@@ -57,6 +57,7 @@
 			c.TYPE_4 AS type4, /**分类4**/
 			c.TYPE_5 AS type5, /**分类5**/
 			c.TYPE_6 AS type6, /**分类6**/
+			c.TYPE_18 AS type18, /**分类18,证券代码**/
 			a.REGIST_ORG registOrg, /**登记托管机构**/
 			/** add by yanya on 20201217 增加是否其他债券的查询 **/
 			NVL(b.IS_QTZQ, 'N') isQtzq /**是否其他债券**/
@@ -122,7 +123,8 @@
 		       null AS type4, /**分类4**/
 		       null AS type5, /**分类5**/
 		       null AS type6, /**分类6**/
-		       null registOrg, /**登记托管机构**/
+				c.TYPE_18 AS type18, /**分类18,证券代码**/
+				null registOrg, /**登记托管机构**/
 			   /** add by yanya on 20201217 增加是否其他债券的查询 **/
 			   NVL(b.IS_QTZQ, 'N') isQtzq /**是否其他债券**/
 		    FROM
@@ -782,7 +784,7 @@
 		<if test="invAim != null and invAim !='' ">
 			AND vsd.INV_AIM=#{invAim}
 		</if>
-        ORDER BY vsd.VDATE desc,vsd.SEC_DETAIL_TYPE NULLS LAST
+        ORDER BY vsd.SEC_DETAIL_TYPE NULLS LAST,vsd.VDATE desc
 	</select>
 
     <!-- 查询账套影子定价方案 -->

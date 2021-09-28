@@ -12,10 +12,7 @@ import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculationMapper;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationReaderDto;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationResultDto;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.FinDealPledgeDTO;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModLgdConfigDto;
+import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.*;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetFinProduct;
@@ -161,7 +158,12 @@ public class BMWEclCalculationProcessorService {
             // 查询按照录入方式升序排序,优先取手工数据，其次取导入数据，故只需取第一条即可
             List<TrdAssetLoss> listTrdAssetLoss = eclCalculationMapper.queryEclManage(
                     searchPara);
+            // 定义 变量.ecl比例Dto = null
+            EclRatioDto eclRatioDto = null;
+            // 定义 变量.ecl比例
             BigDecimal eclRatio = BigDecimal.ZERO;
+            // 定义 变量.减值阶段 = 返回reader结果.减值阶段
+            String finStage = entityDto.getFinStage();
             if(!CollectionUtils.isEmpty(listTrdAssetLoss)){
                 // 将查询结果按数据来源分组：手工、wind、中债
                 Map<String, List<TrdAssetLoss>> lossMap = listTrdAssetLoss.stream().collect(Collectors.groupingBy(TrdAssetLoss::getLossInputType));
@@ -183,21 +185,30 @@ public class BMWEclCalculationProcessorService {
                 }
 
                 // 调用共通根据最终减值流水计算ECL损失比例（当有持仓数据位于三阶段时，则以三阶段减值行情日数据预期信用损失比例为准）
-                eclRatio = accountingCommonBatchService.calcEclByTrdLoss(listTrdAssetLoss, targetFinProduct,
+                eclRatioDto = this.calcEclByTrdLoss(listTrdAssetLoss, targetFinProduct,
                         booksetId, bokDetailId, platDate,
                         platDate, subjectNatureList);
             }
             // 无手工录入、wind、中债导入，采用模型LGD计算
-            else {
+            if(eclRatioDto == null) {
                 //交易信息.ECL预期信用损失比例 = 交易信息.前瞻后PD违约概率% * 交易信息.LGD  四舍五入保留4位小数
                 eclRatio =ArithmeticUtil.multiply(entityDto.getProspectivePd(),entityDto.getLgd());
+            }
+            else{
+                // 变量.ecl比例Dto
+                eclRatio = eclRatioDto.getEclRatio();
+                // 变量.ecl比例Dto.减值阶段不为空
+                if(StringUtil.isNotEmpty(eclRatioDto.getFinStage())){
+                    // 减值阶段 = 变量.ecl比例Dto.减值阶段
+                    finStage = eclRatioDto.getFinStage();
+                }
             }
             // 系统参数控制ECL比例保留小数位数以及尾数处理方式
             eclRatio = calCommonService.round(eclRatio, ECL比例结果保留小数位尾数处理方式, ECL比例结果保留小数位);
             entityDto.setEclRatio(eclRatio);
             //3.3 封装结果集
             quaryResultParam(entityDto, modEclResultProcess, modEclResult, platDate,
-                    dataSource);
+                    dataSource, finStage);
 
         } catch (Exception e) {
             CommonErrorParams commonErrorParams = new CommonErrorParams();
@@ -230,10 +241,12 @@ public class BMWEclCalculationProcessorService {
      * @param modEclResult
      * @param input2
      * @param platDate
+     * @param finStage 减值阶段
      */
     private void quaryResultParam(ModEclResultProcess entity,
                                   ModEclResultProcess modEclResultProcess,
-                                  ModEclResult modEclResult, Date platDate, String dataSource) {
+                                  ModEclResult modEclResult, Date platDate, String dataSource,
+                                  String finStage) {
         //减值结果过程表
         BeanUtil.copyPropertiesIgnoreNull(modEclResultProcess, entity);
         //序列号								自动生成
@@ -242,6 +255,8 @@ public class BMWEclCalculationProcessorService {
         modEclResultProcess.setDecDate(platDate);
         //过程								“05 ECL计算”，此批处理主要加载数据。
         modEclResultProcess.setProcess(ModelDictCodeList.模型_减值过程_ECL计算.getValue());
+        //  减值阶段 = 参数.减值阶段
+        modEclResultProcess.setFinStage(finStage);
 
         //资产减值结果表
         BeanUtil.copyPropertiesIgnoreNull(modEclResult, entity);
@@ -250,7 +265,7 @@ public class BMWEclCalculationProcessorService {
         //资产类型
         modEclResult.setAssetType(entity.getModelAssetType());
         //减值阶段 交易信息DTO.减值阶段
-        modEclResult.setStage(entity.getFinStage());
+        modEclResult.setStage(finStage);
         //数据来源
         modEclResult.setDataSource(dataSource);
         // 买入时点评级
@@ -433,4 +448,82 @@ public class BMWEclCalculationProcessorService {
             stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
         }
     }
+
+    /**
+     * 通过减值流水计算ECL损失比例
+     *
+     * @param trdAssetLoss 资产减值流水列表
+     * @param targetFinProduct 标的信息
+     * @param happenDate 发生日
+     * @param bookDate 入账日
+     * @param booksetId 账套代码
+     * @param bokDetailId 账务明细代码
+     * @param subjectNatureList 科目性质列表
+     * @return
+     */
+    public EclRatioDto calcEclByTrdLoss(List<TrdAssetLoss> trdAssetLoss, TargetFinProduct targetFinProduct,
+                                        String booksetId, String bokDetailId, Date happenDate,
+                                        Date bookDate, List<String> subjectNatureList) {
+        EclRatioDto eclRatioDto = new EclRatioDto();
+        BigDecimal ecl = BigDecimal.ZERO;
+        eclRatioDto.setEclRatio(ecl);
+        Map<BigDecimal,List<TrdAssetLoss>> map= trdAssetLoss.stream().collect(Collectors.groupingBy(TrdAssetLoss::getPeroid));
+        List<TrdAssetLoss> eclTrdAssetLoss  = null;
+        if(map.size()>1){
+            String exeDate = DictCodeList.含权债摊销日_到期日.getValue();
+            if(targetFinProduct!=null){
+                exeDate = finProductCommonBatchService.getExeDate(targetFinProduct, booksetId).getExeDate();
+                if(StringUtil.isEmpty(exeDate) ){
+                    exeDate  = DictCodeList.含权债摊销日_到期日.getValue();
+                }
+            }
+            BigDecimal peroid = accountingCommonBatchService.peroidDecide(map.keySet(),exeDate);
+            eclTrdAssetLoss = map.get(peroid);
+        }else{
+            eclTrdAssetLoss = trdAssetLoss;
+        }
+        if(StringUtil.isEmptyList(eclTrdAssetLoss)){
+            return null;
+        }
+        if(eclTrdAssetLoss.size()>1){
+            List<Date> dates = accountingCommonBatchService.getBuyDate(happenDate, bookDate, booksetId, bokDetailId,subjectNatureList,targetFinProduct.getMdate());
+
+            int num =0;
+            if(StringUtil.isEmptyList(dates)){
+                return null;
+            }
+            for(TrdAssetLoss loss :eclTrdAssetLoss){
+                if(DictCodeListExt3.阶段_买入后出现减值_P3.getValue().equals(loss.getStage())){
+                    eclRatioDto.setEclRatio(loss.getEclVaule());
+                    eclRatioDto.setFinStage(DictCodeListExt3.阶段_买入后出现减值_P3.getValue());
+                    return eclRatioDto;
+                }else{
+                    if(loss.getStrDate() == null || loss.getEndDate() == null || loss.getEclVaule() ==null ){
+                        continue;
+                    }
+                    for(Date date :dates){
+                        if(date == null){
+                            continue;
+                        }
+                        if(loss.getStrDate().compareTo(date)<=0 && loss.getEndDate().compareTo(date)>=0 ){
+                            num++;
+                            ecl = com.joyintech.framework.util.ArithmeticUtil.doAdd(ecl,loss.getEclVaule());
+                            break;
+                        }
+                    }
+                }
+            }
+            if(num>0){
+                ecl = com.joyintech.framework.util.ArithmeticUtil.divide(ecl, num, 12);
+            }
+            eclRatioDto.setEclRatio(ecl);
+            return eclRatioDto;
+        }else{
+            eclRatioDto.setEclRatio(eclTrdAssetLoss.get(0).getEclVaule());
+            eclRatioDto.setFinStage(eclTrdAssetLoss.get(0).getStage());
+            return eclRatioDto;
+        }
+    }
+
+
 }

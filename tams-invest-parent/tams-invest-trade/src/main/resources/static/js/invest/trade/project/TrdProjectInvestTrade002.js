@@ -71,13 +71,13 @@
             initFlag =false;
 
             //根据参数 选择显示投资目的或者业务模式
-            if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
-               $("#invAimDiv").hide();
-               $("#businessModelDiv").show();
-            }else{
-               $("#invAimDiv").show();
-               $("#businessModelDiv").hide();
-            }
+            // if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+            //    $("#invAimDiv").hide();
+            //    $("#businessModelDiv").show();
+            // }else{
+            //    $("#invAimDiv").show();
+            //    $("#businessModelDiv").hide();
+            // }
             setRepayFlag($("#finprodId").val());
         }
 

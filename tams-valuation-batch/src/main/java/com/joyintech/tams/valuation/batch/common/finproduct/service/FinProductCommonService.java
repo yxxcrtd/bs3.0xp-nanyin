@@ -336,10 +336,48 @@ public class FinProductCommonService {
         return faceValue;
     }
 
+    /**
+     * 查询适用估值方案
+     * @param queryDate
+     * @param booksetId
+     * @param invAim
+     * @param finProduct
+     * @return
+     */
+    private SchemeDetailDto querySchemaDetail(Date queryDate, String booksetId, String invAim,TargetFinProduct finProduct) {
+        SchemeDetailDto schemeDetail = null;
+
+
+        // 如果启用了特殊资产估值方案则先查询特殊资产估值方案
+        String specialAssetConfigSwitch = CacheUtil.getSysParam("SPECIAL_ASSET_CONFIG_SWITCH");
+        if ("ON".equals(specialAssetConfigSwitch)) {
+            List<SchemeDetailDto> specialSchemeDetailDtoList = finProductCommonBatchService.getSpecialSchemeDetail(queryDate, booksetId, DictCodeListExt1.配置方案类型_估值方案.getValue(), finProduct.getFinprodId());
+            if (!CollectionUtils.isEmpty(specialSchemeDetailDtoList)) {
+                for (SchemeDetailDto item : specialSchemeDetailDtoList) {
+                    if (item.getInvAim() == null || item.getInvAim().equals(invAim)) {
+                        schemeDetail = item;
+                        break;
+                    }
+                }
+            }
+        }
+
+        //上面没找到再从估值方案找
+        if(schemeDetail == null){
+            Map<String, Object> params = new HashMap<>();
+            params.put("happenDate", queryDate);
+            params.put("booksetId", booksetId);
+            List<SchemeDetailDto> listSchemeDetailDto =finProductCommonBatchService.getSchemeDetail(queryDate, booksetId, finProduct.getType18(), DictCodeListExt1.配置方案类型_估值方案.getValue(), finProduct.getTradeMarket(), finProduct.getType1(), invAim);
+            schemeDetail = listSchemeDetailDto.get(0);
+        }
+
+        return schemeDetail;
+    }
+
 
     /**
      * 市价查询-债券
-     * 
+     *
      * @param happenDate 发生日
      * @param booksetId 账套代码
      * @param finProdId 产品代码
@@ -353,15 +391,13 @@ public class FinProductCommonService {
         // 1.定义变量
         // 定义 变量.市价Dto
         MarketPriceDto marketPriceDto = new MarketPriceDto();
-        marketPriceDto.setPrice(BigDecimal.ZERO);
         // 市价净值
-        // BigDecimal marketPrice = BigDecimal.ZERO;
+        marketPriceDto.setPrice(BigDecimal.ZERO);
         // 估值方案Dto
         SchemeDetailDto schemeDetailDto = null;
-        
         //行情查询日期
         Date queryDate=null;
-        
+
         // 3.查询债券基本信息----调用共通方法-【标的类共通方法设计】
         List<TargetSearchDto> queryCriteria = new ArrayList<>();
         // 定义查询对象targetSearchDto，queryType设值RST_FINPRODUCT
@@ -369,178 +405,27 @@ public class FinProductCommonService {
         targetSearchDto.setQueryType(ValDictCodeList.标的_信息.getValue());
         queryCriteria.add(targetSearchDto);
         // 调用共通方法查询标的信息C---targetFinProduct
-        Map<TargetSearchDto, Object> targetSearchMap = this.getTargetInfo(finProdId,
-            queryCriteria);
+        Map<TargetSearchDto, Object> targetSearchMap = this.getTargetInfo(finProdId,queryCriteria);
         TargetFinProduct targetFinProduct = (TargetFinProduct)targetSearchMap.get(targetSearchDto);
         // 判断是否为空
         if (targetFinProduct == null) {
             return marketPriceDto;
         }
         // 赋值市场代码
-        String finprodMarketId = targetFinProduct.getFinprodMarketId();
+//        String finprodMarketId = targetFinProduct.getFinprodMarketId();
 
         // 5.0
         // 查看数据库配置表 - 特殊资产配置开关是否。只有开关打开才执行特殊资产逻辑
         String specialAssetConfigSwitch = CacheUtil.getSysParam("SPECIAL_ASSET_CONFIG_SWITCH");
-        if ("ON".equals(specialAssetConfigSwitch)) {
-            // 调共通方法-【详细设计-标的类共通方法设计】-估值方案特殊资产配置查询SHEET
-            List<SchemeDetailDto> specialList = this.getSpecialSchemeDetail(happenDate, booksetId,
-                DictCodeListExt1.配置方案类型_估值方案.getValue(), finProdId);
-            // 定义[特殊资产赋值方案DTO]
-            SchemeDetailDto specialDto = null;
-            if (specialList != null && !specialList.isEmpty()) {
-                // FOR (产品估值方案特殊资产配置明细 A:步骤5.0返回值估值方案特殊资产配置LIST）
-                for (SchemeDetailDto item : specialList) {
-                    // if(D.投资目的 == null || 参数.投资目的 = D.投资目的)
-                    if (item.getInvAim() == null || item.getInvAim().equals(invAim)) {
-                        // 变量.特殊资产估值方案DTO = A
-                        specialDto = item;
-                        break;
-                    }
-                }
-            }
 
-            // 特殊资产方案有值的情况
-            if (specialDto != null) {
-                // 参数.投资目的 == 'AC'
-                if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(specialDto.getInvAim())) {
-                    // 变量.市价净价 = 0;
-                    // marketPrice = BigDecimal.ZERO;
-                    marketPriceDto.setPrice(BigDecimal.ZERO);
-                }
-                // 参数.投资目的 = “FVTPL” || （参数.投资目的 = “FVOCI”)
-                else if (DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(invAim)
-                         || DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(invAim)) {
-                    // 估值方法为成本法
-                    if (DictCodeListExt1.估值方法_成本法.getValue().equals(specialDto.getValuationMethod())
-                        || DictCodeListExt1.估值方法_摊余成本法.getValue().equals(specialDto.getValuationMethod())) {
-                        // marketPrice = BigDecimal.ZERO;
-                        marketPriceDto.setPrice(BigDecimal.ZERO);
-                    }
-                    // 市值法、市值成本孰低法
-                    else {
-                        // 获取行情查询日期
-                         queryDate = getQuotationQueryDate(specialDto.getValuationDate(), happenDate);
-                        // 查询行情价格
-                        marketPriceDto = getQuotation(queryDate, specialDto.getValuationPrice(),
-                            specialDto.getValuationPrice2(), finprodMarketId,
-                            DictCodeListExt1.金融产品类型_债券.getValue(), specialDto.getPriceClass());
-                        /**add by weipeng 20200408 杭州版本测试发现特殊资产未做折算处理，主版本合并行情折算处理 start**/
-                        List<String> codeList = new ArrayList<>();
-                        List<Date> dateList = new ArrayList<>();
-                        Map<Date,Double> resultMap = new HashMap<>();
-                        //获取账套参数 债券市价折算方式
-                        codeList.add(ValDictCode.债券市价折算方式.getValue());
-                        Map<String, Object> bokBooksetExtMap = accountingCommonService.getValBokBooksetExtForMap(booksetId, codeList);
-                        //债券市价折算方式
-                        String conversionMode = (String) bokBooksetExtMap.get(ValDictCode.债券市价折算方式.getValue());
-                        BigDecimal conversionNetPrice = BigDecimal.ZERO;
-                        if(marketPriceDto.getValDate()!=null) {
-                            //变量.日期列表 = {出参.估值日期，入参.发生日}
-                            dateList.add(marketPriceDto.getValDate());
-                            dateList.add(happenDate);
-                            //调用共通-标的类共通.多日期百元券面查询 
-                            resultMap = MultiDateHundredSecFaceQuery(dateList, finProdId, null);
-                            
-                            if(resultMap!=null && resultMap.get(happenDate)!=null && resultMap.get(marketPriceDto.getValDate())!=null) {
-                                //市价折算处理
-                                conversionNetPrice = ConversionMarketPrice(resultMap.get(happenDate), resultMap.get(marketPriceDto.getValDate()), conversionMode, marketPriceDto.getPrice());
-                                marketPriceDto.setPrice(conversionNetPrice);
-                            }
-                        }
-                        /**add by weipeng 20200408 杭州版本测试发现特殊资产未做折算处理，主版本合并行情折算处理 end**/
-                        // 小数位处理
-//                        setQuotaDigit(specialDto.getQuotaDigit(), marketPriceDto);
-                        setQuotaDigit(specialDto.getQuotaDigit(), marketPriceDto, specialDto.getPriceTailMode());
-                        if (DictCodeList.息票品种_零息.getValue().equals(targetFinProduct.getCouponSpecies())
-                            || DictCodeList.息票品种_贴现.getValue().equals(targetFinProduct.getCouponSpecies())) {
-                            // 2018年12月27日 增加开关控制
-                            // 需求：零息、贴现债的【市价】计算方式改为取中债估值，【交易性】时取中债净价，【非交易性】时取中债全价；计算影子价格的市价取中债全价。
-                            // 注意：若是查市场行情时，开关需要设为01
-                            // modify by wj 20200620 二级法人改造 五个特殊参数 修改 为特殊取值方法
-                            String institutionCode = MultilevelDataAuthorityUtil.getOrgCodeByBussinessIDType(booksetId, com.joyintech.framework.constant.DictCodeList.联社模式查询数据权限_修改和删除.getValue(), DictCodeList.共通业务类型_账套管理.getValue());
-
-                            if(StringUtil.equals( CacheUtil.getSpecialSysParam("PRICE_CAL_TYPE",institutionCode), GlobalConstant.TYPE_02)){
-                                // 直接取中债全价
-                                marketPriceDto.setPrice(marketPriceDto.getAllPrice());
-                            }
-                            if(marketPriceDto.getPrice() ==null || marketPriceDto.getPrice().compareTo(BigDecimal.ZERO)==0){
-                                marketPriceDto.setPrice(targetFinProduct.getIssuePrice());
-                            }
-
-                        }
-                        //modify by mashukai 合并修改 TISHKBS-1631 20201123	start
-                	    if(queryDate != null){
-                             //理论估值日期
-                            String isHoliday = calculationCommonService.getIsHoliday(queryDate,targetFinProduct.getCalendarId());
-                            if("0".equals(isHoliday)){
-                                marketPriceDto.setSchemeValDate(queryDate);
-                            }else{
-                                marketPriceDto.setSchemeValDate(calculationCommonService.getCDate(queryDate,targetFinProduct.getCalendarId() ));
-                            }
-                    	}
-                        //modify by mashukai 合并修改 TISHKBS-1631 20201123	end
-					}
-                }
-                // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 start
-                // 估值方案代码
-                marketPriceDto.setSchemeId(specialDto.getSchemeId());
-                // 估值方案明细代码
-                marketPriceDto.setSchemeDetailId(specialDto.getSchemeDetailId());
-                // add by weipeng  20210807：资产对应计算用估值行情入库存表落地 end
-
-                return marketPriceDto;
-            }
-        }
-
-        // 2.调用共通查询估值方案
-        Map<String, Object> params = new HashMap<>();
-        params.put("happenDate", happenDate);
-        params.put("booksetId", booksetId);
-        List<SchemeDetailDto> listSchemeDetailDto = this.getSchemeDetail(happenDate, booksetId,
-            DictCodeListExt1.证券品种_债券.getValue(), DictCodeListExt1.配置方案类型_估值方案.getValue(),
-            targetFinProduct.getTradeMarket(), targetFinProduct.getType1(), invAim);
-        if (CollectionUtils.isEmpty(listSchemeDetailDto) || listSchemeDetailDto.get(0) == null) {
+        //查询估值方案
+        schemeDetailDto = querySchemaDetail(happenDate,booksetId,invAim,targetFinProduct);
+        if(schemeDetailDto==null){
+//            logger.warn("账套代码："+booksetId+"，资产代码："+finProdId+"，投资目的："+invAim+"找不到估值方案，市价按0计算.");
+            marketPriceDto.setPrice(BigDecimal.ZERO);
             return marketPriceDto;
         }
-        schemeDetailDto = listSchemeDetailDto.get(0);
 
-        // 5.1 判断取出估值方案
-        // FOR (产品估值方案配置明细 D:步骤2返回值估值方案配置LIST）
-//        for (SchemeDetailDto item : listSchemeDetailDto) {
-//            // C.交易场所 = D.交易场所
-//            if (targetFinProduct.getTradeMarket() != null
-//                && targetFinProduct.getTradeMarket().equals(item.getTradeMarket())) {
-//                // (D.证券细分类 != null)
-//                if (item.getSecDetailType() != null) {
-//                    // 标的信息中的TYPE1 对应的就是 资产二级类型
-//                    // C.分类1 = D.证券细分类
-//                    if (targetFinProduct.getType1().equals(item.getSecDetailType())) {
-//                        // if(D.投资目的 == null || 参数.投资目的 = D.投资目的)
-//                        if (item.getInvAim() == null || invAim.equals(item.getInvAim())) {
-//                            // 变量.估值方案DTO = D
-//                            schemeDetailDto = item;
-//                            break;
-//                        }
-//                    }
-//                }
-//                else {
-//                    // D.证券分类 != null
-//                    if (item.getSecType() != null) {
-//                        // 投资目的
-//                        if (item.getInvAim() == null || invAim.equals(item.getInvAim())) {
-//                            // 变量.估值方案DTO = D
-//                            schemeDetailDto = item;
-//                            break;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        if (schemeDetailDto == null) {
-//            return marketPriceDto;
-//        }
-        
         // 5.2 根据估值方案取对应市价
         // 参数.投资目的 == 'AC'
         if (DictCodeListExt1.投资目的_摊余成本类.getValue().equals(invAim)) {
@@ -557,19 +442,18 @@ public class FinProductCommonService {
                 // marketPrice = BigDecimal.ZERO;
                 marketPriceDto.setPrice(BigDecimal.ZERO);
             }
-            // 市值法、市值成本孰低法
+            // 市值法、市值成本孰低法、模型法
             else {
                 // 获取行情查询日期
                  queryDate = getQuotationQueryDate(schemeDetailDto.getValuationDate(), happenDate);
                 // 查询行情价格
-                marketPriceDto = getQuotation(queryDate, schemeDetailDto.getValuationPrice(),
-                    schemeDetailDto.getValuationPrice2(), finprodMarketId,
-                    DictCodeListExt1.金融产品类型_债券.getValue(), schemeDetailDto.getPriceClass());
+                marketPriceDto = getQuotation(schemeDetailDto,queryDate, targetFinProduct.getFinprodMarketId(),
+                    DictCodeListExt1.金融产品类型_债券.getValue());
                 // 小数位处理
                 //setQuotaDigit(schemeDetailDto.getQuotaDigit(), marketPriceDto);
             }
         }
-        
+
         // modified by wangzhiang 零息贴现综合收益逻辑到取市价共通里 20181212 start
         // 变量.标的信息.息票品种为零息或贴现时
         if (DictCodeList.息票品种_零息.getValue().equals(targetFinProduct.getCouponSpecies())
@@ -615,7 +499,7 @@ public class FinProductCommonService {
                 marketPriceDto.setPrice(marketPrice);
             }
         }
-        
+
         /**add by zhangquan 20200110 行情折算处理 end**/
         List<String> codeList = new ArrayList<>();
         List<Date> dateList = new ArrayList<>();
@@ -630,9 +514,9 @@ public class FinProductCommonService {
         	//变量.日期列表 = {出参.估值日期，入参.发生日}
         	dateList.add(marketPriceDto.getValDate());
         	dateList.add(happenDate);
-        	//调用共通-标的类共通.多日期百元券面查询 
+        	//调用共通-标的类共通.多日期百元券面查询
         	resultMap = MultiDateHundredSecFaceQuery(dateList, finProdId, null);
-        	
+
         	if(resultMap!=null && resultMap.get(happenDate)!=null && resultMap.get(marketPriceDto.getValDate())!=null) {
         		//市价折算处理
         		conversionNetPrice = ConversionMarketPrice(resultMap.get(happenDate), resultMap.get(marketPriceDto.getValDate()), conversionMode, marketPriceDto.getPrice());
@@ -820,7 +704,7 @@ public class FinProductCommonService {
      * @since 1.0
      */
     private Date getQuotationQueryDate(String valuationDate, Date happenDate) {
-        Date queryDate = null;
+        Date queryDate = happenDate;//默认为行情日
         // 估值日期：行情日-1
         if (DictCodeListExt1.估值日期_行情日减1.getValue().equals(valuationDate)) {
             // 变量.查询日期 = 发生日-1
@@ -869,52 +753,24 @@ public class FinProductCommonService {
 
     /**
      * 估值市价查询共通
-     * @param queryDate 查询日期
-     * @param valuationPrice 估值市价
-     * @param finprodMarketId 市场代码
-     * @param queryType 查询类型：基金、债券
-     * @param priceClass 价格种类：全价、净价
+     * @param schemeDetailDto
+     *  估值方案配置
+     * @param queryDate
+     *  查询日期
+     * @param finprodMarketId
+     *  市场代码
+     * @param queryType
+     *  查询资产类型
      * @return
      */
-    private MarketPriceDto getQuotation(Date queryDate, String valuationPrice,
-                                        String valuationPrice2, String finprodMarketId,
-                                        String queryType, String priceClass) {
-        MarketPriceDto marketPriceDto = new MarketPriceDto();
-        // 定义第一市价DTO:
-        MarketPriceDto marketPriceDto1 = getMarketPriceByValPrice(
-            valuationPrice, queryDate, finprodMarketId, queryType, priceClass);
+    private MarketPriceDto getQuotation(SchemeDetailDto schemeDetailDto,Date queryDate,String finprodMarketId,String queryType) {
+//            Date queryDate, String valuationPrice,
+//                                        String valuationPrice2, String finprodMarketId,
+//                                        String queryType, String priceClass) {
 
-        // 定义第二市价DTO:
-        MarketPriceDto marketPriceDto2 = getMarketPriceByValPrice(
-            valuationPrice2, queryDate, finprodMarketId, queryType, priceClass);
+        MarketPriceDto marketPriceDto = getMarketPriceByValPrice(
+                schemeDetailDto.getValuationPrice(), queryDate, finprodMarketId, queryType, schemeDetailDto.getPriceClass(),schemeDetailDto.getValuationMethod());
 
-        // if(第一市价DTO == null)
-        if (marketPriceDto1 == null) {
-            // 变量.市价Dto = 第二市价DTO
-            if (marketPriceDto2 != null) {
-                marketPriceDto = marketPriceDto2;
-            }
-
-        }
-        // else if (第二市价DTO == null)
-        else if (marketPriceDto2 == null) {
-            // 变量.市价Dto = 第一市价DTO
-            if (marketPriceDto1 != null) {
-                marketPriceDto = marketPriceDto1;
-            }
-        }
-        else {
-            // if(第一市价DTO.估值日期 >= 第二市价DTO.估值日期）
-            if (DateUtil.compareDate(marketPriceDto1.getValDate(),
-                marketPriceDto2.getValDate()) >= 0) {
-                // 变量.市价Dto = 第一市价DTO
-                marketPriceDto = marketPriceDto1;
-            }
-            else {
-                // 变量.市价Dto = 第二市价DTO
-                marketPriceDto = marketPriceDto2;
-            }
-        }
         return marketPriceDto;
     }
 
@@ -932,26 +788,28 @@ public class FinProductCommonService {
      * @since 1.0
      */
     private MarketPriceDto getMarketPriceByValPrice(String valuePrice, Date queryDate,
-                                                    String finprodMarketId, String queryType, String priceClass) {
-        // if(D.估值市价!="管理人报价")
-        boolean queryFlag = false;
-        // 债券
-        // if(D.估值市价="收盘价" || D.估值市价="平均价" || D.估值市价="最高价" || D.估值市价="最低价" || D.估值市价="买一价" ||
-        // D.估值市价="卖一价")
-        if (DictCodeListExt1.金融产品类型_债券.getValue().equals(queryType)) {
-            queryFlag = DictCodeList.估值市价_收盘价.getValue().equals(valuePrice)
-                        || DictCodeList.估值市价_平均价.getValue().equals(valuePrice)
-                        || DictCodeList.估值市价_最高价.getValue().equals(valuePrice)
-                        || DictCodeList.估值市价_最低价.getValue().equals(valuePrice)
-                        || DictCodeList.估值市价_买一价.getValue().equals(valuePrice)
-                        || DictCodeList.估值市价_卖一价.getValue().equals(valuePrice);
+                                                    String finprodMarketId, String queryType, String priceClass,String valuationMethod) {
+        String valueSource = null;
+        boolean isMarketInfo = false;
+        if(DictCodeListExt1.估值方法_模型法.getValue().equals(valuationMethod)){
+            valueSource = DictCodeListExt1.估值来源_模型法_MOD.getValue();
+        }else{
+            if(DictCodeList.估值市价_收盘价.getValue().equals(valuePrice)
+                    || DictCodeList.估值市价_平均价.getValue().equals(valuePrice)
+                    || DictCodeList.估值市价_最高价.getValue().equals(valuePrice)
+                    || DictCodeList.估值市价_最低价.getValue().equals(valuePrice)
+                    || DictCodeList.估值市价_买一价.getValue().equals(valuePrice)
+                    || DictCodeList.估值市价_卖一价.getValue().equals(valuePrice)){
+                isMarketInfo = true;
+            }
+            //TODO 其他得估值市价需要补充
+            else{
+                valueSource = valuePrice;
+            }
+
+
         }
-        // 基金
-        // if(D.估值市价!="管理人报价")
-        else {
-            queryFlag = !DictCodeList.估值市价_管理人报价.getValue().equals(valuePrice);
-        }
-        if (queryFlag) {
+        if (isMarketInfo) {
             // 定义 变量.估值市价类型
             String valuePriceType = "";
             if (DictCodeList.估值市价_收盘价.getValue().equals(valuePrice)) {
@@ -1033,11 +891,11 @@ public class FinProductCommonService {
                 }
             }
             /**add by wujie on 20201015 end**/
-            // 市价查询-债券--债券时估值市价不为空，否则不查
-            else if (StringUtil.isNotEmpty(valuePrice)) {
+            // 市价查询-债券--债券时估值来源不为空，否则不查
+            else if (StringUtil.isNotEmpty(valueSource)) {
                 // 变量.债券行情 = 【4.1】查询结果.get(0);
                 List<BondValuationInfoDto> listBondValuationInfoDto = finProductCommonMapper.getBondValuationInfo(
-                    finprodMarketId, queryDate, valuePrice);
+                    finprodMarketId, queryDate, valueSource);
                 if (!CollectionUtils.isEmpty(listBondValuationInfoDto)) {
                     MarketPriceDto marketPriceDto = new MarketPriceDto();
                     // 第一市价DTO.估值日期 = 【4.1】查询结果.get(0).估值日期
@@ -1160,9 +1018,9 @@ public class FinProductCommonService {
         // 定义 变量.市价Dto
         MarketPriceDto marketPriceDto = new MarketPriceDto();
         marketPriceDto.setPrice(BigDecimal.ZERO);
-        
+
         Date queryDate =null;
-        
+
         // 估值方案Dto
         SchemeDetailDto schemeDetailDto = null;
 
@@ -1170,7 +1028,7 @@ public class FinProductCommonService {
         Map<String, Object> params = new HashMap<>();
         params.put("happenDate", happenDate);
         params.put("booksetId", booksetId);
- 
+
         // 3.查询债券基本信息----调用共通方法-【标的类共通方法设计】
         List<TargetSearchDto> queryCriteria = new ArrayList<>();
         // 定义查询对象targetSearchDto，queryType设值RST_FINPRODUCT
@@ -1195,8 +1053,8 @@ public class FinProductCommonService {
         List<SchemeDetailDto> listSchemeDetailDto = this.getSchemeDetail(happenDate, booksetId,
             DictCodeListExt1.证券品种_基金.getValue(), DictCodeListExt1.配置方案类型_估值方案.getValue(),
             targetFinProduct.getTradeMarket(), targetFinProduct.getType1(), null);
-        
-        
+
+
         if (CollectionUtils.isEmpty(listSchemeDetailDto) || listSchemeDetailDto.get(0) == null) {
             return marketPriceDto;
         }
@@ -1263,16 +1121,15 @@ public class FinProductCommonService {
                 // 获取行情查询日期
                  queryDate = getQuotationQueryDate(schemeDetailDto.getValuationDate(), happenDate);
                 // 查询行情价格
-                marketPriceDto = getQuotation(queryDate, schemeDetailDto.getValuationPrice(),
-                    schemeDetailDto.getValuationPrice2(), finprodMarketId,
-                    DictCodeListExt1.金融产品类型_基金.getValue(), schemeDetailDto.getPriceClass());
+                marketPriceDto = getQuotation(schemeDetailDto,queryDate,finprodMarketId,
+                    DictCodeListExt1.金融产品类型_基金.getValue());
                 // 小数位处理
 //                setQuotaDigit(schemeDetailDto.getQuotaDigit(), marketPriceDto);
                 setQuotaDigit(schemeDetailDto.getQuotaDigit(), marketPriceDto, schemeDetailDto.getPriceTailMode());
-                
+
             }
 //        }
-            //估值方案理论估值日期  
+            //估值方案理论估值日期
             String isHoliday = calculationCommonService.getIsHoliday(queryDate,targetFinProduct.getCalendarId() );
             if("0".equals(isHoliday)){
                 marketPriceDto.setSchemeValDate(queryDate);
@@ -1401,7 +1258,7 @@ public class FinProductCommonService {
 
     /**
      * 影子定价查询
-     * 
+     *
      * @param happenDate 发生日
      * @param booksetId 账套代码
      * @param finprodId 金融产品代码
@@ -1454,12 +1311,11 @@ public class FinProductCommonService {
         // 获取行情查询日期
         Date queryDate = getQuotationQueryDate(schemeDetailDto.getValuationDate(), happenDate);
         // 查询行情价格
-        marketPriceDto = getQuotation(queryDate, schemeDetailDto.getValuationPrice(),
-            schemeDetailDto.getValuationPrice2(), finprodMarketId,
-            DictCodeListExt1.金融产品类型_债券.getValue(), schemeDetailDto.getPriceClass());
+        marketPriceDto = getQuotation(schemeDetailDto,queryDate,finprodMarketId,
+                DictCodeListExt1.金融产品类型_债券.getValue());
 //        // 小数位处理
 //        setQuotaDigit(schemeDetailDto.getQuotaDigit(), marketPriceDto);
-        
+
         // if 变量.息票品种 IN（“零息”，“贴现”）
         if (marketPriceDto.getPrice() != null && marketPriceDto.getValDate() != null
             && (DictCodeList.息票品种_零息.getValue().equals(couponSpecies)
@@ -1492,7 +1348,7 @@ public class FinProductCommonService {
             // 市价Dto.市价净价 = 变量.市价净价
             marketPriceDto.setPrice(netprice);
         }
-        
+
         /**add by zhangquan 20200109 行情折算处理 end**/
         List<Date> queryDateList = new ArrayList<>();
         Map<Date,Double> resultMap = new HashMap<>();
@@ -1507,9 +1363,9 @@ public class FinProductCommonService {
         	//变量.日期列表 = {出参.估值日期，入参.发生日}
         	queryDateList.add(marketPriceDto.getValDate());
         	queryDateList.add(happenDate);
-        	//调用共通->标的类共通.多日期百元券面查询 
+        	//调用共通->标的类共通.多日期百元券面查询
         	resultMap = MultiDateHundredSecFaceQuery(queryDateList, finprodId, null);
-        	
+
         	if(resultMap!=null && resultMap.get(happenDate)!=null && resultMap.get(marketPriceDto.getValDate())!=null) {
         		////调用共通->标的类共通.市价折算处理
         		conversionNetPrice = ConversionMarketPrice(resultMap.get(happenDate), resultMap.get(marketPriceDto.getValDate()), conversionMode, marketPriceDto.getPrice());
@@ -1811,9 +1667,8 @@ public class FinProductCommonService {
                         // 获取行情查询日期
                         queryDate = getQuotationQueryDate(specialDto.getValuationDate(), happenDate);
                         // 查询行情价格
-                        marketPriceDto = getQuotation(queryDate, specialDto.getValuationPrice(),
-                                specialDto.getValuationPrice2(), finprodMarketId,
-                                DictCodeListExt1.金融产品类型_计划类资产.getValue(), specialDto.getPriceClass());
+                        marketPriceDto = getQuotation(specialDto,queryDate,finprodMarketId,
+                                DictCodeListExt1.金融产品类型_计划类资产.getValue());
                         // 小数位处理
                         setQuotaDigit(specialDto.getQuotaDigit(), marketPriceDto, specialDto.getPriceTailMode());
                     }
@@ -1864,9 +1719,8 @@ public class FinProductCommonService {
                 // 获取行情查询日期
                 queryDate = getQuotationQueryDate(schemeDetailDto.getValuationDate(), happenDate);
                 // 查询行情价格
-                marketPriceDto = getQuotation(queryDate, schemeDetailDto.getValuationPrice(),
-                        schemeDetailDto.getValuationPrice2(), finprodMarketId,
-                        DictCodeListExt1.金融产品类型_计划类资产.getValue(), schemeDetailDto.getPriceClass());
+                marketPriceDto = getQuotation(schemeDetailDto,queryDate,finprodMarketId,
+                        DictCodeListExt1.金融产品类型_计划类资产.getValue());
                 setQuotaDigit(schemeDetailDto.getQuotaDigit(), marketPriceDto,schemeDetailDto.getPriceTailMode());
             }
         }

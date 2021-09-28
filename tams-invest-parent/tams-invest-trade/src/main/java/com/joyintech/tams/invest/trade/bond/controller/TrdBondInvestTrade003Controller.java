@@ -192,6 +192,10 @@ public class TrdBondInvestTrade003Controller extends BaseController {
             model.addAttribute("entity_bussRepFinProductInfoDto",
                 JsonUtils.object2Json(dto.getBussTrdTransferOrder().get(0)));
         }
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
 
         // 净价radio默认选中
         model.addAttribute("calculateField", "unitCprice");
@@ -274,7 +278,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
             DictCode.有效状态, DictCode.交易平台, DictCode.币种,
             DictCode.投资目的, DictCode.交易市场, DictCode.清算速度, DictCode.是否,
             DictCode.行内资产二级分类,DictCode.行内资产三级分类,DictCode.行内资产四级分类,// 新增资产二、三、四级分类 王贵奇 2019/7/31
-            DictCode.WIND一级分类_含债券一级分类等, BussinessDictCode.缴款方式,DictCode.分配方式);
+            DictCode.WIND一级分类_含债券一级分类等, BussinessDictCode.缴款方式,DictCode.分配方式, DictCode.业务模式);
         model.addAttribute("TURN_INV_AIM",
                 JsonUtils.objectArray2Json(this.getSelectDataFromDataDic(DictCode.投资目的, null).getOptions().toArray()));
         model.addAttribute("TRADE_PLACE_01", DictCodeListExt1.交易场所_银行间.getValue());

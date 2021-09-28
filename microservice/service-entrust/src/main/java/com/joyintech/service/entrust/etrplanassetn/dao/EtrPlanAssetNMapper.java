@@ -71,6 +71,8 @@ public interface EtrPlanAssetNMapper {
      * @since 1.0
      */
     List<SelectOptionDto> getfinprodIdForAdd(Map<String, String> map);
+
+    List<SelectOptionDto> getfinprodIdForAdd1(Map<String, String> map);
     /**
      * 
      * 获取新建界面的组合代码联想下拉框框

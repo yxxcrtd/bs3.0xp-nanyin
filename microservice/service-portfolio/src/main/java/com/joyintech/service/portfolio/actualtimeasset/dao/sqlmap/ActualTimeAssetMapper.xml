@@ -292,7 +292,7 @@
 				SUM(cashBalance) AS actualPositionAmount,
 				SUM(tradeCash) AS tradePositionAmount,
 				SUM(cashAvailable) AS instructionsAmount,
-				SUM(preReductionCash) AS pledgeAmount,
+				null AS pledgeAmount,
 				0 AS preReductionAmount,
 				SUM(cashBalance) AS marketValue
 			FROM

@@ -866,6 +866,9 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
         // add by wangpeng 登记托管机构 2019/08/17 start
         wflTrdProductDeal.setRegistOrg(input.getRegistOrg());
         // add by wangpeng 登记托管机构 2019/08/17 end
+        // add by wanshiwei ZGZGST-3595 回购类资产“利率%”取值错误，取资产的回购利率 20210928 start
+        wflTrdProductDeal.setUnitInt(ArithmeticUtil.divide(input.getRebackPrice(), 100, 8));
+        // add by wanshiwei ZGZGST-3595 回购类资产 “利率%”取值错误，取资产的回购利率 20210928 end
         
         //交易表存入首期交付日
         if(StringUtil.isNotEmpty(input.getVpayDate())){

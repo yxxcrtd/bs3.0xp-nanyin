@@ -218,7 +218,7 @@ $(function() {
             var tradeAmt = $('#tradeAmt').val();
             if(netDate && finprodId){
                 var data = {finprodId:finprodId,netDate:netDate}
-                Joyin.ajaxJson(basePath + 'invest/trade/plannet/TrdPlanNetInvestTrade003/getPrice', data , function(result) {
+                Joyin.ajaxSync(basePath + 'invest/trade/plannet/TrdPlanNetInvestTrade003/getPrice', data , function(result) {
                     $('#unitCprice').val(result).trigger('blur').change();
                 });
             }

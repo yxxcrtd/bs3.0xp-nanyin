@@ -318,7 +318,7 @@
                         query('#availableNum').val(result);
                     });
                 checkFinMdate();
-                changeBussnissModelByFinprodId();
+                // changeBussnissModelByFinprodId();
                 calData();
             } else {
                 // 为空
@@ -356,7 +356,7 @@
         }
     };
 
-    var changeBussnissModelByFinprodId = function(){
+    /*var changeBussnissModelByFinprodId = function(){
         if(SHOW_INVAIM_OR_BUSSINSSMODEL!="02"){
             return;
         }
@@ -378,7 +378,7 @@
             businessModelReulst="";
         }
 
-    }
+    }*/
 
     /**
      * 对外公开的接口
@@ -475,17 +475,20 @@
             title: 'EtrIbBondinfo002.invAim',
             edit: true,
             sortable: false,
-            editOption:{type:'select', formatoption:true, result: INV_AIM},
-            visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false
-        }, {/*业务模式*/
-            field: 'businessModel',
-            width: 100,
-            title: '业务模式',
-            edit: true,
-            sortable: false,
-            editOption:{type:'select', formatoption:true, result: BUSINESS_MODEL},
-            visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false
-        }, {
+            editOption:{type:'select', formatoption:true, result: INV_AIM}
+            // ,
+            // visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false
+        }
+        // , {/*业务模式*/
+        //     field: 'businessModel',
+        //     width: 100,
+        //     title: '业务模式',
+        //     edit: true,
+        //     sortable: false,
+        //     editOption:{type:'select', formatoption:true, result: BUSINESS_MODEL},
+        //     visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false
+        // }
+        , {
             field: 'proAvailableCash',
             width: 200,
             title: 'EtribBondInfo003.proAvailableCash',
@@ -564,12 +567,12 @@
         checkbox: false,
         height: 290,
         addclick: function (row) {
-            if(SHOW_INVAIM_OR_BUSSINSSMODEL=='02'){
-               if(businessModelReulst=='3'){
-                   row.businessModel = "Y1";
-                   row.invAim = 'AC';
-               }
-            }
+            // if(SHOW_INVAIM_OR_BUSSINSSMODEL=='02'){
+            //    if(businessModelReulst=='3'){
+            //        row.businessModel = "Y1";
+            //        row.invAim = 'AC';
+            //    }
+            // }
         },
         editCell: function (value, data, field, cell, column) {
             if (field == "entrustNum") {

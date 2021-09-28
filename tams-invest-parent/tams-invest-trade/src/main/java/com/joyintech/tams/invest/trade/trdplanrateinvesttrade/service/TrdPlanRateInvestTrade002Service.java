@@ -585,9 +585,12 @@ public class TrdPlanRateInvestTrade002Service extends CommonExportService<TrdPla
             trdProductDeal.setSettleSpeed(dto.getSettleSpeed() - 1);
         }
         trdProductDeal.setUnitCprice(new BigDecimal("1"));
-        if (dto.getIntAmt() != null && dto.getTradeAmt() != null) {
+        // modify by wanshiwei ZGZGST-3595 计划类利率型资产“利率%”取值错误，取资产的计提利率 20210928 start
+        trdProductDeal.setUnitInt(ArithmeticUtil.divide(dto.getInvestRate(), 100, 8));
+        /*if (dto.getIntAmt() != null && dto.getTradeAmt() != null) {
             trdProductDeal.setUnitInt(ArithmeticUtil.divide(dto.getIntAmt(), tradeAmt, 8));
-        }
+        }*/
+        // modify by wanshiwei ZGZGST-3595 计划类利率型资产“利率%”取值错误，取资产的计提利率 20210928 end
         trdProductDeal.setUnitFprice(new BigDecimal("1"));
         trdProductDeal.setParValue(new BigDecimal("1"));
         trdProductDeal.setBusiType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
@@ -653,9 +656,12 @@ public class TrdPlanRateInvestTrade002Service extends CommonExportService<TrdPla
             trdProductDeal.setSettleSpeed(dto.getSettleSpeed() - 1);
         }
         trdProductDeal.setUnitCprice(new BigDecimal("1"));
-        if (dto.getIntAmt() != null && dto.getTradeAmt() != null) {
+        // modify by wanshiwei ZGZGST-3595 计划类利率型资产“利率%”取值错误，取资产的计提利率 20210928 start
+        trdProductDeal.setUnitInt(ArithmeticUtil.divide(dto.getInvestRate(), 100, 8));
+        /*if (dto.getIntAmt() != null && dto.getTradeAmt() != null) {
             trdProductDeal.setUnitInt(ArithmeticUtil.divide(dto.getIntAmt(), tradeAmt, 8));
-        }
+        }*/
+        // modify by wanshiwei ZGZGST-3595 计划类利率型资产“利率%”取值错误，取资产的计提利率 20210928 end
         trdProductDeal.setUnitFprice(new BigDecimal("1"));
         trdProductDeal.setParValue(new BigDecimal("1"));
         trdProductDeal.setBusiType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
@@ -1921,9 +1927,12 @@ public class TrdPlanRateInvestTrade002Service extends CommonExportService<TrdPla
             trdProductDealTotal.setSettleSpeed(dto.getSettleSpeed() - 1);
         }
         trdProductDealTotal.setUnitCprice(new BigDecimal("1"));
-        if (dto.getIntAmt() != null && dto.getTradeAmt() != null) {
+        // modify by wanshiwei ZGZGST-3595 计划类（利率型）资产“利率%”取值错误，取资产的计提利率 20210928 start
+        trdProductDealTotal.setUnitInt(com.joyintech.calculation.util.ArithmeticUtil.divide(dto.getInvestRate(), 100, 8));
+        /*if (dto.getIntAmt() != null && dto.getTradeAmt() != null) {
             trdProductDealTotal.setUnitInt(ArithmeticUtil.divide(dto.getIntAmt(), dto.getTradeAmt(), 8));
-        }
+        }*/
+        // modify by wanshiwei ZGZGST-3595 存款类资产“利率%”取值错误，取资产的计提利率 20210928 end
         trdProductDealTotal.setUnitFprice(new BigDecimal("1"));
         trdProductDealTotal.setParValue(new BigDecimal("1"));
         trdProductDealTotal.setBusiType(DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue());
