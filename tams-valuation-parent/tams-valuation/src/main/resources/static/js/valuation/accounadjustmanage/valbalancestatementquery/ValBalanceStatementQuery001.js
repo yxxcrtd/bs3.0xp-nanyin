@@ -150,13 +150,14 @@ $(function () {
                                     valueDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
                                 });
                         } else {
-                            Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
+                            /*Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
                                 basePath + "valuation/basedata/marketdata/bondmarketinfo/ValBondMarketInfo002/init",
                                 "95%", "80%", {
                                     pageModel: PAGE_MODEL_REFERENCE,
                                     secId: resultObj.data.finprodMarketId,
                                     valueDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
-                                });
+                                });*/
+                            Joyin.alert("当前数据为系统反算结果，无对应行情信息");
                         }
                     }
                     //外汇行情信息
