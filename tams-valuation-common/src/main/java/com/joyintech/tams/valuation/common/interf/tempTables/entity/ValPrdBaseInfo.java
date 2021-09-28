@@ -221,6 +221,19 @@ public class ValPrdBaseInfo extends BaseEntity {
     private String isReconciliation;
 
     /**
+     * 市场代码
+     */
+    private String finprodMarketId;
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
+
+    /**
      * 取得 产品代码
      * @return 产品代码
      */

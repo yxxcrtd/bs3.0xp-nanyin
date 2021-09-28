@@ -45,7 +45,7 @@
         $('#ComBondQuotationInfo002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
-        $('#secId').change(function(){
+        /*$('#secId').change(function(){
         	var secId = $('#secId').val();
         	if(secId ==''|| secId==undefined){
         		$('#finprodAbbr').val('');
@@ -54,7 +54,18 @@
         		$('#finprodAbbr').val($('#secId').select2('data')[0].object).trigger('change');
 //        		$('#finprodAbbr').val($('#secId').select2('data')[0].text).trigger('change');
         	}
+        })*/
+
+        $('#finprodAbbr').change(function(){
+            var finprodAbbr = $('#finprodAbbr').val();
+            if(finprodAbbr ==''|| secId==undefined){
+                $('#secId').val('');
+            }
+            else{
+                $('#secId').val($('#finprodAbbr').select2('data')[0].object).trigger('change');
+            }
         })
+
         
     });
 }());

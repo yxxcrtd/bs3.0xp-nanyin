@@ -548,8 +548,6 @@
 			inner join fin_product on FIN_EXERCISE_PLAN.Finprod_Id = fin_product.finprod_id
 		where FIN_EXERCISE_PLAN.EXERCISE_DATE &gt;= to_date(#{valDate},'yyyy-MM-dd')
 			and fin_product.finprod_market_id = #{finprodId}
-			AND (Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_TOUGUAN_F07},#{TYPE_TOUGUAN_F18})
-			OR (Fin_Product.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02})))
 	</select>
 
 	<select id="selectTrdAssetLossByFinprodId" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
@@ -604,7 +602,14 @@
         where FINPROD_ID = #{finprodId}
     </delete>
 
-
+	<!-- 根据产品代码查找市场代码 -->
+	<select id="queryFinprodMarketIdByFinprodId" resultType="java.lang.String">
+		select
+		coalesce(t.FINPROD_MARKET_ID, t.FINPROD_ID)
+		from FIN_PRODUCT t
+		where t.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		and rownum = 1
+	</select>
 
 
 

@@ -59,7 +59,8 @@ public class AssetNameManagementDetailController {
      */
     @PostMapping("selectAssetListDetail")
     public List<RskAccessListDetailDto> selectAssetListDetail(@RequestBody Map<String, Object> param) {
-        return assetNameManagementDetailService.selectAssetListDetail(param);
+        List<RskAccessListDetailDto> sd=assetNameManagementDetailService.selectAssetListDetail(param);
+        return sd;
     }
 
     /**

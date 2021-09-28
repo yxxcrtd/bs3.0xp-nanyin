@@ -52,5 +52,5 @@ public interface InterfServiceLogMapper {
 	* @param param
 	* @return
 	*/
-	List<InterfServiceConfigDto> searchInterfServiceConfig(InterfServiceConfigDto interfTradeConfigDto);
+	List<InterfServiceConfigDto> searchInterfServiceConfig(InterfServiceConfigDto interfServiceConfigDto);
 }

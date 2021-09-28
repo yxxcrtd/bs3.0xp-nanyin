@@ -369,6 +369,11 @@ public class CstpSelectDto extends InterfCstpTrade{
     private BigDecimal pledgeRate;
 
     /**
+     * 折算比例%
+     */
+    private BigDecimal pledgeRateStr;
+
+    /**
      * 代理方交易员名称
      */
     private String otherTraderName;
@@ -387,7 +392,8 @@ public class CstpSelectDto extends InterfCstpTrade{
 
     public BigDecimal getPledgeRateStr() {
         if(pledgeRate != null){
-            return pledgeRate.multiply(new BigDecimal("100"));
+            DecimalFormat df0 = new DecimalFormat("#0.##");
+            return new BigDecimal(df0.format(pledgeRate.multiply(new BigDecimal("100"))));
         }else{
             return null;
         }

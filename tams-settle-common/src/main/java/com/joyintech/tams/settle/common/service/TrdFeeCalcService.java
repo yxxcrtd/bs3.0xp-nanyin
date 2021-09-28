@@ -447,6 +447,12 @@ public class TrdFeeCalcService {
 	        Map<String, List<TrdDetailDto>> mapTrdDetail = new HashMap<String,  List<TrdDetailDto>>();
 	        List<FeeInfo> feeInfos = new ArrayList<>();
 
+			if (StringUtil.isNotEmpty(feePlan.getTrdFeeConfig().getCommCalMethod())) {
+				if (feePlan.getTrdFeeConfig().getCommCalMethod().equals(DictCodeListExt3.佣金计算方式_按申请编号汇总.getValue())) {
+					mapTrdDetail = detailDtos.stream().collect(Collectors.groupingBy(TrdDetailDto::getApplyTradeId));
+				}
+			}
+
 	        // 1.3 佣金承担费用方案查询
 	        // 变量.佣金需处理费用列表 = 变量.费用方案.费用由券商承担 按照逗号分隔
 	        if (StringUtil.isNotEmpty(feePlan.getTrdFeeConfig().getBrokerBaerFee())) {

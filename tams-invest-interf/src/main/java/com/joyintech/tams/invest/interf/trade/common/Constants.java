@@ -24,7 +24,7 @@ public class Constants {
 	/**
 	 * 接口系统-恒生资管系统
 	 */
-	public final static String INTERF_SYSTEM_ZG = "hszg";
+	public final static String INTERF_SYSTEM_HSZG = "hszg";
 	/**
 	 *接口状态-1新增
 	 */

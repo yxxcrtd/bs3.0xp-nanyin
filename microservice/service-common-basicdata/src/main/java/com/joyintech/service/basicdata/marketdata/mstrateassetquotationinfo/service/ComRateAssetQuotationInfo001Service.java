@@ -133,12 +133,13 @@ public class ComRateAssetQuotationInfo001Service extends BaseService<ComRateAsse
 
     public int update(ComRateAssetQuotationInfo001Dto entity) {
         entity.setFinprodId(entity.getFinProdMarketId());
+        entity.setInputType(DictCodeListExt1.录入方式_手工录入.getValue());
         return mstRateAssetQuotationInfo001Mapper.update(entity);
     }
 
     public int delete(ComRateAssetQuotationInfo001Dto entity) {
         entity.setFinprodId(entity.getFinProdMarketId());
-        return finProductValuationMapper.deleteByPrimaryKey(entity);
+        return mstRateAssetQuotationInfo001Mapper.delete(entity);
     }
 
     public List<ComRateAssetQuotationInfo001Dto> selectForExport(Map<String, Object> param) {

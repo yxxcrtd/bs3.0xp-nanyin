@@ -150,7 +150,7 @@
 									<div class="layui-input-inline input-inline">
 										<input type="text" id="fundType" name="fundType"
 											   class="layui-input form-input input-select"
-											   placeholder="请输入内容"
+											   placeholder="请输入内容" childrenIds="etfType_id"
 											   data-th-placeholder="#{SysCommon.placeholder}"
 											   data-th-data-result='${FUND_ASSET_TYPE}'
 											   data-th-value="${entity?.fundType}"
@@ -166,7 +166,7 @@
 												data-th-placeholder="#{SysCommon.placeholder}"
 												data-th-initValue="${entity?.secondType}"
 												data-th-data-result="${FUND_ASSET_SECOND_TYPE}"
-												childrenIds="trmFundType,etfType"
+												childrenIds="trmFundType,etfType_id"
 										>
 										</select>
 									</div>

@@ -202,7 +202,8 @@ public class EclCalculationProcessorService {
                 }
                 // 无手工录入、wind、中债导入，采用模型LGD计算
                 else {
-                    // 计算ECL值
+                    // 明细数据.LGD = 变量.资产信息.LGD
+                    entityDto.setLgd(assetInfo.getLgd());
                     //交易信息.前瞻前ECL预期信用损失 = 交易信息.前瞻前PD违约概率% * 交易信息.EAD * 交易信息.LGD 四舍五入保留2位小数
                     entityDto.setPreProspectiveEcl(
                             ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,

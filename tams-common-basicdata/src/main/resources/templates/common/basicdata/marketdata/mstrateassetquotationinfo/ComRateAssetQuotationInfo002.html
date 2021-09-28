@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <head>
 <title>项目类/计划类利率型估值行情</title>
-    <style>
-        .mst-lable{
-            width: 20%;
-        }
-    </style>
 </head>
 <body>
     <div layout:fragment="content">
+        <style>
+            .mst-lable{
+                width: 20%;
+            }
+        </style>
         <div>
             <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
                 <div class="layui-form-item" style="display: none">
@@ -54,6 +54,16 @@
                                class="layui-input form-input input-dateSelect"
                                data-th-value='${#dates.format(entity?.valDate,"yyyy-MM-dd")}'
                                placeholder="请输入日期" data-th-placeholder="#{SysCommon.placeholder}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label form-lable mst-lable">估值来源</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="valueSource" name="valueSource" data-th-data-result='${VALUATION_SOURCE}'
+                                data-th-initValue="${entity?.valueSource}" required
+                                class="layui-input form-input input-select" allowClear="true"
+                                placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}"></select>
                     </div>
                 </div>
                 <div class="layui-form-item">

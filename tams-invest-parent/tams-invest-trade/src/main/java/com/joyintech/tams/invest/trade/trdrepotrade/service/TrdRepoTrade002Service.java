@@ -2766,12 +2766,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                     pledgeBondInfoDto.setPledgeRatio(ArithmeticUtil.multiply(interfTradRepoasst.getConvrate(),new BigDecimal(100)));
                     pledgeBondInfoDto.setPledgePrin(interfTradRepoasst.getFacetotalamt());
                     //交易匹配提交交易 不需要乘以折算率
-                    BigDecimal pledgePrin = BigDecimal.ZERO;
-                    if(isCstpSure){
-                        pledgePrin = pledgeBondInfoDto.getPledgePrin();
-                    }else{
-                        pledgePrin =  ArithmeticUtil.multiply(pledgeBondInfoDto.getPledgePrin(),interfTradRepoasst.getConvrate());
-                    }
+                    BigDecimal pledgePrin =  ArithmeticUtil.multiply(pledgeBondInfoDto.getPledgePrin(),interfTradRepoasst.getConvrate());
                     pledgeBondInfoDto.setFirstNetPrice(new BigDecimal(100));
                     if(StringUtil.isNotEmpty(finProducts)){
                         for(FinProduct item : finProducts){

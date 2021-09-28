@@ -27,6 +27,7 @@ $(function () {
         if (pageModel == PAGE_MODEL_EDIT) {
             $('#finProdMarketId').attr("disabled", true);
             $('#valDate').attr("disabled", true);
+            $('#valueSource').attr("disabled", true);
             $('#profitType').attr("disabled", true);
         }
     };

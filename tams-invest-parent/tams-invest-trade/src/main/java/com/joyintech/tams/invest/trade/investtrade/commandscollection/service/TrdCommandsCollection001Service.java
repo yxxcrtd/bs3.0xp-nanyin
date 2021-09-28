@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.trade.investtrade.commandscollection.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.system.base.entity.SysPageDictlist;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.constant.GlobalConstant;
@@ -119,5 +120,17 @@ public class TrdCommandsCollection001Service extends CommonExportService<TrdComm
         return restTemplate.postForList(
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdCommandsCollection/getFinprodMarketIds", param,
                 SuggestDto.class);
+    }
+    /**
+     * 根据SysPageDictlist表来塞交易方向的值
+     * @param subPageId 子页面id
+     * @return List<SysPageDictlist> 字典控制显示详情
+     * @see
+     * @since 1.0
+     */
+    public List<SysPageDictlist> getPSControl(String subPageId) {
+        return restTemplate.postForList(
+                ServiceApplication.TRADE_SERVICE_NAME + "/TrdCommandsCollection/getPSControl", subPageId,
+                SysPageDictlist.class);
     }
 }

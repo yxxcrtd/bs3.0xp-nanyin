@@ -37,7 +37,7 @@
 	<!-- 查询满足条件的接口服务日志 -->
 	<select id="searchInterfServiceLog" resultMap="InterfServiceLogResult" parameterType="com.joyintech.tams.invest.interf.trade.common.dto.InterfServiceLogDto">
 		select ID,INTERF_CODE,INTERF_NAME,INTERF_TYPE,INTERF_SYSTEM,INTERF_STATUS,INTERF_MSGBODY,INTERF_REMARK,EXECUTE_INFO,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME 
-			from INTERF_SERVICE_LOG where INTERF_STATUS=#{interfStatus,jdbcType=VARCHAR} and INTERF_SYSTEM=#{interfSystem,jdbcType=VARCHAR}
+			from INTERF_SERVICE_LOG where INTERF_STATUS=#{interfStatus,jdbcType=VARCHAR} and INTERF_SYSTEM=#{interfSystem,jdbcType=VARCHAR} and INTERF_TYPE=#{interfType,jdbcType=VARCHAR}
 	</select>
 	
 	<!-- 更新满足条件的接口服务日志状态 -->
@@ -50,12 +50,13 @@
 	
 	<!--  通过状态和id更新接口服务日志状态 -->
 	<update id="updateInterfServiceLogStatusByStatusAndId" parameterType="java.util.Map">
-		update INTERF_SERVICE_LOG set INTERF_STATUS=#{newStatus,jdbcType=VARCHAR} where INTERF_SYSTEM=#{interfSystem,jdbcType=VARCHAR} and ID=#{id,jdbcType=VARCHAR} and INTERF_STATUS=#{oldStatus,jdbcType=VARCHAR}
+		update INTERF_SERVICE_LOG set INTERF_STATUS=#{newStatus,jdbcType=VARCHAR} 
+			where INTERF_SYSTEM=#{interfSystem,jdbcType=VARCHAR} and ID=#{id,jdbcType=VARCHAR} and INTERF_STATUS=#{oldStatus,jdbcType=VARCHAR} and INTERF_TYPE=#{interfType,jdbcType=VARCHAR}
 	</update>
 	
 	<!-- 查询满足条件的接口服务配置 -->
 	<select id="searchInterfServiceConfig" resultMap="InterfServiceConfigResult" parameterType="com.joyintech.tams.invest.interf.trade.common.dto.InterfServiceConfigDto">
 		select INTERF_CODE,INTERF_NAME,INTERF_TYPE,INTERF_SYSTEM,INTERF_STATUS,INTERF_REMARK,BUSINESS_SERVICE,BUSINESS_METHOD,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
-			from INTERF_SERVICE_CONFIG where INTERF_STATUS=#{interfStatus,jdbcType=VARCHAR} and INTERF_SYSTEM=#{interfSystem,jdbcType=VARCHAR} and INTERF_CODE=#{interfCode,jdbcType=VARCHAR}
+			from INTERF_SERVICE_CONFIG where INTERF_STATUS=#{interfStatus,jdbcType=VARCHAR} and INTERF_SYSTEM=#{interfSystem,jdbcType=VARCHAR} and INTERF_CODE=#{interfCode,jdbcType=VARCHAR} and INTERF_TYPE=#{interfType,jdbcType=VARCHAR}
 	</select>
 </mapper>

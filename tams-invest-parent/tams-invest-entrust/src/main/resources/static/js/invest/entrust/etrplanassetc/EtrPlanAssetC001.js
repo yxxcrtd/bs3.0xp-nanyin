@@ -92,7 +92,7 @@
     /**
      * 导出
      */
-    var exportExcel = function(){       
+    var exportExcel = function(){
         Joyin.exportExcel(basePath+"invest/entrust/etrplanassetc/EtrPlanAssetC001/export", searchform());
     };
 

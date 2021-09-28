@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.bankuplink.bond.service.CfetsBondDealQuotedPrice002Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +56,9 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
     @Autowired
     private CfetsBondDealQuotedPrice003Service cfetsBondDealQuotedPrice003Service;
 
+    @Autowired
+    private CfetsBondDealQuotedPrice002Service cfetsBondDealQuotedPrice002Service;
+
     /**
      * {@inheritDoc}
      */
@@ -81,8 +85,8 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
                 }
             }
         }
-        
-      //多组合
+
+        //多组合
         if(StringUtil.equals(isDzh,"Y")){
             if (StringUtil.isEmptyList(cfetsBondDealRequestQuoteDto.getCfetsBondDealRequestQuoteDtoList())) {
                 validList.add(new ValidMessage("",getMessage("组合分配中必须存在至少一条指令")));
@@ -93,6 +97,24 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
                     if(null==cfetsBondDealRequestQuote.getAvaNum()){
                         validList.add(new ValidMessage("",getMessage("组合分配中券面总额（万元）不可为空")));
                         return validList;
+                    }
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("entrustId", cfetsBondDealRequestQuote.getEntrustId());
+                    param.put("quoteId", cfetsBondDealRequestQuoteDto.getQuoteId());
+                    //先处理单组合
+                    BigDecimal wflEntrustDealedAmt = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
+                    param.put("isDzh",isDzh);
+                    //去掉本身流程中的数据  如退回再提交
+                    param.put("workflowId",cfetsBondDealRequestQuoteDto.getWorkflowId());
+                    //在处理多组合
+                    BigDecimal wflEntrustDealedAmtDzh = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
+                    BigDecimal wflAmt = null==wflEntrustDealedAmt?BigDecimal.ZERO:ArithmeticUtil.divide(wflEntrustDealedAmt,new BigDecimal(10000),2);
+                    BigDecimal wflAmtDzh = null==wflEntrustDealedAmtDzh?BigDecimal.ZERO:ArithmeticUtil.divide(wflEntrustDealedAmtDzh,new BigDecimal(10000),2);
+                    if (!StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustAvaAmt"), "02")){
+                        if(cfetsBondDealRequestQuote.getAvaNum().compareTo(ArithmeticUtil.subtract(cfetsBondDealRequestQuote.getEntrustAvaNum(),ArithmeticUtil.doAdd(wflAmt,wflAmtDzh)))>0){
+                            validList.add(new ValidMessage("avaNum", this.getMessage("CFETS_COMMON_E_023")));
+                            return validList;
+                        }
                     }
                     avaNumTotal = ArithmeticUtil.doAdd(avaNumTotal,cfetsBondDealRequestQuote.getAvaNum());
                     cfetsBondDealRequestQuoteDto.setEntrustId(cfetsBondDealRequestQuote.getEntrustId());
@@ -132,6 +154,15 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
             param.put("entrustId", cfetsBondDealRequestQuoteDto.getEntrustId());
             param.put("quoteId", cfetsBondDealRequestQuoteDto.getQuoteId());
             BigDecimal dealedAmt = cfetsBondDealQuotedPrice003Service.queryEntrustDealedAmt(param);
+            //去掉本身流程中的数据  如退回再提交
+            param.put("workflowId",cfetsBondDealRequestQuoteDto.getWorkflowId());
+            //先处理单组合
+            BigDecimal wflEntrustDealedAmt = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
+            param.put("isDzh","Y");
+            BigDecimal wflEntrustDealedAmtDzh = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
+            BigDecimal wflAmt = null==wflEntrustDealedAmt?BigDecimal.ZERO:wflEntrustDealedAmt;
+            BigDecimal wflAmtDzh = null==wflEntrustDealedAmtDzh?BigDecimal.ZERO:wflEntrustDealedAmtDzh;
+            //dealedAmt = ArithmeticUtil.doAdd(dealedAmt,wflAmt);
             // 查询库里最新的状态
             CfetsBondDealRequestQuoteDto dto = cfetsBondDealQuotedPrice003Service.getBondRequestQuote(
                 cfetsBondDealRequestQuoteDto.getQuoteId(),null);
@@ -172,8 +203,17 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
                             && ArithmeticUtil.multiply(shareAmt, new BigDecimal(10000)).compareTo(
                                 ArithmeticUtil.subtract(
                                     cfetsBondDealRequestQuoteDto.getEntrustAmt(),
-                                    dealedAmt)) > 0) {
+                                    ArithmeticUtil.doAdd(dealedAmt,wflAmt))) > 0) {
                             validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_E_021")));
+                            return validList;
+                        }
+                        if (StringUtil.isNotEmpty(shareAmt)
+                                && ArithmeticUtil.multiply(shareAmt, new BigDecimal(10000)).compareTo(
+                                ArithmeticUtil.subtract(
+                                        cfetsBondDealRequestQuoteDto.getEntrustAmt(),
+                                        ArithmeticUtil.doAdd(dealedAmt,wflAmtDzh))) > 0) {
+                            validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_E_021")));
+                            return validList;
                         }
                     }
                 }
@@ -188,10 +228,9 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
                     && (cfetsBondDealRequestQuoteDto.getAvaNum() == null
                         || ArithmeticUtil.multiply(cfetsBondDealRequestQuoteDto.getAvaNum(),
                             new BigDecimal(10000)).compareTo(ArithmeticUtil.subtract(
-                                cfetsBondDealRequestQuoteDto.getEntrustAmt(), dealedAmt)) > 0)) {
+                                cfetsBondDealRequestQuoteDto.getEntrustAmt(), ArithmeticUtil.doAdd(dealedAmt,wflAmt,wflAmtDzh))) > 0)) {
                     validList.add(new ValidMessage("avaNum", this.getMessage("CFETS_COMMON_E_023")));
                 }
-
             }
         }
         return validList;
