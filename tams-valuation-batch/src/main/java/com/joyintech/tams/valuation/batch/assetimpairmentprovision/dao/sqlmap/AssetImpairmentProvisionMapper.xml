@@ -571,6 +571,7 @@
           and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR}
     </update>
 
+	<!--查询当天资产减值结果-->
 	<select id="getModelEclResult" resultType="com.joyintech.tams.common.base.entity.ModEclResult">
 		SELECT
 			A.*
@@ -581,6 +582,33 @@
 		  	<if test="invAim != null and invAim != ''">
 		  		AND A.INV_AIM = #{invAim}
 		  	</if>
+	</select>
 
+	<!--查询最新资产减值结果 -->
+	<select id="getModelEclResultLatest" resultType="com.joyintech.tams.common.base.entity.ModEclResult">
+		with TMP as (
+		select
+		t.PROD_ID,
+		t.ASSET_ID,
+		t.INV_AIM,
+		max(t.DEC_DATE) DEC_DATE
+		FROM MOD_ECL_RESULT t
+		WHERE t.PROD_ID = #{booksetId}
+		AND t.ASSET_ID = #{assetId}
+		AND t.DEC_DATE <![CDATA[<=]]> #{happenDate}
+		<if test="invAim != null and invAim != ''">
+			AND t.INV_AIM = #{invAim}
+		</if>
+		GROUP BY t.PROD_ID,t.ASSET_ID,t.INV_AIM
+		)
+		SELECT
+		A.*
+		FROM MOD_ECL_RESULT A
+		INNER JOIN TMP
+		ON TMP.ASSET_ID = A.ASSET_ID
+		AND TMP.PROD_ID = A.PROD_ID
+		AND TMP.DEC_DATE =A.DEC_DATE
+		AND NVL(TMP.INV_AIM,1) = NVL(A.INV_AIM,1)
+		WHERE 1=1
 	</select>
 </mapper>

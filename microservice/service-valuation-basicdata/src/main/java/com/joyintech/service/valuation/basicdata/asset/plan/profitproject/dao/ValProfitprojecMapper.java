@@ -92,6 +92,6 @@ public interface ValProfitprojecMapper {
      * @param param
      * @return
      */
-    List<SelectOptionDto> getAssetSelect(Map<String, Object> param);
+    List<SuggestDto> getAssetSelect(Map<String, Object> param);
 
 }

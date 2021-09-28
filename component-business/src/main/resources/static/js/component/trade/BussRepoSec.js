@@ -252,6 +252,7 @@
                         //产品化_质押式回购交易界面,正回购时：点击添加后的可质押券范围为投资经理移入可质押库的、该组合下的债券，不可选不在质押库里债券 add by zhangpei 20201125 end
                         ,isDzh:isDzh
                         ,quoteId:quoteId
+                        ,tradePlace:tradePlace
                     });
             });
     };

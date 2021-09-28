@@ -369,7 +369,9 @@ function saveOrSubmit(operateType) {
         var inSumPledgePrin = 0;
         if (inSelectedAllRows != null && inSelectedAllRows.length > 0) {
             for (var kk = inSelectedAllRows.length - 1; kk >= 0; kk--) {
-                inSumPledgePrin = JoyinMath.doAdd(inSumPledgePrin, inSelectedAllRows[kk].pledgePrin);
+                // modify by wanshiwei ZGZGST-2727 质押券置换换入债券等于换出债券，系统提示：换入债券小于换出债券 20210928 start
+                inSumPledgePrin = JoyinMath.doAdd(inSumPledgePrin, JoyinMath.doMul(inSelectedAllRows[kk].pledgePrin,10000));
+                // modify by wanshiwei ZGZGST-2727 质押券置换换入债券等于换出债券，系统提示：换入债券小于换出债券 20210928 end
                 //债券借贷融入交易做置换，换入债券的质押券面大于可质押券面时要弹出提示：质押券面额不能大于可质押券面总额
                 if(ps==TRADE_PS_05)
                 {

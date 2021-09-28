@@ -444,7 +444,7 @@
         , {
             /*劵面总额*/
             field: 'entrustNum',
-            width: 50,
+            width: 150,
             title: 'EtribBondInfo003.entrustAmt',
             edit: true,
             sortable: false,
@@ -471,7 +471,7 @@
         //     }
         },  {/*投资目的*/
             field: 'invAim',
-            width: 100,
+            width: 50,
             title: 'EtrIbBondinfo002.invAim',
             edit: true,
             sortable: false,
@@ -487,7 +487,7 @@
             visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false
         }, {
             field: 'proAvailableCash',
-            width: 40,
+            width: 200,
             title: 'EtribBondInfo003.proAvailableCash',
             sortable: false,
             type: 'number',
@@ -499,7 +499,7 @@
         }
         , {
             field: 'proAvailableCash1',
-            width: 40,
+            width: 200,
             title: 'EtribBondInfo003.proAvailableCash1',
             sortable: false,
             type: 'number',
@@ -507,7 +507,7 @@
         }
         , {
             field: 'secManageAvailablePosition',
-            width: 40,
+            width: 200,
             title: 'EtribBondInfo003.secManageAvailablePosition',
             sortable: false,
             type: 'number',
@@ -516,7 +516,7 @@
         }
         , {
             field: 'secManageAvailablePosition1',
-            width: 40,
+            width: 200,
             title: 'EtribBondInfo003.secManageAvailablePosition1',
             sortable: false,
             type: 'number',
@@ -537,7 +537,7 @@
 
         , {
             field: 'assetPositionEntrustAmt',
-            width: 40,
+            width: 200,
             title: 'EtribBondInfo003.assetPositionEntrustAmt',
             sortable: false,
             type: 'number',
@@ -545,7 +545,7 @@
         }
         , {
             field: 'assetAvailableEntrustAmt',
-            width: 40,
+            width: 200,
             title: 'EtribBondInfo003.assetAvailableEntrustAmt',
             sortable: false,
             type: 'number',

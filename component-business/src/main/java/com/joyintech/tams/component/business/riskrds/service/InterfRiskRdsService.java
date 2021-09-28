@@ -2385,9 +2385,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         // add by zhangrui1 一级分销缴款 start
         if (StringUtil.isNotEmpty(CommonUtil.findValue(dataMap, "bondFirstSign"))) {
             infRiskRdsDto.setPreOccupyCode(null);
-            if (CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_风险试算接口)
-                || CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_风险试算批量接口))
-                infRiskRdsDto.setIsDiffOccupy(BussinessDictCodeList.是否_是.getValue());
+//            if (CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_风险试算接口)
+//                || CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_风险试算批量接口))
+//                infRiskRdsDto.setIsDiffOccupy(BussinessDictCodeList.是否_是.getValue());
         }
         // add by zhangrui1 一级分销缴款 end
         // add by zhangrui1 基金申购使用净值1 start

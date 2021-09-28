@@ -340,7 +340,7 @@
                                     >交易对手</label>
                                     <div class="layui-input-inline input-inline">
                                         <select disabled type="text"
-                                                id="counterParty" name="counterParty"
+                                                id="counterId" name="counterId"
                                                 class="layui-input form-input input-select"
                                                 th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList}"
@@ -356,7 +356,7 @@
                                         <select disabled type="text"
                                                 id="counterTrader" name="counterTrader"
                                                 class="layui-input form-input input-select"
-                                                parentIds="counterParty"
+                                                parentIds="counterId"
                                                 th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideTraderList}"
                                                 allowClear="true" formatoption="true"
