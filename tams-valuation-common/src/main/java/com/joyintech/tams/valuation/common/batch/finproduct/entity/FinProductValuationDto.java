@@ -10,6 +10,8 @@
  
 package com.joyintech.tams.valuation.common.batch.finproduct.entity;
 
+import com.joyintech.tams.common.base.entity.FinProductValuation;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -20,44 +22,7 @@ import java.util.Date;
  * @see FinProductValuationDto
  * @since 1.0
  */
-public class FinProductValuationDto {
-    
-    /**
-     * 估值日期
-     */
-    private Date valDate;
-    /**
-     * 估值
-     */
-    private BigDecimal valuation;
-    
-    /**
-     * 获取 估值日期
-     * @return 估值日期.
-     */
-    public Date getValDate() {
-        return valDate;
-    }
-    /**
-     * 设置 估值日期
-     * @param valDate 估值日期
-     */
-    public void setValDate(Date valDate) {
-        this.valDate = valDate;
-    }
-    /**
-     * 获取 估值
-     * @return 估值.
-     */
-    public BigDecimal getValuation() {
-        return valuation;
-    }
-    /**
-     * 设置 估值
-     * @param valuation 估值
-     */
-    public void setValuation(BigDecimal valuation) {
-        this.valuation = valuation;
-    }
+public class FinProductValuationDto extends FinProductValuation {
+
     
 }

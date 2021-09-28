@@ -213,7 +213,7 @@ public class TargetFinProduct {
     private BigDecimal faceValue;
 
     /**
-     * 分类1
+     * 分类1（资产类型、证券细分类）
      */
     private String type1;
 
@@ -241,6 +241,10 @@ public class TargetFinProduct {
      * 分类6
      */
     private String type6;
+    /**
+     * 分类18（证券品种）
+     */
+    private String type18;
 
     /**
      * 登记托管机构
@@ -1075,6 +1079,13 @@ public class TargetFinProduct {
     public void setIsQtzq(String isQtzq) {
         this.isQtzq = isQtzq;
     }
-    
+
+    public String getType18() {
+        return type18;
+    }
+
+    public void setType18(String type18) {
+        this.type18 = type18;
+    }
 }
 

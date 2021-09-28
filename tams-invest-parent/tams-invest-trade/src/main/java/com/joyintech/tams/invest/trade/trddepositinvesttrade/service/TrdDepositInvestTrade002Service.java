@@ -550,6 +550,9 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
             AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
             TrdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             TrdProductDeal.setCounterId(entity.getTrdInvestPersonInfo002Dto().getCounterId());
+            // add by wanshiwei ZGZGST-3595 存款类资产“利率%”取值错误，取资产的计提利率 20210928 start
+            TrdProductDeal.setUnitInt(new BigDecimal(dto.getLoadRate()));
+            // add by wanshiwei ZGZGST-3595 存款类资产“利率%”取值错误，取资产的计提利率 20210928 end
             inputDto.setTrdProductDeal(TrdProductDeal);
             AllTradeCommonUtil.handleBeforeTradeComplete(inputDto,false);
             // 调用授信共同 sjj end
@@ -1210,6 +1213,9 @@ public class TrdDepositInvestTrade002Service extends CommonExportService<TrdDepo
 
         //交易费用 本金+利息-随交易支付费用
         trdDto.setTradeAmt(ArithmeticUtil.subtract(trdDto.getTradeAmt(), trdDto.getFeeAmtPay()));
+        // add by wanshiwei ZGZGST-3595 存款类资产“利率%”取值错误，取资产的计提利率 20210928 start
+        trdDto.setUnitInt(ArithmeticUtil.divide(new BigDecimal(dto.getLoadRate()), 100, 8));
+        // add by wanshiwei ZGZGST-3595 存款类资产“利率%”取值错误，取资产的计提利率 20210928 end
 
 //        if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs())) {
 //            trdDto.setTradeAmt(ArithmeticUtil.doAdd(trdDto.getTradeAmt(), dto.getChannelFee()));

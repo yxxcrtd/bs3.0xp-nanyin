@@ -1342,7 +1342,10 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         trdProductDeal.setCcy(entity.getCcy());
         trdProductDeal.setBranch(Long.valueOf(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
         trdProductDeal.setUnitCprice(entity.getUnitCprice());
-        trdProductDeal.setUnitInt(entity.getUnitIntAmt());
+        // modify by wanshiwei ZGZGST-3595 项目类资产“利率%”取值错误，取资产的计提利率 20210928 start
+        trdProductDeal.setUnitInt(ArithmeticUtil.divide(entity.getInvestRate(), 100, 8));
+        // trdProductDeal.setUnitInt(entity.getUnitIntAmt());
+        // modify by wanshiwei ZGZGST-3595 项目类资产 “利率%”取值错误，取资产的计提利率 20210928 end
         trdProductDeal.setUnitFprice(entity.getUnitFprice());
         trdProductDeal.setCpriceAmt(entity.getCpriceAmt());
         trdProductDeal.setCcy(entity.getCcy());

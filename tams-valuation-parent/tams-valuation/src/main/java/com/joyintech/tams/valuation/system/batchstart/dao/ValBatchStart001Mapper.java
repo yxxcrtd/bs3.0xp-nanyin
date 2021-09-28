@@ -6,7 +6,7 @@ import com.joyintech.framework.base.entity.SysBatchPrdGrp;
 import com.joyintech.framework.base.entity.SysBatchTask;
 import com.joyintech.tams.common.base.entity.BokBookset;
 import com.joyintech.tams.common.base.entity.BokBooksetDate;
-import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResult;
+import com.joyintech.tams.valuation.prebatch.dto.SysPrebatchResult;
 import com.joyintech.tams.valuation.system.batchstart.dto.BatchGrpPri;
 import com.joyintech.tams.valuation.system.batchstart.dto.DimensionValue;
 import com.joyintech.tams.valuation.system.batchstart.dto.Product;
