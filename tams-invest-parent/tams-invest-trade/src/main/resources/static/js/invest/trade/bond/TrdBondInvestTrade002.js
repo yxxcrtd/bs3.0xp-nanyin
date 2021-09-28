@@ -215,11 +215,11 @@ var calculateField;
                                 //授信占用额度
 //	                	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {});
                                 object.riskCreditListCommonDto = result1.data;
-                                if(result.data.indexOf("交易净价不满足使权不重大的购入价条件")!=-1){
-                                    $("#businessModel").val("Y2").trigger('change');
-                                    object.businessModel=="Y2";
-                                    object.invAim=="FVTPL";
-                                }
+                                // if(result.data.indexOf("交易净价不满足使权不重大的购入价条件")!=-1){
+                                //     $("#businessModel").val("Y2").trigger('change');
+                                //     object.businessModel=="Y2";
+                                //     object.invAim=="FVTPL";
+                                // }
 
 
                                 Joyin.confirm(result.data, function() {
@@ -302,11 +302,11 @@ var calculateField;
                             //授信占用额度
 //	                	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {});
                             object.riskCreditListCommonDto = result1.data;
-                            if(result.data.indexOf("交易净价不满足使权不重大的购入价条件")!=-1){
-                                $("#businessModel").val("Y2").trigger('change');
-                                object.businessModel=="Y2";
-                                object.invAim=="FVTPL";
-                            }
+                            // if(result.data.indexOf("交易净价不满足使权不重大的购入价条件")!=-1){
+                            //     $("#businessModel").val("Y2").trigger('change');
+                            //     object.businessModel=="Y2";
+                            //     object.invAim=="FVTPL";
+                            // }
                             Joyin.confirm(result.data, function() {
                                 if(operateType === 'save') {
                                     WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_save");
@@ -1745,7 +1745,7 @@ var calculateField;
                     checkAndAssign("#tradePlat", etrEntrust.tradePlat); // 交易平台
                     checkAndAssign("#ps", etrEntrust.ps); // 交易方向
                     checkAndAssign("#invAim", etrEntrust.invAim); // 投资目的
-                    $("#businessModel").val(etrEntrust.businessModel).trigger('change');
+                    // $("#businessModel").val(etrEntrust.businessModel).trigger('change');
                      checkAndAssign("#ccy", etrEntrust.ccy); // 币种
                     if ($("#tradeAmt").val()) {
                     } else {
@@ -2509,16 +2509,16 @@ var calculateField;
          */
         $('#TrdBondInvestTrade002_btn_calculate').click(function() {
             var paramObj = getCalcParam();
-            if (SHOW_INVAIM_OR_BUSSINSSMODEL=='02'){
-                //根据业务模式与投资目的对应关系对投资目的赋值，不改变原来计算逻辑
-                if($('#businessModel').val()=="Y1"){
-                    paramObj.invAim = "AC";
-                }else if($('#businessModel').val()=="Y2"){
-                    paramObj.invAim = "FVTPL"
-                }else {
-                    paramObj.invAim = "";
-                }
-            }
+            // if (SHOW_INVAIM_OR_BUSSINSSMODEL=='02'){
+            //     //根据业务模式与投资目的对应关系对投资目的赋值，不改变原来计算逻辑
+            //     if($('#businessModel').val()=="Y1"){
+            //         paramObj.invAim = "AC";
+            //     }else if($('#businessModel').val()=="Y2"){
+            //         paramObj.invAim = "FVTPL"
+            //     }else {
+            //         paramObj.invAim = "";
+            //     }
+            // }
 
 
             Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/calculateData'), paramObj, function (result) {

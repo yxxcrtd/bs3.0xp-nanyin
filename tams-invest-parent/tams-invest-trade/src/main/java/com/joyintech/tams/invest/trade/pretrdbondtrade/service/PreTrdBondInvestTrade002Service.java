@@ -977,37 +977,37 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
 
 
 
-        if (!StringUtil.equals(inputDto.getOperateType(), "revoke")) {
-            // 委托场合时
-            if (StringUtil.isNotEmpty(inputDto.getEntrustId())) {
-                Map<String,Object> map = new HashMap<>();
-                map.put("portfolioId",inputDto.getPortfolioId()) ;
-                map.put("tradeDate",inputDto.getTradeDate()) ;
-                map.put("acctTypeList","A01,A07") ;
-                map.put("ccy",inputDto.getCcy()) ;
-                map.put("tradeDate",inputDto.getTradeDate()) ;
-                map.put("finprodId",inputDto.getFinprodId()) ;
-                String dateId =  null;
-                dateId = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class,
-                        inputDto.getFinprodId(), FinProduct.class).getCalendarId();
-                List<String> holidayList = dateCalService.getDealCalendarHoliday(inputDto.getTradeDate(), DateUtil.addDay(inputDto.getTradeDate(), 15), dateId);
-                map.put("tradeDateNext", DateUtil.format(dateCalService.calculationTradingDay(inputDto.getTradeDate(), 1, holidayList, "1")));
-                BigDecimal position = (BigDecimal)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") ;
-
-                Map<String,Object> sinal = tradeCommonService.getSppiInfoByY1(map) ;
-                if(StringUtil.equals("2",sinal.get("result"))&&StringUtil.equals("Y1",inputDto.getBusinessModel())){
-                    if(position!=null){
-                        confirmMsg += changeLineMark;
-
-                        confirmMsg +="交易净价不满足使权不重大的购入价条件："+sinal.get("bidPriceCon")+"（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”，请进行资产重分类！";
-                    }else{
-                        confirmMsg += changeLineMark;
-
-                        confirmMsg +="交易净价不满足使权不重大的购入价条件："+sinal.get("bidPriceCon")+"（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”！";
-                    }
-                }
-            }
-        }
+//        if (!StringUtil.equals(inputDto.getOperateType(), "revoke")) {
+//            // 委托场合时
+//            if (StringUtil.isNotEmpty(inputDto.getEntrustId())) {
+//                Map<String,Object> map = new HashMap<>();
+//                map.put("portfolioId",inputDto.getPortfolioId()) ;
+//                map.put("tradeDate",inputDto.getTradeDate()) ;
+//                map.put("acctTypeList","A01,A07") ;
+//                map.put("ccy",inputDto.getCcy()) ;
+//                map.put("tradeDate",inputDto.getTradeDate()) ;
+//                map.put("finprodId",inputDto.getFinprodId()) ;
+//                String dateId =  null;
+//                dateId = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class,
+//                        inputDto.getFinprodId(), FinProduct.class).getCalendarId();
+//                List<String> holidayList = dateCalService.getDealCalendarHoliday(inputDto.getTradeDate(), DateUtil.addDay(inputDto.getTradeDate(), 15), dateId);
+//                map.put("tradeDateNext", DateUtil.format(dateCalService.calculationTradingDay(inputDto.getTradeDate(), 1, holidayList, "1")));
+//                BigDecimal position = (BigDecimal)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") ;
+//
+//                Map<String,Object> sinal = tradeCommonService.getSppiInfoByY1(map) ;
+//                if(StringUtil.equals("2",sinal.get("result"))&&StringUtil.equals("Y1",inputDto.getBusinessModel())){
+//                    if(position!=null){
+//                        confirmMsg += changeLineMark;
+//
+//                        confirmMsg +="交易净价不满足使权不重大的购入价条件："+sinal.get("bidPriceCon")+"（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”，请进行资产重分类！";
+//                    }else{
+//                        confirmMsg += changeLineMark;
+//
+//                        confirmMsg +="交易净价不满足使权不重大的购入价条件："+sinal.get("bidPriceCon")+"（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”！";
+//                    }
+//                }
+//            }
+//        }
 
         if (StringUtil.isNotBlank(confirmMsg)) {
             AjaxResult wr = new AjaxResult();

@@ -197,21 +197,21 @@ public class EtribBondInfo003Validator implements EtrCommonValidator  {
                 // delete by renping 改为共通处理 2019-08-22 end
             }
 
-            if(StringUtil.equals(CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL"),"02")){
-                if(StringUtil.isNotEmpty(dto.getFinprodId())&&StringUtil.isNotEmpty(dto.getPrice())) {
-                    Map<String, Object> paramMap = new HashMap<>();
-                    paramMap.put("finprodId", dto.getFinprodId());
-                    paramMap.put("price", dto.getPrice());
-                    Map<String, Object> result = etrCommonService.getSppiInfoByY1(paramMap);
-                    if (StringUtil.equals(result.get("result"), "2")) {
-                        errorList.add(
-                                new ValidMessage("businessModel", "买入价格不满足使权不重大的购入价条件：" + result.get("bidPriceCon") + "（中债接口接入或人工维护的使权不重大的购入价条件）"));
-                    } else if (StringUtil.equals(result.get("result"), "1")) {
-                        errorList.add(
-                                new ValidMessage("businessModel", "该资产Sppi中债接口维护的使权不重大的购入价错误，请检查"));
-                    }
-                }
-            }
+//            if(StringUtil.equals(CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL"),"02")){
+//                if(StringUtil.isNotEmpty(dto.getFinprodId())&&StringUtil.isNotEmpty(dto.getPrice())) {
+//                    Map<String, Object> paramMap = new HashMap<>();
+//                    paramMap.put("finprodId", dto.getFinprodId());
+//                    paramMap.put("price", dto.getPrice());
+//                    Map<String, Object> result = etrCommonService.getSppiInfoByY1(paramMap);
+//                    if (StringUtil.equals(result.get("result"), "2")) {
+//                        errorList.add(
+//                                new ValidMessage("businessModel", "买入价格不满足使权不重大的购入价条件：" + result.get("bidPriceCon") + "（中债接口接入或人工维护的使权不重大的购入价条件）"));
+//                    } else if (StringUtil.equals(result.get("result"), "1")) {
+//                        errorList.add(
+//                                new ValidMessage("businessModel", "该资产Sppi中债接口维护的使权不重大的购入价错误，请检查"));
+//                    }
+//                }
+//            }
             if ((StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
                     // 一体化对应etliu start
 //                 || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权.getValue()))

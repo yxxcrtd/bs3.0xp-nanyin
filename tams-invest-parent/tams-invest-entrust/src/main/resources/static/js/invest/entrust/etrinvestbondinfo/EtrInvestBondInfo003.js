@@ -66,9 +66,11 @@
            }
         }
         ,{field:'invAim', width:100, title: 'EtrInvestBondInfo002.invAim', sortable: false, edit:true
-          	 ,editOption:{type:'select',id:"invAim",formatoption:true,result:INV_AIM} , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false }
-        ,{field:'businessModel', width:100, title: '业务模式', sortable: false, edit:true
-            ,editOption:{type:'select',id:"businessModel",formatoption:true,result:BUSINESS_MODEL} , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }
+          	 ,editOption:{type:'select',id:"invAim",formatoption:true,result:INV_AIM}
+            // , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false
+        }
+        // ,{field:'businessModel', width:100, title: '业务模式', sortable: false, edit:true
+        //     ,editOption:{type:'select',id:"businessModel",formatoption:true,result:BUSINESS_MODEL} , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }
         ,{field:'entrustNum', width:100, title: function(){
                 //配置单位 edit by yeming 20210721 start
             if (entrustAmtUnit == "01 "){
@@ -103,14 +105,15 @@
         addclick: function(row) {
             if(SHOW_INVAIM_OR_BUSSINSSMODEL=='01'){
                 row.invAim = $('#invAim').val();
-            }else{
-                row.businessModel = $('#businessModel').val();
-                if($('#businessModel').val()=="Y1"){
-                    row.invAim = 'AC';
-                }else if($('#businessModel').val()=="Y2"){
-                    row.invAim  = 'FVTPL'
-                }
             }
+            // else{
+            //     row.businessModel = $('#businessModel').val();
+            //     if($('#businessModel').val()=="Y1"){
+            //         row.invAim = 'AC';
+            //     }else if($('#businessModel').val()=="Y2"){
+            //         row.invAim  = 'FVTPL'
+            //     }
+            // }
 
         },
         beforeEditCell:function (preVal, field, rowData){
@@ -331,25 +334,6 @@
         }
 	
         var isautobond = EtrInvestBondInfo002.getIsautobond();
-
-        if(SHOW_INVAIM_OR_BUSSINSSMODEL=='02'){
-            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getSppiInfoByY1', object, function(resultSppi) {
-                if(resultSppi.data.result==2){
-                    Joyin.error("买入价格不满足使权不重大的购入价条件："+resultSppi.data.bidPriceCon+"（中债接口接入或人工维护的使权不重大的购入价条件）")
-                }else if(resultSppi.data.result==1){
-                    Joyin.error("该资产Sppi中债接口维护的使权不重大的购入价错误，请检查")
-                }
-                else{
-                    finalSubmit(object,objects);
-                }
-            });
-        }else{
-            finalSubmit(object,objects);
-        }
-
-    }
-
-    var finalSubmit = function (object,objects) {
         if(objects.length>0){
             Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/check',objects,
                 function(result) {
@@ -382,7 +366,9 @@
                     }
                 });
         }
+
     }
+
     /**
      * 交易所资金账户可用现金条件隐藏
      */
