@@ -12,6 +12,7 @@ package com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -83,4 +84,11 @@ public interface TrdAssetLoss001Mapper {
     int getExerciseDateCount(Map<String, Object> param);
 
     void deleteByTradeId(String tradeId);
+
+    /**
+     * 根据产品代码查找市场代码
+     * @param finprodId
+     * @return
+     */
+    String queryFinprodMarketIdByFinprodId(@Param("finprodId") String finprodId);
 }

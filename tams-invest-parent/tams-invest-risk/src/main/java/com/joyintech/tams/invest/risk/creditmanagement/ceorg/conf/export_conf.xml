@@ -3,8 +3,8 @@
     <Worksheet javaBean="com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto">
         <Row>
             <Cell order="1" name="批复号">pflsh</Cell>
-            <Cell order="2" name="机构代码">customerId</Cell>
-            <Cell order="3" name="机构名称">customerName</Cell>
+            <Cell order="2" name="市场机构代码">customerId</Cell>
+            <Cell order="3" name="市场机构名称">customerName</Cell>
             <Cell order="4" name="是否同业">isInterbankStr</Cell>
             <Cell order="5" name="是否循环额度">isLoopAmtStr</Cell>
             <Cell order="6" name="非法人主体授信额度（亿元）">nlpscreditline</Cell>

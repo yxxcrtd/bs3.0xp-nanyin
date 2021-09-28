@@ -475,4 +475,16 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
 		this.isDzh = isDzh;
 	}
 
+    /**
+     * 可用持仓
+     */
+	private BigDecimal secManageAvailablePosition;
+
+    public BigDecimal getSecManageAvailablePosition() {
+        return secManageAvailablePosition;
+    }
+
+    public void setSecManageAvailablePosition(BigDecimal secManageAvailablePosition) {
+        this.secManageAvailablePosition = secManageAvailablePosition;
+    }
 }
