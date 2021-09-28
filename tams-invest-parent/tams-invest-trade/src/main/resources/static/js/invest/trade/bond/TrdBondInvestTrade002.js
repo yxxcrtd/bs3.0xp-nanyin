@@ -215,8 +215,12 @@ var calculateField;
                                 //授信占用额度
 //	                	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {});
                                 object.riskCreditListCommonDto = result1.data;
-                                if(result.data.indexOf("xx")!=-1)
+                                if(result.data.indexOf("交易净价不满足使权不重大的购入价条件")!=-1){
                                     $("#businessModel").val("Y2").trigger('change');
+                                    object.businessModel=="Y2";
+                                    object.invAim=="FVTPL";
+                                }
+
 
                                 Joyin.confirm(result.data, function() {
                                     if(operateType === 'save') {
@@ -298,6 +302,11 @@ var calculateField;
                             //授信占用额度
 //	                	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {});
                             object.riskCreditListCommonDto = result1.data;
+                            if(result.data.indexOf("交易净价不满足使权不重大的购入价条件")!=-1){
+                                $("#businessModel").val("Y2").trigger('change');
+                                object.businessModel=="Y2";
+                                object.invAim=="FVTPL";
+                            }
                             Joyin.confirm(result.data, function() {
                                 if(operateType === 'save') {
                                     WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_save");
