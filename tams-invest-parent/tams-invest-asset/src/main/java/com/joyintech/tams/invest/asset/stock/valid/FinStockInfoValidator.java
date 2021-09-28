@@ -105,21 +105,21 @@ public class FinStockInfoValidator implements BeanValidator {
                                this.getMessage("FinStockInfo001.shOrZh"))));
                    }
                }
-               if (null != this.page && null != this.page.getElementcontrol("bussRepStockInfo") && this.page.getElementcontrol("bussRepStockInfo").getIsShow()) {
-                   //中债,3个投资阶段选其他,备注必填
-                   if((dto.getBussRepEquityInfoDto().getRepSharesType().equals(DictCodeListExt2.股票类型_其他.getValue())||
-                           dto.getBussRepEquityInfoDto().getRepPartyType1().equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue())
-                           || dto.getBussRepEquityInfoDto().getRepPartyType2().equals(DictCodeListExt2.发行机构类型_按经济类型划分_其他.getValue())
-                           || dto.getBussRepEquityInfoDto().getRepPartyType3().equals(DictCodeListExt2.发行机构类型_按技术领域划分_其他.getValue()))
-                           && StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepRemark())){
-                       errorList.add(new ValidMessage(this.getMessage("BUSS_COM_CRE_003")));
-                   }
-                   //中债的交易流通场所必填
-                   if(StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepTradeMarket())){
-                       errorList.add(
-                               new ValidMessage("bussRepEquityInfoDto.repTradeMarket",this.getMessage("FW_E_0006", getMessage("BussRepEquityInfo.repTradeMarket"))));
-                   }
-               }
+//               if (null != this.page && null != this.page.getElementcontrol("bussRepStockInfo") && this.page.getElementcontrol("bussRepStockInfo").getIsShow()) {
+//                   //中债,3个投资阶段选其他,备注必填
+//                   if((dto.getBussRepEquityInfoDto().getRepSharesType().equals(DictCodeListExt2.股票类型_其他.getValue())||
+//                           dto.getBussRepEquityInfoDto().getRepPartyType1().equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue())
+//                           || dto.getBussRepEquityInfoDto().getRepPartyType2().equals(DictCodeListExt2.发行机构类型_按经济类型划分_其他.getValue())
+//                           || dto.getBussRepEquityInfoDto().getRepPartyType3().equals(DictCodeListExt2.发行机构类型_按技术领域划分_其他.getValue()))
+//                           && StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepRemark())){
+//                       errorList.add(new ValidMessage(this.getMessage("BUSS_COM_CRE_003")));
+//                   }
+//                   //中债的交易流通场所必填
+//                   if(StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepTradeMarket())){
+//                       errorList.add(
+//                               new ValidMessage("bussRepEquityInfoDto.repTradeMarket",this.getMessage("FW_E_0006", getMessage("BussRepEquityInfo.repTradeMarket"))));
+//                   }
+//               }
 
                /* //中债的行业必填
                 if(StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepIndustry()) || StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepIndustryLevel2())){

@@ -555,13 +555,6 @@
     var gencjcxTableParam = function () {
         var pageParam = $.serializeToObject('#searchForm_cjcx');
         pageParam.finprodType = "REPO";
-        pageParam.tradeDateBegin = $('#tradeDate').startDate();
-        pageParam.tradeDateEnd = $('#tradeDate').endDate();
-        if (pageParam.matchStatus && pageParam.matchStatus != '') {
-            pageParam.matchStatus = pageParam.matchStatus.join(",");
-        } else {
-            pageParam.matchStatus = null;
-        }
         var cols = [];
         $.each(cjcxTable.options.cols, function (i, val) {
             if (val.visible == false) {
@@ -962,6 +955,46 @@
         $('.cjcx_transfer-form #CfetsRepoDealQuotedPr001_btn_search').click(function () {
             cjcxTable.load();
         });
+
+        /**
+         * 成交查询-查询弹出框
+         */
+        $('#CfetsBondDealQuotedPr001_CSTPSelect_btn_seach').click(function() {
+            $('.sgePortDiv').find('span.select2-container--default').attr('style', 'width: 210px !important');
+            $("#CSTPselectorConditionFilter001").hide();
+            if($("#CSTPselectorConditionFilter001").css("display")=="none"){
+                $("#CSTPselectorConditionFilter001").show();
+            }
+            else{
+                $("#CSTPselectorConditionFilter001").hide();
+            }
+        });
+
+        /**
+         * 成交查询-查询弹出框查询
+         */
+        $('#CfetsBondDealQuotedPr001_CSTPSelect_btn_realseach').click(function() {
+            cjcxTable.table ? cjcxTable.reload() : cjcxTable.load();
+            $("#CSTPselectorConditionFilter001").hide();
+        });
+
+        /**
+         * 成交查询-查询弹出框关闭
+         */
+        $('#CfetsBondDealQuotedPr001_CSTPSelect_btn_seachClose').click(function() {
+            $("#CSTPselectorConditionFilter001").hide();
+        });
+
+        /**
+         * 成交查询-查询弹出框重置
+         */
+        $('#CfetsBondDealQuotedPr001_CSTPSelect_btn_seachReset').click(function() {
+            $("#ps").empty();
+            $("#finprodId").empty();
+            $("#quaryDate").val("");
+            $("#matchStatus").empty();
+        });
+
 
         /**
          * 指令执行放弃按钮点击事件
