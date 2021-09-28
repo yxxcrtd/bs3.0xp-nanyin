@@ -187,9 +187,8 @@
     		MST_CUSTOMER_INFO T2
     	ON
     		T1.LINK_ID = T2.CUSTOMER_ID
-    	left join mst_cfets_customer_info T3 on T1.counter_name = T3.party_name 
+    	left join mst_cfets_customer_info T3 on T1.counter_name = T3.party_name AND T3.PARTY_ID IS NULL
         <where>
-        	AND T3.PARTY_ID IS NULL
             <if test="search != null and search != ''">
                AND (
                     T1.COUNTER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
