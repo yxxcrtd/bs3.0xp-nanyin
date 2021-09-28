@@ -68,7 +68,7 @@ $(function() {
         Joyin.ajaxJson(basePath + 'model/impairment/pddefaultmanager/pdfactorconfig/PdFactorConfig002/check', data, function (result) {
             Joyin.dialog('前瞻因子维护编辑',
                 basePath + "model/impairment/pddefaultmanager/pdfactorconfig/PdFactorConfig002/init",
-                "45%", "75%", {
+                "65%", "85%", {
                     pageModel: PAGE_MODEL_EDIT,
                     seqno: data.seqno
                 }, function () {
@@ -109,7 +109,7 @@ $(function() {
     var showDialog = function(){
         Joyin.dialog(JoyinUtil.getLabel("前瞻因子新建"),
                 JoyinUtil.getRealPath("/model/impairment/pddefaultmanager/pdfactorconfig/PdFactorConfig002/init"),
-                "45%", "75%",{pageModel : PAGE_MODEL_NEW},function(){table.reload();}
+                "65%", "85%",{pageModel : PAGE_MODEL_NEW},function(){table.reload();}
         );
     }
 

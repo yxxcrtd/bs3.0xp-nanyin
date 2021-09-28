@@ -606,9 +606,9 @@
                 type: 'date'
             }
             , {field: 'settleSpeedStr', title: '清算速度', width: '150'}
-            , {field: 'settTypeStr', title: '清算类型', sortField: 'settType', width: '110'}
+            , {field: 'clearingmethodStr', title: '清算类型', sortField: 'settType', width: '110'}
             , {field: 'deliveryTypeStr', title: '结算方式', sortField: 'deliveryType', width: '110'}
-            , {field: 'tradeTime', title: '成交时间', sortField: 'tradeTime', width: '110'}
+            , {field: 'tradetime', title: '成交时间', sortField: 'tradeTime', width: '110'}
             , {field: 'quoteTypeStr', title: '报价类型', sortField: 'quoteType', width: '110'}
             , {field: 'reference', title: '报价/订单编号', sortField: 'reference', width: '110'}
             , {field: 'assetTypeOneStr', title: '债券类型', sortField: 'assetTypeOne', width: '110'}

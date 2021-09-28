@@ -14,14 +14,18 @@ import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
+import com.joyintech.tams.common.base.entity.BokStatLossPosiiton;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetailKey;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.valuation.batch.common.accounting.entity.LossAmtInputDto;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
 import com.joyintech.tams.valuation.batch.common.accounting.service.AccountingCommonService;
+import com.joyintech.tams.valuation.batch.common.accounting.service.LossCommonBatchService;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.accounting.BookAccountGenLogic;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.accounting.BookCommonLogic;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.AccountDriver;
@@ -35,6 +39,7 @@ import com.joyintech.tams.valuation.batch.common.dealinfoselectcom.dto.FinProduc
 import com.joyintech.tams.valuation.batch.common.finproduct.service.FinProductCommonService;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.PledgeInfoDto;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TradeInfoDto;
+import com.joyintech.tams.valuation.common.batch.losscommon.service.LossCommonService;
 import com.joyintech.tams.valuation.common.batch.tradecommon.dto.ValTrdProductDealInfoDto;
 import com.joyintech.tams.valuation.common.batch.tradecommon.service.ValTradeCommonService;
 import com.joyintech.tams.valuation.common.constants.BookConstant;
@@ -97,6 +102,14 @@ public class RepoNBookDetailProcessDealService {
     
     @Autowired
     private TrdTradeFeeDetailMapper trdTradeFeeDetailMapper;
+
+    /** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 start**/
+    @Autowired
+    private LossCommonService lossCommonService;
+
+    @Autowired
+    private LossCommonBatchService lossCommonBatchService;
+    /** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 end**/
     
     /**
      * process 数据处理
@@ -172,6 +185,24 @@ public class RepoNBookDetailProcessDealService {
         	glb_subjectProfit = subjectBalanceForfit.getBalance() == null ?
                     BigDecimal.ZERO : subjectBalanceForfit.getBalance();// 变量.应计利息科目余额 = DTO.科目余额
         }
+
+        /** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 start**/
+        //定义  变量.统计分析明细表（资产减值）减值使用列表
+        if (rtnResult.getBokStatLossPosiitonList() == null) {
+            rtnResult.setBokStatLossPosiitonList(new ArrayList<BokStatLossPosiiton>());
+        }
+        //2.5.减值准备类科目余额
+        BigDecimal glb_subjectjz = BigDecimal.ZERO;//减值准备类科目余额
+        //调用共通设计->【详细设计-账务类共通方法设计.xlsx】->科目余额查询-期待方向SHEET
+        SubjectBalance jzBalance = this.getSubjectBalance(booksetIdNow, bokDetailIdNow, happenDateNow, bookDateNow,
+                DictCodeList.余额方向_借方.getValue(), DictCodeBaseSubjectNatrue.摊余成本类资产减值.getValue(), taskPri);
+        if (jzBalance != null) {
+            // 变量.减值准备类科目余额 = DTO.科目余额
+            glb_subjectjz = jzBalance.getBalance() == null ? BigDecimal.ZERO : jzBalance.getBalance();
+        }
+        //定义 汇率 = 1
+        BigDecimal 汇率 = BigDecimal.ONE;
+        /** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 end**/
 
         //2.3.质押式回购费用处理方式
         List<String> paramCodeList = new ArrayList<>();
@@ -276,6 +307,10 @@ public class RepoNBookDetailProcessDealService {
             		repo = ArithmeticUtil.subtract(dealDto.getPrinAmt(), feeAmt);//交易明细.交易本金 - 变量.交易各种费用.交易费用
             	}
 
+            	/** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 start**/
+                //定义 变量.冲减减值金额 = 0
+                BigDecimal 冲减减值金额 = BigDecimal.ZERO;
+                /** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 end**/
                 if (DictCodeList.交易方向_买入.getValue().equals(dealDto.getPs())) {// 交易方向 - 买入
 
                     //定义【变量.费用处理方式】
@@ -355,7 +390,8 @@ public class RepoNBookDetailProcessDealService {
                     glb_subjectProfit = ArithmeticUtil.doAdd(glb_subjectProfit,dealDto.getIntAmt());// 变量.应计利息科目余额 + 交易明细.利息总额
                 }
                 /** modify by yanya on 20191111 增加 提前终止、逾期返售**/
-                else{// 卖出、到期、提前终止、逾期返售
+                else{
+                    // 卖出、到期、提前终止、逾期返售
 
                     //设置公用金额元素
                     // 印花税支出 = 变量.交易各种费用.随交易支付_印花税+ 变量.交易各种费用.印花税
@@ -605,9 +641,7 @@ public class RepoNBookDetailProcessDealService {
                             //变量.调整金额 = 交易明细.应计利息总额 - 金额元素.应计利息
                             adjustAmt = ArithmeticUtil.subtract(dealDto.getIntAmt(), intAmt);
                         }
-                    	glb_subjectAmt = ArithmeticUtil.subtract(glb_subjectAmt, dealDto.getPrinAmt());// 变量.成本科目余额 - 交易明细.交易本金
-                        glb_subjectNum = ArithmeticUtil.subtract(glb_subjectNum, dealDto.getShareAmt());//变量.成本科目数量 - 交易明细.交易份额
-                        glb_subjectProfit = ArithmeticUtil.subtract(glb_subjectProfit, dealDto.getIntAmt());// 变量.应计利息科目余额 - 交易明细.利息总额
+
 	                 }
                     
                     if(adjustAmt.compareTo(BigDecimal.ZERO)>=0){//调整金额_贷 <-     变量.调整金额
@@ -626,6 +660,36 @@ public class RepoNBookDetailProcessDealService {
                         }
                     }
 
+                    /** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 start**/                    //只有逆回购出减值
+                    if(StringUtil.equals(DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue(), dealDto.getFinprodType())){
+                        //IF 变量.减值准备科目余额 != 0
+                        if(glb_subjectjz.compareTo(BigDecimal.ZERO) != 0) {
+                            LossAmtInputDto inputdto = this.getLossAmtInputDto(acctEntity, dealDto,
+                                    null,
+                                    //本次发生额 = 金额元素.回购本金 + 金额元素.应计利息
+                                    ArithmeticUtil.doAdd(accountAmountMap.get(BookConstant.COST), accountAmountMap.get(BookConstant.INTAMT)),
+                                    //减值准备余额
+                                    glb_subjectjz,
+                                    //当前EAD金额 = 成本科目余额 + 应计利息科目余额
+                                    ArithmeticUtil.doAdd(glb_subjectAmt, glb_subjectProfit),
+                                    //应收款项余额
+                                    null,
+                                    //总份额 = 变量.成本科目数量
+                                    glb_subjectNum,
+                                    //发生份额 = 交易明细.交易份额
+                                    dealDto.getShareAmt()
+                            );
+                            冲减减值金额 = lossCommonBatchService.calcLossAmtForDeal(inputdto);
+                        }
+                        accountAmountMap.put(BookConstant.IMPAMT, 冲减减值金额.negate());
+                    }
+
+                    glb_subjectAmt = ArithmeticUtil.subtract(glb_subjectAmt, dealDto.getPrinAmt());// 变量.成本科目余额 - 交易明细.交易本金
+                    glb_subjectNum = ArithmeticUtil.subtract(glb_subjectNum, dealDto.getShareAmt());//变量.成本科目数量 - 交易明细.交易份额
+                    glb_subjectProfit = ArithmeticUtil.subtract(glb_subjectProfit, dealDto.getIntAmt());// 变量.应计利息科目余额 - 交易明细.利息总额
+
+                    glb_subjectjz = glb_subjectjz.subtract(冲减减值金额);// 变量.减值准备科目余额- 变量.冲减减值准备
+                    /** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 end**/
                 }
 
                 // 初始化定义 - 存放该笔记账的相关金额对应的币种 map定义
@@ -644,6 +708,30 @@ public class RepoNBookDetailProcessDealService {
                 BookGenerateResult resultNowNow = bookLogic.genAccount(ad, batchExecuteInfo);
                 // 因为当前属于同一个维度，故将生成的账务名中的账务明细（当前表）数据，累加到返回数据中
                 rtnResult.getValBokBookdetailBatch().addAll(resultNowNow.getValBokBookdetailBatch());
+
+            /** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 start**/
+            //if(金额元素.减值使用 != 0)
+            if (冲减减值金额.compareTo(BigDecimal.ZERO) != 0) {
+                BokStatLossPosiiton statLoss = null;
+                for (ValBokBookdetailBatch detail : resultNowNow.getValBokBookdetailBatch()) {
+                    // 变量.账务明细 = 调用账务明细生成共通返回结果中 基础科目性质 ="买入返售资产减值"的第一条数据
+                    if (StringUtil.equals(DictCodeBaseSubjectNatrue.摊余成本类资产减值.getValue(),detail.getBaseSubjectNature())) {
+                        // 调用【减值相关共通-减值使用明细数据生成】
+                        statLoss = lossCommonService.setLossInfoUsed(detail,
+                                accountAmountMap.get(BookConstant.IMPAMT),
+                                accountAmountMap.get(BookConstant.IMPAMT),
+                                glb_subjectjz,
+                                ArithmeticUtil.multiply(glb_subjectjz, 汇率),
+                                dealDto.getTradeId());
+                        break;
+                    }
+                }
+                if (statLoss != null) {
+                    // 变量.统计分析明细表（资产减值）减值使用列表.add(上述返回值)
+                    rtnResult.getBokStatLossPosiitonList().add(statLoss);
+                }
+            }
+            /** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 end**/
         }
 
         return rtnResult;
@@ -771,4 +859,59 @@ public class RepoNBookDetailProcessDealService {
         return tableIdForReturn;
     }
 
+    /** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 start**/
+    /**
+     * 冲减减值计算DTO初始化
+     * @param acctEntity
+     * @param dealNow
+     * @param flag
+     * @param happenAmt
+     * @param lossBalAmt
+     * @param EADAmt
+     * @param receAmt
+     * @param totalNum
+     * @param happenNum
+     * @return
+     */
+    private LossAmtInputDto getLossAmtInputDto(FinProductDealInfoResult acctEntity, FinProductDealInfoComDTO dealNow,
+                                               String flag,//01 本金  02 利息
+                                               BigDecimal happenAmt,//发生金额
+                                               BigDecimal lossBalAmt,//减值准备余额
+                                               BigDecimal EADAmt, //当前EAD金额
+                                               BigDecimal receAmt, //应收款项余额
+                                               BigDecimal totalNum, //总份额
+                                               BigDecimal happenNum //发生份额
+    ){
+        LossAmtInputDto dto = new LossAmtInputDto();
+        //本息标识
+        dto.setFlag(flag);
+        //账套代码
+        dto.setBooksetId(acctEntity.getBooksetId());
+        //账务明细代码
+        dto.setBokDetailId(acctEntity.getBokDetailId());
+        //批处理优先级
+        dto.setTaskPri(dealNow.getTaskPri());
+        //分支序号
+        dto.setBranch(dealNow.getBranch());
+        //发生日
+        dto.setHappenDate(acctEntity.getHappenDate());
+        //记账日
+        dto.setBookDate(acctEntity.getBookDate());
+        //发生金额 = 金额元素.回购本金 = + 金额元素.应计利息
+        dto.setHappenAmt(ArithmeticUtil.round(happenAmt, NumberEnum.MONEY));
+        //减值准备余额
+        dto.setLossBalAmt(lossBalAmt);
+        //当前EAD金额 = null
+        dto.setEADAmt(EADAmt);
+        //应收款余额
+        dto.setReceAmt(receAmt);
+        //总份额
+        dto.setTotalNum(totalNum);
+        //发生份额
+        dto.setHappenNum(happenNum);
+        //业务类型
+        dto.setBusiType(dealNow.getFinprodType());
+        return dto;
+    }
+    /** add by chufengjie on 20210927 估值核算系统VAS3.0-930-基线需求-质押式逆回购减值场景增加 end**/
 }

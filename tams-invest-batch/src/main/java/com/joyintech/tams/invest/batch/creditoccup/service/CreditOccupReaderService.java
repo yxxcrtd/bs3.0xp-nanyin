@@ -80,7 +80,15 @@ public class CreditOccupReaderService extends BaseService {
             creditLinesInputs.addAll(creditLinesInputDtos1);
         }
         creditLinesInputs.addAll(creditLinesInputDtos);
-        creditOccupReaderResult.setCreditLinesInputs(creditLinesInputs);
+        List<CreditLinesInputDto> creditLinesInputsObj = new ArrayList<>();
+        for(int i=0;i<creditLinesInputs.size();i++){
+            if("T01".equals(creditLinesInputs.get(i).getPs())||"T04".equals(creditLinesInputs.get(i).getPs())||"T52".equals(creditLinesInputs.get(i).getPs())){
+                creditLinesInputsObj.add(creditLinesInputs.get(i));
+                creditLinesInputs.remove(i--);
+            }
+        }
+        creditLinesInputsObj.addAll(creditLinesInputs);
+        creditOccupReaderResult.setCreditLinesInputs(creditLinesInputsObj);
         resultList.add(creditOccupReaderResult);
         return resultList;
     }

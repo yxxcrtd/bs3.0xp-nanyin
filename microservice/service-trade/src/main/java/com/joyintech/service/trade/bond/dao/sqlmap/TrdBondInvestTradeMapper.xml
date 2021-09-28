@@ -1833,8 +1833,9 @@
                     TO_CHAR(TPD.SETTLE_DATE,'yyyy-MM-dd') settleDate, /*结算日，交割日*/
                     SDL1.ITEM_VALUE AS deliveryType, /*结算方式*/
                     NVL(TPD.SHARE_AMT,0)/10000*100 shareAmt, /* 券面*/
-                    TPD.YIELD , /*到期收益率*/
-                    TPD.EXER_YIELD, /*行权收益率*/
+                    TPD.YIELD*100 yield , /*到期收益率*/
+                    TPD.EXER_YIELD*100 exerYield, /*行权收益率*/
+                    TPD.UNIT_INT,
                     TPD.INT_AMT, /*利息总额，应计利息*/
                     TPD.UNIT_CPRICE, /*单位净价*/
                     TPD.FPRICE_AMT, /*全价总额*/

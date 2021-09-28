@@ -148,6 +148,14 @@
             </foreach>
             )
 		</if>
+		<!-- add by mefiaxin 20210927 银行间 start -->
+		<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+			AND FIN_PRODUCT.TRADE_MARKET in
+			<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+				#{currTradeMarket}
+			</foreach>
+		</if>
+		<!-- add by mefiaxin 20210927 银行间 end -->
 		<if test="tradePlace != null and !tradePlace.isEmpty()">
 			AND FIN_PRODUCT.TRADE_MARKET in 
 			<foreach collection="tradePlace" item="item" open="(" close=")" separator=",">
@@ -337,6 +345,14 @@
             </foreach>
             )
 		</if>
+		<!-- add by mefiaxin 20210927 银行间 start -->
+		<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
+			AND FIN_PRODUCT.TRADE_MARKET in
+			<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
+				#{currTradeMarket}
+			</foreach>
+		</if>
+		<!-- add by mefiaxin 20210927 银行间 end -->
 		<if test="tradePlace != null and !tradePlace.isEmpty()">
 			AND FIN_PRODUCT.TRADE_MARKET in 
 			<foreach collection="tradePlace" item="item" open="(" close=")" separator=",">
@@ -676,13 +692,23 @@
 	                    B.SEC_ACCT_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
 	                )
 	            </if>
-	        </where>
+				<!--	add by meifaxin 20190927 区分银行间 start-->
+				<if test="TRADEPLACE01 != null and TRADEPLACE01!=''">
+					AND B.TRADE_PLACE =#{TRADEPLACE01}
+				</if>
+				<!--	add by meifaxin 20190927 区分银行间 end-->
+			</where>
 	        UNION ALL 
 	        SELECT
 				FINPROD_ID id ,
 				FINPROD_NAME text
 			FROM FIN_PRODUCT
 			<where>
+				<!--	add by meifaxin 20190927 区分银行间 start-->
+				<if test="TRADEPLACE01 != null and TRADEPLACE01!=''">
+					AND FIN_PRODUCT.TRADE_MARKET =#{TRADEPLACE01}
+				</if>
+				<!--	add by meifaxin 20190927 区分银行间 end-->
 				<if test="search != null and search != ''">
 					and (
 						FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')

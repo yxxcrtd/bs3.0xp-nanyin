@@ -478,6 +478,9 @@
 		$('#tradeMarket').change(function(){
             tradeMarketChange();
 		});
+        $('#trmFundType_id').change(function(){
+            trmFundTypeChange();
+        });
         $('#fundType').change(function(){
         	if(pageModel != PAGE_MODEL_REFERENCE){
         		var fundType = $("#fundType").val();

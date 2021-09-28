@@ -297,6 +297,19 @@ TrdBondInvestTrade002Controller extends BaseController {
             model.addAttribute("settleAmt_f",this.getParam("settleAmt"));
         }
         //add by chenjiaxing 银行间下行交易费用匹配展示 end
+
+//        // add by etliu 20210927 start
+//        if (dto != null) {
+//            if (StringUtil.isBlank(dto.getoFinprodId())
+//                    && StringUtil.equals(DictCodeListExt1.交易市场_一级市场.getValue(), dto.getTradeMarketMode())) {
+//                FinProduct finProduct = tradeCommonService.selectFinProduct(dto.getFinprodId());
+//                if (finProduct != null) {
+//                    dto.setoFinprodId(finProduct.getoFinprodId());
+//                }
+//            }
+//        }
+//        // add by etliu 20210927 end
+
         model.addAttribute("entity", dto);
         model.addAttribute("entity_trdInvestPersonInfo",
             dto.getTrdInvestPersonInfo() == null ? null : JsonUtils.object2Json(

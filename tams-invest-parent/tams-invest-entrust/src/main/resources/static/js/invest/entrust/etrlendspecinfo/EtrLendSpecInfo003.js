@@ -88,13 +88,13 @@
         , {field: 'psStr', title: 'EtrLendSpecInfo001.ps', width: 150, sortable: false}
         , {field: 'type6Str', title: 'EtrLendSpecInfo001.type6', width: 120, sortable: false}
         , {field: 'ccyStr', title: 'EtrLendSpecInfo001.ccy', width: 120, sortable: false}
-        , {field: 'entrustAmt', title: 'EtrLendSpecInfo001.entrustAmt', width: 120, sortable: false}
+        , {field: 'entrustAmt', title: 'EtrLendSpecInfo001.entrustAmt',type:'number', digit:2, width: 120, sortable: false}
         , {field: 'price', title: 'EtrLendSpecInfo001.price', width:100, type:'number', sortable: false}
         , {field: 'vdateAddStr', title: 'EtrLendSpecInfo002.vdateAdd', width: 120, sortable: false}
         , {field: 'mdateAddStr', title: 'EtrLendSpecInfo002.mdateAdd', width: 120, sortable: false}
         , {field: 'termDays', title: 'EtrLendSpecInfo001.term', width: 120, sortable: false}
         , {field: 'calendarIdName', title: 'EtrLendSpecInfo002.calendarId', width: 150, sortable: false}
-        , {field: 'minAmt', title: 'EtrLendSpecInfo002.minAmt', width: 120, sortable: false}
+        , {field: 'minAmt', title: 'EtrLendSpecInfo002.minAmt',type:'number', digit:2,  width: 120, sortable: false}
         , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'remark', title: 'EtrLendSpecInfo001.remark', width: 150, sortable: false}
         ,{field:'tradeMarketStr', title:'EtrLendSpecInfo001.tradeMarket',width:150,sortable:false}

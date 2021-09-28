@@ -763,5 +763,14 @@ public class CstpSelectDto extends InterfCstpTrade{
     public String getAssetTypeOneStr() {return this.getAssetTypeOne();
     }
 
+    public String getClearingmethodStr() {
+        if(StringUtil.equals("6",super.getClearingmethod())){
+            return "集中清算";
+        }
+        if(StringUtil.equals("13",super.getClearingmethod())){
+            return "自行清算";
+        }
+        return super.getClearingmethod();
+    }
 
 }
