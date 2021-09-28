@@ -265,6 +265,11 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                                        + "/EtrPlanAssetN/getfinprodIdForAdd",map,SelectOptionDto.class);
     }
 
+    public Page<SelectOptionDto> getfinprodIdForAdd1(Map<String, Object> map) {
+        return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME
+                + "/EtrPlanAssetN/getfinprodIdForAdd1",map,SelectOptionDto.class);
+    }
+
     /**
      * 校验方法 <功能详细描述>
      *
@@ -592,7 +597,7 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                         map.put("search", rowData.get(4).toString());
                         map.put("page", 1);
                         map.put("length", 20);
-                        Page<SelectOptionDto> finprodIds = getfinprodIdForAdd(map);
+                        Page<SelectOptionDto> finprodIds = getfinprodIdForAdd1(map);
                         if (finprodIds.getRoot().isEmpty()) {
                             confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0017", getMessage("EtrPlanAssetN002.finprodId"), lineNo));
                         }
@@ -606,7 +611,7 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                     map33.put("search", rowData.get(4).toString());
                     map33.put("page", 1);
                     map33.put("length", 20);
-                    Page<SelectOptionDto> page = getfinprodIdForAdd(map33);
+                    Page<SelectOptionDto> page = getfinprodIdForAdd1(map33);
                     //查到的时候才对委托金额与委托份额的check
                     if(!page.getRoot().isEmpty()){
                         SelectOptionDto selectOptionDto = page.getRoot().get(0);

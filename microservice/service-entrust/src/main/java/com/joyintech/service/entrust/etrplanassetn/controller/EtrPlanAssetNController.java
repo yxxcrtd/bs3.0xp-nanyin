@@ -106,6 +106,14 @@ public class EtrPlanAssetNController  {
         Page<SelectOptionDto> temp = etrPlanAssetNService.getfinprodIdForAdd(page,length,map);
         return temp;
     }
+
+    @PostMapping("getfinprodIdForAdd1/{page}/{length}")
+    @ResponseBody
+    public Page<SelectOptionDto> getfinprodIdForAdd1(@RequestBody Map<String, String> map, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
+        Page<SelectOptionDto> temp = etrPlanAssetNService.getfinprodIdForAdd1(page,length,map);
+        return temp;
+    }
     /**
      * 
      * 获取新建界面的组合代码联想下拉框框
