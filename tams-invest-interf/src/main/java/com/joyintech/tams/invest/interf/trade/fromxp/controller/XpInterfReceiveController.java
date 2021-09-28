@@ -10,10 +10,7 @@
 
 package com.joyintech.tams.invest.interf.trade.fromxp.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,17 +42,17 @@ public class XpInterfReceiveController {
 	 * 获取service对象
 	 */
 	@Autowired
-	private InterfServiceLogService interfTradeLogService;
+	private InterfServiceLogService interfServiceLogService;
 
 	@RequestMapping(value = "/receive", method = RequestMethod.GET)
 	public Result<String> receive() {
 		try {
 			logger.info("接收{}接口数据开始", Constants.INTERF_SYSTEM_XP);
-			List<InterfServiceLogDto> interfTradeLogDtoList = this.getLogDtoList();
-			if (interfTradeLogDtoList == null || interfTradeLogDtoList.size() <= 0) {
+			List<InterfServiceLogDto> interfServiceLogDtoList = interfServiceLogService.getRunableLogList(Constants.INTERF_SYSTEM_XP);
+			if (interfServiceLogDtoList == null || interfServiceLogDtoList.size() <= 0) {
 				return new Result<String>().success();
 			}
-			interfTradeLogService.runInterfTradeLog(interfTradeLogDtoList);
+			interfServiceLogService.runInterfServiceLog(interfServiceLogDtoList);
 			logger.info("接收{}接口数据结束", Constants.INTERF_SYSTEM_XP);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -63,49 +60,5 @@ public class XpInterfReceiveController {
 		}
 		return new Result<String>().success();
 	}
-
-	/*
-	 * 乐观锁方式实现
-	 */
-	private List<InterfServiceLogDto> getLogDtoList() {
-		List<InterfServiceLogDto> retInterfServiceLogDtoList = new ArrayList<InterfServiceLogDto>();
-		InterfServiceLogDto where = new InterfServiceLogDto();
-		where.setInterfType(Constants.INTERF_TYPE_RECEIVE);
-		where.setInterfStatus(Constants.INTERF_STATUS_NEW);
-		where.setInterfSystem(Constants.INTERF_SYSTEM_XP);
-		List<InterfServiceLogDto> interfServiceLogDtoList = interfTradeLogService.searchInterfTradeLog(where);
-		for (InterfServiceLogDto interfServiceLogDto : interfServiceLogDtoList) {
-			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("interfSystem", Constants.INTERF_SYSTEM_XP);
-			param.put("oldStatus", Constants.INTERF_STATUS_NEW);
-			param.put("newStatus", Constants.INTERF_STATUS_PROCESS);
-			param.put("id", interfServiceLogDto.getId());
-			int result = interfTradeLogService.updateInterfTradeLogStatusByStatusAndId(param);
-			if (result >= 1) {
-				retInterfServiceLogDtoList.add(interfServiceLogDto);
-			}
-		}
-		return retInterfServiceLogDtoList;
-	}
-
-	/*
-	 * 分布式锁方式实现
-	 * 
-	 * private List<InterfServiceLogDto> getLogDtoList2() { //TODO
-	 * 获取数据，然后更新数据状态为处理中，添加分布式锁开始 InterfServiceLogDto where = new
-	 * InterfServiceLogDto(); where.setInterfType(Constants.INTERF_TYPE_RECEIVE);
-	 * where.setInterfStatus(Constants.INTERF_STATUS_NEW);
-	 * where.setInterfSystem(Constants.INTERF_SYSTEM_XP); List<InterfServiceLogDto>
-	 * interfTradeLogDtoList = interfTradeLogService.searchInterfTradeLog(where);
-	 * if(interfTradeLogDtoList==null || interfTradeLogDtoList.size()<=0) { return
-	 * null; } List<String> ids =
-	 * interfTradeLogDtoList.stream().map(InterfServiceLogDto::getId).collect(
-	 * Collectors.toList()); Map<String,Object> param = new
-	 * HashMap<String,Object>(); param.put("interfSystem",
-	 * Constants.INTERF_SYSTEM_XP); param.put("interfStatus",
-	 * Constants.INTERF_STATUS_PROCESS); param.put("ids", ids); int result =
-	 * interfTradeLogService.updateInterfTradeLogStatus(param); //TODO
-	 * 获取数据，然后更新数据状态为处理中，添加分布式锁结束 return interfTradeLogDtoList ; }
-	 */
 
 }
