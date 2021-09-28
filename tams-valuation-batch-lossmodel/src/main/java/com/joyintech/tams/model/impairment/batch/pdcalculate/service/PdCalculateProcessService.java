@@ -98,7 +98,7 @@ public class PdCalculateProcessService {
                 }
                 //资产剩余期限是否不足一年 false
                 variablePdCalculateDto.setMaturityYear(false);
-                if(StringUtil.isNotEmpty(variablePdCalculateDto.getMdateYearMonStr()) && DateUtil.compareDate(variablePdCalculateDto.getEndYearMonStr(),variablePdCalculateDto.getMdateYearMonStr())>0){
+                if(StringUtil.isNotEmpty(variablePdCalculateDto.getMdateYearMonStr()) && DateUtil.compareDate(variablePdCalculateDto.getEndYearMonStr(),variablePdCalculateDto.getMdateYearMonStr())>=0){
                     variablePdCalculateDto.setMaturityYear(true);
                 }
 
@@ -413,7 +413,7 @@ public class PdCalculateProcessService {
             //5、加载每一笔交易数据的加权PD
             for(ModEclResultProcess aipcDto:variablePdCalculateDto.getAssetImpairmentPdCalculateList()){
                 // if 资产剩余期限是否不足一年 == false && 交易数据i.减值阶段 == 一阶段
-                if(!variablePdCalculateDto.getTtStage()&& ModelDictCodeList.阶段_初始买入时_P1.getValue().equals(aipcDto.getFinStage())){
+                if(!variablePdCalculateDto.getTtStage()&& !variablePdCalculateDto.getMaturityYear()){
                     // 交易数据i.前瞻前PD违约概率% = 前瞻前第12个月累积加权PD
                     aipcDto.setPreProspectivePd(variablePdCalculateDto.getPreTwelveMonWeightedPd());
                     //交易数据i.前瞻后PD违约概率% = 第12个月累积加权PD
