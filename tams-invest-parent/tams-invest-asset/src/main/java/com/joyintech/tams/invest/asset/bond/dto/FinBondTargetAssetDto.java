@@ -1073,7 +1073,7 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      */
     @Override
     @NotEmpty(fieldName="FinBondTargetAsset002.finprodId",groups = {ValidateGroupEdit.class})
-    @Code(fieldName = "FinBondTargetAsset002.finprodId", length = 32, groups = {ValidateGroupEdit.class})
+//    @Code(fieldName = "FinBondTargetAsset002.finprodId", length = 32, groups = {ValidateGroupEdit.class})
     @PrimaryKey(Field.PK_1)
     public String getFinprodMarketId(){
         return super.getFinprodMarketId();

@@ -5,6 +5,24 @@
 (function(){
     var getElementById = function(id) {
     };
+
+    var getriskdata = function () {
+        //配置单位 edit by yeming 20210721 start
+        var winPrinAmt=$('#winPrinAmt').val();
+        if (winPrinAmt) {
+            if(entrustAmtUnit == '02' ){
+                winPrinAmt=JoyinMath.doMul(winPrinAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            }
+        }
+
+        if(null!=PrimaryBiddingManage003_entity){
+            //配置单位 edit by yeming 20210721 end
+            var obj = {tradeDirection:"T01",timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:PrimaryBiddingManage003_entity.bidOrderBidPriceList[0].portfolioId,tradeAmount:winPrinAmt,assetType:"F17",isEnabled:'01',assetCode:$('#finprodId').val(),tradeAmt:winPrinAmt};
+        }
+        // add by zhangrui1 交易对手影响风险试算 end
+        var object = {tradeDirection:['ps','PrimaryBiddingManage003.ps'],portfolioCode:['portfolioId','PrimaryBiddingManage003.portfolioId'],tradeAmount:['winPrinAmt','PrimaryBiddingManage003.entrustAmt'],assetCode:['finprodId','PrimaryBiddingManage003.finprodId'],data:obj};
+        return object;
+    }
     /**
      * 获取查询参数
      */
@@ -52,6 +70,21 @@
     });
   
     function saveOrSubmit(operateType) {
+        // 风险试算 start
+        var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+            if(BaseRiskMathComm) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if(!s && s != ''){
+                    return;
+                }
+                if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+                    return;
+                }
+            }
+        }
+        //风险试算 end
+
         var object = $.serializeToObject('#informationForm', true);
         object.pageModel = pageModel;
         object.operateType = operateType;
@@ -124,6 +157,39 @@
         $('#PrimaryBiddingManage003_btn_submit').click(function () {
             saveOrSubmit('submit');
         });
+
+        /**
+         * 风险试算
+         */
+        $('#PrimaryBiddingManage003_btn_risk').click(function(){
+            var object = $.serializeToObject('#informationForm',true);
+            var winPrinAmt=object.winPrinAmt;
+            if (winPrinAmt) {
+                if(entrustAmtUnit == '02' ){
+                    winPrinAmt=JoyinMath.doMul(winPrinAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                }
+            }
+            if(null!=PrimaryBiddingManage003_entity){
+                object.bidId=PrimaryBiddingManage003_entity.bidId;
+                object.bidDate=new Date(PrimaryBiddingManage003_entity.bidDate).format("yyyy-MM-dd");
+                object.finprodAbbr=PrimaryBiddingManage003_entity.finprodAbbr;
+                object.finprodMarketId=PrimaryBiddingManage003_entity.finprodMarketId;
+                object.tradeMarket=PrimaryBiddingManage003_entity.tradeMarket;
+                object.counterId=PrimaryBiddingManage003_entity.counterId;
+
+                // add by zhangrui1 start
+                object.entrustId = PrimaryBiddingManage003_entity.entrustId;
+                object.portfolioId = PrimaryBiddingManage003_entity.bidOrderBidPriceList[0].portfolioId;
+                // add by zhangrui1 end
+                object.busiType = TRD61;
+            }
+
+            object.winPrinAmt = winPrinAmt;
+            //中标结果维护传TRD61,不传F17，在共通里特殊处理
+            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F17',object,getriskdata());
+
+        });
+
         $("#isWin").change(function () {
             if ($(this).val() == 'N') {
                 $("#winPrice").val("").trigger("change").attr("disabled", true);

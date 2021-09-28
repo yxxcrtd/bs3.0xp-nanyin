@@ -172,7 +172,7 @@ public class FinFuturesDto extends FinProduct implements ProcessEntity {
     @NotEmpty(fieldName = "FinFutures001.finprodMarketId", groups = {ValidateGroupEdit.class})
     @Length(fieldName = "FinFutures001.finprodMarketId", max = 32, groups = {
         ValidateGroupEdit.class})
-    @Code(fieldName = "FinFutures001.finprodMarketId", length = 32, groups = {ValidateGroupEdit.class})
+//    @Code(fieldName = "FinFutures001.finprodMarketId", length = 32, groups = {ValidateGroupEdit.class})
     @PrimaryKey(value = PrimaryKey.Field.PK_1)
     public String getFinprodMarketId() {
 //        String secId = super.getFinprodMarketId();

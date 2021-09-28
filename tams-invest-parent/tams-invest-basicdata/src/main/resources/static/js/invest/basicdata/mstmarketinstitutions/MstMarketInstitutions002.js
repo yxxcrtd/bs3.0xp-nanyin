@@ -47,7 +47,7 @@ $(function() {
             {field:'noticeDate', title: 'MstMarketInstitutions002.noticeDate', edit:true, type:'date', sortable:false},
             {field:'gradeDate', title: 'MstMarketInstitutions002.gradeDate', edit:true, type:'date', sortable:false},
             {field:'shortLongTerm', title: 'MstMarketInstitutions002.gradeType', edit:true, editOption:{type:'select', result: LONG_SHORT_TERM}, sortable:false},
-            {field:'gradeResult', title: 'MstMarketInstitutions002.gradeResult', edit:true, editOption:{type:'select', result: MAIN_GRADE_RESULT}, sortable:false},
+            {field:'gradeResult', title: 'MstMarketInstitutions002.gradeResult', edit:true, editOption:{type:'select', result: MAIN_GRADE_RESULT, autosort:false}, sortable:false},
             {field:'gradeExpectation', title: 'MstMarketInstitutions002.gradeExpectation', edit:true, editOption:{type:'select', result: RATING_OUTLOOK}, sortable:false},
             {field:'directionChange', title: 'MstMarketInstitutions002.directionChange', edit:true , editOption:{type:'select', result: CHANGE_DIRECTION}, sortable:false},
             //{field:'gradeOrgId', title: 'MstMarketInstitutions002.gradeOrgId', edit:true , editOption:{type:'select', showField:'text', url: JoyinUtil.getRealPath('/invest/basicdata/mstmarketinstitutions/MstMarketInstitutions002/getGradeOrgId')}, sortable:false},

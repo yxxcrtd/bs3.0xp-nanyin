@@ -44,6 +44,11 @@
 		</foreach>
 	</update>
 	
+	<!--  通过状态和id更新交易接口日志状态 -->
+	<update id="updateInterfTradeLogStatusByStatusAndId" parameterType="java.util.Map">
+		update INTERF_TRADE_LOG set INTERF_STATUS=#{newStatus,jdbcType=VARCHAR} where INTERF_SYSTEM=#{interfSystem,jdbcType=VARCHAR} and ID=#{id,jdbcType=VARCHAR} and INTERF_STATUS=#{oldStatus,jdbcType=VARCHAR}
+	</update>
+	
 	<!-- 查询满足条件的交易接口配置 -->
 	<select id="searchInterfTradeConfig" resultMap="InterfTradeConfigResult" parameterType="com.joyintech.tams.invest.interf.trade.common.dto.InterfTradeConfigDto">
 		select * from INTERF_TRADE_CONFIG where INTERF_STATUS=#{interfStatus,jdbcType=VARCHAR} and INTERF_SYSTEM=#{interfSystem,jdbcType=VARCHAR} and INTERF_CODE=#{interfCode,jdbcType=VARCHAR}

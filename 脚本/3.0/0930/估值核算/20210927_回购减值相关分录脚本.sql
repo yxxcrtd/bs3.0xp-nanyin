@@ -57,7 +57,7 @@ insert into BOK_TABLEDICT (BOOKSET_ID,DICT_ID, DICT_CODE, TABLE_ID, DICT_NAME, D
 
 
 --场景分支配置（理财账）
-delete from BOK_SCENECONFIG where NODE_VALUE in ('1431','1432','1432-5');
+delete from BOK_SCENECONFIG where SCENE_NODE_ID like '001601%' or SCENE_NODE_ID like '001602%';
 insert into BOK_SCENECONFIG values('001601', '001', '00000000000000000002', 'ACCOUNTEVENTS', '1431', 1, '',  'admin', '003', to_date('2018/4/25', 'yyyy/mm/dd'), 'admin',to_date('2018/4/25', 'yyyy/mm/dd'));
 insert into BOK_SCENECONFIG values('001601001', '001601', '00000000000000000002', '1431-5', '01', 2, '',  'admin', '003', to_date('2018/4/25', 'yyyy/mm/dd'), 'admin',to_date('2018/4/25', 'yyyy/mm/dd'));
 insert into BOK_SCENECONFIG values('001601002', '001601', '00000000000000000002', '1431-5', '03', 2, '',  'admin', '003', to_date('2018/4/25', 'yyyy/mm/dd'), 'admin',to_date('2018/4/25', 'yyyy/mm/dd'));

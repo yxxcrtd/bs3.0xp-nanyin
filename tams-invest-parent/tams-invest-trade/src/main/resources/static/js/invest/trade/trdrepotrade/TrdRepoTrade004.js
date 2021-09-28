@@ -283,6 +283,9 @@ var outOk = function () {
 
             if ($.inArray(inSelectedAllRows[k].bondCode, resultArrlist) == -1) {
                 var newdate = inSelectedAllRows[k];
+                // modify by wanshiwei ZGZGST-2907 质押券置换时，【换出券】、【换入券】、【最终券】模块单位不统一 20210928 start
+                newdate.pledgePrin = JoyinMath.doMul(newdate.pledgePrin,10000);
+                // modify by wanshiwei ZGZGST-2907 质押券置换时，【换出券】、【换入券】、【最终券】模块单位不统一 20210928 end
                 resultTable.addRow(newdate);
                 resultArrlist.push(newdate.bondCode);
             }

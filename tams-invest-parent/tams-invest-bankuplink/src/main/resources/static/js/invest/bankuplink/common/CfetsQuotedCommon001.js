@@ -24,6 +24,9 @@
             }
             ,{field:'portfolioName', width:160,  title: '组合名称',edit:false,sortable: false,
             }
+            ,{field:'businessModel', width:100, title: '业务模式', sortable: false, edit:true
+                ,editOption:{type:'select',id:"businessModel",formatoption:true,result:BUSINESS_MODEL}
+                , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }
             ,{field:'entrustAvaNum', width:160, title: '剩余额度（万元）',type:'number',sortable: false}
             ,{field:'avaNum', width:150, title: '券面总额（万元）',edit:true,sortable: false,type:'number', digit:2}
             ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}

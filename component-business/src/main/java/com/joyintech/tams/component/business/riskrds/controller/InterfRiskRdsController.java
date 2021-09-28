@@ -15,8 +15,10 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.client.ClientData;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,6 +116,13 @@ public class InterfRiskRdsController {
                 interfRiskRdsDto.setEventType(eventType);
                 interfRiskRdsDto.setInfCode(infCode);
                 interfRiskRdsDto.setAssetType(assetType);
+                //中标结果维护风险试算特殊处理
+                String busiType = StringUtil.isNotEmpty(dataMap.get("busiType"))?String.valueOf(dataMap.get("busiType")):"";
+                if (CommonUtil.isType(busiType, BussinessDictCodeList.共同业务类型_中标结果确认)
+                        || CommonUtil.isType(busiType, BussinessDictCodeList.共同业务类型_中标结果维护)) {
+                    interfRiskRdsDto.setEventStatus(busiType);
+                }
+
                 logger.info("==========调用共通方法sendRiskRdsDataCommon==========");
                 return JsonUtils.object2Json(interfRiskRdsService.sendRiskRdsDataCommon(dataMap, interfRiskRdsDto));
             }else {
