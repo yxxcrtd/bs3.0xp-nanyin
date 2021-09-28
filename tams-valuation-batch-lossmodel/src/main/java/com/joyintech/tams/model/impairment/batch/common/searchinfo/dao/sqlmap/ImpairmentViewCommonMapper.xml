@@ -100,7 +100,7 @@
                 AND B.PORTFOLIO_ID = NVL(prodAdd.PORTFOLIO_ID,bok.ACCT_SUBJECT_ID)
                 AND B.CDATE <![CDATA[<]]> #{searchDate}
                 )
-            ,deal.SETTLE_DATE
+            ,DEAL.SETTLE_DATE-1
             )
         </if>
 

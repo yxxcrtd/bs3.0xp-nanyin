@@ -14,9 +14,9 @@
             <Cell order="7" name="资产名称">finprodName</Cell>
             <Cell order="8" name="交易方向">busPs</Cell>
             <Cell order="11" name="币种">busCcy</Cell>
-            <Cell order="12" name="委托开始日">vdate</Cell>
-            <Cell order="13" name="委托结束日">mdate</Cell>
-            <Cell order="14" name="委托金额">busEntrustAmt</Cell>
+            <Cell order="12" name="指令开始日">vdate</Cell>
+            <Cell order="13" name="指令结束日">mdate</Cell>
+            <Cell order="14" name="指令金额">busEntrustAmt</Cell>
             <Cell order="15" name="已完成额度">finishAmt</Cell>
             <Cell order="16" name="交易完成度%">transactioncom</Cell>
         </Row>

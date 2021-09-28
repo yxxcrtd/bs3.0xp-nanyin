@@ -1252,7 +1252,8 @@ $(function () {
                     // <!-- 通道交易 新增 强成西 2019/03/26 end -->
                     data.tradeMarket = $('#tradeMarket').val();
                     data.secManageAcctId = $('#secManageAcctId').val();
-                    if (!$('#chlId').val() && !$('#secManageAcctId').val()) {
+                    if (($("#tradeMarket").val() == TRADE_PLACE_03 || $("#tradeMarket").val() == TRADE_PLACE_04)
+                        && !$('#chlId').val() && !$('#secManageAcctId').val()) {
                         Joyin.error("交易所基金交易时，" + JoyinUtil.getMessage('TRD_E_0014_1',JoyinUtil.getMessage('invest.channelId')))
                         return;
                     }

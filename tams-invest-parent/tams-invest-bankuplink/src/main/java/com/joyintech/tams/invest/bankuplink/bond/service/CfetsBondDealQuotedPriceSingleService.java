@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -220,6 +221,29 @@ public class CfetsBondDealQuotedPriceSingleService extends CommonExportService<B
     public ResponseEntity<byte[]> exportPdf(String pageId, Map param){
         List<CstpSelectDto> datas = selectExportPdf(param);
         if(!StringUtil.isEmptyList(datas)){
+            for(CstpSelectDto dto:datas){
+                if(StringUtil.isNotEmpty(dto.getLastqty())) {
+                    dto.setLastqty(new BigDecimal(new DecimalFormat("#0.00#").format(dto.getLastqty().setScale(2, BigDecimal.ROUND_HALF_UP))));
+                }
+                if(StringUtil.isNotEmpty(dto.getPrice())){
+                    dto.setPrice(new BigDecimal(new DecimalFormat("#0.0000#").format(dto.getPrice().setScale(4, BigDecimal.ROUND_HALF_UP))));
+                }
+                if(StringUtil.isNotEmpty(dto.getDirtyprice())){
+                    dto.setDirtyprice(new BigDecimal(new DecimalFormat("#0.0000#").format(dto.getDirtyprice().setScale(4, BigDecimal.ROUND_HALF_UP))));
+                }
+                if(StringUtil.isNotEmpty(dto.getStrikeyield())){
+                    dto.setStrikeyield(new BigDecimal(new DecimalFormat("#0.0000#").format(dto.getStrikeyield().setScale(4, BigDecimal.ROUND_HALF_UP))));
+                }
+                if(StringUtil.isNotEmpty(dto.getUnderlyingyield2())){
+                    dto.setUnderlyingyield2(new BigDecimal(new DecimalFormat("#0.0000#").format(dto.getUnderlyingyield2().setScale(4, BigDecimal.ROUND_HALF_UP))));
+                }
+                if(StringUtil.isNotEmpty(dto.getSettlcurramt2())){
+                    dto.setSettlcurramt2(new BigDecimal(new DecimalFormat("#0.00#").format(dto.getSettlcurramt2().setScale(2, BigDecimal.ROUND_HALF_UP))));
+                }
+                if(StringUtil.isNotEmpty(dto.getAccruedinterestamt())){
+                    dto.setAccruedinterestamt(new BigDecimal(new DecimalFormat("#0.00#").format(dto.getAccruedinterestamt().setScale(2, BigDecimal.ROUND_HALF_UP))));
+                }
+            }
             //汇总交易金额
             CstpSelectDto dto = new CstpSelectDto();
             dto.setPortfolioId("合计");

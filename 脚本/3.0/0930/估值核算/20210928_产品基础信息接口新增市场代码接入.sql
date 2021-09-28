@@ -1,0 +1,6 @@
+delete from VAL_TEMP_COL_CHECK_INFO where TMP_E_NAME = 'ValPrdInfoC' and COL_E_NAME = 'finprodMarketId';
+delete from VAL_TEMP_COL_CHECK_INFO where TMP_E_NAME = 'ValPrdInfoN' and COL_E_NAME = 'finprodMarketId';
+delete from VAL_TEMP_COL_CHECK_INFO where TMP_E_NAME = 'ValPrdBaseInfo' and COL_E_NAME = 'finprodMarketId';
+insert into VAL_TEMP_COL_CHECK_INFO (TMP_C_NAME,TMP_E_NAME,COL_C_NAME,COL_E_NAME,COL_TYPE,IS_NULL,MAX_LENGTH,IS_EXIST,DICT_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('货币型产品基础信息','ValPrdInfoC','市场代码','finprodMarketId','1','Y','200','1','','system','',sysdate,'system',sysdate);
+insert into VAL_TEMP_COL_CHECK_INFO (TMP_C_NAME,TMP_E_NAME,COL_C_NAME,COL_E_NAME,COL_TYPE,IS_NULL,MAX_LENGTH,IS_EXIST,DICT_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('净值型产品基础信息','ValPrdInfoN','市场代码','finprodMarketId','1','Y','200','1','','system','',sysdate,'system',sysdate);
+insert into VAL_TEMP_COL_CHECK_INFO (TMP_C_NAME,TMP_E_NAME,COL_C_NAME,COL_E_NAME,COL_TYPE,IS_NULL,MAX_LENGTH,IS_EXIST,DICT_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('预期收益型产品基础信息','ValPrdBaseInfo','市场代码','finprodMarketId','1','N','200','1','','system','',sysdate,'system',sysdate);

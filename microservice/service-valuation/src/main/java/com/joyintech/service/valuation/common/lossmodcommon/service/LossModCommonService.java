@@ -65,4 +65,16 @@ public class LossModCommonService extends BaseService {
     public Page<SelectOptionDto> getModProInfoPage(int page, int length, Map<String, Object> params) {
         return super.queryForPage(page,length,()-> lossModCommonMapper.getModProInfoPage(params));
     }
+
+    /**
+     * 返回减值模型业务编号下拉框List对象
+     * @param params
+     * @return
+     */
+    public Page<SelectOptionDto> getBusiNumPage(int page, int length, Map<String, Object> params) {
+        return super.queryForPage(page,length,()-> lossModCommonMapper.getBusiNumPage(params));
+    }
+
+
+
 }

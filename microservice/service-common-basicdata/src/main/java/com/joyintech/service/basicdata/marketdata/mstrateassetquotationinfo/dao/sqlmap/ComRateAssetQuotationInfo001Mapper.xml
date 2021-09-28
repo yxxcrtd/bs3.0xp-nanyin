@@ -12,7 +12,8 @@
         TO_CHAR(B.PUBLISH_DATE, 'yyyy-MM-dd') importDate,
         B.REMARK remark,
         B.VALUE_SOURCE valueSource,
-        B.FULL_VALUATION fullValuation
+        B.FULL_VALUATION fullValuation,
+        B.INPUT_TYPE inputType
         FROM
         FIN_PRODUCT A ,
         FIN_PRODUCT_VALUATION B
@@ -31,8 +32,8 @@
         <if test="valDate != null and valDate != ''">
             AND B.VAL_DATE =TO_DATE (#{valDate},'yyyy-MM-dd')
         </if>
-        <if test="valueSource != null and valueSource != ''">
-            AND B.VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+        <if test="inputType != null and inputType != ''">
+            AND B.INPUT_TYPE = #{inputType,jdbcType=VARCHAR}
         </if>
     </select>
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SuggestDto">
@@ -132,6 +133,9 @@
                <if test="finprodType!= null and finprodType!='' ">
                	AND FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
                </if>
+               <if test="valueSource!= null and valueSource!='' ">
+                   AND VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+               </if>
     </select>
     <select id="selectMstRateAsset" resultType="com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.dto.ComRateAssetQuotationInfo001Dto">
         SELECT
@@ -145,7 +149,8 @@
         B.PROFIT_TYPE profitType,
         C.FINPROD_TYPE2 finprodType2,
         C.FINPROD_TYPE finprodType,
-        C.REMARK remark
+        C.REMARK remark,
+        C.VALUE_SOURCE valueSource
         FROM
         MST_CUSTOMER_INFO A,
         FIN_PRODUCT B,
@@ -157,6 +162,7 @@
         <!-- AND B.PROFIT_TYPE=#{PROFITTYPE_VALUE_01,jdbcType=VARCHAR} -->
         <!-- AND A.IS_ASSTE_MANAGER(+)=#{YESORNO_YES_01,jdbcType=VARCHAR} -->
         AND C.VAL_DATE=TO_DATE (#{valDate},'yyyy-MM-dd')
+        AND C.VALUE_SOURCE = #{valueSource}
     </select>
     <update id="update" parameterType="com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.dto.ComRateAssetQuotationInfo001Dto" >
         update
@@ -192,5 +198,12 @@
         WHERE
         FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         AND VAL_DATE = #{valDate,jdbcType=DATE}
+        AND VALUE_SOURCE = #{valueSource,jdbcType=DATE}
     </update>
+    <delete id="delete" parameterType="com.joyintech.service.basicdata.marketdata.mstrateassetquotationinfo.dto.ComRateAssetQuotationInfo001Dto" >
+        delete from FIN_PRODUCT_VALUATION
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and VAL_DATE = #{valDate,jdbcType=DATE}
+        and VALUE_SOURCE = #{valueSource,jdbcType=DATE}
+    </delete>
 </mapper>

@@ -17,6 +17,7 @@ import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.base.entity.SysBatchTask;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.BokStatLossPosiiton;
@@ -286,8 +287,6 @@ public class AssetImpairmentProvisionProcessorService {
 		BigDecimal lossBalance = BigDecimal.ZERO;
 		// 获取系统参数——减值方案类型
 		String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
-		// 定义 变量.是否走减值模型逻辑，默认为false，不走减值模型逻辑
-		boolean lossModFlag = false;
 		// 减值方案不为空时，查询对应减值模型结果
 		if(StringUtil.isNotEmpty(lossType)){
 			Map<String, Object> params = new HashMap<>();
@@ -315,8 +314,6 @@ public class AssetImpairmentProvisionProcessorService {
 						// 变量.减值余额 = 变量.减值余额 + 减值模型ECL结果.前瞻后ECL预期信用损失
 						lossBalance = ArithmeticUtil.doAdd(lossBalance, item.getProspectiveEcl());
 					}
-					// 变量.是否走减值模型逻辑 = true
-					lossModFlag = true;
 				}
 				// 若采用毕马威方案，则ecl损失比例直接查询，无需重新计算
 				else if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
@@ -327,14 +324,14 @@ public class AssetImpairmentProvisionProcessorService {
 					lossBalance = ArithmeticUtil.multiply(variableEda,eclRatio);
 					lossBalance = ArithmeticUtil.round(lossBalance, NumberEnum.MONEY);
 					// 若采用的是毕马威方案，则返回结果EAD需要更新入库
-					// 变量.减值模型ECL结果.EAD = 变量.EAD
-					modEclResult.setEad(variableEda);
-					//  变量.减值模型ECL结果.前瞻后ECL预期信用损失= 变量.减值余额
-					modEclResult.setProspectiveEcl(lossBalance);
-					// 将ECL结果添加到返回结果中
-					result.setModEclResult(modEclResult);
-					// 变量.是否走减值模型逻辑 = true
-					lossModFlag = true;
+					if(DateUtil.compareDate(happenDate, modEclResult.getDecDate()) == 0){
+						// 变量.减值模型ECL结果.EAD = 变量.EAD
+						modEclResult.setEad(variableEda);
+						//  变量.减值模型ECL结果.前瞻后ECL预期信用损失= 变量.减值余额
+						modEclResult.setProspectiveEcl(lossBalance);
+						// 将ECL结果添加到返回结果中
+						result.setModEclResult(modEclResult);
+					}
 				}
 			}
 

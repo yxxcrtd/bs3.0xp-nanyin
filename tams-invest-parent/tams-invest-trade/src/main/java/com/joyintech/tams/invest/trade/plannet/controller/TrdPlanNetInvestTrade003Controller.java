@@ -61,6 +61,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
@@ -359,7 +360,7 @@ public class TrdPlanNetInvestTrade003Controller extends BaseController {
      */
     @RequestMapping("getPrice")
     @ResponseBody
-    public BigDecimal getPrice(@RequestBody Map<String, Object> map) {
+    public BigDecimal getPrice(@RequestParam Map<String, Object> map) {
         return trdPlanNetInvestTrade003Service.getPrice(map);
     }
 

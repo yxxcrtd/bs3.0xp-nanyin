@@ -3,14 +3,14 @@ package com.joyintech.tams.invest.interf.trade.common.dto;
 import com.joyintech.framework.base.BaseEntity;
 
 /**
- * 交易接口配置DTO
+ * 接口服务配置DTO
  * 
  * @author yflv
  * @version 1.0 2021年09月23日
- * @see InterfTradeConfigDto
+ * @see InterfServiceConfigDto
  * @since 1.0
  */
-public class InterfTradeConfigDto extends BaseEntity{
+public class InterfServiceConfigDto extends BaseEntity{
 
     /**
 	 * 
@@ -28,9 +28,9 @@ public class InterfTradeConfigDto extends BaseEntity{
     private String interfName;
 
     /**
-     * 接口数据来源
+     * 接口类型(RECEIVE:接收,SEND:发送)
      */
-    private String interfSource;
+    private String interfType;
     
     /**
      * 接口系统
@@ -41,6 +41,11 @@ public class InterfTradeConfigDto extends BaseEntity{
      *接口状态(1:启用,0:禁用,)
      */
     private Integer interfStatus;
+    
+    /**
+     * 接口备注
+     */
+    private String interfRemark;
     
     /**
      * 业务服务
@@ -68,12 +73,12 @@ public class InterfTradeConfigDto extends BaseEntity{
 		this.interfName = interfName;
 	}
 
-	public String getInterfSource() {
-		return interfSource;
+	public String getInterfType() {
+		return interfType;
 	}
 
-	public void setInterfSource(String interfSource) {
-		this.interfSource = interfSource;
+	public void setInterfType(String interfType) {
+		this.interfType = interfType;
 	}
 
 	public String getInterfSystem() {
@@ -90,6 +95,14 @@ public class InterfTradeConfigDto extends BaseEntity{
 
 	public void setInterfStatus(Integer interfStatus) {
 		this.interfStatus = interfStatus;
+	}
+
+	public String getInterfRemark() {
+		return interfRemark;
+	}
+
+	public void setInterfRemark(String interfRemark) {
+		this.interfRemark = interfRemark;
 	}
 
 	public String getBusinessService() {
@@ -110,9 +123,9 @@ public class InterfTradeConfigDto extends BaseEntity{
 
 	@Override
 	public String toString() {
-		return "InterfTradeConfigDto [interfCode=" + interfCode + ", interfName=" + interfName + ", interfSource="
-				+ interfSource + ", interfSystem=" + interfSystem + ", interfStatus=" + interfStatus
-				+ ", businessService=" + businessService + ", businessMethod=" + businessMethod + "]";
+		return "InterfServiceConfigDto [interfCode=" + interfCode + ", interfName=" + interfName + ", interfType="
+				+ interfType + ", interfSystem=" + interfSystem + ", interfStatus=" + interfStatus + ", interfRemark="
+				+ interfRemark + ", businessService=" + businessService + ", businessMethod=" + businessMethod + "]";
 	}
 
 }

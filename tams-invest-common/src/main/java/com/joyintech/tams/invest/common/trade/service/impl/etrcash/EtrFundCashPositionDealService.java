@@ -526,6 +526,34 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
             }
+        }else{
+            if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) { // 提交
+                // 1.无委托直投
+                // 可用现金(组合、托管户):申购确认日减少交易金额
+                if (StringUtil.isEmpty(entrustId) && StringUtil.isEmpty(chlId)) {
+                    etrCashPositionFlowDto.setAmount(deal.getTradeAmt().negate());
+                    etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+                            deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                    etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+                }
+                // 2.无委托通道
+                else if (StringUtil.isEmpty(entrustId) && StringUtil.isNotEmpty(chlId)) {
+                    // 2.1 无委托通道逐笔划款
+                    // 可用现金(组合、托管户):申购确认日减少交易金额
+                    if (StringUtil.equals(chlType, DictCodeListExt2.划款方式_逐笔划款.getValue())) {
+                        etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                        etrCashPositionFlowDto.setChlFinprodId(null);
+                    }
+                    // 2.2 无委托通道一次性划款
+                    // 可用现金(组合、通道):申购确认日减少交易金额
+                    else {
+                        etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select通道资金账户(chlId));
+                    }
+                    etrCashPositionFlowDto.setAmount(deal.getTradeAmt().negate());
+                    etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+                }
+            }
         }
     }
 
@@ -555,6 +583,15 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用持仓(组合、证券账户)：认购确认日增加交易份额
                 // 2.委托通道逐笔划款、委托通道一次性划款、无委托通道逐笔划款、无委托通道一次性划款
                 // 可用持仓(组合、通道)：认购确认日增加交易份额
+                etrSecPositionFlowDto.setAmount(deal.getShareAmt());
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+            }
+        }else{
+            if (DictCodeList.持仓类型_实际.equals(持仓类型)) { // 有效
+                // 1.委托直投、无委托直投
+                // 可用持仓(组合）：申购确认日期增加交易份额
+                // 2.委托通道逐笔划款、委托通道一次性划款、无委托通道逐笔划款、无委托通道一次性划款
+                // 可用持仓(组合、通道）：申购确认日期增加交易份额
                 etrSecPositionFlowDto.setAmount(deal.getShareAmt());
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
             }

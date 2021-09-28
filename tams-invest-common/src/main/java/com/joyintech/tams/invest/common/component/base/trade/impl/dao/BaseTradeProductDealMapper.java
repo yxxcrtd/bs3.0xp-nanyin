@@ -10,8 +10,10 @@
  
 package com.joyintech.tams.invest.common.component.base.trade.impl.dao;
 
+import com.joyintech.tams.common.base.entity.StlPayOrders;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -129,4 +131,10 @@ public interface BaseTradeProductDealMapper {
      */
     List<String> selectRepoAssetType2(Map<String, Object> map);
 
+    /**
+     * 根据交易编号查询对应划款指令
+     * @param map Map<String, Object>
+     * @return 划款指令
+     */
+    List<StlPayOrdersDto> selectStlPayOrders(Map<String, Object> map);
 }

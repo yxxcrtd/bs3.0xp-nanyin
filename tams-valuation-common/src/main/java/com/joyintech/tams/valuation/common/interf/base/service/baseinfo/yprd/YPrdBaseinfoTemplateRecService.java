@@ -378,8 +378,8 @@ public class YPrdBaseinfoTemplateRecService {
         valFinProduct.setCalendarId(interfCommonService.getCalendarId(dto.getTradeMarket()));
         // 交易场所 = A.交易场所
         valFinProduct.setTradeMarket(dto.getTradeMarket());
-        // 市场代码= A.产品代码
-        valFinProduct.setFinprodMarketId(dto.getProdId());
+        // 市场代码= A.市场代码
+        valFinProduct.setFinprodMarketId(dto.getFinprodMarketId());
         // 发行方式 = A.发行方式
 //        valFinProduct.setIssueType(dto.getIssueType());
         // tis传的是开放类型，接收的数据字典为发行方式，增加数据字典

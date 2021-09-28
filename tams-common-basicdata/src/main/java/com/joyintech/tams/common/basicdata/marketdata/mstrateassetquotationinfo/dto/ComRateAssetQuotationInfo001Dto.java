@@ -8,6 +8,7 @@ package com.joyintech.tams.common.basicdata.marketdata.mstrateassetquotationinfo
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -15,6 +16,7 @@ import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.FinProductValuation;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -93,7 +95,14 @@ public class ComRateAssetQuotationInfo001Dto extends FinProductValuation impleme
     public BigDecimal getValuation() {
         return super.getValuation();
     }
+    @NotEmpty(fieldName = "ComBondQuotationInfo002.valueSource", groups = {ValidateGroupEdit.class})
+    public String getValueSourceName(){
+        return SysDataUtil.getNameFromDataDict(DictCode.估值来源, this.getValueSource());
+    }
 
+    public String getInputTypeName(){
+        return SysDataUtil.getNameFromDataDict(DictCode.录入方式, this.getInputType());
+    }
     /**
      * 取得 全价估值(每百元)
      *

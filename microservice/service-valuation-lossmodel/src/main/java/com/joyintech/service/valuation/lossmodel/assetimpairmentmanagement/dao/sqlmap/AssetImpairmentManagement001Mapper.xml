@@ -326,9 +326,9 @@
         inner join FIN_PRODUCT_TYPE C on C.FINPROD_ID = B.FINPROD_ID
         <where>
             1=1
-            and A.IS_CANCEL ='N'
-            and A.TRADE_STATUS !='03'
-            and A.INV_AIM='AC'
+			and A.IS_CANCEL = 'N'
+			and A.TRADE_STATUS != '03'
+			and (A.INV_AIM in ('AC' ,'FVOCI') or A.INV_AIM is null)
 			<if test="prodId != null and prodId != ''">
 				and E.BOOKSET_ID =#{prodId}
 			</if>

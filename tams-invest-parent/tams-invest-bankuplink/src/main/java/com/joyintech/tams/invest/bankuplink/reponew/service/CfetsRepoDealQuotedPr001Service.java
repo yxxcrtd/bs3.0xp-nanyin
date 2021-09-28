@@ -52,6 +52,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -636,6 +637,26 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
     public ResponseEntity<byte[]> exportPdf(String pageId, Map param){
         List<CstpSelectDto> datas = selectExportPdf(param);
         if(!StringUtil.isEmptyList(datas)){
+            datas.forEach(data -> {
+                DecimalFormat df2 = new DecimalFormat("#0.00##");
+                // 交易金额
+                if(StringUtil.isNotEmpty(data.getTradecashamt())){
+                    data.setTradecashamt(new BigDecimal(df2.format(data.getTradecashamt())));
+                }
+                // 全面总额
+                if(StringUtil.isNotEmpty(data.getLastqty())){
+                    data.setLastqty(new BigDecimal(df2.format(data.getLastqty())));
+                }
+                // 回购利息
+                if(StringUtil.isNotEmpty(data.getAccruedinteresttotalamt())){
+                    data.setAccruedinteresttotalamt(new BigDecimal(df2.format(data.getAccruedinteresttotalamt())));
+                }
+                // 到期结算金额
+                if(StringUtil.isNotEmpty(data.getSettlcurramt2())){
+                    data.setSettlcurramt2(new BigDecimal(df2.format(data.getSettlcurramt2())));
+                }
+            });
+
             //汇总交易金额
             CstpSelectDto dto = new CstpSelectDto();
             dto.setPortfolioId("合计");

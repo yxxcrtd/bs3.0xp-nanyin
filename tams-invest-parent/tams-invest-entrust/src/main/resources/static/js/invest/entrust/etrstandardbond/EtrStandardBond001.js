@@ -51,8 +51,8 @@
             // 组合代码
             {field: 'portfolioId', title: 'EtrStandardBond001.colModel.portfolioId', sortField: 'portfolioId'}
             // 证券账户/通道
-            , {field: 'secAcctId', title: function () {
-                    return  JoyinUtil.getLabel("EtrStandardBond001.colModel.secAcctId")+JoyinUtil.getLabel("invest.channelId");}(), sortField: 'secAcctId'}
+            //修改为证券账户
+            , {field: 'secAcctId', title: 'EtrStandardBond001.colModel.secAcctId', sortField: 'secAcctId'}
             // 交易场所
             , {field: 'tradePlaceText', title: 'EtrStandardBond001.colModel.tradePlace', sortField: 'tradePlace'}
             // 债券代码

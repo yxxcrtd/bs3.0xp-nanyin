@@ -75,7 +75,7 @@ public class ComRateAssetQuotationInfo002Controller extends BaseController {
     public String init(Model model) {
         String finprodId = getParam("finprodId");
         String workflowId = getParam("workflowId");
-        setSelectOptionToModel(model, DictCode.收益类型);
+        setSelectOptionToModel(model, DictCode.收益类型,DictCode.估值来源);
         if (StringUtil.isNotEmpty(finprodId)) {
             //将输入的估值日期格式化
             String valDate = DateUtil.format(new Date(Long.valueOf(getParam("valDate"))));
@@ -84,6 +84,7 @@ public class ComRateAssetQuotationInfo002Controller extends BaseController {
             param.put("YESORNO_YES_01", DictCodeList.是否_是.getValue());
             param.put("finprodId", finprodId);
             param.put("valDate", valDate);
+            param.put("valueSource", getParam("valueSource"));
             //根据主键获取业务实体
             ComRateAssetQuotationInfo001Dto dto = mstRateAssetQuotationInfo001Service.selectMstRateAsset(param);
             //设置到model中
@@ -186,10 +187,11 @@ public class ComRateAssetQuotationInfo002Controller extends BaseController {
                         map.put("finprodType2", dto.getFinprodType2());
                         /** modify by yanya on 20210329 使用估值侧类型进行过滤**/
                         map.put("finprodType", dto.getFinprodType());
-                        //新建时，资产代码+估值日期检索基金行情信息，数据已存在的情况下，报错
+                        map.put("valueSource", dto.getValueSource());
+                        //新建时，资产代码+估值日期+估值来源检索基金行情信息，数据已存在的情况下，报错
                         List<ComRateAssetQuotationInfo001Dto> list = mstRateAssetQuotationInfo001Service.selectByIdAndDate(map);
                         if (!StringUtil.isEmptyList(list)) {
-                            errorList.add(new ValidMessage("finProdMarketId", "资产代码" + dto.getFinProdMarketId() + " 估值日期" + dto.getValDateStr() + " 数据不能重复。"));
+                            errorList.add(new ValidMessage("finProdMarketId", "资产代码：" + dto.getFinProdMarketId() + "估值日期：" + dto.getValDateStr() + "估值来源：" + dto.getValueSourceName() + " 数据不能重复。"));
                         }
                     }
                 }
@@ -210,10 +212,11 @@ public class ComRateAssetQuotationInfo002Controller extends BaseController {
                     map.put("finprodType2", dto.getFinprodType2());
                     /** modify by yanya on 20210329 使用估值侧类型进行过滤**/
                     map.put("finprodType", dto.getFinprodType());
+                    map.put("valueSource", dto.getValueSource());
                     //新建时，资产代码+估值日期检索基金行情信息，数据已存在的情况下，报错
                     List<ComRateAssetQuotationInfo001Dto> list = mstRateAssetQuotationInfo001Service.selectByIdAndDate(map);
                     if (!StringUtil.isEmptyList(list)) {
-                        errorList.add(new ValidMessage("finProdMarketId", "资产代码" + dto.getFinProdMarketId() + " 估值日期" + dto.getValDateStr() + " 数据不能重复。"));
+                        errorList.add(new ValidMessage("finProdMarketId", "资产代码：" + dto.getFinProdMarketId() + "估值日期：" + dto.getValDateStr() + "估值来源：" + dto.getValueSourceName() + " 数据不能重复。"));
                     }
                 }
             }
@@ -247,9 +250,6 @@ public class ComRateAssetQuotationInfo002Controller extends BaseController {
         params.setElementId(dto.getElementId());
         if (StringUtil.isEmpty(dto.getFinprodId())) {
             dto.setFinprodId(IDGenerator.generate());
-        }
-        if (StringUtil.isEmpty(dto.getValueSource())) {
-            dto.setValueSource(DictCodeListExt3.估值数据来源_手工.getCodeName());
         }
         params.setBusinessCode(dto.getFinprodId());
 

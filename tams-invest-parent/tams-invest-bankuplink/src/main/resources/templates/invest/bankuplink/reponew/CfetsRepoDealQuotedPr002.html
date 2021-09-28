@@ -523,7 +523,7 @@
                      portfolioId:'${entity?.portfolioId==null?'':entity?.portfolioId}', ps:'${entity?.ps==null?'':entity?.ps}',
                      bussType:'zyqJy',bussType:'zyqJy',tradeType:'trdRepo',
                      bizCode:'${entity?.quoteId==null?'':entity?.quoteId}', entrustId:'${entity?.entrustId==null?'':entity?.entrustId}',
-                     securitiesCust: '${entity?.secAcctId == null? '': entity?.secAcctId}',chlId:'${entity?.chlId == null? '': entity?.chlId}', tradeMarketId: 'tradeMarket'}|">
+                     securitiesCust: '${entity?.secAcctId == null? '': entity?.secAcctId}',chlId:'${entity?.chlId == null? '': entity?.chlId}', tradeMarketId: 'tradeMarket',tradePlace: '${TRADE_PLACE_01}'}|">
             </div>
             <div id="baseRiskMathComm" class="page-component"
                  th:data-path="@{/component/common/BaseRiskMathComm/init}"

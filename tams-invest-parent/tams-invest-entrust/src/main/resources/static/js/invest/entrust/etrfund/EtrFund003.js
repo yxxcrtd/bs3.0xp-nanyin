@@ -352,6 +352,7 @@
         title : 'invest.channelId',
         width : 200,
         sortfield : 'chlIdName',
+        visible:false,
         sortable: false
     }// 通道名称
     , {
@@ -360,6 +361,7 @@
         width : 200,
         type  : 'money',
         sortfield : 'chlIdCash',
+        visible:false,
         sortable: false
     }// 通道可用现金
     , {

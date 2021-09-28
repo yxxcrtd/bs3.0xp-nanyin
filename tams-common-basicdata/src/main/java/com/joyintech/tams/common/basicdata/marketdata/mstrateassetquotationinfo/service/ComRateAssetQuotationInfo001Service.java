@@ -338,6 +338,7 @@ public class ComRateAssetQuotationInfo001Service extends CommonExportService<Com
                 map.put("finprodType", tmpDto.getFinprodType());
             }
             map.put("valDate",DateUtil.format(temp.getValDate()));
+            map.put("valueSource", temp.getValueSource());
             List<ComRateAssetQuotationInfo001Dto> mstRateAssetQuotationInfo001DtoList = this.selectByIdAndDate(map);
             //数据已存在 【资产代码、估值日 相同】，做更新操作。
             if (!StringUtil.isEmptyList(mstRateAssetQuotationInfo001DtoList)){

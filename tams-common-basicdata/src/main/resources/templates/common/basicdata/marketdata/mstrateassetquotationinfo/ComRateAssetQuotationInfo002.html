@@ -57,6 +57,16 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
+                    <label class="layui-form-label form-lable mst-lable">估值来源</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="valueSource" name="valueSource" data-th-data-result='${VALUATION_SOURCE}'
+                                data-th-initValue="${entity?.valueSource}" required
+                                class="layui-input form-input input-select" allowClear="true"
+                                placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}"></select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
                     <label class="layui-form-label form-lable mst-lable" >全价估值(每百元）</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="fullValuation" name="fullValuation" required="required"

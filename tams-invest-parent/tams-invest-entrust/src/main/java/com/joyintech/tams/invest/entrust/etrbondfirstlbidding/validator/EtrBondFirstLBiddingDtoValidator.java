@@ -72,6 +72,10 @@ public class EtrBondFirstLBiddingDtoValidator implements BeanValidator{
             List<EtrBondFirstLBiddingDto> listDto = dto.getSelectedItem();
             for (EtrBondFirstLBiddingDto entity : listDto) {
                 entity.setOperateType(BussinessDictCodeList.委托操作类型_关闭.getValue());
+                if("08".equals(entity.getEntrustStatus())){
+                    errorList.add(new ValidMessage("存在指令在流程中，不可关闭！"));
+                    return errorList;
+                }
                 errorList.addAll(service.check(entity));
             }
         }
@@ -81,6 +85,10 @@ public class EtrBondFirstLBiddingDtoValidator implements BeanValidator{
                 entity.setOperateType(BussinessDictCodeList.委托操作类型_撤回.getValue());
                 if (StringUtil.isNotEmpty(entity.getWinPriceStr())) {
                     errorList.add(new ValidMessage("", entity.getWinPriceStr() + "中标结果已存在不能撤回！"));
+                    return errorList;
+                }
+                if("08".equals(entity.getEntrustStatus())){
+                    errorList.add(new ValidMessage("存在指令在流程中，不可撤销！"));
                     return errorList;
                 }
                 errorList.addAll(service.check(entity));

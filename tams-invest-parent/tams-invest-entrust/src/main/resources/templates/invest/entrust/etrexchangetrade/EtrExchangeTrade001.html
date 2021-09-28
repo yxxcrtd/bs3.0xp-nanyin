@@ -184,7 +184,7 @@
             <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">托管户可用现金:</label>
-                    <label id="tgAcctCash_jj" class="layui-form-label" style="font-size: 12px;"></label>
+                    <label id="tgAcctCash_jj" class="layui-form-label"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">证券户可用现金:</label>
@@ -437,35 +437,35 @@
             <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">托管户可用现金:</label>
-                    <span id="tgAcctCash_dz" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="tgAcctCash_dz"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">证券户可用现金:</label>
-                    <span id="secAcctCash_dz" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="secAcctCash_dz" style="font-size: 12px;"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">T1可用现金:</label>
-                    <span id="t1Cash_dz" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="t1Cash_dz" style="font-size: 12px;"></label>
                 </div>
             </div>
             <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">可买数量:</label>
-                    <span id="canBuyAmount_dz" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="canBuyAmount_dz" style="font-size: 12px;"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">持仓数量:</label>
-                    <span id="positionAmount_dz" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="positionAmount_dz" style="font-size: 12px;"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">可卖数量:</label>
-                    <span id="canSellAmount_dz" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="canSellAmount_dz" style="font-size: 12px;"></label>
                 </div>
             </div>
             <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">成本价:</label>
-                    <span id="costPrice_dz" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="costPrice_dz" style="font-size: 12px;"></label>
                 </div>
             </div>
             <div class="layui-form-item">
@@ -632,12 +632,12 @@
                         <span class="input-right-show">元</span>
                     </div>
                 </div>
-                <!--add by chenjiaxing 添加投资目的字段 start-->
-                <div class="form-inline-wrap" style=" width: 50%; padding:0px;" id="invAim_div_dz">
-                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.invAim}">投资目的</label>
+                <div class="form-inline-wrap" style=" width: 50%; padding:0px;" id="counterId_div_dz">
+                    <label class="layui-form-label" data-th-utext="#{EtrExchangeTrade001.counterId}">交易对手</label>
                     <div class="layui-input-inline input-inline">
-                        <select type="text" id="invAim_dz" name="invAim" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
-                                data-th-data-result='${INV_AIM}' allowClear="true" th:initValue="${entity?.invAim}" required></select>
+                        <select th:id="counterId_dz" th:name="counterId" th:data-url="@{/invest/entrust/etrexchangetrade/EtrExchangeTrade001/selectCounterIdByCounterType}" formatOption="false"
+                                th:initValue="${entity?.counterId}" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}">
+                        </select>
                     </div>
                 </div>
 
@@ -657,12 +657,12 @@
                 <!--add by chenjiaxing 添加投资目的字段 end-->
             </div>
             <div class="layui-form-item">
-                <div class="form-inline-wrap" style=" width: 50%; padding:0px;" id="counterId_div_dz">
-                    <label class="layui-form-label" data-th-utext="#{EtrExchangeTrade001.counterId}">交易对手</label>
+                <!--add by chenjiaxing 添加投资目的字段 start-->
+                <div class="form-inline-wrap" style=" width: 50%; padding:0px;" id="invAim_div_dz">
+                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.invAim}">投资目的</label>
                     <div class="layui-input-inline input-inline">
-                        <select th:id="counterId_dz" th:name="counterId" th:data-url="@{/invest/entrust/etrexchangetrade/EtrExchangeTrade001/selectCounterIdByCounterType}" formatOption="false"
-                                th:initValue="${entity?.counterId}" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}">
-                        </select>
+                        <select type="text" id="invAim_dz" name="invAim" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result='${INV_AIM}' allowClear="true" th:initValue="${entity?.invAim}" required></select>
                     </div>
                 </div>
                 <div class="form-inline-wrap" style=" width: 50%; padding:0px;" id="seatId_div_dz">
@@ -716,35 +716,35 @@
             <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">托管户可用现金:</label>
-                    <span id="tgAcctCash_gd" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="tgAcctCash_gd"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">证券户可用现金:</label>
-                    <span id="secAcctCash_gd" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="secAcctCash_gd" style="font-size: 12px;"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">T1可用现金:</label>
-                    <span id="t1Cash_gd" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="t1Cash_gd" style="font-size: 12px;"></label>
                 </div>
             </div>
             <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">可买数量:</label>
-                    <span id="canBuyAmount_gd" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="canBuyAmount_gd" style="font-size: 12px;"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">持仓数量:</label>
-                    <span id="positionAmount_gd" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="positionAmount_gd" style="font-size: 12px;"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">可卖数量:</label>
-                    <span id="canSellAmount_gd" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="canSellAmount_gd" style="font-size: 12px;"></label>
                 </div>
             </div>
             <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">成本价:</label>
-                    <span id="costPrice_gd" style="font-size: 12px;"></span>
+                    <label class="layui-form-label" id="costPrice_gd" style="font-size: 12px;"></label>
                 </div>
             </div>
             <div class="layui-form-item">

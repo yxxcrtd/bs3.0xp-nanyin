@@ -130,6 +130,10 @@ public class TrdAssetLossService extends BaseService<TrdAssetLoss001Dto> {
         if (StringUtil.isNotEmpty(dto.getEclVaule())){
             dto.setEclVaule(dto.getEclVaule().divide(new BigDecimal(100)));
         }
+        // 代偿期类型若为空，默认为到期
+        if (!StringUtil.isNotEmpty(dto.getPeriodType())){
+            dto.setPeriodType(DictCodeListExt3.代偿期类型_到期.getValue());
+        }
         if (StringUtil.equals(operationType, "NEW")) {
             dto.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             if (!StringUtil.isNotEmpty(dto.getEclVaule())){

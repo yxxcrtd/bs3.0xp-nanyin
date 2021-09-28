@@ -150,12 +150,24 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
             //买入方
             item.setIndexId(String.valueOf(序号*2-1));
             item.setPs(DictCodeList.交易方向_买入.getValue());
+            // 查询卖出方的券商账户
+            Map<String, Object> saleParam = new HashMap<>();
+            saleParam.put(KEY_ARRAY[1], paramDto.getPortfolioId());
+            saleParam.put("tradeMarket", item.getTradeMarket());
+            List<SelectOptionDto> salePtlSecAcctList = etrExchangeTrade001Service.getPtlSecAcctInfo(saleParam);
+            item.setCounterId(!StringUtil.isEmptyList(salePtlSecAcctList)?salePtlSecAcctList.get(0).getText():null);
             jsonArrays.add(assembleCommonDataByTMK(item));
             //卖出方
             desItem.setIndexId(String.valueOf(序号*2));
             desItem.setPs(DictCodeList.交易方向_卖出.getValue());
             desItem.setPortfolioId(paramDto.getPortfolioId());
             desItem.setSecAcctId(paramDto.getSecAcctId());
+            // 查询买入方的券商账户
+            Map<String, Object> param = new HashMap<>();
+            param.put(KEY_ARRAY[1], item.getPortfolioId());
+            saleParam.put("tradeMarket", item.getTradeMarket());
+            List<SelectOptionDto> ptlSecAcctList = etrExchangeTrade001Service.getPtlSecAcctInfo(param);
+            desItem.setCounterId(!StringUtil.isEmptyList(ptlSecAcctList)?ptlSecAcctList.get(0).getText():null);
             jsonArrays.add(assembleCommonDataByTMK(desItem));
         });
         Map<String,Object> retMap=new HashMap<>();
