@@ -14,7 +14,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
@@ -162,6 +164,12 @@ public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {
      * 委托编号
      */
     private String entrustId;
+
+    /**
+     * 质押率
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal pledgeRatio;
 
     /**
      * 获取 prinSysDate
@@ -705,5 +713,13 @@ public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {
 
     public void setEntrustId(String entrustId) {
         this.entrustId = entrustId;
+    }
+
+    public BigDecimal getPledgeRatio() {
+        return pledgeRatio;
+    }
+
+    public void setPledgeRatio(BigDecimal pledgeRatio) {
+        this.pledgeRatio = pledgeRatio;
     }
 }
