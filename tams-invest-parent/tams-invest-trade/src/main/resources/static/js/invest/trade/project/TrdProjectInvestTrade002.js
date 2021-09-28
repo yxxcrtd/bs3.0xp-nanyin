@@ -239,6 +239,7 @@
 //                ChannelAssetCommon.setChannelSelect($("#chlId"), finprodId, $("#entrustId").val(), function () {
                     psChange();
                     init();
+                    $("#bussTrdAvailableCashQuery_div_channelCash").hide();
                     window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                         if (!$("#tradeAmt").val()) {
                             Joyin.error("请输入实收本息总额")
