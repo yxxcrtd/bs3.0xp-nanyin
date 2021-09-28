@@ -397,10 +397,10 @@ public class ValProfitprojectService extends CommonExportService<ValProfitprojec
      * @param map
      * @return
      */
-    public Page<SelectOptionDto> getAssetSelect(Map<String, Object> map) {
+    public Page<SuggestDto> getAssetSelect(Map<String, Object> map) {
         return restTemplate.postForPage(ServiceApplication.VALUATION_BASICDATA_SERVICE_NAME
                         + "/ValProfitproject/getAssetSelect", map,
-                SelectOptionDto.class);
+                SuggestDto.class);
     }
 
     /**
