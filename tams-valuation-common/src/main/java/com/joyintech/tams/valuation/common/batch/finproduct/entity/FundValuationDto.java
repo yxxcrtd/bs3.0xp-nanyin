@@ -12,14 +12,14 @@ package com.joyintech.tams.valuation.common.batch.finproduct.entity;
 
 /**
  * 基金估值行情
- * 
+ *
  * @author weipeng
  * @version 1.0 2018年6月1日
  * @see FundValuationDto
  * @since 1.0
  */
 public class FundValuationDto extends MarketInfoDto{
-    
+
     /**
      * 基金代码
      */
@@ -31,7 +31,7 @@ public class FundValuationDto extends MarketInfoDto{
 
     /**
      * 取得 基金代码
-     * 
+     *
      * @return 基金代码
      */
     public String getFundCode() {
@@ -40,7 +40,7 @@ public class FundValuationDto extends MarketInfoDto{
 
     /**
      * 设置 基金代码
-     * 
+     *
      * @param fundCode
      *            基金代码
      */
@@ -50,7 +50,7 @@ public class FundValuationDto extends MarketInfoDto{
 
     /**
      * 取得 估值来源
-     * 
+     *
      * @return 估值来源
      */
     public String getValueSource() {
@@ -59,14 +59,14 @@ public class FundValuationDto extends MarketInfoDto{
 
     /**
      * 设置 估值来源
-     * 
+     *
      * @param valueSource
      *            估值来源
      */
     public void setValueSource(String valueSource) {
         this.valueSource = valueSource;
     }
-    
-    
+
+
 
 }
