@@ -313,6 +313,22 @@ public class BussRepoSecController extends BaseController {
         }
         return result;
     }
-    
+
+    /**
+     * 根据指令编号查询质押券数据
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping("selectEtrPledgeData")
+    @ResponseBody
+    public AjaxResult selectEtrPledgeData(@RequestBody Map<String, Object> map) {
+        AjaxResult ajaxResult = new AjaxResult();
+
+        BussRepoSecDto bussRepoSecDto = bussRepoSecService.selectBussRepoSec(map);
+        if (bussRepoSecDto != null && !StringUtil.isEmptyList(bussRepoSecDto.getPledgeBondList())) {
+            ajaxResult.setData(bussRepoSecDto.getPledgeBondList());
+        }
+
+        return ajaxResult;
+    }
     
 }

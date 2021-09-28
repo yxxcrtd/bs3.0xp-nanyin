@@ -277,6 +277,15 @@
         if (param) {
             if (param.entrustId) {
                 $("#entrustId").val(param.entrustId).trigger("change");//委托代码
+
+                // 加载质押券信息列表
+                if (window.BussRepoSec && window.BussRepoSec['bussRepoSec']) {
+                    Joyin.ajaxJson(basePath + '/component/trade/BussRepoSec/selectEtrPledgeData', param, function (result) {
+                        if (result && result.data && window.BussRepoSec && window.BussRepoSec['bussRepoSec']) {
+                            window.BussRepoSec['bussRepoSec'].reloadPledgeBond(result.data);
+                        }
+                    },false);
+                }
             }
             if (param.entrustStatus) {
                 $("#entrustStatus").val(param.entrustStatus).trigger("change");//委托状态
