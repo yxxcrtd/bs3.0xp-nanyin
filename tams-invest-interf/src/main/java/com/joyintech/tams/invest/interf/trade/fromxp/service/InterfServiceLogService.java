@@ -1,15 +1,7 @@
-/*
- * 文件名：PaActiveRemind001Service.java
- * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
- * 描述：理财资管管理系统V2.0
- * 修改人：xiexinting
- * 修改时间：2018年8月21日
- * 修改内容：新建
- * 系统名称：理财资管管理系统V2.0
- */
-
 package com.joyintech.tams.invest.interf.trade.fromxp.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,7 +20,7 @@ import com.joyintech.tams.invest.interf.trade.common.dto.InterfServiceLogDto;
 import com.joyintech.tams.invest.interf.trade.common.util.SpringReflectUtils;
 import com.joyintech.tams.invest.interf.trade.fromxp.dao.InterfServiceLogMapper;
 /**
- * 交易接口日志Service
+ * 接口服务日志Service
  * 
  * @author yflv
  * @version 1.0 2021年09月23日
@@ -45,46 +37,73 @@ public class InterfServiceLogService extends BaseService<InterfServiceLogDto> {
      * 获取mapper对象
      */
     @Autowired
-    private InterfServiceLogMapper interfTradeLogMapper;
+    private InterfServiceLogMapper interfServiceLogMapper;
     
     /**
-	 *查询满足条件的交易接口日志
+	 *查询满足条件的接口服务日志
 	* @param param
 	* @return
 	*/
-	public List<InterfServiceLogDto> searchInterfTradeLog(InterfServiceLogDto interfTradeLogDto){
-		return interfTradeLogMapper.searchInterfServiceLog(interfTradeLogDto);
+	public List<InterfServiceLogDto> searchInterfServiceLog(InterfServiceLogDto interfServiceLogDto){
+		return interfServiceLogMapper.searchInterfServiceLog(interfServiceLogDto);
 	}
 	
 	/**
-	 * 更新交易接口日志状态
+	 * 更新接口服务日志状态
 	 * @param param
 	 * @return
 	 */
-	public int updateInterfTradeLogStatus(Map<String,Object> param){
-		return interfTradeLogMapper.updateInterfServiceLogStatus(param);
+	public int updateInterfServiceLogStatus(Map<String,Object> param){
+		return interfServiceLogMapper.updateInterfServiceLogStatus(param);
 	}
 	
 	/**
-     * 通过状态和id更新交易接口日志状态
+     * 通过状态和id更新接口服务日志状态
      */
-	public int updateInterfTradeLogStatusByStatusAndId(Map<String,Object> param) {
-    	return interfTradeLogMapper.updateInterfServiceLogStatusByStatusAndId(param);
+	public int updateInterfServiceLogStatusByStatusAndId(Map<String,Object> param) {
+    	return interfServiceLogMapper.updateInterfServiceLogStatusByStatusAndId(param);
     }
 	
 	/**
-	 * 运行投管业务逻辑
-	 * @param interfTradeLogDtoList
+	 * 获取可处理的接口服务日志
+	 * @param interfSystem
+	 * @return
 	 */
-	public void runInterfTradeLog(List<InterfServiceLogDto> interfTradeLogDtoList){
+	public List<InterfServiceLogDto> getRunableLogList(String interfSystem) {
+		List<InterfServiceLogDto> runableLogList = new ArrayList<InterfServiceLogDto>();
+		InterfServiceLogDto where = new InterfServiceLogDto();
+		where.setInterfSystem(interfSystem);
+		where.setInterfType(Constants.INTERF_TYPE_RECEIVE);
+		where.setInterfStatus(Constants.INTERF_STATUS_NEW);
+		List<InterfServiceLogDto> interfServiceLogDtoList = this.searchInterfServiceLog(where);
+		for (InterfServiceLogDto interfServiceLogDto : interfServiceLogDtoList) {
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("interfSystem", interfSystem);
+			param.put("interfType", Constants.INTERF_TYPE_RECEIVE);
+			param.put("oldStatus", Constants.INTERF_STATUS_NEW);
+			param.put("newStatus", Constants.INTERF_STATUS_PROCESS);
+			param.put("id", interfServiceLogDto.getId());
+			int result = this.updateInterfServiceLogStatusByStatusAndId(param);
+			if (result >= 1) {
+				runableLogList.add(interfServiceLogDto);
+			}
+		}
+		return runableLogList;
+	}
+	
+	/**
+	 * 运行投管业务逻辑
+	 * @param interfServiceLogDtoList
+	 */
+	public void runInterfServiceLog(List<InterfServiceLogDto> interfServiceLogDtoList){
 		InterfThreadPool pool = new InterfThreadPool(Constants.INTERF_THREAD_NUMBER);
     	try {
-        	for(InterfServiceLogDto interfTradeLogDto:interfTradeLogDtoList) {
-        		if(StringUtil.isEmpty(interfTradeLogDto.getInterfCode())) {
-        			logger.warn("接口编码为空，不可调用业务系统，对象：{}",interfTradeLogDto.toString());
+        	for(InterfServiceLogDto interfServiceLogDto:interfServiceLogDtoList) {
+        		if(StringUtil.isEmpty(interfServiceLogDto.getInterfCode())) {
+        			logger.warn("接口编码为空，不可调用业务系统，对象：{}",interfServiceLogDto.toString());
         			continue;
         		}
-        		RunTask task = new RunTask(interfTradeLogDto);
+        		RunTask task = new RunTask(interfServiceLogDto);
         		pool.submit(task);
         	}
     	} catch (Exception e) {
@@ -95,38 +114,39 @@ public class InterfServiceLogService extends BaseService<InterfServiceLogDto> {
 	}
 	
 	private class RunTask implements Runnable {
-    	private InterfServiceLogDto interfTradeLogDto;
-    	public RunTask(InterfServiceLogDto interfTradeLogDto) {
-    		this.interfTradeLogDto = interfTradeLogDto;
+    	private InterfServiceLogDto interfServiceLogDto;
+    	public RunTask(InterfServiceLogDto interfServiceLogDto) {
+    		this.interfServiceLogDto = interfServiceLogDto;
     	}
 		@Override
 		public void run() {
 			try {
-				logger.debug("接口日志对象信息:{}",interfTradeLogDto.toString());
-				InterfServiceConfigDto interfTradeConfigDto = CONFIG_MAP.get(interfTradeLogDto.getInterfCode());
-				if(interfTradeConfigDto==null) {
+				logger.debug("接口日志对象信息:{}",interfServiceLogDto.toString());
+				InterfServiceConfigDto interfServiceConfigDto = CONFIG_MAP.get(interfServiceLogDto.getInterfCode());
+				if(interfServiceConfigDto==null) {
 					InterfServiceConfigDto where = new InterfServiceConfigDto();
-					where.setInterfCode(interfTradeLogDto.getInterfCode());
-					where.setInterfSystem(interfTradeLogDto.getInterfSystem());
+					where.setInterfCode(interfServiceLogDto.getInterfCode());
+					where.setInterfSystem(interfServiceLogDto.getInterfSystem());
 					where.setInterfStatus(Constants.INTERF_CONFIG_STATUS_ENABLE);
-					List<InterfServiceConfigDto> interfTradeConfigDtoList = interfTradeLogMapper.searchInterfServiceConfig(where);
-					if(interfTradeConfigDtoList==null || interfTradeConfigDtoList.size()<=0) {
-						logger.warn("接口编码:{}，没有配置业务处理映射关系或映射关系不可用",interfTradeLogDto.getInterfCode());
+					where.setInterfType(Constants.INTERF_TYPE_RECEIVE);
+					List<InterfServiceConfigDto> interfServiceConfigDtoList = interfServiceLogMapper.searchInterfServiceConfig(where);
+					if(interfServiceConfigDtoList==null || interfServiceConfigDtoList.size()<=0) {
+						logger.warn("接口编码:{}，没有配置业务处理映射关系或映射关系不可用",interfServiceLogDto.getInterfCode());
 						return ;
 					}
-					interfTradeConfigDto = interfTradeConfigDtoList.get(0);
-					CONFIG_MAP.put(interfTradeLogDto.getInterfCode(),interfTradeConfigDto);
+					interfServiceConfigDto = interfServiceConfigDtoList.get(0);
+					CONFIG_MAP.put(interfServiceLogDto.getInterfCode(),interfServiceConfigDto);
 				}
-				String serviceName = interfTradeConfigDto.getBusinessService();
-				String methodName = interfTradeConfigDto.getBusinessMethod();
+				String serviceName = interfServiceConfigDto.getBusinessService();
+				String methodName = interfServiceConfigDto.getBusinessMethod();
 				if(StringUtil.isEmpty(serviceName)) {
-					logger.warn("接口配置:{}，没有配置业务系统服务名",interfTradeConfigDto.getInterfCode());
+					logger.warn("接口配置:{}，没有配置业务系统服务名",interfServiceConfigDto.getInterfCode());
 					return ;
 				}
 				if(StringUtil.isEmpty(methodName)) {
 					methodName = Constants.INTERF_DEFAULT_METHOD;
 				}
-				Object[] params = {interfTradeLogDto.getId(),interfTradeLogDto.getInterfMsgbody()};
+				Object[] params = {interfServiceLogDto.getId(),interfServiceLogDto.getInterfMsgbody()};
 				SpringReflectUtils.springInvokeMethod(serviceName, methodName, params);
 			} catch (Exception e) {
 				logger.error(e.getMessage());
