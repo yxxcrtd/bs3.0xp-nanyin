@@ -1002,7 +1002,44 @@
 	</select>
 	<!--查询流程中数据-->
 	<select id="getWflEntrustDealedAmt" resultType="java.math.BigDecimal">
-		<choose>
+		SELECT
+		SUM(SHARE_AMT*100)
+		FROM
+		(
+		SELECT
+		SHARE_AMT
+		FROM
+		WFL_IBU_QUOTE_ETR_RE T1
+		WHERE
+		EXISTS (
+		SELECT
+		*
+		FROM
+		WFL_IBU_QUOTE_BOND2 T2
+		WHERE
+		T2.QUOTE_ID = T1.QUOTE_ID
+		AND T2.ENTRUST_ID IS NULL)
+		<if test="entrustId != null and entrustId != ''">
+			and T1.ENTRUST_ID = #{entrustId}
+		</if>
+		<if test="workflowId != null and workflowId != ''">
+			and T1.WORKFLOW_ID != #{workflowId}
+		</if>
+		UNION ALL
+		SELECT
+		SHARE_AMT
+		FROM
+		WFL_IBU_QUOTE_BOND2 T3
+		<where>
+			<if test="entrustId != null and entrustId != ''">
+				and T3.ENTRUST_ID = #{entrustId}
+			</if>
+			<if test="workflowId != null and workflowId != ''">
+				and T3.WORKFLOW_ID != #{workflowId}
+			</if>
+		</where>
+		)
+		<!--<choose>
 			<when test="isDzh == 'Y'.toString()">
 				SELECT
 				SUM(SHARE_AMT*100)
@@ -1031,7 +1068,7 @@
 					</if>
 				</where>
 			</otherwise>
-		</choose>
+		</choose> -->
 	</select>
 
 
