@@ -277,7 +277,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%;" id="acctNo_div">
-                    <label class="layui-form-label" style="width: 80px;">资金账号</label>
+                    <label class="layui-form-label" style="width: 100px;">资金账号</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <select required type="text" id="acctNo" name="acctNo" class="layui-input form-input input-select" placeholder="请输入内容" th:initValue="${entity?.acctNo}"
                                 parentIds="portfolioId,tradeMarket" data-th-placeholder="#{SysCommon.placeholder}" data-th-data-url="@{/invest/entrust/etrexchangetrade/EtrExchangeTrade001/getPtlSecAcctInfo}" formatoption=true></select>
@@ -299,7 +299,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%;" id="ps_div">
-                    <label class="layui-form-label" style="width: 80px;" data-th-text="#{EtrExchangeTrade001.ps}">委托方向</label>
+                    <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrExchangeTrade001.ps}">委托方向</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <select required type="text" id="ps" name="ps" allowClear="true" class="layui-input form-input input-select" data-th-data-result='${PS}' data-th-initvalue="${entity?.ps}"
                                 parentIds="tradeMarket,psList" data-th-placeholder="#{SysCommon.placeholder}" formatoption="true" th:data-url= "@{/invest/entrust/etragrereptrade/EtrAgreRepTrade001/selectPs}">
@@ -315,7 +315,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%;" id="tradeAmt_div">
-                    <label class="layui-form-label" style="width: 80px;" >回购金额</label>
+                    <label class="layui-form-label" style="width: 100px;" >回购金额</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input type="text" id="tradeAmt" name="tradeAmt" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='2' class="layui-input form-input text-number"
                                data-th-value="${entity?.tradeAmt}" required="required" autocomplete="off" maxlength=9>
@@ -331,7 +331,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%;" id="fristSettleDate_div">
-                    <label class="layui-form-label" style="width: 80px;" >首期结算日</label>
+                    <label class="layui-form-label" style="width: 100px;" >首期结算日</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input required class="layui-input form-input input-dateSelect" id="fristSettleDate" name="fristSettleDate" placeholder="请选择时间" data-th-value="${entity?.fristSettleDate}">
                     </div>
@@ -349,7 +349,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%;" id="occupyDays_div">
-                    <label class="layui-form-label" style="width: 80px;" >占款天数</label>
+                    <label class="layui-form-label" style="width: 100px;" >占款天数</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input type="text" id="occupyDays" name="occupyDays" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='0' class="layui-input form-input text-number"
                                data-th-value="${entity?.occupyDays}" required="required" autocomplete="off" maxlength=9>
@@ -365,7 +365,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%" id="expireSettleAmt_div">
-                    <label class="layui-form-label" style="width: 80px;" >到期结算金额</label>
+                    <label class="layui-form-label" style="width: 100px;" >到期结算金额</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input type="text" id="expireSettleAmt" name="expireSettleAmt" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='2' class="layui-input form-input text-number"
                                data-th-value="${entity?.expireSettleAmt}" required="required" autocomplete="off" maxlength=10 style="">
@@ -380,7 +380,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%;" id="conRatio_div">
-                    <label class="layui-form-label" style="width: 80px;" >折算比例</label>
+                    <label class="layui-form-label" style="width: 100px;" > 折算率</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input type="text" id="conRatio" name="conRatio" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='2' class="layui-input form-input text-number"
                                data-th-value="${entity?.conRatio}" autocomplete="off" maxlength=9 required="required">
@@ -396,7 +396,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%;" id="printAmt_div">
-                    <label class="layui-form-label" style="width: 80px;" >券面金额</label>
+                    <label class="layui-form-label" style="width: 100px;" >券面金额</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input type="text" id="printAmt" name="printAmt" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='2' class="layui-input form-input text-number"
                                data-th-value="${entity?.printAmt}"  autocomplete="off" maxlength=10>
@@ -476,7 +476,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%;" id="trader_div">
-                    <label class="layui-form-label" style="width: 80px;" >本方交易员</label>
+                    <label class="layui-form-label" style="width: 100px;" >本方交易员</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input type="text" id="trader" name="trader" maxlength="6" class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                data-th-data-url="@{/invest/entrust/etragrereptrade/EtrAgreRepTrade001/selectCounterTrader}" data-idfield="code" data-keyfield="code" formatOption="false"
@@ -529,7 +529,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap" style="width: 50%;" id="vdate_div">
-                    <label class="layui-form-label" style="width: 80px;"data-th-text="#{EtrExchangeTrade001.vdate}" >开始日期</label>
+                    <label class="layui-form-label" style="width: 100px;"data-th-text="#{EtrExchangeTrade001.vdate}" >开始日期</label>
                     <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                         <input required class="layui-input form-input input-dateSelect" id="vdate" name="vdate" placeholder="请选择时间"
                                data-th-value='${iPlatformDate}' disabled="disabled">

@@ -706,11 +706,14 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
     
                         // 数量 = 输出质押品DTO.质押数量
                         BigDecimal amt = BigDecimal.ZERO ;
-                        if(flag){ // 委托开始减少,委托关闭增加
+                        // modify by wanshiwei ZGZGST-3314 【场内质押式回购交易】质押式协议回购，做了正回购交易，撤销后实时资产头寸查询的指令可用持仓错误 20210928 start
+                        // BaseEtrCashPositionCommServiceImpl.java executeEtrCashPosition 后面做了取反
+                        /*if(flag){ // 委托开始减少,委托关闭增加*/
                             amt = ArithmeticUtil.divide(prin, new BigDecimal("100"), 4).negate() ;
-                        }else{
+                        /*}else{
                             amt = ArithmeticUtil.divide(prin, new BigDecimal("100"), 4) ;
-                        }
+                        }*/
+                        // modify by wanshiwei ZGZGST-3314 【场内质押式回购交易】质押式协议回购，做了正回购交易，撤销后实时资产头寸查询的指令可用持仓错误 20210928 end
                         etrSecPositionFlowDto.setAmount(amt);
                         // 币种 = 金融产品交易Entity.币种
                         etrSecPositionFlowDto.setCcy(input.getTrdProductDeal().getCcy());
