@@ -1400,6 +1400,7 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
                     ibuQuoteEtrReDto.setFpriceAmt(ArithmeticUtil.multiply(
                         ibuQuoteEtrReDto.getShareAmt(), BigDecimal.valueOf(100)));
                 }
+                ibuQuoteEtrReDto.setEntrustId(tempDataDto.getEntrustId());
                 ibuQuoteEtrReDtoList.add(ibuQuoteEtrReDto);
             }
         }
@@ -1578,7 +1579,12 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 			}
 		}
         //委托代码需要登录  下行成交数据回来生成交易数据 需要反冲报价时生成的流水
-        ptlSecPositionFlowDtoUnit.setEntrustId(dto.getEntrustId());
+        if(StringUtil.isNotEmpty(dto.getEntrustId())){
+            ptlSecPositionFlowDtoUnit.setEntrustId(dto.getEntrustId());
+        }else{
+            //多组合委托编号从分配列表取
+            ptlSecPositionFlowDtoUnit.setEntrustId(ibuQuoteEtrReDto.getEntrustId());
+        }
 		ptlSecPositionFlows.add(ptlSecPositionFlowDtoUnit);
 	}
 
@@ -1625,7 +1631,12 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 		ptlCashPositionFlowDtoUnit.setOrderId(dto.getQuoteId());// 报价编号
 		ptlCashPositionFlowDtoUnit.setChlFinprodId(null);// 通道金融产品代码
         //委托代码需要登录  下行成交数据回来生成交易数据 需要反冲报价时生成的流水
-        ptlCashPositionFlowDtoUnit.setEntrustId(dto.getEntrustId());
+        if(StringUtil.isNotEmpty(dto.getEntrustId())){
+            ptlCashPositionFlowDtoUnit.setEntrustId(dto.getEntrustId());
+        }else{
+            //多组合委托编号从分配列表取
+            ptlCashPositionFlowDtoUnit.setEntrustId(ibuQuoteEtrReDto.getEntrustId());
+        }
 		/*************************************************************************/
 		ptlCashPositionFlows.add(ptlCashPositionFlowDtoUnit);
 	}
