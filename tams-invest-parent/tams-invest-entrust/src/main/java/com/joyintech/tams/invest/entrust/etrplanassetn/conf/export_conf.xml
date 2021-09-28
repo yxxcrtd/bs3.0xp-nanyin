@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="EtrPlanAssetN.xlsx" name="计划类净值委托">
+<Workbook filePath="EtrPlanAssetN.xlsx" name="计划类净值指令">
     <Worksheet javaBean="com.joyintech.tams.invest.entrust.etrplanassetn.dto.EtrPlanAssetNDto">
         <Row>
              <Cell order="1" name="委托状态">busEntrustStatus</Cell>
@@ -15,9 +15,9 @@
             <Cell order="9" name="资产名称">finprodName</Cell>
             <Cell order="10" name="交易方向">busPs</Cell>
             <Cell order="11" name="币种">busCcy</Cell>
-            <Cell order="12" name="委托开始日">vdateStr</Cell>
-            <Cell order="13" name="委托终止日">mdateStr</Cell>
-            <Cell order="14" name="委托金额">entrustAmt</Cell>
+            <Cell order="12" name="指令开始日">vdateStr</Cell>
+            <Cell order="13" name="指令终止日">mdateStr</Cell>
+            <Cell order="14" name="指令金额">entrustAmt</Cell>
             <Cell order="15" name="已完成额度">finishAmt</Cell>
             <Cell order="16" name="交易完成度">transactioncom</Cell>
         </Row>
