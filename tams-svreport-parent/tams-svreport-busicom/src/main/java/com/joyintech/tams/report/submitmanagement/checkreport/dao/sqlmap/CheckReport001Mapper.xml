@@ -228,7 +228,7 @@
 		<where>
 			A.FINPROD_MARKET_ID like concat(concat('%',#{prodId,
 			jdbcType=VARCHAR}),'%')
-			and A.FINPROD_TYPE != 'F16'
+			and A.FINPROD_TYPE = 'F16'
 			<!-- and A.FINPROD_TYPE2 = 'F16' -->
 		</where>
 		order by A.FINPROD_MARKET_ID

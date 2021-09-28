@@ -101,14 +101,16 @@ public class ValRiftTask extends BatchBaseService{
             if(!StringUtil.isEmptyList(importValTableProdList)){
                 for (Map<String,Object> entry:importValTableProdList) {
                     //导入了估值表的产品寻找最小跑批日
-                    if(StringUtil.isNotEmpty(entry.get("valDate"))){
-                        if(minDate.compareTo((Date)entry.get("valDate"))>0){
-                            minDate = (Date)entry.get("valDate");
+                    if(null!=entry){
+                        if(StringUtil.isNotEmpty(entry.get("valDate"))){
+                            if(minDate.compareTo((Date)entry.get("valDate"))>0){
+                                minDate = (Date)entry.get("valDate");
+                            }
+                            importProdList.add((String)entry.get("finprodId"));
                         }
-                        importProdList.add((String)entry.get("finprodId"));
-                    }
-                    else {
-                        unImportProdList.add((String)entry.get("finprodId"));
+                        else {
+                            unImportProdList.add((String)entry.get("finprodId"));
+                        }
                     }
                 }
             }

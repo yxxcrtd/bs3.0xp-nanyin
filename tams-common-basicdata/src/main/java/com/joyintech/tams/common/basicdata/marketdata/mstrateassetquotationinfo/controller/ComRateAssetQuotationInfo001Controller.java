@@ -82,7 +82,7 @@ public class ComRateAssetQuotationInfo001Controller extends BaseController{
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
-        setSelectOptionToModel(model, DictCode.项目类计划类估值来源);
+        setSelectOptionToModel(model, DictCode.项目类计划类估值来源,DictCode.录入方式);
 
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("valDate",DateUtil.format(sysDate));

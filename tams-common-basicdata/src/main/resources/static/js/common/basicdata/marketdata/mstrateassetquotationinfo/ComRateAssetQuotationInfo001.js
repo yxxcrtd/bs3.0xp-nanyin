@@ -11,7 +11,7 @@ $(function () {
             finProdMarketId: $('#finProdMarketId').val(),
             finProdName: $('#finProdName').val(),
             valDate: $('#valDate').val(),
-            valueSource: $('#valueSource option:selected').val()
+            inputType: $('#inputType option:selected').val()
         }
     };
     /**
@@ -34,14 +34,17 @@ $(function () {
                 "95%", "90%", {
                     pageModel: PAGE_MODEL_REFERENCE,
                     finprodId: data.finprodId,
-                    valDate: data.valDate
+                    valDate: data.valDate,
+                    valueSource :data.valueSource
                 });
         },
         cols: [
             {field: 'finprodId', visible: false}
             , {field: 'finProdMarketId', width: 200, title: '资产代码'}
-            , {field: 'finProdName', title: '资产简称'}
-            , {field: 'valueSource', title: '估值来源',sortField:'valuationSource'}
+            , {field: 'finProdName', width: 200,title: '资产简称'}
+            , {field: 'valueSource',visible: false}
+            , {field: 'valueSourceName', width: 200,title: '估值来源',sortField:'valueSource'}
+            , {field: 'inputTypeName', width: 200,title: '数据来源',sortField:'inputType'}
             , {field: 'valDate', width: 200, title: '估值日期', type: 'date'}
             , {field: 'fullValuation', title: '全价估值（每百元）',type:'number',digit:2}
             , {field: 'valuation', title: '净价估值（每百元）',type:'number',digit:2}
@@ -62,7 +65,8 @@ $(function () {
                     "95%", "90%", {
                         pageModel: PAGE_MODEL_EDIT,
                         finprodId: data.finprodId,
-                        valDate: data.valDate
+                        valDate: data.valDate,
+                        valueSource :data.valueSource
                     }, function () {
                         table.reload();
                     });

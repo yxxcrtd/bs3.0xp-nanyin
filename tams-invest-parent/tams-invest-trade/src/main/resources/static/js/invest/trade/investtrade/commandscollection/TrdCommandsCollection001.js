@@ -1617,10 +1617,24 @@ $(function() {
         var tradeMarket012Selections = [];
         var tradeMarket02345Selections = [];
         var dealMode0123Selections = [];
-        ps01Selections.push(PS_SELECTIONS[0].id);
-        ps01Selections.push(PS_SELECTIONS[3].id);
-        psF01Selections.push(PS_SELECTIONS[0].id);
-        psF01Selections.push(PS_SELECTIONS[3].id);
+
+        for (var i =0 ;i<PS_SELECTIONS.length;i++){
+            if(PS_SELECTIONS[i].id == 'T01' || PS_SELECTIONS[i].id == 'T02') {
+                ps01Selections.push(PS_SELECTIONS[i].id);
+                psF01Selections.push(PS_SELECTIONS[i].id);
+            }
+            if(PS_SELECTIONS[i].id == 'T01' || PS_SELECTIONS[i].id == 'T02'|| PS_SELECTIONS[i].id == 'T04'|| PS_SELECTIONS[i].id == 'T06') {
+                psF04Selections.push(PS_SELECTIONS[i].id);
+            }
+            if(PS_SELECTIONS[i].id == 'T01' || PS_SELECTIONS[i].id == 'T02'|| PS_SELECTIONS[i].id == 'T46'
+                || PS_SELECTIONS[i].id == 'T55' || PS_SELECTIONS[i].id == 'T50') {
+                psF11Selections.push(PS_SELECTIONS[i].id);
+            }
+        }
+        // ps01Selections.push(PS_SELECTIONS[0].id);
+        // ps01Selections.push(PS_SELECTIONS[3].id);
+        // psF01Selections.push(PS_SELECTIONS[0].id);
+        // psF01Selections.push(PS_SELECTIONS[3].id);
         // modify by wanshiwei ZGZGST-2586 基金tab交易方向枚举值应该为申购/赎回/买入/卖出/产品违约赎回 20210912 start
         psF02Selections.push(PS_SELECTIONS[6].id);
         psF02Selections.push(PS_SELECTIONS[11].id);
@@ -1628,19 +1642,19 @@ $(function() {
         psF02Selections.push(PS_SELECTIONS[3].id);
         psF02Selections.push(PS_SELECTIONS[91].id);
         // modify by wanshiwei ZGZGST-2586 基金tab交易方向枚举值应该为申购/赎回/买入/卖出/产品违约赎回 20210912 end
-        psF04Selections.push(PS_SELECTIONS[0].id);
-        psF04Selections.push(PS_SELECTIONS[3].id);
-        psF04Selections.push(PS_SELECTIONS[6].id);
-        psF04Selections.push(PS_SELECTIONS[11].id);
+        // psF04Selections.push(PS_SELECTIONS[0].id);
+        // psF04Selections.push(PS_SELECTIONS[3].id);
+        // psF04Selections.push(PS_SELECTIONS[6].id);
+        // psF04Selections.push(PS_SELECTIONS[11].id);
         psF08Selections.push(BACK_LEND_SELECTIONS[0].id);
         psF08Selections.push(BACK_LEND_SELECTIONS[1].id);
         psF10Selections.push(BACK_LEND_SELECTIONS[2].id);
         psF10Selections.push(BACK_LEND_SELECTIONS[3].id);
-        psF11Selections.push(PS_SELECTIONS[0].id);
-        psF11Selections.push(PS_SELECTIONS[3].id);
-        psF11Selections.push(PS_SELECTIONS[103].id);
-        psF11Selections.push(PS_SELECTIONS[105].id);
-        psF11Selections.push(PS_SELECTIONS[104].id);
+        // psF11Selections.push(PS_SELECTIONS[0].id);
+        // psF11Selections.push(PS_SELECTIONS[3].id);
+        // psF11Selections.push(PS_SELECTIONS[103].id);
+        // psF11Selections.push(PS_SELECTIONS[105].id);
+        // psF11Selections.push(PS_SELECTIONS[104].id);
         tradeMarket12Selections.push(TRADE_PLACE_SELECTIONS[2].id);
         tradeMarket12Selections.push(TRADE_PLACE_SELECTIONS[1].id);
         tradeMarket124Selections.push(TRADE_PLACE_SELECTIONS[1].id);

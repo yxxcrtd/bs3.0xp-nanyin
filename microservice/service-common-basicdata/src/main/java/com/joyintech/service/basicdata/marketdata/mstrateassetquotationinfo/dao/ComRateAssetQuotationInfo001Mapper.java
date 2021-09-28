@@ -50,4 +50,6 @@ public interface ComRateAssetQuotationInfo001Mapper {
     ComRateAssetQuotationInfo001Dto selectMstRateAsset(Map<String, Object> param);
 
     int update(ComRateAssetQuotationInfo001Dto entity);
+
+    int delete(ComRateAssetQuotationInfo001Dto entity);
 }

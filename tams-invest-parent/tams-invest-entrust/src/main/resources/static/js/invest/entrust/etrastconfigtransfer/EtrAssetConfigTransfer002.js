@@ -66,7 +66,7 @@ var correctData;
             {field: 'acctName', title: 'EtrAssetConfigTransfer002.trader',width:140},
             {field: 'rate', title: 'EtrAssetConfigTransfer002.yield',type: 'number',textrange:2,width:90},
             {field: 'amount', title: 'EtrAssetConfigTransfer002.positionAmount',width:120},
-            {field: 'secAcctId', visiable:false},
+            {field: 'secAcctId', visible:false}
         ]
     });
 
