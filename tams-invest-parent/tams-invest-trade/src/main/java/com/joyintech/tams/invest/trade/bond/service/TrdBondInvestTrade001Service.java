@@ -160,17 +160,23 @@ public class TrdBondInvestTrade001Service extends CommonExportService<TrdBondInv
                 if(StringUtil.isNotEmpty(exportPdfDto.getEntrustAmt())){
                     exportPdfDto.setEntrustAmt(new BigDecimal(df2.format(exportPdfDto.getEntrustAmt())));
                 }
-                // 成交均价
-                if(StringUtil.isNotEmpty(exportPdfDto.getUnitCprice())){
-                    exportPdfDto.setUnitCprice(new BigDecimal(df4.format(exportPdfDto.getUnitCprice())));
+                if(pageId.equalsIgnoreCase("TrdBondInvestTradeEx001")){
+                    // 成交均价
+                    if(StringUtil.isNotEmpty(exportPdfDto.getUnitCprice())){
+                        exportPdfDto.setUnitCprice(new BigDecimal(df4.format(exportPdfDto.getUnitCprice())));
+                    }
                 }
                 // 成交均价(全价)
                 if(StringUtil.isNotEmpty(exportPdfDto.getUnitFprice())){
                     exportPdfDto.setUnitFprice(new BigDecimal(df4.format(exportPdfDto.getUnitFprice())));
                 }
-                // 成交金额
+                // 成交金额、结算金额
                 if(StringUtil.isNotEmpty(exportPdfDto.getTradeAmt())){
                     exportPdfDto.setTradeAmt(new BigDecimal(df2.format(exportPdfDto.getTradeAmt())));
+                }
+                // 全价金额
+                if(StringUtil.isNotEmpty(exportPdfDto.getFpriceAmt())){
+                    exportPdfDto.setFpriceAmt(new BigDecimal(df2.format(exportPdfDto.getFpriceAmt())));
                 }
             });
             //汇总交易金额

@@ -305,6 +305,8 @@ public class EclCalculationProcessorService {
         modEclResult.setSeqno(IDGenerator.generate());
         //资产类型
         modEclResult.setAssetType(entity.getModelAssetType());
+        // 交易编号
+        modEclResult.setBussNo(entity.getTradeId());
         //减值阶段 交易信息DTO.减值阶段
         modEclResult.setStage(entity.getFinStage());
         //数据来源

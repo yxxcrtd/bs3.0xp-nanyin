@@ -2201,6 +2201,19 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
                         infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
                     }
+                }else{
+                    MstCfetsCustomerInfo  mstCfetsCustomerInfo = mstCfetsCustomerInfoMapper.selectByPrimaryKey(infRiskRdsDto.getCounterId());
+                    if (StringUtil.isNotEmpty(mstCfetsCustomerInfo)) {
+                        List<MstCounterParty> mstCounterPartys = mstCounterPartyMapper.getCounterByName(mstCfetsCustomerInfo.getPartyName());
+                        if (!CollectionUtils.isEmpty(mstCounterPartys)) {
+                            mstCounterParty =mstCounterPartys.get(0);
+                            if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_市场机构.getValue())) {
+                                infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
+                            }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
+                                infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -2333,6 +2346,19 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                         infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
                     }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
                         infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
+                    }
+                }else{
+                    MstCfetsCustomerInfo  mstCfetsCustomerInfo = mstCfetsCustomerInfoMapper.selectByPrimaryKey(infRiskRdsDto.getCounterId());
+                    if (StringUtil.isNotEmpty(mstCfetsCustomerInfo)) {
+                        List<MstCounterParty> mstCounterPartys = mstCounterPartyMapper.getCounterByName(mstCfetsCustomerInfo.getPartyName());
+                        if (!CollectionUtils.isEmpty(mstCounterPartys)) {
+                            mstCounterParty =mstCounterPartys.get(0);
+                            if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_市场机构.getValue())) {
+                                infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
+                            }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
+                                infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
+                            }
+                        }
                     }
                 }
             }

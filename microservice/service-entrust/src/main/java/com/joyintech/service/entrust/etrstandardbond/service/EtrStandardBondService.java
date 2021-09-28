@@ -1,14 +1,5 @@
 package com.joyintech.service.entrust.etrstandardbond.service;
 
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.common.base.dao.WflEtrEntrustPledgeMapper;
-import com.joyintech.tams.common.base.entity.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
@@ -21,9 +12,18 @@ import com.joyintech.service.entrust.etrstandardbond.dto.EtrStandardBondSearchDt
 import com.joyintech.tams.common.base.dao.EtrEntrustPledgeMapper;
 import com.joyintech.tams.common.base.dao.EtrSecPriorityDetailMapper;
 import com.joyintech.tams.common.base.dao.EtrSecPriorityMapper;
+import com.joyintech.tams.common.base.dao.WflEtrEntrustPledgeMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 质押券微服务Service
@@ -61,6 +61,10 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
     public Page<EtrStandardBondSearchDto> selectSearchDataList(int page, int length,
                                                                Map<String, Object> pageParam)
     {
+
+        // add by mefiaxin 20210927 银行间 start
+        pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
+        // add by mefiaxin 20210927 银行间 end
         this.setParam(pageParam);
         Page<EtrStandardBondSearchDto> pageResult = this.queryForPage(page, length,
                 () -> this.etrStandardBondMapper.selectSearchDataList(pageParam));
@@ -121,6 +125,9 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
      */
     public List<EtrStandardBondInDto> selectAvaPledgeBondList(Map<String, Object> pageParam)
     {
+        // add by mefiaxin 20210927 银行间 start
+        pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
+        // add by mefiaxin 20210927 银行间 end
         this.setParam(pageParam);
         return this.etrStandardBondMapper.selectAvaPledgeBondList(pageParam);
     }
@@ -267,6 +274,9 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
      * @since 1.0
      */
     public List<SuggestDto> getSecManageAcctId(Map<String, Object> param) {
+        // add by mefiaxin 20210927 银行间 start
+        param.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
+        // add by mefiaxin 20210927 银行间 end
         return this.queryForSuggest(() -> this.etrStandardBondMapper.getSecManageAcctId(param),
             null);
     }

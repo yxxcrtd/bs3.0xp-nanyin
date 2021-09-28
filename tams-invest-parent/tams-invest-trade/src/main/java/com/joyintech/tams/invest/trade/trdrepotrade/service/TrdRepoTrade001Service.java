@@ -43,6 +43,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 @Service
 public class TrdRepoTrade001Service extends CommonExportService<TrdRepoTrade001Dto> {
@@ -304,6 +305,7 @@ public class TrdRepoTrade001Service extends CommonExportService<TrdRepoTrade001D
 		if(!StringUtil.isEmptyList(datas)){
 			DecimalFormat df2 = new DecimalFormat("#0.00##");
 			DecimalFormat df4 = new DecimalFormat("#0.0000##");
+			DecimalFormat df6 = new DecimalFormat("#0.000000##");
 			datas.forEach(exportPdfDto -> {
 				// 委托价格
 				if(StringUtil.isNotEmpty(exportPdfDto.getPrice())){
@@ -321,9 +323,31 @@ public class TrdRepoTrade001Service extends CommonExportService<TrdRepoTrade001D
 				if(StringUtil.isNotEmpty(exportPdfDto.getUnitFprice())){
 					exportPdfDto.setUnitFprice(new BigDecimal(df4.format(exportPdfDto.getUnitFprice())));
 				}
-				// 成交金额
+				// 交易金额、成交金额
 				if(StringUtil.isNotEmpty(exportPdfDto.getTradeAmt())){
 					exportPdfDto.setTradeAmt(new BigDecimal(df2.format(exportPdfDto.getTradeAmt())));
+				}
+				// 回购利率
+				if(StringUtil.isNotEmpty(exportPdfDto.getIntRate())){
+					exportPdfDto.setIntRate(new BigDecimal(df6.format(exportPdfDto.getIntRate())));
+				}
+				// 回购利息
+				if(StringUtil.isNotEmpty(exportPdfDto.getmIntAmt())){
+					exportPdfDto.setmIntAmt(new BigDecimal(df2.format(exportPdfDto.getmIntAmt())));
+				}
+				//折算比例
+				if(StringUtil.isNotEmpty(exportPdfDto.getPledgeRatio())){
+					// 多质押券折算比例用,拼接
+					if(exportPdfDto.getPledgeRatio().contains(",")){
+						String[] ratios = exportPdfDto.getPledgeRatio().split(",");
+						StringJoiner joiner = new StringJoiner(",");
+						for(int index=0; index<ratios.length; index++){
+							joiner.add(df2.format(new BigDecimal(ratios[index])));
+						}
+						exportPdfDto.setPledgeRatio(joiner.toString());
+					}else{
+						exportPdfDto.setPledgeRatio(df2.format(new BigDecimal(exportPdfDto.getPledgeRatio())));
+					}
 				}
 			});
 			//汇总交易金额

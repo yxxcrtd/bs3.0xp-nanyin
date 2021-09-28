@@ -1173,6 +1173,18 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             riskCreditListCommonValidatorService.deleteCredit(cetradeid);
         }
 
+        // add by etliu 20210927 start
+        if (entity != null) {
+            if (StringUtil.isBlank(entity.getoFinprodId())
+                    && StringUtil.equals(DictCodeListExt1.交易市场_一级市场.getValue(), entity.getTradeMarketMode())) {
+                FinProduct finProduct = tradeCommonService.selectFinProduct(entity.getFinprodId());
+                if (finProduct != null) {
+                    entity.setoFinprodId(finProduct.getoFinprodId());
+                }
+            }
+        }
+        // add by etliu 20210927 end
+
         Map<String, Object> params = new HashMap<>();
         params.put("workflowId", entity.getWorkflowId());
         String bizCode = entity.getTotleTradeId();

@@ -20,7 +20,7 @@
             <Cell  order="16" name="全价金额(券面*净价+利息)">dirtyprice</Cell>
             <Cell  order="17" name="结算金额(是指全价结算金额,即券面金额*净价+利息或者券面*全价)">settlcurramt2</Cell>
             <Cell  order="18" name="清算速度">settleSpeedStr</Cell>
-            <Cell  order="19" name="清算类型">settTypeStr</Cell>
+            <Cell  order="19" name="清算类型">clearingMethodStr</Cell>
         </Row>
     </Table>
 </WorkPage>
