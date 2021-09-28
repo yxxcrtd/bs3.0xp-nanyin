@@ -1,5 +1,42 @@
 (function(){
-
+    //add by meifaxin 20190928 对于委托查询和成交查询，预期需要全屏展示 start -->
+    layui.use(["element", "form"], function () {
+        // 组合平台TAB切换事件
+        var element = layui.element;
+        element.on("tab(TopPlatform)", function (data) {
+            if (data.index == 0) {
+                $(window.parent.document).find("#bottom_panel_dev").show();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var bottom_panel_dev = $(window.parent.document).find("#bottom_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    height: 'calc(50% - 5px)',
+                    border: '1px solid #aaaaaa',
+                };
+                top_panel_dev.css(cssobj);
+                bottom_panel_dev.css(cssobj);
+            } else if (data.index == 1) {
+                $(window.parent.document).find("#bottom_panel_dev").hide();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    height: 'calc(100% - 20px)',
+                    border: '1px solid #aaaaaa',
+                };
+                top_panel_dev.css(cssobj);
+            } else if (data.index == 2) {
+                $(window.parent.document).find("#bottom_panel_dev").hide();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    height: 'calc(100% - 20px)',
+                    border: '1px solid #aaaaaa',
+                };
+                top_panel_dev.css(cssobj);
+            }
+        });
+    });
+    //add by meifaxin 20190928 对于委托查询和成交查询，预期需要全屏展示 end -->
     /**
      * 获取查询参数
      */

@@ -3,6 +3,65 @@
     $(".layui-tab").show();
     var fetsRepoDealQuotedPrice001_entrustOrderTable_loading;
     var fetsRepoDealQuotedPrice001_dayOfferTable_loading;
+    //add by meifaxin 20190928 对于回购报价页面，质押券查询、委托查询、成交查询需要全屏展示，不需要展示报价新建页面 start -->
+    layui.use(["element", "form"], function () {
+        // 组合平台TAB切换事件
+        var element = layui.element;
+        element.on("tab(tradePlatform)", function (data) {
+            if (data.index == 0) {
+                $(window.parent.document).find("#bottom_panel_dev").show();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var bottom_panel_dev = $(window.parent.document).find("#bottom_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    float: 'right',
+                    height:'49.5%',
+                    margin:'1px',
+                    border: '1px solid #aaaaaa',
+                    display: 'inline-block'
+                };
+                top_panel_dev.css(cssobj);
+                bottom_panel_dev.css(cssobj);
+            } else if (data.index == 1) {
+                $(window.parent.document).find("#bottom_panel_dev").hide();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    float: 'right',
+                    height:'95%',
+                    margin:'1px',
+                    border: '1px solid #aaaaaa',
+                    display: 'inline-block'
+                };
+                top_panel_dev.css(cssobj);
+            } else if (data.index == 2) {
+                $(window.parent.document).find("#bottom_panel_dev").hide();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    float: 'right',
+                    height:'95%',
+                    margin:'1px',
+                    border: '1px solid #aaaaaa',
+                    display: 'inline-block'
+                };
+                top_panel_dev.css(cssobj);
+            }else if (data.index == 3) {
+                $(window.parent.document).find("#bottom_panel_dev").hide();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    float: 'right',
+                    height:'95%',
+                    margin:'1px',
+                    border: '1px solid #aaaaaa',
+                    display: 'inline-block'
+                };
+                top_panel_dev.css(cssobj);
+            }
+        });
+    });
+    //add by meifaxin 20190928 对于委托查询和成交查询，预期需要全屏展示 end -->
     /**
      * 获取指令执行查询参数
      */
