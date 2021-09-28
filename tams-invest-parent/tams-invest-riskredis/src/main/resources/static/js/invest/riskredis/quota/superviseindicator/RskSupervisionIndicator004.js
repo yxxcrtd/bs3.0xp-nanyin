@@ -121,7 +121,10 @@
     			 }
     		 }
     		 
-         }
+         } else {
+			 Joyin.error(JoyinUtil.getMessage('RSKRDS_W_0017',JoyinUtil.getLabel("RskSupervisionPortfPoint001.portfolio")));
+			 return false;
+		 }
          return true;
 	}
 	window.RskSupervisionIndicator004={

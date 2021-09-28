@@ -72,7 +72,7 @@
          var nodes = treeObj.getCheckedNodes();
          if(nodes.length!=0){
         	 if($('input[name="rskPortfolioIndicatorDto.startDate"]').val()==''){
-        		 Joyin.error(JoyinUtil.getMessage('BUSS_COM_E_0038',JoyinUtil.getLabel("RskSupervisionIndicator002.effDate")));
+        		 Joyin.error(JoyinUtil.getMessage('BUSS_COM_E_0038',JoyinUtil.getLabel("RskSupervisionIndicator002.startDate")));
         		 return false;
         	 }
         	 if($('input[name="rskPortfolioIndicatorDto.endDate"]').val()!=''){

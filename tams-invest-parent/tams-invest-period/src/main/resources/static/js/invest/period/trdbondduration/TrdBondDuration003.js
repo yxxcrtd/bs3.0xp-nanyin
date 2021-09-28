@@ -375,6 +375,10 @@ var TrdBondDuration003 = function () {
                 Joyin.error("请选择资产。")
                 return;
             }
+            if (!$('#fPriceAmt').val()) {
+                Joyin.error("请输入到账金额。")
+                return;
+            }
             if (!$('#settleDate').val()) {
                 Joyin.error("请输入资金到账日。")
                 return;
