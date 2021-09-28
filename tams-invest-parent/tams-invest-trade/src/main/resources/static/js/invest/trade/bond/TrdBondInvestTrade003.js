@@ -318,6 +318,12 @@ var table;
 			object.counterType = $('#trdInvestPersonInfo_counterId').select2('data')[0].object;
 			object.counterId = $('#trdInvestPersonInfo_counterId').select2('data')[0].id;
 		}
+        if($("#refundRate").val()){
+            object.refundRate=$("#refundRate").val();
+        }
+        if($("#refundAmount").val()){
+            object.refundAmount=$("#refundAmount").val();
+        }
 		//update by lwj 20200325 券面总额大于资产可用持仓提示 start
 		object.maxTradeamt = maxTradeamt;
 		Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade003/check', object, function(result) {
@@ -633,6 +639,8 @@ var table;
     $("#tradeMarketMode").on("change", function () {
         var tradeMarketMode = $("#tradeMarketMode").val();
         if (tradeMarketMode == SHARES_TRADE_MARKET_01) {
+            $("#refundRate_div").show();
+            $("#refundAmount_div").show();
             checkAndAssign("#ps", PS_T01);
             checkAndAssign("#unitInt", '0');
             checkAndAssign("#intAmt", '0');
@@ -644,6 +652,10 @@ var table;
                 $("#commissionAmt").prop("disabled", false).val(commissionAmt).trigger('blur').trigger('change');
             }*/
         } else {
+            $("#refundRate").val('');
+            $("#refundAmount").val('');
+            $("#refundRate_div").hide();
+            $("#refundAmount_div").hide();
             // $("#commissionAmt").prop("disabled", false).val(commissionAmt).trigger('blur').trigger('change');
             if ($("#entrustId").val()) {
                 $("#ps").attr("disabled", true);
@@ -2626,10 +2638,38 @@ var table;
         }
     }
 
+    $('#refundRate').change(function () {
+        var tradeAmt = $("#tradeAmt").val();
+        var refundRate = $("#refundRate").val();
+        var refundRateMulHundred = JoyinMath.doMul(refundRate, 100, 4, JoyinMath.ROUND_HALF_UP)
+        var refundAmount = JoyinMath.doMul(tradeAmt, refundRateMulHundred, 2, JoyinMath.ROUND_HALF_UP)
+        if(refundAmount < 0) {
+            $("#refundRate").val(refundRate).trigger("blur");
+            $("#refundAmount").val(0).trigger("blur");
+        } else {
+            $("#refundAmount").val(refundAmount).trigger("blur");
+        }
+    });
+
+
     /**
      * 画面加载完成
      */
     $(function() {
+        // 在一级市场缴款时才展示，二级市场无需展示
+        var tradeMarketMode = $("#tradeMarketMode").val();
+        if(tradeMarketMode){
+            if(tradeMarketMode==SHARES_TRADE_MARKET_01){
+                $("#refundRate_div").show();
+                $("#refundAmount_div").show();
+            }
+            else if(tradeMarketMode==SHARES_TRADE_MARKET_02){
+                $("#refundRate").val('');
+                $("#refundAmount").val('');
+                $("#refundRate_div").hide();
+                $("#refundAmount_div").hide();
+            }
+        }
         if(entrustAmtUnit == '01' ){
             $(".unitNum").text('元');
             unitNum = 1;
