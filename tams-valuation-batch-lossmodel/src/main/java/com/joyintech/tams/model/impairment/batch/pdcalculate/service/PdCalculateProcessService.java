@@ -308,7 +308,6 @@ public class PdCalculateProcessService {
 
             //4.2 计算每个累积PD
             // 定义 变量.有效月度边际PD
-            ModGradePdConfigDto modGradePdConfigDto = new ModGradePdConfigDto();
             String PD违约概率小数位 = StringUtil.isEmpty(CacheUtil.getSysParam(
                     "SYS_PARA_PD_DIGIT")) ? "6" : CacheUtil.getSysParam(
                     "SYS_PARA_PD_DIGIT");
@@ -316,77 +315,46 @@ public class PdCalculateProcessService {
                     "SYS_PARA_PD_DIGIT_TYPE")) ? DictCodeList.估值舍入规则_四舍五入.getValue() : CacheUtil.getSysParam(
                     "SYS_PARA_PD_DIGIT_TYPE");
             // 遍历年月列表
+            // 定义 变量.最新PD配置信息Dto
+            ModGradePdConfigLatestDto latestDto = new ModGradePdConfigLatestDto();
             for(int i = 0;  i < variablePdCalculateDto.getYearMonList().size() ; i++){
                 String yearMonStr = variablePdCalculateDto.getYearMonList().get(i);//年月 202107
                 // 当前年份
                 String yearStr = variablePdCalculateDto.getYearMonList().get(i).substring(0,4);
                 // 当前月份
                 String monStr = variablePdCalculateDto.getYearMonList().get(i).substring(4);
+
                 // 遍历 [PD计算过程DTO]列表--每年对应的PD值
                 // 取对应年份PD，若取不到，则pdConfigDto用前一条结果的配置
                 // 当对应剩余期限年份/月份无对应前瞻PD和Z因子值，则采用最后一条有效月度边际PD继续按月向后累积至对应资产剩余期限时点
                 if(pdConfigDtoMap.get(yearStr)!=null){
-                    modGradePdConfigDto = pdConfigDtoMap.get(yearStr);
+                    // 更新 变量.最新PD配置信息Dto
+                    latestDto = initLatestDto(pdConfigDtoMap.get(yearStr), monStr);
                 }
                 //先计算前瞻前的
                 // 计算前瞻前月度累积
                 if(i==0){
                     // 前瞻前累积PD（PD1A） = PD1M
-                    variablePdCalculateDto.setPreCdfPd(getPdm(modGradePdConfigDto.getForwardYearPd()));
+                    variablePdCalculateDto.setPreCdfPd(getPdm(latestDto.getForwardYearPd()));
                 }else{
                     // 前瞻前累积PD = 调用前瞻前月度累积计算公式：得出累计PDt
                     variablePdCalculateDto.setPreCdfPd(ArithmeticUtil.doAdd(variablePdCalculateDto.getPreCdfPd(),
                             ArithmeticUtil.multiply(ArithmeticUtil.subtract(BigDecimal.ONE, variablePdCalculateDto.getPreCdfPd()),
-                                    getPdm(modGradePdConfigDto.getForwardYearPd()))));
+                                    getPdm(latestDto.getForwardYearPd()))));
                 }
 
-                //这里开始计算前瞻后PD
-                int monInt = Integer.valueOf(monStr).intValue();
-                if(monInt>=1 && monInt<=3){
-                    if(i==0){
-                        // 一季度乐观因子 PDstress 计算出 PDm
-                        variablePdCalculateDto.setOptimisticCdfPd(getPdm(modGradePdConfigDto.getOptimisticFactorPdOne()));
-                        // 一季度基础因子 PDstress 计算出 PDm
-                        variablePdCalculateDto.setBasicCdfPd(getPdm(modGradePdConfigDto.getBasicFactorPdOne()));
-                        // 一季度悲观因子 PDstress 计算出 PDm
-                        variablePdCalculateDto.setPessimismCdfPd(getPdm(modGradePdConfigDto.getPessimismFactorPdOne()));
-                    }else{
-                        variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),modGradePdConfigDto.getOptimisticFactorPdOne()));
-                        variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),modGradePdConfigDto.getBasicFactorPdOne()));
-                        variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),modGradePdConfigDto.getPessimismFactorPdOne()));
-                    }
-                }else if(monInt>=4 && monInt<=6){
-                    if(i==0){
-                        variablePdCalculateDto.setOptimisticCdfPd(getPdm(modGradePdConfigDto.getOptimisticFactorPdTwo()));
-                        variablePdCalculateDto.setBasicCdfPd(getPdm(modGradePdConfigDto.getBasicFactorPdTwo()));
-                        variablePdCalculateDto.setPessimismCdfPd(getPdm(modGradePdConfigDto.getPessimismFactorPdTwo()));
-                    }else{
-                        variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),modGradePdConfigDto.getOptimisticFactorPdTwo()));
-                        variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),modGradePdConfigDto.getBasicFactorPdTwo()));
-                        variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),modGradePdConfigDto.getPessimismFactorPdTwo()));
-                    }
 
-                }else if(monInt>=7 && monInt<=9){
-                    if(i==0){
-                        variablePdCalculateDto.setOptimisticCdfPd(getPdm(modGradePdConfigDto.getOptimisticFactorPdThree()));
-                        variablePdCalculateDto.setBasicCdfPd(getPdm(modGradePdConfigDto.getBasicFactorPdThree()));
-                        variablePdCalculateDto.setPessimismCdfPd(getPdm(modGradePdConfigDto.getPessimismFactorPdThree()));
-                    }else{
-                        variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),modGradePdConfigDto.getOptimisticFactorPdThree()));
-                        variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),modGradePdConfigDto.getBasicFactorPdThree()));
-                        variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),modGradePdConfigDto.getPessimismFactorPdThree()));
-                    }
-
-                }else if(monInt>=10 && monInt<=12){
-                    if(i==0){
-                        variablePdCalculateDto.setOptimisticCdfPd(getPdm(modGradePdConfigDto.getOptimisticFactorPdFour()));
-                        variablePdCalculateDto.setBasicCdfPd(getPdm(modGradePdConfigDto.getBasicFactorPdFour()));
-                        variablePdCalculateDto.setPessimismCdfPd(getPdm(modGradePdConfigDto.getPessimismFactorPdFour()));
-                    }else{
-                        variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),modGradePdConfigDto.getOptimisticFactorPdFour()));
-                        variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),modGradePdConfigDto.getBasicFactorPdFour()));
-                        variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),modGradePdConfigDto.getPessimismFactorPdFour()));
-                    }
+                if(i==0){
+                    // 一季度乐观因子 PDstress 计算出 PDm
+                    variablePdCalculateDto.setOptimisticCdfPd(getPdm(latestDto.getOptimisticFactorPd()));
+                    // 一季度基础因子 PDstress 计算出 PDm
+                    variablePdCalculateDto.setBasicCdfPd(getPdm(latestDto.getBasicFactorPd()));
+                    // 一季度悲观因子 PDstress 计算出 PDm
+                    variablePdCalculateDto.setPessimismCdfPd(getPdm(latestDto.getPessimismFactorPd()));
+                }else{
+                    variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),latestDto.getOptimisticFactorPd()));
+                    variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),latestDto.getBasicFactorPd()));
+                    variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),latestDto.getPessimismFactorPd()));
                 }
 
                 if(i == 11){
@@ -505,6 +473,10 @@ public class PdCalculateProcessService {
         cal.setTime(startDate);
         // 初始日期设为本月1号
         cal.set(Calendar.DAY_OF_MONTH, 1);
+        // 若为年份时，将日期设为本年1月1号
+        if("1".equals(type)){
+            cal.set(Calendar.MONTH, 0);
+        }
         for (long d = cal.getTimeInMillis(); d <= endDate.getTime(); d = getYearMonAddOne(cal,type)) {
             yearList.add(sdf.format(d));
         }
@@ -637,5 +609,52 @@ public class PdCalculateProcessService {
         BigDecimal deciTwelve3  =ArithmeticUtil.multiply(variablePdCalculateDto.getPessimismCdfPd(),modPdWeightConfigDto.getPessimismWeight());
         // 第12个月累积加权PD=乐观因子PDm *  乐观因子权重+基础因子PDm *  基础因子权重+悲观因子PDm * 悲观因子权重
        return ArithmeticUtil.doAdd(deciTwelve1,deciTwelve2,deciTwelve3);
+    }
+
+    /**
+     * 初始化最新评级PD配置信息
+     * @param modGradePdConfigDto 评级PD配置信息
+     * @param monStr 月份
+     * @return
+     */
+    public ModGradePdConfigLatestDto initLatestDto(ModGradePdConfigDto modGradePdConfigDto, String monStr){
+        // 变量.最新PD配置信息Dto 重新初始化
+        ModGradePdConfigLatestDto latestDto = new ModGradePdConfigLatestDto();
+        //这里开始计算前瞻后PD
+        int monInt = Integer.valueOf(monStr).intValue();
+        // 前瞻前年度边际PD = 变量.PD配置信息.前瞻前年度边际PD
+        latestDto.setForwardYearPd(modGradePdConfigDto.getForwardYearPd());
+        if(monInt>=1 && monInt<=3){
+            // 乐观因子季度年化边际PD = 乐观因子季度年化边际PD-一季度
+            latestDto.setOptimisticFactorPd(modGradePdConfigDto.getOptimisticFactorPdOne());
+            // 基础因子季度年化边际PD = 基础因子季度年化边际PD-一季度
+            latestDto.setBasicFactorPd(modGradePdConfigDto.getBasicFactorPdOne());
+            // 悲观因子季度年化边际PD = 悲观因子季度年化边际PD-一季度
+            latestDto.setPessimismFactorPd(modGradePdConfigDto.getPessimismFactorPdOne());
+        }else if(monInt>=4 && monInt<=6){
+            // 乐观因子季度年化边际PD = 乐观因子季度年化边际PD-二季度
+            latestDto.setOptimisticFactorPd(modGradePdConfigDto.getOptimisticFactorPdTwo());
+            // 基础因子季度年化边际PD = 基础因子季度年化边际PD-二季度
+            latestDto.setBasicFactorPd(modGradePdConfigDto.getBasicFactorPdTwo());
+            // 悲观因子季度年化边际PD = 悲观因子季度年化边际PD-二季度
+            latestDto.setPessimismFactorPd(modGradePdConfigDto.getPessimismFactorPdTwo());
+
+        }else if(monInt>=7 && monInt<=9){
+            // 乐观因子季度年化边际PD = 乐观因子季度年化边际PD-三季度
+            latestDto.setOptimisticFactorPd(modGradePdConfigDto.getOptimisticFactorPdThree());
+            // 基础因子季度年化边际PD = 基础因子季度年化边际PD-三季度
+            latestDto.setBasicFactorPd(modGradePdConfigDto.getBasicFactorPdThree());
+            // 悲观因子季度年化边际PD = 悲观因子季度年化边际PD-三季度
+            latestDto.setPessimismFactorPd(modGradePdConfigDto.getPessimismFactorPdThree());
+
+        }else if(monInt>=10 && monInt<=12){
+            // 乐观因子季度年化边际PD = 乐观因子季度年化边际PD-四季度
+            latestDto.setOptimisticFactorPd(modGradePdConfigDto.getOptimisticFactorPdFour());
+            // 基础因子季度年化边际PD = 基础因子季度年化边际PD-四季度
+            latestDto.setBasicFactorPd(modGradePdConfigDto.getBasicFactorPdFour());
+            // 悲观因子季度年化边际PD = 悲观因子季度年化边际PD-四季度
+            latestDto.setPessimismFactorPd(modGradePdConfigDto.getPessimismFactorPdFour());
+        }
+        return latestDto;
     }
 }
