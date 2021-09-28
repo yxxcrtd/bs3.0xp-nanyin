@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='LDXSXZCGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('LDXSXZCGZ','流动性受限资产估值','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('LDXSXZCGZ','流动性受限资产估值','N','','system','',sysdate,'system',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='LDXSXZCGZ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LDXSXZCGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LDXSXZCGZ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LDXSXZCGZ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LDXSXZCGZ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LDXSXZCGZ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LDXSXZCGZ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LDXSXZCGZ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LDXSXZCGZ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LDXSXZCGZ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LDXSXZCGZ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','system','',sysdate,'system',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -70,7 +70,9 @@ SELECT DISTINCT FINPROD_ID FROM(
                 -- 存款类资产
                 SELECT FPT.FINPROD_ID,FPT.MDATE,NVL(FPT.CALENDAR_ID,''01'') CALENDAR_ID FROM FIN_PRODUCT FPT
                 LEFT JOIN FIN_PRODUCT_TYPE T1 ON FPT.FINPROD_ID = T1.FINPROD_ID
+                	LEFT JOIN FIN_PRODUCT_ADD FPA ON FPA.FINPROD_ID = T1.FINPROD_ID
                 WHERE FPT.MDATE IS NOT NULL AND T1.TYPE_8 = ''F05'' AND FPT.MDATE >= DATE ''${valDate}'' - 1
+				  AND (FPA.IS_INADVANCE IS NULL OR FPA.IS_INADVANCE IN (''01'',''02''))
                 UNION ALL
                 -- 逆回购
                 SELECT FTP.FINPROD_ID,FTP.MDATE,NVL(FTP.CALENDAR_ID,''01'') CALENDAR_ID FROM FIN_TRADE_PRODUCT FTP
@@ -179,7 +181,9 @@ V_CONTENT_05 CLOB := 'WITH PROD AS (
                 -- 存款类资产
                 SELECT FPT.FINPROD_ID,FPT.MDATE,NVL(FPT.CALENDAR_ID,''01'') CALENDAR_ID FROM FIN_PRODUCT FPT
                 LEFT JOIN FIN_PRODUCT_TYPE T1 ON FPT.FINPROD_ID = T1.FINPROD_ID 
+                LEFT JOIN FIN_PRODUCT_ADD FPA ON FPA.FINPROD_ID = T1.FINPROD_ID
                 WHERE FPT.MDATE IS NOT NULL AND T1.TYPE_8 = ''F05'' AND FPT.MDATE >= DATE ''${valDate}'' - 1
+				  AND (FPA.IS_INADVANCE IS NULL OR FPA.IS_INADVANCE IN (''01'',''02''))
                 UNION ALL
                 -- 逆回购
                 SELECT FTP.FINPROD_ID,FTP.MDATE,NVL(FTP.CALENDAR_ID,''01'') CALENDAR_ID FROM FIN_TRADE_PRODUCT FTP
