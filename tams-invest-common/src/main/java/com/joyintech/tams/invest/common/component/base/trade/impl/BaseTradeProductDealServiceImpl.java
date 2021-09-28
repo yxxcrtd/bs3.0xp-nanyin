@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.common.component.base.trade.impl;
 import java.util.*;
 
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -366,6 +367,15 @@ public class BaseTradeProductDealServiceImpl implements BaseTradeProductDealServ
             MstFileOutputParameter mstFileOutputParameter = mstFileCommonService.getFileInfoByBusiId(tradeId);
             for(BaseTradeProductDealDto entity : baseTradeProductDealDto){
                 entity.setMstFileOutputParameter(mstFileOutputParameter);
+
+                // add by etliu 20210928 start
+                // 如果根据汇总交易编号查询不到划款指令，则根据交易表交易编号重新查询
+                if (entity.getTrdProductDeal() != null && StringUtil.isEmptyList(entity.getStlPayOrdersList())) {
+                    Map<String, Object> paramMap = new HashMap<>();
+                    paramMap.put("tradeId", entity.getTrdProductDeal().getTradeId());
+                    entity.setStlPayOrdersList(baseTradeProductDealMapper.selectStlPayOrders(paramMap));
+                }
+                // add by etliu 20210928 end
             }
             baseTradeProductDealList.addAll(baseTradeProductDealDto);
         }
