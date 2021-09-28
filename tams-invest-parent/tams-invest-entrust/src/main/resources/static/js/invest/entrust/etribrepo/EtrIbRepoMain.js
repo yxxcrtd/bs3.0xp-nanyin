@@ -60,6 +60,7 @@ $(function() {
         if(object && EtrIbRepoinfo002.isNeedRiskcal()) {
             var riskdata = EtrIbRepoinfo002.getriskdata(object);
             var riskInterfUrl = EtrIbRepoinfo002.getRiskInterfUrl();
+            object.calendarId = "03";
             if(riskdata && riskInterfUrl) {
                 window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object,riskdata,riskMathRedisCallback002);
             }
@@ -94,7 +95,7 @@ $(function() {
                 item.data.repoTerm = object.repoTerm;
                 item.data.vdate = object.vdate;
                 item.data.mdate=object.mdate;
-                
+                item.data.calendarId="03";
                 param.push(item.data);
             }
         }
