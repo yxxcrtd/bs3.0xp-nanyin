@@ -89,7 +89,11 @@
        TO_DATE(t.TRADEDATE, 'YYYYMMDD') dealdate,
        TO_DATE(t.SETTLDATE, 'YYYYMMDD') vdate,
        TO_DATE(t.SETTLDATE2, 'YYYYMMDD') mdate,
-       t.settldate2 - t.SETTLDATE term,
+       CASE
+		WHEN t.CASHHOLDINGDAYS IS NOT NULL THEN t.CASHHOLDINGDAYS
+		ELSE t.settldate2 - t.SETTLDATE
+        END term,
+       <!--t.settldate2 - t.SETTLDATE term,-->
        t.SETTLCURRENCY ccy,
        t.PRICE reporate,
        'A/365' basis,

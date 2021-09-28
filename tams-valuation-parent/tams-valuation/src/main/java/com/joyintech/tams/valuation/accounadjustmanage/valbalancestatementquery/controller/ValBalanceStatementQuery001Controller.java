@@ -165,8 +165,10 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("/selectCorrespondingFrame")
-    public ValBalanceStatementQuery001Dto selectCorrespondingFrame(@RequestBody Map<String, Object> param){
-        return valBalanceStatementQuery001Service.selectCorrespondingFrame(param);
+    public AjaxResult selectCorrespondingFrame(@RequestBody Map<String, Object> param){
+        AjaxResult result = new AjaxResult();
+        result.setData(valBalanceStatementQuery001Service.selectCorrespondingFrame(param));
+        return result;
     }
 
 }

@@ -1173,6 +1173,18 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             riskCreditListCommonValidatorService.deleteCredit(cetradeid);
         }
 
+        // add by etliu 20210927 start
+        if (entity != null) {
+            if (StringUtil.isBlank(entity.getoFinprodId())
+                    && StringUtil.equals(DictCodeListExt1.交易市场_一级市场.getValue(), entity.getTradeMarketMode())) {
+                FinProduct finProduct = tradeCommonService.selectFinProduct(entity.getFinprodId());
+                if (finProduct != null) {
+                    entity.setoFinprodId(finProduct.getoFinprodId());
+                }
+            }
+        }
+        // add by etliu 20210927 end
+
         Map<String, Object> params = new HashMap<>();
         params.put("workflowId", entity.getWorkflowId());
         String bizCode = entity.getTotleTradeId();
@@ -1693,7 +1705,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 }
                 if(StringUtil.equals(entity.getIsOfferFlag(), "01")){
                     //存在上行报价时，生效时，反冲可用流水
-                    cstpCommonService.excuteQuotePositionData(entity.getEntrustId(), entity.getfTradeId(), false, entity.getTradeId());
+                    String tradeId2 = entity.getTradeId();
+                    if(StringUtil.isEmpty(tradeId2)){
+                        tradeId2 = entity.getTotleTradeId();
+                    }
+                    cstpCommonService.excuteQuotePositionData(entity.getEntrustId(), entity.getfTradeId(), false, tradeId2);
                 }
                 trdProductDeal.setTradeId(tradeId1);
 

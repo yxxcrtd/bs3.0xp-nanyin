@@ -430,7 +430,7 @@ $(function () {
 			{field:'valuationMethodCode', width:120, title: '估值方法Code', visible:false},
 			{field:'valuationMethod', width:120, sortField:'valuationMethodCode',title: '估值方法'},
 			{field:'valuationPriceCode', width:120, title: '估值市价Code', visible:false},
-			{field:'valuationPrice', width:120, sortField:'valuationPriceCode',title: '估值市价'},
+			{field:'valuationPrice', width:120, sortField:'valuationPriceCode',title: '市价来源'},
 /*			{field:'valuationPrice2Code', width:120, title: '估值第二市价Code', visible:false},
 			{field:'valuationPrice2', width:120, sortField:'valuationPrice2Code',title: '估值第二市价'},*/
 			{field:'valuationDate', sortField:'valuationDateCode',width:120, title: '行情日期'},

@@ -1798,4 +1798,8 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         }
         return cfetsBondDealQuotedPriceMapper.selectExportPdf(map);
     }
+
+    public BigDecimal queryEntrustDealedAmt2(Map<String, Object> map){
+        return cfetsBondDealQuotedPriceMapper.queryEntrustDealedAmt2(map);
+    }
 }

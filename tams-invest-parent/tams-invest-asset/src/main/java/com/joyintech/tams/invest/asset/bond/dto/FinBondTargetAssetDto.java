@@ -17,6 +17,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.validation.annotation.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.dto.UploadFile;
@@ -24,10 +25,6 @@ import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.annotation.Amount;
-import com.joyintech.framework.validation.annotation.Length;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.asset.dto.BussFinRepaymentDto;
@@ -1076,6 +1073,7 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      */
     @Override
     @NotEmpty(fieldName="FinBondTargetAsset002.finprodId",groups = {ValidateGroupEdit.class})
+//    @Code(fieldName = "FinBondTargetAsset002.finprodId", length = 32, groups = {ValidateGroupEdit.class})
     @PrimaryKey(Field.PK_1)
     public String getFinprodMarketId(){
         return super.getFinprodMarketId();

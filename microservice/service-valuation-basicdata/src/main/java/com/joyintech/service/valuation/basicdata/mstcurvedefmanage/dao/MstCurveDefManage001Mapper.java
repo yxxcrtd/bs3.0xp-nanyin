@@ -49,4 +49,12 @@ public interface MstCurveDefManage001Mapper {
     List<SelectOptionDto> getCurveGroupSelect(Map<String, Object> param);
 
 
+    /**
+     * 通用联动查询
+     * @param param : dict_code_parent,dict_code_child,item_code_parent
+     * @return
+     */
+    List<SelectOptionDto> getLinkSelectOption(Map<String, Object> param);
+
+
 }

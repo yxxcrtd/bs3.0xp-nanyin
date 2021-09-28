@@ -217,7 +217,7 @@ public class AssetImpairmentManagement001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getFinprodIdByLossResult")
-    public List<SelectOptionDto> getFinprodIdByLossResult(@RequestParam Map<String, Object> params) throws Exception {
+    public Page<SelectOptionDto> getFinprodIdByLossResult(@RequestParam Map<String, Object> params) throws Exception {
         Map<String, Object> param = RequestUtil.getPageParam();
         return assetImpairmentManagement001Service.getFinprodIdByLossResult(params);
     }

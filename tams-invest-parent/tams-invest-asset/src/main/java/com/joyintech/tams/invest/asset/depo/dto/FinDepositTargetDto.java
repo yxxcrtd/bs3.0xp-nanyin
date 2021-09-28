@@ -17,6 +17,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.validation.annotation.*;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.PaFinProduct;
@@ -26,10 +27,6 @@ import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.annotation.Amount;
-import com.joyintech.framework.validation.annotation.Length;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.PaFinProductBuyoutRate;
@@ -632,6 +629,8 @@ public class FinDepositTargetDto extends FinProduct implements ITableRow, Proces
      */
     @Override
     @PrimaryKey(Field.PK_1)
+    @Code(fieldName = "FinProjectTargetAsset002.finprodId", length = 32, groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "FinProjectTargetAsset002.finprodId",groups={ValidateGroupEdit.class})//非空校验
     public String getFinprodMarketId() {
         return super.getFinprodMarketId();
     }

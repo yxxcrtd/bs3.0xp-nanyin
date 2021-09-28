@@ -72,7 +72,6 @@
 		from MST_CURVE_DEF
 		<where>
 			1=1
--- 			 NVL(eff_status,'E') = #{effStatus,jdbcType=VARCHAR}
 			<if test="curveName != null and curveName != ''">
 				and remark = #{curveName,jdbcType=VARCHAR}
 			</if>
@@ -117,9 +116,6 @@
 			<if test="curveName != null" >
 				CURVE_NAME,
 			</if>
-			<if test="curveGroupType != null" >
-				CURVE_GROUP_TYPE,
-			</if>
 			<if test="valueSource != null" >
 				VALUE_SOURCE,
 			</if>
@@ -128,9 +124,6 @@
 			</if>
 			<if test="remark != null" >
 				REMARK,
-			</if>
-			<if test="curveGroupCode != null" >
-				CURVE_GROUP_TYPE,
 			</if>
 			<if test="gradeResult != null" >
 				GRADE_RESULT,
@@ -171,9 +164,6 @@
 			<if test="curveName != null" >
 				#{curveName,jdbcType=VARCHAR},
 			</if>
-			<if test="curveGroupType != null" >
-				#{curveGroupType,jdbcType=VARCHAR},
-			</if>
 
 			<if test="valueSource != null" >
 				#{valueSource,jdbcType=VARCHAR},
@@ -183,9 +173,6 @@
 			</if>
 			<if test="remark != null" >
 				#{remark,jdbcType=VARCHAR},
-			</if>
-			<if test="curveGroupCode != null" >
-				#{curveGroupCode,jdbcType=VARCHAR},
 			</if>
 			<if test="gradeResult != null" >
 				#{gradeResult,jdbcType=VARCHAR},
@@ -223,7 +210,6 @@
 			CURVE_NAME = #{curveName,jdbcType=VARCHAR},
             VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR},
             REMARK = #{remark,jdbcType=VARCHAR},
-            CURVE_GROUP_TYPE = #{curveGroupCode,jdbcType=VARCHAR},
             GRADE_RESULT = #{gradeResult,jdbcType=VARCHAR},
             CURVE_GROUP_CODE = #{curveGroupCode,jdbcType=VARCHAR},
             CCY = #{ccy,jdbcType=VARCHAR},
@@ -240,24 +226,47 @@
 	<!--获取曲线族下拉框-->
 	<select id="getCurveGroupSelect" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select
-		CURVE_CODE id,
-		CURVE_NAME text,
-		INT_CURVE_TYPE object
-		from   MST_CURVE_DEF
+		CURVE_GROUP_CODE id,
+		CURVE_GROUP_NAME text
+		from   MST_CURVE_GROUP
 		<where>
 			1=1
 			<if test="search != null and search != ''">
 				AND	(
-				CURVE_CODE LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				CURVE_GROUP_CODE LIKE CONCAT('%', CONCAT(#{search}, '%'))
 				OR
-				CURVE_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				CURVE_GROUP_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
 				)
 			</if>
 			<if test="initValue != null and initValue != ''">
-				and CURVE_CODE = #{initValue}
+				and CURVE_GROUP_CODE = #{initValue}
 			</if>
-			and CURVE_GROUP_TYPE='Y'
 		</where>
 
 	</select>
+
+	<select id="getLinkSelectOption" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select distinct
+		sdl.ITEM_CODE id, sdl.ITEM_VALUE text
+		from SYS_DATADICT_LIST sdl
+		inner join SYS_DATADICT_LIST_LINK sdll
+		on sdl.ITEM_CODE = sdll.ITEM_CODE
+		<if test="dict_code_parent != null and dict_code_parent != ''">
+			and sdll.LINKED_DICT_CODE = #{dict_code_parent}
+		</if>
+		<if test="dict_code_child != null and dict_code_child != ''">
+			and sdl.DICT_CODE = #{dict_code_child}
+			and sdll.DICT_CODE = #{dict_code_child}
+		</if>
+		<if test="item_code_parent != null and item_code_parent != ''">
+			and TRIM(sdll.LINKED_ITEM_CODE) = TRIM(#{item_code_parent})
+		</if>
+		<where>
+			<if test="search != null and search !=''">
+				sdl.ITEM_VALUE like '%' || #{search} || '%'
+			</if>
+		</where>
+		order by sdl.ITEM_CODE
+	</select>
+
 </mapper>

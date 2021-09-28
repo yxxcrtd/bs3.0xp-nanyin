@@ -511,6 +511,18 @@
 			</if>
 		</where>
 	</select>
+
+	<select id="queryEntrustDealedAmt2" resultType="java.math.BigDecimal">
+		SELECT
+		SUM(NVL(ETR_FINISH_STATUS.FINISH_AMT, 0))
+		FROM
+		ETR_FINISH_STATUS
+		<where>
+			<if test="entrustId != null and entrustId != ''">
+				and ENTRUST_ID = #{entrustId}
+			</if>
+		</where>
+	</select>
 	
 	<select id="queryLastBondValuation" resultMap="com.joyintech.tams.common.base.dao.MstBondValuationInfoMapper.BaseResultMap">
 		SELECT
@@ -739,7 +751,7 @@
 		ptl_portfolio.portfolio_name portfolioName,/*组合名称*/
 		I.DELIVERYTYPE deliveryType,/*首次结算方式*/
 		I.DELIVERYTYPE2 deliveryType2,/*到期结算方式*/
-		I.TRADEMETHOD tradeMethod,/*交易方式*/
+		I.trademethod trademethod,/*交易方式*/
 		I.SETTLCURRENCY settlcurrency,/*结算币种*/
 		I.EXECTYPE execType,/*成交状态*/
 		I.OURINSTITUTIONCODE ourinstitutioncode, /*本方*/
@@ -757,10 +769,10 @@
 		I.COUNTERDEPOSITACCOUNTNUMBER counterdepositaccountnumber, /*对方托管账号*/
 		I.OURINSTITUTIONCHINESESHORTNAME ourinstitutionchineseshortname,/*本方机构*/
 		I.INSTITUTIONCHINESESHORTNAME institutionchineseshortname,/*对手方机构*/
-		tr.ccy ccy, /*债券币种*/
+		I.settlcurrency ccy, /*债券币种*/
 		1 as exchangerate, /*汇率*/
 		iqcp.PLEDGE_RATIO as pledgeRate,/*折算比例%*/
-		QUOTE.SETT_TYPE as settType,/*清算类型*/
+		I.clearingmethod as clearingmethod,/*清算类型*/
 		'' as settleStatus,/*净额清算状态*/
 		'' as repoMethod,/*回购方式*/
 		tpda.ENTRUST_ID entrustId,
@@ -1012,7 +1024,7 @@
 		ptl_portfolio.portfolio_name portfolioName,/*组合名称*/
 		I.DELIVERYTYPE deliveryType,/*首次结算方式*/
 		I.DELIVERYTYPE2 deliveryType2,/*到期结算方式*/
-		I.TRADEMETHOD tradeMethod,/*交易方式*/
+		I.trademethod trademethod,/*交易方式*/
 		I.SETTLCURRENCY settlcurrency,/*结算币种*/
 		I.EXECTYPE execType,/*成交状态*/
 		I.OURINSTITUTIONCODE ourinstitutioncode, /*本方*/
@@ -1030,10 +1042,10 @@
 		I.COUNTERDEPOSITACCOUNTNUMBER counterdepositaccountnumber, /*对方托管账号*/
 		I.OURINSTITUTIONCHINESESHORTNAME ourinstitutionchineseshortname,/*本方机构*/
 		I.INSTITUTIONCHINESESHORTNAME institutionchineseshortname,/*对手方机构*/
-		tr.ccy ccy, /*债券币种*/
+		I.settlcurrency ccy, /*债券币种*/
 		1 as exchangerate, /*汇率*/
 		iqcp.PLEDGE_RATIO as pledgeRate,/*折算比例%*/
-		QUOTE.SETT_TYPE as settType,/*清算类型*/
+		I.clearingMethod as clearingmethod,/*清算类型*/
 		'' as settleStatus,/*净额清算状态*/
 		'' as repoMethod,/*回购方式*/
 		tpda.ENTRUST_ID entrustId,

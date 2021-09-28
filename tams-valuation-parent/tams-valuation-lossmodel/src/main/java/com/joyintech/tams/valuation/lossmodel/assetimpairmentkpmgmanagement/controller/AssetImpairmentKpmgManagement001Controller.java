@@ -5,7 +5,6 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -26,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -218,7 +218,7 @@ public class AssetImpairmentKpmgManagement001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getFinprodIdByLossResult")
-    public List<SelectOptionDto> getFinprodIdByLossResult(@RequestParam Map<String, Object> params) throws Exception {
+    public Page<SelectOptionDto> getFinprodIdByLossResult(@RequestParam Map<String, Object> params) throws Exception {
         Map<String, Object> param = RequestUtil.getPageParam();
         return assetImpairmentKpmgManagement001Service.getFinprodIdByLossResult(params);
     }

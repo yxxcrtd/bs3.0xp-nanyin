@@ -10,10 +10,8 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinCashPlanMapper;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.FinProductTypeKey;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
@@ -109,6 +107,9 @@ public class TradeCommonService extends BaseService {
 
     @Autowired
     private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
+
+    @Autowired(required = false)
+    private FinProductMapper finProductMapper;
     
     /**
      * 查询生效的委托
@@ -663,6 +664,7 @@ public class TradeCommonService extends BaseService {
                 list.add(dto);
                 CreditLinesInputDto dto1 = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(dto1,creditLinesInputDto);
+                dto1.setEntrustId(dto1.getTradeId());
                 dto1.setPs(DictCodeList.交易方向_申购确认.getValue());
                 dto1.setIsSpecial("true");
                 list.add(dto1);
@@ -1388,4 +1390,12 @@ public class TradeCommonService extends BaseService {
         return result;
     }
 
+    /**
+     * 根据金融产品代码查询金融产品信息
+     * @param finprodId 金融产品代码
+     * @return 金融产品信息
+     */
+    public FinProduct selectFinProduct(String finprodId) {
+        return finProductMapper.selectByPrimaryKey(finprodId);
+    }
 }

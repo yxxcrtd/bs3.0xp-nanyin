@@ -164,6 +164,9 @@ public class AssetImpairmentProvisionReaderService {
         if(lossType!=null && DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)){
             resultList = assetImpairmentProvisionMapper.queryTrdAssetLossReaderPH(param);
         }
+        else  if(lossType!=null && DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
+            resultList = assetImpairmentProvisionMapper.queryTrdAssetLossReaderBMW(param);
+        }
         //  否则，继续走原来的逻辑
         else{
            resultList = assetImpairmentProvisionMapper.queryTrdAssetLossReader(param);
