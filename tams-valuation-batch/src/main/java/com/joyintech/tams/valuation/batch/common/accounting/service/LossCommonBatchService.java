@@ -254,12 +254,12 @@ public class LossCommonBatchService {
         }
         // if 变量.冲抵方式 = 02：金额占比
         if (DictCodeListExt3.卖出冲抵减值准备处理方式_金额占比.getValue().equals(calcType)) {
-            // 变量.减值准备金额 = 入参.减值准备余额 * 入参.发生金额 / 入参.当前EAD金额
-            lossAmt = ArithmeticUtil.divide(
-                ArithmeticUtil.multiply(inputDto.getLossBalAmt(), inputDto.getHappenAmt()),
-                inputDto.getEADAmt(), NumberEnum.MONEY.getCode());
-        }
-        else if (DictCodeListExt3.卖出冲抵减值准备处理方式_原金额占比.getValue().equals(calcType)) {
+//            // 变量.减值准备金额 = 入参.减值准备余额 * 入参.发生金额 / 入参.当前EAD金额
+//            lossAmt = ArithmeticUtil.divide(
+//                ArithmeticUtil.multiply(inputDto.getLossBalAmt(), inputDto.getHappenAmt()),
+//                inputDto.getEADAmt(), NumberEnum.MONEY.getCode());
+//        }
+//        else if (DictCodeListExt3.卖出冲抵减值准备处理方式_原金额占比.getValue().equals(calcType)) {
             // 减值日冲减本息和
             BigDecimal lossAccrDateSumAmt = BigDecimal.ZERO;
             // 减值日冲减本息和
@@ -360,7 +360,7 @@ public class LossCommonBatchService {
             
 
         }
-        else {
+        else if(DictCodeListExt3.卖出冲抵减值准备处理方式_数量占比.getValue().equals(calcType)){
             // 变量.减值准备金额 = 入参.减值准备余额 * 入参.发生份额 / 入参.总份额
             lossAmt = ArithmeticUtil.divide(
                 ArithmeticUtil.multiply(inputDto.getLossBalAmt(), inputDto.getHappenNum()),
