@@ -44,4 +44,14 @@ public interface CashPosAutoGenerationMapper {
      * @since 1.0
      */
     int insertTodaySecPosData(Map<String, Object> paramMap);
+
+    /**
+     * 生成当日持仓数据，不可支取
+     *
+     * @param paramMap 参数
+     * @return 执行结果
+     * @see
+     * @since 1.0
+     */
+    int insertTodaySecPosData07(Map<String, Object> paramMap);
 }

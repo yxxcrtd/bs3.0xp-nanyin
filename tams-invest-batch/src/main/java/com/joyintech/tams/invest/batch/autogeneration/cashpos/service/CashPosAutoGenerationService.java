@@ -66,5 +66,9 @@ public class CashPosAutoGenerationService {
         paramMap.put("POSITION_TYPE_03", DictCodeList.持仓类型_实际.getValue());
         paramMap.put("lastDate", DateUtil.addDay(batchDate, -1));
         cashPosAutoGenerationMapper.insertTodaySecPosData(paramMap);
+
+        // 生成当日持仓数据（不可支取）
+        paramMap.put("POSITION_TYPE_07", DictCodeListExt1.持仓类型_不可支取.getValue());
+        cashPosAutoGenerationMapper.insertTodaySecPosData07(paramMap);
     }
 }
