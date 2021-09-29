@@ -807,7 +807,12 @@ var calculateField;
             }
             if (shortSellingSupported == '01') {
                 $("#assetIntegrateSaleAvailablePosition_div").hide();
-                $("#assetIntegrateAvailablePosition_div").show();
+                // 场内交易不展示融入券
+                if(parentPageId && parentPageId == "TrdBondInvestTradeEx001"){
+                    $("#assetIntegrateAvailablePosition_div").hide();
+                }else{
+                    $("#assetIntegrateAvailablePosition_div").show();
+                }
                 $("#assetOwnAvailablePosition_div").show();
                 $(".ownNum_label").text('融入券券面总额');
                 $(".ownNum_label1").text('融入券应计利息总额');
@@ -828,7 +833,12 @@ var calculateField;
             	window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showCash(true);
             }
             if (shortSellingSupported == '01') {
-                $("#assetIntegrateSaleAvailablePosition_div").show();
+                // 场内交易不展示融入券
+                if(parentPageId && parentPageId == "TrdBondInvestTradeEx001"){
+                    $("#assetIntegrateSaleAvailablePosition_div").hide();
+                }else{
+                    $("#assetIntegrateSaleAvailablePosition_div").show();
+                }
                 $("#assetIntegrateAvailablePosition_div").hide();
                 $("#assetOwnAvailablePosition_div").hide();
                 $(".ownNum_label").text('卖空购回券面总额');
