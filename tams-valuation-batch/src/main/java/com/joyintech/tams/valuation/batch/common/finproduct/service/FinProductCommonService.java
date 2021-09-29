@@ -767,10 +767,11 @@ public class FinProductCommonService {
 //            Date queryDate, String valuationPrice,
 //                                        String valuationPrice2, String finprodMarketId,
 //                                        String queryType, String priceClass) {
-
         MarketPriceDto marketPriceDto = getMarketPriceByValPrice(
                 schemeDetailDto.getValuationPrice(), queryDate, finprodMarketId, queryType, schemeDetailDto.getPriceClass(),schemeDetailDto.getValuationMethod());
-
+        if(marketPriceDto ==null){
+            marketPriceDto =new MarketPriceDto();
+        }
         return marketPriceDto;
     }
 
