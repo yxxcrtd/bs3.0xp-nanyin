@@ -104,6 +104,20 @@ public class TrdAssetLoss001Controller {
     public List<TrdAssetLoss001Dto>  getAssetInfo(@RequestBody Map<String, Object> param) {
         return trdAssetLossService.getAssetInfo(param);
     }
+
+    /**
+     *
+     * 资产信息检索查询
+     * <功能详细描述>
+     * @param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/getAssetInfoForLoss")
+    public List<TrdAssetLoss001Dto>  getAssetInfoForLoss(@RequestBody Map<String, Object> param) {
+        return trdAssetLossService.getAssetInfoForLoss(param);
+    }
     /**
      *
      * 债券资产信息检索查询

@@ -194,6 +194,11 @@
                             if (resultObj.tradeMarket) {
                                 $("#tradeMarket").val(resultObj.tradeMarket).trigger('change');
                             }
+                            debugger;
+                            if (resultObj.secId) {
+                                $("#secId").val(resultObj.secId).trigger('change');
+                            }
+
                             //当资产类型为债券，且资产属于含权债可选择  代偿期类型
                             if(resultObj.isRight && resultObj.isRight==='Y'){
 //                                var exerciseData = {
