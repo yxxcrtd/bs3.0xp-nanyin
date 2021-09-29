@@ -146,10 +146,19 @@ public class CashFlowDiscountProcessorService {
                 }
             }
             if (isAssetPrice) {
-                assetPriceBasePrice = modAssetInfoDto.getIssuePrice();//发行价
-                if(assetPriceBasePrice==null||assetPriceBasePrice.compareTo(BigDecimal.ZERO)==0){
-                    assetPriceBasePrice = new BigDecimal(100);
+                if(modAssetInfoDto.getSecType().equals(DictCodeListExt1.证券品种_债券.getValue())) {
+                    assetPriceBasePrice = modAssetInfoDto.getIssuePrice();//发行价
+                    if(assetPriceBasePrice==null||assetPriceBasePrice.compareTo(BigDecimal.ZERO)==0){
+                        assetPriceBasePrice = new BigDecimal(100);
+                    }
+                }else{
+                    assetPriceBasePrice = modAssetInfoDto.getIssueAmt();//其他债权，发行规模
+                    if(assetPriceBasePrice==null||assetPriceBasePrice.compareTo(BigDecimal.ZERO)==0){
+                        modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：债权类资产无发行规模数据，无法计算.");
+                        return result;
+                    }
                 }
+
             } else {
                 Map<String, Object> param = new HashMap<>();
                 param.put("finprodId", finprodId);
@@ -157,9 +166,17 @@ public class CashFlowDiscountProcessorService {
                 ModRiskPremium modRiskPremium2 = cashFlowDiscountMapper.getModRiskPremium(param);
                 if (null == modRiskPremium2) {
                     isAssetPrice = true;
-                    assetPriceBasePrice = modAssetInfoDto.getIssuePrice();//发行价
-                    if(assetPriceBasePrice==null||assetPriceBasePrice.compareTo(BigDecimal.ZERO)==0){
-                        assetPriceBasePrice = new BigDecimal(100);
+                    if(modAssetInfoDto.getSecType().equals(DictCodeListExt1.证券品种_债券.getValue())) {
+                        assetPriceBasePrice = modAssetInfoDto.getIssuePrice();//发行价
+                        if(assetPriceBasePrice==null||assetPriceBasePrice.compareTo(BigDecimal.ZERO)==0){
+                            assetPriceBasePrice = new BigDecimal(100);
+                        }
+                    }else{
+                        assetPriceBasePrice = modAssetInfoDto.getIssueAmt();//其他债权，发行规模
+                        if(assetPriceBasePrice==null||assetPriceBasePrice.compareTo(BigDecimal.ZERO)==0){
+                            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：债权类资产无发行规模数据，无法计算.");
+                            return result;
+                        }
                     }
                     assetPriceBaseDate = modAssetInfoDto.getVdate();
                 } else {
@@ -198,6 +215,10 @@ public class CashFlowDiscountProcessorService {
             //计算全价
             DisCountInputParameter disCountInputParameter = calDiscountFullPrice(entity, happenDate, modRiskPremium.getSpreadAdj(), calCurveInfo.get(curveCode));
 
+            BigDecimal fullprice = disCountInputParameter.getFullprice();
+
+            fullprice = calcByIssueAmt(fullprice,modAssetInfoDto);
+
             modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：估值日现金流信息列表：");
             disCountInputParameter.getCashInfoDtoList().forEach(x->{
                 modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "起息日："+x.getTheoryStartDate()+"；期限："+x.getRemainingTerm()+";收益率："+x.getSpR());
@@ -207,11 +228,12 @@ public class CashFlowDiscountProcessorService {
                 modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), x.getKeyPoint()+"-"+x.getYield());
             });
 
+
             String resultSeqNo = IDGenerator.generate();
             modCurveResult.setSeqno(resultSeqNo);
             modCurveResult.setFinprodId(finprodId);
             modCurveResult.setCdate(happenDate);
-            modCurveResult.setFullPrice(disCountInputParameter.getFullprice());
+            modCurveResult.setFullPrice(fullprice);
             modCurveResult.setNetPrice(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest));
             modCurveResult.setCurveSpread(modRiskPremium.getSpread());
             modCurveResult.setValModel(ModelDictCodeList.模型_估值模型名称_现金流贴现法.getValue());
@@ -232,7 +254,7 @@ public class CashFlowDiscountProcessorService {
             result.setModCurveResultDetails(modCurveResultDetails);
             result.setModRiskPremium(modRiskPremium);
 
-            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：全价："+disCountInputParameter.getFullprice()+"，净价："+ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest)+"，点差："+modRiskPremium.getSpread());
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：全价："+fullprice+"，净价："+ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest)+"，点差："+modRiskPremium.getSpread());
 
 
             if(modAssetInfoDto.getSecType().equals(DictCodeListExt1.证券品种_债券.getValue())){
@@ -240,7 +262,7 @@ public class CashFlowDiscountProcessorService {
 				mstBondValuationInfo.setSecId(modAssetInfoDto.getFinprodMarketId()); //市场代码
 				mstBondValuationInfo.setValueDate(happenDate);//估值日
 				mstBondValuationInfo.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());//估值来源
-				mstBondValuationInfo.setPrice(disCountInputParameter.getFullprice().setScale(2, RoundingMode.HALF_UP)); //估值全价
+				mstBondValuationInfo.setPrice(fullprice.setScale(2, RoundingMode.HALF_UP)); //估值全价
 				mstBondValuationInfo.setNetprice(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest).setScale(2, RoundingMode.HALF_UP));//估值净价
 				mstBondValuationInfo.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
 				mstBondValuationInfo.setCreateUser("batch"); //
@@ -273,6 +295,25 @@ public class CashFlowDiscountProcessorService {
         }
         return result;
 
+    }
+
+    /**
+     * 全价根据发行规模折算
+     *  对于债券不做处理，对于债权类资产，产品是按照发行规模进行折算
+     * @param fullprice
+     * @param modAssetInfoDto
+     * @return
+     */
+    private BigDecimal calcByIssueAmt(BigDecimal fullprice, ModAssetInfoDto modAssetInfoDto) {
+        String secType = modAssetInfoDto.getSecType();
+        if(DictCodeListExt1.证券品种_债券.getValue().equals(secType)){
+            return fullprice;
+        }else if(DictCodeListExt1.证券品种_其他债权类.getValue().equals(secType)){
+            return ArithmeticUtil.divide(fullprice, modAssetInfoDto.getIssueAmt(),22);
+        }else{
+            logger.warn("资产代码：{1}，对应的证券品种为：{2}，不是债券也不是其他债权，全价不做折算.", modAssetInfoDto.getFinprodId(),modAssetInfoDto.getSecType());
+            return fullprice;
+        }
     }
 
     /**

@@ -133,6 +133,7 @@
 		A.SPONSOR  ,/*担保人*/
 		A.VDATE VDATE,/**起息日**/
 		A.MDATE MDATE,/**到期日**/
+		A.ISSUE_AMT ISSUEAMT,/**发行规模**/
 		A.ISSUE_PRICE ISSUE_PRICE,/**发行价**/
 		A.COUPON_SPECIES AS COUPON_SPECIES,/***息票品种***/
 		D.TYPE_18 AS SEC_TYPE,/**证券品种**/
