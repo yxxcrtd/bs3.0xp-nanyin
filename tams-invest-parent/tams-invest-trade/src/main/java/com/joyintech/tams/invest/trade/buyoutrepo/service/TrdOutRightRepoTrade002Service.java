@@ -1118,7 +1118,9 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 		trdProductDeal.setfTradeId(entity.getDealBussId());
 		trdProductDeal.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
 		trdProductDeal.setUnitCprice(entity.getfCprice());
-		trdProductDeal.setUnitInt(entity.getfIntAmt());
+		// add by wanshiwei ZGZGST-3595 回购类资产“利率%”取值错误，取资产的回购利率 20210928 start
+		trdProductDeal.setUnitInt(ArithmeticUtil.divide(entity.getRepoRate(), 100, 8));
+		// add by wanshiwei ZGZGST-3595 回购类资产 “利率%”取值错误，取资产的回购利率 20210928 end
 		trdProductDeal.setUnitFprice(entity.getfFprice());
 		// trdProductDeal.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(entity.getfCprice(),
 		// entity.getSecTotalPrin()), 100, 2));
