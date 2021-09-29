@@ -168,6 +168,7 @@ public class BussRepoSecController extends BaseController {
         model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
         //配置单位 add by yeming 20210721 end
         model.addAttribute("tradePlace",getParam("tradePlace"));
+        model.addAttribute("parentPageId",this.getParam("parentPageId"));
         return "component/trade/BussRepoSec";
     }
 

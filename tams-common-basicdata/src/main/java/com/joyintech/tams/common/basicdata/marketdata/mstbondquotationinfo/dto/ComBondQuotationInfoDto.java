@@ -149,7 +149,7 @@ public class ComBondQuotationInfoDto extends MstBondValuationInfo implements Pro
      * @return Date
      */
     @Override
-    @NotEmpty(fieldName = "ComBondQuotationInfo001.valueDate", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ComBondQuotationInfo002.valueDate", groups = {ValidateGroupEdit.class})
     public Date getValueDate() {
         return super.getValueDate();
     }
@@ -182,9 +182,9 @@ public class ComBondQuotationInfoDto extends MstBondValuationInfo implements Pro
      * @return String
      */
     @Override
-    @Length(fieldName = "MstBondQuotationInfo002.price", max = 30, groups = {
+    @Length(fieldName = "ComBondQuotationInfo002.price", max = 30, groups = {
         ValidateGroupEdit.class})
-    @NotEmpty(fieldName = "MstBondQuotationInfo002.price", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ComBondQuotationInfo002.price", groups = {ValidateGroupEdit.class})
     public BigDecimal getPrice() {
         return super.getPrice();
     }
