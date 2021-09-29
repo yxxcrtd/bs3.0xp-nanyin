@@ -150,7 +150,7 @@ public class TrdPlanCurrDuration001Service extends CommonExportService<TrdPlanCu
      */
     @Override
     public void doComplete(TrdPlanCurrDuration001Dto entity, OperationType type) {
-        if (StringUtil.equals(entity.getType(), "05")){
+        if (StringUtil.equals(entity.getType(), "05") && OperationType.REVOKE != type){
             entity.setTypeFlag("01");
         }else{
             entity.setTypeFlag("02");

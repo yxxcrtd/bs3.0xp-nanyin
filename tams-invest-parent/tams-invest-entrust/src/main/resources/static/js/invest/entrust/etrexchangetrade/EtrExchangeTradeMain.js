@@ -315,6 +315,7 @@ function hideLeftTopPanel(){
     $("div.top_panel").each(function(i,v){
         $(v).css("display","none");
     });
+    $("#right_bottom_panel_dev").css("width","100%");
 }
 
 function showLeftTopPanel(){
