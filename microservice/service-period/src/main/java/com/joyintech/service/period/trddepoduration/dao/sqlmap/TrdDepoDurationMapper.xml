@@ -229,6 +229,7 @@
                 <!--add by liupengfei for 多级法人改造S-->
                 ,T4.FINPROD_ID
                 <!--add by liupengfei for 多级法人改造E-->
+                ,fplan.pay_date payDateProd
             FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
             <!-- 组合 -->
             <!-- 2.0修改 -->
@@ -242,6 +243,10 @@
             <!-- 通道存续期 qiangchengxi end -->
             <!-- left join 金融产品分类 on 金融产品分类.金融产品代码 = T1.金融产品代码 -->
             LEFT JOIN FIN_PRODUCT_TYPE fprod_type on fprod_type.FINPROD_ID = T1.FINPROD_ID
+            left join FIN_CASH_PLAN fplan
+            on  T1.VDATE=fplan.vdate
+            and T1.Finprod_Id=fplan.finprod_id
+            and ((T1.ps in ('T38','T07') and fplan.cash_type in('02,03'))or(T1.ps in ('C7','T09') and fplan.cash_type in ('01','04')))
             WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF07}
             AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
             and T1.TRADE_STATUS =  #{TRADE_STATUS01}
@@ -305,6 +310,7 @@
                 <!--add by liupengfei for 多级法人改造S-->
                 ,t8.FINPROD_ID
                 <!--add by liupengfei for 多级法人改造E-->
+                ,t8.PAY_DATE payDateProd
             from (
               select T7.FINPROD_ID,
                     t7.CASH_TYPE,
@@ -443,6 +449,7 @@
                 <!--add by liupengfei for 多级法人改造S-->
                 ,T1.FINPROD_ID
                 <!--add by liupengfei for 多级法人改造E-->
+                ,fplan.pay_date payDateProd
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             <!-- LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID -->
             LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
@@ -452,6 +459,10 @@
             <!-- 通道存续期 qiangchengxi end -->
             <!-- left join 金融产品分类 on 金融产品分类.金融产品代码 = T1.金融产品代码 -->
             LEFT JOIN FIN_PRODUCT_TYPE fprod_type on fprod_type.FINPROD_ID = T1.FINPROD_ID
+            left join FIN_CASH_PLAN fplan
+            on  T1.VDATE=fplan.vdate
+            and T1.Finprod_Id=fplan.finprod_id
+            and ((T1.ps in ('T38','T07') and fplan.cash_type in('02,03'))or(T1.ps in ('C7','T09') and fplan.cash_type in ('01','04')))
             WHERE T1.TRADE_STATUS = #{TRADE_STATUS01}
             AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
                 AND T1.IS_CANCEL = #{YESNO_N}
@@ -514,6 +525,7 @@
                 <!--add by liupengfei for 多级法人改造S-->
                 ,T1.FINPROD_ID
                 <!--add by liupengfei for 多级法人改造E-->
+                ,fplan.pay_date payDateProd
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             <!-- LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID -->
             LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
@@ -523,6 +535,10 @@
             <!-- 通道存续期 qiangchengxi end -->
             <!-- left join 金融产品分类 on 金融产品分类.金融产品代码 = T1.金融产品代码 -->
             LEFT JOIN FIN_PRODUCT_TYPE fprod_type on fprod_type.FINPROD_ID = T1.FINPROD_ID
+            left join FIN_CASH_PLAN fplan
+            on  T1.VDATE=fplan.vdate
+            and T1.Finprod_Id=fplan.finprod_id
+            and ((T1.ps in ('T38','T07') and fplan.cash_type in('02,03'))or(T1.ps in ('C7','T09') and fplan.cash_type in ('01','04')))
             WHERE T1.TRADE_STATUS = #{TRADE_STATUS03}
             AND nvl(T1.IS_OVERDUE_DEAL,#{YESNO_N}) = #{YESNO_N}
                 AND T1.IS_CANCEL = #{YESNO_N}
@@ -1043,7 +1059,7 @@
                 fccr.BASIS,
                 T4.VDATE,
                 T4.MDATE,
-                T4.ENTRUSTER,
+                nvl(T4.ENTRUSTER,mstci.CUSTOMER_NAME) ENTRUSTER,
                 T3.RATE*100 earlyWithdrawalRate,
                 <!-- 资产推荐费率 -->
                 fccr.YIELD*100 yield,
@@ -1063,6 +1079,7 @@
                 tdta.INT_SETT_TYPE,
                 T1.IS_CLEAN,
                 T1.REMARK
+                ,fplan.pay_date payDateProd
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
             LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
@@ -1102,6 +1119,12 @@
                and fccr_2.EFF_DATE &lt;= T1.MDATE
                )
             left join TRD_DEAL_TOTAL_ADD tdta on tdta.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID
+            LEFT JOIN MST_CUSTOMER_INFO mstci ON T4.issuer = mstci.CUSTOMER_ID
+            left join FIN_CASH_PLAN fplan
+            on  T1.VDATE=fplan.vdate
+            and T1.Finprod_Id=fplan.finprod_id
+            and ((T1.ps in ('T38','T07') and fplan.cash_type in('02,03'))or(T1.ps in ('C7','T09') and fplan.cash_type in ('01','04')))
+
             WHERE 
                  T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF07}
             <choose>
@@ -1151,7 +1174,7 @@
                    t10.VDATE,
                    t10.MDATE,
                    fccr.BASIS basis,
-                   t10.ENTRUSTER,
+                   nvl(t10.ENTRUSTER,mstci.CUSTOMER_NAME) ENTRUSTER,
                    <!-- 借款利率 -->
                    fccrt_2.YIELD*100 loadRate,
                    <!-- 资产推荐费率 -->
@@ -1168,7 +1191,8 @@
                    sum(t8.intAmt) intAmt,
                    sum(t8.intAmt) theoryInt,
                    <!-- 支付日 -->
-                   t8.PAY_DATE 
+                   t8.PAY_DATE
+                   ,t8.PAY_DATE as payDateProd
                from (
                  select 
                        T7.FINPROD_ID,
@@ -1229,6 +1253,7 @@
                    where fccr_2.CASH_ID =fccrt_2.CASH_ID and fccr_2.EFF_DATE > fccrt_2.EFF_DATE
                    and fccr_2.EFF_DATE &lt;= T8.MDATE
                    )
+                LEFT JOIN MST_CUSTOMER_INFO mstci ON T10.issuer = mstci.CUSTOMER_ID
                <!-- 类型为存款类 -->
                WHERE T10.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF07}
                    <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
@@ -1259,7 +1284,7 @@
                    t8.MDATE,
                    t10.VDATE,
                    t10.MDATE,
-                   t10.ENTRUSTER,
+                   nvl(t10.ENTRUSTER,mstci.CUSTOMER_NAME),
                    fccr.YIELD,
                    fccrt_2.YIELD,
                    t8.PAY_DATE,

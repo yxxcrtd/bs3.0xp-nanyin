@@ -268,6 +268,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="layui-form-item">
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap"
+                                               data-th-text="#{TrdDepoDuration001.payDateProd}">理论支付日</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <input type="text" id="payDateProd" name="payDateProd"
+                                                   data-th-value="${#dates.format(entity?.payDateProd,'yyyy-MM-dd')}"
+                                                   class="layui-input form-input input-dateSelect"
+                                                   disabled />
+                                        </div>
+                                    </div>
+                                </div>
 <!--                                 <div class="layui-form-item">
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-label-wrap"

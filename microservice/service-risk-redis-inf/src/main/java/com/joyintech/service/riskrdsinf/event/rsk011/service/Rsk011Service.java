@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -609,13 +610,13 @@ public class Rsk011Service extends EventBaseService<Rsk002InEntity> {
 
     private void setTrendInd(Map<String, IIndicator> indMap,
                              Map<String, IIndicatorTrend> indTrendMap, String portfolioCode) {
-        // 过滤出没有趋势的指标信息
+        // 过滤出没有趋势的指标信息, ZGZGST-1821 如果不展示原值，那么指标就不存在趋势问题，直接放入没有趋势的指标信息中
         Map<String, IIndicator> leftInd = CommonUtil.mapFilter(indMap,
-            ind -> !indTrendMap.containsKey(ind.getKey() + GlobalConstant.COLON + portfolioCode));
+            ind -> !indTrendMap.containsKey(ind.getKey() + GlobalConstant.COLON + portfolioCode) || StringUtil.equals(DictCodeList.是否_否.getValue(),ind.getValue().getIsDisplayOriginal()));
         getIndTrendCalcSrc().setServiceInfo(IndicatorTrendCalcService.NO_TREND_INDICATOR, leftInd);
-        // 过滤出有指标趋势的指标信息
+        // 过滤出有指标趋势的指标信息，ZGZGST-1821 只有展示原值的指标才有趋势问题
         Map<String, IIndicator> rightInd = CommonUtil.mapFilter(indMap,
-            ind -> indTrendMap.containsKey(ind.getKey() + GlobalConstant.COLON + portfolioCode));
+            ind -> indTrendMap.containsKey(ind.getKey() + GlobalConstant.COLON + portfolioCode) && StringUtil.equals(DictCodeList.是否_是.getValue(),ind.getValue().getIsDisplayOriginal()));
         getIndTrendCalcSrc().setServiceInfo(IndicatorTrendCalcService.HAS_TREND_INDICATOR,
             rightInd);
     }

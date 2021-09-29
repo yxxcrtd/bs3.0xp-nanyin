@@ -2201,7 +2201,7 @@
             nvl(atd.custom_asset_type_five,RAI.ORG_ASSET_TYPE5)  AS customAssetTypeFive,
             atd.faire_price as fairePrice,atd.pos_amount as posAmount,atd.prin,atd.pos_cost as posCost,atd.pos_value as posValue,atd.tdy_intincexp as tdyIntincexp,atd.issue_party as issueParty,atd.is_soe as isSoe,atd.is_listed_company as isListedCompany,atd.company_nature as companyNature,atd.industry ,atd.industry2 ,
             atd.vdate ,atd.mdate,atd.term_days as termDays,atd.counter_id as counterId,atd.last_period as lastPeriod,atd.latest_deal_date as latestDealDate,atd.bshare_face_value as bshareFaceValue,atd.issue_face_value as issueFaceValue,atd.rate,atd.cost_rate as costRate,atd.bpyield ,atd.m_convexity mConvexity,atd.ex_info as exInfo,atd.ex_next_date as exNextDate,atd.last_ex_period as lastExPeriod,atd.m_grade_result mGradeResult,atd.m_grade_org mGradeOrg,atd.b_grade_result bGradeResult,atd.b_grade_org bGradeOrg,atd.m_grade_result_in mGradeResultIn,atd.b_grade_result_in bGradeResultIn,atd.is_city_bond isCityBond,atd.city_bond_lev cityBondLev,atd.c_shares cShares,atd.s_shares sShares,
-            atd.trade_market tradeMarket,atd.is_sus isSus,atd.is_right isRight,atd.ex_date exDate,atd.m_grade_org_in mGradeOrgIn,atd.b_grade_org_in bGradeOrgIn,atd.bshare_scale bshareScale,atd.profit_type profitType,atd.M_DURATION mDuration,atd.MDURATION mdurationAmend
+            atd.trade_market tradeMarket,atd.is_sus isSus,atd.is_right isRight,atd.ex_date exDate,atd.m_grade_org_in mGradeOrgIn,atd.b_grade_org_in bGradeOrgIn,atd.bshare_scale bshareScale,atd.profit_type profitType,atd.DURATION mDuration,atd.MDURATION mdurationAmend
             , '02' hasChildren,
 
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
@@ -2397,7 +2397,7 @@
             ELSE SUM(atd.tdy_intincexp)
             END tdyIntincexp,atd.issue_party as issueParty,atd.is_soe as isSoe,atd.is_listed_company as isListedCompany,atd.company_nature as companyNature,atd.industry ,atd.industry2 ,
             atd.vdate ,atd.mdate,atd.term_days as termDays,atd.counter_id as counterId,atd.last_period as lastPeriod,atd.latest_deal_date as latestDealDate,atd.bshare_face_value as bshareFaceValue,atd.issue_face_value as issueFaceValue,atd.rate,atd.cost_rate as costRate,atd.bpyield ,atd.m_convexity mConvexity,atd.ex_info as exInfo,atd.ex_next_date as exNextDate,atd.last_ex_period as lastExPeriod,atd.m_grade_result mGradeResult,atd.m_grade_org mGradeOrg,atd.b_grade_result bGradeResult,atd.b_grade_org bGradeOrg,atd.m_grade_result_in mGradeResultIn,atd.b_grade_result_in bGradeResultIn,atd.is_city_bond isCityBond,atd.city_bond_lev cityBondLev,atd.c_shares cShares,atd.s_shares sShares,
-            atd.trade_market tradeMarket,atd.is_sus isSus,atd.is_right isRight,atd.ex_date exDate,atd.m_grade_org_in mGradeOrgIn,atd.b_grade_org_in bGradeOrgIn,atd.bshare_scale bshareScale,atd.profit_type profitType,atd.M_DURATION mDuration,atd.MDURATION mdurationAmend
+            atd.trade_market tradeMarket,atd.is_sus isSus,atd.is_right isRight,atd.ex_date exDate,atd.m_grade_org_in mGradeOrgIn,atd.b_grade_org_in bGradeOrgIn,atd.bshare_scale bshareScale,atd.profit_type profitType,atd.DURATION mDuration,atd.MDURATION mdurationAmend
             , '01' hasChildren,atd.dv01 dv01,atd.float_ingpl_add_price floatIngplAddPrice,atd.float_ingpl_add floatIngplAdd,
             <choose>
                 <!-- 下钻层级 1级-->
@@ -2580,7 +2580,7 @@
             atd.b_grade_org_in ,
             atd.bshare_scale ,
             atd.profit_type ,
-            atd.M_DURATION ,
+            atd.DURATION ,
             atd.MDURATION,atd.dv01,atd.float_ingpl_add_price,atd.float_ingpl_add,FTP.FINPROD_TYPE2
         </if>
 
@@ -2603,7 +2603,7 @@
             atd.faire_price as fairePrice,atd.pos_amount as posAmount,atd.prin,atd.pos_cost as posCost,atd.pos_value as posValue,atd.tdy_intincexp as tdyIntincexp,atd.issue_party as issueParty,atd.is_soe as isSoe,atd.is_listed_company as isListedCompany,atd.company_nature as companyNature,atd.industry ,atd.industry2 ,
             <!--多级法人改造 add by jingqiongqiong 20200615-->
             atd.vdate ,atd.mdate,atd.term_days as termDays,atd.counter_id as counterId,atd.last_period as lastPeriod,atd.latest_deal_date as latestDealDate,atd.bshare_face_value as bshareFaceValue,atd.issue_face_value as issueFaceValue,atd.rate,atd.cost_rate as costRate,atd.bpyield ,atd.m_convexity mConvexity,atd.ex_info as exInfo,atd.ex_next_date as exNextDate,atd.last_ex_period as lastExPeriod,atd.m_grade_result mGradeResult,atd.m_grade_org mGradeOrg,atd.b_grade_result bGradeResult,atd.b_grade_org bGradeOrg,atd.m_grade_result_in mGradeResultIn,atd.b_grade_result_in bGradeResultIn,atd.is_city_bond isCityBond,atd.city_bond_lev cityBondLev,atd.c_shares cShares,atd.s_shares sShares,
-            atd.trade_market tradeMarket,atd.is_sus isSus,atd.is_right isRight,atd.ex_date exDate,atd.m_grade_org_in mGradeOrgIn,atd.b_grade_org_in bGradeOrgIn,atd.bshare_scale bshareScale,atd.profit_type profitType,atd.M_DURATION mDuration,atd.MDURATION mdurationAmend
+            atd.trade_market tradeMarket,atd.is_sus isSus,atd.is_right isRight,atd.ex_date exDate,atd.m_grade_org_in mGradeOrgIn,atd.b_grade_org_in bGradeOrgIn,atd.bshare_scale bshareScale,atd.profit_type profitType,atd.DURATION mDuration,atd.MDURATION mdurationAmend
             , '02' hasChildren ,
             <if test="resourcesTreeInstCodeList != null and resourcesTreeInstCodeList.size() > 0">
                 dani.belong_institution_code  belongInstitutionCode,
@@ -2830,7 +2830,7 @@
                     atd.m_grade_org_in mGradeOrgIn,
                     atd.b_grade_org_in bGradeOrgIn,
                     atd.profit_type profitType,
-                    atd.M_DURATION mDuration,
+                    atd.DURATION mDuration,
                     atd.MDURATION mdurationAmend, 
                     '02' hasChildren,
                     atd.dv01 dv01,
@@ -3022,7 +3022,7 @@
             atd.m_grade_org_in ,
             atd.b_grade_org_in ,
             atd.profit_type ,
-            atd.M_DURATION ,
+            atd.DURATION ,
             atd.MDURATION,atd.dv01,atd.float_ingpl_add_price
             ) t where t.row_number=1)a
             left join (

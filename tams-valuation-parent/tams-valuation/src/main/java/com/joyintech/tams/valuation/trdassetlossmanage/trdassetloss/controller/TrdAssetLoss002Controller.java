@@ -138,7 +138,7 @@ public class TrdAssetLoss002Controller extends BaseController {
 
         //如果是编辑
         if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
-            if (!DateUtil.format(dto.getValDate()).equals(DateUtil.format(new Date()))) {
+            if(DateUtil.compareDate(dto.getValDate(),DateUtil.platDateFromCache()) !=0 ){
                 String message = "不可修改减值行情日非系统当前日期的数据!";
                 return new AjaxResult(message, MessageType.错误消息);
             }
@@ -233,7 +233,7 @@ public class TrdAssetLoss002Controller extends BaseController {
                 errorList.add(new ValidMessage("peroid","待偿期（年）不能为空"));
             }
             if (StringUtil.isNotEmpty(dto.getValDate())) {
-                if (dto.getValDate().compareTo(DateUtil.parse(DateUtil.getSysDate())) != 0) {
+                if (dto.getValDate().compareTo(DateUtil.platDateFromCache()) != 0) {
                     errorList.add(new ValidMessage("valDate", "减值行情日必须等于平台日"));
                 }
             }

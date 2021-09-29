@@ -8,7 +8,7 @@
         $("#dataListDiv").empty();
         var v = $(_this).val();
         if(v){
-            Joyin.ajax("/invest/entrust/home/Home/getCheckedConfigList", {id: v},
+            Joyin.ajax("/invest/entrust/home/Home/getCheckedConfigList", {dynId: v},
                 function(result){
                     let v = JSON.parse(result.data);
                     if(!v){

@@ -37,7 +37,7 @@
         <result column="RATE" property="rate" jdbcType="DECIMAL" />
         <result column="COST_RATE" property="costRate" jdbcType="DECIMAL" />
         <result column="BPYIELD" property="bpyield" jdbcType="DECIMAL" />
-        <result column="M_DURATION" property="mDuration" jdbcType="DECIMAL" />
+        <result column="DURATION" property="duration" jdbcType="DECIMAL" />
         <result column="MDURATION" property="mduration" jdbcType="DECIMAL" />
         <result column="M_CONVEXITY" property="mConvexity" jdbcType="DECIMAL" />
         <result column="EX_INFO" property="exInfo" jdbcType="VARCHAR" />
@@ -79,7 +79,7 @@
         COMPANY_NATURE COMPANY_NATURE, INDUSTRY INDUSTRY, INDUSTRY2 INDUSTRY2, VDATE VDATE, 
         MDATE MDATE, TERM_DAYS TERM_DAYS, COUNTER_ID COUNTER_ID, LAST_PERIOD LAST_PERIOD, 
         LATEST_DEAL_DATE LATEST_DEAL_DATE, BSHARE_FACE_VALUE BSHARE_FACE_VALUE, ISSUE_FACE_VALUE ISSUE_FACE_VALUE, 
-        RATE RATE, COST_RATE COST_RATE, BPYIELD BPYIELD, M_DURATION M_DURATION, MDURATION MDURATION, 
+        RATE RATE, COST_RATE COST_RATE, BPYIELD BPYIELD, DURATION DURATION, MDURATION MDURATION,
         M_CONVEXITY M_CONVEXITY, EX_INFO EX_INFO, EX_NEXT_DATE EX_NEXT_DATE, LAST_EX_PERIOD LAST_EX_PERIOD, 
         M_GRADE_RESULT M_GRADE_RESULT, M_GRADE_ORG M_GRADE_ORG, B_GRADE_RESULT B_GRADE_RESULT, 
         B_GRADE_ORG B_GRADE_ORG, M_GRADE_RESULT_IN M_GRADE_RESULT_IN, B_GRADE_RESULT_IN B_GRADE_RESULT_IN, 
@@ -130,7 +130,7 @@
             TERM_DAYS, COUNTER_ID, LAST_PERIOD, 
             LATEST_DEAL_DATE, BSHARE_FACE_VALUE, ISSUE_FACE_VALUE, 
             RATE, COST_RATE, BPYIELD, 
-            M_DURATION, MDURATION, M_CONVEXITY, 
+            DURATION, MDURATION, M_CONVEXITY,
             EX_INFO, EX_NEXT_DATE, LAST_EX_PERIOD, 
             M_GRADE_RESULT, M_GRADE_ORG, B_GRADE_RESULT, 
             B_GRADE_ORG, M_GRADE_RESULT_IN, B_GRADE_RESULT_IN, 
@@ -154,7 +154,7 @@
             #{termDays,jdbcType=DECIMAL}, #{counterId,jdbcType=VARCHAR}, #{lastPeriod,jdbcType=DECIMAL}, 
             #{latestDealDate,jdbcType=DATE}, #{bshareFaceValue,jdbcType=DECIMAL}, #{issueFaceValue,jdbcType=DECIMAL}, 
             #{rate,jdbcType=DECIMAL}, #{costRate,jdbcType=DECIMAL}, #{bpyield,jdbcType=DECIMAL}, 
-            #{mDuration,jdbcType=DECIMAL}, #{mduration,jdbcType=DECIMAL}, #{mConvexity,jdbcType=DECIMAL}, 
+            #{duration,jdbcType=DECIMAL}, #{mduration,jdbcType=DECIMAL}, #{mConvexity,jdbcType=DECIMAL},
             #{exInfo,jdbcType=VARCHAR}, #{exNextDate,jdbcType=DATE}, #{lastExPeriod,jdbcType=DECIMAL}, 
             #{mGradeResult,jdbcType=VARCHAR}, #{mGradeOrg,jdbcType=VARCHAR}, #{bGradeResult,jdbcType=VARCHAR}, 
             #{bGradeOrg,jdbcType=VARCHAR}, #{mGradeResultIn,jdbcType=VARCHAR}, #{bGradeResultIn,jdbcType=VARCHAR}, 
@@ -275,8 +275,8 @@
             <if test="bpyield != null" >
                 BPYIELD,
             </if>
-            <if test="mDuration != null" >
-                M_DURATION,
+            <if test="duration != null" >
+                DURATION,
             </if>
             <if test="mduration != null" >
                 MDURATION,
@@ -576,7 +576,7 @@
         CUSTOM_ASSET_TYPE_FIVE, FAIRE_PRICE, POS_AMOUNT, PRIN, POS_COST, POS_VALUE, TDY_INTINCEXP, 
         ISSUE_PARTY, IS_SOE, IS_LISTED_COMPANY, COMPANY_NATURE, INDUSTRY, INDUSTRY2, VDATE, 
         MDATE, TERM_DAYS, COUNTER_ID, LAST_PERIOD, LATEST_DEAL_DATE, BSHARE_FACE_VALUE, ISSUE_FACE_VALUE, 
-        RATE, COST_RATE, BPYIELD, M_DURATION, MDURATION, M_CONVEXITY, EX_INFO, EX_NEXT_DATE, 
+        RATE, COST_RATE, BPYIELD, DURATION, MDURATION, M_CONVEXITY, EX_INFO, EX_NEXT_DATE,
         LAST_EX_PERIOD, M_GRADE_RESULT, M_GRADE_ORG, B_GRADE_RESULT, B_GRADE_ORG, M_GRADE_RESULT_IN, 
         B_GRADE_RESULT_IN, IS_CITY_BOND, CITY_BOND_LEV, C_SHARES, S_SHARES, TRADE_MARKET, 
         IS_SUS, IS_RIGHT, EX_DATE, M_GRADE_ORG_IN, B_GRADE_ORG_IN, BSHARE_SCALE, PROFIT_TYPE, 
@@ -587,7 +587,7 @@
             CUSTOM_ASSET_TYPE_FIVE, FAIRE_PRICE, POS_AMOUNT, PRIN, POS_COST, POS_VALUE, TDY_INTINCEXP, 
             ISSUE_PARTY, IS_SOE, IS_LISTED_COMPANY, COMPANY_NATURE, INDUSTRY, INDUSTRY2, VDATE, 
             MDATE, TERM_DAYS, COUNTER_ID, LAST_PERIOD, LATEST_DEAL_DATE, BSHARE_FACE_VALUE, ISSUE_FACE_VALUE, 
-            RATE, COST_RATE, BPYIELD, M_DURATION, MDURATION, M_CONVEXITY, EX_INFO, EX_NEXT_DATE, 
+            RATE, COST_RATE, BPYIELD, DURATION, MDURATION, M_CONVEXITY, EX_INFO, EX_NEXT_DATE,
             LAST_EX_PERIOD, M_GRADE_RESULT, M_GRADE_ORG, B_GRADE_RESULT, B_GRADE_ORG, M_GRADE_RESULT_IN, 
             B_GRADE_RESULT_IN, IS_CITY_BOND, CITY_BOND_LEV, C_SHARES, S_SHARES, TRADE_MARKET, 
             IS_SUS, IS_RIGHT, EX_DATE, M_GRADE_ORG_IN, B_GRADE_ORG_IN, BSHARE_SCALE, PROFIT_TYPE, 
@@ -689,8 +689,8 @@
             <if test="bpyield != null" >
                 BPYIELD = #{bpyield,jdbcType=DECIMAL},
             </if>
-            <if test="mDuration != null" >
-                M_DURATION = #{mDuration,jdbcType=DECIMAL},
+            <if test="duration != null" >
+                DURATION = #{duration,jdbcType=DECIMAL},
             </if>
             <if test="mduration != null" >
                 MDURATION = #{mduration,jdbcType=DECIMAL},
@@ -812,7 +812,7 @@
             RATE = #{rate,jdbcType=DECIMAL},
             COST_RATE = #{costRate,jdbcType=DECIMAL},
             BPYIELD = #{bpyield,jdbcType=DECIMAL},
-            M_DURATION = #{mDuration,jdbcType=DECIMAL},
+            DURATION = #{duration,jdbcType=DECIMAL},
             MDURATION = #{mduration,jdbcType=DECIMAL},
             M_CONVEXITY = #{mConvexity,jdbcType=DECIMAL},
             EX_INFO = #{exInfo,jdbcType=VARCHAR},

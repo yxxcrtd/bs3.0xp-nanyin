@@ -7,7 +7,7 @@
         t.portfolio_id portfolioId,t.finprod_id finprodId,t.branch,t.isPass isPerne,t.cdate,t.finprodId finprodMarketId,t.finprodName,t.type_8 pinanAssetType,t.type_9 customAssetTypeTwo,t.type_10 customAssetTypeThree,t.type_11 customAssetTypeFour,t.type_12 customAssetTypeFive,t.ingpl fairePrice,t.shareAmt posAmount,t.prin,
         t.amtB posCost,t.dscCostAmt posValue,t.intincexpB tdyIntincexp,t.issuerMsg issueParty,t.IS_PRIVATE isSoe,t.IS_LISTED_COMPANY isListedCompany,t.COMPANY_NATURE companyNature,t.INDUSTRY industry,t.INDUSTRY2 industry2,t.vdate
         ,t.mdate,t.termDays,t.counter_id counterId,t.LAST_PERIOD lastPeriod,t.LATEST_DEAL_DATE latestDealDate,t.BSHARE_FACE_VALUE bshareFaceValue,t.ISSUE_FACE_VALUE issueFaceValue,
-        t.RATE rate,t.COST_RATE costRate,t.BPYIELD bpyield,t.M_DURATION mduration,t.MDURATION mDuration,t.M_CONVEXITY mConvexity,t.EX_INFO exInfo,t.EX_NEXT_DATE exNextDate,
+        t.RATE rate,t.COST_RATE costRate,t.BPYIELD bpyield,t.M_DURATION duration,t.MDURATION mDuration,t.M_CONVEXITY mConvexity,t.EX_INFO exInfo,t.EX_NEXT_DATE exNextDate,
         t.LAST_EX_PERIOD lastExPeriod,t.M_GRADE_RESULT mGradeResult,t.M_GRADE_ORG mGradeOrg,t.B_GRADE_RESULT bGradeResult,t.B_GRADE_ORG bGradeOrg,t.M_GRADE_RESULT_IN mGradeResultIn,
         t.B_GRADE_RESULT_IN bGradeResultIn,t.IS_CITY_BOND isCityBond,t.CITY_BOND_LEV cityBondLev,t.C_SHARES cShares,t.S_SHARES sShares,t.TRADE_MARKET tradeMarket,t.IS_SUS isSus,t.IS_RIGHT isRight,
         t.EXE_DATE exDate,t.M_GRADE_ORG_IN mGradeOrgIn,t.B_GRADE_ORG_IN bGradeOrgIn,t.totalAmt bshareScale,t.portfolio_type profitType,t.CREATE_USER createUser ,t.CREATE_DEPT createDept,t.CREATE_TIME createTime,t.UPDATE_USER updateUser,
@@ -428,7 +428,7 @@
         t.portfolio_id portfolioId,t.finprod_id finprodId,t.branch,t.isPass isPerne,t.cdate,t.finprodId finprodMarketId,t.finprodName,t.type_8 pinanAssetType,t.type_9 customAssetTypeTwo,t.type_10 customAssetTypeThree,t.type_11 customAssetTypeFour,t.type_12 customAssetTypeFive,t.ingpl fairePrice,t.shareAmt posAmount,t.prin,
         t.amtB posCost,t.dscCostAmt posValue,t.intincexpB tdyIntincexp,t.issuerMsg issueParty,t.IS_PRIVATE isSoe,t.IS_LISTED_COMPANY isListedCompany,t.COMPANY_NATURE companyNature,t.INDUSTRY industry,t.INDUSTRY2 industry2,t.vdate
         ,t.mdate,t.termDays,t.counter_id counterId,t.LAST_PERIOD lastPeriod,t.LATEST_DEAL_DATE latestDealDate,t.BSHARE_FACE_VALUE bshareFaceValue,t.ISSUE_FACE_VALUE issueFaceValue,
-        t.RATE rate,t.COST_RATE costRate,t.BPYIELD bpyield,t.M_DURATION mduration,t.MDURATION mDuration,t.M_CONVEXITY mConvexity,t.EX_INFO exInfo,t.EX_NEXT_DATE exNextDate,
+        t.RATE rate,t.COST_RATE costRate,t.BPYIELD bpyield,t.M_DURATION duration,t.MDURATION mDuration,t.M_CONVEXITY mConvexity,t.EX_INFO exInfo,t.EX_NEXT_DATE exNextDate,
         t.LAST_EX_PERIOD lastExPeriod,t.M_GRADE_RESULT mGradeResult,t.M_GRADE_ORG mGradeOrg,t.B_GRADE_RESULT bGradeResult,t.B_GRADE_ORG bGradeOrg,t.M_GRADE_RESULT_IN mGradeResultIn,
         t.B_GRADE_RESULT_IN bGradeResultIn,t.IS_CITY_BOND isCityBond,t.CITY_BOND_LEV cityBondLev,t.C_SHARES cShares,t.S_SHARES sShares,t.TRADE_MARKET tradeMarket,t.IS_SUS isSus,t.IS_RIGHT isRight,
         t.EXE_DATE exDate,t.M_GRADE_ORG_IN mGradeOrgIn,t.B_GRADE_ORG_IN bGradeOrgIn,t.totalAmt bshareScale,t.portfolio_type profitType,t.CREATE_USER createUser ,t.CREATE_DEPT createDept,t.CREATE_TIME createTime,t.UPDATE_USER updateUser,
@@ -903,7 +903,7 @@
 		        t.RATE rate,
 		        t.COST_RATE costRate,
 		        t.BPYIELD bpyield,
-		        t.M_DURATION mduration,
+		        t.M_DURATION duration,
 		        t.MDURATION mDuration,
 		        t.M_CONVEXITY mConvexity,
 		        t.EX_INFO exInfo,

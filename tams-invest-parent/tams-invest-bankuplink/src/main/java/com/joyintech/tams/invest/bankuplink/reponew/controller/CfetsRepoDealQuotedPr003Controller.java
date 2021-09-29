@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -205,6 +206,12 @@ public class CfetsRepoDealQuotedPr003Controller extends BaseController {
             BussRepoSecDto bussRepoSecDto = new BussRepoSecDto();
             List<CfetsRepoDealQuotedPrice003Dto> cfetsRepoDealQuotedPrice003s = cfetsRepoDealQuotedPrice003Service.selectQuoteCrepPledgeForDzh(map);
             cfetsRepoDealQuotedPrice001Dto.setPledgeBondList(cfetsRepoDealQuotedPrice003s);
+        }
+        //逆回购  质押券列表  可质押以万元为单位
+        if(StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getPs(), DictCodeList.回购拆借方向_逆回购.getValue())&&!StringUtil.isEmptyList(cfetsRepoDealQuotedPrice001Dto.getPledgeBondList())){
+            cfetsRepoDealQuotedPrice001Dto.getPledgeBondList().forEach(item ->{
+                item.setPledgePrin(ArithmeticUtil.divide(item.getPledgePrin(),new BigDecimal(10000),2));
+            });
         }
         if (StringUtil.equals(operation, "CfetsRepoDealQuotedPrice001.copy")
                 && StringUtil.isNotEmpty(quoteId)) {

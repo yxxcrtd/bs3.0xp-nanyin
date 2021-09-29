@@ -88,6 +88,7 @@ $(function() {
             ,{field:'fpriceAmt',width:'20%', title: 'TrdDepoDuration001.fpriceAmt',type:'money'}
             ,{field:'pTradeId',  title: 'TrdDepoDuration001.pTradeId',visible:false} //金融产品代码
             ,{field:'tradeAmt',width:'20%', sortField:'TRADE_AMT',title: 'TrdDepoDuration001.tradeAmt',type:'money'}
+            ,{field:'payDateProd', type:'date',title: 'TrdDepoDuration001.payDateProd'}
             ,{field:'assetType',visible: false}
             ,{field:'assetType',visible: false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']
