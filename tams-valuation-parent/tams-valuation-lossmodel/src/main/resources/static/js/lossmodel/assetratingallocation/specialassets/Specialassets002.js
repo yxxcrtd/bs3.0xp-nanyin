@@ -23,6 +23,8 @@
     $("#finprodName").on('change',function(){
         if($('#finprodName').val()&&$('#finprodName').val()!=""){
             $("#finprodId").val($('#finprodName').select2('data')[0].id);
+        }else {
+            $("#finprodId").val("").trigger('change');
         }
     });
     //页面全部加载完毕后
