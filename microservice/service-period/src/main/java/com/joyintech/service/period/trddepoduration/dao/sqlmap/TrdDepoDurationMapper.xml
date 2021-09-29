@@ -568,7 +568,7 @@
         fcp.VDATE vdateProd,
         <!-- 提前支取计息开始日bug修正 modify by renping 20191026 end -->
         fccr.BASIS basis,
-        pr.ENTRUSTER entruster,
+        nvl(pr.ENTRUSTER,T3.CUSTOMER_NAME) entruster,
         fccr.YIELD*100 loadRate,
         fccr_2.YIELD*100 yield,
         fci.CASH_ID cashId,
@@ -627,6 +627,7 @@
         <!--带出付息频率、日期值、支付月  活期存放结息需要  add by  zhangnian  20191212 start-->
         left join FIN_CASH_PAY_RULE fcpr on fcpr.CASH_ID = fci.CASH_ID
         <!--带出付息频率、日期值、支付月  活期存放结息需要  add by  zhangnian  20191212 end-->
+        LEFT JOIN MST_CUSTOMER_INFO T3 ON pr.issuer = T3.CUSTOMER_ID
         <where>
             <if test="finprodMarketId != null and finprodMarketId !=''">
             pr.FINPROD_MARKET_ID = #{finprodMarketId}

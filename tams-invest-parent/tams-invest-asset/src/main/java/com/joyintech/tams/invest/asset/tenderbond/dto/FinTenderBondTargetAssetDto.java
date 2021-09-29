@@ -1674,4 +1674,12 @@ public class FinTenderBondTargetAssetDto extends FinProduct implements ITableRow
 	public void setBidDate(Date bidDate) {
 		this.bidDate = bidDate;
 	}
+
+    /**
+     * 获取 IsSusStr
+     * @return IsSusStr.
+     */
+    public String getIsSusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否, this.getIsSus());
+    }
 }

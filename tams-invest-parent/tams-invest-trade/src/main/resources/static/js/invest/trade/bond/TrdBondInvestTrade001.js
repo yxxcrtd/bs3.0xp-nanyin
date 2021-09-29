@@ -94,7 +94,7 @@
             // <!-- 资产推荐方 新增 zhuyongkang 20191023 start-->
             ,{field:'assetRecommandOrg',sortField:'ASSET_RECOMMAND_ORG', visible:false,width:150, title: 'TrdBondInvestTrade001.assetRecommandOrg'}
             // <!-- 资产推荐方 新增 zhuyongkang 20191023 end-->
-            ,{field:'fTradeId',sortField:'F_TRADE_ID', width:180, title: '银行间成交编号'}
+            ,{field:'fTradeId',sortField:'F_TRADE_ID', width:180, title:pageId == 'TrdBondInvestTradeEx001'?'TrdBondInvestTrade002.fTradeId':'TrdBondLendInvestTrade002.fTradeId'}
         	,{field:'remark', sortField:'',width:400, title: 'TrdBondInvestTrade001.remark'}
         	,{field:'validStatus', visible: false}
         	,{field:'ps', visible: false}

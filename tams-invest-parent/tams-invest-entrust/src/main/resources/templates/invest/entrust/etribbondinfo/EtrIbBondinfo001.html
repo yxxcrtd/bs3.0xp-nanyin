@@ -219,6 +219,14 @@
 												   data-th-placeholder="#{SysCommon.placeholder}"/>
 										</div>
 									</div>
+									<div class="sgePortDiv">
+										<label class="layui-form-label form-lable" th:text="#{EtribBondInfo003.priceModel}">价格模式</label>
+										<div class="layui-input-inline input-inline">
+											<select type="text" id="priceModel" name="priceModel" class="layui-input form-input input-select"
+													data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result='${PRICE_MODEL}' >
+											</select>
+										</div>
+									</div>
 
 									<div class="sgePortDiv" style="text-align: center">
 										<a id="EtrIbBondinfo001_queryDialog_btn_realseach" style="margin-left:40px" class="layui-btn layui-btn-sm"

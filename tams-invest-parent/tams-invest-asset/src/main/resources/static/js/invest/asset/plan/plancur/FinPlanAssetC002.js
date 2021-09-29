@@ -182,6 +182,9 @@ var QueryFunc=function(){
     	else{
     		$('#bankTrustCodeDiv').hide();
     	}
+    	if(ISChongQing != null && ISChongQing == 'Y'){
+            $('#bankTrustCodeDiv').hide();
+        }
     	if($("#creditFlag").val() == 'Y'){
     		$("#actualCreditProvid").attr("required", true).trigger('change');
     	}
@@ -260,6 +263,10 @@ var QueryFunc=function(){
         	else{
         		$("#bankTrustCode").val('');
         		$('#bankTrustCodeDiv').hide().trigger('change');
+        	}
+        	if(ISChongQing != null && ISChongQing == 'Y'){
+        	    $("#bankTrustCode").val('');
+                $('#bankTrustCodeDiv').hide().trigger('change');
         	}
             //$('#bussRepAssetMngProdInfo_repAssetType').repSelectArr(pageModel);
         });

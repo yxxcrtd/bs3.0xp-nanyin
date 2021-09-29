@@ -415,7 +415,7 @@ $(function() {
                                 return "<a class='finprodId-link' style='cursor: pointer;'>" + row.finprodMarketId + "</a>";
                             }
                         }
-                        ,{field:'finprodName', width:'15%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
+                        ,{field:'finprodName', width:'15%', title: 'TrdPlanNetInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'planTypeStr', width:'10%', title: 'TrdCommandsCollection002.type6',sortField:"type6"}
                         ,{field:'psStr',  width:'10%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
                         ,{field:'chlName', width:'10%', title: 'invest.channelId',visible:false,sortField:"chlId"}
@@ -523,7 +523,7 @@ $(function() {
                                 return "<a class='finprodId-link' style='cursor: pointer;'>" + row.finprodMarketId + "</a>";
                             }
                         }
-                        ,{field:'finprodName', width:'15%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
+                        ,{field:'finprodName', width:'15%', title: 'TrdPlanNetInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'planTypeStr', width:'10%', title: 'TrdCommandsCollection002.type6',sortField:"type6"}
                         ,{field:'psStr',  width:'10%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF02', type: 'number', sortField:"entrustAmt"}
@@ -629,7 +629,7 @@ $(function() {
                                 return "<a class='finprodId-link' style='cursor: pointer;'>" + row.finprodMarketId + "</a>";
                             }
                         }
-                        ,{field:'finprodName', width:'15%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
+                        ,{field:'finprodName', width:'15%', title: 'TrdPlanNetInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'depoTypeStr', width:'10%', title: 'TrdCommandsCollection002.type6',sortField:"type6"}
                         ,{field:'psStr',  width:'10%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
                         ,{field:'chlName', title: 'invest.channelId',visible:false,sortField:"chlId"}
@@ -738,7 +738,7 @@ $(function() {
                                 return "<a class='finprodId-link' style='cursor: pointer;'>" + row.finprodMarketId + "</a>";
                             }
                         }
-                        ,{field:'finprodName', width:'15%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
+                        ,{field:'finprodName', width:'15%', title: 'TrdPlanNetInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'projectTypeStr', width:'10%', title: 'TrdCommandsCollection002.type6',sortField:"type6"}
                         ,{field:'psStr',  width:'10%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
                         ,{field:'chlName', width:'10%', title: 'invest.channelId',visible:false,sortField:"chlId"}
@@ -1039,7 +1039,7 @@ $(function() {
                                 return "<a class='finprodId-link' style='cursor: pointer;'>" + row.finprodMarketId + "</a>";
                             }
                         }
-                        ,{field:'finprodName', width:'15%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
+                        ,{field:'finprodName', width:'15%', title: 'TrdPlanNetInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'planTypeStr', width:'10%', title: 'TrdCommandsCollection002.type6',sortField:"type6"}
                         ,{field:'psStr',  width:'10%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF02', type: 'number', sortField:"entrustAmt"}
@@ -1261,7 +1261,7 @@ $(function() {
                                 return "<a class='finprodId-link' style='cursor: pointer;'>" + row.finprodMarketId + "</a>";
                             }
                         }
-                        ,{field:'finprodName', width:'10%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
+                        ,{field:'finprodName', width:'10%', title: 'TrdPlanNetInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'ccyStr', width:'10%', title: 'TrdFundInvestTrade001.ccy',sortField:"ccy"}
                         ,{field:'tradeMarketStr', width:'10%', title: 'TrdFundInvestTrade001.tradeMarket',sortField:"tradeMarket"}
                         ,{field:'boardStr', width:'10%', title: 'TrdStock002.board',sortField:"board"}

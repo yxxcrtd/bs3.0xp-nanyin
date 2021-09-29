@@ -69,6 +69,7 @@
         },
         cols:[ 
             {field:'entrustStatusStr', title: 'EtrBrowDepoInfo001.entrustStatus', width:'10%',sortField:"entrustStatus"}
+            ,{field:'invManagerId', title: 'EtrBrowDepoInfo001.invManagerId', width:'10%',sortField:"invManagerId"}
 //            ,{field:'entrustId', title: 'EtrBrowDepoInfo001.entrustId', width:180}
             ,{field:'portfolioId', 
             	title: 'EtrBrowDepoInfo001.portfolioId',

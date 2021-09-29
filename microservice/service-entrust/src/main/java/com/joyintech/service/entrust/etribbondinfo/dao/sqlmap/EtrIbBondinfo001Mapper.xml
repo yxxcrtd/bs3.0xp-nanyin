@@ -253,6 +253,9 @@
             <![CDATA[ AND T1.ENTRUST_DATE  >= to_date(#{entrustStartDate},'yyyy-mm-dd') ]]>
             <![CDATA[ AND T1.ENTRUST_DATE <= to_date(#{entrustEndDate},'yyyy-mm-dd') ]]>
         </if>
+        <if test="priceModel != null and priceModel != '' ">
+            AND T1.PRICE_MODEL = #{priceModel}
+        </if>
     </sql>
     <sql id="onlyWtfEtrEntrust">
         select
@@ -338,6 +341,9 @@
         <if test="entrustStartDate!=null and entrustStartDate!='' and  entrustEndDate!=null and entrustEndDate!='' ">
             <![CDATA[ AND T1.ENTRUST_DATE >= to_date(#{entrustStartDate},'yyyy-mm-dd') ]]>
             <![CDATA[ AND T1.ENTRUST_DATE <= to_date(#{entrustEndDate},'yyyy-mm-dd') ]]>
+        </if>
+        <if test="priceModel != null and priceModel != '' ">
+            AND T1.PRICE_MODEL = #{priceModel}
         </if>
     </sql>
     <sql id="vagueQueryWhere">
