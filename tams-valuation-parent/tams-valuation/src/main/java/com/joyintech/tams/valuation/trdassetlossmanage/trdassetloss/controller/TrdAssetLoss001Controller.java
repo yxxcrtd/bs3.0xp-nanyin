@@ -139,7 +139,7 @@ public class TrdAssetLoss001Controller extends BaseController {
         }
         if (StringUtil.isNotEmpty(inputDto.getValDate())) {
             ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-            if (inputDto.getValDate().compareTo(DateUtil.parse(DateUtil.getSysDate())) != 0) {
+            if (inputDto.getValDate().compareTo(DateUtil.platDateFromCache()) != 0) {
                 errorList.add(new ValidMessage("valDate", "减值行情日必须等于平台日"));
                 AjaxResult ar = new AjaxResult();
                 ar.setErrorList(errorList);
@@ -231,7 +231,7 @@ public class TrdAssetLoss001Controller extends BaseController {
     @RequestMapping("deleteCheck")
     public AjaxResult deleteCheck(@RequestBody @Valid TrdAssetLoss001Dto dto, BindingResult result) {
         AjaxResult ajaxResult = new AjaxResult();
-        if(!DateUtil.format(dto.getValDate()).equals(DateUtil.format(new Date())) ){
+        if(DateUtil.compareDate(dto.getValDate(),DateUtil.platDateFromCache()) !=0 ){
             String message = "不可删除减值行情日非系统当前日期的数据!";
             return new AjaxResult(message, MessageType.错误消息);
         }
