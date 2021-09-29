@@ -15,6 +15,16 @@ public class EclRatioDto {
     private String finStage;
 
     /**
+     * PD
+     */
+    private BigDecimal pd;
+
+    /**
+     * LGD
+     */
+    private BigDecimal lgd;
+
+    /**
      * @return ECL比例
      */
     public BigDecimal getEclRatio() {
@@ -44,5 +54,37 @@ public class EclRatioDto {
      */
     public void setFinStage(String finStage) {
         this.finStage = finStage;
+    }
+
+    /**
+     * @return pd
+     */
+    public BigDecimal getPd() {
+        return pd;
+    }
+
+    /**
+     * 设置 pd
+     *
+     * @param pd pd
+     */
+    public void setPd(BigDecimal pd) {
+        this.pd = pd;
+    }
+
+    /**
+     * @return lgd
+     */
+    public BigDecimal getLgd() {
+        return lgd;
+    }
+
+    /**
+     * 设置 lgd
+     *
+     * @param lgd lgd
+     */
+    public void setLgd(BigDecimal lgd) {
+        this.lgd = lgd;
     }
 }

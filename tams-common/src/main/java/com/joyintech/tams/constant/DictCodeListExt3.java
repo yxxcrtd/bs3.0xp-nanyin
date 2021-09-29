@@ -1112,6 +1112,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     阶段_初始买入时_P1(DictCode.减值阶段,"P1","一阶段"),
     阶段_买入后风险显著提升_P2(DictCode.减值阶段,"P2","二阶段"),
     阶段_买入后出现减值_P3(DictCode.减值阶段,"P3","三阶段"),
+    阶段_买入后同处一二阶段_P12(DictCode.减值阶段,"P12","同处一二阶段"),
 
     // Added by JIAOXUJIN on 2020-10-16
     共通业务类型_SPPI测试(DictCode.共通业务类型,"FINASSET23","SPPI测试"),
