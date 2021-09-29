@@ -137,7 +137,8 @@
 				<configuration>
 					<mainClass>com.joyintech.tams.batch.disclosure.DisclosureApplication</mainClass>
 					<classifier>exec</classifier>
-				</configuration>				<executions>
+				</configuration>
+				<executions>
 					<execution>
 						<goals>
 							<goal>repackage</goal>

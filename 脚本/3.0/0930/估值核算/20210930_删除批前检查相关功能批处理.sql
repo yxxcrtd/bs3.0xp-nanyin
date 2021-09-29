@@ -1,0 +1,14 @@
+delete from sys_batch_grp where SEQ_NO = 'preBatchCheckGrp';
+delete from sys_para where para_code = 'PREBATCH_GROUP_ID';
+delete from sys_batch_task where TASK_ID = '88600';
+delete from sys_batch_task where TASK_ID = '88601';
+delete from sys_batch_task where TASK_ID = '88602';
+delete from sys_batch_task where TASK_ID = '88603';
+delete from sys_batch_task where TASK_ID = '88604';
+delete from sys_batch_task where TASK_ID = '88605';
+delete from sys_batch_task where TASK_ID = '88606';
+delete from sys_batch_task where TASK_ID = '88607';
+delete from sys_batch_task where TASK_ID = '88608';
+delete from sys_batch_task where TASK_ID = '88610';
+delete from sys_batch_task where TASK_ID = '88611';
+delete from sys_batch_task where TASK_ID = '88612';
