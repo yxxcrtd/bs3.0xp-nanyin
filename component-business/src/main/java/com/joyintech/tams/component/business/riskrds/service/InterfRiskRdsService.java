@@ -2801,7 +2801,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @param dto 
      * @param dataMap
      * @author zhangrui1
-     * @see BSTOT-2281
+     * @see
      */
     private void repairSet(InterfRiskRdsDto dto, Map<String, Object> dataMap) {
         // 债券中间付息、还本、到期和相应的撤销，应该用实收本息总额
@@ -3068,7 +3068,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     infRiskRdsDto.setPortfolioCode(order.getPortfolioId());
                     //计提式确认页面代码用的是finproduId，而不规则费用新建页面是finprodId
                     if(!StringUtil.isNotEmpty(infRiskRdsDto.getMarketCode())) {
-                        infRiskRdsDto.setMarketCode((String)dataMap.get("finproduId"));
+                        infRiskRdsDto.setMarketCode((String)dataMap.get("finproduId")==null?(String)dataMap.get("finprodId"):(String)dataMap.get("finproduId"));
                     }
 
 //                    if(!StringUtil.isNotEmpty(infRiskRdsDto.getAssetCode())) {

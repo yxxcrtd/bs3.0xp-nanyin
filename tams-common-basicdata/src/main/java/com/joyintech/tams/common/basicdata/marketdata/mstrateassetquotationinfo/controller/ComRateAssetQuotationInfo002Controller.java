@@ -15,10 +15,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.basicdata.marketdata.mstrateassetquotationinfo.dto.ComRateAssetQuotationInfo001Dto;
@@ -39,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -87,6 +85,10 @@ public class ComRateAssetQuotationInfo002Controller extends BaseController {
             param.put("valueSource", getParam("valueSource"));
             //根据主键获取业务实体
             ComRateAssetQuotationInfo001Dto dto = mstRateAssetQuotationInfo001Service.selectMstRateAsset(param);
+            //全价估值、净价估值，页面展示为（每百元），存值需要乘以100
+            dto.setValuation(ArithmeticUtil.multiply(dto.getValuation(),new BigDecimal("100")));
+            dto.setFullValuation(ArithmeticUtil.multiply(dto.getFullValuation(),new BigDecimal("100")));
+
             //设置到model中
             model.addAttribute("entity", dto);
             model.addAttribute("finprodId", finprodId);

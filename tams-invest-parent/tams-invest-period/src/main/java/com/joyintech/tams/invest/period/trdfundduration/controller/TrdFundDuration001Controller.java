@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.*;
@@ -79,6 +80,8 @@ public class TrdFundDuration001Controller extends BaseController {
      */
     @Autowired
     private PeriodCommonService periodCommonService;
+
+    private CommonExportService commonExportService;
     /**
      * 画面初始化
      */
@@ -159,7 +162,7 @@ public class TrdFundDuration001Controller extends BaseController {
             configxml = "/com/joyintech/tams/invest/period/trdfundduration/conf/export_conf.xml";
         }
 
-        File outFile =  trdFundDuration001Service.makeFile( configxml,param1);
+        File outFile =  commonExportService.makeFile( configxml,param1);
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
                         + DateUtil.format(DateUtil.platDateFromCache())

@@ -666,7 +666,7 @@ public class TradeCommonService extends BaseService {
                 BeanUtil.copyPropertiesIgnoreNull(dto1,creditLinesInputDto);
                 dto1.setEntrustId(dto1.getTradeId());
                 dto1.setPs(DictCodeList.交易方向_申购确认.getValue());
-                dto1.setFinprodType2("F06");
+                dto1.setIsjijinmairu("true");
                 dto1.setIsSpecial("true");
                 list.add(dto1);
                 creditLinesInputDto.setInputDtoList(list);

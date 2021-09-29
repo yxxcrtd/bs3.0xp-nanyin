@@ -16,6 +16,19 @@ function dbclickRefreshRisk() {
 
 $(
     (function () {
+        //add by meifaxin 20210929 上下左右拖拽start
+        Split(['#left_bottom_panel_dev', '#right_bottom_panel_dev'], {
+            sizes: [42, 58],
+            minSize: 100,
+            direction: 'horizontal',
+        });
+
+        Split(['#top_panel_dev', '#bottom_panel_dev'], {
+            sizes: [50, 50],
+            minSize: 100,
+            direction: 'vertical',
+        });
+        //add by meifaxin 20210929 上下左右拖拽 end
         //用于判断当前属于单组合打开还是多组合打开
         changeFlg = "01";
         

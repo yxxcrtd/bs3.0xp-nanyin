@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.entrust.etrrepo.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +18,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
+import com.joyintech.tams.common.base.entity.EtrPledge;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.workflow.engine.WorkflowContext;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -86,6 +100,15 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
 
     @Autowired
     private EtrCommonService etrCommonService;
+
+    /**
+     * 平台日获取接口
+     */
+    @Autowired(required=false)
+    private IPlatformDate iPlatformDate;
+
+    @Autowired(required=false)
+    private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
     /**
      * 工作流完成
      */
@@ -102,6 +125,7 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
         if(bussRepoSecService != null){
             bussRepoSecService.insert(dto.getBussRepoSec(),dto.getEntrustId());
         }
+        doDeleteFlow(dto.getWorkflowId());
     }
     /**
      * 
@@ -109,6 +133,15 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
      */
      @Override
      public void doInsert(EtrRepoDto dto, OperationType type){
+         if ("submit".equals(dto.getOperateType())) {
+             doInsertFlow(dto);
+             //产品化_所有投资指令预占需求_质押式回购指令 add by zhangpei 20201118 start
+             EntrustCommonDto entrustCommonDto=getEtrExecuteEntity(dto);
+             if(baseEtrCashPositionCommService!=null){
+                 baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+             }
+             //产品化_所有投资指令预占需求_质押式回购指令 add by zhangpei 20201118 end
+         }
          dto.setOperateType(type.toString());
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/doInsert",dto,
@@ -124,7 +157,42 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/doInsert",dto,
              Integer.class);
+         if (!StringUtil.equals("revoke", dto.getOperateType()) && !StringUtil.equals("delete", dto.getOperateType())) {
+             // 先删除流程中数据
+             doDeleteFlow(dto.getWorkflowId());
+             // 重新insert
+             doInsertFlow(dto);
+             // 产品化_所有投资指令预占需求_质押式回购指令 add by zhangpei 20201118 start
+             if ("submit".equals(dto.getOperateType())) {
+                 EntrustCommonDto entrustCommonDto = getEtrExecuteEntity(dto);
+                 if (baseEtrCashPositionCommService != null) {
+                     baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+                 }
+
+             }
+             // 产品化_所有投资指令预占需求_质押式回购指令 add by zhangpei 20201118 end
+             ProcessMark newEntity;
+             try {
+                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(EtrRepoDto.class, true);
+                 // 工作流ID
+                 newEntity.setWorkflowId(dto.getWorkflowId());
+                 newEntity.setStatus(dto.getStatus());
+                 newEntity.setBusinessData(JsonUtils.object2Json(dto));
+                 // 更新业务表数据
+                 // 操作留痕表
+                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
+             }
+             catch (Exception e) {
+                 e.printStackTrace();
+             }
+         }
      }
+
+    @Override
+    public void doDelete(String workflowId) {
+        doDeleteFlow(workflowId);
+    }
+
      /**
       * 新建页面组合代码联想下拉框 <功能详细描述>
       * 
@@ -824,5 +892,181 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
     @Override
     public void doBack(EtrRepoDto entity) {
         //授信拦截方法
+        //产品化_所有投资指令预占需求_质押式回购指令 add by zhangpei 20201118 start
+        AllTradeCommonUtil.deletePosition(null, entity.getEntrustId());
+        //产品化_所有投资指令预占需求_质押式回购指令 add by zhangpei 20201118 end
     }
+
+
+    /**
+     *
+     * 判断交易对手类型
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public String judgeCounterType(String counterId){
+        if (counterId == null) {
+            return DictCodeList.是否_否.getValue();
+        }
+        String result = restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/judgeCounterType",counterId,
+                String.class);
+        if(StringUtil.equals(DictCodeListExt1.交易对手类型_内部交易对手.getValue(), result)){
+            return DictCodeList.是否_是.getValue();
+        }else{
+            return DictCodeList.是否_否.getValue();
+        }
+    }
+
+    private EntrustCommonDto getEtrExecuteEntity(EtrRepoDto dto) {
+        EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
+        EtrEntrust etrEntrust = new EtrEntrust();
+        EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+        entrustCommonDto.setBussRepoSecDto(dto.getBussRepoSec());
+        dto.setFinprodType2(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())
+                ? DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue() : DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        dto.setIsOutTrade(judgeCounterType(dto.getEtrInvestPersonInfo().getCounterId()));
+        BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto);
+        BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto.getEtrInvestPersonInfo());
+
+        if (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue())) {
+
+            if (StringUtil.isEmpty(dto.getTradePlat())) {
+                etrEntrust.setTradePlat(DictCodeList.交易平台_固定收益平台.getValue());
+            }
+
+        }
+
+        if (iPlatformDate != null) {
+            etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+        }
+        if (StringUtil.isNotEmpty(etrEntrust.getPrice())) {
+            etrEntrust.setPrice(etrEntrust.getPrice().divide(new BigDecimal(100)));
+        }
+        etrEntrustAdd.setEntrustId(dto.getEntrustId());
+        etrEntrustAdd.setMinAmt(dto.getMinAmt());
+        if (StringUtil.equals(dto.getSettleSpreed(), DictCodeList.清算速度_T_0.getValue())) {
+            etrEntrustAdd.setSettleSpreed((long) 0);
+        }
+        if (StringUtil.equals(dto.getSettleSpreed(), DictCodeList.清算速度_T_1.getValue())) {
+            etrEntrustAdd.setSettleSpreed((long) 1);
+        }
+        etrEntrustAdd.setVdate(dto.getVdateAdd());
+        etrEntrustAdd.setMdate(dto.getMdateAdd());
+        if (StringUtil.isNotEmpty(dto.getTermType())) {
+            etrEntrustAdd.setTermType(dto.getTermType());
+        }
+        if (dto.getRepoTerm() != null) {
+            etrEntrustAdd.setTermDays(dto.getRepoTerm().longValue());
+        }
+        etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+        etrEntrustAdd.setAssetType1(dto.getAssetType1());
+        etrEntrustAdd.setBusiPs(dto.getPs());
+        etrEntrustAdd.setCashUsedate(dto.getAvailableDay());
+        etrEntrustAdd.setSecAcctId(dto.getSecuritiesCust());
+        entrustCommonDto.setEtrEntrust(etrEntrust);
+        entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
+        return entrustCommonDto;
+    }
+
+    private void doInsertFlow(EtrRepoDto dto) {
+        try {
+            dto.setOperateType(dto.getOperateType());
+            BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+            EtrEntrust etrEntrust = new EtrEntrust();
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            List<EtrPledge> etrPledgeList = new ArrayList<EtrPledge>();
+            List<EtrEntrustPledge> etrEntrustPledge = new ArrayList<EtrEntrustPledge>();
+            dto.setFinprodType2(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue()) ? DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue() : DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+            dto.setIsOutTrade(judgeCounterType(dto.getEtrInvestPersonInfo().getCounterId()));
+            dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            BeanUtil.copyProperties(etrEntrust, dto);
+            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+            if (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue())) {
+
+                if (StringUtil.isEmpty(dto.getTradePlat())) {
+                    etrEntrust.setTradePlat(DictCodeList.交易平台_固定收益平台.getValue());
+                }
+
+            }
+
+            if (iPlatformDate != null) {
+                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            }
+            if (StringUtil.isNotEmpty(etrEntrust.getPrice())) {
+                etrEntrust.setPrice(etrEntrust.getPrice().divide(new BigDecimal(100)));
+            }
+            etrEntrustAdd.setEntrustId(dto.getEntrustId());
+            etrEntrustAdd.setMinAmt(dto.getMinAmt());
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_0.getValue())) {
+                etrEntrustAdd.setSettleSpreed((long) 0);
+            }
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_1.getValue())) {
+                etrEntrustAdd.setSettleSpreed((long) 1);
+            }
+            etrEntrustAdd.setVdate(dto.getVdateAdd());
+            etrEntrustAdd.setMdate(dto.getMdateAdd());
+            if (StringUtil.isNotEmpty(dto.getTermType())) {
+                etrEntrustAdd.setTermType(dto.getTermType());
+            }
+            if (dto.getRepoTerm() != null) {
+                etrEntrustAdd.setTermDays(dto.getRepoTerm().longValue());
+            }
+
+            // modify by etliu 20200921 start
+            if (dto.getBussRepoSec() != null && dto.getBussRepoSec().getPledgeBondList() != null) {
+                // modify by etliu 20200921 end
+                for (PledgeBondInfoDto pledgeBond : dto.getBussRepoSec().getPledgeBondList()) {
+                    EtrPledge etrPledge = new EtrPledge();
+                    // 委托代码 = 委托代码
+                    etrPledge.setEntrustId(dto.getEntrustId());
+                    // 金融产品代码 = 输出质押品DTO.金融产品代码
+                    etrPledge.setFinprodId(pledgeBond.getFinprodId());
+                    // 质押面值 = 输出质押品DTO.质押面值
+                    etrPledge.setPledgeFaceValue(new BigDecimal("100"));
+                    // 质押数量 = 输出质押品DTO.质押数量
+                    etrPledge.setPledgeNumber(com.joyintech.framework.util.ArithmeticUtil.divide(pledgeBond.getPledgePrin(), new BigDecimal("100"), 4));
+                    // 质押率 = 输出质押品DTO.质押率
+                    etrPledge.setPledgeRatio(com.joyintech.framework.util.ArithmeticUtil.divide(pledgeBond.getPledgeRatio(), new BigDecimal("100"), 4));
+                    // 质押金额 = 输出质押品DTO.质押金额
+                    etrPledge.setPledgeAmt(com.joyintech.framework.util.ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), etrPledge.getPledgeRatio()));
+                    etrPledgeList.add(etrPledge);
+                }
+            }
+
+            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+            etrEntrustAdd.setAssetType1(dto.getAssetType1());
+            etrEntrustAdd.setBusiPs(dto.getPs());
+            etrEntrustAdd.setCashUsedate(dto.getAvailableDay());
+            etrEntrustAdd.setSecAcctId(dto.getSecuritiesCust());
+            entity.setEtrEntrust(etrEntrust);
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+            entity.setEtrPledgeList(etrPledgeList);
+            MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
+            mstFileInputParameter.setFileList(dto.getFileArray());
+            mstFileInputParameter.setBussinessId(dto.getEntrustId());
+            entity.setMstFileInputParameter(mstFileInputParameter);
+            entity.setWorkFlowId(dto.getWorkflowId());
+            entity.setWorkFlowId(dto.getWorkflowId());
+            restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
+                    Boolean.class);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+        private void doDeleteFlow(String workflowId) {
+            Map<String,Object> param = new HashMap<>();
+            param.put("workflowId",workflowId);
+            restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doDeleteEtrFlow", param,
+                    Boolean.class);
+
+        }
 }

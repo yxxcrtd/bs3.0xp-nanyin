@@ -1114,7 +1114,7 @@
         /**
          * 成交查询导出按钮点击事件
          */
-        $('.cjcx_transfer-form #CfetsRepoDealQuotedPr001_btn_export').click(function () {
+        $('#CfetsRepoDealQuotedPr001_cjcx_export').click(function () {
             exportExcel('cjcx');
         });
 
