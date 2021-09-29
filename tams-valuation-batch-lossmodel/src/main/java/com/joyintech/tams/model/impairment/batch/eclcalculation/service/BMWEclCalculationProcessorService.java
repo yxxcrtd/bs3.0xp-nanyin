@@ -166,15 +166,15 @@ public class BMWEclCalculationProcessorService {
                     dataSource = DictCodeListExt3.减值数据来源_手工.getValue();
                     listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_手工.getValue());
                 }
-                else if (!CollectionUtils.isEmpty(lossMap.get(DictCodeListExt3.减值数据来源_wind接入.getValue()))) {
-                    // 数据来源
-                    dataSource = DictCodeListExt3.减值数据来源_wind接入.getValue();
-                    listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_wind接入.getValue());
-                }
-                else{
+                else if (!CollectionUtils.isEmpty(lossMap.get(DictCodeListExt3.减值数据来源_中债接入.getValue()))) {
                     // 数据来源
                     dataSource = DictCodeListExt3.减值数据来源_中债接入.getValue();
                     listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_中债接入.getValue());
+                }
+                else{
+                    // 数据来源
+                    dataSource = DictCodeListExt3.减值数据来源_wind接入.getValue();
+                    listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_wind接入.getValue());
                 }
 
                 // 调用共通根据最终减值流水计算ECL损失比例（当有持仓数据位于三阶段时，则以三阶段减值行情日数据预期信用损失比例为准）
