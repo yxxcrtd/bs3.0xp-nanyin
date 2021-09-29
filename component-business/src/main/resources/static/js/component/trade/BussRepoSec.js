@@ -253,6 +253,7 @@
                         ,isDzh:isDzh
                         ,quoteId:quoteId
                         ,tradePlace:tradePlace
+                        ,parentPageId:parentPageId
                     });
             });
     };

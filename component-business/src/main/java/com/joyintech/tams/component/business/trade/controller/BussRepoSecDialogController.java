@@ -23,6 +23,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -136,6 +137,13 @@ public class BussRepoSecDialogController extends BaseController {
         model.addAttribute("BACK_LEND_DIRECTION_03", DictCodeList.回购拆借方向_正回购.getValue());
         setSelectOptionToModel(model, DictCode.WIND一级分类_含债券一级分类等
                 , DictCode.登记托管机构_中债);
+
+        // add by yeming 20210914 登记托管机构_中债字典值拆分 start
+        if(StringUtil.isNotEmpty(this.getParam("parentPageId"))) {
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.登记托管机构_中债, this.getParam("parentPageId"));
+        }
+        // add by yeming 20210914 登记托管机构_中债字典值拆分 end
+
         /*model.addAttribute("workflowPage", false);*/
         model.addAttribute("ibuFlag_repoOverAvaCanContinue",
                 CacheUtil.getSysParam("ibuFlag_repoOverAvaCanContinue"));
