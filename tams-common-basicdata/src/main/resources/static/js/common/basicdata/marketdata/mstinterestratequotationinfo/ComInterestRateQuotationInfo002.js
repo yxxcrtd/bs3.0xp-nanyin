@@ -25,6 +25,8 @@
         if(pageModel != PAGE_MODEL_NEW){
             $("#intRateId").attr("disabled",true);
             $("#effDate").attr("disabled",true);
+            $("#relaeseDate").attr("disabled",true);
+            $("#ccy").attr("disabled",true);
             // $("#ccy").attr("disabled",true);
         }
     }
