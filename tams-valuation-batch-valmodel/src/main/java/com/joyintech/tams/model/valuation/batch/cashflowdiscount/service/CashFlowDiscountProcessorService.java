@@ -285,8 +285,8 @@ public class CashFlowDiscountProcessorService {
 				finProductValuation.setFinprodType(DictCodeListExt1.金融产品类型_计划类资产.getValue());
 				finProductValuation.setValDate(happenDate);
 				finProductValuation.setPublishDate(happenDate);
-				finProductValuation.setValuation(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest).setScale(2, RoundingMode.HALF_UP));
-				finProductValuation.setFullValuation(modCurveResult.getFullPrice().setScale(2, RoundingMode.HALF_UP));
+				finProductValuation.setValuation(ArithmeticUtil.divide(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest).setScale(2, RoundingMode.HALF_UP), 100, 4));
+				finProductValuation.setFullValuation(ArithmeticUtil.divide(modCurveResult.getFullPrice().setScale(2, RoundingMode.HALF_UP), 100, 4));
 				finProductValuation.setCreateUser("batch"); //
 				finProductValuation.setUpdateUser("batch");
 				finProductValuation.setCreateTime(DateUtil.now());
