@@ -83,6 +83,8 @@
 				<ul class="layui-tab-title">
 					<li th:if="${single_etr_isshow} =='Y' " class="layui-this">单组合指令</li>
 					<li>组合系列指令</li>
+					<img id="enlarge" th:src="@{'/img/enlarge.png'}" style="width: 20px;height: 20px; cursor: pointer;"></img>
+					<img id="narrow" th:src="@{'/img/narrow.png'}" style="width: 20px;height: 20px; cursor: pointer; display: none;"></img>
 				</ul>
 				<div class="layui-tab-content" style="height:98%;">
 					<!-- 单组合指令 -->
@@ -123,7 +125,7 @@
 		var FINPROD_TYPE_TG_F01 = /*[[${FINPROD_TYPE_TG_F01}]]*/'';
 		var single_etr_isshow = /*[[${single_etr_isshow}]]*/'';
 	</script>
-	<!--<script data-th-src="@{/js/invest/entrust/etrexchangetrade/split.min.js}" type="text/javascript"></script>-->
+	<script data-th-src="@{/js/invest/entrust/etrexchangetrade/split.min.js}" type="text/javascript"></script>
 	<script data-th-src="@{/js/invest/entrust/etribrepo/EtrIbRepoMain.js}" type="text/javascript"></script>
 
 </div>
