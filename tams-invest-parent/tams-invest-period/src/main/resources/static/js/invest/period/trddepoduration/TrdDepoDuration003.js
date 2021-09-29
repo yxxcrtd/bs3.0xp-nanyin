@@ -297,7 +297,7 @@ $(function() {
             if (typeof value != "undefined" && value) {
                 // 选择收款账户带出行内/行外、网点
                 Joyin.ajax(JoyinUtil.getRealPath('/component/trade/BussTrdTransferOrder/queryStlCapacctInfoByAcctNo'), {
-                    ccyText: row.ccyText,
+                    ccy: $('#ccy').val(),
                     acctNo: value
                 }, function (result) {
                     if (!result) {
