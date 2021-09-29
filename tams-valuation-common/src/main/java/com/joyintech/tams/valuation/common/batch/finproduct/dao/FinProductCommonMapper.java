@@ -280,14 +280,12 @@ public interface FinProductCommonMapper {
      * 
      * @param queryDate 查询日期
      * @param marketCode 市场代码
-     * @param finprodType 金融产品类型
      * @return 场外基金估值行情
      * @see
      * @since 1.0
      */
     List<FinProductValuationDto> getFinProValuation(@Param("queryDate") Date queryDate,
-                                                    @Param("marketCode") String marketCode,
-                                                    @Param("finprodType") String finprodType);
+                                                    @Param("marketCode") String marketCode);
 
     /**
      * 场外基金估值行情(等于某类金融产品类型)
