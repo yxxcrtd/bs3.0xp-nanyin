@@ -329,7 +329,7 @@ public class IbuComponentRiskService extends BaseService {
                             ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
                             List<Map<String, Object>> pledgeAssetCodeList = new ArrayList<>();
                             for (Map<String, Object> stringObjectMap : pledgeAssetCodeListAll) {
-                                if(stringObjectMap.containsKey(ibuQuoteEtrReDto.getEntrustId())){
+                                if(StringUtil.equals(stringObjectMap.get("entrustId"),ibuQuoteEtrReDto.getEntrustId())){
                                     pledgeAssetCodeList.add(stringObjectMap);
                                 }
                             }
@@ -701,7 +701,7 @@ public class IbuComponentRiskService extends BaseService {
                         ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
                         List<Map<String, Object>> pledgeAssetCodeList = new ArrayList<>();
                         for (Map<String, Object> stringObjectMap : pledgeAssetCodeListAll) {
-                            if(stringObjectMap.containsKey(ibuQuoteEtrReDto.getEntrustId())){
+                            if(StringUtil.equals(stringObjectMap.get("entrustId"),ibuQuoteEtrReDto.getEntrustId())){
                                 pledgeAssetCodeList.add(stringObjectMap);
                             }
                         }
