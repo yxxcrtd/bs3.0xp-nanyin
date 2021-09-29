@@ -10,63 +10,52 @@
  
 package com.joyintech.tams.invest.entrust.etrfund.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.entity.ProcessMark;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.FinProductAddMapper;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrfund.dto.EtrFundDto;
-import com.joyintech.tams.invest.entrust.etrrepo.dto.EtrRepoDto;
-import com.joyintech.tams.invest.entrust.etrstock.dto.EtrStockDto;
 import com.joyintech.tams.invest.entrust.etrstock.service.EtrStockService;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 基金委托service
@@ -1049,17 +1038,10 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
                             DictCodeListExt1.交易场所_上海证券交易所.getValue())
                             || StringUtil.equals((String)m.get("tradeMarket"),
                                 DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
-                            if (StringUtil.isBlank(rowData.get(10).toString())) {
+                            if (StringUtil.isNotBlank(rowData.get(9).toString())) {
                                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                    etrCommonService.checkIsBlank(rowData.get(9).toString(),
-                                        "EtrStock002.secAcctId", lineNo));
-                            }
-                            else {
-                                if (StringUtil.isNotBlank(rowData.get(9).toString())) {
-                                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                                         getMessage("ETR_FU_003", lineNo,
-                                            getMessage("invest.channelId")));
-                                }
+                                                getMessage("invest.channelId")));
                             }
                         }
                         else {
@@ -1078,15 +1060,15 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
                             String[] s1 = rowData.get(5).toString().trim().split(":");
                             if (!(StringUtil.equals(s1[0], DictCodeList.交易方向_卖出.getValue())
                                   || StringUtil.equals(s1[0], DictCodeList.交易方向_买入.getValue()))) {
-                                if (StringUtil.isNotBlank(rowData.get(11).toString())) {
+                                if (StringUtil.isNotBlank(rowData.get(10).toString())) {
                                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                                         getMessage("ETR_FU_007", lineNo));
                                 }
                             }
                             else {
-                                if (StringUtil.isNotBlank(rowData.get(11).toString())) {
+                                if (StringUtil.isNotBlank(rowData.get(10).toString())) {
                                     Map<String, Object> map = new HashMap<>();
-                                    map.put("initValue", rowData.get(11).toString());
+                                    map.put("initValue", rowData.get(10).toString());
                                     map.put("page", 1);
                                     map.put("length", 20);
                                     map.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
@@ -1105,15 +1087,15 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
                         else {
                             // 其他的交易场所，交易对手模板填入，check交易对手是否存在
                             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                etrCommonService.checkIsBlank(rowData.get(11).toString(),
+                                etrCommonService.checkIsBlank(rowData.get(10).toString(),
                                     "etrInvestPersonInfo.counterId", lineNo));
-                            if (StringUtil.isNotBlank(rowData.get(11).toString())) {
+                            if (StringUtil.isNotBlank(rowData.get(10).toString())) {
                                 if(StringUtil.isNotBlank(rowData.get(5).toString())) {
                                 String[] s1 = rowData.get(5).toString().trim().split(":");
                                 if(StringUtil.equals(s1[0], DictCodeList.交易方向_卖出.getValue())
                                   || StringUtil.equals(s1[0], DictCodeList.交易方向_买入.getValue())) {
                                     Map<String, Object> map = new HashMap<>();
-                                    map.put("initValue", rowData.get(11).toString());
+                                    map.put("initValue", rowData.get(10).toString());
                                     map.put("page", 1);
                                     map.put("length", 20);
                                     map.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
@@ -1128,7 +1110,7 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
                                 }else if(StringUtil.equals(s1[0], DictCodeList.交易方向_申购.getValue())
                                   || StringUtil.equals(s1[0], DictCodeList.交易方向_赎回.getValue())) {
                                     Map<String, Object> map = new HashMap<>();
-                                    map.put("initValue", rowData.get(11).toString());
+                                    map.put("initValue", rowData.get(10).toString());
                                     map.put("page", 1);
                                     map.put("length", 20);
                                     map.put("counterType", null);
@@ -1143,7 +1125,7 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
                                     }
                                 }else {
                                     Map<String, Object> map = new HashMap<>();
-                                    map.put("initValue", rowData.get(11).toString());
+                                    map.put("initValue", rowData.get(10).toString());
                                     map.put("page", 1);
                                     map.put("length", 20);
                                     map.put("counterType", null);
@@ -1181,9 +1163,9 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
                             getMessage("ETR_FU_009", lineNo));
                     }
                     //选择内部交易对手时，不能选择通道
-                    if(StringUtil.isNotBlank(rowData.get(11).toString())){
+                    if(StringUtil.isNotBlank(rowData.get(10).toString())){
                         Map<String, Object> map01 = new HashMap<>();
-                        map01.put("initValue", rowData.get(11).toString());
+                        map01.put("initValue", rowData.get(10).toString());
                         map01.put("page", 1);
                         map01.put("length", 20);
                         map01.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
