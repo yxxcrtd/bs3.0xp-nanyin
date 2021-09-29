@@ -643,6 +643,22 @@
         }else{
             $("#bussEtrInvestPersonInfoDto_counterId").attr("disabled",false).trigger('change');
         }
+        // 场外基金指令
+        if(parentPageId && parentPageId == "EtrFundOff001"){
+            var ps = $("#ps").val();
+            if(!ps || (ps == T01 || ps == T04)){ // 当交易方向是买入/申购时,显示组合可用现金字段
+                $("#cashT").show();
+                $("#cashT1").show();
+            }else{
+                $("#cashT").hide();
+                $("#cashT1").hide();
+            }
+            if(!ps || (ps == T02 || ps == T06)){ // 交易方向为卖出/赎回时,显示资产的可用持仓字段
+                $("#pschange2").show();
+            }else{
+                $("#pschange2").hide();
+            }
+        }
     }
     
     function getPrice(){
@@ -858,6 +874,22 @@
             $("#tradeMarketCash_div").hide();
         }
         $("#plat_price_div").hide();
+        // 场外基金指令
+        if(parentPageId && parentPageId == "EtrFundOff001"){
+            var ps = $("#ps").val();
+            if(!ps || (ps == T01 || ps == T04)){ // 当交易方向是买入/申购时,显示组合可用现金字段
+                $("#cashT").show();
+                $("#cashT1").show();
+            }else{
+                $("#cashT").hide();
+                $("#cashT1").hide();
+            }
+            if(!ps || (ps == T02 || ps == T06)){ // 交易方向为卖出/赎回时,显示资产的可用持仓字段
+                $("#pschange2").show();
+            }else{
+                $("#pschange2").hide();
+            }
+        }
     };
 
     /**
