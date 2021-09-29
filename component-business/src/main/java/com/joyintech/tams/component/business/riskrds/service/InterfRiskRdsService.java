@@ -2584,9 +2584,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             if (StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"mDate"))) {
                 infRiskRdsDto.setMdate(DateUtil.parse(CommonUtil.findValue(dataMap, "mDate").toString()));
             }
-//            if (StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"finprodId"))) {
-//                infRiskRdsDto.setAssetCode(CommonUtil.findValue(dataMap, "finprodId").toString());
-//            }
             if(StringUtil.isNotEmpty(CommonUtil.findValue(dataMap, "counterId"))) {
                 String counterId = CommonUtil.findValue(dataMap, "counterId").toString();
                 MstCounterParty mstCounterParty = mstCounterPartyMapper.selectByPrimaryKey(counterId);
@@ -2610,6 +2607,17 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                         }
                     }
                 }
+                if (StringUtil.isNotEmpty(counterId)){
+                    infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+                }else{
+                    infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+                }
+            }
+            long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(),
+                    DateUtil.parse(infRiskRdsDto.getMdate()));
+            infRiskRdsDto.setOneDay(oneDay);
+            if (StringUtil.isNotEmpty(infRiskRdsDto.getAmount()) && StringUtil.isNotEmpty(oneDay)){
+                infRiskRdsDto.setTermAmount(ArithmeticUtil.multiply(infRiskRdsDto.getAmount(),new BigDecimal(oneDay)));
             }
             if(StringUtil.equals(DictCodeList.交易方向_到期续做.getValue(),finDto.getPs())){
                 infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("tradeAmtex"))?dataMap.get("tradeAmtex") instanceof BigDecimal ?(BigDecimal)dataMap.get("tradeAmtex"):new BigDecimal(dataMap.get("tradeAmtex").toString()):finDto.getFpriceAmt());
