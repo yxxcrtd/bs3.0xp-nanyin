@@ -51,7 +51,7 @@
                         <select id="ps" name="ps"
                                 class="layui-input form-input input-select"
                                 multiple="true"
-                                data-th-data-result='${FINPROD_TYPE_TG}'
+                                data-th-data-result='${BACK_LEND_DIRECTION}'
                                 allowClear="true" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}">
                         </select>
@@ -104,6 +104,7 @@
     <script th:inline="javascript" type="text/javascript">
         var PAGE_DATA_STATUS05 = /*[[${PAGE_DATA_STATUS05}]]*/'';
         var REM_TYPE = [[${remType}]];
+        var BACK_LEND_DIRECTION = [[${BACK_LEND_DIRECTION}]];
     </script>
     <script data-th-src="@{/js/invest/period/trdbuyoutduration/TrdRepoBuyoutDuration001.js}" type="text/javascript"></script>
 </div>
