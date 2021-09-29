@@ -53,6 +53,8 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
     private Date vDate;
     private String vDateStr;
 
+    private String secId ;//市场代码
+
     /** 资产到期日 **/
     private Date mDate;
     private String mDateStr;
@@ -577,5 +579,13 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
      */
     public void setLossInputType(String lossInputType) {
         this.lossInputType = lossInputType;
+    }
+
+    public String getSecId() {
+        return secId;
+    }
+
+    public void setSecId(String secId) {
+        this.secId = secId;
     }
 }

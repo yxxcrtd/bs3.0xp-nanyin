@@ -10,6 +10,7 @@
     var cols = [
         {field: 'valDate', title: '减值行情日', type: 'date', sortable:false,width: '10%'}
         , {field: 'finprodId', title: '金融产品代码', sortable:false,width: '10%',visible: false}
+        , {field: 'secId', title: '市场代码', sortable:false,width: '10%',visible: false}
         , {field: 'finprodAbbr', title: '金融产品简称',sortable:false, width: '10%'}
         , {field: 'assetType1', title: '资产类型', width: '10%', sortable:false,visible: false}
         , {field: 'assetType1Str', title: '资产类型', width: '10%' ,sortable:false}

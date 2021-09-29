@@ -70,6 +70,8 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
     private String finprodId;
     /** 金融产品简称 **/
     private String finprodAbbr;
+
+    private String secId;//市场代码
     /** 减值测算方式 **/
     private String lossTestType;
     private String lossTestTypeStr;
@@ -96,6 +98,9 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
     /** 资产类型 **/
     private String assetType1;
     private String assetType1Str;
+
+
+
 
     /** 减值录入方式 **/
     private String lossInputPattern;
@@ -747,5 +752,13 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
      */
     public String getLossInputTypeFmt(){
         return SysDatadictUtil.getNameFromDataDict(DictCode.减值数据来源, this.getLossInputType());
+    }
+
+    public String getSecId() {
+        return secId;
+    }
+
+    public void setSecId(String secId) {
+        this.secId = secId;
     }
 }
