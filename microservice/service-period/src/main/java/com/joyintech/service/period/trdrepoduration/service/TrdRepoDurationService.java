@@ -387,7 +387,8 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
             deletePledgeSecPosition(wflTrdFinProductDealTotal);
         }
         // add by yujiaping 20210205 ZGBSS-489质押式回购交易—银行间正回购交易已做到期交易，质押式回购新建交易添加质押券，查看该债券信息有误start
-       if(StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeList.交易方向_到期.getValue())) {
+       if(StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeList.交易方向_到期.getValue())
+       ||StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeListExt3.交易方向_投资端_提前终止.getValue())) {
     	   Map<String, Object> params = new HashMap<>();
            params.put("finprodId", trdRepoDurationDto.getFinprodId());
            params.put("holdingType", DictCodeList.持仓类型_质押.getValue());
