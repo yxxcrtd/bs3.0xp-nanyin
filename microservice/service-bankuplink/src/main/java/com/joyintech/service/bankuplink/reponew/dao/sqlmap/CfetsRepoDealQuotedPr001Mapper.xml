@@ -467,8 +467,8 @@
         I.ourdepositaccountname ourdepositaccountname,
         I.EXECID execid /*成交编号*/
         ,I.BUSINESSTYPE businesstype /*资产类型*/
-        ,decode(I.BUSINESSTYPE,'BOND',ts.SECID,'REPO','') securityid /*代码*/
-        ,decode(I.BUSINESSTYPE, 'BOND', I.SYMBOL, 'REPO', '') symbol /*简称*/
+        ,decode(I.BUSINESSTYPE, 'BOND', ts.SECID, 'REPO', iqcp.FINPROD_MARKET_ID) securityId /*代码*/
+        ,decode(I.BUSINESSTYPE, 'BOND', I.SYMBOL, 'REPO', iqcp.FINPROD_ABBR) symbol /*简称*/
         ,nvl(ts.ps,tr.ps) side
         ,ts.Prinamt prinamt
         ,tr.Repoamt repoamt
@@ -752,8 +752,8 @@
         I.ourdepositaccountname ourdepositaccountname,
         I.EXECID execid /*成交编号*/
         ,I.BUSINESSTYPE businesstype /*资产类型*/
-        ,decode(I.BUSINESSTYPE,'BOND',ts.SECID,'REPO','') securityid /*代码*/
-        ,decode(I.BUSINESSTYPE, 'BOND', I.SYMBOL, 'REPO', '') symbol /*简称*/
+        ,decode(I.BUSINESSTYPE, 'BOND', ts.SECID, 'REPO', iqcp.FINPROD_MARKET_ID) securityId /*代码*/
+        ,decode(I.BUSINESSTYPE, 'BOND', I.SYMBOL, 'REPO', iqcp.FINPROD_ABBR) symbol /*简称*/
         ,nvl(ts.ps,tr.ps) side
         ,ts.Prinamt prinamt
         ,tr.Repoamt repoamt

@@ -652,7 +652,7 @@
             , {field: 'tradecashamt', title: 'CSTPSelect001.tradecashamt', width: '170', type: 'money'}
             , {field: 'tradelimitdaysStr', title: 'CSTPSelect001.tradelimitdays', width: '150'}
             , {field: 'priceTxt', title: 'CSTPSelect001.backrate', width: '120'}
-            , {field: 'securityid', title: '代码', width: '150'}
+            , {field: 'securityId', title: '代码', width: '150'}
             , {field: 'symbol', title: '名称', width: '150'}
             , {field: 'pledgeRateStr', title: '折算比例(%)', width: '120'}
             , {field: 'lastqty', title: '券面总计（万元）', width: '210', type: 'money', digit: 2}
@@ -691,7 +691,7 @@
             , {field: 'repoMethodStr', title: '回购方式', sortField: 'repoMethod', width: '110'}
             , {field: 'tradeDateStr', title: 'CSTPSelect001.tradedate1', sortField: 'tradedate', width: '110'}
             , {field: 'execType', title: '成交状态', sortField: 'execType', width: '110'}
-            , {field: 'securityId', title: '交易品种', sortField: 'securityId', width: '110'}
+            , {field: 'securityid', title: '交易品种', sortField: 'securityId', width: '110'}
             , {field: 'ccyStr', title: '债券币种', sortField: 'ccy', width: '110'}
             , {field: 'settlcurrencyStr', title: '结算币种', sortField: 'settlcurrency', width: '110'}
             , {field: 'exchangerate', type:'number', width: 130, title: '汇率'}

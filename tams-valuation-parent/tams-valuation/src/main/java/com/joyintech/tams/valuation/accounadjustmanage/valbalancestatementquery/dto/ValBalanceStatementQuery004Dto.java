@@ -34,10 +34,17 @@ public class ValBalanceStatementQuery004Dto extends BaseEntity {
      */
     private String finprodType;
 
+    private String finprodTypeFmt;
+
     /**
      * 业务類型
      */
     private String busiType;
+
+    /**
+     * 业务類型(码值)
+     */
+    private String busiTypeFmt;
 
     /**
      * 业务编号
@@ -65,9 +72,49 @@ public class ValBalanceStatementQuery004Dto extends BaseEntity {
      */
     private String psCode;
 
-    public String getPsCode() {
+    /**
+     * 交易方向(码值)
+     */
+    private String psCodeFmt;
+
+    private String settleDate;
+
+    private String profitType;
+
+    private String pFinprodId;
+
+    public String getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(String settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    public String getProfitType() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.收益类型, profitType))?
+                SysDataUtil.getNameFromDataDict(DictCode.收益类型,profitType):profitType;
+    }
+
+    public void setProfitType(String profitType) {
+        this.profitType = profitType;
+    }
+
+    public String getpFinprodId() {
+        return pFinprodId;
+    }
+
+    public void setpFinprodId(String pFinprodId) {
+        this.pFinprodId = pFinprodId;
+    }
+
+    public String getPsCodeFmt() {
         return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.交易方向, psCode))?
                 SysDataUtil.getNameFromDataDict(DictCode.交易方向,psCode):psCode;
+    }
+
+    public String getPsCode() {
+        return psCode;
     }
 
     public void setPsCode(String psCode) {
@@ -99,15 +146,23 @@ public class ValBalanceStatementQuery004Dto extends BaseEntity {
     }
 
     public String getFinprodType() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.金融产品类型, finprodType))?
-                SysDataUtil.getNameFromDataDict(DictCode.金融产品类型,finprodType):finprodType;
+        return finprodType;
     }
 
     public void setFinprodType(String finprodType) {
         this.finprodType = finprodType;
     }
 
+    public String getFinprodTypeFmt() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.金融产品类型, finprodType))?
+                SysDataUtil.getNameFromDataDict(DictCode.金融产品类型,finprodType):finprodType;
+    }
+
     public String getBusiType() {
+        return busiType;
+    }
+
+    public String getBusiTypeFmt() {
         return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.业务类型, busiType))?
                 SysDataUtil.getNameFromDataDict(DictCode.业务类型,busiType):busiType;
     }

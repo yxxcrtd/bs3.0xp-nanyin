@@ -15,10 +15,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.annotation.Code;
-import com.joyintech.framework.validation.annotation.Length;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.annotation.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
@@ -346,6 +343,7 @@ public class FinFundTargetDto extends FinProduct implements ProcessEntity {
 
     @Override
     @NotEmpty(fieldName = "FinFundTarget001.finprodMarketId", groups = {ValidateGroupEdit.class})
+    @Pattern(fieldName = "FinFundTarget001.finprodMarketId",regx = "^[A-Za-z0-9]+.[A-Za-z0-9]+$",message = "FW_E_0002",groups={ValidateGroupEdit.class})
 //    @Code(fieldName = "FinFundTarget001.finprodMarketId", length = 32, groups = {ValidateGroupEdit.class})
 //    @Length(fieldName = "FinFundTarget001.finprodMarketId", max = 18, groups = {
 //        ValidateGroupEdit.class})

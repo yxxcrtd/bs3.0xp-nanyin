@@ -234,6 +234,22 @@ public class CfetsRepoDealQuotedPr006Service extends BaseService<CfetsRepoDealQu
 
     private void repoSecSubstitutionInsert(CfetsRepoDealQuotedPr006Dto entity) {
 
+        //前台券面总额万元为单位
+        if(null!=entity.getBussRepoSec()&&!StringUtil.isEmptyList(entity.getBussRepoSec().getPledgeBondList())){
+            entity.getBussRepoSec().getPledgeBondList().forEach(item ->{
+                item.setPledgePrin(ArithmeticUtil.multiply(item.getPledgePrin(),new BigDecimal(10000)));
+            });
+        }
+        if(null!=entity.getBussResultRepoSec()&&!StringUtil.isEmptyList(entity.getBussResultRepoSec())){
+            entity.getBussResultRepoSec().forEach(item ->{
+                item.setPledgePrin(ArithmeticUtil.multiply(item.getPledgePrin(),new BigDecimal(10000)));
+            });
+        }
+        if(null!=entity.getOutDataTable()&&!StringUtil.isEmptyList(entity.getOutDataTable())){
+            entity.getOutDataTable().forEach(item ->{
+                item.setPledgePrin(ArithmeticUtil.multiply(item.getPledgePrin(),new BigDecimal(10000)));
+            });
+        }
         // 完成后释放换出债券的持仓，换入的债券变更为质押状态；
         //质押券置换信息
 

@@ -54,10 +54,7 @@ var parenPage = function () {
             , {field: 'sendDate', title: '发送时间', width: 150, sortable: false}
             , {field: 'sendStatusString', title: '发送状态', width: 200, sortable: false,
                 render : function(data, type, row, meta) {
-                    if (isSendStatusTableLinkShow === 'N') {
-                        return row.sendStatusString;
-                    }
-                    return "<a  class='pro-link sendStatusLink' style='cursor: pointer;'>"+row.sendStatusString+"</ a>";
+                    return row.sendStatusString;
                 },sortField:"sendStatus"
               }
             , {field: 'receiveStatusString', title: '指令接收状态', width: 150, sortable: false}

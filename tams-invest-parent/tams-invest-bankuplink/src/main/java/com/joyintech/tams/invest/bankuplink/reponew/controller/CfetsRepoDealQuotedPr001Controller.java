@@ -30,7 +30,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -204,6 +207,26 @@ public class CfetsRepoDealQuotedPr001Controller extends BaseController{
                 param1 = cfetsRepoDealQuotedPr001Service.queryWtdhbjList(param);
             }else{
                 param1 = JsonUtils.json2List(datas, RepoQuoteInfoDto.class);
+            }
+            List<String> quoteIdList = new ArrayList<>();
+            RepoQuoteInfoDto emptyDto =new RepoQuoteInfoDto();
+            Iterator<RepoQuoteInfoDto> iterator = param1.iterator();
+            while (iterator.hasNext()) {
+                RepoQuoteInfoDto repoQuoteInfoDto = iterator.next();
+                if(quoteIdList.contains(repoQuoteInfoDto.getQuoteId())){
+                    String bondCode = repoQuoteInfoDto.getBondCode();
+                    String bondAbbrName = repoQuoteInfoDto.getBondAbbrName() ;
+                    BigDecimal pledgeRate = repoQuoteInfoDto.getPledgeRate() ;
+                    BigDecimal prin = repoQuoteInfoDto.getPrin() ;
+                    BeanUtil.copyProperties(repoQuoteInfoDto,emptyDto);
+                    repoQuoteInfoDto.setBondCode(bondCode);
+                    repoQuoteInfoDto.setBondAbbrName(bondAbbrName);
+                    repoQuoteInfoDto.setPledgeRate(pledgeRate);
+                    repoQuoteInfoDto.setPrin(prin);
+                }
+                if(!StringUtil.isEmpty(repoQuoteInfoDto.getQuoteId())){
+                    quoteIdList.add(repoQuoteInfoDto.getQuoteId());
+                }
             }
             File outFile =  cfetsRepoDealQuotedExport002.makeFile(
                     "/com/joyintech/tams/invest/bankuplink/reponew/conf/export_conf2.xml",

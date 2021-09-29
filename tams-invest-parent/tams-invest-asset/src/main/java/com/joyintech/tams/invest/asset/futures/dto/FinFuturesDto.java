@@ -13,10 +13,7 @@ package com.joyintech.tams.invest.asset.futures.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.annotation.Code;
-import com.joyintech.framework.validation.annotation.Length;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.annotation.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.FinProduct;
@@ -172,6 +169,7 @@ public class FinFuturesDto extends FinProduct implements ProcessEntity {
     @NotEmpty(fieldName = "FinFutures001.finprodMarketId", groups = {ValidateGroupEdit.class})
     @Length(fieldName = "FinFutures001.finprodMarketId", max = 32, groups = {
         ValidateGroupEdit.class})
+    @Pattern(fieldName = "FinFutures001.finprodMarketId",regx = "^[A-Za-z0-9]+.[A-Za-z0-9]+$",message = "FW_E_0002",groups={ValidateGroupEdit.class})
 //    @Code(fieldName = "FinFutures001.finprodMarketId", length = 32, groups = {ValidateGroupEdit.class})
     @PrimaryKey(value = PrimaryKey.Field.PK_1)
     public String getFinprodMarketId() {

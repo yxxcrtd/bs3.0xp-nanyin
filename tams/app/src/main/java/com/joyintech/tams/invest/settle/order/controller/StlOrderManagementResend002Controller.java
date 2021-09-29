@@ -25,7 +25,7 @@ import com.joyintech.framework.base.BaseController;
  * @since 1.0
  */
 @Controller
-@PageId(value = "StlOrderManagementResend002")
+@PageId("StlOrderManagementResend002")
 @RequestMapping("/invest/settle/order/StlOrderManagementResend002")
 public class StlOrderManagementResend002Controller extends BaseController{
 

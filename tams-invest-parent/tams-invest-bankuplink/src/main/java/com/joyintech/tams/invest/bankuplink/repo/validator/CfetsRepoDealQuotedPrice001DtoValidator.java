@@ -342,6 +342,10 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
                         validList.add(new ValidMessage(this.getMessage("组合没有挂对应证券账户,无法提交!")));
                         return validList;
                     }
+                    if(!StringUtil.equals(dto.getSecAcctId(),secAcctId)){
+                        validList.add(new ValidMessage(this.getMessage("资产登记托管机构对应的证券账户与选中证券账户不一致!")));
+                        return validList;
+                    }
                 }
             }
             // 校验质押券的到期日是否小于报价到期结算日
