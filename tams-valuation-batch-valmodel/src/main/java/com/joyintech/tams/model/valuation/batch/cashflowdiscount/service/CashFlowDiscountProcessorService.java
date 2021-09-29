@@ -24,6 +24,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.calculation.CalculatorFactory;
 import com.joyintech.tams.model.valuation.batch.calculation.config.NumberEnum;
@@ -185,35 +186,38 @@ public class CashFlowDiscountProcessorService {
             }
             //现金流同频合并
             entity.setModCashFlows(BasicUtil.constructArr(entity.getModCashFlows()));
-            Map<String, List<ModYieldCurveInfoDto>> calCurveInfo = new HashMap<>();
+            //基准日曲线行情
+            Map<String, List<ModYieldCurveInfoDto>> calCurveInfo_basedata = new HashMap<>();
             if (isAssetPrice) {
                 modRiskPremium.setBasedate(assetPriceBaseDate);
                 modRiskPremium.setbFullprice(assetPriceBasePrice);
                 //曲线行情处理
-                calCurveInfo = handleCurve(entity, assetPriceBaseDate);
-                if (calCurveInfo.isEmpty()) {
+                calCurveInfo_basedata = handleCurve(entity, assetPriceBaseDate);
+                if (calCurveInfo_basedata.isEmpty()) {
                     modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：当天无收益率曲线行情.");
                     return result;
                 }
                 //处理风险溢价
-                modRiskPremium = handleModRiskPremium(modRiskPremium, entity, assetPriceBaseDate, assetPriceBasePrice, calCurveInfo,stepExecution);
+                modRiskPremium = handleModRiskPremium(modRiskPremium, entity, assetPriceBaseDate, assetPriceBasePrice, calCurveInfo_basedata,stepExecution);
                 //资产全价计算
                 //处理曲线代码
                 modRiskPremium.setModMethod(ModelDictCodeList.模型_估值模型名称_现金流贴现法.getValue());
                 modRiskPremium.setSeqno(IDGenerator.generate());
+//                modRiskPremium.setCurveCode();
             }
             String curveCode = handlecurveCode(entity, modRiskPremium);
             //如果全价计算基准日 = 资产定价定准日，且做了资产重定价，复用上面得行情
+            Map<String, List<ModYieldCurveInfoDto>> calCurveInfo_data = new HashMap<>();
             if (isAssetPrice && DateUtil.compareDate(happenDate, assetPriceBaseDate) == 0){
                 logger.info("资产代码："+modAssetInfoDto.getFinprodId()+",估值日期："+DateUtil.format(happenDate)+"直接复用基准日的曲线行情");
             }else{
                 //曲线行情处理
-                calCurveInfo = handleCurve(entity, happenDate);
+                calCurveInfo_data = handleCurve(entity, happenDate);
             }
             //计算应计利息
             BigDecimal accruedInterest = calAccruedInterest(entity, happenDate);
             //计算全价
-            DisCountInputParameter disCountInputParameter = calDiscountFullPrice(entity, happenDate, modRiskPremium.getSpreadAdj(), calCurveInfo.get(curveCode));
+            DisCountInputParameter disCountInputParameter = calDiscountFullPrice(entity, happenDate, modRiskPremium.getSpreadAdj(), calCurveInfo_data.get(curveCode));
 
             BigDecimal fullprice = disCountInputParameter.getFullprice();
 
@@ -264,7 +268,7 @@ public class CashFlowDiscountProcessorService {
 				mstBondValuationInfo.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());//估值来源
 				mstBondValuationInfo.setPrice(fullprice.setScale(2, RoundingMode.HALF_UP)); //估值全价
 				mstBondValuationInfo.setNetprice(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest).setScale(2, RoundingMode.HALF_UP));//估值净价
-				mstBondValuationInfo.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
+				mstBondValuationInfo.setInputType(DictCodeListExt3.录入方式_模型生成.getValue()); //录入方式 待定 测试 interf
 				mstBondValuationInfo.setCreateUser("batch"); //
 				mstBondValuationInfo.setUpdateUser("batch");
 				mstBondValuationInfo.setCreateTime(DateUtil.now());
@@ -277,7 +281,7 @@ public class CashFlowDiscountProcessorService {
 //				finDto.setFinprodType(modAssetInfoDto.getFinprodType()); // 标的信息.金融产品类型（估值核算）
 //				finDto.setFinprodType2(modAssetInfoDto.getFinprodType2());// 标的信息.金融产品类型（投管分类）
 				finProductValuation.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());
-				finProductValuation.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue());
+				finProductValuation.setInputType(DictCodeListExt3.录入方式_模型生成.getValue());
 				finProductValuation.setValDate(happenDate);
 				finProductValuation.setPublishDate(happenDate);
 				finProductValuation.setValuation(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest).setScale(2, RoundingMode.HALF_UP));
@@ -396,17 +400,20 @@ public class CashFlowDiscountProcessorService {
         BigDecimal spread = null;
         //反算后现金流折现法计算参数
         DisCountInputParameter caldisCountInputParameter = null;
-        //计算用曲线
+        //定价用曲线
         String curveCode = StringUtil.EMPTY;
+        //定价用曲线行情日期
+        Date curveDate = null;
         //遍历曲线行情
         Iterator<Map.Entry<String, List<ModYieldCurveInfoDto>>> iterator = calCurveInfoMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, List<ModYieldCurveInfoDto>> next = iterator.next();
-            curveCode = next.getKey();
             List<ModYieldCurveInfoDto> value = next.getValue();
             DisCountInputParameter disCountInputParameter = calRiskPremium(entity, calDate, price, value);
 
             if (null == spread || spread.compareTo(disCountInputParameter.getSpread()) > 0) {
+                curveCode = next.getKey();
+                curveDate = value.get(0).getCurveDate();
                 spread = disCountInputParameter.getSpread();
                 caldisCountInputParameter = disCountInputParameter;
             }
@@ -428,11 +435,11 @@ public class CashFlowDiscountProcessorService {
         modRiskPremium.setSecDetailTypeModel(entity.getModCurveConfig().getSecDetailTypeModel());
         modRiskPremium.setFinprodId(entity.getModAssetInfoDto().getFinprodId());
         modRiskPremium.setFinprodName(entity.getModAssetInfoDto().getFinprodAbbr());
-        if (null != caldisCountInputParameter) {
-            modRiskPremium.setBasedate(BasicUtil.localToDate(caldisCountInputParameter.getCalDate()));
-        }
+        modRiskPremium.setBasedate(calDate);
         modRiskPremium.setbFullprice(spread);
         modRiskPremium.setSpread(spread);
+        modRiskPremium.setCurveCode(curveCode);
+        modRiskPremium.setCurveDate(curveDate);
         if (null != modRiskPremium.getSpreadAdj()) {
             modRiskPremium.setSpreadAdj(ArithmeticUtil.doAdd(modRiskPremium.getbFullprice(), modRiskPremium.getSpreadAdj()));
         } else {
@@ -617,6 +624,7 @@ public class CashFlowDiscountProcessorService {
         List<ModYieldCurveInfoDto> result = new ArrayList<>();
         Map<BigDecimal, CurveSmoothDto> keyPointMap = new HashMap<>();
         Iterator<Map.Entry<Date, List<ModYieldCurveInfoDto>>> it = map.entrySet().iterator();
+        Date curveDate = null;
         while (it.hasNext()) {
             Map.Entry<Date, List<ModYieldCurveInfoDto>> entry = it.next();
             entry.getValue().forEach(item -> {
@@ -633,12 +641,16 @@ public class CashFlowDiscountProcessorService {
                 }
                 keyPointMap.put(key, curveSmoothDto);
             });
+            if(curveDate==null||curveDate.compareTo(entry.getKey())<0){
+                curveDate = entry.getKey();
+            }
         }
 
         //计算收益率
         Iterator<Map.Entry<BigDecimal, CurveSmoothDto>> itkeyPoint = keyPointMap.entrySet().iterator();
         while (itkeyPoint.hasNext()) {
             CurveSmoothDto value = itkeyPoint.next().getValue();
+            value.setCurveDate(curveDate);
             value.setYield(ArithmeticUtil.divide(value.getYield(), value.getSmoothTimes(), NumberEnum.ALL_PRECISION.getCode()));
             result.add(value);
         }

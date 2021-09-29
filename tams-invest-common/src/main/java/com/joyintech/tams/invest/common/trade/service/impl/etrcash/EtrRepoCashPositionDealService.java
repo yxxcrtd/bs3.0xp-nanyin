@@ -534,10 +534,11 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
     
                     });
                 }
-                //资产持仓流水减少券面总额
+                //首期没登录  这里注释
+               /* //资产持仓流水减少券面总额
                 etrSecPositionFlowDto.setAmount(prinAmt.negate());
                 // 添加现金流水到目标dto
-                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);*/
             }
         }
     }

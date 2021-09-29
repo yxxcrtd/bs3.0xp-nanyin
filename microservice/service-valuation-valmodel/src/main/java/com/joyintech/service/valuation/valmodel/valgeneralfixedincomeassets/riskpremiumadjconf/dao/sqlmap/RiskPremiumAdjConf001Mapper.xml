@@ -36,6 +36,12 @@
 				#{item}
 			</foreach>
 		</if>
+		<if test="modMethod!=null and !''.equals(modMethod.trim())">
+			AND A.MOD_METHOD = #{modMethod,jdbcType=VARCHAR}
+		</if>
+
+
+
 	</select>
 	<select id="findByPrimaryKey"
 			resultType="com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf002Dto">
