@@ -107,6 +107,9 @@
 			<if test="curveCode != null" >
 				CURVE_CODE,
 			</if>
+			<if test="curveType != null" >
+				CURVE_TYPE,
+			</if>
 			<if test="n != null" >
 				N,
 			</if>
@@ -154,6 +157,9 @@
 		<trim prefix="values (" suffix=")" suffixOverrides="," >
 			<if test="curveCode != null" >
 				#{curveCode,jdbcType=VARCHAR},
+			</if>
+			<if test="curveType != null" >
+				#{curveType,jdbcType=VARCHAR},
 			</if>
 			<if test="n != null" >
 				#{n,jdbcType=DECIMAL},
@@ -205,6 +211,7 @@
 	<update id="updateByPrimaryKey" parameterType="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto" >
         update MST_CURVE_DEF
         set INT_CURVE_TYPE = #{intCurveType,jdbcType=VARCHAR},
+            CURVE_TYPE= #{curveType,jdbcType=DECIMAL},
             N = #{n,jdbcType=DECIMAL},
             K = #{k,jdbcType=DECIMAL},
 			CURVE_NAME = #{curveName,jdbcType=VARCHAR},

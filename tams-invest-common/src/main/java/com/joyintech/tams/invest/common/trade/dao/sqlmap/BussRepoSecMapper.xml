@@ -69,7 +69,7 @@
             on A.FINPROD_ID = basisData.FINPROD_ID
         <where>
             <!--add by meifaxin 20190928 区分银行间 start-->
-            <if test="tradePlace != null and tradePlace != ''" >
+            <if test="tradePlace != null and tradePlace != '' and tradePlace != 'null'" >
                 A.TRADE_MARKET =#{tradePlace,jdbcType=VARCHAR}
             </if>
             <!--add by meifaxin 20190928 区分银行间 end-->
@@ -426,6 +426,9 @@
            <if test='tradeMarket!=null and tradeMarket!=""'>
                AND fp.TRADE_MARKET = #{tradeMarket}
            </if>
+            <if test='tradePlace!=null and tradePlace!=""'>
+                AND fp.TRADE_MARKET = #{tradePlace}
+            </if>
         </where>
    </select>
 

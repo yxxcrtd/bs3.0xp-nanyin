@@ -104,7 +104,7 @@
             , {
                 field: 'firstNetPrice',
                 width: 100,
-                title: 'BussRepoSec.pledgeBondTotalTbl.colmodel.firstNetPrice',
+                title: 'BussRepoSec.pledgeBondTotalTbl.colmodel.firstNetPrice1',
                 sortable: false
             }
             // 折算比例%

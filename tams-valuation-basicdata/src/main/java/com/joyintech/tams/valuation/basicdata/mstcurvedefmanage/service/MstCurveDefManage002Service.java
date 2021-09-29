@@ -11,6 +11,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
@@ -72,6 +73,7 @@ public class MstCurveDefManage002Service extends CommonExportService<MstCurveDef
      */
     @Override
     public void doComplete(MstCurveDefManageDto entity, OperationType type) {
+        entity.setCurveType(DictCodeListExt2.曲线类别_收益率曲线.getValue());
         String action = StringUtil.EMPTY;
         if (OperationType.DELETE.equals(type)) {
             action = "delete";

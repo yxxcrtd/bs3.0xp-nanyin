@@ -609,6 +609,7 @@
         table.removeRow(data);
         doOther.refreshTradAmt();
         doOther.leftHqReload();
+        calcRestTradeAmt();
     });
 
 

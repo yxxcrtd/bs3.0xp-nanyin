@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -178,6 +177,9 @@ public class CfetsRepoDealQuotedPr003Controller extends BaseController {
         model.addAttribute("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         model.addAttribute("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
         model.addAttribute("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
+        //add by mefiaxin 20210929 银行间 start
+        model.addAttribute("TRADE_PLACE_01", BussinessDictCodeList.交易场所_银行间.getValue());
+        //add by mefiaxin 20210929 银行间 end
         return super.init(model);
     }
 

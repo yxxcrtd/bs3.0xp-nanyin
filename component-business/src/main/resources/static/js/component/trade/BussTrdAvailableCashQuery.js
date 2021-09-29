@@ -10,6 +10,7 @@
     };
     var showPosition = function (autoHide) {
         getElementById('div_position').show();
+        $("#position_div").show();
         if(autoHide){
             getElementById('div_cash').hide();
             getElementById('div_channelCash').hide();
@@ -17,12 +18,14 @@
     };
     var hidePosition = function () {
         getElementById('div_position').hide();
+        $("#position_div").hide();
     };
     var showCash = function (autoHide) {
         getElementById('div_cash').show();
         // getElementById('div_channelCash').show();
         if(autoHide){
             getElementById('div_position').hide();
+            $("#position_div").hide();
         }
     };
     

@@ -15,11 +15,11 @@
         fin.TRADE_MARKET AS TRADE_MARKET,
         fin.FINPROD_MARKET_ID AS FINPROD_MARKET_ID,
         fin.ISSUER AS ISSUER,
-        cust1.IS_FIN_LICENCE AS ISSUER_FIN_LICENCE,
+        cust1.IS_FIN_LICENCE AS issueFinLicence,
         fin.FINANCIER AS FINANCIER,
-        cust2.IS_FIN_LICENCE AS FINANCIER_FIN_LICENCE,
+        cust2.IS_FIN_LICENCE AS financierFinLicence,
         fin.SPONSOR AS SPONSOR,
-        cust3.IS_FIN_LICENCE AS SPONSOR_FIN_LICENCE,
+        cust3.IS_FIN_LICENCE AS sponsorFinLicence,
         fin.VDATE AS VDATE,
         fin.MDATE AS MDATE,
         finAdd.IS_EFF_PLEDGE AS IS_LIMITS,
@@ -267,11 +267,11 @@
         fin.ISSUE_PRICE AS ISSUE_PRICE, /** 发行价 **/
         fin.ISSUE_AMT AS ISSUE_AMT, /** 发行数量 **/
         NVL(fin.ISSUER, cpt.LINK_ID) AS ISSUER, /** 发行人/交易对手对应市场机构（回购）**/
-        cust1.IS_FIN_LICENCE AS ISSUER_FIN_LICENCE,
+        cust1.IS_FIN_LICENCE AS issueFinLicence,
         fin.FINANCIER AS FINANCIER,
-        cust2.IS_FIN_LICENCE AS FINANCIER_FIN_LICENCE,
+        cust2.IS_FIN_LICENCE AS financierFinLicence,
         fin.SPONSOR AS SPONSOR,
-        cust3.IS_FIN_LICENCE AS SPONSOR_FIN_LICENCE,
+        cust3.IS_FIN_LICENCE AS sponsorFinLicence,
         typ.TYPE_1 AS SEC_DETAIL_TYPE_MODEL, /** 模型证券细分类 **/
         typ.TYPE_18 AS SEC_TYPE_MODEL, /** 模型资产类型 **/
         DECODE(VAL.INV_AIM,'999999',NULL,VAL.INV_AIM) AS INV_AIM
@@ -343,11 +343,11 @@
         fin.ISSUE_PRICE AS ISSUE_PRICE,
         fin.ISSUE_AMT AS ISSUE_AMT,
         NVL(fin.ISSUER, cpt.LINK_ID) AS ISSUER, /** 发行人/交易对手对应市场机构（回购）**/
-        cust1.IS_FIN_LICENCE AS ISSUER_FIN_LICENCE,
+        cust1.IS_FIN_LICENCE AS issueFinLicence,
         fin.FINANCIER AS FINANCIER,
-        cust2.IS_FIN_LICENCE AS FINANCIER_FIN_LICENCE,
+        cust2.IS_FIN_LICENCE AS financierFinLicence,
         fin.SPONSOR AS SPONSOR,
-        cust3.IS_FIN_LICENCE AS SPONSOR_FIN_LICENCE,
+        cust3.IS_FIN_LICENCE AS sponsorFinLicence,
         typ.TYPE_1 AS SEC_DETAIL_TYPE_MODEL,
         typ.TYPE_18 AS SEC_TYPE_MODEL,
         deal.SETTLE_DATE AS SETTLE_DATE,

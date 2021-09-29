@@ -743,6 +743,12 @@ $(function() {
         //     chosen: isApproveMarket
         // })
         var tradeMarket = $('#tradeMarket').val();
+        // 只有交易所债券才展示“是否私募债”字段
+        if(tradeMarket == '03' || tradeMarket == '04'){
+            $('#isPpb_div').show();
+        }else{
+            $('#isPpb_div').hide();
+        }
         var type9 = $('#type9').val();
         var finprodMarketId = $('#finprodMarketId').val();
         if (finprodMarketId && isPpb && type9 && tradeMarket) {
@@ -899,13 +905,19 @@ $(function() {
 
     $(function() {
     	init();
-    	console.log("hahah")
         //修改  资产代码置灰
         if(pageModel!=PAGE_MODEL_NEW){
             $("#finprodMarketId").attr('disabled',true);
             //提交流程确认后，交易场所置灰不允许修改
             $("#tradeMarket").attr('disabled',true);
             $('.btn-save').hide();
+        }
+        // 只有交易所债券才展示“是否私募债”字段
+        var tradeMarket = $('#tradeMarket').val();
+        if(tradeMarket == '03' || tradeMarket == '04'){
+            $('#isPpb_div').show();
+        }else{
+            $('#isPpb_div').hide();
         }
         //是否含权债change
         layui.form.on('switch(isRight)',function(){
