@@ -388,9 +388,9 @@ public class EtrRepoService extends BaseService<EtrRepoDto> {
                 mstFileCommonService.updateBusinessId(mstFileInputParameter);
             }
         }
-        if (baseEtrCashPositionCommService != null ) {
+        /*if (baseEtrCashPositionCommService != null ) {
             baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+        }*/
     }
 
     /**
