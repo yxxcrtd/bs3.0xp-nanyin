@@ -296,7 +296,7 @@
         </association>
     </resultMap>
 	<select id="getfinprodIdForAdd" resultMap="finprodIdMap">
-        <if test="(pageId == 'EtrInvestBondInfo002' or pageId == 'EtrInvestBondInfo003') and tradeMarketMode != '02'.toString()">
+        <if test=" tradeMarketMode != '02'.toString()">
             SELECT
             T1.FINPROD_MARKET_ID id,
             <!--下拉框值为代码+简称 modified by lishuping 20191017 start-->

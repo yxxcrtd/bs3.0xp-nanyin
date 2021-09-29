@@ -156,8 +156,8 @@ public class RiskPremiumAdjConf002Dto extends BaseEntity implements ProcessEntit
     }
 
     public String getSecTypeModelFmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.资产类型, secTypeModel))?
-                SysDataUtil.getNameFromDataDict(DictCode.资产类型, secTypeModel):secTypeModel;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.债券类型, secTypeModel))?
+                SysDataUtil.getNameFromDataDict(DictCode.债券类型, secTypeModel):secTypeModel;
     }
 
     public void setSecTypeModel(String secTypeModel) {
