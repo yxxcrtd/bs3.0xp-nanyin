@@ -261,6 +261,9 @@ public class BMWEclCalculationProcessorService {
         modEclResult.setCurrentTimeGrade(entity.getResultCurrent());
         // 是否允许模型覆盖 = 是
         modEclResult.setAllowModelCover(DictCodeList.是否_是.getValue());
+        // 减值阶段
+        modEclResult.setStage(entity.getFinStage());
+
     }
 
     /**
