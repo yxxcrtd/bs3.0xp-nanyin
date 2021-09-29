@@ -196,4 +196,17 @@
 					AND SEC_ID = #{secId}
 				ORDER by VAL_DATE DESC
     </select>
+
+	<select id="getStage3VauleMod" resultType="java.math.BigDecimal">
+		SELECT
+			ECL_RATIO
+		FROM
+			MOD_ECL_RESULT
+		WHERE
+			DEC_DATE <![CDATA[ <= ]]> #{happenDate}
+		  	AND STAGE =  #{stageP3}
+		  	AND ASSET_ID = #{finprodId}
+			AND PROD_ID = #{booksetId}
+		ORDER by DEC_DATE DESC
+	</select>
 </mapper>

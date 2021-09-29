@@ -1,9 +1,13 @@
 $(function () {
 
+    $("#jizhangDate").bind('change',function(){
+        table1.reload();
+    });
+
     var getJiZhangDate=function(x){
         Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery002/getJiZhangDate', getParams(x), function(result) {
             $('#jizhangDate').val(result.data);
-            table1.load();
+            table1.reload();
         });
     };
     var getParams = function (x) {
