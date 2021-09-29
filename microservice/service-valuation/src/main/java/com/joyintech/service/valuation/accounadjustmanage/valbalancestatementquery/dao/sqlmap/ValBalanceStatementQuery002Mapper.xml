@@ -104,7 +104,10 @@
 			ELSE A.TRADE_AMT END AS	 tradeAmt,
 			A.TRADE_DATE AS tradeDate,
 			A.BUSI_TYPE AS busiType,
-			A.PS AS psCode
+			A.PS AS psCode,
+			to_char(A.settle_date, 'yyyy-mm-dd') AS settleDate,
+			B.PROFIT_TYPE AS profitType,
+			nvl(B.p_finprod_id,'0') AS pFinprodId
 		FROM TRD_PRODUCT_DEAL A
 		LEFT JOIN FIN_PRODUCT B
 			ON B.FINPROD_ID = A.FINPROD_ID
@@ -124,7 +127,10 @@
 			A.SETTLE_AMT AS	tradeAmt,
 			A.SETTLE_DATE AS tradeDate,
 			A.BUSI_TYPE AS busiType,
-			NULL AS psCode
+			NULL AS psCode,
+			NULL AS settleDate,
+			NULL AS profitType,
+			NULL AS pFinprodId
 		FROM STL_ORDERS A
 		LEFT JOIN STL_CAPACCT_INFO B
 			ON 	B.ACCT_NO = A.MY_ACCT_NO

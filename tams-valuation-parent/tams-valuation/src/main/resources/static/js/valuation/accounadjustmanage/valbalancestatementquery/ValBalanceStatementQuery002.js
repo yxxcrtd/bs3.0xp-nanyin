@@ -185,12 +185,18 @@ $(function () {
                     return "<a id='table3Zichan' class='pro-link closePriceLink' style='cursor: pointer;'>"+data+"</ a>";
                 }}
             ,{field:'finprodAbbr', width:150, title: '资产简称'}
-            ,{field:'finprodType', width:150, title: '资产类型'}
+            ,{field:'finprodType', width:150, title: '资产类型', visible:false}
+            ,{field:'finprodTypeFmt', width:150, title: '资产类型', sorField: "finprodType"}
             ,{field:'tradePlay',width:150, title: '交易平台'}
             ,{field:'tradeAmt', type:"money",digit: 2, width:150, title: '券面总额/交易金额'}
             ,{field:'tradeDate', width:150, title: '交易日期',type:'date'}
-            ,{field:'busiType', width:150, title: '业务类型'}
-            ,{field:'psCode', width:150, title: '交易方向'}
+            ,{field:'busiTypeFmt', width:150, title: '业务类型', sorField: "busiType"}
+            ,{field:'busiType', width:150, title: '业务类型', visible:false }
+            ,{field:'psCode', width:150, title: '交易方向', visible:false}
+            ,{field:'psCodeFmt', width:150, title: '交易方向', sorField: "psCode"}
+            ,{field:'settleDate', visible:false}
+            ,{field:'profitType', visible:false}
+            ,{field:'pFinprodId', visible:false}
         ]
     });
 
@@ -200,7 +206,7 @@ $(function () {
     table3.bind('click', '#table3Yewu', function(data, index) {
         debugger;
         Joyin.ajaxJson('/valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery002/check', data, function(result) {
-            var bondBusitypeArr =  ['02','20','24'];//债券
+            var bondBusitypeArr =  ['02','24'];//债券
             var planBusitypeArr =  ['09'];//计划类资产
             var depositBusitypeArr =  ['03','28'];//存款类资产
             var lendBusitypeArr =  ['01'];//拆借交易
@@ -210,10 +216,18 @@ $(function () {
             var tradeBusitypeArr =  ['19'];//交易账户收划款查询
             var bondLendBusitypeArr =  ['14'];//债券借贷交易查询
             var overdueBusitypeArr =  ['37'];//逾期罚息交易查询
+            var eBusitypeArr =  ['21'];//货币型 TA交易查询
             if(bondBusitypeArr.indexOf(data.busiType)>=0){
                 Joyin.dialog(JoyinUtil.getLabel("查看债券详情"),
                     JoyinUtil.getRealPath("/valuation/trademanage/investtradequery/bandtrade/BondTradeQuery001/init"),
                     "90%", "85%", {pageModel:PAGE_MODEL_REFERENCE,tradeId:data.tradeId,prodId:data.booksetId,ps:data.psCode},
+                    function(){});
+            }else if(eBusitypeArr.indexOf(data.busiType)>=0){
+                Joyin.dialog(JoyinUtil.getLabel("TA交易-明细查询"),
+                    JoyinUtil.getRealPath("/valuation/trademanage/producttradedeal/ProductTradeDealQuery002/init"),
+                    "90%", "85%", {pageModel:PAGE_MODEL_EDIT, finprodId:data.finprodId, settleDate: data.settleDate,
+                        finprodAbbr: data.finprodAbbr, profitType: data.profitType, hasChildren: '02',
+                        pFinprodId :data.pFinprodId},
                     function(){});
             }else if(planBusitypeArr.indexOf(data.busiType)>=0){
                 Joyin.dialog(JoyinUtil.getLabel("查看计划类资产详情"),
