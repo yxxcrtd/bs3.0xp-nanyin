@@ -31,6 +31,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @see ComNetAssetQuotationInfo001Dto
  * @since 1.0
  */
+@PageId("ComNetAssetQuotationInfo002")
 @ValidLogic(targetClass = ComNetAssetQuotationInfo001Validator.class, groups = {ValidateGroupEdit.class,
     ValidateGroupDelete.class})
 public class ComNetAssetQuotationInfo001Dto extends FinProductValuation implements ProcessEntity {
