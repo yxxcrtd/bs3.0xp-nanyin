@@ -255,9 +255,11 @@ public class CashFlowDiscountProcessorService {
 //				finDto.setFinprodType(modAssetInfoDto.getFinprodType()); // 标的信息.金融产品类型（估值核算）
 //				finDto.setFinprodType2(modAssetInfoDto.getFinprodType2());// 标的信息.金融产品类型（投管分类）
 				finProductValuation.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());
+				finProductValuation.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue());
 				finProductValuation.setValDate(happenDate);
 				finProductValuation.setPublishDate(happenDate);
 				finProductValuation.setValuation(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest).setScale(2, RoundingMode.HALF_UP));
+				finProductValuation.setFullValuation(modCurveResult.getFullPrice().setScale(2, RoundingMode.HALF_UP));
 				finProductValuation.setCreateUser("batch"); //
 				finProductValuation.setUpdateUser("batch");
 				finProductValuation.setCreateTime(DateUtil.now());

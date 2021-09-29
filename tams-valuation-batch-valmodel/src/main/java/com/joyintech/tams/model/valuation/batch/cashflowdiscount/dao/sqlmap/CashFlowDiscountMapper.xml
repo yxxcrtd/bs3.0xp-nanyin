@@ -189,7 +189,7 @@
 		<foreach collection="list" item="item" separator=" or " index="index">
 			(
 				FINPROD_ID = #{item.finprodId,jdbcType=VARCHAR}
-				and VAL_DATE = #{item.valueDate,jdbcType=DATE}
+				and VAL_DATE = #{item.valDate,jdbcType=DATE}
 			)
 		</foreach>
 	</delete>
@@ -204,13 +204,13 @@
 		FULL_VALUATION, VALUE_SOURCE)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
 				 close="from dual)">
-			(#{item.finprodId,jdbcType=VARCHAR}, #{item.valDate,jdbcType=DATE}, #{item.finprodType,jdbcType=VARCHAR},
+			#{item.finprodId,jdbcType=VARCHAR}, #{item.valDate,jdbcType=DATE}, #{item.finprodType,jdbcType=VARCHAR},
 			#{item.finprodType2,jdbcType=VARCHAR}, #{item.publishDate,jdbcType=DATE}, #{item.valuation,jdbcType=DECIMAL},
 			#{item.day7YearYield,jdbcType=DECIMAL}, #{item.yearYield,jdbcType=DECIMAL}, #{item.totalValue,jdbcType=DECIMAL},
 			#{item.inputType,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
 			#{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
 			#{item.updateTime,jdbcType=TIMESTAMP}, #{item.restNetValue,jdbcType=DECIMAL}, #{item.cShares,jdbcType=DECIMAL},
-			#{item.fullValuation,jdbcType=DECIMAL}, #{item.valueSource,jdbcType=VARCHAR})
+			#{item.fullValuation,jdbcType=DECIMAL}, #{item.valueSource,jdbcType=VARCHAR}
 		</foreach>
 	</insert>
 
