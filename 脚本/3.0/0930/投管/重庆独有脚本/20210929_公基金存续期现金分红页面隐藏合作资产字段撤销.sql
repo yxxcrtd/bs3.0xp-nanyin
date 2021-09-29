@@ -1,0 +1,2 @@
+--INSERT INTO SYS_ELEMENT_CONTROL (PAGE_ID, ELEMENT_ID, ELEMENT_FIELD, ELEMENT_LABLE, IS_SHOW, IS_REQUIRED, IS_HOLD, REQUIRED_CONTROL) VALUES ('TrdFundDuration002', 'chlId_div', 'chlId_div', '合作资产', '02', '02', '02', null);
+delete from SYS_ELEMENT_CONTROL where PAGE_ID='TrdFundDuration002' and ELEMENT_ID='chlId_div';
