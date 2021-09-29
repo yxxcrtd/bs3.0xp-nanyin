@@ -1,6 +1,6 @@
 /**风险指标:银行存款、债券回购、中央银行票据、同业存单的期限在1年以内（含1年）**/
 
  DELETE FROM RSK_ISUP_INDICATOR WHERE IND_NAME='银行存款、债券回购、中央银行票据、同业存单的期限在1年以内（含1年）';
- INSERT INTO RSK_ISUP_INDICATOR VALUES('ee448bcdbb5d42ceb42b2b67c3d700bf','银行存款、债券回购、中央银行票据、同业存单的期限在1年以内（含1年）','LIMIT_TERM','${CKHGYPTYSYQX}/${FV202008200001}','SUPERVISION','01,02,03','DAYTIME,DAYEND','','{"threshold_1":{"op":">","unit":"YEAR","is_model":"02"}}','{"threshold_1":{"op":">","unit":"YEAR","is_model":"02"}}','{"threshold_1":{"op":">","value":"1","unit":"YEAR","is_model":"02"}}','N','','01','','system',null,sysdate,'system',sysdate,'03','','','','','','Y');
+ INSERT INTO RSK_ISUP_INDICATOR (IND_ID, IND_NAME, IND_TYPE, EXPR, SUP_TYPE, TIME_POINT, SUP_FREQUENCY, SUP_DIRECTION, WARN_COND, APPROVE_COND, FOUL_COND, IS_ADJUST, ADJUST, IS_ENABLED, MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_EXCP_WHEN_DIV_ZERO, COMPARE_DAYS, INSTITUTION_CODE, SUP_DISPLAY_CLASSIFY, ASSET_THR_TYPE, INVEST_PROPORTY, IS_DISPLAY_ORIGINAL) VALUES('ee448bcdbb5d42ceb42b2b67c3d700bf','银行存款、债券回购、中央银行票据、同业存单的期限在1年以内（含1年）','LIMIT_TERM','${CKHGYPTYSYQX}/${FV202008200001}','SUPERVISION','01,02,03','DAYTIME,DAYEND','','{"threshold_1":{"op":">","unit":"YEAR","is_model":"02"}}','{"threshold_1":{"op":">","unit":"YEAR","is_model":"02"}}','{"threshold_1":{"op":">","value":"1","unit":"YEAR","is_model":"02"}}','N','','01','','system',null,sysdate,'system',sysdate,'03','','','','','','Y');
  
 /**风险指标:银行存款、债券回购、中央银行票据、同业存单的期限在1年以内（含1年）**/

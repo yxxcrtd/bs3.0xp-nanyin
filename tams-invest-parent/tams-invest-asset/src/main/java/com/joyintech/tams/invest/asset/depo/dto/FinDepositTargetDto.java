@@ -629,7 +629,7 @@ public class FinDepositTargetDto extends FinProduct implements ITableRow, Proces
      */
     @Override
     @PrimaryKey(Field.PK_1)
-    @Code(fieldName = "FinProjectTargetAsset002.finprodId", length = 32, groups = {ValidateGroupEdit.class})
+//    @Code(fieldName = "FinProjectTargetAsset002.finprodId", length = 32, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "FinProjectTargetAsset002.finprodId",groups={ValidateGroupEdit.class})//非空校验
     public String getFinprodMarketId() {
         return super.getFinprodMarketId();

@@ -4,6 +4,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.common.lossmodcommon.dao.LossModCommonMapper;
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +73,8 @@ public class LossModCommonService extends BaseService {
      * @return
      */
     public Page<SelectOptionDto> getBusiNumPage(int page, int length, Map<String, Object> params) {
+        params.put("psT01", DictCodeList.交易方向_买入.getValue());
+        params.put("psT35", DictCodeList.交易方向_资产重分类.getValue());
         return super.queryForPage(page,length,()-> lossModCommonMapper.getBusiNumPage(params));
     }
 

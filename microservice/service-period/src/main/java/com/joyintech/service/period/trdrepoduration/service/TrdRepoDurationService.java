@@ -874,7 +874,8 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
         param.put("FINPROD_TYPE_TGF03", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         param.put("FINPROD_TYPE_TGF02", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
 
-        param.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+        param.put("TRADE_STATUS01", DictCodeListExt1.交易状态_初始.getValue());
+        param.put("TRADE_STATUS03", DictCodeListExt1.交易状态_撤销.getValue());
         param.put("IS_CANCEL_N", DictCodeList.是否_否.getValue());
         param.put("PS_T07", DictCodeList.交易方向_到期.getValue());
 
@@ -884,6 +885,12 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
         param.put("PST95", DictCodeListExt3.交易方向_到期购回.getValue());
         param.put("PST96", DictCodeListExt3.交易方向_提前购回.getValue());
 
+        param.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        param.put("PST07", DictCodeList.交易方向_到期.getValue());
+        param.put("PST56", DictCodeList.交易方向_到期续做.getValue());
+//        增加提前终止 与逾期贩售 start
+        param.put("PS_TQZZ", DictCodeListExt3.交易方向_投资端_提前终止.getValue());
+        param.put("PS_YQFS", DictCodeListExt3.交易方向_投资端_逾期返售.getValue());
         param.put("TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         param.put("TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
 

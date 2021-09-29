@@ -140,6 +140,7 @@
             and A.IS_CANCEL = 'N'
             and A.TRADE_STATUS != '03'
             and (A.INV_AIM in ('AC' ,'FVOCI') or A.INV_AIM is null)
+            AND A.PS in (#{psT01},#{psT35})
             <if test="prodId != null and prodId != ''">
                 and E.BOOKSET_ID =#{prodId}
             </if>

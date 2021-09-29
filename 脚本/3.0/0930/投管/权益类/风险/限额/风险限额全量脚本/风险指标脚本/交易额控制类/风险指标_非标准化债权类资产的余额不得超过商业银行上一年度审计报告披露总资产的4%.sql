@@ -1,6 +1,6 @@
 /**风险指标:非标准化债权类资产的余额不得超过商业银行上一年度审计报告披露总资产的4%**/
 
  DELETE FROM RSK_ISUP_INDICATOR WHERE IND_NAME='非标准化债权类资产的余额不得超过商业银行上一年度审计报告披露总资产的4%';
- INSERT INTO RSK_ISUP_INDICATOR VALUES('a81baff4701f4c668dc13d36826337bc','非标准化债权类资产的余额不得超过商业银行上一年度审计报告披露总资产的4%','LIMIT_TRAN','${FBZHZQLZCDYE}/${FV202003020061}','SUPERVISION','01,02,03','DAYTIME,DAYEND','','{"threshold_1":{"op":">","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":">","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":">","value":"4","unit":"PERCENT","is_model":"02"}}','N','','01','','system',null,sysdate,'system',sysdate,'03','','','','','','Y');
+ INSERT INTO RSK_ISUP_INDICATOR (IND_ID, IND_NAME, IND_TYPE, EXPR, SUP_TYPE, TIME_POINT, SUP_FREQUENCY, SUP_DIRECTION, WARN_COND, APPROVE_COND, FOUL_COND, IS_ADJUST, ADJUST, IS_ENABLED, MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_EXCP_WHEN_DIV_ZERO, COMPARE_DAYS, INSTITUTION_CODE, SUP_DISPLAY_CLASSIFY, ASSET_THR_TYPE, INVEST_PROPORTY, IS_DISPLAY_ORIGINAL) VALUES('a81baff4701f4c668dc13d36826337bc','非标准化债权类资产的余额不得超过商业银行上一年度审计报告披露总资产的4%','LIMIT_TRAN','${FBZHZQLZCDYE}/${FV202003020061}','SUPERVISION','01,02,03','DAYTIME,DAYEND','','{"threshold_1":{"op":">","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":">","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":">","value":"4","unit":"PERCENT","is_model":"02"}}','N','','01','','system',null,sysdate,'system',sysdate,'03','','','','','','Y');
  
 /**风险指标:非标准化债权类资产的余额不得超过商业银行上一年度审计报告披露总资产的4%**/
