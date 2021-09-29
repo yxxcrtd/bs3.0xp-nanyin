@@ -207,7 +207,7 @@ public class DeltRightFairValeAlterationsProcessorService {
             
             TreeNode bookSetTreeNodNow = drawBaseInfoSelectComResult.getBookSetTreeNode();// 会计场景
 
-            // 调用共通方法【市价查询-债券】取债券最新市价
+            // 调用共通方法【市价查询】取债券最新市价
             MarketPriceDto marketPriceDto = finProductCommonService.gettDeltRightMarketPrice(happenDate, booksetId,
                 drawBaseInfoSelectComResult.getBusiId(), invAim);
             // 市价 = 返回值.市价

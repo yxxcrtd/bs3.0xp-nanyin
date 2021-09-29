@@ -387,7 +387,8 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
             deletePledgeSecPosition(wflTrdFinProductDealTotal);
         }
         // add by yujiaping 20210205 ZGBSS-489质押式回购交易—银行间正回购交易已做到期交易，质押式回购新建交易添加质押券，查看该债券信息有误start
-       if(StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeList.交易方向_到期.getValue())) {
+       if(StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeList.交易方向_到期.getValue())
+       ||StringUtil.equals(trdRepoDurationDto.getPs(),DictCodeListExt3.交易方向_投资端_提前终止.getValue())) {
     	   Map<String, Object> params = new HashMap<>();
            params.put("finprodId", trdRepoDurationDto.getFinprodId());
            params.put("holdingType", DictCodeList.持仓类型_质押.getValue());
@@ -873,7 +874,8 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
         param.put("FINPROD_TYPE_TGF03", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         param.put("FINPROD_TYPE_TGF02", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
 
-        param.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+        param.put("TRADE_STATUS01", DictCodeListExt1.交易状态_初始.getValue());
+        param.put("TRADE_STATUS03", DictCodeListExt1.交易状态_撤销.getValue());
         param.put("IS_CANCEL_N", DictCodeList.是否_否.getValue());
         param.put("PS_T07", DictCodeList.交易方向_到期.getValue());
 
@@ -883,6 +885,12 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
         param.put("PST95", DictCodeListExt3.交易方向_到期购回.getValue());
         param.put("PST96", DictCodeListExt3.交易方向_提前购回.getValue());
 
+        param.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        param.put("PST07", DictCodeList.交易方向_到期.getValue());
+        param.put("PST56", DictCodeList.交易方向_到期续做.getValue());
+//        增加提前终止 与逾期贩售 start
+        param.put("PS_TQZZ", DictCodeListExt3.交易方向_投资端_提前终止.getValue());
+        param.put("PS_YQFS", DictCodeListExt3.交易方向_投资端_逾期返售.getValue());
         param.put("TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         param.put("TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
 

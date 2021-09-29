@@ -1,6 +1,6 @@
 /**风险指标:摊余成本法估值偏离度超过5%的产品占存续产品总数不得超过5%**/
 
  DELETE FROM RSK_ISUP_INDICATOR WHERE IND_NAME='摊余成本法估值偏离度超过5%的产品占存续产品总数不得超过5%';
- INSERT INTO RSK_ISUP_INDICATOR VALUES('60045134d9c04524a33de8936d23e901','摊余成本法估值偏离度超过5%的产品占存续产品总数不得超过5%','LIMIT_DEVIATION','${TYCBFGZPLDZCXQCPS}','SUPERVISION','03','DAYTIME,DAYEND','','{"threshold_1":{"op":">","value":"4.25","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":">","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":">","value":"5","unit":"PERCENT","is_model":"02"}}','N','','01','','system',null,sysdate,'system',sysdate,'03','','','','','','Y');
+ INSERT INTO RSK_ISUP_INDICATOR (IND_ID, IND_NAME, IND_TYPE, EXPR, SUP_TYPE, TIME_POINT, SUP_FREQUENCY, SUP_DIRECTION, WARN_COND, APPROVE_COND, FOUL_COND, IS_ADJUST, ADJUST, IS_ENABLED, MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_EXCP_WHEN_DIV_ZERO, COMPARE_DAYS, INSTITUTION_CODE, SUP_DISPLAY_CLASSIFY, ASSET_THR_TYPE, INVEST_PROPORTY, IS_DISPLAY_ORIGINAL) VALUES('60045134d9c04524a33de8936d23e901','摊余成本法估值偏离度超过5%的产品占存续产品总数不得超过5%','LIMIT_DEVIATION','${TYCBFGZPLDZCXQCPS}','SUPERVISION','03','DAYTIME,DAYEND','','{"threshold_1":{"op":">","value":"4.25","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":">","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":">","value":"5","unit":"PERCENT","is_model":"02"}}','N','','01','','system',null,sysdate,'system',sysdate,'03','','','','','','Y');
  
 /**风险指标:摊余成本法估值偏离度超过5%的产品占存续产品总数不得超过5%**/

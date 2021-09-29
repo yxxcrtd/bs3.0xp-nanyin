@@ -1,6 +1,6 @@
 /**风险指标:现金、国债、中央银行票据、政策性金融债券不低于该产品资产净值的5%**/
 
  DELETE FROM RSK_ISUP_INDICATOR WHERE IND_NAME='现金、国债、中央银行票据、政策性金融债券不低于该产品资产净值的5%';
- INSERT INTO RSK_ISUP_INDICATOR VALUES('72ed1f74da2c4e23bb7ad4a2bc0b04f3','现金、国债、中央银行票据、政策性金融债券不低于该产品资产净值的5%','LIMIT_FLUID','(${XJGM}+${GZZYYHPJZCXJRZQGZ})/${CPJZCJZ}','SUPERVISION','01,02,03','DAYTIME,DAYEND','','{"threshold_1":{"op":"<","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":"<","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":"<","value":"5","unit":"PERCENT","is_model":"02"}}','N','','01','','system',null,sysdate,'system',sysdate,'03','','','','','','Y');
+ INSERT INTO RSK_ISUP_INDICATOR (IND_ID, IND_NAME, IND_TYPE, EXPR, SUP_TYPE, TIME_POINT, SUP_FREQUENCY, SUP_DIRECTION, WARN_COND, APPROVE_COND, FOUL_COND, IS_ADJUST, ADJUST, IS_ENABLED, MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_EXCP_WHEN_DIV_ZERO, COMPARE_DAYS, INSTITUTION_CODE, SUP_DISPLAY_CLASSIFY, ASSET_THR_TYPE, INVEST_PROPORTY, IS_DISPLAY_ORIGINAL) VALUES('72ed1f74da2c4e23bb7ad4a2bc0b04f3','现金、国债、中央银行票据、政策性金融债券不低于该产品资产净值的5%','LIMIT_FLUID','(${XJGM}+${GZZYYHPJZCXJRZQGZ})/${CPJZCJZ}','SUPERVISION','01,02,03','DAYTIME,DAYEND','','{"threshold_1":{"op":"<","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":"<","unit":"PERCENT","is_model":"02"}}','{"threshold_1":{"op":"<","value":"5","unit":"PERCENT","is_model":"02"}}','N','','01','','system',null,sysdate,'system',sysdate,'03','','','','','','Y');
  
 /**风险指标:现金、国债、中央银行票据、政策性金融债券不低于该产品资产净值的5%**/

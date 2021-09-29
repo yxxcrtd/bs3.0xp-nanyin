@@ -139,6 +139,13 @@
     var setEntrust = function (func) {
         if (pageModel == '0') {
             var entrustInfo = func();
+            if(!getElementById("counterId").val()){
+                if(entrustInfo.innerTrade=='N'){
+                    $("#innerTrade").val(true).trigger('change');
+                }else{
+                    $("#innerTrade").val(false).trigger('change');
+                }
+            }
             if (!getElementById("counterId").val()) {
                 getElementById("counterId").textSelect('setValue', entrustInfo.counterId);
             }

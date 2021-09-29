@@ -2584,9 +2584,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             if (StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"mDate"))) {
                 infRiskRdsDto.setMdate(DateUtil.parse(CommonUtil.findValue(dataMap, "mDate").toString()));
             }
-//            if (StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"finprodId"))) {
-//                infRiskRdsDto.setAssetCode(CommonUtil.findValue(dataMap, "finprodId").toString());
-//            }
             if(StringUtil.isNotEmpty(CommonUtil.findValue(dataMap, "counterId"))) {
                 String counterId = CommonUtil.findValue(dataMap, "counterId").toString();
                 MstCounterParty mstCounterParty = mstCounterPartyMapper.selectByPrimaryKey(counterId);
@@ -2610,6 +2607,17 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                         }
                     }
                 }
+                if (StringUtil.isNotEmpty(counterId)){
+                    infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+                }else{
+                    infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+                }
+            }
+            long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(),
+                    DateUtil.parse(infRiskRdsDto.getMdate()));
+            infRiskRdsDto.setOneDay(oneDay);
+            if (StringUtil.isNotEmpty(infRiskRdsDto.getAmount()) && StringUtil.isNotEmpty(oneDay)){
+                infRiskRdsDto.setTermAmount(ArithmeticUtil.multiply(infRiskRdsDto.getAmount(),new BigDecimal(oneDay)));
             }
             if(StringUtil.equals(DictCodeList.交易方向_到期续做.getValue(),finDto.getPs())){
                 infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("tradeAmtex"))?dataMap.get("tradeAmtex") instanceof BigDecimal ?(BigDecimal)dataMap.get("tradeAmtex"):new BigDecimal(dataMap.get("tradeAmtex").toString()):finDto.getFpriceAmt());
@@ -2793,7 +2801,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * @param dto 
      * @param dataMap
      * @author zhangrui1
-     * @see BSTOT-2281
+     * @see
      */
     private void repairSet(InterfRiskRdsDto dto, Map<String, Object> dataMap) {
         // 债券中间付息、还本、到期和相应的撤销，应该用实收本息总额
@@ -3060,7 +3068,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     infRiskRdsDto.setPortfolioCode(order.getPortfolioId());
                     //计提式确认页面代码用的是finproduId，而不规则费用新建页面是finprodId
                     if(!StringUtil.isNotEmpty(infRiskRdsDto.getMarketCode())) {
-                        infRiskRdsDto.setMarketCode((String)dataMap.get("finproduId"));
+                        infRiskRdsDto.setMarketCode((String)dataMap.get("finproduId")==null?(String)dataMap.get("finprodId"):(String)dataMap.get("finproduId"));
                     }
 
 //                    if(!StringUtil.isNotEmpty(infRiskRdsDto.getAssetCode())) {

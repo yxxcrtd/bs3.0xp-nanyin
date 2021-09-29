@@ -20,6 +20,7 @@ import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -137,13 +138,13 @@ public class BMWPdCalculateProcessService {
             // 资产对应的PD值 列表.add(查询PD结果)
             modGradePdConfigList.add(modGradePdConfigDto);
             // 查询综合系数
-            ModPdFactorConfigDto configDto = pdCalculateMapper.getCombinedFactorConfig(
+            List<ModPdFactorConfigDto> configDtoList = pdCalculateMapper.getCombinedFactorConfig(
                 String.valueOf(tdyYear));
             // 前瞻性调整后PD= 初始评级维护PD
             BigDecimal prospectivePd = modGradePdConfigDto.getForwardYearPd();
             // 前瞻性调整后PD=Min（初始评级维护PD*综合系数，100%）
-            if(configDto != null){
-                prospectivePd = ArithmeticUtil.multiply(prospectivePd, configDto.getCombinedFactor());
+            if(!CollectionUtils.isEmpty(configDtoList)){
+                prospectivePd = ArithmeticUtil.multiply(prospectivePd, configDtoList.get(0).getCombinedFactor());
                 prospectivePd = BigDecimal.ONE.compareTo(prospectivePd) > 0?prospectivePd:BigDecimal.ONE;
             }
             else{

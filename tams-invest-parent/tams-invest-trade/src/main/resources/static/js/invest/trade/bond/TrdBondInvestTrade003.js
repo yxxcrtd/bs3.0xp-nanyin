@@ -2149,6 +2149,13 @@ var table;
             window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showCash();
             if(entrustId != ''){
                 if(etrEntrust){
+                    if(etrEntrust.counterId){
+                        Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/TrdInvestPersonInfo002/selectCounterId?'+"initValue="+etrEntrust.counterId), {initValue:etrEntrust.counterId}, function (result) {
+                            if(result&&result.root&&result.root[0]){
+                                etrEntrust.innerTrade= result.root[0].object
+                            }
+                        },false)
+                    }
                     window.TrdInvestPersonInfo002['trdInvestPersonInfo'].setEntrust(function () {
                         return etrEntrust;
                     });
@@ -2454,6 +2461,15 @@ var table;
                &&$('#unitCprice').val()
                &&table.getAllRows()[i].portfolioId){
                 if(table.getAllRows().length>0){
+
+                    var refundRate = $('#refundRate').val();
+                    var refundRateMulHundred = JoyinMath.doMul(refundRate, 100, 4, JoyinMath.ROUND_HALF_UP);
+                    if(refundRate){
+                        var refundAmount = JoyinMath.doMul(table.getAllRows()[i].tradeAmt, refundRateMulHundred, 2, JoyinMath.ROUND_HALF_UP);
+                        table.renderRow(i, {"refundRate": isNaN(refundRate)?0:refundRate});
+                        table.renderRow(i, {"refundAmount": isNaN(refundAmount) || refundAmount<0 ?0:refundAmount});
+                    }
+
                     if (i != table.getAllRows().length - 1) {//非最后一列
                         var cpriceAmt2 = JoyinMath.doDiv(cpriceAmt4,secTotalPrin,2)-0;
                         var intAmt2 = JoyinMath.doDiv(intAmt4,secTotalPrin,2)-0;
@@ -2504,6 +2520,7 @@ var table;
                             table.renderRow(i, {"tradeAmt": secTotalPrin2});
                             secTotalPrin2 = JoyinMath.doMinus(secTotalPrin2,secTotalPrin2,2);
                         }
+
                         if(table.getAllRows()[i].tradeAmt-0>0){
                             table.renderRow(i, {"cpriceAmt": cpriceAmtTotle});
                             table.renderRow(i, {"intAmt": intAmtTotle});
@@ -2515,7 +2532,6 @@ var table;
                             table.renderRow(i, {"commissionAmt": commissionAmtTotle});
                             table.renderRow(i, {"stampDutyAmt": stampDutyAmtTotle});
                             table.renderRow(i, {"channelFee": channelFeeTotle});
-                            
                             if(ps=="T02"){
                                 tradeAmtAndFee2=(JoyinMath.doAdd(cpriceAmtTotle,intAmtTotle,2)-0)-(commissionAmtTotle-0)-(channelFeeTotle-0)-(settleAmtTotle-0)-(exchangeAmtTotle-0);
                                 table.renderRow(i, {"tradeAmtAndFee": tradeAmtAndFee2});
@@ -2548,7 +2564,6 @@ var table;
                                     table.renderRow(j, {"commissionAmt": commissionAmtLast});
                                     table.renderRow(j, {"stampDutyAmt": stampDutyAmtLast});
                                     table.renderRow(i, {"channelFee": channelFeeLast});
-                                    
                                     if(ps=="T02"){
                                         tradeAmtAndFee2=(fpriceAmtLast-0)-(commissionAmtLast-0)-(channelFeeLast-0)-(settleAmtLast-0)-(exchangeAmtLast-0);
                                         table.renderRow(j, {"tradeAmtAndFee": tradeAmtAndFee2});
@@ -2570,6 +2585,8 @@ var table;
                                      table.renderRow(j, {"stampDutyAmt": zero});
                                      table.renderRow(i, {"channelFee": zero});
  									table.renderRow(j, {"tradeAmtAndFee": zero});
+                                    table.renderRow(j, {"refundRate": $("#refundRate").val()});
+                                    table.renderRow(j, {"refundAmount": zero});
                                  }
                             }
                         }
@@ -2649,9 +2666,8 @@ var table;
         } else {
             $("#refundAmount").val(refundAmount).trigger("blur");
         }
+        extractedJiSuan3();
     });
-
-
     /**
      * 画面加载完成
      */
@@ -3162,6 +3178,24 @@ var table;
                 }
             }
     }
+
+    //返款金额计算
+    function extractedRefundAmount() {
+        // 返款费率
+        var refundRate = $('#refundRate').val();
+        if(refundRate){
+            for (var i = 0; i < table.getAllRows().length; i++) {
+                var tradeAmt = table.getAllRows()[i].tradeAmt;
+                var refundRateMulHundred = JoyinMath.doMul(refundRate, 100, 4, JoyinMath.ROUND_HALF_UP);
+                var refundAmount = JoyinMath.doMul(tradeAmt, refundRateMulHundred, 2, JoyinMath.ROUND_HALF_UP);
+                if (tradeAmt) {
+                    table.renderRow(i, {"refundRate": isNaN(refundRate)?0:refundRate});
+                    table.renderRow(i, {"refundAmount": isNaN(refundAmount) || refundAmount<0 ?0:refundAmount});
+                }
+            }
+        }
+    }
+
     //全价总额计算
     function extractedFpriceAmt() {
         var tradeAmtAll = $('#tradeAmt').val();
@@ -3512,6 +3546,8 @@ var table;
 			               ,{field:'assetsavailablepositions',width:100, title: 'TrdInvestFenPeiInfo.assetsavailablepositions',sortable:false,type:'number', digit:2}
                           // ,{field:'channelAvailableCash', width:100, title:  function(){return JoyinUtil.getLabel("invest.channelId")+JoyinUtil.getLabel("EtrInvestBondInfo002.channelAvailableCash");}(), sortable: false,visible:false,type:'number', digit:2}
                           ,{field:'accAvailableCash', width:100, title: 'TrdInvestFenPeiInfo.accAvailableCash', sortable: false,type:'number', visible:false,digit:2}
+                          ,{field:'refundRate', width:100, title: 'TrdBondInvestTrade002.refundRate', sortable: false, edit:false, type:'number',digit:2}
+                          ,{field:'refundAmount', width:100, title: 'TrdBondInvestTrade002.refundAmount', sortable: false, edit:false, type:'number',digit:2}
 			               ,{field:'operation', width:100,title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['delt']}
 			           ],
 			           addbtn:true,
@@ -3717,6 +3753,10 @@ var table;
                                }
                                if(value&&$('#tradeAmt').val()){
                                    extractedTradeAmtAndFee();
+                               }
+                               // 返款金额计算
+                               if(value&&$('#tradeAmt').val()){
+                                   extractedRefundAmount();
                                }
                                var entrustId = $("#entrustId").val();
                                if(entrustId){

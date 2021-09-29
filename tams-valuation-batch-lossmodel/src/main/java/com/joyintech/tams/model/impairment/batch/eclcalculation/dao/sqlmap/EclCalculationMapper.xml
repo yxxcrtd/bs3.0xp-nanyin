@@ -119,7 +119,7 @@ where
 		  	<if test="peroidType != null and peroidType != ''">
 				AND (
 					T.PEROID_TYPE = #{peroidType}
-					OR (T.PEROID_TYPE IS NULL AND T.LOSS_INPUT_TYPE = #{INPUT_TYPE_03})
+					OR T.PEROID_TYPE IS NULL
 				)
 			</if>
 		  	<if test="tradeDate != null">

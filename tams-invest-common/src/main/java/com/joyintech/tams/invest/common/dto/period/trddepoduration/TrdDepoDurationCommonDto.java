@@ -255,6 +255,10 @@ public class TrdDepoDurationCommonDto extends TrdFinProductDealTotal {
      * 结息方式,适用于活期存放
      */
     private String intSettType;
+    /**
+     * 理论支付日
+     */
+    private Date payDateProd;
 
     /**
      * 获取 channelFee
@@ -1127,5 +1131,13 @@ public class TrdDepoDurationCommonDto extends TrdFinProductDealTotal {
      */
     public void setPTradeId(String pTradeId) {
         this.pTradeId = pTradeId;
+    }
+
+    public Date getPayDateProd() {
+        return payDateProd;
+    }
+
+    public void setPayDateProd(Date payDateProd) {
+        this.payDateProd = payDateProd;
     }
 }

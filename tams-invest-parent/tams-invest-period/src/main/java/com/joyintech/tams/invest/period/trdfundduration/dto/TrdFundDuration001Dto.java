@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.period.trdfundduration.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.util.IDGenerator;
@@ -118,18 +119,22 @@ public class TrdFundDuration001Dto extends TrdFundDurationCommonDto implements P
      * 权益登记日
      */
     @NotEmpty(fieldName = "TrdFundDuration001.registDate",groups= {ValidateGroupEdit.class})
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     private Date registDate;
     /**
      * 除权日
      */
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     private Date exRightsDate;
     /**
      * 分红到账日
      */
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     private Date arriveDate;
     /**
      * 红利再投日
      */
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     private Date reInvesDate;
     /**
      * 权益登记日份额

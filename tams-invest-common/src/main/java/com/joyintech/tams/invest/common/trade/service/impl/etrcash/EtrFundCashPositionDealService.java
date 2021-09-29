@@ -774,6 +774,11 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             finProductTradeDto);
         etrCashPositionFlowDto.setOrderId(deal.getTradeId());
 
+        String acctId = null;
+        if (!CollectionUtils.isEmpty(finProductTradeDto.getStlPayOrdersList())) {
+            acctId = finProductTradeDto.getStlPayOrdersList().get(0).getMyAcctNo();
+        }
+
         /** 场外基金_买入 **/
         if (StringUtil.equals(tradePlace, BussinessDictCodeList.交易场所_场外.getValue())) {
             if (DictCodeList.持仓类型_实际.equals(持仓类型)) { // 有效
@@ -789,8 +794,16 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用现金(组合、托管户):买入确认日减少交易金额
                 if (StringUtil.isEmpty(entrustId) && StringUtil.isEmpty(chlId)) {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt().negate());
-                    etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                        deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+//                    etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+//                        deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+
+                    if (StringUtil.isNotEmpty(acctId)) {
+                        etrCashPositionFlowDto.setAcctId(acctId);
+                    } else {
+                        etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                    }
+
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.无委托通道
@@ -798,8 +811,16 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                     // 2.1 无委托通道逐笔划款
                     // 可用现金(组合、托管户):买入确认日减少交易金额
                     if (StringUtil.equals(chlType, DictCodeListExt2.划款方式_逐笔划款.getValue())) {
-                        etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                            deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+//                        etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+//                            deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+
+                        if (StringUtil.isNotEmpty(acctId)) {
+                            etrCashPositionFlowDto.setAcctId(acctId);
+                        } else {
+                            etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+                                    deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                        }
+
                         etrCashPositionFlowDto.setChlFinprodId(null);
                     }
                     // 2.2 无委托通道一次性划款
@@ -823,10 +844,26 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 }
                 // 2.委托通道逐笔划款、委托通道一次性划款、无委托通道逐笔划款、无委托通道一次性划款
                 // 可用持仓(组合、通道):买入交易日增加交易份额
-                else {
-                    etrSecPositionFlowDto.setAmount(deal.getShareAmt());
-                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    else {
+                        etrSecPositionFlowDto.setAmount(deal.getShareAmt());
+                        etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    }
+
+                //2021-08-25,只有entrustId不为空才需要冲销现金流水
+                if (StringUtil.isNotEmpty(entrustId)){
+                    //add by houzk at 20210511:修改基金买入指令可用金额没有扣除费用的bug start
+                    BigDecimal 交易日数量 = finProductTradeDto.getTrdProductDeal().getShareAmt();
+                    BigDecimal 交易日减少金额 = finProductTradeDto.getTrdProductDeal().getTradeAmt().negate();
+                    etrCashPositionFlowDto.setAmount(交易日减少金额);
+                    //etrCashPositionFlowDto.setAcctId(finProductTradeDto.getTrdProductDeal().getAcctNo());
+                    etrCashPositionFlowDto.setAcctId(acctId);
+                    // 添加现金流水到目标dto
+                    etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+                    // TODO 委托冲销流水生成
+                    etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量));
+                    //add by houzk at 20210511:修改基金买入指令可用金额没有扣除费用的bug end
                 }
+
             }
             if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) { // 提交
                 // 1.无委托直投
@@ -1484,4 +1521,26 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
 			}
         });
     }
+
+    /**
+     * gen冲销现金流水生成
+     *
+     * @param etrCashPositionFlowDto 正常流水
+     * @param entrustId 委托代码
+     * @return 冲销流水
+     * @autor:houzk at 20210511
+     */
+    public static EtrCashPositionFlowDto gen冲销现金流水生成(EtrCashPositionFlowDto etrCashPositionFlowDto, String entrustId,BigDecimal 交易日数量) {
+        EtrCashPositionFlowDto ret = new EtrCashPositionFlowDto();
+        BeanUtil.copyPropertiesIgnoreNull(ret, etrCashPositionFlowDto);
+        ret.setOffsetFlag(DictCodeList.冲正标识_冲销交易.getValue());
+        ret.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+        ret.setOffsetId(entrustId);
+        EntrustCommonDto entrustCommonDto = EtrCommonCashPositionDealService.findEntrust(entrustId);
+        BigDecimal amountReal = ArithmeticUtil.multiply(entrustCommonDto.getEtrEntrust().getPrice(),交易日数量);
+        ret.setAmount(amountReal);
+        ret.setSeqno(getSeqNo());
+        return ret;
+    }
+
 }

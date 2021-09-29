@@ -178,6 +178,9 @@ public class CfetsRepoDealQuotedPr003Controller extends BaseController {
         model.addAttribute("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         model.addAttribute("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
         model.addAttribute("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
+        //add by mefiaxin 20210929 银行间 start
+        model.addAttribute("TRADE_PLACE_01", BussinessDictCodeList.交易场所_银行间.getValue());
+        //add by mefiaxin 20210929 银行间 end
         return super.init(model);
     }
 
@@ -203,6 +206,12 @@ public class CfetsRepoDealQuotedPr003Controller extends BaseController {
             BussRepoSecDto bussRepoSecDto = new BussRepoSecDto();
             List<CfetsRepoDealQuotedPrice003Dto> cfetsRepoDealQuotedPrice003s = cfetsRepoDealQuotedPrice003Service.selectQuoteCrepPledgeForDzh(map);
             cfetsRepoDealQuotedPrice001Dto.setPledgeBondList(cfetsRepoDealQuotedPrice003s);
+        }
+        //逆回购  质押券列表  可质押以万元为单位
+        if(StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getPs(), DictCodeList.回购拆借方向_逆回购.getValue())&&!StringUtil.isEmptyList(cfetsRepoDealQuotedPrice001Dto.getPledgeBondList())){
+            cfetsRepoDealQuotedPrice001Dto.getPledgeBondList().forEach(item ->{
+                item.setPledgePrin(ArithmeticUtil.divide(item.getPledgePrin(),new BigDecimal(10000),2));
+            });
         }
         if (StringUtil.equals(operation, "CfetsRepoDealQuotedPrice001.copy")
                 && StringUtil.isNotEmpty(quoteId)) {

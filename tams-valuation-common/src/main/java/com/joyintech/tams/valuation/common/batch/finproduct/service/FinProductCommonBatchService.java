@@ -1554,7 +1554,7 @@ public class FinProductCommonBatchService {
             if (DictCodeListExt1.金融产品类型_基金.getValue().equals(queryType)) {
                 // 变量.场外基金估值行情DTO = 【4.1】查询结果.get(0);
                 List<FinProductValuationDto> listFinProductValuationDto = finProductCommonMapper.getFinProValuation(
-                        queryDate, finprodMarketId, DictCodeList.基金类型_货币基金.getValue());
+                        queryDate, finprodMarketId);
                 if (!CollectionUtils.isEmpty(listFinProductValuationDto)) {
                     MarketPriceDto marketPriceDto = new MarketPriceDto();
                     // 第一市价DTO.估值日期 = 估值日期

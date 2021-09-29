@@ -31,11 +31,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -154,7 +150,6 @@ public class BMWEclCalculationProcessorService {
             Map<String, Object> searchPara = new HashMap<>();
             searchPara.put("assetId", finprodId);
             searchPara.put("platDate", platDate);
-            searchPara.put("INPUT_TYPE_03", DictCodeListExt3.减值数据来源_中债接入.getValue());
             // 查询按照录入方式升序排序,优先取手工数据，其次取导入数据，故只需取第一条即可
             List<TrdAssetLoss> listTrdAssetLoss = eclCalculationMapper.queryEclManage(
                     searchPara);
@@ -162,8 +157,6 @@ public class BMWEclCalculationProcessorService {
             EclRatioDto eclRatioDto = null;
             // 定义 变量.ecl比例
             BigDecimal eclRatio = BigDecimal.ZERO;
-            // 定义 变量.减值阶段 = 返回reader结果.减值阶段
-            String finStage = entityDto.getFinStage();
             if(!CollectionUtils.isEmpty(listTrdAssetLoss)){
                 // 将查询结果按数据来源分组：手工、wind、中债
                 Map<String, List<TrdAssetLoss>> lossMap = listTrdAssetLoss.stream().collect(Collectors.groupingBy(TrdAssetLoss::getLossInputType));
@@ -173,15 +166,15 @@ public class BMWEclCalculationProcessorService {
                     dataSource = DictCodeListExt3.减值数据来源_手工.getValue();
                     listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_手工.getValue());
                 }
-                else if (!CollectionUtils.isEmpty(lossMap.get(DictCodeListExt3.减值数据来源_wind接入.getValue()))) {
-                    // 数据来源
-                    dataSource = DictCodeListExt3.减值数据来源_wind接入.getValue();
-                    listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_wind接入.getValue());
-                }
-                else{
+                else if (!CollectionUtils.isEmpty(lossMap.get(DictCodeListExt3.减值数据来源_中债接入.getValue()))) {
                     // 数据来源
                     dataSource = DictCodeListExt3.减值数据来源_中债接入.getValue();
                     listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_中债接入.getValue());
+                }
+                else{
+                    // 数据来源
+                    dataSource = DictCodeListExt3.减值数据来源_wind接入.getValue();
+                    listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_wind接入.getValue());
                 }
 
                 // 调用共通根据最终减值流水计算ECL损失比例（当有持仓数据位于三阶段时，则以三阶段减值行情日数据预期信用损失比例为准）
@@ -196,18 +189,18 @@ public class BMWEclCalculationProcessorService {
             else{
                 // 变量.ecl比例Dto
                 eclRatio = eclRatioDto.getEclRatio();
-                // 变量.ecl比例Dto.减值阶段不为空
-                if(StringUtil.isNotEmpty(eclRatioDto.getFinStage())){
-                    // 减值阶段 = 变量.ecl比例Dto.减值阶段
-                    finStage = eclRatioDto.getFinStage();
-                }
+                // PD = 变量.ecl比例Dto.PD
+                entityDto.setProspectivePd(eclRatioDto.getPd());
+                // LGD = 变量.ecl比例Dto.LGD
+                entityDto.setLgd(eclRatioDto.getLgd());
+                // 减值阶段 = 变量.ecl比例Dto.减值阶段
+                entityDto.setFinStage(eclRatioDto.getFinStage());
             }
             // 系统参数控制ECL比例保留小数位数以及尾数处理方式
             eclRatio = calCommonService.round(eclRatio, ECL比例结果保留小数位尾数处理方式, ECL比例结果保留小数位);
             entityDto.setEclRatio(eclRatio);
             //3.3 封装结果集
-            quaryResultParam(entityDto, modEclResultProcess, modEclResult, platDate,
-                    dataSource, finStage);
+            quaryResultParam(entityDto, modEclResultProcess, modEclResult, platDate, dataSource);
 
         } catch (Exception e) {
             CommonErrorParams commonErrorParams = new CommonErrorParams();
@@ -244,8 +237,7 @@ public class BMWEclCalculationProcessorService {
      */
     private void quaryResultParam(ModEclResultProcess entity,
                                   ModEclResultProcess modEclResultProcess,
-                                  ModEclResult modEclResult, Date platDate, String dataSource,
-                                  String finStage) {
+                                  ModEclResult modEclResult, Date platDate, String dataSource) {
         //减值结果过程表
         BeanUtil.copyPropertiesIgnoreNull(modEclResultProcess, entity);
         //序列号								自动生成
@@ -254,8 +246,6 @@ public class BMWEclCalculationProcessorService {
         modEclResultProcess.setDecDate(platDate);
         //过程								“05 ECL计算”，此批处理主要加载数据。
         modEclResultProcess.setProcess(ModelDictCodeList.模型_减值过程_ECL计算.getValue());
-        //  减值阶段 = 参数.减值阶段
-        modEclResultProcess.setFinStage(finStage);
 
         //资产减值结果表
         BeanUtil.copyPropertiesIgnoreNull(modEclResult, entity);
@@ -263,8 +253,6 @@ public class BMWEclCalculationProcessorService {
         modEclResult.setSeqno(IDGenerator.generate());
         //资产类型
         modEclResult.setAssetType(entity.getModelAssetType());
-        //减值阶段 交易信息DTO.减值阶段
-        modEclResult.setStage(finStage);
         //数据来源
         modEclResult.setDataSource(dataSource);
         // 买入时点评级
@@ -273,6 +261,9 @@ public class BMWEclCalculationProcessorService {
         modEclResult.setCurrentTimeGrade(entity.getResultCurrent());
         // 是否允许模型覆盖 = 是
         modEclResult.setAllowModelCover(DictCodeList.是否_是.getValue());
+        // 减值阶段
+        modEclResult.setStage(entity.getFinStage());
+
     }
 
     /**
@@ -484,43 +475,69 @@ public class BMWEclCalculationProcessorService {
             return null;
         }
         if(eclTrdAssetLoss.size()>1){
+            // 降序排列
+            Collections.sort(eclTrdAssetLoss, (o1, o2) -> o2.getEndDate().compareTo(o1.getEndDate()));
+            // 获取资产买入交易日期列表
             List<Date> dates = accountingCommonBatchService.getBuyDate(happenDate, invAim, booksetId, targetFinProduct.getFinprodId());
-
+            // 定义 变量.计数器 = 0;
             int num =0;
             if(StringUtil.isEmptyList(dates)){
                 return null;
             }
+            // 定义 变量.最终减值结果 = 列表第一条数据（最新）
+            TrdAssetLoss resultLoss = null;
             for(TrdAssetLoss loss :eclTrdAssetLoss){
+                // 若为三阶段，则直接返回
                 if(DictCodeListExt3.阶段_买入后出现减值_P3.getValue().equals(loss.getStage())){
-                    eclRatioDto.setEclRatio(loss.getEclVaule());
-                    eclRatioDto.setFinStage(DictCodeListExt3.阶段_买入后出现减值_P3.getValue());
-                    return eclRatioDto;
+                    resultLoss = loss;
+                    break;
                 }else{
-                    if(loss.getStrDate() == null || loss.getEndDate() == null || loss.getEclVaule() ==null ){
-                        continue;
-                    }
                     for(Date date :dates){
                         if(date == null){
                             continue;
                         }
+                        // 交易日期 >=开始日期 且 交易日期<= 结束日期
                         if(loss.getStrDate().compareTo(date)<=0 && loss.getEndDate().compareTo(date)>=0 ){
+                            // 计数+1
                             num++;
-                            ecl = com.joyintech.framework.util.ArithmeticUtil.doAdd(ecl,loss.getEclVaule());
+                            // 当最终结果为空，则表示第一次匹配到减值流水
+                            if(resultLoss == null){
+                                // 变量.最终结果 = 减值流水
+                                resultLoss = loss;
+                            }
+                            // 否则后续依次判断，若减值阶段不同，则直接减值阶段为同处一二阶段
+                            else if(!StringUtil.equals(loss.getStage(), resultLoss.getStage())){
+                                resultLoss.setStage(DictCodeListExt3.阶段_买入后同处一二阶段_P12.getValue());
+                            }
+                            // ecl累计值+= 减值流水.ecl比例
+                            ecl = ArithmeticUtil.doAdd(ecl,loss.getEclVaule());
                             break;
                         }
                     }
                 }
+
             }
-            if(num == 0){
+            if(resultLoss == null){
                 return null;
             }
-            if(num>0){
-                ecl = com.joyintech.framework.util.ArithmeticUtil.divide(ecl, num, 12);
+            // 减值阶段 = 最终结果.减值阶段
+            eclRatioDto.setFinStage(resultLoss.getStage());
+            // 只有同处一二阶段，才会计算算术平均值，直接返回ecl
+            if(DictCodeListExt3.阶段_买入后同处一二阶段_P12.getValue().equals(resultLoss.getStage())){
+                // 计算累加值，算算术平均值，PD、LGD为空
+                eclRatioDto.setEclRatio( ArithmeticUtil.divide(ecl, num));
             }
-            eclRatioDto.setEclRatio(ecl);
+            // 否则，直接取最终的最新数据
+            else{
+                eclRatioDto.setPd(resultLoss.getPdVaule());
+                eclRatioDto.setLgd(resultLoss.getLgdVaule());
+                eclRatioDto.setEclRatio(resultLoss.getEclVaule());
+            }
             return eclRatioDto;
         }else{
             eclRatioDto.setEclRatio(eclTrdAssetLoss.get(0).getEclVaule());
+            eclRatioDto.setLgd(eclTrdAssetLoss.get(0).getLgdVaule());
+            eclRatioDto.setPd(eclTrdAssetLoss.get(0).getPdVaule());
             // 若取到一条为三阶段，则返回减值阶段 = 三阶段
             if(DictCodeListExt3.阶段_买入后出现减值_P3.getValue().equals(eclTrdAssetLoss.get(0).getStage())){
                 eclRatioDto.setFinStage(DictCodeListExt3.阶段_买入后出现减值_P3.getValue());

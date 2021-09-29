@@ -96,7 +96,7 @@
 		GRADE_RESULT, BASEDATE, SPREAD,
 		SPREAD_ADJ, B_FULLPRICE, B_QTY,
 		MOD_METHOD, CREATE_USER, CREATE_DEPT,
-		CREATE_TIME, UPDATE_USER, UPDATE_TIME
+		CREATE_TIME, UPDATE_USER, UPDATE_TIME,CURVE_DATE,CURVE_CODE
 		)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
 				 close="from dual)">
@@ -105,7 +105,8 @@
 			#{item.gradeResult,jdbcType=VARCHAR}, #{item.basedate,jdbcType=DATE}, #{item.spread,jdbcType=DECIMAL},
 			#{item.spreadAdj,jdbcType=DECIMAL}, #{item.bFullprice,jdbcType=DECIMAL}, #{item.bQty,jdbcType=DECIMAL},
 			#{item.modMethod,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
-			#{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+			#{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
+			#{item.curveDate,jdbcType=TIMESTAMP},#{item.curveCode,jdbcType=VARCHAR}
 		</foreach>
 	</insert>
 

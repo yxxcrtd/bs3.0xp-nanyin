@@ -294,10 +294,10 @@ $(function() {
                     row.recAcctName = "";
                 }
             }
-            if (typeof value != "undefined" && value) {
+            if (typeof value != "undefined" && value && field == 'payAcctNo') {
                 // 选择收款账户带出行内/行外、网点
                 Joyin.ajax(JoyinUtil.getRealPath('/component/trade/BussTrdTransferOrder/queryStlCapacctInfoByAcctNo'), {
-                    ccyText: row.ccyText,
+                    ccy: $('#ccy').val(),
                     acctNo: value
                 }, function (result) {
                     if (!result) {

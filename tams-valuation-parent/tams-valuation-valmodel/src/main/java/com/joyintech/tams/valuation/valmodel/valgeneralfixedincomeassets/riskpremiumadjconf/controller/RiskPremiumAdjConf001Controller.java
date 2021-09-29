@@ -6,6 +6,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.dto.RiskPremiumAdjConf001Dto;
 import com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.riskpremiumadjconf.service.RiskPremiumAdjConf001Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class RiskPremiumAdjConf001Controller extends BaseController {
     @RequestMapping("findPage")
     public Page<RiskPremiumAdjConf001Dto> findPage() throws Exception {
         Map<String, Object> params= RequestUtil.getPageParam();
+        params.put("modMethod",ModelDictCodeList.模型_估值模型名称_现金流贴现法.getValue());
         return  riskPremiumAdjConf001Service.selectForPage(params);
 
     }

@@ -38,8 +38,8 @@ public class TrdRepoTrade004DtoValidator implements TradeCommonValidator {
                 && inputDto.getMdate() != null
                 && inputDto.getSubstitutionDate() != null) {
             if (DateUtil.compareDate(inputDto.getSubstitutionDate(),
-                    inputDto.getVdate()) <=0 || DateUtil.compareDate(inputDto.getMdate(),
-                    inputDto.getSubstitutionDate()) <=0) {
+                    inputDto.getVdate()) <0 || DateUtil.compareDate(inputDto.getMdate(),
+                    inputDto.getSubstitutionDate()) <0) {
                 ValidMessage validMessage = new ValidMessage("置换日期需在起息日与到期日之间!");
                 errorList.add(validMessage);
             }

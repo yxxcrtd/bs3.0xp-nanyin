@@ -964,7 +964,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     CreditLinesInputDto dto = new CreditLinesInputDto();
                     BeanUtil.copyPropertiesIgnoreNull(dto, creditLinesInputDto);
                     dto.setEntrustId(dto.getTradeId());
-                    dto.setFinprodType2("F06");
+                    dto.setIsjijinmairu("true");
                     dto.setIsSpecial("true");
                     trdlist.add(dto);
                 }

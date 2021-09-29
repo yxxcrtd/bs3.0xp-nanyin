@@ -398,7 +398,7 @@ function saveOrSubmit(operateType) {
                 }
                 Joyin.ajaxJson(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr006/check', object, function (result) {
                     Joyin.confirm(result.data, function () {
-
+                        //covertObj(object);
                         if (operateType === 'save') {
                             WorkFlow.doSaveList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr006/save', object, "CfetsRepoDealQuotedPr006_btn_save", "CfetsRepoDealQuotedPr006", function () {
 
@@ -433,7 +433,7 @@ function saveOrSubmit(operateType) {
         }
         Joyin.ajaxJson(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr006/check', object, function (result) {
             Joyin.confirm(result.data, function () {
-
+                //covertObj(object);
                 if (operateType === 'save') {
                     WorkFlow.doSaveList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr006/save', object, "CfetsRepoDealQuotedPr006_btn_save", "CfetsRepoDealQuotedPr006", function () {
 
@@ -448,4 +448,24 @@ function saveOrSubmit(operateType) {
         });
     }
 
+    /*function  covertObj(object) {
+        //券面总额转成元为单位
+        if(object.bussRepoSec&&object.bussRepoSec.pledgeBondList){
+            $.each(object.bussRepoSec.pledgeBondList,function (index,item) {
+                item.pledgePrin = JoyinMath.doMul(item.pledgePrin,10000);
+            })
+        }
+        if(object.bussResultRepoSec&&object.bussResultRepoSec.length>0){
+            $.each(object.bussResultRepoSec,function (index,item) {
+                item.pledgePrin = JoyinMath.doMul(item.pledgePrin,10000);
+            })
+        }
+        if(object.outDataTable&&object.outDataTable.length>0){
+            $.each(object.outDataTable,function (index,item) {
+                item.pledgePrin = JoyinMath.doMul(item.pledgePrin,10000);
+            })
+        }
+        return object;
+    }
+*/
 }

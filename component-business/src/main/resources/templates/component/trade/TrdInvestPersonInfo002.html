@@ -9,6 +9,7 @@
             </h3>
             <input type="hidden" th:id="|${entityName}_traderDept|" th:name="|${entityName}.traderDept|" th:value="${entity?.trader}">
             <input type="hidden" th:id="|${entityName}_isOutTrade|" th:name="|${entityName}.isOutTrade|" th:value="${entity?.isOutTrade}">
+            <input type="hidden" id="innerTrade" name="innerTrade" th:value="${innerTrade}">
             <div class="pro-module-item">
                 <div class="layui-form-item">
                     <div class="form-inline-wrap">
@@ -25,8 +26,8 @@
                         <label class="layui-form-label form-label-wrap" data-th-utext="#{EtrInvestPersonInfo002.counterId}" >交易对手</label>
                         <div class="layui-input-inline input-inline">
                             <!-- 场内基金改造 modify by renping 20191117 start -->
-                            <select required th:id="|${entityName}_counterId|" th:name="|${entityName}.counterId|" parentIds="ps,finprodType2,profitType,tradeMarket,chlId,portfolioId,finprodMarketId,pinanAssetType,fTradeIdShow,fTradeId"
-                                    th:data-url="|@{/component/trade/TrdInvestPersonInfo002/selectCounterId}?innerTrade=${innerTrade}&counterType=${counterType}&isInnerCounter=${isInnerCounter}&callPageId=${callPageId}|"
+                            <select required th:id="|${entityName}_counterId|" th:name="|${entityName}.counterId|" parentIds="ps,finprodType2,profitType,tradeMarket,chlId,portfolioId,finprodMarketId,pinanAssetType,fTradeIdShow,fTradeId,innerTrade"
+                                    th:data-url="|@{/component/trade/TrdInvestPersonInfo002/selectCounterId}?counterType=${counterType}&isInnerCounter=${isInnerCounter}&callPageId=${callPageId}|"
                                     formatOption="true"
                                     th:initValue="${entity?.counterId}" class="layui-input form-input input-select"
                                     th:placeholder="#{SysCommon.placeholder}">

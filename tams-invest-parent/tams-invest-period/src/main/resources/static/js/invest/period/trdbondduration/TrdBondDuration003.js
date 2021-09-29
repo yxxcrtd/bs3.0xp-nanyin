@@ -21,7 +21,7 @@ var TrdBondDuration003 = function () {
         cols: [
             {field: 'portfolioId', width: "200", title: '组合代码', sortable: false}
             , {field: 'portfolioName', width: "200", title: '组合名称', sortable: false}
-            , {field: 'secAcctId', width: "200", title: '证券账户/通道', sortable: false, visible: false}
+            , {field: 'secAcctId', width: "200", title: ISChongQing == 'Y'?'证券账户':'证券账户/通道', sortable: false}
             , {field: 'invAimString', width: "200", title: '投资目的', sortable: false, visible: false}
             , {field: 'qty', width: "200", title: '持有面额', type: 'money', sortable: false}
             , {field: 'cPriceAmt', width: "200", title: '净价总额', type: 'money', sortable: false}

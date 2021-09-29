@@ -867,15 +867,11 @@
     		VAL_DATE AS valDate,
     		VALUATION AS valuation
 		FROM FIN_PRODUCT_VALUATION
-		WHERE
-		  FINPROD_ID = #{marketCode}
-		AND
-    		FINPROD_TYPE != #{finprodType}
-    		AND VAL_DATE &lt;= #{queryDate}
-            AND VALUATION != 0 AND VALUATION IS NOT NULL
-			<!--修复 ZGBS-117 公募基金-非货币基金，重新跑批，公允价值有误BUG 20201230 start-->
-			AND PUBLISH_DATE &lt;= #{queryDate}
-			<!--修复 ZGBS-117 公募基金-非货币基金，重新跑批，公允价值有误BUG 20201230 end-->
+		WHERE 1=1
+			AND FINPROD_ID = #{marketCode}
+			AND VAL_DATE &lt;= #{queryDate}
+			AND VALUATION != 0 AND VALUATION IS NOT NULL
+			AND (PUBLISH_DATE is null or PUBLISH_DATE &lt;= #{queryDate})
 		ORDER BY
             VAL_DATE DESC
 	</select>
