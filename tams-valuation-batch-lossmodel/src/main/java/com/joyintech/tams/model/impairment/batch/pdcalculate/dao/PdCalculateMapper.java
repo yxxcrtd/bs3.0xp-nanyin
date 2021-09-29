@@ -88,6 +88,6 @@ public interface PdCalculateMapper {
      * @param:
      * @return:
      */
-    ModPdFactorConfigDto getCombinedFactorConfig(@Param("yearStr") String yearStr);
+    List<ModPdFactorConfigDto> getCombinedFactorConfig(@Param("yearStr") String yearStr);
 
 }
