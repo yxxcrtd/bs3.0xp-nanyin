@@ -975,6 +975,7 @@
 			<if test="loginUserId != null and loginUserId != '' ">
 				and (QUOTE.CREATE_USER = #{loginUserId,jdbcType=VARCHAR}
 				or QUOTE.UPDATE_USER = #{loginUserId,jdbcType=VARCHAR}
+				or QUOTE.UPDATE_USER is null
 				)
 			</if>
 		</where>
