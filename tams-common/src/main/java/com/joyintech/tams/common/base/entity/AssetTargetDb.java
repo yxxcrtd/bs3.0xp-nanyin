@@ -175,7 +175,7 @@ public class AssetTargetDb extends AssetTargetDbKey {
      * 久期
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal mDuration;
+    private BigDecimal duration;
 
     /**
      * 修正久期
@@ -858,16 +858,16 @@ public class AssetTargetDb extends AssetTargetDbKey {
      * 取得 久期
      * @return 久期
      */
-    public BigDecimal getmDuration() {
-        return mDuration;
+    public BigDecimal getDuration() {
+        return duration;
     }
 
     /**
      * 设置 久期
-     * @param mDuration 久期
+     * @param duration 久期
      */
-    public void setmDuration(BigDecimal mDuration) {
-        this.mDuration = mDuration;
+    public void setDuration(BigDecimal duration) {
+        this.duration = duration;
     }
 
     /**
