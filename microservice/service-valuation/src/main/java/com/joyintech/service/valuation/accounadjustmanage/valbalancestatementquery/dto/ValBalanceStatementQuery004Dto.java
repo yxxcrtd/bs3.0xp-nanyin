@@ -62,6 +62,36 @@ public class ValBalanceStatementQuery004Dto extends BaseEntity {
      */
     private String psCode;
 
+    private String settleDate;
+
+    private String profitType;
+
+    private String pFinprodId;
+
+    public String getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(String settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    public String getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(String profitType) {
+        this.profitType = profitType;
+    }
+
+    public String getpFinprodId() {
+        return pFinprodId;
+    }
+
+    public void setpFinprodId(String pFinprodId) {
+        this.pFinprodId = pFinprodId;
+    }
+
     public String getPsCode() {
         return psCode;
     }
