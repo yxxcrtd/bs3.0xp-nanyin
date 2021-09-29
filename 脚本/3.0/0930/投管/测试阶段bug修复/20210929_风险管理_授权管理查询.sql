@@ -1,0 +1,2 @@
+--add by meifaxin 2021-9-29  需求确认，认购是否需要补充需求，确认其他交易方向，其他枚举值系统需要删除--回复：隐藏申购确认、认购确认、赎回确认、赎回到账、买/卖、卖/买 -->
+delete from SYS_PAGE_DICTLIST where SYS_PAGE_DICTLIST.PAGE_ID='RskAuthorityManage001' and  SYS_PAGE_DICTLIST.DICT_ID='PS' and SYS_PAGE_DICTLIST.DICT_ITEM_VAL in ('T05','T18','T19','T24','T_B/S','T_S/B');
