@@ -1168,6 +1168,9 @@
         var object = $.serializeToObject('#CfetsRepoDealQuotedPrice002_submitForm');
         object.quoteId = $("#CfetsRepoDealQuotedPrice002_quoteId").val();
         object.tradeStatus = $("#CfetsRepoDealQuotedPrice002_tradeStatus").val();
+        object.ccy = !$("#CfetsRepoDealQuotedPrice002_ccy").val()?'':$("#CfetsRepoDealQuotedPrice002_ccy").val();
+        object.settleCcy = !$("#CfetsRepoDealQuotedPrice002_settleCcy").val()?'':$("#CfetsRepoDealQuotedPrice002_settleCcy").val();
+        object.basis = !$("#CfetsRepoDealQuotedPrice002_basis").val()?'':$("#CfetsRepoDealQuotedPrice002_basis").val();
         object.operation = "CfetsRepoDealQuotedPrice001.reply.reject"
         Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/checkEdit', object, function (result) {
             if (result.data) {
@@ -1188,6 +1191,9 @@
         object.quoteId = $("#CfetsRepoDealQuotedPrice002_quoteId").val();
         object.tradeStatus = $("#CfetsRepoDealQuotedPrice002_tradeStatus").val();
         object.operatorType = 'save';
+        object.ccy = !$("#CfetsRepoDealQuotedPrice002_ccy").val()?'':$("#CfetsRepoDealQuotedPrice002_ccy").val();
+        object.settleCcy = !$("#CfetsRepoDealQuotedPrice002_settleCcy").val()?'':$("#CfetsRepoDealQuotedPrice002_settleCcy").val();
+        object.basis = !$("#CfetsRepoDealQuotedPrice002_basis").val()?'':$("#CfetsRepoDealQuotedPrice002_basis").val();
         //构造质押券list
         handlepledgeBondList(object);
         object.operation = "CfetsRepoDealQuotedPrice001.save"
@@ -1225,6 +1231,9 @@
         var object = $.serializeToObject('#CfetsRepoDealQuotedPrice003_submitForm');
         object.quoteId = $("#CfetsRepoDealQuotedPrice002_quoteId").val();
         object.tradeStatus = $("#CfetsRepoDealQuotedPrice002_tradeStatus").val();
+        object.ccy = !$("#CfetsRepoDealQuotedPrice002_ccy").val()?'':$("#CfetsRepoDealQuotedPrice002_ccy").val();
+        object.settleCcy = !$("#CfetsRepoDealQuotedPrice002_settleCcy").val()?'':$("#CfetsRepoDealQuotedPrice002_settleCcy").val();
+        object.basis = !$("#CfetsRepoDealQuotedPrice002_basis").val()?'':$("#CfetsRepoDealQuotedPrice002_basis").val();
         object.operation = "CfetsRepoDealQuotedPrice001.submit"
         object.operatorType = 'submit';
         //构造质押券list
