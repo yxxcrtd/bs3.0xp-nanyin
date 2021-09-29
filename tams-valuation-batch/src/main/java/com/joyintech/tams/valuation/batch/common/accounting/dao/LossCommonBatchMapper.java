@@ -70,4 +70,14 @@ public interface LossCommonBatchMapper {
      */
     SysBatchTask getTaskInfo(@Param("beanName") String beanName);
 
+    /**
+     * 取采用模型方案对应的减值比例
+     *
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<BigDecimal> getStage3VauleMod(Map<String, Object> param);
+
 }

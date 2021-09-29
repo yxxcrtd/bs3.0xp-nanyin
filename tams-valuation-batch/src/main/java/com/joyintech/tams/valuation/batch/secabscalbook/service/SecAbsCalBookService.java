@@ -35,10 +35,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.BokFinProductValuationParaMapper;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListTableId;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
@@ -1503,7 +1500,13 @@ public class SecAbsCalBookService {
 		parameter.setCalDate(rstBaseinfo.getVdate().compareTo(calcDate) > 0
 				? BasicUtil.dateToLocal(rstBaseinfo.getVdate()) : BasicUtil.dateToLocal(calcDate));
 		//减值比例
-		BigDecimal eclVaule = lossCommonBatchService.getStage3Vaule(acctEntity.getHappenDate(), rstBaseinfo.getFinprodMarketId());
+		BigDecimal eclVaule = BigDecimal.ZERO;
+        if(StringUtil.isNotEmpty(CacheUtil.getSysParam(DictCode.减值方案类型.getValue()))){
+            eclVaule = lossCommonBatchService.getStage3VauleMod(acctEntity.getHappenDate(), rstBaseinfo.getFinprodId(), acctEntityEx.getBooksetId());
+        }
+        else{
+            eclVaule = lossCommonBatchService.getStage3Vaule(acctEntity.getHappenDate(), rstBaseinfo.getFinprodMarketId());
+        }
         //折算比例
 		BigDecimal zhesuanbili = BigDecimal.ONE;
 		if(acctEntityEx.getNumP3() >0 && eclVaule!=null){

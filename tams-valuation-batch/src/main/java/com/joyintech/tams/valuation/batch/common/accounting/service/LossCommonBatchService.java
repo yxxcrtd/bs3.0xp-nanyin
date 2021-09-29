@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.valuation.common.batch.finproduct.service.AccountingCommonBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +35,6 @@ import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
 import com.joyintech.tams.common.base.entity.BokStatLossPosiiton;
 import com.joyintech.tams.common.base.entity.SysBatchTask;
 import com.joyintech.tams.common.base.entity.TrdAssetLoss;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListNatureGroup;
-import com.joyintech.tams.constant.DictCodeListTableId;
 import com.joyintech.tams.valuation.batch.common.accounting.dao.LossCommonBatchMapper;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.BookLatestInfoDto;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.LossAmtInputDto;
@@ -421,12 +418,38 @@ public class LossCommonBatchService {
         param.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
         param.put("secId", secId);
         param.put("stageP3", DictCodeListExt3.阶段_买入后出现减值_P3.getValue());
-        List<BigDecimal> vauleList = lossCommonBatchMapper.getStage3Vaule(param);
+        // 若减值方案存在，则采用模型计算结果
+        List<BigDecimal> vauleList = new ArrayList<>();
+        vauleList = lossCommonBatchMapper.getStage3Vaule(param);
+
         if(StringUtil.isEmptyList(vauleList)){
             return BigDecimal.ZERO;
         }else{
             return vauleList.get(0);
         }
         
+    }
+
+    /**
+     * 获取三级段减值流水
+     * @param happenDate 发生日
+     * @param secId 资产代码
+     * @return
+     */
+    public BigDecimal getStage3VauleMod(Date happenDate,String finprodId, String booksetId){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("happenDate", happenDate);
+        param.put("finprodId", finprodId);
+        param.put("booksetId", booksetId);
+        param.put("stageP3", DictCodeListExt3.阶段_买入后出现减值_P3.getValue());
+        // 若减值方案存在，则采用模型计算结果
+        List<BigDecimal> vauleList = new ArrayList<>();
+        vauleList = lossCommonBatchMapper.getStage3VauleMod(param);
+        if(StringUtil.isEmptyList(vauleList)){
+            return BigDecimal.ZERO;
+        }else{
+            return vauleList.get(0);
+        }
+
     }
 }
