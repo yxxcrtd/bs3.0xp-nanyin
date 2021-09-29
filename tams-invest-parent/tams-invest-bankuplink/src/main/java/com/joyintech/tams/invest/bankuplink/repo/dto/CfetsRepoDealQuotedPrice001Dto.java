@@ -104,6 +104,7 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
     /**
      * 证券账户ID
      */
+    @NotEmpty(fieldName = "CfetsRepoDealQuotedPrice002.secAcctId")
     private String secAcctId;
 
     /**
