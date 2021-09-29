@@ -19,6 +19,7 @@ import com.joyintech.tams.common.base.entity.ModRiskPremium;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMethodMapper;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.*;
@@ -195,7 +196,7 @@ public class ProductAssetsIncomeMethodProcessorService {
         mstBondValuationInfo.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());//估值来源
         mstBondValuationInfo.setPrice(fullprice.setScale(2, RoundingMode.HALF_UP)); //估值全价
         mstBondValuationInfo.setNetprice(netPrice.setScale(2, RoundingMode.HALF_UP));//估值净价
-        mstBondValuationInfo.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
+        mstBondValuationInfo.setInputType(DictCodeListExt3.录入方式_模型生成.getValue()); //录入方式 待定 测试 interf
         mstBondValuationInfo.setCreateUser("batch"); //
         mstBondValuationInfo.setUpdateUser("batch");
         mstBondValuationInfo.setCreateTime(DateUtil.now());

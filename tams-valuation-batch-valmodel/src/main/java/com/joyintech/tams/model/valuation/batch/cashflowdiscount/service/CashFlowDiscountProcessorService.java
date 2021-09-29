@@ -282,6 +282,7 @@ public class CashFlowDiscountProcessorService {
 //				finDto.setFinprodType2(modAssetInfoDto.getFinprodType2());// 标的信息.金融产品类型（投管分类）
 				finProductValuation.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());
 				finProductValuation.setInputType(DictCodeListExt3.录入方式_模型生成.getValue());
+				finProductValuation.setFinprodType(DictCodeListExt1.金融产品类型_计划类资产.getValue());
 				finProductValuation.setValDate(happenDate);
 				finProductValuation.setPublishDate(happenDate);
 				finProductValuation.setValuation(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest).setScale(2, RoundingMode.HALF_UP));
@@ -313,7 +314,8 @@ public class CashFlowDiscountProcessorService {
         if(DictCodeListExt1.证券品种_债券.getValue().equals(secType)){
             return fullprice;
         }else if(DictCodeListExt1.证券品种_其他债权类.getValue().equals(secType)){
-            return ArithmeticUtil.divide(fullprice, modAssetInfoDto.getIssueAmt(),22);
+            //百元全价
+            return ArithmeticUtil.multiply(ArithmeticUtil.divide(fullprice, modAssetInfoDto.getIssueAmt(),22),new BigDecimal(100));
         }else{
             logger.warn("资产代码：{1}，对应的证券品种为：{2}，不是债券也不是其他债权，全价不做折算.", modAssetInfoDto.getFinprodId(),modAssetInfoDto.getSecType());
             return fullprice;
