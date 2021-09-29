@@ -1756,7 +1756,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         //处理 净值型、货币型、基金的申购/认购确认
         if(StringUtil.isNotEmpty(inputDto.getIsSpecial()) && "true".equals(inputDto.getIsSpecial())){
             if (creditLinesAst!=null && BussinessDictCodeList.授信对象_份额.getValue().equals(creditLinesAst.getCreditObj())) {
-                if("F06".equals(inputDto.getFinprodType2()))return outputDto;
+                if("true".equals(inputDto.getIsjijinmairu()))return outputDto;
                 BigDecimal yuanShareAmt = creditLinesDealsMapper.getShareAmt(inputDto.getEntrustId());
                 BigDecimal objShareAmt = inputDto.getShareAmt().subtract(yuanShareAmt);
                 inputDto.setShareAmt(objShareAmt.abs());
