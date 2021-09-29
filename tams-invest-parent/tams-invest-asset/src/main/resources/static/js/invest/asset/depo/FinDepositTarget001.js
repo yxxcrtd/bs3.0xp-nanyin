@@ -67,7 +67,7 @@
             ,{field:'finprodAbbr',  title: 'FinDepositTarget002.finprodAbbr',sortField:'FINPROD_ABBR',visible:false}//资产简称
             ,{field:'type6Name',title:'FinDepositTarget002.type6', visible:false}//隐藏资产类型 赵东东 2019.7.30
             // 增加推荐方与推荐费率 add by renping 20191014 start
-            ,{field:'recommenderName',  title: 'FinDepositTarget002.recommender', sortField:'recommender'}//存款机构
+            /*,{field:'recommenderName',  title: 'FinDepositTarget002.recommender', sortField:'recommender'}*///存款机构
             // 增加推荐方与推荐费率 add by renping 20191014 start
             ,{field:'sponsorName',  title: 'FinDepositTarget002.sponsor', sortField:'sponsor'}
             ,{field:'issuerName',  title: 'FinDepositTarget002.issuer', sortField:'issuer'}

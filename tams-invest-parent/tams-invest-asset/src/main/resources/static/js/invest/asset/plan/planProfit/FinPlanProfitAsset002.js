@@ -417,6 +417,9 @@ var QueryFunc=function(){
         	 else{
         		 $('#bankTrustCodeDiv').hide();
         	 }
+        	 if(ISChongQing != null && ISChongQing == 'Y'){
+        	     $('#bankTrustCodeDiv').hide();
+        	 }
          }).trigger('change');
        //一级分类联动人行信托代码 by 赵东东 20191018 end
         //二级分类联动显示资产负债类别

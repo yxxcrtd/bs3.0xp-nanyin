@@ -182,7 +182,7 @@ public class FinPlanProfitAsset002Controller extends BaseController{
         model.addAttribute("PLAN_ASSET_SEC_TYPE_03", DictCodeList.计划类资产二级分类_委托权益.getValue());
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
         model.addAttribute("COMMON_BUSINESS_TYPE", DictCodeList.平安资产类型_计划类资产_利率型.getValue());
-
+        model.addAttribute("ISChongQing", CacheUtil.getSysParam("ISChongQing"));
         return super.init(model);
     }
     /**

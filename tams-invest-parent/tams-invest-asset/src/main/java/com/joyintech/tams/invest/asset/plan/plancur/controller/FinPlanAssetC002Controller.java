@@ -139,6 +139,7 @@ public class FinPlanAssetC002Controller extends BaseController{
         //取系统参数
         model.addAttribute("CE_MODEL", CacheUtil.getSysParam(BussinessConstant.CEMODEL));
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
+        model.addAttribute("ISChongQing", CacheUtil.getSysParam("ISChongQing"));
         return super.init(model);
     }
     

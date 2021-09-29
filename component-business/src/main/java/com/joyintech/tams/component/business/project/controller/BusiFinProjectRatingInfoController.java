@@ -59,12 +59,17 @@ public class BusiFinProjectRatingInfoController extends BaseController{
         String entityName = StringUtil.defaultString(this.getParam("entityName"),
             BusiFinBondRatingInfoService.DEFAULT_ENTITY_NAME);
         model.addAttribute("entityName", entityName);
+        String pageId=this.getParam("pageId");
         SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.评级对象显示类型,null);
         if (selectDto != null && !StringUtil.isEmptyList(selectDto.getOptions())) {
             List<SelectOptionDto> options = selectDto.getOptions();
             for (int index = options.size() - 1; index >= 0; index--) {
                 SelectOptionDto option = options.get(index);
                 if (StringUtil.equals(option.getId(), DictCodeList.评级类型_债项评级.getValue())) {
+                    options.remove(option);
+                }
+                if(StringUtil.isNotEmpty(pageId) && StringUtil.equals(pageId,"FinProjectTargetAsset002")
+                  && StringUtil.equals(option.getId(), DictCodeList.评级对象显示类型_发行人评级.getValue())){
                     options.remove(option);
                 }
             }

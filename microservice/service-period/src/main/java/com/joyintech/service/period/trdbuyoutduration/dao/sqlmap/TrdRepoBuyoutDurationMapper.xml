@@ -371,7 +371,8 @@
                 T3.THEORY_AMT/*理论本息总额*/,
                 T1.TRADE_AMT/*实收本息总额*/,
                 T1.FPRICE_AMT,
-                T1.FEE_AMT channelFee
+                T1.FEE_AMT channelFee,
+                (T4.MDATE - T4.VDATE) actAmtDays
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
             LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
@@ -420,7 +421,8 @@
                 T3.THEORY_AMT/*理论本息总额*/,
                 T1.TRADE_AMT/*实收本息总额*/,T1.WORKFLOW_ID,
                 T1.FPRICE_AMT,
-                T1.FEE_AMT channelFee
+                T1.FEE_AMT channelFee,
+                (T4.MDATE - T4.VDATE) actAmtDays
             FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN WFL_PA_TRD_FIN_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
             LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T1.PORTFOLIO_ID
@@ -459,7 +461,8 @@
                 null SETTLE_DATE,
                 T4.M_INT_AMT THEORY_INT/*理论利息*/,
                 T1.PRIN_AMT + T4.M_INT_AMT THEORY_AMT/*理论本息总额*/,
-                null TRADE_AMT
+                null TRADE_AMT,
+                (T1.MDATE - T1.VDATE) actAmtDays
             FROM TRD_PRODUCT_DEAL T1
             LEFT JOIN PTL_TRADE T3 ON T1.TRADE_ID = T3.BUSI_NO
             LEFT JOIN PTL_PORTFOLIO T2 ON T2.PORTFOLIO_ID = T3.PORTFOLIO_ID

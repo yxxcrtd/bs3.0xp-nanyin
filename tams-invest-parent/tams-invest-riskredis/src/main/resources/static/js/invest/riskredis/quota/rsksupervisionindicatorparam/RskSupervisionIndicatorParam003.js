@@ -27,10 +27,10 @@
         object.workflowId = $("#workflowId").val();
         object.paraCode = $("#paraCode").val();
         var institutionId = $('#institutionId').val();
-        if(!institutionId ||  institutionId.length ==0 ){
+    /*    if(!institutionId ||  institutionId.length ==0 ){
         	Joyin.error("请输入机构！");
 			return;
-        }
+        }*/
         var institutionCode = null;
         if(institutionId != null)
         	institutionCode=institutionId.join(",");

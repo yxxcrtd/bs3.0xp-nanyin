@@ -162,7 +162,8 @@
         ETR_ENTRUST.MDATE                    mdate,
         ETR_ENTRUST.ENTRUST_AMT                entrustAmt,
         ETR_FINISH_STATUS_A.FINISH_AMT         finishAmt,
-        round(ETR_FINISH_STATUS_A.FINISH_AMT/ETR_ENTRUST.ENTRUST_AMT,2)*100 transactioncom
+        round(ETR_FINISH_STATUS_A.FINISH_AMT/ETR_ENTRUST.ENTRUST_AMT,2)*100 transactioncom,
+        su.REAL_NAME    invManagerId
         from    ETR_ENTRUST
 
         left join     PTL_PORTFOLIO
@@ -178,6 +179,8 @@
         on            ETR_ENTRUST_ADD.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         left join     (select ENTRUST_ID,sum(FINISH_AMT) as FINISH_AMT from ETR_FINISH_STATUS group by ENTRUST_ID) ETR_FINISH_STATUS_A
         on            ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        left join sys_user su
+        on ETR_ENTRUST.INV_MANAGER_ID=su.user_name
         INNER JOIN
         PTL_PORTFOLIO_AUTHORITY
         ON
@@ -276,7 +279,8 @@
         ETR_ENTRUST.MDATE                    mdate,
         ETR_ENTRUST.ENTRUST_AMT                entrustAmt,
         ETR_FINISH_STATUS_A.FINISH_AMT         finishAmt,
-        round(ETR_FINISH_STATUS_A.FINISH_AMT/ETR_ENTRUST.ENTRUST_AMT,2)*100 transactioncom
+        round(ETR_FINISH_STATUS_A.FINISH_AMT/ETR_ENTRUST.ENTRUST_AMT,2)*100 transactioncom,
+        su.REAL_NAME    invManagerId
         from    WFL_ETR_ENTRUST ETR_ENTRUST
 
         left join     PTL_PORTFOLIO
@@ -292,6 +296,8 @@
         on            ETR_ENTRUST_ADD.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         left join     (select ENTRUST_ID,sum(FINISH_AMT) as FINISH_AMT from ETR_FINISH_STATUS group by ENTRUST_ID) ETR_FINISH_STATUS_A
         on            ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        left join sys_user su
+        on ETR_ENTRUST.INV_MANAGER_ID=su.user_name
         INNER JOIN
         PTL_PORTFOLIO_AUTHORITY
         ON

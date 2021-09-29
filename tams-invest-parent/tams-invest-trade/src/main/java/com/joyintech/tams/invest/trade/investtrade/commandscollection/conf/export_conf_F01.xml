@@ -3,7 +3,7 @@
     <Worksheet javaBean="com.joyintech.tams.invest.trade.investtrade.commandscollection.dto.TrdCommandsCollection001Dto">
         <Row>
             <Cell order="1" name="资产代码">finprodMarketId</Cell>
-            <Cell order="2" name="资产名称">finprodName</Cell>
+            <Cell order="2" name="资产简称">finprodName</Cell>
             <Cell order="3" name="一级分类">type6Str</Cell>
             <Cell order="4" name="二级分类">type7Str</Cell>
             <Cell order="5" name="交易方向">psStr</Cell>

@@ -338,6 +338,10 @@ public class TrdRepoDurationDto extends BaseEntity {
      * 到期交付日 
      */
     private String mpayDate;
+    /**
+     * 实际占款天数
+     */
+    private String actAmtDays;
 
     /**
      * 获取 chaneFee
@@ -1340,4 +1344,11 @@ public class TrdRepoDurationDto extends BaseEntity {
 		this.mpayDate = mpayDate;
 	}
 
+    public String getActAmtDays() {
+        return actAmtDays;
+    }
+
+    public void setActAmtDays(String actAmtDays) {
+        this.actAmtDays = actAmtDays;
+    }
 }

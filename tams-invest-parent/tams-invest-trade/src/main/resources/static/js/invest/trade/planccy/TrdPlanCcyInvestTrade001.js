@@ -84,6 +84,8 @@
             ,{field:'ccy',visible:false}
             ,{field:'ccyStr', width:'10%', title: 'TrdPlanCcyInvestTrade001.ccy',sortField:"tpd.CCY"}
             ,{field:'remark', width:'20%', title: 'TrdPlanCcyInvestTrade001.remark',sortable:false}
+             ,{field:'purCfmDate', width:100, title: 'TrdPlanCcyInvestTrade001.purCfmDate',type:'date',sortField:"purCfmDate"}
+             ,{field:'counterId', width:'10%', title: 'TrdPlanCcyInvestTrade001.counterId',sortField:"counterId"}
             ,{field:'bTradeId',visible:false}
             ,{field:'workflowId',visible:false}
             ,{field:'totleTradeId',visible:false}
