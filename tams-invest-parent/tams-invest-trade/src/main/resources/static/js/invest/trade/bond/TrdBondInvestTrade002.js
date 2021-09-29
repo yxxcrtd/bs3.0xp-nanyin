@@ -2431,6 +2431,11 @@ var calculateField;
             if(tradeMarketMode==SHARES_TRADE_MARKET_01){
                 $("#refundRate_div").show();
                 $("#refundAmount_div").show();
+                if(null!=parentPageId && parentPageId=='EtrBondBiddingResultEx001' ){
+                    $("#integrateFpriceAmt").val('');
+                    $("#integrateFpriceAmt_div").hide();
+
+                }
             }
             else if(tradeMarketMode==SHARES_TRADE_MARKET_02){
                 $("#refundRate").val('');

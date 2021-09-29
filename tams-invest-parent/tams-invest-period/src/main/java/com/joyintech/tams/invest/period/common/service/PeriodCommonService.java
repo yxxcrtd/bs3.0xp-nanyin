@@ -42,17 +42,14 @@ import com.joyintech.tams.invest.period.trdbondduration.dto.TrdBondDuration002Pr
 import com.joyintech.tams.invest.period.trdbondduration.dto.TrdBondDuration003ProcessDto;
 import com.joyintech.tams.invest.period.trdbuyoutduration.dto.TrdRepoBuyoutDuration002Dto;
 import com.joyintech.tams.invest.period.trddepoduration.dto.TrdDepoDuration001Dto;
-import com.joyintech.tams.invest.period.trdfundduration.dto.TrdFundDuration001Dto;
 import com.joyintech.tams.invest.period.trdirsduration.dto.TrdIRSDuration002ProcessDto;
 import com.joyintech.tams.invest.period.trdlendduration.dto.TrdLendDuration001Dto;
 import com.joyintech.tams.invest.period.trdoptionduration.dto.OptionDurationDetailDto;
-import com.joyintech.tams.invest.period.trdplancurrduration.dto.TrdPlanCurrDuration001Dto;
 import com.joyintech.tams.invest.period.trdplanintduration.dto.TrdPlanInterestDurationProcessDto;
 import com.joyintech.tams.invest.period.trdprojduration.dto.TrdProjectDurationProcessDto;
 import com.joyintech.tams.invest.period.trdrepoduration.dto.TrdRepoDuration002Dto;
 import com.joyintech.tams.invest.period.trdseclendduration.dto.TrdSecLendDuration002Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
-import com.netflix.discovery.converters.Auto;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -863,9 +860,12 @@ public class PeriodCommonService extends BaseService {
                     param.put("finprodId",inputDto.getFinprodId());
                     List<PledgeBondInfoDto> list = creditLinesDealsMapper.findPledgeBondInfo(param);
                     if (!StringUtil.isEmptyList(list)){
-                        List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
+                        //List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
                         // 质押券面总额
-                        BigDecimal totalAmt = list.stream().map(PledgeBondInfoDto::getPledgePrin).reduce(BigDecimal.ZERO,BigDecimal::add);
+                        BigDecimal totalAmt = BigDecimal.ZERO;
+                        for (PledgeBondInfoDto item : list) {
+                            totalAmt = ArithmeticUtil.doAdd(totalAmt,ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getPledgePrin(), item.getPledgeRatio()), new BigDecimal(100), 2));
+                        }
                         // 需要扣减额度的券面总额
                         BigDecimal supAmt = list.stream().filter(item ->{
                             // 查询资产类型

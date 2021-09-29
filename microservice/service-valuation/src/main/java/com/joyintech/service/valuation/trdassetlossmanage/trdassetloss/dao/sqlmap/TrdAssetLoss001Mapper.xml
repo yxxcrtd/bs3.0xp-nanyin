@@ -47,7 +47,7 @@
 		ON C.CUSTOMER_ID = B.CUSTOMER_ID
 	  	where TRD_ASSET_LOSS.Status = #{status_init_01}
 		<if test="finprodIdList != null and finprodIdList.size()>0">
-			AND TRD_ASSET_LOSS.Sec_Id in
+			AND TRD_ASSET_LOSS.FINPROD_ID in
 			<foreach collection="finprodIdList" open="(" close=")" item="item" separator=",">
 				#{item}
 			</foreach>
@@ -131,9 +131,31 @@
 			OR (Fin_Product.Finprod_Type = #{TYPE_GUZHI_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02})))	
 	    <!-- modify by wujie on 20210525 end -->
 	</select>
+
+	<select id="getAssetInfoForLoss" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
+		select
+		Fin_Product.FINPROD_MARKET_ID secId,
+		Fin_Product.FINPROD_ID as finprodId,
+		Fin_Product.Finprod_Abbr finprodAbbr,
+		Fin_Product.FINPROD_TYPE assetType1,
+		Fin_Product.Vdate vDate,
+		Fin_Product.Mdate mDate,
+		nvl(fin_product.exe_date,#{EXEC_DATE_04}) exeDate
+		from Fin_Product /** 标的类金融产品 **/
+		where
+		(Fin_Product.FINPROD_MARKET_ID = #{finprodId})
+		<!-- modify by wujie on 20210525
+		AND (Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_GUZHI_F07},#{TYPE_TOUGUAN_F18})
+			OR (Fin_Product.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02}))) -->
+		AND (Fin_Product.Finprod_Type in (#{TYPE_GUZHI_F01},#{TYPE_GUZHI_F07})
+		OR (Fin_Product.Finprod_Type = #{TYPE_GUZHI_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02})))
+		<!-- modify by wujie on 20210525 end -->
+	</select>
+
 	<select id="getBondAssetInfo" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
 		select
-		Fin_Product.FINPROD_MARKET_ID finprodId,
+		Fin_Product.FINPROD_MARKET_ID AS secId,
+		Fin_Product.FINPROD_ID AS finprodId,
 		Fin_Product.Finprod_Abbr finprodAbbr,
 		Fin_Product.FINPROD_TYPE assetType1,
 		Fin_Product.Vdate vDate,
@@ -151,7 +173,7 @@
 			<if test="tradeId != null" >
 				TRADE_ID,
 			</if>
-			<if test="finprodId != null" >
+			<if test="secId != null" >
 				SEC_ID,
 			</if>
 			<if test="stage != null" >
@@ -219,8 +241,8 @@
 			<if test="tradeId != null" >
 				#{tradeId,jdbcType=VARCHAR},
 			</if>
-			<if test="finprodId != null" >
-				#{finprodId,jdbcType=VARCHAR},
+			<if test="secId != null" >
+				#{secId,jdbcType=VARCHAR},
 			</if>
 			<if test="stage != null" >
 				#{stage,jdbcType=VARCHAR},
@@ -319,6 +341,7 @@
 		select
 		TRD_ASSET_LOSS.VAL_DATE valDate, 			/** 行情日 **/
 		TRD_ASSET_LOSS.FINPROD_ID finprodId, 			/** 金融产品代码 **/
+		TRD_ASSET_LOSS.SEC_ID as secId,
 		NVL(Fin_Product.Finprod_Abbr,Fin_Product.Finprod_Name) finprodAbbr, 		/** 金融产品简称 **/
 		TRD_ASSET_LOSS.LOSS_TEST_TYPE lossTestType, /** 减值测算方式 **/
 		Fin_Product.Vdate vDate,  					/** 资产起息日 **/
@@ -553,6 +576,7 @@
 	<select id="selectTrdAssetLossByFinprodId" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
 		SELECT A.FINPROD_ID finprodId,
 		A.Finprod_Abbr finprodAbbr,
+		A.FINPROD_MARKET_ID as secId,
 		A.TRADE_MARKET tradeMarket,
 		A.ISSUER as issuer,
 		NVL(B.CUSTOMER_ABBR, B.CUSTOMER_NAME) AS issuerName,
@@ -570,6 +594,7 @@
 		UNION
 		SELECT A.FINPROD_ID   finprodId,
 		A.FINPROD_ID   finprodAbbr,
+		fp.FINPROD_MARKET_ID as secId,
 		A.TRADE_MARKET tradeMarket,
 		NULL           as issuer,
 		NULL           AS issuerName,
@@ -581,6 +606,7 @@
 	   	D.TYPE_18 AS assetType
 		FROM FIN_TRADE_PRODUCT A
 		LEFT JOIN FIN_PRODUCT_TYPE D ON D.FINPROD_ID = A.FINPROD_ID
+		LEFT JOIN Fin_Product fp  ON fp.FINPROD_ID = A.FINPROD_ID
 		WHERE A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
 		and A.BRANCH='0'
 	</select>

@@ -165,42 +165,16 @@
                 finprodId: $('#finprodId').val(),
                 valDate: $('#valDate').val()
             }
-            if ($('#finprodId').val() && $('#valDate').val()) {
-                Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/getAssetExerciseDate', data,
-                    function (resultObj) {
-                        if (resultObj) {
-                            if (resultObj.assetExerciseDate) {
-                                $("#assetExerciseDate").val(resultObj.assetExerciseDateStr).trigger('change');
-                            }
-                        }
-                    });
-            }
-           /* if($('#finprodId').val()){
-                Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/getAssetInfo', data,
-                    function (resultObj) {
-                        if (resultObj) {
-                            if (resultObj.assetType) {
-                                $("#assetType").val(resultObj.assetType).trigger('change');
-                            }
-                            if (resultObj.vDate) {
-                                $("#vDate").val(resultObj.vDateStr);
-                            }
-                            if (resultObj.mDate) {
-                                $("#mDate").val(resultObj.mDateStr).trigger('change');
-                            }
-
-                            if (resultObj.exeDate) {
-                                if (resultObj.exeDate === '04') {
-                                    var days1 = (Date.ofDate($("#mDate").val()) - Date.ofDate($("#valDate").val())) / (24 * 60 * 60 * 1000);
-                                    $("#peroid").val(JoyinMath.doDiv(days1, 365, 4, JoyinMath.ROUND_HALF_UP));
-                                } else {
-                                    var days2 = (Date.ofDate($("#assetExerciseDate").val()) - Date.ofDate($("#valDate").val())) / (24 * 60 * 60 * 1000);
-                                    $("#peroid").val(JoyinMath.doDiv(days2, 365, 4, JoyinMath.ROUND_HALF_UP));
-                                }
-                            }
-                        }
-                    });
-            }*/
+//            if ($('#finprodId').val() && $('#valDate').val()) {
+//                Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/getAssetExerciseDate', data,
+//                    function (resultObj) {
+//                        if (resultObj) {
+//                            if (resultObj.assetExerciseDate) {
+//                                $("#assetExerciseDate").val(resultObj.assetExerciseDateStr).trigger('change');
+//                            }
+//                        }
+//                    });
+//            }
             if ($('#finprodId').val() ) {
                 Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/selectTrdAssetLossByFinprodId', data,
                     function (resultObj) {
@@ -220,19 +194,27 @@
                             if (resultObj.tradeMarket) {
                                 $("#tradeMarket").val(resultObj.tradeMarket).trigger('change');
                             }
+                            debugger;
+                            if (resultObj.secId) {
+                                $("#secId").val(resultObj.secId).trigger('change');
+                            }
+
                             //当资产类型为债券，且资产属于含权债可选择  代偿期类型
                             if(resultObj.isRight && resultObj.isRight==='Y'){
-                                var exerciseData = {
-                                    finprodId: $('#finprodId').val()
-                                }
-                                Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/queryFinExercisePlan', exerciseData,
-                                    function (resultObj) {
-                                      if(resultObj){
-                                          if(resultObj.exerciseDate){
-                                              $("#assetExerciseDate").val(resultObj.exerciseDate);
+//                                var exerciseData = {
+//                                    finprodId: $('#finprodId').val(),
+//                                    valDate: $('#valDate').val()
+//                                }
+                                if ($('#finprodId').val() && $('#valDate').val()) {
+                                    Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/getAssetExerciseDate', data,
+                                        function (resultObj) {
+                                          if(resultObj){
+                                              if(resultObj.assetExerciseDate){
+                                                  $("#assetExerciseDate").val(resultObj.assetExerciseDateStr).trigger('change');
+                                              }
                                           }
-                                      }
                                     });
+                                 }
                                 $("#period_type").show();
                             }else{
                                 $("#assetExerciseDate").val("");
@@ -241,7 +223,6 @@
                             }
 
                             /*if(resultObj.assetType && resultObj.isRight && resultObj.assetType==='01' && resultObj.isRight==='Y'){
-                                $("#period_type").show();
                             }*/
 
                             /*if (resultObj.exeDate) {

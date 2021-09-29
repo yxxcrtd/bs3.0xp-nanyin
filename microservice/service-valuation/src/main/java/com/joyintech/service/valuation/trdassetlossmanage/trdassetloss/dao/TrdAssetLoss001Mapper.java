@@ -53,6 +53,9 @@ public interface TrdAssetLoss001Mapper {
 
     List<TrdAssetLoss001Dto> getAssetInfo(Map<String, Object> param);
 
+    List<TrdAssetLoss001Dto> getAssetInfoForLoss(Map<String, Object> param);
+
+
     int insertSelective(TrdAssetLoss001Dto record);
 
     int updateByPrimaryKeySelective(TrdAssetLoss001Dto record);

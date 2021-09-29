@@ -182,7 +182,8 @@ public class CashFlowDiscountReaderService {
                             paramCurveCode.put("graderesult", rateInfo.getRating());
                         }else if(null!=modCurveConfig.getBottomGrade()){
                             //设置兜底评级
-//                            rateInfo.setRating(modCurveConfig.getBottomGrade());
+                            rateInfo = new ViewRatingInfoDto();
+                            rateInfo.setRating(modCurveConfig.getBottomGrade());
                             paramCurveCode.put("graderesult", modCurveConfig.getBottomGrade());
                         }
                         List<String> curveCode = cashFlowDiscountMapper.getCurveCode(paramCurveCode);

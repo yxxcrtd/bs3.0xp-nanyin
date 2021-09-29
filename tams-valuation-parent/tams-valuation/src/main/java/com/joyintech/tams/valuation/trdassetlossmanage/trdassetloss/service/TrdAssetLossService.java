@@ -124,6 +124,23 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
         return result.get(0);
     }
 
+    public TrdAssetLoss001Dto getAssetInfoForLoss(Map<String, Object> param) {
+
+        List<TrdAssetLoss001Dto>  result =  restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME + "/TrdAssetLoss/getAssetInfoForLoss",
+                param, TrdAssetLoss001Dto.class);
+        if(StringUtil.isEmptyList(result)){
+            return null;
+        }
+        String tempVdate = DateUtil.format(result.get(0).getvDate());
+        String tempMdate = DateUtil.format(result.get(0).getmDate());
+        result.get(0).setvDateStr(tempVdate);
+        result.get(0).setmDateStr(tempMdate);
+        return result.get(0);
+    }
+
+
+
+
     public List<TrdAssetLoss001Dto> getBondAssetInfo(Map<String, Object> param) {
         List<TrdAssetLoss001Dto>  result =  restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME + "/TrdAssetLoss/getBondAssetInfo",
                 param, TrdAssetLoss001Dto.class);
@@ -222,7 +239,7 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
             trdAssetLoss001Dto.setRemark(new StringBuffer());
             //默认通过，若是有不通过的，在下面重新赋值
             trdAssetLoss001Dto.setCheckStatusStr(CHECK_STATUS_STR_TG);
-            //根据资产代码【0】、行情日【8】去查询资产行权日
+            /*//根据资产代码【0】、行情日【8】去查询资产行权日
             if (StringUtil.isNotEmpty(rowData.get(0)) && StringUtil.isNotEmpty(rowData.get(8))) {
                 Map<String, Object> param = new HashMap<>();
                 param.put("finprodId", rowData.get(0).toString());
@@ -231,14 +248,28 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                 if (StringUtil.isNotEmpty(model)){
                     trdAssetLoss001Dto.setAssetExerciseDate(model.getAssetExerciseDate());
                 }
-            }
+            }*/
             // 资产代码【0】
             if (StringUtil.isNotEmpty(rowData.get(0))) {
-                trdAssetLoss001Dto.setFinprodId(rowData.get(0).toString());
+
                 Map<String, Object> param = new HashMap<>();
                 param.put("finprodId", rowData.get(0).toString());
-                TrdAssetLoss001Dto assetInfo = this.getAssetInfo(param);
+//                TrdAssetLoss001Dto assetInfo = this.getAssetInfo(param);
+                TrdAssetLoss001Dto assetInfo = this.getAssetInfoForLoss(param);
                 if (StringUtil.isNotEmpty(assetInfo)) {
+                    //根据资产代码【0】、行情日【8】去查询资产行权日
+                    if (StringUtil.isNotEmpty(rowData.get(0)) && StringUtil.isNotEmpty(rowData.get(8))) {
+                        Map<String, Object> exerciseDateParam = new HashMap<>();
+                        exerciseDateParam.put("finprodId", assetInfo.getFinprodId());
+                        exerciseDateParam.put("valDate", rowData.get(8).toString());
+                        TrdAssetLoss001Dto model = this.getAssetExerciseDate(exerciseDateParam);
+                        if (StringUtil.isNotEmpty(model)){
+                            trdAssetLoss001Dto.setAssetExerciseDate(model.getAssetExerciseDate());
+                        }
+                    }
+
+                    trdAssetLoss001Dto.setFinprodId(assetInfo.getFinprodId());
+                    trdAssetLoss001Dto.setSecId(assetInfo.getSecId());
                     trdAssetLoss001Dto.setvDate(assetInfo.getvDate());
                     trdAssetLoss001Dto.setmDate(assetInfo.getmDate());
                     trdAssetLoss001Dto.setAssetType1(assetInfo.getAssetType1());
@@ -553,6 +584,7 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                     for (TrdAssetLoss001Dto model : bondAssetInfos
                     ) {
                         trdAssetLoss001Dto.setFinprodId(model.getFinprodId());
+                        trdAssetLoss001Dto.setSecId(model.getSecId());
                         trdAssetLoss001Dto.setFinprodAbbr(model.getFinprodAbbr());
                         trdAssetLoss001Dto.setAssetType1(model.getAssetType1());
                         trdAssetLoss001Dto.setvDate(model.getvDate());
@@ -566,6 +598,7 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                 if (!StringUtil.isEmptyList(bondAssetInfos) && bondAssetInfos.size() == 1){
                     TrdAssetLoss001Dto tmpLossDto = bondAssetInfos.get(0);
                     trdAssetLoss001Dto.setFinprodId(tmpLossDto.getFinprodId());
+                    trdAssetLoss001Dto.setSecId(tmpLossDto.getSecId());
                     trdAssetLoss001Dto.setFinprodAbbr(tmpLossDto.getFinprodAbbr());
                     trdAssetLoss001Dto.setAssetType1(tmpLossDto.getAssetType1());
                     trdAssetLoss001Dto.setvDate(tmpLossDto.getvDate());

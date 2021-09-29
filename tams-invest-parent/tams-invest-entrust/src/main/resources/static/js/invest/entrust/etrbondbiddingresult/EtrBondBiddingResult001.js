@@ -301,6 +301,7 @@ $(function() {
             // add by zhangrui1 start
             selArr[0].oFinprodId = result.oFinprodId;
             // add by zhangrui1 end
+            selArr[0].parentPageId=pageId;
             Joyin.dialog(JoyinUtil.getLabel("TrdBondInvestTrade002"), basePath + "invest/trade/bond/TrdBondInvestTrade002/init", "98%", "98%", selArr[0], function () {
                 table.reload();
             });
