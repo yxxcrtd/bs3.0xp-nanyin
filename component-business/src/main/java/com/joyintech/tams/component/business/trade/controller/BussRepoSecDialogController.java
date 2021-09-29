@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
@@ -54,8 +53,6 @@ public class BussRepoSecDialogController extends BaseController {
 
     @Autowired(required = false)
     private BussRepoSecService bussRepoSecService;
-    @Autowired
-    private HttpServletRequest request;
 
     @Override
     public String init(Model model) {

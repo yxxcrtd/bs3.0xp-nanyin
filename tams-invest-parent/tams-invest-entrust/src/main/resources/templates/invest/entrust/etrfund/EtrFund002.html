@@ -247,17 +247,15 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <div class="pschange">
+                                    <div id="cashT" class="form-inline-wrap pschange">
                                         <!-- placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" -->
-                                        <div class="form-inline-wrap">
-                                            <label class="layui-form-label form-lable">组合T日可用现金</label>
-                                            <div class="layui-input-inline input-inline">
-                                                <input type="text" id="proAvailableCash" name="proAvailableCash" class="layui-input form-input text-money" disabled data-moneymemory="" data-th-value="${entity?.accAvailableCash}"/>
-                                                <span class="input-right-show">元</span>
-                                            </div>
+                                        <label class="layui-form-label form-lable">组合T日可用现金</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <input type="text" id="proAvailableCash" name="proAvailableCash" class="layui-input form-input text-money" disabled data-moneymemory="" data-th-value="${entity?.accAvailableCash}"/>
+                                            <span class="input-right-show">元</span>
                                         </div>
                                     </div>
-                                    <div class="form-inline-wrap pschange">
+                                    <div id="cashT1" class="form-inline-wrap pschange">
                                         <label class="layui-form-label form-lable">组合T+1日可用现金</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="proAvailableCash1" name="proAvailableCash1" class="layui-input form-input text-money" disabled data-moneymemory=""/>
@@ -282,13 +280,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="pschange2" style="display:none">
-                                        <div class="form-inline-wrap">
-                                            <label class="layui-form-label form-lable">资产可用持仓</label>
-                                            <div class="layui-input-inline input-inline">
-                                                <input type="text" id="assetAvailablePosition" name="assetAvailablePosition" class="layui-input form-input text-money" disabled data-moneymemory=""/>
-                                                <span class="input-right-show"></span>
-                                            </div>
+                                    <div id="pschange2" class="form-inline-wrap">
+                                        <label class="layui-form-label form-lable">资产可用持仓</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <input type="text" id="assetAvailablePosition" name="assetAvailablePosition" class="layui-input form-input text-money" disabled data-moneymemory=""/>
+                                            <span class="input-right-show"></span>
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap" id="tradeMarketCash_div">

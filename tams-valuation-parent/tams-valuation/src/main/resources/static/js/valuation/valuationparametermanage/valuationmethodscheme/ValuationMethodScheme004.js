@@ -154,6 +154,9 @@ $(function () {
 				}else{
 					$("#c_priceClass").hide();
 					$("#priceClass").val("");
+				}else{
+					$("#c_priceClass").hide();
+					$("#priceClass").val("");
 				}
 			}
     };

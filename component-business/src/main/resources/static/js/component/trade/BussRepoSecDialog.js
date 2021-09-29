@@ -53,6 +53,9 @@
                 param.ignoreFlowTradeId = ignoreFlowTradeId;
                 // add by etliu 20210303 银行间上下行 end
                 param.isDzh = isDzh;
+                // add by meifaxin 20210929 银行间 start
+                param.tradePlace = tradePlace;
+                // add by meifaxin 20210929 银行间 end
                 return param;
             }
         },

@@ -16,6 +16,7 @@ import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import com.joyintech.tams.invest.common.dto.cstp.CfetsRepoDealQuotedPriceDto;
 import com.joyintech.tams.invest.common.dto.cstp.CfetsRepoPledgeBondDto;
 import com.joyintech.tams.invest.common.dto.cstp.IbuQuoteEntCrepPledgeCommonDto;
+import javafx.scene.layout.BackgroundImage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -160,14 +161,15 @@ public class CstpCommonService{
         if(StringUtil.equals(isDzh,"Y")){
             List<PtlAllocationDto> ptlAllocations = cfetsRepoDealQuotedPriceDto.getPtlAllocationList();
             //默认比例分配 尾差给交易金额最大
-            Map<String,Object> fpriceAmtTotalGroupByPtlMap = new HashMap<>();
+            //Map<String,Object> fpriceAmtTotalGroupByPtlMap = new HashMap<>();
             Map<String,Object> pledgePrinTotalByPtlMap = new HashMap<>();
             if (!StringUtil.isEmptyList(pledgeBondLists)) {
                 //交易金额按组合分组
-                Map<String, List<PtlAllocationDto>> map = ptlAllocations.stream().collect(Collectors.groupingBy(PtlAllocationDto::getPortfolioId));
+                BigDecimal fpriceAmtTotal = ptlAllocations.stream().map(PtlAllocationDto::getFpriceAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                /*Map<String, List<PtlAllocationDto>> map = ptlAllocations.stream().collect(Collectors.groupingBy(PtlAllocationDto::getPortfolioId));
                 for (Map.Entry<String, List<PtlAllocationDto>> entry : map.entrySet()) {
                     fpriceAmtTotalGroupByPtlMap.put(entry.getKey(),entry.getValue().stream().map(PtlAllocationDto::getFpriceAmt).reduce(BigDecimal.ZERO, BigDecimal::add));
-                }
+                }*/
                 //券面总额(正回购 按组合+债分组   逆回购  按债分组)
                 Map<String, List<CfetsRepoPledgeBondDto>> map2 = pledgeBondLists.stream().collect(Collectors.groupingBy((a -> StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())&&StringUtils.isEmpty(isMq)?a.getPortfolioId()+a.getFinprodId():a.getFinprodId())));
                 for (Map.Entry<String, List<CfetsRepoPledgeBondDto>> entry : map2.entrySet()) {
@@ -177,7 +179,7 @@ public class CstpCommonService{
                 Map<String, PtlAllocationDto> maxFpriceAmtMap = ptlAllocations.parallelStream().collect(Collectors.groupingBy(a -> a.getEntrustId()+a.getPortfolioId()
                         ,Collectors.collectingAndThen(Collectors.reducing((c1, c2) -> (c1.getFpriceAmt().compareTo(c2.getFpriceAmt())>=0) ? c1 : c2), Optional::get)));
                 for(PtlAllocationDto item : ptlAllocations){
-                    BigDecimal fpriceAmtTotal  = (BigDecimal) fpriceAmtTotalGroupByPtlMap.get(item.getPortfolioId());
+                    //BigDecimal fpriceAmtTotal  = (BigDecimal) fpriceAmtTotalGroupByPtlMap.get(item.getPortfolioId());
                     for(CfetsRepoPledgeBondDto item2 : pledgeBondLists){
                         if((StringUtils.equals(ps,BussinessDictCodeList.回购拆借方向_正回购.getValue())&&(StringUtils.equals(isMq,"Y")||StringUtils.equals(item.getPortfolioId(),item2.getPortfolioId())))
                         ||StringUtils.equals(ps,BussinessDictCodeList.回购拆借方向_逆回购.getValue())){
