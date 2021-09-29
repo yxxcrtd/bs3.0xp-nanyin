@@ -886,6 +886,7 @@ public class FinTenderBondTargetAssetDto extends FinProduct implements ITableRow
      */
     @Override
     @NotEmpty(fieldName="FinTenderBondTargetAsset002.finprodId",groups = {ValidateGroupEdit.class})
+    @Pattern(fieldName = "FinTenderBondTargetAsset002.finprodId",regx = "^[A-Za-z0-9]+.[A-Za-z0-9]+$",message = "FW_E_0002",groups={ValidateGroupEdit.class})
 //    @Code(fieldName = "FinTenderBondTargetAsset002.finprodId", length = 32, groups = {ValidateGroupEdit.class})
     @PrimaryKey(Field.PK_1)
     public String getFinprodMarketId(){
