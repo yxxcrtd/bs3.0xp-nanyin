@@ -19,6 +19,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrrepo.dto.EtrRepoDto;
 import com.joyintech.service.entrust.etrrepo.service.EtrRepoService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -271,5 +272,17 @@ public class EtrRepoController {
     @PostMapping("selectRepoMdate")
     public Date selectRepoMdate(@RequestBody Map<String,Object> param){
         return etrRepoService.selectRepoMdate(param);
+    }
+
+    /**
+     *
+     *
+     * @param counterId
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("judgeCounterType")
+    public String judgeCounterType(@Param("counterId") String counterId){
+        return etrRepoService.judgeCounterType(counterId);
     }
 }

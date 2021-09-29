@@ -68,11 +68,12 @@ public class TrdRepoBuyoutDuration001Controller extends BaseController {
      * 需要初始化的下拉菜单
      */
     private static final IDictCode[] DICT_CODES = new DictCode[]{
-            DictCode.金融产品类型_投管用, DictCode.画面数据状态};
+            DictCode.金融产品类型_投管用,DictCode.画面数据状态};
 
     @Override
     public String init(Model model) {
         setSelectOptionToModel(model, DICT_CODES);
+        setSelectOptionToModel(model, DictCode.回购拆借方向);
         Map<String, Object> map = RequestUtil.getPageParam();
         if(StringUtil.isNotEmpty(map.get("remType"))) {
             model.addAttribute("finprodId", (String)map.get("finprodId"));

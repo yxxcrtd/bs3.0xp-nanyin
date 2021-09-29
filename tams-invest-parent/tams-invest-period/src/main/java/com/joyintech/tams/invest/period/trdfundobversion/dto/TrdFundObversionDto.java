@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.util.IDGenerator;
@@ -300,6 +301,7 @@ public class TrdFundObversionDto extends TrdFundDurationCommonDto implements Pro
         this.remark = remark;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     public Date getConversionTime() {
         return conversionTime;
     }

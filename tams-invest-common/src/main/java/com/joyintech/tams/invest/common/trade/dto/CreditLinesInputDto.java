@@ -157,6 +157,19 @@ public class CreditLinesInputDto extends BaseEntity {
      */
     private String isSpecial;
 
+    /**
+     * 是否是基金买入
+     */
+    private String isjijinmairu;
+
+    public String getIsjijinmairu() {
+        return isjijinmairu;
+    }
+
+    public void setIsjijinmairu(String isjijinmairu) {
+        this.isjijinmairu = isjijinmairu;
+    }
+
     public String getIsSpecial() {
         return isSpecial;
     }

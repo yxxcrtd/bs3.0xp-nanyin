@@ -11,6 +11,7 @@
 package com.joyintech.tams.common.basicdata.marketdata.mstrateassetquotationinfo.controller;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +36,6 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.common.basicdata.marketdata.mstrateassetquotationinfo.dto.ComRateAssetQuotationInfo001Dto;
@@ -250,6 +247,12 @@ public class ComRateAssetQuotationInfo001Controller extends BaseController{
         } else {
             listdto = JsonUtils.json2List(datas, ComRateAssetQuotationInfo001Dto.class);
         }
+        for(ComRateAssetQuotationInfo001Dto dto:listdto){
+            //全价估值、净价估值，页面展示为（每百元），存值需要乘以100
+            dto.setValuation(ArithmeticUtil.multiply(dto.getValuation(),new BigDecimal("100")));
+            dto.setFullValuation(ArithmeticUtil.multiply(dto.getFullValuation(),new BigDecimal("100")));
+        }
+
         File outFile = mstRateAssetQuotationInfo001Service.makeFile(
                 "/com/joyintech/tams/common/basicdata/marketdata/mstrateassetquotationinfo/conf/export_conf.xml",
                 listdto);

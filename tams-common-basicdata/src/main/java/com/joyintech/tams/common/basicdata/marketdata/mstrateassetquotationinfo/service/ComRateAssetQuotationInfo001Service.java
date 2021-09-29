@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.ArithmeticUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,14 +70,25 @@ public class ComRateAssetQuotationInfo001Service extends CommonExportService<Com
         // 估值不接入finprod_type2，故用估值的金融产品类型做判断
         pageParam.put("TYPE_GUZHI_F17", DictCodeListExt1.金融产品类型_计划类资产.getValue());
         // pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
-        return restTemplate.postForPage(
+        Page<ComRateAssetQuotationInfo001Dto> pageList =  restTemplate.postForPage(
             ServiceApplication.CommonBasicDataService + "/ComRateAssetQuotationInfo/selectForPage", pageParam,
                 ComRateAssetQuotationInfo001Dto.class);
+        for(ComRateAssetQuotationInfo001Dto dto: pageList.getRoot()){
+            //全价估值、净价估值，页面展示为（每百元），存值需要乘以100
+            dto.setValuation(ArithmeticUtil.multiply(dto.getValuation(),new BigDecimal("100")));
+            dto.setFullValuation(ArithmeticUtil.multiply(dto.getFullValuation(),new BigDecimal("100")));
+        }
+
+        return pageList;
     }
 
 
     @Override
     public void doComplete(ComRateAssetQuotationInfo001Dto entity, OperationType operationType) {
+        //全价估值、净价估值，页面展示为（每百元），存值需要除以100
+        entity.setValuation(ArithmeticUtil.divide(entity.getValuation(), new BigDecimal("100"),14));
+        entity.setFullValuation(ArithmeticUtil.divide(entity.getFullValuation(), new BigDecimal("100"),14));
+
         String action = StringUtil.EMPTY;
         if (OperationType.DELETE.equals(operationType)) {
             action = "delete";

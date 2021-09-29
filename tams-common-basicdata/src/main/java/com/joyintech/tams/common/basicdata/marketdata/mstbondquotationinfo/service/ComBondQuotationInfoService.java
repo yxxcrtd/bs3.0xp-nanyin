@@ -379,6 +379,9 @@ public class ComBondQuotationInfoService extends CommonExportService<ComBondQuot
                 ComBondQuotationInfoDto.setBpyield(
                     new BigDecimal(list.get(14).trim()).divide(new BigDecimal(100)));
             }
+            if (StringUtil.isNotEmpty(list.get(15))) {
+                ComBondQuotationInfoDto.setNetvaluationExercise(new BigDecimal(list.get(15).trim()));
+            }
             // Date date = new Date();
             ComBondQuotationInfoDto.setCreateUser(CommonUtil.getUserName());
             ComBondQuotationInfoDto.setCreateDept(CommonUtil.getDeptCode());
