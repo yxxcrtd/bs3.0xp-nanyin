@@ -176,10 +176,18 @@ $(function() {
 			dataType: "json",
 			success:function(data){
 				if(data){
-					$('#sShares').val((data.sShares/1.000).toFixed(3)).trigger('change');
-					$('#cShares').val((data.cShares/1.000).toFixed(3)).trigger('change');
-					$('#lastClosePrice').val((data.closePrice/1.000).toFixed(3)).trigger('change');
-					$('#lastFactorAdj').val((data.factorAdj/1.000).toFixed(3)).trigger('change');
+					if(data.sShares) {
+						$('#sShares').val((data.sShares / 1.000).toFixed(3)).trigger('change');
+					}
+					if(data.cShares) {
+						$('#cShares').val((data.cShares / 1.000).toFixed(3)).trigger('change');
+					}
+					if(data.closePrice) {
+						$('#lastClosePrice').val((data.closePrice / 1.000).toFixed(3)).trigger('change');
+					}
+					if(data.factorAdj) {
+						$('#lastFactorAdj').val((data.factorAdj / 1.000).toFixed(3)).trigger('change');
+					}
 					modifyFactorAdj();
 				}else{
 					//取不到最近交易信息 复权因子置位1
