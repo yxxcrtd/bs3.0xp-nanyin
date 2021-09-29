@@ -31,6 +31,7 @@ import com.joyintech.tams.valuation.common.interf.base.service.common.InterfComm
 import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -304,16 +305,11 @@ public class TrdAssetLoss002Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-
-
-
-
         if(!StringUtil.isNotEmpty(dto.getTradeId())){
             String tradeId = interfCommonService !=null ? interfCommonService.getTradeid("TEDLOSS", dto.getValDate(), "A"): IDGenerator.generate();
             dto.setTradeId(tradeId);
             //dto.setStatus();
         }
-
         //新建、修改录入，存“01 手工”;导入：存“02 中债/wind接入”
         dto.setLossInputPattern(DictCodeListExt3.减值数据来源_手工.getValue());
 
@@ -329,7 +325,37 @@ public class TrdAssetLoss002Controller extends BaseController {
                 entity -> "交易代码："+entity.getTradeId()+"业务类型："+DictCodeListExt3.共通业务类型_资产减值管理.getCodeName()+"交易日："+DateUtil.format(entity.getValDate()));
 
         processParameter.setWorkFlowParameter(params);
-        String msg = trdAssetLossService.start(processParameter, dto);
+        String msg = trdAssetLossService.start(processParameter,dto);
+        return new AjaxResult(msg);
+    }
+
+    /**
+     *  页面删除
+     * @param dto 费用品种
+     * @param br br
+     * @return 删除结果
+     * @throws Exception Exception
+     */
+    @ResponseBody
+    @RequestMapping(ACTION_DELETE)
+    public AjaxResult delete(@RequestBody /*@Validated({
+            ValidateGroupDelete.class})*/ TrdAssetLoss001Dto dto, BindingResult br) throws WorkFlowException {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
+        }
+        ProcessParameter<TrdAssetLoss001Dto> processParameter = new ProcessParameter<TrdAssetLoss001Dto>();
+        WorkFlowParameter<TrdAssetLoss001Dto> params = new WorkFlowParameter<TrdAssetLoss001Dto>();
+        params.setPageId(this.getPageId());
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(TrdAssetLoss001Dto::getFinprodId);
+        params.setBusinessType(DictCodeListExt3.共通业务类型_资产减值管理.getValue());
+        // 设置流程业务说明, entity即传入的dto
+        // 业务说明：“交易代码：” + 上述取得的交易代码+“业务类型”+“交易日：”+画面.平台日
+        params.setComment(
+                entity -> "交易代码："+entity.getTradeId()+"业务类型："+DictCodeListExt3.共通业务类型_资产减值管理.getCodeName()+"交易日："+DateUtil.format(entity.getValDate()));
+        processParameter.setWorkFlowParameter(params);
+        String msg = trdAssetLossService.start(processParameter,
+                dto.getSelectedItem().toArray(new TrdAssetLoss001Dto[dto.getSelectedItem().size()]));
         return new AjaxResult(msg);
     }
 

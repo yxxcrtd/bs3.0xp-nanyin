@@ -86,7 +86,7 @@ public interface TrdAssetLoss001Mapper {
 
     int getExerciseDateCount(Map<String, Object> param);
 
-    void deleteByTradeId(String tradeId);
+    void deleteByTradeId(@Param("tradeId")String tradeId);
 
     /**
      * 根据产品代码查找市场代码

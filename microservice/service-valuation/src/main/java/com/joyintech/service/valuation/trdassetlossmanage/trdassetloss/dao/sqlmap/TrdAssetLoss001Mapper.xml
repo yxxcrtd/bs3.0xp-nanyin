@@ -625,7 +625,7 @@
     <!--根据交易编码删除交易信息-->
 	<delete id="deleteByTradeId" parameterType="java.lang.String" >
         delete from TRD_ASSET_LOSS
-        where FINPROD_ID = #{finprodId}
+        where TRADE_ID = #{tradeId}
     </delete>
 
 	<!-- 根据产品代码查找市场代码 -->
