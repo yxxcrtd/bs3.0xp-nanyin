@@ -343,14 +343,15 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
             if (StringUtil.isNotBlank(cfetsBondDealDialogueQuoteDto.getQuoteId())) {
                 map.put("quoteId", cfetsBondDealDialogueQuoteDto.getQuoteId());
             }
+            //报价本身委托完成度表登录的是券面总额  需要除以100
             BigDecimal dealedAmt = cfetsBondDealQuotedPrice002Service.queryEntrustDealedAmt(
                     map);
-            //查询一下指令本身的完成度
-            BigDecimal dealedAmt2 = cfetsBondDealQuotedPrice002Service.queryEntrustDealedAmt2(
+            //查询一下指令本身的完成度 登录的是百元券 不考慮
+            /*BigDecimal dealedAmt2 = cfetsBondDealQuotedPrice002Service.queryEntrustDealedAmt2(
                     map);
             if(null!=dealedAmt2){
-                dealedAmt = ArithmeticUtil.doAdd(dealedAmt,dealedAmt2);
-            }
+                dealedAmt = ArithmeticUtil.doAdd(ArithmeticUtil.divide(dealedAmt,new BigDecimal(100),2),dealedAmt2);
+            }*/
             //验证下流程中
             //去掉本身流程中的数据  如退回再提交
             map.put("workflowId",cfetsBondDealDialogueQuoteDto.getWorkflowId());
@@ -366,7 +367,7 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                             ArithmeticUtil.multiply(entrustNum,new BigDecimal(100)), dealedAmt),wflAmt);
                 }else{
                     avaAmt = ArithmeticUtil.subtract(ArithmeticUtil.subtract(
-                            ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getEntrustAmt(),new BigDecimal(10000)), ArithmeticUtil.multiply(dealedAmt,new BigDecimal(100))),wflAmt);
+                            ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getEntrustAmt(),new BigDecimal(10000)), dealedAmt),wflAmt);
                 }
             }
             if (ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(), new BigDecimal(10000)).compareTo(avaAmt) > 0) {

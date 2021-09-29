@@ -105,10 +105,9 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
                         Map<String, Object> param = new HashMap<>();
                         param.put("entrustId", cfetsBondDealRequestQuote.getEntrustId());
                         param.put("quoteId", cfetsBondDealRequestQuoteDto.getQuoteId());
-                        //先处理单组合
-                        BigDecimal wflEntrustDealedAmt = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
                         //去掉本身流程中的数据  如退回再提交
                         param.put("workflowId",cfetsBondDealRequestQuoteDto.getWorkflowId());
+                        BigDecimal wflEntrustDealedAmt = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
                         BigDecimal wflAmt = null==wflEntrustDealedAmt?BigDecimal.ZERO:ArithmeticUtil.divide(wflEntrustDealedAmt,new BigDecimal(10000),2);
                         if (!StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustAvaAmt"), "02")){
                             if(cfetsBondDealRequestQuote.getAvaNum().compareTo(ArithmeticUtil.subtract(cfetsBondDealRequestQuote.getEntrustAvaNum(),wflAmt))>0){
