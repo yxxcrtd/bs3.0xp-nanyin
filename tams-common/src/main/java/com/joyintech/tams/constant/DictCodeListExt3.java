@@ -111,8 +111,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 
     // add by leipeng 20191123
     资产_负债类别_公募和私募基金(DictCode.资产_负债类别,"L01","公募基金/私募基金"),
-    
-    
+
+
 	//added by shaohuchen 2019/11/23 start
 	人行资产一级分类_现金(DictCode.人行资产一级分类,"P01","现金"),
 	人行资产一级分类_存款(DictCode.人行资产一级分类,"P02","存款"),
@@ -127,7 +127,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 	人行资产一级分类_应收账款(DictCode.人行资产一级分类,"P11","应收账款"),
 	人行资产一级分类_应付账款(DictCode.人行资产一级分类,"P12","应付账款"),
 	人行资产一级分类_其他负债(DictCode.人行资产一级分类,"P13","其他负债"),
-	
+
 	人行资产二级分类_境内存款(DictCode.人行资产二级分类,"C01","境内存款"),
 	人行资产二级分类_境外存款(DictCode.人行资产二级分类,"C02","境外存款"),
 	人行资产二级分类_非金融资产(DictCode.人行资产二级分类,"F01","非金融资产"),
@@ -161,7 +161,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 	人行资产二级分类_其他股权(DictCode.人行资产二级分类,"T03","其他股权"),
 	人行资产二级分类_境外股权(DictCode.人行资产二级分类,"T04","境外股权"),
 	人行资产二级分类_现金(DictCode.人行资产二级分类,"X01","现金"),
-	
+
 	人行资产三级分类_境内存款(DictCode.人行资产三级分类,"C01","境内存款"),
 	人行资产三级分类_境外存款(DictCode.人行资产三级分类,"C02","境外存款"),
 	人行资产三级分类_非金融资产(DictCode.人行资产三级分类,"F01","非金融资产"),
@@ -276,12 +276,12 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     展示维度_周(DictCode.展示维度,"02","周"),
     展示维度_月(DictCode.展示维度,"03","月"),
     展示维度_短期(DictCode.展示维度,"04","短期"),
-    
+
     人行产品运作模式_开放式净值型(DictCode.人行产品运作模式,"2","开放式净值型"),
     人行产品运作模式_开放式非净值型(DictCode.人行产品运作模式,"3","开放式非净值型"),
     人行产品运作模式_封闭式净值型(DictCode.人行产品运作模式,"4","封闭式净值型"),
     人行产品运作模式_封闭式非净值型(DictCode.人行产品运作模式,"5","封闭式非净值型"),
-    
+
     人行客户类型_单位(DictCode.人行客户类型,"1","单位"),
     人行客户类型_个人(DictCode.人行客户类型,"2","个人"),
     人行客户类型_单位及个人(DictCode.人行客户类型,"3","单位及个人"),
@@ -622,7 +622,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     结构类型_双向鲨鱼鳍(DictCode.结构类型,"05","双向鲨鱼鳍"),
     期权费支付类型_先付期权费(DictCode.期权费支付类型,"01","先付期权费"),
     期权费支付类型_后付期权费(DictCode.期权费支付类型,"02","后付期权费"),
-    
+
     共通业务类型_基金账户管理(DictCode.共通业务类型,"MST25","基金账户管理"),
     证券账户类型_证券账户(DictCode.证券账户类型,"SEC","证券账户"),
     证券账户类型_基金账户(DictCode.证券账户类型,"FUND","基金账户"),
@@ -675,11 +675,11 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     调整策略_按比例分配(DictCode.调整策略,"01","按比例分配"),
     调整策略_价格优先分配(DictCode.调整策略,"02","价格优先分配"),
     /**
-     * 
+     *
      */
     行内资产五级分类_上市银行优先股(DictCode.行内资产五级分类,"142","上市银行优先股"),
     增值税资产分类_场外期权(DictCode.增值税资产分类,"P01","场外期权"),
-    
+
     /**产品风险评级 add by shaohuchen 2020-01-20 start**/
 	产品风险评级_谨慎型(DictCode.产品风险评级, "01", "PR1（谨慎型）"),
 	产品风险评级_稳健型(DictCode.产品风险评级, "02", "PR2（稳健型）"),
@@ -691,12 +691,12 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     债券借贷费用损益计入方式_计入投资收益(DictCode.债券借贷费用损益计入方式,"01","计入投资收益"),
     债券借贷费用损益计入方式_计入费用支出(DictCode.债券借贷费用损益计入方式,"02","计入费用支出"),
     /**债券借贷费用损益计入方式 add by yanya 2020-01-22 end**/
-    
+
     /**费用交易管理 	20200205 **/
     共通业务类型_费用交易管理(DictCode.共通业务类型,"FEETRADE","费用交易管理"),
-    
+
     计息基础_30U_360(DictCode.计息基础,"30U/360","330/360 US"),
-    
+
     /** add by 谈旋 2020-03-05 **/
     金融产品类型_券商集合计划(DictCode.金融产品类型,"F55","券商集合计划"),
     共通业务类型_产品信息管理(DictCode.共通业务类型,"V28","产品信息管理"),
@@ -715,7 +715,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
      * 生僻字类型_生僻字
      */
     生僻字类型_生僻字(DictCode.生僻字类型,"02","生僻字"),
-    
+
     报送处理状态_警告(DictCode.报送处理状态,"05","警告"),
 
     平安业务类型_期权买入(DictCode.平安业务类型,"145","期权买入"),
@@ -792,9 +792,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     指标类型代码_产品分析综合指标(DictCode.指标类型代码,"04","产品分析综合指标"),
     指标类型代码_绩效评价(DictCode.指标类型代码,"05","绩效评价"),
     指标类型代码_盈亏指标(DictCode.指标类型代码,"06","盈亏指标"),
-    指标类型代码_费用指标(DictCode.指标类型代码,"07","费用指标"), 
+    指标类型代码_费用指标(DictCode.指标类型代码,"07","费用指标"),
     指标类型代码_产品表现分析(DictCode.菜单指标类型代码,"02","产品表现分析"),
-    
+
     联社数据权限模式_查询(DictCode.联社数据权限模式,"01","查询"),
 
     联社数据权限模式_修改及删除(DictCode.联社数据权限模式,"02","修改及删除"),
@@ -812,7 +812,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     中债评级类型_次级债券(DictCode.中债评级类型, "02", "评级AA-级以上"),
     中债评级类型_地方债(DictCode.中债评级类型, "03", "评级AA-级以下"),
     中债评级类型_短期融资券(DictCode.中债评级类型, "04", "无评级"),
-    
+
     /**
      * 分录类型_正常记账
      */
@@ -1092,7 +1092,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
      */
     账户性质_银行账户(DictCode.账户性质,"01","银行账户"),
     账户性质_非银行账户(DictCode.账户性质,"02","非银行账户"),
-	
+
     /**
      * add by yzg 20210411
      */
@@ -1119,7 +1119,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     交易方向_清理核销(DictCode.交易方向,"T75","清理核销"),
     交易方向_其他应收款本金清理核销(DictCode.交易方向,"T76","其他应收款本金-清理核销"),
     交易方向_其他应收款利息清理核销(DictCode.交易方向,"T77","其他应收款利息-清理核销"),
-    
+
     //add by yzg sppi测试状态
     SPPI测试状态_未测试(DictCode.SPPI测试状态,"0","未测试"),
     SPPI测试状态_测试中(DictCode.SPPI测试状态,"1","测试中"),
@@ -1430,7 +1430,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     /** add by yanya on 20210309 添加现金流一级类型-行权 start**/
     现金流一级类型_行权(DictCode.现金流一级类型,"05","行权"),
     /** add by yanya on 20210309 添加现金流一级类型-行权 end**/
-    
+
     //add by yzg 20210422 start
     佣金计算方式_按证券代码汇总(DictCode.佣金计算方式, "01", "按证券代码汇总"),
     佣金计算方式_按成交编号计算(DictCode.佣金计算方式, "02", "按成交编号计算"),
@@ -1441,12 +1441,12 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     //add by yzg 20210422 end
     /** add by yanya on 20210316 增加一次性费用赎回费（产品留存）**/
     一次性费用类型_赎回费_产品留存(DictCode.一次性费用类型, "B16", "赎回费（产品留存）"),
-	
+
 	/**add by yanya on 20201229 增加辅助工具类科目变更处理方式 start**/
     科目号变更处理方式_默认(DictCode.科目号变更处理方式,"01","默认"),
     科目号变更处理方式_批量(DictCode.科目号变更处理方式,"02","批量"),
     /**add by yanya on 20201229 增加辅助工具类科目变更处理方式 end**/
-	
+
 	/** add by tanxuan on 20210315 多级法人权限控制改造 start**/
     共通业务类型_拆借类资产(DictCode.共通业务类型,"V33","拆借类资产"),
     共通业务类型_回购类资产(DictCode.共通业务类型,"V34","回购类资产"),
@@ -1462,7 +1462,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
      /** add by tanxuan on 20210318 新增功能费用预提配置 start**/
     共通业务类型_预提费用配置(DictCode.共通业务类型,"V36","预提费用配置"),
     /** add by tanxuan on 20210318 新增功能费用预提配置 end**/
-	
+
 	估值数据来源_手工(DictCode.估值数据来源,"01","手工"),
     估值数据来源_Wind(DictCode.估值数据来源,"02","Wind"),
     估值数据来源_资管系统(DictCode.估值数据来源,"03","资管系统"),
@@ -1562,7 +1562,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     兜底评级_AA(DictCode.系统参数兜底评级,"02","兜底评级_AA"),
     兜底评级_AA_MINUS(DictCode.系统参数兜底评级,"01","兜底评级_AA-"),
 
-    
+
     //20210922 从DictCodeList迁移过来  by yflv start
     共通业务类型_资产要素信息维护(DictCode.共通业务类型,"MST26","资产要素信息维护"),
 	共通业务类型_资产基本信息维护(DictCode.共通业务类型,"SVR01","资产基本信息维护"),
@@ -1574,7 +1574,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     估值市价_外管局(DictCode.估值市价, "10", "外管局"),
     估值市价_央行(DictCode.估值市价, "11", "央行"),
     估值市价_外汇交易中心(DictCode.估值市价, "12", "外汇交易中心"),
-
+    录入方式_模型生成(DictCode.录入方式,"07","模型"),
 
 
     ;
