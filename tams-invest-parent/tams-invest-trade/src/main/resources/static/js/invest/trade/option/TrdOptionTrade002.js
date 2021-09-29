@@ -376,6 +376,13 @@ $(function() {
                 updateCash();
                 if(entrustId != ''){
                     if(etrEntrust){
+                        if(etrEntrust.counterId){
+                            Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/TrdInvestPersonInfo002/selectCounterId?'+"initValue="+etrEntrust.counterId), {initValue:etrEntrust.counterId}, function (result) {
+                                if(result&&result.root&&result.root[0]){
+                                    etrEntrust.innerTrade= result.root[0].object
+                                }
+                            },false)
+                        }
                         window.TrdInvestPersonInfo002['trdInvestPersonInfo'].setEntrust(function () {
                             return etrEntrust;
                         });
