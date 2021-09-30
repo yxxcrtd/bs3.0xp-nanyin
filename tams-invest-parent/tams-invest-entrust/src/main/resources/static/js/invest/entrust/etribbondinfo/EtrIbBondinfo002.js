@@ -81,7 +81,7 @@
      */
     function getSearchParams() {
         var object = $.serializeToObject("#searchForm");
-        object.entrustNum = object.entrustNum * 10000; //页面单位是万元
+        // object.entrustNum = object.entrustNum * 10000; //页面单位是万元
         return object;
     }
 
