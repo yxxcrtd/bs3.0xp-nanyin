@@ -158,7 +158,7 @@ public class EtrInvestBondInfoValidator implements EtrCommonValidator {
             }
             BigDecimal entrustNum = dto.getEntrustNum();
 //            券面总额除以100等于数量
-            entrustNum = ArithmeticUtil.divide(entrustNum,100,2);
+            entrustNum = ArithmeticUtil.divide(entrustNum,100,4);
             String ps = dto.getPs();
             if (!etrInvestBondInfoService.isRight(dto.getFinprodId())
             		&& (StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dto.getPs())
