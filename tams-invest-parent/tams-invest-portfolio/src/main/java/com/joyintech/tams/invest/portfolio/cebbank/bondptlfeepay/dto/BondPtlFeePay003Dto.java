@@ -1,5 +1,5 @@
 
-package com.joyintech.tams.cebbank.bondptlfeepay.dto;
+package com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
