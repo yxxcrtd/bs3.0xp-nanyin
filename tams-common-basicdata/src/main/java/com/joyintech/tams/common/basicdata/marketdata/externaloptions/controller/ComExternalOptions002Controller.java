@@ -112,7 +112,8 @@ public class ComExternalOptions002Controller extends BaseController {
                 }
                 map.put("branch", 0);
                 ComExternalOptions002Dto dateCheckDto = comExternalOptions002Service.dateCheck(map);
-                if (dto.getValDate().compareTo(dateCheckDto.getVdate()) < 0 || dto.getValDate().compareTo(dateCheckDto.getMdate()) >= 0) {
+                if (StringUtil.isNotEmpty(dateCheckDto)&&
+                        (dto.getValDate().compareTo(dateCheckDto.getVdate()) < 0 || dto.getValDate().compareTo(dateCheckDto.getMdate()) >= 0)) {
                     return new AjaxResult("估值日必须介于交易起息日(含)和到期日（不含）之间", MessageType.错误消息);
                 }
             }
