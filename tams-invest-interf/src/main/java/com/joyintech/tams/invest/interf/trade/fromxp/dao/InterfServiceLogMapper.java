@@ -48,6 +48,11 @@ public interface InterfServiceLogMapper {
     int updateInterfServiceLogStatusByStatusAndId(Map<String,Object> param);
     
     /**
+     * 更新接口服务日志
+     */
+    int updateInterfServiceLog(InterfServiceLogDto interfServiceLogDto);
+    
+    /**
 	     *查询满足条件的接口服务配置
 	* @param param
 	* @return

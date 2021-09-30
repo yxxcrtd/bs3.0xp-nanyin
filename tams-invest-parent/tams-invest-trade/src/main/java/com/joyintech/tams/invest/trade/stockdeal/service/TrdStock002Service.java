@@ -468,6 +468,7 @@ public class TrdStock002Service extends BaseService<TrdStockDto> implements Base
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
         BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
+        entity.setBusiType("TRD55");
         baseTradeProductDealDto.setTrdProductDeal(entity);
         baseTradeProductDealDto.setTrdProductDealAdd(entity.getTrdProductDealAdd());
         if (!StringUtil.isEmptyList(entity.getBussTrdTransferOrder())) {

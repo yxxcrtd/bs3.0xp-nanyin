@@ -143,7 +143,7 @@ public class RateInfoCommonService {
                     // 主体取对应发行人是否含有金融牌照
                     viewRatingInfoIssuer.setIsFinLicence(modAssetInfoDto.getIssueFinLicence());
                 }
-                resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoSec,viewRatingInfoIssuer);
+                resultDto =  impairmentCalculationCommonService.minRating(viewRatingInfoSec,viewRatingInfoIssuer);
                 return resultDto;
             }else{
                 logger.warn("评级类型不支持，无法查询评级信息.资产代码为："+modAssetInfoDto.getFinprodId()+"，评级类型为："+otype);
@@ -214,7 +214,7 @@ public class RateInfoCommonService {
                 ocode=modAssetInfoDto.getSponsor();
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoSponsor = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
-                resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoIssuer,viewRatingInfoFinancier,viewRatingInfoSponsor);
+                resultDto =  impairmentCalculationCommonService.minRating(viewRatingInfoIssuer,viewRatingInfoFinancier,viewRatingInfoSponsor);
                 if(resultDto == null){
                     return null;
                 }
