@@ -16,7 +16,6 @@
 		 PARAM_VALUE,
 		 CREATE_DEPT
 		FROM SYS_PARA
-		WHERE SYSTEM_CODE = 'INF'
 	</select>
 	<select id="selectParaOne" resultMap="resultMap" parameterType="com.joyintech.service.riskrdsinf.cache.entity.SysParaKey">
 		SELECT
