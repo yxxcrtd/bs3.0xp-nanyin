@@ -1,7 +1,7 @@
 package com.joyintech.tams.invest.interf.trade.fromxp.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,6 +65,13 @@ public class InterfServiceLogService extends BaseService<InterfServiceLogDto> {
     }
 	
 	/**
+     * 更新接口服务日志
+     */
+	public int updateInterfServiceLog(InterfServiceLogDto interfServiceLogDto) {
+		return interfServiceLogMapper.updateInterfServiceLog(interfServiceLogDto);
+	}
+	
+	/**
 	 * 获取可处理的接口服务日志
 	 * @param interfSystem
 	 * @return
@@ -77,13 +84,16 @@ public class InterfServiceLogService extends BaseService<InterfServiceLogDto> {
 		where.setInterfStatus(Constants.INTERF_STATUS_NEW);
 		List<InterfServiceLogDto> interfServiceLogDtoList = this.searchInterfServiceLog(where);
 		for (InterfServiceLogDto interfServiceLogDto : interfServiceLogDtoList) {
-			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("interfSystem", interfSystem);
-			param.put("interfType", Constants.INTERF_TYPE_RECEIVE);
-			param.put("oldStatus", Constants.INTERF_STATUS_NEW);
-			param.put("newStatus", Constants.INTERF_STATUS_PROCESS);
-			param.put("id", interfServiceLogDto.getId());
-			int result = this.updateInterfServiceLogStatusByStatusAndId(param);
+//			Map<String, Object> param = new HashMap<String, Object>();
+//			param.put("interfSystem", interfSystem);
+//			param.put("interfType", Constants.INTERF_TYPE_RECEIVE);
+//			param.put("oldStatus", Constants.INTERF_STATUS_NEW);
+//			param.put("newStatus", Constants.INTERF_STATUS_PROCESS);
+//			param.put("id", interfServiceLogDto.getId());
+//			int result = this.updateInterfServiceLogStatusByStatusAndId(param);
+			interfServiceLogDto.setNewStatus(Constants.INTERF_STATUS_PROCESS);
+			interfServiceLogDto.setInterfStatus(Constants.INTERF_STATUS_NEW);
+			int result = this.updateInterfServiceLog(interfServiceLogDto);
 			if (result >= 1) {
 				runableLogList.add(interfServiceLogDto);
 			}
@@ -100,6 +110,10 @@ public class InterfServiceLogService extends BaseService<InterfServiceLogDto> {
     	try {
         	for(InterfServiceLogDto interfServiceLogDto:interfServiceLogDtoList) {
         		if(StringUtil.isEmpty(interfServiceLogDto.getInterfCode())) {
+        			interfServiceLogDto.setNewStatus(Constants.INTERF_STATUS_FAIL);
+        			interfServiceLogDto.setInterfStatus(Constants.INTERF_STATUS_PROCESS);
+        			interfServiceLogDto.setExecuteInfo("接口编码为空，不可调用业务系统");
+        			this.updateInterfServiceLog(interfServiceLogDto);
         			logger.warn("接口编码为空，不可调用业务系统，对象：{}",interfServiceLogDto.toString());
         			continue;
         		}
@@ -113,6 +127,24 @@ public class InterfServiceLogService extends BaseService<InterfServiceLogDto> {
 		}
 	}
 	
+	/**
+	 * 判断缓存是否过期
+	 * @param date
+	 * @return
+	 */
+	private boolean cacheInvalid(Date date) {
+		if(date==null) {
+			return true;
+		}
+		Date cacheTime = new Date(date.getTime() + 60*1000);
+		Date nowTime = new Date();
+		if(nowTime.after(cacheTime)) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
 	private class RunTask implements Runnable {
     	private InterfServiceLogDto interfServiceLogDto;
     	public RunTask(InterfServiceLogDto interfServiceLogDto) {
@@ -123,7 +155,7 @@ public class InterfServiceLogService extends BaseService<InterfServiceLogDto> {
 			try {
 				logger.debug("接口日志对象信息:{}",interfServiceLogDto.toString());
 				InterfServiceConfigDto interfServiceConfigDto = CONFIG_MAP.get(interfServiceLogDto.getInterfCode());
-				if(interfServiceConfigDto==null) {
+				if(interfServiceConfigDto==null || cacheInvalid(interfServiceConfigDto.getUpdateTime())) {
 					InterfServiceConfigDto where = new InterfServiceConfigDto();
 					where.setInterfCode(interfServiceLogDto.getInterfCode());
 					where.setInterfSystem(interfServiceLogDto.getInterfSystem());
@@ -131,16 +163,26 @@ public class InterfServiceLogService extends BaseService<InterfServiceLogDto> {
 					where.setInterfType(Constants.INTERF_TYPE_RECEIVE);
 					List<InterfServiceConfigDto> interfServiceConfigDtoList = interfServiceLogMapper.searchInterfServiceConfig(where);
 					if(interfServiceConfigDtoList==null || interfServiceConfigDtoList.size()<=0) {
-						logger.warn("接口编码:{}，没有配置业务处理映射关系或映射关系不可用",interfServiceLogDto.getInterfCode());
+						interfServiceLogDto.setNewStatus(Constants.INTERF_STATUS_FAIL);
+						interfServiceLogDto.setInterfStatus(Constants.INTERF_STATUS_PROCESS);
+						interfServiceLogDto.setExecuteInfo("接口编码:"+interfServiceLogDto.getInterfCode()+"，没有添加接口服务配置或接口服务配置不可用");
+						updateInterfServiceLog(interfServiceLogDto);
+						logger.warn("接口编码:{}，没有添加接口服务配置或接口服务配置不可用",interfServiceLogDto.getInterfCode());
 						return ;
 					}
 					interfServiceConfigDto = interfServiceConfigDtoList.get(0);
+					interfServiceConfigDto.setUpdateTime(new Date());
 					CONFIG_MAP.put(interfServiceLogDto.getInterfCode(),interfServiceConfigDto);
+					
 				}
 				String serviceName = interfServiceConfigDto.getBusinessService();
 				String methodName = interfServiceConfigDto.getBusinessMethod();
 				if(StringUtil.isEmpty(serviceName)) {
-					logger.warn("接口配置:{}，没有配置业务系统服务名",interfServiceConfigDto.getInterfCode());
+					interfServiceLogDto.setNewStatus(Constants.INTERF_STATUS_FAIL);
+					interfServiceLogDto.setInterfStatus(Constants.INTERF_STATUS_PROCESS);
+					interfServiceLogDto.setExecuteInfo("接口服务配置:"+interfServiceConfigDto.getInterfCode()+"，没有配置业务系统服务名");
+					updateInterfServiceLog(interfServiceLogDto);
+					logger.warn("接口服务配置:{}，没有配置业务系统服务名",interfServiceConfigDto.getInterfCode());
 					return ;
 				}
 				if(StringUtil.isEmpty(methodName)) {
