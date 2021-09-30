@@ -1109,7 +1109,7 @@
             }
         });
         // 交易金额联动
-        $('#tradeAmt').change(function() {
+        $('body').on('change', '#tradeAmt', function() {
             var tradeAmt = $('#tradeAmt').val();
             if (isNotNull(tradeAmt)&&isNotNull(sumRegistShare)) {
                 var assetType = $("#assetType").val();
