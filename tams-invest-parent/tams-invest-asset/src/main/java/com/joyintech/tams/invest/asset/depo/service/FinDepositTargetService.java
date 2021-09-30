@@ -271,6 +271,7 @@ public class FinDepositTargetService extends CommonExportService<FinDepositTarge
         // 金融产品附属表entity
         FinProductAdd finProductAdd = new FinProductAdd();
         BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
+        finProductAdd.setIsInadvance(dto.getIsInAdvance());
         //----add by jjpei 20190727 添加投资性质----start----
         finProductAdd.setInvestNature(DictCodeList.投资性质_固定收益类.getValue());
         //----add by jjpei 20190727 添加投资性质----end----
