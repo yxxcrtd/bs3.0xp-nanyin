@@ -269,17 +269,20 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         }
         // 委托操作类型 = “关闭”
         if (DictCodeListExt1.委托操作类型_关闭.getValue().equals(delegateOperationType)) {
+
             // 输入.委托关闭方式 = “人工”并且投资委托信息dto.委托指令Entity.委托状态不是“已退回”
             if (DictCodeListExt1.委托关闭方式_人工.getValue().equals(delegateCloseWay)) {
-                if (!(DictCodeList.委托状态_已退回.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
-                      || DictCodeList.委托状态_已接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
-                      || DictCodeList.委托状态_已撤回.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus()))) {
-                    errorList.add(new ValidMessage(
-                        // “已退回”
-                        this.getMessage("ETR_E_0006",
-                            this.getMessage("BaseEtrInvestInfoServiceImpl.hasReturned") + "/"
-                                                      + this.getMessage("BaseEtrInvestInfoServiceImpl.hasReceive") + "/"
-                                                      + this.getMessage("BaseEtrInvestInfoServiceImpl.hasWithdrawn"))));
+                if (etrInvestInfoDto.getEtrEntrust() != null) {
+                    if (!(DictCodeList.委托状态_已退回.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
+                            || DictCodeList.委托状态_已接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
+                            || DictCodeList.委托状态_已撤回.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus()))) {
+                        errorList.add(new ValidMessage(
+                                // “已退回”
+                                this.getMessage("ETR_E_0006",
+                                        this.getMessage("BaseEtrInvestInfoServiceImpl.hasReturned") + "/"
+                                                + this.getMessage("BaseEtrInvestInfoServiceImpl.hasReceive") + "/"
+                                                + this.getMessage("BaseEtrInvestInfoServiceImpl.hasWithdrawn"))));
+                    }
                 }
             }
             // 输入.委托关闭方式 = “自动”
