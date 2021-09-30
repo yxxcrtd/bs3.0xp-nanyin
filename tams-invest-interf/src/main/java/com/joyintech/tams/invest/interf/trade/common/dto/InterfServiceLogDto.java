@@ -46,6 +46,11 @@ public class InterfServiceLogDto extends BaseEntity{
      *接口状态(1:新建,2:处理中,3:处理成功,4:处理失败)
      */
     private Integer interfStatus;
+    
+    /**
+     *更新的接口状态(1:新建,2:处理中,3:处理成功,4:处理失败)
+     */
+    private Integer newStatus;
 
     /**
      * 接口消息体
@@ -132,6 +137,14 @@ public class InterfServiceLogDto extends BaseEntity{
 
 	public void setExecuteInfo(String executeInfo) {
 		this.executeInfo = executeInfo;
+	}
+
+	public Integer getNewStatus() {
+		return newStatus;
+	}
+
+	public void setNewStatus(Integer newStatus) {
+		this.newStatus = newStatus;
 	}
 
 	@Override

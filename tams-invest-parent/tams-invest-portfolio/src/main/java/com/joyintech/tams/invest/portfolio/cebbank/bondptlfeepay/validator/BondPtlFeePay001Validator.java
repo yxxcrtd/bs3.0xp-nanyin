@@ -1,12 +1,12 @@
 
-package com.joyintech.tams.cebbank.bondptlfeepay.validator;
+package com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.validator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.joyintech.tams.cebbank.bondptlfeepay.dto.BondPtlFeePay001Dto;
-import com.joyintech.tams.cebbank.bondptlfeepay.service.BondPtlFeePay001Service;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.dto.BondPtlFeePay001Dto;
+import com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.service.BondPtlFeePay001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -33,7 +33,7 @@
 							data.mdate = data.mdateStr;
 							data.pageModel = PAGE_MODEL_REFERENCE;
 							Joyin.dialog("证券组合费支付查看",
-											JoyinUtil.getRealPath("cebbank/bondptlfeepay/BondPtlFeePay002/init"),
+											JoyinUtil.getRealPath("invest/portfolio/cebbank/bondptlfeepay/BondPtlFeePay002/init"),
 											"98%", "95%", data, function() {
 												table.reload();
 											});
@@ -92,7 +92,7 @@
 	 */
 	var openNew = function() {
 		Joyin.dialog("证券组合费支付新建",
-				basePath + "cebbank/bondptlfeepay/BondPtlFeePay002/init",
+				basePath + "invest/portfolio/cebbank/bondptlfeepay/BondPtlFeePay002/init",
                 "98%", "95%",{pageModel : PAGE_MODEL_NEW, confirmFlag : 'new'},function(){table.reload();}
         );
 	}
@@ -119,14 +119,14 @@
         		var data = selArr[0];
         		data.operateType = 'revoke';
         		data.pageModel = PAGE_MODEL_REFERENCE;
-                Joyin.ajaxJson(basePath + 'cebbank/bondptlfeepay/BondPtlFeePay001/check', data, function(result) {
+                Joyin.ajaxJson(basePath + 'invest/portfolio/cebbank/bondptlfeepay/BondPtlFeePay001/check', data, function(result) {
                 	Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
                     result = result.replace(/\s+/g,"");
                     if (!result) {
                         result = '无';
                     }
                         data.revokeReason = result;
-                        WorkFlow.doDeleteList(basePath + 'cebbank/bondptlfeepay/BondPtlFeePay001/doRevoke', data, "BondPtlFeePay001_btn_revoke", "BondPtlFeePay002");
+                        WorkFlow.doDeleteList(basePath + 'invest/portfolio/cebbank/bondptlfeepay/BondPtlFeePay001/doRevoke', data, "BondPtlFeePay001_btn_revoke", "BondPtlFeePay002");
                     });
                 });
             }else{

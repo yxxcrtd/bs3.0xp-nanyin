@@ -54,6 +54,23 @@
 			where INTERF_SYSTEM=#{interfSystem,jdbcType=VARCHAR} and ID=#{id,jdbcType=VARCHAR} and INTERF_STATUS=#{oldStatus,jdbcType=VARCHAR} and INTERF_TYPE=#{interfType,jdbcType=VARCHAR}
 	</update>
 	
+	<!--  更新接口服务日志 -->
+	<update id="updateInterfServiceLog" parameterType="java.util.Map">
+        update INTERF_SERVICE_LOG
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="newStatus != null and newStatus != ''">INTERF_STATUS = #{newStatus,jdbcType=VARCHAR},</if>
+            <if test="interfRemark != null and interfRemark != ''">INTERF_REMARK = #{interfRemark},</if>
+            <if test="executeInfo != null and executeInfo != ''">EXECUTE_INFO = #{executeInfo},</if>
+        </trim>
+        <where>  
+            <if test="id != null  and id != ''"> and ID = #{id,jdbcType=VARCHAR}</if>
+            <if test="interfCode != null  and interfCode != ''"> and INTERF_CODE = #{interfCode,jdbcType=VARCHAR} </if>
+            <if test="interfType != null  and interfType != ''"> and INTERF_TYPE = #{interfType,jdbcType=VARCHAR} </if>
+            <if test="interfSystem != null  and interfSystem != ''"> and INTERF_SYSTEM = #{interfSystem,jdbcType=VARCHAR} </if>
+            <if test="interfStatus != null  and interfStatus != ''"> and INTERF_STATUS = #{interfStatus,jdbcType=VARCHAR} </if>
+        </where>
+	</update>
+	
 	<!-- 查询满足条件的接口服务配置 -->
 	<select id="searchInterfServiceConfig" resultMap="InterfServiceConfigResult" parameterType="com.joyintech.tams.invest.interf.trade.common.dto.InterfServiceConfigDto">
 		select INTERF_CODE,INTERF_NAME,INTERF_TYPE,INTERF_SYSTEM,INTERF_STATUS,INTERF_REMARK,BUSINESS_SERVICE,BUSINESS_METHOD,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME

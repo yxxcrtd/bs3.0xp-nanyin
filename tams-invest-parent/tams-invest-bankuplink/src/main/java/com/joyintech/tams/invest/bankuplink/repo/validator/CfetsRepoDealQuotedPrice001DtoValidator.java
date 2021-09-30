@@ -97,6 +97,10 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
         if (dto.getTerm() <= 0) {
             validList.add(new ValidMessage("term", this.getMessage("CFETS_COMMON_R_018")));
         }
+        // 校验证券账户
+        if (!StringUtil.equals(isDzh,"Y") && StringUtil.isEmpty(dto.getSecAcctId())) {
+            validList.add(new ValidMessage("secAcctId", this.getMessage("CFETS_COMMON_R_037")));
+        }
         //多组合check
         if(StringUtil.equals(isDzh,"Y")){
             List<PtlAllocationDto> ptlAllocations = dto.getPtlAllocationList();
@@ -342,7 +346,7 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
                         validList.add(new ValidMessage(this.getMessage("组合没有挂对应证券账户,无法提交!")));
                         return validList;
                     }
-                    if(!StringUtil.equals(dto.getSecAcctId(),secAcctId)){
+                    if(!StringUtil.equals(isDzh,"Y") && !StringUtil.isEmpty(dto.getSecAcctId()) && !StringUtil.equals(dto.getSecAcctId(),secAcctId)){
                         validList.add(new ValidMessage(this.getMessage("资产登记托管机构对应的证券账户与选中证券账户不一致!")));
                         return validList;
                     }

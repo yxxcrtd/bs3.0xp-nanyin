@@ -248,18 +248,19 @@ public class TrdPlanNetInvestTradeValidator implements TradeCommonValidator {
                         BigDecimal entrustNum = new BigDecimal((String) resultMap.get("ENTRUST_NUM"));
                         BigDecimal finishAmt = new BigDecimal((String) resultMap.get("FINISH_AMT"));
                         BigDecimal prinAmt = new BigDecimal((String) resultMap.get("PRIN_AMT"));
-                        if (finishAmt != null) {
+                        if(entrustAmt != null && entrustAmt.compareTo(BigDecimal.ZERO)>0){
                             entrustAmt = entrustAmt.subtract(finishAmt);//委托金额减去完成金额
-                            entrustNum = entrustNum.subtract(finishAmt);//委托份额减去完成份额
-                        }
-                        if (prinAmt != null) {
                             entrustAmt = entrustAmt.subtract(prinAmt);
-                            entrustNum = entrustNum.subtract(prinAmt);
+                            if (tradeAmt != null && tradeAmt.compareTo(entrustAmt) == 1) {
+                                errorList.add(new ValidMessage("tradeAmt", this.getMessage("TRD_X_0004") + entrustAmt));
+                            }
                         }
-                        if (tradeAmt != null && tradeAmt.compareTo(entrustAmt) == 1) {
-                            errorList.add(new ValidMessage("tradeAmt", this.getMessage("TRD_X_0004") + entrustAmt));
-                        }else if(shareAmt != null && shareAmt.compareTo(entrustNum) == 1){
-                            errorList.add(new ValidMessage("shareAmt", this.getMessage("TRD_X_0009") + entrustNum));
+                        if(entrustNum != null && entrustNum.compareTo(BigDecimal.ZERO)>0){
+                            entrustNum = entrustNum.subtract(finishAmt);//委托份额减去完成份额
+                            entrustNum = entrustNum.subtract(prinAmt);
+                            if(shareAmt != null && shareAmt.compareTo(entrustNum) == 1){
+                                errorList.add(new ValidMessage("shareAmt", this.getMessage("TRD_X_0009") + entrustNum));
+                            }
                         }
                     }
                 }

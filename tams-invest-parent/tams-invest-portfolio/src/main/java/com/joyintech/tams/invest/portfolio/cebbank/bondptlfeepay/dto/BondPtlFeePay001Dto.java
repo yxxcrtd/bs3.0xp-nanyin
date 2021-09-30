@@ -1,5 +1,5 @@
 
-package com.joyintech.tams.cebbank.bondptlfeepay.dto;
+package com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.dto;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -10,8 +10,8 @@ import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
-import com.joyintech.tams.cebbank.bondptlfeepay.validator.BondPtlFeePay001Validator;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.validator.BondPtlFeePay001Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;

@@ -1,11 +1,14 @@
-
-package com.joyintech.tams.cebbank.bondptlfeepay.controller;
+package com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.controller;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.dto.BondPtlFeePay001Dto;
+import com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.dto.BondPtlFeePay002Dto;
+import com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.service.BondPtlFeePay001Service;
+import com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.service.BondPtlFeePay002Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,10 +31,6 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.cebbank.bondptlfeepay.dto.BondPtlFeePay001Dto;
-import com.joyintech.tams.cebbank.bondptlfeepay.dto.BondPtlFeePay002Dto;
-import com.joyintech.tams.cebbank.bondptlfeepay.service.BondPtlFeePay001Service;
-import com.joyintech.tams.cebbank.bondptlfeepay.service.BondPtlFeePay002Service;
 import com.joyintech.tams.common.base.dao.MstFeeinfoMapper;
 import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
 import com.joyintech.tams.common.base.entity.MstFeeinfo;
@@ -54,7 +53,7 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Controller
 @PageId("BondPtlFeePay001")
-@RequestMapping("/cebbank/bondptlfeepay/BondPtlFeePay001")
+@RequestMapping("/invest/portfolio/cebbank/bondptlfeepay/BondPtlFeePay001")
 public class BondPtlFeePay001Controller extends BaseController {
 
     /**
@@ -159,7 +158,7 @@ public class BondPtlFeePay001Controller extends BaseController {
     /**
      * check
      * 
-     * @param investFeePay001Dto check对象
+     * @param bondPtlFeePay001Dto check对象
      * @param br 验证信息
      * @return check结果
      * @see

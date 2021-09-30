@@ -44,7 +44,7 @@ public class Constants {
 	/**
 	 *线程数
 	 */
-	public final static Integer INTERF_THREAD_NUMBER = 10;
+	public final static Integer INTERF_THREAD_NUMBER = 3;
 	/**
 	 *接口配置状态-1有效
 	 */

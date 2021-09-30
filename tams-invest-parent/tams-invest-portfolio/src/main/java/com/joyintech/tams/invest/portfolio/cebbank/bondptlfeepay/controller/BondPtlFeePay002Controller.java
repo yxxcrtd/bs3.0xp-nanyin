@@ -1,5 +1,5 @@
 
-package com.joyintech.tams.cebbank.bondptlfeepay.controller;
+package com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,6 +12,10 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 
+import com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.dto.BondPtlFeePay001Dto;
+import com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.dto.BondPtlFeePay002Dto;
+import com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.dto.BondPtlFeePay003Dto;
+import com.joyintech.tams.invest.portfolio.cebbank.bondptlfeepay.service.BondPtlFeePay002Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.tams.cebbank.bondptlfeepay.dto.BondPtlFeePay001Dto;
-import com.joyintech.tams.cebbank.bondptlfeepay.dto.BondPtlFeePay002Dto;
-import com.joyintech.tams.cebbank.bondptlfeepay.dto.BondPtlFeePay003Dto;
-import com.joyintech.tams.cebbank.bondptlfeepay.service.BondPtlFeePay002Service;
+
 import com.joyintech.tams.common.base.dao.MstFeeinfoMapper;
 import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
 import com.joyintech.tams.common.base.dao.WflTrdFinProductDealTotalMapper;
@@ -64,7 +65,7 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Controller
 @PageId("BondPtlFeePay002")
-@RequestMapping("/cebbank/bondptlfeepay/BondPtlFeePay002")
+@RequestMapping("/invest/portfolio/cebbank/bondptlfeepay/BondPtlFeePay002")
 public class BondPtlFeePay002Controller extends BaseController {
 
     /**

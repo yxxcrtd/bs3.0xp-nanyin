@@ -15,7 +15,7 @@ $(function() {
 	 */
 	var feeInfoTable = $('#fee_dataTable').joyintable({
 		ajax : {
-			url : JoyinUtil.getRealPath('/cebbank/bondptlfeepay/BondPtlFeePay002/queryPayFeeInfoList'),
+			url : JoyinUtil.getRealPath('/invest/portfolio/cebbank/bondptlfeepay/BondPtlFeePay002/queryPayFeeInfoList'),
 			type : 'POST',
 			data : function() {
 				return {
@@ -420,13 +420,13 @@ $(function() {
             }
         }
         
-        Joyin.ajaxJson(basePath + 'cebbank/bondptlfeepay/BondPtlFeePay002/check',object, function(result) {
+        Joyin.ajaxJson(basePath + 'invest/portfolio/cebbank/bondptlfeepay/BondPtlFeePay002/check',object, function(result) {
             Joyin.confirm("是否确认？", function() {
                     if(operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'cebbank/bondptlfeepay/BondPtlFeePay002/save', object, "BondPtlFeePay002_btn_save");
+                        WorkFlow.doSaveList(basePath + 'invest/portfolio/cebbank/bondptlfeepay/BondPtlFeePay002/save', object, "BondPtlFeePay002_btn_save");
                     }
                     else {
-                        WorkFlow.doSubmitList(basePath + 'cebbank/bondptlfeepay/BondPtlFeePay002/save', object, "BondPtlFeePay002_btn_submit");
+                        WorkFlow.doSubmitList(basePath + 'invest/portfolio/cebbank/bondptlfeepay/BondPtlFeePay002/save', object, "BondPtlFeePay002_btn_submit");
                     }
                 })
             });
