@@ -1570,7 +1570,12 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     项目类计提区间倒减方式_倒减科目余额(DictCode.项目类计提区间倒减方式,"01","倒减科目余额"),
 	项目类计提区间倒减方式_倒减前一日计算结果(DictCode.项目类计提区间倒减方式,"02","倒减前一日计算结果"),
 	//20210922 从DictCodeList迁移过来  by yflv end
-
+	
+	//20211008 从DictCodeList迁移过来  by yflv start
+	估值来源_第三方估值_OTH(DictCode.估值来源,"OTH","第三方估值(OTH)"),
+	估值市价_第三方估值(DictCode.估值市价, "13", "第三方估值"),
+	评级对象显示类型_发行人评级(DictCode.评级对象显示类型,"91","发行人评级"),
+	//20211008 从DictCodeList迁移过来  by yflv end
 
     估值市价_外管局(DictCode.估值市价, "10", "外管局"),
     估值市价_央行(DictCode.估值市价, "11", "央行"),
