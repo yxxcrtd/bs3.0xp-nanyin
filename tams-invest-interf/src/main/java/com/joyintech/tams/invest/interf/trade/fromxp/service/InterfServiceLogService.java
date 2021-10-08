@@ -76,9 +76,12 @@ public class InterfServiceLogService extends BaseService<InterfServiceLogDto> {
 	 * @param interfSystem
 	 * @return
 	 */
-	public List<InterfServiceLogDto> getRunableLogList(String interfSystem) {
+	public List<InterfServiceLogDto> getRunableLogList(String id,String interfSystem) {
 		List<InterfServiceLogDto> runableLogList = new ArrayList<InterfServiceLogDto>();
 		InterfServiceLogDto where = new InterfServiceLogDto();
+		if(StringUtil.isNotEmpty(id)) {
+			where.setId(id);
+		}
 		where.setInterfSystem(interfSystem);
 		where.setInterfType(Constants.INTERF_TYPE_RECEIVE);
 		where.setInterfStatus(Constants.INTERF_STATUS_NEW);
