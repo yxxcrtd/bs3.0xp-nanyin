@@ -1,1 +1,1 @@
-delete from sys_menu a WHERE A.MENU_ID='REPORT_001_002_004' AND a.remark='Òø±£¼àĞÅÏ¢µÇ¼Ç';
+delete from sys_menu a WHERE A.MENU_ID='REPORT_001_002_004' AND a.remark='é“¶ä¿ç›‘ä¿¡æ¯ç™»è®°';
