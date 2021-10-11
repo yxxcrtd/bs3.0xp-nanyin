@@ -189,7 +189,7 @@
             #{record.localEntrustId,jdbcType=VARCHAR}, #{record.brokerEntrustId,jdbcType=VARCHAR},
             #{record.brokerTradeId,jdbcType=VARCHAR}, #{record.reportNo,jdbcType=VARCHAR},
             #{record.createTime,jdbcType=TIMESTAMP}, #{record.updateTime,jdbcType=TIMESTAMP},
-            #{record.offsetFlag,jdbcType=VARCHAR}, #{record.hedgeFlag,jdbcType=VARCHAR}, #{record.portfolioId,jdbcType=VARCHAR}, #{fullPrice,jdbcType=NUMERIC},
+            #{record.offsetFlag,jdbcType=VARCHAR}, #{record.hedgeFlag,jdbcType=VARCHAR}, #{record.portfolioId,jdbcType=VARCHAR}, #{record.fullPrice,jdbcType=NUMERIC},
         </foreach>
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.exchange.common.db.domain.TradeHistory">
