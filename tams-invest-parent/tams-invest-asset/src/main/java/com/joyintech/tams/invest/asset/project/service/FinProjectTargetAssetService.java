@@ -5,11 +5,11 @@
 
 package com.joyintech.tams.invest.asset.project.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -36,17 +36,18 @@ import com.joyintech.tams.component.business.report.asset.project.dto.BussRepAss
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.asset.common.dto.*;
 import com.joyintech.tams.invest.asset.common.service.AssetCommonService;
-import com.joyintech.tams.invest.asset.interfaceDto.*;
 import com.joyintech.tams.invest.asset.project.dto.FinProjectTargetAssetCmsDto;
 import com.joyintech.tams.invest.asset.project.dto.FinProjectTargetAssetDto;
+import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
-import com.joyintech.tams.invest.common.util.MapParseUtil;
+import com.joyintech.tams.invest.interf.trade.fromxp.service.InterfServiceLogService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -55,11 +56,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 项目类资产 〈功能详细描述〉
@@ -178,6 +175,11 @@ public class FinProjectTargetAssetService extends CommonExportService<FinProject
      */
     @Autowired
     private InvestInterfCommService investInterfCommService;
+    /**
+     * 获取service对象
+     */
+    @Autowired
+    private InterfServiceLogService interfServiceLogService;
 
     /**
      * 使用给定的sqlID检索分页数据。返回类型是Service的泛型。
@@ -847,5 +849,114 @@ public class FinProjectTargetAssetService extends CommonExportService<FinProject
     public String checkMarketExists(String finprodMarketId) {
         return restTemplate.postForObject(ServiceApplication.ASSET_SERVICE_NAME + "/FinProjectTargetAsset/checkMarketExists", finprodMarketId,
                 String.class);
+    }
+
+    /**
+     * 画面服务方法接收数据->处理相应业务逻辑->修改数据为处理成功或失败
+     *
+     * @param id
+     * @param msg
+     * @return void
+     */
+    public void executeInterf(String id,String  msg) {
+        System.out.println("##############################项目类资产 接口数据入库start#############################");
+        try {
+            FinProjectTargetAssetDto entity = new FinProjectTargetAssetDto();
+            if(StringUtil.isNotEmpty(msg)) {
+                String finprodType2=DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue();
+                entity.setFinprodType2(finprodType2);
+                JSONObject msgJson = JSONObject.parseObject(msg);
+                String finprodMarketId=msgJson.getString("asset_code");
+                 String finprodId=finprodType2+"_"+finprodMarketId;
+                 entity.setFinprodId(finprodId);
+                entity.setFinprodMarketId(finprodMarketId);
+                entity.setFinprodName(msgJson.getString("asset_name"));
+                String type9=msgJson.getString("type_9");
+                entity.setType9(type9);
+                String type10=msgJson.getString("type_10");
+                entity.setType10(type10);
+                entity.setType11(type10);
+                entity.setType12(type10);
+                BigDecimal issueAmt=msgJson.getBigDecimal("issue_amt");
+                entity.setIssueAmt(issueAmt);
+                String ccy=msgJson.getString("curr_type");
+                entity.setCcy(ccy);
+                Date vdate=msgJson.getDate("value_date");
+                entity.setVdate(vdate);
+                Date mdate=msgJson.getDate("end_date");
+                entity.setMdate(mdate);
+                Long termDays=msgJson.getLong("term_days");
+                entity.setTermDays(msgJson.getLong("term_days"));
+                String calendarId=msgJson.getString("calendar_id");
+                entity.setCalendarId(calendarId);
+                String contractNo=msgJson.getString("contract_no");
+                entity.setContractNo(contractNo);
+                String financier=msgJson.getString("issuer_no");
+                entity.setFinancier(financier);
+                entity.setSponsor(msgJson.getString("sponsor"));
+                String investNature=msgJson.getString("investment_attributes");
+                entity.setInvestNature(investNature);
+                entity.setTrialNo(msgJson.getString("trial_no"));
+                //计息
+                FinInterestFactorDto interestFactorDto=new FinInterestFactorDto();
+                String intType=msgJson.getString("int_type");
+                interestFactorDto.setIntType(intType);
+                String basis=msgJson.getString("pay_basis");
+                interestFactorDto.setBasis(basis);
+                interestFactorDto.setCalRateType(DictCodeListExt3.计息利率方式_净投资收益率计提.getValue());
+                BigDecimal payRate=msgJson.getBigDecimal("pay_rate");
+                interestFactorDto.setLoadRate(payRate);
+                if(null!=msgJson.getBigDecimal("invest_rate")){
+                    interestFactorDto.setInvestRate(msgJson.getBigDecimal("invest_rate"));
+                }
+                if(null!=msgJson.getBigDecimal("rate_max")){
+                    interestFactorDto.setHighestRate(msgJson.getBigDecimal("rate_max"));
+                }
+                if(null!=msgJson.getBigDecimal("rate_mix")){
+                    interestFactorDto.setLowestRate(msgJson.getBigDecimal("rate_mix"));
+                }
+                interestFactorDto.setResetType(msgJson.getString("reset_type"));
+                interestFactorDto.setObserveBefDay(msgJson.getBigDecimal("observe_bef_day"));
+                interestFactorDto.setObserveBefUnit(msgJson.getString("observe_bef_unit"));
+                interestFactorDto.setBenchmarkId(msgJson.getString("index_id"));
+                interestFactorDto.setCoefficient(msgJson.getBigDecimal("coefficient"));
+                interestFactorDto.setSpreadRate(msgJson.getBigDecimal("spread_rate"));
+                entity.setFinInterestFactorDto(interestFactorDto);
+                //付息信息
+                FinPayInterestStdInfoDto interestStdInfoDto=new FinPayInterestStdInfoDto();
+                interestStdInfoDto.setIssueAmt(issueAmt);
+                interestStdInfoDto.setEndTdayRule(msgJson.getString("end_tday_rule"));
+                interestStdInfoDto.setPayTdayRule(msgJson.getString("pay_tday_rule"));
+                interestStdInfoDto.setPayCycle(msgJson.getString("pay_freq"));
+                interestStdInfoDto.setCalcRule(msgJson.getString("calc_rule"));
+                interestStdInfoDto.setFirstPayDate(msgJson.getDate("first_pay_date"));
+                interestStdInfoDto.setRemark(msgJson.getString("remark"));
+                interestStdInfoDto.setVdate(vdate);
+                interestStdInfoDto.setMdate(mdate);
+                interestStdInfoDto.setFinInterestFactorDto(interestFactorDto);
+                //生成付息计划
+                interestStdInfoDto.setIsPayIntFlag("N");
+                List<FinCashPlanDto> invList = finPayInterestStdInfoService.createAssetPayInteresPlan(interestStdInfoDto);
+                interestStdInfoDto.setFinCashPlanList(invList);
+                entity.setFinPayInterestStdInfoDto(interestStdInfoDto);
+                //还本信息
+                BussFinRepaymentDto bussFinRepaymentDto=new BussFinRepaymentDto();
+                bussFinRepaymentDto.setFinprodType2(finprodType2);
+                bussFinRepaymentDto.setPayCycle(msgJson.getString("pay_cycle"));
+                bussFinRepaymentDto.setIsPayIntFlag(DictCodeList.是否_是.getValue());
+                interestStdInfoDto.setIsPayIntFlag("Y");
+                //生成还本计划
+                List<FinCashPlanDto> payInvList = finPayInterestStdInfoService.createAssetPayInteresPlan(interestStdInfoDto);
+                bussFinRepaymentDto.setFinCashPlanList(payInvList);
+                entity.setBussFinRepaymentDto(bussFinRepaymentDto);
+                this.doComplete(entity, OperationType.NEW);
+                //修改接口服务日志表状态--成功
+                interfServiceLogService.updateInterfServiceLog(id, true, "项目类资产接口数据接入成功！");
+            }
+        }catch(Exception e) {
+            //修改接口服务日志表状态--失败
+            interfServiceLogService.updateInterfServiceLog(id, false, e.getMessage());
+        }
+        System.out.println("##############################项目类资产 接口数据入库end#############################");
     }
 }
