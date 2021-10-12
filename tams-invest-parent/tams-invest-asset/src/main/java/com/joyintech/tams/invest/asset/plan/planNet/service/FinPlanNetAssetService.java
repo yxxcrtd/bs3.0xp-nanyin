@@ -736,6 +736,7 @@ public class FinPlanNetAssetService extends CommonExportService<FinPlanNetAssetD
                 entity.setBaseRule(msgJSON.getString("BASE_RULE")); // 业绩基准
                 entity.setOverallocation(msgJSON.getString("OVERALLOCATION")); // 超额分成方式
                 entity.setCreditEnhanceMeasure(msgJSON.getString("CREDIT_MEASURES")); // 增信措施
+                entity.setManager(msgJSON.getString("MANAGER")); // 管理人
                 entity.setActualManager(msgJSON.getString("ACTUAL_MANAGER")); // 实际管理人
                 entity.setRepAssetType(msgJSON.getString("SUB_CODE")); // 资产/负债类别
 
