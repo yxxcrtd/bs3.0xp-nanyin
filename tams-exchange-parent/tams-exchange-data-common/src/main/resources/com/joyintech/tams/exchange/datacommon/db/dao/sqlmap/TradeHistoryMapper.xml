@@ -291,7 +291,9 @@
             <if test="portfolioId != null">
                 PORTFOLIO_ID,
             </if>
-            FULL_PRICE,
+            <if test="portfolioId != null">
+                FULL_PRICE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -390,7 +392,9 @@
             <if test="portfolioId != null">
                 #{portfolioId,jdbcType=VARCHAR},
             </if>
-            #{fullPrice,jdbcType=NUMERIC},
+            <if test="fullPrice != null">
+                #{fullPrice,jdbcType=NUMERIC},
+            </if>
         </trim>
   </insert>
     <select id="countByExample" parameterType="com.joyintech.tams.exchange.common.db.domain.TradeHistoryExample"

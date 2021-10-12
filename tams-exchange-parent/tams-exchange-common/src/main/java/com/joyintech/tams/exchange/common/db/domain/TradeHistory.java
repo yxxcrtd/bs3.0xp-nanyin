@@ -80,14 +80,14 @@ public class TradeHistory implements Serializable {
     private String hedgeFlag;
     private String portfolioId;
 
-    private String fullPrice;
+    private BigDecimal fullPrice;
 
-    public void setFullPrice(String fullPrice) {
-        this.fullPrice = fullPrice;
+    public BigDecimal getFullPrice() {
+        return fullPrice;
     }
 
-    public String getFullPrice() {
-        return fullPrice;
+    public void setFullPrice(BigDecimal fullPrice) {
+        this.fullPrice = fullPrice;
     }
 
     @Id

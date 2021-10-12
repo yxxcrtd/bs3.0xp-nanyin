@@ -9,6 +9,9 @@ import com.joyintech.tams.exchange.common.db.domain.TradeHistoryExample;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.dao.TradeHistoryMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeHistoryService;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +26,9 @@ public class TradeHistoryServiceImpl implements TradeHistoryService {
 
     @Autowired
     private TradeHistoryMapper tradeHistoryMapper;
-
+    @Autowired
+    private SqlSessionTemplate sqlSessionTemplate;
+    
     @Override
     public List<TradeHistory> queryAll() {
         return tradeHistoryMapper.selectByExample(null);
@@ -31,7 +36,13 @@ public class TradeHistoryServiceImpl implements TradeHistoryService {
 
     @Override
     public void saveTradeHistory(List<TradeHistory> tradeHistories) {
-        tradeHistoryMapper.insertBatch(tradeHistories);
+//        tradeHistoryMapper.insertBatch(tradeHistories);
+        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH,false);
+        TradeHistoryMapper tradeHistoryMapperBatch = sqlSession.getMapper(TradeHistoryMapper.class);
+        for (TradeHistory trade:tradeHistories) {
+            tradeHistoryMapperBatch.insertSelective(trade);
+        }
+        sqlSession.commit();
     }
 
     @Override
