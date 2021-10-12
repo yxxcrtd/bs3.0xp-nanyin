@@ -26,6 +26,7 @@
 						        #{orgCode,jdbcType=VARCHAR}
 						    </foreach>
 						</if>	
+						AND A.ISSUING_STATUS != '02'
 						AND A.FPROD_ID is null		
 						AND TO_DATE(TO_CHAR(A.VDATE, 'yyyy-MM-dd'), 'yyyy-MM-dd') <![CDATA[<=]]> TO_DATE(#{searchDate,jdbcType=VARCHAR},'yyyy-MM-dd')				
 				) tmp1
