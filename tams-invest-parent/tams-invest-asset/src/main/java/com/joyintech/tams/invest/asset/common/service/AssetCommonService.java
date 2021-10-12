@@ -1312,4 +1312,12 @@ public class AssetCommonService extends BaseService{
 			}
         }
     }
+
+    public FinProduct getAsset(String finprodMarketId,String finprodName){
+        Map<String,Object> param = new HashMap<>();
+        param.put("finprodMarketId",finprodMarketId);
+        param.put("finprodName",finprodName);
+        return restTemplate.postForObject(ServiceApplication.ASSET_SERVICE_NAME
+                + "/AssetCommon/getAsset",param,FinProduct.class);
+    }
 }
