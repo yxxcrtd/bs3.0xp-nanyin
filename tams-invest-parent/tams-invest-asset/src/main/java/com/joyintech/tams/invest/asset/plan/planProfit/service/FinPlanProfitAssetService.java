@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.asset.plan.planProfit.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -47,6 +49,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.util.MapParseUtil;
+import com.joyintech.tams.invest.interf.trade.fromxp.service.InterfServiceLogService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -861,5 +864,92 @@ public class FinPlanProfitAssetService extends CommonExportService<FinPlanProfit
             ServiceApplication.ASSET_SERVICE_NAME + "/FinPlanProfitAsset/getName?custormerId="
                                          + custormerId,
             String.class);
+    }
+
+    @Autowired
+    private InterfServiceLogService interfServiceLogService;
+
+    /**
+     *计划类利率型标的 接口数据入库
+     * @param id
+     * @param msgbody
+     */
+    public void executeInterf(String id,String msgbody) {
+        System.out.println("##############################计划类利率型标的 接口数据入库start#############################");
+        try {
+              FinPlanProfitAssetDto entity = new FinPlanProfitAssetDto();
+            if(StringUtil.isNotEmpty(msgbody)) {
+                JSONObject msgJSON = JSONObject.parseObject(msgbody);
+                entity.setOperateType(msgJSON.getString("OPERATE_TYPE"));
+                entity.setType9(msgJSON.getString("TYPE_10"));
+                entity.setTrialNo(msgJSON.getString("TRIAL_NO"));
+                entity.setTransMode(msgJSON.getString("TRANS_MODE"));
+                entity.setBuyOutRate(msgJSON.getBigDecimal("BUYOUT_RATE"));
+                entity.setParentPlan(msgJSON.getString("PARENT_PLAN"));
+                entity.setCreditEnhanceMeasure(msgJSON.getString("CREDIT_MEASURES"));
+                entity.setFundMangerName(msgJSON.getString("FUND_MANAGER"));
+                entity.setSettleDays(msgJSON.getString("SETTLE_DAYS"));
+                entity.setInvestRate(msgJSON.getBigDecimal("INVEST_RATE"));
+                entity.setCalRateType(msgJSON.getString("CAL_RATE_TYPE"));
+                entity.setRepAssetType(msgJSON.getString("SUB_CODE")); // 资产/负债类别
+
+                FinProduct finProduct = new FinProduct();
+                finProduct.setFinprodId(msgJSON.getString("ASSET_CODE")); // 资产代码
+                finProduct.setFinprodAbbr(msgJSON.getString("ASSET_SNAME")); // 资产代码简称
+                finProduct.setFinprodName(msgJSON.getString("ASSET_NAME")); // 资产代码全称
+                finProduct.setpFinprodId(msgJSON.getString("MOTHER_ASSET_CODE")); // 母资产代码
+                finProduct.setIdate(msgJSON.getDate("ESTAB_DATE")); // 发行日
+                finProduct.setProfitType(msgJSON.getString("PROFIT_TYPE"));
+                finProduct.setCcy(msgJSON.getString("CURR_TYPE"));
+                finProduct.setVdate(msgJSON.getDate("VALUE_DATE"));
+                finProduct.setMdate(msgJSON.getDate("END_DATE"));
+                finProduct.setTrusteeId(msgJSON.getString("TRUSTEE_CODE"));
+                finProduct.setIssuer(msgJSON.getString("PUBLISHER_CODE"));
+                finProduct.setIssueAmt(msgJSON.getBigDecimal("ISSUE_AMT"));
+                finProduct.setTermDays(msgJSON.getLong("TERM_DAYS"));
+                finProduct.setManager(msgJSON.getString("ACTUAL_MANAGER"));
+                finProduct.setContractNo(msgJSON.getString("CONTRACT_NO"));
+                finProduct.setInvestAdviser(msgJSON.getString("INVEST_ADVISER"));
+                finProduct.setCalendarId(msgJSON.getString("CALENDAR_ID"));
+                finProduct.setRemark(msgJSON.getString("REMAKE"));
+                if(msgJSON.getString("IS_GUARANTEED").equals("1")){ // 是否保本
+                    finProduct.setCapiIncomeFeature(DictCodeListExt1.本金收益特征_保本.getValue());
+                }else{
+                    finProduct.setCapiIncomeFeature(DictCodeListExt1.本金收益特征_非保本.getValue());
+                }
+                entity.setFinProduct(finProduct);
+
+                // 标的类金融产品附属表
+                FinProductAdd finProductAdd = new FinProductAdd();
+
+
+                finProductAdd.setInvestNature(msgJSON.getString("INVESTMENT_ATTRIBUTES")); // 投资性质
+                finProductAdd.setFinprodId(msgJSON.getString("ASSET_CODE")); // 资产代码
+                finProductAdd.setPurSpeed(msgJSON.getLong("PURCHASE_PERIOD")); // 申购确认速度
+                finProductAdd.setRedSpeed(msgJSON.getLong("RED_PERIOD")); // 赎回确认速度
+                finProductAdd.setFundMangerName(msgJSON.getString("FUND_MANGER")); // 基金经理姓名
+                entity.setFinProductAdd(finProductAdd);
+
+
+
+
+                String operateTye = msgJSON.getString("OPERATE_TYPE");
+                OperationType type;
+                if(operateTye.equals("1")){
+                    type = OperationType.NEW;
+                }else if(operateTye.equals("2")){
+                    type = OperationType.MODIFY;
+                }else{
+                    type = OperationType.DELETE;
+                }
+                this.doComplete(entity, type);
+                //修改接口服务日志表状态--成功
+                interfServiceLogService.updateInterfServiceLog(id, true, "计划类利率型标的数据接入成功！");
+            }
+        }catch(Exception e) {
+            //修改接口服务日志表状态--失败
+            interfServiceLogService.updateInterfServiceLog(id, false, e.getMessage());
+        }
+        System.out.println("##############################计划类利率型标的 接口数据入库end#############################");
     }
 }
