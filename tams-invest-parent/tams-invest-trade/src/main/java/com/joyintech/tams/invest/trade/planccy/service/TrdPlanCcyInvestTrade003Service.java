@@ -232,7 +232,8 @@ public class TrdPlanCcyInvestTrade003Service extends BaseService<TrdPlanCcyInves
             restTemplate.postForObject(
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanCcyInvestTrade/doComplete", entity,
                 Integer.class);
-            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())
+                    && !"N".equals(CacheUtil.getSysParam("is_auto_redemption"))) {
                 doCompleteRedemption(entity);
             }
         } else if (StringUtil.equals(entity.getOperateType(), "REVOKE")) {
@@ -284,8 +285,9 @@ public class TrdPlanCcyInvestTrade003Service extends BaseService<TrdPlanCcyInves
             ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanCcyInvestTrade/doInsert", entity,
             Integer.class);
         if (StringUtil.equals(entity.getOperateType(), "submit")) {
-            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
-//                doInsertRedemption(entity);
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())
+                    &&"N".equals(CacheUtil.getSysParam("is_auto_redemption"))) {
+                doInsertRedemption(entity);
             }
             FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
             finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
@@ -344,8 +346,9 @@ public class TrdPlanCcyInvestTrade003Service extends BaseService<TrdPlanCcyInves
             restTemplate.postForObject(
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanCcyInvestTrade/doUpdate", entity,
                 Integer.class);
-            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
-//                doInsertRedemption(entity);
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())
+                    && "N".equals(CacheUtil.getSysParam("is_auto_redemption"))) {
+                doInsertRedemption(entity);
             }
             FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
             finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());

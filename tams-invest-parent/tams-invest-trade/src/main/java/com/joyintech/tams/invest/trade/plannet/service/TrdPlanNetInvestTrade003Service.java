@@ -236,7 +236,8 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/doComplete",
                 entity, Integer.class);
 
-            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())
+                    && !"N".equals(CacheUtil.getSysParam("is_auto_redemption"))) {
                 doCompleteRedemption(entity);
             }
 
@@ -290,8 +291,9 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
             ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/doInsert", entity,
             Integer.class);
         if (StringUtil.equals(entity.getOperateType(), "submit")) {
-            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
-//                doInsertRedemption(entity);
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())
+                    && "N".equals(CacheUtil.getSysParam("is_auto_redemption"))) {
+                doInsertRedemption(entity);
             }
             FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
             finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
@@ -353,8 +355,9 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
             restTemplate.postForObject(
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/doUpdate", entity,
                 Integer.class);
-            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
-//                doInsertRedemption(entity);
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())
+                    && "N".equals(CacheUtil.getSysParam("is_auto_redemption"))) {
+                doInsertRedemption(entity);
             }
             FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
             finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
