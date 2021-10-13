@@ -8,9 +8,9 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>tams-business-common</artifactId>
-	<name>资管3.0集成功能(tams-business-common)</name>
-	<version>1.0.0</version>
-
+	<name>资管3.0公共业务工程(tams-business-common)</name>
+	<version>3.0.4</version>
+	
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>

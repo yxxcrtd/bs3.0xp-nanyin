@@ -12,7 +12,7 @@
 	<version>1.0.0</version>
 
 	<properties>
-		<cfets.version>0.0.4</cfets.version>
+		<cfets.version>3.0.4</cfets.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
