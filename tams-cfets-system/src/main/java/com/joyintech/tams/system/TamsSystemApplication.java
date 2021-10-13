@@ -27,7 +27,7 @@ import springfox.documentation.spring.web.plugins.Docket;
  * 系统启动类
  */
 @Configuration
-public class DSPZiGuanApplication extends WebApplication {
+public class TamsSystemApplication extends WebApplication {
 
 	@Bean
 	public Docket dataCfetsOpstDocket() {
@@ -68,6 +68,14 @@ public class DSPZiGuanApplication extends WebApplication {
 		System.out.println(MessageFormat.format(" Druid监控地址 ->  http://{0}:{1}{2}/druid/login.html", ip, port,contextPath));
     	System.out.println(MessageFormat.format("   Swagger地址 ->  http://{0}:{1}{2}/swagger-ui.html",ip, port,contextPath));
     	System.out.println("########################################################################################################\r\n");
+    	
+    	try {
+        	String os = System.getProperty("os.name").toLowerCase();
+        	if(os.contains("windows")) {
+        		Runtime.getRuntime().exec("cmd   /c   start   "+MessageFormat.format("http://{0}:{1}{2}/login.html", ip, port,contextPath));
+        	}
+        } catch (Exception ex) {
+        }
 	}
 
 	private static ConfigurableApplicationContext initSpring(String[] args) {
