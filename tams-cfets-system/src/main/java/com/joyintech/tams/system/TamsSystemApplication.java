@@ -72,7 +72,7 @@ public class TamsSystemApplication extends WebApplication {
     	try {
         	String os = System.getProperty("os.name").toLowerCase();
         	if(os.contains("windows")) {
-        		Runtime.getRuntime().exec("cmd   /c   start   "+MessageFormat.format("http://{0}:{1}{2}/login.html", ip, port,contextPath));
+        		Runtime.getRuntime().exec("cmd   /c   start   "+MessageFormat.format("http://{0}:{1}{2}/auth/login", ip, port,contextPath));
         	}
         } catch (Exception ex) {
         }
