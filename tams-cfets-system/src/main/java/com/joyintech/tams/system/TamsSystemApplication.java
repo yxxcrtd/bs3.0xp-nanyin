@@ -65,7 +65,7 @@ public class TamsSystemApplication extends WebApplication {
 				        "                                                                                                      ";
 		System.out.println(banner);
 		System.out.println(MessageFormat.format(" Druid监控地址 ->  http://{0}:{1}{2}/auth/login", ip, port,contextPath));
-		System.out.println(MessageFormat.format(" Druid监控地址 ->  http://{0}:{1}{2}/druid/login.html", ip, port,contextPath));
+//		System.out.println(MessageFormat.format(" Druid监控地址 ->  http://{0}:{1}{2}/druid/login.html", ip, port,contextPath));
     	System.out.println(MessageFormat.format("   Swagger地址 ->  http://{0}:{1}{2}/swagger-ui.html",ip, port,contextPath));
     	System.out.println("########################################################################################################\r\n");
     	
