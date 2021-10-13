@@ -11,7 +11,6 @@
     <artifactId>tams-cefts</artifactId>
     <name>tams-cefts</name>
     <version>1.0</version>
-    <packaging>jar</packaging>
 
     <description>理财资管系统-cefts启动工程</description>
 
