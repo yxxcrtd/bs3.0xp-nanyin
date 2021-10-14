@@ -35,6 +35,7 @@ public class Message<T> implements Serializable {
     }
 
     public Message(T data) {
+    	this.code = SUCCESS;
         this.data = data;
     }
 
