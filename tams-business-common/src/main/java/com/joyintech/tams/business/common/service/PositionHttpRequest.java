@@ -31,8 +31,6 @@ public class PositionHttpRequest {
         PositionHttpRequest.positionUrl = url;
     }
 
-    protected static RestTemplate restTemplate;
-
     public static void send(Map req){
         // 
         Map<String, Object> message = sendPrivate(req);
@@ -47,11 +45,11 @@ public class PositionHttpRequest {
     }
 
     private static Map<String, Object> sendPrivate(Map param) {
-        return restTemplate.postForObject(positionUrl + "/send", param, Map.class);
+//        return restTemplate.postForObject(positionUrl + "/send", param, Map.class);
+        return null;
     }
 
     public static String query(Map req) {
-//        return restTemplate.postForObject(positionUrl + "/etrSecPositionRule", req, Object.class);
         String obj = null;
         try {
             obj = HttpUtil.doPost(positionUrl + "/etrSecPositionRule", JsonUtils.object2Json(req));
@@ -61,9 +59,4 @@ public class PositionHttpRequest {
         return obj;
     }
     
-    @Autowired
-    public void setRestTemplate(RestTemplate restTemplate) {
-        PositionHttpRequest.restTemplate = restTemplate;
-    }
-
 }
