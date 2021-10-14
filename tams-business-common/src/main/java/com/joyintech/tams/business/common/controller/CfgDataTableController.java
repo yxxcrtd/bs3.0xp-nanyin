@@ -1,6 +1,7 @@
 package com.joyintech.tams.business.common.controller;
 
 import com.github.pagehelper.util.StringUtil;
+import com.joyintech.tams.business.common.dto.SetDataTabelDto;
 import com.joyintech.tams.business.common.entity.CfgDataTableShow;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.CfgDataTableService;
@@ -10,10 +11,7 @@ import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -28,17 +26,30 @@ public class CfgDataTableController {
     @Autowired
 	private CfgDataTableService cfgDataTableService;
 
-    @ApiOperation(value = "查询配置分组分页列表", notes = "查询配置分组分页列表")
-    @GetMapping("/pageCode/{pageCode}")
-    public Message<Map<String, List<CfgDataTableShow>>> getInfo(@PathVariable("pageCode") String pageCode) {
+    @ApiOperation(value = "查询数据表格设置", notes = "查询数据表格设置")
+    @GetMapping("/getDataTable/{pageCode}")
+    public Message<Map<String, List<CfgDataTableShow>>> getDataTable(@PathVariable("pageCode") String pageCode) {
     	try {
 	    	if(StringUtil.isEmpty(pageCode)) {
 	    		return new Message<Map<String, List<CfgDataTableShow>>>().setMessage("页面编码不能为空！");
 	    	}
-	        return new Message<Map<String, List<CfgDataTableShow>>>(cfgDataTableService.getByPageCode(pageCode));
+	        return new Message<>(cfgDataTableService.getByPageCode1(pageCode));
     	}catch (Exception e) {
-    		logger.error("获取配置分组详细信息失败",e);
+    		logger.error("查询数据表格设置",e);
 			return new Message<Map<String, List<CfgDataTableShow>>>().fail();
 		}
     }
+
+	@ApiOperation(value = "数据表格设置", notes = "数据表格设置")
+	@PostMapping ("/setDataTable")
+	public Message<String> setDataTable(@RequestBody SetDataTabelDto setDataTabelDto) {
+		try {
+			cfgDataTableService.setDataTable(setDataTabelDto);
+			return new Message<String>().success();
+		}catch (Exception e) {
+			logger.error("数据表格设置",e);
+			return new Message<String>().fail();
+		}
+	}
+
 }

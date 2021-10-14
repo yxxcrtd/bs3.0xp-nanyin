@@ -43,5 +43,5 @@
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-core</artifactId>
 		</dependency>
-	</dependencies>
+      </dependencies>
 </project>

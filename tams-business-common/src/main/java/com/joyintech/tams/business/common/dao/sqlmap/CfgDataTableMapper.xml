@@ -4,7 +4,57 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.business.common.dao.CfgDataTableMapper">
 
+    <sql id="selectCfgDataTableShow">
+        select PAGECODE,DTCODE,COLCODE,PAGENAME,DTNNAME,COLNAME,DICTCODE,SEQNO,DISPLAYED,FROZEN,MINLEN,MAXLEN,EXTENDCFG,EFFERANGE,RANGEID,MDTIME,STATUS,REMARK1,REMARK2,REMARK3 from CFG_DATATABLE_SHOW
+    </sql>
+
+    <insert id="insertCfgDataTableBatch" parameterType="java.util.List" >
+        INSERT ALL
+        <foreach collection ="list" item="dataTable" index= "index">
+         into CFG_DATATABLE_SHOW
+        (PAGECODE,DTCODE,COLCODE,PAGENAME,DTNNAME,COLNAME,DICTCODE,SEQNO,DISPLAYED,FROZEN,MINLEN,MAXLEN,EXTENDCFG,EFFERANGE,RANGEID,MDTIME,STATUS,REMARK1,REMARK2,REMARK3)
+        values(
+            #{dataTable.pageCode ,jdbcType=VARCHAR},
+            #{dataTable.dtCode,jdbcType=VARCHAR},
+            #{dataTable.colCode,jdbcType=VARCHAR},
+            #{dataTable.pageName,jdbcType=VARCHAR},
+            #{dataTable.dtnName,jdbcType=VARCHAR},
+            #{dataTable.colName,jdbcType=VARCHAR},
+            #{dataTable.dictCode,jdbcType=VARCHAR},
+            #{dataTable.seqNo,jdbcType=BIGINT},
+            #{dataTable.disPlayed,jdbcType=BIGINT},
+            #{dataTable.frozen,jdbcType=BIGINT},
+            #{dataTable.minLen,jdbcType=BIGINT},
+            #{dataTable.maxLen,jdbcType=BIGINT},
+            #{dataTable.extendCfg,jdbcType=VARCHAR},
+            #{dataTable.effeRange,jdbcType=BIGINT},
+            #{dataTable.rangeId,jdbcType=VARCHAR},
+            #{dataTable.mdTime,jdbcType=VARCHAR},
+            #{dataTable.status,jdbcType=BIGINT},
+            #{dataTable.remark1,jdbcType=BIGINT},
+            #{dataTable.remark2,jdbcType=VARCHAR},
+            #{dataTable.remark3,jdbcType=VARCHAR}
+            )
+        </foreach >
+        SELECT 1 FROM DUAL
+    </insert>
+
     <select id="getCfgDataTableList" resultType="com.joyintech.tams.business.common.entity.CfgDataTableShow">
 
+    </select>
+
+    <select id="getDtCodeByPageCode" parameterType="String" resultType="java.lang.String">
+        select distinct(DTCODE) from CFG_DATATABLE_SHOW where PAGECODE = #{pageCode}
+    </select>
+
+    <select id="getByPageCode1" parameterType="String" resultType="com.joyintech.tams.business.common.entity.CfgDataTableShow">
+        <include refid="selectCfgDataTableShow"/>
+        <where>
+            <if test="pageCode != null  and pageCode != ''"> and PAGECODE = #{pageCode}</if>
+            <if test="dtCode != null  and dtCode != ''"> and DTCODE = #{dtCode}</if>
+            <if test="effeRange != null  and effeRange != ''"> and EFFERANGE = #{effeRange}</if>
+            <if test="rangeId != null  and rangeId != ''"> and RANGEID = #{rangeId}</if>
+        </where>
+        and STATUS = 1 order by SEQNO
     </select>
 </mapper>
