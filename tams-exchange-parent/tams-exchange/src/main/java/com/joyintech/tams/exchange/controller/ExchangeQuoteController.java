@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.controller;
 
+import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.service.ExchangeQuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,11 @@ public class ExchangeQuoteController {
                                                @RequestParam(value = "entrust_bs",required = false) String entrustBs,
                                                @RequestParam(value = "account_id") String accountId,
                                                @RequestParam(value = "page_size", required = false, defaultValue = "1000") int pageSize) {
-        String param = "?stock_code=" + stockCode + "&entrust_prop=" + entrustProp + "&entrust_bs=" + entrustBs + "&account_id=" + accountId + "&page_size=" + pageSize;
+        String param = "?stock_code=" + stockCode   + "&account_id=" + accountId + "&page_size=" + pageSize;
+        if (!Strings.isNullOrEmpty(entrustProp))
+            param = param + "&entrust_prop=" + entrustProp;
+        if (!Strings.isNullOrEmpty(entrustBs))
+            param = param + "&entrust_bs=" + entrustBs;
         return quoteService.queryIntegratedBulkQuote(param);
     }
 
@@ -79,7 +84,11 @@ public class ExchangeQuoteController {
                                                      @RequestParam(value = "entrust_prop", required = false, defaultValue = "") String entrustProp,
                                                      @RequestParam(value = "account_id", required = false) String accountId,
                                                      @RequestParam(value = "page_size", required = false, defaultValue = "1000") int pageSize) {
-        String param = "?action_in=" + actionIn + "&account_id=" + accountId + "&page_size=" + pageSize + "&entrust_prop=" + entrustProp;
+        String param = "?action_in=" + actionIn + "&account_id=" + accountId + "&page_size=" + pageSize;
+        if (!Strings.isNullOrEmpty(entrustProp))
+            param = param + "&entrust_prop=" + entrustProp;
+        if (!Strings.isNullOrEmpty(accountId))
+            param = param + "&account_id=" + accountId;
         return quoteService.queryIntegratedRepurchaseQuote(param);
     }
 
@@ -101,3 +110,4 @@ public class ExchangeQuoteController {
         return quoteService.queryIntegratedFixedIncomeQuote(param);
     }
 }
+C

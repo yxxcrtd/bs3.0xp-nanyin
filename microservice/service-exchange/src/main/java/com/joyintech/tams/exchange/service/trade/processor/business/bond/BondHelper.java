@@ -162,7 +162,7 @@ public class BondHelper {
 
     // 债券净价成交转换为全价处理
     public BigDecimal getFullPriceByTradePrice(Trade trade, String isFullPrice, Instruction instruction) {
-
+        if (!InvestmentAssetType.isBond(instruction.getAssetType())) return BigDecimal.ZERO;
         if (IntegratedEntrustUtils.isProtocolBack(trade.getEntrustProp()) || trade.getTradedPrice().doubleValue() == 0) {
             return trade.getTradedPrice();
         }
