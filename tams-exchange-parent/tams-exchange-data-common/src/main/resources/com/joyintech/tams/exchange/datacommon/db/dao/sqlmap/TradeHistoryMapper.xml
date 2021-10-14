@@ -291,7 +291,7 @@
             <if test="portfolioId != null">
                 PORTFOLIO_ID,
             </if>
-            <if test="portfolioId != null">
+            <if test="fullPrice != null">
                 FULL_PRICE,
             </if>
         </trim>
