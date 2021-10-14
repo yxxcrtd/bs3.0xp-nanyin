@@ -14,18 +14,19 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.business.common.dto.PositionRuleInterDto;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrTrdProductDealDto;
 import com.joyintech.tams.cfets.etrib.util.PositionUtil;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
@@ -36,10 +37,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 银行间债券指令
@@ -247,5 +245,84 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         } catch (Exception e) {
             throw new RuntimeException("指令消息初始化失败", e);
         }
+    }
+    /**
+     * 持仓信息查询
+     *
+     * @param page int
+     * @param length int
+     * @param pageParam int
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public Page<CfetsEtrIbBondPosinfo001Dto> findPositionsPageNew(int page, int length,
+                                                               Map<String, Object> pageParam) {
+        Page<CfetsEtrIbBondPosinfo001Dto> result = new Page<CfetsEtrIbBondPosinfo001Dto>();
+        List<CfetsEtrIbBondPosinfo001Dto> resultList = new ArrayList<CfetsEtrIbBondPosinfo001Dto>();
+        pageParam.put("sysDate", iPlatformDate.getSysDateStr());
+        //调用头寸，查询当前日期的所有持仓数据
+        Map<String, Object> map=new HashMap<>();
+        //map.put("cdate",pageParam.get("sysDate"));
+        map.put("cdate","2021-09-06");
+        String m=PositionHttpRequest.query(map);
+        List<Map> list = JsonUtils.json2Object(m, List.class);
+        List<String> portfolioIdList=new ArrayList<>();//组合List
+        List<String> finprodIdList=new ArrayList<>();//资产List
+        for(Map t:list){
+            portfolioIdList.add(t.get("portfolioId").toString());
+            finprodIdList.add(t.get("finprodId").toString());
+        }
+        pageParam.put("portfolioIdList", portfolioIdList);
+        pageParam.put("finprodIdList", finprodIdList);
+        addCondionTradeMarket(pageParam); // 交易场所，仅限银行间指令
+
+        //根据组合信息List，查询出所有的组合信息
+        List<CfetsEtrIbBondPosinfo001Dto> portfolioInfoist=cfetsetrIbBondinfoMapper.selectPortfolioInfoist(pageParam);
+        //根据资产信息List，查询出所有的资产信息
+        List<CfetsEtrIbBondPosinfo001Dto> finprodInfoList=cfetsetrIbBondinfoMapper.selectFinprodInfoList(pageParam);
+
+        //根据接口平台数据组装新的list
+        for(Map t:list){
+            String portfolioId=t.get("portfolioId").toString();
+            String finprodId=t.get("finprodId").toString();
+            CfetsEtrIbBondPosinfo001Dto cfetsEtrIbBondPosinfo001Dto=new CfetsEtrIbBondPosinfo001Dto();
+            cfetsEtrIbBondPosinfo001Dto.setPortfolioId(portfolioId);
+            for(CfetsEtrIbBondPosinfo001Dto prd:portfolioInfoist){
+                if(StringUtil.equals(prd.getPortfolioId(),portfolioId)){
+                    cfetsEtrIbBondPosinfo001Dto.setPortfolioName(prd.getPortfolioName());
+                    break;
+                }
+            }
+            for(CfetsEtrIbBondPosinfo001Dto fin:finprodInfoList){
+                if(StringUtil.equals(fin.getFinprodId(),finprodId)){
+                    cfetsEtrIbBondPosinfo001Dto.setFinprodMarketId(fin.getFinprodMarketId());
+                    cfetsEtrIbBondPosinfo001Dto.setFinprodAbbr(fin.getFinprodAbbr());
+                    cfetsEtrIbBondPosinfo001Dto.setSecType1(fin.getSecType1());
+                    cfetsEtrIbBondPosinfo001Dto.setSecType1Name(SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类, fin.getSecType1()));
+                    cfetsEtrIbBondPosinfo001Dto.setPrice(fin.getPrice());
+                    break;
+                }
+            }
+            List<Map> resultLists= (List<Map>) t.get("resultList");
+            for(Map bt:resultLists){
+                if(StringUtil.isNotEmpty(bt.get("hodingType"))){
+                    if(StringUtil.equals(bt.get("hodingType").toString(),"A_004")){
+                        cfetsEtrIbBondPosinfo001Dto.setEtrPledgePrin(new BigDecimal( bt.get("balance").toString()) );
+                    }
+                    if(StringUtil.equals(bt.get("hodingType").toString(),"A_026")){
+                        cfetsEtrIbBondPosinfo001Dto.setEtrAvaPledgePrin(new BigDecimal( bt.get("balance").toString()) );
+                    }
+                }
+
+            }
+
+            resultList.add(cfetsEtrIbBondPosinfo001Dto);
+        }
+        result.setRoot(resultList);
+
+
+        return result;
+
     }
 }

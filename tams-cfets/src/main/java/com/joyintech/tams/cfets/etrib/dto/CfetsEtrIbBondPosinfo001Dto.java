@@ -72,6 +72,9 @@ public class CfetsEtrIbBondPosinfo001Dto{
     @ApiModelProperty(name="floatingPl",value="浮动盈亏（万元）",example="99.99")
     private BigDecimal floatingPl;
 
+    @ApiModelProperty(name="finprodId",value="资产代码id",example="ZC1")
+    private String finprodId;
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -215,5 +218,13 @@ public class CfetsEtrIbBondPosinfo001Dto{
 
     public void setFloatingPl(BigDecimal floatingPl) {
         this.floatingPl = floatingPl;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
     }
 }
