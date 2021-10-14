@@ -510,7 +510,63 @@ from
         and t.ps in('T01','T02')
         order by t.CREATE_TIME asc
     </select>-->
-
+    <select id="selectPortfolioInfoist" parameterType="Map"
+            resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto">
+        select
+        PP.PORTFOLIO_ID AS portfolioId ,
+        PP.PORTFOLIO_NAME portfolioName
+        FROM
+        PTL_PORTFOLIO PP
+        INNER JOIN
+        PTL_PORTFOLIO_AUTHORITY PPA
+        ON
+        PP.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>
+        WHERE 1=1
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            AND PP.PORTFOLIO_ID in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectFinprodInfoList" parameterType="Map"
+            resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto">
+        select
+        FP.finprod_id　finprodId,
+        FP.FINPROD_MARKET_ID finprodMarketId,
+        FP.FINPROD_ABBR finprodAbbr,
+        T4.TYPE_9 secType1,
+        MBVI.NETPRICE price
+        from
+        FIN_PRODUCT FP
+        LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = FP.FINPROD_ID
+        LEFT JOIN (
+        select SEC_ID, NETPRICE, LAST_PERIOD from (
+        select ROW_NUMBER() OVER(PARTITION BY SEC_ID ORDER BY VALUE_DATE DESC) rn, SEC_ID, NETPRICE, LAST_PERIOD
+        from MST_BOND_VALUATION_INFO_TOTAL WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
+        ) where rn = 1
+        ) MBVI ON FP.FINPROD_MARKET_ID = MBVI.SEC_ID
+        where
+        FP.FINPROD_TYPE2 ='F01'
+        <if test="tradeMarketList != null and tradeMarketList.size() > 0"> /* 交易场所，仅限银行间交易 */
+            AND FP.TRADE_MARKET in
+            <foreach collection="tradeMarketList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="secType1 != null and secType1 != ''">
+            AND T4.TYPE_9 = #{secType1,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodIdList != null and finprodIdList.size() > 0">
+            AND FP.finprod_id in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
 
 
 </mapper>

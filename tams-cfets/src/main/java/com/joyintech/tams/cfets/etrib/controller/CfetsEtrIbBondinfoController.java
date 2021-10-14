@@ -12,6 +12,7 @@ package com.joyintech.tams.cfets.etrib.controller;
 
 import java.util.Map;
 
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,31 @@ public class CfetsEtrIbBondinfoController {
         }catch (Exception e) {
             logger.error("查询产品持仓分页列表异常",e);
             return new Message<Page<CfetsEtrIbBondinfo001Dto>>().fail().setMessage("查询产品持仓分页列表异常");
+        }
+    }
+    /**
+     * 检索产品持仓分页数据。 <功能详细描述>
+     *
+     * @param pageParam int
+     * @param page int
+     * @param length int
+     * @return Page<EtrExchangeTrade002Dto>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    @ApiOperation(value = "查询产品持仓分页列表New", notes = "查询产品持仓分页列表New")
+    @PostMapping("/findPositionsPageNew/{page}/{length}")
+    public Message<Page<CfetsEtrIbBondPosinfo001Dto>> findPositionsPageNew(@RequestBody Map<String, Object> pageParam,
+                                                                        @PathVariable("page") int page,
+                                                                        @PathVariable("length") int length)
+            throws Exception {
+        try {
+            Page<CfetsEtrIbBondPosinfo001Dto> list = cfetsEtrIbBondinfoService.findPositionsPageNew(page, length, pageParam);
+            return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().success().setData(list);
+        }catch (Exception e) {
+            logger.error("查询产品持仓分页列表异常",e);
+            return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().fail().setMessage("查询产品持仓分页列表异常");
         }
     }
 }

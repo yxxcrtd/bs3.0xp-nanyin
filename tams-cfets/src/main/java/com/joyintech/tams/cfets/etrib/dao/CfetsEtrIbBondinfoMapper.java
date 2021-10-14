@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.cfets.etrib.dao;
 
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrTrdProductDealDto;
 import org.springframework.stereotype.Repository;
@@ -44,5 +45,23 @@ public interface CfetsEtrIbBondinfoMapper {
      * @return
      */
     List<CfetsEtrTrdProductDealDto> getTradeListByFinprodId(Map<String, Object> map);
+    /**
+     * 查询产品基本信息
+     * <功能详细描述>
+     * @param pageParam 查询参数
+     * @return 分页结果
+     * @see
+     * @since 1.0
+     */
+    List<CfetsEtrIbBondPosinfo001Dto> selectPortfolioInfoist(Map<String, Object> pageParam);
+    /**
+     * 查询资产基本信息
+     * <功能详细描述>
+     * @param pageParam 查询参数
+     * @return 分页结果
+     * @see
+     * @since 1.0
+     */
+    List<CfetsEtrIbBondPosinfo001Dto> selectFinprodInfoList(Map<String, Object> pageParam);
 
 }
