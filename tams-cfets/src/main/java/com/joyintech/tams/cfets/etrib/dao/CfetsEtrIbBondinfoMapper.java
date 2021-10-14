@@ -10,7 +10,12 @@
  
 package com.joyintech.tams.cfets.etrib.dao;
 
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrTrdProductDealDto;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  *  场内交易委托
@@ -23,5 +28,21 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CfetsEtrIbBondinfoMapper {
 
+    /**
+     * 产品持仓信息分页查询
+     * <功能详细描述>
+     * @param pageParam 查询参数
+     * @return 分页结果
+     * @see
+     * @since 1.0
+     */
+    List<CfetsEtrIbBondinfo001Dto> findPositionsPage(Map<String, Object> pageParam);
+
+    /**
+     * 根据资产代码获取相关交易信息列表
+     * @param map
+     * @return
+     */
+    List<CfetsEtrTrdProductDealDto> getTradeListByFinprodId(Map<String, Object> map);
 
 }

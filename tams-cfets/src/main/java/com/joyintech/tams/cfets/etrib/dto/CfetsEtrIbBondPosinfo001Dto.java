@@ -1,12 +1,11 @@
 package com.joyintech.tams.cfets.etrib.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * 银行间债券指令，持仓信息

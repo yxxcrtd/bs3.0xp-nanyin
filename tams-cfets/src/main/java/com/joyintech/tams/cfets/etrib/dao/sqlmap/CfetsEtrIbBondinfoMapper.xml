@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.service.entrust.etribbondinfo.dao.EtrIbBondinfo001Mapper">
+<mapper namespace="com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper">
     <!-- 场内交易持仓查询 -->
     <select id="findPositionsPage" parameterType="Map"
-            resultType="com.joyintech.service.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto">
+            resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto">
     select
         TEMP.PORTFOLIO_ID portfolioId,
         PP.PORTFOLIO_NAME portfolioName,
@@ -126,24 +126,24 @@
             </foreach>
         </if>
     </select>
-
-    <!-- 指令管理查询 -->
+<!--
+    &lt;!&ndash; 指令管理查询 &ndash;&gt;
     <select id="findZqzyPositionsPage" parameterType="Map"
             resultType="com.joyintech.service.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto">
         select aaa.* from (
             <choose>
                 <when test="vagueQuery == '有效'">
-                    <!-- 有效状态查询 -->
+                    &lt;!&ndash; 有效状态查询 &ndash;&gt;
                     <include refid="onlyEtrEntrust"></include>
                 </when>
                 <when test="entrustStatus == ''"> 
-                    <!-- 查询全部状态 -->
+                    &lt;!&ndash; 查询全部状态 &ndash;&gt;
                     <include refid="onlyEtrEntrust"></include>
                     UNION ALL
                     <include refid="onlyWtfEtrEntrust"></include>
                 </when>
                 <when test="entrustStatus == ENTRUST_STATUS_08"> 
-                    <!-- 只查流程中的数据 -->
+                    &lt;!&ndash; 只查流程中的数据 &ndash;&gt;
                     <include refid="onlyWtfEtrEntrust"></include>
                 </when>
                 <otherwise>
@@ -154,7 +154,7 @@
         left join SYS_DATADICT_LIST sdl on aaa.entrustStatus=sdl.ITEM_CODE and sdl.DICT_CODE='ENTRUST_STATUS'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
         left join SYS_DATADICT_LIST dictpriceModel on aaa.priceModel=dictpriceModel.ITEM_CODE and dictpriceModel.DICT_CODE='PRICE_MODEL'
-        <!-- 关键字模糊查询 -->
+        &lt;!&ndash; 关键字模糊查询 &ndash;&gt;
         <include refid="vagueQueryWhere"></include>
         order by sdl.ORDER_NO, aaa.entrustId DESC
     </select>
@@ -225,7 +225,7 @@
             </foreach>)
         </if>
         <if test="finprodAbbr != null and finprodAbbr != ''">
-            <!--联想框返回为市场代码-->
+            &lt;!&ndash;联想框返回为市场代码&ndash;&gt;
             AND T3.FINPROD_MARKET_ID like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
         </if>
         <if test="settleSpeed != null and settleSpeed != ''">
@@ -357,8 +357,8 @@
             </where>
         </if>
     </sql>
-    
-    <select id="getTradeListByFinprodId" resultType="com.joyintech.service.entrust.etribbondinfo.dto.EtrTrdProductDealDto">
+ -->
+    <select id="getTradeListByFinprodId" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrTrdProductDealDto">
         select t.finprod_id finprodId,t.share_amt shareAmt,t.yield,t.ps,t.UNIT_CPRICE unitCprice,
         pt.PORTFOLIO_ID
         from trd_product_deal t
@@ -388,7 +388,7 @@
         and t.ps in('T01','T02')
         order by t.UPDATE_TIME asc
     </select>
-
+<!--
     <select id="getEtrFinProductInfo" resultType="com.joyintech.service.entrust.etribbondinfo.dto.EtrFinProductDto">
 select
     t1.FINPROD_MARKET_ID secId,
@@ -447,7 +447,7 @@ from
     LEFT JOIN FIN_CASH_CALC_RULE t8 ON t8.FINPROD_ID=tempT8.FINPROD_ID AND t8.EFF_DATE = tempT8.EFF_DATE
     and t8.CASH_ID = t5.CASH_ID
     LEFT JOIN (
-        <!-- 取大于当前时间的最接近的实际行权日 -->
+        &lt;!&ndash; 取大于当前时间的最接近的实际行权日 &ndash;&gt;
         select A.FINPROD_ID,min(A.EXERCISE_DATE) EXERCISE_DATE
         from FIN_EXERCISE_PLAN A 
         where
@@ -509,7 +509,7 @@ from
         and t.is_cancel='N'
         and t.ps in('T01','T02')
         order by t.CREATE_TIME asc
-    </select>
+    </select>-->
 
 
 

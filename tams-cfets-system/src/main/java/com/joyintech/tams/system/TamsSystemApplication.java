@@ -1,10 +1,7 @@
 package com.joyintech.tams.system;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.text.MessageFormat;
-
+import com.joyintech.framework.config.WebApplication;
+import com.joyintech.system.SystemApplication;
 import org.springframework.beans.PropertyValue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.bind.PropertySourcesPropertyValues;
@@ -17,11 +14,12 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-
-import com.joyintech.framework.config.WebApplication;
-import com.joyintech.system.SystemApplication;
-
 import springfox.documentation.spring.web.plugins.Docket;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.MessageFormat;
 
 /**
  * 系统启动类
@@ -31,7 +29,7 @@ public class TamsSystemApplication extends WebApplication {
 
 	@Bean
 	public Docket dataCfetsOpstDocket() {
-		return SwaggerConfig.createDocket("银行间", "com.joyintech.dsp.core.controller.ops");
+		return SwaggerConfig.createDocket("银行间指令", "com.joyintech.tams.cfets.etrib.controller");
 	}
 		
 	public static void main(String[] args) throws Exception {
