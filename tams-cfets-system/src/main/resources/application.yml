@@ -22,3 +22,25 @@ spring:
     include:
       - framework
       - cfets
+  rabbitmq:
+    # 开发环境使用mq配置如下
+    addresses: 192.168.60.97:5672
+    username: rbmq
+    password: rbmq
+    #243测试环境使用mq配置如下
+    #    addresses: 192.168.90.243:5672
+    #    username: rbmq
+    #    password: rbmq
+    publisher-confirms: true
+    publisher-returns: true
+    listener:
+      simple:
+        max-concurrency: 20
+        concurrency: 1
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+    template:
+      retry:
+        enabled: false
+      mandatory: true

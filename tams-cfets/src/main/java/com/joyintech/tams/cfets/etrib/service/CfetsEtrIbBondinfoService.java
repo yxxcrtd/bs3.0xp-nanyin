@@ -15,13 +15,20 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.dto.PositionRuleInterDto;
+import com.joyintech.tams.business.common.dto.PositionRulePtlData;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrTrdProductDealDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -30,6 +37,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -173,4 +181,71 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         pageParam.put("tradeMarketList", tradeMarketList);
     }
 
+    /**
+     * 调用方式
+     * PositionFutureManager.send(createMessage(dto, DictCodeListExt3.流程节点_审批生效.getValue(), DictCodeListExt3.系统动作_新建.getValue()));
+     * 冲正方式
+     * PositionFutureManager.revoke(dto.getEntrustId(), DictCodeListExt1.子系统代码_委托.getValue(), e);
+     * 
+     * 撤回
+     * PositionRuleInterDto pDto = PositionUtil.initDto(dto.getEntrustId());
+     * pDto.setSystemAct(DictCodeListExt3.系统动作_新建.getValue()); // 
+     * pDto.setModelType(DictCodeListExt1.子系统代码_委托.getValue());// 委托
+     * pDto.setFlowStatus(DictCodeListExt3.流程节点_流程退回.getValue());
+     *
+     *         // 调用头寸引擎
+     *         PositionFutureManager.sendRevoke(pDto);
+     *         
+     * @param dto
+     * @param flowStatus
+     * @param systemAct
+     * @return
+     */
+    public PositionRuleInterDto createMessage(CfetsEtrIbBondinfo002Dto dto, String flowStatus, String systemAct) {
+
+        PositionRuleInterDto result = PositionUtil.initDto(dto.getEntrustId());
+        try {
+            // head
+            result.setFlowStatus(flowStatus); // 
+            result.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
+
+            if (StringUtil.isNotEmpty(dto.getBalanceCheck())){
+                result.setBalanceCheck(dto.getBalanceCheck());
+            }
+
+            // body 
+            result.setBusiType(DictCodeListExt3.头寸业务类型_现券交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())){
+                result.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易    
+            }
+
+            result.setSettleSpeed(dto.getSettleSpreed()); // 清算速度 
+            result.setTradePlace(dto.getTradeMarket()); // 上交所或深交所
+            result.setDeliveryType("03"); // 结算方式
+            result.setCcy(dto.getCcy()); // 币种
+            result.setCdate(dto.getVdate()); // 开始日
+            result.setBusiAct(DictCodeListExt3.业务动作_投资指令.getValue()); // 业务动作：01投资指令，02交易登记，03汇总确认，中标结果维护
+            result.setPs(dto.getPs());
+            result.setSystemAct(systemAct);
+            result.setFinprodId(dto.getFinprodId());
+
+            // ptlList
+            PositionRulePtlData d = new PositionRulePtlData();
+            d.setPortfolioId(dto.getPortfolioId()); // 组合代码
+            d.setCashAcctId(EtrCommonCashPositionDealService.select组合托管户(dto.getPortfolioId(), dto.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+            d.setCashAmount(dto.getFpriceAmt()); // 交易金额
+            d.setSecAcctId(dto.getSecAcctId());
+            d.setSecAmount(dto.getEntrustNum()); // 本方券面总额
+            d.setTradeId(dto.getEntrustId()); // 指令或交易编号
+            d.setEtrId(dto.getEntrustId());
+            d.setEtrComplete(DictCodeList.是否_是.getValue());
+            d.setInvAim(dto.getInvAim());
+            d.setIntegrateSecAmount(dto.getIntAmt()); // 场内暂时为空，银行间会有
+            result.setPtlList(Arrays.asList(d)); // 融入券券面总额
+
+            return result;
+        } catch (Exception e) {
+            throw new RuntimeException("指令消息初始化失败", e);
+        }
+    }
 }
