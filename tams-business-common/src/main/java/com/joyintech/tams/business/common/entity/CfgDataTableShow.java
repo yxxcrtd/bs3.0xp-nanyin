@@ -1,6 +1,9 @@
 package com.joyintech.tams.business.common.entity;
 
-@ApiModel(value = "数据表格设置")
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "数据表格设置实体类")
 public class CfgDataTableShow {
 
     @ApiModelProperty(name = "pageCode", value = "页面编码")
