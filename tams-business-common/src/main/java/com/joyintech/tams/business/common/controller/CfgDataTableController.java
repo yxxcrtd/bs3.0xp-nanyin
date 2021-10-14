@@ -35,7 +35,7 @@ public class CfgDataTableController {
 	    	if(StringUtil.isEmpty(pageCode)) {
 	    		return new Message<Map<String, List<CfgDataTableShow>>>().setMessage("页面编码不能为空！");
 	    	}
-	        return new Message<>(cfgDataTableService.getByPageCode(pageCode));
+	        return new Message<Map<String, List<CfgDataTableShow>>>(cfgDataTableService.getByPageCode(pageCode));
     	}catch (Exception e) {
     		logger.error("获取配置分组详细信息失败",e);
 			return new Message<Map<String, List<CfgDataTableShow>>>().fail();

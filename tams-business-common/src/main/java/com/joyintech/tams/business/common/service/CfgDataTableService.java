@@ -5,6 +5,8 @@ import com.joyintech.tams.business.common.entity.CfgDataTableShow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +34,18 @@ public class CfgDataTableService {
      * @return
      */
     public Map<String,List<CfgDataTableShow>> getByPageCode(String pageCode){
-        return cfgDataTableMapper.getByPageCode(pageCode);
+    	List<CfgDataTableShow> list = cfgDataTableMapper.listByPageCode(pageCode);
+    	Map<String,List<CfgDataTableShow>> ret = new HashMap<String, List<CfgDataTableShow>>();
+    	for (CfgDataTableShow info : list) {
+			String dtcode = info.getDtCode();
+			List<CfgDataTableShow> temp = ret.get(dtcode);
+			if (temp==null) {
+				temp = new ArrayList<CfgDataTableShow>();
+				ret.put(dtcode, temp);
+			}
+			temp.add(info);
+		}
+        return ret;
     }
 
 }
