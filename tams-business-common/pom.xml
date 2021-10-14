@@ -29,10 +29,14 @@
 			<version>2.5.0</version>
 		</dependency>
 
+<!--		<dependency>-->
+<!--			<groupId>com.joyintech</groupId>-->
+<!--			<artifactId>framework-rabbitmq</artifactId>-->
+<!--			<version>0.0.4</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>com.joyintech</groupId>
-			<artifactId>framework-rabbitmq</artifactId>
-			<version>0.0.4</version>
+			<artifactId>framework-core</artifactId>
 		</dependency>
 	</dependencies>
 </project>
