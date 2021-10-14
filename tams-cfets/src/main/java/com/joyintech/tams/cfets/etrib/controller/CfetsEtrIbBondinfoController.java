@@ -10,20 +10,24 @@
 
 package com.joyintech.tams.cfets.etrib.controller;
 
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 银行间债券指令
@@ -55,9 +59,6 @@ public class CfetsEtrIbBondinfoController {
      */
     @ApiOperation(value = "查询产品持仓分页列表", notes = "查询产品持仓分页列表")
     @PostMapping("/findPositionsPage/{page}/{length}")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="page",value="页码",dataType="int",example="1"),
-            @ApiImplicitParam(name="length",value="每页大小",dataType="int",example="20")})
     public Message<Page<CfetsEtrIbBondinfo001Dto>> findPositionsPage(@RequestBody Map<String, Object> pageParam,
                                                                      @PathVariable("page") int page,
                                                                      @PathVariable("length") int length)

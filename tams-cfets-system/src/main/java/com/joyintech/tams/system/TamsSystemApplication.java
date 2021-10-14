@@ -28,10 +28,15 @@ import java.text.MessageFormat;
 public class TamsSystemApplication extends WebApplication {
 
 	@Bean
-	public Docket dataCfetsOpstDocket() {
+	public Docket dataCfetsDocket() {
 		return SwaggerConfig.createDocket("银行间指令", "com.joyintech.tams.cfets.etrib.controller");
 	}
-		
+	
+	@Bean
+	public Docket dataBusinessCommonDocket() {
+		return SwaggerConfig.createDocket("通用接口", "com.joyintech.tams.business.common.controller");
+	}
+	
 	public static void main(String[] args) throws Exception {
     	initLog();
     	initSpring(args);
