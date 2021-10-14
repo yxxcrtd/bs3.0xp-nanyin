@@ -248,7 +248,11 @@ $(function () {
                 Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery001/getBooksetName',booksetIdParm,function(result) {
                     booksetName = result.data;
                     var titleName='资产估值表';
+                    if(dataId != alt){ // 输入不存在的账套
+                        booksetName = '';
+                    }
                     document.getElementById('titleName').innerHTML=booksetName+ '(' +booksetId+ ')' +titleName+valDate;
+                    table.reload();
                 })
             }
 
