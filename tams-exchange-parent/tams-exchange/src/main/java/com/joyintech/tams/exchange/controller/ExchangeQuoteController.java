@@ -110,4 +110,3 @@ public class ExchangeQuoteController {
         return quoteService.queryIntegratedFixedIncomeQuote(param);
     }
 }
-C
