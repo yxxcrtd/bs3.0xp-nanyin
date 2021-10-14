@@ -37,6 +37,10 @@ public class CfetsEtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntit
     private static final long serialVersionUID = -8503717126985211652L;
 
     /**
+     * 头寸引擎使用，余额是否校验
+     */
+    private String balanceCheck;
+    /**
      * 全价总额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -762,5 +766,13 @@ public class CfetsEtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntit
 
     public void setTrader(String trader) {
         this.trader = trader;
+    }
+
+    public String getBalanceCheck() {
+        return balanceCheck;
+    }
+
+    public void setBalanceCheck(String balanceCheck) {
+        this.balanceCheck = balanceCheck;
     }
 }

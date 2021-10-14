@@ -5,6 +5,7 @@
 		<groupId>com.joyintech</groupId>
 		<artifactId>tams-parent</artifactId>
 		<version>0.0.4</version>
+		<relativePath/>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>tams-business-common</artifactId>
@@ -31,6 +32,16 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.5.0</version>
+		</dependency>
+
+<!--		<dependency>-->
+<!--			<groupId>com.joyintech</groupId>-->
+<!--			<artifactId>framework-rabbitmq</artifactId>-->
+<!--			<version>0.0.4</version>-->
+<!--		</dependency>-->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>framework-core</artifactId>
 		</dependency>
 	</dependencies>
 </project>
