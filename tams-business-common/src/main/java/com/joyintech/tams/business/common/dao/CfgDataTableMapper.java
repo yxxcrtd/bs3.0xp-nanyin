@@ -1,12 +1,11 @@
 package com.joyintech.tams.business.common.dao;
 
-import com.joyintech.tams.business.common.entity.CfgDataTableShow;
-import org.apache.ibatis.annotations.MapKey;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Map;
+import com.joyintech.tams.business.common.entity.CfgDataTableShow;
 
 @Repository
 public interface CfgDataTableMapper {
@@ -24,7 +23,6 @@ public interface CfgDataTableMapper {
      * @return
      */
     @Select("select * from CFG_DATATABLE_SHOW where PAGECODE = #{pageCode} and status = 1")
-    @MapKey("DTCODE")
-    public Map<String,List<CfgDataTableShow>> getByPageCode(String pageCode);
+    public List<CfgDataTableShow> listByPageCode(String pageCode);
 
 }
