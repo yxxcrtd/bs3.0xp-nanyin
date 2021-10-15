@@ -63,6 +63,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -3658,4 +3661,37 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 	}
     //add by chenjiaxing 债券竞价交易计算偏离度 20210907 end
 
+	// add by etliu 20211013 start
+	// TISHKS-5 bug修复：在场内下指令时，资产选了万科之后，出现申购选项，但理论上不应该出现(万科很早就上市了)，我在申报信息维护中也没有看到万科的新股申报
+	/**
+	 * 当前选中股票是否处在新股申购期
+	 *
+	 * @param params 画面参数
+	 * @return 当前选中股票是否存在新股申购期
+	 * @see
+	 * @since 1.0
+	 */
+	public String isXinGuShenGou(@RequestParam Map<String, Object> params) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("finprodId", params.get("finprodId"));//金融产品代码
+		List<String> othTypeList = new ArrayList<String>();
+		othTypeList.add(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
+		paramMap.put("othTypeList", othTypeList);
+
+		List<FinProductOthCodeDto> codeDtos = this.getFinprodOthCodeInfo(paramMap);
+
+		if (StringUtil.isEmptyList(codeDtos)) {
+			return DictCodeList.是否_否.getValue();
+		}
+
+		Date sysdate = DateUtil.parse(DateUtil.getSysDate());
+		boolean isXinGuShenGou = codeDtos.stream().filter(x -> DateUtil.compareDate(x.getDeclaredStartDate(), sysdate) <= 0
+				&& DateUtil.compareDate(x.getDeclaredEndDate(), sysdate) >= 0).findFirst().isPresent();
+		if (isXinGuShenGou) {
+			return DictCodeList.是否_是.getValue();
+		}
+
+		return DictCodeList.是否_否.getValue();
+	}
+	// add by etliu 20211013 end
 }

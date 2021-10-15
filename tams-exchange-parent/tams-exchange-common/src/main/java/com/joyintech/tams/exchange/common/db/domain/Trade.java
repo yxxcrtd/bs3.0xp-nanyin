@@ -164,6 +164,7 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
         this.tradedPrice = new BigDecimal("0.00");
         this.clearBalance = new BigDecimal("0.00");
         this.discount = new BigDecimal("0.00");
+        this.fullPrice = new BigDecimal("0.00");
     }
 
     public boolean isNoCancelEntrust() {

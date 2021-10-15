@@ -450,7 +450,11 @@ public class FinPlanNetAssetService extends CommonExportService<FinPlanNetAssetD
                 RepAssetOther repAssetOther = new RepAssetOther();
                 repAssetOther.setRepFinprodId(finProduct.getFinprodId());
                 //BeanUtil.copyPropertiesIgnoreNull(repAssetOther, bussRepOutInvestAgrInfoDto.getRepAssetOther());
-                repAssetOther.setRepPrivateprdFlag(dto.getBussRepAssetMngProdInfo().getRepPrivateprdFlag());
+                // add by zcw TISHKS-3 计划净值型资产新建，审核时报错。 start
+                if(dto.getBussRepAssetMngProdInfo() != null){
+                    repAssetOther.setRepPrivateprdFlag(dto.getBussRepAssetMngProdInfo().getRepPrivateprdFlag());
+                }
+                // add by zcw TISHKS-3 计划净值型资产新建，审核时报错。 end
                 dto.setRepAssetOther(repAssetOther);
                 // 中债其它要素存值by赵东东 2019.10.10 end
             }
