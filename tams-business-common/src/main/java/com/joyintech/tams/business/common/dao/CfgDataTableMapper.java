@@ -1,21 +1,24 @@
 package com.joyintech.tams.business.common.dao;
 
 import com.joyintech.tams.business.common.entity.CfgDataTableShow;
-import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public interface CfgDataTableMapper {
 
+    /**
+     * 表格设置批量插入
+     * @param list
+     */
     void insertCfgDataTableBatch(List<CfgDataTableShow> list);
 
     /**
      * 查询数据表格式设置
+     *
      * @param cfgDataTableShow
      * @return
      */
@@ -30,9 +33,27 @@ public interface CfgDataTableMapper {
     @Select("select * from CFG_DATATABLE_SHOW where PAGECODE = #{pageCode} and status = 1")
     List<CfgDataTableShow> listByPageCode(String pageCode);
 
-    List<CfgDataTableShow> getByPageCode1(@Param("pageCode") String pageCode, @Param("dtCode") String dtCode,
-                                          @Param("effeRange") Integer effeRange,@Param("rangeId") String rangeId);
+    /**
+     * 查询页面数据表格式设置
+     * @param pageCode
+     * @param dtCode
+     * @param effeRange
+     * @param rangeId
+     * @return
+     */
+    List<CfgDataTableShow> getByPageCode(@Param("pageCode") String pageCode, @Param("dtCode") String dtCode,
+                                          @Param("effeRange") Integer effeRange, @Param("rangeId") String rangeId);
 
+    /**
+     * 查询页面数据表格编码
+     * @param pageCode
+     * @return
+     */
     List<String> getDtCodeByPageCode(@Param("pageCode") String pageCode);
 
+    /**
+     * 表格设置批量更新
+     * @param dataList
+     */
+    void updateCfgDataTableBatch(List<CfgDataTableShow> dataList);
 }

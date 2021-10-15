@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.business.common.dao.CfgDataTableMapper">
 
     <sql id="selectCfgDataTableShow">
-        select PAGECODE,DTCODE,COLCODE,PAGENAME,DTNNAME,COLNAME,DICTCODE,SEQNO,DISPLAYED,FROZEN,MINLEN,MAXLEN,EXTENDCFG,EFFERANGE,RANGEID,MDTIME,STATUS,REMARK1,REMARK2,REMARK3 from CFG_DATATABLE_SHOW
+        select PAGECODE,
+               DTCODE,
+               COLCODE,
+               PAGENAME,
+               DTNNAME,
+               COLNAME,
+               DICTCODE,
+               SEQNO,
+               DISPLAYED,
+               FROZEN,
+               MINLEN,
+               MAXLEN,
+               EXTENDCFG,
+               EFFERANGE,
+               RANGEID,
+               MDTIME,
+               STATUS,
+               REMARK1,
+               REMARK2,
+               REMARK3
+        from CFG_DATATABLE_SHOW
     </sql>
 
-    <insert id="insertCfgDataTableBatch" parameterType="java.util.List" >
+    <insert id="insertCfgDataTableBatch" parameterType="java.util.List">
         INSERT ALL
-        <foreach collection ="list" item="dataTable" index= "index">
-         into CFG_DATATABLE_SHOW
-        (PAGECODE,DTCODE,COLCODE,PAGENAME,DTNNAME,COLNAME,DICTCODE,SEQNO,DISPLAYED,FROZEN,MINLEN,MAXLEN,EXTENDCFG,EFFERANGE,RANGEID,MDTIME,STATUS,REMARK1,REMARK2,REMARK3)
-        values(
+        <foreach collection="list" item="dataTable" index="index">
+            into CFG_DATATABLE_SHOW
+            (PAGECODE,DTCODE,COLCODE,PAGENAME,DTNNAME,COLNAME,DICTCODE,SEQNO,DISPLAYED,FROZEN,MINLEN,MAXLEN,EXTENDCFG,EFFERANGE,RANGEID,MDTIME,STATUS,REMARK1,REMARK2,REMARK3)
+            values(
             #{dataTable.pageCode ,jdbcType=VARCHAR},
             #{dataTable.dtCode,jdbcType=VARCHAR},
             #{dataTable.colCode,jdbcType=VARCHAR},
@@ -35,25 +55,102 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{dataTable.remark2,jdbcType=VARCHAR},
             #{dataTable.remark3,jdbcType=VARCHAR}
             )
-        </foreach >
+        </foreach>
         SELECT 1 FROM DUAL
     </insert>
+
+    <update id="updateCfgDataTableBatch" parameterType="java.util.List">
+        <foreach collection="list" item="dataTable" index="index" open="begin" close=";end;" separator=";">
+            update CFG_DATATABLE_SHOW
+            <set>
+                <if test="dataTable.pageCode !=null and dataTable.pageCode !=''">
+                    PAGECODE = #{dataTable.pageCode ,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.dtCode !=null and dataTable.dtCode !=''">
+                    DTCODE = #{dataTable.dtCode,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.colCode !=null and dataTable.colCode !=''">
+                    COLCODE = #{dataTable.colCode,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.pageName !=null and dataTable.pageName !=''">
+                    PAGENAME = #{dataTable.pageName,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.dtnName !=null and dataTable.dtnName !=''">
+                    DTNNAME = #{dataTable.dtnName,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.colName !=null and dataTable.colName !=''">
+                    COLNAME = #{dataTable.colName,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.dictCode !=null and dataTable.dictCode !=''">
+                    DICTCODE = #{dataTable.dictCode,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.seqNo !=null">
+                    SEQNO=#{dataTable.seqNo,jdbcType=BIGINT},
+                </if>
+                <if test="dataTable.disPlayed !=null">
+                    DISPLAYED = #{dataTable.disPlayed,jdbcType=BIGINT},
+                </if>
+                <if test="dataTable.frozen !=null">
+                    FROZEN = #{dataTable.frozen,jdbcType=BIGINT},
+                </if>
+                <if test="dataTable.minLen !=null">
+                    MINLEN = #{dataTable.minLen,jdbcType=BIGINT},
+                </if>
+                <if test="dataTable.maxLen !=null">
+                    MAXLEN = #{dataTable.maxLen,jdbcType=BIGINT},
+                </if>
+                <if test="dataTable.extendCfg !=null and dataTable.extendCfg !=''">
+                    EXTENDCFG = #{dataTable.extendCfg,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.effeRange !=null">
+                    EFFERANGE = #{dataTable.effeRange,jdbcType=BIGINT},
+                </if>
+                <if test="dataTable.rangeId !=null and dataTable.rangeId !=''">
+                    RANGEID = #{dataTable.rangeId,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.mdTime !=null and dataTable.mdTime !=''">
+                    MDTIME = #{dataTable.mdTime,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.status !=null">
+                    STATUS = #{dataTable.status,jdbcType=BIGINT},
+                </if>
+                <if test="dataTable.remark1 !=null">
+                    REMARK1 = #{dataTable.remark1,jdbcType=BIGINT},
+                </if>
+                <if test="dataTable.remark2 !=null and dataTable.remark2 !=''">
+                    REMARK2 = #{dataTable.remark2,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.remark3 !=null and dataTable.remark3 !=''">
+                    REMARK3 = #{dataTable.remark3,jdbcType=VARCHAR}
+                </if>
+            </set>
+            where PAGECODE = #{dataTable.pageCode ,jdbcType=VARCHAR} and
+            DTCODE = #{dataTable.dtCode,jdbcType=VARCHAR} and
+            COLCODE = #{dataTable.colCode,jdbcType=VARCHAR} and
+            EFFERANGE = #{dataTable.effeRange,jdbcType=BIGINT} and
+            RANGEID = #{dataTable.rangeId,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
 
     <select id="getCfgDataTableList" resultType="com.joyintech.tams.business.common.entity.CfgDataTableShow">
 
     </select>
 
     <select id="getDtCodeByPageCode" parameterType="String" resultType="java.lang.String">
-        select distinct(DTCODE) from CFG_DATATABLE_SHOW where PAGECODE = #{pageCode}
+        select distinct(DTCODE)
+        from CFG_DATATABLE_SHOW
+        where PAGECODE = #{pageCode}
     </select>
 
-    <select id="getByPageCode1" parameterType="String" resultType="com.joyintech.tams.business.common.entity.CfgDataTableShow">
+    <select id="getByPageCode" parameterType="String"
+            resultType="com.joyintech.tams.business.common.entity.CfgDataTableShow">
         <include refid="selectCfgDataTableShow"/>
         <where>
-            <if test="pageCode != null  and pageCode != ''"> and PAGECODE = #{pageCode}</if>
-            <if test="dtCode != null  and dtCode != ''"> and DTCODE = #{dtCode}</if>
-            <if test="effeRange != null  and effeRange != ''"> and EFFERANGE = #{effeRange}</if>
-            <if test="rangeId != null  and rangeId != ''"> and RANGEID = #{rangeId}</if>
+            <if test="pageCode != null  and pageCode != ''">and PAGECODE = #{pageCode}</if>
+            <if test="dtCode != null  and dtCode != ''">and DTCODE = #{dtCode}</if>
+            <if test="effeRange != null  and effeRange != ''">and EFFERANGE = #{effeRange}</if>
+            <if test="rangeId != null  and rangeId != ''">and RANGEID = #{rangeId}</if>
         </where>
         and STATUS = 1 order by SEQNO
     </select>

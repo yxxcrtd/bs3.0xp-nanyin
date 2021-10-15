@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.business.common.dao.CfgDataTableFlagMapper">
 
-    <select id="getByPageCodeAndDtCode" parameterType="String" resultType="com.joyintech.tams.business.common.entity.CfgDataTableShowFlag">
-        select * from CFG_DATATABLE_SHOW_FLAG where PAGECODE=#{pageCode} and DTCODE = #{dtCode} and RANGEID = #{rangeId}
+    <select id="getByPageCodeAndDtCode" parameterType="String"
+            resultType="com.joyintech.tams.business.common.entity.CfgDataTableShowFlag">
+        select *
+        from CFG_DATATABLE_SHOW_FLAG
+        where PAGECODE = #{pageCode}
+          and DTCODE = #{dtCode}
+          and RANGEID = #{rangeId}
     </select>
+
+    <insert id="insertCfgDataTableFlag" parameterType="com.joyintech.tams.business.common.entity.CfgDataTableShowFlag">
+        insert into CFG_DATATABLE_SHOW_FLAG(PAGECODE, DTCODE, COLCODE, EFFERANGE, RANGEID)
+        values (#{pageCode ,jdbcType=VARCHAR},
+                #{dtCode,jdbcType=VARCHAR},
+                #{colCode,jdbcType=VARCHAR},
+                #{effeRange,jdbcType=BIGINT},
+                #{rangeId,jdbcType=VARCHAR})
+    </insert>
 
 
 </mapper>
