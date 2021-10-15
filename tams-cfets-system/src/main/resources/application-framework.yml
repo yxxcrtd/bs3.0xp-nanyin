@@ -12,10 +12,10 @@ spring:
     removeAbandonedOnMaintenance: true
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000  
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS303INIT_TEST1008
-    password: BS303INIT_TEST1008
-    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+    username: BS30INIT_XUQIU
+    password: BS30INIT_XUQIU
+    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
 #  redis:
 #    database: 15
 #    password: joyin!234
@@ -61,9 +61,9 @@ base:
     removeAbandonedOnMaintenance: true
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS303INIT_TEST1008
-    password: BS303INIT_TEST1008
+    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+    username: BS30INIT_XUQIU
+    password: BS30INIT_XUQIU
 mybatis:
   mapperLocations: classpath*:mapper/*.xml,classpath*:com/joyintech/**/dao/sqlmap/**/*.xml
 #####################################
@@ -101,7 +101,7 @@ shiro:
   sessionId: JSESSIONID
   casClientName: datarouter
 # allowUrl: /webjars/**,/swagger/**,/v2/api-docs,/swagger-ui.html,doc.html,/swagger-resources/**,/swagger-resources,/configuration/security,/configuration/ui
-  allowUrl: ${dsp.url.core}/**,${dsp.url.datarouter}/**,${dsp.url.quality}/**
+  allowUrl: /common/config/dataTable/**,/cfets/**
   ssoEnable: true
 #  casEnable: true
 #  casServerUrlPrefix: http://223.240.85.197:8083/cas #cas server地址
