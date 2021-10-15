@@ -100,7 +100,7 @@ public class RepprodIndexInterfService extends FileImpService{
 //				    dto.setNetvalueTotalYield(new BigDecimal(map.get("NETVALUE_TOTAL_YIELD")));
 //				    dto.setNetvalueTdyIncre(new BigDecimal(map.get("NETVALUE_TDY_INCRE")));
 //				    dto.setNetvalueTotalIncre(new BigDecimal(map.get("NETVALUE_TOTAL_INCRE")));
-//				    dto.setFloatBaseRate(new BigDecimal(map.get("FLOAT_BASE_RATE")));
+				    dto.setFloatBaseRate(DisInterfDecimalUtil.str2BigDecimal(map.get("FLOAT_BASE_RATE")));
 //				    dto.setBounusValue(new BigDecimal(map.get("BOUNUS_VALUE")));
 				    dto.setRateBenchmark(DisInterfDecimalUtil.str2BigDecimal(map.get("RATE_BENCHMARK")));
 //				    dto.setCashFormGrantTotal(new BigDecimal(map.get("CASH_FORM_GRANT_TOTAL")));
