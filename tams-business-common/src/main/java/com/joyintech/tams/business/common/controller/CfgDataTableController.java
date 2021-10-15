@@ -2,7 +2,6 @@ package com.joyintech.tams.business.common.controller;
 
 import com.github.pagehelper.util.StringUtil;
 import com.joyintech.tams.business.common.constant.Constant;
-import com.joyintech.tams.business.common.dto.SetDataTabelDto;
 import com.joyintech.tams.business.common.entity.CfgDataTableShow;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.CfgDataTableService;

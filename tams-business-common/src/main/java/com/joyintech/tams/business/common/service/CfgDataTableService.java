@@ -30,26 +30,12 @@ public class CfgDataTableService {
      */
     private static final int EFFERANGE_NO = 0;
 
-    /**
-     * 用户设置操作方向
-     */
-    private static final int SET_FLAG = 1;
 
     @Autowired
     private CfgDataTableMapper cfgDataTableMapper;
 
     @Autowired
     private CfgDataTableFlagMapper cfgDataTableFlagMapper;
-
-    /**
-     * 查询数据表格式设置
-     *
-     * @param cfgDataTableShow
-     * @return
-     */
-    public List<CfgDataTableShow> getCfgDataTableList(CfgDataTableShow cfgDataTableShow) {
-        return cfgDataTableMapper.getCfgDataTableList(cfgDataTableShow);
-    }
 
     /**
      * 查询页面数据表格式设置
