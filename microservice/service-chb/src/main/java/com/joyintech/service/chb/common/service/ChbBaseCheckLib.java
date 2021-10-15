@@ -38,12 +38,12 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public class ChbBaseCheckLib {
-//	  public static Map<String,List<ChbTransformRuleObjDto>> objFiledsMap;
+    //	  public static Map<String,List<ChbTransformRuleObjDto>> objFiledsMap;
 //	  public static Map<String,TransformRule001Dto> spzMap;
-	  public static final String PATTERN_ALL = "^[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF]{0,}$";
-	  public static final String PATTERN_COMMON="^[\\u0020-\\u0026-\\u0028-\\u002F-\\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B\\u007D\\u007E\\u0030-\\u0039-\\u0041-\\u005A-\\u0061-\\u007A]{0,}$";
-	  public static final String PATTERN_NOCHINESE="^[\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF]{0,}$";
-	  public static final String PATTERN_NOSYMBOL="(((\\d+%)|(\\d+%-\\d+%)):[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF&&[^\\u0025\\u003A-\\u003B\\u002D]]+;)*(((\\d+%)|(\\d+%-\\d+%)):[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF&&[^\\u0025\\u003A-\\u003B\\u002D]]+)";
+    public static final String PATTERN_ALL = "^[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF]{0,}$";
+    public static final String PATTERN_COMMON="^[\\u0020-\\u0026-\\u0028-\\u002F-\\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B\\u007D\\u007E\\u0030-\\u0039-\\u0041-\\u005A-\\u0061-\\u007A]{0,}$";
+    public static final String PATTERN_NOCHINESE="^[\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF]{0,}$";
+    public static final String PATTERN_NOSYMBOL="(((\\d+%)|(\\d+%-\\d+%)):[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF&&[^\\u0025\\u003A-\\u003B\\u002D]]+;)*(((\\d+%)|(\\d+%-\\d+%)):[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF&&[^\\u0025\\u003A-\\u003B\\u002D]]+)";
 
     /**
      * 根据指定的规则，判断数据是否为空
@@ -76,7 +76,7 @@ public class ChbBaseCheckLib {
         return (srcValue.length() < length);
     }
 
-        /**
+    /**
      * 根据指定的规则，判断数据字符长度是否超过指定的长度 ，默认GBK编码
      * @param data 被检查的数据
      * @param rule 检查规则实体
@@ -85,23 +85,23 @@ public class ChbBaseCheckLib {
      * @since 1.0
      */
     public static boolean lessThanCharLength(Map<String, String> data, CheckElement rule){
-    	String srcValue = data.get(rule.getSrcproperty());
+        String srcValue = data.get(rule.getSrcproperty());
         if ( StringUtil.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         //add by wm condition表中无nullable字段，并且当字段比较为0时，返回true start
         if(StringUtil.isEmpty(srcValue)  && StringUtil.isEmpty(rule.getNullable()) && StringUtil.equals("0", rule.getObjvalue()) )
-        	return true;
+            return true;
         //add by wm condition表中无nullable字段，并且当字段比较为0时，返回true end
         if ( StringUtil.isEmpty(srcValue) )
             return false;
         int length = Integer.parseInt(rule.getObjvalue());
         try {
-			byte[] b_gbk = srcValue.getBytes("GBK");
-			return (b_gbk.length < length);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return false;
-		}
+            byte[] b_gbk = srcValue.getBytes("GBK");
+            return (b_gbk.length < length);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -366,7 +366,7 @@ public class ChbBaseCheckLib {
             return false;
         // add by zhangmingming 数据字典增加多选情况 20191224 start
         if(StringUtil.equals(rule.getCompareto(),"<")){
-        	 List<String> srcValueList = Arrays.asList(srcValue.split(","));
+            List<String> srcValueList = Arrays.asList(srcValue.split(","));
             // 可以多选 但是不能重复
             if(srcValueList.size() != new HashSet<String>(srcValueList).size()){
                 return false;
@@ -385,7 +385,7 @@ public class ChbBaseCheckLib {
             if(flag == srcValueList.size())  return true;
 
             return false;
-        // add by zhangmingming 数据字典增加多选情况 20191224 end
+            // add by zhangmingming 数据字典增加多选情况 20191224 end
         }else {
             String objValue = rule.getObjvalue();
             DataDict dto = CacheUtil.getDictCode(objValue);
@@ -725,7 +725,7 @@ public class ChbBaseCheckLib {
      * @return
      */
     public static boolean inWhitelistAll(String str){
-    	 return str.matches(PATTERN_ALL);
+        return str.matches(PATTERN_ALL);
     }
     /**
      * 判断是否在常用白名单中
@@ -733,7 +733,7 @@ public class ChbBaseCheckLib {
      * @return
      */
     public static boolean inWhitelistCommon(String str){
-    	 return str.matches(PATTERN_COMMON);
+        return str.matches(PATTERN_COMMON);
     }
     /**
      * 判断是否在非中文白名单中
@@ -741,7 +741,7 @@ public class ChbBaseCheckLib {
      * @return
      */
     public static boolean inWhitelistNoChines(String str){
-    	  return str.matches(PATTERN_NOCHINESE);
+        return str.matches(PATTERN_NOCHINESE);
     }
     /**
      * 判断是否在非符号白名单中
@@ -749,9 +749,9 @@ public class ChbBaseCheckLib {
      * @return
      */
     public static boolean inWhitelistNoSymbol(String str){
-	        return str.matches(PATTERN_NOSYMBOL);
+        return str.matches(PATTERN_NOSYMBOL);
     }
-     // etliu 20191115 add start
+    // etliu 20191115 add start
     /**
      * 根据指定的规则，判断数据的长度是否是定长
      * 允许【固定14位】，或者【固定14位或者15位】
@@ -844,7 +844,7 @@ public class ChbBaseCheckLib {
 
         // ※严格判断是否符合日期格式
         if (ret && DateUtil.isDateStr(srcValue, objValue)
-            && srcValue.length() == objValue.length()) {
+                && srcValue.length() == objValue.length()) {
             ret = true;
         }
         else {
@@ -878,16 +878,16 @@ public class ChbBaseCheckLib {
             return false;
         String objValue = rule.getObjvalue();
         List<String> objValueList = Arrays.asList(objValue.split(","));
-            if(null != objValueList){
-                if("==".equals(compareto)){
-                    if(objValueList.contains(srcValue))
-                        return true;
-                }else if("!=".equals(compareto)){
-                    if(!objValueList.contains(srcValue))
-                        return true;
-                }
-
+        if(null != objValueList){
+            if("==".equals(compareto)){
+                if(objValueList.contains(srcValue))
+                    return true;
+            }else if("!=".equals(compareto)){
+                if(!objValueList.contains(srcValue))
+                    return true;
             }
+
+        }
 
         return false;
     }
@@ -899,20 +899,20 @@ public class ChbBaseCheckLib {
      * @return
      */
     public static boolean inArrayMax(Map<String, String> data, CheckElement rule){
-    	//传入进来的数据值
-    	String srcValue = data.get(rule.getSrcproperty());
-         if ( StringUtil.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
-             return true;
-         if ( StringUtil.isEmpty(srcValue) )
-             return false;
-         //给的固定值
-         String objValue = rule.getObjvalue();
-         List<String> srcValueList = Arrays.asList(srcValue.split(","));
-         String max= Collections.max(srcValueList);
-         if(StringUtil.equals(max, objValue)){
-        	 return true;
-         }
-    	 return  false;
+        //传入进来的数据值
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtil.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+            return true;
+        if ( StringUtil.isEmpty(srcValue) )
+            return false;
+        //给的固定值
+        String objValue = rule.getObjvalue();
+        List<String> srcValueList = Arrays.asList(srcValue.split(","));
+        String max= Collections.max(srcValueList);
+        if(StringUtil.equals(max, objValue)){
+            return true;
+        }
+        return  false;
     }
 
 
@@ -923,20 +923,20 @@ public class ChbBaseCheckLib {
      * @return
      */
     public static boolean inArrayMin(Map<String, String> data, CheckElement rule){
-    	//传入进来的数据值
-    	String srcValue = data.get(rule.getSrcproperty());
-         if ( StringUtil.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
-             return true;
-         if ( StringUtil.isEmpty(srcValue) )
-             return false;
-         //给的固定值
-         String objValue = rule.getObjvalue();
-         List<String> srcValueList = Arrays.asList(srcValue.split(","));
-         String min= Collections.min(srcValueList);
-         if(StringUtil.equals(min, objValue)){
-        	 return true;
-         }
-    	 return  false;
+        //传入进来的数据值
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtil.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+            return true;
+        if ( StringUtil.isEmpty(srcValue) )
+            return false;
+        //给的固定值
+        String objValue = rule.getObjvalue();
+        List<String> srcValueList = Arrays.asList(srcValue.split(","));
+        String min= Collections.min(srcValueList);
+        if(StringUtil.equals(min, objValue)){
+            return true;
+        }
+        return  false;
     }
 
     /**
