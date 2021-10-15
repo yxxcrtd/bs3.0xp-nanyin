@@ -129,7 +129,6 @@ public class HttpUtil {
         CloseableHttpResponse response = null;
 
         try {
-
             response = httpclient.execute(httpPost);
             StatusLine status = response.getStatusLine();
             int state = status.getStatusCode();
@@ -137,8 +136,7 @@ public class HttpUtil {
                 HttpEntity responseEntity = response.getEntity();
                 String jsonString = EntityUtils.toString(responseEntity);
                 return jsonString;
-            }
-            else{
+            } else{
                 //logger.error("请求返回:"+state+"("+url+")");
             }
         }
