@@ -13,29 +13,37 @@ package com.joyintech.tams.cfets.etrib.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.dto.PositionRuleInterDto;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
-import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrTrdProductDealDto;
+import com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper;
+import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.WflEtrEntrust;
+import com.joyintech.tams.common.base.entity.WflEtrEntrustAdd;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -51,6 +59,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
     @Autowired
     private CfetsEtrIbBondinfoMapper cfetsetrIbBondinfoMapper;
+
+    /**
+     * 委托指令流程中Mapper
+     */
+    @Autowired
+    private WflEtrEntrustMapper wflEtrEntrustMapper;
+
+    /**
+     * 委托指令附属表流程中Mapper
+     */
+    @Autowired
+    private WflEtrEntrustAddMapper wflEtrEntrustAddMapper;
+
+
 
     /**
      * 平台日期
@@ -325,4 +347,93 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return result;
 
     }
+
+    /**
+     * 债券质押持仓信息查询
+     *
+     * @param page int
+     * @param length int
+     * @param pageParam int
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public Page<CfetsEtrIbBondinfo001Dto> findZqzyPositionsPage(int page, int length,
+                                                                Map<String, Object> pageParam) {
+        pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        pageParam.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
+        pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
+        String portfolioId = (String)pageParam.get("portfolioId");
+        if(StringUtil.isNotEmpty(portfolioId)){
+            pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
+        }
+        String finprodId = (String)pageParam.get("finprodId");
+        if(StringUtil.isNotEmpty(finprodId)){
+            pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
+        }
+        return super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.findZqzyPositionsPage(pageParam));
+    }
+
+    @Transactional
+    public BaseEtrInvestInfoDto saveBaseEtrInvestInfoDto(CfetsEtrIbBondinfo002Dto dto) {
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+        try {
+            EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
+            EtrEntrust etrEntrust = new EtrEntrust();
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            entrustCommonDto.setEtrEntrust(etrEntrust);
+            entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
+            dto.setInvManagerId(LoginUserUtil.getUserName());
+            dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+            dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            dto.setIsOutTrade(DictCodeList.是否_是.getValue());
+            dto.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            dto.setRecStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            BeanUtil.copyProperties(etrEntrust, dto);
+            etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            etrEntrust.setEntrustAmt(null);
+            etrEntrust.setEntrustNum(dto.getEntrustNum().multiply(new BigDecimal(100))); //前台单位万元
+            BeanUtil.copyProperties(etrEntrustAdd, dto);
+            etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_债券.getValue());
+            etrEntrustAdd.setVdate(null);
+            etrEntrustAdd.setMdate(null);
+            //etrEntrustAdd.setOurEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
+            //etrEntrustAdd.setLendinEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
+            // 单位全价 fuyongsheng 20210917 edit start
+            etrEntrustAdd.setFullPrice(dto.getUnitFprice());
+            // 单位全价 fuyongsheng 20210917 edit end
+            if (dto.getExerYield() != null) {
+                etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));
+            }
+            if (dto.getMatureYield() != null) {
+                etrEntrustAdd.setMatureYield(dto.getMatureYield().divide(new BigDecimal(100)));
+            }
+
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_0.getValue())) {
+                etrEntrustAdd.setSettleSpreed((long) 0);
+            }
+            if (StringUtil.equals(dto.getSettleSpreed(),
+                    DictCodeList.清算速度_T_1.getValue())) {
+                etrEntrustAdd.setSettleSpreed((long) 1);
+            }
+            entity.setEtrEntrust(etrEntrust);
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+            if (entity != null) {
+                WflEtrEntrust entrust = new WflEtrEntrust();
+                WflEtrEntrustAdd entrustAdd = new WflEtrEntrustAdd();
+                BeanUtil.copyPropertiesIgnoreNull(entrust, entity.getEtrEntrust());
+                BeanUtil.copyPropertiesIgnoreNull(entrustAdd, entity.getEtrEntrustAdd());
+                wflEtrEntrustMapper.insertSelective(entrust);
+                wflEtrEntrustAddMapper.insertSelective(entrustAdd);
+                createMessage(dto, DictCodeListExt3.流程节点_审批生效.getValue(), DictCodeListExt3.系统动作_新建.getValue());
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return entity;
+    }
+
 }
