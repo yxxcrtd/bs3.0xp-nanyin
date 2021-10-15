@@ -64,4 +64,14 @@ public interface CfetsEtrIbBondinfoMapper {
      */
     List<CfetsEtrIbBondPosinfo001Dto> selectFinprodInfoList(Map<String, Object> pageParam);
 
+    /**
+     * 指令管理查询分页查询
+     *
+     * @param pageParam 查询参数
+     * @return 分页结果
+     * @see
+     * @since 1.0
+     */
+    List<CfetsEtrIbBondinfo001Dto> findZqzyPositionsPage(Map<String, Object> pageParam);
+
 }
