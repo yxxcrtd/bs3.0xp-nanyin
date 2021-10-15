@@ -56,4 +56,5 @@ public interface CfgDataTableMapper {
      * @param dataList
      */
     void updateCfgDataTableBatch(List<CfgDataTableShow> dataList);
+
 }

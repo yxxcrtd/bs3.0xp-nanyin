@@ -22,5 +22,9 @@
                 #{rangeId,jdbcType=VARCHAR})
     </insert>
 
+    <delete id="deleteDataTable" parameterType="String" >
+        delete from CFG_DATATABLE_SHOW where PAGECODE = #{pageCode} and DTCODE = #{dtCode} and RANGEID = #{rangeId} and STATUS = 1
+    </delete>
+
 
 </mapper>

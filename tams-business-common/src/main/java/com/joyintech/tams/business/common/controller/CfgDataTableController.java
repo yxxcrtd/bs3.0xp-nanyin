@@ -42,14 +42,13 @@ public class CfgDataTableController {
 
     @ApiOperation(value = "数据表格设置", notes = "数据表格设置")
     @PostMapping("/setDataTable")
-    public Message<String> setDataTable(@RequestBody SetDataTabelDto setDataTabelDto) {
+    public Message<String> setDataTable(@RequestBody List<CfgDataTableShow> dataTableShowList) {
         try {
-            cfgDataTableService.setDataTable(setDataTabelDto);
+            cfgDataTableService.setDataTable(dataTableShowList);
             return new Message<String>().success();
         } catch (Exception e) {
             logger.error("数据表格设置", e);
             return new Message<String>().fail();
         }
     }
-
 }

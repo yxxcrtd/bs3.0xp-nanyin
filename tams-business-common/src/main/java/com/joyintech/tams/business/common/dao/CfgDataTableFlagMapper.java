@@ -23,4 +23,11 @@ public interface CfgDataTableFlagMapper {
      */
     int insertCfgDataTableFlag(CfgDataTableShowFlag cfgDataTableFlag);
 
+    /**
+     * 删除用户自定义设置
+     * @param pageCode
+     * @param dtCode
+     * @param rangeId
+     */
+    void deleteDataTable(@Param("pageCode")String pageCode,@Param("dtCode") String dtCode,@Param("rangeId") String rangeId);
 }
