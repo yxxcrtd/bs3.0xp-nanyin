@@ -106,8 +106,8 @@ public class SftpUtil {
             vector = sftp.ls(pathname);
         }
         catch (SftpException e) {
-            logger.error("未找到文件:" + pathname);
-            logger.error(e.getMessage(),e);
+            logger.error("未找到文件:{}" , pathname);
+            //            logger.error(e.getMessage(),e);
         }
         return vector;
     }
@@ -220,8 +220,8 @@ public class SftpUtil {
             }
         }
         catch (SftpException e) {
-        	logger.error(e.getMessage(),e);
-            // log.error("未找到文件:"+pathname);
+//        	logger.error(e.getMessage(),e);
+            logger.error("未找到文件:{}" , filename);
         }
         return list;
     }
@@ -299,7 +299,7 @@ public class SftpUtil {
             vector = sftp.ls(finalPath);
         }
         catch (Exception e) {
-            logger.error("未找到文件:{},{}" , finalPath,e.getMessage(),e);
+            logger.error("未找到文件:{}" , finalPath);
         } finally {
             sFTPDisConnect();
         }
