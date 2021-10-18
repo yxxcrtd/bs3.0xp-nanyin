@@ -1,10 +1,12 @@
 package com.joyintech.tams.business.common.util;
 
-import java.io.File;
+import java.io.*;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
@@ -12,6 +14,8 @@ import com.alibaba.excel.write.metadata.WriteSheet;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class ExcelUitl {
 
@@ -32,7 +36,7 @@ public class ExcelUitl {
 		File excelTemplateFile = new File(excelFile.getParentFile(),Thread.currentThread().getName()+excelFile.getName());
 		createExcelTemplate(excelTemplateFile, sheetName, columns);
 		EasyExcel.write(excelFile).withTemplate(excelTemplateFile).sheet(sheetName).doFill(data);
-		excelTemplateFile.deleteOnExit();
+		excelTemplateFile.delete();
 	}
 	
 	public static class DataAppendUtil<T> {
@@ -137,8 +141,72 @@ public class ExcelUitl {
 			this.name = name;
 		}
 	}
-	
-	
+
+	public static void doExport(String fileName, List<Map> heads, List<Map> dataList, HttpServletResponse response) {
+		OutputStream os = null;
+		File excelFile = null;
+		try {
+			os = response.getOutputStream();
+			response.setContentType("text/vnd.ms-excel;charset=UTF-8");
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Pragma", "public");
+			response.setHeader("Cache-Control", "max-age=30");
+			response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileName + ".xlsx", "UTF-8"));
+
+			StringBuffer buf = new StringBuffer();
+			List<ExcelColumn> columns = new ArrayList<ExcelColumn>();
+			for (Map lineMap : heads) {
+				columns.add(new ExcelColumn(lineMap.get("field")+"", lineMap.get("name")+""));
+			}
+
+			/**
+			 * 使用当前目录，防止生产时目录找不到导出报错
+			 */
+			excelFile = new File(fileName +".xlsx");
+//			System.out.println(excelFile.getAbsolutePath());
+			
+			long s = System.currentTimeMillis();
+			exportAllData(excelFile, fileName , columns, dataList);
+			
+			// 写出响应
+			os.write(File2byte(excelFile));
+			os.flush();
+		} catch (Exception e) {
+//                logger.error("doExport错误...", e);
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		} finally {
+			try {
+				os.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			excelFile.delete();
+		}
+	}
+
+	public static byte[] File2byte(File tradeFile){
+		byte[] buffer = null;
+		try
+		{
+			FileInputStream fis = new FileInputStream(tradeFile);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			byte[] b = new byte[1024];
+			int n;
+			while ((n = fis.read(b)) != -1)
+			{
+				bos.write(b, 0, n);
+			}
+			fis.close();
+			bos.close();
+			buffer = bos.toByteArray();
+		}catch (FileNotFoundException e){
+			e.printStackTrace();
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		return buffer;
+	}
 	public static void main(String[] args) {
 		//导出所有数据
 		List<Data> data = new ArrayList<Data>();
