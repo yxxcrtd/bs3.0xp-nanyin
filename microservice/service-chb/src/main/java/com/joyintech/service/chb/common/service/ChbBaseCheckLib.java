@@ -17,6 +17,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
@@ -159,16 +160,16 @@ public class ChbBaseCheckLib {
             return false;
         switch (compareTo) {
             case ">":
-                r = (srcValue.compareTo(objValue) > 0);
+                r = (BaseCheckLib.compareToAll(srcValue, objValue) > 0);
                 break;
             case "<":
-                r = (srcValue.compareTo(objValue) < 0);
+                r = (BaseCheckLib.compareToAll(srcValue, objValue) < 0);
                 break;
             case ">=":
-                r = (srcValue.compareTo(objValue) >= 0);
+                r = (BaseCheckLib.compareToAll(srcValue, objValue) >= 0);
                 break;
             case "<=":
-                r = (srcValue.compareTo(objValue) <= 0);
+                r = (BaseCheckLib.compareToAll(srcValue, objValue) <= 0);
                 break;
             case "==":
                 r = (srcValue.equals(objValue));
@@ -210,16 +211,16 @@ public class ChbBaseCheckLib {
 
         switch (compareTo) {
             case ">":
-                r = (srcValue.compareTo(objValue) > 0);
+                r = (BaseCheckLib.compareToAll(srcValue, objValue) > 0);
                 break;
             case "<":
-                r = (srcValue.compareTo(objValue) < 0);
+                r = (BaseCheckLib.compareToAll(srcValue, objValue) < 0);
                 break;
             case ">=":
-                r = (srcValue.compareTo(objValue) >= 0);
+                r = (BaseCheckLib.compareToAll(srcValue, objValue) >= 0);
                 break;
             case "<=":
-                r = (srcValue.compareTo(objValue) <= 0);
+                r = (BaseCheckLib.compareToAll(srcValue, objValue) <= 0);
                 break;
             case "==":
                 r = (srcValue.equals(objValue));

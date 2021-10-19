@@ -225,16 +225,16 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             return false;        
         switch (compareTo) {
             case ">":
-                r = (srcValue.compareTo(objValue) > 0);
+                r = (compareToAll(srcValue, objValue) > 0);
                 break;
             case "<":
-                r = (srcValue.compareTo(objValue) < 0);
+                r = (compareToAll(srcValue, objValue) < 0);
                 break;
             case ">=":
-                r = (srcValue.compareTo(objValue) >= 0);
+                r = (compareToAll(srcValue, objValue) >= 0);
                 break;
             case "<=":
-                r = (srcValue.compareTo(objValue) <= 0);
+                r = (compareToAll(srcValue, objValue) <= 0);
                 break;
             case "==":
                 r = (srcValue.equals(objValue));
@@ -276,16 +276,16 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
 
         switch (compareTo) {
             case ">":
-                r = (srcValue.compareTo(objValue) > 0);
+                r = (compareToAll(srcValue, objValue) > 0);
                 break;
             case "<":
-                r = (srcValue.compareTo(objValue) < 0);
+                r = (compareToAll(srcValue, objValue) < 0);
                 break;
             case ">=":
-                r = (srcValue.compareTo(objValue) >= 0);
+                r = (compareToAll(srcValue, objValue) >= 0);
                 break;
             case "<=":
-                r = (srcValue.compareTo(objValue) <= 0);
+                r = (compareToAll(srcValue, objValue) <= 0);
                 break;
             case "==":
                 r = (srcValue.equals(objValue));
@@ -1250,5 +1250,52 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         }
 
         return result;
+    }
+
+    /**
+     * 比较字符串大小。如果是数字比较数字大小。如果是日期比较日期大小
+     * @param srcValue
+     * @param objValue
+     * @return
+     */
+    public static int compareToAll(String srcValue, String objValue) {
+        if(StringUtil.isNotEmpty(srcValue) && StringUtil.isNotEmpty(objValue)){
+            if(isNumberStr(srcValue) && isNumberStr(objValue)){
+                return new BigDecimal(srcValue).compareTo(new BigDecimal(objValue));
+            }else if(isDateStr(srcValue) && isDateStr(objValue)){
+                return DateUtil.parse(srcValue).compareTo(DateUtil.parse(objValue));
+            }else{
+                return compareToAll(srcValue, objValue);
+            }
+        }
+        return compareToAll(srcValue, objValue);
+    }
+
+    /**
+     * 判断是否为数字
+     * @param str
+     * @return
+     */
+    public static boolean isNumberStr(String str) {
+        try {
+            new BigDecimal(str).toString();
+        } catch (Exception e) {
+            return false;//异常 说明包含非数字
+        }
+        return true;
+    }
+
+    /**
+     * 判断是否为日期
+     * @param str
+     * @return
+     */
+    public static boolean isDateStr(String str) {
+        try {
+            DateUtil.parse(str).toString();
+        } catch (Exception e) {
+            return false;//异常 说明包含非日期
+        }
+        return true;
     }
 }
