@@ -26,7 +26,7 @@ public class CfgDataTableController {
     private CfgDataTableService cfgDataTableService;
 
     @ApiOperation(value = "查询数据表格设置", notes = "查询数据表格设置")
-    @PostMapping("/getDataTable")
+    @PostMapping("/getDataTable1")
     public Message<Map<String, List<CfgDataTableShow>>> getDataTable(@RequestParam("pageCode") String pageCode) {
         try {
             if (StringUtil.isEmpty(pageCode)) {
