@@ -53,7 +53,7 @@ public class CfetsEtrIbBondinfoController {
      * @see
      * @since 1.0
      */
-    @ApiOperation(value = "查询产品持仓分页列表", notes = "查询产品持仓分页列表")
+    @ApiOperation(value = "查询产品持仓分页数据", notes = "查询产品持仓分页数据")
     @PostMapping("/findPositionsPage/{page}/{length}")
     @ResponseBody
     public Message<Page<CfetsEtrIbBondinfo001Dto>> findPositionsPage(@RequestBody Map<String, Object> pageParam,
@@ -64,8 +64,8 @@ public class CfetsEtrIbBondinfoController {
             Page<CfetsEtrIbBondinfo001Dto> list = cfetsEtrIbBondinfoService.findPositionsPage(page, length, pageParam);
             return new Message<Page<CfetsEtrIbBondinfo001Dto>>().success().setData(list);
         }catch (Exception e) {
-            logger.error("查询产品持仓分页列表异常",e);
-            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().fail().setMessage("查询产品持仓分页列表异常");
+            logger.error("查询产品持仓分页数据异常",e);
+            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().fail().setMessage("查询产品持仓分页数据异常");
         }
     }
 
@@ -91,22 +91,22 @@ public class CfetsEtrIbBondinfoController {
             Page<CfetsEtrIbBondinfo001Dto> list = cfetsEtrIbBondinfoService.findEtrinfoPage(page, length, pageParam);
             return new Message<Page<CfetsEtrIbBondinfo001Dto>>().success().setData(list);
         }catch (Exception e) {
-            logger.error("查询指令分页列表异常",e);
-            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().fail().setMessage("查询指令分页列表异常");
+            logger.error("查询指令管理分页数据异常",e);
+            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().fail().setMessage("查询指令管理分页数据异常");
         }
 
     }
 
     @PostMapping("save")
-    @ApiOperation(value = "多组合指令新建保存", notes = "多组合指令新建保存")
+    @ApiOperation(value = "多组合指令新建保存/提交", notes = "多组合指令新建保存/提交")
     @ResponseBody
     public Message<CfetsEtrIbBondinfo002Dto> save(@RequestBody CfetsEtrIbBondinfo002Dto dto) {
         try {
             cfetsEtrIbBondinfoService.saveBaseEtrInvestInfoDto(dto);
             return new Message<CfetsEtrIbBondinfo002Dto>().fail().setMessage("新建成功");
         } catch (Exception e) {
-            logger.error("多组合指令新建异常", e);
-            return new Message<CfetsEtrIbBondinfo002Dto>().fail().setMessage("多组合指令新建异常");
+            logger.error("多组合指令新建保存/提交异常", e);
+            return new Message<CfetsEtrIbBondinfo002Dto>().fail().setMessage("多组合指令新建保存/提交异常");
         }
     }
 }
