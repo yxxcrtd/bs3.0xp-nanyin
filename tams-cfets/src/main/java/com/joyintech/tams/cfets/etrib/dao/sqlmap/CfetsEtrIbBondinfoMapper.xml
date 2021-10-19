@@ -127,7 +127,7 @@
         </if>
     </select>
     <!-- 指令管理查询 -->
-    <select id="findZqzyPositionsPage" parameterType="Map"
+    <select id="findEtrinfoPage" parameterType="Map"
             resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto">
         select aaa.* from (
             <choose>

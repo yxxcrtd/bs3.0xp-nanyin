@@ -349,7 +349,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     }
 
     /**
-     * 债券质押持仓信息查询
+     * 指令信息查询
      *
      * @param page int
      * @param length int
@@ -358,7 +358,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @see
      * @since 1.0
      */
-    public Page<CfetsEtrIbBondinfo001Dto> findZqzyPositionsPage(int page, int length,
+    public Page<CfetsEtrIbBondinfo001Dto> findEtrinfoPage(int page, int length,
                                                                 Map<String, Object> pageParam) {
         pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
@@ -371,7 +371,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-        return super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.findZqzyPositionsPage(pageParam));
+        return super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.findEtrinfoPage(pageParam));
     }
 
     @Transactional

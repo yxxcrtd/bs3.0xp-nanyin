@@ -72,7 +72,7 @@ public interface CfetsEtrIbBondinfoMapper {
      * @see
      * @since 1.0
      */
-    List<CfetsEtrIbBondinfo001Dto> findZqzyPositionsPage(Map<String, Object> pageParam);
+    List<CfetsEtrIbBondinfo001Dto> findEtrinfoPage(Map<String, Object> pageParam);
 
 
 }
