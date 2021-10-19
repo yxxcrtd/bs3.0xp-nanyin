@@ -3,7 +3,7 @@ package com.joyintech.tams.business.common.dto;
 import java.util.Date;
 import java.util.List;
 
-public class PositionRuleInterParam extends PositionRuleHead{
+public class PositionBondExecuteParam extends PositionRuleHead{
     
     private String busiAct; // 业务行为 投资指令，交易登记，汇总确认，中标结果维护
 

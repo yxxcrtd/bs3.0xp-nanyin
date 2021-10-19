@@ -3,7 +3,7 @@ package com.joyintech.tams.business.common.util;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.constant.PositionDictCodeListExt;
-import com.joyintech.tams.business.common.dto.PositionRuleInterParam;
+import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 
@@ -14,8 +14,8 @@ public class PositionUtil {
      * @param totalTradeId
      * @return
      */
-    public static PositionRuleInterParam initDto(String totalTradeId){
-        PositionRuleInterParam result = new PositionRuleInterParam();
+    public static PositionBondExecuteParam initDto(String totalTradeId){
+        PositionBondExecuteParam result = new PositionBondExecuteParam();
         result.setInterfaceType("Bond001"); // 规则根节点的编号，默认现券根节点
         result.setUserId(LoginUserUtil.getUserName());
 //        result.setComputerId(PositionFutureManager.QUEUE_POSITION_CALLBACK); // 从配置文件获取，机器标识"queue.position.callback"

@@ -15,7 +15,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.business.common.dto.PositionRuleInterParam;
+import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
@@ -221,9 +221,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @param systemAct
      * @return
      */
-    public PositionRuleInterParam createMessage(CfetsEtrIbBondinfo002Dto dto, String flowStatus, String systemAct) {
+    public PositionBondExecuteParam createMessage(CfetsEtrIbBondinfo002Dto dto, String flowStatus, String systemAct) {
 
-        PositionRuleInterParam result = PositionUtil.initDto(dto.getEntrustId());
+        PositionBondExecuteParam result = PositionUtil.initDto(dto.getEntrustId());
         try {
             // head
             result.setFlowStatus(flowStatus); // 
