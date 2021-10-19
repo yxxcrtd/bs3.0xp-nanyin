@@ -22,34 +22,34 @@ public class CfgDataTableShow {
     private String dictCode;
 
     @ApiModelProperty(name = "seqNo", value = "顺序号")
-    private Long seqNo;
+    private Integer seqNo;
 
     @ApiModelProperty(name = "disPlayed", value = "是否显示(0:不显示,1:显示)")
-    private Long disPlayed;
+    private Integer disPlayed;
 
     @ApiModelProperty(name = "frozen", value = "是否冻结(0:不冻结,1:冻结)")
-    private Long frozen;
+    private Integer frozen;
 
     @ApiModelProperty(name = "sort", value = "是否排序")
-    private Long sort;
+    private Integer sort;
 
     @ApiModelProperty(name = "maxLen", value = "最大长度(px单位)")
-    private Long maxLen;
+    private Integer maxLen;
 
     @ApiModelProperty(name = "extendCfg", value = "扩张配置")
     private String extendCfg;
 
     @ApiModelProperty(name = "effeRange", value = "有效范围(0:全局,1:个人)")
-    private Long effeRange;
+    private Integer effeRange;
 
     @ApiModelProperty(name = "rangeId", value = "范围ID(见有效范围字段)")
     private String rangeId;
 
     @ApiModelProperty(name = "status", value = "可用状态(0:不可用,1:可用)")
-    private Long status;
+    private Integer status;
 
     @ApiModelProperty(name = "remark1", value = "备注1")
-    private Long remark1;
+    private Integer remark1;
 
     @ApiModelProperty(name = "remark2", value = "备注2")
     private String remark2;
@@ -89,43 +89,43 @@ public class CfgDataTableShow {
         this.colName = colName;
     }
 
-    public Long getSeqNo() {
+    public Integer getSeqNo() {
         return seqNo;
     }
 
-    public void setSeqNo(Long seqNo) {
+    public void setSeqNo(Integer seqNo) {
         this.seqNo = seqNo;
     }
 
-    public Long getDisPlayed() {
+    public Integer getDisPlayed() {
         return disPlayed;
     }
 
-    public void setDisPlayed(Long disPlayed) {
+    public void setDisPlayed(Integer disPlayed) {
         this.disPlayed = disPlayed;
     }
 
-    public Long getFrozen() {
+    public Integer getFrozen() {
         return frozen;
     }
 
-    public void setFrozen(Long frozen) {
+    public void setFrozen(Integer frozen) {
         this.frozen = frozen;
     }
 
-    public Long getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(Long sort) {
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
 
-    public Long getMaxLen() {
+    public Integer getMaxLen() {
         return maxLen;
     }
 
-    public void setMaxLen(Long maxLen) {
+    public void setMaxLen(Integer maxLen) {
         this.maxLen = maxLen;
     }
 
@@ -137,11 +137,11 @@ public class CfgDataTableShow {
         this.extendCfg = extendCfg;
     }
 
-    public Long getEffeRange() {
+    public Integer getEffeRange() {
         return effeRange;
     }
 
-    public void setEffeRange(Long effeRange) {
+    public void setEffeRange(Integer effeRange) {
         this.effeRange = effeRange;
     }
 
@@ -153,19 +153,19 @@ public class CfgDataTableShow {
         this.rangeId = rangeId;
     }
 
-    public Long getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Long status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Long getRemark1() {
+    public Integer getRemark1() {
         return remark1;
     }
 
-    public void setRemark1(Long remark1) {
+    public void setRemark1(Integer remark1) {
         this.remark1 = remark1;
     }
 

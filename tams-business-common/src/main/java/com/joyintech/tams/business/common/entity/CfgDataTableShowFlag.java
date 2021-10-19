@@ -19,7 +19,7 @@ public class CfgDataTableShowFlag {
     private String dtname;
 
     @ApiModelProperty(name = "effeRange", value = "有效范围(0:全局,1:个人)")
-    private Long effeRange;
+    private Integer effeRange;
 
     @ApiModelProperty(name = "rangeId", value = "范围ID(见有效范围字段)")
     private String rangeId;
@@ -56,11 +56,11 @@ public class CfgDataTableShowFlag {
         this.dtname = dtname;
     }
 
-    public Long getEffeRange() {
+    public Integer getEffeRange() {
         return effeRange;
     }
 
-    public void setEffeRange(Long effeRange) {
+    public void setEffeRange(Integer effeRange) {
         this.effeRange = effeRange;
     }
 

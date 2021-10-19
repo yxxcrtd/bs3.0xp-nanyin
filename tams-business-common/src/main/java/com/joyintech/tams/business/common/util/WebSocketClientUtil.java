@@ -25,10 +25,10 @@ public class WebSocketClientUtil {
 	private WebSocketListener listener;
 
 	public void start(String url,WebSocketListener listener) throws Exception {
-		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-		container.connectToServer(this, new URI(url));
 		this.url = url;
 		this.listener = listener;
+		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+		container.connectToServer(this, new URI(url));
 	}
 	
 	@OnOpen
@@ -45,6 +45,7 @@ public class WebSocketClientUtil {
 	@OnClose
 	public void onClose() {
 		logger.info("关闭{}连接",url);
+		listener.onClose();
 	}
 
 	/**
@@ -66,15 +67,21 @@ public class WebSocketClientUtil {
 	public static interface WebSocketListener{
 		
 		public void onMessage(String message);
-		
+		public void onClose();
 	}
 	
 	public static void main(String[] args) throws Exception {
 		WebSocketClientUtil util = new WebSocketClientUtil();
-		util.start("ws://192.168.90.208:8888/dsp/cmds",new WebSocketListener() {
+		util.start("ws://127.0.0.1:8888/dsp/cmds",new WebSocketListener() {
 			@Override
 			public void onMessage(String message) {
 				System.out.println("收到消息:"+message);
+			}
+
+			@Override
+			public void onClose() {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 		util.send("101027");

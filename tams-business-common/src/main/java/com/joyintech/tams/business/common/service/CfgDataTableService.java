@@ -71,39 +71,41 @@ public class CfgDataTableService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void setDataTable(List<CfgDataTableShow> dataTableShowList) {
-        if (null != dataTableShowList && dataTableShowList.size() > 0) {
-            //获取登录用户的ID
-            String userId = UserUtil.getUserid();
-            //先判断用户是否自定义过设置
-            CfgDataTableShow dataTableShow = dataTableShowList.get(0);
-            String pageCode = dataTableShow.getPageCode();
-            String dtCode = dataTableShow.getDtCode();
-            CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, userId);
-            if (null != flag) {
-                //删除用户原有自定义设置
-                cfgDataTableFlagMapper.deleteDataTable(pageCode, dtCode, userId);
-                //新增用户修改后设置
-                for (int i = 0; i < dataTableShowList.size(); i++) {
-                    CfgDataTableShow data = dataTableShowList.get(i);
-                    data.setSeqNo((long) i + 1);
-                }
-                cfgDataTableMapper.insertCfgDataTableBatch(dataTableShowList);
-            } else {
-                //新增用户自定义设置
-                for (int i = 0; i < dataTableShowList.size(); i++) {
-                    CfgDataTableShow data = dataTableShowList.get(i);
-                    data.setSeqNo((long) i + 1);
-                    data.setEffeRange(1L);
-                    data.setRangeId(userId);
-                }
-                cfgDataTableMapper.insertCfgDataTableBatch(dataTableShowList);
-                CfgDataTableShowFlag showFlag = new CfgDataTableShowFlag();
-                showFlag.setPageCode(pageCode);
-                showFlag.setDtCode(dtCode);
-                showFlag.setRangeId(userId);
-                cfgDataTableFlagMapper.insertCfgDataTableFlag(showFlag);
+    	if (null == dataTableShowList || dataTableShowList.size() <= 0) {
+    	    return;
+    	}
+        //获取登录用户的ID
+        String userId = UserUtil.getUserid();
+        //先判断用户是否自定义过设置
+        CfgDataTableShow dataTableShow = dataTableShowList.get(0);
+        String pageCode = dataTableShow.getPageCode();
+        String dtCode = dataTableShow.getDtCode();
+        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, userId);
+        if (null != flag) {
+            //删除用户原有自定义设置
+            cfgDataTableFlagMapper.deleteDataTable(pageCode, dtCode, userId);
+            //新增用户修改后设置
+            for (int i = 0; i < dataTableShowList.size(); i++) {
+                CfgDataTableShow data = dataTableShowList.get(i);
+                data.setSeqNo(i + 1);
             }
+            cfgDataTableMapper.insertCfgDataTableBatch(dataTableShowList);
+            return;
+        } 
+        //新增用户自定义设置
+        for (int i = 0; i < dataTableShowList.size(); i++) {
+            CfgDataTableShow data = dataTableShowList.get(i);
+            data.setSeqNo(i + 1);
+            data.setEffeRange(1);
+            data.setRangeId(userId);
         }
+        cfgDataTableMapper.insertCfgDataTableBatch(dataTableShowList);
+        CfgDataTableShowFlag showFlag = new CfgDataTableShowFlag();
+        showFlag.setEffeRange(1);
+        showFlag.setPageCode(pageCode);
+        showFlag.setDtCode(dtCode);
+        showFlag.setRangeId(userId);
+        cfgDataTableFlagMapper.insertCfgDataTableFlag(showFlag);
     }
 
     /**

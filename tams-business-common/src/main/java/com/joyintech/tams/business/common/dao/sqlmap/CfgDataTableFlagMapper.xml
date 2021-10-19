@@ -18,7 +18,7 @@
         insert into CFG_DATATABLE_SHOW_FLAG(PAGECODE, DTCODE, EFFERANGE, RANGEID)
         values (#{pageCode ,jdbcType=VARCHAR},
                 #{dtCode,jdbcType=VARCHAR},
-                #{effeRange,jdbcType=BIGINT},
+                #{effeRange,jdbcType=INTEGER},
                 #{rangeId,jdbcType=VARCHAR})
     </insert>
 

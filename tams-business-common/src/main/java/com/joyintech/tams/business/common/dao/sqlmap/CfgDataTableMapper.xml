@@ -36,16 +36,16 @@
             #{dataTable.colCode,jdbcType=VARCHAR},
             #{dataTable.colName,jdbcType=VARCHAR},
             #{dataTable.dictCode,jdbcType=VARCHAR},
-            #{dataTable.seqNo,jdbcType=BIGINT},
-            #{dataTable.disPlayed,jdbcType=BIGINT},
-            #{dataTable.frozen,jdbcType=BIGINT},
-            #{dataTable.sort,jdbcType=BIGINT},
-            #{dataTable.maxLen,jdbcType=BIGINT},
+            #{dataTable.seqNo,jdbcType=INTEGER},
+            #{dataTable.disPlayed,jdbcType=INTEGER},
+            #{dataTable.frozen,jdbcType=INTEGER},
+            #{dataTable.sort,jdbcType=INTEGER},
+            #{dataTable.maxLen,jdbcType=INTEGER},
             #{dataTable.extendCfg,jdbcType=VARCHAR},
-            #{dataTable.effeRange,jdbcType=BIGINT},
+            #{dataTable.effeRange,jdbcType=INTEGER},
             #{dataTable.rangeId,jdbcType=VARCHAR},
-            #{dataTable.status,jdbcType=BIGINT},
-            #{dataTable.remark1,jdbcType=BIGINT},
+            #{dataTable.status,jdbcType=INTEGER},
+            #{dataTable.remark1,jdbcType=INTEGER},
             #{dataTable.remark2,jdbcType=VARCHAR},
             #{dataTable.remark3,jdbcType=VARCHAR}
             )
@@ -73,34 +73,34 @@
                     DICTCODE = #{dataTable.dictCode,jdbcType=VARCHAR},
                 </if>
                 <if test="dataTable.seqNo !=null">
-                    SEQNO=#{dataTable.seqNo,jdbcType=BIGINT},
+                    SEQNO=#{dataTable.seqNo,jdbcType=INTEGER},
                 </if>
                 <if test="dataTable.disPlayed !=null">
-                    DISPLAYED = #{dataTable.disPlayed,jdbcType=BIGINT},
+                    DISPLAYED = #{dataTable.disPlayed,jdbcType=INTEGER},
                 </if>
                 <if test="dataTable.frozen !=null">
-                    FROZEN = #{dataTable.frozen,jdbcType=BIGINT},
+                    FROZEN = #{dataTable.frozen,jdbcType=INTEGER},
                 </if>
                 <if test="dataTable.sort !=null">
-                    SORT = #{dataTable.sort,jdbcType=BIGINT},
+                    SORT = #{dataTable.sort,jdbcType=INTEGER},
                 </if>
                 <if test="dataTable.maxLen !=null">
-                    MAXLEN = #{dataTable.maxLen,jdbcType=BIGINT},
+                    MAXLEN = #{dataTable.maxLen,jdbcType=INTEGER},
                 </if>
                 <if test="dataTable.extendCfg !=null and dataTable.extendCfg !=''">
                     EXTENDCFG = #{dataTable.extendCfg,jdbcType=VARCHAR},
                 </if>
                 <if test="dataTable.effeRange !=null">
-                    EFFERANGE = #{dataTable.effeRange,jdbcType=BIGINT},
+                    EFFERANGE = #{dataTable.effeRange,jdbcType=INTEGER},
                 </if>
                 <if test="dataTable.rangeId !=null and dataTable.rangeId !=''">
                     RANGEID = #{dataTable.rangeId,jdbcType=VARCHAR},
                 </if>
                 <if test="dataTable.status !=null">
-                    STATUS = #{dataTable.status,jdbcType=BIGINT},
+                    STATUS = #{dataTable.status,jdbcType=INTEGER},
                 </if>
                 <if test="dataTable.remark1 !=null">
-                    REMARK1 = #{dataTable.remark1,jdbcType=BIGINT},
+                    REMARK1 = #{dataTable.remark1,jdbcType=INTEGER},
                 </if>
                 <if test="dataTable.remark2 !=null and dataTable.remark2 !=''">
                     REMARK2 = #{dataTable.remark2,jdbcType=VARCHAR},
@@ -112,7 +112,7 @@
             where PAGECODE = #{dataTable.pageCode ,jdbcType=VARCHAR} and
             DTCODE = #{dataTable.dtCode,jdbcType=VARCHAR} and
             COLCODE = #{dataTable.colCode,jdbcType=VARCHAR} and
-            EFFERANGE = #{dataTable.effeRange,jdbcType=BIGINT} and
+            EFFERANGE = #{dataTable.effeRange,jdbcType=INTEGER} and
             RANGEID = #{dataTable.rangeId,jdbcType=VARCHAR}
         </foreach>
     </update>
