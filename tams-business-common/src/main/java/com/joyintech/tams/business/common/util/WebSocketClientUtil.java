@@ -71,19 +71,13 @@ public class WebSocketClientUtil {
 	
 	public static void main(String[] args) throws Exception {
 		WebSocketClientUtil util = new WebSocketClientUtil();
-		util.start("ws://127.0.0.1:1667/dsp/positionTopic",new WebSocketListener() {
+		util.start("ws://192.168.90.208:8888/dsp/cmds",new WebSocketListener() {
 			@Override
 			public void onMessage(String message) {
 				System.out.println("收到消息:"+message);
 			}
 		});
-		util.send("["
-				+ " {\"table\":\"ETR_CASH_POSITION\",\"hodingTypes\":[]},"
-				+ " {\"table\":\"PTL_CASH_POSITION\",\"hodingTypes\":[]},"
-				+ " {\"table\":\"ETR_SEC_POSITION\",\"hodingTypes\":[]},"
-				+ " {\"table\":\"PTL_SEC_POSITION\",\"hodingTypes\":[]}"
-				+ "]"
-				);
+		util.send("101027");
 		TimeUnit.HOURS.sleep(1);
 	}
 }
