@@ -10,12 +10,14 @@
 
 package com.joyintech.tams.cfets.etrib.controller;
 
+import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -39,7 +42,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/cfets/etrib/cfetsEtrIbBondinfo")
 @Api(tags = "银行间债券指令")
-public class CfetsEtrIbBondinfoController {
+public class CfetsEtrIbBondinfoController  extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(CfetsEtrIbBondinfoController.class);
 
     @Autowired
@@ -48,13 +51,15 @@ public class CfetsEtrIbBondinfoController {
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
     @ResponseBody
-    public Message<Map<String, String>> getPageParams(){
-        Map<String, String> initPageParams = new HashMap<>();
+    public Message<Map<String, Object>> getPageParams(Model model){
+        Map<String, Object> initPageParams = new HashMap<>();
         initPageParams.put("cmdsUrl","ws://192.168.90.208:8888/dsp/cmds");
         initPageParams.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         initPageParams.put("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
         initPageParams.put("CMDS_PATH", CacheUtil.getSysParam("CMDS_PATH"));
-    	return new Message<Map<String, String>>(initPageParams).success();
+        this.setSelectOptionToModel(model, DictCode.清算速度);
+        initPageParams.put("ACCOUNT_SPEED", DictCode.清算速度);
+    	return new Message<Map<String, Object>>(initPageParams).success();
     }
     
     /**
