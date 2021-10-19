@@ -13345,7 +13345,7 @@
             CII.STATUS = decode(TEMP.STATUS,'N','M','E','M','D'),
             CII.CREATE_USER = TEMP.CREATE_USER,
             /*CII.CREATE_TIME = TEMP.CREATE_TIME,*/
-            CII.UPDATE_USER = TEMP.UPDATE_USER,
+            <!-- CII.UPDATE_USER = TEMP.UPDATE_USER, -->
             CII.UPDATE_TIME = TEMP.UPDATE_TIME,
             CII.DEPT_CODE = TEMP.DEPT_CODE,
             CII.ORG_CODE = TEMP.ORG_CODE,
