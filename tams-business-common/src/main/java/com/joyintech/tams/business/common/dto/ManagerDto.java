@@ -10,7 +10,7 @@ public class ManagerDto {
     private String routingKey; // 路由   ps：与交换机路径在一起匹配到对应队列QUEUE,类似java中类名，交换机为包名
     private boolean needTimeOutRevoke=true; // mq发送异常是否抛出，包含超时，一般撤销、撤回、关闭等操作时设置
     private int revokeTimes = 0; // 正常撤销发送超时后重发次数
-    private PositionRuleInterParam positionRuleInterDto;
+    private PositionBondExecuteParam positionRuleInterDto;
     
     public String getId() {
         return id;
@@ -60,11 +60,11 @@ public class ManagerDto {
         this.needTimeOutRevoke = needTimeOutRevoke;
     }
 
-    public PositionRuleInterParam getPositionRuleInterDto() {
+    public PositionBondExecuteParam getPositionRuleInterDto() {
         return positionRuleInterDto;
     }
 
-    public void setPositionRuleInterDto(PositionRuleInterParam positionRuleInterDto) {
+    public void setPositionRuleInterDto(PositionBondExecuteParam positionRuleInterDto) {
         this.positionRuleInterDto = positionRuleInterDto;
     }
 }

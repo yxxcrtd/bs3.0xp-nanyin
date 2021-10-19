@@ -6,16 +6,11 @@ public class PositionRuleHead {
     // "err001   投管处理异常     err002   超时异常"
     private String errorCode;
     
-    // 线程阻塞唯一标识
+    // 头寸引擎根节点标识
     private String interfaceType;
-
-    private String interfaceId; //
     
     // 当前操作用户
     private String userId;
-    
-    // 应答队列 MQ 集群部署时，机器标识
-    private String computerId;
     
     // 委托或交易编号
     private String totalTradeId;
@@ -37,14 +32,6 @@ public class PositionRuleHead {
         this.errorCode = errorCode;
     }
 
-    public String getInterfaceId() {
-        return interfaceId;
-    }
-
-    public void setInterfaceId(String interfaceId) {
-        this.interfaceId = interfaceId;
-    }
-
     public String getInterfaceType() {
         return interfaceType;
     }
@@ -59,14 +46,6 @@ public class PositionRuleHead {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getComputerId() {
-        return computerId;
-    }
-
-    public void setComputerId(String computerId) {
-        this.computerId = computerId;
     }
 
     public String getTotalTradeId() {

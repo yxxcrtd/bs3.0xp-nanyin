@@ -5,22 +5,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WebSocketService {
+public class WebSocketClient {
     
     private static String webSocketUrl;
     private static String webSocketKey;
     @Value("${webSocketUrl}")
     public void setWebSocketUrl(String webSocketUrl) {
-        WebSocketService.webSocketUrl = webSocketUrl;
-        if (WebSocketService.webSocketKey != null){
+        WebSocketClient.webSocketUrl = webSocketUrl;
+        if (WebSocketClient.webSocketKey != null){
             startWebSocket();
         }
     }
     
     @Value("${webSocketKey}")
     public void setWebSocketKey(String webSocketKey) {
-        WebSocketService.webSocketKey = webSocketKey;
-        if (WebSocketService.webSocketUrl != null){
+        WebSocketClient.webSocketKey = webSocketKey;
+        if (WebSocketClient.webSocketUrl != null){
             startWebSocket();
         }
     }

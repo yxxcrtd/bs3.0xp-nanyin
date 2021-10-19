@@ -5,7 +5,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -50,6 +49,10 @@ public class PositionHttpRequest {
         return httpPostRequest(positionUrl + "/position/endpoint/updatePosition", param);
     }
 
+    public static String cancel(Object param) {
+        return httpPostRequest(positionUrl + "/position/endpoint/cancel", param);
+    }
+    
     /**
      * 从头寸引擎查询头寸余额
      * @param param

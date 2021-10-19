@@ -26,8 +26,8 @@ public class CfgDataTableController {
     private CfgDataTableService cfgDataTableService;
 
     @ApiOperation(value = "查询数据表格设置", notes = "查询数据表格设置")
-    @GetMapping("/getDataTable/{pageCode}")
-    public Message<Map<String, List<CfgDataTableShow>>> getDataTable(@PathVariable("pageCode") String pageCode) {
+    @PostMapping("/getDataTable")
+    public Message<Map<String, List<CfgDataTableShow>>> getDataTable(@RequestParam("pageCode") String pageCode) {
         try {
             if (StringUtil.isEmpty(pageCode)) {
                 return new Message<Map<String, List<CfgDataTableShow>>>().setMessage(Constant.MESSAGE_PAGECODE_NULL);
@@ -40,9 +40,9 @@ public class CfgDataTableController {
     }
 
     @ApiOperation(value = "根据pageCode和dtCode查询数据表格式设置", notes = "根据pageCode和dtCode查询数据表格式设置")
-    @GetMapping("/getDataTable/{pageCode}/{dtCode}")
-    public Message<List<CfgDataTableShow>> getByPageCodeAndDtCode(@PathVariable("pageCode") String pageCode,
-                                                                               @PathVariable("dtCode") String dtCode) {
+    @PostMapping("/getDataTable")
+    public Message<List<CfgDataTableShow>> getByPageCodeAndDtCode(@RequestParam("pageCode") String pageCode,
+    		                                                      @RequestParam("dtCode") String dtCode) {
         try {
             if (StringUtil.isEmpty(pageCode) || StringUtil.isEmpty(dtCode)) {
                 return new Message<List<CfgDataTableShow>>().setMessage(Constant.MESSAGE_PAGECODE_NULL);
