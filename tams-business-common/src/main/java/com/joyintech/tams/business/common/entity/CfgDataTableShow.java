@@ -36,8 +36,8 @@ public class CfgDataTableShow {
     @ApiModelProperty(name = "frozen", value = "是否冻结(0:不冻结,1:冻结)")
     private Long frozen;
 
-    @ApiModelProperty(name = "minLen", value = "最小长度(px单位)")
-    private Long minLen;
+    @ApiModelProperty(name = "minLen", value = "是否排序")
+    private Long sort;
 
     @ApiModelProperty(name = "maxLen", value = "最大长度(px单位)")
     private Long maxLen;
@@ -138,12 +138,12 @@ public class CfgDataTableShow {
         this.frozen = frozen;
     }
 
-    public Long getMinLen() {
-        return minLen;
+    public Long getSort() {
+        return sort;
     }
 
-    public void setMinLen(Long minLen) {
-        this.minLen = minLen;
+    public void setSort(Long sort) {
+        this.sort = sort;
     }
 
     public Long getMaxLen() {

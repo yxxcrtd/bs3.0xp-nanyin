@@ -39,6 +39,21 @@ public class CfgDataTableController {
         }
     }
 
+    @ApiOperation(value = "根据pageCode和dtCode查询数据表格式设置", notes = "根据pageCode和dtCode查询数据表格式设置")
+    @GetMapping("/getDataTable/{pageCode}/{dtCode}")
+    public Message<List<CfgDataTableShow>> getByPageCodeAndDtCode(@PathVariable("pageCode") String pageCode,
+                                                                               @PathVariable("dtCode") String dtCode) {
+        try {
+            if (StringUtil.isEmpty(pageCode) || StringUtil.isEmpty(dtCode)) {
+                return new Message<List<CfgDataTableShow>>().setMessage(Constant.MESSAGE_PAGECODE_NULL);
+            }
+            return new Message<>(cfgDataTableService.getByPageCodeAndDtCode(pageCode,dtCode));
+        } catch (Exception e) {
+            logger.error("查询数据表格设置", e);
+            return new Message<List<CfgDataTableShow>>().fail();
+        }
+    }
+
     @ApiOperation(value = "数据表格设置", notes = "数据表格设置")
     @PostMapping("/setDataTable")
     public Message<String> setDataTable(@RequestBody List<CfgDataTableShow> dataTableShowList) {

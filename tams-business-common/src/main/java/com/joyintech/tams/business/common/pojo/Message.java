@@ -10,8 +10,8 @@ public class Message<T> implements Serializable {
 
     private static final long serialVersionUID = 8909160204700409989L;
 
-    private static final String SUCCESS = "success";
-    private static final String FAIL = "fail";
+    private static final String SUCCESS = "000";
+    private static final String FAIL = "001";
 
     @ApiModelProperty(required = true, name = "code", value = "响应码", example = "")
     private String code;

@@ -108,4 +108,23 @@ public class CfgDataTableService {
         }
     }
 
+    /**
+     * 根据pageCode和dtCode查询数据表格式设置
+     *
+     * @param pageCode
+     * @param dtCode
+     * @return
+     */
+    public List<CfgDataTableShow> getByPageCodeAndDtCode(String pageCode, String dtCode) {
+        List<CfgDataTableShow> list;
+        //获取登录用户的ID
+        String userId = UserUtil.getUserInfo().getUid();
+        List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);
+        if (uDataList != null && uDataList.size() < 1) {
+            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_NO, null);
+        } else {
+            list = uDataList;
+        }
+        return list;
+    }
 }
