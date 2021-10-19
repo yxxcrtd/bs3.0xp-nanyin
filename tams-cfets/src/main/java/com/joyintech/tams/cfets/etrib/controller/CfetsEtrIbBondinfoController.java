@@ -10,20 +10,27 @@
 
 package com.joyintech.tams.cfets.etrib.controller;
 
-import com.joyintech.framework.grid.Page;
-import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
-import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Map;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrlbBondinfoParam;
+import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 银行间债券指令
@@ -42,6 +49,16 @@ public class CfetsEtrIbBondinfoController {
     @Autowired
     private CfetsEtrIbBondinfoService cfetsEtrIbBondinfoService;
 
+    @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
+    @PostMapping("/getPageParams")
+    @ResponseBody
+    public Message<CfetsEtrlbBondinfoParam> getPageParams(){
+    	CfetsEtrlbBondinfoParam param = new CfetsEtrlbBondinfoParam();
+    	param.setCmdsUrl("ws://192.168.90.208:8888/dsp/cmds");
+    	param.setNeedWorkFlow(false);
+    	return new Message<CfetsEtrlbBondinfoParam>(param).success();
+    }
+    
     /**
      * 检索产品持仓分页数据。 <功能详细描述>
      *
