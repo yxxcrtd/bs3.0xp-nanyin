@@ -12,8 +12,11 @@ public class CfgDataTableShowFlag {
     @ApiModelProperty(name = "dtCode", value = "数据表格编号")
     private String dtCode;
 
-    @ApiModelProperty(name = "colCode", value = "列的字段名")
-    private String colCode;
+    @ApiModelProperty(name = "pageName", value = "页面编码名")
+    private String pageName;
+
+    @ApiModelProperty(name = "dtname", value = "数据表格编号名")
+    private String dtname;
 
     @ApiModelProperty(name = "effeRange", value = "有效范围(0:全局,1:个人)")
     private Long effeRange;
@@ -37,12 +40,20 @@ public class CfgDataTableShowFlag {
         this.dtCode = dtCode;
     }
 
-    public String getColCode() {
-        return colCode;
+    public String getPageName() {
+        return pageName;
     }
 
-    public void setColCode(String colCode) {
-        this.colCode = colCode;
+    public void setPageName(String pageName) {
+        this.pageName = pageName;
+    }
+
+    public String getDtname() {
+        return dtname;
+    }
+
+    public void setDtname(String dtname) {
+        this.dtname = dtname;
     }
 
     public Long getEffeRange() {

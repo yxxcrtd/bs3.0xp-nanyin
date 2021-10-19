@@ -11,19 +11,24 @@
         where PAGECODE = #{pageCode}
           and DTCODE = #{dtCode}
           and RANGEID = #{rangeId}
+          and EFFERANGE = 1
     </select>
 
     <insert id="insertCfgDataTableFlag" parameterType="com.joyintech.tams.business.common.entity.CfgDataTableShowFlag">
-        insert into CFG_DATATABLE_SHOW_FLAG(PAGECODE, DTCODE, COLCODE, EFFERANGE, RANGEID)
+        insert into CFG_DATATABLE_SHOW_FLAG(PAGECODE, DTCODE, EFFERANGE, RANGEID)
         values (#{pageCode ,jdbcType=VARCHAR},
                 #{dtCode,jdbcType=VARCHAR},
-                #{colCode,jdbcType=VARCHAR},
                 #{effeRange,jdbcType=BIGINT},
                 #{rangeId,jdbcType=VARCHAR})
     </insert>
 
-    <delete id="deleteDataTable" parameterType="String" >
-        delete from CFG_DATATABLE_SHOW where PAGECODE = #{pageCode} and DTCODE = #{dtCode} and RANGEID = #{rangeId} and STATUS = 1
+    <delete id="deleteDataTable" parameterType="String">
+        delete
+        from CFG_DATATABLE_SHOW
+        where PAGECODE = #{pageCode}
+          and DTCODE = #{dtCode}
+          and RANGEID = #{rangeId}
+          and EFFERANGE = 1
     </delete>
 
 

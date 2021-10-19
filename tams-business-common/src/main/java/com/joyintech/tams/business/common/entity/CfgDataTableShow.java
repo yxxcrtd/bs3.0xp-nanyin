@@ -15,12 +15,6 @@ public class CfgDataTableShow {
     @ApiModelProperty(name = "colCode", value = "列的字段名")
     private String colCode;
 
-    @ApiModelProperty(name = "pageName", value = "页面名称")
-    private String pageName;
-
-    @ApiModelProperty(name = "dtnName", value = "数据表格名称")
-    private String dtnName;
-
     @ApiModelProperty(name = "colName", value = "列的名称")
     private String colName;
 
@@ -36,7 +30,7 @@ public class CfgDataTableShow {
     @ApiModelProperty(name = "frozen", value = "是否冻结(0:不冻结,1:冻结)")
     private Long frozen;
 
-    @ApiModelProperty(name = "minLen", value = "是否排序")
+    @ApiModelProperty(name = "sort", value = "是否排序")
     private Long sort;
 
     @ApiModelProperty(name = "maxLen", value = "最大长度(px单位)")
@@ -50,9 +44,6 @@ public class CfgDataTableShow {
 
     @ApiModelProperty(name = "rangeId", value = "范围ID(见有效范围字段)")
     private String rangeId;
-
-    @ApiModelProperty(name = "mdTime", value = "更新时间(yyyy-MM-dd HH:mm:ss)")
-    private String mdTime;
 
     @ApiModelProperty(name = "status", value = "可用状态(0:不可用,1:可用)")
     private Long status;
@@ -88,22 +79,6 @@ public class CfgDataTableShow {
 
     public void setColCode(String colCode) {
         this.colCode = colCode;
-    }
-
-    public String getPageName() {
-        return pageName;
-    }
-
-    public void setPageName(String pageName) {
-        this.pageName = pageName;
-    }
-
-    public String getDtnName() {
-        return dtnName;
-    }
-
-    public void setDtnName(String dtnName) {
-        this.dtnName = dtnName;
     }
 
     public String getColName() {
@@ -176,14 +151,6 @@ public class CfgDataTableShow {
 
     public void setRangeId(String rangeId) {
         this.rangeId = rangeId;
-    }
-
-    public String getMdTime() {
-        return mdTime;
-    }
-
-    public void setMdTime(String mdTime) {
-        this.mdTime = mdTime;
     }
 
     public Long getStatus() {

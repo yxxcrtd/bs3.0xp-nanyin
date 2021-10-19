@@ -86,7 +86,6 @@ public class CfgDataTableService {
                 for (int i = 0; i < dataTableShowList.size(); i++) {
                     CfgDataTableShow data = dataTableShowList.get(i);
                     data.setSeqNo((long) i + 1);
-                    data.setMdTime(DateUtil.getDateTimestamp());
                 }
                 cfgDataTableMapper.insertCfgDataTableBatch(dataTableShowList);
             } else {
@@ -94,7 +93,6 @@ public class CfgDataTableService {
                 for (int i = 0; i < dataTableShowList.size(); i++) {
                     CfgDataTableShow data = dataTableShowList.get(i);
                     data.setSeqNo((long) i + 1);
-                    data.setMdTime(DateUtil.getDateTimestamp());
                     data.setEffeRange(1L);
                     data.setRangeId(userId);
                 }
