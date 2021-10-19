@@ -3,10 +3,7 @@ package com.joyintech.tams.business.common.util;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
@@ -145,6 +142,7 @@ public class ExcelUitl {
 	public static void doExport(String fileName, List<Map> heads, List<Map> dataList, HttpServletResponse response) {
 		OutputStream os = null;
 		File excelFile = null;
+		String dir = UUID.randomUUID().toString();
 		try {
 			os = response.getOutputStream();
 			response.setContentType("text/vnd.ms-excel;charset=UTF-8");
@@ -160,10 +158,13 @@ public class ExcelUitl {
 			}
 
 			/**
-			 * 使用当前目录，防止生产时目录找不到导出报错
+			 * 需要使用当前目录，防止生产时目录找不到导出报错
 			 */
-			excelFile = new File(fileName +".xlsx");
-//			System.out.println(excelFile.getAbsolutePath());
+			File path = new File(dir);
+			if (!path.exists()){
+				path.mkdir();
+			}
+			excelFile = new File(dir + File.separator + fileName +".xlsx");
 			
 			long s = System.currentTimeMillis();
 			exportAllData(excelFile, fileName , columns, dataList);
@@ -181,10 +182,56 @@ public class ExcelUitl {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			excelFile.delete();
+			/**
+			 * 删除文件夹包含文件
+			 */
+			delFolder(dir);
+//			excelFile.delete();
 		}
 	}
 
+	public static void delFolder(String folderPath) {
+		try {
+			delAllFile(folderPath); //删除完里面所有内容
+			String filePath = folderPath;
+			filePath = filePath.toString();
+			java.io.File myFilePath = new java.io.File(filePath);
+			myFilePath.delete(); //删除空文件夹
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//删除指定文件夹下所有文件
+	public static boolean delAllFile(String path) {
+		boolean flag = false;
+		File file = new File(path);
+		if (!file.exists()) {
+			return flag;
+		}
+		if (!file.isDirectory()) {
+			return flag;
+		}
+		String[] tempList = file.list();
+		File temp = null;
+		for (int i = 0; i < tempList.length; i++) {
+			if (path.endsWith(File.separator)) {
+				temp = new File(path + tempList[i]);
+			} else {
+				temp = new File(path + File.separator + tempList[i]);
+			}
+			if (temp.isFile()) {
+				temp.delete();
+			}
+			if (temp.isDirectory()) {
+				delAllFile(path + "/" + tempList[i]);//先删除文件夹里面的文件
+				delFolder(path + "/" + tempList[i]);//再删除空文件夹
+				flag = true;
+			}
+		}
+		return flag;
+	}
+	
 	public static byte[] File2byte(File tradeFile){
 		byte[] buffer = null;
 		try

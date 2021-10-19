@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-@PropertySource("classpath:field.properties")
+//@PropertySource("classpath:config.properties")
 @Component
 public class PositionHttpRequest {
 
@@ -20,9 +20,8 @@ public class PositionHttpRequest {
 
     private static String positionUrl;
     
-    
     @Value("${positionUrl}")
-    public void setQueuePositionCallback(String url) {
+    public void setPositionUrl(String url) {
         PositionHttpRequest.positionUrl = url;
     }
 
