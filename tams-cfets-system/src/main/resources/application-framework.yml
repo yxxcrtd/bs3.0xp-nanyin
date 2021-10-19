@@ -12,10 +12,10 @@ spring:
     removeAbandonedOnMaintenance: true
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000  
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
-    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: BS303INIT_TEST1008
+    password: BS303INIT_TEST1008
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 #  redis:
 #    database: 15
 #    password: joyin!234
@@ -61,9 +61,9 @@ base:
     removeAbandonedOnMaintenance: true
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: BS303INIT_TEST1008
+    password: BS303INIT_TEST1008
 mybatis:
   mapperLocations: classpath*:mapper/*.xml,classpath*:com/joyintech/**/dao/sqlmap/**/*.xml
 #####################################
