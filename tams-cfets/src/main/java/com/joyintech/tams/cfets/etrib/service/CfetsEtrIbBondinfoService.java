@@ -457,7 +457,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return entity;
     }
 
-    public Page<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(int page, int length, CfetsEtrIbBondPosinfo001RequestDto requestDto) {
+    public Page<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(int page, int length, CfetsEtrIbBondPosiPage001RequestDto requestDto) {
         // check
         if (!StringUtil.isNotBlank(requestDto.getCdate())){
             throw new RuntimeException("交易日期cdate不能为空！");
@@ -472,8 +472,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @param pageParam
      * @return
      */
-    public Map queryPositionInfo(Map<String, Object> param) {
-        Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(param);
+    public Map queryPositionInfo(CfetsEtrIbBondPosiPage001RequestDto requestDto) {
+        Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(requestDto);
         if (map != null){
             // 卖空模式
             map.put("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));

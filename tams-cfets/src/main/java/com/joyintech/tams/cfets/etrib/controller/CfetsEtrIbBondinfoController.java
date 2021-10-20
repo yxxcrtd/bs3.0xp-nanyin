@@ -47,12 +47,10 @@ import com.joyintech.tams.cfets.etrib.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.background.component.common.pack.common.validation.groups.ValidateGroupEdit;
@@ -109,21 +107,21 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
      * @see
      * @since 1.0
      */
-    @ApiOperation(value = "查询产品持仓分页数据", notes = "查询产品持仓分页数据")
-    @PostMapping("/findPositionsPage/{page}/{length}")
-    @ResponseBody
-    public Message<Page<CfetsEtrIbBondinfo001Dto>> findPositionsPage(@RequestBody Map<String, Object> pageParam,
-                                                                     @PathVariable("page") int page,
-                                                                     @PathVariable("length") int length)
-            throws Exception {
-        try {
-            Page<CfetsEtrIbBondinfo001Dto> list = cfetsEtrIbBondinfoService.findPositionsPage(page, length, pageParam);
-            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().success().setData(list);
-        }catch (Exception e) {
-            logger.error("查询产品持仓分页数据异常",e);
-            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().fail().setMessage("查询产品持仓分页数据异常");
-        }
-    }
+//    @ApiOperation(value = "查询产品持仓分页数据", notes = "查询产品持仓分页数据")
+//    @PostMapping("/findPositionsPage/{page}/{length}")
+//    @ResponseBody
+//    public Message<Page<CfetsEtrIbBondinfo001Dto>> findPositionsPage(@RequestBody Map<String, Object> pageParam,
+//                                                                     @PathVariable("page") int page,
+//                                                                     @PathVariable("length") int length)
+//            throws Exception {
+//        try {
+//            Page<CfetsEtrIbBondinfo001Dto> list = cfetsEtrIbBondinfoService.findPositionsPage(page, length, pageParam);
+//            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().success().setData(list);
+//        }catch (Exception e) {
+//            logger.error("查询产品持仓分页数据异常",e);
+//            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().fail().setMessage("查询产品持仓分页数据异常");
+//        }
+//    }
 
     /**
      * 检索指令管理分页数据。
@@ -380,10 +378,10 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
 
-    @ApiOperation(value = "持仓信息查询", notes = "查询持仓列表")
+    @ApiOperation(value = "持仓列表查询", notes = "持仓列表查询")
     @PostMapping("/queryPositionsPage/{page}/{length}")
     @ResponseBody
-    public Message<Page<CfetsEtrIbBondPosinfo001Dto>> queryPositionsPage(@RequestBody CfetsEtrIbBondPosinfo001RequestDto requestDto,
+    public Message<Page<CfetsEtrIbBondPosinfo001Dto>> queryPositionsPage(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto,
                                                                          @PathVariable("page") int page,
                                                                          @PathVariable("length") int length) {
         try {
@@ -398,13 +396,13 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ApiOperation(value = "头寸信息查询", notes = "查询头寸信息")
     @PostMapping("/queryPositionInfo")
     @ResponseBody
-    public Message<Map> findPositionInfo(@RequestBody Map<String, Object> pageParam) {
+    public Message<Map> queryPositionInfo(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto) {
         try {
-            Map m = cfetsEtrIbBondinfoService.queryPositionInfo(pageParam);
+            Map m = cfetsEtrIbBondinfoService.queryPositionInfo(requestDto);
             return new Message<Map>().success().setData(m);
         }catch (Exception e) {
             logger.error("查询头寸信息分页列表异常",e);
-            return new Message<Map>().fail().setMessage("查询头寸信息分页列表异常");
+            return new Message<Map>().fail().setMessage(e.getMessage());
         }
     }
     @PostMapping("/getEtrFinProductInfo")
