@@ -75,6 +75,17 @@ public class CfetsEtrIbBondPosinfo001Dto{
     @ApiModelProperty(name="finprodId",value="资产代码id",example="ZC1")
     private String finprodId;
 
+    @ApiModelProperty(name="accountPosition",value="账户持仓",example="99.99")
+    private BigDecimal accountPosition;
+
+    public BigDecimal getAccountPosition() {
+        return accountPosition;
+    }
+
+    public void setAccountPosition(BigDecimal accountPosition) {
+        this.accountPosition = accountPosition;
+    }
+
     public String getPortfolioId() {
         return portfolioId;
     }

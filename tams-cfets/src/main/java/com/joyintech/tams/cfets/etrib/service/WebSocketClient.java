@@ -4,28 +4,23 @@ import com.joyintech.tams.business.common.util.WebSocketClientUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+
 @Service
 public class WebSocketClient {
-    
-    private static String webSocketUrl;
-    private static String webSocketKey;
+
     @Value("${webSocketUrl}")
-    public void setWebSocketUrl(String webSocketUrl) {
-        WebSocketClient.webSocketUrl = webSocketUrl;
-        if (WebSocketClient.webSocketKey != null){
-            //startWebSocket();
-        }
-    }
+    private String webSocketUrl;
     
     @Value("${webSocketKey}")
-    public void setWebSocketKey(String webSocketKey) {
-        WebSocketClient.webSocketKey = webSocketKey;
-        if (WebSocketClient.webSocketUrl != null){
-            //startWebSocket();
-        }
+    private String webSocketKey;
+    
+    @PostConstruct
+    public void init(){
+        startWebSocket();
     }
-
-    public static void startWebSocket(){
+    
+    public void startWebSocket(){
         /**
          * 头寸监听余额变化，更新投管数据库流水余额表
          */
@@ -40,9 +35,10 @@ public class WebSocketClient {
 				@Override
 				public void onClose() {
 					// TODO Auto-generated method stub
-					
+					// 10秒启动
 				}
             });
+            // [{"table":"ETR_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"ETR_SEC_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_SEC_POSITION_RULE", "hodingTypes":[]}]
             util.send(webSocketKey);
         } catch (Exception e) {
             e.printStackTrace();

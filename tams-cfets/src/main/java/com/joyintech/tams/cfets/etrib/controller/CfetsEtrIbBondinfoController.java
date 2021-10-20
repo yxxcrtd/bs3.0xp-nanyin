@@ -15,6 +15,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtribBondInfo003Dto;
@@ -379,6 +380,34 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }catch (Exception e) {
             logger.error("保存银行间多组合指令新建失败",e);
             return new Message<AjaxResult>().fail().setMessage("保存银行间多组合指令新建失败");
+        }
+    }
+
+    @ApiOperation(value = "持仓信息查询", notes = "查询持仓列表")
+    @PostMapping("/queryPositionsPage/{page}/{length}")
+    @ResponseBody
+    public Message<Page<CfetsEtrIbBondPosinfo001Dto>> queryPositionsPage(@RequestBody Map<String, Object> pageParam,
+                                                                         @PathVariable("page") int page,
+                                                                         @PathVariable("length") int length) {
+        try {
+            Page<CfetsEtrIbBondPosinfo001Dto> list = cfetsEtrIbBondinfoService.queryPositionsPage(page, length, pageParam);
+            return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().success().setData(list);
+        }catch (Exception e) {
+            logger.error("查询持仓信息分页列表异常",e);
+            return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().fail().setMessage("查询持仓信息分页列表异常");
+        }
+    }
+
+    @ApiOperation(value = "头寸信息查询", notes = "查询头寸信息")
+    @PostMapping("/queryPositionInfo")
+    @ResponseBody
+    public Message<Map> findPositionInfo(@RequestBody Map<String, Object> pageParam) {
+        try {
+            Map m = cfetsEtrIbBondinfoService.queryPositionInfo(pageParam);
+            return new Message<Map>().success().setData(m);
+        }catch (Exception e) {
+            logger.error("查询头寸信息分页列表异常",e);
+            return new Message<Map>().fail().setMessage("查询头寸信息分页列表异常");
         }
     }
 }
