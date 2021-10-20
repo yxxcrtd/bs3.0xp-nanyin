@@ -12,34 +12,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
-import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
-import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
 import com.joyintech.workflow.engine.controller.WorkFlowController;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.UserSelectService;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -121,50 +103,50 @@ public class JoyinTamsWorkFlowController extends BaseController {
         }
 	}
 	
-    @Autowired(required=false)
-    private BaseGetBusinessId bussGetBussinessIdService;
-    @Autowired
-    private EtrInvestBondInfoService etrInvestBondInfoService;
-    
-	@ApiOperation(value = "保存测试", notes = "/common/workflow/save")
-	@PostMapping("save")
-	public AjaxResult save(@RequestBody EtrInvestBondInfoDto dto) throws Exception {
-		if(!StringUtil.isNotEmpty(dto.getEntrustId())){
-            BussinessCodeParameter param = new BussinessCodeParameter();
-            param.setCommonBusinessType(DictCodeList.共通业务类型_债券投资委托);
-            String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
-            dto.setEntrustId(code);
-        }
-        // ----------add by zhangrui1 20200703 预占功能 start----------
-        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
-            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
-                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
-                    DictCodeList.平安资产类型_债券.getValue());
-            if (StringUtil.isNotEmpty(ar)) {
-                return ar;
-            }
-        }
-        // ----------add by zhangrui1 20200703 预占功能 end----------
-        ProcessParameter<EtrInvestBondInfoDto> processParameter = new ProcessParameter<EtrInvestBondInfoDto>();
-        WorkFlowParameter<EtrInvestBondInfoDto> params = new WorkFlowParameter<EtrInvestBondInfoDto>();
-        params.setPageId("EtrInvestBondInfo002");
-        params.setElementId(dto.getElementId());
-        params.setBusinessCode(dto.getEntrustId());
-        params.setBusinessType(DictCodeList.共通业务类型_债券投资委托.getValue());
-        // 设置流程业务说明, entity即传入的dto
-        params.setComment(
-            entity -> this.getMessage("EtrInvestBondInfo001") + "(" + entity.getPortfolioId() + ")"
-                      + "-" + this.getMessage("EtrInvestBondInfo001.ps")+"("+SysDataUtil.getNameFromDataDict(DictCode.交易方向, entity.getPs())+")" + "-" + "("
-                      + this.getMessage("EtrInvestBondInfo001.vdate") + ":" + DateUtil.format(entity.getVdate())
-                      + ")-(" + this.getMessage("EtrInvestBondInfo001.mdate") + ":"
-                      + DateUtil.format(entity.getMdate())+ ")-"
-                      + this.getMessage("EtrInvestBondInfo001.entrustAmt") + ":"
-                      + entity.getEntrustNum());
-        processParameter.setWorkFlowParameter(params);
-        dto.setWorkflowParameter("new|chumi,xuq,xwy,zhangjian,zhengfeng,duorou,killer,liuyuliang||1|EtrInvestBondInfo002|EtrInvestBondInfo002_btn_submit|false");
-        String msg = etrInvestBondInfoService.start(processParameter, dto);
-        return new AjaxResult(msg);
-	}
+//    @Autowired(required=false)
+//    private BaseGetBusinessId bussGetBussinessIdService;
+//    @Autowired
+//    private EtrInvestBondInfoService etrInvestBondInfoService;
+//    
+//	@ApiOperation(value = "保存测试", notes = "/common/workflow/save")
+//	@PostMapping("save")
+//	public AjaxResult save(@RequestBody EtrInvestBondInfoDto dto) throws Exception {
+//		if(!StringUtil.isNotEmpty(dto.getEntrustId())){
+//            BussinessCodeParameter param = new BussinessCodeParameter();
+//            param.setCommonBusinessType(DictCodeList.共通业务类型_债券投资委托);
+//            String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
+//            dto.setEntrustId(code);
+//        }
+//        // ----------add by zhangrui1 20200703 预占功能 start----------
+//        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+//            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+//                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+//                    DictCodeList.平安资产类型_债券.getValue());
+//            if (StringUtil.isNotEmpty(ar)) {
+//                return ar;
+//            }
+//        }
+//        // ----------add by zhangrui1 20200703 预占功能 end----------
+//        ProcessParameter<EtrInvestBondInfoDto> processParameter = new ProcessParameter<EtrInvestBondInfoDto>();
+//        WorkFlowParameter<EtrInvestBondInfoDto> params = new WorkFlowParameter<EtrInvestBondInfoDto>();
+//        params.setPageId("EtrInvestBondInfo002");
+//        params.setElementId(dto.getElementId());
+//        params.setBusinessCode(dto.getEntrustId());
+//        params.setBusinessType(DictCodeList.共通业务类型_债券投资委托.getValue());
+//        // 设置流程业务说明, entity即传入的dto
+//        params.setComment(
+//            entity -> this.getMessage("EtrInvestBondInfo001") + "(" + entity.getPortfolioId() + ")"
+//                      + "-" + this.getMessage("EtrInvestBondInfo001.ps")+"("+SysDataUtil.getNameFromDataDict(DictCode.交易方向, entity.getPs())+")" + "-" + "("
+//                      + this.getMessage("EtrInvestBondInfo001.vdate") + ":" + DateUtil.format(entity.getVdate())
+//                      + ")-(" + this.getMessage("EtrInvestBondInfo001.mdate") + ":"
+//                      + DateUtil.format(entity.getMdate())+ ")-"
+//                      + this.getMessage("EtrInvestBondInfo001.entrustAmt") + ":"
+//                      + entity.getEntrustNum());
+//        processParameter.setWorkFlowParameter(params);
+//        dto.setWorkflowParameter("new|chumi,xuq,xwy,zhangjian,zhengfeng,duorou,killer,liuyuliang||1|EtrInvestBondInfo002|EtrInvestBondInfo002_btn_submit|false");
+//        String msg = etrInvestBondInfoService.start(processParameter, dto);
+//        return new AjaxResult(msg);
+//	}
 //	http://192.168.70.246:8080/tams/invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save?operType=new&elementIdForLog=EtrInvestBondInfo002_btn_submit&pageIdForLog=EtrInvestBondInfo002&isTodoList=false
 //	{"finprodId":"F01_010007.IB","calendarId":"03","finvdate":"2001-07-31 00:00:00","finmdate":"2021-07-31 00:00:00",
 //	 "isRight":"N","profitType":"","portfolioId":"2222","finprodMarketId":"010007.IB","tradeMarketMode":"02","ps":"T01",
