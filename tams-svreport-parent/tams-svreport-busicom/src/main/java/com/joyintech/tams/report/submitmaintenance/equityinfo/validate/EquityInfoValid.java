@@ -122,7 +122,8 @@ public class EquityInfoValid {
      * 邮箱验证
      */
     //public static final String PATTERN_MAILBOX = "^([a-z0-9A-Z]+[-|\\.|_]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-    public static final String PATTERN_MAILBOX = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_.-]+(\\.[a-zA-Z0-9_.-]+)*\\.[a-zA-Z0-9]{2,6}$";
+//    public static final String PATTERN_MAILBOX = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_.-]+(\\.[a-zA-Z0-9_.-]+)*\\.[a-zA-Z0-9]{2,6}$";
+    public static final String PATTERN_MAILBOX = "^[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?$";
     /**
      * logger
      */
