@@ -42,10 +42,7 @@ import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.business.common.util.UserUtil;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrTrdProductDealDto;
+import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -460,9 +457,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return entity;
     }
 
-    public Page<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(int page, int length, Map<String, Object> pageParam) {
+    public Page<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(int page, int length, CfetsEtrIbBondPosinfo001RequestDto requestDto) {
+        // check
+        if (!StringUtil.isNotBlank(requestDto.getCdate())){
+            throw new RuntimeException("交易日期cdate不能为空！");
+        }
         // 1.分页查询列表
-        Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.queryPositionsPage(pageParam));
+        Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.queryPositionsPage(requestDto));
         return result;
     }
 

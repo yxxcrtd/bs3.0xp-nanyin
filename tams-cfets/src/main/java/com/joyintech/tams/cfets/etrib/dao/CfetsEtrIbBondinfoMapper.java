@@ -12,6 +12,7 @@ package com.joyintech.tams.cfets.etrib.dao;
 
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001RequestDto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrTrdProductDealDto;
 import org.apache.ibatis.annotations.Param;
@@ -81,7 +82,7 @@ public interface CfetsEtrIbBondinfoMapper {
     List<String> getEtrFinExerciseInfo(@Param("secId") String secId);
 
 
-    List<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(Map<String, Object> pageParam);
+    List<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(CfetsEtrIbBondPosinfo001RequestDto pageParam);
 
     Map queryPositionInfo(Map<String, Object> pageParam);
 }

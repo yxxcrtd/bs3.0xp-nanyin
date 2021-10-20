@@ -14,7 +14,7 @@ import java.math.BigDecimal;
  * @see CfetsEtrIbBondinfo001Dto
  * @since 1.0
  */
-@ApiModel(value="债券指令持仓信息",description="债券指令持仓信息")
+@ApiModel(value="债券指令持仓信息返回数据",description="债券指令持仓信息返回数据")
 public class CfetsEtrIbBondPosinfo001Dto{
 
 
