@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.asset.bond.validator;
 
+import com.google.common.cache.Cache;
+import com.joyintech.framework.base.intf.Page;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -18,6 +20,8 @@ import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -103,6 +107,23 @@ public class FinBondTargetAssetValidator implements BeanValidator{
                 }
                 if(dto.getTradePlat () == null || dto.getTradePlat () == ""){
                     resultList.add(new ValidMessage(getMessage("允许交易的平台不能为空")));
+                }
+            }
+            Page page = CacheUtil.getPage("FinBondTargetAsset002");
+            if (null != page && null != page.getElementcontrol("bussRepBondInfo") && page.getElementcontrol("bussRepBondInfo").getIsShow()) {
+                if(StringUtil.isNotEmpty(dto.getRepAssetType())
+                        &&StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_地方政府债.getValue())){
+                    if(dto.getBussFinBondRepInfoDto()!=null && !StringUtil.isNotEmpty(dto.getBussFinBondRepInfoDto().getBankSecZxzq())){
+                        resultList.add(new ValidMessage("bussFinBondRepInfoDto.bankSecZxzq",
+                                getMessage("是否专项债券数据不能为空。")));
+                    }
+                }
+                if(StringUtil.isNotEmpty(dto.getType12())
+                        &&StringUtil.equals(dto.getType12(), DictCodeListExt3.行内资产四级分类_可转债.getValue())){
+                    if(dto.getBussFinBondRepInfoDto()!=null && !StringUtil.isNotEmpty(dto.getBussFinBondRepInfoDto().getBankSecKzzq())){
+                        resultList.add(new ValidMessage("bussFinBondRepInfoDto.bankSecKzzq",
+                                getMessage("是否商业银行可转债数据不能为空。")));
+                    }
                 }
             }
         }
