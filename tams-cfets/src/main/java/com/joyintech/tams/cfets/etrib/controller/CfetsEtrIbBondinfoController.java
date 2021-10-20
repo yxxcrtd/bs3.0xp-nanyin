@@ -15,10 +15,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtribBondInfo003Dto;
+import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfo002Service;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.constant.DictCode;
@@ -408,6 +405,18 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }catch (Exception e) {
             logger.error("查询头寸信息分页列表异常",e);
             return new Message<Map>().fail().setMessage("查询头寸信息分页列表异常");
+        }
+    }
+    @PostMapping("/getEtrFinProductInfo")
+    @ApiOperation(value = "查询功能", notes = "测试查询功能")
+    @ResponseBody
+    public Message<CfetsEtrFinProductDto> getEtrFinProductInfo(@RequestBody String secId) {
+        try {
+            CfetsEtrFinProductDto dto = cfetsEtrIbBondinfoService.getEtrFinProductInfo(secId);
+            return new Message<CfetsEtrFinProductDto>().success().setData(dto);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<CfetsEtrFinProductDto>().fail().setMessage("查询异常");
         }
     }
 }

@@ -21,10 +21,7 @@ import com.joyintech.tams.business.common.dto.PositionRulePtlData;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrTrdProductDealDto;
+import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -465,5 +462,37 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             map.put("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
         }
         return map;
+    }
+
+    /**
+     * 获得债券信息
+     *
+     * @param secId
+     * @return dto
+     */
+    public CfetsEtrFinProductDto getEtrFinProductInfo(String secId) {
+        CfetsEtrFinProductDto dto = cfetsetrIbBondinfoMapper.getEtrFinProductInfo(secId);
+        if (dto != null) {
+            //下一付息日若无，则显示为“—”
+            if (StringUtil.isEmpty(dto.getLastPaydate())) {
+                dto.setLastPaydate("--");
+            }
+            //行权日若无，则显示为“—”
+            if (StringUtil.isEmpty(dto.getXqdate())) {
+                dto.setXqdate("--");
+            }
+            if (StringUtil.isEmpty(dto.getXqFlg())) {
+                dto.setXqFlg("无");
+            }
+
+
+            String xqfangshi = "";
+            List<String> plan = cfetsetrIbBondinfoMapper.getEtrFinExerciseInfo(secId);
+            if (plan != null && plan.size() > 0) {
+                xqfangshi = StringUtil.joinString(plan,";");
+            }
+            dto.setXqFlg(xqfangshi);
+        }
+        return dto;
     }
 }

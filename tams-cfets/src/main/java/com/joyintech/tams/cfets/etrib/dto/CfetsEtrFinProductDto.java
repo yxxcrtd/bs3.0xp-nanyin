@@ -181,6 +181,28 @@ public class CfetsEtrFinProductDto {
      */
     private String sponsorName;
 
+    /**
+     * 评级结果
+     */
+    private String gradeResult;
+    /**
+     * 取得 评级结果
+     *
+     * @return 评级结果
+     */
+    public String getGradeResult() {
+        return gradeResult;
+    }
+    /**
+     * 设置 评级结果
+     *
+     * @param gradeResult
+     *            评级结果
+     */
+    public void setGradeResult(String gradeResult) {
+        this.gradeResult = gradeResult == null ? null : gradeResult.trim();
+    }
+
     public String getSponsorName() {
         return sponsorName;
     }

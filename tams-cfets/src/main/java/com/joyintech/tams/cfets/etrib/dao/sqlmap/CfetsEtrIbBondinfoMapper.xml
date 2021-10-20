@@ -743,4 +743,79 @@ from
         ) cc ON nvl(aa.PORTFOLIO_ID, bb.PORTFOLIO_ID)=cc.PORTFOLIO_ID
         ) summary
     </select>
+
+    <select id="getEtrFinProductInfo" parameterType="String" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto">
+        SELECT
+        t1.FINPROD_ID secId,                            --查询的主键ID
+        t1.FINPROD_ABBR secName,                        --债券名称
+        t1.FINPROD_NAME secType,                        --债券分类
+        t1.ISSUER issuer,                               --发行人
+        TO_CHAR(t1.VDATE,'yyyy-MM-dd') vdate,           --起息日
+        TO_CHAR(t1.MDATE,'yyyy-MM-dd') mdate,           --到期日
+        MBVI.LAST_PERIOD lastqx,                        --剩余期限
+        TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate,  --下一付息日
+        t6.INT_TYPE rateType,                           --利率类型
+        t6.RATE*100 rate,                               --票面利率
+        MBCR.GRADE_RESULT zxGrade,                      --债项评级
+        MBCR.GRADE_RESULT ztGrade,                      --主体评级
+        t1.IS_RIGHT xqFlg,                              --含权标识
+        A.EXERCISE_DATE xqdate,                         --下一行权日
+        MBVI.NETVALUATION_EXERCISE priceXq,             --估价净价（行权）
+        MBVI.NETVALUATION_RECOMMENDED priceTj,          --估价净价（推荐）
+        t2.TYPE_7,                                      --债券二级分类
+        t1.ISSUE_TYPE,                                  --发行方式
+        t1.SPONSOR sponsorName                          --担保人
+        FROM FIN_PRODUCT t1
+        LEFT JOIN FIN_PRODUCT_TYPE t2 ON t1.FINPROD_ID = t2.FINPROD_ID
+        LEFT JOIN MST_BOND_VALUATION_INFO MBVI ON t1.FINPROD_MARKET_ID = MBVI.SEC_ID
+        LEFT JOIN (
+        select
+        f2.FINPROD_ID,
+        min(f1.PAY_DATE) PAY_DATE
+        from
+        fin_cash_plan f1
+        inner join fin_cash_info f2 on f1.CASH_ID = f2.CASH_ID
+        inner join FIN_PRODUCT f3 on f2.FINPROD_ID = f3.FINPROD_ID
+        where
+        f2.CASH_TYPE_2 = 'C02' and
+        f3.FINPROD_TYPE2 = 'F16'
+        group by f2.FINPROD_ID
+        ) t4 on t4.FINPROD_ID = t1.FINPROD_ID
+        left join fin_cash_info t5 on t5.FINPROD_ID = t1.FINPROD_ID AND t5.CASH_TYPE_2 = 'C02' and t5.FINPROD_TYPE = '01'
+        LEFT JOIN FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID
+        LEFT JOIN mst_customer_info t7 ON t1.sponsor = t7.CUSTOMER_ID
+        LEFT JOIN (
+        <!-- 取大于当前时间的最接近的实际行权日 -->
+        select A.FINPROD_ID,min(A.EXERCISE_DATE) EXERCISE_DATE
+        from FIN_EXERCISE_PLAN A
+        where
+        1 = 1
+        <if test="secId != null and secId != ''">
+            AND A.FINPROD_ID = #{secId}
+        </if>
+        group by A.FINPROD_ID
+        ) B on t1.FINPROD_ID = B.FINPROD_ID
+        LEFT JOIN MST_BOND_CREDIT_RATING MBCR ON t1.TRUSTEE_ID = MBCR.O_CODE
+        LEFT JOIN FIN_EXERCISE_PLAN A ON t1.FINPROD_ID = A.FINPROD_ID
+        where 1=1
+        AND t1.FINPROD_TYPE2='F16'
+        <if test="secId != null and secId != ''">
+            AND t1.FINPROD_ID = #{secId}
+        </if>
+    </select>
+
+
+    <select id="getEtrFinExerciseInfo" resultType="java.lang.String">
+        select
+        distinct t2.ITEM_CODE ITEM_CODE
+        from
+        FIN_EXERCISE_PLAN t1
+        inner join sys_datadict_list t2
+        on t2.DICT_CODE = 'EXEC_MODE' and t1.EXERCISE_TYPE = t2.ITEM_CODE
+        where
+        1 = 1
+        <if test="secId != null and secId != ''">
+            AND t1.FINPROD_ID = #{secId}
+        </if>
+    </select>
 </mapper>
