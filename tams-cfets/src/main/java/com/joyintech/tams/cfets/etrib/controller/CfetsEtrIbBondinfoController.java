@@ -50,7 +50,6 @@ public class CfetsEtrIbBondinfoController {
     @ResponseBody
     public Message<Map<String, Object>> getPageParams(){
         Map<String, Object> initPageParams = new HashMap<>();
-        initPageParams.put("cmdsUrl","ws://192.168.90.208:8888/dsp/cmds");
         initPageParams.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         initPageParams.put("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
         initPageParams.put("CMDS_PATH", "ws://192.168.90.208:8888/dsp/cmds");//CacheUtil.getSysParam("CMDS_PATH"));

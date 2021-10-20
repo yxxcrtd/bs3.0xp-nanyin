@@ -46,6 +46,9 @@
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-security</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>joyintech-workflow</artifactId>
+		</dependency>
 	</dependencies>
 </project>

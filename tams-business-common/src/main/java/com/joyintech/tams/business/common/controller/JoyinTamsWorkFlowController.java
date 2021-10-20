@@ -1,0 +1,104 @@
+package com.joyintech.tams.business.common.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.workflow.engine.controller.WorkFlowController;
+import com.joyintech.workflow.engine.service.UserSelectService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@RestController
+@RequestMapping("/common/workflow")
+@Api(tags = "工作流相关-兼容资管3.0框架")
+public class JoyinTamsWorkFlowController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(JoyinTamsWorkFlowController.class);
+	
+	@Resource
+	private UserSelectService userSelectService;
+	@Resource
+	private WorkFlowController workFlowController;
+	@Autowired
+	private HttpServletRequest request;
+	 
+	@SuppressWarnings({ "unchecked" })
+	@ApiOperation(value = "查询审批人员列表", notes = "/common/workflow/listUser?pageId=EtrInvestBondInfo002&elementId=EtrInvestBondInfo002_btn_submit&searchValue=admin")
+	@PostMapping("/listNextUser")
+	public Message<List<?>> listNextUser(){
+		try {
+			String pageId = request.getParameter("pageId");
+			String elementId = request.getParameter("elementId");
+			String searchValue = request.getParameter("searchValue");
+			if (StringUtils.isEmpty(pageId)) {
+				return new Message<List<?>>().fail().setMessage("pageId参数不能为null");
+			}
+			if (StringUtils.isEmpty(elementId)) {
+				return new Message<List<?>>().fail().setMessage("elementId参数不能为null");
+			}
+			//请求:
+			//  processInstanceId: 
+			//  taskId: 
+			//  pageId: EtrInvestBondInfo002
+			//  elementId: EtrInvestBondInfo002_btn_submit
+			//  businessInfo: {"finprodId":"F01_010007.IB","calendarId":"03","finvdate":"2001-07-31 00:00:00","finmdate":"2021-07-31 00:00:00","isRight":"N","profitType":"","portfolioId":"2222","finprodMarketId":"010007.IB","tradeMarketMode":"02","ps":"T01","invAim":"FVTPL","entrustNum":"1000000.00","entrustOwnNum":"1000000.00","entrustIntegrateNum":"0.00","priceModel":"PRM01","price":"100.0000","matureYield":"4.180306271706","minAmt":"","settleSpreed":"0","secAcctId":"","chlId":"","remark":"","riskMathFlag":"02","bankCode":"002","vdate":"2021-07-12","mdate":"2021-07-12","assetType1":"02","assetType10":"03","assetType11":"003","ccy":"CNY","finprodName":"01国债7","tradeMarket":"01","tradePlat":"01","availableNum":"100","fpriceAmt":"101.90640884","exerYield":"","proAvailableCash":"0.00","proAvailableCash1":"0.00","etrInvestPersonInfo":{"realName":"system","room":"资管部门","profitType":"","counterId":"","counterTrader":"","contactInfo":"","invManagerId":"system"},"riskTrialRetDto":[],"pageModel":"0","draftOption":"","operateType":"submit","entrustId":"","entrustStatus":"01","fileArray":[],"parentPageId":"EtrInvestBondInfoIb001"}
+			//  elementIdForLog: EtrInvestBondInfo002_btn_submit
+			//  pageIdForLog: EtrInvestBondInfo002
+			//  isTodoList: false
+			//响应:
+			//  {"sortable":false,"statuCode":200,"errorList":[],
+			//   "data":{"isSendUorg":"02","moduleId":"oneApproval","type":"role","nodeId":"sid-CE4E5CDC-B51F-4762-907F-5966276983D2",
+			//           "nodeData":"{\"initUserIds\":\"null\",\"userNames\":\"null\"}"
+			//          }
+			//  }
+			AjaxResult nextTask = workFlowController.getNextTask();
+			Map<String, String> data = (Map<String, String>) nextTask.getData();
+			String nodeId = data.get("nodeId");
+			String isSendUorg = data.get("isSendUorg");
+			
+			//请求:
+			//  from: workflow
+			//  searchType: user
+			//  moduleId: oneApproval
+			//  nodeId: sid-CE4E5CDC-B51F-4762-907F-5966276983D2
+			//  isSendUorg: 02
+			//  searchValue: admin
+			//  pageId: EtrInvestBondInfo002
+			//  showUserIds: 
+			//  default: 
+			//  pageIdForLog: EtrInvestBondInfo002
+			//  elementIdForLog: btnSearch
+			//响应:
+			// [{"userName":"ai2","realName":"ai2","expired":false,"locked":false,"admin":false},
+			//  {"userName":"JT01","realName":"JT01","expired":false,"locked":false,"admin":false}]
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("from", "workflow");
+			params.put("searchType", "user");
+			params.put("moduleId", "oneApproval");
+			params.put("nodeId", nodeId);
+			params.put("isSendUorg", isSendUorg);
+			params.put("searchValue", searchValue);
+			params.put("pageId", pageId);
+			List<?> list = userSelectService.findByLikeString(params);
+            return new Message<List<?>>(list).success();
+        } catch (Exception e) {
+            logger.error("查询审批人员异常", e);
+            return new Message<List<?>>().fail().setMessage("查询审批人员失败");
+        }
+	}
+}

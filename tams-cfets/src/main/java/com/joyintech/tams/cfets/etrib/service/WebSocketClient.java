@@ -13,7 +13,7 @@ public class WebSocketClient {
     public void setWebSocketUrl(String webSocketUrl) {
         WebSocketClient.webSocketUrl = webSocketUrl;
         if (WebSocketClient.webSocketKey != null){
-            startWebSocket();
+            //startWebSocket();
         }
     }
     
@@ -21,7 +21,7 @@ public class WebSocketClient {
     public void setWebSocketKey(String webSocketKey) {
         WebSocketClient.webSocketKey = webSocketKey;
         if (WebSocketClient.webSocketUrl != null){
-            startWebSocket();
+            //startWebSocket();
         }
     }
 
