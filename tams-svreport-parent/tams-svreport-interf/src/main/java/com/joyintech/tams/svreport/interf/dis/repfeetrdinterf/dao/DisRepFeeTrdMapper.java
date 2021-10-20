@@ -4,6 +4,7 @@ import com.joyintech.tams.svreport.interf.dis.repfeetrdinterf.dto.DisRepFeeTrd;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -13,7 +14,7 @@ public interface DisRepFeeTrdMapper {
     int insertSelective(DisRepFeeTrd record);
     
     
-    int mergeRepFeeTrdInfo (List<DisRepFeeTrd> DisRepFeeTrd);
+    int mergeRepFeeTrdInfo (@Param("list") List<DisRepFeeTrd> DisRepFeeTrd, @Param("dataBentch") String dataBentch);
 
     int insertBasicByBasicInfo(DisRepFeeTrd record);
     
