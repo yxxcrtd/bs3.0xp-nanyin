@@ -54,7 +54,7 @@ import java.util.*;
  * @see CfetsEtrIbBondinfoService
  * @since 1.0
  */
-@Service("backEtrIbBondinfo001Service")
+@Service("CfetsEtrIbBondinfoService")
 public class CfetsEtrIbBondinfoService extends BaseService{
 
     @Autowired

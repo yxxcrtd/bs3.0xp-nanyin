@@ -14,7 +14,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.entrust.etribbondinfo.dto.BussCombDistribtDto;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import javax.validation.Valid;
@@ -140,6 +142,39 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
      */
     private String portfolioSeries;
 
+    public List<BussCombDistribtDto> getBussCombDistribtList() {
+        return bussCombDistribtList;
+    }
+
+    public void setBussCombDistribtList(List<BussCombDistribtDto> bussCombDistribtList) {
+        this.bussCombDistribtList = bussCombDistribtList;
+    }
+
+    /**
+     * 组合分配
+     */
+    List<BussCombDistribtDto> bussCombDistribtList;
+    /**
+     * 利息总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal intAmt;
+
+    /**
+     * 单位利息
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal unitInt;
+
+    /**
+     * 单位全价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal unitFprice;
+    /**
+     * 计算标志
+     */
+    private String calflag;
 
     public String getBusinessId() {
         return businessId;
@@ -243,13 +278,13 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
      * 投资人员信息DTO
      */
     @Valid
-    private CfetsBussEtrInvestPersonInfoDto etrInvestPersonInfo;
+    private BussEtrInvestPersonInfoDto etrInvestPersonInfo;
 
-    public CfetsBussEtrInvestPersonInfoDto getEtrInvestPersonInfo() {
+    public BussEtrInvestPersonInfoDto getEtrInvestPersonInfo() {
         return etrInvestPersonInfo;
     }
 
-    public void setEtrInvestPersonInfo(CfetsBussEtrInvestPersonInfoDto etrInvestPersonInfo) {
+    public void setEtrInvestPersonInfo(BussEtrInvestPersonInfoDto etrInvestPersonInfo) {
         this.etrInvestPersonInfo = etrInvestPersonInfo;
     }
 
@@ -402,5 +437,37 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setPortfolioSeries(String portfolioSeries) {
         this.portfolioSeries = portfolioSeries;
+    }
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    public BigDecimal getUnitInt() {
+        return unitInt;
+    }
+
+    public void setUnitInt(BigDecimal unitInt) {
+        this.unitInt = unitInt;
+    }
+
+    public BigDecimal getUnitFprice() {
+        return unitFprice;
+    }
+
+    public void setUnitFprice(BigDecimal unitFprice) {
+        this.unitFprice = unitFprice;
+    }
+
+    public String getCalflag() {
+        return calflag;
+    }
+
+    public void setCalflag(String calflag) {
+        this.calflag = calflag;
     }
 }

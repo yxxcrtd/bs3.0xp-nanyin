@@ -187,6 +187,15 @@ public class CfetsEtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntit
     private String trader;
 
     /**
+     * 资产本金（授信用）
+     */
+    private BigDecimal prinAmt;
+    /**
+     * 选中的数据
+     */
+    private transient List<CfetsEtrIbBondinfo002Dto> selectedItem;
+
+    /**
      * 获取 chlIdName
      *
      * @return chlIdName.
@@ -774,5 +783,21 @@ public class CfetsEtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntit
 
     public void setBalanceCheck(String balanceCheck) {
         this.balanceCheck = balanceCheck;
+    }
+
+    public List<CfetsEtrIbBondinfo002Dto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<CfetsEtrIbBondinfo002Dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public BigDecimal getPrinAmt() {
+        return prinAmt;
+    }
+
+    public void setPrinAmt(BigDecimal prinAmt) {
+        this.prinAmt = prinAmt;
     }
 }
