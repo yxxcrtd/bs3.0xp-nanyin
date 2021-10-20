@@ -45,11 +45,11 @@
 			<artifactId>tams-business-common</artifactId>
 			<version>3.0.4</version>
 		</dependency>
-		<!-- <dependency>
+		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>tams-cfets</artifactId>
 			<version>${cfets.version}</version>
-		</dependency> -->
+		</dependency>
 		
 		<!-- 集成微服务端的代码 -->
 		<dependency>
