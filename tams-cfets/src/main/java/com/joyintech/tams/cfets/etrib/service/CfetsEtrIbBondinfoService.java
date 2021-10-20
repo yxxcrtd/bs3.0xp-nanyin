@@ -449,7 +449,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
     public Page<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(int page, int length, Map<String, Object> pageParam) {
         // 1.分页查询列表
-        Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.findPositionsPage(pageParam));
+        Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.queryPositionsPage(pageParam));
         return result;
     }
 
@@ -459,7 +459,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @return
      */
     public Map queryPositionInfo(Map<String, Object> param) {
-        Map map = cfetsetrIbBondinfoMapper.findPositionInfo(param);
+        Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(param);
         if (map != null){
             // 卖空模式
             map.put("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));

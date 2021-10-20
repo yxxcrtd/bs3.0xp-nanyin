@@ -75,5 +75,7 @@ public interface CfetsEtrIbBondinfoMapper {
     List<CfetsEtrIbBondinfo001Dto> findEtrinfoPage(Map<String, Object> pageParam);
 
 
-    Map findPositionInfo(Map<String, Object> pageParam);
+    List<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(Map<String, Object> pageParam);
+
+    Map queryPositionInfo(Map<String, Object> pageParam);
 }

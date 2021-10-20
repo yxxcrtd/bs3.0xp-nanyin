@@ -568,7 +568,7 @@ from
     </select>
 
     <!--持仓列表-->
-    <select id="findPositionsPage" parameterType="Map" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto">
+    <select id="queryPositionsPage" parameterType="Map" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto">
         SELECT
         etrptl.PORTFOLIO_ID as portfolioId,
         e.PORTFOLIO_NAME as portfolioName,
@@ -653,7 +653,7 @@ from
 
 
     <!--头寸信息-->
-    <select id="findPositionInfo" parameterType="Map" resultType="map">
+    <select id="queryPositionInfo" parameterType="Map" resultType="map">
         SELECT
         ROUND(sum(nvl(summary.t0kyxj,0)),2) AS t0kyxj, /*T日可用现金*/
         ROUND(sum(summary.t1kyxj),2) AS t1kyxj, /*T+1日可用现金*/
