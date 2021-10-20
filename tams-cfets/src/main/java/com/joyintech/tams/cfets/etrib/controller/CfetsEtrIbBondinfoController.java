@@ -10,14 +10,12 @@
 
 package com.joyintech.tams.cfets.etrib.controller;
 
-import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
-import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +39,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/cfets/etrib/cfetsEtrIbBondinfo")
 @Api(tags = "银行间债券指令")
-public class CfetsEtrIbBondinfoController  extends BaseController {
+public class CfetsEtrIbBondinfoController {
     private static final Logger logger = LoggerFactory.getLogger(CfetsEtrIbBondinfoController.class);
 
     @Autowired
@@ -54,11 +52,11 @@ public class CfetsEtrIbBondinfoController  extends BaseController {
         Map<String, Object> initPageParams = new HashMap<>();
         initPageParams.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         initPageParams.put("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
-        initPageParams.put("CMDS_PATH", CacheUtil.getSysParam("CMDS_PATH"));
-        initPageParams.put("ACCOUNT_SPEED", DictCode.清算速度);
+        initPageParams.put("CMDS_PATH", "ws://192.168.90.208:8888/dsp/cmds");//CacheUtil.getSysParam("CMDS_PATH"));
+        initPageParams.put("NEED_WORKFLOW", false);
     	return new Message<Map<String, Object>>(initPageParams).success();
     }
-    
+
     /**
      * 检索产品持仓分页数据。 <功能详细描述>
      *
@@ -120,7 +118,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController {
     public Message<CfetsEtrIbBondinfo002Dto> save(@RequestBody CfetsEtrIbBondinfo002Dto dto) {
         try {
             cfetsEtrIbBondinfoService.saveBaseEtrInvestInfoDto(dto);
-            return new Message<CfetsEtrIbBondinfo002Dto>().fail().setMessage("新建成功");
+            return new Message<CfetsEtrIbBondinfo002Dto>().success().setMessage("新建成功");
         } catch (Exception e) {
             logger.error("多组合指令新建保存/提交异常", e);
             return new Message<CfetsEtrIbBondinfo002Dto>().fail().setMessage("多组合指令新建保存/提交异常");
