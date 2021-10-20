@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -51,13 +50,11 @@ public class CfetsEtrIbBondinfoController  extends BaseController {
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
     @ResponseBody
-    public Message<Map<String, Object>> getPageParams(Model model){
+    public Message<Map<String, Object>> getPageParams(){
         Map<String, Object> initPageParams = new HashMap<>();
-        initPageParams.put("cmdsUrl","ws://192.168.90.208:8888/dsp/cmds");
         initPageParams.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         initPageParams.put("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
         initPageParams.put("CMDS_PATH", CacheUtil.getSysParam("CMDS_PATH"));
-        this.setSelectOptionToModel(model, DictCode.清算速度);
         initPageParams.put("ACCOUNT_SPEED", DictCode.清算速度);
     	return new Message<Map<String, Object>>(initPageParams).success();
     }
