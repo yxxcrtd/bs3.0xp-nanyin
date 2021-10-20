@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -18,9 +19,8 @@ import java.util.Date;
 @PageId("EtrIbBondinfo001")
 public class CfetsEtrIbBondinfo001Dto extends BaseEntity {
 
-    /**
-     * 组合代码
-     */
+
+    @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
     private String portfolioId;
     
     /**
@@ -38,9 +38,8 @@ public class CfetsEtrIbBondinfo001Dto extends BaseEntity {
      */
     private String invAim;
 
-    /**
-     * 组合名称
-     */
+
+    @ApiModelProperty(name="portfolioName",value="组合名称",example="名称A1")
     private String portfolioName;
 
     /**
@@ -48,19 +47,13 @@ public class CfetsEtrIbBondinfo001Dto extends BaseEntity {
      */
     private String finprodId;
 
-    /**
-     * 市场代码
-     */
+    @ApiModelProperty(name="finprodMarketId",value="资产代码",example="ZC1")
     private String finprodMarketId;
 
-    /**
-     * 资产简称
-     */
+    @ApiModelProperty(name="finprodAbbr",value="资产简称",example="ZC名")
     private String finprodAbbr;
 
-    /**
-     * 债券一级分类
-     */
+    @ApiModelProperty(name="secType1",value="债券一级分类Code",example="分类1Code")
     private String secType1;
 
     /**
@@ -98,59 +91,49 @@ public class CfetsEtrIbBondinfo001Dto extends BaseEntity {
      */
     private BigDecimal floatingPl;
 
-    /**
-     * 指令编号
-     */
+
+    @ApiModelProperty(name="entrustId",value="指令编号",example="A1")
     private String entrustId;
 
     /**
      * 有效状态
      */
+    @ApiModelProperty(name="entrustStatus",value="指令状态Code",example="A1")
     private String entrustStatus;
 
-    /**
-     * 投资经理
-     */
+
+    @ApiModelProperty(name="invManagerId",value="投资经理",example="A1")
     private String invManagerId;
 
-    /**
-     * 交易方向
-     */
+
+    @ApiModelProperty(name="ps",value="交易方向Code",example="T01")
     private String ps;
 
-    /**
-     * 券面总额
-     */
+
+    @ApiModelProperty(name="shareNum",value="券面总额",example="11")
     private BigDecimal shareNum;
 
-    /**
-     * 价格模式
-     */
+
+    @ApiModelProperty(name="priceModel",value="价格模式Code",example="01")
     private String priceModel;
 
-    /**
-     * 净价
-     */
+
+    @ApiModelProperty(name="unitPrice",value="净价",example="1")
     private BigDecimal unitPrice;
 
-    /**
-     * 全价
-     */
+    @ApiModelProperty(name="allPrice",value="全价",example="1")
     private BigDecimal allPrice;
 
-    /**
-     * 到期收益率
-     */
+
+    @ApiModelProperty(name="matureYield",value="到期收益率",example="1")
     private BigDecimal matureYield;
 
-    /**
-     * 行权收益率
-     */
+
+    @ApiModelProperty(name="exerYield",value="行权收益率",example="1")
     private BigDecimal exerYield;
 
-    /**
-     * 清算速度
-     */
+
+    @ApiModelProperty(name="settleSpreed",value="清算速度Code",example="1")
     private String settleSpreed;
 
     /**
@@ -163,9 +146,8 @@ public class CfetsEtrIbBondinfo001Dto extends BaseEntity {
      */
     private Date mdate;
 
-    /**
-     * 已完成额度
-     */
+
+    @ApiModelProperty(name="finishAmt",value="已完成额度",example="1")
     private BigDecimal finishAmt;
 
     /**
@@ -173,9 +155,8 @@ public class CfetsEtrIbBondinfo001Dto extends BaseEntity {
      */
     private BigDecimal transactioncom;
 
-    /**
-     * 备注
-     */
+
+    @ApiModelProperty(name="remark",value="备注",example="A1")
     private String remark;
 
     /**
@@ -200,6 +181,39 @@ public class CfetsEtrIbBondinfo001Dto extends BaseEntity {
      */
     private String counterId;
 
+    @ApiModelProperty(name="effectiveStatus",value="有效状态Code",example="A1")
+    private String effectiveStatus;
+
+    @ApiModelProperty(name="effectiveStatusName",value="有效状态",example="A1")
+    private String effectiveStatusName;
+
+
+    @ApiModelProperty(name="entrustStatusName",value="指令状态",example="A1")
+    private String entrustStatusName;
+
+    @ApiModelProperty(name="execProcess",value="执行进度%",example="A1")
+    private BigDecimal execProcess;
+
+    @ApiModelProperty(name="transProcess",value="成交进度%",example="A1")
+    private BigDecimal transProcess;
+
+    @ApiModelProperty(name="secType1Name",value="债券一级分类",example="分类1名称")
+    private String secType1Name;
+
+    @ApiModelProperty(name="psName",value="交易方向",example="T01")
+    private String psName;
+
+    @ApiModelProperty(name="priceModelName",value="价格模式",example="01")
+    private String priceModelName;
+
+    @ApiModelProperty(name="settleSpreedName",value="清算速度",example="1")
+    private String settleSpreedName;
+
+    @ApiModelProperty(name="etrDate",value="指令日期",example="2021-07-06")
+    private Date etrDate;
+
+    @ApiModelProperty(name="approver",value="审批人",example="1")
+    private String approver;
 
     public String getPortfolioId() {
         return portfolioId;

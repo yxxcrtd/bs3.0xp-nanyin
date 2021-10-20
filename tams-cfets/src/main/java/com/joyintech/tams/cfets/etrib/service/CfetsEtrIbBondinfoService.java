@@ -14,6 +14,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
@@ -33,10 +34,13 @@ import com.joyintech.tams.common.base.entity.WflEtrEntrustAdd;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
@@ -371,7 +375,14 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-        return super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.findEtrinfoPage(pageParam));
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        if (StringUtils.isNotEmpty(userId)) {
+            pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+            return super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.findEtrinfoPage(pageParam));
+        }else{
+            return null;
+        }
+
     }
 
     @Transactional
