@@ -222,7 +222,11 @@ public class InBottomAstPositionBatchService extends FileImpService {
 										|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
 												DictCodeListExt2.报送反馈状态_中债通过.getValue())
 										|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
-												DictCodeListExt2.报送反馈状态_审核文件下载失败.getValue())) {
+												DictCodeListExt2.报送反馈状态_审核文件下载失败.getValue())
+										|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
+												DictCodeListExt2.报送反馈状态_发送中.getValue())
+										|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
+												DictCodeListExt2.报送反馈状态_发送异常.getValue())) {
 									//tmp表数据为删除时
 									if(StringUtil.equals(sub.getStatus(), DictCodeListExt2.数据状态_删除.getValue())){
 										//删除未报送

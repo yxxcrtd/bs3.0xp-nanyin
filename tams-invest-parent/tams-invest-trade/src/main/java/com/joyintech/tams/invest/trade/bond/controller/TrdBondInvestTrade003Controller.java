@@ -795,9 +795,9 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         if (StringUtil.isNotBlank(dto.getBondFirstSign())){
             entrustInfos.stream().forEach(e ->{
                 //数量*100，再转换成万元
-                e.getEtrEntrust().setEntrustNum(ArithmeticUtil.multiply(e.getEtrEntrust().getEntrustNum(),new BigDecimal("1000000")));
+                e.getEtrEntrust().setEntrustNum(ArithmeticUtil.divide(e.getEtrEntrust().getEntrustNum(),new BigDecimal("100"),2));
                 //转换成万元
-                e.setDoEntrustMoney(ArithmeticUtil.multiply(e.getDoEntrustMoney(),new BigDecimal("10000")));
+//                e.setDoEntrustMoney(ArithmeticUtil.multiply(e.getDoEntrustMoney(),new BigDecimal("10000")));
             });
         }
         return entrustInfos;

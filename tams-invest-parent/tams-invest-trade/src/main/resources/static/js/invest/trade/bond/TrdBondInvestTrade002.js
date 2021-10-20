@@ -2192,6 +2192,8 @@ var calculateField;
                 }
             }
         });
+
+        $('#bussTrdAvailableCashQuery_div_channelCash').hide();
     };
     
     var counterIdChangeFee = function (){
