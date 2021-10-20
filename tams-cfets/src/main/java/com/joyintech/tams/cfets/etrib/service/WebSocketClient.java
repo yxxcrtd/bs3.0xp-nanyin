@@ -36,6 +36,12 @@ public class WebSocketClient {
                 public void onMessage(String message) {
                     System.out.println("收到消息:"+message);
                 }
+
+				@Override
+				public void onClose() {
+					// TODO Auto-generated method stub
+					
+				}
             });
             util.send(webSocketKey);
         } catch (Exception e) {
