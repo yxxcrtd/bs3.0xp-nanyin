@@ -1,7 +1,5 @@
 package com.joyintech.tams.business.common.util;
 
-import com.joyintech.framework.security.User;
-
 public class UserUtil {
 
 //    /**
@@ -13,6 +11,10 @@ public class UserUtil {
 ////        return SecurityUtil.getLoginUser();
 //    }
     
+	public static String getUserName() {
+    	return "admin";
+    }
+	
     public static String getUserid() {
     	return "admin";
     }

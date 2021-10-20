@@ -10,33 +10,14 @@
 
 package com.joyintech.tams.cfets.etrib.service;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
-import com.joyintech.tams.business.common.dto.PositionRulePtlData;
-import com.joyintech.tams.business.common.service.PositionHttpRequest;
-import com.joyintech.tams.business.common.util.PositionUtil;
-import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
-import com.joyintech.tams.cfets.etrib.dto.*;
-import com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper;
-import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.WflEtrEntrust;
-import com.joyintech.tams.common.base.entity.WflEtrEntrustAdd;
-import com.joyintech.tams.constant.*;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
-import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
-import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
-import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -44,9 +25,44 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.*;
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
+import com.joyintech.tams.business.common.dto.PositionRulePtlData;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.business.common.util.UserUtil;
+import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo002Dto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrTrdProductDealDto;
+import com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper;
+import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.WflEtrEntrust;
+import com.joyintech.tams.common.base.entity.WflEtrEntrustAdd;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 
 /**
  * 银行间债券指令
@@ -372,9 +388,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-        String userId = SecurityUtil.getLoginUser().getUserName();
+        String userId = UserUtil.getUserName();
         if (StringUtils.isNotEmpty(userId)) {
-            pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+            pageParam.put("userId", UserUtil.getUserName());
             return super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.findEtrinfoPage(pageParam));
         }else{
             return null;
