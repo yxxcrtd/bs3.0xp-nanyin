@@ -1,6 +1,6 @@
 #头寸引擎地址
 positionUrl: http://192.168.10.102:8080/dsp
 #监听头寸余额地址
-webSocketUrl: ws://127.0.0.1:8888/dsp/cmds
+webSocketUrl: ws://192.168.10.102:8888/dsp/cmds
 #监听键值
-webSocketKey: 101027
+webSocketKey: [{"table":"ETR_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"ETR_SEC_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_SEC_POSITION_RULE", "hodingTypes":[]}]
