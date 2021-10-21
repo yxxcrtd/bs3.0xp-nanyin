@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ import java.util.Date;
  * @since 1.0
  */
 @PageId("EtrIbBondinfo001")
-public class CfetsEtrIbBondinfo001Dto extends BaseEntity {
+public class CfetsEtrIbBondinfo001Dto extends BaseEntity{
 
 
     @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
@@ -214,6 +215,9 @@ public class CfetsEtrIbBondinfo001Dto extends BaseEntity {
 
     @ApiModelProperty(name="approver",value="审批人",example="1")
     private String approver;
+
+    @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
+    private PageMode pageMode;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -529,6 +533,20 @@ public class CfetsEtrIbBondinfo001Dto extends BaseEntity {
 	public void setInvAim(String invAim) {
 		this.invAim = invAim;
 	}
-    
-    
+
+    public PageMode getPageMode() {
+        return pageMode;
+    }
+
+    public void setPageMode(PageMode pageMode) {
+        this.pageMode = pageMode;
+    }
+
+    public int getPageSize() {
+        return pageMode.getPageSize();
+    }
+
+    public int getPageNo() {
+        return pageMode.getPageNo();
+    }
 }

@@ -136,12 +136,10 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ApiOperation(value = "查询指令管理分页数据", notes = "查询指令管理分页数据")
     @PostMapping("/findEtrinfoPage/{page}/{length}")
     @ResponseBody
-    public Message<Page<CfetsEtrIbBondinfo001Dto>> findEtrinfoPage(@RequestBody Map<String, Object> pageParam,
-                                                           @PathVariable("page") int page,
-                                                           @PathVariable("length") int length)
+    public Message<Page<CfetsEtrIbBondinfo001Dto>> findEtrinfoPage(@RequestBody CfetsEtrIbBondinfo001Dto dto)
             throws Exception {
         try {
-            Page<CfetsEtrIbBondinfo001Dto> list = cfetsEtrIbBondinfoService.findEtrinfoPage(page, length, pageParam);
+            Page<CfetsEtrIbBondinfo001Dto> list = cfetsEtrIbBondinfoService.findEtrinfoPage(dto);
             return new Message<Page<CfetsEtrIbBondinfo001Dto>>().success().setData(list);
         }catch (Exception e) {
             logger.error("查询指令管理分页数据异常",e);

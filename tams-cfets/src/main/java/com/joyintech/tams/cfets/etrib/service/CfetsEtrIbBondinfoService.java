@@ -45,7 +45,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -359,8 +358,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @see
      * @since 1.0
      */
-    public Page<CfetsEtrIbBondinfo001Dto> findEtrinfoPage(int page, int length,
-                                                                Map<String, Object> pageParam) {
+    public Page<CfetsEtrIbBondinfo001Dto> findEtrinfoPage(CfetsEtrIbBondinfo001Dto dto) {
+        Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
         pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
@@ -375,7 +374,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         String userId = UserUtil.getUserName();
         if (StringUtils.isNotEmpty(userId)) {
             pageParam.put("userId", UserUtil.getUserName());
-            return super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.findEtrinfoPage(pageParam));
+            return super.queryForPage(dto.getPageNo(), dto.getPageSize(), () -> cfetsetrIbBondinfoMapper.findEtrinfoPage(pageParam));
         }else{
             return null;
         }
