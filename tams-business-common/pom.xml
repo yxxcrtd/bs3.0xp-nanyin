@@ -55,21 +55,5 @@
 			<groupId>com.joyintech</groupId>
 			<artifactId>joyintech-workflow</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>tams-service-container-touguan</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-        <dependency>
-            <groupId>com.joyintech</groupId>
-            <artifactId>tams-invest</artifactId>
-            <version>1.0.0</version>
-			<exclusions>
-					<exclusion>
-						<groupId>org.springframework.boot</groupId>
-			            <artifactId>spring-boot-starter-tomcat</artifactId>
-					</exclusion>
-		    </exclusions>
-        </dependency>
 	</dependencies>
 </project>
