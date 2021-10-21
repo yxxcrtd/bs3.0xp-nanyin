@@ -459,7 +459,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @param pageParam
      * @return
      */
-    public List<Map> queryPositionInfo(CfetsEtrIbBondPosiInfoRequestDto requestDto) {
+    public List<BaseMap> queryPositionInfo(CfetsEtrIbBondPosiInfoRequestDto requestDto) {
         // 卖空模式
         String flag = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
 
@@ -497,8 +497,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
     }
 
-    private List<Map> nullData(String flag) {
-        List<Map> resp = new ArrayList<>();
+    private List<BaseMap> nullData(String flag) {
+        List<BaseMap> resp = new ArrayList<>();
         /*T日可用现金*/
         resp.add(BaseMap.newInstance()
                 .put("field", "t0kyxj")
@@ -580,25 +580,25 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return resp;
     }
 
-    private List<Map> assemble(String flag, Map map) {
+    private List<BaseMap> assemble(String flag, Map map) {
         // 初始化返回集合
-        List<Map> resp = new ArrayList<>();
+        List<BaseMap> resp = new ArrayList<>();
         BaseMap bm = BaseMap.newInstance(map);
 
         /*T日可用现金*/
         resp.add(BaseMap.newInstance()
                 .put("field", "T0KYXJ")
-                .put("amount", ArithmeticUtil.round(bm.getBigDecimal("T0KYXJ"),2, RoundingMode.HALF_UP))
+                .put("amount", bm.getBigDecimalStr("T0KYXJ", "0.00"))
                 .put("type", "xj"));
         /*T+1日可用现金*/
         resp.add(BaseMap.newInstance()
                 .put("field", "T1KYXJ")
-                .put("amount", ArithmeticUtil.round(bm.getBigDecimal("T1KYXJ"),2, RoundingMode.HALF_UP))
+                .put("amount", bm.getBigDecimalStr("T1KYXJ", "0.00"))
                 .put("type", "xj"));
         /*账户现金*/
         resp.add(BaseMap.newInstance()
                 .put("field", "ZHXJ")
-                .put("amount", ArithmeticUtil.round(bm.getBigDecimal("ZHXJ"),2, RoundingMode.HALF_UP))
+                .put("amount", bm.getBigDecimalStr("ZHXJ", "0.00"))
                 .put("type", "xj"));
 
         if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "02")){
@@ -606,7 +606,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*融入券卖空待购回持仓*/
             resp.add(BaseMap.newInstance()
                     .put("field", "RRQMKDGHCC")
-                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("RRQMKDGHCC"),2, RoundingMode.HALF_UP))
+                    .put("amount", bm.getBigDecimalStr("RRQMKDGHCC", "0.00"))
                     .put("type", "cc"));
         }
 
@@ -615,7 +615,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*资产T日可用持仓*/
             resp.add(BaseMap.newInstance()
                     .put("field", "ZCTRKYCC")
-                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("ZCTRKYCC"),2, RoundingMode.HALF_UP))
+                    .put("amount", bm.getBigDecimalStr("ZCTRKYCC", "0.00"))
                     .put("type", "cc"));
         }
 
@@ -624,7 +624,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*资产T+1日可用持仓*/
             resp.add(BaseMap.newInstance()
                     .put("field", "ZCT1RKYCC")
-                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("ZCT1RKYCC"),2, RoundingMode.HALF_UP))
+                    .put("amount", bm.getBigDecimalStr("ZCT1RKYCC", "0.00"))
                     .put("type", "cc"));
         }
 
@@ -633,7 +633,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*本方券T日可用持仓*/
             resp.add(BaseMap.newInstance()
                     .put("field", "BFQTRKYCC")
-                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("BFQTRKYCC"),2, RoundingMode.HALF_UP))
+                    .put("amount", bm.getBigDecimalStr("BFQTRKYCC", "0.00"))
                     .put("type", "cc"));
         }
 
@@ -642,7 +642,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*本方券T+1日可用持仓*/
             resp.add(BaseMap.newInstance()
                     .put("field", "BFQT1RKYCC")
-                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("BFQT1RKYCC"),2, RoundingMode.HALF_UP))
+                    .put("amount", bm.getBigDecimalStr("BFQT1RKYCC", "0.00"))
                     .put("type", "cc"));
         }
 
@@ -651,7 +651,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*融入券T日可用持仓*/
             resp.add(BaseMap.newInstance()
                     .put("field", "RRQTRKYCC")
-                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("RRQTRKYCC"),2, RoundingMode.HALF_UP))
+                    .put("amount", bm.getBigDecimalStr("RRQTRKYCC", "0.00"))
                     .put("type", "cc"));
         }
 
@@ -660,7 +660,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*融入券T+1日可用持仓*/
             resp.add(BaseMap.newInstance()
                     .put("field", "RRQT1RKYCC")
-                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("RRQT1RKYCC"),2, RoundingMode.HALF_UP))
+                    .put("amount", bm.getBigDecimalStr("RRQT1RKYCC", "0.00"))
                     .put("type", "cc"));
         }
         return resp;

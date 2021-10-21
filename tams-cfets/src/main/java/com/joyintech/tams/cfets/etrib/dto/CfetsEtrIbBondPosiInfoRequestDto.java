@@ -7,9 +7,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 /**
- * 持仓列表查询，请求参数
+ * 头寸信息查询，请求参数
  */
-@ApiModel(value="债券指令持仓信息请求参数",description="债券指令持仓信息请求参数")
+@ApiModel(value="债券指令头寸信息查询请求参数",description="债券指令头寸信息查询请求参数")
 public class CfetsEtrIbBondPosiInfoRequestDto {
 
     @ApiModelProperty(name="portfolioIdList",value="组合代码集合",example="[字符串1,字符串2,...]", required = true)

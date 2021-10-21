@@ -10,18 +10,38 @@
 
 package com.joyintech.tams.cfets.etrib.controller;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.background.component.common.pack.common.validation.groups.ValidateGroupEdit;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfo002Service;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
+import com.joyintech.tams.cfets.etrib.service.CfetsEtribBondInfo003Service;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
+import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
+import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
+import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
+import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -31,30 +51,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
-import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
-import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
-import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
-import com.joyintech.tools.util.ValidationUtil;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.tams.cfets.etrib.service.CfetsEtribBondInfo003Service;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-
 import java.math.BigDecimal;
-
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
-import com.joyintech.background.component.common.pack.common.validation.groups.ValidateGroupEdit;
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.JoyinMessage;
-import com.joyintech.framework.ajax.MessageType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 /**
  * 银行间债券指令
  * 
@@ -377,7 +378,23 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
 
-
+//    @ApiOperation(value = "持仓列表查询", notes = "持仓列表查询")
+//    @PostMapping("/queryPositionsPage/{page}/{length}")
+//    @ResponseBody
+//    public Message<Page<CfetsEtrIbBondinfo001Dto>> queryPositionsPage(@RequestBody Map<String, Object> pageParam,
+//                                                                   @PathVariable("page") int page,
+//                                                                   @PathVariable("length") int length)
+//            throws Exception {
+//        try {
+//            Page<CfetsEtrIbBondinfo001Dto> list = cfetsEtrIbBondinfoService.findEtrinfoPage(page, length, pageParam);
+//            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().success().setData(list);
+//        }catch (Exception e) {
+//            logger.error("查询指令管理分页数据异常",e);
+//            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().fail().setMessage("查询指令管理分页数据异常");
+//        }
+//
+//    }
+    
     @ApiOperation(value = "持仓列表查询", notes = "持仓列表查询")
     @PostMapping("/queryPositionsPage/{page}/{length}")
     @ResponseBody
@@ -389,7 +406,6 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().success().setData(list);
         }catch (Exception e) {
             logger.error("查询持仓信息分页列表异常",e);
-
             return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().fail().setMessage(e.getMessage());
         }
     }
@@ -397,13 +413,13 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ApiOperation(value = "头寸信息查询", notes = "头寸信息查询")
     @PostMapping("/queryPositionInfo")
     @ResponseBody
-    public Message<List<Map>> queryPositionInfo(@RequestBody CfetsEtrIbBondPosiInfoRequestDto requestDto) {
+    public Message<List<BaseMap>> queryPositionInfo(@RequestBody CfetsEtrIbBondPosiInfoRequestDto requestDto) {
         try {
-            List<Map> m = cfetsEtrIbBondinfoService.queryPositionInfo(requestDto);
-            return new Message<List<Map>>().success().setData(m);
+            List<BaseMap> m = cfetsEtrIbBondinfoService.queryPositionInfo(requestDto);
+            return new Message<List<BaseMap>>().success().setData(m);
         }catch (Exception e) {
             logger.error("查询头寸信息分页列表异常",e);
-            return new Message<List<Map>>().fail().setMessage(e.getMessage());
+            return new Message<List<BaseMap>>().fail().setMessage(e.getMessage());
         }
     }
     

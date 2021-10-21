@@ -21,12 +21,12 @@ public class WebSocketClient {
     
     @PostConstruct
     public void init(){
-        start();
+        startAndSend();
     }
     
     private WebSocketClientUtil util = null;
     
-    public void start(){
+    public void startAndSend(){
         /**
          * 头寸监听余额变化，更新投管数据库流水余额表
          */
@@ -40,29 +40,26 @@ public class WebSocketClient {
                     System.out.println("收到消息:"+message);
                 }
 
-				@Override
-				public void onClose() {
-					// TODO Auto-generated method stub
-					// 10秒启动
-                    System.out.println("头寸服务关闭");
-                    try {
-                        util.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        TimeUnit.SECONDS.sleep(2l);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                @Override
+                public void onClose() {
+                    // 10秒启动
+                    System.out.println("头寸服务关闭。。。10秒后重连");
+                    try {util.close();} catch (IOException e) {e.printStackTrace();}
+                    try {TimeUnit.SECONDS.sleep(2l);} catch (InterruptedException e) {e.printStackTrace();}
                     // 间隔时间再次发送
-                    start();
+                    startAndSend();
                 }
             });
-            // [{"table":"ETR_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"ETR_SEC_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_SEC_POSITION_RULE", "hodingTypes":[]}]
-            util.send(webSocketKey);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        // [{"table":"ETR_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"ETR_SEC_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_SEC_POSITION_RULE", "hodingTypes":[]}]
+        util.send(webSocketKey);
+    }
+    
+    public void send(){
+        // [{"table":"ETR_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"ETR_SEC_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_CASH_POSITION_RULE", "hodingTypes":[]},{"table":"PTL_SEC_POSITION_RULE", "hodingTypes":[]}]
+        util.send(webSocketKey);
     }
 }
