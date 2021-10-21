@@ -10,7 +10,6 @@
 
 package com.joyintech.tams.cfets.etrib.controller;
 
-import com.ecc.util.algorithm.Arithmetic;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
@@ -291,7 +290,6 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @PostMapping("save")
     public Message<AjaxResult> save(@RequestBody CfetsEtribBondInfo003Dto allDto, BindingResult br)
             throws Exception {
-
         allDto=packageEquity(allDto);
 
      /*  AjaxResult ajaxResult = this.check(dtoList, br);
@@ -383,12 +381,10 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ApiOperation(value = "持仓列表查询", notes = "持仓列表查询")
     @PostMapping("/queryPositionsPage/{page}/{length}")
     @ResponseBody
-
     public Message<Page<CfetsEtrIbBondPosinfo001Dto>> queryPositionsPage(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto,
                                                                          @PathVariable("page") int page,
                                                                          @PathVariable("length") int length) {
         try {
-
             Page<CfetsEtrIbBondPosinfo001Dto> list = cfetsEtrIbBondinfoService.queryPositionsPage(page, length, requestDto);
             return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().success().setData(list);
         }catch (Exception e) {
@@ -401,15 +397,12 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ApiOperation(value = "头寸信息查询", notes = "查询头寸信息")
     @PostMapping("/queryPositionInfo")
     @ResponseBody
-
     public Message<Map> queryPositionInfo(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto) {
         try {
-
             Map m = cfetsEtrIbBondinfoService.queryPositionInfo(requestDto);
             return new Message<Map>().success().setData(m);
         }catch (Exception e) {
             logger.error("查询头寸信息分页列表异常",e);
-
             return new Message<Map>().fail().setMessage(e.getMessage());
         }
     }
