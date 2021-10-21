@@ -352,7 +352,7 @@ public class PbcPrdAssetDebtSubService001 extends CommonExportService<PbcMonthRe
         			logger.error(e.getMessage(),e);
         		}
         		// 调用检查方法
-        		resultlist.addAll(check(cdate));
+        		resultlist.addAll(check(cdate,checkKeys));
         	}
             checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
             for(String key : checkKeyset){
@@ -386,14 +386,14 @@ public class PbcPrdAssetDebtSubService001 extends CommonExportService<PbcMonthRe
      * @return List<CheckReport001Dto>
      * @version 1.7 2019年6月24日
      */
-    private List<CheckReport001Dto> check(Date date){
+    private List<CheckReport001Dto> check(Date date,List<String> checkKeys){
         // 数据日期为系统时间
     	Date checkdate = DateUtil.parse(DateUtil.getSysDate());
     	if(date!=null){
     		checkdate=date;
     	}
         // 删除今天所有已检查的数据
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_人行月度统计报表.getValue(),checkdate);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_人行月度统计报表.getValue(),checkdate,checkKeys);
        
         //检查数据
         List<CheckReport001Dto> resultList = pbcBeforeSubCheck.checkPbcPbcPrdAssetDebtSub(checkdate);

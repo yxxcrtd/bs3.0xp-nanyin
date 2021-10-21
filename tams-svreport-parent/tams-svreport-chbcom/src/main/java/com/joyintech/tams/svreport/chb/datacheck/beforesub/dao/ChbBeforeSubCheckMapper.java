@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,13 +17,13 @@ public interface ChbBeforeSubCheckMapper {
      * @see
      * @since 1.0
      */
-    List<ChbBeforeSubCheckDto> selectProdEndRegCheck(Date checkdate);
+    List<ChbBeforeSubCheckDto> selectProdEndRegCheck(@Param("checkdate") Date checkdate, @Param("checkKeys") List<String> checkKeys);
     
-    List<ChbBeforeSubCheckDto> selectRaiseRegCheck(Date checkdate);
+    List<ChbBeforeSubCheckDto> selectRaiseRegCheck(@Param("checkdate") Date checkdate, @Param("checkKeys") List<String> checkKeys);
     
-    List<ChbBeforeSubCheckDto> selectInvestRegCheck(Date checkdate);
+    List<ChbBeforeSubCheckDto> selectInvestRegCheck(@Param("checkdate") Date checkdate, @Param("checkKeys") List<String> checkKeys);
     
-    List<ChbBeforeSubCheckDto> selectBotAstRegCheck(Date checkdate);
+    List<ChbBeforeSubCheckDto> selectBotAstRegCheck(@Param("checkdate") Date checkdate, @Param("checkKeys") List<String> checkKeys);
     
-    List<ChbBeforeSubCheckDto> selectProdMonthReportCheck(Date checkdate);
+    List<ChbBeforeSubCheckDto> selectProdMonthReportCheck(@Param("checkdate") Date checkdate, @Param("checkKeys") List<String> checkKeys);
 }

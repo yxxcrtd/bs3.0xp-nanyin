@@ -128,7 +128,8 @@ public interface CheckReport001Mapper {
      * @see
      * @since 1.0
      */
-    void delReportDatasByCodeAndDate(@Param("reportCode")String reportCode,@Param("reportDate")Date reportDate);
+    //TODO 如果需要可以选择性删除,需要修改入库逻辑及表结构,延后处理
+    void delReportDatasByCodeAndDate(@Param("reportCode")String reportCode,@Param("reportDate")Date reportDate,@Param("checkKeys")List<String> checkKeys);
     
     /**
      * 根据关联序列号查询结果信息

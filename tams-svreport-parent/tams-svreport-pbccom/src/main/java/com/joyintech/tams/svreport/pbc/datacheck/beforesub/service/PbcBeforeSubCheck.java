@@ -83,15 +83,13 @@ public class PbcBeforeSubCheck extends SvrCBBaseService{
         List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
 
         // 删除检查表数据
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品基本信息.getValue(),checkdate);
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品终止信息.getValue(),checkdate);
-
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_新人行产品基本信息.getValue(),checkdate);
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_新人行产品终止信息.getValue(),checkdate);
-
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品资金募集信息.getValue(),checkdate);
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_人行月度统计报表.getValue(),checkdate);
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产负债信息.getValue(),checkdate);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品基本信息.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品终止信息.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_新人行产品基本信息.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_新人行产品终止信息.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品资金募集信息.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_人行月度统计报表.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产负债信息.getValue(),checkdate,null);
        
         //增加例外情况过滤
         List<ChbCheckRuleout> listPrdBaseInfoRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.PBC_PRD_BASEINFO_SUB);
@@ -182,7 +180,7 @@ public class PbcBeforeSubCheck extends SvrCBBaseService{
         
         logger.info("人行产品基本信息检查结束");
         return resultList;
-        
+
     }
 
 
