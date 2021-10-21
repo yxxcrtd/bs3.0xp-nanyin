@@ -1,4 +1,3 @@
-//@ sourceURL=BaseRiskMathComm.js
 /**
  * 风险试算
  */
