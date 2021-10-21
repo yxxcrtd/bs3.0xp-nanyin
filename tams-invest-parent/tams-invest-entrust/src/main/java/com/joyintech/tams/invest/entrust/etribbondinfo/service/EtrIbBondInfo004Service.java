@@ -514,7 +514,7 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                     rowData.get(13).toString(), "EtrInvestBondInfo004.invAim", lineNo));
             // 交易场所非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
-                    rowData.get(14).toString(), "EtrInvestBondInfo004.tradeMarket", lineNo));
+                    rowData.get(14).toString(), "EtrInvestBondInfo004.tradePlat", lineNo));
 //            // 通道存在
 //            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
 //                Map<String, Object> param = new HashMap<>();

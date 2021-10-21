@@ -1,3 +1,4 @@
+//@ sourceURL=BaseRiskMathComm.js
 /**
  * 风险试算
  */
@@ -1188,7 +1189,7 @@
                             continue;
                         }
                         var currentDealObj = currentCalcConditionList[index].data[key];
-                        var backupDealObj = element[key];
+                        var backupDealObj = element.data[key];
 
                         if (typeof currentDealObj != "object"
                             && currentDealObj != backupDealObj) {
