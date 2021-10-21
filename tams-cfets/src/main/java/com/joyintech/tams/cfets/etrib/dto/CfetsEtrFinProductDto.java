@@ -182,9 +182,65 @@ public class CfetsEtrFinProductDto {
     private String sponsorName;
 
     /**
+     * 市场代码
+     */
+    private String marketId;
+
+    /**
+     * 数据来源valueDate
+     */
+    private String valueSource;
+
+    /**
+     * 估值日
+     */
+    public String valueDate;
+
+    /**
      * 评级结果
      */
     private String gradeResult;
+
+    /**
+     * 获取估值日
+     */
+    public String getValueDate() {
+        return valueDate;
+    }
+
+    /**
+     * 设置估值日
+     */
+    public void setValueDate(String valueDate) {
+        this.valueDate = valueDate;
+    }
+
+    /**
+     * 获取数据来源
+     */
+    public String getValueSource() {
+        return valueSource;
+    }
+    /**
+     * 设置数据来源
+     */
+    public void setValueSource(String valueSource) {
+        this.valueSource = valueSource;
+    }
+
+    /**
+     * 获取市场代码
+     */
+    public String getMarketId() {
+        return marketId;
+    }
+
+    /**
+     * 设置市场代码
+     */
+    public void setMarketId(String marketId) {
+        this.marketId = marketId;
+    }
     /**
      * 取得 评级结果
      *

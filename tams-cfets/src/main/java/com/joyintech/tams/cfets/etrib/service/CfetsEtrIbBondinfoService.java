@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingDto;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -494,15 +497,16 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             if (StringUtil.isEmpty(dto.getLastPaydate())) {
                 dto.setLastPaydate("--");
             }
-            //行权日若无，则显示为“—”
+            //下一行权日若无，则显示为“—”
             if (StringUtil.isEmpty(dto.getXqdate())) {
                 dto.setXqdate("--");
             }
+            //是否含权债
             if (StringUtil.isEmpty(dto.getXqFlg())) {
                 dto.setXqFlg("无");
             }
 
-
+//            若为含权债，显示为含权债的行权方式；若有多个行权方式，用分号“;”隔开
             String xqfangshi = "";
             List<String> plan = cfetsetrIbBondinfoMapper.getEtrFinExerciseInfo(secId);
             if (plan != null && plan.size() > 0) {

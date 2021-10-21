@@ -747,12 +747,15 @@ from
     <select id="getEtrFinProductInfo" parameterType="String" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto">
         SELECT
         t1.FINPROD_ID secId,                            --查询的主键ID
+        t1.FINPROD_MARKET_ID marketId,                  --市场代码
         t1.FINPROD_ABBR secName,                        --债券名称
         t1.FINPROD_NAME secType,                        --债券分类
         t1.ISSUER issuer,                               --发行人
         TO_CHAR(t1.VDATE,'yyyy-MM-dd') vdate,           --起息日
         TO_CHAR(t1.MDATE,'yyyy-MM-dd') mdate,           --到期日
         MBVI.LAST_PERIOD lastqx,                        --剩余期限
+        MBVI.VALUE_SOURCE valueSource,                  --数据来源
+        MBVI.VALUE_DATE valueDate,                    --估值日
         TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate,  --下一付息日
         t6.INT_TYPE rateType,                           --利率类型
         t6.RATE*100 rate,                               --票面利率

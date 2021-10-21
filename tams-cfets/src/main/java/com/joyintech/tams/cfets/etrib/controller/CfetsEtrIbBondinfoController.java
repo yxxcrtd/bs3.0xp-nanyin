@@ -407,7 +407,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
     @PostMapping("/getEtrFinProductInfo")
-    @ApiOperation(value = "查询功能", notes = "测试查询功能")
+    @ApiOperation(value = "债券信息查询功能", notes = "债券信息查询功能")
     @ResponseBody
     public Message<CfetsEtrFinProductDto> getEtrFinProductInfo(@RequestBody String secId) {
         try {
