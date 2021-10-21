@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
+import com.joyintech.tams.report.submitmaintenance.equityinfo.util.CheckUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -1878,9 +1879,16 @@ public class EquityInfoValid {
             else if ("00".equals(personalIdentifyTypeKey)
                     || "01".equals(personalIdentifyTypeKey)) {
 //                if (inentifyNumber.length() != 18 && inentifyNumber.length() != 15) {
-                if (EquityInfoCheckUtil.getByteLength(inentifyNumber) != 18 && EquityInfoCheckUtil.getByteLength(inentifyNumber) != 15) {
-                    message.add(this.getMessage("CHB_EQUITYINFO_E_002", "证件号码", "15或18"));
+// 修改证件号校验 by caozhenming 20210923 start
+//                if (EquityInfoCheckUtil.getByteLength(inentifyNumber) != 18 && EquityInfoCheckUtil.getByteLength(inentifyNumber) != 15) {
+//                    message.add(this.getMessage("CHB_EQUITYINFO_E_002", "证件号码", "15或18"));
+//                }
+                // 身份证号校验
+                Map<String,String> result = CheckUtil.idCardValidator(inentifyNumber);
+                if (!Boolean.valueOf(result.get("resultCode"))){
+                    message.add(result.get("resultMessage"));
                 }
+                // 修改证件号校验 by caozhenming 20210923 end
             }
             else if ("01".equals(institutionInentifyTypeKey)) {
 //                if (inentifyNumber.length() != 18) {
