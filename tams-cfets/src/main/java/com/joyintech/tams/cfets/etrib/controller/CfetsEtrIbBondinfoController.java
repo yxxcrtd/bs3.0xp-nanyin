@@ -394,18 +394,19 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
 
-    @ApiOperation(value = "头寸信息查询", notes = "查询头寸信息")
+    @ApiOperation(value = "头寸信息查询", notes = "头寸信息查询")
     @PostMapping("/queryPositionInfo")
     @ResponseBody
-    public Message<Map> queryPositionInfo(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto) {
+    public Message<List<Map>> queryPositionInfo(@RequestBody CfetsEtrIbBondPosiInfoRequestDto requestDto) {
         try {
-            Map m = cfetsEtrIbBondinfoService.queryPositionInfo(requestDto);
-            return new Message<Map>().success().setData(m);
+            List<Map> m = cfetsEtrIbBondinfoService.queryPositionInfo(requestDto);
+            return new Message<List<Map>>().success().setData(m);
         }catch (Exception e) {
             logger.error("查询头寸信息分页列表异常",e);
-            return new Message<Map>().fail().setMessage(e.getMessage());
+            return new Message<List<Map>>().fail().setMessage(e.getMessage());
         }
     }
+    
     @PostMapping("/getEtrFinProductInfo")
     @ApiOperation(value = "债券信息查询功能", notes = "债券信息查询功能")
     @ResponseBody

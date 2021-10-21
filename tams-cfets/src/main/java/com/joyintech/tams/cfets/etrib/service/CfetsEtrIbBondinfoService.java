@@ -10,41 +10,18 @@
 
 package com.joyintech.tams.cfets.etrib.service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingDto;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.business.common.util.UserUtil;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto;
 import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
@@ -52,17 +29,24 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.common.base.entity.WflEtrEntrust;
 import com.joyintech.tams.common.base.entity.WflEtrEntrustAdd;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 
 /**
  * 银行间债券指令
@@ -475,13 +459,211 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @param pageParam
      * @return
      */
-    public Map queryPositionInfo(CfetsEtrIbBondPosiPage001RequestDto requestDto) {
+    public List<Map> queryPositionInfo(CfetsEtrIbBondPosiInfoRequestDto requestDto) {
+        // 卖空模式
+        String flag = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
+
+        // 条件非空校验
+        posiInfoCheckCondition(requestDto);
+        
+        // 查询头寸信息
         Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(requestDto);
+        
         if (map != null){
-            // 卖空模式
-            map.put("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
+            return assemble(flag , map);
         }
-        return map;
+
+        /**
+         * 返回空值数据格式
+         */
+        return nullData(flag);
+    }
+
+    private void posiInfoCheckCondition(CfetsEtrIbBondPosiInfoRequestDto requestDto) {
+        if (requestDto == null){
+            throw new RuntimeException("入参不空！");
+        }
+
+        if (StringUtil.isEmpty(requestDto.getCdate())){
+            throw new RuntimeException("cdate不能为空！");
+        }
+
+        if (StringUtil.isEmpty(requestDto.getFinprodId())){
+            throw new RuntimeException("finprodId不能为空！");
+        }
+        
+        if (requestDto.getPortfolioIdList() == null || requestDto.getPortfolioIdList().size() == 0){
+            throw new RuntimeException("portfolioIdList不能为空！");
+        }
+    }
+
+    private List<Map> nullData(String flag) {
+        List<Map> resp = new ArrayList<>();
+        /*T日可用现金*/
+        resp.add(BaseMap.newInstance()
+                .put("field", "t0kyxj")
+                .put("amount", "0.00")
+                .put("type", "xj"));
+        /*T+1日可用现金*/
+        resp.add(BaseMap.newInstance()
+                .put("field", "t1kyxj")
+                .put("amount", "0.00")
+                .put("type", "xj"));
+        /*账户现金*/
+        resp.add(BaseMap.newInstance()
+                .put("field", "zhxj")
+                .put("amount", "0.00")
+                .put("type", "xj"));
+
+        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式一、模式二时显示此字段
+            /*融入券卖空待购回持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "rrqmkdghcc")
+                    .put("amount", "0.00")
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
+            // 卖空模式设置为模式一、模式三时显示此字段
+            /*资产T日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "zctrkycc")
+                    .put("amount", "0.00")
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
+            // 卖空模式设置为模式一、模式三时显示此字段
+            /*资产T+1日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "zct1rkycc")
+                    .put("amount", "0.00")
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*本方券T日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "bfqtrkycc")
+                    .put("amount", "0.00")
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*本方券T+1日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "bfqt1rkycc")
+                    .put("amount", "0.00")
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*融入券T日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "rrqtrkycc")
+                    .put("amount", "0.00")
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*融入券T+1日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "rrqt1rkycc")
+                    .put("amount", "0.00")
+                    .put("type", "cc"));
+        }
+        return resp;
+    }
+
+    private List<Map> assemble(String flag, Map map) {
+        // 初始化返回集合
+        List<Map> resp = new ArrayList<>();
+        BaseMap bm = BaseMap.newInstance(map);
+
+        /*T日可用现金*/
+        resp.add(BaseMap.newInstance()
+                .put("field", "T0KYXJ")
+                .put("amount", ArithmeticUtil.round(bm.getBigDecimal("T0KYXJ"),2, RoundingMode.HALF_UP))
+                .put("type", "xj"));
+        /*T+1日可用现金*/
+        resp.add(BaseMap.newInstance()
+                .put("field", "T1KYXJ")
+                .put("amount", ArithmeticUtil.round(bm.getBigDecimal("T1KYXJ"),2, RoundingMode.HALF_UP))
+                .put("type", "xj"));
+        /*账户现金*/
+        resp.add(BaseMap.newInstance()
+                .put("field", "ZHXJ")
+                .put("amount", ArithmeticUtil.round(bm.getBigDecimal("ZHXJ"),2, RoundingMode.HALF_UP))
+                .put("type", "xj"));
+
+        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式一、模式二时显示此字段
+            /*融入券卖空待购回持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "RRQMKDGHCC")
+                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("RRQMKDGHCC"),2, RoundingMode.HALF_UP))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
+            // 卖空模式设置为模式一、模式三时显示此字段
+            /*资产T日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "ZCTRKYCC")
+                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("ZCTRKYCC"),2, RoundingMode.HALF_UP))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
+            // 卖空模式设置为模式一、模式三时显示此字段
+            /*资产T+1日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "ZCT1RKYCC")
+                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("ZCT1RKYCC"),2, RoundingMode.HALF_UP))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*本方券T日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "BFQTRKYCC")
+                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("BFQTRKYCC"),2, RoundingMode.HALF_UP))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*本方券T+1日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "BFQT1RKYCC")
+                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("BFQT1RKYCC"),2, RoundingMode.HALF_UP))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*融入券T日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "RRQTRKYCC")
+                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("RRQTRKYCC"),2, RoundingMode.HALF_UP))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*融入券T+1日可用持仓*/
+            resp.add(BaseMap.newInstance()
+                    .put("field", "RRQT1RKYCC")
+                    .put("amount", ArithmeticUtil.round(bm.getBigDecimal("RRQT1RKYCC"),2, RoundingMode.HALF_UP))
+                    .put("type", "cc"));
+        }
+        return resp;
     }
 
     /**

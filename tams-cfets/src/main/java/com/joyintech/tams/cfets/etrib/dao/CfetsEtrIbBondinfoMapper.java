@@ -10,11 +10,7 @@
  
 package com.joyintech.tams.cfets.etrib.dao;
 
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosinfo001Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosiPage001RequestDto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrTrdProductDealDto;
+import com.joyintech.tams.cfets.etrib.dto.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -84,5 +80,5 @@ public interface CfetsEtrIbBondinfoMapper {
 
     List<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(CfetsEtrIbBondPosiPage001RequestDto pageParam);
 
-    Map queryPositionInfo(CfetsEtrIbBondPosiPage001RequestDto RequestDto);
+    Map queryPositionInfo(CfetsEtrIbBondPosiInfoRequestDto RequestDto);
 }

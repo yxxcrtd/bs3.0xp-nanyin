@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.etrib.dto;
 
+import com.joyintech.framework.validation.annotation.NotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -11,13 +12,13 @@ import java.util.List;
 @ApiModel(value="债券指令持仓信息请求参数",description="债券指令持仓信息请求参数")
 public class CfetsEtrIbBondPosiInfoRequestDto {
 
-    @ApiModelProperty(name="portfolioIdList",value="组合代码集合",example="[字符串1,字符串2,...]")
+    @ApiModelProperty(name="portfolioIdList",value="组合代码集合",example="[字符串1,字符串2,...]", required = true)
     private List<String> portfolioIdList;
 
     @ApiModelProperty(name="cdate",value="交易日期",example="2021-10-20", required = true)
     private String cdate;
 
-    @ApiModelProperty(name="finprodId",value="资产代码",example="xxx")
+    @ApiModelProperty(name="finprodId",value="资产代码",example="xxx", required = true)
     private String finprodId;
 
     @ApiModelProperty(name="acctId",value="账户",example="xxx")

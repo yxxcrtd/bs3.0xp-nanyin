@@ -3,17 +3,20 @@ package com.joyintech.tams.cfets.etrib.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.List;
-
 /**
  * 持仓列表查询，请求参数
  */
 @ApiModel(value="债券指令持仓信息请求参数",description="债券指令持仓信息请求参数")
 public class CfetsEtrIbBondPosiPage001RequestDto {
 
+    @ApiModelProperty(name="orderFiled",value="排序字段",example="portfolioId")
+    private String orderFiled;
 
+    @ApiModelProperty(name="orderRule",value="排序规则",example="desc|asc")
+    private String orderRule;
+    
     @ApiModelProperty(name="portfolioId",value="组合代码",example="xxx")
-    private List<String> portfolioId;
+    private String portfolioId;
 
     @ApiModelProperty(name="cdate",value="交易日期",example="2021-10-20", required = true)
     private String cdate;
@@ -24,11 +27,27 @@ public class CfetsEtrIbBondPosiPage001RequestDto {
     @ApiModelProperty(name="finprodId",value="债券一级分类",example="F01")
     private String type8;
 
-    public List<String> getPortfolioId() {
+    public String getOrderFiled() {
+        return orderFiled;
+    }
+
+    public void setOrderFiled(String orderFiled) {
+        this.orderFiled = orderFiled;
+    }
+
+    public String getOrderRule() {
+        return orderRule;
+    }
+
+    public void setOrderRule(String orderRule) {
+        this.orderRule = orderRule;
+    }
+
+    public String getPortfolioId() {
         return portfolioId;
     }
 
-    public void setPortfolioId(List<String> portfolioId) {
+    public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
     }
 
