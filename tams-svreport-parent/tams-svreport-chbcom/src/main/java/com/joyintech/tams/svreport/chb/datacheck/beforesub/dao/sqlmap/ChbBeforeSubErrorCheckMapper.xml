@@ -7,10 +7,12 @@
   	where 
   	 (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
   	and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
-	<if test="listProd!=null and listProd.size()!=0">
-	 	and PROD_ID in 
-	    <foreach item="prodid" collection="listProd" open="(" separator="," close=")"> 
-	      #{prodid}
+	<if test="keys!=null and keys.size()!=0">
+	    <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+			<if test="(index % 998) == 0">
+				null) or REGIST_SEQNO in (
+			</if>
+	      	#{key}
 	   	</foreach>
 	</if>
   </select>
@@ -25,12 +27,15 @@
   	where 
   	 (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
   	and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
-	<if test="listProd!=null and listProd.size()!=0">
-	 	and PROD_ID in 
-	    <foreach item="prodid" collection="listProd" open="(" separator="," close=")"> 
-	      #{prodid}
-	   	</foreach>
-	</if>  	
+   <if test="keys!=null and keys.size()!=0">
+
+	   <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+		   <if test="(index % 998) == 0">
+			   null) or REGIST_SEQNO in (
+		   </if>
+		   #{key}
+	   </foreach>
+   </if>
   </select>
     
    <update id="updateProdIssueSub" parameterType="java.lang.String" >
@@ -43,12 +48,15 @@
   	where 
   	 (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
   	and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
-	<if test="listProd!=null and listProd.size()!=0">
-	 	and PROD_ID in 
-	    <foreach item="prodid" collection="listProd" open="(" separator="," close=")"> 
-	      #{prodid}
-	   	</foreach>
-	</if>  	
+	  <if test="keys!=null and keys.size()!=0">
+
+		  <foreach item="key" collection="keys"  index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+			  <if test="(index % 998) == 0">
+				  null) or REGIST_SEQNO in (
+			  </if>
+			  #{key}
+		  </foreach>
+	  </if>
   </select>
     
    <update id="updateProdEndSub" parameterType="java.lang.String" >
@@ -61,12 +69,16 @@
   	where 
   	 (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
   	and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
-	<if test="listProd!=null and listProd.size()!=0">
-	 	and PROD_ID in 
-	    <foreach item="prodid" collection="listProd" open="(" separator="," close=")"> 
-	      #{prodid}
-	   	</foreach>
-	</if>
+	  <if test="keys!=null and keys.size()!=0">
+
+		  <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+			  <if test="(index % 998) == 0">
+				  null) or REGIST_SEQNO in (
+			  </if>
+
+			  #{key}
+		  </foreach>
+	  </if>
   </select>
     
    <update id="updateInvestTradeSub" parameterType="java.lang.String" >
@@ -79,17 +91,16 @@
   	where 
   	info.STATUS in ('01','02') and info.SEND_STATUS = '01'
   	and info.MDATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
-	<if test="listAsset!=null and listAsset.size()!=0">
-		<if test=""></if>
-	 	and ASSET_CODE =
-	    <foreach item="assetCode" collection="listAsset" open="(" separator="," close=")"> 
-	      #{assetCode,jdbcType=VARCHAR}
-	   	</foreach>
-	   	and CDATE =
-	   	<foreach item="vdate" collection="listAsset" open="(" separator="," close=")"> 
-	      #{vdate,jdbcType=DATE}
-	   	</foreach>
-	</if>
+   <if test="keys!=null and keys.size()!=0">
+
+	   <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+		   <if test="(index % 998) == 0">
+			   null) or REGIST_SEQNO in (
+		   </if>
+
+		   #{key}
+	   </foreach>
+   </if>
   </select>
    
    <update id="updateAssetInfoSub" parameterType="java.lang.String" >
@@ -102,12 +113,16 @@
   	where 
   	 (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
   	and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
-	<if test="listProd!=null and listProd.size()!=0">
-	 	and PROD_ID in 
-	    <foreach item="prodid" collection="listProd" open="(" separator="," close=")"> 
-	      #{prodid}
-	   	</foreach>
-	</if>
+	  <if test="keys!=null and keys.size()!=0">
+
+		  <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+			  <if test="(index % 998) == 0">
+				  null) or REGIST_SEQNO in (
+			  </if>
+
+			  #{key}
+		  </foreach>
+	  </if>
   </select>       
    
    <update id="updateProdDeclareSub" parameterType="java.lang.String" >
@@ -179,10 +194,14 @@
 		where
 		(SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
 		and to_date(to_char(STATUS_DATE, 'yyyy-MM-dd'), 'yyyy-MM-dd')<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
-		<if test="listProd!=null and listProd.size()!=0">
-			and PROD_ID in
-			<foreach item="prodid" collection="listProd" open="(" separator="," close=")">
-				#{prodid}
+		<if test="keys!=null and keys.size()!=0">
+
+			<foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+				<if test="(index % 998) == 0">
+					null) or REGIST_SEQNO in (
+				</if>
+
+				#{key}
 			</foreach>
 		</if>
 	</select>
@@ -205,10 +224,14 @@
 		where
 		(SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
 		and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
-		<if test="listProd!=null and listProd.size()!=0">
-			and PROD_ID in
-			<foreach item="prodid" collection="listProd" open="(" separator="," close=")">
-				#{prodid}
+		<if test="keys!=null and keys.size()!=0">
+
+			<foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+				<if test="(index % 998) == 0">
+					null) or REGIST_SEQNO in (
+				</if>
+
+				#{key}
 			</foreach>
 		</if>
 
@@ -231,6 +254,16 @@
 		where
 		(SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
 		and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
+		<if test="keys!=null and keys.size()!=0">
+
+			<foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+				<if test="(index % 998) == 0">
+					null) or REGIST_SEQNO in (
+				</if>
+
+				#{key}
+			</foreach>
+		</if>
 	</select>
 
 	<update id="updateChbAstValSub" parameterType="java.lang.String" >

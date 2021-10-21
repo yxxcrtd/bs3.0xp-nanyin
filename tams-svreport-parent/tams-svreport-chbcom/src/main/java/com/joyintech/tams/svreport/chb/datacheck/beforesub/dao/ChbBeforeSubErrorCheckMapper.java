@@ -10,33 +10,33 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChbBeforeSubErrorCheckMapper {
        
-    List<Map<String,Object>> selectProdDealSub(@Param("checkdate") Date checkdate,@Param("listProd") List<String> listProd);
+    List<Map<String,Object>> selectProdDealSub(@Param("checkdate") Date checkdate,@Param("keys") List<String> keys);
         
     int updateProdDealSub(String seqno);
     
-    List<Map<String,Object>> selectProdIssueSub(@Param("checkdate") Date checkdate,@Param("listProd") List<String> listProd);
+    List<Map<String,Object>> selectProdIssueSub(@Param("checkdate") Date checkdate,@Param("keys") List<String> keys);
     
     int updateProdIssueSub(String seqno);        
     
-    List<Map<String,Object>> selectProdEndSub(@Param("checkdate") Date checkdate,@Param("listProd") List<String> listProd);
+    List<Map<String,Object>> selectProdEndSub(@Param("checkdate") Date checkdate,@Param("keys") List<String> keys);
     
     int updateProdEndSub(String seqno);
 
-    List<Map<String,Object>> selectInvestTradeSub(@Param("checkdate") Date checkdate,@Param("listProd") List<String> listProd);
+    List<Map<String,Object>> selectInvestTradeSub(@Param("checkdate") Date checkdate,@Param("keys") List<String> keys);
     
     int updateInvestTradeSub(String seqno);  
     
-    List<Map<String,Object>> selectAssetInfoSub(@Param("checkdate") Date checkdate,@Param("listAsset") List<String> listProd);
+    List<Map<String,Object>> selectAssetInfoSub(@Param("checkdate") Date checkdate,@Param("keys") List<String> keys);
     
     int updateAssetInfoSub(String seqno);
-    List<Map<String,Object>> selectProdDeclareSub(@Param("checkdate") Date checkdate,@Param("listProd") List<String> listProd);
+    List<Map<String,Object>> selectProdDeclareSub(@Param("checkdate") Date checkdate,@Param("keys") List<String> keys);
     
     int updateProdDeclareSub(String seqno);
-    List<Map<String,Object>> selectProdRaiseTotalSub(@Param("checkdate") Date checkdate,@Param("listProd") List<String> listProd);
+    List<Map<String,Object>> selectProdRaiseTotalSub(@Param("checkdate") Date checkdate,@Param("keys") List<String> keys);
 
     int updateProdRaiseTotalSub(String seqno);
 
-    List<Map<String,Object>> selectChbAstValSub(@Param("checkdate") Date checkdate);
+    List<Map<String,Object>> selectChbAstValSub(@Param("checkdate") Date checkdate,@Param("keys") List<String> keys);
 
     int updateChbAstValSub(String seqno);
     Integer isInEmpoyeeSub(@Param("id") String id, @Param("employeeType") String employeeType);
@@ -51,7 +51,7 @@ public interface ChbBeforeSubErrorCheckMapper {
 
     String isUploadFile(Map<String, String> dataMap);
 
-    List<Map<String, Object>> selectChbBotAst(@Param("checkdate") Date checkdate,@Param("listProd") List<String> listProd);
+    List<Map<String, Object>> selectChbBotAst(@Param("checkdate") Date checkdate,@Param("keys") List<String> keys);
 
     int updateChbBotAstSub(String seqno);
 

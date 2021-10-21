@@ -806,8 +806,10 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		Map<String, PerProDeclareRegDto> repmap = proDeclareList.stream().collect(Collectors.toMap(PerProDeclareRegDto::getRegistSeqno,(p)->p,(key1, key2)->key1));
 		// 检查登记表中小于今天所有未报送的数据
 		if(CollectionUtils.isNotEmpty(proDeclareList)){
+
+			List<String> keys = proDeclareList.stream().map(string -> string.getRegistSeqno()).collect(Collectors.toList());
 			// 调用检查方法
-			List<CheckReport001Dto> resultlist = check(null);
+			List<CheckReport001Dto> resultlist = check(null,keys);
 			Map<String,CheckReport001Dto> checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
 			for(PerProDeclareRegDto declareRegDto : proDeclareList){
 				if(checkmap.get(declareRegDto.getRegistSeqno())!=null){
@@ -836,7 +838,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 	 * @return List<CheckReport001Dto>
 	 * @version 1.7 2019年6月24日
 	 */
-	public List<CheckReport001Dto> check(Date batchDate){
+	public List<CheckReport001Dto> check(Date batchDate,List<String> keys){
 		Date checkdate = DateUtil.parse(DateUtil.getSysDate());
 		// 供跑批使用
 		if (StringUtil.isNotEmpty(batchDate)){
@@ -844,7 +846,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 		}
 		// 数据日期为系统时间
 		// 删除今天所有已检查的数据
-		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品申报登记.getValue(),checkdate);
+		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品申报登记.getValue(),checkdate,keys);
 		//增加例外情况过滤
 		List<ChbCheckRuleout> listRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_PRD_DECLARE_SUB);
 		Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(
@@ -852,7 +854,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 
 		//检查数据
 		//报送前强制的错误检查
-		List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkProdDeclareSub(checkdate,null,mapRuleout);
+		List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkProdDeclareSub(checkdate,keys,mapRuleout);
 
 		//报错检查异常数据
 		int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数

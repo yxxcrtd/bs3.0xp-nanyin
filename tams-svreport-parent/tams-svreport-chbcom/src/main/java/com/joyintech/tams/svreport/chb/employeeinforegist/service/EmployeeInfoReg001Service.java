@@ -36,6 +36,7 @@ import com.joyintech.tams.svreport.chb.datacheck.beforesub.dao.ChbBeforeSubError
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubErrorCheck;
 import com.joyintech.tams.svreport.chb.employeeinforegist.dao.EmployeeInfoReg001Mapper;
 import com.joyintech.tams.svreport.chb.employeeinforegist.dto.EmployeeInfoReg001Dto;
+import com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto;
 import com.joyintech.tools.collectors.JoyinCollectors;
 
 /**
@@ -208,6 +209,11 @@ public class EmployeeInfoReg001Service extends SvrCommonExportService<EmployeeIn
 			try {
 				List<EmployeeInfoReg001Dto> employeeInfoList = JsonUtils.json2List(keyList,
 						EmployeeInfoReg001Dto.class);
+
+				for(EmployeeInfoReg001Dto tempDto : employeeInfoList) {
+					tempDto.setEmployeeType(null == tempDto.getEmployeeType()? "" : tempDto.getEmployeeType().substring(0,2));
+				}
+
 				pageParam.put("employeeInfoList", employeeInfoList);
 			} catch (IOException e) {
 	            logger.error(e.getMessage(),e);
@@ -247,53 +253,97 @@ public class EmployeeInfoReg001Service extends SvrCommonExportService<EmployeeIn
 	@SuppressWarnings("unchecked")
 	public void updateSumStaus(Map<String, Object> map) {
 		dealSearchParam(map);
-		List<EmployeeInfoReg001Dto> infoList = new ArrayList<EmployeeInfoReg001Dto>();
+		List<EmployeeInfoReg001Dto> registList = new ArrayList<EmployeeInfoReg001Dto>();
 		//选择的手动处理
-		infoList = (List<EmployeeInfoReg001Dto>) map.get("employeeInfoList");
-        if (StringUtil.isEmptyList(infoList)) {
+		registList = (List<EmployeeInfoReg001Dto>) map.get("employeeInfoList");
+        if (StringUtil.isEmptyList(registList)) {
         	//未选中数据
-        	infoList = employeeInfoReg001Mapper.selectAllData(map);
+        	registList = employeeInfoReg001Mapper.selectAllData(map);
 		}
 
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
-        List<String> registSeqList = new ArrayList<String>();
-        Iterator<EmployeeInfoReg001Dto> it = infoList.iterator();
-        while(it.hasNext()){
-        	EmployeeInfoReg001Dto m =  it.next();
-        	m.setEmployeeType(null == m.getEmployeeType()? "" : m.getEmployeeType().substring(0,2));
-			if(m.getSendStatus().equals("01")){
-				registSeqList.add(m.getEmployeeType() 
-						          + GlobalConstant.VERTICAL_LINE + m.getIdentifyNumber()
-						          /*+ GlobalConstant.VERTICAL_LINE + m.getStatus()*/);
-			}else{
-				it.remove();
+        if(!CollectionUtils.isEmpty(registList)){
+ 			// 每批处理的数据条数
+ 			int partSize = 500;
+	 		// 存放业务数据的临时list，数据量不超过partSize
+	 		List<EmployeeInfoReg001Dto> tmpList = new ArrayList<EmployeeInfoReg001Dto>();
+	 		// 分批次处理
+	 		for (int j = 0; j < registList.size(); j++) {
+	 			tmpList.add(registList.get(j));
+	 			if (partSize == tmpList.size() || j == registList.size() - 1) {
+	 				//找sub表有没有已报送的数据
+	 				List<String> regList = employeeInfoReg001Mapper.selectRegistBySeqnoList(tmpList,"02");
+	 				//更新sub表数据（中债通过、手工处理）
+	 	 			this.updateInterfSubmitBySeq(DictCodeListExt2.报送状态_手工处理.getValue(),DictCodeListExt2.报送反馈状态_中债通过.getValue(), tmpList);
+	 	 			if(!CollectionUtils.isEmpty(regList)){
+	 					List<List<String>> regseqnolist = createStringList(regList,20);
+	 					for(int i=0;i<regseqnolist.size();i++){
+	 						employeeInfoReg001Mapper.insertReportHisBySeq(regseqnolist.get(i));
+
+	 						//将已报送的数据从sub表物理删除
+	 						employeeInfoReg001Mapper.deleteLastSubmitRegistBySeq(regseqnolist.get(i));
+
+	 					}
+	 				}
+	 	 			tmpList.clear();
+	 			}
+	 		}
+ 		}
+	}
+
+	/**
+ 	 * 分批次执行 更新画面选择记录/或者查询出的 待处理列表
+ 	 *
+ 	 * @param investList
+ 	 *            数据
+ 	 * @see
+ 	 * @since 1.0
+ 	 */
+ 	private void updateInterfSubmitBySeq(String sendStatus,String submitFeeBackStatus , List<EmployeeInfoReg001Dto> investList) {
+ 		if (StringUtil.isEmptyList(investList)) {
+ 			return;
+ 		}
+ 		int maxDataCountOneTime = 10;
+ 		int dataCount = investList.size();
+ 		if (dataCount <= maxDataCountOneTime) {
+ 			employeeInfoReg001Mapper.updateInterfSubmitBySeqBatch(sendStatus,submitFeeBackStatus, investList);
+ 			return;
+ 		}
+ 		List<EmployeeInfoReg001Dto> newDataList = new ArrayList<EmployeeInfoReg001Dto>();
+ 		newDataList.addAll(investList);
+ 		// 分批处理
+ 		int part = dataCount / maxDataCountOneTime; // 分批数
+ 		for (int i = 0; i < part; i++) {
+ 			logger.info("单次更新登记表start===");
+ 			employeeInfoReg001Mapper.updateInterfSubmitBySeqBatch(sendStatus,submitFeeBackStatus,
+                 newDataList.subList(0, maxDataCountOneTime));
+ 			newDataList.subList(0, maxDataCountOneTime).clear();
+ 			logger.info("单次更新登记表end===");
+ 		}
+ 		// 最后剩下的数据
+ 		if (CollectionUtils.isNotEmpty(newDataList)) {
+ 			logger.info("单次更新登记表start===");
+ 			employeeInfoReg001Mapper.updateInterfSubmitBySeqBatch(sendStatus,submitFeeBackStatus, newDataList);
+ 			logger.info("单次更新登记表end===");
+ 		}
+ 	}
+
+
+
+	private List<List<String>> createStringList(List<String> targe,int size) {
+		List<List<String>> listArr = new ArrayList<List<String>>();
+		//获取被拆分的数组个数
+		int arrSize = targe.size()%size==0?targe.size()/size:targe.size()/size+1;
+		for(int i=0;i<arrSize;i++) {
+			List<String> sub = new ArrayList<String>();
+			//把指定索引数据放入到list中
+			for(int j = i*size;j <= size*(i+1)-1;j++) {
+				if(j <= targe.size()-1) {
+					sub.add(targe.get(j));
+				}
 			}
+			listArr.add(sub);
 		}
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
-        if (!StringUtil.isEmptyList(registSeqList)) {
-            // 分批处理
-            int maxDataCountOneTime = 300;
-            int dataCount = registSeqList.size();
-            if (dataCount <= maxDataCountOneTime) {
-            	employeeInfoReg001Mapper.updateSubmitStatusToOk(registSeqList);
-            }
-            else {
-                List<String> newDataList = new ArrayList<String>();
-                newDataList.addAll(registSeqList);
-
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                	employeeInfoReg001Mapper.updateSubmitStatusToOk(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                	employeeInfoReg001Mapper.updateSubmitStatusToOk(newDataList);
-                }
-            }
-        }
-	  updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), infoList, false);
+		return listArr;
 	}
 	
 	/**
@@ -393,8 +443,8 @@ public class EmployeeInfoReg001Service extends SvrCommonExportService<EmployeeIn
 		}
 
 		// 对于批处理报送全量的数据，直接更新所有检查通过的未报送数据，状态修改为接口报送
-		if (isSendAllData) {
 		    logger.info("updateAllInterfSubmitAndSeqBatch全量更新登记表start===");
+		    if (isSendAllData) {
 		    //已报送数据进留痕表
 			employeeInfoReg001Mapper.insertReportHis(employeeInfoList);
             //删除正式表已报送数据
@@ -432,6 +482,8 @@ public class EmployeeInfoReg001Service extends SvrCommonExportService<EmployeeIn
 		}
 	}
 	
+
+
 	/**
 	 * 选择导出
 	 * @param pageParam
@@ -539,7 +591,7 @@ public class EmployeeInfoReg001Service extends SvrCommonExportService<EmployeeIn
      * @param equityInfoRegistList 用于前台报送用
      * @return
      */
-	public List<CheckReport001Dto> check(Date batchDate,List<Map<String,String>> equityInfoRegistList){
+	public List<CheckReport001Dto> check(Date batchDate,List<Map<String,String>> equityInfoRegistList,List<String> keys){
 		List<Map<String,String>> listData = null;
 		Date checkdate = DateUtil.parse(DateUtil.getSysDate());
 		if(!StringUtil.isEmptyList(equityInfoRegistList)){
@@ -551,7 +603,7 @@ public class EmployeeInfoReg001Service extends SvrCommonExportService<EmployeeIn
 			listData = chbBeforeSubErrorCheckMapper.selectChbEmployeeSub(checkdate);
 		}
 		// 删除今天所有已检查的数据
-		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_从业人员登记.getValue(),checkdate);
+		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_从业人员登记.getValue(),checkdate,keys);
 		//增加例外情况过滤
         List<ChbCheckRuleout> listRuleout = chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_EMPLOYEE_INFO_SUB);
         Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(

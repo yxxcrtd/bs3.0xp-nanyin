@@ -409,7 +409,7 @@ public class PbcPrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPr
         // 检查登记表中小于今天所有未报送的数据
         if(CollectionUtils.isNotEmpty(checkKeys)){
             // 调用检查方法
-            resultlist.addAll(check());
+            resultlist.addAll(check(checkKeys));
             	checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
                 for(String key : checkKeys){
                     if(checkmap.get(key)!=null){
@@ -435,11 +435,11 @@ public class PbcPrdBaseinfoEndSubNew001Service extends CommonExportService<PbcPr
      * @return List<CheckReport001Dto>
      * @version 1.7 2019年6月24日
      */
-    private List<CheckReport001Dto> check(){
+    private List<CheckReport001Dto> check(List<String> checkKeys){
         // 数据日期为系统时间
         Date checkdate = DateUtil.parse(DateUtil.getSysDate());
         // 删除今天所有已检查的数据
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品终止信息.getValue(),checkdate);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_新人行产品终止信息.getValue(),checkdate,checkKeys);
         //增加例外情况过滤
         List<ChbCheckRuleout> listRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_PRD_ISSUE_SUB);
         Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(
