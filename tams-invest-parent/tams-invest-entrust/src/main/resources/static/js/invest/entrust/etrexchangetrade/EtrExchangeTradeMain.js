@@ -316,6 +316,7 @@ function hideLeftTopPanel(){
         $(v).css("display","none");
     });
     $("#right_bottom_panel_dev").css("width","100%");
+    $("#right_bottom_panel_dev").css("height","420px");
 }
 
 function showLeftTopPanel(){
