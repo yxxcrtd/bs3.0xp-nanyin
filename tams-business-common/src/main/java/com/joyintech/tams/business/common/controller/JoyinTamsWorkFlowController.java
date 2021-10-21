@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.base.BaseController;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.workflow.engine.controller.WorkFlowController;
 import com.joyintech.workflow.engine.service.UserSelectService;
@@ -27,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/common/workflow")
 @Api(tags = "工作流相关-兼容资管3.0框架")
-public class JoyinTamsWorkFlowController extends BaseController {
+public class JoyinTamsWorkFlowController  {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JoyinTamsWorkFlowController.class);
 	
