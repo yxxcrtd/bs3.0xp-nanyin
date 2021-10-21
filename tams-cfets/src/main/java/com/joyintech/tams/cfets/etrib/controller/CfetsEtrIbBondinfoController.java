@@ -396,11 +396,9 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ApiOperation(value = "持仓列表查询", notes = "持仓列表查询")
     @PostMapping("/queryPositionsPage/{page}/{length}")
     @ResponseBody
-    public Message<Page<CfetsEtrIbBondPosinfo001Dto>> queryPositionsPage(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto,
-                                                                         @PathVariable("page") int page,
-                                                                         @PathVariable("length") int length) {
+    public Message<Page<CfetsEtrIbBondPosinfo001Dto>> queryPositionsPage(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto) {
         try {
-            Page<CfetsEtrIbBondPosinfo001Dto> list = cfetsEtrIbBondinfoService.queryPositionsPage(page, length, requestDto);
+            Page<CfetsEtrIbBondPosinfo001Dto> list = cfetsEtrIbBondinfoService.queryPositionsPage(requestDto.getPageNo(), requestDto.getPageSize(), requestDto);
             return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().success().setData(list);
         }catch (Exception e) {
             logger.error("查询持仓信息分页列表异常",e);

@@ -86,4 +86,12 @@ public class CfetsEtrIbBondPosiPage001RequestDto {
     public void setPageMode(PageMode pageMode) {
         this.pageMode = pageMode;
     }
+
+    public int getPageNo() {
+        return pageMode.getPageNo();
+    }
+    public int getPageSize() {
+        return pageMode.getPageSize();
+    }
+
 }
