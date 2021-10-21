@@ -11,10 +11,12 @@
 package com.joyintech.tams.report.submitmaintenance.businessdetailed.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,15 +36,18 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.IBDDataCheckUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto;
 import com.joyintech.tams.report.submitmaintenance.businessdetailed.dao.EquityBusiDetails001Mapper;
 import com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto;
+import com.joyintech.tams.report.submitmaintenance.businessdetailed.util.BusinessDetailInfoCheckUtil;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dao.ChbTransformRuleObjDtoMapper;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dao.TransformRule001Mapper;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dto.ChbTransformRuleObjDto;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto;
 import com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.EquityBusiInfoRegist001Dto;
-import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 
 /**
@@ -67,6 +72,12 @@ public class EquityBusiDetails002Service extends BaseService{
 
 	@Autowired
 	EquityBusiDetails001Service equityBusiDetails001Service;
+
+	@Autowired
+    private ChbTransformRuleObjDtoMapper chbTransformRuleObjDtoMapper;
+
+    @Autowired
+    private TransformRule001Mapper transformRule001Mapper;
 
 	/**
 	 * 查询管理处室
@@ -217,6 +228,30 @@ public class EquityBusiDetails002Service extends BaseService{
 	public void doEquityBusiDetailsRefresh(){
 		BaseCheckLib.objFiledsMap=null;
 		List<EquiteBusiDetails001Dto> equiteBusiDetailsList=equityBusiDetails001Mapper.selectEquiteBusiDetailsForTrans();
+
+		//生僻字转化对象数据生成开始     20210922 明细生僻字变形追加 start
+		//1、取得转化对象  转化规则
+		Map<String, Object> paramap=new HashMap<String, Object>();
+        paramap.put("statusList", Arrays.asList("E"));
+        List<TransformRule001Dto> allList=transformRule001Mapper.selectAllData(paramap);
+        Map<String,TransformRule001Dto> spzMap=allList.stream().collect(
+            Collectors.toMap(x ->x.getTransType()+x.getOrgField(),part->part,(k1,k2)->k1));
+        List<ChbTransformRuleObjDto> allRuleObjList=chbTransformRuleObjDtoMapper.selectAllDataByTableId("CHB_EQUDET");
+        Map<String,List<ChbTransformRuleObjDto>> objFiledsMap=allRuleObjList.stream().collect(
+            JoyinCollectors.groupingBy(
+                x -> x.getInfoProperty() ));
+
+        List<ChbTransformRuleObjDto> objFileds=null;
+        if(objFiledsMap!=null){
+            objFileds=objFiledsMap.get("custName");
+        }
+
+        //2、对所有待处理数据进行生僻字转换check 并进行转化规则预存放
+        for(EquiteBusiDetails001Dto dto:equiteBusiDetailsList){
+        	BusinessDetailInfoCheckUtil.whiteListCheckForDetail(dto.getCustName(),objFileds,spzMap,dto);
+        }
+		//生僻字转化对象数据生成开始     20210922 明细生僻字变形追加 end
+
 		if(!StringUtil.isEmptyList(equiteBusiDetailsList)){
 			for(EquiteBusiDetails001Dto dto:equiteBusiDetailsList){
 				//先检查

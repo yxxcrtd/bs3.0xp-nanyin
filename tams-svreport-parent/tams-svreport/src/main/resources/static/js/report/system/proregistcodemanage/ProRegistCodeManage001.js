@@ -222,6 +222,8 @@
                 Joyin.uploadFile(function(fileName) {
                 	Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
                         Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage001/importFile', {fileName: fileName});
+                    },function() {
+                        $('iframe').contents().find("#loading").hide();
                     });
                 },function() {
                     table.reload();

@@ -2631,7 +2631,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     		if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
     			dataList = handleAssetData(originalDataList, tableId, bisinessPkList, dateColumnList);
     		} else {
-    			dataList = handleData(originalDataList, tableId,false);
+    			dataList = handleData(originalDataList, tableId,true);
     		}
 //			List<List<String>> dataList = handleData(originalDataList, tableId);
             // 导入表主键集合
