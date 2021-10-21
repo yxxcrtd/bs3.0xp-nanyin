@@ -265,7 +265,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos())) {
                 for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                     dto.setWorkflowId(entity.getWorkflowId());
-                    WFlowCommonService.doInsertFlow(entity.getOperateType(), initBaseEtrInvestInfoDto(dto));
+                    doInsertFlowMethod(entity.getOperateType(), initBaseEtrInvestInfoDto(dto));
                 }
             }
         }
@@ -1211,7 +1211,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 etrEntrustAdd.setSettleSpreed((long) 1);
             }
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
-            if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
+            /*if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
 
                 List<String> traderList = StringUtil.splitToList(GlobalConstant.COMMA,
                         dto.getEtrInvestPersonInfo().getTrader());
@@ -1226,8 +1226,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     //
                     etrDistributeList.add(etrDistribute);
                 }
-                // entity.setEtrDistributeList(etrDistributeList);
-            }
+            }*/
             // 自动分发
             if (busiAutoEtrDispService != null) {
                 // 检测是否设置交易员
@@ -1387,6 +1386,19 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         }
         catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
+        }
+    }
+    /**
+     * 操作类型为submit时执行新增流程数据 & 持仓处理
+     * @param operateType
+     * @param dto
+     */
+    public static void doInsertFlowMethod(String operateType, BaseEtrInvestInfoDto dto){
+        if ("submit".equals(operateType)) {
+            if(StringUtil.isEmpty(dto.getWorkFlowId())){
+                throw new RuntimeException("WorkFlowId初始化不能为空!");
+            }
+            WFlowCommonService.insertFlow(dto);
         }
     }
 }

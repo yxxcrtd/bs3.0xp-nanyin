@@ -17,7 +17,9 @@ import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.BussCombDistribtDto;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -97,6 +99,18 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
      * 证券托管户
      */
     private String secAcctId;
+    /**
+     * 交易方向
+     */
+    private String ps;
+    /**
+     * 资产代码
+     */
+    private String finprodId;
+    /**
+     * 价格模式
+     */
+    private String priceModel;
 
     List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtos;
 
@@ -125,6 +139,7 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
     /**
      * 多组合汇总指令ID
      */
+    @PrimaryKey(value= PrimaryKey.Field.PK_1)
     private String totalEtrustId;
 
     /**
@@ -141,19 +156,19 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
      * 组合系列
      */
     private String portfolioSeries;
-
-    public List<BussCombDistribtDto> getBussCombDistribtList() {
-        return bussCombDistribtList;
-    }
-
-    public void setBussCombDistribtList(List<BussCombDistribtDto> bussCombDistribtList) {
-        this.bussCombDistribtList = bussCombDistribtList;
-    }
+    /**
+     * 指令日期
+     */
+    private Date etrDate;
+    /**
+     * 备注
+     */
+    private String remark;
 
     /**
      * 组合分配
      */
-    List<BussCombDistribtDto> bussCombDistribtList;
+    List<CfetsBussCombDistribtDto> bussCombDistribtList;
     /**
      * 利息总额
      */
@@ -469,5 +484,60 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setCalflag(String calflag) {
         this.calflag = calflag;
+    }
+
+    @Override
+    public String getPs() {
+        return ps;
+    }
+
+    @Override
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    @Override
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    @Override
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
+    @Override
+    public String getPriceModel() {
+        return priceModel;
+    }
+
+    @Override
+    public void setPriceModel(String priceModel) {
+        this.priceModel = priceModel;
+    }
+
+    public Date getEtrDate() {
+        return etrDate;
+    }
+
+    public void setEtrDate(Date etrDate) {
+        this.etrDate = etrDate;
+    }
+
+    @Override
+    public String getRemark() {
+        return remark;
+    }
+
+    @Override
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+    public List<CfetsBussCombDistribtDto> getBussCombDistribtList() {
+        return bussCombDistribtList;
+    }
+
+    public void setBussCombDistribtList(List<CfetsBussCombDistribtDto> bussCombDistribtList) {
+        this.bussCombDistribtList = bussCombDistribtList;
     }
 }

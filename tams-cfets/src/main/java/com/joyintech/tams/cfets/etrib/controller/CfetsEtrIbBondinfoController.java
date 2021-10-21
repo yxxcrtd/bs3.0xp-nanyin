@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.cfets.etrib.controller;
 
+import com.ecc.util.algorithm.Arithmetic;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
@@ -31,8 +32,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -49,8 +50,6 @@ import com.joyintech.tams.component.business.common.service.CommonBusinessServic
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.background.component.common.pack.common.validation.groups.ValidateGroupEdit;
@@ -293,6 +292,8 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     public Message<AjaxResult> save(@RequestBody CfetsEtribBondInfo003Dto allDto, BindingResult br)
             throws Exception {
 
+        allDto=packageEquity(allDto);
+
      /*  AjaxResult ajaxResult = this.check(dtoList, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().success().setData(ajaxResult);
@@ -364,7 +365,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                         + ")-(" + this.getMessage("EtribBondInfo003.mdate") + ":"
                         + DateUtil.format(entity.getMdate())+ ")-"
                         + this.getMessage("EtribBondInfo003.entrustAmt") + ":"
-                        + entity.getEntrustNum().divide(new BigDecimal("10000")));
+                        );
         processParameter.setWorkFlowParameter(params);
         allDto.setWorkflowParameter("new|wy1,wy2||1|EtribBondInfo003|EtribBondInfo003_btn_submit|false");
 
@@ -378,17 +379,21 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
 
+
     @ApiOperation(value = "持仓列表查询", notes = "持仓列表查询")
     @PostMapping("/queryPositionsPage/{page}/{length}")
     @ResponseBody
+
     public Message<Page<CfetsEtrIbBondPosinfo001Dto>> queryPositionsPage(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto,
                                                                          @PathVariable("page") int page,
                                                                          @PathVariable("length") int length) {
         try {
+
             Page<CfetsEtrIbBondPosinfo001Dto> list = cfetsEtrIbBondinfoService.queryPositionsPage(page, length, requestDto);
             return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().success().setData(list);
         }catch (Exception e) {
             logger.error("查询持仓信息分页列表异常",e);
+
             return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().fail().setMessage(e.getMessage());
         }
     }
@@ -396,12 +401,15 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ApiOperation(value = "头寸信息查询", notes = "查询头寸信息")
     @PostMapping("/queryPositionInfo")
     @ResponseBody
+
     public Message<Map> queryPositionInfo(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto) {
         try {
+
             Map m = cfetsEtrIbBondinfoService.queryPositionInfo(requestDto);
             return new Message<Map>().success().setData(m);
         }catch (Exception e) {
             logger.error("查询头寸信息分页列表异常",e);
+
             return new Message<Map>().fail().setMessage(e.getMessage());
         }
     }
@@ -416,5 +424,31 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             logger.error("查询功能异常", e);
             return new Message<CfetsEtrFinProductDto>().fail().setMessage("查询异常");
         }
+    }
+    private CfetsEtribBondInfo003Dto packageEquity(CfetsEtribBondInfo003Dto dto){
+        dto.setTradeMarket("01");
+        dto.setCalendarId("01");
+        dto.setInvManagerId("system");
+        dto.setCcy("CNY");
+        dto.setSettleDate(dto.getEtrDate());
+        dto.setEntrustNum(ArithmeticUtil.multiply(dto.getTradeAmt(),new BigDecimal("10000")));
+        dto.setVdate(dto.getEtrDate());
+        dto.setMdate(dto.getEtrDate());
+        List<CfetsBussCombDistribtDto> bussCombDistribtList =dto.getBussCombDistribtList();
+        List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtosList=new ArrayList<>();
+        for(CfetsBussCombDistribtDto item:bussCombDistribtList){
+            CfetsEtribBondInfo003Dto dd=new CfetsEtribBondInfo003Dto();
+            BeanUtil.copyPropertiesIgnoreNull(dd,dto);
+            dd.setPortfolioId(item.getPortfolioId());
+            dd.setTradeAmt(item.getEntrustNum());
+            dd.setModelType("01");
+            dd.setEntrustOwnNum(item.getEntrustOwnNum());
+            dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum());
+            dd.setElementId("EtribBondInfo003_btn_submit");
+            etrInvestBondInfoDtosList.add(dd);
+        }
+        dto.setEtrInvestBondInfoDtos(etrInvestBondInfoDtosList);
+
+        return dto;
     }
 }
