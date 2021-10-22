@@ -19,13 +19,13 @@ public class BaseMap extends HashMap<String, Object> {
 		super();
 	}
 
-	public static BaseMap newInstance(Map map){
+	public static BaseMap newMap(Map map){
 		BaseMap bm = new BaseMap();
 		bm.putAll(map);
 		return bm;
 	}
 
-	public static BaseMap newInstance(){
+	public static BaseMap newMap(){
 		return new BaseMap();
 	}
 
