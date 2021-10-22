@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.etrib.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.math.BigDecimal;
 
 /**
@@ -79,16 +81,19 @@ public class CfetsEtrFinProductDto {
     /**
      * 债券名称
      */
+    @ApiModelProperty(required = false,name="secName",value="债券名称")
     private String secName;
 
     /**
      * 债券分类
      */
+    @ApiModelProperty(required = false,name="secType",value="债券分类")
     private String secType;
 
     /**
      * 发行人
      */
+    @ApiModelProperty(required = false,name="issuer",value="发行人")
     private String issuer;
 
     /**
@@ -99,81 +104,97 @@ public class CfetsEtrFinProductDto {
     /**
      * 债券名称
      */
+    @ApiModelProperty(required = false,name="secId",value="查询的主键ID")
     private String secId;
 
     /**
      * 起息日
      */
+    @ApiModelProperty(required = false,name="vdate",value="起息日")
     private String vdate;
 
     /**
      * 到期日
      */
+    @ApiModelProperty(required = false,name="mdate",value="到期日")
     private String mdate;
 
     /**
      * 剩余期限
      */
+    @ApiModelProperty(required = false,name="lastqx",value="剩余期限")
     private BigDecimal lastqx;
 
     /**
      * 下一付息日
      */
+    @ApiModelProperty(required = false,name="lastPaydate",value="下一付息日")
     private String lastPaydate;
 
     /**
      * 利率类型
      */
+    @ApiModelProperty(required = false,name="rateType",value="利率类型")
     private String rateType;
 
     /**
      * 票面利率
      */
+    @ApiModelProperty(required = false,name="rate",value="票面利率")
     private BigDecimal rate;
 
     /**
      * 债项评级
      */
+    @ApiModelProperty(required = false,name="zxGrade",value="债项评级")
     private String zxGrade;
 
     /**
      * 主体评级
      */
+    @ApiModelProperty(required = false,name="ztGrade",value="主体评级")
     private String ztGrade;
 
     /**
      * 含权标识
      */
+    @ApiModelProperty(required = false,name="xqFlg",value="含权标识")
     private String xqFlg;
 
     /**
      * 下一行权日
      */
+    @ApiModelProperty(required = false,name="xqdate",value="下一行权日")
     private String xqdate;
 
     /**
      * 最新净价
      */
+    @ApiModelProperty(required = false,name="newPrice",value="最新净价")
     private BigDecimal newPrice;
 
     /**
      * 估价净价
      */
+    @ApiModelProperty(required = false,name="priceXq",value="估价净价（行权）")
     private BigDecimal priceXq;
 
     /**
      * 最新收益率
      */
+    @ApiModelProperty(required = false,name="newRate",value="最新收益率")
     private BigDecimal newRate;
 
     /**
      * 估价净价
      */
+    @ApiModelProperty(required = false,name="priceTj",value="估价净价（推荐）")
     private BigDecimal priceTj;
 
     /**
      * 估值收益率
      */
+    @ApiModelProperty(required = false,name="gzRate",value="估值收益率")
     private BigDecimal gzRate;
 
     /**
