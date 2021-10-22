@@ -93,6 +93,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
         initPageParams.put("CMDS_PATH", "ws://192.168.90.208:8888/dsp/cmds");//CacheUtil.getSysParam("CMDS_PATH"));
         initPageParams.put("NEED_WORKFLOW", false);
+        initPageParams.put("SHARES_TRADE_MARKET_02",DictCodeListExt1.交易市场_二级市场.getValue());
 
     	return new Message<Map<String, Object>>(initPageParams).success();
     }
@@ -186,7 +187,6 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             RiskCreditListCommonDto riskCreditListCommonDto = new RiskCreditListCommonDto();
             if (!StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))
                     && isCreditSoftControl) {
-//                if(!DictCodeListExt3.授信来源_外部.getValue().equals(dtoList.get(i).getCreditSource())){
                 TrdProductDeal trdProductDeal = cfetsEtrIbBondinfo002Service.prepareDeal(dtoList.get(i));
                 if(trdProductDeal.getCounterId() == null) {
                     trdProductDeal.setCounterId("");

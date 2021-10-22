@@ -32,20 +32,15 @@
 	<select id="getfinprodIdForAdd" resultMap="finprodIdMap">
 		SELECT
 		T1.FINPROD_MARKET_ID id,
-		<!--下拉框值为代码+简称 modified by lishuping 20191017 start-->
 		T1.FINPROD_ABBR text,
-		<!--下拉框值为代码+简称 modified by lishuping 20191017 end-->
 		T1.FINPROD_NAME,
 		T1.FINPROD_ID,
 		T1.CALENDAR_ID,
 		T1.TRADE_MARKET,
 		T1.IS_RIGHT,
-		<!-- type4改为type9~11	王贵奇2019/7/27 开始 -->
-		<!-- T2.TYPE_4, -->
 		T2.TYPE_9,
 		T2.TYPE_10,
 		T2.TYPE_11,
-		<!-- type4改为type9~11	王贵奇2019/7/27 结束 -->
 		T1.VDATE,
 		T1.MDATE,
 		T1.CCY

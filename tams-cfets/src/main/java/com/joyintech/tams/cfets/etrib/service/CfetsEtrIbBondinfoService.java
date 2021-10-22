@@ -377,7 +377,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         String userId = UserUtil.getUserName();
         if (StringUtils.isNotEmpty(userId)) {
             pageParam.put("userId", UserUtil.getUserName());
-            return super.queryForPage(dto.getPageNo(), dto.getPageSize(), () -> cfetsetrIbBondinfoMapper.findEtrinfoPage(pageParam));
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsetrIbBondinfoMapper.findEtrinfoPage(pageParam));
         }else{
             return null;
         }
@@ -707,7 +707,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         param.put("TRADE_PLACE_05",DictCodeListExt1.交易场所_机构间私募系统.getValue());
         param.put("TRADE_PLACE_09",DictCodeListExt1.交易场所_OTC场外.getValue());
         param.put("TRADE_PLACE_10",DictCodeListExt1.交易场所_境外交易场所.getValue());
-        return super.queryForPage(1, 20, ()->cfetsEtrIbBondinfo002Mapper.getfinprodIdForAdd(param));
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->cfetsEtrIbBondinfo002Mapper.getfinprodIdForAdd(param));
     }
     public Page<SelectOptionDto> selectPortfolioIdList(CfetsSearchInfoDto dto) {
         Map<String, Object> param =new HashMap<>();

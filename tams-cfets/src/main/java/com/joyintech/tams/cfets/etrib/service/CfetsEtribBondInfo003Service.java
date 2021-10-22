@@ -422,9 +422,8 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 DictCodeList.清算速度_T_1.getValue())) {
             dto.setSettleSpeed(String.valueOf(1));
         }
-        if (dto == null || dto.getVdate() == null || dto.getMdate() == null
-                || DateUtil.compareDate(dto.getVdate(), dto.getMdate()) != 0) {
-            com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtribBondInfo003Dto nullDto = new EtribBondInfo003Dto();
+        if (dto == null || dto.getEtrDate() == null ) {
+            CfetsEtribBondInfo003Dto nullDto = new CfetsEtribBondInfo003Dto();
             try {
                 nullDto.setPrice(dto.getPrice());
                 nullDto.setExerYield(dto.getExerYield());
@@ -436,8 +435,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             }
             return;
         }
-        dto.setSettleDate(dto.getVdate());
-
+        dto.setSettleDate(dto.getEtrDate());
+        dto.setVdate(dto.getEtrDate());
+        dto.setMdate(dto.getEtrDate());
         if(StringUtil.isNotEmpty(dto.getSettleSpeed())){
             if(Integer.parseInt(dto.getSettleSpeed())!=0){
                 List<String> holiday = dateCalService.getDealCalendarHoliday(dto.getVdate(),
@@ -463,9 +463,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         final int SCALE = 12;
 
         //到期收益率
-        dto.setMatureYield(com.joyintech.calculation.util.ArithmeticUtil.divide(dto.getMatureYield(), 100, 14));
+        dto.setMatureYield(ArithmeticUtil.divide(dto.getMatureYield(), 100, 14));
         //行权收益率
-        dto.setExerYield(com.joyintech.calculation.util.ArithmeticUtil.divide(dto.getExerYield(), 100, 14));
+        dto.setExerYield(ArithmeticUtil.divide(dto.getExerYield(), 100, 14));
 
         YieldByPriceCalculator yieldByPriceCalculator = new YieldByPriceCalculator();
         PriceByYieldCalculator priceByYieldCalculator = new PriceByYieldCalculator();
@@ -665,26 +665,26 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             //交易所债券特殊处理end----------------------------------------------------------------
 
             if (out != null) {
-                accurInt = com.joyintech.calculation.util.ArithmeticUtil.round(out.getInterest(), SCALE, RoundingMode.HALF_UP);
+                accurInt = ArithmeticUtil.round(out.getInterest(), SCALE, RoundingMode.HALF_UP);
             }
             else {
                 // 从计算工厂中创建应计利息计算器
                 AccurIntCalculator calc = CalculatorFactory.createAccurIntCalculator();
                 // 计算利息
                 AccurIntCalOutParameter accurIntCalOutParameter = calc.calculate(accurIntCalInParameter);
-                accurInt = com.joyintech.calculation.util.ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);
+                accurInt = ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);
             }
 
             // 单位应计利息
             if (dto.getUnitInt() == null) {
                 if (isJiaoYiSuo) {
-                    dto.setUnitInt(com.joyintech.calculation.util.ArithmeticUtil.divide(com.joyintech.calculation.util.ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
+                    dto.setUnitInt(ArithmeticUtil.divide(ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
                             Integer.parseInt(StringUtils.isEmpty(CacheUtil.getSysParam(
                                     "SEC_INT_SCALE_EXCHANGE")) ? "8" : CacheUtil.getSysParam(
                                     "SEC_INT_SCALE_EXCHANGE")), RoundingMode.HALF_UP));
                 }
                 else {
-                    dto.setUnitInt(com.joyintech.calculation.util.ArithmeticUtil.divide(com.joyintech.calculation.util.ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
+                    dto.setUnitInt(ArithmeticUtil.divide(ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
                             Integer.parseInt(StringUtils.isEmpty(CacheUtil.getSysParam(
                                     "SEC_INT_SCALE_BANK")) ? "12" : CacheUtil.getSysParam(
                                     "SEC_INT_SCALE_BANK")), RoundingMode.HALF_UP));
@@ -695,10 +695,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             // 单位净价
             if (StringUtil.equals(dto.getCalflag(), "price")) {
                 // 单位全价 = 单位净价 + 单位应计利息
-                dto.setUnitFprice(com.joyintech.calculation.util.ArithmeticUtil.doAdd(dto.getPrice(), dto.getUnitInt()));
+                dto.setUnitFprice(ArithmeticUtil.doAdd(dto.getPrice(), dto.getUnitInt()));
                 // 全价总额 = 单位全价 * 券面总额/100
-                dto.setFpriceAmt(com.joyintech.calculation.util.ArithmeticUtil.divide(
-                        com.joyintech.calculation.util.ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
+                dto.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
                         new BigDecimal(100), SCALE));
 //                // 净价总额 = 单位净价 * 券面总额/100
 //                dto.setCpriceAmt(ArithmeticUtil.divide(
@@ -803,8 +802,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 // ArithmeticUtil.doMul(dto.getFpriceAmt(), new BigDecimal(100)),
                 // dto.getPrinAmt(), 12));
                 // 全价总额 = 单位全价 * 券面总额/100
-                dto.setFpriceAmt(com.joyintech.calculation.util.ArithmeticUtil.divide(
-                        com.joyintech.calculation.util.ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
+                dto.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
                         new BigDecimal(100), SCALE));
                 // 单位净价 = 单位全价 - 单位应计利息
                 dto.setPrice(com.joyintech.calculation.util.ArithmeticUtil.doSub(dto.getUnitFprice(), dto.getUnitInt()));

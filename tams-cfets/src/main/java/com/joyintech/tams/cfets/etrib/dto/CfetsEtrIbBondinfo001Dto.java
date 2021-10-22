@@ -542,11 +542,5 @@ public class CfetsEtrIbBondinfo001Dto extends BaseEntity{
         this.pageMode = pageMode;
     }
 
-    public int getPageSize() {
-        return pageMode.getPageSize();
-    }
 
-    public int getPageNo() {
-        return pageMode.getPageNo();
-    }
 }

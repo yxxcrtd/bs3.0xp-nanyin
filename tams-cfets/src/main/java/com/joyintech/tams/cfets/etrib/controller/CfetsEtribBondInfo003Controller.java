@@ -13,62 +13,40 @@ package com.joyintech.tams.cfets.etrib.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtribBondInfo003Service;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
-import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtribBondInfo003Dto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtrIbBondinfo002Service;
-import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtribBondInfo003Service;
 import com.joyintech.tams.invest.entrust.etribbondinfo.validator.EtribBondInfo003Validator;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import io.swagger.annotations.Api;
-import org.apache.commons.collections.CollectionUtils;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
-
-//import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
-
-/**
- * 银行间债券指令- 多组合指令新建
- * @author 王波
- * @date 2021年01月19日
- * @see CfetsEtribBondInfo003Controller
- * @since 1.0
- */
 @Controller
 @PageId("CfetsEtrIbBondinfo003")
 @RequestMapping("/cfets/etrib/cfetsEtrIbBondinfo003")
 @Api(tags = "银行间债券多组合指令新建")
 public class CfetsEtribBondInfo003Controller extends BaseController {
+    private static final Logger logger = LoggerFactory.getLogger(CfetsEtribBondInfo003Controller.class);
 
     @Autowired
     private CfetsEtribBondInfo003Service cfetsetribBondInfo003Service;
@@ -173,14 +151,33 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
      * @see
      * @since 1.0
      */
-    @RequestMapping("/calData")
+    @PostMapping("/calData")
+    @ApiOperation(value = "新建指令净价全价收益率计算功能", notes = "新建指令净价全价收益率计算功能")
     @ResponseBody
-    public AjaxResult calData(@RequestBody CfetsEtribBondInfo003Dto dto) {
-        AjaxResult result = new AjaxResult();
-        cfetsetribBondInfo003Service.calcAmt(dto);
-        result.setData(dto);
-        return result;
+    public Message<AjaxResult> calData(@RequestBody CfetsEtribBondInfo003Dto dto) {
+        try {
+            AjaxResult result = new AjaxResult();
+            cfetsetribBondInfo003Service.calcAmt(dto);
+            result.setData(dto);
+            return new Message<AjaxResult>().success().setData(result);
+        } catch (Exception e) {
+            logger.error("计算功能异常", e);
+            return new Message<AjaxResult>().fail().setMessage("计算异常");
+        }
+
     }
+   /* @PostMapping("/calData")
+    @ApiOperation(value = "新建指令净价全价收益率计算功能", notes = "新建指令净价全价收益率计算功能")
+    @ResponseBody
+    public Message<CfetsEtrCalcReturnDto> calData(@RequestBody CfetsEtrCalcRequestDto requestDto) {
+        try {
+            CfetsEtrCalcReturnDto dto = cfetsEtrIbBondinfoService.getEtrFinProductInfo(secId);
+            return new Message<CfetsEtrCalcReturnDto>().success().setData(dto);
+        } catch (Exception e) {
+            logger.error("计算功能异常", e);
+            return new Message<CfetsEtrCalcReturnDto>().fail().setMessage("计算异常");
+        }
+    }*/
 
 
 }
