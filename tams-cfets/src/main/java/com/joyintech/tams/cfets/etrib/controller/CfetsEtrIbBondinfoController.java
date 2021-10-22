@@ -394,7 +394,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
 //    }
     
     @ApiOperation(value = "持仓列表查询", notes = "持仓列表查询")
-    @PostMapping("/queryPositionsPage/{page}/{length}")
+    @PostMapping("/queryPositionsPage")
     @ResponseBody
     public Message<Page<CfetsEtrIbBondPosinfo001Dto>> queryPositionsPage(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto) {
         try {
