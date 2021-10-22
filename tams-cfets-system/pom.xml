@@ -93,7 +93,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.joyintech.dsp.DSPZiGuanApplication</mainClass>
+					<mainClass>com.joyintech.tams.system.TamsSystemApplication</mainClass>
 					<includeSystemScope>true</includeSystemScope>
 				</configuration>
 			</plugin>
