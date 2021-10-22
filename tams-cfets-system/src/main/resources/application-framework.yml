@@ -457,7 +457,10 @@ trade:
     risk:
       alive: 5000
       capacity: 128
-
+#分页插件超过最后一页返回空数据
+pagehelper:
+  reasonable: false
+  
 position:
   flag: false #是否控制账户持仓，true控制，false不控制
 

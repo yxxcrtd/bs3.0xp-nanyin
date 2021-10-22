@@ -653,7 +653,7 @@ from
             </if>
         )
         <!--前端传入排序字段-->
-        <if test="sort != null and direction != null">
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
             order by ${sort} ${direction}
         </if>
     </select>
@@ -715,9 +715,12 @@ from
                 sum(CASE WHEN a.HODING_TYPE='A_005' AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS rrqt1rkycc /*融入券T+1日可用持仓*/
                 from ETR_SEC_POSITION_RULE a
                 LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN ('S_001','S_003')
-                where to_char(a.cdate,'yyyy-MM-dd') = #{cdate} and a.FINPROD_ID = #{finprodId}
+                where to_char(a.cdate,'yyyy-MM-dd') = #{cdate} 
+                <if test="finprodId != null">
+                    and a.FINPROD_ID = #{finprodId} 
+                </if>
                 <if test="portfolioIdList != null">
-                    AND a.PORTFOLIO_ID in
+                    AND a.PORTFOLIO_ID in 
                     <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
                         #{item}
                     </foreach>
