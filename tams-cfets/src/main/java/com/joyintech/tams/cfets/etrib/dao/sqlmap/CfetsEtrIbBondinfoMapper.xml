@@ -576,6 +576,7 @@ from
             e.PORTFOLIO_NAME as portfolioName,
             etrptl.FINPROD_ID as finprodId,
             d.FINPROD_NAME as finprodAbbr,
+            d.FINPROD_MARKET_ID as finprodMarketId,
             c.TYPE_8 as secType1,
             f.ITEM_VALUE as secType1Name,
             etrptl.INV_AIM as busiModel,
