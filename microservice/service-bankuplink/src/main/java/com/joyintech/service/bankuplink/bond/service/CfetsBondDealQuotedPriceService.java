@@ -570,6 +570,8 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         bondQuoteInfoDto.setPendingPeriod(bondQuoteExtDto.getPendingPeriod());
         bondQuoteInfoDto.setGrade(bondQuoteExtDto.getGrade());
         bondQuoteInfoDto.setRemark(bondQuoteExtDto.getRemark());
+        bondQuoteInfoDto.setDeliveryType(bondQuoteExtDto.getDeliveryType());
+        bondQuoteInfoDto.setSettType(bondQuoteExtDto.getSettType());
         return bondQuoteInfoDto;
     }
     
