@@ -14,6 +14,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
@@ -21,6 +22,7 @@ import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.business.common.util.UserUtil;
+import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfo002Mapper;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper;
@@ -79,7 +81,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      */
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
-
+    @Autowired
+    private CfetsEtrIbBondinfo002Mapper cfetsEtrIbBondinfo002Mapper;
     /**
      * 持仓信息查询
      *
@@ -696,5 +699,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             dto.setXqFlg(xqfangshi);
         }
         return dto;
+    }
+    public Page<SelectOptionDto> getfinprodIdForAdd(CfetsSearchInfoDto dto) {
+        Map<String, Object> param =new HashMap<>();
+        param.put("search",dto.getSearch());
+        param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
+        param.put("TRADE_PLACE_05",DictCodeListExt1.交易场所_机构间私募系统.getValue());
+        param.put("TRADE_PLACE_09",DictCodeListExt1.交易场所_OTC场外.getValue());
+        param.put("TRADE_PLACE_10",DictCodeListExt1.交易场所_境外交易场所.getValue());
+        return super.queryForPage(1, 20, ()->cfetsEtrIbBondinfo002Mapper.getfinprodIdForAdd(param));
+    }
+    public Page<SelectOptionDto> selectPortfolioIdList(CfetsSearchInfoDto dto) {
+        Map<String, Object> param =new HashMap<>();
+        param.put("search",dto.getSearch());
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->cfetsEtrIbBondinfo002Mapper.selectPortfolioIdList(param));
     }
 }

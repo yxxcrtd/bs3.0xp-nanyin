@@ -32,7 +32,7 @@ public interface CfetsEtrIbBondinfo002Mapper {
      * @see
      * @since 1.0
      */
-   // List<SelectOptionDto> getfinprodIdForAdd(Map<String, Object> param);
+    List<SelectOptionDto> getfinprodIdForAdd(Map<String, Object> param);
     /**
      * 
      * 通过主键查询修改信息
@@ -71,4 +71,14 @@ public interface CfetsEtrIbBondinfo002Mapper {
     int deleteWflEtrEntrustAddByEntrustId(String entrustId);
 
     String qryPortfolioSecAcctId(Map<String, Object> param);
+    /**
+     *
+     * 获取新建界面的组合联想下拉框框
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> selectPortfolioIdList(Map<String, Object> param);
 }

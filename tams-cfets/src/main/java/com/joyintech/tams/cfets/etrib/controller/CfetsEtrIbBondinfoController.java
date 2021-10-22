@@ -17,6 +17,7 @@ import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.BaseMap;
@@ -92,6 +93,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
         initPageParams.put("CMDS_PATH", "ws://192.168.90.208:8888/dsp/cmds");//CacheUtil.getSysParam("CMDS_PATH"));
         initPageParams.put("NEED_WORKFLOW", false);
+
     	return new Message<Map<String, Object>>(initPageParams).success();
     }
 
@@ -134,7 +136,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
      * @since 1.0
      */
     @ApiOperation(value = "查询指令管理分页数据", notes = "查询指令管理分页数据")
-    @PostMapping("/findEtrinfoPage/{page}/{length}")
+    @PostMapping("/findEtrinfoPage")
     @ResponseBody
     public Message<Page<CfetsEtrIbBondinfo001Dto>> findEtrinfoPage(@RequestBody CfetsEtrIbBondinfo001Dto dto)
             throws Exception {
@@ -456,5 +458,30 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         dto.setEtrInvestBondInfoDtos(etrInvestBondInfoDtosList);
 
         return dto;
+    }
+
+    @PostMapping("/getfinprodIdForAdd")
+    @ApiOperation(value = "债券简称列表查询", notes = "债券简称列表查询")
+    @ResponseBody
+    public Message<Page<SelectOptionDto>> getfinprodIdForAdd(@RequestBody CfetsSearchInfoDto item) {
+        try {
+            Page<SelectOptionDto> dto = cfetsEtrIbBondinfoService.getfinprodIdForAdd(item);
+            return new Message<Page<SelectOptionDto>>().success().setData(dto);
+        } catch (Exception e) {
+            logger.error("查询债券简称列表异常", e);
+            return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+        }
+    }
+    @PostMapping("/selectPortfolioIdList")
+    @ApiOperation(value = "组合列表查询", notes = "组合列表查询")
+    @ResponseBody
+    public Message<Page<SelectOptionDto>> selectPortfolioIdList(@RequestBody CfetsSearchInfoDto item) {
+        try {
+            Page<SelectOptionDto> dto = cfetsEtrIbBondinfoService.selectPortfolioIdList(item);
+            return new Message<Page<SelectOptionDto>>().success().setData(dto);
+        } catch (Exception e) {
+            logger.error("查询组合列表异常", e);
+            return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+        }
     }
 }
