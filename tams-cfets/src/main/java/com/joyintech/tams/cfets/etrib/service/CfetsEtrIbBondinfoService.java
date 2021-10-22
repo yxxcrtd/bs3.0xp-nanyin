@@ -447,9 +447,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     }
 
     public Page<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(int page, int length, CfetsEtrIbBondPosiPage001RequestDto requestDto) {
-        // check
         if (!StringUtil.isNotBlank(requestDto.getCdate())){
-            throw new RuntimeException("交易日期cdate不能为空！");
+            requestDto.setCdate(iPlatformDate.getSysDateStr());
         }
         // 1.分页查询列表
         Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.queryPositionsPage(requestDto));
@@ -487,7 +486,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
 
         if (StringUtil.isEmpty(requestDto.getCdate())){
-            throw new RuntimeException("cdate不能为空！");
+            requestDto.setCdate(iPlatformDate.getSysDateStr());
         }
 
         if (StringUtil.isEmpty(requestDto.getFinprodId())){
@@ -502,17 +501,17 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     private List<BaseMap> nullData(String flag) {
         List<BaseMap> resp = new ArrayList<>();
         /*T日可用现金*/
-        resp.add(BaseMap.newInstance()
+        resp.add(BaseMap.newMap()
                 .put("field", "t0kyxj")
                 .put("amount", "0.00")
                 .put("type", "xj"));
         /*T+1日可用现金*/
-        resp.add(BaseMap.newInstance()
+        resp.add(BaseMap.newMap()
                 .put("field", "t1kyxj")
                 .put("amount", "0.00")
                 .put("type", "xj"));
         /*账户现金*/
-        resp.add(BaseMap.newInstance()
+        resp.add(BaseMap.newMap()
                 .put("field", "zhxj")
                 .put("amount", "0.00")
                 .put("type", "xj"));
@@ -520,7 +519,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "02")){
             // 卖空模式设置为模式一、模式二时显示此字段
             /*融入券卖空待购回持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "rrqmkdghcc")
                     .put("amount", "0.00")
                     .put("type", "cc"));
@@ -529,7 +528,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
             // 卖空模式设置为模式一、模式三时显示此字段
             /*资产T日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "zctrkycc")
                     .put("amount", "0.00")
                     .put("type", "cc"));
@@ -538,7 +537,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
             // 卖空模式设置为模式一、模式三时显示此字段
             /*资产T+1日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "zct1rkycc")
                     .put("amount", "0.00")
                     .put("type", "cc"));
@@ -547,7 +546,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "02")){
             // 卖空模式设置为模式二时显示此字段
             /*本方券T日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "bfqtrkycc")
                     .put("amount", "0.00")
                     .put("type", "cc"));
@@ -556,7 +555,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "02")){
             // 卖空模式设置为模式二时显示此字段
             /*本方券T+1日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "bfqt1rkycc")
                     .put("amount", "0.00")
                     .put("type", "cc"));
@@ -565,7 +564,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "02")){
             // 卖空模式设置为模式二时显示此字段
             /*融入券T日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "rrqtrkycc")
                     .put("amount", "0.00")
                     .put("type", "cc"));
@@ -574,7 +573,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "02")){
             // 卖空模式设置为模式二时显示此字段
             /*融入券T+1日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "rrqt1rkycc")
                     .put("amount", "0.00")
                     .put("type", "cc"));
@@ -585,20 +584,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     private List<BaseMap> assemble(String flag, Map map) {
         // 初始化返回集合
         List<BaseMap> resp = new ArrayList<>();
-        BaseMap bm = BaseMap.newInstance(map);
+        BaseMap bm = BaseMap.newMap(map);
 
         /*T日可用现金*/
-        resp.add(BaseMap.newInstance()
+        resp.add(BaseMap.newMap()
                 .put("field", "T0KYXJ")
                 .put("amount", bm.getBigDecimalStr("T0KYXJ", "0.00"))
                 .put("type", "xj"));
         /*T+1日可用现金*/
-        resp.add(BaseMap.newInstance()
+        resp.add(BaseMap.newMap()
                 .put("field", "T1KYXJ")
                 .put("amount", bm.getBigDecimalStr("T1KYXJ", "0.00"))
                 .put("type", "xj"));
         /*账户现金*/
-        resp.add(BaseMap.newInstance()
+        resp.add(BaseMap.newMap()
                 .put("field", "ZHXJ")
                 .put("amount", bm.getBigDecimalStr("ZHXJ", "0.00"))
                 .put("type", "xj"));
@@ -606,7 +605,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "02")){
             // 卖空模式设置为模式一、模式二时显示此字段
             /*融入券卖空待购回持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "RRQMKDGHCC")
                     .put("amount", bm.getBigDecimalStr("RRQMKDGHCC", "0.00"))
                     .put("type", "cc"));
@@ -615,7 +614,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
             // 卖空模式设置为模式一、模式三时显示此字段
             /*资产T日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "ZCTRKYCC")
                     .put("amount", bm.getBigDecimalStr("ZCTRKYCC", "0.00"))
                     .put("type", "cc"));
@@ -624,7 +623,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
             // 卖空模式设置为模式一、模式三时显示此字段
             /*资产T+1日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "ZCT1RKYCC")
                     .put("amount", bm.getBigDecimalStr("ZCT1RKYCC", "0.00"))
                     .put("type", "cc"));
@@ -633,7 +632,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "02")){
             // 卖空模式设置为模式二时显示此字段
             /*本方券T日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "BFQTRKYCC")
                     .put("amount", bm.getBigDecimalStr("BFQTRKYCC", "0.00"))
                     .put("type", "cc"));
@@ -642,7 +641,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "02")){
             // 卖空模式设置为模式二时显示此字段
             /*本方券T+1日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "BFQT1RKYCC")
                     .put("amount", bm.getBigDecimalStr("BFQT1RKYCC", "0.00"))
                     .put("type", "cc"));
@@ -651,7 +650,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "02")){
             // 卖空模式设置为模式二时显示此字段
             /*融入券T日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "RRQTRKYCC")
                     .put("amount", bm.getBigDecimalStr("RRQTRKYCC", "0.00"))
                     .put("type", "cc"));
@@ -660,7 +659,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(flag, "02")){
             // 卖空模式设置为模式二时显示此字段
             /*融入券T+1日可用持仓*/
-            resp.add(BaseMap.newInstance()
+            resp.add(BaseMap.newMap()
                     .put("field", "RRQT1RKYCC")
                     .put("amount", bm.getBigDecimalStr("RRQT1RKYCC", "0.00"))
                     .put("type", "cc"));
