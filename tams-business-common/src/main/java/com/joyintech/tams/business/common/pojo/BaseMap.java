@@ -1,5 +1,6 @@
 package com.joyintech.tams.business.common.pojo;
 
+import com.joyintech.framework.util.DateUtil;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -118,5 +119,13 @@ public class BaseMap extends HashMap<String, Object> {
 			}
 		}
 		return new Date(getLong(key));
+	}
+
+	public String getDateStr(Map<String, Object> param,String key) {
+		return DateUtil.format(getDate(param, key));
+	}
+	
+	public String getDateStr(String key) {
+		return DateUtil.format(getDate(key));
 	}
 }
