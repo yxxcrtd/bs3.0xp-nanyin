@@ -653,8 +653,8 @@ from
             </if>
         )
         <!--前端传入排序字段-->
-        <if test="orderFiled != null and orderRule != null">
-            order by ${orderFiled} ${orderRule}
+        <if test="sort != null and direction != null">
+            order by ${sort} ${direction}
         </if>
     </select>
 
