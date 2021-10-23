@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Lazy(value=false)
@@ -33,7 +34,20 @@ public class PositionSocketClient {
     @PostConstruct
     public void init(){
         logger.info("WebSocketClient初始化一次...");
-        start();
+        
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                loopStart();
+            }
+        }).start();
+    }
+    
+    public void loopStart(){
+        while (!start()){
+            logger.error("头寸通信失败，10秒后重连");
+            try {TimeUnit.SECONDS.sleep(10l);} catch (InterruptedException e) {e.printStackTrace();}
+        }
     }
     
     private WebSocketClientUtil util = null;
@@ -72,16 +86,14 @@ public class PositionSocketClient {
                 
                 @Override
                 public void onClose() {
-                    // 10秒启动
-                    logger.info("头寸服务关闭。。。10秒后重连");
+                    // 重连
+                    logger.info("头寸服务关闭，开始重连");
                     
                     try {util.close();} catch (IOException e) {e.printStackTrace();}
+
+                    // 每间隔10秒重连
+                    loopStart();
                     
-                    start();
-//                    while (!startWb()){
-//                        // 间隔时间再次发送
-//                        try {TimeUnit.SECONDS.sleep(10l);} catch (InterruptedException e) {e.printStackTrace();}
-//                    }
                     logger.info("头寸服务启动成功。。。");
                 }
             });
