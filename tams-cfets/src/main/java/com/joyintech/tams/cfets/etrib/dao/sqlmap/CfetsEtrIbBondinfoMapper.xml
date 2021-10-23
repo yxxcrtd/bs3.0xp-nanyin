@@ -161,6 +161,7 @@
     <sql id="onlyEtrEntrust">
         select
         T1.ENTRUST_ID entrustId,
+        decode(T1.ENTRUST_STATUS,'08','流程中','有效') as effectiveStatusName,
         T1.ENTRUST_STATUS entrustStatus,
         T8.REAL_NAME invManagerId,
         T1.PORTFOLIO_ID portfolioId,
@@ -185,6 +186,8 @@
         ,T1.COUNTER_ID counterId
         ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
         ,T1.INV_AIM as invAim
+        ,round(NVL(10,0)*100/(T1.ENTRUST_NUM*100),4)*100 execProcess
+        ,round(NVL(30,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess
         from
         ETR_ENTRUST T1
         INNER JOIN
@@ -259,6 +262,7 @@
     <sql id="onlyWtfEtrEntrust">
         select
         T1.ENTRUST_ID entrustId,
+        decode(T1.ENTRUST_STATUS,'08','流程中','有效') as effectiveStatusName,
         T1.ENTRUST_STATUS entrustStatus,
         T8.REAL_NAME invManagerId,
         T1.PORTFOLIO_ID portfolioId,
@@ -283,6 +287,8 @@
         ,T1.COUNTER_ID counterId
         ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
         ,T1.INV_AIM as invAim
+        ,round(NVL(10,0)*100/(T1.ENTRUST_NUM*100),4)*100 execProcess
+        ,round(NVL(30,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess
         from
         WFL_ETR_ENTRUST T1
         INNER JOIN

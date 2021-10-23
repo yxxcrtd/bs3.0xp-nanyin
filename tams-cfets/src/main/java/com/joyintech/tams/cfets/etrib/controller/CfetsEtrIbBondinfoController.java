@@ -34,17 +34,22 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +62,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * 银行间债券指令
  * 
@@ -484,4 +491,54 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
         }
     }
+    @PostMapping("close")
+    @ApiOperation(value = "关闭委托", notes = "关闭委托")
+    @ResponseBody
+    public AjaxResult closeDelegate(@RequestBody EtrInvestBondInfoDto dto) throws Exception{
+        List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
+        if(dtolist != null && dtolist.size()>0){
+            for(EtrInvestBondInfoDto entity : dtolist){
+                //etrInvestBondInfoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
+            }
+            // add by zhangrui1 批量委托关闭 start
+            // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
+            List<String> entrustIdList = dtolist.stream().map(
+                    EtrInvestBondInfoDto::getEntrustId).collect(Collectors.toList());
+            // ZGZGST-2330:委托关闭判断是否有完成额度，分情况处理 fuyongsheng 20210919 edit start
+            if(CollectionUtils.isNotEmpty(entrustIdList)){
+                Map<String, BigDecimal> etrFinishMap = EntrustCompleteUtil.getEtrFinishAmtList(entrustIdList);
+                //委托没有做过交易的，和撤销相同逻辑，删除预占
+                List<EtrInvestBondInfoDto> recallEntrustIdList = new ArrayList<>();
+                //委托已有完成额度，做过交易，走关闭完成的逻辑，更新预占
+                List<String> closeEntrustIdList = new ArrayList<>();
+                for(EtrInvestBondInfoDto etrDto : dtolist) {
+                    if(com.joyintech.framework.util.StringUtil.isNotEmpty(etrFinishMap) && com.joyintech.framework.util.StringUtil.isNotEmpty(etrFinishMap.get(etrDto.getEntrustId()))
+                            && BigDecimal.ZERO.compareTo(etrFinishMap.get(etrDto.getEntrustId()))<0) {
+                        closeEntrustIdList.add(etrDto.getEntrustId());
+                    }
+                    else if(entrustIdList.contains(etrDto.getEntrustId())){
+                        recallEntrustIdList.add(etrDto);
+                    }
+                }
+
+                //没有做过交易，直接关闭的
+                if(!com.joyintech.framework.util.StringUtil.isEmptyList(recallEntrustIdList)) {
+                    // add by yushilong 批量撤销预占 start
+                    EntrustRdsCommonAop.doListPreOccupy(recallEntrustIdList, DictCodeList.平安资产类型_债券.getValue(),
+                            BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+                    // add by yushilong 批量撤销预占 end
+                }
+
+                //已经有委托完成度的
+                if(!com.joyintech.framework.util.StringUtil.isEmptyList(closeEntrustIdList)) {
+                    EntrustCompleteUtil.doComplete(closeEntrustIdList);
+                }
+            }
+            // ZGZGST-2330:委托关闭判断是否有完成额度，分情况处理 fuyongsheng 20210919 edit end
+            // add by zhangrui1 批量委托关闭 end
+            return new AjaxResult(this.getMessage("ETR_X_003"));
+        }
+        return new AjaxResult(this.getMessage("ETR_X_004"));
+    }
+
 }

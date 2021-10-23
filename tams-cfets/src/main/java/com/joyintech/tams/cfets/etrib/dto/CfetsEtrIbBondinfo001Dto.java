@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.business.common.dto.PageMode;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
@@ -542,5 +545,82 @@ public class CfetsEtrIbBondinfo001Dto extends BaseEntity{
         this.pageMode = pageMode;
     }
 
+    public String getEntrustStatusName(){
+        if (StringUtil.isEmpty(getEntrustStatus())) {
+            return null;
+        }
+        return SysDataUtil.getNameFromDataDict(DictCode.委托状态, getEntrustStatus());
+    }
 
+    public String getEffectiveStatusName() {
+        return effectiveStatusName;
+    }
+
+    public void setEffectiveStatusName(String effectiveStatusName) {
+        this.effectiveStatusName = effectiveStatusName;
+    }
+
+    public BigDecimal getExecProcess() {
+        return execProcess;
+    }
+
+    public void setExecProcess(BigDecimal execProcess) {
+        this.execProcess = execProcess;
+    }
+
+    public BigDecimal getTransProcess() {
+        return transProcess;
+    }
+
+    public void setTransProcess(BigDecimal transProcess) {
+        this.transProcess = transProcess;
+    }
+
+    public String getSecType1Name() {
+        return secType1Name;
+    }
+
+    public void setSecType1Name(String secType1Name) {
+        this.secType1Name = secType1Name;
+    }
+
+    public String getPriceModelName() {
+        return priceModelName;
+    }
+
+    public void setPriceModelName(String priceModelName) {
+        this.priceModelName = priceModelName;
+    }
+
+    public String getPsName() {
+        return psName;
+    }
+
+    public void setPsName(String psName) {
+        this.psName = psName;
+    }
+
+    public String getSettleSpreedName() {
+        return settleSpreedName;
+    }
+
+    public void setSettleSpreedName(String settleSpreedName) {
+        this.settleSpreedName = settleSpreedName;
+    }
+
+    public Date getEtrDate() {
+        return etrDate;
+    }
+
+    public void setEtrDate(Date etrDate) {
+        this.etrDate = etrDate;
+    }
+
+    public String getApprover() {
+        return approver;
+    }
+
+    public void setApprover(String approver) {
+        this.approver = approver;
+    }
 }

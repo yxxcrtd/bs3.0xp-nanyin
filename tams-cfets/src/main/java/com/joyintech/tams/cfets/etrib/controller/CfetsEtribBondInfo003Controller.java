@@ -178,6 +178,20 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
             return new Message<CfetsEtrCalcReturnDto>().fail().setMessage("计算异常");
         }
     }*/
+   @PostMapping("/calAmountData")
+   @ApiOperation(value = "新建指令金额计算功能", notes = "新建指令金额计算功能")
+   @ResponseBody
+   public Message<AjaxResult> calAmountData(@RequestBody CfetsEtribBondInfo003Dto dto) {
+       try {
+           AjaxResult result = new AjaxResult();
+           cfetsetribBondInfo003Service.calcAmt(dto);
+           result.setData(dto);
+           return new Message<AjaxResult>().success().setData(result);
+       } catch (Exception e) {
+           logger.error("新建指令金额计算功能异常", e);
+           return new Message<AjaxResult>().fail().setMessage("新建指令金额计算功能异常");
+       }
+   }
 
 
 }
