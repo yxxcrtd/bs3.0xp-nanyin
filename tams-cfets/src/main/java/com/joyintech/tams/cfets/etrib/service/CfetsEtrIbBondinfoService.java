@@ -674,6 +674,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @return dto
      */
     public CfetsEtrFinProductDto getEtrFinProductInfo(String secId) {
+        secId = "F01_lhyh10.IB";
         CfetsEtrFinProductDto dto = cfetsetrIbBondinfoMapper.getEtrFinProductInfo(secId);
         if (dto != null) {
             //下一付息日若无，则显示为“—”
@@ -697,6 +698,23 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
             dto.setXqFlg(xqfangshi);
         }
+        dto.setSecName("10-23-债券名称");
+        dto.setSecType("10-23-债券分类");
+        dto.setIssuer("10-23-发行人");
+        dto.setVdate("2021-10-23");
+        dto.setMdate("2021-10-25");
+        dto.setLastqx(BigDecimal.TEN);
+        dto.setValueSource("中债登");
+        dto.setValueDate("2022-11-11");
+        dto.setLastPaydate("2023-10-22");
+        dto.setRateType("到期支付");
+        dto.setRate(BigDecimal.ZERO);
+        dto.setZxGrade("债项评级");
+        dto.setZtGrade("主体评级");
+        dto.setXqFlg("是");
+        dto.setXqdate("2024-01-23");
+        dto.setPriceXq(BigDecimal.ONE);
+        dto.setPriceTj(BigDecimal.ZERO);
         return dto;
     }
     public Page<SelectOptionDto> getfinprodIdForAdd(CfetsSearchInfoDto dto) {
