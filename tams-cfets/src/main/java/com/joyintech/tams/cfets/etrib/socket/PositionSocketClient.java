@@ -30,6 +30,8 @@ public class PositionSocketClient {
     
     @Value("${webSocketKey}")
     private String webSocketKey;
+
+    boolean isStart = false;
     
     @PostConstruct
     public void init(){
@@ -53,6 +55,11 @@ public class PositionSocketClient {
     private WebSocketClientUtil util = null;
     
     public boolean start(){
+        
+        if (isStart){
+            return true;
+        }
+        
         boolean rs = true;
         /**
          * 头寸监听余额变化，更新投管数据库流水余额表
@@ -86,23 +93,31 @@ public class PositionSocketClient {
                 
                 @Override
                 public void onClose() {
+                    isStart = false; // 服务关闭
+                    
                     // 重连
                     logger.info("头寸服务关闭，开始重连");
                     
                     try {util.close();} catch (IOException e) {e.printStackTrace();}
-
+                    isStart = false;
+                    
                     // 每间隔10秒重连
                     loopStart();
-                    
+
+                    isStart = true; // 启动成功
                     logger.info("头寸服务启动成功。。。");
                 }
             });
+
+            // 启动成功
+            isStart = true; // 服务启动成功
             
             // 启动时发送一次
             send();
         } catch (Exception e) {
             e.printStackTrace();
             rs = false;
+            isStart = false; // 服务启动失败
         }
         return rs;
     }
