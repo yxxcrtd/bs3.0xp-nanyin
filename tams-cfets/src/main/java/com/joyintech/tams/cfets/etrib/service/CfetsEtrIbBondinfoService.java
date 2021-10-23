@@ -512,16 +512,19 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         /*T日可用现金*/
         resp.add(BaseMap.newMap()
                 .put("field", "t0kyxj")
+                .put("name", "T日可用现金（元）")
                 .put("amount", "0.00")
                 .put("type", "xj"));
         /*T+1日可用现金*/
         resp.add(BaseMap.newMap()
                 .put("field", "t1kyxj")
+                .put("name", "T+1日可用现金（元）")
                 .put("amount", "0.00")
                 .put("type", "xj"));
         /*账户现金*/
         resp.add(BaseMap.newMap()
                 .put("field", "zhxj")
+                .put("name", "账户现金（元）")
                 .put("amount", "0.00")
                 .put("type", "xj"));
 
@@ -530,6 +533,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*融入券卖空待购回持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "rrqmkdghcc")
+                    .put("name", "融入券卖空待购回持仓（元）")
                     .put("amount", "0.00")
                     .put("type", "cc"));
         }
@@ -539,6 +543,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*资产T日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "zctrkycc")
+                    .put("name", "资产T日可用持仓（元）")
                     .put("amount", "0.00")
                     .put("type", "cc"));
         }
@@ -548,6 +553,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*资产T+1日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "zct1rkycc")
+                    .put("name", "资产T+1日可用持仓（元）")
                     .put("amount", "0.00")
                     .put("type", "cc"));
         }
@@ -557,6 +563,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*本方券T日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "bfqtrkycc")
+                    .put("name", "本方券T日可用持仓（元）")
                     .put("amount", "0.00")
                     .put("type", "cc"));
         }
@@ -566,6 +573,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*本方券T+1日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "bfqt1rkycc")
+                    .put("name", "本方券T+1日可用持仓（元）")
                     .put("amount", "0.00")
                     .put("type", "cc"));
         }
@@ -575,6 +583,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*融入券T日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "rrqtrkycc")
+                    .put("name", "融入券T日可用持仓（元）")
                     .put("amount", "0.00")
                     .put("type", "cc"));
         }
@@ -584,6 +593,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*融入券T+1日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "rrqt1rkycc")
+                    .put("name", "融入券T+1日可用持仓（元）")
                     .put("amount", "0.00")
                     .put("type", "cc"));
         }
@@ -598,16 +608,19 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         /*T日可用现金*/
         resp.add(BaseMap.newMap()
                 .put("field", "T0KYXJ")
+                .put("name", "T日可用现金（元）")
                 .put("amount", bm.getBigDecimalStr("T0KYXJ", "0.00"))
                 .put("type", "xj"));
         /*T+1日可用现金*/
         resp.add(BaseMap.newMap()
                 .put("field", "T1KYXJ")
+                .put("name", "T+1日可用现金（元）")
                 .put("amount", bm.getBigDecimalStr("T1KYXJ", "0.00"))
                 .put("type", "xj"));
         /*账户现金*/
         resp.add(BaseMap.newMap()
                 .put("field", "ZHXJ")
+                .put("name", "账户现金（元）")
                 .put("amount", bm.getBigDecimalStr("ZHXJ", "0.00"))
                 .put("type", "xj"));
 
@@ -616,6 +629,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*融入券卖空待购回持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "RRQMKDGHCC")
+                    .put("name", "融入券卖空待购回持仓（元）")
                     .put("amount", bm.getBigDecimalStr("RRQMKDGHCC", "0.00"))
                     .put("type", "cc"));
         }
@@ -625,6 +639,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*资产T日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "ZCTRKYCC")
+                    .put("name", "资产T日可用持仓（元）")
                     .put("amount", bm.getBigDecimalStr("ZCTRKYCC", "0.00"))
                     .put("type", "cc"));
         }
@@ -634,6 +649,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*资产T+1日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "ZCT1RKYCC")
+                    .put("name", "资产T+1日可用持仓（元）")
                     .put("amount", bm.getBigDecimalStr("ZCT1RKYCC", "0.00"))
                     .put("type", "cc"));
         }
@@ -643,6 +659,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*本方券T日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "BFQTRKYCC")
+                    .put("name", "本方券T日可用持仓（元）")
                     .put("amount", bm.getBigDecimalStr("BFQTRKYCC", "0.00"))
                     .put("type", "cc"));
         }
@@ -652,6 +669,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*本方券T+1日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "BFQT1RKYCC")
+                    .put("name", "本方券T+1日可用持仓（元）")
                     .put("amount", bm.getBigDecimalStr("BFQT1RKYCC", "0.00"))
                     .put("type", "cc"));
         }
@@ -661,6 +679,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*融入券T日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "RRQTRKYCC")
+                    .put("name", "融入券T日可用持仓（元）")
                     .put("amount", bm.getBigDecimalStr("RRQTRKYCC", "0.00"))
                     .put("type", "cc"));
         }
@@ -670,6 +689,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             /*融入券T+1日可用持仓*/
             resp.add(BaseMap.newMap()
                     .put("field", "RRQT1RKYCC")
+                    .put("name", "融入券T+1日可用持仓（元）")
                     .put("amount", bm.getBigDecimalStr("RRQT1RKYCC", "0.00"))
                     .put("type", "cc"));
         }
