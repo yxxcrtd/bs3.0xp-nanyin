@@ -31,6 +31,8 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.common.base.entity.WflEtrEntrust;
 import com.joyintech.tams.common.base.entity.WflEtrEntrustAdd;
+import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingDto;
+import com.joyintech.tams.component.business.basicdata.service.BusiProductRatingService;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -47,6 +49,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -83,6 +86,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     private IPlatformDate iPlatformDate;
     @Autowired
     private CfetsEtrIbBondinfo002Mapper cfetsEtrIbBondinfo002Mapper;
+
+    /**
+     * 产品评级
+     **/
+    @Autowired
+    private BusiProductRatingService busiProductRatingService;
     /**
      * 持仓信息查询
      *
@@ -674,9 +683,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @return dto
      */
     public CfetsEtrFinProductDto getEtrFinProductInfo(String secId) {
-        secId = "F01_lhyh10.IB";
         CfetsEtrFinProductDto dto = cfetsetrIbBondinfoMapper.getEtrFinProductInfo(secId);
+        Map<String, Object> map = new HashMap<>();
         if (dto != null) {
+            map.put("secId",secId);
+            map.put("marketId",dto.getMarketId());
             //下一付息日若无，则显示为“—”
             if (StringUtil.isEmpty(dto.getLastPaydate())) {
                 dto.setLastPaydate("--");
@@ -689,6 +700,77 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             if (StringUtil.isEmpty(dto.getXqFlg())) {
                 dto.setXqFlg("无");
             }
+            //            获取信用评级结果
+            List<BusiFinProductRatingDto> ztList = busiProductRatingService.getZtBestRatingByOrgId(map);
+            if (ztList != null && ztList.size() > 0) {
+//                遍历获取主体评级明细
+                for (BusiFinProductRatingDto busdto : ztList) {
+                    if (DictCodeListExt3.评级来源类型_外部.getValue().equals(busdto.getInOrOut())) {
+//                        主体评级为主体评级明细的评级结果
+                        dto.setZtGrade(busdto.getGradeResult());
+                    }
+                    if (DictCodeListExt3.评级来源类型_内部.getValue().equals(busdto.getInOrOut())) {
+                        dto.setZtGrade(busdto.getGradeResult());
+                    }
+                }
+            }
+
+//            以标的市场代码查询最优先债项评级
+            List<BusiFinProductRatingDto> zxList = busiProductRatingService.getZxBestRatingByMarketId(map);
+            if (zxList != null && zxList.size() > 0) {
+//                遍历获取债项评级明细
+                for (BusiFinProductRatingDto busdto : zxList) {
+                    if (DictCodeListExt3.评级来源类型_外部.getValue().equals(busdto.getInOrOut())) {
+//                        主体评级为债项评级明细的评级结果
+                        dto.setZxGrade(busdto.getGradeResult());
+                    }
+                    if (DictCodeListExt3.评级来源类型_内部.getValue().equals(busdto.getInOrOut())) {
+                        dto.setZxGrade(busdto.getGradeResult());
+                    }
+
+                }
+            }
+
+//            估值日<=交易日取最大 估值来源=中债登
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                if (dto.getValueDate() != null) {
+                    Date valueDate = sdf.parse(dto.getValueDate());
+                    Date maxDate = cfetsetrIbBondinfoMapper.getMaxTradeDate(secId);
+                    if (maxDate != null) {
+                        if (maxDate.compareTo(valueDate) <= 0 && dto.getValueSource().equals(DictCodeList.估值来源_中债登_CBC.getValue())){
+                            dto.setValueDate(dto.getValueDate());
+                        }else {
+                            dto.setValueDate(" ");
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            调整后的计算结束日>交易日取最小 现金流类型=利息
+            try {
+                if (dto.getLastPaydate() != null) {
+                    Date lastPaydate = sdf.parse(dto.getLastPaydate());
+                    Date minDate = cfetsetrIbBondinfoMapper.getMinTradeDate(secId);
+                    if (minDate != null) {
+                        if (minDate.compareTo(lastPaydate) > 0 && dto.getRateType().equals("02")) {
+                            dto.setLastPaydate(dto.getLastPaydate());
+                        }else {
+                            dto.setLastPaydate(" ");
+                        }
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            现金流类型=利息
+            if (dto.getRateType() != null && dto.getRateType().equals("02")) {
+                dto.setRateType(dto.getRateType());
+            }else {
+                dto.setRateType(" ");
+            }
 
 //            若为含权债，显示为含权债的行权方式；若有多个行权方式，用分号“;”隔开
             String xqfangshi = "";
@@ -698,23 +780,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
             dto.setXqFlg(xqfangshi);
         }
-        dto.setSecName("10-23-债券名称");
-        dto.setSecType("10-23-债券分类");
-        dto.setIssuer("10-23-发行人");
-        dto.setVdate("2021-10-23");
-        dto.setMdate("2021-10-25");
-        dto.setLastqx(BigDecimal.TEN);
-        dto.setValueSource("中债登");
-        dto.setValueDate("2022-11-11");
-        dto.setLastPaydate("2023-10-22");
-        dto.setRateType("到期支付");
-        dto.setRate(BigDecimal.ZERO);
-        dto.setZxGrade("债项评级");
-        dto.setZtGrade("主体评级");
-        dto.setXqFlg("是");
-        dto.setXqdate("2024-01-23");
-        dto.setPriceXq(BigDecimal.ONE);
-        dto.setPriceTj(BigDecimal.ZERO);
         return dto;
     }
     public Page<SelectOptionDto> getfinprodIdForAdd(CfetsSearchInfoDto dto) {

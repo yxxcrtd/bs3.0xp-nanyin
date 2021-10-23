@@ -79,10 +79,16 @@ public class CfetsEtrFinProductDto {
     private BigDecimal zcky_qmze;
 
     /**
-     * 债券名称
+     * 债券全称
      */
-    @ApiModelProperty(required = false,name="secName",value="债券名称")
+    @ApiModelProperty(required = false,name="secName",value="债券全称")
     private String secName;
+
+    /**
+     * 债券简称
+     */
+    @ApiModelProperty(required = false,name="secAbbr",value="债券简称")
+    private String secAbbr;
 
     /**
      * 债券分类
@@ -201,6 +207,14 @@ public class CfetsEtrFinProductDto {
      * 担保人
      */
     private String sponsorName;
+
+    public String getSecAbbr() {
+        return secAbbr;
+    }
+
+    public void setSecAbbr(String secAbbr) {
+        this.secAbbr = secAbbr;
+    }
 
     /**
      * 市场代码

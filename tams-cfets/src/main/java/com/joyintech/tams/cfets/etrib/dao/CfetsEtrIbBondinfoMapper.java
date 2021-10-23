@@ -14,6 +14,7 @@ import com.joyintech.tams.cfets.etrib.dto.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -81,4 +82,9 @@ public interface CfetsEtrIbBondinfoMapper {
     List<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(CfetsEtrIbBondPosiPage001RequestDto pageParam);
 
     Map queryPositionInfo(CfetsEtrIbBondPosiInfoRequestDto RequestDto);
+
+    //    交易日取最大值
+    Date getMaxTradeDate(String secId);
+    //    交易日取最小值
+    Date getMinTradeDate(String secId);
 }

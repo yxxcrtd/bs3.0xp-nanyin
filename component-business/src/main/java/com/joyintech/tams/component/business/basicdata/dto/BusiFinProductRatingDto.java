@@ -69,6 +69,25 @@ public class BusiFinProductRatingDto extends BaseEntity {
 	 */
 	private String mstRatingResult02;
 
+	/**
+	 * 内外部类型
+	 */
+	private String inOrOut;
+
+	/**
+	 * 获取内外部类型
+	 */
+	public String getInOrOut() {
+		return inOrOut;
+	}
+
+	/**
+	 * 设置内外部类型
+	 */
+	public void setInOrOut(String inOrOut) {
+		this.inOrOut = inOrOut;
+	}
+
 	public String getMarketId() {
 		return marketId;
 	}

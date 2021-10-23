@@ -460,7 +460,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     public Message<CfetsEtrFinProductDto> getEtrFinProductInfo(@RequestBody String secId) {
         try {
             CfetsEtrFinProductDto dto = cfetsEtrIbBondinfoService.getEtrFinProductInfo(secId);
-            return new Message<CfetsEtrFinProductDto>().success().setData(dto);
+            return new Message<CfetsEtrFinProductDto>(dto).success().setData(dto);
         } catch (Exception e) {
             logger.error("查询功能异常", e);
             return new Message<CfetsEtrFinProductDto>().fail().setMessage("查询异常");
