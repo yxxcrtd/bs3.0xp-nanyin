@@ -498,7 +498,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrInvestBondInfoDto entity : dtolist){
-                //etrInvestBondInfoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
+              //  etrInvestBondInfoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
             }
             // add by zhangrui1 批量委托关闭 start
             // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态

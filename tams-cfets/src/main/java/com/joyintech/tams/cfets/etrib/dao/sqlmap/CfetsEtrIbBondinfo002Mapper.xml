@@ -24,8 +24,8 @@
 			<result column="TYPE_9" property="assetType1" jdbcType="VARCHAR" />
 			<result column="TYPE_10" property="assetType10" jdbcType="VARCHAR" />
 			<result column="TYPE_11" property="assetType11" jdbcType="VARCHAR" />
-			<result column="VDATE" property="finvdate" jdbcType="DATE" />
-			<result column="MDATE" property="finmdate" jdbcType="DATE" />
+			<result column="VDATE" property="finvdate" jdbcType="VARCHAR" />
+			<result column="MDATE" property="finmdate" jdbcType="VARCHAR" />
 			<result column="CCY" property="ccy" jdbcType="VARCHAR" />
 		</association>
 	</resultMap>
@@ -41,8 +41,8 @@
 		T2.TYPE_9,
 		T2.TYPE_10,
 		T2.TYPE_11,
-		T1.VDATE,
-		T1.MDATE,
+		to_char(T1.VDATE,'yyyy-MM-dd') VDATE,
+		to_char(T1.MDATE, 'yyyy-MM-dd') MDATE,
 		T1.CCY
 		FROM
 		FIN_PRODUCT T1

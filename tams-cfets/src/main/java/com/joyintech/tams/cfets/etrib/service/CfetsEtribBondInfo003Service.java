@@ -32,7 +32,11 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.controller.EntrustCommonBaseController;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.business.common.util.UserUtil;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfo002Mapper;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbPosPortfolioRequest;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbPositionRequest;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
@@ -263,10 +267,41 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     public void doInsert(CfetsEtribBondInfo003Dto entity, OperationType type){
         if ("submit".equals(entity.getOperateType())) {
             if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos())) {
+                List<CfetsEtrIbPosPortfolioRequest> ptlList=new ArrayList<>();
                 for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                     dto.setWorkflowId(entity.getWorkflowId());
                     doInsertFlowMethod(entity.getOperateType(), initBaseEtrInvestInfoDto(dto));
+                    CfetsEtrIbPosPortfolioRequest posport=new CfetsEtrIbPosPortfolioRequest();
+                    posport.setPortfolioId(dto.getPortfolioId());
+                    posport.setTradeId(dto.getEntrustId());
+                    posport.setCashAcctId("11111");
+                    posport.setSecAcctId("22222");
+                    posport.setSecAmount(dto.getEntrustNum());
+                    posport.setCashAmount(dto.getFpriceAmt());
+                    posport.setInvAim("AC");
+                    posport.setIntegrateSecAmount(dto.getEntrustIntegrateNum());
+                    posport.setOwnSecAmount(dto.getEntrustOwnNum());
+                    ptlList.add(posport);
                 }
+                //TODO 调用头寸
+                CfetsEtrIbPositionRequest req=new CfetsEtrIbPositionRequest();
+                req.setInterfaceType("Bond001");
+                req.setUserId(UserUtil.getUserid());
+                req.setTotalTradeId(entity.getTotalEtrustId());
+                req.setFlowStatus("01");
+                req.setModelType("ETR");
+                req.setBalanceCheck("N");
+                req.setBusiType("02");
+                req.setTradePlace("01");
+                req.setSettleSpeed(entity.getSettleSpeed());
+                req.setBusiAct("01");
+                req.setPs(entity.getPs());
+                req.setSystemAct("01");
+                req.setCdate(entity.getEtrDate());
+                req.setCcy(entity.getCcy());
+                req.setFinprodId(entity.getFinprodId());
+                req.setPtlList(ptlList);
+                PositionHttpRequest.send(req);
             }
         }
         //无附件上传，删除
