@@ -5,12 +5,14 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 //@PropertySource("classpath:config.properties")
 @Component
+@Lazy(value=false)
 public class PositionHttpRequest {
 
     public final static String CODE_TIMEOUT = "410";        // 超时或通信异常，需冲正
