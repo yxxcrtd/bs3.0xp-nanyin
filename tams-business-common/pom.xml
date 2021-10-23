@@ -55,5 +55,11 @@
 			<groupId>com.joyintech</groupId>
 			<artifactId>joyintech-workflow</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.joyintech.service</groupId>
+            <artifactId>service-interf</artifactId>
+            <version>1.1.0</version>
+            <scope>compile</scope>
+        </dependency>
 	</dependencies>
 </project>
