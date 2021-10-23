@@ -93,8 +93,6 @@ public class PositionSocketClient {
                 
                 @Override
                 public void onClose() {
-                    isStart = false; // 服务关闭
-                    
                     // 重连
                     logger.info("头寸服务关闭，开始重连");
                     
