@@ -273,7 +273,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     doInsertFlowMethod(entity.getOperateType(), initBaseEtrInvestInfoDto(dto));
                     CfetsEtrIbPosPortfolioRequest posport=new CfetsEtrIbPosPortfolioRequest();
                     posport.setPortfolioId(dto.getPortfolioId());
-                    posport.setTradeId(dto.getEntrustId());
+                    posport.setEtrId(dto.getEntrustId());
                     posport.setCashAcctId("11111");
                     posport.setSecAcctId("22222");
                     posport.setSecAmount(dto.getEntrustNum());
