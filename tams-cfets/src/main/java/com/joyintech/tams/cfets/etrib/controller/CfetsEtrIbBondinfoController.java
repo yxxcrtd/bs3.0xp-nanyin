@@ -22,6 +22,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfo002Service;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
@@ -57,6 +58,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -425,6 +427,30 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }catch (Exception e) {
             logger.error("查询头寸信息分页列表异常",e);
             return new Message<List<BaseMap>>().fail().setMessage(e.getMessage());
+        }
+    }
+
+    @PostMapping(value="/export")
+    @ResponseBody
+    @ApiOperation(value = "excel导出", notes = "excel导出")
+    public void export(@RequestBody ExportRequestDto requestDto, HttpServletResponse response) {
+        try {
+            List<BaseMap> header = requestDto.getHeader();
+            List dataList = null;
+            if (StringUtil.equals("checked", requestDto.getType())){
+                dataList = (List) requestDto.getData();
+            }else if (StringUtil.equals("condition", requestDto.getType())){
+                // 数据
+                CfetsEtrIbBondPosiPage001RequestDto dto = requestDto.getRequestDto(CfetsEtrIbBondPosiPage001RequestDto.class);
+                dataList = cfetsEtrIbBondinfoService.queryPositionsPage(1, 500000, dto).getRoot();
+            }else{
+                // 导出方式不合法
+                throw new RuntimeException("导出方式不合法");
+            }
+            ExcelUitl.doExport("投资指令", header, dataList, response);
+        } catch (Exception e) {
+            logger.error("excel导出异常:",e);
+            e.printStackTrace();
         }
     }
     

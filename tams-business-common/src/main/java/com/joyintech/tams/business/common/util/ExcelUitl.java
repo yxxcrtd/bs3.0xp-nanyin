@@ -9,13 +9,18 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 
 public class ExcelUitl {
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(ExcelUitl.class);
+	
 	public static void createExcelTemplate(File excelTemplateFile,String sheetName,List<ExcelColumn> columns) {
 		List<List<String>> list = new ArrayList<List<String>>(2);
 		List<String> head = new ArrayList<String>(columns.size());
@@ -139,7 +144,7 @@ public class ExcelUitl {
 		}
 	}
 
-	public static void doExport(String fileName, List<Map> heads, List<Map> dataList, HttpServletResponse response) {
+	public static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
 		OutputStream os = null;
 		File excelFile = null;
 		String dir = UUID.randomUUID().toString();
@@ -173,20 +178,14 @@ public class ExcelUitl {
 			os.write(File2byte(excelFile));
 			os.flush();
 		} catch (Exception e) {
-//                logger.error("doExport错误...", e);
-			e.printStackTrace();
+			logger.error("doExport错误...", e);
 			throw new RuntimeException(e.getMessage());
 		} finally {
-			try {
-				os.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			try {os.close();} catch (IOException e) {e.printStackTrace();}
 			/**
 			 * 删除文件夹包含文件
 			 */
 			delFolder(dir);
-//			excelFile.delete();
 		}
 	}
 
