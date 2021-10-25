@@ -10,11 +10,7 @@
  
 package com.joyintech.tams.common;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -406,6 +402,14 @@ public abstract class FileImpService extends InterfService{
 //                }
 //            }
             InputStream in = new FileInputStream(file);
+            
+            // 将文件中的特殊字符传转换成转义字符 by caozhenming 20211022 start
+            // 将输入流转换成字符串
+            String inputString = new BufferedReader(new InputStreamReader(in)).lines().collect(Collectors.joining("\n"));
+            String xmlString = inputString.replaceAll("&","&amp;");
+            // 将字符串转换成输入流
+            in = new ByteArrayInputStream(xmlString.getBytes());
+            // 将文件中的特殊字符传转换成转义字符 by caozhenming 20211022 end
             // 解析处理开始前，登录监控信息表，状态处理中
             ChbFileReadMonitorInfo monitorInfoDto = new ChbFileReadMonitorInfo();
             monitorInfoDto.setHandleSeqno(
