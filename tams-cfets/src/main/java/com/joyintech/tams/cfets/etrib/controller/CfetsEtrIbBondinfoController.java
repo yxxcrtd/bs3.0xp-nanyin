@@ -454,10 +454,10 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
     
-    @PostMapping("/getEtrFinProductInfo")
+    @PostMapping("/getEtrFinProductInfo/{secId}")
     @ApiOperation(value = "债券信息查询功能", notes = "债券信息查询功能")
     @ResponseBody
-    public Message<CfetsEtrFinProductDto> getEtrFinProductInfo(@RequestBody String secId) {
+    public Message<CfetsEtrFinProductDto> getEtrFinProductInfo(@PathVariable("secId") String secId) {
         try {
             CfetsEtrFinProductDto dto = cfetsEtrIbBondinfoService.getEtrFinProductInfo(secId);
             return new Message<CfetsEtrFinProductDto>(dto).success().setData(dto);

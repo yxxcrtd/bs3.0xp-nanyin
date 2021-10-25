@@ -755,47 +755,46 @@ from
 
     <select id="getEtrFinProductInfo" parameterType="String" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto">
         SELECT
-        t1.FINPROD_ID secId,                            --查询的主键ID
-        t1.FINPROD_MARKET_ID marketId,                  --市场代码
-        t1.FINPROD_NAME secName,                        --债券全称
-        t1.FINPROD_ABBR secAbbr,                        --债券简称
-        sdl.ITEM_VALUE secType,                         --债券分类
-        t1.ISSUER issuer,                               --发行人
-        TO_CHAR(t1.VDATE,'yyyy-MM-dd') vdate,           --起息日
-        TO_CHAR(t1.MDATE,'yyyy-MM-dd') mdate,           --到期日
-        MBVI.LAST_PERIOD lastqx,                        --剩余期限
-        MBVI.VALUE_SOURCE valueSource,                  --数据来源
-        MBVI.VALUE_DATE valueDate,                    --估值日
-        TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate,  --下一付息日
-        t6.INT_TYPE rateType,                           --利率类型
-        t6.RATE*100 rate,                               --票面利率
-        MBCR.GRADE_RESULT zxGrade,                      --债项评级
-        MBCR.GRADE_RESULT ztGrade,                      --主体评级
-        t1.IS_RIGHT xqFlg,                              --含权标识
-        A.EXERCISE_DATE xqdate,                         --下一行权日
-        MBVI.NETVALUATION_EXERCISE priceXq,             --估价净价（行权）
-        MBVI.NETVALUATION_RECOMMENDED priceTj,          --估价净价（推荐）
-        t2.TYPE_7,                                      --债券二级分类
-        t1.ISSUE_TYPE,                                  --发行方式
-        t1.SPONSOR sponsorName                         --担保人
---         vfpr.INNEROUTER inOrOut                         --内外部类型
+        t1.FINPROD_ID secId,
+        t1.FINPROD_MARKET_ID marketId,
+        t1.FINPROD_NAME secName,
+        t1.FINPROD_ABBR secAbbr,
+        sdl.ITEM_VALUE secType,
+        t1.ISSUER issuer,
+        TO_CHAR(t1.VDATE,'yyyy-MM-dd') vdate,
+        TO_CHAR(t1.MDATE,'yyyy-MM-dd') mdate,
+        MBVI.LAST_PERIOD lastqx,
+        MBVI.VALUE_SOURCE valueSource,
+        MBVI.VALUE_DATE valueDate,
+        TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate,
+        t6.INT_TYPE rateType,
+        t6.RATE*100 rate,
+        MBCR.GRADE_RESULT zxGrade,
+        MBCR.GRADE_RESULT ztGrade,
+        t1.IS_RIGHT xqFlg,
+        A.EXERCISE_DATE xqdate,
+        MBVI.NETVALUATION_EXERCISE priceXq,
+        MBVI.NETVALUATION_RECOMMENDED priceTj,
+        t2.TYPE_7,
+        t1.ISSUE_TYPE,
+        t1.SPONSOR sponsorName
         FROM FIN_PRODUCT t1
         LEFT JOIN FIN_PRODUCT_TYPE t2 ON t1.FINPROD_ID = t2.FINPROD_ID
         LEFT JOIN SYS_DATADICT_LIST sdl ON sdl.ITEM_CODE = t2.TYPE_2
         LEFT JOIN MST_BOND_VALUATION_INFO MBVI ON t1.FINPROD_MARKET_ID = MBVI.SEC_ID
         LEFT JOIN (
-            select
-            f2.FINPROD_ID,
-            min(f1.PAY_DATE) PAY_DATE
-            from
-            fin_cash_plan f1
-            inner join fin_cash_info f2 on f1.CASH_ID = f2.CASH_ID
-            inner join FIN_PRODUCT f3 on f2.FINPROD_ID = f3.FINPROD_ID
-            where
-            f2.CASH_TYPE_2 = 'C02' and
-            f3.FINPROD_TYPE2 = 'F01'
-            group by f2.FINPROD_ID
-            ) t4 on t4.FINPROD_ID = t1.FINPROD_ID
+        select
+        f2.FINPROD_ID,
+        min(f1.PAY_DATE) PAY_DATE
+        from
+        fin_cash_plan f1
+        inner join fin_cash_info f2 on f1.CASH_ID = f2.CASH_ID
+        inner join FIN_PRODUCT f3 on f2.FINPROD_ID = f3.FINPROD_ID
+        where
+        f2.CASH_TYPE_2 = 'C02' and
+        f3.FINPROD_TYPE2 = 'F01'
+        group by f2.FINPROD_ID
+        ) t4 on t4.FINPROD_ID = t1.FINPROD_ID
         left join fin_cash_info t5 on t5.FINPROD_ID = t1.FINPROD_ID AND t5.CASH_TYPE_2 = 'C02' and t5.FINPROD_TYPE = '01'
         LEFT JOIN FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID
         LEFT JOIN mst_customer_info t7 ON t1.SPONSOR = t7.CUSTOMER_ID
