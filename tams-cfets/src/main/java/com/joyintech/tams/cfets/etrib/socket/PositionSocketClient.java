@@ -31,7 +31,8 @@ public class PositionSocketClient {
     @Value("${webSocketKey}")
     private String webSocketKey;
 
-    boolean isStart = false;
+    boolean isStart = false;  // 是否启动开关
+    boolean loopFlag = false; // 10秒重连循环开关
     
     @PostConstruct
     public void init(){
@@ -44,14 +45,7 @@ public class PositionSocketClient {
             }
         }).start();
     }
-    
-    public void loopStart(){
-        while (!start()){
-            logger.error("头寸通信失败，10秒后重连");
-            try {TimeUnit.SECONDS.sleep(10l);} catch (InterruptedException e) {e.printStackTrace();}
-        }
-    }
-    
+
     private WebSocketClientUtil util = null;
     
     public boolean start(){
@@ -119,6 +113,22 @@ public class PositionSocketClient {
         }
         return rs;
     }
+
+
+    public void loopStart(){
+        if(loopFlag){
+            return;
+        }
+        loopFlag = true;
+        synchronized (this){
+            while (!start()){
+                logger.error(webSocketUrl + ":头寸通信失败，10秒后重连");
+                try {TimeUnit.SECONDS.sleep(10l);} catch (InterruptedException e) {e.printStackTrace();}
+            }
+        }
+        loopFlag =false;
+    }
+
 
     /**
      * 转换map

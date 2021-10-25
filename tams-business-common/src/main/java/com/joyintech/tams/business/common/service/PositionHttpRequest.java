@@ -1,8 +1,10 @@
 package com.joyintech.tams.business.common.service;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.exception.PositionException;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -36,18 +38,101 @@ public class PositionHttpRequest {
         // 
         String res = sendPrivate(req);
         Map message = JsonUtils.json2Object(res, Map.class);
+        if (message != null || !StringUtil.equals("success", message.get("code"))){
+            if(StringUtil.equals("FL0007", message.get("code"))){
+                throw new PositionException(CODE_BUSI_REFUSE + "|" + (message==null?"":message.get("message")));
+            }else {
+                revokeCheck(message, req);
+            }
+        }else {
+            throw new PositionException("头寸返回数据为空！");
+        }
+    }
+
+    /**
+     * 校验是否需要头寸冲正
+     * @param message
+     * @param req
+     */
+    private static void revokeCheck(Map message, Object req) {
+        if (StringUtil.equals("DS0000", message.get("code")) || 
+                StringUtil.equals("DS0001", message.get("code")) ||
+                StringUtil.equals("DS0002", message.get("code")) ||
+                StringUtil.equals("DS0003", message.get("code")) ||
+                StringUtil.equals("DS0004", message.get("code")) ||
+                StringUtil.equals("DS0005", message.get("code")) ||
+                StringUtil.equals("DS0006", message.get("code")) ||
+                StringUtil.equals("DS0008", message.get("code")) ||
+                StringUtil.equals("DS0009", message.get("code")) ||
+                StringUtil.equals("DS0010", message.get("code")) ||
+                StringUtil.equals("CT0001", message.get("code"))){
+            throw new PositionException("头寸更新异常：" + message.toString());
+        } else{
+            String jsonStr = JsonUtils.object2Json(req);
+            BaseMap reqMap = JsonUtils.json2Object(jsonStr, BaseMap.class);
+            revoke(reqMap.getString("totalTradeId"), reqMap.getString("modelType"), "");
+        }
+    }
+
+    /**
+     * 正常撤回、退回
+     * @param totalId
+     * @param modelType
+     */
+    public static void sendRevoke(String totalId, String modelType){
+        BaseMap bm = BaseMap.newMap()
+                .put("totalTradeId", totalId)
+                .put("modelType", modelType)
+                .put("userId", LoginUserUtil.getUserName())
+                .put("interfaceType", "Bond001");
+        String msg = cancel(bm);
+        Map message = JsonUtils.json2Object(msg, Map.class);
         if (message == null || !StringUtil.equals("success", message.get("code"))){
             if(StringUtil.equals("FL0007", message.get("code"))){
                 throw new PositionException(CODE_BUSI_REFUSE + "|" + (message==null?"":message.get("message")));
+            }else {
+                throw new PositionException("头寸返回数据为空！");
             }
         }
     }
 
+    /**
+     * 异常冲正
+     * @param totalId
+     * @param modelType
+     * @param e
+     */
+    public static void revoke(String totalId, String modelType, Exception e){
+        BaseMap bm = BaseMap.newMap()
+                .put("totalTradeId", totalId)
+                .put("modelType", modelType)
+                .put("userId", LoginUserUtil.getUserName())
+                .put("interfaceType", "Bond001");
+        cancel(bm);
+        throw new PositionException(e.getMessage());
+    }
+
+    public static void revoke(String totalId, String modelType, String errorMsg){
+        BaseMap bm = BaseMap.newMap()
+                .put("totalTradeId", totalId)
+                .put("modelType", modelType)
+                .put("userId", LoginUserUtil.getUserName())
+                .put("interfaceType", "Bond001");
+        cancel(bm);
+        // 页面端根据异常信息返回前端
+        throw new PositionException(errorMsg);
+    }
+    
     private static String sendPrivate(Object param) {
         return httpPostRequest(positionUrl + "/position/endpoint/updatePosition", param);
     }
 
-    public static String cancel(Object param) {
+    /**
+     * 冲正撤销
+     * @param param
+     * @return
+     */
+    private static String cancel(Object param) {
         return httpPostRequest(positionUrl + "/position/endpoint/cancel", param);
     }
     

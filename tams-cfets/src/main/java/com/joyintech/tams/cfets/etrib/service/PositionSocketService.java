@@ -28,7 +28,6 @@ public class PositionSocketService extends BaseService {
      */
     public void insertOrUpdate(BaseMap dataMap) {
         int count = webSocketMapper.select(dataMap);
-        System.out.println(count);
         if (count == 0){
             webSocketMapper.insert(dataMap);
         }else{

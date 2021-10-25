@@ -475,6 +475,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
         // 条件非空校验
         posiInfoCheckCondition(requestDto);
+
+        if (StringUtil.isEmpty(requestDto.getFinprodId()) || requestDto.getPortfolioIdList() == null || requestDto.getPortfolioIdList().size() == 0){
+            return nullData(flag);
+        }
         
         // 查询头寸信息
         Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(requestDto);
@@ -496,14 +500,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
         if (StringUtil.isEmpty(requestDto.getCdate())){
             requestDto.setCdate(iPlatformDate.getSysDateStr());
-        }
-
-        if (StringUtil.isEmpty(requestDto.getFinprodId())){
-            throw new RuntimeException("finprodId不能为空！");
-        }
-        
-        if (requestDto.getPortfolioIdList() == null || requestDto.getPortfolioIdList().size() == 0){
-            throw new RuntimeException("portfolioIdList不能为空！");
         }
     }
 
