@@ -10,6 +10,7 @@ delete from REP_INFO where REP_ID = 'CP_003_001' and REPORT_NAME = '一体化资
 delete from REP_INFO where REP_ID = 'CP_003_002' and REPORT_NAME = '一体化利润表';
 delete from REP_INFO where REP_ID = 'CP_003_003' and REPORT_NAME = '一体化所有者权益变动表';
 
+
 delete from REP_SCREEN where REP_ID = 'CP_003_001';
 delete from REP_SCREEN where REP_ID = 'CP_003_002';
 delete from REP_SCREEN where REP_ID = 'CP_003_003';
