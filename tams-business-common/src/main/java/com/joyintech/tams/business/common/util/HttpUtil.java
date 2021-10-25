@@ -63,7 +63,7 @@ public class HttpUtil {
      * @param params
      * @return
      */
-    public static String doPost(String url, String params) throws Exception {
+    public static String doPost(String url, String params) {
 
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);// 创建httpPost   
@@ -83,11 +83,11 @@ public class HttpUtil {
                 String jsonString = EntityUtils.toString(responseEntity);
                 return jsonString;
             } else{
-                //logger.error("请求返回:"+state+"("+url+")");
-                throw new PositionException(status!=null?status.toString():"http请求异常");
+                throw new RuntimeException("http请求异常:" + status!=null?status.toString():"http请求异常");
             }
-        }
-        finally {
+        }catch (Exception e){
+            throw new RuntimeException("http通信异常:" + e.getMessage());
+        } finally {
             if (response != null) {
                 try {
                     response.close();

@@ -23,6 +23,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfo002Service;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
@@ -377,11 +378,13 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         processParameter.setWorkFlowParameter(params);
         allDto.setWorkflowParameter("new|wy1,wy2||1|EtribBondInfo003|EtribBondInfo003_btn_submit|false");
 
-        String msg = cfetsEtrIbBondinfo003Service.start(processParameter, allDto);
+        String msg = null;
         try {
+            msg = cfetsEtrIbBondinfo003Service.start(processParameter, allDto);
             AjaxResult m =new AjaxResult(msg);
             return new Message<AjaxResult>().success().setData(m);
         }catch (Exception e) {
+            PositionUtil.ajaxErrorReturn(e);
             logger.error("保存银行间多组合指令新建失败",e);
             return new Message<AjaxResult>().fail().setMessage("保存银行间多组合指令新建失败");
         }
