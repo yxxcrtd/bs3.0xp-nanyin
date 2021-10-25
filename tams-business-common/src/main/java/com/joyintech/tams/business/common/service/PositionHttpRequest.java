@@ -15,8 +15,6 @@ import java.util.Map;
 @Lazy(value=false)
 public class PositionHttpRequest {
 
-    public final static String CODE_TIMEOUT = "410";        // 超时或通信异常，需冲正
-    public final static String CODE_SEND_ERROR = "420";     // 发送异常
     public final static String CODE_BUSI_REFUSE = "300";    // 返回业务信息拒绝，余额不足，需前端确认
 
     private static String positionUrl;
@@ -41,8 +39,6 @@ public class PositionHttpRequest {
         if (message == null || !StringUtil.equals("success", message.get("code"))){
             if(StringUtil.equals("FL0007", message.get("code"))){
                 throw new PositionException(CODE_BUSI_REFUSE + "|" + (message==null?"":message.get("message")));
-            }else{
-                throw new PositionException(CODE_SEND_ERROR + "|" + (message==null?"":message.get("message")));
             }
         }
     }
@@ -64,15 +60,14 @@ public class PositionHttpRequest {
     public static String query(Object param) {
         return httpPostRequest(positionUrl + "/position/search/balance/etrSecPositionRule", param);
     }
-    
+
+    /**
+     * 转换为json
+     * @param url
+     * @param param
+     * @return
+     */
     private static String httpPostRequest(String url, Object param){
-        try {
-            return HttpUtil.doPost(url, JsonUtils.object2Json(param));
-        } catch (Exception e) {
-            /**
-             * 请求失败，通信或网络超时
-             */
-            throw new PositionException(CODE_TIMEOUT + "|" + e.getMessage());
-        }
+        return HttpUtil.doPost(url, JsonUtils.object2Json(param));
     }
 }

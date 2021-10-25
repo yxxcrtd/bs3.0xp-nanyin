@@ -1,5 +1,6 @@
 package com.joyintech.tams.business.common.util;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.constant.PositionDictCodeListExt;
@@ -31,7 +32,7 @@ public class PositionUtil {
      * @param e
      * @return
      */
-    public static Message<String> ajaxErrorReturn(Exception e) {
+    public static Message<AjaxResult> ajaxErrorReturn(Exception e) {
         String message = e.getMessage();
         if (StringUtil.isNotEmpty(message)){
             String[] arr = message.split("\\|");
@@ -39,19 +40,16 @@ public class PositionUtil {
                 /**
                  * 头寸引擎业务失败，待前端确认是否校验
                  */
-                if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_REFUSE, arr[0])
-                        || StringUtil.contains(arr[0], PositionHttpRequest.CODE_BUSI_REFUSE)){
+                if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_REFUSE, arr[0])){
                     /**
                      * 余额不足，前端判断code 300确认
                      */
-                    return new Message<String>().fail().setCode(PositionHttpRequest.CODE_BUSI_REFUSE).setData(arr[1] + " 请确认是否继续？");
-                }else{
-                    return new Message<String>().fail().setData(arr[1]);
+                    return new Message<AjaxResult>().fail().setCode(PositionHttpRequest.CODE_BUSI_REFUSE).setData(new AjaxResult(arr[1] + " 请确认是否继续？"));
                 }
             }else {
-                return new Message<String>().fail().setData(message);
+                return new Message<AjaxResult>().fail().setData(new AjaxResult(message));
             }
         }
-        return new Message<String>().fail().setData(null);
+        return new Message<AjaxResult>().fail().setData(new AjaxResult("无返回信息，未知异常"));
     }
 }
