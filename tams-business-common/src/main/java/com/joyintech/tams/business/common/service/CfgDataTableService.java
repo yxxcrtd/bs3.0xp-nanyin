@@ -119,11 +119,12 @@ public class CfgDataTableService {
         List<CfgDataTableShow> list;
         //获取登录用户的ID
         String userId = UserUtil.getUserid();
-        List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);
-        if (uDataList != null && uDataList.size() < 1) {
+        //List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);
+        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, userId);
+        if (null == flag) {
             list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_NO, null);
         } else {
-            list = uDataList;
+            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);;
         }
         return list;
     }

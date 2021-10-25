@@ -50,7 +50,7 @@ public class CfgDataTableController {
             return new Message<>(cfgDataTableService.getByPageCodeAndDtCode(pageCode,dtCode));
         } catch (Exception e) {
             logger.error("查询数据表格设置", e);
-            return new Message<List<CfgDataTableShow>>().fail();
+            return new Message<List<CfgDataTableShow>>().fail().setMessage(Constant.GET_DATATABLE_ERROR);
         }
     }
 
@@ -61,8 +61,8 @@ public class CfgDataTableController {
             cfgDataTableService.setDataTable(dataTableShowList);
             return new Message<String>().success();
         } catch (Exception e) {
-            logger.error("数据表格设置", e);
-            return new Message<String>().fail();
+            logger.error("数据表格设置失败", e);
+            return new Message<String>().fail().setMessage(Constant.SET_DATATABLE_ERROR);
         }
     }
 }
