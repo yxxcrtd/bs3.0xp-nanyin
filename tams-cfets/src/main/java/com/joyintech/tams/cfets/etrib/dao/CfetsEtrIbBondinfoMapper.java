@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.cfets.etrib.dao;
 
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.cfets.etrib.dto.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -83,6 +84,20 @@ public interface CfetsEtrIbBondinfoMapper {
 
     Map queryPositionInfo(CfetsEtrIbBondPosiInfoRequestDto RequestDto);
 
+    /**
+     * 查询前一日持仓指标
+     * @param baseMap
+     * @return
+     */
+    List<BaseMap> selectLastCostAmt(BaseMap baseMap);
+
+    /**
+     * 当日交易数据查询
+     * @param baseMap
+     * @return
+     */
+    List<BaseMap> selectCurrTrdData(BaseMap baseMap);
+    
     //    交易日取最大值
     Date getMaxTradeDate(String secId);
     //    交易日取最小值

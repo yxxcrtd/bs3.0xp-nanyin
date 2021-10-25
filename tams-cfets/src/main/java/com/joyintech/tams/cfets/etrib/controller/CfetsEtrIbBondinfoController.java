@@ -436,7 +436,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @PostMapping(value="/export")
     @ResponseBody
     @ApiOperation(value = "excel导出", notes = "excel导出")
-    public void export(@RequestBody ExportRequestDto requestDto, HttpServletResponse response) {
+    public void export(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
         try {
             List<BaseMap> header = requestDto.getHeader();
             List dataList = null;
