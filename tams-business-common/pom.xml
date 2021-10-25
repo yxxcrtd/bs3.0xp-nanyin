@@ -5,7 +5,6 @@
 		<groupId>com.joyintech</groupId>
 		<artifactId>tams-parent</artifactId>
 		<version>0.0.4</version>
-		<relativePath/>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>tams-business-common</artifactId>
@@ -43,23 +42,5 @@
 			<artifactId>easyexcel</artifactId>
 			<version>3.0.0-beta3</version>
 		</dependency>
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>framework-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>framework-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>joyintech-workflow</artifactId>
-		</dependency>
-        <dependency>
-            <groupId>com.joyintech.service</groupId>
-            <artifactId>service-interf</artifactId>
-            <version>1.1.0</version>
-            <scope>compile</scope>
-        </dependency>
 	</dependencies>
 </project>
