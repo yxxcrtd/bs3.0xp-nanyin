@@ -638,9 +638,9 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
         try {
             CfetsEtrInvestBondInfoReqDto item = dto.getSelectedItem().get(0);
-            CfetsEtrIbBondinfoDto list = cfetsEtrIbBondinfoService.findEtrinfo(item);
+            CfetsEtrIbBondinfoDto result = cfetsEtrIbBondinfoService.findEtrinfo(item);
             AjaxResult m =new AjaxResult();
-            m.setData(list);
+            m.setData(result);
             return new Message<AjaxResult>().success().setData(m);
         } catch (Exception e) {
             logger.error("查询功能异常", e);

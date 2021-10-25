@@ -32,8 +32,8 @@ public class CfetsEtrInvestBondInfoReqDto {
     @ApiModelProperty(name="entrustId",value="委托代码",example="01")
     private String entrustId;
 
-    @ApiModelProperty(name="closeWay",value="委托关闭方式",example="01")
-    private String closeWay;
+ /*   @ApiModelProperty(name="closeWay",value="委托关闭方式",example="01")
+    private String closeWay;*/
 
     @ApiModelProperty(name="entrustStatus",value="委托状态",example="01")
     private String entrustStatus;
@@ -54,13 +54,13 @@ public class CfetsEtrInvestBondInfoReqDto {
         this.entrustId = entrustId;
     }
 
-    public String getCloseWay() {
+   /* public String getCloseWay() {
         return closeWay;
     }
 
     public void setCloseWay(String closeWay) {
         this.closeWay = closeWay;
-    }
+    }*/
 
     public String getEntrustStatus() {
         return entrustStatus;

@@ -79,6 +79,13 @@ public class CfetsEtrIbBondinfoDto extends BaseEntity{
     @ApiModelProperty(name="ps",value="交易方向Code",example="T01")
     private String ps;
 
+    @ApiModelProperty(name="remark",value="备注",example="A1")
+    private String remark;
+
+    @ApiModelProperty(name="businessModel",value="业务模式",example="A1")
+    private String businessModel;
+
+
     public String getEntrustId() {
         return entrustId;
     }
@@ -247,8 +254,12 @@ public class CfetsEtrIbBondinfoDto extends BaseEntity{
         this.remark = remark;
     }
 
-    @ApiModelProperty(name="remark",value="备注",example="A1")
-    private String remark;
 
+    public String getBusinessModel() {
+        return businessModel;
+    }
 
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
+    }
 }
