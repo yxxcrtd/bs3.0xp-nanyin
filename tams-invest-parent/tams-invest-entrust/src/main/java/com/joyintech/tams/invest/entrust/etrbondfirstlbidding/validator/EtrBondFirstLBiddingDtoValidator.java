@@ -19,8 +19,10 @@ import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.component.base.entrust.impl.dto.TrdCommandDispatcher001Dto;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -49,6 +51,7 @@ public class EtrBondFirstLBiddingDtoValidator implements BeanValidator{
     private EtrBondFirstBiddingService service;
     @Autowired
     private FinProductMapper finProductMapper;
+
 
     List<ValidMessage> resultList = new ArrayList<ValidMessage>();
 
@@ -187,8 +190,21 @@ public class EtrBondFirstLBiddingDtoValidator implements BeanValidator{
         	}
         	 
         }
+        //同一债券同一投标日，若已有分发记录，再次对同一标的同一投标日的委托做分发时，限制只能分发给同一交易员。否则系统给出提示信息并限制操作的check
+        TrdCommandDispatcher001Dto dispatcher001Dto = new TrdCommandDispatcher001Dto();
+        dispatcher001Dto.setBussBidDate(DateUtil.format(dto.getEntrustDate(),DateUtil.DEFAULT_DATE_FORMAT_EN));
+        dispatcher001Dto.setFinprodMarketId(dto.getFinprodMarketId());
+        List<TrdCommandDispatcher001Dto> listTraders=service.getTraders(dispatcher001Dto);
+        if(!listTraders.isEmpty() && StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo()) && StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())){
+            for (TrdCommandDispatcher001Dto list2 : listTraders) {
+                if(!StringUtil.equals(list2.getTrader(),dto.getEtrInvestPersonInfo().getTrader())&&StringUtil.isNotEmpty(list2)){
+                    errorList.add(new ValidMessage(this.getMessage("TRD_I_0004")+list2.getTrader()));
+                    resultList.add(new ValidMessage("type11",
+                            getMessage("COMMON_E_0057", getMessage("EtrBondFirstLBidding002.type11"))));
+                }
+            }
+        }
         return errorList;
-    
     }
 
 }
