@@ -1,12 +1,9 @@
 package com.joyintech.tams.business.common.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.tams.business.common.entity.JoyinDataDictEntity;
 import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
