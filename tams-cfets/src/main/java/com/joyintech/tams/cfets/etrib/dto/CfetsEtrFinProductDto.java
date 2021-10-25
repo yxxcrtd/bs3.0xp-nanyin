@@ -237,6 +237,25 @@ public class CfetsEtrFinProductDto {
     private String gradeResult;
 
     /**
+     * 评级类型
+     */
+    private String otype;
+
+    /**
+     * 获取评级类型
+     */
+    public String getOtype() {
+        return otype;
+    }
+
+    /**
+     * 设置评级类型
+     */
+    public void setOtype(String otype) {
+        this.otype = otype;
+    }
+
+    /**
      * 获取估值日
      */
     public String getValueDate() {

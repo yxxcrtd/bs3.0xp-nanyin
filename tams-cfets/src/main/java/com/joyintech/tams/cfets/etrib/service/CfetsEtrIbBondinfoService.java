@@ -716,6 +716,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             if (StringUtil.isEmpty(dto.getXqFlg())) {
                 dto.setXqFlg("无");
             }
+            if (dto.getOtype().equals("01")) {
+                dto.setZxGrade("");
+            } else if (dto.getOtype().equals("02")) {
+                dto.setZtGrade("");
+            }
             //            获取信用评级结果
             List<BusiFinProductRatingDto> ztList = busiProductRatingService.getZtBestRatingByOrgId(map);
             if (ztList != null && ztList.size() > 0) {
@@ -782,19 +787,27 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 e.printStackTrace();
             }
 //            现金流类型=利息
-            if (dto.getRateType() != null && dto.getRateType().equals("02")) {
-                dto.setRateType(dto.getRateType());
-            }else {
-                dto.setRateType(" ");
-            }
+//            if (dto.getRateType() != null && dto.getRateType().equals("02")) {
+//                dto.setRateType(dto.getRateType());
+//            }else {
+//                dto.setRateType(" ");
+//            }
 
-//            若为含权债，显示为含权债的行权方式；若有多个行权方式，用分号“;”隔开
-            String xqfangshi = "";
-            List<String> plan = cfetsetrIbBondinfoMapper.getEtrFinExerciseInfo(secId);
-            if (plan != null && plan.size() > 0) {
-                xqfangshi = StringUtil.joinString(plan,";");
-            }
-            dto.setXqFlg(xqfangshi);
+            dto.setXqFlg(dto.getXqFlg().equals("Y")?"是":"否");
+//
+//            if (dto.getXqFlg().equals("Y")) {
+//                dto.setXqFlg("是");
+//            }else if (dto.getXqFlg().equals("N")) {
+//                dto.setXqFlg("否");
+//            }
+
+////            若为含权债，显示为含权债的行权方式；若有多个行权方式，用分号“;”隔开
+//            String xqfangshi = "";
+//            List<String> plan = cfetsetrIbBondinfoMapper.getEtrFinExerciseInfo(secId);
+//            if (plan != null && plan.size() > 1) {
+//                xqfangshi = StringUtil.joinString(plan,";");
+//                dto.setXqFlg(xqfangshi);
+//            }
         }
         return dto;
     }

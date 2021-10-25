@@ -767,20 +767,20 @@ from
         MBVI.VALUE_SOURCE valueSource,
         MBVI.VALUE_DATE valueDate,
         TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate,
-        t6.INT_TYPE rateType,
+        sd.ITEM_VALUE rateType,
         t6.RATE*100 rate,
-        MBCR.GRADE_RESULT zxGrade,
-        MBCR.GRADE_RESULT ztGrade,
+        MBCR.O_TYPE otype,
+        sd1.ITEM_VALUE zxGrade,
+        sd1.ITEM_VALUE ztGrade,
         t1.IS_RIGHT xqFlg,
-        A.EXERCISE_DATE xqdate,
+        TO_CHAR(A.EXERCISE_DATE,'yyyy-MM-dd') xqdate,
         MBVI.NETVALUATION_EXERCISE priceXq,
-        MBVI.NETVALUATION_RECOMMENDED priceTj,
+        MBVI.NETPRICE priceTj,
         t2.TYPE_7,
         t1.ISSUE_TYPE,
         t1.SPONSOR sponsorName
         FROM FIN_PRODUCT t1
         LEFT JOIN FIN_PRODUCT_TYPE t2 ON t1.FINPROD_ID = t2.FINPROD_ID
-        LEFT JOIN SYS_DATADICT_LIST sdl ON sdl.ITEM_CODE = t2.TYPE_2
         LEFT JOIN MST_BOND_VALUATION_INFO MBVI ON t1.FINPROD_MARKET_ID = MBVI.SEC_ID
         LEFT JOIN (
         select
@@ -809,7 +809,10 @@ from
         </if>
         group by A.FINPROD_ID
         ) B on t1.FINPROD_ID = B.FINPROD_ID
-        LEFT JOIN MST_BOND_CREDIT_RATING MBCR ON t1.TRUSTEE_ID = MBCR.O_CODE
+        LEFT JOIN MST_BOND_CREDIT_RATING MBCR ON t1.FINPROD_MARKET_ID = MBCR.O_CODE
+        LEFT JOIN SYS_DATADICT_LIST sdl ON sdl.ITEM_CODE = t2.TYPE_2
+        LEFT JOIN SYS_DATADICT_LIST sd ON sd.DICT_CODE = 'INT_TYPE' AND sd.ITEM_CODE = t6.INT_TYPE
+        LEFT JOIN SYS_DATADICT_LIST sd1 ON sd1.DICT_CODE = 'MAIN_GRADE_RESULT' AND sd1.ITEM_CODE = MBCR.GRADE_RESULT
         LEFT JOIN FIN_EXERCISE_PLAN A ON t1.FINPROD_ID = A.FINPROD_ID
         where 1=1
         AND t1.FINPROD_TYPE2='F01'

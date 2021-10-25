@@ -462,6 +462,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ResponseBody
     public Message<CfetsEtrFinProductDto> getEtrFinProductInfo(@PathVariable("secId") String secId) {
         try {
+//            secId = "F01_lvzq001.IB";
             CfetsEtrFinProductDto dto = cfetsEtrIbBondinfoService.getEtrFinProductInfo(secId);
             return new Message<CfetsEtrFinProductDto>(dto).success().setData(dto);
         } catch (Exception e) {
