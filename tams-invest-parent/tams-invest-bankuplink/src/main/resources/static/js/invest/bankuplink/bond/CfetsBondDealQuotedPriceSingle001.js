@@ -220,6 +220,11 @@
                 $('#CfetsBondDealQuotedPriceSingle001_exerYield').attr('disabled', false);
                 $("input[name='calculateField']").attr('disabled', false);
             }
+
+            if (data.assetType10 == assetTypeTwo_abs) {
+                $('#CfetsBondDealQuotedPriceSingle001_div_abs1').toggle(true);
+                $('#CfetsBondDealQuotedPriceSingle001_div_abs2').toggle(true);
+            }
         }else{
             $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val("");
             $("#CfetsBondDealQuotedPriceSingle001_settleCcy").val(CCY_CNY).trigger("change");
