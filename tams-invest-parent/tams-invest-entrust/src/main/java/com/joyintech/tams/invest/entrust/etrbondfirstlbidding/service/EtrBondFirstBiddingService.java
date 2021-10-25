@@ -28,6 +28,7 @@ import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
+import com.joyintech.tams.component.base.entrust.impl.dto.TrdCommandDispatcher001Dto;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
@@ -728,5 +729,16 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
                         + "/EtrBondFirstLBidding/getMainConsignee"
                 , param,
                 SelectOptionDto.class);
+    }
+
+    /**
+     * 根据委托代码查询一投标债的交易人员的信息
+     * @param
+     * @return
+     */
+    public List<TrdCommandDispatcher001Dto> getTraders(TrdCommandDispatcher001Dto dto) {
+        return	restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
+                + "/TrdCommandDispatcher001/getTraders",dto,TrdCommandDispatcher001Dto.class);
+
     }
 }
