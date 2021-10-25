@@ -722,9 +722,9 @@ from
     </select>
 
     <!--头寸信息-->
-    <select id="queryPositionInfo" parameterType="Map" resultType="map">
         SELECT
-        ROUND(sum(nvl(summary.t0kyxj,0)),2) AS T0KYXJ, /*T日可用现金*/
+    <select id="queryPositionInfo" parameterType="Map" resultType="map">
+    ROUND(sum(nvl(summary.t0kyxj,0)),2) AS T0KYXJ, /*T日可用现金*/
         ROUND(sum(nvl(summary.t1kyxj,0)),2) AS T1KYXJ, /*T+1日可用现金*/
         ROUND(sum(nvl(summary.AMOUNT,0)),2) AS ZHXJ, /*账户现金*/
         ROUND(sum(nvl(summary.rrqmkdgh,0)),2) AS RRQMKDGHCC, /*融入券卖空待购回持仓*/
@@ -919,4 +919,72 @@ from
 		WHERE FINPROD_ID = #{secId}
 		)
 	</select>
+    <!-- 指令管理查询 -->
+    <select id="findEtrinfo" parameterType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrInvestBondInfoReqDto"
+            resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfoDto">
+        select aaa.* from (
+        select
+        T1.ENTRUST_ID entrustId,
+        decode(T1.ENTRUST_STATUS,'08','流程中','有效') as effectiveStatusName,
+        T1.ENTRUST_STATUS entrustStatus,
+        T8.REAL_NAME invManagerId,
+        T1.PORTFOLIO_ID portfolioId,
+        T2.PORTFOLIO_NAME portfolioName,
+        T1.FINPROD_ID,
+        T3.FINPROD_MARKET_ID finprodMarketId,
+        T3.FINPROD_ABBR finprodAbbr,
+        T4.TYPE_9 secType1,
+        T1.PS,
+        NVL(T1.ENTRUST_NUM,0) / 100 shareNum,
+        T1.PRICE_MODEL priceModel,
+        T1.PRICE unitPrice,
+        T7.FULL_PRICE allPrice,
+        T7.MATURE_YIELD*100 matureYield,
+        T7.EXER_YIELD*100 exerYield,
+        T7.SETTLE_SPREED,
+        T1.VDATE,
+        T1.MDATE,
+        NVL(T5.FINISH_AMT,0)/100 finishAmt,
+        round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transactioncom,
+        T1.REMARK
+        ,T1.COUNTER_ID counterId
+        ,NVL(T2.PARENT_PORTFOLIO_ID,T2.PORTFOLIO_ID) AS parentPortfolioId
+        ,T1.INV_AIM as invAim
+        ,round(NVL(10,0)*100/(T1.ENTRUST_NUM*100),4)*100 execProcess
+        ,round(NVL(30,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess
+        from
+        ETR_ENTRUST T1
+        INNER JOIN
+        PTL_PORTFOLIO_AUTHORITY PPA
+        ON
+        T1.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
+        LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
+        LEFT JOIN
+        (
+        SELECT
+        ENTRUST_ID,
+        SUM(
+        FINISH_AMT) as FINISH_AMT
+        FROM
+        ETR_FINISH_STATUS
+        GROUP BY
+        ENTRUST_ID) T5
+        ON T1.ENTRUST_ID = T5.ENTRUST_ID
+        LEFT
+        JOIN ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
+        LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
+        LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = T1.FINPROD_ID
+        where 1=1
+        <if test="entrustId != null and entrustId != ''">
+            AND T1.ENTRUST_ID = #{entrustId}
+        </if>
+        ) aaa
+        left join SYS_DATADICT_LIST sdl on aaa.entrustStatus=sdl.ITEM_CODE and sdl.DICT_CODE='ENTRUST_STATUS'
+        left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
+        left join SYS_DATADICT_LIST dictpriceModel on aaa.priceModel=dictpriceModel.ITEM_CODE and dictpriceModel.DICT_CODE='PRICE_MODEL'
+        order by sdl.ORDER_NO, aaa.entrustId DESC
+    </select>
 </mapper>

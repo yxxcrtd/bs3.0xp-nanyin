@@ -102,4 +102,12 @@ public interface CfetsEtrIbBondinfoMapper {
     Date getMaxTradeDate(String secId);
     //    交易日取最小值
     Date getMinTradeDate(String secId);
+
+    /**
+     * 根据指令编号查询数据
+     * @param pageParam
+     * @return
+     */
+    CfetsEtrIbBondinfoDto findEtrinfo(CfetsEtrInvestBondInfoReqDto dto);
+
 }

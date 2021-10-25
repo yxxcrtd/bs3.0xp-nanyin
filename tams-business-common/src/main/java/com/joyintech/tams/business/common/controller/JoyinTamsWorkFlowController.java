@@ -38,7 +38,7 @@ public class JoyinTamsWorkFlowController  {
 	private HttpServletRequest request;
 	 
 	@SuppressWarnings({ "unchecked" })
-	@ApiOperation(value = "查询审批人员列表", notes = "/common/workflow/listNextUser?pageId=EtrInvestBondInfo002&elementId=EtrInvestBondInfo002_btn_submit&searchValue=admin")
+	@ApiOperation(value = "查询审批人员列表", notes = "/common/workflow/listNextUser?pageId=CfetsEtrBondInfo001&elementId=CfetsEtrBondInfo001_btn_submit&searchValue=user")
 	@PostMapping("/listNextUser")
 	public Message<List<?>> listNextUser(){
 		try {

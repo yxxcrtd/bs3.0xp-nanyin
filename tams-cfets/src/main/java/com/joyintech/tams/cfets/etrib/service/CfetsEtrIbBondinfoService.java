@@ -990,4 +990,17 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         param.put("search",dto.getSearch());
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->cfetsEtrIbBondinfo002Mapper.selectPortfolioIdList(param));
     }
+    /**
+     * 指令信息查询
+     *
+     * @param page int
+     * @param length int
+     * @param pageParam int
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public CfetsEtrIbBondinfoDto findEtrinfo(CfetsEtrInvestBondInfoReqDto dto) {
+        return  cfetsetrIbBondinfoMapper.findEtrinfo(dto);
+    }
 }

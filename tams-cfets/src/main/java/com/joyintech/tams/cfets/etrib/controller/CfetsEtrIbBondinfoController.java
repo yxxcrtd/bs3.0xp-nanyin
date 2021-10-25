@@ -20,6 +20,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.trade.investtrade.commanddispatcher.service.TrdCommandDispatcher001Service;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
@@ -44,7 +45,9 @@ import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
+import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
 import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -61,10 +64,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -93,6 +93,22 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     private CfetsEtribBondInfo003Service cfetsEtrIbBondinfo003Service;
     @Autowired
     private CfetsEtrIbBondinfoService cfetsEtrIbBondinfoService;
+    /**
+     * 债券投资委托service
+     */
+    @Autowired
+    private EtrInvestBondInfoService etrInvestBondInfoService;
+    /**
+     * 委托共通
+     */
+    @Autowired
+    private EtrCommonService etrCommonService;
+
+    /**
+     * 指令分发service注入
+     */
+    @Autowired
+    private TrdCommandDispatcher001Service trdCommandDispatcher001Service;
 
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
@@ -338,7 +354,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             }
             // ----------add by zhangrui1 20200715 预占功能 end----------
         }
-        if (com.joyintech.framework.util.StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
+        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
             /*AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
                     dataList, DictCodeList.平安资产类型_债券.getValue(),
                     BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
@@ -361,7 +377,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         ProcessParameter<CfetsEtribBondInfo003Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<CfetsEtribBondInfo003Dto> params = new WorkFlowParameter<>();
 
-        params.setPageId("EtribBondInfo003");
+        params.setPageId("CfetsEtrBondInfo001");
         params.setElementId(allDto.getEtrInvestBondInfoDtos().get(0).getElementId());
         params.setBusinessCode(CfetsEtribBondInfo003Dto::getTotalEtrustId);
         params.setBusinessType(DictCodeList.共通业务类型_债券投资委托.getValue());
@@ -376,7 +392,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                         + this.getMessage("EtribBondInfo003.entrustAmt") + ":"
                         );
         processParameter.setWorkFlowParameter(params);
-        allDto.setWorkflowParameter("new|wy1,wy2||1|EtribBondInfo003|EtribBondInfo003_btn_submit|false");
+      // allDto.setWorkflowParameter("new|wy1,wy2||1|CfetsEtrBondInfo001|CfetsEtrBondInfo001_btn_submit|false");
 
         String msg = null;
         try {
@@ -489,7 +505,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             dd.setModelType("01");
             dd.setEntrustOwnNum(item.getEntrustOwnNum());
             dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum());
-            dd.setElementId("EtribBondInfo003_btn_submit");
+            dd.setElementId("CfetsEtrBondInfo001_btn_submit");
             etrInvestBondInfoDtosList.add(dd);
         }
         dto.setEtrInvestBondInfoDtos(etrInvestBondInfoDtosList);
@@ -521,14 +537,55 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
         }
     }
-    @PostMapping("close")
-    @ApiOperation(value = "关闭委托", notes = "关闭委托")
+    @PostMapping("/getManagers")
+    @ApiOperation(value = "投资经理查询", notes = "投资经理查询")
     @ResponseBody
-    public AjaxResult closeDelegate(@RequestBody EtrInvestBondInfoDto dto) throws Exception{
+    public Message<List<SelectOptionDto>> getManagers(String search){
+        try {
+            List<SelectOptionDto> list = trdCommandDispatcher001Service.getManager(search);
+            return new Message<List<SelectOptionDto>>().success().setData(list);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<List<SelectOptionDto>>().fail().setMessage("查询异常");
+        }
+    }
+    @ResponseBody
+    @ApiOperation(value = "撤回委托", notes = "撤回委托")
+    @RequestMapping("recall")
+    public Message<AjaxResult> recallDelegate(@RequestBody EtrInvestBondInfoDto dto) throws Exception {
+        //对选择的数据进行check
+        AjaxResult ajaxResult = this.recallDelegateCheckMethod(dto);
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+            return new Message<AjaxResult>().success().setData(ajaxResult);
+        }
         List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrInvestBondInfoDto entity : dtolist){
-              //  etrInvestBondInfoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
+                etrInvestBondInfoService.recallDelegate(entity);
+            }
+            // add by zhangrui1 批量撤销预占 start
+            EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeList.平安资产类型_债券.getValue(),
+                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+            // add by zhangrui1 批量撤销预占 end
+            return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_001")));
+
+        }
+        return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_002")));
+    }
+    @PostMapping("close")
+    @ApiOperation(value = "关闭委托", notes = "关闭委托")
+    @ResponseBody
+    public Message<AjaxResult> closeDelegate(@RequestBody EtrInvestBondInfoDto dto) throws Exception{
+        //对选择的数据进行check
+        AjaxResult ajaxResult = this.closeDelegateCheckMethod(dto);
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+            return new Message<AjaxResult>().success().setData(ajaxResult);
+        }
+        List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
+
+        if(dtolist != null && dtolist.size()>0){
+            for(EtrInvestBondInfoDto entity : dtolist){
+                etrInvestBondInfoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
             }
             // add by zhangrui1 批量委托关闭 start
             // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
@@ -542,7 +599,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                 //委托已有完成额度，做过交易，走关闭完成的逻辑，更新预占
                 List<String> closeEntrustIdList = new ArrayList<>();
                 for(EtrInvestBondInfoDto etrDto : dtolist) {
-                    if(com.joyintech.framework.util.StringUtil.isNotEmpty(etrFinishMap) && com.joyintech.framework.util.StringUtil.isNotEmpty(etrFinishMap.get(etrDto.getEntrustId()))
+                    if(StringUtil.isNotEmpty(etrFinishMap) && StringUtil.isNotEmpty(etrFinishMap.get(etrDto.getEntrustId()))
                             && BigDecimal.ZERO.compareTo(etrFinishMap.get(etrDto.getEntrustId()))<0) {
                         closeEntrustIdList.add(etrDto.getEntrustId());
                     }
@@ -552,7 +609,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                 }
 
                 //没有做过交易，直接关闭的
-                if(!com.joyintech.framework.util.StringUtil.isEmptyList(recallEntrustIdList)) {
+                if(!StringUtil.isEmptyList(recallEntrustIdList)) {
                     // add by yushilong 批量撤销预占 start
                     EntrustRdsCommonAop.doListPreOccupy(recallEntrustIdList, DictCodeList.平安资产类型_债券.getValue(),
                             BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
@@ -560,15 +617,125 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                 }
 
                 //已经有委托完成度的
-                if(!com.joyintech.framework.util.StringUtil.isEmptyList(closeEntrustIdList)) {
+                if(!StringUtil.isEmptyList(closeEntrustIdList)) {
                     EntrustCompleteUtil.doComplete(closeEntrustIdList);
                 }
             }
             // ZGZGST-2330:委托关闭判断是否有完成额度，分情况处理 fuyongsheng 20210919 edit end
             // add by zhangrui1 批量委托关闭 end
-            return new AjaxResult(this.getMessage("ETR_X_003"));
+            return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_003")));
         }
-        return new AjaxResult(this.getMessage("ETR_X_004"));
+        return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_004")));
     }
+    @ResponseBody
+    @ApiOperation(value = "修改委托", notes = "修改委托")
+    @RequestMapping("modifyDelegate")
+    public Message<AjaxResult> modifyDelegate(@RequestBody CfetsEtrInvestBondInfoReqDto dto) throws Exception {
+        //对选择的数据进行check
+        AjaxResult ajaxResult = this.modifyDelegateCheckMethod(dto);
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+            return new Message<AjaxResult>().fail().setData(ajaxResult);
+        }
+        try {
+            CfetsEtrInvestBondInfoReqDto item = dto.getSelectedItem().get(0);
+            CfetsEtrIbBondinfoDto list = cfetsEtrIbBondinfoService.findEtrinfo(item);
+            AjaxResult m =new AjaxResult();
+            m.setData(list);
+            return new Message<AjaxResult>().success().setData(m);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<AjaxResult>().fail().setMessage("查询异常");
+        }
+    }
+    public AjaxResult closeDelegateCheckMethod(EtrInvestBondInfoDto dto){
+        if(!StringUtil.isNotEmpty(dto)||StringUtil.isEmptyList(dto.getSelectedItem())){
+            AjaxResult res=new AjaxResult();
+            ValidMessage  validMessage= new ValidMessage();
+            validMessage.setMessage(getMessage("COMMON_E_0002"));
+            res.setErrorList(Arrays.asList(validMessage));
+            return res;
+        }
+        List<EtrInvestBondInfoDto> selectedItem = dto.getSelectedItem();
+        AjaxResult ajaxResult=new AjaxResult();
+        if(StringUtil.isNotEmpty(selectedItem)){
+            List<String> entrustIds = new ArrayList<>();
+            for(EtrInvestBondInfoDto Item:selectedItem){
+                if(StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_流程中.getValue())){
+                    AjaxResult res=new AjaxResult();
+                    ValidMessage  validMessage= new ValidMessage();
+                    validMessage.setMessage("流程中的数据不允许关闭");
+                    res.setErrorList(Arrays.asList(validMessage));
+                    return res;
+                }
+                entrustIds.add(Item.getEntrustId());
+            }
+            Map<String,Object> param= new HashMap<>();
+            param.put("entrustIds",entrustIds);
+            ajaxResult.setErrorList(etrCommonService.entrustCheckCloseList(param));
+            return ajaxResult;
+        }
+        ValidMessage  validMessage= new ValidMessage();
+        validMessage.setMessage("请选择列表中数据");
+        ajaxResult.setErrorList(Arrays.asList(validMessage));
+        return ajaxResult;
+    }
+    public AjaxResult recallDelegateCheckMethod(EtrInvestBondInfoDto dto){
+        if(!StringUtil.isNotEmpty(dto)||StringUtil.isEmptyList(dto.getSelectedItem())){
+            AjaxResult res=new AjaxResult();
+            ValidMessage  validMessage= new ValidMessage();
+            validMessage.setMessage(getMessage("COMMON_E_0002"));
+            res.setErrorList(Arrays.asList(validMessage));
+            return res;
+        }
+        List<EtrInvestBondInfoDto> selectedItem = dto.getSelectedItem();
+        AjaxResult ajaxResult=new AjaxResult();
+        if(StringUtil.isNotEmpty(selectedItem)){
+            for(EtrInvestBondInfoDto Item:selectedItem){
+                if(!StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_待接收.getValue())
+                        && !StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_待分发.getValue())
+                ){
+                    AjaxResult res=new AjaxResult();
+                    ValidMessage  validMessage= new ValidMessage();
+                    validMessage.setMessage("只有指令状态为待分发、待接收的指令允许撤回");
+                    res.setErrorList(Arrays.asList(validMessage));
+                    return res;
+                }
+            };
+        }
+        return new AjaxResult();
+    }
+    public AjaxResult modifyDelegateCheckMethod(CfetsEtrInvestBondInfoReqDto dto){
+        if(!StringUtil.isNotEmpty(dto)||StringUtil.isEmptyList(dto.getSelectedItem())){
+            AjaxResult res=new AjaxResult();
+            ValidMessage  validMessage= new ValidMessage();
+            validMessage.setMessage(getMessage("COMMON_E_0002"));
+            res.setErrorList(Arrays.asList(validMessage));
+            return res;
+        }
+        List<CfetsEtrInvestBondInfoReqDto> selectedItem = dto.getSelectedItem();
+        AjaxResult ajaxResult=new AjaxResult();
+        if(StringUtil.isNotEmpty(selectedItem)){
+            if(selectedItem.size()>1){
+                AjaxResult res=new AjaxResult();
+                ValidMessage  validMessage= new ValidMessage();
+                validMessage.setMessage("委托指令修改仅允许一条数据");
+                res.setErrorList(Arrays.asList(validMessage));
+                return res;
+            }
+            for(CfetsEtrInvestBondInfoReqDto Item:selectedItem){
+                if(!StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_已撤回.getValue())
+                        && !StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_已退回.getValue())
+                ){
+                    AjaxResult res=new AjaxResult();
+                    ValidMessage  validMessage= new ValidMessage();
+                    validMessage.setMessage("只有指令状态为已撤回、已退回的指令允许修改");
+                    res.setErrorList(Arrays.asList(validMessage));
+                    return res;
+                }
+            };
+        }
+        return new AjaxResult();
+    }
+
 
 }
