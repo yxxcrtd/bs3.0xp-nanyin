@@ -2,7 +2,6 @@ package com.joyintech.tams.common.base.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
-
 import java.math.BigDecimal;
 
 public class StlSecpRecon extends StlSecpReconKey {

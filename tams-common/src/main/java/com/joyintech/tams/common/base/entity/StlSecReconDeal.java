@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -116,11 +115,6 @@ public class StlSecReconDeal extends BaseEntity {
     private String ccy;
 
     /**
-     * null
-     */
-    private String termType;
-
-    /**
      * 成交数量
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -211,6 +205,9 @@ public class StlSecReconDeal extends BaseEntity {
 
     /**
      * 交易规费
+对账状态
+对账状态
+对账状态
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal tradeFee;
@@ -220,12 +217,6 @@ public class StlSecReconDeal extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal commissionAmt;
-
-    /**
-     * null
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal otherFeeamt;
 
     /**
      * 一级总费用
@@ -573,22 +564,6 @@ public class StlSecReconDeal extends BaseEntity {
     }
 
     /**
-     * 取得 null
-     * @return null
-     */
-    public String getTermType() {
-        return termType;
-    }
-
-    /**
-     * 设置 null
-     * @param termType null
-     */
-    public void setTermType(String termType) {
-        this.termType = termType == null ? null : termType.trim();
-    }
-
-    /**
      * 取得 成交数量
      * @return 成交数量
      */
@@ -831,7 +806,13 @@ public class StlSecReconDeal extends BaseEntity {
 
     /**
      * 取得 交易规费
+对账状态
+对账状态
+对账状态
      * @return 交易规费
+对账状态
+对账状态
+对账状态
      */
     public BigDecimal getTradeFee() {
         return tradeFee;
@@ -839,7 +820,13 @@ public class StlSecReconDeal extends BaseEntity {
 
     /**
      * 设置 交易规费
+对账状态
+对账状态
+对账状态
      * @param tradeFee 交易规费
+对账状态
+对账状态
+对账状态
      */
     public void setTradeFee(BigDecimal tradeFee) {
         this.tradeFee = tradeFee;
@@ -859,22 +846,6 @@ public class StlSecReconDeal extends BaseEntity {
      */
     public void setCommissionAmt(BigDecimal commissionAmt) {
         this.commissionAmt = commissionAmt;
-    }
-
-    /**
-     * 取得 null
-     * @return null
-     */
-    public BigDecimal getOtherFeeamt() {
-        return otherFeeamt;
-    }
-
-    /**
-     * 设置 null
-     * @param otherFeeamt null
-     */
-    public void setOtherFeeamt(BigDecimal otherFeeamt) {
-        this.otherFeeamt = otherFeeamt;
     }
 
     /**
