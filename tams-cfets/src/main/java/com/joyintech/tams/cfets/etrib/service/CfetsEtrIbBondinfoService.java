@@ -455,15 +455,179 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return entity;
     }
 
+    /**
+     * 持仓列表查询
+     * @param page
+     * @param length
+     * @param requestDto
+     * @return
+     */
     public Page<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(int page, int length, CfetsEtrIbBondPosiPage001RequestDto requestDto) {
         if (!StringUtil.isNotBlank(requestDto.getCdate())){
             requestDto.setCdate(iPlatformDate.getSysDateStr());
         }
         // 1.分页查询列表
         Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.queryPositionsPage(requestDto));
+
+        /**
+         * 根据组合、资产、交易日期、一级分类查询单位成本数据
+         */
+        Map<String, CfetsUnitCostDto> unitCostMap = calcEachCostAmtMap(requestDto);
+        result.getRoot().stream().map(r -> {
+            CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId() + r.getBusiModel());
+            if (dto != null){
+                // 持仓成本价（元）
+                r.setUnitCost(dto.getUnitCost());
+                // 持仓成本（万元）
+                r.setPositionsAmt(dto.getBuyCostAmt());
+                // 浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
+                r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
+            }
+            return r;
+        });
+        
         return result;
     }
 
+    /**
+     * @param requestDto
+     * @return
+     */
+    private Map<String, CfetsUnitCostDto> calcEachCostAmtMap(CfetsEtrIbBondPosiPage001RequestDto requestDto) {
+        /** 返回结果
+         * KEY:组合+资产代码+投资目的
+         * VALUE:持仓单位成本dto：
+         */
+        Map<String, CfetsUnitCostDto> resultMap = new HashMap<>();
+        
+        Date cdate = DateUtil.parse(requestDto.getCdate());
+        List<String> portfolioIdList = null;
+        if (StringUtil.isNotEmpty(requestDto.getPortfolioId())){
+            portfolioIdList = Arrays.asList(requestDto.getPortfolioId());
+        }
+        String finprodId = requestDto.getFinprodId();
+        String firstLevelType = requestDto.getType8();
+        
+        // 查询前一日持仓指标
+        List<BaseMap> lastCostAmt = selectLastCostAmt(cdate, portfolioIdList, finprodId, firstLevelType );
+        
+        if (lastCostAmt != null){
+            lastCostAmt.forEach(e -> {
+                if(BigDecimal.ZERO.compareTo(e.getBigDecimal("SHARE_AMT")) != 0){
+                    // 数量不为0时生成单位净价
+                    CfetsUnitCostDto dto = new CfetsUnitCostDto();
+                    
+                    dto.setBuyCostAmt(e.getBigDecimal("BUY_COST_AMT"));
+                    dto.setShareAmt(e.getBigDecimal("SHARE_AMT"));
+                    // 单位成本=成本*10000.0/数量， （EACH_COST = BUY_COST_AMT / SHARE_AMT）
+                    dto.setUnitCost(ArithmeticUtil.divide(
+                            e.getBigDecimal("BUY_COST_AMT").multiply(BigDecimal.valueOf(10000.0)), 
+                            e.getBigDecimal("SHARE_AMT"), 
+                            4));
+                    resultMap.put(getKey(e), dto);
+                }
+            });
+        }
+        
+        // 当日交易数据查询
+        List<BaseMap> currTrdData = selectCurrTrdData(cdate, portfolioIdList, finprodId, firstLevelType );
+        if (currTrdData != null){
+            currTrdData.forEach(i -> {
+                String key = getKey(i);
+                CfetsUnitCostDto dto = resultMap.get(key);
+                if (dto == null){
+                    dto = new CfetsUnitCostDto(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+                    resultMap.put(key, dto);
+                }
+                
+                if (StringUtil.equals(i.getString("PS"), DictCodeList.交易方向_买入.getValue())){
+                    // 成本
+                    BigDecimal thisBuyCostAmt = dto.getBuyCostAmt()
+                            .add(ArithmeticUtil.multiply(i.getBigDecimal("PRICE"), i.getBigDecimal("AMT")));
+                    dto.setBuyCostAmt(thisBuyCostAmt);
+                    // 数量
+                    dto.setShareAmt(dto.getShareAmt().add(i.getBigDecimal("AMT")));
+                    // 单位成本 = 成本/数量
+                    dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt().multiply(BigDecimal.valueOf(10000.0)), dto.getShareAmt(), 4));
+                }else{
+                    // 成本
+                    BigDecimal thisBuyCostAmt = dto.getBuyCostAmt()
+                            .subtract(ArithmeticUtil.multiply(i.getBigDecimal("PRICE"), i.getBigDecimal("AMT")));
+                    dto.setBuyCostAmt(thisBuyCostAmt);
+                    // 数量
+                    dto.setShareAmt(dto.getShareAmt().subtract(i.getBigDecimal("AMT")));
+                    // 单位成本 = 成本/数量
+                    dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt().multiply(BigDecimal.valueOf(10000.0)), dto.getShareAmt(), 2));
+                }
+                
+                resultMap.put(key, dto);
+            });
+        }
+        return resultMap;
+    }
+
+    private static String getKey(BaseMap bm){
+        return bm.getString("PORTFOLIO_ID") + bm.get("FINPROD_ID") + bm.get("INV_AIM");
+    }
+    
+    /**
+     * 查询前一日持仓指标
+     * @param cdate 交易日期
+     * @param portfolioIdList 组合代码
+     * @param finprodId 资产代码
+     * @param firstLevelType 债券一级分类
+     */
+    public List<BaseMap> selectLastCostAmt(Date cdate, List<String> portfolioIdList, String finprodId, String firstLevelType){
+        BaseMap reqMap = BaseMap.newMap()
+                .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())    // 债券
+                .put("SVR_TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue())           // 银行间
+                .put("cdate", DateUtil.addDay(cdate, -1));
+
+        if(portfolioIdList != null && portfolioIdList.size()>0) reqMap.put("portfolioIdList", portfolioIdList);
+        if(StringUtil.isNotEmpty(finprodId)) reqMap.put("finprodId",finprodId);
+        if(StringUtil.isNotEmpty(firstLevelType)) reqMap.put("firstLevelType",firstLevelType);
+        
+        List<BaseMap> list = cfetsetrIbBondinfoMapper.selectLastCostAmt(reqMap);
+        /**
+         * 返回结果 
+         * PORTFOLIO_ID、FINPROD_ID、INV_AIM、
+         * BUY_COST_AMT 成本
+         * SHARE_AMT    数量
+         */
+        return list;
+    }
+
+    /**
+     * 当日交易数据查询
+     * @param cdate 交易日期
+     * @param portfolioIdList 组合代码
+     * @param finprodId 资产代码
+     * @param firstLevelType 债券一级分类
+     */
+    public List<BaseMap> selectCurrTrdData(Date cdate, List<String> portfolioIdList, String finprodId, String firstLevelType){
+        BaseMap reqMap = BaseMap.newMap()
+                .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())    // 债券
+                .put("SVR_TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue())           // 银行间
+                .put("PS_T01", DictCodeList.交易方向_买入.getValue())
+                .put("PS_T02", DictCodeList.交易方向_卖出.getValue())
+                .put("PS_T03", DictCodeList.交易方向_行权_回售.getValue())
+                .put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue())
+                .put("YN_N", DictCodeList.是否_否.getValue())
+                .put("cdate", cdate);
+
+        if(portfolioIdList != null && portfolioIdList.size()>0) reqMap.put("portfolioIdList", portfolioIdList);
+        if(StringUtil.isNotEmpty(finprodId)) reqMap.put("finprodId",finprodId);
+        if(StringUtil.isNotEmpty(firstLevelType)) reqMap.put("firstLevelType",firstLevelType);
+
+        List<BaseMap> list = cfetsetrIbBondinfoMapper.selectCurrTrdData(reqMap);
+        /**
+         *  PORTFOLIO_ID、FINPROD_ID、INV_AIM、PS
+         *  PRICE,  净价
+         *  AMT     数量
+         */
+        return list;
+    }
+    
     /**
      * 银行间指令，头寸信息
      * @param pageParam

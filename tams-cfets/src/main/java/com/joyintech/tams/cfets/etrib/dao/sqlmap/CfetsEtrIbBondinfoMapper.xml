@@ -665,6 +665,61 @@ from
         </if>
     </select>
 
+    <!-- 查询前一日持仓指标 -->
+    <select id="selectLastCostAmt" parameterType="Map" resultType="map">
+        select
+        a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM,
+        sum(nvl(a.BUY_COST_AMT, 0)) BUY_COST_AMT, sum(nvl(a.SHARE_AMT, 0)) SHARE_AMT
+        from PTL_SEC_VALUTION a
+        LEFT JOIN FIN_PRODUCT b ON a.FINPROD_ID =b.FINPROD_ID and b.FINPROD_TYPE2 =#{FINPROD_TYPE_TG_F01}
+        LEFT JOIN FIN_PRODUCT_TYPE c ON a.FINPROD_ID =c.FINPROD_ID
+        WHERE b.FINPROD_TYPE2 =#{FINPROD_TYPE_TG_F01} AND b.TRADE_MARKET=#{SVR_TRADE_MARKET_01} AND a.CDATE =#{cdate}
+        <if test="portfolioIdList != null">
+            AND a.PORTFOLIO_ID in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodId != null and finprodId != ''">
+            and b.FINPROD_ID = #{finprodId}
+        </if>
+        <if test="firstLevelType != null and firstLevelType != ''">
+            and c.TYPE_8 = #{firstLevelType}
+        </if>
+        GROUP BY a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM
+        ORDER BY a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM
+    </select>
+
+    <!-- 当日交易数据查询 -->
+    <select id="selectCurrTrdData" parameterType="Map" resultType="map">
+        select
+        b.PORTFOLIO_ID ,
+        a.FINPROD_ID ,
+        a.INV_AIM ,
+        a.PS ,
+        a.UNIT_CPRICE AS PRICE,
+        a.SHARE_AMT AS AMT
+        from TRD_PRODUCT_DEAL a
+        LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+        LEFT JOIN FIN_PRODUCT c ON a.FINPROD_ID =c.FINPROD_ID AND c.FINPROD_TYPE2 =#{FINPROD_TYPE_TG_F01}
+        LEFT JOIN FIN_PRODUCT_TYPE d ON d.FINPROD_ID =a.FINPROD_ID
+        WHERE a.TRADE_DATE =#{cdate} AND c.FINPROD_TYPE2 =#{FINPROD_TYPE_TG_F01} AND c.TRADE_MARKET=#{SVR_TRADE_MARKET_01}
+        AND a.PS IN (#{PS_T01},#{PS_T02},#{PS_T03}) AND a.TRADE_STATUS =#{TRADE_STATUS_01}
+        AND a.IS_CANCEL=#{YN_N}
+        <if test="portfolioIdList != null">
+            AND b.PORTFOLIO_ID in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodId != null and finprodId != ''">
+            and a.FINPROD_ID = #{finprodId}
+        </if>
+        <if test="firstLevelType != null and firstLevelType != ''">
+            and d.TYPE_8 = #{firstLevelType}
+        </if>
+        ORDER BY b.PORTFOLIO_ID, a.FINPROD_ID , a.INV_AIM , a.CREATE_TIME DESC
+    </select>
 
     <!--头寸信息-->
     <select id="queryPositionInfo" parameterType="Map" resultType="map">

@@ -14,7 +14,7 @@ import java.util.List;
  * excel导出请求参数
  */
 @ApiModel(value="excel导出请求参数",description="excel导出请求参数")
-public class ExportRequestDto extends BaseService {
+public class CfetsExportRequestDto extends BaseService {
 
     @ApiModelProperty(name="type",value="excel导出方式",example="checked|condition", required = true)
     private String type;
