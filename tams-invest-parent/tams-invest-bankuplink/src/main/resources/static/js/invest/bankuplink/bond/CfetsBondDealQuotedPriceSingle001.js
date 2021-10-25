@@ -224,6 +224,9 @@
             if (data.assetType10 == assetTypeTwo_abs) {
                 $('#CfetsBondDealQuotedPriceSingle001_div_abs1').toggle(true);
                 $('#CfetsBondDealQuotedPriceSingle001_div_abs2').toggle(true);
+            }else{
+                $('#CfetsBondDealQuotedPriceSingle001_div_abs1').toggle(false);
+                $('#CfetsBondDealQuotedPriceSingle001_div_abs2').toggle(false);
             }
         }else{
             $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val("");
