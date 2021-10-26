@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.exchange.datacommon.db.mapper.TradeHistoryMapper">
+<mapper namespace="com.joyintech.tams.exchange.datacommon.db.dao.TradeHistoryMapper">
     <resultMap id="BaseResultMap" type="com.joyintech.tams.exchange.common.db.domain.TradeHistory">
         <result column="ID" property="id" jdbcType="VARCHAR"/>
         <result column="INSTRUCTION_ID" property="instructionId" jdbcType="VARCHAR"/>
