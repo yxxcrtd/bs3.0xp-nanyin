@@ -831,7 +831,7 @@ from
         PJ.INNEROUTER inOrOut
         FROM FIN_PRODUCT t1
         LEFT JOIN FIN_PRODUCT_TYPE t2 ON t1.FINPROD_ID = t2.FINPROD_ID
-        LEFT JOIN MST_BOND_VALUATION_INFO MBVI ON t1.FINPROD_MARKET_ID = MBVI.SEC_ID
+        LEFT JOIN MST_BOND_VALUATION_INFO MBVI ON t1.FINPROD_MARKET_ID = MBVI.SEC_ID AND MBVI.VALUE_SOURCE = 'CBC'
         LEFT JOIN (
         select
         f2.FINPROD_ID,
@@ -842,11 +842,11 @@ from
         inner join FIN_PRODUCT f3 on f2.FINPROD_ID = f3.FINPROD_ID
         where
         f2.CASH_TYPE_2 = 'C02' and
-        f3.FINPROD_TYPE2 = 'F01'
+        f3.FINPROD_TYPE2 = 'F01' and f1.CASH_TYPE in (01,04)
         group by f2.FINPROD_ID
         ) t4 on t4.FINPROD_ID = t1.FINPROD_ID
         left join fin_cash_info t5 on t5.FINPROD_ID = t1.FINPROD_ID AND t5.CASH_TYPE_2 = 'C02' and t5.FINPROD_TYPE = '01'
-        LEFT JOIN FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID
+        LEFT JOIN FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID AND t6.INT_TYPE in (01,04)
         LEFT JOIN mst_customer_info t7 ON t1.SPONSOR = t7.CUSTOMER_ID
         LEFT JOIN (
         <!-- 取大于当前时间的最接近的实际行权日 -->
@@ -894,13 +894,15 @@ from
         SELECT
         Max(TRADE_DATE) TRADE_DATE
         FROM(
-        SELECT Max(TRADE_DATE) TRADE_DATE
-        FROM TRD_PRODUCT_DEAL
-        WHERE FINPROD_ID = #{secId} AND TRADE_STATUS = '01' AND (IS_CANCEL='N' or IS_CANCEL IS NULL)
-        UNION ALL
-        SELECT Max(TRADE_DATE) TRADE_DATE
-        FROM WFL_TRD_PRODUCT_DEAL
-        WHERE FINPROD_ID = #{secId}
+            SELECT
+            Max(TRADE_DATE) TRADE_DATE
+            FROM TRD_PRODUCT_DEAL
+            WHERE FINPROD_ID = #{secId} AND TRADE_STATUS = '01' AND (IS_CANCEL='N' or IS_CANCEL IS NULL)
+            UNION ALL
+            SELECT
+            Max(TRADE_DATE) TRADE_DATE
+            FROM WFL_TRD_PRODUCT_DEAL
+            WHERE FINPROD_ID = #{secId}
         )
     </select>
 
@@ -909,7 +911,7 @@ from
         SELECT
         Min(TRADE_DATE) TRADE_DATE
         FROM(
-        SELECT Max(TRADE_DATE) TRADE_DATE
+        SELECT Min(TRADE_DATE) TRADE_DATE
         FROM TRD_PRODUCT_DEAL
         WHERE FINPROD_ID = #{secId} AND TRADE_STATUS = '01' AND (IS_CANCEL='N' or IS_CANCEL IS NULL)
         UNION ALL

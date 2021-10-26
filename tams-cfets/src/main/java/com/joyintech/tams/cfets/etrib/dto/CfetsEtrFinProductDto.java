@@ -240,7 +240,6 @@ public class CfetsEtrFinProductDto {
      * 评级类型
      */
     private String otype;
-
     /**
      * 获取评级类型
      */

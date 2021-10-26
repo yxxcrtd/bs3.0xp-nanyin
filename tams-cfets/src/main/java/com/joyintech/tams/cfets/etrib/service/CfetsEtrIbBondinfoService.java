@@ -909,18 +909,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 }
             }
 
-//            估值日<=交易日取最大 估值来源=中债登
+//            估值日<=交易日取最大 估值来源=中债登(SQL中)
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                if (dto.getValueDate() != null) {
+                if (dto.getValueDate() != null || !StringUtil.isEmpty(dto.getValueDate())) {
                     Date valueDate = sdf.parse(dto.getValueDate());
                     Date maxDate = cfetsetrIbBondinfoMapper.getMaxTradeDate(secId);
                     if (maxDate != null) {
-                        if (maxDate.compareTo(valueDate) <= 0 && dto.getValueSource().equals(DictCodeList.估值来源_中债登_CBC.getValue())){
+                        if (maxDate.compareTo(valueDate) <= 0){
                             dto.setValueDate(dto.getValueDate());
                         }else {
                             dto.setValueDate("--");
                         }
+                    }else {
+                        dto.setValueDate("--");
                     }
                 }
             } catch (Exception e) {
@@ -932,13 +934,14 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     Date lastPaydate = sdf.parse(dto.getLastPaydate());
                     Date minDate = cfetsetrIbBondinfoMapper.getMinTradeDate(secId);
                     if (minDate != null) {
-                        if (minDate.compareTo(lastPaydate) > 0) {
+                        if (minDate.compareTo(lastPaydate) > 0 && dto.getRateType().equals("02")) {
                             dto.setLastPaydate(dto.getLastPaydate());
                         }else {
                             dto.setLastPaydate("--");
                         }
+                    }else {
+                        dto.setLastPaydate("--");
                     }
-
                 } else {
                     dto.setLastPaydate("--");
                 }
