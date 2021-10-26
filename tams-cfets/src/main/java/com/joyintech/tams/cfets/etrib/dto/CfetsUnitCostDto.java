@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 /**
  * 单位成本价dto
  */
-public class CfetsUnitCostDto extends BaseEntity{
+public class CfetsUnitCostDto{
 
     public CfetsUnitCostDto(){
         

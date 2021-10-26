@@ -473,7 +473,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
          * 根据组合、资产、交易日期、一级分类查询单位成本数据
          */
         Map<String, CfetsUnitCostDto> unitCostMap = calcEachCostAmtMap(requestDto);
-        result.getRoot().stream().map(r -> {
+        result.getRoot().forEach( r->{
             CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId() + r.getBusiModel());
             if (dto != null){
                 // 持仓成本价（元）
@@ -483,7 +483,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 // 浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
                 r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
             }
-            return r;
         });
         
         return result;
@@ -512,17 +511,17 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         List<BaseMap> lastCostAmt = selectLastCostAmt(cdate, portfolioIdList, finprodId, firstLevelType );
         
         if (lastCostAmt != null){
-            lastCostAmt.forEach(e -> {
+            lastCostAmt.forEach(e->{
                 if(BigDecimal.ZERO.compareTo(e.getBigDecimal("SHARE_AMT")) != 0){
                     // 数量不为0时生成单位净价
                     CfetsUnitCostDto dto = new CfetsUnitCostDto();
-                    
+
                     dto.setBuyCostAmt(e.getBigDecimal("BUY_COST_AMT"));
                     dto.setShareAmt(e.getBigDecimal("SHARE_AMT"));
                     // 单位成本=成本*10000.0/数量， （EACH_COST = BUY_COST_AMT / SHARE_AMT）
                     dto.setUnitCost(ArithmeticUtil.divide(
-                            e.getBigDecimal("BUY_COST_AMT").multiply(BigDecimal.valueOf(10000.0)), 
-                            e.getBigDecimal("SHARE_AMT"), 
+                            e.getBigDecimal("BUY_COST_AMT").multiply(BigDecimal.valueOf(10000.0)),
+                            e.getBigDecimal("SHARE_AMT"),
                             4));
                     resultMap.put(getKey(e), dto);
                 }

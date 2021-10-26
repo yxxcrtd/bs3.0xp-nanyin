@@ -666,7 +666,7 @@ from
     </select>
 
     <!-- 查询前一日持仓指标 -->
-    <select id="selectLastCostAmt" parameterType="Map" resultType="map">
+    <select id="selectLastCostAmt" parameterType="Map" resultType="com.joyintech.tams.business.common.pojo.BaseMap">
         select
         a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM,
         sum(nvl(a.BUY_COST_AMT, 0)) BUY_COST_AMT, sum(nvl(a.SHARE_AMT, 0)) SHARE_AMT
@@ -691,7 +691,7 @@ from
     </select>
 
     <!-- 当日交易数据查询 -->
-    <select id="selectCurrTrdData" parameterType="Map" resultType="map">
+    <select id="selectCurrTrdData" parameterType="Map" resultType="com.joyintech.tams.business.common.pojo.BaseMap">
         select
         b.PORTFOLIO_ID ,
         a.FINPROD_ID ,
