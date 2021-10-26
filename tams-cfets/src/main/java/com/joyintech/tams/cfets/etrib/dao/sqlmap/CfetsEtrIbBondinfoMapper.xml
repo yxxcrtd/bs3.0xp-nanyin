@@ -676,10 +676,10 @@ from
             </foreach>
         </if>
         <if test="finprodId != null and finprodId != ''">
-            and b.FINPROD_ID = #{finprodId}
+            and b.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </if>
         <if test="firstLevelType != null and firstLevelType != ''">
-            and c.TYPE_8 = #{firstLevelType}
+            and c.TYPE_8 = #{firstLevelType,jdbcType=VARCHAR}
         </if>
         GROUP BY a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM
         ORDER BY a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM
@@ -708,10 +708,10 @@ from
             </foreach>
         </if>
         <if test="finprodId != null and finprodId != ''">
-            and a.FINPROD_ID = #{finprodId}
+            and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </if>
         <if test="firstLevelType != null and firstLevelType != ''">
-            and d.TYPE_8 = #{firstLevelType}
+            and d.TYPE_8 = #{firstLevelType,jdbcType=VARCHAR}
         </if>
         ORDER BY b.PORTFOLIO_ID, a.FINPROD_ID , a.INV_AIM , a.CREATE_TIME DESC
     </select>
@@ -773,7 +773,7 @@ from
                 LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_001},#{S_003})
                 where to_char(a.cdate,'yyyy-MM-dd') = #{cdate} and (b.S_HOLDINGTYPE IN (#{S_001},#{S_003}) or a.HODING_TYPE in (#{A_004},#{A_005}))
                 <if test="finprodId != null">
-                    and a.FINPROD_ID = #{finprodId}
+                    and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
                 </if>
                 <if test="portfolioIdList != null">
                     AND a.PORTFOLIO_ID in
@@ -789,7 +789,7 @@ from
                 FROM PTL_CASH_POSITION_RULE d
                 where to_char(d.cdate,'yyyy-MM-dd') = #{cdate} AND d.HODING_TYPE =#{C_01}
                 <if test="acctId != null">
-                    and d.ACCT_ID = #{acctId}
+                    and d.ACCT_ID = #{acctId,jdbcType=VARCHAR}
                 </if>
                 <if test="portfolioIdList != null">
                     AND d.PORTFOLIO_ID in

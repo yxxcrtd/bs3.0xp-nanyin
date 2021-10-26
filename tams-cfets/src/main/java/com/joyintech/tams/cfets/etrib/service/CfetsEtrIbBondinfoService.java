@@ -634,13 +634,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      */
     public List<BaseMap> queryPositionInfo(CfetsEtrIbBondPosiInfoRequestDto requestDto) {
         // 卖空模式
-        String flag = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
+        String sellFlag = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
 
         // 条件非空校验
         posiInfoCheckCondition(requestDto);
 
         if (StringUtil.isEmpty(requestDto.getFinprodId()) || requestDto.getPortfolioIdList() == null || requestDto.getPortfolioIdList().size() == 0){
-            return nullData(flag);
+            return nullData(sellFlag);
         }
 
         BaseMap bm = BaseMap.newMap()
@@ -658,13 +658,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(bm);
         
         if (map != null){
-            return assemble(flag , map);
+            return assemble(sellFlag , map);
         }
 
         /**
          * 返回空值数据格式
          */
-        return nullData(flag);
+        return nullData(sellFlag);
     }
 
     private void posiInfoCheckCondition(CfetsEtrIbBondPosiInfoRequestDto requestDto) {

@@ -19,7 +19,7 @@ public class CfetsEtrIbBondPosiPage001RequestDto {
     @ApiModelProperty(name="finprodId",value="资产代码",example="xxx")
     private String finprodId;
     
-    @ApiModelProperty(name="finprodId",value="债券一级分类",example="F01")
+    @ApiModelProperty(name="type8",value="债券一级分类",example="F01")
     private String type8;
 
     @ApiModelProperty(name="pageMode",value="分页对象")
