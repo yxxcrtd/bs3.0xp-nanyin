@@ -1674,7 +1674,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAmount(ArithmeticUtil.multiply(totalAmt,StringUtil.isNotEmpty(dataMap.get("busiRate"))?dataMap.get("busiRate") instanceof BigDecimal?ArithmeticUtil.divide((BigDecimal) dataMap.get("busiRate"),new BigDecimal(100),4):ArithmeticUtil.divide(new BigDecimal(dataMap.get("busiRate").toString()),new BigDecimal(100),4):BigDecimal.ZERO));
             infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
             infRiskRdsDto.setAssetType(DictCodeListExt2.平安资产类型_债券借贷.getValue());
-            infRiskRdsDto.setAssetType2(finDto.getPs());
+            infRiskRdsDto.setAssetType2(finDto.getBusiPs());
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
             infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
