@@ -551,7 +551,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     }
     @ResponseBody
     @ApiOperation(value = "撤回委托", notes = "撤回委托")
-    @RequestMapping("recall")
+    @PostMapping("recall")
     public Message<AjaxResult> recallDelegate(@RequestBody EtrInvestBondInfoDto dto) throws Exception {
         //对选择的数据进行check
         AjaxResult ajaxResult = this.recallDelegateCheckMethod(dto);
@@ -629,7 +629,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     }
     @ResponseBody
     @ApiOperation(value = "修改委托", notes = "修改委托")
-    @RequestMapping("modifyDelegate")
+    @PostMapping("modifyDelegate")
     public Message<AjaxResult> modifyDelegate(@RequestBody CfetsEtrInvestBondInfoReqDto dto) throws Exception {
         //对选择的数据进行check
         AjaxResult ajaxResult = this.modifyDelegateCheckMethod(dto);
