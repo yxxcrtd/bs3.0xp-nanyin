@@ -29,15 +29,22 @@ import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfo002Service;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtribBondInfo003Service;
+import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.common.base.entity.EtrDistribute;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
@@ -63,9 +70,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 /**
  * 银行间债券指令
@@ -109,6 +118,16 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
      */
     @Autowired
     private TrdCommandDispatcher001Service trdCommandDispatcher001Service;
+    /**
+     * 投资委托信息Service
+     */
+    @Autowired
+    private BaseEtrInvestInfoServiceImpl etrInvestInfoServiceImpl;
+    /**
+     * 委托指令Mapper
+     */
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
 
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
@@ -561,7 +580,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrInvestBondInfoDto entity : dtolist){
-                etrInvestBondInfoService.recallDelegate(entity);
+                this.recallDelegateMethod(entity);
             }
             // add by zhangrui1 批量撤销预占 start
             EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeList.平安资产类型_债券.getValue(),
@@ -585,7 +604,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
 
         if(dtolist != null && dtolist.size()>0){
             for(EtrInvestBondInfoDto entity : dtolist){
-                etrInvestBondInfoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
+                this.closeDelegateMethod(entity.getEntrustId(), entity.getCloseWay());
             }
             // add by zhangrui1 批量委托关闭 start
             // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
@@ -736,6 +755,47 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
         return new AjaxResult();
     }
-
+    public boolean recallDelegateMethod(EtrInvestBondInfoDto dto)
+            throws InvocationTargetException, IllegalAccessException {
+        BaseEtrInvestInfoDto entity=recallDelegatePackageEquity(dto);
+        // 将传来dto中的委托指令的委托状态改为"已撤回"
+        entity.getEtrEntrust().setEntrustStatus(DictCodeList.委托状态_已撤回.getValue());
+        // 调用投资委托组件的更新委托状态接口，将委托状态设置为"已撤回"
+        boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entity.getEtrEntrust().getEntrustId(),
+                entity.getEtrEntrust().getEntrustStatus());
+        if (flag) {
+            return true;
+        }
+        return false;
+    }
+    public BaseEtrInvestInfoDto recallDelegatePackageEquity(EtrInvestBondInfoDto dto)
+            throws IllegalAccessException, InvocationTargetException {
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+        EtrEntrust etrEntrust = new EtrEntrust();
+        EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+        BeanUtil.copyProperties(etrEntrust, dto);
+        BeanUtil.copyProperties(etrEntrustAdd, dto);
+        List<EtrDistribute> etrDistributeList = new ArrayList<>();
+        EtrDistribute etrDistribute = new EtrDistribute();
+        BeanUtil.copyProperties(etrDistribute, dto);
+        etrDistributeList.add(etrDistribute);
+        entity.setEtrEntrust(etrEntrust);
+        entity.setEtrEntrustAdd(etrEntrustAdd);
+        entity.setEtrDistributeList(etrDistributeList);
+        return entity;
+    }
+    public boolean closeDelegateMethod(String entrustId,String closeWay){
+        EtrEntrust ee = etrEntrustMapper.selectByPrimaryKey(entrustId);
+        if (ee != null) {
+            // 调用投资委托组件的更新委托状态接口，将委托状态设置为“已关闭”
+            String tempEntrustStatu = ee.getEntrustStatus();// 获取该委托原始状态，防止后续更改成关闭
+            boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_已关闭.getValue());
+            // 判断关闭委托是否完成
+            if (flag) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

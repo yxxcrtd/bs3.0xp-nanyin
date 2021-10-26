@@ -162,5 +162,17 @@
 			</if>
 		</where>
 	</select>
+	<select id="qryPortfolioCashAcctId" resultType="java.lang.String">
+		SELECT P.ACCT_NO CASHACCTID
+		FROM
+		PTL_CAPACCT_INFO P
+		LEFT JOIN
+		STL_CAPACCT_INFO S
+		ON
+		P.ACCT_NO = S.ACCT_NO
+		where P.PORTFOLIO_ID = #{portfolioId}
+		AND P.ACCT_TYPE = #{acctType}
+		and rownum=1
+	</select>
 
 </mapper>

@@ -81,4 +81,6 @@ public interface CfetsEtrIbBondinfo002Mapper {
      * @since 1.0
      */
     List<SelectOptionDto> selectPortfolioIdList(Map<String, Object> param);
+
+    String qryPortfolioCashAcctId(Map<String, Object> param);
 }

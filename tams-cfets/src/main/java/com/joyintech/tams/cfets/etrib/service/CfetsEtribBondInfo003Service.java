@@ -35,9 +35,7 @@ import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDisp
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.UserUtil;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfo002Mapper;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbPosPortfolioRequest;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbPositionRequest;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtribBondInfo003Dto;
+import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
@@ -274,21 +272,37 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     CfetsEtrIbPosPortfolioRequest posport=new CfetsEtrIbPosPortfolioRequest();
                     posport.setPortfolioId(dto.getPortfolioId());
                     posport.setEtrId(dto.getEntrustId());
-                    posport.setCashAcctId("11111");
-                    posport.setSecAcctId("22222");
+                    if(StringUtil.isNotEmpty(dto.getPortfolioId())){
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        map.put("portfolioId", dto.getPortfolioId());
+                        map.put("acctType", BussinessDictCodeList.资金账户类型_托管账户.getValue());
+                        String cashAcctId = this.qryPortfolioCashAcctId(map);
+                        if (StringUtil.isNotEmpty(cashAcctId)) {
+                            posport.setCashAcctId(cashAcctId); // 托管户
+                        }
+                    }
+                    if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(entity.getFinprodId())) {
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        map.put("portfolioId", dto.getPortfolioId());
+                        map.put("finprodId", entity.getFinprodId());
+                        String secAcctId = this.qryPortfolioSecAcctId(map);
+                        if (StringUtil.isNotEmpty(secAcctId)) {
+                            posport.setSecAcctId(secAcctId); // 证券账户
+                        }
+                    }
                     posport.setSecAmount(dto.getEntrustNum());
                     posport.setCashAmount(dto.getFpriceAmt());
-                    posport.setInvAim("AC");
+                    posport.setInvAim(dto.getBusinessModel());
                     posport.setIntegrateSecAmount(dto.getEntrustIntegrateNum());
                     posport.setOwnSecAmount(dto.getEntrustOwnNum());
                     ptlList.add(posport);
                 }
-                //TODO 调用头寸
+                //调用头寸
                 CfetsEtrIbPositionRequest req=new CfetsEtrIbPositionRequest();
                 req.setInterfaceType("Bond001");
                 req.setUserId(UserUtil.getUserid());
                 req.setTotalTradeId(entity.getTotalEtrustId());
-                req.setFlowStatus("01");
+                req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
                 req.setModelType("ETR");
                 req.setBalanceCheck("N");
                 req.setBusiType("02");
@@ -432,14 +446,6 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         return resultList;
     }
 
-    /**
-     *
-     * 净价、行权收益率、到期收益率联动
-     * <功能详细描述>
-     * @param dto
-     * @see
-     * @since 1.0
-     */
     /**
      *
      * 净价、行权收益率、到期收益率联动
@@ -852,10 +858,10 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         }
 
         if (dto.getMatureYield() != null) {
-            dto.setMatureYield(com.joyintech.calculation.util.ArithmeticUtil.multiply(dto.getMatureYield(), new BigDecimal(100)));
+            dto.setMatureYield(ArithmeticUtil.multiply(dto.getMatureYield(), new BigDecimal(100)));
         }
         if (dto.getExerYield() != null) {
-            dto.setExerYield(com.joyintech.calculation.util.ArithmeticUtil.multiply(dto.getExerYield(), new BigDecimal(100)));
+            dto.setExerYield(ArithmeticUtil.multiply(dto.getExerYield(), new BigDecimal(100)));
         }
     }
 
@@ -1433,5 +1439,55 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             }
             WFlowCommonService.insertFlow(dto);
         }
+    }
+    public String qryPortfolioSecAcctId(Map<String, Object> param) {
+        return cfetsEtrIbBondinfo002Mapper.qryPortfolioSecAcctId(param);
+    }
+    public String qryPortfolioCashAcctId(Map<String, Object> param) {
+        return cfetsEtrIbBondinfo002Mapper.qryPortfolioCashAcctId(param);
+    }
+    /**
+     *
+     * 净新建指令金额计算功能联动
+     * <功能详细描述>
+     * @param dto
+     * @see
+     * @since 1.0
+     */
+    public  CfetsEtrCalcAmountReturnDto calAmountData(CfetsEtrCalcAmountReqDto dto) {
+        final int SCALE = 12;
+        CfetsEtrCalcAmountReturnDto result=new CfetsEtrCalcAmountReturnDto();
+        result.setPrice(dto.getPrice());
+        result.setUnitFprice(dto.getUnitFprice());
+        //券面总额
+        BigDecimal entrustNum=dto.getShareNum()==null?BigDecimal.ZERO:dto.getShareNum();
+        //本方券券面总额
+        BigDecimal entrustOwnNum=dto.getEntrustOwnNum()==null?BigDecimal.ZERO:dto.getEntrustOwnNum();
+        //融入券/卖空购回券面总额
+        BigDecimal entrustIntegrateNum=dto.getEntrustIntegrateNum()==null?BigDecimal.ZERO:dto.getEntrustIntegrateNum();
+        //净价总额
+        result.setPriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getPrice(), entrustNum),
+                new BigDecimal(100), SCALE));
+        //应计利息
+        result.setUnitInt(ArithmeticUtil.subtract(result.getUnitFprice(),result.getPrice()));
+        //应计利息总额
+        result.setUnitIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitInt(), entrustNum),
+                new BigDecimal(100), SCALE));
+        //全价总额= 单位全价 * 券面总额/100
+        result.setUnitFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitFprice(), entrustNum),
+                new BigDecimal(100), SCALE));
+        //本方券应计利息总额
+        result.setEntrustOwnInt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitInt(), entrustOwnNum),
+                new BigDecimal(100), SCALE));
+        //卖空购回应计利息总额
+        result.setEntrustIntegrateInt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitInt(), entrustIntegrateNum),
+                new BigDecimal(100), SCALE));
+        //本方券全价总额
+        result.setEntrustOwnUnitFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitFprice(), entrustOwnNum),
+                new BigDecimal(100), SCALE));
+        //卖空购回全价总额
+        result.setEntrustIntegrateUnitFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitFprice(), entrustIntegrateNum),
+                new BigDecimal(100), SCALE));
+        return result;
     }
 }
