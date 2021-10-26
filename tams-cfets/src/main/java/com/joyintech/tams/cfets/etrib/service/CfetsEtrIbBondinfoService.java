@@ -878,23 +878,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (dto != null) {
             map.put("secId",secId);
             map.put("marketId",dto.getMarketId());
-            //下一付息日若无，则显示为“—”
-            if (StringUtil.isEmpty(dto.getLastPaydate())) {
-                dto.setLastPaydate("--");
-            }
-            //下一行权日若无，则显示为“—”
-            if (StringUtil.isEmpty(dto.getXqdate())) {
-                dto.setXqdate("--");
-            }
-            //是否含权债
-            if (StringUtil.isEmpty(dto.getXqFlg())) {
-                dto.setXqFlg("无");
-            }
-            if (dto.getOtype().equals("01")) {
-                dto.setZxGrade("");
-            } else if (dto.getOtype().equals("02")) {
-                dto.setZtGrade("");
-            }
             //            获取信用评级结果
             List<BusiFinProductRatingDto> ztList = busiProductRatingService.getZtBestRatingByOrgId(map);
             if (ztList != null && ztList.size() > 0) {
@@ -936,7 +919,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                         if (maxDate.compareTo(valueDate) <= 0 && dto.getValueSource().equals(DictCodeList.估值来源_中债登_CBC.getValue())){
                             dto.setValueDate(dto.getValueDate());
                         }else {
-                            dto.setValueDate(" ");
+                            dto.setValueDate("--");
                         }
                     }
                 }
@@ -945,43 +928,27 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
 //            调整后的计算结束日>交易日取最小 现金流类型=利息
             try {
-                if (dto.getLastPaydate() != null) {
+                if (dto.getLastPaydate() != null || !StringUtil.isEmpty(dto.getLastPaydate())) {
                     Date lastPaydate = sdf.parse(dto.getLastPaydate());
                     Date minDate = cfetsetrIbBondinfoMapper.getMinTradeDate(secId);
                     if (minDate != null) {
-                        if (minDate.compareTo(lastPaydate) > 0 && dto.getRateType().equals("02")) {
+                        if (minDate.compareTo(lastPaydate) > 0) {
                             dto.setLastPaydate(dto.getLastPaydate());
                         }else {
-                            dto.setLastPaydate(" ");
+                            dto.setLastPaydate("--");
                         }
                     }
 
+                } else {
+                    dto.setLastPaydate("--");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//            现金流类型=利息
-//            if (dto.getRateType() != null && dto.getRateType().equals("02")) {
-//                dto.setRateType(dto.getRateType());
-//            }else {
-//                dto.setRateType(" ");
-//            }
-
+            //是否含权
             dto.setXqFlg(dto.getXqFlg().equals("Y")?"是":"否");
-//
-//            if (dto.getXqFlg().equals("Y")) {
-//                dto.setXqFlg("是");
-//            }else if (dto.getXqFlg().equals("N")) {
-//                dto.setXqFlg("否");
-//            }
-
-////            若为含权债，显示为含权债的行权方式；若有多个行权方式，用分号“;”隔开
-//            String xqfangshi = "";
-//            List<String> plan = cfetsetrIbBondinfoMapper.getEtrFinExerciseInfo(secId);
-//            if (plan != null && plan.size() > 1) {
-//                xqfangshi = StringUtil.joinString(plan,";");
-//                dto.setXqFlg(xqfangshi);
-//            }
+            //下一行权日若无，则显示为“—”
+            dto.setXqdate(!StringUtil.isEmpty(dto.getXqdate())?dto.getXqdate():"--");
         }
         return dto;
     }
