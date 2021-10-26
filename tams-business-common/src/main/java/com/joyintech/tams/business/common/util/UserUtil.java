@@ -1,8 +1,11 @@
 package com.joyintech.tams.business.common.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.joyintech.framework.security.User;
+import com.joyintech.framework.util.DateUtil;
 
 public class UserUtil {
 
@@ -83,7 +86,7 @@ public class UserUtil {
 			
 			@Override
 			public Date getLastPassDate() {
-				return null;
+				return DateUtil.platDateFromCache();
 			}
 			
 			@Override
