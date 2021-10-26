@@ -51,5 +51,3 @@ CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('DQR5RN
       AND M.CDATE = date''${valDate}''
       AND M.PORTFOLIO_ID IN ${portfolioCode}
    GROUP BY M.PORTFOLIO_ID', 'portfolioCode', 'N', 'cdj', 'C001', TIMESTAMP '2021-10-16 15:59:23', 'cdj', TIMESTAMP '2021-10-16 15:59:23');
-
-   /*fixed HFZG-478 bug,【监控值查询】当有两个产品都挂了指标后，显示有问题 end  2021-10-20*/
