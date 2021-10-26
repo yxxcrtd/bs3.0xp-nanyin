@@ -583,10 +583,8 @@ from
             etrptl.FINPROD_ID as finprodId,
             d.FINPROD_NAME as finprodAbbr,
             d.FINPROD_MARKET_ID as finprodMarketId,
-            c.TYPE_8 as secType1,
-            f.ITEM_VALUE as secType1Name,
-            etrptl.INV_AIM as busiModel,
-            null as busiModelStr,
+            c.TYPE_8 as secType1, /*债券一级分类code*/
+            etrptl.INV_AIM as busiModel,  /*业务模式code*/
             /*指令汇总可用持仓、指令可质押持仓、指令已质押持仓*/
             ROUND(etrptl.ETR_SUM_KYCC,2) as etrPledgePrin,
             ROUND(etrptl.ETR_PLEDGE_KZYCC,2) as etrAvaPledgePrin,
@@ -594,9 +592,9 @@ from
             /*交易可用券面总额、交易在途券面总额*/
             ROUND(etrptl.PTL_BOND_BFQKYCC,2) as trdAvaShareAmt,
             ROUND(etrptl.PTL_BOND_BFQZTCC,2) as trdIntransShareAmt,
-            /* 持仓成本 */
+            /* 持仓成本 service从map查询 */
             null as positionsAmt,
-            /* 持仓单位成本 */
+            /* 持仓单位成本 service从map查询*/
             null as unitCost,
             /* 最新净价 根据规则12来获取*/
             null as price,
@@ -651,10 +649,7 @@ from
             LEFT JOIN FIN_PRODUCT_TYPE c ON etrptl.FINPROD_ID = c.FINPROD_ID
             LEFT JOIN FIN_PRODUCT d ON etrptl.FINPROD_ID=d.FINPROD_ID
             LEFT JOIN PTL_PORTFOLIO e ON etrptl.PORTFOLIO_ID=e.PORTFOLIO_ID
-            LEFT JOIN (
-                SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST WHERE DICT_CODE= 'FINPROD_TYPE_TG'
-            ) f on f.ITEM_CODE=c.TYPE_8
-            where 1=1
+            where 1=1 AND etrptl.PTL_BOND_ZHCC > 0  
             <if test="type8 != null and type8 != ''">
                 and c.TYPE_8 = #{type8}
             </if>
@@ -734,76 +729,76 @@ from
         ROUND(sum(nvl(summary.rrqtrkycc,0)),2) AS RRQTRKYCC, /*融入券T日可用持仓*/
         ROUND(sum(nvl(summary.rrqt1rkycc,0)),2) AS RRQT1RKYCC /*融入券T+1日可用持仓*/
         FROM (
-        /*多组合，再汇总一遍*/
-        SELECT
-        aa.t0kyxj, aa.t1kyxj, cc.AMOUNT, bb.rrqmkdgh, bb.zctrkycc,
-        bb.zct1rkycc, bb.bfqtrkycc, bb.bfqt1rkycc, bb.rrqtrkycc, bb.rrqt1rkycc
-        FROM(
-        select
-        a.PORTFOLIO_ID,
-        sum(
-        CASE WHEN b.S_HOLDINGTYPE='S_004' AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
-        ) AS t0kyxj, /*T日可用现金*/
-        sum(
-        CASE WHEN b.S_HOLDINGTYPE='S_004' AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
-        ) AS t1kyxj /*T+1日可用现金*/
-        from ETR_CASH_POSITION_RULE a
-        LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN ('S_004')
-        where to_char(a.cdate,'yyyy-MM-dd') = #{cdate}
-        <if test="portfolioIdList != null">
-            AND a.PORTFOLIO_ID in
-            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        GROUP BY a.PORTFOLIO_ID
-        ) aa
-        FULL OUTER JOIN (
-        select
-        a.PORTFOLIO_ID,
-        sum(
-        CASE WHEN b.S_HOLDINGTYPE='S_003' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
-        ) AS rrqmkdgh, /*融入券卖空待购回持仓*/
-        sum(
-        CASE WHEN b.S_HOLDINGTYPE='S_001' AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
-        ) AS zctrkycc, /*资产T日可用持仓*/
-        sum(
-        CASE WHEN b.S_HOLDINGTYPE='S_001' AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
-        ) AS zct1rkycc, /*资产T+1日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE='A_004' AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS bfqtrkycc, /*本方券T日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE='A_004' AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS bfqt1rkycc, /*本方券T+1日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE='A_005' AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS rrqtrkycc, /*融入券T日可用持仓*/
-        sum(CASE WHEN a.HODING_TYPE='A_005' AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS rrqt1rkycc /*融入券T+1日可用持仓*/
-        from ETR_SEC_POSITION_RULE a
-        LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN ('S_001','S_003')
-        where to_char(a.cdate,'yyyy-MM-dd') = #{cdate}
-        <if test="finprodId != null">
-            and a.FINPROD_ID = #{finprodId}
-        </if>
-        <if test="portfolioIdList != null">
-            AND a.PORTFOLIO_ID in
-            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        GROUP BY a.PORTFOLIO_ID
-        ) bb ON aa.PORTFOLIO_ID=bb.PORTFOLIO_ID
-        LEFT JOIN (
-        <!--账户现金-->
-        SELECT d.PORTFOLIO_ID, sum(d.AMOUNT) AMOUNT
-        FROM PTL_CASH_POSITION_RULE d
-        where to_char(d.cdate,'yyyy-MM-dd') = #{cdate} AND d.HODING_TYPE ='C_01'
-        <if test="acctId != null">
-            and d.ACCT_ID = #{acctId}
-        </if>
-        <if test="portfolioIdList != null">
-            AND d.PORTFOLIO_ID in
-            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        GROUP BY d.PORTFOLIO_ID
-        ) cc ON nvl(aa.PORTFOLIO_ID, bb.PORTFOLIO_ID)=cc.PORTFOLIO_ID
+            /*多组合，再汇总一遍*/
+            SELECT
+            aa.t0kyxj, aa.t1kyxj, cc.AMOUNT, bb.rrqmkdgh, bb.zctrkycc,
+            bb.zct1rkycc, bb.bfqtrkycc, bb.bfqt1rkycc, bb.rrqtrkycc, bb.rrqt1rkycc
+            FROM(
+                select
+                a.PORTFOLIO_ID,
+                sum(
+                CASE WHEN b.S_HOLDINGTYPE='S_004' AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                ) AS t0kyxj, /*T日可用现金*/
+                sum(
+                CASE WHEN b.S_HOLDINGTYPE='S_004' AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                ) AS t1kyxj /*T+1日可用现金*/
+                from ETR_CASH_POSITION_RULE a
+                LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN ('S_004')
+                where to_char(a.cdate,'yyyy-MM-dd') = #{cdate}
+                <if test="portfolioIdList != null">
+                    AND a.PORTFOLIO_ID in
+                    <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                GROUP BY a.PORTFOLIO_ID
+            ) aa
+            FULL OUTER JOIN (
+                select
+                a.PORTFOLIO_ID,
+                sum(
+                CASE WHEN b.S_HOLDINGTYPE='S_003' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                ) AS rrqmkdgh, /*融入券卖空待购回持仓*/
+                sum(
+                CASE WHEN b.S_HOLDINGTYPE='S_001' AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                ) AS zctrkycc, /*资产T日可用持仓*/
+                sum(
+                CASE WHEN b.S_HOLDINGTYPE='S_001' AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                ) AS zct1rkycc, /*资产T+1日可用持仓*/
+                sum(CASE WHEN a.HODING_TYPE='A_004' AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS bfqtrkycc, /*本方券T日可用持仓*/
+                sum(CASE WHEN a.HODING_TYPE='A_004' AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS bfqt1rkycc, /*本方券T+1日可用持仓*/
+                sum(CASE WHEN a.HODING_TYPE='A_005' AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS rrqtrkycc, /*融入券T日可用持仓*/
+                sum(CASE WHEN a.HODING_TYPE='A_005' AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS rrqt1rkycc /*融入券T+1日可用持仓*/
+                from ETR_SEC_POSITION_RULE a
+                LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN ('S_001','S_003')
+                where to_char(a.cdate,'yyyy-MM-dd') = #{cdate}
+                <if test="finprodId != null">
+                    and a.FINPROD_ID = #{finprodId}
+                </if>
+                <if test="portfolioIdList != null">
+                    AND a.PORTFOLIO_ID in
+                    <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                GROUP BY a.PORTFOLIO_ID
+            ) bb ON aa.PORTFOLIO_ID=bb.PORTFOLIO_ID
+            LEFT JOIN (
+                <!--账户现金-->
+                SELECT d.PORTFOLIO_ID, sum(d.AMOUNT) AMOUNT
+                FROM PTL_CASH_POSITION_RULE d
+                where to_char(d.cdate,'yyyy-MM-dd') = #{cdate} AND d.HODING_TYPE ='C_01'
+                <if test="acctId != null">
+                    and d.ACCT_ID = #{acctId}
+                </if>
+                <if test="portfolioIdList != null">
+                    AND d.PORTFOLIO_ID in
+                    <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                GROUP BY d.PORTFOLIO_ID
+            ) cc ON nvl(aa.PORTFOLIO_ID, bb.PORTFOLIO_ID)=cc.PORTFOLIO_ID
         ) summary
     </select>
 

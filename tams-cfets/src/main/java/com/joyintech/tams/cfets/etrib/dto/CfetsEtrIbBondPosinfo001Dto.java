@@ -127,8 +127,7 @@ public class CfetsEtrIbBondPosinfo001Dto{
     }
 
     public String getSecType1Name() {
-        return SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类, getSecType1());
-
+        return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用, getSecType1());        
     }
 
     public void setSecType1Name(String secType1Name) {
@@ -142,9 +141,9 @@ public class CfetsEtrIbBondPosinfo001Dto{
     public void setBusiModel(String busiModel) {
         this.busiModel = busiModel;
     }
-
+    
     public String getBusiModelStr() {
-        return busiModelStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, getBusiModel());
     }
 
     public void setBusiModelStr(String busiModelStr) {
