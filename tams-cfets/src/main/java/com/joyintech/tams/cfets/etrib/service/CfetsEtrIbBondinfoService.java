@@ -642,9 +642,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.isEmpty(requestDto.getFinprodId()) || requestDto.getPortfolioIdList() == null || requestDto.getPortfolioIdList().size() == 0){
             return nullData(flag);
         }
-        
+
+        BaseMap bm = BaseMap.newMap()
+                .put("S_001", DictCodeListExt3.资产类型_指令汇总可用持仓.getValue())
+                .put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
+                .put("S_004", DictCodeListExt3.资产类型_汇总可用现金.getValue())
+                .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
+                .put("A_005", DictCodeListExt3.资产类型_债券融入券可用持仓.getValue())
+                .put("C_01", DictCodeListExt3.资产类型_现金账户持仓.getValue())
+                .put("portfolioIdList", requestDto.getPortfolioIdList())
+                .put("cdate", requestDto.getCdate())
+                .put("finprodId", requestDto.getFinprodId())
+                .put("acctId", requestDto.getAcctId());
         // 查询头寸信息
-        Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(requestDto);
+        Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(bm);
         
         if (map != null){
             return assemble(flag , map);

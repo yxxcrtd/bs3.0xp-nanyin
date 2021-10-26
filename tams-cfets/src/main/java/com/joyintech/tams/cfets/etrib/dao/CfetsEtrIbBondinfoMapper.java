@@ -82,7 +82,7 @@ public interface CfetsEtrIbBondinfoMapper {
 
     List<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(CfetsEtrIbBondPosiPage001RequestDto pageParam);
 
-    Map queryPositionInfo(CfetsEtrIbBondPosiInfoRequestDto RequestDto);
+    Map queryPositionInfo(Map RequestDto);
 
     /**
      * 查询前一日持仓指标

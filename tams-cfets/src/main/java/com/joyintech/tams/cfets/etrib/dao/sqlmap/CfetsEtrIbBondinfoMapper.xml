@@ -737,14 +737,14 @@ from
                 select
                 a.PORTFOLIO_ID,
                 sum(
-                CASE WHEN b.S_HOLDINGTYPE='S_004' AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
                 ) AS t0kyxj, /*T日可用现金*/
                 sum(
-                CASE WHEN b.S_HOLDINGTYPE='S_004' AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
                 ) AS t1kyxj /*T+1日可用现金*/
                 from ETR_CASH_POSITION_RULE a
-                LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN ('S_004')
-                where to_char(a.cdate,'yyyy-MM-dd') = #{cdate}
+                LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_004})
+                where to_char(a.cdate,'yyyy-MM-dd') = #{cdate} and b.S_HOLDINGTYPE IN (#{S_004}) 
                 <if test="portfolioIdList != null">
                     AND a.PORTFOLIO_ID in
                     <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
@@ -757,21 +757,21 @@ from
                 select
                 a.PORTFOLIO_ID,
                 sum(
-                CASE WHEN b.S_HOLDINGTYPE='S_003' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                CASE WHEN b.S_HOLDINGTYPE=#{S_003} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
                 ) AS rrqmkdgh, /*融入券卖空待购回持仓*/
                 sum(
-                CASE WHEN b.S_HOLDINGTYPE='S_001' AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
                 ) AS zctrkycc, /*资产T日可用持仓*/
                 sum(
-                CASE WHEN b.S_HOLDINGTYPE='S_001' AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
                 ) AS zct1rkycc, /*资产T+1日可用持仓*/
-                sum(CASE WHEN a.HODING_TYPE='A_004' AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS bfqtrkycc, /*本方券T日可用持仓*/
-                sum(CASE WHEN a.HODING_TYPE='A_004' AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS bfqt1rkycc, /*本方券T+1日可用持仓*/
-                sum(CASE WHEN a.HODING_TYPE='A_005' AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS rrqtrkycc, /*融入券T日可用持仓*/
-                sum(CASE WHEN a.HODING_TYPE='A_005' AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS rrqt1rkycc /*融入券T+1日可用持仓*/
+                sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS bfqtrkycc, /*本方券T日可用持仓*/
+                sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS bfqt1rkycc, /*本方券T+1日可用持仓*/
+                sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS rrqtrkycc, /*融入券T日可用持仓*/
+                sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS rrqt1rkycc /*融入券T+1日可用持仓*/
                 from ETR_SEC_POSITION_RULE a
-                LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN ('S_001','S_003')
-                where to_char(a.cdate,'yyyy-MM-dd') = #{cdate}
+                LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_001},#{S_003})
+                where to_char(a.cdate,'yyyy-MM-dd') = #{cdate} and (b.S_HOLDINGTYPE IN (#{S_001},#{S_003}) or a.HODING_TYPE in (#{A_004},#{A_005}))
                 <if test="finprodId != null">
                     and a.FINPROD_ID = #{finprodId}
                 </if>
@@ -787,7 +787,7 @@ from
                 <!--账户现金-->
                 SELECT d.PORTFOLIO_ID, sum(d.AMOUNT) AMOUNT
                 FROM PTL_CASH_POSITION_RULE d
-                where to_char(d.cdate,'yyyy-MM-dd') = #{cdate} AND d.HODING_TYPE ='C_01'
+                where to_char(d.cdate,'yyyy-MM-dd') = #{cdate} AND d.HODING_TYPE =#{C_01}
                 <if test="acctId != null">
                     and d.ACCT_ID = #{acctId}
                 </if>
