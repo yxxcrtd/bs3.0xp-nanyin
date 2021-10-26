@@ -1,4 +1,3 @@
 DELETE FROM SYS_PARA WHERE PARA_CODE = 'param_risk_ymzb';
 INSERT INTO SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
-VALUES ('RSK', 'param_risk_ymzb','7149fdea70a94bcaa3983da9b10fe0b6,fa4e2d2a-3fb5-4e27-8c63-fe00e0f9', '01', null, 'ÔÂÄ©Ö¸±ê', 'system', null, sysdate, 'system', sysdate, null, '01');
-commit;
+VALUES ('RSK', 'param_risk_ymzb','7149fdea70a94bcaa3983da9b10fe0b6,fa4e2d2a-3fb5-4e27-8c63-fe00e0f9', '01', null, 'æœˆæœ«æŒ‡æ ‡', 'system', null, sysdate, 'system', sysdate, null, '01');
