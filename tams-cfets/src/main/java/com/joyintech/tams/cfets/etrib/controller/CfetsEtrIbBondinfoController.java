@@ -463,18 +463,12 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     public void export(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
         try {
             List<BaseMap> header = requestDto.getHeader();
-            List dataList = null;
-            if (StringUtil.equals("checked", requestDto.getType())){
-                dataList = (List) requestDto.getData();
-            }else if (StringUtil.equals("condition", requestDto.getType())){
-                // 数据
+            List dataList = requestDto.getData();
+            if (dataList == null || dataList.size() == 0){
                 CfetsEtrIbBondPosiPage001RequestDto dto = requestDto.getRequestDto(CfetsEtrIbBondPosiPage001RequestDto.class);
                 dataList = cfetsEtrIbBondinfoService.queryPositionsPage(1, 500000, dto).getRoot();
-            }else{
-                // 导出方式不合法
-                throw new RuntimeException("导出方式不合法");
             }
-            ExcelUitl.doExport("投资指令", header, dataList, response);
+            ExcelUitl.doExport("持仓列表", header, dataList, response);
         } catch (Exception e) {
             logger.error("excel导出异常:",e);
             e.printStackTrace();

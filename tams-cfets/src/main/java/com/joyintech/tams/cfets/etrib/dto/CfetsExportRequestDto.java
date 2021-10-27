@@ -14,23 +14,23 @@ import java.util.List;
  * excel导出请求参数
  */
 @ApiModel(value="excel导出请求参数",description="excel导出请求参数")
-public class CfetsExportRequestDto extends BaseService {
+public class CfetsExportRequestDto {
 
-    @ApiModelProperty(name="type",value="excel导出方式",example="checked|condition", required = true)
-    private String type;
+    @ApiModelProperty(name="params",value="条件",example="{...}", required = true)
+    private BaseMap params;
     
-    @ApiModelProperty(name="head",value="excel导出表头",example="[{field:'id', name:'编号'}]", required = true)
+    @ApiModelProperty(name="header",value="excel导出表头",example="[{colCode:'id', colName:'编号'}]", required = true)
     private List<BaseMap> header;
 
     @ApiModelProperty(name="data",value="导出数据",example="[{...}..] | {...}", required = true)
-    private Object data;
+    private List<BaseMap> data;
 
-    public String getType() {
-        return type;
+    public BaseMap getParams() {
+        return params;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setParams(BaseMap params) {
+        this.params = params;
     }
 
     public List<BaseMap> getHeader() {
@@ -41,17 +41,16 @@ public class CfetsExportRequestDto extends BaseService {
         this.header = header;
     }
 
-    public Object getData() {
-        return data;
-    }
-
     public <T> T getRequestDto(Class clazz) {
-        String str = JsonUtils.object2Json(data);
+        String str = JsonUtils.object2Json(params);
         return (T) JsonUtils.json2Object(str, clazz);
     }
 
-    public void setData(Object data) {
+    public List<BaseMap> getData() {
+        return data;
+    }
+
+    public void setData(List<BaseMap> data) {
         this.data = data;
     }
-    
 }
