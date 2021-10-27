@@ -1,14 +1,13 @@
-package com.joyintech.tams.cfets.etrib.dto;
+package com.joyintech.tams.business.common.dto;
 
-import com.github.pagehelper.ISelect;
-import com.joyintech.background.component.common.pack.common.util.JsonUtils;
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
-import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * excel导出请求参数
@@ -41,9 +40,10 @@ public class CfetsExportRequestDto {
         this.header = header;
     }
 
-    public <T> T getRequestDto(Class clazz) {
-        String str = JsonUtils.object2Json(params);
-        return (T) JsonUtils.json2Object(str, clazz);
+    public <T> T getDto(Class clazz) {
+        Map pageMode = (Map) params.get("pageMode");
+        if(pageMode != null) pageMode.put("pageSize", 500000); // 设置导出条数
+        return (T) BeanUtil.mapToObject(params, clazz);
     }
 
     public List<BaseMap> getData() {

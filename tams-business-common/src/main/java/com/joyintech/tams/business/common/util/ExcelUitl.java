@@ -11,7 +11,9 @@ import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.handler.context.CellWriteHandlerContext;
 import com.alibaba.excel.write.metadata.WriteSheet;
 
+import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.business.common.service.DoQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.slf4j.Logger;
@@ -39,13 +41,7 @@ public class ExcelUitl {
 	public static <T> void exportAllData(File excelFile,String sheetName,List<ExcelColumn> columns,List<T> data) {
 		File excelTemplateFile = new File(excelFile.getParentFile(),Thread.currentThread().getName()+excelFile.getName());
 		createExcelTemplate(excelTemplateFile, sheetName, columns);
-		EasyExcel.write(excelFile).withTemplate(excelTemplateFile).registerWriteHandler(new CellWriteHandler() {
-			@Override
-			public void afterCellCreate(CellWriteHandlerContext context) {
-				CellWriteHandler.super.afterCellCreate(context);
-				System.out.println(context.getHeadData());
-			}
-		}).sheet(sheetName).doFill(data);
+		EasyExcel.write(excelFile).withTemplate(excelTemplateFile).sheet(sheetName).doFill(data);
 		excelTemplateFile.delete();
 	}
 	
@@ -152,7 +148,16 @@ public class ExcelUitl {
 		}
 	}
 
-	public static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
+	public static void doExport(CfetsExportRequestDto requestDto, HttpServletResponse response, String fileName, DoQuery doQuery) {
+		List<BaseMap> header = requestDto.getHeader();
+		List dataList = requestDto.getData();
+		if (dataList == null || dataList.size() == 0){
+			dataList = doQuery.query();
+		}
+		doExport(fileName, header, dataList, response);
+	}
+	
+	private static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
 		OutputStream os = null;
 		File excelFile = null;
 		String dir = UUID.randomUUID().toString();

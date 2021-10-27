@@ -462,12 +462,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @param requestDto
      * @return
      */
-    public Page<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(int page, int length, CfetsEtrIbBondPosiPage001RequestDto requestDto) {
+    public Page<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(CfetsEtrIbBondPosiPage001RequestDto requestDto) {
         if (!StringUtil.isNotBlank(requestDto.getCdate())){
             requestDto.setCdate(iPlatformDate.getSysDateStr());
         }
         // 1.分页查询列表
-        Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(page, length, () -> cfetsetrIbBondinfoMapper.queryPositionsPage(requestDto));
+        Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(requestDto.getPageNo(), requestDto.getPageSize(), () -> cfetsetrIbBondinfoMapper.queryPositionsPage(requestDto));
 
         /**
          * 根据组合、资产、交易日期、一级分类查询单位成本数据
