@@ -1657,6 +1657,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType2(finDto.getPs());
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+            if (StringUtil.isNotEmpty(dataMap.get("mdateAdd"))) {
+                Date mdate;
+                if (dataMap.get("mdateAdd") instanceof Long){
+                    mdate = new Date(Long.parseLong(dataMap.get("mdateAdd").toString()));
+                }else{
+                    mdate = DateUtil.parse(dataMap.get("mdateAdd").toString());
+                }
+                long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(), mdate);
+                infRiskRdsDto.setBetweenDate(oneDay);
+            }
         }
         if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),v.getAssetType())) {
             infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
@@ -1679,6 +1689,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setMarketCode(null);
             infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
             infRiskRdsDto.setDeadline(StringUtil.isNotEmpty(dataMap.get("termDays"))?new BigDecimal(dataMap.get("termDays").toString()):null);
+            if (StringUtil.isNotEmpty(dataMap.get("mdate"))) {
+                Date mdate;
+                if (dataMap.get("mdate") instanceof Long){
+                    mdate = new Date(Long.parseLong(dataMap.get("mdate").toString()));
+                }else{
+                    mdate = DateUtil.parse(dataMap.get("mdate").toString());
+                }
+                long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(), mdate);
+                infRiskRdsDto.setBetweenDate(oneDay);
+            }
         }
         if(StringUtil.equals(DictCodeList.平安资产类型_买断式回购.getValue(),v.getAssetType())) {
             infRiskRdsDto.setAssetType2(finDto.getPs());
@@ -1796,6 +1816,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setTradeNum(finDto.getEntrustNum());
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+            if (StringUtil.isNotEmpty(dataMap.get("termDays"))) {
+                infRiskRdsDto.setBetweenDate(Long.parseLong(dataMap.get("termDays").toString()));
+            }
         }
         if(StringUtil.equals(DictCodeListExt2.平安资产类型_外汇掉期.getValue(),v.getAssetType())) {
             infRiskRdsDto.setPs(StringUtil.isNotEmpty(dataMap.get("tradePs"))?dataMap.get("tradePs").toString():infRiskRdsDto.getPs());
@@ -2194,6 +2217,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
             infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_拆借.getValue());
             infRiskRdsDto.setAssetType2(finDto.getBusiPs());
+            if (StringUtil.isNotEmpty(priObj.get("mdate"))) {
+                Date mdate;
+                if (priObj.get("mdate") instanceof Long){
+                    mdate = new Date(Long.parseLong(priObj.get("mdate").toString()));
+                }else{
+                    mdate = DateUtil.parse(priObj.get("mdate").toString());
+                }
+                long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(), mdate);
+                infRiskRdsDto.setBetweenDate(oneDay);
+            }
         }
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),v.getFinType())||
                 StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(),v.getFinType())||
@@ -2253,6 +2286,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setMarketCode(null);
             infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
             infRiskRdsDto.setDeadline(StringUtil.isNotEmpty(dataMap.get("term"))?new BigDecimal(dataMap.get("term").toString()):null);
+            if (StringUtil.isNotEmpty(dataMap.get("mdate"))) {
+                Date mdate;
+                if (dataMap.get("mdate") instanceof Long){
+                    mdate = new Date(Long.parseLong(dataMap.get("mdate").toString()));
+                }else{
+                    mdate = DateUtil.parse(dataMap.get("mdate").toString());
+                }
+                long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(), mdate);
+                infRiskRdsDto.setBetweenDate(oneDay);
+            }
         }
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue(),v.getFinType())||
                 StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue(),v.getFinType())||
