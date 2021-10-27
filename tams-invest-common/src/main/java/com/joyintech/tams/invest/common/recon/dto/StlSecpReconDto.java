@@ -1,0 +1,12 @@
+package com.joyintech.tams.invest.common.recon.dto;
+
+import com.joyintech.tams.common.base.entity.StlSecpRecon;
+
+/**
+ * @author zznn
+ * @date 2021/10/26
+ */
+public class StlSecpReconDto extends StlSecpRecon {
+
+}
+
