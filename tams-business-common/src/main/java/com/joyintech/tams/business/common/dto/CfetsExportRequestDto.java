@@ -40,10 +40,19 @@ public class CfetsExportRequestDto {
         this.header = header;
     }
 
+    /**
+     * 从请求参数中获取分页排序对象，设置导出条数
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     public <T> T getDto(Class clazz) {
         Map pageMode = (Map) params.get("pageMode");
-        if(pageMode != null) pageMode.put("pageSize", 500000); // 设置导出条数
-        return (T) BeanUtil.mapToObject(params, clazz);
+        if(pageMode != null) { // 设置导出条数
+            pageMode.put("pageNo", 1);
+            pageMode.put("pageSize", 500000);
+        }
+        return (T) JsonUtils.json2Object(JsonUtils.object2Json(params), clazz);
     }
 
     public List<BaseMap> getData() {

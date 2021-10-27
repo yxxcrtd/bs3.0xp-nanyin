@@ -19,8 +19,8 @@ public class CfetsEtrIbBondPosiPage001RequestDto {
     @ApiModelProperty(name="finprodId",value="资产代码",example="xxx")
     private String finprodId;
     
-    @ApiModelProperty(name="type8",value="债券一级分类",example="F01")
-    private String type8;
+    @ApiModelProperty(name="secType1",value="债券一级分类",example="F01")
+    private String secType1;
 
     @ApiModelProperty(name="pageMode",value="分页对象")
     private PageMode pageMode;
@@ -49,12 +49,12 @@ public class CfetsEtrIbBondPosiPage001RequestDto {
         this.finprodId = finprodId;
     }
 
-    public String getType8() {
-        return type8;
+    public String getSecType1() {
+        return secType1;
     }
 
-    public void setType8(String type8) {
-        this.type8 = type8;
+    public void setSecType1(String secType1) {
+        this.secType1 = secType1;
     }
 
     public PageMode getPageMode() {

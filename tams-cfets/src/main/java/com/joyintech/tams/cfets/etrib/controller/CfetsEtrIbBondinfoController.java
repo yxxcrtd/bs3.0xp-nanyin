@@ -17,6 +17,7 @@ import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
@@ -37,6 +38,7 @@ import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
@@ -533,6 +535,20 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
         }
     }
+
+    @GetMapping("/getSecType1")
+    @ApiOperation(value = "债券一级分类列表查询", notes = "债券一级分类列表查询")
+    @ResponseBody
+    public Message<SelectDto> getSecType1(String search) {
+        try {
+            SelectDto sdto = this.getSelectDataFromDataDic(DictCode.金融产品类型_投管用, search);
+            return new Message<SelectDto>().success().setData(sdto);
+        } catch (Exception e) {
+            logger.error("查询债券简称列表异常", e);
+            return new Message<SelectDto>().fail().setMessage("查询异常");
+        }
+    }
+    
     @PostMapping("/selectPortfolioIdList")
     @ApiOperation(value = "组合列表查询", notes = "组合列表查询")
     @ResponseBody

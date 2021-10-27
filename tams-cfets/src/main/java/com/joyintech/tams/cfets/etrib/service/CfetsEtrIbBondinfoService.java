@@ -506,7 +506,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             portfolioIdList = Arrays.asList(requestDto.getPortfolioId());
         }
         String finprodId = requestDto.getFinprodId();
-        String secType1 = requestDto.getType8();
+        String secType1 = requestDto.getSecType1();
         
         // 查询前一日持仓指标
         List<BaseMap> lastCostAmt = selectLastCostAmt(cdate, portfolioIdList, finprodId, secType1);
