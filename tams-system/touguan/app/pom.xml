@@ -226,6 +226,7 @@
 					<include>**/*.js</include>
 					<include>**/*.html</include>
 					<include>**/*.xls</include>
+					<include>**/*.ico</include>
 				</includes>
 				<filtering>false</filtering>
 			</resource>
