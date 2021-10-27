@@ -337,14 +337,14 @@ spring:
   profiles: allinone
   thymeleaf:
     cache: false
-#   redis:   ##单节点配置
-#     database: 0
-#     host: 192.168.70.246
-#     port: 6379
-#     timeout: 20000
+#  redis:   ##单节点配置
+#    database: 0
+#    host: 192.168.90.47
+#    port: 6379
+#    timeout: 20000
   redis:
     cluster:
-      nodes: 192.168.70.246:6379,192.168.70.246:6380,192.168.70.246:6381,192.168.70.246:6382,192.168.70.246:6383,192.168.70.246:6384
+      nodes: 192.168.90.47:6379,192.168.90.47:6380,192.168.90.47:6381,192.168.90.47:6382,192.168.90.47:6383,192.168.90.47:6384
   redislock:
     redissonEnabled: false
   datasource:
@@ -355,7 +355,7 @@ spring:
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
   rabbitmq:
     # 需求环境使用mq配置如下
-    addresses: 192.168.60.111:5672
+    addresses: 192.168.90.47:5672
     username: rbmq
     password: rbmq
 application:
@@ -418,7 +418,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.70.246:8070
+    managerAddress: 192.168.90.47:8070
 
 # 场内交易使用配置
 netty:
