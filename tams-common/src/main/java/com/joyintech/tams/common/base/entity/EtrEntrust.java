@@ -191,6 +191,11 @@ public class EtrEntrust extends BaseEntity {
     private String businessModel;
 
     /**
+     *业务类型
+     */
+    private String busiType;
+
+    /**
      * 取得 委托代码
      * @return 委托代码
      */
@@ -743,5 +748,13 @@ public class EtrEntrust extends BaseEntity {
 
     public void setBusinessModel(String businessModel) {
         this.businessModel = businessModel;
+    }
+
+    public String getBusiType() {
+        return busiType;
+    }
+
+    public void setBusiType(String busiType) {
+        this.busiType = busiType;
     }
 }
