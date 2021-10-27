@@ -1,12 +1,11 @@
 package com.joyintech.tams.business.common.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.workflow.engine.controller.WorkFlowController;
+import com.joyintech.workflow.engine.service.UserSelectService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.workflow.engine.controller.WorkFlowController;
-import com.joyintech.workflow.engine.service.UserSelectService;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/common/workflow")
@@ -38,13 +35,14 @@ public class JoyinTamsWorkFlowController  {
 	private HttpServletRequest request;
 	 
 	@SuppressWarnings({ "unchecked" })
-	@ApiOperation(value = "查询审批人员列表", notes = "/common/workflow/listNextUser?pageId=CfetsEtrBondInfo001&elementId=CfetsEtrBondInfo001_btn_submit&searchValue=user")
+	@ApiOperation(value = "查询审批人员列表", notes = "/common/workflow/listNextUser?pageId=CfetsEtrBondInfo001&elementId=CfetsEtrBondInfo001_btn_submit&searchType=user&searchValue=搜索用户")
 	@PostMapping("/listNextUser")
 	public Message<List<?>> listNextUser(){
 		try {
 			String pageId = request.getParameter("pageId");
 			String elementId = request.getParameter("elementId");
 			String searchValue = request.getParameter("searchValue");
+			String searchType = request.getParameter("searchType");
 			if (StringUtils.isEmpty(pageId)) {
 				return new Message<List<?>>().fail().setMessage("pageId参数不能为null");
 			}
@@ -70,6 +68,7 @@ public class JoyinTamsWorkFlowController  {
 			Map<String, String> data = (Map<String, String>) nextTask.getData();
 			String nodeId = data.get("nodeId");
 			String isSendUorg = data.get("isSendUorg");
+			String moduleId = data.get("moduleId");
 			
 			//请求:
 			//  from: workflow
@@ -88,8 +87,8 @@ public class JoyinTamsWorkFlowController  {
 			//  {"userName":"JT01","realName":"JT01","expired":false,"locked":false,"admin":false}]
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("from", "workflow");
-			params.put("searchType", "user");
-			params.put("moduleId", "oneApproval");
+			params.put("searchType", searchType);
+			params.put("moduleId", moduleId);
 			params.put("nodeId", nodeId);
 			params.put("isSendUorg", isSendUorg);
 			params.put("searchValue", searchValue);
