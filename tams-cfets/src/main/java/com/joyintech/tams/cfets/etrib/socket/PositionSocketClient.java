@@ -90,7 +90,8 @@ public class PositionSocketClient {
                     // 重连
                     logger.info("头寸服务关闭，开始重连");
                     
-                    try {util.close();} catch (IOException e) {e.printStackTrace();}
+                    try {
+                        util.close();} catch (IOException e) {e.printStackTrace();}
                     isStart = false;
                     
                     // 每间隔10秒重连

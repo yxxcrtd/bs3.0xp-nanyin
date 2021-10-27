@@ -411,9 +411,9 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             AjaxResult m =new AjaxResult(msg);
             return new Message<AjaxResult>().success().setData(m);
         }catch (Exception e) {
-            PositionUtil.ajaxErrorReturn(e);
             logger.error("保存银行间多组合指令新建失败",e);
-            return new Message<AjaxResult>().fail().setMessage("保存银行间多组合指令新建失败");
+            return PositionUtil.ajaxErrorReturn(e);
+//            return new Message<AjaxResult>().fail().setMessage("保存银行间多组合指令新建失败");
         }
     }
 
