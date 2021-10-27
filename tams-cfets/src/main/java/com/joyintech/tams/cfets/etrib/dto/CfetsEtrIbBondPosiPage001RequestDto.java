@@ -18,12 +18,23 @@ public class CfetsEtrIbBondPosiPage001RequestDto {
 
     @ApiModelProperty(name="finprodId",value="资产代码",example="xxx")
     private String finprodId;
+
+    @ApiModelProperty(name="search",value="模糊查询使用",example="xxx")
+    private String search;
     
     @ApiModelProperty(name="secType1",value="债券一级分类",example="F01")
     private String secType1;
 
     @ApiModelProperty(name="pageMode",value="分页对象")
     private PageMode pageMode;
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
+    }
 
     public String getPortfolioId() {
         return portfolioId;

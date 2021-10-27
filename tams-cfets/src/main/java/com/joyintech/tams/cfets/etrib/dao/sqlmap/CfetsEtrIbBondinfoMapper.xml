@@ -668,7 +668,19 @@ from
                     ) WHERE rn =1
                 ) tt on tt.SEC_ID=etrptl.FINPROD_ID
             </if>
-            where etrptl.PTL_BOND_ZHCC > 0 
+            <if test="search != null and search != ''">
+                <!--模糊查询使用-->
+                LEFT JOIN (
+                    SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST WHERE DICT_CODE= 'FINPROD_TYPE_TG'
+                ) f on f.ITEM_CODE=c.TYPE_8
+                LEFT JOIN (
+                    SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST WHERE DICT_CODE= 'BUSINESS_MODEL'
+                ) g on g.ITEM_CODE = etrptl.INV_AIM
+            </if>
+            <!-- 账户持仓为0时数据不展示 -->
+            where etrptl.PTL_BOND_ZHCC != 0 
+            <!-- 关键字模糊查询 -->
+            <include refid="positionQueryAnd"/>
             <if test="secType1 != null and secType1 != ''">
                 and c.TYPE_8 = #{secType1,jdbcType=VARCHAR}
             </if>
@@ -679,6 +691,15 @@ from
         </if>
     </select>
 
+    <sql id="positionQueryAnd">
+        <if test="search != null and search != ''">
+            and etrptl.PORTFOLIO_ID || '|' || e.PORTFOLIO_NAME || '|' || etrptl.FINPROD_ID || '|' || 
+            d.FINPROD_NAME || '|' || d.FINPROD_MARKET_ID || '|' || c.TYPE_8 || '|' || etrptl.INV_AIM || '|' || 
+            f.ITEM_VALUE || '|' || g.ITEM_VALUE 
+            like '%' || #{search} || '%'
+        </if>
+    </sql>
+    
     <!-- 查询前一日持仓指标 -->
     <select id="selectLastCostAmt" parameterType="Map" resultType="com.joyintech.tams.business.common.pojo.BaseMap">
         select
