@@ -466,8 +466,22 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (!StringUtil.isNotBlank(requestDto.getCdate())){
             requestDto.setCdate(iPlatformDate.getSysDateStr());
         }
-        // 1.分页查询列表
-        Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(requestDto.getPageNo(), requestDto.getPageSize(), () -> cfetsetrIbBondinfoMapper.queryPositionsPage(requestDto));
+        
+        // 市价净价取值估值配置
+        String BOND_VALUATION_RULE = CacheUtil.getSysParam("BOND_VALUATION_RULE");
+        BaseMap req = BaseMap.newMap(BeanUtil.object2Map(requestDto))
+                .put("BOND_VALUATION_RULE", BOND_VALUATION_RULE)
+                .put("S_001", DictCodeListExt3.资产类型_指令汇总可用持仓.getValue())
+                .put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue())
+                .put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue())
+                .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
+                .put("A_008", DictCodeListExt3.资产类型_债券本方券在途持仓.getValue())
+                .put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue())
+                ;
+        
+        // 分页查询列表
+        Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(
+                requestDto.getPageNo(), requestDto.getPageSize(), () -> cfetsetrIbBondinfoMapper.queryPositionsPage(req));
 
         /**
          * 根据组合、资产、交易日期、一级分类查询单位成本数据

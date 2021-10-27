@@ -77,8 +77,7 @@ public interface CfetsEtrIbBondinfoMapper {
 
     CfetsEtrFinProductDto getEtrFinProductInfo(@Param("secId") String secId);
 
-
-    List<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(CfetsEtrIbBondPosiPage001RequestDto pageParam);
+    List<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(Map pageParam);
 
     Map queryPositionInfo(Map RequestDto);
 

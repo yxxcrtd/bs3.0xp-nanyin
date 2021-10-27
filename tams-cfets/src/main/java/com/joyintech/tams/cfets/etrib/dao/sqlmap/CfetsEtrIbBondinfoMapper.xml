@@ -597,8 +597,7 @@ from
             /* 持仓单位成本 service从map查询*/
             null as unitCost,
             /* 最新净价 根据规则12来获取*/
-            null as price,
-            MST_LIST.NETPRICE_LIST, /*债券估值行情字符*/
+            tt.NETPRICE as price,
             /* 持仓市值 */
             ROUND((etrptl.PTL_BOND_BFQKYCC + etrptl.PTL_BOND_BFQZTCC),2) as positionsPrice,
             /* 浮动盈亏 */
@@ -616,11 +615,11 @@ from
                 FROM (
                     SELECT
                     a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM,
-                    sum(CASE WHEN b.S_HOLDINGTYPE='S_001' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) ETR_SUM_KYCC,
-                    sum(CASE WHEN b.S_HOLDINGTYPE='S_002' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) ETR_PLEDGE_KZYCC,
-                    sum(CASE WHEN a.HODING_TYPE='A_012' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) ETR_PLEDGE_YZYCC
+                    sum(CASE WHEN b.S_HOLDINGTYPE=#{S_001} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) ETR_SUM_KYCC,
+                    sum(CASE WHEN b.S_HOLDINGTYPE=#{S_002} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) ETR_PLEDGE_KZYCC,
+                    sum(CASE WHEN a.HODING_TYPE=#{A_012} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) ETR_PLEDGE_YZYCC
                     FROM ETR_SEC_POSITION_RULE a
-                    LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN ('S_001','S_002')
+                    LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_001},#{S_002})
                     WHERE to_char(a.cdate,'yyyy-MM-dd') = #{cdate,jdbcType=VARCHAR}
                     <if test="portfolioId != null and portfolioId != ''">
                         AND a.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
@@ -633,9 +632,9 @@ from
                 FULL OUTER JOIN (
                     <!-- 本方券可用持仓、本方券在途持仓、账户持仓 -->
                     select a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM,
-                    sum(CASE WHEN a.HODING_TYPE ='A_004' THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_BFQKYCC,
-                    sum(CASE WHEN a.HODING_TYPE ='A_008' THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_BFQZTCC,
-                    sum(CASE WHEN a.HODING_TYPE ='A_001' THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_ZHCC
+                    sum(CASE WHEN a.HODING_TYPE =#{A_004} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_BFQKYCC,
+                    sum(CASE WHEN a.HODING_TYPE =#{A_008} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_BFQZTCC,
+                    sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_ZHCC
                     from PTL_SEC_POSITION_RULE a
                     where to_char(a.cdate,'yyyy-MM-dd') = #{cdate,jdbcType=VARCHAR}
                     <if test="portfolioId != null and portfolioId != ''">
@@ -650,12 +649,25 @@ from
             LEFT JOIN FIN_PRODUCT_TYPE c ON etrptl.FINPROD_ID = c.FINPROD_ID
             LEFT JOIN FIN_PRODUCT d ON etrptl.FINPROD_ID=d.FINPROD_ID
             LEFT JOIN PTL_PORTFOLIO e ON etrptl.PORTFOLIO_ID=e.PORTFOLIO_ID 
-            LEFT JOIN (
-                <!-- 估值行情表，列转行 结果示例：CBC,144|CSD,145 -->
-                SELECT SEC_ID, TRIM('|' FROM SYS.STRAGG(VALUE_SOURCE || ',' || NETPRICE || NVL2(VALUE_SOURCE,'|',''))) NETPRICE_LIST 
-                from MST_BOND_VALUATION_INFO 
-                GROUP BY SEC_ID
-            ) MST_LIST ON MST_LIST.SEC_ID = etrptl.FINPROD_ID 
+            <if test="BOND_VALUATION_RULE != null and BOND_VALUATION_RULE ='01'">
+                left join (
+                    select SEC_ID, NETPRICE from (
+                        SELECT ROW_NUMBER () over(PARTITION BY SEC_ID ORDER BY VALUE_DATE DESC, DECODE(VALUE_DATE, 'CBC', 1, 0) DESC) rn, a.*
+                        FROM MST_BOND_VALUATION_INFO a
+                        WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') AND VALUE_SOURCE IN ('CBC','SCH')
+                    ) WHERE rn =1
+                ) tt on tt.SEC_ID=etrptl.FINPROD_ID
+            </if>
+            <if test="BOND_VALUATION_RULE != null and BOND_VALUATION_RULE ='02'">
+                left join (
+                    select SEC_ID, NETPRICE from (
+                        SELECT ROW_NUMBER () over(PARTITION BY SEC_ID ORDER BY VALUE_DATE DESC, DECODE(T2.REGIST_ORG, '01', 1, '02', 1, 0) DESC) rn, t1.*
+                        FROM MST_BOND_VALUATION_INFO t1
+                        LEFT JOIN FIN_PRODUCT t2 ON t1.SEC_ID =t2.FINPROD_ID AND t2.FINPROD_TYPE ='F01' AND DECODE(t1.VALUE_SOURCE, 'CBC','01','SCH','02','NULL')=T2.REGIST_ORG
+                        WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') AND VALUE_SOURCE IN ('CBC','SCH')
+                    ) WHERE rn =1
+                ) tt on tt.SEC_ID=etrptl.FINPROD_ID
+            </if>
             where etrptl.PTL_BOND_ZHCC > 0 
             <if test="secType1 != null and secType1 != ''">
                 and c.TYPE_8 = #{secType1,jdbcType=VARCHAR}
