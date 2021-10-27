@@ -36,13 +36,11 @@ import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -401,15 +399,6 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         params.setBusinessCode(CfetsEtribBondInfo003Dto::getTotalEtrustId);
         params.setBusinessType(DictCodeList.共通业务类型_债券投资委托.getValue());
         processParameter.setOperationType(OperationType.NEW);
-        // 设置流程业务说明, entity即传入的dto
-        params.setComment(
-                entity -> this.getMessage("EtribBondInfo003") + "(" + entity.getTotalEtrustId() + ")"
-                        + "-" + this.getMessage("EtribBondInfo003.ps")+"("+ SysDataUtil.getNameFromDataDict(DictCode.交易方向, entity.getPs())+")" + "-" + "("
-                        + this.getMessage("EtribBondInfo003.vdate") + ":" + com.joyintech.framework.util.DateUtil.format(entity.getVdate())
-                        + ")-(" + this.getMessage("EtribBondInfo003.mdate") + ":"
-                        + DateUtil.format(entity.getMdate())+ ")-"
-                        + this.getMessage("EtribBondInfo003.entrustAmt") + ":"
-                        );
         processParameter.setWorkFlowParameter(params);
       // allDto.setWorkflowParameter("new|wy1,wy2||1|CfetsEtrBondInfo001|CfetsEtrBondInfo001_btn_submit|false");
 
@@ -492,10 +481,10 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
     
-    @PostMapping("/getEtrFinProductInfo/{secId}")
+    @PostMapping("/getEtrFinProductInfo")
     @ApiOperation(value = "债券信息查询功能", notes = "债券信息查询功能")
     @ResponseBody
-    public Message<CfetsEtrFinProductDto> getEtrFinProductInfo(@PathVariable("secId") String secId) {
+    public Message<CfetsEtrFinProductDto> getEtrFinProductInfo(@RequestParam("secId") String secId) {
         try {
 //            secId = "F01_lvzq001.IB";
             CfetsEtrFinProductDto dto = cfetsEtrIbBondinfoService.getEtrFinProductInfo(secId);
