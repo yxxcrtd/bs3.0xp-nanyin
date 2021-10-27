@@ -325,6 +325,13 @@ application:
 #交易压力测试性能优化开关
 flag: false
 
+#头寸引擎地址
+positionUrl: http://192.168.70.146:1667/dsp
+#监听头寸余额地址
+webSocketUrl: ws://192.168.70.146:1667/dsp/positionTopic
+#监听键值
+webSocketKey: "[{\"table\":\"ETR_CASH_POSITION\",\"hodingTypes\":[]}, {\"table\":\"PTL_CASH_POSITION\",\"hodingTypes\":[]}, {\"table\":\"ETR_SEC_POSITION\",\"hodingTypes\":[]}, {\"table\":\"PTL_SEC_POSITION\",\"hodingTypes\":[]}]"
+
 ---
 spring:
   profiles: allinone
@@ -343,8 +350,8 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_DEV
-    password: BS30INIT_DEV
+    username: BS303INIT_TEST1008
+    password: BS303INIT_TEST1008
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
   rabbitmq:
     # 需求环境使用mq配置如下
@@ -354,8 +361,8 @@ spring:
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30INIT_DEV
-  sqldirpassword: BS30INIT_DEV
+  sqldiruserName: BS303INIT_TEST1008
+  sqldirpassword: BS303INIT_TEST1008
 shiro:
   ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
   #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
@@ -370,31 +377,32 @@ shiro:
     /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
     /TrdExchangeWorkflow/**,/invest/trade/bond/TrdBondInvestTrade002/**,/invest/trade/trdrepotrade/TrdRepoTrade002/**,/invest/trade/forwex/TrdForwexInvestTrade002/**,/invest/trade/api/**,/commonPosition/**,
     /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,
-    /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo,/interf/xp,/interf/xp/**,/interf/zg,/interf/zg/**,/FinProjectTargetAsset/insert,/FinAssetRateAdj/getFinAssetRateAdjByCashId
+    /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo,/interf/xp,/interf/xp/**,/interf/zg,/interf/zg/**,/FinProjectTargetAsset/insert,/FinAssetRateAdj/getFinAssetRateAdjByCashId,
+    /cfets/**,/common/workflow/**,/common/config/**
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_DEV
-    password: BS30INIT_DEV
+    username: BS303INIT_TEST1008
+    password: BS303INIT_TEST1008
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_DEV
-    password: BS30INIT_DEV
+    username: BS303INIT_TEST1008
+    password: BS303INIT_TEST1008
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_DEV
-    password: BS30INIT_DEV
+    username: BS303INIT_TEST1008
+    password: BS303INIT_TEST1008
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_DEV
-    password: BS30INIT_DEV
+    username: BS303INIT_TEST1008
+    password: BS303INIT_TEST1008
 log:
   path: /home/tams/logs/tams/touguan
   level: debug
