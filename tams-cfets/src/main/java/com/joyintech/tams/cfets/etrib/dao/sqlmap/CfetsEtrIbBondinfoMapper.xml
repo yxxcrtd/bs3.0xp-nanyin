@@ -592,15 +592,15 @@ from
             /*交易可用券面总额、交易在途券面总额*/
             ROUND(etrptl.PTL_BOND_BFQKYCC,2) as trdAvaShareAmt,
             ROUND(etrptl.PTL_BOND_BFQZTCC,2) as trdIntransShareAmt,
-            /* 持仓成本 service从map查询 */
+            /* 1持仓成本 service从map查询 */
             null as positionsAmt,
-            /* 持仓单位成本 service从map查询*/
+            /* 2持仓单位成本 service从map查询*/
             null as unitCost,
-            /* 最新净价 根据规则12来获取*/
+            /* 3最新净价 根据规则12来获取，优先从service中取债券行情数据*/
             tt.NETPRICE as price,
-            /* 持仓市值 */
-            ROUND((etrptl.PTL_BOND_BFQKYCC + etrptl.PTL_BOND_BFQZTCC),2) as positionsPrice,
-            /* 浮动盈亏 */
+            /* 4持仓市值 （交易可用券面总额+交易在途券面总额）*最新净价/单位面值 service中算，需要最新净价*/
+            null as positionsPrice,
+            /* 5浮动盈亏 =持仓市值-持仓成本 service中算*/
             null as floatingPL,
             /* 账户持仓 */
             etrptl.PTL_BOND_ZHCC as accountPosition
@@ -693,10 +693,19 @@ from
 
     <sql id="positionQueryAnd">
         <if test="search != null and search != ''">
-            and etrptl.PORTFOLIO_ID || '|' || e.PORTFOLIO_NAME || '|' || etrptl.FINPROD_ID || '|' || 
-            d.FINPROD_NAME || '|' || d.FINPROD_MARKET_ID || '|' || c.TYPE_8 || '|' || etrptl.INV_AIM || '|' || 
-            f.ITEM_VALUE || '|' || g.ITEM_VALUE 
-            like '%' || #{search} || '%'
+            and (
+                etrptl.PORTFOLIO_ID || '|' || e.PORTFOLIO_NAME || '|' || etrptl.FINPROD_ID || '|' || 
+                d.FINPROD_NAME || '|' || d.FINPROD_MARKET_ID || '|' || c.TYPE_8 || '|' || etrptl.INV_AIM || '|' || 
+                f.ITEM_VALUE || '|' || g.ITEM_VALUE 
+                like '%' || #{search} || '%' 
+                or (etrptl.ETR_SUM_KYCC = #{search})
+                or (etrptl.ETR_PLEDGE_KZYCC = #{search})
+                or (etrptl.ETR_PLEDGE_YZYCC = #{search})
+                or (etrptl.PTL_BOND_BFQKYCC = #{search})
+                or (etrptl.PTL_BOND_BFQZTCC = #{search})
+                or (tt.NETPRICE = #{search}) 
+                or (etrptl.PTL_BOND_ZHCC = #{search}) 
+            )
         </if>
     </sql>
     

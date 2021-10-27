@@ -487,19 +487,30 @@ public class CfetsEtrIbBondinfoService extends BaseService{
          * 根据组合、资产、交易日期、一级分类查询单位成本数据
          */
         Map<String, CfetsUnitCostDto> unitCostMap = calcEachCostAmtMap(requestDto);
+        
+        // 逐条获取单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
         if(result != null && result.getRoot()!= null && result.getRoot().size() > 0){
             result.getRoot().forEach( r->{
                 CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId() + r.getBusiModel());
                 if (dto != null){
-                    // 持仓成本价（元） 取单位成本
-                    r.setUnitCost(dto.getUnitCost());
-                    // 持仓成本（万元）
+                    // 1.持仓成本（万元）
                     r.setPositionsAmt(dto.getBuyCostAmt());
-                    // 浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
+                    // 2.持仓成本价（元） 取单位成本
+                    r.setUnitCost(dto.getUnitCost());
+                    
+                    // 3.最新净价（元） 优先从内存获取债券最新净价，没有则 r.getPrice()
+                    // todo 取实时行情债券最新净价
+                    
+                    // 4.持仓市值（万元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
+                    BigDecimal doAdd = ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt());
+                    r.setPositionsPrice(ArithmeticUtil.multiply(doAdd, r.getPrice()).divide(BigDecimal.valueOf(100)));
+                    
+                    // 5.浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
                     r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
                 }
             });
         }
+        
         return result;
     }
 
