@@ -21,6 +21,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.trade.investtrade.commanddispatcher.service.TrdCommandDispatcher001Service;
+import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
@@ -436,7 +437,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ResponseBody
     public Message<Page<CfetsEtrIbBondPosinfo001Dto>> queryPositionsPage(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto) {
         try {
-            Page<CfetsEtrIbBondPosinfo001Dto> list = cfetsEtrIbBondinfoService.queryPositionsPage(requestDto.getPageNo(), requestDto.getPageSize(), requestDto);
+            Page<CfetsEtrIbBondPosinfo001Dto> list = cfetsEtrIbBondinfoService.queryPositionsPage(requestDto);
             return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().success().setData(list);
         }catch (Exception e) {
             logger.error("查询持仓信息分页列表异常",e);
@@ -457,22 +458,27 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
 
-    @PostMapping(value="/export")
+    @PostMapping(value="/exportPosition")
     @ResponseBody
-    @ApiOperation(value = "excel导出", notes = "excel导出")
-    public void export(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
-        try {
-            List<BaseMap> header = requestDto.getHeader();
-            List dataList = requestDto.getData();
-            if (dataList == null || dataList.size() == 0){
-                CfetsEtrIbBondPosiPage001RequestDto dto = requestDto.getRequestDto(CfetsEtrIbBondPosiPage001RequestDto.class);
-                dataList = cfetsEtrIbBondinfoService.queryPositionsPage(1, 500000, dto).getRoot();
-            }
-            ExcelUitl.doExport("持仓列表", header, dataList, response);
-        } catch (Exception e) {
-            logger.error("excel导出异常:",e);
-            e.printStackTrace();
-        }
+    @ApiOperation(value = "持仓列表导出", notes = "持仓列表导出")
+    public void exportPosition(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
+            CfetsEtrIbBondPosiPage001RequestDto dto = requestDto.getDto(CfetsEtrIbBondPosiPage001RequestDto.class);
+            List dataList = cfetsEtrIbBondinfoService.queryPositionsPage(dto).getRoot();
+            return dataList;
+        });
+    }
+
+    @PostMapping(value="/exportEtrInfo")
+    @ResponseBody
+    @ApiOperation(value = "指令管理导出", notes = "指令管理导出")
+    public void exportEtrInfo(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(req, response, "持仓列表", () -> {
+            List dataList = cfetsEtrIbBondinfoService.findEtrinfoPage(req.getDto(CfetsEtrIbBondinfo001Dto.class)).getRoot();
+            return dataList;
+        });
     }
     
     @PostMapping("/getEtrFinProductInfo")
