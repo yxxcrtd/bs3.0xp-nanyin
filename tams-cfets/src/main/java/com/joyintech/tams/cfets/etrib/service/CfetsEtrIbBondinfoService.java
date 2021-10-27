@@ -473,18 +473,19 @@ public class CfetsEtrIbBondinfoService extends BaseService{
          * 根据组合、资产、交易日期、一级分类查询单位成本数据
          */
         Map<String, CfetsUnitCostDto> unitCostMap = calcEachCostAmtMap(requestDto);
-        result.getRoot().forEach( r->{
-            CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId() + r.getBusiModel());
-            if (dto != null){
-                // 持仓成本价（元）
-                r.setUnitCost(dto.getUnitCost());
-                // 持仓成本（万元）
-                r.setPositionsAmt(dto.getBuyCostAmt());
-                // 浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
-                r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
-            }
-        });
-        
+        if(result != null && result.getRoot()!= null && result.getRoot().size() > 0){
+            result.getRoot().forEach( r->{
+                CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId() + r.getBusiModel());
+                if (dto != null){
+                    // 持仓成本价（元） 取单位成本
+                    r.setUnitCost(dto.getUnitCost());
+                    // 持仓成本（万元）
+                    r.setPositionsAmt(dto.getBuyCostAmt());
+                    // 浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
+                    r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
+                }
+            });
+        }
         return result;
     }
 
@@ -505,10 +506,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             portfolioIdList = Arrays.asList(requestDto.getPortfolioId());
         }
         String finprodId = requestDto.getFinprodId();
-        String firstLevelType = requestDto.getType8();
+        String secType1 = requestDto.getType8();
         
         // 查询前一日持仓指标
-        List<BaseMap> lastCostAmt = selectLastCostAmt(cdate, portfolioIdList, finprodId, firstLevelType );
+        List<BaseMap> lastCostAmt = selectLastCostAmt(cdate, portfolioIdList, finprodId, secType1);
         
         if (lastCostAmt != null){
             lastCostAmt.forEach(e->{
@@ -529,7 +530,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         
         // 当日交易数据查询
-        List<BaseMap> currTrdData = selectCurrTrdData(cdate, portfolioIdList, finprodId, firstLevelType );
+        List<BaseMap> currTrdData = selectCurrTrdData(cdate, portfolioIdList, finprodId, secType1);
         if (currTrdData != null){
             currTrdData.forEach(i -> {
                 String key = getKey(i);
@@ -546,16 +547,16 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     dto.setBuyCostAmt(thisBuyCostAmt);
                     // 数量
                     dto.setShareAmt(dto.getShareAmt().add(i.getBigDecimal("AMT")));
-                    // 单位成本 = 成本/数量
+                    // 单位成本 = 成本（万元）/数量
                     dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt().multiply(BigDecimal.valueOf(10000.0)), dto.getShareAmt(), 4));
-                }else{
+                }else{ // 卖出或行权回售
                     // 成本
                     BigDecimal thisBuyCostAmt = dto.getBuyCostAmt()
                             .subtract(ArithmeticUtil.multiply(i.getBigDecimal("PRICE"), i.getBigDecimal("AMT")));
                     dto.setBuyCostAmt(thisBuyCostAmt);
                     // 数量
                     dto.setShareAmt(dto.getShareAmt().subtract(i.getBigDecimal("AMT")));
-                    // 单位成本 = 成本/数量
+                    // 单位成本 = 成本（万元）/数量
                     dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt().multiply(BigDecimal.valueOf(10000.0)), dto.getShareAmt(), 2));
                 }
                 
@@ -574,9 +575,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @param cdate 交易日期
      * @param portfolioIdList 组合代码
      * @param finprodId 资产代码
-     * @param firstLevelType 债券一级分类
+     * @param secType1 债券一级分类
      */
-    public List<BaseMap> selectLastCostAmt(Date cdate, List<String> portfolioIdList, String finprodId, String firstLevelType){
+    public List<BaseMap> selectLastCostAmt(Date cdate, List<String> portfolioIdList, String finprodId, String secType1){
         BaseMap reqMap = BaseMap.newMap()
                 .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())    // 债券
                 .put("SVR_TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue())           // 银行间
@@ -584,7 +585,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
         if(portfolioIdList != null && portfolioIdList.size()>0) reqMap.put("portfolioIdList", portfolioIdList);
         if(StringUtil.isNotEmpty(finprodId)) reqMap.put("finprodId",finprodId);
-        if(StringUtil.isNotEmpty(firstLevelType)) reqMap.put("firstLevelType",firstLevelType);
+        if(StringUtil.isNotEmpty(secType1)) reqMap.put("secType1",secType1);
         
         List<BaseMap> list = cfetsetrIbBondinfoMapper.selectLastCostAmt(reqMap);
         /**
@@ -601,9 +602,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @param cdate 交易日期
      * @param portfolioIdList 组合代码
      * @param finprodId 资产代码
-     * @param firstLevelType 债券一级分类
+     * @param secType1 债券一级分类
      */
-    public List<BaseMap> selectCurrTrdData(Date cdate, List<String> portfolioIdList, String finprodId, String firstLevelType){
+    public List<BaseMap> selectCurrTrdData(Date cdate, List<String> portfolioIdList, String finprodId, String secType1){
         BaseMap reqMap = BaseMap.newMap()
                 .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())    // 债券
                 .put("SVR_TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue())           // 银行间
@@ -616,7 +617,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
         if(portfolioIdList != null && portfolioIdList.size()>0) reqMap.put("portfolioIdList", portfolioIdList);
         if(StringUtil.isNotEmpty(finprodId)) reqMap.put("finprodId",finprodId);
-        if(StringUtil.isNotEmpty(firstLevelType)) reqMap.put("firstLevelType",firstLevelType);
+        if(StringUtil.isNotEmpty(secType1)) reqMap.put("secType1",secType1);
 
         List<BaseMap> list = cfetsetrIbBondinfoMapper.selectCurrTrdData(reqMap);
         /**

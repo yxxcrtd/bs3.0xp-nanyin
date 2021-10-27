@@ -7,6 +7,8 @@ import java.util.*;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.handler.CellWriteHandler;
+import com.alibaba.excel.write.handler.context.CellWriteHandlerContext;
 import com.alibaba.excel.write.metadata.WriteSheet;
 
 import com.joyintech.tams.business.common.pojo.BaseMap;
@@ -37,7 +39,13 @@ public class ExcelUitl {
 	public static <T> void exportAllData(File excelFile,String sheetName,List<ExcelColumn> columns,List<T> data) {
 		File excelTemplateFile = new File(excelFile.getParentFile(),Thread.currentThread().getName()+excelFile.getName());
 		createExcelTemplate(excelTemplateFile, sheetName, columns);
-		EasyExcel.write(excelFile).withTemplate(excelTemplateFile).sheet(sheetName).doFill(data);
+		EasyExcel.write(excelFile).withTemplate(excelTemplateFile).registerWriteHandler(new CellWriteHandler() {
+			@Override
+			public void afterCellCreate(CellWriteHandlerContext context) {
+				CellWriteHandler.super.afterCellCreate(context);
+				System.out.println(context.getHeadData());
+			}
+		}).sheet(sheetName).doFill(data);
 		excelTemplateFile.delete();
 	}
 	
@@ -159,7 +167,7 @@ public class ExcelUitl {
 			StringBuffer buf = new StringBuffer();
 			List<ExcelColumn> columns = new ArrayList<ExcelColumn>();
 			for (Map lineMap : heads) {
-				columns.add(new ExcelColumn(lineMap.get("field")+"", lineMap.get("name")+""));
+				columns.add(new ExcelColumn(lineMap.get("colCode")+"", lineMap.get("colName")+""));
 			}
 
 			/**

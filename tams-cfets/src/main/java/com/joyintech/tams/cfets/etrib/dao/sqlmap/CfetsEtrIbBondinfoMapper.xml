@@ -598,6 +598,7 @@ from
             null as unitCost,
             /* 最新净价 根据规则12来获取*/
             null as price,
+            MST_LIST.NETPRICE_LIST, /*债券估值行情字符*/
             /* 持仓市值 */
             ROUND((etrptl.PTL_BOND_BFQKYCC + etrptl.PTL_BOND_BFQZTCC),2) as positionsPrice,
             /* 浮动盈亏 */
@@ -648,8 +649,14 @@ from
             ) etrptl
             LEFT JOIN FIN_PRODUCT_TYPE c ON etrptl.FINPROD_ID = c.FINPROD_ID
             LEFT JOIN FIN_PRODUCT d ON etrptl.FINPROD_ID=d.FINPROD_ID
-            LEFT JOIN PTL_PORTFOLIO e ON etrptl.PORTFOLIO_ID=e.PORTFOLIO_ID
-            where 1=1 AND etrptl.PTL_BOND_ZHCC > 0  
+            LEFT JOIN PTL_PORTFOLIO e ON etrptl.PORTFOLIO_ID=e.PORTFOLIO_ID 
+            LEFT JOIN (
+                <!-- 估值行情表，列转行 结果示例：CBC,144|CSD,145 -->
+                SELECT SEC_ID, TRIM('|' FROM SYS.STRAGG(VALUE_SOURCE || ',' || NETPRICE || NVL2(VALUE_SOURCE,'|',''))) NETPRICE_LIST 
+                from MST_BOND_VALUATION_INFO 
+                GROUP BY SEC_ID
+            ) MST_LIST ON MST_LIST.SEC_ID = etrptl.FINPROD_ID 
+            where etrptl.PTL_BOND_ZHCC > 0 
             <if test="type8 != null and type8 != ''">
                 and c.TYPE_8 = #{type8}
             </if>
@@ -678,8 +685,8 @@ from
         <if test="finprodId != null and finprodId != ''">
             and b.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </if>
-        <if test="firstLevelType != null and firstLevelType != ''">
-            and c.TYPE_8 = #{firstLevelType,jdbcType=VARCHAR}
+        <if test="secType1 != null and secType1 != ''">
+            and c.TYPE_8 = #{secType1,jdbcType=VARCHAR}
         </if>
         GROUP BY a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM
         ORDER BY a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM
@@ -710,8 +717,8 @@ from
         <if test="finprodId != null and finprodId != ''">
             and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </if>
-        <if test="firstLevelType != null and firstLevelType != ''">
-            and d.TYPE_8 = #{firstLevelType,jdbcType=VARCHAR}
+        <if test="secType1 != null and secType1 != ''">
+            and d.TYPE_8 = #{secType1,jdbcType=VARCHAR}
         </if>
         ORDER BY b.PORTFOLIO_ID, a.FINPROD_ID , a.INV_AIM , a.CREATE_TIME DESC
     </select>
