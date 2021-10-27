@@ -480,6 +480,11 @@ public abstract class EventBaseService<V> extends InfBaseService<V> {
      * 资产细类
      */
     public static final String ASSET_TYPE2="assetType2";
+
+    public static final List<String> dayParamList=Arrays.asList("ZCSYQXDAY:01","ZCSYQXDAY:02","ZCSYQXDAY:03"
+            ,"ZCSYCXQXDAY:01","ZCSYCXQXDAY:02","ZCSYCXQXDAY:03");
+
+    public static final String BETWEEN_DATE = "betweenDate";
     /**
      * 达到预警线时是否需要人工确认
      * 
@@ -1085,6 +1090,10 @@ public abstract class EventBaseService<V> extends InfBaseService<V> {
                         temp.forEach((field, val) -> {
                             if (val != null) {
                                 formulaParaVal.put(key, (BigDecimal)val.value());
+                            }else{
+                                if (dayParamList.contains(key)){
+                                    formulaParaVal.put(key, StringUtil.isNotEmpty(mapData.get(BETWEEN_DATE))?new BigDecimal(mapData.get(BETWEEN_DATE).toString()):null);
+                                }
                             }
                         });
                     }
