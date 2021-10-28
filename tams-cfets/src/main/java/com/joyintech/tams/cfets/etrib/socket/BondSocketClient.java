@@ -1,0 +1,184 @@
+package com.joyintech.tams.cfets.etrib.socket;
+
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.business.common.util.WebSocketClientUtil;
+import com.joyintech.tams.cfets.etrib.service.PositionSocketService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+
+@Component
+@Lazy(value=false)
+public class BondSocketClient {
+    private static final Logger logger = LoggerFactory.getLogger(BondSocketClient.class);
+
+    // 债券行情行息 mDEntryPx 最新净价
+    private static Map<String, BaseMap> bonds = new ConcurrentHashMap<>(); 
+    
+    @Value("${bondWebSocketUrl}")
+    private String bondWebSocketUrl;
+    
+    boolean isStart = false;  // 是否启动开关
+    boolean loopFlag = false; // 10秒重连循环开关
+    
+    @PostConstruct
+    public void init(){
+        logger.info("WebSocketClient初始化一次...");
+        
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                loopStart();
+            }
+        }).start();
+    }
+
+    private WebSocketClientUtil util = null;
+    
+    public boolean start(){
+        
+        if (isStart){
+            return true;
+        }
+        
+        boolean rs = true;
+        /**
+         * 债券服务监听市场行情
+         */
+        try {
+            util = new WebSocketClientUtil();
+            
+            util.start(bondWebSocketUrl, new WebSocketClientUtil.WebSocketListener() {
+                @Override
+                public void onMessage(String message) {
+                    try {
+                        BaseMap responseMap = JsonUtils.json2Object(message, BaseMap.class);
+                        
+                        logger.info("收到webSocket消息:" + responseMap);
+
+                        messageIntoMap(responseMap);
+                        
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        logger.error("债券数据同步解析失败！");
+                    }
+                }
+                
+                @Override
+                public void onClose() {
+                    // 重连
+                    logger.info("债券服务关闭，开始重连");
+                    
+                    try {
+                        util.close();} catch (IOException e) {e.printStackTrace();}
+                    isStart = false;
+                    
+                    // 每间隔10秒重连
+                    loopStart();
+
+                    isStart = true; // 启动成功
+                    logger.info("债券服务启动成功。。。");
+                }
+            });
+
+            // 启动成功
+            isStart = true; // 服务启动成功
+            
+            // 启动时发送一次
+            send();
+        } catch (Exception e) {
+            e.printStackTrace();
+            rs = false;
+            isStart = false; // 服务启动失败
+        }
+        return rs;
+    }
+
+    /**
+     * 从本币返回信息中获取对应数据
+     * @param baseMap
+     * @return
+     */
+    private void messageIntoMap(BaseMap baseMap) {
+        if (baseMap != null) {
+            Map noMDTypes = (Map) baseMap.get("noMDTypes");
+            if (noMDTypes != null) {
+                Map noRelatedSym = (Map) noMDTypes.get("noRelatedSym");
+                if (noRelatedSym != null) {
+                    String securityID = noRelatedSym.get("securityID") + "";
+                    BaseMap result = BaseMap.newMap();
+                    
+                    BigDecimal mDEntryPx = null;
+                    List<Map> noMDEntries = (List) noRelatedSym.get("noMDEntries");
+                    if (noMDEntries != null && noMDEntries.size() > 0) {
+                        for (Map m: noMDEntries){
+                            if (StringUtil.equals("e", m.get("mDEntryType"))){
+                                // 最新净价
+                                Object obj = m.get("mDEntryPx");
+                                if (obj != null){
+                                    mDEntryPx = new BigDecimal(obj.toString());
+                                    result.put("mDEntryPx", mDEntryPx);
+                                }
+                            }
+                        }
+                    }
+                    
+                    bonds.put(securityID, result);
+                }
+            }
+        }
+    }
+
+
+    public void loopStart(){
+        if(loopFlag){
+            return;
+        }
+        loopFlag = true;
+        synchronized (this){
+            while (!start()){
+                logger.error(bondWebSocketUrl + ":债券服务通信失败，10秒后重连");
+                try {TimeUnit.SECONDS.sleep(10l);} catch (InterruptedException e) {e.printStackTrace();}
+            }
+        }
+        loopFlag =false;
+    }
+
+
+    public void send(){
+        util.send("All");
+        logger.info("债券服务发送成功。。。");
+    }
+
+    private static BaseMap getBond(String key, String suffix) {
+        String theKey = StringUtil.removeEnd(key, suffix);
+        return bonds.get(theKey);
+    }
+
+    /**
+     * 获取净价
+     * @param key
+     * @param suffix
+     * @return
+     */
+    public static BigDecimal getPrice(String key, String suffix){
+        BaseMap bm = getBond(key, suffix);
+        if (bm != null) {
+            return bm.getBigDecimal("mDEntryPx");
+        }
+        return null;
+    }
+}

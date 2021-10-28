@@ -30,6 +30,7 @@ import com.joyintech.tams.business.common.util.UserUtil;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfo002Mapper;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.dto.*;
+import com.joyintech.tams.cfets.etrib.socket.BondSocketClient;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -513,7 +514,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     
                     // 3.最新净价（元） 优先从内存获取债券最新净价，没有则 r.getPrice()
                     // todo 取实时行情债券最新净价
-                    
+                    BigDecimal price = BondSocketClient.getPrice(r.getFinprodMarketId(), ".IB");
+                    if (price != null) {
+                        r.setPrice(price);
+                    }
                     // 4.持仓市值（万元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
                     BigDecimal doAdd = ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt());
                     r.setPositionsPrice(ArithmeticUtil.multiply(doAdd, r.getPrice()).divide(BigDecimal.valueOf(100)));
