@@ -71,7 +71,7 @@ public class CfetsEtrDispatcherService extends BaseService{
         String portfolioId = (String)pageParam.get("portfolioId");
         if(StringUtil.isNotEmpty(pageParam.get("portfolioId"))){
             List<String> portfolioIdList = StringUtil.splitToList(",",(String)pageParam.get("portfolioId"));
-            pageParam.put("finprodMarketIdList", portfolioIdList);
+            pageParam.put("portfolioIdList", portfolioIdList);
         }
 
         String finprodMarketId = (String)pageParam.get("finprodMarketId");

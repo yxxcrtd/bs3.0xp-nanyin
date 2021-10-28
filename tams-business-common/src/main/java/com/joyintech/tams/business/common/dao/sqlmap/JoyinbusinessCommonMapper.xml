@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper">
+
+    <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SelectOptionDto">
+            SELECT distinct
+            A.ACCT_NO id,
+            B.SEC_ACCT_NAME text
+            FROM PTL_SEC_ACCT A
+            INNER JOIN STL_SEC_ACCT_INFO B
+            ON A.ACCT_NO = B.SEC_ACCT_ID
+            <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
+                LEFT JOIN FIN_PRODUCT FP
+                ON FP.FINPROD_ID IN (
+                <foreach item="item" index="index" collection="finprodMarketIdList" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <where>
+                <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                    AND A.PORTFOLIO_ID IN(
+                    <foreach item="item" index="index" collection="portfolioIdList" separator=",">
+                        #{item}
+                    </foreach>
+                    )
+                </if>
+                <if test="search != null and search != ''">
+                    AND
+                    (
+                    A.ACCT_NO LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    OR
+                    B.SEC_ACCT_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    )
+                </if>
+                <if test="initValue != null and initValue != ''">
+                    AND (A.ACCT_NO = #{initValue, jdbcType=VARCHAR} OR
+                    (PORTFOLIO_ID || A.ACCT_NO) = #{initValue, jdbcType=VARCHAR}
+                    )
+                </if>
+                <if test="tradeMarket !=null and tradeMarket !='' ">
+                    AND B.TRADE_PLACE = #{tradeMarket, jdbcType=VARCHAR}
+                </if>
+                <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
+                    AND B.TRADE_PLACE = FP.TRADE_MARKET
+                </if>
+            </where>
+    </select>
+
+    <!-- 委托代码模糊查询 -->
+    <select id="getEntrustId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PORTFOLIO_ID portfolioId,
+        ENTRUST_ID id
+        FROM ETR_ENTRUST
+        <where>
+            AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
+            <if test="etrId != null and etrId != ''">
+                AND ENTRUST_ID like concat(concat('%',#{etrId,jdbcType=VARCHAR}),'%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

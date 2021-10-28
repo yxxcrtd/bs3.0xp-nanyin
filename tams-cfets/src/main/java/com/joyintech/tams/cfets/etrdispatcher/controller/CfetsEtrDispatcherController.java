@@ -12,9 +12,12 @@ package com.joyintech.tams.cfets.etrdispatcher.controller;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse;
 import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListRequest;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.joyintech.tams.business.common.pojo.Message;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 @Controller
@@ -70,5 +76,16 @@ public class CfetsEtrDispatcherController extends BaseController {
             logger.error("查询指令管理分页数据异常",e);
             return new Message<Page<CfetsEtrDispatcherTradeListResponse>>().fail().setMessage("查询指令列表分页数据异常");
         }
+    }
+
+    @PostMapping(value="/exportEtrDispatcherList")
+    @ResponseBody
+    @ApiOperation(value = "指令分发列表导出", notes = "指令分发列表导出")
+    public void exportEtrDispatcherList(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(req, response, "指令分发", () -> {
+            List dataList = cfetsEtrDispatcherService.findAllEtrDispatcherCommon(req.getDto(CfetsEtrDispatcherTradeListRequest.class)).getRoot();
+            return dataList;
+        });
     }
 }
