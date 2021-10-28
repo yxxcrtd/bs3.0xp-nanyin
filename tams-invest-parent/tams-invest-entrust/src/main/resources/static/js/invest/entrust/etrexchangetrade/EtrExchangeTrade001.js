@@ -1275,10 +1275,13 @@
      * 交易场所+资金账户联动证券账户
      */
     var linkSecAcctId = function() {
+        // modify by swwan GZYHTZJY-81 指令下单使用的证券账户不是绑定的那个 2021-10-28 start
+        var portfolioId = $("#portfolioId_" + currentTab).val();
         var tradeMarket = $("#tradeMarket_" + currentTab).val();
         var acctNo = $("#acctNo_" + currentTab).val();
         if(tradeMarket && acctNo) {
-            var list = getAcctNoSelectList(null, acctNo);
+            var list = getAcctNoSelectList(portfolioId, acctNo);
+            // modify by swwan GZYHTZJY-81 指令下单使用的证券账户不是绑定的那个 2021-10-28 end
             if(list && list.length > 0 && list[0].object) {
                 var object = list[0].object;
                 for(var index in object) {
