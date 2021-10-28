@@ -25,8 +25,10 @@ import com.joyintech.service.trade.investtrade.commanddispatcher.service.TrdComm
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.business.common.util.UserUtil;
 import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfo002Service;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
@@ -38,9 +40,13 @@ import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+
+import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -129,6 +135,11 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
      */
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;
+    /**
+     * 风险接口组件Controller
+     */
+    @Autowired
+    private InterfRiskRdsController interfRiskRdsController;
 
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
@@ -140,222 +151,46 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("CMDS_PATH", "ws://192.168.90.208:8888/dsp/cmds");//CacheUtil.getSysParam("CMDS_PATH"));
         initPageParams.put("NEED_WORKFLOW", false);
         initPageParams.put("SHARES_TRADE_MARKET_02",DictCodeListExt1.交易市场_二级市场.getValue());
+        initPageParams.put("platDate",DateUtil.platDateFromCache());
 
     	return new Message<Map<String, Object>>(initPageParams).success();
     }
-
-    /**
-     * 检索产品持仓分页数据。 <功能详细描述>
-     *
-     * @param pageParam int
-     * @param page int
-     * @param length int
-     * @return Page<EtrExchangeTrade002Dto>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-//    @ApiOperation(value = "查询产品持仓分页数据", notes = "查询产品持仓分页数据")
-//    @PostMapping("/findPositionsPage/{page}/{length}")
-//    @ResponseBody
-//    public Message<Page<CfetsEtrIbBondinfo001Dto>> findPositionsPage(@RequestBody Map<String, Object> pageParam,
-//                                                                     @PathVariable("page") int page,
-//                                                                     @PathVariable("length") int length)
-//            throws Exception {
-//        try {
-//            Page<CfetsEtrIbBondinfo001Dto> list = cfetsEtrIbBondinfoService.findPositionsPage(page, length, pageParam);
-//            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().success().setData(list);
-//        }catch (Exception e) {
-//            logger.error("查询产品持仓分页数据异常",e);
-//            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().fail().setMessage("查询产品持仓分页数据异常");
-//        }
-//    }
-
-    /**
-     * 检索指令管理分页数据。
-     *
-     * @param pageParam int
-     * @param page int
-     * @param length int
-     * @return Page<EtrExchangeTrade002Dto>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
     @ApiOperation(value = "查询指令管理分页数据", notes = "查询指令管理分页数据")
     @PostMapping("/findEtrinfoPage")
     @ResponseBody
-    public Message<Page<CfetsEtrIbBondinfo001Dto>> findEtrinfoPage(@RequestBody CfetsEtrIbBondinfo001Dto dto)
+    public Message<Page<CfetsEtrIbfindEtrinfoResponse>> findEtrinfoPage(@RequestBody CfetsEtrIbfindEtrinfoRequest dto)
             throws Exception {
         try {
-            Page<CfetsEtrIbBondinfo001Dto> list = cfetsEtrIbBondinfoService.findEtrinfoPage(dto);
-            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().success().setData(list);
+            Page<CfetsEtrIbfindEtrinfoResponse> list = cfetsEtrIbBondinfoService.findEtrinfoPage(dto);
+            return new Message<Page<CfetsEtrIbfindEtrinfoResponse>>().success().setData(list);
         }catch (Exception e) {
             logger.error("查询指令管理分页数据异常",e);
-            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().fail().setMessage("查询指令管理分页数据异常");
+            return new Message<Page<CfetsEtrIbfindEtrinfoResponse>>().fail().setMessage("查询指令管理分页数据异常");
         }
 
     }
-    /**
-     * 保存按钮点击时的check
-     *
-     * @param dtoList dto
-     * @param result BindingResult
-     * @return check结果
-     * @see
-     * @since 1.0
-     */
-    @ResponseBody
-    @RequestMapping("check")
-    public AjaxResult check(@RequestBody List<CfetsEtrIbBondinfo002Dto> dtoList, BindingResult result) {
-        List<ValidMessage> messages = new ArrayList<>();
-        StringBuffer confirmMessage = new StringBuffer();
-        // 授信软控 start
-        List<JoyinMessage> joyinMessages = new ArrayList<>();
-        Map<String, BigDecimal> cusMap  = new HashMap<String, BigDecimal>();
-        // 授信软控 end
-        for (int i = 0; i < dtoList.size(); i++ ) {
-            // 授信软控 start
-            BigDecimal recode = dtoList.get(i).getPrinAmt();
-            Map<String, Object> map  = new HashMap<String, Object>();
-            map.put("finprodId", dtoList.get(i).getFinprodId());
-            String customerId = commonBusinessService.selectCustomer(map);
-            if(customerId != null) {
-                if(cusMap.get(customerId) == null) {
-                    cusMap.put(customerId, dtoList.get(i).getPrinAmt());
-                }else {
-                    dtoList.get(i).setPrinAmt(cusMap.get(customerId).add(dtoList.get(i).getPrinAmt()));
-                    cusMap.put(customerId, dtoList.get(i).getPrinAmt());
-                }
-            }
-
-            boolean isCreditSoftControl = Boolean.parseBoolean(CacheUtil.getSysParam("IS_CREDIT_SOFTCONTROL"));
-            RiskCreditListCommonDto riskCreditListCommonDto = new RiskCreditListCommonDto();
-            if (!StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))
-                    && isCreditSoftControl) {
-                TrdProductDeal trdProductDeal = cfetsEtrIbBondinfo002Service.prepareDeal(dtoList.get(i));
-                if(trdProductDeal.getCounterId() == null) {
-                    trdProductDeal.setCounterId("");
-                }
-                CeLinesUpdate ceLinesUpdate = SpringContextUtil.getBean(CeLinesUpdate.class);
-                AllTradeCommonInputDto inputDto =new AllTradeCommonInputDto();
-                inputDto.setTrdProductDeal(trdProductDeal);
-                List<CreditLinesDealCommon> list = ceLinesUpdate.isNeedOccupyCre(inputDto, true,false,false);
-                if(list !=null && list.size()>0){
-                    if(list.get(0).getErrMessage() !=null && getMessage("BUSS_COM_CRE_001").equals(list.get(0).getErrMessage())){
-                        list.get(0).setErrMessage(getMessage("BUSS_COM_CRE_004"));
-                    }
-                    JoyinMessage joyinMessage = new JoyinMessage(list.get(0).getErrMessage(), MessageType.确认消息);
-                    joyinMessages.add(joyinMessage);
-                }
-//                }
-            }
-            // 授信软控 end
-            CfetsEtrIbBondinfo002Dto dto = dtoList.get(i);
-            ValidationUtil.ValidResult itemResult = ValidationUtil.validateBean(dto, ValidateGroupEdit.class);
-            // 授信软控 start
-            dtoList.get(i).setPrinAmt(recode);
-            // 授信软控 end
-            if (!StringUtil.isEmptyList(itemResult.getAllErrors())) {
-                StringBuffer message = new StringBuffer();
-                message.append(getMessage("ETR_E_0025", String.valueOf(i + 1)));
-                for (ValidationUtil.ErrorMessage errorMessage : itemResult.getAllErrors()) {
-                    message.append("<br />");
-                    message.append(errorMessage.getMessage());
-                }
-                messages.add(new ValidMessage(message.toString()));
-            }
-            // 可用现金软校验
-            if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH),
-                    DictCodeListExt1.是或否_是.getValue())
-                    && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
-                    && dto.getProAvailableCash() != null
-                    && dto.getEntrustNum().compareTo(dto.getProAvailableCash()) == 1) {
-                if (StringUtil.isNotBlank(confirmMessage)) {
-                    confirmMessage.append("<br />");
-                }
-                confirmMessage.append(getMessage("ETR_E_0025", String.valueOf(i + 1)));
-                confirmMessage.append("<br />");
-                confirmMessage.append(getMessage("TRD_C_0002"));
-            }
-            // 可用持仓软校验
-            else if (StringUtil.equals(
-                    CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH),
-                    DictCodeListExt1.是或否_是.getValue())
-                    && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_赎回.getValue())
-                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue()))
-                    && dto.getAssetAvailablePosition() != null
-                    && dto.getEntrustNum().compareTo(dto.getAssetAvailablePosition()) > 0) {
-                if (StringUtil.isNotBlank(confirmMessage)) {
-                    confirmMessage.append("<br />");
-                }
-                confirmMessage.append(getMessage("ETR_E_0025", String.valueOf(i + 1)));
-                confirmMessage.append("<br />");
-                confirmMessage.append(getMessage("ETR_BOND_002"));
-            }
-        }
-        // 授信软控 start
-        if (joyinMessages.size() > 0 || messages.size() > 0) {
-            AjaxResult errorRs = new AjaxResult();
-            errorRs.setErrorList(messages);
-            // 授信软控 start
-            errorRs.setJoyinMessages(joyinMessages);
-
-            String btnName = "操作";
-            if (StringUtil.equalsIgnoreCase(OPERATE_TYPE_SAVE, dtoList.get(0).getOperateType())) {
-                btnName = "SysCommon.save";
-            }
-            else if (StringUtil.equalsIgnoreCase(OPERATE_TYPE_SUBMIT, dtoList.get(0).getOperateType())) {
-                btnName = "SysCommon.submit";
-            }
-            else if (StringUtil.equalsIgnoreCase("revoke", dtoList.get(0).getOperateType())) {
-                btnName = "SysCommon.revoke";
-            }
-            errorRs.setData(
-                    SpringContextUtil.getTextValue("COMMON_C_0001", SpringContextUtil.getTextValue(btnName)));
-            // 授信软控 end
-            return errorRs;
-        }
-        if (StringUtil.isNotEmpty(confirmMessage.toString())) {
-            AjaxResult wr = new AjaxResult();
-            wr.setData(confirmMessage.toString());
-            return wr;
-        }
-        return commonCheck(result, dtoList.get(0).getOperateType());
-    }
-    /**
-     * 保存/提交
-     *
-     * @param allDto dto
-     * @param br BindingResult
-     * @return 结果
-     * @throws Exception 异常
-     */
     @ResponseBody
     @ApiOperation(value = "多组合指令新建保存/提交", notes = "多组合指令新建保存/提交")
     @PostMapping("save")
-    public Message<AjaxResult> save(@RequestBody CfetsEtribBondInfo003Dto allDto, BindingResult br)
+    public Message<AjaxResult> save(@RequestBody CfetsEtribSaveRequest cfetsDto, BindingResult br)
             throws Exception {
-        allDto=packageEquity(allDto);
-
-     /*  AjaxResult ajaxResult = this.check(dtoList, br);
+       CfetsEtribBondInfo003Dto allDto=cfetsEtrIbBondinfoService.packageEquity(cfetsDto);
+       AjaxResult ajaxResult = cfetsEtrIbBondinfoService.checkSave(cfetsDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().success().setData(ajaxResult);
-        }*/
+        }
         // ----------add by zhangrui1 20200715 预占功能 start----------
         List<CfetsEtribBondInfo003Dto> dataList = new ArrayList<>();
         // ----------add by zhangrui1 20200715 预占功能 end----------
         for(CfetsEtribBondInfo003Dto dto: allDto.getEtrInvestBondInfoDtos()) {
-            if(!com.joyintech.framework.util.StringUtil.isNotEmpty(dto.getEntrustId())){
+            if(!StringUtil.isNotEmpty(dto.getEntrustId())){
                 BussinessCodeParameter param = new BussinessCodeParameter();
                 param.setCommonBusinessType(DictCodeList.共通业务类型_债券投资委托);
                 String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param): com.joyintech.framework.util.IDGenerator.generate();
                 dto.setEntrustId(code);
-
             }
             //默认证券账户
-            if (com.joyintech.framework.util.StringUtil.isNotEmpty(dto.getPortfolioId()) && com.joyintech.framework.util.StringUtil.isNotEmpty(dto.getFinprodId())) {
+            if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("portfolioId", dto.getPortfolioId());
                 map.put("finprodId", dto.getFinprodId());
@@ -364,27 +199,23 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                     dto.setSecAcctId(secAcctId); // 证券账户
                 }
             }
-            dto.setEntrustOwnNum(dto.getEntrustNum());
-            dto.setEntrustIntegrateNum(BigDecimal.ZERO);
-
-
             // ----------add by zhangrui1 20200715 预占功能 start----------
-            if (com.joyintech.framework.util.StringUtil.isNotEmpty(dto.getEntrustId())) {
+            if (StringUtil.isNotEmpty(dto.getEntrustId())) {
                 dataList.add(dto);
             }
             // ----------add by zhangrui1 20200715 预占功能 end----------
         }
         if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
-            /*AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
                     dataList, DictCodeList.平安资产类型_债券.getValue(),
                     BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
-                    true, allDto.getEtrInvestPersonInfo());*/
-           /* if (com.joyintech.framework.util.StringUtil.isNotEmpty(ar)) {
-                return ar;
-            }*/
+                    true, null);
+            if (StringUtil.isNotEmpty(ar)) {
+                return new Message<AjaxResult>().success().setData(ar);
+            }
         }
-     /*   EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), allDto.getEtrInvestBondInfoDtos(),
-                (dto, list) -> dto.setRiskTrialRetDto(list));*/
+       EntrustRdsCommonAop.riskListToChildren(allDto.getRiskTrialRetDto(), allDto.getEtrInvestBondInfoDtos(),
+                (dto, list) -> dto.setRiskTrialRetDto(list));
 
         // 临时主键
         BussinessCodeParameter param = new BussinessCodeParameter();
@@ -403,7 +234,6 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         params.setBusinessType(DictCodeList.共通业务类型_债券投资委托.getValue());
         processParameter.setOperationType(OperationType.NEW);
         processParameter.setWorkFlowParameter(params);
-      // allDto.setWorkflowParameter("new|wy1,wy2||1|CfetsEtrBondInfo001|CfetsEtrBondInfo001_btn_submit|false");
 
         String msg = null;
         try {
@@ -413,26 +243,8 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }catch (Exception e) {
             logger.error("保存银行间多组合指令新建失败",e);
             return PositionUtil.ajaxErrorReturn(e);
-//            return new Message<AjaxResult>().fail().setMessage("保存银行间多组合指令新建失败");
         }
     }
-
-//    @ApiOperation(value = "持仓列表查询", notes = "持仓列表查询")
-//    @PostMapping("/queryPositionsPage/{page}/{length}")
-//    @ResponseBody
-//    public Message<Page<CfetsEtrIbBondinfo001Dto>> queryPositionsPage(@RequestBody Map<String, Object> pageParam,
-//                                                                   @PathVariable("page") int page,
-//                                                                   @PathVariable("length") int length)
-//            throws Exception {
-//        try {
-//            Page<CfetsEtrIbBondinfo001Dto> list = cfetsEtrIbBondinfoService.findEtrinfoPage(page, length, pageParam);
-//            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().success().setData(list);
-//        }catch (Exception e) {
-//            logger.error("查询指令管理分页数据异常",e);
-//            return new Message<Page<CfetsEtrIbBondinfo001Dto>>().fail().setMessage("查询指令管理分页数据异常");
-//        }
-//
-//    }
     
     @ApiOperation(value = "持仓列表查询", notes = "持仓列表查询")
     @PostMapping("/queryPositionsPage")
@@ -495,32 +307,6 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             logger.error("查询功能异常", e);
             return new Message<CfetsEtrFinProductDto>().fail().setMessage("查询异常");
         }
-    }
-    private CfetsEtribBondInfo003Dto packageEquity(CfetsEtribBondInfo003Dto dto){
-        dto.setTradeMarket("01");
-        dto.setCalendarId("01");
-        dto.setInvManagerId("system");
-        dto.setCcy("CNY");
-        dto.setSettleDate(dto.getEtrDate());
-        dto.setEntrustNum(ArithmeticUtil.multiply(dto.getTradeAmt(),new BigDecimal("10000")));
-        dto.setVdate(dto.getEtrDate());
-        dto.setMdate(dto.getEtrDate());
-        List<CfetsBussCombDistribtDto> bussCombDistribtList =dto.getBussCombDistribtList();
-        List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtosList=new ArrayList<>();
-        for(CfetsBussCombDistribtDto item:bussCombDistribtList){
-            CfetsEtribBondInfo003Dto dd=new CfetsEtribBondInfo003Dto();
-            BeanUtil.copyPropertiesIgnoreNull(dd,dto);
-            dd.setPortfolioId(item.getPortfolioId());
-            dd.setTradeAmt(item.getEntrustNum());
-            dd.setModelType("01");
-            dd.setEntrustOwnNum(item.getEntrustOwnNum());
-            dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum());
-            dd.setElementId("CfetsEtrBondInfo001_btn_submit");
-            etrInvestBondInfoDtosList.add(dd);
-        }
-        dto.setEtrInvestBondInfoDtos(etrInvestBondInfoDtosList);
-
-        return dto;
     }
 
     @PostMapping("/getfinprodIdForAdd")
@@ -801,6 +587,106 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             }
         }
         return false;
+    }
+    @ResponseBody
+    @ApiOperation(value = "风险试算", notes = "风险试算")
+    @PostMapping("doRiskcal")
+    public Message<AjaxResult> doRiskcal(@RequestBody CfetsEtrIbdoRiskcalRequest dto) throws Exception {
+        try {
+            CfetsEtribdoRiskcalReturn result=new  CfetsEtribdoRiskcalReturn();
+            Map<String, Object> dataMap=new HashMap<>();
+            //风险试算封装dto
+            CfetsEtrIbdoRiskcalDto d=new CfetsEtrIbdoRiskcalDto();
+            BeanUtil.copyPropertiesIgnoreNull(d,dto);
+            d.setBussTrdTransfenpeiDto(dto.getBussCombDistribtList());
+            d.setBusiType("02");
+            d.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
+            d.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            d.setVdate(dto.getEtrDate());
+            d.setMdate(dto.getEtrDate());;
+            d.setCcy("CNY");
+            dataMap=BeanUtil.object2Map(d);
+            //风险试算check
+
+            List<String> resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F01");
+            result.setRiskMathFlag("02");
+            Boolean forbidFlag=false;
+            Boolean cluflag=true;
+            List<CfetsEtribdoRiskcalReturn> resultlist=new ArrayList<>();
+            result.setRiskcalReturnList(resultlist);
+            if(!StringUtil.isEmptyList(resultArrList) ){
+                for(String row:resultArrList){
+                    ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
+                    if(StringUtil.isNotEmpty(resultArr) && StringUtil.isNotEmpty(resultArr.getHead())
+                            && StringUtil.isNotEmpty(resultArr.getHead().get("std400msgt"))
+                    ){
+                        if (StringUtil.equals(resultArr.getHead().get("std400msgt"),"E")) {
+                            return new Message<AjaxResult>().fail().setMessage(resultArr.getHead().get("stdrtninfo").toString());
+                        }
+                    }
+                    if (!StringUtil.isNotEmpty(resultArr) || !StringUtil.isNotEmpty(resultArr.getBody())
+                            || !StringUtil.isNotEmpty(resultArr.getBody().get("RSK_LIST"))
+                            || !StringUtil.isNotEmpty(resultArr.getBody().get("rskStatus"))) {
+                        return new Message<AjaxResult>().success().setMessage("无");
+                    }
+                    List<Map<String, Object>> riskList = (List<Map<String, Object>>)resultArr.getBody().get("RSK_LIST");
+                    for(Map<String, Object> map: riskList){
+                        if(StringUtil.equals(map.get("kriStatus"),"0") && !StringUtil.equals(map.get("kriTrend"),"向好")){
+                            forbidFlag=true;
+                        }
+                        resultlist.add(BeanUtil.mapToObject(map,CfetsEtribdoRiskcalReturn.class));
+                    }
+
+                    //当置为不通过时就不再进来了
+                    if(cluflag) {
+                        if(!StringUtil.equals(resultArr.getBody().get("rskStatus"),"3")){
+                            if(StringUtil.equals(resultArr.getBody().get("rskStatus"),"4")&&forbidFlag){
+                                cluflag=false;
+                                resultArr.getBody().put("rskStatus","3");
+                            }
+                        }else{
+                            cluflag=false;
+                        }
+                        if (!cluflag) {
+                            result.setRiskTrialSpan("试算不通过");
+                        } else {
+                            result.setRiskTrialSpan("试算通过");
+                        }
+                    }
+                }
+
+            }
+            AjaxResult m =new AjaxResult();
+            m.setData(result);
+            return new Message<AjaxResult>().success().setData(m);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<AjaxResult>().fail().setMessage("查询异常");
+        }
+    }
+    @PostMapping("/getPortfolioIdLink")
+    @ApiOperation(value = "组合代码链接", notes = "组合代码链接")
+    @ResponseBody
+    public Message<String> getPortfolioIdLink(@RequestParam("search")String search) {
+        try {
+            String  url ="invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init?dialog=1&pageModel=2&portfolioId="+search;
+            return new Message<String>().success().setData(url);
+        } catch (Exception e) {
+            logger.error("查询组合代码链接异常", e);
+            return new Message<String>().fail().setMessage("查询异常");
+        }
+    }
+    @PostMapping("/getFinprodIdLink")
+    @ApiOperation(value = "资产代码链接", notes = "资产代码链接")
+    @ResponseBody
+    public Message<String> getFinprodIdLink(@RequestParam("search")String search) {
+        try {
+            String  url ="invest/asset/bond/FinBondTargetAsset002/init?dialog=1&pageModel=2&finprodId="+search;
+            return new Message<String>().success().setData(url);
+        } catch (Exception e) {
+            logger.error("查询资产代码链接异常", e);
+            return new Message<String>().fail().setMessage("查询异常");
+        }
     }
 
 }

@@ -305,8 +305,8 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
                 req.setModelType("ETR");
                 req.setBalanceCheck("N");
-                req.setBusiType("02");
-                req.setTradePlace("01");
+                req.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
+                req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
                 req.setSettleSpeed(entity.getSettleSpeed());
                 req.setBusiAct("01");
                 req.setPs(entity.getPs());
@@ -1233,7 +1233,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             etrEntrustAdd.setOurEntNum(ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
             etrEntrustAdd.setLendinEntNum(ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
             // add by yushilon 全价入库 20200710 start
-            etrEntrustAdd.setFullPrice(dto.getFpriceAmt());
+            etrEntrustAdd.setFullPrice(dto.getUnitFprice());
             // add by yushilon 全价入库 20200710 end
             if (dto.getExerYield() != null) {
                 etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));

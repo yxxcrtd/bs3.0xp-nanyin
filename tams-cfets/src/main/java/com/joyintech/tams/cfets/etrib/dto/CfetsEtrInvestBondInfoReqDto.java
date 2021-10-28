@@ -69,4 +69,9 @@ public class CfetsEtrInvestBondInfoReqDto {
     public void setEntrustStatus(String entrustStatus) {
         this.entrustStatus = entrustStatus;
     }
+
+
+
+
+
 }

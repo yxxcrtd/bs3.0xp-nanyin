@@ -12,6 +12,7 @@ package com.joyintech.tams.cfets.etrib.dao;
 
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.cfets.etrib.dto.*;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -64,17 +65,6 @@ public interface CfetsEtrIbBondinfoMapper {
      * @since 1.0
      */
     List<CfetsEtrIbBondPosinfo001Dto> selectFinprodInfoList(Map<String, Object> pageParam);
-
-    /**
-     * 指令管理查询分页查询
-     *
-     * @param pageParam 查询参数
-     * @return 分页结果
-     * @see
-     * @since 1.0
-     */
-    List<CfetsEtrIbBondinfo001Dto> findEtrinfoPage(Map<String, Object> pageParam);
-
     CfetsEtrFinProductDto getEtrFinProductInfo(@Param("secId") String secId);
 
     List<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(Map pageParam);
@@ -106,5 +96,16 @@ public interface CfetsEtrIbBondinfoMapper {
      * @return
      */
     CfetsEtrIbBondinfoDto findEtrinfo(CfetsEtrInvestBondInfoReqDto dto);
+    /**
+     * 指令管理查询分页查询
+     *
+     * @param pageParam 查询参数
+     * @return 分页结果
+     * @see
+     * @since 1.0
+     */
+    List<CfetsEtrIbfindEtrinfoResponse> findEtrinfoPage(Map<String, Object> pageParam);
+
+    FinProduct  findAssetInfo(String finprodId);
 
 }
