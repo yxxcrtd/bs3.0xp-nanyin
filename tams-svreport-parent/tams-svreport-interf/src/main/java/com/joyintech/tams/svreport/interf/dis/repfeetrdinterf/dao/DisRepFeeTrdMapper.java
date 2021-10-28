@@ -12,9 +12,9 @@ public interface DisRepFeeTrdMapper {
     int insert(List<DisRepFeeTrd> list);
 
     int insertSelective(DisRepFeeTrd record);
-    
-    
-    int mergeRepFeeTrdInfo (@Param("list") List<DisRepFeeTrd> DisRepFeeTrd, @Param("dataBentch") String dataBentch);
+
+
+    int mergeRepFeeTrdInfo (List<DisRepFeeTrd> DisRepFeeTrd);
 
     int insertBasicByBasicInfo(DisRepFeeTrd record);
     
