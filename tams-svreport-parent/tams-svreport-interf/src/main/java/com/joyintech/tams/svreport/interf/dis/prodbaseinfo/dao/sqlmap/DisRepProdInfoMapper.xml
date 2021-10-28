@@ -56,6 +56,9 @@
         <result column="SALE_AMT_STR" property="saleAmtStr" jdbcType="DECIMAL" />
         <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
         <result column="F_PROD_ID" property="fProdId" jdbcType="VARCHAR" />
+        <result column="BONUS_MODE" property="bonusMode" jdbcType="VARCHAR" />
+        <result column="LOWEST_AMT" property="lowestAmt" jdbcType="DECIMAL" />
+
     </resultMap>
     <sql id="Base_Column_List" >
         PROD_ID PROD_ID, PROD_RE PROD_RE, PROD_NAME PROD_NAME, PROD_ABBR PROD_ABBR, RAISE_MIN RAISE_MIN, 
@@ -71,7 +74,7 @@
         TRU_ACCOUNT_NAME TRU_ACCOUNT_NAME, PROD_TERM_TYPE PROD_TERM_TYPE, BASIS BASIS, NATURE_INVEST NATURE_INVEST, 
         TARGET_SALE TARGET_SALE, IS_LAYER IS_LAYER, PERFORM_COMPARE PERFORM_COMPARE, PRO_MANAGER PRO_MANAGER, 
         PRO_CUSTODIAN PRO_CUSTODIAN, HUGE_REDEEM_THRESHOLD HUGE_REDEEM_THRESHOLD, SALE_AMT_STR SALE_AMT_STR, 
-        OPERATE_MODE OPERATE_MODE, F_PROD_ID F_PROD_ID
+        OPERATE_MODE OPERATE_MODE, F_PROD_ID F_PROD_ID,BONUS_MODE BONUS_MODE,LOWEST_AMT LOWEST_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -112,7 +115,7 @@
             PROD_TERM_TYPE, BASIS, NATURE_INVEST, 
             TARGET_SALE, IS_LAYER, PERFORM_COMPARE, 
             PRO_MANAGER, PRO_CUSTODIAN, HUGE_REDEEM_THRESHOLD, 
-            SALE_AMT_STR, OPERATE_MODE, F_PROD_ID
+            SALE_AMT_STR, OPERATE_MODE, F_PROD_ID,BONUS_MODE,LOWEST_AMT
             )
         values (#{prodId,jdbcType=VARCHAR}, #{prodRe,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, 
             #{prodAbbr,jdbcType=VARCHAR}, #{raiseMin,jdbcType=VARCHAR}, #{raiseMax,jdbcType=VARCHAR}, 
@@ -131,7 +134,9 @@
             #{prodTermType,jdbcType=VARCHAR}, #{basis,jdbcType=VARCHAR}, #{natureInvest,jdbcType=VARCHAR}, 
             #{targetSale,jdbcType=VARCHAR}, #{isLayer,jdbcType=VARCHAR}, #{performCompare,jdbcType=VARCHAR}, 
             #{proManager,jdbcType=VARCHAR}, #{proCustodian,jdbcType=VARCHAR}, #{hugeRedeemThreshold,jdbcType=DECIMAL}, 
-            #{saleAmtStr,jdbcType=DECIMAL}, #{operateMode,jdbcType=VARCHAR}, #{fProdId,jdbcType=VARCHAR}
+            #{saleAmtStr,jdbcType=DECIMAL}, #{operateMode,jdbcType=VARCHAR}, #{fProdId,jdbcType=VARCHAR},
+            #{bonusMode,jdbcType=VARCHAR},#{lowestAmt,jdbcType=DECIMAL}
+
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.interf.dis.prodbaseinfo.dto.DisRepProdInfo" >
@@ -299,6 +304,12 @@
             <if test="fProdId != null" >
                 F_PROD_ID,
             </if>
+            <if test="bonusMode != null" >
+                BONUS_MODE,
+            </if>
+            <if test="lowestAmt != null" >
+                LOWEST_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="prodId != null" >
@@ -463,6 +474,12 @@
             <if test="fProdId != null" >
                 #{fProdId,jdbcType=VARCHAR},
             </if>
+            <if test="bonusMode != null" >
+                #{bonusMode,jdbcType=VARCHAR},
+            </if>
+            <if test="lowestAmt != null" >
+                #{lowestAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.svreport.interf.dis.prodbaseinfo.dto.DisRepProdInfo" >
@@ -473,7 +490,7 @@
         OPEN_MODE, INVEST_PROF_DATE, INVEST_PRIN_DATE, IS_INDEPE_ACC, PROD_INVEST_TYPE, REVEAL_CHANNEL, 
         DEAL_CAL, STATUS, FINA_TYPE, TRU_ACCOUNT, ACCT_CHNNAME, TRU_FEE_RAGE, TRU_ACCOUNT_NUM, 
         TRU_ACCOUNT_NAME, PROD_TERM_TYPE, BASIS, NATURE_INVEST, TARGET_SALE, IS_LAYER, PERFORM_COMPARE, 
-        PRO_MANAGER, PRO_CUSTODIAN, HUGE_REDEEM_THRESHOLD, SALE_AMT_STR, OPERATE_MODE, F_PROD_ID
+        PRO_MANAGER, PRO_CUSTODIAN, HUGE_REDEEM_THRESHOLD, SALE_AMT_STR, OPERATE_MODE, F_PROD_ID,BONUS_MODE,LOWEST_AMT
         )
         select PROD_ID, PROD_RE, PROD_NAME, PROD_ABBR, RAISE_MIN, RAISE_MAX, 
             RAISE_STRDATE, RAISE_ENDDATE, RAISE_CCY, SET_DATE, VDATE, FIRST_OPEN_DAY, MDATE, 
@@ -482,7 +499,7 @@
             OPEN_MODE, INVEST_PROF_DATE, INVEST_PRIN_DATE, IS_INDEPE_ACC, PROD_INVEST_TYPE, REVEAL_CHANNEL, 
             DEAL_CAL, #{status,jdbcType=VARCHAR} STATUS, FINA_TYPE, TRU_ACCOUNT, ACCT_CHNNAME, TRU_FEE_RAGE, TRU_ACCOUNT_NUM, 
             TRU_ACCOUNT_NAME, PROD_TERM_TYPE, BASIS, NATURE_INVEST, TARGET_SALE, IS_LAYER, PERFORM_COMPARE, 
-            PRO_MANAGER, PRO_CUSTODIAN, HUGE_REDEEM_THRESHOLD, SALE_AMT_STR, OPERATE_MODE, F_PROD_ID
+            PRO_MANAGER, PRO_CUSTODIAN, HUGE_REDEEM_THRESHOLD, SALE_AMT_STR, OPERATE_MODE, F_PROD_ID,BONUS_MODE,LOWEST_AMT
             
              from REP_PROD_INFO
              where STATUS = 'E' and PROD_ID = #{prodId,jdbcType=VARCHAR}
@@ -640,6 +657,12 @@
             <if test="fProdId != null" >
                 F_PROD_ID = #{fProdId,jdbcType=VARCHAR},
             </if>
+            <if test="bonusMode != null" >
+                BONUS_MODE= #{bonusMode,jdbcType=VARCHAR},
+            </if>
+            <if test="lowestAmt != null" >
+                LOWEST_AMT=#{lowestAmt,jdbcType=DECIMAL},
+            </if>
         </set>
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
@@ -694,7 +717,9 @@
             HUGE_REDEEM_THRESHOLD = #{hugeRedeemThreshold,jdbcType=DECIMAL},
             SALE_AMT_STR = #{saleAmtStr,jdbcType=DECIMAL},
             OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
-            F_PROD_ID = #{fProdId,jdbcType=VARCHAR}
+            F_PROD_ID = #{fProdId,jdbcType=VARCHAR},
+            BONUS_MODE= #{bonusMode,jdbcType=VARCHAR},
+            LOWEST_AMT=#{lowestAmt,jdbcType=DECIMAL}
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
     </update>
     <update id="mergeRepProdInfo">
@@ -752,7 +777,11 @@
 					#{item.hugeRedeemThreshold,jdbcType=DECIMAL} HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
 					#{item.saleAmtStr,jdbcType=DECIMAL} SALE_AMT_STR,<!--起点销售金额-->
 					#{item.operateMode,jdbcType=VARCHAR} OPERATE_MODE,<!--产品运作模式-->
-					#{item.fProdId,jdbcType=VARCHAR} F_PROD_ID<!--源系统金融产品代码-->
+					#{item.fProdId,jdbcType=VARCHAR} F_PROD_ID,<!--源系统金融产品代码-->
+                    #{item.performCompare,jdbcType=VARCHAR} PERFORM_COMPARE,<!--业绩基准-->
+                    #{item.bonusMode,jdbcType=VARCHAR} BONUS_MODE,<!--分红方式-->
+                    #{item.lowestAmt,jdbcType=DECIMAL} LOWEST_AMT<!--最少追加金额-->
+
 				FROM
 					dual
 			</foreach>
@@ -813,7 +842,10 @@
 				RPI.HUGE_REDEEM_THRESHOLD = TEMP.HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
 				RPI.SALE_AMT_STR = TEMP.SALE_AMT_STR,<!--起点销售金额-->
 				RPI.OPERATE_MODE = TEMP.OPERATE_MODE,<!--产品运作模式-->
-				RPI.F_PROD_ID = TEMP.F_PROD_ID<!--源系统金融产品代码-->
+				RPI.F_PROD_ID = TEMP.F_PROD_ID,<!--源系统金融产品代码-->
+                RPI.PERFORM_COMPARE=TEMP.PERFORM_COMPARE,<!--业绩基准-->
+                RPI.BONUS_MODE=TEMP.BONUS_MODE,<!--分红方式-->
+                RPI.LOWEST_AMT=TEMP.LOWEST_AMT<!--最少追加金额-->
 		<!-- 匹配到则更新  end-->
 		<!-- 不匹配到则插入  start-->
 		WHEN NOT MATCHED THEN
@@ -868,7 +900,10 @@
 				HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
 				SALE_AMT_STR,<!--起点销售金额-->
 				OPERATE_MODE,<!--产品运作模式-->
-				F_PROD_ID<!--源系统金融产品代码-->
+				F_PROD_ID,<!--源系统金融产品代码-->
+                PERFORM_COMPARE,<!--业绩基准-->
+                BONUS_MODE,<!--分红方式-->
+                LOWEST_AMT<!--最少追加金额-->
 			)
             VALUES
            (
@@ -921,7 +956,10 @@
 				TEMP.HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
 				TEMP.SALE_AMT_STR,<!--起点销售金额-->
 				TEMP.OPERATE_MODE,<!--产品运作模式-->
-				TEMP.F_PROD_ID<!--源系统金融产品代码-->
+				TEMP.F_PROD_ID,<!--源系统金融产品代码-->
+                TEMP.PERFORM_COMPARE,<!--业绩基准-->
+                TEMP.BONUS_MODE,<!--分红方式-->
+                TEMP.LOWEST_AMT<!--最少追加金额-->
 			) 
 		<!-- 不匹配到则插入  end-->
     </update>

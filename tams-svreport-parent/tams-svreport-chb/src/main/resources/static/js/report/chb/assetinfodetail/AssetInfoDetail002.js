@@ -391,7 +391,7 @@ var QueryFunc=function(){
         /**【资产基本信息维护】-新建页面（1401、1402、1403、1404、1405、1406、1499），提交报错**/
         object.svrBussRepFinanciallInfoDto.targetType3 = object.svrBussRepFinanciallInfoDto.targetType3?object.svrBussRepFinanciallInfoDto.targetType3.join(","):'';
         object.svrBussRepDepositInfoDto.repTargetType = object.svrBussRepDepositInfoDto.repTargetType?object.svrBussRepDepositInfoDto.repTargetType.join(","):'';
-
+        object.svrBussRepDepositInfoDto.repAssetType = $('#assetType2').val();
         object.pageModel = pageModel;
 
         Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/check',object,function(result){

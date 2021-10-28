@@ -19,7 +19,8 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.valuation.prebatch.dto.SysPrebatchResult;
+import com.joyintech.system.batch.batchstart.dao.SysBatchStart001Mapper;
+import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResult;
 import com.joyintech.tams.valuation.system.batchstart.dao.ValBatchStart001Mapper;
 import com.joyintech.tams.valuation.system.batchstart.dto.BatchGrpPri;
 import com.joyintech.tams.valuation.system.batchstart.dto.DimensionValue;
@@ -50,6 +51,9 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 
 	@Autowired
 	private SysBatchGrpMapper batchGroupMapper;
+
+    @Autowired
+    private SysBatchStart001Mapper sysBatchStart001Mapper;
 
 	@Autowired
 	private SysBatchgrpExecInfoMapper batchExecuteDetailMapper;
@@ -125,7 +129,8 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 		String nowString = null;
 		List<String> tasks = null;
 		String systemCode = null;
-		if (GlobalConstant.BATCH_EXECUTE_TYPE_SINGLE.equals(batchGroupType)) {
+        String[] prodGroupSeqNos;
+        if (GlobalConstant.BATCH_EXECUTE_TYPE_SINGLE.equals(batchGroupType)) {
 			tasks = new ArrayList<>(Arrays.asList(selectedBatchGroup.split(",")));
 			systemCode = getSystemCode(tasks.get(0));
 			batchGroupSeqNo = IDGenerator.generate();
@@ -136,7 +141,21 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 			batchGroup.setSeqNo(batchGroupSeqNo);
 			batchGroup.setBatchName(SecurityUtil.getLoginUser().getRealName() + "创建于" + nowString);
 			batchGroup.setDetail(batchGroup.getBatchName() + ";启动批处理时创建。");
+
+            String[] batchGroupSeqNos = selectedBatchGroup.split(",");
+            List<SysBatchJob> jobList = new ArrayList();
+            prodGroupSeqNos = batchGroupSeqNos;
+            int var13 = batchGroupSeqNos.length;
+
+            for(int var14 = 0; var14 < var13; ++var14) {
+                String taskId = prodGroupSeqNos[var14];
+                SysBatchJob job = new SysBatchJob();
+                job.setBatchSeqNo(batchGroupSeqNo);
+                job.setTaskId(taskId);
+                jobList.add(job);
+            }
 			insertGroup(batchGroup);
+            sysBatchStart001Mapper.batchInsertBatchGroup(jobList);
 
 		} else {
 			String[] batchGroupSeqNos = StringUtil.split(selectedBatchGroup, ",");
@@ -156,7 +175,7 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 			productGroup.setGroupName(SecurityUtil.getLoginUser().getRealName() + "创建于"
 					+ (nowString == null ? DateUtil.getCurrentDateTime() : nowString));
 			productGroup.setDetail(productGroup.getGroupName() + ";启动批处理时创建。");
-			String[] prodGroupSeqNos = StringUtil.split(selectedProductGroup, ",");
+			prodGroupSeqNos = StringUtil.split(selectedProductGroup, ",");
 			List<Product> productList = new ArrayList<Product>();
 			if (productService != null) {
 				productList = productService.findProductByIds(prodGroupSeqNos);
@@ -176,7 +195,7 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 			prodList = Arrays.asList(selectedProductGroup.split(","));
 		} else if (StringUtil.isNotEmpty(prodGroupSeqNo)
 				&& GlobalConstant.BATCH_EXECUTE_TYPE_GROUP.equals(prodGroupType)) {
-			String[] prodGroupSeqNos = StringUtil.split(selectedProductGroup, ",");
+			prodGroupSeqNos = StringUtil.split(selectedProductGroup, ",");
 			prodList = findAllProdbyGroup(prodGroupSeqNos);
 
 		}
@@ -209,7 +228,7 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 				productGroup.setGroupName(SecurityUtil.getLoginUser().getRealName() + "创建于"
 						+ (nowString == null ? DateUtil.getCurrentDateTime() : nowString));
 				productGroup.setDetail(productGroup.getGroupName() + ";启动批处理时创建。");
-				String[] prodGroupSeqNos = StringUtil.split(selectedProductGroup, ",");
+				prodGroupSeqNos = StringUtil.split(selectedProductGroup, ",");
 				List<Product> productList = new ArrayList<Product>();
 				if (productService != null) {
 					productList = productService.findProductByIds(prodGroupSeqNos);

@@ -87,7 +87,7 @@ public class DisProdBaseInfoService extends FileImpService {
         DisRepProdInfo dto = null;
         List<DisRepProdInfo> dtoList = new ArrayList<DisRepProdInfo>();
         for(Map<String, String> data : listData){
-            //将map转换为dto
+            //将map转换为dtosvrProdInfoInterfTaskService
         	try{
         		   dto = transMap2Dto(data);
                    dtoList.add(dto);
@@ -197,6 +197,13 @@ public class DisProdBaseInfoService extends FileImpService {
         dto.setCreateUser("interf");
         dto.setCreateDept("");
         dto.setUpdateUser("interf");
+
+        /**add by yinya 新增产品基本信息：分红方式、最少追加金额 on 20211014 start**/
+        dto.setBonusMode(data.get("BONUS_MODE"));
+        if (StringUtil.isNotEmpty(data.get("LOWEST_AMT"))) {
+            dto.setLowestAmt(DisInterfDecimalUtil.str2BigDecimal(data.get("LOWEST_AMT")));//最少追加金额
+        }
+        /**add by yinya 新增产品基本信息：分红方式、最少追加金额 on 20211014 end**/
         try{
             if(StringUtil.isNotEmpty(data.get("CREATE_TIME"))){
                 dto.setCreateTime(DateUtil.parseDate(data.get("CREATE_TIME"),new String[] {DateUtil.DEFAULT_DATETIME_FORMAT_ODS}));

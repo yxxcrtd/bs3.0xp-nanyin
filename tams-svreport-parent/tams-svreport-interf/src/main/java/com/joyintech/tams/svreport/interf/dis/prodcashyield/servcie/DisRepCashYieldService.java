@@ -124,6 +124,12 @@ public class DisRepCashYieldService extends FileImpService{
         dto.setCreateUser("interf");
         dto.setCreateDept(data.get(""));
         dto.setUpdateUser("interf");
+
+        /**add by yinya 新增产品费率信息：银行收取比例（浮动管理费选填） on 20211014 start**/
+        if (StringUtil.isNotEmpty(data.get("CHARGE_RATIO"))) {
+            dto.setChargeRatio(DisInterfDecimalUtil.str2BigDecimal(data.get("CHARGE_RATIO")));//最少追加金额
+        }
+        /**add by yinya 新增产品费率信息：银行收取比例（浮动管理费选填） on 20211014 end**/
         try {
             if(StringUtil.isNotEmpty(data.get("CREATE_TIME"))){
                 dto.setCreateTime(DateUtil.parseDate(data.get("CREATE_TIME"),new String[] {DateUtil.DEFAULT_DATETIME_FORMAT_ODS}));
