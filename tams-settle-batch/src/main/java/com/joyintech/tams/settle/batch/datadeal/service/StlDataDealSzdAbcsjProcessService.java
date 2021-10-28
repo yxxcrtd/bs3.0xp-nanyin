@@ -81,6 +81,9 @@ public class StlDataDealSzdAbcsjProcessService {
             SettleTransData settleTransData = new SettleTransData();
             // 定义变量.成交数据明细附属表DTO
 //            SettleTransDataAdd settleTransDataAdd = new SettleTransDataAdd();
+            String generate = IDGenerator.generate();
+            settleTransData.setTradeId(generate);
+            settleTransData.setCjbh(generate);
             // 金融产品代码
             settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_股票.getValue() + GlobalConstant.UNDER_LINE + szdAbcsj.getZqdm() + ".SH");
             // 金融产品类型(投管分类)
@@ -96,7 +99,7 @@ public class StlDataDealSzdAbcsjProcessService {
             // 交易方向
             settleTransData.setPs(getPs(szdAbcsj));
             // 成交编号
-            settleTransData.setTradeId(IDGenerator.generate());
+            //settleTransData.setTradeId(generate);
 			// 执行日期
 			settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
 			// 证券品种

@@ -162,6 +162,9 @@ public class StlDataDealSzdJsmxProcessService {
 			}
 			// 定义变量.成交数据明细DTO
 			SettleTransData settleTransData = new SettleTransData();
+			String generate = IDGenerator.generate();
+			settleTransData.setTradeId(generate);
+			settleTransData.setCjbh(szdJsmx.getCjbh());
 			// 定义变量.成交数据明细附属表DTO
 			SettleTransDataAdd settleTransDataAdd = new SettleTransDataAdd();
 			// 金融产品代码
@@ -216,7 +219,8 @@ public class StlDataDealSzdJsmxProcessService {
 						// 单位净价
 						settleTransData.setUnitCprice(new BigDecimal(szdJsmx.getJg1()));
 					}
-					settleTransDataAdd.setTradeId(szdJsmx.getCjbh());
+					//settleTransDataAdd.setTradeId(szdJsmx.getCjbh());
+					settleTransDataAdd.setTradeId(generate);
 					settleTransDataAdd.setrFinprodId(szdJsmx.getZqdm2());
 				}
 			}
@@ -228,11 +232,13 @@ public class StlDataDealSzdJsmxProcessService {
 					settleTransData.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
 					// 金融产品类型(估值核算)
 					settleTransData.setFinprodType(DictCodeListExt1.金融产品类型_股票.getValue());					
-					settleTransDataAdd.setTradeId(szdJsmx.getCjbh());
+					//settleTransDataAdd.setTradeId(szdJsmx.getCjbh());
+					settleTransDataAdd.setTradeId(generate);
 					settleTransDataAdd.setrFinprodId(szdJsmx.getZqdm2());
 				}
 				else if (StringUtil.equals(StlDataDealProcessConstant.ZQLB_GZ, szdJsmx.getZqlb())) {
-					settleTransDataAdd.setTradeId(szdJsmx.getCjbh());
+					//settleTransDataAdd.setTradeId(szdJsmx.getCjbh());
+					settleTransDataAdd.setTradeId(generate);
 					settleTransDataAdd.setrFinprodId(szdJsmx.getZqdm2());
 				}
 				else {
@@ -246,17 +252,18 @@ public class StlDataDealSzdJsmxProcessService {
 					settleTransData.setUnitFprice(new BigDecimal(0));
 					// 单位净价
 					settleTransData.setUnitCprice(new BigDecimal(szdJsmx.getJg1()));
-					settleTransDataAdd.setTradeId(szdJsmx.getCjbh());
+					//settleTransDataAdd.setTradeId(szdJsmx.getCjbh());
+					settleTransDataAdd.setTradeId(generate);
 					settleTransDataAdd.setrFinprodId(szdJsmx.getZqdm1());
 				}
 			}
 			// 成交编号
-			if (StringUtil.isNotEmpty(szdJsmx.getCjbh())) {
+			/*if (StringUtil.isNotEmpty(szdJsmx.getCjbh())) {
 				settleTransData.setTradeId(szdJsmx.getCjbh());
 			}
 			else {
 				settleTransData.setTradeId(IDGenerator.generate());
-			}
+			}*/
 			// 执行日期
 			settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
 			// 证券品种

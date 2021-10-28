@@ -209,7 +209,9 @@ public class StlDataDealSzdZqbdProcessService {
             // 定义变量.成交数据明细附属表DTO
             SettleTransDataAdd settleTransDataAdd = new SettleTransDataAdd();
             // 成交编号
-            settleTransData.setTradeId(IDGenerator.generate());
+            String generate = IDGenerator.generate();
+            settleTransData.setTradeId(generate);
+            settleTransData.setCjbh(generate);
 			// 执行日期
 			settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
 			// 证券品种

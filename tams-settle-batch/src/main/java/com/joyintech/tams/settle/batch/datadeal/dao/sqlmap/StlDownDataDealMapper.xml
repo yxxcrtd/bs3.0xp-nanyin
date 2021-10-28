@@ -10,29 +10,35 @@
         </where>
         ORDER BY SEC_TYPE, PORTFOLIO_ID, SEQNO
     </select>
-    
+
+	<sql id="tradeIdSql">
+			SELECT
+			T1.TRADE_ID
+			FROM
+			SETTLE_TRANS_DATA T1
+			LEFT JOIN SETTLE_TRANS_DATA_STATUS T2 ON
+			T2.TRADE_ID = T1.TRADE_ID
+			WHERE
+			T1.DEAL_DATE = #{dealDate,jdbcType=DATE} and (T2.CHECK_RESULT IS NULL OR T2.CHECK_RESULT ='0')
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				AND
+				<foreach collection="portfolioIdList" item="portfolioId" open="T1.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="secTypeList != null and secTypeList.size() > 0">
+				AND
+				<foreach collection="secTypeList" item="secType" open="T1.SEC_TYPE IN (" close=")" separator=",">
+					#{secType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+	</sql>
+
     <delete id="deleteSettleTransTgMapping">
         DELETE FROM SETTLE_TRANS_TG_MAPPING
         <where>
             TRADE_ID IN (
-            	SELECT
-            		TRADE_ID
-            	FROM
-            		SETTLE_TRANS_DATA
-            	WHERE
-            		DEAL_DATE = #{dealDate,jdbcType=DATE}
-            		<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-	            		AND 
-	            		<foreach collection="portfolioIdList" item="portfolioId" open="PORTFOLIO_ID IN (" close=")" separator=",">
-	            			#{portfolioId,jdbcType=VARCHAR}
-	            		</foreach>
-            		</if>
-            		<if test="secTypeList != null and secTypeList.size() > 0">
-	            		AND 
-	            		<foreach collection="secTypeList" item="secType" open="SEC_TYPE IN (" close=")" separator=",">
-	            			#{secType,jdbcType=VARCHAR}
-	            		</foreach>
-            		</if>
+					<include refid="com.joyintech.tams.common.base.dao.SettleBatchParaMapper.tradeIdSql"></include>
             )
         </where>
     </delete>
@@ -41,24 +47,7 @@
         DELETE FROM SETTLE_TRANS_DATA_PLEDGE
         <where>
             TRADE_ID IN (
-            	SELECT
-            		TRADE_ID
-            	FROM
-            		SETTLE_TRANS_DATA
-            	WHERE
-            		DEAL_DATE = #{dealDate,jdbcType=DATE}
-            		<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-	            		AND 
-	            		<foreach collection="portfolioIdList" item="portfolioId" open="PORTFOLIO_ID IN (" close=")" separator=",">
-	            			#{portfolioId,jdbcType=VARCHAR}
-	            		</foreach>
-            		</if>
-            		<if test="secTypeList != null and secTypeList.size() > 0">
-	            		AND 
-	            		<foreach collection="secTypeList" item="secType" open="SEC_TYPE IN (" close=")" separator=",">
-	            			#{secType,jdbcType=VARCHAR}
-	            		</foreach>
-            		</if>
+			<include refid="com.joyintech.tams.common.base.dao.SettleBatchParaMapper.tradeIdSql"></include>
             )
         </where>
     </delete>
@@ -67,24 +56,7 @@
         DELETE FROM SETTLE_TRANS_DATA_ADD
         <where>
             TRADE_ID IN (
-            	SELECT
-            		TRADE_ID
-            	FROM
-            		SETTLE_TRANS_DATA
-            	WHERE
-            		DEAL_DATE = #{dealDate,jdbcType=DATE}
-            		<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-	            		AND 
-	            		<foreach collection="portfolioIdList" item="portfolioId" open="PORTFOLIO_ID IN (" close=")" separator=",">
-	            			#{portfolioId,jdbcType=VARCHAR}
-	            		</foreach>
-            		</if>
-            		<if test="secTypeList != null and secTypeList.size() > 0">
-	            		AND 
-	            		<foreach collection="secTypeList" item="secType" open="SEC_TYPE IN (" close=")" separator=",">
-	            			#{secType,jdbcType=VARCHAR}
-	            		</foreach>
-            		</if>
+			<include refid="com.joyintech.tams.common.base.dao.SettleBatchParaMapper.tradeIdSql"></include>
             )
         </where>
     </delete>
@@ -131,6 +103,9 @@
            			#{secType,jdbcType=VARCHAR}
            		</foreach>
        		</if>
+       		and TRADE_ID in(
+				SELECT TRADE_ID FROM SETTLE_TRANS_DATA_STATUS WHERE CHECK_RESULT IS NULL OR CHECK_RESULT ='0'
+			)
         </where>
     </delete>
 
@@ -148,9 +123,66 @@
 
     <select id="selectSzdJsmx" parameterType="java.util.Map"
             resultMap="com.joyintech.tams.common.base.dao.SzdJsmxMapper.BaseResultMap">
-        <include refid="com.joyintech.tams.common.base.dao.SzdJsmxMapper.Sql_All_Data"></include>
+		SELECT
+		SEQNO,
+		IMPORT_DATE,
+		DATA_FILE,
+		IS_SETTLE_TARGET,
+		T1.CJBH,
+		ZQZH,
+		SCDM,
+		JLLX,
+		JYFS,
+		JSFS,
+		YWLX,
+		QSBZ,
+		GHLX,
+		JSBH,
+		SQBH,
+		WTBH,
+		JYRQ,
+		QSRQ,
+		JSRQ,
+		QTRQ,
+		WTSJ,
+		CJSJ,
+		XWH1,
+		XWH2,
+		XWHY,
+		JSHY,
+		TGHY,
+		ZQDM1,
+		ZQDM2,
+		ZQLB,
+		LTLX,
+		QYLB,
+		GPNF,
+		MMBZ,
+		SL,
+		CJSL,
+		ZJZH,
+		BZ,
+		JG1,
+		JG2,
+		QSJE,
+		YHS,
+		JSF,
+		GHF,
+		ZGF,
+		SXF,
+		QTJE1,
+		QTJE2,
+		QTJE3,
+		SJSF,
+		JGDM,
+		FJSM
+		FROM
+		SZD_JSMX T1
+		LEFT JOIN SETTLE_TRANS_DATA T2 ON T2.CJBH = T1.CJBH AND T2.SEAT_NUMBER = T1.XWH1 AND T2.DEAL_DATE = #{dealDate,jdbcType=DATE}
+		LEFT JOIN SETTLE_TRANS_DATA_STATUS T3 ON T3.TRADE_ID = T2.TRADE_ID
         <where>
-        	IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(DATA_FILE) LIKE CONCAT(#{dataFile}, '%')) AND IS_SETTLE_TARGET = 'Y'
+        	T1.IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(T1.DATA_FILE) LIKE CONCAT(#{dataFile}, '%')) AND T1.IS_SETTLE_TARGET = 'Y'
+        	and (T3.CHECK_RESULT is null or T3.CHECK_RESULT = '0')
         	<foreach item="searchMapValue" index="searchMapKey" collection="searchMap">
         		AND ${searchMapKey} IN 
         		<foreach collection="searchMapValue" item ="searchMapValueData" open="(" close=")" separator=",">
@@ -162,9 +194,68 @@
 
     <select id="selectSzdSjsmx" parameterType="java.util.Map"
             resultMap="com.joyintech.tams.common.base.dao.SzdSjsmxMapper.BaseResultMap">
-        <include refid="com.joyintech.tams.common.base.dao.SzdSjsmxMapper.Sql_All_Data"></include>
+		SELECT
+		SEQNO,
+		IMPORT_DATE,
+		DATA_FILE,
+		IS_SETTLE_TARGET,
+		MXYWLSH,
+		MXJSZH,
+		MXBFZH,
+		MXSJLX,
+		MXYWLB,
+		MXZQDM,
+		MXJYDY,
+		MXTGDY,
+		MXZQZH,
+		MXDDBH,
+		MXYYB,
+		MXZXBH,
+		MXCJSL,
+		MXQSSL,
+		MXCJJG,
+		MXQSJG,
+		MXXYJY,
+		MXPCBS,
+		MXZQLB,
+		MXZQZL,
+		MXGFXZ,
+		MXJSFS,
+		MXHBDH,
+		MXQSBJ,
+		MXYHS,
+		MXJYJSF,
+		MXJGGF,
+		MXGHF,
+		MXJSF,
+		MXSXF,
+		MXQSYJ,
+		MXQTFY,
+		MXZJJE,
+		MXSFJE,
+		MXCJRQ,
+		MXQSRQ,
+		MXJSRQ,
+		MXFSRQ,
+		MXQTRQ,
+		MXSCDM,
+		MXJYFS,
+		MXZQDM2,
+		MXTGDY2,
+		MXDDBH2,
+		MXCWDH,
+		MXPPHM,
+		MXFJSM,
+		MXBYBZ
+		FROM
+		SZD_SJSMX T1
+		LEFT JOIN SETTLE_TRANS_DATA T2 ON
+		T2.CJBH = T1.MXZXBH AND T2.SEAT_NUMBER = T1.MXJYDY  AND T2.DEAL_DATE = #{dealDate,jdbcType=DATE}
+		LEFT JOIN SETTLE_TRANS_DATA_STATUS T3 ON
+		T3.TRADE_ID = T2.TRADE_ID
         <where>
-        	IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(DATA_FILE) LIKE CONCAT(#{dataFile}, '%')) AND IS_SETTLE_TARGET = 'Y'
+			T1.IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(T1.DATA_FILE) LIKE CONCAT(#{dataFile}, '%')) AND T1.IS_SETTLE_TARGET = 'Y'
+			and (T3.CHECK_RESULT is null or T3.CHECK_RESULT = '0')
         	<foreach item="searchMapValue" index="searchMapKey" collection="searchMap">
         		AND ${searchMapKey} IN 
         		<foreach collection="searchMapValue" item ="searchMapValueData" open="(" close=")" separator=",">
@@ -176,10 +267,69 @@
 
     <select id="selectSzdSjsjg" parameterType="java.util.Map"
             resultMap="com.joyintech.tams.common.base.dao.SzdSjsjgMapper.BaseResultMap">
-        <include refid="com.joyintech.tams.common.base.dao.SzdSjsjgMapper.Sql_All_Data"></include>
-        <where>
-        	IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(DATA_FILE) LIKE CONCAT(#{dataFile}, '%')) AND IS_SETTLE_TARGET = 'Y'
-        	AND ((JGYWLB = 'PGQZ') OR (1 = 1 
+		SELECT
+		SEQNO,
+		IMPORT_DATE,
+		DATA_FILE,
+		IS_SETTLE_TARGET,
+		JGJSZH,
+		JGBFZH,
+		JGSJLX,
+		JGYWLB,
+		JGZQDM,
+		JGJYDY,
+		JGTGDY,
+		JGZQZH,
+		JGDDBH,
+		JGYYB,
+		JGZXBH,
+		JGYWLSH,
+		JGCJSL,
+		JGQSSL,
+		JGJSSL,
+		JGCJJG,
+		JGQSJG,
+		JGXYJY,
+		JGPCBS,
+		JGZQLB,
+		JGZQZL,
+		JGGFXZ,
+		JGLTLX,
+		JGJSFS,
+		JGHBDH,
+		JGQSBJ,
+		JGYHS,
+		JGJYJSF,
+		JGJGGF,
+		JGGHF,
+		JGJSF,
+		JGSXF,
+		JGQSYJ,
+		JGQTFY,
+		JGZJJE,
+		JGSFJE,
+		JGJSBZ,
+		JGZYDH,
+		JGCJRQ,
+		JGQSRQ,
+		JGJSRQ,
+		JGFSRQ,
+		JGQTRQ,
+		JGSCDM,
+		JGJYFS,
+		JGZQDM2,
+		JGTGDY2,
+		JGDDBH2,
+		JGFJSM,
+		JGBYBZ
+		FROM
+		SZD_SJSJG T1
+		LEFT JOIN SETTLE_TRANS_DATA T2 ON (T2.CJBH = T1.JGDDBH OR T2.CJBH = T1.JGYWLSH ) AND T2.SEAT_NUMBER = T1.JGJYDY AND T2.DEAL_DATE = #{dealDate,jdbcType=DATE}
+		LEFT JOIN SETTLE_TRANS_DATA_STATUS T3 ON T3.TRADE_ID = T2.TRADE_ID
+		<where>
+        	T1.IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(T1.DATA_FILE) LIKE CONCAT(#{dataFile}, '%')) AND T1.IS_SETTLE_TARGET = 'Y'
+			and (T3.CHECK_RESULT is null or T3.CHECK_RESULT = '0')
+        	AND ((T1.JGYWLB = 'PGQZ') OR (1 = 1
         	<foreach item="searchMapValue" index="searchMapKey" collection="searchMap">
         		AND ${searchMapKey} IN 
         		<foreach collection="searchMapValue" item ="searchMapValueData" open="(" close=")" separator=",">
@@ -192,9 +342,30 @@
 
     <select id="selectSzdSjsfx" parameterType="java.util.Map"
             resultMap="com.joyintech.tams.common.base.dao.SzdSjsfxMapper.BaseResultMap">
-        <include refid="com.joyintech.tams.common.base.dao.SzdSjsfxMapper.Sql_All_Data"></include>
+		SELECT
+		SEQNO,
+		IMPORT_DATE,
+		DATA_FILE,
+		IS_SETTLE_TARGET,
+		FXJSZH,
+		FXTGDY,
+		FXZQDM,
+		FXZQZH,
+		FXYWLB,
+		FXDDBH,
+		FXWTGS,
+		FXQRGS,
+		FXZJJE,
+		FXCWDH,
+		FXFSRQ,
+		FXBYBZ
+		FROM
+		SZD_SJSFX T1
+		LEFT JOIN SETTLE_TRANS_DATA T2 ON T2.CJBH = T1.FXDDBH AND T2.SEAT_NUMBER = T1.FXTGDY AND T2.DEAL_DATE = #{dealDate,jdbcType=DATE}
+		LEFT JOIN SETTLE_TRANS_DATA_STATUS T3 ON T3.TRADE_ID = T2.TRADE_ID
         <where>
-        	IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(DATA_FILE) LIKE CONCAT(#{dataFile}, '%')) AND IS_SETTLE_TARGET = 'Y'
+			T1.IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(T1.DATA_FILE) LIKE CONCAT(#{dataFile}, '%')) AND T1.IS_SETTLE_TARGET = 'Y'
+			and (T3.CHECK_RESULT is null or T3.CHECK_RESULT = '0')
         	<foreach item="searchMapValue" index="searchMapKey" collection="searchMap">
         		AND ${searchMapKey} IN 
         		<foreach collection="searchMapValue" item ="searchMapValueData" open="(" close=")" separator=",">

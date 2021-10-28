@@ -292,6 +292,7 @@ public class StlDataDealSzdSjsjgProcessService {
             // 业务类型
             settleTransData.setBusiType(DictCodeList.业务类型_股票交易.getValue());
             // 单位净价
+            settleTransDataAdd.setTradeId(settleTransData.getTradeId());
             settleTransData.setUnitCprice(szdSjsjg.getJgcjjg());
             setSharesDeal(szdSjsjg,settleTransData,settleTransDataAdd);
             return true;
@@ -701,7 +702,9 @@ public class StlDataDealSzdSjsjgProcessService {
             // 交易币种
             settleTransData.setCcy(stlDataDealProcessCommonService.getCcy(szdSjsjg.getJghbdh()));
             // 成交编号
-            settleTransData.setTradeId(szdSjsjg.getJgywlsh());
+            String generate = IDGenerator.generate();
+            settleTransData.setTradeId(generate);
+            settleTransData.setCjbh(szdSjsjg.getJgywlsh());
 			// 执行日期
 			settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
 			// 证券品种
@@ -776,6 +779,7 @@ public class StlDataDealSzdSjsjgProcessService {
             StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto = new StlDownDataDealWriteBaseDto();
             stlDownDataDealWriteBaseDto.setSettleTransData(settleTransData);
             if (settleTransDataAdd != null && StringUtil.isNotEmpty(settleTransDataAdd.getTradeId())) {
+                settleTransDataAdd.setTradeId(settleTransData.getTradeId());
             	stlDownDataDealWriteBaseDto.setSettleTransDataAdd(settleTransDataAdd);
             }
             // 成交数据与投管交易关系

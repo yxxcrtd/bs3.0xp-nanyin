@@ -3,6 +3,7 @@ package com.joyintech.tams.settle.batch.datadeal.service;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SettleTransData;
 import com.joyintech.tams.common.base.entity.SettleTransDataAdd;
@@ -212,8 +213,11 @@ public class StlDataDealSzdSjsfxProcessService {
             SettleTransData settleTransData = new SettleTransData();
             // 定义变量.成交数据明细附属表DTO
             SettleTransDataAdd settleTransDataAdd = new SettleTransDataAdd();
+            String generate = IDGenerator.generate();
             // 成交编号
-            settleTransData.setTradeId(szdSjsfx.getFxddbh());
+            //settleTransData.setTradeId(szdSjsfx.getFxddbh());
+            settleTransData.setTradeId(generate);
+            settleTransData.setCjbh(szdSjsfx.getFxddbh());
 			// 执行日期
 			settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
 			// 证券品种
