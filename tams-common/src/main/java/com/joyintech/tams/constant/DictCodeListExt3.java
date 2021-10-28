@@ -1577,7 +1577,11 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     估值市价_外汇交易中心(DictCode.估值市价, "12", "外汇交易中心"),
     录入方式_模型生成(DictCode.录入方式,"07","模型"),
 
-
+    //add by chenjiaxing 20211015 start
+    共通业务类型_券商流水核对(DictCode.共通业务类型,"STL07","券商流水核对"),
+    对账状态结果_不一致(DictCode.对账状态结果,"0","不一致"),
+    对账状态结果_一致(DictCode.对账状态结果,"1","一致"),
+    //add by chenjiaxing 20211015 end
     ;
     /**
      * 对应于数据字典code
