@@ -61,6 +61,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -966,17 +967,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//            调整后的计算结束日>交易日取最小 现金流类型=利息
+//            调整后的计算结束日>交易日取最小  现金流类型=利息(SQL中)
             try {
                 if (dto.getLastPaydate() != null || !StringUtil.isEmpty(dto.getLastPaydate())) {
                     Date lastPaydate = sdf.parse(dto.getLastPaydate());
                     Date minDate = cfetsetrIbBondinfoMapper.getMinTradeDate(secId);
-                    if (minDate != null) {
-                        if (minDate.compareTo(lastPaydate) > 0 && dto.getRateType().equals("02")) {
+                    if (minDate != null && minDate.compareTo(lastPaydate) > 0) {
                             dto.setLastPaydate(dto.getLastPaydate());
-                        }else {
-                            dto.setLastPaydate("--");
-                        }
                     }else {
                         dto.setLastPaydate("--");
                     }
@@ -988,8 +985,22 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
             //是否含权
             dto.setXqFlg(dto.getXqFlg().equals("Y")?"是":"否");
-            //下一行权日若无，则显示为“—”
-            dto.setXqdate(!StringUtil.isEmpty(dto.getXqdate())?dto.getXqdate():"--");
+            //下一行权日若无，则显示为“—”  计划行权日>交易日取最小
+            if (dto.getXqdate() != null || !StringUtil.isEmpty(dto.getXqdate())) {
+                try {
+                    Date xqDate = sdf.parse(dto.getXqdate());
+                    Date minDate = cfetsetrIbBondinfoMapper.getMinTradeDate(secId);
+                    if (minDate != null && minDate.compareTo(xqDate) > 0) {
+                        dto.setLastPaydate(dto.getLastPaydate());
+                    }else {
+                        dto.setXqdate("--");
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                dto.setXqdate("--");
+            }
         }
         return dto;
     }
