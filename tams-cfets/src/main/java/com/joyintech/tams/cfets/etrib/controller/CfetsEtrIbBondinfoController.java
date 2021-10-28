@@ -139,7 +139,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         //本币业务指令自动刷新时间(s)
         initPageParams.put("CFETS_ETR_REFRESH_TIME", CacheUtil.getSysParam("CFETS_ETR_REFRESH_TIME"));
         //CMDS地址
-        initPageParams.put("CMDS_PATH", "ws://192.168.90.208:8888/dsp/cmds");//CacheUtil.getSysParam("CMDS_PATH"));
+        initPageParams.put("CMDS_PATH", CacheUtil.getSysParam("CMDS_PATH"));
         initPageParams.put("NEED_WORKFLOW", false);
         initPageParams.put("SHARES_TRADE_MARKET_02",DictCodeListExt1.交易市场_二级市场.getValue());
         initPageParams.put("platDate",DateUtil.platDateFromCache());
