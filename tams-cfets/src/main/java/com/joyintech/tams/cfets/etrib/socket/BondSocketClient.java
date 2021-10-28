@@ -26,7 +26,10 @@ public class BondSocketClient {
     private static final Logger logger = LoggerFactory.getLogger(BondSocketClient.class);
 
     // 债券行情行息 mDEntryPx 最新净价
-    private static Map<String, BaseMap> bonds = new ConcurrentHashMap<>(); 
+    private static Map<String, BaseMap> bonds = new ConcurrentHashMap<>();
+
+    @Value("${bondWebSocketKey}")
+    private String bondWebSocketKey;
     
     @Value("${bondWebSocketUrl}")
     private String bondWebSocketUrl;
@@ -159,7 +162,7 @@ public class BondSocketClient {
 
 
     public void send(){
-        util.send("All");
+        util.send(bondWebSocketKey);
         logger.info("债券服务发送成功。。。");
     }
 
