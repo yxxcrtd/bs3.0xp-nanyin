@@ -1,0 +1,175 @@
+package com.joyintech.tams.cfets.etrdispatcher.dto;
+
+import com.joyintech.tams.business.common.dto.PageMode;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * 场外指令分发
+ * 指令列表分页查询条件DTO
+ * @author sjj
+ * @version 1.0 2021年10月26日
+ * @see CfetsEtrDispatcherTradeListRequest
+ * @since 1.0
+ */
+@ApiModel(value="指令分发菜单指令列表请求参数",description="指令分发菜单指令列表请求参数")
+public class CfetsEtrDispatcherTradeListRequest {
+
+    @ApiModelProperty(name="entrustStatus",value="指令状态",example="字符串1,字符串2,...")
+    private String entrustStatus;
+
+    @ApiModelProperty(name="portfolioId",value="组合代码集合",example="字符串1,字符串2,...")
+    private String portfolioId;
+
+    @ApiModelProperty(name="ps",value="交易方向",example="A1")
+    private String ps;
+
+    @ApiModelProperty(name="finprodType2",value="资产类型",example="A1")
+    private String finprodType2;
+
+    @ApiModelProperty(name="businessModel",value="业务类型",example="A1")
+    private String businessModel;
+
+    @ApiModelProperty(name="finprodMarketId",value="资产代码",example="字符串1,字符串2,...")
+    private String finprodMarketId;
+
+    @ApiModelProperty(name="tradeMarket",value="交易场所",example="A1")
+    private String tradeMarket;
+
+    @ApiModelProperty(name="settleSpeed",value="清算速度",example="A1")
+    private String settleSpeed;
+
+    @ApiModelProperty(name="secAcctId",value="证券账户",example="字符串1,字符串2,...")
+    private String secAcctId;
+
+    @ApiModelProperty(name="entrustId",value="指令代码",example="A1")
+    private String entrustId;
+
+    @ApiModelProperty(name="invManagerId",value="投资经理",example="字符串1,字符串2,...")
+    private String invManagerId;
+
+    @ApiModelProperty(name="entrustDate",value="指令日期",example="2021-01-01")
+    private String entrustDate;
+
+    @ApiModelProperty(name="ccy",value="币种",example="A1")
+    private String ccy;
+
+    @ApiModelProperty(name="pageMode",value="分页对象")
+    private PageMode pageMode;
+
+    public String getEntrustStatus() {
+        return entrustStatus;
+    }
+
+    public void setEntrustStatus(String entrustStatus) {
+        this.entrustStatus = entrustStatus;
+    }
+
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
+    }
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
+    }
+
+    public String getSettleSpeed() {
+        return settleSpeed;
+    }
+
+    public void setSettleSpeed(String settleSpeed) {
+        this.settleSpeed = settleSpeed;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
+    }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
+
+    public String getInvManagerId() {
+        return invManagerId;
+    }
+
+    public void setInvManagerId(String invManagerId) {
+        this.invManagerId = invManagerId;
+    }
+
+    public String getEntrustDate() {
+        return entrustDate;
+    }
+
+    public void setEntrustDate(String entrustDate) {
+        this.entrustDate = entrustDate;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
+
+    public PageMode getPageMode() {
+        return pageMode;
+    }
+
+    public void setPageMode(PageMode pageMode) {
+        this.pageMode = pageMode;
+    }
+}
+
