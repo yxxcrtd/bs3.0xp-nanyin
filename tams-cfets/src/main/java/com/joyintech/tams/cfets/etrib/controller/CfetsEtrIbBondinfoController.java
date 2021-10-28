@@ -32,6 +32,7 @@ import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.component.business.common.controller.BaseRiskMathCommController;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
@@ -291,6 +292,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         });
     }
     
+
     @PostMapping("/getEtrFinProductInfo/{secId:.+}")
     @ApiOperation(value = "债券信息查询功能", notes = "债券信息查询功能")
     @ResponseBody
@@ -603,13 +605,16 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             d.setCcy("CNY");
             dataMap=BeanUtil.object2Map(d);
             //风险试算check
+            AjaxResult ajaxResult = this.doRiskcalCheckMethod(dto);
+            if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+                return new Message<AjaxResult>().fail().setData(ajaxResult);
+            }
 
             List<String> resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F01");
             result.setRiskMathFlag("02");
             Boolean forbidFlag=false;
             Boolean cluflag=true;
             List<CfetsEtribdoRiskcalReturn> resultlist=new ArrayList<>();
-            result.setRiskcalReturnList(resultlist);
             if(!StringUtil.isEmptyList(resultArrList) ){
                 for(String row:resultArrList){
                     ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
@@ -632,13 +637,15 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                         }
                         resultlist.add(BeanUtil.mapToObject(map,CfetsEtribdoRiskcalReturn.class));
                     }
-
+                    result.setRiskcalReturnList(resultlist);
+                    result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());
                     //当置为不通过时就不再进来了
                     if(cluflag) {
                         if(!StringUtil.equals(resultArr.getBody().get("rskStatus"),"3")){
                             if(StringUtil.equals(resultArr.getBody().get("rskStatus"),"4")&&forbidFlag){
                                 cluflag=false;
                                 resultArr.getBody().put("rskStatus","3");
+                                result.setRskStatus("3");
                             }
                         }else{
                             cluflag=false;
@@ -649,6 +656,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                             result.setRiskTrialSpan("试算通过");
                         }
                     }
+
                 }
 
             }
@@ -684,5 +692,39 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<String>().fail().setMessage("查询异常");
         }
     }
+
+    public AjaxResult doRiskcalCheckMethod(CfetsEtrIbdoRiskcalRequest dto){
+        //参数不能为空
+        if(StringUtil.isEmptyList(dto.getBussCombDistribtList())){
+            AjaxResult res=new AjaxResult();
+            ValidMessage  validMessage= new ValidMessage();
+            validMessage.setMessage("组合分配列表不能为空");
+            res.setErrorList(Arrays.asList(validMessage));
+            return res;
+        }
+        List<ValidMessage> messages = new ArrayList<>();
+        if(StringUtil.isNotEmpty(dto.getBussCombDistribtList())){
+            for(CfetsBussCombDistribtBaseDto item:dto.getBussCombDistribtList()){
+                if(!StringUtil.isNotEmpty(item.getPortfolioId())){
+                    messages.add(new ValidMessage("请输入组合名称。"));
+                }
+                if(!StringUtil.isNotEmpty(item.getEntrustNum())){
+                    messages.add(new ValidMessage("请输入券面总额。"));
+                }
+            }
+        }
+        if(StringUtil.isNotEmpty(dto.getFinprodId())){
+            messages.add(new ValidMessage("请输入资产代码。"));
+        }
+        if(messages.size()>0) {
+            AjaxResult errorRs = new AjaxResult();
+            errorRs.setErrorList(messages);
+            return errorRs;
+        }
+
+
+        return new AjaxResult();
+    }
+
 
 }
