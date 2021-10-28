@@ -282,7 +282,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     public void exportEtrInfo(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
         // 导出
         ExcelUitl.doExport(req, response, "指令管理", () -> {
-            List dataList = cfetsEtrIbBondinfoService.findEtrinfoPage(req.getDto(CfetsEtrIbBondinfo001Dto.class)).getRoot();
+            List dataList = cfetsEtrIbBondinfoService.findEtrinfoPage(req.getDto(CfetsEtrIbfindEtrinfoRequest.class)).getRoot();
             return dataList;
         });
     }

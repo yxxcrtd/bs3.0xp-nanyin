@@ -96,8 +96,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     @Autowired
     private BusiProductRatingService busiProductRatingService;
     
-    @Value("${bondSuffixStr}")
-    private String bondSuffixStr;
     /**
      * 持仓信息查询
      *
@@ -505,7 +503,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     r.setUnitCost(dto.getUnitCost());
                     
                     // 3.最新净价（元） 优先从内存获取债券最新净价，没有则 r.getPrice()
-                    BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId(), bondSuffixStr);
+                    BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId());
                     if (price != null) {
                         r.setPrice(price);
                     }else{

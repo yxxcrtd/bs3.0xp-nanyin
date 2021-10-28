@@ -171,21 +171,6 @@ public class BondSocketClient {
         return bonds.get(key);
     }
 
-    /**
-     * 获取净价，需要去除后缀
-     * @param key
-     * @param suffix
-     * @return
-     */
-    public static BigDecimal getLocalCachePrice(String key, String suffix){
-        // 去除后缀
-        String theKey = StringUtil.removeEnd(key, suffix);
-        BaseMap bm = getBond(theKey);
-        if (bm != null) {
-            return bm.getBigDecimal("mDEntryPx");
-        }
-        return null;
-    }
 
     /**
      * 根据债券代码直接获取净价
@@ -193,8 +178,17 @@ public class BondSocketClient {
      * @return
      */
     public static BigDecimal getLocalCachePrice(String key){
+        if (key == null) {
+            return null;
+        }
         // 去除后缀
-        BaseMap bm = getBond(key);
+        int index = key.lastIndexOf(".");
+        String theKey = key;
+        if (index > 0){
+            theKey = StringUtil.substring(key, 0, index);
+        }
+        
+        BaseMap bm = getBond(theKey);
         if (bm != null) {
             return bm.getBigDecimal("mDEntryPx");
         }

@@ -8,5 +8,3 @@ webSocketKey: "[{\"table\":\"ETR_CASH_POSITION\",\"hodingTypes\":[]}, {\"table\"
 bondWebSocketUrl: ws://192.168.90.208:8888/dsp/cmds
 #监听债券行情键值
 bondWebSocketKey: Subscriber
-#去除后缀使用，示例: hhyh1.IB 去除.IB
-bondSuffixStr: .IB
