@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCash
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,6 +95,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      **/
     @Autowired
     private BusiProductRatingService busiProductRatingService;
+    
+    @Value("${bondSuffixStr}")
+    private String bondSuffixStr;
     /**
      * 持仓信息查询
      *
@@ -501,7 +505,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     r.setUnitCost(dto.getUnitCost());
                     
                     // 3.最新净价（元） 优先从内存获取债券最新净价，没有则 r.getPrice()
-                    BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId(), ".IB");
+                    BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId(), bondSuffixStr);
                     if (price != null) {
                         r.setPrice(price);
                     }else{

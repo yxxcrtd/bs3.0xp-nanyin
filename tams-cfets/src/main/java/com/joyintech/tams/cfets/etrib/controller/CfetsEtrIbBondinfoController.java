@@ -144,6 +144,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("SHARES_TRADE_MARKET_02",DictCodeListExt1.交易市场_二级市场.getValue());
         initPageParams.put("platDate",DateUtil.platDateFromCache());
 
+        initPageParams.put("FINPROD_TYPE_TG", this.getSelectDataFromDataDic(DictCode.金融产品类型_投管用, null));
     	return new Message<Map<String, Object>>(initPageParams).success();
     }
     @ApiOperation(value = "查询指令管理分页数据", notes = "查询指令管理分页数据")
