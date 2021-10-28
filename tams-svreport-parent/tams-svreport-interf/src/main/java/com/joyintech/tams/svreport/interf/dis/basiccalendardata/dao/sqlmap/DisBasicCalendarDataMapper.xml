@@ -43,7 +43,7 @@
 				RPI.CREATE_USER = TEMP.CREATE_USER,<!--创建人-->
 				RPI.CREATE_DEPT = TEMP.CREATE_DEPT,<!--创建部门-->
 				RPI.CREATE_TIME = TEMP.CREATE_TIME,<!--创建时间-->
-				<!--RPI.UPDATE_USER = TEMP.UPDATE_USER,--><!--更新人-->
+				RPI.UPDATE_USER = TEMP.UPDATE_USER,<!--更新人-->
 				RPI.UPDATE_TIME = TEMP.UPDATE_TIME<!--更新时间-->			
 		<!-- 匹配到则更新  end-->
 		<!-- 不匹配到则插入  start-->
