@@ -982,7 +982,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 e.printStackTrace();
             }
             //是否含权
-            dto.setXqFlg(dto.getXqFlg().equals("Y")?"是":"否");
+            if (dto.getXqFlg() != null || dto.getXqFlg() == "") {
+                dto.setXqFlg(dto.getXqFlg().equals("Y")?"是":"否");
+            }else {
+                dto.setXqFlg("无");
+            }
             //下一行权日若无，则显示为“—”  计划行权日>交易日取最小
             if (dto.getXqdate() != null || !StringUtil.isEmpty(dto.getXqdate())) {
                 try {
