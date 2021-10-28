@@ -59,6 +59,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -128,6 +129,9 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @Autowired
     private InterfRiskRdsController interfRiskRdsController;
 
+    @Value("${bondWebSocketUrl}")
+    private String bondWebSocketUrl;
+
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
     @ResponseBody
@@ -139,7 +143,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         //本币业务指令自动刷新时间(s)
         initPageParams.put("CFETS_ETR_REFRESH_TIME", CacheUtil.getSysParam("CFETS_ETR_REFRESH_TIME"));
         //CMDS地址
-        initPageParams.put("CMDS_PATH", CacheUtil.getSysParam("CMDS_PATH"));
+        initPageParams.put("bondWebSocketUrl", bondWebSocketUrl);
         initPageParams.put("NEED_WORKFLOW", false);
         initPageParams.put("SHARES_TRADE_MARKET_02",DictCodeListExt1.交易市场_二级市场.getValue());
         initPageParams.put("platDate",DateUtil.platDateFromCache());
