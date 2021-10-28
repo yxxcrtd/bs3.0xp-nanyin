@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public class StlDownDataDealReader extends BaseReader<StlDownDataDealOperatorDto
 		// 批处理执行信息
         SysBatchExecInfo execInfo = getBatchExecuteInfo();
         // 数据清算参数表
-        List<SettleBatchPara> list = stlDownDataDealService.selectAllParam(execInfo.getExecuteDate());
+        //List<SettleBatchPara> list = stlDownDataDealService.selectAllParam(execInfo.getExecuteDate());
         // 组合代码List
         List<String> portfolioIdList = new ArrayList<String>();
         // 证券品种List
@@ -44,7 +45,7 @@ public class StlDownDataDealReader extends BaseReader<StlDownDataDealOperatorDto
         
         List<StlDownDataDealOperatorDto> result = new ArrayList<StlDownDataDealOperatorDto>();
         
-        if (list != null && list.size() > 0) {
+        /*if (list != null && list.size() > 0) {
 	        for (SettleBatchPara settleBatchPara : list) {
 	        	// 组合代码
 	        	if (StringUtil.isNotEmpty(settleBatchPara.getPortfolioId())) {
@@ -66,8 +67,14 @@ public class StlDownDataDealReader extends BaseReader<StlDownDataDealOperatorDto
 	        	}
 	        }
 	        result = stlDownDataDealService.generatorStlDownDataDealOperatorDto(execInfo.getExecuteDate(), portfolioIdList, secTypeList);
-        }
+        }*/
 
+		secTypeList = Arrays.asList(DictCodeListExt1.证券品种_债券.getValue(),DictCodeListExt1.证券品种_基金.getValue(),DictCodeListExt1.证券品种_股票.getValue(),DictCodeListExt1.证券品种_回购.getValue());
+		StepContext.start(DictCodeListExt1.证券品种_债券.getValue());
+		StepContext.start(DictCodeListExt1.证券品种_基金.getValue());
+		StepContext.start(DictCodeListExt1.证券品种_股票.getValue());
+		StepContext.start(DictCodeListExt1.证券品种_回购.getValue());
+		result = stlDownDataDealService.generatorStlDownDataDealOperatorDto(execInfo.getExecuteDate(), portfolioIdList, secTypeList);
         if(CollectionUtils.isNotEmpty(result)) {
         	// 根据证券品种初始化
         	result.forEach(item -> {

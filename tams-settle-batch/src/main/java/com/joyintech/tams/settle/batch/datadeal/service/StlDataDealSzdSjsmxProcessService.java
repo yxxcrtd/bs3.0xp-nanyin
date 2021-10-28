@@ -1,10 +1,7 @@
 package com.joyintech.tams.settle.batch.datadeal.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.SettleTransData;
 import com.joyintech.tams.common.base.entity.SettleTransDataAdd;
 import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
@@ -296,7 +293,9 @@ public class StlDataDealSzdSjsmxProcessService {
             // 交收方式
             settleTransData.setSettleMode(stlDataDealProcessCommonService.getSettleMode(szdSjsmx.getMxjsfs()));
             // 成交编号
-            settleTransData.setTradeId(szdSjsmx.getMxzxbh());// modify 成交编号变更 20210825
+            String generate = IDGenerator.generate();
+            settleTransData.setTradeId(generate);
+            settleTransData.setCjbh(szdSjsmx.getMxzxbh());// modify 成交编号变更 20210825
 			// 执行日期
 			settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
 			// 证券品种
@@ -371,6 +370,7 @@ public class StlDataDealSzdSjsmxProcessService {
             StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto = new StlDownDataDealWriteBaseDto();
             stlDownDataDealWriteBaseDto.setSettleTransData(settleTransData);
             if (settleTransDataAdd != null && StringUtil.isNotEmpty(settleTransDataAdd.getTradeId())) {
+                settleTransDataAdd.setTradeId(settleTransData.getTradeId());
             	stlDownDataDealWriteBaseDto.setSettleTransDataAdd(settleTransDataAdd);
             }
             // 成交数据与投管交易关系

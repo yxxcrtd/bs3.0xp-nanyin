@@ -10,9 +10,14 @@ import java.util.Date;
 
 public class SettleTransData extends BaseEntity {
     /**
-     * 成交编号
+     * 流水号
      */
     private String tradeId;
+
+    /**
+     * 成交编号
+     */
+    private String cjbh;
 
     /**
      * 执行日期
@@ -359,19 +364,35 @@ public class SettleTransData extends BaseEntity {
     private String isPurchTypeYx;
 
     /**
-     * 取得 成交编号
-     * @return 成交编号
+     * 取得 流水号
+     * @return 流水号
      */
     public String getTradeId() {
         return tradeId;
     }
 
     /**
-     * 设置 成交编号
-     * @param tradeId 成交编号
+     * 设置 流水号
+     * @param tradeId 流水号
      */
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId == null ? null : tradeId.trim();
+    }
+
+    /**
+     * 取得 成交编号
+     * @return 成交编号
+     */
+    public String getCjbh() {
+        return cjbh;
+    }
+
+    /**
+     * 设置 成交编号
+     * @param cjbh 成交编号
+     */
+    public void setCjbh(String cjbh) {
+        this.cjbh = cjbh == null ? null : cjbh.trim();
     }
 
     /**
