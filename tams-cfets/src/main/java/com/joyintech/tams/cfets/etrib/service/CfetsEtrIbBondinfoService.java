@@ -10,10 +10,7 @@
 
 package com.joyintech.tams.cfets.etrib.service;
 
-import com.joyintech.background.component.common.pack.common.validation.groups.ValidateGroupEdit;
 import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.JoyinMessage;
-import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
@@ -41,23 +38,14 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
-import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
-import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
-import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
-import com.joyintech.tams.invest.common.trade.dto.CreditLinesDealCommon;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
-import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtribBondInfo003Dto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import com.joyintech.tools.util.ValidationUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.InvocationTargetException;
@@ -502,7 +490,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
          */
         Map<String, CfetsUnitCostDto> unitCostMap = calcEachCostAmtMap(requestDto);
         
-        // 逐条获取单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
+        // 计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
         if(result != null && result.getRoot()!= null && result.getRoot().size() > 0){
             result.getRoot().forEach( r->{
                 CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId() + r.getBusiModel());
@@ -513,11 +501,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     r.setUnitCost(dto.getUnitCost());
                     
                     // 3.最新净价（元） 优先从内存获取债券最新净价，没有则 r.getPrice()
-                    // todo 取实时行情债券最新净价
-                    BigDecimal price = BondSocketClient.getPrice(r.getFinprodMarketId(), ".IB");
+                    BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId(), ".IB");
                     if (price != null) {
                         r.setPrice(price);
+                    }else{
+                        // 是否需要从http查询一次，并放入缓存? 待定
                     }
+                    
                     // 4.持仓市值（万元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
                     BigDecimal doAdd = ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt());
                     r.setPositionsPrice(ArithmeticUtil.multiply(doAdd, r.getPrice()).divide(BigDecimal.valueOf(100)));
