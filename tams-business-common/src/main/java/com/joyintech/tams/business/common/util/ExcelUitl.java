@@ -7,15 +7,21 @@ import java.util.*;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.metadata.Head;
+import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.write.handler.CellWriteHandler;
-import com.alibaba.excel.write.handler.context.CellWriteHandlerContext;
 import com.alibaba.excel.write.metadata.WriteSheet;
 
+import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
+import com.alibaba.excel.write.metadata.holder.WriteTableHolder;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.service.DoQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +31,7 @@ public class ExcelUitl {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExcelUitl.class);
 	
-	public static void createExcelTemplate(File excelTemplateFile,String sheetName,List<ExcelColumn> columns) {
+	public static void createExcelTemplate(File excelTemplateFile,String sheetName,List<ExcelColumn> columns, Map<String, BaseMap> styleMap) {
 		List<List<String>> list = new ArrayList<List<String>>(2);
 		List<String> head = new ArrayList<String>(columns.size());
 		List<String> data = new ArrayList<String>(columns.size());
@@ -35,12 +41,90 @@ public class ExcelUitl {
 		}
 		list.add(head);
 		list.add(data);
-		EasyExcel.write(excelTemplateFile).inMemory(true).sheet(sheetName).doWrite(list);
+		
+		EasyExcel.write(excelTemplateFile).inMemory(true).sheet(sheetName).registerWriteHandler(new CellWriteHandler() {
+			@Override
+			public void afterCellDataConverted(WriteSheetHolder writeSheetHolder, WriteTableHolder writeTableHolder, WriteCellData<?> cellData, Cell cell, Head head, Integer relativeRowIndex, Boolean isHead) {
+				/**
+				 * excel生成时监听
+				 */
+				String key = cellData.getStringValue();
+				/**
+				 * CFG_DATATABLE_SHOW列表字段配置信息
+				 */
+				BaseMap cfg = styleMap.get(key);
+				if (cfg == null){
+					Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
+					CellStyle cellStyle = workbook.createCellStyle();
+					Font cellFont = workbook.createFont();
+					cellFont.setBold(true);
+					cellStyle.setFont(cellFont);
+					cell.setCellStyle(cellStyle);
+				}else{
+					if (StringUtil.isNotEmpty(cfg.getString("dataType"))){
+						// 自定义设置单元格格式
+						setCellStyleSelf(writeSheetHolder, cfg, cell);
+					}
+				}
+				CellWriteHandler.super.afterCellDataConverted(writeSheetHolder, writeTableHolder, cellData, cell, head, relativeRowIndex, isHead);
+			}
+		}).doWrite(list);
 	}
-	
-	public static <T> void exportAllData(File excelFile,String sheetName,List<ExcelColumn> columns,List<T> data) {
+
+	/**
+	 * 自定义设置单元格格式
+	 * dataType "rate|amount|date", // 数据类型, rate-利率型，amount - 金额，date-日期
+	 * format: "yyyy-MM-dd|yyyy-MM-dd HH:mm:ss|...", // 日期格式
+	 * unit: "1|2|3", //金额类型：1 - 元, 2 - 万元, 3 - 亿元
+	 * precision: 2|3|4... // 利率型保留小数位，整数
+	 * @param writeSheetHolder
+	 * @param cfg
+	 */
+	private static void setCellStyleSelf(WriteSheetHolder writeSheetHolder, BaseMap cfg, Cell cell) {
+		
+		if (StringUtil.equals("rate", cfg.getString("dataType"))){
+			// 利率型
+			Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
+			CellStyle cellStyle = workbook.createCellStyle();
+			DataFormat df = workbook.createDataFormat();
+			if (StringUtil.equals("2", cfg.getString("precision"))){
+				cellStyle.setDataFormat(df.getFormat("0.00"));
+			}else if (StringUtil.equals("3", cfg.getString("precision"))){
+				cellStyle.setDataFormat(df.getFormat("0.000"));
+			}else if (StringUtil.equals("4", cfg.getString("precision"))){
+				cellStyle.setDataFormat(df.getFormat("0.0000"));
+			}else{ // 默认保留两位
+				cellStyle.setDataFormat(df.getFormat("0.00"));
+			}
+			cell.setCellStyle(cellStyle);
+		} else if (StringUtil.equals("amount", cfg.getString("dataType"))){
+			// 金额
+			Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
+			CellStyle cellStyle = workbook.createCellStyle();
+			DataFormat df = workbook.createDataFormat();
+			if (StringUtil.equals("2", cfg.getString("precision"))){
+				cellStyle.setDataFormat(df.getFormat("#,##0.00"));
+			}else if (StringUtil.equals("3", cfg.getString("precision"))){
+				cellStyle.setDataFormat(df.getFormat("#,##0.000"));
+			}else if (StringUtil.equals("4", cfg.getString("precision"))){
+				cellStyle.setDataFormat(df.getFormat("#,##0.0000"));
+			}else{ // 默认保留两位
+				cellStyle.setDataFormat(df.getFormat("#,##0.00"));
+			}
+			cell.setCellStyle(cellStyle);
+		}else if (StringUtil.equals("date", cfg.getString("dataType"))){
+			// 日期
+			Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
+			CellStyle cellStyle = workbook.createCellStyle();
+			DataFormat df = workbook.createDataFormat();
+			cellStyle.setDataFormat(df.getFormat(cfg.getString("format")));
+			cell.setCellStyle(cellStyle);
+		}
+	}
+
+	public static <T> void exportAllData(File excelFile,String sheetName,List<ExcelColumn> columns,List<T> data, Map<String, BaseMap> styleMap) {
 		File excelTemplateFile = new File(excelFile.getParentFile(),Thread.currentThread().getName()+excelFile.getName());
-		createExcelTemplate(excelTemplateFile, sheetName, columns);
+		createExcelTemplate(excelTemplateFile, sheetName, columns, styleMap);
 		EasyExcel.write(excelFile).withTemplate(excelTemplateFile).sheet(sheetName).doFill(data);
 		excelTemplateFile.delete();
 	}
@@ -148,13 +232,13 @@ public class ExcelUitl {
 		}
 	}
 
-	public static void doExport(CfetsExportRequestDto requestDto, HttpServletResponse response, String fileName, DoQuery doQuery) {
+	public static void doExport(CfetsExportRequestDto requestDto, HttpServletResponse response, String excelAndSheetName, DoQuery doQuery) {
 		List<BaseMap> header = requestDto.getHeader();
 		List dataList = requestDto.getData();
 		if (dataList == null || dataList.size() == 0){
 			dataList = doQuery.query();
 		}
-		doExport(fileName, header, dataList, response);
+		doExport(excelAndSheetName, header, dataList, response);
 	}
 	
 	private static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
@@ -169,6 +253,17 @@ public class ExcelUitl {
 			response.setHeader("Cache-Control", "max-age=30");
 			response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileName + ".xlsx", "UTF-8"));
 
+			/**
+			 * 设置格式配置信息，后面监听并加入到excel中
+			 */
+			Map<String, BaseMap> styleMap = new HashMap<>();
+			Iterator<BaseMap> it = heads.iterator(); 
+			while (it.hasNext()){
+				BaseMap one = it.next();
+				String extendCfg = one.getString("extendCfg");
+				styleMap.put("{." + one.getString("colCode") + "}", BaseMap.newMap(JsonUtils.json2Object(extendCfg, Map.class)));
+			}
+			
 			StringBuffer buf = new StringBuffer();
 			List<ExcelColumn> columns = new ArrayList<ExcelColumn>();
 			for (Map lineMap : heads) {
@@ -185,7 +280,7 @@ public class ExcelUitl {
 			excelFile = new File(dir + File.separator + fileName +".xlsx");
 			
 			long s = System.currentTimeMillis();
-			exportAllData(excelFile, fileName , columns, dataList);
+			exportAllData(excelFile, fileName , columns, dataList, styleMap);
 			
 			// 写出响应
 			os.write(File2byte(excelFile));
@@ -266,38 +361,38 @@ public class ExcelUitl {
 		}
 		return buffer;
 	}
-	public static void main(String[] args) {
-		//导出所有数据
-		List<Data> data = new ArrayList<Data>();
-		data.add(new Data(1L, "名称1", new BigDecimal(3.11), new Date()));
-		data.add(new Data(2L, "名称2", new BigDecimal(3.12), new Date()));
-		data.add(new Data(3L, "名称3", new BigDecimal(3.13), new Date()));
-		data.add(new Data(4L, "名称4", new BigDecimal(3.14), new Date()));
-		data.add(new Data(5L, "名称5", new BigDecimal(3.15), new Date()));
-		data.add(new Data(6L, "名称6", new BigDecimal(3.16), new Date()));
-		
-		List<ExcelColumn> columns = new ArrayList<ExcelColumn>();
-		columns.add(new ExcelColumn("id", "ID"));
-		columns.add(new ExcelColumn("name", "名称"));
-		columns.add(new ExcelColumn("number", "数字"));
-		columns.add(new ExcelColumn("createTime", "创建日期"));
-		
-		File excelFile = new File("D://1.xlsx");
-		String sheetName = "债券交易-持仓信息";
-		long s = System.currentTimeMillis();
-		exportAllData(excelFile, sheetName , columns, data);
-		System.out.println(System.currentTimeMillis()-s);
-		
-		//分页追加
-		excelFile = new File("D://2.xlsx");
-		File excelTemplateFile = new File(excelFile.getParentFile(),Thread.currentThread().getName()+excelFile.getName());
-		createExcelTemplate(excelTemplateFile, sheetName, columns);
-		DataAppendUtil<Data> u = new DataAppendUtil<>(excelTemplateFile, excelFile, sheetName);
-		u.append(data);
-		u.append(data);
-		u.append(data);
-		u.close();
-	}
+//	public static void main(String[] args) {
+//		//导出所有数据
+//		List<Data> data = new ArrayList<Data>();
+//		data.add(new Data(1L, "名称1", new BigDecimal(3.11), new Date()));
+//		data.add(new Data(2L, "名称2", new BigDecimal(3.12), new Date()));
+//		data.add(new Data(3L, "名称3", new BigDecimal(3.13), new Date()));
+//		data.add(new Data(4L, "名称4", new BigDecimal(3.14), new Date()));
+//		data.add(new Data(5L, "名称5", new BigDecimal(3.15), new Date()));
+//		data.add(new Data(6L, "名称6", new BigDecimal(3.16), new Date()));
+//		
+//		List<ExcelColumn> columns = new ArrayList<ExcelColumn>();
+//		columns.add(new ExcelColumn("id", "ID"));
+//		columns.add(new ExcelColumn("name", "名称"));
+//		columns.add(new ExcelColumn("number", "数字"));
+//		columns.add(new ExcelColumn("createTime", "创建日期"));
+//		
+//		File excelFile = new File("D://1.xlsx");
+//		String sheetName = "债券交易-持仓信息";
+//		long s = System.currentTimeMillis();
+//		exportAllData(excelFile, sheetName , columns, data);
+//		System.out.println(System.currentTimeMillis()-s);
+//		
+//		//分页追加
+//		excelFile = new File("D://2.xlsx");
+//		File excelTemplateFile = new File(excelFile.getParentFile(),Thread.currentThread().getName()+excelFile.getName());
+//		createExcelTemplate(excelTemplateFile, sheetName, columns);
+//		DataAppendUtil<Data> u = new DataAppendUtil<>(excelTemplateFile, excelFile, sheetName);
+//		u.append(data);
+//		u.append(data);
+//		u.append(data);
+//		u.close();
+//	}
 	
 	public static class Data{
 		private long id;
