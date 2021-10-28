@@ -45,15 +45,13 @@ public class ExcelUitl {
 		EasyExcel.write(excelTemplateFile).inMemory(true).sheet(sheetName).registerWriteHandler(new CellWriteHandler() {
 			@Override
 			public void afterCellDataConverted(WriteSheetHolder writeSheetHolder, WriteTableHolder writeTableHolder, WriteCellData<?> cellData, Cell cell, Head head, Integer relativeRowIndex, Boolean isHead) {
-				/**
-				 * excel生成时监听
-				 */
 				String key = cellData.getStringValue();
 				/**
 				 * CFG_DATATABLE_SHOW列表字段配置信息
 				 */
 				BaseMap cfg = styleMap.get(key);
 				if (cfg == null){
+					// 表头信息
 					Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
 					CellStyle cellStyle = workbook.createCellStyle();
 					Font cellFont = workbook.createFont();
@@ -61,9 +59,20 @@ public class ExcelUitl {
 					cellStyle.setFont(cellFont);
 					cell.setCellStyle(cellStyle);
 				}else{
-					if (StringUtil.isNotEmpty(cfg.getString("dataType"))){
+					Integer width = cfg.getInteger("width"); // 单元格宽度
+					String dataType = cfg.getString("dataType"); // 设置数据类型
+					String cloAlign = cfg.getString("colAlign"); // 水平对齐方式
+					
+					if (width != null){
+						// 设置宽度
+						writeSheetHolder.getSheet().setColumnWidth(cell.getColumnIndex(), width);
+					}
+					
+					if (StringUtil.isNotEmpty(dataType) || StringUtil.isNotEmpty(cloAlign)){
 						// 自定义设置单元格格式
-						setCellStyleSelf(writeSheetHolder, cfg, cell);
+						// 数据类型设置 rate、amount、date
+						// 水平对齐方式设置
+						setCellStyleSelf(writeSheetHolder, cfg, cell, dataType, cloAlign);
 					}
 				}
 				CellWriteHandler.super.afterCellDataConverted(writeSheetHolder, writeTableHolder, cellData, cell, head, relativeRowIndex, isHead);
@@ -80,45 +89,58 @@ public class ExcelUitl {
 	 * @param writeSheetHolder
 	 * @param cfg
 	 */
-	private static void setCellStyleSelf(WriteSheetHolder writeSheetHolder, BaseMap cfg, Cell cell) {
-		
-		if (StringUtil.equals("rate", cfg.getString("dataType"))){
-			// 利率型
+	private static void setCellStyleSelf(WriteSheetHolder writeSheetHolder, BaseMap cfg, Cell cell, String dataType, String cloAlign) {
+		try {
 			Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
 			CellStyle cellStyle = workbook.createCellStyle();
 			DataFormat df = workbook.createDataFormat();
-			if (StringUtil.equals("2", cfg.getString("precision"))){
-				cellStyle.setDataFormat(df.getFormat("0.00"));
-			}else if (StringUtil.equals("3", cfg.getString("precision"))){
-				cellStyle.setDataFormat(df.getFormat("0.000"));
-			}else if (StringUtil.equals("4", cfg.getString("precision"))){
-				cellStyle.setDataFormat(df.getFormat("0.0000"));
-			}else{ // 默认保留两位
-				cellStyle.setDataFormat(df.getFormat("0.00"));
+			
+			if (StringUtil.isNotEmpty(dataType)){
+				if (StringUtil.equals("rate", dataType)){
+					// 利率型
+					if (StringUtil.equals("2", cfg.getString("precision"))){
+						cellStyle.setDataFormat(df.getFormat("0.00"));
+					}else if (StringUtil.equals("3", cfg.getString("precision"))){
+						cellStyle.setDataFormat(df.getFormat("0.000"));
+					}else if (StringUtil.equals("4", cfg.getString("precision"))){
+						cellStyle.setDataFormat(df.getFormat("0.0000"));
+					}else{ // 默认保留两位
+						cellStyle.setDataFormat(df.getFormat("0.00"));
+					}
+				} else if (StringUtil.equals("amount", dataType)){
+					// 金额
+					if (StringUtil.equals("2", cfg.getString("precision"))){
+						cellStyle.setDataFormat(df.getFormat("#,##0.00"));
+					}else if (StringUtil.equals("3", cfg.getString("precision"))){
+						cellStyle.setDataFormat(df.getFormat("#,##0.000"));
+					}else if (StringUtil.equals("4", cfg.getString("precision"))){
+						cellStyle.setDataFormat(df.getFormat("#,##0.0000"));
+					}else{ // 默认保留两位
+						cellStyle.setDataFormat(df.getFormat("#,##0.00"));
+					}
+				}else if (StringUtil.equals("date", dataType)){
+					// 日期
+					cellStyle.setDataFormat(df.getFormat(cfg.getString("format")));
+				}
 			}
-			cell.setCellStyle(cellStyle);
-		} else if (StringUtil.equals("amount", cfg.getString("dataType"))){
-			// 金额
-			Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
-			CellStyle cellStyle = workbook.createCellStyle();
-			DataFormat df = workbook.createDataFormat();
-			if (StringUtil.equals("2", cfg.getString("precision"))){
-				cellStyle.setDataFormat(df.getFormat("#,##0.00"));
-			}else if (StringUtil.equals("3", cfg.getString("precision"))){
-				cellStyle.setDataFormat(df.getFormat("#,##0.000"));
-			}else if (StringUtil.equals("4", cfg.getString("precision"))){
-				cellStyle.setDataFormat(df.getFormat("#,##0.0000"));
-			}else{ // 默认保留两位
-				cellStyle.setDataFormat(df.getFormat("#,##0.00"));
+			
+			// 设置对齐方式
+			if (StringUtil.isNotEmpty(cloAlign)) {
+				if (StringUtil.equals("left", cloAlign)){
+					HorizontalAlignment align = HorizontalAlignment.LEFT;
+					cellStyle.setAlignment(align);
+				}else if (StringUtil.equals("right", cloAlign)){
+					HorizontalAlignment align = HorizontalAlignment.RIGHT;
+					cellStyle.setAlignment(align);
+				}else if (StringUtil.equals("center", cloAlign)){
+					HorizontalAlignment align = HorizontalAlignment.CENTER;
+					cellStyle.setAlignment(align);
+				}
 			}
+			
 			cell.setCellStyle(cellStyle);
-		}else if (StringUtil.equals("date", cfg.getString("dataType"))){
-			// 日期
-			Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
-			CellStyle cellStyle = workbook.createCellStyle();
-			DataFormat df = workbook.createDataFormat();
-			cellStyle.setDataFormat(df.getFormat(cfg.getString("format")));
-			cell.setCellStyle(cellStyle);
+		}catch (Exception e){
+			logger.error(e.getMessage());
 		}
 	}
 
