@@ -35,10 +35,10 @@ public class CfetsEtrIbfindEtrinfoRequest{
     private String entrustId;
 
     @ApiModelProperty(name="entrustStartDate",value="指令开始日",example="2021-10-27")
-    private Date entrustStartDate;
+    private String entrustStartDate;
 
     @ApiModelProperty(name="entrustEndDate",value="指令结束日",example="2021-10-27")
-    private Date entrustEndDate;
+    private String entrustEndDate;
 
     @ApiModelProperty(name="entrustStatus",value="指令状态",example="[02,03]")
     private List<String> entrustStatus;
@@ -98,21 +98,7 @@ public class CfetsEtrIbfindEtrinfoRequest{
         this.entrustId = entrustId;
     }
 
-    public Date getEntrustStartDate() {
-        return entrustStartDate;
-    }
 
-    public void setEntrustStartDate(Date entrustStartDate) {
-        this.entrustStartDate = entrustStartDate;
-    }
-
-    public Date getEntrustEndDate() {
-        return entrustEndDate;
-    }
-
-    public void setEntrustEndDate(Date entrustEndDate) {
-        this.entrustEndDate = entrustEndDate;
-    }
 
     public PageMode getPageMode() {
         return pageMode;
@@ -129,5 +115,21 @@ public class CfetsEtrIbfindEtrinfoRequest{
 
     public void setEntrustStatus(List<String> entrustStatus) {
         this.entrustStatus = entrustStatus;
+    }
+
+    public String getEntrustStartDate() {
+        return entrustStartDate;
+    }
+
+    public void setEntrustStartDate(String entrustStartDate) {
+        this.entrustStartDate = entrustStartDate;
+    }
+
+    public String getEntrustEndDate() {
+        return entrustEndDate;
+    }
+
+    public void setEntrustEndDate(String entrustEndDate) {
+        this.entrustEndDate = entrustEndDate;
     }
 }
