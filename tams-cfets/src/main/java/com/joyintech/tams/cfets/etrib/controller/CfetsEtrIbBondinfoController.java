@@ -181,7 +181,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             throws Exception {
        CfetsEtribBondInfo003Dto allDto=cfetsEtrIbBondinfoService.packageEquity(cfetsDto);
        AjaxResult ajaxResult = cfetsEtrIbBondinfoService.checkSave(cfetsDto, br);
-        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+        if (StringUtil.isNotEmpty(ajaxResult) && !StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().success().setData(ajaxResult);
         }
         // ----------add by zhangrui1 20200715 预占功能 start----------
