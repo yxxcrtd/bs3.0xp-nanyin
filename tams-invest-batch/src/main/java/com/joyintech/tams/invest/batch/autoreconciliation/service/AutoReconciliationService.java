@@ -12,10 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 自动对账批处理
@@ -40,10 +38,11 @@ public class AutoReconciliationService {
     private IPlatformDate iPlatformDate;
 
     @Transactional(rollbackFor=Exception.class)
-    public void reconciliation(){
+    public void reconciliation(Date batchDate){
         Map<String, Object> param = new HashMap<>();
         String sysDate = iPlatformDate.getSysDateStr();
         param.put("sysdate", sysDate);
+        param.put("batchDate", batchDate);
         param.put("PARA_CODE_02", DictCodeListStl.参数代码_对账维度.getValue());
         param.put("PARA_VALUE_01", DictCodeListStl.对账维度_证券汇总.getValue());
         param.put("PARA_VALUE_02", DictCodeListStl.对账维度_委托汇总.getValue());

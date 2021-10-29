@@ -211,9 +211,6 @@ public class StlSecReconDeal extends BaseEntity {
 
     /**
      * 交易规费
-对账状态
-对账状态
-对账状态
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal tradeFee;
@@ -834,13 +831,7 @@ public class StlSecReconDeal extends BaseEntity {
 
     /**
      * 取得 交易规费
-对账状态
-对账状态
-对账状态
      * @return 交易规费
-对账状态
-对账状态
-对账状态
      */
     public BigDecimal getTradeFee() {
         return tradeFee;
@@ -848,13 +839,7 @@ public class StlSecReconDeal extends BaseEntity {
 
     /**
      * 设置 交易规费
-对账状态
-对账状态
-对账状态
      * @param tradeFee 交易规费
-对账状态
-对账状态
-对账状态
      */
     public void setTradeFee(BigDecimal tradeFee) {
         this.tradeFee = tradeFee;

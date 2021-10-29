@@ -43,9 +43,14 @@ public class AutoReconciliationTask extends BatchBaseService {
             logger.info("无启动参数，批处理退出。");
             return result;
         }
-
+        // 自动批处理，取平台日期为跑批日，手动批处理，取画面选择日期为跑批日
+        Date batchDate = batchExecuteInfo.getExecuteDate();
+        if (StringUtil.equals(BatchDictCodeList.批处理启动模式_自动.getValue(),
+                batchExecuteInfo.getStartMode())) {
+            batchDate = platformDateService.getSysDate();
+        }
         try {
-            autoReconciliationService.reconciliation();
+            autoReconciliationService.reconciliation(batchDate);
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {
