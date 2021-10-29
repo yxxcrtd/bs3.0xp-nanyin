@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.*;
 @Controller
-@PageId("CfetsEtrBondInfo001")
+@PageId("CfetsEtrBondInfo")
 @RequestMapping("/cfets/etrib/cfetsEtrIbBondinfo003")
 @Api(tags = "银行间债券多组合指令新建")
 public class CfetsEtribBondInfo003Controller extends BaseController {

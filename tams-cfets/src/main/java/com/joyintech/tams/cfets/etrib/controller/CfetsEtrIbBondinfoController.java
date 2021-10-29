@@ -153,7 +153,12 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("isRiskmathSoftcontrol", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
 
         initPageParams.put("FINPROD_TYPE_TG", this.getSelectDataFromDataDic(DictCode.金融产品类型_投管用, null));
-    	return new Message<Map<String, Object>>(initPageParams).success();
+        initPageParams.put("BUSINESS_MODEL", this.getSelectDataFromDataDic(DictCode.业务模式, null));
+        initPageParams.put("PRICE_MODEL", this.getSelectDataFromDataDic(DictCode.价格模式, null));
+        initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));
+        //pageId
+        initPageParams.put("pageId", "CfetsEtrBondInfo");
+        return new Message<Map<String, Object>>(initPageParams).success();
     }
     @ApiOperation(value = "查询指令管理分页数据", notes = "查询指令管理分页数据")
     @PostMapping("/findEtrinfoPage")

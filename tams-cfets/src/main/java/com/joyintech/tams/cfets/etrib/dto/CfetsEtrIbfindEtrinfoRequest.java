@@ -5,6 +5,7 @@ import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
+import java.util.List;
 
 @ApiModel(value="债券指令查询请求参数",description="债券指令查询请求参数")
 public class CfetsEtrIbfindEtrinfoRequest{
@@ -38,6 +39,9 @@ public class CfetsEtrIbfindEtrinfoRequest{
 
     @ApiModelProperty(name="entrustEndDate",value="指令结束日",example="2021-10-27")
     private Date entrustEndDate;
+
+    @ApiModelProperty(name="entrustStatus",value="指令状态",example="[02,03]")
+    private List<String> entrustStatus;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -116,5 +120,14 @@ public class CfetsEtrIbfindEtrinfoRequest{
 
     public void setPageMode(PageMode pageMode) {
         this.pageMode = pageMode;
+    }
+
+
+    public List<String> getEntrustStatus() {
+        return entrustStatus;
+    }
+
+    public void setEntrustStatus(List<String> entrustStatus) {
+        this.entrustStatus = entrustStatus;
     }
 }
