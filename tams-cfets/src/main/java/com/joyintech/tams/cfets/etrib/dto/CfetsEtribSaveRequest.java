@@ -1,6 +1,8 @@
 package com.joyintech.tams.cfets.etrib.dto;
 
 
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -10,7 +12,7 @@ import java.util.List;
 
 
 @ApiModel(value="债券指令保存请求参数",description="债券指令保存请求参数")
-public class CfetsEtribSaveRequest{
+public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
 
     @ApiModelProperty(name="operateType",value="操作类型",example="submit/save", required = true)
     private String operateType;
@@ -39,8 +41,8 @@ public class CfetsEtribSaveRequest{
     @ApiModelProperty(name="etrDate",value="指令日期",example="2021-07-06", required = true)
     private Date etrDate;
 
-    @ApiModelProperty(name="settleSpreed",value="清算速度Code",example="1", required = true)
-    private String settleSpreed;
+    @ApiModelProperty(name="settleSpeed",value="清算速度Code",example="1", required = true)
+    private String settleSpeed;
 
     @ApiModelProperty(name="price",value="净价",example="1")
     private BigDecimal price;
@@ -58,7 +60,7 @@ public class CfetsEtribSaveRequest{
     private String ps;
 
     @ApiModelProperty(name="bussCombDistribtList",value="组合分配",example="T01", required = true)
-    List<CfetsBussCombDistribtBaseDto> bussCombDistribtList;
+    List<CfetsBussCombDistribtDto> bussCombDistribtList;
 
     @ApiModelProperty(name="elementId",value="按钮id",example="EtribBondInfo003_btn_submit")
     private String elementId;
@@ -138,13 +140,7 @@ public class CfetsEtribSaveRequest{
         this.etrDate = etrDate;
     }
 
-    public String getSettleSpreed() {
-        return settleSpreed;
-    }
 
-    public void setSettleSpreed(String settleSpreed) {
-        this.settleSpreed = settleSpreed;
-    }
 
     public BigDecimal getPrice() {
         return price;
@@ -186,13 +182,7 @@ public class CfetsEtribSaveRequest{
         this.ps = ps;
     }
 
-    public List<CfetsBussCombDistribtBaseDto> getBussCombDistribtList() {
-        return bussCombDistribtList;
-    }
 
-    public void setBussCombDistribtList(List<CfetsBussCombDistribtBaseDto> bussCombDistribtList) {
-        this.bussCombDistribtList = bussCombDistribtList;
-    }
 
     public String getElementId() {
         return elementId;
@@ -209,5 +199,21 @@ public class CfetsEtribSaveRequest{
 
     public void setCfetsEtribdoRiskcalReturn(CfetsEtribdoRiskcalResponse cfetsEtribdoRiskcalReturn) {
         this.cfetsEtribdoRiskcalReturn = cfetsEtribdoRiskcalReturn;
+    }
+
+    public String getSettleSpeed() {
+        return settleSpeed;
+    }
+
+    public void setSettleSpeed(String settleSpeed) {
+        this.settleSpeed = settleSpeed;
+    }
+
+    public List<CfetsBussCombDistribtDto> getBussCombDistribtList() {
+        return bussCombDistribtList;
+    }
+
+    public void setBussCombDistribtList(List<CfetsBussCombDistribtDto> bussCombDistribtList) {
+        this.bussCombDistribtList = bussCombDistribtList;
     }
 }

@@ -144,7 +144,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("CFETS_ETR_REFRESH_TIME", CacheUtil.getSysParam("CFETS_ETR_REFRESH_TIME"));
         //CMDS地址
         initPageParams.put("bondWebSocketUrl", bondWebSocketUrl);
-        initPageParams.put("NEED_WORKFLOW", false);
+        initPageParams.put("NEED_WORKFLOW", true);
         initPageParams.put("SHARES_TRADE_MARKET_02",DictCodeListExt1.交易市场_二级市场.getValue());
         initPageParams.put("platDate",DateUtil.platDateFromCache());
         //风险

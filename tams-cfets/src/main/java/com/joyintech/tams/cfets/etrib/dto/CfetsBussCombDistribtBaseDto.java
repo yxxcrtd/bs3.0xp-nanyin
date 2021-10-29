@@ -36,6 +36,9 @@ public class CfetsBussCombDistribtBaseDto {
     @ApiModelProperty(name="elementId",value="按钮id",example="EtribBondInfo003_btn_submit")
     private String  elementId;
 
+
+    private String entrustId;
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -84,4 +87,11 @@ public class CfetsBussCombDistribtBaseDto {
         this.elementId = elementId;
     }
 
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
 }

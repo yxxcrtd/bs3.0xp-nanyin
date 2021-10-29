@@ -55,6 +55,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1050,6 +1051,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     public CfetsEtribBondInfo003Dto packageEquity(CfetsEtribSaveRequest cfetsDto) {
         FinProduct fp=cfetsetrIbBondinfoMapper.findAssetInfo(cfetsDto.getFinprodId());
         CfetsEtribBondInfo003Dto dto=new CfetsEtribBondInfo003Dto();
+        BeanUtil.copyPropertiesIgnoreNull(dto,cfetsDto);
         dto.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
         if(StringUtil.isNotEmpty(fp)){
             dto.setCalendarId(fp.getCalendarId());
@@ -1061,12 +1063,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         dto.setEntrustNum(ArithmeticUtil.multiply(cfetsDto.getTradeAmt(),new BigDecimal("10000")));
         dto.setVdate(cfetsDto.getEtrDate());
         dto.setMdate(cfetsDto.getEtrDate());
-        dto.setSettleSpeed(cfetsDto.getSettleSpreed());
+        dto.setSettleSpeed(cfetsDto.getSettleSpeed());
         dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
-        List<CfetsBussCombDistribtBaseDto> bussCombDistribtList =cfetsDto.getBussCombDistribtList();
+        List<CfetsBussCombDistribtDto> bussCombDistribtList =cfetsDto.getBussCombDistribtList();
         List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtosList=new ArrayList<>();
-        for(CfetsBussCombDistribtBaseDto item:bussCombDistribtList){
+        for(CfetsBussCombDistribtDto item:bussCombDistribtList){
             CfetsEtribBondInfo003Dto dd=new CfetsEtribBondInfo003Dto();
+
             BeanUtil.copyPropertiesIgnoreNull(dd,dto);
             dd.setPortfolioId(item.getPortfolioId());
             dd.setTradeAmt(item.getEntrustNum());
@@ -1099,13 +1102,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      */
     public AjaxResult checkSave(CfetsEtribSaveRequest allDto, BindingResult br) {
         List<ValidMessage> messages = new ArrayList<>();
-        if(!StringUtil.isNotEmpty(allDto.getFinprodMarketId())){
-            messages.add(new ValidMessage("请输入资产简称。"));
+        if(!StringUtil.isNotEmpty(allDto.getFinprodId())){
+            messages.add(new ValidMessage("请输入资产代码。"));
         }
         if(!StringUtil.isNotEmpty(allDto.getPs())){
             messages.add(new ValidMessage("请输入交易方向。"));
         }
-        if(!StringUtil.isNotEmpty(allDto.getSettleSpreed()))
+        if(!StringUtil.isNotEmpty(allDto.getSettleSpeed()))
             messages.add(new ValidMessage("请输入清算速度！"));
         if(!StringUtil.isNotEmpty(allDto.getPriceModel())){
             messages.add(new ValidMessage("请输入价格模式！"));
@@ -1119,7 +1122,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 messages.add(new ValidMessage("请输入净价。"));
             }
         }
-        List<CfetsBussCombDistribtBaseDto> dtoList=allDto.getBussCombDistribtList();
+        List<CfetsBussCombDistribtDto> dtoList=allDto.getBussCombDistribtList();
         for(int i = 0; i< dtoList.size(); i++) {
             if(!StringUtil.isNotEmpty(dtoList.get(i).getPortfolioId()))
                 messages.add(new ValidMessage("请输入组合代码(第"+(i+1)+"行)。"));
@@ -1137,7 +1140,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         for(int i = 0; i< dtoList.size(); i++) {
             //查询可用现金和可用持仓
 
-            CfetsBussCombDistribtBaseDto dto = dtoList.get(0);
+            CfetsBussCombDistribtDto dto = dtoList.get(i);
+            List<String> portfolioIdList=new ArrayList<>();
+            portfolioIdList.add(dto.getPortfolioId());
             BaseMap bm = BaseMap.newMap()
                     .put("S_001", DictCodeListExt3.资产类型_指令汇总可用持仓.getValue())
                     .put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
@@ -1145,33 +1150,36 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
                     .put("A_005", DictCodeListExt3.资产类型_债券融入券可用持仓.getValue())
                     .put("C_01", DictCodeListExt3.资产类型_现金账户持仓.getValue())
-                    .put("portfolioIdList", dto.getPortfolioId())
-                    .put("cdate", allDto.getEtrDate())
+                    .put("portfolioIdList", portfolioIdList)
+                    .put("cdate", DateUtil.format(allDto.getEtrDate(),"yyyy-MM-dd"))
                     .put("finprodId", allDto.getFinprodId());
             // 查询头寸信息
             Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(bm);
-            BigDecimal proAvailableCash=new BigDecimal(map.get("T0KYXJ").toString());
-            BigDecimal assetAvailablePosition=new BigDecimal(map.get("ZCTRKYCC").toString());
-           if (StringUtil.equals(allDto.getPs(), DictCodeList.交易方向_买入.getValue())
-                    && proAvailableCash != null) {
-                if (dto.getEntrustNum().compareTo(proAvailableCash) == 1) {
-                    AjaxResult ar = new AjaxResult();
-                    ar.setData(this.getMessage("TRD_C_0002") + "(第"+(i+1)+"行)。");
-                    return ar;
+          //  if(null!=map){
+                BigDecimal proAvailableCash=map==null? BigDecimal.ZERO:new BigDecimal(map.get("T0KYXJ").toString());
+                BigDecimal assetAvailablePosition=map==null? BigDecimal.ZERO:new BigDecimal(map.get("ZCTRKYCC").toString());
+                if (StringUtil.equals(allDto.getPs(), DictCodeList.交易方向_买入.getValue())
+                        && proAvailableCash != null) {
+                    if (dto.getEntrustNum().compareTo(proAvailableCash) == 1) {
+                        AjaxResult ar = new AjaxResult();
+                        ar.setData(this.getMessage("TRD_C_0002") + "(第"+(i+1)+"行)。");
+                        return ar;
+                    }
                 }
-            }
-            if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH),
-                    DictCodeListExt1.是或否_是.getValue())
-                    && (StringUtil.equals(allDto.getPs(), DictCodeList.交易方向_卖出.getValue())
-                    || StringUtil.equals(allDto.getPs(), DictCodeList.交易方向_行权_赎回.getValue())
-                    || StringUtil.equals(allDto.getPs(), DictCodeList.交易方向_行权_回售.getValue()))
-                    && assetAvailablePosition != null) {
-                if (dto.getEntrustNum().compareTo(assetAvailablePosition) > 0) {
-                    AjaxResult ar = new AjaxResult();
-                    ar.setData(this.getMessage("ETR_BOND_002")+ "(第"+(i+1)+"行)。");
-                    return ar;
+                if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH),
+                        DictCodeListExt1.是或否_是.getValue())
+                        && (StringUtil.equals(allDto.getPs(), DictCodeList.交易方向_卖出.getValue())
+                        || StringUtil.equals(allDto.getPs(), DictCodeList.交易方向_行权_赎回.getValue())
+                        || StringUtil.equals(allDto.getPs(), DictCodeList.交易方向_行权_回售.getValue()))
+                        && assetAvailablePosition != null) {
+                    if (dto.getEntrustNum().compareTo(assetAvailablePosition) > 0) {
+                        AjaxResult ar = new AjaxResult();
+                        ar.setData(this.getMessage("ETR_BOND_002")+ "(第"+(i+1)+"行)。");
+                        return ar;
+                    }
                 }
-            }
+          //  }
+
         }
         return null;
     }

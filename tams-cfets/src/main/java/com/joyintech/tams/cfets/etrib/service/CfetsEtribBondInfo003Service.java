@@ -154,6 +154,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     @Autowired
     private CfetsEtrIbBondinfo002Mapper cfetsEtrIbBondinfo002Mapper;
 
+
     /**
      * 判断是否含权债
      *
@@ -255,7 +256,15 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         }
         return result;
     }
-
+    /**
+     * 设置流程业务说明
+     */
+    @Override
+    public String generateTitle(CfetsEtribBondInfo003Dto entity, OperationType type) {
+        return  "交易编号" + "(" + entity.getTotalEtrustId()  + ")" +"-"+
+                "("+ SysDataUtil.getNameFromDataDict(DictCode.交易方向, entity.getPs())+")"+"-"+
+                "指令日期"+ ":" + DateUtil.format(entity.getEtrDate());
+    }
     /**
      *
      * 流程发起时调用
@@ -314,7 +323,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 req.setCcy(entity.getCcy());
                 req.setFinprodId(entity.getFinprodId());
                 req.setPtlList(ptlList);
-                PositionHttpRequest.send(req);
+                //PositionHttpRequest.send(req);
             }
         }
         //无附件上传，删除

@@ -12,6 +12,7 @@ package com.joyintech.tams.cfets.etrib.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 
@@ -38,7 +39,15 @@ public class CfetsBussCombDistribtDto {
     private BigDecimal entrustNum;
 
     private String invAim;
-    
+
+    @ApiModelProperty(name="businessModel",value="业务模式",example="A1")
+    private String businessModel;
+
+    @ApiModelProperty(name="elementId",value="按钮id",example="EtribBondInfo003_btn_submit")
+    private String  elementId;
+
+
+
     /**
      * 组合T日可用现金
      */
@@ -245,5 +254,21 @@ public class CfetsBussCombDistribtDto {
 
     public void setEntrustIntegrateNum(BigDecimal entrustIntegrateNum) {
         this.entrustIntegrateNum = entrustIntegrateNum;
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
+    }
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
     }
 }
