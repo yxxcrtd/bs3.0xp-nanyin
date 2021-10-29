@@ -20,7 +20,7 @@ import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.batch.batchstart.dao.SysBatchStart001Mapper;
-import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResult;
+import com.joyintech.tams.valuation.prebatch.dto.SysPrebatchResult;
 import com.joyintech.tams.valuation.system.batchstart.dao.ValBatchStart001Mapper;
 import com.joyintech.tams.valuation.system.batchstart.dto.BatchGrpPri;
 import com.joyintech.tams.valuation.system.batchstart.dto.DimensionValue;
