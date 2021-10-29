@@ -398,6 +398,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
         pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
+        List<String> statusList=dto.getEntrustStatus();
+        if(!StringUtil.isEmptyList(statusList) && statusList.contains("all")){
+           dto.setEntrustStatus(null);
+        }
         String portfolioId = (String)pageParam.get("portfolioId");
         if(StringUtil.isNotEmpty(portfolioId)){
             pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));

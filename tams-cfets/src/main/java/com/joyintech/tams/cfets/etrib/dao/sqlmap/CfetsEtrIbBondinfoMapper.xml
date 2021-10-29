@@ -795,17 +795,9 @@ from
                 <!-- 有效状态查询 -->
                 <include refid="onlyEtrEntrust"></include>
             </when>
-            <when test="entrustStatus == ''">
-                <!-- 查询全部状态 -->
+            <otherwise>
                 <include refid="onlyWtfEtrEntrust"></include>
                 UNION ALL
-                <include refid="onlyEtrEntrust"></include>
-            </when>
-            <when test="entrustStatus == ENTRUST_STATUS_08">
-                <!-- 只查流程中的数据 -->
-                <include refid="onlyWtfEtrEntrust"></include>
-            </when>
-            <otherwise>
                 <include refid="onlyEtrEntrust"></include>
             </otherwise>
         </choose>
@@ -879,10 +871,10 @@ from
         T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
         and T1.TRADE_MARKET = #{TRADE_MARKET_01}
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-            AND (T1.portfolio_id in
+            AND T1.portfolio_id in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
                 #{item}
-            </foreach>)
+            </foreach>
         </if>
         <if test="finprodAbbr != null and finprodAbbr != ''">
             AND T3.FINPROD_ABBR like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
@@ -902,8 +894,11 @@ from
         <if test="ps != null and !ps.equals('')">
             AND T1.PS=#{ps}
         </if>
-        <if test="entrustStatus != null and entrustStatus != '' ">
-            AND T1.ENTRUST_STATUS = #{entrustStatus}
+        <if test="entrustStatus != null and entrustStatus.size() > 0">
+            AND T1.ENTRUST_STATUS in
+            <foreach collection="entrustStatus" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
         <if test="entrustId != null and entrustId != ''">
             AND T1.ENTRUST_ID = #{entrustId}
@@ -973,9 +968,16 @@ from
         where
         T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
         and T1.TRADE_MARKET = #{TRADE_MARKET_01}
+        and T1.ENTRUST_STATUS= #{ENTRUST_STATUS_08}
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND T1.portfolio_id in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="entrustStatus != null and entrustStatus.size() > 0">
+            AND T1.ENTRUST_STATUS in
+            <foreach collection="entrustStatus" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
