@@ -856,12 +856,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             e.printStackTrace();
         }
 
-        if (dto.getMatureYield() != null) {
+     /*   if (dto.getMatureYield() != null) {
             dto.setMatureYield(ArithmeticUtil.multiply(dto.getMatureYield(), new BigDecimal(100)));
         }
         if (dto.getExerYield() != null) {
             dto.setExerYield(ArithmeticUtil.multiply(dto.getExerYield(), new BigDecimal(100)));
-        }
+        }*/
     }
 
     /**

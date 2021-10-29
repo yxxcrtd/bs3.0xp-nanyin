@@ -233,7 +233,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         ProcessParameter<CfetsEtribBondInfo003Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<CfetsEtribBondInfo003Dto> params = new WorkFlowParameter<>();
 
-        params.setPageId("CfetsEtrBondInfo001");
+        params.setPageId("CfetsEtrBondInfo");
         params.setElementId(allDto.getEtrInvestBondInfoDtos().get(0).getElementId());
         params.setBusinessCode(CfetsEtribBondInfo003Dto::getTotalEtrustId);
         params.setBusinessType(DictCodeList.共通业务类型_债券投资委托.getValue());

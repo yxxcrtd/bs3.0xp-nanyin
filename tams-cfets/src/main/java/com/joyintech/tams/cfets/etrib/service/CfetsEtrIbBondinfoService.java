@@ -1177,7 +1177,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     }
     public AjaxResult doRiskcalCheckMethod(CfetsEtrIbdoRiskcalRequest dto){
         //参数不能为空
-        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(dto.getBussCombDistribtList())){
+        if(StringUtil.isEmptyList(dto.getBussCombDistribtList())){
             AjaxResult res=new AjaxResult();
             ValidMessage  validMessage= new ValidMessage();
             validMessage.setMessage("组合分配列表不能为空");
@@ -1185,17 +1185,17 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             return res;
         }
         List<ValidMessage> messages = new ArrayList<>();
-        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(dto.getBussCombDistribtList())){
+        if(StringUtil.isNotEmpty(dto.getBussCombDistribtList())){
             for(CfetsBussCombDistribtBaseDto item:dto.getBussCombDistribtList()){
-                if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(item.getPortfolioId())){
+                if(!StringUtil.isNotEmpty(item.getPortfolioId())){
                     messages.add(new ValidMessage("请输入组合名称。"));
                 }
-                if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(item.getEntrustNum())){
+                if(!StringUtil.isNotEmpty(item.getEntrustNum())){
                     messages.add(new ValidMessage("请输入券面总额。"));
                 }
             }
         }
-        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(dto.getFinprodId())){
+        if(!StringUtil.isNotEmpty(dto.getFinprodId())){
             messages.add(new ValidMessage("请输入资产代码。"));
         }
         if(messages.size()>0) {
