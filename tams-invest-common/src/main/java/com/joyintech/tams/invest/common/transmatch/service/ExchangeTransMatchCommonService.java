@@ -49,7 +49,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * 批量处理成交匹配数据
      * @param dtoList
      */
-    public void transactionMacth(List<ExchangeTransMatchCommonDto> dtoList){
+    public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList){
 
         for(ExchangeTransMatchCommonDto dto:dtoList) {
             this.transactionMacth(dto);
