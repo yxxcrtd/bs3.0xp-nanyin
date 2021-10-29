@@ -596,6 +596,11 @@ public class EntrustRdsCommonAop {
         revokeBackRiskCommon(mapTrd, infCode, joinPoint);
     }
 
+    public interface Func<V, K> {
+
+        void accept(V v, K k);
+
+    }
     public static final <V> void riskListToChildren(List<RiskTrialRetDto> rskList, List<V> dtoList,
                                                     Func<V, List<RiskTrialRetDto>> consumer) {
         if (consumer == null) {
@@ -603,16 +608,11 @@ public class EntrustRdsCommonAop {
         }
         if (!StringUtil.isEmptyList(rskList)) {
             Map<Integer, List<RiskTrialRetDto>> groupMap = rskList.stream().collect(
-                Collectors.groupingBy(RiskTrialRetDto::getGroupId));
+                    Collectors.groupingBy(RiskTrialRetDto::getGroupId));
             for (int index = 0; index < dtoList.size(); index++ ) {
                 V dto = dtoList.get(index);
                 consumer.accept(dto, groupMap.get(index));
             }
         }
-    }
-
-    public interface Func<V, K> {
-
-        void accept(V v, K k);
     }
 }

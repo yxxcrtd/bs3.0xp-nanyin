@@ -62,7 +62,6 @@ import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
-import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtribBondInfo003Dto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.SecInfoModelDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -1454,9 +1453,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
      * @see
      * @since 1.0
      */
-    public  CfetsEtrCalcAmountReturnDto calAmountData(CfetsEtrCalcAmountReqDto dto) {
+    public CfetsEtrCalcAmountResponse calAmountData(CfetsEtrCalcAmountRequest dto) {
         final int SCALE = 12;
-        CfetsEtrCalcAmountReturnDto result=new CfetsEtrCalcAmountReturnDto();
+        CfetsEtrCalcAmountResponse result=new CfetsEtrCalcAmountResponse();
         result.setPrice(dto.getPrice());
         result.setUnitFprice(dto.getUnitFprice());
         //券面总额

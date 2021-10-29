@@ -126,6 +126,9 @@ public class CfetsEtrIbfindEtrinfoResponse {
     @ApiModelProperty(name="entrustIntegrateNum",value="卖空购回券券面总额",example="1")
     private BigDecimal entrustIntegrateNum;
 
+    @ApiModelProperty(name="calculateField",value="计算方式",example="price")
+    private String  calculateField;
+
     public String getEffectiveStatus() {
         return effectiveStatus;
     }
@@ -433,5 +436,11 @@ public class CfetsEtrIbfindEtrinfoResponse {
     }
 
 
+    public String getCalculateField() {
+        return calculateField;
+    }
 
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField;
+    }
 }

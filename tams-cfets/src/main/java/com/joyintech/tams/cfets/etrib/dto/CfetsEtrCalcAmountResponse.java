@@ -11,7 +11,7 @@ import java.util.Date;
  * 指令下拉框模糊查询
  */
 @ApiModel(value="新建指令金额计算功能返回参数",description="新建指令金额计算功能返回参数")
-public class CfetsEtrCalcAmountReturnDto {
+public class CfetsEtrCalcAmountResponse {
 
 
     @ApiModelProperty(name="price",value="净价",example="1")

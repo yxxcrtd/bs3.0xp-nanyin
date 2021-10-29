@@ -848,7 +848,8 @@ from
         NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
         ((T1.ENTRUST_NUM*100)- NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
         NVL(T7.OUR_ENT_NUM,0)/100  as entrustOwnNum,
-        NVL(T7.LENDIN_ENT_NUM,0)/100  as entrustIntegrateNum
+        NVL(T7.LENDIN_ENT_NUM,0)/100  as entrustIntegrateNum,
+        T7.calculate_field as calculateField
         from
         ETR_ENTRUST T1
         INNER JOIN
@@ -943,7 +944,8 @@ from
         NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
         ((T1.ENTRUST_NUM*100)- NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
         NVL(T7.OUR_ENT_NUM,0)/100  as entrustOwnNum,
-        NVL(T7.LENDIN_ENT_NUM,0)/100  as entrustIntegrateNum
+        NVL(T7.LENDIN_ENT_NUM,0)/100  as entrustIntegrateNum,
+        T7.calculate_field as calculateField
         from
         WFL_ETR_ENTRUST T1
         INNER JOIN

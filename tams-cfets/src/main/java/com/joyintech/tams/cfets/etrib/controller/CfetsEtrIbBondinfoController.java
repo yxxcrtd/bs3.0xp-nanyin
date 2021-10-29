@@ -32,7 +32,6 @@ import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.component.business.common.controller.BaseRiskMathCommController;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
@@ -307,18 +306,6 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
 
-    @PostMapping("/getfinprodIdForAdd")
-    @ApiOperation(value = "债券简称列表查询", notes = "债券简称列表查询")
-    @ResponseBody
-    public Message<Page<SelectOptionDto>> getfinprodIdForAdd(@RequestBody CfetsSearchInfoDto item) {
-        try {
-            Page<SelectOptionDto> dto = cfetsEtrIbBondinfoService.getfinprodIdForAdd(item);
-            return new Message<Page<SelectOptionDto>>().success().setData(dto);
-        } catch (Exception e) {
-            logger.error("查询债券简称列表异常", e);
-            return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
-        }
-    }
 
     @GetMapping("/getSecType1")
     @ApiOperation(value = "债券一级分类列表查询", notes = "债券一级分类列表查询")
@@ -333,30 +320,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
     
-    @PostMapping("/selectPortfolioIdList")
-    @ApiOperation(value = "组合列表查询", notes = "组合列表查询")
-    @ResponseBody
-    public Message<Page<SelectOptionDto>> selectPortfolioIdList(@RequestBody CfetsSearchInfoDto item) {
-        try {
-            Page<SelectOptionDto> dto = cfetsEtrIbBondinfoService.selectPortfolioIdList(item);
-            return new Message<Page<SelectOptionDto>>().success().setData(dto);
-        } catch (Exception e) {
-            logger.error("查询组合列表异常", e);
-            return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
-        }
-    }
-    @PostMapping("/getManagers")
-    @ApiOperation(value = "投资经理查询", notes = "投资经理查询")
-    @ResponseBody
-    public Message<List<SelectOptionDto>> getManagers(String search){
-        try {
-            List<SelectOptionDto> list = trdCommandDispatcher001Service.getManager(search);
-            return new Message<List<SelectOptionDto>>().success().setData(list);
-        } catch (Exception e) {
-            logger.error("查询功能异常", e);
-            return new Message<List<SelectOptionDto>>().fail().setMessage("查询异常");
-        }
-    }
+
     @ResponseBody
     @ApiOperation(value = "撤回委托", notes = "撤回委托")
     @PostMapping("recall")
@@ -591,7 +555,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @PostMapping("doRiskcal")
     public Message<AjaxResult> doRiskcal(@RequestBody CfetsEtrIbdoRiskcalRequest dto) throws Exception {
         try {
-            CfetsEtribdoRiskcalReturn result=new  CfetsEtribdoRiskcalReturn();
+            CfetsEtribdoRiskcalResponse result=new CfetsEtribdoRiskcalResponse();
             Map<String, Object> dataMap=new HashMap<>();
             //风险试算封装dto
             CfetsEtrIbdoRiskcalDto d=new CfetsEtrIbdoRiskcalDto();
@@ -614,7 +578,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             result.setRiskMathFlag("02");
             Boolean forbidFlag=false;
             Boolean cluflag=true;
-            List<CfetsEtribdoRiskcalReturn> resultlist=new ArrayList<>();
+            List<CfetsEtribdoRiskcalResponse> resultlist=new ArrayList<>();
             if(!StringUtil.isEmptyList(resultArrList) ){
                 for(String row:resultArrList){
                     ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
@@ -635,7 +599,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                         if(StringUtil.equals(map.get("kriStatus"),"0") && !StringUtil.equals(map.get("kriTrend"),"向好")){
                             forbidFlag=true;
                         }
-                        resultlist.add(BeanUtil.mapToObject(map,CfetsEtribdoRiskcalReturn.class));
+                        resultlist.add(BeanUtil.mapToObject(map, CfetsEtribdoRiskcalResponse.class));
                     }
                     result.setRiskcalReturnList(resultlist);
                     result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());

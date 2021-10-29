@@ -38,11 +38,11 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1004,18 +1004,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         return dto;
     }
-    public Page<SelectOptionDto> getfinprodIdForAdd(CfetsSearchInfoDto dto) {
-        Map<String, Object> param =new HashMap<>();
-        param.put("search",dto.getSearch());
-        param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-        param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->cfetsEtrIbBondinfo002Mapper.getfinprodIdForAdd(param));
-    }
-    public Page<SelectOptionDto> selectPortfolioIdList(CfetsSearchInfoDto dto) {
-        Map<String, Object> param =new HashMap<>();
-        param.put("search",dto.getSearch());
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->cfetsEtrIbBondinfo002Mapper.selectPortfolioIdList(param));
-    }
+
     /**
      * 指令信息查询
      *
@@ -1064,6 +1053,16 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             dd.setElementId(item.getElementId());
             etrInvestBondInfoDtosList.add(dd);
         }
+        CfetsEtribdoRiskcalResponse riskDto=cfetsDto.getCfetsEtribdoRiskcalReturn();
+        List<RiskTrialRetDto> riskTrialRetDto=new ArrayList<>();
+        if(StringUtil.isNotEmpty(riskDto) && !StringUtil.isEmptyList(riskDto.getRiskcalReturnList())){
+            for(CfetsEtribdoRiskcalResponse it:riskDto.getRiskcalReturnList()){
+                RiskTrialRetDto t=new RiskTrialRetDto();
+                BeanUtil.copyPropertiesIgnoreNull(t,it);
+                riskTrialRetDto.add(t);
+            }
+        }
+        dto.setRiskTrialRetDto(riskTrialRetDto);
         dto.setEtrInvestBondInfoDtos(etrInvestBondInfoDtosList);
 
         return dto;

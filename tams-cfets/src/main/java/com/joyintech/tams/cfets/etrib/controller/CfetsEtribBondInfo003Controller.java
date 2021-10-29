@@ -18,8 +18,8 @@ import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrCalcAmountReqDto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrCalcAmountReturnDto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrCalcAmountRequest;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrCalcAmountResponse;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -183,10 +183,10 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
    @PostMapping("/calAmountData")
    @ApiOperation(value = "新建指令金额计算功能", notes = "新建指令金额计算功能")
    @ResponseBody
-   public Message<AjaxResult> calAmountData(@RequestBody CfetsEtrCalcAmountReqDto dto) {
+   public Message<AjaxResult> calAmountData(@RequestBody CfetsEtrCalcAmountRequest dto) {
        try {
            AjaxResult result = new AjaxResult();
-           CfetsEtrCalcAmountReturnDto res=cfetsetribBondInfo003Service.calAmountData(dto);
+           CfetsEtrCalcAmountResponse res=cfetsetribBondInfo003Service.calAmountData(dto);
            result.setData(res);
            return new Message<AjaxResult>().success().setData(result);
        } catch (Exception e) {
