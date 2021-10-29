@@ -12,6 +12,7 @@ package com.joyintech.tams.cfets.etrib.controller;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
@@ -80,6 +81,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 @Controller
+@PageId("CfetsEtrBondInfo")
 @RequestMapping("/cfets/etrib/cfetsEtrIbBondinfo")
 @Api(tags = "银行间债券指令")
 public class CfetsEtrIbBondinfoController  extends BaseController{
@@ -156,6 +158,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("BUSINESS_MODEL", this.getSelectDataFromDataDic(DictCode.业务模式, null));
         initPageParams.put("PRICE_MODEL", this.getSelectDataFromDataDic(DictCode.价格模式, null));
         initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));
+        initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
         //pageId
         initPageParams.put("pageId", "CfetsEtrBondInfo");
         return new Message<Map<String, Object>>(initPageParams).success();
