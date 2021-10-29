@@ -1,5 +1,6 @@
 package com.joyintech.tams.business.common.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.business.common.dao.CfgDataTableFlagMapper;
 import com.joyintech.tams.business.common.dao.CfgDataTableMapper;
 import com.joyintech.tams.business.common.entity.CfgDataTableShow;
@@ -105,6 +107,7 @@ public class CfgDataTableService {
         showFlag.setPageCode(pageCode);
         showFlag.setDtCode(dtCode);
         showFlag.setRangeId(userId);
+        showFlag.setUpdateTime(DateUtil.format(new Date(), DateUtil.DEFAULT_DATETIME_FORMAT));
         cfgDataTableFlagMapper.insertCfgDataTableFlag(showFlag);
     }
 

@@ -23,8 +23,19 @@ public class CfgDataTableShowFlag {
 
     @ApiModelProperty(name = "rangeId", value = "范围ID(见有效范围字段)")
     private String rangeId;
+    
+    @ApiModelProperty(name = "updateTime", value = "更新时间")
+    private String updateTime;
 
-    public String getPageCode() {
+    public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public String getPageCode() {
         return pageCode;
     }
 

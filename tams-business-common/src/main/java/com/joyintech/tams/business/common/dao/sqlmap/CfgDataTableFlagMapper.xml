@@ -15,11 +15,12 @@
     </select>
 
     <insert id="insertCfgDataTableFlag" parameterType="com.joyintech.tams.business.common.entity.CfgDataTableShowFlag">
-        insert into CFG_DATATABLE_SHOW_FLAG(PAGECODE, DTCODE, EFFERANGE, RANGEID)
+        insert into CFG_DATATABLE_SHOW_FLAG(PAGECODE, DTCODE, EFFERANGE, RANGEID, UPDATETIME)
         values (#{pageCode ,jdbcType=VARCHAR},
                 #{dtCode,jdbcType=VARCHAR},
                 #{effeRange,jdbcType=INTEGER},
-                #{rangeId,jdbcType=VARCHAR})
+                #{rangeId,jdbcType=VARCHAR},
+                #{updateTime,jdbcType=VARCHAR})
     </insert>
 
     <delete id="deleteDataTable" parameterType="String">
