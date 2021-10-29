@@ -147,6 +147,10 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("NEED_WORKFLOW", false);
         initPageParams.put("SHARES_TRADE_MARKET_02",DictCodeListExt1.交易市场_二级市场.getValue());
         initPageParams.put("platDate",DateUtil.platDateFromCache());
+        //风险
+        initPageParams.put("riskMathSwitch", CacheUtil.getSysParam("risk_math_switch"));
+        initPageParams.put("pageRedisFlag", CacheUtil.getSysParam("pageRedisFlag"));
+        initPageParams.put("isRiskmathSoftcontrol", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
 
         initPageParams.put("FINPROD_TYPE_TG", this.getSelectDataFromDataDic(DictCode.金融产品类型_投管用, null));
     	return new Message<Map<String, Object>>(initPageParams).success();
