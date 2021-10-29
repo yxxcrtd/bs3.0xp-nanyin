@@ -434,6 +434,23 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         else {
             param.put("busiAcctNoList", new ArrayList<>());
         }
+        if(StringUtil.isNotEmpty(param.get("parentId")) && !StringUtil.equals(param.get("parentId"),"root")) {
+            String param1 = (String) param.get("parentId");
+            String[] s = param1.split(",");
+            if(!"null".equals(s[0]))return new Page<>();
+
+            if("1".equals(s[1])){
+                param.put("busiAcctNo",s[2]);
+                param.put("settleDate",s[3]);
+                param.put("ccy",s[4]);
+                return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage1(param));
+            }else{
+                param.put("finprodId",s[2]);
+                param.put("settleDate",s[3]);
+                param.put("secAcctId",s[4]);
+                return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage2(param));
+            }
+        }
         return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage(param));
     }
 }

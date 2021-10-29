@@ -82,4 +82,6 @@ public interface DayEndAccountMapper {
     List<SelectOptionDto> queryBusiAcctNo(Map<String, Object> param);
 
     List<DayEndAccountDto> selectPage(Map<String, Object> param);
+    List<DayEndAccountDto> selectPage1(Map<String, Object> param);
+    List<DayEndAccountDto> selectPage2(Map<String, Object> param);
 }

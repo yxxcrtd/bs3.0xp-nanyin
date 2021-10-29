@@ -127,14 +127,19 @@ $(function() {
             //ajax请求数据
         },
 
+        checkbox: false,
+        tree:true,
+        tiernum:2,
         treeId: 'childInfo',
         treeUpId: 'parentInfo',
-        treeShowName: 'portfolioId',
+        treeShowName: 'customerName',
+        searchOnInit: false,
+        lazyload:true,
         /**
          * 定义表头
          */
         cols: [
-            {field:'customerId',sortable: false, title: '券商',width:120}
+            {field:'customerName',sortable: false, title: '券商',width:200}
             ,{field:'portfolioId',sortable: false, title: '组合代码',width:120}
             ,{field:'portfolioName',sortable: false, title: '组合名称',width:120}
             ,{field:'secAcctId',sortable: false, title: '证券账户账号',width:150}
@@ -148,27 +153,10 @@ $(function() {
             ,{field:'finprodType', sortable: false, title: '类型',width:120}
             ,{field:'xiTongAmount', type:'money',sortable: false, title: '系统持仓',width:120}
             ,{field:'quanShangAmount', type:'money',sortable: false, title: '券商持仓',width:120}
+            ,{field:'childInfo', width:150, visible: false}
+            ,{field:'parentInfo', width:150, visible: false}
         ]
     });
-
-    /**
-     * 绑定编辑事件
-     */
-    totaltable.bind('click', '.edit', function(data, index) {
-        data.pageModel = PAGE_MODEL_EDIT;
-        if (data.accountStatusStr != null && data.accountStatusStr == "一致") {
-            layer.alert("只能修改对账不一致数据");
-            return;
-        }
-        Joyin.dialog(JoyinUtil.getLabel('DayEndAccount001.title'),
-            basePath + 'invest/basicdata/dayendaccount/DayEndAccount002/init',//打开新界面
-            '80%', '80%', {pageModel:PAGE_MODEL_EDIT,//请求的page_model
-                seqNo:data.seqNo
-            },function(){
-                table.reload();//回调函数，表格刷新
-            });
-    });
-
 
     /**
      * 画面加载完成

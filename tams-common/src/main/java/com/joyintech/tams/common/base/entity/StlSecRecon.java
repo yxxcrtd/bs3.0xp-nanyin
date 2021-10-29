@@ -36,6 +36,8 @@ public class StlSecRecon extends BaseEntity {
      */
     private String portfolioId;
 
+    private String portfolioName;
+
     /**
      * 金融产品代码
      */
@@ -489,5 +491,51 @@ public class StlSecRecon extends BaseEntity {
 
     public void setQuanShangAmount(BigDecimal quanShangAmount) {
         this.quanShangAmount = quanShangAmount;
+    }
+
+    /**
+     * 是否有子节点
+     */
+    private String hasChildren;
+
+    /**
+     * 父节点
+     */
+    private String parentInfo;
+    /**
+     * 子节点
+     */
+    private String childInfo;
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
+    public String getHasChildren() {
+        return hasChildren;
+    }
+
+    public void setHasChildren(String hasChildren) {
+        this.hasChildren = hasChildren;
+    }
+
+    public String getParentInfo() {
+        return parentInfo;
+    }
+
+    public void setParentInfo(String parentInfo) {
+        this.parentInfo = parentInfo;
+    }
+
+    public String getChildInfo() {
+        return childInfo;
+    }
+
+    public void setChildInfo(String childInfo) {
+        this.childInfo = childInfo;
     }
 }
