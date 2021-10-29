@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.invest.common.transmatch.dao.ExchangeTransMatchCommonMapper" >
+    <select id="getEtrEntrustByIdList" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto">
+        select
+        T2.TARGET_TYPE TargetType,
+        <include refid="com.joyintech.tams.common.base.dao.EtrEntrustMapper.Base_Column_List" />
+        from ETR_ENTRUST T1
+        left join
+            ETR_ENTRUST_ADD T2
+            ON T1.ENTRUST_ID = T2.ENTRUST_ID
+        <where>
+            <if test="entrustIdList!=null and entrustIdList.size()>0 ">
+                AND (T1.ETR_ENTRUST IN
+                <foreach item="item" index="index" collection="entrustIdList" open="(" close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) or T1.ETR_ENTRUST in (
+                    </if>
+                    #{item,jdbcType=VARCHAR}
+                </foreach>)
+            </if>
+        </where>
+    </select>
+</mapper>
