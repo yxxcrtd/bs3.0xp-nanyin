@@ -9,10 +9,10 @@ import java.util.List;
  * 风险试算结果DTO
  * @author 裴家俊
  * @version 1.0 2018年11月30日
- * @see CfetsEtribdoRiskcalReturn
+ * @see CfetsEtribdoRiskcalResponse
  * @since 1.0
  */
-public class CfetsEtribdoRiskcalReturn{
+public class CfetsEtribdoRiskcalResponse {
 
 	@ApiModelProperty(name="riskMathFlag",value="02：已点击风险试算",example="02")
 	private String riskMathFlag;
@@ -27,7 +27,7 @@ public class CfetsEtribdoRiskcalReturn{
 	private String stdrtninfo;
 
 	@ApiModelProperty(name="riskcalReturnList",value="风险运算结果",example="02")
-	List<CfetsEtribdoRiskcalReturn> riskcalReturnList;
+	List<CfetsEtribdoRiskcalResponse> riskcalReturnList;
 
 	@ApiModelProperty(name="kriCode",value="指标代码",example="80434e46d8bd490cb75b2418bfe53b02")
 	private String kriCode;
@@ -116,11 +116,11 @@ public class CfetsEtribdoRiskcalReturn{
 		this.stdrtninfo = stdrtninfo;
 	}
 
-	public List<CfetsEtribdoRiskcalReturn> getRiskcalReturnList() {
+	public List<CfetsEtribdoRiskcalResponse> getRiskcalReturnList() {
 		return riskcalReturnList;
 	}
 
-	public void setRiskcalReturnList(List<CfetsEtribdoRiskcalReturn> riskcalReturnList) {
+	public void setRiskcalReturnList(List<CfetsEtribdoRiskcalResponse> riskcalReturnList) {
 		this.riskcalReturnList = riskcalReturnList;
 	}
 

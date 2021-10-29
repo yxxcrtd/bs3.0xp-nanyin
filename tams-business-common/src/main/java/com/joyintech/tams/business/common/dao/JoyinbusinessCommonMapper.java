@@ -31,4 +31,33 @@ public interface JoyinbusinessCommonMapper {
      * @return List<SuggestDto>
      */
     List<SelectOptionDto> getEntrustId(Map<String, Object> param);
+    /**
+     *
+     * 获取新建界面的资产代码联想下拉框框
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getfinprodIdForAdd(Map<String, Object> param);
+    /**
+     *
+     * 获取新建界面的组合联想下拉框框
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> selectPortfolioIdList(Map<String, Object> param);
+    /**
+     * 获取投资经理
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getManagers(Map<String, Object> param);
 }

@@ -10,7 +10,7 @@ import java.util.Date;
  * 指令下拉框模糊查询
  */
 @ApiModel(value="新建指令计算请求参数",description="新建指令计算请求参数")
-public class CfetsEtrCalcRequestDto {
+public class CfetsEtrCalcRequest {
 
     @ApiModelProperty(name="settleSpeed",value="清算速度",example="01")
     private String settleSpeed;

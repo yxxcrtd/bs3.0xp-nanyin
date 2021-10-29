@@ -4,7 +4,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
 import com.joyintech.tams.business.common.dto.EntrustIdRequestDto;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.business.common.entity.JoyinDataDictEntity;
@@ -75,4 +75,44 @@ public class JoyinbusinessCommonController extends BaseController {
 			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
 		}
 	}
+
+	@PostMapping("/getfinprodIdForAdd")
+	@ApiOperation(value = "债券简称列表查询", notes = "债券简称列表查询")
+	@ResponseBody
+	public Message<Page<SelectOptionDto>> getfinprodIdForAdd(@RequestBody CfetsSearchInfoRequest item) {
+		try {
+			Page<SelectOptionDto> dto = joyinbusinessCommonService.getfinprodIdForAdd(item);
+			return new Message<Page<SelectOptionDto>>().success().setData(dto);
+		} catch (Exception e) {
+			logger.error("查询债券简称列表异常", e);
+			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+		}
+	}
+
+	@PostMapping("/selectPortfolioIdList")
+	@ApiOperation(value = "组合列表查询", notes = "组合列表查询")
+	@ResponseBody
+	public Message<Page<SelectOptionDto>> selectPortfolioIdList(@RequestBody CfetsSearchInfoRequest item) {
+		try {
+			Page<SelectOptionDto> dto = joyinbusinessCommonService.selectPortfolioIdList(item);
+			return new Message<Page<SelectOptionDto>>().success().setData(dto);
+		} catch (Exception e) {
+			logger.error("查询组合列表异常", e);
+			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+		}
+	}
+
+	@PostMapping("/getManagers")
+	@ApiOperation(value = "投资经理查询", notes = "投资经理查询")
+	@ResponseBody
+	public Message<Page<SelectOptionDto>> getManagers(@RequestBody CfetsSearchInfoRequest item){
+		try {
+			Page<SelectOptionDto> list = joyinbusinessCommonService.getManager(item);
+			return new Message<Page<SelectOptionDto>>().success().setData(list);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+		}
+	}
+
 }

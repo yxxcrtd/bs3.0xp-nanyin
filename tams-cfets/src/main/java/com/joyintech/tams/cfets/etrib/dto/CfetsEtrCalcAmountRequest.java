@@ -11,7 +11,7 @@ import java.util.Date;
  * 指令下拉框模糊查询
  */
 @ApiModel(value="新建指令金额计算功能请求参数",description="新建指令金额计算功能请求参数")
-public class CfetsEtrCalcAmountReqDto {
+public class CfetsEtrCalcAmountRequest {
 
     @ApiModelProperty(name="shareNum",value="券面总额",example="10000")
     private BigDecimal shareNum;
