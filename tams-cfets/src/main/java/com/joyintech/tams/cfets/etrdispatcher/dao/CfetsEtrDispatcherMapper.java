@@ -12,6 +12,7 @@ package com.joyintech.tams.cfets.etrdispatcher.dao;
 
 import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse;
 import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListRequest;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,4 +34,14 @@ public interface CfetsEtrDispatcherMapper {
      * @return List<CfetsEtrDispatcherTradeListResponse>
      */
     List<CfetsEtrDispatcherTradeListResponse> findAllEtrDispatcherCommon(Map<String,Object> paraMap);
+
+
+    /**
+     * 交易员列表模糊查询
+     * @param param
+     * @return List<TrdCommandDispatcher001Dto>
+     * @see
+     * @since 1.0
+     */
+    List<CfetsEtrDispatcherTraderListRequest> getEtrTraderList(Map<String, Object> param);
 }

@@ -12,10 +12,12 @@ package com.joyintech.tams.cfets.etrdispatcher.controller;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse;
 import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListRequest;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
 import io.swagger.annotations.Api;
@@ -23,16 +25,16 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.joyintech.tams.business.common.pojo.Message;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -87,5 +89,14 @@ public class CfetsEtrDispatcherController extends BaseController {
             List dataList = cfetsEtrDispatcherService.findAllEtrDispatcherCommon(req.getDto(CfetsEtrDispatcherTradeListRequest.class)).getRoot();
             return dataList;
         });
+    }
+
+    @PostMapping(value="/getEtrTraderList")
+    @ResponseBody
+    @ApiOperation(value = "交易员列表模糊查询", notes = "交易员列表模糊查询")
+    public Message<List<CfetsEtrDispatcherTraderListRequest>> getEtrTraderList() {
+        Map<String,Object> param = RequestUtil.getParameters(getRequest());
+        List<CfetsEtrDispatcherTraderListRequest> list = cfetsEtrDispatcherService.getEtrTraderList(param);
+        return new Message<List<CfetsEtrDispatcherTraderListRequest>>().success().setData(list);
     }
 }

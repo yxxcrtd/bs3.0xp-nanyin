@@ -294,4 +294,32 @@
         </if>
     </where>
     </select>
+
+    <!-- 交易员模糊查询列表 -->
+    <select id="getEtrTraderList" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest">
+        SELECT
+        DISTINCT
+        SYS_USER.USER_NAME userName,
+        SYS_USER.REAL_NAME realName
+        FROM
+        SYS_USER
+        INNER JOIN
+        SYS_USER_ROLE
+        ON 	SYS_USER.USER_NAME = SYS_USER_ROLE.USER_ID
+        INNER JOIN SYS_ROLE
+        ON SYS_USER_ROLE.ROLE_ID = SYS_ROLE.ROLE_ID
+        <where>
+            AND SYS_ROLE.ROLE_POS IN(
+            <foreach item="item" index="index" collection="rolePosList" separator=",">
+                #{item}
+            </foreach>
+            )
+            <if test="dealers !=null and dealers!= ''">
+                AND (SYS_USER.USER_NAME like concat(concat('%',
+                #{dealers,jdbcType=VARCHAR}),'%')
+                OR SYS_USER.REAL_NAME like concat(concat('%',
+                #{dealers,jdbcType=VARCHAR}),'%'))
+            </if>
+        </where>
+    </select>
 </mapper>

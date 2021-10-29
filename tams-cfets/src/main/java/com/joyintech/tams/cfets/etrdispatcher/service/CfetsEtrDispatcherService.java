@@ -21,11 +21,13 @@ import com.joyintech.service.trade.investtrade.commanddispatcher.dto.TrdCommandD
 import com.joyintech.tams.cfets.etrdispatcher.dao.CfetsEtrDispatcherMapper;
 import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse;
 import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListRequest;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest;
 import com.joyintech.tams.common.base.entity.User;
 import com.joyintech.tams.constant.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -195,4 +197,22 @@ public class CfetsEtrDispatcherService extends BaseService{
         return pageLimit;
 //        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsEtrDispatcherMapper.findAllEtrDispatcherCommon(pageParam));
     }
+
+    /**
+     * 交易员列表模糊查询
+     * @param pageParam
+     * @return
+     */
+    public List<CfetsEtrDispatcherTraderListRequest> getEtrTraderList(Map<String, Object> pageParam) {
+        String dealers = (String)pageParam.get("search");
+        List<String> list=new ArrayList<>();
+//        list.add(DictCodeList.角色岗位_交易处长.getValue());
+        list.add(DictCodeList.角色岗位_交易员.getValue());
+//        list.add(DictCodeList.角色岗位_交易员_资本境内_岗.getValue());
+//        list.add(DictCodeList.角色岗位_交易员_资本境外_岗.getValue());
+        pageParam.put("rolePosList", list);
+        pageParam.put("dealers", dealers);
+        return cfetsEtrDispatcherMapper.getEtrTraderList(pageParam);
+    }
+
 }
