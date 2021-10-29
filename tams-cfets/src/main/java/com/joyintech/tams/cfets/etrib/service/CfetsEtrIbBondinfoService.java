@@ -28,18 +28,22 @@ import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfo002Mapper;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.cfets.etrib.socket.BondSocketClient;
+import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingDto;
 import com.joyintech.tams.component.business.basicdata.service.BusiProductRatingService;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
+import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +99,21 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      **/
     @Autowired
     private BusiProductRatingService busiProductRatingService;
+    /**
+     * 投资委托信息Service
+     */
+    @Autowired
+    private BaseEtrInvestInfoServiceImpl etrInvestInfoServiceImpl;
+    /**
+     * 委托指令Mapper
+     */
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
+    /**
+     * 委托共通
+     */
+    @Autowired
+    private EtrCommonService etrCommonService;
     
     /**
      * 持仓信息查询
@@ -1151,5 +1170,168 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
         }
         return null;
+    }
+    public AjaxResult doRiskcalCheckMethod(CfetsEtrIbdoRiskcalRequest dto){
+        //参数不能为空
+        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(dto.getBussCombDistribtList())){
+            AjaxResult res=new AjaxResult();
+            ValidMessage  validMessage= new ValidMessage();
+            validMessage.setMessage("组合分配列表不能为空");
+            res.setErrorList(Arrays.asList(validMessage));
+            return res;
+        }
+        List<ValidMessage> messages = new ArrayList<>();
+        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(dto.getBussCombDistribtList())){
+            for(CfetsBussCombDistribtBaseDto item:dto.getBussCombDistribtList()){
+                if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(item.getPortfolioId())){
+                    messages.add(new ValidMessage("请输入组合名称。"));
+                }
+                if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(item.getEntrustNum())){
+                    messages.add(new ValidMessage("请输入券面总额。"));
+                }
+            }
+        }
+        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(dto.getFinprodId())){
+            messages.add(new ValidMessage("请输入资产代码。"));
+        }
+        if(messages.size()>0) {
+            AjaxResult errorRs = new AjaxResult();
+            errorRs.setErrorList(messages);
+            return errorRs;
+        }
+
+
+        return new AjaxResult();
+    }
+    public AjaxResult closeDelegateCheckMethod(EtrInvestBondInfoDto dto){
+        if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(dto)|| com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(dto.getSelectedItem())){
+            AjaxResult res=new AjaxResult();
+            ValidMessage  validMessage= new ValidMessage();
+            validMessage.setMessage(getMessage("COMMON_E_0002"));
+            res.setErrorList(Arrays.asList(validMessage));
+            return res;
+        }
+        List<EtrInvestBondInfoDto> selectedItem = dto.getSelectedItem();
+        AjaxResult ajaxResult=new AjaxResult();
+        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(selectedItem)){
+            List<String> entrustIds = new ArrayList<>();
+            for(EtrInvestBondInfoDto Item:selectedItem){
+                if(com.joyintech.background.component.common.pack.common.util.StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_流程中.getValue())){
+                    AjaxResult res=new AjaxResult();
+                    ValidMessage  validMessage= new ValidMessage();
+                    validMessage.setMessage("流程中的数据不允许关闭");
+                    res.setErrorList(Arrays.asList(validMessage));
+                    return res;
+                }
+                entrustIds.add(Item.getEntrustId());
+            }
+            Map<String,Object> param= new HashMap<>();
+            param.put("entrustIds",entrustIds);
+            ajaxResult.setErrorList(etrCommonService.entrustCheckCloseList(param));
+            return ajaxResult;
+        }
+        ValidMessage  validMessage= new ValidMessage();
+        validMessage.setMessage("请选择列表中数据");
+        ajaxResult.setErrorList(Arrays.asList(validMessage));
+        return ajaxResult;
+    }
+    public AjaxResult recallDelegateCheckMethod(EtrInvestBondInfoDto dto){
+        if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(dto)|| com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(dto.getSelectedItem())){
+            AjaxResult res=new AjaxResult();
+            ValidMessage  validMessage= new ValidMessage();
+            validMessage.setMessage(getMessage("COMMON_E_0002"));
+            res.setErrorList(Arrays.asList(validMessage));
+            return res;
+        }
+        List<EtrInvestBondInfoDto> selectedItem = dto.getSelectedItem();
+        AjaxResult ajaxResult=new AjaxResult();
+        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(selectedItem)){
+            for(EtrInvestBondInfoDto Item:selectedItem){
+                if(!com.joyintech.background.component.common.pack.common.util.StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_待接收.getValue())
+                        && !com.joyintech.background.component.common.pack.common.util.StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_待分发.getValue())
+                ){
+                    AjaxResult res=new AjaxResult();
+                    ValidMessage  validMessage= new ValidMessage();
+                    validMessage.setMessage("只有指令状态为待分发、待接收的指令允许撤回");
+                    res.setErrorList(Arrays.asList(validMessage));
+                    return res;
+                }
+            };
+        }
+        return new AjaxResult();
+    }
+    public AjaxResult modifyDelegateCheckMethod(CfetsEtrInvestBondInfoReqDto dto){
+        if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(dto)|| com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(dto.getSelectedItem())){
+            AjaxResult res=new AjaxResult();
+            ValidMessage  validMessage= new ValidMessage();
+            validMessage.setMessage(getMessage("COMMON_E_0002"));
+            res.setErrorList(Arrays.asList(validMessage));
+            return res;
+        }
+        List<CfetsEtrInvestBondInfoReqDto> selectedItem = dto.getSelectedItem();
+        AjaxResult ajaxResult=new AjaxResult();
+        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(selectedItem)){
+            if(selectedItem.size()>1){
+                AjaxResult res=new AjaxResult();
+                ValidMessage  validMessage= new ValidMessage();
+                validMessage.setMessage("委托指令修改仅允许一条数据");
+                res.setErrorList(Arrays.asList(validMessage));
+                return res;
+            }
+            for(CfetsEtrInvestBondInfoReqDto Item:selectedItem){
+                if(!com.joyintech.background.component.common.pack.common.util.StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_已撤回.getValue())
+                        && !com.joyintech.background.component.common.pack.common.util.StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_已退回.getValue())
+                ){
+                    AjaxResult res=new AjaxResult();
+                    ValidMessage  validMessage= new ValidMessage();
+                    validMessage.setMessage("只有指令状态为已撤回、已退回的指令允许修改");
+                    res.setErrorList(Arrays.asList(validMessage));
+                    return res;
+                }
+            };
+        }
+        return new AjaxResult();
+    }
+    public boolean recallDelegateMethod(EtrInvestBondInfoDto dto)
+            throws InvocationTargetException, IllegalAccessException {
+        BaseEtrInvestInfoDto entity=recallDelegatePackageEquity(dto);
+        // 将传来dto中的委托指令的委托状态改为"已撤回"
+        entity.getEtrEntrust().setEntrustStatus(DictCodeList.委托状态_已撤回.getValue());
+        // 调用投资委托组件的更新委托状态接口，将委托状态设置为"已撤回"
+        boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entity.getEtrEntrust().getEntrustId(),
+                entity.getEtrEntrust().getEntrustStatus());
+        if (flag) {
+            return true;
+        }
+        return false;
+    }
+    public BaseEtrInvestInfoDto recallDelegatePackageEquity(EtrInvestBondInfoDto dto)
+            throws IllegalAccessException, InvocationTargetException {
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+        EtrEntrust etrEntrust = new EtrEntrust();
+        EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+        BeanUtil.copyProperties(etrEntrust, dto);
+        BeanUtil.copyProperties(etrEntrustAdd, dto);
+        List<EtrDistribute> etrDistributeList = new ArrayList<>();
+        EtrDistribute etrDistribute = new EtrDistribute();
+        BeanUtil.copyProperties(etrDistribute, dto);
+        etrDistributeList.add(etrDistribute);
+        entity.setEtrEntrust(etrEntrust);
+        entity.setEtrEntrustAdd(etrEntrustAdd);
+        entity.setEtrDistributeList(etrDistributeList);
+        return entity;
+    }
+    public boolean closeDelegateMethod(String entrustId,String closeWay){
+        EtrEntrust ee = etrEntrustMapper.selectByPrimaryKey(entrustId);
+        if (ee != null) {
+            // 调用投资委托组件的更新委托状态接口，将委托状态设置为“已关闭”
+            String tempEntrustStatu = ee.getEntrustStatus();// 获取该委托原始状态，防止后续更改成关闭
+            boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_已关闭.getValue());
+            // 判断关闭委托是否完成
+            if (flag) {
+                return true;
+            }
+        }
+        return false;
     }
 }

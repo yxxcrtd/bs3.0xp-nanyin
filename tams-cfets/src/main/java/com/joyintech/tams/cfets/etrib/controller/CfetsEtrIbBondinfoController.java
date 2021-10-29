@@ -330,14 +330,14 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @PostMapping("recall")
     public Message<AjaxResult> recallDelegate(@RequestBody EtrInvestBondInfoDto dto) throws Exception {
         //对选择的数据进行check
-        AjaxResult ajaxResult = this.recallDelegateCheckMethod(dto);
+        AjaxResult ajaxResult = cfetsEtrIbBondinfoService.recallDelegateCheckMethod(dto);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().success().setData(ajaxResult);
         }
         List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
         if(dtolist != null && dtolist.size()>0){
             for(EtrInvestBondInfoDto entity : dtolist){
-                this.recallDelegateMethod(entity);
+                cfetsEtrIbBondinfoService.recallDelegateMethod(entity);
             }
             // add by zhangrui1 批量撤销预占 start
             EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeList.平安资产类型_债券.getValue(),
@@ -353,7 +353,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @ResponseBody
     public Message<AjaxResult> closeDelegate(@RequestBody EtrInvestBondInfoDto dto) throws Exception{
         //对选择的数据进行check
-        AjaxResult ajaxResult = this.closeDelegateCheckMethod(dto);
+        AjaxResult ajaxResult = cfetsEtrIbBondinfoService.closeDelegateCheckMethod(dto);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().success().setData(ajaxResult);
         }
@@ -361,7 +361,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
 
         if(dtolist != null && dtolist.size()>0){
             for(EtrInvestBondInfoDto entity : dtolist){
-                this.closeDelegateMethod(entity.getEntrustId(), entity.getCloseWay());
+                cfetsEtrIbBondinfoService.closeDelegateMethod(entity.getEntrustId(), entity.getCloseWay());
             }
             // add by zhangrui1 批量委托关闭 start
             // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
@@ -408,7 +408,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @PostMapping("modifyDelegate")
     public Message<AjaxResult> modifyDelegate(@RequestBody CfetsEtrInvestBondInfoReqDto dto) throws Exception {
         //对选择的数据进行check
-        AjaxResult ajaxResult = this.modifyDelegateCheckMethod(dto);
+        AjaxResult ajaxResult = cfetsEtrIbBondinfoService.modifyDelegateCheckMethod(dto);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().fail().setData(ajaxResult);
         }
@@ -423,137 +423,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<AjaxResult>().fail().setMessage("查询异常");
         }
     }
-    public AjaxResult closeDelegateCheckMethod(EtrInvestBondInfoDto dto){
-        if(!StringUtil.isNotEmpty(dto)||StringUtil.isEmptyList(dto.getSelectedItem())){
-            AjaxResult res=new AjaxResult();
-            ValidMessage  validMessage= new ValidMessage();
-            validMessage.setMessage(getMessage("COMMON_E_0002"));
-            res.setErrorList(Arrays.asList(validMessage));
-            return res;
-        }
-        List<EtrInvestBondInfoDto> selectedItem = dto.getSelectedItem();
-        AjaxResult ajaxResult=new AjaxResult();
-        if(StringUtil.isNotEmpty(selectedItem)){
-            List<String> entrustIds = new ArrayList<>();
-            for(EtrInvestBondInfoDto Item:selectedItem){
-                if(StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_流程中.getValue())){
-                    AjaxResult res=new AjaxResult();
-                    ValidMessage  validMessage= new ValidMessage();
-                    validMessage.setMessage("流程中的数据不允许关闭");
-                    res.setErrorList(Arrays.asList(validMessage));
-                    return res;
-                }
-                entrustIds.add(Item.getEntrustId());
-            }
-            Map<String,Object> param= new HashMap<>();
-            param.put("entrustIds",entrustIds);
-            ajaxResult.setErrorList(etrCommonService.entrustCheckCloseList(param));
-            return ajaxResult;
-        }
-        ValidMessage  validMessage= new ValidMessage();
-        validMessage.setMessage("请选择列表中数据");
-        ajaxResult.setErrorList(Arrays.asList(validMessage));
-        return ajaxResult;
-    }
-    public AjaxResult recallDelegateCheckMethod(EtrInvestBondInfoDto dto){
-        if(!StringUtil.isNotEmpty(dto)||StringUtil.isEmptyList(dto.getSelectedItem())){
-            AjaxResult res=new AjaxResult();
-            ValidMessage  validMessage= new ValidMessage();
-            validMessage.setMessage(getMessage("COMMON_E_0002"));
-            res.setErrorList(Arrays.asList(validMessage));
-            return res;
-        }
-        List<EtrInvestBondInfoDto> selectedItem = dto.getSelectedItem();
-        AjaxResult ajaxResult=new AjaxResult();
-        if(StringUtil.isNotEmpty(selectedItem)){
-            for(EtrInvestBondInfoDto Item:selectedItem){
-                if(!StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_待接收.getValue())
-                        && !StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_待分发.getValue())
-                ){
-                    AjaxResult res=new AjaxResult();
-                    ValidMessage  validMessage= new ValidMessage();
-                    validMessage.setMessage("只有指令状态为待分发、待接收的指令允许撤回");
-                    res.setErrorList(Arrays.asList(validMessage));
-                    return res;
-                }
-            };
-        }
-        return new AjaxResult();
-    }
-    public AjaxResult modifyDelegateCheckMethod(CfetsEtrInvestBondInfoReqDto dto){
-        if(!StringUtil.isNotEmpty(dto)||StringUtil.isEmptyList(dto.getSelectedItem())){
-            AjaxResult res=new AjaxResult();
-            ValidMessage  validMessage= new ValidMessage();
-            validMessage.setMessage(getMessage("COMMON_E_0002"));
-            res.setErrorList(Arrays.asList(validMessage));
-            return res;
-        }
-        List<CfetsEtrInvestBondInfoReqDto> selectedItem = dto.getSelectedItem();
-        AjaxResult ajaxResult=new AjaxResult();
-        if(StringUtil.isNotEmpty(selectedItem)){
-            if(selectedItem.size()>1){
-                AjaxResult res=new AjaxResult();
-                ValidMessage  validMessage= new ValidMessage();
-                validMessage.setMessage("委托指令修改仅允许一条数据");
-                res.setErrorList(Arrays.asList(validMessage));
-                return res;
-            }
-            for(CfetsEtrInvestBondInfoReqDto Item:selectedItem){
-                if(!StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_已撤回.getValue())
-                        && !StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_已退回.getValue())
-                ){
-                    AjaxResult res=new AjaxResult();
-                    ValidMessage  validMessage= new ValidMessage();
-                    validMessage.setMessage("只有指令状态为已撤回、已退回的指令允许修改");
-                    res.setErrorList(Arrays.asList(validMessage));
-                    return res;
-                }
-            };
-        }
-        return new AjaxResult();
-    }
-    public boolean recallDelegateMethod(EtrInvestBondInfoDto dto)
-            throws InvocationTargetException, IllegalAccessException {
-        BaseEtrInvestInfoDto entity=recallDelegatePackageEquity(dto);
-        // 将传来dto中的委托指令的委托状态改为"已撤回"
-        entity.getEtrEntrust().setEntrustStatus(DictCodeList.委托状态_已撤回.getValue());
-        // 调用投资委托组件的更新委托状态接口，将委托状态设置为"已撤回"
-        boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entity.getEtrEntrust().getEntrustId(),
-                entity.getEtrEntrust().getEntrustStatus());
-        if (flag) {
-            return true;
-        }
-        return false;
-    }
-    public BaseEtrInvestInfoDto recallDelegatePackageEquity(EtrInvestBondInfoDto dto)
-            throws IllegalAccessException, InvocationTargetException {
-        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
-        EtrEntrust etrEntrust = new EtrEntrust();
-        EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
-        BeanUtil.copyProperties(etrEntrust, dto);
-        BeanUtil.copyProperties(etrEntrustAdd, dto);
-        List<EtrDistribute> etrDistributeList = new ArrayList<>();
-        EtrDistribute etrDistribute = new EtrDistribute();
-        BeanUtil.copyProperties(etrDistribute, dto);
-        etrDistributeList.add(etrDistribute);
-        entity.setEtrEntrust(etrEntrust);
-        entity.setEtrEntrustAdd(etrEntrustAdd);
-        entity.setEtrDistributeList(etrDistributeList);
-        return entity;
-    }
-    public boolean closeDelegateMethod(String entrustId,String closeWay){
-        EtrEntrust ee = etrEntrustMapper.selectByPrimaryKey(entrustId);
-        if (ee != null) {
-            // 调用投资委托组件的更新委托状态接口，将委托状态设置为“已关闭”
-            String tempEntrustStatu = ee.getEntrustStatus();// 获取该委托原始状态，防止后续更改成关闭
-            boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_已关闭.getValue());
-            // 判断关闭委托是否完成
-            if (flag) {
-                return true;
-            }
-        }
-        return false;
-    }
+
     @ResponseBody
     @ApiOperation(value = "风险试算", notes = "风险试算")
     @PostMapping("doRiskcal")
@@ -573,7 +443,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             d.setCcy("CNY");
             dataMap=BeanUtil.object2Map(d);
             //风险试算check
-            AjaxResult ajaxResult = this.doRiskcalCheckMethod(dto);
+            AjaxResult ajaxResult = cfetsEtrIbBondinfoService.doRiskcalCheckMethod(dto);
             if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
                 return new Message<AjaxResult>().fail().setData(ajaxResult);
             }
@@ -660,39 +530,5 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<String>().fail().setMessage("查询异常");
         }
     }
-
-    public AjaxResult doRiskcalCheckMethod(CfetsEtrIbdoRiskcalRequest dto){
-        //参数不能为空
-        if(StringUtil.isEmptyList(dto.getBussCombDistribtList())){
-            AjaxResult res=new AjaxResult();
-            ValidMessage  validMessage= new ValidMessage();
-            validMessage.setMessage("组合分配列表不能为空");
-            res.setErrorList(Arrays.asList(validMessage));
-            return res;
-        }
-        List<ValidMessage> messages = new ArrayList<>();
-        if(StringUtil.isNotEmpty(dto.getBussCombDistribtList())){
-            for(CfetsBussCombDistribtBaseDto item:dto.getBussCombDistribtList()){
-                if(!StringUtil.isNotEmpty(item.getPortfolioId())){
-                    messages.add(new ValidMessage("请输入组合名称。"));
-                }
-                if(!StringUtil.isNotEmpty(item.getEntrustNum())){
-                    messages.add(new ValidMessage("请输入券面总额。"));
-                }
-            }
-        }
-        if(StringUtil.isNotEmpty(dto.getFinprodId())){
-            messages.add(new ValidMessage("请输入资产代码。"));
-        }
-        if(messages.size()>0) {
-            AjaxResult errorRs = new AjaxResult();
-            errorRs.setErrorList(messages);
-            return errorRs;
-        }
-
-
-        return new AjaxResult();
-    }
-
 
 }
