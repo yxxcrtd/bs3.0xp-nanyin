@@ -335,6 +335,9 @@ webSocketKey: "[{\"table\":\"ETR_CASH_POSITION\",\"hodingTypes\":[]}, {\"table\"
 bondWebSocketUrl: ws://192.168.90.208:8888/dsp/cmds
 #监听债券行情键值
 bondWebSocketKey: Subscriber
+#分页插件超过最后一页返回不返回数据
+pagehelper:
+  reasonable: false
 ---
 spring:
   profiles: allinone
