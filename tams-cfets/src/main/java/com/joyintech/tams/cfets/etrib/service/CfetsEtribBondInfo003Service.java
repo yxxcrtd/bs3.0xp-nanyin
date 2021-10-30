@@ -33,7 +33,6 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.controller.EntrustCommonBaseController;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
-import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfo002Mapper;
 import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
@@ -323,7 +322,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 req.setCcy(entity.getCcy());
                 req.setFinprodId(entity.getFinprodId());
                 req.setPtlList(ptlList);
-                PositionHttpRequest.send(req);
+                //PositionHttpRequest.send(req);
             }
         }
         //无附件上传，删除
