@@ -15,6 +15,8 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 
@@ -26,22 +28,16 @@ import java.math.BigDecimal;
  * @see CfetsEtrDispatcherTradeListResponse
  * @since 1.0
  */
-
+@ApiModel(value="场外指令分发返回数据",description="场外指令分发返回数据")
 public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
-    /**
-     * 组合名称
-     */
+    @ApiModelProperty(name="portfolioName",value="组合名称",example="字符串1")
     private String portfolioName;
 
-    /**
-     * 市场代码
-     */
+    @ApiModelProperty(name="finprodMarketId",value="资产代码",example="字符串1")
     private String finprodMarketId;
 
-    /**
-     * 金融产品简称
-     */
+    @ApiModelProperty(name="finprodAbbr",value="资产简称",example="字符串1")
     private String finprodAbbr;
 
     /**
@@ -54,33 +50,22 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
      */
     private String busiPs;
 
-    /**
-     * 完成额度
-     */
+    @ApiModelProperty(name="finishAmt",value="完成额度",example="30%")
     private BigDecimal finishAmt;
 
-    /**
-     * 委托指令分发 指定交易员
-     */
+    @ApiModelProperty(name="trader",value="交易员",example="admin")
     private String trader;
 
-    /**
-     * 证券账户
-     */
+    @ApiModelProperty(name="secAcctId",value="证券账户",example="XXX证券账户")
     private String secAcctId;
-    /**
-     * 清算速度
-     */
+
+    @ApiModelProperty(name="settleSpeed",value="清算速度",example="字符串1")
     private String settleSpeed;
 
-    /**
-     * 期限（天）
-     */
+    @ApiModelProperty(name="settleSpeed",value="期限（天）",example="30")
     private String termDays;
 
-    /**
-     * 有效状态
-     */
+    @ApiModelProperty(name="effectFlag",value="有效状态",example="有效")
     private String effectFlag;
 
     /**

@@ -322,4 +322,79 @@
             </if>
         </where>
     </select>
+
+    <delete id="deleteEtrAutoRule">
+        DELETE FROM ETR_AUTO_DISPENSE_RULE
+    </delete>
+
+    <delete id="deleteEtrAutoRuleDetail">
+        DELETE FROM ETR_AUTO_DISPENSE_RULE_DETAIL
+    </delete>
+
+    <!--查询交易员指令分发权限配置列表-->
+    <select id="getTraderAuthList" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderAuthListResponse">
+        select  a.user_id userName,c.real_name realName,
+        regexp_replace(LISTAGG( d.asset_type, ',') WITHIN GROUP (order by (d.asset_type)) ,'([^,]+)(,\1)*(,|$)','\1\3') finprodType2,c.DEPT_CODE deptCode
+        from sys_user_role a
+        inner join sys_role b on a.role_id = b.role_id
+        inner join  sys_user  c on a.user_id=c.user_name
+        left join AUTO_DISPENSE_RIGHT d on a.user_id=d.user_id
+        where b.role_pos = '06' group by a.user_id,c.real_name,c.DEPT_CODE
+    </select>
+
+    <!--删除交易员指令分发的权限-->
+    <delete id="deleteTraderAuthList" >
+        delete from AUTO_DISPENSE_RIGHT
+    </delete>
+
+    <select id="getEtrDispatcherInfo"
+            resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherInfoResponse">
+        SELECT
+            ete.entrust_date entrustDate,
+            ete.portfolio_id portfolioId,
+            pp.portfolio_name portfolioName,
+            ete.inv_aim busiModel,
+            fp.finprod_market_id finprodMarketId,
+            fp.finprod_abbr finprodAbbr,
+            ete.trade_market tradeMarket,
+            ete.ps ps,
+            eted.settle_spreed settleSpeed,
+            ete.price_model priceModel,
+            eted.sec_acct_id secAcctId,
+            ete.ccy ccy,
+            ete.entrust_num shareNum,
+            eted.our_ent_num entrustOwnNum,
+            eted.lendin_ent_num integrateSecAmount,
+            ete.price unitPrice,
+            eted.full_price allPrice,
+            eted.mature_yield matureYield,
+            eted.exer_yield exerYield,
+            ete.entrust_amt fpriceAmt,
+            ete.remark remark
+        FROM ETR_ENTRUST ete
+        INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
+        LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
+        LEFT JOIN FIN_PRODUCT fp ON ete.finprod_id = fp.finprod_id
+        WHERE ete.entrust_id = #{entrustId}
+    </select>
+
+    <select id="getEtrDispatcherRskInfo"
+            resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherRskInfoResponse">
+        SELECT rit.sup_stat supStat,
+            rii.ind_name indName,
+            rii.ind_type indType,
+            pp.portfolio_name portfolioName,
+            fp.finprod_abbr finprodAbbr,
+            rit.warn_cond warnCond,
+            rit.approve_cond approveCond,
+            rit.foul_cond foulCond,
+            rit.sup_val supVal,
+            rit.old_sup_val oldSupVal,
+            rit.sup_trend supTrend
+        FROM RSK_ISUP_TRIAL rit
+        INNER JOIN RSK_ISUP_INDICATOR rii ON rit.ind_id = rii.ind_id
+        LEFT JOIN ptl_portfolio pp ON rit.portfolio_id = pp.portfolio_id
+        LEFT JOIN fin_product fp ON rit.asset_code = fp.finprod_id
+        WHERE rit.trade_id = #{entrustId}
+    </select>
 </mapper>

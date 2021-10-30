@@ -9,32 +9,37 @@
 package com.joyintech.tams.cfets.etrdispatcher.controller;
 
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.intf.DataDictItem;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.util.ExcelUitl;
-import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse;
-import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListRequest;
-import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest;
+import com.joyintech.tams.cfets.etrdispatcher.dto.*;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfo001Dto;
+import com.joyintech.tams.common.base.dao.AutoDispenseRightMapper;
+import com.joyintech.tams.common.base.entity.AutoDispenseRight;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.joyintech.tams.business.common.pojo.Message;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -47,15 +52,6 @@ public class CfetsEtrDispatcherController extends BaseController {
     @Autowired
     private CfetsEtrDispatcherService cfetsEtrDispatcherService;
 
-    /**
-     * 多组合指令新建画面
-     * @param model
-     * @return
-     */
-    @Override
-    public String init(Model model) {
-        return super.init(model);
-    }
 
     /**
      * 指令列表分页查询
@@ -72,13 +68,83 @@ public class CfetsEtrDispatcherController extends BaseController {
     public Message<Page<CfetsEtrDispatcherTradeListResponse>> findAllEtrDispatcherCommon(@RequestBody CfetsEtrDispatcherTradeListRequest dto)
             throws Exception {
         try {
-            Page<CfetsEtrDispatcherTradeListResponse> list = cfetsEtrDispatcherService.findAllEtrDispatcherCommon(dto);
-            return new Message<Page<CfetsEtrDispatcherTradeListResponse>>().success().setData(list);
+            Page<CfetsEtrDispatcherTradeListResponse> page = cfetsEtrDispatcherService.findAllEtrDispatcherCommon(dto);
+            return new Message<Page<CfetsEtrDispatcherTradeListResponse>>().success().setData(page);
         }catch (Exception e) {
             logger.error("查询指令管理分页数据异常",e);
             return new Message<Page<CfetsEtrDispatcherTradeListResponse>>().fail().setMessage("查询指令列表分页数据异常");
         }
     }
+
+    /**
+     * 指令信息明细查询
+     *
+     * @param dto
+     * @return Page<CfetsEtrDispatcherInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    @ApiOperation(value = "指令信息明细查询", notes = "指令信息明细查询")
+    @PostMapping("/getEtrDispatcherInfo")
+    @ResponseBody
+    public Message<CfetsEtrDispatcherInfoResponse> getEtrDispatcherInfo (@RequestBody CfetsEtrDispatcherInfoRequest dto)
+            throws Exception {
+        try {
+            CfetsEtrDispatcherInfoResponse returnDto = cfetsEtrDispatcherService.getEtrDispatcherInfo(dto);
+            return new Message<CfetsEtrDispatcherInfoResponse>().success().setData(returnDto);
+        }catch (Exception e) {
+            logger.error("查询指令信息明细分页数据异常",e);
+            return new Message<CfetsEtrDispatcherInfoResponse>().fail().setMessage("查询指令信息明细异常");
+        }
+    }
+
+//    /**
+//     * 指令执行查询
+//     *
+//     * @param dto
+//     * @return Page<CfetsEtrDispatcherInfoResponse>
+//     * @throws Exception Exception
+//     * @see
+//     * @since 1.0
+//     */
+//    @ApiOperation(value = "指令执行查询", notes = "指令执行查询")
+//    @PostMapping("/getEtrDispatcherExeInfo")
+//    @ResponseBody
+//    public Message<CfetsEtrDispatcherInfoResponse> getEtrDispatcherExeInfo (@RequestBody CfetsEtrDispatcherInfoRequest dto)
+//            throws Exception {
+//        try {
+//            CfetsEtrDispatcherInfoResponse returnDto = cfetsEtrDispatcherService.getEtrDispatcherInfo(dto);
+//            return new Message<CfetsEtrDispatcherInfoResponse>().success().setData(returnDto);
+//        }catch (Exception e) {
+//            logger.error("查询指令管理分页数据异常",e);
+//            return new Message<CfetsEtrDispatcherInfoResponse>().fail().setMessage("查询指令执行异常");
+//        }
+//    }
+
+    /**
+     * 指令风险试算查询
+     *
+     * @param dto
+     * @return Page<CfetsEtrDispatcherRskInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    @ApiOperation(value = "风险试算查询", notes = "风险试算查询")
+    @PostMapping("/getEtrDispatcherRskInfo")
+    @ResponseBody
+    public Message<Page<CfetsEtrDispatcherRskInfoResponse>> getEtrDispatcherRskInfo (@RequestBody CfetsEtrDispatcherInfoRequest dto)
+            throws Exception {
+        try {
+            Page<CfetsEtrDispatcherRskInfoResponse> page = cfetsEtrDispatcherService.getEtrDispatcherRskInfo(dto);
+            return new Message<Page<CfetsEtrDispatcherRskInfoResponse>>().success().setData(page);
+        }catch (Exception e) {
+            logger.error("查询风险试算分页数据异常",e);
+            return new Message<Page<CfetsEtrDispatcherRskInfoResponse>>().fail().setMessage("查询风险试算异常");
+        }
+    }
+
 
     @PostMapping(value="/exportEtrDispatcherList")
     @ResponseBody
@@ -91,12 +157,85 @@ public class CfetsEtrDispatcherController extends BaseController {
         });
     }
 
-    @PostMapping(value="/getEtrTraderList")
+    /**
+     * 自动分发规则、参数设置提交
+     * @author sjj
+     * @param cfetsDto br
+     * @return Message<AjaxResult>
+     */
     @ResponseBody
-    @ApiOperation(value = "交易员列表模糊查询", notes = "交易员列表模糊查询")
-    public Message<List<CfetsEtrDispatcherTraderListRequest>> getEtrTraderList() {
-        Map<String,Object> param = RequestUtil.getParameters(getRequest());
-        List<CfetsEtrDispatcherTraderListRequest> list = cfetsEtrDispatcherService.getEtrTraderList(param);
-        return new Message<List<CfetsEtrDispatcherTraderListRequest>>().success().setData(list);
+    @ApiOperation(value = "自动分发提交", notes = "自动分发提交")
+    @PostMapping("submit")
+    public Message<AjaxResult> submit(@RequestBody CfetsEtrDispatcherAutoRequest cfetsDto, BindingResult br)
+            throws Exception {
+        //提交check
+        AjaxResult ajaxResult = cfetsEtrDispatcherService.checkSave(cfetsDto, br);
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+            return new Message<AjaxResult>().fail().setData(ajaxResult);
+        }
+
+        //设置提交
+        cfetsEtrDispatcherService.deleteEtrAutoTime();
+        if(cfetsDto.getVdate().equals("1900-01-01") && cfetsDto.getMdate().equals("2099-12-31")){
+
+        }
+        else{
+            int count = cfetsEtrDispatcherService.insertEtrAutoTime(cfetsDto);
+            if(count == 0) {
+                return new Message<AjaxResult>().fail().setMessage("自动分发设置失败，请联系管理员！");
+            }
+        }
+        return new Message<AjaxResult>().success().setMessage("自动分发设置完成");
+    }
+
+    /**
+     * 分发权限配置交易员查询
+     *
+     * @return Page<CfetsEtrDispatcherTradeListResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    @ApiOperation(value = "分发权限配置交易员查询", notes = "分发权限配置交易员查询")
+    @PostMapping("/getTraderAuthList")
+    @ResponseBody
+    public Message<List<CfetsEtrDispatcherTraderAuthListResponse>> getTraderAuthList()
+            throws Exception {
+        try {
+            List<CfetsEtrDispatcherTraderAuthListResponse> list = cfetsEtrDispatcherService.getTraderAuthList();
+            return new Message<List<CfetsEtrDispatcherTraderAuthListResponse>>().success().setData(list);
+        }catch (Exception e) {
+            logger.error("查询分发权限配置交易员数据异常",e);
+            return new Message<List<CfetsEtrDispatcherTraderAuthListResponse>>().fail().setMessage("查询指令列表分页数据异常");
+        }
+    }
+
+    /**
+     * 分发权限配置提交
+     *
+     * @return Page<CfetsEtrDispatcherTradeListResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    @ApiOperation(value = "分发权限配置保存", notes = "分发权限配置保存")
+    @PostMapping("/saveTraderAuthList")
+    @ResponseBody
+    public Message<AjaxResult> saveTraderAuthList(@RequestBody List<CfetsEtrDispatcherTraderAuthListResponse> dtoList, BindingResult br)
+            throws Exception {
+        //提交check
+        AjaxResult ajaxResult = cfetsEtrDispatcherService.checkSaveTraderAuthList(dtoList, br);
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+            return new Message<AjaxResult>().fail().setData(ajaxResult);
+        }
+
+        //保存
+        ajaxResult = cfetsEtrDispatcherService.saveTraderAuthList(dtoList);
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+            return new Message<AjaxResult>().fail().setData(ajaxResult);
+        }else{
+            ajaxResult.setMessage("分发权限配置成功");
+            return new Message<AjaxResult>().success().setData(ajaxResult);
+        }
     }
 }

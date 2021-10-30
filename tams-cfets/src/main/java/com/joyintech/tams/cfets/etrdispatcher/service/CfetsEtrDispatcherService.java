@@ -10,26 +10,31 @@
 
 package com.joyintech.tams.cfets.etrdispatcher.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.trade.investtrade.commanddispatcher.dto.TrdCommandDispatcher001Dto;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.cfets.etrdispatcher.dao.CfetsEtrDispatcherMapper;
-import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse;
-import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListRequest;
-import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest;
-import com.joyintech.tams.common.base.entity.User;
+import com.joyintech.tams.cfets.etrdispatcher.dto.*;
+import com.joyintech.tams.common.base.dao.AutoDispenseRightMapper;
+import com.joyintech.tams.common.base.dao.EtrAutoDispenseRuleDetailMapper;
+import com.joyintech.tams.common.base.dao.EtrAutoDispenseRuleMapper;
+import com.joyintech.tams.common.base.entity.AutoDispenseRight;
+import com.joyintech.tams.common.base.entity.EtrAutoDispenseRule;
+import com.joyintech.tams.common.base.entity.EtrAutoDispenseRuleDetail;
 import com.joyintech.tams.constant.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -42,8 +47,22 @@ import java.util.Map;
 @Service("CfetsEtrDispatcherService")
 public class CfetsEtrDispatcherService extends BaseService{
 
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(CfetsEtrDispatcherService.class);
+
     @Autowired
     private CfetsEtrDispatcherMapper cfetsEtrDispatcherMapper;
+
+    @Autowired
+    private EtrAutoDispenseRuleMapper etrAutoDispenseRuleMapper;
+
+    @Autowired
+    private EtrAutoDispenseRuleDetailMapper etrAutoDispenseRuleDetailMapper;
+
+    @Autowired
+    private AutoDispenseRightMapper autoDispenseRightMapper;
 
     /**
      * 指令列表分页查询
@@ -199,20 +218,247 @@ public class CfetsEtrDispatcherService extends BaseService{
     }
 
     /**
-     * 交易员列表模糊查询
-     * @param pageParam
-     * @return
+     * 自动分发规则、参数设置check
+     * @author sjj
+     * @param cfetsDto br
+     * @return Message<AjaxResult>
      */
-    public List<CfetsEtrDispatcherTraderListRequest> getEtrTraderList(Map<String, Object> pageParam) {
-        String dealers = (String)pageParam.get("search");
-        List<String> list=new ArrayList<>();
-//        list.add(DictCodeList.角色岗位_交易处长.getValue());
-        list.add(DictCodeList.角色岗位_交易员.getValue());
-//        list.add(DictCodeList.角色岗位_交易员_资本境内_岗.getValue());
-//        list.add(DictCodeList.角色岗位_交易员_资本境外_岗.getValue());
-        pageParam.put("rolePosList", list);
-        pageParam.put("dealers", dealers);
-        return cfetsEtrDispatcherMapper.getEtrTraderList(pageParam);
+    public AjaxResult checkSave(CfetsEtrDispatcherAutoRequest cfetsDto, BindingResult br) {
+        AjaxResult result=new AjaxResult();
+        List<ValidMessage> errorList=new ArrayList<ValidMessage>();
+        if(StringUtil.isEmpty(cfetsDto.getVdate())){
+            errorList.add(new ValidMessage("","请选择分发日期"));
+        }
+        result.setErrorList(errorList);
+        result.setData("请选择分发日期");
+        return result;
     }
 
+    /**
+     * 删除自动分发的日期
+     *
+     * @return int
+     */
+    public void deleteEtrAutoTime() {
+        cfetsEtrDispatcherMapper.deleteEtrAutoRule();
+        cfetsEtrDispatcherMapper.deleteEtrAutoRuleDetail();
+    }
+
+    /**
+     * 插入自动分发的日期
+     *
+     * @param cfetsDto
+     * @return int
+     */
+    public int insertEtrAutoTime(CfetsEtrDispatcherAutoRequest cfetsDto) {
+        try {
+            String generate = IDGenerator.generate(32);
+            EtrAutoDispenseRule rule = new EtrAutoDispenseRule();
+            rule.setRuleId(generate);
+            rule.setVdate(DateUtil.parse(cfetsDto.getVdate()));
+            rule.setMdate(DateUtil.parse(cfetsDto.getMdate()));
+            rule.setDispenseRule(cfetsDto.getDistributeRule());
+            etrAutoDispenseRuleMapper.insertSelective(rule);
+            if(StringUtil.isNotBlank(cfetsDto.getDistributeParameter())){
+                String[] split = cfetsDto.getDistributeParameter().split(",");
+                if(split.length>0){
+                    EtrAutoDispenseRuleDetail detail = new EtrAutoDispenseRuleDetail();
+                    for (String str:split) {
+                        detail.setRuleId(generate);
+                        detail.setDispensePara(str);
+                        etrAutoDispenseRuleDetailMapper.insertSelective(detail);
+                    }
+                }
+            }
+            return 1;
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+            return 0;
+        }
+    }
+
+    /**
+     * 查询交易员指令分发权限配置列表
+     * @return List<CfetsEtrDispatcherTraderAuthListResponse>
+     * @throws Exception 抛出异常
+     * @see
+     * @since 1.0
+     */
+    public List<CfetsEtrDispatcherTraderAuthListResponse> getTraderAuthList( ) {
+        List<CfetsEtrDispatcherTraderAuthListResponse> list =  cfetsEtrDispatcherMapper.getTraderAuthList();
+        return list;
+    }
+
+    public AjaxResult checkSaveTraderAuthList(List<CfetsEtrDispatcherTraderAuthListResponse> dtoList, BindingResult br) {
+        AjaxResult result=new AjaxResult();
+        String returnMsg="";
+        List<String> selectList = new ArrayList<String>();//存入所有交易员已选择的投资品种类
+        List<String> allList = new ArrayList<String>();//存入所有的投资品种类
+        if(!StringUtil.isEmptyList(dtoList)&&dtoList.size()>0)
+        {
+            dtoList.forEach(item->{
+                if(StringUtil.isNotEmpty(item.getFinprodType2()))
+                {
+                    List<String> itemList= Arrays.asList(item.getFinprodType2().split(GlobalConstant.COMMA));
+                    itemList.forEach(ii->
+                    {
+                        if(!selectList.contains(ii))
+                        {
+                            selectList.add(ii);
+                        }
+                    });
+                }
+            });
+        }
+        List<? extends DataDictItem> dataDictItemlist = SysDataUtil.getDataDictItem(DictCode.平安资产类型.getValue());
+        if(!StringUtil.isEmptyList(dataDictItemlist) && dataDictItemlist.size()>0)
+        {
+            dataDictItemlist.forEach(data->
+                    {
+                        allList.add(data.getItemCode());
+                    }
+            );
+        }
+        //获取未被选择的投资品，然后分配到所有的交易员上面
+        List<String> noSelectList = allList.stream().filter(item -> !selectList.contains(item)).collect(Collectors.toList());
+        StringBuilder stringBuilder=new StringBuilder();
+        if(!StringUtil.isEmptyList(noSelectList) &&noSelectList.size()>0){
+            if(!StringUtil.isEmptyList(noSelectList)) {
+                noSelectList.forEach(entity ->
+                {
+                    stringBuilder.append(SysDataUtil.getNameFromDataDict(DictCode.平安资产类型,entity)+"、");
+                });
+            }
+        }
+        if(StringUtil.isNotEmpty(stringBuilder.toString())) {
+            returnMsg="[" + stringBuilder.toString().substring(0,stringBuilder.toString().length()-1) + "]品种权限未选，将默认所有交易员都有此权限";
+        }
+        //result.setErrorList(returnMsg);
+        result.setData(returnMsg);
+        return result;
+    }
+
+    /**
+     * 分发权限配置提交
+     *
+     * @return Page<CfetsEtrDispatcherTradeListResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    public AjaxResult saveTraderAuthList(List<CfetsEtrDispatcherTraderAuthListResponse> dtoList) {
+        AjaxResult ajaxResult =new AjaxResult();
+        List<ValidMessage> errorList=new ArrayList<ValidMessage>();
+        List<String> selectList = new ArrayList<String>();//存入所有交易员已选择的投资品种类
+        List<String> allList = new ArrayList<String>();//存入所有的投资品种类
+        if(!StringUtil.isEmptyList(dtoList)&&dtoList.size()>0)
+        {
+            dtoList.forEach(item->{
+
+                if(StringUtil.isNotEmpty(item.getFinprodType2()))
+                {
+                    List<String> itemList= Arrays.asList(item.getFinprodType2().split(GlobalConstant.COMMA));
+                    itemList.forEach(ii->
+                    {
+                        if(!selectList.contains(ii))
+                        {
+                            selectList.add(ii);
+                        }
+                    });
+                }
+            });
+        }
+        List<? extends DataDictItem> dataDictItemlist = SysDataUtil.getDataDictItem(DictCode.平安资产类型.getValue());
+        if(!StringUtil.isEmptyList(dataDictItemlist) && dataDictItemlist.size()>0)
+        {
+            dataDictItemlist.forEach(data->
+                    {
+                        allList.add(data.getItemCode());
+
+                    }
+            );
+        }
+        //获取未被选择的投资品，然后分配到所有的交易员上面
+        List<String> noSelectList = allList.stream().filter(item -> !selectList.contains(item)).collect(Collectors.toList());
+
+        //新增交易员分配的权限【先删除后添加】
+        try{
+            cfetsEtrDispatcherMapper.deleteTraderAuthList();
+
+            if(!StringUtil.isEmptyList(dtoList)&&dtoList.size()>0)
+            {
+                dtoList.forEach(item->{
+
+                    //添加原来选择的
+                    if(StringUtil.isNotEmpty(item.getFinprodType2())){
+                        List<String> itemList= Arrays.asList(item.getFinprodType2().split(GlobalConstant.COMMA));
+                        itemList.forEach(ii->
+                        {
+                            AutoDispenseRight autoDispenseRight=new AutoDispenseRight();
+                            autoDispenseRight.setUserId(item.getUserName());
+                            autoDispenseRight.setAssetType(ii);
+                            autoDispenseRightMapper.insert(autoDispenseRight);
+                        });
+                    }
+                    // 添加未分配的默认项
+                    if(!StringUtil.isEmptyList(noSelectList))
+                    {
+                        noSelectList.forEach(entity->
+                        {
+                            AutoDispenseRight  autoDispenseRightEntity=new AutoDispenseRight();
+                            autoDispenseRightEntity.setUserId(item.getUserName());
+                            autoDispenseRightEntity.setAssetType(entity);
+                            autoDispenseRightMapper.insert(autoDispenseRightEntity);
+                        });
+                    }
+                });
+            }
+        } catch (Exception e) {
+            errorList.add(new ValidMessage("分发权限配置异常！请联系管理员"));
+            ajaxResult.setErrorList(errorList);
+        }
+        return ajaxResult;
+    }
+
+    /**
+     * 指令信息明细查询
+     *
+     * @param dto
+     * @return Page<CfetsEtrDispatcherInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    public CfetsEtrDispatcherInfoResponse getEtrDispatcherInfo(CfetsEtrDispatcherInfoRequest dto) {
+        //dto转成map
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
+        if(entrustIdList.size() > 1){
+            return new CfetsEtrDispatcherInfoResponse();
+        }else{
+            return cfetsEtrDispatcherMapper.getEtrDispatcherInfo(pageParam);
+        }
+    }
+
+    /**
+     * 指令风险试算查询
+     *
+     * @param dto
+     * @return Page<CfetsEtrDispatcherRskInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    public Page<CfetsEtrDispatcherRskInfoResponse> getEtrDispatcherRskInfo(CfetsEtrDispatcherInfoRequest dto) {
+
+        //dto转成map
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
+        if(entrustIdList.size() > 1){
+            return new Page<CfetsEtrDispatcherRskInfoResponse>();
+        }else{
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                    () -> cfetsEtrDispatcherMapper.getEtrDispatcherRskInfo(pageParam));
+        }
+    }
 }

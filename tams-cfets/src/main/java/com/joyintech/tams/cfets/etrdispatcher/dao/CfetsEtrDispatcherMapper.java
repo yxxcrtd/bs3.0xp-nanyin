@@ -10,9 +10,8 @@
  
 package com.joyintech.tams.cfets.etrdispatcher.dao;
 
-import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse;
-import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListRequest;
-import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest;
+import com.joyintech.service.trade.investtrade.commanddispatcher.dto.TrdCommandDispatcher001Dto;
+import com.joyintech.tams.cfets.etrdispatcher.dto.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,13 +34,56 @@ public interface CfetsEtrDispatcherMapper {
      */
     List<CfetsEtrDispatcherTradeListResponse> findAllEtrDispatcherCommon(Map<String,Object> paraMap);
 
+    /** @MethodName: 删除自动分发规则
+     * @Return: int
+     * @Author: sjj
+     * @Date: 2021/10/29
+     **/
+    int deleteEtrAutoRule();
+
+    /** @MethodName: 删除自动分发规则明细
+     * @Return: int
+     * @Author: sjj
+     * @Date: 2021/10/29
+     **/
+    int deleteEtrAutoRuleDetail();
 
     /**
-     * 交易员列表模糊查询
-     * @param param
-     * @return List<TrdCommandDispatcher001Dto>
+     * 查询交易员指令分发权限配置列表
+     * @return page分页参数
+     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
-    List<CfetsEtrDispatcherTraderListRequest> getEtrTraderList(Map<String, Object> param);
+    List<CfetsEtrDispatcherTraderAuthListResponse>  getTraderAuthList();
+
+    /**
+     * 删除交易员指令分发的权限
+     * @throws Exception 抛出异常
+     * @see
+     * @since 1.0
+     */
+    int deleteTraderAuthList();
+
+    /**
+     * 指令信息明细查询
+     *
+     * @param pageParam
+     * @return Page<CfetsEtrDispatcherInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    CfetsEtrDispatcherInfoResponse getEtrDispatcherInfo(Map<String, Object> pageParam);
+
+    /**
+     * 指令风险试算查询
+     *
+     * @param pageParam
+     * @return Page<CfetsEtrDispatcherRskInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    List<CfetsEtrDispatcherRskInfoResponse> getEtrDispatcherRskInfo(Map<String, Object> pageParam);
 }
