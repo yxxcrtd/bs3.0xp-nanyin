@@ -324,10 +324,10 @@ public class ReconciliationCommonService {
                 if (StringUtil.isNotEmpty(dto.getPs())) {
                     localPlanSearchInfo.setPs(dto.getPs());
                 }
-//                // 期限品种
-//                if (StringUtil.isNotEmpty(dto.getTermType())) {
-//                    localPlanSearchInfo.setTermType(dto.getTermType());
-//                }
+                // 期限品种
+                if (StringUtil.isNotEmpty(dto.getTermType())) {
+                    localPlanSearchInfo.setTermType(dto.getTermType());
+                }
                 // 证券账户
                 if (StringUtil.isNotEmpty(dto.getSecAcctId())) {
                     localPlanSearchInfo.setSecAcctId(dto.getSecAcctId());
