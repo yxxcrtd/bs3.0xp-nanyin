@@ -112,7 +112,7 @@ public class ReconciliationCommonService {
                 if (ArithmeticUtil.subtract(dto.getTradeAmt(), dto.getTradeAmt2()).abs().compareTo(wuChaZhi) <= 0
                         && ArithmeticUtil.subtract(dto.getTradeNum(), dto.getTradeNum2()).abs().compareTo(wuChaZhi) <= 0
                         && ArithmeticUtil.subtract(dto.getStampFee(), dto.getStampFee2()).abs().compareTo(wuChaZhi) <= 0
-                        && ArithmeticUtil.subtract(dto.getOtherFeeamt(), otherFee).abs().compareTo(wuChaZhi) <= 0
+//                        && ArithmeticUtil.subtract(dto.getOtherFeeamt(), otherFee).abs().compareTo(wuChaZhi) <= 0
                         && ArithmeticUtil.subtract(dto.getGhfAmt(), dto.getGhfAmt2()).abs().compareTo(wuChaZhi) <= 0
                         && ArithmeticUtil.subtract(dto.getSxfAmt(), dto.getSxfAmt2()).abs().compareTo(wuChaZhi) <= 0
                         && ArithmeticUtil.subtract(dto.getCommissionAmt(), dto.getCommissionAmt2()).abs().compareTo(wuChaZhi) <= 0
@@ -324,10 +324,10 @@ public class ReconciliationCommonService {
                 if (StringUtil.isNotEmpty(dto.getPs())) {
                     localPlanSearchInfo.setPs(dto.getPs());
                 }
-                // 期限品种
-                if (StringUtil.isNotEmpty(dto.getTermType())) {
-                    localPlanSearchInfo.setTermType(dto.getTermType());
-                }
+//                // 期限品种
+//                if (StringUtil.isNotEmpty(dto.getTermType())) {
+//                    localPlanSearchInfo.setTermType(dto.getTermType());
+//                }
                 // 证券账户
                 if (StringUtil.isNotEmpty(dto.getSecAcctId())) {
                     localPlanSearchInfo.setSecAcctId(dto.getSecAcctId());
