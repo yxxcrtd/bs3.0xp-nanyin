@@ -1,0 +1,169 @@
+package com.joyintech.service.trade.exchangetransmatch.service;
+
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.service.trade.exchangetransmatch.dao.ExchangeTransMatchMapper;
+import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto;
+import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalMatchMapper;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalStatusMapper;
+import com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
+import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
+import com.joyintech.tams.invest.common.transmatch.service.ExchangeTransMatchCommonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class ExchangeTransMatchService extends BaseService {
+
+    @Autowired
+    private ExchangeTransMatchMapper exchangeTransMatchMapper;
+
+    @Autowired
+    private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
+
+    /**
+     * 查询成交数据
+     *
+     * @param map
+     * @param page
+     * @param length
+     * @return
+     */
+    public Page<ExchangeTransMatch002Dto> findPage(Map<String, Object> map, int page, int length) {
+        map.put("TRD_MATCH_STATUS_01", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
+        map.put("TRD_MATCH_STATUS_02",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+        map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
+        return super.queryForPage(page, length, () -> exchangeTransMatchMapper.findPage(map));
+    }
+
+    /**
+     * 查询委托交易数据
+     *
+     * @param map
+     * @param page
+     * @param length
+     * @return
+     */
+    public Page<ExchangeTransMatch003Dto> findEntrustPage(Map<String, Object> map, int page, int length) {
+        map.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        map.put("ENTRUST_STATUS_03",DictCodeList.委托状态_已接收.getValue());
+        map.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+
+        map.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        map.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        map.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        map.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+        map.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+
+        map.put("SEC_TYPE_06", DictCodeListExt1.证券品种_股票.getValue());
+        map.put("SEC_TYPE_02", DictCodeListExt1.证券品种_基金.getValue());
+        map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
+
+        map.put("TARGET_CLASS_01", DictCodeListExt3.目标类型_数量.getValue());
+        map.put("TARGET_CLASS_02", DictCodeListExt3.目标类型_金额.getValue());
+
+        map.put("TRADE_TYPE_02", DictCodeListExt3.交易类型_投资指令.getValue());
+        map.put("TRADE_TYPE_03", DictCodeListExt3.交易类型_交易数据.getValue());
+
+        return super.queryForPage(page, length, () -> exchangeTransMatchMapper.findEntrustPage(map));
+    }
+
+    /**
+     * 获取资产代码下拉框
+     * @param map
+     * @param page
+     * @param length
+     * @return
+     */
+    public Page<SelectOptionDto> getFinprodId(Map<String, Object> map, int page, int length) {
+        return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getFinprodId(map));
+    }
+
+    /**
+     * 获取交易编号下拉框
+     * @param map
+     * @param page
+     * @param length
+     * @return
+     */
+    public Page<SelectOptionDto> getBusiCode(Map<String, Object> map, int page, int length) {
+        return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getBusiCode(map));
+    }
+
+    /**
+     * 获取申请编号下拉框
+     * @param map
+     * @param page
+     * @param length
+     * @return
+     */
+    public Page<SelectOptionDto> getApplyNo(Map<String, Object> map, int page, int length) {
+        map.put("TRD_MATCH_STATUS_01", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
+        map.put("TRD_MATCH_STATUS_02",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+        return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getApplyNo(map));
+    }
+
+
+    /**
+     * 获取证券账户下拉框
+     * @param map
+     * @param page
+     * @param length
+     * @return
+     */
+    public Page<SelectOptionDto> getSecAcctNo(Map<String, Object> map, int page, int length) {
+        return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getSecAcctNo(map));
+    }
+
+    /**
+     * 获取成交编号下拉框
+     * @param map
+     * @param page
+     * @param length
+     * @return
+     */
+    public Page<SelectOptionDto> getDealId(Map<String, Object> map, int page, int length) {
+        return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getDealId(map));
+    }
+
+    /**
+     * 成交匹配
+     * @param dealDto
+     * @return
+     */
+    public Integer transactionMacth(ExchangeTransMatch002Dto dealDto) {
+        ExchangeTransMatchCommonDto exchangeTransMatchCommonDto = new ExchangeTransMatchCommonDto();
+        BeanUtil.copyPropertiesIgnoreNull(exchangeTransMatchCommonDto,dealDto);
+        List<String> entrustIdList = new ArrayList<>();
+        if(!StringUtil.isEmptyList(dealDto.getEntrustList())) {
+            dealDto.getEntrustList().stream().forEach(item ->{
+                entrustIdList.add(item.getEntrustId());
+            });
+        }
+        exchangeTransMatchCommonDto.setEntrustIdList(entrustIdList);
+
+        //调用成交匹配共通方法
+        exchangeTransMatchCommonService.transactionMacth(exchangeTransMatchCommonDto);
+        return 0;
+    }
+
+}

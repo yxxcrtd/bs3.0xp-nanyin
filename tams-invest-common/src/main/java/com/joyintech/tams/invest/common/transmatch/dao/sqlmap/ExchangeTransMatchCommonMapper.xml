@@ -4,6 +4,7 @@
     <select id="getEtrEntrustByIdList" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto">
         select
         T2.TARGET_TYPE TargetType,
+        T2.TRADER trader,
         <include refid="com.joyintech.tams.common.base.dao.EtrEntrustMapper.Base_Column_List" />
         from ETR_ENTRUST T1
         left join

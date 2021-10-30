@@ -20,6 +20,18 @@ public class ExchangeTransMatchCommonEntrustDto extends EtrEntrust {
     private BigDecimal marchAmt;
 
     /**
+     * 已分配随交易费用
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal marchFeeAmtPay;
+
+    /**
+     * 已分配不随交易费用
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal marchFeeAmtUnPay;
+
+    /**
      * 指令已匹配份额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -35,6 +47,23 @@ public class ExchangeTransMatchCommonEntrustDto extends EtrEntrust {
      * 目标类型
      */
     private String targetType;
+
+    /**
+     * 剩余成交金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal remainEntrustAmt;
+
+    /**
+     * 剩余成交数量
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal remainEntrustNum;
+
+    /**
+     * 本方交易员
+     */
+    private String trader;
 
     public BigDecimal getMarchQty() {
         return marchQty;
@@ -74,5 +103,45 @@ public class ExchangeTransMatchCommonEntrustDto extends EtrEntrust {
 
     public void setTargetType(String targetType) {
         targetType = targetType;
+    }
+
+    public BigDecimal getRemainEntrustAmt() {
+        return remainEntrustAmt;
+    }
+
+    public void setRemainEntrustAmt(BigDecimal remainEntrustAmt) {
+        this.remainEntrustAmt = remainEntrustAmt;
+    }
+
+    public BigDecimal getRemainEntrustNum() {
+        return remainEntrustNum;
+    }
+
+    public void setRemainEntrustNum(BigDecimal remainEntrustNum) {
+        this.remainEntrustNum = remainEntrustNum;
+    }
+
+    public BigDecimal getMarchFeeAmtPay() {
+        return marchFeeAmtPay;
+    }
+
+    public void setMarchFeeAmtPay(BigDecimal marchFeeAmtPay) {
+        this.marchFeeAmtPay = marchFeeAmtPay;
+    }
+
+    public BigDecimal getMarchFeeAmtUnPay() {
+        return marchFeeAmtUnPay;
+    }
+
+    public void setMarchFeeAmtUnPay(BigDecimal marchFeeAmtUnPay) {
+        this.marchFeeAmtUnPay = marchFeeAmtUnPay;
+    }
+
+    public String getTrader() {
+        return trader;
+    }
+
+    public void setTrader(String trader) {
+        this.trader = trader;
     }
 }

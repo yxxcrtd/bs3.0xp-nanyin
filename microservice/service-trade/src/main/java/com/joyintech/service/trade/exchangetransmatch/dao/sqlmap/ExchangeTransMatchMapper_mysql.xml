@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.trade.exchangetransmatch.dao.ExchangeTransMatchMapper_mysql" >
+    <select id="findPage" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto">
+        select CASE
+                    WHEN B.MATCH_STATUS IS NULL THEN '0'
+                ELSE
+                    B.MATCH_STATUS END matchStatus,
+                SUM(F.MARCH_QTY) / A.SHARE_AMT matchProgress,
+                A.TRADE_MARKET tradeMarket,
+                A.APPLY_TRADE_ID applyNo,
+                A.SEC_ACCT_ID secAcctNo,
+                A.SEC_TYPE finprodType2,
+                CASE
+                    WHEN A.SEC_TYPE = '09' THEN NULL
+                ELSE
+                    E.FINPROD_MARKET_ID END finprodMarketId,
+                CASE
+                    WHEN A.SEC_TYPE = '09' THEN NULL
+                ELSE
+                    E.FINPROD_ID END finprodId,
+                CASE
+                    WHEN A.SEC_TYPE = '09' THEN NULL
+                ELSE
+                    E.FINPROD_ABBR END finprodAbbr,
+                A.SEAT_NUMBER seatNo,
+                A.TRADE_PLAT tradePlat,
+                A.PS ps,
+                A.SHARE_AMT - SUM(F.MARCH_QTY) remainNum,
+                A.FPRICE_AMT - SUM(F.MARCH_AMT) remainAmount,
+                A.UNIT_FPRICE dealPrice,
+                A.TRADE_DATE dealDate,
+                D.ACCT_NO fundAccount,
+                D.ACCT_NAME fundAccountName
+        from SETTLE_TRANS_DATA A
+        INNER JOIN SETTLE_TRANS_DATA_STATUS B
+            ON A.TRADE_ID = B.TRADE_ID
+        LEFT JOIN STL_SEC_ACCT_INFO C
+            ON A.SEC_ACCT_ID = C.SEC_ACCT_ID
+        LEFT JOIN STL_CAPACCT_INFO D
+            ON D.ACCT_NO = A.ACCT_NO
+        LEFT JOIN FIN_PRODUCT E
+            ON E.FINPROD_ID = A.FINPROD_ID
+        LEFT JOIN SETTLE_TRANS_DATA_MATCH F
+            ON A.TRADE_ID = F.TRADE_ID
+        <where>
+            <if test="tradeMarket!=null and tradeMarket!='' ">
+                AND A.TRADE_MARKET = #{tradeMarket}
+            </if>
+            <if test="tradePlat!=null and tradePlat!='' ">
+                AND A.TRADE_PLAT = #{tradePlat}
+            </if>
+            <if test="ps!=null and ps!='' ">
+                AND A.PS = #{ps}
+            </if>
+            <if test="secAcctNo!=null and secAcctNo!='' ">
+                AND A.SEC_ACCT_ID = #{secAcctNo}
+            </if>
+            <if test="applyNoList!=null and applyNoList.size()>0 ">
+                AND (aa.APPLY_TRADE_ID IN
+                <foreach item="item" index="index" collection="applyNoList" open="(" close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) or aa.APPLY_TRADE_ID in (
+                    </if>
+                    #{item}
+                </foreach>)
+            </if>
+            <if test="tradeMarket!=null and tradeMarket!='' ">
+                AND E.FINPROD_MARKET_ID = #{tradeMarket}
+            </if>
+
+            <if test="tradeDateBegin != null and tradeDateBegin != ''">
+                <![CDATA[ AND A.TRADE_DATE  >= STR_TO_DATE(#{tradeDateBegin},'%Y-%m-%d') ]]>
+            </if>
+            <if test="tradeDateEnd != null and tradeDateEnd != ''">
+                <![CDATA[ AND A.TRADE_DATE  <= STR_TO_DATE(#{tradeDateEnd},'%Y-%m-%d') ]]>
+            </if>
+            <if test="matchStatus == null or matchStatus == '' or matchStatus == '02'">
+                AND (B.MATCH_STATUS = #{MATCH_STATUS_02} OR B.MATCH_STATUS IS NULL)
+            </if>
+            <if test=" matchStatus == '03'">
+                AND B.MATCH_STATUS = #{MATCH_STATUS_03}
+            </if>
+            <if test="tradeDateEnd != null and tradeDateEnd != ''">
+                <![CDATA[ AND A.FPRICE_AMT  >=  #{tradeAmt1}]]>
+            </if>
+            <if test="tradeDateEnd != null and tradeDateEnd != ''">
+                <![CDATA[ AND A.FPRICE_AMT  <= #{tradeAmt2}]]>
+            </if>
+        </where>
+        GROUP BY B.MATCH_STATUS,
+                A.SHARE_AMT,
+                A.TRADE_MARKET,
+                A.APPLY_TRADE_ID,
+                A.SEC_ACCT_ID,
+                A.SEC_TYPE,
+                E.FINPROD_MARKET_ID,
+                E.FINPROD_ID,
+                E.FINPROD_ABBR,
+                A.SEAT_NUMBER,
+                A.TRADE_PLAT,
+                A.PS,
+                A.SHARE_AMT,
+                A.FPRICE_AMT,
+                A.UNIT_FPRICE,
+                A.TRADE_DATE,
+                D.ACCT_NO,
+                D.ACCT_NAME
+    </select>
+</mapper>
