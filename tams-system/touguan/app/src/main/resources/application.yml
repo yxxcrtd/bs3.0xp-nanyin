@@ -332,7 +332,7 @@ webSocketUrl: ws://192.168.70.146:1667/dsp/positionTopic
 #监听键值
 webSocketKey: "[{\"table\":\"ETR_CASH_POSITION\",\"hodingTypes\":[]}, {\"table\":\"PTL_CASH_POSITION\",\"hodingTypes\":[]}, {\"table\":\"ETR_SEC_POSITION\",\"hodingTypes\":[]}, {\"table\":\"PTL_SEC_POSITION\",\"hodingTypes\":[]}]"
 #监听市场行情最新净价
-bondWebSocketUrl: ws://192.168.90.208:8888/dsp/cmds
+bondWebSocketUrl: ws://192.168.90.208:18888/dsp/cmds
 #监听债券行情键值
 bondWebSocketKey: Subscriber
 #分页插件超过最后一页返回不返回数据

@@ -1,11 +1,9 @@
 package com.joyintech.tams.business.common.util;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.DateUtil;
+
+import java.util.Date;
 
 public class UserUtil {
 
@@ -101,12 +99,5 @@ public class UserUtil {
 		};
 //        return SecurityUtil.getLoginUser();
     }
-		
-	public static String getUserName() {
-    	return "admin";
-    }
-	
-    public static String getUserid() {
-    	return "admin";
-    }
+
 }

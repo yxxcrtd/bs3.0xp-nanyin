@@ -1,3 +1,4 @@
+/*
 (function () {
     function query(ele){
         return $("#EtribBondInfo003_bodydiv " + ele);
@@ -356,7 +357,8 @@
         }
     };
 
-    /*var changeBussnissModelByFinprodId = function(){
+    */
+/*var changeBussnissModelByFinprodId = function(){
         if(SHOW_INVAIM_OR_BUSSINSSMODEL!="02"){
             return;
         }
@@ -378,11 +380,14 @@
             businessModelReulst="";
         }
 
-    }*/
+    }*//*
 
-    /**
+
+    */
+/**
      * 对外公开的接口
-     */
+     *//*
+
     parent.EtrIbBondinfo003 = {
         riskResultdata: riskResultdata,
         initFlag: initFlag,
@@ -407,21 +412,25 @@
         businessId: businessId
     }
 
-    /**
+    */
+/**
      * 风险试算时不需要进行风险试算的校验
-     */
+     *//*
+
     var isNeedRiskcal = function (){
         //质押券入库和出库不需要走风险试算
         ps = query("#ps").val();
         return true;
     }
 
-    /**
+    */
+/**
      * 获取风险试算参数
      *
      * @param operateType 操作类型（save，submit）
      * @returns
-     */
+     *//*
+
     function getSearchParams() {
         var object = $.serializeToObject("#searchForm");
         return object;
@@ -429,7 +438,9 @@
 
     var cols = [
         {
-            /* 组合代码 */
+            */
+/* 组合代码 *//*
+
             field: 'portfolioId', width: 100, title: 'EtribBondInfo003.portfolioId', edit: true, sortable: false,
             editOption: {
                 type: 'select',
@@ -442,7 +453,9 @@
             }
         }
         , {
-            /*劵面总额*/
+            */
+/*劵面总额*//*
+
             field: 'entrustNum',
             width: 150,
             title: 'EtribBondInfo003.entrustAmt',
@@ -451,7 +464,9 @@
             type: 'number',
             digit: 2
         }, {
-            /*结算金额*/
+            */
+/*结算金额*//*
+
             field: 'settleAmt',
             width: 50,
             title: 'EtribBondInfo003.settleAmt',
@@ -459,7 +474,9 @@
             sortable: false,
             type: 'number',
             digit: 2
-        // }, {/*证券账户*/
+        // }, {*/
+/*证券账户*//*
+
         //     field: 'secManageAcctId',
         //     width: 100,
         //     title: 'EtribBondInfo003.secAcct',
@@ -469,7 +486,9 @@
         //         multiple: false, showField:'text',searchable: true,
         //         url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
         //     }
-        },  {/*投资目的*/
+        },  {*/
+/*投资目的*//*
+
             field: 'invAim',
             width: 50,
             title: 'EtrIbBondinfo002.invAim',
@@ -479,7 +498,9 @@
             // ,
             // visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false
         }
-        // , {/*业务模式*/
+        // , {*/
+/*业务模式*//*
+
         //     field: 'businessModel',
         //     width: 100,
         //     title: '业务模式',
@@ -557,7 +578,8 @@
         , {field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['delt']}
     ]
 
-    var table = query("#bussCombDistribtTable").joyintable({
+    */
+/*var table = query("#bussCombDistribtTable").joyintable({
         data:entity_BussCombDistribtList||[],
         cols: cols,
         page: true,
@@ -600,17 +622,22 @@
             }
             return true;
         }
-    });
+    });*//*
 
-    /**
+
+    */
+/**
      * 绑定删除事件
-     */
-    table.bind('click', '.delt', function (data, index) {
+     *//*
+
+    */
+/*table.bind('click', '.delt', function (data, index) {
         table.removeRow(data);
         doOther.refreshTradAmt();
         doOther.leftHqReload();
         calcRestTradeAmt();
-    });
+    });*//*
+
 
 
     window.componentLoadCallback = function(isDone, pagePath, params) {
@@ -769,11 +796,13 @@
 
     init();
 
-    /**
+    */
+/**
      * 获取提交的数据
      * @param operateType
      * @returns {{}}
-     */
+     *//*
+
     function getSubmitParam(operateType) {
         var res = {}
         var object = $.serializeToObject('#EtribBondInfo003_bodydiv #searchForm');
@@ -889,10 +918,12 @@
         }
     }
 
-    /**
+    */
+/**
      * 重置
      * @returns
-     */
+     *//*
+
     function doReset() {
         query("#finprodId").val('').trigger('change');
         query("#ps").val('').trigger('change');
@@ -922,33 +953,41 @@
 
 
 
-    /**
+    */
+/**
      * 委托终止日
-     */
+     *//*
+
     query("#portfolioSeries").change(function () {
         table.reload({ajax:null, url: null, data:[]});
         doOther.leftHqReload();
     });
 
 
-    /**
+    */
+/**
      * 委托终止日
-     */
+     *//*
+
     query("#mdate").change(function () {
         checkFinMdate();
         calData();
     });
 
-    /**
+    */
+/**
      * 清算速度
-     */
+     *//*
+
     query("#settleSpeed").change(function () {
         calData();
     });
 
-    /**
+    */
+/**
      * 净价
-     */
+     *//*
+
     query("#price").change(function () {
         var ps = query("#ps").val();
         var entrustNum = query("#tradeAmt").val();
@@ -970,9 +1009,11 @@
             }
         }
     });
-    /**
+    */
+/**
      * 行权收益率
-     */
+     *//*
+
     query("#exerYield").change(function () {
         var ps = query("#ps").val();
         var entrustNum = query("#tradeAmt").val();
@@ -995,9 +1036,11 @@
             }
         }
     });
-    /**
+    */
+/**
      * 到期收益率
-     */
+     *//*
+
     query("#matureYield").change(function () {
         var ps = query("#ps").val();
         var entrustNum = query("#tradeAmt").val();
@@ -1081,7 +1124,8 @@
         //     JoyinUtil.showMessage("请选择交易方向","error");
         //     return null;
         // }
-        /*
+        */
+/*
         var bussCombDistribtList = $.serializeToObject('#searchForm').bussCombDistribtList;
         if (bussCombDistribtList.length > 0) {
             var objects = new Array();
@@ -1156,12 +1200,15 @@
             // // add by zhangrui1 交易对手影响风险试算 end
             // return objects;
         }
-        */
+        *//*
+
     }
 
-    /**
+    */
+/**
      * 文件上传
-     */
+     *//*
+
     var fileUpload = function () {
         var params = getSearchParams();
         var object = {
@@ -1171,13 +1218,15 @@
         Joyin.dialog(JoyinUtil.getLabel('EtribBondInfo003.fileUpload'), '/invest/entrust/etribbondinfo/EtrIbBondinfoFile/init', '60%', '75%',object);
     }
 
-    /**
+    */
+/**
      * 风险试算
      * @param url
      * @param object
      * @param riskdata
      * @returns
-     */
+     *//*
+
     function doRiskcal() {
         var object = getSearchParams();
         var checkParam = {};
@@ -1199,12 +1248,14 @@
         window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F01', param, checkParam,riskMathRedisCallback003);
     }
 
-    /**
+    */
+/**
      * 风险试算的回调函数
      * @param object
      * @param cluflag
      * @returns
-     */
+     *//*
+
     function riskMathRedisCallback003(object,cluflag) {
         EtrIbBondinfo003.riskResultdata = object;
         parent.EtrIbBondinfo003.riskResultdata = object;
@@ -1276,9 +1327,11 @@
     //         }
     //     }
     // });
-    /**
+    */
+/**
      * 净值偏离度
-     */
+     *//*
+
     function calDeviationDegree() {
         if (query("#finprodIdhid").val() && query("#price").val()) {
             var paramObj = {};
@@ -1339,10 +1392,12 @@
             object.finmdate = query("#finmdate").val();
             object.finprodId = query("#finprodIdhid").val();
             object.tradeMarketMode = SHARES_TRADE_MARKET_02;
-            /* object.etrInvestPersonInfo.invManagerId = query('#etrInvestPersonInfo_invManagerId').val()
+            */
+/* object.etrInvestPersonInfo.invManagerId = query('#etrInvestPersonInfo_invManagerId').val()
             if (object.etrInvestPersonInfo.trader != null && object.etrInvestPersonInfo.trader != '') {
                 object.etrInvestPersonInfo.trader = object.etrInvestPersonInfo.trader.join(',')
-            } */
+            } *//*
+
             if (object.bussCombDistribtList != null) {
                 if (object.bussCombDistribtList.length > 0) {
                     var entrustNum = 0.0;
@@ -1425,9 +1480,11 @@
         calcRestTradeAmt();
     });
 
-    /**
+    */
+/**
      * 全价change
-     */
+     *//*
+
     query("#fpriceAmt").change(function () {
         // var fpriceAmt = query('#fpriceAmt').val();
         if(!fprice||fprice==''){
@@ -1442,11 +1499,13 @@
         }
     });
 
-    /**
+    */
+/**
      * 计算结算金额
      * @param value
      * @param data
-     */
+     *//*
+
     function calSettleAmt (value, data) {
         var rowData = {};
         if(fprice&&fprice!=''&&data.entrustNum){
@@ -1456,3 +1515,4 @@
     }
 
 }());
+*/

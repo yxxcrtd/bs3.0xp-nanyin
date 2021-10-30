@@ -15,7 +15,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
@@ -23,7 +23,6 @@ import com.joyintech.tams.business.common.dto.PositionRulePtlData;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
-import com.joyintech.tams.business.common.util.UserUtil;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfo002Mapper;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.dto.*;
@@ -55,7 +54,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -411,9 +409,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-        String userId = UserUtil.getUserName();
+        String userId = SecurityUtil.getLoginUser().getUserName();
         if (StringUtils.isNotEmpty(userId)) {
-            pageParam.put("userId", UserUtil.getUserName());
+            pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsetrIbBondinfoMapper.findEtrinfoPage(pageParam));
         }else{
             return null;
@@ -1059,7 +1057,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             Date entrustDate=DateUtil.compareDate(cfetsDto.getEtrDate(),fp.getVdate())>0?cfetsDto.getEtrDate():fp.getVdate();
             dto.setEntrustDate(entrustDate);
         }
-        dto.setInvManagerId(UserUtil.getUserid());
+        dto.setInvManagerId(SecurityUtil.getLoginUser().getUserName());
         dto.setEntrustNum(ArithmeticUtil.multiply(cfetsDto.getTradeAmt(),new BigDecimal("10000")));
         dto.setVdate(cfetsDto.getEtrDate());
         dto.setMdate(cfetsDto.getEtrDate());

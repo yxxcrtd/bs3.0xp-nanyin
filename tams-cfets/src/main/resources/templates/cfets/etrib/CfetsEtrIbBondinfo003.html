@@ -72,7 +72,7 @@
                                 class="layui-input form-input input-select" allowClear="true"
                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                 required="required"
-                                data-th-data-url="@{/invest/entrust/etribbondinfo/EtrIbBondinfo002/getfinprodIdForAdd}"
+                                data-th-data-url="@{/common/joyinbusinessCommon/getfinprodIdForAdd}"
                                 data-th-initvalue="${entity?.finprodMarketId}">
                         </select>
                     </div>
@@ -262,7 +262,7 @@
                 </div>
             </div>
 
-            <div id="combDistribt_div" class="pro-module-wrap">
+            <!--<div id="combDistribt_div" class="pro-module-wrap">
                 <div class="pro-module">
                     <h3 class="pro-module-title">
                         <span class="title-des">组合分配</span>
@@ -289,27 +289,15 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
             <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">
                 <div class="text-center">
-                    <a id="EtribBondInfo003_btn_fileupload" class="layui-btn layui-btn-sm"
-                       data-th-text="#{EtribBondInfo003.fileUpload}">附件上传</a>
-                    <a id="EtribBondInfo003_btn_riskcal" class="layui-btn layui-btn-sm"
-                       data-th-text="#{EtribBondInfo003.riskcal}">风险试算</a>
-                    <a id="EtribBondInfo003_btn_save" class="layui-btn layui-btn-sm btn-save" style="display: none;"
+                    <a id="CfetsEtrIbBondinfo003_btn_save" class="layui-btn layui-btn-sm btn-save" style="display: none;"
                        data-th-text="#{SysCommon.save}">保存</a>
-                    <a id="EtribBondInfo003_btn_submit" class="layui-btn layui-btn-sm  btn-submit"
+                    <a id="CfetsEtrIbBondinfo003_btn_submit" class="layui-btn layui-btn-sm  btn-submit"
                        style="display: none;"
                        data-th-text="#{SysCommon.submit}">提交</a>
-                    <!--                     <a id="EtribBondInfo003_btn_reset" class="layui-btn layui-btn-sm  btn-reset" -->
-                    <!--                        data-th-text="#{SysCommon.reset}">重置</a> -->
                 </div>
-                <div id="baseRiskMathComm" class="page-component" style="display: none;"
-                     th:data-path="@{/component/common/BaseRiskMathComm/init}"
-                     th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
-                <div id="fileUpload" class="page-component" style="display: none;"
-                     th:data-path="@{/component/core/FileCommon/init}"
-                     th:data-params="|{entityName: 'FileCommon',businessId?: ''}|"></div>
             </div>
 
         </form>
