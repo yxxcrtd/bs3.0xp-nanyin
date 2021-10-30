@@ -38,14 +38,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.*;
 @Controller
-@PageId("CfetsEtrBondInfo")
-@RequestMapping("/cfets/etrib/cfetsEtrIbBondinfo003")
+@PageId("CfetsEtrIbBondinfo003")
+@RequestMapping("cfets/etrib/CfetsEtrIbBondinfo003")
 @Api(tags = "银行间债券多组合指令新建")
 public class CfetsEtribBondInfo003Controller extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(CfetsEtribBondInfo003Controller.class);

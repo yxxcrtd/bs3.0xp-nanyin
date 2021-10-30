@@ -16,9 +16,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.trade.investtrade.commanddispatcher.service.TrdCommandDispatcher001Service;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
@@ -30,9 +28,6 @@ import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfo002Service;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.entity.EtrDistribute;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
@@ -44,7 +39,6 @@ import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInves
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
@@ -66,9 +60,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -160,7 +156,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));
         initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
         //pageId
-        initPageParams.put("pageId", "CfetsEtrBondInfo");
+        initPageParams.put("pageId", "CfetsEtrIbBondinfo003");
         return new Message<Map<String, Object>>(initPageParams).success();
     }
     @ApiOperation(value = "查询指令管理分页数据", notes = "查询指令管理分页数据")
@@ -236,7 +232,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         ProcessParameter<CfetsEtribBondInfo003Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<CfetsEtribBondInfo003Dto> params = new WorkFlowParameter<>();
 
-        params.setPageId("CfetsEtrBondInfo");
+        params.setPageId("CfetsEtrIbBondinfo003");
         params.setElementId(allDto.getEtrInvestBondInfoDtos().get(0).getElementId());
         params.setBusinessCode(CfetsEtribBondInfo003Dto::getTotalEtrustId);
         params.setBusinessType(DictCodeList.共通业务类型_债券投资委托.getValue());
