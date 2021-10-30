@@ -78,6 +78,21 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         else {
             pageParam.put("portfolioIdList", new ArrayList<>());
         }
+        Object finprodIdObj = pageParam.get("finprodId");
+        if (finprodIdObj != null) {
+            pageParam.put("finprodIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA, (String)finprodIdObj));
+        }
+        else {
+            pageParam.put("finprodIdList", new ArrayList<>());
+        }
+        String sysDate = iPlatformDate.getSysDateStr();
+        pageParam.put("sysDate", sysDate);
+        pageParam.put("PARA_CODE_02", DictCodeListStl.参数代码_对账维度.getValue());
+        pageParam.put("PARA_VALUE_01", DictCodeListStl.对账维度_证券汇总.getValue());
+        pageParam.put("PARA_VALUE_02", DictCodeListStl.对账维度_委托汇总.getValue());
+        pageParam.put("PARA_VALUE_03", DictCodeListStl.对账维度_成交明细.getValue());
+        pageParam.put("CHECK_RESULT_2", DictCodeListExt3.对账状态结果_待处理.getValue());
         return super.queryForPage(page, length, () -> dayEndAccountMapper.findAccountInfo(pageParam));
     }
 
