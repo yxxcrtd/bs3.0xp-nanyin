@@ -323,7 +323,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 req.setCcy(entity.getCcy());
                 req.setFinprodId(entity.getFinprodId());
                 req.setPtlList(ptlList);
-                //PositionHttpRequest.send(req);
+                PositionHttpRequest.send(req);
             }
         }
         //无附件上传，删除
