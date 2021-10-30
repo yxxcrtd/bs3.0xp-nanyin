@@ -8,9 +8,9 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
-import com.joyintech.tams.invest.common.transmatch.service.ExchangeTransMatchCommonService;
 import com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper;
 import com.joyintech.tams.settle.batch.datagather.dto.*;
+import com.joyintech.tams.settle.batch.datagather.service.StlDataGatherService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
 public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEntity, InvestTradeWriteDto> {
 
     @Autowired
-    private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
+    private StlDataGatherMapper stlDataGatherMapper;
 
     @Autowired
-    private StlDataGatherMapper stlDataGatherMapper;
+    private StlDataGatherService stlDataGatherService;
 
     @Override
     public InvestTradeWriteDto process(NeedOperateEntity operateEntity) throws Exception {
@@ -154,7 +154,9 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                     }
                 }
             }
-            exchangeTransMatchCommonService.transactionMacthBatch(exchangeTransMatchCommons);
+
+
+            stlDataGatherService.transactionMacthBatch(exchangeTransMatchCommons);
         }
     }
 

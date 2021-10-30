@@ -1,4 +1,4 @@
-package com.joyintech.tams.invest.trade.exchangetransmatch.dto;
+package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -6,10 +6,9 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.invest.trade.exchangetransmatch.validator.ExchangeTransMatchValidator;
+import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.validator.ExchangeTransMatchValidator;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @ValidLogic(targetClass = ExchangeTransMatchValidator.class)

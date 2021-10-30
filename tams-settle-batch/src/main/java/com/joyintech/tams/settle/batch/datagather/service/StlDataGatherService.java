@@ -10,6 +10,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseFinProductCashInputDto;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -233,6 +234,17 @@ public class StlDataGatherService {
         }
         else {
             restTemplate.postForObject(tamsSerever + "/invest/trade/api/execute", param, Map.class);
+        }
+
+    }
+
+    public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList) {
+        // 调用债券交易计算逻辑
+        if(isSingle) {
+            simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionMacthBatch", dtoList, Map.class);
+        }
+        else {
+            restTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionMacthBatch", dtoList, Map.class);
         }
 
     }

@@ -1,4 +1,4 @@
-package com.joyintech.tams.invest.trade.exchangetransmatch.dto;
+package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto;
 
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.SysDataUtil;

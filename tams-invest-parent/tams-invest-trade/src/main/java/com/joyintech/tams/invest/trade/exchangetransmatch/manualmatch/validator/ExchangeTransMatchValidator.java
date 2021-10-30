@@ -1,10 +1,10 @@
-package com.joyintech.tams.invest.trade.exchangetransmatch.validator;
+package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.validator;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.invest.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto;
-import com.joyintech.tams.invest.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto;
+import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch002Dto;
+import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch003Dto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

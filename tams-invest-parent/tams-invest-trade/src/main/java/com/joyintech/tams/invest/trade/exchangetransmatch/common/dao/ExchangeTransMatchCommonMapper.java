@@ -1,7 +1,5 @@
-package com.joyintech.tams.invest.common.transmatch.dao;
+package com.joyintech.tams.invest.trade.exchangetransmatch.common.dao;
 
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
 import org.springframework.stereotype.Repository;
 

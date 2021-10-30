@@ -1,8 +1,8 @@
-package com.joyintech.tams.invest.trade.exchangetransmatch.controller;
+package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.controller;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.tams.invest.trade.exchangetransmatch.service.ExchangeTransMatch001Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.service.ExchangeTransMatch001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

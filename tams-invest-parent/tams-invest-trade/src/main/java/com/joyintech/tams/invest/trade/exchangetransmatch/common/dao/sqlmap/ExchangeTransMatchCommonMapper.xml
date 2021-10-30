@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.invest.common.transmatch.dao.ExchangeTransMatchCommonMapper" >
-    <select id="getEtrEntrustByIdList" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto">
+<mapper namespace="com.joyintech.tams.invest.trade.transmatch.dao.ExchangeTransMatchCommonMapper" >
+    <select id="getEtrEntrustByIdList" resultType="com.joyintech.tams.invest.trade.transmatch.dto.ExchangeTransMatchCommonEntrustDto">
         select
         T2.TARGET_TYPE TargetType,
         T2.TRADER trader,
