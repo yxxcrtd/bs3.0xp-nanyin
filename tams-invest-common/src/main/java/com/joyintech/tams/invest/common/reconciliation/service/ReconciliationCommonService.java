@@ -475,22 +475,24 @@ public class ReconciliationCommonService {
                     .subtract(dto.getSettleFee())
                     .subtract(dto.getGhfAmt())
                     .subtract(dto.getSxfAmt());
-            // 求出最大值
-            BigDecimal[] arrays = new BigDecimal[]{dto.getJsfAmt(), dto.getZgfAmt(),dto.getStampFee(),
-                    dto.getSettleFee(),dto.getGhfAmt(),dto.getSxfAmt()};
-            BigDecimal max = Arrays.stream(arrays).max(Comparator.naturalOrder()).get();
-            if(dto.getJsfAmt().compareTo(max) == 0){
-                dto.setJsfAmt(dto.getJsfAmt().add(balance));
-            }else if(dto.getZgfAmt().compareTo(max) == 0){
-                dto.setZgfAmt(dto.getZgfAmt().add(balance));
-            }else if(dto.getStampFee().compareTo(max) == 0){
-                dto.setStampFee(dto.getStampFee().add(balance));
-            }else if(dto.getSettleFee().compareTo(max) == 0){
-                dto.setSettleFee(dto.getSettleFee().add(balance));
-            }else if(dto.getGhfAmt().compareTo(max) == 0){
-                dto.setGhfAmt(dto.getGhfAmt().add(balance));
-            }else if(dto.getSxfAmt().compareTo(max) == 0){
-                dto.setSxfAmt(dto.getSxfAmt().add(balance));
+            if(balance.compareTo(BigDecimal.ZERO)>0){
+                // 求出最大值
+                BigDecimal[] arrays = new BigDecimal[]{dto.getJsfAmt(), dto.getZgfAmt(),dto.getStampFee(),
+                        dto.getSettleFee(),dto.getGhfAmt(),dto.getSxfAmt()};
+                BigDecimal max = Arrays.stream(arrays).max(Comparator.naturalOrder()).get();
+                if(dto.getJsfAmt().compareTo(max) == 0){
+                    dto.setJsfAmt(dto.getJsfAmt().add(balance));
+                }else if(dto.getZgfAmt().compareTo(max) == 0){
+                    dto.setZgfAmt(dto.getZgfAmt().add(balance));
+                }else if(dto.getStampFee().compareTo(max) == 0){
+                    dto.setStampFee(dto.getStampFee().add(balance));
+                }else if(dto.getSettleFee().compareTo(max) == 0){
+                    dto.setSettleFee(dto.getSettleFee().add(balance));
+                }else if(dto.getGhfAmt().compareTo(max) == 0){
+                    dto.setGhfAmt(dto.getGhfAmt().add(balance));
+                }else if(dto.getSxfAmt().compareTo(max) == 0){
+                    dto.setSxfAmt(dto.getSxfAmt().add(balance));
+                }
             }
         }
     }
