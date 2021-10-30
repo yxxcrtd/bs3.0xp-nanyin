@@ -13,13 +13,7 @@ package com.joyintech.tams.invest.bankuplink.bond.service;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -344,6 +338,50 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
          }
         return res;
     }
+
+    public Page<BondQuoteInfoDto> getDayOfferTableListByPage(Map<String, Object> param) {
+        User user = SecurityUtil.getLoginUser();
+        if (user == null) {
+            return new Page<>();
+        }
+        param.put("loginUserId", user.getUserName());
+        //add by zznn 20210730 start
+        //岗位信息 框架没有封装  单独处理
+        //交易主管(交易处长03)、超级管理员能够查询出所有的报价信息
+        Map<String,Object> paramUser = new HashMap<>();
+        paramUser.put("userId",user.getUserName());
+        paramUser.put("rolePos","03");
+        boolean traDirector = commonBusinessService.isTraDirector(paramUser);
+        param.put("isAdmin", user.isAdmin()||traDirector);
+        //add by zznn 20210730 end
+        // 待回复报价是否所有交易员可见（01：不允许，02：允许）
+        param.put("unAnswerFlag", CacheUtil.getSysParam("ibuFlag_allTraderCanShowUnAnswerQuote"));
+        String keywords = "";
+        if(param.containsKey("keywords")){
+            keywords =(String) param.get("keywords");
+            param.remove("keywords");
+        }
+        List<BondQuoteInfoDto> list = simpleRestTemplate.postForList(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                + "/CfetsBondDealQuotedPrice/getDayOfferTableList",param, BondQuoteInfoDto.class);
+        if(StringUtil.isNotEmpty(keywords)&&!StringUtil.isEmptyList(list)){
+            list = (List<BondQuoteInfoDto>) getKeyWordsList(list,keywords,(String) param.get("keycols"));
+        }
+        int pageNumber = Integer.parseInt(StringUtil.getOrElse(param.get("page"), "1"));
+        int pageSize = Integer.parseInt(StringUtil.getOrElse(param.get("length"), "20"));
+        // 封装Page对象
+        Page<BondQuoteInfoDto> page = new Page<>();
+        page.setCode(0);
+        page.setRecords(list.size());
+        page.setPage(pageNumber+1);
+        int total = list.size()%pageSize==0?list.size()/pageSize:list.size()/pageSize+1;
+        page.setTotal(total);
+        //截取返回集合
+        List<BondQuoteInfoDto> resultList = list.stream().sorted(Comparator.comparing(BondQuoteInfoDto::getQuoteId)).skip((pageNumber-1)*pageSize).limit(pageSize).collect(Collectors.toList());
+        page.setRoot(resultList);
+
+        return page;
+    }
+
 
     /**
      * 现券报价查询-按指定条件分页查询<br />

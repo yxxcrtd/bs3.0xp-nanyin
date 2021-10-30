@@ -190,7 +190,7 @@
      */
     var dayOfferTable = $("#CfetsBond001_dayOffer_table").joyintable({
         ajax: {
-            url: 'getDayOfferTableList',
+            url: 'getDayOfferTableListByPage',
             type: 'POST',
             data: function() {
                 return genDayOfferParam();
@@ -198,8 +198,8 @@
         },
         //height:380,
         searchOnInit:true,
-        page: false,
-        loadonce: true,
+     /*   page: false,
+        loadonce: true,*/
         sortfont: true,
         cols:[
             {field:'validStatusStr', width:90, title: '有效状态', sortField:"validStatus"} 
