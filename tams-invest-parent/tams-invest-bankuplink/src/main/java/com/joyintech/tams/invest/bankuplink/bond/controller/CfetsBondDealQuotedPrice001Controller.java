@@ -229,6 +229,18 @@ public class CfetsBondDealQuotedPrice001Controller extends BaseController {
     /**
      * 现券报价查询-按指定条件分页查询<br />
      * 根据传入的不为空的变量进行查询，以分页形式返回查询结果，需支持数据权限
+     *
+     * @return Page<BondQuoteInfoDto>
+     */
+    @ResponseBody
+    @RequestMapping("/getDayOfferTableListByPage")
+    public Page<BondQuoteInfoDto> getDayOfferTableListByPage() {
+        return cfetsBondDealQuotedPrice001Service.getDayOfferTableListByPage(RequestUtil.getPageParam());
+    }
+
+    /**
+     * 现券报价查询-按指定条件分页查询<br />
+     * 根据传入的不为空的变量进行查询，以分页形式返回查询结果，需支持数据权限
      * 
      * @return Page<BondQuoteInfoDto>
      */
