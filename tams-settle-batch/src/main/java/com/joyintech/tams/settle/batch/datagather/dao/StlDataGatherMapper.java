@@ -1,6 +1,7 @@
 package com.joyintech.tams.settle.batch.datagather.dao;
 
 import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
+import com.joyintech.tams.settle.batch.datagather.dto.EtrEntrustDto;
 import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
 import com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto;
 import com.joyintech.tams.settle.batch.datagather.dto.TotalTrdProductDealDto;
@@ -103,4 +104,7 @@ public interface StlDataGatherMapper {
      * @since 1.0
      */
     TrdDealTotalAdd queryTotalAddByTradeId(@Param("tradeId") String tradeId);
+
+
+    List<EtrEntrustDto> listEtrEntrust(@Param("finprodType") List<String> finprodType,@Param("entrustDate") Date entrustDate);
 }

@@ -2,12 +2,21 @@ package com.joyintech.tams.settle.batch.datagather.processor;
 
 import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
+import com.joyintech.tams.invest.common.transmatch.service.ExchangeTransMatchCommonService;
+import com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper;
 import com.joyintech.tams.settle.batch.datagather.dto.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author 何阳阳
@@ -17,13 +26,21 @@ import java.util.List;
  */
 public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEntity, InvestTradeWriteDto> {
 
+    @Autowired
+    private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
+
+    @Autowired
+    private StlDataGatherMapper stlDataGatherMapper;
+
     @Override
     public InvestTradeWriteDto process(NeedOperateEntity operateEntity) throws Exception {
         InvestTradeReaderDto item = (InvestTradeReaderDto)operateEntity;
+        Date executeDate = this.getBatchExecuteInfo().getExecuteDate();
         // 根据InvestTradeReaderDto中的成交数据明细数据列表，构建一个InvestTradeWriteDto
         List<SettleTransDataDto> settleTransDataDtos = item.getSettleTransDataList();
         if(CollectionUtils.isNotEmpty(settleTransDataDtos)) {
-            InvestTradeWriteDto investTradeWriteDto = new InvestTradeWriteDto();
+            generateSettleTransData(settleTransDataDtos);
+            /*InvestTradeWriteDto investTradeWriteDto = new InvestTradeWriteDto();
             // 金融产品交易明细
             List<TrdProductDealDto> dealList = generateProductDeal(settleTransDataDtos);
             // 金融产品交易汇总信息
@@ -83,12 +100,63 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                 investTradeWriteDto.setEtrFinishStatusList(etrFinishStatusList);
             }
             investTradeWriteDto.setSecType(getSecType());
-            return investTradeWriteDto;
+            return investTradeWriteDto;*/
         }
         return null;
     }
 
     protected abstract String getSecType();
+
+    protected abstract List<String> getFinprodType();
+
+    /**
+     *  汇总成交数据
+     * @param settleTransDataList
+     * @return
+     */
+    protected void generateSettleTransData(List<SettleTransDataDto> settleTransDataList) {
+        List<ExchangeTransMatchCommonDto>  exchangeTransMatchCommons = new ArrayList<>();
+        List<EtrEntrustDto> etrEntrustDtos = stlDataGatherMapper.listEtrEntrust(getFinprodType(),this.getBatchExecuteInfo().getExecuteDate());
+        Map<String, List<EtrEntrustDto>> etrEntrustMap = etrEntrustDtos.stream().collect(Collectors.groupingBy(EtrEntrustDto::getBusiKey, Collectors.toList()));
+        if(null!=etrEntrustDtos&&!StringUtil.isEmptyList(etrEntrustDtos)){
+            for (SettleTransDataDto settleTransDataDto : settleTransDataList) {
+                ExchangeTransMatchCommonDto exchangeTransMatchCommonDto = new ExchangeTransMatchCommonDto();
+                BeanUtil.copyPropertiesIgnoreNull(exchangeTransMatchCommonDto,settleTransDataDto);
+                exchangeTransMatchCommonDto.setMatchType("0");
+                if(StringUtil.isNotEmpty(settleTransDataDto.getEntrustId())){
+                    exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(etrEntrustDtos.get(0).getEntrustId()));
+                }else{
+                    String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(), DateUtil.format(settleTransDataDto.getTradeDate()),settleTransDataDto.getTradePlat()),"_");
+                    if(etrEntrustMap.containsKey(busiKey)){
+                        List<EtrEntrustDto> etrEntrusts = etrEntrustMap.get(busiKey);
+                        if(null!=etrEntrusts&&!StringUtil.isEmptyList(etrEntrusts)){
+                            if(etrEntrustDtos.size()==1){
+                                exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(etrEntrustDtos.get(0).getEntrustId()));
+                            }
+                            if(etrEntrustDtos.size()>1){
+                                List<String> entrustIds = etrEntrustDtos.stream().map(e -> e.getEntrustId()).collect(Collectors.toList());
+                                //委托数量汇总
+                                BigDecimal entrustNumTotal = etrEntrusts.stream().map(EtrEntrustDto::getEntrustNum).reduce(BigDecimal.ZERO, BigDecimal::add);
+                                if(null!=settleTransDataDto.getShareAmt()&&settleTransDataDto.getShareAmt().compareTo(entrustNumTotal)>=0){
+                                    exchangeTransMatchCommonDto.setEntrustIdList(entrustIds);
+                                }else{
+                                    //委托金额汇总
+                                    BigDecimal entrustAmtTotal = etrEntrusts.stream().map(EtrEntrustDto::getEntrustAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                                    if(null!=settleTransDataDto.getTradeAmt()&&settleTransDataDto.getTradeAmt().compareTo(entrustAmtTotal)>=0){
+                                        exchangeTransMatchCommonDto.setEntrustIdList(entrustIds);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(null!=exchangeTransMatchCommonDto&&!StringUtil.isEmptyList(exchangeTransMatchCommonDto.getEntrustIdList())){
+                        exchangeTransMatchCommons.add(exchangeTransMatchCommonDto);
+                    }
+                }
+            }
+            exchangeTransMatchCommonService.transactionMacthBatch(exchangeTransMatchCommons);
+        }
+    }
 
     /**
      * 组合交易

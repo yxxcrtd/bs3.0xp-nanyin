@@ -29,6 +29,11 @@ public class SettleTransDataDto extends SettleTransData {
      */
     private String tradeIdTg;
 
+    /**
+     * 委托代码
+     */
+    private String entrustId;
+
     public String getOrderId() {
         return orderId;
     }
@@ -59,5 +64,13 @@ public class SettleTransDataDto extends SettleTransData {
 
     public void setTradeIdTg(String tradeIdTg) {
         this.tradeIdTg = tradeIdTg;
+    }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
     }
 }
