@@ -6,9 +6,10 @@ import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
-@ApiModel(value="新建指令风险试算请求参数",description="新建指令风险试算请求参数")
+@ApiModel(value="新建指令风险试算全部参数",description="新建指令风险试算全部参数")
 public class CfetsEtrIbdoRiskcalDto {
 
     @ApiModelProperty(name="finprodId",value="资产代码Id",example="ZC1")
@@ -42,16 +43,17 @@ public class CfetsEtrIbdoRiskcalDto {
     private BigDecimal unitFprice;
 
     @ApiModelProperty(name="matureYield",value="到期收益率",example="1")
-    private BigDecimal matureYield;
+    private String matureYield;
 
     @ApiModelProperty(name="exerYield",value="行权收益率",example="1")
-    private BigDecimal exerYield;
+    private String exerYield;
 
     @ApiModelProperty(name="ps",value="交易方向Code",example="T01")
     private String ps;
 
+
     @ApiModelProperty(name="bussTrdTransfenpeiDto",value="组合分配",example="T01")
-    List<CfetsBussCombDistribtBaseDto> bussTrdTransfenpeiDto;
+    List<Map> bussTrdTransfenpeiDto;
 
     @ApiModelProperty(name="busiType",value="业务类型",example="02")
     private String busiType;
@@ -78,6 +80,12 @@ public class CfetsEtrIbdoRiskcalDto {
 
     @ApiModelProperty(name="entrustNum",value="券面总额",example="11")
     private BigDecimal entrustNum;
+
+    @ApiModelProperty(name="invAim",value="投资目的",example="AC")
+    private String invAim;
+
+    @ApiModelProperty(name="tradeMarketMode",value="交易市场",example="02")
+    private String tradeMarketMode;
 
     public String getFinprodId() {
         return finprodId;
@@ -152,22 +160,6 @@ public class CfetsEtrIbdoRiskcalDto {
     }
 
 
-    public BigDecimal getMatureYield() {
-        return matureYield;
-    }
-
-    public void setMatureYield(BigDecimal matureYield) {
-        this.matureYield = matureYield;
-    }
-
-    public BigDecimal getExerYield() {
-        return exerYield;
-    }
-
-    public void setExerYield(BigDecimal exerYield) {
-        this.exerYield = exerYield;
-    }
-
     public String getPs() {
         return ps;
     }
@@ -176,13 +168,7 @@ public class CfetsEtrIbdoRiskcalDto {
         this.ps = ps;
     }
 
-    public List<CfetsBussCombDistribtBaseDto> getBussTrdTransfenpeiDto() {
-        return bussTrdTransfenpeiDto;
-    }
 
-    public void setBussTrdTransfenpeiDto(List<CfetsBussCombDistribtBaseDto> bussTrdTransfenpeiDto) {
-        this.bussTrdTransfenpeiDto = bussTrdTransfenpeiDto;
-    }
     public String getBusiType() {
         return busiType;
     }
@@ -261,5 +247,44 @@ public class CfetsEtrIbdoRiskcalDto {
 
     public void setUnitFprice(BigDecimal unitFprice) {
         this.unitFprice = unitFprice;
+    }
+    public List<Map> getBussTrdTransfenpeiDto() {
+        return bussTrdTransfenpeiDto;
+    }
+
+    public void setBussTrdTransfenpeiDto(List<Map> bussTrdTransfenpeiDto) {
+        this.bussTrdTransfenpeiDto = bussTrdTransfenpeiDto;
+    }
+
+    public String getMatureYield() {
+        return matureYield;
+    }
+
+    public void setMatureYield(String matureYield) {
+        this.matureYield = matureYield;
+    }
+
+    public String getExerYield() {
+        return exerYield;
+    }
+
+    public void setExerYield(String exerYield) {
+        this.exerYield = exerYield;
+    }
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
+    }
+
+    public String getTradeMarketMode() {
+        return tradeMarketMode;
+    }
+
+    public void setTradeMarketMode(String tradeMarketMode) {
+        this.tradeMarketMode = tradeMarketMode;
     }
 }

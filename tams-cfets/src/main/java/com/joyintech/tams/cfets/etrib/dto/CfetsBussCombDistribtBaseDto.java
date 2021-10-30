@@ -36,6 +36,9 @@ public class CfetsBussCombDistribtBaseDto {
     @ApiModelProperty(name="elementId",value="按钮id",example="EtribBondInfo003_btn_submit")
     private String  elementId;
 
+    @ApiModelProperty(name="invAim",value="投资目的",example="AC")
+    private String invAim;
+
 
     private String entrustId;
 
@@ -93,5 +96,13 @@ public class CfetsBussCombDistribtBaseDto {
 
     public void setEntrustId(String entrustId) {
         this.entrustId = entrustId;
+    }
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
     }
 }
