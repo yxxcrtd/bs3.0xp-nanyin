@@ -28,6 +28,7 @@ import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfo002Service;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
@@ -61,10 +62,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -438,13 +436,20 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             //风险试算封装dto
             CfetsEtrIbdoRiskcalDto d=new CfetsEtrIbdoRiskcalDto();
             BeanUtil.copyPropertiesIgnoreNull(d,dto);
-            d.setBussTrdTransfenpeiDto(dto.getBussCombDistribtList());
+            List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
+            for(CfetsBussCombDistribtBaseDto pt:dto.getBussCombDistribtList()){
+                pt.setInvAim(pt.getBusinessModel());
+                bussTrdTransfenpeiDto.add(BeanUtil.object2Map(pt));
+            }
+            d.setBussTrdTransfenpeiDto(bussTrdTransfenpeiDto);
             d.setBusiType("02");
             d.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
             d.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             d.setVdate(dto.getEtrDate());
             d.setMdate(dto.getEtrDate());;
             d.setCcy("CNY");
+            d.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+
             dataMap=BeanUtil.object2Map(d);
             //风险试算check
             AjaxResult ajaxResult = cfetsEtrIbBondinfoService.doRiskcalCheckMethod(dto);
