@@ -3,17 +3,32 @@ package com.joyintech.tams.business.common.util;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.converters.Converter;
+import com.alibaba.excel.converters.DefaultConverterLoader;
+import com.alibaba.excel.converters.ReadConverterContext;
+import com.alibaba.excel.converters.WriteConverterContext;
+import com.alibaba.excel.enums.CellDataTypeEnum;
+import com.alibaba.excel.metadata.GlobalConfiguration;
 import com.alibaba.excel.metadata.Head;
+import com.alibaba.excel.metadata.data.CellData;
+import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
+import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.WriteSheet;
 
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteTableHolder;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
@@ -30,6 +45,71 @@ import javax.servlet.http.HttpServletResponse;
 public class ExcelUitl {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExcelUitl.class);
+
+	public static void doExport(CfetsExportRequestDto requestDto, HttpServletResponse response, String excelAndSheetName, DoQuery doQuery) {
+		List<BaseMap> header = requestDto.getHeader();
+		List dataList = requestDto.getData();
+		if (dataList == null || dataList.size() == 0){
+			dataList = doQuery.query();
+		}
+		doExport(excelAndSheetName, header, dataList, response);
+	}
+
+	private static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
+		OutputStream os = null;
+		File excelFile = null;
+		String dir = UUID.randomUUID().toString();
+		try {
+			os = response.getOutputStream();
+			response.setContentType("text/vnd.ms-excel;charset=UTF-8");
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Pragma", "public");
+			response.setHeader("Cache-Control", "max-age=30");
+			response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileName + ".xlsx", "UTF-8"));
+
+			/**
+			 * 设置格式配置信息，后面监听并加入到excel中
+			 */
+			Map<String, BaseMap> styleMap = new HashMap<>();
+			Iterator<BaseMap> it = heads.iterator();
+			while (it.hasNext()){
+				BaseMap one = it.next();
+				String extendCfg = one.getString("extendCfg");
+				styleMap.put("{." + one.getString("colCode") + "}", BaseMap.newMap(JsonUtils.json2Object(extendCfg, Map.class)));
+			}
+
+			StringBuffer buf = new StringBuffer();
+			List<ExcelColumn> columns = new ArrayList<ExcelColumn>();
+			for (Map lineMap : heads) {
+				columns.add(new ExcelColumn(lineMap.get("colCode")+"", lineMap.get("colName")+""));
+			}
+
+			/**
+			 * 需要使用当前目录，防止生产时目录找不到导出报错
+			 */
+			File path = new File(dir);
+			if (!path.exists()){
+				path.mkdir();
+			}
+			excelFile = new File(dir + File.separator + fileName +".xlsx");
+
+			long s = System.currentTimeMillis();
+			exportAllData(excelFile, fileName , columns, dataList, styleMap);
+
+			// 写出响应
+			os.write(File2byte(excelFile));
+			os.flush();
+		} catch (Exception e) {
+			logger.error("doExport错误...", e);
+			throw new RuntimeException(e.getMessage());
+		} finally {
+			try {os.close();} catch (IOException e) {e.printStackTrace();}
+			/**
+			 * 删除文件夹包含文件
+			 */
+			delFolder(dir);
+		}
+	}
 	
 	public static void createExcelTemplate(File excelTemplateFile,String sheetName,List<ExcelColumn> columns, Map<String, BaseMap> styleMap) {
 		List<List<String>> list = new ArrayList<List<String>>(2);
@@ -41,7 +121,7 @@ public class ExcelUitl {
 		}
 		list.add(head);
 		list.add(data);
-		
+
 		EasyExcel.write(excelTemplateFile).inMemory(true).sheet(sheetName).registerWriteHandler(new CellWriteHandler() {
 			@Override
 			public void afterCellDataConverted(WriteSheetHolder writeSheetHolder, WriteTableHolder writeTableHolder, WriteCellData<?> cellData, Cell cell, Head head, Integer relativeRowIndex, Boolean isHead) {
@@ -78,6 +158,7 @@ public class ExcelUitl {
 				CellWriteHandler.super.afterCellDataConverted(writeSheetHolder, writeTableHolder, cellData, cell, head, relativeRowIndex, isHead);
 			}
 		}).doWrite(list);
+		
 	}
 
 	/**
@@ -147,7 +228,23 @@ public class ExcelUitl {
 	public static <T> void exportAllData(File excelFile,String sheetName,List<ExcelColumn> columns,List<T> data, Map<String, BaseMap> styleMap) {
 		File excelTemplateFile = new File(excelFile.getParentFile(),Thread.currentThread().getName()+excelFile.getName());
 		createExcelTemplate(excelTemplateFile, sheetName, columns, styleMap);
-		EasyExcel.write(excelFile).withTemplate(excelTemplateFile).sheet(sheetName).doFill(data);
+		EasyExcel.write(excelFile).withTemplate(excelTemplateFile).sheet(sheetName)
+				.registerConverter(new Converter<Date>() {
+					@Override
+					public Class<?> supportJavaTypeKey() {
+						return Date.class;
+					}
+
+					@Override
+					public Date convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) throws Exception {
+						return Converter.super.convertToJavaData(cellData, contentProperty, globalConfiguration);
+					}
+
+					@Override
+					public WriteCellData<?> convertToExcelData(Date value, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) throws Exception {
+						return new WriteCellData<>(DateUtil.format(value));
+					}
+				}).doFill(data);
 		excelTemplateFile.delete();
 	}
 	
@@ -251,71 +348,6 @@ public class ExcelUitl {
 
 		public void setName(String name) {
 			this.name = name;
-		}
-	}
-
-	public static void doExport(CfetsExportRequestDto requestDto, HttpServletResponse response, String excelAndSheetName, DoQuery doQuery) {
-		List<BaseMap> header = requestDto.getHeader();
-		List dataList = requestDto.getData();
-		if (dataList == null || dataList.size() == 0){
-			dataList = doQuery.query();
-		}
-		doExport(excelAndSheetName, header, dataList, response);
-	}
-	
-	private static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
-		OutputStream os = null;
-		File excelFile = null;
-		String dir = UUID.randomUUID().toString();
-		try {
-			os = response.getOutputStream();
-			response.setContentType("text/vnd.ms-excel;charset=UTF-8");
-			response.setCharacterEncoding("UTF-8");
-			response.setHeader("Pragma", "public");
-			response.setHeader("Cache-Control", "max-age=30");
-			response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileName + ".xlsx", "UTF-8"));
-
-			/**
-			 * 设置格式配置信息，后面监听并加入到excel中
-			 */
-			Map<String, BaseMap> styleMap = new HashMap<>();
-			Iterator<BaseMap> it = heads.iterator(); 
-			while (it.hasNext()){
-				BaseMap one = it.next();
-				String extendCfg = one.getString("extendCfg");
-				styleMap.put("{." + one.getString("colCode") + "}", BaseMap.newMap(JsonUtils.json2Object(extendCfg, Map.class)));
-			}
-			
-			StringBuffer buf = new StringBuffer();
-			List<ExcelColumn> columns = new ArrayList<ExcelColumn>();
-			for (Map lineMap : heads) {
-				columns.add(new ExcelColumn(lineMap.get("colCode")+"", lineMap.get("colName")+""));
-			}
-
-			/**
-			 * 需要使用当前目录，防止生产时目录找不到导出报错
-			 */
-			File path = new File(dir);
-			if (!path.exists()){
-				path.mkdir();
-			}
-			excelFile = new File(dir + File.separator + fileName +".xlsx");
-			
-			long s = System.currentTimeMillis();
-			exportAllData(excelFile, fileName , columns, dataList, styleMap);
-			
-			// 写出响应
-			os.write(File2byte(excelFile));
-			os.flush();
-		} catch (Exception e) {
-			logger.error("doExport错误...", e);
-			throw new RuntimeException(e.getMessage());
-		} finally {
-			try {os.close();} catch (IOException e) {e.printStackTrace();}
-			/**
-			 * 删除文件夹包含文件
-			 */
-			delFolder(dir);
 		}
 	}
 
