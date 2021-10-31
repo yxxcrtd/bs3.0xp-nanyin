@@ -2,6 +2,7 @@ package com.joyintech.tams.business.common.util;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.constant.PositionDictCodeListExt;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
@@ -49,7 +50,7 @@ public class PositionUtil {
                      */
                     BaseMap bm = BaseMap.newMap()
                             .put("code", PositionHttpRequest.CODE_BUSI_REFUSE)
-                            .put("data", arr[1] + " 请确认是否继续？");
+                            .put("data", JsonUtils.json2Object(arr[1], Map.class));
                     return new Message().success().setData(bm);
                 }
             }else {

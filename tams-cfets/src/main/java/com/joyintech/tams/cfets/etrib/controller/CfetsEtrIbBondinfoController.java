@@ -312,21 +312,6 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
 
-
-    @GetMapping("/getSecType1")
-    @ApiOperation(value = "债券一级分类列表查询", notes = "债券一级分类列表查询")
-    @ResponseBody
-    public Message<SelectDto> getSecType1(String search) {
-        try {
-            SelectDto sdto = this.getSelectDataFromDataDic(DictCode.金融产品类型_投管用, search);
-            return new Message<SelectDto>().success().setData(sdto);
-        } catch (Exception e) {
-            logger.error("查询债券简称列表异常", e);
-            return new Message<SelectDto>().fail().setMessage("查询异常");
-        }
-    }
-    
-
     @ResponseBody
     @ApiOperation(value = "撤回委托", notes = "撤回委托")
     @PostMapping("recall")

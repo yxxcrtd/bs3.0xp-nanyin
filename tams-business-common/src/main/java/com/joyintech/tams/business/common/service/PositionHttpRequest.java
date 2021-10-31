@@ -38,15 +38,18 @@ public class PositionHttpRequest {
         // 
         String res = sendPrivate(req);
         Map msgMap = JsonUtils.json2Object(res, Map.class);
-        if (msgMap != null || !StringUtil.equals("success", msgMap.get("code"))){
+        if(msgMap == null){
+            throw new PositionException("头寸返回数据为空！");
+        }
+        
+        if (!StringUtil.equals("success", msgMap.get("code") + "")){
             if(StringUtil.equals("FL0007", msgMap.get("code"))){
-                throw new PositionException(CODE_BUSI_REFUSE + "|" + (msgMap==null?"":msgMap.get("message")));
+                throw new PositionException(CODE_BUSI_REFUSE + "|" + JsonUtils.object2Json(msgMap));
             }else {
                 revokeCheck(msgMap, req);
             }
-        }else {
-            throw new PositionException("头寸返回数据为空！");
         }
+        throw new PositionException(CODE_BUSI_REFUSE + "|" + JsonUtils.object2Json(msgMap));
     }
 
     /**
