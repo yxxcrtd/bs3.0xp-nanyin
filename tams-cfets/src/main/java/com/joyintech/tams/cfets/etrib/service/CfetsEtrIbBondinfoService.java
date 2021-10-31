@@ -35,9 +35,11 @@ import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingD
 import com.joyintech.tams.component.business.basicdata.service.BusiProductRatingService;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
@@ -57,6 +59,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * 银行间债券指令
@@ -114,6 +117,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     @Autowired
     private EtrCommonService etrCommonService;
     
+	@Autowired
+    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
+	
     /**
      * 持仓信息查询
      *
@@ -503,6 +509,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
                 .put("A_008", DictCodeListExt3.资产类型_债券本方券在途持仓.getValue())
                 .put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue())
+                .put("VALUATION_SOURCE_CBC", DictCodeList.估值来源_中债登_CBC.getValue())
+                .put("VALUATION_SOURCE_SCH", DictCodeList.估值来源_上清所_SCH.getValue())
+                .put("REGIST_ORG_01", DictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue())
+                .put("REGIST_ORG_02", DictCodeList.登记托管机构_上海清算所.getValue())
+                .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+                .put("search_isNumberFlag", BaseMap.isNumeric(requestDto.getSearch()))
                 ;
         
         // 分页查询列表
@@ -700,6 +712,35 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             return nullData(sellFlag);
         }
 
+        // 从原投管系统取
+        BigDecimal cashT = BigDecimal.ZERO; // 指令t日可用
+        BigDecimal cashT1 = BigDecimal.ZERO; // 指令t1日可用
+        BigDecimal realCash = BigDecimal.ZERO; // 账户现金
+        List<String> list = requestDto.getPortfolioIdList();
+        if (list != null) {
+            for (String portfolioId : list){
+                BaseMap paramMap = BaseMap.newMap()
+                        .put("finprodId", requestDto.getFinprodId())
+                        .put("portfolioId", portfolioId)
+                        .put("ccy", DictCodeList.币种_人民币_CNY.getValue())
+                        .put("vdate", requestDto.getCdate())
+                        .put("calId", "03")
+                        ;
+                Map<String, Object> mapRst = etrCommonService.getProAvailableCash(paramMap);
+                if (mapRst != null){ // 指令t日可用，指令t1日可用
+                    cashT = ArithmeticUtil.doAdd(cashT, BaseMap.newMap(mapRst).getBigDecimal("cashT"));
+                    cashT1 = ArithmeticUtil.doAdd(cashT1, BaseMap.newMap(mapRst).getBigDecimal("cashT1"));
+                }
+                PtlCashPositionFlowDto positionQueryDto = new PtlCashPositionFlowDto();
+                positionQueryDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
+                positionQueryDto.setPortfolioId(portfolioId);
+                positionQueryDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+                positionQueryDto.setCdate(iPlatformDate.getSysDate());
+                // 实际现金（账户现金）
+                realCash = ArithmeticUtil.doAdd(realCash, basePtlCashPositionInfoService.queryOtherCashPosition(positionQueryDto));
+            }
+        }
+        
         BaseMap bm = BaseMap.newMap()
                 .put("S_001", DictCodeListExt3.资产类型_指令汇总可用持仓.getValue())
                 .put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
@@ -714,14 +755,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         // 查询头寸信息
         Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(bm);
         
-        if (map != null){
-            return assemble(sellFlag , map);
-        }
-
-        /**
-         * 返回空值数据格式
-         */
-        return nullData(sellFlag);
+        return assemble(sellFlag, map, cashT, cashT1, realCash);
     }
 
     private void posiInfoCheckCondition(CfetsEtrIbBondPosiInfoRequestDto requestDto) {
@@ -736,6 +770,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
     private List<BaseMap> nullData(String flag) {
         List<BaseMap> resp = new ArrayList<>();
+
         /*T日可用现金*/
         resp.add(BaseMap.newMap()
                 .put("field", "t0kyxj")
@@ -827,11 +862,33 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return resp;
     }
 
-    private List<BaseMap> assemble(String flag, Map map) {
+    private List<BaseMap> assemble(String flag, Map map, BigDecimal cashT, BigDecimal cashT1, BigDecimal realCash) {
+        if (map == null) {
+            map = new HashMap();
+            map.put("T0KYXJ", cashT);
+            map.put("T1KYXJ", cashT1);
+            map.put("ZHXJ", realCash);
+            map.put("RRQMKDGHCC", "0");
+            map.put("ZCTRKYCC", "0");
+            map.put("ZCT1RKYCC", "0");
+            map.put("BFQTRKYCC", "0");
+            map.put("BFQT1RKYCC", "0");
+            map.put("RRQTRKYCC", "0");
+            map.put("RRQT1RKYCC", "0");
+        }
         // 初始化返回集合
         List<BaseMap> resp = new ArrayList<>();
         BaseMap bm = BaseMap.newMap(map);
-
+        if (cashT != null){
+            bm.put("T0KYXJ", ArithmeticUtil.doAdd(bm.getBigDecimal("T0KYXJ"), cashT));
+        }
+        if (cashT1 != null){
+            bm.put("T1KYXJ", ArithmeticUtil.doAdd(bm.getBigDecimal("T1KYXJ"), cashT1));
+        }
+        if (realCash != null){
+            bm.put("ZHXJ", ArithmeticUtil.doAdd(bm.getBigDecimal("ZHXJ"), realCash));
+        }
+        
         /*T日可用现金*/
         resp.add(BaseMap.newMap()
                 .put("field", "T0KYXJ")

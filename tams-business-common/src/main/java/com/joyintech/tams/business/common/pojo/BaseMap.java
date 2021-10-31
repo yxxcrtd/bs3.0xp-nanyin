@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class BaseMap extends HashMap<String, Object> {
 
@@ -130,5 +131,15 @@ public class BaseMap extends HashMap<String, Object> {
 	
 	public String getDateStr(String key) {
 		return DateUtil.format(getDate(key));
+	}
+
+	/**
+	 * 判断是否金额数字
+	 * @param str
+	 * @return
+	 */
+	public static boolean isNumeric(String str){
+		Pattern pattern = Pattern.compile("[0-9.]*");
+		return pattern.matcher(str).matches();
 	}
 }
