@@ -635,7 +635,7 @@ from
         t1.FINPROD_NAME secName,
         t1.FINPROD_ABBR secAbbr,
         sdl.ITEM_VALUE secType,
-        t1.ISSUER issuer,
+        MCI.CUSTOMER_NAME issuer,
         TO_CHAR(t1.VDATE,'yyyy-MM-dd') vdate,
         TO_CHAR(t1.MDATE,'yyyy-MM-dd') mdate,
         MBVI.LAST_PERIOD lastqx,
@@ -697,6 +697,8 @@ from
             SYS_DATADICT_LIST sdl ON sdl.ITEM_CODE = t2.TYPE_2
         LEFT JOIN
             SYS_DATADICT_LIST sd ON sd.DICT_CODE = 'INT_TYPE' AND sd.ITEM_CODE = t6.INT_TYPE
+        LEFT JOIN
+            MST_CUSTOMER_INFO MCI ON t1.ISSUER = MCI.CUSTOMER_ID
         LEFT JOIN (
             SELECT * FROM(
                 SELECT OCODE,
