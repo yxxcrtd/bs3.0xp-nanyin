@@ -37,12 +37,12 @@ public class PositionHttpRequest {
     public static void send(Object req) throws PositionException{
         // 
         String res = sendPrivate(req);
-        Map message = JsonUtils.json2Object(res, Map.class);
-        if (message != null || !StringUtil.equals("success", message.get("code"))){
-            if(StringUtil.equals("FL0007", message.get("code"))){
-                throw new PositionException(CODE_BUSI_REFUSE + "|" + (message==null?"":message.get("message")));
+        Map msgMap = JsonUtils.json2Object(res, Map.class);
+        if (msgMap != null || !StringUtil.equals("success", msgMap.get("code"))){
+            if(StringUtil.equals("FL0007", msgMap.get("code"))){
+                throw new PositionException(CODE_BUSI_REFUSE + "|" + (msgMap==null?"":msgMap.get("message")));
             }else {
-                revokeCheck(message, req);
+                revokeCheck(msgMap, req);
             }
         }else {
             throw new PositionException("头寸返回数据为空！");
@@ -66,11 +66,12 @@ public class PositionHttpRequest {
                 StringUtil.equals("DS0009", message.get("code")) ||
                 StringUtil.equals("DS0010", message.get("code")) ||
                 StringUtil.equals("CT0001", message.get("code"))){
-            throw new PositionException("头寸更新异常：" + message.toString());
+            throw new PositionException("头寸更新异常：" + message);
         } else{
             String jsonStr = JsonUtils.object2Json(req);
             BaseMap reqMap = JsonUtils.json2Object(jsonStr, BaseMap.class);
-            revoke(reqMap.getString("totalTradeId"), reqMap.getString("modelType"), "");
+            String errorMsg = message != null?message.get("message") + "":"头寸返回数据为空";
+            revoke(reqMap.getString("totalTradeId"), reqMap.getString("modelType"), errorMsg);
         }
     }
 
@@ -118,7 +119,11 @@ public class PositionHttpRequest {
                 .put("modelType", modelType)
                 .put("userId", LoginUserUtil.getUserName())
                 .put("interfaceType", "Bond001");
-        cancel(bm);
+        try {
+            cancel(bm);
+        } catch (Exception e) {
+            errorMsg += "\n" + e.getMessage();
+        }
         // 页面端根据异常信息返回前端
         throw new PositionException(errorMsg);
     }
