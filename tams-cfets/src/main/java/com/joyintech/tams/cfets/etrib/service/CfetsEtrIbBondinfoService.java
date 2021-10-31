@@ -59,7 +59,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * 银行间债券指令
@@ -406,6 +405,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         List<String> statusList=dto.getEntrustStatus();
         if(!StringUtil.isEmptyList(statusList) && statusList.contains("all")){
            dto.setEntrustStatus(null);
+           pageParam.put("entrustStatus",null);
         }
         String portfolioId = (String)pageParam.get("portfolioId");
         if(StringUtil.isNotEmpty(portfolioId)){
