@@ -550,6 +550,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     
                     // 5.浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
                     r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
+                }else {
+                    BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId());
+                    if (price != null) {
+                        r.setPrice(price);
+                    }
                 }
             });
         }
