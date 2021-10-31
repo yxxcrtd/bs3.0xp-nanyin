@@ -134,7 +134,7 @@
         <where>
             <if test="pageCode != null  and pageCode != ''">and PAGECODE = #{pageCode}</if>
             <if test="dtCode != null  and dtCode != ''">and DTCODE = #{dtCode}</if>
-            <if test="effeRange != null  and effeRange != ''">and EFFERANGE = #{effeRange}</if>
+            <if test="effeRange != null">and EFFERANGE = #{effeRange}</if>
             <if test="rangeId != null  and rangeId != ''">and RANGEID = #{rangeId}</if>
         </where>
         and STATUS = 1 order by SEQNO

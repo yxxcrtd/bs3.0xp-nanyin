@@ -32,6 +32,12 @@ public class CfgDataTableService {
     private static final int EFFERANGE_NO = 0;
 
 
+    /**
+     * 默认设置用户ID
+     */
+    private static final String USER_ID = "COMM";
+
+
     @Autowired
     private CfgDataTableMapper cfgDataTableMapper;
 
@@ -124,7 +130,7 @@ public class CfgDataTableService {
         //List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);
         CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, userId);
         if (null == flag) {
-            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_NO, null);
+            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_NO, USER_ID);
         } else {
             list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);;
         }
