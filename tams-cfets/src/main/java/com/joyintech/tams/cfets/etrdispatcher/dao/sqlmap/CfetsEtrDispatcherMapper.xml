@@ -397,4 +397,50 @@
         LEFT JOIN fin_product fp ON rit.asset_code = fp.finprod_id
         WHERE rit.trade_id = #{entrustId}
     </select>
+
+    <!-- 交易员与工作量列表查询 -->
+    <select id="getEtrTraderAndWorkloadList" resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTraderListRequest">
+        SELECT
+        DISTINCT
+        su.USER_NAME userName,
+        su.REAL_NAME realName,
+        a.totalWork,
+        NVL(b.finishedWork,0) finishedWork,
+        ROUND(a.totalWork-NVL(b.finishedWork,0)) unfinishedWork
+        FROM
+        SYS_USER su
+        INNER JOIN
+        SYS_USER_ROLE sur
+        ON 	su.USER_NAME = sur.USER_ID
+        INNER JOIN SYS_ROLE sr
+        ON sur.ROLE_ID = sr.ROLE_ID AND sr.ROLE_POS in (06)
+        LEFT JOIN
+        (
+        SELECT
+            TRADER,
+            COUNT(TRADER) AS totalWork
+        FROM
+            ETR_DISTRIBUTE
+        GROUP BY
+            ETR_DISTRIBUTE.TRADER) a
+        ON
+            su.USER_NAME = a.TRADER
+        LEFT JOIN
+        (
+        SELECT
+            TRADER,
+            COUNT(TRADER) AS finishedWork
+        FROM
+            ETR_DISTRIBUTE
+        LEFT JOIN
+            TRD_DEAL_TOTAL_ADD
+        ON
+            ETR_DISTRIBUTE.ENTRUST_ID = TRD_DEAL_TOTAL_ADD.ENTRUST_ID
+        WHERE
+            TRD_DEAL_TOTAL_ADD.ENTRUST_ID IS NOT NULL
+        GROUP BY
+            ETR_DISTRIBUTE.TRADER ) b
+        ON
+            b.TRADER=su.USER_NAME
+    </select>
 </mapper>

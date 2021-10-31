@@ -16,6 +16,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.util.ExcelUitl;
@@ -29,10 +30,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.joyintech.tams.business.common.pojo.Message;
@@ -237,5 +235,23 @@ public class CfetsEtrDispatcherController extends BaseController {
             ajaxResult.setMessage("分发权限配置成功");
             return new Message<AjaxResult>().success().setData(ajaxResult);
         }
+    }
+
+    @GetMapping(value="/getEtrTraderList")
+    @ResponseBody
+    @ApiOperation(value = "交易员列表模糊查询", notes = "交易员列表模糊查询")
+    public Message<List<CfetsEtrDispatcherTraderListRequest>> getEtrTraderList() {
+        Map<String,Object> param = RequestUtil.getParameters(getRequest());
+        List<CfetsEtrDispatcherTraderListRequest> list = cfetsEtrDispatcherService.getEtrTraderList(param);
+        return new Message<List<CfetsEtrDispatcherTraderListRequest>>().success().setData(list);
+    }
+
+    @GetMapping(value = "/getEtrTraderAndWorkloadList")
+    @ResponseBody
+    @ApiOperation(value = "交易员与工作量列表查询", notes = "交易员与工作量列表查询")
+    public Message<List<CfetsEtrDispatcherTraderListRequest>> getEtrTraderAndWorkloadList() {
+        Map<String,Object> param = RequestUtil.getParameters(getRequest());
+        List<CfetsEtrDispatcherTraderListRequest> list = cfetsEtrDispatcherService.getEtrTraderAndWorkloadList(param);
+        return new Message<List<CfetsEtrDispatcherTraderListRequest>>().success().setData(list);
     }
 }

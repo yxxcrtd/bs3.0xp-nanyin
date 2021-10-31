@@ -461,4 +461,31 @@ public class CfetsEtrDispatcherService extends BaseService{
                     () -> cfetsEtrDispatcherMapper.getEtrDispatcherRskInfo(pageParam));
         }
     }
+
+    /**
+     * 交易员列表模糊查询
+     * @param pageParam
+     * @return
+     */
+    public List<CfetsEtrDispatcherTraderListRequest> getEtrTraderList(Map<String, Object> pageParam) {
+        String dealers = (String)pageParam.get("search");
+        List<String> list=new ArrayList<>();
+//        list.add(DictCodeList.角色岗位_交易处长.getValue());
+        list.add(DictCodeList.角色岗位_交易员.getValue());
+//        list.add(DictCodeList.角色岗位_交易员_资本境内_岗.getValue());
+//        list.add(DictCodeList.角色岗位_交易员_资本境外_岗.getValue());
+        pageParam.put("rolePosList", list);
+        pageParam.put("dealers", dealers);
+        return cfetsEtrDispatcherMapper.getEtrTraderList(pageParam);
+    }
+
+    /**
+     * 交易员与工作量列表查询
+     * @param pageParam
+     * @return
+     */
+    public List<CfetsEtrDispatcherTraderListRequest> getEtrTraderAndWorkloadList(Map<String, Object> pageParam) {
+        CfetsEtrDispatcherTraderListRequest dto = new CfetsEtrDispatcherTraderListRequest();
+        return cfetsEtrDispatcherMapper.getEtrTraderAndWorkloadList(pageParam);
+    }
 }

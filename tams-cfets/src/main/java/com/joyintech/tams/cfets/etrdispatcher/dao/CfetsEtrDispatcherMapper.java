@@ -86,4 +86,22 @@ public interface CfetsEtrDispatcherMapper {
      * @since 1.0
      */
     List<CfetsEtrDispatcherRskInfoResponse> getEtrDispatcherRskInfo(Map<String, Object> pageParam);
+
+    /**
+     * 交易员列表模糊查询
+     * @param param
+     * @return List<TrdCommandDispatcher001Dto>
+     * @see
+     * @since 1.0
+     */
+    List<CfetsEtrDispatcherTraderListRequest> getEtrTraderList(Map<String, Object> param);
+
+    /**
+     * 交易员与工作量列表查询
+     * @param param
+     * @return List<CfetsEtrDispatcherTraderListRequest>
+     * @see
+     * @since 1.0
+     */
+    List<CfetsEtrDispatcherTraderListRequest> getEtrTraderAndWorkloadList(Map<String, Object> param);
 }
