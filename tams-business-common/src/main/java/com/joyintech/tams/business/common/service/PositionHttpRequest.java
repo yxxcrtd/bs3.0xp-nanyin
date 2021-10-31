@@ -49,7 +49,6 @@ public class PositionHttpRequest {
                 revokeCheck(msgMap, req);
             }
         }
-        throw new PositionException(CODE_BUSI_REFUSE + "|" + JsonUtils.object2Json(msgMap));
     }
 
     /**
