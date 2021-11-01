@@ -1151,6 +1151,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
         List<CfetsBussCombDistribtDto> bussCombDistribtList =cfetsDto.getBussCombDistribtList();
         List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtosList=new ArrayList<>();
+        //本方券券面总额
+        BigDecimal bfqtrkyccSAmt=BigDecimal.ZERO;
+        //融入券卖空待购回持仓
+        BigDecimal rrqmkdghSAmt=BigDecimal.ZERO;
         for(CfetsBussCombDistribtDto item:bussCombDistribtList){
             CfetsEtribBondInfo003Dto dd=new CfetsEtribBondInfo003Dto();
 
@@ -1161,8 +1165,56 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             dd.setEntrustOwnNum(item.getEntrustOwnNum());
             dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum());
             dd.setElementId(item.getElementId());
+            //根据卖空模式对本方券和融入券/卖空购回券面总额进行赋值
+            String shortSellingSupported=CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
+            if(StringUtil.equals(shortSellingSupported,"01")){
+                //只有券面总额
+                //查询系统融入券待购回持仓和本方券T日可用持仓
+                BaseMap bm = BaseMap.newMap()
+                        .put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
+                        .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
+                        .put("portfolioId", item.getPortfolioId())
+                        .put("cdate", cfetsDto.getEtrDate())
+                        .put("finprodId", cfetsDto.getFinprodId());
+                // 查询头寸信息
+                Map map = cfetsetrIbBondinfoMapper.queryPositionByEtrInfo(bm);
+                //本方券T日可用持仓
+                BigDecimal bfqtrkyccAmt=BigDecimal.ZERO;
+                if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("BFQTRKYCC"))){
+                    bfqtrkyccAmt=new BigDecimal(map.get("BFQTRKYCC").toString());
+                }
+                //融入券卖空待购回持仓
+                BigDecimal rrqmkdghAmt=BigDecimal.ZERO;
+                if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("RRQMKDGH"))){
+                    rrqmkdghAmt=new BigDecimal(map.get("RRQMKDGH").toString());
+                }
+                if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_买入.getValue())){
+                    BigDecimal integrateSecAmount=rrqmkdghAmt;
+                    dd.setEntrustIntegrateNum(integrateSecAmount);
+                    dd.setEntrustOwnNum(ArithmeticUtil.subtract(item.getEntrustNum(),integrateSecAmount));
+                }else if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_卖出.getValue())){
+                    //查询系统本方券可用持仓
+                    BigDecimal ownSecAmount=bfqtrkyccAmt;
+                    dd.setEntrustOwnNum(ownSecAmount);
+                    dd.setEntrustIntegrateNum(ArithmeticUtil.subtract(item.getEntrustNum(),ownSecAmount));
+                }else if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
+                    dd.setEntrustOwnNum(item.getEntrustNum());
+                    dd.setEntrustIntegrateNum(BigDecimal.ZERO);
+                }
+                bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
+                rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
+            }else if(StringUtil.equals(shortSellingSupported,"02")){
+                dd.setEntrustOwnNum(item.getEntrustOwnNum());
+                dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum());
+                bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
+                rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
+            }else if(StringUtil.equals(shortSellingSupported,"03")){
+
+            }
             etrInvestBondInfoDtosList.add(dd);
         }
+        dto.setEntrustOwnNum(bfqtrkyccSAmt);
+        dto.setEntrustIntegrateNum(rrqmkdghSAmt);
         CfetsEtribdoRiskcalResponse riskDto=cfetsDto.getCfetsEtribdoRiskcalReturn();
         List<RiskTrialRetDto> riskTrialRetDto=new ArrayList<>();
         if(StringUtil.isNotEmpty(riskDto) && !StringUtil.isEmptyList(riskDto.getRiskcalReturnList())){

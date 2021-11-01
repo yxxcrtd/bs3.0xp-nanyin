@@ -17,7 +17,7 @@ public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
     @ApiModelProperty(name="operateType",value="操作类型",example="submit/save", required = true)
     private String operateType;
 
-    @ApiModelProperty(name="calculateField",value="计算方式",example="submit/save", required = true)
+    @ApiModelProperty(name="calculateField",value="计算方式",example="price", required = true)
     private String calculateField;
 
     @ApiModelProperty(name="finprodId",value="资产代码Id",example="F01_ZC1", required = true)
@@ -67,6 +67,9 @@ public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
 
     @ApiModelProperty(name="cfetsEtribdoRiskcalReturn",value="风险试算dto",example="CfetsEtribdoRiskcalReturn")
     private CfetsEtribdoRiskcalResponse cfetsEtribdoRiskcalReturn;
+
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
 
     public String getOperateType() {
         return operateType;
@@ -215,5 +218,13 @@ public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
 
     public void setBussCombDistribtList(List<CfetsBussCombDistribtDto> bussCombDistribtList) {
         this.bussCombDistribtList = bussCombDistribtList;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
     }
 }

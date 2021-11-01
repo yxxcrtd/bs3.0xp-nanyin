@@ -299,8 +299,11 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                         }
                     }
                     posport.setSecAmount(dto.getEntrustNum());
-                    posport.setCashAmount(dto.getEntrustNum());
-                    posport.setInvAim(dto.getBusinessModel());
+                    posport.setCashAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
+                            new BigDecimal(100), 4));
+                    if(!StringUtil.isEmptyList(dto.getBussCombDistribtList())){
+                        posport.setInvAim(dto.getBussCombDistribtList().get(0).getBusinessModel());
+                    }
                     posport.setIntegrateSecAmount(dto.getEntrustIntegrateNum());
                     posport.setOwnSecAmount(dto.getEntrustOwnNum());
                     ptlList.add(posport);
@@ -312,7 +315,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 req.setTotalTradeId(entity.getTotalEtrustId());
                 req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
                 req.setModelType("ETR");
-                req.setBalanceCheck("N");
+               // req.setBalanceCheck("N");
+                String softSkipMode="N";
+                if(StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(),"Y")){
+                    softSkipMode="Y";
+                }
+                req.setBalanceCheck(softSkipMode);
                 req.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
                 req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
                 req.setSettleSpeed(entity.getSettleSpeed());

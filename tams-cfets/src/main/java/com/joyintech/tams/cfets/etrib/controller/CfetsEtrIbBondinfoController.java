@@ -147,7 +147,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("riskMathSwitch", CacheUtil.getSysParam("risk_math_switch"));
         initPageParams.put("pageRedisFlag", CacheUtil.getSysParam("pageRedisFlag"));
         initPageParams.put("isRiskmathSoftcontrol", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
-
+        //数据字典初始化数据
         initPageParams.put("FINPROD_TYPE_TG", this.getSelectDataFromDataDic(DictCode.金融产品类型_投管用, null));
         initPageParams.put("BUSINESS_MODEL", this.getSelectDataFromDataDic(DictCode.业务模式, null));
         initPageParams.put("PRICE_MODEL", this.getSelectDataFromDataDic(DictCode.价格模式, null));
@@ -180,10 +180,10 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         if (StringUtil.isNotEmpty(errorMessage) ) {
             return new Message<AjaxResult>().fail().setMessage(errorMessage);
         }
-        String  warnMessage = cfetsEtrIbBondinfoService.checkSaveWarn(cfetsDto, br);
+      /*  String  warnMessage = cfetsEtrIbBondinfoService.checkSaveWarn(cfetsDto, br);
         if (StringUtil.isNotEmpty(warnMessage) ) {
             return new Message<AjaxResult>().success().setMessage(warnMessage);
-        }
+        }*/
         CfetsEtribBondInfo003Dto allDto=cfetsEtrIbBondinfoService.packageEquity(cfetsDto);
         // ----------add by zhangrui1 20200715 预占功能 start----------
         List<CfetsEtribBondInfo003Dto> dataList = new ArrayList<>();

@@ -191,6 +191,9 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
      */
     private String calflag;
 
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
+
     public String getBusinessId() {
         return businessId;
     }
@@ -539,5 +542,13 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setBussCombDistribtList(List<CfetsBussCombDistribtDto> bussCombDistribtList) {
         this.bussCombDistribtList = bussCombDistribtList;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
     }
 }

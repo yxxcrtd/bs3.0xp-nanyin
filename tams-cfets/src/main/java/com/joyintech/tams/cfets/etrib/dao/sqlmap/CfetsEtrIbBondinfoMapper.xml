@@ -1057,5 +1057,18 @@ from
         fin_product T1
         where T1.finprod_id = #{entrustId}
     </select>
+    <select id="queryPositionByEtrInfo" parameterType="Map" resultType="map">
+        select
+        sum(
+        CASE WHEN b.S_HOLDINGTYPE=#{S_003} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+        ) AS RRQMKDGH, /*融入券卖空待购回持仓*/
+        sum(CASE WHEN a.HODING_TYPE=#{A_004} AND a.DATE_TYPE ='0' THEN AMOUNT ELSE 0 END) AS BFQTRKYCC
+        from ETR_SEC_POSITION_RULE a
+        LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_003})
+        where to_char(a.cdate,'yyyy-MM-dd') = to_char(#{cdate},'yyyy-MM-dd') and (b.S_HOLDINGTYPE IN (#{S_003}) or a.HODING_TYPE in (#{A_004}))
+        and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and  a.PORTFOLIO_ID  = #{portfolioId,jdbcType=VARCHAR}
+    </select>
+
 
 </mapper>

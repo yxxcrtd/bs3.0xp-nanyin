@@ -110,4 +110,6 @@ public interface CfetsEtrIbBondinfoMapper {
 
     FinProduct  findAssetInfo(String finprodId);
 
+    Map queryPositionByEtrInfo(Map RequestDto);
+
 }
