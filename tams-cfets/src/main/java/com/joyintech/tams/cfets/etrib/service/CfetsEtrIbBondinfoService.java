@@ -18,6 +18,7 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.entrust.etribbondinfo.dto.EtrFinProductDto;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
 import com.joyintech.tams.business.common.pojo.BaseMap;
@@ -1095,6 +1096,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }else {
                 dto.setXqdate("--");
             }
+
+//            若为含权债，显示为含权债的行权方式；若有多个行权方式，用分号“;”隔开    非含权债，显示为“无”
+//            map.put("sysDate", iPlatformDate.getSysDateStr());
+            map.put("EXEC_MODE_01", DictCodeList.行权方式_赎回.getValue());
+            map.put("EXEC_MODE_02", DictCodeList.行权方式_回售.getValue());
+            map.put("FINPROD_TYPE2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            String xqfangshi = "";
+            List<String> plan = cfetsetrIbBondinfoMapper.getEtrFinExerciseInfo(map);
+            if (plan != null && plan.size() > 0) {
+                xqfangshi = StringUtil.joinString(plan,";");
+            }else {
+                xqfangshi = "无";
+            }
+            dto.setXqFlg(xqfangshi);
         }
         return dto;
     }

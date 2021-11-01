@@ -90,6 +90,8 @@ public interface CfetsEtrIbBondinfoMapper {
     //    交易日取最小值
     Date getMinTradeDate(String secId);
 
+    List<String> getEtrFinExerciseInfo(Map<String, Object> map);
+
     /**
      * 根据指令编号查询数据
      * @param pageParam
