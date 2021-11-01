@@ -31,4 +31,27 @@
         WHERE
         	B.IS_HOLIDAY = 0 and B.CDATE > #{nowday, jdbcType=DATE} and B.TRADE_CALENDAR_ID = #{calendarId, jdbcType=DATE}
     </select>
+
+    <!-- 前置交易编号查询 -->
+    <select id="selectBTradeId" resultType="java.lang.String">
+        SELECT DISTINCT
+        TRADE_ID_TG
+        FROM
+        SETTLE_TRANS_DATA_TOTAL t1
+        INNER JOIN SETTLE_TRANS_TG_MAPPING t2
+        ON t1.TRADE_ID = t2.TRADE_ID
+        <where>
+            t1.APPLY_TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+            <if test="ps != null">
+                and t1.PS = #{ps,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryTotalAddByTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper.BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper.Base_Column_List" />
+        from TRD_DEAL_TOTAL_ADD
+        where TOTLE_TRADE_ID = (select TOTLE_TRADE_ID from trd_product_deal where trade_id = #{tradeId,jdbcType=VARCHAR})
+    </select>
 </mapper>
