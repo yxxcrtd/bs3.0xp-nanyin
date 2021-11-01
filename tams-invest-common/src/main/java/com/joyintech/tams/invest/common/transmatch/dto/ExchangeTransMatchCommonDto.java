@@ -1,7 +1,10 @@
 package com.joyintech.tams.invest.common.transmatch.dto;
 
 import com.joyintech.background.component.common.pack.common.base.BaseEntity;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
+import com.joyintech.tams.constant.DictCodeList;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,6 +31,16 @@ public class ExchangeTransMatchCommonDto extends SettleTransDataTotal {
      * 剩余成交数量
      */
     private BigDecimal remainNum;
+
+    /**
+     * 随交易费用
+     */
+    private BigDecimal totalFeeAmtPay;
+
+    /**
+     * 不随交易费用
+     */
+    private BigDecimal totalUnFeeAmtPay;
 
     /**
      * 关联的指令编号list
@@ -64,5 +77,32 @@ public class ExchangeTransMatchCommonDto extends SettleTransDataTotal {
 
     public void setRemainNum(BigDecimal remainNum) {
         this.remainNum = remainNum;
+    }
+
+    public BigDecimal getTotalFeeAmtPay() {
+        if(StringUtil.equals(getIsPayWithTrade(), DictCodeList.是否_是.getValue())) {
+            return ArithmeticUtil.doAdd(getStampFee(),getJsfAmt(),getGhfAmt(),getZgfAmt(),getSxfAmt(),getSettleFee(),getCommissionAmt());
+        }
+        else {
+            return ArithmeticUtil.doAdd(getStampFee(),getJsfAmt(),getGhfAmt(),getZgfAmt(),getSxfAmt(),getSettleFee());
+        }
+
+    }
+
+    public void setTotalFeeAmtPay(BigDecimal totalFeeAmtPay) {
+        this.totalFeeAmtPay = totalFeeAmtPay;
+    }
+
+    public BigDecimal getTotalUnFeeAmtPay() {
+        if(StringUtil.equals(getIsPayWithTrade(), DictCodeList.是否_是.getValue())) {
+            return getCommissionAmt();
+        }
+        else {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    public void setTotalUnFeeAmtPay(BigDecimal totalUnFeeAmtPay) {
+        this.totalUnFeeAmtPay = totalUnFeeAmtPay;
     }
 }

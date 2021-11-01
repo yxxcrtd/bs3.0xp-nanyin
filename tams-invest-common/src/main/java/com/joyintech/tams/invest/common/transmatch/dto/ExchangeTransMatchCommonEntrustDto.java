@@ -65,6 +65,11 @@ public class ExchangeTransMatchCommonEntrustDto extends EtrEntrust {
      */
     private String trader;
 
+    /**
+     * 是否是最后一笔匹配委托
+     */
+    private boolean lastEntrust;
+
     public BigDecimal getMarchQty() {
         return marchQty;
     }
@@ -143,5 +148,13 @@ public class ExchangeTransMatchCommonEntrustDto extends EtrEntrust {
 
     public void setTrader(String trader) {
         this.trader = trader;
+    }
+
+    public boolean getLastEntrust() {
+        return lastEntrust;
+    }
+
+    public void setLastEntrust(boolean lastEntrust) {
+        this.lastEntrust = lastEntrust;
     }
 }
