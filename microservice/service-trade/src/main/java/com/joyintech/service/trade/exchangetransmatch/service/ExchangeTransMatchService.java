@@ -21,7 +21,6 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
-import com.joyintech.tams.invest.common.transmatch.service.ExchangeTransMatchCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +36,6 @@ public class ExchangeTransMatchService extends BaseService {
     @Autowired
     private ExchangeTransMatchMapper exchangeTransMatchMapper;
 
-    @Autowired
-    private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
 
     /**
      * 查询成交数据
@@ -143,27 +140,6 @@ public class ExchangeTransMatchService extends BaseService {
      */
     public Page<SelectOptionDto> getDealId(Map<String, Object> map, int page, int length) {
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getDealId(map));
-    }
-
-    /**
-     * 成交匹配
-     * @param dealDto
-     * @return
-     */
-    public Integer transactionMacth(ExchangeTransMatch002Dto dealDto) {
-        ExchangeTransMatchCommonDto exchangeTransMatchCommonDto = new ExchangeTransMatchCommonDto();
-        BeanUtil.copyPropertiesIgnoreNull(exchangeTransMatchCommonDto,dealDto);
-        List<String> entrustIdList = new ArrayList<>();
-        if(!StringUtil.isEmptyList(dealDto.getEntrustList())) {
-            dealDto.getEntrustList().stream().forEach(item ->{
-                entrustIdList.add(item.getEntrustId());
-            });
-        }
-        exchangeTransMatchCommonDto.setEntrustIdList(entrustIdList);
-
-        //调用成交匹配共通方法
-        exchangeTransMatchCommonService.transactionMacth(exchangeTransMatchCommonDto);
-        return 0;
     }
 
 }

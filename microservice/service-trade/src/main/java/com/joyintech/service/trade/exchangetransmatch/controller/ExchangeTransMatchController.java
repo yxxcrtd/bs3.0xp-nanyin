@@ -111,14 +111,4 @@ public class ExchangeTransMatchController {
         return exchangeTransMatchService.getDealId(map,page, length);
     }
 
-
-    /**
-     * 成交匹配
-     * @return
-     */
-    @ResponseBody
-    @PostMapping("transactionMacth")
-    public Integer transactionMacth(@RequestBody ExchangeTransMatch002Dto exchangeTransMatch002Dto) {
-        return exchangeTransMatchService.transactionMacth(exchangeTransMatch002Dto);
-    }
 }

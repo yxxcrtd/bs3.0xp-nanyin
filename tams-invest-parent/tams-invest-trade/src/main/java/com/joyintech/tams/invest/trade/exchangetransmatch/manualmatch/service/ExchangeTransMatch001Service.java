@@ -5,18 +5,27 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch002Dto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch003Dto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch004Dto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
 @Transactional(rollbackFor=Exception.class)
 public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTransMatch002Dto>{
+
+    @Autowired
+    private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
 
 
     /**
@@ -137,8 +146,19 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
             return;
         }
 
-        restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
-                + "/ExchangeTransMatchController/transactionMacth", exchangeTransMatch002Dto, Integer.class);
+        ExchangeTransMatchCommonDto exchangeTransMatchCommonDto = new ExchangeTransMatchCommonDto();
+        BeanUtil.copyPropertiesIgnoreNull(exchangeTransMatchCommonDto,exchangeTransMatch002Dto);
+        List<String> entrustIdList = new ArrayList<>();
+        if(!StringUtil.isEmptyList(exchangeTransMatch002Dto.getEntrustList())) {
+            exchangeTransMatch002Dto.getEntrustList().stream().forEach(item ->{
+                entrustIdList.add(item.getEntrustId());
+            });
+        }
+        exchangeTransMatchCommonDto.setEntrustIdList(entrustIdList);
+
+        //调用成交匹配共通方法
+        exchangeTransMatchCommonService.transactionMacth(exchangeTransMatchCommonDto);
+
     }
 
 }
