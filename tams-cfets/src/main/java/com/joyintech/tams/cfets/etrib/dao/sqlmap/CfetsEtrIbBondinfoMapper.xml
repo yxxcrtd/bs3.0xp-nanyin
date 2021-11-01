@@ -653,7 +653,7 @@ from
         MBVI.NETPRICE priceTj,
         t2.TYPE_7,
         t1.ISSUE_TYPE,
-        t1.SPONSOR sponsorName,
+        MCI.CUSTOMER_NAME sponsorName,
         PJ.INNEROUTER inOrOut
         FROM FIN_PRODUCT t1
         LEFT JOIN
@@ -753,6 +753,22 @@ from
         WHERE FINPROD_ID = #{secId}
         )
     </select>
+
+    <select id="getEtrFinExerciseInfo" resultType="java.lang.String">
+        select
+        distinct t2.ITEM_VALUE ITEM_CODE
+        from
+        FIN_EXERCISE_PLAN t1
+        inner join sys_datadict_list t2
+        on t2.DICT_CODE = 'EXEC_MODE' and t1.EXERCISE_TYPE = t2.ITEM_CODE
+        where
+        t1.FINPROD_TYPE2 = #{FINPROD_TYPE2_F01} and
+         t1.EXERCISE_TYPE in (#{EXEC_MODE_01}, #{EXEC_MODE_02})
+        <if test="secId != null and secId != ''">
+            AND t1.FINPROD_ID = #{secId}
+        </if>
+    </select>
+
     <!-- 指令管理查询 -->
     <select id="findEtrinfo" parameterType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrInvestBondInfoReqDto"
             resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfoDto">

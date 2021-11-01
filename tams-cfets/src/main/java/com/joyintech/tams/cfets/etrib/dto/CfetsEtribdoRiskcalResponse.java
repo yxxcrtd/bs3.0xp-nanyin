@@ -242,7 +242,7 @@ public class CfetsEtribdoRiskcalResponse {
 				return "异常";
 			}
 		}
-		return null;
+		return kriStatusCn;
 	}
 
 	public void setKriStatusCn(String kriStatusCn) {

@@ -25,8 +25,8 @@ public class CfetsEtrIbfindEtrinfoRequest{
     @ApiModelProperty(name="ps",value="交易方向Code",example="T01")
     private String ps;
 
-    @ApiModelProperty(name="settleSpreed",value="清算速度Code",example="1")
-    private String settleSpreed;
+    @ApiModelProperty(name="settleSpeed",value="清算速度Code",example="1")
+    private String settleSpeed;
 
     @ApiModelProperty(name="repManager",value="投资经理",example="A1")
     private String repManager;
@@ -74,13 +74,7 @@ public class CfetsEtrIbfindEtrinfoRequest{
         this.ps = ps;
     }
 
-    public String getSettleSpreed() {
-        return settleSpreed;
-    }
 
-    public void setSettleSpreed(String settleSpreed) {
-        this.settleSpreed = settleSpreed;
-    }
 
     public String getRepManager() {
         return repManager;
@@ -131,5 +125,13 @@ public class CfetsEtrIbfindEtrinfoRequest{
 
     public void setEntrustEndDate(String entrustEndDate) {
         this.entrustEndDate = entrustEndDate;
+    }
+
+    public String getSettleSpeed() {
+        return settleSpeed;
+    }
+
+    public void setSettleSpeed(String settleSpeed) {
+        this.settleSpeed = settleSpeed;
     }
 }
