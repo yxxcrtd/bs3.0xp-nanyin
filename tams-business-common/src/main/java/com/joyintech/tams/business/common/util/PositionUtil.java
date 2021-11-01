@@ -54,9 +54,9 @@ public class PositionUtil {
                     return new Message().success().setData(bm);
                 }
             }else {
-                return new Message().fail().setData(message);
+                return new Message().fail().setMessage(message).setData(null);
             }
         }
-        return new Message().fail().setData("无返回信息，未知异常");
+        return new Message().fail().setMessage("无返回信息，未知异常").setData(null);
     }
 }

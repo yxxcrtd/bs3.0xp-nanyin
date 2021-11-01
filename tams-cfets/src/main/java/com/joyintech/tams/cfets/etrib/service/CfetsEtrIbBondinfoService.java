@@ -740,7 +740,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                         .put("portfolioId", portfolioId)
                         .put("ccy", DictCodeList.币种_人民币_CNY.getValue())
                         .put("vdate", requestDto.getCdate())
-                        .put("calId", "03")
+                        .put("calId", "03") // 银行间
                         ;
                 Map<String, Object> mapRst = etrCommonService.getProAvailableCash(paramMap);
                 if (mapRst != null){ // 指令t日可用，指令t1日可用
@@ -748,12 +748,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     cashT1 = ArithmeticUtil.doAdd(cashT1, BaseMap.newMap(mapRst).getBigDecimal("cashT1"));
                 }
                 PtlCashPositionFlowDto positionQueryDto = new PtlCashPositionFlowDto();
-                positionQueryDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
                 positionQueryDto.setPortfolioId(portfolioId);
                 positionQueryDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
                 positionQueryDto.setCdate(iPlatformDate.getSysDate());
                 // 实际现金（账户现金）
-                realCash = ArithmeticUtil.doAdd(realCash, basePtlCashPositionInfoService.queryOtherCashPosition(positionQueryDto));
+                realCash = ArithmeticUtil.doAdd(realCash, basePtlCashPositionInfoService.queryUsableCashPosition(positionQueryDto));
             }
         }
         
