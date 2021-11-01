@@ -43,22 +43,29 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletResponse;
 
 public class ExcelUitl {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ExcelUitl.class);
 
 	public static void doExport(CfetsExportRequestDto requestDto, HttpServletResponse response, String excelAndSheetName, DoQuery doQuery) {
 		List<BaseMap> header = requestDto.getHeader();
 		List dataList = requestDto.getData();
+		List mapList = new ArrayList();
 		if (dataList == null || dataList.size() == 0){
 			dataList = doQuery.query();
+			if (dataList != null && dataList.size() > 0){
+				dataList.forEach(e -> {
+					mapList.add(BeanUtil.object2Map(e));
+				});	
+			}
 		}
-		doExport(excelAndSheetName, header, dataList, response);
+		doExport(excelAndSheetName, header, mapList, response);
 	}
 
 	private static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
 		OutputStream os = null;
 		File excelFile = null;
 		String dir = UUID.randomUUID().toString();
+		File path = null;
 		try {
 			os = response.getOutputStream();
 			response.setContentType("text/vnd.ms-excel;charset=UTF-8");
@@ -75,7 +82,9 @@ public class ExcelUitl {
 			while (it.hasNext()){
 				BaseMap one = it.next();
 				String extendCfg = one.getString("extendCfg");
-				styleMap.put("{." + one.getString("colCode") + "}", BaseMap.newMap(JsonUtils.json2Object(extendCfg, Map.class)));
+				Map oneMap = JsonUtils.json2Object(extendCfg, Map.class);
+				oneMap.put("maxLen", one.getString("maxLen"));
+				styleMap.put("{." + one.getString("colCode") + "}", BaseMap.newMap(oneMap));
 			}
 
 			StringBuffer buf = new StringBuffer();
@@ -87,7 +96,7 @@ public class ExcelUitl {
 			/**
 			 * 需要使用当前目录，防止生产时目录找不到导出报错
 			 */
-			File path = new File(dir);
+			path = new File(dir);
 			if (!path.exists()){
 				path.mkdir();
 			}
@@ -104,13 +113,11 @@ public class ExcelUitl {
 			throw new RuntimeException(e.getMessage());
 		} finally {
 			try {os.close();} catch (IOException e) {e.printStackTrace();}
-			/**
-			 * 删除文件夹包含文件
-			 */
-			delFolder(dir);
+			excelFile.delete();
+			path.delete();
 		}
 	}
-	
+
 	public static void createExcelTemplate(File excelTemplateFile,String sheetName,List<ExcelColumn> columns, Map<String, BaseMap> styleMap) {
 		List<List<String>> list = new ArrayList<List<String>>(2);
 		List<String> head = new ArrayList<String>(columns.size());
@@ -139,15 +146,15 @@ public class ExcelUitl {
 					cellStyle.setFont(cellFont);
 					cell.setCellStyle(cellStyle);
 				}else{
-					Integer width = cfg.getInteger("width"); // 单元格宽度
+					Integer width = cfg.getInteger("maxLen"); // 单元格宽度
 					String dataType = cfg.getString("dataType"); // 设置数据类型
 					String cloAlign = cfg.getString("colAlign"); // 水平对齐方式
-					
+
 					if (width != null){
-						// 设置宽度
-						writeSheetHolder.getSheet().setColumnWidth(cell.getColumnIndex(), width);
+						// 设置宽度与分辨率比例计算,34倍正好
+						writeSheetHolder.getSheet().setColumnWidth(cell.getColumnIndex(), width*34);
 					}
-					
+
 					if (StringUtil.isNotEmpty(dataType) || StringUtil.isNotEmpty(cloAlign)){
 						// 自定义设置单元格格式
 						// 数据类型设置 rate、amount、date
@@ -158,7 +165,7 @@ public class ExcelUitl {
 				CellWriteHandler.super.afterCellDataConverted(writeSheetHolder, writeTableHolder, cellData, cell, head, relativeRowIndex, isHead);
 			}
 		}).doWrite(list);
-		
+
 	}
 
 	/**
@@ -175,7 +182,7 @@ public class ExcelUitl {
 			Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
 			CellStyle cellStyle = workbook.createCellStyle();
 			DataFormat df = workbook.createDataFormat();
-			
+
 			if (StringUtil.isNotEmpty(dataType)){
 				if (StringUtil.equals("rate", dataType)){
 					// 利率型
@@ -204,7 +211,7 @@ public class ExcelUitl {
 					cellStyle.setDataFormat(df.getFormat(cfg.getString("format")));
 				}
 			}
-			
+
 			// 设置对齐方式
 			if (StringUtil.isNotEmpty(cloAlign)) {
 				if (StringUtil.equals("left", cloAlign)){
@@ -218,7 +225,7 @@ public class ExcelUitl {
 					cellStyle.setAlignment(align);
 				}
 			}
-			
+
 			cell.setCellStyle(cellStyle);
 		}catch (Exception e){
 			logger.error(e.getMessage());
@@ -247,15 +254,15 @@ public class ExcelUitl {
 				}).doFill(data);
 		excelTemplateFile.delete();
 	}
-	
+
 	public static class DataAppendUtil<T> {
-		
+
 		private File excelTemplateFile;
 		private File excelFile;
 		private String sheetName;
 		private ExcelWriter excelWriter;
 		private WriteSheet writeSheet;
-		
+
 		public DataAppendUtil(File excelTemplateFile, File excelFile, String sheetName) {
 			this.excelTemplateFile = excelTemplateFile;
 			this.excelFile = excelFile;
@@ -263,11 +270,11 @@ public class ExcelUitl {
 			this.excelWriter = EasyExcel.write(excelFile).withTemplate(excelTemplateFile).build();
 			this.writeSheet = EasyExcel.writerSheet(sheetName).build();
 		}
-		
+
 		public void append(List<T> data) {
 			excelWriter.fill(data, writeSheet);
 		}
-		
+
 		public void close() {
 			if (null!=excelWriter) {
 				excelWriter.finish();
@@ -313,15 +320,15 @@ public class ExcelUitl {
 		public void setWriteSheet(WriteSheet writeSheet) {
 			this.writeSheet = writeSheet;
 		}
-		
+
 	}
-	
+
 	@ApiModel(value="Excel导出指定的列",description="Excel导出指定的列")
 	public static class ExcelColumn{
-		
+
 		@ApiModelProperty(required = false, name="code",value="列的字段名",example="portfolioName")
 		private String code;
-		
+
 		@ApiModelProperty(required = false, name="name",value="列的中文名",example="组合名称")
 		private String name;
 
@@ -351,48 +358,6 @@ public class ExcelUitl {
 		}
 	}
 
-	public static void delFolder(String folderPath) {
-		try {
-			delAllFile(folderPath); //删除完里面所有内容
-			String filePath = folderPath;
-			filePath = filePath.toString();
-			java.io.File myFilePath = new java.io.File(filePath);
-			myFilePath.delete(); //删除空文件夹
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	//删除指定文件夹下所有文件
-	public static boolean delAllFile(String path) {
-		boolean flag = false;
-		File file = new File(path);
-		if (!file.exists()) {
-			return flag;
-		}
-		if (!file.isDirectory()) {
-			return flag;
-		}
-		String[] tempList = file.list();
-		File temp = null;
-		for (int i = 0; i < tempList.length; i++) {
-			if (path.endsWith(File.separator)) {
-				temp = new File(path + tempList[i]);
-			} else {
-				temp = new File(path + File.separator + tempList[i]);
-			}
-			if (temp.isFile()) {
-				temp.delete();
-			}
-			if (temp.isDirectory()) {
-				delAllFile(path + "/" + tempList[i]);//先删除文件夹里面的文件
-				delFolder(path + "/" + tempList[i]);//再删除空文件夹
-				flag = true;
-			}
-		}
-		return flag;
-	}
-	
 	public static byte[] File2byte(File tradeFile){
 		byte[] buffer = null;
 		try
@@ -447,13 +412,13 @@ public class ExcelUitl {
 //		u.append(data);
 //		u.close();
 //	}
-	
+
 	public static class Data{
 		private long id;
 		private String name;
 		private BigDecimal number;
 		private Date createTime;
-		
+
 		public Data(long id, String name, BigDecimal number, Date createTime) {
 			this.id = id;
 			this.name = name;
