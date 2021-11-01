@@ -783,7 +783,11 @@
                     }
                     if(secId) {
                         if(parent.EtrExchangeTradeHq) {
-                            parent.EtrExchangeTradeHq.queryJJHQXX(secId, object.finprodName, object.finprodType2);
+                            if (useInterfQuoteFlag) {
+                                parent.EtrExchangeTradeHq.queryJJHQXXByWS(secId, object.finprodName, object.finprodType2);
+                            } else {
+                                parent.EtrExchangeTradeHq.queryJJHQXX(secId, object.finprodName, object.finprodType2);
+                            }
                         }
                         /*if(ps == PS_T68 || ps == PS_T69){
                         	linkToConverseRatio();
@@ -2805,8 +2809,10 @@
                         if(object.othCodeType && object.othCodeType == FINPROD_OTH_CODE_TYPE_06){
                             secId = object.marketId;
                         }
-                        console.log(etrExchange_HqArea_refresh_period + 's定时刷新竞价行情数据');
-                        parent.EtrExchangeTradeHq.queryJJHQXX(secId, finprodName,finprodType);
+                        if (!useInterfQuoteFlag) {
+                            console.log(etrExchange_HqArea_refresh_period + 's定时刷新竞价行情数据');
+                            parent.EtrExchangeTradeHq.queryJJHQXX(secId, finprodName, finprodType);
+                        }
                     }
                 }
                 //刷新可用现金

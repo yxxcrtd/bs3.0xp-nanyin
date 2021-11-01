@@ -590,7 +590,16 @@ trade:
     risk:
       alive: 5000
       capacity: 128
-
+quote:
+  flag: true #是否使用接口平台行情，true 是，false 否
+  ws:
+    host: ws://192.168.10.191:16667/dsp
+    url: /exchange
+  http:
+    host: http://192.168.10.191:1669/dsp
+    url: /datarouter/http/json/callTrigger
+    gpCode: GZYH
+    triggerCode: GZ_HQ_SH
 position:
   flag: false #是否控制账户持仓，true控制，false不控制
 

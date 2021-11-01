@@ -48,6 +48,11 @@
     });
 
     /**
+     * 证券信息
+     */
+    var secMap = new Map();
+
+    /**
      * 定义交易行情数据表格
      */
     var afterHoursTable = $("#afterHoursTable").joyintable({
@@ -124,6 +129,116 @@
             ,{field:'yield', title: 'EtrExchangeTrade001.yield',type:'number', width : 100,sortable:false}//收益率
         ]
     });
+
+    var websocket = null;
+    /**
+     * 打开Websocket连接
+     */
+    //判断当前浏览器是否支持WebSocket, 主要此处要更换为自己的地址
+    if ('WebSocket' in window) {
+        if (useInterfQuoteFlag) {
+            websocket = new WebSocket(wsUri);
+        }
+    } else {
+        alert('Not support websocket')
+    }
+
+    //连接发生错误的回调方法
+    websocket.onerror = function() {
+        setMessageInnerHTML("error");
+    }
+
+    //连接成功建立的回调方法
+    websocket.onopen = function(event) {
+        //setMessageInnerHTML("open");
+    }
+
+    //接收到消息的回调方法
+    websocket.onmessage = function(event) {
+        // setMessageInnerHTML(event.data);
+        debugger;
+        console.log(event.data);
+        $.ajax({
+            type: "POST",
+            url: basePath + "joyin/quote/tick/convert",
+            data: event.data,
+            async: false,
+            dataType:"json",
+            contentType: "application/json",
+            success: function(info) {
+                var result = info.data;
+                if (result != null && result != '') {
+                    var xtradeTickData = new Object();
+                    xtradeTickData.stockCode = result.instrumentID;
+                    var secInfo = secMap.get(result.instrumentID);
+                    xtradeTickData.stockName = secInfo.split("=")[0];
+                    xtradeTickData.finprodType = secInfo.split("=")[1];
+                    xtradeTickData.open = result.openPrice;
+                    xtradeTickData.highest = result.highPrice;
+                    xtradeTickData.lowest = result.lowPrice;
+                    xtradeTickData.latest = result.lastPrice;
+                    xtradeTickData.preclose = result.preClosePrice;
+                    xtradeTickData.tradeVolume = result.volume || 0;
+                    xtradeTickData.tradeAmount = result.tradeBalance || 0;
+                    xtradeTickData.ceiling = result.upperLimitPrice;
+                    xtradeTickData.floor = result.lowerLimitPrice;
+                    xtradeTickData.change = xtradeTickData.latest - xtradeTickData.preclose;
+                    xtradeTickData.changePercent = xtradeTickData.change / (xtradeTickData.preclose > 0 ? xtradeTickData.preclose : 1);
+
+                    /**
+                     * 卖出数量，顺序，1档 ~ 10档
+                     */
+                    xtradeTickData.sellVolumes = result.askVolume instanceof Array ? result.askVolume : [];
+
+                    /**
+                     * 卖出报价，顺序，1档 ~ 10档
+                     */
+                    xtradeTickData.sells = result.askPrice instanceof Array ? result.askPrice : [];
+
+                    /**
+                     * 买入数量，顺序，10档 ~ 1档
+                     */
+                    xtradeTickData.buyVolumes = result.bidVolume instanceof Array ? result.bidVolume: [];
+
+                    /**
+                     * 买入报价，顺序，10档 ~ 1档
+                     */
+                    xtradeTickData.buys = result.bidPrice instanceof Array ? result.bidPrice : [];
+                    updateLevel2(xtradeTickData);
+                }
+                else {
+                    updateLevel2();
+                }
+            }
+        });
+    }
+
+    //连接关闭的回调方法
+    websocket.onclose = function() {
+        // setMessageInnerHTML("close");
+    }
+
+    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    window.onbeforeunload = function() {
+        websocket.close();
+    }
+
+    //关闭连接
+    function closeWS() {
+        websocket.close();
+    }
+
+    //发送消息
+    function send(message) {
+        websocket.send(message);
+    }
+
+    /**根据市场代码，查询行情信息，展示出来*/
+    var queryJJHQXXByWS = function(secId,secName,finprodType) {
+        /** 使用WebSocket方式查询行情信息*/
+        websocket.send(secId.split(".")[0]);
+        secMap.set(secId, secName + "=" + finprodType);
+    }
 
 
     /**根据市场代码，查询行情信息，展示出来*/
@@ -547,7 +662,8 @@
         showFiveLevel:showFiveLevel,
         hideFiveLevel:hideFiveLevel,
         setAccAvailableCash:setAccAvailableCash,
-        setCashOrNum:setCashOrNum
+        setCashOrNum:setCashOrNum,
+        queryJJHQXXByWS:queryJJHQXXByWS
     }
 
     /**

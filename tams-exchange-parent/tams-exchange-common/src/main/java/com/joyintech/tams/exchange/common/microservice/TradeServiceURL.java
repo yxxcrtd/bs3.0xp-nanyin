@@ -61,6 +61,7 @@ public class TradeServiceURL {
     public static String flushInstructionAll = "/instruction/flush";
 
     public static String queryQuoteTick = "/quote/tick";
+    public static String queryQuoteTickConvert = "/quote/tick/convert";
 
     public static String queryInstrument = "/common/instrument";
 
