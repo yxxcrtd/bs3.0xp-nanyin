@@ -467,6 +467,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                         if(StringUtil.equals(map.get("kriStatus"),"0") && !StringUtil.equals(map.get("kriTrend"),"向好")){
                             forbidFlag=true;
                         }
+                        map.put("kriStatusCn",getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
                         resultlist.add(BeanUtil.mapToObject(map, CfetsEtribdoRiskcalResponse.class));
                     }
                     result.setRiskcalReturnList(resultlist);
@@ -523,6 +524,23 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             logger.error("查询资产代码链接异常", e);
             return new Message<String>().fail().setMessage("查询异常");
         }
+    }
+
+    private  String getKriStatusCnByKriStatus(String kriStatus){
+        if(StringUtil.isNotEmpty(kriStatus)){
+            if(StringUtil.equals(kriStatus,"0")){
+                return "正常";
+            }else if(StringUtil.equals(kriStatus,"1")){
+                return "预警";
+            }else  if(StringUtil.equals(kriStatus,"2")){
+                return "审批";
+            }else  if(StringUtil.equals(kriStatus,"3")){
+                return "违规";
+            }else  if(StringUtil.equals(kriStatus,"4")){
+                return "异常";
+            }
+        }
+        return null;
     }
 
 }
