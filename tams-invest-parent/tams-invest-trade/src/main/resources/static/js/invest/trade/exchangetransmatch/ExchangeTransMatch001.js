@@ -93,6 +93,35 @@
                 return getDealPageParams();
             }
         },
+        dblclick:function(table, data) {
+            data.operateType = "dblclick";
+            data.pageModel=PAGE_MODEL_REFERENCE;
+            //交易所（上交和深交）的指令
+            var entrustType = data.entrustType;
+            if(entrustType == ENTRUST_BUSS_TYPE_22 || entrustType == ENTRUST_BUSS_TYPE_21
+                || entrustType == ENTRUST_BUSS_TYPE_20 || entrustType == ENTRUST_BUSS_TYPE_19
+                || entrustType == ENTRUST_BUSS_TYPE_18 || entrustType == ENTRUST_BUSS_TYPE_17) {
+                pagePath = "invest/entrust/etragrereptrade/EtrAgreRepTrade001/init";
+                Joyin.dialog(JoyinUtil.getLabel('EtrAgreRepTrade001.detail'), basePath + pagePath,
+                    "95%", "90%", {
+                        pageModel: PAGE_MODEL_REFERENCE,
+                        entrustId: data.entrustId,
+                    });//交易所协议回购指令详情
+                return;
+            }
+            //债券申购进可转债页面
+            if(data.assetType == F01 && data.ps == PS_T04 ){
+                label='EtrConBond002.refrence';
+                pagePath = '/invest/entrust/etrconbond/EtrConBond002/init'
+            }else{
+                label='EtrExchangeTrade001.detail';
+                pagePath = "/invest/entrust/etrexchangetrade/EtrExchangeTrade001/init";
+            }
+            Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+                "95%", "90%",data,
+                function(){table.reload();});//交易所场内指令详情
+            return;
+        },
         cols:[
             {field:'entrustTypeStr', sortField:'entrustType',width:200, title: 'ExchangeTransMatch001.entrustType'},
             {field:'portfolioId', sortField:'portfolioId',width:200, title: 'ExchangeTransMatch001.portfolioId'},

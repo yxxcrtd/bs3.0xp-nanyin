@@ -14,6 +14,7 @@ import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.dao.ExchangeTransMatchCommonMapper;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.Fund.ExchangeTransMatchFund1Service;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,9 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
     @Autowired
     private ExchangeTransMatchBond5Service exchangeTransMatchBond5Service;
+
+    @Autowired
+    private ExchangeTransMatchFund1Service exchangeTransMatchFund1Service;
 
     /**
      * 批量处理成交匹配数据
@@ -351,7 +355,8 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
         }
         else if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
-
+            BaseTradeProductDealDto baseTradeProductDealDto = exchangeTransMatchFund1Service.genFinProductTradeDto(dto,commonEntrustDto);
+            baseTradeProductDealDtos.add(baseTradeProductDealDto);
         }
         else if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
 
