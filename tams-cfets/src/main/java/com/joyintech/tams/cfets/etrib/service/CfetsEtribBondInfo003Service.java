@@ -463,6 +463,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
      * @since 1.0
      */
     public void calcAmt(CfetsEtribBondInfo003Dto dto) {
+        if(dto == null || StringUtil.isEmpty(dto.getFinprodId())){
+            return;
+        }
         if (StringUtil.equals(dto.getSettleSpeed(),
                 DictCodeList.清算速度_T_0.getValue())) {
             dto.setSettleSpeed(String.valueOf(0));

@@ -176,11 +176,15 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @PostMapping("save")
     public Message<AjaxResult> save(@RequestBody CfetsEtribSaveRequest cfetsDto, BindingResult br)
             throws Exception {
-       CfetsEtribBondInfo003Dto allDto=cfetsEtrIbBondinfoService.packageEquity(cfetsDto);
-       AjaxResult ajaxResult = cfetsEtrIbBondinfoService.checkSave(cfetsDto, br);
-        if (StringUtil.isNotEmpty(ajaxResult) && !StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-            return new Message<AjaxResult>().fail().setData(ajaxResult);
+       String  errorMessage = cfetsEtrIbBondinfoService.checkSaveError(cfetsDto, br);
+        if (StringUtil.isNotEmpty(errorMessage) ) {
+            return new Message<AjaxResult>().fail().setMessage(errorMessage);
         }
+        String  warnMessage = cfetsEtrIbBondinfoService.checkSaveWarn(cfetsDto, br);
+        if (StringUtil.isNotEmpty(warnMessage) ) {
+            return new Message<AjaxResult>().success().setMessage(warnMessage);
+        }
+        CfetsEtribBondInfo003Dto allDto=cfetsEtrIbBondinfoService.packageEquity(cfetsDto);
         // ----------add by zhangrui1 20200715 预占功能 start----------
         List<CfetsEtribBondInfo003Dto> dataList = new ArrayList<>();
         // ----------add by zhangrui1 20200715 预占功能 end----------
@@ -416,32 +420,14 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @PostMapping("doRiskcal")
     public Message<AjaxResult> doRiskcal(@RequestBody CfetsEtrIbdoRiskcalRequest dto) throws Exception {
         try {
-            CfetsEtribdoRiskcalResponse result=new CfetsEtribdoRiskcalResponse();
-            Map<String, Object> dataMap=new HashMap<>();
-            //风险试算封装dto
-            CfetsEtrIbdoRiskcalDto d=new CfetsEtrIbdoRiskcalDto();
-            BeanUtil.copyPropertiesIgnoreNull(d,dto);
-            List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
-            for(CfetsBussCombDistribtBaseDto pt:dto.getBussCombDistribtList()){
-                pt.setInvAim(pt.getBusinessModel());
-                bussTrdTransfenpeiDto.add(BeanUtil.object2Map(pt));
-            }
-            d.setBussTrdTransfenpeiDto(bussTrdTransfenpeiDto);
-            d.setBusiType("02");
-            d.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
-            d.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-            d.setVdate(dto.getEtrDate());
-            d.setMdate(dto.getEtrDate());;
-            d.setCcy("CNY");
-            d.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
-
-            dataMap=BeanUtil.object2Map(d);
             //风险试算check
-            AjaxResult ajaxResult = cfetsEtrIbBondinfoService.doRiskcalCheckMethod(dto);
-            if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-                return new Message<AjaxResult>().fail().setData(ajaxResult);
+            String  message = cfetsEtrIbBondinfoService.doRiskcalCheckMethod(dto);
+            if (StringUtil.isNotEmpty(message)) {
+                return new Message<AjaxResult>().fail().setMessage(message);
             }
-
+            CfetsEtribdoRiskcalResponse result=new CfetsEtribdoRiskcalResponse();
+            //风险试算组装dto
+            Map<String, Object> dataMap=cfetsEtrIbBondinfoService.doRiskcalPackageEquity(dto);
             List<String> resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F01");
             result.setRiskMathFlag("02");
             Boolean forbidFlag=false;
@@ -467,7 +453,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                         if(StringUtil.equals(map.get("kriStatus"),"0") && !StringUtil.equals(map.get("kriTrend"),"向好")){
                             forbidFlag=true;
                         }
-                        map.put("kriStatusCn",getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
+                        map.put("kriStatusCn",cfetsEtrIbBondinfoService.getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
                         resultlist.add(BeanUtil.mapToObject(map, CfetsEtribdoRiskcalResponse.class));
                     }
                     result.setRiskcalReturnList(resultlist);
@@ -524,23 +510,6 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             logger.error("查询资产代码链接异常", e);
             return new Message<String>().fail().setMessage("查询异常");
         }
-    }
-
-    private  String getKriStatusCnByKriStatus(String kriStatus){
-        if(StringUtil.isNotEmpty(kriStatus)){
-            if(StringUtil.equals(kriStatus,"0")){
-                return "正常";
-            }else if(StringUtil.equals(kriStatus,"1")){
-                return "预警";
-            }else  if(StringUtil.equals(kriStatus,"2")){
-                return "审批";
-            }else  if(StringUtil.equals(kriStatus,"3")){
-                return "违规";
-            }else  if(StringUtil.equals(kriStatus,"4")){
-                return "异常";
-            }
-        }
-        return null;
     }
 
 }
