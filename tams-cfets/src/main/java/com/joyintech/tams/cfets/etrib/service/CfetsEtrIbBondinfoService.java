@@ -1120,7 +1120,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             dto.setEntrustDate(entrustDate);
         }
         dto.setInvManagerId(SecurityUtil.getLoginUser().getUserName());
-        dto.setEntrustNum(ArithmeticUtil.multiply(cfetsDto.getTradeAmt(),new BigDecimal("10000")));
+        dto.setEntrustNum(cfetsDto.getTradeAmt());
         dto.setVdate(cfetsDto.getEtrDate());
         dto.setMdate(cfetsDto.getEtrDate());
         dto.setSettleSpeed(cfetsDto.getSettleSpeed());

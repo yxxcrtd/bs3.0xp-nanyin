@@ -512,9 +512,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         final int SCALE = 12;
 
         //到期收益率
-        dto.setMatureYield(ArithmeticUtil.divide(dto.getMatureYield(), 100, 14));
+        //dto.setMatureYield(ArithmeticUtil.divide(dto.getMatureYield(), 100, 14));
         //行权收益率
-        dto.setExerYield(ArithmeticUtil.divide(dto.getExerYield(), 100, 14));
+        //dto.setExerYield(ArithmeticUtil.divide(dto.getExerYield(), 100, 14));
 
         YieldByPriceCalculator yieldByPriceCalculator = new YieldByPriceCalculator();
         PriceByYieldCalculator priceByYieldCalculator = new PriceByYieldCalculator();
