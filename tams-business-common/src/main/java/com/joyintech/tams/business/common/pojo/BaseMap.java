@@ -1,6 +1,7 @@
 package com.joyintech.tams.business.common.pojo;
 
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -139,6 +140,9 @@ public class BaseMap extends HashMap<String, Object> {
 	 * @return
 	 */
 	public static boolean isNumeric(String str){
+		if (StringUtil.isEmpty(str)){
+			return false;
+		}
 		Pattern pattern = Pattern.compile("[0-9.]*");
 		return pattern.matcher(str).matches();
 	}
