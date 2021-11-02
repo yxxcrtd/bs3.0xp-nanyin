@@ -2,7 +2,9 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -17,6 +19,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
+import com.joyintech.tams.invest.trade.cstp.dto.CstpSelectDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,7 @@ import java.util.Map;
 
 @Service
 @Transactional(rollbackFor=Exception.class)
-public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTransMatch002Dto>{
+public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTransMatch004Dto>{
 
     @Autowired
     private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
@@ -147,8 +150,29 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
      */
     public Page<ExchangeTransMatch004Dto> findTransMatchInfoPage(Map<String,Object> map){
 
-        return new Page<ExchangeTransMatch004Dto>();
+        Page<ExchangeTransMatch004Dto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
+                + "/ExchangeTransMatchController/findTransMatchInfoPage", map, ExchangeTransMatch004Dto.class);
+
+        return page;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<ExchangeTransMatch004Dto> selectPageData(Map<String, Object> map) {
+        return findTransMatchInfoPage(map);
+    }
+
+    /**
+     * 导出
+     */
+    @Override
+    protected void buildExportParam(ExportParam exportParam) {
+        exportParam.config(
+                "/com/joyintech/tams/invest/trade/exchangetransmatch/manualmatch/conf/export_conf.xml").dataSource(DataSourceType.MASERT);
+    }
+
 
     /**
      * 成交匹配

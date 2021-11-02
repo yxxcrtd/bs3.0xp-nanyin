@@ -195,10 +195,24 @@
             });
     });
 
+
+    /**
+     * 导出事件
+     */
+
+    var exportExcelQueDing = function() {
+        var paramObj = getPageParams();
+        Joyin.exportExcel('exportExcelQueDing', paramObj);
+    };
+
     /**
      * 画面加载完成
      */
     $(function() {
+
+        $('#ExchangeTransMatch001_btn_export').click(function() {
+            exportExcelQueDing();
+        });
 
         //成交数据查询
         $('#ExchangeTransMatch001_deal_btn_search').click(function () {

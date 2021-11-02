@@ -1,4 +1,5 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.controller;
+import com.joyintech.tams.invest.trade.cstptrdmatchinfo.service.CstpTrdMatchInfoService;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -15,6 +16,7 @@ import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.service.Ex
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +39,9 @@ public class ExchangeTransMatch001Controller  extends BaseController {
      */
     @Autowired
     private ExchangeTransMatch001Service exchangeTransMatch001Service;
+
+    @Autowired
+    private CstpTrdMatchInfoService cstpTrdMatchInfoService;
     /**
      * 初始化方法
      * {@inheritDoc}
@@ -65,6 +70,22 @@ public class ExchangeTransMatch001Controller  extends BaseController {
         model.addAttribute("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
         return super.init(model);
     }
+
+    /**
+     * 画面导出功能实现
+     *
+     * @return ResponseEntity 确认的实体类
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("exportExcelQueDing")
+    public ResponseEntity<byte[]> exportExcelQueDing()
+    {
+        return exchangeTransMatch001Service.export(this.getPageId(),
+                RequestUtil.getParameters(getRequest()));
+    }
+
 
     /**
      * 获取资产代码下拉框
