@@ -49,6 +49,33 @@
 									</div>
 								</div>
 								<div class="layui-form-item">
+									<div class="form-inline-wrap" style="width: 35%">
+										<label class="layui-form-label form-label-wrap"
+											   data-th-text="#{RskSupervisionIndicator002.indNum}"
+											   style="width: 37% !important">指标编号</label>
+										<div class="layui-input-inline input-inline" style="width: 55% !important">
+											<input type="text" th:id="|${pageId}_indNum|"
+												   name="rskSupervisionIndicatorDto.indNum"
+												   class="layui-input form-input" placeholder="请输入内容"
+												   data-th-placeholder="#{SysCommon.placeholder}" maxlength="9"
+												   data-th-value='${entity?.rskSupervisionIndicatorDto?.indNum}' required>
+										</div>
+									</div>
+									<div class="form-inline-wrap" style="width: 65%">
+										<label class="layui-form-label form-label-wrap"
+											   data-th-text="#{RskSupervisionIndicator002.supDoc}"
+											   style="width: 14% !important">监管文件说明</label>
+										<div class="layui-input-inline input-inline"
+											 style="width: 75% !important">
+											<input type="text" th:id="|${pageId}_supDoc|"
+												   name="rskSupervisionIndicatorDto.supDoc"
+												   class="layui-input form-input" placeholder="请输入内容"
+												   data-th-placeholder="#{SysCommon.placeholder}"
+												   data-th-value='${entity?.rskSupervisionIndicatorDto?.supDoc}' maxlength="200">
+										</div>
+									</div>
+								</div>
+								<div class="layui-form-item">
 									<div class="form-inline-wrap" style="width: 100%">
 										<label class="layui-form-label form-label-wrap"
 											data-th-text="#{RskSupervisionIndicator002.memo}" 
