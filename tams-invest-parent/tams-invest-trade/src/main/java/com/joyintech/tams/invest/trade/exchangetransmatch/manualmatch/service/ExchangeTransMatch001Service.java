@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -163,11 +164,18 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
 
     public String genTransactionRecord(ExchangeTransMatch002Dto dto) {
         String dtoStr = "";
+        Map<String,Object> map=JsonUtils.object2Map(dto);
         if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
             dtoStr = JsonUtils.object2Json(null);
         }
         else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
         || StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+            //期限品种
+            map.put("termTypeReback",dto.getTermType());
+            //回购利率
+            map.put("rebackPrice",dto.getIntAmt());
+            //回购类型
+            map.put("repoType","");
             dtoStr = JsonUtils.object2Json(null);
         }
         else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
