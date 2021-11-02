@@ -760,7 +760,9 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 	    	
 	    	List<PbcInitProdRaisingSubVo> listDetailSheet2 = new ArrayList<PbcInitProdRaisingSubVo>();
 	    	//根据产品币种，判断使用人民币/外币模板
-	    	if(StringUtil.isNotEmpty(dto.getValue().getRaiseCcy())&&dto.getValue().getRaiseCcy().equals("CNY")){
+            // add by zcw  TISHKS-244 新人行代码关联不上老人行表。改为老人行代码
+            param.put("pbcProdId", dto.getValue().getPbcProdId());
+            if(StringUtil.isNotEmpty(dto.getValue().getRaiseCcy())&&dto.getValue().getRaiseCcy().equals("CNY")){
 	    		template="PbcReport_PrdBaseinfo_CNY";
 	    		listDetailSheet2 = pbcInitProdRaisingSubMapper.searchListDetailCNY(param);
 	    	}else{

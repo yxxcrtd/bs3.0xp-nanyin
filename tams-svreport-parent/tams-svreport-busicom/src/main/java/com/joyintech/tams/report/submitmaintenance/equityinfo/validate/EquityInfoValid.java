@@ -556,6 +556,12 @@ public class EquityInfoValid {
             map.put("HOLDER_TYPE", equityInfo001Dto.getHolderType());
             sb.append("01");
         }
+        // 投资者分类
+        else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getHolderClassify(),
+                equityInfoRegist001Dto.getHolderClassify())) {
+            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
+            sb.append("01");
+        }
         // 个人证件类别
         else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getPersonalIdentifyType(),
                 equityInfoRegist001Dto.getPersonalIdentifyType())) {
@@ -691,6 +697,12 @@ public class EquityInfoValid {
                 && !equityInfo001Dto.getHolderType().equals(
                 equityInfoRegist001Dto.getHolderType())) {
             map.put("HOLDER_TYPE", equityInfo001Dto.getHolderType());
+        }
+        // 投资者分类
+        else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderClassify())
+                && !equityInfo001Dto.getHolderClassify().equals(
+                equityInfoRegist001Dto.getHolderClassify())) {
+            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
         }
         // 个人证件类别
         else if (StringUtil.isNotEmpty(equityInfo001Dto.getPersonalIdentifyType())
@@ -1083,6 +1095,12 @@ public class EquityInfoValid {
             map.put("HOLDER_EMAIL", list.get(20));
             sb.append("01");
         }
+        //投资者分类
+        else if (!CommonUtil.equalsIgnoreNull(list.get(25),
+                equityInfoRegist001Dto.getHolderClassify())) {
+            map.put("HOLDER_CLASSIFY", list.get(25));
+            sb.append("01");
+        }
         if (StringUtil.isNotEmpty(sb)) {
             map.put("type02", sb.toString());
         }
@@ -1183,6 +1201,11 @@ public class EquityInfoValid {
         else if (!CommonUtil.equalsIgnoreNull(list.get(21), equityInfoRegist001Dto.getRemark())) {
             map.put("REMARK", list.get(21));
         }
+        //投资者分类
+        else if (!CommonUtil.equalsIgnoreNull(list.get(25),
+                equityInfoRegist001Dto.getHolderClassify())) {
+            map.put("HOLDER_CLASSIFY", list.get(25));
+        }
         else {
             // 风险偏好
             if (!CommonUtil.equalsIgnoreNull(list.get(17),
@@ -1208,7 +1231,6 @@ public class EquityInfoValid {
                 map.put("HOLDER_EMAIL", list.get(20));
                 type = "04";
             }
-
 //            if (!StringUtil.equals(type, "04")) {
 //                // 备注
 //                if (!CommonUtil.equalsIgnoreNull(list.get(21), equityInfoRegist001Dto.getRemark())) {
@@ -1544,6 +1566,36 @@ public class EquityInfoValid {
             }
             // add by etliu 20180912 end
         }
+        return message;
+    }
+
+    /**
+     * 投资者分类验证
+     *
+     * @param message 验证信息
+     * @param holderClassify 投资者类别
+     * @param type 数据类型
+     * @return message 验证信息
+     * @see
+     * @since 1.0
+     */
+    private List<String> checkHolderClassify(List<String> message, String holderClassify, String type,
+                                         Map<String,TransformRule001Dto> spzMap,
+                                         Map<String,List<ChbTransformRuleObjDto>> objFiledsMap,
+                                         EquityInfo001Dto equityInfo001Dto) {
+        List<ChbTransformRuleObjDto> objFileds=null;
+        if(objFiledsMap!=null){
+            objFileds=objFiledsMap.get("holderClassify");
+        }
+            if (EquityInfoCheckUtil.isEmpty(holderClassify)) {
+                message.add(this.getMessage("CHB_EQUITYINFO_E_005", "新增或重要信息变更", "投资者分类"));
+            }
+            else if (EquityInfoCheckUtil.isDictCodeExist(DictCode.投资者分类, holderClassify)) {
+                message.add(this.getMessage("CHB_EQUITYINFO_E_004", "投资者分类"));
+            }
+            else if (EquityInfoCheckUtil.whiteListCheck( holderClassify,objFileds,spzMap,equityInfo001Dto)) {
+                message.add(this.getMessage("CHB_EQUITYINFO_E_035", "投资者分类"));
+            }
         return message;
     }
 
@@ -2638,6 +2690,8 @@ public class EquityInfoValid {
                 message = checkHolderMark(message, list.get(6), type,spzMap,objFiledsMap,equityInfo001Dto);
                 // 投资者类别
                 message = checkHolderType(message, list.get(8), type,spzMap,objFiledsMap,equityInfo001Dto);
+                // 投资者分类
+                message = checkHolderClassify(message, list.get(25), type,spzMap,objFiledsMap,equityInfo001Dto);
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message, list.get(9), type, list.get(8),
                         list.get(6),spzMap,objFiledsMap,equityInfo001Dto);
@@ -2802,6 +2856,8 @@ public class EquityInfoValid {
                 message = checkHolderMark(message, equityInfoRegist001Dto.getHolderMark(), type,spzMap,objFiledsMap,null);
                 // 投资者类别
                 message = checkHolderType(message, equityInfoRegist001Dto.getHolderType(), type,spzMap,objFiledsMap,null);
+                // 投资者分类
+                message = checkHolderClassify(message,equityInfoRegist001Dto.getHolderClassify(), type,spzMap,objFiledsMap,null);
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message,
                         equityInfoRegist001Dto.getPersonalIdentifyType(), type,
@@ -3043,6 +3099,9 @@ public class EquityInfoValid {
                 // 投资者类别
                 message = checkHolderType(message, SysDataUtil.getZZDictCodeAndName(DictCode.投资者类别,
                         equityInfo001Dto.getHolderType()), type,spzMap,objFiledsMap,equityInfo001Dto);
+                // 投资者分类
+                message = checkHolderClassify(message, SysDataUtil.getZZDictCodeAndName(DictCode.投资者分类,
+                        equityInfo001Dto.getHolderClassify()), type,spzMap,objFiledsMap,equityInfo001Dto);
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message,
                         SysDataUtil.getZZDictCodeAndName(DictCode.个人证件类别,

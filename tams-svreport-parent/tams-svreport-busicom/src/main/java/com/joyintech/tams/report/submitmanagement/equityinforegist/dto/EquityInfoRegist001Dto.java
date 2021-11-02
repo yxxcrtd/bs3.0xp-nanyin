@@ -255,6 +255,12 @@ public class EquityInfoRegist001Dto extends TableRow {
     private String holderType;
 
     /**
+     * 权益人类别
+     */
+    @DictFormat(DictCode.投资者分类)
+    private String holderClassify;
+
+    /**
      * 证件类别
      */
     @DictFormat(DictCode.是否_中债)
@@ -675,6 +681,14 @@ public class EquityInfoRegist001Dto extends TableRow {
      */
     public void setHolderType(String holderType) {
         this.holderType = holderType;
+    }
+
+    public String getHolderClassify() {
+        return holderClassify;
+    }
+
+    public void setHolderClassify(String holderClassify) {
+        this.holderClassify = holderClassify;
     }
 
     /**

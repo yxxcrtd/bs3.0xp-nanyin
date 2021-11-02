@@ -48,6 +48,7 @@ $(function() {
             { title: "投资者境内外标识", field: 'holderMark',sortField:'holderMark',width:152,align:'center'},
             { title: "投资者所属国家或地区", field: 'holderRegion',sortField:'holderRegion',width:180 },
             { title: "投资者类别", field: 'holderType',sortField:'holderType',width:130},
+            { title: "投资者分类", field: 'holderClassify',sortField:'holderClassify',width:130},
             { title: "证件类别", field: 'inentifyType',sortField:'inentifyType', width: 260},
             { title: "证件号码", field: 'identifyNumber', width: 171},
             { title: "其他证件名称", field: 'otherIdentifyName', width: 126},

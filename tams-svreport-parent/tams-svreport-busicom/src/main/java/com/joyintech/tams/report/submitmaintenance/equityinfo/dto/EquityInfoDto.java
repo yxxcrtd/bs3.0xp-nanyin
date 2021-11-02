@@ -52,6 +52,11 @@ public class EquityInfoDto{
     /**
      * null
      */
+    private String holderClassify;
+
+    /**
+     * null
+     */
     private String personalIdentifyType;
 
     /**
@@ -362,6 +367,14 @@ public class EquityInfoDto{
      */
     public void setHolderType(String holderType) {
         this.holderType = holderType == null ? null : holderType.trim();
+    }
+
+    public String getHolderClassify() {
+        return holderClassify;
+    }
+
+    public void setHolderClassify(String holderClassify) {
+        this.holderClassify = holderClassify;
     }
 
     /**

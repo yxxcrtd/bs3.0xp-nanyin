@@ -95,7 +95,7 @@ public class EquityInfo001Controller extends BaseController {
             model.addAttribute("MY_AGENCY_CODE", myOrgCode);
         }
         // dingzhipeng add end
-        super.setSelectOptionToModel(model, DictCode.维护数据状态, DictCode.投资者类别);
+        super.setSelectOptionToModel(model, DictCode.维护数据状态, DictCode.投资者类别,DictCode.投资者分类);
         return super.init(model);
     }
 
