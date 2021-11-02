@@ -51,13 +51,13 @@
             MSN, EMAIL, ADDRESS, 
             POST_CODE, REMARK, CREATE_USER, 
             CREATE_TIME, CREATE_DEPT, UPDATE_USER, 
-            UPDATE_TIME)
+            UPDATE_TIME,PARTY_CUSTOMER_NAME)
         values (#{traderId,jdbcType=VARCHAR}, #{partyCustomerId,jdbcType=VARCHAR}, #{traderName,jdbcType=VARCHAR}, 
             #{telphoneNo,jdbcType=VARCHAR}, #{telNo,jdbcType=VARCHAR}, #{faxNo,jdbcType=VARCHAR}, 
             #{msn,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
             #{postCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP})
+            #{updateTime,jdbcType=TIMESTAMP}, #{partyCustomerName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsTraderTmp" >
         insert into INTERF_CFETS_TRADER_TMP

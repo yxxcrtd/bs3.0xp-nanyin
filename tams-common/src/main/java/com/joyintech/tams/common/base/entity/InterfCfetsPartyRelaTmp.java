@@ -17,6 +17,46 @@ public class InterfCfetsPartyRelaTmp extends BaseEntity {
      * 从交易机构ID，6位编号
      */
     private String spartyCustomerId;
+    private String mpartyName;
+
+    private String spartyName;
+
+    private String mpartyTypeName;
+
+    private String spartyTypeName;
+
+
+    public String getMpartyName() {
+        return mpartyName;
+    }
+
+    public void setMpartyName(String mpartyName) {
+        this.mpartyName = mpartyName;
+    }
+
+    public String getSpartyName() {
+        return spartyName;
+    }
+
+    public void setSpartyName(String spartyName) {
+        this.spartyName = spartyName;
+    }
+
+    public String getMpartyTypeName() {
+        return mpartyTypeName;
+    }
+
+    public void setMpartyTypeName(String mpartyTypeName) {
+        this.mpartyTypeName = mpartyTypeName;
+    }
+
+    public String getSpartyTypeName() {
+        return spartyTypeName;
+    }
+
+    public void setSpartyTypeName(String spartyTypeName) {
+        this.spartyTypeName = spartyTypeName;
+    }
 
     /**
      * 取得 关系代码

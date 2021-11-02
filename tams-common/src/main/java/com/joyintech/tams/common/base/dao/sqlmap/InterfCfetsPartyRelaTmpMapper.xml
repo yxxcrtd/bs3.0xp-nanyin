@@ -39,10 +39,10 @@
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsPartyRelaTmp" >
         insert into INTERF_CFETS_PARTY_RELA_TMP (RELA_ID, MPARTY_CUSTOMER_ID, SPARTY_CUSTOMER_ID, 
             CREATE_USER, CREATE_TIME, CREATE_DEPT, 
-            UPDATE_USER, UPDATE_TIME)
+            UPDATE_USER, UPDATE_TIME,MPARTY_NAME,SPARTY_NAME,MPARTY_TYPE_NAME,SPARTY_TYPE_NAME)
         values (#{relaId,jdbcType=VARCHAR}, #{mpartyCustomerId,jdbcType=VARCHAR}, #{spartyCustomerId,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{mpartyName,jdbcType=VARCHAR}, #{spartyName,jdbcType=VARCHAR}, #{mpartyTypeName,jdbcType=VARCHAR}, #{spartyTypeName,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCfetsPartyRelaTmp" >
         insert into INTERF_CFETS_PARTY_RELA_TMP

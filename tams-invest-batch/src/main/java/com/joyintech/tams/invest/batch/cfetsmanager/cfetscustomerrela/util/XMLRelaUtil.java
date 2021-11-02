@@ -39,6 +39,10 @@ public class XMLRelaUtil extends DefaultHandler {
      */
     private static final String NODE_PARTYLISTGRP = "PartyListGrp";
     /**
+     * 节点 PartyListGrp
+     */
+    private static final String NODE_PTYSSUBGRP = "PtysSubGrp";
+    /**
      * 节点属性 ID
      */
     private static final String ATTR_ID = "ID";
@@ -46,6 +50,10 @@ public class XMLRelaUtil extends DefaultHandler {
      * 节点属性R
      */
     private static final String ATTR_R = "R";
+    /**
+     * 节点属性R
+     */
+    private static final String ATTR_TYP = "Typ";
     
     private List<InterfCfetsPartyRelaTmp> customerRelaList;
     
@@ -92,6 +100,20 @@ public class XMLRelaUtil extends DefaultHandler {
         	 }else {
         		 customerRela.setSpartyCustomerId(attributes.getValue(ATTR_ID));
         	 }
+         }else if(StringUtil.equalsIgnoreCase(NODE_PTYSSUBGRP, qName)) {
+             if(StringUtil.equals(attributes.getValue(ATTR_TYP), "124")){
+                 if(StringUtil.isEmpty(customerRela.getSpartyCustomerId())){
+                     //主机构名称
+                     customerRela.setMpartyName(attributes.getValue(ATTR_ID));
+                 }else{
+                     //从机构名称
+                     customerRela.setSpartyName(attributes.getValue(ATTR_ID));
+                 }
+             }else if(StringUtil.equals(attributes.getValue(ATTR_TYP), "244")){
+                 customerRela.setMpartyTypeName(attributes.getValue(ATTR_ID));
+             }else if(StringUtil.equals(attributes.getValue(ATTR_TYP), "245")){
+                 customerRela.setSpartyTypeName(attributes.getValue(ATTR_ID));
+             }
          }
     }
     /**

@@ -101,8 +101,10 @@ public class XMLTraderUtil extends DefaultHandler {
         	 if(StringUtil.equals(attributes.getValue(ATTR_TYP), "2")){
         		 customerTrader.setTraderId(attributes.getValue(ATTR_ID));
         	 }else if(StringUtil.equals(attributes.getValue(ATTR_TYP), "126")){
-        		 customerTrader.setTraderName(attributes.getValue(ATTR_ID));
-        	 }
+                 customerTrader.setTraderName(attributes.getValue(ATTR_ID));
+             }else if(StringUtil.equals(attributes.getValue(ATTR_TYP), "124")){
+                 customerTrader.setPartyCustomerName(attributes.getValue(ATTR_ID));
+             }
          }else if(StringUtil.equalsIgnoreCase(NODE_CONTACTINFOGRP, qName)) {
         	 String typ = attributes.getValue(ATTR_CONTACTINFOIDTYPE);
         	 switch(typ) {
