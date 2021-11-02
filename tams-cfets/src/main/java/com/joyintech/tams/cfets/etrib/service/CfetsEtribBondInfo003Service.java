@@ -314,14 +314,19 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 req.setUserId(SecurityUtil.getLoginUser().getUserName());
                 req.setTotalTradeId(entity.getTotalEtrustId());
                 req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
-                req.setModelType("ETR");
-               // req.setBalanceCheck("N");
-                String softSkipMode="N";
+                req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
+
+                // req.setBalanceCheck("N");
+                String balanceCheck="Y";
                 if(StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(),"Y")){
-                    softSkipMode="Y";
+                    balanceCheck="N";
                 }
-                req.setBalanceCheck(softSkipMode);
-                req.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
+                req.setBalanceCheck(balanceCheck);
+                req.setBusiType(DictCodeList.头寸业务类型_现券交易.getValue());
+                if(StringUtil.isNotEmpty(entity.getPs())
+                        && StringUtil.equals(entity.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+                    req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+                }
                 req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
                 req.setSettleSpeed(entity.getSettleSpeed());
                 req.setBusiAct("01");
@@ -1337,7 +1342,8 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 etrEntrustAdd.setSettleSpreed((long) 1);
             }
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
-            if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
+            if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo())
+                    && StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
                 List<String> traderList = StringUtil.splitToList(GlobalConstant.COMMA,
                         dto.getEtrInvestPersonInfo().getTrader());
                 for (String trader : traderList) {
