@@ -99,6 +99,30 @@ public class ExchangeTransMatchCommonService extends BaseService {
     private TrdTradeFeeDetailMapper trdTradeFeeDetailMapper;
 
     /**
+     * 交易完成后，调用共通修改SETTLE_TRANS_TG_MAPPING，SETTLE_TRANS_DATA_TOTAL_STATUS
+     * @param dto
+     * @param tradeId
+     */
+    public void transactionRecord(ExchangeTransMatchCommonDto dto,String tradeId) {
+        //登录:成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）
+        List<SettleTransTgMapping> settleTransTgMappingList = this.genSettleTransTgMapping(dto,tradeId);
+        if(!StringUtil.isEmptyList(settleTransTgMappingList)) {
+            for(SettleTransTgMapping settleTransTgMapping:settleTransTgMappingList) {
+                settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
+            }
+        }
+
+        //更新:汇总成交数据状态表（SETTLE_TRANS_DATA_TOTAL_STATUS）
+        SettleTransDataTotalStatus settleTransDataTotalStatus = settleTransDataTotalStatusMapper.selectByPrimaryKey(dto.getSeqId());
+        if(StringUtil.isNotEmpty(settleTransDataTotalStatus)) {
+            settleTransDataTotalStatus.setMatchStatus(DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
+            settleTransDataTotalStatus.setUpdateTime(new Date());
+            settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
+            settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
+        }
+    }
+
+    /**
      * 批量处理成交匹配数据
      * @param dtoList
      */
@@ -109,6 +133,10 @@ public class ExchangeTransMatchCommonService extends BaseService {
         }
     }
 
+    /**
+     * 处理成交匹配数据
+     * @param dto
+     */
     public void transactionMacth(ExchangeTransMatchCommonDto dto) {
         //查询汇总成交数据附属表
         dto.setSettleTransDataTotalAdd(settleTransDataTotalAddMapper.selectByPrimaryKey(dto.getSeqId()));
@@ -345,8 +373,13 @@ public class ExchangeTransMatchCommonService extends BaseService {
             settleTransDataTotalMatchMapper.insertSelective(settleTransDataTotalMatch);
 
             //登录:成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）
-            SettleTransTgMapping settleTransTgMapping = this.genSettleTransTgMapping(dto,tradeId);
-            settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
+            List<SettleTransTgMapping> settleTransTgMappingList = this.genSettleTransTgMapping(dto,tradeId);
+            if(!StringUtil.isEmptyList(settleTransTgMappingList)) {
+                for(SettleTransTgMapping settleTransTgMapping:settleTransTgMappingList) {
+                    settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
+                }
+            }
+
         }
 
         //更新:汇总成交数据状态表（SETTLE_TRANS_DATA_TOTAL_STATUS）
@@ -503,12 +536,19 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param tradeId
      * @return
      */
-    private SettleTransTgMapping genSettleTransTgMapping(ExchangeTransMatchCommonDto dealDto,String tradeId) {
-        SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
-        settleTransTgMapping.setTradeId(dealDto.getSeqId());
-        settleTransTgMapping.setTradeIdTg(tradeId);
-        settleTransTgMapping.setTgDataStatus(DictCodeListStl.投管交易数据状态_处理结束.getValue());
+    private List<SettleTransTgMapping> genSettleTransTgMapping(ExchangeTransMatchCommonDto dealDto,String tradeId) {
+        List<SettleTransTgMapping> list = new ArrayList<>();
+        List<SettleTransData> settleTransDataList = exchangeTransMatchCommonMapper.getSettleTransDataList(dealDto.getSeqId());
+        if(!StringUtil.isEmptyList(settleTransDataList)) {
+            for(SettleTransData settleTransData:settleTransDataList) {
+                SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
+                settleTransTgMapping.setTradeId(settleTransData.getTradeId());
+                settleTransTgMapping.setTradeIdTg(tradeId);
+                settleTransTgMapping.setTgDataStatus(DictCodeListStl.投管交易数据状态_处理结束.getValue());
+                list.add(settleTransTgMapping);
+            }
+        }
 
-        return settleTransTgMapping;
+        return list;
     }
 }

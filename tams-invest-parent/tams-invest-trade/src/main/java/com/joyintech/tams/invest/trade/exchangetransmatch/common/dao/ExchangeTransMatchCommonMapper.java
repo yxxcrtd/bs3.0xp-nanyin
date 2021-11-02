@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.common.dao;
 
+import com.joyintech.tams.common.base.entity.SettleTransData;
 import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
 import org.apache.ibatis.annotations.Param;
@@ -40,5 +41,15 @@ public interface ExchangeTransMatchCommonMapper {
      * @since 1.0
      */
     TrdDealTotalAdd queryTotalAddByTradeId(@Param("tradeId") String tradeId);
+
+    /**
+     * 根据汇总流水号获取成交明细
+     *
+     * @param seqId 流水号
+     * @return 汇总附属信息
+     * @see
+     * @since 1.0
+     */
+    List<SettleTransData> getSettleTransDataList(@Param("seqId") String seqId);
 
 }

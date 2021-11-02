@@ -54,4 +54,18 @@
         from TRD_DEAL_TOTAL_ADD
         where TOTLE_TRADE_ID = (select TOTLE_TRADE_ID from trd_product_deal where trade_id = #{tradeId,jdbcType=VARCHAR})
     </select>
+
+    <!-- 根据汇总流水号获取成交明细 -->
+    <select id="getSettleTransDataList" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.SettleTransDataMapper.Base_Column_List" />
+          from SETTLE_TRANS_DATA A
+         INNER JOIN SETTLE_TRANS_DATA_TOTAL B
+            ON A.APPLY_TRADE_ID = B.APPLY_TRADE_ID
+           AND A.DEAL_DATE = B.DEAL_DATE
+           AND A.SEAT_NUMBER = B.SEAT_NUMBER
+        <where>
+            B.SEQ_ID = #{seqId,jdbcType=VARCHAR}
+        </where>
+    </select>
 </mapper>
