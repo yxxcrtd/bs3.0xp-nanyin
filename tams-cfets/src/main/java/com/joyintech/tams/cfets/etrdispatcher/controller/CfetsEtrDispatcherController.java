@@ -120,6 +120,8 @@ public class CfetsEtrDispatcherController extends BaseController {
 //        }
 //    }
 
+
+
     /**
      * 指令风险试算查询
      *
@@ -189,7 +191,7 @@ public class CfetsEtrDispatcherController extends BaseController {
     /**
      * 分发权限配置交易员查询
      *
-     * @return Page<CfetsEtrDispatcherTradeListResponse>
+     * @return Page<CfetsEtrDispatcherTraderAuthListResponse>
      * @throws Exception Exception
      * @see
      * @since 1.0
@@ -211,7 +213,7 @@ public class CfetsEtrDispatcherController extends BaseController {
     /**
      * 分发权限配置提交
      *
-     * @return Page<CfetsEtrDispatcherTradeListResponse>
+     * @return AjaxResult
      * @throws Exception Exception
      * @see
      * @since 1.0

@@ -15,8 +15,17 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value="指令明细请求参数",description="指令明细请求参数")
 public class CfetsEtrDispatcherInfoRequest {
 
-    @ApiModelProperty(name="entrustId",value="指令代码",example="字符串1",required = true)
+    @ApiModelProperty(name="entrustId",value="指令代码",example="A1",required = true)
     private String entrustId;
+
+    @ApiModelProperty(name="busiTypePosition",value="业务类型",example="债券一级投标/现券买卖CODE",required = true)
+    private String busiTypePosition;
+
+    @ApiModelProperty(name="ps",value="交易方向",example="买入/卖出",required = true)
+    private String ps;
+
+    @ApiModelProperty(name="portfolioId",value="组合代码",example="字符串1")
+    private String portfolioId;
 
     @ApiModelProperty(name="pageMode",value="分页对象")
     private PageMode pageMode;
@@ -35,6 +44,30 @@ public class CfetsEtrDispatcherInfoRequest {
 
     public void setPageMode(PageMode pageMode) {
         this.pageMode = pageMode;
+    }
+
+    public String getBusiTypePosition() {
+        return busiTypePosition;
+    }
+
+    public void setBusiTypePosition(String busiTypePosition) {
+        this.busiTypePosition = busiTypePosition;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
     }
 }
 

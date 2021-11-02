@@ -1,9 +1,13 @@
 package com.joyintech.tams.cfets.etrdispatcher.dto;
 
+import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 场外指令分发
@@ -14,32 +18,26 @@ import java.math.BigDecimal;
  * @since 1.0
  */
 @ApiModel(value="指令明细返回数据",description="指令明细数据")
-public class CfetsEtrDispatcherInfoResponse {
+public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
 
-    @ApiModelProperty(name="entrustDate",value="指令日期",example="2021-01-01")
-    private String entrustDate;
+    //债券一级投标 start
+    @ApiModelProperty(name="mainConsignee",value="主承销商",example="字符串1")
+    private String mainConsignee;
 
-    @ApiModelProperty(name="portfolioId",value="组合代码",example="字符串1")
-    private String portfolioId;
+    @ApiModelProperty(name="paymentDate",value="缴款日",example="date'2021-01-01'")
+    private Date paymentDate;
 
-    @ApiModelProperty(name="portfolioName",value="组合名称",example="字符串1")
-    private String portfolioName;
+    @ApiModelProperty(name="listingDate",value="上市日",example="date'2021-01-01'")
+    private Date listingDate;
 
-    @ApiModelProperty(name="busiModel",value="业务模式Code",example="01")
-    private String busiModel;
+    @ApiModelProperty(name="entrustNum",value="投标券面总额汇总",example="字符串1")
+    private BigDecimal entrustNum;
 
-    @ApiModelProperty(name="finprodMarketId",value="资产代码",example="字符串1")
-    private String finprodMarketId;
+    @ApiModelProperty(name="bidPriceList",value="投标标位",example="List<EtrEntrustBidPrice>")
+    private List<EtrEntrustBidPrice> bidPriceList;
+    //债券一级投标 end
 
-    @ApiModelProperty(name="finprodAbbr",value="资产简称",example="字符串1")
-    private String finprodAbbr;
-
-    @ApiModelProperty(name="tradeMarket",value="交易场所",example="字符串1")
-    private String tradeMarket;
-
-    @ApiModelProperty(name="ps",value="交易方向",example="字符串1")
-    private String ps;
-
+    //债券交易 start
     @ApiModelProperty(name="settleSpeed",value="清算速度",example="字符串1")
     private String settleSpeed;
 
@@ -48,9 +46,6 @@ public class CfetsEtrDispatcherInfoResponse {
 
     @ApiModelProperty(name="secAcctId",value="证券账户",example="XXX证券账户")
     private String secAcctId;
-
-    @ApiModelProperty(name="ccy",value="币种",example="CNY")
-    private String ccy;
 
     @ApiModelProperty(name="shareNum",value="券面总额",example="1000000")
     private BigDecimal shareNum;
@@ -78,69 +73,124 @@ public class CfetsEtrDispatcherInfoResponse {
 
     @ApiModelProperty(name="remark",value="备注",example="A1")
     private String remark;
+    //债券交易 end
 
-    public String getEntrustDate() {
-        return entrustDate;
+    @ApiModelProperty(name="pledgeBondList",value="质押券信息",example="pledgeBondList")
+    private List<PledgeBondInfoDto> pledgeBondList;
+
+    //回购 start
+    @ApiModelProperty(name="repoTerm",value="回购期限",example="A1")
+    private String repoTerm;
+
+    @ApiModelProperty(name="pledgeStockName",value="质押券库",example="A1")
+    private String pledgeStockName;
+
+    @ApiModelProperty(name="firstprice",value="首次净价",example="A1")
+    private String firstprice;
+
+    @ApiModelProperty(name="totalPrinAmt",value="汇总券面总额",example="10000")
+    private BigDecimal totalPrinAmt;
+
+    @ApiModelProperty(name="repoPledgeModel",value="银行间质押式回购质押券模式",example="01无质押券库，02单个质押库，03多个质押券库")
+    private String repoPledgeModel;
+    //回购 end
+
+    //利率互换 start
+    @ApiModelProperty(name="busiPs",value="互换方式",example="收取固定/收取浮动")
+    private String busiPs;
+
+    @ApiModelProperty(name="entrustAmt",value="名义本金",example="1000")
+    private BigDecimal entrustAmt;
+
+    @ApiModelProperty(name="dealMode",value="挂钩利率",example="个人定期(整存整取)一年")
+    private String dealMode;
+
+    @ApiModelProperty(name="termType",value="期限",example="1Y/1M")
+    private String termType;
+
+    @ApiModelProperty(name="dueDate",value="到期日",example="[2017-01-01 - 2017-02-01]")
+    private String dueDate;
+    //利率互换 end
+
+
+    public String getBusiPs() {
+        return busiPs;
     }
 
-    public void setEntrustDate(String entrustDate) {
-        this.entrustDate = entrustDate;
+    public void setBusiPs(String busiPs) {
+        this.busiPs = busiPs;
     }
 
-    public String getPortfolioId() {
-        return portfolioId;
+    public BigDecimal getEntrustAmt() {
+        return entrustAmt;
     }
 
-    public void setPortfolioId(String portfolioId) {
-        this.portfolioId = portfolioId;
+    public void setEntrustAmt(BigDecimal entrustAmt) {
+        this.entrustAmt = entrustAmt;
     }
 
-    public String getPortfolioName() {
-        return portfolioName;
+    public String getDealMode() {
+        return dealMode;
     }
 
-    public void setPortfolioName(String portfolioName) {
-        this.portfolioName = portfolioName;
+    public void setDealMode(String dealMode) {
+        this.dealMode = dealMode;
     }
 
-    public String getBusiModel() {
-        return busiModel;
+    public String getTermType() {
+        return termType;
     }
 
-    public void setBusiModel(String busiModel) {
-        this.busiModel = busiModel;
+    public void setTermType(String termType) {
+        this.termType = termType;
     }
 
-    public String getFinprodMarketId() {
-        return finprodMarketId;
+    public String getDueDate() {
+        return dueDate;
     }
 
-    public void setFinprodMarketId(String finprodMarketId) {
-        this.finprodMarketId = finprodMarketId;
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
     }
 
-    public String getFinprodAbbr() {
-        return finprodAbbr;
+    public String getMainConsignee() {
+        return mainConsignee;
     }
 
-    public void setFinprodAbbr(String finprodAbbr) {
-        this.finprodAbbr = finprodAbbr;
+    public void setMainConsignee(String mainConsignee) {
+        this.mainConsignee = mainConsignee;
     }
 
-    public String getTradeMarket() {
-        return tradeMarket;
+    public Date getPaymentDate() {
+        return paymentDate;
     }
 
-    public void setTradeMarket(String tradeMarket) {
-        this.tradeMarket = tradeMarket;
+    public void setPaymentDate(Date paymentDate) {
+        this.paymentDate = paymentDate;
     }
 
-    public String getPs() {
-        return ps;
+    public Date getListingDate() {
+        return listingDate;
     }
 
-    public void setPs(String ps) {
-        this.ps = ps;
+    public void setListingDate(Date listingDate) {
+        this.listingDate = listingDate;
+    }
+
+    public BigDecimal getEntrustNum() {
+        return entrustNum;
+    }
+
+    public void setEntrustNum(BigDecimal entrustNum) {
+        this.entrustNum = entrustNum;
+    }
+
+    public List<EtrEntrustBidPrice> getBidPriceList() {
+        return bidPriceList;
+    }
+
+    public void setBidPriceList(List<EtrEntrustBidPrice> bidPriceList) {
+        this.bidPriceList = bidPriceList;
     }
 
     public String getSettleSpeed() {
@@ -165,14 +215,6 @@ public class CfetsEtrDispatcherInfoResponse {
 
     public void setSecAcctId(String secAcctId) {
         this.secAcctId = secAcctId;
-    }
-
-    public String getCcy() {
-        return ccy;
-    }
-
-    public void setCcy(String ccy) {
-        this.ccy = ccy;
     }
 
     public BigDecimal getShareNum() {
@@ -245,5 +287,53 @@ public class CfetsEtrDispatcherInfoResponse {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getRepoTerm() {
+        return repoTerm;
+    }
+
+    public void setRepoTerm(String repoTerm) {
+        this.repoTerm = repoTerm;
+    }
+
+    public String getFirstprice() {
+        return firstprice;
+    }
+
+    public void setFirstprice(String firstprice) {
+        this.firstprice = firstprice;
+    }
+
+    public BigDecimal getTotalPrinAmt() {
+        return totalPrinAmt;
+    }
+
+    public void setTotalPrinAmt(BigDecimal totalPrinAmt) {
+        this.totalPrinAmt = totalPrinAmt;
+    }
+
+    public List<PledgeBondInfoDto> getPledgeBondList() {
+        return pledgeBondList;
+    }
+
+    public void setPledgeBondList(List<PledgeBondInfoDto> pledgeBondList) {
+        this.pledgeBondList = pledgeBondList;
+    }
+
+    public String getPledgeStockName() {
+        return pledgeStockName;
+    }
+
+    public void setPledgeStockName(String pledgeStockName) {
+        this.pledgeStockName = pledgeStockName;
+    }
+
+    public String getRepoPledgeModel() {
+        return repoPledgeModel;
+    }
+
+    public void setRepoPledgeModel(String repoPledgeModel) {
+        this.repoPledgeModel = repoPledgeModel;
     }
 }

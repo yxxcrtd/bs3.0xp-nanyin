@@ -18,6 +18,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.entrust.etrbondfirstlbidding.dao.EtrBondFirstLBiddingMapper;
 import com.joyintech.tams.cfets.etrdispatcher.dao.CfetsEtrDispatcherMapper;
 import com.joyintech.tams.cfets.etrdispatcher.dto.*;
 import com.joyintech.tams.common.base.dao.AutoDispenseRightMapper;
@@ -27,12 +28,17 @@ import com.joyintech.tams.common.base.entity.AutoDispenseRight;
 import com.joyintech.tams.common.base.entity.EtrAutoDispenseRule;
 import com.joyintech.tams.common.base.entity.EtrAutoDispenseRuleDetail;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
+import com.joyintech.tams.invest.common.trade.dao.BussRepoSecMapper;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,6 +69,17 @@ public class CfetsEtrDispatcherService extends BaseService{
 
     @Autowired
     private AutoDispenseRightMapper autoDispenseRightMapper;
+    /**
+     * 自定义债券一级投标委托mapper
+     */
+    @Autowired
+    private EtrBondFirstLBiddingMapper mapper;
+
+    @Autowired
+    private IPlatformDate platformDateImpl;
+
+    @Autowired
+    private BussRepoSecMapper bussRepoSecMapper;
 
     /**
      * 指令列表分页查询
@@ -430,13 +447,45 @@ public class CfetsEtrDispatcherService extends BaseService{
      * @since 1.0
      */
     public CfetsEtrDispatcherInfoResponse getEtrDispatcherInfo(CfetsEtrDispatcherInfoRequest dto) {
+        CfetsEtrDispatcherInfoResponse cfetsResponseDto =new CfetsEtrDispatcherInfoResponse();
         //dto转成map
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
         if(entrustIdList.size() > 1){
             return new CfetsEtrDispatcherInfoResponse();
-        }else{
-            return cfetsEtrDispatcherMapper.getEtrDispatcherInfo(pageParam);
+        }else {
+            cfetsResponseDto = cfetsEtrDispatcherMapper.getEtrDispatcherInfo(pageParam);
+            //一级市场投标增加投标标位List
+            if (cfetsResponseDto != null) {
+                if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_债券一级投标.getValue())) {
+                    cfetsResponseDto.setBidPriceList(mapper.selectBidPriceByKey(pageParam));
+                } else if (StringUtil.equals(dto.getBusiTypePosition(), "利率互换首期")) {
+                    if (cfetsResponseDto.getDueDate().equals(" - ")) {
+                        cfetsResponseDto.setDueDate("");
+                    }
+                } else if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_债券借贷首期.getValue())
+                                ||StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue())) {
+                    String ps = (String) pageParam.get("ps");
+                    if (DictCodeList.回购拆借方向_正回购.getValue().equals(ps) || DictCodeList.回购拆借方向_融入.getValue().equals(ps)) {
+                        pageParam.put("POSITION_TYPE_01", DictCodeList.持仓类型_可用.getValue());
+                        pageParam.put("POSITION_TYPE_03", DictCodeList.持仓类型_实际.getValue());
+                        pageParam.put("POSITION_TYPE_04", DictCodeList.持仓类型_质押.getValue());
+                        pageParam.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
+                        pageParam.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
+                        pageParam.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+                        pageParam.put("plateDate", platformDateImpl.getSysDateStr());
+                        List<PledgeBondInfoDto> pledgeList = bussRepoSecMapper.selectBussRepoSecSellRepo(pageParam);
+                        BigDecimal totalPrinAmt = BigDecimal.ZERO;
+                        for (PledgeBondInfoDto pbi : pledgeList) {
+                            totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(pbi.getPledgePrin(), pbi.getPledgeRatio()).divide(new BigDecimal("100")));
+                        }
+                        cfetsResponseDto.setPledgeBondList(pledgeList);
+                        cfetsResponseDto.setTotalPrinAmt(totalPrinAmt);
+                    }
+                }
+            }
+            cfetsResponseDto.setRepoPledgeModel(CacheUtil.getSysParam(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL)));
+            return cfetsResponseDto;
         }
     }
 
