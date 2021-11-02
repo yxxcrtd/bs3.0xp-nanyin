@@ -215,4 +215,9 @@ public class EtrTradeSysInterfService extends BaseService<EtrTradeSysInterfDto>{
     	
     	return result;
     }
+
+	public String getRealNameByUser(String param){
+		return etrTradeSysInterfMapper.getRealNameByUser(param);
+	}
+
 }

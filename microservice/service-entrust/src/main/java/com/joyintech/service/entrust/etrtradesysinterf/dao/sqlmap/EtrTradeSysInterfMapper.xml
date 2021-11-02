@@ -177,5 +177,8 @@
 		UPDATE ETR_ENTRUST SET ENTRUST_STATUS = #{entrustStatus} 
 		WHERE ENTRUST_ID = #{entrustId}
 	</update>
-   
+
+	<select id="getRealNameByUser" resultType="java.lang.String">
+        select REAL_NAME from SYS_USER where USER_NAME = #{userId}
+	</select>
 </mapper>
