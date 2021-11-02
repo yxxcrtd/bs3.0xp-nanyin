@@ -516,7 +516,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
             }
 
         }
-        
+
         logger.error("交易表数据:"+JsonUtils.object2Json(finProductTradeDto));
         //处理头寸和指令完成度
         baseTradeProductDealCommService.execute(finProductTradeDto);

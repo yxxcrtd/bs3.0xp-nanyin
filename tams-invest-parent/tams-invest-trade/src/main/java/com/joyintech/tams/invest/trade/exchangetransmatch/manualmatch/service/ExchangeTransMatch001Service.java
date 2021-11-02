@@ -231,6 +231,8 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                     trdBondInvestTradeDto.setIsCancel(DictCodeList.是否_否.getValue());
                     trdBondInvestTradeDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                     trdBondInvestTradeDto.setIsOutTrade(DictCodeList.是否_是.getValue());
+                    trdBondInvestTradeDto.setTradeAmt(dto.getRemainAmount());
+                    trdBondInvestTradeDto.setShareAmt(dto.getRemainNum());
 
                     if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())) {
                         trdBondInvestTradeDto.setPs(DictCodeList.交易方向_买入.getValue());
@@ -245,6 +247,8 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                     trdConBondDto.setIsCancel(DictCodeList.是否_否.getValue());
                     trdConBondDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                     trdConBondDto.setIsOutTrade(DictCodeList.是否_是.getValue());
+                    trdConBondDto.setTradeAmt(dto.getRemainAmount());
+                    trdConBondDto.setShareAmt(dto.getRemainNum());
 
                     dtoStr = JsonUtils.object2Json(trdConBondDto);
                 }
@@ -256,6 +260,8 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                     trdConBond003Dto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                     trdConBond003Dto.setIsOutTrade(DictCodeList.是否_是.getValue());
                     trdConBond003Dto.setbTradeId(exchangeTransMatchBondCommonService.selectBTradeId(settleTransDataTotal.getApplyTradeId(),settleTransDataTotal.getPs()));
+                    trdConBond003Dto.setTradeAmt(dto.getRemainAmount());
+                    trdConBond003Dto.setShareAmt(dto.getRemainNum());
 
                     dtoStr = JsonUtils.object2Json(trdConBond003Dto);
                 }
@@ -272,6 +278,8 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                         trdBondToStock001Dto.setConvdate(settleTransDataTotal.getVdate());
                         trdBondToStock001Dto.setConNum(settleTransDataTotalAdd.getConAmt());
                         trdBondToStock001Dto.setConPrice(settleTransDataTotalAdd.getConPrice());
+                        trdBondToStock001Dto.setTradeAmt(dto.getRemainAmount());
+                        trdBondToStock001Dto.setShareAmt(dto.getRemainNum());
 
                         dtoStr = JsonUtils.object2Json(trdBondToStock001Dto);
                     }

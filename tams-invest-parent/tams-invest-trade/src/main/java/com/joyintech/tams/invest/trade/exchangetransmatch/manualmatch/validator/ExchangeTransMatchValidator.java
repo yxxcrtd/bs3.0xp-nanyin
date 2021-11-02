@@ -1,8 +1,9 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.validator;
 
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch002Dto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch003Dto;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,11 @@ public class ExchangeTransMatchValidator implements BeanValidator {
             }
         }
         else if (StringUtil.equals(dealDto.getElementId(),"transaction_record")) {
+            if(!StringUtil.equals(dealDto.getMatchStatus(), DictCodeListExt3.下行交易匹配状态_未匹配.getValue())
+            && !StringUtil.equals(dealDto.getMatchStatus(), DictCodeListExt3.下行交易匹配状态_部分匹配.getValue())) {
+                errorList.add(new ValidMessage("请选择未匹配或者部分匹配的数据"));
+            }
+
 
         }
 
