@@ -94,6 +94,11 @@ public class ExchangeTransMatch004Dto extends BaseEntity implements ITableRow {
      */
     private String ccy;
 
+    /**
+     * 流水号
+     */
+    private String seqNo;
+
 
     public String getMatchType() {
         return matchType;
@@ -225,5 +230,13 @@ public class ExchangeTransMatch004Dto extends BaseEntity implements ITableRow {
 
     public void setTradePlat(String tradePlat) {
         this.tradePlat = tradePlat;
+    }
+
+    public String getSeqNo() {
+        return seqNo;
+    }
+
+    public void setSeqNo(String seqNo) {
+        this.seqNo = seqNo;
     }
 }

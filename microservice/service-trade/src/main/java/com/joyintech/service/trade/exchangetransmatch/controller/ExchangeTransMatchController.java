@@ -4,10 +4,13 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto;
+import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch005Dto;
+import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch006Dto;
 import com.joyintech.service.trade.exchangetransmatch.service.ExchangeTransMatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -111,4 +114,15 @@ public class ExchangeTransMatchController {
         return exchangeTransMatchService.getDealId(map,page, length);
     }
 
+    @ResponseBody
+    @PostMapping("findEntrustList")
+    public List<ExchangeTransMatch005Dto> findEntrustList(@RequestBody String seqNo){
+        return  exchangeTransMatchService.findEntrustList(seqNo);
+    }
+
+    @ResponseBody
+    @PostMapping("findDealList")
+    public List<ExchangeTransMatch006Dto> findDealList(@RequestBody String seqNo){
+        return  exchangeTransMatchService.findDealList(seqNo);
+    }
 }

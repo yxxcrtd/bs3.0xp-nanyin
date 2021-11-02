@@ -6,12 +6,21 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.exchangetransmatch.dao.ExchangeTransMatchMapper;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto;
+import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch005Dto;
+import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch006Dto;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalMatchMapper;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalStatusMapper;
+import com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
+import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -126,4 +135,11 @@ public class ExchangeTransMatchService extends BaseService {
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getDealId(map));
     }
 
+    public List<ExchangeTransMatch005Dto> findEntrustList(String seqNo) {
+        return  exchangeTransMatchMapper.findEntrustList(seqNo);
+    }
+
+    public List<ExchangeTransMatch006Dto> findDealList(String seqNo) {
+        return  exchangeTransMatchMapper.findDealList(seqNo);
+    }
 }

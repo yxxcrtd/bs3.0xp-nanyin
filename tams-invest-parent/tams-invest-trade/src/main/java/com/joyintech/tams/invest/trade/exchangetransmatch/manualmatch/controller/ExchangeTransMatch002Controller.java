@@ -2,11 +2,15 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.controlle
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch005Dto;
+import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch006Dto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.service.ExchangeTransMatch001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @PageId("ExchangeTransMatch002")
@@ -24,6 +28,11 @@ public class ExchangeTransMatch002Controller extends BaseController {
      */
     @Override
     public String init(Model model) {
+        String seqNo = this.getParam("seqNo");
+        List<ExchangeTransMatch005Dto> entrustList = exchangeTransMatch001Service.findEntrustList(seqNo);
+        model.addAttribute("entrustList",entrustList);
+        List<ExchangeTransMatch006Dto> dealList = exchangeTransMatch001Service.findDealList(seqNo);
+        model.addAttribute("dealList",dealList);
         return super.init(model);
     }
 

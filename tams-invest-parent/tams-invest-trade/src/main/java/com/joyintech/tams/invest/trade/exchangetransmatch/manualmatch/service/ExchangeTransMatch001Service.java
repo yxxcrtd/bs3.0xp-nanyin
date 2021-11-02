@@ -11,9 +11,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
-import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch002Dto;
-import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch003Dto;
-import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch004Dto;
+import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -182,4 +180,13 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
         return dtoStr;
     }
 
+    public List<ExchangeTransMatch005Dto> findEntrustList(String seqNo) {
+       return restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
+                + "/ExchangeTransMatchController/findEntrustList", seqNo, ExchangeTransMatch005Dto.class);
+    }
+
+    public List<ExchangeTransMatch006Dto> findDealList(String seqNo) {
+        return restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
+                + "/ExchangeTransMatchController/findDealList", seqNo, ExchangeTransMatch006Dto.class);
+    }
 }

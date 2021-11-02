@@ -158,6 +158,7 @@
             }
         },
         cols:[
+            {field:'seqNo',visible:'false'},
             {field:'matchTypeStr', sortField:'matchType',width:200, title: 'ExchangeTransMatch001.matchType'},
             {field:'busiCode', sortField:'busiCode',width:200, title: 'ExchangeTransMatch001.busiCode'},
             {field:'tradeMarketStr', sortField:'tradeMarket',width:200, title: 'ExchangeTransMatch001.tradeMarket'},
@@ -176,9 +177,22 @@
             {field:'tradeMarket', visible:false},
             {field:'finprodType2', visible:false},
             {field:'ps', visible:false},
-            {field:'ccy', visible:false}
+            {field:'ccy', visible:false},
+            {field:'oprtation', title:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操 作', type:'action', fixed: 'right',
+                buttons:[{text:'&#xe642;',clas:'edit',title:'查看'}] }
         ]
 
+    });
+
+    /**
+     * 绑定编辑事件
+     */
+    transMatchInfoTable.bind('click', '.edit', function(data, index) {
+        Joyin.dialog(JoyinUtil.getLabel("匹配明细查看"),
+            basePath + "invest/trade/exchangetransmatch/ExchangeTransMatch002/init",
+            "98%", "95%", {seqNo:data.seqNo},function(){
+                transMatchInfoTable.reload();
+            });
     });
 
     /**
