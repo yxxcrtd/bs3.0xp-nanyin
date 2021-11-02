@@ -88,6 +88,10 @@ public class StlDataDealProcessConstant {
 	public static final String YWLX_104 = "104";
 	// SzdJsmx业务类型_红利清算
 	public static final String YWLX_351 = "351";
+	// SzdJsmx业务类型_债券兑付
+	public static final String YWLX_352 = "352";
+	// SzdJsmx业务类型_债券兑息
+	public static final String YWLX_353 = "353";
 	// SzdJsmx业务类型_按值配售新股有效认购
 	public static final String YWLX_018 = "018";
 	// SzdJsmx业务类型_A股大宗交易系统专场业务
@@ -172,6 +176,10 @@ public class StlDataDealProcessConstant {
 	public static final String QSBZ_074 = "074";
 	// SzdJsmx清算标志_红利清算
 	public static final String QSBZ_230 = "230";
+	// SzdJsmx清算标志_债券兑付
+	public static final String QSBZ_231 = "231";
+	// SzdJsmx清算标志_债券兑息
+	public static final String QSBZ_232 = "232";
 	// SzdJsmx清算标志_A股交易清算
 	public static final String QSBZ_060 = "060";
 	// SzdJsmx清算标志_科创板交易清算

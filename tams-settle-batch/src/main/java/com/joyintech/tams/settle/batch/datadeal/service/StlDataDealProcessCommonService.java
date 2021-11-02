@@ -1,5 +1,6 @@
 package com.joyintech.tams.settle.batch.datadeal.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -8,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -50,6 +53,19 @@ public class StlDataDealProcessCommonService {
 	
 	@Autowired
     protected TrdFeeCalcService trdFeeCalcService;
+
+	@Autowired(required = false)
+	private JoyinRestTemplate restTemplate;
+
+	// 无需计算佣金场景
+	public static final List<String> NO_NEED_CALCULATE_COMMISSION_LIST = Arrays.asList(
+			DictCodeListStl.业务场景分类明细_债券_还本收息_还本.getValue(),
+			DictCodeListStl.业务场景分类明细_债券_还本收息_收息.getValue(),
+			DictCodeListStl.业务场景分类明细_债券_收息.getValue(),
+			DictCodeListStl.业务场景分类明细_债券_还本收息.getValue(),
+			DictCodeListStl.业务场景分类明细_债券_到期_到期.getValue(),
+			DictCodeListStl.业务场景分类明细_债券_赎回.getValue()
+	);
 
 	// 币种取得
 	public String getCcy(String bz) {
@@ -192,6 +208,10 @@ public class StlDataDealProcessCommonService {
 				tradeFeatureInformation.setDealDate(DateUtil.parse(keyStrArray[9]));
 				List<TrdDetailDto> detailDtos = new ArrayList<TrdDetailDto>();
 				for (StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto : list) {
+					// 无需计算佣金场景跳过
+					if(NO_NEED_CALCULATE_COMMISSION_LIST.contains(stlDownDataDealWriteBaseDto.getSettleTransData().getBusiSceneCalss())){
+						continue;
+					}
 					TrdDetailDto trdDetailDto = new TrdDetailDto();
 					// 交易日期
 					trdDetailDto.setTradeDate(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeDate());
@@ -268,6 +288,10 @@ public class StlDataDealProcessCommonService {
 				// 根据佣金计算的返回值对StlDownDataDealWriteBaseDto的佣金及相关数据重新赋值
 				if (commissionCalcDto != null && commissionCalcDto.getCommisionDetailList() != null && commissionCalcDto.getCommisionDetailList().size() > 0) {
 					for (StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto : result.getStlDownDataDealWriteBaseDtoList()) {
+						// 无需计算佣金场景跳过
+						if(NO_NEED_CALCULATE_COMMISSION_LIST.contains(stlDownDataDealWriteBaseDto.getSettleTransData().getBusiSceneCalss())){
+							continue;
+						}
 						for (CommisionDetail commisionDetail : commissionCalcDto.getCommisionDetailList()) {
 							if (StringUtil.equals(commisionDetail.getTradeId(), stlDownDataDealWriteBaseDto.getSettleTransData().getTradeId())) {
 							    stlDownDataDealWriteBaseDto.getSettleTransData().setBatchNumber(batch);
@@ -389,5 +413,22 @@ public class StlDataDealProcessCommonService {
 			return result.get(0);
 		}
 		return null;
+	}
+
+	/**
+	 * 1.8计算单位面值
+	 *
+	 * @param finprodId 金融产品代码
+	 * @param settleDate 交割日
+	 * @return 单位面值
+	 * @see
+	 * @since 1.0
+	 */
+	public BigDecimal getUnitPrice(String finprodId, Date settleDate) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("finprodId", finprodId);
+		parameters.put("settleDate", DateUtil.format(settleDate));
+		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getUnitPrice", parameters,
+				BigDecimal.class);
 	}
 }
