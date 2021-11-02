@@ -271,7 +271,9 @@
 	<update id="updateTradeId" parameterType="java.util.Map">
 		update BID_ORDER_BID_PRICE  set TRADE_ID = #{tradeId,jdbcType = VARCHAR}
 		where ENTRUST_ID= #{entrustId,jdbcType=VARCHAR}
-		and BID_PRICE = #{bidPrice}
+		<if test="bidPrice!=null and bidPrice!=''">
+			and BID_PRICE = #{bidPrice}
+		</if>
 		<!--and (WIN_PRICE = #{winPrice,jdbcType=DECIMAL}  OR  WIN_CPRICE = #{winCprice,jdbcType=DECIMAL})-->
 	</update>
 
