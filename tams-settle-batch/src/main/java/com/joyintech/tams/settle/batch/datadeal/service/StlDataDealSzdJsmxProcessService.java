@@ -1653,26 +1653,16 @@ public class StlDataDealSzdJsmxProcessService {
 		settleTransData.setCommissionAmt(BigDecimal.ZERO);
 		// 佣金_原始
 		settleTransData.setCommissionAmtRaw(BigDecimal.ZERO);
-		if (StringUtil.isNotEmpty(szdJsmx.getYhs())){
-			// 印花税_原始
-			settleTransData.setStampFeeRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
-		}
-		if (StringUtil.isNotEmpty(szdJsmx.getJsf())){
-			// 经手费_原始
-			settleTransData.setJsfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getJsf()).doubleValue())));
-		}
-		if (StringUtil.isNotEmpty(szdJsmx.getGhf())){
-			// 过户费_原始
-			settleTransData.setGhfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getGhf()).doubleValue())));
-		}
-		if (StringUtil.isNotEmpty(szdJsmx.getZgf())){
-			// 证管费_原始
-			settleTransData.setZgfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getZgf()).doubleValue())));
-		}
-		if (StringUtil.isNotEmpty(szdJsmx.getSxf())){
-			// 手续费_原始
-			settleTransData.setSxfAmtRaw(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSxf()).doubleValue())));
-		}
+		// 印花税_原始
+		settleTransData.setStampFeeRaw(this.abs(szdJsmx.getYhs()));
+		// 经手费_原始
+		settleTransData.setJsfAmtRaw(this.abs(szdJsmx.getJsf()));
+		// 过户费_原始
+		settleTransData.setGhfAmtRaw(this.abs(szdJsmx.getGhf()));
+		// 证管费_原始
+		settleTransData.setZgfAmtRaw(this.abs(szdJsmx.getZgf()));
+		// 手续费_原始
+		settleTransData.setSxfAmtRaw(this.abs(szdJsmx.getSxf()));
 		// 是否优先配售
 		settleTransData.setIsPurchTypeYx(DictCodeList.是否_否.getValue());
 		stlDownDataDealService.calc(settleTransData);
@@ -1683,5 +1673,14 @@ public class StlDataDealSzdJsmxProcessService {
 		settleTransTgMapping.setTradeId(settleTransData.getTradeId());
 		stlDownDataDealWriteBaseDto.setSettleTransTgMapping(settleTransTgMapping);
 		return stlDownDataDealWriteBaseDto;
+	}
+
+	/**
+	 * 对字符串类型的数字取绝对值
+	 * @param value
+	 * @return
+	 */
+	private BigDecimal abs(String value) {
+		return null != value ? new BigDecimal(value).abs() : null;
 	}
 }
