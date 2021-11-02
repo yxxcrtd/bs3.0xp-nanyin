@@ -134,6 +134,7 @@ public class BondSocketClient {
                                 if (obj != null){
                                     mDEntryPx = new BigDecimal(obj.toString());
                                     result.put("mDEntryPx", mDEntryPx);
+                                    break;
                                 }
                             }
                         }
