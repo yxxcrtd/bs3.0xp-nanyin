@@ -7,7 +7,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch002Dto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch003Dto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch004Dto;
@@ -45,6 +45,24 @@ public class ExchangeTransMatch001Controller  extends BaseController {
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.下行交易匹配状态,DictCode.交易场所,DictCode.平安资产类型,DictCode.交易类型,DictCode.交易平台,DictCode.下行交易匹配类型,DictCode.交易方向);
 
+        model.addAttribute("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        model.addAttribute("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        model.addAttribute("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        model.addAttribute("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+        model.addAttribute("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+
+        model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
+        model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
+        model.addAttribute("PS_T03", DictCodeList.交易方向_行权_回售.getValue());
+        model.addAttribute("PS_T04", DictCodeList.交易方向_申购.getValue());
+        model.addAttribute("PS_T05", DictCodeList.交易方向_申购确认.getValue());
+        model.addAttribute("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
+        model.addAttribute("PS_T97", DictCodeListExt3.交易方向_配债.getValue());
+        model.addAttribute("PS_03", DictCodeList.回购拆借方向_正回购.getValue());
+        model.addAttribute("PS_04", DictCodeList.回购拆借方向_逆回购.getValue());
+        model.addAttribute("PS_T48", DictCodeListExt2.交易方向_新股中签.getValue());
+        model.addAttribute("PS_T47", DictCodeListExt2.交易方向_增发.getValue());
+        model.addAttribute("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
         return super.init(model);
     }
 
@@ -180,4 +198,16 @@ public class ExchangeTransMatch001Controller  extends BaseController {
         }
         return new AjaxResult("交成交匹配成功",MessageType.提示消息);
     }
+
+    /**
+     * 生成交易录单数据
+     * @param dto
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("genTransactionRecord")
+    public String genTransactionRecord(@RequestBody ExchangeTransMatch002Dto dto) {
+        return  exchangeTransMatch001Service.genTransactionRecord(dto);
+    }
+
 }

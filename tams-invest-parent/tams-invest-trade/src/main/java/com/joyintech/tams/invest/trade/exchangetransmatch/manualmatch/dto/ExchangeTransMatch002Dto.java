@@ -65,6 +65,11 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
     private String operateType;
 
     /**
+     * 元素ID
+     */
+    private String elementId;
+
+    /**
      * 委托交易list
      */
     private List<ExchangeTransMatch003Dto> entrustList;
@@ -161,6 +166,14 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
 
     public void setOperateType(String operateType) {
         this.operateType = operateType;
+    }
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
     }
 
     public String getTradeMarketStr() {

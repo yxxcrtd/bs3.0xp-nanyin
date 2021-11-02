@@ -16,8 +16,8 @@ public class ExchangeTransMatchValidator implements BeanValidator {
     public List<ValidMessage> valid(Object entity) {
         ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
         ExchangeTransMatch002Dto dealDto = (ExchangeTransMatch002Dto) entity;
+        if(StringUtil.equals(dealDto.getElementId(),"transaction_macth")) {
             ExchangeTransMatch003Dto entrustDto = dealDto.getEntrustList().get(0);
-
             //比较左右的资产类型
             if(!StringUtil.equals(dealDto.getSecType(),entrustDto.getSecType())) {
                 errorList.add(new ValidMessage("组成交数据的资产类型和委托或交易的资产类型不一致!"));
@@ -32,6 +32,11 @@ public class ExchangeTransMatchValidator implements BeanValidator {
                     || !StringUtil.equals(dealDto.getTradePlat(),entrustDto.getTradePlat())) {
                 errorList.add(new ValidMessage("成交数据的基本信息和委托或交易的基本信息不一致"));
             }
+        }
+        else if (StringUtil.equals(dealDto.getElementId(),"transaction_record")) {
+
+        }
+
         return errorList;
     }
 }

@@ -6,6 +6,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
@@ -159,6 +160,12 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
         //调用成交匹配共通方法
         exchangeTransMatchCommonService.transactionMacth(exchangeTransMatchCommonDto);
 
+    }
+
+    public String genTransactionRecord(ExchangeTransMatch002Dto dto) {
+        String dtoStr = "";
+        dtoStr = JsonUtils.object2Json(null);
+        return dtoStr;
     }
 
 }
