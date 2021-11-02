@@ -4,12 +4,16 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.business.common.constant.PositionDictCodeListExt;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.constant.DictCode;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 public class PositionUtil {
@@ -45,12 +49,38 @@ public class PositionUtil {
                  * 头寸引擎业务失败，待前端确认是否校验
                  */
                 if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_REFUSE, arr[0])){
+                    // 头寸返回对象
+                    BaseMap data = JsonUtils.json2Object(arr[1], BaseMap.class);
+
+                    StringBuffer strb = null;
+                    Map responseMap_data = (Map) data.get("data");
+                    if (responseMap_data != null){
+                        strb = new StringBuffer("当前【");
+                        List checkResults = (List) responseMap_data.get("checkResults");
+                        if (checkResults != null) {
+                            for (int i=0; i<checkResults.size();i++){
+                                BaseMap flow = BaseMap.newMap((Map) checkResults.get(i));
+                                BigDecimal AMOUNT = flow.getBigDecimal("AMOUNT");
+                                String PORTFOLIO_ID = flow.getString("PORTFOLIO_ID");
+                                String HODING_TYPE = flow.getString("HODING_TYPE");
+                                strb.append(PORTFOLIO_ID);
+                                strb.append("【");
+                                strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
+                                strb.append("】");
+                                strb.append("余额为");
+                                strb.append(AMOUNT);
+                            }
+                        }
+                        strb.append("】持仓不足，请确认是否继续？");
+                    }
+                    
                     /**
                      * 余额不足，前端判断code 300确认
                      */
                     BaseMap bm = BaseMap.newMap()
                             .put("code", PositionHttpRequest.CODE_BUSI_REFUSE)
-                            .put("data", JsonUtils.json2Object(arr[1], Map.class));
+                            .put("message", strb)
+                            .put("data", data);
                     return new Message().success().setData(bm);
                 }
             }else {
