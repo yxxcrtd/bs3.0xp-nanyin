@@ -322,7 +322,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     balanceCheck="N";
                 }
                 req.setBalanceCheck(balanceCheck);
-                req.setBusiType(DictCodeList.头寸业务类型_现券交易.getValue());
+                req.setBusiType(DictCodeListExt3.头寸业务类型_现券交易.getValue());
                 if(StringUtil.isNotEmpty(entity.getPs())
                         && StringUtil.equals(entity.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
                     req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
