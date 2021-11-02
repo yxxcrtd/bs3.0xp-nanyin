@@ -560,8 +560,11 @@ public class StlDataDealSzdSjsjgProcessService {
             settleTransData.setVpayDate(DateUtil.parseDate(szdSjsjg.getJgfsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
             // 到期交收日
             settleTransData.setMpayDate(nextWorkDay(DateUtil.parseDate(szdSjsjg.getJgqtrq(), DateUtil.DEFAULT_OTHER_FORMAT)));
-            // 交易本金
-            settleTransData.setPrinAmt(abs(qsbj));
+            // 交易本金 ABS(清算数据Entity.成交数量)
+            // settleTransData.setPrinAmt(abs(qsbj));
+            settleTransData.setPrinAmt(abs(szdSjsjg.getJgqssl()));
+            // 单位净价
+            settleTransData.setUnitCprice(szdSjsjg.getJgcjjg());
             // 回购利息
             BigDecimal repayInt = ArithmeticUtil.multiply(
                     ArithmeticUtil.divide(ArithmeticUtil.multiply(abs(qsbj), abs(szdSjsjg.getJgcjjg())), 100, 2),
