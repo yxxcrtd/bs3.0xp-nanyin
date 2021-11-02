@@ -5,8 +5,13 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.common.base.dao.*;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalMatchMapper;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalStatusMapper;
+import com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
+import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
@@ -16,6 +21,8 @@ import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonE
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.dao.ExchangeTransMatchCommonMapper;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.Fund.ExchangeTransMatchFund1Service;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.*;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.ExchangeTransMatchRepo1Service;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.shares.ExchangeTransMatchShares1Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +74,10 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
     @Autowired
     private ExchangeTransMatchBond5Service exchangeTransMatchBond5Service;
-
+    @Autowired
+    private ExchangeTransMatchRepo1Service exchangeTransMatchRepo1Service;
+    @Autowired
+    private ExchangeTransMatchShares1Service exchangeTransMatchShares1Service;
     @Autowired
     private ExchangeTransMatchFund1Service exchangeTransMatchFund1Service;
 
@@ -362,14 +372,24 @@ public class ExchangeTransMatchCommonService extends BaseService {
         }
         else if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
         || StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())){
-
+               if (StringUtil.equals(commonEntrustDto.getPs(), DictCodeList.交易方向_买入.getValue())) {
+                BaseTradeProductDealDto baseTradeProductDealDto = exchangeTransMatchRepo1Service.genFinProductTradeDto(dto,commonEntrustDto);
+                baseTradeProductDealDtos.add(baseTradeProductDealDto);
+            }
         }
         else if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
             BaseTradeProductDealDto baseTradeProductDealDto = exchangeTransMatchFund1Service.genFinProductTradeDto(dto,commonEntrustDto);
             baseTradeProductDealDtos.add(baseTradeProductDealDto);
         }
         else if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-
+            if(StringUtil.equals(commonEntrustDto.getPs(),DictCodeListExt2.交易方向_新股中签.getValue())
+                    || StringUtil.equals(commonEntrustDto.getPs(),DictCodeListExt2.交易方向_增发.getValue())
+                    || StringUtil.equals(commonEntrustDto.getPs(),DictCodeListExt2.交易方向_配股.getValue())
+                    || StringUtil.equals(commonEntrustDto.getPs(),DictCodeList.交易方向_买入.getValue())
+                    || StringUtil.equals(commonEntrustDto.getPs(),DictCodeList.交易方向_卖出.getValue())) {
+                BaseTradeProductDealDto baseTradeProductDealDto = exchangeTransMatchShares1Service.genFinProductTradeDto(dto,commonEntrustDto);
+                baseTradeProductDealDtos.add(baseTradeProductDealDto);
+            }
         }
 
         //处理头寸和指令完成度
