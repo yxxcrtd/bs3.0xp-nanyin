@@ -6,6 +6,8 @@ import java.util.*;
 
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.riskinfrds.calendar.entity.ICalendar;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -55,6 +57,9 @@ public class StlDataDealSzdJsmxProcessService {
 	
 	@Autowired
     protected StlDownDataDealMapper stlDownDataDealMapper;
+
+	@Autowired
+	protected ICalendar iCalendar;
 	
 	// jsmx02-上中登jsmx的债券
 	public static final String[] szdJsmx02BondYwlxArray1 = new String[] {StlDataDealProcessConstant.YWLX_003, StlDataDealProcessConstant.YWLX_004, StlDataDealProcessConstant.YWLX_601, 
@@ -1519,7 +1524,8 @@ public class StlDataDealSzdJsmxProcessService {
 		// 业务类型
 		settleTransData.setBusiType(DictCodeListExt3.业务类型_债券交易.getValue());
 		// 交易日期
-		settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
+		settleTransData.setTradeDate(DateUtil.parse(iCalendar.calcDate(szdJsmx.getJyrq(), 1,
+				BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
 		// 交割日期
 		settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getJsrq()));
 		// 交易币种
@@ -1665,8 +1671,10 @@ public class StlDataDealSzdJsmxProcessService {
 		settleTransData.setSxfAmtRaw(this.abs(szdJsmx.getSxf()));
 		// 是否优先配售
 		settleTransData.setIsPurchTypeYx(DictCodeList.是否_否.getValue());
-		stlDownDataDealService.calc(settleTransData);
 		stlDownDataDealWriteBaseDto.setSettleTransData(settleTransData);
+		// 成交编号= 成交数据明细流水号
+		settleTransDataAdd.setTradeId(settleTransData.getTradeId());
+		settleTransDataAdd.setSeRepDayType(CacheUtil.getSysParam(StlDataDealProcessConstant.STL_SE_REP_DAY_TYPE));
 		stlDownDataDealWriteBaseDto.setSettleTransDataAdd(settleTransDataAdd);
 		// 成交数据与投管交易关系
 		SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
