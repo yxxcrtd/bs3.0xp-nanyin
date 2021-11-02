@@ -546,6 +546,11 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      */
     private String businessModel;
 
+    /**
+     * 成交匹配的流水号 seqId
+     */
+    private String dealSqeId;
+
 
     public String getPreTradeId() {
         return preTradeId;
@@ -2386,5 +2391,13 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
 
     public void setBusinessModel(String businessModel) {
         this.businessModel = businessModel;
+    }
+
+    public String getDealSqeId() {
+        return dealSqeId;
+    }
+
+    public void setDealSqeId(String dealSqeId) {
+        this.dealSqeId = dealSqeId;
     }
 }

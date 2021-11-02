@@ -7,6 +7,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.SettleTransDataTotalAddMapper;
@@ -17,10 +18,16 @@ import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
+import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
+import com.joyintech.tams.invest.trade.bondtostock.dto.TrdBondToStock001Dto;
+import com.joyintech.tams.invest.trade.conbond.dto.TrdConBond003Dto;
+import com.joyintech.tams.invest.trade.conbond.dto.TrdConBondDto;
 import com.joyintech.tams.invest.trade.cstp.dto.CstpSelectDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.ExchangeTransMatchBondCommonService;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +44,10 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
 
     @Autowired
     private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
+
+    @Autowired
+    private ExchangeTransMatchBondCommonService exchangeTransMatchBondCommonService;
+
     @Autowired
     private SettleTransDataTotalMapper settleTransDataTotalMapper;
 
@@ -198,37 +209,93 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
 
     }
 
+    /**
+     * 生成交易录单数据
+     * @param dto
+     * @return
+     */
     public String genTransactionRecord(ExchangeTransMatch002Dto dto) {
-        String dtoStr = "";
+        String dtoStr = null;
         SettleTransDataTotal settleTransDataTotal = settleTransDataTotalMapper.selectByPrimaryKey(dto.getSeqId());
         SettleTransDataTotalAdd settleTransDataTotalAdd = settleTransDataTotalAddMapper.selectByPrimaryKey(dto.getSeqId());
-        Map<String,Object> map=JsonUtils.object2Map(settleTransDataTotal);
-        if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
-            || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
-            || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())
-            || StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())) {
+        if(StringUtil.isNotEmpty(settleTransDataTotal)) {
+            if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
+                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
+                        || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())
+                        || StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())) {
+                    TrdBondInvestTradeDto trdBondInvestTradeDto = new TrdBondInvestTradeDto();
+                    BeanUtil.copyPropertiesIgnoreNull(trdBondInvestTradeDto,settleTransDataTotal);
+
+                    trdBondInvestTradeDto.setDealSqeId(settleTransDataTotal.getSeqId());
+                    trdBondInvestTradeDto.setIsCancel(DictCodeList.是否_否.getValue());
+                    trdBondInvestTradeDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                    trdBondInvestTradeDto.setIsOutTrade(DictCodeList.是否_是.getValue());
+
+                    if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())) {
+                        trdBondInvestTradeDto.setPs(DictCodeList.交易方向_买入.getValue());
+                    }
+
+                    dtoStr = JsonUtils.object2Json(trdBondInvestTradeDto);
+                }
+                else if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())) {
+                    TrdConBondDto trdConBondDto = new TrdConBondDto();
+                    BeanUtil.copyPropertiesIgnoreNull(trdConBondDto,settleTransDataTotal);
+                    trdConBondDto.setDealSqeId(settleTransDataTotal.getSeqId());
+                    trdConBondDto.setIsCancel(DictCodeList.是否_否.getValue());
+                    trdConBondDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                    trdConBondDto.setIsOutTrade(DictCodeList.是否_是.getValue());
+
+                    dtoStr = JsonUtils.object2Json(trdConBondDto);
+                }
+                else if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购确认.getValue())) {
+                    TrdConBond003Dto trdConBond003Dto = new TrdConBond003Dto();
+                    BeanUtil.copyPropertiesIgnoreNull(trdConBond003Dto,settleTransDataTotal);
+                    trdConBond003Dto.setDealSqeId(settleTransDataTotal.getSeqId());
+                    trdConBond003Dto.setIsCancel(DictCodeList.是否_否.getValue());
+                    trdConBond003Dto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                    trdConBond003Dto.setIsOutTrade(DictCodeList.是否_是.getValue());
+                    trdConBond003Dto.setbTradeId(exchangeTransMatchBondCommonService.selectBTradeId(settleTransDataTotal.getApplyTradeId(),settleTransDataTotal.getPs()));
+
+                    dtoStr = JsonUtils.object2Json(trdConBond003Dto);
+                }
+                else if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())) {
+                    if(StringUtil.isNotEmpty(settleTransDataTotalAdd)) {
+                        TrdBondToStock001Dto trdBondToStock001Dto = new TrdBondToStock001Dto();
+
+                        BeanUtil.copyPropertiesIgnoreNull(trdBondToStock001Dto,settleTransDataTotal);
+                        trdBondToStock001Dto.setDealSqeId(settleTransDataTotal.getSeqId());
+                        trdBondToStock001Dto.setIsCancel(DictCodeList.是否_否.getValue());
+                        trdBondToStock001Dto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                        trdBondToStock001Dto.setIsOutTrade(DictCodeList.是否_是.getValue());
+                        trdBondToStock001Dto.setConShareId(settleTransDataTotalAdd.getrFinprodId());
+                        trdBondToStock001Dto.setConvdate(settleTransDataTotal.getVdate());
+                        trdBondToStock001Dto.setConNum(settleTransDataTotalAdd.getConAmt());
+                        trdBondToStock001Dto.setConPrice(settleTransDataTotalAdd.getConPrice());
+
+                        dtoStr = JsonUtils.object2Json(trdBondToStock001Dto);
+                    }
+                }
 
             }
-            dtoStr = JsonUtils.object2Json(null);
+            else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+                    || StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+                Map<String,Object> map=JsonUtils.object2Map(settleTransDataTotal);
+                //期限品种
+                map.put("termTypeReback",settleTransDataTotal.getTermType());
+                //回购利率
+                map.put("rebackPrice",settleTransDataTotal.getIntAmt());
+                //回购类型
+                map.put("repoType",settleTransDataTotalAdd.getRepoType());
+                dtoStr = JsonUtils.object2Json(map);
+            }
+            else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+                dtoStr = JsonUtils.object2Json(null);
+            }
+            else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+                dtoStr = JsonUtils.object2Json(null);
+            }
         }
-        else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
-        || StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
-            //期限品种
-            map.put("termTypeReback",settleTransDataTotal.getTermType());
-            //回购利率
-            map.put("rebackPrice",settleTransDataTotal.getIntAmt());
-            //回购类型
-            map.put("repoType",settleTransDataTotalAdd.getRepoType());
-            dtoStr = JsonUtils.object2Json(map);
-        }
-        else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
-            dtoStr = JsonUtils.object2Json(null);
-        }
-        else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-            dtoStr = JsonUtils.object2Json(null);
-        }
-        
         return dtoStr;
     }
 

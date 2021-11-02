@@ -245,6 +245,11 @@ public class TrdConBondDto extends TrdFinProductDealTotal implements ProcessEnti
      * 控制操作按钮
      */
     private String flg;
+
+	/**
+	 * 成交匹配的流水号 seqId
+	 */
+	private String dealSqeId;
     
 
 
@@ -639,5 +644,11 @@ public class TrdConBondDto extends TrdFinProductDealTotal implements ProcessEnti
 		this.channelAvailableCash = channelAvailableCash;
 	}
 
-	
+	public String getDealSqeId() {
+		return dealSqeId;
+	}
+
+	public void setDealSqeId(String dealSqeId) {
+		this.dealSqeId = dealSqeId;
+	}
 }

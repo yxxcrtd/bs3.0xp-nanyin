@@ -77,6 +77,7 @@
             {field:'finprodId', visible:false},
             {field:'ps', visible:false},
             {field:'tradeMarket', visible:false},
+            {field:'seqId', visible:false},
             {field:'tradePlat', visible:false}
         ]
 

@@ -179,7 +179,7 @@
                 AND A1.TRADE_DATE = TO_DATE(#{dealDate}, 'yyyy-mm-dd')
             </if>
             <if test="secAccount!=null and secAccount!='' ">
-                AND D1.SEC_ACCT_ID = TO_DATE(#{secAcct}, 'yyyy-mm-dd')
+                AND D1.SEC_ACCT_ID = #{secAccount}
             </if>
     </select>
 

@@ -70,6 +70,11 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
     private String elementId;
 
     /**
+     * 组合名称
+     */
+    private String portfolioName;
+
+    /**
      * 委托交易list
      */
     private List<ExchangeTransMatch003Dto> entrustList;
@@ -190,6 +195,14 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
 
     public String getPsStr() {
         return  SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
     }
 }
 
