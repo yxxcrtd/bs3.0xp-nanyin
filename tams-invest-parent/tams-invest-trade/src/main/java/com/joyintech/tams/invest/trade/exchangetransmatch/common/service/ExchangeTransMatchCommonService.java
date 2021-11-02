@@ -1,11 +1,7 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.common.service;
-
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
@@ -20,6 +16,8 @@ import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.Fund.Ex
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.*;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.ExchangeTransMatchRepo1Service;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.shares.ExchangeTransMatchShares1Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +33,11 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ExchangeTransMatchCommonService extends BaseService {
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ExchangeTransMatchCommonService.class);
     
     @Autowired
     private ExchangeTransMatchCommonMapper exchangeTransMatchCommonMapper;
@@ -50,6 +53,9 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
     @Autowired
     private SettleTransDataTotalStatusMapper settleTransDataTotalStatusMapper;
+
+    @Autowired
+    private SettleTransDataTotalMapper settleTransDataTotalMapper;
 
     /**
      * 金融产品交易共通业务
@@ -100,26 +106,37 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
     /**
      * 交易完成后，调用共通修改SETTLE_TRANS_TG_MAPPING，SETTLE_TRANS_DATA_TOTAL_STATUS
-     * @param dto
+     * @param seqId
      * @param tradeId
      */
-    public void transactionRecord(ExchangeTransMatchCommonDto dto,String tradeId) {
+    public void transactionRecord(String seqId,String tradeId) {
         //登录:成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）
-        List<SettleTransTgMapping> settleTransTgMappingList = this.genSettleTransTgMapping(dto,tradeId);
-        if(!StringUtil.isEmptyList(settleTransTgMappingList)) {
-            for(SettleTransTgMapping settleTransTgMapping:settleTransTgMappingList) {
-                settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
+        logger.error("录单完成,调用共通，成交流水号"+ seqId +",交易编号:"+tradeId +",开始");
+        SettleTransDataTotal settleTransDataTotal = settleTransDataTotalMapper.selectByPrimaryKey(seqId);
+        if(StringUtil.isNotEmpty(settleTransDataTotal)) {
+            ExchangeTransMatchCommonDto dto = new ExchangeTransMatchCommonDto();
+            BeanUtil.copyPropertiesIgnoreNull(dto,settleTransDataTotal);
+            List<SettleTransTgMapping> settleTransTgMappingList = this.genSettleTransTgMapping(dto,tradeId);
+            if(!StringUtil.isEmptyList(settleTransTgMappingList)) {
+                for(SettleTransTgMapping settleTransTgMapping:settleTransTgMappingList) {
+                    settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
+                }
+            }
+
+            //更新:汇总成交数据状态表（SETTLE_TRANS_DATA_TOTAL_STATUS）
+            SettleTransDataTotalStatus settleTransDataTotalStatus = settleTransDataTotalStatusMapper.selectByPrimaryKey(dto.getSeqId());
+            if(StringUtil.isNotEmpty(settleTransDataTotalStatus)) {
+                settleTransDataTotalStatus.setMatchStatus(DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
+                settleTransDataTotalStatus.setUpdateTime(new Date());
+                settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
+                settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
             }
         }
-
-        //更新:汇总成交数据状态表（SETTLE_TRANS_DATA_TOTAL_STATUS）
-        SettleTransDataTotalStatus settleTransDataTotalStatus = settleTransDataTotalStatusMapper.selectByPrimaryKey(dto.getSeqId());
-        if(StringUtil.isNotEmpty(settleTransDataTotalStatus)) {
-            settleTransDataTotalStatus.setMatchStatus(DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
-            settleTransDataTotalStatus.setUpdateTime(new Date());
-            settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
-            settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
+        else {
+            logger.error("没有查询到成交信息,成交流水号:"+ seqId +",交易编号:"+tradeId);
         }
+
+        logger.error("录单完成,调用共通，成交流水号"+ seqId +",交易编号:"+tradeId +",结束");
     }
 
     /**
@@ -127,10 +144,12 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param dtoList
      */
     public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList){
+        logger.error("批量处理成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
 
         for(ExchangeTransMatchCommonDto dto:dtoList) {
             this.transactionMacth(dto);
         }
+        logger.error("批量处理成交匹配数据---结束");
     }
 
     /**
@@ -138,6 +157,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param dto
      */
     public void transactionMacth(ExchangeTransMatchCommonDto dto) {
+        logger.error("处理成交匹配数据---开始，成交数据:"+ JsonUtils.object2Json(dto));
         //查询汇总成交数据附属表
         dto.setSettleTransDataTotalAdd(settleTransDataTotalAddMapper.selectByPrimaryKey(dto.getSeqId()));
         //查询匹配的委托信息list
@@ -353,7 +373,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
             //处理匹配成交相关的表
             this.handleSettleTransTableInfo(dto,commonEntrustDtoList,matchStatus);
         }
-
+        logger.error("处理成交匹配数据---结束");
     }
 
     /**
@@ -363,9 +383,10 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param matchStatus
      */
     private void handleSettleTransTableInfo(ExchangeTransMatchCommonDto dto,List<ExchangeTransMatchCommonEntrustDto> commonEntrustDtoList,String matchStatus) {
-
+        logger.error("处理匹配成交相关的表---开始,委托list:"+JsonUtils.objectArray2Json(commonEntrustDtoList));
         for(ExchangeTransMatchCommonEntrustDto commonEntrustDto : commonEntrustDtoList) {
             //处理业务交易表
+
             String tradeId = this.handleFinProductTradeDto(dto,commonEntrustDto);
 
             //登录:汇总成交数据匹配结果表（SETTLE_TRANS_DATA_TOTAL_MATCH）
@@ -390,9 +411,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
             settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
             settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
         }
+        logger.error("处理匹配成交相关的表---结束");
     }
 
     private String handleFinProductTradeDto(ExchangeTransMatchCommonDto dto,ExchangeTransMatchCommonEntrustDto commonEntrustDto){
+        logger.error("处理业务交易表---开始");
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         List<BaseTradeProductDealDto> baseTradeProductDealDtos = new ArrayList<>();
         finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
@@ -493,10 +516,12 @@ public class ExchangeTransMatchCommonService extends BaseService {
             }
 
         }
-
+        
+        logger.error("交易表数据:"+JsonUtils.object2Json(finProductTradeDto));
         //处理头寸和指令完成度
         baseTradeProductDealCommService.execute(finProductTradeDto);
 
+        logger.error("处理业务交易表---结束,交易编号:"+tradeId);
         return tradeId;
     }
 
