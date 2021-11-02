@@ -7,6 +7,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
@@ -164,7 +165,20 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
 
     public String genTransactionRecord(ExchangeTransMatch002Dto dto) {
         String dtoStr = "";
-        dtoStr = JsonUtils.object2Json(null);
+        if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+            dtoStr = JsonUtils.object2Json(null);
+        }
+        else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+        || StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+            dtoStr = JsonUtils.object2Json(null);
+        }
+        else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+            dtoStr = JsonUtils.object2Json(null);
+        }
+        else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+            dtoStr = JsonUtils.object2Json(null);
+        }
+        
         return dtoStr;
     }
 
