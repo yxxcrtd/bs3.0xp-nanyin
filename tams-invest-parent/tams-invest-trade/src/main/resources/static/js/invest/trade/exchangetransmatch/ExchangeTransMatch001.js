@@ -286,6 +286,7 @@
                 Joyin.ajaxJson(basePath + 'invest/trade/exchangetransmatch/ExchangeTransMatch001/check', object, function(result) {
                     Joyin.confirm("请确认是否进行交易录单?", function() {
                         Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/genTransactionRecord'),object,function (result) {
+                            result=JSON.stringify(result);
                             if(result) {
                                 var lable = "";
                                 var url = "";

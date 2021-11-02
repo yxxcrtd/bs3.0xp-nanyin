@@ -178,6 +178,7 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
         String dtoStr = "";
         SettleTransDataTotal settleTransDataTotal = settleTransDataTotalMapper.selectByPrimaryKey(dto.getSeqId());
         SettleTransDataTotalAdd settleTransDataTotalAdd = settleTransDataTotalAddMapper.selectByPrimaryKey(dto.getSeqId());
+        Map<String,Object> map=JsonUtils.object2Map(settleTransDataTotal);
         if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
             if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
             || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
@@ -189,13 +190,13 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
         }
         else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
         || StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
-//            //期限品种
-//            map.put("termTypeReback",dto.getTermType());
-//            //回购利率
-//            map.put("rebackPrice",dto.getIntAmt());
-//            //回购类型
-//            map.put("repoType","");
-            dtoStr = JsonUtils.object2Json(null);
+            //期限品种
+            map.put("termTypeReback",settleTransDataTotal.getTermType());
+            //回购利率
+            map.put("rebackPrice",settleTransDataTotal.getIntAmt());
+            //回购类型
+            map.put("repoType",settleTransDataTotalAdd.getRepoType());
+            dtoStr = JsonUtils.object2Json(map);
         }
         else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
             dtoStr = JsonUtils.object2Json(null);
