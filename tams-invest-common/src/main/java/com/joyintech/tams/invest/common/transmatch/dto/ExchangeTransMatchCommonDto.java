@@ -3,7 +3,9 @@ package com.joyintech.tams.invest.common.transmatch.dto;
 import com.joyintech.background.component.common.pack.common.base.BaseEntity;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.SettleTransDataAdd;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
 import com.joyintech.tams.constant.DictCodeList;
 
 import java.math.BigDecimal;
@@ -46,6 +48,16 @@ public class ExchangeTransMatchCommonDto extends SettleTransDataTotal {
      * 关联的指令编号list
      */
     private List<String> entrustIdList;
+
+    /**
+     * 汇总成交数据附属表
+     */
+    private SettleTransDataTotalAdd settleTransDataTotalAdd;
+
+    /**
+     *  转换资产代码/债转股代码（基金转换/债转股）
+     */
+    private String rFinprodType;
 
     public String getMatchType() {
         return matchType;
@@ -104,5 +116,21 @@ public class ExchangeTransMatchCommonDto extends SettleTransDataTotal {
 
     public void setTotalUnFeeAmtPay(BigDecimal totalUnFeeAmtPay) {
         this.totalUnFeeAmtPay = totalUnFeeAmtPay;
+    }
+
+    public SettleTransDataTotalAdd getSettleTransDataTotalAdd() {
+        return settleTransDataTotalAdd;
+    }
+
+    public void setSettleTransDataTotalAdd(SettleTransDataTotalAdd settleTransDataTotalAdd) {
+        this.settleTransDataTotalAdd = settleTransDataTotalAdd;
+    }
+
+    public String getrFinprodType() {
+        return rFinprodType;
+    }
+
+    public void setrFinprodType(String rFinprodType) {
+        this.rFinprodType = rFinprodType;
     }
 }

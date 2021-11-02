@@ -51,10 +51,10 @@ public class ExchangeTransMatchBond1Service extends ExchangeTransMatchBondCommon
         trdFinProductDealTotal.setTradeAmt(ArithmeticUtil.subtract(trdFinProductDealTotal.getFpriceAmt(),entrustDto.getMarchFeeAmtPay()));
         // 利息总额
         trdFinProductDealTotal.setIntAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),dealDto.getUnitInt()));
-//        // 到期收益率
-//        trdFinProductDealTotal.setYield(trdProductDealDto.getYield());
-//        // 行权收益率
-//        trdFinProductDealTotal.setExerYield(trdProductDealDto.getExerYield());
+        // 到期收益率--在TrdProductDeal生成的时候同时设值
+        trdFinProductDealTotal.setYield(null);
+        // 行权收益率--在TrdProductDeal生成的时候同时设值
+        trdFinProductDealTotal.setExerYield(null);
         // 首期结算方式
         trdFinProductDealTotal.setDeliveryType("DVP");
     }
@@ -79,8 +79,14 @@ public class ExchangeTransMatchBond1Service extends ExchangeTransMatchBondCommon
         trdProductDeal.setPs(entrustDto.getPs());
         // 到期收益率和行权收益率
         this.calc(trdProductDeal);
-
         trdProductDeal.setTgBusiType(getTgBusiType(entrustDto.getPs()));
+
+        // 到期收益率
+        trdFinProductDealTotal.setYield(trdProductDeal.getYield());
+        // 行权收益率
+        trdFinProductDealTotal.setExerYield(trdProductDeal.getExerYield());
+
+
 
         return trdProductDeal;
     }

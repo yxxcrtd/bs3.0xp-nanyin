@@ -3,12 +3,11 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
-
 import java.math.BigDecimal;
 
 public class SettleTransDataTotalAdd extends BaseEntity {
     /**
-     * 成交编号
+     * 流水号
      */
     private String tradeId;
 
@@ -46,16 +45,16 @@ public class SettleTransDataTotalAdd extends BaseEntity {
     private String seRepDayType;
 
     /**
-     * 取得 成交编号
-     * @return 成交编号
+     * 取得 流水号
+     * @return 流水号
      */
     public String getTradeId() {
         return tradeId;
     }
 
     /**
-     * 设置 成交编号
-     * @param tradeId 成交编号
+     * 设置 流水号
+     * @param tradeId 流水号
      */
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId == null ? null : tradeId.trim();

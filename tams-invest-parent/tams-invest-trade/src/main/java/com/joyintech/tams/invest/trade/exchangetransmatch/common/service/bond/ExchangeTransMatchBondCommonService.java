@@ -464,9 +464,15 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         return stlPayOrders;
     }
 
+    protected List<TrdFinProductBarterTotal> generateDealBarterTotal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
+        return null;
+    }
+
     protected List<TrdFinProductBarter> generateDealBarterList(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
         return null;
     }
+
+
 
     /**
      * 生成交易信息

@@ -29,10 +29,10 @@ public class ExchangeTransMatchBond3Service extends ExchangeTransMatchBondCommon
     protected void setDealTotal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
         // 业务类型
         trdFinProductDealTotal.setBusiType(DictCodeListExt2.共通业务类型_可转债申购交易.getValue());
-//        // 到期收益率
-//        trdFinProductDealTotal.setYield(trdProductDealDto.getYield());
-//        // 行权收益率
-//        trdFinProductDealTotal.setExerYield(trdProductDealDto.getExerYield());
+        // 到期收益率
+        trdFinProductDealTotal.setYield(null);
+        // 行权收益率
+        trdFinProductDealTotal.setExerYield(null);
         // 首期结算方式
         trdFinProductDealTotal.setDeliveryType("DVP");
         // 净价总额
@@ -94,6 +94,11 @@ public class ExchangeTransMatchBond3Service extends ExchangeTransMatchBondCommon
         trdProductDeal.setbTradeId(this.selectBTradeId(dealDto.getApplyTradeId(), DictCodeList.交易方向_申购.getValue()));
 
         trdProductDeal.setTgBusiType(DictCodeListExt1.平安业务类型_债券类资产买入.getValue());
+
+        // 到期收益率
+        trdFinProductDealTotal.setYield(trdProductDeal.getYield());
+        // 行权收益率
+        trdFinProductDealTotal.setExerYield(trdProductDeal.getExerYield());
 
         return trdProductDeal;
     }

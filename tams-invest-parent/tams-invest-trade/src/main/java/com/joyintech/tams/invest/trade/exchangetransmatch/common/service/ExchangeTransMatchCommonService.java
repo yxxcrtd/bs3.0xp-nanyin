@@ -4,17 +4,14 @@ import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
-import com.joyintech.tams.common.base.dao.SettleTransDataTotalMatchMapper;
-import com.joyintech.tams.common.base.dao.SettleTransDataTotalStatusMapper;
-import com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper;
-import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
-import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
-import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
+import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
@@ -80,6 +77,26 @@ public class ExchangeTransMatchCommonService extends BaseService {
     private ExchangeTransMatchShares1Service exchangeTransMatchShares1Service;
     @Autowired
     private ExchangeTransMatchFund1Service exchangeTransMatchFund1Service;
+	@Autowired
+    private SettleTransDataTotalAddMapper settleTransDataTotalAddMapper;
+	@Autowired
+    private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
+	@Autowired
+	private PaTrdFinProductDealTotalMapper paTrdFinProductDealTotalMapper;
+	@Autowired
+    private TrdDealTotalAddMapper trdDealTotalAddMapper;
+	@Autowired
+    private TrdProductDealMapper trdProductDealMapper;
+	@Autowired
+    private TrdProductDealAddMapper trdProductDealAddMapper;
+	@Autowired
+    private PaTrdProductDealMapper paTrdProductDealMapper;
+	@Autowired
+    private StlPayOrdersMapper stlPayOrdersMapper;
+    @Autowired
+    private TrdFinProductBarterMapper trdFinProductBarterMapper;
+    @Autowired
+    private TrdTradeFeeDetailMapper trdTradeFeeDetailMapper;
 
     /**
      * 批量处理成交匹配数据
@@ -93,7 +110,8 @@ public class ExchangeTransMatchCommonService extends BaseService {
     }
 
     public void transactionMacth(ExchangeTransMatchCommonDto dto) {
-
+        //查询汇总成交数据附属表
+        dto.setSettleTransDataTotalAdd(settleTransDataTotalAddMapper.selectByPrimaryKey(dto.getSeqId()));
         //查询匹配的委托信息list
         List<ExchangeTransMatchCommonEntrustDto> commonEntrustDtoList = exchangeTransMatchCommonMapper.getEtrEntrustByIdList(dto.getEntrustIdList());
         if(!StringUtil.isEmptyList(commonEntrustDtoList)) {
@@ -382,20 +400,71 @@ public class ExchangeTransMatchCommonService extends BaseService {
             baseTradeProductDealDtos.add(baseTradeProductDealDto);
         }
         else if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-            if(StringUtil.equals(commonEntrustDto.getPs(),DictCodeListExt2.交易方向_新股中签.getValue())
-                    || StringUtil.equals(commonEntrustDto.getPs(),DictCodeListExt2.交易方向_增发.getValue())
-                    || StringUtil.equals(commonEntrustDto.getPs(),DictCodeListExt2.交易方向_配股.getValue())
-                    || StringUtil.equals(commonEntrustDto.getPs(),DictCodeList.交易方向_买入.getValue())
-                    || StringUtil.equals(commonEntrustDto.getPs(),DictCodeList.交易方向_卖出.getValue())) {
-                BaseTradeProductDealDto baseTradeProductDealDto = exchangeTransMatchShares1Service.genFinProductTradeDto(dto,commonEntrustDto);
+            if (StringUtil.equals(commonEntrustDto.getPs(), DictCodeListExt2.交易方向_新股中签.getValue())
+                    || StringUtil.equals(commonEntrustDto.getPs(), DictCodeListExt2.交易方向_增发.getValue())
+                    || StringUtil.equals(commonEntrustDto.getPs(), DictCodeListExt2.交易方向_配股.getValue())
+                    || StringUtil.equals(commonEntrustDto.getPs(), DictCodeList.交易方向_买入.getValue())
+                    || StringUtil.equals(commonEntrustDto.getPs(), DictCodeList.交易方向_卖出.getValue())) {
+                BaseTradeProductDealDto baseTradeProductDealDto = exchangeTransMatchShares1Service.genFinProductTradeDto(dto, commonEntrustDto);
                 baseTradeProductDealDtos.add(baseTradeProductDealDto);
             }
+        }
+        //交易入库
+        String tradeId = "";
+        for(BaseTradeProductDealDto baseTradeProductDealDto: finProductTradeDto.getBaseTradeProductDealDtos()) {
+            if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdFinProductDealTotal())){
+                trdFinProductDealTotalMapper.insertSelective(baseTradeProductDealDto.getTrdFinProductDealTotal());
+            }
+
+            if(StringUtil.isNotEmpty(baseTradeProductDealDto.getPaTrdFinProductDealTotal())){
+                paTrdFinProductDealTotalMapper.insertSelective(baseTradeProductDealDto.getPaTrdFinProductDealTotal());
+            }
+
+            if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdDealTotalAdd())){
+                trdDealTotalAddMapper.insertSelective(baseTradeProductDealDto.getTrdDealTotalAdd());
+            }
+
+            if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDeal())){
+                tradeId = StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDeal().getTotleTradeId())
+                ?baseTradeProductDealDto.getTrdProductDeal().getTotleTradeId() : baseTradeProductDealDto.getTrdProductDeal().getTradeId();
+                trdProductDealMapper.insertSelective(baseTradeProductDealDto.getTrdProductDeal());
+            }
+            if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDealAdd())){
+                trdProductDealAddMapper.insertSelective(baseTradeProductDealDto.getTrdProductDealAdd());
+            }
+
+            if(StringUtil.isNotEmpty(baseTradeProductDealDto.getPaTrdProductDeal())){
+                paTrdProductDealMapper.insertSelective(baseTradeProductDealDto.getPaTrdProductDeal());
+            }
+
+            if(!StringUtil.isEmptyList(baseTradeProductDealDto.getStlPayOrdersList())){
+                for(StlPayOrdersDto stlPayOrdersDto:baseTradeProductDealDto.getStlPayOrdersList()) {
+                    stlPayOrdersMapper.insertSelective(stlPayOrdersDto);
+                }
+            }
+
+            if(!StringUtil.isEmptyList(baseTradeProductDealDto.getTrdFinProductBarterList())){
+                for(TrdFinProductBarter trdFinProductBarter:baseTradeProductDealDto.getTrdFinProductBarterList()) {
+                    trdFinProductBarterMapper.insertSelective(trdFinProductBarter);
+                }
+            }
+
+            if(!StringUtil.isEmptyList(baseTradeProductDealDto.getTrdTradeFeeDetailList())){
+                for(TrdTradeFeeDetail TrdTradeFeeDetail:baseTradeProductDealDto.getTrdTradeFeeDetailList()) {
+                    trdTradeFeeDetailMapper.insertSelective(TrdTradeFeeDetail);
+                }
+            }
+
+            if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdTradeFeeDetail())){
+                trdTradeFeeDetailMapper.insertSelective(baseTradeProductDealDto.getTrdTradeFeeDetail());
+            }
+
         }
 
         //处理头寸和指令完成度
         baseTradeProductDealCommService.execute(finProductTradeDto);
 
-        return "";
+        return tradeId;
     }
 
     /**

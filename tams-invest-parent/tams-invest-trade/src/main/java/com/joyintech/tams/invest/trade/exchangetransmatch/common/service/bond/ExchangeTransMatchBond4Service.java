@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond;
 
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -9,8 +10,10 @@ import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.TrdProductDealDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +22,9 @@ import java.util.List;
  */
 @Service
 public class ExchangeTransMatchBond4Service extends ExchangeTransMatchBondCommonService {
+
+    @Autowired
+    private FinProductMapper finProductMapper;
     /**
      * 债券交易处理
      * @param
@@ -64,6 +70,11 @@ public class ExchangeTransMatchBond4Service extends ExchangeTransMatchBondCommon
 
         trdProductDeal.setTgBusiType(getTgBusiType(entrustDto.getPs()));
 
+        // 到期收益率
+        trdFinProductDealTotal.setYield(trdProductDeal.getYield());
+        // 行权收益率
+        trdFinProductDealTotal.setExerYield(trdProductDeal.getExerYield());
+
         return trdProductDeal;
     }
 
@@ -71,10 +82,29 @@ public class ExchangeTransMatchBond4Service extends ExchangeTransMatchBondCommon
     public TrdDealTotalAdd generateDealTotalAdd(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
         TrdDealTotalAdd trdDealTotalAdd = new TrdDealTotalAdd();
         trdDealTotalAdd.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+
         // 零星股数
 //        trdDealTotalAdd.setSpoShareNum(x.getSpoShareNum());
 
         return trdDealTotalAdd;
+    }
+
+    @Override
+    protected List<TrdFinProductBarterTotal> generateDealBarterTotal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal){
+        List<TrdFinProductBarterTotal> trdFinProductBarterTotalList = new ArrayList<>();
+        TrdFinProductBarterTotal trdFinProductBarterTotal = new TrdFinProductBarterTotal();
+        SettleTransDataTotalAdd settleTransDataTotalAdd = dealDto.getSettleTransDataTotalAdd();
+
+        trdFinProductBarterTotal.setTradeId(trdFinProductDealTotal.getTotleTradeId());
+        // 金融产品代码
+        trdFinProductBarterTotal.setFinprodId(settleTransDataTotalAdd.getrFinprodId());
+        trdFinProductBarterTotal.setFinprodType(dealDto.getrFinprodType());
+        // 转股价格
+        trdFinProductBarterTotal.setUnitCprice(settleTransDataTotalAdd.getConPrice());
+        // 转股数
+        trdFinProductBarterTotal.setShareAmt(settleTransDataTotalAdd.getConAmt());
+        trdFinProductBarterTotalList.add(trdFinProductBarterTotal);
+        return trdFinProductBarterTotalList;
     }
 
 
@@ -83,15 +113,16 @@ public class ExchangeTransMatchBond4Service extends ExchangeTransMatchBondCommon
         List<TrdFinProductBarter> trdFinProductBarterList = new ArrayList<>();
 
         TrdFinProductBarter trdFinProductBarter = new TrdFinProductBarter();
+        SettleTransDataTotalAdd settleTransDataTotalAdd = dealDto.getSettleTransDataTotalAdd();
         trdFinProductBarter.setTradeId(trdProductDeal.getTradeId());
         // 金融产品代码
-        trdFinProductBarter.setFinprodId(trdProductDeal.getFinprodId());
+        trdFinProductBarter.setFinprodId(settleTransDataTotalAdd.getrFinprodId());
         // 金融产品类型
-        trdFinProductBarter.setFinprodType(trdProductDeal.getFinprodType2());
+        trdFinProductBarter.setFinprodType(dealDto.getrFinprodType());
         // 转股价格
-        trdFinProductBarter.setUnitCprice(dealDto.getUnitCprice());
+        trdFinProductBarter.setUnitCprice(settleTransDataTotalAdd.getConPrice());
         // 转股数
-        trdFinProductBarter.setShareAmt(trdProductDeal.getShareAmt());
+        trdFinProductBarter.setShareAmt(settleTransDataTotalAdd.getConAmt());
         trdFinProductBarterList.add(trdFinProductBarter);
 
         return trdFinProductBarterList;
