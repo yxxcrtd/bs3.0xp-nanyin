@@ -291,25 +291,25 @@
                                 var url = "";
                                 //债券
                                 if(object.finprodType2 == FINPROD_TYPE_TG_F01) {
-                                    if(object.ps == PS_T01 || object.ps == PS_T02 || object.ps == PS_T03) {
+                                    //买入，卖出，行权回售，配债
+                                    if(object.ps == PS_T01 || object.ps == PS_T02 || object.ps == PS_T03 || object.ps == PS_T97) {
                                         lable = "TrdBondInvestTrade002";
                                         url = "invest/trade/bond/TrdBondInvestTrade002/init";
                                     }
+                                    //可转债申购
                                     else if(object.ps == PS_T04){
                                         lable = "TrdConBond002";
                                         url = "invest/trade/conbond/TrdConBond002/init";
                                     }
+                                    //可转债申购确认
                                     else if(object.ps == PS_T05) {
                                         lable = "TrdConBond002";
                                         url = "invest/trade/conbond/TrdConBond003/init";
                                     }
+                                    //债转股
                                     else if(object.ps == PS_T49) {
                                         lable = "TrdBondToStock002.new";
                                         url = "invest/trade/bondtostock/TrdBondToStock002/init";
-                                    }
-                                    else if(object.ps == PS_T97) {
-                                        lable = "TrdBondInvestTrade002";
-                                        url = "invest/trade/bond/TrdBondInvestTrade002/init";
                                     }
 
                                 }

@@ -1,13 +1,20 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.service;
 
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalAddMapper;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalMapper;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
@@ -27,6 +34,11 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
 
     @Autowired
     private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
+    @Autowired
+    private SettleTransDataTotalMapper settleTransDataTotalMapper;
+
+    @Autowired
+    private SettleTransDataTotalAddMapper settleTransDataTotalAddMapper;
 
 
     /**
@@ -164,18 +176,25 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
 
     public String genTransactionRecord(ExchangeTransMatch002Dto dto) {
         String dtoStr = "";
-        Map<String,Object> map=JsonUtils.object2Map(dto);
+        SettleTransDataTotal settleTransDataTotal = settleTransDataTotalMapper.selectByPrimaryKey(dto.getSeqId());
+        SettleTransDataTotalAdd settleTransDataTotalAdd = settleTransDataTotalAddMapper.selectByPrimaryKey(dto.getSeqId());
         if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
+            || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
+            || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())
+            || StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())) {
+
+            }
             dtoStr = JsonUtils.object2Json(null);
         }
         else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
         || StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
-            //期限品种
-            map.put("termTypeReback",dto.getTermType());
-            //回购利率
-            map.put("rebackPrice",dto.getIntAmt());
-            //回购类型
-            map.put("repoType","");
+//            //期限品种
+//            map.put("termTypeReback",dto.getTermType());
+//            //回购利率
+//            map.put("rebackPrice",dto.getIntAmt());
+//            //回购类型
+//            map.put("repoType","");
             dtoStr = JsonUtils.object2Json(null);
         }
         else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
