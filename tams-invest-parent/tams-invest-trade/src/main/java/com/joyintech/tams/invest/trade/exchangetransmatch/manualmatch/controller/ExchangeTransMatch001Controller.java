@@ -207,8 +207,7 @@ public class ExchangeTransMatch001Controller  extends BaseController {
     @ResponseBody
     @RequestMapping("genTransactionRecord")
     public String genTransactionRecord(@RequestBody ExchangeTransMatch002Dto dto) {
-        String str=exchangeTransMatch001Service.genTransactionRecord(dto);
-        return str;
+        return exchangeTransMatch001Service.genTransactionRecord(dto);
     }
 
 }
