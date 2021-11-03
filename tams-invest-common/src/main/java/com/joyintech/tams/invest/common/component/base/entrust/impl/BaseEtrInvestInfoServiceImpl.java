@@ -220,7 +220,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                 		||DictCodeListExt3.委托状态_待分发.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus()))) {
                     errorList.add(new ValidMessage(
                         // “待接收”
-                        this.getMessage("ETR_E_0010", this.getMessage("BaseEtrInvestInfoServiceImpl.toReceive"))));
+                        this.getMessage("ETR_E_0010", this.getMessage("BaseEtrInvestInfoServiceImpl.toReceiveOrtoReceive"))));
                 }
             }
         }
