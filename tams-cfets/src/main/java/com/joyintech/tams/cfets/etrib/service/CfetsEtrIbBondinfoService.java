@@ -1157,7 +1157,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         BigDecimal rrqmkdghSAmt=BigDecimal.ZERO;
         for(CfetsBussCombDistribtDto item:bussCombDistribtList){
             CfetsEtribBondInfo003Dto dd=new CfetsEtribBondInfo003Dto();
-
             BeanUtil.copyPropertiesIgnoreNull(dd,dto);
             dd.setPortfolioId(item.getPortfolioId());
             dd.setTradeAmt(item.getEntrustNum());
@@ -1209,8 +1208,14 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
                 rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
             }else if(StringUtil.equals(shortSellingSupported,"03")){
-
+                dd.setEntrustOwnNum(item.getEntrustNum());
+                dd.setEntrustIntegrateNum(BigDecimal.ZERO);
+                bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
+                rrqmkdghSAmt=BigDecimal.ZERO;
             }
+            //针对组合分配中的数据查询头寸信息
+            item.setEntrustOwnNum(dd.getEntrustOwnNum());
+            item.setEntrustIntegrateNum(dd.getEntrustIntegrateNum());
             etrInvestBondInfoDtosList.add(dd);
         }
         dto.setEntrustOwnNum(bfqtrkyccSAmt);

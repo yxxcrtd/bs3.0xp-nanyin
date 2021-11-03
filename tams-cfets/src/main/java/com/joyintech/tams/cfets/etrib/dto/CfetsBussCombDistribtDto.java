@@ -113,6 +113,24 @@ public class CfetsBussCombDistribtDto {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal entrustIntegrateNum;
 
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    @ApiModelProperty(name="secAcctAvailableCash",value="账户现金",example="100")
+    private BigDecimal secAcctAvailableCash;
+
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    @ApiModelProperty(name="entrustIntegrateSecNum",value="融入券卖空购回持仓",example="100")
+    private BigDecimal entrustIntegrateSecNum;
+
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    @ApiModelProperty(name="ownPorAvailableSec",value="本方券T日可用持仓",example="100")
+    private BigDecimal ownPorAvailableSec;
+
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    @ApiModelProperty(name="ownProAvailableSec1",value="本方券T+1日可用持仓",example="100")
+    private BigDecimal ownProAvailableSec1;
+
+
+
     /**
      * 证券账户
      */
@@ -270,5 +288,37 @@ public class CfetsBussCombDistribtDto {
 
     public void setElementId(String elementId) {
         this.elementId = elementId;
+    }
+
+    public BigDecimal getSecAcctAvailableCash() {
+        return secAcctAvailableCash;
+    }
+
+    public void setSecAcctAvailableCash(BigDecimal secAcctAvailableCash) {
+        this.secAcctAvailableCash = secAcctAvailableCash;
+    }
+
+    public BigDecimal getEntrustIntegrateSecNum() {
+        return entrustIntegrateSecNum;
+    }
+
+    public void setEntrustIntegrateSecNum(BigDecimal entrustIntegrateSecNum) {
+        this.entrustIntegrateSecNum = entrustIntegrateSecNum;
+    }
+
+    public BigDecimal getOwnPorAvailableSec() {
+        return ownPorAvailableSec;
+    }
+
+    public void setOwnPorAvailableSec(BigDecimal ownPorAvailableSec) {
+        this.ownPorAvailableSec = ownPorAvailableSec;
+    }
+
+    public BigDecimal getOwnProAvailableSec1() {
+        return ownProAvailableSec1;
+    }
+
+    public void setOwnProAvailableSec1(BigDecimal ownProAvailableSec1) {
+        this.ownProAvailableSec1 = ownProAvailableSec1;
     }
 }
