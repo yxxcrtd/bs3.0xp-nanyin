@@ -94,6 +94,8 @@ public class CfgDataTableService {
             //新增用户修改后设置
             for (int i = 0; i < dataTableShowList.size(); i++) {
                 CfgDataTableShow data = dataTableShowList.get(i);
+                data.setRangeId(userId);
+                data.setEffeRange(1);
                 data.setSeqNo(i + 1);
             }
             cfgDataTableMapper.insertCfgDataTableBatch(dataTableShowList);

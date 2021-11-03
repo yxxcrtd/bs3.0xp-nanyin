@@ -630,6 +630,7 @@ from
 
     <select id="getEtrFinProductInfo" parameterType="String" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto">
         SELECT
+        DISTINCT
         t1.FINPROD_ID secId,
         t1.FINPROD_MARKET_ID marketId,
         t1.FINPROD_NAME secName,
