@@ -374,6 +374,30 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
      */
     private BigDecimal exerYield;
 
+
+    @ApiModelProperty(name="priceAmt",value="净价总额",example="1")
+    private BigDecimal priceAmt;
+
+
+    @ApiModelProperty(name="unitIntAmt",value="应计利息总额",example="1")
+    private BigDecimal unitIntAmt;
+
+
+    @ApiModelProperty(name="unitFpriceAmt",value="全价总额",example="1")
+    private BigDecimal unitFpriceAmt;
+
+    @ApiModelProperty(name="entrustOwnInt",value="本方券应计利息总额",example="11")
+    private BigDecimal entrustOwnInt;
+
+    @ApiModelProperty(name="entrustIntegrateInt",value="卖空购回应计利息总额",example="11")
+    private BigDecimal entrustIntegrateInt;
+
+    @ApiModelProperty(name="entrustOwnUnitFpriceAmt",value="本方券全价总额",example="11")
+    private BigDecimal entrustOwnUnitFpriceAmt;
+
+    @ApiModelProperty(name="entrustIntegrateUnitFpriceAmt",value="卖空购回全价总额",example="11")
+    private BigDecimal entrustIntegrateUnitFpriceAmt;
+
     public String getOperateType() {
         return operateType;
     }
@@ -550,5 +574,61 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setSoftSkipMode(String softSkipMode) {
         this.softSkipMode = softSkipMode;
+    }
+
+    public BigDecimal getPriceAmt() {
+        return priceAmt;
+    }
+
+    public void setPriceAmt(BigDecimal priceAmt) {
+        this.priceAmt = priceAmt;
+    }
+
+    public BigDecimal getUnitIntAmt() {
+        return unitIntAmt;
+    }
+
+    public void setUnitIntAmt(BigDecimal unitIntAmt) {
+        this.unitIntAmt = unitIntAmt;
+    }
+
+    public BigDecimal getUnitFpriceAmt() {
+        return unitFpriceAmt;
+    }
+
+    public void setUnitFpriceAmt(BigDecimal unitFpriceAmt) {
+        this.unitFpriceAmt = unitFpriceAmt;
+    }
+
+    public BigDecimal getEntrustOwnInt() {
+        return entrustOwnInt;
+    }
+
+    public void setEntrustOwnInt(BigDecimal entrustOwnInt) {
+        this.entrustOwnInt = entrustOwnInt;
+    }
+
+    public BigDecimal getEntrustIntegrateInt() {
+        return entrustIntegrateInt;
+    }
+
+    public void setEntrustIntegrateInt(BigDecimal entrustIntegrateInt) {
+        this.entrustIntegrateInt = entrustIntegrateInt;
+    }
+
+    public BigDecimal getEntrustOwnUnitFpriceAmt() {
+        return entrustOwnUnitFpriceAmt;
+    }
+
+    public void setEntrustOwnUnitFpriceAmt(BigDecimal entrustOwnUnitFpriceAmt) {
+        this.entrustOwnUnitFpriceAmt = entrustOwnUnitFpriceAmt;
+    }
+
+    public BigDecimal getEntrustIntegrateUnitFpriceAmt() {
+        return entrustIntegrateUnitFpriceAmt;
+    }
+
+    public void setEntrustIntegrateUnitFpriceAmt(BigDecimal entrustIntegrateUnitFpriceAmt) {
+        this.entrustIntegrateUnitFpriceAmt = entrustIntegrateUnitFpriceAmt;
     }
 }

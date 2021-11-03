@@ -123,7 +123,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     
 	@Autowired
     private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
-	
+    @Autowired
+    private CfetsEtribBondInfo003Service cfetsetribBondInfo003Service;
     /**
      * 持仓信息查询
      *
@@ -1176,6 +1177,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             dto.setCcy(fp.getCcy());
             Date entrustDate=DateUtil.compareDate(cfetsDto.getEtrDate(),fp.getVdate())>0?cfetsDto.getEtrDate():fp.getVdate();
             dto.setEntrustDate(entrustDate);
+            dto.setFinvdate(fp.getVdate());
+            dto.setFinmdate(fp.getMdate());
         }
         dto.setInvManagerId(SecurityUtil.getLoginUser().getUserName());
         dto.setEntrustNum(cfetsDto.getTradeAmt());
@@ -1183,7 +1186,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         dto.setMdate(cfetsDto.getEtrDate());
         dto.setSettleSpeed(cfetsDto.getSettleSpeed());
         dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
-        List<CfetsBussCombDistribtDto> bussCombDistribtList =cfetsDto.getBussCombDistribtList();
+        List<CfetsBussCombDistribtDto> bussCombDistribtList =dto.getBussCombDistribtList();
         List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtosList=new ArrayList<>();
         //本方券券面总额
         BigDecimal bfqtrkyccSAmt=BigDecimal.ZERO;
@@ -1250,10 +1253,97 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             //针对组合分配中的数据查询头寸信息
             item.setEntrustOwnNum(dd.getEntrustOwnNum());
             item.setEntrustIntegrateNum(dd.getEntrustIntegrateNum());
+            //查询系统融入券待购回持仓和本方券T日可用持仓
+
+            // 从原投管系统取
+            BigDecimal cashT = BigDecimal.ZERO; // 指令t日可用
+            BigDecimal cashT1 = BigDecimal.ZERO; // 指令t1日可用
+            BigDecimal realCash = BigDecimal.ZERO; // 账户现金
+            BaseMap paramMap = BaseMap.newMap()
+                    .put("finprodId", cfetsDto.getFinprodId())
+                    .put("portfolioId", item.getPortfolioId())
+                    .put("ccy", fp.getCcy())
+                    .put("vdate", cfetsDto.getEtrDate())
+                    .put("calId", "03") // 银行间
+                    ;
+            Map<String, Object> mapRst = etrCommonService.getProAvailableCash(paramMap);
+            if (mapRst != null){ // 指令t日可用，指令t1日可用
+                cashT = ArithmeticUtil.doAdd(cashT, BaseMap.newMap(mapRst).getBigDecimal("cashT"));
+                cashT1 = ArithmeticUtil.doAdd(cashT1, BaseMap.newMap(mapRst).getBigDecimal("cashT1"));
+            }
+            PtlCashPositionFlowDto positionQueryDto = new PtlCashPositionFlowDto();
+            positionQueryDto.setPortfolioId(item.getPortfolioId());
+            positionQueryDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+            positionQueryDto.setCdate(iPlatformDate.getSysDate());
+            // 实际现金（账户现金）
+            realCash = ArithmeticUtil.doAdd(realCash, basePtlCashPositionInfoService.queryUsableCashPosition(positionQueryDto));
+            List<String> portfolioIdList=new ArrayList<>();
+            portfolioIdList.add(item.getPortfolioId());
+
+            BaseMap bm = BaseMap.newMap()
+                    .put("S_001", DictCodeListExt3.资产类型_指令汇总可用持仓.getValue())
+                    .put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
+                    .put("S_004", DictCodeListExt3.资产类型_汇总可用现金.getValue())
+                    .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
+                    .put("A_005", DictCodeListExt3.资产类型_债券融入券可用持仓.getValue())
+                    .put("C_01", DictCodeListExt3.资产类型_现金账户持仓.getValue())
+                    .put("portfolioIdList", portfolioIdList)
+                    .put("cdate", DateUtil.format(cfetsDto.getEtrDate(),"yyyy-MM-dd"))
+                    .put("finprodId", cfetsDto.getFinprodId())
+                    .put("acctId", null);
+            // 查询头寸信息
+            Map map = cfetsetrIbBondinfoMapper.queryPositionInfo(bm);
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("T0KYXJ"))){
+                cashT=ArithmeticUtil.doAdd(new BigDecimal(map.get("T0KYXJ").toString()), cashT);
+            }
+            item.setProAvailableCash(cashT);
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("T1KYXJ"))){
+                cashT1=ArithmeticUtil.doAdd(new BigDecimal(map.get("T1KYXJ").toString()), cashT1);
+            }
+            item.setProAvailableCash1(cashT1);
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("ZHXJ"))){
+                realCash=ArithmeticUtil.doAdd(new BigDecimal(map.get("ZHXJ").toString()), realCash);
+            }
+            item.setSecAcctAvailableCash(realCash);
+            //融入券卖空购回持仓
+            BigDecimal rrqmkghccAmt=BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("RRQMKDGHCC"))){
+                rrqmkghccAmt=new BigDecimal(map.get("RRQMKDGHCC").toString());
+            }
+            item.setEntrustIntegrateSecNum(rrqmkghccAmt);
+            //本方券T日可用持仓
+            BigDecimal bfqtrkyccAmt=BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("BFQTRKYCC"))){
+                bfqtrkyccAmt=new BigDecimal(map.get("BFQTRKYCC").toString());
+            }
+            item.setOwnPorAvailableSec(bfqtrkyccAmt);
+            //本方券T+1日可用持仓
+            BigDecimal bfqt1rkyccAmt=BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("BFQT1RKYCC"))){
+                bfqt1rkyccAmt=new BigDecimal(map.get("BFQT1RKYCC").toString());
+            }
+            item.setOwnProAvailableSec1(bfqt1rkyccAmt);
             etrInvestBondInfoDtosList.add(dd);
         }
         dto.setEntrustOwnNum(bfqtrkyccSAmt);
         dto.setEntrustIntegrateNum(rrqmkdghSAmt);
+        //查询新建金额数据计算
+        CfetsEtrCalcAmountRequest calcAmtReq=new CfetsEtrCalcAmountRequest();
+        calcAmtReq.setShareNum(dto.getEntrustNum());
+        calcAmtReq.setEntrustIntegrateNum(dto.getEntrustIntegrateNum());
+        calcAmtReq.setEntrustOwnNum(dto.getEntrustOwnNum());
+        calcAmtReq.setPrice(dto.getPrice());
+        calcAmtReq.setUnitFprice(dto.getUnitFprice());
+        CfetsEtrCalcAmountResponse calcAmtRes=cfetsetribBondInfo003Service.calAmountData(calcAmtReq);
+        dto.setPriceAmt(calcAmtRes.getPriceAmt());
+        dto.setUnitInt(calcAmtRes.getUnitInt());
+        dto.setUnitIntAmt(calcAmtRes.getUnitIntAmt());
+        dto.setUnitFpriceAmt(calcAmtRes.getUnitFpriceAmt());
+        dto.setEntrustOwnInt(calcAmtRes.getEntrustOwnInt());
+        dto.setEntrustIntegrateInt(calcAmtRes.getEntrustIntegrateInt());
+        dto.setEntrustOwnUnitFpriceAmt(calcAmtRes.getEntrustOwnUnitFpriceAmt());
+        dto.setEntrustIntegrateUnitFpriceAmt(calcAmtRes.getEntrustIntegrateUnitFpriceAmt());
+        //风险
         CfetsEtribdoRiskcalResponse riskDto=cfetsDto.getCfetsEtribdoRiskcalReturn();
         List<RiskTrialRetDto> riskTrialRetDto=new ArrayList<>();
         if(StringUtil.isNotEmpty(riskDto) && !StringUtil.isEmptyList(riskDto.getRiskcalReturnList())){

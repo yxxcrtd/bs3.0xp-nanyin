@@ -347,7 +347,11 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     public void doUpdate(CfetsEtribBondInfo003Dto entity) {
         if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
-                WFlowCommonService.doUpdateFlow(entity.getOperateType(), initBaseEtrInvestInfoDto(dto));
+                WFlowCommonService.deleteFlow(initBaseEtrInvestInfoDto(dto).getWorkFlowId());
+                WFlowCommonService.insertFlow(initBaseEtrInvestInfoDto(dto));
+                //删除头寸
+
+                //发送头寸
             }
         }
     }

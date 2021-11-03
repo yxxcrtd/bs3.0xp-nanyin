@@ -43,6 +43,9 @@ public class CfetsEtrIbfindEtrinfoRequest{
     @ApiModelProperty(name="entrustStatus",value="指令状态",example="[02,03]")
     private List<String> entrustStatus;
 
+    @ApiModelProperty(name="vagueQuery",value="关键字",example="12")
+    private String vagueQuery;
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -133,5 +136,13 @@ public class CfetsEtrIbfindEtrinfoRequest{
 
     public void setSettleSpeed(String settleSpeed) {
         this.settleSpeed = settleSpeed;
+    }
+
+    public String getVagueQuery() {
+        return vagueQuery;
+    }
+
+    public void setVagueQuery(String vagueQuery) {
+        this.vagueQuery = vagueQuery;
     }
 }

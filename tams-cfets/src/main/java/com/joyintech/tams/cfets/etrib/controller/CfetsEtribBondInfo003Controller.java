@@ -97,6 +97,7 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
             model.addAttribute("person_entity", JsonUtils.object2Json(entity.getEtrInvestPersonInfo()));
             model.addAttribute("businessId",workflowId);
             model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(entity.getBussCombDistribtList()));
+            model.addAttribute("entity_RiskTrialRetList",  JsonUtils.object2Json(entity.getRiskTrialRetDto()));
             todoList = true;
             model.addAttribute("businessId", entity.getTotalEtrustId());
         } else {
