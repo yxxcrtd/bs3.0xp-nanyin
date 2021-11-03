@@ -60,7 +60,11 @@ public class BaseMap extends HashMap<String, Object> {
 
 	public String getBigDecimalStr(String key, String pattern) {
 		DecimalFormat df1 = new DecimalFormat(pattern);
-		return df1.format(getBigDecimal(this, key));
+		BigDecimal temp = getBigDecimal(this, key);
+		if (temp == null){
+			return null;
+		}
+		return df1.format(temp);
 	}
 	public String getBigDecimalStr(Map<String, Object> param, String key, String pattern) {
 		DecimalFormat df1 = new DecimalFormat(pattern);
