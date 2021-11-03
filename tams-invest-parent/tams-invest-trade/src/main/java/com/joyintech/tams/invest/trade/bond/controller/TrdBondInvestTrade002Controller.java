@@ -779,6 +779,10 @@ TrdBondInvestTrade002Controller extends BaseController {
                   confirmMsg += this.getMessage("交易方向与债券行权计划中行权方式不同，请确认是否继续？");
                 }
             }
+
+            if(dto.getUnitIntCalc().compareTo(dto.getUnitInt()) != 0){
+                confirmMsg += this.getMessage("应计利息与系统计算的应计利息不一致，请确认是否继续？");
+            }
             //业务模式情况下
 //            if (StringUtil.equals("02", CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL"))) {
 //                // 委托场合时    查询资产可用持仓

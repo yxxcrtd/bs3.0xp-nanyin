@@ -53,8 +53,6 @@ var calculateField;
 	            Joyin.error("本方券券面总额不能大于委托剩余额度")
 	            return;
 	        }
-	
-	        var s;
             if(typeof(BaseRiskMathComm) != 'undefined') {
 	        if(BaseRiskMathComm) {
 	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
@@ -2616,6 +2614,7 @@ var calculateField;
                     // 记录隐藏值
                     $("#unitCprice_calc").val(data.unitCprice);
                     $("#unitInt_calc").val(data.unitInt);
+                    $("#unitIntCalc").val(data.unitInt);
                     $("#unitFprice_calc").val(data.unitFprice);
                     $("#cpriceAmt_calc").val(data.cpriceAmt);
                     $("#intAmt_calc").val(data.intAmt);
