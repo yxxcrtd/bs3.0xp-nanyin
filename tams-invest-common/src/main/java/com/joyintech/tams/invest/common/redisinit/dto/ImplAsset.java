@@ -437,4 +437,18 @@ public class ImplAsset extends FinProduct implements IAssetInfo {
     public void setIsUnEquity(String isUnEquity) {
         this.isUnEquity = isUnEquity;
     }
+
+    /**
+     * 行内四级类型
+     */
+    private String  type11;
+
+    @Override
+    public String getType11() {
+        return type11;
+    }
+
+    public void setType11(String type11) {
+        this.type11 = type11;
+    }
 }
