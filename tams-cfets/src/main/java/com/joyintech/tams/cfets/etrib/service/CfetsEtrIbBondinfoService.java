@@ -1069,7 +1069,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 if (dto.getLastPaydate() != null || !StringUtil.isEmpty(dto.getLastPaydate())) {
                     Date lastPaydate = sdf.parse(dto.getLastPaydate());
                     Date minDate = cfetsetrIbBondinfoMapper.getMinTradeDate(secId);
-                    if (minDate != null && minDate.compareTo(lastPaydate) > 0) {
+                    if (minDate != null && minDate.compareTo(lastPaydate) < 0) {
                             dto.setLastPaydate(dto.getLastPaydate());
                     }else {
                         dto.setLastPaydate("--");
@@ -1091,7 +1091,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 try {
                     Date xqDate = sdf.parse(dto.getXqdate());
                     Date minDate = cfetsetrIbBondinfoMapper.getMinTradeDate(secId);
-                    if (minDate != null && minDate.compareTo(xqDate) > 0) {
+                    if (minDate != null && minDate.compareTo(xqDate) < 0) {
                         dto.setLastPaydate(dto.getLastPaydate());
                     }else {
                         dto.setXqdate("--");
