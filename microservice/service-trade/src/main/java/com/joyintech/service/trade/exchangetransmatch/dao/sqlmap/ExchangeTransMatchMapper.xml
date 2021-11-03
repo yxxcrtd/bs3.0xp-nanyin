@@ -203,6 +203,15 @@
     </select>
 
     <select id="getBusiCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select
+               T.ENTRUST_ID id,
+               T.ENTRUST_ID text
+          from ETR_ENTRUST T
+        <where>
+            <if test="search != null and search != ''">
+                and A.APPLY_TRADE_ID like concat(concat('%',#{search}),'%')
+            </if>
+        </where>
     </select>
 
     <select id="getApplyNo" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -322,10 +331,10 @@
     </select>
     <select id="findTransMatchInfoPage" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch004Dto">
         select  A.SEQ_NO seqId,
-        A.MATCH_CLASS trdMatchType,
+        A.MATCH_CLASS matchType,
         A.ENTRUNST_TRADE_ID busiCode,
         C.TRADE_MARKET tradeMarket,
-        C.APPLY_TRADE_ID applyNo,
+        C.APPLY_TRADE_ID applyTradeId,
         D.PORTFOLIO_ID portfolioId,
         C.SEC_TYPE finprodType2,
         CASE
@@ -333,10 +342,9 @@
         ELSE
         E.FINPROD_ID END finprodId,
         C.PS ps,
-        A.MARCH_AMT_EN tradeAmt1,
+        A.MARCH_AMT_EN tradeAmt,
         A.MARCH_QTY_EN tradeNum,
         C.TRADE_AMT_RAW tradePrice,
-        C.TRADE_MARKET tradeMarket,
         C.CCY ccy
         from SETTLE_TRANS_DATA_TOTAL_MATCH A
         INNER JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B

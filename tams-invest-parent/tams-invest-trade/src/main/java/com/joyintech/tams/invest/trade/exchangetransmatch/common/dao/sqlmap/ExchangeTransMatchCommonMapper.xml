@@ -68,4 +68,96 @@
             B.SEQ_ID = #{seqId,jdbcType=VARCHAR}
         </where>
     </select>
+
+    <delete id="deleteSettleTransDataTotalMatch" parameterType="java.lang.String" >
+        delete from SETTLE_TRANS_DATA_TOTAL_MATCH T
+         where T.SEQ_NO = #{totalSeqId}
+           AND T.ENTRUNST_TRADE_ID = #{entrunstId}
+    </delete>
+
+    <delete id="deleteSettleTransTgMapping" parameterType="java.lang.String" >
+        delete from SETTLE_TRANS_TG_MAPPING T
+        WHERE T.TRADE_ID_TG =  #{tradeId}
+    </delete>
+
+    <select id="getTotalSeqId" resultType="java.lang.String">
+            select DISTINCT A.SEQ_ID
+              from SETTLE_TRANS_DATA_TOTAL A
+             INNER JOIN SETTLE_TRANS_DATA B
+                ON B.APPLY_TRADE_ID = A.APPLY_TRADE_ID
+               AND B.DEAL_DATE = A.DEAL_DATE
+               AND B.SEAT_NUMBER = A.SEAT_NUMBER
+             INNER JOIN SETTLE_TRANS_TG_MAPPING C
+                ON C.TRADE_ID = B.TRADE_ID
+             WHERE C.TRADE_ID_TG = #{tradeId}
+    </select>
+
+    <select id="getEntrunstId" resultType="java.lang.String">
+            SELECT DISTINCT ENTRUST_ID
+              from (SELECT A.ENTRUST_ID
+                      FROM ETR_ENTRUST A
+                     INNER JOIN TRD_PRODUCT_DEAL_ADD B
+                        ON A.ENTRUST_ID = B.ENTRUST_ID
+                     WHERE B.TRADE_ID = #{tradeId}
+                    UNION ALL
+                    SELECT A1.ENTRUST_ID
+                      FROM ETR_ENTRUST A1
+                     INNER JOIN TRD_DEAL_TOTAL_ADD B1
+                        ON A1.ENTRUST_ID = B1.ENTRUST_ID
+                     WHERE B1.TOTLE_TRADE_ID = #{tradeId})
+    </select>
+
+    <select id="getRemainNum" resultType="java.math.BigDecimal">
+            select NVL(SUM(T.MARCH_QTY),0)
+              from SETTLE_TRANS_DATA_TOTAL_MATCH T
+             WHERE T.SEQ_NO = #{totalSeqId}
+    </select>
+
+    <select id="getRemainNum" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto">
+            select
+                'N'    isTotalDeal,
+                <include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />
+              from SETTLE_TRANS_TG_MAPPING A
+             INNER JOIN SETTLE_TRANS_DATA B
+                ON A.TRADE_ID = B.TRADE_ID
+             INNER JOIN SETTLE_TRANS_DATA_TOTAL C
+                ON B.APPLY_TRADE_ID = C.APPLY_TRADE_ID
+               AND B.DEAL_DATE = C.APPLY_TRADE_ID
+               AND B.SEAT_NUMBER = C.SEAT_NUMBER
+             INNER JOIN SETTLE_TRANS_DATA_TOTAL_MATCH D
+                ON C.SEQ_ID = D.SEQ_NO
+             INNER JOIN TRD_PRODUCT_DEAL E
+                ON E.TRADE_ID = A.TRADE_ID_TG
+             INNER JOIN TRD_PRODUCT_DEAL_ADD F
+                ON E.TRADE_ID = F.TRADE_ID
+               AND F.ENTRUST_ID = D.ENTRUNST_TRADE_ID
+             WHERE
+                A.TG_DATA_STATUS = #{tgDataStatus}
+               AND D.SEQ_NO = #{seqNo}
+               AND D.ENTRUNST_TRADE_ID = #{entrunstId}
+               AND D.MATCH_CLASS = #{matchClass}
+            union  all
+            select
+            'Y'   isTotalDeal,
+            <include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />
+            from SETTLE_TRANS_TG_MAPPING A
+            INNER JOIN SETTLE_TRANS_DATA B
+                ON A.TRADE_ID = B.TRADE_ID
+            INNER JOIN SETTLE_TRANS_DATA_TOTAL C
+                ON B.APPLY_TRADE_ID = C.APPLY_TRADE_ID
+                AND B.DEAL_DATE = C.APPLY_TRADE_ID
+                AND B.SEAT_NUMBER = C.SEAT_NUMBER
+            INNER JOIN SETTLE_TRANS_DATA_TOTAL_MATCH D
+                ON C.SEQ_ID = D.SEQ_NO
+            INNER JOIN TRD_PRODUCT_DEAL E
+                ON  E.TOTLE_TRADE_ID = A.TRADE_ID_TG
+            INNER JOIN TRD_PRODUCT_DEAL_ADD F
+                ON E.TRADE_ID = F.TRADE_ID
+                AND F.ENTRUST_ID = D.ENTRUNST_TRADE_ID
+            WHERE
+                A.TG_DATA_STATUS = #{tgDataStatus}
+                AND D.SEQ_NO = #{seqNo}
+                AND D.ENTRUNST_TRADE_ID = #{entrunstId}
+                AND D.MATCH_CLASS = #{matchClass}
+    </select>
 </mapper>

@@ -33,6 +33,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -195,6 +196,10 @@ public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implemen
     @Autowired
     private InvestInterfCommService investInterfCommService;
     // 调用投管接口 add by renping 20190205 end
+
+
+    @Autowired
+    private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
 
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。
@@ -1362,6 +1367,11 @@ public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implemen
             if(StringUtil.equals(DictCodeList.交易方向_申购确认.getValue(), entity.getPs())&&StringUtil.isNotEmpty(entity.getRefundAmt())&&entity.getRefundAmt().compareTo(BigDecimal.ZERO)>0){
             	doInsertRedemption(entity);
             }
+
+            //成交录单---调用共通
+            if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
+                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),trdFinProductDealTotal.getTotleTradeId(),operationType);
+            }
             
         }
         // 撤销
@@ -1488,6 +1498,11 @@ public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implemen
             
             restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdConBond/doComplete",
                     entity,Integer.class);
+
+            //成交录单---调用共通
+            if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
+                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),operationType);
+            }
         
         }
         //        调用接口  add by zhangpuyu 2019/12/6 start

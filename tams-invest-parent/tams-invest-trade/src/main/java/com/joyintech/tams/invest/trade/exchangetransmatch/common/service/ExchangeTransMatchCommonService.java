@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.common.service;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -11,21 +12,22 @@ import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto;
+import com.joyintech.tams.invest.trade.api.PositionUpdateParam;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.dao.ExchangeTransMatchCommonMapper;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.Fund.ExchangeTransMatchFund1Service;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.*;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.ExchangeTransMatchRepo1Service;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.shares.ExchangeTransMatchShares1Service;
+import com.joyintech.workflow.engine.constant.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -104,24 +106,34 @@ public class ExchangeTransMatchCommonService extends BaseService {
     @Autowired
     private TrdTradeFeeDetailMapper trdTradeFeeDetailMapper;
 
+    @Value("${application.micorservice.contextPath.tamsServer:http://tams-server}")
+    private String tamsSerever;
+
+    /**
+     * 是否单体服务
+     */
+    @Value("${application.micorservice.contextPath.single:false}")
+    private boolean isSingle;
+
     /**
      * 交易完成后，调用共通修改SETTLE_TRANS_TG_MAPPING，SETTLE_TRANS_DATA_TOTAL_STATUS
      * @param seqId
      * @param tradeId
      */
-    public void transactionRecord(String seqId,String tradeId) {
-        //登录:成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）
-        logger.error("录单完成,调用共通，成交流水号"+ seqId +",交易编号:"+tradeId +",开始");
-        SettleTransDataTotal settleTransDataTotal = settleTransDataTotalMapper.selectByPrimaryKey(seqId);
-        if(StringUtil.isNotEmpty(settleTransDataTotal)) {
-            ExchangeTransMatchCommonDto dto = new ExchangeTransMatchCommonDto();
-            BeanUtil.copyPropertiesIgnoreNull(dto,settleTransDataTotal);
-            List<SettleTransTgMapping> settleTransTgMappingList = this.genSettleTransTgMapping(dto,tradeId);
-            if(!StringUtil.isEmptyList(settleTransTgMappingList)) {
-                for(SettleTransTgMapping settleTransTgMapping:settleTransTgMappingList) {
-                    settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
+    public void transactionRecord(String seqId, String tradeId, OperationType type) {
+        if(!type.equals(OperationType.REVOKE) && !type.equals(OperationType.DELETE)) {
+            //登录:成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）
+            logger.error("交易完成,调用共通，成交流水号"+ seqId +",交易编号:"+tradeId +",开始");
+            SettleTransDataTotal settleTransDataTotal = settleTransDataTotalMapper.selectByPrimaryKey(seqId);
+            if(StringUtil.isNotEmpty(settleTransDataTotal)) {
+                ExchangeTransMatchCommonDto dto = new ExchangeTransMatchCommonDto();
+                BeanUtil.copyPropertiesIgnoreNull(dto,settleTransDataTotal);
+                List<SettleTransTgMapping> settleTransTgMappingList = this.genSettleTransTgMapping(dto,tradeId);
+                if(!StringUtil.isEmptyList(settleTransTgMappingList)) {
+                    for(SettleTransTgMapping settleTransTgMapping:settleTransTgMappingList) {
+                        settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
+                    }
                 }
-            }
 
             //更新:汇总成交数据状态表（SETTLE_TRANS_DATA_TOTAL_STATUS）
             SettleTransDataTotalStatus settleTransDataTotalStatus = settleTransDataTotalStatusMapper.selectByPrimaryKey(dto.getSeqId());
@@ -136,7 +148,45 @@ public class ExchangeTransMatchCommonService extends BaseService {
             logger.error("没有查询到成交信息,成交流水号:"+ seqId +",交易编号:"+tradeId);
         }
 
-        logger.error("录单完成,调用共通，成交流水号"+ seqId +",交易编号:"+tradeId +",结束");
+            logger.error("交易完成,调用共通，成交流水号"+ seqId +",交易编号:"+tradeId +",结束");
+        }
+        else {
+            logger.error("交易撤销,调用共通,交易编号:"+tradeId +",开始");
+            if(StringUtil.endsWith(tradeId,"R")) {
+                tradeId = StringUtil.substring(tradeId,0,tradeId.length()-1);
+            }
+
+            String totalSeqId = exchangeTransMatchCommonMapper.getTotalSeqId(tradeId);
+            if(StringUtil.isNotEmpty(totalSeqId)) {
+                //如果存在委托代码，需要删除汇总成交数据匹配结果表数据
+                String entrunstId = exchangeTransMatchCommonMapper.getEntrunstId(tradeId);
+                if(StringUtil.isNotEmpty(entrunstId)) {
+                    Map<String, String> paraMap = new HashMap<>();
+                    paraMap.put("totalSeqId",totalSeqId);
+                    paraMap.put("entrunstId",entrunstId);
+                    exchangeTransMatchCommonMapper.deleteSettleTransDataTotalMatch(paraMap);
+                }
+
+                //更新汇总成交数据状态表
+                SettleTransDataTotalStatus settleTransDataTotalStatus = settleTransDataTotalStatusMapper.selectByPrimaryKey(totalSeqId);
+                if(StringUtil.isNotEmpty(settleTransDataTotalStatus)) {
+                    //取得剩余匹配份额
+                    BigDecimal remainNum = exchangeTransMatchCommonMapper.getRemainNum(totalSeqId);
+                    settleTransDataTotalStatus.setMatchStatus(BigDecimal.ZERO.compareTo(remainNum) >=0
+                            ?DictCodeListExt3.下行交易匹配状态_未匹配.getValue():DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+                    settleTransDataTotalStatus.setUpdateTime(new Date());
+                    settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
+                    settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
+                }
+
+                //成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）：删除
+                exchangeTransMatchCommonMapper.deleteSettleTransTgMapping(tradeId);
+            }
+
+            logger.error("交易撤销,调用共通,交易编号:"+tradeId +",结束");
+
+        }
+
     }
 
     /**
@@ -574,4 +624,96 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
         return list;
     }
+
+    /**
+     * 批量取消成交匹配
+     * @param dtoList
+     */
+    public void revokeTransactionMacthBatch(List<SettleTransDataTotalMatch> dtoList) {
+        logger.error("批量取消成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
+        if(!StringUtil.isEmptyList(dtoList)) {
+            for (SettleTransDataTotalMatch dto : dtoList) {
+                this.revokeTransactionMacth(dto);
+            }
+        }
+        logger.error("批量取消成交匹配数据---结束");
+    }
+
+    /**
+     * 取消成交匹配
+     * @param dto
+     */
+    public void revokeTransactionMacth(SettleTransDataTotalMatch dto) {
+        logger.error("取消成交匹配---开始，成交数据:"+ JsonUtils.object2Json(dto));
+        Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("tgDataStatus",DictCodeListStl.投管交易数据状态_处理结束.getValue());
+        paraMap.put("seqNo",dto.getSeqNo());
+        paraMap.put("entrunstId",dto.getEntrunstTradeId());
+        paraMap.put("matchClass",dto.getMatchClass());
+        List<ExchangeTransMatchCommonRevokeDto> exchangeTransMatchCommonRevokeDtoList = exchangeTransMatchCommonMapper.getSettleTransTgMapping(paraMap);
+        logger.error("查询取消匹配的成交数据与投管交易关系:"+ JsonUtils.objectArray2Json(exchangeTransMatchCommonRevokeDtoList));
+        if(!StringUtil.isEmptyList(exchangeTransMatchCommonRevokeDtoList)) {
+            List<String> tradeIdList = new ArrayList<>();
+            List<String> totalTradeIdList = new ArrayList<>();
+            for(ExchangeTransMatchCommonRevokeDto revokeDto:exchangeTransMatchCommonRevokeDtoList) {
+                if (StringUtil.equals(revokeDto.getIsTotalDeal(), DictCodeList.是否_是)) {
+                    totalTradeIdList.add(revokeDto.getTradeIdTg());
+                } else {
+                    tradeIdList.add(revokeDto.getTradeIdTg());
+                }
+            }
+
+            PositionUpdateParam param = new PositionUpdateParam();
+            if(!StringUtil.isEmptyList(totalTradeIdList)) {
+                param.setTotalTradeIdList(totalTradeIdList);
+            }
+            else {
+                param.setTradeIdList(tradeIdList);
+            }
+            param.setUpdateUser(GlobalConstant.SYSTEM_USER);
+            param.setRevokeReason("取消成交匹配");
+
+            // 处理头寸
+            logger.error("取消成交匹配---处理头寸开始，参数数据:"+ JsonUtils.object2Json(param));
+            if(isSingle) {
+                simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/api/execute", param, Map.class);
+            }
+            else {
+                restTemplate.postForObject(tamsSerever + "/invest/trade/api/execute", param, Map.class);
+            }
+            logger.error("取消成交匹配---处理头寸结束");
+
+            // 撤销交易
+            logger.error("取消成交匹配---撤销交易开始，参数数据:"+ JsonUtils.object2Json(param));
+            if(isSingle) {
+                simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
+            }
+            else {
+                restTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
+            }
+            logger.error("取消成交匹配---撤销交易寸结束");
+
+            for(ExchangeTransMatchCommonRevokeDto revokeDto:exchangeTransMatchCommonRevokeDtoList) {
+               // 成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）：删除
+                settleTransTgMappingMapper.deleteByPrimaryKey(revokeDto.getTradeId());
+                //汇总成交数据匹配结果表（SETTLE_TRANS_DATA_TOTAL_MATCH）：数据删除
+                settleTransDataTotalMatchMapper.deleteByPrimaryKey(dto);
+            }
+
+            //更新汇总成交数据状态表
+            SettleTransDataTotalStatus settleTransDataTotalStatus = settleTransDataTotalStatusMapper.selectByPrimaryKey(dto.getSeqNo());
+            if(StringUtil.isNotEmpty(settleTransDataTotalStatus)) {
+                //取得剩余匹配份额
+                BigDecimal remainNum = exchangeTransMatchCommonMapper.getRemainNum(dto.getSeqNo());
+                settleTransDataTotalStatus.setMatchStatus(BigDecimal.ZERO.compareTo(remainNum) >=0
+                        ?DictCodeListExt3.下行交易匹配状态_未匹配.getValue():DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+                settleTransDataTotalStatus.setUpdateTime(new Date());
+                settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
+                settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
+            }
+
+        }
+        logger.error("取消成交匹配---结束");
+    }
+
 }

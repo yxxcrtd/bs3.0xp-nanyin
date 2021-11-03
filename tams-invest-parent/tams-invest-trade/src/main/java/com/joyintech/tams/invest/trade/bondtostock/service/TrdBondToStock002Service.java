@@ -44,6 +44,7 @@ import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
 import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.bondtostock.dao.TrdBondToStockMapper;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -170,6 +171,9 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
     
     @Autowired
     private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
+
+    @Autowired
+    private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
     
     /**
      * 获取业务编号
@@ -441,6 +445,11 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
 //            }
 //            AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
 //            // 一体化对应etliu end
+
+            //成交录单---调用共通
+            if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
+                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),StringUtil.isNotEmpty(entity.getTotleTradeId())?entity.getTotleTradeId():deal.getTradeId(),type);
+            }
         }
         // 撤销
         else {
@@ -634,6 +643,11 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
                 entity.getUpdateUser(), entity.getRevokeReason(), null, entity.getActPortfolioId());
 //        删除流程数据
         doDelete(entity.getWorkflowId());
+
+        //成交录单---调用共通
+        if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
+            exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),OperationType.REVOKE);
+        }
     }
 
     @Override

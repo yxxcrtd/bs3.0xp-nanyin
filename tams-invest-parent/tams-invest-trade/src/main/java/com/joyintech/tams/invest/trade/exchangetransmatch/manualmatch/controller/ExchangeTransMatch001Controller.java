@@ -68,6 +68,10 @@ public class ExchangeTransMatch001Controller  extends BaseController {
         model.addAttribute("PS_T48", DictCodeListExt2.交易方向_新股中签.getValue());
         model.addAttribute("PS_T47", DictCodeListExt2.交易方向_增发.getValue());
         model.addAttribute("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
+
+        model.addAttribute("TRD_MATCH_TYPE_0", DictCodeListExt3.下行交易匹配类型_自动匹配.getValue());
+        model.addAttribute("TRD_MATCH_TYPE_1", DictCodeListExt3.下行交易匹配类型_手动匹配.getValue());
+
         return super.init(model);
     }
 
@@ -229,6 +233,23 @@ public class ExchangeTransMatch001Controller  extends BaseController {
     @RequestMapping("genTransactionRecord")
     public String genTransactionRecord(@RequestBody ExchangeTransMatch002Dto dto) {
         return exchangeTransMatch001Service.genTransactionRecord(dto);
+    }
+
+    /**
+     * 成交匹配
+     * @param dto
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("revokeTransactionMacth")
+    public AjaxResult revokeTransactionMacth(@RequestBody ExchangeTransMatch004Dto dto){
+        try {
+            exchangeTransMatch001Service.revokeTransactionMacth(dto);
+        } catch (Exception e) {
+            logger.error("取消成交匹配失败"+e.getMessage());
+            return new AjaxResult("取消成交匹配失败", MessageType.错误消息);
+        }
+        return new AjaxResult("取消成交匹配成功",MessageType.提示消息);
     }
 
 }

@@ -215,6 +215,19 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
     }
 
     /**
+     * 取消匹配
+     * @param dto
+     */
+    public void revokeTransactionMacth(ExchangeTransMatch004Dto dto) {
+        for(ExchangeTransMatch004Dto item: dto.getSelectItem()) {
+            SettleTransDataTotalMatch settleTransDataTotalMatch = new SettleTransDataTotalMatch();
+            settleTransDataTotalMatch.setSeqNo(dto.getSeqNo());
+            settleTransDataTotalMatch.setEntrunstTradeId(dto.getBusiCode());
+            settleTransDataTotalMatch.setMatchClass(dto.getMatchType());
+
+            exchangeTransMatchCommonService.revokeTransactionMacth(settleTransDataTotalMatch);
+        }
+    }
      * 生成交易录单数据
      * @param dto
      * @return
