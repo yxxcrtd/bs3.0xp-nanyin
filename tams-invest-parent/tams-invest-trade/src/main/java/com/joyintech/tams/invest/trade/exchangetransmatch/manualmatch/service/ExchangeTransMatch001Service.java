@@ -228,6 +228,8 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
             exchangeTransMatchCommonService.revokeTransactionMacth(settleTransDataTotalMatch);
         }
     }
+
+    /**
      * 生成交易录单数据
      * @param dto
      * @return
