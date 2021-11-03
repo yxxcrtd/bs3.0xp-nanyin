@@ -1,10 +1,10 @@
 package com.joyintech.tams.cfets.etrib.socket;
 
 import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.WebSocketClientUtil;
 import com.joyintech.tams.cfets.etrib.service.PositionSocketService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +25,19 @@ public class PositionSocketClient {
     
     @Autowired
     private PositionSocketService webSocketService;
+
+    private static final String TABLE_NAME ="tableName";
+    private static final String CDATE = "CDATE";
+    private static final String PORTFOLIO_ID="PORTFOLIO_ID";
+    private static final String ACCT_ID="ACCT_ID";
+    private static final String HODING_TYPE="HODING_TYPE";
+    private static final String DATE_TYPE="DATE_TYPE";
+    private static final String CCY="CCY";
+    private static final String AMOUNT="AMOUNT";
+    private static final String SEC_ACCT_ID = "SEC_ACCT_ID";
+    private static final String FINPROD_ID="FINPROD_ID";
+    private static final String INV_AIM="INV_AIM";
+    
     
     @Value("${webSocketUrl}")
     private String webSocketUrl;
@@ -38,12 +52,7 @@ public class PositionSocketClient {
     public void init(){
         logger.info("WebSocketClient初始化一次...");
         
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loopStart();
-            }
-        }).start();
+        new Thread(this::loopStart).start();
     }
 
     private WebSocketClientUtil util = null;
@@ -66,18 +75,21 @@ public class PositionSocketClient {
                 public void onMessage(String message) {
                     try {
                         List<String> list = JsonUtils.json2Object(message, List.class);
+
+                        logger.info(MessageFormat.format("收到webSocket消息: {0}", message));
                         
-                        logger.info("收到webSocket消息:"+message);
-                        
-                        if (list != null && list.size() > 0 ){
+                        if (list != null && !list.isEmpty()){
                             // 转换成map
                             BaseMap dataMap = convertedMap(list);
+                            if (dataMap == null){
+                                return;
+                            }
                             // long转换成日期格式
-                            dataMap.put("CDATE", dataMap.getDate("CDATE"));
-
-                            webSocketService.insertOrUpdate(dataMap);
+                            dataMap.put(CDATE, dataMap.getDate(CDATE));
                             
-                            logger.info("socket同步数据结束：" + dataMap);
+                            webSocketService.insertOrUpdate(dataMap);
+
+                            logger.info(MessageFormat.format("socket同步数据结束: {0}", dataMap));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -122,9 +134,16 @@ public class PositionSocketClient {
         }
         loopFlag = true;
         synchronized (this){
-            while (!start()){
-                logger.error(webSocketUrl + ":头寸通信失败，10秒后重连");
-                try {TimeUnit.SECONDS.sleep(10l);} catch (InterruptedException e) {e.printStackTrace();}
+            try {
+                while (!start()){
+                    logger.info("头寸通信失败，10秒后重连");
+                    logger.info(webSocketUrl);
+    
+                    TimeUnit.SECONDS.sleep(10l);
+                }
+            } catch (InterruptedException e) {
+                logger.error("thread sleep error");
+                Thread.currentThread().interrupt();
             }
         }
         loopFlag =false;
@@ -138,57 +157,57 @@ public class PositionSocketClient {
      */
     private BaseMap convertedMap(List<String> list) {
         String tableName = list.get(0);
-        if (StringUtil.equals(tableName, "ETR_CASH_POSITION")){
+        if (StringUtils.equals(tableName, "ETR_CASH_POSITION")){
             return BaseMap.newMap()
-                    .put("tableName", "ETR_CASH_POSITION_RULE")
-                    .put("PORTFOLIO_ID",list.get(2))
-                    .put("ACCT_ID",list.get(3))
-                    .put("HODING_TYPE", list.get(4))
-                    .put("CDATE", list.get(5))
-                    .put("DATE_TYPE", list.get(6))
-                    .put("CCY", list.get(7))
-                    .put("AMOUNT", list.get(8))
+                    .put(TABLE_NAME, "ETR_CASH_POSITION_RULE")
+                    .put(PORTFOLIO_ID,list.get(2))
+                    .put(ACCT_ID,list.get(3))
+                    .put(HODING_TYPE, list.get(4))
+                    .put(CDATE, list.get(5))
+                    .put(DATE_TYPE, list.get(6))
+                    .put(CCY, list.get(7))
+                    .put(AMOUNT, list.get(8))
                     ;
-        }else if (StringUtil.equals(tableName, "ETR_SEC_POSITION")){
+        }else if (StringUtils.equals(tableName, "ETR_SEC_POSITION")){
             return BaseMap.newMap()
-                    .put("tableName", "ETR_SEC_POSITION_RULE")
-                    .put("PORTFOLIO_ID",list.get(2))
-                    .put("SEC_ACCT_ID",list.get(3))
-                    .put("FINPROD_ID", list.get(4))
-                    .put("INV_AIM", list.get(5))
-                    .put("HODING_TYPE", list.get(6))
-                    .put("CDATE", list.get(7))
-                    .put("DATE_TYPE", list.get(8))
-                    .put("CCY", list.get(9))
-                    .put("AMOUNT", list.get(10))
+                    .put(TABLE_NAME, "ETR_SEC_POSITION_RULE")
+                    .put(PORTFOLIO_ID,list.get(2))
+                    .put(SEC_ACCT_ID,list.get(3))
+                    .put(FINPROD_ID, list.get(4))
+                    .put(INV_AIM, list.get(5))
+                    .put(HODING_TYPE, list.get(6))
+                    .put(CDATE, list.get(7))
+                    .put(DATE_TYPE, list.get(8))
+                    .put(CCY, list.get(9))
+                    .put(AMOUNT, list.get(10))
                     ;
-        }else if (StringUtil.equals(tableName, "PTL_SEC_POSITION")){
+        }else if (StringUtils.equals(tableName, "PTL_SEC_POSITION")){
             return BaseMap.newMap()
-                    .put("tableName", "PTL_SEC_POSITION_RULE")
-                    .put("PORTFOLIO_ID",list.get(2))
-                    .put("SEC_ACCT_ID",list.get(3))
-                    .put("FINPROD_ID", list.get(4))
-                    .put("INV_AIM", list.get(5))
-                    .put("HODING_TYPE", list.get(6))
-                    .put("CDATE", list.get(7))
-                    .put("DATE_TYPE", list.get(8))
-                    .put("CCY", list.get(9))
-                    .put("AMOUNT", list.get(10))
+                    .put(TABLE_NAME, "PTL_SEC_POSITION_RULE")
+                    .put(PORTFOLIO_ID,list.get(2))
+                    .put(SEC_ACCT_ID,list.get(3))
+                    .put(FINPROD_ID, list.get(4))
+                    .put(INV_AIM, list.get(5))
+                    .put(HODING_TYPE, list.get(6))
+                    .put(CDATE, list.get(7))
+                    .put(DATE_TYPE, list.get(8))
+                    .put(CCY, list.get(9))
+                    .put(AMOUNT, list.get(10))
                     ;
-        }else if (StringUtil.equals(tableName, "PTL_CASH_POSITION")){
+        }else if (StringUtils.equals(tableName, "PTL_CASH_POSITION")){
             return BaseMap.newMap()
-                    .put("tableName", "PTL_CASH_POSITION_RULE")
-                    .put("PORTFOLIO_ID",list.get(2))
-                    .put("ACCT_ID",list.get(3))
-                    .put("HODING_TYPE", list.get(4))
-                    .put("CDATE", list.get(5))
-                    .put("DATE_TYPE", list.get(6))
-                    .put("CCY", list.get(7))
-                    .put("AMOUNT", list.get(8))
+                    .put(TABLE_NAME, "PTL_CASH_POSITION_RULE")
+                    .put(PORTFOLIO_ID,list.get(2))
+                    .put(ACCT_ID,list.get(3))
+                    .put(HODING_TYPE, list.get(4))
+                    .put(CDATE, list.get(5))
+                    .put(DATE_TYPE, list.get(6))
+                    .put(CCY, list.get(7))
+                    .put(AMOUNT, list.get(8))
                     ;
         }
         //
-        return null;
+        return BaseMap.newMap();
     }
 
     public void send(){

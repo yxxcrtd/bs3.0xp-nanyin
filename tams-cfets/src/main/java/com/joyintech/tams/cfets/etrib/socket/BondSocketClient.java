@@ -4,10 +4,9 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.WebSocketClientUtil;
-import com.joyintech.tams.cfets.etrib.service.PositionSocketService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -41,12 +40,7 @@ public class BondSocketClient {
     public void init(){
         logger.info("WebSocketClient初始化一次...");
         
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loopStart();
-            }
-        }).start();
+        new Thread(this::loopStart).start();
     }
 
     private WebSocketClientUtil util = null;
@@ -69,9 +63,12 @@ public class BondSocketClient {
                 public void onMessage(String message) {
                     try {
                         BaseMap responseMap = JsonUtils.json2Object(message, BaseMap.class);
-                        
-                        logger.info("收到webSocket消息:" + responseMap);
 
+                        if (responseMap == null) {
+                            return;
+                        }
+                        logger.info("收到webSocket消息: ");
+                        logger.info(responseMap.toString());
                         messageIntoMap(responseMap);
                         
                     } catch (Exception e) {
@@ -126,14 +123,15 @@ public class BondSocketClient {
                     
                     BigDecimal mDEntryPx = null;
                     List<Map> noMDEntries = (List) noRelatedSym.get("noMDEntries");
-                    if (noMDEntries != null && noMDEntries.size() > 0) {
+                    if (noMDEntries != null && !noMDEntries.isEmpty()) {
                         for (Map m: noMDEntries){
                             if (StringUtil.equals("e", m.get("mDEntryType"))){
+                                String mDEntryPxName = "mDEntryPx";
                                 // 最新净价
-                                Object obj = m.get("mDEntryPx");
+                                Object obj = m.get(mDEntryPxName);
                                 if (obj != null){
                                     mDEntryPx = new BigDecimal(obj.toString());
-                                    result.put("mDEntryPx", mDEntryPx);
+                                    result.put(mDEntryPxName, mDEntryPx);
                                     break;
                                 }
                             }
@@ -154,8 +152,14 @@ public class BondSocketClient {
         loopFlag = true;
         synchronized (this){
             while (!start()){
-                logger.error(bondWebSocketUrl + ":债券服务通信失败，10秒后重连");
-                try {TimeUnit.SECONDS.sleep(10l);} catch (InterruptedException e) {e.printStackTrace();}
+                logger.info("债券服务通信失败，10秒后重连");
+                logger.info(bondWebSocketUrl);
+                try {
+                    TimeUnit.SECONDS.sleep(10l);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                }
             }
         }
         loopFlag =false;
@@ -186,7 +190,7 @@ public class BondSocketClient {
         int index = key.lastIndexOf(".");
         String theKey = key;
         if (index > 0){
-            theKey = StringUtil.substring(key, 0, index);
+            theKey = StringUtils.substring(key, 0, index);
         }
         
         BaseMap bm = getBond(theKey);

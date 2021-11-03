@@ -1,6 +1,5 @@
 package com.joyintech.tams.cfets.etrib.dao;
 
-import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;

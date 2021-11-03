@@ -1,6 +1,5 @@
 package com.joyintech.tams.cfets.etrib.dto;
 
-import com.joyintech.framework.validation.annotation.NotEmpty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
