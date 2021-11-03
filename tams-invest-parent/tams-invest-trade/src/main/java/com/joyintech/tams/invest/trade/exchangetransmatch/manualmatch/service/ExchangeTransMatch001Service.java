@@ -30,6 +30,7 @@ import com.joyintech.tams.invest.trade.cstp.dto.CstpSelectDto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.ExchangeTransMatchBondCommonService;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.*;
+import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade002Dto;
 import com.joyintech.tams.invest.trade.trdstockconnect.controller.TrdStockConnect002Controller;
 import com.joyintech.tams.invest.trade.trdstockconnect.dto.TrdStockConnectDto;
@@ -309,7 +310,12 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 dtoStr = JsonUtils.object2Json(trdRepoTrade002Dto);
             }
             else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
-                dtoStr = JsonUtils.object2Json(null);
+                TrdFundInvestTradeDto trdFundInvestTradeDto =new TrdFundInvestTradeDto();
+                BeanUtil.copyPropertiesIgnoreNull(trdFundInvestTradeDto,settleTransDataTotal);
+                trdFundInvestTradeDto.setIsCancel(DictCodeList.是否_否.getValue());
+                trdFundInvestTradeDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                trdFundInvestTradeDto.setSecManageAcctId(settleTransDataTotal.getSecAcctId());
+                dtoStr = JsonUtils.object2Json(trdFundInvestTradeDto);
             }
             else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
                     TrdStockConnectDto trdStockConnectDto = new TrdStockConnectDto();
