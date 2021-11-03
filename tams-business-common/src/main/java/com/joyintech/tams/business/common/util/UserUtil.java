@@ -100,13 +100,4 @@ public class UserUtil {
 //        return SecurityUtil.getLoginUser();
     }
 
-
-	public static String getUserName() {
-		return "admin";
-	}
-
-	public static String getUserid() {
-		return "admin";
-	}
-
 }
