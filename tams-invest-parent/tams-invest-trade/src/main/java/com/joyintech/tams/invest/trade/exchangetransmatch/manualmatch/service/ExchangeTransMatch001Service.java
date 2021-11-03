@@ -17,6 +17,7 @@ import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -30,6 +31,8 @@ import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.Exchang
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.ExchangeTransMatchBondCommonService;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.*;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade002Dto;
+import com.joyintech.tams.invest.trade.trdstockconnect.controller.TrdStockConnect002Controller;
+import com.joyintech.tams.invest.trade.trdstockconnect.dto.TrdStockConnectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -298,13 +301,26 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 trdRepoTrade002Dto.setRebackIntAmt(settleTransDataTotal.getIntAmt());
                 //回购类型
                 trdRepoTrade002Dto.setRepoType(settleTransDataTotalAdd.getRepoType());
+                trdRepoTrade002Dto.setIsCancel(DictCodeList.是否_否.getValue());
+                trdRepoTrade002Dto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                trdRepoTrade002Dto.setIsOutTrade(DictCodeList.是否_是.getValue());
+                trdRepoTrade002Dto.setTradeAmt(dto.getRemainAmount());
+                trdRepoTrade002Dto.setShareAmt(dto.getRemainNum());
                 dtoStr = JsonUtils.object2Json(trdRepoTrade002Dto);
             }
             else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
                 dtoStr = JsonUtils.object2Json(null);
             }
             else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-                dtoStr = JsonUtils.object2Json(null);
+                    TrdStockConnectDto trdStockConnectDto = new TrdStockConnectDto();
+                    BeanUtil.copyPropertiesIgnoreNull(trdStockConnectDto, settleTransDataTotal);
+                    trdStockConnectDto.setDealSqeId(settleTransDataTotal.getSeqId());
+                    trdStockConnectDto.setIsCancel(DictCodeList.是否_否.getValue());
+                    trdStockConnectDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                    trdStockConnectDto.setIsOutTrade(DictCodeList.是否_是.getValue());
+                    trdStockConnectDto.setTradeAmt(dto.getRemainAmount());
+                    trdStockConnectDto.setShareAmt(dto.getRemainNum());
+                    dtoStr = JsonUtils.object2Json(trdStockConnectDto);
             }
         }
         return dtoStr;

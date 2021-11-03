@@ -446,10 +446,8 @@ public class ExchangeTransMatchCommonService extends BaseService {
         }
         else if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
         || StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())){
-               if (StringUtil.equals(commonEntrustDto.getPs(), DictCodeList.交易方向_买入.getValue())) {
-                BaseTradeProductDealDto baseTradeProductDealDto = exchangeTransMatchRepo1Service.genFinProductTradeDto(dto,commonEntrustDto);
-                baseTradeProductDealDtos.add(baseTradeProductDealDto);
-            }
+            BaseTradeProductDealDto baseTradeProductDealDto = exchangeTransMatchRepo1Service.genFinProductTradeDto(dto,commonEntrustDto);
+            baseTradeProductDealDtos.add(baseTradeProductDealDto);
         }
         else if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
             BaseTradeProductDealDto baseTradeProductDealDto = exchangeTransMatchFund1Service.genFinProductTradeDto(dto,commonEntrustDto);

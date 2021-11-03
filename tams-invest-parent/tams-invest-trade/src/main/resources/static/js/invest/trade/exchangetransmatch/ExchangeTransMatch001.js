@@ -341,8 +341,10 @@
                                 }
                                 //股票
                                 else if(object.finprodType2 == FINPROD_TYPE_TG_F10) {
-                                    lable = "TrdStock002";
-                                    url = "invest/trade/stockdeal/TrdStock002/init";
+                                    if(object.ps == PS_T01 || object.ps == PS_T02 || object.ps == PS_T46 || object.ps == PS_T47|| object.ps == PS_T48 ) {
+                                        lable = "TrdStock002";
+                                        url = "invest/trade/stockdeal/TrdStock002/init";
+                                    }
                                 }
 
                                 Joyin.dialog(JoyinUtil.getLabel(lable), basePath
