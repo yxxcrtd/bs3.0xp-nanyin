@@ -43,31 +43,10 @@ V_CONTENT_01_02_03 CLOB := 'WITH PROD AS (select distinct FINPROD_ID from (
     SELECT FPT.FINPROD_ID FROM FIN_PRODUCT_TYPE FPT
     WHERE EXISTS (
         SELECT 1 FROM RSK_SPECIFIC_ASSET_TYPE RSAT WHERE RSAT.IS_FLOW_LIMITED = ''Y'' AND (
-                  (RSAT.TYPE_2 is not null and RSAT.TYPE_3 is null and RSAT.TYPE_2 = FPT.TYPE_9)
-              OR  (RSAT.TYPE_3 is not null and RSAT.TYPE_4 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10 )
-              OR  (RSAT.TYPE_4 is not null and RSAT.TYPE_5 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 = FPT.TYPE_11 )
-              OR  (RSAT.TYPE_5 is not null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 =  FPT.TYPE_11  and RSAT.TYPE_5= FPT.TYPE_12)
-              OR
-               FPT.FINPROD_ID = RSAT.FINPROD_ID
-              OR (REGEXP_INSTR( (select wm_concat(t.item_code) from sys_datadict_list_link t
-              where t.linked_dict_code=''ASSET_CLASS'' and t.dict_code=''CUSTOM_ASSET_TYPE_TWO'' AND TRIM(t.linked_item_code)= RSAT.TYPE_1),FPT.TYPE_9)>=1
-              and RSAT.TYPE_1 is not null and RSAT.TYPE_2 is null )
-              )
-              and FPT.TYPE_9 is not null
-    )AND NOT EXISTS(
-         SELECT 1 FROM RSK_SPECIFIC_ASSET_TYPE RSAT WHERE RSAT.IS_FLOW_LIMITED = ''N'' AND (
-                  (RSAT.TYPE_2 is not null and RSAT.TYPE_3 is null and RSAT.TYPE_2 = FPT.TYPE_9)
-              OR  (RSAT.TYPE_3 is not null and RSAT.TYPE_4 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10 )
-              OR  (RSAT.TYPE_4 is not null and RSAT.TYPE_5 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 = FPT.TYPE_11 )
-              OR  (RSAT.TYPE_5 is not null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 =  FPT.TYPE_11  and RSAT.TYPE_5= FPT.TYPE_12)
-              OR
-               FPT.FINPROD_ID = RSAT.FINPROD_ID
-              OR (REGEXP_INSTR( (select wm_concat(t.item_code) from sys_datadict_list_link t
-              where t.linked_dict_code=''ASSET_CLASS'' and t.dict_code=''CUSTOM_ASSET_TYPE_TWO'' AND TRIM(t.linked_item_code)= RSAT.TYPE_1),FPT.TYPE_9)>=1
-              and RSAT.TYPE_1 is not null and RSAT.TYPE_2 is null )
-              )
-              and FPT.TYPE_9 is not null
-              )
+        REGEXP_INSTR(RSAT.TYPE_1||''_''||RSAT.TYPE_2||''_''||RSAT.TYPE_3||''_''||RSAT.TYPE_4 ,
+            FPT.TYPE_9||''_''||FPT.TYPE_10||''_''||FPT.TYPE_11||''_''||FPT.TYPE_12) >= 1
+        OR FPT.FINPROD_ID = RSAT.FINPROD_ID)
+    )
 ))
 SELECT
     NVL(SUM(NVL(m.MARKET_VALUE,0)+nvl(m.TDY_INTINCEXP, 0)),0) RVALUE,
@@ -111,31 +90,10 @@ SELECT DISTINCT FINPROD_ID FROM(
       SELECT FPT.FINPROD_ID FROM FIN_PRODUCT_TYPE FPT
       WHERE EXISTS (
         SELECT 1 FROM RSK_SPECIFIC_ASSET_TYPE RSAT WHERE RSAT.IS_FLOW_LIMITED = ''Y'' AND (
-                  (RSAT.TYPE_2 is not null and RSAT.TYPE_3 is null and RSAT.TYPE_2 = FPT.TYPE_9)
-              OR  (RSAT.TYPE_3 is not null and RSAT.TYPE_4 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10 )
-              OR  (RSAT.TYPE_4 is not null and RSAT.TYPE_5 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 = FPT.TYPE_11 )
-              OR  (RSAT.TYPE_5 is not null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 =  FPT.TYPE_11  and RSAT.TYPE_5= FPT.TYPE_12)
-              OR
-               FPT.FINPROD_ID = RSAT.FINPROD_ID
-              OR (REGEXP_INSTR( (select wm_concat(t.item_code) from sys_datadict_list_link t
-              where t.linked_dict_code=''ASSET_CLASS'' and t.dict_code=''CUSTOM_ASSET_TYPE_TWO'' AND TRIM(t.linked_item_code)= RSAT.TYPE_1),FPT.TYPE_9)>=1
-              and RSAT.TYPE_1 is not null and RSAT.TYPE_2 is null )
-              )
-              and FPT.TYPE_9 is not null
-      )AND NOT EXISTS(
-         SELECT 1 FROM RSK_SPECIFIC_ASSET_TYPE RSAT WHERE RSAT.IS_FLOW_LIMITED = ''N'' AND (
-                  (RSAT.TYPE_2 is not null and RSAT.TYPE_3 is null and RSAT.TYPE_2 = FPT.TYPE_9)
-              OR  (RSAT.TYPE_3 is not null and RSAT.TYPE_4 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10 )
-              OR  (RSAT.TYPE_4 is not null and RSAT.TYPE_5 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 = FPT.TYPE_11 )
-              OR  (RSAT.TYPE_5 is not null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 =  FPT.TYPE_11  and RSAT.TYPE_5= FPT.TYPE_12)
-              OR
-               FPT.FINPROD_ID = RSAT.FINPROD_ID
-              OR (REGEXP_INSTR( (select wm_concat(t.item_code) from sys_datadict_list_link t
-              where t.linked_dict_code=''ASSET_CLASS'' and t.dict_code=''CUSTOM_ASSET_TYPE_TWO'' AND TRIM(t.linked_item_code)= RSAT.TYPE_1),FPT.TYPE_9)>=1
-              and RSAT.TYPE_1 is not null and RSAT.TYPE_2 is null )
-              )
-              and FPT.TYPE_9 is not null
-              )
+        REGEXP_INSTR(RSAT.TYPE_1||''_''||RSAT.TYPE_2||''_''||RSAT.TYPE_3||''_''||RSAT.TYPE_4 ,
+            FPT.TYPE_9||''_''||FPT.TYPE_10||''_''||FPT.TYPE_11||''_''||FPT.TYPE_12) >= 1
+        OR FPT.FINPROD_ID = RSAT.FINPROD_ID)
+      )
 ))
 SELECT SUM(TRADE_AMT) RVALUE FROM (
     SELECT
@@ -243,36 +201,15 @@ V_CONTENT_05 CLOB := 'WITH PROD AS (select distinct FINPROD_ID from (
     SELECT FPT.FINPROD_ID FROM FIN_PRODUCT FPT
     LEFT JOIN FIN_PRODUCT_TYPE T1 ON FPT.FINPROD_ID = T1.FINPROD_ID 
     WHERE FPT.MDATE IS NOT NULL AND T1.TYPE_8 = ''F01'' AND TYPE_6 = ''B13'' AND FPT.MDATE >= DATE ''${valDate}'' - 1
-  UNION ALL
+    UNION ALL
     -- 流动性受限债券
     SELECT FPT.FINPROD_ID FROM FIN_PRODUCT_TYPE FPT
-    WHERE EXISTS (
+     WHERE EXISTS (
         SELECT 1 FROM RSK_SPECIFIC_ASSET_TYPE RSAT WHERE RSAT.IS_FLOW_LIMITED = ''Y'' AND (
-                  (RSAT.TYPE_2 is not null and RSAT.TYPE_3 is null and RSAT.TYPE_2 = FPT.TYPE_9)
-              OR  (RSAT.TYPE_3 is not null and RSAT.TYPE_4 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10 )
-              OR  (RSAT.TYPE_4 is not null and RSAT.TYPE_5 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 = FPT.TYPE_11 )
-              OR  (RSAT.TYPE_5 is not null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 =  FPT.TYPE_11  and RSAT.TYPE_5= FPT.TYPE_12)
-              OR
-               FPT.FINPROD_ID = RSAT.FINPROD_ID
-              OR (REGEXP_INSTR( (select wm_concat(t.item_code) from sys_datadict_list_link t
-              where t.linked_dict_code=''ASSET_CLASS'' and t.dict_code=''CUSTOM_ASSET_TYPE_TWO'' AND TRIM(t.linked_item_code)= RSAT.TYPE_1),FPT.TYPE_9)>=1
-              and RSAT.TYPE_1 is not null and RSAT.TYPE_2 is null )
-              )
-              and FPT.TYPE_9 is not null
-    )AND NOT EXISTS(
-         SELECT 1 FROM RSK_SPECIFIC_ASSET_TYPE RSAT WHERE RSAT.IS_FLOW_LIMITED = ''N'' AND (
-                  (RSAT.TYPE_2 is not null and RSAT.TYPE_3 is null and RSAT.TYPE_2 = FPT.TYPE_9)
-              OR  (RSAT.TYPE_3 is not null and RSAT.TYPE_4 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10 )
-              OR  (RSAT.TYPE_4 is not null and RSAT.TYPE_5 is null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 = FPT.TYPE_11 )
-              OR  (RSAT.TYPE_5 is not null and RSAT.TYPE_2 = FPT.TYPE_9 and RSAT.TYPE_3 = FPT.TYPE_10  and RSAT.TYPE_4 =  FPT.TYPE_11  and RSAT.TYPE_5= FPT.TYPE_12)
-              OR
-               FPT.FINPROD_ID = RSAT.FINPROD_ID
-              OR (REGEXP_INSTR( (select wm_concat(t.item_code) from sys_datadict_list_link t
-              where t.linked_dict_code=''ASSET_CLASS'' and t.dict_code=''CUSTOM_ASSET_TYPE_TWO'' AND TRIM(t.linked_item_code)= RSAT.TYPE_1),FPT.TYPE_9)>=1
-              and RSAT.TYPE_1 is not null and RSAT.TYPE_2 is null )
-              )
-              and FPT.TYPE_9 is not null
-              )
+        REGEXP_INSTR(RSAT.TYPE_1||''_''||RSAT.TYPE_2||''_''||RSAT.TYPE_3||''_''||RSAT.TYPE_4 ,
+            FPT.TYPE_9||''_''||FPT.TYPE_10||''_''||FPT.TYPE_11||''_''||FPT.TYPE_12) >= 1
+        OR FPT.FINPROD_ID = RSAT.FINPROD_ID)
+    )
 ))
 SELECT
     NVL(SUM(NVL(M.MARKET_VALUE,0)+nvl(M.TDY_INTINCEXP, 0)),0) RVALUE
