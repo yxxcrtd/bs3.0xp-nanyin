@@ -16,6 +16,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etribbondinfo.dto.EtrFinProductDto;
@@ -509,6 +510,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (!StringUtil.isNotBlank(requestDto.getCdate())){
             requestDto.setCdate(iPlatformDate.getSysDateStr());
         }
+
+        User user = SecurityUtil.getLoginUser();
+        if (user == null){
+            return null;
+        }
         
         // 市价净价取值估值配置
         String BOND_VALUATION_RULE = CacheUtil.getSysParam("BOND_VALUATION_RULE");
@@ -526,6 +532,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 .put("REGIST_ORG_02", DictCodeList.登记托管机构_上海清算所.getValue())
                 .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                 .put("search_isNumberFlag", BaseMap.isNumeric(requestDto.getSearch()))
+                .put("userId", user.getUserName())
                 ;
         
         // 分页查询列表

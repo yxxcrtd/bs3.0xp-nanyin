@@ -19,6 +19,7 @@ import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.trade.investtrade.commanddispatcher.service.TrdCommandDispatcher001Service;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
@@ -256,26 +257,16 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @PostMapping("/queryPositionsPage")
     @ResponseBody
     public Message<Page<CfetsEtrIbBondPosinfo001Dto>> queryPositionsPage(@RequestBody CfetsEtrIbBondPosiPage001RequestDto requestDto) {
-        try {
-            Page<CfetsEtrIbBondPosinfo001Dto> list = cfetsEtrIbBondinfoService.queryPositionsPage(requestDto);
-            return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().success().setData(list);
-        }catch (Exception e) {
-            logger.error("查询持仓信息分页列表异常",e);
-            return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().fail().setMessage(e.getMessage());
-        }
+        Page<CfetsEtrIbBondPosinfo001Dto> list = cfetsEtrIbBondinfoService.queryPositionsPage(requestDto);
+        return new Message<Page<CfetsEtrIbBondPosinfo001Dto>>().success().setData(list);
     }
 
     @ApiOperation(value = "头寸信息查询", notes = "头寸信息查询")
     @PostMapping("/queryPositionInfo")
     @ResponseBody
     public Message<List<BaseMap>> queryPositionInfo(@RequestBody CfetsEtrIbBondPosiInfoRequestDto requestDto) {
-        try {
-            List<BaseMap> m = cfetsEtrIbBondinfoService.queryPositionInfo(requestDto);
-            return new Message<List<BaseMap>>().success().setData(m);
-        }catch (Exception e) {
-            logger.error("查询头寸信息分页列表异常",e);
-            return new Message<List<BaseMap>>().fail().setMessage(e.getMessage());
-        }
+        List<BaseMap> m = cfetsEtrIbBondinfoService.queryPositionInfo(requestDto);
+        return new Message<List<BaseMap>>().success().setData(m);
     }
 
     @PostMapping(value="/exportPosition")
@@ -512,4 +503,9 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         }
     }
 
+    @ExceptionHandler
+    @ResponseBody
+    public Message<String> ExceptionHandler(Exception e) {
+        return new Message<String>().fail().setMessage("异常：" + e.getMessage());
+    }
 }

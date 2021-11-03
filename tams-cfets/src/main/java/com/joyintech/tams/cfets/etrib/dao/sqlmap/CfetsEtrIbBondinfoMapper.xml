@@ -383,6 +383,10 @@ from
                     sum(CASE WHEN b.S_HOLDINGTYPE=#{S_002} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) ETR_PLEDGE_KZYCC,
                     sum(CASE WHEN a.HODING_TYPE=#{A_012} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) ETR_PLEDGE_YZYCC
                     FROM ETR_SEC_POSITION_RULE a
+                    INNER JOIN PTL_PORTFOLIO_AUTHORITY PPA ON a.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+                    <if test="userId != null and userId != ''">
+                        AND PPA.USER_ID = #{userId}
+                    </if>
                     LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_001},#{S_002})
                     WHERE to_char(a.cdate,'yyyy-MM-dd') = #{cdate,jdbcType=VARCHAR}
                     <if test="portfolioId != null and portfolioId != ''">
@@ -400,6 +404,10 @@ from
                     sum(CASE WHEN a.HODING_TYPE =#{A_008} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_BFQZTCC,
                     sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_ZHCC
                     from PTL_SEC_POSITION_RULE a
+                    INNER JOIN PTL_PORTFOLIO_AUTHORITY PPA ON a.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+                    <if test="userId != null and userId != ''">
+                        AND PPA.USER_ID = #{userId}
+                    </if>
                     where to_char(a.cdate,'yyyy-MM-dd') = #{cdate,jdbcType=VARCHAR}
                     <if test="portfolioId != null and portfolioId != ''">
                         AND a.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
