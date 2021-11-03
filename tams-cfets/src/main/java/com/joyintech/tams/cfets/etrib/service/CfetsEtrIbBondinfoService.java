@@ -1102,7 +1102,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }else {
                 dto.setXqdate("--");
             }
-
+//            如果估值收益率没有数据，则显示为空
+            if (dto.getGzRate().equals("%")) {
+                dto.setGzRate(" ");
+            }
 //            若为含权债，显示为含权债的行权方式；若有多个行权方式，用分号“;”隔开    非含权债，显示为“无”
 //            map.put("sysDate", iPlatformDate.getSysDateStr());
             map.put("EXEC_MODE_01", DictCodeList.行权方式_赎回.getValue());

@@ -201,7 +201,7 @@ public class CfetsEtrFinProductDto {
      * 估值收益率
      */
     @ApiModelProperty(required = false,name="gzRate",value="估值收益率")
-    private BigDecimal gzRate;
+    private String gzRate;
 
     /**
      * 担保人
@@ -552,11 +552,11 @@ public class CfetsEtrFinProductDto {
         this.priceTj = priceTj;
     }
 
-    public BigDecimal getGzRate() {
+    public String getGzRate() {
         return gzRate;
     }
 
-    public void setGzRate(BigDecimal gzRate) {
+    public void setGzRate(String gzRate) {
         this.gzRate = gzRate;
     }
 
