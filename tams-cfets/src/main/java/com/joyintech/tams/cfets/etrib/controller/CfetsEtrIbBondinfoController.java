@@ -15,11 +15,9 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.trade.investtrade.commanddispatcher.service.TrdCommandDispatcher001Service;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
-import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
@@ -29,7 +27,6 @@ import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfo002Service;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
@@ -39,7 +36,6 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
@@ -63,7 +59,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -137,8 +136,11 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         // 卖空模式
         initPageParams.put("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
-        //本币业务指令自动刷新时间(s)
-        initPageParams.put("CFETS_ETR_REFRESH_TIME", CacheUtil.getSysParam("CFETS_ETR_REFRESH_TIME"));
+        //本币业务指令画面头寸信息区域自动刷新时间(ms)
+        initPageParams.put("cfetsEtrIbBondinfo_positionTable_refresh_period", CacheUtil.getSysParam("cfetsEtrIbBondinfo_positionTable_refresh_period"));
+        //本币业务指令画面指令列表区域自动刷新时间(ms)
+        initPageParams.put("cfetsEtrIbBondinfo_etrTable_refresh_period", CacheUtil.getSysParam("cfetsEtrIbBondinfo_etrTable_refresh_period"));
+
         //CMDS地址
         initPageParams.put("bondWebSocketUrl", bondWebSocketUrl);
         initPageParams.put("NEED_WORKFLOW", true);
