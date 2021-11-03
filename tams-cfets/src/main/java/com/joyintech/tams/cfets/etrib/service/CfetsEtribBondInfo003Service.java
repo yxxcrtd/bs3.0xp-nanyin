@@ -25,7 +25,6 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
@@ -34,6 +33,7 @@ import com.joyintech.service.entrust.common.controller.EntrustCommonBaseControll
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.business.common.util.UserUtil;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfo002Mapper;
 import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
@@ -311,7 +311,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 //调用头寸
                 CfetsEtrIbPositionRequest req=new CfetsEtrIbPositionRequest();
                 req.setInterfaceType("Bond001");
-                req.setUserId(SecurityUtil.getLoginUser().getUserName());
+                req.setUserId(UserUtil.getUserName());
                 req.setTotalTradeId(entity.getTotalEtrustId());
                 req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
                 req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
