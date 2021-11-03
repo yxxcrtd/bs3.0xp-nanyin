@@ -345,7 +345,7 @@ from
             etrptl.PORTFOLIO_ID as portfolioId,
             e.PORTFOLIO_NAME as portfolioName,
             etrptl.FINPROD_ID as finprodId,
-            d.FINPROD_NAME as finprodAbbr,
+            d.FINPROD_ABBR as finprodAbbr,
             d.FINPROD_MARKET_ID as finprodMarketId,
             c.TYPE_8 as secType1, /*债券一级分类code*/
             etrptl.INV_AIM as busiModel,  /*业务模式code*/
