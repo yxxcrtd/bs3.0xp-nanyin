@@ -60,6 +60,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -795,139 +796,21 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
         /*T日可用现金*/
         resp.add(BaseMap.newMap()
-                .put("field", "t0kyxj")
-                .put("name", "T日可用现金（元）")
-                .put("amount", "0.00")
-                .put("type", "xj"));
-        /*T+1日可用现金*/
-        resp.add(BaseMap.newMap()
-                .put("field", "t1kyxj")
-                .put("name", "T+1日可用现金（元）")
-                .put("amount", "0.00")
-                .put("type", "xj"));
-        /*账户现金*/
-        resp.add(BaseMap.newMap()
-                .put("field", "zhxj")
-                .put("name", "账户现金（元）")
-                .put("amount", "0.00")
-                .put("type", "xj"));
-
-        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "02")){
-            // 卖空模式设置为模式一、模式二时显示此字段
-            /*融入券卖空待购回持仓*/
-            resp.add(BaseMap.newMap()
-                    .put("field", "rrqmkdghcc")
-                    .put("name", "融入券卖空待购回持仓（元）")
-                    .put("amount", "0.00")
-                    .put("type", "cc"));
-        }
-
-        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
-            // 卖空模式设置为模式一、模式三时显示此字段
-            /*资产T日可用持仓*/
-            resp.add(BaseMap.newMap()
-                    .put("field", "zctrkycc")
-                    .put("name", "资产T日可用持仓（元）")
-                    .put("amount", "0.00")
-                    .put("type", "cc"));
-        }
-
-        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
-            // 卖空模式设置为模式一、模式三时显示此字段
-            /*资产T+1日可用持仓*/
-            resp.add(BaseMap.newMap()
-                    .put("field", "zct1rkycc")
-                    .put("name", "资产T+1日可用持仓（元）")
-                    .put("amount", "0.00")
-                    .put("type", "cc"));
-        }
-
-        if (StringUtil.equals(flag, "02")){
-            // 卖空模式设置为模式二时显示此字段
-            /*本方券T日可用持仓*/
-            resp.add(BaseMap.newMap()
-                    .put("field", "bfqtrkycc")
-                    .put("name", "本方券T日可用持仓（元）")
-                    .put("amount", "0.00")
-                    .put("type", "cc"));
-        }
-
-        if (StringUtil.equals(flag, "02")){
-            // 卖空模式设置为模式二时显示此字段
-            /*本方券T+1日可用持仓*/
-            resp.add(BaseMap.newMap()
-                    .put("field", "bfqt1rkycc")
-                    .put("name", "本方券T+1日可用持仓（元）")
-                    .put("amount", "0.00")
-                    .put("type", "cc"));
-        }
-
-        if (StringUtil.equals(flag, "02")){
-            // 卖空模式设置为模式二时显示此字段
-            /*融入券T日可用持仓*/
-            resp.add(BaseMap.newMap()
-                    .put("field", "rrqtrkycc")
-                    .put("name", "融入券T日可用持仓（元）")
-                    .put("amount", "0.00")
-                    .put("type", "cc"));
-        }
-
-        if (StringUtil.equals(flag, "02")){
-            // 卖空模式设置为模式二时显示此字段
-            /*融入券T+1日可用持仓*/
-            resp.add(BaseMap.newMap()
-                    .put("field", "rrqt1rkycc")
-                    .put("name", "融入券T+1日可用持仓（元）")
-                    .put("amount", "0.00")
-                    .put("type", "cc"));
-        }
-        return resp;
-    }
-
-    private List<BaseMap> assemble(String flag, Map map, BigDecimal cashT, BigDecimal cashT1, BigDecimal realCash) {
-        if (map == null) {
-            map = new HashMap();
-            map.put("T0KYXJ", cashT);
-            map.put("T1KYXJ", cashT1);
-            map.put("ZHXJ", realCash);
-            map.put("RRQMKDGHCC", "0");
-            map.put("ZCTRKYCC", "0");
-            map.put("ZCT1RKYCC", "0");
-            map.put("BFQTRKYCC", "0");
-            map.put("BFQT1RKYCC", "0");
-            map.put("RRQTRKYCC", "0");
-            map.put("RRQT1RKYCC", "0");
-        }
-        // 初始化返回集合
-        List<BaseMap> resp = new ArrayList<>();
-        BaseMap bm = BaseMap.newMap(map);
-        if (cashT != null){
-            bm.put("T0KYXJ", ArithmeticUtil.doAdd(bm.getBigDecimal("T0KYXJ"), cashT));
-        }
-        if (cashT1 != null){
-            bm.put("T1KYXJ", ArithmeticUtil.doAdd(bm.getBigDecimal("T1KYXJ"), cashT1));
-        }
-        if (realCash != null){
-            bm.put("ZHXJ", ArithmeticUtil.doAdd(bm.getBigDecimal("ZHXJ"), realCash));
-        }
-        
-        /*T日可用现金*/
-        resp.add(BaseMap.newMap()
                 .put("field", "T0KYXJ")
                 .put("name", "T日可用现金（元）")
-                .put("amount", bm.getBigDecimalStr("T0KYXJ", "0.00"))
+                .put("amount", "--")
                 .put("type", "xj"));
         /*T+1日可用现金*/
         resp.add(BaseMap.newMap()
                 .put("field", "T1KYXJ")
                 .put("name", "T+1日可用现金（元）")
-                .put("amount", bm.getBigDecimalStr("T1KYXJ", "0.00"))
+                .put("amount", "--")
                 .put("type", "xj"));
         /*账户现金*/
         resp.add(BaseMap.newMap()
                 .put("field", "ZHXJ")
                 .put("name", "账户现金（元）")
-                .put("amount", bm.getBigDecimalStr("ZHXJ", "0.00"))
+                .put("amount", "--")
                 .put("type", "xj"));
 
         if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "02")){
@@ -936,7 +819,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", "RRQMKDGHCC")
                     .put("name", "融入券卖空待购回持仓（元）")
-                    .put("amount", bm.getBigDecimalStr("RRQMKDGHCC", "0.00"))
+                    .put("amount", "--")
                     .put("type", "cc"));
         }
 
@@ -946,7 +829,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", "ZCTRKYCC")
                     .put("name", "资产T日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr("ZCTRKYCC", "0.00"))
+                    .put("amount", "--")
                     .put("type", "cc"));
         }
 
@@ -956,7 +839,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", "ZCT1RKYCC")
                     .put("name", "资产T+1日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr("ZCT1RKYCC", "0.00"))
+                    .put("amount", "--")
                     .put("type", "cc"));
         }
 
@@ -966,7 +849,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", "BFQTRKYCC")
                     .put("name", "本方券T日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr("BFQTRKYCC", "0.00"))
+                    .put("amount", "--")
                     .put("type", "cc"));
         }
 
@@ -976,7 +859,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", "BFQT1RKYCC")
                     .put("name", "本方券T+1日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr("BFQT1RKYCC", "0.00"))
+                    .put("amount", "--")
                     .put("type", "cc"));
         }
 
@@ -986,7 +869,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", "RRQTRKYCC")
                     .put("name", "融入券T日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr("RRQTRKYCC", "0.00"))
+                    .put("amount", "--")
                     .put("type", "cc"));
         }
 
@@ -996,7 +879,148 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             resp.add(BaseMap.newMap()
                     .put("field", "RRQT1RKYCC")
                     .put("name", "融入券T+1日可用持仓（元）")
-                    .put("amount", bm.getBigDecimalStr("RRQT1RKYCC", "0.00"))
+                    .put("amount", "--")
+                    .put("type", "cc"));
+        }
+        return resp;
+    }
+
+    private String addToStr(BigDecimal a, BigDecimal b){
+        if (a == null && b== null){
+            return "--";
+        }
+        return decimalToStr(ArithmeticUtil.doAdd(a,b),"0.00");
+    }
+
+    /**
+     * 返回前端格式保留小数位
+     * @param b
+     * @param pattern
+     * @return
+     */
+    private String decimalToStr(BigDecimal b, String pattern){
+        if (b == null){
+            return "--";
+        }
+        DecimalFormat df1 = new DecimalFormat(pattern);
+        return df1.format(b);
+    }
+    
+    private List<BaseMap> assemble(String flag, Map map, BigDecimal cashT, BigDecimal cashT1, BigDecimal realCash) {
+        String T0KYXJ="T0KYXJ",T1KYXJ="T1KYXJ",ZHXJ="ZHXJ",RRQMKDGHCC="RRQMKDGHCC",ZCTRKYCC="ZCTRKYCC";
+        String ZCT1RKYCC="ZCT1RKYCC",BFQTRKYCC="BFQTRKYCC",BFQT1RKYCC="BFQT1RKYCC",RRQTRKYCC="RRQTRKYCC",RRQT1RKYCC="RRQT1RKYCC";
+        if (map == null) {
+            map = new HashMap();
+            map.put(T0KYXJ, cashT);
+            map.put(T1KYXJ, cashT1);
+            map.put(ZHXJ, realCash);
+            map.put(RRQMKDGHCC, "0");
+            map.put(ZCTRKYCC, "0");
+            map.put(ZCT1RKYCC, "0");
+            map.put(BFQTRKYCC, "0");
+            map.put(BFQT1RKYCC, "0");
+            map.put(RRQTRKYCC, "0");
+            map.put(RRQT1RKYCC, "0");
+        }
+        // 初始化返回集合
+        List<BaseMap> resp = new ArrayList<>();
+        BaseMap bm = BaseMap.newMap(map);
+        if (cashT != null){
+            bm.put(T0KYXJ, addToStr(bm.getBigDecimal(T0KYXJ), cashT));
+        }
+        if (cashT1 != null){
+            bm.put(T1KYXJ, addToStr(bm.getBigDecimal(T1KYXJ), cashT1));
+        }
+        if (realCash != null){
+            bm.put(ZHXJ, addToStr(bm.getBigDecimal(ZHXJ), realCash));
+        }
+        
+        /*T日可用现金*/
+        resp.add(BaseMap.newMap()
+                .put("field", T0KYXJ)
+                .put("name", "T日可用现金（元）")
+                .put("amount", bm.getBigDecimalStr(T0KYXJ, "0.00"))
+                .put("type", "xj"));
+        /*T+1日可用现金*/
+        resp.add(BaseMap.newMap()
+                .put("field", T1KYXJ)
+                .put("name", "T+1日可用现金（元）")
+                .put("amount", bm.getBigDecimalStr(T1KYXJ, "0.00"))
+                .put("type", "xj"));
+        /*账户现金*/
+        resp.add(BaseMap.newMap()
+                .put("field", ZHXJ)
+                .put("name", "账户现金（元）")
+                .put("amount", bm.getBigDecimalStr(ZHXJ, "0.00"))
+                .put("type", "xj"));
+
+        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式一、模式二时显示此字段
+            /*融入券卖空待购回持仓*/
+            resp.add(BaseMap.newMap()
+                    .put("field", RRQMKDGHCC)
+                    .put("name", "融入券卖空待购回持仓（元）")
+                    .put("amount", bm.getBigDecimalStr(RRQMKDGHCC, "0.00"))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
+            // 卖空模式设置为模式一、模式三时显示此字段
+            /*资产T日可用持仓*/
+            resp.add(BaseMap.newMap()
+                    .put("field", ZCTRKYCC)
+                    .put("name", "资产T日可用持仓（元）")
+                    .put("amount", bm.getBigDecimalStr(ZCTRKYCC, "0.00"))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "03")){
+            // 卖空模式设置为模式一、模式三时显示此字段
+            /*资产T+1日可用持仓*/
+            resp.add(BaseMap.newMap()
+                    .put("field", ZCT1RKYCC)
+                    .put("name", "资产T+1日可用持仓（元）")
+                    .put("amount", bm.getBigDecimalStr(ZCT1RKYCC, "0.00"))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*本方券T日可用持仓*/
+            resp.add(BaseMap.newMap()
+                    .put("field", BFQTRKYCC)
+                    .put("name", "本方券T日可用持仓（元）")
+                    .put("amount", bm.getBigDecimalStr(BFQTRKYCC, "0.00"))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*本方券T+1日可用持仓*/
+            resp.add(BaseMap.newMap()
+                    .put("field", BFQT1RKYCC)
+                    .put("name", "本方券T+1日可用持仓（元）")
+                    .put("amount", bm.getBigDecimalStr(BFQT1RKYCC, "0.00"))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*融入券T日可用持仓*/
+            resp.add(BaseMap.newMap()
+                    .put("field", RRQTRKYCC)
+                    .put("name", "融入券T日可用持仓（元）")
+                    .put("amount", bm.getBigDecimalStr(RRQTRKYCC, "0.00"))
+                    .put("type", "cc"));
+        }
+
+        if (StringUtil.equals(flag, "02")){
+            // 卖空模式设置为模式二时显示此字段
+            /*融入券T+1日可用持仓*/
+            resp.add(BaseMap.newMap()
+                    .put("field", RRQT1RKYCC)
+                    .put("name", "融入券T+1日可用持仓（元）")
+                    .put("amount", bm.getBigDecimalStr(RRQT1RKYCC, "0.00"))
                     .put("type", "cc"));
         }
         return resp;
