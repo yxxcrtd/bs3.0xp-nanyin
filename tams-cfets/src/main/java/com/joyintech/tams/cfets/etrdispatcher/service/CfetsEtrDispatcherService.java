@@ -1,9 +1,9 @@
 /*
- * 文件名：EtrBondFirstLBiddingService.java
+ * 文件名：CfetsEtrDispatcherService.java
  * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
  * 描述：理财资管管理系统V2.0
- * 修改人：yangjm
- * 修改时间：2019年5月6日
+ * 修改人：sjj
+ * 修改时间：2021年11月1日
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
@@ -15,31 +15,43 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dao.EtrBondFirstLBiddingMapper;
 import com.joyintech.tams.cfets.etrdispatcher.dao.CfetsEtrDispatcherMapper;
 import com.joyintech.tams.cfets.etrdispatcher.dto.*;
-import com.joyintech.tams.common.base.dao.AutoDispenseRightMapper;
-import com.joyintech.tams.common.base.dao.EtrAutoDispenseRuleDetailMapper;
-import com.joyintech.tams.common.base.dao.EtrAutoDispenseRuleMapper;
-import com.joyintech.tams.common.base.entity.AutoDispenseRight;
-import com.joyintech.tams.common.base.entity.EtrAutoDispenseRule;
-import com.joyintech.tams.common.base.entity.EtrAutoDispenseRuleDetail;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
+import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
+import com.joyintech.tams.component.business.riskrds.constant.PageFieldToInterfFactory;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.client.ClientData;
+import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
+import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.BussRepoSecMapper;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 
@@ -80,6 +92,47 @@ public class CfetsEtrDispatcherService extends BaseService{
 
     @Autowired
     private BussRepoSecMapper bussRepoSecMapper;
+
+    /**
+     * 委托指令Mapper
+     */
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
+
+    /**
+     * 委托指令分发信息保存的mapper
+     */
+    @Autowired
+    private EtrDistributeMapper etrDistributeMapper;
+
+    /**
+     * 工作流CommonServicemapper
+     */
+    @Autowired(required = false)
+    private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapper;
+
+    /**
+     * 投资委托信息Service
+     */
+    @Autowired
+    private BaseEtrInvestInfoServiceImpl etrInvestInfoServiceImpl;
+
+    /**
+     * 投资委托信息Mapper
+     */
+    @Autowired
+    private BaseEtrInvestInfoMapper etrInvestInfoMapper;
+
+    @Autowired(required = false)
+    private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+
+    /**
+     * 状态码，默认为200
+     */
+    private int statuCode = HttpStatus.CONTINUE.value();
+
+    @Autowired
+    private IPlatformDate iPlatformDate;
 
     /**
      * 指令列表分页查询
@@ -182,42 +235,42 @@ public class CfetsEtrDispatcherService extends BaseService{
         //将交易员和投资经理转为真实姓名
         List<CfetsEtrDispatcherTradeListResponse> list = pageLimit.getRoot();
         if(!list.isEmpty()){
-//            for(CfetsEtrDispatcherTradeListResponse  cfetsEtrDispatcherTradeListResponse : list){
-//                if(StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getTrader())){
-//                    String[] traders = cfetsEtrDispatcherTradeListResponse.getTrader().split(",");
-//                    StringBuffer buffer = new StringBuffer();
-//                    StringBuffer userName = new StringBuffer();
-//                    for (String trader : traders) {
-//                        userName.append(trader + ",");
-//                        User user=trdCommandDispatcher001Service.getRealNameByUserName(trader);
-//                        if(StringUtil.isNotEmpty(user)){
-//                            buffer.append(user.getRealName() + ",");
-//                        }
-//                    }
-//                    if(buffer.toString().length() !=0){
-//                        cfetsEtrDispatcherTradeListResponse.setTrader(buffer.toString().substring(0, buffer.toString().length() - 1));
-//                    }
+            for(CfetsEtrDispatcherTradeListResponse  cfetsEtrDispatcherTradeListResponse : list){
+                if(StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getTrader())){
+                    String[] traders = cfetsEtrDispatcherTradeListResponse.getTrader().split(",");
+                    StringBuffer buffer = new StringBuffer();
+                    StringBuffer userName = new StringBuffer();
+                    for (String trader : traders) {
+                        userName.append(trader + ",");
+                        User user=cfetsEtrDispatcherMapper.getRealNameByUserName(trader);
+                        if(StringUtil.isNotEmpty(user)){
+                            buffer.append(user.getRealName() + ",");
+                        }
+                    }
+                    if(buffer.toString().length() !=0){
+                        cfetsEtrDispatcherTradeListResponse.setTrader(buffer.toString().substring(0, buffer.toString().length() - 1));
+                    }
 //                    if(userName.toString().length() !=0){
 //                        cfetsEtrDispatcherTradeListResponse.setUserName(userName.toString().substring(0,userName.toString().length() - 1));
 //                    }
-//                }
-//                if(StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getInvManagerId())){
-//                    User user1=trdCommandDispatcher001Service.getRealNameByUserName(cfetsEtrDispatcherTradeListResponse.getInvManagerId());
-//                    if(StringUtil.isNotEmpty(user1)){
-//                        cfetsEtrDispatcherTradeListResponse.setInvManagerId(user1.getRealName());
-//                    }
-//                }
-//                if(StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getBusiPs())){
-//                    //委托指令附属表中取出回购/拆借方向
-//                    if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(), cfetsEtrDispatcherTradeListResponse.getFinprodType2())
-//                            || StringUtil.equals(DictCodeList.平安资产类型_拆借.getValue(), cfetsEtrDispatcherTradeListResponse.getFinprodType2()) ){
-//                        cfetsEtrDispatcherTradeListResponse.setPs(cfetsEtrDispatcherTradeListResponse.getBusiPs());
-//                    }
-//                }
+                }
+                if(StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getInvManagerId())){
+                    User user1=cfetsEtrDispatcherMapper.getRealNameByUserName(cfetsEtrDispatcherTradeListResponse.getInvManagerId());
+                    if(StringUtil.isNotEmpty(user1)){
+                        cfetsEtrDispatcherTradeListResponse.setInvManagerId(user1.getRealName());
+                    }
+                }
+                if(StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getBusiPs())){
+                    //委托指令附属表中取出回购/拆借方向
+                    if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(), cfetsEtrDispatcherTradeListResponse.getFinprodType2())
+                            || StringUtil.equals(DictCodeList.平安资产类型_拆借.getValue(), cfetsEtrDispatcherTradeListResponse.getFinprodType2()) ){
+                        cfetsEtrDispatcherTradeListResponse.setPs(cfetsEtrDispatcherTradeListResponse.getBusiPs());
+                    }
+                }
 //                if(StringUtil.equals(cfetsEtrDispatcherTradeListResponse.getFinprodType2(), DictCodeListExt2.平安资产类型_一级市场债.getValue())){
-//                    //债券一级投标交易方向的查询结果显示为空；
+////                    //债券一级投标交易方向的查询结果显示为空；
 //                    cfetsEtrDispatcherTradeListResponse.setPs(null);
-//                    TrdCommandDispatcher001Dto  dto2=trdCommandDispatcher001Service.getEtrBidInfo(dto.getEntrustId());
+//                    CfetsEtrDispatcherTradeListResponse dto2= cfetsEtrDispatcherMapper.getEtrBidInfo(dto.getEntrustId());
 //                    if(StringUtil.isNotEmpty(dto2)){
 //                        //列表项中委托额度后增加字段 投标标位
 //                        cfetsEtrDispatcherTradeListResponse.setBidPrice(dto2.getBidPrice());
@@ -227,11 +280,9 @@ public class CfetsEtrDispatcherService extends BaseService{
 //                        cfetsEtrDispatcherTradeListResponse.setBussBidDate(DateUtil.format(dto2.getBidDate()));
 //                    }
 //                }
-//            }
-            //TODO 需要特殊处理清算速度 0转成T+0
+            }
         }
         return pageLimit;
-//        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsEtrDispatcherMapper.findAllEtrDispatcherCommon(pageParam));
     }
 
     /**
@@ -240,15 +291,12 @@ public class CfetsEtrDispatcherService extends BaseService{
      * @param cfetsDto br
      * @return Message<AjaxResult>
      */
-    public AjaxResult checkSave(CfetsEtrDispatcherAutoRequest cfetsDto, BindingResult br) {
-        AjaxResult result=new AjaxResult();
-        List<ValidMessage> errorList=new ArrayList<ValidMessage>();
+    public String checkSave(CfetsEtrDispatcherAutoRequest cfetsDto, BindingResult br) {
+        String returnMsg ="";
         if(StringUtil.isEmpty(cfetsDto.getVdate())){
-            errorList.add(new ValidMessage("","请选择分发日期"));
+            returnMsg = "请选择分发日期";
         }
-        result.setErrorList(errorList);
-        result.setData("请选择分发日期");
-        return result;
+        return returnMsg;
     }
 
     /**
@@ -306,8 +354,8 @@ public class CfetsEtrDispatcherService extends BaseService{
         return list;
     }
 
-    public AjaxResult checkSaveTraderAuthList(List<CfetsEtrDispatcherTraderAuthListResponse> dtoList, BindingResult br) {
-        AjaxResult result=new AjaxResult();
+    public AjaxResult checkSaveTraderAuthList(List<CfetsEtrDispatcherTraderAuthListResponse> dtoList) {
+        AjaxResult ajaxResult =new AjaxResult();
         String returnMsg="";
         List<String> selectList = new ArrayList<String>();//存入所有交易员已选择的投资品种类
         List<String> allList = new ArrayList<String>();//存入所有的投资品种类
@@ -350,9 +398,9 @@ public class CfetsEtrDispatcherService extends BaseService{
         if(StringUtil.isNotEmpty(stringBuilder.toString())) {
             returnMsg="[" + stringBuilder.toString().substring(0,stringBuilder.toString().length()-1) + "]品种权限未选，将默认所有交易员都有此权限";
         }
-        //result.setErrorList(returnMsg);
-        result.setData(returnMsg);
-        return result;
+        ajaxResult.setMessage(returnMsg);
+        ajaxResult.setStatuCode(statuCode);
+        return ajaxResult;
     }
 
     /**
@@ -363,7 +411,7 @@ public class CfetsEtrDispatcherService extends BaseService{
      * @see
      * @since 1.0
      */
-    public AjaxResult saveTraderAuthList(List<CfetsEtrDispatcherTraderAuthListResponse> dtoList) {
+    public AjaxResult doSaveTraderAuthList(List<CfetsEtrDispatcherTraderAuthListResponse> dtoList) {
         AjaxResult ajaxResult =new AjaxResult();
         List<ValidMessage> errorList=new ArrayList<ValidMessage>();
         List<String> selectList = new ArrayList<String>();//存入所有交易员已选择的投资品种类
@@ -490,6 +538,41 @@ public class CfetsEtrDispatcherService extends BaseService{
     }
 
     /**
+     * 指令成交明细查询
+     *
+     * @param dto
+     * @return Page<CfetsEtrDispatcherExeListInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    public Page<CfetsEtrDispatcherExeListInfoResponse> getEtrDispatcherExeListInfo(CfetsEtrDispatcherInfoRequest dto) {
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("feeType06", DictCodeList.费用品种类型_交易手续费.getValue());
+        pageParam.put("feeType07", DictCodeList.费用品种类型_结算服务费.getValue());
+
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                () -> cfetsEtrDispatcherMapper.getEtrDispatcherExeListInfo(pageParam));
+    }
+
+    /**
+     * 指令成交明细查询
+     *
+     * @param dto
+     * @return Page<CfetsEtrDispatcherDealListInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    public Page<CfetsEtrDispatcherDealListInfoResponse> getEtrDispatcherDealListInfo(CfetsEtrDispatcherInfoRequest dto) {
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("feeType06", DictCodeList.费用品种类型_交易手续费.getValue());
+        pageParam.put("feeType07", DictCodeList.费用品种类型_结算服务费.getValue());
+
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                () -> cfetsEtrDispatcherMapper.getEtrDispatcherDealListInfo(pageParam));
+    }
+    /**
      * 指令风险试算查询
      *
      * @param dto
@@ -536,5 +619,356 @@ public class CfetsEtrDispatcherService extends BaseService{
     public List<CfetsEtrDispatcherTraderListRequest> getEtrTraderAndWorkloadList(Map<String, Object> pageParam) {
         CfetsEtrDispatcherTraderListRequest dto = new CfetsEtrDispatcherTraderListRequest();
         return cfetsEtrDispatcherMapper.getEtrTraderAndWorkloadList(pageParam);
+    }
+
+    /**
+     * 点击分发按钮check
+     * @author sjj
+     * @param pageParam
+     * @return Message<AjaxResult>
+     */
+    public AjaxResult doDispatcherCheck(Map<String,Object> pageParam, BindingResult br) {
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<ValidMessage>();
+        List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
+        if(entrustIdList.isEmpty() || entrustIdList.size() ==0) {
+            errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0026")));
+        }else{
+            pageParam.put("entrustIdList",entrustIdList);
+            List<String> list = cfetsEtrDispatcherMapper.doDispatcherCheck(pageParam);
+            for(String entrustStatu:list){
+                if(!(StringUtil.equals(entrustStatu, DictCodeList.委托状态_待接收.getValue()) ||StringUtil.equals(entrustStatu,DictCodeListExt3.委托状态_待分发.getValue())
+                )){
+                    errorList.add(new ValidMessage("",getMessage("TRD_W_0001",SysDataUtil.getNameFromDataDict(DictCode.委托状态,entrustStatu),"分发")));
+                }
+            }
+        }
+        ajaxResult.setErrorList(errorList);
+        return ajaxResult;
+    }
+
+    /**
+     * 获取联想文本框交易员的查询方法
+     *
+     * @param pageParam param
+     * @return List
+     * @see
+     * @since 1.0
+     */
+    public List<SelectOptionDto> getUsers(Map<String, Object> pageParam) {
+        String dealers = (String)pageParam.get("search");
+        List<String> list=new ArrayList<>();
+        list.add(DictCodeList.角色岗位_交易处长.getValue());
+        list.add(DictCodeList.角色岗位_交易员.getValue());
+        list.add(DictCodeList.角色岗位_交易员_资本境内_岗.getValue());
+        list.add(DictCodeList.角色岗位_交易员_资本境外_岗.getValue());
+        pageParam.put("rolePosList", list);
+        pageParam.put("dealers", dealers);
+        return cfetsEtrDispatcherMapper.getUsers(pageParam);
+    }
+
+    /**
+     * 点击分发保存按钮check
+     * @author sjj
+     * @param pageParam
+     * @return Message<AjaxResult>
+     */
+    public AjaxResult doDispatcherDealCheck(Map<String, Object> pageParam, BindingResult br) {
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<ValidMessage>();
+        List<String> tradersList = StringUtil.splitToList(",",(String)pageParam.get("traders"));
+        List<String> finprodType2List=StringUtil.splitToList(",",(String)pageParam.get("finprodType2"));
+//        List<String> bussBidDateList=StringUtil.splitToList(GlobalConstant.COMMA, (String)pageParam.get("bussBidDate"));
+        if(tradersList.isEmpty()) {
+            errorList.add(new ValidMessage(getMessage("TRD_W_0002")));
+        }else{
+            for (String finprodType2 : finprodType2List) {
+                if (finprodType2.equals(BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue()) && tradersList.size() > 1) {
+                    errorList.add(new ValidMessage(getMessage("一级投标债券只能分发给一个交易员")));
+                    break;
+                }
+            }
+//            //TODO 待后续存在开发一级市场投标
+//            if(!finprodType2List.isEmpty()&&!bussBidDateList.isEmpty()){
+//                for (int i = 0; i < finprodType2List.size(); i++)  {
+//                    if(StringUtil.equals(finprodType2List.get(i), DictCodeListExt2.平安资产类型_一级市场债.getValue())&&!StringUtil.equals(bussBidDateList.get(i).trim(),"undefined")){
+//                        dto.setBussBidDate(bussBidDateList.get(i));
+//                        dto.setFinprodMarketId(finprodMarketIdsList.get(i));
+//                        List<TrdCommandDispatcher001Dto> listTraders=trdCommandDispatcher001Service.getTraders(dto);
+//                        if(!listTraders.isEmpty()){
+//                            for (TrdCommandDispatcher001Dto list2 : listTraders) {
+//                                if(!StringUtil.equals(list2.getTrader(),dto.getDealers())&&StringUtil.isNotEmpty(list2)){
+//                                    errorList.add(new ValidMessage(this.getMessage("TRD_I_0004")+list2.getTrader()));
+//                                    result.setErrorList(errorList);
+//                                    return result;
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+        }
+        ajaxResult.setErrorList(errorList);
+        return ajaxResult;
+    }
+
+    /**
+     * 点击分发确认
+     * @author sjj
+     * @param pageParam
+     * @return Message<AjaxResult>
+     */
+    public void doDispatcherDeal(Map<String, Object> pageParam) {
+        // 删除原先分发过的所有交易员记录
+        List<String> entrustIds = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
+        List<String> tradersList = StringUtil.splitToList(",",(String)pageParam.get("traders"));
+        EtrDistributeKey key = new EtrDistributeKey();
+        EtrDistribute record = new EtrDistribute();
+        for (int j = 0; j < entrustIds.size(); j++ ) {
+            key.setEntrustId(entrustIds.get(j));
+            cfetsEtrDispatcherMapper.deleteEtrDistributeByPrimaryKey(key);
+            //待分发转为待接收
+            EtrEntrust etrEntrust = new EtrEntrust();
+            etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
+            etrEntrust.setEntrustId(entrustIds.get(j));
+            etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
+        }
+        for (int i = 0; i < tradersList.size(); i++ ) {
+            record.setTrader(tradersList.get(i));
+            for (int j = 0; j < entrustIds.size(); j++ ) {
+                record.setEntrustId(entrustIds.get(j));
+                record.setRecStatus(DictCodeList.委托状态_待接收.getValue());
+                record.setCreateTime(DateUtil.now());
+                record.setCreateUser(LoginUserUtil.getUserName());
+                record.setUpdateUser(LoginUserUtil.getUserName());
+                etrDistributeMapper.insert(record);
+            }
+        }
+    }
+
+    /**
+     * 点击退回按钮check
+     * @author sjj
+     * @param pageParam
+     * @return Message<AjaxResult>
+     */
+    public AjaxResult doRefuseEntrustCheck(Map<String, Object> pageParam, BindingResult br) {
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<ValidMessage>();
+        List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
+        List<String> entrustStatusList = StringUtil.splitToList(",",(String)pageParam.get("entrustStatus"));
+        if(entrustIdList.isEmpty()) {
+            errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0026")));
+        }else{
+            for(String entrustStatus : entrustStatusList){
+                if(!StringUtil.equals(entrustStatus,DictCodeListExt3.委托状态_待分发.getValue())){
+                    errorList.add(new ValidMessage("只可对待分发指令执行退回操作！"));
+                    break;
+                }
+            }
+        }
+        return ajaxResult;
+    }
+
+    private String queryPageId(String finprodType2) {
+        String pageId="";
+        //存款
+        if(StringUtil.equals(DictCodeList.平安资产类型_存款.getValue(), finprodType2)){
+            pageId="TrdDepositInvestTrade002";
+        }
+        //拆借
+        else if(StringUtil.equals(DictCodeList.平安资产类型_拆借.getValue(), finprodType2)){
+            pageId="TrdLendInvestTrade002";
+        }
+        //基金
+        else if(StringUtil.equals(DictCodeList.平安资产类型_基金.getValue(), finprodType2)){
+            pageId="TrdFundInvestTrade002";
+        }
+        //计划类净值型
+        else if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_净值型.getValue(), finprodType2)){
+            pageId="TrdPlanNetInvestTrade002";
+        }
+        //计划类货币型
+        else if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_货币型.getValue(), finprodType2)){
+            pageId="TrdPlanCcyInvestTrade002";
+        }
+        //计划类利率型
+        else if(StringUtil.equals(DictCodeList.平安资产类型_计划类资产_利率型.getValue(), finprodType2)){
+            pageId="TrdPlanRateInvestTrade002";
+        }
+        //股票
+        else if(StringUtil.equals(DictCodeListExt2.平安资产类型_股票.getValue(), finprodType2)){
+            pageId="TrdStock002";
+        }
+        //项目类
+        else if(StringUtil.equals(DictCodeList.平安资产类型_项目类资产.getValue(), finprodType2)){
+            pageId="TrdProjectInvestTrade002";
+        }
+        //外汇即期
+        else if(StringUtil.equals(DictCodeListExt2.平安资产类型_外汇即期.getValue(), finprodType2)){
+            pageId="TrdSpotexInvestTrade002";
+        }
+        //外汇远期
+        else if(StringUtil.equals(DictCodeListExt2.平安资产类型_外汇远期.getValue(), finprodType2)){
+            pageId="TrdForwexInvestTrade002";
+        }
+        //外汇掉期
+        else if(StringUtil.equals(DictCodeListExt2.平安资产类型_外汇掉期.getValue(), finprodType2)){
+            pageId="TrdFxswapInvestTrade002";
+        }
+        //债券借贷
+        else if(StringUtil.equals(DictCodeListExt2.平安资产类型_债券借贷.getValue(), finprodType2)){
+            pageId="TrdBondLendInvestTrade002";
+        }
+        //利率互换
+        else if(StringUtil.equals(DictCodeListExt2.平安资产类型_利率互换.getValue(), finprodType2)){
+            pageId="TrdIRSTrade002";
+        }//债券交易
+        else if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(), finprodType2)){
+            pageId = "TrdBondInvestTrade002";
+        }
+        return pageId;
+    }
+
+    /**
+     * 点击退回按钮
+     * @author sjj
+     * @param pageParam
+     * @return Message<AjaxResult>
+     */
+    public AjaxResult refuseEntrust(Map<String, Object> pageParam) {
+        AjaxResult result=new AjaxResult();
+        if(this.returnEntrust(pageParam)){
+            result = this.returnRsk(pageParam);
+        }
+        return result;
+    }
+
+    /**
+     * 指令退回
+     * @author sjj
+     * @param pageParam
+     * @return Message<AjaxResult>
+     */
+    private Boolean returnEntrust(Map<String, Object> pageParam) {
+        List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
+        if (entrustIdList != null && entrustIdList.size() > 0) {
+            for (String entrustId: entrustIdList) {
+                EtrDistributeKey key = new EtrDistributeKey();
+                key.setEntrustId(entrustId);
+                List<EtrDistribute> etrDistributeList = etrInvestInfoMapper.selectEtrDistributeByPrimaryKey(key);
+                // 更新委托表的委托状态
+                etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_已退回.getValue());
+//                // 委托退回原因
+//                etrInvestInfoServiceImpl.updateBackReason(entrustId, reason);
+                // 删除交易员的委托数据
+                for (EtrDistribute entity : etrDistributeList) {
+                    entity.setRecStatus(DictCodeList.委托状态_已退回.getValue());
+                    etrDistributeMapper.updateByPrimaryKeySelective(entity);
+                }
+                if (baseEtrCashPositionCommService != null) {
+                    baseEtrCashPositionCommService.entrustCloseExecute(entrustId);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private AjaxResult returnRsk(Map<String, Object> pageParam) {
+        AjaxResult result=new AjaxResult();
+        @SuppressWarnings("unchecked")
+        List<String> enTrustIds =StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
+        List<Map<String, Object>> list = new ArrayList<>();
+        List<String> counterIdList = new ArrayList<>();
+        Map<String, String> counterIdMap = splitParams("counterIds",
+                str -> counterIdList.add(str));
+        Map<String, PtlPortfolio> innerIds = AllTradeCommonUtil.selectPortfolioIds(
+                counterIdList);
+        Map<String, String> psMap = splitParams("psList", null);
+        if (!StringUtil.isEmptyList(enTrustIds)) {
+            String ps = BussinessDictCodeList.交易方向_买入.getValue();
+            enTrustIds.forEach(id -> {
+                Map<String, Object> finDto = new HashMap<>();
+                finDto.put(PageFieldToInterfFactory.INF_EVENTID, id);
+                finDto.put(PageFieldToInterfFactory.INF_PS, psMap.get(id));
+                finDto.put(PageFieldToInterfFactory.INF_EVENTDATE, DateUtil.format(
+                        DateUtil.platDateFromCache(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+                finDto.put(PageFieldToInterfFactory.INF_REVOKEFLG, BussinessDictCodeListRds.是否_是.getValue());
+                finDto.put(PageFieldToInterfFactory.INF_ISINNERTRD, innerIds.containsKey(counterIdMap.get(
+                        id)) ? BussinessDictCodeListRds.是否_是.getValue() : BussinessDictCodeListRds.是否_否.getValue());
+                TradeRdsCommonAop.getInterfRiskRdsService().changeEventId(finDto);
+                list.add(finDto);
+                // 生成方向指令
+                if (innerIds.containsKey(counterIdMap.get(id))) {
+                    finDto = new HashMap<>();
+                    finDto.put(PageFieldToInterfFactory.INF_EVENTID, id + ps);
+                    finDto.put(PageFieldToInterfFactory.INF_EVENTDATE, DateUtil.format(
+                            DateUtil.platDateFromCache(),
+                            DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    finDto.put(PageFieldToInterfFactory.INF_PS, ps);
+                    finDto.put(PageFieldToInterfFactory.INF_REVOKEFLG, BussinessDictCodeListRds.是否_是.getValue());
+                    finDto.put(PageFieldToInterfFactory.INF_ISINNERTRD, BussinessDictCodeListRds.是否_是.getValue());
+                    list.add(finDto);
+                }
+                // 转换申请生成买入方向指令
+                else if (CommonUtil.isType(psMap.get(id), DictCodeListExt2.交易方向_转换申请)
+                        || CommonUtil.isType(psMap.get(id), DictCodeListExt1.交易方向_债转股)) {
+                    finDto.put(PageFieldToInterfFactory.INF_PS,
+                            BussinessDictCodeList.交易方向_卖出.getValue());
+                    finDto.put(PageFieldToInterfFactory.INF_EVENTID,
+                            id + BussinessDictCodeList.交易方向_卖出.getValue());
+                    finDto = new HashMap<>();
+                    finDto.put(PageFieldToInterfFactory.INF_EVENTID, id + ps);
+                    finDto.put(PageFieldToInterfFactory.INF_EVENTDATE, DateUtil.format(
+                            DateUtil.platDateFromCache(), DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    finDto.put(PageFieldToInterfFactory.INF_PS, ps);
+                    finDto.put(PageFieldToInterfFactory.INF_REVOKEFLG,
+                            BussinessDictCodeListRds.是否_是.getValue());
+                    finDto.put(PageFieldToInterfFactory.INF_ISINNERTRD,
+                            BussinessDictCodeListRds.是否_是.getValue());
+                    list.add(finDto);
+                }
+            });
+        }
+        try {
+            ClientData data = TradeRdsCommonAop.getInterfRiskRdsService().sendListDataCommon(
+                    list, BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue());
+            if (StringUtil.equals(data.getHead().get(InterfUtil.std400msgt), InterfUtil.E)) {
+                result.setMessage(data.getHead().get(InterfUtil.stdrtninfo).toString());
+            }
+        }
+        catch (Exception e) {
+            result.setMessage("指令撤销异常");
+        }
+        return result;
+    }
+
+    private Map<String, String> splitParams(String param, Consumer<String> consumer) {
+        List<String> list = StringUtil.splitToList(GlobalConstant.COMMA,
+                RequestUtil.getParam(param));
+        Map<String, String> map = new HashMap<>();
+        if (!StringUtil.isEmptyList(list)) {
+            list.forEach(str -> {
+                String[] arr = StringUtil.split(str, GlobalConstant.COLON);
+                if (arr == null || arr.length == 0) {
+                    return;
+                }
+                map.put(arr[0], arr.length == 2 ? arr[1] : StringUtil.EMPTY);
+                if (consumer != null && arr.length == 2 && !StringUtil.isEmpty(arr[1])) {
+                    consumer.accept(arr[1]);
+                }
+            });
+        }
+        return map;
+    }
+
+    /**
+     * 自动分发规则查询
+     * @return CfetsEtrDispatcherAutoRequest
+     * @author sjj
+     */
+    public CfetsEtrDispatcherAutoRequest findAutoDetail() {
+        return cfetsEtrDispatcherMapper.findAutoDetail(DateUtil.format(iPlatformDate.getSysDate()));
     }
 }

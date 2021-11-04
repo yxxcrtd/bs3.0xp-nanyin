@@ -27,9 +27,6 @@ public class CfetsEtrDispatcherTraderAuthListResponse {
     @ApiModelProperty(name="finprodType2",value="投资品",example="F01")
     private String finprodType2;
 
-    @ApiModelProperty(name="otherfinprodType2",value="投资品",example="字符串1")
-    private String otherfinprodType2;
-
     public String getUserName() {
         return userName;
     }
@@ -52,21 +49,6 @@ public class CfetsEtrDispatcherTraderAuthListResponse {
 
     public void setFinprodType2(String finprodType2) {
         this.finprodType2 = finprodType2;
-    }
-
-    /**
-     * 获取 otherFinprodType2
-     * @return otherFinprodType2.
-     */
-    public String getOtherFinprodType2() {
-        if (StringUtil.equals(this.getFinprodType2(), BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue())){
-            return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, BussinessDictCodeList.平安资产类型_一级投标债券.getValue());
-        }
-        return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, this.getFinprodType2());
-    }
-
-    public void setOtherfinprodType2(String otherfinprodType2) {
-        this.otherfinprodType2 = otherfinprodType2;
     }
 }
 

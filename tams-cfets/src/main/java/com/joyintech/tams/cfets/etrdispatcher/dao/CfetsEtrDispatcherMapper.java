@@ -10,10 +10,14 @@
  
 package com.joyintech.tams.cfets.etrdispatcher.dao;
 
-import com.joyintech.service.trade.investtrade.commanddispatcher.dto.TrdCommandDispatcher001Dto;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.cfets.etrdispatcher.dto.*;
+import com.joyintech.tams.common.base.entity.EtrDistributeKey;
+import com.joyintech.tams.common.base.entity.User;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -104,4 +108,53 @@ public interface CfetsEtrDispatcherMapper {
      * @since 1.0
      */
     List<CfetsEtrDispatcherTraderListRequest> getEtrTraderAndWorkloadList(Map<String, Object> param);
+
+    List<CfetsEtrDispatcherExeListInfoResponse>  getEtrDispatcherExeListInfo(Map<String, Object> pageParam);
+
+    List<CfetsEtrDispatcherDealListInfoResponse>  getEtrDispatcherDealListInfo(Map<String, Object> pageParam);
+
+    /**
+     * 根据委托代码查询委托状态
+     * add by sjj 20211101
+     * @param map
+     * @return
+     */
+    List<String> doDispatcherCheck(Map<String, Object> map);
+
+    /**
+     * 获取联想文本框交易员的查询方法
+     * @param param
+     * @return List<TrdCommandDispatcher001Dto>
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getUsers(Map<String, Object> param);
+
+    /**
+     * 删除原先分发的所有交易员记录
+     * <功能详细描述>
+     * @param key
+     * @return
+     * @see
+     * @since 1.0
+     */
+    int deleteEtrDistributeByPrimaryKey(EtrDistributeKey key);
+
+    /**
+     * 根据用户名查找真实姓名
+     * <功能详细描述>
+     * @param userName
+     * @return
+     * @see
+     * @since 1.0
+     */
+    User getRealNameByUserName(@Param("userName")String userName);
+
+    /**
+     * 根据委托代码查询委托投标标位
+     * @return
+     */
+    CfetsEtrDispatcherTradeListResponse getEtrBidInfo(@Param("entrustId") String entrustId);
+
+    CfetsEtrDispatcherAutoRequest findAutoDetail(@Param("sysDate")String sysDate);
 }

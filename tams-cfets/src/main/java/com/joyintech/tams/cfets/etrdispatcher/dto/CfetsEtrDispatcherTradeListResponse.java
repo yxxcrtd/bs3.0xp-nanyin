@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.cfets.etrdispatcher.dto;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -40,14 +41,10 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     @ApiModelProperty(name="finprodAbbr",value="资产简称",example="字符串1")
     private String finprodAbbr;
 
-    /**
-     * 交易方向（画面端用）
-     */
+    @ApiModelProperty(name="otherPs",value="交易方向",example="买入")
     private String otherPs;
 
-    /**
-     * 回购/拆借方向
-     */
+    @ApiModelProperty(name="busiPs",value="回购方向",example="回购/拆借方向")
     private String busiPs;
 
     @ApiModelProperty(name="finishAmt",value="完成额度",example="30%")
@@ -65,12 +62,10 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     @ApiModelProperty(name="settleSpeed",value="期限（天）",example="30")
     private String termDays;
 
-    @ApiModelProperty(name="effectFlag",value="有效状态",example="有效")
+    @ApiModelProperty(name="effectFlag",value="有效状态code",example="01")
     private String effectFlag;
 
-    /**
-     * 指令价格
-     */
+    @ApiModelProperty(name="etrPrice",value="指令价格",example="99")
     private String etrPrice;
 
     /**
@@ -91,6 +86,18 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
         return SysDataUtil.getNameFromDataDict(DictCode.委托状态, super.getEntrustStatus());
     }
 
+    public String setEntrustDate() {
+        return DateUtil.format(super.getEntrustDate());
+    }
+
+    /**
+     * 获取 otherEntrustStatus
+     * @return otherEntrustStatus.
+     */
+    public String getOtherSettleSpeed() {
+        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, super.getEntrustStatus());
+    }
+
     /**
      * 获取资产类型 otherFinprodType2
      * @return otherFinprodType2 资产类型对应name
@@ -108,6 +115,14 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
      */
     public String getOtherTradeMarket() {
         return SysDataUtil.getNameFromDataDict(DictCode.交易场所, super.getTradeMarket());
+    }
+
+    /**
+     * 获取 otherTradeMarket
+     * @return otherTradeMarket.
+     */
+    public String getOtherEffectFlag() {
+        return SysDataUtil.getNameFromDataDict(DictCode.有效状态, super.getTradeMarket());
     }
 
     /**

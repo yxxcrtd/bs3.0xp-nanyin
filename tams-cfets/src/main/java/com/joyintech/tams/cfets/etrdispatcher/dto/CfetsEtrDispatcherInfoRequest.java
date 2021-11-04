@@ -27,6 +27,9 @@ public class CfetsEtrDispatcherInfoRequest {
     @ApiModelProperty(name="portfolioId",value="组合代码",example="字符串1")
     private String portfolioId;
 
+    @ApiModelProperty(name="entrustStatus",value="指令状态",example="待分发/待接收",required = true)
+    private String entrustStatus;
+
     @ApiModelProperty(name="pageMode",value="分页对象")
     private PageMode pageMode;
 
@@ -68,6 +71,14 @@ public class CfetsEtrDispatcherInfoRequest {
 
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
+    }
+
+    public String getEntrustStatus() {
+        return entrustStatus;
+    }
+
+    public void setEntrustStatus(String entrustStatus) {
+        this.entrustStatus = entrustStatus;
     }
 }
 
