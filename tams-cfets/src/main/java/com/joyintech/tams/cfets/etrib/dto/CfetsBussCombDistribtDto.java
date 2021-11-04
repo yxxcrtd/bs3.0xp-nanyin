@@ -12,6 +12,9 @@ package com.joyintech.tams.cfets.etrib.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
@@ -135,6 +138,12 @@ public class CfetsBussCombDistribtDto {
      * 证券账户
      */
     private String secManageAcctId;
+
+    @ApiModelProperty(name="busiModelStr",value="业务模式",example="01")
+    private String busiModelStr;
+
+    @ApiModelProperty(name="portfolioName",value="组合名称",example="01")
+    private String portfolioName;
 
     public BigDecimal getSettleAmt() {
         return settleAmt;
@@ -320,5 +329,23 @@ public class CfetsBussCombDistribtDto {
 
     public void setOwnProAvailableSec1(BigDecimal ownProAvailableSec1) {
         this.ownProAvailableSec1 = ownProAvailableSec1;
+    }
+    public String getBusiModelStr() {
+        if (StringUtil.isEmpty(getBusinessModel())) {
+            return null;
+        }
+        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, getBusinessModel());
+    }
+
+    public void setBusiModelStr(String busiModelStr) {
+        this.busiModelStr = busiModelStr;
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
     }
 }

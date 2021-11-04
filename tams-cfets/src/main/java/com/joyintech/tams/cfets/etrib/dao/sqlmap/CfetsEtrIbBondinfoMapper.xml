@@ -1089,6 +1089,15 @@ from
         and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         and  a.PORTFOLIO_ID  = #{portfolioId,jdbcType=VARCHAR}
     </select>
-
+    <select id="findPtlInfo"
+            resultType="com.joyintech.tams.common.base.entity.PtlPortfolio">
+        SELECT DISTINCT
+        A.PORTFOLIO_ID portfolioId,
+        A.PORTFOLIO_NAME  portfolioName
+        from
+        PTL_PORTFOLIO A
+        where A.PORTFOLIO_ID = #{entrustId}
+        and rownum=1
+    </select>
 
 </mapper>

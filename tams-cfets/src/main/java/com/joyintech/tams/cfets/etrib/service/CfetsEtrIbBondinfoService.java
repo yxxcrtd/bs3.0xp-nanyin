@@ -431,9 +431,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
-        String userId = SecurityUtil.getLoginUser().getUserName();
+       // String userId = SecurityUtil.getLoginUser().getUserName();
+        String userId="hxy";
         if (StringUtils.isNotEmpty(userId)) {
-            pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+            pageParam.put("userId", userId);
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsetrIbBondinfoMapper.findEtrinfoPage(pageParam));
         }else{
             return null;
@@ -1253,6 +1254,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 dd.setEntrustIntegrateNum(BigDecimal.ZERO);
                 bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
                 rrqmkdghSAmt=BigDecimal.ZERO;
+            }
+            //根据组合id查询组合信息
+            PtlPortfolio pp=cfetsetrIbBondinfoMapper.findPtlInfo(item.getPortfolioId());
+            if(null!=pp){
+                item.setPortfolioName(pp.getPortfolioName());
             }
             //针对组合分配中的数据查询头寸信息
             item.setEntrustOwnNum(dd.getEntrustOwnNum());
