@@ -431,8 +431,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
-       // String userId = SecurityUtil.getLoginUser().getUserName();
-        String userId="hxy";
+        String userId = SecurityUtil.getLoginUser().getUserName();
         if (StringUtils.isNotEmpty(userId)) {
             pageParam.put("userId", userId);
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsetrIbBondinfoMapper.findEtrinfoPage(pageParam));
