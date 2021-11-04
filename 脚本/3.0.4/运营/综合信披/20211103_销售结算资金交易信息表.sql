@@ -95,7 +95,8 @@ comment on column CHB_SALER_STL_DEA_ERRODATA.CREATE_USER IS '创建人 ';
 comment on column CHB_SALER_STL_DEA_ERRODATA.UPDATE_TIME IS '更新时间 ';
 comment on column CHB_SALER_STL_DEA_ERRODATA.CREATE_TIME IS '创建时间 ';
 
-
+ALTER TABLE CHB_EQU_HOLD_CHECK ADD HOLDER_CLASSIFY char(2);
+comment on column CHB_EQU_HOLD_CHECK.HOLDER_CLASSIFY is '投资者分类';
   
   
   
