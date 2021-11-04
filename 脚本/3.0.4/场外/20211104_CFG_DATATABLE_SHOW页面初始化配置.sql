@@ -108,64 +108,64 @@ insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SE
 values ('CfetsEtrDispatcherController', 'EtrDispatcherTradeList', 'otherTradeMarket', '交易场所', null, 13, 1, 0, 1, 100, '{"colAlign": "left"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
 values ('CfetsEtrDispatcher', 'EtrTraderAndWorkloadList', 'totalWork', '全部的指令笔数', null, 5, 1, 0, 1, 100, '{"colAlign": "left"}', 0, 'COMM', 1, 0, null, null, '999999');
@@ -219,58 +219,58 @@ insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SE
 values ('CfetsTrdBondInfo', 'BONDETRINFOS', 'price', '净价（元）', null, 14, 1, 0, 0, 110, '{"colAlign": "right","dataType":"amount","precision":"4","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
 values ('CfetsEtrDispatcher', 'EtrTraderAndWorkloadList', 'userName', '用户名', null, 1, 1, 0, 1, 100, '{"colAlign": "left"}', 0, 'COMM', 1, 0, null, null, '999999');
@@ -279,565 +279,565 @@ insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SE
 values ('CfetsEtrDispatcher', 'EtrTraderAndWorkloadList', 'realName', '真实姓名', null, 2, 1, 0, 1, 100, '{"colAlign": "left"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioId', '组合代码', null, 1, 1, 1, 1, 100, '{"need":true,"colAlign": "center"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioId', '组合代码', null, 1, 1, 1, 1, 100, '{"need":true,"colAlign": "center"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioName', '组合名称', null, 2, 1, 1, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioName', '组合名称', null, 2, 1, 1, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodMarketId', '资产代码', null, 3, 1, 1, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodMarketId', '资产代码', null, 3, 1, 1, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodAbbr', '资产简称', null, 4, 1, 1, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodAbbr', '资产简称', null, 4, 1, 1, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 5, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 5, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 6, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 6, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 7, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 7, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 8, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 8, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 9, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 9, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 10, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 10, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 11, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 11, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 12, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 12, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'unitCost', '持仓成本价', null, 13, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'unitCost', '持仓成本价', null, 13, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'price', '最新净价', null, 14, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'price', '最新净价', null, 14, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 15, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 15, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 16, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 16, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'effectiveStatusName', '有效状态', 'effectiveStatus', 1, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'effectiveStatusName', '有效状态', 'effectiveStatus', 1, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'entrustId', '指令代码', null, 2, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'entrustId', '指令代码', null, 2, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'entrustStatusName', '指令状态', 'entrustStatus', 3, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'entrustStatusName', '指令状态', 'entrustStatus', 3, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'execProcess', '执行进度%', null, 4, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'execProcess', '执行进度%', null, 4, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'transProcess', '成交进度%', null, 5, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'transProcess', '成交进度%', null, 5, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'invManagerId', '投资经理', null, 6, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'invManagerId', '投资经理', null, 6, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'portfolioId', '组合代码', null, 7, 1, 1, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'portfolioId', '组合代码', null, 7, 1, 1, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'portfolioName', '组合名称', null, 8, 1, 1, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'portfolioName', '组合名称', null, 8, 1, 1, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'finprodMarketId', '资产代码', null, 9, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'finprodMarketId', '资产代码', null, 9, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'finprodAbbr', '资产简称', null, 10, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'finprodAbbr', '资产简称', null, 10, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'secType1Name', '债券一级分类', 'secType1', 11, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'secType1Name', '债券一级分类', 'secType1', 11, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'psName', '交易方向', 'ps', 12, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'psName', '交易方向', 'ps', 12, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'shareNum', '券面总额（万元）', null, 13, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'shareNum', '券面总额（万元）', null, 13, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'priceModelName', '价格模式', 'priceModel', 14, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'priceModelName', '价格模式', 'priceModel', 14, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'unitPrice', '净价（元）', null, 15, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'unitPrice', '净价（元）', null, 15, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'allPrice', '全价（元）', null, 16, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'allPrice', '全价（元）', null, 16, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'matureYield', '到期收益率%', null, 17, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'matureYield', '到期收益率%', null, 17, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'exerYield', '行权收益率%', null, 18, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'exerYield', '行权收益率%', null, 18, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'settleSpreedName', '清算速度', 'settleSpreed', 19, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'settleSpreedName', '清算速度', 'settleSpreed', 19, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'etrDate', '指令日期', null, 20, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'etrDate', '指令日期', null, 20, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'approver', '审批人', null, 21, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'approver', '审批人', null, 21, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'remark', '备注', null, 23, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'remark', '备注', null, 23, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'accountPosition', '账户持仓', null, 17, 1, 0, 1, 100, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'accountPosition', '账户持仓', null, 17, 1, 0, 1, 100, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
 values ('CfetsEtrDispatcherController', 'EtrDispatcherTradeList', 'settleSpeed', '清算速度', null, 14, 1, 0, 1, 100, '{"colAlign": "left"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioId', '组合代码', null, 1, 1, 1, 1, 100, '{"need":true,"colAlign": "center"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioId', '组合代码', null, 1, 1, 1, 1, 100, '{"need":true,"colAlign": "center"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioName', '组合名称', null, 2, 1, 1, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioName', '组合名称', null, 2, 1, 1, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodMarketId', '资产代码', null, 3, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodMarketId', '资产代码', null, 3, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodAbbr', '资产简称', null, 4, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodAbbr', '资产简称', null, 4, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 5, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 5, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 6, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 6, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 7, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 7, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 8, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 8, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 9, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 9, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 10, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 10, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 11, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 11, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 12, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 12, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'unitCost', '持仓成本价', null, 13, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'unitCost', '持仓成本价', null, 13, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'price', '最新净价', null, 14, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'price', '最新净价', null, 14, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 15, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 15, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 16, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 16, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'accountPosition', '账户持仓', null, 17, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'accountPosition', '账户持仓', null, 17, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'xq1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'ld', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'liyusong', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioId', '组合代码', null, 1, 1, 0, 1, 100, '{"need":true,"colAlign": "center"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioId', '组合代码', null, 1, 1, 0, 1, 100, '{"need":true,"colAlign": "center"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 0, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 0, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 0, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 0, 0, 1, 100, '{}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioName', '组合名称', null, 2, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioName', '组合名称', null, 2, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodMarketId', '资产代码', null, 3, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodMarketId', '资产代码', null, 3, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodAbbr', '资产简称', null, 4, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodAbbr', '资产简称', null, 4, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 5, 0, 0, 1, 100, '{"colAlign": "left"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 5, 0, 0, 1, 100, '{"colAlign": "left"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 6, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 6, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 7, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 7, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 8, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 8, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 9, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 9, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 10, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 10, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 11, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 11, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 12, 0, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 12, 0, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'unitCost', '持仓成本价', null, 13, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'unitCost', '持仓成本价', null, 13, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'price', '最新净价', null, 14, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'price', '最新净价', null, 14, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 15, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 15, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 16, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 16, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'accountPosition', '账户持仓', null, 17, 1, 0, 1, 100, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'accountPosition', '账户持仓', null, 17, 1, 0, 1, 100, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zxc', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
 values ('CfetsTrdBondInfo', 'BONDETRINFOS', 'matureYield', '到期收益率%', null, 15, 1, 0, 0, 110, '{"colAlign": "right","dataType":"rate","precision":"4","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'xq', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 2, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 2, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodMarketId', '资产代码', null, 3, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodMarketId', '资产代码', null, 3, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 4, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 4, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioId', '组合代码', null, 5, 1, 0, 1, 100, '{"need":true,"colAlign": "center"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioId', '组合代码', null, 5, 1, 0, 1, 100, '{"need":true,"colAlign": "center"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'price', '最新净价', null, 6, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'price', '最新净价', null, 6, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioName', '组合名称', null, 7, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioName', '组合名称', null, 7, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodAbbr', '资产简称', null, 8, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodAbbr', '资产简称', null, 8, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 9, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 9, 1, 0, 1, 100, '{"colAlign": "left"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 10, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 10, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 11, 0, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 11, 0, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 12, 0, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 12, 0, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 13, 0, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 13, 0, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 14, 0, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 14, 0, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'accountPosition', '账户持仓', null, 15, 1, 0, 1, 100, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'accountPosition', '账户持仓', null, 15, 1, 0, 1, 100, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'unitCost', '持仓成本价', null, 16, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'unitCost', '持仓成本价', null, 16, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 17, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 17, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 1, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 1, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'zzz1', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
 values ('CfetsTrdBondInfo', 'BONDETRINFOS', 'invManagerId', '投资经理', null, 18, 1, 0, 1, 110, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
@@ -858,55 +858,55 @@ insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SE
 values ('CfetsTrdBondInfo', 'BONDETRINFOS', 'remark', '备注', null, 21, 1, 0, 0, 110, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 1, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 1, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodMarketId', '资产代码', null, 2, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodMarketId', '资产代码', null, 2, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 3, 0, 0, 1, 100, '{"colAlign": "left"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 3, 0, 0, 1, 100, '{"colAlign": "left"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodAbbr', '资产简称', null, 4, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodAbbr', '资产简称', null, 4, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 5, 0, 0, 1, 100, '{"colAlign": "left"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 5, 0, 0, 1, 100, '{"colAlign": "left"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioName', '组合名称', null, 6, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioName', '组合名称', null, 6, 1, 0, 1, 100, '{"need":true,"colAlign": "left"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioId', '组合代码', null, 7, 1, 0, 1, 100, '{"need":true,"colAlign": "center"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioId', '组合代码', null, 7, 1, 0, 1, 100, '{"need":true,"colAlign": "center"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 8, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 8, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 9, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 9, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 10, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 10, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 11, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 11, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 12, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 12, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'unitCost', '持仓成本价', null, 13, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'unitCost', '持仓成本价', null, 13, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'price', '最新净价', null, 14, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'price', '最新净价', null, 14, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 15, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 15, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 16, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 16, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'accountPosition', '账户持仓', null, 17, 1, 0, 1, 100, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'accountPosition', '账户持仓', null, 17, 1, 0, 1, 100, '{"colAlign": "right","dataType":"amount","precision":"2"}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
 values ('CfetsEtrDispatcherController', 'EtrDispatcherTradeList', 'secAcctId', '证券账户', null, 15, 1, 0, 1, 100, '{"colAlign": "left"}', 0, 'COMM', 1, 0, null, null, '999999');
@@ -936,113 +936,113 @@ insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SE
 values ('CfetsEtrDispatcherController', 'EtrDispatcherTradeList', 'remark', '备注', null, 23, 1, 0, 1, 100, '{"colAlign": "left"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'ETRINFOS', 'busiModelStr', '业务模式', 'busiModel', 22, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'ETRINFOS', 'busiModelStr', '业务模式', 'busiModel', 22, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secName', '债券名称', null, 1, 1, 0, 1, 100, '{"isblock":true}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'secType', '债券分类', null, 2, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'issuer', '发行人', null, 3, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'vdate', '起息日', null, 4, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'mdate', '到期日', null, 5, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastqx', '剩余期限', null, 6, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'lastPaydate', '下一付息日', null, 7, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rateType', '利率类型', null, 8, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'rate', '票面利率', null, 9, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'zxGrade', '债项评级', null, 10, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'ztGrade', '主体评级', null, 11, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqFlg', '含权标识', null, 12, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'xqdate', '下一行权日', null, 13, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newPrice', '最新净价', null, 14, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceXq', '估价净价(行权)', null, 15, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'newRate', '最新收益率', null, 16, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'priceTj', '估价净价(推荐)', null, 17, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'yieldUpDown', '收益率涨跌', null, 18, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BASEINFO', 'gzRate', '估值收益率', null, 19, 1, 0, 1, 100, '{}', 1, 'admin', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'accountPosition', '账户持仓', null, 17, 1, 0, 1, 100, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'accountPosition', '账户持仓', null, 17, 1, 0, 1, 100, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioId', '组合代码', null, 1, 1, 0, 1, 100, '{"need":true,"colAlign": "center","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioId', '组合代码', null, 1, 1, 0, 1, 100, '{"need":true,"colAlign": "center","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'portfolioName', '组合名称', null, 2, 1, 0, 1, 100, '{"need":true,"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'portfolioName', '组合名称', null, 2, 1, 0, 1, 100, '{"need":true,"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodMarketId', '资产代码', null, 3, 1, 0, 1, 100, '{"need":true,"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodMarketId', '资产代码', null, 3, 1, 0, 1, 100, '{"need":true,"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'finprodAbbr', '资产简称', null, 4, 1, 0, 1, 100, '{"need":true,"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'finprodAbbr', '资产简称', null, 4, 1, 0, 1, 100, '{"need":true,"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 5, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'secType1Name', '债券一级分类', 'secType1', 5, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 5, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'busiModelStr', '业务模式', 'busiModel', 5, 1, 0, 1, 100, '{"colAlign": "left","supportSearch":"模糊"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 7, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrPledgePrin', '指令可卖出持仓', null, 7, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 8, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAvaPledgePrin', '指令可质押持仓', null, 8, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 9, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'etrAlrPledgePrin', '指令已质押持仓', null, 9, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 10, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdAvaShareAmt', '交易可用券面总额', null, 10, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 11, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'trdIntransShareAmt', '交易在途券面总额', null, 11, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 12, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsAmt', '持仓成本（万元）', null, 12, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'unitCost', '持仓成本价', null, 13, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'unitCost', '持仓成本价', null, 13, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'price', '最新净价', null, 14, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'price', '最新净价', null, 14, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"4"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 15, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'positionsPrice', '持仓市值（万元）', null, 15, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 0, 'COMM', 1, 0, null, null, '999999');
 
 insert into CFG_DATATABLE_SHOW (PAGECODE, DTCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, SPCDCODE)
-values ('CFETS_ETR', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 16, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 0, 'COMM', 1, 0, null, null, '999999');
+values ('CfetsEtrBondInfo', 'BONDS', 'floatingPl', '浮动盈亏（万元）', null, 16, 1, 0, 1, 110, '{"colAlign": "right","dataType":"amount","precision":"2"}', 0, 'COMM', 1, 0, null, null, '999999');
 
