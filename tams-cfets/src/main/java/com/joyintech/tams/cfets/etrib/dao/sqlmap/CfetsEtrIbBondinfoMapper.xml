@@ -846,6 +846,7 @@ from
         left join SYS_DATADICT_LIST sdl on aaa.entrustStatus=sdl.ITEM_CODE and sdl.DICT_CODE='ENTRUST_STATUS'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
         left join SYS_DATADICT_LIST dictpriceModel on aaa.priceModel=dictpriceModel.ITEM_CODE and dictpriceModel.DICT_CODE='PRICE_MODEL'
+        left join SYS_DATADICT_LIST dictbusiModel on aaa.busiModel=dictbusiModel.ITEM_CODE and dictbusiModel.DICT_CODE='BUSINESS_MODEL'
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
         order by sdl.ORDER_NO, aaa.entrustId DESC)
@@ -1058,7 +1059,7 @@ from
                 ((aaa.effectiveStatusName || '|' || sdl.ITEM_VALUE || '|' || aaa.portfolioId || '|' || aaa.portfolioName
                 || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr || '|' || aaa.secType1 || '|' || dictps.ITEM_VALUE
                 || '|T+' || aaa.settleSpreed || '|' || dictpriceModel.ITEM_VALUE   || '|' || aaa.invManagerId
-                || '|' || aaa.entrustId || '|' || approver || '|' || aaa.REMARK
+                || '|' || aaa.entrustId || '|' || approver || '|' || aaa.REMARK || '|' || dictbusiModel.ITEM_VALUE
                 like '%' || #{search} || '%')
                 or  aaa.shareNum||'' =#{search} or  aaa.unitPrice||'' =#{search}
                 or  aaa.allPrice||'' =#{search} or  aaa.matureYield||'' =#{search}
