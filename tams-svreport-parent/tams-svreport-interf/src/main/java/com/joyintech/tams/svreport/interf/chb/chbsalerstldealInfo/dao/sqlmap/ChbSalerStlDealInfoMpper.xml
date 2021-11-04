@@ -9,7 +9,7 @@
                  close=")" separator="union all">
             select
             #{item.registSeqno,jdbcType=VARCHAR} REGIST_SEQNO,
-            'E' DATA_STATUS ,
+            #{item.status,jdbcType=VARCHAR} DATA_STATUS ,
             #{item.accountName,jdbcType=VARCHAR} ACCOUNT_NAME ,
             #{item.institutionCode,jdbcType=VARCHAR} INSTITUTION_CODE,
             #{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
@@ -27,7 +27,8 @@
             #{item.postscript,jdbcType=VARCHAR} POSTSCRIPT ,
             #{item.remark,jdbcType=VARCHAR} REMARK ,
             sysdate RECEPT_DATE ,
-            #{item.orgCode,jdbcType=VARCHAR} ORG_CODE ,
+            #{item.orgCode,jdbcType=VARCHAR} CREATE_DEPT,
+            #{item.createDept,jdbcType=VARCHAR} ORG_CODE ,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER ,
             #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} CREATE_USER,
@@ -42,11 +43,7 @@
         WHEN MATCHED THEN
         UPDATE
         SET
-        L.INSTITUTION_CODE              = TEMP.INSTITUTION_CODE
-        ,L.PRD_REGIST_CODE               = TEMP.PRD_REGIST_CODE
-        ,L.ACCOUNT_NO                    = TEMP.ACCOUNT_NO
-        ,L.TRADE_NO                      = TEMP.TRADE_NO
-        ,L.REGIST_SEQNO                  = TEMP.REGIST_SEQNO
+        L.REGIST_SEQNO                  = TEMP.REGIST_SEQNO
         ,L.DATA_STATUS                   = TEMP.DATA_STATUS
         ,L.ACCOUNT_NAME                  = TEMP.ACCOUNT_NAME
         ,L.TRADE_PS                      = TEMP.TRADE_PS

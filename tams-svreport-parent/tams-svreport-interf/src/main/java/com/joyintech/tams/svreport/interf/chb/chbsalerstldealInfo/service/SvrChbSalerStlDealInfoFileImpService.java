@@ -212,6 +212,8 @@ public class SvrChbSalerStlDealInfoFileImpService extends FileImpService {
 
             chbSalerStlDealInfo.setRegistSeqno(IDGenerator.generate(36));
 
+            chbSalerStlDealInfo.setStatus("E");
+
             entities.add(chbSalerStlDealInfo);
         }
         return entities;
