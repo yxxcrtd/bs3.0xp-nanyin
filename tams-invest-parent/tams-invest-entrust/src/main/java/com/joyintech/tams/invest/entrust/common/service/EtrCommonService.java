@@ -1067,7 +1067,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
         //债券借贷
         if(object instanceof EtrSecLendDto){
             EtrSecLendDto inputDto = (EtrSecLendDto) object;
-            if (StringUtil.equals(DictCodeList.回购拆借方向_融出.getValue(),inputDto.getBusiPs())){
+            if (StringUtil.equals(DictCodeList.回购拆借方向_融入.getValue(),inputDto.getBusiPs())){
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
@@ -1081,11 +1081,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
                     creditLinesInputDto.setCounterId(inputDto.getEtrInvestPersonInfo().getCounterId());
                 }
-                creditLinesInputDto.setTradeAmt(ArithmeticUtil.multiply(inputDto.getTotalAmt(),new BigDecimal(10000)));
-                if (inputDto.getTotalAmt() != null){
-                    creditLinesInputDto.setShareAmt(inputDto.getTotalAmt().multiply(new BigDecimal(100)));
-                }
-                creditLinesInputDto.setShareAmt(ArithmeticUtil.multiply(inputDto.getTotalAmt(),new BigDecimal(10000)));
+                creditLinesInputDto.setTradeAmt(inputDto.getTotalAmt());
+                creditLinesInputDto.setShareAmt(inputDto.getTotalAmt());
                 //最新面值
                 BigDecimal newFaceValue = creditLinesDealsMapper.getFaceValue(creditLinesInputDto);
                 if (newFaceValue == null){

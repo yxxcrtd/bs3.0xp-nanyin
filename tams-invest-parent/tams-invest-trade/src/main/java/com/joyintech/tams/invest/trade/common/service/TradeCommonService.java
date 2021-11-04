@@ -587,7 +587,7 @@ public class TradeCommonService extends BaseService {
         //债券借贷
         if (object instanceof TrdBondLendInvestTradeDto){
             TrdBondLendInvestTradeDto inputDto = (TrdBondLendInvestTradeDto)object;
-            if (StringUtil.equals(inputDto.getPs(), DictCodeList.回购拆借方向_融出.getValue())){
+            if (StringUtil.equals(inputDto.getPs(), DictCodeList.回购拆借方向_融入.getValue())){
                 creditLinesInputDto = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
