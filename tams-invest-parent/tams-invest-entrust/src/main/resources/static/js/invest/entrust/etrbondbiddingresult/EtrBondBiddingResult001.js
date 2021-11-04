@@ -268,9 +268,11 @@ $(function() {
             //改造定义参数 sunhui start
             var winPrinAmt = 0;
             var entrustId = "";
+            var winPrinAmtList = "";
             $.each(selArr, function(i, d) {
                 winPrinAmt = JoyinMath.doAdd(d.winPrinAmt) ;
                 entrustId = entrustId + "," + d.entrustId;
+                winPrinAmtList = winPrinAmtList +","+d.winPrinAmt;
             });
             var paramObjs ={};
             paramObjs.bondFirstSign = '01';
@@ -280,6 +282,7 @@ $(function() {
             paramObjs.finprodId = result.finprodId;
             paramObjs.needDoTrade = selArr;
             paramObjs.winPrinAmt = winPrinAmt;// 中标 "中标券面总额"
+            paramObjs.winPrinAmtList = winPrinAmtList.substr(1,winPrinAmtList.length);
             paramObjs.entrustId = entrustId.substr(1,entrustId.length);
             paramObjs.winCprice = selArr[0].winCprice;//第一条的中标净价
             //改造定义参数 sunhui end

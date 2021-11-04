@@ -259,7 +259,11 @@
 	        object.pageModel = pageModel;
 	        object.operateType = operateType;
 	        object.shareAmt = JoyinMath.doMul($("#shareAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
-	        if(FileCommon) {
+	        // TISHKS-255 可转换面额和持有券面总额 进行单位换算 fuyongsheng add start
+            object.conetrPriceTotal = JoyinMath.doMul($("#conetrPriceTotal").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
+            object.holdetrPriceTotal = JoyinMath.doMul($("#holdetrPriceTotal").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
+            // TISHKS-255 可转换面额和持有券面总额 进行单位换算 fuyongsheng add end
+            if(FileCommon) {
 	            object.uploadFileList = FileCommon.getUploadFileInfo();
 	        }
 	        //零股折算金额为空时不需要划款指令

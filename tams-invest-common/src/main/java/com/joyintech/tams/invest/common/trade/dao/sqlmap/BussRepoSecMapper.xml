@@ -1628,4 +1628,11 @@
             END
         </if>
     </select>
+
+    <select id="selectFinprodIdByPledge" resultType="java.lang.String" >
+        select
+            FINPROD_ID
+        from ETR_ENTRUST_PLEDGE
+        where PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR}
+    </select>
 </mapper>

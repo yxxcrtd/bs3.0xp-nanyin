@@ -1067,7 +1067,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
         //债券借贷
         if(object instanceof EtrSecLendDto){
             EtrSecLendDto inputDto = (EtrSecLendDto) object;
-            if (StringUtil.equals(DictCodeList.回购拆借方向_融出.getValue(),inputDto.getBusiPs())){
+            if (StringUtil.equals(DictCodeList.回购拆借方向_融入.getValue(),inputDto.getBusiPs())){
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
@@ -1081,11 +1081,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
                     creditLinesInputDto.setCounterId(inputDto.getEtrInvestPersonInfo().getCounterId());
                 }
-                creditLinesInputDto.setTradeAmt(ArithmeticUtil.multiply(inputDto.getTotalAmt(),new BigDecimal(10000)));
-                if (inputDto.getTotalAmt() != null){
-                    creditLinesInputDto.setShareAmt(inputDto.getTotalAmt().multiply(new BigDecimal(100)));
-                }
-                creditLinesInputDto.setShareAmt(ArithmeticUtil.multiply(inputDto.getTotalAmt(),new BigDecimal(10000)));
+                creditLinesInputDto.setTradeAmt(inputDto.getTotalAmt());
+                creditLinesInputDto.setShareAmt(inputDto.getTotalAmt());
                 //最新面值
                 BigDecimal newFaceValue = creditLinesDealsMapper.getFaceValue(creditLinesInputDto);
                 if (newFaceValue == null){
@@ -1190,6 +1187,22 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(object instanceof EtrBoutRepoDto){
             EtrBoutRepoDto inputDto = (EtrBoutRepoDto) object;
             if (StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue(),inputDto.getPs())){
+                // 先判断标的券类型是否需要扣减授信额度
+                List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
+                // 查询资产类型
+                FinProductTypeKey key = new FinProductTypeKey();
+                key.setFinprodId(inputDto.getFinprodId());
+                key.setBranch(0L);
+                FinProductType finProductType = creditLinesDealsMapper.selectByPrimaryKey(key);
+                FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(inputDto.getFinprodId());
+                String astType = finProductType.getType10();
+                if (StringUtil.equals(finProductAdd.getIsSecBond(),DictCodeList.是否_是.getValue())){
+                    astType = astType.concat("_") + DictCodeList.是否_是.getValue();
+                }
+                // 资产类型在【不扣减授信参数】列表
+                if (assetTypeList.contains(astType)){
+                    return null;
+                }
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());

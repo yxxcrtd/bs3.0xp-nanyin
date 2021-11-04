@@ -38,7 +38,7 @@
         DELETE FROM SETTLE_TRANS_TG_MAPPING
         <where>
             TRADE_ID IN (
-					<include refid="com.joyintech.tams.common.base.dao.SettleBatchParaMapper.tradeIdSql"></include>
+					<include refid="com.joyintech.tams.settle.batch.datadeal.dao.StlDownDataDealMapper.tradeIdSql"></include>
             )
         </where>
     </delete>
@@ -47,7 +47,7 @@
         DELETE FROM SETTLE_TRANS_DATA_PLEDGE
         <where>
             TRADE_ID IN (
-			<include refid="com.joyintech.tams.common.base.dao.SettleBatchParaMapper.tradeIdSql"></include>
+			<include refid="com.joyintech.tams.settle.batch.datadeal.dao.StlDownDataDealMapper.tradeIdSql"></include>
             )
         </where>
     </delete>
@@ -56,7 +56,7 @@
         DELETE FROM SETTLE_TRANS_DATA_ADD
         <where>
             TRADE_ID IN (
-			<include refid="com.joyintech.tams.common.base.dao.SettleBatchParaMapper.tradeIdSql"></include>
+			<include refid="com.joyintech.tams.settle.batch.datadeal.dao.StlDownDataDealMapper.tradeIdSql"></include>
             )
         </where>
     </delete>

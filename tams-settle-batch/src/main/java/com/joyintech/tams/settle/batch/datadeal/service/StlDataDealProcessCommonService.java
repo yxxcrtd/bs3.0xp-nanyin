@@ -149,9 +149,9 @@ public class StlDataDealProcessCommonService {
 		String isAlloc = DictCodeList.是否_是.getValue();
 		// 交易品种
 		String tradeType = stlDownDataDealOperatorDto.getFinprodType();
-		
+
 		StlDownDataDealWriteDto result = new StlDownDataDealWriteDto();
-		
+
 		// 按照交易场所、交易平台、交易方向、期限品种、证券账户代码、组合代码、金融产品代码、分支序号、交易日期进行分组处理
 		Map<String, List<StlDownDataDealWriteBaseDto>> map = new HashMap<String, List<StlDownDataDealWriteBaseDto>>();
 		if (stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList() != null && stlDownDataDealWriteDto.getStlDownDataDealWriteBaseDtoList().size() > 0) {
@@ -177,17 +177,17 @@ public class StlDataDealProcessCommonService {
 				}
 			}
 		}
-		
+
 		// 定义变量记录每笔交易承担的费用信息
 		Map<String, List<String>> feeMap = new HashMap<>();
-		
+
 		// 按照交易场所、交易平台、交易方向、期限品种、证券账户代码、组合代码、金融产品代码、分支序号、交易日期进行分组结果调用共通处理-交易所费用计算，并且对入参StlDownDataDealWriteDto再次处理
 		Iterator<String> iterator = map.keySet().iterator();
 		CommissionCalcDto commissionCalcDto = null;
 		while (iterator.hasNext()) {
-		    // 批次号
-	        String batch = IDGenerator.generate();
-	        
+			// 批次号
+			String batch = IDGenerator.generate();
+
 			StlDownDataDealWriteDto temp = new StlDownDataDealWriteDto();
 			String key = iterator.next();
 			List<StlDownDataDealWriteBaseDto> list = map.get(key);
@@ -203,7 +203,7 @@ public class StlDataDealProcessCommonService {
 				tradeFeatureInformation.setSecAcctId(keyStrArray[4]);
 				tradeFeatureInformation.setPortfolioId(keyStrArray[5]);
 				tradeFeatureInformation.setFinprodId(keyStrArray[6]);
-				tradeFeatureInformation.setBranch(new Long(keyStrArray[7]));
+				tradeFeatureInformation.setBranch(null!=keyStrArray[7]&&!StringUtil.equals(keyStrArray[7],"null")?new Long(keyStrArray[7]):0L);
 				tradeFeatureInformation.setFinprodType2(keyStrArray[8]);
 				tradeFeatureInformation.setDealDate(DateUtil.parse(keyStrArray[9]));
 				List<TrdDetailDto> detailDtos = new ArrayList<TrdDetailDto>();
@@ -294,115 +294,114 @@ public class StlDataDealProcessCommonService {
 						}
 						for (CommisionDetail commisionDetail : commissionCalcDto.getCommisionDetailList()) {
 							if (StringUtil.equals(commisionDetail.getTradeId(), stlDownDataDealWriteBaseDto.getSettleTransData().getTradeId())) {
-							    stlDownDataDealWriteBaseDto.getSettleTransData().setBatchNumber(batch);
-							    if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_佣金.getValue())){
-							        stlDownDataDealWriteBaseDto.getSettleTransData().setCommissionAmt(commisionDetail.getFeeAmt());
-	                                stlDownDataDealWriteBaseDto.getSettleTransData().setCommissionAmtRaw(commisionDetail.getFeeAmt());
-	                                stlDownDataDealWriteBaseDto.getSettleTransData().setIsPayWithTrade(commisionDetail.getIsPayWithTrade());
-	                                // 佣金随交易支付时，交易金额需要加上佣金和费用
-	                                if (StringUtil.equals(commisionDetail.getIsPayWithTrade(), DictCodeList.是否_是.getValue())){
-	                                    if (StringUtil.equals(stlDownDataDealWriteBaseDto.getSettleTransData().getPs(), DictCodeList.交易方向_买入.getValue())){
-	                                        stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.doAdd(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(), commisionDetail.getFeeAmt()));
-	                                    }
-	                                    else if (StringUtil.equals(stlDownDataDealWriteBaseDto.getSettleTransData().getPs(), DictCodeList.交易方向_卖出.getValue())){
-	                                        stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.subtract(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(), commisionDetail.getFeeAmt()));
-	                                    }
-	                                }
-							    }
-							    else{
-							        if (feeMap.get(commisionDetail.getTradeId()) != null && feeMap.get(commisionDetail.getTradeId()).size() > 0){
-							            List<String> feeList = new ArrayList<>(feeMap.get(commisionDetail.getTradeId()));
-							            feeList.add(commisionDetail.getFeeType());
-							            feeMap.put(commisionDetail.getTradeId(), feeList);
-							        }
-							        else{
-							            feeMap.put(commisionDetail.getTradeId(), Arrays.asList(commisionDetail.getFeeType()));
-							        }
-							        if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_经手费.getValue())){
-	                                    stlDownDataDealWriteBaseDto.getSettleTransData().setJsfAmt(commisionDetail.getFeeAmt());
-	                                }
-	                                else if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_过户费.getValue())){
-	                                    stlDownDataDealWriteBaseDto.getSettleTransData().setGhfAmt(commisionDetail.getFeeAmt());
-	                                }
-	                                else if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_证管费.getValue())){
-	                                    stlDownDataDealWriteBaseDto.getSettleTransData().setZgfAmt(commisionDetail.getFeeAmt());
-	                                }
-	                                else if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_交易手续费.getValue())){
-	                                    stlDownDataDealWriteBaseDto.getSettleTransData().setSxfAmt(commisionDetail.getFeeAmt());
-	                                }
-	                                else if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_结算费.getValue())){
-	                                    stlDownDataDealWriteBaseDto.getSettleTransData().setSettleFee(commisionDetail.getFeeAmt());
-	                                }
-                                    else if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_印花税.getValue())){
-                                        stlDownDataDealWriteBaseDto.getSettleTransData().setStampFee(commisionDetail.getFeeAmt());
-                                    }
-							    }
+								stlDownDataDealWriteBaseDto.getSettleTransData().setBatchNumber(batch);
+								if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_佣金.getValue())){
+									stlDownDataDealWriteBaseDto.getSettleTransData().setCommissionAmt(commisionDetail.getFeeAmt());
+									stlDownDataDealWriteBaseDto.getSettleTransData().setCommissionAmtRaw(commisionDetail.getFeeAmt());
+									stlDownDataDealWriteBaseDto.getSettleTransData().setIsPayWithTrade(commisionDetail.getIsPayWithTrade());
+									// 佣金随交易支付时，交易金额需要加上佣金和费用
+									if (StringUtil.equals(commisionDetail.getIsPayWithTrade(), DictCodeList.是否_是.getValue())){
+										if (StringUtil.equals(stlDownDataDealWriteBaseDto.getSettleTransData().getPs(), DictCodeList.交易方向_买入.getValue())){
+											stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.doAdd(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(), commisionDetail.getFeeAmt()));
+										}
+										else if (StringUtil.equals(stlDownDataDealWriteBaseDto.getSettleTransData().getPs(), DictCodeList.交易方向_卖出.getValue())){
+											stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.subtract(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(), commisionDetail.getFeeAmt()));
+										}
+									}
+								}
+								else{
+									if (feeMap.get(commisionDetail.getTradeId()) != null && feeMap.get(commisionDetail.getTradeId()).size() > 0){
+										List<String> feeList = new ArrayList<>(feeMap.get(commisionDetail.getTradeId()));
+										feeList.add(commisionDetail.getFeeType());
+										feeMap.put(commisionDetail.getTradeId(), feeList);
+									}
+									else{
+										feeMap.put(commisionDetail.getTradeId(), Arrays.asList(commisionDetail.getFeeType()));
+									}
+									if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_经手费.getValue())){
+										stlDownDataDealWriteBaseDto.getSettleTransData().setJsfAmt(commisionDetail.getFeeAmt());
+									}
+									else if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_过户费.getValue())){
+										stlDownDataDealWriteBaseDto.getSettleTransData().setGhfAmt(commisionDetail.getFeeAmt());
+									}
+									else if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_证管费.getValue())){
+										stlDownDataDealWriteBaseDto.getSettleTransData().setZgfAmt(commisionDetail.getFeeAmt());
+									}
+									else if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_交易手续费.getValue())){
+										stlDownDataDealWriteBaseDto.getSettleTransData().setSxfAmt(commisionDetail.getFeeAmt());
+									}
+									else if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_结算费.getValue())){
+										stlDownDataDealWriteBaseDto.getSettleTransData().setSettleFee(commisionDetail.getFeeAmt());
+									}
+									else if (StringUtil.equals(commisionDetail.getFeeType(), DictCodeListExt1.一次性费用类型_印花税.getValue())){
+										stlDownDataDealWriteBaseDto.getSettleTransData().setStampFee(commisionDetail.getFeeAmt());
+									}
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-		
+
 		for (StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto : result.getStlDownDataDealWriteBaseDtoList()) {
-            // 表示有券商承担的费用
-            if (feeMap.containsKey(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeId())){
-                List<String> feeTypeList = feeMap.get(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeId());
-                
-                if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_经手费.getValue())){
-                    stlDownDataDealWriteBaseDto.getSettleTransData().setJsfAmt(null);
-                }
-                else if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_过户费.getValue())){
-                    stlDownDataDealWriteBaseDto.getSettleTransData().setGhfAmt(null);
-                }
-                else if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_证管费.getValue())){
-                    stlDownDataDealWriteBaseDto.getSettleTransData().setZgfAmt(null);
-                }
-                else if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_交易手续费.getValue())){
-                    stlDownDataDealWriteBaseDto.getSettleTransData().setSxfAmt(null);
-                }
-                else if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_结算费.getValue())){
-                    stlDownDataDealWriteBaseDto.getSettleTransData().setSettleFee(null);
-                }
-                else if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_印花税.getValue())){
-                    stlDownDataDealWriteBaseDto.getSettleTransData().setStampFee(null);
-                }
-            }
-            // 一次性费用都是随交易支付的
-            if (!StringUtil.equals(DictCodeListExt1.证券品种_回购.getValue(), tradeType)) {
-	            if (StringUtil.equals(stlDownDataDealWriteBaseDto.getSettleTransData().getPs(), DictCodeList.交易方向_买入.getValue())){
-	                stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.doAdd(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(), 
-	                    stlDownDataDealWriteBaseDto.getSettleTransData().getJsfAmt(),
-	                    stlDownDataDealWriteBaseDto.getSettleTransData().getGhfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getZgfAmt(),
-	                    stlDownDataDealWriteBaseDto.getSettleTransData().getSxfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getSettleFee(),
-	                    stlDownDataDealWriteBaseDto.getSettleTransData().getStampFee()));
-	            }
-	            else if (StringUtil.equals(stlDownDataDealWriteBaseDto.getSettleTransData().getPs(), DictCodeList.交易方向_卖出.getValue())){
-	                stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.subtract(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(), 
-	                    ArithmeticUtil.doAdd(stlDownDataDealWriteBaseDto.getSettleTransData().getJsfAmt(),
-	                        stlDownDataDealWriteBaseDto.getSettleTransData().getGhfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getZgfAmt(),
-	                        stlDownDataDealWriteBaseDto.getSettleTransData().getSxfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getSettleFee(),
-	                        stlDownDataDealWriteBaseDto.getSettleTransData().getStampFee())));
-	            }
-            }
-            else {
-            	if (StringUtil.equals(stlDownDataDealWriteBaseDto.getSettleTransData().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())){
-            		stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.doAdd(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(), 
-    	                    stlDownDataDealWriteBaseDto.getSettleTransData().getJsfAmt(),
-    	                    stlDownDataDealWriteBaseDto.getSettleTransData().getGhfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getZgfAmt(),
-    	                    stlDownDataDealWriteBaseDto.getSettleTransData().getSxfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getSettleFee(),
-    	                    stlDownDataDealWriteBaseDto.getSettleTransData().getStampFee()));
-            	}
-            	else {
-            		stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.subtract(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(), 
-    	                    ArithmeticUtil.doAdd(stlDownDataDealWriteBaseDto.getSettleTransData().getJsfAmt(),
-    	                        stlDownDataDealWriteBaseDto.getSettleTransData().getGhfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getZgfAmt(),
-    	                        stlDownDataDealWriteBaseDto.getSettleTransData().getSxfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getSettleFee(),
-    	                        stlDownDataDealWriteBaseDto.getSettleTransData().getStampFee())));
-            	}
-            }
-        }
-		
+			// 表示有券商承担的费用
+			if (feeMap.containsKey(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeId())){
+				List<String> feeTypeList = feeMap.get(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeId());
+
+				if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_经手费.getValue())){
+					stlDownDataDealWriteBaseDto.getSettleTransData().setJsfAmt(null);
+				}
+				else if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_过户费.getValue())){
+					stlDownDataDealWriteBaseDto.getSettleTransData().setGhfAmt(null);
+				}
+				else if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_证管费.getValue())){
+					stlDownDataDealWriteBaseDto.getSettleTransData().setZgfAmt(null);
+				}
+				else if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_交易手续费.getValue())){
+					stlDownDataDealWriteBaseDto.getSettleTransData().setSxfAmt(null);
+				}
+				else if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_结算费.getValue())){
+					stlDownDataDealWriteBaseDto.getSettleTransData().setSettleFee(null);
+				}
+				else if (!feeTypeList.contains(DictCodeListExt1.一次性费用类型_印花税.getValue())){
+					stlDownDataDealWriteBaseDto.getSettleTransData().setStampFee(null);
+				}
+			}
+			// 一次性费用都是随交易支付的
+			if (!StringUtil.equals(DictCodeListExt1.证券品种_回购.getValue(), tradeType)) {
+				if (StringUtil.equals(stlDownDataDealWriteBaseDto.getSettleTransData().getPs(), DictCodeList.交易方向_买入.getValue())){
+					stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.doAdd(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(),
+							stlDownDataDealWriteBaseDto.getSettleTransData().getJsfAmt(),
+							stlDownDataDealWriteBaseDto.getSettleTransData().getGhfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getZgfAmt(),
+							stlDownDataDealWriteBaseDto.getSettleTransData().getSxfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getSettleFee(),
+							stlDownDataDealWriteBaseDto.getSettleTransData().getStampFee()));
+				}
+				else if (StringUtil.equals(stlDownDataDealWriteBaseDto.getSettleTransData().getPs(), DictCodeList.交易方向_卖出.getValue())){
+					stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.subtract(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(),
+							ArithmeticUtil.doAdd(stlDownDataDealWriteBaseDto.getSettleTransData().getJsfAmt(),
+									stlDownDataDealWriteBaseDto.getSettleTransData().getGhfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getZgfAmt(),
+									stlDownDataDealWriteBaseDto.getSettleTransData().getSxfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getSettleFee(),
+									stlDownDataDealWriteBaseDto.getSettleTransData().getStampFee())));
+				}
+			}
+			else {
+				if (StringUtil.equals(stlDownDataDealWriteBaseDto.getSettleTransData().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())){
+					stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.doAdd(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(),
+							stlDownDataDealWriteBaseDto.getSettleTransData().getJsfAmt(),
+							stlDownDataDealWriteBaseDto.getSettleTransData().getGhfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getZgfAmt(),
+							stlDownDataDealWriteBaseDto.getSettleTransData().getSxfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getSettleFee(),
+							stlDownDataDealWriteBaseDto.getSettleTransData().getStampFee()));
+				}
+				else {
+					stlDownDataDealWriteBaseDto.getSettleTransData().setTradeAmt(ArithmeticUtil.subtract(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeAmt(),
+							ArithmeticUtil.doAdd(stlDownDataDealWriteBaseDto.getSettleTransData().getJsfAmt(),
+									stlDownDataDealWriteBaseDto.getSettleTransData().getGhfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getZgfAmt(),
+									stlDownDataDealWriteBaseDto.getSettleTransData().getSxfAmt(), stlDownDataDealWriteBaseDto.getSettleTransData().getSettleFee(),
+									stlDownDataDealWriteBaseDto.getSettleTransData().getStampFee())));
+				}
+			}
+		}
 		return result;
 	}
 	

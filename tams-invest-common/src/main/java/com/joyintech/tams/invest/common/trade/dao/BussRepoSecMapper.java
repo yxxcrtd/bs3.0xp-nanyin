@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.common.trade.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
@@ -116,4 +117,7 @@ public interface BussRepoSecMapper {
      * @return List<PledgeBondInfoDto>
      */
     List<PledgeBondInfoDto> selectAvaPledgeBondDetailListSellRepoForBankDzh(Map<String, Object> params);
+
+
+    List<String> selectFinprodIdByPledge (@Param("pledgeStockId")String pledgeStockId);
 }

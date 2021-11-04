@@ -79,6 +79,7 @@
 		)TABLE01/*以上统计可用持仓*/
 		LEFT JOIN STL_SEC_ACCT_INFO on TABLE01.SEC_ACCT_ID = STL_SEC_ACCT_INFO.SEC_ACCT_ID
 		LEFT JOIN FIN_PRODUCT FIN_PRODUCT2  on TABLE01.SEC_ACCT_ID = FIN_PRODUCT2.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT_TYPE ftype ON ftype.FINPROD_ID = TABLE01.FINPROD_ID
 		LEFT JOIN (
 		SELECT
 		PTL_SEC_POSITION.PORTFOLIO_ID,
@@ -161,6 +162,15 @@
 		) MBCR
 		ON MBCR.O_CODE = FIN_PRODUCT.FINPROD_MARKET_ID
 		AND MBCR.NUM = 1
+		LEFT JOIN (SELECT RANK() OVER(PARTITION BY O_CODE ORDER BY  GRADE_DATE DESC,CAST(GRADE_RESULT AS DECIMAL) DESC) NUM,
+		O_CODE,
+		GRADE_RESULT
+		FROM MST_BOND_CREDIT_RATING
+		WHERE GRADE_DATE &lt;= to_date(#{plateDate},'yyyy-MM-dd')
+		and GRADE_ORG_ID !='22'
+		) MBCRZT
+		ON MBCRZT.O_CODE = FIN_PRODUCT.ISSUER
+		AND MBCRZT.NUM = 1
 		LEFT JOIN ETR_ENTRUST_PLEDGE EEP
 		ON TABLE01.PORTFOLIO_ID = EEP.PORTFOLIO_ID
 		AND TABLE01.SEC_ACCT_ID = EEP.SEC_ACCT_ID
@@ -190,6 +200,18 @@
 				#{item}
 			</foreach>
 			)
+		</if>
+		<if test="secType != null and !secType.isEmpty()">
+			AND  ftype.TYPE_9 IN
+			<foreach collection="secType" item="item" index= "index" open="(" close=")" separator="," >
+				#{item}
+			</foreach>
+		</if>
+		<if test="mainGrade != null and !mainGrade.isEmpty()">
+			AND MBCRZT.GRADE_RESULT IN
+			<foreach collection="mainGrade" item="item" index= "index" open="(" close=")" separator="," >
+				#{item}
+			</foreach>
 		</if>
 		<if test="zyqk !=null and zyqk !=''">
 			AND (EEP.PLEDGE_STOCK_ID !=#{zyqk,jdbcType=VARCHAR} or EEP.PLEDGE_STOCK_ID is null)

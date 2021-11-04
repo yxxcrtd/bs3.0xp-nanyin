@@ -9,7 +9,7 @@
          and SEQ_ID not in
              (
                  select
-                     TRADE_ID
+                     SEQ_ID
                  from
                      SETTLE_TRANS_DATA_TOTAL_STATUS
                  where
@@ -20,8 +20,6 @@
     <select id="selectNeedTotalDataList" resultType="com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherDto">
         select
             A.*,
-            B.TRADE_ID tradeIdAdd, B.REPO_TYPE, B.CON_PRICE, B.CON_AMT, B.CON_PRIN_AMT,
-            B.R_FINPROD_ID, B.SE_REP_DAY_TYPE,
             C.CHECK_RESULT
         from
             SETTLE_TRANS_DATA A
@@ -43,7 +41,7 @@
     </select>
 
     <insert id="batchInsetSettleTransDataTotal">
-        insert into IBU_QUOTE_ENT_CREP_PLEDGE (SEQ_ID, DEAL_DATE, SEC_TYPE,
+        insert into SETTLE_TRANS_DATA_TOTAL (SEQ_ID, DEAL_DATE, SEC_TYPE,
         APPLY_TRADE_ID, FINPROD_ID, FINPROD_TYPE,
         FINPROD_TYPE2, BRANCH, BUSI_TYPE,
         TRADE_DATE, SETTLE_DATE, VDATE,
@@ -96,7 +94,7 @@
 
 
     <insert id="batchInsetSettleTransDataTotalAdd">
-        insert into (IBU_QUOTE_ENT_CREP_PLEDGE TRADE_ID, REPO_TYPE, CON_PRICE,
+        insert into SETTLE_TRANS_DATA_ADD (TRADE_ID, REPO_TYPE, CON_PRICE,
         CON_AMT, CON_PRIN_AMT, R_FINPROD_ID,
         SE_REP_DAY_TYPE, CREATE_USER, CREATE_DEPT,
         CREATE_TIME, UPDATE_USER, UPDATE_TIME)
