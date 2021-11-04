@@ -60,7 +60,7 @@ public class PositionUtil {
                         if (checkResults != null) {
                             for (int i=0; i<checkResults.size();i++){
                                 BaseMap flow = BaseMap.newMap((Map) checkResults.get(i));
-                                BigDecimal AMOUNT = flow.getBigDecimal("AMOUNT");
+                                BigDecimal CHECKBALANCE = flow.getBigDecimal("CHECKBALANCE");
                                 String PORTFOLIO_ID = flow.getString("PORTFOLIO_ID");
                                 String HODING_TYPE = flow.getString("HODING_TYPE");
                                 strb.append(PORTFOLIO_ID);
@@ -68,7 +68,7 @@ public class PositionUtil {
                                 strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
                                 strb.append("】");
                                 strb.append("余额为");
-                                strb.append(AMOUNT);
+                                strb.append(CHECKBALANCE);
                             }
                         }
                         strb.append("】持仓不足，请确认是否继续？");
