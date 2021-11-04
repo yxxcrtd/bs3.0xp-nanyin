@@ -50,6 +50,7 @@ import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.MultiApproveTradeCheckService;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
 import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeConfirmDto;
 import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
 import com.joyintech.tams.invest.trade.fund.dto.WorkFlowDto;
@@ -149,6 +150,9 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
     
     @Autowired
     private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
+
+    @Autowired
+    private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
 
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。 {@inheritDoc}
@@ -374,6 +378,11 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
             // 场内基金改造 modify by renping 20191117 end
 
             jasperExecute(entity);
+
+            //成交录单---调用共通
+            if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
+                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTradeId(),OperationType.NEW);
+            }
         }
         else if (StringUtil.equals(entity.getOperateType(), "REVOKE")) {
 
@@ -396,6 +405,10 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
             if (null != entity.getTradeId() && !"".equals(entity.getTradeId())){
                 riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
             }
+
+            //成交录单---调用共通
+            exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTradeId(),OperationType.REVOKE);
+
         }
         // 调接口 by 赵东东 20191206 start
         try {

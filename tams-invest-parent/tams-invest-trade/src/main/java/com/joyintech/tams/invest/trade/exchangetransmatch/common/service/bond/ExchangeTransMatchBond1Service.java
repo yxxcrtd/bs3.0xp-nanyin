@@ -92,22 +92,6 @@ public class ExchangeTransMatchBond1Service extends ExchangeTransMatchBondCommon
     }
 
     @Override
-    public TrdProductDealAdd genTrdProductDealAdd(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto,TrdProductDeal trdProductDeal) {
-        TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
-        trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
-        trdProductDealAdd.setPortfolioId(entrustDto.getPortfolioId());
-        if(StringUtil.equals(DictCodeListExt3.下行交易匹配类型_自动匹配.getValue(),dealDto.getMatchType())) {
-            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_批处理生成.getValue());
-        }
-        else {
-            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
-        }
-        trdProductDealAdd.setEntrustId(entrustDto.getEntrustId());
-
-        return trdProductDealAdd;
-    }
-
-    @Override
     public List<StlPayOrdersDto> generateStlPayOrdersList(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
         List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<>();
 

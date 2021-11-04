@@ -3,14 +3,12 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
@@ -76,7 +74,7 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         baseTradeProductDealDto.setTrdTradeFeeDetailList(this.genTrdTradeFeeDetailList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
         //生成划款指令
         baseTradeProductDealDto.setStlPayOrdersList(this.generateStlPayOrdersList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
-
+        //金融产品实物交易表
         baseTradeProductDealDto.setTrdFinProductBarterList(this.generateDealBarterList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
 
         return baseTradeProductDealDto;
@@ -317,7 +315,23 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
      * 金融产品交易附属表
      */
     public TrdProductDealAdd genTrdProductDealAdd(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto,TrdProductDeal trdProductDeal) {
-        return null;
+        TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+        BeanUtil.copyPropertiesIgnoreNull(trdProductDealAdd, trdProductDeal);
+        trdProductDealAdd.setEntrustId(entrustDto.getEntrustId());
+        trdProductDealAdd.setPortfolioId(entrustDto.getPortfolioId());
+
+        // 申购模式
+        if ((DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(trdProductDeal.getFinprodType2()))
+                && DictCodeList.交易方向_申购确认.getValue().equals(trdProductDeal.getPs())) {
+            trdProductDealAdd.setPurchModle(DictCodeListExt2.申购方式_网上申购.getValue());
+        }
+        if(StringUtil.equals(DictCodeListExt3.下行交易匹配类型_自动匹配.getValue(),dealDto.getMatchType())) {
+            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_批处理生成.getValue());
+        }
+        else {
+            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
+        }
+        return trdProductDealAdd;
     }
 
     /**
@@ -464,7 +478,7 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         return stlPayOrders;
     }
 
-    protected List<TrdFinProductBarterTotal> generateDealBarterTotal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
+    public List<TrdFinProductBarterTotal> generateDealBarterTotal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
         return null;
     }
 

@@ -282,6 +282,11 @@ public class TrdStockDto extends TrdProductDeal implements ProcessEntity {
 	private String settleDateStr;
 
 	/**
+	 * 成交匹配的流水号 seqId
+	 */
+	private String dealSqeId;
+
+	/**
 	 * 获取锁定期
 	 *
 	 * @return
@@ -1197,5 +1202,13 @@ public class TrdStockDto extends TrdProductDeal implements ProcessEntity {
 
 	public void  setSettleDateStr(){
 		this.settleDateStr = getSettleDateStr();
+	}
+
+	public String getDealSqeId() {
+		return dealSqeId;
+	}
+
+	public void setDealSqeId(String dealSqeId) {
+		this.dealSqeId = dealSqeId;
 	}
 }

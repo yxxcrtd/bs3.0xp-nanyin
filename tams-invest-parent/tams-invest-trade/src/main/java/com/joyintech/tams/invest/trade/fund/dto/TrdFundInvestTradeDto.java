@@ -230,6 +230,11 @@ public class TrdFundInvestTradeDto extends TrdProductDeal implements ProcessEnti
 
     private String parentPageId;
 
+    /**
+     * 成交匹配的流水号 seqId
+     */
+    private String dealSqeId;
+
     public String getParentPageId() {
         return parentPageId;
     }
@@ -1413,5 +1418,13 @@ public class TrdFundInvestTradeDto extends TrdProductDeal implements ProcessEnti
 
     public void setRedSpeed(String redSpeed) {
         this.redSpeed = redSpeed;
+    }
+
+    public String getDealSqeId() {
+        return dealSqeId;
+    }
+
+    public void setDealSqeId(String dealSqeId) {
+        this.dealSqeId = dealSqeId;
     }
 }

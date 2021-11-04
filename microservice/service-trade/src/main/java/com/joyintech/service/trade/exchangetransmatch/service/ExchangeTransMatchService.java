@@ -84,6 +84,9 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("TRADE_TYPE_02", DictCodeListExt3.交易类型_投资指令.getValue());
         map.put("TRADE_TYPE_03", DictCodeListExt3.交易类型_交易数据.getValue());
 
+        map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        map.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.findEntrustPage(map));
     }
 

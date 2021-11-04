@@ -1994,9 +1994,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             /**add by sunhui 20210721 重庆银行：一级债缴款后撤销重新占用中标维护占用的头寸   end**/
 
             //成交录单---调用共通
-            if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
-                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),operationType);
-            }
+
+            exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),OperationType.REVOKE);
+
         }
         // 如果中标结果进来 add by gejiaao 2019年8月6日 start
 //        if (StringUtil.isNotEmpty(entity.getBondFirstSign())) {

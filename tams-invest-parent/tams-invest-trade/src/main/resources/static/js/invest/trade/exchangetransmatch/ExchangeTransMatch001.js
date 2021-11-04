@@ -124,22 +124,25 @@
             return;
         },
         cols:[
-            {field:'entrustTypeStr', sortField:'entrustType',width:200, title: 'ExchangeTransMatch001.entrustType'},
+            {field:'tradeTypeStr', sortField:'tradeType',width:200, title: 'ExchangeTransMatch001.entrustType'},
             {field:'portfolioId', sortField:'portfolioId',width:200, title: 'ExchangeTransMatch001.portfolioId'},
             {field:'portfolioName', sortField:'portfolioName',width:200, title: 'ExchangeTransMatch001.portfolioName'},
+            {field:'finprodType2Str', sortField:'getFinprodType2Str',width:200, title: 'ExchangeTransMatch001.finprodType2'},
             {field:'finprodMarketId', sortField:'finprodMarketId',width:200, title: 'ExchangeTransMatch001.finprodId'},
-            {field:'finprodAbbr', sortField:'finprodAbbr',width:200, title: 'ExchangeTransMatch001.finprodAbbr'},
             {field:'entrustDate', sortField:'entrustDate',width:200, title: 'ExchangeTransMatch001.entrustDate',type: 'date'},
             {field:'tradeDate', sortField:'tradeDate',width:200, title: 'ExchangeTransMatch001.tradeDate',type: 'date'},
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch001.ertPs'},
             {field:'tradeMarketStr', sortField:'tradeMarket',width:200, title: 'ExchangeTransMatch001.tradeMarket'},
             {field:'tradePlatStr', sortField:'tradePlat',width:200, title: 'ExchangeTransMatch001.tradePlat'},
-            {field:'entrustAmount', sortField:'entrustAmount',width:200, title: 'ExchangeTransMatch001.entrustAmount',type: 'number'},
-            {field:'entrustPrice', sortField:'entrustPrice',width:200, title: 'ExchangeTransMatch001.entrustPrice',type: 'number'},
+            {field:'entrustAmt', sortField:'entrustAmount',width:200, title: 'ExchangeTransMatch001.entrustAmount',type: 'number'},
+            {field:'price', sortField:'entrustPrice',width:200, title: 'ExchangeTransMatch001.entrustPrice',type: 'number'},
             {field:'entrustNum', sortField:'entrustNum',width:200, title: 'ExchangeTransMatch001.entrustNum',type: 'number'},
-            {field:'secAcctNo', sortField:'secAcctNo',width:200, title: 'ExchangeTransMatch001.secAcctNo'},
-            {field:'fundAccount', sortField:'fundAccount',width:200, title: 'ExchangeTransMatch001.fundAccount'},
-            {field:'entrustType', visible:false},
+            {field:'secAcctName', sortField:'secAcctName',width:200, title: 'ExchangeTransMatch001.secAcctNo'},
+            {field:'acctName', sortField:'acctName',width:200, title: 'ExchangeTransMatch001.fundAccount'},
+            {field:'tradeType', visible:false},
+            {field:'finprodType2', visible:false},
+            {field:'secAcctId', visible:false},
+            {field:'acctNo', visible:false},
             {field:'ps', visible:false},
             {field:'tradeMarket', visible:false},
             {field:'tradePlat', visible:false}
@@ -242,6 +245,14 @@
                     return;
                 }
 
+                var item = selArr[0];
+                var object = getDealPageParams();
+                object.finprodId = item.finprodMarketId;
+                object.finprodType1 = item.finprodType2;
+                object.ps = item.ps;
+                object.tradePlat = item.tradePlat;
+                object.dealDate = item.dealDate;
+                object.secAccount = item.secAcctNo;
             }
 
         });
@@ -327,7 +338,6 @@
                                         lable = "TrdBondToStock002.new";
                                         url = "invest/trade/bondtostock/TrdBondToStock002/init";
                                     }
-
                                 }
                                 //质押式回购
                                 else if(object.finprodType2 == FINPROD_TYPE_TG_F02 || object.finprodType2 == FINPROD_TYPE_TG_F03) {
@@ -396,7 +406,7 @@
                 object.selectItem = selArr;
                 Joyin.confirm("请确认是否取消成交匹配?", function() {
                     Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/revokeTransactionMacth'),object,function (result) {
-
+                        transMatchInfoTable.table?transMatchInfoTable.reload():transMatchInfoTable.load();
                     });
                 });
 

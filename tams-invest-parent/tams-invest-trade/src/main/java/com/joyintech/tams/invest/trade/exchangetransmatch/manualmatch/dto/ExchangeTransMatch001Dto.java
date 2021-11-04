@@ -48,6 +48,11 @@ public class ExchangeTransMatch001Dto extends BaseEntity {
     /**
      * 资产类型
      */
+    private String finprodType1;
+
+    /**
+     * 资产类型
+     */
     private String finprodType2;
 
     /**
@@ -203,5 +208,13 @@ public class ExchangeTransMatch001Dto extends BaseEntity {
 
     public void setBusiCode(String busiCode) {
         this.busiCode = busiCode;
+    }
+
+    public String getFinprodType1() {
+        return finprodType1;
+    }
+
+    public void setFinprodType1(String finprodType1) {
+        this.finprodType1 = finprodType1;
     }
 }

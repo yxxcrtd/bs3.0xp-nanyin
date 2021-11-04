@@ -448,7 +448,7 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
 
             //成交录单---调用共通
             if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
-                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),StringUtil.isNotEmpty(entity.getTotleTradeId())?entity.getTotleTradeId():deal.getTradeId(),type);
+                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),StringUtil.isNotEmpty(entity.getTotleTradeId())?entity.getTotleTradeId():deal.getTradeId(),OperationType.NEW);
             }
         }
         // 撤销
@@ -645,9 +645,8 @@ public class TrdBondToStock002Service extends BaseService<TrdBondToStock001Dto> 
         doDelete(entity.getWorkflowId());
 
         //成交录单---调用共通
-        if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
-            exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),OperationType.REVOKE);
-        }
+        exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),OperationType.REVOKE);
+
     }
 
     @Override

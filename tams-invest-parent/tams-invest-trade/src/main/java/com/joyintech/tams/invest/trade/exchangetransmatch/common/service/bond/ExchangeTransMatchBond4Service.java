@@ -82,6 +82,7 @@ public class ExchangeTransMatchBond4Service extends ExchangeTransMatchBondCommon
     public TrdDealTotalAdd generateDealTotalAdd(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
         TrdDealTotalAdd trdDealTotalAdd = new TrdDealTotalAdd();
         trdDealTotalAdd.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+        trdDealTotalAdd.setEntrustId(entrustDto.getEntrustId());
 
         // 零星股数
 //        trdDealTotalAdd.setSpoShareNum(x.getSpoShareNum());
@@ -90,15 +91,17 @@ public class ExchangeTransMatchBond4Service extends ExchangeTransMatchBondCommon
     }
 
     @Override
-    protected List<TrdFinProductBarterTotal> generateDealBarterTotal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal){
+    public List<TrdFinProductBarterTotal> generateDealBarterTotal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal){
         List<TrdFinProductBarterTotal> trdFinProductBarterTotalList = new ArrayList<>();
         TrdFinProductBarterTotal trdFinProductBarterTotal = new TrdFinProductBarterTotal();
         SettleTransDataTotalAdd settleTransDataTotalAdd = dealDto.getSettleTransDataTotalAdd();
 
         trdFinProductBarterTotal.setTradeId(trdFinProductDealTotal.getTotleTradeId());
+        trdFinProductBarterTotal.setInvAim(entrustDto.getInvAim());
+        trdFinProductBarterTotal.setBranch(0L);
         // 金融产品代码
         trdFinProductBarterTotal.setFinprodId(settleTransDataTotalAdd.getrFinprodId());
-        trdFinProductBarterTotal.setFinprodType(dealDto.getrFinprodType());
+        trdFinProductBarterTotal.setFinprodType(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
         // 转股价格
         trdFinProductBarterTotal.setUnitCprice(settleTransDataTotalAdd.getConPrice());
         // 转股数
@@ -115,10 +118,12 @@ public class ExchangeTransMatchBond4Service extends ExchangeTransMatchBondCommon
         TrdFinProductBarter trdFinProductBarter = new TrdFinProductBarter();
         SettleTransDataTotalAdd settleTransDataTotalAdd = dealDto.getSettleTransDataTotalAdd();
         trdFinProductBarter.setTradeId(trdProductDeal.getTradeId());
+        trdFinProductBarter.setInvAim(entrustDto.getInvAim());
+        trdFinProductBarter.setBranch(0L);
         // 金融产品代码
         trdFinProductBarter.setFinprodId(settleTransDataTotalAdd.getrFinprodId());
         // 金融产品类型
-        trdFinProductBarter.setFinprodType(dealDto.getrFinprodType());
+        trdFinProductBarter.setFinprodType(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
         // 转股价格
         trdFinProductBarter.setUnitCprice(settleTransDataTotalAdd.getConPrice());
         // 转股数
