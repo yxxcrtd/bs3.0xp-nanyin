@@ -13,6 +13,7 @@ package com.joyintech.tams.cfets.etrib.dao;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.cfets.etrib.dto.*;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -111,5 +112,8 @@ public interface CfetsEtrIbBondinfoMapper {
     FinProduct  findAssetInfo(String finprodId);
 
     Map queryPositionByEtrInfo(Map RequestDto);
+
+    PtlPortfolio findPtlInfo(String portfolioId);
+
 
 }

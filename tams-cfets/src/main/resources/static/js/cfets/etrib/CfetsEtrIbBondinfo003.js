@@ -11,7 +11,7 @@
     var fprice;
 
     var businessModelReulst="";
-
+    var entityBussCombDistritList;
     let doOther = {
         star : function () {
             // 加红星星
@@ -331,22 +331,24 @@
     var colsCombDistribt = [
         {
             /* 组合代码 */
-            field: 'portfolioId', width: 100, title: 'CfetsEtribBondInfo003.portfolioId',  sortable: false
-            ,editOption: {
+            field: 'portfolioName', width: 100, title: 'CfetsEtribBondInfo003.portfolioId',  sortable: false
+            //,edit: true
+            ,disabled:true
+           /* ,editOption: {
                 type: 'select',
                 id: 'portfolioId',
                 multiple: false,
                 showField: 'text',
                 searchable: true,
                 url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectPortfolioId?act=true')
-            }
+            }*/
         }
         , {/*业务模式*/
-              field: 'businessModel',
+              field: 'busiModelStr',
               width: 50,
               title: 'CfetsEtribBondInfo003.businessModel',
               sortable: false,
-              editOption:{type:'select', formatoption:true, result: BUSINESS_MODEL}
+              editOption:{type:'select', formatoption:true, showField: 'text',result: BUSINESS_MODEL}
        }
         , {
             /*劵面总额*/
@@ -587,6 +589,24 @@
                 doOther.exerYield_setDisabled(false);
             }*/
         }
+     var entityBussCombDistritList=entity_BussCombDistribtList||[];
+   // var rowsData = table.getAllRows();
+    if (entityBussCombDistritList.length > 0) {
+      for (var index in entityBussCombDistritList) {
+        entityBussCombDistritList[index].entrustNum = result.entrustNum/10000;
+        //table.reload({data: rowsData});
+      }
+    }
+/*      if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
+                                //质押券反显万元为单位
+                                var obj = [];
+                                $.each(result.pledgeBondInfoDtoList,function (index,item) {
+                                    item.avaPledgePrin = item.avaPledgePrin/10000;
+                                    item.pledgePrin = item.pledgePrin/10000;
+                                    obj.push(item);
+                                });
+                                window.BussRepoSec["bussRepoSec"].reloadPledgeBond(obj);
+      }*/
         businessId = query('#businessId').val();
     }
 
