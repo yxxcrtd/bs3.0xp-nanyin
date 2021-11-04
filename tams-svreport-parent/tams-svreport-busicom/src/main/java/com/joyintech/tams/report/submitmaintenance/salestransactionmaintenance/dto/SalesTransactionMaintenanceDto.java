@@ -1,0 +1,334 @@
+/*
+ * 销售结算资金交易信息维护
+ */
+ 
+package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto;
+
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.validate.SalesTransactionMaintenanceValid;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+@ValidLogic(targetClass = SalesTransactionMaintenanceValid.class, groups = {ValidateGroupEdit.class,
+        ValidateGroupDelete.class})
+public class SalesTransactionMaintenanceDto extends BaseEntity  implements ProcessEntity {
+    /**
+     * 主键uuid
+     */
+    private String elementId;//页面元素
+    private String pageModel;//页面模型
+    private String operateType;//操作类型
+    private String DataStatus;// 数据状态
+    private String bankCode;// 登记银行代码
+    private String registSeqno;//主键uuid
+    /**
+     * 机构代码
+     */
+    private String orgCode;
+    /**
+     * 提供销售结算资金服务机构代码
+     */
+    private String institutionCode;
+
+    /**
+     * 产品登记编码
+     */
+    private String prdRegistCode;
+
+    /**
+     * 销售结算资金账号
+     */
+    private String accountNo;
+
+    /**
+     * 销售结算资金账户名称
+     */
+    private String accountName;
+
+    /**
+     * 销售结算资金交易流水号
+     */
+    private String tradeNo;
+
+    /**
+     * 销售结算资金流动方向
+     */
+    private String tradePs;
+
+    /**
+     * 销售结算资金交易对手方账号
+     */
+    private String tradeCounterAccNo;
+
+    /**
+     * 销售结算资金交易对手方账户名称
+     */
+    private String tradeCounterAccName;
+
+    /**
+     * 销售结算资金交易对手方开户行名称
+     */
+    private String tradeCounterAccBankName;
+
+    /**
+     * 销售结算资金交易对手方账户开户行号
+     */
+    private String tradeCounterAccBankNo;
+
+    /**
+     * 销售结算资金交易币种
+     */
+    private String tradeCcy;
+
+    /**
+     * 销售结算资金交易金额
+     */
+    private BigDecimal tradeAmt;
+
+    /**
+     * 销售结算资金交易日期
+     */
+    private Date tradeVdate;
+
+    /**
+     * 销售结算资金交易时间
+     */
+    private Date tradeTime;
+
+    /**
+     * 销售结算资金交易附言
+     */
+    private String postscript;
+
+    /**
+     * 备注
+     */
+    private String remark;
+    /**
+     * 选中的数据
+     */
+    private transient List<SalesTransactionMaintenanceDto> selectedItem;
+
+    /**
+     * 数据接入日期
+     */
+    private Date receptDate;
+
+    public String getDataStatus() {
+        return DataStatus;
+    }
+
+    public void setDataStatus(String DataStatus) {
+        this.DataStatus = DataStatus;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
+
+    public String getInstitutionCode() {
+        return institutionCode;
+    }
+
+    public void setInstitutionCode(String institutionCode) {
+        this.institutionCode = institutionCode;
+    }
+
+    public String getPrdRegistCode() {
+        return prdRegistCode;
+    }
+
+    public void setPrdRegistCode(String prdRegistCode) {
+        this.prdRegistCode = prdRegistCode;
+    }
+
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo;
+    }
+
+    public String getTradePs() {
+        return tradePs;
+    }
+
+    public void setTradePs(String tradePs) {
+        this.tradePs = tradePs;
+    }
+
+    public String getTradeCounterAccNo() {
+        return tradeCounterAccNo;
+    }
+
+    public void setTradeCounterAccNo(String tradeCounterAccNo) {
+        this.tradeCounterAccNo = tradeCounterAccNo;
+    }
+
+    public String getTradeCounterAccName() {
+        return tradeCounterAccName;
+    }
+
+    public void setTradeCounterAccName(String tradeCounterAccName) {
+        this.tradeCounterAccName = tradeCounterAccName;
+    }
+
+    public String getTradeCounterAccBankName() {
+        return tradeCounterAccBankName;
+    }
+
+    public void setTradeCounterAccBankName(String tradeCounterAccBankName) {
+        this.tradeCounterAccBankName = tradeCounterAccBankName;
+    }
+
+    public String getTradeCounterAccBankNo() {
+        return tradeCounterAccBankNo;
+    }
+
+    public void setTradeCounterAccBankNo(String tradeCounterAccBankNo) {
+        this.tradeCounterAccBankNo = tradeCounterAccBankNo;
+    }
+
+    public String getTradeCcy() {
+        return tradeCcy;
+    }
+
+    public void setTradeCcy(String tradeCcy) {
+        this.tradeCcy = tradeCcy;
+    }
+
+    public Date getTradeVdate() {
+        return tradeVdate;
+    }
+
+    public void setTradeVdate(Date tradeVdate) {
+        this.tradeVdate = tradeVdate;
+    }
+
+    public String getPostscript() {
+        return postscript;
+    }
+
+    public void setPostscript(String postscript) {
+        this.postscript = postscript;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getOperateType() {
+        return operateType;
+    }
+
+    public void setOperateType(String operateType) {
+        this.operateType = operateType;
+    }
+
+    public String getPageModel() {
+        return pageModel;
+    }
+
+    public void setPageModel(String pageModel) {
+        this.pageModel = pageModel;
+    }
+
+    public BigDecimal getTradeAmt() {
+        return tradeAmt;
+    }
+
+    public void setTradeAmt(BigDecimal tradeAmt) {
+        this.tradeAmt = tradeAmt;
+    }
+
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
+    }
+
+    public Date getReceptDate() {
+        return receptDate;
+    }
+
+    public void setReceptDate(Date receptDate) {
+        this.receptDate = receptDate;
+    }
+
+    public String getRegistSeqno() {
+        return registSeqno;
+    }
+
+    public void setRegistSeqno(String registSeqno) {
+        this.registSeqno = registSeqno;
+    }
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
+    }
+
+    public List<SalesTransactionMaintenanceDto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<SalesTransactionMaintenanceDto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public String getTradePsName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, this.getTradePs());
+    }
+    public String getDataStatusName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getDataStatus());
+    }
+    public String getTradeCcyName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getTradeCcy());
+    }
+}

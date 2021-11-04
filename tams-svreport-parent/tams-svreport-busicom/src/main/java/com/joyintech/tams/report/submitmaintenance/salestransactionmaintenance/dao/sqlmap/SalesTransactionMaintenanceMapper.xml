@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dao.SalesTransactionMaintenanceMapper">
+
+    <!--	查询-->
+	<select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+		select
+		a.DATA_STATUS dataStatus,
+		a.INSTITUTION_CODE institutionCode,
+		a.PRD_REGIST_CODE prdRegistCode,
+		a.ACCOUNT_NO accountNo,
+		a.ACCOUNT_NAME accountName,
+		a.TRADE_NO tradeNo,
+		a.TRADE_PS tradePs,
+		a.TRADE_COUNTER_ACC_NO tradeCounterAccNo,
+		a.TRADE_COUNTER_ACC_NAME tradeCounterAccName,
+		a.TRADE_COUNTER_ACC_BANK_NAME tradeCounterAccBankName,
+		a.TRADE_COUNTER_ACC_BANK_NO tradeCounterAccBankNo,
+		a.TRADE_CCY tradeCcy,
+		a.TRADE_AMT tradeAmt,
+		a.TRADE_VDATE tradeVdate,
+		a.TRADE_TIME tradeTime,
+<!--		b.ERR_MSG errMsg,-->
+		a.POSTSCRIPT postscript,
+		a.REMARK remark
+		from CHB_SALER_STL_DEAL_INFO a
+		where 1=1
+		<if test="tradePs != null and tradePs != ''">
+			and a.TRADE_PS = #{tradePs,jdbcType=VARCHAR}
+		</if>
+		<if test="institutionCode != null and institutionCode != ''">
+			and a.INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+		</if>
+		<if test="dataStatus != null and dataStatus != ''">
+			and a.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="prdRegistCode != null and prdRegistCode != ''">
+			and a.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="tradeNo != null and tradeNo != ''">
+			and a.TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
+		</if>
+		<if test="searchTradeVdateStart != null and searchTradeVdateStart != ''">
+			and a.TRADE_VDATE between to_date(#{searchTradeVdateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchTradeVdateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		</if>
+	</select>
+
+<!--	双击查看详细信息查询-->
+	<select id="selectDetail"
+			resultType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+		select
+		a.INSTITUTION_CODE institutionCode,
+		a.PRD_REGIST_CODE prdRegistCode,
+		a.ACCOUNT_NO accountNo,
+		a.ACCOUNT_NAME accountName,
+		a.TRADE_NO tradeNo,
+		a.TRADE_PS tradePs,
+		a.TRADE_COUNTER_ACC_NO tradeCounterAccNo,
+		a.TRADE_COUNTER_ACC_NAME tradeCounterAccName,
+		a.TRADE_COUNTER_ACC_BANK_NAME tradeCounterAccBankName,
+		a.TRADE_COUNTER_ACC_BANK_NO tradeCounterAccBankNo,
+		a.TRADE_CCY tradeCcy,
+		a.TRADE_AMT tradeAmt,
+		a.TRADE_VDATE tradeVdate,
+		a.TRADE_TIME tradeTime,
+		a.POSTSCRIPT postscript,
+		a.REMARK remark
+		from CHB_SALER_STL_DEAL_INFO a
+		where
+		PRD_REGIST_CODE=#{prdRegistCode}
+		and TRADE_NO=#{tradeNo}
+	</select>
+
+<!--	根据主键删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+		delete from CHB_SALER_STL_DEAL_INFO
+		where
+		REGIST_SEQNO=#{registSeqno}
+	</delete>
+
+<!--	提供销售结算资金服务机构代码下拉框-->
+	<select id="getInstitutionCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		INSTITUTION_CODE id,
+		null text
+		from CHB_SALER_STL_DEAL_INFO
+		<where>
+			<if test="search != null and search != ''">
+				and PTL_ID like concat(concat('%',#{search}),'%')
+			</if>
+		</where>
+	</select>
+
+<!--销售结算资金交易流水号下拉框-->
+	<select id="getTradeNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		TRADE_NO id,
+		null text
+		from CHB_SALER_STL_DEAL_INFO
+		<where>
+			<if test="search != null and search != ''">
+				and TRADE_NO like concat(concat('%',#{search}),'%')
+			</if>
+		</where>
+	</select>
+
+	<!--	导入时校验数据是否重复-->
+	<select id="getRegistExcelList" resultType="java.lang.Integer">
+		select count(REGIST_SEQNO) from CHB_SALER_STL_DEAL_INFO
+		where
+		PRD_REGIST_CODE=#{prdRegistCode}
+		and TRADE_NO=#{tradeNo}
+	</select>
+
+<!--保存提交-->
+	<insert id="insert"
+			parameterType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+	insert into CHB_SALER_STL_DEAL_INFO (
+	REGIST_SEQNO,
+	DATA_STATUS,
+	INSTITUTION_CODE,
+	PRD_REGIST_CODE,
+	ACCOUNT_NO,
+	ACCOUNT_NAME,
+	TRADE_NO,
+	TRADE_PS,
+	TRADE_COUNTER_ACC_NO,
+	TRADE_COUNTER_ACC_NAME,
+	TRADE_COUNTER_ACC_BANK_NAME,
+	TRADE_COUNTER_ACC_BANK_NO,
+	TRADE_CCY,
+	TRADE_AMT,
+	TRADE_VDATE,
+	TRADE_TIME,
+	POSTSCRIPT,
+	REMARK,
+	RECEPT_DATE,
+	ORG_CODE,
+	UPDATE_TIME) VALUES
+	(
+	#{registSeqno,jdbcType=VARCHAR},
+	#{dataStatus,jdbcType=VARCHAR},
+	#{institutionCode,jdbcType=VARCHAR},
+	#{prdRegistCode,jdbcType=VARCHAR},
+	#{accountNo,jdbcType=VARCHAR},
+	#{accountName,jdbcType=VARCHAR},
+	#{tradeNo,jdbcType=VARCHAR},
+	#{tradePs,jdbcType=VARCHAR},
+	#{tradeCounterAccNo,jdbcType=VARCHAR},
+	#{tradeCounterAccName,jdbcType=VARCHAR},
+	#{tradeCounterAccBankName,jdbcType=VARCHAR},
+	#{tradeCounterAccBankNo,jdbcType=VARCHAR},
+	#{tradeCcy,jdbcType=VARCHAR},
+	#{tradeAmt,jdbcType=NUMERIC},
+	#{tradeVdate,jdbcType=DATE},
+	#{tradeTime,jdbcType=TIMESTAMP},
+	#{postscript,jdbcType=VARCHAR},
+	#{remark,jdbcType=VARCHAR},
+	#{receptDate,jdbcType=DATE},
+	#{orgCode,jdbcType=VARCHAR},
+	SYSDATE
+	)
+	</insert>
+
+<!--	修改-->
+	<update id="update">
+		UPDATE CHB_SALER_STL_DEAL_INFO
+		SET
+		DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+		TRADE_AMT = #{tradeAmt,jdbcType=NUMERIC},
+		POSTSCRIPT = #{postscript,jdbcType=VARCHAR},
+		REMARK = #{remark,jdbcType=VARCHAR},
+		UPDATE_TIME = SYSDATE
+		where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+	</update>
+</mapper>
