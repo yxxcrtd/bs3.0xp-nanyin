@@ -2400,4 +2400,13 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
     public void setDealSqeId(String dealSqeId) {
         this.dealSqeId = dealSqeId;
     }
+    private String winPrinAmtList;
+
+    public String getWinPrinAmtList() {
+        return winPrinAmtList;
+    }
+
+    public void setWinPrinAmtList(String winPrinAmtList) {
+        this.winPrinAmtList = winPrinAmtList;
+    }
 }
