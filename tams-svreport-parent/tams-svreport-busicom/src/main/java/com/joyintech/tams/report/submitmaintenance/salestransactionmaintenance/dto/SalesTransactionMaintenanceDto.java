@@ -26,7 +26,7 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
     private String elementId;//页面元素
     private String pageModel;//页面模型
     private String operateType;//操作类型
-    private String DataStatus;// 数据状态
+    private String dataStatus;// 数据状态
     private String bankCode;// 登记银行代码
     private String registSeqno;//主键uuid
     /**
@@ -123,11 +123,11 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
     private Date receptDate;
 
     public String getDataStatus() {
-        return DataStatus;
+        return dataStatus;
     }
 
-    public void setDataStatus(String DataStatus) {
-        this.DataStatus = DataStatus;
+    public void setDataStatus(String dataStatus) {
+        this.dataStatus = dataStatus;
     }
 
     public String getBankCode() {

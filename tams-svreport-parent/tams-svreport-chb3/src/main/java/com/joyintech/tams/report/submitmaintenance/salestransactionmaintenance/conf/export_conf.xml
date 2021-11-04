@@ -18,6 +18,7 @@
 			<Cell order="14" name="销售结算资金交易时间">tradeTime</Cell>
 			<Cell order="15" name="销售结算资金交易附言">postscript</Cell>
 			<Cell order="16" name="备注">remark</Cell>
+			<Cell order="17" name="数据状态">dataStatus</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

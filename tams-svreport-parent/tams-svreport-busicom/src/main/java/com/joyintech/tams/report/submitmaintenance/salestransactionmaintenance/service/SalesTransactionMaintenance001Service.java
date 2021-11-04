@@ -122,6 +122,7 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             headList.add("销售结算资金交易时间");
             headList.add("销售结算资金交易附言");
             headList.add("备注");
+            headList.add("数据状态");
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 return tempCheckResult;

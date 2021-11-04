@@ -98,7 +98,7 @@ public class SalesTransactionMaintenance001Controller extends BaseController {
             listdto = JsonUtils.json2List(datas, SalesTransactionMaintenanceDto.class);
         }
         File outFile = salesTransactionmaintenanceService.makeFile(
-                "/com/joyintech/tams/report/submitmaintenance/equityinfo/conf/export_conf.xml",
+                "/com/joyintech/tams/report/submitmaintenance/salestransactionmaintenance/conf/export_conf.xml",
                 listdto);
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
