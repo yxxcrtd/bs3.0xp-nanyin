@@ -64,14 +64,14 @@ public class PositionUtil {
                                 String PORTFOLIO_ID = flow.getString("PORTFOLIO_ID");
                                 String HODING_TYPE = flow.getString("HODING_TYPE");
                                 strb.append(PORTFOLIO_ID);
-                                strb.append("【");
-                                strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
-                                strb.append("】");
                                 strb.append("余额为");
                                 strb.append(CHECKBALANCE);
+                                strb.append("【");
+                                strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
+                                strb.append("】不足");
                             }
                         }
-                        strb.append("】持仓不足，请确认是否继续？");
+                        strb.append("】，请确认是否继续？");
                     }
                     
                     /**
