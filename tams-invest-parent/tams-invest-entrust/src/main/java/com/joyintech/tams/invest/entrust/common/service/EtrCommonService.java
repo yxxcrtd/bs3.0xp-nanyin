@@ -1187,6 +1187,22 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(object instanceof EtrBoutRepoDto){
             EtrBoutRepoDto inputDto = (EtrBoutRepoDto) object;
             if (StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue(),inputDto.getPs())){
+                // 先判断标的券类型是否需要扣减授信额度
+                List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
+                // 查询资产类型
+                FinProductTypeKey key = new FinProductTypeKey();
+                key.setFinprodId(inputDto.getFinprodId());
+                key.setBranch(0L);
+                FinProductType finProductType = creditLinesDealsMapper.selectByPrimaryKey(key);
+                FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(inputDto.getFinprodId());
+                String astType = finProductType.getType10();
+                if (StringUtil.equals(finProductAdd.getIsSecBond(),DictCodeList.是否_是.getValue())){
+                    astType = astType.concat("_") + DictCodeList.是否_是.getValue();
+                }
+                // 资产类型在【不扣减授信参数】列表
+                if (assetTypeList.contains(astType)){
+                    return null;
+                }
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
