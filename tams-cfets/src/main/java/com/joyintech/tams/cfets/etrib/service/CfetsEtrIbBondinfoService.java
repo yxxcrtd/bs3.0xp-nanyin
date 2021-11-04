@@ -1240,8 +1240,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
                 rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
             }else if(StringUtil.equals(shortSellingSupported,"02")){
-                dd.setEntrustOwnNum(item.getEntrustOwnNum());
-                dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum());
+                dd.setEntrustOwnNum(item.getEntrustOwnNum()==null?BigDecimal.ZERO:item.getEntrustOwnNum());
+                dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum()==null?BigDecimal.ZERO:item.getEntrustIntegrateNum());
                 bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
                 rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
             }else if(StringUtil.equals(shortSellingSupported,"03")){

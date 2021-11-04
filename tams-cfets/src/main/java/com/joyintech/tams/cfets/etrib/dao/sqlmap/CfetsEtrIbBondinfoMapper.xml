@@ -832,7 +832,7 @@ from
             resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbfindEtrinfoResponse">
         select aaa.* from (
         <choose>
-            <when test="vagueQuery == '有效'">
+            <when test="search == '有效'">
                 <!-- 有效状态查询 -->
                 <include refid="onlyEtrEntrust"></include>
             </when>
@@ -871,7 +871,7 @@ from
         T7.MATURE_YIELD*100 matureYield,
         T7.EXER_YIELD*100 exerYield,
         T7.SETTLE_SPREED settleSpreed,
-        T1.entrust_date etrDate,
+        TO_CHAR(T1.entrust_date, 'yyyy-MM-dd')  as etrDate,
         null as approver,
         T1.REMARK as remark,
         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 execProcess,
@@ -970,7 +970,7 @@ from
         T7.MATURE_YIELD*100 matureYield,
         T7.EXER_YIELD*100 exerYield,
         T7.SETTLE_SPREED as settleSpreed,
-        T1.ENTRUST_DATE as etrDate,
+        TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as etrDate,
         null as approver,
         T1.REMARK as remark,
         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 execProcess,
@@ -1049,13 +1049,13 @@ from
         </if>
     </sql>
     <sql id="vagueQueryWhere">
-        <if test="vagueQuery != null and vagueQuery != '' and vagueQuery !='有效' ">
+        <if test="search != null and search != '' and search !='有效' ">
             <where>
                 aaa.entrustId || '|' || sdl.ITEM_VALUE || '|' || aaa.invManagerId || '|' || aaa.portfolioId || '|' || aaa.portfolioName
                 || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr || '|' || aaa.secType1 || '|' || dictps.ITEM_VALUE || '|' || aaa.shareNum || '|' || dictpriceModel.ITEM_VALUE
-                || '|' || aaa.unitPrice || '|' || aaa.allPrice || '|' || aaa.matureYield || '|' || aaa.exerYield || '|T+' || aaa.SETTLE_SPREED || '|' || TO_CHAR(aaa.VDATE, 'yyyy-MM-dd')
-                || '|' || TO_CHAR(aaa.MDATE, 'yyyy-MM-dd') || '|' || aaa.finishAmt || '|' || aaa.transactioncom || '|' || aaa.REMARK || '|' || aaa.counterId || '|' || aaa.parentPortfolioId
-                like '%' || #{vagueQuery} || '%'
+                || '|' || aaa.unitPrice || '|' || aaa.allPrice || '|' || aaa.matureYield || '|' || aaa.exerYield || '|T+' || aaa.settleSpreed
+                || '|' || aaa.etrDate || '|' || aaa.REMARK || '|'
+                like '%' || #{search} || '%'
             </where>
         </if>
     </sql>

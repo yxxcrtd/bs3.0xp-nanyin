@@ -100,7 +100,7 @@ public class CfetsEtrIbfindEtrinfoResponse {
     private String settleSpreedName;
 
     @ApiModelProperty(name="etrDate",value="指令日期",example="2021-07-06")
-    private Date etrDate;
+    private String etrDate;
 
     @ApiModelProperty(name="approver",value="审批人",example="1")
     private String approver;
@@ -363,13 +363,7 @@ public class CfetsEtrIbfindEtrinfoResponse {
         this.settleSpreedName = settleSpreedName;
     }
 
-    public Date getEtrDate() {
-        return etrDate;
-    }
 
-    public void setEtrDate(Date etrDate) {
-        this.etrDate = etrDate;
-    }
 
     public String getApprover() {
         return approver;
@@ -442,5 +436,13 @@ public class CfetsEtrIbfindEtrinfoResponse {
 
     public void setCalculateField(String calculateField) {
         this.calculateField = calculateField;
+    }
+
+    public String getEtrDate() {
+        return etrDate;
+    }
+
+    public void setEtrDate(String etrDate) {
+        this.etrDate = etrDate;
     }
 }
