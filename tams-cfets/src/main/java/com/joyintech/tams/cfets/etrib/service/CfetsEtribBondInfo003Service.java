@@ -1428,7 +1428,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             etrEntrustAdd.setMdate(null);
             //etrEntrustAdd.setOurEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
             //etrEntrustAdd.setLendinEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
-            etrEntrustAdd.setFullPrice(dto.getFpriceAmt());
+            etrEntrustAdd.setFullPrice(dto.getUnitFprice());
             if (dto.getExerYield() != null) {
                 etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));
             }
