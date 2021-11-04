@@ -49,16 +49,18 @@ public class ExcelUitl {
 	public static void doExport(CfetsExportRequestDto requestDto, HttpServletResponse response, String excelAndSheetName, DoQuery doQuery) {
 		List<BaseMap> header = requestDto.getHeader();
 		List dataList = requestDto.getData();
-		List mapList = new ArrayList();
-		if (dataList == null || dataList.size() == 0){
+		if (dataList == null || dataList.isEmpty()){
+			List mapList = new ArrayList();
 			dataList = doQuery.query();
-			if (dataList != null && dataList.size() > 0){
+			if (dataList != null && !dataList.isEmpty()){
 				dataList.forEach(e -> {
 					mapList.add(BeanUtil.object2Map(e));
 				});	
 			}
+			doExport(excelAndSheetName, header, mapList, response);
+		}else {
+			doExport(excelAndSheetName, header, dataList, response);
 		}
-		doExport(excelAndSheetName, header, mapList, response);
 	}
 
 	private static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
