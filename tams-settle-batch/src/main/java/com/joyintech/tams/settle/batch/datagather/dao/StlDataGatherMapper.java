@@ -1,5 +1,6 @@
 package com.joyintech.tams.settle.batch.datagather.dao;
 
+import com.joyintech.tams.common.base.entity.PtlSecPosition;
 import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
 import com.joyintech.tams.settle.batch.datagather.dto.EtrEntrustDto;
 import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
@@ -107,4 +108,25 @@ public interface StlDataGatherMapper {
 
 
     List<EtrEntrustDto> listEtrEntrust(@Param("finprodType") List<String> finprodType,@Param("entrustDate") Date entrustDate);
+
+    /**
+     * 债券存续期
+     * @param paraMap
+     * @return
+     */
+    List<SettleTransDataDto> listBondSettleTransData(Map<String, Object> paraMap);
+
+    /**
+     * 回购存续期
+     * @param paraMap
+     * @return
+     */
+    List<SettleTransDataDto> listRepoSettleTransData(Map<String, Object> paraMap);
+
+    /**
+     * 持仓余额
+     * @param param
+     * @return
+     */
+    List<PtlSecPosition> listPtlSecPosition(Map<String,Object> param);
 }

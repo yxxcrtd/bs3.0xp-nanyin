@@ -3,6 +3,7 @@
 <mapper namespace="com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper">
 	<sql id="settleTransDataTotalSql">
 		std.SEQ_ID TRADE_ID,
+			std.CJBH CJBH
 			std.DEAL_DATE DEAL_DATE,
 			std.SEC_TYPE SEC_TYPE,
 			std.APPLY_TRADE_ID APPLY_TRADE_ID,
@@ -70,6 +71,7 @@
 
 	<sql id="settleTransDataSql">
 			std.TRADE_ID TRADE_ID,
+			std.CJBH CJBH
 			std.DEAL_DATE DEAL_DATE,
 			std.SEC_TYPE SEC_TYPE,
 			std.APPLY_TRADE_ID APPLY_TRADE_ID,
@@ -111,7 +113,7 @@
 			std.TRADE_PLAT TRADE_PLAT,
 			std.PLEDGE_SEC_NUM PLEDGE_SEC_NUM,
 			std.SEAT_NUMBER SEAT_NUMBER,
-			std.PORTFOLIO_ID PORTFOLIO_ID,
+			/*std.PORTFOLIO_ID PORTFOLIO_ID,*/
 			std.SEC_ACCT_ID SEC_ACCT_ID,
 			std.ACCT_NO ACCT_NO,
 			std.BATCH_NUMBER BATCH_NUMBER,
@@ -136,6 +138,164 @@
 		FROM
 			SETTLE_TRANS_DATA std
 	</sql>
+
+	<!--债券存续期专用-->
+	<select id="listBondSettleTransData" parameterType="java.util.Map"
+			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		SELECT
+		TMIN.CASH_ID CASH_ID,
+		TMAX.MDATE VDATE,
+		TMIN.MDATE MDATE MDATE2,
+		fp.MDATE MDATE,
+		<include refid="settleTransDataSql"></include>
+		LEFT JOIN FIN_PRODUCT fp ON
+		fp.FINPROD_ID = std.FINPROD_ID
+		LEFT JOIN (
+		SELECT
+		T1.CASH_ID,
+		T1.MDATE ,
+		T1.FINPROD_ID
+		FROM
+		FIN_CASH_PLAN T1
+		WHERE
+		EXISTS(
+		SELECT
+		1
+		FROM
+		(
+		SELECT
+		CASH_ID,
+		FINPROD_ID ,
+		MIN(MDATE) MDATE
+		FROM
+		FIN_CASH_PLAN fcp2
+		GROUP BY
+		CASH_ID ,
+		FINPROD_ID)T2
+		WHERE
+		<![CDATA[T2.MDATE >= #{dealDate,jdbcType=DATE}]]>
+		AND T2.CASH_ID = T1.CASH_ID
+		AND T2.FINPROD_ID = T1.FINPROD_ID
+		AND T2.MDATE = T1.MDATE)) TMIN ON
+		TMIN.FINPROD_ID = std.FINPROD_ID
+		LEFT JOIN (
+		SELECT
+		T1.CASH_ID,
+		T1.MDATE ,
+		T1.FINPROD_ID
+		FROM
+		FIN_CASH_PLAN T1
+		WHERE
+		EXISTS(
+		SELECT
+		1
+		FROM
+		(
+		SELECT
+		CASH_ID,
+		FINPROD_ID ,
+		MIN(MDATE) MDATE
+		FROM
+		FIN_CASH_PLAN fcp2
+		GROUP BY
+		CASH_ID ,
+		FINPROD_ID)T2
+		WHERE
+		<![CDATA[T2.MDATE < #{dealDate,jdbcType=DATE}]]>
+		AND T2.CASH_ID = T1.CASH_ID
+		AND T2.FINPROD_ID = T1.FINPROD_ID
+		AND T2.MDATE = T1.MDATE)) TMAX ON
+		TMAX.FINPROD_ID = std.FINPROD_ID
+		<where>
+			<if test="dealDate != null">
+				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+			</if>
+			<if test="finprodIdList != null and finprodIdList.size() > 0">
+				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
+					#{finprodId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="busiType != null">
+				AND std.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			</if>
+			<if test="finprodTypes != null and finprodTypes.size() > 0">
+				<foreach collection="finprodTypes" item="finprodType" open="AND std.FINPROD_TYPE2 IN (" close=")" separator=",">
+					#{finprodType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="psList != null and psList.size() > 0">
+				<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
+					#{ps,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="finprodTypes != null and finprodTypes.size() > 0">
+				<foreach collection="finprodTypes" item="finprodType" open="AND std.FINPROD_TYPE2 IN (" close=")" separator=",">
+					#{finprodType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<!--回购存续期专用-->
+	<select id="listRepoSettleTransData" parameterType="java.util.Map"
+			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		SELECT
+		T1.TRADE_ID tradeId2,
+		T1.SHARE_AMT SHARE_NUM,
+		T1.PORTFOLIO_ID PORTFOLIO_ID,
+		T3.PORTFOLIO_ID,
+		T2.FINPROD_ID ,
+		T2.VDATE ,
+		T2.MDATE,
+		<include refid="settleTransDataSql"></include>
+		INNER JOIN TRD_PRODUCT_DEAL T1 ON
+		T1.F_TRADE_ID = std.CJBH
+		AND T1.SEAT_ID = std.SEAT_NUMBER
+		AND T1.VDATE = STD .TRADE_DATE
+		LEFT JOIN TRD_PRODUCT_DEAL_ADD T3 ON
+		T3.TRADE_ID = T1.TRADE_ID
+		LEFT JOIN FIN_TRADE_PRODUCT T2 ON
+		T2.FINPROD_ID = std.FINPROD_ID
+		<where>
+			<if test="dealDate != null">
+				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+			</if>
+			<if test="finprodIdList != null and finprodIdList.size() > 0">
+				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
+					#{finprodId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="busiType != null">
+				AND std.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			</if>
+			<if test="busiTypeList != null and busiTypeList.size() > 0">
+				<foreach collection="busiTypeList" item="busiType" open="AND std.BUSI_TYPE IN (" close=")" separator=",">
+					#{busiType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="psList != null and psList.size() > 0">
+				<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
+					#{ps,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="finprodTypes != null and finprodTypes.size() > 0">
+				<foreach collection="finprodTypes" item="finprodType" open="AND std.FINPROD_TYPE2 IN (" close=")" separator=",">
+					#{finprodType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
     <select id="selectSettleTransData" parameterType="java.util.Map"
             resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
 		SELECT
@@ -477,5 +637,21 @@
 				#{item}
 			</foreach>
 		</if>
+	</select>
+
+	<!--组合持仓-->
+	<select id="listPtlSecPosition" resultType="com.joyintech.tams.common.base.entity.PtlSecPosition">
+		SELECT
+			SEC_ACCT_ID,
+			FINPROD_ID,
+			PORTFOLIO_ID,
+			SUM(AMOUNT) AMOUNT
+		FROM
+			PTL_SEC_POSITION psp
+		WHERE psp.HODING_TYPE = '03' AND CDATE = #{dealDate,jdbcType=DATE}
+		GROUP BY
+			SEC_ACCT_ID,
+			FINPROD_ID,
+			PORTFOLIO_ID
 	</select>
 </mapper>
