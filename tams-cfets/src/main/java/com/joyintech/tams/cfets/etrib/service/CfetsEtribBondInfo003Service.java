@@ -832,7 +832,8 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                         if (yieldPriceInParameter.getNextExePrice() != null) {
                             yieldPriceOutParameter = yieldByPriceCalculator.calculate(
                                     yieldPriceInParameter);
-                            dto.setExerYield(yieldPriceOutParameter.getMatYield());
+                           // dto.setExerYield(yieldPriceOutParameter.getMatYield());
+                            dto.setExerYield(yieldPriceOutParameter.getExeYield());
                         }
                         else {
                             dto.setExerYield(null);
