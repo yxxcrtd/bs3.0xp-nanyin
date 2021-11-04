@@ -113,7 +113,7 @@
              WHERE T.SEQ_NO = #{totalSeqId}
     </select>
 
-    <select id="getRemainNum" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto">
+    <select id="getSettleTransTgMapping" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto">
             select
                 'N'    isTotalDeal,
                 <include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />
