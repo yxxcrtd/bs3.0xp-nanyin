@@ -3099,9 +3099,14 @@ public class EquityInfoValid {
                 // 投资者类别
                 message = checkHolderType(message, SysDataUtil.getZZDictCodeAndName(DictCode.投资者类别,
                         equityInfo001Dto.getHolderType()), type,spzMap,objFiledsMap,equityInfo001Dto);
-                // 投资者分类
-                message = checkHolderClassify(message, SysDataUtil.getZZDictCodeAndName(DictCode.投资者分类,
-                        equityInfo001Dto.getHolderClassify()), type,spzMap,objFiledsMap,equityInfo001Dto);
+                //添加系统参数三期是否校验投资者分类字段.01 验证字段,02不验证字段
+                String HolderClassify = CacheUtil.getSysParam("HAS_HOLDER_CLASSIFY");
+                if(StringUtil.isNotEmpty(HolderClassify)&&DictCodeList.是否_中债_是.getValue().equals(HolderClassify)){
+                    // 投资者分类
+                    message = checkHolderClassify(message, SysDataUtil.getZZDictCodeAndName(DictCode.投资者分类,
+                            equityInfo001Dto.getHolderClassify()), type,spzMap,objFiledsMap,equityInfo001Dto);
+                }
+
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message,
                         SysDataUtil.getZZDictCodeAndName(DictCode.个人证件类别,
