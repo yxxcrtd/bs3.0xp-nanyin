@@ -5,10 +5,8 @@ import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.ChbAssetInfoErrodataMapper;
-import com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs;
-import com.joyintech.tams.common.base.entity.ChbBotAstPositionSub;
-import com.joyintech.tams.common.base.entity.ChbPrdDeclareSub;
-import com.joyintech.tams.common.base.entity.ChbPrdIssueSub;
+import com.joyintech.tams.common.base.dao.ChbSalerStlDeaErrodataMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dao.CommonCodeCheckMapper;
@@ -137,6 +135,9 @@ public class CommonCodeCheckBatchService {
         // 资产要素错误信息集合
         List<ChbAssetInfoErrodataWithBLOBs> chbAssetInfoErrorList = new ArrayList<ChbAssetInfoErrodataWithBLOBs>();
 
+        // 资产要素错误信息集合
+        List<ChbSalerStlDeaErrodataWithBLOBs> chbSalerStlDeaErrodataList = new ArrayList<ChbSalerStlDeaErrodataWithBLOBs>();
+
         codeCheckCommonOnly(list, tableInfo);
 
         for (int i = list.size() - 1; i >= 0; i--){
@@ -163,11 +164,24 @@ public class CommonCodeCheckBatchService {
                     chbAssetInfoErrorList.add(chbAssetInfoErrodata);
                 }
             }
+
+            //销售数据反馈
+            if (StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02") && StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.销售结算资金交易信息表INFO.getTableName())){
+                // 记录销售数据信息表
+                ChbSalerStlDeaErrodataWithBLOBs ChbSalerStlDeaErrodata = createChbSalerStlDeaErrodata(map);
+                if(ChbSalerStlDeaErrodata != null) {
+                    chbSalerStlDeaErrodataList.add(ChbSalerStlDeaErrodata);
+                }
+            }
         }
 
 		//错误信息入库
         if (StringUtil.isEmptyList(chbAssetInfoErrorList)){
-            if(!erroList.isEmpty()){
+            // 销售错误信息表入库
+            if(!chbSalerStlDeaErrodataList.isEmpty()){
+                deleteChbSalerStlDeaErrodataByTradeNo(chbSalerStlDeaErrodataList);
+                insertChbSalerStlDeaErrodata(chbSalerStlDeaErrodataList);
+            }else if(!erroList.isEmpty()){
                 insertErroData(erroList);
             }
         }else{
@@ -176,6 +190,8 @@ public class CommonCodeCheckBatchService {
                 deleteAssetInfoErrorDataByAssetCode(chbAssetInfoErrorList);
                 insertChbAssetInfoErroData(chbAssetInfoErrorList);
             }
+
+
         }
 	}
 
@@ -1539,6 +1555,41 @@ public class CommonCodeCheckBatchService {
     }
 
     /**
+     * 批量插入销售错误信息表
+     * @param erroList 销售错误信息表
+     */
+    private void insertChbSalerStlDeaErrodata(List<ChbSalerStlDeaErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("销售数据信息表错误信息数据插入开始--------------" + new Date());
+            ChbSalerStlDeaErrodataMapper batchMapper = session.getMapper(ChbSalerStlDeaErrodataMapper.class);
+            for(ChbSalerStlDeaErrodataWithBLOBs single: erroList){
+                batchMapper.insert(single);
+                count ++;
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("销售数据信息表错误信息数据插入结束--------------" + new Date());
+    }
+
+
+    /**
      * 批量插入资产要素错误信息表
      * @param erroList 错误信息表
      */
@@ -1571,6 +1622,43 @@ public class CommonCodeCheckBatchService {
         }
         logger.debug("资产要素登记错误信息数据插入结束--------------" + new Date());
     }
+
+    /**
+     * 批量插入销售错误信息表
+     * @param erroList 销售错误信息表
+     */
+    private void deleteChbSalerStlDeaErrodataByTradeNo(List<ChbSalerStlDeaErrodataWithBLOBs> erroList) {
+        SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            int count = 0;
+            logger.debug("销售数据信息表错误信息数据删除开始--------------" + new Date());
+            CommonCodeCheckMapper batchMapper = session.getMapper(CommonCodeCheckMapper.class);
+            for(ChbSalerStlDeaErrodataWithBLOBs single: erroList){
+                if (StringUtil.isNotEmpty(single.getTradeNo())){
+                    batchMapper.deleteChbSalerStlDeaErrorDataByTradeNo(single.getTradeNo());
+                    count ++;
+                }
+                // 每20次提交
+                if (count % 20 == 0) {
+                    session.commit();
+                    // 清理缓存，防止溢出
+                    session.clearCache();
+                }
+            }
+            session.commit();
+            // 清理缓存，防止溢出
+            session.clearCache();
+        }
+        catch (Exception e) {
+            session.rollback();
+            logger.error("SQL执行异常：", e);
+        }
+        finally {
+            session.close();
+        }
+        logger.debug("销售数据信息表错误信息数据删除结束--------------" + new Date());
+    }
+
 
     /**
      * 批量插入资产要素错误信息表
@@ -1660,6 +1748,49 @@ public class CommonCodeCheckBatchService {
         errodata.setUpdateTime(new Date());
         return errodata;
     }
+
+    /**
+     * 根据错误消息创建需要入库的Dto
+     *
+     * @param map 数据
+     * @return 需要入库的Dto
+     */
+    public ChbSalerStlDeaErrodataWithBLOBs createChbSalerStlDeaErrodata(Map<String, String> map) {
+        String msg = map.get("ERRMSG");
+        if (StringUtil.isEmpty(msg)) {
+            return null;
+        }
+        // 拼装错误信息
+        ChbSalerStlDeaErrodataWithBLOBs chbSalerStlDeaErrodata = new ChbSalerStlDeaErrodataWithBLOBs();
+
+        // 提供销售结算资金服务机构代码
+        chbSalerStlDeaErrodata.setInstitutionCode(map.get("INSTITUTION_CODE"));
+        //产品登记编码
+        chbSalerStlDeaErrodata.setPrdRegistCode(map.get("PRD_REGIST_CODE"));
+        // 销售结算资金账号
+        chbSalerStlDeaErrodata.setAccountNo(map.get("ACCOUNT_NO"));
+        //销售结算资金流动方向
+        chbSalerStlDeaErrodata.setTradePs(map.get("TRADE_PS"));
+        // 销售结算资金交易流水号
+        chbSalerStlDeaErrodata.setTradeNo(map.get("TRADE_NO"));
+        //销售结算资金交易日期
+        chbSalerStlDeaErrodata.setTradeVdate(null!=map.get("TRADE_VDATE")&&DateUtil.isDateStr(map.get("TRADE_VDATE").toString())?DateUtil.parse(map.get("TRADE_VDATE").toString()):null);
+        // 拼接错误字段信息
+        Map<String, String> newMap = new HashMap<>(map);
+        newMap.remove("ERRMSG");
+        chbSalerStlDeaErrodata.setOrgData(JsonUtils.object2Json(newMap));
+        // 错误提示信息
+        chbSalerStlDeaErrodata.setErrMsg(msg);
+        // 数据状态
+        chbSalerStlDeaErrodata.setStatus("E");
+        chbSalerStlDeaErrodata.setCreateUser("system");
+        chbSalerStlDeaErrodata.setUpdateUser("system");
+        chbSalerStlDeaErrodata.setCreateTime(new Date());
+        chbSalerStlDeaErrodata.setUpdateTime(new Date());
+
+        return chbSalerStlDeaErrodata;
+    }
+
 
     /**
      * 根据错误消息创建需要入库的Dto

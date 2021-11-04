@@ -30,6 +30,7 @@ public enum ChbCheckTableInfo {
     个人产品申报登记INFO("CHB_PRD_DECLARE_INFO", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}, ""),
     底层资产持仓信息登记INFO("CHB_BOT_AST_POS", true, null, new String[] {"POS_DATE","ASSET_CODE","PLAN_ASSET_ID"}, ""),
 	从业人员登记表INFO("CHB_EMPLOYEE_INFO", true, "", new String[] {"EMPLOYEE_TYPE","IDENTIFY_NUMBER"}, ""),
+    销售结算资金交易信息表INFO("CHB_SALER_STL_DEAL_INFO", true, "TRADE_NO", new String[] {"INSTITUTION_CODE","TRADE_NO"}, ""),
 
 	/*杭州TMP*/
     募集总量登记TMP("CHB_PRD_RAISETOT_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE"}, "CHB_PRD_RAISETOT_SUB"),
