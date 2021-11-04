@@ -19,8 +19,10 @@
     <!-- 处理数据对象查询 -->
     <select id="selectNeedTotalDataList" resultType="com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherDto">
         select
-            SETTLE_TRANS_DATA.*
-            SETTLE_TRANS_DATA_STATUS.CHECK_RESULT
+            A.*,
+            B.TRADE_ID tradeIdAdd, B.REPO_TYPE, B.CON_PRICE, B.CON_AMT, B.CON_PRIN_AMT,
+            B.R_FINPROD_ID, B.SE_REP_DAY_TYPE,
+            C.CHECK_RESULT
         from
             SETTLE_TRANS_DATA A
                 left join SETTLE_TRANS_DATA_ADD B
