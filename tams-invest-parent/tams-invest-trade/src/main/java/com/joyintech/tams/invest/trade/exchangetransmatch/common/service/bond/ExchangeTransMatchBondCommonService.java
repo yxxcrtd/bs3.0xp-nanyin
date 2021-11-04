@@ -616,7 +616,7 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
      * @param
      * @return 前置交易编号
      */
-    protected String selectBTradeId(String applyNo, String ps) {
+    public String selectBTradeId(String applyNo, String ps) {
         Map<String, String> paraMap = new HashMap<>(2);
         paraMap.put("ps", ps);
         paraMap.put("tradeId", applyNo);

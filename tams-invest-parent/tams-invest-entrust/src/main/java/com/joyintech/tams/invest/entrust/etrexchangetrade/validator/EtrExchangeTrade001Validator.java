@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
+import com.joyintech.tams.common.base.entity.FinProductConvertible;
 import com.joyintech.tams.common.base.entity.WflEtrEntrust;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.SubEqutityDto;
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +70,9 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
      */
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;
-    
+
+	@Autowired
+	private FinProductConvertibleMapper finProductConvertibleMapper;
 	
 	List<ValidMessage> resultList = new ArrayList<ValidMessage>();
 	
@@ -359,6 +363,12 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				if (!StringUtils.equals(customerTypeTwo,DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())) {
 					errorList.add(new ValidMessage("stockId", getMessage("ETR_ERROR_0025",DictCodeListExt3.交易方向_债转股.getCodeName())));
 				}
+				// 验证转股起始日和委托终止日 fuyongsheng 20211103 add start
+				FinProductConvertible convertible = finProductConvertibleMapper.selectByPrimaryKey(dto.getFinprodId());
+				if(convertible != null && DateUtil.compareDate(convertible.getConVdate(),dto.getMdate())==1) {
+					errorList.add(new ValidMessage(this.getMessage("ETR_BTS_003")));
+				}
+				// 验证转股起始日和委托终止日 fuyongsheng 20211103 add end
 			}
 			
 			//正回购、质押券出库

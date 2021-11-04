@@ -77,6 +77,7 @@
             {field:'finprodId', visible:false},
             {field:'ps', visible:false},
             {field:'tradeMarket', visible:false},
+            {field:'seqId', visible:false},
             {field:'tradePlat', visible:false}
         ]
 
@@ -158,7 +159,7 @@
             }
         },
         cols:[
-            {field:'seqNo',visible:'false'},
+            {field:'seqId',visible:'false'},
             {field:'matchTypeStr', sortField:'matchType',width:200, title: 'ExchangeTransMatch001.matchType'},
             {field:'busiCode', sortField:'busiCode',width:200, title: 'ExchangeTransMatch001.busiCode'},
             {field:'tradeMarketStr', sortField:'tradeMarket',width:200, title: 'ExchangeTransMatch001.tradeMarket'},
@@ -195,10 +196,24 @@
             });
     });
 
+
+    /**
+     * 导出事件
+     */
+
+    var exportExcelQueDing = function() {
+        var paramObj = getPageParams();
+        Joyin.exportExcel('exportExcelQueDing', paramObj);
+    };
+
     /**
      * 画面加载完成
      */
     $(function() {
+
+        $('#ExchangeTransMatch001_btn_export').click(function() {
+            exportExcelQueDing();
+        });
 
         //成交数据查询
         $('#ExchangeTransMatch001_deal_btn_search').click(function () {
@@ -326,8 +341,10 @@
                                 }
                                 //股票
                                 else if(object.finprodType2 == FINPROD_TYPE_TG_F10) {
-                                    lable = "TrdStock002";
-                                    url = "invest/trade/stockdeal/TrdStock002/init";
+                                    if(object.ps == PS_T01 || object.ps == PS_T02 || object.ps == PS_T46 || object.ps == PS_T47|| object.ps == PS_T48 ) {
+                                        lable = "TrdStock002";
+                                        url = "invest/trade/stockdeal/TrdStock002/init";
+                                    }
                                 }
 
                                 Joyin.dialog(JoyinUtil.getLabel(lable), basePath
@@ -345,22 +362,45 @@
             }
         });
 
-        //委托交易数据-匹配查询
-        $('#ExchangeTransMatch001_entrust_btn_match_search').click(function () {
+        // //委托交易数据-匹配查询
+        // $('#ExchangeTransMatch001_entrust_btn_match_search').click(function () {
+        //
+        // });
+        //
+        // //委托交易数据-成交匹配
+        // $('#ExchangeTransMatch001_entrust_btn_transaction_macth').click(function () {
+        //
+        // });
 
-        });
-
-        //委托交易数据-成交匹配
-        $('#ExchangeTransMatch001_entrust_btn_transaction_macth').click(function () {
-
-        });
-
-        //匹配查询-提交
-        $('#TrdMatchInfo_btn_submit').click(function () {
-        });
+        // //匹配查询-提交
+        // $('#TrdMatchInfo_btn_submit').click(function () {
+        // });
 
         //匹配查询-取消匹配
         $('#TrdMatchInfo_btn_quit').click(function () {
+            var object = {};
+            if(transMatchInfoTable) {
+                var selArr = transMatchInfoTable.getAllCheckedRows();
+                if (!selArr || selArr.length == 0) {
+                    Joyin.error(JoyinUtil.getMessage("TRDFUND_E_XXT_001"));
+                    return;
+                }
+
+                for(var i=0;i<selArr.length;i++) {
+                    var item = selArr[i];
+                    if(item.matchType == TRD_MATCH_TYPE_0) {
+                        Joyin.error("自动匹配的记录不可以取消匹配！");
+                        return;
+                    }
+                }
+                object.selectItem = selArr;
+                Joyin.confirm("请确认是否取消成交匹配?", function() {
+                    Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/revokeTransactionMacth'),object,function (result) {
+
+                    });
+                });
+
+            }
 
         });
 

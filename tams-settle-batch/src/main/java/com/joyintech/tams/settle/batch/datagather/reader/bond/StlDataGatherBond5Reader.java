@@ -22,4 +22,9 @@ public class StlDataGatherBond5Reader extends StlDataGatherBondBaseReader {
     protected List<String> getPSList() {
         return Arrays.asList(DictCodeListExt3.交易方向_配债.getValue());
     }
+
+    @Override
+    protected boolean isCreateTrade(){
+        return false;
+    }
 }

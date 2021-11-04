@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
+import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.trade.common.controller.TrdCommonController;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
@@ -200,6 +201,10 @@ public class TrdFundInvestTrade002Controller extends BaseController {
         String tradeId = this.getParam("tradeId");
         String status = this.getParam("validStatus");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+
+        //获取成交匹配录单
+        String tranRecord = this.getParam("tranRecord");
+
         if (StringUtil.isNotEmpty(tradeId)) {
             // 双击查看反显流程中的数据
             if (StringUtil.equals(status, DictCodeListExt1.交易流程状态_流程中.getValue())) {
@@ -265,6 +270,10 @@ public class TrdFundInvestTrade002Controller extends BaseController {
             model.addAttribute("parentPageId", dto.getParentPageId());
             PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
             // add by yeming 20210910 场内场外拆分 end
+        }
+        //成交匹配录单
+        else if(StringUtil.isNotEmpty(tranRecord)) {
+            dto = JsonUtils.json2Object(tranRecord, TrdFundInvestTradeDto.class);
         }
         else {
             String entrustId = this.getParam("entrustId");

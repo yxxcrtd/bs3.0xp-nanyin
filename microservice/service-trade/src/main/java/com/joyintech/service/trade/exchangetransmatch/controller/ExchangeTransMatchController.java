@@ -4,13 +4,11 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto;
-import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch005Dto;
-import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch006Dto;
+import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch004Dto;
 import com.joyintech.service.trade.exchangetransmatch.service.ExchangeTransMatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -32,6 +30,12 @@ public class ExchangeTransMatchController {
     @PostMapping("findPage/{page}/{length}")
     public Page<ExchangeTransMatch002Dto> findPage(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length) {
         return exchangeTransMatchService.findPage(map,page, length);
+    }
+
+    @ResponseBody
+    @PostMapping("findTransMatchInfoPage/{page}/{length}")
+    public Page<ExchangeTransMatch004Dto> findTransMatchInfoPage(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length) {
+        return exchangeTransMatchService.findTransMatchInfoPage(map,page, length);
     }
 
     /**
@@ -114,15 +118,4 @@ public class ExchangeTransMatchController {
         return exchangeTransMatchService.getDealId(map,page, length);
     }
 
-    @ResponseBody
-    @PostMapping("findEntrustList")
-    public List<ExchangeTransMatch005Dto> findEntrustList(@RequestBody String seqNo){
-        return  exchangeTransMatchService.findEntrustList(seqNo);
-    }
-
-    @ResponseBody
-    @PostMapping("findDealList")
-    public List<ExchangeTransMatch006Dto> findDealList(@RequestBody String seqNo){
-        return  exchangeTransMatchService.findDealList(seqNo);
-    }
 }

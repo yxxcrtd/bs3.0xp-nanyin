@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
@@ -27,15 +28,8 @@ import java.util.List;
 @Service
 public class ExchangeTransMatchRepo1Service extends ExchangeTransMatchRepoCommonService {
 
-	@Override
-	public BaseTradeProductDealDto genFinProductTradeDto(ExchangeTransMatchCommonDto settleTransData, ExchangeTransMatchCommonEntrustDto entrustDto) {
-		BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
-		TrdProductDealDto trdProductDeal=setTrdProductDeal(settleTransData);
-		baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
-		baseTradeProductDealDto.setStlPayOrdersList(generateStlPayOrdersList(Arrays.asList(trdProductDeal),settleTransData));
-		return baseTradeProductDealDto;
-	}
-	private TrdProductDealDto setTrdProductDeal(ExchangeTransMatchCommonDto settleTransData) {
+
+	private TrdProductDealDto createDeal(ExchangeTransMatchCommonDto settleTransData) {
 			// 创建交易信息
             TrdProductDealDto trdProductDeal = createProductDeal(settleTransData);
             // 金融产品代码
@@ -91,21 +85,16 @@ public class ExchangeTransMatchRepo1Service extends ExchangeTransMatchRepoCommon
 	}
 
 
-	protected List<StlPayOrdersDto> generateStlPayOrdersList(List<TrdProductDealDto> dealList, ExchangeTransMatchCommonDto settleTransDataDto) {
-		List<StlPayOrdersDto> payOrdersList = new ArrayList<>(dealList.size());
-		if(CollectionUtils.isNotEmpty(dealList)) {
-			dealList.forEach(dealDto -> {
-				StlPayOrdersDto stlPayOrders = createStlPayOrders(dealDto);
-				// 收付方向
-				if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(), dealDto.getFinprodType2())) {
-					stlPayOrders.setPs(DictCodeListExt1.收付方向_支出.getValue());
-				}
-				else {
-					stlPayOrders.setPs(DictCodeList.收付方向_收入.getValue());
-				}
-				payOrdersList.add(stlPayOrders);
-			});
+	public List<StlPayOrdersDto> generateStlPayOrdersList(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
+		List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<>();
+		StlPayOrdersDto stlPayOsrdersDto = createStlPayOrders(dealDto, entrustDto, trdProductDeal);
+		// 收付方向
+		if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(), dealDto.getFinprodType2())) {
+			stlPayOsrdersDto.setPs(DictCodeListExt1.收付方向_支出.getValue());
+		} else {
+			stlPayOsrdersDto.setPs(DictCodeList.收付方向_收入.getValue());
 		}
-		return payOrdersList;
-	    }
+		stlPayOrdersList.add(stlPayOsrdersDto);
+		return stlPayOrdersList;
+	}
 	}

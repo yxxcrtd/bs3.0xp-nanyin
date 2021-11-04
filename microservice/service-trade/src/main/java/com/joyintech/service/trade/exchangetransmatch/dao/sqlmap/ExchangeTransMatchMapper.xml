@@ -179,7 +179,7 @@
                 AND A1.TRADE_DATE = TO_DATE(#{dealDate}, 'yyyy-mm-dd')
             </if>
             <if test="secAccount!=null and secAccount!='' ">
-                AND D1.SEC_ACCT_ID = TO_DATE(#{secAcct}, 'yyyy-mm-dd')
+                AND D1.SEC_ACCT_ID = #{secAccount}
             </if>
     </select>
 
@@ -203,6 +203,15 @@
     </select>
 
     <select id="getBusiCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select
+               T.ENTRUST_ID id,
+               T.ENTRUST_ID text
+          from ETR_ENTRUST T
+        <where>
+            <if test="search != null and search != ''">
+                and A.APPLY_TRADE_ID like concat(concat('%',#{search}),'%')
+            </if>
+        </where>
     </select>
 
     <select id="getApplyNo" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -320,4 +329,86 @@
                            on p1.PORTFOLIO_ID=s3.PORTFOLIO_ID
         WHERE s1.SEQ_NO=#{seqNo}
     </select>
+    <select id="findTransMatchInfoPage" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch004Dto">
+        select  A.SEQ_NO seqId,
+        A.MATCH_CLASS matchType,
+        A.ENTRUNST_TRADE_ID busiCode,
+        C.TRADE_MARKET tradeMarket,
+        C.APPLY_TRADE_ID applyTradeId,
+        D.PORTFOLIO_ID portfolioId,
+        C.SEC_TYPE finprodType2,
+        CASE
+        WHEN C.SEC_TYPE = #{SEC_TYPE_09} THEN NULL
+        ELSE
+        E.FINPROD_ID END finprodId,
+        C.PS ps,
+        A.MARCH_AMT_EN tradeAmt,
+        A.MARCH_QTY_EN tradeNum,
+        C.TRADE_AMT_RAW tradePrice,
+        C.CCY ccy
+        from SETTLE_TRANS_DATA_TOTAL_MATCH A
+        INNER JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B
+        ON A.SEQ_NO = B.SEQ_NO
+        AND B.MATCH_STATUS IN ('02','03')
+        INNER JOIN SETTLE_TRANS_DATA_TOTAL C
+        ON A.SEQ_NO = C.SEQ_ID
+        LEFT JOIN ETR_ENTRUST D
+        ON D.ENTRUST_ID = A.ENTRUNST_TRADE_ID
+        LEFT JOIN FIN_PRODUCT E
+        ON E.FINPROD_ID = C.FINPROD_ID
+        <where>
+            <if test="trdMatchType!=null and trdMatchType!='' ">
+                AND A.MATCH_CLASS = #{trdMatchType}
+            </if>
+            <!--            <if test="applyNo!=null and applyNo!='' ">-->
+            <!--                AND C.APPLY_TRADE_ID = #{applyNo}-->
+            <!--            </if>-->
+            <if test="applyNoList!=null and applyNoList.size()>0 ">
+                AND (C.APPLY_TRADE_ID IN
+                <foreach item="item" index="index" collection="applyNoList" open="(" close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) or C.APPLY_TRADE_ID in (
+                    </if>
+                    #{item}
+                </foreach>)
+            </if>
+            <if test="tradeMarket!=null and tradeMarket!='' ">
+                AND C.TRADE_MARKET = #{tradeMarket}
+            </if>
+            <if test="portfolioId!=null and portfolioId!='' ">
+                AND D.PORTFOLIO_ID = #{portfolioId}
+            </if>
+            <if test="busiCode!=null and busiCode!='' ">
+                AND A.ENTRUNST_TRADE_ID = #{busiCode}
+            </if>
+            <if test="secAcctNo!=null and secAcctNo!='' ">
+                AND C.SEC_ACCT_ID = #{secAcctNo}
+            </if>
+            <if test="ps!=null and ps!='' ">
+                AND C.PS = #{ps}
+            </if>
+            <if test="tradeDateBegin != null and tradeDateBegin != ''">
+                <![CDATA[ AND A.TRADE_DATE  >= to_date(#{tradeDateBegin},'yyyy-mm-dd') ]]>
+            </if>
+            <if test="tradeDateEnd != null and tradeDateEnd != ''">
+                <![CDATA[ AND A.TRADE_DATE  <= to_date(#{tradeDateEnd},'yyyy-mm-dd') ]]>
+            </if>
+            <if test="finprodId!=null and finprodId!='' ">
+                AND E.FINPROD_MARKET_ID = #{finprodId}
+            </if>
+            <if test="finprodType2!=null and finprodType2!='' ">
+                AND C.SEC_TYPE = #{SEC_TYPE_01}
+            </if>
+            <if test="finprodType2!=null and finprodType2!='' ">
+                AND C.SEC_TYPE = #{SEC_TYPE_02}
+            </if>
+            <if test="finprodType2!=null and finprodType2!='' ">
+                AND C.SEC_TYPE = #{SEC_TYPE_06}
+            </if>
+            <if test="finprodType2!=null and finprodType2!='' ">
+                AND C.SEC_TYPE = #{SEC_TYPE_09}
+            </if>
+        </where>
+    </select>
+
 </mapper>

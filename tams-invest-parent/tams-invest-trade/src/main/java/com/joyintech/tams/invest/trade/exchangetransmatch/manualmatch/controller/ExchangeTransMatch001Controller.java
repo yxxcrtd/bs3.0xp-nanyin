@@ -1,4 +1,5 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.controller;
+import com.joyintech.tams.invest.trade.cstptrdmatchinfo.service.CstpTrdMatchInfoService;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
@@ -15,6 +16,7 @@ import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.service.Ex
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +39,9 @@ public class ExchangeTransMatch001Controller  extends BaseController {
      */
     @Autowired
     private ExchangeTransMatch001Service exchangeTransMatch001Service;
+
+    @Autowired
+    private CstpTrdMatchInfoService cstpTrdMatchInfoService;
     /**
      * 初始化方法
      * {@inheritDoc}
@@ -63,8 +68,28 @@ public class ExchangeTransMatch001Controller  extends BaseController {
         model.addAttribute("PS_T48", DictCodeListExt2.交易方向_新股中签.getValue());
         model.addAttribute("PS_T47", DictCodeListExt2.交易方向_增发.getValue());
         model.addAttribute("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
+
+        model.addAttribute("TRD_MATCH_TYPE_0", DictCodeListExt3.下行交易匹配类型_自动匹配.getValue());
+        model.addAttribute("TRD_MATCH_TYPE_1", DictCodeListExt3.下行交易匹配类型_手动匹配.getValue());
+
         return super.init(model);
     }
+
+    /**
+     * 画面导出功能实现
+     *
+     * @return ResponseEntity 确认的实体类
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("exportExcelQueDing")
+    public ResponseEntity<byte[]> exportExcelQueDing()
+    {
+        return exchangeTransMatch001Service.export(this.getPageId(),
+                RequestUtil.getParameters(getRequest()));
+    }
+
 
     /**
      * 获取资产代码下拉框
@@ -208,6 +233,23 @@ public class ExchangeTransMatch001Controller  extends BaseController {
     @RequestMapping("genTransactionRecord")
     public String genTransactionRecord(@RequestBody ExchangeTransMatch002Dto dto) {
         return exchangeTransMatch001Service.genTransactionRecord(dto);
+    }
+
+    /**
+     * 成交匹配
+     * @param dto
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("revokeTransactionMacth")
+    public AjaxResult revokeTransactionMacth(@RequestBody ExchangeTransMatch004Dto dto){
+        try {
+            exchangeTransMatch001Service.revokeTransactionMacth(dto);
+        } catch (Exception e) {
+            logger.error("取消成交匹配失败"+e.getMessage());
+            return new AjaxResult("取消成交匹配失败", MessageType.错误消息);
+        }
+        return new AjaxResult("取消成交匹配成功",MessageType.提示消息);
     }
 
 }

@@ -11,6 +11,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseFinProductCashInputDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
+import com.joyintech.tams.settle.batch.datagather.dto.*;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +47,6 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper;
-import com.joyintech.tams.settle.batch.datagather.dto.BondTradeDealParam;
-import com.joyintech.tams.settle.batch.datagather.dto.FinTradeProductDto;
-import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeWriteDto;
-import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
-import com.joyintech.tams.settle.batch.datagather.dto.TotalTrdProductDealDto;
-import com.joyintech.tams.settle.batch.datagather.dto.TrdProductDealDto;
 import com.joyintech.tams.settle.common.dto.FundInfoDto;
 import com.joyintech.tams.settle.common.service.SettleCommonService;
 
@@ -234,17 +229,6 @@ public class StlDataGatherService {
         }
         else {
             restTemplate.postForObject(tamsSerever + "/invest/trade/api/execute", param, Map.class);
-        }
-
-    }
-
-    public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList) {
-        // 调用债券交易计算逻辑
-        if(isSingle) {
-            simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionMacthBatch", dtoList, Map.class);
-        }
-        else {
-            restTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionMacthBatch", dtoList, Map.class);
         }
 
     }
@@ -966,5 +950,24 @@ public class StlDataGatherService {
         回购利息 = ArithmeticUtil.divide(回购利息, BigDecimal.valueOf(num_计息基础), 2);
 
         return 回购利息;
+    }
+
+    public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList) {
+        // 调用债券交易计算逻辑
+        if(isSingle) {
+            simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionMacthBatch", dtoList, Map.class);
+        }
+        else {
+            restTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionMacthBatch", dtoList, Map.class);
+        }
+
+    }
+
+    public List<SettleTransDataDto> listBondSettleTransData(Map<String, Object> paraMap){
+        return stlDataGatherMapper.listBondSettleTransData(paraMap);
+    }
+
+    public List<SettleTransDataDto> listRepoSettleTransData(Map<String, Object> paraMap){
+        return stlDataGatherMapper.listRepoSettleTransData(paraMap);
     }
 }

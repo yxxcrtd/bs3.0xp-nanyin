@@ -406,6 +406,8 @@ public class StlDataDealProcessConstant {
 	public static final String SJSJG_YWLB_EFSY = "EFSY";
 	// 业务类别：现金分红
 	public static final String SJSJG_YWLB_QPPX = "QPPX";
+	// 业务类别：债券兑付
+	public static final String SJSJG_YWLB_QPDF = "QPDF";
 	// 业务类别：红股/转增股到账
 	public static final String SJSJG_YWLB_QPHG = "QPHG";
 	// 业务类别：零碎股转现金

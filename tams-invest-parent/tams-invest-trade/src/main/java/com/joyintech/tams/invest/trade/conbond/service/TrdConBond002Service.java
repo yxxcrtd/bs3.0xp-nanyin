@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.tams.invest.common.component.base.entrust.dto.BaseEtrFinishAmtDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,6 +206,9 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
      */
     @Autowired
     private BaseEtrInvestInfoServiceImpl etrInvestInfoServiceImpl;
+
+    @Autowired
+    private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
     
 
     /**
@@ -994,7 +998,10 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
                 }
             }
 
-           
+            //成交录单---调用共通
+            if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
+                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),trdFinProductDealTotal.getTotleTradeId(),operationType);
+            }
         }
         // 撤销
         else {
@@ -1069,7 +1076,11 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
             investInterfCommDto.setStlPayOrders(stlPayOrders);
             investInterfCommService.doInvestInterf(investInterfCommDto);
             // 调用投管接口 add by renping 20190205 end
-        
+
+            //成交录单---调用共通
+            if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
+                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),operationType);
+            }
         }
         //        调用接口  add by zhangpuyu 2019/12/6 start
         try {
