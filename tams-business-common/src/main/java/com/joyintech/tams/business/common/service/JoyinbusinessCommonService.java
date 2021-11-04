@@ -2,6 +2,7 @@ package com.joyintech.tams.business.common.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -12,6 +13,7 @@ import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -80,7 +82,13 @@ public class JoyinbusinessCommonService extends BaseService {
     public Page<SelectOptionDto> selectPortfolioIdList(CfetsSearchInfoRequest dto) {
         Map<String, Object> param =new HashMap<>();
         param.put("search",dto.getSearch());
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.selectPortfolioIdList(param));
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        if (StringUtils.isNotEmpty(userId)) {
+            param.put("userId", SecurityUtil.getLoginUser().getUserName());
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.selectPortfolioIdList(param));
+        }else{
+            return null;
+        }
     }
     public Page<SelectOptionDto> getManager(CfetsSearchInfoRequest dto) {
         Map<String, Object> param = new HashMap<String, Object>();

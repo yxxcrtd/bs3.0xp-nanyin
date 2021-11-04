@@ -127,6 +127,11 @@
         FROM PTL_PORTFOLIO A
         LEFT JOIN PA_PTL_PORTFOLIO B
         ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
+        INNER JOIN PTL_PORTFOLIO_AUTHORITY PPA
+        ON A.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>
         <where>
             <if test="search != null and search != ''">
                 (A.PORTFOLIO_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
