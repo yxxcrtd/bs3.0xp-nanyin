@@ -429,6 +429,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 DictCodeList.清算速度_T_1.getValue())) {
             pageParam.put("settleSpeed","1");
         }
+        pageParam.put("sort",dto.getPageMode().getSort());
+        pageParam.put("direction",dto.getPageMode().getDirection());
         String userId = SecurityUtil.getLoginUser().getUserName();
         if (StringUtils.isNotEmpty(userId)) {
             pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());

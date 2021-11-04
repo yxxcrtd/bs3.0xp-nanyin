@@ -830,7 +830,7 @@ from
     <!-- 指令管理查询 -->
     <select id="findEtrinfoPage" parameterType="Map"
             resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbfindEtrinfoResponse">
-        select aaa.* from (
+        select * from (select aaa.* from (
         <choose>
             <when test="search == '有效'">
                 <!-- 有效状态查询 -->
@@ -848,7 +848,11 @@ from
         left join SYS_DATADICT_LIST dictpriceModel on aaa.priceModel=dictpriceModel.ITEM_CODE and dictpriceModel.DICT_CODE='PRICE_MODEL'
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
-        order by sdl.ORDER_NO, aaa.entrustId DESC
+        order by sdl.ORDER_NO, aaa.entrustId DESC)
+        <!--前端传入排序字段-->
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
+            order by ${sort} ${direction}
+        </if>
     </select>
     <sql id="onlyEtrEntrust">
         select
