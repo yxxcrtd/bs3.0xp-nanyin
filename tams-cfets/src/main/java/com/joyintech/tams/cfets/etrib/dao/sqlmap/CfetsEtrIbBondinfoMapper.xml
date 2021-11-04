@@ -1051,11 +1051,16 @@ from
     <sql id="vagueQueryWhere">
         <if test="search != null and search != '' and search !='有效' ">
             <where>
-                aaa.entrustId || '|' || sdl.ITEM_VALUE || '|' || aaa.invManagerId || '|' || aaa.portfolioId || '|' || aaa.portfolioName
-                || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr || '|' || aaa.secType1 || '|' || dictps.ITEM_VALUE || '|' || aaa.shareNum || '|' || dictpriceModel.ITEM_VALUE
-                || '|' || aaa.unitPrice || '|' || aaa.allPrice || '|' || aaa.matureYield || '|' || aaa.exerYield || '|T+' || aaa.settleSpreed
-                || '|' || aaa.etrDate || '|' || aaa.REMARK || '|'
-                like '%' || #{search} || '%'
+                ((aaa.effectiveStatusName || '|' || sdl.ITEM_VALUE || '|' || aaa.portfolioId || '|' || aaa.portfolioName
+                || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr || '|' || aaa.secType1 || '|' || dictps.ITEM_VALUE
+                || '|T+' || aaa.settleSpreed || '|' || dictpriceModel.ITEM_VALUE   || '|' || aaa.invManagerId
+                || '|' || aaa.entrustId || '|' || approver || '|' || aaa.REMARK
+                like '%' || #{search} || '%')
+                or  aaa.shareNum||'' =#{search} or  aaa.unitPrice||'' =#{search}
+                or  aaa.allPrice||'' =#{search} or  aaa.matureYield||'' =#{search}
+                or  aaa.exerYield||'' =#{search} or  aaa.etrDate||'' =#{search}
+                or  aaa.execProcess||'' =#{search} or  aaa.transProcess||'' =#{search}
+                )
             </where>
         </if>
     </sql>
