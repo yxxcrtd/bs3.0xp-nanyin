@@ -15,7 +15,10 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
+import com.joyintech.tams.common.base.dao.EtrEntrustPledgeMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductAddMapper;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.common.base.entity.FinTradeProductAdd;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -26,6 +29,7 @@ import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.dao.BussRepoSecMapper;
 import com.joyintech.tams.invest.common.trade.dto.PledgeInsertDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 质押劵管理共通组件-微服务Service
@@ -58,6 +63,12 @@ public class BussRepoSecService extends BaseService<PledgeBondInfoDto>{
     private MapperDelegateService mapperDelegateService;
     @Autowired
     private FinTradeProductAddMapper finTradeProductAddMapper;
+
+    @Autowired
+    private EtrEntrustPledgeMapper etrEntrustPledgeMapper;
+
+    @Autowired
+    private EtrEntrustAddMapper etrEntrustAddMapper;
 
     /**
      * 债券代码：下拉框
@@ -302,6 +313,14 @@ public class BussRepoSecService extends BaseService<PledgeBondInfoDto>{
             params.put("tradeMarket",tradeMarket);
             resultList = this.queryForPage(page,length,() -> bussRepoSecMapper.selectAvaPledgeBondDetailListAntiRepo(params));
             //resultList = bussRepoSecMapper.selectAvaPledgeBondDetailListAntiRepo(params);
+        }
+        if(StringUtil.isNotEmpty(resultList) && params.get("pageFromTz") != null && (StringUtils.equals(params.get("pageFromTz").toString(),"CfetsRepoDealQuotedPrice002"))){
+             if(params.get("entrustId") != null) {
+                 EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(params.get("entrustId").toString());
+                 List<String> finprodIdList =  bussRepoSecMapper.selectFinprodIdByPledge(etrEntrustAdd.getPledgeStockId());
+                 List<PledgeBondInfoDto> rootList =resultList.getRoot().stream().filter(item->finprodIdList.contains(item.getFinprodId())).collect(Collectors.toList());
+                 resultList.setRoot(rootList);
+             }
         }
         return resultList;
     }

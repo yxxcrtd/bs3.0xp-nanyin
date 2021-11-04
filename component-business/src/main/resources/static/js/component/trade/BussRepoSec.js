@@ -186,6 +186,7 @@
      * 添加按钮按下处理
      */
     var addProcess = function () {
+        entrustId =  getElementById("entrustId").val();
         //CFET质押式回购check
         if(getElementById("pageFrom").val() == 'CfetsRepoDealQuotedPrice002'){
             var data = $.serializeToObject('#CfetsRepoDealQuotedPrice002_submitForm');
@@ -208,6 +209,9 @@
             if(!data.price){
                 Joyin.error(JoyinUtil.getMessage("CFETS_COMMON_E_028"));
                 return;
+            }
+            if (!entrustId && data.entrustId){
+                entrustId = data.entrustId;
             }
         }
         Joyin.ajaxJson(basePath + 'component/trade/BussRepoSec/check',
@@ -232,7 +236,7 @@
                         repoType: param.data.repoType,
                         tradeMarket: $("#"+tradeMarketId).val(),
                         //add by gaopeng 2019/10/12 start
-                        entrustId:getElementById("entrustId").val(),
+                        entrustId:entrustId,
                         //add by gaopeng 2019/10/12 end
                         entity: JSON.stringify(entity),
                         entityName: entityNameBussRepoSec,
