@@ -332,7 +332,7 @@
 			<if test="ccy !=null and ccy != ''">
 				AND PF.CCY =  #{ccy}
 			</if>
-		WHERE 1=1 and PF.PORTFOLIO_ID = #{subPortfolioId,jdbcType=VARCHAR}
+		WHERE 1=1 and PC.PORTFOLIO_ID = #{subPortfolioId,jdbcType=VARCHAR}
 		GROUP BY PC.PORTFOLIO_ID,PC.CCY
 	</select>
 	
