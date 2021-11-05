@@ -173,16 +173,16 @@
                 AND A1.PS = #{ps}
             </if>
             <if test="tradeDateBegin!=null and tradeDateBegin!='' ">
-                AND <![CDATA[ A1.TRADE_DATE >= TO_DATE(#{tradeDateBegin}, 'yyyy-mm-dd') ]]>
+                AND <![CDATA[ A1.ENTRUST_DATE >= TO_DATE(#{tradeDateBegin}, 'yyyy-mm-dd') ]]>
             </if>
             <if test="tradeDateEnd!=null and tradeDateEnd!='' ">
-                AND <![CDATA[ A1.TRADE_DATE <= TO_DATE(#{tradeDateEnd}, 'yyyy-mm-dd') ]]>
+                AND <![CDATA[ A1.ENTRUST_DATE <= TO_DATE(#{tradeDateEnd}, 'yyyy-mm-dd') ]]>
             </if>
             <if test="tradePlat!=null and tradePlat!='' ">
                 AND A1.TRADE_PLAT = #{tradePlat}
             </if>
             <if test="dealDate!=null and dealDate!='' ">
-                AND A1.TRADE_DATE = TO_DATE(#{dealDate}, 'yyyy-mm-dd')
+                AND A1.ENTRUST_DATE = TO_DATE(#{dealDate}, 'yyyy-mm-dd')
             </if>
             <if test="secAccount!=null and secAccount!='' ">
                 AND D1.SEC_ACCT_ID = #{secAccount}
