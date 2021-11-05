@@ -469,6 +469,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
     private String handleFinProductTradeDto(ExchangeTransMatchCommonDto dto,ExchangeTransMatchCommonEntrustDto commonEntrustDto){
         logger.error("处理业务交易表---开始");
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
+        finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
         List<BaseTradeProductDealDto> baseTradeProductDealDtos = new ArrayList<>();
         finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
 
@@ -683,6 +684,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
             else {
                 param.setTradeIdList(tradeIdList);
             }
+            param.setStatus(DictCodeListExt1.交易流程状态_撤销.getValue());
             param.setUpdateUser(GlobalConstant.SYSTEM_USER);
             param.setRevokeReason("取消成交匹配");
 

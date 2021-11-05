@@ -146,6 +146,8 @@ public class ExchangeTransMatchService extends BaseService {
      * @return
      */
     public Page<SelectOptionDto> getDealId(Map<String, Object> map, int page, int length) {
+        map.put("TRD_MATCH_STATUS_01",DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
+        map.put("TRD_MATCH_STATUS_02",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getDealId(map));
     }
 
