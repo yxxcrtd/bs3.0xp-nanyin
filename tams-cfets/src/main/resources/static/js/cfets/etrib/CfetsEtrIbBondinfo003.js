@@ -327,7 +327,17 @@
         var object = $.serializeToObject("#searchForm");
         return object;
     }
-
+    function getBussCombDistribtTableParams() {
+       var entityBussCombDistritList=entity_BussCombDistribtList||[];
+       if (entityBussCombDistritList.length > 0) {
+           for (var index in entityBussCombDistritList) {
+               entityBussCombDistritList[index].entrustNum = entityBussCombDistritList[index].entrustNum/10000;
+               entityBussCombDistritList[index].entrustOwnNum = entityBussCombDistritList[index].entrustOwnNum/10000;
+               entityBussCombDistritList[index].entrustIntegrateNum = entityBussCombDistritList[index].entrustIntegrateNum/10000;
+           }
+       }
+       return entityBussCombDistritList;
+    }
     var colsCombDistribt = [
         {
             /* 组合代码 */
@@ -433,7 +443,7 @@
     ]
 
     var table = query("#bussCombDistribtTable").joyintable({
-        data:entity_BussCombDistribtList||[],
+        data:getBussCombDistribtTableParams(),
         cols: colsCombDistribt,
         page: true,
         addToLast: true,
@@ -516,7 +526,7 @@
         }
     ]
 
-    var table = query("#riskTrialRetTable").joyintable({
+    var tableRisk = query("#riskTrialRetTable").joyintable({
         data:entity_RiskTrialRetList||[],
         cols: colsRiskTrialRet,
         page: true,
@@ -557,56 +567,13 @@
             layui.form.render('radio');
 
         }
-        if (pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) {
-           // $('#EtribBondInfo003_btn_reset').css('display', 'none');
-        }
-        if (todoList == false) {
-       //     $('#EtribBondInfo003_btn_fileupload').css('display', 'none');
-         //   $('#EtribBondInfo003_btn_riskcal').css('display', 'none');
-        } else {
-            /*if (query('#priceModel').val() == PRICEMODEL_03) {
-                // 净价置灰不可填
-                query('#price').val('').attr('disabled', true);
-                query('#price').removeAttr("required");
-                // 全价置灰不可填
-                query('#fpriceAmt').val('').attr('disabled', true);
+        var restTradeAmt = query("#tradeAmt").val()==null?0:query("#tradeAmt").val();
+        query("#tradeAmt").val(restTradeAmt/10000).trigger("change");
+        var restEntrustOwnNum=query("#entrustOwnNum").val()==null?0:query("#entrustOwnNum").val();
+        query("#entrustOwnNum").val(restEntrustOwnNum/10000).trigger("change");
+        var restEntrustIntegrateNum=query("#entrustIntegrateNum").val()==null?0:query("#entrustIntegrateNum").val();
+        query("#entrustIntegrateNum").val(restEntrustIntegrateNum/10000).trigger("change");
 
-                // 到期收益率
-                query('#matureYield').val('').attr('disabled', true);
-
-                // 行权收益率
-                query('#exerYield').val('').attr('disabled', true);
-
-            } else {
-                // 净价必填
-                query('#price').attr('disabled', false);
-                query('#price').attr("required", "true");
-                // 全价 可填
-                query('#fpriceAmt').attr('disabled', false);
-
-                query('#matureYield').attr('disabled', false);
-
-                doOther.exerYield_setDisabled(false);
-            }*/
-        }
-    // var entityBussCombDistritList=entity_BussCombDistribtList||[];
-   // var rowsData = table.getAllRows();
-   /* if (entityBussCombDistritList.length > 0) {
-      for (var index in entityBussCombDistritList) {
-        entityBussCombDistritList[index].entrustNum = result.entrustNum/10000;
-        //table.reload({data: rowsData});
-      }
-    }*/
-/*      if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
-                                //质押券反显万元为单位
-                                var obj = [];
-                                $.each(result.pledgeBondInfoDtoList,function (index,item) {
-                                    item.avaPledgePrin = item.avaPledgePrin/10000;
-                                    item.pledgePrin = item.pledgePrin/10000;
-                                    obj.push(item);
-                                });
-                                window.BussRepoSec["bussRepoSec"].reloadPledgeBond(obj);
-      }*/
         businessId = query('#businessId').val();
     }
 

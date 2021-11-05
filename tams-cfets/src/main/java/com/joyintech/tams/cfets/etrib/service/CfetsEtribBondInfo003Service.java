@@ -1278,6 +1278,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     DictCodeList.清算速度_T_1.getValue())) {
                 etrEntrustAdd.setSettleSpreed((long) 1);
             }
+            String busiTypePosition=DictCodeListExt3.头寸业务类型_现券交易.getValue();
+            if(StringUtil.isNotEmpty(dto.getPs())
+                    && StringUtil.equals(dto.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+                busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+            }
+            etrEntrustAdd.setBusiTypePosition(busiTypePosition);
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
             /*if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
 
@@ -1346,6 +1352,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     DictCodeList.清算速度_T_1.getValue())) {
                 etrEntrustAdd.setSettleSpreed((long) 1);
             }
+            String busiTypePosition=DictCodeListExt3.头寸业务类型_现券交易.getValue();
+            if(StringUtil.isNotEmpty(dto.getPs())
+                    && StringUtil.equals(dto.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+                busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+            }
+            etrEntrustAdd.setBusiTypePosition(busiTypePosition);
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
             if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo())
                     && StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
