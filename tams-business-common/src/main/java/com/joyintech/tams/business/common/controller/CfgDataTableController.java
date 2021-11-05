@@ -17,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/common/config/dataTable")
-@Api(tags = "数据表格设置")
+@Api(tags = "页面展示设置")
 public class CfgDataTableController {
 
     private static final Logger logger = LoggerFactory.getLogger(CfgDataTableController.class);
@@ -25,7 +25,7 @@ public class CfgDataTableController {
     @Autowired
     private CfgDataTableService cfgDataTableService;
 
-    @ApiOperation(value = "查询数据表格设置", notes = "查询数据表格设置")
+    @ApiOperation(value = "查询页面设置", notes = "查询页面设置")
     @PostMapping("/getAllDataTable/{pageCode}")
     public Message<Map<String, List<CfgDataTableShow>>> getAllDataTable(@PathVariable("pageCode") String pageCode) {
         try {
@@ -34,34 +34,35 @@ public class CfgDataTableController {
             }
             return new Message<>(cfgDataTableService.getByPageCode(pageCode));
         } catch (Exception e) {
-            logger.error("查询数据表格设置", e);
+            logger.error("查询页面设置", e);
             return new Message<Map<String, List<CfgDataTableShow>>>().fail();
         }
     }
 
-    @ApiOperation(value = "根据pageCode和dtCode查询数据表格式设置", notes = "根据pageCode和dtCode查询数据表格式设置")
-    @PostMapping("/getByPageCodeAndDtCode/{pageCode}/{dtCode}")
+    @ApiOperation(value = "根据pageCode，dtCode和spcdCode查询页面设置", notes = "根据pageCode，dtCode和spcdCode查询页面设置")
+    @PostMapping("/getByPageCodeAndDtCode/{pageCode}/{dtCode}/{spcdCode}")
     public Message<List<CfgDataTableShow>> getByPageCodeAndDtCode(@PathVariable("pageCode") String pageCode,
-    		                                                      @PathVariable("dtCode") String dtCode) {
+    		                                                      @PathVariable("dtCode") String dtCode,
+                                                                  @PathVariable("spcdCode") String spcdCode) {
         try {
             if (StringUtil.isEmpty(pageCode) || StringUtil.isEmpty(dtCode)) {
                 return new Message<List<CfgDataTableShow>>().setMessage(Constant.MESSAGE_PAGECODE_NULL);
             }
-            return new Message<>(cfgDataTableService.getByPageCodeAndDtCode(pageCode,dtCode));
+            return new Message<>(cfgDataTableService.getByPageCodeAndDtCode(pageCode,dtCode,spcdCode));
         } catch (Exception e) {
-            logger.error("查询数据表格设置", e);
+            logger.error("查询页面设置", e);
             return new Message<List<CfgDataTableShow>>().fail().setMessage(Constant.GET_DATATABLE_ERROR);
         }
     }
 
-    @ApiOperation(value = "数据表格设置", notes = "数据表格设置")
+    @ApiOperation(value = "页面设置", notes = "页面设置")
     @PostMapping("/setDataTable")
     public Message<String> setDataTable(@RequestBody List<CfgDataTableShow> dataTableShowList) {
         try {
             cfgDataTableService.setDataTable(dataTableShowList);
             return new Message<String>().success();
         } catch (Exception e) {
-            logger.error("数据表格设置失败", e);
+            logger.error("页面设置失败", e);
             return new Message<String>().fail().setMessage(Constant.SET_DATATABLE_ERROR);
         }
     }

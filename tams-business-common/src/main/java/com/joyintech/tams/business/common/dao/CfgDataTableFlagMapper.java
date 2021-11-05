@@ -14,7 +14,8 @@ public interface CfgDataTableFlagMapper {
      * @param rangeId
      * @return
      */
-    CfgDataTableShowFlag getByPageCodeAndDtCode(@Param("pageCode") String pageCode, @Param("dtCode") String dtCode, @Param("rangeId") String rangeId);
+    CfgDataTableShowFlag getByPageCodeAndDtCode(@Param("pageCode") String pageCode, @Param("dtCode") String dtCode,
+                                                @Param("spcdCode") String spcdCode, @Param("rangeId") String rangeId);
 
     /**
      * 新增数据表格设置记录
@@ -29,5 +30,6 @@ public interface CfgDataTableFlagMapper {
      * @param dtCode
      * @param rangeId
      */
-    void deleteDataTable(@Param("pageCode")String pageCode,@Param("dtCode") String dtCode,@Param("rangeId") String rangeId);
+    void deleteDataTable(@Param("pageCode")String pageCode,@Param("dtCode") String dtCode,
+                         @Param("spcdCode") String spcdCode,@Param("rangeId") String rangeId);
 }

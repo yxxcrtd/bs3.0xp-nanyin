@@ -10,14 +10,16 @@
         from CFG_DATATABLE_SHOW_FLAG
         where PAGECODE = #{pageCode}
           and DTCODE = #{dtCode}
+          and SPCDCODE = #{spcdCode}
           and RANGEID = #{rangeId}
           and EFFERANGE = 1
     </select>
 
     <insert id="insertCfgDataTableFlag" parameterType="com.joyintech.tams.business.common.entity.CfgDataTableShowFlag">
-        insert into CFG_DATATABLE_SHOW_FLAG(PAGECODE, DTCODE, EFFERANGE, RANGEID, UPDATETIME)
+        insert into CFG_DATATABLE_SHOW_FLAG(PAGECODE, DTCODE, SPCDCODE,EFFERANGE, RANGEID, UPDATETIME)
         values (#{pageCode ,jdbcType=VARCHAR},
                 #{dtCode,jdbcType=VARCHAR},
+                #{spcdCode,jdbcType=VARCHAR},
                 #{effeRange,jdbcType=INTEGER},
                 #{rangeId,jdbcType=VARCHAR},
                 #{updateTime,jdbcType=VARCHAR})
@@ -28,6 +30,7 @@
         from CFG_DATATABLE_SHOW
         where PAGECODE = #{pageCode}
           and DTCODE = #{dtCode}
+          and SPCDCODE = #{spcdCode}
           and RANGEID = #{rangeId}
           and EFFERANGE = 1
     </delete>

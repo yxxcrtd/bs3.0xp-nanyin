@@ -3,14 +3,17 @@ package com.joyintech.tams.business.common.entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "数据表格设置实体类")
+@ApiModel(value = "页面展示配置实体类")
 public class CfgDataTableShow {
 
     @ApiModelProperty(name = "pageCode", value = "页面编码")
     private String pageCode;
 
-    @ApiModelProperty(name = "dtCode", value = "数据表格编号")
+    @ApiModelProperty(name = "dtCode", value = "区域编码")
     private String dtCode;
+
+    @ApiModelProperty(name = "dtCode", value = "特殊条件编码")
+    private String spcdCode;
 
     @ApiModelProperty(name = "colCode", value = "列的字段名")
     private String colCode;
@@ -71,6 +74,14 @@ public class CfgDataTableShow {
 
     public void setDtCode(String dtCode) {
         this.dtCode = dtCode;
+    }
+
+    public String getSpcdCode() {
+        return spcdCode;
+    }
+
+    public void setSpcdCode(String spcdCode) {
+        this.spcdCode = spcdCode;
     }
 
     public String getColCode() {
