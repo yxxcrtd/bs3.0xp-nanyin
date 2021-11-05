@@ -2459,8 +2459,9 @@ var calculateField;
                 $("#refundAmount_div").show();
                 if(null!=parentPageId && parentPageId=='EtrBondBiddingResultEx001' ){
                     $("#integrateFpriceAmt").val('');
-                    $("#integrateFpriceAmt_div").hide();
-
+                    //mody by meifaxin 20211105 html中判断,这个地方判断导致计算按钮没有效果 start
+                    //$("#integrateFpriceAmt_div").hide();
+                    //mody by meifaxin 20211105 html中判断,这个地方判断导致计算按钮没有效果 end
                 }
             }
             else if(tradeMarketMode==SHARES_TRADE_MARKET_02){
