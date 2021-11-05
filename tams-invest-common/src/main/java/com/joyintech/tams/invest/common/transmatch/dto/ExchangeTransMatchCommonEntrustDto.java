@@ -107,7 +107,7 @@ public class ExchangeTransMatchCommonEntrustDto extends EtrEntrust {
     }
 
     public void setTargetType(String targetType) {
-        targetType = targetType;
+        this.targetType = targetType;
     }
 
     public BigDecimal getRemainEntrustAmt() {
@@ -157,4 +157,6 @@ public class ExchangeTransMatchCommonEntrustDto extends EtrEntrust {
     public void setLastEntrust(boolean lastEntrust) {
         this.lastEntrust = lastEntrust;
     }
+
+
 }

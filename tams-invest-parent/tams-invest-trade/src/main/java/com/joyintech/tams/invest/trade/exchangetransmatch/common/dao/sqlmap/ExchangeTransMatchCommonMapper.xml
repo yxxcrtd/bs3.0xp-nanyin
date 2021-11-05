@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.invest.trade.transmatch.dao.ExchangeTransMatchCommonMapper" >
+<mapper namespace="com.joyintech.tams.invest.trade.exchangetransmatch.common.dao.ExchangeTransMatchCommonMapper" >
     <select id="getEtrEntrustByIdList" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto">
         select
-        T2.TARGET_TYPE TargetType,
+        T2.TARGET_TYPE targetType,
         T2.TRADER trader,
-        <include refid="com.joyintech.tams.common.base.dao.EtrEntrustMapper.Base_Column_List" />
+        T1.*
         from ETR_ENTRUST T1
         left join
             ETR_ENTRUST_ADD T2
             ON T1.ENTRUST_ID = T2.ENTRUST_ID
         <where>
             <if test="entrustIdList!=null and entrustIdList.size()>0 ">
-                AND (T1.ETR_ENTRUST IN
+                AND (T1.ENTRUST_ID IN
                 <foreach item="item" index="index" collection="entrustIdList" open="(" close=")" separator=",">
                     <if test="(index % 998) == 0">
-                        null) or T1.ETR_ENTRUST in (
+                        null) or T1.ENTRUST_ID in (
                     </if>
                     #{item,jdbcType=VARCHAR}
                 </foreach>)
@@ -58,7 +58,7 @@
     <!-- 根据汇总流水号获取成交明细 -->
     <select id="getSettleTransDataList" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
         select
-        <include refid="com.joyintech.tams.common.base.dao.SettleTransDataMapper.Base_Column_List" />
+        A.*
           from SETTLE_TRANS_DATA A
          INNER JOIN SETTLE_TRANS_DATA_TOTAL B
             ON A.APPLY_TRADE_ID = B.APPLY_TRADE_ID
@@ -116,7 +116,8 @@
     <select id="getSettleTransTgMapping" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto">
             select
                 'N'    isTotalDeal,
-                <include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />
+                <!--<include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />-->
+                A.*
               from SETTLE_TRANS_TG_MAPPING A
              INNER JOIN SETTLE_TRANS_DATA B
                 ON A.TRADE_ID = B.TRADE_ID
@@ -139,7 +140,8 @@
             union  all
             select
             'Y'   isTotalDeal,
-            <include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />
+            <!--<include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />-->
+            A.*
             from SETTLE_TRANS_TG_MAPPING A
             INNER JOIN SETTLE_TRANS_DATA B
                 ON A.TRADE_ID = B.TRADE_ID

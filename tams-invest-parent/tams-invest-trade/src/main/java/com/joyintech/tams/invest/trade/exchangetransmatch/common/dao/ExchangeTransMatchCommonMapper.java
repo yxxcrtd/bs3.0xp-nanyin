@@ -18,10 +18,10 @@ public interface ExchangeTransMatchCommonMapper {
 
     /**
      * 查询委托信息--根据idlIST
-     * @param entrustIdList
+     * @param entrustMap
      * @return
      */
-    List<ExchangeTransMatchCommonEntrustDto> getEtrEntrustByIdList(List<String> entrustIdList);
+    List<ExchangeTransMatchCommonEntrustDto> getEtrEntrustByIdList(Map<String,Object> entrustMap);
 
     /**
      * 获取下一工作日

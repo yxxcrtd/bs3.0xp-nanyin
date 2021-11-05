@@ -74,6 +74,7 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         map.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
 
+        map.put("SEC_TYPE_01", DictCodeListExt1.证券品种_债券.getValue());
         map.put("SEC_TYPE_06", DictCodeListExt1.证券品种_股票.getValue());
         map.put("SEC_TYPE_02", DictCodeListExt1.证券品种_基金.getValue());
         map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
