@@ -152,50 +152,54 @@ public class StlDownDataGatherTask extends BatchBaseService {
             logger.info("无启动参数，批处理退出。");
             return null;
         }
+        try{
+            JobExecution jobExecution = batchBuilder.init(this)
+                .batch("bond1", stlDataGatherBond1Reader, stlDataGatherBond1Processor, stlDataGatherWriter)
+                .batch("bond2", stlDataGatherBond2Reader, stlDataGatherBond2Processor, stlDataGatherWriter)
+                .batch("bond3", stlDataGatherBond3Reader, stlDataGatherBond3Processor, stlDataGatherWriter)
+                .batch("bond4", stlDataGatherBond4Reader, stlDataGatherBond4Processor, stlDataGatherWriter)
+                .batch("bond5", stlDataGatherBond5Reader, stlDataGatherBond5Processor, stlDataGatherWriter)
+                .batch("fund1", stlDataGatherFund1Reader, stlDataGatherFund1Processor, stlDataGatherWriter)
+                .batch("fund2", stlDataGatherFund2Reader, stlDataGatherFund2Processor, stlDataGatherWriter)
+                .batch("repo1", stlDataGatherRepo1Reader, stlDataGatherRepo1Processor, stlDataGatherWriter)
+                /*.batch("repo2", stlDataGatherRepo2Reader, stlDataGatherRepo2Processor, stlDataGatherWriter)
+                .batch("repo3", stlDataGatherRepo3Reader, stlDataGatherRepo3Processor, stlDataGatherWriter)
+                .batch("repo4", stlDataGatherRepo4Reader, stlDataGatherRepo4Processor, stlDataGatherWriter)*//*
+                .batch("repo5", stlDataGatherRepo5Reader, stlDataGatherRepo5Processor, stlDataGatherWriter)
+                .batch("shares1", stlDataGatherShares1Reader, stlDataGatherShares1Processor, stlDataGatherWriter)
+                .batch("shares2", stlDataGatherShares2Reader, stlDataGatherShares2Processor, stlDataGatherWriter)
+                .batch("bond6", stlDataGatherBondDurationReader, stlDataGatherBondDurationProcessor, stlDataGatherWriter)
+                .buildFlow("债券买卖交易", "bond1")
+                .buildFlow("可转债申购", "bond2")
+                .buildFlow("可转债申购确认", "bond3")
+                .buildFlow("债转股", "bond4")
+                .buildFlow("配债", "bond5")
+                .buildFlow("基金买入、卖出、除权交易", "fund1")
+                .buildFlow("基金交易分红交易", "fund2")
+                .buildFlow("债券质押式回购_首期", "repo1")
+             /*   .buildFlow("债券质押式回购_到期续作", "repo2")
+                .buildFlow("债券质押式协议回购_提前终止", "repo3")
+                .buildFlow("债券质押式协议回购_到期", "repo4")*//*
+                .buildFlow("债券质押式竞价回购_到期", "repo5")
+                .buildFlow("股票新股中签交易", "shares1")
+                .buildFlow("股票分红及送转交易", "shares2")
+                .buildFlow("债券存续期", "bond6")
+                *//*.parallelBuilder(this.getBatchTask().getBeanName() + StringUtil.SPACE + this.getBatchTask().getTaskId(), stlDataGatherJobListener,
+                        "债券买卖交易", "可转债申购", "可转债申购确认", "债转股", "配债"
+                        , "基金买入、卖出、除权交易", "基金交易分红交易"
+                        , "债券质押式回购_首期", "债券质押式回购_到期续作", "债券质押式协议回购_提前终止", "债券质押式协议回购_到期", "债券质押式竞价回购_到期"
+                        , "股票新股中签交易", "股票分红及送转交易")*/
+                .parallelBuilder(this.getBatchTask().getBeanName() + StringUtil.SPACE + this.getBatchTask().getTaskId(), stlDataGatherJobListener,
+                        "债券买卖交易", "可转债申购", "可转债申购确认", "债转股", "配债"
+                        , "基金买入、卖出、除权交易", "基金交易分红交易"
+                        , "债券质押式回购_首期", "债券质押式竞价回购_到期"
+                        , "股票新股中签交易", "股票分红及送转交易","债券存续期")
+                .run();
 
-        JobExecution jobExecution = batchBuilder.init(this)
-            .batch("bond1", stlDataGatherBond1Reader, stlDataGatherBond1Processor, stlDataGatherWriter)
-            .batch("bond2", stlDataGatherBond2Reader, stlDataGatherBond2Processor, stlDataGatherWriter)
-            .batch("bond3", stlDataGatherBond3Reader, stlDataGatherBond3Processor, stlDataGatherWriter)
-            .batch("bond4", stlDataGatherBond4Reader, stlDataGatherBond4Processor, stlDataGatherWriter)
-            .batch("bond5", stlDataGatherBond5Reader, stlDataGatherBond5Processor, stlDataGatherWriter)
-            .batch("fund1", stlDataGatherFund1Reader, stlDataGatherFund1Processor, stlDataGatherWriter)
-            .batch("fund2", stlDataGatherFund2Reader, stlDataGatherFund2Processor, stlDataGatherWriter)
-            .batch("repo1", stlDataGatherRepo1Reader, stlDataGatherRepo1Processor, stlDataGatherWriter)
-            /*.batch("repo2", stlDataGatherRepo2Reader, stlDataGatherRepo2Processor, stlDataGatherWriter)
-            .batch("repo3", stlDataGatherRepo3Reader, stlDataGatherRepo3Processor, stlDataGatherWriter)
-            .batch("repo4", stlDataGatherRepo4Reader, stlDataGatherRepo4Processor, stlDataGatherWriter)*/
-            .batch("repo5", stlDataGatherRepo5Reader, stlDataGatherRepo5Processor, stlDataGatherWriter)
-            .batch("shares1", stlDataGatherShares1Reader, stlDataGatherShares1Processor, stlDataGatherWriter)
-            .batch("shares2", stlDataGatherShares2Reader, stlDataGatherShares2Processor, stlDataGatherWriter)
-            .batch("bond6", stlDataGatherBondDurationReader, stlDataGatherBondDurationProcessor, stlDataGatherWriter)
-            .buildFlow("债券买卖交易", "bond1")
-            .buildFlow("可转债申购", "bond2")
-            .buildFlow("可转债申购确认", "bond3")
-            .buildFlow("债转股", "bond4")
-            .buildFlow("配债", "bond5")
-            .buildFlow("基金买入、卖出、除权交易", "fund1")
-            .buildFlow("基金交易分红交易", "fund2")
-            .buildFlow("债券质押式回购_首期", "repo1")
-         /*   .buildFlow("债券质押式回购_到期续作", "repo2")
-            .buildFlow("债券质押式协议回购_提前终止", "repo3")
-            .buildFlow("债券质押式协议回购_到期", "repo4")*/
-            .buildFlow("债券质押式竞价回购_到期", "repo5")
-            .buildFlow("股票新股中签交易", "shares1")
-            .buildFlow("股票分红及送转交易", "shares2")
-            .buildFlow("债券存续期", "bond6")
-            /*.parallelBuilder(this.getBatchTask().getBeanName() + StringUtil.SPACE + this.getBatchTask().getTaskId(), stlDataGatherJobListener,
-                    "债券买卖交易", "可转债申购", "可转债申购确认", "债转股", "配债"
-                    , "基金买入、卖出、除权交易", "基金交易分红交易"
-                    , "债券质押式回购_首期", "债券质押式回购_到期续作", "债券质押式协议回购_提前终止", "债券质押式协议回购_到期", "债券质押式竞价回购_到期"
-                    , "股票新股中签交易", "股票分红及送转交易")*/
-            .parallelBuilder(this.getBatchTask().getBeanName() + StringUtil.SPACE + this.getBatchTask().getTaskId(), stlDataGatherJobListener,
-                    "债券买卖交易", "可转债申购", "可转债申购确认", "债转股", "配债"
-                    , "基金买入、卖出、除权交易", "基金交易分红交易"
-                    , "债券质押式回购_首期", "债券质押式竞价回购_到期"
-                    , "股票新股中签交易", "股票分红及送转交易","债券存续期")
-            .run();
-
-        return jobExecution;
+            return jobExecution;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

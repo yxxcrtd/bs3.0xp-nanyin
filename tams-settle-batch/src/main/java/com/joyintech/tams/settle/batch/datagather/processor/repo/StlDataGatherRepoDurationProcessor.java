@@ -103,7 +103,7 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
             investTradeWriteDto.setProductDealList(productDealList);
             investTradeWriteDto.setTrdProductDealAddList(trdProductDealAddList);
         }
-        return null;
+        return investTradeWriteDto;
     }
 
     /**

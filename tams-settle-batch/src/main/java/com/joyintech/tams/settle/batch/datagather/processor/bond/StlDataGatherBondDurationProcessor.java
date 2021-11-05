@@ -142,7 +142,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             investTradeWriteDto.setProductDealList(productDealList);
             investTradeWriteDto.setTrdProductDealAddList(trdProductDealAddList);
         }
-        return null;
+        return investTradeWriteDto;
     }
 
     /**

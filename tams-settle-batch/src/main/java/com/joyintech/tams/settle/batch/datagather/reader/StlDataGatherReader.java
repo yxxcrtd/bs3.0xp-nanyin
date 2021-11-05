@@ -88,7 +88,7 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                                 if(DateUtil.compareDate(settleTransDataDtoInit.getMdate(),settleTransDataDtoInit.getMdate2())==0){
                                     settleTransDataDto.setPs(DictCodeList.交易方向_到期.getValue());
                                 }
-                                if(DateUtil.compareDate(settleTransDataDtoInit.getMdate(),settleTransDataDtoInit.getMdate2())==0){
+                                if(DateUtil.compareDate(settleTransDataDtoInit.getMdate(),settleTransDataDtoInit.getMdate2())!=0){
                                     settleTransDataDto.setPs(DictCodeList.交易方向_还本.getValue());
                                 }
                             }else{
@@ -98,9 +98,11 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                         }
                         settleTransDataResult.add(settleTransDataDto);
                     }
+                    investTradeReaderDto.setSettleTransDataList(settleTransDataResult);
+                    List<InvestTradeReaderDto> result = new ArrayList<>();
+                    result.add(investTradeReaderDto);
+                    return result;
                 }
-                investTradeReaderDto.setSettleTransDataList(settleTransDataResult);
-                return Arrays.asList(investTradeReaderDto);
             }
             //回购存续期
             if(searchParam.containsKey("busiType")&&StringUtil.equals(searchParam.get("busiType"),"R3S14")){
@@ -111,7 +113,9 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                 searchParam.put("psList",  Arrays.asList(DictCodeList.交易方向_到期.getValue()));
                 List<SettleTransDataDto> settleTransDataDtos = stlDataGatherService.listRepoSettleTransData(searchParam);
                 investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
-                return Arrays.asList(investTradeReaderDto);
+                List<InvestTradeReaderDto> result = new ArrayList<>();
+                result.add(investTradeReaderDto);
+                return result;
             }
         }
         return new ArrayList<InvestTradeReaderDto>();

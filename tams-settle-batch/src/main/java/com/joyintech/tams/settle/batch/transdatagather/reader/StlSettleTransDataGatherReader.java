@@ -70,6 +70,8 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                     || (StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                         &&StringUtil.equals(settleTransDataDto.getPs(), DictCodeListExt1.交易方向_债转股.getValue()))){
                 BeanUtils.copyProperties(settleTransDataDto, dealTotal);
+                //  汇总交易编号
+                dealTotal.setSeqId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易));
                 settleTransDataList.add(dealTotal);
                 //当笔成交数据明细.附属表流水号 非空
                 if(StringUtil.isNotEmpty(settleTransDataDto.getTradeIdAdd())){
@@ -313,6 +315,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                     //是否优先配售
                     dealTotal.setIsPurchTypeYx(settleTransDataDto.getIsPurchTypeYx());
                     dealTotal.setApplyTradeId(settleTransDataDto.getApplyTradeId());
+                    dealTotal.setPs(settleTransDataDto.getPs());
                     settleTransDataList.add(dealTotal);
                 }
              }

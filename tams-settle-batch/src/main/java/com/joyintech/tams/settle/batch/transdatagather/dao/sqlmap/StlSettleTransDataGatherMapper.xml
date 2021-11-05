@@ -131,7 +131,7 @@
     <delete id="deleteTotalTradeStatusByLastDeal">
         delete
         from SETTLE_TRANS_DATA_TOTAL_STATUS
-        where MATCH_STATUS != #{matchStatus}
+        where MATCH_STATUS = #{matchStatus}
     </delete>
 
     <!-- 存量数据删除，为支持重复跑批，先将上次批处理生出的数据删除-->
