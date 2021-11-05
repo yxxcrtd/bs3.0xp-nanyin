@@ -153,7 +153,7 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
             map.put("finprodType2List",StringUtil.splitToList(GlobalConstant.COMMA, finprodType2));
         }
         Page<ExchangeTransMatch003Dto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
-                + "/ExchangeTransMatchController/findPage", map, ExchangeTransMatch003Dto.class);
+                + "/ExchangeTransMatchController/findEntrustPage", map, ExchangeTransMatch003Dto.class);
         return page;
     }
 
@@ -330,18 +330,19 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 trdFundInvestTradeDto.setIsCancel(DictCodeList.是否_否.getValue());
                 trdFundInvestTradeDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                 trdFundInvestTradeDto.setSecManageAcctId(settleTransDataTotal.getSecAcctId());
+                trdFundInvestTradeDto.setDealSqeId(settleTransDataTotal.getSeqId());
                 dtoStr = JsonUtils.object2Json(trdFundInvestTradeDto);
             }
             else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-                    TrdStockConnectDto trdStockConnectDto = new TrdStockConnectDto();
-                    BeanUtil.copyPropertiesIgnoreNull(trdStockConnectDto, settleTransDataTotal);
-                    trdStockConnectDto.setDealSqeId(settleTransDataTotal.getSeqId());
-                    trdStockConnectDto.setIsCancel(DictCodeList.是否_否.getValue());
-                    trdStockConnectDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
-                    trdStockConnectDto.setIsOutTrade(DictCodeList.是否_是.getValue());
-                    trdStockConnectDto.setTradeAmt(dto.getRemainAmount());
-                    trdStockConnectDto.setShareAmt(dto.getRemainNum());
-                    dtoStr = JsonUtils.object2Json(trdStockConnectDto);
+                TrdStockConnectDto trdStockConnectDto = new TrdStockConnectDto();
+                BeanUtil.copyPropertiesIgnoreNull(trdStockConnectDto, settleTransDataTotal);
+                trdStockConnectDto.setDealSqeId(settleTransDataTotal.getSeqId());
+                trdStockConnectDto.setIsCancel(DictCodeList.是否_否.getValue());
+                trdStockConnectDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                trdStockConnectDto.setIsOutTrade(DictCodeList.是否_是.getValue());
+                trdStockConnectDto.setTradeAmt(dto.getRemainAmount());
+                trdStockConnectDto.setShareAmt(dto.getRemainNum());
+                dtoStr = JsonUtils.object2Json(trdStockConnectDto);
             }
         }
         return dtoStr;

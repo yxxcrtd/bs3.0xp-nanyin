@@ -1,19 +1,11 @@
 package com.joyintech.tams.settle.batch.datadeal.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.riskinfrds.calendar.entity.ICalendar;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplCalendar;
 import com.joyintech.tams.settle.batch.datadeal.constant.StlDataDealProcessConstant;
 import com.joyintech.tams.settle.batch.datadeal.dao.StlDownDataDealMapper;
 import com.joyintech.tams.settle.batch.datadeal.dto.StlDownDataDealOperatorDto;
@@ -29,11 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 深中登SJSJG
@@ -89,8 +77,8 @@ public class StlDataDealSzdSjsjgProcessService {
 	@Autowired
     protected StlDownDataDealMapper stlDownDataDealMapper;
 
-    @Autowired
-    protected ICalendar iCalendar;
+  /*  @Autowired
+    protected ICalendar iCalendar;*/
 
     // 生成数据清算批处理step2 processor的结果Dto(深中登SJSJG)
     public StlDownDataDealWriteDto generatorStlDownDataDealSzdSjsjgWriteDto(StlDownDataDealOperatorDto stlDownDataDealOperatorDto) throws ParseException {
@@ -947,7 +935,8 @@ public class StlDataDealSzdSjsjgProcessService {
         // 业务类型
         settleTransData.setBusiType(DictCodeListExt3.业务类型_债券交易.getValue());
         // 交易日期
-        settleTransData.setTradeDate(DateUtil.parse(iCalendar.calcDate(szdSjsjg.getJgqsrq(), 1,
+        ImplCalendar implCalendar = new ImplCalendar();
+        settleTransData.setTradeDate(DateUtil.parse(implCalendar.calcDate(szdSjsjg.getJgqsrq(), 1,
                 BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
         // 交割日期
         settleTransData.setSettleDate(DateUtil.parse(szdSjsjg.getJgjsrq()));

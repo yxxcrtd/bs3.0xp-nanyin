@@ -20,6 +20,7 @@
                             <input type="hidden" id="tradeId" name="tradeId" th:value="${entity?.tradeId}">
                             <input type="hidden" id="isPayWithTrade" name="isPayWithTrade" th:value="${entity?.isPayWithTrade}">
                             <input type="hidden" id="collectType" name="collectType" th:value="${entity?.collectType}">
+                            <input type="hidden" id="dealSqeId" name="dealSqeId" th:value="${entity?.dealSqeId}"/>
                             <!-- <input type="hidden" id="vdate" name="vdate" class="layui-input form-input input-dateSelect"
                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                 th:value="${#dates.format(entity?.vdate,'yyyy-MM-dd')}"> -->
@@ -109,7 +110,7 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <div class="form-inline-wrap" id="trmFundAbbr_div">
+                                    <div class="form-inline-wrap" id="trmFundAbbr_div" data-th-if="${parentPageId} eq TrdFundInvestTradeEx001} or ${parentPageId} eq TrdFundInvestTrade001}">
                                         <label class="layui-form-label form-label-wrap"
                                             th:text="#{TrdFundInvestTrade002.trmFundAbbr}">交易所基金简称</label>
                                         <div class="layui-input-inline input-inline">
@@ -168,7 +169,7 @@
                                                     formatoption="true" th:initValue="${entity?.type11}"></select>
                                         </div>
                                     </div>
-                                    <div class="form-inline-wrap" id="trmFundType_Div">
+                                    <div class="form-inline-wrap" id="trmFundType_Div" data-th-if="${parentPageId} eq TrdFundInvestTradeEx001} or ${parentPageId} eq TrdFundInvestTrade001}">
                                         <label class="layui-form-label form-label-wrap"
                                                th:text="#{TrdFundInvestTrade002.trmFundType}">交易所基金类型</label>
                                         <div class="layui-input-inline input-inline">

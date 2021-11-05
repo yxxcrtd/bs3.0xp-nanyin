@@ -223,7 +223,7 @@
 		<!-- 行情 -->
 		<dependency>
 			<groupId>com.joyintech</groupId>
-			<artifactId>service-quote</artifactId>
+			<artifactId>service-quote-new</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 				<!-- 公共基础数据 -->

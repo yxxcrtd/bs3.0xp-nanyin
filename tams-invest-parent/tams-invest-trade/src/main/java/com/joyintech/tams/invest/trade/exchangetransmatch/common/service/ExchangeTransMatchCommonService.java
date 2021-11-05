@@ -105,6 +105,8 @@ public class ExchangeTransMatchCommonService extends BaseService {
     private TrdFinProductBarterMapper trdFinProductBarterMapper;
     @Autowired
     private TrdTradeFeeDetailMapper trdTradeFeeDetailMapper;
+    @Autowired
+    private TrdFinProductBarterTotalMapper trdFinProductBarterTotalMapper;
 
     @Value("${application.micorservice.contextPath.tamsServer:http://tams-server}")
     private String tamsSerever;
@@ -526,6 +528,16 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
             if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdDealTotalAdd())){
                 trdDealTotalAddMapper.insertSelective(baseTradeProductDealDto.getTrdDealTotalAdd());
+            }
+
+            if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+            && StringUtil.equals(commonEntrustDto.getPs(), DictCodeListExt1.交易方向_债转股.getValue())) {
+                List<TrdFinProductBarterTotal> trdFinProductBarterTotalList = exchangeTransMatchBond4Service.generateDealBarterTotal(dto,commonEntrustDto,baseTradeProductDealDto.getTrdFinProductDealTotal());
+                if(!StringUtil.isEmptyList(trdFinProductBarterTotalList)) {
+                    for(TrdFinProductBarterTotal trdFinProductBarterTotal:trdFinProductBarterTotalList) {
+                        trdFinProductBarterTotalMapper.insertSelective(trdFinProductBarterTotal);
+                    }
+                }
             }
 
             if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdProductDeal())){

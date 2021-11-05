@@ -1000,7 +1000,7 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
 
             //成交录单---调用共通
             if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
-                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),trdFinProductDealTotal.getTotleTradeId(),operationType);
+                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),trdFinProductDealTotal.getTotleTradeId(),OperationType.NEW);
             }
         }
         // 撤销
@@ -1078,9 +1078,8 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
             // 调用投管接口 add by renping 20190205 end
 
             //成交录单---调用共通
-            if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
-                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),operationType);
-            }
+            exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),OperationType.REVOKE);
+
         }
         //        调用接口  add by zhangpuyu 2019/12/6 start
         try {

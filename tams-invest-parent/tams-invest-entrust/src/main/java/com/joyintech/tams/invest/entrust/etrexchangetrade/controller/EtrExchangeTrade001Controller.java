@@ -22,6 +22,7 @@ import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
@@ -101,6 +102,15 @@ public class EtrExchangeTrade001Controller extends BaseController{
 	public static final String ENTRUST_RECORD_NEW = "new";
 
 	public static final String ENTRUST_RECORD_MODIFY = "modify";
+
+    @Value("${quote.flag:true}")
+    private boolean useInterfQuoteFlag;
+
+    @Value("${quote.ws.host}")
+    private String wsHost;
+
+    @Value("${quote.ws.url}")
+    private String wsUrl;
     
     @Override
     public String init(Model model) {
@@ -202,6 +212,9 @@ public class EtrExchangeTrade001Controller extends BaseController{
             }
         }
         model.addAttribute("etrExchange_HqArea_refresh_period", etrExchange_HqArea_refresh_period);
+
+        model.addAttribute("useInterfQuoteFlag", useInterfQuoteFlag);
+        model.addAttribute("wsUri", wsHost + wsUrl);
         
         return super.init(model);
     }
@@ -1235,6 +1248,8 @@ public class EtrExchangeTrade001Controller extends BaseController{
     @RequestMapping(value = "/initHq")
     public String initHq(Model model){
 
+        model.addAttribute("useInterfQuoteFlag", useInterfQuoteFlag);
+        model.addAttribute("wsUri", wsHost + wsUrl);
         return "invest/entrust/etrexchangetrade/EtrExchangeTradeHq";
     }
 

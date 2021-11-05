@@ -7,6 +7,7 @@ import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
 import com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherParamDto;
 import com.joyintech.tams.settle.batch.transdatagather.service.StlSettleTransDataGatherService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -32,8 +33,12 @@ public class StlSettleTransDataGatherProcessor extends BaseProcessor<NeedOperate
         // 汇总交易编号
         List<SettleTransDataTotalAdd> transDataTotalAddList = item.getSettleTransDataTotalAddList();
         //批量写入汇总成交数据表
-        stlSettleTransDataGatherService.batchInsetSettleTransDataTotal(transDataTotalList);
-        stlSettleTransDataGatherService.batchInsetSettleTransDataTotalAdd(transDataTotalAddList);
+        if(CollectionUtils.isNotEmpty(transDataTotalList)){
+            stlSettleTransDataGatherService.batchInsetSettleTransDataTotal(transDataTotalList);
+        }
+        if(CollectionUtils.isNotEmpty(transDataTotalAddList)){
+            stlSettleTransDataGatherService.batchInsetSettleTransDataTotalAdd(transDataTotalAddList);
+        }
         return null;
     }
 }

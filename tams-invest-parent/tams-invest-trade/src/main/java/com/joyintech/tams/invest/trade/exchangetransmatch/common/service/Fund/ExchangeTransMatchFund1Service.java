@@ -2,14 +2,14 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.Fund;
 
 import com.joyintech.background.component.common.pack.common.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.PtlTrade;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -34,6 +34,7 @@ public class ExchangeTransMatchFund1Service extends BaseService {
         BaseTradeProductDealDto entity = new BaseTradeProductDealDto();
 
         entity.setTrdProductDeal(setTrdProductDeal(dto));
+        entity.setTrdProductDealAdd(this.genTrdProductDealAdd(dto,commonEntrustDto,entity.getTrdProductDeal()));
         entity.setPtlTrade(generatePtlTrade(Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
         entity.setStlPayOrdersList(generateStlPayOrdersList(Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
         return entity;
@@ -186,6 +187,24 @@ public class ExchangeTransMatchFund1Service extends BaseService {
         // 投资组合代码
         trdProductDeal.setPortfolioId(settleTransData.getPortfolioId());
         return trdProductDeal;
+    }
+
+    /**
+     * 金融产品交易附属表
+     */
+    public TrdProductDealAdd genTrdProductDealAdd(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
+        TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+        BeanUtil.copyPropertiesIgnoreNull(trdProductDealAdd, trdProductDeal);
+        trdProductDealAdd.setEntrustId(entrustDto.getEntrustId());
+        trdProductDealAdd.setPortfolioId(entrustDto.getPortfolioId());
+
+        if(StringUtil.equals(DictCodeListExt3.下行交易匹配类型_自动匹配.getValue(),dealDto.getMatchType())) {
+            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_批处理生成.getValue());
+        }
+        else {
+            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
+        }
+        return trdProductDealAdd;
     }
 
     /**

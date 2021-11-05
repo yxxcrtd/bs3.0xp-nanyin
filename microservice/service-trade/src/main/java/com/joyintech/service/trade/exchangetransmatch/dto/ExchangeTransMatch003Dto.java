@@ -50,6 +50,12 @@ public class ExchangeTransMatch003Dto extends EtrEntrust  implements ITableRow {
      */
     private String acctName;
 
+
+    /**
+     * 资产市场代码
+     */
+    private String finprodMarketId;
+
     public String getTargetType() {
         return targetType;
     }
@@ -112,5 +118,13 @@ public class ExchangeTransMatch003Dto extends EtrEntrust  implements ITableRow {
 
     public void setAcctName(String acctName) {
         this.acctName = acctName;
+    }
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
     }
 }

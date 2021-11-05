@@ -2,11 +2,13 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo;
 
 import com.joyintech.background.component.common.pack.common.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
@@ -40,6 +42,8 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         baseTradeProductDealDto.setPtlTrade(this.generatePtlTrade(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
         //生成费用信息list
         baseTradeProductDealDto.setTrdTradeFeeDetailList(this.genTrdTradeFeeDetailList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+        //生成金融产品交易扩展
+        baseTradeProductDealDto.setPaTrdProductDeal(this.genPaTrdProductDeal(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
         //生成划款指令
         baseTradeProductDealDto.setStlPayOrdersList(this.generateStlPayOrdersList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
         return baseTradeProductDealDto;
@@ -169,11 +173,41 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
 
         return trdProductDeal;
     }
+
     /**
      * 金融产品交易附属表
      */
     public TrdProductDealAdd genTrdProductDealAdd(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
-        return null;
+        TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+        BeanUtil.copyPropertiesIgnoreNull(trdProductDealAdd, trdProductDeal);
+        trdProductDealAdd.setEntrustId(entrustDto.getEntrustId());
+        trdProductDealAdd.setPortfolioId(entrustDto.getPortfolioId());
+
+        if(StringUtil.equals(DictCodeListExt3.下行交易匹配类型_自动匹配.getValue(),dealDto.getMatchType())) {
+            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_批处理生成.getValue());
+        }
+        else {
+            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
+        }
+        return trdProductDealAdd;
+    }
+
+    /**
+     * 金融产品交易附属表
+     */
+    public PaTrdProductDeal genPaTrdProductDeal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
+        PaTrdProductDeal paTrdProductDeal = new PaTrdProductDeal();
+        BeanUtil.copyPropertiesIgnoreNull(paTrdProductDeal, trdProductDeal);
+        paTrdProductDeal.setPaBussType(entrustDto.getEntrustId());
+        if (StringUtil.equals(dealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+            paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_正回购.getValue());
+            paTrdProductDeal.setBackLendDirection(DictCodeList.回购拆借方向_正回购.getValue());
+        }
+        else {
+            paTrdProductDeal.setPaBussType(DictCodeListExt1.平安业务类型_逆回购.getValue());
+            paTrdProductDeal.setBackLendDirection(DictCodeList.回购拆借方向_逆回购.getValue());
+        }
+        return paTrdProductDeal;
     }
 
     public List<PtlTrade> generatePtlTrade(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDealDto) {

@@ -114,10 +114,11 @@
                     WHEN A1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) THEN #{SEC_TYPE_09}
                 END secType,
                 CASE
-                    WHEN A1.FINPROD_TYPE2 IN ({FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) THEN NULL
+                    WHEN A1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) THEN NULL
                     ELSE A1.FINPROD_ID
                 END finprodId,
                 A1.FINPROD_TYPE2 finprodType2,
+                C1.FINPROD_MARKET_ID finprodMarketId,
                 A1.ENTRUST_DATE entrustDate,
                 A1.PS ps,
                 A1.TRADE_MARKET tradeMarket,
@@ -141,6 +142,7 @@
             LEFT JOIN STL_CAPACCT_INFO F1
                 ON F1.ACCT_NO = E1.TRD_ACCT_ID
         WHERE A1.ENTRUST_STATUS = #{ENTRUST_STATUS_03}
+            AND A1.TRADE_MARKET IN (#{TRADE_PLACE_03},#{TRADE_PLACE_04})
             AND A1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F01}, #{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}, #{FINPROD_TYPE_TG_F06}, #{FINPROD_TYPE_TG_F10})
             <if test="portfolioIdList!=null and portfolioIdList.size()>0 ">
                 AND (A1.PORTFOLIO_ID IN
@@ -162,6 +164,9 @@
             </if>
             <if test="finprodId!=null and finprodId!='' ">
                 AND C1.FINPROD_MARKET_ID = #{finprodId}
+            </if>
+            <if test="finprodType1!=null and finprodType1!='' ">
+                AND A1.FINPROD_TYPE2 = #{finprodType1}
             </if>
             <if test="ps!=null and ps!='' ">
                 AND A1.PS = #{ps}
@@ -185,18 +190,18 @@
 
     <select id="getFinprodId" resultType="com.joyintech.framework.select.SelectOptionDto">
         select distinct
-               A.FINPROD_ID id,
+               B.FINPROD_MARKET_ID id,
                B.FINPROD_ABBR text,
-               A.FINPROD_TYPE2 object
+               A.FINPROD_ID object
           from SETTLE_TRANS_DATA_TOTAL A
-          LEFT JOIN FIN_PRODUCT B
+          INNER JOIN FIN_PRODUCT B
             ON A.FINPROD_ID = B.FINPROD_ID
         <where>
             <if test="search != null and search != ''">
                 and (
-                FINPROD_ID like concat(concat('%',#{search}),'%')
+                B.FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
                 or
-                FINPROD_ABBR like concat(concat('%',#{search}),'%')
+                B.FINPROD_ABBR like concat(concat('%',#{search}),'%')
                 )
             </if>
         </where>

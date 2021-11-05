@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.StlPayOrders;
+import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -29,7 +30,8 @@ import java.util.List;
 public class ExchangeTransMatchRepo1Service extends ExchangeTransMatchRepoCommonService {
 
 
-	private TrdProductDealDto createDeal(ExchangeTransMatchCommonDto settleTransData) {
+	@Override
+	protected TrdProductDeal createDeal(ExchangeTransMatchCommonDto settleTransData, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
 			// 创建交易信息
             TrdProductDealDto trdProductDeal = createProductDeal(settleTransData);
             // 金融产品代码

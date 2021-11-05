@@ -309,6 +309,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                     dealTotal.setSeqNo(settleTransDataDto.getSeqNo());
                     //是否优先配售
                     dealTotal.setIsPurchTypeYx(settleTransDataDto.getIsPurchTypeYx());
+                    dealTotal.setApplyTradeId(settleTransDataDto.getApplyTradeId());
                     settleTransDataList.add(dealTotal);
                 }
              }

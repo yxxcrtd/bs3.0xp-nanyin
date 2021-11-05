@@ -1363,16 +1363,18 @@ $(function () {
         }
 
         // add by etliu 20210501 银行间场内场外拆分 start
-        if (parentPageId) {
-            if (parentPageId == 'TrdFundInvestTradeEx001' || parentPageId == 'TrdFundInvestTrade001') {
-                $('#trmFundAbbr_div').show();
-                $('#trmFundType_Div').show();
-            } else {
-                $('#trmFundAbbr_div').hide();
-                $('#trmFundType_Div').show();
-            }
-        }
+        // mody by meifaxin 20211105 银行间场内场外拆分,在html中判断 start
+        // if (parentPageId) {
+        //     if (parentPageId == 'TrdFundInvestTradeEx001' || parentPageId == 'TrdFundInvestTrade001') {
+        //         $('#trmFundAbbr_div').show();
+        //         $('#trmFundType_Div').show();
+        //     } else {
+        //         $('#trmFundAbbr_div').hide();
+        //         $('#trmFundType_Div').show();
+        //     }
+        // }
         // add by etliu 20210501 银行间场内场外拆分 end
+        // mody by meifaxin 20211105 银行间场内场外拆分,在html中判断 end
     });
 
 }());

@@ -7,6 +7,7 @@ import com.joyintech.tams.settle.batch.transdatagather.dao.StlSettleTransDataGat
 import com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
  * @see StlSettleTransDataGatherService
  * @since 1.0
  */
-@Lazy
+@Service
 public class StlSettleTransDataGatherService {
 
 

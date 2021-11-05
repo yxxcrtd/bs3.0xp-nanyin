@@ -7,6 +7,7 @@ import java.util.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplCalendar;
 import com.joyintech.tams.invest.common.riskinfrds.calendar.entity.ICalendar;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +59,8 @@ public class StlDataDealSzdJsmxProcessService {
 	@Autowired
     protected StlDownDataDealMapper stlDownDataDealMapper;
 
-	@Autowired
-	protected ICalendar iCalendar;
+	/*@Autowired
+	protected ICalendar iCalendar;*/
 	
 	// jsmx02-上中登jsmx的债券
 	public static final String[] szdJsmx02BondYwlxArray1 = new String[] {StlDataDealProcessConstant.YWLX_003, StlDataDealProcessConstant.YWLX_004, StlDataDealProcessConstant.YWLX_601, 
@@ -213,6 +214,18 @@ public class StlDataDealSzdJsmxProcessService {
 				// 业务场景明细分类
 				settleTransData.setBusiSceneCalss(getSzdJsmxBondBusiSceneClass(stlDownDataDealOperatorDto.getDataFile(), szdJsmx.getMmbz(), szdJsmx.getYwlx(),
 						szdJsmx.getZqlb(), szdJsmx.getJllx(), szdJsmx.getQsbz(), szdJsmx.getGhlx()));
+				//执行日期
+				settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
+				//交易日期
+				if(StringUtil.isNotEmpty(szdJsmx.getJyrq())){
+					try{
+						settleTransData.setTradeDate(DateUtil.parseDate(szdJsmx.getJyrq(),DateUtil.DEFAULT_OTHER_FORMAT));
+					}catch (Exception e){}
+				}
+				// 分支序号
+				settleTransData.setBranch(0L);
+				//申请编号
+				settleTransData.setApplyTradeId(szdJsmx.getSqbh());
 				// 债可交换债换股业务
 				if (StringUtil.lowerCase(stlDownDataDealOperatorDto.getDataFile()).startsWith(StlDataDealProcessConstant.SZD_JSMX_03)) {
 					if (StringUtil.equals(szdJsmx.getYwlx(), StlDataDealProcessConstant.YWLX_653)) {
@@ -1524,7 +1537,8 @@ public class StlDataDealSzdJsmxProcessService {
 		// 业务类型
 		settleTransData.setBusiType(DictCodeListExt3.业务类型_债券交易.getValue());
 		// 交易日期
-		settleTransData.setTradeDate(DateUtil.parse(iCalendar.calcDate(szdJsmx.getJyrq(), 1,
+		ImplCalendar implCalendar = new ImplCalendar();
+		settleTransData.setTradeDate(DateUtil.parse(implCalendar.calcDate(szdJsmx.getJyrq(), 1,
 				BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
 		// 交割日期
 		settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getJsrq()));

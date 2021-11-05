@@ -31,6 +31,7 @@ public class ExchangeTransMatchBond2Service extends ExchangeTransMatchBondCommon
         trdDealTotalAdd.setPurchModle(DictCodeListExt2.申购方式_网上申购.getValue());
         trdDealTotalAdd.setPurchDate(trdFinProductDealTotal.getTradeDate());
         trdDealTotalAdd.setPurAmt(trdFinProductDealTotal.getPrinAmt());
+        trdDealTotalAdd.setEntrustId(entrustDto.getEntrustId());
 
         return trdDealTotalAdd;
     }

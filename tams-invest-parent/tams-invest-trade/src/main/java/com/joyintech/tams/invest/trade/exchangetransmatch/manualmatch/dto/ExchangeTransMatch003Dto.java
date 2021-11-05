@@ -52,6 +52,11 @@ public class ExchangeTransMatch003Dto extends EtrEntrust  implements ITableRow {
      */
     private String acctName;
 
+    /**
+     * 资产市场代码
+     */
+    private String finprodMarketId;
+
     public String getTargetType() {
         return targetType;
     }
@@ -116,8 +121,8 @@ public class ExchangeTransMatch003Dto extends EtrEntrust  implements ITableRow {
         this.acctName = acctName;
     }
 
-    public String getEntrustTypeStr() {
-        return  SysDataUtil.getNameFromDataDict(DictCode.投资指令类型, this.getTradeType());
+    public String getTradeTypeStr() {
+        return  SysDataUtil.getNameFromDataDict(DictCode.交易类型, this.getTradeType());
     }
 
     public String getTradeMarketStr() {
@@ -126,5 +131,21 @@ public class ExchangeTransMatch003Dto extends EtrEntrust  implements ITableRow {
 
     public String getTradePlatStr() {
         return  SysDataUtil.getNameFromDataDict(DictCode.交易平台, this.getTradePlat());
+    }
+
+    public String getPsStr(){
+        return  SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());
+    };
+
+    public String getFinprodType2Str() {
+        return  SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用, this. getFinprodType2());
+    }
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
     }
 }
