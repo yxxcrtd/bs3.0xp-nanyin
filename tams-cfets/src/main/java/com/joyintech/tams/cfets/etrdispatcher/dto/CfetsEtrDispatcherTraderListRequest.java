@@ -30,19 +30,19 @@ public class CfetsEtrDispatcherTraderListRequest {
      * 已执行的指令笔数
      **/
     @ApiModelProperty(name="finishedWork",value="已执行的指令笔数",example="50")
-    private int finishedWork;
+    private String finishedWork;
 
     /**
      * 待执行的指令笔数
      **/
     @ApiModelProperty(name="unfinishedWork",value="待执行的指令笔数",example="5")
-    private int unfinishedWork;
+    private String unfinishedWork;
 
     /**
      * 全部的指令笔数
      **/
     @ApiModelProperty(name="totalWork",value="全部的指令笔数",example="60")
-    private int totalWork;
+    private String totalWork;
 
     /**
      * 获取用户名
@@ -75,42 +75,42 @@ public class CfetsEtrDispatcherTraderListRequest {
     /**
      * 获取已执行的指令笔数
      **/
-    public int getFinishedWork() {
+    public String getFinishedWork() {
         return finishedWork;
     }
 
     /**
      * 设置已执行的指令笔数
      **/
-    public void setFinishedWork(int finishedWork) {
+    public void setFinishedWork(String finishedWork) {
         this.finishedWork = finishedWork;
     }
 
     /**
      * 获取待执行的指令笔数
      **/
-    public int getUnfinishedWork() {
+    public String getUnfinishedWork() {
         return unfinishedWork;
     }
 
     /**
      * 设置待执行的指令笔数
      **/
-    public void setUnfinishedWork(int unfinishedWork) {
+    public void setUnfinishedWork(String unfinishedWork) {
         this.unfinishedWork = unfinishedWork;
     }
 
     /**
      * 获取全部的指令笔数
      **/
-    public int getTotalWork() {
+    public String getTotalWork() {
         return totalWork;
     }
 
     /**
      * 设置全部的指令笔数
      **/
-    public void setTotalWork(int totalWork) {
+    public void setTotalWork(String totalWork) {
         this.totalWork = totalWork;
     }
 }

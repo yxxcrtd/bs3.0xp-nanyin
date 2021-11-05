@@ -546,9 +546,9 @@
         DISTINCT
         su.USER_NAME userName,
         su.REAL_NAME realName,
-        a.totalWork,
-        NVL(b.finishedWork,0) finishedWork,
-        ROUND(a.totalWork-NVL(b.finishedWork,0)) unfinishedWork
+        to_char(NVL(a.totalWork,0),'fm999990.009') as totalWork,
+        to_char(NVL(b.finishedWork,0),'fm999990.009') as finishedWork,
+        to_char(NVL(a.totalWork-NVL(b.finishedWork,0),0),'fm999990.009') as unfinishedWork
         FROM
         SYS_USER su
         INNER JOIN
@@ -556,11 +556,12 @@
         ON 	su.USER_NAME = sur.USER_ID
         INNER JOIN SYS_ROLE sr
         ON sur.ROLE_ID = sr.ROLE_ID AND sr.ROLE_POS in (06)
+        LEFT JOIN ETR_DISTRIBUTE ed ON ed.TRADER=su.USER_NAME
         LEFT JOIN
         (
         SELECT
             TRADER,
-            COUNT(TRADER) AS totalWork
+            round(COUNT(TRADER),2) AS totalWork
         FROM
             ETR_DISTRIBUTE
         GROUP BY

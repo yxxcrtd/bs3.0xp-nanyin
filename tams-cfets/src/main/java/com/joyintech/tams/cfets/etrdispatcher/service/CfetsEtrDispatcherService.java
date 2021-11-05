@@ -617,8 +617,8 @@ public class CfetsEtrDispatcherService extends BaseService{
      * @return
      */
     public List<CfetsEtrDispatcherTraderListRequest> getEtrTraderAndWorkloadList(Map<String, Object> pageParam) {
-        CfetsEtrDispatcherTraderListRequest dto = new CfetsEtrDispatcherTraderListRequest();
-        return cfetsEtrDispatcherMapper.getEtrTraderAndWorkloadList(pageParam);
+        List<CfetsEtrDispatcherTraderListRequest> list = cfetsEtrDispatcherMapper.getEtrTraderAndWorkloadList(pageParam);
+        return list;
     }
 
     /**
