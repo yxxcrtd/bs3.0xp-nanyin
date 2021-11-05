@@ -592,8 +592,10 @@ public class TradeCommonService extends BaseService {
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
                 creditLinesInputDto.setEntrustId(inputDto.getEntrustId());
-                creditLinesInputDto.setTradeAmt(ArithmeticUtil.multiply(inputDto.getShareAmt(),new BigDecimal(10000)));
-                creditLinesInputDto.setShareAmt(ArithmeticUtil.multiply(inputDto.getShareAmt(),new BigDecimal(10000)));
+//                creditLinesInputDto.setTradeAmt(ArithmeticUtil.multiply(inputDto.getShareAmt(),new BigDecimal(10000)));
+//                creditLinesInputDto.setShareAmt(ArithmeticUtil.multiply(inputDto.getShareAmt(),new BigDecimal(10000)));
+                creditLinesInputDto.setTradeAmt(inputDto.getShareAmt());
+                creditLinesInputDto.setShareAmt(inputDto.getShareAmt());
                 if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo()))
                     creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
                 creditLinesInputDto.setTgBusiType(DictCodeListExt2.平安资产类型_债券借贷.getValue());
