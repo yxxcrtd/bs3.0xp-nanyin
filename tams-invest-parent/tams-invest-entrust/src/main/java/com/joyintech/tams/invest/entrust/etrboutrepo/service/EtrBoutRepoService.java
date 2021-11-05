@@ -582,20 +582,22 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                 String[] s = data.get(16).toString().split(":");
                 dto.setTermType(s[0]);
             }
+            // TISHKS-205:导入模板删除通道列 fuyongsheng 20211105 edit start
             // 通道
-            if (StringUtil.isNotBlank(data.get(18).toString())) {
-                dto.setChlId(data.get(18).toString().trim());
-            }
+//            if (StringUtil.isNotBlank(data.get(18).toString())) {
+//                dto.setChlId(data.get(18).toString().trim());
+//            }
+            // TISHKS-205:导入模板删除通道列 fuyongsheng 20211105 edit end
             // 证券账户
-            if (StringUtil.isNotBlank(data.get(19).toString())) {
-                dto.setSecuritiesCust(data.get(19).toString().trim());
+            if (StringUtil.isNotBlank(data.get(18).toString())) {
+                dto.setSecuritiesCust(data.get(18).toString().trim());
             }
             // 备注
-            dto.setRemark(data.get(20).toString().trim());
+            dto.setRemark(data.get(19).toString().trim());
             // 证券账户名称查询
             if (StringUtil.isNotEmpty(dto.getSecuritiesCust())) {
                 Map<String, Object> map1 = new HashMap<>();
-                map1.put("initValue", data.get(19).toString().trim());
+                map1.put("initValue", data.get(18).toString().trim());
                 map1.put("page", 1);
                 map1.put("length", 20);
                 map1.put("portfolioId", data.get(3).toString());
@@ -665,9 +667,9 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                 dto.setCalendarIdName(selectOptionDtoPage.getRoot().get(0).getText());
             }
             // 交易对手
-            if (StringUtil.isNotBlank(data.get(21).toString())) {
-                dto.setCounterId(data.get(21).toString());
-                String counterName = getCounterName(data.get(21).toString().trim());
+            if (StringUtil.isNotBlank(data.get(20).toString())) {
+                dto.setCounterId(data.get(20).toString());
+                String counterName = getCounterName(data.get(20).toString().trim());
                 dto.setCounterIdName(counterName);
             }
             // 指令可用现金
