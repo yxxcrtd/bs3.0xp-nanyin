@@ -797,7 +797,7 @@ from
         T1.FINPROD_ID finprodId,
         T3.FINPROD_MARKET_ID finprodMarketId,
         T3.FINPROD_ABBR finprodAbbr,
-        T4.TYPE_9 secType1,
+        T4.type_11 secType1,
         T1.PS as ps,
         NVL(T1.ENTRUST_NUM,0) / 100 shareNum,
         T1.PRICE_MODEL priceModel,
@@ -853,6 +853,7 @@ from
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
         left join SYS_DATADICT_LIST dictpriceModel on aaa.priceModel=dictpriceModel.ITEM_CODE and dictpriceModel.DICT_CODE='PRICE_MODEL'
         left join SYS_DATADICT_LIST dictbusiModel on aaa.busiModel=dictbusiModel.ITEM_CODE and dictbusiModel.DICT_CODE='BUSINESS_MODEL'
+        left join SYS_DATADICT_LIST dictSecType on aaa.secType1=dictSecType.ITEM_CODE and dictSecType.DICT_CODE='CUSTOM_ASSET_TYPE_FOUR'
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
         order by sdl.ORDER_NO, aaa.entrustId DESC)
@@ -872,7 +873,7 @@ from
         T1.FINPROD_ID finprodId,
         T3.FINPROD_MARKET_ID finprodMarketId,
         T3.FINPROD_ABBR finprodAbbr,
-        T4.TYPE_9 secType1,
+        T4.type_11 secType1,
         T1.PS ps,
         NVL(T1.ENTRUST_NUM,0) / 100 shareNum,
         T1.PRICE_MODEL priceModel,
@@ -971,7 +972,7 @@ from
         T1.FINPROD_ID finprodId,
         T3.FINPROD_MARKET_ID finprodMarketId,
         T3.FINPROD_ABBR finprodAbbr,
-        T4.TYPE_9 secType1,
+        T4.type_11 secType1,
         T1.PS ps,
         NVL(T1.ENTRUST_NUM,0) / 100 shareNum,
         T1.PRICE_MODEL priceModel,
@@ -1079,7 +1080,7 @@ from
         <if test="search != null and search != '' and search !='有效' ">
             <where>
                 ((aaa.effectiveStatusName || '|' || sdl.ITEM_VALUE || '|' || aaa.portfolioId || '|' || aaa.portfolioName
-                || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr || '|' || aaa.secType1 || '|' || dictps.ITEM_VALUE
+                || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr || '|' || dictSecType.ITEM_VALUE || '|' || dictps.ITEM_VALUE
                 || '|T+' || aaa.settleSpreed || '|' || dictpriceModel.ITEM_VALUE   || '|' || aaa.invManagerId
                 || '|' || aaa.entrustId || '|' || approver || '|' || aaa.REMARK || '|' || dictbusiModel.ITEM_VALUE
                 like '%' || #{search} || '%')
