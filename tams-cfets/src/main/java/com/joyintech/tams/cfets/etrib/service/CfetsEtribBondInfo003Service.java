@@ -391,13 +391,13 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             etrEntrustAdd.setMdate(null);
             //etrEntrustAdd.setOurEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
             //etrEntrustAdd.setLendinEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
-            etrEntrustAdd.setFullPrice(dto.getFpriceAmt());
-            if (dto.getExerYield() != null) {
+            etrEntrustAdd.setFullPrice(dto.getUnitFprice());
+           /* if (dto.getExerYield() != null) {
                 etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));
             }
             if (dto.getMatureYield() != null) {
                 etrEntrustAdd.setMatureYield(dto.getMatureYield().divide(new BigDecimal(100)));
-            }
+            }*/
             if (StringUtil.equals(dto.getSettleSpeed(),
                     DictCodeList.清算速度_T_0.getValue())) {
                 etrEntrustAdd.setSettleSpreed((long)0);
@@ -1264,12 +1264,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             // add by yushilon 全价入库 20200710 start
             etrEntrustAdd.setFullPrice(dto.getUnitFprice());
             // add by yushilon 全价入库 20200710 end
-            if (dto.getExerYield() != null) {
+           /* if (dto.getExerYield() != null) {
                 etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));
             }
             if (dto.getMatureYield() != null) {
                 etrEntrustAdd.setMatureYield(dto.getMatureYield().divide(new BigDecimal(100)));
-            }
+            }*/
             if (StringUtil.equals(dto.getSettleSpeed(),
                     DictCodeList.清算速度_T_0.getValue())) {
                 etrEntrustAdd.setSettleSpreed((long) 0);
@@ -1338,12 +1338,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             etrEntrustAdd.setMdate(null);
             etrEntrustAdd.setOurEntNum(ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
             etrEntrustAdd.setLendinEntNum(ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
-            if (dto.getExerYield() != null) {
+           /* if (dto.getExerYield() != null) {
                 etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));
             }
             if (dto.getMatureYield() != null) {
                 etrEntrustAdd.setMatureYield(dto.getMatureYield().divide(new BigDecimal(100)));
-            }
+            }*/
             if (StringUtil.equals(dto.getSettleSpeed(),
                     DictCodeList.清算速度_T_0.getValue())) {
                 etrEntrustAdd.setSettleSpreed((long) 0);
@@ -1442,12 +1442,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             //etrEntrustAdd.setOurEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
             //etrEntrustAdd.setLendinEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
             etrEntrustAdd.setFullPrice(dto.getUnitFprice());
-            if (dto.getExerYield() != null) {
+          /*  if (dto.getExerYield() != null) {
                 etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));
             }
             if (dto.getMatureYield() != null) {
                 etrEntrustAdd.setMatureYield(dto.getMatureYield().divide(new BigDecimal(100)));
-            }
+            }*/
             if (StringUtil.equals(dto.getSettleSpeed(),
                     DictCodeList.清算速度_T_0.getValue())) {
                 etrEntrustAdd.setSettleSpreed((long)0);
@@ -1501,35 +1501,43 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         CfetsEtrCalcAmountResponse result=new CfetsEtrCalcAmountResponse();
         result.setPrice(dto.getPrice());
         result.setUnitFprice(dto.getUnitFprice());
-        //券面总额
-        BigDecimal entrustNum=dto.getShareNum()==null?BigDecimal.ZERO:dto.getShareNum();
-        //本方券券面总额
-        BigDecimal entrustOwnNum=dto.getEntrustOwnNum()==null?BigDecimal.ZERO:dto.getEntrustOwnNum();
-        //融入券/卖空购回券面总额
-        BigDecimal entrustIntegrateNum=dto.getEntrustIntegrateNum()==null?BigDecimal.ZERO:dto.getEntrustIntegrateNum();
+        if(StringUtil.isNotEmpty(dto.getPrice()) && StringUtil.isNotEmpty(dto.getUnitFprice())){
+            //应计利息
+            result.setUnitInt(ArithmeticUtil.subtract(result.getUnitFprice(),result.getPrice()));
+        }
         //净价总额
-        result.setPriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getPrice(), entrustNum),
-                new BigDecimal(100), SCALE));
-        //应计利息
-        result.setUnitInt(ArithmeticUtil.subtract(result.getUnitFprice(),result.getPrice()));
-        //应计利息总额
-        result.setUnitIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitInt(), entrustNum),
-                new BigDecimal(100), SCALE));
-        //全价总额= 单位全价 * 券面总额/100
-        result.setUnitFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitFprice(), entrustNum),
-                new BigDecimal(100), SCALE));
-        //本方券应计利息总额
-        result.setEntrustOwnInt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitInt(), entrustOwnNum),
-                new BigDecimal(100), SCALE));
-        //卖空购回应计利息总额
-        result.setEntrustIntegrateInt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitInt(), entrustIntegrateNum),
-                new BigDecimal(100), SCALE));
-        //本方券全价总额
-        result.setEntrustOwnUnitFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitFprice(), entrustOwnNum),
-                new BigDecimal(100), SCALE));
-        //卖空购回全价总额
-        result.setEntrustIntegrateUnitFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitFprice(), entrustIntegrateNum),
-                new BigDecimal(100), SCALE));
+        if(StringUtil.isNotEmpty(dto.getShareNum())){
+            //券面总额
+            BigDecimal entrustNum=dto.getShareNum()==null?BigDecimal.ZERO:dto.getShareNum();
+            result.setPriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getPrice(), entrustNum),
+                    new BigDecimal(100), SCALE));
+            //应计利息总额
+            result.setUnitIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitInt(), entrustNum),
+                    new BigDecimal(100), SCALE));
+            //全价总额= 单位全价 * 券面总额/100
+            result.setUnitFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitFprice(), entrustNum),
+                    new BigDecimal(100), SCALE));
+        }
+        if(StringUtil.isNotEmpty(dto.getEntrustOwnNum())){
+            //本方券券面总额
+            BigDecimal entrustOwnNum=dto.getEntrustOwnNum()==null?BigDecimal.ZERO:dto.getEntrustOwnNum();
+            //本方券应计利息总额
+            result.setEntrustOwnInt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitInt(), entrustOwnNum),
+                    new BigDecimal(100), SCALE));
+            //本方券全价总额
+            result.setEntrustOwnUnitFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitFprice(), entrustOwnNum),
+                    new BigDecimal(100), SCALE));
+        }
+        if(StringUtil.isNotEmpty(dto.getEntrustIntegrateNum())){
+            //融入券/卖空购回券面总额
+            BigDecimal entrustIntegrateNum=dto.getEntrustIntegrateNum()==null?BigDecimal.ZERO:dto.getEntrustIntegrateNum();
+            //卖空购回应计利息总额
+            result.setEntrustIntegrateInt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitInt(), entrustIntegrateNum),
+                    new BigDecimal(100), SCALE));
+            //卖空购回全价总额
+            result.setEntrustIntegrateUnitFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(result.getUnitFprice(), entrustIntegrateNum),
+                    new BigDecimal(100), SCALE));
+        }
         return result;
     }
 }

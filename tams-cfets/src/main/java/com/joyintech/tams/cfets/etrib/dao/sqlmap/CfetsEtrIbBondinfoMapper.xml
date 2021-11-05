@@ -879,8 +879,8 @@ from
         T1.INV_AIM as busiModel,
         T1.PRICE unitPrice,
         T7.FULL_PRICE allPrice,
-        T7.MATURE_YIELD*100 matureYield,
-        T7.EXER_YIELD*100 exerYield,
+        T7.MATURE_YIELD matureYield,
+        T7.EXER_YIELD exerYield,
         T7.SETTLE_SPREED settleSpreed,
         TO_CHAR(T1.entrust_date, 'yyyy-MM-dd')  as etrDate,
         null as approver,
@@ -888,9 +888,9 @@ from
         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 execProcess,
         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess,
         NVL(T5.FINISH_AMT,0)/100  as execFinishAmt,
-        ((T1.ENTRUST_NUM*100)- NVL(T5.FINISH_AMT,0)/100) as execRemainderAmt,
+        (NVL(T1.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as execRemainderAmt,
         NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
-        ((T1.ENTRUST_NUM*100)- NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
+        (NVL(T1.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
         NVL(T7.OUR_ENT_NUM,0)/100  as entrustOwnNum,
         NVL(T7.LENDIN_ENT_NUM,0)/100  as entrustIntegrateNum,
         T7.calculate_field as calculateField
@@ -978,18 +978,18 @@ from
         T1.INV_AIM as busiModel,
         T1.PRICE unitPrice,
         T7.FULL_PRICE allPrice,
-        T7.MATURE_YIELD*100 matureYield,
-        T7.EXER_YIELD*100 exerYield,
+        T7.MATURE_YIELD matureYield,
+        T7.EXER_YIELD exerYield,
         T7.SETTLE_SPREED as settleSpreed,
         TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as etrDate,
-        null as approver,
+        nextApp.nowUserId as approver,
         T1.REMARK as remark,
         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 execProcess,
         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess,
         NVL(T5.FINISH_AMT,0)/100  as execFinishAmt,
-        ((T1.ENTRUST_NUM*100)- NVL(T5.FINISH_AMT,0)/100) as execRemainderAmt,
+        (NVL(T1.ENTRUST_NUM,0)/100- NVL(T5.FINISH_AMT,0)/100) as execRemainderAmt,
         NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
-        ((T1.ENTRUST_NUM*100)- NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
+        (NVL(T1.ENTRUST_NUM,0)/100- NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
         NVL(T7.OUR_ENT_NUM,0)/100  as entrustOwnNum,
         NVL(T7.LENDIN_ENT_NUM,0)/100  as entrustIntegrateNum,
         T7.calculate_field as calculateField
@@ -1017,6 +1017,22 @@ from
         LEFT JOIN WFL_ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
         LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
         LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = T1.FINPROD_ID
+        left join (
+        SELECT case when T.PROCESS_STATE = 'END' then  null else T.NEXT_USER end AS nowUserId,
+        sdpm.Workflow_Id as workFlowId
+        FROM SYS_WFL_BUSINESS_LIST T
+        inner join SYS_DATA_PROCESS_MARK sdpm
+        on sdpm.business_data_pk1=T.TRADE_ID
+        WHERE EXISTS
+        (SELECT 1
+            FROM SYS_WFL_BUSINESS_LIST A
+            WHERE A.SEQ_NO = (SELECT MAX(B.SEQ_NO)
+                FROM SYS_WFL_BUSINESS_LIST B
+                WHERE A.WORKFLOW_ID = B.WORKFLOW_ID)
+                AND T.SEQ_NO = A.SEQ_NO)
+                AND T.PROCESS_STATE in ('ING')
+                and T.BUSINESS_TYPE='ETR02') nextApp
+        on T1.Workflow_Id=nextApp.workFlowId
         where
         T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
         and T1.TRADE_MARKET = #{TRADE_MARKET_01}
