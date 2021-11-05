@@ -114,17 +114,5 @@ public class JoyinbusinessCommonController extends BaseController {
 			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
 		}
 	}
-	@PostMapping("/getRightfinprodIdForAdd")
-	@ApiOperation(value = "含权债券简称列表查询", notes = "含权债券简称列表查询")
-	@ResponseBody
-	public Message<Page<SelectOptionDto>> getRightfinprodIdForAdd(@RequestBody CfetsSearchInfoRequest item) {
-		try {
-			Page<SelectOptionDto> dto = joyinbusinessCommonService.getRightfinprodIdForAdd(item);
-			return new Message<Page<SelectOptionDto>>().success().setData(dto);
-		} catch (Exception e) {
-			logger.error("查询含权债券简称列表异常", e);
-			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
-		}
-	}
 
 }
