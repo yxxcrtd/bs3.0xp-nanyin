@@ -103,7 +103,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
 
 	public static final String ENTRUST_RECORD_MODIFY = "modify";
 
-    @Value("${quote.flag:true}")
+    @Value("${quote.flag:false}")
     private boolean useInterfQuoteFlag;
 
     @Value("${quote.ws.host}")
