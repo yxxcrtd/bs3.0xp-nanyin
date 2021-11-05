@@ -168,7 +168,7 @@ public class EtrBoutRepoController {
     @DTXTransaction
     @PostMapping("doBack")
     public void doBack(@RequestBody EtrBoutRepoDto dto){
-        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
+        WFlowCommonService.doBackFlowExecute(dto.getWorkflowId(), dto.getEntrustId());
     }
     /**
      * 

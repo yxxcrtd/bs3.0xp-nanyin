@@ -120,4 +120,17 @@ public class WFlowCommonService {
     public void setEtrEntrustMapper(EtrEntrustMapper etrEntrustMapper){
         WFlowCommonService.etrEntrustMapper=etrEntrustMapper;
     }
+
+    /**
+     * 修改状态为已退回 & 持仓关闭
+     * @param workflowId
+     * @param entrustId
+     */
+    public static void doBackFlowExecute(String workflowId, String entrustId){
+        if (baseEtrCashPositionCommService != null) {
+            // 持仓关闭
+            baseEtrCashPositionCommService.entrustCloseExecute(entrustId);
+        }
+    }
+
 }

@@ -225,7 +225,8 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
      
      @Override
     public void doBack(EtrSecLendDto entity) {
-    	 deleteWflEntity(entity);
+         doBackFlow(entity);
+         //deleteWflEntity(entity);
     }
      
     
@@ -386,5 +387,14 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
         else {
             return null;
         }
+    }
+
+    /**
+     * 退回更新流程,删除流水
+     * @param dto
+     */
+    public void doBackFlow(EtrSecLendDto dto) {
+        restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME+"/EtrSecLend/doBackFlow",
+                dto, Void.class);
     }
 }
