@@ -426,7 +426,7 @@
            <if test='tradeMarket!=null and tradeMarket!=""'>
                AND fp.TRADE_MARKET = #{tradeMarket}
            </if>
-            <if test='tradePlace!=null and tradePlace!=""'>
+            <if test="tradePlace!=null and tradePlace!='' and tradePlace != 'null'">
                 AND fp.TRADE_MARKET = #{tradePlace}
             </if>
         </where>

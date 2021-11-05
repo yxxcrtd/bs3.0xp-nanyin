@@ -622,7 +622,15 @@
      * 画面加载完成
      */
     $(function () {
-    	//Modify by gaopeng 2019/10/12 start
+        if(getElementById("ps").val() == BACK_LEND_DIRECTION_04){
+            getElementById("portfolioId").parent().parent().hide();
+            getElementById("endDays1Start").parent().parent().parent().hide();
+        }else if(getElementById("ps").val() == BACK_LEND_DIRECTION_03){
+            getElementById("portfolioId").parent().parent().show();
+            getElementById("endDays1Start").parent().parent().parent().show();
+        }
+
+        //Modify by gaopeng 2019/10/12 start
     	//判断是否存在委托代码，存在即隐藏添加质押券按钮
     	if(getElementById("entrustId").val()!=null&&getElementById("entrustId").val()!=""&&pageModel==2){
     		getElementById("btn_joyin").hide();
@@ -658,6 +666,7 @@
     	setTimeout(function () {
             window.CfetsPledgedBond.refreshCfetsPldegeBond((entity && entity.pledgeBondList) ? entity.pledgeBondList : []);
         },1000);
+
 
     });
 }());
