@@ -18,6 +18,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.service.trade.bond.dto.TrdBondInvestTradePdfDto;
 import com.joyintech.service.trade.bond.service.TrdBondCalcService;
 import com.joyintech.tams.invest.common.dto.period.trdfundduration.TrdFundDurationCommonDto;
@@ -593,6 +594,16 @@ public class TrdBondInvestTradeController {
         TrdBondInvestTradeDto inputDto = JSON.parseObject(
                 JSON.toJSONString(map), TrdBondInvestTradeDto.class);
         inputDto.setCalculateField("unitCprice");
+
+        // add by swwan 20211105 GZYHTZJY-197 场内交易净价、全价、到期收益率未联动 start
+        Map<String, Object> tempParamMap = new HashMap<>();
+        tempParamMap.put("finprodId", map.get("finprodId"));
+        SecInfoModelDto secInfoModelDto = getSecInfoModel(tempParamMap);
+        if (secInfoModelDto != null && secInfoModelDto.getStartDate() != null
+                && DateUtil.compareTo(secInfoModelDto.getStartDate(), inputDto.getSettleDate()) > 0) {
+            inputDto.setSettleDate(secInfoModelDto.getStartDate());
+        }
+        // add by swwan 20211105 GZYHTZJY-197 场内交易净价、全价、到期收益率未联动 end
         return trdBondCalcService.calculateData(inputDto);
     }
 

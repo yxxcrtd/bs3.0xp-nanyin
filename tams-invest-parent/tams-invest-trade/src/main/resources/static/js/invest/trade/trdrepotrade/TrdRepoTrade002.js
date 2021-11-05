@@ -1996,6 +1996,28 @@
 	    }
     }
     //add by lizhi 2020-2-26 划款指令是否自动生成  end
+
+    /**
+     * 验证日期是否正确
+     * 日期格式：yyyy-mm-dd，yyyy-m-d，yyyy/mm/dd，yyyy/m/d
+     */
+    function checkDate(dateStr) {
+        dateStr = dateStr.replace(/\//g, '-');
+        var dateReg = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
+        var rValue = dateStr.match(dateReg);
+        if (rValue == null) {
+            return false;
+        }
+        rValue[1] = parseInt(rValue[1], 10);
+        rValue[2] = parseInt(rValue[2] - 1, 10);
+        rValue[3] = parseInt(rValue[3], 10);
+        var dateObj = new Date(rValue[1], rValue[2], rValue[3]);
+        if (dateObj.getFullYear() != rValue[1] || dateObj.getMonth() != rValue[2] || dateObj.getDate() != rValue[3]) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 画面加载完成
      */
@@ -2087,13 +2109,19 @@
                 vdateChange();
         });
         $('#mdate').on("change", function () {
-                // 起息日、到期日改变时，自动计算回购期限
-                /*vmdateOnChangeCalcTerm();*/
-                vmdateOnChangeCalcDate($('#mdate').val(), $('#mpayDate'));
-                /*mpayDateChangeBymdate();*/
-                // 组合代码、证券托管户、交易日、到期日改变时，刷新可使用标准券额度
-                refreshAvaStandardStockPosition();
-                mdateChange();
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add start
+            if($('#mdate').val() && !checkDate($('#mdate').val())){
+                Joyin.error(JoyinUtil.getLabel("TrdRepoTrade002.mdate")+ "格式不正确!");
+                return;
+            }
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add end
+            // 起息日、到期日改变时，自动计算回购期限
+            /*vmdateOnChangeCalcTerm();*/
+            vmdateOnChangeCalcDate($('#mdate').val(), $('#mpayDate'));
+            /*mpayDateChangeBymdate();*/
+            // 组合代码、证券托管户、交易日、到期日改变时，刷新可使用标准券额度
+            refreshAvaStandardStockPosition();
+            mdateChange();
         });
         //实际占款天数刷新回购利息
         $('#actCapDays').on("change", function () {
@@ -2112,10 +2140,22 @@
 
         // add by zhanggenglin 首期交付日,到期交付日变动时 20190807 start
         $('#vpayDate').on("change", function(){
-                vpayDateChange()
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add start
+            if($('#vpayDate').val() && !checkDate($('#vpayDate').val())){
+                Joyin.error(JoyinUtil.getLabel("TrdRepoTrade002.vpayDate")+ "格式不正确!");
+                return;
+            }
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add end
+            vpayDateChange()
         });
         $('#mpayDate').on("change",function(){
-                mpayDateChange()
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add start
+            if($('#mpayDate').val() && !checkDate($('#mpayDate').val())){
+                Joyin.error(JoyinUtil.getLabel("TrdRepoTrade002.mpayDate")+ "格式不正确!");
+                return;
+            }
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add end
+            mpayDateChange()
         });
        // add by zhanggenglin 首期交付日,到期交付日变动时 20190807 end
 

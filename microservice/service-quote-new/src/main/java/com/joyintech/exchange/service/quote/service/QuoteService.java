@@ -46,7 +46,7 @@ public class QuoteService {
     /**
      * 是否使用接口平台行情数据
      */
-    @Value("${quote.flag:true}")
+    @Value("${quote.flag:false}")
     private boolean useInterfQuoteFlag;
 
     public ResultBean getTick(String stockCode) {

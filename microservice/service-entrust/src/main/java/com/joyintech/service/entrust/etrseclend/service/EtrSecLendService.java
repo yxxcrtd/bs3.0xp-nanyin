@@ -662,5 +662,18 @@ public class EtrSecLendService extends BaseService {
         }
         return result;
     }
+
+    /**
+     * 退回更新流程,删除流水
+     * @param dto
+     */
+    public void doBackFlow(EtrSecLendDto dto) {
+        //删除流水
+        baseEtrCashPositionCommService.entrustCloseExecute(dto.getEntrustId());
+        //删除流程中数据
+//        Map<String, Object> param = new HashMap<>();
+//        param.put("workflowId", dto.getWorkflowId());
+//        etrSecLendMapper.deleteWflwflEtrTarget(dto.getWorkflowId());
+    }
     
 }
