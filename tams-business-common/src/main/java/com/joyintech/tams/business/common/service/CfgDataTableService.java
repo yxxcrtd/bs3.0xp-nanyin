@@ -1,11 +1,11 @@
 package com.joyintech.tams.business.common.service;
 
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.business.common.dao.CfgDataTableFlagMapper;
 import com.joyintech.tams.business.common.dao.CfgDataTableMapper;
 import com.joyintech.tams.business.common.entity.CfgDataTableShow;
 import com.joyintech.tams.business.common.entity.CfgDataTableShowFlag;
-import com.joyintech.tams.business.common.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
- * 数据表格设置service
+ * 页面展示设置service
  */
 @Service
 public class CfgDataTableService {
@@ -45,7 +46,7 @@ public class CfgDataTableService {
     private CfgDataTableFlagMapper cfgDataTableFlagMapper;
 
     /**
-     * 查询页面数据表格式设置
+     * 查询页面展示设置
      *
      * @param pageCode
      * @return
@@ -53,8 +54,8 @@ public class CfgDataTableService {
     public Map<String, List<CfgDataTableShow>> getByPageCode(String pageCode) {
         Map<String, List<CfgDataTableShow>> map = new HashMap<>();
         //获取登录用户的ID
-        String userId = UserUtil.getUserName();
-        //获取页面的表格编号
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        //获取页面的区域编码
         List<String> dtCodes = cfgDataTableMapper.getDtCodeByPageCode(pageCode);
         if (null != dtCodes && dtCodes.size() > 0) {
             dtCodes.stream().forEach(dtCode -> {
@@ -72,7 +73,7 @@ public class CfgDataTableService {
     }
 
     /**
-     * 数据表格设置
+     * 页面展示设置
      *
      * @param dataTableShowList
      */
@@ -82,7 +83,7 @@ public class CfgDataTableService {
     	    return;
     	}
         //获取登录用户的ID
-        String userId = UserUtil.getUserName();
+        String userId = SecurityUtil.getLoginUser().getUserName();
         //先判断用户是否自定义过设置
         CfgDataTableShow dataTableShow = dataTableShowList.get(0);
         String pageCode = dataTableShow.getPageCode();
@@ -120,7 +121,7 @@ public class CfgDataTableService {
     }
 
     /**
-     * 根据pageCode和dtCode查询数据表格式设置
+     * 根据pageCode，dtCode和spcdCode查询页面展示设置
      *
      * @param pageCode
      * @param dtCode
@@ -129,7 +130,7 @@ public class CfgDataTableService {
     public List<CfgDataTableShow> getByPageCodeAndDtCode(String pageCode, String dtCode, String spcdCode) {
         List<CfgDataTableShow> list;
         //获取登录用户的ID
-        String userId = UserUtil.getUserName();
+        String userId = SecurityUtil.getLoginUser().getUserName();
         //List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);
         CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode,spcdCode, userId);
         if (null == flag) {
