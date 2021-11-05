@@ -1402,6 +1402,14 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(allDto.getTradeAmt().compareTo(entrustNum)!=0){
             messages.add("组合分配中各组合券面总额之和必须等于基本信息中券面总额。");
         }
+        //指令日期若是节假日，不可以保存、提交
+        FinProduct fp=cfetsetrIbBondinfoMapper.findAssetInfo(allDto.getFinprodId());
+        if(StringUtil.isNotEmpty(fp)){
+            String isHoliday = cfetsetrIbBondinfoMapper.getIsHoliday(allDto.getEtrDate(), fp.getCalendarId());
+            if(StringUtil.isNotEmpty(isHoliday) && !StringUtil.equals(isHoliday,"0")){
+                messages.add("指令日期必须为交易日。");
+            }
+        }
         if(messages.size()>0) {
             return  StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE);
         }

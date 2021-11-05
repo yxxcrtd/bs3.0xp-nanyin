@@ -114,6 +114,8 @@ public interface CfetsEtrIbBondinfoMapper {
     Map queryPositionByEtrInfo(Map RequestDto);
 
     PtlPortfolio findPtlInfo(String portfolioId);
+    String getIsHoliday(@Param("cdate") Date cdate,@Param("calendarId") String calendarId);
+
 
 
 }
