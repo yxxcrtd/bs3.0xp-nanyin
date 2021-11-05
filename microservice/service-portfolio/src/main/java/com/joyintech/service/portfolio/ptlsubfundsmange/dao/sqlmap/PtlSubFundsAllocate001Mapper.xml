@@ -269,31 +269,30 @@
 			on dis.PORTFOLIO_ID = T1.PORTFOLIO_ID		
 		left join 
 		(
-		select NVL(SUM(PF.AMOUNT),0) actualAmt, 
-		PF.PORTFOLIO_ID subPortfolioId, 
-		PF.CCY ccy 
-		from PTL_CASH_POSITION_FLOW  PF
+		select NVL(SUM(PF.AMOUNT),0) actualAmt,
+		PC.PORTFOLIO_ID subPortfolioId,
+		PC.CCY ccy
+		from  PTL_CAPACCT_INFO PC
 		/**设计修改 add by leipeng 20190910**/
-		INNER JOIN PTL_CAPACCT_INFO PC ON PC.PORTFOLIO_ID=PF.PORTFOLIO_ID
+		LEFT JOIN PTL_CASH_POSITION_FLOW  PF ON PC.PORTFOLIO_ID=PF.PORTFOLIO_ID
 			AND PC.ACCT_NO=PF.ACCT_ID
 		    AND PC.ACCT_TYPE='${acctType}'
 		    AND PF.CCY=PC.CCY
-		
+			<if test="hodingType !=null and hodingType != ''">
+				AND PF.HODING_TYPE =  #{hodingType}
+			</if>
+			<if test="ccy !=null and ccy != ''">
+				AND PF.CCY =  #{ccy}
+			</if>
 		WHERE 1=1 
-		and PF.PORTFOLIO_ID IN 
+		and PC.PORTFOLIO_ID IN
 		(select T1.PORTFOLIO_ID 
 		from PTL_PORTFOLIO T1/**组合表**/ where 1=1 			
        	<if test="portfolioId !=null and portfolioId != ''">
        		AND	T1.PARENT_PORTFOLIO_ID = #{portfolioId}
        	</if>
        	)
-        <if test="hodingType !=null and hodingType != ''">
-    		AND PF.HODING_TYPE =  #{hodingType}
-       	</if>																																																																					
-        <if test="ccy !=null and ccy != ''">
-    		AND PF.CCY =  #{ccy}
-       	</if>
-       	GROUP BY PF.PORTFOLIO_ID,PF.CCY) A on T1.PORTFOLIO_ID = A.subPortfolioId																																																																					
+       	GROUP BY PC.PORTFOLIO_ID,PC.CCY) A on T1.PORTFOLIO_ID = A.subPortfolioId
        	where 1=1
        	<if test="portfolioId !=null and portfolioId != ''">
        		AND	T1.PARENT_PORTFOLIO_ID = #{portfolioId}
@@ -318,23 +317,23 @@
 	<select id="SumCashFlowAvaAmt" resultType="com.joyintech.service.portfolio.ptlsubfundsmange.dto.PtlSubFundsAllocateDto" parameterType="java.util.Map">
 		select
 		    NVL(SUM(PF.AMOUNT),0) avaAmt,
-		    PF.PORTFOLIO_ID subPortfolioId,
-		    PF.CCY ccy  
-		from 
-		PTL_CASH_POSITION_FLOW PF
+		   PC.PORTFOLIO_ID subPortfolioId,
+		   PC.CCY ccy
+		from
+		PTL_CAPACCT_INFO PC
 		/**设计修改 add by leipeng 20190910**/
-		INNER JOIN PTL_CAPACCT_INFO PC ON PC.PORTFOLIO_ID=PF.PORTFOLIO_ID
+		LEFT JOIN PTL_CASH_POSITION_FLOW PF ON PC.PORTFOLIO_ID=PF.PORTFOLIO_ID
 			AND PC.ACCT_NO=PF.ACCT_ID
 		    AND PC.ACCT_TYPE='${acctType}'
 		    AND PF.CCY=PC.CCY
+			<if test="hodingType !=null and hodingType != ''">
+				AND PF.HODING_TYPE =  #{hodingType}
+			</if>
+			<if test="ccy !=null and ccy != ''">
+				AND PF.CCY =  #{ccy}
+			</if>
 		WHERE 1=1 and PF.PORTFOLIO_ID = #{subPortfolioId,jdbcType=VARCHAR}
-        <if test="hodingType !=null and hodingType != ''">
-    		AND PF.HODING_TYPE =  #{hodingType}
-       	</if>																																																																					
-        <if test="ccy !=null and ccy != ''">
-    		AND PF.CCY =  #{ccy}
-       	</if>																																																																					
-		GROUP BY PF.PORTFOLIO_ID,PF.CCY
+		GROUP BY PC.PORTFOLIO_ID,PC.CCY
 	</select>
 	
 	<select id="getBusinessWorkflowId" parameterType="java.util.Map" resultType="java.lang.Integer">
