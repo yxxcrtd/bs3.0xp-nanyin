@@ -1389,6 +1389,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
         }
         List<CfetsBussCombDistribtDto> dtoList=allDto.getBussCombDistribtList();
+        BigDecimal entrustNum=BigDecimal.ZERO;
         for(int i = 0; i< dtoList.size(); i++) {
             if(!StringUtil.isNotEmpty(dtoList.get(i).getPortfolioId()))
                 messages.add("请输入组合代码(第"+(i+1)+"行)。");
@@ -1396,6 +1397,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 messages.add("请输入券面总额(第"+(i+1)+"行)。");
             if(!StringUtil.isNotEmpty(dtoList.get(i).getBusinessModel()))
                 messages.add("请输入业务模式(第"+(i+1)+"行)。");
+            entrustNum=ArithmeticUtil.doAdd(entrustNum,dtoList.get(i).getEntrustNum());
+        }
+        if(allDto.getTradeAmt().compareTo(entrustNum)!=0){
+            messages.add("组合分配中各组合券面总额之和必须等于基本信息中券面总额。");
         }
         if(messages.size()>0) {
             return  StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE);
