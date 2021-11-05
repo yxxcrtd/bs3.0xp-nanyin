@@ -33,7 +33,11 @@ public interface StlSettleTransDataGatherMapper {
     int batchInsetSettleTransDataTotalAdd(@Param("inputList") List<SettleTransDataTotalAdd> inputList);
 
 
+    int deleteTotalTradeAddByLastDeal(@Param("dealDate")Date dealDate,@Param("matchStatus")String matchStatus);
 
+    int deleteTotalTradeStatusByLastDeal(@Param("matchStatus")String matchStatus);
+
+    int insetSettleTransDataTotalStatus(SettleTransDataTotalStatus settleTransDataTotalStatus);
 
 
 

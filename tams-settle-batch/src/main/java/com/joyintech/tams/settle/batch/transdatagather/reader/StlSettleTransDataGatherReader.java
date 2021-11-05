@@ -6,6 +6,7 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -49,6 +50,8 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
         Date tradeDate = execInfo.getExecuteDate();
         //1、删除
         stlSettleTransDataGatherService.deleteTotalTradeByLastDeal(tradeDate);
+        stlSettleTransDataGatherService.deleteTotalTradeAddByLastDeal(tradeDate);
+        stlSettleTransDataGatherService.deleteTotalTradeStatusByLastDeal();
         //2、查询对账一致或者不需要对账的成交数据明细表数据
        List<StlSettleTransDataGatherDto> selectNeedTotalDataList = stlSettleTransDataGatherService.selectNeedTotalDataList(tradeDate);
         //3、查询得到的数据list按照 席位号 + 申请编号 的维度进行分组 得到List<Map<席位号 + 申请编号,StlSettleTransDataGatherDto>>
