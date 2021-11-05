@@ -78,7 +78,18 @@ public class JoyinbusinessCommonService extends BaseService {
         param.put("search",dto.getSearch());
         param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getfinprodIdForAdd(param));
+        if(StringUtil.isNotEmpty(dto.getPs()) && StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
+            param.put("platDate",DateUtil.platDateFromCache());
+            String userId = SecurityUtil.getLoginUser().getUserName();
+            if (StringUtils.isNotEmpty(userId)) {
+                param.put("userId", SecurityUtil.getLoginUser().getUserName());
+                return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getRightfinprodIdForAdd(param));
+            }else{
+                return null;
+            }
+        }else{
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getfinprodIdForAdd(param));
+        }
     }
     public Page<SelectOptionDto> selectPortfolioIdList(CfetsSearchInfoRequest dto) {
         Map<String, Object> param =new HashMap<>();
@@ -97,19 +108,5 @@ public class JoyinbusinessCommonService extends BaseService {
         param.put("roleOne", DictCodeList.角色岗位_投资经理.getValue());
         param.put("roleTwo", DictCodeList.角色岗位_项目经理岗.getValue());
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getManagers(param));
-    }
-    public Page<SelectOptionDto> getRightfinprodIdForAdd(CfetsSearchInfoRequest dto) {
-        Map<String, Object> param =new HashMap<>();
-        param.put("search",dto.getSearch());
-        param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-        param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
-        param.put("platDate",DateUtil.platDateFromCache());
-        String userId = SecurityUtil.getLoginUser().getUserName();
-        if (StringUtils.isNotEmpty(userId)) {
-            param.put("userId", SecurityUtil.getLoginUser().getUserName());
-            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getRightfinprodIdForAdd(param));
-        }else{
-            return null;
-        }
     }
 }

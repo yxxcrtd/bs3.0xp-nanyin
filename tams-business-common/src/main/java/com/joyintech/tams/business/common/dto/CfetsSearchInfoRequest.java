@@ -14,6 +14,8 @@ public class CfetsSearchInfoRequest {
     private String search;
     @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1}")
     private PageMode pageMode;
+    @ApiModelProperty(name="ps",value="交易方向",example="T03")
+    private String ps;
 
     public String getSearch() {
         return search;
@@ -29,5 +31,13 @@ public class CfetsSearchInfoRequest {
 
     public void setPageMode(PageMode pageMode) {
         this.pageMode = pageMode;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
     }
 }
