@@ -1,6 +1,8 @@
 package com.joyintech.tams.cfets.etrdispatcher.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,16 +35,25 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
     @ApiModelProperty(name="entrustNum",value="投标券面总额汇总",example="字符串1")
     private BigDecimal entrustNum;
 
+    @ApiModelProperty(name="etrBidDate",value="投标日期",example="2021-01-01")
+    private String etrBidDate;
+
     @ApiModelProperty(name="bidPriceList",value="投标标位",example="List<EtrEntrustBidPrice>")
     private List<EtrEntrustBidPrice> bidPriceList;
     //债券一级投标 end
 
     //债券交易 start
-    @ApiModelProperty(name="settleSpeed",value="清算速度",example="字符串1")
+    @ApiModelProperty(name="settleSpeed",value="清算速度CODE",example="T+0")
     private String settleSpeed;
+
+    @ApiModelProperty(name="otherSettleSpeed",value="清算速度",example="字符串1")
+    private String otherSettleSpeed;
 
     @ApiModelProperty(name="priceModel",value="价格模式Code",example="01")
     private String priceModel;
+
+    @ApiModelProperty(name="otherPriceModel",value="价格模式",example="A1")
+    private String otherPriceModel;
 
     @ApiModelProperty(name="secAcctId",value="证券账户",example="XXX证券账户")
     private String secAcctId;
@@ -335,5 +346,41 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
 
     public void setRepoPledgeModel(String repoPledgeModel) {
         this.repoPledgeModel = repoPledgeModel;
+    }
+
+    public String getOtherBusiModel() {
+        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, super.getBusiModel());
+    }
+
+    /**
+     * 获取 otherTradeMarket
+     * @return otherTradeMarket.
+     */
+    public String getOtherTradeMarket() {
+        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, super.getTradeMarket());
+    }
+
+    public String getOtherCcy() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
+    }
+
+    public String getOtherPs() {
+        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
+    }
+
+    public String getEtrBidDate() {
+        return etrBidDate;
+    }
+
+    public void setEtrBidDate(String etrBidDate) {
+        this.etrBidDate = etrBidDate;
+    }
+
+    public String getOtherPriceModel() {
+        return SysDataUtil.getNameFromDataDict(DictCode.价格模式, this.getPriceModel());
+    }
+
+    public String getOtherSettleSpeed() {
+        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, this.getSettleSpeed());
     }
 }

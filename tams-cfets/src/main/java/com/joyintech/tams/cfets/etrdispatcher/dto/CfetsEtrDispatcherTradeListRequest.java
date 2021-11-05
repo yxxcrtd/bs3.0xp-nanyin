@@ -4,9 +4,6 @@ import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Date;
-import java.util.List;
-
 /**
  * 场外指令分发
  * 指令列表分页查询条件DTO
@@ -19,7 +16,7 @@ import java.util.List;
 public class CfetsEtrDispatcherTradeListRequest {
 
     @ApiModelProperty(name="entrustStatus",value="指令状态",example="字符串1,字符串2,...")
-    private String entrustStatus;
+    private String[] entrustStatus;
 
     @ApiModelProperty(name="portfolioId",value="组合代码集合",example="字符串1,字符串2,...")
     private String portfolioId;
@@ -30,8 +27,8 @@ public class CfetsEtrDispatcherTradeListRequest {
     @ApiModelProperty(name="finprodType2",value="资产类型",example="A1")
     private String finprodType2;
 
-    @ApiModelProperty(name="businessModel",value="业务类型",example="A1")
-    private String businessModel;
+    @ApiModelProperty(name="busiTypePosition",value="业务类型",example="A1")
+    private String busiTypePosition;
 
     @ApiModelProperty(name="finprodMarketId",value="资产代码",example="字符串1,字符串2,...")
     private String finprodMarketId;
@@ -60,11 +57,14 @@ public class CfetsEtrDispatcherTradeListRequest {
     @ApiModelProperty(name="pageMode",value="分页对象")
     private PageMode pageMode;
 
-    public String getEntrustStatus() {
+    @ApiModelProperty(name="search",value="关键字",example="12")
+    private String search;
+
+    public String[] getEntrustStatus() {
         return entrustStatus;
     }
 
-    public void setEntrustStatus(String entrustStatus) {
+    public void setEntrustStatus(String[] entrustStatus) {
         this.entrustStatus = entrustStatus;
     }
 
@@ -92,12 +92,12 @@ public class CfetsEtrDispatcherTradeListRequest {
         this.finprodType2 = finprodType2;
     }
 
-    public String getBusinessModel() {
-        return businessModel;
+    public String getBusiTypePosition() {
+        return busiTypePosition;
     }
 
-    public void setBusinessModel(String businessModel) {
-        this.businessModel = businessModel;
+    public void setBusiTypePosition(String busiTypePosition) {
+        this.busiTypePosition = busiTypePosition;
     }
 
     public String getFinprodMarketId() {
@@ -171,5 +171,14 @@ public class CfetsEtrDispatcherTradeListRequest {
     public void setPageMode(PageMode pageMode) {
         this.pageMode = pageMode;
     }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
+    }
+
 }
 

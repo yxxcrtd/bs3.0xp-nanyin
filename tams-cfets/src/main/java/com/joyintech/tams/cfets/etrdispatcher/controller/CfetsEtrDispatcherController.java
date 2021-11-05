@@ -16,6 +16,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.util.ExcelUitl;
@@ -54,6 +55,12 @@ public class CfetsEtrDispatcherController extends BaseController {
         Map<String, Object> initPageParams = new HashMap<>();
         //数据字典初始化数据
         initPageParams.put("PINAN_ASSET_TYPE", this.getSelectDataFromDataDic(DictCode.平安资产类型, null));
+        initPageParams.put("BUSI_TYPE_POSITION", this.getSelectDataFromDataDic(DictCode.头寸业务类型, null));
+        initPageParams.put("TRADE_MARKET", this.getSelectDataFromDataDic(DictCode.交易流通场所, null));
+        initPageParams.put("CCY", this.getSelectDataFromDataDic(DictCode.币种, null));
+        initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));
+        initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
+        initPageParams.put("SHORTSELLINGSUPPORTED01", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
 
         initPageParams.put("pageId", "CfetsEtrDispatcher");
         return new Message<Map<String, Object>>(initPageParams).success();
@@ -253,7 +260,7 @@ public class CfetsEtrDispatcherController extends BaseController {
         Map<String, Object> pageParam = BeanUtil.object2Map(cfetsDto);
         AjaxResult ajaxResult = cfetsEtrDispatcherService.doDispatcherCheck(pageParam, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-            return new Message<AjaxResult>().fail().setData(ajaxResult);
+            return new Message<AjaxResult>().fail().setMessage(ajaxResult.getMessage());
         } else {
             //选择交易员
             List<SelectOptionDto> userList = cfetsEtrDispatcherService.getUsers(pageParam);
@@ -308,11 +315,12 @@ public class CfetsEtrDispatcherController extends BaseController {
             Map<String, Object> pageParam = BeanUtil.object2Map(cfetsDto);
             AjaxResult ajaxResult = cfetsEtrDispatcherService.doRefuseEntrustCheck(pageParam, br);
             if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-                return new Message<AjaxResult>().fail().setData(ajaxResult);
+                return new Message<AjaxResult>().fail().setMessage(ajaxResult.getMessage());
             }
             else{
                 //退回指令
                 ajaxResult = cfetsEtrDispatcherService.refuseEntrust(pageParam);
+
                 return new Message<AjaxResult>().success().setMessage("退回成功");
             }
         } catch (Exception e) {

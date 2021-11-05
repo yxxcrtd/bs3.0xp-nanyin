@@ -68,16 +68,14 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     @ApiModelProperty(name="etrPrice",value="指令价格",example="99")
     private String etrPrice;
 
-    /**
-     *执行进度%
-     */
+    @ApiModelProperty(name="exeProgress",value="执行进度%",example="50%")
     private BigDecimal exeProgress;
 
-    /**
-     *成交进度%
-     */
+    @ApiModelProperty(name="dealProgress",value="成交进度%",example="50%")
     private BigDecimal dealProgress;
 
+    @ApiModelProperty(name="busiTypePosition",value="头寸类型",example="01")
+    private String busiTypePosition;
     /**
      * 获取 otherEntrustStatus
      * @return otherEntrustStatus.
@@ -86,13 +84,13 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
         return SysDataUtil.getNameFromDataDict(DictCode.委托状态, super.getEntrustStatus());
     }
 
-    public String setEntrustDate() {
+    public String setOtherEntrustDate() {
         return DateUtil.format(super.getEntrustDate());
     }
 
     /**
-     * 获取 otherEntrustStatus
-     * @return otherEntrustStatus.
+     * 获取 otherSettleSpeed
+     * @return otherSettleSpeed.
      */
     public String getOtherSettleSpeed() {
         return SysDataUtil.getNameFromDataDict(DictCode.清算速度, super.getEntrustStatus());
@@ -122,7 +120,7 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
      * @return otherTradeMarket.
      */
     public String getOtherEffectFlag() {
-        return SysDataUtil.getNameFromDataDict(DictCode.有效状态, super.getTradeMarket());
+        return SysDataUtil.getNameFromDataDict(DictCode.有效状态, this.getEffectFlag());
     }
 
     /**
@@ -243,5 +241,17 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     public void setDealProgress(BigDecimal dealProgress) {
         this.dealProgress = dealProgress;
+    }
+
+    public String getBusiTypePosition() {
+        return busiTypePosition;
+    }
+
+    public void setBusiTypePosition(String busiTypePosition) {
+        this.busiTypePosition = busiTypePosition;
+    }
+
+    public String getOtherBusiTypePosition() {
+        return SysDataUtil.getNameFromDataDict(DictCode.头寸业务类型, this.getBusiTypePosition());
     }
 }

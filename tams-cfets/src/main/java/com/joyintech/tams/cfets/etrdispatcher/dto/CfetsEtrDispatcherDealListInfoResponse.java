@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.etrdispatcher.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -20,8 +22,8 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
     @ApiModelProperty(name="effectFlag",value="有效状态code",example="01")
     private String effectFlag;
 
-    @ApiModelProperty(name="effectFlagStr",value="有效状态",example="有效")
-    private String effectFlagStr;
+    @ApiModelProperty(name="otherEffectFlag",value="有效状态",example="有效")
+    private String otherEffectFlag;
 
     @ApiModelProperty(name="totleTradeId",value="汇总交易编号",example="A1")
     private String totleTradeId;
@@ -131,14 +133,6 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
 
     public void setEffectFlag(String effectFlag) {
         this.effectFlag = effectFlag;
-    }
-
-    public String getEffectFlagStr() {
-        return effectFlagStr;
-    }
-
-    public void setEffectFlagStr(String effectFlagStr) {
-        this.effectFlagStr = effectFlagStr;
     }
 
     public String getTotleTradeId() {
@@ -411,5 +405,21 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
 
     public void setSecTotalPrin(BigDecimal secTotalPrin) {
         this.secTotalPrin = secTotalPrin;
+    }
+
+    public String getOtherEffectFlag() {
+        return SysDataUtil.getNameFromDataDict(DictCode.有效状态, this.getEffectFlag());
+    }
+
+    public String getOtherCcy() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
+    }
+
+    public String getOtherPs() {
+        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
+    }
+
+    public String getOtherSettleSpeed() {
+        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, this.getSettleSpeed());
     }
 }

@@ -154,10 +154,9 @@ public class CfetsEtrDispatcherService extends BaseService{
         pageParam.put("busiTypePosition02", DictCodeListExt3.头寸业务类型_现券交易.getValue());
         pageParam.put("busiTypePosition03", DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
 
-        String entrustStatus = (String)pageParam.get("entrustStatus");
-        if(StringUtil.isNotEmpty(pageParam.get("entrustStatus"))){
-            List<String> entrustStatusList = StringUtil.splitToList(",",(String)pageParam.get("entrustStatus"));
-            pageParam.put("entrustStatusList", entrustStatusList);
+        List<String> listTemp = Arrays.asList(dto.getEntrustStatus());
+        if(!listTemp.contains("all")){
+            pageParam.put("entrustStatusList", listTemp);
         }
         String portfolioId = (String)pageParam.get("portfolioId");
         if(StringUtil.isNotEmpty(pageParam.get("portfolioId"))){
@@ -222,6 +221,17 @@ public class CfetsEtrDispatcherService extends BaseService{
         pageParam.put("finType_zq", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("ps_49", DictCodeListExt3.交易方向_债转股.getValue());
 
+//        if (StringUtil.equals(dto.getSettleSpeed(),
+//                DictCodeList.清算速度_T_0.getValue())) {
+//            pageParam.put("settleSpeed","0");
+//        }
+//        if (StringUtil.equals(dto.getSettleSpeed(),
+//                DictCodeList.清算速度_T_1.getValue())) {
+//            pageParam.put("settleSpeed","1");
+//        }
+        pageParam.put("sort",dto.getPageMode().getSort());
+        pageParam.put("direction",dto.getPageMode().getDirection());
+
         //根据组合权限表添加检索权限
         Page<CfetsEtrDispatcherTradeListResponse> pageLimit = new Page<CfetsEtrDispatcherTradeListResponse>();
         if(StringUtil.isNotEmpty(SecurityUtil.getLoginUser())) {
@@ -280,6 +290,7 @@ public class CfetsEtrDispatcherService extends BaseService{
 //                        cfetsEtrDispatcherTradeListResponse.setBussBidDate(DateUtil.format(dto2.getBidDate()));
 //                    }
 //                }
+                //TODO 清算速度
             }
         }
         return pageLimit;
@@ -498,6 +509,7 @@ public class CfetsEtrDispatcherService extends BaseService{
         CfetsEtrDispatcherInfoResponse cfetsResponseDto =new CfetsEtrDispatcherInfoResponse();
         //dto转成map
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("YESORNO_YES", DictCodeList.是否_是.getValue());
         List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
         if(entrustIdList.size() > 1){
             return new CfetsEtrDispatcherInfoResponse();
@@ -507,6 +519,7 @@ public class CfetsEtrDispatcherService extends BaseService{
             if (cfetsResponseDto != null) {
                 if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_债券一级投标.getValue())) {
                     cfetsResponseDto.setBidPriceList(mapper.selectBidPriceByKey(pageParam));
+                    cfetsResponseDto.setEtrBidDate(cfetsResponseDto.getEntrustDate());
                 } else if (StringUtil.equals(dto.getBusiTypePosition(), "利率互换首期")) {
                     if (cfetsResponseDto.getDueDate().equals(" - ")) {
                         cfetsResponseDto.setDueDate("");
@@ -530,6 +543,12 @@ public class CfetsEtrDispatcherService extends BaseService{
                         cfetsResponseDto.setPledgeBondList(pledgeList);
                         cfetsResponseDto.setTotalPrinAmt(totalPrinAmt);
                     }
+                }else if(StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_现券交易.getValue())){
+                    if(StringUtil.equals("01", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"))){
+                        cfetsResponseDto.setEntrustOwnNum(BigDecimal.ZERO);
+                        cfetsResponseDto.setIntegrateSecAmount(BigDecimal.ZERO);
+                    }
+
                 }
             }
             cfetsResponseDto.setRepoPledgeModel(CacheUtil.getSysParam(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL)));
@@ -644,6 +663,7 @@ public class CfetsEtrDispatcherService extends BaseService{
             }
         }
         ajaxResult.setErrorList(errorList);
+        ajaxResult.setMessage(errorList.toString());
         return ajaxResult;
     }
 
@@ -767,6 +787,7 @@ public class CfetsEtrDispatcherService extends BaseService{
                 }
             }
         }
+        ajaxResult.setMessage(errorList.toString());
         return ajaxResult;
     }
 
