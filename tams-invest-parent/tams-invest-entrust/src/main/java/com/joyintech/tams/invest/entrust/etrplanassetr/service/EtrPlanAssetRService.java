@@ -725,30 +725,32 @@ public class EtrPlanAssetRService extends CommonExportService<EtrPlanAssetRDto> 
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                         etrCommonService.checkIsBlank(rowData.get(8).toString(),
                                 "EtrInvestBondInfo002.invAim", lineNo));
+                // TISHKS-220:导入模板删除通道字段 fuyongsheng 20211105 edit start
                 // 通道
-                if (StringUtil.isNotBlank(rowData.get(9).toString())) {
-                    Map<String, Object> param = new HashMap<>();
-                    param.put("initValue", rowData.get(9).toString());
-                    param.put("page", 1);
-                    param.put("length", 20);
-                    Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                        ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
-                        param, SelectOptionDto.class);
-                    if (selectOptionDtoPage.getRoot().isEmpty()) {
-                        etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0017",
-                            getMessage("invest.channelId"), lineNo));
-                    }
-                }
+//                if (StringUtil.isNotBlank(rowData.get(9).toString())) {
+//                    Map<String, Object> param = new HashMap<>();
+//                    param.put("initValue", rowData.get(9).toString());
+//                    param.put("page", 1);
+//                    param.put("length", 20);
+//                    Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+//                        ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
+//                        param, SelectOptionDto.class);
+//                    if (selectOptionDtoPage.getRoot().isEmpty()) {
+//                        etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0017",
+//                            getMessage("invest.channelId"), lineNo));
+//                    }
+//                }
+                // TISHKS-220:导入模板删除通道字段 fuyongsheng 20211105 edit end
                 // 交易对手
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(11).toString(),
+                    etrCommonService.checkIsBlank(rowData.get(10).toString(),
                     		 "EtrPlanAssetN003.counterId", lineNo));
-                if (StringUtil.isNotBlank(rowData.get(11).toString())) {
+                if (StringUtil.isNotBlank(rowData.get(10).toString())) {
                     if (StringUtil.equals(s2[0], DictCodeList.交易方向_赎回.getValue())
                         || StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())
                         || StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())) {
                         Map<String, Object> map = new HashMap<>();
-                        map.put("search", rowData.get(11).toString());
+                        map.put("search", rowData.get(10).toString());
                         map.put("page", 1);
                         map.put("length", 20);
                         map.put("counterType", DictCodeListExt1.交易对手类型_市场机构.getValue());
