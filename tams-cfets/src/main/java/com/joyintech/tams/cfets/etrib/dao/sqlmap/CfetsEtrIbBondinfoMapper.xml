@@ -1131,5 +1131,26 @@ from
         WHERE CDATE = #{cdate}
         AND TRADE_CALENDAR_ID = #{calendarId}
     </select>
+    <!--查询该资产对应的组合分配列表-->
+    <select id="queryCfetsBussCombDisList" parameterType="Map" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsBussCombDistribtBaseDto">
+        select
+        tt.portfolio_id as portfolioId,
+        tt.inv_aim as businessModel,
+        tt.entrustNum as entrustNum
+        from
+        (select a.portfolio_id,a.finprod_id,a.inv_aim,
+        sum(case when a.HODING_TYPE =#{A_004} then a.AMOUNT else 0 end)/100 as entrustNum
+        from ptl_sec_position_rule a
+        inner join ptl_portfolio_authority ppa
+        on a.portfolio_id=ppa.portfolio_id
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>
+        where a.cdate= #{platDate}
+        and a.finprod_id=#{finprodId,jdbcType=VARCHAR}
+        group by  a.portfolio_id,a.finprod_id,a.inv_aim)tt
+        where tt.entrustNum!=0
+    </select>
+
 
 </mapper>

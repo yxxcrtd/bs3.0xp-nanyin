@@ -1666,4 +1666,29 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         return null;
     }
+    /**
+     * 查询该资产对应的组合分配列表
+     * @param page
+     * @param length
+     * @param requestDto
+     * @return
+     */
+    public List<CfetsBussCombDistribtBaseDto> queryCfetsBussCombDisList(String secId) {
+        if(!StringUtil.isNotEmpty(secId)){
+           return null;
+        }
+        Map<String, Object> param =new HashMap<>();
+        param.put("platDate",DateUtil.platDateFromCache());
+        param.put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue());
+        param.put("finprodId",secId);
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        if (StringUtils.isNotEmpty(userId)) {
+            param.put("userId", SecurityUtil.getLoginUser().getUserName());
+            return cfetsetrIbBondinfoMapper.queryCfetsBussCombDisList(param);
+        }else{
+            return null;
+        }
+
+    }
+
 }

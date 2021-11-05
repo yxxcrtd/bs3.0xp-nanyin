@@ -510,4 +510,16 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     public Message<String> ExceptionHandler(Exception e) {
         return new Message<String>().fail().setMessage("异常：" + e.getMessage());
     }
+    @ApiOperation(value = "回售时组合分配列表查询", notes = "回售时组合分配列表查询")
+    @PostMapping("/queryCfetsBussCombDisList/{secId:.+}")
+    @ResponseBody
+    public Message<List<CfetsBussCombDistribtBaseDto>> queryCfetsBussCombDisList(@PathVariable String secId) {
+        try {
+            List<CfetsBussCombDistribtBaseDto> list = cfetsEtrIbBondinfoService.queryCfetsBussCombDisList(secId);
+            return new Message<List<CfetsBussCombDistribtBaseDto>>().success().setData(list);
+        } catch (Exception e) {
+            logger.error("查询该资产对应的组合分配列表异常", e);
+            return new Message<List<CfetsBussCombDistribtBaseDto>>().fail().setMessage("查询异常");
+        }
+     }
 }
