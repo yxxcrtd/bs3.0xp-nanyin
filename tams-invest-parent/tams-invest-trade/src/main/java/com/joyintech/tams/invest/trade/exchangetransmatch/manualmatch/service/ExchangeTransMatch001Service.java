@@ -210,6 +210,7 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
         exchangeTransMatchCommonDto.setEntrustIdList(entrustIdList);
 
         //调用成交匹配共通方法
+        exchangeTransMatchCommonDto.setMatchType(DictCodeListExt3.下行交易匹配类型_手动匹配.getValue());
         exchangeTransMatchCommonService.transactionMacth(exchangeTransMatchCommonDto);
 
     }

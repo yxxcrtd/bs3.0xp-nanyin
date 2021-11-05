@@ -57,24 +57,26 @@
             {field:'matchStatusStr', sortField:'matchStatus',width:200, title: 'ExchangeTransMatch001.matchStatus'},
             {field:'matchProgressStr', sortField:'matchProgress',width:200, title: 'ExchangeTransMatch001.matchProgress'},
             {field:'tradeMarketStr', sortField:'tradeMarket',width:200, title: 'ExchangeTransMatch001.tradeMarket'},
-            {field:'applyNo', sortField:'applyNo',width:200, title: 'ExchangeTransMatch001.applyNo'},
-            {field:'secAcctNo', sortField:'secAcctNo',width:200, title: 'ExchangeTransMatch001.secAcctNo'},
+            {field:'applyTradeId', sortField:'applyNo',width:200, title: 'ExchangeTransMatch001.applyNo'},
+            {field:'secAcctName', sortField:'secAcctId',width:200, title: 'ExchangeTransMatch001.secAcctNo'},
             {field:'finprodType2Str', sortField:'finprodType2',width:200, title: 'ExchangeTransMatch001.finprodType2'},
             {field:'finprodMarketId', sortField:'finprodMarketId',width:200, title: 'ExchangeTransMatch001.finprodId'},
             {field:'finprodAbbr', sortField:'finprodAbbr',width:200, title: 'ExchangeTransMatch001.finprodAbbr'},
-            {field:'seatNo', sortField:'seatNo',width:200, title: 'ExchangeTransMatch001.seatNo'},
+            {field:'seatNumber', sortField:'seatNo',width:200, title: 'ExchangeTransMatch001.seatNo'},
             {field:'tradePlatStr', sortField:'tradePlat',width:200, title: 'ExchangeTransMatch001.tradePlat'},
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch001.ps'},
             {field:'remainAmount', sortField:'remainAmount',width:200, title: 'ExchangeTransMatch001.remainAmount',type: 'money'},
             {field:'remainNum', sortField:'remainNum',width:200, title: 'ExchangeTransMatch001.remainNum',type: 'number'},
-            {field:'dealPrice', sortField:'dealPrice',width:200, title: 'ExchangeTransMatch001.dealPrice',type: 'number'},
+            {field:'unitFprice', sortField:'unitFprice',width:200, title: 'ExchangeTransMatch001.dealPrice',type: 'number'},
             {field:'dealDate', sortField:'dealDate',width:200, title: 'ExchangeTransMatch001.dealDate',type: 'date'},
-            {field:'fundAccount', sortField:'fundAccount',width:200, title: 'ExchangeTransMatch001.fundAccount'},
+            {field:'acctName', sortField:'acctNo',width:200, title: 'ExchangeTransMatch001.fundAccount'},
 
             {field:'matchStatus', visible:false},
             {field:'matchProgress', visible:false},
             {field:'finprodType2', visible:false},
             {field:'finprodId', visible:false},
+            {field:'secAcctId', visible:false},
+            {field:'acctNo', visible:false},
             {field:'ps', visible:false},
             {field:'tradeMarket', visible:false},
             {field:'seqId', visible:false},
@@ -253,6 +255,12 @@
                 object.tradePlat = item.tradePlat;
                 object.dealDate = item.dealDate;
                 object.secAccount = item.secAcctNo;
+
+                Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/findEntrustPage'),object,function (result) {
+                    if(result) {
+                        entrustDataTable.data(result);
+                    }
+                });
             }
 
         });

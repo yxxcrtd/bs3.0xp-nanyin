@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.validator;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
@@ -29,7 +30,7 @@ public class ExchangeTransMatchValidator implements BeanValidator {
                     || !StringUtil.equals(dealDto.getAcctNo(),entrustDto.getAcctNo())
                     || !StringUtil.equals(dealDto.getFinprodId(),entrustDto.getFinprodId())
                     || !StringUtil.equals(dealDto.getPs(),entrustDto.getPs())
-                    || !StringUtil.equals(dealDto.getTradeDate(),entrustDto.getEntrustDate())
+                    || !StringUtil.equals(DateUtil.format(dealDto.getTradeDate()),DateUtil.format(entrustDto.getEntrustDate()))
                     || !StringUtil.equals(dealDto.getTradePlat(),entrustDto.getTradePlat())) {
                 errorList.add(new ValidMessage("成交数据的基本信息和委托或交易的基本信息不一致"));
             }

@@ -1985,7 +1985,9 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 	public AjaxResult checkImportData(Map<String,Object> paramMap) throws Exception {
 		ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(StringUtil.isNotEmpty(paramMap.get("fileName"))?paramMap.get("fileName").toString():StringUtil.EMPTY), null);
 		List<List<String>> objects = excelUtil.readToList(0, 1, 0);
-		if (objects.size() - 1 > 100) {
+		// TISHKS-206:导入数据行数判断是否大于100 fuyongsheng 20211105 edit start
+		if (objects.size() > 100) {
+		// TISHKS-206:导入数据行数判断是否大于100 fuyongsheng 20211105 edit end
 			Map<String, Object> resultMap = new HashMap<>();
 			resultMap.put("errorMsg", getMessage("ETR_E_0021"));
 			AjaxResult wr = new AjaxResult();

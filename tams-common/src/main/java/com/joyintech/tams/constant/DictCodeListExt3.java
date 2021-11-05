@@ -1586,9 +1586,9 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     对账状态结果_手工完成(DictCode.对账状态结果,"3","手工完成"),
     //add by chenjiaxing 20211015 end
 	
-	下行交易匹配状态_未匹配(DictCode.下行交易匹配状态,"01","未匹配"),
-    下行交易匹配状态_部分匹配(DictCode.下行交易匹配状态,"02","部分匹配"),
-    下行交易匹配状态_匹配完成(DictCode.下行交易匹配状态,"03","匹配完成"),
+	下行交易匹配状态_未匹配(DictCode.下行交易匹配状态,"0","未匹配"),
+    下行交易匹配状态_部分匹配(DictCode.下行交易匹配状态,"1","部分匹配"),
+    下行交易匹配状态_匹配完成(DictCode.下行交易匹配状态,"2","匹配完成"),
     ;
     /**
      * 对应于数据字典code
