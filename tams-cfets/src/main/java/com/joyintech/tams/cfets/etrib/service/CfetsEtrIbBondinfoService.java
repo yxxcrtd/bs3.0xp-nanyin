@@ -1034,10 +1034,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @return dto
      */
     public CfetsEtrFinProductDto getEtrFinProductInfo(String secId) {
-        CfetsEtrFinProductDto dto = cfetsetrIbBondinfoMapper.getEtrFinProductInfo(secId);
         Map<String, Object> map = new HashMap<>();
+        map.put("secId",secId);
+        map.put("sysDate",iPlatformDate.getSysDate());
+        CfetsEtrFinProductDto dto = cfetsetrIbBondinfoMapper.getEtrFinProductInfo(map);
         if (dto != null) {
-            map.put("secId",secId);
             map.put("marketId",dto.getMarketId());
             //            获取信用评级结果
             List<BusiFinProductRatingDto> ztList = busiProductRatingService.getZtBestRatingByOrgId(map);
@@ -1092,14 +1093,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 //            调整后的计算结束日>交易日取最小  现金流类型=利息(SQL中)
             try {
                 if (dto.getLastPaydate() != null || !StringUtil.isEmpty(dto.getLastPaydate())) {
-                    Date lastPaydate = sdf.parse(dto.getLastPaydate());
-//                    Date minDate = cfetsetrIbBondinfoMapper.getMinTradeDate(secId);
-                    Date sysdate = iPlatformDate.getSysDate();
-                    if (sysdate != null && sysdate.compareTo(lastPaydate) < 0) {
-                            dto.setLastPaydate(dto.getLastPaydate());
-                    }else {
-                        dto.setLastPaydate("--");
-                    }
+                    dto.setLastPaydate(dto.getLastPaydate());
                 } else {
                     dto.setLastPaydate("--");
                 }

@@ -636,7 +636,7 @@ from
         ) summary
     </select>
 
-    <select id="getEtrFinProductInfo" parameterType="String" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto">
+    <select id="getEtrFinProductInfo" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto">
         SELECT
         DISTINCT
         t1.FINPROD_ID secId,
@@ -671,11 +671,17 @@ from
         LEFT JOIN
             MST_BOND_VALUATION_INFO MBVI ON t1.FINPROD_MARKET_ID = MBVI.SEC_ID AND MBVI.VALUE_SOURCE = 'CBC'
         LEFT JOIN (
-            select f2.FINPROD_ID, min(f1.PAY_DATE) PAY_DATE
-            from fin_cash_plan f1
+            select
+            f2.FINPROD_ID,
+            min(f1.PAY_DATE) PAY_DATE
+            from
+            fin_cash_plan f1
             inner join fin_cash_info f2 on f1.CASH_ID = f2.CASH_ID
             inner join FIN_PRODUCT f3 on f2.FINPROD_ID = f3.FINPROD_ID
-            where f2.CASH_TYPE_2 = 'C02' and f3.FINPROD_TYPE2 = 'F01' and f1.CASH_TYPE in (01,04)
+            where
+            f2.CASH_TYPE_2 = 'C02' and
+            to_char(f1.PAY_DATE,'yyyy-MM-dd') <![CDATA[>=]]> to_char(#{sysDate},'yyyy-MM-dd') and
+            f3.FINPROD_TYPE2 = 'F01'
             group by f2.FINPROD_ID
             ) t4 on t4.FINPROD_ID = t1.FINPROD_ID
         left join
