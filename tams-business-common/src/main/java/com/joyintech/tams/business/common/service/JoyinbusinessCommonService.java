@@ -5,6 +5,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
@@ -96,5 +97,19 @@ public class JoyinbusinessCommonService extends BaseService {
         param.put("roleOne", DictCodeList.角色岗位_投资经理.getValue());
         param.put("roleTwo", DictCodeList.角色岗位_项目经理岗.getValue());
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getManagers(param));
+    }
+    public Page<SelectOptionDto> getRightfinprodIdForAdd(CfetsSearchInfoRequest dto) {
+        Map<String, Object> param =new HashMap<>();
+        param.put("search",dto.getSearch());
+        param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
+        param.put("platDate",DateUtil.platDateFromCache());
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        if (StringUtils.isNotEmpty(userId)) {
+            param.put("userId", SecurityUtil.getLoginUser().getUserName());
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getRightfinprodIdForAdd(param));
+        }else{
+            return null;
+        }
     }
 }

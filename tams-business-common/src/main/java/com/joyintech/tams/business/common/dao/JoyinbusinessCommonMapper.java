@@ -60,4 +60,14 @@ public interface JoyinbusinessCommonMapper {
      * @since 1.0
      */
     List<SelectOptionDto> getManagers(Map<String, Object> param);
+    /**
+     *
+     * 获取新建界面的行权债资产代码联想下拉框框
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> getRightfinprodIdForAdd(Map<String, Object> param);
 }

@@ -78,6 +78,7 @@
             <result column="VDATE" property="finvdate" jdbcType="VARCHAR" />
             <result column="MDATE" property="finmdate" jdbcType="VARCHAR" />
             <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+            <result column="PRICE" property="price" jdbcType="DOUBLE" />
         </association>
     </resultMap>
     <select id="getfinprodIdForAdd" resultMap="finprodIdMap">
@@ -94,7 +95,8 @@
         T2.TYPE_11,
         to_char(T1.VDATE,'yyyy-MM-dd') VDATE,
         to_char(T1.MDATE, 'yyyy-MM-dd') MDATE,
-        T1.CCY
+        T1.CCY,
+        null as PRICE
         FROM
         FIN_PRODUCT T1
         LEFT JOIN
@@ -163,6 +165,62 @@
                 #{manager,jdbcType=VARCHAR}),'%'))
             </if>
         </where>
+    </select>
+    <select id="getRightfinprodIdForAdd" resultMap="finprodIdMap">
+        SELECT distinct
+        T1.FINPROD_MARKET_ID id,
+        T1.FINPROD_ABBR text,
+        T1.FINPROD_NAME,
+        T1.FINPROD_ID,
+        T1.CALENDAR_ID,
+        T1.TRADE_MARKET,
+        T1.IS_RIGHT,
+        T2.TYPE_9,
+        T2.TYPE_10,
+        T2.TYPE_11,
+        to_char(T1.VDATE,'yyyy-MM-dd') VDATE,
+        to_char(T1.MDATE, 'yyyy-MM-dd') MDATE,
+        T1.CCY,
+        pr.price as PRICE
+        from ptl_sec_position_rule ptl
+        INNER JOIN
+        PTL_PORTFOLIO_AUTHORITY PPA
+        ON ptl.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>
+        inner join fin_product T1
+        on ptl.finprod_id=T1.finprod_id
+        and  T1.is_right='Y'
+        inner join FIN_EXERCISE_PLAN p
+        on p.finprod_id=T1.finprod_id
+        and p.finprod_id=ptl.finprod_id
+        left join (
+            select row_number() over(partition by pd.finprod_id order by pd.exercise_date desc) idx,
+            pd.finprod_id,
+            pd.exercise_price as price
+            from FIN_EXERCISE_PLAN pd
+            where pd.exercise_date<![CDATA[<=]]>#{platDate}
+        )pr
+        on pr.finprod_id=T1.finprod_id
+        and pr.finprod_id=ptl.finprod_id
+        and pr.idx=1
+        LEFT JOIN  FIN_PRODUCT_TYPE T2
+        ON T1.FINPROD_ID = T2.FINPROD_ID
+        where
+            T1.FINPROD_TYPE2 = #{assestType}
+            AND T1.TRADE_MARKET in(#{TRADE_PLACE_01})
+            and  T1.is_right='Y'
+            and  ptl.cdate=#{platDate}
+            and p.exercise_date>=#{platDate}
+            and ptl.amount>0
+            <if test="search != null and !search.equals('')">
+                and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+                or T1.FINPROD_NAME like concat('%',concat(#{search},'%'))
+                or T1.FINPROD_ABBR like concat('%',concat(#{search},'%'))
+                or T1.FINPROD_ID like concat('%',concat(#{search},'%'))
+                )
+            </if>
     </select>
 
 </mapper>
