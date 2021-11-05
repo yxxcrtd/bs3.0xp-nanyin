@@ -42,6 +42,7 @@ public interface CfgDataTableMapper {
      * @return
      */
     List<CfgDataTableShow> getByPageCode(@Param("pageCode") String pageCode, @Param("dtCode") String dtCode,
+                                         @Param("spcdCode") String spcdCode,
                                           @Param("effeRange") Integer effeRange, @Param("rangeId") String rangeId);
 
     /**

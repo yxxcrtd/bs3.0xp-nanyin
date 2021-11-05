@@ -57,12 +57,13 @@ public class CfgDataTableService {
         String userId = SecurityUtil.getLoginUser().getUserName();
         //获取页面的区域编码
         List<String> dtCodes = cfgDataTableMapper.getDtCodeByPageCode(pageCode);
+        String spcdCode = "999999";
         if (null != dtCodes && dtCodes.size() > 0) {
             dtCodes.stream().forEach(dtCode -> {
                 //先查用户自定义设置，没有再查询默认设置
-                List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);
+                List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_IS, userId);
                 if (uDataList != null && uDataList.size() < 1) {
-                    List<CfgDataTableShow> dataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_NO, null);
+                    List<CfgDataTableShow> dataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_NO, null);
                     map.put(dtCode, dataList);
                 } else {
                     map.put(dtCode, uDataList);
@@ -134,9 +135,9 @@ public class CfgDataTableService {
         //List<CfgDataTableShow> uDataList = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);
         CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode,spcdCode, userId);
         if (null == flag) {
-            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_NO, USER_ID);
+            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_NO, USER_ID);
         } else {
-            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode, EFFERANGE_IS, userId);;
+            list = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_IS, userId);;
         }
         return list;
     }
