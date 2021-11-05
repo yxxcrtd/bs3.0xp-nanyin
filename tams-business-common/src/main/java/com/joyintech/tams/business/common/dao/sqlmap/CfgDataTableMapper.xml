@@ -7,6 +7,7 @@
     <sql id="selectCfgDataTableShow">
         select PAGECODE,
                DTCODE,
+               SPCDCODE,
                COLCODE,
                COLNAME,
                DICTCODE,
@@ -29,10 +30,11 @@
         INSERT ALL
         <foreach collection="list" item="dataTable" index="index">
             into CFG_DATATABLE_SHOW
-            (PAGECODE,DTCODE,COLCODE,COLNAME,DICTCODE,SEQNO,DISPLAYED,FROZEN,SORT,MAXLEN,EXTENDCFG,EFFERANGE,RANGEID,STATUS,REMARK1,REMARK2,REMARK3)
+            (PAGECODE,DTCODE,SPCDCODE,COLCODE,COLNAME,DICTCODE,SEQNO,DISPLAYED,FROZEN,SORT,MAXLEN,EXTENDCFG,EFFERANGE,RANGEID,STATUS,REMARK1,REMARK2,REMARK3)
             values(
             #{dataTable.pageCode ,jdbcType=VARCHAR},
             #{dataTable.dtCode,jdbcType=VARCHAR},
+            #{dataTable.spcdCode,jdbcType=VARCHAR},
             #{dataTable.colCode,jdbcType=VARCHAR},
             #{dataTable.colName,jdbcType=VARCHAR},
             #{dataTable.dictCode,jdbcType=VARCHAR},
@@ -62,6 +64,9 @@
                 </if>
                 <if test="dataTable.dtCode !=null and dataTable.dtCode !=''">
                     DTCODE = #{dataTable.dtCode,jdbcType=VARCHAR},
+                </if>
+                <if test="dataTable.spcdCode !=null and dataTable.spcdCode !=''">
+                    SPCDCODE = #{dataTable.spcdCode,jdbcType=VARCHAR},
                 </if>
                 <if test="dataTable.colCode !=null and dataTable.colCode !=''">
                     COLCODE = #{dataTable.colCode,jdbcType=VARCHAR},
@@ -111,6 +116,7 @@
             </set>
             where PAGECODE = #{dataTable.pageCode ,jdbcType=VARCHAR} and
             DTCODE = #{dataTable.dtCode,jdbcType=VARCHAR} and
+            SPCDCODE = #{dataTable.spcdCode,jdbcType=VARCHAR} and
             COLCODE = #{dataTable.colCode,jdbcType=VARCHAR} and
             EFFERANGE = #{dataTable.effeRange,jdbcType=INTEGER} and
             RANGEID = #{dataTable.rangeId,jdbcType=VARCHAR}
@@ -134,6 +140,7 @@
         <where>
             <if test="pageCode != null  and pageCode != ''">and PAGECODE = #{pageCode}</if>
             <if test="dtCode != null  and dtCode != ''">and DTCODE = #{dtCode}</if>
+            <if test="spcdCode != null  and spcdCode != ''">and SPCDCODE = #{spcdCode}</if>
             <if test="effeRange != null">and EFFERANGE = #{effeRange}</if>
             <if test="rangeId != null  and rangeId != ''">and RANGEID = #{rangeId}</if>
         </where>
