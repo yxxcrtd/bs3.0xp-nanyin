@@ -925,20 +925,24 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                     // 交易日历check
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                         etrCommonService.checkCalendarIdExist(rowData.get(17).toString(), "EtrBoutRepo002.calendarId", lineNo));
+                    // TISHKS-205:买断式回购指令导入模板文件删除通道字段 fuyongsheng 20211105 edit start
                     // 通道
-                    if ((StringUtil.isBlank(rowData.get(18).toString())
-                         && StringUtil.isBlank(rowData.get(19).toString()))
-                        || (StringUtil.isNotBlank(rowData.get(18).toString())
-                            && StringUtil.isNotBlank(rowData.get(19).toString()))) {
-                        confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                            getMessage("ETR_E_0020", getMessage("invest.channelId"),
-                                getMessage("EtrStock002.secAcctId"), lineNo));
-                    }
+//                    if ((StringUtil.isBlank(rowData.get(18).toString())
+//                         && StringUtil.isBlank(rowData.get(19).toString()))
+//                        || (StringUtil.isNotBlank(rowData.get(18).toString())
+//                            && StringUtil.isNotBlank(rowData.get(19).toString()))) {
+//                        confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//                            getMessage("ETR_E_0020", getMessage("invest.channelId"),
+//                                getMessage("EtrStock002.secAcctId"), lineNo));
+//                    }
+                    // 证券账户非空
+                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                    etrCommonService.checkIsBlank(rowData.get(18).toString(), "EtrStock002.secAcctId", lineNo));
                     // 证券账户存在
-                    if (StringUtil.isNotBlank(rowData.get(19).toString())
+                    if (StringUtil.isNotBlank(rowData.get(18).toString())
                         && StringUtil.isNotBlank(rowData.get(3).toString())) {
                         Map<String, Object> map = new HashMap<>();
-                        map.put("initValue", rowData.get(19).toString());
+                        map.put("initValue", rowData.get(18).toString());
                         map.put("page", 1);
                         map.put("length", 20);
                         map.put("portfolioId", rowData.get(3).toString());
@@ -949,24 +953,25 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                         }
                     }
                     // 通道存在
-                    if (StringUtil.isNotBlank(rowData.get(18).toString())) {
-                        Map<String, Object> param = new HashMap<>();
-                        param.put("initValue", rowData.get(18).toString());
-                        param.put("page", 1);
-                        param.put("length", 20);
-                        Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                            ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
-                            param, SelectOptionDto.class);
-                        if (selectOptionDtoPage.getRoot().isEmpty()) {
-                            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                getMessage("ETR_E_0017", getMessage("EtrFund003.chlId"), lineNo));
-                        }
-                    }
+//                    if (StringUtil.isNotBlank(rowData.get(18).toString())) {
+//                        Map<String, Object> param = new HashMap<>();
+//                        param.put("initValue", rowData.get(18).toString());
+//                        param.put("page", 1);
+//                        param.put("length", 20);
+//                        Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+//                            ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
+//                            param, SelectOptionDto.class);
+//                        if (selectOptionDtoPage.getRoot().isEmpty()) {
+//                            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//                                getMessage("ETR_E_0017", getMessage("EtrFund003.chlId"), lineNo));
+//                        }
+//                    }
+                    // TISHKS-205:买断式回购指令导入模板文件删除通道字段 fuyongsheng 20211105 edit end
                 }
                 // 交易对手是否存在check
-                if (StringUtil.isNotBlank(rowData.get(21).toString())) {
+                if (StringUtil.isNotBlank(rowData.get(20).toString())) {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("initValue", rowData.get(21).toString());
+                    map.put("initValue", rowData.get(20).toString());
                     map.put("page", 1);
                     map.put("length", 20);
                     map.put("counterType", null);
