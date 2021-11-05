@@ -11,4 +11,11 @@
 			and fp.FINPROD_TYPE2 = #{finprodType2}
 		</if>
 	</select>
+
+	<select id="getZyqk" resultType="java.lang.String">
+		select distinct PLEDGE_STOCK_ID
+		from  PTL_SEC_STOCK
+		where PLEDGE_STOCK_NAME = #{zyqkName}
+	</select>
+
 </mapper>

@@ -2079,4 +2079,22 @@ public class EtrCommonService extends BaseService<ITableRow> {
         return portfolioName;
     }
 
+    public String getZyqk(String zyqkName){
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getZyqk", zyqkName,
+                String.class);
+    }
+
+    public String checkZyqkExist(String cellData, String labelName, String indexId) {
+        // 判断是否是正确的组合代码
+        if (StringUtil.isNotBlank(cellData)) {
+             String zyqk =restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getZyqk", cellData,
+                    String.class);
+            if (!StringUtil.isNotEmpty(zyqk)) {
+                return getMessage("ETR_E_0017", getMessage(labelName), indexId);
+            }
+        }
+        return "";
+    }
 }

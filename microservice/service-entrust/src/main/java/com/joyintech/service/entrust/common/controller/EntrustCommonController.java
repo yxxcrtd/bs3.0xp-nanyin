@@ -30,4 +30,9 @@ public class EntrustCommonController {
 	public String assetIsTestBySppi(@RequestBody Map<String, Object> pageParam) {
 		return entrustCommonService.assetIsTestBySppi(pageParam);
 	}
+
+	@PostMapping("getZyqk")
+	public String getZyqk(@RequestBody String param) {
+		return entrustCommonService.getZyqk(param);
+	}
 }

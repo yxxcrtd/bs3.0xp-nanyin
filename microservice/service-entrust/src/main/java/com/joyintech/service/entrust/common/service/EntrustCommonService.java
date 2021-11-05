@@ -48,4 +48,7 @@ public class EntrustCommonService extends BaseService<ITableRow> {
 		return entrustCommonMapper.assetIsTestBySppi(map);
 	}
 
+	public String getZyqk(String param) {
+		return entrustCommonMapper.getZyqk(param);
+	}
 }

@@ -11,6 +11,7 @@
 package com.joyintech.service.entrust.common.dao;
 
 import com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,4 +30,7 @@ public interface EntrustCommonMapper {
 
 
 	String assetIsTestBySppi(Map<String, Object> map);
+
+	String getZyqk(@Param("zyqkName")String zyqkName);
+
 }
