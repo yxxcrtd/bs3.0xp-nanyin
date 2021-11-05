@@ -325,7 +325,7 @@ public class EntrustRdsCommonAop {
         }
         Map<String, Object> mapTrd = JsonUtils.object2Map(args[0]);
         if (StringUtil.isNotEmpty(mapTrd) && StringUtil.isNotEmpty(mapTrd.get("elementId"))
-                &&StringUtil.equals(mapTrd.get("elementId"),"EtrIbRepoRk_btn_submit")){
+                && mapTrd.get("elementId").toString().indexOf("EtrIbRepoRk")!=-1){
             return;
         }
         if (OperationType.REVOKE.equals(args[1]) || OperationType.DELETE.equals(args[1])) {
