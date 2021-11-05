@@ -589,14 +589,14 @@
                 doOther.exerYield_setDisabled(false);
             }*/
         }
-     var entityBussCombDistritList=entity_BussCombDistribtList||[];
+    // var entityBussCombDistritList=entity_BussCombDistribtList||[];
    // var rowsData = table.getAllRows();
-    if (entityBussCombDistritList.length > 0) {
+   /* if (entityBussCombDistritList.length > 0) {
       for (var index in entityBussCombDistritList) {
         entityBussCombDistritList[index].entrustNum = result.entrustNum/10000;
         //table.reload({data: rowsData});
       }
-    }
+    }*/
 /*      if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
                                 //质押券反显万元为单位
                                 var obj = [];
