@@ -122,7 +122,7 @@ public class WFlowCommonService {
     }
 
     /**
-     * 修改状态为已退回 & 持仓关闭
+     * 修改状态为已退回 & 持仓关闭 & 不删除流程
      * @param workflowId
      * @param entrustId
      */
