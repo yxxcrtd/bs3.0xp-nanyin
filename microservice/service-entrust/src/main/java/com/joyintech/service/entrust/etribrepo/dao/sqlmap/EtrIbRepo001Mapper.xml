@@ -713,9 +713,9 @@
 		<if test="isRight !=null and isRight !=''">
 			AND FIN_PRODUCT.IS_RIGHT = #{isRight,jdbcType=VARCHAR}
 		</if>
-		<if test="isPpb !=null and isPpb !=''">
-			AND FPA.IS_PPB = #{isPpb,jdbcType=VARCHAR}
-		</if>
+        <if test="isPpb !=null and isPpb !=''">
+            AND (CASE WHEN FIN_PRODUCT.TRADE_MARKET = '01' THEN decode(FIN_PRODUCT.ISSUE_TYPE,'01','N','Y') ELSE FPA.IS_PPB END) = #{isPpb,jdbcType=VARCHAR}
+        </if>
     </select>
     
     <delete id="deleteEtrEntrustPledgeByPledgeStockId" parameterType="java.lang.String">
