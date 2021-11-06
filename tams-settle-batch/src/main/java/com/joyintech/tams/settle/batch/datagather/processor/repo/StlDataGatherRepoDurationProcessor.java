@@ -71,8 +71,6 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 //TODO 执行日期
                 settleTransTgMappingList.add(settleTransTgMapping);
                 //组合交易
-                PtlTrade ptlTrade = new PtlTrade();
-                ptlTradeList.add(createPtlTrade(ptlTrade,totalTrdProductDealDto));
                 //划款指令
                 stlPayOrdersList.add(createStlPayOrders(totalTrdProductDealDto,settleTransData.getAcctNo()));
                 for (TrdProductDealDto  trdProductDealDto: settleTransData.getTrdProductDealList()) {
@@ -90,11 +88,16 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                     trdProductDeal.setTradeAmt(trdProductDealDto.getTradeAmt());
                     trdProductDeal.setTotleTradeId(totalTrdProductDealDto.getTotleTradeId());
                     createDeal(trdProductDeal,settleTransData);
+                    trdProductDeal.setPortfolioId(settleTransData.getPortfolioId());
                     TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
                     trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
                     trdProductDealAdd.setPortfolioId(settleTransData.getPortfolioId());
+                    PtlTrade ptlTrade = new PtlTrade();
+                    ptlTrade.setPortfolioId(settleTransData.getPortfolioId());
+                    ptlTradeList.add(createPtlTrade(ptlTrade,trdProductDeal));
                     productDealList.add(trdProductDeal);
                     trdProductDealAddList.add(trdProductDealAdd);
+
                 }
             }
             investTradeWriteDto.setFinProductDealTotalList(finProductDealTotalList);
@@ -195,21 +198,21 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
         dealTotal.setEntrustId(settleTransData.getEntrustId());
     }
 
-    private PtlTrade createPtlTrade(PtlTrade ptlTrade,TotalTrdProductDealDto totalTrdProductDealDto) {
+    private PtlTrade createPtlTrade(PtlTrade ptlTrade,TrdProductDealDto trdProductDealDto) {
         // 组合代码
-        ptlTrade.setPortfolioId(totalTrdProductDealDto.getPortfolioId());
+        //ptlTrade.setPortfolioId(trdProductDealDto.getPortfolioId());
         // 业务编号
-        ptlTrade.setBusiNo(totalTrdProductDealDto.getTotleTradeId());
+        ptlTrade.setBusiNo(trdProductDealDto.getTradeId());
         // 业务表
         ptlTrade.setBusiTable(DictCodeListStl.业务表_金融产品交易表.getValue());
         // 业务明细代码
-        ptlTrade.setBusiId(totalTrdProductDealDto.getFinprodId());
+        ptlTrade.setBusiId(trdProductDealDto.getFinprodId());
         // 投资目的
-        ptlTrade.setInvAim(totalTrdProductDealDto.getInvAim());
+        ptlTrade.setInvAim(trdProductDealDto.getInvAim());
         // 证券托管户代码
-        ptlTrade.setSecManageAcctId(totalTrdProductDealDto.getSecManageAcctId());
+        ptlTrade.setSecManageAcctId(trdProductDealDto.getSecManageAcctId());
         // 实际发生日
-        ptlTrade.setSettleDate(totalTrdProductDealDto.getSettleDate());
+        ptlTrade.setSettleDate(trdProductDealDto.getSettleDate());
         // 业务类型
         ptlTrade.setBusiType(DictCodeList.共通业务类型_质押式回购存续期.getValue());
         return ptlTrade;

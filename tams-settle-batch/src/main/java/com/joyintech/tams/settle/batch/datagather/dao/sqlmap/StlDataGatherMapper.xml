@@ -256,7 +256,7 @@
 		LEFT JOIN TRD_PRODUCT_DEAL_ADD T3 ON
 		T3.TRADE_ID = T1.TRADE_ID
 		LEFT JOIN FIN_TRADE_PRODUCT T2 ON
-		T2.FINPROD_ID = std.FINPROD_ID
+		T2.FINPROD_ID = T1.FINPROD_ID
 		<where>
 			<if test="dealDate != null">
 				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}

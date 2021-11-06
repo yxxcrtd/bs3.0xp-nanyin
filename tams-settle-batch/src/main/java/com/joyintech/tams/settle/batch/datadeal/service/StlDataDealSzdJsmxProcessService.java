@@ -230,6 +230,8 @@ public class StlDataDealSzdJsmxProcessService {
 				settleTransData.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
 				// 证券品种
 				settleTransData.setSecType(stlDownDataDealOperatorDto.getFinprodType());
+				// 交割日期
+				settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getQsrq()));
 				// 债可交换债换股业务
 				if (StringUtil.lowerCase(stlDownDataDealOperatorDto.getDataFile()).startsWith(StlDataDealProcessConstant.SZD_JSMX_03)) {
 					if (StringUtil.equals(szdJsmx.getYwlx(), StlDataDealProcessConstant.YWLX_653)) {
