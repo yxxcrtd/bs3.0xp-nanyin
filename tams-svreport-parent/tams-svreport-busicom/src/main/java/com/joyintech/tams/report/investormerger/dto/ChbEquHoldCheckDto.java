@@ -222,8 +222,18 @@ public class ChbEquHoldCheckDto implements ITableRow {
      * 是否已报送
      */
     private String isOrNoSubmit;
-    
-    
+
+
+    private String holderClassify;
+
+    public String getHolderClassify() {
+        return holderClassify;
+    }
+
+    public void setHolderClassify(String holderClassify) {
+        this.holderClassify = holderClassify;
+    }
+
     public String getIsOrNoSubmit() {
 		return isOrNoSubmit;
 	}

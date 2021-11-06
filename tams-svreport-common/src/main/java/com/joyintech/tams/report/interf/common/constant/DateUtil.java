@@ -127,6 +127,26 @@ public class DateUtil extends DateUtils {
     }
 
     /**
+     * 将日期字符串转为日期形式
+     *
+     * @param dateString 日期字符串
+     * @return 日期
+     */
+    public static Date parse(String dateString,String parsePatterns) {
+        // 外围系统有用C开发的，他们的日期如果是空的话给的是0
+        if (StringUtil.isEmpty(dateString) || "0".equals(dateString) || "00000000".equals(dateString)) {
+            return null;
+        }
+
+        try {
+            return parseDate(dateString,parsePatterns);
+        }
+        catch (ParseException e) {
+            throw new BusinessException("Date ParseException");
+        }
+    }
+
+    /**
      * 根据格式化字符串格式化日期
      *
      * @param date 格式化前日期
