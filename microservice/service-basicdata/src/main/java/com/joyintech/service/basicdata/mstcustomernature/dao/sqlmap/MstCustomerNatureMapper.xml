@@ -374,5 +374,10 @@
             </foreach>
    	  </if>
 	</select>
-	
+
+	<select id="checkLinkId" resultType="java.lang.Integer">
+		select count(1)
+		from MST_COUNTER_PARTY
+		where LINK_ID = #{linkId,jdbcType=VARCHAR}
+	</select>
 </mapper>

@@ -112,4 +112,7 @@ public interface MstCustomerNatureMapper {
 	String checkIsFinLicenceStr(String customerId);
 
 	int checkwflstatus(Map<String, Object> param);
+
+    int checkLinkId(@Param("linkId") String linkId);
+
 }
