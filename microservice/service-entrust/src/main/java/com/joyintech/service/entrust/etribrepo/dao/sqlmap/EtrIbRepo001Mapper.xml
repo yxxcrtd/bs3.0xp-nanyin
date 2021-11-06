@@ -702,10 +702,10 @@
 			)
 		</if>
 		<if test="windtypeone !=null and windtypeone !=''">
-			AND T4.TYPE_6 = #{windtypeone,jdbcType=VARCHAR}
+			AND T4.TYPE_9 = #{windtypeone,jdbcType=VARCHAR}
 		</if>
 		<if test="windtypetwo !=null and windtypetwo !=''">
-			AND T4.TYPE_7 = #{windtypetwo,jdbcType=VARCHAR}
+			AND T4.TYPE_10 = #{windtypetwo,jdbcType=VARCHAR}
 		</if>
 		<if test="isSecBond !=null and isSecBond !=''">
 			AND FPA.IS_SEC_BOND = #{isSecBond,jdbcType=VARCHAR}
