@@ -102,6 +102,7 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
             investTradeWriteDto.setStlPayOrdersList(stlPayOrdersList);
             investTradeWriteDto.setProductDealList(productDealList);
             investTradeWriteDto.setTrdProductDealAddList(trdProductDealAddList);
+            investTradeWriteDto.setSecType(DictCodeListExt1.证券品种_回购.getValue());
         }
         return investTradeWriteDto;
     }
@@ -112,7 +113,7 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
      * @param settleTransData
      */
     private void createTotalDeal(TotalTrdProductDealDto dealTotal,SettleTransDataDto settleTransData){
-        String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_质押式回购存续期);
+        String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易);
         dealTotal.setTotleTradeId(totalTradeId);
         // 业务类型
         dealTotal.setBusiType(DictCodeList.共通业务类型_质押式回购存续期.getValue());
@@ -179,7 +180,7 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
         // 交易市场
         dealTotal.setTradeMarketMode(settleTransData.getTradeMarketMode());
         // 投资组合代码
-        //dealTotal.setPortfolioId(settleTransData.getPortfolioId());
+        dealTotal.setPortfolioId(settleTransData.getPortfolioId());
         // 投管业务类型
         dealTotal.setTgBusiType(settleTransData.getBusiType());
         // 席位号
@@ -220,7 +221,7 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
      * @param settleTransData
      */
     private void createDeal(TrdProductDealDto trdProductDeal, SettleTransDataDto settleTransData){
-        trdProductDeal.setTradeId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_质押式回购存续期));
+        trdProductDeal.setTradeId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易));
         // 业务类型
         trdProductDeal.setBusiType(DictCodeList.共通业务类型_质押式回购存续期.getValue());
         // 金融产品代码

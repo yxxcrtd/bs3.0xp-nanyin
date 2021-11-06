@@ -141,6 +141,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             investTradeWriteDto.setStlPayOrdersList(stlPayOrdersList);
             investTradeWriteDto.setProductDealList(productDealList);
             investTradeWriteDto.setTrdProductDealAddList(trdProductDealAddList);
+            investTradeWriteDto.setSecType(DictCodeListExt1.证券品种_债券.getValue());
         }
         return investTradeWriteDto;
     }
