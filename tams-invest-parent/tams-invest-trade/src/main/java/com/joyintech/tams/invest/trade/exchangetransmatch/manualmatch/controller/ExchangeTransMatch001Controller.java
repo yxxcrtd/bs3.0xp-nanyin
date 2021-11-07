@@ -179,6 +179,12 @@ public class ExchangeTransMatch001Controller  extends BaseController {
         return exchangeTransMatch001Service.findEntrustPage(map);
     }
 
+    @ResponseBody
+    @RequestMapping("matchSearch")
+    public Page<ExchangeTransMatch003Dto> matchSearch(@RequestBody Map<String,Object> map) {
+        return exchangeTransMatch001Service.findEntrustPage(map);
+    }
+
     /**
      * 分页查询
      * @return 分页查询结果
