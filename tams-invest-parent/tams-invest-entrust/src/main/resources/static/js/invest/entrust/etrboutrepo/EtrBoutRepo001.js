@@ -62,7 +62,7 @@
             ,{field:'finishAmt',type:'number', title: 'EtrBoutRepo001.finishAmt', width:'10%',sortField:"finishAmt"}
             ,{field: 'priceModelStr', title: 'EtrStock001.priceModel', width: '10%', sortField: "priceModel"} //新增价格模式	王贵奇	2019/10/10
             ,{field:'transactioncom', title: 'EtrBoutRepo001.transactioncom',render : function(data, type, row, meta){
-                return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.finishAmt/row.entrustAmt*100).toFixed(2)+"%'><span class='layui-progress-text'>"+(row.finishAmt/row.entrustAmt*100).toFixed(2)+"%</span></div></div>";
+                return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.finishAmt/row.entrustAmt/100).toFixed(2)+"%'><span class='layui-progress-text'>"+(row.finishAmt/row.entrustAmt/100).toFixed(2)+"%</span></div></div>";
             }, width:'10%',sortable:false}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit'] , width:'10%'}
             ],
