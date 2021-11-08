@@ -1227,4 +1227,15 @@
            table.clear();
         });
     });
+    //add by meifaxin  20211108 新增的时候有在质押券库字段,待办中缺少质押券库字段bug start
+    setTimeout(function () {
+        if(pageModel == PAGE_MODEL_REFERENCE) {
+            if (repo_pledge_model == '03') {
+                if ($('#ps').val() !== '04') {
+                    table.showColumns([{field: 'zyqk', visible: true}]);
+                }
+            }
+        }
+    },500);
+    //add by meifaxin  20211108 新增的时候有在质押券库字段,待办中缺少质押券库字段bug end
 }());
