@@ -10,12 +10,22 @@
  
 package com.joyintech.tams.invest.entrust.etrboutrepo.controller;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -100,8 +110,12 @@ public class EtrBoutRepo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("recall")
-    public AjaxResult recallDelegate(@RequestBody EtrBoutRepoDto dto) {
+    public AjaxResult recallDelegate(@RequestBody EtrBoutRepoDto dto) throws Exception {
         List<EtrBoutRepoDto> dtolist = dto.getSelectedItem();
+        // add by yangwenjun 批量撤销预占 start
+        EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeList.平安资产类型_买断式回购.getValue(),
+                BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+        // add by yangwenjun 批量撤销预占 end
         if(dtolist != null && dtolist.size()>0){
             for(EtrBoutRepoDto entity : dtolist){
                 etrBoutRepoService.recallDelegate(entity);
@@ -120,15 +134,46 @@ public class EtrBoutRepo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("close")
-    public AjaxResult closeDelegate(@RequestBody EtrBoutRepoDto dto) {
+    public AjaxResult closeDelegate(@RequestBody EtrBoutRepoDto dto) throws Exception {
+        AjaxResult ajaxResult = new AjaxResult();
         List<EtrBoutRepoDto> dtolist = dto.getSelectedItem();
+        List<ValidMessage> errorList = new ArrayList<ValidMessage>();
+        List<String> entrustIdList = new ArrayList<>();
         if(dtolist != null && dtolist.size()>0){
             for(EtrBoutRepoDto entity : dtolist){
-                etrBoutRepoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay());
+                if(etrBoutRepoService.closeDelegate(entity.getEntrustId(), entity.getCloseWay())){
+                    ajaxResult.setMessage(this.getMessage("ETR_X_003"));
+                    entrustIdList.add(entity.getEntrustId());
+                }else{
+                    errorList.add(new ValidMessage(getMessage("组合代码:"+entity.getPortfolioId())+"委托关闭失败"));
+                    ajaxResult.setErrorList(errorList);
+                }
+
             }
-            return new AjaxResult(this.getMessage("ETR_X_003"));
+            if (!CollectionUtils.isEmpty(entrustIdList)) {
+                Map<String, BigDecimal> etrFinishMap = EntrustCompleteUtil.getEtrFinishAmtList(entrustIdList);
+                List<EtrBoutRepoDto> recallEntrustIdList = new ArrayList<>();
+                List<String> closeEntrustIdList = new ArrayList<>();
+                for(EtrBoutRepoDto etrDto : dtolist) {
+                    if(StringUtil.isNotEmpty(etrFinishMap) && StringUtil.isNotEmpty(etrFinishMap.get(etrDto.getEntrustId()))
+                            && BigDecimal.ZERO.compareTo(etrFinishMap.get(etrDto.getEntrustId()))<0) {
+                        closeEntrustIdList.add(etrDto.getEntrustId());
+                    }
+                    else if(entrustIdList.contains(etrDto.getEntrustId())){
+                        recallEntrustIdList.add(etrDto);
+                    }
+                }
+                if(!StringUtil.isEmptyList(recallEntrustIdList)) {
+                    EntrustRdsCommonAop.doListPreOccupy(recallEntrustIdList, DictCodeList.平安资产类型_买断式回购.getValue(),
+                            BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+                }
+                if(!StringUtil.isEmptyList(closeEntrustIdList)) {
+                    EntrustCompleteUtil.doComplete(closeEntrustIdList);
+                }
+            }
+
         }
-        return new AjaxResult(this.getMessage("ETR_X_004"));
+        return ajaxResult;
     }
     /**
      * 按钮点击时的check
