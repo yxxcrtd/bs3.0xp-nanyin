@@ -573,7 +573,12 @@
         query("#entrustOwnNum").val(restEntrustOwnNum/10000).trigger("change");
         var restEntrustIntegrateNum=query("#entrustIntegrateNum").val()==null?0:query("#entrustIntegrateNum").val();
         query("#entrustIntegrateNum").val(restEntrustIntegrateNum/10000).trigger("change");
-
+        if(query("#matureYield").val()){
+            query("#matureYield").val(query("#matureYield").val()*100).trigger("change");
+        }
+        if(query("#exerYield").val()){
+            query("#exerYield").val(query("#exerYield").val()*100).trigger("change");
+        }
         businessId = query('#businessId').val();
     }
 
