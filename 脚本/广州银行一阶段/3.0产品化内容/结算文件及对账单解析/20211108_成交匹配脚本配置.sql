@@ -6,6 +6,9 @@ delete from sys_page where PAGE_ID = 'ExchangeTransMatch001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ExchangeTransMatch001', 'TRD', '/invest/trade/exchangetransmatch/ExchangeTransMatch001', 'invest/trade/exchangetransmatch/ExchangeTransMatch001', 'DEAL_MANAGEMENT_001_007_002', null, null, '02', '01', '场内成交管理', 'system', null, sysdate, 'system', sysdate);
 
+delete from sys_page where PAGE_ID = 'ExchangeTransMatch002';
+insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('ExchangeTransMatch002', 'TRD', '/invest/trade/exchangetransmatch/ExchangeTransMatch002', 'invest/trade/exchangetransmatch/ExchangeTransMatch002', '', null, null, '02', '01', '匹配明细查看', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page_element where PAGE_ID = 'ExchangeTransMatch001' and ELEMENT_ID in ('ExchangeTransMatch001_btn_search','ExchangeTransMatch001_btn_export');
 insert into sys_page_element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG)
