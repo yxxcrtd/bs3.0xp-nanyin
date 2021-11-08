@@ -433,7 +433,7 @@ from
                         WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') 
                             AND VALUE_SOURCE IN (#{VALUATION_SOURCE_CBC},#{VALUATION_SOURCE_SCH})
                     ) WHERE rn =1
-                ) tt on tt.SEC_ID=etrptl.FINPROD_ID
+                ) tt on tt.SEC_ID=d.FINPROD_MARKET_ID
             </if>
             <if test="BOND_VALUATION_RULE != null and BOND_VALUATION_RULE =='02'">
                 <!-- 银行间债券根据债券登记托管机构判断，中债的债券取中债估值，上清债券取上清所估值，没有再取另外一个 -->
@@ -444,12 +444,12 @@ from
                             ORDER BY VALUE_DATE DESC, DECODE(T2.REGIST_ORG, #{REGIST_ORG_01}, 1, #{REGIST_ORG_02}, 1, 0) DESC
                         ) rn, t1.*
                         FROM MST_BOND_VALUATION_INFO t1
-                        LEFT JOIN FIN_PRODUCT t2 ON t1.SEC_ID =t2.FINPROD_ID AND t2.FINPROD_TYPE =#{FINPROD_TYPE_TG_F01} 
+                        LEFT JOIN FIN_PRODUCT t2 ON t1.SEC_ID =t2.FINPROD_MARKET_ID AND t2.FINPROD_TYPE =#{FINPROD_TYPE_TG_F01} 
                             AND DECODE(t1.VALUE_SOURCE, #{VALUATION_SOURCE_CBC}, #{REGIST_ORG_01}, #{VALUATION_SOURCE_SCH}, #{REGIST_ORG_02}, 'NULL')=T2.REGIST_ORG
                         WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') 
                             AND VALUE_SOURCE IN (#{VALUATION_SOURCE_CBC},#{VALUATION_SOURCE_SCH})
                     ) WHERE rn =1
-                ) tt on tt.SEC_ID=etrptl.FINPROD_ID
+                ) tt on tt.SEC_ID=d.FINPROD_MARKET_ID
             </if>
             <if test="search != null and search != ''">
                 <!--模糊查询使用-->
