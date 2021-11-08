@@ -734,7 +734,13 @@ public class EtrCommonService extends BaseService<ITableRow> {
             CreditLinesInputDto creditLinesInputDto = generateInputDto(object,status,method);
             if (creditLinesInputDto != null){
                 creditLinesInputDto.setRownum(rownum);
-                inputDtoList.add(creditLinesInputDto);
+                if (!StringUtil.isEmptyList(creditLinesInputDto.getInputDtoList())){
+                    inputDtoList.addAll(creditLinesInputDto.getInputDtoList());
+                }else {
+                    creditLinesInputDto.setRownum(rownum);
+                    inputDtoList.add(creditLinesInputDto);
+                }
+
             }
         }
     }
@@ -1229,6 +1235,18 @@ public class EtrCommonService extends BaseService<ITableRow> {
                     creditLinesInputDto.setTradeAmt(newFaceValue.multiply(creditLinesInputDto.getShareAmt()));
                 }else if (creditLinesInputDto.getTradeAmt() != null){
                     creditLinesInputDto.setTradeAmt(newFaceValue.multiply(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),100,2)));
+                }
+                List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+                if("01".equals(status)){
+                    CreditLinesInputDto dto1 = new CreditLinesInputDto();
+                    BeanUtil.copyPropertiesIgnoreNull(dto1,creditLinesInputDto);
+                    inputDtoList.add(dto1);
+
+                    CreditLinesInputDto dto2 = new CreditLinesInputDto();
+                    BeanUtil.copyPropertiesIgnoreNull(dto2,creditLinesInputDto);
+                    dto2.setZhiYaQuan(inputDto.getFinprodId());
+                    inputDtoList.add(dto2);
+                    creditLinesInputDto.setInputDtoList(inputDtoList);
                 }
             }
         }

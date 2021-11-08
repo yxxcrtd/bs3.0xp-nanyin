@@ -705,10 +705,10 @@
 			)
 		</if>
 		<if test="windtypeone !=null and windtypeone !=''">
-			AND T4.TYPE_6 = #{windtypeone,jdbcType=VARCHAR}
+			AND T4.TYPE_9 = #{windtypeone,jdbcType=VARCHAR}
 		</if>
 		<if test="windtypetwo !=null and windtypetwo !=''">
-			AND T4.TYPE_7 = #{windtypetwo,jdbcType=VARCHAR}
+			AND T4.TYPE_10 = #{windtypetwo,jdbcType=VARCHAR}
 		</if>
 		<if test="isSecBond !=null and isSecBond !=''">
 			AND FPA.IS_SEC_BOND = #{isSecBond,jdbcType=VARCHAR}
@@ -716,9 +716,9 @@
 		<if test="isRight !=null and isRight !=''">
 			AND FIN_PRODUCT.IS_RIGHT = #{isRight,jdbcType=VARCHAR}
 		</if>
-		<if test="isPpb !=null and isPpb !=''">
-			AND FPA.IS_PPB = #{isPpb,jdbcType=VARCHAR}
-		</if>
+        <if test="isPpb !=null and isPpb !=''">
+            AND (CASE WHEN FIN_PRODUCT.TRADE_MARKET = '01' THEN decode(FIN_PRODUCT.ISSUE_TYPE,'01','N','Y') ELSE FPA.IS_PPB END) = #{isPpb,jdbcType=VARCHAR}
+        </if>
     </select>
     
     <delete id="deleteEtrEntrustPledgeByPledgeStockId" parameterType="java.lang.String">

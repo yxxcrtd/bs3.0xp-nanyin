@@ -384,10 +384,13 @@ public class EtrIbRepoInfo004Service extends CommonExportService<EtrIbRepoinfo00
                 etrCommonService.checkIsGtZero(repoTerm, "EtrRepo003.repoTerm", lineNo));
             // 质押券库
             String zyqk = rowData.get(10).toString();
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(zyqk, "EtrRepo003.zyqk", lineNo));
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkZyqkExist(zyqk,"EtrRepo003.zyqk", lineNo));
+            if (StringUtil.isNotEmpty(rowData.get(4).toString()) && StringUtil.equals(rowData.get(4).toString(),"03:正回购")) {
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsBlank(zyqk, "EtrRepo003.zyqk", lineNo));
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkZyqkExist(zyqk,"EtrRepo003.zyqk", lineNo));
+            }
+
 
 //            String zyqk = rowData.get(14).toString();
 //            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,

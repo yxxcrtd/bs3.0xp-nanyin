@@ -159,16 +159,28 @@ public class ComMarketCalendarInfo001Service extends CommonExportService<ComMark
     private List<ExcelValidDto> checkExcelData(List<List<String>> dataList)
         throws ParseException {
         List<ExcelValidDto> checkResult = new ArrayList<>();
+        // TISHKS-4：先校验导入数据格式，再转bean fuyongsheng 20211108 edit start
+        if(CollectionUtils.isNotEmpty(dataList)){
+            for(int j=0; j<dataList.size(); j++){
+                List<ExcelValidDto> result = checkExcelCow(j, dataList.get(j));
+                if (CollectionUtils.isNotEmpty(result)) {
+                    checkResult.addAll(result);
+                }
+            }
+        }
+        if(CollectionUtils.isNotEmpty(checkResult)){
+            return checkResult;
+        }
         List<ComMarketCalendarInfo001Dto> equityList = converToBean(dataList);
         ComMarketCalendarInfo001Dto comMarketCalendarInfo001Dto = null;
         // 检查表中是否有数据
         if (equityList.size() >= 1) {
             for (int i = 0; i < equityList.size(); i++ ) {
                 comMarketCalendarInfo001Dto = equityList.get(i);
-                // 检查表内数据每行是否合法
-                if (checkExcelCow(i, dataList.get(i)) != null) {
-                    checkResult.addAll(checkExcelCow(i, dataList.get(i)));
-                }
+//                // 检查表内数据每行是否合法
+//                if (checkExcelCow(i, dataList.get(i)) != null) {
+//                    checkResult.addAll(checkExcelCow(i, dataList.get(i)));
+//                }
                 // 检查表内数据是否有主键重复
                 if (equityList.size() >= 2) {
                     for (int k = i + 1; k < equityList.size(); k++ ) {
@@ -185,6 +197,7 @@ public class ComMarketCalendarInfo001Service extends CommonExportService<ComMark
                 }
             }
         }
+        // TISHKS-4：先校验导入数据格式，再转bean fuyongsheng 20211108 edit end
         return checkResult;
     }
 
@@ -396,7 +409,7 @@ public class ComMarketCalendarInfo001Service extends CommonExportService<ComMark
         // 删除数据列 SPV 登记编码
         // 列数变为3
         if (null == list || list.size() != 3) {
-            ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i),
+            ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+2),
                 this.getMessage("COM_INFO_E_0001"));
             excelValidDtolist.add(dto);
         }
@@ -409,7 +422,7 @@ public class ComMarketCalendarInfo001Service extends CommonExportService<ComMark
             Date sysDate = DateUtil.platDateFromCache();
             if (date.before(sysDate)) {
                 // 验证导入数据日期是否小于平台日期
-                ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i),
+                ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i+2),
                     this.getMessage("BUSS_COM_E_0003", "平台日期", "导入数据的日期"));
                 excelValidDtolist.add(dto);
             }
@@ -423,7 +436,7 @@ public class ComMarketCalendarInfo001Service extends CommonExportService<ComMark
             // }
         }
         catch (ParseException e) {
-            ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i),
+            ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i+2),
                 this.getMessage("COM_INFO_E_0001"));
             excelValidDtolist.add(dto);
         }
