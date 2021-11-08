@@ -129,7 +129,7 @@ public class CfetsEtrFinProductDto {
      * 剩余期限
      */
     @ApiModelProperty(required = false,name="lastqx",value="剩余期限")
-    private BigDecimal lastqx;
+    private String lastqx;
 
     /**
      * 下一付息日
@@ -456,11 +456,11 @@ public class CfetsEtrFinProductDto {
         this.mdate = mdate;
     }
 
-    public BigDecimal getLastqx() {
+    public String getLastqx() {
         return lastqx;
     }
 
-    public void setLastqx(BigDecimal lastqx) {
+    public void setLastqx(String lastqx) {
         this.lastqx = lastqx;
     }
 

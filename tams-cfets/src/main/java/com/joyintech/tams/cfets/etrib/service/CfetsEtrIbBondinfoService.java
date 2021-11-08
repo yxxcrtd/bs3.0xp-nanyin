@@ -1104,6 +1104,18 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }else {
                 dto.setXqFlg("无");
             }
+
+            //如果估价净价（行权）、估价净价（推荐）为空，显示为--
+            if (dto.getPriceXq().equals("元")) {
+                dto.setPriceXq("--");
+            }
+            if (dto.getPriceTj().equals("元")) {
+                dto.setPriceTj("--");
+            }
+            //如果剩余期限为空，显示--
+            if (dto.getLastqx().equals("年")) {
+                dto.setLastqx("--");
+            }
             //下一行权日若无，则显示为“—”  计划行权日>交易日取最小
             if (dto.getXqdate() != null || !StringUtil.isEmpty(dto.getXqdate())) {
                 try {
