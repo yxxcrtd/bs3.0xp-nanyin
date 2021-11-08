@@ -22,55 +22,55 @@ CREATE TABLE
     );
 COMMENT ON TABLE CFG_DATATABLE_SHOW
 IS
-    'йЩ╬щ╠М╦Яу╧й╬еДжц';
+    'Ф∙╟Ф█╝Х║╗Ф═╪Е╠∙Г╓╨И┘█Г╫╝';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.PAGECODE
 IS
-    'рЁцФ╠ЮбК';
+    'И║╣И²╒Г╪√Г═│';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.DTCODE
 IS
-    'йЩ╬щ╠М╦Я╠Ю╨е';
+    'Ф∙╟Ф█╝Х║╗Ф═╪Г╪√Е▐╥';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.COLCODE
 IS
-    'ап╣двж╤нцШ';
+    'Е┬≈Г └Е╜≈Ф╝╣Е░█';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.COLNAME
 IS
-    'ап╣дцШЁф';
+    'Е┬≈Г └Е░█Г╖╟';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.DICTCODE
 IS
-    'вж╣Дж╣╣двж╤нцШ';
+    'Е╜≈Е┘╦Е─╪Г └Е╜≈Ф╝╣Е░█';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.SEQNO
 IS
-    'кЁпР╨е';
+    'И║╨Е╨▐Е▐╥';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.DISPLAYED
 IS
-    'йг╥Яотй╬(0:╡╩отй╬,1:отй╬)';
+    'Ф≤╞Е░╕Ф≤╬Г╓╨(0:Д╦█Ф≤╬Г╓╨,1:Ф≤╬Г╓╨)';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.FROZEN
 IS
-    'йг╥Я╤Ё╫А(0:╡╩╤Ё╫А,1:╤Ё╫А)';
+    'Ф≤╞Е░╕Е├╩Г╩⌠(0:Д╦█Е├╩Г╩⌠,1:Е├╩Г╩⌠)';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.SORT
 IS
-    'йг╥ЯеепР(0:╡╩еепР,1:еепР))';
+    'Ф≤╞Е░╕Ф▌▓Е╨▐(0:Д╦█Ф▌▓Е╨▐,1:Ф▌▓Е╨▐))';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.MAXLEN
 IS
-    'вН╢СЁ╓╤х(px╣╔н╩)';
+    'Ф°─Е╓╖И∙©Е╨╕(pxЕ█∙Д╫█)';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.EXTENDCFG
 IS
-    'ю╘уееДжц';
+    'Ф┴╘Е╪═И┘█Г╫╝';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.EFFERANGE
 IS
-    'спп╖╥╤н╖(0:х╚╬ж,1:╦Жхк)';
+    'Ф°┴Ф∙┬Х▄┐Е⌡╢(0:Е┘╗Е╠─,1:Д╦╙Д╨╨)';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.RANGEID
 IS
-    '╥╤н╖ID(╪Шспп╖╥╤н╖вж╤н)';
+    'Х▄┐Е⌡╢ID(Х╖│Ф°┴Ф∙┬Х▄┐Е⌡╢Е╜≈Ф╝╣)';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.STATUS
 IS
-    '©исцв╢л╛(0:╡╩©исц,1:©исц)';
+    'Е▐╞Г■╗Г┼╤Ф─│(0:Д╦█Е▐╞Г■╗,1:Е▐╞Г■╗)';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.REMARK1
 IS
-    '╠╦в╒1';
+    'Е╓┤ФЁ╗1';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.REMARK2
 IS
-    '╠╦в╒2';
+    'Е╓┤ФЁ╗2';
 COMMENT ON COLUMN CFG_DATATABLE_SHOW.REMARK3
 IS
-    '╠╦в╒3';
+    'Е╓┤ФЁ╗3';
