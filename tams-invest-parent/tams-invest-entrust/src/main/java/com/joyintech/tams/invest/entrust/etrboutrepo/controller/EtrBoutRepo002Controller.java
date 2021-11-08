@@ -27,7 +27,9 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
 import com.joyintech.tams.invest.entrust.etrboutrepo.dto.EtrBoutRepoDto;
 import com.joyintech.tams.invest.entrust.etrboutrepo.service.EtrBoutRepoService;
@@ -343,7 +345,7 @@ public class EtrBoutRepo002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrBoutRepoDto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody EtrBoutRepoDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -353,6 +355,17 @@ public class EtrBoutRepo002Controller extends BaseController {
             String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
             dto.setEntrustId(code);
         }
+
+        // ----------add by yangwenjun 20211108 预占功能 start----------
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    DictCodeList.平安资产类型_买断式回购.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
+        }
+        // ----------add by yangwenjun 20211108 预占功能 end----------
         ProcessParameter<EtrBoutRepoDto> processParameter = new ProcessParameter<EtrBoutRepoDto>();
         WorkFlowParameter<EtrBoutRepoDto> params = new WorkFlowParameter<EtrBoutRepoDto>();
         params.setPageId(this.getPageId());

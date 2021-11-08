@@ -26,7 +26,12 @@
                     WHEN A.SEC_TYPE = #{SEC_TYPE_09} THEN NULL
                 ELSE
                     E.FINPROD_ABBR END finprodAbbr,
-                E.FINPROD_TYPE2 finprodType2,
+                CASE
+                WHEN A.SEC_TYPE = #{SEC_TYPE_09} THEN
+                    #{FINPROD_TYPE_TG_F02}
+                ELSE
+                    E.FINPROD_TYPE2
+                END  finprodType2,
                 A.SEAT_NUMBER seatNumber,
                 A.TRADE_PLAT tradePlat,
                 A.PS ps,
@@ -37,6 +42,7 @@
                 A.CCY ccy,
                 A.TRADE_DATE dealDate,
                 A.TRADE_DATE tradeDate,
+                A.SETTLE_DATE settleDate,
                 D.ACCT_NO acctNo,
                 D.ACCT_NAME acctName
         from SETTLE_TRANS_DATA_TOTAL A
@@ -173,16 +179,16 @@
                 AND A1.PS = #{ps}
             </if>
             <if test="tradeDateBegin!=null and tradeDateBegin!='' ">
-                AND <![CDATA[ A1.TRADE_DATE >= TO_DATE(#{tradeDateBegin}, 'yyyy-mm-dd') ]]>
+                AND <![CDATA[ A1.ENTRUST_DATE >= TO_DATE(#{tradeDateBegin}, 'yyyy-mm-dd') ]]>
             </if>
             <if test="tradeDateEnd!=null and tradeDateEnd!='' ">
-                AND <![CDATA[ A1.TRADE_DATE <= TO_DATE(#{tradeDateEnd}, 'yyyy-mm-dd') ]]>
+                AND <![CDATA[ A1.ENTRUST_DATE <= TO_DATE(#{tradeDateEnd}, 'yyyy-mm-dd') ]]>
             </if>
             <if test="tradePlat!=null and tradePlat!='' ">
                 AND A1.TRADE_PLAT = #{tradePlat}
             </if>
             <if test="dealDate!=null and dealDate!='' ">
-                AND A1.TRADE_DATE = TO_DATE(#{dealDate}, 'yyyy-mm-dd')
+                AND A1.ENTRUST_DATE = TO_DATE(#{dealDate}, 'yyyy-mm-dd')
             </if>
             <if test="secAccount!=null and secAccount!='' ">
                 AND D1.SEC_ACCT_ID = #{secAccount}

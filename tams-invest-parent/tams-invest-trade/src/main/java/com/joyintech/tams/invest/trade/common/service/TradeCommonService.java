@@ -1235,6 +1235,18 @@ public class TradeCommonService extends BaseService {
                     creditLinesInputDto.setTradeAmt(newFaceValue.multiply(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),100,2)));
                 }
                 creditLinesInputDto.setFinprodId("");
+                List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+                if("01".equals(status)){
+                    CreditLinesInputDto dto1 = new CreditLinesInputDto();
+                    BeanUtil.copyPropertiesIgnoreNull(dto1,creditLinesInputDto);
+                    inputDtoList.add(dto1);
+
+                    CreditLinesInputDto dto2 = new CreditLinesInputDto();
+                    BeanUtil.copyPropertiesIgnoreNull(dto2,creditLinesInputDto);
+                    dto2.setZhiYaQuan(inputDto.getFinprodId());
+                    inputDtoList.add(dto2);
+                    creditLinesInputDto.setInputDtoList(inputDtoList);
+                }
             }
         }
         // 手工交收

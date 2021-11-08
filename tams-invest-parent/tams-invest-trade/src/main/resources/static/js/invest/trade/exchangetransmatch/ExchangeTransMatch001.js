@@ -8,8 +8,8 @@
         }
 
         if(object.tradeDate) {
-            object.tradeDateBegin = object.tradeDate.startDate();
-            object.tradeDateEnd = object.tradeDate.endDate();
+            object.tradeDateBegin = $("#tradeDate").startDate();
+            object.tradeDateEnd = $("#tradeDate").endDate();
         }
         return object;
     };
@@ -26,8 +26,8 @@
         }
 
         if(object.tradeDate) {
-            object.tradeDateBegin = object.tradeDate.startDate();
-            object.tradeDateEnd = object.tradeDate.endDate();
+            object.tradeDateBegin = $("#deaalTradeDate").startDate();
+            object.tradeDateEnd = $("#deaalTradeDate").endDate();
         }
         return object;
     };
@@ -80,6 +80,7 @@
             {field:'ps', visible:false},
             {field:'tradeMarket', visible:false},
             {field:'seqId', visible:false},
+            {field:'settleDate', visible:false},
             {field:'tradePlat', visible:false}
         ]
 
@@ -253,12 +254,18 @@
                 object.finprodType1 = item.finprodType2;
                 object.ps = item.ps;
                 object.tradePlat = item.tradePlat;
-                object.dealDate = item.dealDate;
+                object.dealDate = new Date(item.dealDate).Format("yyyy-MM-dd");
                 object.secAccount = item.secAcctNo;
 
-                Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/findEntrustPage'),object,function (result) {
+                Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/matchSearch'),object,function (result) {
                     if(result) {
-                        entrustDataTable.data(result);
+                        if(result && result.root.length >0){
+                            if(!entrustDataTable.table) {
+                                entrustDataTable.load();
+                            }
+                            entrustDataTable.clear();
+                            entrustDataTable.addRow(result.root);
+                        }
                     }
                 });
             }
@@ -315,68 +322,90 @@
                     return;
                 }
 
-                object = selArr[0];
-                object.elementId = "transaction_record";
-                Joyin.ajaxJson(basePath + 'invest/trade/exchangetransmatch/ExchangeTransMatch001/check', object, function(result) {
-                    Joyin.confirm("请确认是否进行交易录单?", function() {
-                        Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/genTransactionRecord'),object,function (result) {
-                            result=JSON.stringify(result);
-                            if(result) {
-                                var lable = "";
-                                var url = "";
-                                //债券
-                                if(object.finprodType2 == FINPROD_TYPE_TG_F01) {
-                                    //买入，卖出，行权回售，配债
-                                    if(object.ps == PS_T01 || object.ps == PS_T02 || object.ps == PS_T03 || object.ps == PS_T97) {
-                                        lable = "TrdBondInvestTrade002";
-                                        url = "invest/trade/bond/TrdBondInvestTrade002/init";
-                                    }
-                                    //可转债申购
-                                    else if(object.ps == PS_T04){
-                                        lable = "TrdConBond002";
-                                        url = "invest/trade/conbond/TrdConBond002/init";
-                                    }
-                                    //可转债申购确认
-                                    else if(object.ps == PS_T05) {
-                                        lable = "TrdConBond002";
-                                        url = "invest/trade/conbond/TrdConBond003/init";
-                                    }
-                                    //债转股
-                                    else if(object.ps == PS_T49) {
-                                        lable = "TrdBondToStock002.new";
-                                        url = "invest/trade/bondtostock/TrdBondToStock002/init";
-                                    }
-                                }
-                                //质押式回购
-                                else if(object.finprodType2 == FINPROD_TYPE_TG_F02 || object.finprodType2 == FINPROD_TYPE_TG_F03) {
-                                    lable = "TrdRepoTrade002.new";
-                                    url = "invest/trade/trdrepotrade/TrdRepoTrade002/init";
-                                }
-                                //基金
-                                else if(object.finprodType2 == FINPROD_TYPE_TG_F06) {
-                                    lable = "TrdFundInvestTrade002";
-                                    url = "invest/trade/fund/TrdFundInvestTrade002/init";
-                                }
-                                //股票
-                                else if(object.finprodType2 == FINPROD_TYPE_TG_F10) {
-                                    if(object.ps == PS_T01 || object.ps == PS_T02 || object.ps == PS_T46 || object.ps == PS_T47|| object.ps == PS_T48 ) {
-                                        lable = "TrdStock002";
-                                        url = "invest/trade/stockdeal/TrdStock002/init";
-                                    }
-                                }
+                var item = selArr[0];
+                var checkObject = getDealPageParams();
+                object.finprodId = item.finprodMarketId;
+                object.finprodType1 = item.finprodType2;
+                object.ps = item.ps;
+                object.tradePlat = item.tradePlat;
+                object.dealDate = item.dealDate;
+                object.secAccount = item.secAcctNo;
 
-                                Joyin.dialog(JoyinUtil.getLabel(lable), basePath
-                                    + url, "99%", "99%", {
-                                    pageModel : PAGE_MODEL_NEW,
-                                    tranRecord : result
-                                }, function() {
-                                    table.table?table.reload():table.load();
-                                    entrustDataTable.table?entrustDataTable.reload():entrustDataTable.load();
+                Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/findEntrustPage'),object,function (result) {
+                    if(result) {
+                        if(result && result.root.length >0){
+                            Joyin.error("存在可匹配信息，请先进行成交匹配！");
+                            return;
+                        }
+                        else {
+
+                            object = item;
+                            object.elementId = "transaction_record";
+                            Joyin.ajaxJson(basePath + 'invest/trade/exchangetransmatch/ExchangeTransMatch001/check', object, function(result) {
+                                Joyin.confirm("请确认是否进行交易录单?", function() {
+                                    Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/genTransactionRecord'),object,function (result) {
+                                        result=JSON.stringify(result);
+                                        if(result) {
+                                            var lable = "";
+                                            var url = "";
+                                            //债券
+                                            if(object.finprodType2 == FINPROD_TYPE_TG_F01) {
+                                                //买入，卖出，行权回售，配债
+                                                if(object.ps == PS_T01 || object.ps == PS_T02 || object.ps == PS_T03 || object.ps == PS_T97) {
+                                                    lable = "TrdBondInvestTrade002";
+                                                    url = "invest/trade/bond/TrdBondInvestTrade002/init";
+                                                }
+                                                //可转债申购
+                                                else if(object.ps == PS_T04){
+                                                    lable = "TrdConBond002";
+                                                    url = "invest/trade/conbond/TrdConBond002/init";
+                                                }
+                                                //可转债申购确认
+                                                else if(object.ps == PS_T05) {
+                                                    lable = "TrdConBond002";
+                                                    url = "invest/trade/conbond/TrdConBond003/init";
+                                                }
+                                                //债转股
+                                                else if(object.ps == PS_T49) {
+                                                    lable = "TrdBondToStock002.new";
+                                                    url = "invest/trade/bondtostock/TrdBondToStock002/init";
+                                                }
+                                            }
+                                            //质押式回购
+                                            else if(object.finprodType2 == FINPROD_TYPE_TG_F02 || object.finprodType2 == FINPROD_TYPE_TG_F03) {
+                                                lable = "TrdRepoTrade002.new";
+                                                url = "invest/trade/trdrepotrade/TrdRepoTrade002/init";
+                                            }
+                                            //基金
+                                            else if(object.finprodType2 == FINPROD_TYPE_TG_F06) {
+                                                lable = "TrdFundInvestTrade002";
+                                                url = "invest/trade/fund/TrdFundInvestTrade002/init";
+                                            }
+                                            //股票
+                                            else if(object.finprodType2 == FINPROD_TYPE_TG_F10) {
+                                                if(object.ps == PS_T01 || object.ps == PS_T02 || object.ps == PS_T46 || object.ps == PS_T47|| object.ps == PS_T48 ) {
+                                                    lable = "TrdStock002";
+                                                    url = "invest/trade/stockdeal/TrdStock002/init";
+                                                }
+                                            }
+
+                                            Joyin.dialog(JoyinUtil.getLabel(lable), basePath
+                                                + url, "99%", "99%", {
+                                                pageModel : PAGE_MODEL_NEW,
+                                                tranRecord : result
+                                            }, function() {
+                                                table.table?table.reload():table.load();
+                                                entrustDataTable.table?entrustDataTable.reload():entrustDataTable.load();
+                                            });
+                                        }
+                                    });
                                 });
-                            }
-                        });
-                    });
+                            });
+                        }
+                    }
                 });
+
+
             }
         });
 

@@ -40,6 +40,8 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("TRD_MATCH_STATUS_01", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
         map.put("TRD_MATCH_STATUS_02",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
         map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
+        map.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        map.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.findPage(map));
     }
 

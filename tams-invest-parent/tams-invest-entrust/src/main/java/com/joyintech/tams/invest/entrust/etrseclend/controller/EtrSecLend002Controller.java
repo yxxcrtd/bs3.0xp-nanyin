@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
 import com.joyintech.tams.invest.entrust.etrseclend.dto.EtrSecLendDto;
 import com.joyintech.tams.invest.entrust.etrseclend.service.EtrSecLendService;
@@ -267,7 +269,7 @@ public class EtrSecLend002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrSecLendDto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody EtrSecLendDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -276,6 +278,14 @@ public class EtrSecLend002Controller extends BaseController {
             param.setCommonBusinessExtType(DictCodeListExt2.fromDictCodeList(DictCodeListExt2.共通业务类型_债券借贷投资委托));
             String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
             dto.setEntrustId(code);
+        }
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    DictCodeListExt2.平安资产类型_债券借贷.getValue());
+            if (StringUtil.isNotEmpty(ar)) {
+                return ar;
+            }
         }
         ProcessParameter<EtrSecLendDto> processParameter = new ProcessParameter<EtrSecLendDto>();
         WorkFlowParameter<EtrSecLendDto> params = new WorkFlowParameter<EtrSecLendDto>();

@@ -5,6 +5,8 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherParamDto;
 import com.joyintech.tams.settle.batch.transdatagather.service.StlSettleTransDataGatherService;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,13 +34,19 @@ public class StlSettleTransDataGatherProcessor extends BaseProcessor<NeedOperate
         List<SettleTransDataTotal> transDataTotalList = item.getSettleTransDataTotalList();
         // 汇总交易编号
         List<SettleTransDataTotalAdd> transDataTotalAddList = item.getSettleTransDataTotalAddList();
-        //批量写入汇总成交数据表
-        if(CollectionUtils.isNotEmpty(transDataTotalList)){
-            stlSettleTransDataGatherService.batchInsetSettleTransDataTotal(transDataTotalList);
-        }
-        if(CollectionUtils.isNotEmpty(transDataTotalAddList)){
-            stlSettleTransDataGatherService.batchInsetSettleTransDataTotalAdd(transDataTotalAddList);
-        }
+        transDataTotalList.forEach(settleTransDataTotal -> {
+            stlSettleTransDataGatherService.insetSettleTransDataTotal(settleTransDataTotal);
+        });
+        transDataTotalAddList.forEach(settleTransDataTotalAdd -> {
+            stlSettleTransDataGatherService.insetSettleTransDataTotalAdd(settleTransDataTotalAdd);
+        });
+        //批量写入汇总状态表
+        transDataTotalList.forEach(settleTransDataTotal -> {
+            SettleTransDataTotalStatus status=new SettleTransDataTotalStatus();
+            status.setSeqNo(settleTransDataTotal.getSeqId());
+            status.setMatchStatus(DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
+            stlSettleTransDataGatherService.insetSettleTransDataTotalStatus(status);
+        });
         return null;
     }
 }

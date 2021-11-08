@@ -6,10 +6,7 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.SettleTransDataTotalAddMapper;
 import com.joyintech.tams.common.base.dao.SettleTransDataTotalMapper;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
@@ -38,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -254,6 +252,8 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                     trdBondInvestTradeDto.setIsOutTrade(DictCodeList.是否_是.getValue());
                     trdBondInvestTradeDto.setTradeAmt(dto.getRemainAmount());
                     trdBondInvestTradeDto.setShareAmt(dto.getRemainNum());
+                    trdBondInvestTradeDto.setSecManageAcctId(dto.getSecAcctId());
+                    trdBondInvestTradeDto.setOwnTradeAmt(ArithmeticUtil.multiply(dto.getRemainNum(),new BigDecimal(100)));
 
                     if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())) {
                         trdBondInvestTradeDto.setPs(DictCodeList.交易方向_买入.getValue());

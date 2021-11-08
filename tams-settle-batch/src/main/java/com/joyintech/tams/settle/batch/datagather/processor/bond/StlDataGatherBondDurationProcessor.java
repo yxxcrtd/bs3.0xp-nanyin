@@ -104,9 +104,6 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                             totalTrdProductDealDtoDetaile.setPortfolioId(ptlSecPosition.getPortfolioId());
                             createTotalDeal(totalTrdProductDealDtoDetaile,settleTransData);
                             finProductDealTotalList.add(totalTrdProductDealDtoDetaile);
-                            //组合交易
-                            PtlTrade ptlTrade = new PtlTrade();
-                            ptlTradeList.add(createPtlTrade(ptlTrade,totalTrdProductDealDtoDetaile));
                             //划款指令
                             stlPayOrdersList.add(createStlPayOrders(totalTrdProductDealDtoDetaile,settleTransData.getAcctNo()));
                             //交易明细(还本、收息)
@@ -126,10 +123,15 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                                 trdProductDeal.setTradeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(trdProductDealDto.getTradeAmt(),ptlSecPosition.getAmount()),amountTotal,2));
                                 trdProductDeal.setTotleTradeId(totalTrdProductDealDtoDetaile.getTotleTradeId());
                                 createDeal(trdProductDeal,settleTransData);
+                                trdProductDeal.setPortfolioId(ptlSecPosition.getPortfolioId());
                                 TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
                                 trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
                                 trdProductDealAdd.setPortfolioId(ptlSecPosition.getPortfolioId());
                                 productDealList.add(trdProductDeal);
+                                //组合交易
+                                PtlTrade ptlTrade = new PtlTrade();
+                                ptlTrade.setPortfolioId(ptlSecPosition.getPortfolioId());
+                                ptlTradeList.add(createPtlTrade(ptlTrade,trdProductDeal));
                                 trdProductDealAddList.add(trdProductDealAdd);
                             }
                         }
@@ -141,8 +143,9 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             investTradeWriteDto.setStlPayOrdersList(stlPayOrdersList);
             investTradeWriteDto.setProductDealList(productDealList);
             investTradeWriteDto.setTrdProductDealAddList(trdProductDealAddList);
+            investTradeWriteDto.setSecType(DictCodeListExt1.证券品种_债券.getValue());
         }
-        return null;
+        return investTradeWriteDto;
     }
 
     /**
@@ -233,21 +236,21 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
         dealTotal.setEntrustId(settleTransData.getEntrustId());
     }
 
-    private PtlTrade createPtlTrade(PtlTrade ptlTrade,TotalTrdProductDealDto totalTrdProductDealDto) {
+    private PtlTrade createPtlTrade(PtlTrade ptlTrade,TrdProductDealDto trdProductDealDto) {
             // 组合代码
-            ptlTrade.setPortfolioId(totalTrdProductDealDto.getPortfolioId());
+            //ptlTrade.setPortfolioId(trdProductDealDto.getPortfolioId());
             // 业务编号
-            ptlTrade.setBusiNo(totalTrdProductDealDto.getTotleTradeId());
+            ptlTrade.setBusiNo(trdProductDealDto.getTradeId());
             // 业务表
             ptlTrade.setBusiTable(DictCodeListStl.业务表_金融产品交易表.getValue());
             // 业务明细代码
-            ptlTrade.setBusiId(totalTrdProductDealDto.getFinprodId());
+            ptlTrade.setBusiId(trdProductDealDto.getFinprodId());
             // 投资目的
-            ptlTrade.setInvAim(totalTrdProductDealDto.getInvAim());
+            ptlTrade.setInvAim(trdProductDealDto.getInvAim());
             // 证券托管户代码
-            ptlTrade.setSecManageAcctId(totalTrdProductDealDto.getSecManageAcctId());
+            ptlTrade.setSecManageAcctId(trdProductDealDto.getSecManageAcctId());
             // 实际发生日
-            ptlTrade.setSettleDate(totalTrdProductDealDto.getSettleDate());
+            ptlTrade.setSettleDate(trdProductDealDto.getSettleDate());
             // 业务类型
             ptlTrade.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
             return ptlTrade;

@@ -42,6 +42,7 @@ public class ExchangeTransMatchValidator implements BeanValidator {
             }
 
 
+
         }
 
         return errorList;

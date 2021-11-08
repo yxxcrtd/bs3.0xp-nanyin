@@ -9,6 +9,8 @@ import com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto;
 import com.joyintech.tams.settle.batch.datagather.reader.StlDataGatherReader;
 import com.joyintech.tams.settle.batch.datagather.service.StlDataGatherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -17,6 +19,8 @@ import java.util.*;
  * @author zznn
  * @date 2021/11/1
  */
+@Service
+@Lazy
 public class StlDataGatherRepoDurationReader extends StlDataGatherReader {
 
     @Override

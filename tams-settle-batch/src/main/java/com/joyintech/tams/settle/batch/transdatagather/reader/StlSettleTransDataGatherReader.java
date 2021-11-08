@@ -6,6 +6,7 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -49,6 +50,8 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
         Date tradeDate = execInfo.getExecuteDate();
         //1、删除
         stlSettleTransDataGatherService.deleteTotalTradeByLastDeal(tradeDate);
+        stlSettleTransDataGatherService.deleteTotalTradeAddByLastDeal(tradeDate);
+        stlSettleTransDataGatherService.deleteTotalTradeStatusByLastDeal();
         //2、查询对账一致或者不需要对账的成交数据明细表数据
        List<StlSettleTransDataGatherDto> selectNeedTotalDataList = stlSettleTransDataGatherService.selectNeedTotalDataList(tradeDate);
         //3、查询得到的数据list按照 席位号 + 申请编号 的维度进行分组 得到List<Map<席位号 + 申请编号,StlSettleTransDataGatherDto>>
@@ -67,6 +70,8 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                     || (StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                         &&StringUtil.equals(settleTransDataDto.getPs(), DictCodeListExt1.交易方向_债转股.getValue()))){
                 BeanUtils.copyProperties(settleTransDataDto, dealTotal);
+                //  汇总交易编号
+                dealTotal.setSeqId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易));
                 settleTransDataList.add(dealTotal);
                 //当笔成交数据明细.附属表流水号 非空
                 if(StringUtil.isNotEmpty(settleTransDataDto.getTradeIdAdd())){
@@ -310,6 +315,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                     //是否优先配售
                     dealTotal.setIsPurchTypeYx(settleTransDataDto.getIsPurchTypeYx());
                     dealTotal.setApplyTradeId(settleTransDataDto.getApplyTradeId());
+                    dealTotal.setPs(settleTransDataDto.getPs());
                     settleTransDataList.add(dealTotal);
                 }
              }

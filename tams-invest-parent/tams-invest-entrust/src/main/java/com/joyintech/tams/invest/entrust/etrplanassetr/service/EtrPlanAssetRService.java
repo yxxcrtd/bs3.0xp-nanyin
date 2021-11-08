@@ -509,16 +509,16 @@ public class EtrPlanAssetRService extends CommonExportService<EtrPlanAssetRDto> 
             // 投资目的
             dto.setInvAim(rowData.get(8).toString().trim().split(":")[0]);
             // 获取备注
-            dto.setRemark(rowData.get(10).toString().trim());
+            dto.setRemark(rowData.get(9).toString().trim());
             // 获取交易对手
-            dto.setCounterId(rowData.get(11).toString().trim());
+            dto.setCounterId(rowData.get(10).toString().trim());
             // 获取交易对手名称
-            dto.setCounterIdName(getCounterName(rowData.get(11).toString().trim()));
+            dto.setCounterIdName(getCounterName(rowData.get(10).toString().trim()));
             // 投资经理
             dto.setEtrInvestPersonInfo(new EtrInvestPersonInfoDto());
             dto.getEtrInvestPersonInfo().setInvManagerId(dto.getCreateUser());
             // 获取交易对手
-            dto.getEtrInvestPersonInfo().setCounterId(rowData.get(11).toString().trim());
+            dto.getEtrInvestPersonInfo().setCounterId(rowData.get(10).toString().trim());
             // 投资处室
             dto.getEtrInvestPersonInfo().setRoom(dto.getCreateDept());
             // 根据市场代码查出联动值

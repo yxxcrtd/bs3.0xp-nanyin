@@ -370,7 +370,10 @@ public class StlDataGatherService {
 					
                     // add 处理现金流信息 20210825 start
                     // 写入现金流相关信息表
-                    this.cashFlowLogic(productDealDto, finTradeProductMap.get(productDealDto.getTradeId()));
+                    //存续期不用登录
+                    if(null!=finTradeProductMap.get(productDealDto.getTradeId())){
+                        this.cashFlowLogic(productDealDto, finTradeProductMap.get(productDealDto.getTradeId()));
+                    }
                     // add end
                 }
                 // 成交数据与投管交易关系
@@ -396,7 +399,7 @@ public class StlDataGatherService {
             for (TrdTradeFeeDetail feeDetail : tradeFeeDetailList) {
                 // 金融产品交易费用明细
                 trdTradeFeeDetailMapper.insertSelective(feeDetail);
-                
+
                 // 费用交易汇总
                 if (CollectionUtils.isNotEmpty(dealMap.get(feeDetail.getTradeId())) && CollectionUtils.isNotEmpty(finProductDealTotalList)){
                     TrdTradeFeeTotal trdTradeFeeTotal = new TrdTradeFeeTotal();
@@ -445,14 +448,14 @@ public class StlDataGatherService {
                 // add bug: GNS-363 正回购清算生成交易后，组合实时资产头寸查询结果显示为逆回购 20210827 start
                 List<TrdProductDealDto> dealList = dealMap.get(tradeProductDto.getFinprodId());
                 if (!StringUtil.isEmptyList(dealList) && dealList.get(0) != null) {
-                	TrdProductDealDto trdProductDealDto = dealList.get(0);
-                	if (StringUtil.equals(trdProductDealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
-                		finProductType.setType7("03");
-                		finProductType.setType9("12");
-                		finProductType.setType10("45");
-                		finProductType.setType11("091");
+                    TrdProductDealDto trdProductDealDto = dealList.get(0);
+                    if (StringUtil.equals(trdProductDealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+                        finProductType.setType7("03");
+                        finProductType.setType9("12");
+                        finProductType.setType10("45");
+                        finProductType.setType11("091");
                         finProductType.setType12("093");
-                	}
+                    }
                 }
                 // add end
                 finProductTypeMapper.insert(finProductType);
@@ -472,36 +475,36 @@ public class StlDataGatherService {
                 trdDealTotalAddMapper.insertSelective(trdDealTotalAdd);
             }
         }
-        
+
         if(CollectionUtils.isNotEmpty(trdBarterTotalList)) {
             // 实物汇总
             for (TrdFinProductBarterTotal trdBarterTotal : trdBarterTotalList) {
-            	trdBarterTotalMapper.insertSelective(trdBarterTotal);
+                trdBarterTotalMapper.insertSelective(trdBarterTotal);
             }
         }
-        
+
         if(CollectionUtils.isNotEmpty(trdBarterList)) {
             // 实物
             for (TrdFinProductBarter trdFinProductBarter : trdBarterList) {
-            	trdBarterMapper.insertSelective(trdFinProductBarter);
+                trdBarterMapper.insertSelective(trdFinProductBarter);
             }
         }
-        
+
         // 日间委托完成度表有一笔交易编号等于自身委托编号的记录，这条记录每次正向跑批时需要实时更新
         if (CollectionUtils.isNotEmpty(etrFinishStatusList)){
-        	for (EtrFinishStatus etrFinishStatus : etrFinishStatusList){
-        		etrFinishStatus.setCreateTime(null);
-        		etrFinishStatus.setCreateTime(null);
-        		etrFinishStatus.setCreateDept(null);
-        		etrFinishStatusMapper.updateByPrimaryKeySelective(etrFinishStatus);
-        	}
+            for (EtrFinishStatus etrFinishStatus : etrFinishStatusList){
+                etrFinishStatus.setCreateTime(null);
+                etrFinishStatus.setCreateTime(null);
+                etrFinishStatus.setCreateDept(null);
+                etrFinishStatusMapper.updateByPrimaryKeySelective(etrFinishStatus);
+            }
         }
-        
+
         // 成交编号业务编号关联表（只针对除权登记数据）
         if (CollectionUtils.isNotEmpty(settleTransTgMappingList)){
-        	for (SettleTransTgMapping settleTransTgMapping : settleTransTgMappingList){
-        		settleTransTgMappingMapper.insert(settleTransTgMapping);
-        	}
+            for (SettleTransTgMapping settleTransTgMapping : settleTransTgMappingList){
+                settleTransTgMappingMapper.insert(settleTransTgMapping);
+            }
         }
     }
 
@@ -698,16 +701,16 @@ public class StlDataGatherService {
         // 生效日期 = 画面.起息日
         finCashPayRule.setEffDate(input.getVdate());
         // 支付频率 = 数据字典缓存.支付频率(付息频率).到期支付
-        
-     // 一体化对应etliu start
+
+        // 一体化对应etliu start
 //        finCashPayRule.setPayCycle(DictCodeList.支付频率_付息频率_到期支付.getValue());
         finCashPayRule.setPayCycle(DictCodeList.频率_到期一次.getValue());
-     // 一体化对应etliu end
-        
-     // 一体化对应etliu
+        // 一体化对应etliu end
+
+        // 一体化对应etliu
 //        finCashPayRule.setCalcRule(DictCodeList.推算方法_起息日向后.getValue());
         finCashPayRule.setCalcRule(DictCodeList.推算方式_起息日向后.getValue());
-        
+
         // 首次支付日 = 画面.到期日
         finCashPayRule.setFirstPayDate(input.getMdate());
         // 现金流单位 = 数据字典缓存.现金流单位.总额
@@ -736,7 +739,7 @@ public class StlDataGatherService {
         // 生效日期 = 画面.起息日
         finCashCalcRule.setEffDate(input.getVdate());
         // 公布日期 = 画面.起息日
-     // 一体化对应etliu
+        // 一体化对应etliu
 //        finCashCalcRule.setRelaeseDate(dto.getVdate()); // 公布日期
         // 计算类型 = 数据字典缓存.利率类型.固定利率
         finCashCalcRule.setCalcType(DictCodeList.利率类型_固定利率.getValue());

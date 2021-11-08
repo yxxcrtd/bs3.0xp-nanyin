@@ -1,7 +1,10 @@
 package com.joyintech.tams.settle.batch.transdatagather.service;
 
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalAddMapper;
+import com.joyintech.tams.common.base.dao.SettleTransDataTotalMapper;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.transdatagather.dao.StlSettleTransDataGatherMapper;
 import com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherDto;
@@ -24,6 +27,10 @@ public class StlSettleTransDataGatherService {
 
     @Autowired
     private StlSettleTransDataGatherMapper stlSettleTransDataGatherMapper;
+    @Autowired
+    private SettleTransDataTotalMapper settleTransDataTotalMapper;
+    @Autowired
+    private SettleTransDataTotalAddMapper settleTransDataTotalAddMapper;
     /**
      * @param dealDate 执行日期
      * @return 为支持重复跑批，先将上次批处理生出的数据删除。
@@ -48,5 +55,34 @@ public class StlSettleTransDataGatherService {
 
     public int batchInsetSettleTransDataTotalAdd(List<SettleTransDataTotalAdd> inputList) {
         return stlSettleTransDataGatherMapper.batchInsetSettleTransDataTotalAdd(inputList);
+    }
+
+    /**
+     * @param dealDate 执行日期
+     * @return 为支持重复跑批，先将上次批处理生出的数据删除。
+     */
+    public int deleteTotalTradeAddByLastDeal(Date dealDate) {
+        String matchStatus = DictCodeListExt3.下行交易匹配状态_未匹配.getValue();
+        return stlSettleTransDataGatherMapper.deleteTotalTradeAddByLastDeal(dealDate,matchStatus);
+    }
+    /**
+     * @param dealDate 执行日期
+     * @return 为支持重复跑批，先将上次批处理生出的数据删除。
+     */
+    public int deleteTotalTradeStatusByLastDeal() {
+        String matchStatus = DictCodeListExt3.下行交易匹配状态_未匹配.getValue();
+        return stlSettleTransDataGatherMapper.deleteTotalTradeStatusByLastDeal(matchStatus);
+    }
+
+    public int insetSettleTransDataTotalStatus(SettleTransDataTotalStatus settleTransDataTotalStatus) {
+        return stlSettleTransDataGatherMapper.insetSettleTransDataTotalStatus(settleTransDataTotalStatus);
+    }
+
+    public int insetSettleTransDataTotal(SettleTransDataTotal settleTransDataTotal) {
+        return settleTransDataTotalMapper.insert(settleTransDataTotal);
+    }
+
+    public int insetSettleTransDataTotalAdd(SettleTransDataTotalAdd settleTransDataTotalAdd) {
+        return settleTransDataTotalAddMapper.insert(settleTransDataTotalAdd);
     }
 }

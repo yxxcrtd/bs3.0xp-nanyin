@@ -72,6 +72,12 @@ public class ComMarketCalendarInfo001Controller extends BaseController {
         map.put("calendarType", "");
         List<ComCalendarInfoDto> listresult = comMarketCalendarInfo001Service.selectCalendarInfo(map);
         for (ComCalendarInfoDto m:listresult) {
+            // TISHKS-4:功能未实现,暂时剔除沪港通、深港通、沪港通&深港通交易日历  fuyongsheng 20211108 edit start
+            // 13:沪港通 14:深港通 15:沪港通&深港通交易日历 功能未实现,暂时去掉
+            if(m.getCalendarId().equals("13") || m.getCalendarId().equals("14") || m.getCalendarId().equals("15")){
+                continue;
+            }
+            // TISHKS-4:功能未实现,暂时剔除沪港通、深港通、沪港通&深港通交易日历  fuyongsheng 20211108 edit end
             SelectOptionDto dto = new SelectOptionDto();
             dto.setId(m.getCalendarId());
             dto.setText(m.getCalendarName());

@@ -734,7 +734,13 @@ public class EtrCommonService extends BaseService<ITableRow> {
             CreditLinesInputDto creditLinesInputDto = generateInputDto(object,status,method);
             if (creditLinesInputDto != null){
                 creditLinesInputDto.setRownum(rownum);
-                inputDtoList.add(creditLinesInputDto);
+                if (!StringUtil.isEmptyList(creditLinesInputDto.getInputDtoList())){
+                    inputDtoList.addAll(creditLinesInputDto.getInputDtoList());
+                }else {
+                    creditLinesInputDto.setRownum(rownum);
+                    inputDtoList.add(creditLinesInputDto);
+                }
+
             }
         }
     }
@@ -1230,6 +1236,18 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 }else if (creditLinesInputDto.getTradeAmt() != null){
                     creditLinesInputDto.setTradeAmt(newFaceValue.multiply(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),100,2)));
                 }
+                List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+                if("01".equals(status)){
+                    CreditLinesInputDto dto1 = new CreditLinesInputDto();
+                    BeanUtil.copyPropertiesIgnoreNull(dto1,creditLinesInputDto);
+                    inputDtoList.add(dto1);
+
+                    CreditLinesInputDto dto2 = new CreditLinesInputDto();
+                    BeanUtil.copyPropertiesIgnoreNull(dto2,creditLinesInputDto);
+                    dto2.setZhiYaQuan(inputDto.getFinprodId());
+                    inputDtoList.add(dto2);
+                    creditLinesInputDto.setInputDtoList(inputDtoList);
+                }
             }
         }
         // 股票指令
@@ -1315,6 +1333,23 @@ public class EtrCommonService extends BaseService<ITableRow> {
                     creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
                     creditLinesInputDto.setShareAmt(inputDto.getEntrustNum());
                 }
+            }
+            // 股票指令
+            if (inputDto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())
+                    && (StringUtil.equals(DictCodeList.交易方向_买入.getValue(),inputDto.getPs())
+                    || StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())
+                    || StringUtil.equals(DictCodeListExt2.交易方向_配股.getValue(),inputDto.getPs()))){
+                creditLinesInputDto = new CreditLinesInputDto();
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
+                creditLinesInputDto.setTradeId(inputDto.getEntrustId());
+                creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
+                creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+                creditLinesInputDto.setTradeDate(inputDto.getVdate());
+                creditLinesInputDto.setTradeStatus(status);
+                creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+                creditLinesInputDto.setCounterId(inputDto.getCounterId());
+                creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
+                creditLinesInputDto.setShareAmt(inputDto.getEntrustNum());
             }
             // 债券指令
             if (inputDto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())

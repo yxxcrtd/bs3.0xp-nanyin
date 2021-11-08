@@ -153,13 +153,11 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                             }
                         }
                     }
-                    if(null!=exchangeTransMatchCommonDto&&!StringUtil.isEmptyList(exchangeTransMatchCommonDto.getEntrustIdList())){
-                        exchangeTransMatchCommons.add(exchangeTransMatchCommonDto);
-                    }
+                }
+                if(null!=exchangeTransMatchCommonDto&&!StringUtil.isEmptyList(exchangeTransMatchCommonDto.getEntrustIdList())){
+                    exchangeTransMatchCommons.add(exchangeTransMatchCommonDto);
                 }
             }
-
-
             stlDataGatherService.transactionMacthBatch(exchangeTransMatchCommons);
         }
     }

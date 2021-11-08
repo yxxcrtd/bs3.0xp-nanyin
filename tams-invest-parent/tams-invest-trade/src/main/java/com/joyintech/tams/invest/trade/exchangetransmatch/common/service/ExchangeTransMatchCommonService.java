@@ -470,6 +470,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
         logger.error("处理业务交易表---开始");
         FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
         finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+        finProductTradeDto.setNeedSum(true);
         List<BaseTradeProductDealDto> baseTradeProductDealDtos = new ArrayList<>();
         finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
 
