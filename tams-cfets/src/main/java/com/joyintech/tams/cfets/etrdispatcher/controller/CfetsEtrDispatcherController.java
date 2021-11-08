@@ -286,7 +286,7 @@ public class CfetsEtrDispatcherController extends BaseController {
             Map<String, Object> pageParam = BeanUtil.object2Map(cfetsDto);
             AjaxResult ajaxResult = cfetsEtrDispatcherService.doDispatcherDealCheck(pageParam, br);
             if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
-                return new Message<AjaxResult>().fail().setData(ajaxResult);
+                return new Message<AjaxResult>().fail().setMessage(ajaxResult.getMessage());
             } else {
                 //选择交易员
                 cfetsEtrDispatcherService.doDispatcherDeal(pageParam);

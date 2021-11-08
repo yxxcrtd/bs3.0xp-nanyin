@@ -22,9 +22,6 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
     @ApiModelProperty(name="effectFlag",value="有效状态code",example="01")
     private String effectFlag;
 
-    @ApiModelProperty(name="otherEffectFlag",value="有效状态",example="有效")
-    private String otherEffectFlag;
-
     @ApiModelProperty(name="totleTradeId",value="汇总交易编号",example="A1")
     private String totleTradeId;
 
@@ -38,7 +35,7 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
     private String secAcctIdStr;
 
     @ApiModelProperty(name="tradeDate",value="成交日期",example="2021-01-01")
-    private Date tradeDate;
+    private String tradeDate;
 
     @ApiModelProperty(name="settleSpeed",value="清算速度code",example="T+0")
     private String settleSpeed;
@@ -47,7 +44,7 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
     private String settleSpeedStr;
 
     @ApiModelProperty(name="settleDate",value="结算日期",example="2021-01-01")
-    private Date settleDate;
+    private String settleDate;
 
     @ApiModelProperty(name="unitPrice",value="净价",example="100")
     private BigDecimal unitPrice;
@@ -167,11 +164,11 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
         this.secAcctIdStr = secAcctIdStr;
     }
 
-    public Date getTradeDate() {
+    public String getTradeDate() {
         return tradeDate;
     }
 
-    public void setTradeDate(Date tradeDate) {
+    public void setTradeDate(String tradeDate) {
         this.tradeDate = tradeDate;
     }
 
@@ -191,11 +188,11 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
         this.settleSpeedStr = settleSpeedStr;
     }
 
-    public Date getSettleDate() {
+    public String getSettleDate() {
         return settleDate;
     }
 
-    public void setSettleDate(Date settleDate) {
+    public void setSettleDate(String settleDate) {
         this.settleDate = settleDate;
     }
 

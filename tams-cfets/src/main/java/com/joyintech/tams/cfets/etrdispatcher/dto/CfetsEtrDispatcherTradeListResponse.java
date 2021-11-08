@@ -66,7 +66,7 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     private String effectFlag;
 
     @ApiModelProperty(name="etrPrice",value="指令价格",example="99")
-    private String etrPrice;
+    private BigDecimal etrPrice;
 
     @ApiModelProperty(name="exeProgress",value="执行进度%",example="50%")
     private BigDecimal exeProgress;
@@ -84,7 +84,7 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
         return SysDataUtil.getNameFromDataDict(DictCode.委托状态, super.getEntrustStatus());
     }
 
-    public String setOtherEntrustDate() {
+    public String getOtherEntrustDate() {
         return DateUtil.format(super.getEntrustDate());
     }
 
@@ -219,14 +219,6 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
         this.effectFlag = effectFlag;
     }
 
-    public String getEtrPrice() {
-        return etrPrice;
-    }
-
-    public void setEtrPrice(String etrPrice) {
-        this.etrPrice = etrPrice;
-    }
-
     public BigDecimal getExeProgress() {
         return exeProgress;
     }
@@ -253,5 +245,13 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     public String getOtherBusiTypePosition() {
         return SysDataUtil.getNameFromDataDict(DictCode.头寸业务类型, this.getBusiTypePosition());
+    }
+
+    public BigDecimal getEtrPrice() {
+        return etrPrice;
+    }
+
+    public void setEtrPrice(BigDecimal etrPrice) {
+        this.etrPrice = etrPrice;
     }
 }
