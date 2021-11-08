@@ -90,6 +90,7 @@
                     return "<div class='layui-progress layui-progress-big' style='margin-top: 3px;'><div class='layui-progress-bar layui-bg-green' style='width:"+row.transactioncom+"%'><span class='layui-progress-text'>"+row.transactioncom+"%</span></div></div>";
                 }, width:100,sortable:false}
             ,{field:'remark', title: 'EtrInvestBondInfo001.remark', width:180,sortable:false}
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:220,sortable:false}
             ,{field:'counterId', title: '交易对手', width:180,sortable:false ,visible:false}
         ]
     });

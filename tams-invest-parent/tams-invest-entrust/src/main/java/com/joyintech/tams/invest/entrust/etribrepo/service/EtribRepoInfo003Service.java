@@ -233,6 +233,7 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
         if ("submit".equals(entity.getOperateType())) {
             if (CollectionUtils.isNotEmpty(entity.getEtrInvestRepoInfoDtos())) {
                 for (EtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+                    dto.setWorkflowId(entity.getWorkflowId());
                     doInsertFlow(dto);
                 }
             }
