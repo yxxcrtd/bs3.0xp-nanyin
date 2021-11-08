@@ -147,7 +147,7 @@ public class CfetsEtrFinProductDto {
      * 票面利率
      */
     @ApiModelProperty(required = false,name="rate",value="票面利率")
-    private BigDecimal rate;
+    private String rate;
 
     /**
      * 债项评级
@@ -480,11 +480,11 @@ public class CfetsEtrFinProductDto {
         this.rateType = rateType;
     }
 
-    public BigDecimal getRate() {
+    public String getRate() {
         return rate;
     }
 
-    public void setRate(BigDecimal rate) {
+    public void setRate(String rate) {
         this.rate = rate;
     }
 

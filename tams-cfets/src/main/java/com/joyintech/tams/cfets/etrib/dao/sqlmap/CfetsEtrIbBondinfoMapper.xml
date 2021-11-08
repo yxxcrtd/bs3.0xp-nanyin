@@ -652,7 +652,7 @@ from
         TO_CHAR(MBVI.VALUE_DATE,'yyyy-MM-dd') valueDate,
         TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate,
         sd.ITEM_VALUE rateType,
-        t6.RATE*100 rate,
+        ROUND(t6.RATE*100,4) ||'%' rate,
         MBCR.O_TYPE otype,
         sd1.ITEM_VALUE zxGrade,
         sd2.ITEM_VALUE ztGrade,
