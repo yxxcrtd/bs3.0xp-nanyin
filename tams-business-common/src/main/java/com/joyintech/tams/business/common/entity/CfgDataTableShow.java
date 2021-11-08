@@ -60,7 +60,7 @@ public class CfgDataTableShow {
     @ApiModelProperty(name = "remark3", value = "备注3")
     private String remark3;
 
-    @ApiModelProperty(name = "iskey", value = "是否表格主键(0:是,1:否)")
+    @ApiModelProperty(name = "iskey", value = "是否表格主键(0:否,1:是)")
     private Integer iskey;
 
     public String getPageCode() {
