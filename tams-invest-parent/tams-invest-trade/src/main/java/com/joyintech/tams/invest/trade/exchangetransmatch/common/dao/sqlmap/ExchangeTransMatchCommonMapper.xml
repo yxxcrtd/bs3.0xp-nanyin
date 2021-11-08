@@ -64,6 +64,8 @@
             ON A.APPLY_TRADE_ID = B.APPLY_TRADE_ID
            AND A.DEAL_DATE = B.DEAL_DATE
            AND A.SEAT_NUMBER = B.SEAT_NUMBER
+           AND A.PS = B.PS
+           AND A.FINPROD_TYPE2 = A.FINPROD_TYPE2
         <where>
             B.SEQ_ID = #{seqId,jdbcType=VARCHAR}
         </where>
@@ -123,7 +125,7 @@
                 ON A.TRADE_ID = B.TRADE_ID
              INNER JOIN SETTLE_TRANS_DATA_TOTAL C
                 ON B.APPLY_TRADE_ID = C.APPLY_TRADE_ID
-               AND B.DEAL_DATE = C.APPLY_TRADE_ID
+               AND B.DEAL_DATE = C.DEAL_DATE
                AND B.SEAT_NUMBER = C.SEAT_NUMBER
              INNER JOIN SETTLE_TRANS_DATA_TOTAL_MATCH D
                 ON C.SEQ_ID = D.SEQ_NO
@@ -147,7 +149,7 @@
                 ON A.TRADE_ID = B.TRADE_ID
             INNER JOIN SETTLE_TRANS_DATA_TOTAL C
                 ON B.APPLY_TRADE_ID = C.APPLY_TRADE_ID
-                AND B.DEAL_DATE = C.APPLY_TRADE_ID
+                AND B.DEAL_DATE = C.DEAL_DATE
                 AND B.SEAT_NUMBER = C.SEAT_NUMBER
             INNER JOIN SETTLE_TRANS_DATA_TOTAL_MATCH D
                 ON C.SEQ_ID = D.SEQ_NO

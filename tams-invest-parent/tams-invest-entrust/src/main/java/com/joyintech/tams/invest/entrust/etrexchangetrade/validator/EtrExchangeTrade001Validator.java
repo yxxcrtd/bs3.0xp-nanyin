@@ -290,24 +290,24 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				}
 			}
 
-			// etr_check_pos_switch 01 不提示 02 提示 禁止交易
-			if (CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_否.getValue()) && (
-					DictCodeList.交易方向_卖出.getValue().equals(dto.getPs()) 
-					|| DictCodeList.交易方向_行权_回售.getValue().equals(dto.getPs()) 
-					|| DictCodeListExt3.交易方向_债转股.getValue().equals(dto.getPs()) 
-					|| DictCodeListExt3.交易方向_质押券入库.getValue().equals(dto.getPs()))) {
-				Map<String,Object> param = new HashMap<String,Object>();
-				param.put("portfolioId",dto.getPortfolioId());
-				param.put("finprodId",dto.getFinprodId());
-				param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
-				param.put("secAcctId",dto.getSecAcctId());
-				dto.setAccAvailablePos(etrExchangeTrade001Service.selectAvailableNum(param));
-				if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getEntrustNum())) {
-					if (dto.getAccAvailablePos().compareTo(dto.getEntrustNum()) == -1) {
-						errorList.add(new ValidMessage("accAvailablePos", this.getMessage("ETR_ERROR_0021")));
-					}
-				}
-			}
+//			// etr_check_pos_switch 01 不提示 02 提示 禁止交易
+//			if (CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_否.getValue()) && (
+//					DictCodeList.交易方向_卖出.getValue().equals(dto.getPs())
+//					|| DictCodeList.交易方向_行权_回售.getValue().equals(dto.getPs())
+//					|| DictCodeListExt3.交易方向_债转股.getValue().equals(dto.getPs())
+//					|| DictCodeListExt3.交易方向_质押券入库.getValue().equals(dto.getPs()))) {
+//				Map<String,Object> param = new HashMap<String,Object>();
+//				param.put("portfolioId",dto.getPortfolioId());
+//				param.put("finprodId",dto.getFinprodId());
+//				param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
+//				param.put("secAcctId",dto.getSecAcctId());
+//				dto.setAccAvailablePos(etrExchangeTrade001Service.selectAvailableNum(param));
+//				if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getEntrustNum())) {
+//					if (dto.getAccAvailablePos().compareTo(dto.getEntrustNum()) == -1) {
+//						errorList.add(new ValidMessage("accAvailablePos", this.getMessage("ETR_ERROR_0021")));
+//					}
+//				}
+//			}
 			
 			//行权回售
 			if (DictCodeList.交易方向_行权_回售.getValue().equals(dto.getPs())) {

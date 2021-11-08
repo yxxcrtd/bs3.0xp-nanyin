@@ -1,5 +1,6 @@
 package com.joyintech.service.trade.exchangetransmatch.service;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -7,6 +8,7 @@ import com.joyintech.service.trade.exchangetransmatch.dao.ExchangeTransMatchMapp
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch004Dto;
+import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch005Dto;
 import com.joyintech.tams.common.base.dao.SettleTransDataTotalMatchMapper;
 import com.joyintech.tams.common.base.dao.SettleTransDataTotalStatusMapper;
 import com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper;
@@ -19,6 +21,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -47,13 +50,26 @@ public class ExchangeTransMatchService extends BaseService {
 
 
     public Page<ExchangeTransMatch004Dto> findTransMatchInfoPage(Map<String, Object> map, int page, int length) {
-        map.put("TRD_MATCH_STATUS_01", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
-        map.put("TRD_MATCH_STATUS_02",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
-        map.put("TRD_MATCH_STATUS_03",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
-        map.put("SEC_TYPE_01", DictCodeListExt1.证券品种_债券.getValue());
-        map.put("SEC_TYPE_02", DictCodeListExt1.证券品种_基金.getValue());
-        map.put("SEC_TYPE_06", DictCodeListExt1.证券品种_股票.getValue());
+        map.put("TRD_MATCH_STATUS_1", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
+        map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+        map.put("TRD_MATCH_STATUS_3",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
         map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
+        if(StringUtil.isNotEmpty(map.get("finprodType2"))) {
+            if(StringUtil.equals((String)map.get("finprodType2"),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                map.put("secType", DictCodeListExt1.证券品种_债券.getValue());
+            }
+            else if(StringUtil.equals((String)map.get("finprodType2"),DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+                map.put("secType", DictCodeListExt1.证券品种_基金.getValue());
+            }
+            else if(StringUtil.equals((String)map.get("finprodType2"),DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+                map.put("secType", DictCodeListExt1.证券品种_股票.getValue());
+            }
+            else if(StringUtil.equals((String)map.get("finprodType2"),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+            || StringUtil.equals((String)map.get("finprodType2"),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+                map.put("secType", DictCodeListExt1.证券品种_回购.getValue());
+            }
+        }
+
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.findTransMatchInfoPage(map));
     }
 
@@ -153,4 +169,21 @@ public class ExchangeTransMatchService extends BaseService {
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getDealId(map));
     }
 
+    /**
+     * 获取委托信息
+     * @param seqNo
+     * @return
+     */
+    public List<ExchangeTransMatch005Dto> findEntrustList(String seqNo) {
+        return  exchangeTransMatchMapper.findEntrustList(seqNo);
+    }
+
+    /**
+     * 获取成交信息
+     * @param seqNo
+     * @return
+     */
+    public List<ExchangeTransMatch005Dto> findDealList(String seqNo) {
+        return  exchangeTransMatchMapper.findDealList(seqNo);
+    }
 }

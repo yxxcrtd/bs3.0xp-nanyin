@@ -1,4 +1,5 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.controller;
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.tams.invest.trade.cstptrdmatchinfo.service.CstpTrdMatchInfoService;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -182,6 +183,15 @@ public class ExchangeTransMatch001Controller  extends BaseController {
     @ResponseBody
     @RequestMapping("matchSearch")
     public Page<ExchangeTransMatch003Dto> matchSearch(@RequestBody Map<String,Object> map) {
+        if(StringUtil.isNotEmpty(map.get("finprodType1"))) {
+            String finprodType = (String)map.get("finprodType1");
+            if(StringUtil.equals(finprodType,DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+                map.put("ps",DictCodeList.回购拆借方向_正回购.getValue());
+            }
+            else if (StringUtil.equals(finprodType,DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+                map.put("ps",DictCodeList.回购拆借方向_逆回购.getValue());
+            }
+        }
         return exchangeTransMatch001Service.findEntrustPage(map);
     }
 

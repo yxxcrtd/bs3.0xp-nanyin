@@ -170,7 +170,7 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         // 交易市场
         dealTotal.setTradeMarketMode(dealDto.getTradeMarketMode());
         // 投资组合代码
-        dealTotal.setPortfolioId(dealDto.getPortfolioId());
+        dealTotal.setPortfolioId(entrustDto.getPortfolioId());
         // 备注
         dealTotal.setRemark(entrustDto.getRemark());
         // 投管业务类型
@@ -569,7 +569,7 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         // 交易份额
         trdProductDeal.setShareAmt(entrustDto.getMarchQty());
         // 交易本金
-        trdProductDeal.setPrinAmt(dealDto.getCpriceAmt());
+        trdProductDeal.setPrinAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),new BigDecimal(100)));
         // 利息总额
         trdProductDeal.setIntAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),dealDto.getUnitInt()));
         // 全价总额

@@ -52,7 +52,7 @@
                 return getPageParams();
             }
         },
-
+        searchOnInit: true,
         cols:[
             {field:'matchStatusStr', sortField:'matchStatus',width:200, title: 'ExchangeTransMatch001.matchStatus'},
             {field:'matchProgressStr', sortField:'matchProgress',width:200, title: 'ExchangeTransMatch001.matchProgress'},
@@ -97,6 +97,7 @@
                 return getDealPageParams();
             }
         },
+        searchOnInit: true,
         dblclick:function(table, data) {
             data.operateType = "dblclick";
             data.pageModel=PAGE_MODEL_REFERENCE;
@@ -165,17 +166,17 @@
             }
         },
         cols:[
-            {field:'seqId',visible:'false'},
+            {field:'seqId',visible:false},
             {field:'matchTypeStr', sortField:'matchType',width:200, title: 'ExchangeTransMatch001.matchType'},
             {field:'busiCode', sortField:'busiCode',width:200, title: 'ExchangeTransMatch001.busiCode'},
             {field:'tradeMarketStr', sortField:'tradeMarket',width:200, title: 'ExchangeTransMatch001.tradeMarket'},
-            {field:'applyNo', sortField:'applyNo',width:200, title: 'ExchangeTransMatch001.applyNo'},
+            {field:'applyTradeId', sortField:'applyTradeId',width:200, title: 'ExchangeTransMatch001.applyNo'},
             {field:'portfolioId', sortField:'portfolioId',width:200, title: 'ExchangeTransMatch001.portfolioId'},
             {field:'portfolioName', sortField:'portfolioName',width:200, title: 'ExchangeTransMatch001.portfolioName'},
             {field:'finprodType2Str', sortField:'finprodType2',width:200, title: 'ExchangeTransMatch001.finprodType2'},
             {field:'finprodMarketId', sortField:'finprodMarketId',width:200, title: 'ExchangeTransMatch001.finprodId'},
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch001.ps'},
-            {field:'tradeAmout', sortField:'tradeAmout',width:200, title: 'ExchangeTransMatch001.tradeAmout',type: 'number'},
+            {field:'tradeAmt', sortField:'tradeAmt',width:200, title: 'ExchangeTransMatch001.tradeAmout',type: 'number'},
             {field:'tradeNum', sortField:'tradeNum',width:200, title: 'ExchangeTransMatch001.tradeNum',type: 'number'},
             {field:'tradePrice', sortField:'tradePrice',width:200, title: 'ExchangeTransMatch001.tradePrice',type: 'number'},
             {field:'tradeDate', sortField:'tradeDate',width:200, title: 'ExchangeTransMatch001.tradeDate',type: 'date'},
@@ -197,7 +198,7 @@
     transMatchInfoTable.bind('click', '.edit', function(data, index) {
         Joyin.dialog(JoyinUtil.getLabel("匹配明细查看"),
             basePath + "invest/trade/exchangetransmatch/ExchangeTransMatch002/init",
-            "98%", "95%", {seqNo:data.seqNo},function(){
+            "98%", "95%", {seqNo:data.seqId},function(){
                 transMatchInfoTable.reload();
             });
     });
@@ -256,15 +257,17 @@
                 object.tradePlat = item.tradePlat;
                 object.dealDate = new Date(item.dealDate).Format("yyyy-MM-dd");
                 object.secAccount = item.secAcctNo;
-
+                if(entrustDataTable.table) {
+                    entrustDataTable.clear();
+                }
                 Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/matchSearch'),object,function (result) {
                     if(result) {
                         if(result && result.root.length >0){
-                            if(!entrustDataTable.table) {
-                                entrustDataTable.load();
+                            if(entrustDataTable.table) {
+
+                                entrustDataTable.addRow(result.root);
                             }
-                            entrustDataTable.clear();
-                            entrustDataTable.addRow(result.root);
+
                         }
                     }
                 });

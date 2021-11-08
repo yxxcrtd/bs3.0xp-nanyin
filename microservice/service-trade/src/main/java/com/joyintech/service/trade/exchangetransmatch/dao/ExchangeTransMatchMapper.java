@@ -4,6 +4,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch004Dto;
+import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch005Dto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -63,4 +64,17 @@ public interface ExchangeTransMatchMapper {
      */
     List<SelectOptionDto> getDealId(Map<String, Object> map);
 
+    /**
+     * 获取指令列表
+     * @param seqNo
+     * @return
+     */
+    List<ExchangeTransMatch005Dto> findEntrustList(String seqNo);
+
+    /**
+     * 获取成交信息
+     * @param seqNo
+     * @return
+     */
+    List<ExchangeTransMatch005Dto> findDealList(String seqNo);
 }

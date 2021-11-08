@@ -4,6 +4,8 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch002Dto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch003Dto;
@@ -26,13 +28,20 @@ public class ExchangeTransMatchValidator implements BeanValidator {
             }
 
             //比较基本信息
+            String ps = dealDto.getPs();
+            if(StringUtil.equals(dealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+                ps = DictCodeList.回购拆借方向_正回购.getValue();
+            }
+            else if (StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+                ps = DictCodeList.回购拆借方向_逆回购.getValue();
+            }
             if(!StringUtil.equals(dealDto.getSecAcctId(),entrustDto.getSecAcctId())
                     || !StringUtil.equals(dealDto.getAcctNo(),entrustDto.getAcctNo())
                     || !StringUtil.equals(dealDto.getFinprodId(),entrustDto.getFinprodId())
-                    || !StringUtil.equals(dealDto.getPs(),entrustDto.getPs())
+                    || !StringUtil.equals(ps,entrustDto.getPs())
                     || !StringUtil.equals(DateUtil.format(dealDto.getTradeDate()),DateUtil.format(entrustDto.getEntrustDate()))
                     || !StringUtil.equals(dealDto.getTradePlat(),entrustDto.getTradePlat())) {
-                errorList.add(new ValidMessage("成交数据的基本信息和委托或交易的基本信息不一致"));
+                    errorList.add(new ValidMessage("成交数据的基本信息和委托或交易的基本信息不一致"));
             }
         }
         else if (StringUtil.equals(dealDto.getElementId(),"transaction_record")) {

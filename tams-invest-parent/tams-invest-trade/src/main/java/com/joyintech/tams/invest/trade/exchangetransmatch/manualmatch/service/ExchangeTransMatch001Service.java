@@ -220,9 +220,10 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
     public void revokeTransactionMacth(ExchangeTransMatch004Dto dto) {
         for(ExchangeTransMatch004Dto item: dto.getSelectItem()) {
             SettleTransDataTotalMatch settleTransDataTotalMatch = new SettleTransDataTotalMatch();
-            settleTransDataTotalMatch.setSeqNo(dto.getSeqNo());
-            settleTransDataTotalMatch.setEntrunstTradeId(dto.getBusiCode());
-            settleTransDataTotalMatch.setMatchClass(dto.getMatchType());
+            settleTransDataTotalMatch.setSeqNo(item.getSeqId());
+            settleTransDataTotalMatch.setEntrunstTradeId(item.getBusiCode());
+            settleTransDataTotalMatch.setMatchClass(item.getMatchType());
+            settleTransDataTotalMatch.setMatchType(item.getSecType());
 
             exchangeTransMatchCommonService.revokeTransactionMacth(settleTransDataTotalMatch);
         }
@@ -322,7 +323,17 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 trdRepoTrade002Dto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                 trdRepoTrade002Dto.setIsOutTrade(DictCodeList.是否_是.getValue());
                 trdRepoTrade002Dto.setTradeAmt(dto.getRemainAmount());
+                trdRepoTrade002Dto.setPrinAmt(dto.getRemainAmount());
+                trdRepoTrade002Dto.setRebackPrice(dto.getUnitCprice());
                 trdRepoTrade002Dto.setShareAmt(dto.getRemainNum());
+                trdRepoTrade002Dto.setCommissionAmt(dto.getCommissionAmt());
+                trdRepoTrade002Dto.setTradeAmtAndFee(ArithmeticUtil.subtract(trdRepoTrade002Dto.getPrinAmt(),trdRepoTrade002Dto.getCommissionAmt()));
+                if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+                    trdRepoTrade002Dto.setPs(DictCodeList.回购拆借方向_正回购.getValue());
+                }
+                else {
+                    trdRepoTrade002Dto.setPs(DictCodeList.回购拆借方向_逆回购.getValue());
+                }
                 dtoStr = JsonUtils.object2Json(trdRepoTrade002Dto);
             }
             else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
@@ -332,6 +343,7 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 trdFundInvestTradeDto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                 trdFundInvestTradeDto.setSecManageAcctId(settleTransDataTotal.getSecAcctId());
                 trdFundInvestTradeDto.setDealSqeId(settleTransDataTotal.getSeqId());
+                trdFundInvestTradeDto.setFinprodMarketId(dto.getFinprodMarketId());
                 dtoStr = JsonUtils.object2Json(trdFundInvestTradeDto);
             }
             else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {

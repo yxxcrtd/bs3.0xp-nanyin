@@ -26,10 +26,10 @@
          -->
         <choose>
             <when test="totleTradeId != null and totleTradeId != ''">
-                and TOTLE_TRADE_ID = #{totleTradeId}
+                and T1.TOTLE_TRADE_ID = #{totleTradeId}
             </when>
             <otherwise>
-                and TRADE_ID = #{tradeId}
+                and T1.TRADE_ID = #{tradeId}
             </otherwise>
         </choose>
     </select>

@@ -107,6 +107,8 @@ public class ExchangeTransMatchCommonService extends BaseService {
     private TrdTradeFeeDetailMapper trdTradeFeeDetailMapper;
     @Autowired
     private TrdFinProductBarterTotalMapper trdFinProductBarterTotalMapper;
+    @Autowired
+    private PtlTradeMapper ptlTradeMapper;
 
     @Value("${application.micorservice.contextPath.tamsServer:http://tams-server}")
     private String tamsSerever;
@@ -270,8 +272,8 @@ public class ExchangeTransMatchCommonService extends BaseService {
                         commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(commonEntrustDto.getEntrustNum(),dto.getUnitFprice()));
                     }
                     else {
-                        commonEntrustDto.setMarchQty(ArithmeticUtil.divide(commonEntrustDto.getEntrustAmt(),dto.getCpriceAmt(),4));
-                        commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(commonEntrustDto.getEntrustAmt(),dto.getCpriceAmt(),4),dto.getUnitFprice()));
+                        commonEntrustDto.setMarchQty(ArithmeticUtil.divide(commonEntrustDto.getEntrustAmt(),dto.getUnitCprice(),4));
+                        commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(commonEntrustDto.getEntrustAmt(),dto.getUnitCprice(),4),dto.getUnitFprice()));
                     }
                     totalMarchQty = ArithmeticUtil.doAdd(totalMarchQty,commonEntrustDto.getMarchQty());
                 }
@@ -569,7 +571,9 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
             if(!StringUtil.isEmptyList(baseTradeProductDealDto.getTrdTradeFeeDetailList())){
                 for(TrdTradeFeeDetail TrdTradeFeeDetail:baseTradeProductDealDto.getTrdTradeFeeDetailList()) {
-                    trdTradeFeeDetailMapper.insertSelective(TrdTradeFeeDetail);
+                    if(StringUtil.isNotEmpty(TrdTradeFeeDetail.getFeeAmt()) && BigDecimal.ZERO.compareTo(TrdTradeFeeDetail.getFeeAmt())<0) {
+                        trdTradeFeeDetailMapper.insertSelective(TrdTradeFeeDetail);
+                    }
                 }
             }
 
@@ -577,6 +581,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 trdTradeFeeDetailMapper.insertSelective(baseTradeProductDealDto.getTrdTradeFeeDetail());
             }
 
+            if(!StringUtil.isEmptyList(baseTradeProductDealDto.getPtlTrade())) {
+                for(PtlTrade ptlTrade:baseTradeProductDealDto.getPtlTrade()) {
+                    ptlTradeMapper.insertSelective(ptlTrade);
+                }
+            }
         }
 
         logger.error("交易表数据:"+JsonUtils.object2Json(finProductTradeDto));
@@ -600,9 +609,9 @@ public class ExchangeTransMatchCommonService extends BaseService {
         //匹配列表选择记录.业务编号
         settleTransDataTotalMatch.setEntrunstTradeId(etrEntrust.getEntrustId());
         //匹配列表选择记录.目标类型
-        settleTransDataTotalMatch.setMatchClass(etrEntrust.getTargetType());
+        settleTransDataTotalMatch.setMatchType(etrEntrust.getTargetType());
         //数据字典.下行交易匹配方式（TRD_MATCH_TYPE）.手动匹配
-        settleTransDataTotalMatch.setMatchType(dealDto.getMatchType());
+        settleTransDataTotalMatch.setMatchClass(dealDto.getMatchType());
         //已匹配份额
         settleTransDataTotalMatch.setMarchQty(etrEntrust.getMarchQty());
         //已匹配金额
@@ -671,10 +680,15 @@ public class ExchangeTransMatchCommonService extends BaseService {
             List<String> tradeIdList = new ArrayList<>();
             List<String> totalTradeIdList = new ArrayList<>();
             for(ExchangeTransMatchCommonRevokeDto revokeDto:exchangeTransMatchCommonRevokeDtoList) {
-                if (StringUtil.equals(revokeDto.getIsTotalDeal(), DictCodeList.是否_是)) {
-                    totalTradeIdList.add(revokeDto.getTradeIdTg());
+                if (StringUtil.equals(revokeDto.getIsTotalDeal(), DictCodeList.是否_是.getValue())) {
+                    if(!totalTradeIdList.contains(revokeDto.getTradeIdTg())) {
+                        totalTradeIdList.add(revokeDto.getTradeIdTg());
+                    }
+
                 } else {
-                    tradeIdList.add(revokeDto.getTradeIdTg());
+                    if(!tradeIdList.contains(revokeDto.getTradeIdTg())) {
+                        tradeIdList.add(revokeDto.getTradeIdTg());
+                    }
                 }
             }
 
@@ -686,6 +700,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 param.setTradeIdList(tradeIdList);
             }
             param.setStatus(DictCodeListExt1.交易流程状态_撤销.getValue());
+            param.setBusiType(dto.getMatchType());
             param.setUpdateUser(GlobalConstant.SYSTEM_USER);
             param.setRevokeReason("取消成交匹配");
 
@@ -711,7 +726,10 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
             for(ExchangeTransMatchCommonRevokeDto revokeDto:exchangeTransMatchCommonRevokeDtoList) {
                // 成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）：删除
-                settleTransTgMappingMapper.deleteByPrimaryKey(revokeDto.getTradeId());
+                SettleTransTgMappingKey key = new SettleTransTgMappingKey();
+                key.setTradeId(revokeDto.getTradeId());
+                key.setTradeIdTg(revokeDto.getTradeIdTg());
+                settleTransTgMappingMapper.deleteByPrimaryKey(key);
                 //汇总成交数据匹配结果表（SETTLE_TRANS_DATA_TOTAL_MATCH）：数据删除
                 settleTransDataTotalMatchMapper.deleteByPrimaryKey(dto);
             }

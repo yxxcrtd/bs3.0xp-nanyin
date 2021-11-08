@@ -5,10 +5,12 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto;
 import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch004Dto;
+import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch005Dto;
 import com.joyintech.service.trade.exchangetransmatch.service.ExchangeTransMatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -116,6 +118,29 @@ public class ExchangeTransMatchController {
     @PostMapping("getDealId/{page}/{length}")
     public Page<SelectOptionDto> getDealId(@RequestBody Map<String,Object> map, @PathVariable("page") int page, @PathVariable("length") int length) {
         return exchangeTransMatchService.getDealId(map,page, length);
+    }
+
+
+    /**
+     * 获取委托信息
+     * @param seqNo
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("findEntrustList")
+    public List<ExchangeTransMatch005Dto> findEntrustList(@RequestBody String seqNo) {
+        return exchangeTransMatchService.findEntrustList(seqNo);
+    }
+
+    /**
+     * 获取成交信息
+     * @param seqNo
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("findDealList")
+    public List<ExchangeTransMatch005Dto> findDealList(@RequestBody String seqNo) {
+        return exchangeTransMatchService.findDealList(seqNo);
     }
 
 }

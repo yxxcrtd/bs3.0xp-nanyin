@@ -26,12 +26,7 @@
                     WHEN A.SEC_TYPE = #{SEC_TYPE_09} THEN NULL
                 ELSE
                     E.FINPROD_ABBR END finprodAbbr,
-                CASE
-                WHEN A.SEC_TYPE = #{SEC_TYPE_09} THEN
-                    #{FINPROD_TYPE_TG_F02}
-                ELSE
-                    E.FINPROD_TYPE2
-                END  finprodType2,
+                A.FINPROD_TYPE2 finprodType2,
                 A.SEAT_NUMBER seatNumber,
                 A.TRADE_PLAT tradePlat,
                 A.PS ps,
@@ -48,7 +43,6 @@
         from SETTLE_TRANS_DATA_TOTAL A
         LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B
             ON A.SEQ_ID = B.SEQ_NO
-        AND (B.MATCH_STATUS IN (#{TRD_MATCH_STATUS_01},#{TRD_MATCH_STATUS_02}) OR B.MATCH_STATUS IS NULL)
         LEFT JOIN STL_SEC_ACCT_INFO C
             ON A.SEC_ACCT_ID = C.SEC_ACCT_ID
         LEFT JOIN STL_CAPACCT_INFO D
@@ -91,11 +85,11 @@
             <if test="tradeDateEnd != null and tradeDateEnd != ''">
                 <![CDATA[ AND A.TRADE_DATE  <= to_date(#{tradeDateEnd},'yyyy-mm-dd') ]]>
             </if>
-            <if test="matchStatus == null or matchStatus == '' or matchStatus == '01'">
-                AND (B.MATCH_STATUS = #{TRD_MATCH_STATUS_01} OR B.MATCH_STATUS IS NULL)
+            <if test="matchStatus == null or matchStatus == '' ">
+                AND (B.MATCH_STATUS in (#{TRD_MATCH_STATUS_01},#{TRD_MATCH_STATUS_02}) OR B.MATCH_STATUS IS NULL)
             </if>
-            <if test=" matchStatus == '02'">
-                AND B.MATCH_STATUS = #{TRD_TRD_MATCH_STATUS_02}
+            <if test=" matchStatus != null and matchStatus != ''">
+                AND B.MATCH_STATUS = #{matchStatus}
             </if>
             <if test="tradeAmt1 != null and tradeAmt1 != ''">
                 <![CDATA[ AND A.FPRICE_AMT  >=  #{tradeAmt1}]]>
@@ -348,11 +342,19 @@
         C.TRADE_MARKET tradeMarket,
         C.APPLY_TRADE_ID applyTradeId,
         D.PORTFOLIO_ID portfolioId,
-        C.SEC_TYPE finprodType2,
+        F.PORTFOLIO_NAME portfolioName,
         CASE
-        WHEN C.SEC_TYPE = #{SEC_TYPE_09} THEN NULL
+            WHEN C.SEC_TYPE = '09' THEN NULL
         ELSE
-        E.FINPROD_ID END finprodId,
+            E.FINPROD_MARKET_ID
+        END finprodMarketId,
+        C.FINPROD_TYPE2 finprodType2,
+        C.SEC_TYPE secType,
+        CASE
+            WHEN C.SEC_TYPE = #{SEC_TYPE_09} THEN NULL
+        ELSE
+            E.FINPROD_ID
+        END finprodId,
         C.PS ps,
         A.MARCH_AMT_EN tradeAmt,
         A.MARCH_QTY_EN tradeNum,
@@ -361,13 +363,15 @@
         from SETTLE_TRANS_DATA_TOTAL_MATCH A
         INNER JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B
         ON A.SEQ_NO = B.SEQ_NO
-        AND B.MATCH_STATUS IN ('02','03')
+        AND B.MATCH_STATUS IN (#{TRD_MATCH_STATUS_2},#{TRD_MATCH_STATUS_3})
         INNER JOIN SETTLE_TRANS_DATA_TOTAL C
         ON A.SEQ_NO = C.SEQ_ID
         LEFT JOIN ETR_ENTRUST D
         ON D.ENTRUST_ID = A.ENTRUNST_TRADE_ID
         LEFT JOIN FIN_PRODUCT E
         ON E.FINPROD_ID = C.FINPROD_ID
+        LEFT JOIN PTL_PORTFOLIO F
+        ON D.PORTFOLIO_ID = F.PORTFOLIO_ID
         <where>
             <if test="trdMatchType!=null and trdMatchType!='' ">
                 AND A.MATCH_CLASS = #{trdMatchType}
@@ -408,17 +412,8 @@
             <if test="finprodId!=null and finprodId!='' ">
                 AND E.FINPROD_MARKET_ID = #{finprodId}
             </if>
-            <if test="finprodType2!=null and finprodType2!='' ">
-                AND C.SEC_TYPE = #{SEC_TYPE_01}
-            </if>
-            <if test="finprodType2!=null and finprodType2!='' ">
-                AND C.SEC_TYPE = #{SEC_TYPE_02}
-            </if>
-            <if test="finprodType2!=null and finprodType2!='' ">
-                AND C.SEC_TYPE = #{SEC_TYPE_06}
-            </if>
-            <if test="finprodType2!=null and finprodType2!='' ">
-                AND C.SEC_TYPE = #{SEC_TYPE_09}
+            <if test="secType!=null and secType!='' ">
+                AND C.SEC_TYPE = #{secType}
             </if>
         </where>
     </select>

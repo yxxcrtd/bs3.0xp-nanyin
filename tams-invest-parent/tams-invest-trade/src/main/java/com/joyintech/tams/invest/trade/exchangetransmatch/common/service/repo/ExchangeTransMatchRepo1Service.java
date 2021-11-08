@@ -47,13 +47,13 @@ public class ExchangeTransMatchRepo1Service extends ExchangeTransMatchRepoCommon
             // 清算速度
 	        trdProductDeal.setSettleSpeed(0L);
             // 交易份额
-	        trdProductDeal.setShareAmt(settleTransData.getShareAmt());
+	        trdProductDeal.setShareAmt(entrustDto.getMarchQty());
             // 交易本金
-	        trdProductDeal.setPrinAmt(settleTransData.getShareAmt());
+	        trdProductDeal.setPrinAmt(entrustDto.getMarchQty());
             // 利息总额
 	        trdProductDeal.setIntAmt(settleTransData.getIntAmt());
             // 全价总额
-	        trdProductDeal.setFpriceAmt(settleTransData.getFpriceAmt());
+	        trdProductDeal.setFpriceAmt(entrustDto.getMarchAmt());
             // 随交易支付费用
 	        if(StringUtil.equals(DictCodeList.是否_是.getValue(), settleTransData.getIsPayWithTrade())) {
                trdProductDeal.setFeeAmtPay(ArithmeticUtil.doAdd(settleTransData.getJsfAmt(), settleTransData.getGhfAmt(), settleTransData.getZgfAmt(), settleTransData.getSxfAmt(), settleTransData.getSettleFee(), settleTransData.getStampFee(), settleTransData.getCommissionAmt()));
@@ -61,7 +61,7 @@ public class ExchangeTransMatchRepo1Service extends ExchangeTransMatchRepoCommon
                trdProductDeal.setFeeAmtPay(ArithmeticUtil.doAdd(settleTransData.getJsfAmt(), settleTransData.getGhfAmt(), settleTransData.getZgfAmt(), settleTransData.getSxfAmt(), settleTransData.getSettleFee(), settleTransData.getStampFee()));
             }
             // 交易金额
-	        trdProductDeal.setTradeAmt(settleTransData.getTradeAmt());
+	        trdProductDeal.setTradeAmt(entrustDto.getMarchAmt());
             // 未随交易支付费用
 	        if(!StringUtil.equals(DictCodeList.是否_是.getValue(), settleTransData.getIsPayWithTrade())) {
                 trdProductDeal.setFeeAmtUnpay(settleTransData.getCommissionAmt());

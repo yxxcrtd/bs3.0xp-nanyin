@@ -33,17 +33,17 @@ public class ExchangeTransMatchFund1Service extends BaseService {
     public BaseTradeProductDealDto genFinProductTradeDto(ExchangeTransMatchCommonDto dto, ExchangeTransMatchCommonEntrustDto commonEntrustDto) {
         BaseTradeProductDealDto entity = new BaseTradeProductDealDto();
 
-        entity.setTrdProductDeal(setTrdProductDeal(dto));
+        entity.setTrdProductDeal(setTrdProductDeal(dto,commonEntrustDto));
         entity.setTrdProductDealAdd(this.genTrdProductDealAdd(dto,commonEntrustDto,entity.getTrdProductDeal()));
-        entity.setPtlTrade(generatePtlTrade(Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
-        entity.setStlPayOrdersList(generateStlPayOrdersList(Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
+        entity.setPtlTrade(generatePtlTrade(dto,commonEntrustDto,Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
+        entity.setStlPayOrdersList(generateStlPayOrdersList(dto,Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
         return entity;
     }
 
     /**
      * 设置金融产品交易明细DTO
      */
-    private TrdProductDealDto setTrdProductDeal( ExchangeTransMatchCommonDto settleTransData) {
+    private TrdProductDealDto setTrdProductDeal(ExchangeTransMatchCommonDto settleTransData,ExchangeTransMatchCommonEntrustDto entrustDto) {
         TrdProductDealDto trdProductDeal = new TrdProductDealDto();
         // ∑交易金额_原始
         BigDecimal tradeAmtRawSum = BigDecimal.ZERO;
@@ -130,21 +130,21 @@ public class ExchangeTransMatchFund1Service extends BaseService {
         trdProductDeal.setCpriceDate(settleTransData.getTradeDate());
         // 单位净价
         BigDecimal unitCprice = ArithmeticUtil.divide(fpriceAmtSum, shareAmtSum, 14);
-        trdProductDeal.setUnitCprice(unitCprice);
+        trdProductDeal.setUnitCprice(settleTransData.getUnitCprice());
         // 交易本金
-        trdProductDeal.setPrinAmt(shareAmtSum);
+        trdProductDeal.setPrinAmt(entrustDto.getMarchAmt());
         // 随交易支付费用
-        trdProductDeal.setFeeAmtPay(feeAmtPaySum);
+        trdProductDeal.setFeeAmtPay(entrustDto.getMarchFeeAmtPay());
         // ∑成交数据明细.交易份额
-        trdProductDeal.setShareAmt(shareAmtSum);
+        trdProductDeal.setShareAmt(entrustDto.getMarchQty());
         // ∑成交数据明细.交易金额
-        trdProductDeal.setTradeAmt(tradeAmtSum);
+        trdProductDeal.setTradeAmt(entrustDto.getMarchAmt());
         // 全价总额
-        trdProductDeal.setFpriceAmt(fpriceAmtSum);
+        trdProductDeal.setFpriceAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),settleTransData.getFpriceAmt()));
         // 未随交易支付费用
-        trdProductDeal.setFeeAmtUnpay(feeAmtUnPaySum);
+        trdProductDeal.setFeeAmtUnpay(entrustDto.getMarchFeeAmtUnPay());
         // 总交易费用
-        trdProductDeal.setFeeAmt(ArithmeticUtil.doAdd(trdProductDeal.getFeeAmtPay(), trdProductDeal.getFeeAmtUnpay()));
+        trdProductDeal.setFeeAmt(ArithmeticUtil.doAdd(entrustDto.getMarchFeeAmtPay(), entrustDto.getMarchFeeAmtUnPay()));
         // 交易方向
         trdProductDeal.setPs(settleTransData.getPs());
         // 交易状态
@@ -211,12 +211,12 @@ public class ExchangeTransMatchFund1Service extends BaseService {
      * 获取 组合交易DTO
      * @return 组合交易DTO
      */
-    protected List<PtlTrade> generatePtlTrade(List<TrdProductDealDto> dealList) {
+    protected List<PtlTrade> generatePtlTrade(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto,List<TrdProductDealDto> dealList) {
         List<PtlTrade> res = new ArrayList<>();
         dealList.forEach(deal-> {
             PtlTrade ptlTrade = new PtlTrade();
             // 组合代码
-            ptlTrade.setPortfolioId(deal.getPortfolioId());
+            ptlTrade.setPortfolioId(entrustDto.getPortfolioId());
             // 业务编号
             ptlTrade.setBusiNo(deal.getTradeId());
             // 业务表
@@ -242,7 +242,7 @@ public class ExchangeTransMatchFund1Service extends BaseService {
      * 生成指令
      * @return 指令列表
      */
-    protected List<StlPayOrdersDto> generateStlPayOrdersList(List<TrdProductDealDto> dealList) {
+    protected List<StlPayOrdersDto> generateStlPayOrdersList(ExchangeTransMatchCommonDto dealDto,List<TrdProductDealDto> dealList) {
         List<StlPayOrdersDto> res = new ArrayList<>();
         dealList.forEach(deal -> {
             StlPayOrdersDto stlPayOrders = new StlPayOrdersDto();
@@ -253,7 +253,7 @@ public class ExchangeTransMatchFund1Service extends BaseService {
             // 结算日期
             stlPayOrders.setSettleDate(deal.getSettleDate());
             //本方资金账户
-//            stlPayOrders.setMyAcctNo(deal.getAcctNo());
+            stlPayOrders.setMyAcctNo(dealDto.getAcctNo());
             // 收付方向
             if (StringUtil.equals(deal.getPs(), DictCodeList.交易方向_买入.getValue())) {
                 stlPayOrders.setPs(DictCodeListExt1.收付方向_支出.getValue());

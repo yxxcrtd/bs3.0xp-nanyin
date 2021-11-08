@@ -106,7 +106,7 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 			List<SettleTransDataPledge> settleTransDataPledgeList = dataDealWriteBaseDto.getSettleTransDataPledgeList();
 
 			// 成交数据与投管交易关系
-			SettleTransTgMapping settleTransTgMapping = dataDealWriteBaseDto.getSettleTransTgMapping();
+//			SettleTransTgMapping settleTransTgMapping = dataDealWriteBaseDto.getSettleTransTgMapping();
 
 			if(null != settleTransData) {
 				try {
@@ -135,9 +135,9 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 					}
 				}
 			}
-			if(null != settleTransTgMapping && StringUtil.isNotEmpty(settleTransTgMapping.getTradeId())) {
-				settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
-			}
+//			if(null != settleTransTgMapping && StringUtil.isNotEmpty(settleTransTgMapping.getTradeId())) {
+//				settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
+//			}
 		}
 	}
 }
