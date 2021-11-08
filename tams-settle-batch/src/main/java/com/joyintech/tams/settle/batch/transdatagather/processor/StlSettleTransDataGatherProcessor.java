@@ -43,7 +43,7 @@ public class StlSettleTransDataGatherProcessor extends BaseProcessor<NeedOperate
         //批量写入汇总状态表
         transDataTotalList.forEach(settleTransDataTotal -> {
             SettleTransDataTotalStatus status=new SettleTransDataTotalStatus();
-            status.setSeqNo(settleTransDataTotal.getSeqNo());
+            status.setSeqNo(settleTransDataTotal.getSeqId());
             status.setMatchStatus(DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
             stlSettleTransDataGatherService.insetSettleTransDataTotalStatus(status);
         });
