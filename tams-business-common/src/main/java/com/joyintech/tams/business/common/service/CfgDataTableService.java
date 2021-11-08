@@ -117,6 +117,7 @@ public class CfgDataTableService {
         showFlag.setPageCode(pageCode);
         showFlag.setDtCode(dtCode);
         showFlag.setRangeId(userId);
+        showFlag.setSpcdCode(spcdCode);
         showFlag.setUpdateTime(DateUtil.format(new Date(), DateUtil.DEFAULT_DATETIME_FORMAT));
         cfgDataTableFlagMapper.insertCfgDataTableFlag(showFlag);
     }

@@ -27,6 +27,9 @@ public class CfgDataTableShowFlag {
     @ApiModelProperty(name = "updateTime", value = "更新时间")
     private String updateTime;
 
+    @ApiModelProperty(name = "spcdCode", value = "特殊条件编码")
+    private String spcdCode;
+
     public String getUpdateTime() {
 		return updateTime;
 	}
@@ -81,5 +84,13 @@ public class CfgDataTableShowFlag {
 
     public void setRangeId(String rangeId) {
         this.rangeId = rangeId;
+    }
+
+    public String getSpcdCode() {
+        return spcdCode;
+    }
+
+    public void setSpcdCode(String spcdCode) {
+        this.spcdCode = spcdCode;
     }
 }
