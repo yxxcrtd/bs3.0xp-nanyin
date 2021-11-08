@@ -547,7 +547,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         Map<String, CfetsUnitCostDto> unitCostMap = calcEachCostAmtMap(requestDto);
         
         // 计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
-        if(result != null && result.getRoot()!= null && result.getRoot().size() > 0){
+        if(result != null && result.getRoot()!= null && !result.getRoot().isEmpty()){
             result.getRoot().forEach( r->{
                 CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId() + r.getBusiModel());
                 if (dto != null){
@@ -555,26 +555,24 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     r.setPositionsAmt(dto.getBuyCostAmt());
                     // 2.持仓成本价（元） 取单位成本
                     r.setUnitCost(dto.getUnitCost());
-                    
-                    // 3.最新净价（元） 优先从内存获取债券最新净价，没有则 r.getPrice()
-                    BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId());
-                    if (price != null) {
-                        r.setPrice(price);
-                    }else{
-                        // 是否需要从http查询一次，并放入缓存? 待定
-                    }
-                    
+                }
+                
+                // 3.最新净价（元） 优先从内存获取债券最新净价，没有则使用dto中债券估值行情的值r.getPrice()
+                BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId());
+                if (price != null) {
+                    r.setPrice(price);
+                }
+                // else{
+                    // 是否需要从http查询一次，并放入缓存? 待定
+                // }
+                
+                if (r.getPrice() != null){
                     // 4.持仓市值（万元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
                     BigDecimal doAdd = ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt());
                     r.setPositionsPrice(ArithmeticUtil.multiply(doAdd, r.getPrice()).divide(BigDecimal.valueOf(100)));
-                    
+
                     // 5.浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
                     r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
-                }else {
-                    BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId());
-                    if (price != null) {
-                        r.setPrice(price);
-                    }
                 }
             });
         }
