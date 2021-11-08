@@ -30,10 +30,10 @@ public class CfetsEtrIbBondPosinfo001Dto{
     @ApiModelProperty(name="finprodAbbr",value="资产简称",example="ZC名")
     private String finprodAbbr;
 
-    @ApiModelProperty(name="secType1",value="债券一级分类Code",example="分类1Code")
+    @ApiModelProperty(name="secType1",value="债券分类Code",example="分类1Code")
     private String secType1;
 
-    @ApiModelProperty(name="secType1Name",value="债券一级分类",example="分类1名称")
+    @ApiModelProperty(name="secType1Name",value="债券分类",example="分类1名称")
     private String secType1Name;
 
     @ApiModelProperty(name="busiModel",value="业务模式Code",example="业务模式1Code")
