@@ -657,7 +657,7 @@ from
         sd1.ITEM_VALUE zxGrade,
         sd2.ITEM_VALUE ztGrade,
         t1.IS_RIGHT xqFlg,
-        TO_CHAR(A.EXERCISE_DATE,'yyyy-MM-dd') xqdate,
+        TO_CHAR(B.EXERCISE_DATE,'yyyy-MM-dd') xqdate,
         MBVI.NETVALUATION_EXERCISE priceXq,
         MBVI.NETPRICE priceTj,
         t2.TYPE_7,
@@ -667,70 +667,70 @@ from
         (MBVI.BPYIELD*100) ||'%' gzRate
         FROM FIN_PRODUCT t1
         LEFT JOIN
-            FIN_PRODUCT_TYPE t2 ON t1.FINPROD_ID = t2.FINPROD_ID
+        FIN_PRODUCT_TYPE t2 ON t1.FINPROD_ID = t2.FINPROD_ID
         LEFT JOIN
-            MST_BOND_VALUATION_INFO MBVI ON t1.FINPROD_MARKET_ID = MBVI.SEC_ID AND MBVI.VALUE_SOURCE = 'CBC'
+        MST_BOND_VALUATION_INFO MBVI ON t1.FINPROD_MARKET_ID = MBVI.SEC_ID AND MBVI.VALUE_SOURCE = 'CBC'
         LEFT JOIN (
-            select
-            f2.FINPROD_ID,
-            min(f1.PAY_DATE) PAY_DATE
-            from
-            fin_cash_plan f1
-            inner join fin_cash_info f2 on f1.CASH_ID = f2.CASH_ID
-            inner join FIN_PRODUCT f3 on f2.FINPROD_ID = f3.FINPROD_ID
-            where
-            f2.CASH_TYPE_2 = 'C02' and
-            to_char(f1.PAY_DATE,'yyyy-MM-dd') <![CDATA[>=]]> to_char(#{sysDate},'yyyy-MM-dd') and
-            f3.FINPROD_TYPE2 = 'F01'
-            group by f2.FINPROD_ID
-            ) t4 on t4.FINPROD_ID = t1.FINPROD_ID
+        select
+        f2.FINPROD_ID,
+        min(f1.PAY_DATE) PAY_DATE
+        from
+        fin_cash_plan f1
+        inner join fin_cash_info f2 on f1.CASH_ID = f2.CASH_ID
+        inner join FIN_PRODUCT f3 on f2.FINPROD_ID = f3.FINPROD_ID
+        where
+        f2.CASH_TYPE_2 = 'C02' and
+        to_char(f1.PAY_DATE,'yyyy-MM-dd') >= to_char(#{sysDate},'yyyy-MM-dd') and
+        f3.FINPROD_TYPE2 = 'F01'
+        group by f2.FINPROD_ID
+        ) t4 on t4.FINPROD_ID = t1.FINPROD_ID
         left join
-            fin_cash_info t5 on t5.FINPROD_ID = t1.FINPROD_ID AND t5.CASH_TYPE_2 = 'C02' and t5.FINPROD_TYPE = '01'
+        fin_cash_info t5 on t5.FINPROD_ID = t1.FINPROD_ID AND t5.CASH_TYPE_2 = 'C02' and t5.FINPROD_TYPE = '01'
         LEFT JOIN
-            FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID
+        FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID
         LEFT JOIN
-            mst_customer_info t7 ON t1.SPONSOR = t7.CUSTOMER_ID
+        mst_customer_info t7 ON t1.SPONSOR = t7.CUSTOMER_ID
         LEFT JOIN (
-            <!-- 取大于当前时间的最接近的实际行权日 -->
-            select A.FINPROD_ID,min(A.EXERCISE_DATE) EXERCISE_DATE
-            from FIN_EXERCISE_PLAN A
-            where
-            1 = 1
-            <if test="secId != null and secId != ''">
-                AND A.FINPROD_ID = #{secId}
-            </if>
-            group by A.FINPROD_ID
-            ) B on t1.FINPROD_ID = B.FINPROD_ID
+        <!-- 取大于当前时间的最接近的实际行权日 -->
+        select A.FINPROD_ID,min(A.EXERCISE_DATE) EXERCISE_DATE
+        from FIN_EXERCISE_PLAN A
+        where
+        to_char(A.EXERCISE_DATE,'yyyy-MM-dd') >= to_char(#{sysDate},'yyyy-MM-dd')
+        <if test="secId != null and secId != ''">
+            AND A.FINPROD_ID = #{secId}
+        </if>
+        group by A.FINPROD_ID
+        ) B on t1.FINPROD_ID = B.FINPROD_ID
         LEFT JOIN
-            MST_BOND_CREDIT_RATING MBCR ON t1.FINPROD_MARKET_ID = MBCR.O_CODE AND MBCR.O_TYPE = '02'
+        MST_BOND_CREDIT_RATING MBCR ON t1.FINPROD_MARKET_ID = MBCR.O_CODE AND MBCR.O_TYPE = '02'
         LEFT JOIN
-            SYS_DATADICT_LIST sd1 ON sd1.DICT_CODE = 'MAIN_GRADE_RESULT' AND sd1.ITEM_CODE = MBCR.GRADE_RESULT
+        SYS_DATADICT_LIST sd1 ON sd1.DICT_CODE = 'MAIN_GRADE_RESULT' AND sd1.ITEM_CODE = MBCR.GRADE_RESULT
         LEFT JOIN
-            MST_BOND_CREDIT_RATING MBCRA ON t1.ISSUER = MBCRA.O_CODE AND MBCRA.O_TYPE = '01'
+        MST_BOND_CREDIT_RATING MBCRA ON t1.ISSUER = MBCRA.O_CODE AND MBCRA.O_TYPE = '01'
         LEFT JOIN
-            SYS_DATADICT_LIST sd2 ON sd2.DICT_CODE = 'MAIN_GRADE_RESULT' AND sd2.ITEM_CODE = MBCRA.GRADE_RESULT
+        SYS_DATADICT_LIST sd2 ON sd2.DICT_CODE = 'MAIN_GRADE_RESULT' AND sd2.ITEM_CODE = MBCRA.GRADE_RESULT
         LEFT JOIN
-            SYS_DATADICT_LIST sdl ON sdl.ITEM_CODE = t2.TYPE_2
+        SYS_DATADICT_LIST sdl ON sdl.DICT_CODE = 'CUSTOM_ASSET_TYPE_FOUR' AND sdl.ITEM_CODE = t2.TYPE_12
         LEFT JOIN
-            SYS_DATADICT_LIST sd ON sd.DICT_CODE = 'INT_TYPE' AND sd.ITEM_CODE = t6.INT_TYPE
+        SYS_DATADICT_LIST sd ON sd.DICT_CODE = 'INT_TYPE' AND sd.ITEM_CODE = t6.INT_TYPE
         LEFT JOIN
-            MST_CUSTOMER_INFO MCI ON t1.ISSUER = MCI.CUSTOMER_ID
+        MST_CUSTOMER_INFO MCI ON t1.ISSUER = MCI.CUSTOMER_ID
         LEFT JOIN (
-            SELECT * FROM(
-                SELECT OCODE,
-                INNEROUTER,
-                GRADEDATE,
-                MSTRATINGRESULT01
-                GRADERESULT,
-                rank() over (
-                    partition
-                    BY
-                    OCODE
-                    ORDER BY
-                    gradeDate
-                    DESC
-                ) rk FROM view_fin_product_rating
-            ) WHERE rk = 1
+        SELECT * FROM(
+        SELECT OCODE,
+        INNEROUTER,
+        GRADEDATE,
+        MSTRATINGRESULT01
+        GRADERESULT,
+        rank() over (
+        partition
+        BY
+        OCODE
+        ORDER BY
+        gradeDate
+        DESC
+        ) rk FROM view_fin_product_rating
+        ) WHERE rk = 1
         ) PJ ON PJ.OCODE = t1.FINPROD_MARKET_ID
         LEFT JOIN FIN_EXERCISE_PLAN A ON t1.FINPROD_ID = A.FINPROD_ID
         where 1 = 1
