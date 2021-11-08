@@ -60,6 +60,9 @@ public class CfgDataTableShow {
     @ApiModelProperty(name = "remark3", value = "备注3")
     private String remark3;
 
+    @ApiModelProperty(name = "iskey", value = "是否表格主键(0:是,1:否)")
+    private Integer iskey;
+
     public String getPageCode() {
         return pageCode;
     }
@@ -202,5 +205,13 @@ public class CfgDataTableShow {
 
     public void setDictCode(String dictCode) {
         this.dictCode = dictCode;
+    }
+
+    public Integer getIskey() {
+        return iskey;
+    }
+
+    public void setIskey(Integer iskey) {
+        this.iskey = iskey;
     }
 }
