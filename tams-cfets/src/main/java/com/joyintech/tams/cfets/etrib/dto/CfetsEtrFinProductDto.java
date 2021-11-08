@@ -177,13 +177,13 @@ public class CfetsEtrFinProductDto {
      * 最新净价
      */
     @ApiModelProperty(required = false,name="newPrice",value="最新净价")
-    private BigDecimal newPrice;
+    private String newPrice;
 
     /**
      * 估价净价
      */
     @ApiModelProperty(required = false,name="priceXq",value="估价净价（行权）")
-    private BigDecimal priceXq;
+    private String priceXq;
 
     /**
      * 最新收益率
@@ -195,7 +195,7 @@ public class CfetsEtrFinProductDto {
      * 估价净价
      */
     @ApiModelProperty(required = false,name="priceTj",value="估价净价（推荐）")
-    private BigDecimal priceTj;
+    private String priceTj;
 
     /**
      * 估值收益率
@@ -520,19 +520,19 @@ public class CfetsEtrFinProductDto {
         this.xqdate = xqdate;
     }
 
-    public BigDecimal getNewPrice() {
+    public String getNewPrice() {
         return newPrice;
     }
 
-    public void setNewPrice(BigDecimal newPrice) {
+    public void setNewPrice(String newPrice) {
         this.newPrice = newPrice;
     }
 
-    public BigDecimal getPriceXq() {
+    public String getPriceXq() {
         return priceXq;
     }
 
-    public void setPriceXq(BigDecimal priceXq) {
+    public void setPriceXq(String priceXq) {
         this.priceXq = priceXq;
     }
 
@@ -544,11 +544,11 @@ public class CfetsEtrFinProductDto {
         this.newRate = newRate;
     }
 
-    public BigDecimal getPriceTj() {
+    public String getPriceTj() {
         return priceTj;
     }
 
-    public void setPriceTj(BigDecimal priceTj) {
+    public void setPriceTj(String priceTj) {
         this.priceTj = priceTj;
     }
 
