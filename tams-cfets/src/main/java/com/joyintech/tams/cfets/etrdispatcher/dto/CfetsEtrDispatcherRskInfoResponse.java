@@ -1,5 +1,8 @@
 package com.joyintech.tams.cfets.etrdispatcher.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -135,5 +138,17 @@ public class CfetsEtrDispatcherRskInfoResponse {
 
     public void setSupTrend(String supTrend) {
         this.supTrend = supTrend;
+    }
+
+    /**
+     * 将监控状态对应的数据字典代码转换为数据字典值
+     * @return 数据字典值
+     */
+    public String getOtherSupStat(){
+        return SysDataUtil.getNameFromDataDict(BussinessDictCodeRds.监督状态, this.getSupStat());
+    }
+
+    public String getOtherIndType() {
+        return SysDataUtil.getNameFromDataDict(DictCode.指标类型, this.getIndType());
     }
 }

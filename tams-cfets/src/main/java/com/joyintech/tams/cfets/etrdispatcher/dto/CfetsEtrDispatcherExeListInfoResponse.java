@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 
 /**
@@ -42,8 +41,11 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     @ApiModelProperty(name="secAcctIdStr",value="证券账户",example="XXX证券账户")
     private String secAcctIdStr;
 
+    @ApiModelProperty(name="exeDate",value="执行日期",example="2021-01-01")
+    private String exeDate;
+
     @ApiModelProperty(name="tradeDate",value="成交日期",example="2021-01-01")
-    private Date tradeDate;
+    private String tradeDate;
 
     @ApiModelProperty(name="settleSpeed",value="清算速度code",example="T+0")
     private String settleSpeed;
@@ -52,7 +54,7 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     private String settleSpeedStr;
 
     @ApiModelProperty(name="settleDate",value="结算日期",example="2021-01-01")
-    private Date settleDate;
+    private String settleDate;
 
     @ApiModelProperty(name="unitPrice",value="净价",example="100")
     private BigDecimal unitPrice;
@@ -211,13 +213,6 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
         this.secAcctIdStr = secAcctIdStr;
     }
 
-    public Date getTradeDate() {
-        return tradeDate;
-    }
-
-    public void setTradeDate(Date tradeDate) {
-        this.tradeDate = tradeDate;
-    }
 
     public String getSettleSpeed() {
         return settleSpeed;
@@ -233,14 +228,6 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
 
     public void setSettleSpeedStr(String settleSpeedStr) {
         this.settleSpeedStr = settleSpeedStr;
-    }
-
-    public Date getSettleDate() {
-        return settleDate;
-    }
-
-    public void setSettleDate(Date settleDate) {
-        this.settleDate = settleDate;
     }
 
     public BigDecimal getUnitPrice() {
@@ -489,5 +476,21 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
 
     public void setSettleTypeStr(String settleTypeStr) {
         this.settleTypeStr = settleTypeStr;
+    }
+
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+    public String getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(String settleDate) {
+        this.settleDate = settleDate;
     }
 }

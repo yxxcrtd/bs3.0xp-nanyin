@@ -43,7 +43,7 @@
     ssai.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03','01') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-    decode(#{busiTypePosition01},EEBP.BID_PRICE,#{busiTypePosition02},ETR_ENTRUST_ADD.MATURE_YIELD,#{busiTypePosition03},ETR_ENTRUST.PRICE,'') etrPrice,
+    round(decode(ETR_ENTRUST_ADD.BUSI_TYPE_POSITION,#{busiTypePosition01},EEBP.BID_PRICE,#{busiTypePosition02},ETR_ENTRUST_ADD.MATURE_YIELD,#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
     round(NVL(T5.ent_finish_amt,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 exeProgress,
     round(NVL(T5.FINISH_AMT,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 dealProgress
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
@@ -203,7 +203,7 @@
     ssai.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03','01') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-    decode(#{busiTypePosition01},EEBP.BID_PRICE,#{busiTypePosition02},ETR_ENTRUST_ADD.MATURE_YIELD,#{busiTypePosition03},ETR_ENTRUST.PRICE,'') etrPrice,
+    round(decode(ETR_ENTRUST_ADD.BUSI_TYPE_POSITION,#{busiTypePosition01},EEBP.BID_PRICE,#{busiTypePosition02},ETR_ENTRUST_ADD.MATURE_YIELD,#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
     round(NVL(T5.ent_finish_amt,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 exeProgress,
     round(NVL(T5.FINISH_AMT,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 dealProgress
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
@@ -356,13 +356,13 @@
                     OR t.finprodMarketId like '%' || #{search} || '%'
                     OR t.finprodAbbr like '%' || #{search} || '%'
                     OR t.remark like '%' || #{search} || '%'
-                    OR t.sec_acct_name like '%' || #{search} || '%'
-                    OR t.entrustAmt = #{search}
-                    OR t.etrPrice = #{search}
-                    OR t.termDays = #{search}
-                    OR t.exeProgress = #{search}
-                    OR t.dealProgress = #{search}
-                    OR t.entrustDate = #{search}
+                    OR t.secAcctId like '%' || #{search} || '%'
+                    OR t.entrustAmt||'' = #{search}
+                    OR t.etrPrice||'' = #{search}
+                    OR t.termDays||'' = #{search}
+                    OR t.exeProgress||'' = #{search}
+                    OR t.dealProgress||'' = #{search}
+                    OR to_char(t.entrustDate,'yyyy-MM-dd') = #{search}
                 )
             </where>
         </if>
@@ -468,7 +468,6 @@
 
     <sql id="etrDispatcherDealListInfo">
         #{busiTypePosition} busiTypePosition,
-        tpd.trade_status effectFlag,
         tpd.totle_trade_id totleTradeId,
         tpd.trade_id tradeId,
         tpda.portfolio_id portfolioId,
@@ -512,6 +511,7 @@
     <select id="getEtrDispatcherDealListInfo"
             resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherDealListInfoResponse">
         SELECT
+        decode(tpd.is_cancel,'Y',#{TRADE_FLOW_STATUS03},#{TRADE_FLOW_STATUS02}) effectFlag,
         <include refid="etrDispatcherDealListInfo"/>
         FROM trd_product_deal tpd
         LEFT JOIN trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
@@ -532,6 +532,7 @@
         union all
 
         SELECT
+        #{TRADE_FLOW_STATUS01} effectFlag,
         <include refid="etrDispatcherDealListInfo"/>
         FROM wfl_trd_product_deal tpd
         LEFT JOIN wfl_trd_product_deal_add tpda ON tpd.trade_id = tpda.trade_id
@@ -665,18 +666,18 @@
 
     <sql id="etrDispatcherExeListInfo">
         #{busiTypePosition} busiTypePosition,
-        tpdp.trade_status effectFlag,
         tpdp.trade_id tradeId,
-        tpdp.trade_date tradeDate,
+        to_char(tpdp.trade_date,'yyyy-MM-dd') exeDate,
+        to_char(tpdp.settle_date,'yyyy-MM-dd') tradeDate,
         tpdp.busi_type busiType,
         tpdp.portfolio_id portfolioId,
         pp.portfolio_name portfolioName,
         fp.finprod_market_id finprodMarketId,
         fp.finprod_abbr finprodAbbr,
         tpdp.ps ps,
-        tpdp.sec_manage_acct_id secAcctId,
+        ssai.sec_acct_name secAcctId,
         tpdp.settle_speed settleSpeed,
-        tpdp.settle_date settleDate,
+        to_char(tpdp.settle_date,'yyyy-MM-dd') settleDate,
         tpdp.unit_cprice unitPrice,
         tpdp.yield matureYield,
         tpdp.exer_yield exerYield,
@@ -692,65 +693,74 @@
         '' settleType,
         tpdp.COUNTER_ID counterId,
         mcp.counter_name counterName,
+        tpdp.COUNTER_TRADER counterTrader,
+        tpdp.remark remark
+    </sql>
+    <sql id="etrDispatcherExeListInfo1">
+        '' effectFlag,
+        #{busiTypePosition} busiTypePosition,
+        tpdp.quote_id tradeId,
+        to_char(tpdp.quote_date, 'yyyy-MM-dd') exeDate,
+        to_char(tpdp.quote_date, 'yyyy-MM-dd') tradeDate,
+        tpdp.quote_type busiType,
+        tpdp.portfolio_id portfolioId,
+        pp.portfolio_name portfolioName,
+        fp.finprod_market_id finprodMarketId,
+        fp.finprod_abbr finprodAbbr,
+        tpdp.ps ps,
+        tpdp.sec_manage_acct_id secAcctId,
+        tpdp.settle_speed settleSpeed,
+        to_char(tpdp.settle_date, 'yyyy-MM-dd') settleDate,
+        tpdpa.unit_cprice unitPrice,
+        tpdpa.yield matureYield,
+        tpdpa.exer_yield exerYield,
+        tpdpa.share_amt shareNum,
+        tpdpa.unit_int unitInt,
+        tpdpa.unit_fprice allPrice,
+        tpdpa.cprice_amt cpriceAmt,
+        tpdpa.int_amt intAmt,
+        tpdpa.fprice_amt fpriceAmt,
+        0 jyFeeAmt,
+        0 jsFeeAmt,
+        tpdp.sett_ccy ccy,
+        tpdp.sett_type  settleType,
+        tpdpa.cp_party_id counterId,
+        tpdpa.cp_trader counterName,
+        tpdpa.cp_trader counterTrader,
         tpdp.remark remark
     </sql>
     <select id="getEtrDispatcherExeListInfo"
             resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherExeListInfoResponse">
         SELECT
+        decode(tpdp.is_cancel,'Y',#{TRADE_FLOW_STATUS03},#{TRADE_FLOW_STATUS02}) effectFlag,
         <include refid="etrDispatcherExeListInfo"/>
-        FROM REG_FIN_PRODUCT_DEA tpdp
+        FROM REG_FIN_PRODUCT_DEAL tpdp
         LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
         LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.COUNTER_ID = mcp.counter_id
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON tpdp.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpdp.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type =#{feeType07}
-        WHERE tpdap.entrust_id = #{entrustId}
-
-<!--        union all-->
-
-<!--        SELECT-->
-<!--        <include refid="etrDispatcherExeListInfo"/>-->
-<!--        FROM WFL_TRD_PRODUCT_DEAL_PRE tpdp-->
-<!--        LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD_PRE tpdap ON tpdp.trade_id = tpdap.trade_id-->
-<!--        LEFT JOIN PTL_PORTFOLIO pp ON tpdap.portfolio_id = pp.portfolio_id-->
-<!--        LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id-->
-<!--        LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.counter_id = mcp.counter_id-->
-<!--        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON tpdp.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}-->
-<!--        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpdp.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type =#{feeType07}-->
-<!--        WHERE tpdap.entrust_id = #{entrustId}-->
+        WHERE tpdp.entrust_id = #{entrustId}
 
         union all
 
         SELECT
-            #{busiTypePosition} busiTypePosition,
-            '' effectFlag,
-            tpdp.quote_id tradeId,
-            tpdp.quote_date tradeDate,
-            tpdp.quote_type busiType,
-            tpdp.portfolio_id portfolioId,
-            pp.portfolio_name portfolioName,
-            fp.finprod_market_id finprodMarketId,
-            fp.finprod_abbr finprodAbbr,
-            tpdp.ps ps,
-            tpdp.sec_manage_acct_id secAcctId,
-            tpdp.settle_speed settleSpeed,
-            tpdp.settle_date settleDate,
-            tpdpa.unit_cprice unitPrice,
-            tpdpa.yield matureYield,
-            tpdpa.exer_yield exerYield,
-            tpdpa.share_amt shareNum,
-            tpdpa.unit_int unitInt,
-            tpdpa.unit_fprice allPrice,
-            tpdpa.cprice_amt cpriceAmt,
-            tpdpa.int_amt intAmt,
-            tpdpa.fprice_amt fpriceAmt,
-            0 jyFeeAmt,
-            0 jsFeeAmt,
-            tpdp.sett_ccy ccy,
-            tpdp.sett_type  settleType,
-            tpdpa.cp_party_id counterId,
-            tpdpa.cp_trader counterName,
-            tpdp.remark remark
+        #{TRADE_FLOW_STATUS01} effectFlag,
+        <include refid="etrDispatcherExeListInfo"/>
+        FROM WFL_REG_FIN_PRODUCT_DEAL tpdp
+        LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
+        LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
+        LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.COUNTER_ID = mcp.counter_id
+        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON tpdp.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}
+        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpdp.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type =#{feeType07}
+        WHERE tpdp.entrust_id = #{entrustId}
+
+        union all
+
+        SELECT
+        <include refid="etrDispatcherExeListInfo1"/>
         FROM IBU_QUOTE_BOND tpdp
         LEFT JOIN IBU_QUOTE_BOND_DET tpdpa ON tpdp.QUOTE_ID = tpdpa.QUOTE_ID
         LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id
@@ -761,35 +771,7 @@
         union all
 
         SELECT
-            #{busiTypePosition} busiTypePosition,
-            '' effectFlag,
-            tpdp.quote_id tradeId,
-            tpdp.quote_date tradeDate,
-            tpdp.quote_type busiType,
-            tpdp.portfolio_id portfolioId,
-            pp.portfolio_name portfolioName,
-            fp.finprod_market_id finprodMarketId,
-            fp.finprod_abbr finprodAbbr,
-            tpdp.ps ps,
-            tpdp.sec_manage_acct_id secAcctId,
-            tpdp.settle_speed settleSpeed,
-            tpdp.settle_date settleDate,
-            tpdpa.unit_cprice unitPrice,
-            tpdpa.yield matureYield,
-            tpdpa.exer_yield exerYield,
-            tpdpa.share_amt shareNum,
-            tpdpa.unit_int unitInt,
-            tpdpa.unit_fprice allPrice,
-            tpdpa.cprice_amt cpriceAmt,
-            tpdpa.int_amt intAmt,
-            tpdpa.fprice_amt fpriceAmt,
-            0 jyFeeAmt,
-            0 jsFeeAmt,
-            tpdp.sett_ccy ccy,
-            tpdp.sett_type  settleType,
-            tpdpa.cp_party_id counterId,
-            tpdpa.cp_trader counterName,
-            tpdp.remark remark
+        <include refid="etrDispatcherExeListInfo1"/>
         FROM WFL_IBU_QUOTE_BOND2 tpdp
         LEFT JOIN WFL_IBU_QUOTE_BOND_DET tpdpa ON tpdp.QUOTE_ID = tpdpa.QUOTE_ID
         LEFT JOIN PTL_PORTFOLIO pp ON tpdp.portfolio_id = pp.portfolio_id

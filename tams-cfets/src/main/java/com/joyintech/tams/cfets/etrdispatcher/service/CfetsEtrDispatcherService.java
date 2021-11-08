@@ -511,7 +511,7 @@ public class CfetsEtrDispatcherService extends BaseService{
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("YESORNO_YES", DictCodeList.是否_是.getValue());
         List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
-        if(entrustIdList.size() > 1){
+        if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
             return new CfetsEtrDispatcherInfoResponse();
         }else {
             cfetsResponseDto = cfetsEtrDispatcherMapper.getEtrDispatcherInfo(pageParam);
@@ -569,7 +569,13 @@ public class CfetsEtrDispatcherService extends BaseService{
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("feeType06", DictCodeList.费用品种类型_交易手续费.getValue());
         pageParam.put("feeType07", DictCodeList.费用品种类型_结算服务费.getValue());
-
+        pageParam.put("TRADE_FLOW_STATUS01", DictCodeListExt1.交易流程状态_流程中.getValue());
+        pageParam.put("TRADE_FLOW_STATUS02", DictCodeListExt1.交易流程状态_有效.getValue());
+        pageParam.put("TRADE_FLOW_STATUS03", DictCodeListExt1.交易流程状态_撤销.getValue());
+        List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
+        if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
+            return new Page<CfetsEtrDispatcherExeListInfoResponse>();
+        }
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> cfetsEtrDispatcherMapper.getEtrDispatcherExeListInfo(pageParam));
     }
@@ -587,7 +593,13 @@ public class CfetsEtrDispatcherService extends BaseService{
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("feeType06", DictCodeList.费用品种类型_交易手续费.getValue());
         pageParam.put("feeType07", DictCodeList.费用品种类型_结算服务费.getValue());
-
+        pageParam.put("TRADE_FLOW_STATUS01", DictCodeListExt1.交易流程状态_流程中.getValue());
+        pageParam.put("TRADE_FLOW_STATUS02", DictCodeListExt1.交易流程状态_有效.getValue());
+        pageParam.put("TRADE_FLOW_STATUS03", DictCodeListExt1.交易流程状态_撤销.getValue());
+        List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
+        if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
+            return new Page<CfetsEtrDispatcherDealListInfoResponse>();
+        }
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> cfetsEtrDispatcherMapper.getEtrDispatcherDealListInfo(pageParam));
     }
@@ -605,7 +617,7 @@ public class CfetsEtrDispatcherService extends BaseService{
         //dto转成map
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
-        if(entrustIdList.size() > 1){
+        if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
             return new Page<CfetsEtrDispatcherRskInfoResponse>();
         }else{
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
@@ -729,6 +741,7 @@ public class CfetsEtrDispatcherService extends BaseService{
 //            }
         }
         ajaxResult.setErrorList(errorList);
+        ajaxResult.setMessage(errorList.toString());
         return ajaxResult;
     }
 
