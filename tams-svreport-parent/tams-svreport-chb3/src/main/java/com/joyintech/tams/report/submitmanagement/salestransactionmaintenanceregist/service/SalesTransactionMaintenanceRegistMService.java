@@ -4,13 +4,11 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.batch.batchstart.service.SysBatchStart001Service;
 import com.joyintech.tams.common.base.entity.ChbBatchPara;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,28 +71,6 @@ public class SalesTransactionMaintenanceRegistMService extends BaseService<Sales
 			   param,
 			   SalesTransactionMaintenanceRegist001Dto.class);
    }
-
-
-
-   /**
-    *
-    * 导入
-    * <功能详细描述>
-    * @param fileName 文件
-    * @return 导入数据
-    * @see
-    * @since 1.0
-    */
-   public List<ExcelValidDto> importData(String fileName){
-		Map<String,Object> param = new HashMap<String,Object>();
-	   	param.put("dataList", ExcelUtil.getDataList(fileName));
-	   	param.put("deptCode", CommonUtil.getDeptCode());
-	   	param.put("orgCode", CommonUtil.getOrgCode());
-	    return restTemplate.postForList(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/importData", 
-	       		param,
-	       		ExcelValidDto.class);
-  }
    /**
     *手工处理功能
     * @return 提示信息
@@ -139,7 +115,7 @@ public class SalesTransactionMaintenanceRegistMService extends BaseService<Sales
    public void cancelMannulAll(Map<String,Object> map) {
 	   map.put("deptCode", CommonUtil.getDeptCode());
 	   restTemplate.postForObject(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/cancelMannulAll", map,
+	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/cancelMannulAll", map,
 	       		Integer.class);
    }
 
@@ -151,19 +127,8 @@ public class SalesTransactionMaintenanceRegistMService extends BaseService<Sales
     */
    public void cancelMannul(String upKey) {
 	   restTemplate.postForObject(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/cancelMannul", upKey,
+	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/cancelMannul", upKey,
 	       		Integer.class);
-   }
-   /**
-    * checkIsNotSubmit
-    * @return 提示信息
-    * @since 1.0
-    */
-public List<ValidMessage> checkIsNotSubmit(String upKey) {
-	   return  restTemplate.postForList(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/checkIsNotSubmit", upKey,
-	       		ValidMessage.class);
-   	
    }
    
    /**
@@ -188,26 +153,14 @@ public List<ValidMessage> checkIsNotSubmit(String upKey) {
     */
    public List<SalesTransactionMaintenanceRegist001Dto> queryExportRegistDelList(Map<String,Object> paramMap){
 	   return restTemplate.postForList(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryExportSelectRegistList", paramMap,
+	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/queryExportSelectRegistList", paramMap,
 	       		SalesTransactionMaintenanceRegist001Dto.class);
    }
 
-   /**
-    * 中债直连报送 二次报送
-    * @param paramMap 传入需要报送的主键
-    * @return 反馈信息
-    * @see
-    * @since 1.0
-    */
-   public void submitCbAgain(Map<String,Object> paramMap){
-	   restTemplate.postForObject(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/submitCbAgain", paramMap,
-	       		Integer.class);
-   }
    
    public boolean checkIfInBatchByTaskBeanName(String beanname) {
    	return restTemplate.postForObject(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/checkIfInBatchByTaskBeanName", beanname,
+	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/checkIfInBatchByTaskBeanName", beanname,
 	       	boolean.class);
    }
    
