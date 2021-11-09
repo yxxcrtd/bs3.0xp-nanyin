@@ -1370,7 +1370,7 @@ $(function () {
         //         $('#trmFundType_Div').show();
         //     } else {
         //         $('#trmFundAbbr_div').hide();
-        //         $('#trmFundType_Div').show();
+        //         $('#trmFundType_Div').hide();
         //     }
         // }
         // add by etliu 20210501 银行间场内场外拆分 end
