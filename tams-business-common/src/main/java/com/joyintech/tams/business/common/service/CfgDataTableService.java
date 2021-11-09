@@ -93,7 +93,7 @@ public class CfgDataTableService {
         CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode, spcdCode,userId);
         if (null != flag) {
             //删除用户原有自定义设置
-            cfgDataTableFlagMapper.deleteDataTable(pageCode, dtCode, userId, spcdCode);
+            cfgDataTableFlagMapper.deleteDataTable(pageCode, dtCode, spcdCode,userId);
             //新增用户修改后设置
             for (int i = 0; i < dataTableShowList.size(); i++) {
                 CfgDataTableShow data = dataTableShowList.get(i);
