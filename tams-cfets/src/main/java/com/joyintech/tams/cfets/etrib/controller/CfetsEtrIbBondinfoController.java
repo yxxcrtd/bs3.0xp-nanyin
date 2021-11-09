@@ -18,8 +18,10 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.trade.investtrade.commanddispatcher.service.TrdCommandDispatcher001Service;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.dto.*;
@@ -33,6 +35,7 @@ import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsCon
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -119,6 +122,8 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
      */
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
     /**
      * 风险接口组件Controller
      */
@@ -181,7 +186,10 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             throws Exception {
        String  errorMessage = cfetsEtrIbBondinfoService.checkSaveError(cfetsDto, br);
         if (StringUtil.isNotEmpty(errorMessage) ) {
-            return new Message<AjaxResult>().fail().setMessage(errorMessage);
+            AjaxResult m=new AjaxResult();
+            m.setStatuCode(220);
+            m.setMessage(errorMessage);
+            return new Message<AjaxResult>().success().setData(m);
         }
       /*  String  warnMessage = cfetsEtrIbBondinfoService.checkSaveWarn(cfetsDto, br);
         if (StringUtil.isNotEmpty(warnMessage) ) {
@@ -383,6 +391,12 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             }
             // ZGZGST-2330:委托关闭判断是否有完成额度，分情况处理 fuyongsheng 20210919 edit end
             // add by zhangrui1 批量委托关闭 end
+
+            //发送头寸，批量关闭
+            cfetsEtrIbBondinfoService.closeDelegatePositionMethod(dtolist);
+            //更新操作日志
+            cfetsEtrIbBondinfoService.closeDelegatOprHisMethod(dto);
+
             return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_003")));
         }
         return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("ETR_X_004")));

@@ -200,7 +200,7 @@
             pd.finprod_id,
             pd.exercise_price as price
             from FIN_EXERCISE_PLAN pd
-            where pd.exercise_date<![CDATA[<=]]>#{platDate}
+            where pd.exercise_date<![CDATA[>=]]>#{platDate}
         )pr
         on pr.finprod_id=T1.finprod_id
         and pr.finprod_id=ptl.finprod_id
@@ -222,5 +222,16 @@
                 )
             </if>
     </select>
-
+    <insert id="insertCfetsOprHis" parameterType="com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest" >
+        insert into ETR_ENTRUST_OPER_HIS (SEQ_NO, ENTRUST_ID, OPER_TYPE,
+        OPER_DATE, OPER_TIME, BUSI_DES,
+        USER_ID, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        values (#{seqNo,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, #{operType,jdbcType=VARCHAR},
+        #{operDate,jdbcType=DATE}, sysdate, #{busiDes,jdbcType=VARCHAR},
+        #{userId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+        sysdate, #{updateUser,jdbcType=VARCHAR},sysdate
+        )
+    </insert>
 </mapper>

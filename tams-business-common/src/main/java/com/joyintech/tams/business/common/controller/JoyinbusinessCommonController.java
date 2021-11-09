@@ -1,9 +1,11 @@
 package com.joyintech.tams.business.common.controller;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
 import com.joyintech.tams.business.common.dto.EntrustIdRequestDto;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
@@ -114,5 +116,18 @@ public class JoyinbusinessCommonController extends BaseController {
 			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
 		}
 	}
+	@ResponseBody
+	@ApiOperation(value = "更新操作记录", notes = "更新操作记录")
+	@PostMapping("updateCfetsOprHis")
+	public Message<AjaxResult> updateCfetsOprHis(@RequestBody CfetsOprHisInfoRequest dto) throws Exception {
+		try {
+			 joyinbusinessCommonService.updateCfetsOprHis(dto);
+			return new Message<AjaxResult>().success().setData(new AjaxResult("更新操作记录成功"));
+		} catch (Exception e) {
+			logger.error("更新操作记录异常", e);
+			return new Message<AjaxResult>().fail().setMessage("更新操作记录异常");
+		}
+	}
+
 
 }

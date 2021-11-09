@@ -993,7 +993,7 @@ from
         (NVL(T1.ENTRUST_NUM,0)/100- NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
         NVL(T7.OUR_ENT_NUM,0)/100  as entrustOwnNum,
         NVL(T7.LENDIN_ENT_NUM,0)/100  as entrustIntegrateNum,
-        T7.calculate_field as calculateField
+        T7.cal_mode as calculateField
         from
         WFL_ETR_ENTRUST T1
         INNER JOIN
@@ -1088,6 +1088,9 @@ from
                 or  aaa.allPrice||'' =#{search} or  aaa.matureYield||'' =#{search}
                 or  aaa.exerYield||'' =#{search} or  aaa.etrDate||'' =#{search}
                 or  aaa.execProcess||'' =#{search} or  aaa.transProcess||'' =#{search}
+                or  aaa.etrDate=#{year}||'-'||#{search}
+                or  replace(aaa.etrDate,'-','/')=#{search}
+                or  replace(aaa.etrDate,'-','/')=#{year}||'/'||#{search}
                 )
             </where>
         </if>

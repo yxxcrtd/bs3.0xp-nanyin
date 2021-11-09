@@ -33,6 +33,8 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.controller.EntrustCommonBaseController;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfo002Mapper;
 import com.joyintech.tams.cfets.etrib.dto.*;
@@ -153,7 +155,8 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     private BaseEtrInvestInfoService baseEtrInvestInfoService;
     @Autowired
     private CfetsEtrIbBondinfo002Mapper cfetsEtrIbBondinfo002Mapper;
-
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
 
     /**
      * 判断是否含权债
@@ -273,11 +276,11 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
     public void doInsert(CfetsEtribBondInfo003Dto entity, OperationType type){
         if ("submit".equals(entity.getOperateType())) {
             if (CollectionUtils.isNotEmpty(entity.getEtrInvestBondInfoDtos())) {
-                List<CfetsEtrIbPosPortfolioRequest> ptlList=new ArrayList<>();
+               // List<CfetsEtrIbPosPortfolioRequest> ptlList=new ArrayList<>();
                 for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                     dto.setWorkflowId(entity.getWorkflowId());
                     doInsertFlowMethod(entity.getOperateType(), initBaseEtrInvestInfoDto(dto));
-                    CfetsEtrIbPosPortfolioRequest posport=new CfetsEtrIbPosPortfolioRequest();
+                   /* CfetsEtrIbPosPortfolioRequest posport=new CfetsEtrIbPosPortfolioRequest();
                     posport.setPortfolioId(dto.getPortfolioId());
                     posport.setEtrId(dto.getEntrustId());
                     if(StringUtil.isNotEmpty(dto.getPortfolioId())){
@@ -306,9 +309,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     }
                     posport.setIntegrateSecAmount(dto.getEntrustIntegrateNum());
                     posport.setOwnSecAmount(dto.getEntrustOwnNum());
-                    ptlList.add(posport);
+                    ptlList.add(posport);*/
                 }
-                //调用头寸
+    /*            //调用头寸
                 CfetsEtrIbPositionRequest req=new CfetsEtrIbPositionRequest();
                 req.setInterfaceType("Bond001");
                 req.setUserId(SecurityUtil.getLoginUser().getUserName());
@@ -336,7 +339,10 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 req.setCcy(entity.getCcy());
                 req.setFinprodId(entity.getFinprodId());
                 req.setPtlList(ptlList);
-                PositionHttpRequest.send(req);
+                PositionHttpRequest.send(req);*/
+
+                //发送头寸
+                sendPositionMethod(entity);
             }
         }
         //无附件上传，删除
@@ -349,10 +355,10 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
                 WFlowCommonService.deleteFlow(initBaseEtrInvestInfoDto(dto).getWorkFlowId());
                 WFlowCommonService.insertFlow(initBaseEtrInvestInfoDto(dto));
-                //删除头寸
-
-                //发送头寸
             }
+            //发送头寸
+            entity.setSoftSkipMode("Y");
+            sendPositionMethod(entity);
         }
     }
 
@@ -1413,6 +1419,16 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             param.put("entrustId", dto.getEntrustId());
             etrCommandDispatcherService.pushCommandMsg(param);
         }
+        //更新操作记录日志
+        CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+        oprHisReq.setEntrustId(dto.getEntrustId());
+        if(StringUtil.equals(operationType, "NEW")){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
+        }else{
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_修改.getValue());
+        }
+        oprHisReq.setBusiDes(dto.getRemark());
+        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
 
     }
 
@@ -1456,6 +1472,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     DictCodeList.清算速度_T_1.getValue())) {
                 etrEntrustAdd.setSettleSpreed((long)1);
             }
+            etrEntrustAdd.setCalMode(dto.getCalculateField());
             entity.setEtrEntrust(etrEntrust);
             entity.setEtrEntrustAdd(etrEntrustAdd);
             MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
@@ -1539,5 +1556,68 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                     new BigDecimal(100), SCALE));
         }
         return result;
+    }
+    private  void sendPositionMethod(CfetsEtribBondInfo003Dto entity){
+        List<CfetsEtrIbPosPortfolioRequest> ptlList=new ArrayList<>();
+        for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
+            //调用头寸
+            CfetsEtrIbPosPortfolioRequest posport=new CfetsEtrIbPosPortfolioRequest();
+            posport.setPortfolioId(dto.getPortfolioId());
+            posport.setEtrId(dto.getEntrustId());
+            if(StringUtil.isNotEmpty(dto.getPortfolioId())){
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("portfolioId", dto.getPortfolioId());
+                map.put("acctType", BussinessDictCodeList.资金账户类型_托管账户.getValue());
+                String cashAcctId = this.qryPortfolioCashAcctId(map);
+                if (StringUtil.isNotEmpty(cashAcctId)) {
+                    posport.setCashAcctId(cashAcctId); // 托管户
+                }
+            }
+            if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(entity.getFinprodId())) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("portfolioId", dto.getPortfolioId());
+                map.put("finprodId", entity.getFinprodId());
+                String secAcctId = this.qryPortfolioSecAcctId(map);
+                if (StringUtil.isNotEmpty(secAcctId)) {
+                    posport.setSecAcctId(secAcctId); // 证券账户
+                }
+            }
+            posport.setSecAmount(dto.getEntrustNum());
+            posport.setCashAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
+                    new BigDecimal(100), 4));
+            if(!StringUtil.isEmptyList(dto.getBussCombDistribtList())){
+                posport.setInvAim(dto.getBussCombDistribtList().get(0).getBusinessModel());
+            }
+            posport.setIntegrateSecAmount(dto.getEntrustIntegrateNum());
+            posport.setOwnSecAmount(dto.getEntrustOwnNum());
+            ptlList.add(posport);
+        }
+        //调用头寸
+        CfetsEtrIbPositionRequest req=new CfetsEtrIbPositionRequest();
+        req.setInterfaceType("Bond001");
+        req.setUserId(SecurityUtil.getLoginUser().getUserName());
+        req.setTotalTradeId(entity.getTotalEtrustId());
+        req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
+        req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
+        String balanceCheck="Y";
+        if(StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(),"Y")){
+            balanceCheck="N";
+        }
+        req.setBalanceCheck(balanceCheck);
+        req.setBusiType(DictCodeListExt3.头寸业务类型_现券交易.getValue());
+        if(StringUtil.isNotEmpty(entity.getPs())
+                && StringUtil.equals(entity.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+            req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+        }
+        req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
+        req.setSettleSpeed(entity.getSettleSpeed());
+        req.setBusiAct("01");
+        req.setPs(entity.getPs());
+        req.setSystemAct("01");
+        req.setCdate(entity.getEtrDate());
+        req.setCcy(entity.getCcy());
+        req.setFinprodId(entity.getFinprodId());
+        req.setPtlList(ptlList);
+        PositionHttpRequest.send(req);
     }
 }

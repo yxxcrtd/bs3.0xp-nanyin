@@ -19,9 +19,11 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
 import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfo002Mapper;
@@ -39,14 +41,18 @@ import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInves
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -122,6 +128,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
     @Autowired
     private CfetsEtribBondInfo003Service cfetsetribBondInfo003Service;
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
     /**
      * 持仓信息查询
      *
@@ -426,6 +434,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 DictCodeList.清算速度_T_1.getValue())) {
             pageParam.put("settleSpeed","1");
         }
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        int year = c.get(Calendar.YEAR);
+        pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
         String userId = SecurityUtil.getLoginUser().getUserName();
@@ -1502,7 +1514,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return null;
     }
     public AjaxResult closeDelegateCheckMethod(EtrInvestBondInfoDto dto){
-        if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(dto)|| com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(dto.getSelectedItem())){
+        if(!StringUtil.isNotEmpty(dto)|| StringUtil.isEmptyList(dto.getSelectedItem())){
             AjaxResult res=new AjaxResult();
             ValidMessage  validMessage= new ValidMessage();
             validMessage.setMessage(getMessage("COMMON_E_0002"));
@@ -1511,10 +1523,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         List<EtrInvestBondInfoDto> selectedItem = dto.getSelectedItem();
         AjaxResult ajaxResult=new AjaxResult();
-        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(selectedItem)){
+        if(StringUtil.isNotEmpty(selectedItem)){
             List<String> entrustIds = new ArrayList<>();
             for(EtrInvestBondInfoDto Item:selectedItem){
-                if(com.joyintech.background.component.common.pack.common.util.StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_流程中.getValue())){
+                if(StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_流程中.getValue())){
                     AjaxResult res=new AjaxResult();
                     ValidMessage  validMessage= new ValidMessage();
                     validMessage.setMessage("流程中的数据不允许关闭");
@@ -1534,7 +1546,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return ajaxResult;
     }
     public AjaxResult recallDelegateCheckMethod(EtrInvestBondInfoDto dto){
-        if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(dto)|| com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(dto.getSelectedItem())){
+        if(!StringUtil.isNotEmpty(dto)|| StringUtil.isEmptyList(dto.getSelectedItem())){
             AjaxResult res=new AjaxResult();
             ValidMessage  validMessage= new ValidMessage();
             validMessage.setMessage(getMessage("COMMON_E_0002"));
@@ -1543,10 +1555,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         List<EtrInvestBondInfoDto> selectedItem = dto.getSelectedItem();
         AjaxResult ajaxResult=new AjaxResult();
-        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(selectedItem)){
+        if(StringUtil.isNotEmpty(selectedItem)){
             for(EtrInvestBondInfoDto Item:selectedItem){
-                if(!com.joyintech.background.component.common.pack.common.util.StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_待接收.getValue())
-                        && !com.joyintech.background.component.common.pack.common.util.StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_待分发.getValue())
+                if(!StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_待接收.getValue())
+                        && !StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_待分发.getValue())
                 ){
                     AjaxResult res=new AjaxResult();
                     ValidMessage  validMessage= new ValidMessage();
@@ -1559,7 +1571,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         return new AjaxResult();
     }
     public AjaxResult modifyDelegateCheckMethod(CfetsEtrInvestBondInfoReqDto dto){
-        if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(dto)|| com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(dto.getSelectedItem())){
+        if(!StringUtil.isNotEmpty(dto)|| StringUtil.isEmptyList(dto.getSelectedItem())){
             AjaxResult res=new AjaxResult();
             ValidMessage  validMessage= new ValidMessage();
             validMessage.setMessage(getMessage("COMMON_E_0002"));
@@ -1568,7 +1580,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         List<CfetsEtrInvestBondInfoReqDto> selectedItem = dto.getSelectedItem();
         AjaxResult ajaxResult=new AjaxResult();
-        if(com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(selectedItem)){
+        if(StringUtil.isNotEmpty(selectedItem)){
             if(selectedItem.size()>1){
                 AjaxResult res=new AjaxResult();
                 ValidMessage  validMessage= new ValidMessage();
@@ -1577,8 +1589,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 return res;
             }
             for(CfetsEtrInvestBondInfoReqDto Item:selectedItem){
-                if(!com.joyintech.background.component.common.pack.common.util.StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_已撤回.getValue())
-                        && !com.joyintech.background.component.common.pack.common.util.StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_已退回.getValue())
+                if(!StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_已撤回.getValue())
+                        && !StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_已退回.getValue())
                 ){
                     AjaxResult res=new AjaxResult();
                     ValidMessage  validMessage= new ValidMessage();
@@ -1598,6 +1610,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         // 调用投资委托组件的更新委托状态接口，将委托状态设置为"已撤回"
         boolean flag = etrInvestInfoServiceImpl.updateDelegateStatus(entity.getEtrEntrust().getEntrustId(),
                 entity.getEtrEntrust().getEntrustStatus());
+        //更新操作记录日志
+        CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+        oprHisReq.setEntrustId(dto.getEntrustId());
+        oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
+        oprHisReq.setBusiDes(dto.getRemark());
+        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
         if (flag) {
             return true;
         }
@@ -1631,6 +1649,41 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
         }
         return false;
+    }
+    public void closeDelegatePositionMethod(List<EtrInvestBondInfoDto> dtolist){
+        CfetsEtrIbClosePositionRequest req=new CfetsEtrIbClosePositionRequest();
+        List<CfetsEtrIbClosePosEtrRequest> etrList=new ArrayList<>();
+        for(EtrInvestBondInfoDto t: dtolist){
+            CfetsEtrIbClosePosEtrRequest closeItem=new CfetsEtrIbClosePosEtrRequest();
+            String busiTypePosition=DictCodeListExt3.头寸业务类型_现券交易.getValue();
+            if(StringUtil.isNotEmpty(t.getPs())
+                    && StringUtil.equals(t.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+                busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+            }
+            closeItem.setBusiType(busiTypePosition);
+            closeItem.setPs(t.getPs());
+            closeItem.setEntrustId(t.getEntrustId());
+            etrList.add(closeItem);
+        }
+        req.setEtrList(etrList);
+        req.setUserId(SecurityUtil.getLoginUser().getUserName());
+        req.setTotalTradeId(IDGenerator.generate());
+        req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
+        PositionHttpRequest.batchClose(req);
+    }
+    public void closeDelegatOprHisMethod(EtrInvestBondInfoDto dto){
+        List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
+        if(dtolist != null && dtolist.size()>0) {
+            for (EtrInvestBondInfoDto entity : dtolist) {
+                //更新操作记录日志
+                CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+                oprHisReq.setEntrustId(entity.getEntrustId());
+                oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
+                oprHisReq.setBusiDes(dto.getRemark());
+                joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+            }
+        }
+
     }
     /**
      *风险试算时，后台数据转换

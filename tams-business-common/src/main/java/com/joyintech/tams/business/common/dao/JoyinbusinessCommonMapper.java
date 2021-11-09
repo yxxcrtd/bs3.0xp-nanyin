@@ -1,10 +1,7 @@
 package com.joyintech.tams.business.common.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.tams.business.common.entity.CfgDataTableShow;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -70,4 +67,11 @@ public interface JoyinbusinessCommonMapper {
      * @since 1.0
      */
     List<SelectOptionDto> getRightfinprodIdForAdd(Map<String, Object> param);
+
+    /**
+     * 更新操作记录
+     * @param record
+     * @return
+     */
+    int insertCfetsOprHis(CfetsOprHisInfoRequest record);
 }

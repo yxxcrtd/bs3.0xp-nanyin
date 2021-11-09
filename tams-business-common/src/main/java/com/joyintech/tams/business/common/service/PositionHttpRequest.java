@@ -162,4 +162,32 @@ public class PositionHttpRequest {
     private static String httpPostRequest(String url, Object param){
         return HttpUtil.doPost(url, JsonUtils.object2Json(param));
     }
+    /**
+     * 头寸调用方法，需处理异常，可使用PositionUtil.ajaxErrorReturn解析异常
+     * 返回码 300|。。。  表示余额不足，需前端确认
+     * 返回码 410|。。。  表示通信息或网络超时
+     * 返回码 420|。。。  头寸引擎返回不成功，具体参考返回信息
+     * @param req
+     * @throws PositionException
+     */
+    public static void batchClose(Object req) throws PositionException{
+        //
+        String res = batchClosePrivate(req);
+        Map msgMap = JsonUtils.json2Object(res, Map.class);
+        if(msgMap == null){
+            throw new PositionException("头寸返回数据为空！");
+        }
+
+     /*   if (!StringUtil.equals("success", msgMap.get("code") + "")){
+            if(StringUtil.equals("FL0007", msgMap.get("code"))){
+                throw new PositionException(CODE_BUSI_REFUSE + "|" + JsonUtils.object2Json(msgMap));
+            }else {
+               // revokeCheck(msgMap, req);
+                throw new PositionException("头寸返回数据为空！");
+            }
+        }*/
+    }
+    private static String batchClosePrivate(Object param) {
+        return httpPostRequest(positionUrl + "/position/endpoint/batchClose", param);
+    }
 }

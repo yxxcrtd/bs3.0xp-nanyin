@@ -598,6 +598,7 @@
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.tradeMarket = query('#tradeMarket').val();
+        object.tradeMarketMode= query('#tradeMarketMode').val();
         object.entrustId = query('#entrustId').val();
         object.businessId = query('#businessId').val();
         object.entrustStatus = query('#entrustStatus').val();
@@ -609,6 +610,12 @@
             object.vdate: object.finvdate.split(' ')[0];
         //提交获取计算方式单选框的值
         object.calculateField = query("input[name=calculateField]:checked").val();
+        if(query('#exerYield').val()){
+           object.exerYield=query('#exerYield').val()/100;
+        }
+        if(query('#matureYield').val()){
+          object.matureYield=query('#matureYield').val()/100;
+        }
 
         object.finmdate = query('#finmdate').val();
         object.ccy = query('#ccy').val();
@@ -629,7 +636,16 @@
             temp.portfolioId = item.portfolioId;
             tradeAmt += parseFloat(item.entrustNum);
             if(item.entrustNum&&item.entrustNum!=''){
-                temp.entrustNum = item.entrustNum * 10000;
+                item.entrustNum=item.entrustNum * 10000;
+                temp.entrustNum = item.entrustNum;
+            }
+            if(item.entrustOwnNum&&item.entrustOwnNum!=''){
+                item.entrustOwnNum=item.entrustOwnNum * 10000;
+                temp.entrustOwnNum = item.entrustOwnNum;
+            }
+            if(item.entrustIntegrateNum&&item.entrustIntegrateNum!=''){
+                item.entrustIntegrateNum=item.entrustIntegrateNum * 10000;
+                temp.entrustIntegrateNum = item.entrustIntegrateNum;
             }
             finprodId = temp.finprodId;
             tradeMarket = temp.tradeMarket;
@@ -638,7 +654,6 @@
             temp.invAim = item.invAim;
             temp.businessModel = item.businessModel;
             temp.elementId = 'CfetsEtribBondInfo003_btn_submit';
-
             objects.push(temp);
         }
         if(tradeAmt && tradeAmt !== parseFloat(object.tradeAmt)){
