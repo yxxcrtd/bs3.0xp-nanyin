@@ -388,7 +388,7 @@
         });
         
         // 绑定查询按钮
-        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_search').click(function() {
+        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_ccsearch').click(function() {
         	refreshPositionsTable();//加载表格
         });
         // 绑定债券质押查询按钮
@@ -444,11 +444,12 @@
                 }
             }
         });
-        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_reset').click(function() {
-            $("#portfolioId").val("");
-            $("#tradeMarket_cc").val("");
-            $("#secId").val("");
-            $("#finprodType2").val("");
+        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_ccreset').click(function() {
+            $("#portfolioId").val("").trigger('change');
+            $("#tradeMarket_cc").val("").trigger('change');
+            $("#secId").val("").trigger('change');
+            $("#finprodType2").val("").trigger('change');
+            positionsTable.clear();
         });
 
         init();
