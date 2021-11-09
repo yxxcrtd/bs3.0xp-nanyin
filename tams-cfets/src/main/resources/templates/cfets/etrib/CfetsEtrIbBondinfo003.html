@@ -29,6 +29,14 @@
                     text-align: center;
                     line-height: 24px;
                 }
+                .riskclu{
+                   border: 1px solid #ccc;
+                   margin: 7px 5px 0px 5px;
+                   height: 35px
+               }
+               .riskclu span{
+               font-weight: bold;
+               }
 	</style>
 
         <form class="layui-form joyin-form-wrap pro-module-form" id="searchForm">
@@ -353,6 +361,19 @@
                             <i class="iconfont icon-arrow-down pro-down-icon"></i>
                         </h3>
                         <div class="pro-module-item">
+                          <!--  <div class="layui-form-item">
+                                <div class="form-inline-wrap" style=" width: 100%; padding:0px;">
+                                    <label class="layui-form-label form-label-wrap"
+                                           data-th-text="#{CfetsEtribBondInfo003.remark}" style="width: 105px;">备注</label>
+                                    <div class="layui-input-inline" style="width: 80%; margin: 0px; margin-left: auto;">
+                                          <textarea id="remark" name="remark" th:value="${entity?.remark}"
+                                              data-th-text="${entity?.remark}" class="layui-textarea"
+                                              placeholder="请输入内容"
+                                              data-th-placeholder="#{SysCommon.placeholder}" disabled></textarea>
+                                    </div>
+                                </div>
+                            </div>-->
+                            <div class="riskclu" id="CfetsEtribBondinfo003_DIV2"><span id="riskTrialSpan"></span></div>
                             <div id="riskTrialRet">
                                 <table class="layui-table" id="riskTrialRetTable"
                                        name="riskTrialRetList"></table>

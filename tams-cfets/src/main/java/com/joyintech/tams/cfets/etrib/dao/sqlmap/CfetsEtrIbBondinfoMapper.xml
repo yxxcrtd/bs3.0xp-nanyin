@@ -1084,7 +1084,9 @@ from
                 || '|T+' || aaa.settleSpreed || '|' || dictpriceModel.ITEM_VALUE   || '|' || aaa.invManagerId
                 || '|' || aaa.entrustId || '|' || approver || '|' || aaa.REMARK || '|' || dictbusiModel.ITEM_VALUE
                 like '%' || #{search} || '%')
-                or  aaa.shareNum||'' =#{search} or  aaa.unitPrice||'' =#{search}
+                or to_char(aaa.shareNum,'FM9999999999999990.99')=#{search}
+                or to_char(aaa.shareNum)=#{search}
+                or  aaa.unitPrice||'' =#{search}
                 or  aaa.allPrice||'' =#{search} or  aaa.matureYield||'' =#{search}
                 or  aaa.exerYield||'' =#{search} or  aaa.etrDate||'' =#{search}
                 or  aaa.execProcess||'' =#{search} or  aaa.transProcess||'' =#{search}

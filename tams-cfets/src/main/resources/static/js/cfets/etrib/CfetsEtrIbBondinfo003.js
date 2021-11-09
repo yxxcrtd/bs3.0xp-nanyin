@@ -580,6 +580,10 @@
             query("#exerYield").val(query("#exerYield").val()*100).trigger("change");
         }
         businessId = query('#businessId').val();
+        var riskLists=entity_RiskTrialRetList||[];
+        if (riskLists.length > 0) {
+            $("#riskTrialSpan").html("&nbsp;&nbsp;" + riskLists[0].conclusion);
+        }
     }
 
     init();
@@ -672,7 +676,7 @@
         // add by zhangrui1 start
         param.operateType = operateType;
         param.pageModel = pageModel;
-        param.riskTrialRetDto = object.riskTrialRetDto;
+        //param.riskTrialRetDto = object.riskTrialRetDto;
         param.riskTrialRetDto = entity_RiskTrialRetList||[];
 
         param.elementId = 'CfetsEtrIbBondinfo003_btn_submit';

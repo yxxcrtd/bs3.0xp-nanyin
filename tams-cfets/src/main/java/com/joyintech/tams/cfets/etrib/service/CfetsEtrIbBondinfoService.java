@@ -1373,6 +1373,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             for(CfetsEtribdoRiskcalResponse it:riskDto.getRiskcalReturnList()){
                 RiskTrialRetDto t=new RiskTrialRetDto();
                 BeanUtil.copyPropertiesIgnoreNull(t,it);
+                t.setConclusion(riskDto.getRiskTrialSpan());
                 riskTrialRetDto.add(t);
             }
         }
