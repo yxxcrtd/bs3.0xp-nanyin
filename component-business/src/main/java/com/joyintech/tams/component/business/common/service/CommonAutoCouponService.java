@@ -1071,7 +1071,7 @@ public class CommonAutoCouponService extends BaseService{
                     finProduct.setVdate(sdf.parse(infChinamutualfunddescription.getfInfoSetupdate()));
                 }
                 if(StringUtil.isNotEmpty(infChinamutualfunddescription.getfInfoMaturitydate())){
-                    finProduct.setVdate(sdf.parse(infChinamutualfunddescription.getfInfoMaturitydate()));
+                    finProduct.setMdate(sdf.parse(infChinamutualfunddescription.getfInfoMaturitydate()));
                 }
                 if(null!=infChinamutualfunddescription.getfInfoSetupdate() && null!=infChinamutualfunddescription.getfInfoMaturitydate()){
                     long termDays  = DateUtil.getBetweenDayNumber(infChinamutualfunddescription.getfInfoSetupdate(),infChinamutualfunddescription.getfInfoMaturitydate());
