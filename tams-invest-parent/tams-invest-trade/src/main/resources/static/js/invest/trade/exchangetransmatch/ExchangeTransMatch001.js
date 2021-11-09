@@ -331,10 +331,10 @@
                 object.finprodType1 = item.finprodType2;
                 object.ps = item.ps;
                 object.tradePlat = item.tradePlat;
-                object.dealDate = item.dealDate;
+                object.dealDate = new Date(item.dealDate).format('yyyy-MM-dd');
                 object.secAccount = item.secAcctNo;
 
-                Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/findEntrustPage'),object,function (result) {
+                Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/matchSearch'),object,function (result) {
                     if(result) {
                         if(result && result.root.length > 0){
                             Joyin.error("存在可匹配信息，请先进行成交匹配！");
