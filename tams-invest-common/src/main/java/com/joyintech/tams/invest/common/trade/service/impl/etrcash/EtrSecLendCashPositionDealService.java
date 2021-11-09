@@ -284,6 +284,9 @@ public class EtrSecLendCashPositionDealService  {
         EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
         etrPledgeKey.setEntrustId(etrEntrust.getEntrustId());
         List<EtrPledge> etrPledges = baseEtrInvestInfoMapper.selectEtrPledgeByPrimaryKey(etrPledgeKey);
+        if(etrPledges==null || etrPledges.size()==0){
+            etrPledges = baseEtrInvestInfoMapper.selectWflEtrPledgeByPrimaryKey(etrPledgeKey);
+        }
         // 交易方向
         String ps = etrEntrust.getPs();
         // 委托生成的持仓流水

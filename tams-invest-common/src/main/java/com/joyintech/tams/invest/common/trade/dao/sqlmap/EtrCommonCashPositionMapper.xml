@@ -94,7 +94,7 @@
     <!-- 查询指令持仓流水 2019/12/15 add by yjm-->
     <select id="selectCommandPositionFlow" parameterType="com.joyintech.tams.common.base.entity.EtrSecPositionFlow" resultType="java.math.BigDecimal">
      	select
-        	t.amount as amount 
+        	sum(t.amount) as amount
         from etr_sec_position_flow t 
         where         
         	t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}  
