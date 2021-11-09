@@ -90,11 +90,11 @@
     var dealIntDetail = function() {
         var finprodMarketId = $('#finprodMarketId').val();
         var regDate = $('#regDate').val();
-        // TISHKS-253:校验日期格式 fuyongsheng 20211109 add start
+        // TISHKS-211:校验日期格式 fuyongsheng 20211109 add start
         if(regDate && !checkDate(regDate)){
             return;
         }
-        // TISHKS-253:校验日期格式 fuyongsheng 20211109 add end
+        // TISHKS-211:校验日期格式 fuyongsheng 20211109 add end
         /*var chlId = $("#chlId").val()?$("#chlId").val():$('#secManageAcctId').val();*/
 //        var chlId = $('#secManageAcctId').val();
         if (finprodMarketId && regDate ) {
