@@ -608,6 +608,8 @@
         object.entrustStatus = query('#entrustStatus').val();
         object.finvdate = query('#finvdate').val();
         object.invManagerId = query('#invManagerId').val();
+        // 证券账户ID
+        object.secAcctId = query('#secAcctId').val();
         object.vdate=object.etrDate;
         object.mdate=object.etrDate;
         object.entrustDate = object.vdate > object.finvdate.split(' ')[0] ?
@@ -620,11 +622,19 @@
         if(query('#matureYield').val()){
           object.matureYield=query('#matureYield').val()/100;
         }
+        if(query('#tradeAmt').val()){
+          object.tradeAmt=query('#tradeAmt').val()*10000;
+          object.entrustNum=query('#tradeAmt').val()*10000;
+        }
+        if(query('#entrustOwnNum').val()){
+          object.entrustOwnNum=query('#entrustOwnNum').val()*10000;
+        }
+        if(query('#entrustIntegrateNum').val()){
+          object.entrustIntegrateNum=query('#entrustIntegrateNum').val()*10000;
+        }
 
         object.finmdate = query('#finmdate').val();
         object.ccy = query('#ccy').val();
-        // 证券账户ID
-        object.secAcctId = query('#secAcctId').val();
         var objects = new Array();
         var entrustNum = 0;
         var finprodId = null;
@@ -641,15 +651,15 @@
             tradeAmt += parseFloat(item.entrustNum);
             if(item.entrustNum&&item.entrustNum!=''){
                 item.entrustNum=item.entrustNum * 10000;
-                temp.entrustNum = item.entrustNum;
+              //  temp.entrustNum = item.entrustNum;
             }
             if(item.entrustOwnNum&&item.entrustOwnNum!=''){
                 item.entrustOwnNum=item.entrustOwnNum * 10000;
-                temp.entrustOwnNum = item.entrustOwnNum;
+              //  temp.entrustOwnNum = item.entrustOwnNum;
             }
             if(item.entrustIntegrateNum&&item.entrustIntegrateNum!=''){
                 item.entrustIntegrateNum=item.entrustIntegrateNum * 10000;
-                temp.entrustIntegrateNum = item.entrustIntegrateNum;
+             //   temp.entrustIntegrateNum = item.entrustIntegrateNum;
             }
             finprodId = temp.finprodId;
             tradeMarket = temp.tradeMarket;
@@ -660,12 +670,12 @@
             temp.elementId = 'CfetsEtribBondInfo003_btn_submit';
             objects.push(temp);
         }
-        if(tradeAmt && tradeAmt !== parseFloat(object.tradeAmt)){
+       /* if(tradeAmt && tradeAmt !== parseFloat(object.tradeAmt)){
             JoyinUtil.showMessage("各组合分配的券面总额汇总不等于总的券面总额!", "error")
             return null;
-        }
+        }*/
         param = JSON.parse(JSON.stringify(object));
-        param.entrustNum = object.tradeAmt * 10000;
+       // param.entrustNum = object.tradeAmt;
         param.finprodId = finprodId;
         param.tradeMarket = tradeMarket;
         param.invManagerId = query('#invManagerId').val();

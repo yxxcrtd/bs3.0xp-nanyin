@@ -1261,6 +1261,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             etrEntrust.setEntrustAmt(null);
             etrEntrust.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(100)));
+            etrEntrust.setInvAim(dto.getBusinessModel());
             BeanUtil.copyProperties(etrEntrustAdd, dto);
             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_债券.getValue());
             etrEntrustAdd.setVdate(null);
@@ -1290,6 +1291,18 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
             }
             etrEntrustAdd.setBusiTypePosition(busiTypePosition);
+            //默认证券账户
+            if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())
+                && !StringUtil.isNotEmpty(dto.getSecAcctId())
+            ) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("portfolioId", dto.getPortfolioId());
+                map.put("finprodId", dto.getFinprodId());
+                String secAcctId = this.qryPortfolioSecAcctId(map);
+                if (StringUtil.isNotEmpty(secAcctId)) {
+                    dto.setSecAcctId(secAcctId); // 证券账户
+                }
+            }
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
             /*if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
 
@@ -1364,6 +1377,18 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
             }
             etrEntrustAdd.setBusiTypePosition(busiTypePosition);
+            //默认证券账户
+            if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())
+                    && !StringUtil.isNotEmpty(dto.getSecAcctId())
+            ) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("portfolioId", dto.getPortfolioId());
+                map.put("finprodId", dto.getFinprodId());
+                String secAcctId = this.qryPortfolioSecAcctId(map);
+                if (StringUtil.isNotEmpty(secAcctId)) {
+                    dto.setSecAcctId(secAcctId); // 证券账户
+                }
+            }
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
             if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo())
                     && StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
@@ -1451,12 +1476,13 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
             etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             etrEntrust.setEntrustAmt(null);
             etrEntrust.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(100)));
+            etrEntrust.setInvAim(dto.getBusinessModel());
             BeanUtil.copyProperties(etrEntrustAdd, dto);
             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_债券.getValue());
             etrEntrustAdd.setVdate(null);
             etrEntrustAdd.setMdate(null);
-            //etrEntrustAdd.setOurEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
-            //etrEntrustAdd.setLendinEntNum(com.joyintech.framework.util.ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
+            etrEntrustAdd.setOurEntNum(ArithmeticUtil.divide(dto.getEntrustOwnNum(), 100, 4));
+            etrEntrustAdd.setLendinEntNum(ArithmeticUtil.divide(dto.getEntrustIntegrateNum(), 100, 4));
             etrEntrustAdd.setFullPrice(dto.getUnitFprice());
           /*  if (dto.getExerYield() != null) {
                 etrEntrustAdd.setExerYield(dto.getExerYield().divide(new BigDecimal(100)));
@@ -1473,6 +1499,18 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 etrEntrustAdd.setSettleSpreed((long)1);
             }
             etrEntrustAdd.setCalMode(dto.getCalculateField());
+            //默认证券账户
+            if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())
+                    && !StringUtil.isNotEmpty(dto.getSecAcctId())
+            ) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("portfolioId", dto.getPortfolioId());
+                map.put("finprodId", dto.getFinprodId());
+                String secAcctId = this.qryPortfolioSecAcctId(map);
+                if (StringUtil.isNotEmpty(secAcctId)) {
+                    dto.setSecAcctId(secAcctId); // 证券账户
+                }
+            }
             entity.setEtrEntrust(etrEntrust);
             entity.setEtrEntrustAdd(etrEntrustAdd);
             MstFileInputParameter mstFileInputParameter = new MstFileInputParameter();
