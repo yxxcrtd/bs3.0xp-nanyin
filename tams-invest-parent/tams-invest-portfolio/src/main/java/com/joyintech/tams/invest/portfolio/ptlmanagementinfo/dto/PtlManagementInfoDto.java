@@ -163,7 +163,7 @@ public class PtlManagementInfoDto extends PtlPortfolio implements ITableRow,Proc
      * 组合系列
      */
     @Valid
-//    @NotEmpty(fieldName="PtlManagementInfo002.portfolioSeries",groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName="PtlManagementInfo002.portfolioSeries",groups = {ValidateGroupEdit.class})
     private String portfolioSeries;
 
     public String getInvestNatureStr(){
