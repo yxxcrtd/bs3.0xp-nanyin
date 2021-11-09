@@ -179,4 +179,15 @@ public class MstCustomerNatureService extends CommonExportService<MstCustomerNat
 		return restTemplate.postForList(
 				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstTradeOpponent/selectCounterIdByCustomer", param, MstTradeOpponentDto.class);
 	}
+
+    /**
+     * 查询当前客户代码是否被用作交易对手
+     * @param counterId
+     * @return
+     */
+    public int selectCounter(String counterId) {
+        return restTemplate.postForObject(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstCustomerNature/selectCounter",
+                counterId,Integer.class);
+    }
 }

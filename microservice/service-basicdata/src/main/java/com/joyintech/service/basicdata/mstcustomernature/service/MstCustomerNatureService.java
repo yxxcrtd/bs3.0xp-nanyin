@@ -424,4 +424,16 @@ public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> 
     public int checkwflstatus(Map<String, Object> param) {
         return mstCustomerNatureMapper.checkwflstatus(param);
     }
+
+    /**
+     * 统计
+     * <功能详细描述>
+     * @param counterId id
+     * @return 统计结果
+     * @see
+     * @since 1.0
+     */
+    public int selectCounter(String linkId) {
+        return mstCustomerNatureMapper.selectCounter(linkId);
+    }
 }

@@ -380,4 +380,16 @@
 		from MST_COUNTER_PARTY
 		where LINK_ID = #{linkId,jdbcType=VARCHAR}
 	</select>
+
+	<select id = "selectCounter" resultType = "java.lang.Integer">
+	SELECT
+		COUNT(*) count
+	FROM
+		MST_COUNTER_PARTY,
+		TRD_PRODUCT_DEAL
+	WHERE
+		MST_COUNTER_PARTY.COUNTER_ID = TRD_PRODUCT_DEAL.COUNTER_ID
+	AND
+		MST_COUNTER_PARTY.LINK_ID = #{linkId,jdbcType=VARCHAR}
+</select>
 </mapper>
