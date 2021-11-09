@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.invest.common.reconciliation.dao.AutoReconciliationMapper_mysql">
+<mapper namespace="com.joyintech.tams.invest.batch.autoreconciliation.dao.AutoReconciliationMapper_mysql">
 
 	<select id="queryAccountTodoList" resultType="com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto">
 		<!-- 汇总对账单数据 -->
@@ -29,8 +29,7 @@
 				ssrd.GHF_AMT,
 				ssrd.SXF_AMT,
 				ssrd.TRADE_AMT,
-				ssrd.TRADE_NUM,
-				ssrd.OTHER_FEEAMT
+				ssrd.TRADE_NUM
 			FROM
 				STL_SEC_RECON_DEAL ssrd
 				LEFT JOIN
@@ -75,7 +74,6 @@
 			a.FINPROD_TYPE,
 			a.PS,
 			a.SEC_ACCT_ID,
-			a.TERM_TYPE,
 			a.COMMISSION_AMT,
 			a.JSF_AMT,
 			a.ZGF_AMT,
@@ -83,7 +81,6 @@
 			a.SETTLE_FEE,
 			a.GHF_AMT,
 			a.SXF_AMT,
-			a.OTHER_FEEAMT,
 			a.TRADE_AMT,
 			a.TRADE_NUM,
 			ss.APPLY_TRADE_ID TRADE_ID2,
@@ -143,7 +140,6 @@
 				a.FINPROD_TYPE,
 				a.PS,
 				a.SEC_ACCT_ID,
-				a.TERM_TYPE,
 				a.COMMISSION_AMT,
 				a.JSF_AMT,
 				a.ZGF_AMT,
@@ -151,7 +147,6 @@
 				a.SETTLE_FEE,
 				a.GHF_AMT,
 				a.SXF_AMT,
-				a.OTHER_FEEAMT,
 				a.TRADE_AMT,
 				a.TRADE_NUM,
 				ss.APPLY_TRADE_ID TRADE_ID2,
@@ -192,7 +187,7 @@
 					SETTLE_TRANS_DATA std
 				INNER JOIN tmp b ON b.FINPROD_ID = std.FINPROD_ID AND b.PARA_VALUE = #{PARA_VALUE_01}
 				GROUP BY
-					std.FINPROD_ID,
+					std.APPLY_TRADE_ID,
 					std.FINPROD_TYPE2,
 					std.PS,
 					std.TRADE_MARKET,
@@ -216,7 +211,6 @@
 			b.FINPROD_TYPE,
 			b.PS,
 			b.SEC_ACCT_ID,
-			b.TERM_TYPE,
 			b.COMMISSION_AMT,
 			b.JSF_AMT,
 			b.ZGF_AMT,
@@ -224,7 +218,6 @@
 			b.SETTLE_FEE,
 			b.GHF_AMT,
 			b.SXF_AMT,
-			b.OTHER_FEEAMT,
 			b.TRADE_AMT,
 			b.TRADE_NUM,
 			std.TRADE_ID TRADE_ID2,
@@ -244,7 +237,7 @@
 			std.SEC_ACCT_ID SEC_ACCT_ID2
 		FROM
 			SETTLE_TRANS_DATA std
-			INNER JOIB tmp b ON
+			INNER JOIN tmp b ON
 				b.TRADE_ID = std.TRADE_ID AND
 				b.TRADE_ID IS NOT NULL AND
 				b.TRADE_ID != '' AND
@@ -264,7 +257,6 @@
 				b.FINPROD_TYPE,
 				b.PS,
 				b.SEC_ACCT_ID,
-				b.TERM_TYPE,
 				b.COMMISSION_AMT,
 				b.JSF_AMT,
 				b.ZGF_AMT,
@@ -272,7 +264,6 @@
 				b.SETTLE_FEE,
 				b.GHF_AMT,
 				b.SXF_AMT,
-				b.OTHER_FEEAMT,
 				b.TRADE_AMT,
 				b.TRADE_NUM,
 				std.TRADE_ID TRADE_ID2,

@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.batch.autoreconciliation.service;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.invest.batch.autoreconciliation.dao.AutoReconciliationMapper;
@@ -42,7 +43,7 @@ public class AutoReconciliationService {
         Map<String, Object> param = new HashMap<>();
         String sysDate = iPlatformDate.getSysDateStr();
         param.put("sysdate", sysDate);
-        param.put("batchDate", batchDate);
+        param.put("batchDate", DateUtil.format(batchDate));
         param.put("PARA_CODE_02", DictCodeListStl.参数代码_对账维度.getValue());
         param.put("PARA_VALUE_01", DictCodeListStl.对账维度_证券汇总.getValue());
         param.put("PARA_VALUE_02", DictCodeListStl.对账维度_委托汇总.getValue());

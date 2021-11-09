@@ -652,6 +652,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         trdDealTotalAdd.setLendinFpriceAmt2(dto.getIntegrateIntAmt() == null ? BigDecimal.ZERO : dto.getIntegrateIntAmt());
         trdDealTotalAdd.setAssetRecommandOrg(dto.getAssetRecommandOrg());
         trdDealTotalAdd.setEntrustId(dto.getEntrustId());
+        trdDealTotalAdd.setDeviation(dto.getDeviation());
         return trdDealTotalAdd;
     }
 
