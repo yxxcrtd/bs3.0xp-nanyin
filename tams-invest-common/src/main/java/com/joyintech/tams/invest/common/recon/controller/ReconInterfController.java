@@ -7,6 +7,7 @@ import com.joyintech.tams.common.base.dao.StlSecpReconMapper;
 import com.joyintech.tams.invest.common.recon.dto.StlCashReconDto;
 import com.joyintech.tams.invest.common.recon.dto.StlSecpReconDto;
 import com.joyintech.tams.invest.common.recon.service.ReconInterfService;
+import com.joyintech.tams.invest.common.settle.service.SettleDownLinkService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +44,9 @@ public class ReconInterfController {
 
     @Autowired
     private StlSecpReconMapper stlSecpReconMapper;
+
+    @Autowired
+    private SettleDownLinkService settleDownLinkService;
 
     /**
      * 资金余额
@@ -112,6 +117,24 @@ public class ReconInterfController {
             logger.debug("接口平台调用对账单业务处理成功");
         }catch (Exception e){
             logger.error("接口平台调用对账单业务处理失败!"+e.getMessage());
+        }
+    }
+
+
+    @Transactional
+    @DTXTransaction
+    @PostMapping("execute")
+    public void execute(@RequestBody Map<String,Object> param) {
+        try{
+            logger.debug("接口平台调用批处理开始");
+            param.put("beanNames", Arrays.asList("autoReconciliationTask","stlSettleTransDataGatherTask","stlDownDataGatherTask"));
+            if(!param.containsKey("execDate")){
+                param.put("execDate", DateUtil.format(iPlatformDate.getSysDate(),"yyyyMMdd"));
+            }
+            settleDownLinkService.execute(param);
+            logger.debug("接口平台调用批处理成功");
+        }catch (Exception e){
+            logger.error("接口平台调用批处理失败!"+e.getMessage());
         }
     }
 
