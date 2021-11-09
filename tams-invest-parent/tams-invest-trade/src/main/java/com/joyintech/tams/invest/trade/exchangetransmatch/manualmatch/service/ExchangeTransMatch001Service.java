@@ -361,13 +361,13 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
         return dtoStr;
     }
 
-    public List<ExchangeTransMatch005Dto> findEntrustList(String seqNo) {
+    public List<ExchangeTransMatch003Dto> findEntrustList(String seqNo) {
        return restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
-                + "/ExchangeTransMatchController/findEntrustList", seqNo, ExchangeTransMatch005Dto.class);
+                + "/ExchangeTransMatchController/findEntrustList", seqNo, ExchangeTransMatch003Dto.class);
     }
 
-    public List<ExchangeTransMatch006Dto> findDealList(String seqNo) {
+    public List<ExchangeTransMatch002Dto> findDealList(String seqNo) {
         return restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
-                + "/ExchangeTransMatchController/findDealList", seqNo, ExchangeTransMatch006Dto.class);
+                + "/ExchangeTransMatchController/findDealList", seqNo, ExchangeTransMatch002Dto.class);
     }
 }

@@ -5,22 +5,14 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.exchangetransmatch.dao.ExchangeTransMatchMapper;
-import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto;
-import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto;
-import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch004Dto;
-import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch005Dto;
-import com.joyintech.tams.common.base.dao.SettleTransDataTotalMatchMapper;
-import com.joyintech.tams.common.base.dao.SettleTransDataTotalStatusMapper;
-import com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper;
-import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
-import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
-import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
+import com.joyintech.service.trade.exchangetransmatch.dto.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -166,6 +158,7 @@ public class ExchangeTransMatchService extends BaseService {
     public Page<SelectOptionDto> getDealId(Map<String, Object> map, int page, int length) {
         map.put("TRD_MATCH_STATUS_01",DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
         map.put("TRD_MATCH_STATUS_02",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getDealId(map));
     }
 
@@ -174,8 +167,13 @@ public class ExchangeTransMatchService extends BaseService {
      * @param seqNo
      * @return
      */
-    public List<ExchangeTransMatch005Dto> findEntrustList(String seqNo) {
-        return  exchangeTransMatchMapper.findEntrustList(seqNo);
+    public List<ExchangeTransMatch003Dto> findEntrustList(String seqNo) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("seqNo",seqNo);
+        map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
+        map.put("TRD_MATCH_STATUS_1",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+        map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
+        return  exchangeTransMatchMapper.findEntrustList(map);
     }
 
     /**
@@ -183,7 +181,12 @@ public class ExchangeTransMatchService extends BaseService {
      * @param seqNo
      * @return
      */
-    public List<ExchangeTransMatch005Dto> findDealList(String seqNo) {
-        return  exchangeTransMatchMapper.findDealList(seqNo);
+    public List<ExchangeTransMatch002Dto> findDealList(String seqNo) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("seqNo",seqNo);
+        map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
+        map.put("TRD_MATCH_STATUS_1",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+        map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
+        return  exchangeTransMatchMapper.findDealList(map);
     }
 }

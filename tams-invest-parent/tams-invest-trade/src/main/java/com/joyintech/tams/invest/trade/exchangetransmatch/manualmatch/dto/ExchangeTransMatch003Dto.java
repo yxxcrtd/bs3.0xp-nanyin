@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto;
 
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
@@ -147,5 +148,13 @@ public class ExchangeTransMatch003Dto extends EtrEntrust  implements ITableRow {
 
     public void setFinprodMarketId(String finprodMarketId) {
         this.finprodMarketId = finprodMarketId;
+    }
+
+    /**
+     * 取得 交易日期
+     * @return 交易日期
+     */
+    public String getTradeDateStr() {
+        return DateUtil.format(this.getEntrustDate());
     }
 }

@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -9,6 +10,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.validator.ExchangeTransMatchValidator;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @ValidLogic(targetClass = ExchangeTransMatchValidator.class)
@@ -23,6 +25,11 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
      * 匹配状态
      */
     private String matchStatus;
+
+    /**
+     * 匹配方式
+     */
+    private String matchType;
 
     /**
      * 匹配进度
@@ -203,6 +210,26 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
 
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
+    }
+
+    public String getMatchType() {
+        return matchType;
+    }
+
+    public void setMatchType(String matchType) {
+        this.matchType = matchType;
+    }
+
+    public String getMatchTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.下行交易匹配类型, this.getMatchType());
+    }
+
+    /**
+     * 取得 交易日期
+     * @return 交易日期
+     */
+    public String getTradeDateStr() {
+        return DateUtil.format(this.getTradeDate());
     }
 }
 

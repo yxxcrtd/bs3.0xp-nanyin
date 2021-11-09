@@ -2,8 +2,8 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.controlle
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch005Dto;
-import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch006Dto;
+import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch002Dto;
+import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.dto.ExchangeTransMatch003Dto;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.service.ExchangeTransMatch001Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,9 +29,9 @@ public class ExchangeTransMatch002Controller extends BaseController {
     @Override
     public String init(Model model) {
         String seqNo = this.getParam("seqNo");
-        List<ExchangeTransMatch005Dto> entrustList = exchangeTransMatch001Service.findEntrustList(seqNo);
+        List<ExchangeTransMatch003Dto> entrustList = exchangeTransMatch001Service.findEntrustList(seqNo);
         model.addAttribute("entrustList",entrustList);
-        List<ExchangeTransMatch006Dto> dealList = exchangeTransMatch001Service.findDealList(seqNo);
+        List<ExchangeTransMatch002Dto> dealList = exchangeTransMatch001Service.findDealList(seqNo);
         model.addAttribute("dealList",dealList);
         return super.init(model);
     }

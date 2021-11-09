@@ -25,6 +25,11 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
     private String matchStatus;
 
     /**
+     * 匹配方式
+     */
+    private String matchType;
+
+    /**
      * 匹配进度
      */
     private BigDecimal matchProgress;
@@ -148,5 +153,13 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
 
     public void setOperateType(String operateType) {
         this.operateType = operateType;
+    }
+
+    public String getMatchType() {
+        return matchType;
+    }
+
+    public void setMatchType(String matchType) {
+        this.matchType = matchType;
     }
 }

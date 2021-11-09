@@ -5,11 +5,19 @@
         select
         T2.TARGET_TYPE targetType,
         T2.TRADER trader,
+        NVL(T1.ENTRUST_NUM,0) - NVL(S.MARCH_QTY_EN,0) remainEntrustNum,
+        NVL(T1.ENTRUST_AMT,0) - NVL(S.MARCH_AMT_EN,0) remainEntrustAmt,
         T1.*
         from ETR_ENTRUST T1
         left join
             ETR_ENTRUST_ADD T2
             ON T1.ENTRUST_ID = T2.ENTRUST_ID
+        LEFT JOIN (SELECT ENTRUNST_TRADE_ID,
+                    NVL(SUM(MARCH_QTY_EN), 0) MARCH_QTY_EN,
+                    NVL(SUM(MARCH_AMT_EN), 0) MARCH_AMT_EN
+                        FROM SETTLE_TRANS_DATA_TOTAL_MATCH
+                    GROUP BY ENTRUNST_TRADE_ID) S
+            ON S.ENTRUNST_TRADE_ID = T1.ENTRUST_ID
         <where>
             <if test="entrustIdList!=null and entrustIdList.size()>0 ">
                 AND (T1.ENTRUST_ID IN

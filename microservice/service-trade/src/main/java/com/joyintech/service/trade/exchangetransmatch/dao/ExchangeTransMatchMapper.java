@@ -1,10 +1,7 @@
 package com.joyintech.service.trade.exchangetransmatch.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto;
-import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto;
-import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch004Dto;
-import com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch005Dto;
+import com.joyintech.service.trade.exchangetransmatch.dto.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -66,15 +63,15 @@ public interface ExchangeTransMatchMapper {
 
     /**
      * 获取指令列表
-     * @param seqNo
+     * @param map
      * @return
      */
-    List<ExchangeTransMatch005Dto> findEntrustList(String seqNo);
+    List<ExchangeTransMatch003Dto> findEntrustList(Map<String,Object> map);
 
     /**
      * 获取成交信息
-     * @param seqNo
+     * @param map
      * @return
      */
-    List<ExchangeTransMatch005Dto> findDealList(String seqNo);
+    List<ExchangeTransMatch002Dto> findDealList(Map<String,Object> map);
 }

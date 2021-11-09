@@ -57,7 +57,7 @@
             {field:'matchStatusStr', sortField:'matchStatus',width:200, title: 'ExchangeTransMatch001.matchStatus'},
             {field:'matchProgressStr', sortField:'matchProgress',width:200, title: 'ExchangeTransMatch001.matchProgress'},
             {field:'tradeMarketStr', sortField:'tradeMarket',width:200, title: 'ExchangeTransMatch001.tradeMarket'},
-            {field:'applyTradeId', sortField:'applyNo',width:200, title: 'ExchangeTransMatch001.applyNo'},
+            {field:'applyTradeId', sortField:'applyTradeId',width:200, title: 'ExchangeTransMatch001.applyNo'},
             {field:'secAcctName', sortField:'secAcctId',width:200, title: 'ExchangeTransMatch001.secAcctNo'},
             {field:'finprodType2Str', sortField:'finprodType2',width:200, title: 'ExchangeTransMatch001.finprodType2'},
             {field:'finprodMarketId', sortField:'finprodMarketId',width:200, title: 'ExchangeTransMatch001.finprodId'},
