@@ -159,29 +159,35 @@ public class SalesTransactionMaintenanceRegist001Controller extends BaseControll
     }
 
     /**
-     *手工处理功能
+     * 手工处理功能
+     *
      * @return 提示信息
-     * @param map 条件map
+     * @param map
+     *            条件map
      * @seea
      * @since 1.0
      */
     @ResponseBody
-    @RequestMapping(value = ReportGlobalConstant.PAGE_UPDATE ,method = RequestMethod.POST)
-    public AjaxResult doUpdate(@RequestParam Map<String,Object> map){
-        return salesTransactionMaintenanceRegistMService.doUpdate(map);
+    @RequestMapping("doManual")
+    public AjaxResult doUpdate(@RequestBody Map<String, Object> map) {
+        salesTransactionMaintenanceRegistMService.updateSumStaus(map);
+        return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
     }
 
     /**
-     *取消手工处理功能
+     * 取消手工处理功能
+     *
      * @return 提示信息
-     * @param map 条件map
-     * @see
+     * @param map
+     *            条件map
+     * @seea
      * @since 1.0
      */
     @ResponseBody
-    @RequestMapping(value = "/cancelMannul" ,method = RequestMethod.POST)
-    public AjaxResult cancelMannul(@RequestBody Map<String,Object> map) {
-        return null;
+    @RequestMapping(value = "/cancelMannul", method = RequestMethod.POST)
+    public AjaxResult cancelMannul(@RequestBody Map<String, Object> map) {
+        salesTransactionMaintenanceRegistMService.cancelMannul(map);
+        return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
     }
     /**
      *

@@ -160,94 +160,87 @@ $(function(){
         })
 
     }
-    // 手工处理 
-    $('#SalesTransactionMaintenanceRegist001_btn_manual').click(function() {
-        var manArr=table.getAllCheckedRows();
-        if(!manArr || manArr.length ==0){
-            //当不选择时默认选择符合查询条件的全部数据
-            var sendStatus = $("#sendStatus").val();
-            var submitFeedbackStatus = $("#submitFeedbackStatus").val();
-            if(!((sendStatus && sendStatus.length == 1 &&sendStatus[0] == '01')
-                || (sendStatus && sendStatus.indexOf('02')>-1 && submitFeedbackStatus && (submitFeedbackStatus.indexOf('02')>-1 ||  submitFeedbackStatus.indexOf('04')> -1)))){
-                Joyin.error("只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理");
-                return;
+        /**
+         * 手工处理
+         */
+        $('#SalesTransactionMaintenanceRegist001_btn_manual').click(function(){
+            var rows = table.getAllCheckedRows();
+            if(rows.length === 0) {
+            	var sendStatus = $("#sendStatus").val();
+            	var submitFeedbackStatus = $("#submitFeedbackStatus").val();
+            	if(!((sendStatus && sendStatus.length == 1 &&sendStatus[0] == '01')
+            			|| (sendStatus && sendStatus.indexOf('02')>-1 && submitFeedbackStatus && (submitFeedbackStatus.indexOf('02')>-1 ||  submitFeedbackStatus.indexOf('04')> -1
+                    || submitFeedbackStatus.indexOf('00')>-1 ||  submitFeedbackStatus.indexOf('06')> -1)))){
+            		Joyin.error("只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送中、发送失败、中债退回和发送异常的数据进行手工处理");
+            		return;
+            	}
+            	var paramObj = getSearchParams();
+            	paramObj.flag = '01';
+            	Joyin.confirm("请确认是否要手工处理符合查询条件的全部记录？", function() {
+            		layui.layer.open({type:3});
+                     Joyin.ajaxJson('doManual', paramObj, function() {
+                         table.load();
+                         layui.layer.closeAll();
+                     });
+                 });
+            }else{
+            	for(var i=0;i<rows.length;i++){
+                  if (!(rows[i].sendStatus == '01'
+                      || (rows[i].sendStatus == '02' && (rows[i].submitFeedbackStatus == '02' || rows[i].submitFeedbackStatus == '04'
+                      || rows[i].submitFeedbackStatus == '00' || rows[i].submitFeedbackStatus == '06')))) {
+                      Joyin.error("只能选择报送状态为未报送的数据，或报送状态为接口报送且反馈状态为发送中、发送失败、中债退回和发送异常的数据进行手工处理，请重新选择！");
+                      return;
+                  }
+              }
+
+              Joyin.confirm("请确认是否要手工处理选中记录？", function() {
+            	  layui.layer.open({type:3});
+                  Joyin.ajaxJson('doManual', {keyList: JSON.stringify(rows)}, function() {
+                      table.load();
+                      layui.layer.closeAll();
+                  });
+              });
             }
-            var paramObj = getPageParams();
-            paramObj.flag = "01";//判断是否选中记录
-            Joyin.confirm("请确认是否要手工处理全部未报送记录？", function() {
-                //页面添加滚动条
-                Joyin.ajax('checkConfirmMsgForAllManual', null, function() {
-                    Joyin.ajax('update', {
-                        flag:'01',
-                        key: JSON.stringify(paramObj),
-                        selectedBatchGroup: '3073',
-                        selectedProductGroup: '',
-                        startDate: new Date(),
-                        endDate: new Date(),
-                        batchGroupType: '1',
-                        prodGroupType: '0',
-                        detailName: 'SFSGCL'
-                    }, function() {
-                        table.load();
-                        layui.layer.closeAll();
-                    });
-                });
-            });
-        }else{
-            var keyList = [];
-            for(var i=0;i<manArr.length;i++){
-                keyList.push(manArr[i].bankCode + '|' + manArr[i].indentifyMark + '|' + manArr[i].sendStatus+ '|' + manArr[i].sumitSeq);
-                if (!(manArr[i].sendStatus == '01'
-                    || (manArr[i].sendStatus == '02' && (manArr[i].submitFeedbackStatus == '02' || manArr[i].submitFeedbackStatus == '04')))) {
-                    Joyin.error("只能选择报送状态为未报送的数据，或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理，请重新选择！");
+
+        });
+
+   /**
+    * 取消手工处理
+    */
+       $('#SalesTransactionMaintenanceRegist001_btn_cancelManual').click(function() {
+           var manArr=table.getAllCheckedRows();
+           if(!manArr || manArr.length ==0){
+        	   var sendStatus = $("#sendStatus").val();
+           	   if(!(sendStatus && sendStatus.length==1 && sendStatus[0] == '03')){
+           		 Joyin.error("只能选择手工处理的数据，请重新选择！");
                     return;
-                }
-            };
-            Joyin.confirm("请确认是否要手工处理选中记录？", function() {
-                Joyin.ajax('update', {updateKeys:keyList.join(',')}, function() {
-                    table.load();
-                    layui.layer.closeAll();
-                });
-            });
-        }
-    });
-    // 取消手工处理
-    $('#SalesTransactionMaintenanceRegist001_btn_cancelManual').click(function() {
-        var manArr=table.getAllCheckedRows();
-        if(!manArr || manArr.length ==0){
-            var sendStatus = $("#sendStatus").val();
-            if(!(sendStatus && sendStatus.length==1 && sendStatus[0] == '03')){
-                Joyin.error("只能选择手工处理的数据，请重新选择！");
-                return;
-            }
-            var paramObj = getPageParams();
-            paramObj.flag = "01";//判断是否选中记录
-            Joyin.confirm("请确认是否取消手工处理全部未报送记录？", function() {
-                layui.layer.open({type:3});
+           	   }
+           	   var paramObj = getSearchParams();
+           	   paramObj.flag = '01';
+           	   Joyin.confirm("请确认是否要取消手工处理符合查询条件所有记录？", function() {
+           		layui.layer.open({type:3});
                 Joyin.ajaxJson('cancelMannul', paramObj, function() {
                     table.load();
                     layui.layer.closeAll();
-                });
-            });
-        }else{
-            var keyList = [];
-            for(var i=0;i<manArr.length;i++){
-                keyList.push((manArr[i].sumitSeq =='' ? null : manArr[i].sumitSeq) +'|'+ manArr[i].bankCode + '|' + manArr[i].indentifyMark);
-                if(manArr[i].sendStatusName !="手工处理"){
-                    Joyin.error("只能选择手工处理的数据，请重新选择！");
-                    return;
-                }
-            };
-            Joyin.confirm("请确认是否要取消手工处理选中记录？", function() {
-                layui.layer.open({type:3});
-                Joyin.ajaxJson('cancelMannul', {updateKeys:keyList.join(',')}, function() {
-                    table.load();
-                    layui.layer.closeAll();
-                });
-            });
-        }
+                	});
+           	   });
+           }else{
+        	   for(var i=0;i<manArr.length;i++){
+                   if(manArr[i].sendStatus !="03"){
+                       Joyin.error("只能选择手工处理的数据，请重新选择！");
+                       return;
+                   }
+               };
+                Joyin.confirm("请确认是否要取消手工处理选中记录？", function() {
+                	layui.layer.open({type:3});
+                    Joyin.ajaxJson('cancelMannul', {keyList: JSON.stringify(manArr)}, function() {
+                        table.load();
+                        layui.layer.closeAll();
+                    });
+               });
+           }
 
-    });
+       });
 
     var init= function(){
         $('#updateTime').val('');

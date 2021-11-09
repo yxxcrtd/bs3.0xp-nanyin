@@ -46,6 +46,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -99,6 +100,11 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
      * CheckReport001Mapper
      */
 
+    /**
+     * 短sql最大一次最大插入条数
+     */
+    @Value("${application.reportSelectOrDeleteCountForShenFen}")
+    public  int reportSelectOrDeleteCountForShenFen;
     private static final String IS_CHECK_SUCESS="01";
 
     /**
@@ -327,745 +333,103 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
         }
         return registList;
     }
-
     /**
-     * 将报送状态改为手工处理
-     * @param upKey 传入主键
-     * @see
-     * @since 1.0
-     */
-    public void updateSumStaus(String upKey){
-        List<String> list = StringUtil.splitToList(GlobalConstant.COMMA, upKey);
-        //送表主键
-        List<SalesTransactionMaintenanceRegist001Dto> registList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        SalesTransactionMaintenanceRegist001Dto SalesTransactionMaintenanceRegist001Dto = null;
-        //报送状态表主键
-        ChbSubmitStatus chbSubmitStatus = null;
-        List<ChbSubmitStatus> listStatus = new ArrayList<ChbSubmitStatus>();
-
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
-        List<String> sumitSeqList = new ArrayList<String>();
-        List<SalesTransactionMaintenanceRegist001Dto> equiytRegistAlreadySendList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-
-        List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, list.size());
-        int index = 0;
-        for (String data : list) {
-            //主键组装
-            SalesTransactionMaintenanceRegist001Dto = new SalesTransactionMaintenanceRegist001Dto();
-            String[] keyArr=data.split("\\|",-1);
-            SalesTransactionMaintenanceRegist001Dto.setInstitutionCode(keyArr[0]);
-            SalesTransactionMaintenanceRegist001Dto.setTradeNo(keyArr[1]);
-            SalesTransactionMaintenanceRegist001Dto.setSendStatus(keyArr[2]);
-            //报送状态表插入组装
-            chbSubmitStatus = new ChbSubmitStatus();
-            String seqno = "";
-            if(StringUtil.isEmpty(keyArr[3])){
-            	seqno =CommonUtil.getSequenceStr(sequenceList, index);
-            	index++;
-                chbSubmitStatus.setSeqno(seqno);
-                SalesTransactionMaintenanceRegist001Dto.setSumitSeq(seqno);
-            }
-            else {
-                chbSubmitStatus.setSeqno(keyArr[3]);
-                SalesTransactionMaintenanceRegist001Dto.setSumitSeq(keyArr[3]);
-            }
-
-            if (StringUtil.equals(DictCodeListExt2.报送状态_未报送.getValue(), SalesTransactionMaintenanceRegist001Dto.getSendStatus())) {
-                registList.add(SalesTransactionMaintenanceRegist001Dto);
-                chbSubmitStatus.setSubmitFeedbackStatus("03");
-                chbSubmitStatus.setSubmitType(DictCodeListExt2.报表名称_投资者身份信息登记.getValue());
-                listStatus.add(chbSubmitStatus);
-            }
-            else {
-                sumitSeqList.add(SalesTransactionMaintenanceRegist001Dto.getSumitSeq());
-                equiytRegistAlreadySendList.add(SalesTransactionMaintenanceRegist001Dto);
-            }
-        }
-
-        // 未报送的数据
-        if (!StringUtil.isEmptyList(registList)) {
-            // 分批处理
-            int maxDataCountOneTime = 200;
-            int dataCount = registList.size();
-            if (dataCount <= maxDataCountOneTime) {
-                this.doMannulForNotSubmitData(registList);
-            }
-            else {
-                List<SalesTransactionMaintenanceRegist001Dto> newDataList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-                newDataList.addAll(registList);
-
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    this.doMannulForNotSubmitData(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    this.doMannulForNotSubmitData(newDataList);
-                }
-            }
-        }
-
-        // 未报送的数据 插入报送状态表
-        if (!StringUtil.isEmptyList(listStatus)) {
-            // 分批处理
-            int maxDataCountOneTime = 50;
-            int dataCount = listStatus.size();
-            if (dataCount <= maxDataCountOneTime) {
-                salesTransactionMaintenanceRegist001Mapper.insertSubmitStatus(listStatus);
-            }
-            else {
-                List<ChbSubmitStatus> newDataList = new ArrayList<ChbSubmitStatus>();
-                newDataList.addAll(listStatus);
-
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    salesTransactionMaintenanceRegist001Mapper.insertSubmitStatus(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    salesTransactionMaintenanceRegist001Mapper.insertSubmitStatus(newDataList);
-                }
-            }
-        }
-
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新报送状态
-        if (!StringUtil.isEmptyList(equiytRegistAlreadySendList)) {
-            // 分批处理
-            int maxDataCountOneTime = 200;
-            int dataCount = equiytRegistAlreadySendList.size();
-            if (dataCount <= maxDataCountOneTime) {
-                salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitForAlreadySendData("03", equiytRegistAlreadySendList);
-            }
-            else {
-                List<SalesTransactionMaintenanceRegist001Dto> newDataList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-                newDataList.addAll(equiytRegistAlreadySendList);
-
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitForAlreadySendData("03", newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitForAlreadySendData("03", newDataList);
-                }
-            }
-        }
-
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
-        if (!StringUtil.isEmptyList(sumitSeqList)) {
-            // 分批处理
-            int maxDataCountOneTime = 300;
-            int dataCount = sumitSeqList.size();
-            if (dataCount <= maxDataCountOneTime) {
-                salesTransactionMaintenanceRegist001Mapper.updateSubmitStatusToOk(sumitSeqList);
-            }
-            else {
-                List<String> newDataList = new ArrayList<String>();
-                newDataList.addAll(sumitSeqList);
-
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    salesTransactionMaintenanceRegist001Mapper.updateSubmitStatusToOk(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    salesTransactionMaintenanceRegist001Mapper.updateSubmitStatusToOk(newDataList);
-                }
-            }
-        }
-    }
-
-    /**
-     * add by liubin
-     * 将报送状态置为手工处理
-     * @param param
-     */
-    @SuppressWarnings("unchecked")
-    public void updateSumStausAll(Map<String, Object> param){
-    	//查询符合条件的数据
-//    	param.put("submitStatus", DictCodeListExt2.报送状态_未报送.getValue());
-
-        //先查询出参数表的参数
-        List<ChbBatchPara> chbBatchParas=chbBatchParaMapper.selectAllData();
-        if(!StringUtil.isEmptyList(chbBatchParas)){
-            for(ChbBatchPara single:chbBatchParas){
-                if(single.getTaskId().equals(BatchBeanName.投资者身份信息登记手工处理.getTaskId())){
-                    Map<String,Object> ssmap=(Map<String,Object>)JSON.parse(single.getParas());
-                    param=ssmap;
-                }
-            }
-        }
-
-
-        param.put("deptCode", CommonUtil.getDeptCode());
-        List<SalesTransactionMaintenanceRegist001Dto> list= this.queryExportRegistList(param);
-        //权益信息登记
-        List<SalesTransactionMaintenanceRegist001Dto> equiytRegistList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        //报送状态表主键
-        ChbSubmitStatus chbSubmitStatus = null;
-        List<ChbSubmitStatus> listStatus = new ArrayList<ChbSubmitStatus>();
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
-        List<String> sumitSeqList = new ArrayList<String>();
-        List<SalesTransactionMaintenanceRegist001Dto> equiytRegistAlreadySendList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-
-        List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, list.size());
-        int index = 0;
-        for(SalesTransactionMaintenanceRegist001Dto registDto : list){
-        	chbSubmitStatus = new ChbSubmitStatus();
-        	String seqno = "";
-        	if(StringUtil.isEmpty(registDto.getSumitSeq())){
-//        		seqno = CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理);
-        		seqno =CommonUtil.getSequenceStr(sequenceList, index);
-            	index++;
-        		chbSubmitStatus.setSeqno(seqno);
-        		registDto.setSumitSeq(seqno);
-        	}else{
-        		chbSubmitStatus.setSeqno(registDto.getSumitSeq());
-        	}
-        	if(StringUtil.equals(DictCodeListExt2.报送状态_未报送.getValue(),registDto.getSendStatus())){
-        		equiytRegistList.add(registDto);
-        		chbSubmitStatus.setSubmitFeedbackStatus("03");
-        		chbSubmitStatus.setSubmitType(DictCodeListExt2.报表名称_投资者身份信息登记.getValue());
-        		listStatus.add(chbSubmitStatus);
-        	}else{
-        		sumitSeqList.add(registDto.getSumitSeq());
-        		equiytRegistAlreadySendList.add(registDto);
-        	}
-        }
-
-        //处理未报送数据
-        if(!StringUtil.isEmptyList(equiytRegistList)){
-        	//分批处理
-        	int maxDataCountOneTime = 200;
-        	int dataCount = equiytRegistList.size();
-        	if (dataCount <= maxDataCountOneTime) {
-                this.doMannulForNotSubmitData(equiytRegistList);
-            }
-            else {
-                List<SalesTransactionMaintenanceRegist001Dto> newDataList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-                newDataList.addAll(equiytRegistList);
-
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    this.doMannulForNotSubmitData(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    this.doMannulForNotSubmitData(newDataList);
-                }
-            }
-        }
-
-        //未报送的数据，插入报送状态表
-        if (!StringUtil.isEmptyList(listStatus)) {
-            // 分批处理
-            int maxDataCountOneTime = 50;
-            int dataCount = listStatus.size();
-            if (dataCount <= maxDataCountOneTime) {
-                salesTransactionMaintenanceRegist001Mapper.insertSubmitStatus(listStatus);
-            }
-            else {
-                List<ChbSubmitStatus> newDataList = new ArrayList<ChbSubmitStatus>();
-                newDataList.addAll(listStatus);
-
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    salesTransactionMaintenanceRegist001Mapper.insertSubmitStatus(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    salesTransactionMaintenanceRegist001Mapper.insertSubmitStatus(newDataList);
-                }
-            }
-        }
-
-     // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新报送状态
-        if (!StringUtil.isEmptyList(equiytRegistAlreadySendList)) {
-            // 分批处理
-            int maxDataCountOneTime = 200;
-            int dataCount = equiytRegistAlreadySendList.size();
-            if (dataCount <= maxDataCountOneTime) {
-                salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitForAlreadySendData("03", equiytRegistAlreadySendList);
-            }
-            else {
-                List<SalesTransactionMaintenanceRegist001Dto> newDataList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-                newDataList.addAll(equiytRegistAlreadySendList);
-
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitForAlreadySendData("03", newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitForAlreadySendData("03", newDataList);
-                }
-            }
-        }
-
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
-        if (!StringUtil.isEmptyList(sumitSeqList)) {
-            // 分批处理
-            int maxDataCountOneTime = 300;
-            int dataCount = sumitSeqList.size();
-            if (dataCount <= maxDataCountOneTime) {
-                salesTransactionMaintenanceRegist001Mapper.updateSubmitStatusToOk(sumitSeqList);
-            }
-            else {
-                List<String> newDataList = new ArrayList<String>();
-                newDataList.addAll(sumitSeqList);
-
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                    salesTransactionMaintenanceRegist001Mapper.updateSubmitStatusToOk(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                    salesTransactionMaintenanceRegist001Mapper.updateSubmitStatusToOk(newDataList);
-                }
-            }
-        }
-
-        if(!StringUtil.isEmptyList(chbBatchParas)){
-            for(ChbBatchPara single:chbBatchParas){
-                    chbBatchParaMapper.deleteByPrimaryKey(single.getParaId());
-            }
-        }
-    }
-
-    /**
-     * 对于未报送的数据进行手工处理数据库处理
-     * @see
-     * @since 1.0
-     */
-    private void doMannulForNotSubmitData(List<SalesTransactionMaintenanceRegist001Dto> registList) {
-      //检查报送的数据中是否存在已报送数据
-        List<SalesTransactionMaintenanceRegist001Dto> list = salesTransactionMaintenanceRegist001Mapper.queryRegistSubmitListByKeys(registList);
-        if(CollectionUtils.isNotEmpty(list)){
-            //讲第一次报送的数据数据履历表
-            salesTransactionMaintenanceRegist001Mapper.insertEquityRegistHis(list);
-            //删除已报送数据
-            salesTransactionMaintenanceRegist001Mapper.deleteSubmitRegist(list);
-        }
-        salesTransactionMaintenanceRegist001Mapper.updateInterfSubmit("03",registList);
-        this.updateInterfSubmitSeq(registList);
-    }
-
-    /**
-     * 已手工处理的数据将报送状态改为未报送
-     * @param upKey 传入主键
-     * @see
-     * @since 1.0
-     */
-    public void cancelMannul(String upKey){
-        List<String> keys = StringUtil.splitToList(GlobalConstant.COMMA, upKey);
-        List<ChbSubmitStatus> listStatus = new ArrayList<ChbSubmitStatus>();
-        List<SalesTransactionMaintenanceRegist001Dto> list = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();;
-        for (String string : keys) {
-            String[] key=StringUtil.split(string, "|");
-            SalesTransactionMaintenanceRegist001Dto SalesTransactionMaintenanceRegist001Dto = new SalesTransactionMaintenanceRegist001Dto();
-            SalesTransactionMaintenanceRegist001Dto.setInstitutionCode(key[0]);
-            SalesTransactionMaintenanceRegist001Dto.setTradeNo(key[1]);
-            SalesTransactionMaintenanceRegist001Dto.setSendStatus(key[2]);
-            SalesTransactionMaintenanceRegist001Dto.setSumitSeq(key[3]);
-            list.add(SalesTransactionMaintenanceRegist001Dto);
-            ChbSubmitStatus chbSubmitStatus = new ChbSubmitStatus();
-            chbSubmitStatus.setSeqno(key[0]);
-            listStatus.add(chbSubmitStatus);
-        }
-        salesTransactionMaintenanceRegist001Mapper.updateEquityRegist(list);
-        //将履历表中履历号最大的数据挪回登记表
-        salesTransactionMaintenanceRegist001Mapper.insertEquityRegistFromHis(list);
-        salesTransactionMaintenanceRegist001Mapper.deleteMannulSubmitRegist(listStatus);
-    }
-
-    /**
-     * 手工处理取消所有
-     * @param
-     */
-    public void cancelMannulAll(Map<String, Object> param){
-    	param.put("submitStatus", "03");
-//        param.put("deptCode", CommonUtil.getDeptCode());
-        List<SalesTransactionMaintenanceRegist001Dto> list= this.queryExportRegistList(param);
-        List<ChbSubmitStatus> listStatus = new ArrayList<ChbSubmitStatus>();
-        for(SalesTransactionMaintenanceRegist001Dto registDto: list){
-        	ChbSubmitStatus chbSubmitStatus = new ChbSubmitStatus();
-        	chbSubmitStatus.setSeqno(registDto.getSumitSeq());
-//        	registDto.setSumitSeq(null);
-             listStatus.add(chbSubmitStatus);
-
-        }
-        salesTransactionMaintenanceRegist001Mapper.updateEquityRegist(list);
-        //将履历表中履历号最大的数据挪回登记表
-        salesTransactionMaintenanceRegist001Mapper.insertEquityRegistFromHis(list);
-        salesTransactionMaintenanceRegist001Mapper.deleteMannulSubmitRegist(listStatus);
-    }
-    /**
-     * 获取报送列表
-     * @param param 界面查询条件
-     * @return map
-     * @see
-     * @since 1.0
-     */
-    public Map<String,List<SalesTransactionMaintenanceRegist001Dto>> getSubmitList(Map<String,Object> param){
-        List<SalesTransactionMaintenanceRegist001Dto> equiytRegistList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        SalesTransactionMaintenanceRegist001Dto SalesTransactionMaintenanceRegist001Dto = null;
-        //报送状态表主键
-        String submitKey = (String)param.get("submitKeys");
-        String keyList = (String)param.get("keyList");
-        List<SalesTransactionMaintenanceRegist001Dto> registList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        if(StringUtil.isNotEmpty(keyList)){
-            List<String> keysList = StringUtil.splitToList(GlobalConstant.COMMA, keyList);
-            for (String string : keysList) {
-                SalesTransactionMaintenanceRegist001Dto = new SalesTransactionMaintenanceRegist001Dto();
-                SalesTransactionMaintenanceRegist001Dto.setSumitSeq(string);
-                equiytRegistList.add(SalesTransactionMaintenanceRegist001Dto);
-			}
-            logger.info("queryExportListByKeys处理开始：" + DateUtil.getCurrentDateTime());
-            this.queryExportListByKeys(equiytRegistList, registList);
-            logger.info("queryExportListByKeys处理结束：" + DateUtil.getCurrentDateTime());
-        }
-        else if(StringUtil.isNotEmpty(submitKey)){
-        	List<String> keys = StringUtil.splitToList(GlobalConstant.COMMA, submitKey);
-            for (String string : keys) {
-                SalesTransactionMaintenanceRegist001Dto = new SalesTransactionMaintenanceRegist001Dto();
-                String[] key=StringUtil.split(string, ReportGlobalConstant.VERTICAL_LINE);
-                SalesTransactionMaintenanceRegist001Dto.setInstitutionCode(key[0]);
-                SalesTransactionMaintenanceRegist001Dto.setTradeNo(key[1]);
-                SalesTransactionMaintenanceRegist001Dto.setSendStatus(key[2]);
-                equiytRegistList.add(SalesTransactionMaintenanceRegist001Dto);
-            }
-            logger.info("queryExportListByKeys处理开始：" + DateUtil.getCurrentDateTime());
-            this.queryExportListByKeys(equiytRegistList, registList);
-            logger.info("queryExportListByKeys处理结束：" + DateUtil.getCurrentDateTime());
-//            EquityInfoRegistCommonUtil.format(registList," ");
-        	
-        }
-        else {
-            registList = this.queryExportRegistList(param);
-        }
-       //将数据字典的值转换成如01 男这种格式
-        Map<String,List<SalesTransactionMaintenanceRegist001Dto>> map = new HashMap<String,List<SalesTransactionMaintenanceRegist001Dto>>();
-        List<SalesTransactionMaintenanceRegist001Dto> equList = null;
-        for (SalesTransactionMaintenanceRegist001Dto SalesTransactionMaintenanceRegist001Dto2 : registList) {
-            if(StringUtil.isEmptyList(map.get(SalesTransactionMaintenanceRegist001Dto2.getInstitutionCode()))){
-                equList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-            }
-            else{
-                equList = map.get(SalesTransactionMaintenanceRegist001Dto2.getInstitutionCode());
-            }
-            equList.add(SalesTransactionMaintenanceRegist001Dto2);
-            map.put(SalesTransactionMaintenanceRegist001Dto2.getInstitutionCode(), equList);
-        }
-        return map;
-    }
-
-    /**
-     * 获取报送列表
-     * @param equiytRegistList 条件
+     * <一句话功能简述> <功能详细描述>
      * @see
      * @since 1.0
      */
     @Transactional(rollbackFor = Exception.class)
-    public void doUpdateSubmtitStatus(List<SalesTransactionMaintenanceRegist001Dto> equiytRegistList,List<SalesTransactionMaintenanceRegist001Dto>  unSubmitSeqList, boolean isSendAllData){
-        //检查报送的数据中是否存在已报送数据
-        List<SalesTransactionMaintenanceRegist001Dto> unSub = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        for (SalesTransactionMaintenanceRegist001Dto SalesTransactionMaintenanceRegist001Dto : equiytRegistList) {
-			if(DictCodeListExt2.报送状态_未报送.getValue().equals(SalesTransactionMaintenanceRegist001Dto.getSendStatus())){
-				unSub.add(SalesTransactionMaintenanceRegist001Dto);
-			}
-		}
-        //批量更新报送状态
-//        salesTransactionMaintenanceRegist001Mapper.updateInterfSubmit("02",equiytRegistList);
-        logger.info("updateInterfSubmitBatch处理开始：" + DateUtil.getCurrentDateTime());
-        this.updateInterfSubmitBatch(DictCodeListExt2.报送状态_接口报送.getValue(), unSub, isSendAllData);
-        logger.info("updateInterfSubmitBatch处理结束：" + DateUtil.getCurrentDateTime());
-//        salesTransactionMaintenanceRegist001Mapper.insertSubmitStatus(listStatus);
-        logger.info("updateInterfSubmitSeq处理开始：" + DateUtil.getCurrentDateTime());
-        this.updateInterfSubmitSeq(unSubmitSeqList);
-        logger.info("updateInterfSubmitSeq处理结束：" + DateUtil.getCurrentDateTime());
-    }
-
-    /**
-     * 处理已经报送的数据（将已报送数据移至履历表，并删除登记表数据）
-     *
-     * @param equiytRegistList 数据列表
-     * @see
-     * @since 1.0
-     */
-    public void handleAlreadySubmitData(List<SalesTransactionMaintenanceRegist001Dto> equiytRegistList) {
-        logger.info("queryAlreadyRegistSubmitList处理开始：" + DateUtil.getCurrentDateTime());
-        List<SalesTransactionMaintenanceRegist001Dto> unSub = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        for (SalesTransactionMaintenanceRegist001Dto SalesTransactionMaintenanceRegist001Dto : equiytRegistList) {
-            if(DictCodeListExt2.报送状态_未报送.getValue().equals(SalesTransactionMaintenanceRegist001Dto.getSendStatus())){
-                unSub.add(SalesTransactionMaintenanceRegist001Dto);
+    @SuppressWarnings("unchecked")
+    public void updateSumStaus(Map<String, Object> map) {
+        dealSearchParam(map);
+        List<SalesTransactionMaintenanceRegist001Dto> chbRegistList  = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
+        if(map.get("flag") != null && "01".equals(map.get("flag"))){
+            //按条件查询全部
+            chbRegistList = salesTransactionMaintenanceRegist001Mapper.searchPage(map);
+        }else{
+            chbRegistList = (List<SalesTransactionMaintenanceRegist001Dto>)map.get("reportList");
+        }
+        Iterator<SalesTransactionMaintenanceRegist001Dto> it=chbRegistList.iterator();
+        while(it.hasNext()){
+            SalesTransactionMaintenanceRegist001Dto m =  it.next();
+            if(!m.getSendStatus().equals("01")){
+                it.remove();
             }
         }
-        List<SalesTransactionMaintenanceRegist001Dto> list = this.queryAlreadyRegistSubmitList(unSub);
-        logger.info("queryAlreadyRegistSubmitList处理结束：" + DateUtil.getCurrentDateTime());
-        if(CollectionUtils.isNotEmpty(list)){
-            //讲第一次报送的数据数据履历表
-            logger.info("insertEquityRegistHisBatch处理开始：" + DateUtil.getCurrentDateTime());
-            this.insertEquityRegistHisBatch(list);
-            logger.info("insertEquityRegistHisBatch处理结束：" + DateUtil.getCurrentDateTime());
-            //删除已报送数据
-            logger.info("deleteSubmitRegistBatch处理开始：" + DateUtil.getCurrentDateTime());
-            this.deleteSubmitRegistBatch(list);
-            logger.info("deleteSubmitRegistBatch处理结束：" + DateUtil.getCurrentDateTime());
-        }
+        this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), chbRegistList);
     }
-
     /**
-     * 分批次执行deleteSubmitRegist
+     * 分批次执行updateInterfSubmitAndSeq
      *
-     * @param equiytRegistList 数据
+     * @param investList
+     *            数据
      * @see
      * @since 1.0
      */
-    private void deleteSubmitRegistBatch(List<SalesTransactionMaintenanceRegist001Dto> equiytRegistList) {
-        if (StringUtil.isEmptyList(equiytRegistList)) {
+    @Transactional(rollbackFor = Exception.class)
+    public void updateInterfSubmitAndSeq(String sendStatus, List<SalesTransactionMaintenanceRegist001Dto> investList) {
+        if (StringUtil.isEmptyList(investList)) {
             return;
         }
-
-        int maxDataCountOneTime = reportSelectOrDeleteCount;
-        int dataCount = equiytRegistList.size();
+        int maxDataCountOneTime = reportSelectOrDeleteCountForShenFen;
+        int dataCount = investList.size();
         if (dataCount <= maxDataCountOneTime) {
-        	salesTransactionMaintenanceRegist001Mapper.deleteSubmitRegist(equiytRegistList);;
+            //已报送数据进留痕表
+            salesTransactionMaintenanceRegist001Mapper.insertIntoHis(investList);
+            //删除正式表已报送数据
+            salesTransactionMaintenanceRegist001Mapper.deleteLastSubmitRegist(investList);
+            salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
             return;
         }
-
         List<SalesTransactionMaintenanceRegist001Dto> newDataList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        newDataList.addAll(equiytRegistList);
-
+        newDataList.addAll(investList);
         // 分批处理
         int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++ ) {
-        	salesTransactionMaintenanceRegist001Mapper.deleteSubmitRegist(newDataList.subList(0, maxDataCountOneTime));;
+        for (int i = 0; i < part; i++) {
+            logger.info("单次更新登记表start===");
+            //已报送数据进留痕表
+            salesTransactionMaintenanceRegist001Mapper.insertIntoHis(investList);
+            //删除正式表已报送数据
+            salesTransactionMaintenanceRegist001Mapper.deleteLastSubmitRegist(investList);
+            salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus,
+                    newDataList.subList(0, maxDataCountOneTime));
             newDataList.subList(0, maxDataCountOneTime).clear();
+            logger.info("单次更新登记表end===");
         }
         // 最后剩下的数据
         if (CollectionUtils.isNotEmpty(newDataList)) {
-        	salesTransactionMaintenanceRegist001Mapper.deleteSubmitRegist(newDataList);;
+            logger.info("单次更新登记表start===");
+            //已报送数据进留痕表
+            salesTransactionMaintenanceRegist001Mapper.insertIntoHis(investList);
+            //删除正式表已报送数据
+            salesTransactionMaintenanceRegist001Mapper.deleteLastSubmitRegist(investList);
+            salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
+            logger.info("单次更新登记表end===");
         }
     }
     /**
-     * 分批次执行insertEquityRegistHis
+     * 已手工处理的数据将报送状态改为未报送
      *
-     * @param equiytRegistList 数据
      * @see
      * @since 1.0
      */
-    private void insertEquityRegistHisBatch(List<SalesTransactionMaintenanceRegist001Dto> equiytRegistList) {
-        if (StringUtil.isEmptyList(equiytRegistList)) {
-            return;
+    @Transactional(rollbackFor = Exception.class)
+    @SuppressWarnings("unchecked")
+    public void cancelMannul(Map<String, Object> map) {
+        dealSearchParam(map);
+        List<SalesTransactionMaintenanceRegist001Dto> list = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
+        if(map.get("flag") != null && "01".equals(map.get("flag"))){
+            list = salesTransactionMaintenanceRegist001Mapper.searchPage(map);
+        }else{
+            list = (List<SalesTransactionMaintenanceRegist001Dto>) map.get("reportList");
         }
-
-        int maxDataCountOneTime = reportInsertLongCount;
-        int dataCount = equiytRegistList.size();
-        if (dataCount <= maxDataCountOneTime) {
-        	salesTransactionMaintenanceRegist001Mapper.insertEquityRegistHis(equiytRegistList);;
-            return;
-        }
-
-        List<SalesTransactionMaintenanceRegist001Dto> newDataList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        newDataList.addAll(equiytRegistList);
-
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++ ) {
-        	salesTransactionMaintenanceRegist001Mapper.insertEquityRegistHis(newDataList.subList(0, maxDataCountOneTime));;
-            newDataList.subList(0, maxDataCountOneTime).clear();
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-        	salesTransactionMaintenanceRegist001Mapper.insertEquityRegistHis(newDataList);;
-        }
-    }
-    /**
-     * 分批次执行queryRegistSubmitListByKeys
-     *
-     * @param equiytRegistList 数据
-     * @see
-     * @since 1.0
-     */
-    private List<SalesTransactionMaintenanceRegist001Dto> queryRegistSubmitListByKeysBatch(List<SalesTransactionMaintenanceRegist001Dto> equiytRegistList) {
-        List<SalesTransactionMaintenanceRegist001Dto> equiytRegistResultList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-    	if (StringUtil.isEmptyList(equiytRegistList)) {
-            return equiytRegistResultList;
-        }
-        int maxDataCountOneTime = reportSelectOrDeleteCount;
-        int dataCount = equiytRegistList.size();
-        if (dataCount <= maxDataCountOneTime) {
-        	equiytRegistResultList.addAll(salesTransactionMaintenanceRegist001Mapper.queryRegistSubmitListByKeys(equiytRegistList));
-            return equiytRegistResultList;
-        }
-
-        List<SalesTransactionMaintenanceRegist001Dto> newDataList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        newDataList.addAll(equiytRegistList);
-
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++ ) {
-            logger.info("queryRegistSubmitListByKeys单次查询处理开始：" + DateUtil.getCurrentDateTime());
-        	equiytRegistResultList.addAll(salesTransactionMaintenanceRegist001Mapper.queryRegistSubmitListByKeys(newDataList.subList(0, maxDataCountOneTime)));
-        	logger.info("queryRegistSubmitListByKeys单次查询处理结束：" + DateUtil.getCurrentDateTime());
-            newDataList.subList(0, maxDataCountOneTime).clear();
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-        	equiytRegistResultList.addAll(salesTransactionMaintenanceRegist001Mapper.queryRegistSubmitListByKeys(newDataList));
-        }
-        return equiytRegistResultList;
+        salesTransactionMaintenanceRegist001Mapper.cancelMannultRegist(list);
+        // 将履历表中最后创建时间的数据挪回登记表
+        salesTransactionMaintenanceRegist001Mapper.insertReportDataFromHis(list);
+        //将挪回数据从履历表中删除
+        salesTransactionMaintenanceRegist001Mapper.deleteReportDataHis(list);
     }
 
-    /**
-     * 查询已报送数据
-     *
-     * @param equiytRegistList equiytRegistList
-     * @return 已报送数据
-     * @see
-     * @since 1.0
-     */
-    private List<SalesTransactionMaintenanceRegist001Dto> queryAlreadyRegistSubmitList(List<SalesTransactionMaintenanceRegist001Dto> equiytRegistList) {
-        List<SalesTransactionMaintenanceRegist001Dto> equiytRegistResultList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-
-        if (StringUtil.isEmptyList(equiytRegistList)) {
-            return equiytRegistResultList;
-        }
-
-        if (equiytRegistList.size() <= 100000) {
-            return this.queryRegistSubmitListByKeysBatch(equiytRegistList);
-        }
-
-        Map<String, String> dataKeyMap = equiytRegistList.stream().collect(
-            JoyinCollectors.toMap(
-                x -> x.getInstitutionCode() + GlobalConstant.UNDER_LINE + x.getTradeNo(),
-                x -> x.getInstitutionCode() + GlobalConstant.UNDER_LINE + x.getTradeNo()));
-
-        logger.info("queryAllRegistSubmitList处理开始：" + DateUtil.getCurrentDateTime());
-        List<SalesTransactionMaintenanceRegist001Dto> allRegistDataList = salesTransactionMaintenanceRegist001Mapper.queryAllRegistSubmitList();
-        logger.info("queryAllRegistSubmitList处理结束：" + DateUtil.getCurrentDateTime());
-
-        List<SalesTransactionMaintenanceRegist001Dto> resultList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        for (SalesTransactionMaintenanceRegist001Dto tempDataDto : allRegistDataList) {
-            String dataKey = tempDataDto.getInstitutionCode() + GlobalConstant.UNDER_LINE + tempDataDto.getTradeNo();
-            if (dataKeyMap.containsKey(dataKey)) {
-                resultList.add(tempDataDto);
-            }
-        }
-
-        return resultList;
-    }
-
-    /**
-     * 分批次执行updateInterfSubmitBatch
-     *
-     * @param equiytRegistList 数据
-     * @see
-     * @since 1.0
-     */
-    private void updateInterfSubmitBatch(String sendStatus,List<SalesTransactionMaintenanceRegist001Dto> equiytRegistList, boolean isSendAllData) {
-        if (StringUtil.isEmptyList(equiytRegistList)) {
-            return;
-        }
-
-        int maxDataCountOneTime = reportSelectOrDeleteCount;
-        int dataCount = equiytRegistList.size();
-        if (dataCount <= maxDataCountOneTime) {
-            logger.info("updateInterfSubmit单次处理开始：" + DateUtil.getCurrentDateTime());
-        	salesTransactionMaintenanceRegist001Mapper.updateInterfSubmit(sendStatus,equiytRegistList);
-        	logger.info("updateInterfSubmit单次处理结束：" + DateUtil.getCurrentDateTime());
-            return;
-        }
-
-        // 对于批处理报送全量的数据，直接更新所有检查通过的未报送数据，状态修改为接口报送
-        if (isSendAllData) {
-            logger.info("updateAllInterfSubmit处理开始："
-                        + DateUtil.getCurrentDateTime());
-            salesTransactionMaintenanceRegist001Mapper.updateAllInterfSubmit(sendStatus);
-            logger.info("updateAllInterfSubmit处理结束："
-                        + DateUtil.getCurrentDateTime());
-
-            return;
-        }
-
-        List<SalesTransactionMaintenanceRegist001Dto> newDataList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        newDataList.addAll(equiytRegistList);
-
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++ ) {
-            logger.info("updateInterfSubmit单次处理开始：" + DateUtil.getCurrentDateTime());
-        	salesTransactionMaintenanceRegist001Mapper.updateInterfSubmit(sendStatus,newDataList.subList(0, maxDataCountOneTime));;
-        	logger.info("updateInterfSubmit单次处理结束：" + DateUtil.getCurrentDateTime());
-            newDataList.subList(0, maxDataCountOneTime).clear();
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            logger.info("updateInterfSubmit单次处理开始：" + DateUtil.getCurrentDateTime());
-        	salesTransactionMaintenanceRegist001Mapper.updateInterfSubmit(sendStatus,newDataList);
-        	logger.info("updateInterfSubmit单次处理结束：" + DateUtil.getCurrentDateTime());
-        }
-    }
-
-    /**
-     * 分批次执行updateInterfSubmitSeq
-     *
-     * @param equiytRegistList 数据
-     * @see
-     * @since 1.0
-     */
-    private void updateInterfSubmitSeq(List<SalesTransactionMaintenanceRegist001Dto> equiytRegistList) {
-        if (StringUtil.isEmptyList(equiytRegistList)) {
-            return;
-        }
-
-        int maxDataCountOneTime = reportInsertCount;
-		boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-        if (isDB2DataBase) {
-            maxDataCountOneTime = 1;
-        }
-        int dataCount = equiytRegistList.size();
-        if (dataCount <= maxDataCountOneTime) {
-            logger.info("updateInterfSubmitSeq单次处理开始：" + DateUtil.getCurrentDateTime());
-        	salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitSeq(equiytRegistList);
-        	logger.info("updateInterfSubmitSeq单次处理结束：" + DateUtil.getCurrentDateTime());
-            return;
-        }
-
-        List<SalesTransactionMaintenanceRegist001Dto> newDataList = new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        newDataList.addAll(equiytRegistList);
-
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++ ) {
-            logger.info("updateInterfSubmitSeq单次处理开始：" + DateUtil.getCurrentDateTime());
-        	salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitSeq(newDataList.subList(0, maxDataCountOneTime));;
-        	logger.info("updateInterfSubmitSeq单次处理结束：" + DateUtil.getCurrentDateTime());
-            newDataList.subList(0, maxDataCountOneTime).clear();
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            logger.info("updateInterfSubmitSeq单次处理开始：" + DateUtil.getCurrentDateTime());
-        	salesTransactionMaintenanceRegist001Mapper.updateInterfSubmitSeq(newDataList);
-        	logger.info("updateInterfSubmitSeq单次处理结束：" + DateUtil.getCurrentDateTime());
-        }
-    }
     /**
      * 数据检查
      * @param checkKeys 检查数据的关键字
@@ -1275,40 +639,6 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
         return sb.toString();
     }
     /**
-     * 根据查询条件获取所有未报送数据
-     * @param param 查询条件
-     * @return list 未报送数据
-     * @see
-     * @since 1.0
-     */
-    public List<SalesTransactionMaintenanceRegist001Dto> getAllUnSubmit(Map<String, Object> param) {
-        param.put("submitStatus", DictCodeListExt2.报送状态_未报送.getValue());
-        param.put("deptCode", CommonUtil.getDeptCode());
-        List<SalesTransactionMaintenanceRegist001Dto> list= this.queryExportRegistList(param);
-        return list;
-    }
-    /**
-     * 报送前检查
-     * @param list 报送前检查list
-     * @return 检查结果
-     * @see
-     * @since 1.0
-     */
-    public List<ExcelValidDto> sendAllDataBeforeCheck(List<SalesTransactionMaintenanceRegist001Dto> list){
-        List<ExcelValidDto>  checkResult = new ArrayList<ExcelValidDto>();
-        if(CollectionUtils.isEmpty(list)){
-            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),"无报送数据"));
-        }
-        else{
-            //将数据字典的值转换成如01 男这种格式
-            checkResult = this.dealReportCheckData(list, checkResult ,true);
-         }
-            checkResult = checkResult.parallelStream().filter(dto -> {
-                return StringUtil.equals(dto.getCheckResult(), DictCodeListExt2.检查结果_检查不通过.getCodeName());
-            }).collect(Collectors.toList());
-        return checkResult;
-    }
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -1426,33 +756,50 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
    public int getNoendCountByTaskBeanName(String beanname) {
        return salesTransactionMaintenanceRegist001Mapper.selectNoendCountByTaskBeanName(beanname);
    }
-   
-   public void dealSearchParam(Map<String, Object> param){
-	   String orgCode = (String)param.get("orgCode");
-       List<String> orgCodeList = StringUtil.splitToList(GlobalConstant.COMMA, orgCode);
-       if (StringUtil.isBlank(orgCode)) {
-           orgCodeList = CommonUtil.getOrgCodeListForSearch();
-       }
-       param.put("orgCodeList", orgCodeList);
-       String personalIdentifyType = (String)param.get("personalIdentifyType");
-       String institutionIdentifyType = (String)param.get("institutionIdentifyType");
-       String status = (String)param.get("status");
-       String submitStatus = (String)param.get("submitStatus");
-       String submitFeedbackStatus = (String)param.get("submitFeedbackStatus");
-       String holderType = (String)param.get("holderType");
-       // 增加发送状态
-       String sendStatus = (String)param.get("sendStatus");
-       param.put("sendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, sendStatus));
-       param.put("holderTypeList", StringUtil.splitToList(GlobalConstant.COMMA, holderType));
-       param.put("personalIdentifyTypeList", StringUtil.splitToList(GlobalConstant.COMMA, personalIdentifyType));
-       param.put("institutionIdentifyTypeList", StringUtil.splitToList(GlobalConstant.COMMA, institutionIdentifyType));
-       param.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
-       param.put("submitStatusList", StringUtil.splitToList(GlobalConstant.COMMA, submitStatus));
-       param.put("submitFeedbackStatusList", StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
-//       param.put("submitDeadLineStart", DateCalcUtil.getEndOfDay((String)param.get("submitDeadLineStart")));
-       param.put("submitDeadLineStart", param.get("submitDeadLineStart"));
-       param.put("submitDeadLineEnd", DateCalcUtil.getEndOfDay((String)param.get("submitDeadLineEnd")));
-   }
+
+    /**
+     * 处理查询前的参数 <功能详细描述>
+     *
+     * @param pageParam
+     * @see
+     * @since 1.0
+     */
+    public void dealSearchParam(Map<String, Object> pageParam) {
+        // 选择行数据时
+        if (pageParam.containsKey("keyList")) {
+            String keyList = pageParam.get("keyList").toString();
+            try {
+                List<SalesTransactionMaintenanceRegist001Dto> astValueList = JsonUtils.json2List(keyList,
+                        SalesTransactionMaintenanceRegist001Dto.class);
+                pageParam.put("registList", astValueList);
+            } catch (IOException e) {
+                logger.error(e.getMessage(),e);
+            }
+        } else {
+            // 查询参数条件
+            // 数据状态
+            String dataStatus = (String) pageParam.get("dataStatus");
+            // 报送状态
+            String sendStatus = (String) pageParam.get("sendStatus");
+            // 反馈状态
+            String submitFeedbackStatus = (String) pageParam.get("submitFeedbackStatus");
+
+
+            // 将数据状态当做多选下拉框处理
+            if (StringUtil.isNotBlank(dataStatus)) {
+                pageParam.put("dataStatusList", StringUtil.splitToList(GlobalConstant.COMMA, dataStatus));
+            }
+            // 将报送状态当做多选下拉框处理
+            if (StringUtil.isNotBlank(sendStatus)) {
+                pageParam.put("sendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, sendStatus));
+            }
+            // 将反馈状态当做多选下拉框处理
+            if (StringUtil.isNotBlank(submitFeedbackStatus)) {
+                pageParam.put("submitFeedbackStatusList",
+                        StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
+            }
+        }
+    }
    
    /**
     * 导出功能查询
@@ -1467,7 +814,4 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
        int dataNum = salesTransactionMaintenanceRegist001Mapper.countExportNum(pageParam);
        return dataNum;
    }
-
-	
-
 }

@@ -1,13 +1,3 @@
-/*
- * 文件名：EquityInfoRegist001Dao.java
- * 版权：Copyright 2016-2017 JoyinTech. Co. Ltd. All Rights Reserved.
- * 描述：中信银行资管系统
- * 修改人：Administrator
- * 修改时间：2017年9月19日
- * 修改内容：新建
- * 系统名称：中信银行资管系统
- */
-
 package com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dao;
 
 import com.joyintech.tams.common.base.entity.ChbSubmitStatus;
@@ -37,25 +27,35 @@ public interface SalesTransactionMaintenanceRegist001Mapper {
     * @since 1.0
     */
     List<SalesTransactionMaintenanceRegist001Dto> queryForRegistPage(Map<String,Object> param);
-
+    List<SalesTransactionMaintenanceRegist001Dto> searchPage(Map<String,Object> map);
+    int insertIntoHis(@Param("registList")List<SalesTransactionMaintenanceRegist001Dto> registList);
+    Integer cancelMannultRegist(List<SalesTransactionMaintenanceRegist001Dto> list);
+    void updateInterfSubmitAndSeqBatch(@Param("sendStatus")String sendStatus, @Param("registList")List<SalesTransactionMaintenanceRegist001Dto> registList);
  /**
   * 导出查询
   * @param
   * @return
   */
     List<SalesTransactionMaintenanceRegist001Dto> queryForRegist(Map<String,Object> pageParam);
-
-    int insertDeleteEquityReg(SalesTransactionMaintenanceRegist001Dto SalesTransactionMaintenanceRegist001Dto);
+   int deleteLastSubmitRegist(@Param("registList")List<SalesTransactionMaintenanceRegist001Dto> registList);
+   /**
+    * 取消手工处理时将履历表中的数据移回登记表
+    * @see
+    * @since 1.0
+    */
+   void insertReportDataFromHis(@Param("registList")List<SalesTransactionMaintenanceRegist001Dto> registList);
+   /**
+    * 取消手工处理时将履历表中的数据移回登记表
+    * @see
+    * @since 1.0
+    */
+   void deleteReportDataHis(@Param("registList")List<SalesTransactionMaintenanceRegist001Dto> registList);
 
     List<SalesTransactionMaintenanceRegist001Dto> queryForInfoRegist(Map<String,Object> param);
 
     List<SalesTransactionMaintenanceRegist001Dto> queryBatchForEquityInfoRegist(List<Map<String, String>> list);
 
     int insertBatchEquityRegist(List<SalesTransactionMaintenanceRegist001Dto> list);
-
-    int deleteBatchEquityRegist(List<SalesTransactionMaintenanceRegist001Dto> list);
-
-    int insertExcelEquityRegist(List<SalesTransactionMaintenanceRegist001Dto> list);
 
     int updateExportRegDel(@Param("submitStatus")String submitStatus,
                            @Param("remark")String remark,
@@ -121,17 +121,6 @@ public interface SalesTransactionMaintenanceRegist001Mapper {
       * @since 1.0
       */
      List<SalesTransactionMaintenanceRegist001Dto> queryAllRegistSubmitList();
-
-    /**
-     * 接口批量导入
-     * <一句话功能简述>
-     * <功能详细描述>
-     * @param list
-     * @return
-     * @see
-     * @since 1.0
-     */
-    int insertBatchInterfEquityRegist(List<SalesTransactionMaintenanceRegist001Dto> list);
     /**
      * 批量插入履历表
      * @param list
@@ -167,12 +156,6 @@ public interface SalesTransactionMaintenanceRegist001Mapper {
      */
     int updateSubmitStatusToOk(List<String> list);
 
-    /**
-     * 根据识别标识
-     * @param indentifyMarkList
-     * @return匹配投资人信息
-     */
-    List<SalesTransactionMaintenanceRegist001Dto> getEirListByindentifyMarkList(@Param("indentifyMarkList")List<EquityBusiInfo001Dto> indentifyMarkList);
     /**
      * 根据识别标识 查询单条权益人是否已报送
      * @param indentifyMarkList

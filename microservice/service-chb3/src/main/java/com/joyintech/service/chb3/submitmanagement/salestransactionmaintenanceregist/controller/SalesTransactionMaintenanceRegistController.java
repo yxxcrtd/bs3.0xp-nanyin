@@ -10,6 +10,7 @@
 
 package com.joyintech.service.chb3.submitmanagement.salestransactionmaintenanceregist.controller;
 
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
@@ -19,6 +20,7 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.service.SalesTransactionMaintenanceRegist001Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,43 +61,37 @@ public class SalesTransactionMaintenanceRegistController {
     public Page<SalesTransactionMaintenanceRegist001Dto> search(@RequestBody Map<String, Object> param){
         return salesTransactionMaintenanceRegist001Service.searchForPage(param);
     }
+
     /**
-     *手工处理功能
+     * 手工处理功能
+     *
      * @return 提示信息
      * @param map 条件map
      * @seea
      * @since 1.0
      */
-    @PostMapping("doUpdate")
-    public void doUpdate(@RequestBody Map<String,Object> map){
-    	String upKey = (String)map.get("updateKeys");//删除的主键
-    	salesTransactionMaintenanceRegist001Service.updateSumStaus(upKey);
+    @Transactional
+    @DTXTransaction
+    @PostMapping("updateSumStaus")
+    public void updateSumStaus(@RequestBody Map<String, Object> map) {
+        salesTransactionMaintenanceRegist001Service.updateSumStaus(map);
     }
 
     /**
-     *取消手工处理功能
+     * 取消手工处理功能
+     *
      * @return 提示信息
      * @param map 条件map
-     * @see
+     * @seea
      * @since 1.0
      */
-    @PostMapping("cancelMannulAll")
-    public void cancelMannulAll(@RequestBody Map<String,Object> map) {
-    		salesTransactionMaintenanceRegist001Service.cancelMannulAll(map);
-    	
-    }
-    
-    /**
-     *取消手工处理功能
-     * @return 提示信息
-     * @see
-     * @since 1.0
-     */
+    @Transactional
+    @DTXTransaction
     @PostMapping("cancelMannul")
-    public void cancelMannul(@RequestBody String upKey) {
-    		salesTransactionMaintenanceRegist001Service.cancelMannul(upKey);
-    	
+    public void cancelMannul(@RequestBody Map<String, Object> map) {
+        salesTransactionMaintenanceRegist001Service.cancelMannul(map);
     }
+
     /**
      * checkIsNotSubmit
      * @return 提示信息

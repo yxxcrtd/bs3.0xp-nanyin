@@ -71,65 +71,35 @@ public class SalesTransactionMaintenanceRegistMService extends BaseService<Sales
 			   param,
 			   SalesTransactionMaintenanceRegist001Dto.class);
    }
-   /**
-    *手工处理功能
-    * @return 提示信息
-    * @param map 条件map
- * @return 
-    * @seea
-    * @since 1.0
-    */
-   @ResponseBody
-   public AjaxResult doUpdate(Map<String,Object> map){
-	   map.put("deptCode", CommonUtil.getDeptCode());
-	   if(map.get("flag") != null && "01".equals(map.get("flag"))){
-			ChbBatchPara record = new ChbBatchPara();
-		    record.setTaskId(BatchBeanName.投资者身份信息登记手工处理.getTaskId());
-		    record.setParaId(IDGenerator.generate());
-		    if (map.get("key") != null) {
-		        record.setParas(map.get("key").toString());
-		        restTemplate.postForObject(
-         	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/insert", record,
-         	       	ChbBatchPara.class);
-		    }
-		    
-		    sysBatchStart001Service.executeBatch();
-		    return new AjaxResult(this.getMessage("REPORT_MANUAL_0009"));
-	   }else{
-		   restTemplate.postForObject(
-		       		SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/doUpdate", map,
-		       		Integer.class);
-		   return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
-	   }
-	   
+	/**
+	 * 手工处理功能
+	 *
+	 * @return 提示信息
+	 * @param map
+	 *            条件map
+	 * @seea
+	 * @since 1.0
+	 */
+	public void updateSumStaus(Map<String, Object> map) {
+		restTemplate.postForObject(
+				SvrServiceApplication.CHB_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/updateSumStaus",map,
+				Integer.class);
+	}
 
-   }
-
-   /**
-    *取消手工处理功能
-    * @return 提示信息
-    * @param map 条件map
-    * @see
-    * @since 1.0
-    */
-   public void cancelMannulAll(Map<String,Object> map) {
-	   map.put("deptCode", CommonUtil.getDeptCode());
-	   restTemplate.postForObject(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/cancelMannulAll", map,
-	       		Integer.class);
-   }
-
-   /**
-    *取消手工处理功能
-    * @return 提示信息
-    * @see
-    * @since 1.0
-    */
-   public void cancelMannul(String upKey) {
-	   restTemplate.postForObject(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/cancelMannul", upKey,
-	       		Integer.class);
-   }
+	/**
+	 * 取消手工处理功能
+	 *
+	 * @return 提示信息
+	 * @param map
+	 *            条件map
+	 * @seea
+	 * @since 1.0
+	 */
+	public void cancelMannul(Map<String, Object> map) {
+		restTemplate.postForObject(
+				SvrServiceApplication.CHB_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/cancelMannul",map,
+				Integer.class);
+	}
    
    /**
     * 将选择的数据导出成excel
