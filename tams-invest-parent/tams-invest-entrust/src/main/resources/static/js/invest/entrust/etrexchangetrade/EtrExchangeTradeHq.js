@@ -158,6 +158,11 @@
             // setMessageInnerHTML(event.data);
             debugger;
             console.log(event.data);
+            // 处理 空数据
+            if (event.data == '没有数据') {
+                updateLevel2();
+                return;
+            }
             $.ajax({
                 type: "POST",
                 url: basePath + "joyin/quote/tick/convert",
