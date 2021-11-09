@@ -90,6 +90,11 @@
     var dealIntDetail = function() {
         var finprodMarketId = $('#finprodMarketId').val();
         var regDate = $('#regDate').val();
+        // TISHKS-253:校验日期格式 fuyongsheng 20211109 add start
+        if(regDate && !checkDate(regDate)){
+            return;
+        }
+        // TISHKS-253:校验日期格式 fuyongsheng 20211109 add end
         /*var chlId = $("#chlId").val()?$("#chlId").val():$('#secManageAcctId').val();*/
 //        var chlId = $('#secManageAcctId').val();
         if (finprodMarketId && regDate ) {
@@ -118,7 +123,28 @@
         }
         resetTableData();
     }
-    
+
+    /**
+     * 验证日期是否正确
+     * 日期格式：yyyy-mm-dd，yyyy-m-d，yyyy/mm/dd，yyyy/m/d
+     */
+    function checkDate(dateStr) {
+        dateStr = dateStr.replace(/\//g, '-');
+        var dateReg = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
+        var rValue = dateStr.match(dateReg);
+        if (rValue == null) {
+            return false;
+        }
+        rValue[1] = parseInt(rValue[1], 10);
+        rValue[2] = parseInt(rValue[2] - 1, 10);
+        rValue[3] = parseInt(rValue[3], 10);
+        var dateObj = new Date(rValue[1], rValue[2], rValue[3]);
+        if (dateObj.getFullYear() != rValue[1] || dateObj.getMonth() != rValue[2] || dateObj.getDate() != rValue[3]) {
+            return false;
+        }
+        return true;
+    }
+
 //    /**
 //     * 利用占比计算所有的金额
 //     */
