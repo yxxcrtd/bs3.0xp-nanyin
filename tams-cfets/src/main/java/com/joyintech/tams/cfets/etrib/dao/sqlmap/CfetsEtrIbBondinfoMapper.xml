@@ -1069,7 +1069,7 @@ from
             AND T1.PS=#{ps}
         </if>
         <if test="entrustId != null and entrustId != ''">
-            AND T1.ENTRUST_ID = #{entrustId}
+            AND T1.ENTRUST_ID  LIKE concat('%',concat(#{entrustId,jdbcType=VARCHAR},'%'))
         </if>
         <if test="entrustStartDate!=null and entrustStartDate!='' and  entrustEndDate!=null and entrustEndDate!='' ">
             <![CDATA[ AND T1.ENTRUST_DATE >= to_date(#{entrustStartDate},'yyyy-mm-dd') ]]>
