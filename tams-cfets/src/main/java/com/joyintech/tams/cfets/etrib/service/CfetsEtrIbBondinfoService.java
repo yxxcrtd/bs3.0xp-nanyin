@@ -1678,6 +1678,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 //更新操作记录日志
                 CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
                 oprHisReq.setEntrustId(entity.getEntrustId());
+                oprHisReq.setOperType(DictCodeListExt3.操作类型_关闭.getValue());
+                oprHisReq.setBusiDes(dto.getRemark());
+                joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+            }
+        }
+
+    }
+    public void recallDelegateOprHisMethod(EtrInvestBondInfoDto dto){
+        List<EtrInvestBondInfoDto> dtolist = dto.getSelectedItem();
+        if(dtolist != null && dtolist.size()>0) {
+            for (EtrInvestBondInfoDto entity : dtolist) {
+                //更新操作记录日志
+                CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+                oprHisReq.setEntrustId(entity.getEntrustId());
                 oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
                 oprHisReq.setBusiDes(dto.getRemark());
                 joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
