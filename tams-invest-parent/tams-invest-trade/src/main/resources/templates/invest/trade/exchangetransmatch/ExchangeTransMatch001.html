@@ -250,7 +250,7 @@
                                             <select type="text" id="trdMatchInfo_matchType" name="matchType"
                                                     class="layui-input form-input input-select"
                                                     data-th-data-result='${TRD_MATCH_TYPE}'
-                                                    allowClear="true" placeholder="请输入内容"  multiple="true"
+                                                    allowClear="true" placeholder="请输入内容"
                                                     data-th-placeholder="#{SysCommon.placeholder}">
                                             </select>
                                         </div>
@@ -262,9 +262,9 @@
                                         <label class="layui-form-label form-lable"
                                                data-th-text="#{ExchangeTransMatch001.dealId}">成交编号</label>
                                         <div class="layui-input-inline input-inline">
-                                            <select type="text" id="trdMatchInfo_dealId" name="dealId"
+                                            <select type="text" id="trdMatchInfo_dealId" name="dealId"  multiple="true"
                                                     class="layui-input form-input input-select" placeholder="请输入内容" formatoption="false"
-                                                    data-th-placeholder="#{SysCommon.placeholder}" multiple="true" allowClear="true"
+                                                    data-th-placeholder="#{SysCommon.placeholder}" allowClear="true"
                                                     data-th-data-url="@{/invest/trade/exchangetransmatch/ExchangeTransMatch001/getDealId}">
                                             </select>
                                         </div>
@@ -347,7 +347,7 @@
                                             <select type="text" id="trdMatchInfo_finprodType2" name="finprodType2"
                                                     class="layui-input form-input input-select"
                                                     data-th-data-result='${PINAN_ASSET_TYPE}'
-                                                    allowClear="true" placeholder="请输入内容"  multiple="true"
+                                                    allowClear="true" placeholder="请输入内容"
                                                     data-th-placeholder="#{SysCommon.placeholder}">
                                             </select>
                                         </div>
@@ -360,7 +360,7 @@
                                                data-th-text="#{ExchangeTransMatch001.finprodId}">资产代码</label>
                                         <div class="layui-input-inline input-inline">
                                             <select type="text" id="trdMatchInfo_finprodId" name="finprodId"
-                                                   class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
+                                                   class="layui-input form-input input-select" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}"
                                                    data-th-data-url="@{/invest/trade/exchangetransmatch/ExchangeTransMatch001/getFinprodId}"
                                                    formatoption="true">

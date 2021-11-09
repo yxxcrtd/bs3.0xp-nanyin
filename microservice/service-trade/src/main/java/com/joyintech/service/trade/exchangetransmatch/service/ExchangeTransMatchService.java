@@ -2,6 +2,7 @@ package com.joyintech.service.trade.exchangetransmatch.service;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.exchangetransmatch.dao.ExchangeTransMatchMapper;

@@ -384,17 +384,14 @@
         LEFT JOIN PTL_PORTFOLIO F
         ON D.PORTFOLIO_ID = F.PORTFOLIO_ID
         <where>
-            <if test="trdMatchType!=null and trdMatchType!='' ">
-                AND A.MATCH_CLASS = #{trdMatchType}
+            <if test="matchType!=null and matchType!='' ">
+                AND A.MATCH_CLASS = #{matchType}
             </if>
-            <!--            <if test="applyNo!=null and applyNo!='' ">-->
-            <!--                AND C.APPLY_TRADE_ID = #{applyNo}-->
-            <!--            </if>-->
-            <if test="applyNoList!=null and applyNoList.size()>0 ">
-                AND (C.APPLY_TRADE_ID IN
-                <foreach item="item" index="index" collection="applyNoList" open="(" close=")" separator=",">
+            <if test="dealIdList!=null and dealIdList.size()>0 ">
+                AND (A.SEQ_NO IN
+                <foreach item="item" index="index" collection="dealIdList" open="(" close=")" separator=",">
                     <if test="(index % 998) == 0">
-                        null) or C.APPLY_TRADE_ID in (
+                        null) or A.SEQ_NO in (
                     </if>
                     #{item}
                 </foreach>)
@@ -402,8 +399,14 @@
             <if test="tradeMarket!=null and tradeMarket!='' ">
                 AND C.TRADE_MARKET = #{tradeMarket}
             </if>
-            <if test="portfolioId!=null and portfolioId!='' ">
-                AND D.PORTFOLIO_ID = #{portfolioId}
+            <if test="portfolioIdList!=null and portfolioIdList.size()>0 ">
+                AND (D.PORTFOLIO_ID IN
+                <foreach item="item" index="index" collection="portfolioIdList" open="(" close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) or D.PORTFOLIO_ID in (
+                    </if>
+                    #{item}
+                </foreach>)
             </if>
             <if test="busiCode!=null and busiCode!='' ">
                 AND A.ENTRUNST_TRADE_ID = #{busiCode}

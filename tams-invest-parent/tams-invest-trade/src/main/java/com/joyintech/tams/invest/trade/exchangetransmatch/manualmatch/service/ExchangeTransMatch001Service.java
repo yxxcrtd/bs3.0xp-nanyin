@@ -164,6 +164,15 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
      */
     public Page<ExchangeTransMatch004Dto> findTransMatchInfoPage(Map<String,Object> map){
 
+        if(StringUtil.isNotEmpty(map.get("portfolioId"))) {
+            String portfolioId = (String)map.get("portfolioId");
+            map.put("portfolioIdList",StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
+        }
+
+        if(StringUtil.isNotEmpty(map.get("dealId"))) {
+            String dealId = (String)map.get("dealId");
+            map.put("dealIdList",StringUtil.splitToList(GlobalConstant.COMMA, dealId));
+        }
         Page<ExchangeTransMatch004Dto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
                 + "/ExchangeTransMatchController/findTransMatchInfoPage", map, ExchangeTransMatch004Dto.class);
 

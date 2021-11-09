@@ -35,8 +35,16 @@
     var getTransMatchInfoPageParams = function () {
         var object = $.serializeToObject('#searchForm_TransMacthInfo', true);
         if(object.tradeDate) {
-            object.tradeDateBegin = object.tradeDate.startDate();
-            object.tradeDateEnd = object.tradeDate.endDate();
+            object.tradeDateBegin = $("#trdMatchInfo_tradeDate").startDate();
+            object.tradeDateEnd = $("#trdMatchInfo_tradeDate").endDate();
+        }
+
+        if(object.dealId) {
+            object.dealId = object.dealId.join(",")
+        }
+
+        if(object.portfolioId) {
+            object.portfolioId = object.portfolioId.join(",")
         }
         return object;
     }
