@@ -190,8 +190,8 @@ $(function () {
             cellMinWidth : 100,
     		cols: [
                {field:'taxClassStr',sortable:'taxClass',width:150, title: '增值税品种', sort: true},
-               {field:'channelId',width:150, title: '通道代码', sort: true},
-               {field:'channelName',width:150, title: '通道名称', sort: true},
+               {field:'channelId',visible: false,width:150, title: '通道代码', sort: true},
+               {field:'channelName',visible: false,width:150, title: '通道名称', sort: true},
                {field:'portfolioId',width:150, title: '组合代码', sort: true},
                {field:'profitType',visible: false},
                {field:'finprodId',visible: false},
@@ -386,7 +386,7 @@ $(function () {
                editOption: {type: 'select', multiple: false, searchable: false, showField: 'text', result: YES_NO}
            }
            , {field: 'payTypeText', width: 130, title: 'BussTrdTransferOrder.payType', sortable: false, sortable: false}
-           , {field: 'settleDateText', width: 130, title: 'BussTrdTransferOrder.settleDate', sortable: false}
+           , {field: 'settleDateText', width: 130, title: 'BussTrdTransferOrder.payDate', sortable: false}
            , {field: 'settleAmt', width: 130, title: 'BussTrdTransferOrder.settleAmt', type: 'money', sortable: false}
            , {field: 'ccyText', width: 130, title: 'BussTrdTransferOrder.ccy', sortable: false}
            , {
