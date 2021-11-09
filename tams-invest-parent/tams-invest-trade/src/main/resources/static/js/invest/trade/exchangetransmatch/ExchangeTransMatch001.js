@@ -336,7 +336,7 @@
 
                 Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/findEntrustPage'),object,function (result) {
                     if(result) {
-                        if(result && result.root.length >0){
+                        if(result && result.root.length > 0){
                             Joyin.error("存在可匹配信息，请先进行成交匹配！");
                             return;
                         }

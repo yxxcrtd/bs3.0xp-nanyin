@@ -1,13 +1,11 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.shares;
 
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -40,6 +38,8 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
         BaseTradeProductDealDto baseTradeProductDealDto=new BaseTradeProductDealDto();
         //生成金融产品交易信息
         baseTradeProductDealDto.setTrdProductDeal(this.genTrdProductDeal(dealDto,entrustDto));
+        //生成金融产品交易信息附属表
+        baseTradeProductDealDto.setTrdProductDealAdd(this.genTrdProductDealAdd(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
         //生成组合交易表数据
         baseTradeProductDealDto.setPtlTrade(this.generatePtlTrade(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
         //生成费用信息list
@@ -104,26 +104,26 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
             // 净值日期
             trdProductDeal.setCpriceDate(dealDto.getTradeDate());
             // 单位净价
-            BigDecimal unitCprice = ArithmeticUtil.divide(cpriceAmtSum, dealDto.getShareAmt(), 14);
-            trdProductDeal.setUnitCprice(unitCprice);
-            // 配股需要计算价格
-            if (StringUtil.equals(dealDto.getPs(), DictCodeListExt2.交易方向_配股.getValue())){
-                trdProductDeal.setUnitCprice(ArithmeticUtil.divide(dealDto.getTradeAmt(), dealDto.getShareAmt(), 14));
-            }
+//            BigDecimal unitCprice = ArithmeticUtil.divide(cpriceAmtSum, dealDto.getShareAmt(), 14);
+            trdProductDeal.setUnitCprice(dealDto.getUnitCprice());
+//            // 配股需要计算价格
+//            if (StringUtil.equals(dealDto.getPs(), DictCodeListExt2.交易方向_配股.getValue())){
+//                trdProductDeal.setUnitCprice(ArithmeticUtil.divide(dealDto.getTradeAmt(), dealDto.getShareAmt(), 14));
+//            }
             // 净价总额
             trdProductDeal.setCpriceAmt(dealDto.getFpriceAmt());
             // 交易份额
-            trdProductDeal.setShareAmt(dealDto.getShareAmt());
+            trdProductDeal.setShareAmt(entrustDto.getMarchQty());
             // 交易本金
-            trdProductDeal.setPrinAmt(dealDto.getPrinAmt());
+            trdProductDeal.setPrinAmt(entrustDto.getMarchAmt());
             // 随交易支付费用
-            trdProductDeal.setFeeAmtPay(feeAmtPay);
+            trdProductDeal.setFeeAmtPay(entrustDto.getMarchFeeAmtPay());
             // 交易金额
-            trdProductDeal.setTradeAmt(dealDto.getTradeAmt());
+            trdProductDeal.setTradeAmt(ArithmeticUtil.subtract(entrustDto.getMarchAmt(),entrustDto.getMarchFeeAmtPay()));
             // 未随交易支付费用
-            trdProductDeal.setFeeAmtUnpay(feeAmtUnpay);
+            trdProductDeal.setFeeAmtUnpay(entrustDto.getMarchFeeAmtUnPay());
             // 总交易费用
-            trdProductDeal.setFeeAmt(ArithmeticUtil.doAdd(feeAmtPay, feeAmtUnpay));
+            trdProductDeal.setFeeAmt(entrustDto.getMarchFeeAmtUnPay());
             // 交易方向
             trdProductDeal.setPs(dealDto.getPs());
             // 交易状态
@@ -153,6 +153,24 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
             return trdProductDeal;
     }
 
+    /**
+     * 金融产品交易附属表
+     */
+    public TrdProductDealAdd genTrdProductDealAdd(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto,TrdProductDeal trdProductDeal) {
+        TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
+        BeanUtil.copyPropertiesIgnoreNull(trdProductDealAdd, trdProductDeal);
+        trdProductDealAdd.setEntrustId(entrustDto.getEntrustId());
+        trdProductDealAdd.setPortfolioId(entrustDto.getPortfolioId());
+        if(StringUtil.equals(DictCodeListExt3.下行交易匹配类型_自动匹配.getValue(),dealDto.getMatchType())) {
+            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_批处理生成.getValue());
+        }
+        else {
+            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_画面录入.getValue());
+        }
+
+        return trdProductDealAdd;
+    }
+
     public List<PtlTrade> generatePtlTrade(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDealDto) {
         List<PtlTrade> ptlTradeList = new ArrayList<>();
         PtlTrade ptlTrade = new PtlTrade();
@@ -179,7 +197,7 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
     public List<TrdTradeFeeDetail> genTrdTradeFeeDetailList(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
         List<TrdTradeFeeDetail> result = new ArrayList<TrdTradeFeeDetail>();
         // 经手费
-        if (dealDto != null && dealDto.getJsfAmt().compareTo(new BigDecimal(0)) > 0) {
+        if (dealDto.getJsfAmt() != null && dealDto.getJsfAmt().compareTo(new BigDecimal(0)) > 0) {
             TrdTradeFeeDetail trdTradeFeeDetail = new TrdTradeFeeDetail();
             // 交易编号
             trdTradeFeeDetail.setTradeId(trdProductDeal.getTradeId());
@@ -194,7 +212,7 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
             result.add(trdTradeFeeDetail);
         }
         // 过户费
-        if (dealDto != null && dealDto.getGhfAmt().compareTo(new BigDecimal(0)) > 0) {
+        if (dealDto.getGhfAmt() != null && dealDto.getGhfAmt().compareTo(new BigDecimal(0)) > 0) {
             TrdTradeFeeDetail trdTradeFeeDetail = new TrdTradeFeeDetail();
             // 交易编号
             trdTradeFeeDetail.setTradeId(trdProductDeal.getTradeId());
@@ -209,7 +227,7 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
             result.add(trdTradeFeeDetail);
         }
         // 证管费
-        if (dealDto != null && dealDto.getZgfAmt().compareTo(new BigDecimal(0)) > 0) {
+        if (dealDto.getZgfAmt() != null && dealDto.getZgfAmt().compareTo(new BigDecimal(0)) > 0) {
             TrdTradeFeeDetail trdTradeFeeDetail = new TrdTradeFeeDetail();
             // 交易编号
             trdTradeFeeDetail.setTradeId(trdProductDeal.getTradeId());
@@ -224,7 +242,7 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
             result.add(trdTradeFeeDetail);
         }
         // 手续费
-        if (dealDto != null && dealDto.getSxfAmt().compareTo(new BigDecimal(0)) > 0) {
+        if (dealDto.getSxfAmt() != null && dealDto.getSxfAmt().compareTo(new BigDecimal(0)) > 0) {
             TrdTradeFeeDetail trdTradeFeeDetail = new TrdTradeFeeDetail();
             // 交易编号
             trdTradeFeeDetail.setTradeId(trdProductDeal.getTradeId());
@@ -239,7 +257,7 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
             result.add(trdTradeFeeDetail);
         }
         // 结算费
-        if (dealDto != null && dealDto.getSettleFee().compareTo(new BigDecimal(0)) > 0) {
+        if (dealDto.getSettleFee() != null && dealDto.getSettleFee().compareTo(new BigDecimal(0)) > 0) {
             TrdTradeFeeDetail trdTradeFeeDetail = new TrdTradeFeeDetail();
             // 交易编号
             trdTradeFeeDetail.setTradeId(trdProductDeal.getTradeId());
@@ -254,7 +272,7 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
             result.add(trdTradeFeeDetail);
         }
         // 印花税
-        if (dealDto != null && dealDto.getStampFee().compareTo(new BigDecimal(0)) > 0) {
+        if (dealDto.getStampFee() != null && dealDto.getStampFee().compareTo(new BigDecimal(0)) > 0) {
             TrdTradeFeeDetail trdTradeFeeDetail = new TrdTradeFeeDetail();
             // 交易编号
             trdTradeFeeDetail.setTradeId(trdProductDeal.getTradeId());
@@ -269,7 +287,7 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
             result.add(trdTradeFeeDetail);
         }
         // 佣金
-        if (dealDto != null && dealDto.getCommissionAmt().compareTo(new BigDecimal(0)) > 0) {
+        if (dealDto.getCommissionAmt() != null && dealDto.getCommissionAmt().compareTo(new BigDecimal(0)) > 0) {
             TrdTradeFeeDetail trdTradeFeeDetail = new TrdTradeFeeDetail();
             // 交易编号
             trdTradeFeeDetail.setTradeId(trdProductDeal.getTradeId());

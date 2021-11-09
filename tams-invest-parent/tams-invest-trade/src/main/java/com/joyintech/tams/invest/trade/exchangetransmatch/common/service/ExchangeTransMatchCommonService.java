@@ -226,7 +226,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 ExchangeTransMatchCommonEntrustDto commonEntrustDto = commonEntrustDtoList.get(0);
                 if(StringUtil.equals(commonEntrustDto.getTargetType(),DictCodeListExt3.目标类型_数量.getValue())) {
                     //已匹配份额
-                    commonEntrustDto.setMarchQty(commonEntrustDto.getEntrustNum());
+                    commonEntrustDto.setMarchQty(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),commonEntrustDto.getEntrustNum()))>0?dto.getRemainNum() : commonEntrustDto.getEntrustNum());
                     //已匹配金额
                     commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),commonEntrustDto.getEntrustNum()))>0?dto.getRemainNum() : commonEntrustDto.getEntrustNum(),dto.getUnitCprice()));
                     //指令已匹配份额
