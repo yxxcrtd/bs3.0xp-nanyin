@@ -43,9 +43,9 @@ public class ExchangeTransMatchService extends BaseService {
 
 
     public Page<ExchangeTransMatch004Dto> findTransMatchInfoPage(Map<String, Object> map, int page, int length) {
-        map.put("TRD_MATCH_STATUS_1", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
-        map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
-        map.put("TRD_MATCH_STATUS_3",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
+        map.put("TRD_MATCH_STATUS_0", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
+        map.put("TRD_MATCH_STATUS_1",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+        map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
         map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
         if(StringUtil.isNotEmpty(map.get("finprodType2"))) {
             if(StringUtil.equals((String)map.get("finprodType2"),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
