@@ -52,13 +52,13 @@ public interface ReconciliationCommonMapper {
 
     /**
      * 批量插入券商对账结果
-     * @param list 处理结果
+     * @param stlSecRecon 处理结果
      */
-    void insertStlSecReconBatchData(List<StlSecRecon> list);
+    void insertStlSecRecon(StlSecRecon stlSecRecon);
 
     /**
      * 批量插入券商对账结果详情
-     * @param list 处理结果详情
+     * @param stlSecReconDetail 处理结果详情
      */
-    void insertStlSecReconDetailBatchData(List<StlSecReconDetail> list);
+    void insertStlSecReconDetail(StlSecReconDetail stlSecReconDetail);
 }

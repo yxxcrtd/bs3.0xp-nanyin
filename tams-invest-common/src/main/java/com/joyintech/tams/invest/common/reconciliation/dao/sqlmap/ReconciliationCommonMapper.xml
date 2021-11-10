@@ -424,40 +424,163 @@ from
 		std.SEQ_NO = #{seqNo, jdbcType=VARCHAR}
 	</delete>
 
-	<insert id="insertStlSecReconBatchData" parameterType="java.util.List" >
-		insert into stl_sec_recon (SEQ_NO, CUSTOMER_ID, PORTFOLIO_ID,
-		FINPROD_ID, MARKET_ID, SETTLE_DATE,
-		TRADE_MARKET, CHECK_RESULT, STL_SEC_DEME,
-		create_user, create_dept, create_time,
-		update_user, update_time, COMMISSION_AMT,
-		JSF_AMT, ZGF_AMT, STAMP_FEE,
-		SETTLE_FEE, GHF_AMT, SXF_AMT,
-		FPRICE_AMT, TRADE_NUM, RECON_INFO
-		) values
-		<foreach collection="list" item="item" separator=",">
-			(
-			#{item.seqNo,jdbcType=VARCHAR}, #{item.customerId,jdbcType=VARCHAR}, #{item.portfolioId,jdbcType=VARCHAR},
-			#{item.finprodId,jdbcType=VARCHAR}, #{item.marketId,jdbcType=VARCHAR}, #{item.settleDate,jdbcType=TIMESTAMP},
-			#{item.tradeMarket,jdbcType=VARCHAR}, #{item.checkResult,jdbcType=VARCHAR}, #{item.stlSecDeme,jdbcType=VARCHAR},
-			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
-			#{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},#{item.commissionAmt,jdbcType=DECIMAL},
-			#{item.jsfAmt,jdbcType=DECIMAL}, #{item.zgfAmt,jdbcType=DECIMAL}, #{item.stampFee,jdbcType=DECIMAL},
-			#{item.settleFee,jdbcType=DECIMAL}, #{item.ghfAmt,jdbcType=DECIMAL}, #{item.sxfAmt,jdbcType=DECIMAL},
-			#{item.fpriceAmt,jdbcType=DECIMAL}, #{item.tradeNum,jdbcType=DECIMAL}, #{item.reconInfo,jdbcType=LONGVARBINARY}
-			)
-		</foreach>
+	<insert id="insertStlSecRecon" parameterType="com.joyintech.tams.common.base.entity.StlSecRecon" >
+		insert into STL_SEC_RECON
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="seqNo != null" >
+				SEQ_NO,
+			</if>
+			<if test="customerId != null" >
+				CUSTOMER_ID,
+			</if>
+			<if test="portfolioId != null" >
+				PORTFOLIO_ID,
+			</if>
+			<if test="finprodId != null" >
+				FINPROD_ID,
+			</if>
+			<if test="marketId != null" >
+				MARKET_ID,
+			</if>
+			<if test="settleDate != null" >
+				SETTLE_DATE,
+			</if>
+			<if test="tradeMarket != null" >
+				TRADE_MARKET,
+			</if>
+			<if test="account != null" >
+				ACCOUT,
+			</if>
+			<if test="checkResult != null" >
+				CHECK_RESULT,
+			</if>
+			<if test="stlSecDeme != null" >
+				STL_SEC_DEME,
+			</if>
+			<if test="reconInfo != null" >
+				RECON_INFO,
+			</if>
+			<if test="entrustTradeId != null" >
+				ENTRUST_TRADE_ID,
+			</if>
+			<if test="createUser != null" >
+				CREATE_USER,
+			</if>
+			<if test="createDept != null" >
+				CREATE_DEPT,
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME,
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER,
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="seqNo != null" >
+				#{seqNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null" >
+				#{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="portfolioId != null" >
+				#{portfolioId,jdbcType=VARCHAR},
+			</if>
+			<if test="finprodId != null" >
+				#{finprodId,jdbcType=VARCHAR},
+			</if>
+			<if test="marketId != null" >
+				#{marketId,jdbcType=VARCHAR},
+			</if>
+			<if test="settleDate != null" >
+				#{settleDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="tradeMarket != null" >
+				#{tradeMarket,jdbcType=VARCHAR},
+			</if>
+			<if test="account != null" >
+				#{account,jdbcType=VARCHAR},
+			</if>
+			<if test="checkResult != null" >
+				#{checkResult,jdbcType=VARCHAR},
+			</if>
+			<if test="stlSecDeme != null" >
+				#{stlSecDeme,jdbcType=VARCHAR},
+			</if>
+			<if test="reconInfo != null" >
+				#{reconInfo,jdbcType=LONGVARBINARY},
+			</if>
+			<if test="entrustTradeId != null" >
+				#{entrustTradeId,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null" >
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null" >
+				#{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null" >
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
 	</insert>
 
-	<insert id="insertStlSecReconDetailBatchData" parameterType="java.util.List" >
-		insert into stl_sec_recon_detail (SEQ_NO, TRADE_ID, create_user,
-		create_dept, create_time, update_user,
-		update_time) values
-		<foreach collection="list" item="item" separator=",">
-			(
-			#{item.seqNo,jdbcType=VARCHAR}, #{item.tradeId,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
-			#{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
-			#{item.updateTime,jdbcType=TIMESTAMP}
-			)
-		</foreach>
+	<insert id="insertStlSecReconDetail" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDetail" >
+		insert into STL_SEC_RECON_DETAIL
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="seqNo != null" >
+				SEQ_NO,
+			</if>
+			<if test="tradeId != null" >
+				TRADE_ID,
+			</if>
+			<if test="createUser != null" >
+				CREATE_USER,
+			</if>
+			<if test="createDept != null" >
+				CREATE_DEPT,
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME,
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER,
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="seqNo != null" >
+				#{seqNo,jdbcType=VARCHAR},
+			</if>
+			<if test="tradeId != null" >
+				#{tradeId,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null" >
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null" >
+				#{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null" >
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
 	</insert>
 </mapper>

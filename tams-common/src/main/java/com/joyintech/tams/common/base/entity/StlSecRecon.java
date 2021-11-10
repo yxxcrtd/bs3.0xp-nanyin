@@ -59,6 +59,11 @@ public class StlSecRecon extends BaseEntity {
     private String tradeMarket;
 
     /**
+     * 资金账户
+     */
+    private String account;
+
+    /**
      * 对账结果
      */
     private String checkResult;
@@ -126,6 +131,11 @@ public class StlSecRecon extends BaseEntity {
      * 对账信息
      */
     private byte[] reconInfo;
+
+    /**
+     * 委托编号/成交编号
+     */
+    private String entrustTradeId;
 
     /**
      * 取得 券商对账单流水号
@@ -238,6 +248,14 @@ public class StlSecRecon extends BaseEntity {
      */
     public void setTradeMarket(String tradeMarket) {
         this.tradeMarket = tradeMarket == null ? null : tradeMarket.trim();
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account == null ? null : account.trim();
     }
 
     /**
@@ -430,6 +448,14 @@ public class StlSecRecon extends BaseEntity {
      */
     public void setReconInfo(byte[] reconInfo) {
         this.reconInfo = reconInfo;
+    }
+
+    public String getEntrustTradeId() {
+        return entrustTradeId;
+    }
+
+    public void setEntrustTradeId(String entrustTradeId) {
+        this.entrustTradeId = entrustTradeId == null ? null : entrustTradeId.trim();
     }
 
     private String finprodName;

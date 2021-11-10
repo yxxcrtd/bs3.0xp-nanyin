@@ -11,12 +11,14 @@ import com.joyintech.tams.invest.common.reconciliation.dto.AccountFeePlan;
 import com.joyintech.tams.invest.common.reconciliation.dto.AccountPlanSearchInfo;
 import com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * 对账公共服务
@@ -28,6 +30,11 @@ import java.util.*;
  */
 @Service
 public class ReconciliationCommonService {
+
+    /**
+     * 日志
+     */
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private StlSecAcctInfoMapper stlSecAcctInfoMapper;
@@ -78,7 +85,6 @@ public class ReconciliationCommonService {
                 //处理待对账数据
                 chuliAccountInfo(dto, wuCha);
             }
-
             //将待对账数据List存入
             saveAccountInfo(list);
         }
@@ -96,7 +102,7 @@ public class ReconciliationCommonService {
         }
         //其他费用拆分（经手费+证管费+印花税+结算费+过户费+手续费）
         chuliOtherFee(dto);
-        if(dto.getCheckResult().equals(DictCodeListExt3.对账状态结果_待处理.getValue())){
+        if(DictCodeListExt3.对账状态结果_待处理.getValue().equals(dto.getCheckResult())){
             dto.setCheckResult(DictCodeListExt3.对账状态结果_手工完成.getValue());
         }else{
             //误差不为空时
@@ -187,7 +193,7 @@ public class ReconciliationCommonService {
                         checkInfo = checkInfo + "交易场所结算数据【" + dto.getTradeMarket2() + "】对账单【" + dto.getTradeMarket() + "】\n";
                     }
                     //待对账数据.交易日期 ！= 待对账数据.清算交易日期
-                    if (dto.getTradeDate() != null && dto.getTradeDate().compareTo(dto.getTradeDate2()) != 0) {
+                    if (dto.getTradeDate() != null && dto.getTradeDate().equals(dto.getTradeDate2())) {
                         checkInfo = checkInfo + "交易日期结算数据【" + DateUtil.format(dto.getTradeDate2()) + "】对账单【" + DateUtil.format(dto.getTradeDate()) + "】\n";
                     }
                     //待对账数据.证券账户 ！= 待对账数据.清算证券账户
@@ -204,7 +210,7 @@ public class ReconciliationCommonService {
                 if (dto.getFinprodType() != null && dto.getFinprodType().equals(dto.getFinprodType2())
                         && dto.getPs() != null && dto.getPs().equals(dto.getPs2())
                         && dto.getTradeMarket() != null && dto.getTradeMarket().equals(dto.getTradeMarket2())
-                        && dto.getTradeDate() != null && dto.getTradeDate().compareTo(dto.getTradeDate2()) == 0
+                        && dto.getTradeDate() != null && dto.getTradeDate().equals(dto.getTradeDate2())
                         && dto.getSecAcctId() != null && dto.getSecAcctId().equals(dto.getSecAcctId2())) {
                     dto.setCheckResult(DictCodeListExt3.对账状态结果_一致.getValue());
                     //误差处理
@@ -224,7 +230,7 @@ public class ReconciliationCommonService {
                         checkInfo = checkInfo + "交易场所结算数据【" + dto.getTradeMarket2() + "】对账单【" + dto.getTradeMarket() + "】\n";
                     }
                     //待对账数据.交易日期 ！= 待对账数据.清算交易日期
-                    if (dto.getTradeDate() != null && dto.getTradeDate().compareTo(dto.getTradeDate2()) != 0) {
+                    if (dto.getTradeDate() != null && dto.getTradeDate().equals(dto.getTradeDate2())) {
                         checkInfo = checkInfo + "交易日期结算数据【" + DateUtil.format(dto.getTradeDate2()) + "】对账单【" + DateUtil.format(dto.getTradeDate()) + "】\n";
                     }
                     //待对账数据.证券账户 ！= 待对账数据.清算证券账户
@@ -451,7 +457,7 @@ public class ReconciliationCommonService {
         BigDecimal fee = ArithmeticUtil.doAdd(dto.getJsfAmt(),dto.getZgfAmt(),dto.getStampFee(),dto.getSettleFee(),dto.getGhfAmt(),dto.getSxfAmt());
         // 经手费+证管费+印花税+结算费+过户费+手续费=0 并且 待对账数据.一级总费用!=0
         BigDecimal totalTeeamt = dto.getTotalTeeamt();
-        if(fee.equals(BigDecimal.ZERO) && !totalTeeamt.equals(BigDecimal.ZERO)){
+        if(fee.equals(BigDecimal.ZERO) && totalTeeamt != null && !totalTeeamt.equals(BigDecimal.ZERO)){
             // 清算一级总费用
             BigDecimal settleTotalTeeamt = ArithmeticUtil.doAdd(dto.getJsfAmt2(),dto.getZgfAmt2(),dto.getStampFee2(),dto.getSettleFee2(),dto.getGhfAmt2(),dto.getSxfAmt2());
             // 经手费
@@ -538,6 +544,8 @@ public class ReconciliationCommonService {
             stlSecRecon.setTradeMarket(dto.getTradeMarket());
             stlSecRecon.setCheckResult(dto.getCheckResult());
             stlSecRecon.setStlSecDeme(dto.getParaValue());
+            stlSecRecon.setAccount(dto.getAccout());
+            stlSecRecon.setEntrustTradeId(dto.getTradeId());
             stlSecRecon.setReconInfo(StringUtil.isEmpty(dto.getReconInfo()) ? null : dto.getReconInfo().getBytes());
             //场内清算原金额数据保留
             stlSecRecon.setCommissionAmt(dto.getCommissionAmt2());
@@ -754,10 +762,18 @@ public class ReconciliationCommonService {
         }
         //插入结果
         if (listRecon != null && listRecon.size() > 0) {
-            reconciliationCommonMapper.insertStlSecReconBatchData(listRecon);
+            for(StlSecRecon recon : listRecon){
+                reconciliationCommonMapper.insertStlSecRecon(recon);
+            }
+
         }
         if (listReconDetail != null && listReconDetail.size() > 0) {
-            reconciliationCommonMapper.insertStlSecReconDetailBatchData(listReconDetail);
+            for(StlSecReconDetail reconDetail : listReconDetail){
+                if(StringUtil.isEmpty(reconDetail.getSeqNo()) || StringUtil.isEmpty(reconDetail.getTradeId())){
+                    continue;
+                }
+                reconciliationCommonMapper.insertStlSecReconDetail(reconDetail);
+            }
         }
     }
 }
