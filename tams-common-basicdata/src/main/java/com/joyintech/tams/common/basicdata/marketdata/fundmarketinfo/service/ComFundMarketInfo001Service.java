@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.basicdata.util.ComBasicDataExcelUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -143,6 +146,19 @@ public class ComFundMarketInfo001Service extends CommonExportService<ComFundMark
 					//基金代码 必填
 					if (!StringUtil.isNotEmpty(rowData.get(0))){
 						errorMsg.append("基金代码 必填！");
+					}else{
+						//基金标的是否存在
+						Map<String, Object> params=new HashMap<>();
+						params.put("finprodType", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+						params.put("initValue",rowData.get(0));
+						try {
+							Page<SelectOptionDto> page=getFinProductList(params);
+							if(page.getTotal()==0){
+								errorMsg.append("标的信息 不存在！");
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 					//基金名称 必填
 					if (!StringUtil.isNotEmpty(rowData.get(1))){
@@ -155,30 +171,59 @@ public class ComFundMarketInfo001Service extends CommonExportService<ComFundMark
 					//估值日期 必填
 					if (!StringUtil.isNotEmpty(rowData.get(3))){
 						errorMsg.append("估值日期 必填！");
+					}else{
+						// 验证导入发布日格式是否正确
+						if(ComBasicDataExcelUtil.isErrorDate(rowData.get(3))){
+							errorMsg.append("估值日期格式错误！");
+						}
 					}
 					//收盘价 必填
 					if (!StringUtil.isNotEmpty(rowData.get(4))){
 						errorMsg.append("收盘价 必填！");
+					}else{
+						if (!CommonUtil.isFloatNumeric(rowData.get(4))){
+							errorMsg.append("收盘价 输入数字");
+						}
 					}
 					//平均价 必填
 					if (!StringUtil.isNotEmpty(rowData.get(5))){
 						errorMsg.append("平均价 必填！");
+					}else{
+						if (!CommonUtil.isFloatNumeric(rowData.get(5))){
+							errorMsg.append("平均价 输入数字");
+						}
 					}
 					//最高价 必填
 					if (!StringUtil.isNotEmpty(rowData.get(6))){
 						errorMsg.append("最高价 必填！");
+					}else{
+						if (!CommonUtil.isFloatNumeric(rowData.get(6))){
+							errorMsg.append("最高价 输入数字");
+						}
 					}
 					//最低价 必填
 					if (!StringUtil.isNotEmpty(rowData.get(7))){
 						errorMsg.append("最低价 必填！");
+					}else{
+						if (!CommonUtil.isFloatNumeric(rowData.get(7))){
+							errorMsg.append("最低价 输入数字");
+						}
 					}
 					//买一价 必填
 					if (!StringUtil.isNotEmpty(rowData.get(8))){
 						errorMsg.append("买一价 必填！");
+					}else{
+						if (!CommonUtil.isFloatNumeric(rowData.get(8))){
+							errorMsg.append("买一价 输入数字");
+						}
 					}
 					//卖一价 必填
 					if (!StringUtil.isNotEmpty(rowData.get(9))){
 						errorMsg.append("卖一价 必填！");
+					}else{
+						if (!CommonUtil.isFloatNumeric(rowData.get(9))){
+							errorMsg.append("卖一价 输入数字");
+						}
 					}
 					if (StringUtil.isNotEmpty(errorMsg.toString())){
 						errorMsg.append("<br />");

@@ -436,4 +436,14 @@ public class ComFundMarketInfo001dto extends BaseEntity {
     public void setOperateType(String operateType) {
         this.operateType = operateType;
     }
+
+    private String processState;
+
+    public String getProcessState() {
+        return processState;
+    }
+
+    public void setProcessState(String processState) {
+        this.processState = processState;
+    }
 }
