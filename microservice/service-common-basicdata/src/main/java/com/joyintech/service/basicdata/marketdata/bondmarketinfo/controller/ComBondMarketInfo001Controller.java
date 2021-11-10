@@ -162,6 +162,8 @@ public class ComBondMarketInfo001Controller extends BaseController {
     public int update(@RequestBody ComBondMarketInfo001Dto dto)
             throws Exception {
 //        dto.setUpdateUser(LoginUserUtil.getUserName());
+        String secId = comBondMarketInfo001Service.queryFinprodMarketIdByFinprodId(dto.getFinprodId());
+        dto.setSecId(secId);
         return comBondMarketInfo001Service.update(dto);
     }
 
