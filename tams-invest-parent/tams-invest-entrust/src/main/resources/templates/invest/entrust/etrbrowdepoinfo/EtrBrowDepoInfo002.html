@@ -68,17 +68,17 @@
 			                            </select>
 	                                </div>
 	                            </div>
-	                            <div class="form-inline-wrap" style="display: none">
-	                                <label class="layui-form-label form-lable" data-th-text="#{EtrBrowDepoInfo001.finprodType2}">资产类型</label>
-	                                <div class="layui-input-inline input-inline">
-	                                    <select type="text" id="finprodType2" name="finprodType2" class="layui-input form-input input-select"
-			                                data-th-data-result='${DEPO_ASSET_TYPE}' allowClear="true"  
-			                                formatoption = "true" 
-			                                disabled="disabled"
-			                                data-th-initValue="${entity?.finprodType2}">
-			                            </select>
-	                                </div>
-	                            </div>
+<!--	                            <div class="form-inline-wrap" >-->
+<!--	                                <label class="layui-form-label form-lable" data-th-text="#{EtrBrowDepoInfo001.finprodType2}">资产类型</label>-->
+<!--	                                <div class="layui-input-inline input-inline">-->
+<!--	                                    <select type="text" id="finprodType2" name="finprodType2" class="layui-input form-input input-select"-->
+<!--			                                data-th-data-result='${DEPO_ASSET_TYPE}' allowClear="true"-->
+<!--			                                formatoption = "true"-->
+<!--			                                disabled="disabled"-->
+<!--			                                data-th-initValue="${entity?.finprodType2}">-->
+<!--			                            </select>-->
+<!--	                                </div>-->
+<!--	                            </div>-->
 	                            <div class="form-inline-wrap">
 	                                <label class="layui-form-label form-lable" data-th-text="#{EtrBrowDepoInfo001.finprodName}">资产代码</label>
 	                                <div class="layui-input-inline input-inline">
@@ -233,6 +233,16 @@
                                             <span class="input-right-show">元</span>
                                         </div>
                                     </div>
+								<div class="form-inline-wrap" >
+									<label class="layui-form-label form-lable" data-th-text="#{EtrBrowDepoInfo001.finprodType2}">资产类型</label>
+									<div class="layui-input-inline input-inline">
+										<select type="text" id="finprodType2" name="finprodType2" class="layui-input form-input input-select"
+												data-th-data-result='${DEPO_ASSET_TYPE}' allowClear="true"
+												formatoption = "true"
+												data-th-initValue="${entity?.finprodType2}">
+										</select>
+									</div>
+								</div>
 	                            
                             <div id="pschange">
                                     <div class="form-inline-wrap">
