@@ -280,6 +280,7 @@
             s1.TRADE_DATE tradeDate,
             s1.TRADE_MARKET tradeMarket,
             s1.TRADE_PLAT tradePlat,
+            s7.finprod_market_id finprodMarketId,
             NVL(S6.MARCH_QTY_EN,0) shareAmt,
             NVL(S6.MARCH_AMT_EN,0) tradeAmt,
             s1.UNIT_FPRICE unitFprice
@@ -298,6 +299,8 @@
                        GROUP BY SEQ_NO
                  ) S6
                  ON S6.SEQ_NO = S1.SEQ_ID
+              LEFT JOIN FIN_PRODUCT S7
+                ON S1.FINPROD_ID = S7.FINPROD_ID
         WHERE s1.SEQ_ID=#{seqNo}
     </select>
     <select id="findEntrustList" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto">
