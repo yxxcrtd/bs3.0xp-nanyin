@@ -188,41 +188,55 @@
             AND D1.SEC_ACCT_ID = #{secAccount}
         </if>
     </select>
-    
 
     <select id="findDealList" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto">
         SELECT
             distinct
+            s8.MATCH_STATUS  matchStatus,
+            ROUND(s6.MARCH_QTY / s1.SHARE_AMT,4) matchProgress,
             s1.APPLY_TRADE_ID applyTradeId,
             s1.SEC_ACCT_ID secAcctId,
             s2.SEC_ACCT_NAME secAcctName,
+            s7.finprod_market_id finprodMarketId,
+            s7.finprod_abbr finprodAbbr,
+            s1.seat_number seatNumber,
             s5.MATCH_CLASS matchType,
-            s1.TRADE_DATE tradeDate,
             s1.TRADE_MARKET tradeMarket,
             s1.TRADE_PLAT tradePlat,
-            ifnull(S6.MARCH_QTY_EN,0) shareAmt,
-            ifnull(S6.MARCH_AMT_EN,0) tradeAmt,
-            s1.UNIT_FPRICE unitFprice
+            s1.ps ps,
+            s1.TRADE_DATE tradeDate,
+            s1.UNIT_FPRICE unitFprice,
+            ifnull(S6.MARCH_QTY,0) shareAmt,
+            ifnull(S6.MARCH_AMT,0) tradeAmt,
+            s9.acct_no acctNo,
+            s9.acct_name acctName
         FROM SETTLE_TRANS_DATA_TOTAL  s1
             LEFT JOIN SETTLE_TRANS_DATA_TOTAL_MATCH s5
                     ON s1.SEQ_ID = s5.SEQ_NO
+            LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS s8
+                 ON s1.SEQ_ID = s8.SEQ_NO
             LEFT JOIN STL_SEC_ACCT_INFO s2
-                    ON s2.SEC_ACCT_ID=s1.SEC_ACCT_ID
+                 ON s2.SEC_ACCT_ID=s1.SEC_ACCT_ID
+            LEFT JOIN STL_CAPACCT_INFO s9
+                 ON s1.ACCT_NO = s9.ACCT_NO
             INNER JOIN SETTLE_TRANS_DATA_TOTAL_STATUS s4
                     ON s4.SEQ_NO=s1.SEQ_ID
             LEFT JOIN (
                       SELECT SEQ_NO,
-                             ifnull(SUM(MARCH_QTY),0) MARCH_QTY_EN,
-                             ifnull(SUM(MARCH_AMT),0) MARCH_AMT_EN
+                             ifnull(SUM(MARCH_QTY),0) MARCH_QTY,
+                             ifnull(SUM(MARCH_AMT),0) MARCH_AMT
                        FROM SETTLE_TRANS_DATA_TOTAL_MATCH
                        GROUP BY SEQ_NO
                  ) S6
                  ON S6.SEQ_NO = S1.SEQ_ID
+              LEFT JOIN FIN_PRODUCT S7
+                ON S1.FINPROD_ID = S7.FINPROD_ID
         WHERE s1.SEQ_ID=#{seqNo}
     </select>
     <select id="findEntrustList" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch003Dto">
         SELECT
             s1.ENTRUNST_TRADE_ID entrustId,
+            #{TRADE_TYPE_02} tradeType,
             e1.PORTFOLIO_ID portfolioId,
             p1.PORTFOLIO_NAME portfolioName,
             s3.FINPROD_TYPE2 finprodType2,
@@ -236,11 +250,15 @@
             ELSE
                 f1.FINPROD_ID
             END finprodId,
+            e1.ENTRUST_DATE entrustDate,
+            e1.trade_market tradeMarket,
+            e1.trade_plat tradePlat,
             e1.PS ps,
             e1.PRICE price,
-            ifnull(S4.MARCH_QTY,0) entrustNum,
-            ifnull(S4.MARCH_AMT,0) entrustAmt,
-            e1.ENTRUST_DATE entrustDate
+            ifnull(S4.MARCH_QTY_EN,0) entrustNum,
+            ifnull(S4.MARCH_AMT_EN,0) entrustAmt,
+            s5.sec_acct_name secAcctName,
+            s6.acct_name acctName
         FROM SETTLE_TRANS_DATA_TOTAL_MATCH s1
                  INNER JOIN SETTLE_TRANS_DATA_TOTAL_STATUS s2
                             ON s2.SEQ_NO=s1.SEQ_NO
@@ -256,15 +274,20 @@
                  LEFT JOIN (
                       SELECT SEQ_NO,
                              ENTRUNST_TRADE_ID,
-                             ifnull(SUM(MARCH_QTY_EN),0) MARCH_QTY,
-                             ifnull(SUM(MARCH_AMT_EN),0) MARCH_AMT
+                             ifnull(SUM(MARCH_QTY_EN),0) MARCH_QTY_EN,
+                             ifnull(SUM(MARCH_AMT_EN),0) MARCH_AMT_EN
                        FROM SETTLE_TRANS_DATA_TOTAL_MATCH
                        GROUP BY SEQ_NO,ENTRUNST_TRADE_ID
-                 ) S4
-                 ON S4.SEQ_NO = S1.SEQ_NO
-                 AND S4.ENTRUNST_TRADE_ID = E1.ENTRUST_ID
+                     ) S4
+                     ON S4.SEQ_NO = S1.SEQ_NO
+                     AND S4.ENTRUNST_TRADE_ID = E1.ENTRUST_ID
+                 LEFT JOIN STL_SEC_ACCT_INFO s5
+                      ON s3.SEC_ACCT_ID=s5.SEC_ACCT_ID
+                 LEFT JOIN STL_CAPACCT_INFO s6
+                      ON s3.ACCT_NO = s6.ACCT_NO
         WHERE s1.seq_no=#{seqNo}
     </select>
+
     <select id="findTransMatchInfoPage" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch004Dto">
         select  A.SEQ_NO seqId,
         A.MATCH_CLASS matchType,

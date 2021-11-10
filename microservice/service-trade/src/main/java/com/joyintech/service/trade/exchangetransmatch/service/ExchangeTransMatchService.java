@@ -174,6 +174,7 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
         map.put("TRD_MATCH_STATUS_1",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
         map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
+        map.put("TRADE_TYPE_02", DictCodeListExt3.交易类型_投资指令.getValue());
         return  exchangeTransMatchMapper.findEntrustList(map);
     }
 
