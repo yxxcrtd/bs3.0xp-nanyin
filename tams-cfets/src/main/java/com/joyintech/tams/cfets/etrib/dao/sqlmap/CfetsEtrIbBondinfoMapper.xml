@@ -647,7 +647,7 @@ from
         MCI.CUSTOMER_NAME issuer,
         TO_CHAR(t1.VDATE,'yyyy-MM-dd') vdate,
         TO_CHAR(t1.MDATE,'yyyy-MM-dd') mdate,
-        ROUND(MBVI.LAST_PERIOD,2) ||'年' lastqx,
+        TO_CHAR(MBVI.LAST_PERIOD,'fm99990.00') ||'年' lastqx,
         MBVI.VALUE_SOURCE valueSource,
         TO_CHAR(MBVI.VALUE_DATE,'yyyy-MM-dd') valueDate,
         TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate,
