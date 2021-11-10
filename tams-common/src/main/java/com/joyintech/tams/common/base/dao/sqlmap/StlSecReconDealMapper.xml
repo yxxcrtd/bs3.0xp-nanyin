@@ -236,9 +236,9 @@
             <if test="commissionAmt != null" >
                 COMMISSION_AMT,
             </if>
-            <if test="otherFeeamt != null" >
-                OTHER_FEEAMT,
-            </if>
+<!--            <if test="otherFeeamt != null" >-->
+<!--                OTHER_FEEAMT,-->
+<!--            </if>-->
             <if test="totalTeeamt != null" >
                 TOTAL_TEEAMT,
             </if>
@@ -376,9 +376,9 @@
             <if test="commissionAmt != null" >
                 #{commissionAmt,jdbcType=DECIMAL},
             </if>
-            <if test="otherFeeamt != null" >
-                #{otherFeeamt,jdbcType=DECIMAL},
-            </if>
+<!--            <if test="otherFeeamt != null" >-->
+<!--                #{otherFeeamt,jdbcType=DECIMAL},-->
+<!--            </if>-->
             <if test="totalTeeamt != null" >
                 #{totalTeeamt,jdbcType=DECIMAL},
             </if>

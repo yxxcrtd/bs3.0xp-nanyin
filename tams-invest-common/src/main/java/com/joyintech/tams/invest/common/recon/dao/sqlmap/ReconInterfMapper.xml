@@ -263,7 +263,7 @@
             YJLXZE INT_AMT,
             QJCJJE TRADE_AMT,
             FYHJ TOTAL_TEEAMT,
-            HGDQR HGDQR,
+            TO_DATE(HGDQR, 'yyyy-MM-dd') HGDQR,
             HGDQJE HGDQJE,
             YHS STAMP_FEE,
             JSF JSF_AMT,
