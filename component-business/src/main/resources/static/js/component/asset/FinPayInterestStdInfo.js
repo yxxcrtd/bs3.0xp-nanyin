@@ -118,7 +118,7 @@
             width : 150,
             edit : true,
             type : 'number',
-            digit:16
+            digit:4
         }, {
             field : 'vdateY',
             type : 'date',
