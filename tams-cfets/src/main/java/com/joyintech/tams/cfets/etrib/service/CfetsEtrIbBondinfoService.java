@@ -1206,6 +1206,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         dto.setMdate(cfetsDto.getEtrDate());
         dto.setSettleSpeed(cfetsDto.getSettleSpeed());
         dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+        dto.setElementId(dto.getBussCombDistribtList().get(0).getElementId());
         List<CfetsBussCombDistribtDto> bussCombDistribtList =dto.getBussCombDistribtList();
         List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtosList=new ArrayList<>();
         //本方券券面总额

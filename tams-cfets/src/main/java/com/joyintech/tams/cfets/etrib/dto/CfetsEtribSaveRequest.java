@@ -71,6 +71,9 @@ public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
     @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
     private String softSkipMode;
 
+   /* @ApiModelProperty(name="entrustId",value="指令代码",example="11")
+    private String entrustId;*/
+
     public String getOperateType() {
         return operateType;
     }
