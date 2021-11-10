@@ -180,17 +180,38 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
 
     }
     @ResponseBody
+    @ApiOperation(value = "多组合指令新建保存/提交校验", notes = "多组合指令新建保存/提交校验")
+    @PostMapping("checkSaveError")
+    public Message<AjaxResult> checkSaveError(@RequestBody CfetsEtribSaveRequest cfetsDto, BindingResult br)
+            throws Exception {
+        try {
+            String  errorMessage = cfetsEtrIbBondinfoService.checkSaveError(cfetsDto, br);
+            if (StringUtil.isNotEmpty(errorMessage) ) {
+                AjaxResult m=new AjaxResult();
+                m.setStatuCode(220);
+                m.setMessage(errorMessage);
+                return new Message<AjaxResult>().success().setData(m);
+            }else{
+                return new Message<AjaxResult>().success().setMessage("校验通过");
+            }
+        }catch (Exception e) {
+            logger.error("多组合指令新建保存/提交校验异常",e);
+            return new Message<AjaxResult>().fail().setMessage("校验失败");
+        }
+    }
+
+    @ResponseBody
     @ApiOperation(value = "多组合指令新建保存/提交", notes = "多组合指令新建保存/提交")
     @PostMapping("save")
     public Message<AjaxResult> save(@RequestBody CfetsEtribSaveRequest cfetsDto, BindingResult br)
             throws Exception {
-       String  errorMessage = cfetsEtrIbBondinfoService.checkSaveError(cfetsDto, br);
+      /* String  errorMessage = cfetsEtrIbBondinfoService.checkSaveError(cfetsDto, br);
         if (StringUtil.isNotEmpty(errorMessage) ) {
             AjaxResult m=new AjaxResult();
             m.setStatuCode(220);
             m.setMessage(errorMessage);
             return new Message<AjaxResult>().success().setData(m);
-        }
+        }*/
       /*  String  warnMessage = cfetsEtrIbBondinfoService.checkSaveWarn(cfetsDto, br);
         if (StringUtil.isNotEmpty(warnMessage) ) {
             return new Message<AjaxResult>().success().setMessage(warnMessage);
