@@ -218,6 +218,8 @@ public class EtribRepoInfo003Controller extends BaseController {
                 messages.add(new ValidMessage("mdate", "请输入指令终止日。"));
             if(!StringUtil.isNotEmpty(dtoList.get(0).getSettleSpreed()))
                 messages.add(new ValidMessage("settleSpreed", "请输入清算速度。"));
+            if(!StringUtil.isNotEmpty(dtoList.get(0).getRepoTerm()))
+                messages.add(new ValidMessage("repoTerm", "请输入回购期限。"));
             if (StringUtil.isNotEmpty(dtoList.get(0).getChlId())) {
                 chlId = true;
             }
