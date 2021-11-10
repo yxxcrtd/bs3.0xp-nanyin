@@ -572,4 +572,14 @@ public class ComBondMarketInfo001Dto extends BaseEntity implements ProcessEntity
 	public void setOperateType(String operateType) {
 		this.operateType = operateType;
 	}
+
+	private String processState;
+
+	public String getProcessState() {
+		return processState;
+	}
+
+	public void setProcessState(String processState) {
+		this.processState = processState;
+	}
 }
