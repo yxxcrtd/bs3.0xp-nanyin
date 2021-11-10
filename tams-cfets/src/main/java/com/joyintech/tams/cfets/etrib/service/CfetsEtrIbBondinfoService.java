@@ -1217,7 +1217,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             BeanUtil.copyPropertiesIgnoreNull(dd,dto);
             dd.setPortfolioId(item.getPortfolioId());
             dd.setTradeAmt(item.getEntrustNum());
+            dd.setEntrustNum(item.getEntrustNum());
             dd.setInvAim(item.getBusinessModel());
+            dd.setBusinessModel(item.getBusinessModel());
             dd.setEntrustOwnNum(item.getEntrustOwnNum());
             dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum());
             dd.setElementId(item.getElementId());
