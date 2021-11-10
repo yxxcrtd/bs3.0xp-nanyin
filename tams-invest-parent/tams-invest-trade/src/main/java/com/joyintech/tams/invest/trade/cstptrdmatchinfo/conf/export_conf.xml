@@ -28,6 +28,8 @@
             <Cell order="24" name="到期结算金额">mdateSettleAmt</Cell>
             <Cell order="25" name="回购期限">repoTerm</Cell>
             <Cell order="26" name="实际占款天数">actCapDays</Cell>
+            <Cell order="27" name="交易手续费"></Cell>
+            <Cell order="28" name="结算手续费"></Cell>
         </Row>
     </Worksheet>
 </Workbook>
