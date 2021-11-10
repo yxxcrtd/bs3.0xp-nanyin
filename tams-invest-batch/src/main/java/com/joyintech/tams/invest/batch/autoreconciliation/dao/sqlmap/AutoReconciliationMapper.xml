@@ -3,21 +3,19 @@
 <mapper namespace="com.joyintech.tams.invest.batch.autoreconciliation.dao.AutoReconciliationMapper">
 
 	<select id="queryAccountTodoList" resultType="com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto">
-		<!-- 汇总对账单数据 -->
+		<!-- 查询委托维度数据 -->
 		WITH tmp AS(
 			SELECT
 				ssrd.SEQ_NO,
 				ssrd.INSTRUCTION_ID,
-				ssrd.PORTFOLIO_ID,
-				ssrd.TRADE_DATE,
-				ssrd.TRADE_ID,
 				ssrd.FINPROD_ID,
-				ssrd.MARKET_ID,
 				ssrd.TRADE_MARKET,
 				ssrd.CUSTOMER_ID,
-				nvl(aa.PARA_VALUE, bb.PARA_VALUE) PARA_VALUE,
+				ssrp.PARA_VALUE,
 				ssrd.FINPROD_TYPE,
 				ssrd.PS,
+				ssrd.TRADE_DATE,
+				ssrd.TRADE_ID,
 				ssrd.SEC_ACCT_ID,
 				ssr.CHECK_RESULT,
 				ssrd.SEAT_NUMBER,
@@ -29,197 +27,185 @@
 				ssrd.GHF_AMT,
 				ssrd.SXF_AMT,
 				ssrd.TRADE_AMT,
-				ssrd.TRADE_NUM
+				ssrd.TRADE_NUM,
+				ssrd.TOTAL_TEEAMT
 			FROM
 				STL_SEC_RECON_DEAL ssrd
 				LEFT JOIN
-					STL_SEC_RECON ssr ON ssr.SEQ_NO = ssrd.SEQ_NO
+					STL_SEC_RECON ssr ON ssrd.SEQ_NO = ssr.SEQ_NO
 				LEFT JOIN
-					STL_SEC_RECON_PARA aa ON aa.CUSTOMER_ID = ssrd.CUSTOMER_ID AND aa.PARA_CODE = #{PARA_CODE_02}
-				LEFT JOIN
-					STL_SEC_RECON_PARA bb ON (bb.CUSTOMER_ID = '' OR bb.CUSTOMER_ID IS NULL) AND bb.PARA_CODE = #{PARA_CODE_02}
-			WHERE
-				(ssr.CHECK_RESULT IS NULL OR ssr.CHECK_RESULT = '' OR ssr.CHECK_RESULT = #{CHECK_RESULT_0})
-				AND ssrd.TRADE_DATE = TO_DATE(#{batchDate}, 'yyyy-MM-dd')
-				<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-					AND ssr.PORTFOLIO_ID IN
-					<foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
-						<if test="(index % 998) == 0">
-							null) OR  ssr.PORTFOLIO_ID IN (
-						</if>
-						#{item}
-					</foreach>
-				</if>
-				<if test="finprodId != null and finprodId != ''">
-					AND ssrd.FINPROD_ID like CONCAT_WS('', '%', #{finprodId}, '%')
-				</if>
-				<if test="seqNo != null and seqNo != ''">
-					AND ssrd.SEQ_NO = #{seqNo}
-				</if>
-				<if test="tradeMarket != null and tradeMarket != ''">
-					AND ssrd.TRADE_MARKET = #{tradeMarket}
-				</if>
+				(
+					SELECT
+					    CUSTOMER_ID,
+					    PARA_VALUE,
+					    MAX(CONFIG_DATE)
+				    FROM
+						STL_SEC_RECON_PARA
+				    WHERE
+						<![CDATA[CONFIG_DATE <= TO_DATE(#{batchDate},'YYYY-MM-DD')]]>
+						AND PARA_CODE = #{PARA_CODE_02}
+				    GROUP BY
+						CUSTOMER_ID,
+						PARA_VALUE
+				)ssrp ON ssrd.CUSTOMER_ID = ssrp.CUSTOMER_ID
 		)
-		SELECT <!-- 查询委托维度对账数据 -->
-			a.SEQ_NO,
-			a.INSTRUCTION_ID,
-			a.PORTFOLIO_ID,
-			a.TRADE_DATE,
-			a.TRADE_ID,
-			a.FINPROD_ID,
-			a.MARKET_ID,
-			a.TRADE_MARKET,
-			a.CUSTOMER_ID,
-			a.PARA_VALUE,
-			a.FINPROD_TYPE,
-			a.PS,
-			a.SEC_ACCT_ID,
-			a.COMMISSION_AMT,
-			a.JSF_AMT,
-			a.ZGF_AMT,
-			a.STAMP_FEE,
-			a.SETTLE_FEE,
-			a.GHF_AMT,
-			a.SXF_AMT,
-			a.TRADE_AMT,
-			a.TRADE_NUM,
-			ss.APPLY_TRADE_ID TRADE_ID2,
-			ss.COMMISSION_AMT2,
-			ss.JSF_AMT2,
-			ss.ZGF_AMT2,
-			ss.STAMP_FEE2,
-			ss.SETTLE_FEE2,
-			ss.GHF_AMT2,
-			ss.SXF_AMT2,
-			ss.FPRICE_AMT2 TRADE_AMT2,
-			ss.SHARE_AMT2 TRADE_NUM2,
-			ss.FINPROD_TYPE2 FINPROD_TYPE2,
-			ss.PS PS2,
-			ss.TRADE_MARKET TRADE_MARKET2,
-			ss.TRADE_DATE TRADE_DATE2,
-			ss.SEC_ACCT_ID SEC_ACCT_ID2
+		SELECT <!-- 查询委托汇总数据 -->
+			tmp.SEQ_NO,
+			tmp.FINPROD_ID,
+			tmp.TRADE_MARKET,
+			tmp.CUSTOMER_ID,
+			tmp.PARA_VALUE,
+			tmp.FINPROD_TYPE,
+			tmp.PS,
+			tmp.TRADE_DATE,
+			tmp.SEC_ACCT_ID,
+			tmp.CHECK_RESULT,
+			tmp.SEAT_NUMBER,
+			tmp.COMMISSION_AMT,
+			tmp.JSF_AMT,
+			tmp.ZGF_AMT,
+			tmp.STAMP_FEE,
+			tmp.SETTLE_FEE,
+			tmp.GHF_AMT,
+			tmp.SXF_AMT,
+			tmp.TRADE_AMT,
+			tmp.TRADE_NUM,
+			tmp.TOTAL_TEEAMT,
+			std.APPLY_TRADE_ID TRADE_ID2,
+			std.COMMISSION_AMT2,
+			std.JSF_AMT2,
+			std.ZGF_AMT2,
+			std.STAMP_FEE2,
+			std.SETTLE_FEE2,
+			std.GHF_AMT2,
+			std.SXF_AMT2,
+			std.FPRICE_AMT2 TRADE_AMT2,
+			std.SHARE_AMT2 TRADE_NUM2,
+			std.FINPROD_TYPE2 FINPROD_TYPE2,
+			std.PS PS2,
+			std.TRADE_MARKET TRADE_MARKET2,
+			std.TRADE_DATE TRADE_DATE2,
+			std.SEC_ACCT_ID SEC_ACCT_ID2
 		FROM
-			tmp a
-		INNER JOIN (
+			tmp
+		LEFT JOIN (
 			SELECT
-				std.APPLY_TRADE_ID,
-				SUM(std.COMMISSION_AMT) COMMISSION_AMT2,
-				SUM(std.JSF_AMT) JSF_AMT2,
-				SUM(std.ZGF_AMT) ZGF_AMT2,
-				SUM(std.STAMP_FEE) STAMP_FEE2,
-				SUM(std.SETTLE_FEE) SETTLE_FEE2,
-				SUM(std.GHF_AMT) GHF_AMT2,
-				SUM(std.SXF_AMT) SXF_AMT2,
-				SUM(std.FPRICE_AMT) FPRICE_AMT2,
-				SUM(std.SHARE_AMT) SHARE_AMT2,
-				std.FINPROD_TYPE2,
-				std.PS,
-				std.TRADE_MARKET,
-				std.TRADE_DATE,
-				std.SEC_ACCT_ID
+				APPLY_TRADE_ID,
+				SUM(COMMISSION_AMT) COMMISSION_AMT2,
+				SUM(JSF_AMT) JSF_AMT2,
+				SUM(ZGF_AMT) ZGF_AMT2,
+				SUM(STAMP_FEE) STAMP_FEE2,
+				SUM(SETTLE_FEE) SETTLE_FEE2,
+				SUM(GHF_AMT) GHF_AMT2,
+				SUM(SXF_AMT) SXF_AMT2,
+				SUM(FPRICE_AMT) FPRICE_AMT2,
+				SUM(SHARE_AMT) SHARE_AMT2,
+				FINPROD_TYPE2,
+				PS,
+				TRADE_MARKET,
+				TRADE_DATE,
+				SEC_ACCT_ID
 			FROM
-				SETTLE_TRANS_DATA std
-				INNER JOIN tmp b ON b.INSTRUCTION_ID = std.APPLY_TRADE_ID AND b.PARA_VALUE = #{PARA_VALUE_02}
+				SETTLE_TRANS_DATA
 			GROUP BY
-				std.APPLY_TRADE_ID,std.FINPROD_TYPE2,std.PS,std.TRADE_MARKET,std.TRADE_DATE,std.SEC_ACCT_ID
-			) ss ON a.INSTRUCTION_ID = ss.APPLY_TRADE_ID
+				APPLY_TRADE_ID,FINPROD_TYPE2,PS,TRADE_MARKET,TRADE_DATE,SEC_ACCT_ID
+			) std ON tmp.INSTRUCTION_ID = std.APPLY_TRADE_ID
 		WHERE
-			a.PARA_VALUE = #{PARA_VALUE_02}
+			tmp.PARA_VALUE = #{PARA_VALUE_02}
 		UNION ALL
-			SELECT
-				a.SEQ_NO,
-				a.INSTRUCTION_ID,
-				a.PORTFOLIO_ID,
-				a.TRADE_DATE,
-				a.TRADE_ID,
-				a.FINPROD_ID,
-				a.MARKET_ID,
-				a.TRADE_MARKET,
-				a.CUSTOMER_ID,
-				a.PARA_VALUE,
-				a.FINPROD_TYPE,
-				a.PS,
-				a.SEC_ACCT_ID,
-				a.COMMISSION_AMT,
-				a.JSF_AMT,
-				a.ZGF_AMT,
-				a.STAMP_FEE,
-				a.SETTLE_FEE,
-				a.GHF_AMT,
-				a.SXF_AMT,
-				a.TRADE_AMT,
-				a.TRADE_NUM,
-				ss.APPLY_TRADE_ID TRADE_ID2,
-				ss.COMMISSION_AMT2,
-				ss.JSF_AMT2,
-				ss.ZGF_AMT2,
-				ss.STAMP_FEE2,
-				ss.SETTLE_FEE2,
-				ss.GHF_AMT2,
-				ss.SXF_AMT2,
-				ss.FPRICE_AMT2 TRADE_AMT2,
-				ss.SHARE_AMT2 TRADE_NUM2,
-				ss.FINPROD_TYPE2 FINPROD_TYPE2,
-				ss.PS PS2,
-				ss.TRADE_MARKET TRADE_MARKET2,
-				ss.TRADE_DATE TRADE_DATE2,
-				ss.SEC_ACCT_ID SEC_ACCT_ID2
-			FROM
-				tmp a
-			INNER JOIN (
-				SELECT
-					std.APPLY_TRADE_ID,
-					SUM(std.COMMISSION_AMT) COMMISSION_AMT2,
-					SUM(std.JSF_AMT) JSF_AMT2,
-					SUM(std.ZGF_AMT) ZGF_AMT2,
-					SUM(std.STAMP_FEE) STAMP_FEE2,
-					SUM(std.SETTLE_FEE) SETTLE_FEE2,
-					SUM(std.GHF_AMT) GHF_AMT2,
-					SUM(std.SXF_AMT) SXF_AMT2,
-					SUM(std.FPRICE_AMT) FPRICE_AMT2,
-					SUM(std.SHARE_AMT) SHARE_AMT2,
-					std.FINPROD_TYPE2,
-					std.PS,
-					std.TRADE_MARKET,
-					std.TRADE_DATE,
-					std.SEC_ACCT_ID
-				FROM
-					SETTLE_TRANS_DATA std
-				INNER JOIN tmp b ON b.FINPROD_ID = std.FINPROD_ID AND b.PARA_VALUE = #{PARA_VALUE_01}
-				GROUP BY
-					std.APPLY_TRADE_ID,
-					std.FINPROD_TYPE2,
-					std.PS,
-					std.TRADE_MARKET,
-					std.TRADE_DATE,
-					std.SEC_ACCT_ID
-				) ss ON a.INSTRUCTION_ID = ss.APPLY_TRADE_ID
-			WHERE
-			a.PARA_VALUE = #{PARA_VALUE_01}
-		UNION ALL
+		<!-- 查询证券汇总数据 -->
 		SELECT
-			b.SEQ_NO,
-			b.INSTRUCTION_ID,
-			b.PORTFOLIO_ID,
-			b.TRADE_DATE,
-			b.TRADE_ID,
-			b.FINPROD_ID,
-			b.MARKET_ID,
-			b.TRADE_MARKET,
-			b.CUSTOMER_ID,
-			b.PARA_VALUE,
-			b.FINPROD_TYPE,
-			b.PS,
-			b.SEC_ACCT_ID,
-			b.COMMISSION_AMT,
-			b.JSF_AMT,
-			b.ZGF_AMT,
-			b.STAMP_FEE,
-			b.SETTLE_FEE,
-			b.GHF_AMT,
-			b.SXF_AMT,
-			b.TRADE_AMT,
-			b.TRADE_NUM,
+			tmp.SEQ_NO,
+			tmp.FINPROD_ID,
+			tmp.TRADE_MARKET,
+			tmp.CUSTOMER_ID,
+			tmp.PARA_VALUE,
+			tmp.FINPROD_TYPE,
+			tmp.PS,
+			tmp.TRADE_DATE,
+			tmp.SEC_ACCT_ID,
+			tmp.CHECK_RESULT,
+			tmp.SEAT_NUMBER,
+			tmp.COMMISSION_AMT,
+			tmp.JSF_AMT,
+			tmp.ZGF_AMT,
+			tmp.STAMP_FEE,
+			tmp.SETTLE_FEE,
+			tmp.GHF_AMT,
+			tmp.SXF_AMT,
+			tmp.TRADE_AMT,
+			tmp.TRADE_NUM,
+			tmp.TOTAL_TEEAMT,
+		    NULL TRADE_ID2,
+			std.COMMISSION_AMT2,
+			std.JSF_AMT2,
+			std.ZGF_AMT2,
+			std.STAMP_FEE2,
+			std.SETTLE_FEE2,
+			std.GHF_AMT2,
+			std.SXF_AMT2,
+			std.FPRICE_AMT2 TRADE_AMT2,
+			std.SHARE_AMT2 TRADE_NUM2,
+			std.FINPROD_TYPE2 FINPROD_TYPE2,
+			std.PS PS2,
+			std.TRADE_MARKET TRADE_MARKET2,
+			std.TRADE_DATE TRADE_DATE2,
+			std.SEC_ACCT_ID SEC_ACCT_ID2
+		FROM
+			tmp
+		LEFT JOIN (
+			SELECT
+				FINPROD_ID,
+				SUM(COMMISSION_AMT) COMMISSION_AMT2,
+				SUM(JSF_AMT) JSF_AMT2,
+				SUM(ZGF_AMT) ZGF_AMT2,
+				SUM(STAMP_FEE) STAMP_FEE2,
+				SUM(SETTLE_FEE) SETTLE_FEE2,
+				SUM(GHF_AMT) GHF_AMT2,
+				SUM(SXF_AMT) SXF_AMT2,
+				SUM(FPRICE_AMT) FPRICE_AMT2,
+				SUM(SHARE_AMT) SHARE_AMT2,
+				FINPROD_TYPE2,
+				PS,
+				TRADE_MARKET,
+				TRADE_DATE,
+				SEC_ACCT_ID
+			FROM
+				SETTLE_TRANS_DATA
+			GROUP BY
+				FINPROD_ID,
+				FINPROD_TYPE2,
+				PS,
+				TRADE_MARKET,
+				TRADE_DATE,
+				SEC_ACCT_ID
+			) std ON tmp.FINPROD_ID = std.FINPROD_ID
+		WHERE
+			tmp.PARA_VALUE = #{PARA_VALUE_01}
+		UNION ALL
+		<!-- 查询成交明细数据 -->
+		SELECT
+			tmp.SEQ_NO,
+			tmp.FINPROD_ID,
+			tmp.TRADE_MARKET,
+			tmp.CUSTOMER_ID,
+			tmp.PARA_VALUE,
+			tmp.FINPROD_TYPE,
+			tmp.PS,
+			tmp.TRADE_DATE,
+			tmp.SEC_ACCT_ID,
+			tmp.CHECK_RESULT,
+			tmp.SEAT_NUMBER,
+			tmp.COMMISSION_AMT,
+			tmp.JSF_AMT,
+			tmp.ZGF_AMT,
+			tmp.STAMP_FEE,
+			tmp.SETTLE_FEE,
+			tmp.GHF_AMT,
+			tmp.SXF_AMT,
+			tmp.TRADE_AMT,
+			tmp.TRADE_NUM,
+			tmp.TOTAL_TEEAMT,
 			std.TRADE_ID TRADE_ID2,
 			std.COMMISSION_AMT COMMISSION_AMT2,
 			std.JSF_AMT JSF_AMT2,
@@ -236,59 +222,56 @@
 			std.TRADE_DATE TRADE_DATE2,
 			std.SEC_ACCT_ID SEC_ACCT_ID2
 		FROM
-			SETTLE_TRANS_DATA std
-			INNER JOIN tmp b ON
-				b.TRADE_ID = std.TRADE_ID AND
-				b.TRADE_ID IS NOT NULL AND
-				b.TRADE_ID != '' AND
-				b.PARA_VALUE = #{PARA_VALUE_03}
+			tmp
+		LEFT JOIN
+			SETTLE_TRANS_DATA std ON tmp.TRADE_ID = std.CJBH
+		WHERE
+			tmp.TRADE_ID IS NOT NULL
+			AND tmp.PARA_VALUE = #{PARA_VALUE_03}
 		UNION ALL
+		<!-- 查询成交明细数据 -->
 		SELECT
-				b.SEQ_NO,
-				b.INSTRUCTION_ID,
-				b.PORTFOLIO_ID,
-				b.TRADE_DATE,
-				b.TRADE_ID,
-				b.FINPROD_ID,
-				b.MARKET_ID,
-				b.TRADE_MARKET,
-				b.CUSTOMER_ID,
-				b.PARA_VALUE,
-				b.FINPROD_TYPE,
-				b.PS,
-				b.SEC_ACCT_ID,
-				b.COMMISSION_AMT,
-				b.JSF_AMT,
-				b.ZGF_AMT,
-				b.STAMP_FEE,
-				b.SETTLE_FEE,
-				b.GHF_AMT,
-				b.SXF_AMT,
-				b.TRADE_AMT,
-				b.TRADE_NUM,
-				std.TRADE_ID TRADE_ID2,
-				std.COMMISSION_AMT COMMISSION_AMT2,
-				std.JSF_AMT JSF_AMT2,
-				std.ZGF_AMT ZGF_AMT2,
-				std.STAMP_FEE STAMP_FEE2,
-				std.SETTLE_FEE SETTLE_FEE2,
-				std.GHF_AMT GHF_AMT2,
-				std.SXF_AMT SXF_AMT2,
-				std.FPRICE_AMT TRADE_AMT2,
-				std.SHARE_AMT TRADE_NUM2,
-				std.FINPROD_TYPE2 FINPROD_TYPE2,
-				std.PS PS2,
-				std.TRADE_MARKET TRADE_MARKET2,
-				std.TRADE_DATE TRADE_DATE2,
-				std.SEC_ACCT_ID SEC_ACCT_ID2
+			tmp.SEQ_NO,
+			tmp.FINPROD_ID,
+			tmp.TRADE_MARKET,
+			tmp.CUSTOMER_ID,
+			tmp.PARA_VALUE,
+			tmp.FINPROD_TYPE,
+			tmp.PS,
+			tmp.TRADE_DATE,
+			tmp.SEC_ACCT_ID,
+			tmp.CHECK_RESULT,
+			tmp.SEAT_NUMBER,
+			tmp.COMMISSION_AMT,
+			tmp.JSF_AMT,
+			tmp.ZGF_AMT,
+			tmp.STAMP_FEE,
+			tmp.SETTLE_FEE,
+			tmp.GHF_AMT,
+			tmp.SXF_AMT,
+			tmp.TRADE_AMT,
+			tmp.TRADE_NUM,
+			tmp.TOTAL_TEEAMT,
+			std.TRADE_ID TRADE_ID2,
+			std.COMMISSION_AMT COMMISSION_AMT2,
+			std.JSF_AMT JSF_AMT2,
+			std.ZGF_AMT ZGF_AMT2,
+			std.STAMP_FEE STAMP_FEE2,
+			std.SETTLE_FEE SETTLE_FEE2,
+			std.GHF_AMT GHF_AMT2,
+			std.SXF_AMT SXF_AMT2,
+			std.FPRICE_AMT TRADE_AMT2,
+			std.SHARE_AMT TRADE_NUM2,
+			std.FINPROD_TYPE2 FINPROD_TYPE2,
+			std.PS PS2,
+			std.TRADE_MARKET TRADE_MARKET2,
+			std.TRADE_DATE TRADE_DATE2,
+			std.SEC_ACCT_ID SEC_ACCT_ID2
 		FROM
-			SETTLE_TRANS_DATA std
-			INNER JOIN tmp b ON
-				b.PARA_VALUE = #{PARA_VALUE_03} AND
-				std.FINPROD_ID = b.FINPROD_ID AND
-				std.PS = b.PS AND
-				std.PORTFOLIO_ID = b.PORTFOLIO_ID AND
-				std.SEC_ACCT_ID = b.SEC_ACCT_ID AND
-				(b.TRADE_ID IS NULL OR b.TRADE_ID = '')
+			tmp
+		LEFT JOIN SETTLE_TRANS_DATA std ON tmp.FINPROD_ID = std.FINPROD_ID AND tmp.PS = std.PS AND tmp.SEC_ACCT_ID = std.SEC_ACCT_ID AND tmp.SEAT_NUMBER = std.SEAT_NUMBER
+		WHERE
+			tmp.TRADE_ID IS NULL
+			AND tmp.PARA_VALUE = #{PARA_VALUE_03}
 	</select>
 </mapper>
