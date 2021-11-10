@@ -11,7 +11,9 @@ import java.util.Map;
 import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
 import com.joyintech.tams.common.basicdata.marketdata.mstbondquotationinfo.dto.ComBondQuotationInfoDto;
 import com.joyintech.tams.common.basicdata.util.ComBasicDataExcelUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -271,16 +273,24 @@ public class ComBondQuotationInfoService extends CommonExportService<ComBondQuot
     private List<ExcelValidDto> checkExcelData(List<List<String>> dataList)
         throws ParseException {
         List<ExcelValidDto> checkResult = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            for (int i = 0; i < dataList.size(); i++ ) {
+                List<ExcelValidDto> result = checkExcelCow(i, dataList.get(i));
+                // 检查表内数据每行是否合法
+                if (CollectionUtils.isNotEmpty(result)) {
+                    checkResult.addAll(result);
+                }
+            }
+        }
+        if (checkResult.size()>0){
+            return checkResult;
+        }
         List<ComBondQuotationInfoDto> equityList = converToBean(dataList,null);
         ComBondQuotationInfoDto ComBondQuotationInfoDto = null;
         List<Integer> duplicateDataList=new ArrayList<Integer>();
         if (equityList.size() >= 1) {
             for (int i = 0; i < equityList.size(); i++ ) {
                 ComBondQuotationInfoDto = equityList.get(i);
-                // 检查表内数据每行是否合法
-                if (checkExcelCow(i, dataList.get(i)) != null) {
-                    checkResult.addAll(checkExcelCow(i, dataList.get(i)));
-                }
                 if(ComBondQuotationInfoDto.getSecId() == null
                 		|| ComBondQuotationInfoDto.getValueDate() == null
                 		|| ComBondQuotationInfoDto.getValueSource() == null
@@ -342,8 +352,8 @@ public class ComBondQuotationInfoService extends CommonExportService<ComBondQuot
             if (StringUtil.isNotEmpty(list.get(2))) {
                 ComBondQuotationInfoDto.setValueSource(list.get(2).trim().split("：")[0].trim());
             }
-            if (StringUtil.isNotEmpty(list.get(3))) {
-                ComBondQuotationInfoDto.setValueDate(DateUtil.parse(list.get(3).trim()));
+            if (StringUtil.isNotEmpty(list.get(3))&&!ComBasicDataExcelUtil.isErrorDate(list.get(3))) {
+                    ComBondQuotationInfoDto.setValueDate(DateUtil.parse(list.get(3).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(4))) {
                 ComBondQuotationInfoDto.setLastPeriod(new BigDecimal(list.get(4).trim()));
@@ -423,6 +433,11 @@ public class ComBondQuotationInfoService extends CommonExportService<ComBondQuot
             // 验证导入估值日期是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "估值日期为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(ComBasicDataExcelUtil.isErrorDate(list.get(3))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "估值日期格式错误");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(5))) {
             // 验证导入市价全价是否为空
