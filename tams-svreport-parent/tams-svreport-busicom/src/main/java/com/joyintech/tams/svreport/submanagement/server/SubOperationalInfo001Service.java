@@ -1866,27 +1866,27 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									"产品增信机构类型"));
 						}
 					}else if (StringUtil.equals(CHB_EMPLOYEE_INFO, tableName)){
-						if(i<2){
+						if(i<1){
 							continue;
 						}
 						String FinProfessionalCrtf = strList.get(15) ;
 						//理财专业证书
 						if(!BaseCheckLib.inDatadict3(FinProfessionalCrtf,DictCode.理财专业证书.getValue(),true,true)){
-							checkResult.add(new ExcelValidDto(strList.get(0)+"|"+strList.get(4), String.valueOf(i + 1), "理财专业证书分类不在值域范围内且多选选项不可重复。"
+							checkResult.add(new ExcelValidDto(strList.get(0)+"|"+strList.get(4), String.valueOf(i + 2), "理财专业证书分类不在值域范围内且多选选项不可重复。"
 									+ "[REG_BUSI_TYPE="+FinProfessionalCrtf+"]",
 									"理财专业证书"));
 						}
 						String REGBUSITYPE = strList.get(21) ;
 						//登记业务分类多选校验
 						if(!BaseCheckLib.inDatadict3(REGBUSITYPE,DictCode.登记业务分类.getValue(),true,true)){
-							checkResult.add(new ExcelValidDto(strList.get(0)+"|"+strList.get(4), String.valueOf(i + 1), "登记业务分类不在值域范围内且多选选项不可重复。"
+							checkResult.add(new ExcelValidDto(strList.get(0)+"|"+strList.get(4), String.valueOf(i + 2), "登记业务分类不在值域范围内且多选选项不可重复。"
 									+ "[REG_BUSI_TYPE="+REGBUSITYPE+"]",
 									"登记业务分类"));
 						}
 						String REGEMPLOYEETYPE = strList.get(22);
 						//登记人员类别
 						if(!BaseCheckLib.inDatadict3(REGEMPLOYEETYPE,DictCode.登记人员类别.getValue(),true,true)){
-							checkResult.add(new ExcelValidDto(strList.get(0)+"|"+strList.get(4), String.valueOf(i + 1), "登记人员类别不在值域范围内且多选选项不可重复。"
+							checkResult.add(new ExcelValidDto(strList.get(0)+"|"+strList.get(4), String.valueOf(i + 2), "登记人员类别不在值域范围内且多选选项不可重复。"
 									+ "[REG_EMPLOYEE_TYPE="+REGEMPLOYEETYPE+"]",
 									"登记人员类别"));
 						}
@@ -2077,6 +2077,8 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								int rowNum = j + 1;
 								if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
 									rowNum = j + 2;
+								}else if("CHB_EMPLOYEE_INFO".equals(tableName)){
+									rowNum = j + 2;
 								}
 								List<String> strList1 = new ArrayList<String>();
 								for (String key : pkDataMap.keySet()) {
@@ -2091,6 +2093,8 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								int rowNum = j + 1;
 								if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
 									rowNum = j + 2;
+								}else if("CHB_EMPLOYEE_INFO".equals(tableName)){
+									rowNum = j + 2;
 								}
 								List<String> strList1 = new ArrayList<String>();
 								for (String key : pkDataMap.keySet()) {
@@ -2103,6 +2107,8 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 							else if (!flag && (StringUtil.equals(strList.get(0), "修改") || StringUtil.equals(strList.get(0), "删除"))){
 								int rowNum = j + 1;
 								if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+									rowNum = j + 2;
+								}else if("CHB_EMPLOYEE_INFO".equals(tableName)){
 									rowNum = j + 2;
 								}
 								List<String> strList1 = new ArrayList<String>();
@@ -2352,6 +2358,8 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						String indexStr = map.get("ERRMSG_ROW");
 						int index = 0;
 						if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
+							index = Integer.parseInt(indexStr) + 2;
+						}else if("CHB_EMPLOYEE_INFO".equals(tableName)){
 							index = Integer.parseInt(indexStr) + 2;
 						} else {
 							index = Integer.parseInt(indexStr) + 1;

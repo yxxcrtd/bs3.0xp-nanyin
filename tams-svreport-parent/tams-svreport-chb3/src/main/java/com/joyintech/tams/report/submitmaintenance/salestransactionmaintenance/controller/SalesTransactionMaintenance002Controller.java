@@ -45,12 +45,21 @@ public class SalesTransactionMaintenance002Controller extends BaseController {
    @RequestMapping(PAGE_INIT)
    public String init(Model model) {
        super.setSelectOptionToModel(model, DictCode.销售结算资金流动方向,DictCode.币种);
-       String prdRegistCode = getParam("prdRegistCode");
-       String tradeNo = getParam("tradeNo");
-       if(WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(prdRegistCode) && StringUtil.isNotEmpty(tradeNo)) {
-           SalesTransactionMaintenanceDto entity = SalesTransactionMaintenanceService.selectDetail(prdRegistCode,tradeNo);
-           // 设置到model中
-           model.addAttribute("entity", entity);
+       String registSeqno = getParam("registSeqno");
+       String maintainStatus = getParam("maintainStatus");
+       if(WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(registSeqno)) {
+           //从info表取
+           if(maintainStatus.equals("02")) {
+               SalesTransactionMaintenanceDto entity = SalesTransactionMaintenanceService.selectDetail(registSeqno);
+               // 设置到model中
+               model.addAttribute("entity", entity);
+           }
+           //从erro表取
+           else{
+               SalesTransactionMaintenanceDto entity = SalesTransactionMaintenanceService.selectErroDetail(registSeqno);
+               // 设置到model中
+               model.addAttribute("entity", entity);
+           }
        }
        return super.init(model);
    }

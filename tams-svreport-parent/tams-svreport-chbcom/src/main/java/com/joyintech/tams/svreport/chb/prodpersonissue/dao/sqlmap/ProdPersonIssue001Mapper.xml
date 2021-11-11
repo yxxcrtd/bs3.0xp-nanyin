@@ -652,14 +652,17 @@
             sub.BUSI_ACCT_NO,
             sub.ACCT_NAME
 			from CHB_PRD_ISSUE_SUB sub
-		<where>
-		   	<if test="registList!=null and registList.size()!=0">
-			   	<foreach collection="registList" item="items" 
-	            		open=" AND TRIM(sub.REGIST_SEQNO) IN (" close=")" separator=",">
-	             		#{items,jdbcType=CHAR}
-	             </foreach> 
-		   	</if>
-		</where>
+      <where>
+        <if test="registList!=null and registList.size()!=0">
+          <foreach collection="registList" item="items" index= "index"
+                   open=" AND TRIM(sub.REGIST_SEQNO) IN (" close=")" separator=",">
+            <if test="(index % 998) == 0">
+              null) OR TRIM(sub.REGIST_SEQNO) IN (
+            </if>
+            #{items,jdbcType=CHAR}
+          </foreach>
+        </if>
+      </where>
 		
 	</select>
 	

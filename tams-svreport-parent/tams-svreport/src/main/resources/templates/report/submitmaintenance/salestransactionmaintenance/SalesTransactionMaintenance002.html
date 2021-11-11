@@ -8,6 +8,8 @@
 <body>
     <div layout:fragment="content">
             <form class="layui-form joyin-form-wrap pro-module-form" id="informationForm">
+                <input hidden type="text" id="maintainStatus" data-th-value="${entity?.maintainStatus}" style="display:none;">
+                <input hidden type="text" id="registSeqno" data-th-value="${entity?.registSeqno}" style="display:none;">
                 <div class="pro-module-wrapper pro-module-base">
                     <div class="pro-module-wrap">
                         <div class="pro-module">

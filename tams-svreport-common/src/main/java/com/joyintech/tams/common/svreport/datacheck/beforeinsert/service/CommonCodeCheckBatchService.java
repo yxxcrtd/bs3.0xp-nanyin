@@ -65,6 +65,7 @@ public class CommonCodeCheckBatchService {
     public void codeCheckCommonOnly(List<Map<String, String>> list, ChbCheckTableInfo tableInfo) {
 
         Set<String> prodRegistCodeList = new HashSet<>();
+        Set<String> prodIdCodeList = new HashSet<>();
 
         Map<String, List<String>> prodRegistCodeMap = new HashMap<>();
         
@@ -85,7 +86,7 @@ public class CommonCodeCheckBatchService {
                 case 个人发行登记表SUB:
                 case 个人发行登记表INFO:
                 case 个人发行登记TMP:
-                    checkPrdoIssue(map, prodRegistCodeList);
+                    checkPrdoIssue(map, prodRegistCodeList,prodIdCodeList);
                     break;
                 case 募集总量登记SUB:
                 case 募集总量登记TMP:
@@ -794,7 +795,7 @@ public class CommonCodeCheckBatchService {
      * 代码检查产品申报登记
      * @param dataMap
      */
-    private  void  checkPrdoIssue(Map<String, String> dataMap,Set<String> prodRegistCodeList) {
+    private  void  checkPrdoIssue(Map<String, String> dataMap,Set<String> prodRegistCodeList,Set<String> prodIdCodeList) {
         String  errMsg=dataMap.getOrDefault("ERRMSG", "");
         // 发行机构代码
         String issuePartyId=dataMap.get("ISSUE_PARTY_ID");
@@ -811,6 +812,13 @@ public class CommonCodeCheckBatchService {
         }
         else{
             prodRegistCodeList.add(prodRegistCode);
+        }
+        //产品代码报文内不可重复
+        if (StringUtil.isNotEmpty(prodId) && prodIdCodeList.contains(prodId)){
+            errMsg +="产品代码报文内不可重复[PROD_ID="+prodId+"];";
+        }
+        else{
+            prodIdCodeList.add(prodId);
         }
 //      // 该产品不存在。
 //      if (StringUtil.isNotEmpty(prodRegistCode)){

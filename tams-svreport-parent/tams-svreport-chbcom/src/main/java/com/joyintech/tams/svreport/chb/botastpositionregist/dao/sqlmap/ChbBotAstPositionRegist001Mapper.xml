@@ -308,14 +308,17 @@
       <select id="selectByRegistNo" resultType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto" 
       parameterType="java.util.List">
 		<include refid="baseInfo"/>
-		<where>
-		   	<if test="registList!=null and registList.size()!=0">
-			   	<foreach collection="registList" item="items" 
-	            		open=" AND TRIM(POS.REGIST_SEQNO) IN (" close=")" separator=",">
-	             		#{items,jdbcType=CHAR}
-	             </foreach> 
-		   	</if>
-		</where>
+		  <where>
+			  <if test="registList!=null and registList.size()!=0">
+				  <foreach collection="registList" item="items" index= "index"
+						   open=" AND TRIM(POS.REGIST_SEQNO) IN (" close=")" separator=",">
+					  <if test="(index % 998) == 0">
+						  null) OR TRIM(POS.REGIST_SEQNO) IN (
+					  </if>
+					  #{items,jdbcType=CHAR}
+				  </foreach>
+			  </if>
+		  </where>
    </select>
    
 </mapper>

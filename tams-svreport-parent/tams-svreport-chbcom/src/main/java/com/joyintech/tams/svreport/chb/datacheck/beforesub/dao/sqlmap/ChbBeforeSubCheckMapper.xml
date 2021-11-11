@@ -15,8 +15,6 @@
 	    and i.operate_mode in ('01','02')
 	    /***监管要求只核查2014年1月1日之后起息的产品**/
 	    AND i.VDATE<![CDATA[>=]]> date '2014-01-01'
-	    and e.MDATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
-	    and e.STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
 	    and e.status!='04'
 	)
 	
@@ -135,7 +133,6 @@
 	left join pi
 	on r.prod_id=pi.prod_id
 	where (r.SUBMIT_FEEDBACK_STATUS !='03' or  r.SUBMIT_FEEDBACK_STATUS is null)
-	and to_char(r.STATUS_DATE,'yyyy-MM-dd')<![CDATA[<=]]>to_char(#{checkdate,jdbcType=DATE},'yyyy-MM-dd')
 	  <if test="checkKeys!=null and checkKeys.size()!=0">
 
 		  <foreach item="keys" index="index" collection="checkKeys" open="and r.REGIST_SEQNO in(" separator="," close=")">
@@ -173,7 +170,6 @@
 	    ,round(min(cast(NVL(CNY_AMT, 0) as float)/( case when num=0 then 1 else nvl(num,1) end )),2) min_price
 	    from chb_invest_trade_sub
 	    where (SUBMIT_FEEDBACK_STATUS !='03' or  SUBMIT_FEEDBACK_STATUS is null)
-	    and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
 	    and status!='04'
 	    and CUR_ASSET_TYPE in('01','02','03','04','05','06','07','08')
 		  <if test="checkKeys!=null and checkKeys.size()!=0">
@@ -234,7 +230,6 @@
 	    on p.asset_code=i.asset_code
 	     and i.SUBMIT_FEEDBACK_STATUS ='03'
 	    where (p.SUBMIT_FEEDBACK_STATUS !='03' or p.SUBMIT_FEEDBACK_STATUS is null)
-	    and p.STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
 
 	)
 	
@@ -273,7 +268,6 @@
 	    on d.prod_id=i.prod_id and i.operate_mode in ('01','02')
 	where 
 	d.status!='04'
-	and d.STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
 	)
 	
 	,pm as(

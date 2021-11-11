@@ -1,13 +1,3 @@
-/*
- * 文件名：MstNaturalPersonValidator.java
- * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
- * 描述：理财资管管理系统V2.0
- * 修改人：xiexinting
- * 修改时间：2018年8月15日
- * 修改内容：新建
- * 系统名称：理财资管管理系统V2.0
- */
-
 package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.validate;
 
 import com.joyintech.background.component.common.check.DataCheckCommonUtil;
@@ -26,14 +16,11 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 自然人管理校验 〈功能详细描述〉
- */
+
 @Component
 public class SalesTransactionMaintenanceValid implements BeanValidator {
     /**

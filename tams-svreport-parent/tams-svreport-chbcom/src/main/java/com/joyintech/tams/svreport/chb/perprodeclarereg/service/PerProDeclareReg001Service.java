@@ -1306,14 +1306,21 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 					//    09/aaa.doc:表示文件夹下文件
 					if (entry.getName().indexOf("/") == entry.getName().lastIndexOf("/")){
 						ChbPrdDeclareRegFileCode chbPrdDeclareRegFileCode = ChbPrdDeclareRegFileCode.genInfoByFolderNo(folderName);
-						if (chbPrdDeclareRegFileCode != null && entry.getSize() > chbPrdDeclareRegFileCode.getFileSize() * 1024 * 1024){
-							fileCheckMsg1.append("文件（" + entry.getName() + "）大小超过" + chbPrdDeclareRegFileCode.getFileSize() + "M。");
+						if (chbPrdDeclareRegFileCode != null &&(
+								entry.getSize() > chbPrdDeclareRegFileCode.getFileSize() * 1024 * 1024||  entry.getSize() == 0)){
+							fileCheckMsg1.append("文件（" + entry.getName() + "）大小超过" + chbPrdDeclareRegFileCode.getFileSize() + "M或为0字节文件");
 							fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
 						}
-						String fileType = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().length());
-						if (chbPrdDeclareRegFileCode != null && chbPrdDeclareRegFileCode.getFileType().indexOf(fileType) < 0){
+						if(entry.getName().lastIndexOf(".")>=0){
+							String fileType = entry.getName().substring(entry.getName().lastIndexOf(".") + 1, entry.getName().length());
+							if (chbPrdDeclareRegFileCode != null && chbPrdDeclareRegFileCode.getFileType().indexOf(fileType) < 0){
+								fileCheckMsg1.append("文件（" + entry.getName() + "）扩展名不对。必须为以下的一种：" + chbPrdDeclareRegFileCode.getFileType() + "。" );
+								fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+							}
+						}else{
 							fileCheckMsg1.append("文件（" + entry.getName() + "）扩展名不对。必须为以下的一种：" + chbPrdDeclareRegFileCode.getFileType() + "。" );
 							fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+							continue;
 						}
 						// add by zhangliang 20210315 上传九大附件时，需要对每个附件的名称进行白名单检查 start
 						String fileName = entry.getName().substring(entry.getName().lastIndexOf("/") + 1, entry.getName().lastIndexOf("."));
