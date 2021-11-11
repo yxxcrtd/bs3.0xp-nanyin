@@ -393,7 +393,12 @@ public class EtrExchangeTrade001Controller extends BaseController{
         // 金融产品其他代码类型
         model.addAttribute("FINPROD_OTH_CODE_TYPE_06", DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
         model.addAttribute("FINPROD_OTH_CODE_TYPE_05", DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
-        
+
+        // add by etliu 20211013 start
+        // TISHKS-5 bug修复：在场内下指令时，资产选了万科之后，出现申购选项，但理论上不应该出现(万科很早就上市了)，我在申报信息维护中也没有看到万科的新股申报
+        model.addAttribute("FINPROD_OTH_CODE_TYPE_07", DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
+        // add by etliu 20211013 end
+
      // 金融产品其他代码类型
         model.addAttribute("WINDTYPEONE_B07", DictCodeList.WIND一级分类_含债券一级分类等_公司债.getValue());
         model.addAttribute("WINDTYPEONE_B13", DictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue());
@@ -1265,5 +1270,22 @@ public class EtrExchangeTrade001Controller extends BaseController{
 //        ajaxResult.setData("2");
          return ajaxResult;
     }
+
+    // add by etliu 20211013 start
+    // TISHKS-5 bug修复：在场内下指令时，资产选了万科之后，出现申购选项，但理论上不应该出现(万科很早就上市了)，我在申报信息维护中也没有看到万科的新股申报
+    /**
+     * 当前选中股票是否存在新股申购期
+     *
+     * @param params 画面参数
+     * @return 当前选中股票是否处在新股申购期
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("isXinGuShenGou")
+    @ResponseBody
+    public String isXinGuShenGou(@RequestParam Map<String, Object> params) {
+        return etrExchangeTrade001Service.isXinGuShenGou(params);
+    }
+    // add by etliu 20211013 end
 }
 	

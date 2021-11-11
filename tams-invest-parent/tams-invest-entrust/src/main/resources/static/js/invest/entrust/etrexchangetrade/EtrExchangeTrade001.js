@@ -1369,11 +1369,33 @@
             }
             // if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.股票
             else if(finprodType2 && finprodType2 == FINPROD_TYPE_TG_F10) {
-                $("#ps_" + currentTab).updateChosenArr({
-                    item: [PS_T01, PS_T02, PS_T04],
-                    chosen: $("#ps_" + currentTab).val(),
-                    disabled: false
-                });
+                // modify by etliu 20211013 start
+                // TISHKS-5 bug修复：在场内下指令时，资产选了万科之后，出现申购选项，但理论上不应该出现(万科很早就上市了)，我在申报信息维护中也没有看到万科的新股申报
+                // $("#ps_" + currentTab).updateChosenArr({
+                //     item: [PS_T01, PS_T02, PS_T04],
+                //     chosen: $("#ps_" + currentTab).val(),
+                //     disabled: false
+                // });
+                var tempParam = {
+                    finprodId: $("#finprodId_" + currentTab).val()
+                };
+                Joyin.ajax(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/isXinGuShenGou', tempParam,
+                    function(res) {
+                        if (res == YES_OR_NO_Y) {
+                            $("#ps_" + currentTab).updateChosenArr({
+                                item: [PS_T04],
+                                chosen: PS_T04,
+                                disabled: true
+                            });
+                        } else {
+                            $("#ps_" + currentTab).updateChosenArr({
+                                item: [PS_T01, PS_T02],
+                                chosen: $("#ps_" + currentTab).val(),
+                                disabled: false
+                            });
+                        }
+                    });
+                // modify by etliu 20211013 end
             }
             // if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.债券
             else if(finprodType2 && finprodType2 == FINPROD_TYPE_TG_F01) {
