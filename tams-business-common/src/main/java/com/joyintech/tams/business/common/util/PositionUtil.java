@@ -55,7 +55,7 @@ public class PositionUtil {
                     StringBuffer strb = null;
                     Map responseMap_data = (Map) data.get("data");
                     if (responseMap_data != null){
-                        strb = new StringBuffer("当前【");
+                        strb = new StringBuffer("当前【\n");
                         List checkResults = (List) responseMap_data.get("checkResults");
                         if (checkResults != null) {
                             for (int i=0; i<checkResults.size();i++){
@@ -66,9 +66,9 @@ public class PositionUtil {
                                 strb.append(PORTFOLIO_ID);
                                 strb.append("余额为");
                                 strb.append(CHECKBALANCE);
-                                strb.append("【");
+                                strb.append("元【");
                                 strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
-                                strb.append("】不足");
+                                strb.append("】不足\n");
                             }
                         }
                         strb.append("】，请确认是否继续？");
