@@ -129,6 +129,10 @@ public class CfetsEtrIbfindEtrinfoResponse {
     @ApiModelProperty(name="calculateField",value="计算方式",example="price")
     private String  calculateField;
 
+    @ApiModelProperty(name="wflExist",value="是否流程中数据",example="Y")
+    private String  wflExist;
+
+
     public String getEffectiveStatus() {
         return effectiveStatus;
     }
@@ -444,5 +448,13 @@ public class CfetsEtrIbfindEtrinfoResponse {
 
     public void setEtrDate(String etrDate) {
         this.etrDate = etrDate;
+    }
+
+    public String getWflExist() {
+        return wflExist;
+    }
+
+    public void setWflExist(String wflExist) {
+        this.wflExist = wflExist;
     }
 }
