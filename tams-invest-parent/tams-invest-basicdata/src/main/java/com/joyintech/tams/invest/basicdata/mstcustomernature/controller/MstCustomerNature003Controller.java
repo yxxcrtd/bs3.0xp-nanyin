@@ -12,12 +12,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.basicdata.msttradeopponent.dto.MstTradeOpponentDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import org.apache.commons.collections.CollectionUtils;
 import org.h2.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -286,8 +288,22 @@ public class MstCustomerNature003Controller extends BaseController {
 //    	if(status > 0){
 //    		 return new AjaxResult("该客户已有在流程中的数据！", MessageType.错误消息);
 //    	}
-//    	
-    	
+//
+       if (CollectionUtils.isNotEmpty( dto.getSelectedItem())) {
+           List<MstCustomerNatureDto> mstCustomerNatureDtoList =  dto.getSelectedItem().stream()
+                   .filter(item->StringUtil.equals(item.getCustomerCharater(),DictCodeListExt3.客户性质_交易对手.getValue())).collect(Collectors.toList());
+           if (CollectionUtils.isEmpty(mstCustomerNatureDtoList)) {
+               int status = mstCustomerNatureService.selectCounter(dto.getCustomerId());
+               if (status > 0) {
+                   return new AjaxResult("选择的记录已经被使用，不允许删除客户性质为交易对手的记录！", MessageType.错误消息);
+               }
+           }
+       }else{
+           int status = mstCustomerNatureService.selectCounter(dto.getCustomerId());
+           if (status > 0) {
+               return new AjaxResult("选择的记录已经被使用，不允许删除客户性质为交易对手的记录！", MessageType.错误消息);
+           }
+       }
         if (WorkFlowUtil.isNotFromToDoList()) {
             
             ProcessMark processMark = new ProcessMark();

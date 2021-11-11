@@ -170,5 +170,17 @@ class MstCustomerNatureController  {
         int num = mstCustomerNatureService.checkwflstatus(param);
         return num;
     }
-    
+
+    /**
+     * 统计
+     * <功能详细描述>
+     * @param counterId id
+     * @return 统计结果
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/selectCounter")
+    public int selectCounter(@RequestBody String counterId) {
+        return mstCustomerNatureService.selectCounter(counterId);
+    }
 }
