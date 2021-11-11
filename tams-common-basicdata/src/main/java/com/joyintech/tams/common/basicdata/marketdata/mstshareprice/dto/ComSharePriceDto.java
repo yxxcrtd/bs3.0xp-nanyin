@@ -364,4 +364,14 @@ public class ComSharePriceDto extends MstSharePrice implements ITableRow,Process
 	public BigDecimal getPb() {
 		return super.getPb();
 	}
+
+	private String processState;
+
+	public String getProcessState() {
+		return processState;
+	}
+
+	public void setProcessState(String processState) {
+		this.processState = processState;
+	}
 }
