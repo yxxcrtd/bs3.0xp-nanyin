@@ -553,7 +553,7 @@ public class EtrProjectDto extends EtrEntrust implements ProcessEntity {
      * @return 投资目的
      */
     @Override
-//    @NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
     public String getInvAim() {
         return super.getInvAim();
     }

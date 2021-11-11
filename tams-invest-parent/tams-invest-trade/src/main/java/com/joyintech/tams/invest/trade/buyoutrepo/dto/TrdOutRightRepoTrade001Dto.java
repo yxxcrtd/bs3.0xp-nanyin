@@ -10,9 +10,11 @@
 
 package com.joyintech.tams.invest.trade.buyoutrepo.dto;
 
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
@@ -158,7 +160,7 @@ public class TrdOutRightRepoTrade001Dto extends TrdProductDeal {
 	}
 
 	public BigDecimal getfYield() {
-		return fYield;
+		return ArithmeticUtil.round(fYield,4, RoundingMode.HALF_UP);
 	}
 
 	public void setfYield(BigDecimal fYield) {
@@ -174,7 +176,7 @@ public class TrdOutRightRepoTrade001Dto extends TrdProductDeal {
 	}
 
 	public BigDecimal getmYield() {
-		return mYield;
+		return ArithmeticUtil.round(mYield,4, RoundingMode.HALF_UP);
 	}
 
 	public void setmYield(BigDecimal mYield) {

@@ -140,7 +140,7 @@ public class ExchangeTransMatchFund1Service extends BaseService {
         // ∑成交数据明细.交易金额
         trdProductDeal.setTradeAmt(entrustDto.getMarchAmt());
         // 全价总额
-        trdProductDeal.setFpriceAmt(ArithmeticUtil.multiply(entrustDto.getMarchQty(),settleTransData.getFpriceAmt()));
+        trdProductDeal.setFpriceAmt(entrustDto.getMarchAmt());
         // 未随交易支付费用
         trdProductDeal.setFeeAmtUnpay(entrustDto.getMarchFeeAmtUnPay());
         // 总交易费用
