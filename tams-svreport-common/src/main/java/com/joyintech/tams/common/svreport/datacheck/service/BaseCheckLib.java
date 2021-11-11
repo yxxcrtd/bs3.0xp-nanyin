@@ -956,6 +956,34 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
 
         return ret;
     }
+
+    /**
+     * 中债日期校验 只校验yyyyMMdd和yyyy-MM-dd格式
+     * @param data 被检查的数据
+     * @param rule 检查规则实体，年:小写，月:大写，日:小写，时:大写,分:小写，秒:小写
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public static boolean isValidDate3(Map<String, String> data, CheckElement rule) {
+        boolean ret = false;
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+            return true;
+        if ( StringUtils.isEmpty(srcValue) )
+            return false;
+        try {
+            if(com.joyintech.tams.report.interf.common.constant.DateUtil.isDateStr(srcValue,true)
+                    ||com.joyintech.tams.report.interf.common.constant.DateUtil.isDateStrE(srcValue,true)){
+                ret = true;
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+            ret = false;
+        }
+
+        return ret;
+    }
     
     /**
      * 根据指定的规则，判断日期数据是否是指定的格式 

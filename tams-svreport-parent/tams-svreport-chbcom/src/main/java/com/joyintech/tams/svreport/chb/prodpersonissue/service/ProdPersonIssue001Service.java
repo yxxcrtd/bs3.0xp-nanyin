@@ -519,7 +519,7 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
         Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(
                  JoyinCollectors.groupingBy(x -> x.getProdId()));
         //检查数据
-        List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkProdIssueReg(checkdate,null,mapRuleout);
+        List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkProdIssueReg(checkdate,keys,mapRuleout);
         //报错检查异常数据
         int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
 		int batchLastIndex = batchCount;// 每批最后一个的下标

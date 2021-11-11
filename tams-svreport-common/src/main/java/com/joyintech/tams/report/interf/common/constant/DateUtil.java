@@ -656,6 +656,35 @@ public class DateUtil extends DateUtils {
         }
         return true;
     }
+    /**
+     * 主要功能:判断字符串是否为日期 注意事项:无
+     *
+     * @param str 日期字符串 yyyy-MM-dd
+     * @return 是否
+     */
+    public static boolean isDateStr(String str,boolean lenient) {
+        SimpleDateFormat format = new SimpleDateFormat(DEFAULT_DATE_FORMAT_EN);
+        try {
+            format.setLenient(lenient);
+            format.parse(str);
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isDateStrE(String str,boolean lenient) {
+        SimpleDateFormat format = new SimpleDateFormat(DEFAULT_OTHER_FORMAT);
+        try {
+            format.setLenient(lenient);
+            format.parse(str);
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * 主要功能:判断字符串是否为日期 注意事项:无
