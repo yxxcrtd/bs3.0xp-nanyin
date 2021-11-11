@@ -963,7 +963,7 @@ from
     </sql>
     <sql id="onlyWtfEtrEntrust">
         select
-        '流程中' as effectiveStatusName,
+        decode(T1.ENTRUST_STATUS,'08','流程中','有效') as effectiveStatusName,
         T1.ENTRUST_ID entrustId,
         T1.ENTRUST_STATUS entrustStatus,
         T8.REAL_NAME invManagerId,

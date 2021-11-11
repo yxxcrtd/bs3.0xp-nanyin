@@ -1402,8 +1402,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(!StringUtil.isNotEmpty(allDto.getPs())){
             messages.add("请输入交易方向。");
         }
-        if(!StringUtil.isNotEmpty(allDto.getSettleSpeed()))
-            messages.add("请输入清算速度！");
+        if(StringUtil.isNotEmpty(allDto.getPs())
+                && !StringUtil.equals(allDto.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())
+                && !StringUtil.isNotEmpty(allDto.getSettleSpeed())
+        ){
+           messages.add("请输入清算速度！");
+        }
         if(!StringUtil.isNotEmpty(allDto.getPriceModel())){
             messages.add("请输入价格模式！");
         }

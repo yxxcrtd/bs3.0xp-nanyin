@@ -41,7 +41,7 @@ public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
     @ApiModelProperty(name="etrDate",value="指令日期",example="2021-07-06", required = true)
     private Date etrDate;
 
-    @ApiModelProperty(name="settleSpeed",value="清算速度Code",example="1", required = true)
+    @ApiModelProperty(name="settleSpeed",value="清算速度Code",example="1")
     private String settleSpeed;
 
     @ApiModelProperty(name="price",value="净价",example="1")

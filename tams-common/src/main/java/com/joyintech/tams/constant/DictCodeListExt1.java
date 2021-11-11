@@ -905,6 +905,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	交易状态_修改(DictCode.交易状态,"02","修改"),
 	交易状态_撤销(DictCode.交易状态,"03","撤销"),
 	交易场所_银行间(DictCode.交易场所,"01","银行间"),
+	交易场所_商业银行柜台(DictCode.交易场所,"02","商业银行柜台"),
 	交易场所_上海证券交易所(DictCode.交易场所,"03","上海证券交易所"),
 	交易场所_深圳证券交易所(DictCode.交易场所,"04","深圳证券交易所"),
 	交易场所_机构间私募系统(DictCode.交易场所,"05","机构间私募系统"),
