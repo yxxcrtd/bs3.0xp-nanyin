@@ -207,6 +207,10 @@ public class EtrIbBondinfo001Dto extends BaseEntity {
         return SysDataUtil.getNameFromDataDict(DictCode.委托状态, getEntrustStatus());
     }
 
+    public String getEffectiveStatusStr(){
+        return getEntrustStatusName()=="流程中"?"流程中":"有效";
+    }
+
     public String getPriceModelName(){
         if (StringUtil.isEmpty(getPriceModel())) {
             return null;
