@@ -29,6 +29,11 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
     private String dataStatus;// 数据状态
     private String bankCode;// 登记银行代码
     private String registSeqno;//主键uuid
+    private String maintainStatus;//报送信息维护状态
+    /**
+     * 错误信息
+     */
+    private String errMsg;
     /**
      * 机构代码
      */
@@ -101,7 +106,7 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
     /**
      * 销售结算资金交易时间
      */
-    private Date tradeTime;
+    private String tradeTime;
 
     /**
      * 销售结算资金交易附言
@@ -282,11 +287,11 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
         this.tradeAmt = tradeAmt;
     }
 
-    public Date getTradeTime() {
+    public String getTradeTime() {
         return tradeTime;
     }
 
-    public void setTradeTime(Date tradeTime) {
+    public void setTradeTime(String tradeTime) {
         this.tradeTime = tradeTime;
     }
 
@@ -330,5 +335,24 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
     }
     public String getTradeCcyName() {
         return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getTradeCcy());
+    }
+    public String getMaintainStatusName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.中债一二三期文件处理状态, this.getMaintainStatus());
+    }
+
+    public String getMaintainStatus() {
+        return maintainStatus;
+    }
+
+    public void setMaintainStatus(String maintainStatus) {
+        this.maintainStatus = maintainStatus;
+    }
+
+    public String getErrMsg() {
+        return errMsg;
+    }
+
+    public void setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
     }
 }

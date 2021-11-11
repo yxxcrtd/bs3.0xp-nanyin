@@ -65,11 +65,19 @@ public class SalesTransactionMaintenance002Service extends BaseService{
          return null;
     }
     /**
-     * 双击查看详细信息查询 修改页面信息查询
+     * 双击查看详细信息查询 修改页面信息查询 info
      *
      */
     public SalesTransactionMaintenanceDto selectDetail(Map<String,Object> param) {
         return salestransactionmaintenanceMapper.selectDetail(param);
+    }
+
+    /**
+     * 双击查看详细信息查询 修改页面信息查询 erro
+     *
+     */
+    public SalesTransactionMaintenanceDto selectErroDetail(Map<String,Object> param) {
+        return salestransactionmaintenanceMapper.selectErroDetail(param);
     }
 
     /**
@@ -78,8 +86,7 @@ public class SalesTransactionMaintenance002Service extends BaseService{
      */
     public void save(SalesTransactionMaintenanceDto dto) {
         Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
-        dto.setRegistSeqno(UUID.randomUUID().toString().replace("-","").toUpperCase());
-        dto.setReceptDate(sysDate);
+        dto.setRegistSeqno(UUID.randomUUID().toString().replace("-", "").toUpperCase());
         dto.setDataStatus("E");
         salestransactionmaintenanceMapper.insert(dto);
     }
@@ -90,23 +97,38 @@ public class SalesTransactionMaintenance002Service extends BaseService{
      */
     public void update(SalesTransactionMaintenanceDto dto) {
         dto.setDataStatus("M");
+        if(dto.getMaintainStatus().equals("01") || dto.getRegistSeqno().isEmpty()) {
+            dto.setRegistSeqno(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+        }
         salestransactionmaintenanceMapper.update(dto);
     }
 
     /**
-     * 删除
+     * 删除erro
      */
     public boolean deleteByPrimaryKey(SalesTransactionMaintenanceDto dto){
         List<SalesTransactionMaintenanceDto> dtolist = dto.getSelectedItem();
-        List<String> registSeqnoList = new ArrayList<>();
-        if(!dtolist.isEmpty()) {
-            for (SalesTransactionMaintenanceDto entity : dtolist) {
-                registSeqnoList.add(entity.getRegistSeqno());
+        if (!dtolist.isEmpty() && dtolist.size() != 0) {
+            for (int i = 0 ; i < dtolist.size() ; i++) {
+                String institutionCode = dtolist.get(i).getInstitutionCode();
+                String tradeNo = dtolist.get(i).getTradeNo();
+                salestransactionmaintenanceMapper.deleteByPrimaryKey(institutionCode,tradeNo);
             }
+            return true;
         }
-        if (!registSeqnoList.isEmpty()) {
-            for (String registSeqno : registSeqnoList) {
-                salestransactionmaintenanceMapper.deleteByPrimaryKey(registSeqno);
+        return false;
+    }
+
+    /**
+     * 删除info
+     */
+    public boolean deleteInfo(SalesTransactionMaintenanceDto dto){
+        List<SalesTransactionMaintenanceDto> dtolist = dto.getSelectedItem();
+        if (!dtolist.isEmpty() && dtolist.size() != 0) {
+            for (int i = 0 ; i < dtolist.size() ; i++) {
+                String institutionCode = dtolist.get(i).getInstitutionCode();
+                String tradeNo = dtolist.get(i).getTradeNo();
+                salestransactionmaintenanceMapper.deleteInfo(institutionCode,tradeNo);
             }
             return true;
         }

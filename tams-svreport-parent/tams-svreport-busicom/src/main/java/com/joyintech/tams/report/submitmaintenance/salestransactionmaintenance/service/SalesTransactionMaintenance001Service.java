@@ -248,6 +248,17 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             if(list.get(13) == null || list.get(13).trim().equals("")){
                 flag = false;
                 message.add("销售结算资金交易时间不能为空");
+            }else if(!(list.get(13) == null || list.get(13).trim().equals(""))){
+                if (!checkFigure(list.get(13))) {
+                    flag = false;
+                    message.add("销售结算资金交易时间不是数字");
+                }
+            }else {
+                int a = Integer.parseInt(list.get(13));
+                if(a > 235959){
+                    flag = false;
+                    message.add("销售结算资金交易时间格式不对");
+                }
             }
             //数据状态
             if(list.get(16) == null || list.get(16).trim().equals("")){
@@ -294,7 +305,7 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
                 //估值日
                 entity.setTradeVdate(DateUtil.parse(list.get(12)));
                 //销售结算资金交易时间
-                entity.setTradeTime(DateUtil.parse(list.get(13)));
+                entity.setTradeTime(list.get(13));
                 //销售结算资金交易附言
                 if(StringUtils.isNotEmpty(list.get(14))){
                     entity.setPostscript(list.get(14));
