@@ -86,6 +86,10 @@
                 });
             }
         }
+        if(!$('#invAim').val()){
+            Joyin.error("请输入投资目的");
+            return;
+        }
         // if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
         //     if(object.businessModel=="Y1"){
         //         object.invAim = 'AC';
