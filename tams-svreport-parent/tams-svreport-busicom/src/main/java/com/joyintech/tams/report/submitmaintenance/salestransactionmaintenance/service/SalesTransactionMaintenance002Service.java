@@ -99,6 +99,9 @@ public class SalesTransactionMaintenance002Service extends BaseService{
         dto.setDataStatus("M");
         if(dto.getMaintainStatus().equals("01") || dto.getRegistSeqno().isEmpty()) {
             dto.setRegistSeqno(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+            String institutionCode = dto.getInstitutionCode();
+            String tradeNo = dto.getTradeNo();
+            salestransactionmaintenanceMapper.deleteByPrimaryKey(institutionCode,tradeNo);
         }
         salestransactionmaintenanceMapper.update(dto);
     }
