@@ -1016,7 +1016,7 @@ from
 
 		union all
 		select
-		table2.*,ifnull(table2.portfolioId,,'null')||','||'2'||','||table2.finprodId||','||DATE_FORMAT(table2.settleDate,'%Y-%m-%d')||','||table2.secAcctId
+		table2.*,ifnull(table2.portfolioId,'null')||','||'2'||','||table2.finprodId||','||DATE_FORMAT(table2.settleDate,'%Y-%m-%d')||','||table2.secAcctId
 		from (
 		SELECT
 		'root' parentInfo,
