@@ -127,7 +127,7 @@ public class CfetsEtrIbBondPosinfo001Dto{
     }
 
     public String getSecType1Name() {
-        return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用, getSecType1());        
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类, getSecType1());        
     }
 
     public void setSecType1Name(String secType1Name) {
