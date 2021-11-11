@@ -1140,10 +1140,10 @@ from
         select
         tt.portfolio_id as portfolioId,
         tt.inv_aim as businessModel,
-        tt.entrustNum as entrustNum
+        nvl(tt.entrustNum,0)/10000 as entrustNum
         from
         (select a.portfolio_id,a.finprod_id,a.inv_aim,
-        sum(case when b.S_HOLDINGTYPE =#{S_001} then a.AMOUNT else 0 end) as entrustNum
+        sum(CASE WHEN b.S_HOLDINGTYPE=#{S_001} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) as entrustNum
         from ETR_SEC_POSITION_RULE a
         LEFT JOIN PTL_POSITION_CFG b
         ON a.HODING_TYPE = b.HOLDINGTYPE

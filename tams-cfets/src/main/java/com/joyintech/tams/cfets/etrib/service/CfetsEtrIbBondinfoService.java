@@ -1441,14 +1441,18 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         //根据卖空模式对本方券和融入券/卖空购回券面总额进行赋值
         String shortSellingSupported=CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
         if(StringUtil.equals(shortSellingSupported,"02")){
-            if(allDto.getEntrustOwnNum().compareTo(entrustOwnNum)!=0){
+            if(StringUtil.isNotEmpty(allDto.getEntrustOwnNum()) && allDto.getEntrustOwnNum().compareTo(entrustOwnNum)!=0){
                 messages.add("组合分配中各组合本方券券面总额之和必须等于基本信息中本方券券面总额。");
             }
-            if(allDto.getEntrustIntegrateNum().compareTo(entrustIntegrateNum)!=0){
+            if(StringUtil.isNotEmpty(allDto.getEntrustIntegrateNum()) && allDto.getEntrustIntegrateNum().compareTo(entrustIntegrateNum)!=0){
                 messages.add("组合分配中各组合卖空购回券面总额之和必须等于基本信息中卖空购回券面总额。");
             }
-            if(allDto.getTradeAmt().compareTo(ArithmeticUtil.doAdd(allDto.getEntrustOwnNum(),allDto.getEntrustIntegrateNum()))!=0){
-                messages.add("基本信息中券面总额必须等于基本信息中本方券券面总额和卖空购回券面总额之和。");
+            if(StringUtil.isNotEmpty(allDto.getEntrustOwnNum()) && StringUtil.isNotEmpty(allDto.getEntrustIntegrateNum())
+               &&  StringUtil.isNotEmpty(allDto.getTradeAmt())
+            ){
+                if(allDto.getTradeAmt().compareTo(ArithmeticUtil.doAdd(allDto.getEntrustOwnNum(),allDto.getEntrustIntegrateNum()))!=0){
+                    messages.add("基本信息中券面总额必须等于基本信息中本方券券面总额和卖空购回券面总额之和。");
+                }
             }
         }
         //指令日期若是节假日，不可以保存、提交
