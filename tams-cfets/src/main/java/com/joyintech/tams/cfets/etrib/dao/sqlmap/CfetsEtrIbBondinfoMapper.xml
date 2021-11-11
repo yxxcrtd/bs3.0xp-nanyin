@@ -350,12 +350,12 @@ from
             c.TYPE_8 as secType1, /*债券一级分类code*/
             etrptl.INV_AIM as busiModel,  /*业务模式code*/
             /*指令汇总可用持仓、指令可质押持仓、指令已质押持仓*/
-            ROUND(etrptl.ETR_SUM_KYCC,2) as etrPledgePrin,
-            ROUND(etrptl.ETR_PLEDGE_KZYCC,2) as etrAvaPledgePrin,
-            ROUND(etrptl.ETR_PLEDGE_YZYCC,2) as etrAlrPledgePrin,
+            ROUND(etrptl.ETR_SUM_KYCC/10000,2) as etrPledgePrin,
+            ROUND(etrptl.ETR_PLEDGE_KZYCC/10000,2) as etrAvaPledgePrin,
+            ROUND(etrptl.ETR_PLEDGE_YZYCC/10000,2) as etrAlrPledgePrin,
             /*交易可用券面总额、交易在途券面总额*/
-            ROUND(etrptl.PTL_BOND_BFQKYCC,2) as trdAvaShareAmt,
-            ROUND(etrptl.PTL_BOND_BFQZTCC,2) as trdIntransShareAmt,
+            ROUND(etrptl.PTL_BOND_BFQKYCC/10000,2) as trdAvaShareAmt,
+            ROUND(etrptl.PTL_BOND_BFQZTCC/10000,2) as trdIntransShareAmt,
             /* 1持仓成本 service从map查询 */
             null as positionsAmt,
             /* 2持仓单位成本 service从map查询*/
@@ -367,7 +367,7 @@ from
             /* 5浮动盈亏 =持仓市值-持仓成本 service中算*/
             null as floatingPL,
             /* 账户持仓 */
-            etrptl.PTL_BOND_ZHCC as accountPosition
+            etrptl.PTL_BOND_ZHCC/10000 as accountPosition
             FROM (
                 SELECT
                 (CASE WHEN aa.PORTFOLIO_ID IS NULL THEN bb.PORTFOLIO_ID ELSE aa.PORTFOLIO_ID END ) AS PORTFOLIO_ID,

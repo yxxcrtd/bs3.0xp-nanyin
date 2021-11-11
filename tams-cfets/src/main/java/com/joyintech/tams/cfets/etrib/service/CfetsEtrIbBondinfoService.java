@@ -564,7 +564,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId() + r.getBusiModel());
                 if (dto != null){
                     // 1.持仓成本（万元）
-                    r.setPositionsAmt(dto.getBuyCostAmt());
+                    r.setPositionsAmt(ArithmeticUtil.divide(dto.getBuyCostAmt(), BigDecimal.valueOf(10000), 2));
                     // 2.持仓成本价（元） 取单位成本
                     r.setUnitCost(dto.getUnitCost());
                 }
