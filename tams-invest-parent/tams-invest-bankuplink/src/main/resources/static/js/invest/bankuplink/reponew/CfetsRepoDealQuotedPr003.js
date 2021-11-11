@@ -717,6 +717,9 @@
             if (param[0].price) {
                 $("#CfetsRepoDealQuotedPrice002_price").val(param[0].price).trigger("change");
             }
+            if (param[0].mySide) {
+                $("#CfetsRepoDealQuotedPrice002_mySide").textSelect('setValue', param[0].mySide);
+            }
             /*添加限制*/
             $("#CfetsRepoDealQuotedPrice002_tradeDate").attr("disabled",true);
             $("#CfetsRepoDealQuotedPrice002_ps").attr("disabled",true);
