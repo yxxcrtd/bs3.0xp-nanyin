@@ -1417,7 +1417,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
         }
         List<CfetsBussCombDistribtDto> dtoList=allDto.getBussCombDistribtList();
+        //券面总额
         BigDecimal entrustNum=BigDecimal.ZERO;
+        //本方券券面总额
+        BigDecimal entrustOwnNum=BigDecimal.ZERO;
+        //卖空购回券面总额
+        BigDecimal entrustIntegrateNum=BigDecimal.ZERO;
+
         for(int i = 0; i< dtoList.size(); i++) {
             if(!StringUtil.isNotEmpty(dtoList.get(i).getPortfolioId()))
                 messages.add("请输入组合代码(第"+(i+1)+"行)。");
@@ -1426,9 +1432,24 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             if(!StringUtil.isNotEmpty(dtoList.get(i).getBusinessModel()))
                 messages.add("请输入业务模式(第"+(i+1)+"行)。");
             entrustNum=ArithmeticUtil.doAdd(entrustNum,dtoList.get(i).getEntrustNum());
+            entrustOwnNum=ArithmeticUtil.doAdd(entrustOwnNum,dtoList.get(i).getEntrustOwnNum());
+            entrustIntegrateNum=ArithmeticUtil.doAdd(entrustIntegrateNum,dtoList.get(i).getEntrustIntegrateNum());
         }
         if(allDto.getTradeAmt().compareTo(entrustNum)!=0){
             messages.add("组合分配中各组合券面总额之和必须等于基本信息中券面总额。");
+        }
+        //根据卖空模式对本方券和融入券/卖空购回券面总额进行赋值
+        String shortSellingSupported=CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
+        if(StringUtil.equals(shortSellingSupported,"02")){
+            if(allDto.getEntrustOwnNum().compareTo(entrustOwnNum)!=0){
+                messages.add("组合分配中各组合本方券券面总额之和必须等于基本信息中本方券券面总额。");
+            }
+            if(allDto.getEntrustIntegrateNum().compareTo(entrustIntegrateNum)!=0){
+                messages.add("组合分配中各组合卖空购回券面总额之和必须等于基本信息中卖空购回券面总额。");
+            }
+            if(allDto.getTradeAmt().compareTo(ArithmeticUtil.doAdd(allDto.getEntrustOwnNum(),allDto.getEntrustIntegrateNum()))!=0){
+                messages.add("基本信息中券面总额必须等于基本信息中本方券券面总额和卖空购回券面总额之和。");
+            }
         }
         //指令日期若是节假日，不可以保存、提交
         FinProduct fp=cfetsetrIbBondinfoMapper.findAssetInfo(allDto.getFinprodId());
@@ -1762,7 +1783,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         Map<String, Object> param =new HashMap<>();
         param.put("platDate",DateUtil.platDateFromCache());
-        param.put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue());
+        param.put("S_001", DictCodeListExt3.资产类型_指令汇总可用持仓.getValue());
         param.put("finprodId",secId);
         String userId = SecurityUtil.getLoginUser().getUserName();
         if (StringUtils.isNotEmpty(userId)) {

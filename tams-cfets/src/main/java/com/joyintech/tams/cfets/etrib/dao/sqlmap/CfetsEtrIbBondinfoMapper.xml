@@ -963,7 +963,7 @@ from
     </sql>
     <sql id="onlyWtfEtrEntrust">
         select
-        decode(T1.ENTRUST_STATUS,'08','流程中','有效') as effectiveStatusName,
+        '流程中' as effectiveStatusName,
         T1.ENTRUST_ID entrustId,
         T1.ENTRUST_STATUS entrustStatus,
         T8.REAL_NAME invManagerId,
@@ -1037,7 +1037,6 @@ from
         where
         T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
         and T1.TRADE_MARKET = #{TRADE_MARKET_01}
-        and T1.ENTRUST_STATUS= #{ENTRUST_STATUS_08}
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND T1.portfolio_id in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
@@ -1144,8 +1143,11 @@ from
         tt.entrustNum as entrustNum
         from
         (select a.portfolio_id,a.finprod_id,a.inv_aim,
-        sum(case when a.HODING_TYPE =#{A_004} then a.AMOUNT else 0 end)/100 as entrustNum
-        from ptl_sec_position_rule a
+        sum(case when b.S_HOLDINGTYPE =#{S_001} then a.AMOUNT else 0 end) as entrustNum
+        from ETR_SEC_POSITION_RULE a
+        LEFT JOIN PTL_POSITION_CFG b
+        ON a.HODING_TYPE = b.HOLDINGTYPE
+        AND b.S_HOLDINGTYPE =#{S_001}
         inner join ptl_portfolio_authority ppa
         on a.portfolio_id=ppa.portfolio_id
         <if test="userId != null and userId != ''">
@@ -1154,7 +1156,7 @@ from
         where a.cdate= #{platDate}
         and a.finprod_id=#{finprodId,jdbcType=VARCHAR}
         group by  a.portfolio_id,a.finprod_id,a.inv_aim)tt
-        where tt.entrustNum!=0
+        where tt.entrustNum>0
     </select>
 
 

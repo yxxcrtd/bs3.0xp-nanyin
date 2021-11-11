@@ -196,11 +196,11 @@
         on p.finprod_id=T1.finprod_id
         and p.finprod_id=ptl.finprod_id
         left join (
-            select row_number() over(partition by pd.finprod_id order by pd.exercise_date desc) idx,
+            select row_number() over(partition by pd.finprod_id order by pd.exercise_date) idx,
             pd.finprod_id,
             pd.exercise_price as price
             from FIN_EXERCISE_PLAN pd
-            where pd.exercise_date<![CDATA[>=]]>#{platDate}
+            where pd.exercise_date<![CDATA[>]]>#{platDate}
         )pr
         on pr.finprod_id=T1.finprod_id
         and pr.finprod_id=ptl.finprod_id
@@ -212,7 +212,7 @@
             AND T1.TRADE_MARKET in(#{TRADE_PLACE_01})
             and  T1.is_right='Y'
             and  ptl.cdate=#{platDate}
-            and p.exercise_date>=#{platDate}
+            and p.exercise_date>#{platDate}
             and ptl.amount>0
             <if test="search != null and !search.equals('')">
                 and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
