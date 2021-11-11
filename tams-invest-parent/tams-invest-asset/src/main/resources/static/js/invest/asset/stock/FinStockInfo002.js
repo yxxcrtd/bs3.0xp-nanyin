@@ -382,10 +382,15 @@ var QueryFunc = function () {
 
     }
     var getCalendarId = function(){
+        if ($('#tradeMarket').val()) {
             Joyin.ajax(basePath + 'invest/asset/stock/FinStockInfo002/getCalendarId?tradeMarket=' + $('#tradeMarket').val(),'' , function(result){
-               // $('#calendarId').val(result.data[0].code);
+                // $('#calendarId').val(result.data[0].code);
                 $('#calendarId').textSelect("setValue",result.data[0].code);
             });
+        }
+        else{
+            $("#calendarId").empty();
+        }
     };
 
     /**
@@ -421,7 +426,7 @@ var QueryFunc = function () {
                 $('#isMarginFinprod').attr('disabled',false);
                 $('#ccy').val('CNY').trigger('change');
             }
-			
+
             if ($('#tradeMarket').val() == '13') {//香港联合交易所
                 $('#shOrZh_div').show();
                 $('#minSaleUnit_div').show();
@@ -438,10 +443,12 @@ var QueryFunc = function () {
         $('#magnifier').click(getInterfStockInfo);
 		
         $('#shOrZh').change(function(){
-            Joyin.ajax(basePath + 'invest/asset/stock/FinStockInfo002/getCalendarId2?tradeMarket=' + $('#shOrZh').val(),'' , function(result){
-                // $('#calendarId').val(result.data[0].code);
-                $('#calendarId').textSelect("setValue",result.data[0].code);
-            });
+            if ($('#shOrZh').val()) {
+                Joyin.ajax(basePath + 'invest/asset/stock/FinStockInfo002/getCalendarId2?tradeMarket=' + $('#shOrZh').val(),'' , function(result){
+                    // $('#calendarId').val(result.data[0].code);
+                    $('#calendarId').textSelect("setValue",result.data[0].code);
+                });
+            }
         });
 		
         //typeSelect();
