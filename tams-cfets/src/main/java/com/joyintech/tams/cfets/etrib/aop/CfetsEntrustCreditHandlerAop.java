@@ -3,6 +3,7 @@ package com.joyintech.tams.cfets.etrib.aop;
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
@@ -22,6 +23,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -137,7 +139,14 @@ public class CfetsEntrustCreditHandlerAop {
             Map<String,Object> mapTrd= JsonUtils.object2Map(args[0]);
             //update zhangweiqi 20210119 修改授信begin
             if(args[0] instanceof EtrAutoManagementAccountDto && operationType.equals(OperationType.MODIFY)){
-            	etrCommonService.executeOccupyCreditLines(args[0], DictCodeListExt1.交易状态_撤销.getValue(),"doBack");
+                CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+                //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+                pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
+                pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+                pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
+                EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
+                BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+            	etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_撤销.getValue(),"doBack");
             }
           //update zhangweiqi 20210119 修改授信end
             //add by longpeng 债券一级指令多对多导入不占授信 20201228 start
@@ -149,6 +158,10 @@ public class CfetsEntrustCreditHandlerAop {
                     && (operationType.equals(OperationType.NEW) || operationType.equals(OperationType.MODIFY))) {
 
                 CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+                //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+                pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
+                pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+                pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
                 EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
                 BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
                 etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_初始.getValue(),"doInsert");
@@ -176,7 +189,14 @@ public class CfetsEntrustCreditHandlerAop {
             }
           //add by longpeng 债券一级指令多对多导入不占授信 20201228 end
             if (StringUtil.isNotEmpty(mapTrd.get("operateType"))&& mapTrd.get("operateType").equals("submit")) {
-                etrCommonService.executeOccupyCreditLines(args[0], DictCodeListExt1.交易状态_初始.getValue(),"doUpdate");
+                CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+                //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+                pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
+                pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+                pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
+                EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
+                BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+                etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_初始.getValue(),"doUpdate");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -194,7 +214,14 @@ public class CfetsEntrustCreditHandlerAop {
         }
         try {
             Object[] args = joinPoint.getArgs();
-            etrCommonService.executeOccupyCreditLines(args[0], DictCodeListExt1.交易状态_撤销.getValue(),"doBack");
+            CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+            //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+            pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
+            pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+            pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
+            EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
+            BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+            etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_撤销.getValue(),"doBack");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -206,7 +233,14 @@ public class CfetsEntrustCreditHandlerAop {
         }
         try {
             Object[] args = joinPoint.getArgs();
-            etrCommonService.executeOccupyCreditLines(args[0], DictCodeListExt1.交易状态_撤销.getValue(),"close");
+            CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+            //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+            pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
+            pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+            pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
+            EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
+            BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+            etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_撤销.getValue(),"close");
         }catch (Exception e){
             e.printStackTrace();
         }

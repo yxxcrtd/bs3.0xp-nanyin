@@ -36,6 +36,7 @@ import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingDto;
 import com.joyintech.tams.component.business.basicdata.service.BusiProductRatingService;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
@@ -1465,6 +1466,60 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             String isHoliday = cfetsetrIbBondinfoMapper.getIsHoliday(allDto.getEtrDate(), fp.getCalendarId());
             if(StringUtil.isNotEmpty(isHoliday) && !StringUtil.equals(isHoliday,"0")){
                 messages.add("指令日期必须为交易日。");
+            }
+        }
+        boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));
+        // 授权额度检查（当本金金额高于副总裁/总裁助理相应资产的授权额度时，提示消息） 且不等于赎回
+        TrdProductDeal trdProductDeal = null;
+        String repType = null;
+
+        // 副总裁/总裁助理授权额度检查相关处理
+        String counterId = null;
+        BigDecimal prinAmt = null;
+        String 平安资产类型 = null;
+        String windtypeone = null;
+        String tradeMarket = null;
+        String ps = null;
+        // 资产类型改为授权类型 add by renping 2019-08-06  start
+        String finprodId = null;
+        // 资产类型改为授权类型 add by renping 2019-08-06  end
+        // 资产类型改为授权类型 add by zhangnian 2020-03-04  start
+        String 无标的投管资产类型映射行内资产分类 = null;
+        // 资产类型改为授权类型 add by zhangnian 2019-03-04  end
+        // 无标的投管资产类型映射行内资产分类 inputValue1 inputValue2 inputValue3 add by zhangnian 2020-03-04  start
+        String inputValue1 = null;String inputValue2 = null;String inputValue3 = null;
+        // 无标的投管资产类型映射行内资产分类 inputValue1 inputValue2 inputValue3 add by zhangnian 2019-03-04  end
+        // 债券投资交易
+        if (allDto instanceof CfetsEtribSaveRequest) {
+            CfetsEtribSaveRequest inputDto = (CfetsEtribSaveRequest)allDto;
+            // 修改债券获取金额by赵东东 2019.9.4 start
+            prinAmt = inputDto.getTradeAmt();
+            // 修改债券获取金额by赵东东 2019.9.4 end
+            平安资产类型 = DictCodeList.平安资产类型_债券.getValue();
+            windtypeone = DictCodeList.平安资产类型_债券.getValue();
+            tradeMarket = BussinessDictCodeList.交易场所_银行间.getValue();
+            trdProductDeal = new TrdProductDeal();
+            BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, inputDto);
+            ps = inputDto.getPs();
+            finprodId = inputDto.getFinprodId();
+        }
+
+        if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH),"01") && StringUtil.isEmptyList(messages)
+                && prinAmt != null
+                && (!StringUtil.equals(allDto.getPs()==null? "":allDto.getPs(), DictCodeList.交易方向_赎回.getValue()))) {
+            if (!isAuthorizationSoftcontrol){
+                CommonBusinessService commonBusinessService = SpringContextUtil.getBean(CommonBusinessService.class);
+                Map<String, Object> params = CommonBusinessService.setParams(counterId, prinAmt, LoginUserUtil.getUserName(),
+                        平安资产类型, windtypeone, tradeMarket, ps, finprodId, null);
+                if (commonBusinessService != null && commonBusinessService.是否超过副总额额度_委托用(params)) {
+                    // 交易本金金额超过副总裁/总裁助理授权额度，无法发起交易!
+                    ValidMessage validMessage = new ValidMessage(
+                            // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 start
+                            getMessage("TRD_E_0016","领导"));
+                    // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 end
+                   // validMessageList.add(validMessage);
+                    messages.add("交易本金金额超过领导授权额度，无法发起交易。");
+                }
             }
         }
         if(messages.size()>0) {
