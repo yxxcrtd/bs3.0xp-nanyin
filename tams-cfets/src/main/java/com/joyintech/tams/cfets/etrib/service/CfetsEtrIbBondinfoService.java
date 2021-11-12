@@ -1473,6 +1473,42 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));
         // 授权额度检查（当本金金额高于副总裁/总裁助理相应资产的授权额度时，提示消息） 且不等于赎回
+        if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH),"01") && StringUtil.isEmptyList(messages)
+                && (!StringUtil.equals(allDto.getPs()==null? "":allDto.getPs(), DictCodeList.交易方向_赎回.getValue()))) {
+            if (!isAuthorizationSoftcontrol){
+                if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH_IS_TOTAL), "Y")){
+                    String mess=getEtrLimitSwitch(allDto);
+                    if(StringUtil.isNotEmpty(mess)){
+                        messages.add(mess);
+                    }
+                }else{
+//           		BussinessConstant.是否需要上级审批
+                    List<CfetsBussCombDistribtDto> etribComDistribtDtoList =allDto.getBussCombDistribtList();
+                    for(CfetsBussCombDistribtDto distribt:etribComDistribtDtoList){
+                        CfetsEtribSaveRequest itemDto=new CfetsEtribSaveRequest();
+                        BeanUtil.copyPropertiesIgnoreNull(itemDto,allDto);
+                        itemDto.setTradeAmt(distribt.getEntrustNum());
+                        String mess=getEtrLimitSwitch(itemDto);
+                        if(StringUtil.isNotEmpty(mess)){
+                            //根据组合id查询组合信息
+                            PtlPortfolio pp=cfetsetrIbBondinfoMapper.findPtlInfo(distribt.getPortfolioId());
+                            if(null!=pp){
+                                mess=pp.getPortfolioName().toString()+"组合下"+mess;
+                                messages.add(mess);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(messages.size()>0) {
+            return  StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE);
+        }
+        return null;
+    }
+    private String getEtrLimitSwitch(CfetsEtribSaveRequest allDto){
+        String message=null;
+
         TrdProductDeal trdProductDeal = null;
         String repType = null;
 
@@ -1506,8 +1542,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             ps = inputDto.getPs();
             finprodId = inputDto.getFinprodId();
         }
+        boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));
 
-        if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH),"01") && StringUtil.isEmptyList(messages)
+        if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH),"01")
                 && prinAmt != null
                 && (!StringUtil.equals(allDto.getPs()==null? "":allDto.getPs(), DictCodeList.交易方向_赎回.getValue()))) {
             if (!isAuthorizationSoftcontrol){
@@ -1520,15 +1557,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                             // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 start
                             getMessage("TRD_E_0016","领导"));
                     // 修改超过副总裁的授权额度时报出的message 赵东东 2019.8.27 end
-                   // validMessageList.add(validMessage);
-                    messages.add("交易本金金额超过领导授权额度，无法发起交易。");
+                    // validMessageList.add(validMessage);
+                    message="交易本金金额超过领导授权额度，无法发起交易。";
                 }
             }
         }
-        if(messages.size()>0) {
-            return  StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE);
-        }
-        return null;
+        return  message;
     }
     /**
      * 保存提交时check检查
