@@ -1141,6 +1141,7 @@ from
     <select id="queryCfetsBussCombDisList" parameterType="Map" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsBussCombDistribtBaseDto">
         select
         tt.portfolio_id as portfolioId,
+        pp.portfolio_name portfolioName，
         tt.inv_aim as businessModel,
         nvl(tt.entrustNum,0)/10000 as entrustNum
         from
@@ -1158,6 +1159,8 @@ from
         where a.cdate= #{platDate}
         and a.finprod_id=#{finprodId,jdbcType=VARCHAR}
         group by  a.portfolio_id,a.finprod_id,a.inv_aim)tt
+        left join PTL_PORTFOLIO pp
+        on pp.portfolio_id=tt.portfolio_id
         where tt.entrustNum>0
     </select>
 

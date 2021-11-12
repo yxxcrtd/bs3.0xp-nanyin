@@ -39,6 +39,8 @@ public class CfetsBussCombDistribtBaseDto {
     @ApiModelProperty(name="invAim",value="投资目的",example="AC")
     private String invAim;
 
+    @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
+    private String portfolioName;
 
     private String entrustId;
 
@@ -104,5 +106,13 @@ public class CfetsBussCombDistribtBaseDto {
 
     public void setInvAim(String invAim) {
         this.invAim = invAim;
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
     }
 }
