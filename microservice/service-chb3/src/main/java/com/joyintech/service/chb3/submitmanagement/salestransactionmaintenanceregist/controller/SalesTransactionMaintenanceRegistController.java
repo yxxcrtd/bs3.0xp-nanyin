@@ -1,13 +1,3 @@
-/*
- * 文件名：EquityInfoRegist.java
- * 版权：Copyright 2016-2017 JoyinTech. Co. Ltd. All Rights Reserved.
- * 描述：中信银行资管系统
- * 修改人：Administrator
- * 修改时间：2017年9月19日
- * 修改内容：新建
- * 系统名称：中信银行资管系统
- */
-
 package com.joyintech.service.chb3.submitmanagement.salestransactionmaintenanceregist.controller;
 
 import com.joyintech.framework.annotation.DTXTransaction;
@@ -32,11 +22,7 @@ import java.util.Map;
 
 
 /**
- * 投资者身份信息登记服务
- *
- * @author zhangzhongliang
- * @version 1.0 2019年4月19日
- * @since 1.0
+ *销售资金交易信息登记
  */
 @RestController
 @RequestMapping("/SalesTransactionMaintenanceRegist")

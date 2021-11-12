@@ -1,21 +1,14 @@
 package com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.service;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.system.batch.batchstart.service.SysBatchStart001Service;
-import com.joyintech.tams.common.base.entity.ChbBatchPara;
-import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
-import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

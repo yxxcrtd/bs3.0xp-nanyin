@@ -53,7 +53,6 @@ public interface SalesTransactionMaintenanceRegist001Mapper {
 
     List<SalesTransactionMaintenanceRegist001Dto> queryForInfoRegist(Map<String,Object> param);
 
-    List<SalesTransactionMaintenanceRegist001Dto> queryBatchForEquityInfoRegist(List<Map<String, String>> list);
 
     int insertBatchEquityRegist(List<SalesTransactionMaintenanceRegist001Dto> list);
 

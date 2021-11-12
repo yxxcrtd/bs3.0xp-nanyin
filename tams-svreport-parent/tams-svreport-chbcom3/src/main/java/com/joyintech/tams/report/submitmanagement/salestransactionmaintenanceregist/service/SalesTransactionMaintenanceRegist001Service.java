@@ -1,41 +1,27 @@
 package com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.service;
 
-import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.system.batch.batchstart.service.SysBatchStart001Service;
-import com.joyintech.tams.common.base.dao.ChbBatchParaMapper;
-import com.joyintech.tams.common.base.entity.ChbBatchPara;
 import com.joyintech.tams.common.base.entity.ChbSubmitStatus;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.report.common.constant.BatchBeanName;
-import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.DateCalcUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.report.interf.cnbond.service.CnBondInterfService;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.validate.SalesTransactionMaintenanceValid;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
-import com.joyintech.tams.report.submitmanagement.equityinforegist.common.EquityInfoRegistCommonUtil;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dao.SalesTransactionMaintenanceRegist001Mapper;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
-import com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog;
-import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
@@ -48,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -65,27 +50,12 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
 
     @Autowired
     private SalesTransactionMaintenanceRegist001Mapper salesTransactionMaintenanceRegist001Mapper;
-    
-    @Autowired
-    private CnBondInterfService cnBondInterfService;
 
     /**
      * CheckReport001Mapper
      */
     @Autowired
     private CheckReport001Mapper checkReport001Mapper;
-    
-    @Autowired
-    private ChbBatchParaMapper chbBatchParaMapper;
-    
-    @Autowired
-    private SysBatchStart001Service sysBatchStart001Service;
-    
-    /**
-     * 长sql最大一次插入或者更新条数
-     */
-    @Value("${application.reportInsertLongCount}")
-    public  int reportInsertLongCount;
     /**
      * sql最大一次最大删除条数
      */
@@ -96,10 +66,6 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
      */
     @Value("${application.reportInsertCount}")
     public  int reportInsertCount;
-    /**
-     * CheckReport001Mapper
-     */
-
     /**
      * 短sql最大一次最大插入条数
      */
@@ -278,7 +244,6 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
 
     /**
      * @param param 查询参数
-     * @return 投资者登记信息列表
      * @see
      * @since 1.0
      */

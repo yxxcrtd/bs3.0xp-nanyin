@@ -149,7 +149,7 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     /**
      * 销售结算资金交易时间
      */
-    private Date tradeTime;
+    private String tradeTime;
 
     /**
      * 销售结算资金交易附言
@@ -353,11 +353,11 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
         this.tradeVdate = tradeVdate;
     }
 
-    public Date getTradeTime() {
+    public String getTradeTime() {
         return tradeTime;
     }
 
-    public void setTradeTime(Date tradeTime) {
+    public void setTradeTime(String tradeTime) {
         this.tradeTime = tradeTime;
     }
 
@@ -381,10 +381,13 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
         return SysDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, this.getTradePs());
     }
     public String getDataStatusName() {
-        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getDataStatus());
+        return SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getDataStatus());
     }
     public String getTradeCcyName() {
         return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getTradeCcy());
+    }
+    public String getSendStatusName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.报送状态, this.getSendStatus());
     }
 
     public String getSubmitTimeStr() {

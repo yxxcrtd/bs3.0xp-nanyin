@@ -401,49 +401,6 @@
 		<!--   	AND status.SUBMIT_FEEDBACK_STATUS !='02'-->
 		</where>
 	</select>
-	<!-- 查询权益人登记表中已报送内容(反馈状态不为02，即中债报送失败的内容)-->
-	<select id="queryBatchForEquityInfoRegist" parameterType="java.util.List" resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
-		select INDENTIFY_MARK         as indentifyMark,
-       		ORG_INDENTIFY_MARK        as orgIndentifyMark,
-       		REGIST_BANK_CODE          as bankCode,
-       		IS_BELONG_BANK            as isBelongBank,
-       		THE_BANK_NAME             as theBankName,
-       		THE_BANK_CODE             as theBankCode,
-       		HOLDER_MARK               as holderMark,
-       		HOLDER_REGION             as holderRegion,
-       		HOLDER_TYPE               as holderType,
-       		PERSONAL_IDENTIFY_TYPE    as personalIdentifyType,
-       		INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
-       		IDENTIFY_NUMBER           as identifyNumber,
-       		SPV_CAP_ACC_BANK          as spvCapAccBank,
-       		OTHER_CAP_ACC_BANK        as otherCapAccBank,
-       		SPV_REGIST_CODE           as spvRegistCode,
-       		HOLDER_DATE               holderDate,
-       		HOLDER_NAME               holderName,
-       		HOLDER_SEX                holderSex,
-       		HOLDER_RISK_PREFER        as holderRiskPrefer,
-       		HOLDER_CELLPHONE          as holderCellphone,
-       		HOLDER_TELEPHONE          as holderTelephone,
-       		HOLDER_EMAIL              as holderEmail,
-       		TYPE                      as type,
-       		REMARK,
-       		SUBMIT_STATUS             as submitStatus,
-       		SUBMIT_TIME               as submitTime,
-       		CHB_SUBMIT_DEADLINE       as chbSubmitDeadline,
-       		SUBMIT_DEADLINE           as submitDeadline,
-      	 	STATUS                    as status,
-       		sub.UPDATE_TIME           as updateTime,
-       		status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
-  		from chb_equ_sub sub
-  		left join CHB_SUBMIT_STATUS status
-    		on sub.sumit_seq = status.seqno
-		<where>
-		    sub.submit_status !='01'
-		    <foreach collection="list" item="item" separator="," open=" AND (sub.REGIST_BANK_CODE, sub.INDENTIFY_MARK) IN (" close=")">
-		    	(#{item.REGIST_BANK_CODE}, #{item.INDENTIFY_MARK})
-		    </foreach>
-		</where>
-	</select>
 	<!-- 批量插入登记表数据 -->
 	<insert id="insertBatchEquityRegist" parameterType="java.util.List" >
 		insert into CHB_EQU_SUB (INDENTIFY_MARK, REGIST_BANK_CODE, SUBMIT_STATUS, 

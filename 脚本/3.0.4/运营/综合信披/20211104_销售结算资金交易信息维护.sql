@@ -2,6 +2,9 @@ DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3054';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
 values ('3054', 'VAL', '销售结算资金交易登记报送', null, 'svrSalesTransactionInterfTaskService', 3040, 'system', null, sysdate, 'system', sysdate, null);
 
+insert into SYS_DATADICT_LIST VALUES ('SVR_REPORT_CODE','34','销售结算资金交易信息登记','34','0','system',null,sysdate,'system',sysdate,null);
+insert into SYS_DATADICT_LIST VALUES ('SVR_CHECK_INTERF_TYPE','CHB_SALER_STL_DEAL_SUB','销售结算资金交易信息登记','20','0','system',null,sysdate,'system',sysdate,null);
+
 INSERT INTO SYS_MENU VALUES ('REPORT_001_001_016_003', 'REP',null,'REPORT_001_001_016','SalesTransactionMaintenance001','5','02','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance001','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','REPORT_001_001_016_003',null,null,'02','01','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance002','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002',null,null,null,'02','01','销售结算资金交易信息维护新建','system',null,sysdate,'system',sysdate);
