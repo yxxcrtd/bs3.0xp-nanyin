@@ -208,6 +208,159 @@ public class CfetsEtrFinProductDto {
      */
     private String sponsorName;
 
+    /**
+     * 债券二级分类
+     */
+    private String type2;
+
+    /**
+     * 发行方式
+     */
+    private String issueType;
+
+    /**
+     * 息票品种
+     */
+    private String couponSpecies;
+
+    /**
+     * 付息频率
+     */
+    private String payCycle;
+
+    /**
+     * 计息基础
+     */
+    private String basis;
+
+    /**
+     * 发行金额
+     */
+    private String issueAmt;
+
+    /**
+     * 市价久期
+     */
+    private String mDuration;
+
+    /**
+     * 利率久期
+     */
+    private String interestDuration;
+
+    /**
+     * 利差久期
+     */
+    private String sDuration;
+
+    /**
+     * 市价凸性
+     */
+    private String mConvexity;
+
+    /**
+     * 基点价值
+     */
+    private String bpvalue;
+
+    /**
+     * 债券市场余额
+     */
+    private String secMarketAmt;
+
+    /**
+     * 剩余行权期限
+     */
+    private String lastXQDate;
+
+    public String getType2() {
+        return type2;
+    }
+
+    public void setType2(String type2) {
+        this.type2 = type2;
+    }
+
+    public String getIssueType() {
+        return issueType;
+    }
+
+    public void setIssueType(String issueType) {
+        this.issueType = issueType;
+    }
+
+    public String getCouponSpecies() {
+        return couponSpecies;
+    }
+
+    public void setCouponSpecies(String couponSpecies) {
+        this.couponSpecies = couponSpecies;
+    }
+
+    public String getPayCycle() {
+        return payCycle;
+    }
+
+    public void setPayCycle(String payCycle) {
+        this.payCycle = payCycle;
+    }
+
+    public String getBasis() {
+        return basis;
+    }
+
+    public void setBasis(String basis) {
+        this.basis = basis;
+    }
+
+    public String getIssueAmt() {
+        return issueAmt;
+    }
+
+    public void setIssueAmt(String issueAmt) {
+        this.issueAmt = issueAmt;
+    }
+
+    public String getmDuration() {
+        return mDuration;
+    }
+
+    public void setmDuration(String mDuration) {
+        this.mDuration = mDuration;
+    }
+
+    public String getInterestDuration() {
+        return interestDuration;
+    }
+
+    public void setInterestDuration(String interestDuration) {
+        this.interestDuration = interestDuration;
+    }
+
+    public String getsDuration() {
+        return sDuration;
+    }
+
+    public void setsDuration(String sDuration) {
+        this.sDuration = sDuration;
+    }
+
+    public String getmConvexity() {
+        return mConvexity;
+    }
+
+    public void setmConvexity(String mConvexity) {
+        this.mConvexity = mConvexity;
+    }
+
+    public String getBpvalue() {
+        return bpvalue;
+    }
+
+    public void setBpvalue(String bpvalue) {
+        this.bpvalue = bpvalue;
+    }
+
     public String getSecAbbr() {
         return secAbbr;
     }
