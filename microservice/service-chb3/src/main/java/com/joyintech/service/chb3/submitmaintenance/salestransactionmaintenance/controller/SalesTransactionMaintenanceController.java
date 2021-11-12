@@ -93,12 +93,21 @@ public class SalesTransactionMaintenanceController {
     }
 
     /**
-     *
+     *从info表取值设置页面
      * selectDetail
      */
     @PostMapping("selectDetail")
     public SalesTransactionMaintenanceDto selectDetail(@RequestBody Map<String, Object> param){
         return  salestransactionmaintenance002Service.selectDetail(param);
+    }
+
+    /**
+     *从erro表取值设置页面
+     * selectErroDetail
+     */
+    @PostMapping("selectErroDetail")
+    public SalesTransactionMaintenanceDto selectErroDetail(@RequestBody Map<String, Object> param){
+        return  salestransactionmaintenance002Service.selectErroDetail(param);
     }
     /**
      *
@@ -119,11 +128,19 @@ public class SalesTransactionMaintenanceController {
     }
     /**
      *
-     * 删除
+     * 删除erro
      */
     @PostMapping("deleteByPrimaryKey")
     public boolean deleteByPrimaryKey(@RequestBody SalesTransactionMaintenanceDto dto) {
         return salestransactionmaintenance002Service.deleteByPrimaryKey(dto);
+    }
+    /**
+     *
+     * 删除info
+     */
+    @PostMapping("deleteInfo")
+    public boolean deleteInfo(@RequestBody SalesTransactionMaintenanceDto dto) {
+        return salestransactionmaintenance002Service.deleteInfo(dto);
     }
 
     /**

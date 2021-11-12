@@ -4,51 +4,88 @@
 
     <!--	查询-->
 	<select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+		SELECT *
+		FROM (
 		select
-		a.DATA_STATUS dataStatus,
-		a.INSTITUTION_CODE institutionCode,
-		a.PRD_REGIST_CODE prdRegistCode,
-		a.ACCOUNT_NO accountNo,
-		a.ACCOUNT_NAME accountName,
-		a.TRADE_NO tradeNo,
-		a.TRADE_PS tradePs,
-		a.TRADE_COUNTER_ACC_NO tradeCounterAccNo,
-		a.TRADE_COUNTER_ACC_NAME tradeCounterAccName,
-		a.TRADE_COUNTER_ACC_BANK_NAME tradeCounterAccBankName,
-		a.TRADE_COUNTER_ACC_BANK_NO tradeCounterAccBankNo,
-		a.TRADE_CCY tradeCcy,
-		a.TRADE_AMT tradeAmt,
-		a.TRADE_VDATE tradeVdate,
-		a.TRADE_TIME tradeTime,
-<!--		b.ERR_MSG errMsg,-->
-		a.POSTSCRIPT postscript,
-		a.REMARK remark
-		from CHB_SALER_STL_DEAL_INFO a
+		erro.REGIST_SEQNO         as registSeqno,
+		'01'                      as maintainStatus,
+		erro.DATA_STATUS          as dataStatus,
+		erro.INSTITUTION_CODE     as institutionCode,
+		erro.PRD_REGIST_CODE      as prdRegistCode,
+		erro.ACCOUNT_NO           as accountNo,
+		erro.TRADE_NO             as tradeNo,
+		erro.TRADE_PS             as tradePs,
+		erro.TRADE_VDATE          as tradeVdate,
+		null                      as remark,
+		erro.ERR_MSG              as errMsg
+		from CHB_SALER_STL_DEA_ERRODATA erro
 		where 1=1
+		and erro.DATA_STATUS in ('E','M')
 		<if test="tradePs != null and tradePs != ''">
-			and a.TRADE_PS = #{tradePs,jdbcType=VARCHAR}
+			and erro.TRADE_PS = #{tradePs,jdbcType=VARCHAR}
 		</if>
 		<if test="institutionCode != null and institutionCode != ''">
-			and a.INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+			and erro.INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
 		</if>
 		<if test="dataStatus != null and dataStatus != ''">
-			and a.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+			and erro.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
 		</if>
 		<if test="prdRegistCode != null and prdRegistCode != ''">
-			and a.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
+			and erro.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
 		</if>
 		<if test="tradeNo != null and tradeNo != ''">
-			and a.TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
+			and erro.TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
 		</if>
 		<if test="searchTradeVdateStart != null and searchTradeVdateStart != ''">
-			and a.TRADE_VDATE between to_date(#{searchTradeVdateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchTradeVdateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+			and erro.TRADE_VDATE between to_date(#{searchTradeVdateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchTradeVdateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 		</if>
+
+
+    UNION ALL
+
+
+		select
+		info.REGIST_SEQNO         as registSeqno,
+		'02'                      as maintainStatus,
+		info.DATA_STATUS          as dataStatus,
+		info.INSTITUTION_CODE     as institutionCode,
+		info.PRD_REGIST_CODE      as prdRegistCode,
+		info.ACCOUNT_NO           as accountNo,
+		info.TRADE_NO             as tradeNo,
+		info.TRADE_PS             as tradePs,
+		info.TRADE_VDATE          as tradeVdate,
+		info.REMARK               as remark,
+		null                      as errMsg
+		from CHB_SALER_STL_DEAL_INFO info
+		where 1=1
+		and info.DATA_STATUS in ('E','M')
+		<if test="tradePs != null and tradePs != ''">
+			and info.TRADE_PS = #{tradePs,jdbcType=VARCHAR}
+		</if>
+		<if test="institutionCode != null and institutionCode != ''">
+			and info.INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+		</if>
+		<if test="dataStatus != null and dataStatus != ''">
+			and info.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="prdRegistCode != null and prdRegistCode != ''">
+			and info.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="tradeNo != null and tradeNo != ''">
+			and info.TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
+		</if>
+		<if test="searchTradeVdateStart != null and searchTradeVdateStart != ''">
+			and info.TRADE_VDATE between to_date(#{searchTradeVdateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchTradeVdateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		</if>
+		) ORDER BY dataStatus DESC
 	</select>
 
-<!--	双击查看详细信息查询-->
+<!--	双击查看详细信息查询info-->
 	<select id="selectDetail"
 			resultType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
 		select
+		a.REGIST_SEQNO     registSeqno,
+		'02'               maintainStatus,
 		a.INSTITUTION_CODE institutionCode,
 		a.PRD_REGIST_CODE prdRegistCode,
 		a.ACCOUNT_NO accountNo,
@@ -67,49 +104,119 @@
 		a.REMARK remark
 		from CHB_SALER_STL_DEAL_INFO a
 		where
-		PRD_REGIST_CODE=#{prdRegistCode}
-		and TRADE_NO=#{tradeNo}
+		REGIST_SEQNO=#{registSeqno}
+	</select>
+
+	<!--	双击查看详细信息查询erro-->
+	<select id="selectErroDetail"
+			resultType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+		select
+		a.registSeqno      registSeqno,
+		'01'               maintainStatus,
+		a.INSTITUTION_CODE institutionCode,
+		a.PRD_REGIST_CODE prdRegistCode,
+		a.ACCOUNT_NO accountNo,
+		a.TRADE_NO tradeNo,
+		a.TRADE_PS tradePs,
+		a.TRADE_VDATE tradeVdate,
+		from CHB_SALER_STL_DEA_ERRODATA a
+		where
+		REGIST_SEQNO=#{registSeqno}
 	</select>
 
 <!--	根据主键删除-->
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
 		delete from CHB_SALER_STL_DEAL_INFO
 		where
-		REGIST_SEQNO=#{registSeqno}
+		INSTITUTION_CODE=#{institutionCode}
+		and
+		TRADE_NO=#{tradeNo}
 	</delete>
+
+	<!--	根据主键删除info-->
+	<update id="deleteInfo" parameterType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+		UPDATE CHB_SALER_STL_DEAL_INFO
+		SET
+		DATA_STATUS = 'D'
+		where
+		INSTITUTION_CODE=#{institutionCode}
+		and
+		TRADE_NO=#{tradeNo}
+	</update>
 
 <!--	提供销售结算资金服务机构代码下拉框-->
 	<select id="getInstitutionCode" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select
+		SELECT DISTINCT
 		INSTITUTION_CODE id,
 		null text
-		from CHB_SALER_STL_DEAL_INFO
+		from(
+		select
+		info.INSTITUTION_CODE
+		from CHB_SALER_STL_DEAL_INFO info
 		<where>
 			<if test="search != null and search != ''">
-				and PTL_ID like concat(concat('%',#{search}),'%')
+				and info.INSTITUTION_CODE like concat(concat('%',#{search}),'%')
 			</if>
 		</where>
+
+		union all
+
+		select
+		erro.INSTITUTION_CODE
+		from CHB_SALER_STL_DEA_ERRODATA erro
+		<where>
+			<if test="search != null and search != ''">
+				and erro.INSTITUTION_CODE like concat(concat('%',#{search}),'%')
+			</if>
+		</where>
+		)
+		ORDER BY INSTITUTION_CODE
 	</select>
 
 <!--销售结算资金交易流水号下拉框-->
 	<select id="getTradeNo" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select
+		SELECT DISTINCT
 		TRADE_NO id,
 		null text
-		from CHB_SALER_STL_DEAL_INFO
+		from(
+		select
+		info.TRADE_NO
+		from CHB_SALER_STL_DEAL_INFO info
 		<where>
 			<if test="search != null and search != ''">
-				and TRADE_NO like concat(concat('%',#{search}),'%')
+				and info.TRADE_NO like concat(concat('%',#{search}),'%')
 			</if>
 		</where>
+
+		union all
+
+		select
+		erro.TRADE_NO
+		from CHB_SALER_STL_DEA_ERRODATA erro
+		<where>
+			<if test="search != null and search != ''">
+				and erro.TRADE_NO like concat(concat('%',#{search}),'%')
+			</if>
+		</where>
+		)
+		ORDER BY TRADE_NO
 	</select>
 
 	<!--	导入时校验数据是否重复-->
 	<select id="getRegistExcelList" resultType="java.lang.Integer">
-		select count(REGIST_SEQNO) from CHB_SALER_STL_DEAL_INFO
+		SELECT count(*) from(
+		select REGIST_SEQNO from CHB_SALER_STL_DEAL_INFO
 		where
 		PRD_REGIST_CODE=#{prdRegistCode}
 		and TRADE_NO=#{tradeNo}
+
+		union all
+
+		select REGIST_SEQNO from CHB_SALER_STL_DEA_ERRODATA
+		where
+		PRD_REGIST_CODE=#{prdRegistCode}
+		and TRADE_NO=#{tradeNo}
+		)
 	</select>
 
 <!--保存提交-->
@@ -153,7 +260,7 @@
 	#{tradeCcy,jdbcType=VARCHAR},
 	#{tradeAmt,jdbcType=NUMERIC},
 	#{tradeVdate,jdbcType=DATE},
-	#{tradeTime,jdbcType=TIMESTAMP},
+	#{tradeTime,jdbcType=VARCHAR},
 	#{postscript,jdbcType=VARCHAR},
 	#{remark,jdbcType=VARCHAR},
 	#{receptDate,jdbcType=DATE},
@@ -163,9 +270,10 @@
 	</insert>
 
 <!--	修改-->
-	<update id="update">
+	<update id="update" parameterType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
 		UPDATE CHB_SALER_STL_DEAL_INFO
 		SET
+		REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR},
 		DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
 		TRADE_AMT = #{tradeAmt,jdbcType=NUMERIC},
 		POSTSCRIPT = #{postscript,jdbcType=VARCHAR},

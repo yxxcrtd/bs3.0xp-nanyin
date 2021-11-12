@@ -39,23 +39,17 @@
                     "98%", "95%", data,
                     function(){table.reload();});
         },
-        cols:[ 
-            {field:'dataStatusName', title: '数据状态', width:'150',sortField:'dataStatus'}
+        cols:[
+             { title: "主键uuid",field:'registSeqno',visible:false}
+            ,{field:'maintainStatusName', title: '报送信息维护状态', width:'150',sortField:'maintainStatus'}
+            ,{field:'dataStatusName', title: '数据状态', width:'150',sortField:'dataStatus'}
             ,{field:'institutionCode', title: '提供销售结算资金服务机构代码', width:'150',sortField:'institutionCode'}
             ,{field:'prdRegistCode', title: '产品登记编码', width:'150',sortField:'prdRegistCode'}
             ,{field:'accountNo', title: '销售结算资金账号', width:'150',sortField:'accountNo'}
-            ,{field:'accountName', title: '销售结算资金账户名称', width:'150',sortField:'accountName'}
             ,{field:'tradeNo', title: '销售结算资金交易流水号', width:'150',sortField:'tradeNo'}
             ,{field:'tradePsName', title: '销售结算资金流动方向', width:'150',sortField:'tradePs'}
-            ,{field:'tradeCounterAccNo', title: '销售结算资金交易对手方账号', width:'150',sortField:'tradeCounterAccNo'}
-            ,{field:'tradeCounterAccName', title: '销售结算资金交易对手方账户名称', width:'150',sortField:'tradeCounterAccName'}
-            ,{field:'tradeCounterAccBankName', title: '销售结算资金交易对手方开户行名称', width:'150',sortField:'tradeCounterAccBankName'}
-            ,{field:'tradeCounterAccBankNo', title: '销售结算资金交易对手方账户开户行号', width:'150',sortField:'tradeCounterAccBankNo'}
-            ,{field:'tradeCcyName', title: '销售结算资金交易币种', width:'150',sortField:'tradeCcy'}
-            ,{field:'tradeAmt', title: '销售结算资金交易金额', width:'150',sortField:'tradeAmt',type:'money',digit: 2}
             ,{field:'tradeVdate', title: '销售结算资金交易日期', width:'150',sortField:'tradeVdate',type:'date'}
-            ,{field:'tradeTime', title: '销售结算资金交易时间', width:'150',sortField:'tradeTime'}
-            ,{field:'postscript', title: '销售结算资金交易附言', width:'150',sortField:'postscript'}
+            ,{field:'errMsg', title: '错误信息', width:'150',sortField:'errMsg'}
             ,{field:'remark', title: '备注', width:'150',sortField:'remark'}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:'150'}
         ],
@@ -151,7 +145,7 @@
                 return;
             }
             var object = {selectedItem: selArr, operateType:"delete"};
-            Joyin.ajaxJson(basePath + 'invest/basicdata/mstnaturalperson/SalesTransactionMaintenance001/check', object, function(result) {
+            Joyin.ajaxJson(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                     WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/delete', object,"SalesTransactionMaintenance001_btn_delete", "SalesTransactionMaintenance002", function(result) {
                         table.reload();

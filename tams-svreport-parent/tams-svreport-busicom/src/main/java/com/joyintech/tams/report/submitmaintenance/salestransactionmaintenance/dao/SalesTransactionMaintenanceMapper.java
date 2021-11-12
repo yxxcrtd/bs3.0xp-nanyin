@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 
@@ -19,10 +20,16 @@ public interface SalesTransactionMaintenanceMapper {
     List<SalesTransactionMaintenanceDto> selectForPage(Map<String, Object> param);
 
     /**
-     * 双击查看详细信息查询，修改信息查询 <功能详细描述>
+     * 双击查看详细信息查询，修改信息查询 <功能详细描述>info
      *
      */
     SalesTransactionMaintenanceDto selectDetail(Map<String, Object> param);
+
+    /**
+     * 双击查看详细信息查询，修改信息查询 <功能详细描述>erro
+     *
+     */
+    SalesTransactionMaintenanceDto selectErroDetail(Map<String, Object> param);
 
     /**
      * 查询新增数据主键是否重复
@@ -30,11 +37,18 @@ public interface SalesTransactionMaintenanceMapper {
     int getRegistExcelList( Map<String,Object> param );
 
     /**
-     * 根据主键删除
+     * 根据主键删除erro
      * @param
      * @return
      */
-    int deleteByPrimaryKey(String registSeqno);
+    int deleteByPrimaryKey(@Param("institutionCode") String institutionCode, @Param("tradeNo") String tradeNo);
+
+    /**
+     * 根据主键删除info
+     * @param
+     * @return
+     */
+    int deleteInfo(@Param("institutionCode") String institutionCode, @Param("tradeNo") String tradeNo);
 
     /**
      * 新建插入

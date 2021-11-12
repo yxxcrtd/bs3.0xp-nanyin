@@ -32,6 +32,8 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 
+import javax.validation.Valid;
+
 /**
  * 销售结算资金交易信息维护
  */
@@ -75,6 +77,15 @@ public class SalesTransactionMaintenance001Controller extends BaseController {
     public Page<SalesTransactionMaintenanceDto> findPage() {
         Map<String, Object> param = RequestUtil.getPageParam();
         return salesTransactionmaintenanceService.searchForPage(param);
+    }
+    /**
+     *
+     */
+    @ResponseBody
+    @RequestMapping("check")
+    public AjaxResult check(@RequestBody @Valid SalesTransactionMaintenanceDto salesTransactionMaintenanceDto,
+                            BindingResult br) {
+        return commonCheck(br, salesTransactionMaintenanceDto.getOperateType());
     }
 
     /**
@@ -151,8 +162,14 @@ public class SalesTransactionMaintenance001Controller extends BaseController {
             ValidateGroupDelete.class}) SalesTransactionMaintenanceDto dto, BindingResult br)
             throws Exception {
         if(dto!=null){
-            if(salesTransactionmaintenanceService.deleteByPrimaryKey(dto)){
-                return new AjaxResult("删除成功");
+            if(dto.getMaintainStatus().equals("01")) {//erro表刪除
+                if (salesTransactionmaintenanceService.deleteByPrimaryKey(dto)) {
+                    return new AjaxResult("删除成功");
+                }
+            }else if(dto.getMaintainStatus().equals("02")){//info表逻辑刪除
+                if (salesTransactionmaintenanceService.deleteInfo(dto)) {
+                    return new AjaxResult("删除成功");
+                }
             }
         }
         return new AjaxResult("删除失败");

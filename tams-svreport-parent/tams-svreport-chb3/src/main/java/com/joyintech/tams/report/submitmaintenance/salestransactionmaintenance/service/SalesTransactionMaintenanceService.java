@@ -90,15 +90,26 @@ public class SalesTransactionMaintenanceService extends CommonExportService<Sale
 	}
 
 	/**
-	 * 双击查看或编辑
+	 * 双击查看或编辑info
 	 * selectDetail
 	 */
-	public SalesTransactionMaintenanceDto selectDetail(String prdRegistCode,String tradeNo) {
+	public SalesTransactionMaintenanceDto selectDetail(String registSeqno) {
 		Map<String,Object> param = new HashMap<String,Object>();
-		param.put("prdRegistCode",prdRegistCode);
-		param.put("tradeNo",tradeNo);
+		param.put("registSeqno",registSeqno);
 		return restTemplate.postForObject(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenance/selectDetail", param,
+				SalesTransactionMaintenanceDto.class);
+	}
+
+	/**
+	 * 双击查看或编辑erro
+	 * selectErroDetail
+	 */
+	public SalesTransactionMaintenanceDto selectErroDetail(String registSeqno) {
+		Map<String,Object> param = new HashMap<String,Object>();
+		param.put("registSeqno",registSeqno);
+		return restTemplate.postForObject(
+				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenance/selectErroDetail", param,
 				SalesTransactionMaintenanceDto.class);
 	}
 
@@ -112,9 +123,6 @@ public class SalesTransactionMaintenanceService extends CommonExportService<Sale
 	 * @since 1.0
 	 */
 	public AjaxResult save(SalesTransactionMaintenanceDto dto){
-		if(StringUtil.isEmpty(dto.getBankCode())){
-			dto.setBankCode(CommonUtil.getUserBankCode(null));
-		}
 		if(StringUtil.isEmpty(dto.getOrgCode())){
 			dto.setOrgCode(CommonUtil.getOrgCode());
 		}
@@ -132,9 +140,6 @@ public class SalesTransactionMaintenanceService extends CommonExportService<Sale
 	 * @since 1.0
 	 */
 	public AjaxResult update(SalesTransactionMaintenanceDto dto){
-		if(StringUtil.isEmpty(dto.getBankCode())){
-			dto.setBankCode(CommonUtil.getUserBankCode(null));
-		}
 		if(StringUtil.isEmpty(dto.getOrgCode())){
 			dto.setOrgCode(CommonUtil.getOrgCode());
 		}
@@ -145,7 +150,7 @@ public class SalesTransactionMaintenanceService extends CommonExportService<Sale
 
 
 	/**
-	 * 删除
+	 * 删除erro
 	 * <功能详细描述>
 	 * @param dto 待校验数据
 	 * @return jiaoyanjieguo
@@ -153,14 +158,28 @@ public class SalesTransactionMaintenanceService extends CommonExportService<Sale
 	 * @since 1.0
 	 */
 	public boolean deleteByPrimaryKey(SalesTransactionMaintenanceDto dto){
-		if(StringUtil.isEmpty(dto.getBankCode())){
-			dto.setBankCode(CommonUtil.getUserBankCode(null));
-		}
 		if(StringUtil.isEmpty(dto.getOrgCode())){
 			dto.setOrgCode(CommonUtil.getOrgCode());
 		}
 		return restTemplate.postForObject(
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenance/deleteByPrimaryKey", dto,
+				Boolean.class);
+	}
+
+	/**
+	 * 删除info
+	 * <功能详细描述>
+	 * @param dto 待校验数据
+	 * @return jiaoyanjieguo
+	 * @see
+	 * @since 1.0
+	 */
+	public boolean deleteInfo(SalesTransactionMaintenanceDto dto){
+		if(StringUtil.isEmpty(dto.getOrgCode())){
+			dto.setOrgCode(CommonUtil.getOrgCode());
+		}
+		return restTemplate.postForObject(
+				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenance/deleteInfo", dto,
 				Boolean.class);
 	}
 
