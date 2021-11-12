@@ -167,23 +167,6 @@ public class SalesTransactionMaintenanceService extends CommonExportService<Sale
 	}
 
 	/**
-	 * 删除info
-	 * <功能详细描述>
-	 * @param dto 待校验数据
-	 * @return jiaoyanjieguo
-	 * @see
-	 * @since 1.0
-	 */
-	public boolean deleteInfo(SalesTransactionMaintenanceDto dto){
-		if(StringUtil.isEmpty(dto.getOrgCode())){
-			dto.setOrgCode(CommonUtil.getOrgCode());
-		}
-		return restTemplate.postForObject(
-				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenance/deleteInfo", dto,
-				Boolean.class);
-	}
-
-	/**
 	 * 提供销售结算资金服务机构代码下拉框
 	 */
 	public List<SelectOptionDto> getInstitutionCode(Map<String, Object> params) {

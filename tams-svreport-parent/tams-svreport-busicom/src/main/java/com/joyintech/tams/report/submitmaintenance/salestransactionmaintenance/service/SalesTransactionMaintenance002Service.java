@@ -115,7 +115,14 @@ public class SalesTransactionMaintenance002Service extends BaseService{
             for (int i = 0 ; i < dtolist.size() ; i++) {
                 String institutionCode = dtolist.get(i).getInstitutionCode();
                 String tradeNo = dtolist.get(i).getTradeNo();
-                salestransactionmaintenanceMapper.deleteByPrimaryKey(institutionCode,tradeNo);
+                String maintainStatus = dtolist.get(i).getMaintainStatus();
+                if(maintainStatus.equals("01")){
+                    //erro表的直接物理删除
+                    salestransactionmaintenanceMapper.deleteByPrimaryKey(institutionCode,tradeNo);
+                }else{
+                    //info表内容逻辑删除
+                    this.deleteInfo(institutionCode,tradeNo);
+                }
             }
             return true;
         }
@@ -123,19 +130,10 @@ public class SalesTransactionMaintenance002Service extends BaseService{
     }
 
     /**
-     * 删除info
+     * 逻辑删除info
      */
-    public boolean deleteInfo(SalesTransactionMaintenanceDto dto){
-        List<SalesTransactionMaintenanceDto> dtolist = dto.getSelectedItem();
-        if (!dtolist.isEmpty() && dtolist.size() != 0) {
-            for (int i = 0 ; i < dtolist.size() ; i++) {
-                String institutionCode = dtolist.get(i).getInstitutionCode();
-                String tradeNo = dtolist.get(i).getTradeNo();
+    public void deleteInfo(String institutionCode, String tradeNo){
                 salestransactionmaintenanceMapper.deleteInfo(institutionCode,tradeNo);
-            }
-            return true;
-        }
-        return false;
     }
 
     /**

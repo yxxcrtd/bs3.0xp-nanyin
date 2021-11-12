@@ -161,17 +161,11 @@ public class SalesTransactionMaintenance001Controller extends BaseController {
     public AjaxResult delete(@RequestBody @Validated({
             ValidateGroupDelete.class}) SalesTransactionMaintenanceDto dto, BindingResult br)
             throws Exception {
-        if(dto!=null){
-            if(dto.getMaintainStatus().equals("01")) {//erro表刪除
-                if (salesTransactionmaintenanceService.deleteByPrimaryKey(dto)) {
-                    return new AjaxResult("删除成功");
-                }
-            }else if(dto.getMaintainStatus().equals("02")){//info表逻辑刪除
-                if (salesTransactionmaintenanceService.deleteInfo(dto)) {
-                    return new AjaxResult("删除成功");
-                }
+        if(!(dto.getSelectedItem().isEmpty())){
+            if (salesTransactionmaintenanceService.deleteByPrimaryKey(dto)) {
+                return new AjaxResult("删除成功");
             }
-        }
+            }
         return new AjaxResult("删除失败");
     }
 

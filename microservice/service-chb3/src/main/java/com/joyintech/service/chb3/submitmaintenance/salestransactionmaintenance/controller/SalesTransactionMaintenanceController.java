@@ -134,14 +134,6 @@ public class SalesTransactionMaintenanceController {
     public boolean deleteByPrimaryKey(@RequestBody SalesTransactionMaintenanceDto dto) {
         return salestransactionmaintenance002Service.deleteByPrimaryKey(dto);
     }
-    /**
-     *
-     * 删除info
-     */
-    @PostMapping("deleteInfo")
-    public boolean deleteInfo(@RequestBody SalesTransactionMaintenanceDto dto) {
-        return salestransactionmaintenance002Service.deleteInfo(dto);
-    }
 
     /**
      * 提供销售结算资金服务机构代码下拉框

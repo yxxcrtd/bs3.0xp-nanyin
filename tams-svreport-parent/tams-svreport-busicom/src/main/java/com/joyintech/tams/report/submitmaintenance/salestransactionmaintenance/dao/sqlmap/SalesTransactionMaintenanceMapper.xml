@@ -111,22 +111,22 @@
 	<select id="selectErroDetail"
 			resultType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
 		select
-		a.registSeqno      registSeqno,
+		a.REGIST_SEQNO      registSeqno,
 		'01'               maintainStatus,
 		a.INSTITUTION_CODE institutionCode,
 		a.PRD_REGIST_CODE prdRegistCode,
 		a.ACCOUNT_NO accountNo,
 		a.TRADE_NO tradeNo,
 		a.TRADE_PS tradePs,
-		a.TRADE_VDATE tradeVdate,
-		from CHB_SALER_STL_DEA_ERRODATA a
+		a.TRADE_VDATE tradeVdate
+		FROM  CHB_SALER_STL_DEA_ERRODATA a
 		where
 		REGIST_SEQNO=#{registSeqno}
 	</select>
 
 <!--	根据主键删除-->
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-		delete from CHB_SALER_STL_DEAL_INFO
+		delete from CHB_SALER_STL_DEA_ERRODATA
 		where
 		INSTITUTION_CODE=#{institutionCode}
 		and
@@ -134,7 +134,7 @@
 	</delete>
 
 	<!--	根据主键删除info-->
-	<update id="deleteInfo" parameterType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+	<update id="deleteInfo" parameterType="java.lang.String">
 		UPDATE CHB_SALER_STL_DEAL_INFO
 		SET
 		DATA_STATUS = 'D'
