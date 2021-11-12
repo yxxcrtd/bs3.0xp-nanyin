@@ -321,6 +321,9 @@ public class EtribRepoInfo003Controller extends BaseController {
         // 针对每个单组合绑定附件
         List<UploadFile> files = fileAttachmentProcess.fetchByBusinessCode(RepoInfoDto.getBusinessId());
         for(EtribRepoInfo003Dto dto: RepoInfoDto.getEtrInvestRepoInfoDtos()) {
+            // TISHKS-270:多组合指令回购类型展示为空 fuyongsheng 20211112 add start
+            dto.setAssetType1(DictCodeList.回购类型_质押式回购.getValue());
+            // TISHKS-270:多组合指令回购类型展示为空 fuyongsheng 20211112 add end
             List<String> fileNos = new ArrayList<>();
             if(!dto.equals(RepoInfoDto.getEtrInvestRepoInfoDtos().get(0))) {
                 if (CollectionUtils.isNotEmpty(files)) {
