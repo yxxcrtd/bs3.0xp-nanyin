@@ -883,7 +883,9 @@ public class CfetsInterfService {
             quoteBody.setNoUnderlyings(noUnderlyings);
         }
         
-        if (ibuQuoteCrepDto.getCbFpriceAmt() != null && ibuQuoteCrepDto.getScFpriceAmt() != null) {
+        if (ibuQuoteCrepDto.getCbFpriceAmt() != null && ibuQuoteCrepDto.getScFpriceAmt() != null
+                && BigDecimal.ZERO.compareTo(ibuQuoteCrepDto.getCbFpriceAmt()) < 0
+                && BigDecimal.ZERO.compareTo(ibuQuoteCrepDto.getScFpriceAmt()) < 0) {
             // 12048域-跨托管信息
             List<NoCrossCustodianDto> noCrossCustodians = new ArrayList<>();
             NoCrossCustodianDto noCrossCustodianDto = new NoCrossCustodianDto();
