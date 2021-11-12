@@ -965,7 +965,7 @@ var calculateField;
     $("#settleSpeed").on("change", function () {
         // TISHKS-227:对清算速度进行数字校验 fuyongsheng 20211105 add start
         var settleSpeed = $("#settleSpeed").val();
-        var reg = /^[0-9]*$/;
+        var reg = /^\d{1}$/;
         // 校验清算速度是否为数字
         if(settleSpeed && !reg.test(settleSpeed)){
             Joyin.error(JoyinUtil.getLabel("TrdBondInvestTrade002.settleSpreed")+ "数字格式不正确!");
