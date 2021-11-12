@@ -1140,7 +1140,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     Date xqDate = sdf.parse(dto.getXqdate());
 //                    Date minDate = cfetsetrIbBondinfoMapper.getMinTradeDate(secId);
                     Date sysdate = iPlatformDate.getSysDate();
-                    if (sysdate != null && sysdate.compareTo(xqDate) < 0) {
+                    if (sysdate != null && sysdate.compareTo(xqDate) <= 0) {
                         dto.setLastPaydate(dto.getLastPaydate());
                     }else {
                         dto.setXqdate("--");
