@@ -292,6 +292,10 @@ public class ComNetAssetQuotationInfo001Service extends CommonExportService<ComN
                     //万份收益/净值 必填
                     if (!StringUtil.isNotEmpty(rowData.get(3))){
                         errorMsg.append("万份收益/净值 必填！");
+                    }else{
+                        if(isNotNumeric(rowData.get(3))){
+                            errorMsg.append("万份收益/净值格式不正确");
+                        }
                     }
                     //管理人 必填
 //                    if (!StringUtil.isNotEmpty(rowData.get(4))){
@@ -463,5 +467,23 @@ public class ComNetAssetQuotationInfo001Service extends CommonExportService<ComN
             }
         }
         return flag;
+    }
+
+    /**
+     * check是否是数值
+     *
+     * @param param 金融产品类型
+     * @return check结果
+     */
+    public static boolean isNotNumeric(Object param) {
+        if (StringUtil.isNotEmpty(param)) {
+            try {
+                Double.parseDouble((String)param);
+            }
+            catch (NumberFormatException e) {
+                return true;
+            }
+        }
+        return false;
     }
 }
