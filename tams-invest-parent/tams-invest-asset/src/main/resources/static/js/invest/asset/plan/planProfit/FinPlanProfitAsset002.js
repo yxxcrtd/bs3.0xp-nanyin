@@ -404,7 +404,11 @@ var QueryFunc=function(){
     $(function() {
     	init();
     	if(pageModel!=PAGE_MODEL_NEW){
-            $("#parentPlan").attr('disabled',true);
+    	    //add by wm 20211112 GZYHTZJY-309 修改时 母计划按钮不可修改bug修复 start
+            if(pageModel!=PAGE_MODEL_EDIT){
+                $("#parentPlan").attr('disabled',true);
+            }
+            //add by wm 20211112 GZYHTZJY-309 修改时 母计划按钮不可修改bug修复 end
             $('#finprodMarketId').attr('disabled', true).trigger('change');
             $('.btn-save').hide();
         }
