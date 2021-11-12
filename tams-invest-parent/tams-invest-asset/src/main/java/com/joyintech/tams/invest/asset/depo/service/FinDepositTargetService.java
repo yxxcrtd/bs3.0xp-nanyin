@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -20,11 +21,12 @@ import com.joyintech.tams.component.business.project.dto.BussParticipantInfoDto;
 import com.joyintech.tams.component.business.project.dto.BussPostInvestInfoDto;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.asset.interfaceDto.*;
+import com.joyintech.tams.invest.asset.constant.AssetConstant;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
-import com.joyintech.tams.invest.common.util.MapParseUtil;
+import com.joyintech.tams.invest.interf.trade.fromxp.service.InterfServiceLogService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +72,8 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class FinDepositTargetService extends CommonExportService<FinDepositTargetDto> implements BaseProcessService<FinDepositTargetDto> {
+
+    private static final Logger logger = LoggerFactory.getLogger(FinDepositTargetService.class);
 
     /*
      * @Autowired private FileAttachmentProcess fileAttachmentProcess;
@@ -125,6 +129,12 @@ public class FinDepositTargetService extends CommonExportService<FinDepositTarge
      */
     @Autowired
     private InvestInterfCommService investInterfCommService;
+
+    /**
+     * 接口服务日志
+     */
+    @Autowired
+    private InterfServiceLogService interfServiceLogService;
 
     /**
      * 使用给定的sqlID检索分页数据。返回类型是Service的泛型。
@@ -607,4 +617,72 @@ public class FinDepositTargetService extends CommonExportService<FinDepositTarge
     }
     /*存借款机构匹配存放行和融资人属性 modified by lishuping 20191018 end*/
 
+    /**
+     * 存款 接口数据入库
+     * @param id
+     * @param msg
+     */
+    public void executeInterf(String id,String msg) {
+        logger.debug("##############################存款 接口数据入库start#############################");
+        logger.debug("转换前数据：{}", msg);
+        FinDepositTargetDto entity = new FinDepositTargetDto();
+        if (StringUtil.isEmpty(msg)) {
+            return;
+        }
+        try {
+            JSONObject msgJSON = JSONObject.parseObject(msg);
+            entity.setFinprodId(msgJSON.getString("finprod_id"));   // 资产代码
+            entity.setFinprodName(msgJSON.getString("finprod_name"));   // 资产名称
+            entity.setType6(msgJSON.getString("asset_type")); // 资产类型 D01同业借款、D02存放同业、D03活期存放
+            entity.setType7(msgJSON.getString("type_9"));   // 存款类型	D001存放本行、D002存放他行
+            entity.setIssuer(msgJSON.getString("issuer"));   // 存/借款机构
+            entity.setContractNo(msgJSON.getString("contract_no"));   // 合同号
+            entity.setTrialNo(msgJSON.getString("trial_no"));   // 法审编号
+            entity.setCcy(msgJSON.getString("ccy"));   // 币种
+            entity.setIssueAmt(msgJSON.getBigDecimal("issue_amt"));   // 存款本金
+            entity.setIsInAdvance(msgJSON.getString("is_can_draw_in_advance"));   // 是否可提前支取
+            entity.setVdate(msgJSON.getDate("vdate"));   // 起息日
+            entity.setMdate(msgJSON.getDate("mdate"));   // 到期日
+            entity.setTermDays(msgJSON.getLong("term_days"));   // 期限（天）
+            entity.setCalendarId(msgJSON.getString("calendar_id"));   // 交易日历
+            entity.setBlnArea(msgJSON.getString("bln_area"));   // 境内外
+            entity.setSponsor(msgJSON.getString("sponsor"));   // 担保人
+            entity.setPostOrg(msgJSON.getString("post_org"));   // 投后责任机构
+            entity.setRemark(msgJSON.getString("remark"));   // 备注
+
+            // 计息要素
+            FinInterestFactorDto finInterestFactorDto = new FinInterestFactorDto();
+            finInterestFactorDto.setBasis(msgJSON.getString("basis"));   // 计息基础
+            finInterestFactorDto.setIntType(msgJSON.getString("int_type"));   // 利率类型
+            finInterestFactorDto.setLoadRate(msgJSON.getBigDecimal("load_rate"));   // 存/借款利率%
+            finInterestFactorDto.setInvestRate(msgJSON.getBigDecimal("invest_rate"));   // 净投资收益率%
+            entity.setFinInterestFactorDto(finInterestFactorDto);
+
+            // 付息信息
+            FinPayInterestStdInfoDto finPayInterestStdInfoDto = new FinPayInterestStdInfoDto();
+            finPayInterestStdInfoDto.setPayCycle(msgJSON.getString("pay_cycle"));   // 付息频率
+            finPayInterestStdInfoDto.setPayTdayRule(msgJSON.getString("pay_tday_rule"));   // 营业日准则
+            finPayInterestStdInfoDto.setFirstPayDate(msgJSON.getDate("first_pay_date"));   // 首次付息日
+            finPayInterestStdInfoDto.setCalcRule(msgJSON.getString("calc_rule"));   // 推算方式
+            entity.setFinPayInterestStdInfoDto(finPayInterestStdInfoDto);
+
+            String operateTye = msgJSON.getString("OPERATE_TYPE");
+            OperationType type = OperationType.NEW;
+            if (AssetConstant.OPERATE_TYPE_ADD.equals(operateTye)) {
+                type = OperationType.NEW;
+            } else if (AssetConstant.OPERATE_TYPE_SUBMIT.equals(operateTye)) {
+                type = OperationType.MODIFY;
+            } else if (AssetConstant.OPERATE_TYPE_DELETE.equals(operateTye)) {
+                type = OperationType.DELETE;
+            }
+            this.doComplete(entity, type);
+            //修改接口服务日志表状态--成功
+            interfServiceLogService.updateInterfServiceLog(id, true, "存款接口数据接入成功！");
+        }catch(Exception e) {
+            //修改接口服务日志表状态--失败
+            interfServiceLogService.updateInterfServiceLog(id, false, e.getMessage());
+        }
+        logger.debug("转换后数据：{}", JSONObject.toJSONString(entity));
+        logger.debug("##############################存款 接口数据入库end#############################");
+    }
 }

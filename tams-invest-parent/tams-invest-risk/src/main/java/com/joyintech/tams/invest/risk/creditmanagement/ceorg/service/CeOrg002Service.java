@@ -1,15 +1,18 @@
 package com.joyintech.tams.invest.risk.creditmanagement.ceorg.service;
 
-import com.joyintech.framework.base.dto.UploadFile;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.listener.FileAttachmentProcess;
@@ -21,14 +24,11 @@ import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.interf.trade.fromxp.service.InterfServiceLogService;
 import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditConfInfoDto;
 import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditLinesOrgDto;
-import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditConfInfoDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 机构授信
@@ -214,4 +214,53 @@ public class CeOrg002Service extends CommonExportService<CreditLinesOrgDto>
 				Integer.class);
 	}
 	// add by yushilong 查询是否重复校验 20200629 end
+	
+	@Autowired
+    private InterfServiceLogService interfServiceLogService;
+	
+	/**
+	 *机构授信 接口数据入库
+	 * @param id
+	 * @param msg
+	 */
+	public void executeInterf(String id,String msgbody) {
+		System.out.println("##############################机构授信 接口数据入库start#############################");
+		try {
+			CreditLinesOrgDto entity = new CreditLinesOrgDto();
+			if(StringUtil.isNotEmpty(msgbody)) {
+				JSONObject msgJSON = JSONObject.parseObject(msgbody);
+				entity.setInsitituteCode(msgJSON.getString("INSTITUTION_CODE"));
+				entity.setCustomerName(msgJSON.getString("INSTITUTION_NAME"));
+				entity.setPflsh(msgJSON.getString("PFLSH"));
+				entity.setCreditAmt(msgJSON.getBigDecimal("CREDIT_AMT"));//接口按“元”传
+				entity.setNlpscreditline(msgJSON.getBigDecimal("NLPS_CREDIT_LINE"));//接口按“元”传
+				entity.setVdate(msgJSON.getDate("VDATE"));
+				entity.setMdate(msgJSON.getDate("MDATE"));
+				entity.setIsLoopAmt(msgJSON.getString("IS_LOOP_AMT"));//枚举值：是、否
+				entity.setInternalRating(msgJSON.getString("INTERNAL_RATING"));
+				entity.setRemark(msgJSON.getString("REMARK"));
+				entity.setCreditCondition(msgJSON.getString("CREDIT_CONDITION"));
+				JSONArray pzArray = msgJSON.getJSONArray("PZ_LIST");
+				if(pzArray!=null&&pzArray.size()>0) {
+					List<CreditConfInfoDto> creditLabelItem = new ArrayList<CreditConfInfoDto>();
+					for(int i=0;i<pzArray.size();i++) {
+						JSONObject pzObject = (JSONObject) pzArray.get(i);
+						CreditConfInfoDto creditConfInfoDto = new CreditConfInfoDto();
+						creditConfInfoDto.setCreditMstId(pzObject.getString("CREDIT_TAGID"));//枚举值：可根据行内需求自定义；需要双方初始化统一的额度标签，如果有新增，两边同时维护，且数据字典项必须一致
+						creditConfInfoDto.setCreditAmt(pzObject.getBigDecimal("CREDIT_AMT"));//接口按“元”传
+						creditLabelItem.add(creditConfInfoDto);
+					}
+					entity.setCreditLabelItem(creditLabelItem);
+				}
+				this.doComplete(entity, OperationType.NEW);
+				//修改接口服务日志表状态--成功
+				interfServiceLogService.updateInterfServiceLog(id, true, "机构授信接口数据接入成功！");
+			}
+		}catch(Exception e) {
+			//修改接口服务日志表状态--失败
+			interfServiceLogService.updateInterfServiceLog(id, false, e.getMessage());
+		}
+		System.out.println("##############################机构授信 接口数据入库end#############################");
+	}
+	
 }

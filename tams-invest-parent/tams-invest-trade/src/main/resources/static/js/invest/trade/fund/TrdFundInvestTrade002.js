@@ -272,6 +272,11 @@ $(function () {
             $(".channelAmt_class").show();
         }
         changeTradeAmtAndFee();
+        if(ps == ps_T06){
+            $('#TrdFundInvestTrade002_btn_risk').addClass("layui-btn-disabled");
+        }else{
+            $('#TrdFundInvestTrade002_btn_risk').removeClass("layui-btn-disabled");
+        }
     };
     // 场内基金改造 add by renping 20191117 end
     var getriskdata = function () {

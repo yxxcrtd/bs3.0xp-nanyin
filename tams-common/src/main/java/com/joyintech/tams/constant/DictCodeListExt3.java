@@ -802,6 +802,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     联社机构类型_省级机构(DictCode.联社机构类型, "01", "省级机构"),
     联社机构类型_市级机构(DictCode.联社机构类型, "02", "市级机构"),
     联社机构类型_成员行社机构(DictCode.联社机构类型, "03", "成员行社机构"),
+    //add by wqg 20201021
+    行内资产四级分类_可交换债券(DictCode.行内资产四级分类,"011","可交换债券"),
+    行内资产四级分类_可转债(DictCode.行内资产四级分类,"013","可转债"),
+    行内资产四级分类_优先股(DictCode.行内资产四级分类,"023","优先股"),
 
     中债债券类型_国债_央票(DictCode.中债债券类型, "01", "国债/央票"),
     中债债券类型_次级债券(DictCode.中债债券类型, "02", "政策性金融债"),
@@ -1570,7 +1574,12 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     项目类计提区间倒减方式_倒减科目余额(DictCode.项目类计提区间倒减方式,"01","倒减科目余额"),
 	项目类计提区间倒减方式_倒减前一日计算结果(DictCode.项目类计提区间倒减方式,"02","倒减前一日计算结果"),
 	//20210922 从DictCodeList迁移过来  by yflv end
-
+	
+	//20211008 从DictCodeList迁移过来  by yflv start
+	估值来源_第三方估值_OTH(DictCode.估值来源,"OTH","第三方估值(OTH)"),
+	估值市价_第三方估值(DictCode.估值市价, "13", "第三方估值"),
+	评级对象显示类型_发行人评级(DictCode.评级对象显示类型,"91","发行人评级"),
+	//20211008 从DictCodeList迁移过来  by yflv end
 
     估值市价_外管局(DictCode.估值市价, "10", "外管局"),
     估值市价_央行(DictCode.估值市价, "11", "央行"),

@@ -1247,4 +1247,14 @@ public class InterfRiskRdsDto implements IRiskRds {
     public void setIsShareHolder(String isShareHolder) {
         this.isShareHolder = isShareHolder;
     }
+
+    private long betweenDate;
+
+    public long getBetweenDate() {
+        return betweenDate;
+    }
+
+    public void setBetweenDate(long betweenDate) {
+        this.betweenDate = betweenDate;
+    }
 }

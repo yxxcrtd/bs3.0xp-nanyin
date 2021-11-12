@@ -10,6 +10,8 @@
  
 package com.joyintech.tams.invest.asset.plan.planNet.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -22,6 +24,9 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.core.dto.BaseFinProductBaseInfoDto;
+import com.joyintech.tams.component.base.report.dto.BaseRepMngAssetPlanInfoDto;
+import com.joyintech.tams.component.base.report.dto.BaseRepTrustInvestModeInfoDto;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.dto.FileCommonDto;
 import com.joyintech.tams.component.business.project.BussParticipantInfoService;
@@ -40,6 +45,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.util.MapParseUtil;
+import com.joyintech.tams.invest.interf.trade.fromxp.service.InterfServiceLogService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -47,11 +53,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 计划类资产（净值型）service
@@ -104,6 +106,9 @@ public class FinPlanNetAssetService extends CommonExportService<FinPlanNetAssetD
      */
     @Autowired
     private InvestInterfCommService investInterfCommService;
+
+    @Autowired
+    private InterfServiceLogService interfServiceLogService;
 
     /**
      * 资产代码的联想文本框事件
@@ -445,7 +450,11 @@ public class FinPlanNetAssetService extends CommonExportService<FinPlanNetAssetD
                 RepAssetOther repAssetOther = new RepAssetOther();
                 repAssetOther.setRepFinprodId(finProduct.getFinprodId());
                 //BeanUtil.copyPropertiesIgnoreNull(repAssetOther, bussRepOutInvestAgrInfoDto.getRepAssetOther());
-                repAssetOther.setRepPrivateprdFlag(dto.getBussRepAssetMngProdInfo().getRepPrivateprdFlag());
+                // add by zcw TISHKS-3 计划净值型资产新建，审核时报错。 start
+                if(dto.getBussRepAssetMngProdInfo() != null){
+                    repAssetOther.setRepPrivateprdFlag(dto.getBussRepAssetMngProdInfo().getRepPrivateprdFlag());
+                }
+                // add by zcw TISHKS-3 计划净值型资产新建，审核时报错。 end
                 dto.setRepAssetOther(repAssetOther);
                 // 中债其它要素存值by赵东东 2019.10.10 end
             }
@@ -708,4 +717,91 @@ public class FinPlanNetAssetService extends CommonExportService<FinPlanNetAssetD
                 "/FinPlanNetAsset/getFinprodId?finprodMarketId="+ finprodMarketId,String.class);
     }
     // 增加查询资产代码 by 赵东东 2019.10.12 end
+
+    /**
+     *资管计划-净值型 接口数据入库
+     * @param id
+     * @param msg
+     */
+    public void executeInterf(String id,String msg) {
+        System.out.println("##############################资管计划-净值型 接口数据入库start#############################");
+        FinPlanNetAssetDto entity = new FinPlanNetAssetDto();
+        try {
+            if(StringUtil.isNotEmpty(msg)) {
+                JSONObject msgJSON = JSONObject.parseObject(msg);
+                entity.setTrialNo(msgJSON.getString("TRIAL_NO")); // 法审编号
+                entity.setContractNo(msgJSON.getString("CONTRACT_NO")); // 合同编号
+                entity.setVdate(msgJSON.getDate("VALUE_DATE")); // 起息日
+                entity.setMdate(msgJSON.getDate("MDATE")); // 到期日
+                entity.setIdate(msgJSON.getDate("ESTAB_DATE")); // 发行日
+                entity.setpFinprodId(msgJSON.getString("MOTHER_ASSET_CODE")); // 母资产代码
+                entity.setWarnLine(msgJSON.getString("WARN_LINE")); // 预警线
+                entity.setFlatLine(msgJSON.getString("FLAT_LINE")); // 止损线
+                entity.setBaseRule(msgJSON.getString("BASE_RULE")); // 业绩基准
+                entity.setOverallocation(msgJSON.getString("OVERALLOCATION")); // 超额分成方式
+                entity.setCreditEnhanceMeasure(msgJSON.getString("CREDIT_MEASURES")); // 增信措施
+                entity.setManager(msgJSON.getString("MANAGER")); // 管理人
+                entity.setActualManager(msgJSON.getString("ACTUAL_MANAGER")); // 实际管理人
+                entity.setRepAssetType(msgJSON.getString("SUB_CODE")); // 资产/负债类别
+
+                // 标的类金融产品
+                FinProduct finProduct = new FinProduct();
+                finProduct.setFinprodId(msgJSON.getString("ASSET_CODE")); // 资产代码
+                finProduct.setFinprodAbbr(msgJSON.getString("ASSET_SNAME")); // 资产代码简称
+                finProduct.setFinprodName(msgJSON.getString("ASSET_NAME")); // 资产代码全称
+                finProduct.setpFinprodId(msgJSON.getString("MOTHER_ASSET_CODE")); // 母资产代码
+                finProduct.setProfitType(msgJSON.getString("PROFIT_TYPE")); // 收益类型
+                finProduct.setIssueAmt(msgJSON.getBigDecimal("ISSUE_AMT")); // 发行规模
+                finProduct.setCcy(msgJSON.getString("CURR_TYPE")); // 币种
+                finProduct.setVdate(msgJSON.getDate("VALUE_DATE")); // 起息日
+                finProduct.setMdate(msgJSON.getDate("MDATE")); // 到期日
+                finProduct.setIdate(msgJSON.getDate("ESTAB_DATE")); // 发行日
+                finProduct.setIssuer(msgJSON.getString("PUBLISHER_CODE")); // 发行人
+                finProduct.setTrusteeId(msgJSON.getString("TRUSTEE_CODE")); // 托管人
+                finProduct.setIssueType(msgJSON.getString("IPO_WAY")); // 募集方式
+                finProduct.setManager(msgJSON.getString("MANAGER")); // 管理人
+                finProduct.setCalendarId(msgJSON.getString("CALENDAR_ID")); // 交易日历
+                if(msgJSON.getString("IS_GUARANTEED").equals("1")){ // 是否保本
+                    finProduct.setCapiIncomeFeature(DictCodeListExt1.本金收益特征_保本.getValue());
+                }else{
+                    finProduct.setCapiIncomeFeature(DictCodeListExt1.本金收益特征_非保本.getValue());
+                }
+                entity.setFinProduct(finProduct);
+
+                // 标的类金融产品附属表
+                FinProductAdd finProductAdd = new FinProductAdd();
+                finProductAdd.setInvestNature(msgJSON.getString("INVESTMENT_ATTRIBUTES")); // 投资性质
+                finProductAdd.setFinprodId(msgJSON.getString("ASSET_CODE")); // 资产代码
+                finProductAdd.setPurSpeed(msgJSON.getLong("PURCHASE_PERIOD")); // 申购确认速度
+                finProductAdd.setRedSpeed(msgJSON.getLong("RED_PERIOD")); // 赎回确认速度
+                finProductAdd.setFundMangerName(msgJSON.getString("FUND_MANGER")); // 基金经理姓名
+                entity.setFinProductAdd(finProductAdd);
+
+                // 委外投资-协议方式报送信息
+                RepTrustInvestMode repTrustInvestMode = new RepTrustInvestMode();
+                repTrustInvestMode.setRepFinprodId(msgJSON.getString("ASSET_CODE")); // 资产代码
+                repTrustInvestMode.setRepContainExpectedYield(msgJSON.getString("IS_EXITS_YIELD")); // 是否有预期收益率
+                repTrustInvestMode.setRepMaxExpectedYield(msgJSON.getBigDecimal("HIGH_RATE")); // 预期最高收益率%
+                repTrustInvestMode.setRepMinExpectedYield(msgJSON.getBigDecimal("LOW_RATE")); // 预期最低收益率%
+                entity.setRepTrustInvestMode(repTrustInvestMode);
+
+                String operateTye = msgJSON.getString("OPERATE_TYPE");
+                OperationType type;
+                if(operateTye.equals("1")){
+                    type = OperationType.NEW;
+                }else if(operateTye.equals("2")){
+                    type = OperationType.MODIFY;
+                }else{
+                    type = OperationType.DELETE;
+                }
+                this.doComplete(entity, type);
+                //修改接口服务日志表状态--成功
+                interfServiceLogService.updateInterfServiceLog(id, true, "资管计划-净值型接口数据接入成功！");
+            }
+        }catch(Exception e) {
+            //修改接口服务日志表状态--失败
+            interfServiceLogService.updateInterfServiceLog(id, false, e.getMessage());
+        }
+        System.out.println("##############################资管计划-净值型 接口数据入库end#############################");
+    }
 }

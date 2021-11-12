@@ -29,6 +29,8 @@
         <result column="ASSET_THR_TYPE" property="assetThrType" jdbcType="VARCHAR" />
         <result column="INVEST_PROPORTY" property="investProporty" jdbcType="VARCHAR" />
         <result column="IS_DISPLAY_ORIGINAL" property="isDisplayOriginal" jdbcType="VARCHAR" />
+        <result column="IND_NUM" property="indNum" jdbcType="VARCHAR" />
+        <result column="SUP_DOC" property="supDoc" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         IND_ID IND_ID, IND_NAME IND_NAME, IND_TYPE IND_TYPE, EXPR EXPR, SUP_TYPE SUP_TYPE, 
@@ -37,7 +39,7 @@
         ADJUST ADJUST, IS_ENABLED IS_ENABLED, MEMO MEMO, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
         CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, IS_EXCP_WHEN_DIV_ZERO IS_EXCP_WHEN_DIV_ZERO, 
         COMPARE_DAYS COMPARE_DAYS, INSTITUTION_CODE INSTITUTION_CODE, SUP_DISPLAY_CLASSIFY SUP_DISPLAY_CLASSIFY, 
-        ASSET_THR_TYPE ASSET_THR_TYPE, INVEST_PROPORTY INVEST_PROPORTY, IS_DISPLAY_ORIGINAL IS_DISPLAY_ORIGINAL
+        ASSET_THR_TYPE ASSET_THR_TYPE, INVEST_PROPORTY INVEST_PROPORTY, IS_DISPLAY_ORIGINAL IS_DISPLAY_ORIGINAL,IND_NUM,SUP_DOC
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -68,7 +70,7 @@
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, IS_EXCP_WHEN_DIV_ZERO, 
             COMPARE_DAYS, INSTITUTION_CODE, SUP_DISPLAY_CLASSIFY, 
-            ASSET_THR_TYPE, INVEST_PROPORTY, IS_DISPLAY_ORIGINAL
+            ASSET_THR_TYPE, INVEST_PROPORTY, IS_DISPLAY_ORIGINAL,IND_NUM,SUP_DOC
             )
         values (#{indId,jdbcType=VARCHAR}, #{indName,jdbcType=VARCHAR}, #{indType,jdbcType=VARCHAR}, 
             #{expr,jdbcType=VARCHAR}, #{supType,jdbcType=VARCHAR}, #{timePoint,jdbcType=VARCHAR}, 
@@ -79,6 +81,7 @@
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{isExcpWhenDivZero,jdbcType=VARCHAR}, 
             #{compareDays,jdbcType=DECIMAL}, #{institutionCode,jdbcType=VARCHAR}, #{supDisplayClassify,jdbcType=VARCHAR}, 
             #{assetThrType,jdbcType=VARCHAR}, #{investProporty,jdbcType=VARCHAR}, #{isDisplayOriginal,jdbcType=VARCHAR}
+            , #{indNum,jdbcType=VARCHAR}, #{supDoc,jdbcType=VARCHAR}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicator" >
@@ -165,6 +168,12 @@
             <if test="isDisplayOriginal != null" >
                 IS_DISPLAY_ORIGINAL,
             </if>
+            <if test="indNum != null" >
+                IND_NUM,
+            </if>
+            <if test="supDoc != null" >
+                SUP_DOC,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="indId != null" >
@@ -248,6 +257,12 @@
             <if test="isDisplayOriginal != null" >
                 #{isDisplayOriginal,jdbcType=VARCHAR},
             </if>
+            <if test="indNum != null" >
+                #{indNum,jdbcType=VARCHAR},
+            </if>
+            <if test="supDoc != null" >
+                #{supDoc,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIsupIndicator" >
@@ -255,12 +270,12 @@
         SUP_FREQUENCY, SUP_DIRECTION, WARN_COND, APPROVE_COND, FOUL_COND, IS_ADJUST, ADJUST, 
         IS_ENABLED, MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
         IS_EXCP_WHEN_DIV_ZERO, COMPARE_DAYS, INSTITUTION_CODE, SUP_DISPLAY_CLASSIFY, ASSET_THR_TYPE, 
-        INVEST_PROPORTY, IS_DISPLAY_ORIGINAL)
+        INVEST_PROPORTY, IS_DISPLAY_ORIGINAL,IND_NUM,SUP_DOC)
         select IND_ID, IND_NAME, IND_TYPE, EXPR, SUP_TYPE, TIME_POINT, 
             SUP_FREQUENCY, SUP_DIRECTION, WARN_COND, APPROVE_COND, FOUL_COND, IS_ADJUST, ADJUST, 
             IS_ENABLED, MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
             IS_EXCP_WHEN_DIV_ZERO, COMPARE_DAYS, INSTITUTION_CODE, SUP_DISPLAY_CLASSIFY, ASSET_THR_TYPE, 
-            INVEST_PROPORTY, IS_DISPLAY_ORIGINAL
+            INVEST_PROPORTY, IS_DISPLAY_ORIGINAL,IND_NUM,SUP_DOC
              from RSK_ISUP_INDICATOR
              where 1 = 1 and IND_ID = #{indId,jdbcType=VARCHAR}
     </insert>
@@ -336,6 +351,12 @@
             <if test="isDisplayOriginal != null" >
                 IS_DISPLAY_ORIGINAL = #{isDisplayOriginal,jdbcType=VARCHAR},
             </if>
+            <if test="indNum != null" >
+                IND_NUM = #{indNum,jdbcType=VARCHAR},
+            </if>
+            <if test="supDoc != null" >
+                SUP_DOC = #{supDoc,jdbcType=VARCHAR},
+            </if>
         </set>
         where IND_ID = #{indId,jdbcType=VARCHAR}
     </update>
@@ -363,7 +384,9 @@
             SUP_DISPLAY_CLASSIFY = #{supDisplayClassify,jdbcType=VARCHAR},
             ASSET_THR_TYPE = #{assetThrType,jdbcType=VARCHAR},
             INVEST_PROPORTY = #{investProporty,jdbcType=VARCHAR},
-            IS_DISPLAY_ORIGINAL = #{isDisplayOriginal,jdbcType=VARCHAR}
+            IS_DISPLAY_ORIGINAL = #{isDisplayOriginal,jdbcType=VARCHAR},
+            IND_NUM = #{indNum,jdbcType=VARCHAR},
+            SUP_DOC = #{supDoc,jdbcType=VARCHAR}
         where IND_ID = #{indId,jdbcType=VARCHAR}
     </update>
 </mapper>

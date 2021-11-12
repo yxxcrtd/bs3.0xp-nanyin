@@ -219,6 +219,100 @@
        and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
 	</insert>
 	
+	<insert id="insertReportHisBySeq" parameterType="java.lang.String">
+      INSERT INTO CHB_EMPLOYEE_INFO_SUB_HIS (
+            HIS_NO,
+	     	EMPLOYEE_TYPE,
+			EMPLOYEE_NAME,
+			EMPLOYEE_SEX,
+			ISSUE_PARTY_ID,
+			IDENTIFY_NUMBER,
+			BELONGS_BANK,
+			BELONGS_PLACE,
+			COMPANY_NAME,
+			BELONGS_DEPT,
+			POSITION,
+			EDUCATION,
+			ACADEMIC_DEGREE,
+			FIRSTTIME2WORK,
+			FIRSTTIME2FINWORK,
+			PROFESSIONAL_TITLE,
+			FIN_PROFESSIONAL_CRTF,
+			FIN_TRAINING_NO,
+			AWARDS,
+			OFFICE_TEL,
+			MOBILE_TEL,
+			MAIL,
+			REG_BUSI_TYPE,
+			REG_EMPLOYEE_TYPE,
+			STATUS,
+			DEPT_CODE,
+			ORG_CODE,
+			UPDATE_USER,
+			UPDATE_TIME,
+			CREATE_USER,
+			CREATE_TIME,
+			SUMIT_SEQ,
+			CHB_SUBMIT_DEADLINE,
+			SUBMIT_DEADLINE,
+			SUBMIT_FEEDBACK_STATUS,
+			SEND_STATUS,
+			STATUS_DATE,
+			SUBMIT_TIME,
+			REMARK,
+			SUBMIT_FEEDBACK_MSG
+      )
+      SELECT
+            EMPLOYEEINFO_SEQUENCE.NEXTVAL,
+	     	EMPLOYEE_TYPE,
+			EMPLOYEE_NAME,
+			EMPLOYEE_SEX,
+			ISSUE_PARTY_ID,
+			IDENTIFY_NUMBER,
+			BELONGS_BANK,
+			BELONGS_PLACE,
+			COMPANY_NAME,
+			BELONGS_DEPT,
+			POSITION,
+			EDUCATION,
+			ACADEMIC_DEGREE,
+			FIRSTTIME2WORK,
+			FIRSTTIME2FINWORK,
+			PROFESSIONAL_TITLE,
+			FIN_PROFESSIONAL_CRTF,
+			FIN_TRAINING_NO,
+			AWARDS,
+			OFFICE_TEL,
+			MOBILE_TEL,
+			MAIL,
+			REG_BUSI_TYPE,
+			REG_EMPLOYEE_TYPE,
+			STATUS,
+			DEPT_CODE,
+			ORG_CODE,
+			UPDATE_USER,
+			UPDATE_TIME,
+			CREATE_USER,
+			CREATE_TIME,
+			SUMIT_SEQ,
+			CHB_SUBMIT_DEADLINE,
+			SUBMIT_DEADLINE,
+			SUBMIT_FEEDBACK_STATUS,
+			SEND_STATUS,
+			STATUS_DATE,
+			SUBMIT_TIME,
+			REMARK,
+			SUBMIT_FEEDBACK_MSG
+      FROM CHB_EMPLOYEE_INFO_SUB
+      WHERE 1 =1
+        AND SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+	  	<if test="regList !=null and regList.size()>0">
+	          <foreach collection="regList" item="item" open="and SUMIT_SEQ IN (" separator=","  close=")">
+	            #{item,jdbcType=VARCHAR}
+	          </foreach>
+	    </if>
+	</insert>
+
 	<delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
       DELETE FROM CHB_EMPLOYEE_INFO_SUB
       WHERE 1 =1
@@ -230,6 +324,14 @@
        AND SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
 	</delete>
 	
+	<delete id="deleteLastSubmitRegistBySeq">
+	   delete from CHB_EMPLOYEE_INFO_SUB
+	   where
+		<foreach collection="regList" item="item" open="SUMIT_SEQ in (" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+		</foreach>
+   </delete>
+
 	<update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
          update CHB_EMPLOYEE_INFO_SUB sub
         <set> 
@@ -434,7 +536,45 @@
 	          </foreach>
            </if>
    </select>
-	
+
+	   <select id="selectRegistBySeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.employeeinforegist.dto.EmployeeInfoReg001Dto">
+		   	 SELECT
+		   	    SUMIT_SEQ
+		     FROM CHB_EMPLOYEE_INFO_SUB
+		     WHERE
+		      <if test="flag == '02'">
+		         SEND_STATUS in ('02','03')
+		      </if>
+		      <if test="flag == '01'">
+		         SEND_STATUS = '01'
+		      </if>
+		       <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+		     		 	 EMPLOYEE_TYPE = #{item.employeeType,jdbcType=VARCHAR}
+		     		 and IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR}
+		     		 and SUMIT_SEQ != #{item.sumitSeq,jdbcType=VARCHAR}
+		      </foreach>
+	   </select>
+
+		<!-- 根据报送流水号更新报送状态-->
+	    <update id="updateInterfSubmitBySeqBatch" parameterType="java.util.Map">
+	         update CHB_EMPLOYEE_INFO_SUB sub
+	        <set>
+	            <if test="sendStatus != null and sendStatus != ''">
+	                sub.SEND_STATUS = #{sendStatus},
+	            </if>
+	            <if test="submitFeeBackStatus != null and submitFeeBackStatus != ''">
+	                sub.SUBMIT_FEEDBACK_STATUS = #{submitFeeBackStatus},
+	            </if>
+	            sub.submit_time = sysdate,
+	            sub.UPDATE_TIME = sysdate
+	        </set>
+	        <where>
+	            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+	                trim(sub.SUMIT_SEQ) = #{regist.sumitSeq}
+	            </foreach>
+	        </where>
+	    </update>
+
 	  <select id="selectAllDataByList" resultMap="BaseResultMap">
 		SELECT  
 		 <include refid="Base_Column_List" />

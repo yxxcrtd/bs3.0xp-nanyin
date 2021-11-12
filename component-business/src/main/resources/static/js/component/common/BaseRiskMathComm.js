@@ -1188,7 +1188,7 @@
                             continue;
                         }
                         var currentDealObj = currentCalcConditionList[index].data[key];
-                        var backupDealObj = element[key];
+                        var backupDealObj = element.data[key];
 
                         if (typeof currentDealObj != "object"
                             && currentDealObj != backupDealObj) {

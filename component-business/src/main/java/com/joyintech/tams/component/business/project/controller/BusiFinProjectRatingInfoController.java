@@ -10,6 +10,17 @@
  
 package com.joyintech.tams.component.business.project.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -17,24 +28,13 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.component.business.bond.BusiFinBondRatingInfoService;
-import com.joyintech.tams.component.business.bond.dto.BusiFinBondRatingInfoDto;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.project.BusiFinProjectRatingInfoService;
 import com.joyintech.tams.component.business.project.dto.BusiFinProjectRatingInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  *  项目类评级信息
@@ -69,7 +69,7 @@ public class BusiFinProjectRatingInfoController extends BaseController{
                     options.remove(option);
                 }
                 if(StringUtil.isNotEmpty(pageId) && StringUtil.equals(pageId,"FinProjectTargetAsset002")
-                  && StringUtil.equals(option.getId(), DictCodeList.评级对象显示类型_发行人评级.getValue())){
+                  && StringUtil.equals(option.getId(), DictCodeListExt3.评级对象显示类型_发行人评级.getValue())){
                     options.remove(option);
                 }
             }

@@ -101,10 +101,10 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    ID, INSTRUCTION_ID, PARENT_ORDER_ID, ENTRUST_ID, ACCOUNT_ID, TRADE_ID, FINANCE_ACCOUNT, 
-    ACCOUNT_NAME, MARKET, ASSET_TYPE, STOCK_CODE, STOCK_NAME, BUSINESS_FLAG, ENTRUST_TYPE, 
-    ENTRUST_PROP, ENTRUST_BS, BS_FLAG, TRADE_TYPE, TRADED_BALANCE, TRADED_VOLUME, TRADED_PRICE, 
-    CLEAR_BALANCE, TRADE_TIME, DISCOUNT, TRANS_CODE, PROP_SEAT_NO, TRADING_DAY, LOCAL_ENTRUST_ID, 
+    ID, INSTRUCTION_ID, PARENT_ORDER_ID, ENTRUST_ID, ACCOUNT_ID, TRADE_ID, FINANCE_ACCOUNT,
+    ACCOUNT_NAME, MARKET, ASSET_TYPE, STOCK_CODE, STOCK_NAME, BUSINESS_FLAG, ENTRUST_TYPE,
+    ENTRUST_PROP, ENTRUST_BS, BS_FLAG, TRADE_TYPE, TRADED_BALANCE, TRADED_VOLUME, TRADED_PRICE,
+    CLEAR_BALANCE, TRADE_TIME, DISCOUNT, TRANS_CODE, PROP_SEAT_NO, TRADING_DAY, LOCAL_ENTRUST_ID,
     BROKER_ENTRUST_ID, BROKER_TRADE_ID, REPORT_NO, CREATE_TIME, UPDATE_TIME, OFFSET_FLAG, HEDGE_FLAG, PORTFOLIO_ID, FULL_PRICE
   </sql>
 
@@ -189,7 +189,7 @@
             #{record.localEntrustId,jdbcType=VARCHAR}, #{record.brokerEntrustId,jdbcType=VARCHAR},
             #{record.brokerTradeId,jdbcType=VARCHAR}, #{record.reportNo,jdbcType=VARCHAR},
             #{record.createTime,jdbcType=TIMESTAMP}, #{record.updateTime,jdbcType=TIMESTAMP},
-            #{record.offsetFlag,jdbcType=VARCHAR}, #{record.hedgeFlag,jdbcType=VARCHAR}, #{record.portfolioId,jdbcType=VARCHAR}, #{fullPrice,jdbcType=NUMERIC},
+            #{record.offsetFlag,jdbcType=VARCHAR}, #{record.hedgeFlag,jdbcType=VARCHAR}, #{record.portfolioId,jdbcType=VARCHAR}, #{record.fullPrice,jdbcType=NUMERIC},
         </foreach>
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.exchange.common.db.domain.TradeHistory">
@@ -254,7 +254,7 @@
             <if test="tradeTime != null">
                 TRADE_TIME,
             </if>
-      DISCOUNT,
+            DISCOUNT,
             <if test="transCode != null">
                 TRANS_CODE,
             </if>
@@ -353,7 +353,7 @@
             <if test="tradeTime != null">
                 #{tradeTime,jdbcType=VARCHAR},
             </if>
-      #{discount,jdbcType=NUMERIC},
+            #{discount,jdbcType=NUMERIC},
             <if test="transCode != null">
                 #{transCode,jdbcType=VARCHAR},
             </if>
@@ -392,7 +392,7 @@
             </if>
             #{fullPrice,jdbcType=NUMERIC},
         </trim>
-  </insert>
+    </insert>
     <select id="countByExample" parameterType="com.joyintech.tams.exchange.common.db.domain.TradeHistoryExample"
             resultType="java.lang.Integer">
         select count(*) from T_TRADEHISTORY
@@ -518,7 +518,7 @@
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
-  </update>
+    </update>
     <update id="updateByExample" parameterType="map">
         update T_TRADEHISTORY
         set ID = #{record.id,jdbcType=VARCHAR},

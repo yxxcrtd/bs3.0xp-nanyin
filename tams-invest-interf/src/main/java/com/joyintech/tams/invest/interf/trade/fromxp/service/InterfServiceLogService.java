@@ -72,13 +72,31 @@ public class InterfServiceLogService extends BaseService<InterfServiceLogDto> {
 	}
 	
 	/**
+     * 更新接口服务日志
+     */
+	public int updateInterfServiceLog(String id,boolean success,String executeInfo) {
+		InterfServiceLogDto interfServiceLogDto = new InterfServiceLogDto();
+		interfServiceLogDto.setId(id);
+		if(success) {
+			interfServiceLogDto.setNewStatus(Constants.INTERF_STATUS_SUCCESS);
+		}else {
+			interfServiceLogDto.setNewStatus(Constants.INTERF_STATUS_FAIL);
+		}
+		interfServiceLogDto.setExecuteInfo(executeInfo);
+		return interfServiceLogMapper.updateInterfServiceLog(interfServiceLogDto);
+	}
+	
+	/**
 	 * 获取可处理的接口服务日志
 	 * @param interfSystem
 	 * @return
 	 */
-	public List<InterfServiceLogDto> getRunableLogList(String interfSystem) {
+	public List<InterfServiceLogDto> getRunableLogList(String id,String interfSystem) {
 		List<InterfServiceLogDto> runableLogList = new ArrayList<InterfServiceLogDto>();
 		InterfServiceLogDto where = new InterfServiceLogDto();
+		if(StringUtil.isNotEmpty(id)) {
+			where.setId(id);
+		}
 		where.setInterfSystem(interfSystem);
 		where.setInterfType(Constants.INTERF_TYPE_RECEIVE);
 		where.setInterfStatus(Constants.INTERF_STATUS_NEW);

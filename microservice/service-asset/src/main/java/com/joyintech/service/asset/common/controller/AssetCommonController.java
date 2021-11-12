@@ -15,14 +15,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.asset.common.service.AssetCommonService;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashPayRule;
-import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.FinOpenPlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductSppiInfo;
-import com.joyintech.tams.common.base.entity.FinProductTypeConfig;
-import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.asset.dto.AssetCommonInfoDto;
 import com.joyintech.tams.invest.common.asset.service.BaseCommonAssetCommonService;
 import com.joyintech.tams.invest.common.dto.mock.asset.MockAssetInfoDto;
@@ -349,5 +342,10 @@ public class AssetCommonController {
     @PostMapping("selectFundOpenjh")
     public List<FinOpenPlan> selectFundOpenjh(@RequestBody Map<String, Object> param) {
         return baseCommonAssetCommonService.selectFundOpenjh(param);
+    }
+
+    @PostMapping("getAsset")
+    public FinProduct getAsset(@RequestBody Map<String, Object> param){
+        return  assetCommonService.getAsset(param);
     }
 }

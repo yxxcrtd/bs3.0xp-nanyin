@@ -70,6 +70,21 @@ public class DisRepCashYield extends BaseEntity {
      * 取得 产品代码
      * @return 产品代码
      */
+
+    /**
+     *
+     * @return 银行收取比例
+     */
+    private BigDecimal chargeRatio;
+
+    public BigDecimal getChargeRatio() {
+        return chargeRatio;
+    }
+
+    public void setChargeRatio(BigDecimal chargeRatio) {
+        this.chargeRatio = chargeRatio;
+    }
+
     public String getBusiId() {
         return busiId;
     }

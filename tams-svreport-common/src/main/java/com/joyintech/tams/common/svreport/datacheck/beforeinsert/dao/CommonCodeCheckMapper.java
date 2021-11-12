@@ -86,4 +86,8 @@ public interface CommonCodeCheckMapper {
 	int findEmployeeSub(@Param("key") String key);
 
 	int deleteAssetInfoErrorDataByAssetCode(@Param("assetCode") String assetCode);
+
+    int deleteChbSalerStlDeaErrorDataByTradeNo(@Param("tradeNo") String tradeNo);
+
+
 }

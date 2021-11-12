@@ -62,18 +62,18 @@ $(function() {
         var type7 = $('#type7').val();
         var repAssetType = $('#repAssetType').val();
         
-        if(repAssetType == "1301"&& !$('#bussRepEquityInfoDto_isUnlisted').val()){
-        	Joyin.error("是否政府出资产业投资基金数据不能为空。")
-            return;
-        }
-        if(repAssetType == "1399"&& !$('#bussRepOtherInvestTargetInfoDto_isUnlisted').val()){
-        	Joyin.error("是否政府出资产业投资基金数据不能为空。")
-            return;
-        }
-        if(repAssetType == "1201" && !$('#bussRepAssetAstBillInfoDto_isBzhpj').val()){
-        	Joyin.error("是否标准化票据数据不能为空。")
-            return;
-        }
+        // if(repAssetType == "1301"&& !$('#bussRepEquityInfoDto_isUnlisted').val()){
+        // 	Joyin.error("是否政府出资产业投资基金数据不能为空。")
+        //     return;
+        // }
+        // if(repAssetType == "1399"&& !$('#bussRepOtherInvestTargetInfoDto_isUnlisted').val()){
+        // 	Joyin.error("是否政府出资产业投资基金数据不能为空。")
+        //     return;
+        // }
+        // if(repAssetType == "1201" && !$('#bussRepAssetAstBillInfoDto_isBzhpj').val()){
+        // 	Joyin.error("是否标准化票据数据不能为空。")
+        //     return;
+        // }
         
         var object = $.serializeToObject('#submitForm', true);
         object.operateType = operateType;

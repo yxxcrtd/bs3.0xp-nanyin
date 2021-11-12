@@ -791,4 +791,14 @@ public class EtrIbRepoinfo002Dto extends EtrEntrust implements ProcessEntity {
     public void setParentPortfolioId(String parentPortfolioId) {
         this.parentPortfolioId = parentPortfolioId;
     }
+
+    private String trader;
+
+    public String getTrader() {
+        return trader;
+    }
+
+    public void setTrader(String trader) {
+        this.trader = trader;
+    }
 }

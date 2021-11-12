@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.interf.chb.baseinfo.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -28,4 +29,10 @@ public interface SvrMstCustomerInfoAddImpMapper {
     int mergeMstCustomerInfoData(@Param("list")List<MstCustomerInfoAdd> record);
     
     int deleteTodayData();
+
+    /**
+     * 查询所有交易对手 信息
+     * @return
+     */
+    List<MstCustomerInfoAdd> getAllMstCustomerInfoInstit();
 }

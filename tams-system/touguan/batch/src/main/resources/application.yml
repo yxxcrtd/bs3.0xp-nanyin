@@ -275,7 +275,7 @@ application:
       pbcService: http://127.0.0.1:8080/tams
       investInterfService: http://127.0.0.1:8080/tams
       tamsServer: http://127.0.0.1:8080/tams
-      exchangeService: http://127.0.0.1:8080/tams
+      exchangeService: http://127.0.0.1:8080/tams/service
 #base数据库配置
 base:
   datasource:
@@ -356,7 +356,7 @@ application:
       pbcService: http://127.0.0.1:8080/tams
       investInterfService: http://127.0.0.1:8080/tams
       tamsServer: http://127.0.0.1:8080/tams
-      exchangeService: http://127.0.0.1:8080/tams
+      exchangeService: http://127.0.0.1:8080/tams/service
 #base数据库配置
 base:
   datasource:

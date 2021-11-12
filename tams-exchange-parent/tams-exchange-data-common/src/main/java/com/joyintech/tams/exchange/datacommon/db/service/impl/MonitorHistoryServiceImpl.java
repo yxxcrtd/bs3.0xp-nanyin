@@ -6,12 +6,14 @@ import com.joyintech.tams.exchange.common.db.domain.MonitorHistory;
 import com.joyintech.tams.exchange.common.db.domain.MonitorHistoryExample;
 import com.joyintech.tams.exchange.datacommon.db.dao.MonitorHistoryMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.MonitorHistoryService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @ClassName MonitorHistoryServiceImpl
@@ -23,11 +25,10 @@ import java.util.List;
 @Service
 public class MonitorHistoryServiceImpl implements MonitorHistoryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MonitorHistoryServiceImpl.class);
-
     @Autowired
     private MonitorHistoryMapper monitorHistoryMapper;
-
+    @Autowired
+    private SqlSessionTemplate sqlSessionTemplate;
     @Override
     public List<MonitorHistory> queryAll() {
         return monitorHistoryMapper.selectByExample(null);
@@ -35,7 +36,18 @@ public class MonitorHistoryServiceImpl implements MonitorHistoryService {
 
     @Override
     public void saveMonitorHistory(List<MonitorHistory> monitorHistories) {
-        monitorHistoryMapper.insertBatch(monitorHistories);
+        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH,false);
+        MonitorHistoryMapper monitorHistoryMapper = sqlSession.getMapper(MonitorHistoryMapper.class);
+        AtomicInteger index = new AtomicInteger(0);
+        monitorHistories.forEach(monitorHistory -> {
+            index.getAndIncrement();
+            monitorHistoryMapper.insertSelective(monitorHistory);
+            if (index.get() % 500 == 0){
+                sqlSession.flushStatements();
+            }
+        });
+        sqlSession.commit();
+        sqlSession.close();
     }
 
     @Override

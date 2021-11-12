@@ -1734,8 +1734,10 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
         List<CheckReport001Dto> resultlist = new ArrayList<CheckReport001Dto>();
         // 检查登记表中小于今天所有未报送的数据
         if(CollectionUtils.isNotEmpty(checkKeys)){
+
+        	List<String> keys = checkKeys.stream().map(string -> string.getAssetCode()).collect(Collectors.toList());
             // 调用检查方法
-            resultlist.addAll(check(executeDate));
+            resultlist.addAll(check(executeDate,keys));
             // 同一资产同一产品汇总一条
             Map<String,String> showInMap = new HashMap<String,String>();
             checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getUniqueKey,(p)->p,(key1,key2)->key1));
@@ -1773,7 +1775,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
      * @return List<CheckReport001Dto>
      * @version 1.7 2019年6月24日
      */
-    public List<CheckReport001Dto> check(Date executeDate){
+    public List<CheckReport001Dto> check(Date executeDate,List<String> keys){
         // 数据日期为系统时间
         Date checkdate = DateUtil.parse(DateUtil.getSysDate());
 		// 供跑批使用
@@ -1781,7 +1783,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 			checkdate = executeDate;
 		}
         // 删除今天所有已检查的数据
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产要素信息登记.getValue(),checkdate);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产要素信息登记.getValue(),checkdate,keys);
         //增加例外情况过滤
         List<ChbCheckRuleout> listInvestTradeRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_INVEST_TRADE_SUB);
         Map<String, List<ChbCheckRuleout>> mapInvestTradeRuleout = listInvestTradeRuleout.stream().collect(
@@ -1789,7 +1791,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
         //检查数据
         List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
         //报送前强制的错误检查
-        resultList.addAll(beforeSubErrorCheck.checkAssetInfoReg(checkdate,null,mapInvestTradeRuleout));
+        resultList.addAll(beforeSubErrorCheck.checkAssetInfoReg(checkdate,keys,mapInvestTradeRuleout));
         //警告逻辑检查
         //resultList.addAll(beforeSubCheck.checkInvestReg(checkdate,mapInvestTradeRuleout));
         //报错检查异常数据

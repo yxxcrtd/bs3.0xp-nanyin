@@ -1524,7 +1524,6 @@ public enum DictCodeList implements BaseDictCodeList {
 	估值来源_中证登_CSD(DictCode.估值来源,"CSD","中证登(CSD)"),
 	估值来源_上清所_SCH(DictCode.估值来源,"SCH","上清所(SCH)"),
 	估值来源_模型法_MOD(DictCode.估值来源,"MOD","模型法(MOD)"),
-	估值来源_第三方估值_OTH(DictCode.估值来源,"OTH","第三方估值(OTH)"),
 	行情类型_指数(DictCode.行情类型,"02","指数"),
 	行情类型_收益率曲线(DictCode.行情类型,"03","收益率曲线"),
 	行情类型_利率(DictCode.行情类型,"04","利率"),
@@ -1833,7 +1832,6 @@ public enum DictCodeList implements BaseDictCodeList {
 	估值市价_专家法(DictCode.估值市价,"EXP","专家法"),
 	估值市价_开盘价(DictCode.估值市价, "09", "开盘价"),
 	估值市价_中间价(DictCode.估值市价, "08", "中间价"),
-	估值市价_第三方估值(DictCode.估值市价, "13", "第三方估值"),
 	动作标志_新增(DictCode.动作标志,"01","新增"),
 	动作标志_修改(DictCode.动作标志,"02","修改"),
 	动作标志_删除(DictCode.动作标志,"03","删除"),
@@ -2022,7 +2020,6 @@ public enum DictCodeList implements BaseDictCodeList {
 	产品数据来源_三方分销TA(DictCode.产品数据来源, "02", "三方分销TA"),
     释放状态_未释放(DictCode.释放状态,"0","未释放"),
     释放状态_已释放(DictCode.释放状态,"1","已释放"),
-	评级对象显示类型_发行人评级(DictCode.评级对象显示类型,"91","发行人评级"),
 	;
 	/*字典值已经满了 ，不要添加了*/
     private String value;

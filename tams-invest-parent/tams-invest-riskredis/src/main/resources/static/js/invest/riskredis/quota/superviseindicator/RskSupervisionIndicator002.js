@@ -319,6 +319,11 @@
     			 messages += '<span>&nbsp' + JoyinUtil.getMessage('BUSS_COM_E_0038',JoyinUtil.getLabel("RskSupervisionIndicator002.indName")) + '</span>'+'<br>';
         		 mesFlag=false;
 	       	}
+			if($('#' + pageId + '_indNum').val()==''){
+				$('#' + pageId + '_indNum').addClass('errors');
+				messages += '<span>&nbsp' + JoyinUtil.getMessage('BUSS_COM_E_0038',JoyinUtil.getLabel("RskSupervisionIndicator002.indNum")) + '</span>'+'<br>';
+				mesFlag=false;
+			}
 	       	if($('#' + pageId + '_indType').val()==''){
 	       		$('#' + pageId + '_indType').next().next().children().children().addClass("errors")
 	       		//$('#' + pageId + '_indType').addClass('errors');

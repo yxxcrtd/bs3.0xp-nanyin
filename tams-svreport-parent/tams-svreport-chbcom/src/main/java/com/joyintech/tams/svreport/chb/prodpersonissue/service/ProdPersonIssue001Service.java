@@ -303,7 +303,7 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 
-		if(CollectionUtils.isNotEmpty(data)){
+		if(data!=null){
 			page.setTotal(data.size()/pageSize+1);
 		}else{
 			page.setTotal(0);
@@ -476,7 +476,7 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 		// 检查登记表中小于今天所有未报送的数据
 		if(CollectionUtils.isNotEmpty(checkKeys)){
 			// 调用检查方法
-			resultlist.addAll(check(null));
+			resultlist.addAll(check(null,checkKeys));
 			checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
 			for(String key : checkKeys){
 				if(checkmap.get(key)!=null){
@@ -505,7 +505,7 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 	 * @return List<CheckReport001Dto>
 	 * @version 1.7 2019年6月24日
 	 */
-	public List<CheckReport001Dto> check(Date batchDate){
+	public List<CheckReport001Dto> check(Date batchDate,List<String> keys){
 		// 数据日期为系统时间
 		Date checkdate = DateUtil.parse(DateUtil.getSysDate());
 		// 供跑批使用
@@ -513,13 +513,13 @@ public class ProdPersonIssue001Service extends SvrCommonExportService<ProdPerson
 			checkdate = batchDate;
 		}
 		// 删除今天所有已检查的数据
-		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品发行登记.getValue(),checkdate);
+		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品发行登记.getValue(),checkdate,keys);
 		//增加例外情况过滤
         List<ChbCheckRuleout> listRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_PRD_ISSUE_SUB);
         Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(
                  JoyinCollectors.groupingBy(x -> x.getProdId()));
         //检查数据
-        List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkProdIssueReg(checkdate,null,mapRuleout);
+        List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkProdIssueReg(checkdate,keys,mapRuleout);
         //报错检查异常数据
         int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
 		int batchLastIndex = batchCount;// 每批最后一个的下标

@@ -2387,4 +2387,14 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
     public void setBusinessModel(String businessModel) {
         this.businessModel = businessModel;
     }
+
+    private BigDecimal unitIntCalc;
+
+    public BigDecimal getUnitIntCalc() {
+        return unitIntCalc;
+    }
+
+    public void setUnitIntCalc(BigDecimal unitIntCalc) {
+        this.unitIntCalc = unitIntCalc;
+    }
 }

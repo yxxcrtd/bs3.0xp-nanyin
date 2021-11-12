@@ -119,8 +119,11 @@
 </if>
  </select>
  <select  id="getOpertModeByPordId"  resultType="java.lang.String">
- select  OPERATE_MODE  from CHB_PRD_DECLARE_SUB  
- where  prod_id=#{prodId,jdbcType=VARCHAR}
+     select  t.OPERATE_MODE from
+     (select  row_number() over(partition by prod_id order by update_time desc) my_rank,OPERATE_MODE
+     from CHB_PRD_DECLARE_SUB
+     where  prod_id=#{prodId,jdbcType=VARCHAR}
+     and  status in ('01','02'))t where t.my_rank=1
  </select>
  
 </mapper>

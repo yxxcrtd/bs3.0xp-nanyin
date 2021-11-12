@@ -883,7 +883,7 @@
         }
         //分红明细不能为空
         if(object.finAssetIntInfoList.length == 0){
-            Joyin.alert("分红明细信息不能为空！");
+            Joyin.error("分红明细信息不能为空！");
             return;
         }
         if(isCalcConditionChangedTwo(object.bussTrdTransferOrder)){

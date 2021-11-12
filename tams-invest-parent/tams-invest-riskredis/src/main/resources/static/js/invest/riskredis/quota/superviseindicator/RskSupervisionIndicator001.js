@@ -32,9 +32,11 @@
         
         cols:[
              {field:'indId',  title: 'RskSupervisionIndicator001.indId',visible: false}
+            ,{field:'indNum',  width:200 , title: 'RskSupervisionIndicator002.indNum'}
             ,{field:'indName', width:500 , title: 'RskSupervisionIndicator001.indName'}
             ,{field:'indTypeStr', width:180 , sortField:"indType", title: 'RskSupervisionIndicator001.indType'}
-            ,{field:'supTypeStr', width:160 , sortField:"supType",title: 'RskSupervisionIndicator001.supType'}
+            ,{field:'supTypeStr', width:140 , sortField:"supType",title: 'RskSupervisionIndicator001.supType'}
+            ,{field:'supDoc', width:340 , sortField:"supDoc",title: 'RskSupervisionIndicator002.supDoc'}
             ,{field:'warnCond', width:240 ,title: 'RskSupervisionIndicator001.warnCond',render: transferWarnFoul}
             ,{field:'foulCond', width:240 ,title: 'RskSupervisionIndicator001.foulCond',render: transferWarnFoul}
             ,{field:'approveCond', title: 'RskSupervisionIndicator001.approveCond',render: transferWarnFoul,width:150}

@@ -38,6 +38,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.LongAdder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -232,6 +234,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      * 数字18.5
      */
     public static final String PATTERN_EIGTEEN_FIFVE = "([0-9]{0,13})(\\.(\\d){0,5})?$";
+    /**
+     * YYYYMMDD 时间格式校验，正则表达式
+     */
+    public static final String DATE_FORMAT_YYYYMMDD = "((\\d{3}[1-9]|\\d{2}[1-9]\\d|\\d[1-9]\\d{2}|[1-9]\\d{3})(((0[13578]|1[02])(0[1-9]|[12]\\d|3[01]))|((0[469]|11)(0[1-9]|[12]\\d|30))|(02(0[1-9]|[1]\\d|2[0-8]))))|(((\\d{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))0229)";
 
     /**
      * 上游接口解析读取文件处理最大线程数
@@ -1490,9 +1496,21 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     }
                 }
                 String row = String.valueOf(rowId + 1);
+                // 增加业务确认日期格式校验 by caozhenming 20210922 start
+                boolean equityConfDateFlag = false;
+                String equityConfDate =  item.get("equityConfDate");
+                Pattern pattern = Pattern.compile(DATE_FORMAT_YYYYMMDD);
+                Matcher matcher = pattern.matcher(equityConfDate);
+                if (matcher.matches()) {
+                    equityConfDateFlag = true;
+                } else {
+                    message.add(this.getMessage("CHB_EQUITY_EQUITYCONFDATE_CHECK"));
+                }
+                // 增加业务确认日期格式校验 by caozhenming 20210922 end
+
 
                 // 判断已存在数据中 "业务确认日"是否跨区间，是则不能更新
-                if (allChbEqudetDataMap != null && allChbEqudetDataMap.size() > 0) {
+                if (equityConfDateFlag && allChbEqudetDataMap != null && allChbEqudetDataMap.size() > 0) {
                     String account =item.get("account");
                     if (item.containsKey("regCode")) {
                         account =allRegCodeMap.get(item.get("regCode"));
@@ -1633,7 +1651,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
                 try {
                     // 16 业务确认日期
-                    entity.setEquityConfDate(DateUtil.parse(item.get("equityConfDate")));
+                    if (equityConfDateFlag) {
+                        entity.setEquityConfDate(DateUtil.parse(item.get("equityConfDate")));
+                    }
                 }
                 catch (Exception e) {
                     // TODO: handle exception

@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.chb.employeeinforegist.dto.EmployeeInfoReg001Dto;
+import com.joyintech.tams.svreport.chb.prodpersonissue.dto.ProdPersonIssue001Dto;
+
 import org.springframework.stereotype.Repository;
 
 
@@ -47,6 +49,31 @@ public interface EmployeeInfoReg001Mapper {
      * int
      */
     int insertReportHis(@Param("registList")List<EmployeeInfoReg001Dto> registList);
+
+
+    /**
+     * 功能:根据报送流水号未主键，将已报送数据移入履历表
+     * @since
+     * @version
+     * @author：
+     * @param registList
+     * @return
+     * int
+     */
+    int insertReportHisBySeq(@Param("regList")List<String> list);
+
+
+    /**
+     * 功能:删除登记表中的已报送数据
+     * @since 1.7.0
+     * @version 1.7.0
+     * @author：yuluan 2019年5月23日
+     * @param registList
+     * @return
+     * int
+     */
+    int deleteLastSubmitRegistBySeq(@Param("regList")List<String> list);
+
     /**
      * 功能:删除登记表中的已报送数据
      * @since 1.7.0
@@ -65,6 +92,16 @@ public interface EmployeeInfoReg001Mapper {
      * @since 1.0
      */
     int updateInterfSubmitAndSeqBatch(@Param("sendStatus")String sendStatus, @Param("registList")List<EmployeeInfoReg001Dto> employeeInfoRegList);
+
+    /**
+     * 根据报送流水号进行状态设置
+     * @param list 报送状态
+     * @return
+     * @see
+     * @since 1.0
+     */
+    void updateInterfSubmitBySeqBatch(@Param("sendStatus")String sendStatus,@Param("submitFeeBackStatus")String submitFeeBackStatus, @Param("registList")List<EmployeeInfoReg001Dto> registList);
+
     /**
      * 接口报送更新(更新所有检查通过的数据)
      * @param sendStatus 报送状态
@@ -107,6 +144,14 @@ public interface EmployeeInfoReg001Mapper {
 	 * @return
 	 */
 	List<String> selectRegistSeqnoList(@Param("list")List<String> registList, @Param("flag")String string);
+
+	/**
+	 * 查询所有存在报送记录的数据
+	 * @param registList
+	 * @param string
+	 * @return
+	 */
+	List<String> selectRegistBySeqnoList(@Param("list")List<EmployeeInfoReg001Dto> registList, @Param("flag")String string);
 
 	/**
 	 * 选择导出查询

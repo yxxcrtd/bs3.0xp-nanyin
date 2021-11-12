@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
+import com.joyintech.tams.report.submitmaintenance.equityinfo.util.CheckUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -122,7 +123,8 @@ public class EquityInfoValid {
      * 邮箱验证
      */
     //public static final String PATTERN_MAILBOX = "^([a-z0-9A-Z]+[-|\\.|_]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-    public static final String PATTERN_MAILBOX = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_.-]+(\\.[a-zA-Z0-9_.-]+)*\\.[a-zA-Z0-9]{2,6}$";
+//    public static final String PATTERN_MAILBOX = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_.-]+(\\.[a-zA-Z0-9_.-]+)*\\.[a-zA-Z0-9]{2,6}$";
+    public static final String PATTERN_MAILBOX = "^[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?$";
     /**
      * logger
      */
@@ -554,6 +556,12 @@ public class EquityInfoValid {
             map.put("HOLDER_TYPE", equityInfo001Dto.getHolderType());
             sb.append("01");
         }
+        // 投资者分类
+        else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getHolderClassify(),
+                equityInfoRegist001Dto.getHolderClassify())) {
+            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
+            sb.append("01");
+        }
         // 个人证件类别
         else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getPersonalIdentifyType(),
                 equityInfoRegist001Dto.getPersonalIdentifyType())) {
@@ -689,6 +697,12 @@ public class EquityInfoValid {
                 && !equityInfo001Dto.getHolderType().equals(
                 equityInfoRegist001Dto.getHolderType())) {
             map.put("HOLDER_TYPE", equityInfo001Dto.getHolderType());
+        }
+        // 投资者分类
+        else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderClassify())
+                && !equityInfo001Dto.getHolderClassify().equals(
+                equityInfoRegist001Dto.getHolderClassify())) {
+            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
         }
         // 个人证件类别
         else if (StringUtil.isNotEmpty(equityInfo001Dto.getPersonalIdentifyType())
@@ -1081,6 +1095,12 @@ public class EquityInfoValid {
             map.put("HOLDER_EMAIL", list.get(20));
             sb.append("01");
         }
+        //投资者分类
+        else if (!CommonUtil.equalsIgnoreNull(list.get(25),
+                equityInfoRegist001Dto.getHolderClassify())) {
+            map.put("HOLDER_CLASSIFY", list.get(25));
+            sb.append("01");
+        }
         if (StringUtil.isNotEmpty(sb)) {
             map.put("type02", sb.toString());
         }
@@ -1181,6 +1201,11 @@ public class EquityInfoValid {
         else if (!CommonUtil.equalsIgnoreNull(list.get(21), equityInfoRegist001Dto.getRemark())) {
             map.put("REMARK", list.get(21));
         }
+        //投资者分类
+        else if (!CommonUtil.equalsIgnoreNull(list.get(25),
+                equityInfoRegist001Dto.getHolderClassify())) {
+            map.put("HOLDER_CLASSIFY", list.get(25));
+        }
         else {
             // 风险偏好
             if (!CommonUtil.equalsIgnoreNull(list.get(17),
@@ -1206,7 +1231,6 @@ public class EquityInfoValid {
                 map.put("HOLDER_EMAIL", list.get(20));
                 type = "04";
             }
-
 //            if (!StringUtil.equals(type, "04")) {
 //                // 备注
 //                if (!CommonUtil.equalsIgnoreNull(list.get(21), equityInfoRegist001Dto.getRemark())) {
@@ -1546,6 +1570,36 @@ public class EquityInfoValid {
     }
 
     /**
+     * 投资者分类验证
+     *
+     * @param message 验证信息
+     * @param holderClassify 投资者类别
+     * @param type 数据类型
+     * @return message 验证信息
+     * @see
+     * @since 1.0
+     */
+    private List<String> checkHolderClassify(List<String> message, String holderClassify, String type,
+                                         Map<String,TransformRule001Dto> spzMap,
+                                         Map<String,List<ChbTransformRuleObjDto>> objFiledsMap,
+                                         EquityInfo001Dto equityInfo001Dto) {
+        List<ChbTransformRuleObjDto> objFileds=null;
+        if(objFiledsMap!=null){
+            objFileds=objFiledsMap.get("holderClassify");
+        }
+            if (EquityInfoCheckUtil.isEmpty(holderClassify)) {
+                message.add(this.getMessage("CHB_EQUITYINFO_E_005", "新增或重要信息变更", "投资者分类"));
+            }
+            else if (EquityInfoCheckUtil.isDictCodeExist(DictCode.投资者分类, holderClassify)) {
+                message.add(this.getMessage("CHB_EQUITYINFO_E_004", "投资者分类"));
+            }
+            else if (EquityInfoCheckUtil.whiteListCheck( holderClassify,objFileds,spzMap,equityInfo001Dto)) {
+                message.add(this.getMessage("CHB_EQUITYINFO_E_035", "投资者分类"));
+            }
+        return message;
+    }
+
+    /**
      * 投资者所属国家和地区
      *
      * @param message 验证消息
@@ -1877,9 +1931,16 @@ public class EquityInfoValid {
             else if ("00".equals(personalIdentifyTypeKey)
                     || "01".equals(personalIdentifyTypeKey)) {
 //                if (inentifyNumber.length() != 18 && inentifyNumber.length() != 15) {
-                if (EquityInfoCheckUtil.getByteLength(inentifyNumber) != 18 && EquityInfoCheckUtil.getByteLength(inentifyNumber) != 15) {
-                    message.add(this.getMessage("CHB_EQUITYINFO_E_002", "证件号码", "15或18"));
+// 修改证件号校验 by caozhenming 20210923 start
+//                if (EquityInfoCheckUtil.getByteLength(inentifyNumber) != 18 && EquityInfoCheckUtil.getByteLength(inentifyNumber) != 15) {
+//                    message.add(this.getMessage("CHB_EQUITYINFO_E_002", "证件号码", "15或18"));
+//                }
+                // 身份证号校验
+                Map<String,String> result = CheckUtil.idCardValidator(inentifyNumber);
+                if (!Boolean.valueOf(result.get("resultCode"))){
+                    message.add(result.get("resultMessage"));
                 }
+                // 修改证件号校验 by caozhenming 20210923 end
             }
             else if ("01".equals(institutionInentifyTypeKey)) {
 //                if (inentifyNumber.length() != 18) {
@@ -2629,6 +2690,8 @@ public class EquityInfoValid {
                 message = checkHolderMark(message, list.get(6), type,spzMap,objFiledsMap,equityInfo001Dto);
                 // 投资者类别
                 message = checkHolderType(message, list.get(8), type,spzMap,objFiledsMap,equityInfo001Dto);
+                // 投资者分类
+                message = checkHolderClassify(message, list.get(25), type,spzMap,objFiledsMap,equityInfo001Dto);
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message, list.get(9), type, list.get(8),
                         list.get(6),spzMap,objFiledsMap,equityInfo001Dto);
@@ -2793,6 +2856,8 @@ public class EquityInfoValid {
                 message = checkHolderMark(message, equityInfoRegist001Dto.getHolderMark(), type,spzMap,objFiledsMap,null);
                 // 投资者类别
                 message = checkHolderType(message, equityInfoRegist001Dto.getHolderType(), type,spzMap,objFiledsMap,null);
+                // 投资者分类
+                message = checkHolderClassify(message,equityInfoRegist001Dto.getHolderClassify(), type,spzMap,objFiledsMap,null);
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message,
                         equityInfoRegist001Dto.getPersonalIdentifyType(), type,
@@ -3034,6 +3099,14 @@ public class EquityInfoValid {
                 // 投资者类别
                 message = checkHolderType(message, SysDataUtil.getZZDictCodeAndName(DictCode.投资者类别,
                         equityInfo001Dto.getHolderType()), type,spzMap,objFiledsMap,equityInfo001Dto);
+                //添加系统参数三期是否校验投资者分类字段.01 验证字段,02不验证字段
+                String HolderClassify = CacheUtil.getSysParam("HAS_HOLDER_CLASSIFY");
+                if(StringUtil.isNotEmpty(HolderClassify)&&DictCodeList.是否_中债_是.getValue().equals(HolderClassify)){
+                    // 投资者分类
+                    message = checkHolderClassify(message, SysDataUtil.getZZDictCodeAndName(DictCode.投资者分类,
+                            equityInfo001Dto.getHolderClassify()), type,spzMap,objFiledsMap,equityInfo001Dto);
+                }
+
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message,
                         SysDataUtil.getZZDictCodeAndName(DictCode.个人证件类别,

@@ -198,4 +198,9 @@
     <delete id="deleteAssetInfoErrorDataByAssetCode">
         delete from CHB_ASSET_INFO_ERRODATA where ASSET_CODE = #{assetCode}
     </delete>
+
+
+    <delete id="deleteChbSalerStlDeaErrorDataByTradeNo">
+        delete from CHB_SALER_STL_DEA_ERRODATA where TRADE_NO = #{tradeNo}
+    </delete>
 </mapper>

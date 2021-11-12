@@ -1291,6 +1291,8 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                             DictCode.SPV资金托管账户开户行, equityInfo001Dto.getSpvCapAccBank()));
                     equityInfo001Dto.setHolderType(SysDataUtil.getNameFromDataDict(DictCode.投资者类别,
                             equityInfo001Dto.getHolderType()));
+                    equityInfo001Dto.setHolderClassify(SysDataUtil.getNameFromDataDict(DictCode.投资者分类,
+                            equityInfo001Dto.getHolderClassify()));
                     if (StringUtil.isNotEmpty(equityInfo001Dto.getPersonalIdentifyType())) {
                         equityInfo001Dto.setInentifyType(SysDataUtil.getNameFromDataDict(
                             DictCode.个人证件类别, equityInfo001Dto.getPersonalIdentifyType()));
@@ -1316,6 +1318,8 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                             DictCode.SPV资金托管账户开户行, equityInfo001Dto.getSpvCapAccBank()));
                     equityInfo001Dto.setHolderType(SysDataUtil.getZZDictCodeAndName(DictCode.投资者类别,
                             equityInfo001Dto.getHolderType()));
+                    equityInfo001Dto.setHolderClassify(SysDataUtil.getNameFromDataDict(DictCode.投资者分类,
+                            equityInfo001Dto.getHolderClassify()));
                     equityInfo001Dto.setHolderRiskPrefer(SysDataUtil.getZZDictCodeAndName(
                             DictCode.投资风险偏好, equityInfo001Dto.getHolderRiskPrefer()));
                     equityInfo001Dto.setPersonalIdentifyType(SysDataUtil.getZZDictCodeAndName(
@@ -1360,6 +1364,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             }
             if (!EquityInfoCheckUtil.isEmpty(list.get(8))) {
                 equityInfo001Dto.setHolderType(EquityInfoCheckUtil.subDictcode(list.get(8), " "));
+            }
+            if (!EquityInfoCheckUtil.isEmpty(list.get(25))) {
+                equityInfo001Dto.setHolderClassify(EquityInfoCheckUtil.subDictcode(list.get(25), " "));
             }
             if (!EquityInfoCheckUtil.isEmpty(list.get(9))) {
                 equityInfo001Dto.setPersonalIdentifyType(
@@ -2391,6 +2398,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("固定电话");
             headList.add("电子邮箱");
             headList.add("备注");
+            headList.add("投资人分类");
 
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
@@ -2525,6 +2533,8 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             list.set(7, regist001Dto.getHolderRegion());
             // 投资者类别
             list.set(8, regist001Dto.getHolderType());
+            // 投资者分类
+            list.set(25, regist001Dto.getHolderClassify());
             // 个人证件类别
             list.set(9, regist001Dto.getPersonalIdentifyType());
             // 机构证件类别

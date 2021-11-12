@@ -253,6 +253,17 @@ public class DisRepProdInfo extends BaseEntity {
      */
     private String fProdId;
 
+
+    /**
+     * 分红方式（01 主动管理、02 被动管理）
+     */
+    private String bonusMode;
+    /**
+     * 最少追加金额
+     */
+    private BigDecimal lowestAmt;
+
+
     /**
      * 取得 产品代码
      * @return 产品代码
@@ -1027,5 +1038,21 @@ public class DisRepProdInfo extends BaseEntity {
      */
     public void setfProdId(String fProdId) {
         this.fProdId = fProdId == null ? null : fProdId.trim();
+    }
+
+    public String getBonusMode() {
+        return bonusMode;
+    }
+
+    public void setBonusMode(String bonusMode) {
+        this.bonusMode = bonusMode;
+    }
+
+    public BigDecimal getLowestAmt() {
+        return lowestAmt;
+    }
+
+    public void setLowestAmt(BigDecimal lowestAmt) {
+        this.lowestAmt = lowestAmt;
     }
 }

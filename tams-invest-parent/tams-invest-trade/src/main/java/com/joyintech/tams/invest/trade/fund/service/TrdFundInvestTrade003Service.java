@@ -309,10 +309,12 @@ public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTrade
             restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdFundInvestTrade/doComplete", entity,
                 Integer.class);
 
-            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
-//                doInsertRedemption(entity);
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())
+                    && "N".equals(CacheUtil.getSysParam("is_auto_redemption"))) {
+                doInsertRedemption(entity);
             }
-            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())
+                    && !"N".equals(CacheUtil.getSysParam("is_auto_redemption"))) {
                 doCompleteRedemption(entity);
                 if (EntrustCompleteUtil.isEtrCompleted(entity.getEntrustId())) {
                     EntrustCompleteUtil.doComplete(Arrays.asList(entity.getEntrustId()));

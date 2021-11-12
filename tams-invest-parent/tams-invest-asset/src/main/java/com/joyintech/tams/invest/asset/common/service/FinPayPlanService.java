@@ -10,43 +10,43 @@
 
 package com.joyintech.tams.invest.asset.common.service;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.joyintech.calculation.util.ArithmeticUtil;
+import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.FinCashPlan;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.component.business.asset.BussFinRepaymentService;
+import com.joyintech.tams.component.business.asset.FinPayInterestStdInfoService;
+import com.joyintech.tams.component.business.asset.dto.BussFinRepaymentDto;
+import com.joyintech.tams.component.business.asset.dto.FinPayInterestStdInfoDto;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.asset.common.dto.FinAssetRateAdjDto;
+import com.joyintech.tams.invest.asset.common.dto.FinPayPlanDto;
+import com.joyintech.tams.invest.common.asset.dto.AssetCommonInfoDto;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import com.joyintech.tams.invest.common.calculator.AdjustedTradeDayCal;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.interf.trade.fromxp.service.InterfServiceLogService;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.calculation.util.ArithmeticUtil;
-import com.joyintech.tams.common.base.entity.FinCashPlan;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.component.business.asset.BussFinRepaymentService;
-import com.joyintech.tams.component.business.asset.FinPayInterestStdInfoService;
-import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.invest.asset.common.dto.FinAssetRateAdjDto;
-import com.joyintech.tams.invest.asset.common.dto.FinPayPlanDto;
-import com.joyintech.tams.invest.common.asset.dto.AssetCommonInfoDto;
-import com.joyintech.tams.invest.common.calculator.AdjustedTradeDayCal;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.service.BaseProcessService;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -54,7 +54,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  * 〈功能详细描述〉
  * @author zhangnian
  * @version 1.0 2018年11月23日
- * @see FinPayInterestPlanService
+ * @see FinPayPlanService
  * @since 1.0
  */
 @Service
@@ -82,6 +82,12 @@ public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implem
 
     @Autowired(required = false)
     private FinPayInterestStdInfoService finPayInterestStdInfoService;
+
+    @Autowired
+    private InterfServiceLogService interfServiceLogService;
+
+    @Autowired
+    private CommonBusinessService commonBusinessService;
     /**
      * {@inheritDoc}
      */
@@ -290,5 +296,82 @@ public class FinPayPlanService extends CommonExportService<FinPayPlanDto> implem
         return restTemplate.postForObject(ServiceApplication.ASSET_SERVICE_NAME
             + "/FinPayPlan/isNotIng", paramMap, boolean.class);
     }
+
+
+    /**
+     * 资产还本计划(从信评接口接收)
+     * @param id
+     * @param msg
+     */
+    public void executeInterf(String id,String msg){
+        Long branch =StringUtil.isEmpty(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE))?0:Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
+        FinPayPlanDto entity  = new FinPayPlanDto();
+        //FinPayInterestStdInfoDto finPayInterestStdInfoDto = new FinPayInterestStdInfoDto();
+        BussFinRepaymentDto bussFinRepaymentDto = new BussFinRepaymentDto();
+        try{
+            JSONObject jsonObject = JSONObject.parseObject(msg);
+            String finprodMarketId = jsonObject.getString("finprod_market_id");
+            String finprodName = jsonObject.getString("finprod_name");
+            //构造还本付息计划，模拟前台录入，便于调用共通
+            entity.setFinprodMarketId(finprodMarketId);
+            entity.setFinprodName(finprodName);
+            packFinproduct(entity);
+            JSONArray payList = JSONObject.parseArray(jsonObject.getString("pay_list"));
+            if(null!=payList&&payList.size()>0){
+                String finprodId = entity.getFinprodId();
+                String cashIdHb = commonBusinessService.generateCashFlowCode(finprodId, entity.getFinprodType2(), branch, DictCodeListExt1.现金流二级类型_本金.getValue());
+                //String cashIdFx = commonBusinessService.generateCashFlowCode(finprodId, DictCodeListExt1.现金流业务类型_金融产品.getValue(), branch, DictCodeListExt1.现金流二级类型_利息.getValue());
+                //还本计划
+                List<FinCashPlanDto> finCashPlanDtoHb = new ArrayList<>();
+                for (int i = 0; i < payList.size(); i++) {
+                    FinCashPlanDto finCashPlanDto = new FinCashPlanDto();
+                    JSONObject jso = (JSONObject)payList.get(i);
+                    String payType = jso.getString("pay_type");
+                    int payDate = jso.getInteger ("pay_date");
+                    BigDecimal prinAmt = jso.getBigDecimal("prin_amt");
+                    BigDecimal prinPer = jso.getBigDecimal("prin_per");
+                    Date mdate = DateUtil.parse(Integer.toString(payDate));
+                    finCashPlanDto.setMdate(mdate);
+                    finCashPlanDto.setPayDate(mdate);
+                    finCashPlanDto.setPrinAmt(prinAmt);
+                    finCashPlanDto.setCashId(cashIdHb);
+                    finCashPlanDtoHb.add(finCashPlanDto);
+                }
+                finCashPlanDtoHb = finCashPlanDtoHb.stream().sorted((o1,o2) -> {return DateUtil.compareDate(o1.getMdate(),o2.getMdate());}).collect(Collectors.toList());
+                //付息计划
+                /*List<FinCashPlanDto> finCashPlanDtoFx = new ArrayList<>();
+                for (int i = 0; i < finCashPlanDtoHb.size(); i++) {
+                    FinCashPlanDto finCashPlanDto = new FinCashPlanDto();
+                    FinCashPlanDto item = finCashPlanDtoHb.get(i);
+                    finCashPlanDto.setCashId(cashIdFx);
+                    finCashPlanDto.setFinprodId(finprodId);
+                    if(i==0){
+                        finCashPlanDto.setVdate(entity.getVdate());
+                        finCashPlanDto.setMdate(item.getMdate());
+                        finCashPlanDtoFx.add(finCashPlanDto);
+                        continue;
+                    }
+                    finCashPlanDto.setVdate(finCashPlanDtoHb.get(i-1).getMdate());
+                    finCashPlanDto.setMdate(item.getMdate());
+                    finCashPlanDtoFx.add(finCashPlanDto);
+                }
+                finPayInterestStdInfoDto.setFinCashPlanList(finCashPlanDtoFx);*/
+                bussFinRepaymentDto.setFinCashPlanList(finCashPlanDtoHb);
+                entity.setBussFinRepaymentDto(bussFinRepaymentDto);
+                //entity.setFinPayInterestStdInfoDto(finPayInterestStdInfoDto);
+                doComplete(entity, OperationType.NEW);
+            }
+            interfServiceLogService.updateInterfServiceLog(id, true, "资产还本计划接口数据接入成功！");
+        }catch (Exception e){
+            interfServiceLogService.updateInterfServiceLog(id, false, "资产还本计划接口数据接入失败:"+e.getMessage());
+        }
+    }
+
+    public void packFinproduct(FinPayPlanDto entity){
+        FinProduct finProduct = assetCommonService.getAsset(entity.getFinprodMarketId(),entity.getFinprodName());
+        BeanUtil.copyPropertiesIgnoreNull(entity,finProduct);
+    }
+
+
     
 }

@@ -176,17 +176,19 @@ public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> 
 	 * 创建机构交易对手记录
 	 */
 	public void createCounter(MstCustomerNatureDto dto) {
-		MstTradeOpponentDto mstTradeOpponentDto = new MstTradeOpponentDto();
-		mstTradeOpponentDto.setCounterId(dto.getCounterId());
-		mstTradeOpponentDto.setCounterName(dto.getCustomerName());
-		mstTradeOpponentDto.setLinkId(dto.getCustomerId());
-		mstTradeOpponentDto.setCounterType(dto.getCounterType());
-        mstTradeOpponentDto.setOperateType(dto.getOperateType());
-		mstCounterPartyMapper.insertSelective(mstTradeOpponentDto);
-        // 调用投管接口 add by chaowei
-        mstCounterInterf(mstTradeOpponentDto);
-        // 调用投管接口 add by chaowei
-
+        int count = mstCustomerNatureMapper.checkLinkId(dto.getCustomerId());
+	    if (count == 0){
+            MstTradeOpponentDto mstTradeOpponentDto = new MstTradeOpponentDto();
+            mstTradeOpponentDto.setCounterId(dto.getCounterId());
+            mstTradeOpponentDto.setCounterName(dto.getCustomerName());
+            mstTradeOpponentDto.setLinkId(dto.getCustomerId());
+            mstTradeOpponentDto.setCounterType(dto.getCounterType());
+            mstTradeOpponentDto.setOperateType(dto.getOperateType());
+            mstCounterPartyMapper.insertSelective(mstTradeOpponentDto);
+            // 调用投管接口 add by chaowei
+            mstCounterInterf(mstTradeOpponentDto);
+            // 调用投管接口 add by chaowei
+        }
 	}
     // 调用投管接口 add by renping 20200409 start
 	/**
@@ -421,5 +423,17 @@ public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> 
     @DataSource(DataSourceType.OTHER)
     public int checkwflstatus(Map<String, Object> param) {
         return mstCustomerNatureMapper.checkwflstatus(param);
+    }
+
+    /**
+     * 统计
+     * <功能详细描述>
+     * @param counterId id
+     * @return 统计结果
+     * @see
+     * @since 1.0
+     */
+    public int selectCounter(String linkId) {
+        return mstCustomerNatureMapper.selectCounter(linkId);
     }
 }

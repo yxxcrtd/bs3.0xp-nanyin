@@ -368,6 +368,21 @@ public class EtrIbRepoinfo002Service extends BaseService {
                 }
                 // entity.setEtrDistributeList(etrDistributeList);
             }*/
+
+            if (StringUtil.isNotEmpty(dto.getTrader())) {
+
+                EtrDistribute etrDistribute = new EtrDistribute();
+                // 设置接收状态
+                etrDistribute.setRecStatus(DictCodeList.委托状态_待接收.getValue());
+                // 设置指定交易员指定交易员 = 指定交易员
+                etrDistribute.setTrader(dto.getTrader());
+                // 设置委托代码
+                etrDistribute.setEntrustId(dto.getEntrustId());
+                //
+                etrDistributeList.add(etrDistribute);
+                // entity.setEtrDistributeList(etrDistributeList);
+            }
+
             // 自动分发
             if (busiAutoEtrDispService != null) {
                 // 检测是否设置交易员

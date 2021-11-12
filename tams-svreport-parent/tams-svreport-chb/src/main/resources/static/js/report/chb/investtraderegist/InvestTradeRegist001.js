@@ -238,8 +238,9 @@ $(function() {
               var submitStatus = $("#submitStatus").val();
               var submitFeedbackStatus = $("#submitFeedbackStatus").val();
               if(!((submitStatus && submitStatus.length == 1 &&submitStatus[0] == '01')
-                      || (submitStatus && submitStatus.indexOf('02')>-1 && submitFeedbackStatus && (submitFeedbackStatus.indexOf('02')>-1 ||  submitFeedbackStatus.indexOf('04')> -1)))){
-                  Joyin.error("只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理");
+                      || (submitStatus && submitStatus.indexOf('02')>-1 && submitFeedbackStatus && (submitFeedbackStatus.indexOf('02')>-1 ||  submitFeedbackStatus.indexOf('04')> -1
+                  || submitFeedbackStatus.indexOf('00')>-1 ||  submitFeedbackStatus.indexOf('06')> -1)))){
+                  Joyin.error("只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送中、发送失败、中债退回和发送异常的数据进行手工处理");
                   return;
               }
               var paramObj = getSearchParams();
@@ -255,8 +256,9 @@ $(function() {
           }else{
               var keyList = [];
               for(var i=0;i<manArr.length;i++){
-                  if (!(manArr[i].sendStatus == '01' || (manArr[i].sendStatus == '02' && (manArr[i].submitFeedbackStatus == '发送失败' || manArr[i].submitFeedbackStatus == '中债退回')))) {
-                      Joyin.error("只能选择报送状态为未报送的数据，或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理，请重新选择！");
+                  if (!(manArr[i].sendStatus == '01' || (manArr[i].sendStatus == '02' && (manArr[i].submitFeedbackStatus == '发送失败' || manArr[i].submitFeedbackStatus == '中债退回'
+                        || manArr[i].submitFeedbackStatus == '发送中' || manArr[i].submitFeedbackStatus == '发送异常')))) {
+                      Joyin.error("只能选择报送状态为未报送的数据，或报送状态为接口报送且反馈状态为发送中、发送失败、中债退回和发送异常的数据进行手工处理，请重新选择！");
                       return;
                   }
               };

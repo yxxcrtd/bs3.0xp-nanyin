@@ -203,7 +203,7 @@
     	// 1、借款人类型为“1-住户”时，行业信息联动带出“1-境内个人”，且置灰不允许修改；实际上，行业信息未联动带出且没有置灰。
     	// 2、借款人类型为“6-境外”时，行业信息联动带出“2-非居民”，且置灰不允许修改；实际上，行业信息未联动带出且没有置灰。
     	// 3、当借款人类型为“1-住户、6-境外”时，借款人地区（省）、借款人地区（市）、借款人地区（县）置灰不可填；实际未置灰可填。
-    	if($('#assetType').val() && '02' === $('#assetType').val()){
+    	if($('#assetType').val() && '08' === $('#assetType').val()){
     		if(borrowerType === SVR_DEPT_TYPE_1){
     			$('#industryInfo').val('1').trigger('change').attr('disabled',true);
     		}else if(borrowerType === SVR_DEPT_TYPE_6){

@@ -376,4 +376,8 @@ public class AssetCommonService extends BaseService{
         return this.queryForPageForSelectReturn(page, length,
                 () -> assetCommonMapper.getSysDictCode(param));
     }
+
+    public FinProduct getAsset(Map<String,Object> param){
+	    return assetCommonMapper.getAsset(param);
+    }
 }

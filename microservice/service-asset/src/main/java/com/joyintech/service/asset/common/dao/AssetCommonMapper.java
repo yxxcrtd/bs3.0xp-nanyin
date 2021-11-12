@@ -10,7 +10,6 @@
 
 package com.joyintech.service.asset.common.dao;
 
-import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.common.base.entity.AssetTypeConfig;
@@ -185,4 +184,6 @@ public interface AssetCommonMapper {
     
     @Select("select credit_mst_id,seqno from CREDIT_LINES where  CUSTOMER_ID = #{finprodId,jdbcType=VARCHAR}")
     List<Map> getMstIdByFinproId(String finprodId);
+
+    FinProduct getAsset(Map<String,Object> param);
 }

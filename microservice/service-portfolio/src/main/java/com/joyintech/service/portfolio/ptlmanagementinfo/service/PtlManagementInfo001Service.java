@@ -258,20 +258,20 @@ public class PtlManagementInfo001Service extends BaseService<PtlManagementInfoDt
         // 组合新建，调用估值接口  (子组合新建不需要调用)
         /** modify by yanya on 20191114 子组合也调用估值接口，生成账套
         if (!StringUtil.equals(entity.getPortfolioType(), DictCodeListExt1.组合类型_子组合.getValue())) {**/
-            ProdOtherInfoInitInputDto inputDto = new ProdOtherInfoInitInputDto();
-            inputDto.setPageId("PtlManagementInfo002");
-            inputDto.setPtlPortfolio(ptlPortfolio);
-            inputDto.setPtlValParam(entity.getPtlValParam());
-            inputDto.setNewData(isNewData);
-            if (!StringUtil.isEmptyList(entity.getFundAccountInfoDto())) {
-                List<PtlCapacctInfo> prodAcctDataList = new ArrayList<>();
-                for (FundAccountInfoDto fundAccountInfoDto : entity.getFundAccountInfoDto()) {
-                    PtlCapacctInfo ptlCapacctInfo = new PtlCapacctInfo();
-                    BeanUtil.copyPropertiesIgnoreNull(ptlCapacctInfo, fundAccountInfoDto);
-                    prodAcctDataList.add(ptlCapacctInfo);
-                }
-                inputDto.setProdAcctDataList(prodAcctDataList);
-            }
+//            ProdOtherInfoInitInputDto inputDto = new ProdOtherInfoInitInputDto();
+//            inputDto.setPageId("PtlManagementInfo002");
+//            inputDto.setPtlPortfolio(ptlPortfolio);
+//            inputDto.setPtlValParam(entity.getPtlValParam());
+//            inputDto.setNewData(isNewData);
+//            if (!StringUtil.isEmptyList(entity.getFundAccountInfoDto())) {
+//                List<PtlCapacctInfo> prodAcctDataList = new ArrayList<>();
+//                for (FundAccountInfoDto fundAccountInfoDto : entity.getFundAccountInfoDto()) {
+//                    PtlCapacctInfo ptlCapacctInfo = new PtlCapacctInfo();
+//                    BeanUtil.copyPropertiesIgnoreNull(ptlCapacctInfo, fundAccountInfoDto);
+//                    prodAcctDataList.add(ptlCapacctInfo);
+//                }
+//                inputDto.setProdAcctDataList(prodAcctDataList);
+//            }
 
 //            resultObject = valuationInterfService.prodOtherInfoInit(inputDto);
         /** modify by yanya on 20191114 子组合也调用估值接口，生成账套

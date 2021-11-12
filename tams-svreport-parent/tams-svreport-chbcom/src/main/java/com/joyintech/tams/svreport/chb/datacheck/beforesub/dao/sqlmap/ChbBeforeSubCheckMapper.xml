@@ -13,8 +13,8 @@
 	    where (e.SUBMIT_FEEDBACK_STATUS !='03' or e.SUBMIT_FEEDBACK_STATUS is null)
 	    AND i.RAISE_CCY='CNY' and i.CASH_PRIN_CCY='CNY' AND i.CASH_PROF_CCY='CNY'
 	    and i.operate_mode in ('01','02')
-	    AND i.VDATE<![CDATA[>=]]>date'2014-01-01' and e.MDATE<![CDATA[<=]]>#{querydate,jdbcType=DATE}
-	    and e.STATUS_DATE<![CDATA[<=]]>#{querydate,jdbcType=DATE}
+	    /***监管要求只核查2014年1月1日之后起息的产品**/
+	    AND i.VDATE<![CDATA[>=]]> date '2014-01-01'
 	    and e.status!='04'
 	)
 	
@@ -104,7 +104,15 @@
 	    left join pi
 	    on pe.prod_id=pi.prod_id
 	    left join pp
-	    on pe.prod_id=pp.prod_id  
+	    on pe.prod_id=pp.prod_id
+		  <if test="checkKeys!=null and checkKeys.size()!=0">
+			  <foreach item="keys" index="index" collection="checkKeys" open=" and pe.REGIST_SEQNO in(" separator="," close=")">
+				  <if test="(index % 998) == 0">
+					  null) or pe.REGIST_SEQNO in (
+				  </if>
+				  #{keys}
+			  </foreach>
+		  </if>
 	)
 
   </select>
@@ -125,7 +133,15 @@
 	left join pi
 	on r.prod_id=pi.prod_id
 	where (r.SUBMIT_FEEDBACK_STATUS !='03' or  r.SUBMIT_FEEDBACK_STATUS is null)
-	and to_char(r.STATUS_DATE,'yyyy-MM-dd')<![CDATA[<=]]>to_char(#{querydate,jdbcType=DATE},'yyyy-MM-dd')
+	  <if test="checkKeys!=null and checkKeys.size()!=0">
+
+		  <foreach item="keys" index="index" collection="checkKeys" open="and r.REGIST_SEQNO in(" separator="," close=")">
+			  <if test="(index % 998) == 0">
+				  null) or r.REGIST_SEQNO in (
+			  </if>
+			  #{keys}
+		  </foreach>
+	  </if>
   </select>
     
   <select id="selectInvestRegCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto" 
@@ -134,7 +150,7 @@
 	with ai as (
 	    select asset_code,count(1) reg_asset_count 
 	    from chb_asset_info_sub a
-	    where a.SUBMIT_FEEDBACK_STATUS ='03' 
+	    where a.SUBMIT_FEEDBACK_STATUS ='03'
 	    group by asset_code
 	)
 	
@@ -154,9 +170,17 @@
 	    ,round(min(cast(NVL(CNY_AMT, 0) as float)/( case when num=0 then 1 else nvl(num,1) end )),2) min_price
 	    from chb_invest_trade_sub
 	    where (SUBMIT_FEEDBACK_STATUS !='03' or  SUBMIT_FEEDBACK_STATUS is null)
-	    and STATUS_DATE<![CDATA[<=]]>#{querydate,jdbcType=DATE}
 	    and status!='04'
 	    and CUR_ASSET_TYPE in('01','02','03','04','05','06','07','08')
+		  <if test="checkKeys!=null and checkKeys.size()!=0">
+
+			  <foreach item="keys" index="index" collection="checkKeys" open="and REGIST_SEQNO in(" separator="," close=")">
+				  <if test="(index % 998) == 0">
+					  null) or REGIST_SEQNO in (
+				  </if>
+				  #{keys}
+			  </foreach>
+		  </if>
 	    group by prod_id,asset_code
 	)
 	
@@ -179,10 +203,9 @@
 	with ai as (
 	    select asset_code,count(1) reg_asset_count 
 	    from chb_asset_info_sub a
-	    where a.SUBMIT_FEEDBACK_STATUS ='03' 
+	    where a.SUBMIT_FEEDBACK_STATUS ='03'
 	    group by asset_code
 	)
-	
 	,ad as (
 	    select 
 	    p.regist_seqno
@@ -207,8 +230,7 @@
 	    on p.asset_code=i.asset_code
 	     and i.SUBMIT_FEEDBACK_STATUS ='03'
 	    where (p.SUBMIT_FEEDBACK_STATUS !='03' or p.SUBMIT_FEEDBACK_STATUS is null)
-	    and p.STATUS_DATE<![CDATA[<=]]>#{querydate,jdbcType=DATE}
-	
+
 	)
 	
 	select 
@@ -222,7 +244,16 @@
 	from ad
 	left join ai
 	on ad.asset_code=ai.asset_code
-    
+    WHERE 1=1
+	  <if test="checkKeys!=null and checkKeys.size()!=0">
+
+		  <foreach item="keys" index="index" collection="checkKeys" open="and REGIST_SEQNO in(" separator="," close=")">
+			  <if test="(index % 998) == 0">
+				  null) or REGIST_SEQNO in (
+			  </if>
+			  #{keys}
+		  </foreach>
+	  </if>
   </select>
     
   <select id="selectProdMonthReportCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto" 
@@ -230,14 +261,13 @@
 	with 
 	/**产品存续期交易：银行实际收益之和*/
 	pp as (
-	select to_char(#{querydate,jdbcType=DATE},'yyyymm') termid
+	select to_char(#{checkdate,jdbcType=DATE},'yyyymm') termid
 	,sum(nvl(BANK_IMP_INT,0)) bank_profit1
 	from chb_prd_deal_sub d
 	left join chb_prd_baseinfo i
 	    on d.prod_id=i.prod_id and i.operate_mode in ('01','02')
 	where 
 	d.status!='04'
-	and d.STATUS_DATE<![CDATA[<=]]>#{querydate,jdbcType=DATE}
 	)
 	
 	,pm as(
@@ -245,17 +275,25 @@
 	from chb_month_report_detail d 
 	left join chb_month_report m
 	on d.termid = m.termid
-	where d.termid=to_char(#{querydate,jdbcType=DATE},'yyyymm')
+	where d.termid=to_char(#{checkdate,jdbcType=DATE},'yyyymm')
 	and d.propertycode in ( 'GMLCCP','SMLCCP')
 	group by d.termid,m.reportuuid
 	)
 	
 	select 
-	B.termid
-	,B.reportuuid registseqno
-	,nvl(A.bank_profit1,0) bankprofit1
-	,nvl(B.bank_profit2,0) bankprofit2
-	from pp A,pm B
-	where A.termid=B.termid
+	pm.termid
+	,pm.reportuuid registseqno
+	,nvl(pp.bank_profit1,0) bankprofit1
+	,nvl(pm.bank_profit2,0) bankprofit2
+	from pp,pm
+	where pp.termid=pm.termid
+	  <if test="checkKeys!=null and checkKeys.size()!=0">
+		  <foreach item="keys" index="index" collection="checkKeys" open="and pm.reportuuid in(" separator="," close=")">
+			  <if test="(index % 998) == 0">
+				  null) or pm.reportuuid in (
+			  </if>
+			  #{keys}
+		  </foreach>
+	  </if>
   </select>
 </mapper>

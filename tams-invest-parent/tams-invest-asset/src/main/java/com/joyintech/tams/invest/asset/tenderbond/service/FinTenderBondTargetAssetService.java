@@ -15,6 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.asset.constant.AssetConstant;
+import com.joyintech.tams.invest.interf.trade.fromxp.service.InterfServiceLogService;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,6 +80,9 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 public class FinTenderBondTargetAssetService extends CommonExportService<FinTenderBondTargetAssetDto>
 implements BaseProcessService<FinTenderBondTargetAssetDto>{
+
+    private static final Logger logger = LoggerFactory.getLogger(FinTenderBondTargetAssetService.class);
+
     @Autowired
     private CommonAutoCouponService commonAutoService;
 
@@ -124,6 +134,12 @@ implements BaseProcessService<FinTenderBondTargetAssetDto>{
      */
     @Autowired(required = false)
     private MstFileCommonService fileCommonService;
+
+    /**
+     * 接口服务日志
+     */
+    @Autowired
+    private InterfServiceLogService interfServiceLogService;
 
     /**
      * 使用给定的sqlID检索分页数据。返回类型是Service的泛型。
@@ -581,4 +597,115 @@ implements BaseProcessService<FinTenderBondTargetAssetDto>{
         return bondTargetDto;
     }
 
+    /**
+     * 一级市场债 接口数据入库
+     * @param id
+     * @param msg
+     */
+    public void executeInterf(String id,String msg) {
+        logger.debug("##############################一级市场债 接口数据入库start#############################");
+        logger.debug("转换前数据：{}", msg);
+        FinTenderBondTargetAssetDto entity = new FinTenderBondTargetAssetDto();
+        if (StringUtil.isEmpty(msg)) {
+            return;
+        }
+        try {
+            JSONObject msgJSON = JSONObject.parseObject(msg);
+            // TODO entity.setContractNo(msgJSON.getString("company_id"));   // 公司序号
+            // TODO entity.setFinprodId(msgJSON.getString("bank_no"));   // 法人编号
+            entity.setFinprodMarketId(msgJSON.getString("asset_code"));   // 资产代码
+            entity.setFinprodName(msgJSON.getString("asset_name"));   // 资产全称
+            entity.setFinprodAbbr(msgJSON.getString("asset_sname"));   // 资产简称
+            // TODO entity.setFinprodId(msgJSON.getString("sub_code"));   // 资产细类
+            entity.setCcy(msgJSON.getString("curr_type"));   // 币种
+            // 流通市场 映射转换
+            String marketNo = msgJSON.getString("market_no");
+            switch (marketNo) {
+                case AssetConstant.TRADE_PLACE_SH:
+                    marketNo = DictCodeListExt1.交易场所_上海证券交易所.getValue();
+                    break;
+                case AssetConstant.TRADE_PLACE_SZ:
+                    marketNo = DictCodeListExt1.交易场所_深圳证券交易所.getValue();
+                    break;
+                case AssetConstant.TRADE_PLACE_YHJ:
+                    marketNo = DictCodeListExt1.交易场所_银行间.getValue();
+                    break;
+                default:
+                    marketNo = StringUtil.EMPTY;
+                    break;
+            }
+            entity.setTradeMarket(marketNo);   // 流通市场
+
+            // 簿记市场 映射转换
+            String bookMarket = msgJSON.getString("book_market");
+            switch (bookMarket) {
+                case AssetConstant.SVR_REGIST_ORG_BOND:
+                    bookMarket = DictCodeList.登记托管机构_中债_中央国债登记结算有限责任公司.getValue();
+                    break;
+                case AssetConstant.SVR_REGIST_ORG_SQS:
+                    bookMarket = DictCodeList.登记托管机构_中债_上海清算所.getValue();
+                    break;
+                case AssetConstant.SVR_REGIST_ORG_STOCK:
+                    bookMarket = DictCodeList.登记托管机构_中债_中国证券登记结算有限责任公司.getValue();
+                    break;
+                case AssetConstant.SVR_REGIST_ORG_QT:
+                    bookMarket = DictCodeList.登记托管机构_中债_其他.getValue();
+                    break;
+                default:
+                    bookMarket = StringUtil.EMPTY;
+                    break;
+            }
+            entity.setRegistOrg(bookMarket);  // 簿记市场
+            entity.setFaceValue(msgJSON.getBigDecimal("face_value"));   // 面值（元）
+            entity.setIssueAmt(msgJSON.getBigDecimal("issue_price"));   // 发行价（元）
+            // TODO market_date	上市日期
+            // TODO value_date	起息日期
+            // TODO end_date	到期日期
+            // TODO cash_date	兑付日期
+            // TODO quoted_type	报价方式
+            // TODO coupon_first_date	首期现金流结束日
+            // TODO coupon_last_date	末期现金流开始日
+            entity.setIssuer(msgJSON.getString("issuer_no"));   // 发行人代码
+
+            // TODO pay_interest_type	付息类型
+            // TODO pay_basis	计息基础
+            // TODO interet_model	付息方式
+            // TODO pay_freq	付息频率
+            // TODO tax_mark	计税标志
+            // TODO interest_type	利率类型
+            // TODO pay_rate	利率（%）
+            // TODO basic_rate	利差（BP）
+            // TODO offset_type	偏移天数类型
+            // TODO index_fixing_offset	往前偏移天数
+            // TODO index_id	浮动基准
+
+            entity.setIsSus(SysDatadictUtil.getCodeFromDataDictByName(DictCode.是否, msgJSON.getString("is_sus")));   // 是否永续
+            // TODO windtypeone	债券一级分类
+            // TODO windtypetwo	债券二级分类
+            entity.setIsSecBond(SysDatadictUtil.getCodeFromDataDictByName(DictCode.是否, msgJSON.getString("issue_type")));   // 是否次级债
+            entity.setIsRight(SysDatadictUtil.getCodeFromDataDictByName(DictCode.是否, msgJSON.getString("issue_type")));   // 是否含权债
+            entity.setIssueType(SysDatadictUtil.getCodeFromDataDictByName(DictCode.发行方式, msgJSON.getString("issue_type"))); // 发行方式
+            entity.setCalendarId(msgJSON.getString("calendar_id"));   // 交易日历
+            entity.setSustainableRemark(msgJSON.getString("sustainable_remark"));   // 特殊条款
+
+            // 操作类型 映射转换
+            String operateTye = msgJSON.getString("OPERATE_TYPE");
+            OperationType type = OperationType.NEW;
+            if (AssetConstant.OPERATE_TYPE_ADD.equals(operateTye)) {
+                type = OperationType.NEW;
+            } else if (AssetConstant.OPERATE_TYPE_SUBMIT.equals(operateTye)) {
+                type = OperationType.MODIFY;
+            } else if (AssetConstant.OPERATE_TYPE_DELETE.equals(operateTye)) {
+                type = OperationType.DELETE;
+            }
+            this.doComplete(entity, type);
+            //修改接口服务日志表状态--成功
+            interfServiceLogService.updateInterfServiceLog(id, true, "一级市场债接口数据接入成功！");
+        }catch(Exception e) {
+            //修改接口服务日志表状态--失败
+            interfServiceLogService.updateInterfServiceLog(id, false, e.getMessage());
+        }
+        logger.debug("转换后数据：{}", JSONObject.toJSONString(entity));
+        logger.debug("##############################一级市场债 接口数据入库end#############################");
+    }
 }

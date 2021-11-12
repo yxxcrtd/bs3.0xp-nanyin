@@ -653,7 +653,8 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
             ProRegistCodeManage001Dto entity = new ProRegistCodeManage001Dto();
-            entity.setProdId(list.get(3));
+//            entity.setProdId(list.get(3));
+            entity.setProdId(list.get(4));
             entity.setProdName(list.get(1));
             entity.setRegCode(list.get(2));
             entity.setExcelNum(String.valueOf(i+2));

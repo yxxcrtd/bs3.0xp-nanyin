@@ -631,6 +631,7 @@ public class RedisViewController extends RedisBaseController {
             return;
         }
         // add by zhangrui1 end
+
         cond.setParamCodeArray(StringUtil.substring(key, 0, StringUtil.indexOf(key, GlobalConstant.COLON)));
         cond.setIsUpdParVal(true);
         List<String> fList = new ArrayList<>();

@@ -146,6 +146,12 @@ public class MonthReportAssetService {
 		// 先定义债项和主体排序sql变量，用以调用共通方法时候使用
 		String getProductRatingOrderSqlByZx = null;
 		String getProductRatingOrderSqlByZt = null;
+		Map<String, Object> productRatingOrderSqlMap = new HashMap<>();
+		// 先取债项，再取主体排序sql
+		productRatingOrderSqlMap.put("oType","02");
+		getProductRatingOrderSqlByZx = commonProductRatingService.getProductRatingOrderSql(productRatingOrderSqlMap);
+		productRatingOrderSqlMap.put("oType","01");
+		getProductRatingOrderSqlByZt = commonProductRatingService.getProductRatingOrderSql(productRatingOrderSqlMap);
 		// 如果是中债子系统取评级逻辑不变，如果不是，就调共通方法
 		// 走原有逻辑
 		if(isSubSystem != null) {
@@ -161,12 +167,6 @@ public class MonthReportAssetService {
 			}
 			// 走共通逻辑
 			else {
-				Map<String, Object> productRatingOrderSqlMap = new HashMap<>();
-				// 先取债项，再取主体排序sql
-				productRatingOrderSqlMap.put("oType","02");
-				getProductRatingOrderSqlByZx = commonProductRatingService.getProductRatingOrderSql(productRatingOrderSqlMap);
-				productRatingOrderSqlMap.put("oType","01");
-				getProductRatingOrderSqlByZt = commonProductRatingService.getProductRatingOrderSql(productRatingOrderSqlMap);
 				dealpara.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
 				dealpara.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
 				dealpara.setGradeDateEnd(formatter.format(lastday));

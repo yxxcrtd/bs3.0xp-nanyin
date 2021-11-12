@@ -112,4 +112,14 @@ public interface MstCustomerNatureMapper {
 	String checkIsFinLicenceStr(String customerId);
 
 	int checkwflstatus(Map<String, Object> param);
+
+    int checkLinkId(@Param("linkId") String linkId);
+    /**
+     * 交易对手查找
+     * @param counter 交易对手
+     * @return 是否存在
+     * @see
+     * @since 1.0
+     */
+    int selectCounter(@Param("linkId")String linkId);
 }
