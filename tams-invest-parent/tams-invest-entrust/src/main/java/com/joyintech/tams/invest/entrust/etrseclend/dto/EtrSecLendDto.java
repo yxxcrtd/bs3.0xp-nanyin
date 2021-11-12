@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.entrust.etrseclend.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -691,6 +692,14 @@ import java.util.List;
          */
         public String getBusTradeMarket(){
             return SysDataUtil.getNameFromDataDict(DictCode.交易场所, super.getTradeMarket());
+        }
+
+        public String getMdateStr() {
+            return DateUtil.format(super.getMdate());
+        }
+
+        public String getVdateStr() {
+            return DateUtil.format(super.getVdate());
         }
         
     }
