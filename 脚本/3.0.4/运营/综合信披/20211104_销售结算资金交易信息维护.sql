@@ -1,3 +1,6 @@
+DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3054';
+insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
+values ('3054', 'VAL', '销售结算资金交易登记报送', null, 'svrSalesTransactionInterfTaskService', 3040, 'system', null, sysdate, 'system', sysdate, null);
 
 INSERT INTO SYS_MENU VALUES ('REPORT_001_001_016_003', 'REP',null,'REPORT_001_001_016','SalesTransactionMaintenance001','5','02','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance001','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','REPORT_001_001_016_003',null,null,'02','01','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
@@ -6,8 +9,10 @@ INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance002','REP','report/subm
 INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenance002','SalesTransactionMaintenance002_btn_submit','01','02',null,'提交','system',null,sysdate,'system',sysdate,null);
 INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenance002','SalesTransactionMaintenance002_btn_save','01','02',null,'保存','system',null,sysdate,'system',sysdate,null);
 INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenance001','SalesTransactionMaintenance001_btn_delete','01','02',null,'删除','system',null,sysdate,'system',sysdate,null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenance002','SalesTransactionMaintenance001_btn_delete','01','02',null,'删除','system',null,sysdate,'system',sysdate,null);
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalesTransactionMaintenance002','SalesTransactionMaintenance002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalesTransactionMaintenance002','SalesTransactionMaintenance002_btn_save','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
+INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalesTransactionMaintenance001','SalesTransactionMaintenance001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 INSERT INTO SYS_WFL_BUSINESS_MODULE VALUES ('SalesTransactionMaintenance002','SalesTransactionMaintenance001_btn_delete','noneApproval','system',null,sysdate,'system',sysdate,'ALL','02');
 
 DELETE FROM CHB_DATACHECK_RULE_INV WHERE PAGE_ID = 'SalesTransactionMaintenance002';
@@ -68,7 +73,7 @@ values ('CHB_SALER_STL_DEAL_INFO-000000000027','SalesTransactionMaintenance002',
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
 values ('CHB_SALER_STL_DEAL_INFO-000000000028','SalesTransactionMaintenance002','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isNotEmpty','TRADE_TIME','','','N','销售结算资金交易时间要素不可为空。','E');
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
-values ('CHB_SALER_STL_DEAL_INFO-000000000029','SalesTransactionMaintenance002','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isValidDate2','TRADE_TIME','','HHmmss','Y','销售结算资金交易时间必须是正常时间','E');
+values ('CHB_SALER_STL_DEAL_INFO-000000000029','SalesTransactionMaintenance002','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','isValidDate2','TRADE_TIME','','yyyy-MM-dd HH:mm:ss','Y','销售结算资金交易时间必须是正常时间','E');
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
 values ('CHB_SALER_STL_DEAL_INFO-000000000030','SalesTransactionMaintenance002','com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib','lessThanCharLength','POSTSCRIPT','','201','Y','销售结算资金交易附言不能超过200字符','E');
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)

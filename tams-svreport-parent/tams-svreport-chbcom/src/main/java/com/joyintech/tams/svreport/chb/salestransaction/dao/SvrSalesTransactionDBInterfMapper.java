@@ -1,0 +1,32 @@
+package com.joyintech.tams.svreport.chb.salestransaction.dao;
+
+import java.util.List;
+
+import com.joyintech.tams.common.base.entity.ChbSalesTransactionInfo;
+import com.joyintech.tams.common.base.entity.ChbSalesTransactionInfoSub;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+
+@Repository
+public interface SvrSalesTransactionDBInterfMapper {
+	
+	/**
+	 * 查询所有从业人员信息数据
+	 * @return
+	 */
+	List<ChbSalesTransactionInfo> selectBatchData(@Param("batchDate")String batchDate);
+	
+	/**
+	 * 查询所有已登记的从业人员信息数据
+	 * @return
+	 */
+	List<ChbSalesTransactionInfoSub> selectRegSalesTransactionData();
+	
+	int deleteBatchData(@Param("deleleList")List<ChbSalesTransactionInfoSub> deleleList);
+    /**
+     * 增量插入数据
+     * @param subList
+     */
+    int insertChbSalesTransactionSubData(@Param("subList")List<ChbSalesTransactionInfoSub> subList);
+}

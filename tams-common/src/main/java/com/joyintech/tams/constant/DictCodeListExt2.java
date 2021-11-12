@@ -1918,6 +1918,7 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
      */
     投资者份额检查结果_无偏差(DictCode.投资者份额检查结果,"02","无偏差"),
     报表名称_从业人员信息登记(DictCode.报表名称,"30","从业人员信息登记"),
+    报表名称_销售结算资金交易信息登记(DictCode.报表名称,"34","销售结算资金交易信息登记"),
     // add by zhuhanlu 20201126 期货行情信息 start
     共通业务类型_期货行情信息(DictCode.共通业务类型,"MST32","期货行情信息"),
     /**
