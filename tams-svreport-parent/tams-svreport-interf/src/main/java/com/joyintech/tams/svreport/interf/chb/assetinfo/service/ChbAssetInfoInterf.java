@@ -770,10 +770,11 @@ public class ChbAssetInfoInterf  extends BaseService{
 //                        chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
 //                    isCentralCounter = null;
 //                }
-                // 非银行业金融机构 区分是否中央交易对手
-                if(InterfMappingConstants.BS_ASSETTYPE3_C0402.equals(counterType2)) {
+                // 非银行业金融机构 区分是否中央交易对手   修改获取非银行业金融机构类型方法
+                //if(InterfMappingConstants.BS_ASSETTYPE3_C0402.equals(counterType2)) {
+                if(DictCodeListExt3.对手方类型_非银行业金融机构.getValue().equals(chbAssetInfo.getRivalPartyType())){
                     // 根据配置映射项判别是否带相应属性
-                    if (chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_COUNTER,
+                    if (chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_DSFLX,
                             chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) != null) {
                         // 市场结构是否为交易所 03 上海证券交易所/04 深圳证券交易所,是-中央交易对手，否-非中央交易对手
                         if ("03".equals(marketStr) || "04".equals(marketStr) ) {
@@ -806,10 +807,16 @@ public class ChbAssetInfoInterf  extends BaseService{
                         chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
                     blnarea = null;
                 }
+                String rivalPartyType = chbAssetInfo.getRivalPartyType();
+                // 根据配置映射项判别是否带相应属性
+                if (!StringUtils.isEmpty(blnarea) && chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_DSFLX,
+                        chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
+                    rivalPartyType = null;
+                }
                 //TISHKBS-2835  监管报送-人行资管产品月度统计报告  添加对手方类型映射规则
                 mappingEx = chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_PBCASSETTYPE, 
                         chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3(),industry,repprofittype
-                        ,isCentralCounter,counterType2,blnarea,chbAssetInfo.getRivalPartyType());
+                        ,isCentralCounter,counterType2,blnarea,rivalPartyType);
             }
             if(mappingEx!=null){
                 chbAssetInfo.setPbcAssetType1(mappingEx.getObjfield1());
