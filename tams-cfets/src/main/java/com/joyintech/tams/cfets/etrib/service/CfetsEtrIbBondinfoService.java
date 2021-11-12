@@ -925,9 +925,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         String ZCT1RKYCC="ZCT1RKYCC",BFQTRKYCC="BFQTRKYCC",BFQT1RKYCC="BFQT1RKYCC",RRQTRKYCC="RRQTRKYCC",RRQT1RKYCC="RRQT1RKYCC";
         if (map == null) {
             map = new HashMap();
-            map.put(T0KYXJ, cashT);
-            map.put(T1KYXJ, cashT1);
-            map.put(ZHXJ, realCash);
+            map.put(T0KYXJ, "0");
+            map.put(T1KYXJ, "0");
+            map.put(ZHXJ, "0");
             map.put(RRQMKDGHCC, "0");
             map.put(ZCTRKYCC, "0");
             map.put(ZCT1RKYCC, "0");
@@ -939,6 +939,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         // 初始化返回集合
         List<BaseMap> resp = new ArrayList<>();
         BaseMap bm = BaseMap.newMap(map);
+        /**
+         * 若老投管现金存在需累计
+         */
         if (cashT != null){
             bm.put(T0KYXJ, addToStr(bm.getBigDecimal(T0KYXJ), cashT));
         }
