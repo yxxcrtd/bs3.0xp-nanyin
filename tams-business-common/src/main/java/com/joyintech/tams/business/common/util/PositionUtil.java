@@ -68,7 +68,7 @@ public class PositionUtil {
                                 strb.append(CHECKBALANCE);
                                 strb.append("元【");
                                 strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
-                                strb.append("】不足\n");
+                                strb.append("】不足、\n");
                             }
                         }
                         strb.append("】，请确认是否继续？");
