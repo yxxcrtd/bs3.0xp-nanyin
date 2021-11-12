@@ -1003,6 +1003,11 @@ public class CfetsEtrDispatcherService extends BaseService{
      * @author sjj
      */
     public CfetsEtrDispatcherAutoRequest findAutoDetail() {
-        return cfetsEtrDispatcherMapper.findAutoDetail(DateUtil.format(iPlatformDate.getSysDate()));
+        CfetsEtrDispatcherAutoRequest request = cfetsEtrDispatcherMapper.findAutoDetail(DateUtil.format(iPlatformDate.getSysDate()));
+        if(request == null){
+            request = new CfetsEtrDispatcherAutoRequest();
+            request.setDistributeRule("01");
+        }
+        return request;
     }
 }
