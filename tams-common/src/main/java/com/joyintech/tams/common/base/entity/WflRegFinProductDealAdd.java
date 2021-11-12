@@ -8,7 +8,7 @@ import com.joyintech.framework.json.CustomDateDeserialize;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class WflFinProductDealAdd extends BaseEntity {
+public class WflRegFinProductDealAdd extends BaseEntity {
     /**
      * 登记编号
      */
