@@ -1574,6 +1574,31 @@
 
     };
 
+    var linkInvAim = function(){
+        var finprodId = $("#finprodId_" + currentTab).val();
+        var secAcctId = $("#secAcctId_" + currentTab).val();
+        var portfolioId = $("#portfolioId_" + currentTab).val();
+        var finprodType2 = $("#finprodType2_" + currentTab).val();
+
+        // 如果金融产品类型债券”,需要投资目的
+        if(finprodId &&  secAcctId && portfolioId && finprodType2 == FINPROD_TYPE_TG_F01) {
+            var param = {
+                secAcctId:secAcctId,
+                finprodId:finprodId,
+                portfolioId:portfolioId
+            }
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/linkInvAim', param, function(result) {
+                if(result) {
+                    $("#invAim_" + currentTab).textSelect(result);
+                    $("#invAim_" + currentTab).prop("disabled", true);
+                }
+                else {
+                    $("#invAim_" + currentTab).prop("disabled", false);
+                }
+            });
+        }
+    }
+
     /**
      * 联动展示可买数量
      */
@@ -3207,11 +3232,13 @@
         // 组合名称
         $("#portfolioId_jj,#portfolioId_dz,#portfolioId_gd").change(function() {
             portfolioIdChange(false);
+            linkInvAim();
         });
         // 证券代码
         $("#secId_jj,#secId_dz,#secId_gd").change(function() {
             secIdChange();
             linkFindSecAmountInfo();
+            linkInvAim();
             var secId = $("#secId_" + currentTab).val();
             var param = {};
             param.secId = secId;
@@ -3291,6 +3318,7 @@
                 return;
             }
             secAcctIdChange();
+            linkInvAim();
         });
         // 价格模式
         $("#priceModel_jj,#priceModel_dz,#priceModel_gd").change(function(e,isNotTrigger) {

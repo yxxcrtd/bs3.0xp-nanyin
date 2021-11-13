@@ -1541,6 +1541,10 @@ public class EtrExchangeTradeService extends BaseService{
         return this.etrExchangeTradeMapper.getInvAim();
     }
 
+    public String linkInvAim(Map<String, Object> param) {
+        return this.etrExchangeTradeMapper.linkInvAim(param);
+    }
+
     /**
      * 查询指令信息
      * @param entrustId

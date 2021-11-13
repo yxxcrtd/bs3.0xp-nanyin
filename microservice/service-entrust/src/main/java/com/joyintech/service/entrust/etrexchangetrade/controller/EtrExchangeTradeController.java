@@ -255,6 +255,15 @@ public class EtrExchangeTradeController {
     public String getInvAim() {
        return etrExchangeTradeService.getInvAim();
     }
+
+    /**
+     * 获取投资目的
+     * @return
+     */
+    @RequestMapping("linkInvAim")
+    public String linkInvAim(@RequestBody Map<String, Object> param) {
+        return etrExchangeTradeService.linkInvAim(param);
+    }
     
     /**
      * 查询交易所指令信息

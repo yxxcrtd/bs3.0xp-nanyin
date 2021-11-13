@@ -1090,6 +1090,17 @@ public class EtrExchangeTrade001Controller extends BaseController{
     public String getInvAim() {
         return etrExchangeTrade001Service.getInvAim();
     }
+
+
+    /***
+     * 取更新时间最新记录.投资目的  指令业务类型 = 数据字典.委托类型.大宗债券指令
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/linkInvAim")
+    public String linkInvAim(@RequestBody Map<String, Object> param) {
+            return etrExchangeTrade001Service.linkInvAim(param);
+    }
     
 	/**
 	 * 
