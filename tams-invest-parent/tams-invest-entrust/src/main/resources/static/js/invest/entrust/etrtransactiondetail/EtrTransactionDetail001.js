@@ -213,9 +213,9 @@
             }
         },
         cols:[ 
-              {field:'entrustId',title: 'EtrTransactionDetail001.entrustId', width:'200',sortField:"entrustId"}
-             ,{field:'orderNo',title: 'EtrTransactionDetail001.orderNo', width:'200', sortField:"orderNo"}
-             ,{field:'fTradeId',title: 'EtrTransactionDetail001.fTradeId', width:'200', sortField:"fTradeId"}
+              {field:'entrustId',title: 'EtrTransactionDetail001.entrustId', width:'200',sortField:"entrustId",visible:false}
+             ,{field:'orderNo',title: 'EtrTransactionDetail001.orderNo', width:'200', sortField:"orderNo",visible:false}
+             ,{field:'fTradeId',title: 'EtrTransactionDetail001.fTradeId', width:'200', sortField:"fTradeId",visible:false}
              ,{field:'portfolioId', title: 'EtrTransactionDetail001.portfolioId', width:'200',sortField:"portfolioId"}
              ,{field:'portfolioName', title: 'EtrTransactionDetail001.portfolioName', width:'200',sortField:"portfolioName"}
              ,{field:'tradeDate', title: 'EtrTransactionDetail001.tradeDate', width:'200', type:'date',sortField:"tradeDate"}
