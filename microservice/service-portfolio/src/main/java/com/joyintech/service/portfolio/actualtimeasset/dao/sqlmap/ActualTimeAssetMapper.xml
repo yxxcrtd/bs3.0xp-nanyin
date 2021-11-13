@@ -4,6 +4,7 @@
 
     <!-- 分页查询 -->
     <select id="findPage" resultType="com.joyintech.service.portfolio.actualtimeasset.dto.ActualTimeAssetDto">
+		select * from(
         select distinct tt.* from
         (
             select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr, type9, type10, type11, type12, type8, type7, type6,
@@ -494,7 +495,12 @@
 		<if test="type8 != null and type8 != ''">
 			and type8 = #{type8,jdbcType=VARCHAR}
 		</if>
-        order by portfolioId desc,type8 desc,secAcctId desc,finprodMarketId desc
+        order by portfolioId desc,type8 desc,secAcctId desc,finprodMarketId desc)abc
+		<where>
+			<if test="finprodId != null and finprodId !=''">
+				and abc.finprodId = #{finprodId,jdbcType=VARCHAR}
+			</if>
+		</where>
     </select>
 
     <!-- 证券账户 -->

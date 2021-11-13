@@ -10,11 +10,14 @@
  
 package com.joyintech.tams.invest.asset.tenderbond.validator;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +47,11 @@ public class FinTenderBondTargetAssetValidator implements BeanValidator{
     private CommonBusinessService commonBusinessService;
     @Autowired
     private IPlatformDate iPlatformDate;
-    
+
+    @Autowired
+    private JoyinRestTemplate restTemplate;
+
+
     @Autowired
     private FinTenderBondTargetAssetService finTenderBondTargetAssetService;
     @Override
@@ -80,6 +87,18 @@ public class FinTenderBondTargetAssetValidator implements BeanValidator{
                             getMessage("资产存在交易,不可删除!")));
                         break;
                     }
+                    // TISHKS-131: 查询银行间一级交易,看是否有已使用的新债标的,如存在则不可删除 fuyongsheng 20211113 edit start
+                    Map<String, Object> pageParam = new HashMap<>();
+                    pageParam.put("finprodId", entity.getFinprodMarketId());
+                    Page<Object> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME +
+                                    "/PrimaryBiddingManage001/findPage",
+                            pageParam,Object.class);
+                    if(null != page && CollectionUtils.isNotEmpty(page.getRoot())){
+                        resultList.add(new ValidMessage("",
+                                getMessage("资产存在交易,不可删除!")));
+                        break;
+                    }
+                    // TISHKS-131: 查询银行间一级交易,看是否有已使用的新债标的,如存在则不可删除 fuyongsheng 20211113 edit end
                 }
             }
         }else{

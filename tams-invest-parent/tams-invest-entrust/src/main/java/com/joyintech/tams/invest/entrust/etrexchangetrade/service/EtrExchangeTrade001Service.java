@@ -1153,6 +1153,12 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getInvAim", null, String.class);
         return invAim;
     }
+
+    public String linkInvAim(Map<String, Object> param) {
+        String invAim = restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/linkInvAim", param, String.class);
+        return invAim;
+    }
     
     /**
      * 
@@ -3276,29 +3282,30 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				confirmMsg += "，应至少不低于其中一个！";
 			}
 		}
-
+		// TISHKS-151:修改最大交易金额和最大交易量使用查询配置值而非固定值 fuyongsheng edit start
 		if (null == minTrdUnitLimitDto.getMaxAmt() || (minTrdUnitLimitDto.getMaxAmt() != null
 				&& minTrdUnitLimitDto.getMaxAmt().compareTo(BigDecimal.ZERO) > 0
-				&& dto.getEntrustAmt().compareTo(maxAmt) > 0)) {
+				&& dto.getEntrustAmt().compareTo(minTrdUnitLimitDto.getMaxAmt()) > 0)) {
 			flag3 = true;
 		}
 		if (null == minTrdUnitLimitDto.getMaxNum() || (minTrdUnitLimitDto.getMaxNum() != null
 				&& minTrdUnitLimitDto.getMaxNum().compareTo(BigDecimal.ZERO) > 0
-				&& dto.getEntrustNum().compareTo(maxNum) > 0)) {
+				&& dto.getEntrustNum().compareTo(minTrdUnitLimitDto.getMaxNum()) > 0)) {
 			flag4 = true;
 		}
 		if (flag3 && flag4 && !(null == minTrdUnitLimitDto.getMaxNum() && null == minTrdUnitLimitDto.getMaxAmt())) {
 			if (flag3 && null != minTrdUnitLimitDto.getMaxNum()) {
 				confirmMsg += "最大交易数量"
-						+ getNumAndUnit(maxNum, minTrdUnitLimitDto.getMaxNumUnit());
+						+ getNumAndUnit(minTrdUnitLimitDto.getMaxNum(), minTrdUnitLimitDto.getMaxNumUnit());
 			}
 			if (flag3 && flag4 && flag3 && null != minTrdUnitLimitDto.getMaxNum()
 					&& null != minTrdUnitLimitDto.getMaxAmt()) {
 				confirmMsg += "，";
 			}
 			if (flag4 && null != minTrdUnitLimitDto.getMaxAmt()) {
-				confirmMsg += "最大交易金额" + getNumAndUnit(maxAmt);
+				confirmMsg += "最大交易金额" + getNumAndUnit(minTrdUnitLimitDto.getMaxAmt());
 			}
+			// TISHKS-151:修改最大交易金额和最大交易量使用查询配置值而非固定值 fuyongsheng edit end
 			if (flag3 && flag4 && flag3 && null != minTrdUnitLimitDto.getMaxNum()
 					&& null != minTrdUnitLimitDto.getMaxAmt()) {
 				confirmMsg += "，应至少不超过其中一个！";

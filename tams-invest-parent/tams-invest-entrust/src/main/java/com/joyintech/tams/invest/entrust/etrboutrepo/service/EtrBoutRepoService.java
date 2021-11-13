@@ -861,14 +861,16 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                     // 首次净价（最小）不能大于首次净价（最大）
                     if (StringUtil.isNotBlank(rowData.get(10).toString().trim())
                         && StringUtil.isNotBlank(rowData.get(11).toString().trim())) {
-                        BigDecimal a = BigDecimal.valueOf(
-                            Double.valueOf(rowData.get(10).toString().trim()));
-                        BigDecimal b = BigDecimal.valueOf(
-                            Double.valueOf(rowData.get(11).toString().trim()));
-                        if (a.compareTo(b) > 0) {
-                            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                getMessage("ETR_BR_002", getMessage("EtrBoutRepo003.firstprice"),
-                                    getMessage("EtrBoutRepo003.firstprice2"), lineNo));
+                        if(!isNotNumeric(rowData.get(10)) && !isNotNumeric(rowData.get(11))){
+                            BigDecimal a = BigDecimal.valueOf(
+                                    Double.valueOf(rowData.get(10).toString().trim()));
+                            BigDecimal b = BigDecimal.valueOf(
+                                    Double.valueOf(rowData.get(11).toString().trim()));
+                            if (a.compareTo(b) > 0) {
+                                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                                        getMessage("ETR_BR_002", getMessage("EtrBoutRepo003.firstprice"),
+                                                getMessage("EtrBoutRepo003.firstprice2"), lineNo));
+                            }
                         }
                     }
                     // 币种非空
@@ -1007,5 +1009,23 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
             wr.setData(resultMap);
         }
         return wr;
+    }
+
+    /**
+     * check是否是数值
+     *
+     * @param param 金融产品类型
+     * @return check结果
+     */
+    public static boolean isNotNumeric(Object param) {
+        if (StringUtil.isNotEmpty(param)) {
+            try {
+                Double.parseDouble((String)param);
+            }
+            catch (NumberFormatException e) {
+                return true;
+            }
+        }
+        return false;
     }
 }
