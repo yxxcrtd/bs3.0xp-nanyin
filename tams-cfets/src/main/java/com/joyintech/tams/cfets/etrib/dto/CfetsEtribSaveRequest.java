@@ -71,6 +71,9 @@ public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
     @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
     private String softSkipMode;
 
+    @ApiModelProperty(name="creditIsContinue",value="授信软控是否继续？Y：继续",example="Y")
+    private String creditIsContinue;
+
    /* @ApiModelProperty(name="entrustId",value="指令代码",example="11")
     private String entrustId;*/
 
@@ -229,5 +232,13 @@ public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
 
     public void setSoftSkipMode(String softSkipMode) {
         this.softSkipMode = softSkipMode;
+    }
+
+    public String getCreditIsContinue() {
+        return creditIsContinue;
+    }
+
+    public void setCreditIsContinue(String creditIsContinue) {
+        this.creditIsContinue = creditIsContinue;
     }
 }

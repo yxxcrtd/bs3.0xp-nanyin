@@ -2,13 +2,18 @@ package com.joyintech.tams.cfets.etrib.aop;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtribBondInfo003Dto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtribSaveRequest;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrautomanagementaccount.dto.EtrAutoManagementAccountDto;
 import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
@@ -76,14 +81,21 @@ public class CfetsEntrustCreditHandlerAop {
     protected void recallPoint() {
     }
 
-    @AfterReturning(pointcut = "checkPoint()", returning = "ajaxResult")
-    public void creditOccupyCheck(JoinPoint joinPoint, AjaxResult ajaxResult) throws BusinessException {
-        if (ajaxResult != null && !StringUtil.isEmptyList(ajaxResult.getErrorList())){
+    @AfterReturning(pointcut = "checkPoint()", returning = "ajaxResultMessage")
+    public void creditOccupyCheck(JoinPoint joinPoint, Message<AjaxResult> ajaxResultMessage) throws BusinessException {
+        AjaxResult ajaxResult=ajaxResultMessage.getData();
+        String code=ajaxResultMessage.getCode();
+        if (ajaxResult != null || StringUtil.equals(code,"001")){
             return;
         }
         try {
-            if (ajaxResult != null){
+            if (StringUtil.equals(code,"000") && !StringUtil.isNotEmpty(ajaxResult)){
                 Object[] args = joinPoint.getArgs();
+                CfetsEtribSaveRequest saveReq=(CfetsEtribSaveRequest) args[0];
+                if(StringUtil.isNotEmpty(saveReq)
+                        &&  StringUtil.equals(saveReq.getCreditIsContinue(),"Y")){
+                    return;
+                }
                 EtrInvestBondInfoDto dto = new EtrInvestBondInfoDto();
                 BeanUtil.copyPropertiesIgnoreNull(dto, args[0]);
                 if (!(StringUtil.isNotEmpty(dto.getOperateType())&& dto.getOperateType().equals("submit"))) {
@@ -104,18 +116,41 @@ public class CfetsEntrustCreditHandlerAop {
                     }
                     ar = etrCommonService.executeOccupyCreditLines(list, DictCodeListExt1.交易状态_初始.getValue(),"check");
                 }else {
-                    ar = etrCommonService.executeOccupyCreditLines(args[0], DictCodeListExt1.交易状态_初始.getValue(),"check");
+                    CfetsEtribSaveRequest pageInputDto = (CfetsEtribSaveRequest) args[0];
+                    //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
+                    if(StringUtil.isNotEmpty(pageInputDto.getTradeAmt())){
+                        pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getTradeAmt(),new BigDecimal(10000),8));
+                    }
+                    if(StringUtil.isNotEmpty(pageInputDto.getEntrustOwnNum())){
+                        pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
+                    }
+                    if(StringUtil.isNotEmpty(pageInputDto.getEntrustIntegrateNum())){
+                        pageInputDto.setEntrustIntegrateNum(ArithmeticUtil.divide(pageInputDto.getEntrustIntegrateNum(),new BigDecimal(10000),8));
+                    }
+                    EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
+                    BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+                    inputDto.setVdate(pageInputDto.getEtrDate());
+                    ar = etrCommonService.executeOccupyCreditLines(inputDto, DictCodeListExt1.交易状态_初始.getValue(),"check");
                 }
                 if (ar != null && !StringUtil.isEmptyList(ar.getErrorList())){
-                    ajaxResult.setErrorList(ar.getErrorList());
+                    List<String> messages = new ArrayList<>();
+                    for(ValidMessage t:ar.getErrorList()){
+                        messages.add(t.getMessage());
+                    }
+                    if(messages.size()>0) {
+                        AjaxResult m=new AjaxResult();
+                        m.setStatuCode(220);
+                        m.setMessage(StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE));
+                        ajaxResultMessage.setData(m);
+
+                    }
                 }
                 if (ar != null && StringUtil.isNotEmpty(ar.getData())){
-                    if (StringUtil.equals(ajaxResult.getData().toString(),"请确认是否要提交?")
-                            || StringUtil.equals(ajaxResult.getData().toString(),"请确认是否要保存?")){
-                        ajaxResult.setData(ar.getData());
-                    }else {
-                        ajaxResult.setData(ar.getData() + String.valueOf(ajaxResult.getData()));
-                    }
+                        AjaxResult m=new AjaxResult();
+                        m.setStatuCode(230);
+                        String ms=ar.getData().toString().replaceAll(BussinessConstant.MSG_SPLIT,GlobalConstant.VERTICAL_LINE);
+                        m.setMessage(ms);
+                        ajaxResultMessage.setData(m);
                 }
             }
         }catch (Exception e){
