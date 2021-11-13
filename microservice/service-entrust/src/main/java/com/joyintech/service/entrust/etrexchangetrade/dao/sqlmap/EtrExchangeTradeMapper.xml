@@ -808,6 +808,19 @@
           order by t.update_time desc
         ) where rownum =1
     </select>
+
+    <select id="linkInvAim" resultType="string">
+        select distinct INV_AIM
+          from (select  A.INV_AIM
+                   from PTL_SEC_POSITION_FLOW A
+                  WHERE  A.PORTFOLIO_ID = #{portfolioId}
+                          AND A.SEC_ACCT_ID = #{secAcctId}
+                          AND A.FINPROD_ID = #{finprodId}
+                          AND A.BRANCH = 0
+               AND A.INV_AIM != '999999'
+             order by A.CREATE_TIME DESC)
+         WHERE rownum = 1
+    </select>
     <!-- 检索对手方交易商 -->
     <select id="selectCounterDealer" resultType="com.joyintech.framework.select.SuggestDto">
         SELECT

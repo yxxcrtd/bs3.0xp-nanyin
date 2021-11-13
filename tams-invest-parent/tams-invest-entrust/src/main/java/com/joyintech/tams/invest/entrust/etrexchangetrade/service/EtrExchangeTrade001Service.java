@@ -1153,6 +1153,12 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getInvAim", null, String.class);
         return invAim;
     }
+
+    public String linkInvAim(Map<String, Object> param) {
+        String invAim = restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/linkInvAim", param, String.class);
+        return invAim;
+    }
     
     /**
      * 
