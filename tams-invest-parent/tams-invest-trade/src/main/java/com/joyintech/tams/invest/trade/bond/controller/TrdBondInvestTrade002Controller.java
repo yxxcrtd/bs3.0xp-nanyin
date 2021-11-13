@@ -233,6 +233,8 @@ public class TrdBondInvestTrade002Controller extends BaseController {
                 //modify by sunhui 20210723 重庆银行：分销缴款进来时已经是万元了，不需要再除以10000---产品bug   end
             }
             dto.setTradeAmt(winPrinAmtBig);
+            dto.setSettleSpeed(0L);
+            dto.setSettleSpeedStr("0");
             dto.setYield(BigDecimal.valueOf(Double.valueOf(yield == null ? "0" : yield)));
             model.addAttribute("bondFirstSign",bondFirstSign);
             model.addAttribute("winPrinAmt",winPrinAmtBig);
