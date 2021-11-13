@@ -139,19 +139,36 @@ var table;
 	   	 var dealMode = $('#dealMode').val();
 	   	 var withLockPeriod = $('#withLockPeriod').val();
 	   	 //交易方式不为大宗交易或者不为大宗交易专场
-	   	 if(dealMode != DEAL_MODE_02 && dealMode != DEAL_MODE_04){
-	   		 //则是否有锁定期默认为否，且不可修改
-	   		 $("#withLockPeriod").attr("disabled", true);
-	   		 $("#withLockPeriod").val(WITH_LOCK_PERIOD_T02);
-	   		 $("#lockMdate").val('');
-	   		 $("#lockMdate").attr("disabled", true); 
-	   	 }else {
-	   		 //则是否有锁定期为是可选择可修改
-	   		 $("#withLockPeriod").attr("disabled", false);
-	//   		 $("#lockMdate").attr("disabled", false);
-	   	 }
+	//    	 if(dealMode != DEAL_MODE_02 && dealMode != DEAL_MODE_04){
+	//    		 //则是否有锁定期默认为否，且不可修改
+	//    		 $("#withLockPeriod").attr("disabled", true);
+	//    		 $("#withLockPeriod").val(WITH_LOCK_PERIOD_T02);
+	//    		 $("#lockMdate").val('');
+	//    		 $("#lockMdate").attr("disabled", true);
+	//    	 }else {
+	//    		 //则是否有锁定期为是可选择可修改
+	//    		 $("#withLockPeriod").attr("disabled", false);
+	// //   		 $("#lockMdate").attr("disabled", false);
+	//    	 }
    	 	if (dealMode) {
-        	var board=$("#board").val();
+   	 	    // TISHKS-204: 交易方向和交易方式和是否有锁定联动 fuyongsheng 20211113 edit start
+            //交易方向为新股中签/配股/增发(配售),或交易方式为大宗交易/大宗专场交易且方向为买入时可选择,其他情况默认为否且不可改
+            var ps = $("#ps").val();
+            if(ps == PS_T48 || ps == PS_T46 || ps == PS_T47){
+                //是否有锁定期为是可选择可修改
+                $("#withLockPeriod").attr("disabled", false);
+            }else if(ps == PS_T01 && (dealMode ==DEAL_MODE_02 || dealMode == DEAL_MODE_04)){
+                //是否有锁定期为是可选择可修改
+                $("#withLockPeriod").attr("disabled", false);
+            }else{
+                //是否有锁定期默认为否，且不可修改
+                $("#withLockPeriod").attr("disabled", true);
+                $("#withLockPeriod").val(WITH_LOCK_PERIOD_T02);
+                $("#lockMdate").val('');
+                $("#lockMdate").attr("disabled", true);
+            }
+            // TISHKS-204: 交易方向和交易方式和是否有锁定联动 fuyongsheng 20211113 edit end
+            var board=$("#board").val();
         	if(board != BOARD_BD03 && dealMode == DEAL_MODE_03){
         		 $('#dealMode').val('');
         		Joyin.error("只有上市板为科创板的才可选择盘后定价交易");
@@ -207,17 +224,33 @@ var table;
 		}else{
 			$("#saleCode").val('').prop("disabled", true);
 		}	
-//   	 交易方式，交易方向与是否有锁定期联动
-//        * 交易方向为新股中签，或交易方式为大宗交易/大宗交易专场时可选择，其他情况默认为否不可改；
-         // TISHKS-204:卖出方向是是否锁定可选择 fuyongsheng 20211113 edit start
-	   	 if((ps != PS_T48 && ps != PS_T02) && dealMode != DEAL_MODE_02 && dealMode != DEAL_MODE_04 && ps != PS_T46 && ps != PS_T47){
-             // TISHKS-204:卖出方向是是否锁定可选择 fuyongsheng 20211113 edit end
-	   		 $("#withLockPeriod").attr("disabled", true);
-	   		 $("#withLockPeriod").attr("value",WITH_LOCK_PERIOD_T02);
-	   	 }else {
-	   		 $("#withLockPeriod").attr("disabled", false);
-	   		 var withLockPeriod = $('#withLockPeriod').val();
-	   	 }
+// //   	 交易方式，交易方向与是否有锁定期联动
+// //        * 交易方向为新股中签，或交易方式为大宗交易/大宗交易专场时可选择，其他情况默认为否不可改；
+//          // TISHKS-204:卖出方向是是否锁定可选择 fuyongsheng 20211113 edit start
+// 	   	 if(ps != PS_T48 && dealMode != DEAL_MODE_02 && dealMode != DEAL_MODE_04 && ps != PS_T46 && ps != PS_T47){
+//              // TISHKS-204:卖出方向是是否锁定可选择 fuyongsheng 20211113 edit end
+// 	   		 $("#withLockPeriod").attr("disabled", true);
+// 	   		 $("#withLockPeriod").attr("value",WITH_LOCK_PERIOD_T02);
+// 	   	 }else {
+// 	   		 $("#withLockPeriod").attr("disabled", false);
+// 	   		 var withLockPeriod = $('#withLockPeriod').val();
+// 	   	 }
+        // TISHKS-204: 交易方向和交易方式和是否有锁定联动 fuyongsheng 20211113 edit start
+        //交易方向为新股中签/配股/增发(配售),或交易方式为大宗交易/大宗专场交易且方向为买入时可选择,其他情况默认为否且不可改
+        if(ps == PS_T48 || ps == PS_T46 || ps == PS_T47){
+            //是否有锁定期为是可选择可修改
+            $("#withLockPeriod").attr("disabled", false);
+        }else if(ps == PS_T01 && (dealMode == DEAL_MODE_02 || dealMode == DEAL_MODE_04)){
+            //是否有锁定期为是可选择可修改
+            $("#withLockPeriod").attr("disabled", false);
+        }else{
+            //是否有锁定期默认为否，且不可修改
+            $("#withLockPeriod").attr("disabled", true);
+            $("#withLockPeriod").val(WITH_LOCK_PERIOD_T02);
+            $("#lockMdate").val('');
+            $("#lockMdate").attr("disabled", true);
+        }
+        // TISHKS-204: 交易方向和交易方式和是否有锁定联动 fuyongsheng 20211113 edit end
     }
        
     
