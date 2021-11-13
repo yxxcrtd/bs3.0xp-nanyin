@@ -313,6 +313,12 @@ public class EtrBoutRepo002Controller extends BaseController {
                 confirmMsg= this.getMessage("ETR_X_010",this.getMessage("EtrRepo002.entrustAmt"));
             }
         }
+
+        String mdateTemp = DateUtil.plusDays(DateUtil.format(dto.getVdate()),Integer.parseInt(dto.getRepoTerm2()));
+        if(dto.getFinmdate() != null && DateUtil.parse(mdateTemp).after(dto.getFinmdate())){
+            confirmMsg= "债券到期日不在该回购期限内!";
+        }
+
         if(StringUtil.isNotEmpty(confirmMsg)) {
             confirmMsg +=changeLineMark;
             confirmMsg +=getMessage("请确认是否继续?");
