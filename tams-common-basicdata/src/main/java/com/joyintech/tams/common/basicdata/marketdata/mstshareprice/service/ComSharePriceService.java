@@ -265,10 +265,10 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
             if (StringUtil.isNotEmpty(list.get(1))) {
                 ComSharePriceDto.setFinprodAbbr(list.get(1).trim());
             }
-            if (StringUtil.isNotEmpty(list.get(2))) {
+            if (StringUtil.isNotEmpty(list.get(2)) &&!ComBasicDataExcelUtil.isErrorDate(list.get(2))) {
                 ComSharePriceDto.setsShares(new BigDecimal(list.get(2).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(3))) {
+            if (StringUtil.isNotEmpty(list.get(3)) &&!ComBasicDataExcelUtil.isErrorDate(list.get(3))) {
                 ComSharePriceDto.setcShares(new BigDecimal(list.get(3).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(4))&&!ComBasicDataExcelUtil.isErrorDate(list.get(4))) {
@@ -277,7 +277,7 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
             if (StringUtil.isNotEmpty(list.get(5))&&CommonUtil.isFloatNumeric(list.get(5))) {
                 ComSharePriceDto.setPreClosePrice(new BigDecimal(list.get(5).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(6))) {
+            if (StringUtil.isNotEmpty(list.get(6))&&CommonUtil.isFloatNumeric(list.get(6))) {
                 ComSharePriceDto.setOpenPrice(new BigDecimal(list.get(6).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(7))&&CommonUtil.isFloatNumeric(list.get(7))) {
