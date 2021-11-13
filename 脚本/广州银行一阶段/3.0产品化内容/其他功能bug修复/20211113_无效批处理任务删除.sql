@@ -1,0 +1,1 @@
+delete from SYS_BATCH_TASK where BEAN_NAME in ('binaryTreeModelTask', 'impairmentDataLoadTask', 'eclCalculationTask', 'cashFlowDiscountTask', 'assetImpairmentStageJudgeModelTask', 'eadCalCulationBatchTask', 'pdCalculateTask', 'dataPushEclResultTask', 'productAssetsIncomeMethodTask', 'dataPushValuatIoninfoTask', 'manualVoucherTask');

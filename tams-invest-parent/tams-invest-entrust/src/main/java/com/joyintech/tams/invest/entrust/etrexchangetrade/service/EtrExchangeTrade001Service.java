@@ -1371,7 +1371,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 	 * @param minTrdUnitLimitDto 最小交易单位对象
 	 * @return 格式化指令数量
 	 */
-	private BigDecimal formatEntrustNum(BigDecimal entrustNum, MinTrdUnitLimitDto minTrdUnitLimitDto) {
+	public BigDecimal formatEntrustNum(BigDecimal entrustNum, MinTrdUnitLimitDto minTrdUnitLimitDto) {
 		if (entrustNum == null || entrustNum.compareTo(BigDecimal.ZERO) == 0) {
 			return entrustNum;
 		}
@@ -2569,7 +2569,6 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                             Map<String, BigDecimal> result = calcEntrustNumAndAmt(map2);
                             unit.setEntrustNum(result.get("entrustNum"));
                         }
-                        System.out.println(lineNo + "_指令金额:" + unit.getEntrustAmt() + "_指令数量：" + unit.getEntrustNum());
                         if (null != minTrdUnitLimitDto) {
                             confirmMsg = checkMinTrdUnit(unit, minTrdUnitLimitDto, lineNo);
                         }
@@ -3246,7 +3245,7 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 	 * @param lineNo
 	 * @return
 	 */
-	private String checkMinTrdUnit(EtrExchangeTrade001Dto dto, MinTrdUnitLimitDto minTrdUnitLimitDto, String lineNo) {
+	public String checkMinTrdUnit(EtrExchangeTrade001Dto dto, MinTrdUnitLimitDto minTrdUnitLimitDto, String lineNo) {
 		// 按数量check
 		String confirmMsg = "";
 		boolean flag1 = false;
@@ -3282,43 +3281,49 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				confirmMsg += "，应至少不低于其中一个！";
 			}
 		}
-
+		// TISHKS-151:修改最大交易金额和最大交易量使用查询配置值而非固定值 fuyongsheng edit start
 		if (null == minTrdUnitLimitDto.getMaxAmt() || (minTrdUnitLimitDto.getMaxAmt() != null
 				&& minTrdUnitLimitDto.getMaxAmt().compareTo(BigDecimal.ZERO) > 0
-				&& dto.getEntrustAmt().compareTo(maxAmt) > 0)) {
+				&& dto.getEntrustAmt().compareTo(minTrdUnitLimitDto.getMaxAmt()) > 0)) {
 			flag3 = true;
 		}
 		if (null == minTrdUnitLimitDto.getMaxNum() || (minTrdUnitLimitDto.getMaxNum() != null
 				&& minTrdUnitLimitDto.getMaxNum().compareTo(BigDecimal.ZERO) > 0
-				&& dto.getEntrustNum().compareTo(maxNum) > 0)) {
+				&& dto.getEntrustNum().compareTo(minTrdUnitLimitDto.getMaxNum()) > 0)) {
 			flag4 = true;
 		}
 		if (flag3 && flag4 && !(null == minTrdUnitLimitDto.getMaxNum() && null == minTrdUnitLimitDto.getMaxAmt())) {
 			if (flag3 && null != minTrdUnitLimitDto.getMaxNum()) {
 				confirmMsg += "最大交易数量"
-						+ getNumAndUnit(maxNum, minTrdUnitLimitDto.getMaxNumUnit());
+						+ getNumAndUnit(minTrdUnitLimitDto.getMaxNum(), minTrdUnitLimitDto.getMaxNumUnit());
 			}
 			if (flag3 && flag4 && flag3 && null != minTrdUnitLimitDto.getMaxNum()
 					&& null != minTrdUnitLimitDto.getMaxAmt()) {
 				confirmMsg += "，";
 			}
 			if (flag4 && null != minTrdUnitLimitDto.getMaxAmt()) {
-				confirmMsg += "最大交易金额" + getNumAndUnit(maxAmt);
+				confirmMsg += "最大交易金额" + getNumAndUnit(minTrdUnitLimitDto.getMaxAmt());
 			}
+			// TISHKS-151:修改最大交易金额和最大交易量使用查询配置值而非固定值 fuyongsheng edit end
 			if (flag3 && flag4 && flag3 && null != minTrdUnitLimitDto.getMaxNum()
 					&& null != minTrdUnitLimitDto.getMaxAmt()) {
 				confirmMsg += "，应至少不超过其中一个！";
 			}
 		}
 		
-		if (StringUtils.isNotEmpty(confirmMsg)) {
+		if (StringUtils.isNotEmpty(confirmMsg) && StringUtil.isNotEmpty(lineNo)) {
 			confirmMsg += "(行号为" + lineNo + ")。";
 		}
 		
 		if ((DictCodeListExt3.交易方向_质押券出库.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_质押券入库.getValue().equals(dto.getPs()))
 				&& dto.getEntrustAmt().compareTo(new BigDecimal(0)) == 0) {
-			confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-					this.getMessage("ETR_ERROR_0033") + "(行号为" + lineNo + ")。");
+			if(StringUtil.isEmpty(lineNo)){
+				confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+						this.getMessage("ETR_ERROR_0033"));
+			}else{
+				confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+						this.getMessage("ETR_ERROR_0033") + "(行号为" + lineNo + ")。");
+			}
 		}
 		/*
 		if (dto.getEntrustNum().compareTo(new BigDecimal(0)) == 0) {
