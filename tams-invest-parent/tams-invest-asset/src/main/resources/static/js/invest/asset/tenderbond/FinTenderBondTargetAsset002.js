@@ -405,6 +405,15 @@ $(function() {
         });
         $('#tradeMarket').change(function(){
 			AssetCommon.setTradeMarketId($('#tradeMarket').val());
+			// TISHKS-131:交易场所联动交易日历默认值 fuyongsheng 20211113 edit start
+            if ($('#tradeMarket').val() == '03') {//上海证券交易所
+                $("#calendarId").textSelect('setValue','04');// 上交所
+            }else if ($('#tradeMarket').val() == '04') {//深圳证券交易所
+                $("#calendarId").textSelect('setValue','05');// 深交所
+            }else{
+                $("#calendarId").textSelect('setValue','01');// 中国法定节假日
+            }
+            // TISHKS-131:交易场所联动交易日历默认值 fuyongsheng 20211113 edit end
 		});
         $('#issuer').change(issuerChange);
         $('#tradeMarket').change(function(){
