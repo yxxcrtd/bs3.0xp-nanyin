@@ -637,8 +637,8 @@ from
     </select>
 
     <select id="getEtrFinProductInfo" resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtrFinProductDto">
-        SELECT
-        DISTINCT
+        select * from
+        (SELECT
         t1.FINPROD_ID secId,
         t1.FINPROD_MARKET_ID marketId,
         t1.FINPROD_NAME secName,
@@ -699,7 +699,7 @@ from
         left join
         fin_cash_info t5 on t5.FINPROD_ID = t1.FINPROD_ID AND t5.CASH_TYPE_2 = 'C02' and t5.FINPROD_TYPE = '01'
         LEFT JOIN
-        FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID
+        FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID AND to_char(#{sysDate},'yyyy-MM-dd') >= to_char(t6.EFF_DATE,'yyyy-MM-dd')
         LEFT JOIN
         mst_customer_info t7 ON t1.SPONSOR = t7.CUSTOMER_ID
         LEFT JOIN (
@@ -749,10 +749,11 @@ from
         ) WHERE rk = 1
         ) PJ ON PJ.OCODE = t1.FINPROD_MARKET_ID
         LEFT JOIN FIN_EXERCISE_PLAN A ON t1.FINPROD_ID = A.FINPROD_ID
-        where rownum = 1
+        where 1 = 1
         <if test="secId != null and secId != ''">
             AND t1.FINPROD_ID = #{secId}
         </if>
+        ORDER  BY t6.EFF_DATE desc ) where rownum = 1
     </select>
     <!--交易日取最大值-->
     <select id="getMaxTradeDate" resultType="java.util.Date">
