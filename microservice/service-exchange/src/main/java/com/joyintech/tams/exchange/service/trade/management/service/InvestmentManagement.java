@@ -147,12 +147,15 @@ public class InvestmentManagement extends BaseService {
         if (StringUtil.isNotEmpty(tradeTimeSwitch)) {
             commonManagement.setTradeTimeSwitch(tradeTimeSwitch);
         }
+        // modify by etliu 20211113 start
+        // TISHKS-343: 需求文档中描述闭市不可下委托，但系统没有做此校验；
         if (StringUtil.isNotEmpty(fairModeEntrustPriceBestThanInstruction)) {
-            commonManagement.setTradeTimeSwitch(fairModeEntrustPriceBestThanInstruction);
+            commonManagement.setFairModeEntrustPriceBestThanInstruction(fairModeEntrustPriceBestThanInstruction);
         }
         if (StringUtil.isNotEmpty(fairModeWithUnacceptInstruction)) {
-            commonManagement.setTradeTimeSwitch(fairModeWithUnacceptInstruction);
+            commonManagement.setFairModeWithUnacceptInstruction(fairModeWithUnacceptInstruction);
         }
+        // modify by etliu 20211113 end
     }
 
     /**
