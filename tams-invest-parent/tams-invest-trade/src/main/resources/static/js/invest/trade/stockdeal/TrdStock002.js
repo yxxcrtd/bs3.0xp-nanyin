@@ -209,7 +209,9 @@ var table;
 		}	
 //   	 交易方式，交易方向与是否有锁定期联动
 //        * 交易方向为新股中签，或交易方式为大宗交易/大宗交易专场时可选择，其他情况默认为否不可改；
-	   	 if(ps != PS_T48 && dealMode != DEAL_MODE_02 && dealMode != DEAL_MODE_04 && ps != PS_T46 && ps != PS_T47){
+         // TISHKS-204:卖出方向是是否锁定可选择 fuyongsheng 20211113 edit start
+	   	 if((ps != PS_T48 && ps != PS_T02) && dealMode != DEAL_MODE_02 && dealMode != DEAL_MODE_04 && ps != PS_T46 && ps != PS_T47){
+             // TISHKS-204:卖出方向是是否锁定可选择 fuyongsheng 20211113 edit end
 	   		 $("#withLockPeriod").attr("disabled", true);
 	   		 $("#withLockPeriod").attr("value",WITH_LOCK_PERIOD_T02);
 	   	 }else {
