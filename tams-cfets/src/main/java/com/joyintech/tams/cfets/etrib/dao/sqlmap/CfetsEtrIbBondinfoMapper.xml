@@ -749,7 +749,7 @@ from
         ) WHERE rk = 1
         ) PJ ON PJ.OCODE = t1.FINPROD_MARKET_ID
         LEFT JOIN FIN_EXERCISE_PLAN A ON t1.FINPROD_ID = A.FINPROD_ID
-        where 1 = 1
+        where rownum = 1
         <if test="secId != null and secId != ''">
             AND t1.FINPROD_ID = #{secId}
         </if>
