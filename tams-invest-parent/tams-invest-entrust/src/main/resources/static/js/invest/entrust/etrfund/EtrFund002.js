@@ -599,7 +599,7 @@
             $("#entrustAmt0").show();
             $("#entrustNum0").show();
             $("#entrustNum").attr("disabled",false);
-            $("#entrustAmt").val('').attr("disabled",true);
+            $("#entrustAmt").val('').attr("disabled",false);
             $('#changeToFinprodMarketId_div').hide();
             $('#changeToFinprodMarketId').val('');
             getAssetAvailablePosition();
