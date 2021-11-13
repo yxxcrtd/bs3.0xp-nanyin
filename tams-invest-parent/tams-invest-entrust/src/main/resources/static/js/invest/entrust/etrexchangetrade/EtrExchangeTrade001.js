@@ -1379,7 +1379,7 @@
                 var tempParam = {
                     finprodId: $("#finprodId_" + currentTab).val()
                 };
-                Joyin.ajax(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/isXinGuShenGou', tempParam,
+                Joyin.ajaxSync(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/isXinGuShenGou', tempParam,
                     function(res) {
                         if (res == YES_OR_NO_Y) {
                             $("#ps_" + currentTab).updateChosenArr({
@@ -1555,9 +1555,17 @@
                         document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万份';
                         document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
                     }else{
-                        document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万元';
-                        document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万元';
-                        document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+                        //配债配股不显示持仓数量，可卖数量，成本价
+                        if(ps == PS_T46 || ps == PS_T97) {
+                            document.getElementById('positionAmount_' + currentTab).innerHTML = "";
+                            document.getElementById('canSellAmount_' + currentTab).innerHTML = "";
+                            document.getElementById('costPrice_' + currentTab).innerHTML = "";
+                        }
+                        else {
+                            document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万元';
+                            document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万元';
+                            document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+                        }
                     }
                     //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 end
                 }
