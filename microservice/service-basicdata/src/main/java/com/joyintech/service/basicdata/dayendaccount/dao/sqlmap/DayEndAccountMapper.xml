@@ -5,13 +5,13 @@
     <select id="findAccountInfo" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
         WITH temp1 AS(
             SELECT
-                b.ACCOUNT busiAcctNo,
+                a.ACCOUT busiAcctNo,
                 a.SETTLE_DATE,
                 a.FINPROD_ID,
                 a.TRADE_MARKET,
                 a.CHECK_RESULT,
                 f.TYPE_8 FINPROD_TYPE,
-                b.TRADE_ID TRADE_ID,
+                a.ENTRUST_TRADE_ID TRADE_ID,
                 a.CUSTOMER_ID,
                 a.STL_SEC_DEME,
                 b.COMMISSION_AMT,

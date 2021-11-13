@@ -11,6 +11,7 @@ import com.joyintech.tams.invest.common.reconciliation.dto.AccountFeePlan;
 import com.joyintech.tams.invest.common.reconciliation.dto.AccountPlanSearchInfo;
 import com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,9 @@ public class ReconciliationCommonService {
 
     @Autowired
     private SettleTransDataMapper settleTransDataMapper;
+
+    @Autowired
+    private SettleTransDataStatusMapper settleTransDataStatusMapper;
 
     @Autowired
     private StlSecReconDealMapper stlSecReconDealMapper;
@@ -531,249 +535,162 @@ public class ReconciliationCommonService {
         List<StlSecRecon> listRecon = new ArrayList<StlSecRecon>();
         List<StlSecReconDetail> listReconDetail = new ArrayList<StlSecReconDetail>();
         for (DayEndAccountDaichuliDto dto : list) {
-            //根据券商对账单删除之前的对账数据
-            stlSecReconMapper.deleteByPrimaryKey(dto.getSeqNo());
-            //封装新的对账单数据
-            StlSecRecon stlSecRecon = new StlSecRecon();
-            stlSecRecon.setSeqNo(dto.getSeqNo());
-            stlSecRecon.setCustomerId(dto.getCustomerId());
-            stlSecRecon.setPortfolioId(dto.getPortfolioId());
-            stlSecRecon.setFinprodId(dto.getFinprodId());
-            stlSecRecon.setMarketId(dto.getMarketId());
-            stlSecRecon.setSettleDate(dto.getTradeDate());
-            stlSecRecon.setTradeMarket(dto.getTradeMarket());
-            stlSecRecon.setCheckResult(dto.getCheckResult());
-            stlSecRecon.setStlSecDeme(dto.getParaValue());
-            stlSecRecon.setAccount(dto.getAccout());
-            stlSecRecon.setEntrustTradeId(dto.getTradeId());
-            stlSecRecon.setReconInfo(StringUtil.isEmpty(dto.getReconInfo()) ? null : dto.getReconInfo().getBytes());
-            //场内清算原金额数据保留
-            stlSecRecon.setCommissionAmt(dto.getCommissionAmt2());
-            stlSecRecon.setJsfAmt(dto.getJsfAmt2());
-            stlSecRecon.setZgfAmt(dto.getZgfAmt2());
-            stlSecRecon.setStampFee(dto.getStampFee2());
-            stlSecRecon.setSettleFee(dto.getSettleFee2());
-            stlSecRecon.setGhfAmt(dto.getGhfAmt2());
-            stlSecRecon.setSxfAmt(dto.getSxfAmt2());
-            stlSecRecon.setFpriceAmt(dto.getTradeAmt2());
-            stlSecRecon.setTradeNum(dto.getTradeNum2());
-            listRecon.add(stlSecRecon);
-            //更新拆分其他费用显示（经手费、征管费、结算费）
-            StlSecReconDeal stlSecReconDeal = new StlSecReconDeal();
-            stlSecReconDeal.setSeqNo(dto.getSeqNo());
-            stlSecReconDeal.setJsfAmt(dto.getJsfAmt());
-            stlSecReconDeal.setZgfAmt(dto.getZgfAmt());
-            stlSecReconDeal.setSettleFee(dto.getSettleFee());
-            stlSecReconDealMapper.updateByPrimaryKeySelective(stlSecReconDeal);
-
-            //待对账数据.对账维度 = 委托汇总
-            if (DictCodeListStl.对账维度_委托汇总.getValue().equals(dto.getParaValue())) {
-                //调用【清算明细查询】
-                Map<String, Object> param = new HashMap<String, Object>();
-                param.put("applyTradeId", dto.getTradeId2());
-                List<SettleTransData> listSettleTransData = reconciliationCommonMapper.getSettleTransData(param);
-                if (listSettleTransData != null && listSettleTransData.size() > 0) {
-                    for (SettleTransData settleTransData : listSettleTransData) {
-                        StlSecReconDetail detail = new StlSecReconDetail();
-                        detail.setSeqNo(dto.getSeqNo());
-                        detail.setTradeId(settleTransData.getTradeId());
-                        listReconDetail.add(detail);
+            if(DictCodeListExt3.对账状态结果_手工完成.getValue().equals(dto.getCheckResult())){
+                if(DictCodeListStl.对账维度_委托汇总.getValue().equals(dto.getParaValue())){
+                    //调用【清算明细查询】
+                    Map<String, Object> param = new HashMap<String, Object>();
+                    param.put("applyTradeId", dto.getTradeId2());
+                    param.put("dealDate", dto.getTradeDate());
+                    param.put("seatNumber", dto.getSeatNumber());
+                    List<SettleTransData> settleTransDatas = reconciliationCommonMapper.getSettleTransData(param);
+                    if(CollectionUtils.isEmpty(settleTransDatas)){
+                        continue;
                     }
-                    if (DictCodeListExt3.对账状态结果_一致.getValue().equals(stlSecRecon.getCheckResult())) {
-                        SettleTransData settleTransData = listSettleTransData.get(0);
-                        SettleTransData settleTransDataNew = new SettleTransData();
-                        settleTransDataNew.setTradeId(settleTransData.getTradeId());
-                        //成交数据明细表.佣金									=	成交数据明细表.佣金 + 待对账数据.清算佣金差额
-                        settleTransDataNew.setCommissionAmt(ArithmeticUtil.doAdd(settleTransData.getCommissionAmt(), dto.getCommissionAmtCe()));
-                        if (settleTransDataNew.getCommissionAmt() != null
-                                && settleTransDataNew.getCommissionAmt().compareTo(BigDecimal.ZERO) != 0
-                                && StringUtil.isNotEmpty(dto.getIsPayWithTrade())) {
-                            settleTransDataNew.setIsPayWithTrade(dto.getIsPayWithTrade());
-                        } else if (StringUtil.isEmpty(dto.getIsPayWithTrade())
-                                && settleTransDataNew.getCommissionAmt() != null
-                                && settleTransDataNew.getCommissionAmt().compareTo(BigDecimal.ZERO) != 0) {
-                            settleTransDataNew.setIsPayWithTrade(DictCodeListExt1.是否_否.getValue());
-                        }
-                        //成交数据明细表.经手费									=	成交数据明细表.经手费 + 待对账数据.清算经手费差额
-                        settleTransDataNew.setJsfAmt(ArithmeticUtil.doAdd(settleTransData.getJsfAmt(), dto.getJsfAmtCe()));
-                        //成交数据明细表.证管费									=	成交数据明细表.证管费 + 待对账数据.清算证管费差额
-                        settleTransDataNew.setZgfAmt(ArithmeticUtil.doAdd(settleTransData.getZgfAmt(), dto.getZgfAmtCe()));
-                        //成交数据明细表.印花税									=	成交数据明细表.印花税 + 待对账数据.清算印花税差额
-                        settleTransDataNew.setStampFee(ArithmeticUtil.doAdd(settleTransData.getStampFee(), dto.getStampFeeCe()));
-                        //成交数据明细表.结算费									=	成交数据明细表.结算费 + 待对账数据.清算结算费差额
-                        settleTransDataNew.setSettleFee(ArithmeticUtil.doAdd(settleTransData.getSettleFee(), dto.getSettleFeeCe()));
-                        //成交数据明细表.过户费									=	成交数据明细表.过户费 +待对账数据.清算过户费差额
-                        settleTransDataNew.setGhfAmt(ArithmeticUtil.doAdd(settleTransData.getGhfAmt(), dto.getGhfAmtCe()));
-                        //成交数据明细表.手续费									=	成交数据明细表.手续费 +待对账数据.清算手续费差额
-                        settleTransDataNew.setSxfAmt(ArithmeticUtil.doAdd(settleTransData.getSxfAmt(), dto.getSxfAmtCe()));
-                        //成交数据明细表.全价总额									=	成交数据明细表.成交金额 +待对账数据.清算成交金额差额
-                        settleTransDataNew.setFpriceAmt(ArithmeticUtil.doAdd(settleTransData.getFpriceAmt(), dto.getTradeAmtCe()));
-                        //成交数据明细表.清算金额									=	成交数据明细表.清算金额 +待对账数据.清算金额差额
-                        settleTransDataNew.setTradeAmt(ArithmeticUtil.doAdd(settleTransData.getTradeAmt(), dto.getSettleAmtCe(), dto.getTradeAmtCe()));
-                        //成交数据明细表.成交数量									=	成交数据明细表.成交数量 +待对账数据.清算成交数量差额
-                        settleTransDataNew.setShareAmt(ArithmeticUtil.doAdd(settleTransData.getShareAmt(), dto.getTradeNumCe()));
-                        //净价总额
-                        if (settleTransData.getCpriceAmt() != null) {
-                            settleTransDataNew.setCpriceAmt(ArithmeticUtil.subtract(settleTransData.getCpriceAmt(), dto.getTradeAmtCe()));
-                        }
-                        if (dto.getTradeAmtCe() != null && dto.getTradeAmtCe().compareTo(BigDecimal.ZERO) != 0
-                                && settleTransDataNew.getShareAmt() != null && settleTransDataNew.getShareAmt().compareTo(BigDecimal.ZERO) != 0) {
-                            //全价
-                            settleTransDataNew.setUnitFprice(ArithmeticUtil.divide(settleTransDataNew.getFpriceAmt(), settleTransDataNew.getShareAmt(), 8));
-                            //净价
-                            if (settleTransData.getCpriceAmt() != null) {
-                                settleTransDataNew.setUnitCprice(ArithmeticUtil.divide(settleTransDataNew.getCpriceAmt(), settleTransDataNew.getShareAmt(), 8));
-                            }
-                        }
-                        settleTransDataMapper.updateByPrimaryKeySelective(settleTransDataNew);
+                    SettleTransDataStatus status;
+                    for(SettleTransData settleTransData : settleTransDatas){
+                        status = new SettleTransDataStatus();
+                        status.setTradeId(settleTransData.getTradeId());
+                        status.setCheckResult(dto.getCheckResult());
+                        settleTransDataStatusMapper.insertSelective(status);
                     }
+                }else if(DictCodeListStl.对账维度_证券汇总.getValue().equals(dto.getParaValue())){
+                    //调用【清算明细查询】
+                    Map<String, Object> param = new HashMap<String, Object>();
+                    param.put("finprodId", dto.getFinprodId());
+                    param.put("dealDate", dto.getTradeDate());
+                    param.put("seatNumber", dto.getSeatNumber());
+                    List<SettleTransData> settleTransDatas = reconciliationCommonMapper.getSettleTransData(param);
+                    if(CollectionUtils.isEmpty(settleTransDatas)){
+                        continue;
+                    }
+                    SettleTransDataStatus status;
+                    for(SettleTransData settleTransData : settleTransDatas){
+                        status = new SettleTransDataStatus();
+                        status.setTradeId(settleTransData.getTradeId());
+                        status.setCheckResult(dto.getCheckResult());
+                        settleTransDataStatusMapper.insertSelective(status);
+                    }
+                }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getParaValue())){
+                    SettleTransDataStatus status = new SettleTransDataStatus();
+                    status.setTradeId(dto.getTradeId());
+                    status.setCheckResult(dto.getCheckResult());
+                    settleTransDataStatusMapper.insertSelective(status);
                 }
-                //删除明细数据
-                param.put("seqNo", dto.getSeqNo());
-                reconciliationCommonMapper.deleteStlSecReconDetail(param);
+            }else{
+                //根据券商对账单删除之前的对账数据
+                stlSecReconMapper.deleteByPrimaryKey(dto.getSeqNo());
+                //封装新的对账单数据
+                StlSecRecon stlSecRecon = new StlSecRecon();
+                stlSecRecon.setSeqNo(dto.getSeqNo());
+                stlSecRecon.setCustomerId(dto.getCustomerId());
+                stlSecRecon.setPortfolioId(dto.getPortfolioId());
+                stlSecRecon.setFinprodId(dto.getFinprodId());
+                stlSecRecon.setMarketId(dto.getMarketId());
+                stlSecRecon.setSettleDate(dto.getTradeDate());
+                stlSecRecon.setTradeMarket(dto.getTradeMarket());
+                stlSecRecon.setCheckResult(dto.getCheckResult());
+                stlSecRecon.setStlSecDeme(dto.getParaValue());
+                stlSecRecon.setAccount(dto.getAccout());
+                stlSecRecon.setEntrustTradeId(dto.getTradeId());
+                stlSecRecon.setReconInfo(StringUtil.isEmpty(dto.getReconInfo()) ? null : dto.getReconInfo().getBytes());
+                reconciliationCommonMapper.insertStlSecRecon(stlSecRecon);
 
-            } else if (DictCodeListStl.对账维度_证券汇总.getValue().equals(dto.getParaValue())) {
-                //调用【清算明细查询】
-                Map<String, Object> param = new HashMap<String, Object>();
-                param.put("finprodId", dto.getFinprodId());
-                List<SettleTransData> listSettleTransData = reconciliationCommonMapper.getSettleTransData(param);
-                if (listSettleTransData != null && listSettleTransData.size() > 0) {
-                    for (SettleTransData settleTransData : listSettleTransData) {
-                        StlSecReconDetail detail = new StlSecReconDetail();
-                        detail.setSeqNo(dto.getSeqNo());
-                        detail.setTradeId(settleTransData.getTradeId());
-                        listReconDetail.add(detail);
+                //待对账数据.对账维度 = 委托汇总 || 证券汇总
+                if (DictCodeListStl.对账维度_委托汇总.getValue().equals(dto.getParaValue()) ||
+                        DictCodeListStl.对账维度_证券汇总.getValue().equals(dto.getParaValue())) {
+                    //调用【清算明细查询】
+                    Map<String, Object> param = new HashMap<String, Object>();
+                    if(DictCodeListStl.对账维度_委托汇总.getValue().equals(dto.getParaValue())){
+                        param.put("applyTradeId", dto.getTradeId2());
+                    }else{
+                        param.put("finprodId", dto.getFinprodId());
                     }
-                    if (DictCodeListExt3.对账状态结果_一致.getValue().equals(stlSecRecon.getCheckResult())) {
-                        SettleTransData settleTransData = listSettleTransData.get(0);
-                        SettleTransData settleTransDataNew = new SettleTransData();
-                        settleTransDataNew.setTradeId(settleTransData.getTradeId());
-                        //成交数据明细表.佣金									=	成交数据明细表.佣金 + 待对账数据.清算佣金差额
-                        settleTransDataNew.setCommissionAmt(ArithmeticUtil.doAdd(settleTransData.getCommissionAmt(), dto.getCommissionAmtCe()));
-                        if (settleTransDataNew.getCommissionAmt() != null
-                                && settleTransDataNew.getCommissionAmt().compareTo(BigDecimal.ZERO) != 0
-                                && StringUtil.isNotEmpty(dto.getIsPayWithTrade())) {
-                            settleTransDataNew.setIsPayWithTrade(dto.getIsPayWithTrade());
-                        } else if (StringUtil.isEmpty(dto.getIsPayWithTrade())
-                                && settleTransDataNew.getCommissionAmt() != null
-                                && settleTransDataNew.getCommissionAmt().compareTo(BigDecimal.ZERO) != 0) {
-                            settleTransDataNew.setIsPayWithTrade(DictCodeListExt1.是否_否.getValue());
-                        }
-                        //成交数据明细表.经手费									=	成交数据明细表.经手费 + 待对账数据.清算经手费差额
-                        settleTransDataNew.setJsfAmt(ArithmeticUtil.doAdd(settleTransData.getJsfAmt(), dto.getJsfAmtCe()));
-                        //成交数据明细表.证管费									=	成交数据明细表.证管费 + 待对账数据.清算证管费差额
-                        settleTransDataNew.setZgfAmt(ArithmeticUtil.doAdd(settleTransData.getZgfAmt(), dto.getZgfAmtCe()));
-                        //成交数据明细表.印花税									=	成交数据明细表.印花税 + 待对账数据.清算印花税差额
-                        settleTransDataNew.setStampFee(ArithmeticUtil.doAdd(settleTransData.getStampFee(), dto.getStampFeeCe()));
-                        //成交数据明细表.结算费									=	成交数据明细表.结算费 + 待对账数据.清算结算费差额
-                        settleTransDataNew.setSettleFee(ArithmeticUtil.doAdd(settleTransData.getSettleFee(), dto.getSettleFeeCe()));
-                        //成交数据明细表.过户费									=	成交数据明细表.过户费 +待对账数据.清算过户费差额
-                        settleTransDataNew.setGhfAmt(ArithmeticUtil.doAdd(settleTransData.getGhfAmt(), dto.getGhfAmtCe()));
-                        //成交数据明细表.手续费									=	成交数据明细表.手续费 +待对账数据.清算手续费差额
-                        settleTransDataNew.setSxfAmt(ArithmeticUtil.doAdd(settleTransData.getSxfAmt(), dto.getSxfAmtCe()));
-                        //成交数据明细表.全价总额									=	成交数据明细表.成交金额 +待对账数据.清算成交金额差额
-                        settleTransDataNew.setFpriceAmt(ArithmeticUtil.doAdd(settleTransData.getFpriceAmt(), dto.getTradeAmtCe()));
-                        //成交数据明细表.清算金额									=	成交数据明细表.清算金额 +待对账数据.清算金额差额
-                        settleTransDataNew.setTradeAmt(ArithmeticUtil.doAdd(settleTransData.getTradeAmt(), dto.getSettleAmtCe(), dto.getTradeAmtCe()));
-                        //成交数据明细表.成交数量									=	成交数据明细表.成交数量 +待对账数据.清算成交数量差额
-                        settleTransDataNew.setShareAmt(ArithmeticUtil.doAdd(settleTransData.getShareAmt(), dto.getTradeNumCe()));
-                        //净价总额
-                        if (settleTransData.getCpriceAmt() != null) {
-                            settleTransDataNew.setCpriceAmt(ArithmeticUtil.subtract(settleTransData.getCpriceAmt(), dto.getTradeAmtCe()));
-                        }
-                        if (dto.getTradeAmtCe() != null && dto.getTradeAmtCe().compareTo(BigDecimal.ZERO) != 0
-                                && settleTransDataNew.getShareAmt() != null && settleTransDataNew.getShareAmt().compareTo(BigDecimal.ZERO) != 0) {
-                            //全价
-                            settleTransDataNew.setUnitFprice(ArithmeticUtil.divide(settleTransDataNew.getFpriceAmt(), settleTransDataNew.getShareAmt(), 8));
-                            //净价
-                            if (settleTransData.getCpriceAmt() != null) {
-                                settleTransDataNew.setUnitCprice(ArithmeticUtil.divide(settleTransDataNew.getCpriceAmt(), settleTransDataNew.getShareAmt(), 8));
-                            }
-                        }
-                        settleTransDataMapper.updateByPrimaryKeySelective(settleTransDataNew);
-                    }
-                }
-                //删除明细数据
-                param.put("seqNo", dto.getSeqNo());
-                reconciliationCommonMapper.deleteStlSecReconDetail(param);
-
-            }else if (DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getParaValue())) {
-                StlSecReconDetail detail = new StlSecReconDetail();
-                detail.setSeqNo(dto.getSeqNo());
-                detail.setTradeId(dto.getTradeId2());
-                listReconDetail.add(detail);
-                Map<String, Object> param = new HashMap<String, Object>();
-                param.put("seqNo", dto.getSeqNo());
-                reconciliationCommonMapper.deleteStlSecReconDetail(param);
-
-                if (DictCodeListExt3.对账状态结果_一致.getValue().equals(stlSecRecon.getCheckResult())) {
-                    param.put("tradeId", dto.getTradeId2());
+                    param.put("dealDate", dto.getTradeDate());
+                    param.put("seatNumber", dto.getSeatNumber());
                     List<SettleTransData> listSettleTransData = reconciliationCommonMapper.getSettleTransData(param);
-                    if (listSettleTransData != null && listSettleTransData.size() > 0) {
-                        SettleTransData settleTransData = listSettleTransData.get(0);
-                        SettleTransData settleTransDataNew = new SettleTransData();
-                        settleTransDataNew.setTradeId(settleTransData.getTradeId());
-                        //成交数据明细表.佣金									=	成交数据明细表.佣金 + 待对账数据.清算佣金差额
-                        settleTransDataNew.setCommissionAmt(ArithmeticUtil.doAdd(settleTransData.getCommissionAmt(), dto.getCommissionAmtCe()));
-                        if (settleTransDataNew.getCommissionAmt() != null
-                                && settleTransDataNew.getCommissionAmt().compareTo(BigDecimal.ZERO) != 0
-                                && StringUtil.isNotEmpty(dto.getIsPayWithTrade())) {
-                            settleTransDataNew.setIsPayWithTrade(dto.getIsPayWithTrade());
-                        } else if (StringUtil.isEmpty(dto.getIsPayWithTrade())
-                                && settleTransDataNew.getCommissionAmt() != null
-                                && settleTransDataNew.getCommissionAmt().compareTo(BigDecimal.ZERO) != 0) {
-                            settleTransDataNew.setIsPayWithTrade(DictCodeListExt1.是否_否.getValue());
+                    if(CollectionUtils.isEmpty(listSettleTransData)){
+                        continue;
+                    }
+                    StlSecReconDetail detail;
+                    SettleTransDataStatus status;
+                    for (SettleTransData settleTransData : listSettleTransData) {
+                        detail = new StlSecReconDetail();
+                        detail.setSeqNo(dto.getSeqNo());
+                        detail.setTradeId(settleTransData.getTradeId());
+                        detail.setStlSecDeme(dto.getParaValue());
+                        reconciliationCommonMapper.insertStlSecReconDetail(detail);
+                        status = new SettleTransDataStatus();
+                        status.setTradeId(settleTransData.getTradeId());
+                        status.setCheckResult(dto.getCheckResult());
+                        settleTransDataStatusMapper.insertSelective(status);
+                    }
+                    BigDecimal max = listSettleTransData.stream().max(Comparator.comparing(
+                            SettleTransData::getShareAmt)).get().getShareAmt();
+                    for(SettleTransData settleTransData : listSettleTransData){
+                        if(settleTransData.getShareAmt().equals(max)){
+                            settleTransDataMapper.updateByPrimaryKeySelective(settleTransData);
                         }
-                        //成交数据明细表.经手费									=	成交数据明细表.经手费 + 待对账数据.清算经手费差额
-                        settleTransDataNew.setJsfAmt(ArithmeticUtil.doAdd(settleTransData.getJsfAmt(), dto.getJsfAmtCe()));
-                        //成交数据明细表.证管费									=	成交数据明细表.证管费 + 待对账数据.清算证管费差额
-                        settleTransDataNew.setZgfAmt(ArithmeticUtil.doAdd(settleTransData.getZgfAmt(), dto.getZgfAmtCe()));
-                        //成交数据明细表.印花税									=	成交数据明细表.印花税 + 待对账数据.清算印花税差额
-                        settleTransDataNew.setStampFee(ArithmeticUtil.doAdd(settleTransData.getStampFee(), dto.getStampFeeCe()));
-                        //成交数据明细表.结算费									=	成交数据明细表.结算费 + 待对账数据.清算结算费差额
-                        settleTransDataNew.setSettleFee(ArithmeticUtil.doAdd(settleTransData.getSettleFee(), dto.getSettleFeeCe()));
-                        //成交数据明细表.过户费									=	成交数据明细表.过户费 +待对账数据.清算过户费差额
-                        settleTransDataNew.setGhfAmt(ArithmeticUtil.doAdd(settleTransData.getGhfAmt(), dto.getGhfAmtCe()));
-                        //成交数据明细表.手续费									=	成交数据明细表.手续费 +待对账数据.清算手续费差额
-                        settleTransDataNew.setSxfAmt(ArithmeticUtil.doAdd(settleTransData.getSxfAmt(), dto.getSxfAmtCe()));
-                        //成交数据明细表.全价总额									=	成交数据明细表.成交金额 +待对账数据.清算成交金额差额
-                        settleTransDataNew.setFpriceAmt(ArithmeticUtil.doAdd(settleTransData.getFpriceAmt(), dto.getTradeAmtCe()));
-                        //成交数据明细表.清算金额									=	成交数据明细表.清算金额 +待对账数据.清算金额差额
-                        settleTransDataNew.setTradeAmt(ArithmeticUtil.doAdd(settleTransData.getTradeAmt(), dto.getSettleAmtCe(), dto.getTradeAmtCe()));
-                        //成交数据明细表.成交数量									=	成交数据明细表.成交数量 +待对账数据.清算成交数量差额
-                        settleTransDataNew.setShareAmt(ArithmeticUtil.doAdd(settleTransData.getShareAmt(), dto.getTradeNumCe()));
-                        //净价总额
-                        if (settleTransData.getCpriceAmt() != null) {
-                            settleTransDataNew.setCpriceAmt(ArithmeticUtil.subtract(settleTransData.getCpriceAmt(), dto.getTradeAmtCe()));
-                        }
-                        if (dto.getTradeAmtCe() != null && dto.getTradeAmtCe().compareTo(BigDecimal.ZERO) != 0
-                                && settleTransDataNew.getShareAmt() != null && settleTransDataNew.getShareAmt().compareTo(BigDecimal.ZERO) != 0) {
-                            //全价
-                            settleTransDataNew.setUnitFprice(ArithmeticUtil.divide(settleTransDataNew.getFpriceAmt(), settleTransDataNew.getShareAmt(), 8));
-                            //净价
-                            if (settleTransData.getCpriceAmt() != null) {
-                                settleTransDataNew.setUnitCprice(ArithmeticUtil.divide(settleTransDataNew.getCpriceAmt(), settleTransDataNew.getShareAmt(), 8));
-                            }
-                        }
-                        settleTransDataMapper.updateByPrimaryKeySelective(settleTransDataNew);
+                    }
+                }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getParaValue())){
+                    StlSecReconDetail detail = new StlSecReconDetail();
+                    detail.setSeqNo(dto.getSeqNo());
+                    detail.setTradeId(dto.getTradeId());
+                    detail.setStlSecDeme(dto.getParaValue());
+                    reconciliationCommonMapper.insertStlSecReconDetail(detail);
+                    SettleTransDataStatus status = new SettleTransDataStatus();
+                    status.setTradeId(dto.getTradeId());
+                    status.setCheckResult(dto.getCheckResult());
+                    settleTransDataStatusMapper.insertSelective(status);
+                    Map<String, Object> param = new HashMap<String, Object>();
+                    param.put("tradeId", dto.getTradeId());
+                    List<SettleTransData> listSettleTransData = reconciliationCommonMapper.getSettleTransData(param);
+                    if(CollectionUtils.isNotEmpty(listSettleTransData)){
+                        SettleTransData std = getReCalSettleTransData(listSettleTransData.get(0),dto);
+                        settleTransDataMapper.updateByPrimaryKeySelective(std);
                     }
                 }
             }
         }
-        //插入结果
-        if (listRecon != null && listRecon.size() > 0) {
-            for(StlSecRecon recon : listRecon){
-                reconciliationCommonMapper.insertStlSecRecon(recon);
-            }
+    }
 
+    /**
+     * 获取新的交易明细
+     * @param settleTransData
+     * @param dto
+     * @return
+     */
+    private SettleTransData getReCalSettleTransData(SettleTransData settleTransData, DayEndAccountDaichuliDto dto){
+        SettleTransData settleTransDataNew = new SettleTransData();
+        settleTransDataNew.setTradeId(settleTransData.getTradeId());
+        //成交数据明细表.佣金									=	成交数据明细表.佣金 + 待对账数据.清算佣金差额
+        settleTransDataNew.setCommissionAmt(ArithmeticUtil.doAdd(settleTransData.getCommissionAmt(), dto.getCommissionAmtCe()));
+        if (settleTransDataNew.getCommissionAmt() != null
+                && settleTransDataNew.getCommissionAmt().compareTo(BigDecimal.ZERO) != 0
+                && StringUtil.isNotEmpty(dto.getIsPayWithTrade())) {
+            settleTransDataNew.setIsPayWithTrade(dto.getIsPayWithTrade());
+        } else if (StringUtil.isEmpty(dto.getIsPayWithTrade())
+                && settleTransDataNew.getCommissionAmt() != null
+                && settleTransDataNew.getCommissionAmt().compareTo(BigDecimal.ZERO) != 0) {
+            settleTransDataNew.setIsPayWithTrade(DictCodeListExt1.是否_否.getValue());
         }
-        if (listReconDetail != null && listReconDetail.size() > 0) {
-            for(StlSecReconDetail reconDetail : listReconDetail){
-                if(StringUtil.isEmpty(reconDetail.getSeqNo()) || StringUtil.isEmpty(reconDetail.getTradeId())){
-                    continue;
-                }
-                reconciliationCommonMapper.insertStlSecReconDetail(reconDetail);
-            }
-        }
+        //成交数据明细表.经手费									=	成交数据明细表.经手费 + 待对账数据.清算经手费差额
+        settleTransDataNew.setJsfAmt(ArithmeticUtil.doAdd(settleTransData.getJsfAmt(), dto.getJsfAmtCe()));
+        //成交数据明细表.证管费									=	成交数据明细表.证管费 + 待对账数据.清算证管费差额
+        settleTransDataNew.setZgfAmt(ArithmeticUtil.doAdd(settleTransData.getZgfAmt(), dto.getZgfAmtCe()));
+        //成交数据明细表.印花税									=	成交数据明细表.印花税 + 待对账数据.清算印花税差额
+        settleTransDataNew.setStampFee(ArithmeticUtil.doAdd(settleTransData.getStampFee(), dto.getStampFeeCe()));
+        //成交数据明细表.结算费									=	成交数据明细表.结算费 + 待对账数据.清算结算费差额
+        settleTransDataNew.setSettleFee(ArithmeticUtil.doAdd(settleTransData.getSettleFee(), dto.getSettleFeeCe()));
+        //成交数据明细表.过户费									=	成交数据明细表.过户费 +待对账数据.清算过户费差额
+        settleTransDataNew.setGhfAmt(ArithmeticUtil.doAdd(settleTransData.getGhfAmt(), dto.getGhfAmtCe()));
+        //成交数据明细表.手续费									=	成交数据明细表.手续费 +待对账数据.清算手续费差额
+        settleTransDataNew.setSxfAmt(ArithmeticUtil.doAdd(settleTransData.getSxfAmt(), dto.getSxfAmtCe()));
+        //成交数据明细表.全价总额									=	成交数据明细表.成交金额 +待对账数据.清算成交金额差额
+        settleTransDataNew.setFpriceAmt(ArithmeticUtil.doAdd(settleTransData.getFpriceAmt(), dto.getTradeAmtCe()));
+        //成交数据明细表.清算金额									=	成交数据明细表.清算金额 +待对账数据.清算金额差额
+        settleTransDataNew.setTradeAmt(ArithmeticUtil.doAdd(settleTransData.getTradeAmt(), dto.getSettleAmtCe(), dto.getTradeAmtCe()));
+        //成交数据明细表.成交数量									=	成交数据明细表.成交数量 +待对账数据.清算成交数量差额
+        settleTransDataNew.setShareAmt(ArithmeticUtil.doAdd(settleTransData.getShareAmt(), dto.getTradeNumCe()));
+        return settleTransDataNew;
     }
 }
