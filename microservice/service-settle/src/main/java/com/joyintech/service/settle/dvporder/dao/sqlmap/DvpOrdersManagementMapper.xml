@@ -195,6 +195,7 @@
         T1.IS_CANCEL = #{NO} and t1.TRADE_STATUS=#{TS_01}
         AND SSAI.SEC_ACCT_SOURCE = #{ACCOUNT_SOURCE_01}
         AND SSAI.TRADE_PLACE = #{TRADE_PLACE_01}
+        AND T1.IS_OUT_TRADE != 'N'
 		/*BS-252  去除下面条件限制    债券交易STL_PAY_ORDERS.TRADE_ID存的是TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID  modifly by caojin  2020/6/23  start*/
         AND (T3.PA_BUSS_TYPE    IN ( '76', '77', '52', '51','09','10','11','19','20','74','75')
         OR (T1.FINPROD_TYPE2    IN ('F29', 'F30')) )
