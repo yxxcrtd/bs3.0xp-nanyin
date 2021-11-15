@@ -211,7 +211,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                 BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, dto);
                 trdFinProductDealTotal.setTotleTradeId(dto.getBusiNo());
                 trdFinProductDealTotal.setFinprodId(dto.getAcctNo());
-                trdFinProductDealTotal.setTradeDate(dto.getSettleDate());
+                trdFinProductDealTotal.setTradeDate(dto.getSettleDate()!=null?dto.getSettleDate():dto.getDetailsList().get(0).getSettleDate());
 //                trdFinProductDealTotal.setVdate(dto.getVdate());//需求确认过不需要上次收息日，暂时没存该字段
                 trdFinProductDealTotal.setMdate(dto.getMdate());
                 trdFinProductDealTotal.setPs(DictCodeList.交易方向_收息.getValue());
@@ -228,7 +228,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                     for(PtlActivityPeriod001Dto period001Dto:dto.getDetailsList()) {
                     	if(StringUtil.isNotEmpty(period001Dto.getActualTradeAmt())
                     			&& period001Dto.getActualTradeAmt().compareTo(BigDecimal.ZERO) > 0) {
-                            period001Dto.setSettleDate(dto.getSettleDate());
+                            period001Dto.setSettleDate(dto.getSettleDate()!=null?dto.getSettleDate():dto.getDetailsList().get(0).getSettleDate());
                             //交易表
                             TrdProductDeal trdProductDeal = genTrdProductDeal(dto,period001Dto);
 
@@ -1038,5 +1038,58 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
     private StlCapacctInfo getZiJing(String busiAcctNo){
         List<StlCapacctInfo> stlCapacctInfoList = restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/isZiJing", busiAcctNo, StlCapacctInfo.class);
         return stlCapacctInfoList.get(0);
+    }
+
+    /**
+     *
+     * 自定义生成付款指令
+     * <功能详细描述>
+     * @param bussSettleOrderParameterDtos
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<BussTrdTransferOrderDto> generateImportOrder(PtlActivityPeriod001Dto dto) {
+        List<BussTrdTransferOrderDto> list = new ArrayList<BussTrdTransferOrderDto>();
+        for(PtlActivityPeriod001Dto ptlActivityPeriod001Dto :dto.getDetailsList()) {
+            String orderId;
+            if(baseGetBussinessId != null){
+                BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+                bussinessCodeParameter.setSeqNo("9998");
+                orderId = baseGetBussinessId.buildBussinessCode(bussinessCodeParameter);
+            }
+            else {
+                orderId = IDGenerator.generate();
+            }
+            BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
+            bussTrdTransferOrderDto.setOrderId(orderId);
+            bussTrdTransferOrderDto.setPayType(DictCodeListExt1.平安划款类型_托管划款.getValue());
+            bussTrdTransferOrderDto.setSettleDate(ptlActivityPeriod001Dto.getSettleDate());
+            bussTrdTransferOrderDto.setPs(DictCodeListExt1.收支方向_收入.getValue());
+            bussTrdTransferOrderDto.setSettleAmt(ptlActivityPeriod001Dto.getActualTradeAmt());
+            bussTrdTransferOrderDto.setCcy(ptlActivityPeriod001Dto.getCcy());
+            bussTrdTransferOrderDto.setSettleStatus(DictCodeList.结算状态_已结算.getValue());
+            bussTrdTransferOrderDto.setIsNeedSend(DictCodeList.是否_否.getValue());
+            bussTrdTransferOrderDto.setIsTotalTrade(DictCodeList.是否_否.getValue());
+            bussTrdTransferOrderDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_资金账户.getValue());
+            bussTrdTransferOrderDto.setTradeId(ptlActivityPeriod001Dto.getBusiNo());
+            bussTrdTransferOrderDto.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
+
+            bussTrdTransferOrderDto.setRecAcctNo(ptlActivityPeriod001Dto.getAcctNo());
+            bussTrdTransferOrderDto.setRecAcctName(ptlActivityPeriod001Dto.getAcctName());
+
+            StlCapacctInfo stlCapacctInfo = bussTrdTransferOrderService.queryStlCapacctInfoByBusiAcctNo(ptlActivityPeriod001Dto.getCcy(), ptlActivityPeriod001Dto.getAcctNo());
+            bussTrdTransferOrderDto.setRecAcctPoint(stlCapacctInfo.getLargePayno());
+            bussTrdTransferOrderDto.setInOutBank(SysDataUtil.getNameFromDataDict(DictCode.资产来源, stlCapacctInfo.getInOutBank()));
+
+
+            bussTrdTransferOrderDto.setPortfolioId(ptlActivityPeriod001Dto.getPortfolioId());
+            bussTrdTransferOrderDto.setPortfolioName(ptlActivityPeriod001Dto.getPortfolioName());
+
+            list.add(bussTrdTransferOrderDto);
+        }
+
+        return list;
+
     }
 }
