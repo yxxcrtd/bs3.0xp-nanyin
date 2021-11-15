@@ -85,7 +85,13 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 		List<ValidMessage> errorList = new ArrayList<>();
 		// TODO Auto-generated method stub
 		EtrExchangeTrade001Dto dto = (EtrExchangeTrade001Dto) value;
-		if (dto.getOperateType().equals("save") || dto.getOperateType().equals("submit")) {
+		if(dto.getOperateType().equals("save")) {
+			if (!StringUtil.isNotEmpty(dto.getStockId())&&!StringUtil.isNotEmpty(dto.getFinprodId())) {
+				errorList.add(new ValidMessage("stockId", "资产名称不可为空！"));
+			}
+
+		}
+		else if (dto.getOperateType().equals("submit")) {
 			Boolean isNonTradingTime = etrExchangeTrade001Service.isNonTradingTime(dto);
 			if (isNonTradingTime) {
 				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));

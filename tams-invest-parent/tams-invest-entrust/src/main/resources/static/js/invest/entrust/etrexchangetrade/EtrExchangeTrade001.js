@@ -506,6 +506,8 @@
         //清空风险试算结果
         riskResultdata = null;
         cluflag = true;
+
+        controlModifyView(false);
     }
     /**
      * 获取当前tab页
@@ -2463,6 +2465,8 @@
         $("#entrustId_" + currentTab).val('').trigger('change');
         optType = ENTRUST_RECORD_NEW;
 
+        controlModifyView(false);
+
         //双击校验后，将风险试算标识重置
         window.parent.dbclickRefreshRisk();
     }
@@ -2480,9 +2484,17 @@
         if(data.entrustId){
             //设置指令记录操作类型
             optType = ENTRUST_RECORD_MODIFY;
+            //修改页面时组合，资产名称，交易方向不可改
+            controlModifyView(true);
         }
         //双击校验后，将风险试算标识重置
         window.parent.dbclickRefreshRisk();
+    }
+
+    var controlModifyView = function (disabled) {
+        $("#portfolioId_" + currentTab).attr("disabled", disabled);
+        $("#secId_" + currentTab).attr("disabled", disabled);
+        $("#ps_" + currentTab).attr("disabled", disabled);
     }
 
     /**
