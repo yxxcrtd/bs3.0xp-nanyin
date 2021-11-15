@@ -747,7 +747,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         // 条件非空校验
         posiInfoCheckCondition(requestDto);
 
-        if (StringUtil.isEmpty(requestDto.getFinprodId()) || requestDto.getPortfolioIdList() == null || requestDto.getPortfolioIdList().size() == 0){
+        if (requestDto.getPortfolioIdList() == null || requestDto.getPortfolioIdList().size() == 0){
             return nullData(sellFlag);
         }
 

@@ -10,14 +10,20 @@ import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
+import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.constant.DictCode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class PositionUtil {
 
+    private static PtlPortfolioMapper ptlPortfolioMapper;
     /**
      * 初始化头寸通用信息
      * @param totalTradeId
@@ -63,12 +69,19 @@ public class PositionUtil {
                                 BigDecimal CHECKBALANCE = flow.getBigDecimal("CHECKBALANCE");
                                 String PORTFOLIO_ID = flow.getString("PORTFOLIO_ID");
                                 String HODING_TYPE = flow.getString("HODING_TYPE");
-                                strb.append(PORTFOLIO_ID);
+                                PtlPortfolio obj = ptlPortfolioMapper.selectByPrimaryKey(PORTFOLIO_ID);
+                                String portfolioName = "";
+                                if (obj != null) {
+                                    portfolioName = obj.getPortfolioName();
+                                }else{
+                                    portfolioName=PORTFOLIO_ID;
+                                }
+                                strb.append(portfolioName);
                                 strb.append("余额为");
                                 strb.append(CHECKBALANCE);
                                 strb.append("元【");
                                 strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
-                                if (i == checkResults.size()){
+                                if ((i+1) == checkResults.size()){
                                     strb.append("】不足\n");
                                 }else{
                                     strb.append("】不足、\n");
@@ -92,5 +105,10 @@ public class PositionUtil {
             }
         }
         return new Message().fail().setMessage("无返回信息，未知异常").setData(null);
+    }
+
+    @Autowired
+    public void setPtlPortfolioMapper(PtlPortfolioMapper ptlPortfolioMapper) {
+        PositionUtil.ptlPortfolioMapper = ptlPortfolioMapper;
     }
 }
