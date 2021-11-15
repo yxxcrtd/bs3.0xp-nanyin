@@ -548,7 +548,6 @@ $(function() {
 
         if(stlCommandInput != null){
             var currentCalcConditionObj = stlCommandInput();
-            alert(JSON.stringify(currentCalcConditionObj));
             // 影响计划生成的所有项目与计划生成时记录的值比较，值变更时
             for ( var key in currentCalcConditionObj) {
                 for ( var key1 in currentCalcConditionObj[key]) {
