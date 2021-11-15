@@ -13,11 +13,10 @@
             <Cell order="9" name="收款账号">recAcctNo</Cell>
             <Cell order="10" name="收款账户名称">recAcctName</Cell>
             <Cell order="11" name="收款账户网点/支付系统号">largePayNo</Cell>
-            <Cell order="12" name="资产名称">finprodName</Cell>
-            <Cell order="13" name="交易日">tradeDate</Cell>
-            <Cell order="14" name="交割日">settleDate</Cell>
-            <Cell order="15" name="交易金额">tradeAmt</Cell>
-            <Cell order="16" name="处理状态">dealStatusString</Cell>
+            <Cell order="12" name="交易日">tradeDate</Cell>
+            <Cell order="13" name="交割日">settleDate</Cell>
+            <Cell order="14" name="交易金额">tradeAmt</Cell>
+            <Cell order="15" name="处理状态">dealStatusString</Cell>
         </Row>
     </Worksheet>
 </Workbook>
