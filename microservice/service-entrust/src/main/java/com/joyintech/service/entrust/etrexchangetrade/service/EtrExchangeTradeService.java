@@ -850,6 +850,19 @@ public class EtrExchangeTradeService extends BaseService{
     }
 
     /**
+     * 质押券代码下拉框查询
+     * @param page
+     * @param length
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> selectZyq(int page, int length,Map<String, Object> param) {
+        return super.queryForPage(page, length, () -> etrExchangeTradeMapper.selectZyq(param));
+    }
+
+
+
+    /**
      * 查询债券基本信息
      *
      * @param map 参数

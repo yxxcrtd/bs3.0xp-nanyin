@@ -444,6 +444,15 @@
                 }
             }
         });
+
+        //质押券重置按钮点击事件
+        $('#EtrExchangeTrade002_zqzy_reset_btn').click(function() {
+            $("#portfolioId_zqzy").val("").trigger('change');
+            $("#tradeMarket_zqzy").val("").trigger('change');
+            $("#date_zqzy").val("").trigger('change');
+            $("#finprodMarketId_zqzy").val("").trigger('change');
+        });
+
         $('.zlgl-transfer-form #EtrExchangeTrade002_btn_ccreset').click(function() {
             $("#portfolioId").val("").trigger('change');
             $("#tradeMarket_cc").val("").trigger('change');

@@ -73,6 +73,13 @@ public interface EtrExchangeTradeMapper {
      */
     List<SelectOptionDto> getSecAcctId(Map<String, Object> param);
 
+	/**
+	 *质押券代码下拉框查询
+	 * @param param
+	 * @return
+	 */
+	List<SelectOptionDto> selectZyq(Map<String, Object> param);
+
     /**
      * 获取债券基本信息
      * 
