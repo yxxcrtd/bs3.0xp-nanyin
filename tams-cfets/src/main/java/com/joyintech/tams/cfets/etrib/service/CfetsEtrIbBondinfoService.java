@@ -1428,6 +1428,24 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(StringUtil.isNotEmpty(allDto.getPrice()) && allDto.getPrice().compareTo(BigDecimal.ZERO)<=0){
             messages.add("净价不允许小于等于0。");
         }
+        if(StringUtil.isNotEmpty(allDto.getTradeAmt())&& allDto.getTradeAmt().compareTo(BigDecimal.ZERO)<=0){
+            messages.add("基本信息中“券面总额”不允许小于等于0。");
+        }
+        String shortSellingSupported=CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
+        if(StringUtil.equals(shortSellingSupported,"02")){
+            if(StringUtil.isNotEmpty(allDto.getEntrustOwnNum())&& allDto.getEntrustOwnNum().compareTo(BigDecimal.ZERO)<0){
+                messages.add("基本信息中“本方券券面总额”不允许小于0。");
+            }
+            if(StringUtil.isNotEmpty(allDto.getEntrustIntegrateNum())&& allDto.getEntrustIntegrateNum().compareTo(BigDecimal.ZERO)<0){
+                if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_买入.getValue())){
+                    messages.add("基本信息中“卖空购回券面总额”不允许小于0。");
+
+                }else{
+                    messages.add("基本信息中“融入券券面总额”不允许小于0。");
+                }
+            }
+        }
+
         List<CfetsBussCombDistribtDto> dtoList=allDto.getBussCombDistribtList();
         //券面总额
         BigDecimal entrustNum=BigDecimal.ZERO;
@@ -1447,16 +1465,18 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             if(StringUtil.isNotEmpty(distrib.getEntrustNum())&& distrib.getEntrustNum().compareTo(BigDecimal.ZERO)<=0){
                 messages.add("组合分配处“券面总额”不允许小于等于0。");
             }
-            if(StringUtil.isNotEmpty(distrib.getEntrustOwnNum())&& distrib.getEntrustOwnNum().compareTo(BigDecimal.ZERO)<0){
-                messages.add("组合分配处“本方券券面总额”不允许小于0。");
-            }
-            if(StringUtil.isNotEmpty(distrib.getEntrustIntegrateNum())&& distrib.getEntrustIntegrateNum().compareTo(BigDecimal.ZERO)<0){
-               if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_买入.getValue())){
-                   messages.add("组合分配处“卖空购回券面总额”不允许小于0。");
+            if(StringUtil.equals(shortSellingSupported,"02")){
+                if(StringUtil.isNotEmpty(distrib.getEntrustOwnNum())&& distrib.getEntrustOwnNum().compareTo(BigDecimal.ZERO)<0){
+                    messages.add("组合分配处“本方券券面总额”不允许小于0。");
+                }
+                if(StringUtil.isNotEmpty(distrib.getEntrustIntegrateNum())&& distrib.getEntrustIntegrateNum().compareTo(BigDecimal.ZERO)<0){
+                    if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_买入.getValue())){
+                        messages.add("组合分配处“卖空购回券面总额”不允许小于0。");
 
-               }else{
-                   messages.add("组合分配处“融入券券面总额”不允许小于0。");
-               }
+                    }else{
+                        messages.add("组合分配处“融入券券面总额”不允许小于0。");
+                    }
+                }
             }
             entrustNum=ArithmeticUtil.doAdd(entrustNum,dtoList.get(i).getEntrustNum());
             entrustOwnNum=ArithmeticUtil.doAdd(entrustOwnNum,dtoList.get(i).getEntrustOwnNum());
@@ -1466,7 +1486,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             messages.add("组合分配中各组合券面总额之和必须等于基本信息中券面总额。");
         }
         //根据卖空模式对本方券和融入券/卖空购回券面总额进行赋值
-        String shortSellingSupported=CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
         if(StringUtil.equals(shortSellingSupported,"02")){
             if(StringUtil.isNotEmpty(allDto.getEntrustOwnNum()) && allDto.getEntrustOwnNum().compareTo(entrustOwnNum)!=0){
                 messages.add("组合分配中各组合本方券券面总额之和必须等于基本信息中本方券券面总额。");
