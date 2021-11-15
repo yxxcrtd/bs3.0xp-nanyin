@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.invest.batch.extrdautosettle.dao.sql.ExTrdAutoSettleMapper">
+	<select id="selectExTrdAutoSettleInfos" resultType="com.joyintech.tams.invest.batch.extrdautosettle.dto.ExTrdAutoSettleInfoDto">
+		SELECT
+			info.SETTLE_SEQ_NO,
+			info.SETTLE_STATUS,
+			info.PORTFOLIO_ID,
+			info.ACCT_NO,
+			info.SEC_ACCT_ID,
+			info.TRADE_MARKET,
+			info.TRADE_PLAT,
+			info.FINPROD_ID,
+			info.BUSI_TYPE,
+			info.ENTRUST_NO,
+			info.DEAL_NO,
+			detail.ORDER_NO
+		FROM
+			TRD_MANUAL_SETTLE_INFO info
+		INNER JOIN INF_CONTRACT_DETAILFILE detail ON info.DEAL_NO = detail.DEAL_NO
+		WHERE
+			info.SETTLE_STATUS IN (#{SETTLE_STATUS_01},#{SETTLE_STATUS_03})
+			<if test="portfolioIdList != null and portfolioIdList.size > 0">
+				AND info.PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" item="item" index="index" open="(" close="))" separator=",">
+					#{item}
+				</foreach>
+			</if>
+	</select>
+</mapper>
