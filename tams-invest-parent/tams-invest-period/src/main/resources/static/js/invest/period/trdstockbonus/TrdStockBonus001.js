@@ -63,7 +63,19 @@
             // 多级法人改造 add by caiqun 20200615
             ,{field: 'institutionName', visible : false}
             // 多级法人改造 add by caiqun 20200615
-            ,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: []}
+            // ,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: []}
+            // TISHKS-211:撤销数据可以修改 fuyongsheng 20211115 edit start
+            ,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['edit'],
+                render: function (data, type, row, meta) {
+                    if (row.statusValid != '03')
+                        return "";
+                    else
+                    if(purviewElements.indexOf('_edit')!=-1){
+                        return '<i class="btn layui-icon edit" title="确认">&#x1005;</i>';
+                    }
+                }
+            }
+            // TISHKS-211:撤销数据可以修改 fuyongsheng 20211115 edit end
         ]
     });
 
@@ -71,10 +83,12 @@
      * 绑定编辑事件
      */
     table.bind('click', '.edit', function(data, index) {
+        // TISHKS-211:撤销数据可以修改 fuyongsheng 20211115 edit start
         //不为有效不可编辑
-        if(data.statusValid != TRADE_FLOW_STATUS_02){
+        if(data.statusValid != TRADE_FLOW_STATUS_02 && data.statusValid != TRADE_FLOW_STATUS_03){
             return Joyin.error(JoyinUtil.getMessage('FIN_ASSET_E_0004'));
         }
+        // TISHKS-211:撤销数据可以修改 fuyongsheng 20211115 edit end
         var title;
         
         pageModel = PAGE_MODEL_EDIT;
