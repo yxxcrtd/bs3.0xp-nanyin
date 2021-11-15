@@ -236,7 +236,7 @@
                         repoType: param.data.repoType,
                         tradeMarket: $("#"+tradeMarketId).val(),
                         //add by gaopeng 2019/10/12 start
-                        entrustId:entrustId,
+                        entrustId:entrustId==''?param.data.entrustId: entrustId,
                         //add by gaopeng 2019/10/12 end
                         entity: JSON.stringify(entity),
                         entityName: entityNameBussRepoSec,

@@ -314,13 +314,20 @@ public class BussRepoSecService extends BaseService<PledgeBondInfoDto>{
             resultList = this.queryForPage(page,length,() -> bussRepoSecMapper.selectAvaPledgeBondDetailListAntiRepo(params));
             //resultList = bussRepoSecMapper.selectAvaPledgeBondDetailListAntiRepo(params);
         }
-        if(StringUtil.isNotEmpty(resultList) && params.get("pageFromTz") != null && (StringUtils.equals(params.get("pageFromTz").toString(),"CfetsRepoDealQuotedPrice002"))){
-             if(params.get("entrustId") != null) {
-                 EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(params.get("entrustId").toString());
-                 List<String> finprodIdList =  bussRepoSecMapper.selectFinprodIdByPledge(etrEntrustAdd.getPledgeStockId());
-                 List<PledgeBondInfoDto> rootList =resultList.getRoot().stream().filter(item->finprodIdList.contains(item.getFinprodId())).collect(Collectors.toList());
-                 resultList.setRoot(rootList);
-             }
+        if(StringUtil.isNotEmpty(resultList) && params.get("pageFromTz") != null
+                && ((StringUtils.equals(params.get("pageFromTz").toString(),"CfetsRepoDealQuotedPrice002"))
+                ||(StringUtils.equals(params.get("pageFromTz").toString(),"CfetsRepoDealQuotedPrice003")))){
+            String entrustId = (String) params.get("entrustId");
+            if(entrustId.endsWith(","))entrustId=entrustId.substring(0,entrustId.length()-1);
+            List<String> finprodIdList = new ArrayList<>();
+            for(String entrustIdObj:entrustId.split(",")){
+                if(entrustIdObj != null&& !"".equals(entrustIdObj)) {
+                    EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustIdObj);
+                    finprodIdList.addAll(bussRepoSecMapper.selectFinprodIdByPledge(etrEntrustAdd.getPledgeStockId()));
+                }
+            }
+            List<PledgeBondInfoDto> rootList =resultList.getRoot().stream().filter(item->finprodIdList.contains(item.getFinprodId())).collect(Collectors.toList());
+            resultList.setRoot(rootList);
         }
         return resultList;
     }
