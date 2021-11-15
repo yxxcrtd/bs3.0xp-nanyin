@@ -1648,10 +1648,12 @@
         var secId = $("#secId_" + currentTab).val();
         if (secId && price) {
             var paramObj = {};
-            paramObj.finprodId = secId;
+            // TISHKS-137:计算偏离度 fuyongsheng 20211109 edit start
+            paramObj.finprodId = finprodId;
             if(finprodId){
-                paramObj.finprodMarketId = finprodId
+                paramObj.finprodMarketId = secId
             }
+            // TISHKS-137:计算偏离度 fuyongsheng 20211109 edit end
             paramObj.unitCprice = price;
             Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calcDeviationDegree'), paramObj, function (data) {
                 $("#deviationDegree").text(data);
