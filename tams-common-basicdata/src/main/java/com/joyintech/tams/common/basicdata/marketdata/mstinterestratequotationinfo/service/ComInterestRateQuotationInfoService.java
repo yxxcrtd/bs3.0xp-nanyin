@@ -135,7 +135,7 @@ public class ComInterestRateQuotationInfoService extends CommonExportService<Com
             else {
                 List<ExcelValidDto> checkResult = new ArrayList<>();
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
-                        getMessage("文件名称错误，请下载模板后上传")));
+                         "文件名称错误，请下载模板后上传"));
                 return checkResult;
             }
         }
