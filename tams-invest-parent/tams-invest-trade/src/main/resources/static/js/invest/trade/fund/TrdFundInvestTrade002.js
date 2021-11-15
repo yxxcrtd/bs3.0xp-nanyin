@@ -105,14 +105,21 @@ $(function () {
             $('#accAvailableCash_c_div').hide();
             $('#assetAvailablePosition_div').hide();
             $('#expectedArrivalDate_div').hide();
-            $('#transferInformation').show();
             if (ps == ps_T52) {
                 $('#settleSpreed1_div').hide();
+                $('#trdFundFTradeId').hide();
+                $('#transferInformation').hide();
                 $('#trdFundFTradeId').hide();
             } else {
                 $('#settleSpreed1_div').show();
                 $('#trdFundFTradeId').show();
+
+                $('#transferInformation').show();
+                $('#trdFundFTradeId').show();
             }
+
+            $("#changeToFinprodMarketId_div").show();
+            $('#changeToFinprodName_div').show();
             $('#settleSpreed2_div').show();
             $('#confirmDate').hide();
             $('#trdDate').show();
@@ -140,7 +147,19 @@ $(function () {
             $('.commissionFee_class').hide();
             $('.channel_cash').hide();
             $('#assetAvailablePosition_div').show();
-            $('#expectedArrivalDate_div').show();
+            if($("#ps").val() == T65) {
+                $('#expectedArrivalDate_div').hide();
+                $("#changeToFinprodMarketId_div").show();
+                $('#changeToFinprodName_div').show();
+                $('#trdFundFTradeId').hide();
+            }
+            else {
+                $('#expectedArrivalDate_div').show();
+                $("#changeToFinprodMarketId_div").hide();
+                $('#changeToFinprodName_div').hide();
+                $('#trdFundFTradeId').show();
+            }
+
             $('#transferInformation').hide();
             $('#settleSpreed1_div').show();
             $('#settleSpreed2_div').show();
@@ -156,6 +175,9 @@ $(function () {
             $(".channelAmt_class").hide();
             if (ps == ps_T06) {
                 $('#trdFundFTradeId').show();
+            }
+            else {
+                $('#trdFundFTradeId').hide();
             }
             if (!initFlag) {
                 $('#tradeAmt').val("");
@@ -222,6 +244,8 @@ $(function () {
                 $('#tradeAmt').attr("disabled", false);
             }
             $('#tradeAmt_div').show();
+            $('#changeToFinprodMarketId_div').hide();
+            $('#changeToFinprodName_div').hide();
             if (data && data.finprodId && portfolioId && ccy) {
                 getPtlCashPositionInfo();
             }
@@ -245,7 +269,7 @@ $(function () {
             $('#carryAmt').prop("disabled", false);
             $('.channel_cash').hide();
             $('#assetAvailablePosition_div').show();
-            $('#expectedArrivalDate_div').show();
+            $('#expectedArrivalDate_div').hide();
             $('#transferInformation').show();
             $('#settleSpreed1_div').hide();
             $('#settleSpreed2_div').hide();
@@ -269,6 +293,8 @@ $(function () {
             if (data && data.finprodId && portfolioId) {
                 getPtlSecPositionInfo();
             }
+            $('#changeToFinprodMarketId_div').hide();
+            $('#changeToFinprodName_div').hide();
             $(".channelAmt_class").show();
         }
         changeTradeAmtAndFee();
@@ -756,7 +782,7 @@ $(function () {
                 $("#changeToFinprodMarketId").val('').trigger('change');
             }
             $('#changeToFinprodMarketId').prop('disabled', true);
-            $(".changein").hide();
+
             var ps = $('#ps').val();
             var data = $('#finprodId').select2('data')[0].object;
             var portfolioId = $('#portfolioId').val();
@@ -773,7 +799,16 @@ $(function () {
                 // <!-- 通道交易 新增 强成西 2019/03/26 end -->
                 $('#assetAvailablePosition_div').hide();
                 $('#expectedArrivalDate_div').hide();
-                $('#transferInformation').show();
+                if(ps == ps_T52) {
+                    $('#transferInformation').hide();
+                    $('#trdFundFTradeId').hide();
+                }
+                else {
+                    $('#transferInformation').show();
+                    $('#trdFundFTradeId').show();
+                }
+                $("#changeToFinprodMarketId_div").hide();
+                $("#changeToFinprodName_div").hide();
                 $('#settleSpreed1_div').show();
                 $('#settleSpreed2_div').show();
                 $('#confirmDate').hide();
@@ -805,7 +840,19 @@ $(function () {
                 $('.channel_cash').hide();
                 // <!-- 通道交易 新增 强成西 2019/03/26 end -->
                 $('#assetAvailablePosition_div').show();
-                $('#expectedArrivalDate_div').show();
+                if ($("#ps").val() == T65) {
+                    $('#expectedArrivalDate_div').hide();
+                    $("#changeToFinprodMarketId_div").show();
+                    $('#changeToFinprodName_div').show();
+                    $('#trdFundFTradeId').hide();
+                }
+                else {
+                    $('#expectedArrivalDate_div').show();
+                    $("#changeToFinprodMarketId_div").hide();
+                    $('#changeToFinprodName_div').hide();
+                    $('#trdFundFTradeId').show();
+                }
+
                 $('#transferInformation').hide();
                 $('#settleSpreed1_div').show();
                 $('#settleSpreed2_div').show();
@@ -875,6 +922,8 @@ $(function () {
                     getPtlCashPositionInfo();
                 }
                 $(".channelAmt_class").show();
+                $("#changeToFinprodMarketId_div").hide();
+                $('#changeToFinprodName_div').hide();
                 $('#netDate').change();
             } else if (ps == ps_mc) {
                 $('#proAvailableCash_div').hide();
@@ -884,7 +933,7 @@ $(function () {
                 $('.channel_cash').hide();
                 // <!-- 通道交易 新增 强成西 2019/03/26 end -->
                 $('#assetAvailablePosition_div').show();
-                $('#expectedArrivalDate_div').show();
+                $('#expectedArrivalDate_div').hide();
                 $('#transferInformation').show();
                 $('#settleSpreed1_div').hide();
                 $('#settleSpreed2_div').hide();
@@ -910,6 +959,8 @@ $(function () {
                     getPtlSecPositionInfo();
                 }
                 $(".channelAmt_class").show();
+                $("#changeToFinprodMarketId_div").hide();
+                $('#changeToFinprodName_div').hide();
                 $('#netDate').change();
             }
             <!-- 通道交易 新增 强成西 2019/03/26 start -->
