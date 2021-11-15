@@ -41,6 +41,11 @@ public class TamsSystemApplication extends WebApplication {
 	public Docket dataCfetsEtrDispatcherDocket() {
 		return SwaggerConfig.createDocket("指令分发", "com.joyintech.tams.cfets.etrdispatcher.controller");
 	}
+
+	@Bean
+	public Docket dataBankuplinkDocket() {
+		return SwaggerConfig.createDocket("本币业务交易", "com.joyintech.tams.cfets.bankuplink.bond.controller");
+	}
 	
 	public static void main(String[] args) throws Exception {
     	initLog();

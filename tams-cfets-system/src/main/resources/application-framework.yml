@@ -372,7 +372,7 @@ shiro:
     /TrdExchangeWorkflow/**,/invest/trade/bond/TrdBondInvestTrade002/**,/invest/trade/trdrepotrade/TrdRepoTrade002/**,/invest/trade/forwex/TrdForwexInvestTrade002/**,/invest/trade/api/**,/commonPosition/**,
     /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,
     /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo,/interf/xp,/interf/xp/**,/interf/zg,/interf/zg/**,/FinProjectTargetAsset/insert,/FinAssetRateAdj/getFinAssetRateAdjByCashId,
-    /cfets/**,/common/workflow/**,/common/config/**,/component/**,/FinProductRating/**,/common/joyinbusinessCommon/**
+    /cfets/**,/common/workflow/**,/common/config/**,/component/**,/FinProductRating/**,/common/joyinbusinessCommon/**,/cfets/bankuplink/bond/IbuQuoteBond/**,/cfets/bond/IbuQuoteBond004/**
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl

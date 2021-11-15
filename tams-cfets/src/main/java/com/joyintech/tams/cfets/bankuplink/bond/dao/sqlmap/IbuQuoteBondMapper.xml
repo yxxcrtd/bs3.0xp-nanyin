@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper">
+
+    <select id="listEntrust" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto">
+        SELECT
+        ETR_ENTRUST.ENTRUST_STATUS                                          entrustStatus,
+        ROUND(NVL(T5.FINISH_AMT,0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100     transactioncom,
+        ETR_ENTRUST.INV_MANAGER_ID                                          invManagerId,
+        (SELECT
+        real_name
+        FROM
+        SYS_USER
+        WHERE
+        user_name = ETR_ENTRUST.INV_MANAGER_ID)                     invManagerName,
+        ETR_ENTRUST.PORTFOLIO_ID                                            portfolioId,
+        PTL_PORTFOLIO.PORTFOLIO_NAME                                        portfolioName,
+        (select sec_acct_name from stl_sec_acct_info where stl_sec_acct_info.sec_acct_id = ETR_ENTRUST_ADD.SEC_ACCT_ID)
+        as                                                             secAcctName,
+        ETR_ENTRUST.FINPROD_ID                                              finprodId,
+        FIN_PRODUCT.FINPROD_ABBR                                            finprodAbbr,
+        FIN_PRODUCT.FINPROD_MARKET_ID                                       finprodMarketId,
+        ETR_ENTRUST_ADD.SETTLE_SPREED                                       settleSpreed,
+        ETR_ENTRUST.PS                                                      ps,
+        ETR_ENTRUST.ENTRUST_NUM/100                                         entrustNum,
+        NVL(T5.FINISH_AMT,0)/10000                                          finishAmt,
+        NVL(ETR_ENTRUST.ENTRUST_NUM, 0)/100 - NVL(T5.FINISH_AMT,0)/10000    avaNum,
+        (NVL(ETR_ENTRUST.ENTRUST_NUM,0) /100 -NVL(T5.FINISH_AMT, 0)/10000 ) AS entrustAvaNum,
+        ETR_ENTRUST.PRICE                                                   price,
+        ETR_ENTRUST_ADD.MATURE_YIELD * 100                                  matureYield,
+        ETR_ENTRUST.VDATE                                                   vdate,
+        ETR_ENTRUST.MDATE                                                   mdate,
+        ETR_ENTRUST.ENTRUST_ID                                              entrustId,
+        ETR_ENTRUST_ADD.QUOTE_TYPE                                          quoteType,
+        ETR_ENTRUST.BUSINESS_MODEL                                          businessModel,
+        <!-- 本方 -->
+        MST_CFETS_CUSTOMER_INFO.PARTY_ID                                    mySide,
+        <!-- 本方名称 -->
+        MST_CFETS_CUSTOMER_INFO.PARTY_ABBR                                  mySideAbbr,
+        <!-- 本方交易员 -->
+        (SELECT
+        MST_CFETS_CUSTOMER_TRADER.TRADER_ID
+        FROM
+        MST_CFETS_CUSTOMER_TRADER
+        INNER JOIN SYS_USER_ADD
+        ON SYS_USER_ADD.ibu_trader = MST_CFETS_CUSTOMER_TRADER.TRADER_ID
+        INNER JOIN
+        SYS_USER
+        ON sys_user.user_name = '${loginUserId}'
+        AND sys_user.USER_ID = SYS_USER_ADD.USER_ID
+        WHERE
+        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID
+        OR  MST_CFETS_CUSTOMER_TRADER.MPARTY_ID =
+        (
+        SELECT
+        MST_CFETS_CUSTOMER_RELA.MPARTY_ID
+        FROM
+        MST_CFETS_CUSTOMER_RELA
+        WHERE
+        MST_CFETS_CUSTOMER_RELA.SPARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID)
+        )                                                       mySideTrader,
+        <!-- 本方交易员名称 -->
+        (SELECT
+        MST_CFETS_CUSTOMER_TRADER.TRADER_NAME
+        FROM
+        MST_CFETS_CUSTOMER_TRADER
+        INNER JOIN SYS_USER_ADD
+        ON SYS_USER_ADD.ibu_trader = MST_CFETS_CUSTOMER_TRADER.TRADER_ID
+        INNER JOIN
+        SYS_USER
+        ON sys_user.user_name = '${loginUserId}'
+        AND sys_user.USER_ID = SYS_USER_ADD.USER_ID
+        WHERE
+        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID
+        OR  MST_CFETS_CUSTOMER_TRADER.MPARTY_ID =
+        (
+        SELECT
+        MST_CFETS_CUSTOMER_RELA.MPARTY_ID
+        FROM
+        MST_CFETS_CUSTOMER_RELA
+        WHERE
+        MST_CFETS_CUSTOMER_RELA.SPARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID)
+        )                                                       mySideTraderName,
+        <!-- 交易对手-->
+        MST_CFETS_CI.PARTY_ID                                              counterId,
+        <!-- 交易对手名称-->
+        MST_CFETS_CI.PARTY_ABBR                                             counterName,
+        <!-- 对手方交易员-->
+        ETR_ENTRUST.COUNTER_TRADER  	                                    counterTrader,
+        <!-- 对手方交易员名称-->
+        MST_CFETS_CT.TRADER_NAME                                            counterTraderName,
+        ETR_ENTRUST_ADD.EXER_YIELD * 100                                    exerYield,
+        NVL(ETR_ENTRUST_ADD.CAL_MODE,DECODE(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price','01','matureYield','02','exerYield','03','01'))
+        calculateField,
+        FIN_PRODUCT.IS_RIGHT                                                isRight,
+        FIN_PRODUCT_TYPE.TYPE_4                                             assetTypeOne,
+        ETR_ENTRUST.REMARK                                                  remark,
+        ETR_ENTRUST.CCY                                                     settleCcy,
+        IBU_PORTFOLIO_ACCT_RELA.CFETS_ACCT_TYPE                                  secAcctSource,
+        IBU_PORTFOLIO_ACCT_RELA.PARTY_ID                                  partyId,
+        ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100	tradeFinishPercent,
+        ETR_ENTRUST.PRICE_MODEL                                             priceModel,
+        ETR_ENTRUST_ADD.SEC_ACCT_ID                                         secManageAcctId,
+        PA_PTL_PORTFOLIO.PORTFOLIO_SERIES									portfolioSeries,
+        ETR_ENTRUST_ADD.OUR_ENT_NUM OUR_ENT_NUM,
+        ETR_ENTRUST_ADD.LENDIN_ENT_NUM LENDIN_ENT_NUM,
+        ETR_ENTRUST_ADD.SELL_ABLE_NUM SELL_ABLE_NUM
+        FROM
+        ETR_ENTRUST
+        INNER JOIN
+        PTL_PORTFOLIO
+        ON
+        ETR_ENTRUST.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
+        LEFT JOIN PA_PTL_PORTFOLIO
+        ON
+        PTL_PORTFOLIO.PORTFOLIO_ID = PA_PTL_PORTFOLIO.PORTFOLIO_ID
+        LEFT JOIN
+        ETR_DISTRIBUTE
+        ON
+        ETR_ENTRUST.ENTRUST_ID = ETR_DISTRIBUTE.ENTRUST_ID
+        LEFT JOIN
+        ETR_ENTRUST_ADD
+        ON
+        ETR_ENTRUST.ENTRUST_ID = ETR_ENTRUST_ADD.ENTRUST_ID
+        LEFT JOIN
+        (
+        SELECT
+        ENTRUST_ID,
+        SUM(FINISH_AMT) AS FINISH_AMT
+        FROM
+        ETR_QUOTE_FINISH_STATUS
+        GROUP BY
+        ENTRUST_ID) T5
+        ON
+        ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
+        LEFT JOIN
+        FIN_PRODUCT
+        ON
+        ETR_ENTRUST.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+        LEFT JOIN
+        FIN_PRODUCT_TYPE
+        ON
+        FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID
+        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA
+        ON
+        ETR_ENTRUST.PORTFOLIO_ID = IBU_PORTFOLIO_ACCT_RELA.PORTFOLIO_ID
+        AND IBU_PORTFOLIO_ACCT_RELA.CFETS_ACCT_TYPE = '01'
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO
+        ON IBU_PORTFOLIO_ACCT_RELA.PARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID
+        LEFT JOIN SYS_USER
+        ON ETR_ENTRUST.CREATE_USER = SYS_USER.USER_NAME
+        LEFT JOIN SYS_USER_ADD ON SYS_USER.USER_ID = SYS_USER_ADD.USER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER
+        ON SYS_USER_ADD.IBU_TRADER = MST_CFETS_CUSTOMER_TRADER.TRADER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER MST_CFETS_CT
+        ON MST_CFETS_CT.TRADER_ID = ETR_ENTRUST.COUNTER_TRADER
+        LEFT JOIN MST_COUNTER_PARTY MCP
+        ON MCP.COUNTER_ID = ETR_ENTRUST.COUNTER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO MST_CFETS_CI
+        ON MST_CFETS_CI.PARTY_NAME = MCP.COUNTER_NAME
+        LEFT JOIN
+        (SELECT C.ENTRUST_ID,
+        SUM(nvl(C.SHARE_AMT, 0)) * 100 totalShareAmt
+        FROM IBU_QUOTE_BOND A
+        LEFT JOIN IBU_QUOTE_BOND_DET B ON A.QUOTE_ID = B.QUOTE_ID
+        LEFT JOIN IBU_QUOTE_ETR_RE C ON A.QUOTE_ID = C.QUOTE_ID
+        WHERE B.TRADE_STATUS = '07'
+        GROUP BY C.ENTRUST_ID) C
+        ON C.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        LEFT JOIN
+        (SELECT A.ENTRUST_ID,
+        nvl(A.SHARE_AMT, 0) * 100 totalShareAmt
+        FROM IBU_QUOTE_BOND A
+        LEFT JOIN IBU_QUOTE_BOND_DET B ON A.QUOTE_ID = B.QUOTE_ID
+        WHERE B.TRADE_STATUS = '07') C2
+        ON C2.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'ENTRUST_STATUS')D ON ETR_ENTRUST.ENTRUST_STATUS = D.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'PS')E ON ETR_ENTRUST.PS = E.ITEM_CODE
+        WHERE
+        ETR_ENTRUST.FINPROD_TYPE2 = #{finprodType2}
+        AND ETR_ENTRUST.TRADE_MARKET in (#{tradeMarket01},#{tradeMarket04})
+        AND ETR_ENTRUST.TRADE_MARKET_MODE = #{tradeMarketMode}
+        AND ETR_ENTRUST.PS IN (#{psT01}, #{psT02})
+        <if test="entrustStatus != null and entrustStatus.size() > 0">
+            AND ETR_ENTRUST.ENTRUST_STATUS IN
+            <foreach collection="entrustStatus" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="platDate != null">
+            AND ETR_ENTRUST.VDATE &lt;= to_date(#{platDate}, 'yyyy-MM-dd')
+            AND ETR_ENTRUST.MDATE &gt;= to_date(#{platDate}, 'yyyy-MM-dd')
+        </if>
+        <if test="entrustDateStart != null">
+            AND ETR_ENTRUST.VDATE &lt;= to_date(#{entrustDateStart}, 'yyyy-MM-dd')
+            AND ETR_ENTRUST.MDATE &lt;= to_date(#{entrustDateStart}, 'yyyy-MM-dd')
+        </if>
+        <if test="entrustDateEnd != null">
+            AND ETR_ENTRUST.VDATE &gt;= to_date(#{entrustDateEnd}, 'yyyy-MM-dd')
+            AND ETR_ENTRUST.MDATE &gt;= to_date(#{entrustDateEnd}, 'yyyy-MM-dd')
+        </if>
+        <if test="portfolioId != null and portfolioId.size() > 0">
+            AND ETR_ENTRUST.PORTFOLIO_ID IN
+            <foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodMarketId != null and finprodMarketId != ''">
+            AND FIN_PRODUCT.FINPROD_MARKET_ID = #{finprodMarketId}
+        </if>
+        <if test="finprodId != null and finprodId != ''">
+            AND FIN_PRODUCT.FINPROD_ID = #{finprodId}
+        </if>
+        <if test="ps != null and ps != ''">
+            AND ETR_ENTRUST.PS = #{ps}
+        </if>
+        <if test="settleSpreed != null and settleSpreed != ''">
+            AND DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED, 0, '01', 1, '02') = #{settleSpreed}
+        </if>
+        <if test="invManagerId != null and invManagerId.size() > 0">
+            AND ETR_ENTRUST.INV_MANAGER_ID IN
+            <foreach collection="invManagerId" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="mySide!= null and mySide != ''">
+            AND IBU_PORTFOLIO_ACCT_RELA.PARTY_ID = #{mySide}
+        </if>
+        <if test="loginUserId != null and loginUserId != ''">
+            AND ETR_DISTRIBUTE.TRADER = #{loginUserId}
+        </if>
+        <if test="quotaPageModel != null and quotaPageModel eq 'marketResponse'">
+            AND STL_SEC_ACCT_INFO.SEC_ACCT_SOURCE = #{secAcctSource}
+        </if>
+        <if test="keywords != null and keywords != ''">
+            AND (SYS_USER.USER_NAME LIKE '%' || #{keywords} || '%' OR SYS_USER.REAL_NAME LIKE '%' || #{keywords} || '%' OR
+            ETR_ENTRUST.ENTRUST_STATUS like  '%' || #{keywords} || '%' OR D.ITEM_VALUE LIKE '%' || #{keywords} || '%' OR
+            ETR_ENTRUST.PORTFOLIO_ID LIKE '%' || #{keywords} || '%' OR
+            PTL_PORTFOLIO.PORTFOLIO_NAME LIKE '%' || #{keywords} || '%' OR
+            ETR_ENTRUST.FINPROD_ID LIKE '%' || #{keywords} || '%' OR
+            FIN_PRODUCT.FINPROD_ABBR LIKE '%' || #{keywords} || '%' OR
+            ETR_ENTRUST_ADD.SEC_ACCT_ID LIKE '%' || #{keywords} || '%' OR
+            ETR_ENTRUST.PS LIKE '%' || #{keywords} || '%' OR E.ITEM_VALUE LIKE '%' || #{keywords} || '%' OR
+            ETR_ENTRUST_ADD.SETTLE_SPREED LIKE '%' || decode(#{keywords},'T+0','0','T+1','1','T+2','2',#{keywords}) || '%' OR
+            ETR_ENTRUST.PRICE LIKE '%' || #{keywords} || '%' OR
+            ETR_ENTRUST_ADD.MATURE_YIELD LIKE '%' || #{keywords} || '%' OR
+            MST_CFETS_CI.PARTY_ABBR LIKE '%' || #{keywords} || '%' OR
+            MST_CFETS_CT.TRADER_NAME LIKE '%' || #{keywords} || '%' OR
+            ETR_ENTRUST.VDATE LIKE '%' || #{keywords} || '%' OR
+            ETR_ENTRUST.MDATE LIKE '%' || #{keywords} || '%' OR
+            ETR_ENTRUST.ENTRUST_ID LIKE '%' || #{keywords} || '%')
+        </if>
+        <if test="entrustIdList != null and entrustIdList.size() > 0">
+            and ETR_ENTRUST.ENTRUST_ID not in
+            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
+            order by ${sort} ${direction}
+        </if>
+    </select>
+
+    <!--未来是否有行权-->
+    <select id="countBondHasEexrPlan" resultType="java.lang.Integer">
+        select count(1)
+        from FIN_EXERCISE_PLAN
+        where
+            FINPROD_ID = #{finprodId}
+            and EXERCISE_DATE &gt; = #{sysDate,jdbcType=DATE}
+    </select>
+
+    <select id="getSecAcctId" resultType="java.lang.String">
+        SELECT V.SEC_ACCT_ID
+          FROM PTL_SEC_ACCT PSA, STL_SEC_ACCT_INFO V
+          LEFT JOIN FIN_PRODUCT R
+		ON R.REGIST_ORG = V.REGIST_ORG
+	 WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
+	   AND V.SEC_ACCT_TYPE = 'SEC'
+	   AND V.TRADE_PLACE = '01'
+	   AND PSA.PORTFOLIO_ID = #{portfolioId}
+	   AND R.FINPROD_ID = #{finprodId}
+    </select>
+
+    <select id="getACCTNO" resultType="java.lang.String">
+		SELECT P.ACCT_NO
+		FROM
+		PTL_CAPACCT_INFO P
+		LEFT JOIN
+		STL_CAPACCT_INFO S
+		ON
+		P.ACCT_NO = S.ACCT_NO
+		where P.PORTFOLIO_ID = #{portfolioId}
+		AND P.ACCT_TYPE = #{acctType}
+		and rownum=1
+	</select>
+
+</mapper>
