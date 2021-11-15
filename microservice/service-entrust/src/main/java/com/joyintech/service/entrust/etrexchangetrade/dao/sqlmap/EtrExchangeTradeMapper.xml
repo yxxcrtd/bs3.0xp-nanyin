@@ -244,7 +244,8 @@
             END AS floatingPL, -->
             FP.FINPROD_TYPE2                          AS finprodType2,
             FP.TRADE_MARKET                           AS tradeMarket,
-            SSAI.TRD_ACCT_ID                          AS acctNo
+            SSAI.TRD_ACCT_ID                          AS acctNo,
+            TEMP.invAim invAim
         FROM
             (
             SELECT
@@ -253,6 +254,7 @@
                 PSP.SEC_ACCT_ID  AS SEC_ACCT_ID ,
                 PSP.FINPROD_ID   AS FINPROD_ID,
                 PSP.BRANCH       AS BRANCH,
+                PSP.INV_AIM invAim,
                 SUM(CASE WHEN PSP.HODING_TYPE IN (#{POSITION_TYPE_03}, #{POSITION_TYPE_05}) THEN NVL(PSP.AMOUNT,0)
                     ELSE -1* NVL(PSP.AMOUNT,0)
                 END) AS AMOUNT
@@ -278,6 +280,7 @@
                 PSP.PORTFOLIO_ID ,
                 PSP.SEC_ACCT_ID,
                 PSP.FINPROD_ID,
+                PSP.INV_AIM,
                 PSP.BRANCH 
         )TEMP
         LEFT JOIN
@@ -672,6 +675,9 @@
         <if test="portfolioId != null and portfolioId !=''">
             AND TEMP.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
         </if>
+        <if test="finprodMarketId != null and finprodMarketId !=''">
+            AND FP.FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
+        </if>
     </select>
     <!-- 证券账户代码下拉框查询-->
     <select id="getSecAcctId" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -694,6 +700,36 @@
             <if test="initValue != null and initValue != ''">
                 AND A.ACCT_NO = #{initValue}
             </if>
+        </where>
+    </select>
+
+    <!--质押券代码下拉框查询-->
+    <select id="selectZyq" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        F.FINPROD_MARKET_ID   AS id,
+        F.FINPROD_ABBR AS text
+        FROM
+        PTL_SEC_POSITION PSP
+        INNER JOIN FIN_PRODUCT F
+        ON F.FINPROD_ID = PSP.FINPROD_ID
+        <where>
+            PSP.BRANCH =0
+            AND F.FINPROD_TYPE2 = 'F01'
+            AND PSP.HODING_TYPE IN ('04')
+            <if test="search != null and search != ''">
+                AND
+                (
+                F.FINPROD_MARKET_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                OR
+                F.FINPROD_ABBR LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                )
+            </if>
+            <if test="initValue != null and initValue != ''">
+                AND F.FINPROD_MARKET_ID = #{initValue}
+            </if>
+            GROUP BY
+            F.FINPROD_MARKET_ID,
+            F.FINPROD_ABBR
         </where>
     </select>
 

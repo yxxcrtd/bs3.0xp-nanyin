@@ -480,6 +480,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
 		if (result.hasErrors()) {
 			return new AjaxResult(result);
 		}
+
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
 			// add  start
 			if (StringUtils.equals(dto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
@@ -537,7 +538,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
 			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue());
 		}
 		AjaxResult ajax  = etrExchangeTrade001Service.checkSave(dto);
-		if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList())) {
+		if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList()) && !StringUtil.equals(dto.getOperateType(),"save")) {
 			return ajax;
 		}
 		

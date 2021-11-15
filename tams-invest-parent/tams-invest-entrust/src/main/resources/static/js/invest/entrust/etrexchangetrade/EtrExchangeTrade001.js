@@ -506,6 +506,8 @@
         //清空风险试算结果
         riskResultdata = null;
         cluflag = true;
+
+        controlModifyView(false);
     }
     /**
      * 获取当前tab页
@@ -918,7 +920,14 @@
             ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F10)){
             $("#invAim_div_" + currentTab).hide();
         }else{
-            $("#invAim_div_" + currentTab).show();
+            var ps = $("#ps_" + currentTab).val();
+            if(ps == PS_T68 || ps == PS_T69) {
+                $("#invAim_div_" + currentTab).hide();
+            }
+            else {
+                $("#invAim_div_" + currentTab).show();
+            }
+
         }
         //add by chenjiaxing 股票与基金时投资目的字段不显示 end
     };
@@ -1113,6 +1122,15 @@
         calcPriceAndYield(init);
         linkTargetType();
         linkAvailableNum();
+        //质押券出入库不展示投资目的
+        var ps = $("#ps_" + currentTab).val();
+        if(ps == PS_T68 || ps == PS_T69) {
+            linkFindSecAmountInfo();
+            $("#invAim_div_" + currentTab).hide();
+        }
+        else {
+            $("#invAim_div_" + currentTab).show();
+        }
     };
     /**
      * 数据来源变更时
@@ -1555,8 +1573,8 @@
                         document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万份';
                         document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
                     }else{
-                        //配债配股不显示持仓数量，可卖数量，成本价
-                        if(ps == PS_T46 || ps == PS_T97) {
+                        //配债配股,质押券出入库不显示持仓数量，可卖数量，成本价
+                        if(ps == PS_T46 || ps == PS_T97 || ps == PS_T68) {
                             document.getElementById('positionAmount_' + currentTab).innerHTML = "";
                             document.getElementById('canSellAmount_' + currentTab).innerHTML = "";
                             document.getElementById('costPrice_' + currentTab).innerHTML = "";
@@ -1630,7 +1648,12 @@
                     if((currentTab == 'dz' || currentTab == 'gs')&& finprodType2 == FINPROD_TYPE_TG_F06){
                         document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万份';
                     }else{
-                        document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万元';
+                        if(ps == PS_T46 || ps == PS_T97 || ps == PS_T68 || ps == PS_T69) {
+                            document.getElementById('canBuyAmount_' + currentTab).innerHTML ='0.00万元'
+                        }else {
+                            document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万元';
+                        }
+
                     }
                     //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 end
                 }
@@ -1648,10 +1671,12 @@
         var secId = $("#secId_" + currentTab).val();
         if (secId && price) {
             var paramObj = {};
-            paramObj.finprodId = secId;
+            // TISHKS-137:计算偏离度 fuyongsheng 20211109 edit start
+            paramObj.finprodId = finprodId;
             if(finprodId){
-                paramObj.finprodMarketId = finprodId
+                paramObj.finprodMarketId = secId
             }
+            // TISHKS-137:计算偏离度 fuyongsheng 20211109 edit end
             paramObj.unitCprice = price;
             Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calcDeviationDegree'), paramObj, function (data) {
                 $("#deviationDegree").text(data);
@@ -2440,6 +2465,8 @@
         $("#entrustId_" + currentTab).val('').trigger('change');
         optType = ENTRUST_RECORD_NEW;
 
+        controlModifyView(false);
+
         //双击校验后，将风险试算标识重置
         window.parent.dbclickRefreshRisk();
     }
@@ -2457,9 +2484,17 @@
         if(data.entrustId){
             //设置指令记录操作类型
             optType = ENTRUST_RECORD_MODIFY;
+            //修改页面时组合，资产名称，交易方向不可改
+            controlModifyView(true);
         }
         //双击校验后，将风险试算标识重置
         window.parent.dbclickRefreshRisk();
+    }
+
+    var controlModifyView = function (disabled) {
+        $("#portfolioId_" + currentTab).attr("disabled", disabled);
+        $("#secId_" + currentTab).attr("disabled", disabled);
+        $("#ps_" + currentTab).attr("disabled", disabled);
     }
 
     /**

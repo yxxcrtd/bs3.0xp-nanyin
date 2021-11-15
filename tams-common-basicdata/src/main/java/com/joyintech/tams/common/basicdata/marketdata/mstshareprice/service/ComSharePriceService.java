@@ -396,11 +396,21 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
             // 验证导入总股本是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "总股本为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(2))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(2), String.valueOf(i+2), "总股本不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(3))) {
             // 验证导入流通股本是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "流通股本为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(3))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i+2), "流通股本不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(4))) {
             // 验证导入交易日期是否为空

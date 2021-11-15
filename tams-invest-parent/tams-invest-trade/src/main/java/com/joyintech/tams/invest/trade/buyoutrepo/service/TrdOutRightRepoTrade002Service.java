@@ -1144,7 +1144,8 @@ public class TrdOutRightRepoTrade002Service extends BaseService<TrdOutRightRepoT
 		// trdProductDeal.setShareAmt(ArithmeticUtil.divide(entity.getSecTotalPrin(),
 		// 100, 2));
 		trdProductDeal.setShareAmt(entity.getfSettleAmt());// 交易份额=首次结算金额
-		trdProductDeal.setPrinAmt(entity.getfSettleAmt());// 交易本金=首次结算金额
+//		trdProductDeal.setPrinAmt(entity.getfSettleAmt());// 交易本金=首次结算金额
+		trdProductDeal.setPrinAmt(entity.getSecTotalPrin());//交易本金=页面券面总额
 		// trdProductDeal.setIntAmt(entity.getfIntAmt());
 		trdProductDeal.setIntAmt(BigDecimal.ZERO);// 利息总额=0
 		// trdProductDeal.setFpriceAmt(

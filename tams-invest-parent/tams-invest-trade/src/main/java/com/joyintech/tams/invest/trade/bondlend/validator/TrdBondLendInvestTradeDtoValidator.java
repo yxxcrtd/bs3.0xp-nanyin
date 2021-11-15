@@ -268,7 +268,7 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
 
     //证券托管户
         if(inputDto.getSecManageAcctId()==null||"".equals(inputDto.getSecManageAcctId())){
-        	 ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0014",getMessage("invest.channelId")));
+             ValidMessage validMessage =  new ValidMessage("secManageAcctId",getMessage("TRD_E_0014_1"));
         	
         	errorList.add(validMessage);
         }

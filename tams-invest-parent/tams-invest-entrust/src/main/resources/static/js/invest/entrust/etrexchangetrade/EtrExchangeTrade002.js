@@ -181,7 +181,7 @@
             ,{field:'secName', title: 'EtrExchangeTrade002.finpordName', width : 160}//资产名称
             ,{field:'finprodType2', title: 'EtrExchangeTrade002.finprodType', width : 160,render: function (data, type, row, meta) {
                     if (data == 'F01'){data = "债券";} if(data == 'F06'){data = "基金";}if (data=='F10'){data="股票";} return data;}}//资产类型
-            // ,{field:'invAimStr', title: 'EtrExchangeTrade002.invAim',sortField:'invAim', width : 150}//投资目的
+            ,{field:'invAimStr', title: 'EtrExchangeTrade002.invAim',sortField:'invAim', width : 150}//投资目的
             ,{field:'positionsNum', title: 'EtrExchangeTrade002.positionsNum',type:'number', digit : 0, width : 150}//持仓数量
             ,{field:'sellNum', title: 'EtrExchangeTrade002.sellNum',type:'number', digit : 0, width : 150}//可卖数量
             ,{field:'positionsAmt', title: 'EtrExchangeTrade002.positionsAmt',type:'number', width : 150}//持仓成本
@@ -444,6 +444,15 @@
                 }
             }
         });
+
+        //质押券重置按钮点击事件
+        $('#EtrExchangeTrade002_zqzy_reset_btn').click(function() {
+            $("#portfolioId_zqzy").val("").trigger('change');
+            $("#tradeMarket_zqzy").val("").trigger('change');
+            $("#date_zqzy").val("").trigger('change');
+            $("#finprodMarketId_zqzy").val("").trigger('change');
+        });
+
         $('.zlgl-transfer-form #EtrExchangeTrade002_btn_ccreset').click(function() {
             $("#portfolioId").val("").trigger('change');
             $("#tradeMarket_cc").val("").trigger('change');

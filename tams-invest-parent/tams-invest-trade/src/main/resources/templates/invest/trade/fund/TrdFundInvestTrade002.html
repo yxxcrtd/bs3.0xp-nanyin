@@ -315,14 +315,14 @@
                                         </div>
                                     <!-- 资产推荐方 新增 zhuyongkang 20191023 end-->
                                         <div class="form-inline-wrap" id="expectedArrivalDate_div">
-                                        <label class="layui-form-label form-label-wrap"
-                                               th:text="#{TrdFundInvestTrade002.expectedArrivalDate}">预计到账日</label>
-                                        <div class="layui-input-inline input-inline">
-                                            <input required disabled type="text" id="expectedArrivalDate" name="redCfmDate"
-                                                   class="layui-input form-input input-dateSelect" placeholder="请输入内容"
-                                                   th:placeholder="#{SysCommon.placeholder}"
-                                                   th:value="${entity?.redCfmDate==null ? platDate : #dates.format(entity?.redCfmDate,'yyyy-MM-dd')}">
-                                        </div>
+                                            <label class="layui-form-label form-label-wrap"
+                                                   th:text="#{TrdFundInvestTrade002.expectedArrivalDate}">预计到账日</label>
+                                            <div class="layui-input-inline input-inline">
+                                                <input required disabled type="text" id="expectedArrivalDate" name="redCfmDate"
+                                                       class="layui-input form-input input-dateSelect" placeholder="请输入内容"
+                                                       th:placeholder="#{SysCommon.placeholder}"
+                                                       th:value="${entity?.redCfmDate==null ? platDate : #dates.format(entity?.redCfmDate,'yyyy-MM-dd')}">
+                                            </div>
                                         </div>
                                         <div class="form-inline-wrap" id="assetAvailablePosition_div" Style="display: none">
                                             <label class="layui-form-label form-lable"
@@ -334,8 +334,8 @@
                                             </div>
                                         </div>
                                 </div>
-                                <div class="layui-form-item changein">
-                                    <div class="form-inline-wrap">
+                                <div class="layui-form-item">
+                                    <div class="form-inline-wrap"  id = "changeToFinprodMarketId_div">
                                         <label class="layui-form-label form-lable">转入资产简称</label>
                                         <div class="layui-input-inline input-inline">
                                             <select type="text" id="changeToFinprodMarketId" name="changeToFinprodMarketId" class="layui-input form-input input-select"
@@ -345,7 +345,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-inline-wrap">
+                                    <div class="form-inline-wrap" id = "changeToFinprodName_div">
                                         <label class="layui-form-label form-lable" >转入资产代码</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="changeToFinprodName" name="changeToFinprodName"
@@ -586,7 +586,7 @@
             var MY_SUP_TIME_TYPE_02 = /*[[${MY_SUP_TIME_TYPE_02}]]*/'';
             var FINPROD_TYPE_F06 = /*[[${FINPROD_TYPE_F06}]]*/'';
             var IS_SHOW_TYPE = /*[[${isShowType}]]*/'01';
-            var GEN_PAY_ORDERS_AUTO= /*[[${GEN_PAY_ORDERS_AUTO}]]*/; // 系统参数_是否显示划款指令
+            var GEN_PAY_ORDERS_AUTO=/*[[${GEN_PAY_ORDERS_AUTO}]]*/''; // 系统参数_是否显示划款指令
             var tradeId = /*[[${tradeId}]]*/'';
             var workflowId = /*[[${workflowId}]]*/'';
 
