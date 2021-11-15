@@ -12,13 +12,20 @@ package com.joyintech.tams.common.basicdata.marketdata.mstcoinfundquotationinfo.
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import com.google.common.collect.Maps;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -210,6 +217,8 @@ public class ComCoinFundQuotationInfo001Service extends CommonExportService<ComC
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
+        Pattern pattern = Pattern.compile("[0-9]*");
+        List<String> findList =  this.queryFinprod(Maps.newHashMap()).stream().map(item->item.getId()).collect(Collectors.toList());
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
         if (objects.size() - 1 > 1000) {
             Map<String, Object> resultMap = new HashMap<>();
@@ -229,9 +238,9 @@ public class ComCoinFundQuotationInfo001Service extends CommonExportService<ComC
             wr.setData(resultMap);
             return wr;
         } else {
-            if (null == objects.get(0) || objects.get(0).size() != 8) {
+            if (null == objects.get(0) || objects.get(0).size() != 9) {
                 Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要8列。");
+                resultMap.put("errorMsg", "数据格式错误，数据格式需要9列。");
                 AjaxResult wr = new AjaxResult();
                 wr.setData(resultMap);
                 return wr;
@@ -243,15 +252,49 @@ public class ComCoinFundQuotationInfo001Service extends CommonExportService<ComC
                     //基金代码 必填
                     if (!StringUtil.isNotEmpty(rowData.get(0))){
                         errorMsg.append("基金代码 必填！");
+                    }else if(!findList.contains(rowData.get(0))){
+                        errorMsg.append("基金代码不存在！");
                     }
+
                     //估值日期 必填
                     if (!StringUtil.isNotEmpty(rowData.get(2))){
                         errorMsg.append("估值日期 必填！");
+                    }else if(!this.isDateStr(rowData.get(2))){
+                        errorMsg.append("估值日期 格式不正确！");
                     }
+
                     //万份收益/净值 必填
                     if (!StringUtil.isNotEmpty(rowData.get(3))){
                         errorMsg.append("万份收益/净值 必填！");
+                    }else if (!pattern.matcher(rowData.get(3)).matches()){
+                        errorMsg.append("万份收益/净值 格式不正确！");
                     }
+
+                    //累计净值	复权单位净值	七日年化收益率	基金总份额
+                    if (StringUtil.isNotEmpty(rowData.get(5))){
+                        if (!pattern.matcher(rowData.get(5)).matches()){
+                            errorMsg.append("累计净值 格式不正确！");
+                        }
+                    }
+
+                    if (StringUtil.isNotEmpty(rowData.get(6))){
+                        if (!pattern.matcher(rowData.get(6)).matches()){
+                            errorMsg.append("复权单位净值 格式不正确！");
+                        }
+                    }
+
+                    if (StringUtil.isNotEmpty(rowData.get(7))){
+                        if (!pattern.matcher(rowData.get(7)).matches()){
+                            errorMsg.append("七日年化收益率 格式不正确！");
+                        }
+                    }
+
+                    if (StringUtil.isNotEmpty(rowData.get(8))){
+                        if (!pattern.matcher(rowData.get(8)).matches()){
+                            errorMsg.append("基金总份额 格式不正确！");
+                        }
+                    }
+
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
                         returnerrorMsg.append("第"+(i+1)+"行数据："+errorMsg.toString());
@@ -312,6 +355,17 @@ public class ComCoinFundQuotationInfo001Service extends CommonExportService<ComC
         AjaxResult wr = new AjaxResult();
         wr.setData(resultMap);
         return wr;
+    }
+
+    public static boolean isDateStr(String str) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            format.setLenient(false);
+            format.parse(str);
+            return true;
+        } catch (Exception var3) {
+            return false;
+        }
     }
 
     /**
