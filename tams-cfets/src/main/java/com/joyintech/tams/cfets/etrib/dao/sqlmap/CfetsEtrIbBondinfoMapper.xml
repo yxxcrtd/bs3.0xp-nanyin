@@ -454,7 +454,7 @@ from
             <if test="search != null and search != ''">
                 <!--模糊查询使用-->
                 LEFT JOIN (
-                    SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST WHERE DICT_CODE= 'FINPROD_TYPE_TG'
+                    SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST WHERE DICT_CODE= 'CUSTOM_ASSET_TYPE_FOUR'
                 ) f on f.ITEM_CODE=c.TYPE_11
                 LEFT JOIN (
                     SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST WHERE DICT_CODE= 'BUSINESS_MODEL'
