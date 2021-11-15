@@ -14,9 +14,11 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.util.ExcelUitl;
@@ -56,15 +58,46 @@ public class CfetsEtrDispatcherController extends BaseController {
         //数据字典初始化数据
         initPageParams.put("PINAN_ASSET_TYPE", this.getSelectDataFromDataDic(DictCode.平安资产类型, null));
         initPageParams.put("BUSI_TYPE_POSITION", this.getSelectDataFromDataDic(DictCode.头寸业务类型, null));
-        initPageParams.put("TRADE_MARKET", this.getSelectDataFromDataDic(DictCode.交易流通场所, null));
+        initPageParams.put("TRADE_MARKET", this.getSelectDataFromDataDic(DictCode.交易场所, null));
         initPageParams.put("CCY", this.getSelectDataFromDataDic(DictCode.币种, null));
         initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));
-        initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
+//        initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
+        List<SelectOptionDto> psList = makeAllFloatRate();
+        initPageParams.put("PS", JsonUtils.objectArray2Json(psList.toArray()));
         initPageParams.put("SHORTSELLINGSUPPORTED01", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
+        //自动刷新时间(ms)
+        initPageParams.put("cfetsEtrDispatcher_tradeList_refresh_period", CacheUtil.getSysParam("cfetsEtrDispatcher_tradeList_refresh_period"));
 
         initPageParams.put("pageId", "CfetsEtrDispatcher");
         return new Message<Map<String, Object>>(initPageParams).success();
     }
+
+    /**
+     *
+     * 组交易方向下拉框值
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    private List<SelectOptionDto> makeAllFloatRate() {
+        List<SelectOptionDto> listFloatRate = new ArrayList<SelectOptionDto>();
+
+        SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.交易方向, null);
+        for (SelectOptionDto dto : selectDto1.getOptions()) {
+            listFloatRate.add(dto);
+        }
+        SelectDto selectDto2 = this.getSelectDataFromDataDic(DictCode.回购拆借方向, null);
+        for (SelectOptionDto dto : selectDto2.getOptions()) {
+            listFloatRate.add(dto);
+        }
+        SelectDto selectDto3 = this.getSelectDataFromDataDic(DictCode.互换方式, null);
+        for (SelectOptionDto dto : selectDto3.getOptions()) {
+            listFloatRate.add(dto);
+        }
+        return listFloatRate;
+    }
+
     /**
      * 指令列表分页查询
      *

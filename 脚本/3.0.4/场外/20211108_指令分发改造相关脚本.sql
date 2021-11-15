@@ -8,7 +8,19 @@ insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER
 values ('DEAL_MANAGEMENT_001_009', 'TRD', '', 'DEAL_MANAGEMENT_001', '', 9, '01', '指令分发', 'system', '', sysdate, 'system', sysdate);
 insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('DEAL_MANAGEMENT_001_009_001', 'TRD', '', 'DEAL_MANAGEMENT_001_009', 'CfetsEtrDispatcher', 1, '01', '指令分发', 'system', '', sysdate, 'system', sysdate);
- 
+
+--自动刷新
+delete from sys_para t where t.para_code='cfetsEtrDispatcher_tradeList_refresh_period';
+insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
+values ('TRD', 'cfetsEtrDispatcher_tradeList_refresh_period', '30000', '01', '', '指令分发列表自动刷新时间（毫秒）', 'system', '', sysdate, 'system', sysdate, '', '01');
+
+delete from sys_page_dictlist where PAGE_ID = 'CfetsEtrDispatcher' and DICT_ID ='ACCOUNT_SPEED';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('CfetsEtrDispatcher', '999999', 'ACCOUNT_SPEED', '01', '', '', 'admin', '', sysdate, 'admin', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('CfetsEtrDispatcher', '999999', 'ACCOUNT_SPEED', '02', '', '', 'admin', '', sysdate, 'admin', sysdate, '');
+
+
  
 --金融产品交易登记表
 DROP TABLE REG_FIN_PRODUCT_DEAL;

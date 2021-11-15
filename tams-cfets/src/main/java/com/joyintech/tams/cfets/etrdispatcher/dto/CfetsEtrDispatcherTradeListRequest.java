@@ -51,6 +51,12 @@ public class CfetsEtrDispatcherTradeListRequest {
     @ApiModelProperty(name="entrustDate",value="指令日期",example="2021-01-01")
     private String entrustDate;
 
+    @ApiModelProperty(name="entrustEndDate",value="指令日期结束日",example="2021-01-01")
+    private String entrustEndDate;
+
+    @ApiModelProperty(name="entrustStartDate",value="指令日期开始日",example="2021-01-01")
+    private String entrustStartDate;
+
     @ApiModelProperty(name="ccy",value="币种",example="A1")
     private String ccy;
 
@@ -180,5 +186,20 @@ public class CfetsEtrDispatcherTradeListRequest {
         this.search = search;
     }
 
+    public String getEntrustEndDate() {
+        return entrustEndDate;
+    }
+
+    public void setEntrustEndDate(String entrustEndDate) {
+        this.entrustEndDate = entrustEndDate;
+    }
+
+    public String getEntrustStartDate() {
+        return entrustStartDate;
+    }
+
+    public void setEntrustStartDate(String entrustStartDate) {
+        this.entrustStartDate = entrustStartDate;
+    }
 }
 

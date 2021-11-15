@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 场外指令分发
@@ -76,6 +77,22 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     @ApiModelProperty(name="busiTypePosition",value="头寸类型",example="01")
     private String busiTypePosition;
+
+    @ApiModelProperty(name="execFinishAmt",value="已完成指令额度",example="1")
+    private BigDecimal execFinishAmt;
+
+    @ApiModelProperty(name="execRemainderAmt",value="剩余指令额度",example="1")
+    private BigDecimal execRemainderAmt;
+
+    @ApiModelProperty(name="transFinishAmt",value="已成交额度",example="1")
+    private BigDecimal transFinishAmt;
+
+    @ApiModelProperty(name="transRemainderAmt",value="剩余成交额度",example="1")
+    private BigDecimal transRemainderAmt;
+
+    @ApiModelProperty(name="transmitTime",value="下达时间",example="HH:MM:SS")
+    private Date transmitTime;
+
     /**
      * 获取 otherEntrustStatus
      * @return otherEntrustStatus.
@@ -93,7 +110,7 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
      * @return otherSettleSpeed.
      */
     public String getOtherSettleSpeed() {
-        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, super.getEntrustStatus());
+        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, this.getSettleSpeed());
     }
 
     /**
@@ -253,5 +270,45 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     public void setEtrPrice(BigDecimal etrPrice) {
         this.etrPrice = etrPrice;
+    }
+
+    public BigDecimal getExecFinishAmt() {
+        return execFinishAmt;
+    }
+
+    public void setExecFinishAmt(BigDecimal execFinishAmt) {
+        this.execFinishAmt = execFinishAmt;
+    }
+
+    public BigDecimal getExecRemainderAmt() {
+        return execRemainderAmt;
+    }
+
+    public void setExecRemainderAmt(BigDecimal execRemainderAmt) {
+        this.execRemainderAmt = execRemainderAmt;
+    }
+
+    public BigDecimal getTransFinishAmt() {
+        return transFinishAmt;
+    }
+
+    public void setTransFinishAmt(BigDecimal transFinishAmt) {
+        this.transFinishAmt = transFinishAmt;
+    }
+
+    public BigDecimal getTransRemainderAmt() {
+        return transRemainderAmt;
+    }
+
+    public void setTransRemainderAmt(BigDecimal transRemainderAmt) {
+        this.transRemainderAmt = transRemainderAmt;
+    }
+
+    public Date getTransmitTime() {
+        return transmitTime;
+    }
+
+    public void setTransmitTime(Date transmitTime) {
+        this.transmitTime = transmitTime;
     }
 }

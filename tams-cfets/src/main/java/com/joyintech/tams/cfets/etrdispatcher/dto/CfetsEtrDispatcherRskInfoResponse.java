@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.etrdispatcher.dto;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
@@ -145,7 +146,21 @@ public class CfetsEtrDispatcherRskInfoResponse {
      * @return 数据字典值
      */
     public String getOtherSupStat(){
-        return SysDataUtil.getNameFromDataDict(BussinessDictCodeRds.监督状态, this.getSupStat());
+//        return SysDataUtil.getNameFromDataDict(BussinessDictCodeRds.监督状态, this.getSupStat());
+        if(StringUtil.isNotEmpty(this.getSupStat())){
+            if(StringUtil.equals(this.getSupStat(),"0")){
+                return "正常";
+            }else if(StringUtil.equals(this.getSupStat(),"1")){
+                return "预警";
+            }else  if(StringUtil.equals(this.getSupStat(),"2")){
+                return "审批";
+            }else  if(StringUtil.equals(this.getSupStat(),"3")){
+                return "违规";
+            }else  if(StringUtil.equals(this.getSupStat(),"4")){
+                return "异常";
+            }
+        }
+        return null;
     }
 
     public String getOtherIndType() {
