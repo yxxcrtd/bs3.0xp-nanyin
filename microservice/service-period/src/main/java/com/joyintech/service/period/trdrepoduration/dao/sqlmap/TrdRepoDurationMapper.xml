@@ -734,7 +734,7 @@
         <if test="isRevoke != null and isRevoke != ''">
             AMOUNT,
         </if>
-        P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INV_AIM
+        P_FINPROD_ID, '${newTradeId}', CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INV_AIM
         from PTL_SEC_POSITION_FLOW
         where 
             TRADE_ID = #{tradeId,jdbcType=VARCHAR} 

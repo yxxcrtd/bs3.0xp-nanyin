@@ -129,6 +129,13 @@ public interface EtrExchangeTradeMapper {
 	 */
 	String linkInvAim(Map<String, Object> map);
 
+	/**
+	 * 联动债券的投资目的-查询当日委托
+	 * @param map
+	 * @return
+	 */
+	String linkInvAimEtr(Map<String, Object> map);
+
     /**
      * 对手方交易商联想文本框初始化。
      * 

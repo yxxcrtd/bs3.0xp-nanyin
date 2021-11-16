@@ -113,6 +113,17 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				if(!StringUtil.isNotEmpty(dto.getInvAim())
 						&&dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
 					errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
+				} else {
+					if(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+						Map<String, Object> param = new HashMap<>();
+						param.put("portfolioId",dto.getPortfolioId());
+						param.put("secAcctId",dto.getSecAcctId());
+						param.put("finprodId",dto.getFinprodId());
+						String historyInvAim = etrExchangeTrade001Service.linkInvAim(param);
+						if(StringUtil.isNotEmpty(historyInvAim) && !StringUtil.equals(historyInvAim,dto.getInvAim())) {
+							errorList.add(new ValidMessage("invAim", "已存在交易，投资目的只能为"+SysDataUtil.getNameFromDataDict(DictCode.投资目的, dto.getInvAim())));
+						}
+					}
 				}
 			}
 			// GZYHTZJY-111:放开投资目的的校验逻辑 fuyongshneg 20211030 edit end
