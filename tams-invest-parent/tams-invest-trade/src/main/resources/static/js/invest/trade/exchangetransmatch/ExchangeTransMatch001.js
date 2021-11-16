@@ -225,6 +225,8 @@
      * 画面加载完成
      */
     $(function() {
+        $('#ExchangeTransMatch001_btn_reset').hide();
+        $('#ExchangeTransMatch001_btn_search').hide();
 
         $('#ExchangeTransMatch001_btn_export').click(function() {
             exportExcelQueDing();
@@ -241,7 +243,7 @@
         });
 
         //匹配信息查询
-        $('#ExchangeTransMatch001_btn_search').click(function () {
+        $('#ExchangeTransMatch001_trdMatchInfo_btn_search').click(function () {
             transMatchInfoTable.table?transMatchInfoTable.reload():transMatchInfoTable.load();
         });
 
@@ -484,6 +486,21 @@
             $('#dealPs').val('').trigger('change');
             $('#dealTradePlat').val('').trigger('change');
             $('#deaalTradeDate').val('').trigger('change');
+        });
+
+        //委托交易重置按钮
+        $('#ExchangeTransMatch001_trdMatchInfo_btn_reset').click(function () {
+            $('#trdMatchInfo_matchType').val('').trigger('change');
+            $('#trdMatchInfo_dealId').val('').trigger('change');
+            $('#trdMatchInfo_tradeMarket').val('').trigger('change');
+            $('#trdMatchInfo_portfolioId').val('').trigger('change');
+            $('#trdMatchInfo_busiCode').val('').trigger('change');
+            $('#trdMatchInfo_secAcctNo').val('').trigger('change');
+            $('#trdMatchInfo_ps').val('').trigger('change');
+            $('#trdMatchInfo_tradeDate').val('').trigger('change');
+            $('#trdMatchInfo_finprodType2').val('').trigger('change');
+            $('#trdMatchInfo_finprodId').val('').trigger('change');
+
         });
 
         //更多按钮
