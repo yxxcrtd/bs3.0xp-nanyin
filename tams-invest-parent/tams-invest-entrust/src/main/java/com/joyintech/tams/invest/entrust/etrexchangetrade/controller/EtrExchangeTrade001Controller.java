@@ -399,7 +399,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
         model.addAttribute("WINDTYPEONE_B13", DictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue());
         model.addAttribute("WINDTYPEONE_B14", DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue());
         model.addAttribute("WINDTYPEONE_B15", DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue());
-        
+        model.addAttribute("BOARD_BD03", DictCodeList.上市板_科创板.getValue());
     }
     
     /**

@@ -1222,7 +1222,13 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 			BigDecimal minNum = new BigDecimal(1);
 			MinTrdUnitLimitDto minTrdUnitLimitDto = getInterfSysMinTrdUnit(finprodId, currentTab, tradeMarket, finprodType2, ps);
 			if (null != minTrdUnitLimitDto && null != minTrdUnitLimitDto.getMinStep()) {
-				minNum = minTrdUnitLimitDto.getMinStep();
+				// 如果是股票,并且是科创板,则最小交易单元是200
+				if(DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)
+						&& DictCodeList.上市板_科创板.getValue().equals(param.get("board"))){
+					minNum = new BigDecimal(200);
+				}else{
+					minNum = minTrdUnitLimitDto.getMinStep();
+				}
 			}
 			if (null != availableNum && availableNum.compareTo(BigDecimal.ZERO) > 0) {
 				resultMap.put("minNum", minNum);

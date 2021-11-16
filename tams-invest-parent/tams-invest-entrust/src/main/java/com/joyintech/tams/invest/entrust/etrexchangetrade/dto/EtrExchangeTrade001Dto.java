@@ -186,7 +186,13 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal accAvailablePos;
-    
+
+    /**
+     * 最新价格
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal latestPrice;
+
     /**
      * 业务类型名称
      */
@@ -508,8 +514,16 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
 	public void setAccAvailablePos(BigDecimal accAvailablePos) {
 		this.accAvailablePos = accAvailablePos;
 	}
-	
-	public String getBusinessTypeName() {
+
+    public BigDecimal getLatestPrice() {
+        return latestPrice;
+    }
+
+    public void setLatestPrice(BigDecimal latestPrice) {
+        this.latestPrice = latestPrice;
+    }
+
+    public String getBusinessTypeName() {
 		return businessTypeName;
 	}
 	public void setBusinessTypeName(String businessTypeName) {
