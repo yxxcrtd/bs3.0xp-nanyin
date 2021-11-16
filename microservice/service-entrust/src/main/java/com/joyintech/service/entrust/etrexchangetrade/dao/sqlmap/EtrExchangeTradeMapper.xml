@@ -848,7 +848,7 @@
     <select id="linkInvAim" resultType="string">
         select distinct INV_AIM
           from (select  A.INV_AIM
-                   from PTL_SEC_POSITION_FLOW A
+                   from PTL_SEC_POSITION A
                   WHERE  A.PORTFOLIO_ID = #{portfolioId}
                           AND A.SEC_ACCT_ID = #{secAcctId}
                           AND A.FINPROD_ID = #{finprodId}
@@ -857,6 +857,29 @@
              order by A.CREATE_TIME DESC)
          WHERE rownum = 1
     </select>
+
+    <select id="linkInvAimEtr" resultType="string">
+        select INV_AIM
+          from (select distinct A.INV_AIM
+                  from ETR_ENTRUST A
+                 INNER JOIN ETR_ENTRUST_ADD B
+                    ON A.ENTRUST_ID = B.ENTRUST_ID
+                 WHERE A.PORTFOLIO_ID = #{portfolioId}
+                   AND B.SEC_ACCT_ID = #{secAcctId}
+                   AND A.FINPROD_ID = #{finprodId}
+                   AND A.INV_AIM != '999999'
+                UNION ALL
+                select distinct A.INV_AIM
+                  from WFL_ETR_ENTRUST A
+                 INNER JOIN WFL_ETR_ENTRUST_ADD B
+                    ON A.ENTRUST_ID = B.ENTRUST_ID
+                 WHERE A.PORTFOLIO_ID = #{portfolioId}
+                   AND B.SEC_ACCT_ID = #{secAcctId}
+                   AND A.FINPROD_ID = #{finprodId}
+                   AND A.INV_AIM != '999999')
+        where rownum = 1
+    </select>
+
     <!-- 检索对手方交易商 -->
     <select id="selectCounterDealer" resultType="com.joyintech.framework.select.SuggestDto">
         SELECT
