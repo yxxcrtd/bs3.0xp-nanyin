@@ -117,6 +117,13 @@ public class FinTenderBondTargetAssetValidator implements BeanValidator{
                 }
             }
         }
+        //TISHKS-131:若已关联二级流通债券则不可修改 fuyongsheng 20211116 edit start
+        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
+            if(finTenderBondTargetAssetService.selectCountByOFinprodId(dto.getFinprodId())>0){
+                resultList.add(new ValidMessage("已关联二级流通债券，不可修改！"));
+            }
+        }
+        //TISHKS-131:若已关联二级流通债券则不可修改 fuyongsheng 20211116 edit end
         if(StringUtil.equals(isSus, DictCodeList.是否_是.getValue())){
              //特殊条款已删除，相关check也删掉
           if(StringUtil.isEmpty(dto.getSustainableRemark())){

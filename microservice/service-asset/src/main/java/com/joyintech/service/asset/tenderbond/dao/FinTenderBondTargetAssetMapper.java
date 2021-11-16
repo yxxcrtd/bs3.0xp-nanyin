@@ -53,4 +53,11 @@ public interface FinTenderBondTargetAssetMapper {
      * @since 1.0
      */
     List<FinTenderBondTargetAssetDto> getZXPJ(Map<String, Object> param);
+
+    /**
+     * 查询关联此一级市场投标债券数量
+     * @param oFinprodId
+     * @return
+     */
+    int selectCountByOFinprodId(@Param("oFinprodId") String oFinprodId);
 }
