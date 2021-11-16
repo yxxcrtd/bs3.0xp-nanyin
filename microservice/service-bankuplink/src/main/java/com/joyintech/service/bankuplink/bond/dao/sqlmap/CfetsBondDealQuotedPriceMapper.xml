@@ -699,6 +699,7 @@
 			<result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
 			<result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
 			<result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
+			<result column="TYPE_4" property="paassetType1" jdbcType="VARCHAR" />
 			<result column="TYPE_9" property="assetType1" jdbcType="VARCHAR" /><!-- type4改为type9	王贵奇2019/7/27 -->
 			<result column="TYPE_10" property="assetType10" jdbcType="VARCHAR" /><!-- type4改为type9	王贵奇2019/7/27 -->
 			<result column="TYPE_11" property="assetType11" jdbcType="VARCHAR" /><!-- type4改为type9	王贵奇2019/7/27 -->
@@ -719,7 +720,7 @@
 		T1.TRADE_MARKET,
 		T1.IS_RIGHT,
 		<!-- type4改为type9~11	王贵奇2019/7/27 开始 -->
-		<!-- T2.TYPE_4, -->
+		T2.TYPE_4,
 		T2.TYPE_9,
 		T2.TYPE_10,
 		T2.TYPE_11,

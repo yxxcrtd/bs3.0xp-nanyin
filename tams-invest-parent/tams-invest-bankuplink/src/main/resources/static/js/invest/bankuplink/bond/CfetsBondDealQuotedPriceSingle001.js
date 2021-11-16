@@ -202,7 +202,7 @@
             else{
                 $('#CfetsBondDealQuotedPriceSingle001_div_exerYield').toggle(false);
             }
-            if (data.assetType1 == assetTypeOne_abs){
+            if (data.paassetType1 == assetTypeOne_abs){
                 $('#CfetsBondDealQuotedPriceSingle001_div_abs1').toggle(true);
                 $('#CfetsBondDealQuotedPriceSingle001_div_abs2').toggle(true);
 
@@ -882,6 +882,8 @@
         $("#CfetsBondDealQuotedPriceSingle001_settleSpreed").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_tradeDate").val(sysDate).trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_settleDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle001_tradeDate").val().trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle001_settleDate").val().trigger("change")
         $("#CfetsBondDealQuotedPriceSingle001_responseAmt").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_settleMethod").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_secManageAcctId").val("").trigger("change");
