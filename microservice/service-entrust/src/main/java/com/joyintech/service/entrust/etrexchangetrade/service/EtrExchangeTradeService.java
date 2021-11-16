@@ -1555,7 +1555,11 @@ public class EtrExchangeTradeService extends BaseService{
     }
 
     public String linkInvAim(Map<String, Object> param) {
-        return this.etrExchangeTradeMapper.linkInvAim(param);
+        String invAim = this.etrExchangeTradeMapper.linkInvAim(param);
+        if(!StringUtil.isNotEmpty(invAim)) {
+            invAim = this.etrExchangeTradeMapper.linkInvAimEtr(param);
+        }
+        return invAim;
     }
 
     /**
