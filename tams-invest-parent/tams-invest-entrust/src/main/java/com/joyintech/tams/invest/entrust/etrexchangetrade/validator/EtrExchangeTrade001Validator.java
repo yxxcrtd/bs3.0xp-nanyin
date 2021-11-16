@@ -111,10 +111,15 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				}
 			}else{
 				if(!StringUtil.isNotEmpty(dto.getInvAim())
-						&&dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+						&& dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+						&& !StringUtil.equals(DictCodeListExt3.交易方向_质押券入库.getValue(), dto.getPs())
+						&& !StringUtil.equals(DictCodeListExt3.交易方向_质押券出库.getValue(), dto.getPs())){
 					errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
 				} else {
-					if(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+					if(StringUtil.isNotEmpty(dto.getInvAim())
+							&& StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+							&& !StringUtil.equals(DictCodeListExt3.交易方向_质押券入库.getValue(), dto.getPs())
+							&& !StringUtil.equals(DictCodeListExt3.交易方向_质押券出库.getValue(), dto.getPs())) {
 						Map<String, Object> param = new HashMap<>();
 						param.put("portfolioId",dto.getPortfolioId());
 						param.put("secAcctId",dto.getSecAcctId());

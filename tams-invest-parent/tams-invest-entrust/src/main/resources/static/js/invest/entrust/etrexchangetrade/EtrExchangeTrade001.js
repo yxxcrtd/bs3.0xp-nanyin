@@ -919,7 +919,12 @@
             ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F10)
             ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F10)){
             $("#invAim_div_" + currentTab).hide();
-        }else{
+        }else if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)
+            ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)
+            ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)){
+            $("#invAim_div_" + currentTab).hide();
+        }
+        else{
             var ps = $("#ps_" + currentTab).val();
             if(ps == PS_T68 || ps == PS_T69) {
                 $("#invAim_div_" + currentTab).hide();
@@ -1122,14 +1127,30 @@
         calcPriceAndYield(init);
         linkTargetType();
         linkAvailableNum();
-        //质押券出入库不展示投资目的
-        var ps = $("#ps_" + currentTab).val();
-        if(ps == PS_T68 || ps == PS_T69) {
-            linkFindSecAmountInfo();
+
+        var finprodType2 = $("#finprodType2_" + currentTab).val();
+        if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
+            ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
+            ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)){
             $("#invAim_div_" + currentTab).hide();
-        }
-        else {
-            $("#invAim_div_" + currentTab).show();
+        }else if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F10)
+            ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F10)
+            ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F10)){
+            $("#invAim_div_" + currentTab).hide();
+        }else if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)
+            ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)
+            ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)){
+            $("#invAim_div_" + currentTab).hide();
+        }else {
+            //质押券出入库不展示投资目的
+            var ps = $("#ps_" + currentTab).val();
+            if(ps == PS_T68 || ps == PS_T69) {
+                linkFindSecAmountInfo();
+                $("#invAim_div_" + currentTab).hide();
+            }
+            else {
+                $("#invAim_div_" + currentTab).show();
+            }
         }
     };
     /**
@@ -2564,7 +2585,9 @@
      */
     function hideLeftTopPanel(){
         if(parentPageModel==PAGE_MODEL_NEW){
-            window.parent.showLeftTopPanel();
+            if (window.parent.showLeftTopPanel) {
+                window.parent.showLeftTopPanel();
+            }
         } else {
             if(window.parent.hideLeftTopPanel) {
                 window.parent.hideLeftTopPanel();
