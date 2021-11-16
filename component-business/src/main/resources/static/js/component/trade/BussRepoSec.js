@@ -234,7 +234,7 @@
                         chlId: param.data.chlId,
                         securitiesCust: param.data.securitiesCust,
                         repoType: param.data.repoType,
-                        tradeMarket: $("#"+tradeMarketId).val(),
+                        tradeMarket: $("#"+tradeMarketId).val()==undefined?tradeMarketId: $("#"+tradeMarketId).val(),
                         //add by gaopeng 2019/10/12 start
                         entrustId:entrustId==''?param.data.entrustId: entrustId,
                         //add by gaopeng 2019/10/12 end
