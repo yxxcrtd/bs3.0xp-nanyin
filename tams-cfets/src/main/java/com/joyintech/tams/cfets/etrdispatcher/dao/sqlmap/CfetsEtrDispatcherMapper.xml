@@ -446,7 +446,7 @@
             ssai.sec_acct_name secAcctId,
             ete.ccy ccy,
             ete.entrust_num/100 shareNum,
-            eted.our_ent_num entrustOwnNum,
+            eted.our_ent_num/100 entrustOwnNum,
             eted.lendin_ent_num integrateSecAmount,
             ete.price unitPrice,
             eted.full_price allPrice,
