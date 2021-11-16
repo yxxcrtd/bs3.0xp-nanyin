@@ -437,10 +437,11 @@
             $("#avaFundsDateDiv").show();
             $("#vpayDateDiv").show();
             $("#mpayDateDiv").show();
-            //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  start
-            $(".div_position").show();
-            //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  end
-
+            // TISHKS-253:场内质押式交易不展示资产可用持仓 fuyongsheng 20211116 edit start
+            // //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  start
+            // $(".div_position").show();
+            // //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  end
+            // TISHKS-253:场内质押式交易不展示资产可用持仓 fuyongsheng 20211116 edit end
             calcAvaFundsDate();
             if (!isInit) {
                 $("#fTradeId").val("").trigger("change");
