@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbAssetRateMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbAssetRate" >
+        <id column="SEQNO" property="seqno" jdbcType="CHAR" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="CHANGE_TYPE" property="changeType" jdbcType="VARCHAR" />
+        <result column="CHANGE_DATE" property="changeDate" jdbcType="DATE" />
+        <result column="ASSET_RATE" property="assetRate" jdbcType="DECIMAL" />
+        <result column="ASSET_BONUSREINVEST_RATE" property="assetBonusreinvestRate" jdbcType="DECIMAL" />
+        <result column="CLOSE_PRICE_FULL" property="closePriceFull" jdbcType="DECIMAL" />
+        <result column="COST_AMT" property="costAmt" jdbcType="DECIMAL" />
+        <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="REV_DATE" property="revDate" jdbcType="DATE" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="SCINO" property="scino" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, ASSET_ID ASSET_ID, FINPROD_TYPE2 FINPROD_TYPE2, PROFIT_TYPE PROFIT_TYPE, 
+        CHANGE_TYPE CHANGE_TYPE, CHANGE_DATE CHANGE_DATE, ASSET_RATE ASSET_RATE, ASSET_BONUSREINVEST_RATE ASSET_BONUSREINVEST_RATE, 
+        CLOSE_PRICE_FULL CLOSE_PRICE_FULL, COST_AMT COST_AMT, TRADE_ID TRADE_ID, ORG_CODE ORG_CODE, 
+        DEPT_CODE DEPT_CODE, STATUS STATUS, REV_DATE REV_DATE, DATA_SOURCE DATA_SOURCE, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, REMARK REMARK, 
+        CCY CCY, SCINO SCINO
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbAssetRateMapper.Base_Column_List" />
+        from CHB_ASSET_RATE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbAssetRateMapper.Base_Column_List" />
+        from CHB_ASSET_RATE
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbAssetRateMapper.Base_Column_List" />
+        from CHB_ASSET_RATE
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_ASSET_RATE
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbAssetRate" >
+        insert into CHB_ASSET_RATE (SEQNO, ASSET_ID, FINPROD_TYPE2, 
+            PROFIT_TYPE, CHANGE_TYPE, CHANGE_DATE, 
+            ASSET_RATE, ASSET_BONUSREINVEST_RATE, CLOSE_PRICE_FULL, 
+            COST_AMT, TRADE_ID, ORG_CODE, 
+            DEPT_CODE, STATUS, REV_DATE, 
+            DATA_SOURCE, UPDATE_USER, UPDATE_TIME, 
+            CREATE_USER, CREATE_TIME, REMARK, 
+            CCY, SCINO)
+        values (#{seqno,jdbcType=CHAR}, #{assetId,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, 
+            #{profitType,jdbcType=VARCHAR}, #{changeType,jdbcType=VARCHAR}, #{changeDate,jdbcType=DATE}, 
+            #{assetRate,jdbcType=DECIMAL}, #{assetBonusreinvestRate,jdbcType=DECIMAL}, #{closePriceFull,jdbcType=DECIMAL}, 
+            #{costAmt,jdbcType=DECIMAL}, #{tradeId,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+            #{deptCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{revDate,jdbcType=DATE}, 
+            #{dataSource,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, 
+            #{ccy,jdbcType=VARCHAR}, #{scino,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbAssetRate" >
+        insert into CHB_ASSET_RATE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="assetId != null" >
+                ASSET_ID,
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2,
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE,
+            </if>
+            <if test="changeType != null" >
+                CHANGE_TYPE,
+            </if>
+            <if test="changeDate != null" >
+                CHANGE_DATE,
+            </if>
+            <if test="assetRate != null" >
+                ASSET_RATE,
+            </if>
+            <if test="assetBonusreinvestRate != null" >
+                ASSET_BONUSREINVEST_RATE,
+            </if>
+            <if test="closePriceFull != null" >
+                CLOSE_PRICE_FULL,
+            </if>
+            <if test="costAmt != null" >
+                COST_AMT,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="revDate != null" >
+                REV_DATE,
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="scino != null" >
+                SCINO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=CHAR},
+            </if>
+            <if test="assetId != null" >
+                #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="changeType != null" >
+                #{changeType,jdbcType=VARCHAR},
+            </if>
+            <if test="changeDate != null" >
+                #{changeDate,jdbcType=DATE},
+            </if>
+            <if test="assetRate != null" >
+                #{assetRate,jdbcType=DECIMAL},
+            </if>
+            <if test="assetBonusreinvestRate != null" >
+                #{assetBonusreinvestRate,jdbcType=DECIMAL},
+            </if>
+            <if test="closePriceFull != null" >
+                #{closePriceFull,jdbcType=DECIMAL},
+            </if>
+            <if test="costAmt != null" >
+                #{costAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="revDate != null" >
+                #{revDate,jdbcType=DATE},
+            </if>
+            <if test="dataSource != null" >
+                #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="scino != null" >
+                #{scino,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbAssetRate" >
+        insert into CHB_ASSET_RATE(SEQNO, ASSET_ID, FINPROD_TYPE2, PROFIT_TYPE, CHANGE_TYPE, 
+        CHANGE_DATE, ASSET_RATE, ASSET_BONUSREINVEST_RATE, CLOSE_PRICE_FULL, COST_AMT, TRADE_ID, 
+        ORG_CODE, DEPT_CODE, STATUS, REV_DATE, DATA_SOURCE, UPDATE_USER, UPDATE_TIME, CREATE_USER, 
+        CREATE_TIME, REMARK, CCY, SCINO)
+        select SEQNO, ASSET_ID, FINPROD_TYPE2, PROFIT_TYPE, CHANGE_TYPE, 
+            CHANGE_DATE, ASSET_RATE, ASSET_BONUSREINVEST_RATE, CLOSE_PRICE_FULL, COST_AMT, TRADE_ID, 
+            ORG_CODE, DEPT_CODE, #{status,jdbcType=VARCHAR} STATUS, REV_DATE, DATA_SOURCE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, 
+            CREATE_TIME, REMARK, CCY, SCINO
+             from CHB_ASSET_RATE
+             where STATUS = 'E' and SEQNO = #{seqno,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbAssetRate" >
+        update CHB_ASSET_RATE
+        <set >
+            <if test="assetId != null" >
+                ASSET_ID = #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="changeType != null" >
+                CHANGE_TYPE = #{changeType,jdbcType=VARCHAR},
+            </if>
+            <if test="changeDate != null" >
+                CHANGE_DATE = #{changeDate,jdbcType=DATE},
+            </if>
+            <if test="assetRate != null" >
+                ASSET_RATE = #{assetRate,jdbcType=DECIMAL},
+            </if>
+            <if test="assetBonusreinvestRate != null" >
+                ASSET_BONUSREINVEST_RATE = #{assetBonusreinvestRate,jdbcType=DECIMAL},
+            </if>
+            <if test="closePriceFull != null" >
+                CLOSE_PRICE_FULL = #{closePriceFull,jdbcType=DECIMAL},
+            </if>
+            <if test="costAmt != null" >
+                COST_AMT = #{costAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="revDate != null" >
+                REV_DATE = #{revDate,jdbcType=DATE},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="scino != null" >
+                SCINO = #{scino,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbAssetRate" >
+        update CHB_ASSET_RATE
+        set ASSET_ID = #{assetId,jdbcType=VARCHAR},
+            FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            CHANGE_TYPE = #{changeType,jdbcType=VARCHAR},
+            CHANGE_DATE = #{changeDate,jdbcType=DATE},
+            ASSET_RATE = #{assetRate,jdbcType=DECIMAL},
+            ASSET_BONUSREINVEST_RATE = #{assetBonusreinvestRate,jdbcType=DECIMAL},
+            CLOSE_PRICE_FULL = #{closePriceFull,jdbcType=DECIMAL},
+            COST_AMT = #{costAmt,jdbcType=DECIMAL},
+            TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            REV_DATE = #{revDate,jdbcType=DATE},
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            SCINO = #{scino,jdbcType=VARCHAR}
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </update>
+</mapper>
