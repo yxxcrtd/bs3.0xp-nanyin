@@ -11,6 +11,7 @@
     ETR_ENTRUST.ENTRUST_TYPE entrustType,
     ETR_ENTRUST.ENTRUST_ID entrustId,
     ETR_ENTRUST.INV_MANAGER_ID invManagerId,
+    su1.real_name invManagerName,
     ETR_ENTRUST.PORTFOLIO_ID portfolioId,
     PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
     ETR_ENTRUST_ADD.ASSET_TYPE finprodType2,
@@ -38,6 +39,7 @@
     ETR_ENTRUST.VDATE vdate,
     ETR_ENTRUST.MDATE mdate,
     B.TRADER trader,
+    B.realName realName,
     ETR_ENTRUST.REMARK remark,
     ETR_ENTRUST_ADD.BUSI_TYPE_POSITION busiTypePosition,
     ssai.sec_acct_name secAcctId,
@@ -62,8 +64,10 @@
     LEFT JOIN
     (SELECT
     listagg(TRADER, ',')  within group ( order by TRADER ) TRADER,
+    listagg(REAL_NAME, ',') within group(order by TRADER) realName,
     ENTRUST_ID as ENTRUST_ID FROM
     ETR_DISTRIBUTE
+    LEFT JOIN SYS_USER ON ETR_DISTRIBUTE.TRADER = SYS_USER.USER_NAME
     GROUP BY ENTRUST_ID)B
     ON
     B.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
@@ -96,6 +100,7 @@
         ON
         ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
+        LEFT JOIN SYS_USER su1 ON ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
     <where>
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
         <if test="entrustStatusList != null and entrustStatusList.size() > 0">
@@ -179,6 +184,7 @@
     ETR_ENTRUST.ENTRUST_TYPE entrustType,
     ETR_ENTRUST.ENTRUST_ID entrustId,
     ETR_ENTRUST.INV_MANAGER_ID invManagerId,
+    su2.real_name invManagerName,
     ETR_ENTRUST.PORTFOLIO_ID portfolioId,
     PTL_PORTFOLIO.PORTFOLIO_NAME portfolioName,
     ETR_ENTRUST.FINPROD_TYPE2 finprodType2,
@@ -203,6 +209,7 @@
     ETR_ENTRUST.VDATE vdate,
     ETR_ENTRUST.MDATE mdate,
     B.TRADER trader,
+    B.realName realName,
     ETR_ENTRUST.REMARK remark,
     ETR_ENTRUST_ADD.BUSI_TYPE_POSITION busiTypePosition,
     ssai.sec_acct_name secAcctId,
@@ -227,8 +234,10 @@
     LEFT JOIN
     (SELECT
     listagg(TRADER, ',')  within group ( order by TRADER ) TRADER,
+    listagg(REAL_NAME, ',') within group(order by TRADER) realName,
     ENTRUST_ID as ENTRUST_ID FROM
     ETR_DISTRIBUTE
+    LEFT JOIN SYS_USER ON ETR_DISTRIBUTE.TRADER = SYS_USER.USER_NAME
     GROUP BY ENTRUST_ID)B
     ON
     B.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
@@ -256,6 +265,7 @@
     ON
     ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
     LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
+    LEFT JOIN SYS_USER su2 ON ETR_ENTRUST.INV_MANAGER_ID = su2.USER_NAME
     <where>
         AND ETR_ENTRUST.FINPROD_TYPE2 = 'F36'
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
@@ -360,6 +370,8 @@
                     OR sdl7.ITEM_VALUE like '%' || #{search} || '%'
                     OR t.entrustId like '%' || #{search} || '%'
                     OR t.invManagerId like '%' || #{search} || '%'
+                    OR t.invManagerName like '%' || #{search} || '%'
+                    OR t.realName like '%' || #{search} || '%'
                     OR t.trader like '%' || #{search} || '%'
                     OR t.portfolioId like '%' || #{search} || '%'
                     OR t.portfolioName like '%' || #{search} || '%'
@@ -452,7 +464,7 @@
             eted.full_price allPrice,
             eted.mature_yield*100 matureYield,
             eted.exer_yield*100 exerYield,
-            eted.full_price*ete.entrust_num*100 fpriceAmt,
+            eted.full_price*ete.entrust_num fpriceAmt,
             ete.remark remark,
             mci.CUSTOMER_NAME mainConsignee,
             to_char(eted.payment_date,'yyyy-MM-dd') paymentDate,
