@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper_mysql">
+	<sql id="settleTransDataTotalSql">
+		std.SEQ_ID TRADE_ID,
+			/*std.CJBH CJBH,*/
+			std.DEAL_DATE DEAL_DATE,
+			std.SEC_TYPE SEC_TYPE,
+			std.APPLY_TRADE_ID APPLY_TRADE_ID,
+			std.FINPROD_ID FINPROD_ID,
+			std.FINPROD_TYPE FINPROD_TYPE,
+			std.FINPROD_TYPE2 FINPROD_TYPE2,
+			std.BRANCH BRANCH,
+			std.BUSI_TYPE BUSI_TYPE,
+			std.TRADE_DATE TRADE_DATE,
+			std.SETTLE_DATE SETTLE_DATE,
+			std.VDATE VDATE,
+			std.MDATE MDATE,
+			std.VPAY_DATE VPAY_DATE,
+			std.MPAY_DATE MPAY_DATE,
+			std.TERM_TYPE TERM_TYPE,
+			std.SETTLE_SPEED SETTLE_SPEED,
+			std.CCY CCY,
+			std.UNIT_CPRICE UNIT_CPRICE,
+			std.UNIT_INT UNIT_INT,
+			std.UNIT_FPRICE UNIT_FPRICE,
+			std.PAR_VALUE PAR_VALUE,
+			std.CPRICE_AMT CPRICE_AMT,
+			std.SHARE_AMT SHARE_AMT,
+			std.PRIN_AMT PRIN_AMT,
+			std.INT_AMT INT_AMT,
+			std.FPRICE_AMT FPRICE_AMT,
+			std.STAMP_FEE STAMP_FEE,
+			std.JSF_AMT JSF_AMT,
+			std.GHF_AMT GHF_AMT,
+			std.ZGF_AMT ZGF_AMT,
+			std.SXF_AMT SXF_AMT,
+			std.SETTLE_FEE SETTLE_FEE,
+			std.COMMISSION_AMT COMMISSION_AMT,
+			std.IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE,
+			std.TRADE_AMT TRADE_AMT,
+			std.PS PS,
+			std.TRADE_MARKET TRADE_MARKET,
+			std.TRADE_MARKET_MODE TRADE_MARKET_MODE,
+			std.TRADE_PLAT TRADE_PLAT,
+			std.PLEDGE_SEC_NUM PLEDGE_SEC_NUM,
+			std.SEAT_NUMBER SEAT_NUMBER,
+			std.PORTFOLIO_ID PORTFOLIO_ID,
+			std.SEC_ACCT_ID SEC_ACCT_ID,
+			std.ACCT_NO ACCT_NO,
+			std.BATCH_NUMBER BATCH_NUMBER,
+			std.M_PRIN_AMT M_PRIN_AMT,
+			std.M_INT_AMT M_INT_AMT,
+			std.M_TRADE_AMT M_TRADE_AMT,
+			std.INT_RATE INT_RATE,
+			std.BASIS BASIS,
+			std.BUSI_SCENE_CALSS BUSI_SCENE_CALSS,
+			std.SETTLE_MODE SETTLE_MODE,
+			std.STAMP_FEE_RAW STAMP_FEE_RAW,
+			std.JSF_AMT_RAW JSF_AMT_RAW,
+			std.GHF_AMT_RAW GHF_AMT_RAW,
+			std.ZGF_AMT_RAW ZGF_AMT_RAW,
+			std.SXF_AMT_RAW SXF_AMT_RAW,
+			std.SETTLE_FEE_RAW SETTLE_FEE_RAW,
+			std.COMMISSION_AMT_RAW COMMISSION_AMT_RAW,
+			std.TRADE_AMT_RAW TRADE_AMT_RAW,
+			std.TRADE_ID_RAW TRADE_ID_RAW,
+			std.SEQ_NO SEQ_NO,
+			std.IS_PURCH_TYPE_YX IS_PURCH_TYPE_YX
+			FROM SETTLE_TRANS_DATA_TOTAL std
+	</sql>
+
+	<sql id="settleTransDataSql">
+			std.TRADE_ID TRADE_ID,
+			std.CJBH CJBH,
+			std.DEAL_DATE DEAL_DATE,
+			std.SEC_TYPE SEC_TYPE,
+			std.APPLY_TRADE_ID APPLY_TRADE_ID,
+			std.FINPROD_ID FINPROD_ID,
+			std.FINPROD_TYPE FINPROD_TYPE,
+			std.FINPROD_TYPE2 FINPROD_TYPE2,
+			std.BRANCH BRANCH,
+			std.BUSI_TYPE BUSI_TYPE,
+			std.TRADE_DATE TRADE_DATE,
+			std.SETTLE_DATE SETTLE_DATE,
+			std.VDATE VDATE,
+			std.MDATE MDATE,
+			std.VPAY_DATE VPAY_DATE,
+			std.MPAY_DATE MPAY_DATE,
+			std.TERM_TYPE TERM_TYPE,
+			std.SETTLE_SPEED SETTLE_SPEED,
+			std.CCY CCY,
+			std.UNIT_CPRICE UNIT_CPRICE,
+			std.UNIT_INT UNIT_INT,
+			std.UNIT_FPRICE UNIT_FPRICE,
+			std.PAR_VALUE PAR_VALUE,
+			std.CPRICE_AMT CPRICE_AMT,
+			std.SHARE_AMT SHARE_AMT,
+			std.PRIN_AMT PRIN_AMT,
+			std.INT_AMT INT_AMT,
+			std.FPRICE_AMT FPRICE_AMT,
+			std.STAMP_FEE STAMP_FEE,
+			std.JSF_AMT JSF_AMT,
+			std.GHF_AMT GHF_AMT,
+			std.ZGF_AMT ZGF_AMT,
+			std.SXF_AMT SXF_AMT,
+			std.SETTLE_FEE SETTLE_FEE,
+			std.COMMISSION_AMT COMMISSION_AMT,
+			std.IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE,
+			std.TRADE_AMT TRADE_AMT,
+			std.PS PS,
+			std.TRADE_MARKET TRADE_MARKET,
+			std.TRADE_MARKET_MODE TRADE_MARKET_MODE,
+			std.TRADE_PLAT TRADE_PLAT,
+			std.PLEDGE_SEC_NUM PLEDGE_SEC_NUM,
+			std.SEAT_NUMBER SEAT_NUMBER,
+			/*std.PORTFOLIO_ID PORTFOLIO_ID,*/
+			std.SEC_ACCT_ID SEC_ACCT_ID,
+			std.ACCT_NO ACCT_NO,
+			std.BATCH_NUMBER BATCH_NUMBER,
+			std.M_PRIN_AMT M_PRIN_AMT,
+			std.M_INT_AMT M_INT_AMT,
+			std.M_TRADE_AMT M_TRADE_AMT,
+			std.INT_RATE INT_RATE,
+			std.BASIS BASIS,
+			std.BUSI_SCENE_CALSS BUSI_SCENE_CALSS,
+			std.SETTLE_MODE SETTLE_MODE,
+			std.STAMP_FEE_RAW STAMP_FEE_RAW,
+			std.JSF_AMT_RAW JSF_AMT_RAW,
+			std.GHF_AMT_RAW GHF_AMT_RAW,
+			std.ZGF_AMT_RAW ZGF_AMT_RAW,
+			std.SXF_AMT_RAW SXF_AMT_RAW,
+			std.SETTLE_FEE_RAW SETTLE_FEE_RAW,
+			std.COMMISSION_AMT_RAW COMMISSION_AMT_RAW,
+			std.TRADE_AMT_RAW TRADE_AMT_RAW,
+			std.TRADE_ID_RAW TRADE_ID_RAW,
+			std.SEQ_NO SEQ_NO,
+			std.IS_PURCH_TYPE_YX IS_PURCH_TYPE_YX
+		FROM
+			SETTLE_TRANS_DATA std
+	</sql>
+
+    <select id="selectSettleTransData" parameterType="java.util.Map"
+            resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		SELECT
+			IFNULL(IFNULL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID), IFNULL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID)) ORDER_ID,
+			case when ptl.PROFIT_TYPE = '01' then 'FVTPL' else 'AC' end as invAim,ee.ENTRUST_ID,
+			<!--<include refid="settleTransDataSql"></include>-->
+			<include refid="settleTransDataTotalSql"></include>
+			LEFT JOIN T_ENTRUSTHISTORY teh ON TRIM(LEADING substr(std.APPLY_TRADE_ID, 6, length(std.APPLY_TRADE_ID)) from '0') = teh.BROKER_ENTRUST_ID
+				and teh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND DATE_FORMAT(DEAL_DATE, '%Y%m%d') = teh.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
+			LEFT JOIN T_ENTRUST te ON TRIM(LEADING substr(std.APPLY_TRADE_ID, 6, length(std.APPLY_TRADE_ID)) from '0') = te.BROKER_ENTRUST_ID
+				and te.ENTRUST_STATUS IN ('2', '5', '6', '8') AND DATE_FORMAT(DEAL_DATE, '%Y%m%d') = te.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
+			LEFT JOIN T_INTEGRATED_ENTRUSTHISTORY tieh ON TRIM(LEADING substr(std.APPLY_TRADE_ID, 6, length(std.APPLY_TRADE_ID)) from '0') = tieh.BROKER_ENTRUST_ID
+				and tieh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND DATE_FORMAT(DEAL_DATE, '%Y%m%d') = tieh.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
+			LEFT JOIN T_INTEGRATED_ENTRUST tie ON TRIM(LEADING substr(std.APPLY_TRADE_ID, 6, length(std.APPLY_TRADE_ID)) from '0') = tie.BROKER_ENTRUST_ID
+				and tie.ENTRUST_STATUS IN ('2', '5', '6', '8') AND DATE_FORMAT(DEAL_DATE, '%Y%m%d') = tie.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
+			LEFT JOIN ETR_ENTRUST ee ON (ee.ENTRUST_ID = IFNULL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID) OR ee.ENTRUST_ID = IFNULL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID))
+			LEFT JOIN PTL_PORTFOLIO ptl ON (ptl.PORTFOLIO_ID = std.PORTFOLIO_ID)
+		<where>
+			<!--(te.BROKER_ENTRUST_ID IS NOT NULL OR teh.BROKER_ENTRUST_ID IS NOT NULL OR tie.BROKER_ENTRUST_ID IS NOT NULL OR tieh.BROKER_ENTRUST_ID IS NOT NULL)-->
+			<if test="dealDate != null">
+				std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+			</if>
+			<if test="finprodIdList != null and finprodIdList.size() > 0">
+				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
+           			#{finprodId,jdbcType=VARCHAR}
+           		</foreach>
+			</if>
+			<if test="busiType != null">
+				AND std.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			</if>
+			<if test="busiTypeList != null and busiTypeList.size() > 0">
+				<foreach collection="busiTypeList" item="busiType" open="AND std.BUSI_TYPE IN (" close=")" separator=",">
+           			#{busiType,jdbcType=VARCHAR}
+           		</foreach>
+			</if>
+            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+           		<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+           			#{portfolioId,jdbcType=VARCHAR}
+           		</foreach>
+       		</if>
+			<if test="psList != null and psList.size() > 0">
+				<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
+					#{ps,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+        </where>
+    </select>
+
+	<!-- 从成交数据明细表获取债券质押式协议回购提前终止、到期交易明细数据 -->
+	<select id="selectEndSettleTransData" resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		SELECT
+		IFNULL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID) ORDER_ID,
+		ee.INV_AIM invAim,
+		<!--stda.REPO_TYPE,
+		<include refid="settleTransDataSql"></include>-->
+		<include refid="settleTransDataTotalSql"></include>
+		--INNER JOIN SETTLE_TRANS_DATA_ADD stda ON stda.TRADE_ID=std.TRADE_ID
+		LEFT JOIN T_ENTRUSTHISTORY teh ON std.APPLY_TRADE_ID = teh.ENTRUST_ID
+		LEFT JOIN T_ENTRUST te ON std.APPLY_TRADE_ID = te.ID
+		LEFT JOIN ETR_ENTRUST ee ON ee.ENTRUST_ID = IFNULL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID)
+		<where>
+			(te.ID IS NOT NULL OR teh.ENTRUST_ID IS NOT NULL)
+			<if test="dealDate != null">
+				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+			</if>
+			<if test="busiType != null">
+				AND std.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			</if>
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND std.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="psList != null and psList.size() > 0">
+				<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
+					#{ps,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<!--<if test="repoType != null">
+				AND stda.REPO_TYPE = #{repoType,jdbcType=VARCHAR}
+			</if>-->
+		</where>
+	</select>
+</mapper>
