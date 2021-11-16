@@ -1118,7 +1118,7 @@ from
     <select id="findAssetInfo"
             resultType="com.joyintech.tams.common.base.entity.FinProduct">
         select
-        T1.ccy,T1.Calendar_Id as calendarId,T1.vdate vdate,T1.mdate mdate
+        T1.ccy,T1.Calendar_Id as calendarId,T1.vdate vdate,T1.mdate mdate,T1.TRADE_MARKET
         from
         fin_product T1
         where T1.finprod_id = #{entrustId}

@@ -1196,7 +1196,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         FinProduct fp=cfetsetrIbBondinfoMapper.findAssetInfo(cfetsDto.getFinprodId());
         CfetsEtribBondInfo003Dto dto=new CfetsEtribBondInfo003Dto();
         BeanUtil.copyPropertiesIgnoreNull(dto,cfetsDto);
-        dto.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
+        dto.setTradeMarket(fp.getTradeMarket());
         if(StringUtil.isNotEmpty(fp)){
             dto.setCalendarId(fp.getCalendarId());
             dto.setCcy(fp.getCcy());
