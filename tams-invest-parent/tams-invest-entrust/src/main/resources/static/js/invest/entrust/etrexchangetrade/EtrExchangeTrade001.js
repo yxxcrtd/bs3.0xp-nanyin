@@ -2516,6 +2516,7 @@
         $("#portfolioId_" + currentTab).attr("disabled", disabled);
         $("#secId_" + currentTab).attr("disabled", disabled);
         $("#ps_" + currentTab).attr("disabled", disabled);
+        $("#priceModel_" + currentTab).attr("disabled", disabled);
     }
 
     /**
