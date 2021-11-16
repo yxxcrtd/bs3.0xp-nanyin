@@ -21,6 +21,8 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dao.EtrBondFirstLBiddingMapper;
+import com.joyintech.tams.business.common.dao.CfgReadonlyFormShowMapper;
+import com.joyintech.tams.business.common.entity.CfgReadonlyFormShow;
 import com.joyintech.tams.cfets.etrdispatcher.dao.CfetsEtrDispatcherMapper;
 import com.joyintech.tams.cfets.etrdispatcher.dto.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -42,6 +44,7 @@ import com.joyintech.tams.invest.common.trade.dao.BussRepoSecMapper;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.poi.util.ArrayUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +52,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Consumer;
@@ -133,6 +137,9 @@ public class CfetsEtrDispatcherService extends BaseService{
 
     @Autowired
     private IPlatformDate iPlatformDate;
+
+    @Autowired
+    private CfgReadonlyFormShowMapper cfgReadonlyFormShowMapper;
 
     /**
      * 指令列表分页查询
@@ -553,7 +560,7 @@ public class CfetsEtrDispatcherService extends BaseService{
 
                 }
             }
-            cfetsResponseDto.setRepoPledgeModel(CacheUtil.getSysParam(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL)));
+            //cfetsResponseDto.setRepoPledgeModel(CacheUtil.getSysParam(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL)));
             return cfetsResponseDto;
         }
     }
@@ -1011,5 +1018,21 @@ public class CfetsEtrDispatcherService extends BaseService{
             request.setDistributeRule("01");
         }
         return request;
+    }
+
+    /**
+     * 只读表单设置及数据查询_指令详情
+     * @param pageCode
+     * @param dtCode
+     * @param spcdCode
+     * @return
+     */
+    public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode,CfetsEtrDispatcherInfoRequest dto) {
+        Map<String, Object> resultData = new HashMap<>();
+        List<CfgReadonlyFormShow>  infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
+        CfetsEtrDispatcherInfoResponse cfetsResponseDto = this.getEtrDispatcherInfo(dto);
+        resultData.put(dtCode+"_form",infoForm);
+        resultData.put(dtCode+"_data",cfetsResponseDto);
+        return resultData;
     }
 }

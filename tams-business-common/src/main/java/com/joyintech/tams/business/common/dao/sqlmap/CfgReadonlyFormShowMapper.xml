@@ -174,4 +174,17 @@
       and SPCDCODE = #{spcdcode,jdbcType=VARCHAR}
       and COLCODE = #{colcode,jdbcType=VARCHAR}
   </update>
+
+  <select id="getReadonlyForm" parameterType="String"
+          resultType="com.joyintech.tams.business.common.entity.CfgReadonlyFormShow">
+    select
+    <include refid="Base_Column_List" />
+    from CFG_READONLY_FORM_SHOW
+    <where>
+      <if test="pageCode != null  and pageCode != ''">and PAGECODE = #{pageCode}</if>
+      <if test="dtCode != null  and dtCode != ''">and DTCODE = #{dtCode}</if>
+      <if test="spcdCode != null  and spcdCode != ''">and SPCDCODE = #{spcdCode}</if>
+    </where>
+    order by SEQNO
+  </select>
 </mapper>

@@ -435,4 +435,15 @@ public class CfetsEtrDispatcherController extends BaseController {
         List<CfetsEtrDispatcherTraderListRequest> list = cfetsEtrDispatcherService.getEtrTraderAndWorkloadList(param);
         return new Message<List<CfetsEtrDispatcherTraderListRequest>>().success().setData(list);
     }
+
+    @ResponseBody
+    @PostMapping("/getReadonlyFormEtrInfo/{pageCode}/{dtCode}/{spcdCode}")
+    @ApiOperation(value = "只读表单设置及数据查询_指令详情", notes = "只读表单设置及数据查询_指令详情")
+    public Message<Map<String,Object>> getReadonlyFormEtrInfo(@PathVariable("pageCode") String pageCode,
+                                                       @PathVariable("dtCode") String dtCode,
+                                                       @PathVariable("spcdCode") String spcdCode,
+                                                       @RequestBody CfetsEtrDispatcherInfoRequest dto) {
+        Map<String,Object> resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfo(pageCode,dtCode,spcdCode,dto);
+        return new Message<Map<String,Object>>().success().setData(resultData);
+    }
 }
