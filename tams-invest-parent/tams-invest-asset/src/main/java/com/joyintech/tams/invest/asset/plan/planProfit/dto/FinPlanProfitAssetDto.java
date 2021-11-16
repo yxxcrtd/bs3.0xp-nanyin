@@ -1743,7 +1743,7 @@ public class FinPlanProfitAssetDto extends FinProduct implements ProcessEntity {
 
     @Override
     @Length(fieldName = "FinPlanProfitAsset002.contractNo", max = 400, groups = {ValidateGroupEdit.class})
-    @NotEmpty(fieldName = "FinPlanProfitAsset002.contractNo", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "FinPlanProfitAsset002.contractNo", groups = {ValidateGroupEdit.class})
     public String getContractNo(){
         return super.getContractNo();
     }
