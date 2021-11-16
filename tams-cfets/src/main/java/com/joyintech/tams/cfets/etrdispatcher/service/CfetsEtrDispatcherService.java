@@ -221,14 +221,16 @@ public class CfetsEtrDispatcherService extends BaseService{
         pageParam.put("finType_zq", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("ps_49", DictCodeListExt3.交易方向_债转股.getValue());
 
-//        if (StringUtil.equals(dto.getSettleSpeed(),
-//                DictCodeList.清算速度_T_0.getValue())) {
-//            pageParam.put("settleSpeed","0");
-//        }
-//        if (StringUtil.equals(dto.getSettleSpeed(),
-//                DictCodeList.清算速度_T_1.getValue())) {
-//            pageParam.put("settleSpeed","1");
-//        }
+        if (StringUtil.equals(dto.getSettleSpeed(),
+                DictCodeList.清算速度_T_0.getValue())) {
+            pageParam.put("settleSpeed","0");
+        }else if (StringUtil.equals(dto.getSettleSpeed(),
+                DictCodeList.清算速度_T_1.getValue())) {
+            pageParam.put("settleSpeed","1");
+        }else if(StringUtil.equals(dto.getSettleSpeed(),
+                DictCodeList.清算速度_T_2.getValue())){
+            pageParam.put("settleSpeed","2");
+        }
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
 
