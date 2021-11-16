@@ -625,7 +625,7 @@
         LEFT JOIN ptl_portfolio pp ON rit.portfolio_id = pp.portfolio_id
         LEFT JOIN fin_product fp ON rit.asset_code = fp.finprod_id
         WHERE rit.trade_id = #{entrustId}
-        AND rit.conclusion is not null
+        AND rit.conclusion is null
     </select>
 
     <!-- 交易员与工作量列表查询 -->
