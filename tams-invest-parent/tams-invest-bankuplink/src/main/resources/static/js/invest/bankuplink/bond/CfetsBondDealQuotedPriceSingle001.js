@@ -618,9 +618,9 @@
             //修改无委托初始化增加不可修改项 add by yzg 20210123 end
             $('#CfetsBondDealQuotedPriceSingle001_btn_done').toggle(false);
             $('#CfetsBondDealQuotedPriceSingle001_btn_refuse').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(true);
 
         }
         // 含权、资产一级类型
