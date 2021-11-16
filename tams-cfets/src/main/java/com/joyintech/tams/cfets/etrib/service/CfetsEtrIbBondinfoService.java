@@ -530,7 +530,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
         User user = SecurityUtil.getLoginUser();
         if (user == null){
-            return null;
+//            return null;
         }
         
         // 市价净价取值估值配置
@@ -549,9 +549,32 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 .put("REGIST_ORG_02", DictCodeList.登记托管机构_上海清算所.getValue())
                 .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                 .put("search_isNumberFlag", BaseMap.isNumeric(requestDto.getSearch()))
-                .put("userId", user.getUserName())
+//                .put("userId", user.getUserName())
                 ;
-        
+
+        List<String> portfolioIdList = null;
+        if (requestDto != null && requestDto.getPortfolioId() != null){
+            int index = StringUtil.indexOf(requestDto.getPortfolioId(), ",");
+            if (index > 0){
+                portfolioIdList = Arrays.asList(requestDto.getPortfolioId().split(","));
+                if (portfolioIdList != null && !portfolioIdList.isEmpty()){
+                    portfolioIdList.stream().map(s -> {return StringUtil.trim(s.trim());});
+                    req.put("portfolioIdList", portfolioIdList).remove("portfolioId");
+                }
+            }
+        }
+
+        List<String> finprodIdList = null;
+        if (requestDto != null && requestDto.getPortfolioId() != null){
+            int index = StringUtil.indexOf(requestDto.getFinprodId(), ",");
+            if (index > 0){
+                finprodIdList = Arrays.asList(requestDto.getFinprodId().split(","));
+                if (finprodIdList != null && !finprodIdList.isEmpty()){
+                    finprodIdList.stream().map(s -> {return StringUtil.trim(s.trim());});
+                    req.put("finprodIdList", finprodIdList).remove("finprodId");
+                }
+            }
+        }
         // 分页查询列表
         Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(
                 requestDto.getPageNo(), requestDto.getPageSize(), () -> cfetsetrIbBondinfoMapper.queryPositionsPage(req));
