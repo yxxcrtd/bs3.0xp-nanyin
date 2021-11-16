@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.daycollect.dao.SvrDayCollectInterfMapper" >
+   
+    <select id="selectBatchData" resultType="com.joyintech.tams.svreport.chb.daycollect.dto.ChbDayCollect">
+		SELECT
+		A.REG_CODE                            as prdRegistCode,
+		A.ACCOUNT                             as prodId,
+		NVL(A.AGENCY_CODE,A.REGIST_BANK_CODE) as institutionCode,
+		A.FUND_ACC_PLACE                      as areaCode,
+		B.HOLDER_TYPE                         as holderType,
+		A.CCY                                 as ccy,
+		A.IS_CONSIGN                          as isagency,
+		NVL((select sum(AMOUNT) FROM CHB_EQUDET_SUB WHERE BUSI_TYPE in ('01','02','05','14')),0) as daySaleAmountSum,
+		NVL((NVL((select sum(AMOUNT) FROM CHB_EQUDET_SUB WHERE BUSI_TYPE in ('01','02','05','14')),0) -
+		NVL((select sum(AMOUNT) FROM CHB_EQUDET_SUB WHERE BUSI_TYPE in ('03','16','15')),0)),0)  as dayValueAmountSum,
+		A.PROD_VALUE                         as prodValue,
+		NVL((select sum(AMOUNT) FROM CHB_EQUDET_SUB WHERE BUSI_TYPE in ('01','02','05','14')),0) as daySaleQtySum,
+		NVL((NVL((select sum(AMOUNT) FROM CHB_EQUDET_SUB WHERE BUSI_TYPE in ('01','02','05','14')),0) -
+		NVL((select sum(AMOUNT) FROM CHB_EQUDET_SUB WHERE BUSI_TYPE in ('03','16','15')),0)),0)  as dayValueQtySum,
+		NVL((select sum(AMOUNT) FROM CHB_EQUDET_SUB WHERE BUSI_TYPE in ('01','02','05','14')),0) *
+		A.PROD_VALUE                        as saleTotalByQty,
+		NVL((NVL((select sum(AMOUNT) FROM CHB_EQUDET_SUB WHERE BUSI_TYPE in ('01','02','05','14')),0) -
+		NVL((select sum(AMOUNT) FROM CHB_EQUDET_SUB WHERE BUSI_TYPE in ('03','16','15')),0)),0) *
+		A.PROD_VALUE                        as valueTotalByQty,
+		#{batchDate,jdbcType=VARCHAR}       as equityConfDate
+		FROM
+		CHB_EQUDET_SUB A
+		left join (
+		SELECT
+		DISTINCT(INDENTIFY_MARK),
+		ORG_INDENTIFY_MARK,
+		MERGER_INDENTIFY_MARK,
+		REGIST_BANK_CODE,
+		HOLDER_TYPE
+		FROM(
+		SELECT
+		INDENTIFY_MARK,
+		ORG_INDENTIFY_MARK,
+		REGIST_BANK_CODE,
+		DECODE(HOLDER_TYPE,HOLDER_CLASSIFY) as HOLDER_TYPE
+		FROM CHB_EQU_SUB
+
+		union ALL
+
+		SELECT
+		INDENTIFY_MARK,
+		ORG_INDENTIFY_MARK,
+		REGIST_BANK_CODE,
+		DECODE(HOLDER_TYPE,HOLDER_CLASSIFY) as HOLDER_TYPE
+		FROM CHB_EQU_HOLD_CHECK
+		)
+		) B
+		on A.ORG_INDENTIFY_MARK = B.INDENTIFY_MARK
+		WHERE
+		TO_CHAR(A.EQUITY_CONF_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+		GROUP BY
+		A.REG_CODE,NVL(A.AGENCY_CODE,A.REGIST_BANK_CODE),A.FUND_ACC_PLACE,B.HOLDER_TYPE,A.CCY,A.FUND_ACC_PLACE,A.IS_CONSIGN,A.PROD_VALUE,A.ACCOUNT,A.EQUITY_CONF_DATE
+	</select>
+	
+	<delete id="deleteBatchData">
+		DELETE CHB_SALE_DEAL_SUM WHERE TO_CHAR(EQUITY_CONF_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertBatchData" parameterType="com.joyintech.tams.svreport.chb.daycollect.dto.ChbDayCollect">
+		insert into CHB_SALE_DEAL_SUM(PRD_REGIST_CODE, PROD_ID, INSTITUTION_CODE, AREA_CODE, HOLDER_TYPE, CCY, ISAGENCY, DAY_SALE_AMOUNT_SUM, DAY_VALUE_AMOUNT_SUM,
+		PROD_VALUE, DAY_SALE_QTY_SUM, SALE_TOTAL_BY_QTY, VALUE_TOTAL_BY_QTY, HOLDER_NUM, HOLDER_BALANCE_AMT, REMARK, CREATE_USER, ORG_CODE, CREATE_DEPT, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME, EQUITY_CONF_DATE)
+		values(
+		#{prdRegistCode},#{prodId},#{institutionCode},#{areaCode}, #{holderType},#{ccy},#{isagency}, #{daySaleAmountSum}, #{dayValueAmountSum}, #{prodValue},
+		#{daySaleQtySum},#{dayValueQtySum},#{saleTotalByQty},#{valueTotalByQty},#{holderNum},#{holderBalanceAmt}, #{remark},#{createUser},#{orgCode}, #{createDept},
+		sysdate,#{updateUser},sysdate,to_date(#{equityConfDate},'yyyy-MM-dd')
+		)
+	</insert>
+
+<!--	check当月有无当日交易数据-->
+	<select id="checkTransaction" resultType="java.lang.Integer">
+		SELECT COUNT(*) from CHB_EQUDET_SUB WHERE TO_CHAR(EQUITY_CONF_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+	</select>
+
+	<!--	check身份信息-->
+	<select id="checkIdentity" resultType="java.lang.Integer">
+		SELECT COUNT(*) from CHB_EQU_HOLD_CHECK WHERE TO_CHAR(DATA_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+	</select>
+</mapper>
