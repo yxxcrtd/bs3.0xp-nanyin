@@ -414,6 +414,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue());
+        pageParam.put("TRADE_MARKET_02", DictCodeListExt1.交易场所_商业银行柜台.getValue());
         pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
         List<String> statusList=dto.getEntrustStatus();
         if(!StringUtil.isEmptyList(statusList) && statusList.contains("all")){
@@ -1239,7 +1240,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                         .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
                         .put("portfolioId", item.getPortfolioId())
                         .put("cdate", cfetsDto.getEtrDate())
-                        .put("finprodId", cfetsDto.getFinprodId());
+                        .put("finprodId", cfetsDto.getFinprodId())
+                        .put("invaim",item.getBusinessModel());
                 // 查询头寸信息
                 Map map = cfetsetrIbBondinfoMapper.queryPositionByEtrInfo(bm);
                 //本方券T日可用持仓
