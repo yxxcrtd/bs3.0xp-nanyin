@@ -442,6 +442,9 @@ public class BondRequestQuoteSubServiceImpl extends BaseService<IbuQuoteBond> im
                 
                 //多组合
     	        if (CollectionUtils.isNotEmpty(inputBean.getIbuQuoteEtrReDtoList())) {
+                     for (IbuQuoteEtrReDto IbuQuoteEtrReDto :inputBean.getIbuQuoteEtrReDtoList()) {
+                           ibuQuoteMapper.deleteQuoteEtrReByQuoteId(IbuQuoteEtrReDto.getQuoteId());
+                     }
     	            affectRows += ibuQuoteMapper.batchInsetIbuQuoteEtrRe(inputBean.getIbuQuoteEtrReDtoList());
     	        }
 
