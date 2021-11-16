@@ -51,6 +51,12 @@ public class ComInterestRateQuotationInfoValidator implements BeanValidator {
             if (dto.getSelectedItem() != null || dto.getSelectedItem().size() > 0) {
                 // 遍历选择的项目
                 for (ComInterestRateQuotationInfoDto cur : dto.getSelectedItem()) {
+                    // TISHKS-61 :流程中数据不可删除 fuyongsheng 20211116 edit start
+                    if(comInterestRateQuotationInfoService.checkBusinessDataInFlow(cur)){
+                        errorList.add(new ValidMessage("流程中的数据不可删除！"));
+                        return errorList;
+                    }
+                    // TISHKS-61 :流程中数据不可删除 fuyongsheng 20211116 edit end
                     // 判断发布日是否小于平台时间
 //                    if (cur.getEffDate().compareTo(sysDate) < 0) {
 //                        // 添加错误信息
