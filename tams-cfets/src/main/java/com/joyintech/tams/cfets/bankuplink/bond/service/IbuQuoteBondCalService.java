@@ -1,17 +1,17 @@
 package com.joyintech.tams.cfets.bankuplink.bond.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.AutoAllocationRequest;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CalRequest;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CalRespone;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,31 +1,35 @@
 package com.joyintech.tams.cfets.bankuplink.bond.controller;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.business.common.dto.PageMode;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondCalService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtribdoRiskcalResponse;
+import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
+import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,10 +51,19 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@Autowired
 	private IbuQuoteBondCalService ibuQuoteBondCalService;
 
-	@ApiOperation(value = "查询报价页面初始化参数", notes = "查询报价页面初始化参数")
-	@PostMapping("/getPageParams")
+	@Autowired
+	private CfetsEtrIbBondinfoService cfetsEtrIbBondinfoService;
+
+	/**
+	 * 风险接口组件Controller
+	 */
+	@Autowired
+	private InterfRiskRdsController interfRiskRdsController;
+
+	@ApiOperation(value = "初始化参数", notes = "初始化参数")
+	@PostMapping("/initParams")
 	@ResponseBody
-	public Message<Map<String, Object>> getPageParams(){
+	public Message<Map<String, Object>> initParams(){
 		Map<String, Object> initPageParams = new HashMap<>();
 		initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
 		initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));
@@ -86,19 +99,59 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		}
 	}
 
-
-	@ApiOperation(value = "接收委托(批量)", notes = "接收委托(批量)")
-	@PostMapping("receiveEntrust")
+	@ApiOperation(value = "查询指令详细信息", notes = "查询指令详细信息")
+	@PostMapping("/getEntrust/{entrustId}")
 	@ResponseBody
-	public Message<List<ValidMessage>> recallDelegate(@RequestBody Map<String,Object> param){
-		try{
-			List<ValidMessage> validMessages = ibuQuoteBondService.receiveEntrust(param);
-			return new Message<List<ValidMessage>>().success().setData(validMessages);
-		}catch (Exception e){
-			logger.error("接收委托(批量)异常",e);
-			return new Message<List<ValidMessage>>().fail().setMessage("接收委托(批量)异常");
+	public Message<EntrustDto> getEntrust(@PathVariable("entrustId") String entrustId){
+		try {
+			EntrustDto result = ibuQuoteBondService.gettEntrust(entrustId);
+			return new Message<EntrustDto>().success().setData(result);
+		}catch (Exception e) {
+			logger.error("查询指令详细信息异常",e);
+			return new Message<EntrustDto>().fail().setMessage("查询指令详细信息异常");
 		}
 	}
+
+	@ApiOperation(value = "接收委托(批量)", notes = "接收委托(批量,key=entrustIds,value数组)")
+	@PostMapping("receiveEntrust")
+	@ResponseBody
+	public Message<AjaxResult> recallDelegate(@RequestBody Map<String,Object> param){
+		try{
+			AjaxResult result = new AjaxResult();
+			List<ValidMessage> validMessages = ibuQuoteBondService.receiveEntrust(param);
+			result.setErrorList(validMessages);
+			return new Message<AjaxResult>().success().setData(result);
+		}catch (Exception e){
+			logger.error("接收委托(批量)异常",e);
+			return new Message<AjaxResult>().fail().setMessage("接收委托(批量)异常");
+		}
+	}
+
+	@ApiOperation(value = "放弃委托(批量)", notes = "放弃委托(批量,key=entrustIds,value数组)")
+	@PostMapping("giveUpEntrust")
+	@ResponseBody
+	public Message<AjaxResult> entrustGiveUpHandle(@RequestBody Map<String,Object> param){
+		try{
+			AjaxResult result = new AjaxResult();
+			List<String> entrustIds = (List<String>)param.get("entrustIds");
+			entrustIds.forEach(item ->{
+				String flag = ibuQuoteBondService.giveUpEntrust(param.get("entrustId").toString());
+				if(StringUtil.equals("1", flag)){
+					result.appendMessage(new ValidMessage("已接收且完成度为0指令,才能执行放弃操作！"));
+					return;
+				}
+				else if(StringUtil.equals("2", flag)){
+					result.appendMessage(new ValidMessage("存在流程中的报价，不可放弃！"));
+					return;
+				}
+			});
+			return new Message<AjaxResult>().success().setData(result);
+		}catch (Exception e){
+			logger.error("放弃委托异常",e);
+			return new Message<AjaxResult>().fail().setMessage("放弃委托异常");
+		}
+	}
+
 
 	@ApiOperation(value = "交易执行初始化检查", notes = "交易执行初始化检查")
 	@PostMapping("/dealexecutioncheck")
@@ -158,16 +211,82 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		}
 	}
 
-	public static void main(String[] args) {
-		EntrustRequest dto = new EntrustRequest();
-		PageMode pageMode = new PageMode();
-		pageMode.setPageNo(1);
-		pageMode.setPageSize(10);
-		pageMode.setSort("name");
-		pageMode.setDirection("asc");
-		dto.setPageMode(pageMode);
-		System.out.println(JsonUtils.object2Json(dto));
+	@ResponseBody
+	@ApiOperation(value = "风险试算check", notes = "风险试算check")
+	@PostMapping("doRiskcalCheck")
+	public Message<AjaxResult> doRiskcalCheck(@RequestBody RiskCalRequest riskCalRequest){
+		AjaxResult ajaxResult = ibuQuoteBondService.riskCheckNotEmpty(riskCalRequest);
+		return new Message<AjaxResult>().success().setData(ajaxResult);
+	}
 
+	@ResponseBody
+	@ApiOperation(value = "风险试算", notes = "风险试算")
+	@PostMapping("doRiskcal")
+	public Message<AjaxResult> doRiskcal(@RequestBody RiskCalRequest riskCalRequest){
+		CfetsEtribdoRiskcalResponse result=new CfetsEtribdoRiskcalResponse();
+		try{
+			AjaxResult ajaxResult = ibuQuoteBondService.riskCheckNotEmpty(riskCalRequest);
+			if(CollectionUtils.isNotEmpty(ajaxResult.getErrorList())){
+				return new Message<AjaxResult>().success().setData(ajaxResult);
+			}
+			Map<String, Object> dataMap = ibuQuoteBondService.doRiskcalPackage(riskCalRequest);
+			List<String> resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F01");
+			result.setRiskMathFlag("02");
+			Boolean forbidFlag=false;
+			Boolean cluflag=true;
+			List<CfetsEtribdoRiskcalResponse> resultlist=new ArrayList<>();
+			if(!StringUtil.isEmptyList(resultArrList) ){
+				for(String row:resultArrList){
+					ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
+					if(StringUtil.isNotEmpty(resultArr) && StringUtil.isNotEmpty(resultArr.getHead())
+							&& StringUtil.isNotEmpty(resultArr.getHead().get("std400msgt"))
+					){
+						if (StringUtil.equals(resultArr.getHead().get("std400msgt"),"E")) {
+							return new Message<AjaxResult>().fail().setMessage(resultArr.getHead().get("stdrtninfo").toString());
+						}
+					}
+					if (!StringUtil.isNotEmpty(resultArr) || !StringUtil.isNotEmpty(resultArr.getBody())
+							|| !StringUtil.isNotEmpty(resultArr.getBody().get("RSK_LIST"))
+							|| !StringUtil.isNotEmpty(resultArr.getBody().get("rskStatus"))) {
+						return new Message<AjaxResult>().success().setMessage("无");
+					}
+					List<Map<String, Object>> riskList = (List<Map<String, Object>>)resultArr.getBody().get("RSK_LIST");
+					for(Map<String, Object> map: riskList){
+						if(StringUtil.equals(map.get("kriStatus"),"0") && !StringUtil.equals(map.get("kriTrend"),"向好")){
+							forbidFlag=true;
+						}
+						map.put("kriStatusCn",cfetsEtrIbBondinfoService.getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
+						resultlist.add(BeanUtil.mapToObject(map, CfetsEtribdoRiskcalResponse.class));
+					}
+					result.setRiskcalReturnList(resultlist);
+					result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());
+					//当置为不通过时就不再进来了
+					if(cluflag) {
+						if(!StringUtil.equals(resultArr.getBody().get("rskStatus"),"3")){
+							if(StringUtil.equals(resultArr.getBody().get("rskStatus"),"4")&&forbidFlag){
+								cluflag=false;
+								resultArr.getBody().put("rskStatus","3");
+								result.setRskStatus("3");
+							}
+						}else{
+							cluflag=false;
+						}
+						if (!cluflag) {
+							result.setRiskTrialSpan("试算不通过");
+						} else {
+							result.setRiskTrialSpan("试算通过");
+						}
+					}
 
+				}
+
+			}
+			AjaxResult m =new AjaxResult();
+			m.setData(result);
+			return new Message<AjaxResult>().success().setData(m);
+		}
+		catch (Exception e){
+			return new Message<AjaxResult>().fail().setMessage("风险试算异常");
+		}
 	}
 }

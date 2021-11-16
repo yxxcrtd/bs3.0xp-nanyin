@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper">
+    <select id="listEtrQuoteFinishStatus" resultType="com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus">
+        SELECT
+        <include refid="com.joyintech.tams.common.base.dao.EtrQuoteFinishStatusMapper.Base_Column_List" />
+        FROM ETR_QUOTE_FINISH_STATUS
+        <where>
+            1=1
+            <if test="entrustId != null and !entrustId.equals('')">
+                AND entrust_Id = #{entrustId}
+            </if>
+        </where>
+    </select>
+
+    <select id="checkDataStatus" resultType="java.lang.Integer">
+		select count(1) from WFL_REG_FIN_PRODUCT_DEAL
+	</select>
+
+    <select id="listEtrDistributeInterfTmp" resultType="com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp">
+        SELECT
+        A.ENTRUST_ID entrustId,
+        A.TRADER trader,
+        A.TRADING_HEADER tradingHeader,
+        A.CREATE_USER createUser,
+        A.CREATE_DEPT createDept,
+        A.CREATE_TIME createTime,
+        A.UPDATE_USER updateUser,
+        A.UPDATE_TIME updateTime
+        FROM ETR_DISTRIBUTE_INTERF_TMP A
+        <where>
+            1=1
+            <if test="entrustId != null and !entrustId.equals('')">
+                AND A.Entrust_Id = #{entrustId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

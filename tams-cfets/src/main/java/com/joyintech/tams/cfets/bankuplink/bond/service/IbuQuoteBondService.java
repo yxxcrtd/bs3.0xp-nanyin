@@ -9,16 +9,21 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.common.base.dao.EtrDistributeMapper;
+import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
+import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
+import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +56,41 @@ public class IbuQuoteBondService extends BaseService {
     @Autowired
     private FinProductMapper finProductMapper;
 
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
+
+    @Autowired
+    private BaseEtrInvestInfoMapper etrInvestInfoMapper;
+
+    @Autowired
+    private CfetsIbuQuoteBondEtrMapper cfetsIbuQuoteBondEtrMapper;
+
+    @Autowired
+    private EtrEntrustAddMapper etrEntrustAddMapper;
+
+    @Autowired
+    private BaseEtrInvestInfoServiceImpl etrInvestInfoServiceImpl;
+
+    /**
+     * 风险试算check
+     * @param entity
+     * @return
+     */
+    public AjaxResult riskCheckNotEmpty(RiskCalRequest entity) {
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(entity.getPtlAllocations())){
+            for (PtlAllocationDto ptlAllocation : entity.getPtlAllocations()) {
+                if(null==ptlAllocation.getShareAmt()){
+                    errorList.add(new ValidMessage("请输入组合分配券面总额"));
+                    break;
+                }
+            }
+        }
+        return ajaxResult;
+    }
+
+
     /**
      *  初始化指令列表
      * @param dto
@@ -62,6 +102,25 @@ public class IbuQuoteBondService extends BaseService {
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
         setParam(pageParam);
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsIbuQuoteBondMapper.listEntrust(pageParam));
+    }
+
+    /**
+     * 指令详细信息
+     * @param dto
+     * @return
+     */
+    public EntrustDto gettEntrust(String  entrustId){
+        EntrustDto result = new EntrustDto();
+        Map<String, Object> param = new HashMap<>();
+        param.put("entrustIdList",Arrays.asList(entrustId));
+        param.put("loginUserId", LoginUserUtil.getUserName());
+        param.put("platDate", iPlatformDate.getSysDateStr());
+        setParam(param);
+        List<CfetsBondDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
+        if(CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)){
+            BeanUtil.copyPropertiesIgnoreNull(result,cfetsBondDealEntrustOrderDtos.get(0));
+        }
+        return result;
     }
 
 
@@ -495,6 +554,100 @@ public class IbuQuoteBondService extends BaseService {
             return result;
         }
         return null;
+    }
+
+    /**
+     * 指令放弃
+     * @param entrustId
+     * @return
+     */
+    public String giveUpEntrust(String entrustId) {
+        if (StringUtil.isEmpty(entrustId)) {
+            return "1";
+        }
+
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
+        if (etrEntrust == null) {
+            return "1";
+        }
+
+        // 已接收且完成度为0的指令可以选择【放弃】接收
+        if (!StringUtil.equals(etrEntrust.getEntrustStatus(),
+                BussinessDictCodeList.委托状态_已接收.getValue())) {
+            return "1";
+        }
+
+        EtrFinishStatusKey etrFinishStatusKey = new EtrFinishStatusKey();
+        etrFinishStatusKey.setEntrustId(entrustId);
+        List<EtrFinishStatus> etrFinishStatusList = etrInvestInfoMapper.selectEtrFinishStatusByPrimaryKey(
+                etrFinishStatusKey);
+        if (!StringUtil.isEmptyList(etrFinishStatusList)) {
+            return "1";
+        }
+        Map<String,Object> param= new HashMap<>();
+        param.put("entrustId", entrustId);
+        List<EtrQuoteFinishStatus> etrQuoteFinishStatusList =  cfetsIbuQuoteBondEtrMapper.listEtrQuoteFinishStatus(param);
+        if (!StringUtil.isEmptyList(etrQuoteFinishStatusList)) {
+            return "1";
+        }
+        EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustId);
+        if (etrEntrustAdd == null) {
+            return "1";
+        }
+
+        //是否存在流程中或者有效且数据状态不为 已撤回 已终止
+
+        int i =cfetsIbuQuoteBondEtrMapper.checkDataStatus(param);
+        if(i>0){
+            return "2";
+        }
+        //2.查询指令分发的临时表数据  插入  指令分发表，并将状态改为  待接收。
+        List<EtrDistributeInterfTmp> distmpList = cfetsIbuQuoteBondEtrMapper.listEtrDistributeInterfTmp(param);
+
+        if(!StringUtil.isEmptyList(distmpList)) {
+            boolean status = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId,com.joyintech.tams.constant.DictCodeList.委托状态_待接收.getValue());
+
+            List<EtrDistribute> disList = new ArrayList<EtrDistribute>();
+
+            for(EtrDistributeInterfTmp entity : distmpList) {
+                EtrDistribute dis = new EtrDistribute();
+                dis.setEntrustId(entity.getEntrustId());
+                dis.setTrader(entity.getTrader());
+                dis.setRecStatus(com.joyintech.tams.constant.DictCodeList.委托状态_待接收.getValue());
+                dis.setTradingHeader(entity.getTradingHeader());
+                disList.add(dis);
+            }
+
+            this.etrInvestInfoServiceImpl.distributeDelegate(disList);
+        }else{
+            boolean status = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId,com.joyintech.tams.constant.DictCodeListExt3.委托状态_待分发.getValue());
+        }
+
+        return "3";
+    }
+
+    /**
+     * 风险试算实体组装
+     * @param riskCalRequest
+     * @return
+     */
+    public  Map<String, Object> doRiskcalPackage(RiskCalRequest riskCalRequest) {
+        Map<String, Object> result = new HashMap<>();
+        List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
+        for(PtlAllocationDto ptlAllocationDto:riskCalRequest.getPtlAllocations()){
+            Map<String, Object> stringObjectMap = BeanUtil.object2Map(ptlAllocationDto);
+            stringObjectMap.put("tradeAmount",ptlAllocationDto.getShareAmt());
+            stringObjectMap.put("fpriceAmt",ptlAllocationDto.getShareAmt());
+            stringObjectMap.put("portfolioCode",ptlAllocationDto.getPortfolioId());
+            bussTrdTransfenpeiDto.add(stringObjectMap);
+        }
+        result.put("bussTrdTransfenpeiDto",bussTrdTransfenpeiDto);
+        result.put("finprodId",riskCalRequest.getFinprodId());
+        result.put("finprodType2",DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        result.put("ps",riskCalRequest.getPs());
+        result.put("ccy","CNY");
+        return result;
+
     }
 
     private void setParam(Map<String,Object> param){

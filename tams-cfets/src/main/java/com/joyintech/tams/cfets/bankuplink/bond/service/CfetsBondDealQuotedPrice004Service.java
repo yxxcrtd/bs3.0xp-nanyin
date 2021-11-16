@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -177,6 +178,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         if(CollectionUtils.isEmpty(entity.getPtlAllocatios())){
             errorList.add(new ValidMessage("组合分配不可为空"));
         }else{
+            BigDecimal shareAmtTotal = BigDecimal.ZERO;BigDecimal dealFeeAmtTotal = BigDecimal.ZERO;BigDecimal settFeeamtTotal = BigDecimal.ZERO;
             for (PtlAllocationDto ptlAllocatio : entity.getPtlAllocatios()) {
                 if(null==ptlAllocatio.getShareAmt()){
                     errorList.add(new ValidMessage("请输入组合分配券面总额"));
@@ -204,6 +206,19 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                         break;
                     }
                 }
+                shareAmtTotal = ArithmeticUtil.doAdd(shareAmtTotal,ptlAllocatio.getShareAmt());
+                dealFeeAmtTotal = ArithmeticUtil.doAdd(dealFeeAmtTotal,ptlAllocatio.getDealFeeAmt());
+                settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal,ptlAllocatio.getSettFeeamt());
+            }
+            //券面总额   交易手续费  结算服务费  总和需要相等
+            if(null!=entity.getShareAmt()&&entity.getShareAmt().compareTo(shareAmtTotal)!=0){
+                errorList.add(new ValidMessage("组合分配券面总额总和需要等于券面总额"));
+            }
+            if(null!=entity.getDealFeeAmt()&&entity.getDealFeeAmt().compareTo(dealFeeAmtTotal)!=0){
+                errorList.add(new ValidMessage("组合分配交易手续费总和需要等于交易手续费"));
+            }
+            if(null!=entity.getSettFeeamt()&&entity.getSettFeeamt().compareTo(settFeeamtTotal)!=0){
+                errorList.add(new ValidMessage("组合分配结算服务费总和需要等于结算服务费"));
             }
         }
         if(StringUtil.isNotEmpty(entity.getFinprodId())){
