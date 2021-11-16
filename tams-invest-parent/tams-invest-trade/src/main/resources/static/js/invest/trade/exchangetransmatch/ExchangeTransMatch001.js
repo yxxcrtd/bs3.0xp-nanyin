@@ -490,9 +490,11 @@
         $('#ExchangeTransMatch001_deal_btn_more').click(function () {
             if($('#ExchangeTransMatch001_deal_btn_more').find('span').html()=="更多"){
                 $('#ExchangeTransMatch001_more_div').show();
+                $('#ExchangeTransMatch001_more_div2').show();
                 $('#ExchangeTransMatch001_deal_btn_more').find('span').html("取消更多");
             }else{
                 $('#ExchangeTransMatch001_more_div').hide();
+                $('#ExchangeTransMatch001_more_div2').hide();
                 $('#ExchangeTransMatch001_deal_btn_more').find('span').html("更多");
             }
         });

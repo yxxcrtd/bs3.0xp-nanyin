@@ -15,7 +15,7 @@
         if($("#busiAcctNo").val()) {
             object.busiAcctNo = $("#busiAcctNo").val().join(",");
         }
-        object.tradeAmt = $("#tradeAmt").val();
+        // object.tradeAmt = $("#tradeAmt").val();
         object.workflowId = workflowId;
         return object;
     }
@@ -27,7 +27,7 @@
         searchOnInit: true,
         loadonce:true,
         page:false,
-        data: [],
+        data: bussTrdTransferOrderList == null || bussTrdTransferOrderList == '' ? null : JSON.parse(bussTrdTransferOrderList),
         checkbox:false,
         cols:[
               {field:'isNeedSend', width:140, title: 'BussTrdTransferOrder.isNeedSend',edit:true,
@@ -187,8 +187,11 @@
             dealReal.actualTradeAmt=detailsList[i].actualTradeAmt;
             dealReal.ccy=detailsList[i].ccy;
 
-            dealReal.tradeDate=$("#settleDate").val();
-            dealReal.tradeAmt = dealReal.actualTradeAmt;
+            // dealReal.tradeDate=$("#settleDate").val();
+            // dealReal.tradeAmt = dealReal.actualTradeAmt;
+
+            dealReal.tradeDate=detailsList[i].settleDate;
+            dealReal.tradeAmt = detailsList[i].tradeAmt;
             dealReal.ps = PS_T09;
             dealReal.busiType = BUSI_TYPE_PTL03;
             dealReal.finprodType2 = FINPROD_TYPE_F21;
@@ -241,14 +244,13 @@
               ,{field:'theoryTradeAmt', title: 'PtlActivityPeriod001.theoryTradeAmt',sortField:'theoryTradeAmt',type:'money'}//理论收息金额
               ,{field:'actualTradeAmt', title: 'PtlActivityPeriod001.actualTradeAmt',sortField:'actualTradeAmt',type:'money',edit:true}//实际收息金额
               ,{field:'mdate', title: 'PtlActivityPeriod001.mdate',sortField:'mdate',type:'date'}//本次收息日
-              ,{field:'settleDate', title: 'PtlActivityPeriod001.settleDate',sortField:'settleDate',type:'date',edit:true}//支付日
-              ,{field:'bankDep', title: 'PtlActivityPeriod001.bankDep',sortField:'bankDep',edit:true}//开户机构
-              ,{field:'tradeAmt', title: 'PtlActivityPeriod001.tradeAmt',sortField:'tradeAmt',type:'money',edit:true}//划款金额
-              ,{field:'ccyStr', title: 'PtlActivityPeriod001.ccy',sortField:'cyy',sort: true,edit:true,editOption:{id: 'ccy',type:'select', result: CCY}}//币种
+              ,{field:'settleDate', title: 'PtlActivityPeriod001.settleDate',sortField:'settleDate',type:'date'}//支付日
+              ,{field:'bankDep', title: 'PtlActivityPeriod001.bankDep',sortField:'bankDep'}//开户机构
+              ,{field:'tradeAmt', title: 'PtlActivityPeriod001.tradeAmts',sortField:'tradeAmt',type:'money'}//划款金额
+              ,{field:'ccy', title: 'PtlActivityPeriod001.ccy',sortField:'cyy',sort: true,edit:true,editOption:{id: 'ccy',type:'select', result: CCY}}//币种
               ,{field:'isParentPortfolio',visible:false}//是否子母组合
               ,{field:'childrenDetailsJson',visible:false}
               ,{field:'acctNo',visible:false}
-              ,{field:'ccy',visible:false}
               ,{field:'operation', title: 'SysCommon.operation', type:'action',
                   render:function (data, type, row, meta) {
                       if(row.isParentPortfolio != YES_OR_NO_N){
@@ -335,14 +337,7 @@
         Joyin.ajaxJson(basePath + 'invest/portfolio/ptlactivityperiod/PtlActivityPeriod004/check', object, function(result) {
             //确认窗口
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon."+operateType)), function() {
-                //保存操作
-                if(operateType === 'save') {
-                    WorkFlow.doSaveList(basePath + 'invest/portfolio/ptlactivityperiod/PtlActivityPeriod004/save', object, "PtlActivityPeriod004_btn_save");
-                }
-                else {
-                    //修改
-                    WorkFlow.doSubmitList(basePath + 'invest/portfolio/ptlactivityperiod/PtlActivityPeriod004/save', object, "PtlActivityPeriod004_btn_submit");
-                }
+                WorkFlow.doSubmitList(basePath + 'invest/portfolio/ptlactivityperiod/PtlActivityPeriod004/save', object, "PtlActivityPeriod004_btn_submit");
             });
         });
     }
@@ -362,21 +357,16 @@
             });
         }
 
-    	// if(pageModel == PAGE_MODEL_NEW) {
-    	// 	$('#busiAcctNo').prop('disabled', false);
-    	// 	$('#bankDep').prop('disabled', false);
-    	// 	$('#mdate').prop('disabled', false);
-    	//
-    	// } else {
-    	// 	$('#busiAcctNo').prop('disabled', true);
-    	// 	$('#bankDep').prop('disabled', true);
-    	// 	$('#mdate').prop('disabled', true);
-    	// }
+        if (bussTrdTransferOrderList) {
+            $.each(JSON.parse(bussTrdTransferOrderList), function(id, value) {
 
-        // 绑定保存按钮
-        $('#PtlActivityPeriod004_btn_save').click(function() {
-            saveOrSubmit('save');
-        });
+            });
+
+            bussTrdTransferOrderTable.reload({
+                data : JSON.parse(bussTrdTransferOrderList)
+            });
+        }
+
         //绑定提交按钮
         $('#PtlActivityPeriod004_btn_submit').click(function() {
             saveOrSubmit('submit');
@@ -413,7 +403,7 @@
                     }
                 }
                 Joyin.ajaxJson(JoyinUtil.getRealPath('/common/multiOrder/genOrderCheck'), data, function () {
-                    Joyin.ajaxJson(basePath + 'invest/portfolio/ptlactivityperiod/PtlActivityPeriod002/generateOrder', object, function (ret) {
+                    Joyin.ajaxJson(basePath + 'invest/portfolio/ptlactivityperiod/PtlActivityPeriod004/generateOrder', object, function (ret) {
 
                         if (data.length == ret.data.length) {
                             bussTrdTransferOrderTable.clear(function () {

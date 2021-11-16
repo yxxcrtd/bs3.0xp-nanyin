@@ -159,10 +159,15 @@ public class CfetsBondDealQuotedPriceSingle001Service extends BaseService<CfetsB
         }
 
         // 调用算法包计算金额要素(委托二级指令应该是能带出这些字段的)
+        //券面按万元处理 故需要乘以10000
+        BigDecimal avaNum = cfetsBondDealDialogueQuoteDto.getAvaNum();
+        cfetsBondDealDialogueQuoteDto.setAvaNum(ArithmeticUtil.multiply(avaNum,new BigDecimal("10000")));
         AjaxResult ar = this.calcAmt(cfetsBondDealDialogueQuoteDto);
+        cfetsBondDealDialogueQuoteDto.setAvaNum(avaNum);
         if (ar != null && ar.getData() != null) {
             CfetsBondDealDialogueQuoteDto calcDto = (CfetsBondDealDialogueQuoteDto)ar.getData();
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto, calcDto);
+            cfetsBondDealDialogueQuoteDto.setAvaNum(avaNum);
         }
 
         return cfetsBondDealDialogueQuoteDto;

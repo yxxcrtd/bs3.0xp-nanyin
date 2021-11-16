@@ -470,6 +470,19 @@ implements BaseProcessService<FinTenderBondTargetAssetDto>{
             Integer.class);
     }
 
+    /**
+     *  市场代码是否重复
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public int selectCountByOFinprodId(String oFinprodId){
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinTenderBondTargetAsset/selectCountByOFinprodId?oFinprodId="+oFinprodId,
+                Integer.class);
+    }
+
 	@Override
 	protected void buildExportParam(ExportParam exportParam) {
 		exportParam.getSelectParam().put("finprodType2", BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue());

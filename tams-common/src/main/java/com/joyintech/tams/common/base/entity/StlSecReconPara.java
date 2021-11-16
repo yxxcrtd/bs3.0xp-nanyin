@@ -2,6 +2,8 @@ package com.joyintech.tams.common.base.entity;
 
 import com.joyintech.framework.base.BaseEntity;
 
+import java.util.Date;
+
 public class StlSecReconPara extends BaseEntity {
     /**
      * 序列号
@@ -22,6 +24,11 @@ public class StlSecReconPara extends BaseEntity {
      * 参数值
      */
     private String paraValue;
+
+    /**
+     * 配置日期
+     */
+    private Date configDate;
 
     /**
      * 取得 序列号
@@ -85,5 +92,21 @@ public class StlSecReconPara extends BaseEntity {
      */
     public void setParaValue(String paraValue) {
         this.paraValue = paraValue == null ? null : paraValue.trim();
+    }
+
+    /**
+     * 取得 配置日期
+     * @return 配置日期
+     */
+    public Date getConfigDate() {
+        return configDate;
+    }
+
+    /**
+     * 设置 配置日期
+     * @param configDate 配置日期
+     */
+    public void setConfigDate(Date configDate) {
+        this.configDate = configDate;
     }
 }

@@ -85,7 +85,15 @@ $(function() {
         /*object.finPayInterestStdInfoDto.mdate = $('#mdate').val();*/
         Joyin.ajaxJson(basePath + 'invest/asset/tenderbond/FinTenderBondTargetAsset002/check', object, function(
                 result) {
-        	finalSava(object,operateType,result);
+            // TISHKS-131:该资产未与二级流通债券关联，那么需提示用户“已存在一级交易数据，是否确定修改资产定义信息？” fuyongsheng 20211116 edit start
+            if(isRelatedSecondBond != "Y"){
+                Joyin.confirm("已存在一级交易数据，是否确定修改资产定义信息？", function(){
+                    finalSava(object,operateType,result);
+                });
+            }else{
+                finalSava(object,operateType,result);
+            }
+            // TISHKS-131:该资产未与二级流通债券关联，那么需提示用户“已存在一级交易数据，是否确定修改资产定义信息？” fuyongsheng 20211116 edit end
             //息票品种为贴现、零息时不作付息计划 、还本计划check
             /*if(couponSpecies==COUPON_SPECIES_02||couponSpecies==COUPON_SPECIES_03){
                 if(isTransInAsset){

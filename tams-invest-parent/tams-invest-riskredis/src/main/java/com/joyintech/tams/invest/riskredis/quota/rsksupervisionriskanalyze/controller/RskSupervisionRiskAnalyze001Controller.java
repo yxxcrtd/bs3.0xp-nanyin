@@ -161,6 +161,28 @@ public class RskSupervisionRiskAnalyze001Controller extends BaseController  {
              {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RskSupervisionRiskAnalyzeDto> page = rskSupervisionRiskAnalyzeService.selectForPageInit(map);
+
+         // modify by etliu 20211115 start
+         // GZYHTZJY-368：【产品问题】【风险管理-指标管理】页面：1、选择框错位了；2、预警线、禁止线、审批线，显示错乱。
+         // 框架调整，导致画面显示异常，需要业务代码自行处理
+         if (page != null) {
+             for(RskSupervisionRiskAnalyzeDto resultDto : page.getRoot()) {
+                 if (StringUtil.isNotBlank(resultDto.getWarnCond())) {
+                     resultDto.setWarnCond(StringUtil.replaceAll(resultDto.getWarnCond(), ">", "&gt;"));
+                     resultDto.setWarnCond(StringUtil.replaceAll(resultDto.getWarnCond(), "<", "&lt;"));
+                 }
+                 if (StringUtil.isNotBlank(resultDto.getFoulCond())) {
+                     resultDto.setFoulCond(StringUtil.replaceAll(resultDto.getFoulCond(), ">", "&gt;"));
+                     resultDto.setFoulCond(StringUtil.replaceAll(resultDto.getFoulCond(), "<", "&lt;"));
+                 }
+                 if (StringUtil.isNotBlank(resultDto.getApproveCond())) {
+                     resultDto.setApproveCond(StringUtil.replaceAll(resultDto.getApproveCond(), ">", "&gt;"));
+                     resultDto.setApproveCond(StringUtil.replaceAll(resultDto.getApproveCond(), "<", "&lt;"));
+                 }
+             }
+         }
+         // modify by etliu 20211115 end
+
         return page;
     }
 

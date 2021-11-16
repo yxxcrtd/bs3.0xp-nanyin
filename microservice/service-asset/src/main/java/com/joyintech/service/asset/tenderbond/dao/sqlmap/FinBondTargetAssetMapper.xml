@@ -223,4 +223,10 @@
 		AND O_TYPE = #{ZXPJ,jdbcType=VARCHAR}
 	GROUP BY GRADE_ORG_ID,GRADE_RESULT
 	 </select>
+
+	<select id = "selectCountByOFinprodId" resultType="java.lang.Integer">
+		SELECT count(1)
+		FROM FIN_PRODUCT
+		WHERE O_FINPROD_ID = #{oFinprodId}
+	</select>
 </mapper>

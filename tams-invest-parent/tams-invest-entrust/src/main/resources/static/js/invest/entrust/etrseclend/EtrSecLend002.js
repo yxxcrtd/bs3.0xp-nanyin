@@ -101,6 +101,9 @@
     }
     //查询组合可用持仓
     var getPtlSecPositionInfo = function(){
+        if(pageModel ==PAGE_MODEL_REFERENCE){
+            return;
+        }
       var params = {};
       params.portfolioId = $("#portfolioId").val();
       params.calendarId = $("#calendarId").val();

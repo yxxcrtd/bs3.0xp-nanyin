@@ -18,6 +18,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
@@ -85,8 +86,13 @@ public class PtlActivityPeriod004Controller extends BaseController{
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
-        this.setSelectOptionToModel(model, DictCode.币种, DictCode.交易所基金类型, DictCode.交易方向,
-                DictCode.交易场所, DictCode.基金类资产类型);
+        this.setSelectOptionToModel(model,  DictCode.资金账户类型,DictCode.币种,DictCode.是否,DictCode.平安划款类型,DictCode.资产来源);
+        model.addAttribute("PS_T09",DictCodeList.交易方向_收息.getValue());
+        model.addAttribute("BUSI_TYPE_PTL03",DictCodeList.共通业务类型_活期结息.getValue());
+        model.addAttribute("FINPROD_TYPE_F21",DictCodeListExt1.金融产品类型_投管用_资金账户.getValue());
+        model.addAttribute("platDate",platformDateImpl.getSysDate());
+        model.addAttribute(GlobalConstant.WORKFLOW_ID,getParam(GlobalConstant.WORKFLOW_ID));
+
         String operateType = getParam("operateType");
         if (StringUtil.equals(operateType, "import")) {
             String tempList = getParam("tempList");
@@ -96,6 +102,24 @@ public class PtlActivityPeriod004Controller extends BaseController{
         }
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate", DateUtil.format(sysDate));
+
+        String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        Map<String,Object> map = RequestUtil.getPageParam();
+        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
+            PtlActivityPeriod001Dto dto = ptlActivityPeriod002Service.getBussinessEntityByWorkflowId(
+                    workflowId);
+            dto.setSettleDate(dto.getDetailsList().get(0).getSettleDate());
+            model.addAttribute("entity", dto);
+            model.addAttribute("PtlActivityPeriod001DtoList", StringUtil.isEmptyList(
+                    dto.getDetailsList()) ? null : JsonUtils.object2Json(dto.getDetailsList()));
+            model.addAttribute("bussTrdTransferOrderList", StringUtil.isEmptyList(
+                    dto.getBussTrdTransferOrderList()) ? null : JsonUtils.object2Json(dto.getBussTrdTransferOrderList()));
+            // 判断逐渐是否为空
+        }else {
+            PtlActivityPeriod001Dto dto = new PtlActivityPeriod001Dto();
+            dto.setSettleDate(platformDateImpl.getSysDate());
+            model.addAttribute("entity", dto);
+        }
         return super.init(model);
     }
 
@@ -108,34 +132,22 @@ public class PtlActivityPeriod004Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) PtlActivityPeriod001Dto dto, BindingResult br) {
+    public AjaxResult check(@RequestBody PtlActivityPeriod001Dto dto, BindingResult br) {
         if (br != null && br.hasErrors()) {
             return new AjaxResult(br);
         }
-        
-        String str = "";
-        if(StringUtil.isNotEmpty(dto.getBusiAcctNo())) {
-            for(String busiAcctNo:StringUtil.splitToList(",", dto.getBusiAcctNo())) {
-                List<PtlActivityPeriod001Dto> newDetailsList = new ArrayList<PtlActivityPeriod001Dto>();
-                for(PtlActivityPeriod001Dto detailsDto:dto.getDetailsList()) {
-                    if(StringUtil.equals(busiAcctNo, detailsDto.getBusiAcctNo())) {
-                        newDetailsList.add(detailsDto);
-                    }   
-                }
-                if(StringUtil.isEmptyList(newDetailsList)) {
-                    if(StringUtil.isNotEmpty(str)) {
-                        str = str +"," +busiAcctNo;
-                    } else {
-                        str = busiAcctNo;
-                    }
-                    
-                }
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        for (BussTrdTransferOrderDto bussTrdTransferOrderDto : dto.getBussTrdTransferOrderList()) {
+            if(StringUtil.isEmpty(bussTrdTransferOrderDto.getPayAcctNo())){
+                errorList.add(new ValidMessage(getMessage("PTL_COM_E_0032")));
             }
-
         }
-
-        if(StringUtil.isNotEmpty(str)) {
-            return new AjaxResult(str + getMessage("PTL_COM_E_0030"));
+        if (errorList.size() > 0) {
+            ajaxResult.setErrorList(errorList);
+            return ajaxResult;
+        }else if(ajaxResult.getData()!=null) {
+            return ajaxResult;
         }
         return commonCheck(br, dto.getOperateType());  
     }
@@ -149,13 +161,21 @@ public class PtlActivityPeriod004Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) PtlActivityPeriod001Dto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody PtlActivityPeriod001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
-        
         String msg = null;
+        for (PtlActivityPeriod001Dto ptlActivityPeriod001Dto : dto.getDetailsList()) {
+            if(StringUtil.isNotEmpty(dto.getTradeAmt())) {
+                dto.setTradeAmt(ptlActivityPeriod001Dto.getTradeAmt().add(dto.getTradeAmt()));
+                dto.setBusiAcctNo(dto.getBusiAcctNo()+ptlActivityPeriod001Dto.getBusiAcctNo()+",");
+            }else {
+                dto.setTradeAmt(ptlActivityPeriod001Dto.getTradeAmt().add(new BigDecimal(0)));
+                dto.setBusiAcctNo(ptlActivityPeriod001Dto.getBusiAcctNo()+",");
+            }
+        }
+        dto.setBusiAcctNo(dto.getBusiAcctNo().substring(0,dto.getBusiAcctNo().lastIndexOf(",")));
         if(StringUtil.isNotEmpty(dto.getBusiAcctNo())) {
             for(String busiAcctNo:StringUtil.splitToList(",", dto.getBusiAcctNo())) {
                 List<PtlActivityPeriod001Dto> newDetailsList = new ArrayList<PtlActivityPeriod001Dto>();
@@ -194,9 +214,11 @@ public class PtlActivityPeriod004Controller extends BaseController{
                     newDto.setBusiAcctNo(busiAcctNo);
                     newDto.setAcctName(newDetailsList.get(0).getAcctName());
                     newDto.setAcctNo(newDetailsList.get(0).getAcctNo());
-                    newDto.setSettleDate(dto.getSettleDate());
-                    newDto.setBankDep(dto.getBankDep());
-                    newDto.setMdate(dto.getMdate());
+                    newDto.setPortfolioName(newDetailsList.get(0).getPortfolioName());
+                    newDto.setPortfolioId(newDetailsList.get(0).getPortfolioId());
+                    newDto.setBankDep(newDetailsList.get(0).getBankDep());
+                    newDto.setMdate(newDetailsList.get(0).getMdate());
+                    newDto.setSettleDate(newDetailsList.get(0).getSettleDate());
                     newDto.setTradeAmt(sumActualTradeAmt);
                     newDto.setActualTradeAmt(sumActualTradeAmt);
                     newDto.setDetailsList(newDetailsList);
@@ -215,7 +237,7 @@ public class PtlActivityPeriod004Controller extends BaseController{
                     newDto.setBusiNo(baseGetBussinessId !=null ? baseGetBussinessId.buildBussinessCode(bussinessCodeParameter):IDGenerator.generate());
                     ProcessParameter<PtlActivityPeriod001Dto> processParameter = new ProcessParameter<PtlActivityPeriod001Dto>();
                     WorkFlowParameter<PtlActivityPeriod001Dto> params = new WorkFlowParameter<PtlActivityPeriod001Dto>();
-                    params.setPageId("PtlActivityPeriod002");
+                    params.setPageId("PtlActivityPeriod004");
                     params.setElementId(newDto.getElementId());
                     params.setBusinessCode(item -> item.getBusiNo());
                     params.setBusinessType(DictCodeList.共通业务类型_活期结息.getValue());
@@ -250,5 +272,15 @@ public class PtlActivityPeriod004Controller extends BaseController{
         return ptlActivityPeriod002Service.checkImportData(fileName);
     }
 
-
+    @RequestMapping("generateOrder")
+    @ResponseBody
+    public AjaxResult generateOrder(@RequestBody PtlActivityPeriod001Dto dto) {
+        if (dto == null) {
+            return new AjaxResult(getMessage("BussTrdTransferOrder_E_0001"), MessageType.错误消息);
+        }
+        List<BussTrdTransferOrderDto> resultData = ptlActivityPeriod002Service.generateImportOrder(dto);
+        AjaxResult result = new AjaxResult();
+        result.setData(resultData);
+        return result ;
+    }
 }

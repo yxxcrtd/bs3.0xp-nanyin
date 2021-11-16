@@ -4,6 +4,13 @@
     layout:decorator="~{layout/default}">
 <head>
 <title data-th-text="#{TrdStockBonus001}">股票分红查询</title>
+    <!--TISHKS-211:业务编号支持下拉框模糊搜索 fuyongsheng 20211116 add start-->
+    <style type="text/css">
+        .select2-search--dropdown.select2-search--hide{
+            display: block;
+        }
+    </style>
+    <!--TISHKS-211:业务编号支持下拉框模糊搜索 fuyongsheng 20211116 add end-->
 </head>
 <body>
     <div layout:fragment="content">
@@ -28,8 +35,7 @@
                                     allowClear="true"
                                     class="layui-input form-input input-select"
                                     data-th-data-url="@{/invest/period/trdstockbonus/TrdStockBonus001/getBusiCode}"
-                                    placeholder="请输入内容"
-                                    data-th-placeholder="#{SysCommon.placeholder}">
+                                    placeholder="请输入内容">
                                 </select>
                             </div>
                         </div>

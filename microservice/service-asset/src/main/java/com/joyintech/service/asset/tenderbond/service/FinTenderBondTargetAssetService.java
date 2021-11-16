@@ -315,4 +315,16 @@ public class FinTenderBondTargetAssetService extends BaseService<FinTenderBondTa
     public int selectCountByfinprodMarketId(String finprodMarketId){
         return finTenderBondTargetAssetMapper.selectCountByfinprodMarketId(finprodMarketId);
     }
+
+    /**
+     * 查询关联此一级市场投标债券数量
+     * <功能详细描述>
+     * @param oFinprod
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public int selectCountByOFinprodId(String oFinprodId){
+        return finTenderBondTargetAssetMapper.selectCountByOFinprodId(oFinprodId);
+    }
 }
