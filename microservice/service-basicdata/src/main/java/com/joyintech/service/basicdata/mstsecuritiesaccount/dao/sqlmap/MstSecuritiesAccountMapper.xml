@@ -287,8 +287,12 @@ with ZYSHG as
         <if test="acctTradeMarket != null and acctTradeMarket != ''">
             and a.trade_market = #{acctTradeMarket}
         </if>
-        <if test="tradePlat != null and tradePlat != ''">
-            and (b.TRADE_PLAT like concat('%',concat(#{tradePlat},'%')) and a.finprod_type2 = 'F01') or a.finprod_type2 != 'F01'
+        <if test="tradePlat != null and tradePlat != '' and tradePlat_05 == null">
+            and ((b.TRADE_PLAT like concat('%',concat(#{tradePlat},'%')) or b.TRADE_PLAT is null) and a.finprod_type2 = 'F01') or a.finprod_type2 != 'F01'
+        </if>
+        <if test="tradePlat != null and tradePlat != '' and tradePlat_05 != null and tradePlat_05 != ''">
+            and ((b.TRADE_PLAT like concat('%',concat(#{tradePlat},'%')) or b.TRADE_PLAT like concat('%', concat('05', '%')) or b.TRADE_PLAT is null)
+            and a.finprod_type2 = 'F01') or a.finprod_type2 != 'F01'
         </if>
         <choose>
             <when test="tradePlat != null and tradePlat != '' and tradePlat == '04'.toString()">
