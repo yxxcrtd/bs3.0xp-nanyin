@@ -165,6 +165,7 @@ public class EtrSecLend002Controller extends BaseController {
             //配置单位 add by yeming 20210723 end
             entity.setVdate(sysDate);
             entity.setMdate(sysDate);
+            entity.setTradeMarket(DictCodeListExt1.交易场所_银行间.getValue());
             entity.setEntrustStatus(DictCodeList.委托状态_新建.getValue());
             model.addAttribute(GlobalConstant.ENTITY, entity);
         }

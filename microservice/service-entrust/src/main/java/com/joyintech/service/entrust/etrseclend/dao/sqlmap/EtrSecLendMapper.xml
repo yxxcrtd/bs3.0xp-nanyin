@@ -406,6 +406,9 @@
 			<if test="finprodId !=null and finprodId !='' ">
 				AND FP.REGIST_ORG = B.REGIST_ORG
 			</if>
+			<if test="tradeMarket !=null and tradeMarket !='' ">
+				AND TRADE_PLACE = #{tradeMarket, jdbcType=VARCHAR}
+			</if>
 		</where>
 	</select>
 	<resultMap type="com.joyintech.service.entrust.etrseclend.dto.EtrSecLendDto" id="selByKeyResult">
