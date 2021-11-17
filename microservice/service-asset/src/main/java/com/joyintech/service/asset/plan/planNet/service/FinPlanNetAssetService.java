@@ -162,8 +162,8 @@ public class FinPlanNetAssetService extends BaseService<FinPlanNetAssetDto> {
             if (assetType11.indexOf("107")!=-1){
                 assetType11=assetType11+",125,137,138,139,140";
             }
-            List<String> assetType11List = StringUtil.splitToList(",", assetType11);
-            pageParam.put("assetType11List", assetType11List);
+            List<String> type11List = StringUtil.splitToList(",", assetType11);
+            pageParam.put("type11List", type11List);
         }
 //      if(StringUtil.isNotEmpty(pageParam.get("type12"))){
 //          pageParam.put("type12List",StringUtil.splitToList(GlobalConstant.COMMA,(String)pageParam.get("type12")));
