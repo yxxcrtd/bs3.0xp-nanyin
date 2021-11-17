@@ -186,6 +186,7 @@
      * 添加按钮按下处理
      */
     var addProcess = function () {
+        debugger;
         entrustId =  getElementById("entrustId").val();
         //CFET质押式回购check
         if(getElementById("pageFrom").val() == 'CfetsRepoDealQuotedPrice002'){
@@ -258,6 +259,7 @@
                         ,quoteId:quoteId
                         ,tradePlace:tradePlace
                         ,parentPageId:parentPageId
+                        ,mdate:param.data.mdate
                     });
             });
     };
