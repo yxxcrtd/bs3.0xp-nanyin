@@ -679,7 +679,7 @@ from
         TO_CHAR(MBVI.VALUE_DATE,'yyyy-MM-dd') valueDate,
         TO_CHAR(t4.PAY_DATE,'yyyy-MM-dd') lastPaydate,
         sd.ITEM_VALUE rateType,
-        ROUND(t6.RATE*100,4) ||'%' rate,
+        ROUND(fccc.YIELD*100,4) ||'%' rate,
         MBCR.O_TYPE otype,
         sd1.ITEM_VALUE zxGrade,
         sd2.ITEM_VALUE ztGrade,
@@ -727,8 +727,28 @@ from
         fin_cash_info t5 on t5.FINPROD_ID = t1.FINPROD_ID AND t5.CASH_TYPE_2 = 'C02' and t5.FINPROD_TYPE = '01'
         LEFT JOIN
         FIN_RATE_INFO t6 ON t6.CASH_ID = t5.CASH_ID AND to_char(#{sysDate},'yyyy-MM-dd') >= to_char(t6.EFF_DATE,'yyyy-MM-dd')
+        LEFT JOIN (
+        SELECT
+        fcc.YIELD as YIELD,
+        fcc.FINPROD_ID as FINPROD_ID
+        FROM
+        FIN_CASH_CALC_RULE fcc
+        WHERE
+        EFF_DATE =
+        (
+        SELECT
+        MAX(f1.EFF_DATE)
+        FROM
+        FIN_CASH_CALC_RULE f1
+        WHERE
+        to_char(#{sysDate},'yyyy-MM-dd') >= to_char(f1.EFF_DATE,'yyyy-MM-dd')
+        AND f1.FINPROD_ID=#{secId} )
+        AND FINPROD_ID=#{secId}
+        ) fccc
+        on
+            fccc.FINPROD_ID = t1.FINPROD_ID
         LEFT JOIN
-        mst_customer_info t7 ON t1.SPONSOR = t7.CUSTOMER_ID
+            mst_customer_info t7 ON t1.SPONSOR = t7.CUSTOMER_ID
         LEFT JOIN (
         <!-- 取大于当前时间的最接近的实际行权日 -->
         select A.FINPROD_ID,min(A.EXERCISE_DATE) EXERCISE_DATE
