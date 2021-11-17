@@ -2024,13 +2024,6 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				JSONArray jsonArrays = new JSONArray();
 				// 失败条数
 				int errorNum = 0;
-				if (null == objects.get(0) || objects.get(0).size() != 12) {
-					Map<String, Object> resultMap = new HashMap<>();
-					resultMap.put("errorMsg", "数据格式错误，数据格式需要12列。");
-					AjaxResult wr = new AjaxResult();
-					wr.setData(resultMap);
-					return wr;
-				} else {
 					for (int i = 0; i < objects.size(); i++) {
 						String confirmMsg = "";
 						String promptMsg = "";
@@ -2660,7 +2653,6 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 							errorNum++;
 						}
 					}
-				}
 				totalMsg = etrCommonService.StringAddByBr(totalMsg, getMessage("ETR_C_0001", String.valueOf(errorNum)));
 				Map<String, Object> resultMap = new HashMap<>();
 				if (StringUtil.isNotBlank(totalMsg)) {
