@@ -963,6 +963,7 @@ public class PeriodCommonService extends BaseService {
                     creditLinesInputDto.setTgBusiType(DictCodeList.平安资产类型_买断式回购.getValue());
                     creditLinesInputDto.setPsPayment(DictCodeList.回购拆借方向_逆回购.getValue());
                     creditLinesInputDto.setTerm(Long.parseLong(inputDto.getTerm()));
+                    creditLinesInputDto.setFinprodId(null);
                     //查询标的券券面总额及最新面值
                     Map<String,Object> param = new HashMap<>();
                     param.put("finprodId",inputDto.getFinprodId());
@@ -994,6 +995,11 @@ public class PeriodCommonService extends BaseService {
                         if (creditLinesInputDto.getTradeAmt() != null){
                             creditLinesInputDto.setTradeAmt(newFaceValue.multiply(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),100,2)));
                         }
+
+                        CreditLinesInputDto dto2 = new CreditLinesInputDto();
+                        BeanUtil.copyPropertiesIgnoreNull(dto2,creditLinesInputDto);
+                        dto2.setZhiYaQuan(list.get(0).getFinprodId());
+                        inputDtoList.add(dto2);
                     }
                 }
 
