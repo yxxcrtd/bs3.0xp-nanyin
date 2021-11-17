@@ -293,7 +293,11 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                 if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_否.getValue())){
                     outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_17"));
                 }else if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_是.getValue())){
-                    outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_18"));
+                    if(StringUtil.isNotEmpty(inputDto.getZhiYaQuan())){
+                        outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_19"));
+                    }else {
+                        outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_18"));
+                    }
                 }
             }
         }
