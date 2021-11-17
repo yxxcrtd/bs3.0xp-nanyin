@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.common.base.dao.TrdBankManualSettleDetailMapper" >
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TrdBankManualSettleDetail" >
-    <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+<mapper namespace="com.joyintech.tams.common.base.dao.TrdBankManualSetDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TrdBankManualSetDetail" >
+    <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
     <result column="SETTLE_SEQ_NO" property="settleSeqNo" jdbcType="VARCHAR" />
     <result column="SETTLE_STATUS" property="settleStatus" jdbcType="VARCHAR" />
     <result column="SETTLE_DATE" property="settleDate" jdbcType="TIMESTAMP" />
@@ -19,8 +19,23 @@
     <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
     <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
-  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TrdBankManualSettleDetail" >
-    insert into TRD_BANK_MANUAL_SETTLE_DETAIL (SEQ_NO, SETTLE_SEQ_NO, SETTLE_STATUS, 
+  <sql id="Base_Column_List" >
+    SEQ_NO, SETTLE_SEQ_NO, SETTLE_STATUS, SETTLE_DATE, TRADE_ID, FINPROD_ID, FINPROD_ABBR, 
+    PORTFOLIO_ID, SETTLE_NUM, SETTLE_AMT, BUSI_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+    UPDATE_USER, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from TRD_BANK_MANUAL_SET_DETAIL
+    where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TRD_BANK_MANUAL_SET_DETAIL
+    where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TrdBankManualSetDetail" >
+    insert into TRD_BANK_MANUAL_SET_DETAIL (SEQ_NO, SETTLE_SEQ_NO, SETTLE_STATUS, 
       SETTLE_DATE, TRADE_ID, FINPROD_ID, 
       FINPROD_ABBR, PORTFOLIO_ID, SETTLE_NUM, 
       SETTLE_AMT, BUSI_TYPE, CREATE_USER, 
@@ -33,8 +48,8 @@
       #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdBankManualSettleDetail" >
-    insert into TRD_BANK_MANUAL_SETTLE_DETAIL
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdBankManualSetDetail" >
+    insert into TRD_BANK_MANUAL_SET_DETAIL
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="seqNo != null" >
         SEQ_NO,
@@ -136,4 +151,74 @@
       </if>
     </trim>
   </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TrdBankManualSetDetail" >
+    update TRD_BANK_MANUAL_SET_DETAIL
+    <set >
+      <if test="settleSeqNo != null" >
+        SETTLE_SEQ_NO = #{settleSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="settleStatus != null" >
+        SETTLE_STATUS = #{settleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="settleDate != null" >
+        SETTLE_DATE = #{settleDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tradeId != null" >
+        TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+      </if>
+      <if test="finprodId != null" >
+        FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+      </if>
+      <if test="finprodAbbr != null" >
+        FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
+      </if>
+      <if test="portfolioId != null" >
+        PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+      </if>
+      <if test="settleNum != null" >
+        SETTLE_NUM = #{settleNum,jdbcType=DECIMAL},
+      </if>
+      <if test="settleAmt != null" >
+        SETTLE_AMT = #{settleAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="busiType != null" >
+        BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TrdBankManualSetDetail" >
+    update TRD_BANK_MANUAL_SET_DETAIL
+    set SETTLE_SEQ_NO = #{settleSeqNo,jdbcType=VARCHAR},
+      SETTLE_STATUS = #{settleStatus,jdbcType=VARCHAR},
+      SETTLE_DATE = #{settleDate,jdbcType=TIMESTAMP},
+      TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+      FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+      FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
+      PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+      SETTLE_NUM = #{settleNum,jdbcType=DECIMAL},
+      SETTLE_AMT = #{settleAmt,jdbcType=DECIMAL},
+      BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+  </update>
 </mapper>
