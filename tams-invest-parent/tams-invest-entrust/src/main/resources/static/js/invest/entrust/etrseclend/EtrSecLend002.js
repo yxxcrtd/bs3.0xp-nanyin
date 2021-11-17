@@ -111,6 +111,7 @@
       params.tradeDate = sysDate;
       params.finprodId = $("#finprodId").val();
       params.secAcctId = $("#secAcctId").val();
+        params.multiParam=100;
       if (window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery["bussTrdAvailableCashQuery"]) {
         window.BussTrdAvailableCashQuery["bussTrdAvailableCashQuery"].updateCash(function () {
             return params
