@@ -1004,7 +1004,7 @@ from
             AND T8.REAL_NAME = #{repManager,jdbcType=VARCHAR}
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
-            AND T3.FINPROD_MARKET_ID in
+            AND T3.FINPROD_ID in
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
@@ -1125,7 +1125,7 @@ from
             AND T8.REAL_NAME = #{repManager,jdbcType=VARCHAR}
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
-            AND T3.FINPROD_MARKET_ID in
+            AND T3.FINPROD_ID in
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
