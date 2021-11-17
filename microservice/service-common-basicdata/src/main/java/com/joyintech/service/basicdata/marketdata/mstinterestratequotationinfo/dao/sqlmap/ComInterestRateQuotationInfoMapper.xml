@@ -44,7 +44,8 @@
 	<select id="selectByPrimaryKey" resultType="com.joyintech.service.basicdata.marketdata.mstinterestratequotationinfo.dto.ComInterestRateQuotationInfoDto">
 		select 
 			<include refid="Base_Column_List"></include>
-		from MST_INT_RATE_INFO where INT_RATE_ID =#{intRateId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE} and CCY = #{ccy}
+		from MST_INT_RATE_INFO where INT_RATE_ID =#{intRateId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE}
+		and (CCY = #{ccy} or CCY = (SELECT ITEM_CODE FROM SYS_DATADICT_LIST WHERE  DICT_CODE='CCY' AND ITEM_VALUE = #{ccy}))
 	</select>
 
 	<select id="getIntRateId" resultType="java.lang.String">
