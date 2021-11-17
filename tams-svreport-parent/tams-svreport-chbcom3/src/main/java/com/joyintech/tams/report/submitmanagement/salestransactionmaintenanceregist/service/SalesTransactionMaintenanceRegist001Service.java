@@ -312,7 +312,7 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
             //按条件查询全部
             chbRegistList = salesTransactionMaintenanceRegist001Mapper.searchPage(map);
         }else{
-            chbRegistList = (List<SalesTransactionMaintenanceRegist001Dto>)map.get("reportList");
+            chbRegistList = (List<SalesTransactionMaintenanceRegist001Dto>)map.get("registList");
         }
         Iterator<SalesTransactionMaintenanceRegist001Dto> it=chbRegistList.iterator();
         while(it.hasNext()){

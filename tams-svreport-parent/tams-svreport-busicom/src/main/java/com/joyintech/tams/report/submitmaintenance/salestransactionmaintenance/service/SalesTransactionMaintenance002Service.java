@@ -16,6 +16,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dao.SalesTransactionMaintenanceMapper;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
+import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.util.SaleErrdataConvertUtil;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.validate.SalesTransactionMaintenanceValid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +78,14 @@ public class SalesTransactionMaintenance002Service extends BaseService{
      *
      */
     public SalesTransactionMaintenanceDto selectErroDetail(Map<String,Object> param) {
-        return salestransactionmaintenanceMapper.selectErroDetail(param);
+        String registSeqno = param.get("registSeqno").toString();
+        SalesTransactionMaintenanceDto infoDto=new  SalesTransactionMaintenanceDto();
+        List<SalesTransactionMaintenanceDto>  listSaleErrordata = salestransactionmaintenanceMapper.selectErroDetail(param);
+        if(listSaleErrordata!=null&&listSaleErrordata.size()>0){
+            SaleErrdataConvertUtil.errdataAssetInfoConvert(infoDto,listSaleErrordata.get(0));
+            infoDto.setRegistSeqno(registSeqno);
+        }
+        return infoDto;
     }
 
     /**

@@ -29,7 +29,7 @@ public interface SalesTransactionMaintenanceMapper {
      * 双击查看详细信息查询，修改信息查询 <功能详细描述>erro
      *
      */
-    SalesTransactionMaintenanceDto selectErroDetail(Map<String, Object> param);
+    List<SalesTransactionMaintenanceDto> selectErroDetail(Map<String, Object> param);
 
     /**
      * 查询新增数据主键是否重复

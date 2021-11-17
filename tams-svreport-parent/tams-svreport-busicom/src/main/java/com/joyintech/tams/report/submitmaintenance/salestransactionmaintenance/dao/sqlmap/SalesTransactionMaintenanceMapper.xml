@@ -105,6 +105,7 @@
 		from CHB_SALER_STL_DEAL_INFO a
 		where
 		REGIST_SEQNO=#{registSeqno}
+		and DATA_STATUS IN ('E','M')
 	</select>
 
 	<!--	双击查看详细信息查询erro-->
@@ -118,7 +119,9 @@
 		a.ACCOUNT_NO accountNo,
 		a.TRADE_NO tradeNo,
 		a.TRADE_PS tradePs,
-		a.TRADE_VDATE tradeVdate
+		a.TRADE_VDATE tradeVdate,
+		a.ORG_DATA orgData,
+		a.ERR_MSG errMsg
 		FROM  CHB_SALER_STL_DEA_ERRODATA a
 		where
 		REGIST_SEQNO=#{registSeqno}
