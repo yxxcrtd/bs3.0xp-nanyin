@@ -10,6 +10,7 @@
     <div class='layui-fluid' style="padding-left:1px">
         <div class="layui-form-item" style="width:18%;float: left;border-right: 1px solid #ccc;min-height:460px;">
             <form class="layui-form  pro-module-form" style="background: #fff">
+                <input type="hidden" name="treeId" id="treeId" data-th-value="${treeId}"/>
                 <div class="layui-form-item" style="margin-left: 10px;padding-bottom:8px" >
                     <div class="layui-input-inline input-inline"
                          style="width: 95% !important">
@@ -23,9 +24,9 @@
 <!--                </div>-->
                 <div class="layui-form-item">
                     <div class="" id="treeIndPortfDiv"
-                         style="margin-left: 10px; height: 350px">
+                         style="margin-left: 10px; height: 300px">
                         <div class="layui-input"
-                             style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; height: 270px; overflow-y: scroll; margin-right: 50px;"
+                             style="border: 1px solid #dbdbdb; scroll-y: auto; scroll-x: hidden; height: 240px; overflow-y: scroll; margin-right: 50px;"
                              id="treeIndPortf"
                              data-checkall="false" data-checkable="true" data-roottitle=''>
                         </div>
@@ -36,29 +37,30 @@
                          style="width: 95% !important">
                         <input type="text" id="effDate" name="effDate"
                                class="layui-input form-input input-dateSelect"
+                               data-th-value='${#dates.format(iPlatformDate,"yyyy-MM-dd")}'
                                placeholder="选择生效日">
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-left: 200px;padding-bottom:8px" >
+                <div class="layui-form-item" style="margin-left: 180px;padding-bottom:8px" >
                     <div class="layui-input-inline input-inline"
                          style="width: 95% !important">
-                        <a th:id="_btn_confirm" class="layui-btn layui-btn-sm">确认</a>
+                        <a th:id="MultiPortfolioMaintenance002_btn_confirm" class="layui-btn layui-btn-sm">确认</a>
                     </div>
                 </div>
             </form>
         </div>
         <div class="layui-col-lg9" style="width:81%">
-            <div style="height: 500px">
-                <table class="layui-table" id="dataIndTable"></table>
-            </div>
-            <div class="layui-col-md12"  filter="false">
-                <a id="MultiPortfolioMaintenance002_btn_delete" style="float: right;" class="layui-btn layui-btn-sm btn-delete"
+            <div class="layui-col-md12" style="margin: 10px;" filter="false">
+                <a id="MultiPortfolioMaintenance002_btn_delete"  class="layui-btn layui-btn-sm btn-delete"
                    data-th-text="#{SysCommon.delete}">删除</a>
-                <a id="MultiPortfolioMaintenance002_btn_cancel" style="float: right;"class="layui-btn layui-btn-sm btn-create"
+                <a id="MultiPortfolioMaintenance002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel"
                    data-th-text="#{SysCommon.cancel}">取消</a>
-                <a id="MultiPortfolioMaintenance002_btn_commit" style="float: right;" class="layui-btn layui-btn-sm btn-create"
+                <a id="MultiPortfolioMaintenance002_btn_commit"  class="layui-btn layui-btn-sm btn-create"
                    data-th-text="#{SysCommon.submit}">提交</a>
 
+            </div>
+            <div style="height: 500px">
+                <table class="layui-table" id="dataIndTable"></table>
             </div>
         </div>
     </div>
@@ -123,6 +125,7 @@
     </style>
     <script data-th-inline="javascript" type="text/javascript">
         var getAllRelationUrl = /*[[@{/invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance002/getMutiptlPortfolioAcctnoTree}]]*/'';
+        var iPlatformDate = /*[[${iPlatformDate}]]*/'';//平台日期
     </script>
     <script data-th-src="@{/js/invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance002.js}"></script>
 </div>

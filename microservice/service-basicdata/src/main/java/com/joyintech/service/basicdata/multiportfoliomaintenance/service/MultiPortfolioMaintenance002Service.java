@@ -1,18 +1,19 @@
 package com.joyintech.service.basicdata.multiportfoliomaintenance.service;
 
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.TreeNode;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.service.basicdata.multiportfoliomaintenance.dao.MutiptlPortfolioDetailMapper;
 import com.joyintech.service.basicdata.multiportfoliomaintenance.dto.MutiptlPortfolioDetailDto;
-import com.joyintech.tools.collectors.JoyinCollectors;
-import org.apache.commons.collections.list.AbstractLinkedList;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,5 +59,51 @@ public class MultiPortfolioMaintenance002Service extends BaseService<MutiptlPort
             });
         });
         return treeNodes;
+    }
+
+    /**
+     * 根据名称查询账户树
+     *
+     * @param dto
+     * @return
+     * @since 1.0
+     */
+    public Integer isExistPortfolio(MutiptlPortfolioDetailDto dto) {
+        Integer count =mutiptlPortfolioDetailMapper.isExistPortfolio(dto);
+        return count;
+    }
+    /**
+     * 插入记录
+     * @param dto
+     * @return
+     */
+    public Integer insert(MutiptlPortfolioDetailDto dto) {
+        for(MutiptlPortfolioDetailDto temp:dto.getSelectedItem()){
+            MutiptlPortfolioDetailDto insertDto = new MutiptlPortfolioDetailDto();
+            BeanUtil.copyPropertiesIgnoreNull(insertDto, temp);
+            insertDto.setSeqNo(IDGenerator.generate());
+            insertDto.setCreateUser(LoginUserUtil.getUserName());
+            insertDto.setUpdateUser(LoginUserUtil.getUserName());
+            Date date= DateUtil.now();
+            insertDto.setCreateTime(date);
+            insertDto.setUpdateTime(date);
+            insertDto.setCreateDept(LoginUserUtil.getDeptCode());
+            mutiptlPortfolioDetailMapper.insert(insertDto);
+        }
+        return 1;
+    }
+
+    /**
+     * 删除记录
+     * @param dto
+     * @return
+     */
+    public Integer delete(MutiptlPortfolioDetailDto dto) {
+        for(MutiptlPortfolioDetailDto temp:dto.getSelectedItem()){
+            MutiptlPortfolioDetailDto deleteDto = new MutiptlPortfolioDetailDto();
+            BeanUtil.copyPropertiesIgnoreNull(deleteDto, temp);
+            mutiptlPortfolioDetailMapper.deleteByPrimaryKey(deleteDto.getSeqNo());
+        }
+        return 1;
     }
 }

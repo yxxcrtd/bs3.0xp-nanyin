@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.basicdata.multiportfoliomaintenance.dto;
 
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.tams.common.base.entity.MutiptlPortfolioTree;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.List;
 

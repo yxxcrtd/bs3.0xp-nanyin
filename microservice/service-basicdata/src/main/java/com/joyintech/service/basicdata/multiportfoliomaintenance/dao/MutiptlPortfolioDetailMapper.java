@@ -23,4 +23,6 @@ public interface MutiptlPortfolioDetailMapper {
     List<MutiptlPortfolioDetailDto> selectForPage(Map<String, Object> param);
 
     List<MutiptlPortfolioDetailDto> getMutiptlPortfolioAcctnoTree(Map<String, Object> param);
+
+    int isExistPortfolio(MutiptlPortfolioDetailDto dto);
 }

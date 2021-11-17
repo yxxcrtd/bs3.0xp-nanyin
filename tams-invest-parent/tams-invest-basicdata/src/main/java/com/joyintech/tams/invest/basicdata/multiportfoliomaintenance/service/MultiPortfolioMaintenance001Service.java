@@ -9,7 +9,6 @@ import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.basicdata.multiportfoliomaintenance.dto.MultiPortfolioMaintenanceDto;
 import com.joyintech.tams.invest.basicdata.multiportfoliomaintenance.dto.MutiptlPortfolioDetailDto;
 import com.joyintech.tams.invest.basicdata.multiportfoliomaintenance.dto.MutiptlPortfolioTreeDto;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -26,29 +25,7 @@ import java.util.Map;
  * 对账参数设置
  */
 @Service
-public class MultiPortfolioMaintenance001Service extends CommonExportService<MutiptlPortfolioDetailDto>
-        implements BaseProcessService<MultiPortfolioMaintenanceDto> {
-    /**
-     * 继承框架doComplete，完成增删改
-     * @param entity 业务实体
-     * @param type 操作类型
-     */
-    @Override
-    public void doComplete(MultiPortfolioMaintenanceDto entity, OperationType type) {
-        entity.setOperateType(type.toString());
-        String action = StringUtil.EMPTY;
-        // 删除
-        if (entity.getOperateType().equals("DELETE")) {
-            action = "delete";
-            // 插入
-        } else if (entity.getOperateType().equals("NEW")) {
-            action = "insert";
-        } else {
-            // 更新
-            action = "update";
-        }
-        restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/StlSecReconPara/" + action, entity, Integer.class);
-    }
+public class MultiPortfolioMaintenance001Service extends CommonExportService<MutiptlPortfolioTreeDto>{
 
     /**
      * 分页查询

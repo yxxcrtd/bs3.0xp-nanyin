@@ -138,7 +138,7 @@
         Joyin.dialog(JoyinUtil.getLabel("MultiPortfolioMaintenance002"),
             //JoyinUtil.getRealPath("invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPointInd002/init"),
             JoyinUtil.getRealPath("invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance002/init"),
-            "100%", "100%",{pageModel : PAGE_MODEL_NEW,indId:indId,indName:indName}
+            "100%", "100%",{pageModel : PAGE_MODEL_NEW,treeId:indId,indName:indName}
         );
     }
 
@@ -165,11 +165,6 @@
         searchTreeSingle();
 
 
-        // 绑定按钮事件
-        $('#MultiPortfolioMaintenance001_btn_search').click(function() {
-            table.load();
-            $('#MultiPortfolioMaintenance001_btn_delete').show();
-        });
         $('#MultiPortfolioMaintenance001_btn_add').click(function() {
             openNew();
         });
@@ -179,24 +174,12 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
             }
-            for(var i=0;i<selArr.length;i++){
-                var rskSupervisionIndicator002DtoList = [];
-                var rskSupervisionIndicator002Dto = {indId:selArr[i].indId,portfolioId:selArr[i].portfolioId};
-                rskSupervisionIndicator002DtoList[0] = rskSupervisionIndicator002Dto;
-                selArr[i].rskSupervisionIndicator002DtoList = rskSupervisionIndicator002DtoList;
-                selArr[i].opeType = "delete"
-            }
-            var object = {selectedItem: selArr, treeFlag:"A",indId:$("div.condition-area").find('#indId').val(),operateType:"delete"};
-            Joyin.ajaxJson(basePath + 'invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint001/check', object, function(result) {//请求路径，请求参数回调函数
-                Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    // mody by zhuzhen 20191128 组合关联指标删除时校验联合设置 start
-                    Joyin.ajaxJson(basePath + 'invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint001/checkDelate', object, function(result) {
-                        WorkFlow.doDeleteList(basePath + 'invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint001/delete', object,
-                            "MultiPortfolioMaintenance001_btn_delete","RskSupervisionPortfPoint004",function() {
-                                table.reload();
-                            });
-                    });
-                    // mody by zhuzhen 20191128 组合关联指标删除时校验联合设置 end
+            var object={};
+            object.selectedItem=selArr;
+            object.operateType="DELETE";
+            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+                Joyin.ajaxJson(basePath + 'invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance002/delete', object,function (result) {
+                    table.reload();
                 });
             });
         });

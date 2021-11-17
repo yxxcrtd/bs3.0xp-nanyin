@@ -56,116 +56,51 @@
      * 定义单组合数据表格
      */
     var table=$("#dataIndTable").joyintable({
-        ajax: {
-            url:  basePath + "invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance001/findPage",
-            type: 'POST',
-            data: function() {
-                return getSearchParams();
-            }
-        },
-        /**
-         * 双击查看
-         */
-        dblclick:function(table, data) {
-            data.pageModel = PAGE_MODEL_REFERENCE;
-            Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                basePath + "invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint004/init",
-                "70%", "90%", data);
-        },
-
+        data:[],
         cols:[
-            {field:'seqNo', width:150 , visible: false}
-            ,{field:'portfolioId', width:200, title: '组合代码' ,sortable: true}
+            {field:'portfolioId', width:200, title: '组合代码' ,sortable: true}
             ,{field:'portfolioName', width:200, title: '组合名称',sortable: true}
             ,{field:'acctNo', width:200, title: '资金账户',sortable: true}
             ,{field:'effDate', width:200, title: '生效日',sortable: true,type:'date'}
+            ,{field:'treeId', visible: false}
         ]
     });
 
     /**
-     * 绑定指标名称事件
+     * 重设表格数据
      */
-    table.bind('click', '.indName', function(data, index) {
-        data.pageModel = PAGE_MODEL_REFERENCE;
-        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-            basePath + "invest/riskredis/quota/superviseindicator/RskSupervisionIndicator002/init",
-            "70%", "90%",data,function() {
-                table.reload();
-            });
-    })
-
-    /**
-     * 绑定编辑事件
-     */
-    table.bind('click', '.edit', function(data, index) {
-        data.pageModel = PAGE_MODEL_EDIT;
-        Joyin.ajaxJson(basePath + 'invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint004/check', data, function(result) {
-            Joyin.dialog(JoyinUtil.getLabel("RskSupervisionPortfPoint004"),
-                basePath + "invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint004/init",
-                "70%", "90%",data,function() {
-                    table.reload();
-                });
-        });
-    });
-
-    /**
-     * 绑定设置事件
-     */
-    table.bind('click', '.set', function(data, index) {
-        data.pageModel = PAGE_MODEL_NEW;
-        Joyin.dialog(JoyinUtil.getLabel("RskSupervisionIndividuation001"),
-            basePath + "invest/riskredis/quota/supervisionindividuation/RskSupervisionIndividuation001/init",
-            "90%", "90%",data,function() {
-                table.reload();
-            });
-    })
-
-    /**
-     * 绑定删除事件
-     */
-    table.bind('click', '.delt', function(data, index) {
-        var rskSupervisionIndicator002DtoList = [];
-        var rskSupervisionIndicator002Dto = {indId:data.indId,portfolioId:data.portfolioId};
-        rskSupervisionIndicator002DtoList[0] = rskSupervisionIndicator002Dto;
-        data.rskSupervisionIndicator002DtoList = rskSupervisionIndicator002DtoList;
-        data.opeType = "delete";
-        var object = {selectedItem: [data],treeFlag:"A",indId:$("div.condition-area").find('#indId').val(),portfolioId:data.portfolioId,operateType:"delete"};
-        Joyin.ajaxJson(basePath + 'invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint001/check', object, function(result) {//请求路径，请求参数回调函数
-            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                // mody by zhuzhen 20191128 组合关联指标删除时校验联合设置 start
-                Joyin.ajaxJson(basePath + 'invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint001/checkDelate', object, function(result) {
-                    WorkFlow.doDeleteList(basePath + 'invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint001/delete', object,
-                        "MultiPortfolioMaintenance001_btn_delete","RskSupervisionPortfPoint004",function() {
-                            table.reload();
-                        });
-                });
-                // mody by zhuzhen 20191128 组合关联指标删除时校验联合设置 end
-            });
-        });
-    });
-    /**
-     * 弹出新建画面
-     * @returns
-     */
-    function openNew() {
-        var indId="",indName="";
+    var resetTableData = function () {
         var treeObj = $.fn.zTree.getZTreeObj("treeIndPortf_tree");
-        var nodes = treeObj.getSelectedNodes();
-
-        $.each(nodes,function(i,v){
-            if(v.level==1){
-                indId=v.id;
-                indName=v.name;
-            }
-        })
-        if(nodes.length==0||indId==""){
-            Joyin.error(JoyinUtil.getMessage("RSKRDS_W_0017",JoyinUtil.getLabel("RskSupervisionPortfPoint001.indicator")));
+        var nodes = treeObj.getCheckedNodes();
+        if (!nodes || nodes.length == 0) {
+            Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
             return;
         }
-        Joyin.dialog(JoyinUtil.getLabel("RskSupervisionPortfPointInd002"),
-            JoyinUtil.getRealPath("invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPointInd002/init"),
-            "70%", "90%",{pageModel : PAGE_MODEL_NEW,indId:indId,indName:indName}
-        );
+        if($('#effDate').val()==null||$('#effDate').val()==''){
+            Joyin.error(JoyinUtil.getMessage("MultiPortfolioMaintenance002.effDate.isEmpty"));
+            return;
+        }
+        if($('#effDate').val()&&typeof $('#effDate').val() != 'undefined'
+            &&iPlatformDate && typeof iPlatformDate != 'undefined'){
+            if(Date.ofDate($('#effDate').val()).DateDiff('d',iPlatformDate)>0){
+                Joyin.error(JoyinUtil.getMessage("MultiPortfolioMaintenance002.effDate.vaild"));
+                return;
+            }
+        }
+        var selectedItem = [];
+        $.each(nodes,function(i,v){
+            if(v.level==1){
+                selectedItem.push({'portfolioId':v.pId,'portfolioName':v.name,'acctNo':v.id,'effDate':$('#effDate').val(),'treeId':$('#treeId').val()})
+            }
+        })
+        var object ={};
+        object.selectedItem=selectedItem;
+        object.operateType='confirm';
+        Joyin.ajaxJson(basePath + 'invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance002/check', object,function (result) {
+            table.load();
+            table.reload({data:selectedItem});
+        });
+
     }
 
     /**
@@ -190,41 +125,53 @@
         $("#treeIndPortf").attr('url',getAllRelationUrl+'?type='+indType)
         searchTreeSingle();
 
-
-        // 绑定按钮事件
-        $('#MultiPortfolioMaintenance001_btn_search').click(function() {
+        /**
+         * 确定按钮绑定事件
+         */
+        $('#MultiPortfolioMaintenance002_btn_confirm').click(function () {
+            resetTableData();
+        });
+        // 取消
+        $('#MultiPortfolioMaintenance002_btn_cancel').click(function() {
+            table.clear();
             table.load();
-            $('#MultiPortfolioMaintenance001_btn_delete').show();
         });
         $('#MultiPortfolioMaintenance001_btn_add').click(function() {
             openNew();
         });
-        $('#MultiPortfolioMaintenance001_btn_delete').click(function() {
-            var selArr = table.getAllCheckedRows();
+        $('#MultiPortfolioMaintenance002_btn_delete').click(function() {
+            var selArr = table.getAllRows();
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-                var rskSupervisionIndicator002DtoList = [];
-                var rskSupervisionIndicator002Dto = {indId:selArr[i].indId,portfolioId:selArr[i].portfolioId};
-                rskSupervisionIndicator002DtoList[0] = rskSupervisionIndicator002Dto;
-                selArr[i].rskSupervisionIndicator002DtoList = rskSupervisionIndicator002DtoList;
-                selArr[i].opeType = "delete"
+                if(selArr[i].LAY_CHECKED){
+                    table.removeRow(selArr[i])
+                }
             }
-            var object = {selectedItem: selArr, treeFlag:"A",indId:$("div.condition-area").find('#indId').val(),operateType:"delete"};
-            Joyin.ajaxJson(basePath + 'invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint001/check', object, function(result) {//请求路径，请求参数回调函数
-                Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    // mody by zhuzhen 20191128 组合关联指标删除时校验联合设置 start
-                    Joyin.ajaxJson(basePath + 'invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint001/checkDelate', object, function(result) {
-                        WorkFlow.doDeleteList(basePath + 'invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPoint001/delete', object,
-                            "MultiPortfolioMaintenance001_btn_delete","RskSupervisionPortfPoint004",function() {
-                                table.reload();
-                            });
+            table.load();
+        });
+        /**
+         * 取消
+         */
+        $('#MultiPortfolioMaintenance002_btn_commit').click(function () {
+            var selArr = table.getAllRows();
+            if (!selArr || selArr.length == 0) {
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                return;
+            }
+            var object={};
+            object.selectedItem=selArr;
+            object.operateType="NEW";
+            Joyin.ajaxJson(basePath + 'invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance002/check', object,function (result) {
+                Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.submit")), function(){
+                    Joyin.ajaxJson(basePath + 'invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance002/insert', object,function (result) {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
                     });
-                    // mody by zhuzhen 20191128 组合关联指标删除时校验联合设置 end
                 });
             });
+
         });
         //指标类型联动事件
         $("#indType").change(function(){

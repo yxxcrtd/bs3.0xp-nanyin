@@ -1,5 +1,7 @@
 package com.joyintech.tams.common.base.entity;
 
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+
 import java.util.Date;
 
 /**
@@ -12,6 +14,7 @@ public class MutiptlPortfolioDetail {
     /**
      * 序号
      */
+    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String seqNo;
 
     /**
