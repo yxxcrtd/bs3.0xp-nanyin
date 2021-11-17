@@ -727,6 +727,9 @@
              <if test="entrustId !=null and entrustId != ''">
                  wiqc.ENTRUST_ID = #{entrustId}
              </if>
+             <if test="workflowId !=null and workflowId != ''">
+                and  wiqc.WORKFLOW_ID != #{workflowId}
+             </if>
          </where>
     UNION ALL
         SELECT

@@ -1312,7 +1312,7 @@ SELECT T.QUOTE_ID,
 		QUOTE_ID) PORTFOLIO_ID ,
 		LISTAGG(ENTRUST_ID, ',') WITHIN GROUP(
 		ORDER BY
-		QUOTE_ID) ENTRUST_ID
+		QUOTE_ID)ENTRUST_ID
 		FROM
 		WFL_IBU_QUOTE_ETR_RE
 		GROUP BY
@@ -1491,6 +1491,9 @@ SELECT T.QUOTE_ID,
 			</if>
 			<if test="termEnd !=null and termEnd !=''">
 				and a.TERM <![CDATA[<=]]> #{termEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="term !=null and term !=''">
+				and a.TERM = #{term,jdbcType=VARCHAR}
 			</if>
 			<if test="ouPartyIdList != null and ouPartyIdList.size() > 0">
 				and a.OU_PARTY_ID in

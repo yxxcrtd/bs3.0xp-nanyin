@@ -19,19 +19,19 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.MstCfetsCustomerInfoMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice001Service;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice002Service;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice003Service;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import com.joyintech.tams.invest.common.util.QuotaPageModelUtil;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -221,6 +221,10 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
                     }
                 }
             }
+            //check  必须保证组合列表都能分配到质押券
+            if(StringUtil.equals(ps,BussinessDictCodeList.回购拆借方向_正回购.getValue())){
+                完全分配(validList,dto);
+            }
         }
         else{
             if(StringUtil.isEmpty(dto.getPortfolioId())){
@@ -353,14 +357,14 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
                 }
             }
             // 校验质押券的到期日是否小于报价到期结算日
-            /*if(!StringUtil.isEmptyList(dto.getPledgeBondList())){
+            if(!StringUtil.isEmptyList(dto.getPledgeBondList())){
                 for (CfetsRepoDealQuotedPrice003Dto dto2 : dto.getPledgeBondList()) {
                     if(DateUtil.compareDate(dto2.getMdate(), dto.getmSettleDate()) == -1){
                         validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_R_029",
                             dto2.getBondCode())));
                     }
                 }
-            }*/
+            }
         }
         else if (StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_逆回购.getValue())) {
             // 8) 交易方向为逆回购，价格模式为限价，需校验回购利率不能小于委托指令的回购利率，
@@ -404,6 +408,7 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
                 Map<String,Object> paramUsedAmt = new HashMap<>();
                 paramUsedAmt.put("entrustId",cfetsRepoDealQuotedPrice001Dto.getEntrustId());
                 paramUsedAmt.put("quoteId",dto.getQuoteId());
+                paramUsedAmt.put("workflowId",dto.getWorkflowId());
                 BigDecimal usedAmt = cfetsRepoDealQuotedPrice002Service.selectUsedAmt(paramUsedAmt);
                 usedAmt = null==usedAmt?new BigDecimal(0):usedAmt;
                 if (StringUtil.equals("01",CacheUtil.getSysParam("ibuFlag_repoOverEntrustAvaAmt"))) {
@@ -490,6 +495,23 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
                 DateUtil.parse(platDateStr)) == -1)) {
             validList.add(
                     new ValidMessage("entrustId", this.getMessage("CFETS_COMMON_E_003")));
+        }
+    }
+
+
+    private void  完全分配(List<ValidMessage> validList,CfetsRepoDealQuotedPrice001Dto dto){
+        List<PtlAllocationDto> ptlAllocationList = dto.getPtlAllocationList();
+        List<CfetsRepoDealQuotedPrice003Dto> pledgeBondList = dto.getPledgeBondList();
+        if(!CollectionUtils.isEmpty(pledgeBondList)&&!CollectionUtils.isEmpty(ptlAllocationList)){
+            Map<String,Object> pledgeBondMap = new HashMap<>();
+            pledgeBondList.stream().collect(Collectors.groupingBy(CfetsRepoDealQuotedPrice003Dto::getPortfolioId,Collectors.toList()))
+                    .forEach(pledgeBondMap::put);
+            for (PtlAllocationDto ptlAllocationDto : ptlAllocationList) {
+                if(!pledgeBondMap.containsKey(ptlAllocationDto.getPortfolioId())){
+                    validList.add(new ValidMessage(this.getMessage("组合分配中组合没有质押券持仓!组合代码:"+ptlAllocationDto.getPortfolioId())));
+                    break;
+                }
+            }
         }
     }
 }
