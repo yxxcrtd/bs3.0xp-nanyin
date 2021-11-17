@@ -20,7 +20,12 @@ import java.util.Map;
 
 import com.joyintech.tams.component.business.settle.dto.BussSettleOrderParameterDto;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
+import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.constant.InterfCommonConstant;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.product.common.service.ProductCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -126,6 +131,12 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
 
     @Autowired
     private ProductCommonService productCommonService;
+
+    /**
+     * 业务编号取得共通
+     */
+    @Autowired
+    private BaseGetBussinessId baseGetBussinessIdimpl;
 
     
     /**
@@ -387,6 +398,36 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
                 restTemplate.postForObject(
                         ServiceApplication.PORTFOLIO_SERVICE_NAME + "/common/ptlposition/insertPosition",
                         ptlPositionHoldDto, Boolean.class);
+                // GZYHTZJY-324:产品增值税缴纳新建审批后需要扣减指令现金 fuyongsheng 20211117 edit start
+                //指令现金流水
+                List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
+                EtrCashPositionFlowDto etrCashPositionFlowDto = new EtrCashPositionFlowDto();
+                //组合代码
+                etrCashPositionFlowDto.setPortfolioId(listDto.getPortfolioId());
+                //账户
+                etrCashPositionFlowDto.setAcctId(stlpayorder == null ? null : stlpayorder.getMyAcctNo());
+                //持仓类型
+                etrCashPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());;
+                //日期
+                etrCashPositionFlowDto.setCdate(tradedate);
+                //币种
+                etrCashPositionFlowDto.setCcy(dto.getCcy());
+                //数量
+                etrCashPositionFlowDto.setAmount(stlpayorder.getSettleAmt().negate());
+                //业务编号
+                etrCashPositionFlowDto.setOrderId(stlpayorder.getOrderId());
+                //通道金融产品代码
+                if (StringUtil.isNotEmpty(dto.getChannelId()) && StringUtil.equals(dto.getPayType(), DictCodeListExt2.划款方式_一次性划款.getValue())) {
+                    etrCashPositionFlowDto.setChlFinprodId("F28_" + dto.getChannelId());
+                }
+                BussinessCodeParameter parameter = new BussinessCodeParameter();
+                parameter.setSeqNo("9999");
+                etrCashPositionFlowDto.setSeqno(baseGetBussinessIdimpl.buildBussinessCode(parameter));
+                etrCashPositionFlows.add(etrCashPositionFlowDto);
+                EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
+                EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+                // GZYHTZJY-324:产品增值税缴纳新建审批后需要扣减指令现金 fuyongsheng 20211117 edit end
             }
 //        }
         /*del by xr 中债交易登记缺少增值税交易 修复*/
