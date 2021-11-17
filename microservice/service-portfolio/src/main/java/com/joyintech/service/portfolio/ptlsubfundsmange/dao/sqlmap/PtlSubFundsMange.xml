@@ -53,7 +53,7 @@
 		'root' parentInfo,
 		wft.ccy as ccy,
 		<!--多级法人改造 add by jingqiongqiong 20200615-->
-		ptp.PORTFOLIO_ID AS portfolioId1
+		nvl(ptp.parent_portfolio_id,ptp.PORTFOLIO_ID) portfolioId1
 		<!--多级法人改造 add by jingqiongqiong 20200615-->
 		from
 		WFL_TRD_FIN_PRODUCT_DEAL_TOTAL wft
@@ -101,7 +101,7 @@
 		and wft.TRADE_STATUS=#{tardeStatus}
 		   group by wft.TOTLE_TRADE_ID,wft.SETTLE_DATE,fp.FINPROD_NAME,
 		<!--多级法人改造 add by jingqiongqiong 20200615-->
-    wft.PORTFOLIO_ID,wft.TRADE_AMt,wft.WORKFLOW_ID,wft.ccy,ptp.PORTFOLIO_ID
+    wft.PORTFOLIO_ID,wft.TRADE_AMt,wft.WORKFLOW_ID,wft.ccy,nvl(ptp.parent_portfolio_id,ptp.PORTFOLIO_ID)
 		<!--多级法人改造 add by jingqiongqiong 20200615-->
     union all
 
