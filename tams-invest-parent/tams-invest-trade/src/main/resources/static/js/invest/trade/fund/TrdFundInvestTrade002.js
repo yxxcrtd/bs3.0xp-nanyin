@@ -105,16 +105,12 @@ $(function () {
             $('#accAvailableCash_c_div').hide();
             $('#assetAvailablePosition_div').hide();
             $('#expectedArrivalDate_div').hide();
+            $('#transferInformation').show();
             if (ps == ps_T52) {
                 $('#settleSpreed1_div').hide();
                 $('#trdFundFTradeId').hide();
-                $('#transferInformation').hide();
-                $('#trdFundFTradeId').hide();
             } else {
                 $('#settleSpreed1_div').show();
-                $('#trdFundFTradeId').show();
-
-                $('#transferInformation').show();
                 $('#trdFundFTradeId').show();
             }
 

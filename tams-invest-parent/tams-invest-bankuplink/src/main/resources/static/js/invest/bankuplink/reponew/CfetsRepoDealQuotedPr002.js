@@ -69,7 +69,7 @@
                         $('#CfetsRepoDealQuotedPrice002_mySide').textSelect('setValue',data.mySide);
                         $('#CfetsRepoDealQuotedPrice002_mySideTrader').textSelect('setValue',data.mySideTrader);
                         $('#CfetsRepoDealQuotedPrice002_counterTrader').textSelect('setValue',data.counterTrader);
-                        $('#CfetsRepoDealQuotedPrice002_secAcctId').val(data.secAcctId);
+                        $('#secAcctId').val(data.secAcctId);
                     }
                 }else{
                     $('#CfetsRepoDealQuotedPrice002_portfolioName').attr('disabled', false);

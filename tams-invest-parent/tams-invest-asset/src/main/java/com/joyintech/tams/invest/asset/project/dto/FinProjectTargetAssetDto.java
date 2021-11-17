@@ -641,7 +641,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     @Override
     @PrimaryKey(Field.PK_1)
     @Code(fieldName = "FinProjectTargetAsset002.finprodId", length = 32, groups = {ValidateGroupEdit.class})
-    @NotEmpty(fieldName = "FinProjectTargetAsset002.finprodId",groups={ValidateGroupEdit.class})//非空校验
+//    @NotEmpty(fieldName = "FinProjectTargetAsset002.finprodId",groups={ValidateGroupEdit.class})//非空校验
     public String getFinprodMarketId(){
         return super.getFinprodMarketId();
     }

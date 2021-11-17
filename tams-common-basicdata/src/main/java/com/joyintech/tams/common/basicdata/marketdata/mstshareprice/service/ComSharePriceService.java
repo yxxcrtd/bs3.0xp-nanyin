@@ -260,6 +260,17 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
             List<String> list = dataList.get(i);
             ComSharePriceDto = new ComSharePriceDto();
             if (StringUtil.isNotEmpty(list.get(0))) {
+                //股票标的是否存在
+                Map<String, Object> params=new HashMap<>();
+                params.put("initValue",list.get(0));
+                try {
+                    Page<SelectOptionDto> page=getFinprodIdForAdd(params);
+                    if(page.getTotal()==0){
+                        continue;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 ComSharePriceDto.setSharesId(list.get(0).trim());
             }
             if (StringUtil.isNotEmpty(list.get(1))) {
@@ -526,31 +537,33 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
         throws ParseException {
     	List<ComSharePriceDto> equityList = converToBean(dataList,null);
     	List<Integer> duplicateData=new ArrayList<Integer>();
-      for (int i = 0; i < dataList.size(); i++ ) {
-      	ComSharePriceDto ComSharePriceDto = equityList.get(i);
-      	if(ComSharePriceDto.getSharesId() == null
-        		|| ComSharePriceDto.getDealDate() == null
-        		|| duplicateData.contains(i)){
-      		continue;
+    	if(!org.apache.commons.collections4.CollectionUtils.isEmpty(equityList)) {
+            for (int i = 0; i < dataList.size(); i++) {
+                ComSharePriceDto ComSharePriceDto = equityList.get(i);
+                if (ComSharePriceDto.getSharesId() == null
+                        || ComSharePriceDto.getDealDate() == null
+                        || duplicateData.contains(i)) {
+                    continue;
+                }
+                // 检查表内数据是否有主键重复
+                for (int k = i + 1; k < dataList.size(); k++) {
+                    if (equityList.get(k).getSharesId() == null
+                            || equityList.get(k).getDealDate() == null) {
+                        continue;
+                    }
+                    if (equityList.get(k).getSharesId().equals(
+                            ComSharePriceDto.getSharesId())
+                            && equityList.get(k).getDealDate().equals(ComSharePriceDto.getDealDate())) {
+                        if (!duplicateData.contains(k)) {
+                            duplicateData.add(k);
+                        }
+                    }
+                }
+            }
         }
-          // 检查表内数据是否有主键重复
-          for (int k = i + 1; k < dataList.size(); k++ ) {
-        	  if(equityList.get(k).getSharesId() == null
-              		|| equityList.get(k).getDealDate() == null){
-        		  continue;
-              }
-              if (equityList.get(k).getSharesId().equals(
-              		ComSharePriceDto.getSharesId())
-                      && equityList.get(k).getDealDate().equals(ComSharePriceDto.getDealDate())) {
-              	if(!duplicateData.contains(k)){
-              		duplicateData.add(k);
-              	}
-              }
-          }
-      }
-      if(duplicateData.isEmpty()){
-    	  duplicateData.add(-1);
-      }
+//      if(duplicateData.isEmpty()){
+//    	  duplicateData.add(-1);
+//      }
       return duplicateData;
     }
 

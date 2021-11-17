@@ -70,25 +70,25 @@
         STL_SEC_RECON_PARA T1
     WHERE
         PARA_CODE = #{RECON_PARA_CODE_02}
-        AND <![CDATA[ CONFIG_DATE <= to_date(#{execDate,jdbcType=VARCHAR},'yyyy-MM-dd') ]]>
-        AND EXISTS (
+    <!--AND <![CDATA[ CONFIG_DATE <= to_date(#{execDate,jdbcType=VARCHAR},'yyyy-MM-dd') ]]>
+    AND EXISTS (
+    SELECT
+        1
+    FROM
+        (
         SELECT
-            1
+            CUSTOMER_ID,
+            MAX(CONFIG_DATE) CONFIG_DATE
         FROM
-            (
-            SELECT
-                CUSTOMER_ID,
-                MAX(CONFIG_DATE) CONFIG_DATE
-            FROM
-                STL_SEC_RECON_PARA
-            GROUP BY
-                CUSTOMER_ID) T2
-        WHERE
-		T2.CUSTOMER_ID = T1.CUSTOMER_ID
-		AND T1.CONFIG_DATE = T2.CONFIG_DATE)
-    </select>
+            STL_SEC_RECON_PARA
+        GROUP BY
+            CUSTOMER_ID) T2
+    WHERE
+    T2.CUSTOMER_ID = T1.CUSTOMER_ID
+    AND T1.CONFIG_DATE = T2.CONFIG_DATE)-->
+</select>
 
-    <!--查询对账结果-->
+<!--查询对账结果-->
     <select id="listStlSecRecon" resultType="com.joyintech.tams.common.base.entity.StlSecRecon">
     SELECT
         FINPROD_ID,

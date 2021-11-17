@@ -8,7 +8,7 @@
             <Cell order="4" name="本方">ourinstitutioncode</Cell>
             <Cell order="5" name="对手方">counterinstitutioncode</Cell>
             <Cell order="6" name="对手方机构">cpPartyName</Cell>
-            <Cell order="7" name="交易金额">tradecashamt</Cell>
+            <Cell order="7" name="交易金额(元)">tradecashamt</Cell>
             <Cell order="8" name="回购期限(天)">tradelimitdaysStr</Cell>
             <Cell order="9" name="回购利率(%)">priceTxt</Cell>
             <Cell order="10" name="代码">securityid</Cell>
