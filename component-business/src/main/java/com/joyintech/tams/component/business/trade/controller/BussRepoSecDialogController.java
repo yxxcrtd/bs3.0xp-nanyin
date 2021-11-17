@@ -152,6 +152,7 @@ public class BussRepoSecDialogController extends BaseController {
         //add by meifaxin 20190928 区分银行间 start
         model.addAttribute("tradePlace",this.getParam("tradePlace"));
         //add by meifaxin 20190928 区分银行间 end
+        model.addAttribute("mdate",this.getParam("mdate"));
         return "component/trade/BussRepoSecDialog";
     }
 

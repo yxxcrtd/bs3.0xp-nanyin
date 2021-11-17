@@ -353,6 +353,9 @@
               AND mbvi.LAST_PERIOD &lt;= to_number(#{endDays1End})
            </if>
   		   <!-- 可质押列表增加“债项评级”、“到期日”、“登记托管机构”、“剩余期限”字段 add by renping 20191011 end -->
+            <if test='mdate!=null and mdate!=""'>
+                AND fp.mdate >= to_date(#{mdate},'yyyy-MM-dd')
+            </if>
         </where>
        <if test="isWithInvAim">
           ORDER BY
@@ -428,6 +431,9 @@
            </if>
             <if test="tradePlace!=null and tradePlace!='' and tradePlace != 'null'">
                 AND fp.TRADE_MARKET = #{tradePlace}
+            </if>
+            <if test='mdate!=null and mdate!=""'>
+                AND fp.mdate >= to_date(#{mdate},'yyyy-MM-dd')
             </if>
         </where>
    </select>

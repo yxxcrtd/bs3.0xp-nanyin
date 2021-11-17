@@ -369,9 +369,17 @@ implements BaseProcessService<TrdFundDuration001Dto>{
         }else {
             pageParam.put("chlIdList",new ArrayList<>());
         }
-        return restTemplate.postForPage(
+        Page<TrdFundDuration001Dto>  page =restTemplate.postForPage(
             ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDuration/findPage", pageParam,
             TrdFundDuration001Dto.class);
+        for (TrdFundDuration001Dto dto: page.getRoot()) {
+            if (StringUtil.equals(dto.getAssetType(),DictCodeList.基金类资产类型_货币基金.getValue())){
+              dto.setRegistDate(null); dto.setExRightsDate(null);
+              dto.setArriveDate(null); dto.setRegistShare(null);
+              dto.setUnitCprice(null); dto.setTradeAmt(null);
+            }
+        }
+        return page;
     }
     /**
      * @Description: 构建导出参数

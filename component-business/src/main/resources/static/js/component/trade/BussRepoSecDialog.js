@@ -56,6 +56,7 @@
                 // add by meifaxin 20210929 银行间 start
                 param.tradePlace = tradePlace;
                 // add by meifaxin 20210929 银行间 end
+                param.mdate = mdate;
                 return param;
             }
         },
