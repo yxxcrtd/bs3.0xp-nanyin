@@ -1263,8 +1263,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                         .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
                         .put("portfolioId", item.getPortfolioId())
                         .put("cdate", cfetsDto.getEtrDate())
-                        .put("finprodId", cfetsDto.getFinprodId())
-                        .put("invaim",item.getBusinessModel());
+                        .put("finprodId", cfetsDto.getFinprodId());
                 // 查询头寸信息
                 Map map = cfetsetrIbBondinfoMapper.queryPositionByEtrInfo(bm);
                 //本方券T日可用持仓

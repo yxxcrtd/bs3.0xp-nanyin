@@ -1163,7 +1163,6 @@ from
         where to_char(a.cdate,'yyyy-MM-dd') = to_char(#{cdate},'yyyy-MM-dd') and (b.S_HOLDINGTYPE IN (#{S_003}) or a.HODING_TYPE in (#{A_004}))
         and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         and  a.PORTFOLIO_ID  = #{portfolioId,jdbcType=VARCHAR}
-        and  a.inv_aim  = #{invaim,jdbcType=VARCHAR}
     </select>
     <select id="findPtlInfo"
             resultType="com.joyintech.tams.common.base.entity.PtlPortfolio">
