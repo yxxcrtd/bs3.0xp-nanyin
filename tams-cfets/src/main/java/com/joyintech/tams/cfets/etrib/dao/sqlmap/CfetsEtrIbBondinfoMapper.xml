@@ -1183,6 +1183,17 @@ from
         on pp.portfolio_id=tt.portfolio_id
         where tt.entrustNum>0
     </select>
+    <!--查询资产是否行权债-->
+    <select id="queryAssetIsRight" resultType="Boolean">
+        SELECT count(*)
+        from fin_product T1
+        inner join FIN_EXERCISE_PLAN p
+        on p.finprod_id=T1.finprod_id
+        where
+        T1.is_right='Y'
+        and p.exercise_date>#{platDate}
+        and T1.finprod_id=#{finprodId,jdbcType=VARCHAR}
+    </select>
 
 
 </mapper>

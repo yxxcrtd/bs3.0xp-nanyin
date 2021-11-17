@@ -1937,5 +1937,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
 
     }
-
+    /**
+     * 查询资产是否行权债
+     * @param page
+     * @param length
+     * @param requestDto
+     * @return
+     */
+    public Boolean queryAssetIsRight(String secId) {
+        if(!StringUtil.isNotEmpty(secId)){
+            return false;
+        }
+        Map<String, Object> param =new HashMap<>();
+        param.put("platDate",DateUtil.platDateFromCache());
+        param.put("finprodId",secId);
+        return cfetsetrIbBondinfoMapper.queryAssetIsRight(param);
+    }
 }

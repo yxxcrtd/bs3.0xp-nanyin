@@ -556,4 +556,16 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
             return new Message<List<CfetsBussCombDistribtBaseDto>>().fail().setMessage("查询异常");
         }
      }
+    @ApiOperation(value = "查询资产是否行权债", notes = "查询资产是否行权债")
+    @PostMapping("/queryAssetIsRight/{secId:.+}")
+    @ResponseBody
+    public Message<Boolean> queryAssetIsRight(@PathVariable String secId) {
+        try {
+            Boolean flag = cfetsEtrIbBondinfoService.queryAssetIsRight(secId);
+            return new Message<Boolean>().success().setData(flag);
+        } catch (Exception e) {
+            logger.error("查询该资产是否行权债异常", e);
+            return new Message<Boolean>().fail().setMessage("查询异常");
+        }
+    }
 }

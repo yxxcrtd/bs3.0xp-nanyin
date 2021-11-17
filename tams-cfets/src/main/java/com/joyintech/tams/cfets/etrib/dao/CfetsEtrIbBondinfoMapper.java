@@ -118,5 +118,8 @@ public interface CfetsEtrIbBondinfoMapper {
 
     List<CfetsBussCombDistribtBaseDto> queryCfetsBussCombDisList(Map pageParam);
 
+    public boolean queryAssetIsRight(Map pageParam);
+
+
 
 }
