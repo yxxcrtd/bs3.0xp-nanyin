@@ -1,10 +1,10 @@
-package com.joyintech.tams.invest.common.settle.controller;
+package com.joyintech.tams.invest.interf.fromjkpt.settle.controller;
 
 import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.invest.common.settle.service.SettleDownLinkService;
+import com.joyintech.tams.invest.interf.fromjkpt.settle.service.SettleDownLinkService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +46,9 @@ public class SettleDownLinkController {
                 param.put("beanNames", Arrays.asList("investDealRevokeTask","stlDownDataDealTask","stlDownDataGatherTask"));
                 if(!param.containsKey("execDate")){
                     param.put("execDate", DateUtil.format(iPlatformDate.getSysDate(),"yyyyMMdd"));
+                } else {
+                    param.put("execDate", DateUtil.format(DateUtil.parse(
+                            param.get("execDate").toString()),"yyyyMMdd"));
                 }
                 settleDownLinkService.execute(param);
                 logger.debug("接口平台调用批处理成功");

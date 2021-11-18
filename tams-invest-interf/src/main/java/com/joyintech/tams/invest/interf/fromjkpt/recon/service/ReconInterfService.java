@@ -1,4 +1,4 @@
-package com.joyintech.tams.invest.common.recon.service;
+package com.joyintech.tams.invest.interf.fromjkpt.recon.service;
 
 /**
  * @author zznn
@@ -10,10 +10,10 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.common.base.dao.StlSecReconDealMapper;
 import com.joyintech.tams.common.base.entity.StlSecReconPara;
 import com.joyintech.tams.constant.DictCodeListStl;
-import com.joyintech.tams.invest.common.recon.dao.ReconInterfMapper;
-import com.joyintech.tams.invest.common.recon.dto.StlCashReconDto;
-import com.joyintech.tams.invest.common.recon.dto.StlSecReconDealDto;
-import com.joyintech.tams.invest.common.recon.dto.StlSecpReconDto;
+import com.joyintech.tams.invest.interf.fromjkpt.recon.dao.ReconInterfMapper;
+import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlCashReconDto;
+import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecReconDealDto;
+import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecpReconDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

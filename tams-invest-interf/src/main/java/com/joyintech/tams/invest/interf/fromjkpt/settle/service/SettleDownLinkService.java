@@ -1,4 +1,4 @@
-package com.joyintech.tams.invest.common.settle.service;
+package com.joyintech.tams.invest.interf.fromjkpt.settle.service;
 
 /**
  * @author zznn
@@ -20,7 +20,7 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.batch.batchstart.dao.SysBatchStart001Mapper;
 import com.joyintech.system.batch.batchstart.service.SysBatchStart001Service;
-import com.joyintech.tams.invest.common.settle.dao.SettleDownLinkMapper;
+import com.joyintech.tams.invest.interf.fromjkpt.settle.dao.SettleDownLinkMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

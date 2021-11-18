@@ -74,13 +74,12 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
      */
     public Page<DayEndAccountDto> selectForPage(int page, int length, Map<String, Object> pageParam)
         throws Exception {
-        Object portfolioIdObj = pageParam.get("portfolioId");
-        if (portfolioIdObj != null) {
-            pageParam.put("portfolioIdList",
-                    StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioIdObj));
+        Object accountObj = pageParam.get("account");
+        if (accountObj != null) {
+            pageParam.put("accountList", StringUtil.splitToList(GlobalConstant.COMMA, (String)accountObj));
         }
         else {
-            pageParam.put("portfolioIdList", new ArrayList<>());
+            pageParam.put("accountList", new ArrayList<>());
         }
         Object finprodIdObj = pageParam.get("finprodId");
         if (finprodIdObj != null) {
@@ -127,9 +126,9 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         }
         AccountResult result = new AccountResult();
         //对账前check
-        if (!checkAccount(result)) {
-            return result;
-        }
+//        if (!checkAccount(result)) {
+//            return result;
+//        }
         //处理对账逻辑
         chuliAccount(param);
         return result;
@@ -404,6 +403,55 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             }
         }
         dto.setReconDealInfoList(reconDealInfoList);
+        dto.setDealDetailList(dealDetailList);
+        return dto;
+    }
+
+    public DayEndAccount002Dto getDealDetailInfo(Map<String, Object> param) {
+        DayEndAccount002Dto dto = new DayEndAccount002Dto();
+        //费用加减标识
+        BigDecimal stampFeeFlg = BigDecimal.ZERO;
+        BigDecimal jsfAmtFlg = BigDecimal.ZERO;
+        BigDecimal ghfAmtFlg = BigDecimal.ZERO;
+        BigDecimal zgfAmtFlg = BigDecimal.ZERO;
+        BigDecimal sxfAmtFlg = BigDecimal.ZERO;
+        BigDecimal settleFeeFlg = BigDecimal.ZERO;
+        BigDecimal commissionAmtFlg = BigDecimal.ZERO;
+        List<SettleTransData> listSettleTransData = dayEndAccountMapper.selectSettleTransData(param);
+        List<DayEndAccountDto> dealDetailList = new ArrayList<DayEndAccountDto>();
+        if (listSettleTransData != null && listSettleTransData.size() > 0) {
+            for (SettleTransData settleTransData : listSettleTransData) {
+                DayEndAccountDto dealDetail = new DayEndAccountDto();
+                dealDetail.setCommissionAmt(settleTransData.getCommissionAmt());
+                dealDetail.setJsfAmt(settleTransData.getJsfAmt());
+                dealDetail.setZgfAmt(settleTransData.getZgfAmt());
+                dealDetail.setStampFee(settleTransData.getStampFee());
+                dealDetail.setSettleFee(settleTransData.getSettleFee());
+                dealDetail.setSxfAmt(settleTransData.getSxfAmt());
+                dealDetail.setGhfAmt(settleTransData.getGhfAmt());
+                dealDetail.setTradeAmt(settleTransData.getFpriceAmt());
+                dealDetail.setTradeNum(settleTransData.getShareAmt());
+                dealDetail.setTradeId(settleTransData.getTradeId());
+                //费用标识，没有0，增加1，扣减-1
+                dealDetail.setCommissionAmtFlg(commissionAmtFlg);
+                dealDetail.setJsfAmtFlg(jsfAmtFlg);
+                dealDetail.setZgfAmtFlg(zgfAmtFlg);
+                dealDetail.setStampFeeFlg(stampFeeFlg);
+                dealDetail.setSettleFeeFlg(settleFeeFlg);
+                dealDetail.setSxfAmtFlg(sxfAmtFlg);
+                dealDetail.setGhfAmtFlg(ghfAmtFlg);
+                //隐藏用于记录调整值字段
+                dealDetail.setCommissionAmt2(settleTransData.getCommissionAmt());
+                dealDetail.setJsfAmt2(settleTransData.getJsfAmt());
+                dealDetail.setZgfAmt2(settleTransData.getZgfAmt());
+                dealDetail.setStampFee2(settleTransData.getStampFee());
+                dealDetail.setSettleFee2(settleTransData.getSettleFee());
+                dealDetail.setSxfAmt2(settleTransData.getSxfAmt());
+                dealDetail.setGhfAmt2(settleTransData.getGhfAmt());
+                dealDetail.setTradeAmt2(BigDecimal.ZERO);
+                dealDetailList.add(dealDetail);
+            }
+        }
         dto.setDealDetailList(dealDetailList);
         return dto;
     }

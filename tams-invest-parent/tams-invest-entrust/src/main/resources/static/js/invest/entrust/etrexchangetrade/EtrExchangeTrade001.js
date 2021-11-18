@@ -1628,8 +1628,8 @@
                 portfolioId:portfolioId
             }
             Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/linkInvAim', param, function(result) {
-                if(result) {
-                    $("#invAim_" + currentTab).textSelect(result);
+                if(result && result.data) {
+                    $("#invAim_" + currentTab).textSelect('setValue',result.data);
                     $("#invAim_" + currentTab).prop("disabled", true);
                 }
                 else {

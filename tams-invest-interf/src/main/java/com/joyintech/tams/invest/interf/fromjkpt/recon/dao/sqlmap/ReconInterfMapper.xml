@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.invest.common.recon.dao.ReconInterfMapper">
+<mapper namespace="com.joyintech.tams.invest.interf.fromjkpt.recon.dao.ReconInterfMapper">
 
     <delete id="deleteStlCashRecon">
          delete from STL_CASH_RECON  where CDATE = to_date(#{execDate,jdbcType=VARCHAR},'yyyy-MM-dd')
@@ -99,13 +99,13 @@
     </select>
 
     <!--资金余额-->
-    <select id="listStlCashRecon" resultType="com.joyintech.tams.invest.common.recon.dto.StlCashReconDto">
+    <select id="listStlCashRecon" resultType="com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlCashReconDto">
         SELECT
             to_date(T1.SJRQ,'yyyy-MM-dd') cdate,
             T1.QMYE zybs,
-            CASE WHEN T1.BZ = '0' THEN  'CNY'
-            WHEN T1.BZ = '1' THEN  'HKD'
-            WHEN T1.BZ = '2' THEN  'USD' END jylb,
+            CASE WHEN T1.BZ in ('0', '人民币') THEN  'CNY'
+            WHEN T1.BZ in ('1', '港币') THEN  'HKD'
+            WHEN T1.BZ in ('2', '美元') THEN  'USD' END jylb,
             T2.ACCT_NO acctNo
         FROM
             INTERF_ZX_ZJYE T1
@@ -116,9 +116,9 @@
         SELECT
             TO_DATE(T1.JYRQ, 'yyyy-MM-dd') cdate,
             T1.ZJYE zybs,
-             CASE WHEN T1.BZLB = 'RMB' THEN  'CNY'
-            WHEN T1.BZLB = 'HKD' THEN  'HKD'
-            WHEN T1.BZLB = 'USD' THEN  'USD' END jylb,
+             CASE WHEN T1.BZLB in ('RMB', '人民币') THEN  'CNY'
+            WHEN T1.BZLB in ('HKD', '港币') THEN  'HKD'
+            WHEN T1.BZLB in ('USD', '美元') THEN  'USD' END jylb,
             T2.ACCT_NO acctNo
         FROM
             INTERF_ZJYE T1
@@ -128,7 +128,7 @@
     </select>
 
     <!--持仓余额-->
-    <select id="listStlSecpRecon" resultType="com.joyintech.tams.invest.common.recon.dto.StlSecpReconDto">
+    <select id="listStlSecpRecon" resultType="com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecpReconDto">
         SELECT
             to_date(T1.SJRQ,'yyyy-MM-dd') cdate,
             T1.CCSL amout,
@@ -143,8 +143,8 @@
         LEFT JOIN STL_CAPACCT_INFO T2 ON
             T2.BUSI_ACCT_NO = T1.ZJZH
         LEFT JOIN FIN_PRODUCT T3 ON
-            T3.FINPROD_MARKET_ID = T1.ZQDM || '.' || DECODE(T1.JYSC, '0', 'SH', '1' , 'SZ')
-         WHERE T1.SJRQ = #{execDate,jdbcType=VARCHAR} AND T1.JYSC IN ('0','1')
+            T3.FINPROD_MARKET_ID = T1.ZQDM || '.' || DECODE(T1.JYSC, '0', 'SZ', '深圳', 'SZ', '1', 'SH', '上海', 'SH')
+         WHERE T1.SJRQ = #{execDate,jdbcType=VARCHAR} AND T1.JYSC IN ('0', '1', '深圳', 'SH')
         UNION ALL
         SELECT
             to_date(T1.JYRQ,'yyyy-MM-dd') cdate,
@@ -154,11 +154,15 @@
             ELSE T3.FINPROD_MARKET_ID END marketId,
             CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
             ELSE T3.FINPROD_ID END finprodId,
-            CASE WHEN T1.BZLB = 'RMB' THEN  'CNY'
-            WHEN T1.BZLB = 'HKD' THEN  'HKD'
-            WHEN T1.BZLB = 'USD' THEN  'USD' END jylb
+            CASE WHEN T1.BZLB in ('RMB', '人民币') THEN  'CNY'
+            WHEN T1.BZLB in ('HKD', '港币') THEN  'HKD'
+            WHEN T1.BZLB in ('USD', '美元') THEN  'USD' END jylb
         FROM
-        INTERF_CCYE T1 LEFT JOIN STL_CAPACCT_INFO T2 ON T1.ZJZH = T2.BUSI_ACCT_NO  LEFT JOIN FIN_PRODUCT T3 ON T3.FINPROD_MARKET_ID = T1.ZQDM AND T3.FINPROD_NAME = T1.ZQMC
+        INTERF_CCYE T1
+            LEFT JOIN STL_CAPACCT_INFO T2
+                ON T1.ZJZH = T2.BUSI_ACCT_NO
+            LEFT JOIN FIN_PRODUCT T3
+                ON T3.FINPROD_MARKET_ID = T1.ZQDM || '.' || DECODE(T1.JYLB, '2', 'SZ', '深圳', 'SZ', '1', 'SH', '上海', 'SH')
          WHERE T1.JYRQ = #{execDate,jdbcType=VARCHAR}
     </select>
 
@@ -169,9 +173,9 @@
             CJBH TRADE_ID,
             WTBH ENTRUNST_ID,
         CASE
-                WHEN T1.BZLB = 'RMB' THEN 'CNY'
-                WHEN T1.BZLB = 'HKD' THEN 'HKD'
-                WHEN T1.BZLB = 'USD' THEN 'USD'
+            WHEN T1.BZLB in ('RMB', '人民币') THEN 'CNY'
+            WHEN T1.BZLB in ('HKD', '港币') THEN 'HKD'
+            WHEN T1.BZLB in ('USD', '美元') THEN 'USD'
         END CCY,
             T3.TRADE_MARKET TRADE_MARKET,
             ZQZH SEC_ACCT_ID,
@@ -245,9 +249,9 @@
             LSH TRADE_ID,
             WTBH ENTRUNST_ID,
         CASE
-                WHEN T1.BZ = '0' THEN 'CNY'
-                WHEN T1.BZ = '1' THEN 'HKD'
-                WHEN T1.BZ = '2' THEN 'USD'
+                WHEN T1.BZ in ('0', '人民币') THEN 'CNY'
+                WHEN T1.BZ in ('1', '港币') THEN 'HKD'
+                WHEN T1.BZ in ('2', '美元') THEN 'USD'
         END CCY,
         CASE
                 WHEN JYSC = '1' THEN '03'
@@ -319,13 +323,13 @@
     </sql>
 
     <!--明细对账单-->
-    <select id="listStlSecReconDealDetaile" resultType="com.joyintech.tams.invest.common.recon.dto.StlSecReconDealDto">
-        <include refid="com.joyintech.tams.invest.common.recon.dao.ReconInterfMapper.detailesql" />
+    <select id="listStlSecReconDealDetaile" resultType="com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecReconDealDto">
+        <include refid="com.joyintech.tams.invest.interf.fromjkpt.recon.dao.ReconInterfMapper.detailesql" />
     </select>
 
 
     <!--委托代码汇总-->
-    <select id="listStlSecReconDealTotalByEntrustId" resultType="com.joyintech.tams.invest.common.recon.dto.StlSecReconDealDto">
+    <select id="listStlSecReconDealTotalByEntrustId" resultType="com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecReconDealDto">
         SELECT
         ENTRUST_ID,
         ACCOUT,
@@ -347,7 +351,7 @@
         SUM(TOTAL_TEEAMT)
         FROM
         (
-            <include refid="com.joyintech.tams.invest.common.recon.dao.ReconInterfMapper.detailesql" />
+            <include refid="com.joyintech.tams.invest.interf.fromjkpt.recon.dao.ReconInterfMapper.detailesql" />
         )
         GROUP BY
         CUSTOMER_ID,
@@ -359,7 +363,7 @@
     </select>
 
     <!--证券代码汇总-->
-    <select id="listStlSecReconDealTotalByMarketId" resultType="com.joyintech.tams.invest.common.recon.dto.StlSecReconDealDto">
+    <select id="listStlSecReconDealTotalByMarketId" resultType="com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecReconDealDto">
         SELECT
         FINPROD_ID,
         ACCOUT,
@@ -381,7 +385,7 @@
         SUM(TOTAL_TEEAMT)
         FROM
         (
-            <include refid="com.joyintech.tams.invest.common.recon.dao.ReconInterfMapper.detailesql" />
+            <include refid="com.joyintech.tams.invest.interf.fromjkpt.recon.dao.ReconInterfMapper.detailesql" />
         )
         GROUP BY
         CUSTOMER_ID,

@@ -184,6 +184,19 @@ public class DayEndAccountDto extends StlSecRecon {
 	@JsonSerialize(using=BigDecimalSerializer.class)
 	private BigDecimal commissionAmtFlg;
 
+	/**
+	 * 席位号
+	 */
+	private String seatNumber;
+
+	public String getSeatNumber() {
+		return seatNumber;
+	}
+
+	public void setSeatNumber(String seatNumber) {
+		this.seatNumber = seatNumber;
+	}
+
 	public BigDecimal getStampFeeFlg() {
 		return stampFeeFlg;
 	}
@@ -249,7 +262,7 @@ public class DayEndAccountDto extends StlSecRecon {
 	}
 
 	public String getFinprodTypeStr() {
-		return SysDataUtil.getNameFromDataDict(BussinessDictCode.金融产品类型_投管用, this.getFinprodType());
+		return SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, this.getFinprodType());
 	}
 
 	public BigDecimal getStampFee() {

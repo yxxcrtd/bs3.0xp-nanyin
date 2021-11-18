@@ -1,4 +1,4 @@
-package com.joyintech.tams.invest.common.recon.dto;
+package com.joyintech.tams.invest.interf.fromjkpt.recon.dto;
 
 import com.joyintech.tams.common.base.entity.StlSecReconDeal;
 
