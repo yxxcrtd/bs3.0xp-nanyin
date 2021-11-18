@@ -12,6 +12,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
+import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
 import com.joyintech.tams.common.base.dao.EtrDistributeMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
@@ -70,6 +71,9 @@ public class IbuQuoteBondService extends BaseService {
 
     @Autowired
     private BaseEtrInvestInfoServiceImpl etrInvestInfoServiceImpl;
+
+    @Autowired
+    private CfetsEtrDispatcherService cfetsEtrDispatcherService;
 
     /**
      * 风险试算check
@@ -148,7 +152,7 @@ public class IbuQuoteBondService extends BaseService {
         List<EtrDistribute> list=new ArrayList<EtrDistribute>();
         EtrDistributeKey etrKey=new EtrDistributeKey();
         etrKey.setTrader((String) param.get("trader"));
-        List<String> entrustIds=(List<String>)param.get("entrustIds");
+        List<String> entrustIds = StringUtil.splitToList(",",(String)param.get("entrustIds"));
         for(String entrustId:entrustIds){
             etrKey.setEntrustId(entrustId);
             list.add(etrDistributeMapper.selectByPrimaryKey(etrKey));
@@ -624,6 +628,37 @@ public class IbuQuoteBondService extends BaseService {
         }
 
         return "3";
+    }
+
+
+    /**
+     * check 退回指令
+     * @param param
+     * @return
+     */
+    public AjaxResult entrustRefuceCheck(Map<String,Object> param){
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        if(!StringUtil.isNotEmpty(param.get("remark"))){
+            errorList.add(new ValidMessage("请输入退回原因!"));
+        }
+        if(StringUtil.isNotEmpty(param.get("entrustId"))){
+           param.put("entrustIdList",StringUtil.splitToList(",",(String)param.get("entrustIds")));
+        }
+        if(cfetsIbuQuoteBondEtrMapper.countNotDjsEtr(param)>0){
+            errorList.add(new ValidMessage("只可对待分发指令执行退回操作!"));
+        }
+        ajaxResult.setErrorList(errorList);
+        return ajaxResult;
+    }
+
+    /**
+     * 指令退回
+     * @param param
+     * @return
+     */
+    public AjaxResult entrustRefuce(Map<String,Object> param) {
+        return cfetsEtrDispatcherService.refuseEntrust(param);
     }
 
     /**
