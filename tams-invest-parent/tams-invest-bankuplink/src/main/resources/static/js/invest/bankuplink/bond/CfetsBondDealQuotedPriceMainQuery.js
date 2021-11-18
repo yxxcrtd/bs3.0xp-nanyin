@@ -626,7 +626,7 @@
             , {field: 'countertradername', title: '对手方交易员', width: '100'}
             , {field: 'ourinstitutioncode', title: '本方', width: '100'}
             , {field: 'ourtradername', title: '本方交易员', width: '100'}
-            , {field: 'lastqty', title: '券面总计（万）', width: '100', type: 'money', digit: 2}
+            , {field: 'lastqty', title: '券面总额（万）', width: '100', type: 'money', digit: 2}
             , {field: 'price', title: '净价', width: '100', type: 'money', digit: 4}
             , {field: 'dirtyprice', title: '全价', width: '100', type: 'money', digit: 4}
             , {field: 'underlyingyield2', title: '到期收益率(%)', width: '100', type: 'money', digit: 4}
