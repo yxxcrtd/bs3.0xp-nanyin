@@ -1,13 +1,13 @@
-package com.joyintech.tams.invest.common.recon.controller;
+package com.joyintech.tams.invest.interf.fromjkpt.recon.controller;
 
 import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.tams.common.base.dao.StlCashReconMapper;
 import com.joyintech.tams.common.base.dao.StlSecpReconMapper;
-import com.joyintech.tams.invest.common.recon.dto.StlCashReconDto;
-import com.joyintech.tams.invest.common.recon.dto.StlSecpReconDto;
-import com.joyintech.tams.invest.common.recon.service.ReconInterfService;
-import com.joyintech.tams.invest.common.settle.service.SettleDownLinkService;
+import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlCashReconDto;
+import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecpReconDto;
+import com.joyintech.tams.invest.interf.fromjkpt.recon.service.ReconInterfService;
+import com.joyintech.tams.invest.interf.fromjkpt.settle.service.SettleDownLinkService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +61,9 @@ public class ReconInterfController {
             logger.debug("接口平台调用资金余额业务处理开始");
             if(!param.containsKey("execDate")){
                 param.put("execDate", DateUtil.format(iPlatformDate.getSysDate(),"yyyyMMdd"));
+            } else {
+                param.put("execDate", DateUtil.format(DateUtil.parse(
+                        param.get("execDate").toString()),"yyyyMMdd"));
             }
             reconInterfService.deleteStlCashRecon(param);
             List<StlCashReconDto> stlCashReconDtos = reconInterfService.listStlCashRecon(param);
@@ -86,6 +89,9 @@ public class ReconInterfController {
             logger.debug("接口平台调用持仓余额业务处理开始");
             if(!param.containsKey("execDate")){
                 param.put("execDate",iPlatformDate.getSysDateStr());
+            } else {
+                param.put("execDate", DateUtil.format(DateUtil.parse(
+                        param.get("execDate").toString()),"yyyyMMdd"));
             }
             reconInterfService.deleteStlSecpRecon(param);
             List<StlSecpReconDto> stlSecpReconDtos = reconInterfService.listStlSecpRecon(param);
@@ -112,6 +118,9 @@ public class ReconInterfController {
             logger.debug("接口平台调用对账单业务处理开始");
             if(!param.containsKey("execDate")){
                 param.put("execDate",iPlatformDate.getSysDateStr());
+            } else {
+                param.put("execDate", DateUtil.format(DateUtil.parse(
+                        param.get("execDate").toString()),"yyyyMMdd"));
             }
             reconInterfService.executerecon(param);
             logger.debug("接口平台调用对账单业务处理成功");
@@ -130,6 +139,9 @@ public class ReconInterfController {
             param.put("beanNames", Arrays.asList("autoReconciliationTask","stlSettleTransDataGatherTask","stlDownDataGatherTask"));
             if(!param.containsKey("execDate")){
                 param.put("execDate", DateUtil.format(iPlatformDate.getSysDate(),"yyyyMMdd"));
+            } else {
+                param.put("execDate", DateUtil.format(DateUtil.parse(
+                        param.get("execDate").toString()),"yyyyMMdd"));
             }
             settleDownLinkService.execute(param);
             logger.debug("接口平台调用批处理成功");
