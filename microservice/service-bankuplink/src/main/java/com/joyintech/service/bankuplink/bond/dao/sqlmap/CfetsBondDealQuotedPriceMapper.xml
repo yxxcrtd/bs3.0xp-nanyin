@@ -84,7 +84,8 @@
             <!-- 交易对手-->
 			MST_CFETS_CI.PARTY_ID                                              counterId,
 			<!-- 交易对手名称-->
-            MST_CFETS_CI.PARTY_ABBR                                             counterName,	
+			CASE WHEN MST_CFETS_CI.PARTY_ABBR IS NOT NULL THEN  MST_CFETS_CI.PARTY_ABBR
+			ELSE MST_CFETS_CI2.PARTY_NAME END counterName,
             <!-- 对手方交易员--> 
 		    ETR_ENTRUST.COUNTER_TRADER  	                                    counterTrader,
 		    <!-- 对手方交易员名称-->
@@ -154,7 +155,8 @@
     	 ON MCP.COUNTER_ID = ETR_ENTRUST.COUNTER_ID
        LEFT JOIN MST_CFETS_CUSTOMER_INFO MST_CFETS_CI
          ON MST_CFETS_CI.PARTY_NAME = MCP.COUNTER_NAME
-        <!-- ADD BY YZG 成交进度计算 20201230 START--> 
+		LEFT JOIN 	MST_CFETS_CUSTOMER_INFO MST_CFETS_CI2 ON MST_CFETS_CI2.PARTY_ID  = ETR_ENTRUST.COUNTER_ID
+		<!-- ADD BY YZG 成交进度计算 20201230 START-->
         LEFT JOIN 
 	        (SELECT C.ENTRUST_ID,
 			SUM(nvl(C.SHARE_AMT, 0)) * 100 totalShareAmt
