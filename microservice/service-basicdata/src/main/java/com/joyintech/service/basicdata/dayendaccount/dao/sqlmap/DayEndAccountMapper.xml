@@ -502,7 +502,6 @@
         ssrd.FINPROD_TYPE,
         ssrd.PS,
         ssrd.SEC_ACCT_ID,
-        ssrd.TERM_TYPE,
         ssrd.COMMISSION_AMT,
         ssrd.JSF_AMT,
         ssrd.ZGF_AMT,
@@ -511,8 +510,7 @@
         ssrd.GHF_AMT,
         ssrd.SXF_AMT,
         ssrd.TRADE_AMT,
-        ssrd.TRADE_NUM,
-        ssrd.OTHER_FEEAMT
+        ssrd.TRADE_NUM
         from
         STL_SEC_RECON_DEAL ssrd
         left join STL_SEC_RECON ssr on ssr.SEQ_NO = ssrd.SEQ_NO
@@ -555,7 +553,6 @@
         a.FINPROD_TYPE,
         a.PS,
         a.SEC_ACCT_ID,
-        a.TERM_TYPE,
         a.COMMISSION_AMT,
         a.JSF_AMT,
         a.ZGF_AMT,
@@ -563,7 +560,6 @@
         a.SETTLE_FEE,
         a.GHF_AMT,
         a.SXF_AMT,
-        a.OTHER_FEEAMT,
         a.TRADE_AMT,
         a.TRADE_NUM,
         ss.APPLY_TRADE_ID TRADE_ID2,
@@ -695,7 +691,6 @@
         b.FINPROD_TYPE,
         b.PS,
         b.SEC_ACCT_ID,
-        b.TERM_TYPE,
         b.COMMISSION_AMT,
         b.JSF_AMT,
         b.ZGF_AMT,
@@ -703,7 +698,6 @@
         b.SETTLE_FEE,
         b.GHF_AMT,
         b.SXF_AMT,
-        b.OTHER_FEEAMT,
         b.TRADE_AMT,
         b.TRADE_NUM,
         std.TRADE_ID TRADE_ID2,
@@ -743,7 +737,6 @@
         b.FINPROD_TYPE,
         b.PS,
         b.SEC_ACCT_ID,
-        b.TERM_TYPE,
         b.COMMISSION_AMT,
         b.JSF_AMT,
         b.ZGF_AMT,
@@ -751,7 +744,6 @@
         b.SETTLE_FEE,
         b.GHF_AMT,
         b.SXF_AMT,
-        b.OTHER_FEEAMT,
         b.TRADE_AMT,
         b.TRADE_NUM,
         std.TRADE_ID TRADE_ID2,
