@@ -11,21 +11,14 @@
       <div class="layui-inline layui-col-md10">
         <label class="layui-form-label form-lable">父级ID</label>
         <div class="layui-input-inline input-inline">
+          <input  type="hidden" id="treeId" name="treeId"/>
           <input type="text" id="PId" name="PId" disabled="true" data-th-value="${pId}" class="layui-input form-input" multiple="multiple">
         </div>
       </div> 
       </div>
       <div class="layui-form-item">
       <div class="layui-inline layui-col-md10">
-        <label class="layui-form-label form-lable">ID</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="treeId" name="treeId" disabled="true" class="layui-input form-input" multiple="multiple">
-        </div>
-      </div>
-      </div>
-      <div class="layui-form-item">
-      <div class="layui-inline layui-col-md10">
-        <label class="layui-form-label form-lable">父级名称</label>
+        <label class="layui-form-label form-lable">名称</label>
         <div class="layui-input-inline input-inline">
           <input type="text" id="treeName" name="treeName" class="layui-input form-input" required>
         </div>

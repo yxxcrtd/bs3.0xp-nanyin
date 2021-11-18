@@ -3,21 +3,25 @@
         $('#treeIndPortf').joyinMixTree({
             onTreeLoadSuccess: function () {
                 $("#treeIndPortf_tree").closest('div').css("height",$('#treeIndPortf').height());
-                if(pageModel == PAGE_MODEL_REFERENCE) {
+                // if(pageModel == PAGE_MODEL_REFERENCE) {
+                //     var treeObj = $.fn.zTree.getZTreeObj("treeIndPortf_tree");
+                //     var nodes = treeObj.getNodes();
+                //     for(var i=0; i < nodes.length;i++) {
+                //         var node = nodes[i];
+                //         DisabledNode(treeObj, node);
+                //     }
+                //
+                // }
+                if(pageModel ==PAGE_MODEL_NEW){
                     var treeObj = $.fn.zTree.getZTreeObj("treeIndPortf_tree");
                     var nodes = treeObj.getNodes();
-                    for(var i=0; i < nodes.length;i++) {
-                        var node = nodes[i];
-                        DisabledNode(treeObj, node);
+                    if(nodes.length==0){
+                        $("div.mixtree-div").append('<a class="refreshAicon" ><i class="iconfont icon-found"></i>&nbsp;新建分类</a>')
+                    }else{
+                        $("div.mixtree-div").find('a.refreshAicon').hide();
                     }
-
-                }
-                if(pageModel ==PAGE_MODEL_NEW){
                     $.fn.zTree.getZTreeObj("treeIndPortf_tree").setting.callback.onClick=function(event, treeId, treeNode){
                         event.stopPropagation();
-                        if(treeNode==null){
-                            $("div.mixtree-div").append('<a class="refreshAicon" ><i class="iconfont icon-found"></i>&nbsp;新建分类</a>')
-                        }
                         if(treeNode.level==1){
                             $('#indId').val(treeNode.id);
                             $('#indName').val(treeNode.name);
@@ -28,8 +32,12 @@
 
                     //绑定组合刷新事件
                     $("div.mixtree-div").find('a.refreshAicon').click(function(){
-                        event.stopPropagation();
-                        $("#indType").trigger('change');
+                        Joyin.dialog(JoyinUtil.getLabel("编辑"),
+                            basePath + "invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance005/init",
+                            "80%", "70%",{ID:""},
+                            function(){
+                                $('#treeIndPortf').reloadTree(null);
+                            });
                     });
                 }
             },
@@ -62,10 +70,9 @@
             },
             onTreeDelFunction: function(obj,callback){
                 var id=obj.id;
-                var pId=obj.pId;
                 Joyin.confirm("确定删除吗？",function(){
                     Joyin.ajax('getDelete',
-                        {Id:id,PId:pId},function(){
+                        {treeId:id},function(){
                             $('#treeIndPortf').reloadTree(null);
                         });
 
@@ -116,6 +123,8 @@
         ]
     });
 
+
+
     /**
      * 弹出新建画面
      * @returns
@@ -136,10 +145,10 @@
             return;
         }
         Joyin.dialog(JoyinUtil.getLabel("MultiPortfolioMaintenance002"),
-            //JoyinUtil.getRealPath("invest/riskredis/quota/portfolioindicator/RskSupervisionPortfPointInd002/init"),
             JoyinUtil.getRealPath("invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance002/init"),
-            "100%", "100%",{pageModel : PAGE_MODEL_NEW,treeId:indId,indName:indName}
-        );
+            "100%", "100%",{pageModel : PAGE_MODEL_NEW,treeId:indId,indName:indName},function() {
+                table.reload();
+            });
     }
 
     /**

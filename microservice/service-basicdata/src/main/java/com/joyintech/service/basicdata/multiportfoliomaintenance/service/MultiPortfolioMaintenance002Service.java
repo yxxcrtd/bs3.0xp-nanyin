@@ -53,7 +53,8 @@ public class MultiPortfolioMaintenance002Service extends BaseService<MutiptlPort
                 TreeNode node=new TreeNode();
                 node.setId(detailDto.getAcctNo());
                 node.setName(detailDto.getAcctName());
-                node.setpId(key.split("_")[0]);
+                node.setpId(key.split("_")[0]); //父节点是组合
+                node.setObject(detailDto.getPortfolioName());
                 node.setOpen(true);
                 treeNodes.add(node);
             });

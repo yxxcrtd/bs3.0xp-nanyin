@@ -90,17 +90,20 @@
         var selectedItem = [];
         $.each(nodes,function(i,v){
             if(v.level==1){
-                selectedItem.push({'portfolioId':v.pId,'portfolioName':v.name,'acctNo':v.id,'effDate':$('#effDate').val(),'treeId':$('#treeId').val()})
+                selectedItem.push({'portfolioId':v.pId,'portfolioName':v.object,'acctNo':v.id,'effDate':$('#effDate').val(),'treeId':$('#treeId').val()})
             }
         })
         var object ={};
         object.selectedItem=selectedItem;
         object.operateType='confirm';
+        var selArr = table.getAllRows();
+        for(var i=0;i<selArr.length;i++){
+                table.removeRow(selArr[i])
+        }
         Joyin.ajaxJson(basePath + 'invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance002/check', object,function (result) {
             table.load();
             table.reload({data:selectedItem});
         });
-
     }
 
     /**
@@ -158,7 +161,7 @@
         $('#MultiPortfolioMaintenance002_btn_commit').click(function () {
             var selArr = table.getAllRows();
             if (!selArr || selArr.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                Joyin.error(JoyinUtil.getMessage("MultiPortfolioMaintenance002.commit"));
                 return;
             }
             var object={};
@@ -167,7 +170,9 @@
             Joyin.ajaxJson(basePath + 'invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance002/check', object,function (result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.submit")), function(){
                     Joyin.ajaxJson(basePath + 'invest/basicdata/multiportfoliomaintenance/MultiPortfolioMaintenance002/insert', object,function (result) {
-                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        // window.parent.Multiportfoliomaintenance001.reloadTable();//刷新父页面表格
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));//关闭子页面
+
                     });
                 });
             });

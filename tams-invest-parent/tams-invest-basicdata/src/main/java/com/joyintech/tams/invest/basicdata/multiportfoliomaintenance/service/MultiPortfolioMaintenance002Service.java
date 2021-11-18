@@ -7,8 +7,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.basicdata.multiportfoliomaintenance.dto.MutiptlPortfolioDetailDto;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -50,11 +48,17 @@ public class MultiPortfolioMaintenance002Service extends CommonExportService<Mut
         AjaxResult ajaxResult=new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<ValidMessage>();
         MutiptlPortfolioDetailDto dto = (MutiptlPortfolioDetailDto) value;
-        if (StringUtil.equals(dto.getOperateType(), "confirm")) {
+        if (StringUtil.equals(dto.getOperateType(), "confirm")||StringUtil.equals(dto.getOperateType(), "NEW")) {
             for(MutiptlPortfolioDetailDto item:dto.getSelectedItem()){
                 if(isExistPortfolio(item)>0){
-                    errorList.add(new ValidMessage("finprodId",
-                            getMessage("MultiPortfolioMaintenance002.isExistPortfolio")));
+                    errorList.add(new ValidMessage(getMessage("MultiPortfolioMaintenance002.isExistPortfolio",item.getPortfolioId()+":"+item.getAcctNo())));
+                    break;
+                }
+            }
+        }else if (StringUtil.equals(dto.getOperateType(), "NEW")) {
+            for(MutiptlPortfolioDetailDto item:dto.getSelectedItem()){
+                if(isExistPortfolio(item)>0){
+                    errorList.add(new ValidMessage(getMessage("MultiPortfolioMaintenance002.isExistPortfolio",item.getPortfolioId()+":"+item.getAcctNo())));
                     break;
                 }
             }

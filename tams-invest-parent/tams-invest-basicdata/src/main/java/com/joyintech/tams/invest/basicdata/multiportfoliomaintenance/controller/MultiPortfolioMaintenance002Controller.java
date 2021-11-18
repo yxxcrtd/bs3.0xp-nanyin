@@ -67,7 +67,7 @@ public class MultiPortfolioMaintenance002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(MutiptlPortfolioDetailDto dto) {
+    public AjaxResult check(@RequestBody  MutiptlPortfolioDetailDto dto) {
         return multiPortfolioMaintenance002Service.check(dto);
     }
 

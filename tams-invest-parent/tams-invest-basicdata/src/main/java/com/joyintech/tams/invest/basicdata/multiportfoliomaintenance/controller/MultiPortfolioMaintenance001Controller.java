@@ -95,8 +95,7 @@ public class MultiPortfolioMaintenance001Controller extends BaseController {
     @ResponseBody
     public AjaxResult getDelete(){
         String treeId = this.getParam("treeId");
-        String parTreeId = this.getParam("parTreeId");
-        AjaxResult aResult =multiPortfolioMaintenancea001Service.getDelete(treeId,parTreeId);
+        AjaxResult aResult =multiPortfolioMaintenancea001Service.getDelete(treeId);
         return aResult;
     }
 }

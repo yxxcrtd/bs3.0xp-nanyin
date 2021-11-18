@@ -192,7 +192,7 @@
       WHERE TREE_ID = #{treeId,jdbcType=VARCHAR}
       AND   PORTFOLIO_ID =  #{portfolioId,jdbcType=VARCHAR}
       AND   ACCT_NO = #{acctNo,jdbcType=VARCHAR}
-      AND   EFF_DATE &gt;= to_date(#{effDate}, 'yyyy-MM-dd')
+      AND   EFF_DATE &lt;=#{effDate}
     </select>
 
 

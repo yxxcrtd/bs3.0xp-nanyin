@@ -12,14 +12,13 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.basicdata.multiportfoliomaintenance.dto.MutiptlPortfolioDetailDto;
 import com.joyintech.tams.invest.basicdata.multiportfoliomaintenance.dto.MutiptlPortfolioTreeDto;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.workflow.engine.constant.OperationType;
-import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 对账参数设置
@@ -75,7 +74,8 @@ public class MultiPortfolioMaintenance001Service extends CommonExportService<Mut
         if(dto!=null){
             return new AjaxResult("该数据已经存在", MessageType.错误消息);
         }
-        map.put("treeId", IDGenerator.generate());
+        String four= UUID.randomUUID().toString().replace("-", "").substring(0, 3);
+        map.put("treeId", "DZHF"+DateUtil.format(DateUtil.now(),DateUtil.DEFAULT_OTHER_FORMAT)+four);//DZHF+8位日期+4位自动采番
         map.put("createUser", LoginUserUtil.getUserName());
         map.put("updateUser",LoginUserUtil.getUserName());
         map.put("createDept", LoginUserUtil.getDeptCode());
@@ -111,7 +111,8 @@ public class MultiPortfolioMaintenance001Service extends CommonExportService<Mut
         if(dto!=null){
             return new AjaxResult("该数据已经存在", MessageType.错误消息);
         }
-        map.put("treeId", IDGenerator.generate());
+        String four= UUID.randomUUID().toString().replace("-", "").substring(0, 3);
+        map.put("treeId", "DZHF"+DateUtil.format(DateUtil.now(),DateUtil.DEFAULT_OTHER_FORMAT)+four);//DZHF+8位日期+4位自动采番        map.put("createUser", LoginUserUtil.getUserName());
         map.put("createUser", LoginUserUtil.getUserName());
         map.put("updateUser",LoginUserUtil.getUserName());
         map.put("createDept", LoginUserUtil.getDeptCode());
@@ -135,9 +136,17 @@ public class MultiPortfolioMaintenance001Service extends CommonExportService<Mut
      */
     @Transactional(rollbackFor = Exception.class)
     public void getEdit(Map<String, Object> map){
-        restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/MultiPortfolioMaintenance005/getEdit",
-                map,
-                Integer.class);
+        String treeId=(String)map.get("treeId");
+        if(StringUtil.isEmpty(treeId)){
+            addParentNode(map);
+        }else{
+            map.put("updateUser",LoginUserUtil.getUserName());
+            map.put("updateTime",DateUtil.getCurrentDate());
+            restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/MultiPortfolioMaintenance005/getEdit",
+                    map,
+                    Integer.class);
+        }
+
     }
     /**
      * 删除方法
@@ -150,7 +159,7 @@ public class MultiPortfolioMaintenance001Service extends CommonExportService<Mut
      * @since 1.0
      */
     @Transactional(rollbackFor = Exception.class)
-    public AjaxResult getDelete(String treeId,String parTreeId){
+    public AjaxResult getDelete(String treeId){
         restTemplate.getForObject(
                 ServiceApplication.BASICDATA_SERVICE_NAME + "/MultiPortfolioMaintenance001/getDelete?treeId="+treeId,
                 Integer.class);
