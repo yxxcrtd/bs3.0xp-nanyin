@@ -13,12 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * 投资者身份信息登记画面
- *
- * @author zhangzhongliang
- * @version 1.0 2019年4月19日
- */
 @Service
 public class SalesTransactionMaintenanceRegistMService extends BaseService<SalesTransactionMaintenanceRegist001Dto> {
 	
@@ -107,18 +101,6 @@ public class SalesTransactionMaintenanceRegistMService extends BaseService<Sales
 	       		SalesTransactionMaintenanceRegist001Dto.class);
    }
 
-   /**
-    * 将选择的数据导出成excel
-    * 查询数据
-    * @return 查询结果
-    * @see
-    * @since 1.0
-    */
-   public List<SalesTransactionMaintenanceRegist001Dto> queryExportRegistDelList(Map<String,Object> paramMap){
-	   return restTemplate.postForList(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/queryExportSelectRegistList", paramMap,
-	       		SalesTransactionMaintenanceRegist001Dto.class);
-   }
 
    
    public boolean checkIfInBatchByTaskBeanName(String beanname) {

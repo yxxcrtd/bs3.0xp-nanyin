@@ -2,11 +2,9 @@ package com.joyintech.service.chb3.submitmanagement.salestransactionmaintenancer
 
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.ChbBatchParaMapper;
 import com.joyintech.tams.common.base.entity.ChbBatchPara;
-import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.service.SalesTransactionMaintenanceRegist001Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -89,67 +86,9 @@ public class SalesTransactionMaintenanceRegistController {
     	return salesTransactionMaintenanceRegist001Service.checkIsNotSubmit(upKey);
     }
 
-    /**
-     * 数据检查
-     * @param map 查询条件
-     * @return 检查结果
-     * @see
-     * @since 1.0
-     */
-    @PostMapping("reportCheck")
-    public List<ExcelValidDto> reportCheck(@RequestBody Map<String,Object> map) {
-        String keyList;
-        Map<String, Object> param = map;
-        if(!param.containsKey("checkKeys")){
-            keyList=salesTransactionMaintenanceRegist001Service.getKeyList(param);
-        }
-        else{
-            keyList=(String)param.get("checkKeys");
-        }
-        if (StringUtil.isEmpty(keyList)) {
-            List<ExcelValidDto> checkResult = new ArrayList<ExcelValidDto>();
-            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "无报送数据",null));
-            return checkResult;
-        }
-        return salesTransactionMaintenanceRegist001Service.checkData(keyList);
-    }
-    
-    /**
-     * 将选择的数据导出成excel
-     * 查询数据
-     * @return 查询结果
-     * @see
-     * @since 1.0
-     */
-    @PostMapping("queryExportSelectRegistList")
-    public List<SalesTransactionMaintenanceRegist001Dto> queryExportSelectRegistList(@RequestBody String exportKeys){
-        return salesTransactionMaintenanceRegist001Service.queryExportSelectRegistList(exportKeys);
-    }
-
-    /**
-     * 将选择的数据导出成excel
-     * 查询数据
-     * @return 查询结果
-     * @see
-     * @since 1.0
-     */
-    @PostMapping("queryExportRegistDelList")
-    public List<SalesTransactionMaintenanceRegist001Dto> queryExportRegistDelList(@RequestBody Map<String,Object> paramMap){
-        return salesTransactionMaintenanceRegist001Service.queryExportRegistDelList(paramMap);
-    }
-    
     @PostMapping("queryForInfoRegist")
     public List<SalesTransactionMaintenanceRegist001Dto> queryForInfoRegist(@RequestBody Map<String,Object> param){
     	return salesTransactionMaintenanceRegist001Service.queryForInfoRegist(param);
-    }
-    @PostMapping("queryExportListByKeys")
-    public List<SalesTransactionMaintenanceRegist001Dto> queryExportListByKeys(@RequestBody List<SalesTransactionMaintenanceRegist001Dto> equityRegistList){
-    	return salesTransactionMaintenanceRegist001Service.queryExportListByKeys(equityRegistList);
-    }
-    
-    @PostMapping("checkIfInBatchByTaskBeanName")
-    public boolean checkIfInBatchByTaskBeanName(@RequestBody String beanname) {
-    	return salesTransactionMaintenanceRegist001Service.checkIfInBatchByTaskBeanName(beanname);
     }
     
     @PostMapping("insert")
