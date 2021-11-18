@@ -55,6 +55,9 @@ public class DayEndAccount001Controller extends BaseController {
         // 下拉框初始化
         this.setSelectOptionToModel(model, BussinessDictCode.交易场所);
         this.setSelectOptionToModel(model, DictCode.对账状态结果);
+        String accountStatus = (String)model.asMap().get("ACCOUNT_STATUS");
+        String ACCOUNT_STATUS1 = accountStatus.replace(",{\"id\":\"2\",\"text\":\"待处理\",\"col\":\"ACCOUNT_STATUS\"},{\"id\":\"3\",\"text\":\"手工完成\",\"col\":\"ACCOUNT_STATUS\"}","");
+        model.addAttribute("ACCOUNT_STATUS1",ACCOUNT_STATUS1);
         model.addAttribute("settleDateTotal", DateUtil.platDateFromCache());
         return super.init(model);
     }

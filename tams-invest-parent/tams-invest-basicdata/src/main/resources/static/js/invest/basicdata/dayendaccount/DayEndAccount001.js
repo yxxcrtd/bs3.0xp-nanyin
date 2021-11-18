@@ -148,7 +148,7 @@ $(function() {
             ,{field:'finprodMarketId',sortable: false, title: '资产代码',width:120}
             ,{field:'finprodName',sortable: false, title: '资产名称',width:120}
             ,{field:'tradeMarketStr', sortable: false, title: '交易市场',width:120}
-            ,{field:'finprodTypeStr', sortable: false, title: '类型',width:120}
+            ,{field:'finprodTypeStr1', sortable: false, title: '类型',width:120}
             ,{field:'xiTongAmount', type:'money',sortable: false, title: '系统持仓',width:120}
             ,{field:'quanShangAmount', type:'money',sortable: false, title: '券商持仓',width:120}
             ,{field:'childInfo', width:150, visible: false}

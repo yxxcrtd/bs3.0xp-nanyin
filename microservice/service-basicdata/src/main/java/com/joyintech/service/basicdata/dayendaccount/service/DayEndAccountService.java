@@ -470,21 +470,18 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                 param.put("busiAcctNo",s[2]);
                 param.put("settleDate",s[3]);
                 param.put("ccy",s[4]);
-                result = super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage1(param));
-                setFinprodMarketId(result);
-                return result;
+                return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage1(param));
             }else{
                 param.put("finprodId",s[2]);
                 param.put("settleDate",s[3]);
                 param.put("secAcctId",s[4]);
-                result = super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage2(param));
-                setFinprodMarketId(result);
-                return result;
+                if(StringUtil.isNotEmpty(s[5])&&!"null".equals(s[5])){
+                    param.put("termType",s[5]);
+                }
+                return  super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage2(param));
             }
         }
-        result = super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage(param));
-        setFinprodMarketId(result);
-        return result;
+        return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage(param));
     }
 
     private void setFinprodMarketId(Page<DayEndAccountDto> page){

@@ -412,4 +412,7 @@ public class DayEndAccountDto extends StlSecRecon {
 		this.tradeId = tradeId;
 	}
 
+	public String getFinprodTypeStr1() {
+		return SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, this.getFinprodType());
+	}
 }
