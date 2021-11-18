@@ -58,7 +58,6 @@ $(function() {
         dblclick:function(table, data) {
 
         },
-        checkbox: false,
         isMulti:true,
         /**
          * 定义表头
@@ -94,7 +93,6 @@ $(function() {
             ,{field:'tradeNum', type:'money',sortable: false, title: 'DayEndAccount001.tradeNum',width:120}
         ]]
     });
-    
     /**
      * 绑定编辑事件
      */
