@@ -101,6 +101,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             if(StringUtil.isNotEmpty(dto.getFinprodId())){
                 FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getFinprodId());
                 dto.setFinprodMarketId(finProduct.getFinprodMarketId());
+                dto.setFinprodName(finProduct.getFinprodAbbr());
             }
         }
         return result;
