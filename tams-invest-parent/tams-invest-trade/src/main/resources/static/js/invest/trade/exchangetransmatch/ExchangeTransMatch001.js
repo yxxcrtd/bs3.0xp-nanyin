@@ -86,9 +86,12 @@
             {field:'secAcctId', visible:false},
             {field:'acctNo', visible:false},
             {field:'ps', visible:false},
+            {field:'unitInt', visible:false},
+            {field:'unitCprice', visible:false},
             {field:'tradeMarket', visible:false},
             {field:'seqId', visible:false},
             {field:'settleDate', visible:false},
+            {field:'tradeMarketMode', visible:false},
             {field:'tradePlat', visible:false}
         ]
 
