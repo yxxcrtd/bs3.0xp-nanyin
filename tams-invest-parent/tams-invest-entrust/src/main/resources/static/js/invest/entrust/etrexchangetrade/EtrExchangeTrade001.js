@@ -1141,16 +1141,17 @@
             ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)
             ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_ZYSHG)){
             $("#invAim_div_" + currentTab).hide();
+            linkFindSecAmountInfo();
         }else {
             //质押券出入库不展示投资目的
             var ps = $("#ps_" + currentTab).val();
             if(ps == PS_T68 || ps == PS_T69) {
-                linkFindSecAmountInfo();
                 $("#invAim_div_" + currentTab).hide();
             }
             else {
                 $("#invAim_div_" + currentTab).show();
             }
+            linkFindSecAmountInfo();
         }
     };
     /**
@@ -1595,7 +1596,7 @@
                         document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
                     }else{
                         //配债配股,质押券出入库不显示持仓数量，可卖数量，成本价
-                        if(ps == PS_T46 || ps == PS_T97 || ps == PS_T68) {
+                        if(ps == PS_T46 || ps == PS_T97 || ps == PS_T68 || ps ==PS_T69 || ps ==PS_03 || ps ==PS_04) {
                             document.getElementById('positionAmount_' + currentTab).innerHTML = "";
                             document.getElementById('canSellAmount_' + currentTab).innerHTML = "";
                             document.getElementById('costPrice_' + currentTab).innerHTML = "";

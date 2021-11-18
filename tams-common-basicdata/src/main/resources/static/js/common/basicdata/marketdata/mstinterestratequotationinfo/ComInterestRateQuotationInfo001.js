@@ -35,6 +35,7 @@ $(function() {
             ,{field:'ccyName',width:200,  title: 'ComInterestRateQuotationInfo001.ccy', sortField:'ccy'}
             ,{field:'intRate',width:200,  title: 'ComInterestRateQuotationInfo001.intRate',type:'number'}
             ,{field:'effDate',width:200, title: 'ComInterestRateQuotationInfo001.effDate',type:'date'}
+            ,{field:'ccy',visible:false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });

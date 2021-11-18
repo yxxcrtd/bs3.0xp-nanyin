@@ -370,12 +370,14 @@ public class EtrSecLendService extends BaseService {
             if( dto.getBussRepoSec().getTotalPrinAmt()  != null){
                 dto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply( dto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
             }
-            for (PledgeBondInfoDto pledgeBond :  dto.getBussRepoSec().getPledgeBondList()) {
-                if (pledgeBond.getAvaPledgePrin() != null) {
-                    pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
-                }
-                if (pledgeBond.getPledgePrin() != null) {
-                    pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+            if(StringUtil.isNotEmpty(dto.getBussRepoSec()) && !StringUtil.isEmptyList(dto.getBussRepoSec().getPledgeBondList())) {
+                for (PledgeBondInfoDto pledgeBond : dto.getBussRepoSec().getPledgeBondList()) {
+                    if (pledgeBond.getAvaPledgePrin() != null) {
+                        pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
+                    }
+                    if (pledgeBond.getPledgePrin() != null) {
+                        pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+                    }
                 }
             }
             List<EtrPledge> etrPledgeList = new ArrayList<>();

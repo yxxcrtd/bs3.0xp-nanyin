@@ -1026,7 +1026,7 @@
         </if>
     </select>
     <select id="queryBusiAcctNo" resultType="com.joyintech.framework.select.SelectOptionDto">
-        select p.ACCT_NO id,s.ACCT_NAME text from
+        select distinct p.ACCT_NO id,s.ACCT_NAME text from
         PTL_CAPACCT_INFO p
         left join STL_CAPACCT_INFO s
         on p.ACCT_NO = s.ACCT_NO
@@ -1079,11 +1079,13 @@
         s1.ACCT_NAME acctName,
         t1.CDATE settleDate,
         null finprodId,
+        null finprodMarketId,
         null finprodName,
         null tradeMarket,
         'F20' finprodType,
         t1.AMOUNT xiTongAmount,
         s2.ZYBS quanShangAmount,
+        null termType,
         case when t1.AMOUNT = s2.ZYBS then '1' else '0' end checkResult
         FROM (
         SELECT p1.ACCT_ID,
@@ -1116,9 +1118,6 @@
             <if test="busiAcctNoList != null and busiAcctNoList.size() > 0">
                 AND t1.ACCT_ID IN
                 <foreach collection="busiAcctNoList" index="index" item="item" open="(" close=")" separator=",">
-                    <if test="(index % 998) == 0">
-                        null) OR t1.ACCT_ID IN (
-                    </if>
                     #{item}
                 </foreach>
             </if>
@@ -1136,7 +1135,7 @@
 
         union all
         select
-        table2.*,nvl(table2.portfolioId,'null')||','||'2'||','||table2.finprodId||','||to_char(table2.settleDate,'yyyy-MM-dd')||','||table2.secAcctId
+        table2.*,nvl(table2.portfolioId,'null')||','||'2'||','||table2.finprodId||','||to_char(table2.settleDate,'yyyy-MM-dd')||','||table2.secAcctId||','||nvl(table2.termType,'null') childInfo
         from (
         SELECT
         'root' parentInfo,
@@ -1178,15 +1177,17 @@
         s2.BUSI_ACCT_NO busiAcctNo,
         s2.ACCT_NAME acctName,
         t1.CDATE settleDate,
-        f1.FINPROD_ID finprodId,
+        nvl(f1.FINPROD_ID,t1.FINPROD_ID) finprodId,
+        nvl(f1.FINPROD_MARKET_ID,t1.FINPROD_ID) finprodMarketId,
         f1.FINPROD_NAME finprodName,
-        f1.TRADE_MARKET tradeMarket,
-        f2.TYPE_8 finprodType,
+        t1.TRADE_MARKET tradeMarket,
+        t1.TYPE_8 finprodType,
         t1.AMOUNT xiTongAmount,
         s3.AMOUT quanShangAmount,
+        t1.TERM_TYPE termType,
         case when t1.AMOUNT = s3.AMOUT then '1' else '0' end checkResult
         FROM (
-        SELECT p1.FINPROD_ID,p1.SEC_ACCT_ID,p1.CDATE,
+        SELECT nvl(f1.FINPROD_MARKET_ID,p1.FINPROD_ID) FINPROD_ID,p1.SEC_ACCT_ID,p1.CDATE,f1.TRADE_MARKET,f2.type_8,null TERM_TYPE,
         SUM(p1.AMOUNT) AMOUNT
         FROM PTL_SEC_POSITION p1
         LEFT JOIN STL_SEC_ACCT_INFO s1
@@ -1195,13 +1196,16 @@
         ON s1.TRD_ACCT_ID=p2.ACCT_NO
         AND s1.TRD_ACCT_CCY=p2.CCY
         AND p1.PORTFOLIO_ID=p2.PORTFOLIO_ID
-
+        LEFT JOIN FIN_PRODUCT f1
+        ON p1.FINPROD_ID=f1.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_TYPE f2
+        ON p1.FINPROD_ID=f2.FINPROD_ID
         WHERE s1.SEC_ACCT_TYPE='SEC'
         AND s1.TRADE_PLACE IN ('03','04')
         AND p2.ACCT_TYPE='A07'
         AND p1.HODING_TYPE='03'
         AND p1.BRANCH='0'
-        GROUP BY p1.FINPROD_ID,p1.SEC_ACCT_ID,p1.CDATE
+        GROUP BY p1.FINPROD_ID,p1.SEC_ACCT_ID,p1.CDATE,f2.type_8,f1.TRADE_MARKET,f1.FINPROD_MARKET_ID
         UNION ALL
         SELECT
         CASE WHEN f1.TERM_TYPE='GC001' THEN '204001'
@@ -1224,6 +1228,11 @@
         ELSE '131807' END FINPROD_ID,
         p1.SEC_ACCT_ID,
         p1.CDATE,
+        case when f1.TERM_TYPE like 'G%' then '03'
+        when f1.TERM_TYPE like 'R%' then '04' else '04'
+        end tradeMarket,
+        '07' TYPE_8,
+        f1.TERM_TYPE,
         SUM(p1.AMOUNT) AMOUNT
         FROM PTL_SEC_POSITION p1
         LEFT JOIN STL_SEC_ACCT_INFO s1
@@ -1232,7 +1241,7 @@
         ON s1.TRD_ACCT_ID=p2.ACCT_NO
         AND s1.TRD_ACCT_CCY=p2.CCY
         AND p1.PORTFOLIO_ID=p2.PORTFOLIO_ID
-        LEFT JOIN FIN_TRADE_PRODUCT f1
+        inner JOIN FIN_TRADE_PRODUCT f1
         ON p1.FINPROD_ID=f1.FINPROD_ID
         AND p1.BRANCH=f1.BRANCH
         WHERE s1.SEC_ACCT_TYPE='SEC'
@@ -1264,16 +1273,10 @@
                 m2.CUSTOMER_ID = #{customerId}
             </if>
             <if test="busiAcctNoList != null and busiAcctNoList.size() > 0">
-                AND t1.ACCT_ID IN
-                <foreach collection="busiAcctNoList" index="index" item="item" open="(" close=")" separator=",">
-                    <if test="(index % 998) == 0">
-                        null) OR t1.ACCT_ID IN (
-                    </if>
-                    #{item}
-                </foreach>
+                AND 1=2
             </if>
             <if test="accountStatus!=null and accountStatus!=''">
-                AND case when t1.AMOUNT = s2.ZYBS then '1' else '0' end = #{accountStatus}
+                AND case when t1.AMOUNT = s3.AMOUT then '1' else '0' end = #{accountStatus}
             </if>
             <if test="tradeDateBegin!=null and tradeDateBegin!=''">
                 AND t1.CDATE&gt;=to_date(#{tradeDateBegin},'yyyy-MM-dd')
@@ -1324,10 +1327,20 @@
                                AND p1.PORTFOLIO_ID = p2.PORTFOLIO_ID
                  LEFT JOIN PTL_PORTFOLIO p3
                            on p1.PORTFOLIO_ID = p3.PORTFOLIO_ID
+                <if test="termType!=null">
+                    inner join FIN_TRADE_PRODUCT f1
+                    on p1.FINPROD_ID = f1.FINPROD_ID
+                    and p1.BRANCH = f1.BRANCH
+                </if>
         WHERE s1.SEC_ACCT_TYPE = 'SEC'
           AND p1.HODING_TYPE = '03'
           AND p1.SEC_ACCT_ID =#{secAcctId}
-          AND p1.FINPROD_ID =#{finprodId}
+        <if test="termType!=null">
+            and f1.term_type = #{termType}
+        </if>
+        <if test="termType=null">
+            AND p1.FINPROD_ID =#{finprodId}
+        </if>
           AND p1.BRANCH = '0'
           AND p1.CDATE =to_date(#{settleDate},'yyyy-MM-dd')
         GROUP BY p1.PORTFOLIO_ID,

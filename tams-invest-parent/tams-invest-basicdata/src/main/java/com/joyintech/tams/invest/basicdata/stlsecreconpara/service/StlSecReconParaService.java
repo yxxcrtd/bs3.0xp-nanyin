@@ -46,6 +46,8 @@ public class StlSecReconParaService extends CommonExportService<StlSecReconParaD
             // 更新
             action = "update";
         }
+        entity.setConfigDate(DateUtil.platDateFromCache());
+
         restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME + "/StlSecReconPara/" + action, entity, Integer.class);
     }
 

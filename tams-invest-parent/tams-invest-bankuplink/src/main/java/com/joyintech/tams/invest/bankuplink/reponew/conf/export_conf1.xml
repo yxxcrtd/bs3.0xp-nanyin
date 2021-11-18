@@ -4,7 +4,7 @@
         <Row>
             <Cell order="1" name="指令状态">entrustStatusStr</Cell>
             <Cell order="2" name="执行进度">transactioncom</Cell>
-            <Cell order="3" name="完成进度">tradeFinishPercent</Cell>
+            <Cell order="3" name="成交进度">tradeFinishPercent</Cell>
             <Cell order="4" name="投资经理">invManagerName</Cell>
             <Cell order="5" name="组合代码">portfolioId</Cell>
             <Cell order="6" name="组合名称">portfolioName</Cell>
@@ -17,7 +17,7 @@
             <Cell order="13" name="回购利率%">price</Cell>
             <Cell order="14" name="指令开始日">vdate</Cell>
             <Cell order="15" name="指令终止日">mdate</Cell>
-            <Cell order="16" name="委托代码">entrustId</Cell>
+            <Cell order="16" name="指令代码">entrustId</Cell>
         </Row>
     </Worksheet>
 </Workbook>

@@ -166,7 +166,7 @@ public class StlDownDataGatherTask extends BatchBaseService {
             .batch("bond5", stlDataGatherBond5Reader, stlDataGatherBond5Processor, stlDataGatherWriter)
             .batch("fund1", stlDataGatherFund1Reader, stlDataGatherFund1Processor, stlDataGatherWriter)
             .batch("fund2", stlDataGatherFund2Reader, stlDataGatherFund2Processor, stlDataGatherWriter)
-            .batch("repo1", stlDataGatherRepo1Reader, stlDataGatherRepoDurationProcessor, stlDataGatherWriter)
+            .batch("repo1", stlDataGatherRepo1Reader, stlDataGatherRepo1Processor, stlDataGatherWriter)
             /*.batch("repo2", stlDataGatherRepo2Reader, stlDataGatherRepo2Processor, stlDataGatherWriter)
             .batch("repo3", stlDataGatherRepo3Reader, stlDataGatherRepo3Processor, stlDataGatherWriter)
             .batch("repo4", stlDataGatherRepo4Reader, stlDataGatherRepo4Processor, stlDataGatherWriter)*/

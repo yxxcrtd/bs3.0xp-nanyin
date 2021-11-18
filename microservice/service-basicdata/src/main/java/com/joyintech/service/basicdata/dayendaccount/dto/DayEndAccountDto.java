@@ -19,6 +19,19 @@ public class DayEndAccountDto extends StlSecRecon {
 	 */
 	private String tradeId;
 
+	public String getFinprodMarketId() {
+		return finprodMarketId;
+	}
+
+	public void setFinprodMarketId(String finprodMarketId) {
+		this.finprodMarketId = finprodMarketId;
+	}
+
+	/**
+	 * 金融产品市场代码
+	 */
+	private String finprodMarketId;
+
 	/**
 	 * 印花税
 	 */

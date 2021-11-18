@@ -21,6 +21,19 @@ public class DayEndAccountDto extends StlSecRecon {
 	 */
 	private String tradeId;
 
+	public String getFinprodMarketId() {
+		return finprodMarketId;
+	}
+
+	public void setFinprodMarketId(String finprodMarketId) {
+		this.finprodMarketId = finprodMarketId;
+	}
+
+	/**
+	 * 金融产品市场代码
+	 */
+	private String finprodMarketId;
+
 	/**
 	 * 印花税
 	 */
@@ -399,4 +412,7 @@ public class DayEndAccountDto extends StlSecRecon {
 		this.tradeId = tradeId;
 	}
 
+	public String getFinprodTypeStr1() {
+		return SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, this.getFinprodType());
+	}
 }
