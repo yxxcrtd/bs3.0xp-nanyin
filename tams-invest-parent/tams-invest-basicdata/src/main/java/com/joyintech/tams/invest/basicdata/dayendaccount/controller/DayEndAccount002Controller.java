@@ -4,6 +4,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -15,6 +16,7 @@ import com.joyintech.tams.invest.basicdata.dayendaccount.service.DayEndAccount00
 import com.joyintech.tams.invest.basicdata.dayendaccount.service.DayEndAccount002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -65,8 +70,14 @@ public class DayEndAccount002Controller extends BaseController {
             dayEndAccount002Dto.setWorkflowId(workflowId);
             model.addAttribute("entity", dayEndAccount002Dto);
         }else{
-            DayEndAccount002Dto dayEndAccount002Dto = new DayEndAccount002Dto();
-        	model.addAttribute("entity", dayEndAccount002Dto);
+            DayEndAccountDto dayEndAccountDto = new DayEndAccountDto();
+            dayEndAccountDto.setEntrustTradeId(getParam("entrustTradeId"));
+            dayEndAccountDto.setFinprodId(getParam("finprodId"));
+            dayEndAccountDto.setAccount(getParam("busiAcctNo"));
+            dayEndAccountDto.setSeatNumber(getParam("seatNumber"));
+            dayEndAccountDto.setTradeMarket(getParam("tradeMarket"));
+            dayEndAccountDto.setSettleDate(new Date(Long.valueOf(getParam("settleDate"))));
+        	model.addAttribute("entity", dayEndAccountDto);
         }
         return super.init(model);
     }
@@ -121,6 +132,9 @@ public class DayEndAccount002Controller extends BaseController {
         } else if (StringUtil.isNotEmpty(seqNo)) {
             DayEndAccount002Dto dayEndAccount002Dto = dayEndAccount001Service.getReconDealInfo(pageParam);
             page.setRoot(dayEndAccount002Dto.getDealDetailList());
+        }else{
+            DayEndAccount002Dto dayEndAccount002Dto = dayEndAccount001Service.getDealDetailInfo(pageParam);
+            page.setRoot(dayEndAccount002Dto.getDealDetailList());
         }
         return page;
     }
@@ -165,11 +179,15 @@ public class DayEndAccount002Controller extends BaseController {
         params.setBusinessCode(dto.getSeqNo());
         params.setBusinessType(DictCodeListExt3.共通业务类型_券商流水核对.getValue());
         // 设置流程业务说明, entity即传入的dto
-        DayEndAccountDto dayEndAccountDto = dto.getReconDealInfoList().get(0);
-        params.setComment(
-            entity -> "组合代码" + "("
-                      + dayEndAccountDto.getPortfolioId()
-                      + ")" + "-" + "资产代码" + "(" + dayEndAccountDto.getFinprodId() + ")");
+        DayEndAccountDto dayEndAccountDto = null;
+        if(CollectionUtils.isNotEmpty(dto.getReconDealInfoList())){
+            dayEndAccountDto =  dto.getReconDealInfoList().get(0);
+        }else if(CollectionUtils.isNotEmpty(dto.getDealDetailList())){
+            dayEndAccountDto = dto.getDealDetailList().get(0);
+        }
+        String portfolioId = dayEndAccountDto.getPortfolioId();
+        String finprodId = dayEndAccountDto.getFinprodId();
+        params.setComment(entity -> "组合代码" + "(" + portfolioId + ")" + "-" + "资产代码" + "(" + finprodId + ")");
         ProcessParameter<DayEndAccount002Dto> parameter = new ProcessParameter<DayEndAccount002Dto>();
         parameter.setWorkFlowParameter(params);
         String msg = dayEndAccount002Service.start(parameter, dto);

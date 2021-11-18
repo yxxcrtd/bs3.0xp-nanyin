@@ -11,9 +11,10 @@
 				a.TRADE_MARKET,
 				a.CHECK_RESULT,
 				f.TYPE_8 FINPROD_TYPE,
-				a.ENTRUST_TRADE_ID TRADE_ID,
+				a.ENTRUST_TRADE_ID,
 				a.CUSTOMER_ID,
 				a.STL_SEC_DEME,
+			    b.SEAT_NUMBER,
 				b.COMMISSION_AMT,
 				b.JSF_AMT,
 				b.ZGF_AMT,
@@ -59,9 +60,9 @@
 				FIN_PRODUCT_TYPE f ON a.FINPROD_ID = f.FINPROD_ID
 			WHERE
 			1=1
-			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+			<if test="accountList != null and accountList.size() > 0">
 				AND a.ACCOUT IN
-				<foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
+				<foreach collection="accountList" index="index" item="item" open="(" close=")" separator=",">
 					#{item}
 				</foreach>
 			</if>
@@ -94,9 +95,10 @@
 				e.TRADE_MARKET,
 				e.CHECK_RESULT,
 				h.TYPE_8 FINPROD_TYPE,
-				e.APPLY_TRADE_ID TRADE_ID,
+				e.APPLY_TRADE_ID ENTRUST_TRADE_ID,
 				e.BROKER_ID CUSTOMER_ID,
 				e.PARA_VALUE STL_SEC_DEME,
+			    e.SEAT_NUMBER,
 				null COMMISSION_AMT,
 				null JSF_AMT,
 				null ZGF_AMT,
@@ -160,9 +162,9 @@
 				AND c.CHECK_RESULT = #{accountStatus}
 			</if>
 			AND d.PARA_VALUE = #{PARA_VALUE_02}
-			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+			<if test="accountList != null and accountList.size() > 0">
 				AND a.ACCT_NO IN
-				<foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
+				<foreach collection="accountList" index="index" item="item" open="(" close=")" separator=",">
 					#{item}
 				</foreach>
 			</if>
@@ -209,9 +211,10 @@
 				e.TRADE_MARKET,
 				e.CHECK_RESULT,
 				h.TYPE_8 FINPROD_TYPE,
-				e.APPLY_TRADE_ID TRADE_ID,
+				e.APPLY_TRADE_ID ENTRUST_TRADE_ID,
 				e.BROKER_ID CUSTOMER_ID,
 				e.PARA_VALUE STL_SEC_DEME,
+				e.SEAT_NUMBER,
 				null COMMISSION_AMT,
 				null JSF_AMT,
 				null ZGF_AMT,
@@ -275,9 +278,9 @@
 					AND c.CHECK_RESULT = #{accountStatus}
 				</if>
 				AND d.PARA_VALUE = #{PARA_VALUE_01}
-				<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<if test="accountList != null and accountList.size() > 0">
 					AND a.ACCT_NO IN
-					<foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
+					<foreach collection="accountList" index="index" item="item" open="(" close=")" separator=",">
 						#{item}
 					</foreach>
 				</if>
@@ -324,9 +327,10 @@
 				e.TRADE_MARKET,
 				e.CHECK_RESULT,
 				h.TYPE_8 FINPROD_TYPE,
-				e.APPLY_TRADE_ID TRADE_ID,
+				e.APPLY_TRADE_ID ENTRUST_TRADE_ID,
 				e.BROKER_ID CUSTOMER_ID,
 				e.PARA_VALUE STL_SEC_DEME,
+				e.SEAT_NUMBER,
 				null COMMISSION_AMT,
 				null JSF_AMT,
 				null ZGF_AMT,
@@ -390,9 +394,9 @@
 					AND c.CHECK_RESULT = #{accountStatus}
 				</if>
 				AND d.PARA_VALUE = #{PARA_VALUE_03}
-				<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<if test="accountList != null and accountList.size() > 0">
 					AND a.ACCT_NO IN
-					<foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
+					<foreach collection="accountList" index="index" item="item" open="(" close=")" separator=",">
 						#{item}
 					</foreach>
 				</if>
@@ -896,6 +900,55 @@ from
 		ssrd.SEQ_NO = #{seqNo, jdbcType=VARCHAR}
 	</select>
 
+	<select id="selectSettleTransData" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
+		select
+			std.TRADE_ID, std.DEAL_DATE, std.SEC_TYPE,
+			std.APPLY_TRADE_ID, std.FINPROD_ID, std.FINPROD_TYPE,
+			std.FINPROD_TYPE2, std.BRANCH, BUSI_TYPE,
+			std.TRADE_DATE, std.SETTLE_DATE, std.VDATE,
+			std.MDATE, std.VPAY_DATE, std.MPAY_DATE,
+			std.TERM_TYPE, std.SETTLE_SPEED, std.CCY,
+			std.UNIT_CPRICE, std.UNIT_INT, std.UNIT_FPRICE,
+			std.PAR_VALUE, std.CPRICE_AMT, std.SHARE_AMT,
+			std.PRIN_AMT, std.INT_AMT, std.FPRICE_AMT,
+			std.STAMP_FEE, std.JSF_AMT, std.GHF_AMT,
+			std.ZGF_AMT, std.SXF_AMT, std.SETTLE_FEE,
+			std.COMMISSION_AMT, std.IS_PAY_WITH_TRADE, std.TRADE_AMT,
+			std.PS, std.TRADE_MARKET, std.TRADE_MARKET_MODE,
+			std.TRADE_PLAT, std.PLEDGE_SEC_NUM, std.SEAT_NUMBER,
+			std.PORTFOLIO_ID, std.SEC_ACCT_ID, std.ACCT_NO,
+			std.BATCH_NUMBER, std.M_PRIN_AMT, std.M_INT_AMT,
+			std.M_TRADE_AMT, std.INT_RATE, std.BASIS,
+			std.BUSI_SCENE_CALSS, std.SETTLE_MODE, std.STAMP_FEE_RAW,
+			std.JSF_AMT_RAW, std.GHF_AMT_RAW, std.ZGF_AMT_RAW,
+			std.SXF_AMT_RAW, std.SETTLE_FEE_RAW, std.COMMISSION_AMT_RAW,
+			std.TRADE_AMT_RAW, std.TRADE_ID_RAW, std.SEQ_NO,
+			std.CREATE_USER, std.CREATE_DEPT, std.CREATE_TIME,
+			std.UPDATE_USER, std.UPDATE_TIME, std.IS_PURCH_TYPE_YX
+		from
+			settle_trans_data std
+		WHERE
+		    1=1
+			<if test="finprodId!=null and finprodId != ''">
+				AND std.FINPROD_ID = #{finprodId}
+			</if>
+			<if test="entrustTradeId!=null and entrustTradeId != ''">
+				AND std.APPLY_TRADE_ID = #{entrustTradeId}
+			</if>
+			<if test="account!=null and account != ''">
+				AND std.ACCT_NO = #{account}
+			</if>
+			<if test="seatNumber!=null and seatNumber != ''">
+				AND std.SEAT_NUMBER = #{seatNumber}
+			</if>
+			<if test="tradeMarket!=null and tradeMarket != ''">
+				AND std.TRADE_MARKET = #{tradeMarket}
+			</if>
+			<if test="settleDate!=null and settleDate != ''">
+				AND std.DEAL_DATE = #{settleDate}
+			</if>
+	</select>
+
 	<select id="selectCustomerId" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select CUSTOMER_ID id,CUSTOMER_NAME text
 		from MST_CUSTOMER_INFO where IS_BROKER='Y'
@@ -905,7 +958,7 @@ from
 	</select>
 
 	<select id="queryBusiAcctNo" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select p.ACCT_NO id,s.ACCT_NAME text from
+		select DISTINCT p.ACCT_NO id,s.ACCT_NAME text from
 		PTL_CAPACCT_INFO p
 		left join STL_CAPACCT_INFO s
 		on p.ACCT_NO = s.ACCT_NO

@@ -4,15 +4,15 @@ $(function() {
      */
     var getSearchParams = function() {
         var pageParam = {
-            portfolioId: $('#portfolioId').val(),
+            account: $('#busiAcctNo').val(),
             finprodId: $('#finprodId').val(),
             tradeMarket: $('#tradeMarket').val(),
             tradeDateBegin: $('#settleDate').startDate(),
             tradeDateEnd: $('#settleDate').endDate(),
             accountStatus: $('#accountStatus').val()
         };
-        if ($("#portfolioId").val()) {
-            pageParam.portfolioId = $("#portfolioId").val().join(",");
+        if ($("#busiAcctNo").val()) {
+            pageParam.account = $("#busiAcctNo").val().join(",");
         } else {
             pageParam.portfolioId = null;
         }
@@ -26,14 +26,14 @@ $(function() {
 
     var getSearchParams1 = function() {
         var pageParam = {
-            busiAcctNo: $('#busiAcctNo').val(),
+            busiAcctNo: $('#busiAcctNoTotal').val(),
             customerId: $('#customerId').val(),
             accountStatus:$('#accountStatusTotal').val(),
             tradeDateBegin: $('#settleDateTotal').startDate(),
             tradeDateEnd: $('#settleDateTotal').endDate()
         };
-        if ($("#busiAcctNo").val()) {
-            pageParam.busiAcctNo = $("#busiAcctNo").val().join(",");
+        if ($("#busiAcctNoTotal").val()) {
+            pageParam.busiAcctNo = $("#busiAcctNoTotal").val().join(",");
         } else {
             pageParam.busiAcctNo = null;
         }
@@ -104,9 +104,7 @@ $(function() {
         }
         Joyin.dialog(JoyinUtil.getLabel('DayEndAccount001.title'),
                 basePath + 'invest/basicdata/dayendaccount/DayEndAccount002/init',//打开新界面
-                '80%', '80%', {pageModel:PAGE_MODEL_EDIT,//请求的page_model
-                                seqNo:data.seqNo
-                                },function(){
+                '80%', '80%', data,function(){
                                     table.reload();//回调函数，表格刷新
                                 });
     });

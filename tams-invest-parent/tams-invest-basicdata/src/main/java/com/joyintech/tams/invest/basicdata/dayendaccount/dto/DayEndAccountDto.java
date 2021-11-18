@@ -184,6 +184,19 @@ public class DayEndAccountDto extends StlSecRecon {
 	@JsonSerialize(using=BigDecimalSerializer.class)
 	private BigDecimal commissionAmtFlg;
 
+	/**
+	 * 席位号
+	 */
+	private String seatNumber;
+
+	public String getSeatNumber() {
+		return seatNumber;
+	}
+
+	public void setSeatNumber(String seatNumber) {
+		this.seatNumber = seatNumber;
+	}
+
 	public BigDecimal getStampFeeFlg() {
 		return stampFeeFlg;
 	}
