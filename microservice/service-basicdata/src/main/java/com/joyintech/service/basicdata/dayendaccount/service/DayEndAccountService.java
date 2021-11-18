@@ -17,6 +17,7 @@ import com.joyintech.tams.invest.common.reconciliation.dto.AccountPlanSearchInfo
 import com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto;
 import com.joyintech.tams.invest.common.reconciliation.service.ReconciliationCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,9 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
     @Autowired(required=false)
     private IPlatformDate iPlatformDate;
 
+    @Autowired
+    private FinProductMapper finProductMapper;
+
     /**
      * 使用给定的sqlID检索分页数据。返回类型是Service的泛型。
      * @param pageParam pageParam
@@ -93,7 +97,14 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         pageParam.put("PARA_VALUE_02", DictCodeListStl.对账维度_委托汇总.getValue());
         pageParam.put("PARA_VALUE_03", DictCodeListStl.对账维度_成交明细.getValue());
         pageParam.put("CHECK_RESULT_2", DictCodeListExt3.对账状态结果_待处理.getValue());
-        return super.queryForPage(page, length, () -> dayEndAccountMapper.findAccountInfo(pageParam));
+        Page<DayEndAccountDto> result = super.queryForPage(page, length, () -> dayEndAccountMapper.findAccountInfo(pageParam));
+        for(DayEndAccountDto dto:result.getRoot()){
+            if(StringUtil.isNotEmpty(dto.getFinprodId())){
+                FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getFinprodId());
+                dto.setFinprodMarketId(finProduct.getFinprodMarketId());
+            }
+        }
+        return result;
     }
 
     public Page<SelectOptionDto> queryAssetCode(int page, int length,
@@ -442,6 +453,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
 
     public Page<DayEndAccountDto> selectPage(int page, int length, Map<String, Object> param) {
         Object busiAcctNo = param.get("busiAcctNo");
+        Page<DayEndAccountDto> result;
         if (busiAcctNo != null) {
             param.put("busiAcctNoList",
                     StringUtil.splitToList(GlobalConstant.COMMA, (String)busiAcctNo));
@@ -458,14 +470,29 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                 param.put("busiAcctNo",s[2]);
                 param.put("settleDate",s[3]);
                 param.put("ccy",s[4]);
-                return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage1(param));
+                result = super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage1(param));
+                setFinprodMarketId(result);
+                return result;
             }else{
                 param.put("finprodId",s[2]);
                 param.put("settleDate",s[3]);
                 param.put("secAcctId",s[4]);
-                return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage2(param));
+                result = super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage2(param));
+                setFinprodMarketId(result);
+                return result;
             }
         }
-        return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage(param));
+        result = super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage(param));
+        setFinprodMarketId(result);
+        return result;
+    }
+
+    private void setFinprodMarketId(Page<DayEndAccountDto> page){
+        for(DayEndAccountDto dto:page.getRoot()){
+            if(StringUtil.isNotEmpty(dto.getFinprodId())){
+                FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getFinprodId());
+                dto.setFinprodMarketId(finProduct.getFinprodMarketId());
+            }
+        }
     }
 }
