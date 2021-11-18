@@ -35,7 +35,6 @@ import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
@@ -240,6 +239,11 @@ public class CfetsEtrDispatcherService extends BaseService{
         }
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        int year = c.get(Calendar.YEAR);
+        pageParam.put("year",year);
 
         //根据组合权限表添加检索权限
         Page<CfetsEtrDispatcherTradeListResponse> pageLimit = new Page<CfetsEtrDispatcherTradeListResponse>();
@@ -1030,6 +1034,17 @@ public class CfetsEtrDispatcherService extends BaseService{
     public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode,CfetsEtrDispatcherInfoRequest dto) {
         Map<String, Object> resultData = new HashMap<>();
         List<CfgReadonlyFormShow>  infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
+        if(StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"),"02")){
+            spcdCode = spcdCode+",02";
+            infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode));
+        }
+        //排序
+        Collections.sort(infoForm, new Comparator<CfgReadonlyFormShow>() {
+            @Override
+            public int compare(CfgReadonlyFormShow o1, CfgReadonlyFormShow o2) {
+                return o1.getSeqno().compareTo(o2.getSeqno());
+            }
+        });
         CfetsEtrDispatcherInfoResponse cfetsResponseDto = this.getEtrDispatcherInfo(dto);
         resultData.put(dtCode+"_form",infoForm);
         resultData.put(dtCode+"_data",cfetsResponseDto);
