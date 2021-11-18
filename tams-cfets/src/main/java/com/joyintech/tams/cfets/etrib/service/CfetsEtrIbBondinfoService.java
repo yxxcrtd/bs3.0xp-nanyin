@@ -1147,6 +1147,15 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }else {
                 dto.setXqFlg("无");
             }
+            //剩余期限（待偿期）
+            if (dto.getLastqx().equals("年")) {
+                dto.setLastqx(" ");
+            }
+
+            //付息频率
+            if (dto.getPayCycle().equals("月")||dto.getPayCycle().equals("季")||dto.getPayCycle().equals("年")||dto.getPayCycle().equals("半年")) {
+                dto.setPayCycle(dto.getPayCycle()+"付");
+            }
 
             //如果估价净价（行权）、估价净价（推荐）为空，显示为--
             if (dto.getPriceXq().equals("元")) {

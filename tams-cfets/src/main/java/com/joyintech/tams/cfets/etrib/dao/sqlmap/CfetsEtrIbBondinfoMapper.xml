@@ -690,13 +690,13 @@ from
         PJ.INNEROUTER inOrOut,
         ROUND(MBVI.BPYIELD*100,4) ||'%' gzRate,
 
-        t2.TYPE_7 type2,
-        t1.ISSUE_TYPE issueType,
+        sdltwo.ITEM_VALUE type2,
+        sdlIssueType.ITEM_VALUE issueType,
         MCI.CUSTOMER_NAME sponsorName,
-        t1.COUPON_SPECIES couponSpecies,
-        FCPR.PAY_CYCLE payCycle,
+        sdlCouponSpecies.ITEM_VALUE couponSpecies,
+        sdlPayCycle.ITEM_VALUE payCycle,
         FCCR.BASIS basis,
-        t1.ISSUE_AMT issueAmt,
+        ROUND(t1.ISSUE_AMT/10000,2) || '万元' issueAmt,
 
         MBVI.M_DURATION mDuration,
         MBVI.INTEREST_DURATION interestDuration,
@@ -761,6 +761,8 @@ from
         group by A.FINPROD_ID
         ) B on t1.FINPROD_ID = B.FINPROD_ID
         LEFT JOIN
+        FIN_CASH_PAY_RULE FCPR ON FCPR.FINPROD_ID = t1.FINPROD_ID
+        LEFT JOIN
         MST_BOND_CREDIT_RATING MBCR ON t1.FINPROD_MARKET_ID = MBCR.O_CODE AND MBCR.O_TYPE = '02'
         LEFT JOIN
         SYS_DATADICT_LIST sd1 ON sd1.DICT_CODE = 'MAIN_GRADE_RESULT' AND sd1.ITEM_CODE = MBCR.GRADE_RESULT
@@ -771,11 +773,17 @@ from
         LEFT JOIN
         SYS_DATADICT_LIST sdl ON sdl.DICT_CODE = 'CUSTOM_ASSET_TYPE_FOUR' AND sdl.ITEM_CODE = t2.TYPE_11
         LEFT JOIN
+        SYS_DATADICT_LIST sdltwo ON sdltwo.DICT_CODE = 'CUSTOM_ASSET_TYPE_TWO' AND sdltwo.ITEM_CODE = t2.TYPE_9
+        LEFT JOIN
+        SYS_DATADICT_LIST sdlIssueType ON sdlIssueType.DICT_CODE = 'ISSUE_TYPE' AND sdlIssueType.ITEM_CODE = t1.ISSUE_TYPE
+        LEFT JOIN
+        SYS_DATADICT_LIST sdlCouponSpecies ON sdlCouponSpecies.DICT_CODE = 'COUPON_SPECIES' AND sdlCouponSpecies.ITEM_CODE = t1.COUPON_SPECIES
+        LEFT JOIN
+        SYS_DATADICT_LIST sdlPayCycle ON sdlPayCycle.DICT_CODE = 'FREQUENCY_UNIT' AND sdlPayCycle.ITEM_CODE = FCPR.PAY_CYCLE
+        LEFT JOIN
         SYS_DATADICT_LIST sd ON sd.DICT_CODE = 'INT_TYPE' AND sd.ITEM_CODE = t6.INT_TYPE
         LEFT JOIN
-        MST_CUSTOMER_INFO MCI ON t1.ISSUER = MCI.CUSTOMER_ID
-        LEFT JOIN
-        FIN_CASH_PAY_RULE FCPR ON FCPR.FINPROD_ID = t1.FINPROD_ID
+        MST_CUSTOMER_INFO MCI ON t1.SPONSOR = MCI.CUSTOMER_ID
         LEFT JOIN
         FIN_CASH_CALC_RULE FCCR ON FCCR.FINPROD_ID = t1.FINPROD_ID
         LEFT JOIN (
