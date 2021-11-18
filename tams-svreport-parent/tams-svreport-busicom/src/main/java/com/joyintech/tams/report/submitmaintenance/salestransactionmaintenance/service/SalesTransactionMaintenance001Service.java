@@ -122,7 +122,6 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             headList.add("销售结算资金交易时间");
             headList.add("销售结算资金交易附言");
             headList.add("备注");
-            headList.add("数据状态");
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 return tempCheckResult;
@@ -157,9 +156,6 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
     private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,List<SalesTransactionMaintenanceDto> entities,String userName,String deptCode) {
 
         List<ExcelValidDto> checkResult = new ArrayList<>();
-        //估值来源枚举值：银行间、商业银行柜台交易、上交所、深交所、机构间私募系统、理财直接融资工具平台、其他场外、交易所、场外。
-        String[] valueSourceStr = {"银行间","商业银行柜台交易","上交所","深交所","机构间私募系统","理财直接融资工具平台","其他场外","交易所","场外"};
-        List valueSourceList = Arrays.asList(valueSourceStr);
         Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
         Date nowDate = new Date();
         for (int i = 0; i < dataList.size(); i++ ) {

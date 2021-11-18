@@ -112,7 +112,7 @@ public class SalesTransactionMaintenance001Controller extends BaseController {
                 "/com/joyintech/tams/report/submitmaintenance/salestransactionmaintenance/conf/export_conf.xml",
                 listdto);
         return ExportUtil.export(
-                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                "销售结算资金交易维护" + SystemGlobalConstant.OPEN_PARENTHESIS
                         + DateUtil.format(DateUtil.platDateFromCache())
                         + SystemGlobalConstant.CLOSE_PARENTHESIS
                         + SystemGlobalConstant.POINT

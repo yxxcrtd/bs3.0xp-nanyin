@@ -18,6 +18,7 @@ import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.d
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.util.SaleErrdataConvertUtil;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.validate.SalesTransactionMaintenanceValid;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,8 @@ public class SalesTransactionMaintenance002Service extends BaseService{
      */
     public void save(SalesTransactionMaintenanceDto dto) {
         Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
+        dto.setCreateUser(CommonUtil.getUserName());
+        dto.setUpdateUser(CommonUtil.getUserName());
         dto.setRegistSeqno(UUID.randomUUID().toString().replace("-", "").toUpperCase());
         dto.setDataStatus("E");
         salestransactionmaintenanceMapper.insert(dto);
