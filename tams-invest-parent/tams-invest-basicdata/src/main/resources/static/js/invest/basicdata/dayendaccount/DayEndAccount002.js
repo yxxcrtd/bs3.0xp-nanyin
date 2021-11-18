@@ -165,7 +165,6 @@ $(function() {
      * 画面加载完成
      */
     $(function() {
-        debugger;
         /**
          * 提交
          */

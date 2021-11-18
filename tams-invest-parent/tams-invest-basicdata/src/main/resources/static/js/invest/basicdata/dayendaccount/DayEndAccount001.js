@@ -70,7 +70,7 @@ $(function() {
             , {field: 'seqNo', width: 150, visible: false}
             ,{field:'operation', title: 'SysCommon.operation',rowspan: 2, type:'action', buttons: ['edit']}
         ],[
-            {field:'portfolioId',sortable: false, title: 'DayEndAccount001.portfolioId',width:120}
+            {field:'busiAcctNo',sortable: false, title: 'DayEndAccount001.busiAcctNo',width:120}
             ,{field:'settleDate', type:'date',sortable: false, title: 'DayEndAccount001.settleDate',width:120}
             ,{field:'finprodId',sortable: false, title: 'DayEndAccount001.finprodId',width:120}
             ,{field:'tradeMarketStr',sortable: false, title: 'DayEndAccount001.tradeMarket',width:120}
