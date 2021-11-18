@@ -71,11 +71,7 @@ $(function() {
         ajax: {
             url: JoyinUtil.getRealPath('invest/basicdata/dayendaccount/DayEndAccount002/findDataDetailPage'),
             type: 'POST',
-            data: function() {
-                return {seqNo: $('#seqNo').val(),
-                    workflowId: $('#workflowId').val()
-                };
-            }
+            data: entity
         },
         cols: colsDetail,
         height: 250,

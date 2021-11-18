@@ -75,6 +75,8 @@ public interface DayEndAccountMapper {
 
     List<SettleTransData> selectAllSettleTransData(Map<String, Object> param);
 
+    List<SettleTransData> selectSettleTransData(Map<String, Object> param);
+
     List<DayEndAccountDto> listTotalAccountInfo(Map<String, Object> param);
 
     List<SelectOptionDto> selectCustomerId(Map<String, Object> param);

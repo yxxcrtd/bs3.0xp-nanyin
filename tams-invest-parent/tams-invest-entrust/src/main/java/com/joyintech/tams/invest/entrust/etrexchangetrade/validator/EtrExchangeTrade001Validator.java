@@ -126,7 +126,7 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 						param.put("finprodId",dto.getFinprodId());
 						String historyInvAim = etrExchangeTrade001Service.linkInvAim(param);
 						if(StringUtil.isNotEmpty(historyInvAim) && !StringUtil.equals(historyInvAim,dto.getInvAim())) {
-							errorList.add(new ValidMessage("invAim", "已存在交易，投资目的只能为"+SysDataUtil.getNameFromDataDict(DictCode.投资目的, dto.getInvAim())));
+							errorList.add(new ValidMessage("invAim", "已存在交易，投资目的只能为"+SysDataUtil.getNameFromDataDict(DictCode.投资目的, historyInvAim)));
 						}
 					}
 				}

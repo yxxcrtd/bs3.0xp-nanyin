@@ -1099,8 +1099,10 @@ public class EtrExchangeTrade001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/linkInvAim")
-    public String linkInvAim(@RequestBody Map<String, Object> param) {
-            return etrExchangeTrade001Service.linkInvAim(param);
+    public AjaxResult linkInvAim(@RequestBody Map<String, Object> param) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setData(etrExchangeTrade001Service.linkInvAim(param));
+        return ajaxResult;
     }
     
 	/**
