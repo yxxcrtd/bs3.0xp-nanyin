@@ -112,7 +112,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		}
 	}
 
-	@ApiOperation(value = "接收委托(批量)", notes = "接收委托(批量,key=entrustIds,value数组)")
+	@ApiOperation(value = "接收指令(批量)", notes = "接收指令(批量,key=entrustIds 传数组)")
 	@PostMapping("receiveEntrust")
 	@ResponseBody
 	public Message<AjaxResult> recallDelegate(@RequestBody Map<String,Object> param){
@@ -122,20 +122,20 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			result.setErrorList(validMessages);
 			return new Message<AjaxResult>().success().setData(result);
 		}catch (Exception e){
-			logger.error("接收委托(批量)异常",e);
-			return new Message<AjaxResult>().fail().setMessage("接收委托(批量)异常");
+			logger.error("接收指令(批量)异常",e);
+			return new Message<AjaxResult>().fail().setMessage("接收指令(批量)异常");
 		}
 	}
 
-	@ApiOperation(value = "放弃委托(批量)", notes = "放弃委托(批量,key=entrustIds,value数组)")
+	@ApiOperation(value = "放弃委托(批量)", notes = "放弃委托(批量,key=entrustIds 传字符串用逗号隔开)")
 	@PostMapping("giveUpEntrust")
 	@ResponseBody
 	public Message<AjaxResult> entrustGiveUpHandle(@RequestBody Map<String,Object> param){
 		try{
 			AjaxResult result = new AjaxResult();
-			List<String> entrustIds = (List<String>)param.get("entrustIds");
+			List<String> entrustIds = com.joyintech.framework.util.StringUtil.splitToList(",",(String)param.get("entrustIds"));
 			entrustIds.forEach(item ->{
-				String flag = ibuQuoteBondService.giveUpEntrust(param.get("entrustId").toString());
+				String flag = ibuQuoteBondService.giveUpEntrust(item);
 				if(StringUtil.equals("1", flag)){
 					result.appendMessage(new ValidMessage("已接收且完成度为0指令,才能执行放弃操作！"));
 					return;
@@ -147,11 +147,28 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			});
 			return new Message<AjaxResult>().success().setData(result);
 		}catch (Exception e){
-			logger.error("放弃委托异常",e);
-			return new Message<AjaxResult>().fail().setMessage("放弃委托异常");
+			logger.error("放弃指令异常",e);
+			return new Message<AjaxResult>().fail().setMessage("放弃指令异常");
 		}
 	}
 
+	@ApiOperation(value = "指令退回(批量)", notes = "指令退回(批量,key=entrustIds指令代码, key=remark退回原因)")
+	@PostMapping("entrustRefuce")
+	@ResponseBody
+	public Message<AjaxResult> entrustRefuce(@RequestBody Map<String,Object> param){
+		try{
+			AjaxResult result = new AjaxResult();
+			result = ibuQuoteBondService.entrustRefuceCheck(param);
+			if(CollectionUtils.isNotEmpty(result.getErrorList())){
+				return new Message<AjaxResult>().success().setData(result);
+			}
+			ibuQuoteBondService.entrustRefuce(param);
+			return new Message<AjaxResult>().success().setMessage("退回成功");
+		}catch (Exception e){
+			logger.error("指令退回异常",e);
+			return new Message<AjaxResult>().fail().setMessage("指令退回异常");
+		}
+	}
 
 	@ApiOperation(value = "交易执行初始化检查", notes = "交易执行初始化检查")
 	@PostMapping("/dealexecutioncheck")
