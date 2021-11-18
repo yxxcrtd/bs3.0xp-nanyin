@@ -172,8 +172,8 @@ public class FinPlanProfitAssetService extends BaseService<FinPlanProfitAssetDto
             if (type11.indexOf("107")!=-1){
                 type11=type11+",125,137,138,139,140";
             }
-            List<String> assetType11List = StringUtil.splitToList(",", type11);
-            pageParam.put("type11", assetType11List);
+            List<String> type11List = StringUtil.splitToList(",", type11);
+            pageParam.put("type11List", type11List);
         }
         if(StringUtil.isNotEmpty(type12)){
             pageParam.put("type12List",StringUtil.splitToList(GlobalConstant.COMMA,type12));
