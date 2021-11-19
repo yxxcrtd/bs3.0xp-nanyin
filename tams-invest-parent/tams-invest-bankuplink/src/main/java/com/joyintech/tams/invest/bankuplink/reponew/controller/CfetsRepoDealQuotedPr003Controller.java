@@ -134,11 +134,18 @@ public class CfetsRepoDealQuotedPr003Controller extends BaseController {
                         ptlAllocationList.get(0).getEntrustId(), null);
                 cfetsRepoDealQuotedPrice001Dto.setTradeDate(dto.getVdate());
                 cfetsRepoDealQuotedPrice001Dto.setPortfolioSeries(dto.getPortfolioSeries());
+
             }
             //add by chenjiaxing 交易日期，组合系列初始化 20210913 start
-            model.addAttribute(GlobalConstant.ENTITY,cfetsRepoDealQuotedPrice001Dto);
             //组合分配列表初始化
-            cfetsRepoDealQuotedPrice001Dto.setPtlAllocationList(cfetsRepoDealQuotedPrice003Service.selectPortfolioInit(map));
+            List<PtlAllocationDto> ptlAllocationLists = cfetsRepoDealQuotedPrice003Service.selectPortfolioInit(map);
+            for (PtlAllocationDto ptlAllocationDto:ptlAllocationLists){
+                if (StringUtil.equals(this.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
+                    ptlAllocationDto.setAvaNum(ArithmeticUtil.doAdd(ptlAllocationDto.getFpriceAmt(),ptlAllocationDto.getAvaNum()));
+                }
+            }
+            cfetsRepoDealQuotedPrice001Dto.setPtlAllocationList(ptlAllocationLists);
+            model.addAttribute(GlobalConstant.ENTITY,cfetsRepoDealQuotedPrice001Dto);
         }
         else if (StringUtil.isNotEmpty(entrustId)) {
             //多组合

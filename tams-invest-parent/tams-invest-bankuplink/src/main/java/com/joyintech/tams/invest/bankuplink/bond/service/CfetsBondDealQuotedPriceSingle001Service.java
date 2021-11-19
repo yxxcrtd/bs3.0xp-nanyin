@@ -472,11 +472,13 @@ public class CfetsBondDealQuotedPriceSingle001Service extends BaseService<CfetsB
         	    if(StringUtils.isNotEmpty(entrustId)){
                     CfetsBondDealDialogueQuoteDto dto = this.queryEntrustInfoByEntrustId(entrustId);
                     if (dto != null) {
+
                         // 委托已接收状态切完成度小于100%
                         if (StringUtil.equals(dto.getEntrustStatus(), BussinessDictCodeList.委托状态_已接收.getValue())
                             && dto.getTransactioncom().compareTo(new BigDecimal(100)) >= 0) {
                             validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_R_031")+"指令编号:"+dto.getEntrustId()));
                         }
+
                         if(!StringUtil.isNotEmpty(finprodId)){
                             finprodId = dto.getFinprodId();
                         }
