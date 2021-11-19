@@ -123,6 +123,7 @@ public class EtrIbBondinfo002Service extends BaseService<EtrIbBondinfo002Dto> {
     public Page<SelectOptionDto> getfinprodIdForAdd(int page, int length,Map<String, Object> param) {
         param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
+        param.put("TRADE_PLACE_02",DictCodeListExt1.交易场所_商业银行柜台.getValue());
         param.put("TRADE_PLACE_05",DictCodeListExt1.交易场所_机构间私募系统.getValue());
         param.put("TRADE_PLACE_09",DictCodeListExt1.交易场所_OTC场外.getValue());
         param.put("TRADE_PLACE_10",DictCodeListExt1.交易场所_境外交易场所.getValue());

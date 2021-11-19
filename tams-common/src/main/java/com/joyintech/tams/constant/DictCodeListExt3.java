@@ -812,6 +812,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     中债评级类型_次级债券(DictCode.中债评级类型, "02", "评级AA-级以上"),
     中债评级类型_地方债(DictCode.中债评级类型, "03", "评级AA-级以下"),
     中债评级类型_短期融资券(DictCode.中债评级类型, "04", "无评级"),
+    共通业务类型_手工交收(DictCode.共通业务类型,"STL06","手工交收"),
 
     /**
      * 分录类型_正常记账
@@ -1687,6 +1688,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     操作类型_修改(DictCode.操作类型,"02","修改"),
     操作类型_撤回(DictCode.操作类型,"03","撤回"),
     操作类型_关闭(DictCode.操作类型,"04","关闭"),
+    操作类型_退回(DictCode.操作类型,"05","退回"),
+    操作类型_分发(DictCode.操作类型,"06","分发"),
 
     ;
     /**

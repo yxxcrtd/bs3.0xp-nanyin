@@ -22,7 +22,9 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dao.EtrBondFirstLBiddingMapper;
 import com.joyintech.tams.business.common.dao.CfgReadonlyFormShowMapper;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.entity.CfgReadonlyFormShow;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.cfets.etrdispatcher.dao.CfetsEtrDispatcherMapper;
 import com.joyintech.tams.cfets.etrdispatcher.dto.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -35,7 +37,6 @@ import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
@@ -141,6 +142,9 @@ public class CfetsEtrDispatcherService extends BaseService{
     @Autowired
     private CfgReadonlyFormShowMapper cfgReadonlyFormShowMapper;
 
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
+
     /**
      * 指令列表分页查询
      * @param dto 入数
@@ -240,6 +244,11 @@ public class CfetsEtrDispatcherService extends BaseService{
         }
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        int year = c.get(Calendar.YEAR);
+        pageParam.put("year",year);
 
         //根据组合权限表添加检索权限
         Page<CfetsEtrDispatcherTradeListResponse> pageLimit = new Page<CfetsEtrDispatcherTradeListResponse>();
@@ -774,6 +783,12 @@ public class CfetsEtrDispatcherService extends BaseService{
             etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
             etrEntrust.setEntrustId(entrustIds.get(j));
             etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
+
+            //更新操作记录日志
+            CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+            oprHisReq.setEntrustId(entrustIds.get(j));
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_分发.getValue());
+            joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
         }
         for (int i = 0; i < tradersList.size(); i++ ) {
             record.setTrader(tradersList.get(i));
@@ -799,6 +814,9 @@ public class CfetsEtrDispatcherService extends BaseService{
         List<ValidMessage> errorList = new ArrayList<ValidMessage>();
         List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
         List<String> entrustStatusList = StringUtil.splitToList(",",(String)pageParam.get("entrustStatus"));
+        if(!StringUtil.isNotEmpty(pageParam.get("rekReason"))){
+            errorList.add(new ValidMessage("请输入退回原因!"));
+        }
         if(entrustIdList.isEmpty()) {
             errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0026")));
         }else{
@@ -903,7 +921,7 @@ public class CfetsEtrDispatcherService extends BaseService{
                 // 更新委托表的委托状态
                 etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_已退回.getValue());
 //                // 委托退回原因
-//                etrInvestInfoServiceImpl.updateBackReason(entrustId, reason);
+                etrInvestInfoServiceImpl.updateBackReason(entrustId, (String)pageParam.get("rekReason"));
                 // 删除交易员的委托数据
                 for (EtrDistribute entity : etrDistributeList) {
                     entity.setRecStatus(DictCodeList.委托状态_已退回.getValue());
@@ -912,6 +930,14 @@ public class CfetsEtrDispatcherService extends BaseService{
                 if (baseEtrCashPositionCommService != null) {
                     baseEtrCashPositionCommService.entrustCloseExecute(entrustId);
                 }
+
+                //更新操作记录日志
+                CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+                oprHisReq.setEntrustId(entrustId);
+                oprHisReq.setOperType(DictCodeListExt3.操作类型_退回.getValue());
+                oprHisReq.setBusiDes((String)pageParam.get("rekReason"));
+                joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+
             }
             return true;
         }
@@ -1030,6 +1056,17 @@ public class CfetsEtrDispatcherService extends BaseService{
     public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode,CfetsEtrDispatcherInfoRequest dto) {
         Map<String, Object> resultData = new HashMap<>();
         List<CfgReadonlyFormShow>  infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
+        if(StringUtil.equals(CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"),"02")){
+            spcdCode = spcdCode+",02";
+            infoForm.addAll(cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode));
+        }
+        //排序
+        Collections.sort(infoForm, new Comparator<CfgReadonlyFormShow>() {
+            @Override
+            public int compare(CfgReadonlyFormShow o1, CfgReadonlyFormShow o2) {
+                return o1.getSeqno().compareTo(o2.getSeqno());
+            }
+        });
         CfetsEtrDispatcherInfoResponse cfetsResponseDto = this.getEtrDispatcherInfo(dto);
         resultData.put(dtCode+"_form",infoForm);
         resultData.put(dtCode+"_data",cfetsResponseDto);

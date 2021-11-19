@@ -122,29 +122,6 @@ public class CfetsEtrDispatcherController extends BaseController {
     }
 
     /**
-     * 指令信息明细查询
-     *
-     * @param dto
-     * @return Page<CfetsEtrDispatcherInfoResponse>
-     * @throws Exception Exception
-     * @see
-     * @since 1.0
-     */
-    @ApiOperation(value = "指令信息明细查询", notes = "指令信息明细查询")
-    @PostMapping("/getEtrDispatcherInfo")
-    @ResponseBody
-    public Message<CfetsEtrDispatcherInfoResponse> getEtrDispatcherInfo(@RequestBody CfetsEtrDispatcherInfoRequest dto)
-            throws Exception {
-        try {
-            CfetsEtrDispatcherInfoResponse returnDto = cfetsEtrDispatcherService.getEtrDispatcherInfo(dto);
-            return new Message<CfetsEtrDispatcherInfoResponse>().success().setData(returnDto);
-        } catch (Exception e) {
-            logger.error("查询指令信息明细分页数据异常", e);
-            return new Message<CfetsEtrDispatcherInfoResponse>().fail().setMessage("查询指令信息明细异常");
-        }
-    }
-
-    /**
      * 指令执行查询
      *
      * @param dto
@@ -443,7 +420,12 @@ public class CfetsEtrDispatcherController extends BaseController {
                                                        @PathVariable("dtCode") String dtCode,
                                                        @PathVariable("spcdCode") String spcdCode,
                                                        @RequestBody CfetsEtrDispatcherInfoRequest dto) {
-        Map<String,Object> resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfo(pageCode,dtCode,spcdCode,dto);
-        return new Message<Map<String,Object>>().success().setData(resultData);
+        try{
+            Map<String,Object> resultData = cfetsEtrDispatcherService.getReadonlyFormEtrInfo(pageCode,dtCode,spcdCode,dto);
+            return new Message<Map<String,Object>>().success().setData(resultData);
+        } catch (Exception e) {
+            logger.error("查询指令信息明细分页数据异常", e);
+            return new Message<Map<String,Object>>().fail().setMessage("查询指令信息明细异常");
+        }
     }
 }

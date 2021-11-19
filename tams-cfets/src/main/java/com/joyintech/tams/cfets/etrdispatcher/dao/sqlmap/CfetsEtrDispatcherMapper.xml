@@ -349,7 +349,7 @@
         left join SYS_DATADICT_LIST sdl7 on sdl7.DICT_CODE='CCY' and t.ccy=sdl7.ITEM_CODE
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
-        order by t.entrustStatus,t.finprodType2,t.busiTypePosition,t.ps)
+        order by t.entrustStatus,t.finprodType2,t.finprodMarketId,t.ps)
         <!--前端传入排序字段-->
         <if test="sort != null and sort != '' and direction != null and direction != ''">
             order by ${sort} ${direction}
@@ -384,7 +384,10 @@
                     OR t.termDays||'' = #{search}
                     OR t.exeProgress||'' = #{search}
                     OR t.dealProgress||'' = #{search}
-                    OR to_char(t.entrustDate,'yyyy-MM-dd') = #{search}
+                    OR TO_CHAR(t.entrustDate,'yyyy-MM-dd') ||''= #{search}
+                    OR TO_CHAR(t.entrustDate,'yyyy-MM-dd') ||''= #{year}||'-'||#{search}
+                    OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{search}
+                    OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
                 )
             </where>
         </if>
@@ -638,6 +641,7 @@
         LEFT JOIN fin_product fp ON rit.asset_code = fp.finprod_id
         WHERE rit.trade_id = #{entrustId}
         AND rit.conclusion is null
+        AND fp.finprod_id is not null
     </select>
 
     <!-- 交易员与工作量列表查询 -->
