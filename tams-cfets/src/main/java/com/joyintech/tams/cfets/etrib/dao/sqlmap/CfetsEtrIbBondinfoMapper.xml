@@ -1175,7 +1175,8 @@ from
     <select id="findAssetInfo"
             resultType="com.joyintech.tams.common.base.entity.FinProduct">
         select
-        T1.ccy,T1.Calendar_Id as calendarId,T1.vdate vdate,T1.mdate mdate,T1.TRADE_MARKET as tradeMarket
+        T1.ccy,T1.Calendar_Id as calendarId,T1.vdate vdate,T1.mdate mdate,T1.TRADE_MARKET as tradeMarket,
+        T1.finprod_abbr as finprodAbbr
         from
         fin_product T1
         where T1.finprod_id = #{entrustId}
@@ -1247,6 +1248,15 @@ from
         T1.is_right='Y'
         and p.exercise_date>#{platDate}
         and T1.finprod_id=#{finprodId,jdbcType=VARCHAR}
+    </select>
+    <!--查询该资产该组合的所有的业务模式-->
+    <select id="selectAllBusModelListByInfo" parameterType="Map" resultType="java.lang.String">
+        select distinct t.inv_aim as busModel
+        from etr_entrust t
+        where t.finprod_id=#{finprodId,jdbcType=VARCHAR}
+        and t.portfolio_id=#{portfolioId,jdbcType=VARCHAR}
+        and t.inv_aim is not null
+
     </select>
 
 

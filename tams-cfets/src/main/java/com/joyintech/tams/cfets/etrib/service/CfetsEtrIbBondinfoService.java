@@ -1491,6 +1491,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 }
             }
         }
+        FinProduct fp=cfetsetrIbBondinfoMapper.findAssetInfo(allDto.getFinprodId());
 
         List<CfetsBussCombDistribtDto> dtoList=allDto.getBussCombDistribtList();
         //券面总额
@@ -1527,6 +1528,27 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             entrustNum=ArithmeticUtil.doAdd(entrustNum,dtoList.get(i).getEntrustNum());
             entrustOwnNum=ArithmeticUtil.doAdd(entrustOwnNum,dtoList.get(i).getEntrustOwnNum());
             entrustIntegrateNum=ArithmeticUtil.doAdd(entrustIntegrateNum,dtoList.get(i).getEntrustIntegrateNum());
+            //交易方向为卖出，回售时，判断是否存在不同的业务模式
+            if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.isNotEmpty(allDto.getFinprodId())
+                    && StringUtil.isNotEmpty(distrib.getPortfolioId())
+                    && StringUtil.isNotEmpty(distrib.getBusinessModel())
+                    && (StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_卖出.getValue())
+                      || StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_行权_回售.getValue()))){
+                //查询该资产和该组合存在的业务模式
+                Map<String, Object> pageParam=new HashMap<>();
+                pageParam.put("finprodId",allDto.getFinprodId());
+                pageParam.put("portfolioId",distrib.getPortfolioId());
+                List<String> busmodelList=cfetsetrIbBondinfoMapper.selectAllBusModelListByInfo(pageParam);
+                if(!StringUtil.isEmptyList(busmodelList)){
+                    for(String bus:busmodelList){
+                         if(!StringUtil.equals(bus,distrib.getBusinessModel())){
+                             messages.add("组合【"+distrib.getPortfolioId()+"】、资产【"+ allDto.getFinprodMarketId()+"】存在多个业务模式，不允许下指令，请先做资产重分类");
+                             break;
+                         }
+                    }
+                }
+            }
+
         }
         if(StringUtil.isNotEmpty(allDto.getTradeAmt()) && allDto.getTradeAmt().compareTo(entrustNum)!=0){
             messages.add("组合分配中各组合券面总额之和必须等于基本信息中券面总额。");
@@ -1548,7 +1570,6 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
         }
         //指令日期若是节假日，不可以保存、提交
-        FinProduct fp=cfetsetrIbBondinfoMapper.findAssetInfo(allDto.getFinprodId());
         if(StringUtil.isNotEmpty(fp)){
             String isHoliday = cfetsetrIbBondinfoMapper.getIsHoliday(allDto.getEtrDate(), fp.getCalendarId());
             if(StringUtil.isNotEmpty(isHoliday) && !StringUtil.equals(isHoliday,"0")){
@@ -1560,13 +1581,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if (StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH),"01") && StringUtil.isEmptyList(messages)
                 && (!StringUtil.equals(allDto.getPs()==null? "":allDto.getPs(), DictCodeList.交易方向_赎回.getValue()))) {
             if (!isAuthorizationSoftcontrol){
-                if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH_IS_TOTAL), "Y")){
+                /*if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH_IS_TOTAL), "Y")){*/
                     String mess=getEtrLimitSwitch(allDto);
                     if(StringUtil.isNotEmpty(mess)){
                         messages.add(mess);
                     }
-                }else{
-//           		BussinessConstant.是否需要上级审批
+              /*  }else{
                     List<CfetsBussCombDistribtDto> etribComDistribtDtoList =allDto.getBussCombDistribtList();
                     for(CfetsBussCombDistribtDto distribt:etribComDistribtDtoList){
                         CfetsEtribSaveRequest itemDto=new CfetsEtribSaveRequest();
@@ -1582,7 +1602,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                             }
                         }
                     }
-                }
+                }*/
             }
         }
         if(messages.size()>0) {
