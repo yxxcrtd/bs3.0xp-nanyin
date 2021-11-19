@@ -1592,11 +1592,17 @@
                 if (result) {
                     //add by chenjiaxing 大宗交易指令、固收平台指令创建面板，选择的资产为基金时，“持仓数量、可卖数量、可买数量”单位显示“份” 20210826 start
                     var finprodType2 = $("#finprodType2_" + currentTab).val();
-                    if((currentTab == 'dz' || currentTab == 'gs')&& finprodType2 == FINPROD_TYPE_TG_F06){
+                    if((currentTab == 'dz' || currentTab == 'gd')&& finprodType2 == FINPROD_TYPE_TG_F06){
                         document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万份';
                         document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 10000, 2)+'万份';
                         document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
-                    }else{
+                    }
+                    else if(finprodType2 == FINPROD_TYPE_TG_F10){
+                        document.getElementById('positionAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 1, 2)+'股';
+                        document.getElementById('canSellAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canSellAmount, 2, 1, 2)+'股';
+                        document.getElementById('costPrice_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.costPrice, 2, null, 2) ;
+                    }
+                    else{
                         //配债配股,质押券出入库不显示持仓数量，可卖数量，成本价
                         if(ps == PS_T46 || ps == PS_T97 || ps == PS_T68 || ps ==PS_T69 || ps ==PS_03 || ps ==PS_04) {
                             document.getElementById('positionAmount_' + currentTab).innerHTML = "";
@@ -1671,7 +1677,11 @@
                     var finprodType2 = $("#finprodType2_" + currentTab).val();
                     if((currentTab == 'dz' || currentTab == 'gs')&& finprodType2 == FINPROD_TYPE_TG_F06){
                         document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 10000, 2)+'万份';
-                    }else{
+                    }
+                    else if(finprodType2 == FINPROD_TYPE_TG_F10){
+                        document.getElementById('canBuyAmount_' + currentTab).innerHTML = JoyinUtil.formatNumber(result.canBuyAmount, 2, 1, 2)+'股';
+                    }
+                    else{
                         if(ps == PS_T46 || ps == PS_T97 || ps == PS_T68 || ps == PS_T69) {
                             document.getElementById('canBuyAmount_' + currentTab).innerHTML ='0.00万元'
                         }else {
