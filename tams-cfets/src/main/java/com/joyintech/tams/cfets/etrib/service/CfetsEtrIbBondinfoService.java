@@ -650,9 +650,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
                     dto.setBuyCostAmt(e.getBigDecimal("BUY_COST_AMT"));
                     dto.setShareAmt(e.getBigDecimal("SHARE_AMT"));
-                    // 单位成本=成本*10000.0/数量， （EACH_COST = BUY_COST_AMT / SHARE_AMT）
+                    // 单位成本=成本/数量， （EACH_COST = BUY_COST_AMT / SHARE_AMT）
                     dto.setUnitCost(ArithmeticUtil.divide(
-                            e.getBigDecimal("BUY_COST_AMT").multiply(BigDecimal.valueOf(10000.0)),
+                            e.getBigDecimal("BUY_COST_AMT"),
                             e.getBigDecimal("SHARE_AMT"),
                             4));
                     resultMap.put(getKey(e), dto);
