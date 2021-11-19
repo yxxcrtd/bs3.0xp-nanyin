@@ -427,10 +427,10 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             if (StringUtil.isNotEmpty(stlSecReconDeal.getPs())) {
                 localPlanSearchInfo.setPs(stlSecReconDeal.getPs());
             }
-            // 期限品种
-            if (StringUtil.isNotEmpty(stlSecReconDeal.getTermType())) {
-                localPlanSearchInfo.setTermType(stlSecReconDeal.getTermType());
-            }
+//            // 期限品种
+//            if (StringUtil.isNotEmpty(stlSecReconDeal.getTermType())) {
+//                localPlanSearchInfo.setTermType(stlSecReconDeal.getTermType());
+//            }
             // 证券账户
             if (StringUtil.isNotEmpty(stlSecReconDeal.getSecAcctId())) {
                 localPlanSearchInfo.setSecAcctId(stlSecReconDeal.getSecAcctId());
