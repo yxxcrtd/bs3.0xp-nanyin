@@ -223,7 +223,7 @@
 		values(
 		#{registSeqno},#{dataStatus},#{institutionCode},#{prdRegistCode}, #{accountNo},#{accountName},#{tradeNo}, #{tradePs}, #{tradeCounterAccNo}, #{tradeCounterAccName},
 		#{tradeCounterAccBankName},#{tradeCounterAccBankNo},#{tradeCcy},#{tradeAmt},to_date(#{tradeVdate},'yyyy-MM-dd'),#{tradeTime}, #{postscript}, #{remark},
-		to_date(#{chbSubmitDeadline},'yyyy-MM-dd'),to_date(#{submitDeadline},'yyyy-MM-dd'),sysdate,to_date(#{submitTime},'yyyy-MM-dd'),
+		to_date(#{chbSubmitDeadline},'yyyy-MM-dd'),to_date(#{submitDeadline},'yyyy-MM-dd'),sysdate,null,
 		#{sumitSeq},#{sendStatus},#{createUser},
 		sysdate,#{updateUser},sysdate)
 	</insert>
