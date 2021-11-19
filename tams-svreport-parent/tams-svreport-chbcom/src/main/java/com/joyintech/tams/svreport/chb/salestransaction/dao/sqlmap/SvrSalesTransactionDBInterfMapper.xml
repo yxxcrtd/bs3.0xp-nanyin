@@ -215,19 +215,17 @@
 	</insert>
 
 	<insert id="insertBatchData" parameterType="com.joyintech.tams.common.base.entity.ChbSalesTransactionInfoSub">
-		insert into CHB_SALE_DEAL_SUM(REGIST_SEQNO, DATA_STATUS, INSTITUTION_CODE, PRD_REGIST_CODE, ACCOUNT_NO, ACCOUNT_NAME, TRADE_NO, TRADE_PS, TRADE_COUNTER_ACC_NO,
+		insert into CHB_SALER_STL_DEAL_SUB(REGIST_SEQNO, DATA_STATUS, INSTITUTION_CODE, PRD_REGIST_CODE, ACCOUNT_NO, ACCOUNT_NAME, TRADE_NO, TRADE_PS, TRADE_COUNTER_ACC_NO,
 		TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY, TRADE_AMT, TRADE_VDATE,TRADE_TIME,POSTSCRIPT, REMARK,
 		CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
 		STATUS_DATE,SUBMIT_TIME,SUMIT_SEQ,SEND_STATUS,
-		CREATE_USER, ORG_CODE, CREATE_DEPT, CREATE_TIME,
-		UPDATE_USER, UPDATE_TIME)
+		CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 		values(
 		#{registSeqno},#{dataStatus},#{institutionCode},#{prdRegistCode}, #{accountNo},#{accountName},#{tradeNo}, #{tradePs}, #{tradeCounterAccNo}, #{tradeCounterAccName},
 		#{tradeCounterAccBankName},#{tradeCounterAccBankNo},#{tradeCcy},#{tradeAmt},to_date(#{tradeVdate},'yyyy-MM-dd'),#{tradeTime}, #{postscript}, #{remark},
 		to_date(#{chbSubmitDeadline},'yyyy-MM-dd'),to_date(#{submitDeadline},'yyyy-MM-dd'),sysdate,to_date(#{submitTime},'yyyy-MM-dd'),
-		#{sumitSeq},#{sendStatus},#{createUser},#{orgCode}, #{createDept},
+		#{sumitSeq},#{sendStatus},#{createUser},
 		sysdate,#{updateUser},sysdate)
-		)
 	</insert>
 
 </mapper>
