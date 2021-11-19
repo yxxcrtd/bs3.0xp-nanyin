@@ -50,4 +50,64 @@
             </foreach>
         </if>
     </select>
+
+    <!--指令的执行明细-->
+    <select id="listDealTransactionDetails" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.DealTransactionDetailsDto">
+        SELECT
+            '01' validStatus,
+            '04' QUOTE_TYPE,
+            T3.TRADE_DATE settleDate,
+            T1.PS,
+            T4.FINPROD_MARKET_ID ,
+            T4.FINPROD_ABBR ,
+            T1.TRADE_STATUS,
+            '' SEND_STATUS,
+            T1.SHARE_AMT,
+            T1.UNIT_CPRICE price,
+            T1.YIELD matureYield,
+            T1.EXER_YIELD exerYield,
+            T1.SETTLE_SPEED ,
+            '' quoteRoleType,
+            T1.OU_PARTY_ID ,
+            T1.OU_TRADER_ID ,
+            T1.COUNTER_ID ,
+            T1.COUNTER_TRADER,
+            T6.PARTY_NAME ouPartyName ,
+            T5.TRADER_NAME ouTraderName,
+            T8.PARTY_NAME cpPartyName,
+            T7.TRADER_NAME cpTraderName,
+            NULL reqEffTime,
+            NULL resEffTime,
+            NULL shareAmtHun,
+            T1.TOTLE_TRADE_ID cfetsQuoteId,
+            T2.EXE_ID,
+            T1.REMARK
+        FROM
+            REG_FIN_PRODUCT_DEAL_TOTAL T1
+        LEFT JOIN TRDQUTO_MATCH_INFO T2 ON
+            T2.PRE_TRADE_ID = T1.TOTLE_TRADE_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON
+            T3.F_TRADE_ID = T2.EXE_ID
+        LEFT JOIN FIN_PRODUCT T4 ON
+            T4.FINPROD_ID = T1.FINPROD_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T5 ON
+            T5.TRADER_ID = T1.OU_TRADER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO T6 ON
+            T6.PARTY_ID = T1.OU_PARTY_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T7 ON
+            T7.TRADER_ID = T1.COUNTER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO T8 ON
+            T8.PARTY_ID = T1.COUNTER_TRADER
+        WHERE EXISTS (
+            SELECT
+                1
+            FROM
+                REG_FIN_PRODUCT_DEAL T9
+            WHERE
+                T9.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID
+                <if test="entrustId != null and !entrustId.equals('')">
+                    AND T9.ENTRUST_ID= #{entrustId}
+                </if>
+         )
+    </select>
 </mapper>

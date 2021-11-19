@@ -42,7 +42,7 @@
                         <h3 class="pro-module-title">
                             <span class="title-des" th:text="#{CfetsBondDealQuotedPrice002.baseinfo}">基本信息</span><i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
                         <div class="pro-module-item">
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" data-th-if="${entity?.ps} neq ${PS_T03}">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label">报价方式</label>
                                     <div class="layui-input-block">
@@ -55,7 +55,7 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.ps}">交易方向</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select required type="text" id="CfetsBondDealQuotedPrice004_ps" name="ps"
+                                        <select required type="text" id="ps" name="ps"
                                                 class="layui-input form-input input-select"
                                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-result='${PS}' allowClear="true" formatoption="true"
@@ -81,7 +81,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" data-th-if="${entity?.ps} eq ${PS_T03}">
                                 <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap" >登记日期</label>
                                 <div class="layui-input-inline input-inline buss-inline-wrap">
@@ -116,7 +116,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" data-th-if="${entity?.ps} neq ${PS_T03}">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.my}">本方</label>
                                     <div class="layui-input-inline input-inline">
@@ -139,7 +139,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" data-th-if="${entity?.ps} neq ${PS_T03}">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.counterId}">对手方</label>
                                     <div class="layui-input-inline input-inline">
@@ -163,7 +163,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" data-th-if="${entity?.ps} neq ${PS_T03}">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap" data-th-text="#{CfetsBondDealQuotedPrice002.settleSpeed}" >清算速度</label>
                                     <div class="layui-input-inline input-inline buss-inline-wrap">
@@ -186,7 +186,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" data-th-if="${entity?.ps} neq ${PS_T03}">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">
                                         <input type="radio" lay-filter="calculateField" id="calculateField_unitCprice" name="calculateField" value="01" th:checked="${entity?.calculateField eq '01'}">
@@ -234,7 +234,7 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">币种</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select required disabled type="text"  name="settleCcy" class="layui-input form-input input-select"
+                                        <select required disabled type="text"  name="ccy" class="layui-input form-input input-select"
                                                 placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-result='${CCY}' allowClear="true" formatoption="true"
                                                 th:initValue="*{entity?.ccy}"></select>
@@ -250,7 +250,7 @@
                                         <span class="input-right-show">万元</span>
                                     </div>
                                 </div>
-                                <div class="form-inline-wrap">
+                                <div class="form-inline-wrap" data-th-if="${entity?.ps} eq ${PS_T03}">
                                     <label class="layui-form-label form-label-wrap">行权净价</label>
                                     <div class="layui-input-inline input-inline">
                                         <input required type="text"  name="price"
@@ -260,6 +260,8 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item" data-th-if="${entity?.ps} neq ${PS_T03} and ${sellPara} eq '02'">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">本方券券面总额</label>
                                     <div class="layui-input-inline input-inline">
@@ -270,7 +272,7 @@
                                         <span class="input-right-show">万元</span>
                                     </div>
                                 </div>
-                                <div class="form-inline-wrap">
+                                <div class="form-inline-wrap" data-th-if="${entity?.ps} eq ${PS_T02}">
                                     <label class="layui-form-label form-label-wrap">融入券券面总额</label>
                                     <div class="layui-input-inline input-inline">
                                         <input required type="text" name="lendinEntNum"
@@ -280,7 +282,7 @@
                                         <span class="input-right-show">万元</span>
                                     </div>
                                 </div>
-                                <div class="form-inline-wrap" style="display: none">
+                                <div class="form-inline-wrap" data-th-if="${entity?.ps} eq ${PS_T01}">
                                     <label class="layui-form-label form-label-wrap">卖空购回券面总额</label>
                                     <div class="layui-input-inline input-inline">
                                         <input required type="text" name="sellAbleNum"
@@ -291,7 +293,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="layui-form-item">
+                            <div class="layui-form-item" data-th-if="${entity?.ps} neq ${PS_T03}">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.settleMethod}">结算方式</label>
                                     <div class="layui-input-inline input-inline">
@@ -312,6 +314,8 @@
                                                 th:initValue="${entity?.settleType}"></select>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-form-item">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">交易手续费</label>
                                     <div class="layui-input-inline input-inline">
@@ -322,8 +326,6 @@
                                         <span class="input-right-show">元</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item">
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap">结算服务费</label>
                                     <div class="layui-input-inline input-inline">
@@ -339,7 +341,7 @@
                     </div>
                 </div>
             </div>
-            <div class="pro-module-wrap">
+            <div class="pro-module-wrap" data-th-if="${entity?.ps} neq ${PS_T03}">
                 <div class="pro-module">
                     <h3 class="pro-module-title"><span class="title-des" th:text="#{CfetsBondDealQuotedPrice002.remark}">备注</span><i
                             class="iconfont icon-arrow-down pro-down-icon"></i></h3>
@@ -356,7 +358,7 @@
                     </div>
                 </div>
             </div>
-            <div class="pro-module-wrap">
+            <div class="pro-module-wrap" data-th-if="${entity?.ps} neq ${PS_T03}">
                 <div class="pro-module">
                     <h3 class="pro-module-title"><span class="title-des" th:text="#{CfetsBondDealQuotedPrice002.amtInfo}">金额信息</span><i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
                     <div class="pro-module-item">
@@ -405,7 +407,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="layui-form-item">
+                        <div class="layui-form-item" data-th-if="${sellPara} eq '02'">
                             <div class="form-inline-wrap">
                                 <label class="layui-form-label form-label-wrap">本方券应计利息总额</label>
                                 <div class="layui-input-inline input-inline">
@@ -420,7 +422,7 @@
                                     <span class="input-right-show">元</span>
                                 </div>
                             </div>
-                            <div class="form-inline-wrap">
+                            <div class="form-inline-wrap" data-th-if="${entity?.ps} neq ${PS_T02}">
                                 <label class="layui-form-label form-label-wrap">融入券应计利息总额</label>
                                 <div class="layui-input-inline input-inline">
                                     <input required disabled type="text"  name="lendinIntAmt" data-th-value="${entity?.lendinIntAmt}" class="layui-input form-input text-number" placeholder="请输入">
@@ -428,22 +430,22 @@
                                 </div>
                             </div>
                        </div>
-                        <div class="layui-form-item">
-                            <div class="form-inline-wrap">
+                        <div class="layui-form-item" data-th-if="${sellPara} eq '02'">
+                            <div class="form-inline-wrap" data-th-if="${entity?.ps} neq ${PS_T02}">
                                 <label class="layui-form-label form-label-wrap">融入券全价总额</label>
                                 <div class="layui-input-inline input-inline">
                                     <input required disabled type="text"  name="lendinFpriceAmt" data-th-value="${entity?.lendinFpriceAmt}" class="layui-input form-input text-number" placeholder="请输入">
                                     <span class="input-right-show">元</span>
                                 </div>
                             </div>
-                            <div class="form-inline-wrap">
+                            <div class="form-inline-wrap" data-th-if="${entity?.ps} neq ${PS_T01}">
                                 <label class="layui-form-label form-label-wrap">卖空购回应计利息总额</label>
                                 <div class="layui-input-inline input-inline">
                                     <input required disabled type="text"  name="saleinIntAmt" data-th-value="${entity?.saleinIntAmt}" class="layui-input form-input text-number" placeholder="请输入">
                                     <span class="input-right-show">元</span>
                                 </div>
                             </div>
-                            <div class="form-inline-wrap">
+                            <div class="form-inline-wrap" data-th-if="${entity?.ps} neq ${PS_T01}">
                                 <label class="layui-form-label form-label-wrap">卖空购回全价总额</label>
                                 <div class="layui-input-inline input-inline">
                                     <input required disabled type="text"  name="saleinFpriceAmt" data-th-value="${entity?.saleinFpriceAmt}" class="layui-input form-input text-number" placeholder="请输入">
@@ -456,7 +458,7 @@
             </div>
             <!-- 组合分配信息 -->
             <div class="page-component" th:data-path="@{/invest/bankuplink/common/CfetsQuotedCommon001/init}" id="cfetsQuotedCommon_div"
-                 th:data-params="|{entityName: 'bussTrdTransferOrder', pageFrom: 'submitForm', entity:'${ptlAllocatios}', quoteType:'04', quotaPageModel:'${quotaPageModel}', distribution:'${distribution}'}|">
+                 th:data-params="|{entityName: 'bussTrdTransferOrder', pageFrom: 'submitForm', entity:'${ptlAllocatios}', quoteType:'04', quotaPageModel:'${quotaPageModel}', ps:'${entity?.ps}', distribution:'${distribution}'}|">
             </div>
         </form>
         <div class="row text-center" style="margin: 20px 0;">

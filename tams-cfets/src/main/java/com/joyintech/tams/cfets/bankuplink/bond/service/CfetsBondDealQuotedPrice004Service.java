@@ -135,7 +135,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(StringUtil.isEmpty(entity.getCounterId())){
                 errorList.add(new ValidMessage("请输入对手方"));
             }
-            if(StringUtil.isEmpty(entity.getCounterTrader())){
+            if(StringUtil.isEmpty(entity.getCounterTrader())&&(StringUtil.equals(entity.getQuoteStyle(),"01")||StringUtil.equals(entity.getQuoteStyle(),"02"))){
                 errorList.add(new ValidMessage("请输入对手方交易员"));
             }
             if(StringUtil.isEmpty(entity.getCcy())){
@@ -360,6 +360,8 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      */
     public CfetsBondDealDbDto prepareEntity(CfetsBondDealRegisterQuoteDto entity) {
         CfetsBondDealDbDto result = new CfetsBondDealDbDto();
+        //交易方向
+        String ps = entity.getPs();
         //金融产品交易汇总登记
         RegFinProductDealTotal regFinProductDealTotal = new RegFinProductDealTotal();
         BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotal,entity);
@@ -368,6 +370,11 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         //金融产品交易汇总登记附属
         RegFinProductDealTotalAdd regFinProductDealTotalAdd = new RegFinProductDealTotalAdd();
         BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotalAdd,entity);
+        if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+            regFinProductDealTotalAdd.setLendinFpriceAmt(entity.getSaleinFpriceAmt());
+            regFinProductDealTotalAdd.setLendinIntAmt(entity.getSaleinIntAmt());
+            regFinProductDealTotalAdd.setLendinShareAmt(entity.getSellAbleNum());
+        }
         //汇总登记费用明细表
         List<RegTradeFeeTotal> regTradeFeeTotals = new ArrayList<>();
         if(null!=entity.getDealFeeAmt()){
@@ -399,9 +406,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
                 regFinProductDealAdd.setOurShareAmt(ptlAllocatio.getOurEntNum());
                 regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getLendinEntNum());
-                //regFinProductDealAdd.setSaleinShareAmt(ptlAllocatio.getSellAbleNum());
-                //TODO 重新计算
                 regFinProductDealAdd.setActSetteDate(entity.getActSetteDate());
+                if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+                    regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getSellAbleNum());
+                }
                 if(null!=ptlAllocatio.getDealFeeAmt()){
                     regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
                 }

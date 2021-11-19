@@ -311,4 +311,17 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			return new Message<AjaxResult>().fail().setMessage("风险试算异常");
 		}
 	}
+
+	@ApiOperation(value = "查询交易成交信息", notes = "查询交易成交信息")
+	@PostMapping("/listDealTransactionDetails/{entrustId}")
+	@ResponseBody
+	public Message<List<DealTransactionDetailsDto>> listDealTransactionDetails(@PathVariable("entrustId") String entrustId){
+		try {
+			List<DealTransactionDetailsDto> result = ibuQuoteBondService.listDealTransactionDetails(entrustId);
+			return new Message<List<DealTransactionDetailsDto>>().success().setData(result);
+		}catch (Exception e) {
+			logger.error("查询交易成交信息异常",e);
+			return new Message<List<DealTransactionDetailsDto>>().fail().setMessage("查询交易成交信息异常");
+		}
+	}
 }

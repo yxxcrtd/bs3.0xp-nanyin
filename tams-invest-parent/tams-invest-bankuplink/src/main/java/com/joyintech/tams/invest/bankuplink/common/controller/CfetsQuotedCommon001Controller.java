@@ -71,8 +71,9 @@ public class CfetsQuotedCommon001Controller extends BaseController {
         //展示投资目的或业务模式参数
         String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
         model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
-        //展示投资目的或业务模式参数
-        // 定义topic
+        //卖空模式
+        model.addAttribute("sellPara",CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
+        model.addAttribute("ps",this.getParam("ps"));
         return super.init(model);
     }
 

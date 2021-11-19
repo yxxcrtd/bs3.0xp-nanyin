@@ -1,7 +1,7 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dao;
 
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.DealTransactionDetailsDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -40,4 +40,6 @@ public interface CfetsIbuQuoteBondMapper {
      * @return
      */
     String getACCTNO(@Param("portfolioId") String portfolioId,@Param("acctType") String acctType);
+
+    List<DealTransactionDetailsDto> listDealTransactionDetails(@Param("entrustId") String entrustId);
 }

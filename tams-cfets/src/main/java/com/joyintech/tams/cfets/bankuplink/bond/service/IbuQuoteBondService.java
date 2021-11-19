@@ -726,6 +726,15 @@ public class IbuQuoteBondService extends BaseService {
 
     }
 
+    /**
+     * 查询交易成交信息
+     * @param entrustId
+     * @return
+     */
+    public List<DealTransactionDetailsDto> listDealTransactionDetails(String entrustId){
+        return cfetsIbuQuoteBondMapper.listDealTransactionDetails(entrustId);
+    }
+
     private void setParam(Map<String,Object> param){
         param.put("finprodType2", BussinessDictCodeList.金融产品类型_债券.getValue());
         param.put("tradeMarket01", BussinessDictCodeList.交易场所_银行间.getValue());

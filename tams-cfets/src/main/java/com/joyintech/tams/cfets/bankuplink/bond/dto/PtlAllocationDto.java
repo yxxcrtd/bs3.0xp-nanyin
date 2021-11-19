@@ -60,6 +60,9 @@ public class PtlAllocationDto {
     @ApiModelProperty(name="price",value="净价(元)")
     private BigDecimal price;
 
+    @ApiModelProperty(name="unitFprice",value="全价(元)")
+    private BigDecimal unitFprice;
+
     @ApiModelProperty(name="matureYield",value="到期收益率(%)")
     private BigDecimal matureYield;
 
@@ -208,6 +211,14 @@ public class PtlAllocationDto {
 
     public void setExerYield(BigDecimal exerYield) {
         this.exerYield = exerYield;
+    }
+
+    public BigDecimal getUnitFprice() {
+        return unitFprice;
+    }
+
+    public void setUnitFprice(BigDecimal unitFprice) {
+        this.unitFprice = unitFprice;
     }
 }
 

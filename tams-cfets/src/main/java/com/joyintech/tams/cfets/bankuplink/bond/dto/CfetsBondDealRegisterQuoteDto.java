@@ -56,6 +56,24 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
      * 结算服务费
      */
     private BigDecimal  settFeeamt;
+
+    private BigDecimal ourFpriceAmt;
+
+    private BigDecimal lendinFpriceAmt;
+
+    private BigDecimal saleinFpriceAmt;
+
+    private BigDecimal ourIntAmt;
+
+    private BigDecimal lendinIntAmt;
+
+    private BigDecimal saleinIntAmt;
+
+    private BigDecimal sellAbleNum;
+
+
+    private Date theoreticalExerciseDate;
+
     /**
      * 组合分配信息
      */
@@ -130,5 +148,69 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setFinprodMarketId(String finprodMarketId) {
         this.finprodMarketId = finprodMarketId;
+    }
+
+    public BigDecimal getOurFpriceAmt() {
+        return ourFpriceAmt;
+    }
+
+    public void setOurFpriceAmt(BigDecimal ourFpriceAmt) {
+        this.ourFpriceAmt = ourFpriceAmt;
+    }
+
+    public BigDecimal getLendinFpriceAmt() {
+        return lendinFpriceAmt;
+    }
+
+    public void setLendinFpriceAmt(BigDecimal lendinFpriceAmt) {
+        this.lendinFpriceAmt = lendinFpriceAmt;
+    }
+
+    public BigDecimal getSaleinFpriceAmt() {
+        return saleinFpriceAmt;
+    }
+
+    public void setSaleinFpriceAmt(BigDecimal saleinFpriceAmt) {
+        this.saleinFpriceAmt = saleinFpriceAmt;
+    }
+
+    public BigDecimal getOurIntAmt() {
+        return ourIntAmt;
+    }
+
+    public void setOurIntAmt(BigDecimal ourIntAmt) {
+        this.ourIntAmt = ourIntAmt;
+    }
+
+    public BigDecimal getLendinIntAmt() {
+        return lendinIntAmt;
+    }
+
+    public void setLendinIntAmt(BigDecimal lendinIntAmt) {
+        this.lendinIntAmt = lendinIntAmt;
+    }
+
+    public BigDecimal getSaleinIntAmt() {
+        return saleinIntAmt;
+    }
+
+    public void setSaleinIntAmt(BigDecimal saleinIntAmt) {
+        this.saleinIntAmt = saleinIntAmt;
+    }
+
+    public Date getTheoreticalExerciseDate() {
+        return theoreticalExerciseDate;
+    }
+
+    public void setTheoreticalExerciseDate(Date theoreticalExerciseDate) {
+        this.theoreticalExerciseDate = theoreticalExerciseDate;
+    }
+
+    public BigDecimal getSellAbleNum() {
+        return sellAbleNum;
+    }
+
+    public void setSellAbleNum(BigDecimal sellAbleNum) {
+        this.sellAbleNum = sellAbleNum;
     }
 }
