@@ -18,14 +18,23 @@ public class CfetsBondDealQuoteCommonDto {
     @ApiModelProperty(name="operateType",value="操作类型" ,example = "save")
     private String operateType;
 
-    @ApiModelProperty(name="quoteType",value="报价方式")
-    private String quoteType;
+    @ApiModelProperty(name="quoteStyle",value="报价方式")
+    private String quoteStyle;
+
+    @ApiModelProperty(name="distribution",value="分配方式")
+    private String distribution;
 
     @ApiModelProperty(name="ps",value="交易方向")
     private String ps;
 
     @ApiModelProperty(name="finprodId",value="资产代码")
     private String finprodId;
+
+    @ApiModelProperty(name="finprodMarketId",value="市场代码")
+    private String finprodMarketId;
+
+    @ApiModelProperty(name="finprodAbbr",value="资产简称")
+    private String finprodAbbr;
 
     @ApiModelProperty(name="mySide",value="本方")
     private String mySide;
@@ -57,6 +66,21 @@ public class CfetsBondDealQuoteCommonDto {
     @ApiModelProperty(name="price",value="净价")
     private BigDecimal price;
 
+    @ApiModelProperty(name="cpriceAmt",value="净价总额")
+    private BigDecimal cpriceAmt;
+
+    @ApiModelProperty(name="unitInt",value="应计利息")
+    private BigDecimal unitInt;
+
+    @ApiModelProperty(name="intAmt",value="应计利息总额")
+    private BigDecimal intAmt;
+
+    @ApiModelProperty(name="unitFprice",value="全价")
+    private BigDecimal unitFprice;
+
+    @ApiModelProperty(name="fpriceAmt",value="全价总额")
+    private BigDecimal fpriceAmt;
+
     @ApiModelProperty(name="matureYield",value="到期收益率")
     private BigDecimal matureYield;
 
@@ -75,11 +99,11 @@ public class CfetsBondDealQuoteCommonDto {
     @ApiModelProperty(name="sellRepurchaseSec",value="卖空购回券面总额")
     private BigDecimal sellAbleNum;
 
-    @ApiModelProperty(name="deliveryType",value="结算方式")
-    private String  deliveryType;
+    @ApiModelProperty(name="settleMethod",value="结算方式")
+    private String  settleMethod;
 
-    @ApiModelProperty(name="settType",value="清算类型")
-    private String  settType;
+    @ApiModelProperty(name="settleType",value="清算类型")
+    private String  settleType;
 
     @ApiModelProperty(name="dealFeeAmt",value="交易手续费")
     private BigDecimal  dealFeeAmt;
@@ -107,14 +131,6 @@ public class CfetsBondDealQuoteCommonDto {
         this.operateType = operateType;
     }
 
-    public String getQuoteType() {
-        return quoteType;
-    }
-
-    public void setQuoteType(String quoteType) {
-        this.quoteType = quoteType;
-    }
-
     public String getPs() {
         return ps;
     }
@@ -129,6 +145,22 @@ public class CfetsBondDealQuoteCommonDto {
 
     public void setFinprodId(String finprodId) {
         this.finprodId = finprodId;
+    }
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
+
+    public String getFinprodAbbr() {
+        return finprodAbbr;
+    }
+
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
     }
 
     public String getMySide() {
@@ -251,20 +283,20 @@ public class CfetsBondDealQuoteCommonDto {
         this.sellAbleNum = sellAbleNum;
     }
 
-    public String getDeliveryType() {
-        return deliveryType;
+    public String getSettleMethod() {
+        return settleMethod;
     }
 
-    public void setDeliveryType(String deliveryType) {
-        this.deliveryType = deliveryType;
+    public void setSettleMethod(String settleMethod) {
+        this.settleMethod = settleMethod;
     }
 
-    public String getSettType() {
-        return settType;
+    public String getSettleType() {
+        return settleType;
     }
 
-    public void setSettType(String settType) {
-        this.settType = settType;
+    public void setSettleType(String settleType) {
+        this.settleType = settleType;
     }
 
     public BigDecimal getDealFeeAmt() {
@@ -321,6 +353,110 @@ public class CfetsBondDealQuoteCommonDto {
 
     public void setTradeDate(Date tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+    public BigDecimal getOurFpriceAmt() {
+        return ourFpriceAmt;
+    }
+
+    public void setOurFpriceAmt(BigDecimal ourFpriceAmt) {
+        this.ourFpriceAmt = ourFpriceAmt;
+    }
+
+    public BigDecimal getLendinFpriceAmt() {
+        return lendinFpriceAmt;
+    }
+
+    public void setLendinFpriceAmt(BigDecimal lendinFpriceAmt) {
+        this.lendinFpriceAmt = lendinFpriceAmt;
+    }
+
+    public BigDecimal getOurIntAmt() {
+        return ourIntAmt;
+    }
+
+    public void setOurIntAmt(BigDecimal ourIntAmt) {
+        this.ourIntAmt = ourIntAmt;
+    }
+
+    public BigDecimal getLendinIntAmt() {
+        return lendinIntAmt;
+    }
+
+    public void setLendinIntAmt(BigDecimal lendinIntAmt) {
+        this.lendinIntAmt = lendinIntAmt;
+    }
+
+    public BigDecimal getCpriceAmt() {
+        return cpriceAmt;
+    }
+
+    public void setCpriceAmt(BigDecimal cpriceAmt) {
+        this.cpriceAmt = cpriceAmt;
+    }
+
+    public BigDecimal getUnitInt() {
+        return unitInt;
+    }
+
+    public void setUnitInt(BigDecimal unitInt) {
+        this.unitInt = unitInt;
+    }
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    public BigDecimal getUnitFprice() {
+        return unitFprice;
+    }
+
+    public void setUnitFprice(BigDecimal unitFprice) {
+        this.unitFprice = unitFprice;
+    }
+
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
+    }
+
+    public BigDecimal getSaleinFpriceAmt() {
+        return saleinFpriceAmt;
+    }
+
+    public void setSaleinFpriceAmt(BigDecimal saleinFpriceAmt) {
+        this.saleinFpriceAmt = saleinFpriceAmt;
+    }
+
+    public BigDecimal getSaleinIntAmt() {
+        return saleinIntAmt;
+    }
+
+    public void setSaleinIntAmt(BigDecimal saleinIntAmt) {
+        this.saleinIntAmt = saleinIntAmt;
+    }
+
+    public String getDistribution() {
+        return distribution;
+    }
+
+    public void setDistribution(String distribution) {
+        this.distribution = distribution;
+    }
+
+    public String getQuoteStyle() {
+        return quoteStyle;
+    }
+
+    public void setQuoteStyle(String quoteStyle) {
+        this.quoteStyle = quoteStyle;
     }
 }
 

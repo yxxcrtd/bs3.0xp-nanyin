@@ -167,11 +167,18 @@ public class IbuQuoteBondService extends BaseService {
      */
     public CfetsBondDealQuoteCommonDto queryEntrustInfoById(CfetsBondDealQuoteRequest cfetsBondDealQuoteRequest) {
         CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
+        //模式
+        String sellPara = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
         Map<String, Object> param = BeanUtil.object2Map(cfetsBondDealQuoteRequest);
         setParam(param);
         List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if (!StringUtil.isEmptyList(entrustDtos)) {
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto, entrustDtos.get(0));
+            //处理券面总额
+            cfetsBondDealQuoteCommonDto.setShareAmt(entrustDtos.stream().map(CfetsBondDealEntrustOrderDto::getEntrustAvaNum).reduce(BigDecimal.ZERO, BigDecimal::add));
+            if(StringUtil.equals(sellPara,"02")){
+                cfetsBondDealQuoteCommonDto.setOurEntNum(cfetsBondDealQuoteCommonDto.getShareAmt());
+            }
             //处理结算日期
             cfetsBondDealQuoteCommonDto.setTradeDate(iPlatformDate.getSysDate());
             cfetsBondDealQuoteCommonDto.setSettleDate(ibuQuoteBondCalService.getNextWorkDay(cfetsBondDealQuoteCommonDto.getTradeDate()));
@@ -199,6 +206,14 @@ public class IbuQuoteBondService extends BaseService {
                     break;
                 }
             }
+            //处理组合分配
+            List<PtlAllocationDto> ptlAllocatios = new ArrayList<>();
+            for (CfetsBondDealEntrustOrderDto entrustDto : entrustDtos) {
+                PtlAllocationDto ptlAllocationDto = new PtlAllocationDto();
+                BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto,entrustDto);
+                ptlAllocatios.add(ptlAllocationDto);
+            }
+            cfetsBondDealQuoteCommonDto.setPtlAllocatios(ptlAllocatios);
         }
         return cfetsBondDealQuoteCommonDto;
     }
@@ -210,6 +225,7 @@ public class IbuQuoteBondService extends BaseService {
      */
     public List<PtlAllocationDto> ptlAllocationAdd(PtlAllocationAddRequest ptlAllocationAddRequest){
         Map<String, Object> param = BeanUtil.object2Map(ptlAllocationAddRequest);
+        param.put("notentrustIdList",ptlAllocationAddRequest.getEntrustIdList());
         setParam(param);
         List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if (!StringUtil.isEmptyList(entrustDtos)) {
@@ -240,229 +256,254 @@ public class IbuQuoteBondService extends BaseService {
      */
     public AjaxResult dealexecutioncheck(CfetsBondDealQuoteRequest cfetsBondDealQuoteRequest) {
         AjaxResult ajaxResult = new AjaxResult();
-        String message = StringUtil.EMPTY;String ps = StringUtil.EMPTY;
-        Map<String, Object> param = BeanUtil.object2Map(cfetsBondDealQuoteRequest);
-        setParam(param);
-        String exportShow = CacheUtil.getSysParam("EXPORT_SHOW");
-        List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
-        if (!StringUtil.isEmptyList(entrustDtos)) {
-            CfetsBondDealEntrustOrderDto one = entrustDtos.get(0);
-            ps = one.getPs();
-             boolean psFlag = true;boolean settleSpreedFlag = true;boolean finprodIdFlag = true;boolean  secManageAcctIdFlag = true;boolean partyIdFlag = true;
-            for (CfetsBondDealEntrustOrderDto item : entrustDtos) {
-                if(StringUtil.isEmpty(item.getPartyId())){
-                    message = "指令"+item.getEntrustId()+"下组合未关联交易账户，请至[银行间业务参数管理-CFETS关联账户]中维护";
-                    ajaxResult.setMessage(message);
+        try{
+            String message = StringUtil.EMPTY;String ps = StringUtil.EMPTY;
+            Map<String, Object> param = BeanUtil.object2Map(cfetsBondDealQuoteRequest);
+            setParam(param);
+            String exportShow = CacheUtil.getSysParam("EXPORT_SHOW");
+            List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
+            if (!StringUtil.isEmptyList(entrustDtos)) {
+                CfetsBondDealEntrustOrderDto one = entrustDtos.get(0);
+                ps = one.getPs();
+                boolean psFlag = true;
+                boolean settleSpreedFlag = true;
+                boolean finprodIdFlag = true;
+                boolean secManageAcctIdFlag = true;
+                boolean partyIdFlag = true;
+                for (CfetsBondDealEntrustOrderDto item : entrustDtos) {
+                    if(!StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_已接收.getValue())){
+                        message = "指令" + item.getEntrustId() + "委托状态不是已接,不可交易执行!";
+                        ajaxResult.setMessage(message);
+                        return ajaxResult;
+                    }
+                    if (StringUtil.isEmpty(item.getPartyId())) {
+                        message = "指令" + item.getEntrustId() + "下组合未关联交易账户，请至[银行间业务参数管理-CFETS关联账户]中维护";
+                        ajaxResult.setMessage(message);
+                        return ajaxResult;
+                    }
+                    if (psFlag && !StringUtil.equals(one.getPs(), item.getPs())) {
+                        psFlag = false;
+                        message = message + "交易方向OR";
+                    }
+                    if (settleSpreedFlag && !StringUtil.equals(one.getSettleSpreed(), item.getSettleSpreed())) {
+                        settleSpreedFlag = false;
+                        message = message + "清算速度OR";
+                    }
+                    if (finprodIdFlag && !StringUtil.equals(one.getFinprodId(), item.getFinprodId())) {
+                        finprodIdFlag = false;
+                        message = message + "债券标的OR";
+                    }
+                    if (secManageAcctIdFlag && !StringUtil.equals(one.getSecManageAcctId(), item.getSecManageAcctId())) {
+                        secManageAcctIdFlag = false;
+                        message = message + "证券账户OR";
+                    }
+                    //EXPORT_SHOW ==01 本币交易导出按钮配置为显示
+                    if (StringUtil.equals(exportShow, "01")) {
+                        //交易场所+交易方向+清算速度+标的+证券账户+交易账户必须一致
+                        if (partyIdFlag && !StringUtil.equals(one.getPartyId(), item.getPartyId())) {
+                            partyIdFlag = false;
+                            message = message + "交易账户OR";
+                        }
+                    }
+                }
+                //提示
+                if (StringUtil.isNotEmpty(message)) {
+                    ajaxResult.setMessage(message.substring(0, message.length() - 2));
                     return ajaxResult;
                 }
-                if(psFlag&&!StringUtil.equals(one.getPs(),item.getPs())){
-                    psFlag = false;
-                    message = message+"交易方向OR";
-                }
-                if(settleSpreedFlag&&!StringUtil.equals(one.getSettleSpreed(),item.getSettleSpreed())){
-                    settleSpreedFlag = false;
-                    message = message+"清算速度OR";
-                }
-                if(finprodIdFlag&&!StringUtil.equals(one.getFinprodId(),item.getFinprodId())){
-                    finprodIdFlag = false;
-                    message = message+"债券标的OR";
-                }
-                if(secManageAcctIdFlag&&!StringUtil.equals(one.getSecManageAcctId(),item.getSecManageAcctId())){
-                    secManageAcctIdFlag = false;
-                    message = message+"证券账户OR";
-                }
-                //EXPORT_SHOW ==01 本币交易导出按钮配置为显示
-                if(StringUtil.equals(exportShow,"01")){
-                    //交易场所+交易方向+清算速度+标的+证券账户+交易账户必须一致
-                    if(partyIdFlag&&!StringUtil.equals(one.getPartyId(),item.getPartyId())){
-                        partyIdFlag = false;
-                        message = message+"交易账户OR";
+                //价格模式判断
+                //所有数据以保留4位小数，第5位四舍五入
+                entrustDtos.stream().forEach(item -> {
+                    if (null != item.getPrice()) {
+                        item.setPrice(item.getPrice().setScale(4, BigDecimal.ROUND_HALF_UP));
                     }
-                }
-            }
-            //提示
-            if(StringUtil.isNotEmpty(message)){
-                ajaxResult.setMessage(message.substring(0, message.length() - 2));
-                return ajaxResult;
-            }
-            //价格模式判断
-            //所有数据以保留4位小数，第5位四舍五入
-            entrustDtos.stream().forEach(item ->{
-                if(null!=item.getPrice()){
-                    item.setPrice(item.getPrice().setScale(4, BigDecimal.ROUND_HALF_UP));
-                }
-                if(null!=item.getMatureYield()){
-                    item.setMatureYield(item.getMatureYield().setScale(4, BigDecimal.ROUND_HALF_UP));
+                    if (null != item.getMatureYield()) {
+                        item.setMatureYield(item.getMatureYield().setScale(4, BigDecimal.ROUND_HALF_UP));
 
-                }
-                if(null!=item.getExerYield()){
-                    item.setExerYield(item.getExerYield().setScale(4, BigDecimal.ROUND_HALF_UP));
-                }
-            });
-            //按价格模式分组
-            Map<String, List<CfetsBondDealEntrustOrderDto>> groupByPriceModel = entrustDtos.stream().collect(Collectors.groupingBy(CfetsBondDealEntrustOrderDto::getPriceModel));
-            //按锚定值分组
-            Map<String, List<CfetsBondDealEntrustOrderDto>> groupByCalculateField = entrustDtos.stream().collect(Collectors.groupingBy(CfetsBondDealEntrustOrderDto::getCalculateField));
-            //锚定值是否一致
-             boolean translateFlag = true;int i=0;String translateKey = StringUtil.EMPTY;
-            for (Map.Entry<String, List<CfetsBondDealEntrustOrderDto>> entry : groupByCalculateField.entrySet()) {i++;translateKey = entry.getKey();}
-            if(i!=1){ translateFlag = false;}
-            if(groupByPriceModel.containsKey(DictCodeList.价格模式_指定价格.getValue())){
-                List<CfetsBondDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = groupByPriceModel.get(DictCodeList.价格模式_指定价格.getValue());
-                if(groupByPriceModel.containsKey(DictCodeList.价格模式_限价指令.getValue())){
-                    //三维度是否一致标志
-                    boolean priceFlag = true;boolean matureYieldFlag = true;boolean exerYieldFlag = true;
-                    List<CfetsBondDealEntrustOrderDto> priceMode01lList = groupByPriceModel.get(DictCodeList.价格模式_指定价格.getValue());
-                    List<CfetsBondDealEntrustOrderDto> priceMode02lList = groupByPriceModel.get(DictCodeList.价格模式_限价指令.getValue());
-                    CfetsBondDealEntrustOrderDto priceModelOne = priceMode01lList.get(0);
-                    //有限价指令模式   混合模式
-                    //最值(最大值、最小值)
-                    BigDecimal maximumPrice = BigDecimal.ZERO;BigDecimal maximumMatureYield = BigDecimal.ZERO;BigDecimal maximumExerYield = BigDecimal.ZERO;
-                    if(StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue())){
-                        //最小的价格
-                        maximumPrice = priceMode02lList.stream().min((u1, u2) -> u1.getPrice().compareTo(u2.getPrice())).get().getPrice();
-                        //最大的收益率
-                        maximumMatureYield = priceMode02lList.stream().max((u1, u2) -> u1.getMatureYield().compareTo(u2.getMatureYield())).get().getMatureYield();
-                        maximumExerYield = priceMode02lList.stream().max((u1, u2) -> u1.getExerYield().compareTo(u2.getExerYield())).get().getExerYield();
                     }
-                    if(StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_卖出.getValue())){
-                        //最大的价格
-                        maximumPrice = priceMode02lList.stream().max((u1, u2) -> u1.getPrice().compareTo(u2.getPrice())).get().getPrice();
-                        //最小的收益率
-                        maximumMatureYield = priceMode02lList.stream().min((u1, u2) -> u1.getMatureYield().compareTo(u2.getMatureYield())).get().getMatureYield();
-                        maximumExerYield = priceMode02lList.stream().min((u1, u2) -> u1.getExerYield().compareTo(u2.getExerYield())).get().getExerYield();
+                    if (null != item.getExerYield()) {
+                        item.setExerYield(item.getExerYield().setScale(4, BigDecimal.ROUND_HALF_UP));
                     }
-                    if(translateFlag){
-                        for (CfetsBondDealEntrustOrderDto item : priceMode01lList) {
-                                if(StringUtil.equals(translateKey,"01")&&priceModelOne.getPrice().compareTo(item.getPrice())!=0){
+                });
+                //按价格模式分组
+                Map<String, List<CfetsBondDealEntrustOrderDto>> groupByPriceModel = entrustDtos.stream().collect(Collectors.groupingBy(CfetsBondDealEntrustOrderDto::getPriceModel));
+                //按锚定值分组
+                Map<String, List<CfetsBondDealEntrustOrderDto>> groupByCalculateField = entrustDtos.stream().collect(Collectors.groupingBy(CfetsBondDealEntrustOrderDto::getCalculateField));
+                //锚定值是否一致
+                boolean translateFlag = true;
+                int i = 0;
+                String translateKey = StringUtil.EMPTY;
+                for (Map.Entry<String, List<CfetsBondDealEntrustOrderDto>> entry : groupByCalculateField.entrySet()) {
+                    i++;
+                    translateKey = entry.getKey();
+                }
+                if (i != 1) {
+                    translateFlag = false;
+                }
+                if (groupByPriceModel.containsKey(DictCodeList.价格模式_指定价格.getValue())) {
+                    List<CfetsBondDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = groupByPriceModel.get(DictCodeList.价格模式_指定价格.getValue());
+                    if (groupByPriceModel.containsKey(DictCodeList.价格模式_限价指令.getValue())) {
+                        //三维度是否一致标志
+                        boolean priceFlag = true;
+                        boolean matureYieldFlag = true;
+                        boolean exerYieldFlag = true;
+                        List<CfetsBondDealEntrustOrderDto> priceMode01lList = groupByPriceModel.get(DictCodeList.价格模式_指定价格.getValue());
+                        List<CfetsBondDealEntrustOrderDto> priceMode02lList = groupByPriceModel.get(DictCodeList.价格模式_限价指令.getValue());
+                        CfetsBondDealEntrustOrderDto priceModelOne = priceMode01lList.get(0);
+                        //有限价指令模式   混合模式
+                        //最值(最大值、最小值)
+                        BigDecimal maximumPrice = BigDecimal.ZERO;
+                        BigDecimal maximumMatureYield = BigDecimal.ZERO;
+                        BigDecimal maximumExerYield = BigDecimal.ZERO;
+                        if (StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue())) {
+                            //最小的价格
+                            maximumPrice = priceMode02lList.stream().min((u1, u2) -> u1.getPrice().compareTo(u2.getPrice())).get().getPrice();
+                            //最大的收益率
+                            maximumMatureYield = priceMode02lList.stream().max((u1, u2) -> u1.getMatureYield().compareTo(u2.getMatureYield())).get().getMatureYield();
+                            maximumExerYield = priceMode02lList.stream().max((u1, u2) -> u1.getExerYield().compareTo(u2.getExerYield())).get().getExerYield();
+                        }
+                        if (StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_卖出.getValue())) {
+                            //最大的价格
+                            maximumPrice = priceMode02lList.stream().max((u1, u2) -> u1.getPrice().compareTo(u2.getPrice())).get().getPrice();
+                            //最小的收益率
+                            maximumMatureYield = priceMode02lList.stream().min((u1, u2) -> u1.getMatureYield().compareTo(u2.getMatureYield())).get().getMatureYield();
+                            maximumExerYield = priceMode02lList.stream().min((u1, u2) -> u1.getExerYield().compareTo(u2.getExerYield())).get().getExerYield();
+                        }
+                        if (translateFlag) {
+                            for (CfetsBondDealEntrustOrderDto item : priceMode01lList) {
+                                if (StringUtil.equals(translateKey, "01") && priceModelOne.getPrice().compareTo(item.getPrice()) != 0) {
                                     priceFlag = false;
                                     message = "存在多条指定价格指令，净价需一致";
                                     break;
                                 }
-                                if(StringUtil.equals(translateKey,"02")&&priceModelOne.getMatureYield().compareTo(item.getMatureYield())!=0){
+                                if (StringUtil.equals(translateKey, "02") && priceModelOne.getMatureYield().compareTo(item.getMatureYield()) != 0) {
                                     matureYieldFlag = false;
                                     message = "存在多条指定价格指令，到期收益率需一致";
                                     break;
                                 }
-                                if(StringUtil.equals(translateKey,"03")&&priceModelOne.getExerYield().compareTo(item.getExerYield())!=0){
+                                if (StringUtil.equals(translateKey, "03") && priceModelOne.getExerYield().compareTo(item.getExerYield()) != 0) {
                                     exerYieldFlag = false;
                                     message = "存在多条指定价格指令，行权收益率需一致";
                                     break;
                                 }
-                        }
-                        if(StringUtil.isNotEmpty(message)){
-                            ajaxResult.setMessage(message);
-                            return ajaxResult;
-                        }
-                        if(StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue())){
-                            if(priceFlag&&StringUtil.equals(translateKey,"01")&&priceModelOne.getPrice().compareTo(maximumPrice)>0){
-                                message = "同时存在指定价格指令和限价指令，指定价格指令的净价不能大于限价指令中净价的最小值";
                             }
-                            if(matureYieldFlag&&StringUtil.equals(translateKey,"02")&&priceModelOne.getMatureYield().compareTo(maximumMatureYield)<0){
-                                message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能小于限价指令中到期收益率的最大值";
+                            if (StringUtil.isNotEmpty(message)) {
+                                ajaxResult.setMessage(message);
+                                return ajaxResult;
                             }
-                            if(exerYieldFlag&&StringUtil.equals(translateKey,"03")&&priceModelOne.getExerYield().compareTo(maximumExerYield)<0){
-                                message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能小于限价指令中行权收益率的最大值";
-                            }
-                        }
-                        if(StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_卖出.getValue())){
-                            if(priceFlag&&StringUtil.equals(translateKey,"01")&&priceModelOne.getPrice().compareTo(maximumPrice)<0){
-                                message = "同时存在指定价格指令和限价指令，指定价格指令的净价不能小于限价指令中净价的最大值";
-                            }
-                            if(matureYieldFlag&&StringUtil.equals(translateKey,"02")&&priceModelOne.getMatureYield().compareTo(maximumMatureYield)>0){
-                                message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能大于限价指令中到期收益率的最小值";
-                            }
-                            if(exerYieldFlag&&StringUtil.equals(translateKey,"03")&&priceModelOne.getExerYield().compareTo(maximumExerYield)>0){
-                                message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能大于限价指令中行权收益率的最小值";
-                            }
-                        }
-                        if(StringUtil.isNotEmpty(message)){
-                            ajaxResult.setMessage(message);
-                            return ajaxResult;
-                        }
-                    }else{
-                        //三者其中之一一致
-                        boolean threeFlag = true;
-                        for (CfetsBondDealEntrustOrderDto item : priceMode01lList) {
-                            if(priceModelOne.getPrice().compareTo(item.getPrice())!=0&&priceModelOne.getMatureYield().compareTo(item.getMatureYield())!=0&&priceModelOne.getExerYield().compareTo(item.getExerYield())!=0){
-                                threeFlag = false;
-                                message = "存在多条指定价格指令，净价/到期收益率/行权收益率三者中任一数据需一致";
-                                break;
-                            }
-                        }
-                        if(StringUtil.isNotEmpty(message)){
-                            ajaxResult.setMessage(message);
-                            return ajaxResult;
-                        }
-                        //
-                        if(threeFlag){
-                            if(StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue())){
-                                if(priceModelOne.getPrice().compareTo(maximumPrice)>0){
+                            if (StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue())) {
+                                if (priceFlag && StringUtil.equals(translateKey, "01") && priceModelOne.getPrice().compareTo(maximumPrice) > 0) {
                                     message = "同时存在指定价格指令和限价指令，指定价格指令的净价不能大于限价指令中净价的最小值";
                                 }
-                                if(priceModelOne.getMatureYield().compareTo(maximumMatureYield)<0){
+                                if (matureYieldFlag && StringUtil.equals(translateKey, "02") && priceModelOne.getMatureYield().compareTo(maximumMatureYield) < 0) {
                                     message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能小于限价指令中到期收益率的最大值";
                                 }
-                                if(priceModelOne.getExerYield().compareTo(maximumExerYield)<0){
+                                if (exerYieldFlag && StringUtil.equals(translateKey, "03") && priceModelOne.getExerYield().compareTo(maximumExerYield) < 0) {
                                     message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能小于限价指令中行权收益率的最大值";
                                 }
                             }
-                            if(StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_卖出.getValue())){
-                                if(priceModelOne.getPrice().compareTo(maximumPrice)<0){
+                            if (StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_卖出.getValue())) {
+                                if (priceFlag && StringUtil.equals(translateKey, "01") && priceModelOne.getPrice().compareTo(maximumPrice) < 0) {
                                     message = "同时存在指定价格指令和限价指令，指定价格指令的净价不能小于限价指令中净价的最大值";
                                 }
-                                if(priceModelOne.getMatureYield().compareTo(maximumMatureYield)>0){
+                                if (matureYieldFlag && StringUtil.equals(translateKey, "02") && priceModelOne.getMatureYield().compareTo(maximumMatureYield) > 0) {
                                     message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能大于限价指令中到期收益率的最小值";
                                 }
-                                if(priceModelOne.getExerYield().compareTo(maximumExerYield)>0){
+                                if (exerYieldFlag && StringUtil.equals(translateKey, "03") && priceModelOne.getExerYield().compareTo(maximumExerYield) > 0) {
                                     message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能大于限价指令中行权收益率的最小值";
                                 }
                             }
+                            if (StringUtil.isNotEmpty(message)) {
+                                ajaxResult.setMessage(message);
+                                return ajaxResult;
+                            }
+                        } else {
+                            //三者其中之一一致
+                            boolean threeFlag = true;
+                            for (CfetsBondDealEntrustOrderDto item : priceMode01lList) {
+                                if (priceModelOne.getPrice().compareTo(item.getPrice()) != 0 && priceModelOne.getMatureYield().compareTo(item.getMatureYield()) != 0 && priceModelOne.getExerYield().compareTo(item.getExerYield()) != 0) {
+                                    threeFlag = false;
+                                    message = "存在多条指定价格指令，净价/到期收益率/行权收益率三者中任一数据需一致";
+                                    break;
+                                }
+                            }
+                            if (StringUtil.isNotEmpty(message)) {
+                                ajaxResult.setMessage(message);
+                                return ajaxResult;
+                            }
+                            //
+                            if (threeFlag) {
+                                if (StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue())) {
+                                    if (priceModelOne.getPrice().compareTo(maximumPrice) > 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的净价不能大于限价指令中净价的最小值";
+                                    }
+                                    if (priceModelOne.getMatureYield().compareTo(maximumMatureYield) < 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能小于限价指令中到期收益率的最大值";
+                                    }
+                                    if (priceModelOne.getExerYield().compareTo(maximumExerYield) < 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能小于限价指令中行权收益率的最大值";
+                                    }
+                                }
+                                if (StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_卖出.getValue())) {
+                                    if (priceModelOne.getPrice().compareTo(maximumPrice) < 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的净价不能小于限价指令中净价的最大值";
+                                    }
+                                    if (priceModelOne.getMatureYield().compareTo(maximumMatureYield) > 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能大于限价指令中到期收益率的最小值";
+                                    }
+                                    if (priceModelOne.getExerYield().compareTo(maximumExerYield) > 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能大于限价指令中行权收益率的最小值";
+                                    }
+                                }
+                            }
+                            if (StringUtil.isNotEmpty(message)) {
+                                ajaxResult.setMessage(message);
+                                return ajaxResult;
+                            }
                         }
-                        if(StringUtil.isNotEmpty(message)){
+                    } else {
+                        //无限制指令模式
+                        //1.存在多条指定价格指令，净价/到期收益率/行权收益率需一致
+                        //2.存在多条指定价格指令，净价/到期收益率/行权收益率三者中任一数据需一致
+                        //3.存在多条指定价格指令，净价需一致
+                        CfetsBondDealEntrustOrderDto priceModelOne = cfetsBondDealEntrustOrderDtos.get(0);
+                        if (StringUtil.isNotEmpty(message)) {
+                            ajaxResult.setMessage(message);
+                            return ajaxResult;
+                        }
+                        for (CfetsBondDealEntrustOrderDto item : entrustDtos) {
+                            //锚定值一致
+                            if (translateFlag) {
+                                //01 净价  02 到期收益率 03 行权收益率
+                                if (StringUtil.equals(translateKey, "01") && priceModelOne.getPrice().compareTo(item.getPrice()) != 0) {
+                                    message = "存在多条指定价格指令，净价需一致";
+                                    break;
+                                }
+                                if (StringUtil.equals(translateKey, "02") && priceModelOne.getMatureYield().compareTo(item.getMatureYield()) != 0) {
+                                    message = "存在多条指定价格指令，到期收益率需一致";
+                                    break;
+                                }
+                                if (StringUtil.equals(translateKey, "03") && priceModelOne.getExerYield().compareTo(item.getExerYield()) != 0) {
+                                    message = "存在多条指定价格指令，行权收益率需一致";
+                                    break;
+                                }
+                            } else {
+                                if (priceModelOne.getPrice().compareTo(item.getPrice()) != 0 && priceModelOne.getMatureYield().compareTo(item.getMatureYield()) != 0 && priceModelOne.getExerYield().compareTo(item.getExerYield()) != 0) {
+                                    message = "存在多条指定价格指令，净价/到期收益率/行权收益率三者中任一数据需一致";
+                                    break;
+                                }
+                            }
+                        }
+                        if (StringUtil.isNotEmpty(message)) {
                             ajaxResult.setMessage(message);
                             return ajaxResult;
                         }
                     }
-                }else{
-                    //无限制指令模式
-                    //1.存在多条指定价格指令，净价/到期收益率/行权收益率需一致
-                    //2.存在多条指定价格指令，净价/到期收益率/行权收益率三者中任一数据需一致
-                    //3.存在多条指定价格指令，净价需一致
-                    CfetsBondDealEntrustOrderDto priceModelOne = cfetsBondDealEntrustOrderDtos.get(0);
-                    if(StringUtil.isNotEmpty(message)){
-                        ajaxResult.setMessage(message);
-                        return ajaxResult;
-                    }
-                    for (CfetsBondDealEntrustOrderDto item : entrustDtos) {
-                        //锚定值一致
-                        if(translateFlag){
-                            //01 净价  02 到期收益率 03 行权收益率
-                            if(StringUtil.equals(translateKey,"01")&&priceModelOne.getPrice().compareTo(item.getPrice())!=0){
-                                message = "存在多条指定价格指令，净价需一致";
-                                break;
-                            }
-                            if(StringUtil.equals(translateKey,"02")&&priceModelOne.getMatureYield().compareTo(item.getMatureYield())!=0){
-                                message = "存在多条指定价格指令，到期收益率需一致";
-                                break;
-                            }
-                            if(StringUtil.equals(translateKey,"03")&&priceModelOne.getExerYield().compareTo(item.getExerYield())!=0){
-                                message = "存在多条指定价格指令，行权收益率需一致";
-                                break;
-                            }
-                        }else{
-                            if(priceModelOne.getPrice().compareTo(item.getPrice())!=0&&priceModelOne.getMatureYield().compareTo(item.getMatureYield())!=0&&priceModelOne.getExerYield().compareTo(item.getExerYield())!=0){
-                                message = "存在多条指定价格指令，净价/到期收益率/行权收益率三者中任一数据需一致";
-                                break;
-                            }
-                        }
-                    }
-                    if(StringUtil.isNotEmpty(message)){
-                        ajaxResult.setMessage(message);
-                        return ajaxResult;
-                    }
                 }
             }
+        }catch (Exception e){
+            ajaxResult.setMessage("交易执行检查异常!");
+            return ajaxResult;
         }
         return ajaxResult;
     }

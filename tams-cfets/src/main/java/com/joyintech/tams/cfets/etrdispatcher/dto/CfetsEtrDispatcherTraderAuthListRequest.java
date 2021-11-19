@@ -19,7 +19,7 @@ public class CfetsEtrDispatcherTraderAuthListRequest {
     @ApiModelProperty(name="dtoList",value="分发权限配置交易员请求数据",example="dtoList")
     private List<CfetsEtrDispatcherTraderAuthListResponse> dtoList;
 
-    @ApiModelProperty(name="isConfirmFlag",value="确认提交标识",example="Y")
+    @ApiModelProperty(name="isConfirmFlag",value="标识",example="Y")
     private String isConfirmFlag;
 
     public List<CfetsEtrDispatcherTraderAuthListResponse> getDtoList() {

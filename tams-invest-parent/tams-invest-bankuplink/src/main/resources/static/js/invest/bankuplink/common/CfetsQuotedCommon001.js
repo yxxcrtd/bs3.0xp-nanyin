@@ -8,6 +8,105 @@
     }
 
 	var tempAvaNum ;
+    /**
+     * 登记组合分配列表
+     * @type {*[]}
+     */
+    var colsReg = [
+        {field:'entrustId', width:180, title: '指令代码',sortable: false,disabled:true}
+        ,{field:'portfolioId', width:150,  title: '组合代码',edit:false,sortable: false,
+            editOption:{type:'select', id:'portfolioId', multiple: false, showField:'text',searchable: true,
+                url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectPortfolioId?act=true&&auth=false')
+            }
+        }
+        ,{field:'portfolioName', width:160,  title: '组合名称',edit:false,sortable: false,
+        }
+        ,{field:'avaNum', width:160, title: '剩余额度（万元）',type:'number',sortable: false}
+        ,{field:'shareAmt', width:150, title: '券面总额（万元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'ourEntNum', width:150, title: '本方券券面总额（万元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'ourEntNum', width:150, title: '融入券券面总额（万元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'ourEntNum', width:150, title: '卖空购回券面总额（万元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'ourEntNum', width:150, title: '交易手续费（元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'ourEntNum', width:150, title: '结算服务费（元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'ourEntNum', width:150, title: '净价总额（元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'ourEntNum', width:150, title: '应计利息总额（元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'ourEntNum', width:150, title: '全价总额（元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'businessModel', width:100, title: '业务模式', sortable: false, edit:true
+            ,editOption:{type:'select',id:"businessModel",formatoption:true,result:BUSINESS_MODEL}
+            , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }
+        ,{field:'priceModel', width:100, title: '价格模式', sortable: false, edit:true
+            ,editOption:{type:'select',id:"priceModel",formatoption:true,result:BUSINESS_MODEL}
+            , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }
+        ,{field:'secManageAcctId', width:150, title: '证券账户',edit:true,sortable: false}
+        ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}
+        ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:2}
+        ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:2}
+        ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt'],
+            render(data, type, row, meta) {
+                // 报价修改时组合信息只可以添加和修改额度，不允许删除(初始化的组合信息不允许删除，手工添加的组合信息可以删除)
+                if (quotaPageModel && quotaPageModel == 'edit' && initEntrustId.indexOf(row.entrustId) > -1) {
+                    return "";
+                }else if(quotaPageModel && quotaPageModel == 'new'){
+                    return "";
+                }
+                else {
+                    return '<i class="btn layui-icon delt" title="删除">&#xe640;</i>';
+                }
+            }
+        }//编辑和删除事件
+    ];
+    /**
+     * 对话和请求组合列表
+     * @type {*[]}
+     */
+    var colsFreg = [
+        {field:'entrustId', width:180, title: '指令代码',sortable: false,disabled:true}
+        ,{field:'portfolioId', width:150,  title: '组合代码',edit:false,sortable: false,
+            editOption:{type:'select', id:'portfolioId', multiple: false, showField:'text',searchable: true,
+                url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectPortfolioId?act=true&&auth=false')
+            }
+        }
+        ,{field:'portfolioName', width:160,  title: '组合名称',edit:false,sortable: false,
+        }
+        /*,{field:'businessModel', width:100, title: '业务模式', sortable: false, edit:true
+            ,editOption:{type:'select',id:"businessModel",formatoption:true,result:BUSINESS_MODEL}
+            , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }*/
+        ,{field:'entrustAvaNum', width:160, title: '剩余额度（万元）',type:'number',sortable: false}
+        ,{field:'avaNum', width:150, title: '券面总额（万元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}
+        ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:2}
+        ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:2}
+        // ,{field:'settleAmt', width:150, title: '结算金额',sortable: false,type:'number', digit:2}
+        , {
+            field: 'proAvailableCash',
+            width: 120,
+            title: '组合T日可用现金',
+            sortable: false,
+            type: 'number',
+            digit: 2
+        }, {
+            field: 'secManageAvailablePosition',
+            width: 120,
+            title: '组合T日可用持仓',
+            sortable: false,
+            type: 'number',
+            digit: 2,
+            visible: true
+        }
+        ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt'],
+            render(data, type, row, meta) {
+                // 报价修改时组合信息只可以添加和修改额度，不允许删除(初始化的组合信息不允许删除，手工添加的组合信息可以删除)
+                if (quotaPageModel && quotaPageModel == 'edit' && initEntrustId.indexOf(row.entrustId) > -1) {
+                    return "";
+                }else if(quotaPageModel && quotaPageModel == 'new'){
+                    return "";
+                }
+                else {
+                    return '<i class="btn layui-icon delt" title="删除">&#xe640;</i>';
+                }
+            }
+        }//编辑和删除事件
+    ];
     var table=$("#cfetsQuoTedCommonTable").joyintable({
     	data:entity==null?[]:entity,
    	    searchOnInit: true,
@@ -15,54 +114,7 @@
         page: false,
         addbtn: false,
         height : 200,
-        cols:[
-            {field:'entrustId', width:180, title: '指令代码',sortable: false,disabled:true}
-            ,{field:'portfolioId', width:150,  title: '组合代码',edit:false,sortable: false,
-                editOption:{type:'select', id:'portfolioId', multiple: false, showField:'text',searchable: true,
-                    url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectPortfolioId?act=true&&auth=false')
-                }
-            }
-            ,{field:'portfolioName', width:160,  title: '组合名称',edit:false,sortable: false,
-            }
-            /*,{field:'businessModel', width:100, title: '业务模式', sortable: false, edit:true
-                ,editOption:{type:'select',id:"businessModel",formatoption:true,result:BUSINESS_MODEL}
-                , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }*/
-            ,{field:'entrustAvaNum', width:160, title: '剩余额度（万元）',type:'number',sortable: false}
-            ,{field:'avaNum', width:150, title: '券面总额（万元）',edit:true,sortable: false,type:'number', digit:2}
-            ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}
-            ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:2}
-            ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:2}
-            // ,{field:'settleAmt', width:150, title: '结算金额',sortable: false,type:'number', digit:2}
-            , {
-                field: 'proAvailableCash',
-                width: 120,
-                title: '组合T日可用现金',
-                sortable: false,
-                type: 'number',
-                digit: 2
-            }, {
-                field: 'secManageAvailablePosition',
-                width: 120,
-                title: '组合T日可用持仓',
-                sortable: false,
-                type: 'number',
-                digit: 2,
-                visible: true
-            }
-            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt'],
-                render(data, type, row, meta) {
-                    // 报价修改时组合信息只可以添加和修改额度，不允许删除(初始化的组合信息不允许删除，手工添加的组合信息可以删除)
-                    if (quotaPageModel && quotaPageModel == 'edit' && initEntrustId.indexOf(row.entrustId) > -1) {
-                        return "";
-                    }else if(quotaPageModel && quotaPageModel == 'new'){
-                        return "";
-                    }
-                    else {
-                        return '<i class="btn layui-icon delt" title="删除">&#xe640;</i>';
-                    }
-                }
-            }//编辑和删除事件
-        ],
+        cols:quoteType=="04"?colsReg:colsFreg,
         editCell: function(value, data, field, cell, column){
             if(Number(value) > Number(data.entrustAvaNum)){
         		 table.renderRow(data.LAY_TABLE_INDEX, {"avaNum": tempAvaNum});

@@ -42,7 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,10 +150,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(null==entity.getShareAmt()){
                 errorList.add(new ValidMessage("请输入券面总额"));
             }
-            if(StringUtil.isEmpty(entity.getDeliveryType())){
+            if(StringUtil.isEmpty(entity.getSettleMethod())){
                 errorList.add(new ValidMessage("请输入结算方式"));
             }
-            if(null==entity.getSettType()){
+            if(null==entity.getSettleType()){
                 errorList.add(new ValidMessage("请输入清算类型"));
             }
         }
@@ -400,7 +399,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
                 regFinProductDealAdd.setOurShareAmt(ptlAllocatio.getOurEntNum());
                 regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getLendinEntNum());
-                regFinProductDealAdd.setSaleinShareAmt(ptlAllocatio.getSellAbleNum());
+                //regFinProductDealAdd.setSaleinShareAmt(ptlAllocatio.getSellAbleNum());
                 //TODO 重新计算
                 regFinProductDealAdd.setActSetteDate(entity.getActSetteDate());
                 if(null!=ptlAllocatio.getDealFeeAmt()){

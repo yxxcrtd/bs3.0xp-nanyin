@@ -26,6 +26,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,9 @@ import java.util.Map;
 public class CfetsIbuQuoteBondController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CfetsIbuQuoteBondController.class);
+
+	@Value("${bondWebSocketUrl}")
+	private String bondWebSocketUrl;
 
 	@Autowired
 	private IbuQuoteBondService ibuQuoteBondService;
@@ -82,7 +86,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		initPageParams.put("ouTraderIdCanEditFlag",CacheUtil.getSysParam("ibuFlag_ouTraderIdCanEdit"));
 		initPageParams.put("ibuFlag_startDialogueQuoteWithNoEntrust",CacheUtil.getSysParam("ibuFlag_startDialogueQuoteWithNoEntrust"));
 		initPageParams.put("SHORT_SELLING_SUPPORTED",CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
-		initPageParams.put("pageId", "CfetsBondDealQuotedPrice002");
+		//CMDS地址
+		initPageParams.put("bondWebSocketUrl", bondWebSocketUrl);
 		return new Message<Map<String, Object>>(initPageParams).success();
 	}
 

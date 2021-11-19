@@ -61,6 +61,11 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
      */
     private List<PtlAllocationDto> ptlAllocatios;
 
+    /**
+     * 市场代码
+     */
+    private String finprodMarketId;
+
     public String getOperatorType() {
         return operatorType;
     }
@@ -117,5 +122,13 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setPtlAllocatios(List<PtlAllocationDto> ptlAllocatios) {
         this.ptlAllocatios = ptlAllocatios;
+    }
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
     }
 }

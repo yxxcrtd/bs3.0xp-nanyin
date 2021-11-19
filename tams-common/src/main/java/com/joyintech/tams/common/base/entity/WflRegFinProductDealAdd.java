@@ -32,12 +32,6 @@ public class WflRegFinProductDealAdd extends BaseEntity {
     private BigDecimal lendinShareAmt;
 
     /**
-     * 卖空购回交易份额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal saleinShareAmt;
-
-    /**
      * 本方券净价总额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -62,12 +56,6 @@ public class WflRegFinProductDealAdd extends BaseEntity {
     private BigDecimal lendinFpriceAmt;
 
     /**
-     * 卖空购回全价总额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal saleinFpriceAmt;
-
-    /**
      * 本方券利息总额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -78,12 +66,6 @@ public class WflRegFinProductDealAdd extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal lendinIntAmt;
-
-    /**
-     * 卖空购回利息总额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal saleinIntAmt;
 
     /**
      * 工作流代码
@@ -156,22 +138,6 @@ public class WflRegFinProductDealAdd extends BaseEntity {
     }
 
     /**
-     * 取得 卖空购回交易份额
-     * @return 卖空购回交易份额
-     */
-    public BigDecimal getSaleinShareAmt() {
-        return saleinShareAmt;
-    }
-
-    /**
-     * 设置 卖空购回交易份额
-     * @param saleinShareAmt 卖空购回交易份额
-     */
-    public void setSaleinShareAmt(BigDecimal saleinShareAmt) {
-        this.saleinShareAmt = saleinShareAmt;
-    }
-
-    /**
      * 取得 本方券净价总额
      * @return 本方券净价总额
      */
@@ -236,22 +202,6 @@ public class WflRegFinProductDealAdd extends BaseEntity {
     }
 
     /**
-     * 取得 卖空购回全价总额
-     * @return 卖空购回全价总额
-     */
-    public BigDecimal getSaleinFpriceAmt() {
-        return saleinFpriceAmt;
-    }
-
-    /**
-     * 设置 卖空购回全价总额
-     * @param saleinFpriceAmt 卖空购回全价总额
-     */
-    public void setSaleinFpriceAmt(BigDecimal saleinFpriceAmt) {
-        this.saleinFpriceAmt = saleinFpriceAmt;
-    }
-
-    /**
      * 取得 本方券利息总额
      * @return 本方券利息总额
      */
@@ -281,22 +231,6 @@ public class WflRegFinProductDealAdd extends BaseEntity {
      */
     public void setLendinIntAmt(BigDecimal lendinIntAmt) {
         this.lendinIntAmt = lendinIntAmt;
-    }
-
-    /**
-     * 取得 卖空购回利息总额
-     * @return 卖空购回利息总额
-     */
-    public BigDecimal getSaleinIntAmt() {
-        return saleinIntAmt;
-    }
-
-    /**
-     * 设置 卖空购回利息总额
-     * @param saleinIntAmt 卖空购回利息总额
-     */
-    public void setSaleinIntAmt(BigDecimal saleinIntAmt) {
-        this.saleinIntAmt = saleinIntAmt;
     }
 
     /**

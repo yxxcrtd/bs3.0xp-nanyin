@@ -15,7 +15,7 @@ public class CfetsBondDealQuoteRequest {
     @ApiModelProperty(required = false,name="quoteId",value="报价编号")
     private String quoteId;
 
-    @ApiModelProperty(required = false,name="entrustIdList",value="委托编号",example = "[A,B]")
+    @ApiModelProperty(required = false,name="entrustIdList",value="委托编号")
     private List<String> entrustIdList;
 
     @ApiModelProperty(required = false,name="workflowId",value="工作流代码")

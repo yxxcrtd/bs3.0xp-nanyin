@@ -14,15 +14,13 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealRegisterQuoteDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice004Service;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
@@ -92,7 +90,14 @@ public class IbuQuoteBond004Controller extends BaseController {
             model.addAttribute(GlobalConstant.WORKFLOW_ID,getParam(GlobalConstant.WORKFLOW_ID));
         }
         model.addAttribute("PRICE_MODEL_PRM01",DictCodeListExt2.价格模式_指定价格.getValue());
-        model.addAttribute(GlobalConstant.ENTITY, cfetsBondDealRegisterQuoteDto);
+        model.addAttribute("PS_T03", DictCodeList.交易方向_行权_回售.getValue());
+        CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
+        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealRegisterQuoteDto);
+        model.addAttribute("quotaPageModel","new");
+        model.addAttribute("ptlAllocatios", JsonUtils.object2Json(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
+        //分配方式
+        model.addAttribute("distribution",cfetsBondDealQuoteCommonDto.getDistribution());
+        model.addAttribute(GlobalConstant.ENTITY, cfetsBondDealQuoteCommonDto);
         return super.init(model);
     }
 

@@ -251,8 +251,14 @@
             ETR_ENTRUST.ENTRUST_ID LIKE '%' || #{keywords} || '%')
         </if>
         <if test="entrustIdList != null and entrustIdList.size() > 0">
-            and ETR_ENTRUST.ENTRUST_ID not in
+            and ETR_ENTRUST.ENTRUST_ID  in
             <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="notentrustIdList != null and notentrustIdList.size() > 0">
+            and ETR_ENTRUST.ENTRUST_ID not in
+            <foreach collection="notentrustIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
