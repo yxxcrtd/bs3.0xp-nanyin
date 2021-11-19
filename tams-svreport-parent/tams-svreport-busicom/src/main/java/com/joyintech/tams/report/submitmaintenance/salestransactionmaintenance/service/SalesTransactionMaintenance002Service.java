@@ -1,18 +1,8 @@
-/*
- * 文件名：EquityInfo002Service.java
- * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
- * 描述：天津滨海农商行理财资管系统
- * 修改人：dingzhipeng
- * 修改时间：2018年5月17日
- * 修改内容：新建
- * 系统名称：天津滨海农商行理财资管系统
- */
-
 package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dao.SalesTransactionMaintenanceMapper;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
@@ -107,7 +97,7 @@ public class SalesTransactionMaintenance002Service extends BaseService{
      * @param
      */
     public void update(SalesTransactionMaintenanceDto dto) {
-        dto.setDataStatus("M");
+        dto.setDataStatus("E");
         if(dto.getMaintainStatus().equals("01") || dto.getRegistSeqno().isEmpty()) {
             dto.setRegistSeqno(UUID.randomUUID().toString().replace("-", "").toUpperCase());
             String institutionCode = dto.getInstitutionCode();
@@ -150,14 +140,14 @@ public class SalesTransactionMaintenance002Service extends BaseService{
     /**
      * 提供销售结算资金服务机构代码下拉框
      */
-    public List<SelectOptionDto> getInstitutionCode(Map<String, Object> params) {
-        return salestransactionmaintenanceMapper.getInstitutionCode(params);
+    public List<SuggestDto> getInstitutionCode(Map<String, Object> map) {
+        return salestransactionmaintenanceMapper.getInstitutionCode(map);
     }
 
     /**
-     * 销售结算资金交易流水号下拉框
+     * 登记编码下拉框
      */
-    public List<SelectOptionDto> getTradeNo(Map<String, Object> params) {
-        return salestransactionmaintenanceMapper.getTradeNo(params);
+    public List<SuggestDto> getPrdRegistCode(Map<String, Object> map) {
+        return salestransactionmaintenanceMapper.getPrdRegistCode(map);
     }
 }

@@ -1,10 +1,14 @@
 package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dao.SalesTransactionMaintenanceMapper;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
 import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
@@ -30,6 +34,8 @@ public class SalesTransactionMaintenanceService extends CommonExportService<Sale
 	@Autowired
 	private SalesTransactionMaintenance001Service salestransactionmaintenance001Service;
 
+	@Autowired
+	private SalesTransactionMaintenanceMapper salestransactionmaintenanceMapper;
 	/**
 	 * 分页查询列表
 	 *
@@ -169,18 +175,27 @@ public class SalesTransactionMaintenanceService extends CommonExportService<Sale
 	/**
 	 * 提供销售结算资金服务机构代码下拉框
 	 */
-	public List<SelectOptionDto> getInstitutionCode(Map<String, Object> params) {
-		return restTemplate.postForObject(
-				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenance/getInstitutionCode", params,
-				List.class);
+	public List<SuggestDto> getInstitutionCode(Map<String, Object> map) {
+		return restTemplate.postForList(
+				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenance/getInstitutionCode",
+				map, SuggestDto.class);
+	}
+
+	/**
+	 * 产品登记编码下拉框
+	 */
+	public List<SuggestDto> getPrdRegistCode(Map<String, Object> map) {
+		return restTemplate.postForList(
+				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenance/getPrdRegistCode",
+				map, SuggestDto.class);
 	}
 
 	/**
 	 * 销售结算资金交易流水号下拉框
 	 */
-	public List<SelectOptionDto> getTradeNo(Map<String, Object> params) {
-		return restTemplate.postForObject(
-				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenance/getTradeNo", params,
-				List.class);
+	public List<SelectOptionDto> getTradeNo(Map<String, Object> map) {
+		List<SelectOptionDto> dtoList = new ArrayList<SelectOptionDto>();
+		dtoList = salestransactionmaintenanceMapper.getTradeNo(map);
+		return dtoList;
 	}
 }

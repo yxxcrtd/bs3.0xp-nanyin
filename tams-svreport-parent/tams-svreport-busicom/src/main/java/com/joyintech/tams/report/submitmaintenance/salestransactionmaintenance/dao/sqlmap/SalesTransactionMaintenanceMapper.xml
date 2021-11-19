@@ -166,63 +166,88 @@
 	</update>
 
 <!--	提供销售结算资金服务机构代码下拉框-->
-	<select id="getInstitutionCode" resultType="com.joyintech.framework.select.SelectOptionDto">
-		SELECT DISTINCT
-		INSTITUTION_CODE id,
-		null text
-		from(
-		select
-		info.INSTITUTION_CODE
-		from CHB_SALER_STL_DEAL_INFO info
+	<select id="getInstitutionCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT
+		INSTITUTION_CODE code,
+		INSTITUTION_CODE name,
+		INSTITUTION_CODE shortName,
+		INSTITUTION_CODE hidCode
+		FROM CHB_SALER_STL_DEAL_INFO
 		<where>
-			<if test="search != null and search != ''">
-				and info.INSTITUTION_CODE like concat(concat('%',#{search}),'%')
+			<if test="institutionCode != null and institutionCode != ''">
+				AND	INSTITUTION_CODE like concat('%',concat(#{institutionCode,jdbcType=VARCHAR},'%'))
 			</if>
 		</where>
 
 		union all
 
-		select
-		erro.INSTITUTION_CODE
-		from CHB_SALER_STL_DEA_ERRODATA erro
+		SELECT
+		INSTITUTION_CODE code,
+		INSTITUTION_CODE name,
+		INSTITUTION_CODE shortName,
+		INSTITUTION_CODE hidCode
+		FROM CHB_SALER_STL_DEA_ERRODATA
 		<where>
-			<if test="search != null and search != ''">
-				and erro.INSTITUTION_CODE like concat(concat('%',#{search}),'%')
+			<if test="institutionCode != null and institutionCode != ''">
+				AND	INSTITUTION_CODE like concat('%',concat(#{institutionCode,jdbcType=VARCHAR},'%'))
 			</if>
 		</where>
-		)
-		ORDER BY INSTITUTION_CODE
 	</select>
 
-<!--销售结算资金交易流水号下拉框-->
+<!--登记编码下拉框-->
+	<select id="getPrdRegistCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT
+		PRD_REGIST_CODE code,
+		PRD_REGIST_CODE name,
+		PRD_REGIST_CODE shortName,
+		PRD_REGIST_CODE hidCode
+		FROM CHB_SALER_STL_DEAL_INFO
+		<where>
+			<if test="prdRegistCode != null and prdRegistCode != ''">
+				AND	PRD_REGIST_CODE like concat('%',concat(#{prdRegistCode,jdbcType=VARCHAR},'%'))
+			</if>
+		</where>
+
+		union all
+
+		SELECT
+		PRD_REGIST_CODE code,
+		PRD_REGIST_CODE name,
+		PRD_REGIST_CODE shortName,
+		PRD_REGIST_CODE hidCode
+		FROM CHB_SALER_STL_DEA_ERRODATA
+		<where>
+			<if test="prdRegistCode != null and prdRegistCode != ''">
+				AND	PRD_REGIST_CODE like concat('%',concat(#{prdRegistCode,jdbcType=VARCHAR},'%'))
+			</if>
+		</where>
+	</select>
+
+<!--交易流水下拉框-->
 	<select id="getTradeNo" resultType="com.joyintech.framework.select.SelectOptionDto">
-		SELECT DISTINCT
+		SELECT
 		TRADE_NO id,
-		null text
-		from(
-		select
-		info.TRADE_NO
-		from CHB_SALER_STL_DEAL_INFO info
+		TRADE_NO text
+		from CHB_SALER_STL_DEAL_INFO
 		<where>
+			1=1
 			<if test="search != null and search != ''">
-				and info.TRADE_NO like concat(concat('%',#{search}),'%')
+				and TRADE_NO like concat(concat('%', #{search}),'%')
 			</if>
 		</where>
 
 		union all
 
-		select
-		erro.TRADE_NO
-		from CHB_SALER_STL_DEA_ERRODATA erro
+		SELECT
+		TRADE_NO id,
+		TRADE_NO text
+		from CHB_SALER_STL_DEA_ERRODATA
 		<where>
 			<if test="search != null and search != ''">
-				and erro.TRADE_NO like concat(concat('%',#{search}),'%')
+				and TRADE_NO like concat(concat('%', #{search}),'%')
 			</if>
 		</where>
-		)
-		ORDER BY TRADE_NO
 	</select>
-
 	<!--	导入时校验数据是否重复-->
 	<select id="getRegistExcelList" resultType="java.lang.Integer">
 		SELECT count(*) from(

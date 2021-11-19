@@ -1,10 +1,12 @@
 package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.controller;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
@@ -173,16 +175,33 @@ public class SalesTransactionMaintenance001Controller extends BaseController {
      * 提供销售结算资金服务机构代码下拉框
      */
     @ResponseBody
-    @RequestMapping("getInstitutionCode")
-    public List<SelectOptionDto> getInstitutionCode() {
-        return salesTransactionmaintenanceService.getInstitutionCode(RequestUtil.getPageParam());
+    @RequestMapping("/getInstitutionCode")
+    public List<SuggestDto> getInstitutionCode()
+            throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("institutionCode", RequestUtil.getPageParam().get("institutionCode"));
+        List<SuggestDto> temp = salesTransactionmaintenanceService.getInstitutionCode(map);
+        return temp;
+    }
+
+    /**
+     * 登记编码下拉框
+     */
+    @ResponseBody
+    @RequestMapping("/getPrdRegistCode")
+    public List<SuggestDto> getPrdRegistCode()
+            throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("prdRegistCode", RequestUtil.getPageParam().get("prdRegistCode"));
+        List<SuggestDto> temp = salesTransactionmaintenanceService.getPrdRegistCode(map);
+        return temp;
     }
 
     /**
      * 销售结算资金交易流水号下拉框
      */
+    @RequestMapping("/getTradeNo")
     @ResponseBody
-    @RequestMapping("getTradeNo")
     public List<SelectOptionDto> getTradeNo() {
         return salesTransactionmaintenanceService.getTradeNo(RequestUtil.getPageParam());
     }

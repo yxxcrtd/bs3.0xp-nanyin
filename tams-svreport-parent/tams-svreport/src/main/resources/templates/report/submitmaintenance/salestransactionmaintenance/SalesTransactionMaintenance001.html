@@ -20,19 +20,23 @@
                     <label class="layui-form-label form-lable">销售结算资金流动方向</label>
                     <div class="layui-input-inline input-inline">
                         <select id="tradePs" name="tradePs" class="input-select"
-                                allowClear="true" data-th-data-result='${TRADE_PS}'
+                                allowClear="true" data-th-data-result='${TRADE_PS}' data-th-initvalue="${tradePs}"
                                 data-th-formatoption="false" placeholder="请选择"
                                 data-th-placeholder="#{SysCommon.selectplaceholder}">
                         </select>
                     </div>
                 </div>
-                <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">提供销售结算资金服务机构代码</label>
+                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                    <label class="layui-form-label form-lable"
+                           data-th-text="#{SalesTransactionMaintenance001.institutionCode}">提供销售结算资金服务机构代码</label>
                     <div class="layui-input-inline input-inline">
-                        <select id="institutionCode" name="institutionCode" class="layui-input form-input input-select"
-                                data-th-data-url="@{/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/getInstitutionCode}"
-                                allowClear="true" placeholder="请输入内容">
-                        </select>
+                        <input type="text" id="institutionCode" name="institutionCode"
+                               class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                               data-parentIds="institutionCode"
+                               data-th-data-url="@{/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/getInstitutionCode}"
+                               data-idfield="code"
+                               data-th-data-effectivefieldsalias='|{"code":"#{SalesTransactionMaintenance001.institutionCode}"}|'
+                        />
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
@@ -47,21 +51,29 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">产品登记编码</label>
+                <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                    <label class="layui-form-label form-lable"
+                           data-th-text="#{SalesTransactionMaintenance001.prdRegistCode}">产品登记编码</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="prdRegistCode" name="prdRegistCode"
-                               class="layui-input form-input"
-                               data-th-placeholder="#{SysCommon.placeholder}">
+                               class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                               data-parentIds="prdRegistCode"
+                               data-th-data-url="@{/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/getPrdRegistCode}"
+                               data-idfield="code"
+                               data-th-data-effectivefieldsalias='|{"code":"#{SalesTransactionMaintenance001.prdRegistCode}"}|'
+                        />
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">销售结算资金交易流水号</label>
                     <div class="layui-input-inline input-inline">
-                        <select id="tradeNo" name="tradeNo" class="layui-input form-input input-select"
-                                data-th-data-url="@{/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/getTradeNo}"
-                                allowClear="true" placeholder="请输入内容">
+                        <select id="tradeNo" class="input-select" name="tradeNo"
+                                data-th-data-url='@{/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/getTradeNo}'
+                                initvalue="" placeholder="请选择"
+                                data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                allowClear="true">
                         </select>
+
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
