@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -113,6 +115,24 @@ public class CfetsBondDealQuoteCommonDto {
 
     @ApiModelProperty(name="remark",value="备注")
     private String  remark;
+
+    @ApiModelProperty(name="ourFpriceAmt",value="本方券全价总额")
+    private BigDecimal ourFpriceAmt;
+
+    @ApiModelProperty(name="lendinFpriceAmt",value="融入券全价总额")
+    private BigDecimal lendinFpriceAmt;
+
+    @ApiModelProperty(name="saleinFpriceAmt",value="卖空购回全价总额")
+    private BigDecimal saleinFpriceAmt;
+
+    @ApiModelProperty(name="ourIntAmt",value="本方券利息总额")
+    private BigDecimal ourIntAmt;
+
+    @ApiModelProperty(name="lendinIntAmt",value="融入券利息总额")
+    private BigDecimal lendinIntAmt;
+
+    @ApiModelProperty(name="saleinIntAmt",value="卖空购回应计利息总额")
+    private BigDecimal saleinIntAmt;
 
     @ApiModelProperty(name="ptlAllocatios",value="组合分配")
     private List<PtlAllocationDto> ptlAllocatios;
