@@ -11,6 +11,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
+import com.joyintech.tams.svreport.chb.daycollect.dto.ChbDayCollect;
 import com.joyintech.tams.svreport.chb.salestransaction.dao.SvrSalesTransactionDBInterfMapper;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -223,6 +224,7 @@ public class SvrSalesTransactionDBInterf extends BaseService{
 	        if (!CollectionUtils.isEmpty(dateList)) {
 	        	sub.setChbSubmitDeadline(dateList.get(0));
 	        	sub.setSubmitDeadline(dateList.get(1));
+//	        	sub.setDataStatus(dateList.get());
 	        }
             // 准备插入处理修改未报送的数据
             insertList.add(sub);
@@ -262,19 +264,20 @@ public class SvrSalesTransactionDBInterf extends BaseService{
             }
             logger.debug("销售结算资金交易登记删除未报送数据：删除结束----------");
             logger.debug("销售结算资金交易登记插入数据：插入开始----------");
-	    		
-            int batchinsertLastIndex = batchDeleteCount;        
-    		for(int index = 0; index < insertList.size();){
-                if(batchinsertLastIndex > insertList.size()-1){
-                	batchinsertLastIndex = insertList.size();
-                    svrSalesTransactionDBInterfMapper.insertChbSalesTransactionSubData(insertList.subList(index, batchinsertLastIndex));
-                    break;//数据插入完毕,退出循环
-                }else{
-                	svrSalesTransactionDBInterfMapper.insertChbSalesTransactionSubData(insertList.subList(index, batchinsertLastIndex));
-                    index = batchinsertLastIndex;//设置下一批下标
-                    batchinsertLastIndex = index + batchDeleteCount;                     
-                }
-            }
+			for(ChbSalesTransactionInfoSub sub : insertList){
+				//创建人
+				sub.setCreateUser(CommonUtil.getUserName());
+				//更新人
+				sub.setUpdateUser(CommonUtil.getUserName());
+				//创建部门
+				sub.setCreateDept(CommonUtil.getDeptCode());
+				//创建机构
+				sub.setOrgCode(CommonUtil.getOrgCode());
+
+				sub.setRegistSeqno(UUID.randomUUID().toString().replace("-", "").toUpperCase());
+
+				svrSalesTransactionDBInterfMapper.insertBatchData(sub);
+			}
 
             logger.debug("销售结算资金交易登记插入数据：插入结束----------");
 		}

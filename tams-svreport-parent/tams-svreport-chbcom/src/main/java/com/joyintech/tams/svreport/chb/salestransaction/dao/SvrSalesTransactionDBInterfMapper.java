@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.joyintech.tams.common.base.entity.ChbSalesTransactionInfo;
 import com.joyintech.tams.common.base.entity.ChbSalesTransactionInfoSub;
+import com.joyintech.tams.svreport.chb.daycollect.dto.ChbDayCollect;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -29,4 +30,10 @@ public interface SvrSalesTransactionDBInterfMapper {
      * @param subList
      */
     int insertChbSalesTransactionSubData(@Param("subList")List<ChbSalesTransactionInfoSub> subList);
+
+	/**
+	 * 插入数据
+	 * @param sub
+	 */
+	int insertBatchData(ChbSalesTransactionInfoSub sub);
 }
