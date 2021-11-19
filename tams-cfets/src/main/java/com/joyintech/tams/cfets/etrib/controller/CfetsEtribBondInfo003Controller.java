@@ -120,7 +120,7 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
         model.addAttribute("PS_T03", DictCodeList.交易方向_行权_回售.getValue());
         model.addAttribute("N", DictCodeList.是否_否.getValue());
         model.addAttribute("Y", DictCodeList.是否_是.getValue());
-        model.addAttribute("CCY", DictCodeList.币种_人民币_CNY.getValue());
+        //model.addAttribute("CCY", DictCodeList.币种_人民币_CNY.getValue());
         //展示投资目的或业务模式参数
         String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
         model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
@@ -130,6 +130,9 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         model.addAttribute("TodoList", todoList);
         model.addAttribute("SHARES_TRADE_MARKET_02", DictCodeListExt1.交易市场_二级市场.getValue());
+        //卖空模式
+        model.addAttribute("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
+
         return super.init(model);
     }
 

@@ -94,7 +94,7 @@ public class CfetsTrdConfirmRegInfoListResponse{
     @ApiModelProperty(name="tradeDate",value="登记日期",example="admin")
     private Date tradeDate;
 
-    @ApiModelProperty(name="counterTrader",value="对手方",example="admin")
+    @ApiModelProperty(name="counterTrader",value="对手方交易员",example="admin")
     private String counterTrader;
 
     @ApiModelProperty(name="portfolioIds",value="组合代码",example="字符串1")
@@ -114,6 +114,343 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     @ApiModelProperty(name="totleTradeId",value="汇总登记编号",example="字符串1")
     private String totleTradeId;
+
+    @ApiModelProperty(name="settleDate",value="结算日期",example="字符串1")
+    private Date settleDate;
+
+    @ApiModelProperty(name="cpriceAmt",value="净价总额",example="字符串1")
+    private BigDecimal cpriceAmt;
+
+    @ApiModelProperty(name="yield",value="到期收益率",example="字符串1")
+    private BigDecimal yield;
+
+    @ApiModelProperty(name="exerYield",value="到期收益率",example="字符串1")
+    private BigDecimal exerYield;
+
+    @ApiModelProperty(name="ouPartyId",value="本方银行间机构",example="字符串1")
+    private String ouPartyId;
+
+    @ApiModelProperty(name="ouTraderId",value="本方银行间交易员",example="字符串1")
+    private String ouTraderId;
+
+    @ApiModelProperty(name="counterId",value="交易对手代码",example="字符串1")
+    private String counterId;
+
+    @ApiModelProperty(name="ourShareAmt",value="本方券券面总额",example="字符串1")
+    private BigDecimal ourShareAmt;
+
+    @ApiModelProperty(name="lendinShareAmt",value="融入券券面总额",example="字符串1")
+    private BigDecimal lendinShareAmt;
+
+    @ApiModelProperty(name="ourFpriceAmt",value="本方券全价总额",example="字符串1")
+    private BigDecimal ourFpriceAmt;
+
+    @ApiModelProperty(name="lendinFpriceAmt",value="融入券全价总额",example="字符串1")
+    private BigDecimal lendinFpriceAmt;
+
+    @ApiModelProperty(name="lendinFpriceAmt",value="融入券净价总额",example="字符串1")
+    private BigDecimal lendinCpriceAmt;
+
+
+    @ApiModelProperty(name="ownIntAmt",value="本方券应计利息",example="字符串1")
+    private BigDecimal ownIntAmt;
+
+
+    @ApiModelProperty(name="lendinIntAmt",value="融入券应计利息",example="字符串1")
+    private BigDecimal lendinIntAmt;
+
+
+    @ApiModelProperty(name="ccy",value="交易币种",example="字符串1")
+    private String ccy;
+
+    @ApiModelProperty(name="unitCprice",value="单位净价",example="字符串1")
+    private BigDecimal unitCprice;
+    @ApiModelProperty(name="unitInt",value="单位利息",example="字符串1")
+    private BigDecimal unitInt;
+    @ApiModelProperty(name="unitFprice",value="单位利息",example="字符串1")
+    private BigDecimal unitFprice;
+    @ApiModelProperty(name="parValue",value="单位面值",example="字符串1")
+    private BigDecimal parValue;
+    @ApiModelProperty(name="intAmt",value="利息总额",example="字符串1")
+    private BigDecimal intAmt;
+    @ApiModelProperty(name="fpriceAmt",value="全价总额",example="字符串1")
+    private BigDecimal fpriceAmt;
+    @ApiModelProperty(name="shareAmt",value="交易份额",example="字符串1")
+    private BigDecimal shareAmt;
+    @ApiModelProperty(name="deliveryType",value="结算方式",example="字符串1")
+    private String  deliveryType;
+    @ApiModelProperty(name="mDeliveryType",value="到期结算方式",example="字符串1")
+    private String  mDeliveryType;
+    @ApiModelProperty(name="settCcy",value="结算币种",example="字符串1")
+    private String  settCcy;
+    @ApiModelProperty(name="clearType",value="清算类型",example="字符串1")
+    private String  clearType;
+    @ApiModelProperty(name="acctId",value="本方资金账户",example="字符串1")
+    private String  acctId;
+    @ApiModelProperty(name="invAim",value="投资目的",example="字符串1")
+    private String  invAim;
+    @ApiModelProperty(name="tradeMarketMode",value="交易市场",example="字符串1")
+    private String  tradeMarketMode;
+    @ApiModelProperty(name="rate",value="利率",example="字符串1")
+    private BigDecimal  rate;
+    @ApiModelProperty(name="repoTerm",value="回购期限(天)",example="字符串1")
+    private BigDecimal   repoTerm;
+    @ApiModelProperty(name="termType",value="期限品种",example="字符串1")
+    private String   termType;
+    @ApiModelProperty(name="disFaceValue",value="质押券折算总额",example="字符串1")
+    private BigDecimal   disFaceValue;
+    @ApiModelProperty(name="repoType",value="回购方式",example="字符串1")
+    private String   repoType;
+    @ApiModelProperty(name="vSettleDate",value="首期结算日",example="字符串1")
+    private Date   vSettleDate;
+    @ApiModelProperty(name="mSettleDate",value="到期结算日",example="字符串1")
+    private Date   mSettleDate;
+    @ApiModelProperty(name="mIntAmt",value="到期利息",example="字符串1")
+    private BigDecimal   mIntAmt;
+    @ApiModelProperty(name="mTradeAmt",value="到期结算金额",example="字符串1")
+    private BigDecimal   mTradeAmt;
+    @ApiModelProperty(name="actRepoTerm",value="实际占款天数",example="字符串1")
+    private BigDecimal   actRepoTerm;
+    @ApiModelProperty(name="tgBusiType",value="投管业务类型",example="字符串1")
+    private String   tgBusiType;
+    @ApiModelProperty(name="tradeStatus",value="交易状态",example="字符串1")
+    private String   tradeStatus;
+    @ApiModelProperty(name="pTradeId",value="原始交易编号",example="字符串1")
+    private String   pTradeId;
+    @ApiModelProperty(name="isCancel",value="是否已执行",example="字符串1")
+    private String   isCancel;
+    @ApiModelProperty(name="isOutTrade",value="是否外部交易",example="字符串1")
+    private String   isOutTrade;
+    @ApiModelProperty(name="fTradeId",value="关联系统编号",example="字符串1")
+    private String   fTradeId;
+
+    public BigDecimal getParValue() {
+        return parValue;
+    }
+
+    public void setParValue(BigDecimal parValue) {
+        this.parValue = parValue;
+    }
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
+    }
+
+    public BigDecimal getShareAmt() {
+        return shareAmt;
+    }
+
+    public void setShareAmt(BigDecimal shareAmt) {
+        this.shareAmt = shareAmt;
+    }
+
+    public String getDeliveryType() {
+        return deliveryType;
+    }
+
+    public void setDeliveryType(String deliveryType) {
+        this.deliveryType = deliveryType;
+    }
+
+    public String getmDeliveryType() {
+        return mDeliveryType;
+    }
+
+    public void setmDeliveryType(String mDeliveryType) {
+        this.mDeliveryType = mDeliveryType;
+    }
+
+    public String getSettCcy() {
+        return settCcy;
+    }
+
+    public void setSettCcy(String settCcy) {
+        this.settCcy = settCcy;
+    }
+
+    public String getClearType() {
+        return clearType;
+    }
+
+    public void setClearType(String clearType) {
+        this.clearType = clearType;
+    }
+
+    public String getAcctId() {
+        return acctId;
+    }
+
+    public void setAcctId(String acctId) {
+        this.acctId = acctId;
+    }
+
+    public String getInvAim() {
+        return invAim;
+    }
+
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
+    }
+
+    public String getTradeMarketMode() {
+        return tradeMarketMode;
+    }
+
+    public void setTradeMarketMode(String tradeMarketMode) {
+        this.tradeMarketMode = tradeMarketMode;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+    public BigDecimal getRepoTerm() {
+        return repoTerm;
+    }
+
+    public void setRepoTerm(BigDecimal repoTerm) {
+        this.repoTerm = repoTerm;
+    }
+
+    public String getTermType() {
+        return termType;
+    }
+
+    public void setTermType(String termType) {
+        this.termType = termType;
+    }
+
+    public BigDecimal getDisFaceValue() {
+        return disFaceValue;
+    }
+
+    public void setDisFaceValue(BigDecimal disFaceValue) {
+        this.disFaceValue = disFaceValue;
+    }
+
+    public String getRepoType() {
+        return repoType;
+    }
+
+    public void setRepoType(String repoType) {
+        this.repoType = repoType;
+    }
+
+    public Date getvSettleDate() {
+        return vSettleDate;
+    }
+
+    public void setvSettleDate(Date vSettleDate) {
+        this.vSettleDate = vSettleDate;
+    }
+
+    public Date getmSettleDate() {
+        return mSettleDate;
+    }
+
+    public void setmSettleDate(Date mSettleDate) {
+        this.mSettleDate = mSettleDate;
+    }
+
+    public BigDecimal getmIntAmt() {
+        return mIntAmt;
+    }
+
+    public void setmIntAmt(BigDecimal mIntAmt) {
+        this.mIntAmt = mIntAmt;
+    }
+
+    public BigDecimal getmTradeAmt() {
+        return mTradeAmt;
+    }
+
+    public void setmTradeAmt(BigDecimal mTradeAmt) {
+        this.mTradeAmt = mTradeAmt;
+    }
+
+    public BigDecimal getActRepoTerm() {
+        return actRepoTerm;
+    }
+
+    public void setActRepoTerm(BigDecimal actRepoTerm) {
+        this.actRepoTerm = actRepoTerm;
+    }
+
+    public String getTgBusiType() {
+        return tgBusiType;
+    }
+
+    public void setTgBusiType(String tgBusiType) {
+        this.tgBusiType = tgBusiType;
+    }
+
+    public String getTradeStatus() {
+        return tradeStatus;
+    }
+
+    public void setTradeStatus(String tradeStatus) {
+        this.tradeStatus = tradeStatus;
+    }
+
+    public String getpTradeId() {
+        return pTradeId;
+    }
+
+    public void setpTradeId(String pTradeId) {
+        this.pTradeId = pTradeId;
+    }
+
+    public String getIsCancel() {
+        return isCancel;
+    }
+
+    public void setIsCancel(String isCancel) {
+        this.isCancel = isCancel;
+    }
+
+    public String getIsOutTrade() {
+        return isOutTrade;
+    }
+
+    public void setIsOutTrade(String isOutTrade) {
+        this.isOutTrade = isOutTrade;
+    }
+
+    public String getfTradeId() {
+        return fTradeId;
+    }
+
+    public void setfTradeId(String fTradeId) {
+        this.fTradeId = fTradeId;
+    }
+
+    public String getDipType() {
+        return dipType;
+    }
+
+    public void setDipType(String dipType) {
+        this.dipType = dipType;
+    }
+
+    @ApiModelProperty(name="dipType",value="分配方式",example="字符串1")
+    private String   dipType;
+
 
     public String getEffectiveStatus() {
         return effectiveStatus;
@@ -346,5 +683,150 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setTotleTradeId(String totleTradeId) {
         this.totleTradeId = totleTradeId;
+    }
+
+
+    public Date getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(Date settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    public BigDecimal getCpriceAmt() {
+        return cpriceAmt;
+    }
+
+    public void setCpriceAmt(BigDecimal cpriceAmt) {
+        this.cpriceAmt = cpriceAmt;
+    }
+
+    public BigDecimal getYield() {
+        return yield;
+    }
+
+    public void setYield(BigDecimal yield) {
+        this.yield = yield;
+    }
+
+    public BigDecimal getExerYield() {
+        return exerYield;
+    }
+
+    public void setExerYield(BigDecimal exerYield) {
+        this.exerYield = exerYield;
+    }
+
+    public String getOuPartyId() {
+        return ouPartyId;
+    }
+
+    public void setOuPartyId(String ouPartyId) {
+        this.ouPartyId = ouPartyId;
+    }
+
+    public String getOuTraderId() {
+        return ouTraderId;
+    }
+
+    public void setOuTraderId(String ouTraderId) {
+        this.ouTraderId = ouTraderId;
+    }
+
+    public String getCounterId() {
+        return counterId;
+    }
+
+    public void setCounterId(String counterId) {
+        this.counterId = counterId;
+    }
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public BigDecimal getOurFpriceAmt() {
+        return ourFpriceAmt;
+    }
+
+    public void setOurFpriceAmt(BigDecimal ourFpriceAmt) {
+        this.ourFpriceAmt = ourFpriceAmt;
+    }
+
+    public BigDecimal getLendinFpriceAmt() {
+        return lendinFpriceAmt;
+    }
+
+    public void setLendinFpriceAmt(BigDecimal lendinFpriceAmt) {
+        this.lendinFpriceAmt = lendinFpriceAmt;
+    }
+
+    public BigDecimal getLendinCpriceAmt() {
+        return lendinCpriceAmt;
+    }
+
+    public void setLendinCpriceAmt(BigDecimal lendinCpriceAmt) {
+        this.lendinCpriceAmt = lendinCpriceAmt;
+    }
+
+    public BigDecimal getOwnIntAmt() {
+        return ownIntAmt;
+    }
+
+    public void setOwnIntAmt(BigDecimal ownIntAmt) {
+        this.ownIntAmt = ownIntAmt;
+    }
+
+    public BigDecimal getLendinIntAmt() {
+        return lendinIntAmt;
+    }
+
+    public void setLendinIntAmt(BigDecimal lendinIntAmt) {
+        this.lendinIntAmt = lendinIntAmt;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
+
+    public BigDecimal getUnitCprice() {
+        return unitCprice;
+    }
+
+    public void setUnitCprice(BigDecimal unitCprice) {
+        this.unitCprice = unitCprice;
+    }
+
+    public BigDecimal getUnitInt() {
+        return unitInt;
+    }
+
+    public void setUnitInt(BigDecimal unitInt) {
+        this.unitInt = unitInt;
+    }
+
+    public BigDecimal getUnitFprice() {
+        return unitFprice;
+    }
+
+    public void setUnitFprice(BigDecimal unitFprice) {
+        this.unitFprice = unitFprice;
     }
 }

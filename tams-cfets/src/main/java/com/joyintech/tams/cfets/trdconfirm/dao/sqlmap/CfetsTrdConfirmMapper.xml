@@ -1,6 +1,170 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.cfets.etrdispatcher.dao.CfetsEtrDispatcherMapper">
-
-
+<mapper namespace="com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper">
+    <select id="findAllRegInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse">
+        select null as effectiveStatusName,
+        reg.finprod_type2 as finprodType2,
+        reg.finprod_id as finprodId,
+        fp.finprod_market_id as finprodMarketId,
+        fp.finprod_abbr as finprodAbbr,
+        reg.ps as ps,
+        reg.trade_market as tradeMarket,
+        reg.settle_speed as settleSpeed,
+        reg.sec_manage_acct_id as secManageAcctId,
+        null as secManageAcctIdName,
+        nvl(reg.face_value,0)/10000 as faceValue,
+        case when reg.finprod_type2='F01' and reg.ps in ('T01','T02') then reg.yield
+        when reg.finprod_id in ('F02','F03') then reg.rate else null end as tradeYield,
+        reg.repo_term as termDays,
+        reg.trade_amt as tradeAmt,
+        reg.totle_trade_id as busiCode,
+        reg.ou_trader_id as trader,
+        reg.trade_date as tradeDate,
+        reg.counter_id as counterTrader,
+        null as portfolioIds,
+        null as portfolioNames,
+        reg.quote_type as quoteType,
+        null as exportNum,
+        reg.remark as remark,
+        reg.totle_trade_id as totleTradeId
+        from reg_fin_product_deal_total reg
+        left join fin_product fp
+        on fp.finprod_id=reg.finprod_id
+        left join
+        (
+        select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
+        from reg_fin_product_deal regdeal
+        left join ptl_portfolio pp
+        on regdeal.portfolio_id=pp.portfolio_id
+        group by regdeal.totle_trade_id
+        )deal
+        on reg.totle_trade_id=deal.totle_trade_id
+    </select>
+    <select id="selectRegInfoByKey" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse">
+        select null as effectiveStatusName,
+        reg.finprod_type2 as finprodType2,
+        reg.finprod_id as finprodId,
+        fp.finprod_market_id as finprodMarketId,
+        fp.finprod_abbr as finprodAbbr,
+        reg.ps as ps,
+        reg.trade_market as tradeMarket,
+        reg.settle_speed as settleSpeed,
+        reg.sec_manage_acct_id as secManageAcctId,
+        null as secManageAcctIdName,
+        nvl(reg.face_value,0)/10000 as faceValue,
+        case when reg.finprod_type2='F01' and reg.ps in ('T01','T02') then reg.yield
+        when reg.finprod_id in ('F02','F03') then reg.rate else null end as tradeYield,
+        reg.repo_term as termDays,
+        reg.trade_amt as tradeAmt,
+        reg.totle_trade_id as busiCode,
+        reg.ou_trader_id as trader,
+        reg.trade_date as tradeDate,
+        reg.counter_id as counterTrader,
+        null as portfolioIds,
+        null as portfolioNames,
+        reg.quote_type as quoteType,
+        null as exportNum,
+        reg.remark as remark,
+        reg.totle_trade_id as totleTradeId
+        from reg_fin_product_deal_total reg
+        left join fin_product fp
+        on fp.finprod_id=reg.finprod_id
+        left join
+        (
+        select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
+        from reg_fin_product_deal regdeal
+        left join ptl_portfolio pp
+        on regdeal.portfolio_id=pp.portfolio_id
+        group by regdeal.totle_trade_id
+        )deal
+        on reg.totle_trade_id=deal.totle_trade_id
+        where reg.totle_trade_id= #{totleTradeId,jdbcType=VARCHAR}
+    </select>
+    <select id="findAllRegFeeInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegFeeInfoDto">
+        select reg.trade_id as tradeId,
+        reg.fee_type as feeType,
+        reg.is_pay_with_trade as isPayWithTrade,
+        reg.fee_amt as feeAmt
+        from reg_trade_fee_total reg
+        where reg.trade_id= #{tradeId,jdbcType=VARCHAR}
+    </select>
+    <sql id="regFinProductDealInfo">
+        TRADE_ID as tradeId,
+        BUSI_TYPE as busiType,
+        ENTRUST_ID as entrustId,
+        PORTFOLIO_ID as portfolioId,
+        FINPROD_ID as finprodId,
+        FINPROD_TYPE as finprodType,
+        FINPROD_TYPE2 as finprodType2,
+        BRANCH as branch,
+        MARKET_ID as marketId,
+        PS as ps,
+        TRADE_DATE as tradeDate,
+        OU_PARTY_ID as ouPartyId,
+        OU_TRADER_ID as ouTraderId,
+        COUNTER_ID as counterId,
+        COUNTER_TRADER as counterTrader,
+        CCY as ccy,
+        SETTLE_SPEED as settleSpeed,
+        SETTLE_DATE as settleDate,
+        UNIT_CPRICE as unitCprice,
+        YIELD as yield,
+        EXER_YIELD as exerYield,
+        UNIT_INT as unitInt,
+        UNIT_FPRICE as unitFprice,
+        PAR_VALUE as parValue,
+        CPRICE_AMT as cpriceAmt,
+        INT_AMT as intAmt,
+        FPRICE_AMT as fpriceAmt,
+        SHARE_AMT as shareAmt,
+        DELIVERY_TYPE as deliveryType,
+        M_DELIVERY_TYPE as mDeliveryType,
+        TRADE_AMT as tradeAmt,
+        CLEAR_TYPE as clearType,
+        SEC_MANAGE_ACCT_ID as secManageAcctId,
+        ACCT_ID as acctId,
+        INV_AIM as invAim,
+        TRADE_MARKET as tradeMarket,
+        TRADE_MARKET_MODE as tradeMarketMode,
+        RATE as rate,
+        REPO_TERM as repoTerm,
+        TERM_TYPE as termType,
+        FACE_VALUE as faceValue,
+        DIS_FACE_VALUE as disFaceValue,
+        REPO_TYPE as repoType,
+        V_SETTLE_DATE as vSettleDate,
+        M_SETTLE_DATE as mSettleDate,
+        ACT_REPO_TERM as actRepoTerm,
+        M_INT_AMT as mIntAmt,
+        M_TRADE_AMT as mTradeAmt,
+        TG_BUSI_TYPE as tgBusiType,
+        TRADE_STATUS as tradeStatus,
+        P_TRADE_ID as pTradeId,
+        IS_CANCEL as isCancel,
+        IS_OUT_TRADE as isOutTrade,
+        F_TRADE_ID as fTradeId,
+        TOTLE_TRADE_ID as totleTradeId,
+        REMARK as remark
+    </sql>
+    <select id="findAllRegDealList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsRegFinProductDealDto" parameterType="java.lang.String" >
+        select
+        <include refid="regFinProductDealInfo"/>
+        from REG_FIN_PRODUCT_DEAL
+        where totle_trade_id= #{totleTradeId,jdbcType=VARCHAR}
+    </select>
+    <select id="findAllRegFeeDetailInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegFeeInfoDto">
+        select reg.trade_id as tradeId,
+        reg.fee_type as feeType,
+        reg.is_pay_with_trade as isPayWithTrade,
+        reg.fee_amt as feeAmt
+        from reg_trade_fee reg
+        where reg.trade_id= #{tradeId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectSecAcctSource" resultType="java.lang.String">
+        SELECT
+        SEC_ACCT_SOURCE
+        FROM STL_SEC_ACCT_INFO
+        WHERE
+        SEC_ACCT_ID = #{secAcctId}
+    </select>
 </mapper>

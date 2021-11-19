@@ -132,6 +132,14 @@ public class CfetsBussCombDistribtDto {
     @ApiModelProperty(name="ownProAvailableSec1",value="本方券T+1日可用持仓",example="100")
     private BigDecimal ownProAvailableSec1;
 
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    @ApiModelProperty(name="porAvailableSec",value="资产T日可用持仓",example="100")
+    private BigDecimal porAvailableSec;
+
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    @ApiModelProperty(name="porAvailableSec1",value="资产T+1日可用持仓",example="100")
+    private BigDecimal porAvailableSec1;
+
 
 
     /**
@@ -347,5 +355,21 @@ public class CfetsBussCombDistribtDto {
 
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
+    }
+
+    public BigDecimal getPorAvailableSec() {
+        return porAvailableSec;
+    }
+
+    public void setPorAvailableSec(BigDecimal porAvailableSec) {
+        this.porAvailableSec = porAvailableSec;
+    }
+
+    public BigDecimal getPorAvailableSec1() {
+        return porAvailableSec1;
+    }
+
+    public void setPorAvailableSec1(BigDecimal porAvailableSec1) {
+        this.porAvailableSec1 = porAvailableSec1;
     }
 }

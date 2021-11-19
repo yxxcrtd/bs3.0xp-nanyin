@@ -1389,6 +1389,19 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 bfqt1rkyccAmt=new BigDecimal(map.get("BFQT1RKYCC").toString());
             }
             item.setOwnProAvailableSec1(bfqt1rkyccAmt);
+            //资产T日可用持仓
+            BigDecimal zctrkyccAmt=BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("ZCTRKYCC"))){
+                zctrkyccAmt=new BigDecimal(map.get("ZCTRKYCC").toString());
+            }
+            item.setPorAvailableSec(zctrkyccAmt);
+
+            //资产T+1日可用持仓
+            BigDecimal zct1rkyccAmt=BigDecimal.ZERO;
+            if(StringUtil.isNotEmpty(map) && StringUtil.isNotEmpty(map.get("ZCT1RKYCC"))){
+                zct1rkyccAmt=new BigDecimal(map.get("ZCT1RKYCC").toString());
+            }
+            item.setPorAvailableSec1(zct1rkyccAmt);
             etrInvestBondInfoDtosList.add(dd);
         }
         dto.setEntrustOwnNum(bfqtrkyccSAmt);

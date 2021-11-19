@@ -375,6 +375,7 @@
             width: 150,
             title: 'CfetsEtribBondInfo003.entrustOwnNum',
             sortable: false,
+            visible:SHORT_SELLING_SUPPORTED == '02'?true:false,
             type: 'number',
             digit: 2
         }
@@ -383,6 +384,7 @@
             width: 150,
             title: 'CfetsEtribBondInfo003.entrustIntegratCasheNum',
             sortable: false,
+            visible:SHORT_SELLING_SUPPORTED == '02'?true:false,
             type: 'number',
             digit: 2
         }
@@ -409,22 +411,40 @@
             sortable: false,
             type: 'number',
             digit: 2,
-            visible: true
         }
+       , {
+             field: 'porAvailableSec',
+             width: 200,
+             title: 'CfetsEtribBondInfo003.porAvailableSec',
+             sortable: false,
+             visible:SHORT_SELLING_SUPPORTED == '02'?false:true,
+             type: 'number',
+             digit: 2
+         }
+         , {
+             field: 'porAvailableSec1',
+             width: 200,
+             title: 'CfetsEtribBondInfo003.porAvailableSec1',
+             sortable: false,
+             visible:SHORT_SELLING_SUPPORTED == '02'?false:true,
+             type: 'number',
+             digit: 2,
+         }
        , {
             field: 'entrustIntegrateSecNum',
             width: 200,
             title: 'CfetsEtribBondInfo003.entrustIntegrateSecNum',
             sortable: false,
+            visible:SHORT_SELLING_SUPPORTED == '02'?true:false,
             type: 'number',
-            digit: 2,
-            visible: true
+            digit: 2
         }
        , {
             field: 'ownPorAvailableSec',
             width: 200,
             title: 'CfetsEtribBondInfo003.ownPorAvailableSec',
             sortable: false,
+            visible:SHORT_SELLING_SUPPORTED == '02'?true:false,
             type: 'number',
             digit: 2
         }
@@ -433,6 +453,7 @@
             width: 200,
             title: 'CfetsEtribBondInfo003.ownProAvailableSec1',
             sortable: false,
+            visible:SHORT_SELLING_SUPPORTED == '02'?true:false,
             type: 'number',
             digit: 2
         }
@@ -584,6 +605,11 @@
         if (riskLists.length > 0) {
             $("#riskTrialSpan").html("&nbsp;&nbsp;" + riskLists[0].conclusion);
         }
+        if (SHORT_SELLING_SUPPORTED && SHORT_SELLING_SUPPORTED != '02') {
+            //本方券和卖空购回字段隐藏
+            $('.selling').hide();
+            table.showColumns([{field: 'entrustOwnNum', visible: false}]);
+        }
     }
 
     init();
@@ -687,7 +713,7 @@
         param.operateType = operateType;
         param.pageModel = pageModel;
         //param.riskTrialRetDto = object.riskTrialRetDto;
-        param.riskTrialRetDto = entity_RiskTrialRetList||[];
+        param.riskTrialRetDto = entity_RiskTrialRetList;
 
         param.elementId = 'CfetsEtrIbBondinfo003_btn_submit';
 

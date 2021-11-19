@@ -10,6 +10,8 @@ package com.joyintech.tams.cfets.trdconfirm.controller;
 
 
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -18,6 +20,10 @@ import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListRequest
 import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse;
 import com.joyintech.tams.cfets.trdconfirm.service.CfetsTrdConfirmService;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +51,15 @@ public class CfetsTrdConfirmController extends BaseController {
     @ResponseBody
     public Message<Map<String, Object>> getPageParams(){
         Map<String, Object> initPageParams = new HashMap<>();
+        //是否支持CSTP下行接口
+        initPageParams.put("IS_SUPPORT_CSTP_FLAG", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG"));
+        //银行间交易执行是否可手工确认
+        initPageParams.put("IS_CFETSTRD_MANUALCONFIRM_FLAG", CacheUtil.getSysParam("IS_CFETSTRD_MANUALCONFIRM_FLAG"));
+
+
+        //自动刷新时间
+
+
         //数据字典初始化数据
         initPageParams.put("PINAN_ASSET_TYPE", this.getSelectDataFromDataDic(DictCode.平安资产类型, null));
         initPageParams.put("BUSI_TYPE_POSITION", this.getSelectDataFromDataDic(DictCode.头寸业务类型, null));
@@ -73,11 +88,31 @@ public class CfetsTrdConfirmController extends BaseController {
     public Message<Page<CfetsTrdConfirmRegInfoListResponse>> findAllRegInfoList(@RequestBody CfetsTrdConfirmRegInfoListRequest dto)
             throws Exception {
         try {
-            Page<CfetsTrdConfirmRegInfoListResponse> page = null;//cfetsTrdConfirmService.findAllRegInfoList(dto);
+            Page<CfetsTrdConfirmRegInfoListResponse> page =cfetsTrdConfirmService.findAllRegInfoList(dto);
             return new Message<Page<CfetsTrdConfirmRegInfoListResponse>>().success().setData(page);
         } catch (Exception e) {
             logger.error("查询交易登记列表分页数据异常", e);
             return new Message<Page<CfetsTrdConfirmRegInfoListResponse>>().fail().setMessage("查询交易登记列表分页数据异常");
+        }
+    }
+    /**
+     * 交易执行-成交确认
+     */
+    @ResponseBody
+    @ApiOperation(value = "交易执行-成交确认", notes = "交易执行-成交确认")
+    @PostMapping("recall")
+    public Message<AjaxResult> trdConfirmSave(@RequestBody CfetsTrdConfirmRegInfoListResponse dto) throws Exception {
+        //对选择的数据进行check
+        /*AjaxResult ajaxResult = cfetsTrdConfirmService.trdConfirmSaveCheckMethod(dto);
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+            return new Message<AjaxResult>().fail().setData(ajaxResult);
+        }*/
+        try {
+            cfetsTrdConfirmService.trdConfirmSaveMethod(dto);
+            return new Message<AjaxResult>().success().setData(new AjaxResult("成交确认成功"));
+        } catch (Exception e) {
+            logger.error("交易执行-成交确认数据异常", e);
+            return new Message<AjaxResult>().fail().setMessage("成交确认数据异常");
         }
     }
 
