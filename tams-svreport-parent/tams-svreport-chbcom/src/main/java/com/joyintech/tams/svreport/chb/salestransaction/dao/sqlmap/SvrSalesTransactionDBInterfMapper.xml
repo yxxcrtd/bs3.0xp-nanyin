@@ -218,13 +218,17 @@
 		insert into CHB_SALER_STL_DEAL_SUB(REGIST_SEQNO, DATA_STATUS, INSTITUTION_CODE, PRD_REGIST_CODE, ACCOUNT_NO, ACCOUNT_NAME, TRADE_NO, TRADE_PS, TRADE_COUNTER_ACC_NO,
 		TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY, TRADE_AMT, TRADE_VDATE,TRADE_TIME,POSTSCRIPT, REMARK,
 		CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
-		STATUS_DATE,SUBMIT_TIME,SUMIT_SEQ,SEND_STATUS,
+		STATUS_DATE,SUMIT_SEQ,SEND_STATUS,
 		CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 		values(
-		#{registSeqno},#{dataStatus},#{institutionCode},#{prdRegistCode}, #{accountNo},#{accountName},#{tradeNo}, #{tradePs}, #{tradeCounterAccNo}, #{tradeCounterAccName},
-		#{tradeCounterAccBankName},#{tradeCounterAccBankNo},#{tradeCcy},#{tradeAmt},to_date(#{tradeVdate},'yyyy-MM-dd'),#{tradeTime}, #{postscript}, #{remark},
-		to_date(#{chbSubmitDeadline},'yyyy-MM-dd'),to_date(#{submitDeadline},'yyyy-MM-dd'),sysdate,null,
-		#{sumitSeq},#{sendStatus},#{createUser},
+		#{registSeqno,jdbcType=VARCHAR},#{dataStatus,jdbcType=VARCHAR},#{institutionCode,jdbcType=VARCHAR},#{prdRegistCode,jdbcType=VARCHAR},
+		#{accountNo,jdbcType=VARCHAR},#{accountName,jdbcType=VARCHAR},#{tradeNo,jdbcType=VARCHAR}, #{tradePs,jdbcType=VARCHAR},
+		#{tradeCounterAccNo,jdbcType=VARCHAR}, #{tradeCounterAccName,jdbcType=VARCHAR},
+		#{tradeCounterAccBankName,jdbcType=VARCHAR},#{tradeCounterAccBankNo,jdbcType=VARCHAR},
+		#{tradeCcy,jdbcType=VARCHAR},#{tradeAmt,jdbcType=DECIMAL},#{tradeVdate,jdbcType=DATE},#{tradeTime,jdbcType=VARCHAR},
+		#{postscript,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+		#{chbSubmitDeadline,jdbcType=DATE},#{submitDeadline,jdbcType=DATE},sysdate,
+		#{sumitSeq,jdbcType=VARCHAR},#{sendStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},
 		sysdate,#{updateUser},sysdate)
 	</insert>
 
