@@ -712,6 +712,7 @@ public class EtrExchangeTradeService extends BaseService{
         param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
         param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
         param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+        param.put("ENTRUST_CLASS_02", DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
         String portfolioId = (String)param.get("portfolioId");
         if (StringUtil.isNotEmpty(portfolioId)) {
             param.put("portfolioIdList",
