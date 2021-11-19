@@ -22,7 +22,9 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrbondfirstlbidding.dao.EtrBondFirstLBiddingMapper;
 import com.joyintech.tams.business.common.dao.CfgReadonlyFormShowMapper;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.entity.CfgReadonlyFormShow;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.cfets.etrdispatcher.dao.CfetsEtrDispatcherMapper;
 import com.joyintech.tams.cfets.etrdispatcher.dto.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -139,6 +141,9 @@ public class CfetsEtrDispatcherService extends BaseService{
 
     @Autowired
     private CfgReadonlyFormShowMapper cfgReadonlyFormShowMapper;
+
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
 
     /**
      * 指令列表分页查询
@@ -778,6 +783,12 @@ public class CfetsEtrDispatcherService extends BaseService{
             etrEntrust.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
             etrEntrust.setEntrustId(entrustIds.get(j));
             etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
+
+            //更新操作记录日志
+            CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+            oprHisReq.setEntrustId(entrustIds.get(j));
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_分发.getValue());
+            joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
         }
         for (int i = 0; i < tradersList.size(); i++ ) {
             record.setTrader(tradersList.get(i));
@@ -803,6 +814,9 @@ public class CfetsEtrDispatcherService extends BaseService{
         List<ValidMessage> errorList = new ArrayList<ValidMessage>();
         List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
         List<String> entrustStatusList = StringUtil.splitToList(",",(String)pageParam.get("entrustStatus"));
+        if(!StringUtil.isNotEmpty(pageParam.get("rekReason"))){
+            errorList.add(new ValidMessage("请输入退回原因!"));
+        }
         if(entrustIdList.isEmpty()) {
             errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0026")));
         }else{
@@ -907,7 +921,7 @@ public class CfetsEtrDispatcherService extends BaseService{
                 // 更新委托表的委托状态
                 etrInvestInfoServiceImpl.updateDelegateStatus(entrustId, DictCodeList.委托状态_已退回.getValue());
 //                // 委托退回原因
-//                etrInvestInfoServiceImpl.updateBackReason(entrustId, reason);
+                etrInvestInfoServiceImpl.updateBackReason(entrustId, (String)pageParam.get("rekReason"));
                 // 删除交易员的委托数据
                 for (EtrDistribute entity : etrDistributeList) {
                     entity.setRecStatus(DictCodeList.委托状态_已退回.getValue());
@@ -916,6 +930,14 @@ public class CfetsEtrDispatcherService extends BaseService{
                 if (baseEtrCashPositionCommService != null) {
                     baseEtrCashPositionCommService.entrustCloseExecute(entrustId);
                 }
+
+                //更新操作记录日志
+                CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+                oprHisReq.setEntrustId(entrustId);
+                oprHisReq.setOperType(DictCodeListExt3.操作类型_退回.getValue());
+                oprHisReq.setBusiDes((String)pageParam.get("rekReason"));
+                joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+
             }
             return true;
         }

@@ -30,6 +30,9 @@ public class CfetsEtrDispatcherDealRequest {
     @ApiModelProperty(name="entrustStatus",value="指令状态",example="待分发/待接收",required = true)
     private String entrustStatus;
 
+    @ApiModelProperty(name="rekReason",value="退回原因",example="A1",required = true)
+    private String rekReason;
+
     public String getEntrustId() {
         return entrustId;
     }
@@ -68,6 +71,14 @@ public class CfetsEtrDispatcherDealRequest {
 
     public void setEntrustStatus(String entrustStatus) {
         this.entrustStatus = entrustStatus;
+    }
+
+    public String getRekReason() {
+        return rekReason;
+    }
+
+    public void setRekReason(String rekReason) {
+        this.rekReason = rekReason;
     }
 }
 
