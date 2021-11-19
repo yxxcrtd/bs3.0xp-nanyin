@@ -6,6 +6,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -138,6 +139,13 @@ public class ExchangeTransMatchShares1Service extends ExchangeTransMatchSharesCo
             trdProductDeal.setTradePlat(dealDto.getTradePlat());
             // 交易市场
             trdProductDeal.setTradeMarketMode(dealDto.getTradeMarketMode());
+
+            if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+            }
+            else if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+            }
             // 证券管理户代码
             trdProductDeal.setSecManageAcctId(dealDto.getSecAcctId());
             // 登记托管机构

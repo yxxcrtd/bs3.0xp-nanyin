@@ -10,6 +10,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -159,6 +160,13 @@ public class ExchangeTransMatchFund1Service extends BaseService {
         trdProductDeal.setTradePlat(settleTransData.getTradePlat());
         // 交易市场
         trdProductDeal.setTradeMarketMode(settleTransData.getTradeMarketMode());
+
+        if(StringUtil.equals(settleTransData.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+            trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+        }
+        else if(StringUtil.equals(settleTransData.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+            trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+        }
         // 证券管理户代码
         trdProductDeal.setSecManageAcctId(settleTransData.getSecAcctId());
 
