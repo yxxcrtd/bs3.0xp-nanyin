@@ -103,6 +103,15 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         pageParam.put("PARA_VALUE_02", DictCodeListStl.对账维度_委托汇总.getValue());
         pageParam.put("PARA_VALUE_03", DictCodeListStl.对账维度_成交明细.getValue());
         pageParam.put("CHECK_RESULT_2", DictCodeListExt3.对账状态结果_待处理.getValue());
+        pageParam.put("PS_T01", DictCodeList.交易方向_买入.getValue());
+        pageParam.put("PS_T07", DictCodeList.交易方向_到期.getValue());
+        pageParam.put("PS_T54", DictCodeListExt3.交易方向_投资端_提前终止.getValue());
+        pageParam.put("PS_T55", DictCodeListExt3.交易方向_投资端_逾期返售.getValue());
+        pageParam.put("PS_T56", DictCodeListExt3.交易方向_到期续做.getValue());
+        pageParam.put("PS_T95", DictCodeListExt3.交易方向_到期购回.getValue());
+        pageParam.put("PS_T96", DictCodeListExt3.交易方向_提前购回.getValue());
+        pageParam.put("prodType2_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        pageParam.put("prodType2_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         Page<DayEndAccountDto> result = super.queryForPage(page, length, () -> dayEndAccountMapper.findAccountInfo(pageParam));
         for(DayEndAccountDto dto:result.getRoot()){
             if(StringUtil.isNotEmpty(dto.getFinprodId())){
@@ -427,10 +436,10 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             if (StringUtil.isNotEmpty(stlSecReconDeal.getPs())) {
                 localPlanSearchInfo.setPs(stlSecReconDeal.getPs());
             }
-            // 期限品种
-            if (StringUtil.isNotEmpty(stlSecReconDeal.getTermType())) {
-                localPlanSearchInfo.setTermType(stlSecReconDeal.getTermType());
-            }
+//            // 期限品种
+//            if (StringUtil.isNotEmpty(stlSecReconDeal.getTermType())) {
+//                localPlanSearchInfo.setTermType(stlSecReconDeal.getTermType());
+//            }
             // 证券账户
             if (StringUtil.isNotEmpty(stlSecReconDeal.getSecAcctId())) {
                 localPlanSearchInfo.setSecAcctId(stlSecReconDeal.getSecAcctId());
