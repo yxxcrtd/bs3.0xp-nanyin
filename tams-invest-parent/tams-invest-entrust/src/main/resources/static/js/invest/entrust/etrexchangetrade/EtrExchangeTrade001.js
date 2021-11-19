@@ -1202,13 +1202,15 @@
      */
     var getSecIdSelectObjectData = function(secId) {
         var tradePlat = SHARES_TRADE_PLATFORM_02;
+        var tradePlat_05 = null;
         if(currentTab == 'dz') {
             tradePlat = SHARES_TRADE_PLATFORM_04;
+            tradePlat_05 = SHARES_TRADE_PLATFORM_05;
         } else if(currentTab == 'gd') {
             tradePlat = SHARES_TRADE_PLATFORM_03;
         }
         var result = {};
-        var param = {secId:secId, tradePlat:tradePlat};
+        var param = {secId:secId, tradePlat:tradePlat,tradePlat_05:tradePlat_05};
         Joyin.ajaxSync(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/getFinprodMarketInfo', param, function(page) {
             if(page && page.root && page.root.length > 0) {
                 result = page.root[0].object || {};
