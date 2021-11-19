@@ -64,8 +64,8 @@ $(function() {
          */
         cols: [[
             { title: 'DayEndAccount001.dzylb',align:'center',sortable: false, colspan: 6}
-            ,{ title: 'DayEndAccount001.cnqssj',align:'center',sortable: false, colspan: 8}
-            ,{ title: 'DayEndAccount001.qsdzdsj',align:'center',sortable: false, colspan: 8}
+            ,{ title: 'DayEndAccount001.cnqssj',align:'center',sortable: false, colspan: 7}
+            ,{ title: 'DayEndAccount001.qsdzdsj',align:'center',sortable: false, colspan: 7}
             , {field: 'seqNo', width: 150, visible: false}
             ,{field:'operation', title: 'SysCommon.operation',rowspan: 2, type:'action', buttons: ['edit']}
         ],[
@@ -185,7 +185,8 @@ $(function() {
         });
         // 绑定查询事件
         $('#DayEndAccount001_btn_account').click(function() {
-            Joyin.ajaxJson(basePath + 'invest/basicdata/dayendaccount/DayEndAccount001/qryAccount', getSearchParams(), function(result) {
+            var dataList = table.getAllCheckedRows();
+            Joyin.ajaxJson(basePath + 'invest/basicdata/dayendaccount/DayEndAccount001/qryAccount', dataList, function(result) {
                 if (result.setMessage != null) {
                     layer.alert(result.setMessage);
                 } else {

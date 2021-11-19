@@ -12,20 +12,19 @@ import com.joyintech.service.basicdata.dayendaccount.dto.*;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.reconciliation.dao.ReconciliationCommonMapper;
 import com.joyintech.tams.invest.common.reconciliation.dto.AccountFeePlan;
 import com.joyintech.tams.invest.common.reconciliation.dto.AccountPlanSearchInfo;
 import com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto;
 import com.joyintech.tams.invest.common.reconciliation.service.ReconciliationCommonService;
+import com.joyintech.tams.invest.common.service.BatchManualExcuteService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author chengzhong
@@ -50,12 +49,20 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
     @Autowired
     private SettleTransDataMapper settleTransDataMapper;
 
+    @Autowired
+    private SettleTransDataStatusMapper settleTransDataStatusMapper;
 
     @Autowired
     private StlSecReconDealMapper stlSecReconDealMapper;
 
     @Autowired
     private ReconciliationCommonService reconciliationCommonService;
+
+    @Autowired
+    private ReconciliationCommonMapper reconciliationCommonMapper;
+
+    @Autowired
+    private BatchManualExcuteService batchManualExcuteService;
 
     /**
      * 平台日获取接口
@@ -116,65 +123,214 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                 () -> dayEndAccountMapper.queryAssetCode(param));
     }
 
-    public AccountResult qryAccount(Map<String, Object> param) {
-        Object portfolioIdObj = param.get("portfolioId");
-        if (portfolioIdObj != null) {
-            param.put("portfolioIdList",
-                    StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioIdObj));
-        }
-        else {
-            param.put("portfolioIdList", new ArrayList<>());
-        }
+    public AccountResult qryAccount(List<DayEndAccountDto> dtoList) {
         AccountResult result = new AccountResult();
         //对账前check
-//        if (!checkAccount(result)) {
-//            return result;
-//        }
+        if (!checkAccount(result, dtoList)) {
+            return result;
+        }
         //处理对账逻辑
-        chuliAccount(param);
+        chuliAccount(dtoList);
+        //触发下一步的批处理任务
+        triggerNextBatchTask();
         return result;
     }
 
-    private boolean checkAccount(AccountResult result) {
+    /**
+     * 触发下一步的批处理任务
+     */
+    private void triggerNextBatchTask(){
+        Map<String, Object> param = new HashMap<>();
+        param.put("CHECK_RESULT_0", DictCodeListExt3.对账状态结果_不一致.getValue());
+        // 查询对账结果不一致的数量
+        int count = reconciliationCommonMapper.queryCheckDisaccordCount(param);
+        if(count != 0){
+            param.put("beanNames", Arrays.asList("stlSettleTransDataGatherTask","stlDownDataGatherTask"));
+            if(!param.containsKey("execDate")){
+                param.put("execDate", com.joyintech.background.component.common.pack.common.util.DateUtil.format(iPlatformDate.getSysDate(),"yyyyMMdd"));
+            }
+            batchManualExcuteService.execute(param);
+        }
+    }
+
+    private boolean checkAccount(AccountResult result, List<DayEndAccountDto> dtoList) {
         Map<String, Object> param = new HashMap<String, Object>();
-        String sysDate = iPlatformDate.getSysDateStr();
-        //券商对账单是否解析
-        param.put("sysdate", sysDate);
-        if (dayEndAccountMapper.queryStlSecReconDealCount(param) <= 0) {
-            result.setMessage("请读入券商对账单");
+        if(CollectionUtils.isEmpty(dtoList)){
+            result.setMessage("请选择对账记录");
             return false;
         }
-        //清算数据是否解析
-        if (dayEndAccountMapper.querySettleTransDataCount(param) <= 0) {
-            result.setMessage("请读入中登清算数据");
-            return false;
-        }
-        //是否设置对账维度
-        param.put("paraCode", DictCodeListStl.参数代码_对账维度.getValue());
-        List<StlSecReconPara> stlSecReconParaList = dayEndAccountMapper.queryAccountPara(param);
-        if (stlSecReconParaList == null || stlSecReconParaList.size() <= 0) {
-            result.setMessage("对账参数未设置，请设置后再进行对账");
-            return false;
+        for(DayEndAccountDto dto:dtoList){
+            if(!DictCodeListExt3.对账状态结果_待处理.getValue().equals(dto.getCheckResult())
+                    && !DictCodeListExt3.对账状态结果_不一致.getValue().equals(dto.getCheckResult())){
+                result.setMessage("请选择状态为不一致和待处理的对账记录");
+                return false;
+            }
         }
         return true;
     }
 
     /**
      * 处理对账
-     * @param param
+     * @param dtoList
      */
-    private void chuliAccount(Map<String, Object> param) {
-        String sysDate = iPlatformDate.getSysDateStr();
-        param.put("sysdate", sysDate);
-        param.put("PARA_CODE_02", DictCodeListStl.参数代码_对账维度.getValue());
-        param.put("PARA_VALUE_01", DictCodeListStl.对账维度_证券汇总.getValue());
-        param.put("PARA_VALUE_02", DictCodeListStl.对账维度_委托汇总.getValue());
-        param.put("PARA_VALUE_03", DictCodeListStl.对账维度_成交明细.getValue());
-        param.put("CHECK_RESULT_0", DictCodeListExt3.对账状态结果_不一致.getValue());
-        //获取待处理的对账数据
-        List<DayEndAccountDaichuliDto> list = dayEndAccountMapper.queryAccountDaichuli(param);
-        //处理对账逻辑
-        reconciliationCommonService.executeReconciliation(list);
+    private void chuliAccount(List<DayEndAccountDto> dtoList) {
+        if(CollectionUtils.isEmpty(dtoList)){
+            return;
+        }
+        for(DayEndAccountDto dto : dtoList){
+            if(DictCodeListExt3.对账状态结果_不一致.getValue().equals(dto.getCheckResult())){
+                // 查询成交明细数据
+                List<SettleTransData> settleTransDatas = querySettleTransDatas(dto);
+                // 更新成交明细数据
+                updateSettleTransDatas(dto, settleTransDatas);
+                // 更新成交明细状态表
+                updateSettleTransDataStatus(dto, settleTransDatas);
+                // 更新券商对账单结果表
+                StlSecRecon stlSecRecon = new StlSecRecon();
+                stlSecRecon.setSeqNo(dto.getSeqNo());
+                stlSecRecon.setCheckResult(DictCodeListExt3.对账状态结果_手工完成.getValue());
+                stlSecReconMapper.updateByPrimaryKeySelective(stlSecRecon);
+            }else if(DictCodeListExt3.对账状态结果_待处理.getValue().equals(dto.getCheckResult())){
+                // 查询成交明细数据
+                List<SettleTransData> settleTransDatas = querySettleTransDatas(dto);
+                // 更新成交明细数据
+                updateSettleTransDatas(dto, settleTransDatas);
+                // 更新成交明细状态表
+                updateSettleTransDataStatus(dto, settleTransDatas);
+            }
+        }
+    }
+
+    /**
+     * 查询成交明细数据
+     * @param dto
+     * @return
+     */
+    private List<SettleTransData> querySettleTransDatas(DayEndAccountDto dto){
+        List<SettleTransData> settleTransDatas = new ArrayList<>();
+        if(DictCodeListStl.对账维度_委托汇总.getValue().equals(dto.getStlSecDeme())){
+            //调用【清算明细查询】
+            Map<String, Object> param = new HashMap<>();
+            param.put("applyTradeId", dto.getEntrustTradeId());
+            param.put("dealDate", dto.getSettleDate());
+            param.put("seatNumber", dto.getSeatNumber());
+            settleTransDatas = reconciliationCommonMapper.getSettleTransData(param);
+        }else if(DictCodeListStl.对账维度_证券汇总.getValue().equals(dto.getStlSecDeme())){
+            //调用【清算明细查询】
+            Map<String, Object> param = new HashMap<>();
+            param.put("finprodId", dto.getFinprodId());
+            param.put("dealDate", dto.getSettleDate());
+            param.put("seatNumber", dto.getSeatNumber());
+            settleTransDatas = reconciliationCommonMapper.getSettleTransData(param);
+        }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getStlSecDeme())){
+            //调用【清算明细查询】
+            Map<String, Object> param = new HashMap<>();
+            param.put("tradeId", dto.getTradeId());
+            settleTransDatas = reconciliationCommonMapper.getSettleTransData(param);
+        }
+        return settleTransDatas;
+    }
+
+    /**
+     * 更新成交明细数据
+     * @param dto
+     * @param settleTransDatas
+     */
+    private void updateSettleTransDatas(DayEndAccountDto dto, List<SettleTransData> settleTransDatas){
+        if(CollectionUtils.isEmpty(settleTransDatas)){
+            return;
+        }
+        if(DictCodeListExt3.对账状态结果_不一致.getValue().equals(dto.getCheckResult())){
+            boolean isModify = false;
+            // 判断成交明细数据是否有人工修改
+            for(SettleTransData settleTransData : settleTransDatas){
+                if(DictCodeListExt1.是否_是.getValue().equals(settleTransData.getIsModify())){
+                    isModify = true;
+                }
+            }
+            if(!isModify){ // // 如果成交明细无人工修改,则用券商对账单数据更新成交明细数据
+                if(DictCodeListStl.对账维度_委托汇总.getValue().equals(dto.getStlSecDeme())
+                        || DictCodeListStl.对账维度_证券汇总.getValue().equals(dto.getStlSecDeme())){
+                    // 处理误差值
+                    DayEndAccountDaichuliDto daichuliDto = covertToDaichuliDto(dto);
+                    reconciliationCommonService.chuliWucha(daichuliDto);
+
+                    // 重新结算交易明细数据
+                    SettleTransData std = reconciliationCommonService.getReCalSettleTransData(settleTransDatas.get(0),daichuliDto);
+                    settleTransDataMapper.updateByPrimaryKeySelective(std);
+                }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getStlSecDeme())){
+                    for(SettleTransData settleTransData : settleTransDatas){
+                        settleTransData.setTradeId(dto.getTradeId()); // 流水号
+                        settleTransData.setCommissionAmt(dto.getCommissionAmt()); // 佣金
+                        settleTransData.setJsfAmt(dto.getJsfAmt()); // 经手费
+                        settleTransData.setZgfAmt(dto.getZgfAmt()); // 证管费
+                        settleTransData.setStampFee(dto.getStampFee()); // 印花税
+                        settleTransData.setSettleFee(dto.getSettleFee()); // 结算费
+                        settleTransData.setTradeAmt(dto.getTradeAmt()); // 成交金额
+                        settleTransData.setShareAmt(dto.getTradeNum()); // 成交份额
+                        settleTransDataMapper.updateByPrimaryKeySelective(settleTransData);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 数据转换
+     * @param dto
+     * @return
+     */
+    private DayEndAccountDaichuliDto covertToDaichuliDto(DayEndAccountDto dto){
+        DayEndAccountDaichuliDto daichuliDto = new DayEndAccountDaichuliDto();
+        daichuliDto.setSeqNo(dto.getSeqNo());
+        daichuliDto.setPs(dto.getPs());
+        daichuliDto.setSecAcctId(dto.getSecAcctId());
+        daichuliDto.setFinprodId(dto.getFinprodId());
+        daichuliDto.setTradeMarket(dto.getTradeMarket());
+        daichuliDto.setFinprodType(dto.getFinprodType());
+        daichuliDto.setCustomerId(dto.getCustomerId());
+        daichuliDto.setJsfAmt(dto.getJsfAmt()); // 经手费
+        daichuliDto.setJsfAmt2(dto.getJsfAmt2()); // 清算经手费
+        daichuliDto.setZgfAmt(dto.getZgfAmt()); // 证管费
+        daichuliDto.setZgfAmt2(dto.getZgfAmt2()); // 清算证管费
+        daichuliDto.setSettleFee(dto.getSettleFee()); // 结算费
+        daichuliDto.setSettleFee2(dto.getSettleFee2()); // 清算结算费
+        daichuliDto.setGhfAmt(dto.getGhfAmt()); // 过户费
+        daichuliDto.setGhfAmt2(dto.getGhfAmt2()); // 清算过户费
+        daichuliDto.setSxfAmt(dto.getSxfAmt()); // 手续费
+        daichuliDto.setSxfAmt2(dto.getSxfAmt2()); // 清算手续费
+        daichuliDto.setCommissionAmt(dto.getCommissionAmt()); // 佣金
+        daichuliDto.setCommissionAmt2(dto.getCommissionAmt2()); // 清算佣金
+        daichuliDto.setStampFee(dto.getStampFee()); // 印花税
+        daichuliDto.setStampFee2(dto.getStampFee2()); // 清算印花税
+        daichuliDto.setTradeAmt(dto.getTradeAmt()); // 成交金额
+        daichuliDto.setTradeAmt2(dto.getTradeAmt2()); // 清算成交金额
+        daichuliDto.setTradeNum(dto.getTradeNum()); // 成交数量
+        daichuliDto.setTradeNum2(dto.getTradeNum2()); // 清算成交数量
+        return daichuliDto;
+    }
+
+    /**
+     * 更新成交明细状态表
+     * @param dto
+     * @param settleTransDatas
+     */
+    private void updateSettleTransDataStatus(DayEndAccountDto dto, List<SettleTransData> settleTransDatas){
+        for(SettleTransData settleTransData : settleTransDatas){
+            if(DictCodeListExt3.对账状态结果_不一致.getValue().equals(dto.getCheckResult())){
+                // 更新成交明细数据状态表
+                SettleTransDataStatus status = new SettleTransDataStatus();
+                status.setTradeId(settleTransData.getTradeId());
+                status.setCheckResult(DictCodeListExt3.对账状态结果_手工完成.getValue());
+                settleTransDataStatusMapper.updateByPrimaryKeySelective(status);
+            }else if(DictCodeListExt3.对账状态结果_待处理.getValue().equals(dto.getCheckResult())){
+                // 插入成交明细数据状态表
+                SettleTransDataStatus status = new SettleTransDataStatus();
+                status.setTradeId(settleTransData.getTradeId());
+                status.setCheckResult(DictCodeListExt3.对账状态结果_手工完成.getValue());
+                settleTransDataStatusMapper.insertSelective(status);
+            }
+        }
     }
 
     public DayEndAccount002Dto getReconDealInfo(Map<String, Object> param) {
@@ -481,14 +637,15 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                 //data.setTradeAmt(ArithmeticUtil.doAdd(data.getTradeAmt(), dto.getTradeAmt2()));
                 data.setTradeAmt(ArithmeticUtil.doAdd(dto.getTradeAmt(), dto.getTradeAmt2()));
                 data.setTradeId(dto.getTradeId());
+                data.setIsModify(DictCodeListExt1.是否_是.getValue());
                 settleTransDataMapper.updateByPrimaryKeySelective(data);
             }
-
-            //新数据进行对账
-            //处理对账逻辑
-            Map<String, Object> param = new HashMap<String, Object>();
-            param.put("seqNo", entity.getSeqNo());
-            chuliAccount(param);
+//
+//            //新数据进行对账
+//            //处理对账逻辑
+//            Map<String, Object> param = new HashMap<String, Object>();
+//            param.put("seqNo", entity.getSeqNo());
+//            chuliAccount(param);
         }
     }
 

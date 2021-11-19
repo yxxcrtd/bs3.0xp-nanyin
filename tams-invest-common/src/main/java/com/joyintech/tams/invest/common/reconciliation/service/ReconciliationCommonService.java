@@ -106,143 +106,139 @@ public class ReconciliationCommonService {
         }
         //其他费用拆分（经手费+证管费+印花税+结算费+过户费+手续费）
         chuliOtherFee(dto);
-        if(DictCodeListExt3.对账状态结果_待处理.getValue().equals(dto.getCheckResult())){
-            dto.setCheckResult(DictCodeListExt3.对账状态结果_手工完成.getValue());
-        }else{
-            //误差不为空时
-            if (wuChaZhi != null) {
-                //if （abs（待对账数据.成交金额 - 待对账数据.清算成交金额）<= 变量.误差 and abs（待对账数据.成交数量- 待对账数据.清算成交数量）<=变量.误差 and
-                //abs（待对账数据.佣金- 待对账数据.清算佣金）<= 变量.误差 and abs（待对账数据.印花税- 待对账数据.清算印花税）<=变量.误差 and
-                //abs（待对账数据.经手费- 待对账数据.清算经手费）<= 变量.误差 and abs（待对账数据.证管费- 待对账数据.清算证管费）<= 变量.误差 and
-                //abs（待对账数据.结算费- 待对账数据.清算结算费）< 变量.误差 and and abs（待对账数据.成交数量- 待对账数据.清算成交数量<= 变量.误差
-                //and		待对账数据.金融产品类型 = 待对账数据.清算金融产品类型 and 待对账数据.交易方向 = 待对账数据.清算交易方向
-                //and		待对账数据.交易场所 = 待对账数据.清算交易场所 and 待对账数据.交易日期 = 待对账数据.清算交易日期
-                //and		待对账数据.证券账户 = 待对账数据.清算证券账户
-                BigDecimal otherFee = ArithmeticUtil.doAdd(dto.getJsfAmt2(),dto.getZgfAmt2(),dto.getSettleFee2());
-                if (ArithmeticUtil.subtract(dto.getTradeAmt(), dto.getTradeAmt2()).abs().compareTo(wuChaZhi) <= 0
-                        && ArithmeticUtil.subtract(dto.getTradeNum(), dto.getTradeNum2()).abs().compareTo(wuChaZhi) <= 0
-                        && ArithmeticUtil.subtract(dto.getStampFee(), dto.getStampFee2()).abs().compareTo(wuChaZhi) <= 0
+        //误差不为空时
+        if (wuChaZhi != null) {
+            //if （abs（待对账数据.成交金额 - 待对账数据.清算成交金额）<= 变量.误差 and abs（待对账数据.成交数量- 待对账数据.清算成交数量）<=变量.误差 and
+            //abs（待对账数据.佣金- 待对账数据.清算佣金）<= 变量.误差 and abs（待对账数据.印花税- 待对账数据.清算印花税）<=变量.误差 and
+            //abs（待对账数据.经手费- 待对账数据.清算经手费）<= 变量.误差 and abs（待对账数据.证管费- 待对账数据.清算证管费）<= 变量.误差 and
+            //abs（待对账数据.结算费- 待对账数据.清算结算费）< 变量.误差 and and abs（待对账数据.成交数量- 待对账数据.清算成交数量<= 变量.误差
+            //and		待对账数据.金融产品类型 = 待对账数据.清算金融产品类型 and 待对账数据.交易方向 = 待对账数据.清算交易方向
+            //and		待对账数据.交易场所 = 待对账数据.清算交易场所 and 待对账数据.交易日期 = 待对账数据.清算交易日期
+            //and		待对账数据.证券账户 = 待对账数据.清算证券账户
+            BigDecimal otherFee = ArithmeticUtil.doAdd(dto.getJsfAmt2(),dto.getZgfAmt2(),dto.getSettleFee2());
+            if (ArithmeticUtil.subtract(dto.getTradeAmt(), dto.getTradeAmt2()).abs().compareTo(wuChaZhi) <= 0
+                    && ArithmeticUtil.subtract(dto.getTradeNum(), dto.getTradeNum2()).abs().compareTo(wuChaZhi) <= 0
+                    && ArithmeticUtil.subtract(dto.getStampFee(), dto.getStampFee2()).abs().compareTo(wuChaZhi) <= 0
 //                        && ArithmeticUtil.subtract(dto.getOtherFeeamt(), otherFee).abs().compareTo(wuChaZhi) <= 0
-                        && ArithmeticUtil.subtract(dto.getGhfAmt(), dto.getGhfAmt2()).abs().compareTo(wuChaZhi) <= 0
-                        && ArithmeticUtil.subtract(dto.getSxfAmt(), dto.getSxfAmt2()).abs().compareTo(wuChaZhi) <= 0
-                        && ArithmeticUtil.subtract(dto.getCommissionAmt(), dto.getCommissionAmt2()).abs().compareTo(wuChaZhi) <= 0
-                        && dto.getFinprodType() != null && dto.getFinprodType().equals(dto.getFinprodType2())
-                        && dto.getPs() != null && dto.getPs().equals(dto.getPs2())
-                        && dto.getTradeMarket() != null && dto.getTradeMarket().equals(dto.getTradeMarket2())
-                        && dto.getTradeDate() != null && dto.getTradeDate().compareTo(dto.getTradeDate2()) == 0
-                        && dto.getSecAcctId() != null && dto.getSecAcctId().equals(dto.getSecAcctId2())) {
-                    dto.setCheckResult(DictCodeListExt3.对账状态结果_一致.getValue());
-                    //误差处理
-                    chuliWucha(dto);
-                } else {
-                    dto.setCheckResult(DictCodeListExt3.对账状态结果_不一致.getValue());
-                    String checkInfo = "";
-                    //待对账数据.成交金额 ！= 待对账数据.清算成交金额
-                    if (ArithmeticUtil.subtract(dto.getTradeAmt(), dto.getTradeAmt2()).compareTo(BigDecimal.ZERO) != 0) {
-                        String tradeAmt2 = dto.getTradeAmt2() == null ? "空" : dto.getTradeAmt2().toString();
-                        String tradeAmt = dto.getTradeAmt() == null ? "空" : dto.getTradeAmt().toString();
-                        checkInfo = checkInfo + "成交金额结算数据【" + tradeAmt2 + "】对账单【" + tradeAmt + "】\n";
-                    }
-                    //待对账数据.佣金 ！= 待对账数据.清算佣金
-                    if (ArithmeticUtil.subtract(dto.getCommissionAmt(), dto.getCommissionAmt2()).compareTo(BigDecimal.ZERO) != 0) {
-                        String commissionAmt2 = dto.getCommissionAmt2() == null ? "空" : dto.getCommissionAmt2().toString();
-                        String commissionAmt = dto.getCommissionAmt() == null ? "空" : dto.getCommissionAmt().toString();
-                        checkInfo = checkInfo + "佣金结算数据【" + commissionAmt2 + "】对账单【" + commissionAmt + "】\n";
-                    }
-                    //待对账数据.证管费 ！= 待对账数据.清算证管费
-                    if (ArithmeticUtil.subtract(dto.getZgfAmt(), dto.getZgfAmt2()).compareTo(BigDecimal.ZERO) != 0) {
-                        String zgfAmt2 = dto.getZgfAmt2() == null ? "空" : dto.getZgfAmt2().toString();
-                        String zgfAmt = dto.getZgfAmt() == null ? "空" : dto.getZgfAmt().toString();
-                        checkInfo = checkInfo + "证管费结算数据【" + zgfAmt2 + "】对账单【" + zgfAmt + "】\n";
-                    }
-                    // 待对账数据.印花税 ！= 待对账数据.清算印花税
-                    if (ArithmeticUtil.subtract(dto.getStampFee(), dto.getStampFee2()).compareTo(BigDecimal.ZERO) != 0) {
-                        String stampFee2 = dto.getStampFee2() == null ? "空" : dto.getStampFee2().toString();
-                        String stampFee = dto.getStampFee() == null ? "空" : dto.getStampFee().toString();
-                        checkInfo = checkInfo + "印花税结算数据【" + stampFee2 + "】对账单【" + stampFee + "】\n";
-                    }
-                    //待对账数据.结算费 ！= 待对账数据.清算结算费
-                    if (ArithmeticUtil.subtract(dto.getSettleFee(), dto.getSettleFee2()).compareTo(BigDecimal.ZERO) != 0) {
-                        String settleFee2 = dto.getSettleFee2() == null ? "空" : dto.getSettleFee2().toString();
-                        String settleFee = dto.getSettleFee() == null ? "空" : dto.getSettleFee().toString();
-                        checkInfo = checkInfo + "结算费结算数据【" + settleFee2 + "】对账单【" + settleFee + "】\n";
-                    }
-                    // 待对账数据.过户费 ！= 待对账数据.清算过户费
-                    if (ArithmeticUtil.subtract(dto.getGhfAmt(), dto.getGhfAmt2()).compareTo(BigDecimal.ZERO) != 0) {
-                        String getGhfAmt2 = dto.getGhfAmt2() == null ? "空" : dto.getGhfAmt2().toString();
-                        String getGhfAmt = dto.getGhfAmt() == null ? "空" : dto.getGhfAmt().toString();
-                        checkInfo = checkInfo + "过户费结算数据【" + getGhfAmt2 + "】对账单【" + getGhfAmt + "】\n";
-                    }
-                    // 待对账数据.手续费 ！= 待对账数据.清算手续费
-                    if (ArithmeticUtil.subtract(dto.getSxfAmt(), dto.getSxfAmt2()).compareTo(BigDecimal.ZERO) != 0) {
-                        String getSxfAmt2 = dto.getSxfAmt2() == null ? "空" : dto.getSxfAmt2().toString();
-                        String getSxfAmt = dto.getSxfAmt() == null ? "空" : dto.getSxfAmt().toString();
-                        checkInfo = checkInfo + "手续费结算数据【" + getSxfAmt2 + "】对账单【" + getSxfAmt + "】\n";
-                    }
-                    // 待对账数据.成交数量 ！= 待对账数据.清算成交数量
-                    if (ArithmeticUtil.subtract(dto.getTradeNum(), dto.getTradeNum2()).compareTo(BigDecimal.ZERO) != 0) {
-                        String getTradeNum2 = dto.getTradeNum2() == null ? "空" : dto.getTradeNum2().toString();
-                        String getTradeNum = dto.getTradeNum() == null ? "空" : dto.getTradeNum().toString();
-                        checkInfo = checkInfo + "成交数量结算数据【" + getTradeNum2 + "】对账单【" + getTradeNum + "】\n";
-                    }
-                    if (dto.getFinprodType() !=null && !dto.getFinprodType().equals(dto.getFinprodType2())) {
-                        checkInfo = checkInfo + "金融产品类型结算数据【" + dto.getFinprodType2() + "】对账单【" + dto.getFinprodType() + "】\n";
-                    }
-                    //待对账数据.交易方向 ！= 待对账数据.清算交易方向
-                    if (dto.getPs() != null && !dto.getPs().equals(dto.getPs2())) {
-                        checkInfo = checkInfo + "交易方向结算数据【" + dto.getPs2() + "】对账单【" + dto.getPs() + "】\n";
-                    }
-                    //待对账数据.交易场所 ！= 待对账数据.清算交易场所
-                    if (dto.getTradeMarket() != null && !dto.getTradeMarket().equals(dto.getTradeMarket2())) {
-                        checkInfo = checkInfo + "交易场所结算数据【" + dto.getTradeMarket2() + "】对账单【" + dto.getTradeMarket() + "】\n";
-                    }
-                    //待对账数据.交易日期 ！= 待对账数据.清算交易日期
-                    if (dto.getTradeDate() != null && dto.getTradeDate().equals(dto.getTradeDate2())) {
-                        checkInfo = checkInfo + "交易日期结算数据【" + DateUtil.format(dto.getTradeDate2()) + "】对账单【" + DateUtil.format(dto.getTradeDate()) + "】\n";
-                    }
-                    //待对账数据.证券账户 ！= 待对账数据.清算证券账户
-                    if (dto.getSecAcctId() != null && !dto.getSecAcctId().equals(dto.getSecAcctId2())) {
-                        checkInfo = checkInfo + "证券账户结算数据【" + dto.getSecAcctId2() + "】对账单【" + dto.getSecAcctId() + "】\n";
-                    }
-                    dto.setReconInfo(checkInfo);
-                }
+                    && ArithmeticUtil.subtract(dto.getGhfAmt(), dto.getGhfAmt2()).abs().compareTo(wuChaZhi) <= 0
+                    && ArithmeticUtil.subtract(dto.getSxfAmt(), dto.getSxfAmt2()).abs().compareTo(wuChaZhi) <= 0
+                    && ArithmeticUtil.subtract(dto.getCommissionAmt(), dto.getCommissionAmt2()).abs().compareTo(wuChaZhi) <= 0
+                    && dto.getFinprodType() != null && dto.getFinprodType().equals(dto.getFinprodType2())
+                    && dto.getPs() != null && dto.getPs().equals(dto.getPs2())
+                    && dto.getTradeMarket() != null && dto.getTradeMarket().equals(dto.getTradeMarket2())
+                    && dto.getTradeDate() != null && dto.getTradeDate().compareTo(dto.getTradeDate2()) == 0
+                    && dto.getSecAcctId() != null && dto.getSecAcctId().equals(dto.getSecAcctId2())) {
+                dto.setCheckResult(DictCodeListExt3.对账状态结果_一致.getValue());
+                //误差处理
+                chuliWucha(dto);
             } else {
-                //没有误差值时
-                //	待对账数据.金融产品类型 = 待对账数据.清算金融产品类型 and 待对账数据.交易方向 = 待对账数据.清算交易方向
-                //	待对账数据.交易场所 = 待对账数据.清算交易场所 and 待对账数据.交易日期 = 待对账数据.清算交易日期
-                //		待对账数据.证券账户 = 待对账数据.清算证券账户
-                if (dto.getFinprodType() != null && dto.getFinprodType().equals(dto.getFinprodType2())
-                        && dto.getPs() != null && dto.getPs().equals(dto.getPs2())
-                        && dto.getTradeMarket() != null && dto.getTradeMarket().equals(dto.getTradeMarket2())
-                        && dto.getTradeDate() != null && dto.getTradeDate().equals(dto.getTradeDate2())
-                        && dto.getSecAcctId() != null && dto.getSecAcctId().equals(dto.getSecAcctId2())) {
-                    dto.setCheckResult(DictCodeListExt3.对账状态结果_一致.getValue());
-                    //误差处理
-                    chuliWucha(dto);
-                } else {
-                    dto.setCheckResult(DictCodeListExt3.对账状态结果_不一致.getValue());
-                    String checkInfo = "";
-                    if (dto.getFinprodType() !=null && !dto.getFinprodType().equals(dto.getFinprodType2())) {
-                        checkInfo = checkInfo + "金融产品类型结算数据【" + dto.getFinprodType2() + "】对账单【" + dto.getFinprodType() + "】\n";
-                    }
-                    //待对账数据.交易方向 ！= 待对账数据.清算交易方向
-                    if (dto.getPs() != null && !dto.getPs().equals(dto.getPs2())) {
-                        checkInfo = checkInfo + "交易方向结算数据【" + dto.getPs2() + "】对账单【" + dto.getPs() + "】\n";
-                    }
-                    //待对账数据.交易场所 ！= 待对账数据.清算交易场所
-                    if (dto.getTradeMarket() != null && !dto.getTradeMarket().equals(dto.getTradeMarket2())) {
-                        checkInfo = checkInfo + "交易场所结算数据【" + dto.getTradeMarket2() + "】对账单【" + dto.getTradeMarket() + "】\n";
-                    }
-                    //待对账数据.交易日期 ！= 待对账数据.清算交易日期
-                    if (dto.getTradeDate() != null && dto.getTradeDate().equals(dto.getTradeDate2())) {
-                        checkInfo = checkInfo + "交易日期结算数据【" + DateUtil.format(dto.getTradeDate2()) + "】对账单【" + DateUtil.format(dto.getTradeDate()) + "】\n";
-                    }
-                    //待对账数据.证券账户 ！= 待对账数据.清算证券账户
-                    if (dto.getSecAcctId() != null && !dto.getSecAcctId().equals(dto.getSecAcctId2())) {
-                        checkInfo = checkInfo + "证券账户结算数据【" + dto.getSecAcctId2() + "】对账单【" + dto.getSecAcctId() + "】\n";
-                    }
-                    dto.setReconInfo(checkInfo);
+                dto.setCheckResult(DictCodeListExt3.对账状态结果_不一致.getValue());
+                String checkInfo = "";
+                //待对账数据.成交金额 ！= 待对账数据.清算成交金额
+                if (ArithmeticUtil.subtract(dto.getTradeAmt(), dto.getTradeAmt2()).compareTo(BigDecimal.ZERO) != 0) {
+                    String tradeAmt2 = dto.getTradeAmt2() == null ? "空" : dto.getTradeAmt2().toString();
+                    String tradeAmt = dto.getTradeAmt() == null ? "空" : dto.getTradeAmt().toString();
+                    checkInfo = checkInfo + "成交金额结算数据【" + tradeAmt2 + "】对账单【" + tradeAmt + "】\n";
                 }
+                //待对账数据.佣金 ！= 待对账数据.清算佣金
+                if (ArithmeticUtil.subtract(dto.getCommissionAmt(), dto.getCommissionAmt2()).compareTo(BigDecimal.ZERO) != 0) {
+                    String commissionAmt2 = dto.getCommissionAmt2() == null ? "空" : dto.getCommissionAmt2().toString();
+                    String commissionAmt = dto.getCommissionAmt() == null ? "空" : dto.getCommissionAmt().toString();
+                    checkInfo = checkInfo + "佣金结算数据【" + commissionAmt2 + "】对账单【" + commissionAmt + "】\n";
+                }
+                //待对账数据.证管费 ！= 待对账数据.清算证管费
+                if (ArithmeticUtil.subtract(dto.getZgfAmt(), dto.getZgfAmt2()).compareTo(BigDecimal.ZERO) != 0) {
+                    String zgfAmt2 = dto.getZgfAmt2() == null ? "空" : dto.getZgfAmt2().toString();
+                    String zgfAmt = dto.getZgfAmt() == null ? "空" : dto.getZgfAmt().toString();
+                    checkInfo = checkInfo + "证管费结算数据【" + zgfAmt2 + "】对账单【" + zgfAmt + "】\n";
+                }
+                // 待对账数据.印花税 ！= 待对账数据.清算印花税
+                if (ArithmeticUtil.subtract(dto.getStampFee(), dto.getStampFee2()).compareTo(BigDecimal.ZERO) != 0) {
+                    String stampFee2 = dto.getStampFee2() == null ? "空" : dto.getStampFee2().toString();
+                    String stampFee = dto.getStampFee() == null ? "空" : dto.getStampFee().toString();
+                    checkInfo = checkInfo + "印花税结算数据【" + stampFee2 + "】对账单【" + stampFee + "】\n";
+                }
+                //待对账数据.结算费 ！= 待对账数据.清算结算费
+                if (ArithmeticUtil.subtract(dto.getSettleFee(), dto.getSettleFee2()).compareTo(BigDecimal.ZERO) != 0) {
+                    String settleFee2 = dto.getSettleFee2() == null ? "空" : dto.getSettleFee2().toString();
+                    String settleFee = dto.getSettleFee() == null ? "空" : dto.getSettleFee().toString();
+                    checkInfo = checkInfo + "结算费结算数据【" + settleFee2 + "】对账单【" + settleFee + "】\n";
+                }
+                // 待对账数据.过户费 ！= 待对账数据.清算过户费
+                if (ArithmeticUtil.subtract(dto.getGhfAmt(), dto.getGhfAmt2()).compareTo(BigDecimal.ZERO) != 0) {
+                    String getGhfAmt2 = dto.getGhfAmt2() == null ? "空" : dto.getGhfAmt2().toString();
+                    String getGhfAmt = dto.getGhfAmt() == null ? "空" : dto.getGhfAmt().toString();
+                    checkInfo = checkInfo + "过户费结算数据【" + getGhfAmt2 + "】对账单【" + getGhfAmt + "】\n";
+                }
+                // 待对账数据.手续费 ！= 待对账数据.清算手续费
+                if (ArithmeticUtil.subtract(dto.getSxfAmt(), dto.getSxfAmt2()).compareTo(BigDecimal.ZERO) != 0) {
+                    String getSxfAmt2 = dto.getSxfAmt2() == null ? "空" : dto.getSxfAmt2().toString();
+                    String getSxfAmt = dto.getSxfAmt() == null ? "空" : dto.getSxfAmt().toString();
+                    checkInfo = checkInfo + "手续费结算数据【" + getSxfAmt2 + "】对账单【" + getSxfAmt + "】\n";
+                }
+                // 待对账数据.成交数量 ！= 待对账数据.清算成交数量
+                if (ArithmeticUtil.subtract(dto.getTradeNum(), dto.getTradeNum2()).compareTo(BigDecimal.ZERO) != 0) {
+                    String getTradeNum2 = dto.getTradeNum2() == null ? "空" : dto.getTradeNum2().toString();
+                    String getTradeNum = dto.getTradeNum() == null ? "空" : dto.getTradeNum().toString();
+                    checkInfo = checkInfo + "成交数量结算数据【" + getTradeNum2 + "】对账单【" + getTradeNum + "】\n";
+                }
+                if (dto.getFinprodType() !=null && !dto.getFinprodType().equals(dto.getFinprodType2())) {
+                    checkInfo = checkInfo + "金融产品类型结算数据【" + dto.getFinprodType2() + "】对账单【" + dto.getFinprodType() + "】\n";
+                }
+                //待对账数据.交易方向 ！= 待对账数据.清算交易方向
+                if (dto.getPs() != null && !dto.getPs().equals(dto.getPs2())) {
+                    checkInfo = checkInfo + "交易方向结算数据【" + dto.getPs2() + "】对账单【" + dto.getPs() + "】\n";
+                }
+                //待对账数据.交易场所 ！= 待对账数据.清算交易场所
+                if (dto.getTradeMarket() != null && !dto.getTradeMarket().equals(dto.getTradeMarket2())) {
+                    checkInfo = checkInfo + "交易场所结算数据【" + dto.getTradeMarket2() + "】对账单【" + dto.getTradeMarket() + "】\n";
+                }
+                //待对账数据.交易日期 ！= 待对账数据.清算交易日期
+                if (dto.getTradeDate() != null && dto.getTradeDate().equals(dto.getTradeDate2())) {
+                    checkInfo = checkInfo + "交易日期结算数据【" + DateUtil.format(dto.getTradeDate2()) + "】对账单【" + DateUtil.format(dto.getTradeDate()) + "】\n";
+                }
+                //待对账数据.证券账户 ！= 待对账数据.清算证券账户
+                if (dto.getSecAcctId() != null && !dto.getSecAcctId().equals(dto.getSecAcctId2())) {
+                    checkInfo = checkInfo + "证券账户结算数据【" + dto.getSecAcctId2() + "】对账单【" + dto.getSecAcctId() + "】\n";
+                }
+                dto.setReconInfo(checkInfo);
+            }
+        } else {
+            //没有误差值时
+            //	待对账数据.金融产品类型 = 待对账数据.清算金融产品类型 and 待对账数据.交易方向 = 待对账数据.清算交易方向
+            //	待对账数据.交易场所 = 待对账数据.清算交易场所 and 待对账数据.交易日期 = 待对账数据.清算交易日期
+            //		待对账数据.证券账户 = 待对账数据.清算证券账户
+            if (dto.getFinprodType() != null && dto.getFinprodType().equals(dto.getFinprodType2())
+                    && dto.getPs() != null && dto.getPs().equals(dto.getPs2())
+                    && dto.getTradeMarket() != null && dto.getTradeMarket().equals(dto.getTradeMarket2())
+                    && dto.getTradeDate() != null && dto.getTradeDate().equals(dto.getTradeDate2())
+                    && dto.getSecAcctId() != null && dto.getSecAcctId().equals(dto.getSecAcctId2())) {
+                dto.setCheckResult(DictCodeListExt3.对账状态结果_一致.getValue());
+                //误差处理
+                chuliWucha(dto);
+            } else {
+                dto.setCheckResult(DictCodeListExt3.对账状态结果_不一致.getValue());
+                String checkInfo = "";
+                if (dto.getFinprodType() !=null && !dto.getFinprodType().equals(dto.getFinprodType2())) {
+                    checkInfo = checkInfo + "金融产品类型结算数据【" + dto.getFinprodType2() + "】对账单【" + dto.getFinprodType() + "】\n";
+                }
+                //待对账数据.交易方向 ！= 待对账数据.清算交易方向
+                if (dto.getPs() != null && !dto.getPs().equals(dto.getPs2())) {
+                    checkInfo = checkInfo + "交易方向结算数据【" + dto.getPs2() + "】对账单【" + dto.getPs() + "】\n";
+                }
+                //待对账数据.交易场所 ！= 待对账数据.清算交易场所
+                if (dto.getTradeMarket() != null && !dto.getTradeMarket().equals(dto.getTradeMarket2())) {
+                    checkInfo = checkInfo + "交易场所结算数据【" + dto.getTradeMarket2() + "】对账单【" + dto.getTradeMarket() + "】\n";
+                }
+                //待对账数据.交易日期 ！= 待对账数据.清算交易日期
+                if (dto.getTradeDate() != null && dto.getTradeDate().equals(dto.getTradeDate2())) {
+                    checkInfo = checkInfo + "交易日期结算数据【" + DateUtil.format(dto.getTradeDate2()) + "】对账单【" + DateUtil.format(dto.getTradeDate()) + "】\n";
+                }
+                //待对账数据.证券账户 ！= 待对账数据.清算证券账户
+                if (dto.getSecAcctId() != null && !dto.getSecAcctId().equals(dto.getSecAcctId2())) {
+                    checkInfo = checkInfo + "证券账户结算数据【" + dto.getSecAcctId2() + "】对账单【" + dto.getSecAcctId() + "】\n";
+                }
+                dto.setReconInfo(checkInfo);
             }
         }
     }
@@ -251,7 +247,7 @@ public class ReconciliationCommonService {
      * 处理误差，更新场内清算数据
      * @param dto
      */
-    private void chuliWucha(DayEndAccountDaichuliDto dto) {
+    public void chuliWucha(DayEndAccountDaichuliDto dto) {
         dto.setTradeAmtCe(ArithmeticUtil.subtract(dto.getTradeAmt(), dto.getTradeAmt2()));
         dto.setTradeNumCe(ArithmeticUtil.subtract(dto.getTradeNum(), dto.getTradeNum2()));
         dto.setStampFeeCe(ArithmeticUtil.subtract(dto.getStampFee(), dto.getStampFee2()));
@@ -532,125 +528,66 @@ public class ReconciliationCommonService {
     }
 
     private void saveAccountInfo(List<DayEndAccountDaichuliDto> list) {
-        List<StlSecRecon> listRecon = new ArrayList<StlSecRecon>();
-        List<StlSecReconDetail> listReconDetail = new ArrayList<StlSecReconDetail>();
         for (DayEndAccountDaichuliDto dto : list) {
-            if(DictCodeListExt3.对账状态结果_手工完成.getValue().equals(dto.getCheckResult())){
-                if(DictCodeListStl.对账维度_委托汇总.getValue().equals(dto.getParaValue())){
-                    //调用【清算明细查询】
-                    Map<String, Object> param = new HashMap<String, Object>();
-                    param.put("applyTradeId", dto.getTradeId2());
-                    param.put("dealDate", dto.getTradeDate());
-                    param.put("seatNumber", dto.getSeatNumber());
-                    List<SettleTransData> settleTransDatas = reconciliationCommonMapper.getSettleTransData(param);
-                    if(CollectionUtils.isEmpty(settleTransDatas)){
-                        continue;
-                    }
-                    SettleTransDataStatus status;
-                    for(SettleTransData settleTransData : settleTransDatas){
-                        status = new SettleTransDataStatus();
-                        status.setTradeId(settleTransData.getTradeId());
-                        status.setCheckResult(dto.getCheckResult());
-                        settleTransDataStatusMapper.insertSelective(status);
-                    }
-                }else if(DictCodeListStl.对账维度_证券汇总.getValue().equals(dto.getParaValue())){
-                    //调用【清算明细查询】
-                    Map<String, Object> param = new HashMap<String, Object>();
-                    param.put("finprodId", dto.getFinprodId());
-                    param.put("dealDate", dto.getTradeDate());
-                    param.put("seatNumber", dto.getSeatNumber());
-                    List<SettleTransData> settleTransDatas = reconciliationCommonMapper.getSettleTransData(param);
-                    if(CollectionUtils.isEmpty(settleTransDatas)){
-                        continue;
-                    }
-                    SettleTransDataStatus status;
-                    for(SettleTransData settleTransData : settleTransDatas){
-                        status = new SettleTransDataStatus();
-                        status.setTradeId(settleTransData.getTradeId());
-                        status.setCheckResult(dto.getCheckResult());
-                        settleTransDataStatusMapper.insertSelective(status);
-                    }
-                }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getParaValue())){
-                    SettleTransDataStatus status = new SettleTransDataStatus();
-                    status.setTradeId(dto.getTradeId());
-                    status.setCheckResult(dto.getCheckResult());
-                    settleTransDataStatusMapper.insertSelective(status);
-                }
-            }else{
-                //根据券商对账单删除之前的对账数据
-                stlSecReconMapper.deleteByPrimaryKey(dto.getSeqNo());
-                //封装新的对账单数据
-                StlSecRecon stlSecRecon = new StlSecRecon();
-                stlSecRecon.setSeqNo(dto.getSeqNo());
-                stlSecRecon.setCustomerId(dto.getCustomerId());
-                stlSecRecon.setPortfolioId(dto.getPortfolioId());
-                stlSecRecon.setFinprodId(dto.getFinprodId());
-                stlSecRecon.setMarketId(dto.getMarketId());
-                stlSecRecon.setSettleDate(dto.getTradeDate());
-                stlSecRecon.setTradeMarket(dto.getTradeMarket());
-                stlSecRecon.setCheckResult(dto.getCheckResult());
-                stlSecRecon.setStlSecDeme(dto.getParaValue());
-                stlSecRecon.setAccount(dto.getAccout());
-                stlSecRecon.setEntrustTradeId(dto.getTradeId());
-                stlSecRecon.setReconInfo(StringUtil.isEmpty(dto.getReconInfo()) ? null : dto.getReconInfo().getBytes());
-                reconciliationCommonMapper.insertStlSecRecon(stlSecRecon);
-
-                //待对账数据.对账维度 = 委托汇总 || 证券汇总
-                if (DictCodeListStl.对账维度_委托汇总.getValue().equals(dto.getParaValue()) ||
-                        DictCodeListStl.对账维度_证券汇总.getValue().equals(dto.getParaValue())) {
-                    //调用【清算明细查询】
-                    Map<String, Object> param = new HashMap<String, Object>();
-                    if(DictCodeListStl.对账维度_委托汇总.getValue().equals(dto.getParaValue())){
-                        param.put("applyTradeId", dto.getTradeId2());
-                    }else{
-                        param.put("finprodId", dto.getFinprodId());
-                    }
-                    param.put("dealDate", dto.getTradeDate());
-                    param.put("seatNumber", dto.getSeatNumber());
-                    List<SettleTransData> listSettleTransData = reconciliationCommonMapper.getSettleTransData(param);
-                    if(CollectionUtils.isEmpty(listSettleTransData)){
-                        continue;
-                    }
-                    StlSecReconDetail detail;
-                    SettleTransDataStatus status;
-                    for (SettleTransData settleTransData : listSettleTransData) {
-                        detail = new StlSecReconDetail();
-                        detail.setSeqNo(dto.getSeqNo());
-                        detail.setTradeId(settleTransData.getTradeId());
-                        detail.setStlSecDeme(dto.getParaValue());
-                        reconciliationCommonMapper.insertStlSecReconDetail(detail);
-                        status = new SettleTransDataStatus();
-                        status.setTradeId(settleTransData.getTradeId());
-                        status.setCheckResult(dto.getCheckResult());
-                        settleTransDataStatusMapper.insertSelective(status);
-                    }
-                    BigDecimal max = listSettleTransData.stream().max(Comparator.comparing(
-                            SettleTransData::getShareAmt)).get().getShareAmt();
-                    for(SettleTransData settleTransData : listSettleTransData){
-                        if(settleTransData.getShareAmt().equals(max)){
-                            settleTransDataMapper.updateByPrimaryKeySelective(settleTransData);
-                        }
-                    }
-                }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getParaValue())){
-                    StlSecReconDetail detail = new StlSecReconDetail();
-                    detail.setSeqNo(dto.getSeqNo());
-                    detail.setTradeId(dto.getTradeId());
-                    detail.setStlSecDeme(dto.getParaValue());
-                    reconciliationCommonMapper.insertStlSecReconDetail(detail);
-                    SettleTransDataStatus status = new SettleTransDataStatus();
-                    status.setTradeId(dto.getTradeId());
-                    status.setCheckResult(dto.getCheckResult());
-                    settleTransDataStatusMapper.insertSelective(status);
-                    Map<String, Object> param = new HashMap<String, Object>();
-                    param.put("tradeId", dto.getTradeId());
-                    List<SettleTransData> listSettleTransData = reconciliationCommonMapper.getSettleTransData(param);
-                    if(CollectionUtils.isNotEmpty(listSettleTransData)){
-                        SettleTransData std = getReCalSettleTransData(listSettleTransData.get(0),dto);
-                        settleTransDataMapper.updateByPrimaryKeySelective(std);
-                    }
-                }
+            //根据券商对账单删除之前的对账数据
+            stlSecReconMapper.deleteByPrimaryKey(dto.getSeqNo());
+            //封装新的对账单数据
+            StlSecRecon stlSecRecon = new StlSecRecon();
+            stlSecRecon.setSeqNo(dto.getSeqNo());
+            stlSecRecon.setCustomerId(dto.getCustomerId());
+            stlSecRecon.setPortfolioId(dto.getPortfolioId());
+            stlSecRecon.setFinprodId(dto.getFinprodId());
+            stlSecRecon.setMarketId(dto.getMarketId());
+            stlSecRecon.setSettleDate(dto.getTradeDate());
+            stlSecRecon.setTradeMarket(dto.getTradeMarket());
+            stlSecRecon.setCheckResult(dto.getCheckResult());
+            stlSecRecon.setStlSecDeme(dto.getParaValue());
+            stlSecRecon.setAccount(dto.getAccout());
+            stlSecRecon.setEntrustTradeId(dto.getTradeId());
+            stlSecRecon.setReconInfo(StringUtil.isEmpty(dto.getReconInfo()) ? null : dto.getReconInfo().getBytes());
+            reconciliationCommonMapper.insertStlSecRecon(stlSecRecon);
+            // 查询成交明细数据
+            List<SettleTransData> listSettleTransData = querySettleTransDatas(dto);
+            // 重新结算交易明细数据
+            SettleTransData std = getReCalSettleTransData(listSettleTransData.get(0),dto);
+            // 更新成交明细数据
+            settleTransDataMapper.updateByPrimaryKeySelective(std);
+            StlSecReconDetail detail;
+            SettleTransDataStatus status;
+            for (SettleTransData settleTransData : listSettleTransData) {
+                detail = new StlSecReconDetail();
+                detail.setSeqNo(dto.getSeqNo());
+                detail.setTradeId(settleTransData.getTradeId());
+                detail.setStlSecDeme(dto.getParaValue());
+                reconciliationCommonMapper.insertStlSecReconDetail(detail);
+                status = new SettleTransDataStatus();
+                status.setTradeId(settleTransData.getTradeId());
+                status.setCheckResult(dto.getCheckResult());
+                settleTransDataStatusMapper.insertSelective(status);
             }
         }
+    }
+
+    /**
+     * 查询清算明细
+     * @param dto
+     * @return
+     */
+    private List<SettleTransData> querySettleTransDatas(DayEndAccountDaichuliDto dto){
+        //调用【清算明细查询】
+        Map<String, Object> param = new HashMap<String, Object>();
+        if(DictCodeListStl.对账维度_委托汇总.getValue().equals(dto.getParaValue())){
+            param.put("applyTradeId", dto.getTradeId2());
+            param.put("dealDate", dto.getTradeDate());
+            param.put("seatNumber", dto.getSeatNumber());
+        }else if(DictCodeListStl.对账维度_证券汇总.getValue().equals(dto.getParaValue())){
+            param.put("finprodId", dto.getFinprodId());
+            param.put("dealDate", dto.getTradeDate());
+            param.put("seatNumber", dto.getSeatNumber());
+        }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getParaValue())){
+            param.put("tradeId", dto.getTradeId());
+        }
+        return reconciliationCommonMapper.getSettleTransData(param);
     }
 
     /**
@@ -659,7 +596,7 @@ public class ReconciliationCommonService {
      * @param dto
      * @return
      */
-    private SettleTransData getReCalSettleTransData(SettleTransData settleTransData, DayEndAccountDaichuliDto dto){
+    public SettleTransData getReCalSettleTransData(SettleTransData settleTransData, DayEndAccountDaichuliDto dto){
         SettleTransData settleTransDataNew = new SettleTransData();
         settleTransDataNew.setTradeId(settleTransData.getTradeId());
         //成交数据明细表.佣金									=	成交数据明细表.佣金 + 待对账数据.清算佣金差额

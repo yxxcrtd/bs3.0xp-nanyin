@@ -44,7 +44,7 @@ $(function() {
      * 定义数据表格
      */
     var colsDetail = [
-        {field:'tradeId',sortable: false, title: 'DayEndAccount001.tradeId',width:120}
+         {field:'cjbh',sortable: false, title: 'DayEndAccount001.tradeId',width:120}
         ,{field:'commissionAmt', type:'money',edit: true,sortable: false, title: 'DayEndAccount001.commissionAmt',width:120}
         ,{field:'jsfAmt', type:'money',edit: true,sortable: false, title: 'DayEndAccount001.jsfAmt',width:120}
         ,{field:'zgfAmt', type:'money',edit: true,sortable: false, title: 'DayEndAccount001.zgfAmt',width:120}

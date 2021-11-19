@@ -19,6 +19,32 @@ public class DayEndAccountDto extends StlSecRecon {
 	 */
 	private String tradeId;
 
+	/**
+	 * 是否人工修改
+	 */
+	private String isModify;
+
+	public String getIsModify() {
+		return isModify;
+	}
+
+	public void setIsModify(String isModify) {
+		this.isModify = isModify;
+	}
+
+	/**
+	 * 交易方向
+	 */
+	private String ps;
+
+	public String getPs() {
+		return ps;
+	}
+
+	public void setPs(String ps) {
+		this.ps = ps;
+	}
+
 	public String getFinprodMarketId() {
 		return finprodMarketId;
 	}

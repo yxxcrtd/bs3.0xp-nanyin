@@ -414,6 +414,9 @@ from
 		<if test="finprodId != null and finprodId != '' ">
 			AND std.FINPROD_ID = #{finprodId, jdbcType=VARCHAR}
 		</if>
+		<if test="dealDate != null">
+			AND std.DEAL_DATE = #{dealDate, jdbcType=DATE}
+		</if>
 		order by std.SHARE_AMT desc
 	</select>
 
@@ -583,4 +586,8 @@ from
 			</if>
 		</trim>
 	</insert>
+
+	<select id="queryCheckDisaccordCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM SETTLE_TRANS_DATA_STATUS WHERE CHECK_RESULT = #{CHECK_RESULT_0,jdbcType=VARCHAR}
+	</select>
 </mapper>

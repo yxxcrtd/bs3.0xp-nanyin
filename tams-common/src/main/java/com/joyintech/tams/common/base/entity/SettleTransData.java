@@ -20,6 +20,11 @@ public class SettleTransData extends BaseEntity {
     private String cjbh;
 
     /**
+     * 是否人工修改
+     */
+    private String isModify;
+
+    /**
      * 执行日期
      */
     private Date dealDate;
@@ -1408,5 +1413,13 @@ public class SettleTransData extends BaseEntity {
      */
     public void setIsPurchTypeYx(String isPurchTypeYx) {
         this.isPurchTypeYx = isPurchTypeYx == null ? null : isPurchTypeYx.trim();
+    }
+
+    public String getIsModify() {
+        return isModify;
+    }
+
+    public void setIsModify(String isModify) {
+        this.isModify = isModify;
     }
 }

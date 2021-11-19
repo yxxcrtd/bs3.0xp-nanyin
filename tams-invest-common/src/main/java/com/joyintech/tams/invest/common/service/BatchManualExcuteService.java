@@ -1,9 +1,4 @@
-package com.joyintech.tams.invest.interf.fromjkpt.settle.service;
-
-/**
- * @author zznn
- * @date 2021/10/25
- */
+package com.joyintech.tams.invest.common.service;
 
 import com.joyintech.framework.base.dao.SysBatchGrpMapper;
 import com.joyintech.framework.base.dao.SysBatchPrdGrpMapper;
@@ -16,23 +11,23 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.batch.batchstart.dao.SysBatchStart001Mapper;
-import com.joyintech.system.batch.batchstart.service.SysBatchStart001Service;
-import com.joyintech.tams.invest.interf.fromjkpt.settle.dao.SettleDownLinkMapper;
+import com.joyintech.tams.invest.common.service.dao.BatchManualExcuteMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class SettleDownLinkService {
-
+public class BatchManualExcuteService {
     @Autowired
-    private SettleDownLinkMapper settleDownLinkMapper;
+    private BatchManualExcuteMapper batchManualExcuteMapper;
 
     @Autowired
     private SysBatchStart001Mapper sysBatchStart001Mapper;
@@ -57,15 +52,13 @@ public class SettleDownLinkService {
                 StringUtil.EMPTY, startDate, endDate, batchGroupType, prodGroupType);
     }
 
-
-
     /**
      *  查找taskid
      * @param param
      */
     @DataSource("BASE")
     private List<String> listSysBatchTask(Map<String,Object> param){
-        return settleDownLinkMapper.listSysBatchTask(param);
+        return batchManualExcuteMapper.listSysBatchTask(param);
     }
 
     @DataSource("BASE")
@@ -180,4 +173,3 @@ public class SettleDownLinkService {
         return true;
     }
 }
-

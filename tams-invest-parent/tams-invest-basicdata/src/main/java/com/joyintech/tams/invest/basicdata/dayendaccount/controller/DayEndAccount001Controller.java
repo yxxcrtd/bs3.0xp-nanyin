@@ -24,9 +24,11 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -88,9 +90,8 @@ public class DayEndAccount001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("qryAccount")
-    public AjaxResult qryAccount() {
-        Map<String, Object> param = RequestUtil.getPageParam();
-        return dayEndAccount001Service.qryAccount(param);
+    public AjaxResult qryAccount(@RequestBody List<DayEndAccountDto> dataList) {
+        return dayEndAccount001Service.qryAccount(dataList);
     }
 
     @RequestMapping("selectCustomerId")

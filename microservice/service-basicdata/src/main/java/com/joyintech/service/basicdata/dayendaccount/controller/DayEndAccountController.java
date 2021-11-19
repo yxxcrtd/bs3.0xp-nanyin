@@ -60,8 +60,8 @@ public class DayEndAccountController {
     }
 
     @RequestMapping("qryAccount")
-    public AccountResult qryAccount(@RequestBody Map<String, Object> param) {
-        return dayEndAccountService.qryAccount(param);
+    public AccountResult qryAccount(@RequestBody List<DayEndAccountDto> dtoList) {
+        return dayEndAccountService.qryAccount(dtoList);
     }
     @RequestMapping("getReconDealInfo")
     public DayEndAccount002Dto getReconDealInfo(@RequestBody Map<String, Object> param) {

@@ -61,4 +61,11 @@ public interface ReconciliationCommonMapper {
      * @param stlSecReconDetail 处理结果详情
      */
     void insertStlSecReconDetail(StlSecReconDetail stlSecReconDetail);
+
+    /**
+     * 查询对账结果不一致数据数量
+     * @param param
+     * @return
+     */
+    int queryCheckDisaccordCount(Map<String, Object> param);
 }

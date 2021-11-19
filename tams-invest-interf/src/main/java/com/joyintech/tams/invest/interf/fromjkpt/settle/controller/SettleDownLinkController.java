@@ -4,7 +4,7 @@ import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.invest.interf.fromjkpt.settle.service.SettleDownLinkService;
+import com.joyintech.tams.invest.common.service.BatchManualExcuteService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class SettleDownLinkController {
     private IPlatformDate iPlatformDate;
 
     @Autowired
-    private SettleDownLinkService settleDownLinkService;
+    private BatchManualExcuteService batchManualExcuteService;
 
     @Transactional
     @DTXTransaction
@@ -50,7 +50,7 @@ public class SettleDownLinkController {
                     param.put("execDate", DateUtil.format(DateUtil.parse(
                             param.get("execDate").toString()),"yyyyMMdd"));
                 }
-                settleDownLinkService.execute(param);
+                batchManualExcuteService.execute(param);
                 logger.debug("接口平台调用批处理成功");
             }else{
                 logger.debug("系统参数是否有对账流程IS_RECON非01,不用启动批处理");
