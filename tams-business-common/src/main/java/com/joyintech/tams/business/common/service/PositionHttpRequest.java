@@ -129,7 +129,19 @@ public class PositionHttpRequest {
         // 页面端根据异常信息返回前端
         throw new PositionException(errorMsg);
     }
-    
+    public static void deleteMethod(String totalId, String modelType) throws PositionException{
+        //
+        BaseMap bm = BaseMap.newMap()
+                .put("totalTradeId", totalId)
+                .put("modelType", modelType)
+                .put("userId", LoginUserUtil.getUserName())
+                .put("interfaceType", "Bond001");
+        String res = cancel(bm);
+        Map msgMap = JsonUtils.json2Object(res, Map.class);
+        if(msgMap == null){
+            throw new PositionException("头寸返回数据为空！");
+        }
+    }
     private static String sendPrivate(Object param) {
         return httpPostRequest(positionUrl + "/position/endpoint/updatePosition", param);
     }

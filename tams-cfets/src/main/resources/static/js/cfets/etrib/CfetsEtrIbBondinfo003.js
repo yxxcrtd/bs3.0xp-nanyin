@@ -631,6 +631,7 @@
         object.tradeMarketMode= query('#tradeMarketMode').val();
         object.entrustId = query('#entrustId').val();
         object.businessId = query('#businessId').val();
+        object.totalEtrustId = query('#totalEtrustId').val();
         object.entrustStatus = query('#entrustStatus').val();
         object.finvdate = query('#finvdate').val();
         object.invManagerId = query('#invManagerId').val();

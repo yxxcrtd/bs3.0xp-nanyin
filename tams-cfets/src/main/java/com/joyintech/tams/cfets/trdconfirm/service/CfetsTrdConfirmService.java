@@ -174,6 +174,7 @@ public class CfetsTrdConfirmService extends BaseService{
         //日志表
 
 
+
         //发送头寸
 
 
@@ -323,8 +324,8 @@ public class CfetsTrdConfirmService extends BaseService{
                 //设置登记时的成交编号
 
 
-                if(StringUtil.isNotBlank(entity.getfTradeId())){
-                    baseTradeProductDealDto.setfTradeId(entity.getfTradeId());
+                if(StringUtil.isNotBlank(trdProductDeal.getfTradeId())){
+                    baseTradeProductDealDto.setfTradeId(trdProductDeal.getfTradeId());
                 }
                 baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
                 entity.getTrdProductDealAdds().forEach(trdProductDealAdd -> {

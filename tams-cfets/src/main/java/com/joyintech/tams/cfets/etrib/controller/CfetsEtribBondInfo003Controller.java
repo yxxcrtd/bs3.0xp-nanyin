@@ -100,6 +100,7 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
             model.addAttribute("entity_RiskTrialRetList",  JsonUtils.object2Json(entity.getRiskTrialRetDto()));
             todoList = true;
             model.addAttribute("businessId", entity.getTotalEtrustId());
+            model.addAttribute("totalEtrustId", entity.getTotalEtrustId());
         } else {
             entity = new CfetsEtribBondInfo003Dto();
             entity.setInvManagerId(LoginUserUtil.getUserName());
