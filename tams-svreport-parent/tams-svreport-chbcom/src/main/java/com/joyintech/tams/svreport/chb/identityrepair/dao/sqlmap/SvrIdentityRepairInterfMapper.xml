@@ -18,11 +18,11 @@
 
 		SELECT
 		'CHECK'  equMark,
-		B.INDENTIFY_MARK indentifyMark
+		INDENTIFY_MARK indentifyMark
 		FROM CHB_EQU_HOLD_CHECK
 		WHERE
 		FUND_ACC_PLACE = NULL
-		) AS tmp1
+		)  tmp1
 		LEFT JOIN (
 		SELECT
 		DISTINCT(ORG_INDENTIFY_MARK) as orgIndentifyMark,
@@ -33,7 +33,7 @@
 		group BY
 		ORG_INDENTIFY_MARK,
 		INDENTIFY_MARK,
-		FUND_ACC_PLACE) AS tmp2
+		FUND_ACC_PLACE)  tmp2
 		ON tmp1.indentifyMark = tmp2.orgIndentifyMark
 		GROUP BY
 		tmp1.equMark,

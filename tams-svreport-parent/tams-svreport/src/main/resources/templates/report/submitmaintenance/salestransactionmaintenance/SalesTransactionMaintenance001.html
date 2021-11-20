@@ -21,7 +21,7 @@
                     <div class="layui-input-inline input-inline">
                         <select id="tradePs" name="tradePs" class="input-select"
                                 allowClear="true" data-th-data-result='${TRADE_PS}' data-th-initvalue="${tradePs}"
-                                data-th-formatoption="false" placeholder="请选择"
+                                placeholder="请选择"
                                 data-th-placeholder="#{SysCommon.selectplaceholder}">
                         </select>
                     </div>
@@ -67,7 +67,7 @@
                 <div class="layui-inline layui-col-md4">
                     <label class="layui-form-label form-lable">销售结算资金交易流水号</label>
                     <div class="layui-input-inline input-inline">
-                        <select id="tradeNo" class="input-select" name="tradeNo"
+                        <select id="tradeNo" class="input-select" name="tradeNo" formatoption="false"
                                 data-th-data-url='@{/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/getTradeNo}'
                                 initvalue="" placeholder="请选择"
                                 data-th-placeholder="#{SysCommon.selectplaceholder}"
