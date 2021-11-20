@@ -665,7 +665,9 @@
             $('#portfolioId_div').hide();
         }
     	setTimeout(function () {
-            window.CfetsPledgedBond.refreshCfetsPldegeBond((entity && entity.pledgeBondList) ? entity.pledgeBondList : []);
+    	    if (window.CfetsPledgedBond) {
+                window.CfetsPledgedBond.refreshCfetsPldegeBond((entity && entity.pledgeBondList) ? entity.pledgeBondList : []);
+            }
         },1000);
 
 

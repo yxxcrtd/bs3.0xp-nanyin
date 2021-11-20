@@ -178,7 +178,8 @@
             CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
             ELSE T3.FINPROD_MARKET_ID END MARKET_ID,
             CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
-            ELSE T3.FINPROD_ID END FINPROD_ID
+            ELSE T3.FINPROD_ID END FINPROD_ID,
+            FPT.TYPE_8 AS FINPROD_TYPE
         FROM
             INTERF_DZD T1
             LEFT JOIN STL_SEC_ACCT_INFO T5  ON T5.BOND_ID = T1.ZQZH
@@ -190,6 +191,7 @@
                     or (T5.TRADE_PLACE = '04' and msd.SZ_SEATNO = T1.XWBH)
                 )
         LEFT JOIN FIN_PRODUCT T3 ON T3.FINPROD_MARKET_ID = CONCAT(T1.ZQDM,CASE WHEN T5.TRADE_PLACE = '03' THEN '.SH' WHEN T5.TRADE_PLACE = '04' then '.SZ' END)
+        LEFT JOIN FIN_PRODUCT_TYPE FPT ON T3.FINPROD_ID = FPT.FINPROD_ID
         LEFT JOIN MST_SEAT  T4 ON T4.SEAT_ID  = T1.XWBH
         <where>
                  EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.JYLB  = T1.JYLB  AND T6.YWBS = T1.YWBS AND ZYBS IS NULL)
@@ -243,7 +245,9 @@
             DWYJLX UNIT,
             CJQJ FULL_PRICE,
             YJLXZE INT_AMT,
-            QJCJJE TRADE_AMT,
+            case when SJSF > 0 then abs(QJCJJE)
+                else abs(QJCJJE) * -1
+                    end as TRADE_AMT,
             FYHJ TOTAL_TEEAMT,
             STR_TO_DATE(HGDQR, '%Y%m%d') HGDQR,
             HGDQJE HGDQJE,
@@ -262,7 +266,8 @@
             CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
             ELSE T3.FINPROD_MARKET_ID END MARKET_ID,
             CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
-            ELSE T3.FINPROD_ID END FINPROD_ID
+            ELSE T3.FINPROD_ID END FINPROD_ID,
+            FPT.TYPE_8 AS FINPROD_TYPE
         FROM
             INTERF_ZX_ZJGFLS T1
             LEFT JOIN STL_SEC_ACCT_INFO T5  ON T5.BOND_ID = T1.ZQZH
@@ -278,6 +283,7 @@
                 WHEN T1.JYSC = '深圳' THEN '.SZ'
                 WHEN T1.JYSC = '1' then '.SH'
                 WHEN T1.JYSC = '上海' then '.SH' END)
+        LEFT JOIN FIN_PRODUCT_TYPE FPT ON T3.FINPROD_ID = FPT.FINPROD_ID
         LEFT JOIN MST_SEAT  T4 ON T4.SEAT_ID  = T1.XWDM
         WHERE
             T1.JYSC IN ('0', '1', '深圳', '上海') and EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.ZYBS = T1.ZYDM  AND ZYBS IS NOT NULL)
@@ -320,6 +326,7 @@
         CUSTOMER_ID,
         SEAT_NUMBER,
         FINPROD_ID,
+        FINPROD_TYPE,
         MARKET_ID,
         TRADE_MARKET,
         TRADE_DATE,
@@ -348,6 +355,7 @@
         CUSTOMER_ID,
         SEAT_NUMBER,
         FINPROD_ID,
+        FINPROD_TYPE,
         MARKET_ID,
         TRADE_MARKET,
         TRADE_DATE,
@@ -362,6 +370,7 @@
         CUSTOMER_ID,
         SEAT_NUMBER,
         FINPROD_ID,
+        FINPROD_TYPE,
         MARKET_ID,
         TRADE_MARKET,
         TRADE_DATE,
@@ -389,6 +398,7 @@
         CUSTOMER_ID,
         SEAT_NUMBER,
         FINPROD_ID,
+        FINPROD_TYPE,
         MARKET_ID,
         TRADE_MARKET,
         TRADE_DATE,
