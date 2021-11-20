@@ -20,9 +20,12 @@
         if(object.portfolioId != null && object.portfolioId != ''){
             object.portfolioId = object.portfolioId.join(",");
         }
-        if(object.entrustStatus != null && object.entrustStatus != ''){
-            object.entrustStatus = object.entrustStatus.join(",");
-        }
+        // delete by etliu 20211120 start
+        // TISHKS-466:【指令管理-场外指令】计划类利率型指令有效状态选择后点击查询无反应
+        // if(object.entrustStatus != null && object.entrustStatus != ''){
+        //     object.entrustStatus = object.entrustStatus.join(",");
+        // }
+        // delete by etliu 20211120 end
         return object;
     };
     /** 
