@@ -169,8 +169,10 @@ public class TrdBondInvestTrade002Controller extends BaseController {
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdBondInvestTrade002Service.getBussinessEntityByWorkflowId(
                 workflowId);
-            dto.setYield(ArithmeticUtil.multiply(dto.getYield(), new BigDecimal(100)));
-            dto.setExerYield(ArithmeticUtil.multiply(dto.getExerYield(), new BigDecimal(100)));
+            // add by ld 20211120 审批页面利率多了100倍 start
+//            dto.setYield(ArithmeticUtil.multiply(dto.getYield(), new BigDecimal(100)));
+//            dto.setExerYield(ArithmeticUtil.multiply(dto.getExerYield(), new BigDecimal(100)));
+            // add by ld 20211120 审批页面利率多了100倍 end
             if (dto.getTotalFaceValue() != null) {
                 dto.setTradeAmt(dto.getTotalFaceValue());
             }
