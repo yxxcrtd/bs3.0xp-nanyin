@@ -270,8 +270,8 @@
                 ON T5.TRD_ACCT_ID = T2.ACCT_NO and T5.TRD_ACCT_CCY = T2.CCY
             LEFT JOIN MST_SALE_DEPARTMENT msd
                 ON T2.OWN_DEPT = msd.SALE_DEPID
-                    and ((T1.JYSC in ('1', '上海') and msd.SH_SEATNO = T1.XWBH)
-                    or (T1.JYSC in ('0', '深圳') and msd.SZ_SEATNO = T1.XWBH)
+                    and ((T1.JYSC in ('1', '上海') and msd.SH_SEATNO = T1.XWDM)
+                    or (T1.JYSC in ('0', '深圳') and msd.SZ_SEATNO = T1.XWDM)
                 )
         LEFT JOIN FIN_PRODUCT T3 ON
             T3.FINPROD_MARKET_ID =  CONCAT(T1.ZQDM,CASE WHEN T1.JYSC = '0' THEN '.SZ'
