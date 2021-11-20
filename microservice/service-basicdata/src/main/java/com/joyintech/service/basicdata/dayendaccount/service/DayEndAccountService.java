@@ -350,6 +350,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         List<DayEndAccountDto> reconDealInfoList = new ArrayList<DayEndAccountDto>();
         DayEndAccountDto reconDealInfo = new DayEndAccountDto();
         reconDealInfo.setSeqNo(stlSecReconDeal.getSeqNo());
+        reconDealInfo.setAccount(stlSecReconDeal.getAccout());
         reconDealInfo.setPortfolioId(stlSecReconDeal.getPortfolioId());
         reconDealInfo.setSettleDate(stlSecReconDeal.getTradeDate());
         reconDealInfo.setFinprodId(stlSecReconDeal.getMarketId());

@@ -4,7 +4,7 @@ $(function() {
      * 定义数据表格
      */
     var cols = [
-        {field:'portfolioId',sortable: false, title: 'DayEndAccount001.portfolioId',width:120}
+        {field:'account',sortable: false, title: 'DayEndAccount001.busiAcctNo',width:120}
         ,{field:'settleDate', type:'date',sortable: false, title: 'DayEndAccount001.settleDate',width:120}
         ,{field:'finprodId',sortable: false, title: 'DayEndAccount001.finprodId',width:120}
         ,{field:'tradeMarketStr',sortable: false, title: 'DayEndAccount001.tradeMarket',width:120}
