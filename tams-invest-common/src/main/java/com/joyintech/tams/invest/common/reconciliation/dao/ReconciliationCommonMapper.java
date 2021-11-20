@@ -9,12 +9,6 @@ import java.util.Map;
 
 @Repository
 public interface ReconciliationCommonMapper {
-    /**
-     * 获取待处理的对账数据
-     * @param param param
-     * @return
-     */
-    List<DayEndAccountDaichuliDto> queryAccountTodoList(Map<String, Object> param);
 
     /**
      * 查询对账参数
@@ -68,4 +62,32 @@ public interface ReconciliationCommonMapper {
      * @return
      */
     int queryCheckDisaccordCount(Map<String, Object> param);
+
+    /**
+     * 删除对账结果不一致数据
+     * @param param
+     * @return
+     */
+    void deleteSettleTransDataStatusDisaccords(Map<String, Object> param);
+
+    /**
+     * 查询对账结果表对账不一致数据
+     * @param param
+     * @return
+     */
+    List<StlSecRecon> queryStlSecReconDisaccords(Map<String, Object> param);
+
+    /**
+     * 批量删除券商对账结果明细对账不一致数据
+     * @param param
+     * @return
+     */
+    void batchDeleteStlSecReconDetail(Map<String, Object> param);
+
+    /**
+     * 批量删除券商对账单对账不一致数据
+     * @param param
+     * @return
+     */
+    void batchDeleteStlSecRecon(Map<String, Object> param);
 }

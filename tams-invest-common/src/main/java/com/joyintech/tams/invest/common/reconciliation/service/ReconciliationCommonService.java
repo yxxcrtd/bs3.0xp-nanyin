@@ -16,10 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * 对账公共服务
@@ -95,6 +93,26 @@ public class ReconciliationCommonService {
     }
 
     /**
+     * 删除对账结果不一致数据
+     */
+    public void deleteCheckDisaccords(Date batchDate){
+        Map<String, Object> param = new HashMap<>();
+        param.put("batchDate", DateUtil.format(batchDate));
+        param.put("CHECK_RESULT_0", DictCodeListExt3.对账状态结果_不一致.getValue());
+        // 删除成交明细状态表对账结果为不一致的数据
+        reconciliationCommonMapper.deleteSettleTransDataStatusDisaccords(param);
+        // 查询券商对账结果表对账结果为不一致的数据
+        List<StlSecRecon> stlSecRecons = reconciliationCommonMapper.queryStlSecReconDisaccords(param);
+        if(CollectionUtils.isNotEmpty(stlSecRecons)){
+            param.put("stlSecRecons", stlSecRecons);
+            //批量删除券商对账结果明细对账结果为不一致的数据
+            reconciliationCommonMapper.batchDeleteStlSecReconDetail(param);
+            //批量删除券商对账单对账结果为不一致的数据
+            reconciliationCommonMapper.batchDeleteStlSecRecon(param);
+        }
+    }
+
+    /**
      * 处理待对账数据
      * @param dto
      * @param wuCha
@@ -123,8 +141,8 @@ public class ReconciliationCommonService {
                     && ArithmeticUtil.subtract(dto.getGhfAmt(), dto.getGhfAmt2()).abs().compareTo(wuChaZhi) <= 0
                     && ArithmeticUtil.subtract(dto.getSxfAmt(), dto.getSxfAmt2()).abs().compareTo(wuChaZhi) <= 0
                     && ArithmeticUtil.subtract(dto.getCommissionAmt(), dto.getCommissionAmt2()).abs().compareTo(wuChaZhi) <= 0
-                    && dto.getFinprodType() != null && dto.getFinprodType().equals(dto.getFinprodType2())
-                    && dto.getPs() != null && dto.getPs().equals(dto.getPs2())
+//                    && dto.getFinprodType() != null && dto.getFinprodType().equals(dto.getFinprodType2())
+//                    && dto.getPs() != null && dto.getPs().equals(dto.getPs2())
                     && dto.getTradeMarket() != null && dto.getTradeMarket().equals(dto.getTradeMarket2())
                     && dto.getTradeDate() != null && dto.getTradeDate().compareTo(dto.getTradeDate2()) == 0
                     && dto.getSecAcctId() != null && dto.getSecAcctId().equals(dto.getSecAcctId2())) {

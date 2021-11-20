@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.invest.batch.autoreconciliation.dao.AutoReconciliationMapper">
+<mapper namespace="com.joyintech.tams.settle.batch.autoreconciliation.dao.AutoReconciliationMapper">
 
 	<select id="queryAccountTodoList" resultType="com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto">
 		<!-- 查询委托维度数据 -->
@@ -11,6 +11,7 @@
 				ssrd.FINPROD_ID,
 				ssrd.TRADE_MARKET,
 				ssrd.CUSTOMER_ID,
+			    ssrd.ACCOUT,
 				ssrp.PARA_VALUE,
 				ssrd.FINPROD_TYPE,
 				ssrd.PS,
@@ -48,12 +49,16 @@
 						CUSTOMER_ID,
 						PARA_VALUE
 				)ssrp ON ssrd.CUSTOMER_ID = ssrp.CUSTOMER_ID
+			WHERE
+				(ssr.CHECK_RESULT is NULL or ssr.CHECK_RESULT = #{CHECK_RESULT_0})
+		    	AND ssrd.TRADE_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
 		)
 		SELECT <!-- 查询委托汇总数据 -->
 			tmp.SEQ_NO,
 			tmp.FINPROD_ID,
 			tmp.TRADE_MARKET,
 			tmp.CUSTOMER_ID,
+		    tmp.ACCOUT,
 			tmp.PARA_VALUE,
 			tmp.FINPROD_TYPE,
 			tmp.PS,
@@ -98,8 +103,16 @@
 				SUM(SETTLE_FEE) SETTLE_FEE2,
 				SUM(GHF_AMT) GHF_AMT2,
 				SUM(SXF_AMT) SXF_AMT2,
-				SUM(FPRICE_AMT) FPRICE_AMT2,
-				SUM(SHARE_AMT) SHARE_AMT2,
+				SUM(
+					CASE WHEN PS = #{PS_T01} AND FINPROD_TYPE2 != #{prodType2_F02} THEN FPRICE_AMT*-1
+					WHEN PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND FINPROD_TYPE2 = #{prodType2_F02} THEN FPRICE_AMT*-1
+					ELSE FPRICE_AMT END
+				) FPRICE_AMT2,
+				SUM(
+					CASE WHEN PS = #{PS_T01} AND FINPROD_TYPE2 != #{prodType2_F02} THEN SHARE_AMT
+					WHEN PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND FINPROD_TYPE2 = #{prodType2_F02} THEN SHARE_AMT
+					ELSE SHARE_AMT*-1 END
+				) SHARE_AMT2,
 				FINPROD_TYPE2,
 				PS,
 				TRADE_MARKET,
@@ -119,6 +132,7 @@
 			tmp.FINPROD_ID,
 			tmp.TRADE_MARKET,
 			tmp.CUSTOMER_ID,
+		    tmp.ACCOUT,
 			tmp.PARA_VALUE,
 			tmp.FINPROD_TYPE,
 			tmp.PS,
@@ -163,8 +177,16 @@
 				SUM(SETTLE_FEE) SETTLE_FEE2,
 				SUM(GHF_AMT) GHF_AMT2,
 				SUM(SXF_AMT) SXF_AMT2,
-				SUM(FPRICE_AMT) FPRICE_AMT2,
-				SUM(SHARE_AMT) SHARE_AMT2,
+				SUM(
+					CASE WHEN PS = #{PS_T01} AND FINPROD_TYPE2 != #{prodType2_F02} THEN FPRICE_AMT*-1
+					WHEN PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND FINPROD_TYPE2 = #{prodType2_F02} THEN FPRICE_AMT*-1
+					ELSE FPRICE_AMT END
+				) FPRICE_AMT2,
+					SUM(
+					CASE WHEN PS = #{PS_T01} AND FINPROD_TYPE2 != #{prodType2_F02} THEN SHARE_AMT
+					WHEN PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND FINPROD_TYPE2 = #{prodType2_F02} THEN SHARE_AMT
+					ELSE SHARE_AMT*-1 END
+				) SHARE_AMT2,
 				FINPROD_TYPE2,
 				PS,
 				TRADE_MARKET,
@@ -189,6 +211,7 @@
 			tmp.FINPROD_ID,
 			tmp.TRADE_MARKET,
 			tmp.CUSTOMER_ID,
+		    tmp.ACCOUT,
 			tmp.PARA_VALUE,
 			tmp.FINPROD_TYPE,
 			tmp.PS,
@@ -214,8 +237,12 @@
 			std.SETTLE_FEE SETTLE_FEE2,
 			std.GHF_AMT GHF_AMT2,
 			std.SXF_AMT SXF_AMT2,
-			std.FPRICE_AMT TRADE_AMT2,
-			std.SHARE_AMT TRADE_NUM2,
+			CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.FPRICE_AMT*-1
+			WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.FPRICE_AMT*-1
+			ELSE FPRICE_AMT END TRADE_AMT2,
+			CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.SHARE_AMT
+			WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.SHARE_AMT
+			ELSE std.SHARE_AMT*-1 END TRADE_NUM2,
 			std.FINPROD_TYPE2 FINPROD_TYPE2,
 			std.PS PS2,
 			std.TRADE_MARKET TRADE_MARKET2,
@@ -235,6 +262,7 @@
 			tmp.FINPROD_ID,
 			tmp.TRADE_MARKET,
 			tmp.CUSTOMER_ID,
+		    tmp.ACCOUT,
 			tmp.PARA_VALUE,
 			tmp.FINPROD_TYPE,
 			tmp.PS,
@@ -260,8 +288,12 @@
 			std.SETTLE_FEE SETTLE_FEE2,
 			std.GHF_AMT GHF_AMT2,
 			std.SXF_AMT SXF_AMT2,
-			std.FPRICE_AMT TRADE_AMT2,
-			std.SHARE_AMT TRADE_NUM2,
+			CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.FPRICE_AMT*-1
+			WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.FPRICE_AMT*-1
+			ELSE FPRICE_AMT END TRADE_AMT2,
+			CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.SHARE_AMT
+			WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.SHARE_AMT
+			ELSE std.SHARE_AMT*-1 END TRADE_NUM2,
 			std.FINPROD_TYPE2 FINPROD_TYPE2,
 			std.PS PS2,
 			std.TRADE_MARKET TRADE_MARKET2,

@@ -14,300 +14,6 @@ where
 	a.PARA_CODE = #{paraCode}
 	</select>
 
-	<select id="queryAccountTodoList" resultType="com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto">
-<!-- 汇总对账单数据 -->
-with tmp as(
-select
-	ssrd.SEQ_NO,
-	ssrd.INSTRUCTION_ID,
-	ssrd.PORTFOLIO_ID,
-	ssrd.TRADE_DATE,
-	ssrd.TRADE_ID,
-	ssrd.FINPROD_ID,
-	ssrd.MARKET_ID,
-	ssrd.TRADE_MARKET,
-	ssrd.CUSTOMER_ID,
-	nvl(aa.PARA_VALUE, bb.PARA_VALUE) PARA_VALUE,
-	ssrd.FINPROD_TYPE,
-	ssrd.PS,
-	ssrd.SEC_ACCT_ID,
-	ssrd.TERM_TYPE,
-	ssrd.COMMISSION_AMT,
-	ssrd.JSF_AMT,
-	ssrd.ZGF_AMT,
-	ssrd.STAMP_FEE,
-	ssrd.SETTLE_FEE,
-	ssrd.GHF_AMT,
-	ssrd.SXF_AMT,
-	ssrd.TRADE_AMT,
-	ssrd.TRADE_NUM,
-	ssrd.OTHER_FEEAMT
-from
-	STL_SEC_RECON_DEAL ssrd
-	left join STL_SEC_RECON ssr on ssr.SEQ_NO = ssrd.SEQ_NO
-	left join STL_SEC_RECON_PARA aa on aa.CUSTOMER_ID = ssrd.CUSTOMER_ID and aa.PARA_CODE = #{PARA_CODE_02}
-	left join STL_SEC_RECON_PARA bb on (bb.CUSTOMER_ID = '' or bb.CUSTOMER_ID is null) and bb.PARA_CODE = #{PARA_CODE_02}
-where
-	(ssr.CHECK_RESULT IS NULL or ssr.CHECK_RESULT = '' or ssr.CHECK_RESULT = #{CHECK_RESULT_0}) and
-	ssrd.TRADE_DATE = STR_TO_DATE(#{sysdate}, '%Y-%m-%d')
-	<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-		AND ssr.PORTFOLIO_ID IN
-		<foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
-			<if test="(index % 998) == 0">
-				null) OR  ssr.PORTFOLIO_ID IN (
-			</if>
-			#{item}
-		</foreach>
-	</if>
-	<if test="finprodId != null and finprodId != ''">
-		AND ssrd.FINPROD_ID like CONCAT_WS('', '%', #{finprodId}, '%')
-	</if>
-	<if test="seqNo != null and seqNo != ''">
-		AND ssrd.SEQ_NO = #{seqNo}
-	</if>
-	<if test="tradeMarket != null and tradeMarket != ''">
-		AND ssrd.TRADE_MARKET = #{tradeMarket}
-	</if>
-)
-select <!-- 查询委托维度对账数据 -->
-	a.SEQ_NO,
-	a.INSTRUCTION_ID,
-	a.PORTFOLIO_ID,
-	a.TRADE_DATE,
-	a.TRADE_ID,
-	a.FINPROD_ID,
-	a.MARKET_ID,
-	a.TRADE_MARKET,
-	a.CUSTOMER_ID,
-	a.PARA_VALUE,
-	a.FINPROD_TYPE,
-	a.PS,
-	a.SEC_ACCT_ID,
-	a.TERM_TYPE,
-	a.COMMISSION_AMT,
-	a.JSF_AMT,
-	a.ZGF_AMT,
-	a.STAMP_FEE,
-	a.SETTLE_FEE,
-	a.GHF_AMT,
-	a.SXF_AMT,
-	a.OTHER_FEEAMT,
-	a.TRADE_AMT,
-	a.TRADE_NUM,
-	ss.APPLY_TRADE_ID TRADE_ID2,
-	ss.COMMISSION_AMT2,
-	ss.JSF_AMT2,
-	ss.ZGF_AMT2,
-	ss.STAMP_FEE2,
-	ss.SETTLE_FEE2,
-	ss.GHF_AMT2,
-	ss.SXF_AMT2,
-	ss.FPRICE_AMT2 TRADE_AMT2,
-	ss.SHARE_AMT2 TRADE_NUM2,
-	ss.FINPROD_TYPE2 FINPROD_TYPE2,
-	ss.PS PS2,
-	ss.TRADE_MARKET TRADE_MARKET2,
-	ss.TRADE_DATE TRADE_DATE2,
-	ss.SEC_ACCT_ID SEC_ACCT_ID2
-from
-	tmp a
-	inner join (
-		select
-			std.APPLY_TRADE_ID,
-			SUM(std.COMMISSION_AMT) COMMISSION_AMT2,
-			SUM(std.JSF_AMT) JSF_AMT2,
-			SUM(std.ZGF_AMT) ZGF_AMT2,
-			SUM(std.STAMP_FEE) STAMP_FEE2,
-			SUM(std.SETTLE_FEE) SETTLE_FEE2,
-			SUM(std.GHF_AMT) GHF_AMT2,
-			SUM(std.SXF_AMT) SXF_AMT2,
-			SUM(std.FPRICE_AMT) FPRICE_AMT2,
-			SUM(std.SHARE_AMT) SHARE_AMT2,
-			std.FINPROD_TYPE2,
-			std.PS,
-			std.TRADE_MARKET,
-			std.TRADE_DATE,
-			std.SEC_ACCT_ID
-		from
-			SETTLE_TRANS_DATA std
-			inner join tmp b on
-				b.INSTRUCTION_ID = std.APPLY_TRADE_ID and
-				b.PARA_VALUE = #{PARA_VALUE_02}
-		GROUP BY
-			std.APPLY_TRADE_ID,std.FINPROD_TYPE2,std.PS,std.TRADE_MARKET,std.TRADE_DATE,std.SEC_ACCT_ID
-		) ss on a.INSTRUCTION_ID = ss.APPLY_TRADE_ID
-	where
-		a.PARA_VALUE = #{PARA_VALUE_02}
-UNION ALL
-	select
-	a.SEQ_NO,
-	a.INSTRUCTION_ID,
-	a.PORTFOLIO_ID,
-	a.TRADE_DATE,
-	a.TRADE_ID,
-	a.FINPROD_ID,
-	a.MARKET_ID,
-	a.TRADE_MARKET,
-	a.CUSTOMER_ID,
-	a.PARA_VALUE,
-	a.FINPROD_TYPE,
-	a.PS,
-	a.SEC_ACCT_ID,
-	a.TERM_TYPE,
-	a.COMMISSION_AMT,
-	a.JSF_AMT,
-	a.ZGF_AMT,
-	a.STAMP_FEE,
-	a.SETTLE_FEE,
-	a.GHF_AMT,
-	a.SXF_AMT,
-	a.OTHER_FEEAMT,
-	a.TRADE_AMT,
-	a.TRADE_NUM,
-	ss.APPLY_TRADE_ID TRADE_ID2,
-	ss.COMMISSION_AMT2,
-	ss.JSF_AMT2,
-	ss.ZGF_AMT2,
-	ss.STAMP_FEE2,
-	ss.SETTLE_FEE2,
-	ss.GHF_AMT2,
-	ss.SXF_AMT2,
-	ss.FPRICE_AMT2 TRADE_AMT2,
-	ss.SHARE_AMT2 TRADE_NUM2,
-	ss.FINPROD_TYPE2 FINPROD_TYPE2,
-	ss.PS PS2,
-	ss.TRADE_MARKET TRADE_MARKET2,
-	ss.TRADE_DATE TRADE_DATE2,
-	ss.SEC_ACCT_ID SEC_ACCT_ID2
-	from
-	tmp a
-	inner join (
-		select
-		std.APPLY_TRADE_ID,
-		SUM(std.COMMISSION_AMT) COMMISSION_AMT2,
-		SUM(std.JSF_AMT) JSF_AMT2,
-		SUM(std.ZGF_AMT) ZGF_AMT2,
-		SUM(std.STAMP_FEE) STAMP_FEE2,
-		SUM(std.SETTLE_FEE) SETTLE_FEE2,
-		SUM(std.GHF_AMT) GHF_AMT2,
-		SUM(std.SXF_AMT) SXF_AMT2,
-		SUM(std.FPRICE_AMT) FPRICE_AMT2,
-		SUM(std.SHARE_AMT) SHARE_AMT2,
-		std.FINPROD_TYPE2,
-		std.PS,
-		std.TRADE_MARKET,
-		std.TRADE_DATE,
-		std.SEC_ACCT_ID
-		from
-		SETTLE_TRANS_DATA std
-		inner join tmp b on
-		b.FINPROD_ID = std.FINPROD_ID and
-		b.PARA_VALUE = #{PARA_VALUE_01}
-		GROUP BY
-		std.FINPROD_ID,std.FINPROD_TYPE2,std.PS,std.TRADE_MARKET,std.TRADE_DATE,std.SEC_ACCT_ID
-		) ss on a.INSTRUCTION_ID = ss.APPLY_TRADE_ID
-		where
-		a.PARA_VALUE = #{PARA_VALUE_01}
-UNION ALL
-select
-	b.SEQ_NO,
-	b.INSTRUCTION_ID,
-	b.PORTFOLIO_ID,
-	b.TRADE_DATE,
-	b.TRADE_ID,
-	b.FINPROD_ID,
-	b.MARKET_ID,
-	b.TRADE_MARKET,
-	b.CUSTOMER_ID,
-	b.PARA_VALUE,
-	b.FINPROD_TYPE,
-	b.PS,
-	b.SEC_ACCT_ID,
-	b.TERM_TYPE,
-	b.COMMISSION_AMT,
-	b.JSF_AMT,
-	b.ZGF_AMT,
-	b.STAMP_FEE,
-	b.SETTLE_FEE,
-	b.GHF_AMT,
-	b.SXF_AMT,
-	b.OTHER_FEEAMT,
-	b.TRADE_AMT,
-	b.TRADE_NUM,
-	std.TRADE_ID TRADE_ID2,
-	std.COMMISSION_AMT COMMISSION_AMT2,
-	std.JSF_AMT JSF_AMT2,
-	std.ZGF_AMT ZGF_AMT2,
-	std.STAMP_FEE STAMP_FEE2,
-	std.SETTLE_FEE SETTLE_FEE2,
-	std.GHF_AMT GHF_AMT2,
-	std.SXF_AMT SXF_AMT2,
-	std.FPRICE_AMT TRADE_AMT2,
-	std.SHARE_AMT TRADE_NUM2,
-	std.FINPROD_TYPE2 FINPROD_TYPE2,
-	std.PS PS2,
-	std.TRADE_MARKET TRADE_MARKET2,
-	std.TRADE_DATE TRADE_DATE2,
-	std.SEC_ACCT_ID SEC_ACCT_ID2
-from
-	SETTLE_TRANS_DATA std
-	inner join tmp b on
-		b.TRADE_ID = std.TRADE_ID and
-		b.TRADE_ID is not null and
-		b.TRADE_ID != '' and
-		b.PARA_VALUE = #{PARA_VALUE_03}
-UNION ALL
-select
-		b.SEQ_NO,
-		b.INSTRUCTION_ID,
-		b.PORTFOLIO_ID,
-		b.TRADE_DATE,
-		b.TRADE_ID,
-		b.FINPROD_ID,
-		b.MARKET_ID,
-		b.TRADE_MARKET,
-		b.CUSTOMER_ID,
-		b.PARA_VALUE,
-		b.FINPROD_TYPE,
-		b.PS,
-		b.SEC_ACCT_ID,
-		b.TERM_TYPE,
-		b.COMMISSION_AMT,
-		b.JSF_AMT,
-		b.ZGF_AMT,
-		b.STAMP_FEE,
-		b.SETTLE_FEE,
-		b.GHF_AMT,
-		b.SXF_AMT,
-		b.OTHER_FEEAMT,
-		b.TRADE_AMT,
-		b.TRADE_NUM,
-		std.TRADE_ID TRADE_ID2,
-		std.COMMISSION_AMT COMMISSION_AMT2,
-		std.JSF_AMT JSF_AMT2,
-		std.ZGF_AMT ZGF_AMT2,
-		std.STAMP_FEE STAMP_FEE2,
-		std.SETTLE_FEE SETTLE_FEE2,
-		std.GHF_AMT GHF_AMT2,
-		std.SXF_AMT SXF_AMT2,
-		std.FPRICE_AMT TRADE_AMT2,
-		std.SHARE_AMT TRADE_NUM2,
-		std.FINPROD_TYPE2 FINPROD_TYPE2,
-		std.PS PS2,
-		std.TRADE_MARKET TRADE_MARKET2,
-		std.TRADE_DATE TRADE_DATE2,
-		std.SEC_ACCT_ID SEC_ACCT_ID2
-from
-	SETTLE_TRANS_DATA std
-	inner join tmp b on
-		b.PARA_VALUE = #{PARA_VALUE_03} and
-		std.FINPROD_ID = b.FINPROD_ID and
-		std.PS = b.PS and
-		std.PORTFOLIO_ID = b.PORTFOLIO_ID and
-		std.SEC_ACCT_ID = b.SEC_ACCT_ID and
-		(b.TRADE_ID is null or b.TRADE_ID = '')
-	</select>
-
 	<select id="getTrdFeeConfig"
 			resultType="com.joyintech.tams.common.base.entity.TrdFeeConfig">
 		select
@@ -320,9 +26,9 @@ from
 		<if test="planInfo.assetClassify2 == null or planInfo.assetClassify2 == '' ">
 			, 99 as order3
 		</if>
-		<if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">
-			,(case when tfg.ASSET_CLASSIFY3=#{planInfo.assetClassify3, jdbcType=VARCHAR} then 1 else 99 end) order9
-		</if>
+<!--		<if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">-->
+<!--			,(case when tfg.ASSET_CLASSIFY3=#{planInfo.assetClassify3, jdbcType=VARCHAR} then 1 else 99 end) order9-->
+<!--		</if>-->
 		<if test="planInfo.assetClassify3 == null or planInfo.assetClassify3 == '' ">
 			, 99 as order9
 		</if>
@@ -380,11 +86,11 @@ from
 			AND
 			(tfg.ASSET_CLASSIFY2 = #{planInfo.assetClassify2, jdbcType=VARCHAR} or tfg.ASSET_CLASSIFY2 = '' or tfg.ASSET_CLASSIFY2 = null)
 		</if>
-		<if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">
-			AND
-			(tfg.ASSET_CLASSIFY3 = #{planInfo.assetClassify3, jdbcType=VARCHAR} or tfg.ASSET_CLASSIFY3 = '' or tfg.ASSET_CLASSIFY3 = null)
-		</if>
-		ORDER  BY order1, order2, order3, order4, order5, order6, order7, order8, order9, tfg.EFF_DATE
+<!--		<if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">-->
+<!--			AND-->
+<!--			(tfg.ASSET_CLASSIFY3 = #{planInfo.assetClassify3, jdbcType=VARCHAR} or tfg.ASSET_CLASSIFY3 = '' or tfg.ASSET_CLASSIFY3 = null)-->
+<!--		</if>-->
+		ORDER  BY order1, order2, order3, order4, order5, order6, order7, order8, tfg.EFF_DATE
 	</select>
 	<select id="getTrdFeeConfigDetail"
 			resultType="com.joyintech.tams.common.base.entity.TrdFeeConfigDetail">
@@ -466,5 +172,54 @@ from
 
 	<select id="queryCheckDisaccordCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT COUNT(1) FROM SETTLE_TRANS_DATA_STATUS WHERE CHECK_RESULT = #{CHECK_RESULT_0,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteSettleTransDataStatusDisaccords" parameterType="java.util.Map">
+		DELETE
+		FROM
+			SETTLE_TRANS_DATA_STATUS
+		WHERE
+			CHECK_RESULT = #{CHECK_RESULT_0,jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="batchDeleteStlSecReconDetail" parameterType="java.util.Map">
+		DELETE
+		FROM
+		STL_SEC_RECON_DETAIL
+		WHERE
+		1 = 1
+		<if test="stlSecRecons != null and stlSecRecons.size()>0">
+			and SEQ_NO  in
+			<foreach item="item" index="index" collection="stlSecRecons" open="(" separator=","  close=")">
+				#{item.seqNo}
+			</foreach>
+		</if>
+	</delete>
+
+	<delete id="batchDeleteStlSecRecon" parameterType="java.util.Map">
+		DELETE
+		FROM
+		STL_SEC_RECON
+		WHERE
+		1 = 1
+		<if test="stlSecRecons != null and stlSecRecons.size()>0">
+			and SEQ_NO  in
+			<foreach item="item" index="index" collection="stlSecRecons" open="(" separator=","  close=")">
+				#{item.seqNo}
+			</foreach>
+		</if>
+	</delete>
+
+	<select id="queryStlSecReconDisaccords" parameterType="java.util.Map" resultType="com.joyintech.tams.common.base.entity.StlSecRecon">
+		SELECT
+			SEQ_NO,
+			SETTLE_DATE,
+			STL_SEC_DEME,
+			CHECK_RESULT
+		FROM
+			STL_SEC_RECON
+		WHERE
+			CHECK_RESULT = #{CHECK_RESULT_0,jdbcType=VARCHAR}
+		  AND SETTLE_DATE = STR_TO_DATE(#{batchDate}, '%Y-%m-%d')
 	</select>
 </mapper>

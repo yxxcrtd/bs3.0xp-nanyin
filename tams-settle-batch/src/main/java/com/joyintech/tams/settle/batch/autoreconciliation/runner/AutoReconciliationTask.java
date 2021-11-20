@@ -1,4 +1,4 @@
-package com.joyintech.tams.invest.batch.autoreconciliation.runner;
+package com.joyintech.tams.settle.batch.autoreconciliation.runner;
 
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
 import com.joyintech.batch.batchbase.exception.BatchException;
@@ -6,7 +6,7 @@ import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.web.PlatformDate;
-import com.joyintech.tams.invest.batch.autoreconciliation.service.AutoReconciliationService;
+import com.joyintech.tams.settle.batch.autoreconciliation.service.AutoReconciliationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;

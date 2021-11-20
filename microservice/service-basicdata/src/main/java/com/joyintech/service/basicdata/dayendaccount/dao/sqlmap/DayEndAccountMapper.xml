@@ -5,6 +5,7 @@
     <select id="findAccountInfo" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
         WITH temp1 AS(
             SELECT
+                a.SEQ_NO,
                 a.ACCOUT busiAcctNo,
                 a.SETTLE_DATE,
                 a.FINPROD_ID,
@@ -98,6 +99,7 @@
         ),
         temp2 AS(
             SELECT
+                NULL SEQ_NO,
                 e.ACCT_NO busiAcctNo,
                 e.DEAL_DATE SETTLE_DATE,
                 NVL(h.FINPROD_ID,g.FINPROD_ID) FINPROD_ID,
@@ -223,6 +225,7 @@
         ),
         temp3 AS(
             SELECT
+                NULL SEQ_NO,
                 e.ACCT_NO busiAcctNo,
                 e.DEAL_DATE SETTLE_DATE,
                 NVL(h.FINPROD_ID,g.FINPROD_ID) FINPROD_ID,
@@ -348,6 +351,7 @@
         ),
         temp4 AS(
             SELECT
+                NULL SEQ_NO,
                 e.ACCT_NO busiAcctNo,
                 e.DEAL_DATE SETTLE_DATE,
                 NVL(h.FINPROD_ID,g.FINPROD_ID) FINPROD_ID,
@@ -820,9 +824,9 @@
         <if test="planInfo.assetClassify2 == null or planInfo.assetClassify2 == '' ">
             , 99 as order3
         </if>
-        <if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">
-            ,(case when tfg.ASSET_CLASSIFY3=#{planInfo.assetClassify3, jdbcType=VARCHAR} then 1 else 99 end) order9
-        </if>
+<!--        <if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">-->
+<!--            ,(case when tfg.ASSET_CLASSIFY3=#{planInfo.assetClassify3, jdbcType=VARCHAR} then 1 else 99 end) order9-->
+<!--        </if>-->
         <if test="planInfo.assetClassify3 == null or planInfo.assetClassify3 == '' ">
             , 99 as order9
         </if>
@@ -882,11 +886,11 @@
             (tfg.ASSET_CLASSIFY2 = #{planInfo.assetClassify2, jdbcType=VARCHAR} or tfg.ASSET_CLASSIFY2 = '' or
             tfg.ASSET_CLASSIFY2 = null)
         </if>
-        <if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">
-            AND
-            (tfg.ASSET_CLASSIFY3 = #{planInfo.assetClassify3, jdbcType=VARCHAR} or tfg.ASSET_CLASSIFY3 = '' or
-            tfg.ASSET_CLASSIFY3 = null)
-        </if>
+<!--        <if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">-->
+<!--            AND-->
+<!--            (tfg.ASSET_CLASSIFY3 = #{planInfo.assetClassify3, jdbcType=VARCHAR} or tfg.ASSET_CLASSIFY3 = '' or-->
+<!--            tfg.ASSET_CLASSIFY3 = null)-->
+<!--        </if>-->
         ORDER BY order1, order2, order3, order4, order5, order6, order7, order8, order9, tfg.EFF_DATE
     </select>
     <select id="getTrdFeeConfigDetail"

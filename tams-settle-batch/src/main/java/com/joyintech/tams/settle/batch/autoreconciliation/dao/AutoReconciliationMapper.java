@@ -1,4 +1,4 @@
-package com.joyintech.tams.invest.batch.autoreconciliation.dao;
+package com.joyintech.tams.settle.batch.autoreconciliation.dao;
 
 import com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto;
 import org.springframework.stereotype.Repository;
