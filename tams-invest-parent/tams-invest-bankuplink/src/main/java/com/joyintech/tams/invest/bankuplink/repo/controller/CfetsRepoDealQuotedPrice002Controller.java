@@ -334,41 +334,7 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
         StringBuffer sb = new StringBuffer();
         String ps = cfetsRepoDealQuotedPrice001Dto.getPs();
         String isDzh = cfetsRepoDealQuotedPrice001Dto.getIsDzh();
-        HashMap<String, Object> map = new HashMap<>();
         List<PtlAllocationDto> ptlAllocations = cfetsRepoDealQuotedPrice001Dto.getPtlAllocationList();
-        //交易只能针对质押库中已有债券做
-        if(StringUtil.isNotEmpty(cfetsRepoDealQuotedPrice001Dto.getBussRepoSec())){
-            if(StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getIsDzh(),"Y")) {
-                int count = 0;
-                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();
-                for (PtlAllocationDto ptlAllocationDto : cfetsRepoDealQuotedPrice001Dto.getPtlAllocationList()) {
-                    map.clear();
-                    map.put("entrustId", ptlAllocationDto.getEntrustId());
-                    for (PledgeBondInfoDto dto : cfetsRepoDealQuotedPrice001Dto.getBussRepoSec().getPledgeBondList()) {
-                        if (!cfetsRepoDealQuotedPrice002Service.isZYQ(dto.getFinprodId(), map)) {
-                            count++;
-                        }else {
-//                            errorList.add(new ValidMessage("指令代码" + ptlAllocationDto.getEntrustId() + "的质押券库中无" + dto.getFinprodId() + "该质押券，必须有一个质押券库中含有该质押券！"));
-                        }
-//                        if(StringUtil.isNotEmpty(errorList) && (count==0)){
-//                            ar.setErrorList(errorList);
-//                            return ar;
-//                        }
-                    }
-                }
-            }else{
-                map.clear();
-                map.put("entrustId", cfetsRepoDealQuotedPrice001Dto.getEntrustId());
-                for (PledgeBondInfoDto dto : cfetsRepoDealQuotedPrice001Dto.getBussRepoSec().getPledgeBondList()) {
-                    if (cfetsRepoDealQuotedPrice002Service.isZYQ(dto.getFinprodId(), map)) {
-                        ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();
-                        errorList.add(new ValidMessage("该指令代码:" + cfetsRepoDealQuotedPrice001Dto.getEntrustId() + "的质押券库中无" + dto.getFinprodId() + "该质押券！"));
-                        ar.setErrorList(errorList);
-                        return ar;
-                    }
-                }
-            }
-        }
         // 委托为空的场合只有新建模式且系统参数为软校验
         if (!StringUtil.equals(isDzh,"Y")&&StringUtil.isEmpty(cfetsRepoDealQuotedPrice001Dto.getEntrustId())) {
             if ((StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getQuotaPageModel(), QuotaPageModelUtil.MODEL_NEW)||StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getQuotaPageModel(), QuotaPageModelUtil.MODEL_EDIT))
