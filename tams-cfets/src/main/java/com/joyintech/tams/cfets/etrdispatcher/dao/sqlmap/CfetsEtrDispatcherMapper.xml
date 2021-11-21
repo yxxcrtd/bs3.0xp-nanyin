@@ -651,8 +651,7 @@
         su.USER_NAME userName,
         su.REAL_NAME realName,
         to_char(NVL(a.totalWork,0),'fm999990.009') as totalWork,
-        to_char(NVL(b.finishedWork,0),'fm999990.009') as finishedWork,
-        to_char(NVL(a.totalWork-NVL(b.finishedWork,0),0),'fm999990.009') as unfinishedWork
+        to_char(NVL(b.unfinishedWork,0),'fm999990.009') as unfinishedWork
         FROM
         SYS_USER su
         INNER JOIN
@@ -664,29 +663,27 @@
         LEFT JOIN
         (
         SELECT
-            TRADER,
-            round(COUNT(TRADER),2) AS totalWork
+            edi.TRADER as TRADER,
+            round(COUNT(edi.TRADER),2) AS totalWork
         FROM
-            ETR_DISTRIBUTE
+            ETR_DISTRIBUTE edi
+        LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
+        where een.ENTRUST_STATUS = '03' OR een.ENTRUST_STATUS = '04'
         GROUP BY
-            ETR_DISTRIBUTE.TRADER) a
+            edi.TRADER) a
         ON
             su.USER_NAME = a.TRADER
         LEFT JOIN
         (
         SELECT
-            TRADER,
-            COUNT(TRADER) AS finishedWork
+            edi.TRADER as TRADER,
+            round(COUNT(edi.TRADER),2) AS unfinishedWork
         FROM
-            ETR_DISTRIBUTE
-        LEFT JOIN
-            TRD_DEAL_TOTAL_ADD
-        ON
-            ETR_DISTRIBUTE.ENTRUST_ID = TRD_DEAL_TOTAL_ADD.ENTRUST_ID
-        WHERE
-            TRD_DEAL_TOTAL_ADD.ENTRUST_ID IS NOT NULL
+            ETR_DISTRIBUTE edi
+        LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
+        where een.ENTRUST_STATUS = '03'
         GROUP BY
-            ETR_DISTRIBUTE.TRADER ) b
+            edi.TRADER) b
         ON
             b.TRADER=su.USER_NAME
     </select>
