@@ -11,6 +11,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
+import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondCalService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtribdoRiskcalResponse;
@@ -18,6 +19,8 @@ import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
+import com.joyintech.tams.invest.bankuplink.bond.service.CfetsBondDealQuotedPrice001Service;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import io.swagger.annotations.Api;
@@ -63,6 +66,12 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	 */
 	@Autowired
 	private InterfRiskRdsController interfRiskRdsController;
+
+	@Autowired
+	private CfetsQuotedCommonService cfetsQuotedCommonService;
+
+	@Autowired
+	private CfetsBondDealQuotedPrice001Service cfetsBondDealQuotedPrice001Service;
 
 	@ApiOperation(value = "初始化参数", notes = "初始化参数")
 	@PostMapping("/initParams")
@@ -256,6 +265,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			result.setRiskMathFlag("02");
 			Boolean forbidFlag=false;
 			Boolean cluflag=true;
+			//是否全部正常
+			Boolean allNormalFlag = true;
 			List<CfetsEtribdoRiskcalResponse> resultlist=new ArrayList<>();
 			if(!StringUtil.isEmptyList(resultArrList) ){
 				for(String row:resultArrList){
@@ -274,13 +285,18 @@ public class CfetsIbuQuoteBondController extends BaseController {
 					}
 					List<Map<String, Object>> riskList = (List<Map<String, Object>>)resultArr.getBody().get("RSK_LIST");
 					for(Map<String, Object> map: riskList){
+						if(allNormalFlag&&!StringUtil.equals(map.get("kriStatus"),"0")){
+							allNormalFlag = false;
+						}
 						if(StringUtil.equals(map.get("kriStatus"),"0") && !StringUtil.equals(map.get("kriTrend"),"向好")){
 							forbidFlag=true;
 						}
 						map.put("kriStatusCn",cfetsEtrIbBondinfoService.getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
 						resultlist.add(BeanUtil.mapToObject(map, CfetsEtribdoRiskcalResponse.class));
 					}
-					result.setRiskcalReturnList(resultlist);
+					if(!allNormalFlag){
+						result.setRiskcalReturnList(resultlist);
+					}
 					result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());
 					//当置为不通过时就不再进来了
 					if(cluflag) {
@@ -323,5 +339,82 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			logger.error("查询交易成交信息异常",e);
 			return new Message<List<DealTransactionDetailsDto>>().fail().setMessage("查询交易成交信息异常");
 		}
+	}
+
+
+	@ApiOperation(value = "报价批量撤回检查", notes = "报价批量撤回检查")
+	@ResponseBody
+	@RequestMapping("/checkOperationAllowList")
+	public Message<AjaxResult> checkOperationAllowList(@RequestBody List<CfetsBondCheckRequst> cfetsBondCheckRequsts) {
+		AjaxResult aj = null;
+		for(CfetsBondCheckRequst cfetsBondCheckRequst:cfetsBondCheckRequsts){
+			BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
+			BeanUtil.copyPropertiesIgnoreNull(bondQuoteInfoDto,cfetsBondCheckRequst);
+			aj =cfetsQuotedCommonService.checkOperationAllow(bondQuoteInfoDto);
+			if(!com.joyintech.framework.util.StringUtil.isEmptyList(aj.getErrorList())){
+				return new Message<AjaxResult>().success().setData(aj);
+			}
+		}
+		return new Message<AjaxResult>().success().setData(aj);
+	}
+
+	@ApiOperation(value = "报价检查", notes = "报价修改、复制、回退、回复、撤回检查")
+	@ResponseBody
+	@RequestMapping("/checkOperationAllow")
+	public Message<AjaxResult> checkOperationAllow(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) {
+		BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
+		BeanUtil.copyPropertiesIgnoreNull(bondQuoteInfoDto,cfetsBondCheckRequst);
+		return new Message<AjaxResult>().success().setData(cfetsQuotedCommonService.checkOperationAllow(bondQuoteInfoDto));
+	}
+
+	@ApiOperation(value = "撤回", notes = "撤回")
+	@ResponseBody
+	@RequestMapping("doReCall")
+	public Message<AjaxResult> doReCall(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) {
+		AjaxResult ar = null;
+		BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
+		BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
+		if (cfetsBondDealQuotedPrice001Service.doReCall(bondQuote)) {
+			ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
+		} ;
+		return new Message<AjaxResult>().success().setData(ar);
+	}
+
+	@ApiOperation(value = "批量撤回", notes = "批量撤回")
+	@ResponseBody
+	@RequestMapping("doReCallList")
+	public Message<AjaxResult> doReCallList(@RequestBody List<CfetsBondCheckRequst> cfetsBondCheckRequsts) {
+		AjaxResult ar = null;
+		for(CfetsBondCheckRequst cfetsBondCheckRequst:cfetsBondCheckRequsts){
+			BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
+			BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
+			if (cfetsBondDealQuotedPrice001Service.doReCall(bondQuote)) {
+				ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
+			} ;
+		}
+		return new Message<AjaxResult>().success().setData(ar);
+	}
+
+	@ApiOperation(value = "回退", notes = "回退")
+	@ResponseBody
+	@RequestMapping("doBack")
+	public Message<AjaxResult> doBack(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) {
+		AjaxResult ar = null;
+		BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
+		BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
+		if (cfetsBondDealQuotedPrice001Service.doBack(bondQuote)) {
+			ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
+		} ;
+
+		return new Message<AjaxResult>().success().setData(ar);
+	}
+
+	@ApiOperation(value = "失败", notes = "失败")
+	@ResponseBody
+	@RequestMapping("/selectErrlog")
+	public AjaxResult selectErrlog(String quoteId) {
+		AjaxResult ar = new AjaxResult();
+		ar.setData(cfetsQuotedCommonService.selectErrlog(quoteId));
+		return ar;
 	}
 }

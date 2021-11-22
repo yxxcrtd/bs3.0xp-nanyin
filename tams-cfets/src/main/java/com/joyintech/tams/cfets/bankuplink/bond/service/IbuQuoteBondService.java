@@ -3,11 +3,10 @@ package com.joyintech.tams.cfets.bankuplink.bond.service;
 import com.joyintech.background.component.order.exchange.common.constant.DictCodeList;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
@@ -174,10 +173,17 @@ public class IbuQuoteBondService extends BaseService {
         List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if (!StringUtil.isEmptyList(entrustDtos)) {
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto, entrustDtos.get(0));
-            //处理券面总额
             cfetsBondDealQuoteCommonDto.setShareAmt(entrustDtos.stream().map(CfetsBondDealEntrustOrderDto::getEntrustAvaNum).reduce(BigDecimal.ZERO, BigDecimal::add));
+            cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getShareAmt(),new BigDecimal("10000")));
             if(StringUtil.equals(sellPara,"02")){
+                //处理券面总额
                 cfetsBondDealQuoteCommonDto.setOurEntNum(cfetsBondDealQuoteCommonDto.getShareAmt());
+                if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getPs(), com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue())){
+                    cfetsBondDealQuoteCommonDto.setSellAbleNum(BigDecimal.ZERO);
+                }
+                if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getPs(),com.joyintech.tams.constant.DictCodeList.交易方向_卖出.getValue())){
+                    cfetsBondDealQuoteCommonDto.setLendinEntNum(BigDecimal.ZERO);
+                }
             }
             //处理结算日期
             cfetsBondDealQuoteCommonDto.setTradeDate(iPlatformDate.getSysDate());
@@ -211,6 +217,8 @@ public class IbuQuoteBondService extends BaseService {
             for (CfetsBondDealEntrustOrderDto entrustDto : entrustDtos) {
                 PtlAllocationDto ptlAllocationDto = new PtlAllocationDto();
                 BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto,entrustDto);
+                ptlAllocationDto.setAvaNum(ArithmeticUtil.multiply(entrustDto.getEntrustAvaNum(),new BigDecimal("10000")));
+                ptlAllocationDto.setShareAmt(ArithmeticUtil.multiply(entrustDto.getAvaNum(),new BigDecimal("10000")));
                 ptlAllocatios.add(ptlAllocationDto);
             }
             cfetsBondDealQuoteCommonDto.setPtlAllocatios(ptlAllocatios);
@@ -733,6 +741,51 @@ public class IbuQuoteBondService extends BaseService {
      */
     public List<DealTransactionDetailsDto> listDealTransactionDetails(String entrustId){
         return cfetsIbuQuoteBondMapper.listDealTransactionDetails(entrustId);
+    }
+
+    /**
+     * 行权收益率是否显示
+     *
+     * @param
+     * @return 行权收益率是否显示
+     * @see
+     * @since 1.0
+     */
+    public String isExerYieldDivShow(Map<String, Object> param) {
+        String finprodId = (String) param.get("finprodId");
+        if (StringUtil.isBlank(finprodId)) {
+            return com.joyintech.tams.constant.DictCodeList.是否_否.getValue();
+        }
+
+        // 是否含权债
+        FinProduct finProduct = finProductMapper.selectByPrimaryKey(finprodId);
+        if (finProduct == null) {
+            return com.joyintech.tams.constant.DictCodeList.是否_否.getValue();
+        }
+        else {
+            String isRight = finProduct.getIsRight();
+            if (StringUtil.contains(isRight, GlobalConstant.COMMA)) {
+                isRight = StringUtil.splitToList(GlobalConstant.COMMA, isRight).get(0);
+            }
+            if (!StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), isRight)) {
+                return com.joyintech.tams.constant.DictCodeList.是否_否.getValue();
+            }
+        }
+
+        // tradeDate
+        if (StringUtil.isBlank((String) param.get("tradeDate"))) {
+            param.put("sysDate", iPlatformDate.getSysDate());
+        }
+        else {
+            param.put("sysDate", DateUtil.parse((String) param.get("tradeDate")));
+        }
+
+        int dataCount = cfetsIbuQuoteBondMapper.selectBondHasEexrPlanCount(param);
+        if (dataCount > 0) {
+            return com.joyintech.tams.constant.DictCodeList.是否_是.getValue();
+        }
+
+        return com.joyintech.tams.constant.DictCodeList.是否_否.getValue();
     }
 
     private void setParam(Map<String,Object> param){

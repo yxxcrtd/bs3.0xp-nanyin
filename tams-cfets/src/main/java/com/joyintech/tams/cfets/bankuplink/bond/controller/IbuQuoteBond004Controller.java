@@ -116,9 +116,9 @@ public class IbuQuoteBond004Controller extends BaseController {
     @ApiOperation(value = "登记提交(保存)", notes = "登记提交(保存)")
 	@RequestMapping("save")
     @ResponseBody
-	public AjaxResult save(@RequestBody CfetsBondDealQuoteCommonDto dto, BindingResult br) throws WorkFlowException {
-		if (br.hasErrors()) {
-			return new AjaxResult(br);
+	public Message<AjaxResult> save(@RequestBody CfetsBondDealQuoteCommonDto dto, BindingResult br) throws WorkFlowException {
+        if (br.hasErrors()) {
+            return new Message<AjaxResult>().success().setData(new AjaxResult(br));
 		}
         CfetsBondDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsBondDealRegisterQuoteDto();
         //前台实体转成后台dto
@@ -139,7 +139,7 @@ public class IbuQuoteBond004Controller extends BaseController {
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券登记报价.getValue());
 		processParameter.setWorkFlowParameter(params);
 		String msg = cfetsBondDealQuotedPrice004Service.start(processParameter, cfetsBondDealRegisterQuoteDto);
-		return new AjaxResult(msg);
+        return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
 	}
 
 

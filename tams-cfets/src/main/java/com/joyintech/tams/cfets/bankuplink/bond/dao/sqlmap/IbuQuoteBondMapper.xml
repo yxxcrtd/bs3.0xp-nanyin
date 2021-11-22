@@ -102,9 +102,9 @@
         ETR_ENTRUST.PRICE_MODEL                                             priceModel,
         ETR_ENTRUST_ADD.SEC_ACCT_ID                                         secManageAcctId,
         PA_PTL_PORTFOLIO.PORTFOLIO_SERIES									portfolioSeries,
-        ETR_ENTRUST_ADD.OUR_ENT_NUM OUR_ENT_NUM,
-        ETR_ENTRUST_ADD.LENDIN_ENT_NUM LENDIN_ENT_NUM,
-        ETR_ENTRUST_ADD.SELL_ABLE_NUM SELL_ABLE_NUM
+        ETR_ENTRUST_ADD.OUR_ENT_NUM*100 OUR_ENT_NUM,
+        ETR_ENTRUST_ADD.LENDIN_ENT_NUM*100 LENDIN_ENT_NUM,
+        ETR_ENTRUST_ADD.SELL_ABLE_NUM*100 SELL_ABLE_NUM
         FROM
         ETR_ENTRUST
         INNER JOIN
@@ -300,5 +300,13 @@
 		AND P.ACCT_TYPE = #{acctType}
 		and rownum=1
 	</select>
+
+    <select id="selectBondHasEexrPlanCount" resultType="java.lang.Integer">
+        select count(1)
+        from FIN_EXERCISE_PLAN
+        where
+            FINPROD_ID = #{finprodId}
+            and EXERCISE_DATE &gt; = #{sysDate,jdbcType=DATE}
+    </select>
 
 </mapper>

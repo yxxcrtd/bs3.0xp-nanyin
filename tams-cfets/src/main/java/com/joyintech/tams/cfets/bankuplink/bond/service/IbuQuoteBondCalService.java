@@ -2,11 +2,10 @@ package com.joyintech.tams.cfets.bankuplink.bond.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
+import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
@@ -28,15 +27,22 @@ public class IbuQuoteBondCalService extends BaseService {
     @Autowired(required = false)
     private DateCalService dateCalService;
 
+    @Autowired
+    private CfetsBondDealQuotedPriceService cfetsBondDealQuotedPriceService;
     /**
      * 数据联动计算
      * @param calRequest
      * @return
      */
     public CalRespone calculation(CalRequest calRequest){
-        return restTemplate.postForObject(
+        CalRespone calRespone = new CalRespone();
+        CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
+        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,calRequest);
+        BeanUtil.copyPropertiesIgnoreNull(calRespone,cfetsBondDealQuotedPriceService.calcAmt(cfetsBondDealDialogueQuoteDto));
+        return calRespone;
+        /*return restTemplate.postForObject(
                     ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/calcAmt",
-                    calRequest, CalRespone.class);
+                    calRequest, CalRespone.class);*/
     }
 
     /**

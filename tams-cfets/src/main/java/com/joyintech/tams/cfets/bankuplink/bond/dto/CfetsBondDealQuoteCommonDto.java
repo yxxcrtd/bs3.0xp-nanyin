@@ -1,7 +1,5 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.json.BigDecimalSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -16,9 +14,20 @@ import java.util.List;
 @ApiModel(value="债券报价实体(输入输出共用)",description="债券报价实体(输入输出共用)")
 public class CfetsBondDealQuoteCommonDto {
 
+    @ApiModelProperty(name="quoteId",value="报价编号")
+    private String quoteId;
 
     @ApiModelProperty(name="operateType",value="操作类型" ,example = "save")
     private String operateType;
+
+    @ApiModelProperty(name="quotaPageModel",value="报价操作类型" ,example = "marketResponse")
+    private String quotaPageModel;
+
+    @ApiModelProperty(name="validStatus",value="有效状态" ,example = "01")
+    private String validStatus;
+
+    @ApiModelProperty(name="openModel",value="打开入口" ,example = "copy:表示复制入口")
+    private String openModel;
 
     @ApiModelProperty(name="quoteStyle",value="报价方式")
     private String quoteStyle;
@@ -143,12 +152,44 @@ public class CfetsBondDealQuoteCommonDto {
     @ApiModelProperty(name="actSetteDate",value="实际行权日")
     private Date actSetteDate;
 
+    public String getQuoteId() {
+        return quoteId;
+    }
+
+    public void setQuoteId(String quoteId) {
+        this.quoteId = quoteId;
+    }
+
     public String getOperateType() {
         return operateType;
     }
 
     public void setOperateType(String operateType) {
         this.operateType = operateType;
+    }
+
+    public String getQuotaPageModel() {
+        return quotaPageModel;
+    }
+
+    public void setQuotaPageModel(String quotaPageModel) {
+        this.quotaPageModel = quotaPageModel;
+    }
+
+    public String getValidStatus() {
+        return validStatus;
+    }
+
+    public void setValidStatus(String validStatus) {
+        this.validStatus = validStatus;
+    }
+
+    public String getOpenModel() {
+        return openModel;
+    }
+
+    public void setOpenModel(String openModel) {
+        this.openModel = openModel;
     }
 
     public String getPs() {
