@@ -152,6 +152,15 @@
                     </select>
                 </div>
             </div>
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.chbIssuerId}">发行人代码</label>
+                <div class="layui-input-inline input-inline">
+                    <input th:id="|${entityName}_chbIssuerId|" th:name="|${entityName}.chbIssuerId|"
+                           th:value="${entity?.chbIssuerId}"
+                           class="layui-input form-input" placeholder="请输入内容"
+                           data-th-placeholder="#{SysCommon.placeholder}" >
+                </div>
+            </div>
         </div>
         <div class="layui-form-item">
             <div class="form-inline-wrap" th:id="|${entityName}_repBankSecPerpetual_div|">
@@ -246,7 +255,68 @@
                     </select>
                 </div>
             </div>
+        </div>
 
+		<div class="layui-form-item">
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.constracteBusiType}" >结构化业务类型</label>
+                <div class="layui-input-inline input-inline">
+                    <select th:id="|${entityName}_constracteBusiType|" th:name="|${entityName}.constracteBusiType|"
+                            class="layui-input form-input input-select" placeholder="请输入内容"
+                            th:initValue="${entity?.constracteBusiType}"
+                            data-th-placeholder="#{SysCommon.placeholder}" 
+                            data-th-data-result="${SVR_CONSTRACTE_BUSI_TYPE}">
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.constracteGrade}" >结构化层级</label>
+                <div class="layui-input-inline input-inline">
+                    <select th:id="|${entityName}_constracteGrade|" th:name="|${entityName}.constracteGrade|"
+                            class="layui-input form-input input-select" placeholder="请输入内容"
+                            th:initValue="${entity?.constracteGrade}"
+                            data-th-placeholder="#{SysCommon.placeholder}" 
+                            data-th-data-result="${SVR_CONSTRACTE_GRADE}">
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.constracteHeaverTimes}" >结构化杠杆倍数</label>
+                <div class="layui-input-inline input-inline">                   
+                    <input type="text" th:id="|${entityName}_constracteHeaverTimes|" th:name="|${entityName}.constracteHeaverTimes|"                               
+                               th:value="${entity?.constracteHeaverTimes}" data-textrange="2" maxlength="6"
+                               class="layui-input form-input text-number"/>       
+                </div>
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.optionFlag}" >是否含权债</label>
+                <div class="layui-input-inline input-inline">
+                    <select th:id="|${entityName}_optionFlag|" th:name="|${entityName}.optionFlag|"
+                            class="layui-input form-input input-select" placeholder="请输入内容"
+                            th:initValue="${entity?.optionFlag}"
+                            data-th-placeholder="#{SysCommon.placeholder}" 
+                            data-th-data-result="${SVR_YES_OR_NO}">
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-inline-wrap">
+                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussFinBondRepInfo.bankSecKzzq}" >是否商业银行可转债</label>
+                <div class="layui-input-inline input-inline">
+                    <select th:id="|${entityName}_bankSecKzzq|" th:name="|${entityName}.bankSecKzzq|"
+                            class="layui-input form-input input-select" placeholder="请输入内容"
+                            th:initValue="${entity?.bankSecKzzq}"
+                            data-th-placeholder="#{SysCommon.placeholder}" 
+                            data-th-data-result="${SVR_YES_OR_NO}">
+                    </select>
+                </div>
+            </div>
+            
         </div>
 
         <div class="layui-form-item">

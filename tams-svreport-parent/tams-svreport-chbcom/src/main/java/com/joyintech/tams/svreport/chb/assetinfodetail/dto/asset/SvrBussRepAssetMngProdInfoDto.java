@@ -159,6 +159,11 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
      * 新人行资产三级分类
      */
     private String pbcAssetType3;
+    
+    /**
+     * 管理人代码
+     */
+    private String chbManagerId;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -379,4 +384,12 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
     public void setPbcAssetType3(String pbcAssetType3) {
         this.pbcAssetType3 = pbcAssetType3;
     }
+    
+    public String getChbManagerId() {
+		return chbManagerId;
+	}
+
+	public void setChbManagerId(String chbManagerId) {
+		this.chbManagerId = chbManagerId;
+	}
 }
