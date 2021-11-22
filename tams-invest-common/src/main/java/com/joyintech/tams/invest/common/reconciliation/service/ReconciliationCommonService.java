@@ -323,7 +323,7 @@ public class ReconciliationCommonService {
                     localPlanSearchInfo.setFeeType(feeType);
                 }
                 // 登记托管机构
-                if (StringUtil.isNotEmpty(stlSecAcctInfo.getRegistOrg())) {
+                if (stlSecAcctInfo != null && StringUtil.isNotEmpty(stlSecAcctInfo.getRegistOrg())) {
                     localPlanSearchInfo.setRegistOrg(stlSecAcctInfo.getRegistOrg());
                 }
                 // 交易品种
