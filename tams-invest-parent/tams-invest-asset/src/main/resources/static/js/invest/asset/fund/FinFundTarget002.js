@@ -423,11 +423,11 @@
 			if ($('#finprodMarketId').prop('disabled')) {
 				$("#magnifier").css({color: '#dbdbdb'});
 			}
-            if(typeof pageModel !== 'undefined'
-                && (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)){
-                $('.purSpeed').append('<i class="must">*</i>');
-                $('.redSpeed').append('<i class="must">*</i>');
-            }
+            // if(typeof pageModel !== 'undefined'
+            //     && (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)){
+            //     $('.purSpeed').append('<i class="must">*</i>');
+            //     $('.redSpeed').append('<i class="must">*</i>');
+            // }
             $('#bussRepFundInfoDto_repAssetType_div').show();
             //add by zhangnain 20191120 start
             //双父级数据字典联动 重新触发change事件
