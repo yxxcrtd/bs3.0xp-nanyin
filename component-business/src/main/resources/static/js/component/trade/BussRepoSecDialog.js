@@ -636,6 +636,13 @@
     	if(getElementById("entrustId").val()!=null&&getElementById("entrustId").val()!=""&&pageModel==2){
     		getElementById("btn_joyin").hide();
     	}
+
+    	// GZYHTZJY-510:银行间债券借贷交易,新建页面借贷方向为融出时,质押券信息，添加质押卷界面应没有【新建债券】按钮 fuyongsheng 20211122 edit start
+        if(isBondLendTrade && getElementById("ps").val() == BACK_LEND_DIRECTION_06){
+            getElementById("btn_add").hide();
+        }
+        // GZYHTZJY-510:银行间债券借贷交易,新建页面借贷方向为融出时,质押券信息，添加质押卷界面应没有【新建债券】按钮 fuyongsheng 20211122 edit end
+
     	//Modify by gaopeng 2019/10/12 end
         // 初始化时，直接加载质押券列表
         pledgeBondDetailTbl.load();
