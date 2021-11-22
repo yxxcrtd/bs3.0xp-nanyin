@@ -11,6 +11,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinCashPlanMapper;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
@@ -110,6 +111,10 @@ public class TradeCommonService extends BaseService {
 
     @Autowired(required = false)
     private FinProductMapper finProductMapper;
+
+
+    @Autowired
+    private TrdProductDealMapper trdProductDealMapper;
     
     /**
      * 查询生效的委托
@@ -1319,6 +1324,11 @@ public class TradeCommonService extends BaseService {
         }
         // 买入、申购，退回时，释放授信
         if ("doBack".equals(method)){
+            //add by meifaxin 20211122 撤销交易 审批退回  不释放授信 start
+            if(selectTrade(creditLinesInputDto.getTradeId())!=null){ //区分新建和撤销交易退回
+                return false;
+            }
+            //add by meifaxin 20211122 撤回交易 审批退回  不释放授信 end
             if (DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs())
@@ -1412,5 +1422,13 @@ public class TradeCommonService extends BaseService {
      */
     public FinProduct selectFinProduct(String finprodId) {
         return finProductMapper.selectByPrimaryKey(finprodId);
+    }
+    /**
+     * 查询交易
+     * @param tradeId 交易id
+     * @return 交易信息
+     */
+    public TrdProductDeal selectTrade(String tradeId) {
+        return trdProductDealMapper.selectByPrimaryKey(tradeId);
     }
 }
