@@ -160,7 +160,27 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
      * 备注
      */
     private String remark;
-
+    /**
+     * 取得 销售结算资金交易日期字符串格式
+     * @return 销售结算资金交易日期
+     */
+    public String getTradeVdateStr() {
+        return DateUtil.format(this.getTradeVdate());
+    }
+    /**
+     * 取得 中债报送截止日字符串格式
+     * @return
+     */
+    public String getChbSubmitDeadlineStr() {
+        return DateUtil.format(this.getChbSubmitDeadline());
+    }
+    /**
+     * 取得 数据日期字符串格式
+     * @return 数据日期
+     */
+    public String getStatusDateStr() {
+        return DateUtil.format(this.getStatusDate());
+    }
     public Date getChbSubmitDeadline() {
         return chbSubmitDeadline;
     }

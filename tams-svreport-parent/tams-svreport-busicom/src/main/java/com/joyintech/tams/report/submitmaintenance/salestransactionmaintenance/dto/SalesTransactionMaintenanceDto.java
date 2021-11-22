@@ -5,6 +5,7 @@
 package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -130,6 +131,13 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
      * 数据接入日期
      */
     private Date receptDate;
+    /**
+     * 取得 销售结算资金交易日期字符串格式
+     * @return 销售结算资金交易日期
+     */
+    public String getTradeVdateStr() {
+        return DateUtil.format(this.getTradeVdate());
+    }
 
     public String getDataStatus() {
         return dataStatus;
