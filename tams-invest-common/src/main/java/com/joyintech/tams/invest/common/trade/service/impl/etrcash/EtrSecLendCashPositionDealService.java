@@ -107,6 +107,31 @@ public class EtrSecLendCashPositionDealService  {
                                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto1);
                             }
                         }
+                    }else{
+                        BigDecimal shengYuEntrustAmt = etrCommonCashPositionMapper.selectShengYuEntrustAmt(entrustId);
+                        //判断这笔指令剩余待完成额度是否等于此次交易额度，如果等于就冲销指令中质押券头寸，然后按照交易中质押券券面占用头寸
+                        if(finProductTradeDto.getTrdProductDeal().getPrinAmt().compareTo(shengYuEntrustAmt)==0){
+                            BussRepoSecDto bussRepoSecDto = finProductTradeDto.getBussRepoSec();
+                            if (bussRepoSecDto!=null && bussRepoSecDto.getPledgeBondList()!= null && bussRepoSecDto.getPledgeBondList().size()>0 ) {
+                                List<PledgeBondInfoDto> pledgeBondListDetailed = bussRepoSecDto.getPledgeBondList();
+                                for (PledgeBondInfoDto pledgeBondInfoDto : pledgeBondListDetailed) {
+                                    EtrSecPositionFlowDto etrSecPositionFlowDto1 = new EtrSecPositionFlowDto();
+                                    BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDto1, etrSecPositionFlowDto);
+                                    etrSecPositionFlowDto1.setAmount(etrCommonCashPositionMapper.selectZhiLingChiCang(entrustId,pledgeBondInfoDto.getFinprodId()).negate());
+                                    etrSecPositionFlowDto1.setFinprodId(pledgeBondInfoDto.getFinprodId());
+                                    etrSecPositionFlowDto1.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+                                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto1);
+
+                                    EtrSecPositionFlowDto etrSecPositionFlowDto2 = new EtrSecPositionFlowDto();
+                                    BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDto2, etrSecPositionFlowDto);
+                                    etrSecPositionFlowDto2.setAmount(etrCommonCashPositionMapper.selectJiaoYiChiCang(entrustId, pledgeBondInfoDto.getFinprodId()).add(
+                                            ArithmeticUtil.divide(pledgeBondInfoDto.getPledgePrin(), 100, 2)).negate());
+                                    etrSecPositionFlowDto2.setFinprodId(pledgeBondInfoDto.getFinprodId());
+                                    etrSecPositionFlowDto2.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+                                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto2);
+                                }
+                            }
+                        }
                     }
                 }
             } else {
@@ -293,18 +318,26 @@ public class EtrSecLendCashPositionDealService  {
         EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(entrustCommonDto);
         if (StringUtil.equals(etrEntrust.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())) {
             if(CollectionUtils.isNotEmpty(etrPledges)){
-                for (EtrPledge pledgeBondInfoDto:etrPledges) {                   
+                for (EtrPledge pledgeBondInfoDto:etrPledges) {
                     etrSecPositionFlowDto.setFinprodId(pledgeBondInfoDto.getFinprodId());
                     //获取质押流水
                     etrSecPositionFlowDto.setAmount(etrCommonCashPositionMapper.selectCommandPositionFlow(etrSecPositionFlowDto).negate());            
                     etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+
+                    //上面是释放指令全部占用的头寸，下面是加上 占用交易部分的头寸
+                    EtrSecPositionFlowDto etrSecPositionFlowDto2 = new EtrSecPositionFlowDto();
+                    BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDto2, etrSecPositionFlowDto);
+                    etrSecPositionFlowDto2.setAmount(etrCommonCashPositionMapper.selectJiaoYiChiCang(etrEntrust.getEntrustId(), pledgeBondInfoDto.getFinprodId()).negate());
+                    etrSecPositionFlowDto2.setFinprodId(pledgeBondInfoDto.getFinprodId());
+                    etrSecPositionFlowDto2.setSeqno(EtrCommonCashPositionDealService.getSeqNo());
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto2);
                 }
             }
         }
         else {
             BigDecimal etrFinish = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
             // 关闭日每只券增加未完成券面总额/100
-            etrSecPositionFlowDto.setAmount(ArithmeticUtil.subtract(ArithmeticUtil.divide(etrEntrust.getEntrustAmt(),100,2), etrFinish));
+            etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(ArithmeticUtil.subtract(etrEntrust.getEntrustAmt(), etrFinish),100,2));
             etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
         }
     }
