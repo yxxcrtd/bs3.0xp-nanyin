@@ -9,6 +9,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.service.basicdata.multiportfoliomaintenance.dao.MutiptlPortfolioDetailMapper;
 import com.joyintech.service.basicdata.multiportfoliomaintenance.dto.MutiptlPortfolioDetailDto;
+import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -83,6 +84,7 @@ public class MultiPortfolioMaintenance002Service extends BaseService<MutiptlPort
             MutiptlPortfolioDetailDto insertDto = new MutiptlPortfolioDetailDto();
             BeanUtil.copyPropertiesIgnoreNull(insertDto, temp);
             insertDto.setSeqNo(IDGenerator.generate());
+            insertDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
             insertDto.setCreateUser(LoginUserUtil.getUserName());
             insertDto.setUpdateUser(LoginUserUtil.getUserName());
             Date date= DateUtil.now();
