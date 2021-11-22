@@ -113,6 +113,11 @@ public class TrdSecLendDuration002Service extends BaseService<TrdSecLendDuration
             else {
                 getInterfInputDto(item, DictCodeListExt1.交易流程状态_有效);
             }
+
+            if (StringUtil.isNotEmpty(entity.getIsCashPay())){
+                item.setIsCashPay(entity.getIsCashPay());
+            }
+            item.setIsSLDeal(DictCodeList.是否_是.getValue());
         });
 
         baseTradeProductDealCommServiceImpl.execute(tradeDto);

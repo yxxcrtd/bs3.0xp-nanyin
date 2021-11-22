@@ -148,12 +148,12 @@ public class EtrSecLendCashPositionDealService  {
         else {// 到期
             // 融入到期，只在提交时，体现持仓和现金.只需处理债券交割，现金交割（暂不实现）
             if (StringUtil.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())) {
-//                if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
-//                    etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId());
-//                    etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(deal.getPrinAmt(), 100, 2).negate());
-//                    etrSecPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-//                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
-//                }
+                if (DictCodeList.持仓类型_实际.equals(持仓类型)) {
+                    etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId());
+                    etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(deal.getPrinAmt(), 100, 2).negate());
+                    etrSecPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                }
                 if (DictCodeList.持仓类型_实际.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) { // 无委托提交 每只券减少委托质押券面总额/100
                     if (StringUtils.isBlank(entrustId)) {
                         List<RepoInfo> bussRepoSecDto = EtrCommonCashPositionDealService.findRepoInfo(deal.getFinprodId());//质押劵信息
