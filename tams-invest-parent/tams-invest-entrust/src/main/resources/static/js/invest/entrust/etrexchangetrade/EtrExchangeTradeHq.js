@@ -693,6 +693,9 @@
                 }
                 //设置TAB页
                 parent.EtrExchangeTrade001.setCurrentTab(currentTab);
+                if(window.parent.getIsNeedMutiPtl() == '01') {
+                    parent.EtrExchangeTradeMulti001.setCurrentTab(currentTab);
+                }
             });
 
         });

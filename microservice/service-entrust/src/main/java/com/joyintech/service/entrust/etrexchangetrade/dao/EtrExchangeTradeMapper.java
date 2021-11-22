@@ -14,16 +14,13 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.service.entrust.etrexchangetrade.dto.FinProductOthCodeDto;
-import com.joyintech.service.entrust.etrexchangetrade.dto.SubEqutityDto;
+import com.joyintech.service.entrust.etrexchangetrade.dto.*;
 import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
-import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade003Dto;
 import com.joyintech.tams.invest.common.trade.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import org.springframework.stereotype.Repository;
@@ -286,4 +283,18 @@ public interface EtrExchangeTradeMapper {
     //add by chenjiaxing 20210907 债券竞价交易添加偏离度 start
 	BigDecimal getLastNetPrice(Map<String, Object> param);
 	//add by chenjiaxing 20210907 债券竞价交易添加偏离度 end
+
+	/**
+	 * 查询多组合名称下拉框
+	 * @param map
+	 * @return
+	 */
+	List<SelectOptionDto> selectPortfolioTreeId(Map<String,Object> map);
+
+	/**
+	 * 查询多组合明细
+	 * @param map
+	 * @return
+	 */
+	List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(Map<String,Object> map);
 }

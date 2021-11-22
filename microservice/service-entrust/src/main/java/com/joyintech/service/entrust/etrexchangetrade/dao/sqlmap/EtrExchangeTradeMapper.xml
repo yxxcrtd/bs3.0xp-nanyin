@@ -1336,4 +1336,60 @@
                     AND VALUE_SOURCE = #{VALUATION_SOURCE}
             )
     </select>
+
+    <select id="selectPortfolioTreeId" resultType="com.joyintech.framework.select.SelectOptionDto">
+            select T.TREE_ID id,
+                   T.TREE_NAME text
+                    from MUTIPTL_PORTFOLIO_TREE T
+            <where>
+                 T.PAR_TREE_ID IS NOT NULL
+                <if test="search != null and search != ''">
+                    AND
+                    (
+                    T.TREE_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    OR
+                    T.TREE_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    )
+                </if>
+                <if test="initValue != null and initValue != ''">
+                    AND T.TREE_ID = #{initValue}
+                </if>
+            </where>
+    </select>
+
+    <select id="selectPortfolioTreeDetail" resultType="com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTradeMultiPtl001Dto">
+        select
+            A.TREE_ID treeId,
+            A.PORTFOLIO_ID portfolioId,
+            B.PORTFOLIO_NAME portfolioName,
+            A.ACCT_NO acctNo,
+            D.ACCT_NAME acctName,
+            <if test="finprodId != null and finprodId != ''">
+                E.FINPROD_ID finprodId,
+                E.FINPROD_MARKET_ID finprodMarketId,
+                E.FINPROD_ABBR finprodName,
+            </if>
+            <if test="ps != null and ps != ''">
+                #{ps} ps,
+            </if>
+            A.CCY ccy
+        from
+            MUTIPTL_PORTFOLIO_DETAIL A
+        INNER JOIN PTL_PORTFOLIO B
+            ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
+        INNER JOIN PTL_PORTFOLIO_AUTHORITY C
+            ON B.PORTFOLIO_ID = C.PORTFOLIO_ID
+        INNER JOIN STL_CAPACCT_INFO D
+            ON A.ACCT_NO = D.ACCT_NO
+        <if test="finprodId != null and finprodId != ''">
+            LEFT JOIN FIN_PRODUCT E
+            ON E.FINPROD_ID = #{finprodId}
+        </if>
+        <where>
+            A.TREE_ID = #{portfolioTreeId}
+            AND A.EFF_DATE <![CDATA[<=]]> to_date(#{ptlDate},'yyyy-mm-dd')
+            AND C.USER_ID = #{userId}
+        </where>
+
+    </select>
 </mapper>

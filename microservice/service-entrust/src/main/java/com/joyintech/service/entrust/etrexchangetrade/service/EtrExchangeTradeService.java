@@ -2315,4 +2315,23 @@ public class EtrExchangeTradeService extends BaseService{
         return null;
     }
     //add by chenjiaxing 债券竞价交易展示偏离度 end
+
+    /**
+     * 查询多组合名称下拉框
+     * @param map
+     * @return
+     */
+    public Page<SelectOptionDto> selectPortfolioTreeId(Map<String,Object> map, int page, int length) {
+        return super.queryForPageForSelectReturn(page,length,()->etrExchangeTradeMapper.selectPortfolioTreeId(map));
+    }
+
+    /**
+     * 查询多组合明细
+     * @param map
+     * @return
+     */
+    public List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(Map<String,Object> map) {
+        List<EtrExchangeTradeMultiPtl001Dto> list = etrExchangeTradeMapper.selectPortfolioTreeDetail(map);
+        return list;
+    }
 }

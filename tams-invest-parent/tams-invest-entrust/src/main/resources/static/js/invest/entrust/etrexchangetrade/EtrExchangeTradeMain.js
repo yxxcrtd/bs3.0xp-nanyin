@@ -4,6 +4,8 @@
 
 var correctData;
 
+var currentEtrTypeTab = "0";
+
   /**
    * 指令提交或者保存
    */
@@ -365,6 +367,23 @@ var importEtr = function() {
 
 $(function() {
 
+    layui.use(['element'], function() {
+        // 单组合和多组合指令页面切换
+        var element = layui.element;
+        element.on('tab(zlPlatform)', function(data) {
+            currentEtrTypeTab = data.index;
+            if(currentEtrTypeTab == 0) {
+                $("#singlePtlDiv").show();
+                $("#multiPtlDiv").hide();
+            }
+            else {
+                $("#multiPtlDiv").show();
+                $("#singlePtlDiv").hide();
+            }
+        });
+
+    });
+
     //add by meifaxin 20211027 上下左右拖拽start
     Split(['#left_bottom_panel_dev', '#right_bottom_panel_dev'], {
         sizes: [42, 58],
@@ -424,7 +443,9 @@ $(function() {
     });
 }());
 
-
+var getIsNeedMutiPtl = function () {
+    return isNeedMutiPtl;
+}
 
 var dialogSelf = {}
 dialogSelf.flag="acd";

@@ -480,4 +480,24 @@ public class EtrExchangeTradeController {
         return etrExchangeTradeService.calcDeviationDegree(param);
     }
     //add by chenjiaxing 20210907 债券竞价交易添加偏离度展示 end
+
+    /**
+     * 查询多组合名称下拉框
+     * @param map
+     * @return
+     */
+    @PostMapping("selectPortfolioTreeId/{page}/{length}")
+    public Page<SelectOptionDto> selectPortfolioTreeId(Map<String,Object> map,@PathVariable("page") int page, @PathVariable("length") int length) {
+        return etrExchangeTradeService.selectPortfolioTreeId(map,page,length);
+    }
+
+    /**
+     * 查询多组合明细
+     * @param map
+     * @return
+     */
+    @RequestMapping("selectPortfolioTreeDetail")
+    public List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(@RequestBody Map<String,Object> map) {
+        return etrExchangeTradeService.selectPortfolioTreeDetail(map);
+    }
 }

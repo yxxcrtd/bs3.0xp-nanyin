@@ -498,4 +498,9 @@ public interface BussinessConstant {
      * 中债导入估值表中文件名称拆分分隔符：估值表
      */
     String CHB_VAL_SPLIT_STR = "CHB_VAL_SPLIT_STR";
+
+    /**
+     * 场内交易指令是否开启多组合指令
+     */
+    String IS_NEED_EXCHANGE_MULTI_PTL = "IS_NEED_EXCHANGE_MULTI_PTL";
 }
