@@ -46,7 +46,9 @@ public class StlSettleTransDataGatherService {
      */
     public List<StlSettleTransDataGatherDto> selectNeedTotalDataList(Date dealDate) {
         String matchStatus = DictCodeListExt3.下行交易匹配状态_未匹配.getValue();
-        return stlSettleTransDataGatherMapper.selectNeedTotalDataList(dealDate,matchStatus);
+        String checkResult1=DictCodeListExt3.对账状态结果_一致.getValue();
+        String checkResult3=DictCodeListExt3.对账状态结果_手工完成.getValue();
+        return stlSettleTransDataGatherMapper.selectNeedTotalDataList(dealDate,matchStatus,checkResult1,checkResult3);
     }
 
     public int batchInsetSettleTransDataTotal(List<SettleTransDataTotal> inputList) {

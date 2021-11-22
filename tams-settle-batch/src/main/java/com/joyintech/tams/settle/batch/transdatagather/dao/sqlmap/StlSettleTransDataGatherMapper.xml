@@ -37,8 +37,12 @@
                           on D.SEQ_ID= E.SEQ_NO
         where
             A.DEAL_DATE = #{dealDate,jdbcType=DATE}
+          and C.CHECK_RESULT in (#{checkResult1},#{checkResult3})
           and (E.MATCH_STATUS is null or E.MATCH_STATUS = #{matchStatus})
           and A.APPLY_TRADE_ID is not null
+          AND EXISTS  (
+                SELECT 1 FROM stl_sec_recon_detail ssrd
+                where ssrd.TRADE_ID = A.TRADE_ID)
 
     </select>
 
