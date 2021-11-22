@@ -1006,13 +1006,17 @@ public class StlDataDealSzdJsmxProcessService {
 						}
 					}
 				}
+//				// 成交编号
+//				if (StringUtil.isNotEmpty(szdJsmx.getCjbh())) {
+//					settleTransData.setTradeId(szdJsmx.getCjbh());
+//				}
+//				else {
+//					settleTransData.setTradeId(IDGenerator.generate());
+//				}
+				// 流水号
+				settleTransData.setTradeId(IDGenerator.generate());
 				// 成交编号
-				if (StringUtil.isNotEmpty(szdJsmx.getCjbh())) {
-					settleTransData.setTradeId(szdJsmx.getCjbh());
-				}
-				else {
-					settleTransData.setTradeId(IDGenerator.generate());
-				}
+				settleTransData.setCjbh(szdJsmx.getCjbh());
 				// 执行日期
 				settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
 				// 证券品种
@@ -1261,12 +1265,16 @@ public class StlDataDealSzdJsmxProcessService {
 				settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_股票_配股认购_配股.getValue());
 			}
 			// 成交编号
-			if (StringUtil.isNotEmpty(szdJsmx.getCjbh())) {
-				settleTransData.setTradeId(szdJsmx.getCjbh());
-			}
-			else {
-				settleTransData.setTradeId(IDGenerator.generate());
-			}
+//			if (StringUtil.isNotEmpty(szdJsmx.getCjbh())) {
+//				settleTransData.setTradeId(szdJsmx.getCjbh());
+//			}
+//			else {
+//				settleTransData.setTradeId(IDGenerator.generate());
+//			}
+			// 流水号
+			settleTransData.setTradeId(IDGenerator.generate());
+			// 成交编号
+			settleTransData.setCjbh(szdJsmx.getCjbh());
 			// 执行日期
 			settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
 			// 证券品种
