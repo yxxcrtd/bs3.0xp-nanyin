@@ -47,7 +47,7 @@ $(function(){
              { title: "主键uuid",field:'registSeqno',visible:false}
             ,{field: 'dataStatusName', title: "数据状态",width:100,sortField:'dataStatus'}
             ,{field: 'sendStatusName', title: "报送状态", width:100 ,sortField:'sendStatus'}
-            ,{field: 'submitTimeStr', title: "报送时间", width:150,sortField:'submitTime'}
+            ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
             ,{field: 'submitDeadlineStr', title: "报送截止日", width:150,sortField:'submitDeadline'}
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
             ,{field:'institutionCode', title: '提供销售结算资金服务机构代码', width:'150',sortField:'institutionCode'}
