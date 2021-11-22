@@ -14,7 +14,7 @@
                 select COUNT(*) 
                 from ETR_SEC_POSITION_RULE 
                 WHERE PORTFOLIO_ID=#{PORTFOLIO_ID} AND SEC_ACCT_ID=#{SEC_ACCT_ID} AND FINPROD_ID=#{FINPROD_ID} AND 
-                      INV_AIM=#{INV_AIM} AND HODING_TYPE=#{HODING_TYPE} AND CDATE =#{CDATE} AND DATE_TYPE=#{DATE_TYPE} AND CCY =#{CCY}
+                    HODING_TYPE=#{HODING_TYPE} AND CDATE =#{CDATE} AND DATE_TYPE=#{DATE_TYPE} AND CCY =#{CCY}
             </when>
             <when test="tableName == 'PTL_CASH_POSITION_RULE'">
                 select count(*) 
@@ -26,7 +26,7 @@
                 select COUNT(*) 
                 from PTL_SEC_POSITION_RULE 
                 WHERE PORTFOLIO_ID=#{PORTFOLIO_ID} AND SEC_ACCT_ID=#{SEC_ACCT_ID} AND FINPROD_ID=#{FINPROD_ID} AND
-                INV_AIM=#{INV_AIM} AND HODING_TYPE=#{HODING_TYPE} AND CDATE =#{CDATE} AND DATE_TYPE=#{DATE_TYPE} AND CCY =#{CCY}
+                    HODING_TYPE=#{HODING_TYPE} AND CDATE =#{CDATE} AND DATE_TYPE=#{DATE_TYPE} AND CCY =#{CCY}
             </when>
         </choose>
     </select>
@@ -37,16 +37,16 @@
                 VALUES(#{PORTFOLIO_ID}, #{ACCT_ID}, #{HODING_TYPE}, #{CDATE}, #{DATE_TYPE}, #{CCY}, #{AMOUNT}, 'webScocket', sysdate)
             </when>
             <when test="tableName == 'ETR_SEC_POSITION_RULE' ">
-                INSERT INTO ETR_SEC_POSITION_RULE (PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, INV_AIM, HODING_TYPE, CDATE, DATE_TYPE, AMOUNT, CCY, CREATE_USER, CREATE_TIME)
-                VALUES(#{PORTFOLIO_ID}, #{SEC_ACCT_ID}, #{FINPROD_ID}, #{INV_AIM}, #{HODING_TYPE}, #{CDATE}, #{DATE_TYPE}, #{AMOUNT}, #{CCY}, 'webScocket', sysdate)
+                INSERT INTO ETR_SEC_POSITION_RULE (PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, HODING_TYPE, CDATE, DATE_TYPE, AMOUNT, CCY, CREATE_USER, CREATE_TIME)
+                VALUES(#{PORTFOLIO_ID}, #{SEC_ACCT_ID}, #{FINPROD_ID}, #{HODING_TYPE}, #{CDATE}, #{DATE_TYPE}, #{AMOUNT}, #{CCY}, 'webScocket', sysdate)
             </when>
             <when test="tableName == 'PTL_CASH_POSITION_RULE' ">
                 INSERT INTO PTL_CASH_POSITION_RULE (PORTFOLIO_ID, ACCT_ID, HODING_TYPE, CDATE, DATE_TYPE, CCY, AMOUNT, CREATE_USER, CREATE_TIME)
                 VALUES(#{PORTFOLIO_ID}, #{ACCT_ID}, #{HODING_TYPE}, #{CDATE}, #{DATE_TYPE}, #{CCY}, #{AMOUNT}, 'webScocket', sysdate)
             </when>
             <when test="tableName == 'PTL_SEC_POSITION_RULE' ">
-                INSERT INTO PTL_SEC_POSITION_RULE (PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, INV_AIM, HODING_TYPE, CDATE, DATE_TYPE, AMOUNT, CCY, CREATE_USER, CREATE_TIME)
-                VALUES(#{PORTFOLIO_ID}, #{SEC_ACCT_ID}, #{FINPROD_ID}, #{INV_AIM}, #{HODING_TYPE}, #{CDATE}, #{DATE_TYPE}, #{AMOUNT}, #{CCY}, 'webScocket', sysdate)
+                INSERT INTO PTL_SEC_POSITION_RULE (PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, HODING_TYPE, CDATE, DATE_TYPE, AMOUNT, CCY, CREATE_USER, CREATE_TIME)
+                VALUES(#{PORTFOLIO_ID}, #{SEC_ACCT_ID}, #{FINPROD_ID}, #{HODING_TYPE}, #{CDATE}, #{DATE_TYPE}, #{AMOUNT}, #{CCY}, 'webScocket', sysdate)
             </when>
             <otherwise>
             </otherwise>
@@ -65,7 +65,7 @@
             <when test="tableName == 'ETR_SEC_POSITION_RULE'">
                 UPDATE ETR_SEC_POSITION_RULE
                 SET AMOUNT=#{AMOUNT}, CREATE_USER='webScocket', UPDATE_TIME=SYSDATE
-                WHERE PORTFOLIO_ID=#{PORTFOLIO_ID} AND SEC_ACCT_ID=#{SEC_ACCT_ID} AND FINPROD_ID=#{FINPROD_ID} AND INV_AIM=#{INV_AIM} AND
+                WHERE PORTFOLIO_ID=#{PORTFOLIO_ID} AND SEC_ACCT_ID=#{SEC_ACCT_ID} AND FINPROD_ID=#{FINPROD_ID} AND 
                 HODING_TYPE=#{HODING_TYPE} AND CDATE=#{CDATE} AND DATE_TYPE=#{DATE_TYPE}
             </when>
             <when test="tableName == 'PTL_CASH_POSITION_RULE'">
@@ -77,7 +77,7 @@
             <when test="tableName == 'PTL_SEC_POSITION_RULE' ">
                 UPDATE PTL_SEC_POSITION_RULE
                 SET AMOUNT=#{AMOUNT}, CREATE_USER='webScocket', UPDATE_TIME=SYSDATE
-                WHERE PORTFOLIO_ID=#{PORTFOLIO_ID} AND SEC_ACCT_ID=#{SEC_ACCT_ID} AND FINPROD_ID=#{FINPROD_ID} AND INV_AIM=#{INV_AIM} AND
+                WHERE PORTFOLIO_ID=#{PORTFOLIO_ID} AND SEC_ACCT_ID=#{SEC_ACCT_ID} AND FINPROD_ID=#{FINPROD_ID} AND 
                 HODING_TYPE=#{HODING_TYPE} AND CDATE=#{CDATE} AND DATE_TYPE=#{DATE_TYPE}
             </when>
             <otherwise>

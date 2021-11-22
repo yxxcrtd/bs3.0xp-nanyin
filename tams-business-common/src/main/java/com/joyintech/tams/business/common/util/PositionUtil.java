@@ -1,6 +1,5 @@
 package com.joyintech.tams.business.common.util;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
@@ -54,7 +53,8 @@ public class PositionUtil {
                 /**
                  * 头寸引擎业务失败，待前端确认是否校验
                  */
-                if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_REFUSE, arr[0])){
+                if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, arr[0]) ||
+                        StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, arr[0])){
                     // 头寸返回对象
                     BaseMap data = JsonUtils.json2Object(arr[1], BaseMap.class);
 
@@ -92,15 +92,22 @@ public class PositionUtil {
                         }
                         strb.append("】，请确认是否继续？");
                     }
-                    
-                    /**
-                     * 余额不足，前端判断code 300确认
-                     */
-                    BaseMap bm = BaseMap.newMap()
-                            .put("code", PositionHttpRequest.CODE_BUSI_REFUSE)
-                            .put("message", strb)
-                            .put("data", data);
-                    return new Message().success().setData(bm);
+
+                    if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, arr[0])){
+                        /**
+                         * 余额不足，软控确认
+                         */
+                        BaseMap bm = BaseMap.newMap()
+                                .put("code", arr[0])
+                                .put("message", strb)
+                                .put("data", data);
+                        return new Message().success().setData(bm);
+                    }else {
+                        /**
+                         * 余额不足，硬控提示
+                         */
+                        return new Message().fail().setMessage(strb.toString());
+                    }
                 }
             }else {
                 return new Message().fail().setMessage(message).setData(null);

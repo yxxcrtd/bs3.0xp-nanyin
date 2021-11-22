@@ -17,7 +17,8 @@ import java.util.Map;
 @Lazy(value=false)
 public class PositionHttpRequest {
 
-    public final static String CODE_BUSI_REFUSE = "300";    // 返回业务信息拒绝，余额不足，需前端确认
+    public final static String CODE_BUSI_RK = "300";    // 返回业务信息拒绝，余额不足，软控，前端确认
+    public final static String CODE_BUSI_YK = "310";    // 返回业务信息拒绝，余额不足，硬控，前端提示
 
     private static String positionUrl;
     
@@ -44,7 +45,9 @@ public class PositionHttpRequest {
         
         if (!StringUtil.equals("success", msgMap.get("code") + "")){
             if(StringUtil.equals("FL0007", msgMap.get("code"))){
-                throw new PositionException(CODE_BUSI_REFUSE + "|" + JsonUtils.object2Json(msgMap));
+                throw new PositionException(CODE_BUSI_RK + "|" + JsonUtils.object2Json(msgMap));
+            }else if(StringUtil.equals("CT0001", msgMap.get("code"))){
+                throw new PositionException(CODE_BUSI_YK + "|" + JsonUtils.object2Json(msgMap));
             }else {
                 revokeCheck(msgMap, req);
             }
@@ -92,7 +95,7 @@ public class PositionHttpRequest {
         Map message = JsonUtils.json2Object(msg, Map.class);
         if (message == null || !StringUtil.equals("success", message.get("code"))){
             if(StringUtil.equals("FL0007", message.get("code"))){
-                throw new PositionException(CODE_BUSI_REFUSE + "|" + (message==null?"":message.get("message")));
+                throw new PositionException(CODE_BUSI_RK + "|" + (message==null?"":message.get("message")));
             }else {
                 throw new PositionException("头寸返回数据为空！");
             }

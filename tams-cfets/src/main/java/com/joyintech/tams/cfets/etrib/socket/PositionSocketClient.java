@@ -36,8 +36,6 @@ public class PositionSocketClient {
     private static final String AMOUNT="AMOUNT";
     private static final String SEC_ACCT_ID = "SEC_ACCT_ID";
     private static final String FINPROD_ID="FINPROD_ID";
-    private static final String INV_AIM="INV_AIM";
-    
     
     @Value("${webSocketUrl}")
     private String webSocketUrl;
@@ -174,12 +172,11 @@ public class PositionSocketClient {
                     .put(PORTFOLIO_ID,list.get(2))
                     .put(SEC_ACCT_ID,list.get(3))
                     .put(FINPROD_ID, list.get(4))
-                    .put(INV_AIM, list.get(5))
-                    .put(HODING_TYPE, list.get(6))
-                    .put(CDATE, list.get(7))
-                    .put(DATE_TYPE, list.get(8))
-                    .put(CCY, list.get(9))
-                    .put(AMOUNT, list.get(10))
+                    .put(HODING_TYPE, list.get(5))
+                    .put(CDATE, list.get(6))
+                    .put(DATE_TYPE, list.get(7))
+                    .put(CCY, list.get(8))
+                    .put(AMOUNT, list.get(9))
                     ;
         }else if (StringUtils.equals(tableName, "PTL_SEC_POSITION")){
             return BaseMap.newMap()
@@ -187,12 +184,11 @@ public class PositionSocketClient {
                     .put(PORTFOLIO_ID,list.get(2))
                     .put(SEC_ACCT_ID,list.get(3))
                     .put(FINPROD_ID, list.get(4))
-                    .put(INV_AIM, list.get(5))
-                    .put(HODING_TYPE, list.get(6))
-                    .put(CDATE, list.get(7))
-                    .put(DATE_TYPE, list.get(8))
-                    .put(CCY, list.get(9))
-                    .put(AMOUNT, list.get(10))
+                    .put(HODING_TYPE, list.get(5))
+                    .put(CDATE, list.get(6))
+                    .put(DATE_TYPE, list.get(7))
+                    .put(CCY, list.get(8))
+                    .put(AMOUNT, list.get(9))
                     ;
         }else if (StringUtils.equals(tableName, "PTL_CASH_POSITION")){
             return BaseMap.newMap()
