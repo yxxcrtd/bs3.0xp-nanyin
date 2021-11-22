@@ -14,7 +14,7 @@
 			<Cell order="10" name="销售结算资金交易对手方账户开户行号">tradeCounterAccBankNo</Cell>
 			<Cell order="11" name="销售结算资金交易币种">tradeCcy</Cell>
 			<Cell order="12" name="销售结算资金交易金额">tradeAmt</Cell>
-			<Cell order="13" name="销售结算资金交易日期">tradeVdate</Cell>
+			<Cell order="13" name="销售结算资金交易日期">tradeVdateStr</Cell>
 			<Cell order="14" name="销售结算资金交易时间">tradeTime</Cell>
 			<Cell order="15" name="销售结算资金交易附言">postscript</Cell>
 			<Cell order="16" name="备注">remark</Cell>
