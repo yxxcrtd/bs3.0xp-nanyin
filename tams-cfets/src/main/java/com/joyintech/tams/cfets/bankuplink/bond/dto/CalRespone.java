@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author zznn
@@ -44,6 +45,12 @@ public class CalRespone {
 
     @ApiModelProperty(name="intAmt",value="应计利息总额")
     private BigDecimal intAmt;
+
+    @ApiModelProperty(name="dealFeeAmt",value="交易手续费(元)")
+    private BigDecimal dealFeeAmt;
+
+    @ApiModelProperty(name="settFeeamt",value="结算服务费(元)")
+    private BigDecimal settFeeamt;
 
     public BigDecimal getShareAmt() {
         return shareAmt;
@@ -123,6 +130,22 @@ public class CalRespone {
 
     public void setIntAmt(BigDecimal intAmt) {
         this.intAmt = intAmt;
+    }
+
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
+    }
+
+    public BigDecimal getSettFeeamt() {
+        return settFeeamt;
+    }
+
+    public void setSettFeeamt(BigDecimal settFeeamt) {
+        this.settFeeamt = settFeeamt;
     }
 }
 

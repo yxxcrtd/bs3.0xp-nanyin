@@ -44,4 +44,6 @@ public interface CfetsIbuQuoteBondMapper {
     List<DealTransactionDetailsDto> listDealTransactionDetails(@Param("entrustId") String entrustId);
 
     int selectBondHasEexrPlanCount(Map<String, Object> param);
+
+    String getRegistOrg(@Param("secAcctId") String secManageAcctId);
 }

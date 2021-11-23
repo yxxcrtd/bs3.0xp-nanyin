@@ -1,15 +1,20 @@
 package com.joyintech.tams.cfets.bankuplink.bond.service;
 
-import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.AutoAllocationRequest;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CalRequest;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CalRespone;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
+import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
+import com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +34,12 @@ public class IbuQuoteBondCalService extends BaseService {
 
     @Autowired
     private CfetsBondDealQuotedPriceService cfetsBondDealQuotedPriceService;
+
+    @Autowired(required = false)
+    private BaseTradeFeeCommService baseTradeFeeCommService;
+
+    @Autowired
+    private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
     /**
      * 数据联动计算
      * @param calRequest
@@ -38,11 +49,46 @@ public class IbuQuoteBondCalService extends BaseService {
         CalRespone calRespone = new CalRespone();
         CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,calRequest);
+        cfetsBondDealDialogueQuoteDto.setAvaNum(calRequest.getShareAmt());
         BeanUtil.copyPropertiesIgnoreNull(calRespone,cfetsBondDealQuotedPriceService.calcAmt(cfetsBondDealDialogueQuoteDto));
+        List<TrdTradeFeeDetail> trdTradeFeeDetails = calFee(calRequest);
+        if(CollectionUtils.isNotEmpty(trdTradeFeeDetails)){
+            for (TrdTradeFeeDetail item : trdTradeFeeDetails) {
+                if(StringUtil.equals(item.getFeeType(),BussinessDictCodeList.费用类型_交易手续费.getValue())){
+                    calRespone.setDealFeeAmt(item.getFeeAmt());
+                    continue;
+                }
+                if(StringUtil.equals(item.getFeeType(),BussinessDictCodeList.费用类型_结算手续费.getValue())){
+                    calRespone.setSettFeeamt(item.getFeeAmt());
+                    continue;
+                }
+            }
+        }
         return calRespone;
         /*return restTemplate.postForObject(
                     ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/calcAmt",
                     calRequest, CalRespone.class);*/
+    }
+
+    /**
+     * 计算费用
+     * @param calRequest
+     * @return
+     */
+    public List<TrdTradeFeeDetail>  calFee(CalRequest calRequest){
+        BasicTradeFeeInputDto inputDto = new BasicTradeFeeInputDto();
+        inputDto.setTradeAmt(calRequest.getFpriceAmt());
+        inputDto.setTradeDate(calRequest.getSettleDate());
+        inputDto.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
+        inputDto.setFinprodType2(BussinessDictCodeList.平安资产类型_债券.getValue());
+        inputDto.setPs(calRequest.getPs());// 交易方向
+        inputDto.setFpriceAmt(calRequest.getFpriceAmt());// 全价总额
+        inputDto.setPrinAmt(calRequest.getShareAmt());// 券面总额
+        inputDto.setIsGrade("1");
+        String registOrg = cfetsIbuQuoteBondMapper.getRegistOrg(calRequest.getSecManageAcctId());
+        inputDto.setRegistOrg(registOrg);
+        inputDto.setFeeTypeList(Arrays.asList(BussinessDictCodeList.费用类型_交易手续费.getValue(), BussinessDictCodeList.费用类型_结算手续费.getValue()));
+        return baseTradeFeeCommService.innerBankFeeDeal(inputDto);
     }
 
     /**

@@ -20,7 +20,7 @@ public class CalRequest {
     private String finprodId;
 
     @ApiModelProperty(required = true,name="shareAmt",value="券面总额")
-    private BigDecimal avaNum;
+    private BigDecimal shareAmt;
 
     @ApiModelProperty(required = true,name="settleDate",value="结算日期")
     private Date settleDate;
@@ -36,6 +36,13 @@ public class CalRequest {
 
     @ApiModelProperty(name="exerYield",value="行权收益率(%)")
     private BigDecimal exerYield;
+
+    @ApiModelProperty(required = true,name="ps",value="交易方向")
+    private String ps;
+
+    @ApiModelProperty(required = true,name="secManageAcctId",value="证券账户代码")
+    private String secManageAcctId;
+
 
     public String getCalculateField() {
         return calculateField;
@@ -53,12 +60,12 @@ public class CalRequest {
         this.finprodId = finprodId;
     }
 
-    public BigDecimal getAvaNum() {
-        return avaNum;
+    public BigDecimal getShareAmt() {
+        return shareAmt;
     }
 
-    public void setAvaNum(BigDecimal avaNum) {
-        this.avaNum = avaNum;
+    public void setShareAmt(BigDecimal shareAmt) {
+        this.shareAmt = shareAmt;
     }
 
     public Date getSettleDate() {
@@ -99,6 +106,22 @@ public class CalRequest {
 
     public void setExerYield(BigDecimal exerYield) {
         this.exerYield = exerYield;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    public String getSecManageAcctId() {
+        return secManageAcctId;
+    }
+
+    public void setSecManageAcctId(String secManageAcctId) {
+        this.secManageAcctId = secManageAcctId;
     }
 }
 

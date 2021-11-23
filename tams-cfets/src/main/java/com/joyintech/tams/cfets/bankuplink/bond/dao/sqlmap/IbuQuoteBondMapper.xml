@@ -309,4 +309,14 @@
             and EXERCISE_DATE &gt; = #{sysDate,jdbcType=DATE}
     </select>
 
+    <!--通过证券账户获取登记托管机构-->
+    <select id="getRegistOrg" resultType="java.lang.String">
+        SELECT
+        REGIST_ORG
+        FROM STL_SEC_ACCT_INFO
+        <where>
+            SEC_ACCT_ID = #{secAcctId}
+        </where>
+    </select>
+
 </mapper>
