@@ -398,6 +398,9 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
     @ApiModelProperty(name="entrustIntegrateUnitFpriceAmt",value="卖空购回全价总额",example="11")
     private BigDecimal entrustIntegrateUnitFpriceAmt;
 
+    @ApiModelProperty(name="transmitTime",value="指令下达时间",example="11")
+    private Date transmitTime;
+
     public String getOperateType() {
         return operateType;
     }
@@ -630,5 +633,13 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setEntrustIntegrateUnitFpriceAmt(BigDecimal entrustIntegrateUnitFpriceAmt) {
         this.entrustIntegrateUnitFpriceAmt = entrustIntegrateUnitFpriceAmt;
+    }
+
+    public Date getTransmitTime() {
+        return transmitTime;
+    }
+
+    public void setTransmitTime(Date transmitTime) {
+        this.transmitTime = transmitTime;
     }
 }

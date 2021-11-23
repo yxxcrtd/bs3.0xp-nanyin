@@ -128,6 +128,29 @@ public class JoyinbusinessCommonController extends BaseController {
 			return new Message<AjaxResult>().fail().setMessage("更新操作记录异常");
 		}
 	}
-
+	@PostMapping("/queryMySideList")
+	@ApiOperation(value = "本方或对方查询", notes = "本方或对方查询")
+	@ResponseBody
+	public Message<Page<SelectOptionDto>> queryMySideList(@RequestBody CfetsSearchInfoRequest item){
+		try {
+			Page<SelectOptionDto> list = joyinbusinessCommonService.queryMySideList(item);
+			return new Message<Page<SelectOptionDto>>().success().setData(list);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+		}
+	}
+	@PostMapping("/queryMySideTraderList")
+	@ApiOperation(value = "本方交易员或对手方交易员查询", notes = "本方交易员或对手方交易员查询")
+	@ResponseBody
+	public Message<Page<SelectOptionDto>> queryMySideTraderList(@RequestBody CfetsSearchInfoRequest item){
+		try {
+			Page<SelectOptionDto> list = joyinbusinessCommonService.queryMySideTraderList(item);
+			return new Message<Page<SelectOptionDto>>().success().setData(list);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+		}
+	}
 
 }

@@ -234,4 +234,44 @@
         sysdate, #{updateUser,jdbcType=VARCHAR},sysdate
         )
     </insert>
+    <select id="queryMySideList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT DISTINCT
+        MST_CFETS_CUSTOMER_INFO.PARTY_ID id,
+        MST_CFETS_CUSTOMER_INFO.PARTY_ABBR text
+        FROM
+        MST_CFETS_CUSTOMER_INFO
+        <where>
+            <if test="search != null and !search.equals('')">
+                AND	(MST_CFETS_CUSTOMER_INFO.PARTY_ID like concat('%',concat(#{search},'%'))
+                or MST_CFETS_CUSTOMER_INFO.PARTY_ABBR like concat('%',concat(#{search},'%')))
+            </if>
+        </where>
+    </select>
+    <select id="queryMySideTraderList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
+        MST_CFETS_CUSTOMER_TRADER.TRADER_NAME text,
+        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID   parentId
+        FROM (SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID,
+        MST_CFETS_CUSTOMER_TRADER.TRADER_NAME,
+        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID
+        FROM MST_CFETS_CUSTOMER_TRADER
+        INNER JOIN(
+        SELECT nvl(t2.mparty_id,t1.party_id) PARTY_ID
+        from MST_CFETS_CUSTOMER_INFO t1 LEFT JOIN MST_CFETS_CUSTOMER_RELA t2
+        on t1.party_id = t2.sparty_id
+        WHERE 1 = 1
+        <if test="mySide != null and !mySide.equals('')">
+            AND t1.PARTY_ID = #{mySide}
+        </if>
+        <if test="counterId != null and !counterId.equals('')">
+            AND t1.PARTY_ID = #{counterId}
+        </if>
+        ) t3 on MST_CFETS_CUSTOMER_TRADER.PARTY_ID = t3.PARTY_ID
+        ) MST_CFETS_CUSTOMER_TRADER
+        WHERE 1 = 1
+        <if test="search != null and !search.equals('')">
+            AND	(MST_CFETS_CUSTOMER_TRADER.TRADER_ID like concat('%',concat(#{search},'%'))
+            or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{search},'%')))
+        </if>
+    </select>
 </mapper>

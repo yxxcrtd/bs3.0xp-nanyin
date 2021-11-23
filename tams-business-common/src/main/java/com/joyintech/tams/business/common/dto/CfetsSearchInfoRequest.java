@@ -16,6 +16,11 @@ public class CfetsSearchInfoRequest {
     private PageMode pageMode;
     @ApiModelProperty(name="ps",value="交易方向",example="T03")
     private String ps;
+    @ApiModelProperty(name="mySide",value="本方",example="T03")
+    private String mySide;
+    @ApiModelProperty(name="counterId",value="对手方",example="T03")
+    private String counterId;
+
 
     public String getSearch() {
         return search;
@@ -39,5 +44,21 @@ public class CfetsSearchInfoRequest {
 
     public void setPs(String ps) {
         this.ps = ps;
+    }
+
+    public String getMySide() {
+        return mySide;
+    }
+
+    public void setMySide(String mySide) {
+        this.mySide = mySide;
+    }
+
+    public String getCounterId() {
+        return counterId;
+    }
+
+    public void setCounterId(String counterId) {
+        this.counterId = counterId;
     }
 }

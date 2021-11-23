@@ -74,4 +74,22 @@ public interface JoyinbusinessCommonMapper {
      * @return
      */
     int insertCfetsOprHis(CfetsOprHisInfoRequest record);
+    /**
+     * 查询本方机构列表
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> queryMySideList(Map<String, Object> param);
+    /**
+     * 查询本方交易员列表
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> queryMySideTraderList(Map<String, Object> param);
 }

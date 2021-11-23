@@ -17,16 +17,14 @@ public class CfetsEtrIbClosePosEtrRequest {
     @ApiModelProperty(name="ps",value="交易方向",example="T01")
     private String ps;
 
-    @ApiModelProperty(name="entrustId",value="指令编号",example="1")
-    private String entrustId;
+    @ApiModelProperty(name="closeId",value="关闭编号",example="1")
+    private String closeId;
 
-    public String getEntrustId() {
-        return entrustId;
-    }
+    @ApiModelProperty(name="systemAct",value="系统动作",example="T01")
+    private String systemAct;
 
-    public void setEntrustId(String entrustId) {
-        this.entrustId = entrustId;
-    }
+    @ApiModelProperty(name="busiAct",value="业务动作",example="1")
+    private String busiAct;
 
     public String getBusiType() {
         return busiType;
@@ -42,5 +40,29 @@ public class CfetsEtrIbClosePosEtrRequest {
 
     public void setPs(String ps) {
         this.ps = ps;
+    }
+
+    public String getSystemAct() {
+        return systemAct;
+    }
+
+    public void setSystemAct(String systemAct) {
+        this.systemAct = systemAct;
+    }
+
+    public String getBusiAct() {
+        return busiAct;
+    }
+
+    public void setBusiAct(String busiAct) {
+        this.busiAct = busiAct;
+    }
+
+    public String getCloseId() {
+        return closeId;
+    }
+
+    public void setCloseId(String closeId) {
+        this.closeId = closeId;
     }
 }

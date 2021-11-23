@@ -126,4 +126,13 @@ public class JoyinbusinessCommonService extends BaseService {
         }
         return false;
     }
+    public Page<SelectOptionDto> queryMySideList(CfetsSearchInfoRequest dto) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("search", dto.getSearch());
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideList(param));
+    }
+    public Page<SelectOptionDto> queryMySideTraderList(CfetsSearchInfoRequest dto) {
+        Map<String, Object> param = BeanUtil.object2Map(dto);
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideTraderList(param));
+    }
 }

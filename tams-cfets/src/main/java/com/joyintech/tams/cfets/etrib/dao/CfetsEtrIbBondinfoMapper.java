@@ -122,6 +122,9 @@ public interface CfetsEtrIbBondinfoMapper {
 
     List<String> selectAllBusModelListByInfo(Map<String, Object> pageParam);
 
+    CfetsEtribBondInfo003Dto  selectTransmitTimeByInfo(String entrustId);
+
+
 
 
 

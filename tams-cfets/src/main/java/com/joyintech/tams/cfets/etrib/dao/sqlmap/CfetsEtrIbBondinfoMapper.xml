@@ -1258,6 +1258,17 @@ from
         and t.inv_aim is not null
 
     </select>
+    <!--该指令退回时，指令初始下达时间-->
+    <select id="selectTransmitTimeByInfo"
+            resultType="com.joyintech.tams.cfets.etrib.dto.CfetsEtribBondInfo003Dto">
+        select t2.transmit_time  as transmitTime
+        from etr_entrust t1
+        inner join etr_entrust_add t2
+        on t1.entrust_id=t2.entrust_id
+        where t1.entrust_id=#{entrustId}
+        and t1.entrust_status='05'
+        and rownum=1
+    </select>
 
 
 </mapper>

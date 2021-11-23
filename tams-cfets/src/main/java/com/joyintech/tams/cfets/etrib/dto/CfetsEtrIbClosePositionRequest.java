@@ -24,7 +24,7 @@ public class CfetsEtrIbClosePositionRequest {
     private String modelType;
 
     @ApiModelProperty(name="etrList",value="指令数据集",example="[字符串1,字符串2,...]")
-    private List<CfetsEtrIbClosePosEtrRequest> etrList;
+    private List<CfetsEtrIbClosePosEtrRequest> data;
 
     public String getUserId() {
         return userId;
@@ -50,11 +50,11 @@ public class CfetsEtrIbClosePositionRequest {
         this.modelType = modelType;
     }
 
-    public List<CfetsEtrIbClosePosEtrRequest> getEtrList() {
-        return etrList;
+    public List<CfetsEtrIbClosePosEtrRequest> getData() {
+        return data;
     }
 
-    public void setEtrList(List<CfetsEtrIbClosePosEtrRequest> etrList) {
-        this.etrList = etrList;
+    public void setData(List<CfetsEtrIbClosePosEtrRequest> data) {
+        this.data = data;
     }
 }

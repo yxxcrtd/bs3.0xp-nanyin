@@ -1402,6 +1402,15 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 zct1rkyccAmt=new BigDecimal(map.get("ZCT1RKYCC").toString());
             }
             item.setPorAvailableSec1(zct1rkyccAmt);
+            //针对退回指令，查询指令下达时间
+            if(StringUtil.isNotEmpty(cfetsDto.getEntrustId())){
+                //根据指令id查询出该资产是退回指令，且该指令的下达时间
+                CfetsEtribBondInfo003Dto transmitTimeDto=cfetsetrIbBondinfoMapper.selectTransmitTimeByInfo(cfetsDto.getEntrustId());
+                if(null!=transmitTimeDto && StringUtil.isNotEmpty(transmitTimeDto.getTransmitTime())){
+                    dd.setTransmitTime(transmitTimeDto.getTransmitTime());
+                    dto.setTransmitTime(transmitTimeDto.getTransmitTime());
+                }
+            }
             etrInvestBondInfoDtosList.add(dd);
         }
         dto.setEntrustOwnNum(bfqtrkyccSAmt);
@@ -1894,12 +1903,15 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     && StringUtil.equals(t.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
                 busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
             }
+
             closeItem.setBusiType(busiTypePosition);
             closeItem.setPs(t.getPs());
-            closeItem.setEntrustId(t.getEntrustId());
+            closeItem.setCloseId(t.getEntrustId());
+            closeItem.setSystemAct(DictCodeListExt3.系统动作_关闭.getValue());
+            closeItem.setBusiAct(DictCodeListExt3.业务动作_指令手动关闭.getValue());
             etrList.add(closeItem);
         }
-        req.setEtrList(etrList);
+        req.setData(etrList);
         req.setUserId(SecurityUtil.getLoginUser().getUserName());
         req.setTotalTradeId(IDGenerator.generate());
         req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
