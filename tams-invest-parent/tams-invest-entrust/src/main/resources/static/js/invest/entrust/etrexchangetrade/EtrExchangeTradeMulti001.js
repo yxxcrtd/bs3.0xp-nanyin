@@ -698,6 +698,24 @@
                     }
                 }
             }
+            // 科创板打新股、股票直连交易支持 fuyongsheng 20211116 edit start
+            // 当前tab是竞价交易,股票资产是科创板,并且价格模式选择收盘价固定价格申报时,指令价格根据时间判断
+            if(currentTab === "jj" && $("#board_" + currentTab).val() == BOARD_BD03
+                && priceModel === DECLA_TYPE_PRM10){
+                var currentDate = new Date();
+                // 15:00 时间戳
+                var time1500 = new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.getDate(),15,0,0).getTime();
+                // 当前时间为15:00前时，指令价格处理同股票市价指令时处理（指令价格只读，显示0，小数位按照股票最小价差显示）
+                if(currentDate.getTime()<time1500){
+                    $("#entrustPrice_" + currentTab).attr("disabled", true);
+                    $("#entrustPrice_" + currentTab).val(zeroPrice).trigger('change');
+                }else{ // 当前时间为15:00-15:30时，指令价格只读，显示最新价（小数位按照股票最小价差显示）；
+                    $("#entrustPrice_" + currentTab).val(
+                        formatPrice(parent.EtrExchangeTradeHq.getJJMktPrice("#latestPrice_jj")))
+                        .trigger('blur').trigger('change');
+                }
+            }
+            // 科创板打新股、股票直连交易支持 fuyongsheng 20211116 edit end
         }
         else {
             if(finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)) {
@@ -1170,17 +1188,27 @@
             var tradeMarket = $("#tradeMarket_" + currentTab).val();
             // 画面.交易场所 = 数据字典.交易场所.上海证券交易场所
             if(tradeMarket == TRADE_PLACE_03) {
-                // 画面.价格模式  = 数据字典.意向申报，数据字典.成交申报，收盘价固定价格申报，不指定
-                $("#declaType_" + currentTab).updateChosenArr({
-                    item: [DECLA_TYPE_PRM06, DECLA_TYPE_PRM09, DECLA_TYPE_PRM10, DECLA_TYPE_PRM05],
-                    chosen: $("#declaType_" + currentTab).val(),
-                    disabled: false,
-                    isNotTrigger:true
-                });
+                // 当资产类型为股票,并且上市板是科创板时,申请类型不展示收盘价固定价格申报
+                if(finprodType2 == FINPROD_TYPE_TG_F10 && $("#board_" + currentTab).val() == BOARD_BD03){
+                    // 画面.价格模式  = 数据字典.意向申报，数据字典.成交申报，不指定
+                    $("#declaType_" + currentTab).updateChosenArr({
+                        item: [DECLA_TYPE_PRM06, DECLA_TYPE_PRM09, DECLA_TYPE_PRM05],
+                        chosen: $("#declaType_" + currentTab).val() == DECLA_TYPE_PRM10?"":$("#declaType_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger:true
+                    });
+                }else {
+                    // 画面.价格模式  = 数据字典.意向申报，数据字典.成交申报，收盘价固定价格申报，不指定
+                    $("#declaType_" + currentTab).updateChosenArr({
+                        item: [DECLA_TYPE_PRM06, DECLA_TYPE_PRM09, DECLA_TYPE_PRM10, DECLA_TYPE_PRM05],
+                        chosen: $("#declaType_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger:true
+                    });
+                }
             }
             // 画面.金融产品类型 IN（债券、股票、基金）
-            else if(/*finprodType2 == FINPROD_TYPE_TG_F01 || */finprodType2 == FINPROD_TYPE_TG_F06
-                || finprodType2 == FINPROD_TYPE_TG_F10) {
+            else if(/*finprodType2 == FINPROD_TYPE_TG_F01 || */finprodType2 == FINPROD_TYPE_TG_F06) {
                 // 画面.价格模式  = 数据字典.收盘价固定价格申报，数据字典.日均价固定价格申报，不指定
                 $("#declaType_" + currentTab).updateChosenArr({
                     item: [DECLA_TYPE_PRM10, DECLA_TYPE_PRM11, DECLA_TYPE_PRM05],
@@ -1188,6 +1216,24 @@
                     disabled: false,
                     isNotTrigger:true
                 });
+            }
+            else if(finprodType2 == FINPROD_TYPE_TG_F10){
+                // 大宗交易资产为股票且股票的上市板是科创板时,不展示 收盘价固定价格申报
+                if($("#board_" + currentTab).val() == BOARD_BD03){
+                    $("#declaType_" + currentTab).updateChosenArr({
+                        item: [DECLA_TYPE_PRM11, DECLA_TYPE_PRM05],
+                        chosen: $("#declaType_" + currentTab).val() == DECLA_TYPE_PRM10?"":$("#declaType_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger:true
+                    });
+                }else{
+                    $("#declaType_" + currentTab).updateChosenArr({
+                        item: [DECLA_TYPE_PRM10, DECLA_TYPE_PRM11, DECLA_TYPE_PRM05],
+                        chosen: $("#declaType_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger:true
+                    });
+                }
             }
             //债券申报类型放开
             else if(finprodType2 == FINPROD_TYPE_TG_F01){
@@ -1232,14 +1278,37 @@
                 }
             }
             // else if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.股票 and （画面.委托方向=数据字典.交易方向.配股 or 数据字典.交易方向.申购）
-            else if(finprodType2 == FINPROD_TYPE_TG_F10 && (ps == PS_T46 || ps == PS_T04)) {
-                // 画面.价格模式  = 数据字典.价格模式.指定价格 不可编辑
-                $("#priceModel_" + currentTab).updateChosenArr({
-                    item: [PRICE_MODEL_PRM01],
-                    chosen: PRICE_MODEL_PRM01,
-                    disabled: true,
-                    isNotTrigger:true
-                });
+            else if(finprodType2 == FINPROD_TYPE_TG_F10) {
+                // 科创板打新股、股票直连交易支持 fuyongsheng 20211123 edit start
+                // 资产为股票,并且上市板=科创板时,价格模式下拉框追加【收盘价固定价格申报】
+                if($("#board_" + currentTab).val() == BOARD_BD03){
+                    // 判断是否有【收盘价固定价格申报】选项,如果已添加,则无需重复添加
+                    var isExist = false;
+                    $("#priceModel_" + currentTab).find( "option" ).each(function(i, value) {
+                        if(value.value == DECLA_TYPE_PRM10){
+                            isExist = true;
+                        }
+                    });
+                    if(!isExist){
+                        $("#priceModel_" + currentTab).append("<option value='PRM10'>收盘价固定价格申报</option>")
+                    }
+                }else{// 如果不是科创板股票时,价格模式下拉框去除【收盘价固定价格申报】
+                    $("#priceModel_" + currentTab).find( "option" ).each(function(i, value) {
+                        if(value.value === DECLA_TYPE_PRM10){
+                            $(this).remove();
+                        }
+                    });
+                }
+                // 科创板打新股、股票直连交易支持 fuyongsheng 20211123 edit end
+                if((ps == PS_T46 || ps == PS_T04)){
+                    // 画面.价格模式  = 数据字典.价格模式.指定价格 不可编辑
+                    $("#priceModel_" + currentTab).updateChosenArr({
+                        item: [PRICE_MODEL_PRM01],
+                        chosen: PRICE_MODEL_PRM01,
+                        disabled: true,
+                        isNotTrigger:true
+                    });
+                }
                 //add by chenjiaxing 更改资产为空时的价格模式枚举值 start
             }else if(!finprodType2) {
                 // 画面.价格模式  = 数据字典.价格模式.限价指令，数据字典.价格模式.市价指令
@@ -2844,6 +2913,10 @@
         // 证券代码
         $("#secId_jj,#secId_dz,#secId_gd").change(function() {
             secIdChange();
+            // 资产代码变化联动价格模式下拉框
+            linkDeclaType();
+            // 联动指令价格变化
+            priceModelChange();
         });
 
         // 委托方向变更时
