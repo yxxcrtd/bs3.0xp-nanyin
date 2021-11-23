@@ -635,6 +635,7 @@
         object.entrustStatus = query('#entrustStatus').val();
         object.finvdate = query('#finvdate').val();
         object.invManagerId = query('#invManagerId').val();
+        object.transmitTime = query('#transmitTime').val();
         // 证券账户ID
         object.secAcctId = query('#secAcctId').val();
         object.vdate=object.etrDate;

@@ -1,9 +1,8 @@
 package com.joyintech.tams.cfets.trdconfirm.dao;
 
 
-import com.joyintech.tams.cfets.trdconfirm.dto.CfetsRegFinProductDealDto;
-import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegFeeInfoDto;
-import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.cfets.trdconfirm.dto.*;
 import com.joyintech.tams.common.base.entity.RegFinProductDeal;
 import org.springframework.stereotype.Repository;
 
@@ -61,5 +60,54 @@ public interface CfetsTrdConfirmMapper {
      * @return
      */
     String selectSecAcctSource(Map<String, Object> param);
+    /**
+     * 更新操作记录
+     * @param record
+     * @return
+     */
+    int insertTrdQutoMatchInfo(CfetsTrdConfirmMatchDto record);
+    /**
+     * 查询所有Cstp下行信息
+     * @param pageParam
+     * @return
+     */
+    List<CfetsTrdConfirmCstpInfoListResponse> findAllCstpInfoList(Map<String, Object> pageParam);
+    /**
+     * 查询所有匹配确认数据
+     * @param pageParam
+     * @return
+     */
+    List<CfetsTrdConfirmTrdCstpMatchResponse> findAllTrdCstpInfoList(Map<String, Object> pageParam);
+    /**
+     * 查询所有匹配确认-执行债券数据
+     * @param pageParam
+     * @return
+     */
+    List<CfetsTrdConfirmExecBondInfoResponse> findAllTrdBondList(Map<String, Object> pageParam);
+    /**
+     * 查询所有匹配确认-执行质押式数据
+     * @param pageParam
+     * @return
+     */
+    List<CfetsTrdConfirmExecRepoInfoResponse> findAllTrdRepoList(Map<String, Object> pageParam);
+    /**
+     * 匹配确认列表-cstp成交债券数据分页查询
+     * @param pageParam
+     * @return
+     */
+    List<CfetsTrdConfirmCstpBondInfoResponse> findAllCstpBondList(Map<String, Object> pageParam);
+    /**
+     * 匹配确认列表-cstp成交质押式分页查询
+     * @param pageParam
+     * @return
+     */
+    List<CfetsTrdConfirmCstpRepoInfoResponse> findAllCstpRepoList(Map<String, Object> pageParam);
+
+    /**
+     * 根据主键删除匹配关系表
+     * @param seqno
+     * @return
+     */
+    int deleteByPrimaryKey(String seqno);
 
 }

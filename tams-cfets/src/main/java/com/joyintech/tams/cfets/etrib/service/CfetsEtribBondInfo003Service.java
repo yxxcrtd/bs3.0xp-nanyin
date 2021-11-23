@@ -1234,6 +1234,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
             }
             etrEntrustAdd.setBusiTypePosition(busiTypePosition);
+            //指令下达时间
+            if(StringUtil.isNotEmpty(dto.getTransmitTime())){
+                etrEntrustAdd.setTransmitTime(dto.getTransmitTime());
+            }else{
+                etrEntrustAdd.setTransmitTime(new Date());
+            }
             //默认证券账户
             if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())
                 && !StringUtil.isNotEmpty(dto.getSecAcctId())
@@ -1243,7 +1249,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 map.put("finprodId", dto.getFinprodId());
                 String secAcctId = this.qryPortfolioSecAcctId(map);
                 if (StringUtil.isNotEmpty(secAcctId)) {
-                    dto.setSecAcctId(secAcctId); // 证券账户
+                    etrEntrustAdd.setSecAcctId(secAcctId); // 证券账户
                 }
             }
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
@@ -1321,6 +1327,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 busiTypePosition=DictCodeListExt3.头寸业务类型_债券行权交易.getValue(); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
             }
             etrEntrustAdd.setBusiTypePosition(busiTypePosition);
+            //指令下达时间
+            if(StringUtil.isNotEmpty(dto.getTransmitTime())){
+                etrEntrustAdd.setTransmitTime(dto.getTransmitTime());
+            }else{
+                etrEntrustAdd.setTransmitTime(new Date());
+            }
             //默认证券账户
             if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())
                     && !StringUtil.isNotEmpty(dto.getSecAcctId())
@@ -1330,7 +1342,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 map.put("finprodId", dto.getFinprodId());
                 String secAcctId = this.qryPortfolioSecAcctId(map);
                 if (StringUtil.isNotEmpty(secAcctId)) {
-                    dto.setSecAcctId(secAcctId); // 证券账户
+                    etrEntrustAdd.setSecAcctId(secAcctId); // 证券账户
                 }
             }
             List<EtrDistribute> etrDistributeList = new ArrayList<>();

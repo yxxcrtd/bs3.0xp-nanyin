@@ -1622,6 +1622,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     业务动作_清算失败(DictCode.业务动作,"08","清算失败"),
     业务动作_交收确认(DictCode.业务动作,"09","交收确认"),
     业务动作_交收失败(DictCode.业务动作,"10","交收失败"),
+    业务动作_指令日终关闭(DictCode.业务动作,"13","指令日终关闭"),
+    业务动作_指令手动关闭(DictCode.业务动作,"14","指令手动关闭"),
+
+
 
     资产类型_现金账户持仓(DictCode.头寸资产类型, "C_01", "现金账户持仓"),
     资产类型_可用资金(DictCode.头寸资产类型, "C_02", "可用资金"),

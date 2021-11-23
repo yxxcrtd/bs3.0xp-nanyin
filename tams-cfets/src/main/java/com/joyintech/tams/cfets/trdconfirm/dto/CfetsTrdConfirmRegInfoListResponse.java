@@ -11,11 +11,13 @@
 package com.joyintech.tams.cfets.trdconfirm.dto;
 
 
+import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 银行间交易成交确认
@@ -106,8 +108,8 @@ public class CfetsTrdConfirmRegInfoListResponse{
     @ApiModelProperty(name="quoteType",value="报价方式",example="字符串1")
     private String quoteType;
 
-    @ApiModelProperty(name="exportNum",value="导出次数",example="1")
-    private BigDecimal exportNum;
+/*    @ApiModelProperty(name="exportNum",value="导出次数",example="1")
+    private BigDecimal exportNum;*/
 
     @ApiModelProperty(name="remark",value="备注",example="字符串1")
     private String remark;
@@ -124,7 +126,7 @@ public class CfetsTrdConfirmRegInfoListResponse{
     @ApiModelProperty(name="yield",value="到期收益率",example="字符串1")
     private BigDecimal yield;
 
-    @ApiModelProperty(name="exerYield",value="到期收益率",example="字符串1")
+    @ApiModelProperty(name="exerYield",value="行权收益率",example="字符串1")
     private BigDecimal exerYield;
 
     @ApiModelProperty(name="ouPartyId",value="本方银行间机构",example="字符串1")
@@ -148,6 +150,9 @@ public class CfetsTrdConfirmRegInfoListResponse{
     @ApiModelProperty(name="lendinFpriceAmt",value="融入券全价总额",example="字符串1")
     private BigDecimal lendinFpriceAmt;
 
+    @ApiModelProperty(name="ourCpriceAmt",value="本方券净价总额",example="字符串1")
+    private BigDecimal ourCpriceAmt;
+
     @ApiModelProperty(name="lendinFpriceAmt",value="融入券净价总额",example="字符串1")
     private BigDecimal lendinCpriceAmt;
 
@@ -167,7 +172,7 @@ public class CfetsTrdConfirmRegInfoListResponse{
     private BigDecimal unitCprice;
     @ApiModelProperty(name="unitInt",value="单位利息",example="字符串1")
     private BigDecimal unitInt;
-    @ApiModelProperty(name="unitFprice",value="单位利息",example="字符串1")
+    @ApiModelProperty(name="unitFprice",value="单位全价",example="字符串1")
     private BigDecimal unitFprice;
     @ApiModelProperty(name="parValue",value="单位面值",example="字符串1")
     private BigDecimal parValue;
@@ -179,8 +184,8 @@ public class CfetsTrdConfirmRegInfoListResponse{
     private BigDecimal shareAmt;
     @ApiModelProperty(name="deliveryType",value="结算方式",example="字符串1")
     private String  deliveryType;
-    @ApiModelProperty(name="mDeliveryType",value="到期结算方式",example="字符串1")
-    private String  mDeliveryType;
+    @ApiModelProperty(name="mdeliveryType",value="到期结算方式",example="字符串1")
+    private String  mdeliveryType;
     @ApiModelProperty(name="settCcy",value="结算币种",example="字符串1")
     private String  settCcy;
     @ApiModelProperty(name="clearType",value="清算类型",example="字符串1")
@@ -202,13 +207,13 @@ public class CfetsTrdConfirmRegInfoListResponse{
     @ApiModelProperty(name="repoType",value="回购方式",example="字符串1")
     private String   repoType;
     @ApiModelProperty(name="vSettleDate",value="首期结算日",example="字符串1")
-    private Date   vSettleDate;
+    private Date   vsettleDate;
     @ApiModelProperty(name="mSettleDate",value="到期结算日",example="字符串1")
-    private Date   mSettleDate;
+    private Date   msettleDate;
     @ApiModelProperty(name="mIntAmt",value="到期利息",example="字符串1")
-    private BigDecimal   mIntAmt;
+    private BigDecimal   mintAmt;
     @ApiModelProperty(name="mTradeAmt",value="到期结算金额",example="字符串1")
-    private BigDecimal   mTradeAmt;
+    private BigDecimal   miradeAmt;
     @ApiModelProperty(name="actRepoTerm",value="实际占款天数",example="字符串1")
     private BigDecimal   actRepoTerm;
     @ApiModelProperty(name="tgBusiType",value="投管业务类型",example="字符串1")
@@ -216,13 +221,19 @@ public class CfetsTrdConfirmRegInfoListResponse{
     @ApiModelProperty(name="tradeStatus",value="交易状态",example="字符串1")
     private String   tradeStatus;
     @ApiModelProperty(name="pTradeId",value="原始交易编号",example="字符串1")
-    private String   pTradeId;
+    private String   ptradeId;
     @ApiModelProperty(name="isCancel",value="是否已执行",example="字符串1")
     private String   isCancel;
     @ApiModelProperty(name="isOutTrade",value="是否外部交易",example="字符串1")
     private String   isOutTrade;
     @ApiModelProperty(name="fTradeId",value="关联系统编号",example="字符串1")
-    private String   fTradeId;
+    private String   ftradeId;
+    @ApiModelProperty(name="regStatus",value="登记状态",example="字符串1")
+    private String   regStatus;
+    @ApiModelProperty(name="dipType",value="分配方式",example="字符串1")
+    private String   dipType;
+    @ApiModelProperty(name="selectedItem",value="选中数据",example="字符串1")
+    private transient List<CfetsTrdConfirmRegInfoListResponse> selectedItem;
 
     public BigDecimal getParValue() {
         return parValue;
@@ -262,14 +273,6 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setDeliveryType(String deliveryType) {
         this.deliveryType = deliveryType;
-    }
-
-    public String getmDeliveryType() {
-        return mDeliveryType;
-    }
-
-    public void setmDeliveryType(String mDeliveryType) {
-        this.mDeliveryType = mDeliveryType;
     }
 
     public String getSettCcy() {
@@ -352,38 +355,6 @@ public class CfetsTrdConfirmRegInfoListResponse{
         this.repoType = repoType;
     }
 
-    public Date getvSettleDate() {
-        return vSettleDate;
-    }
-
-    public void setvSettleDate(Date vSettleDate) {
-        this.vSettleDate = vSettleDate;
-    }
-
-    public Date getmSettleDate() {
-        return mSettleDate;
-    }
-
-    public void setmSettleDate(Date mSettleDate) {
-        this.mSettleDate = mSettleDate;
-    }
-
-    public BigDecimal getmIntAmt() {
-        return mIntAmt;
-    }
-
-    public void setmIntAmt(BigDecimal mIntAmt) {
-        this.mIntAmt = mIntAmt;
-    }
-
-    public BigDecimal getmTradeAmt() {
-        return mTradeAmt;
-    }
-
-    public void setmTradeAmt(BigDecimal mTradeAmt) {
-        this.mTradeAmt = mTradeAmt;
-    }
-
     public BigDecimal getActRepoTerm() {
         return actRepoTerm;
     }
@@ -408,14 +379,6 @@ public class CfetsTrdConfirmRegInfoListResponse{
         this.tradeStatus = tradeStatus;
     }
 
-    public String getpTradeId() {
-        return pTradeId;
-    }
-
-    public void setpTradeId(String pTradeId) {
-        this.pTradeId = pTradeId;
-    }
-
     public String getIsCancel() {
         return isCancel;
     }
@@ -432,14 +395,6 @@ public class CfetsTrdConfirmRegInfoListResponse{
         this.isOutTrade = isOutTrade;
     }
 
-    public String getfTradeId() {
-        return fTradeId;
-    }
-
-    public void setfTradeId(String fTradeId) {
-        this.fTradeId = fTradeId;
-    }
-
     public String getDipType() {
         return dipType;
     }
@@ -447,9 +402,6 @@ public class CfetsTrdConfirmRegInfoListResponse{
     public void setDipType(String dipType) {
         this.dipType = dipType;
     }
-
-    @ApiModelProperty(name="dipType",value="分配方式",example="字符串1")
-    private String   dipType;
 
 
     public String getEffectiveStatus() {
@@ -660,14 +612,6 @@ public class CfetsTrdConfirmRegInfoListResponse{
         this.quoteType = quoteType;
     }
 
-    public BigDecimal getExportNum() {
-        return exportNum;
-    }
-
-    public void setExportNum(BigDecimal exportNum) {
-        this.exportNum = exportNum;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -676,7 +620,6 @@ public class CfetsTrdConfirmRegInfoListResponse{
         this.remark = remark;
     }
 
-
     public String getTotleTradeId() {
         return totleTradeId;
     }
@@ -684,7 +627,6 @@ public class CfetsTrdConfirmRegInfoListResponse{
     public void setTotleTradeId(String totleTradeId) {
         this.totleTradeId = totleTradeId;
     }
-
 
     public Date getSettleDate() {
         return settleDate;
@@ -828,5 +770,85 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setUnitFprice(BigDecimal unitFprice) {
         this.unitFprice = unitFprice;
+    }
+
+    public List<CfetsTrdConfirmRegInfoListResponse> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<CfetsTrdConfirmRegInfoListResponse> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public String getRegStatus() {
+        return regStatus;
+    }
+
+    public void setRegStatus(String regStatus) {
+        this.regStatus = regStatus;
+    }
+
+    public BigDecimal getOurCpriceAmt() {
+        return ourCpriceAmt;
+    }
+
+    public void setOurCpriceAmt(BigDecimal ourCpriceAmt) {
+        this.ourCpriceAmt = ourCpriceAmt;
+    }
+
+    public Date getVsettleDate() {
+        return vsettleDate;
+    }
+
+    public void setVsettleDate(Date vsettleDate) {
+        this.vsettleDate = vsettleDate;
+    }
+
+    public Date getMsettleDate() {
+        return msettleDate;
+    }
+
+    public void setMsettleDate(Date msettleDate) {
+        this.msettleDate = msettleDate;
+    }
+
+    public BigDecimal getMintAmt() {
+        return mintAmt;
+    }
+
+    public void setMintAmt(BigDecimal mintAmt) {
+        this.mintAmt = mintAmt;
+    }
+
+    public BigDecimal getMiradeAmt() {
+        return miradeAmt;
+    }
+
+    public void setMiradeAmt(BigDecimal miradeAmt) {
+        this.miradeAmt = miradeAmt;
+    }
+
+    public String getPtradeId() {
+        return ptradeId;
+    }
+
+    public void setPtradeId(String ptradeId) {
+        this.ptradeId = ptradeId;
+    }
+
+    public String getFtradeId() {
+        return ftradeId;
+    }
+
+    public void setFtradeId(String ftradeId) {
+        this.ftradeId = ftradeId;
+    }
+
+    public String getMdeliveryType() {
+        return mdeliveryType;
+    }
+
+    public void setMdeliveryType(String mdeliveryType) {
+        this.mdeliveryType = mdeliveryType;
     }
 }
