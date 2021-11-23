@@ -132,7 +132,9 @@
     // 导入按钮点击事件
     $('#SalesTransactionMaintenance001_btn_import').click(function() {
         Joyin.confirm("请确认是否要导入数据？", function() {
-            Joyin.uploadFile(function(fileName) {
+        var options = {};
+        options.pageId = "SalesTransactionMaintenance";
+            Joyin.uploadFile(options,function(fileName) {
                 Joyin.ajax(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
                     Joyin.ajax(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/importFile', {fileName: fileName});
                 });
@@ -141,6 +143,20 @@
             });
         });
     });
+//            // 导入按钮点击事件
+//            $('#SalesTransactionMaintenance001_btn_import').click(function() {
+//                Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function() {
+//                    Joyin.uploadFile(function(fileName) {
+//                        Joyin.ajax('checkConfirmMsgForImportData', {fileName: fileName}, function() {
+//                            Joyin.ajax('importFile', {fileName: fileName});
+//                        },function() {
+//                            $('iframe').contents().find("#loading").hide();
+//                        });
+//                    },function() {
+//                        table.reload();
+//                    });
+//                });
+//            });
 
         /**
          * 批量删除按钮
