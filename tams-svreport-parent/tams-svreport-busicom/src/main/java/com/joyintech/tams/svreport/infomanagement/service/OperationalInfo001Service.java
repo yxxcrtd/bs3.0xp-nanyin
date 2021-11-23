@@ -26,7 +26,6 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -1866,7 +1865,15 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				FileOutputStream out = null;
 				try {
 					File exportFile = new SafelyFile(fileName);
-					out = new FileOutputStream(exportFile);
+					// 本地文件夹不存在先创建文件夹 add by zcw
+					File exportFilePaths = new SafelyFile(exportFilePath);
+					if (!exportFilePaths.exists()) {
+						exportFilePaths.mkdirs();
+					}
+					// 当配置参数为服务器路径时从新获取本地路径 add by zcw
+					String saveFileDirPath = exportFile.getAbsolutePath();
+
+					out = new FileOutputStream(saveFileDirPath);
 					workbook.write(out);
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
