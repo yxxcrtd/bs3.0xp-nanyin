@@ -543,6 +543,10 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
      *业务模式
      */
     private String businessModel;
+    /**
+     *  银行间交易成交匹配Dto
+     */
+    private CfetsTrdConfirmMatchDto cfetsTrdConfirmMatchDto;
 
 
     public String getPreTradeId() {
@@ -2384,5 +2388,13 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 
     public void setBusinessModel(String businessModel) {
         this.businessModel = businessModel;
+    }
+
+    public CfetsTrdConfirmMatchDto getCfetsTrdConfirmMatchDto() {
+        return cfetsTrdConfirmMatchDto;
+    }
+
+    public void setCfetsTrdConfirmMatchDto(CfetsTrdConfirmMatchDto cfetsTrdConfirmMatchDto) {
+        this.cfetsTrdConfirmMatchDto = cfetsTrdConfirmMatchDto;
     }
 }

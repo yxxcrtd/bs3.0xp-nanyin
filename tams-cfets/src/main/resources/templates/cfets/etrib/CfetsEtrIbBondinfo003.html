@@ -58,7 +58,8 @@
                    data-th-value="${entity?.entrustId}"/>
             <input type="text" id="entrustStatus" name="entrustId" disabled="disabled" style="display:none;"
                    data-th-value="${entity?.entrustStatus}"/>
-            <div class="pro-module-wrapper pro-module-base" title="基本信息">
+             <input type="hidden" id="transmitTime" name="transmitTime" th:value="${entity?.transmitTime}">
+                <div class="pro-module-wrapper pro-module-base" title="基本信息">
                 <div class="pro-module-wrap">
                     <div class="pro-module">
                         <h3 class="pro-module-title">
