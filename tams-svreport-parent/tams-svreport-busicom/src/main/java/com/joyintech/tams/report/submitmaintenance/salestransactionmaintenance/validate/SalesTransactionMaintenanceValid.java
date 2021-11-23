@@ -56,9 +56,7 @@ public class SalesTransactionMaintenanceValid implements BeanValidator {
                 errorList.add(new ValidMessage("", "产品登记编码不能为空"));
             }
             if (!dto.getPrdRegistCode().isEmpty()) {
-                if (dto.getPrdRegistCode().length() != 14) {
-                    errorList.add(new ValidMessage("", "产品登记编码错误（公募理财产品14位，私募15位）"));
-                }else if (dto.getPrdRegistCode().length() != 15) {
+                if (dto.getPrdRegistCode().length() != 14 && dto.getPrdRegistCode().length() != 15) {
                     errorList.add(new ValidMessage("", "产品登记编码错误（公募理财产品14位，私募15位）"));
                 }
             }
