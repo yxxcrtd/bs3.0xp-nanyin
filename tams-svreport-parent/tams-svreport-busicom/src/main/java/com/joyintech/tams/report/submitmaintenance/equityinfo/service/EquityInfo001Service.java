@@ -592,6 +592,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("固定电话");
             headList.add("电子邮箱");
             headList.add("备注");
+            headList.add("投资者分类");
 
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
@@ -2395,7 +2396,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("固定电话");
             headList.add("电子邮箱");
             headList.add("备注");
-            headList.add("投资人分类");
+            headList.add("投资者分类");
 
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
@@ -2635,7 +2636,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("固定电话");
             headList.add("电子邮箱");
             headList.add("备注");
-
+            headList.add("投资者分类");
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
