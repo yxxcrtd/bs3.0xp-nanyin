@@ -1,10 +1,12 @@
 package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.controller;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
@@ -112,7 +114,7 @@ public class SalesTransactionMaintenance001Controller extends BaseController {
                 "/com/joyintech/tams/report/submitmaintenance/salestransactionmaintenance/conf/export_conf.xml",
                 listdto);
         return ExportUtil.export(
-                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                "销售结算资金交易维护" + SystemGlobalConstant.OPEN_PARENTHESIS
                         + DateUtil.format(DateUtil.platDateFromCache())
                         + SystemGlobalConstant.CLOSE_PARENTHESIS
                         + SystemGlobalConstant.POINT
@@ -161,17 +163,11 @@ public class SalesTransactionMaintenance001Controller extends BaseController {
     public AjaxResult delete(@RequestBody @Validated({
             ValidateGroupDelete.class}) SalesTransactionMaintenanceDto dto, BindingResult br)
             throws Exception {
-        if(dto!=null){
-            if(dto.getMaintainStatus().equals("01")) {//erro表刪除
-                if (salesTransactionmaintenanceService.deleteByPrimaryKey(dto)) {
-                    return new AjaxResult("删除成功");
-                }
-            }else if(dto.getMaintainStatus().equals("02")){//info表逻辑刪除
-                if (salesTransactionmaintenanceService.deleteInfo(dto)) {
-                    return new AjaxResult("删除成功");
-                }
+        if(!(dto.getSelectedItem().isEmpty())){
+            if (salesTransactionmaintenanceService.deleteByPrimaryKey(dto)) {
+                return new AjaxResult("删除成功");
             }
-        }
+            }
         return new AjaxResult("删除失败");
     }
 
@@ -179,16 +175,33 @@ public class SalesTransactionMaintenance001Controller extends BaseController {
      * 提供销售结算资金服务机构代码下拉框
      */
     @ResponseBody
-    @RequestMapping("getInstitutionCode")
-    public List<SelectOptionDto> getInstitutionCode() {
-        return salesTransactionmaintenanceService.getInstitutionCode(RequestUtil.getPageParam());
+    @RequestMapping("/getInstitutionCode")
+    public List<SuggestDto> getInstitutionCode()
+            throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("institutionCode", RequestUtil.getPageParam().get("institutionCode"));
+        List<SuggestDto> temp = salesTransactionmaintenanceService.getInstitutionCode(map);
+        return temp;
+    }
+
+    /**
+     * 登记编码下拉框
+     */
+    @ResponseBody
+    @RequestMapping("/getPrdRegistCode")
+    public List<SuggestDto> getPrdRegistCode()
+            throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("prdRegistCode", RequestUtil.getPageParam().get("prdRegistCode"));
+        List<SuggestDto> temp = salesTransactionmaintenanceService.getPrdRegistCode(map);
+        return temp;
     }
 
     /**
      * 销售结算资金交易流水号下拉框
      */
+    @RequestMapping("/getTradeNo")
     @ResponseBody
-    @RequestMapping("getTradeNo")
     public List<SelectOptionDto> getTradeNo() {
         return salesTransactionmaintenanceService.getTradeNo(RequestUtil.getPageParam());
     }

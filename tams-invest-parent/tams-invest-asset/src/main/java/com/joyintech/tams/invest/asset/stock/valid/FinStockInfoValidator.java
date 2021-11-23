@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.asset.stock.valid;
 
 import com.joyintech.framework.base.intf.Page;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
@@ -59,8 +60,6 @@ public class FinStockInfoValidator implements BeanValidator {
     @Autowired
     private InvDataCheckService chbInvDataCheckService;
 
-    private Page page;
-
     /**
      * {@inheritDoc}
      */
@@ -105,7 +104,8 @@ public class FinStockInfoValidator implements BeanValidator {
                                this.getMessage("FinStockInfo001.shOrZh"))));
                    }
                }
-               if (null != this.page && null != this.page.getElementcontrol("bussRepStockInfo") && this.page.getElementcontrol("bussRepStockInfo").getIsShow()) {
+               Page page = CacheUtil.getPage("FinStockInfo002");
+               if (null != page && null != page.getElementcontrol("bussRepStockInfo") && page.getElementcontrol("bussRepStockInfo").getIsShow()) {
                    //中债,3个投资阶段选其他,备注必填
                    if((dto.getBussRepEquityInfoDto().getRepSharesType().equals(DictCodeListExt2.股票类型_其他.getValue())||
                            dto.getBussRepEquityInfoDto().getRepPartyType1().equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue())

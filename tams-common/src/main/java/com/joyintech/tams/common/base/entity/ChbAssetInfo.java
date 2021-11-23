@@ -1103,7 +1103,22 @@ public class ChbAssetInfo extends BaseEntity {
      * 是否非标转标资产
      */
     private String isFbzb;
-
+    
+    /**
+     * 结构化业务类型
+     */
+    private String constracteBusiType;
+    
+    /**
+     * 结构化层级
+     */
+    private String constracteGrade;
+    
+    /**
+     * 结构化杠杆倍数
+     */
+    private BigDecimal constracteHeaverTimes;
+    
     /**
      * 取得 资产要素uuid（为修改删除使用）
      * @return 资产要素uuid（为修改删除使用）
@@ -4525,4 +4540,29 @@ public class ChbAssetInfo extends BaseEntity {
     public void setIsFinLicence(String isFinLicence) {
         this.isFinLicence = isFinLicence;
     }
+
+	public String getConstracteBusiType() {
+		return constracteBusiType;
+	}
+
+	public void setConstracteBusiType(String constracteBusiType) {
+		this.constracteBusiType = constracteBusiType;
+	}
+
+	public String getConstracteGrade() {
+		return constracteGrade;
+	}
+
+	public void setConstracteGrade(String constracteGrade) {
+		this.constracteGrade = constracteGrade;
+	}
+
+	public BigDecimal getConstracteHeaverTimes() {
+		return constracteHeaverTimes;
+	}
+
+	public void setConstracteHeaverTimes(BigDecimal constracteHeaverTimes) {
+		this.constracteHeaverTimes = constracteHeaverTimes;
+	}
+   
 }

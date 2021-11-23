@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -29,7 +30,7 @@ public interface SalesTransactionMaintenanceMapper {
      * 双击查看详细信息查询，修改信息查询 <功能详细描述>erro
      *
      */
-    SalesTransactionMaintenanceDto selectErroDetail(Map<String, Object> param);
+    List<SalesTransactionMaintenanceDto> selectErroDetail(Map<String, Object> param);
 
     /**
      * 查询新增数据主键是否重复
@@ -67,11 +68,15 @@ public interface SalesTransactionMaintenanceMapper {
     /**
      * 提供销售结算资金服务机构代码下拉框
      */
-    List<SelectOptionDto> getInstitutionCode(Map<String,Object> map);
+    List<SuggestDto> getInstitutionCode(Map<String, Object> map);
 
     /**
-     * 销售结算资金交易流水号下拉框
+     * 产品登记编码下拉框
      */
-    List<SelectOptionDto> getTradeNo(Map<String,Object> map);
+    List<SuggestDto> getPrdRegistCode(Map<String, Object> map);
+    /**
+     * 交易流水下拉框
+     */
+    List<SelectOptionDto> getTradeNo(Map<String, Object> pageParam);
 
 }

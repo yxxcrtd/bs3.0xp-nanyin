@@ -462,7 +462,8 @@
        		UPDATE_TIME           	  as updateTime,
        		SUMIT_SEQ                 as sumitSeq,
        		ORG_CODE                  as orgCode,
-       		CHECK_SEQNO		  		  as checkSeqno
+       		CHECK_SEQNO		  		  as checkSeqno,
+		    HOLDER_CLASSIFY           as holderClassify
 		 from CHB_EQU_SUB
 		where SUBMIT_STATUS='01'
 		 <if test="keys !=null and keys.size()>0">

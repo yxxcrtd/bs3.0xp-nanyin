@@ -330,6 +330,17 @@
                 </div>
 
              </div>
+             
+             <div class="form-inline-wrap">
+					<label class="layui-form-label form-lable"
+						   data-th-utext="#{SvrBussRepAssetMngProdInfo.chbManagerId}">管理人代码</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" th:id="|${entityName}_chbManagerId|"
+							   th:name="|${entityName}.chbManagerId|"
+							   th:value="${entity?.chbManagerId}"
+							   data-fixtype="2" class="layui-input form-input"/>
+					</div>
+				</div>
             </div>
             <!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段start -->
             <div class="layui-form-item">

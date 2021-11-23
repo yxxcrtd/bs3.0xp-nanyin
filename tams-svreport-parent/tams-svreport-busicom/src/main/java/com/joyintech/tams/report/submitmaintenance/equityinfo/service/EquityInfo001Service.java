@@ -1365,9 +1365,6 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             if (!EquityInfoCheckUtil.isEmpty(list.get(8))) {
                 equityInfo001Dto.setHolderType(EquityInfoCheckUtil.subDictcode(list.get(8), " "));
             }
-            if (!EquityInfoCheckUtil.isEmpty(list.get(25))) {
-                equityInfo001Dto.setHolderClassify(EquityInfoCheckUtil.subDictcode(list.get(25), " "));
-            }
             if (!EquityInfoCheckUtil.isEmpty(list.get(9))) {
                 equityInfo001Dto.setPersonalIdentifyType(
                         EquityInfoCheckUtil.subDictcode(list.get(9), " "));
@@ -1405,10 +1402,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             equityInfo001Dto.setRemark(list.get(21));
             equityInfo001Dto.setAgent(list.get(22));
             equityInfo001Dto.setOrgCode(orgCode);
-//            //接口接入数据校验字段置空
-//            if(!EquityInfoCheckUtil.isEmpty(list.get(25))) {
-//                equityInfo001Dto.setInterfCheckResult(" ");
-//            }
+            if (!EquityInfoCheckUtil.isEmpty(list.get(25))) {
+                equityInfo001Dto.setHolderClassify(
+                        EquityInfoCheckUtil.subDictcode(list.get(25), " "));
+            }
             // 增加行号
             equityInfo001Dto.setExcelNum(String.valueOf(i + 2));
             //检查序列号设置初始值

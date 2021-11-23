@@ -5,6 +5,7 @@
 package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -30,6 +31,10 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
     private String bankCode;// 登记银行代码
     private String registSeqno;//主键uuid
     private String maintainStatus;//报送信息维护状态
+    /**
+     * 原始数据
+     */
+    private String orgData;
     /**
      * 错误信息
      */
@@ -126,6 +131,13 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
      * 数据接入日期
      */
     private Date receptDate;
+    /**
+     * 取得 销售结算资金交易日期字符串格式
+     * @return 销售结算资金交易日期
+     */
+    public String getTradeVdateStr() {
+        return DateUtil.format(this.getTradeVdate());
+    }
 
     public String getDataStatus() {
         return dataStatus;
@@ -348,11 +360,35 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
         this.maintainStatus = maintainStatus;
     }
 
+    /**
+     * 取得 原始数据
+     * @return 原始数据
+     */
+    public String getOrgData() {
+        return orgData;
+    }
+
+    /**
+     * 设置 原始数据
+     * @param orgData 原始数据
+     */
+    public void setOrgData(String orgData) {
+        this.orgData = orgData == null ? null : orgData.trim();
+    }
+
+    /**
+     * 取得 错误信息
+     * @return 错误信息
+     */
     public String getErrMsg() {
         return errMsg;
     }
 
+    /**
+     * 设置 错误信息
+     * @param errMsg 错误信息
+     */
     public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
+        this.errMsg = errMsg == null ? null : errMsg.trim();
     }
 }

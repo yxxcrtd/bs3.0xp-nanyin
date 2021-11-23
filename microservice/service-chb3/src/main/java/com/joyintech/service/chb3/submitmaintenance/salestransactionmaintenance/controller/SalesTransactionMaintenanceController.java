@@ -2,7 +2,7 @@ package com.joyintech.service.chb3.submitmaintenance.salestransactionmaintenance
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.service.SalesTransactionMaintenance001Service;
@@ -134,28 +134,20 @@ public class SalesTransactionMaintenanceController {
     public boolean deleteByPrimaryKey(@RequestBody SalesTransactionMaintenanceDto dto) {
         return salestransactionmaintenance002Service.deleteByPrimaryKey(dto);
     }
-    /**
-     *
-     * 删除info
-     */
-    @PostMapping("deleteInfo")
-    public boolean deleteInfo(@RequestBody SalesTransactionMaintenanceDto dto) {
-        return salestransactionmaintenance002Service.deleteInfo(dto);
-    }
 
     /**
      * 提供销售结算资金服务机构代码下拉框
      */
     @PostMapping("getInstitutionCode")
-    public List<SelectOptionDto> getInstitutionCode(@RequestBody Map<String, Object> param){
-        return  salestransactionmaintenance002Service.getInstitutionCode(param);
+    public List<SuggestDto> getCustomerName(@RequestBody Map<String, Object> map) {
+        return salestransactionmaintenance002Service.getInstitutionCode(map);
     }
 
     /**
-     * 销售结算资金交易流水号下拉框
+     * 登记编码下拉框
      */
-    @PostMapping("getTradeNo")
-    public List<SelectOptionDto> getTradeNo(@RequestBody Map<String, Object> param){
-        return  salestransactionmaintenance002Service.getTradeNo(param);
+    @PostMapping("getPrdRegistCode")
+    public List<SuggestDto> getPrdRegistCode(@RequestBody Map<String, Object> map) {
+        return salestransactionmaintenance002Service.getPrdRegistCode(map);
     }
 }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.identityrepair.dao.SvrIdentityRepairInterfMapper" >
+   
+    <select id="selectBatchData" resultType="com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair">
+		SELECT
+		tmp1.equMark,
+		tmp1.indentifyMark,
+		tmp2.fundAccPlace
+		FROM(
+		SELECT
+		'SUB'  equMark,
+		INDENTIFY_MARK indentifyMark
+		FROM CHB_EQU_SUB
+		WHERE FUND_ACC_PLACE = NULL
+
+		UNION ALL
+
+		SELECT
+		'CHECK'  equMark,
+		INDENTIFY_MARK indentifyMark
+		FROM CHB_EQU_HOLD_CHECK
+		WHERE
+		FUND_ACC_PLACE = NULL
+		)  tmp1
+		LEFT JOIN (
+		SELECT
+		DISTINCT(ORG_INDENTIFY_MARK) as orgIndentifyMark,
+		INDENTIFY_MARK as indentifyMark,
+		FUND_ACC_PLACE as fundAccPlace
+		FROM CHB_EQUDET_SUB
+		WHERE TO_CHAR(NVL(UPDATE_TIME,CREATE_TIME),'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+		group BY
+		ORG_INDENTIFY_MARK,
+		INDENTIFY_MARK,
+		FUND_ACC_PLACE)  tmp2
+		ON tmp1.indentifyMark = tmp2.orgIndentifyMark
+		GROUP BY
+		tmp1.equMark,
+		tmp1.indentifyMark,
+		tmp2.fundAccPlace
+	</select>
+
+
+	<select id="idenCheck" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		from
+		CHB_EQUDET_SUB
+		WHERE TO_CHAR(NVL(UPDATE_TIME,CREATE_TIME),'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updataSub" parameterType="com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair">
+		UPDATE CHB_EQU_SUB
+		SET
+		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR}
+		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updataCheck" parameterType="com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair">
+		updata CHB_EQU_HOLD_CHECK
+		SET
+		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR}
+		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
+	</update>
+</mapper>

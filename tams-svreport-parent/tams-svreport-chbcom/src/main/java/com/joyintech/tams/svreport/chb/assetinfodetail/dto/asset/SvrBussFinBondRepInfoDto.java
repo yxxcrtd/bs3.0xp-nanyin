@@ -10,6 +10,8 @@
  
 package com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset;
 
+import java.math.BigDecimal;
+
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -154,6 +156,42 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
      */
     private String bankSecZxzq;
 
+    
+    /**
+     * 发行人代码
+     */
+    private String chbIssuerId;
+    
+    /**
+     * 是否永续债
+     */
+    private String perpetualFlag;
+    
+    /**
+     * 是否含权债
+     */
+    private String optionFlag;
+    
+    /**
+     * 是否商业银行可转债
+     */
+    private String bankSecKzzq;
+    
+    /**
+     * 结构化业务类型
+     */
+    private String constracteBusiType;
+    
+    /**
+     * 结构化层级
+     */
+    private String constracteGrade;
+    
+    /**
+     * 结构化杠杆倍数
+     */
+    private BigDecimal constracteHeaverTimes;
+        
 
     public String getAssetType2() {
         return assetType2;
@@ -382,4 +420,61 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
     public void setRepIsFbzb(String repIsFbzb) {
         this.repIsFbzb = repIsFbzb;
     }
+    
+	public String getChbIssuerId() {
+		return chbIssuerId;
+	}
+	
+	public void setChbIssuerId(String chbIssuerId) {
+		this.chbIssuerId = chbIssuerId;
+	}
+	
+	public String getPerpetualFlag() {
+		return perpetualFlag;
+	}
+	
+	public void setPerpetualFlag(String perpetualFlag) {
+		this.perpetualFlag = perpetualFlag;
+	}
+	
+	public String getOptionFlag() {
+		return optionFlag;
+	}
+	
+	public void setOptionFlag(String optionFlag) {
+		this.optionFlag = optionFlag;
+	}
+	
+	public String getBankSecKzzq() {
+		return bankSecKzzq;
+	}
+	
+	public void setBankSecKzzq(String bankSecKzzq) {
+		this.bankSecKzzq = bankSecKzzq;
+	}
+	
+	public String getConstracteBusiType() {
+		return constracteBusiType;
+	}
+	
+	public void setConstracteBusiType(String constracteBusiType) {
+		this.constracteBusiType = constracteBusiType;
+	}
+	
+	public String getConstracteGrade() {
+		return constracteGrade;
+	}
+	
+	public void setConstracteGrade(String constracteGrade) {
+		this.constracteGrade = constracteGrade;
+	}
+	
+	public BigDecimal getConstracteHeaverTimes() {
+		return constracteHeaverTimes;
+	}	
+	
+	public void setConstracteHeaverTimes(BigDecimal constracteHeaverTimes) {
+		this.constracteHeaverTimes = constracteHeaverTimes;
+	}   
+    
 }
