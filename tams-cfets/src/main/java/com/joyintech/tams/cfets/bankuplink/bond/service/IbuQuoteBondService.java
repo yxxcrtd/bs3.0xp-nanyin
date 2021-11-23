@@ -89,6 +89,7 @@ public class IbuQuoteBondService extends BaseService {
                     break;
                 }
             }
+            ajaxResult.setErrorList(errorList);
         }
         return ajaxResult;
     }
