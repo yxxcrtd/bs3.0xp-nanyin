@@ -1196,6 +1196,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     交收操作类型_回溯(DictCode.交收操作类型,"02","回溯"),
     交收操作类型_交收延期(DictCode.交收操作类型,"03","交收延期"),
     交收操作类型_交收失败(DictCode.交收操作类型,"04","交收失败"),
+    交收操作类型_交收修改(DictCode.交收操作类型,"05","交收修改"),
     /**手工交收 end*/
     // add by dubaojun 2020-07-24 增加目标类型 start
     共通业务类型_股票竞价指令(DictCode.共通业务类型, "ETR25", "股票竞价指令"),

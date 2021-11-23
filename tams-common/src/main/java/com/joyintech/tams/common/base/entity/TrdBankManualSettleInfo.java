@@ -1,5 +1,7 @@
 package com.joyintech.tams.common.base.entity;
 
+import com.joyintech.framework.base.BaseEntity;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -9,7 +11,7 @@ import java.util.Date;
  * @author:  Administrator
  * @创建时间: 2021-11-16
  */
-public class TrdBankManualSettleInfo {
+public class TrdBankManualSettleInfo extends BaseEntity {
     /**
      * 交收编号
      */

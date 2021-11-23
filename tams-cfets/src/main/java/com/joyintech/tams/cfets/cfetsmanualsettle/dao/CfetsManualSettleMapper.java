@@ -1,0 +1,115 @@
+package com.joyintech.tams.cfets.cfetsmanualsettle.dao;
+
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
+import com.joyintech.tams.common.base.entity.TrdBankManualSetDetail;
+import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 手工交收
+ * @author sjj
+ * @version 1.0 2021年11月12日
+ * @see CfetsManualSettleMapper
+ * @since 1.0
+ */
+@Repository
+public interface CfetsManualSettleMapper {
+
+
+    /**
+     * 指令列表分页查询
+     * @param pageParam 参数
+     * @return List<CfetsManualSettleTraderListRespond>
+     */
+    List<CfetsManualSettleTradeListRespond> findPage(Map<String, Object> pageParam);
+
+    /**
+     * 交收流水列表分页查询
+     *
+     * @param pageParam 参数
+     * @return List<CfetsManualSettleFlowRespond>
+     */
+    List<CfetsManualSettleFlowRespond> findManualSettleFlow(Map<String, Object> pageParam);
+
+    /**
+     * 交收流水列表分页查询
+     *
+     * @param pageParam 参数
+     * @return CfetsManualSettleInfoRespond
+     */
+    CfetsManualSettleInfoRespond findManualSettleInfo(Map<String, Object> pageParam);
+
+    /**
+     * 组合分配信息List
+     *
+     * @param pageParam 参数
+     * @return List<PortIntFenPeiInfoDto>
+     */
+    List<PortIntFenPeiInfoDto> findPortIntFenPeiInfoList(Map<String, Object> pageParam);
+
+    /**
+     * 成交确认明细查询
+     *
+     * @param tradeId 参数
+     * @return List<CfetsManualSettleDealInfo>
+     */
+    List<CfetsManualSettleDealInfo> getDealDetailsByTradeId(@Param("tradeId") String tradeId);
+
+    /**
+     * 查询证券账户
+     * @param param
+     * @return
+     */
+    String qryPortfolioSecAcctId(Map<String, Object> param);
+
+    /**
+     * 查询托管户
+     * @param param
+     * @return
+     */
+    String qryPortfolioCashAcctId(Map<String, Object> param);
+
+    /**
+     * 批量更新银行间手工交收明细
+     * @param listTrdBnakSetDetails
+     * @return
+     */
+    int updateByTradeId(@Param("listTrdBnakSetDetails") List<TrdBankManualSetDetail> listTrdBnakSetDetails);
+
+    /**
+     * 插入/更新交收信息表
+     * @param trdBankManualSettleInfo
+     * @return
+     * @see
+     * @since 1.0
+     */
+    void mergeInfo(TrdBankManualSettleInfo trdBankManualSettleInfo);
+
+    /**
+     * 查询待修改记录
+     * @param pageParam
+     * @return
+     */
+    PortSettleinfoDto queryPortSettleinfo(Map<String, Object> pageParam);
+
+    /**
+     * 查询金融产品交易附属表数据
+     * @param tradeId
+     * @return
+     */
+    List<TrdProductDealAdd> queryTrdProductDealsByTotalTradeId(@Param("tradeId") String tradeId);
+
+//    /**
+//     * 查询金融产品交易表数据
+//     * @param tradeId
+//     * @return
+//     */
+//    TrdProductDeal queryTrdProductDealsByTradeId(@Param("tradeId") String tradeId);
+}
