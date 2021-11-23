@@ -158,9 +158,49 @@ public class EtrExchangeTradeMulti001Service extends CommonExportService<EtrExch
 	 * @since 1.0
 	 */
 	public EtrExchangeTradeMulti001Dto selectMultDetail(Map<String, Object> pageParam) {
-		EtrExchangeTradeMulti001Dto etrExchangeTradeMulti001Dto = restTemplate.postForObject(
+		EtrExchangeTradeMulti001Dto dto = restTemplate.postForObject(
 				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectMultDetail",
 				pageParam, EtrExchangeTradeMulti001Dto.class);
-		return etrExchangeTradeMulti001Dto;
+		if(!StringUtil.isEmptyList(dto.getTradeMultiPtl001Dtos())) {
+			Date platformDate = DateUtil.platDateFromCache();
+			String calId = StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())?DictCodeList.交易日历_上海交易所日历.getValue():DictCodeList.交易日历_深圳交易所日历.getValue();
+			dto.getTradeMultiPtl001Dtos().stream().forEach(item->{
+				Map<String, Object> paramMap = new HashMap<String,Object>();
+				paramMap.put("portfolioId",item.getPortfolioId());
+				paramMap.put("vdate",DateUtil.format(platformDate));
+				paramMap.put("acctNo",item.getAcctNo());
+				paramMap.put("calId",calId);
+				paramMap.put("ccy",StringUtil.isNotEmpty(item.getCcy())? item.getCcy():DictCodeList.币种_人民币_CNY.getValue());
+
+				//可用现金
+				Map<String, Object> cash = etrCommonService.getProAvailableCash(paramMap);
+				if(StringUtil.isNotEmpty(cash)) {
+					//组合T日可用现金
+					item.setAvailableCashT(StringUtil.isNotEmpty(cash.get("cashT"))?(BigDecimal)cash.get("cashT"): BigDecimal.ZERO);
+					//组合T+1日可用现金
+					item.setAvailableCashT1(StringUtil.isNotEmpty(cash.get("cashT1"))?(BigDecimal)cash.get("cashT1"): BigDecimal.ZERO);
+				}
+				if(StringUtil.isNotEmpty(dto.getFinprodId())) {
+					EtrSecPositionDto etrSecPositionDto = new EtrSecPositionDto();
+					etrSecPositionDto.setFinprodId((String)paramMap.get("finprodId"));
+					etrSecPositionDto.setPortfolioId(item.getPortfolioId());
+					etrSecPositionDto.setCcy(item.getCcy());
+
+					//组合T日可用持仓
+					etrSecPositionDto.setCdate(platformDate);
+					item.setAvailablePositionsT(etrCommonService.getAssetAvailablePosition(etrSecPositionDto));
+
+					if(StringUtil.isNotEmpty(calId)){
+						List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(platformDate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(platformDate)), 15),calId);
+						Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(platformDate)), 1, holidayList, "1");
+						etrSecPositionDto.setCdate(tradeDay);
+					}
+					//组合T+1日可用持仓
+					item.setAvailablePositionsT1(etrCommonService.getAssetAvailablePosition(etrSecPositionDto));
+				}
+
+			});
+		}
+		return dto;
 	}
 }

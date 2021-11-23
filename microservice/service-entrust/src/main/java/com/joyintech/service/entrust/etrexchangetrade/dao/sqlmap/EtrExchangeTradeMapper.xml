@@ -1434,6 +1434,7 @@
         ,T1.PRICE_MODEL
         ,CASE WHEN T1.PS IN (#{PS_T68}, #{PS_T69}, #{PS_03}, #{PS_04}) THEN T1.PRICE * 100 ELSE
         T1.PRICE END price
+        ,T1.TRADE_MARKET
         ,T2.FULL_PRICE as fprice
         ,T2.MATURE_YIELD * 100 as yield
         ,T2.DEAL_MODE as declaType
