@@ -1,10 +1,10 @@
 package com.joyintech.service.entrust.etrcommanddispatcher.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrEntrustDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +12,10 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrcommanddispatcher.dao.EtrCommandDispatcherMapper;
 import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrCommandDispatcherDto;
 import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrCommandDispatcherTotalDto;
 import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrTradePledgeDto;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 
@@ -66,6 +61,7 @@ public class EtrCommandDispatcherService extends BaseService<EtrCommandDispatche
         	}
     		dto.setEtr_entrust_list(selectList);
     		dto.setEtr_pledge_list(this.selectPledgeList(selectList));
+    		dto.setEtr_detail_list(selectEtrDetailList(param));
     		if(selectList!=null && !selectList.isEmpty()) {
     			dto.setAMOUNT(selectList.size());
         		dto.setPageCount(1);
@@ -110,6 +106,18 @@ public class EtrCommandDispatcherService extends BaseService<EtrCommandDispatche
     	}
     	return pledgelist;
     }
+
+	/**
+	 * 委托指令明细列表查询
+	 * <功能详细描述>
+	 * @param param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public List<EtrEntrustDetail> selectEtrDetailList(Map<String, Object> param){
+		return etrTradeSysInterfMapper.selectEtrDetailList(param);
+	}
     
 	@SuppressWarnings("unchecked")
 	public void sendMessageByInf(EtrCommandDispatcherTotalDto dto) {
