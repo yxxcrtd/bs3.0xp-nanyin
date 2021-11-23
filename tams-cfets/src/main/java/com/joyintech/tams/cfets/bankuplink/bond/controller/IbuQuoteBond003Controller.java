@@ -157,12 +157,6 @@ public class IbuQuoteBond003Controller extends BaseController {
             ar.setErrorList(valid);
             return new Message<AjaxResult>().success().setData(ar);
         }
-        // 委托为空的场合只有新建模式且系统参数为软校验
-//        if (StringUtil.isEmpty(cfetsBondDealRequestQuoteDto.getEntrustId()) && StringUtil.equals(
-//            CacheUtil.getSysParam("ibuFlag_startDialogueQuoteWithNoEntrust"), "02")) {
-//            sb.append(this.getMessage("CFETS_COMMON_E_004"));
-//            sb.append(GlobalConstant.HTML_NEWLINE);
-//        }
 
         // 银行间报价-现券买卖报价-超委托的价格校验开关（01 硬阻挡 02 软阻挡）
         if (StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustPrice"), "02")) {

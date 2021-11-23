@@ -152,6 +152,9 @@ public class CfetsBondDealQuoteCommonDto {
     @ApiModelProperty(name="actSetteDate",value="实际行权日")
     private Date actSetteDate;
 
+    @ApiModelProperty(name="counterInfoList",value="可选机构(请求报价专用)")
+    private List<CounterInfoDto> counterInfoList;
+
     public String getQuoteId() {
         return quoteId;
     }
@@ -518,6 +521,14 @@ public class CfetsBondDealQuoteCommonDto {
 
     public void setQuoteStyle(String quoteStyle) {
         this.quoteStyle = quoteStyle;
+    }
+
+    public List<CounterInfoDto> getCounterInfoList() {
+        return counterInfoList;
+    }
+
+    public void setCounterInfoList(List<CounterInfoDto> counterInfoList) {
+        this.counterInfoList = counterInfoList;
     }
 }
 

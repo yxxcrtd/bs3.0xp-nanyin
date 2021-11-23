@@ -30,8 +30,10 @@ import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -111,6 +113,12 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
 
     @Autowired
     private EtrEntrustMapper etrEntrustMapper;
+
+    @Autowired
+    private EtrEntrustAddMapper etrEntrustAddMapper;
+
+    @Autowired
+    private BaseEtrInvestInfoService baseEtrInvestInfoServiceImpl;
     /**
      * 提交保存check 必填项
      * @param entity
@@ -229,6 +237,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 }else {
                     param.put("sysDate", entity.getTradeDate());
                 }
+                param.put("finprodId",entity.getFinprodId());
                 //未来有行权计划
                 if(cfetsIbuQuoteBondMapper.countBondHasEexrPlan(param)>0){
                     if(null==entity.getPrice()&&null==entity.getMatureYield()&&null==entity.getExerYield()){
@@ -346,7 +355,47 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         updateCfetsOprHis(entity.getTotleTradeId(),type.name());
         //头寸
         PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto));
+        //处理指令执行进度
+        insertEtrFinishStatus(cfetsBondDealDbDto,type);
     }
+
+    /**
+     * 处理指令完成度
+     * @param cfetsBondDealDbDto
+     * @param operationType
+     */
+    public void insertEtrFinishStatus(CfetsBondDealDbDto cfetsBondDealDbDto,OperationType operationType){
+        RegFinProductDealTotal regFinProductDealTotal = cfetsBondDealDbDto.getRegFinProductDealTotal();
+        List<RegFinProductDeal> regFinProductDeals = cfetsBondDealDbDto.getRegFinProductDeals();
+        if(CollectionUtils.isNotEmpty(regFinProductDeals)){
+            List<EtrFinishStatusDto> etrFinishStatusDtos = new ArrayList<>();
+            for (RegFinProductDeal regFinProductDeal : regFinProductDeals) {
+                EtrFinishStatusDto status = new EtrFinishStatusDto();
+                status.setEntrustId(regFinProductDeal.getEntrustId());
+                status.setTradeId(regFinProductDealTotal.getTotleTradeId());
+                status.setCstpTradeId(regFinProductDealTotal.getTotleTradeId());
+                status.setFinishDate(regFinProductDealTotal.getTradeDate());
+                EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(regFinProductDeal.getEntrustId());
+                if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())
+                        && StringUtil.equals(DictCodeListExt3.目标类型_金额.getValue(),etrEntrustAdd.getTargetType())){
+                    status.setEntFinishAmt(regFinProductDeal.getTradeAmt());
+                }
+                else {
+                    status.setEntFinishAmt(regFinProductDeal.getShareAmt());
+                }
+                status.setTrader(regFinProductDealTotal.getOuTraderId());
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    baseEtrInvestInfoServiceImpl.cancelCompleteDelegate(status.getEntrustId(),status.getTradeId());
+                }
+                etrFinishStatusDtos.add(status);
+
+            }
+            if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
+                baseEtrInvestInfoServiceImpl.completeDelegate(etrFinishStatusDtos);
+            }
+        }
+    }
+
 
     @Override
     public void doDelete(String workflowId) {

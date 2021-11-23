@@ -9,7 +9,9 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondCalService;
@@ -20,8 +22,8 @@ import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsCon
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
-import com.joyintech.tams.invest.bankuplink.bond.service.CfetsBondDealQuotedPrice001Service;
 import com.joyintech.tams.invest.common.client.ClientData;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +35,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,9 +73,6 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@Autowired
 	private CfetsQuotedCommonService cfetsQuotedCommonService;
 
-	@Autowired
-	private CfetsBondDealQuotedPrice001Service cfetsBondDealQuotedPrice001Service;
-
 	@ApiOperation(value = "初始化参数", notes = "初始化参数")
 	@PostMapping("/initParams")
 	@ResponseBody
@@ -82,6 +82,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));
 		initPageParams.put("SETT_MODE", this.getSelectDataFromDataDic(DictCode.结算方式, null));
 		initPageParams.put("CLEAR_TYPE", this.getSelectDataFromDataDic(DictCode.清算类型, null));
+		initPageParams.put("QUOTE_TYPE", this.getSelectDataFromDataDic(BussinessDictCode.报价方式, null));
+		initPageParams.put("QUOTE_STYLE", this.getSelectDataFromDataDic(BussinessDictCode.报价方式_登记, null));
 		initPageParams.put("CCY", this.getSelectDataFromDataDic(DictCode.币种, null));
 		initPageParams.put("ACCOUNT_SPEED_0",BussinessDictCodeList.清算速度_T加0.getValue());
 		initPageParams.put("ACCOUNT_SPEED_1",BussinessDictCodeList.清算速度_T加1.getValue());
@@ -374,7 +376,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		AjaxResult ar = null;
 		BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
 		BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
-		if (cfetsBondDealQuotedPrice001Service.doReCall(bondQuote)) {
+		if (ibuQuoteBondService.doReCall(bondQuote)) {
 			ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
 		} ;
 		return new Message<AjaxResult>().success().setData(ar);
@@ -388,7 +390,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		for(CfetsBondCheckRequst cfetsBondCheckRequst:cfetsBondCheckRequsts){
 			BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
 			BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
-			if (cfetsBondDealQuotedPrice001Service.doReCall(bondQuote)) {
+			if (ibuQuoteBondService.doReCall(bondQuote)) {
 				ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
 			} ;
 		}
@@ -402,7 +404,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		AjaxResult ar = null;
 		BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
 		BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
-		if (cfetsBondDealQuotedPrice001Service.doBack(bondQuote)) {
+		if (ibuQuoteBondService.doBack(bondQuote)) {
 			ar = new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
 		} ;
 
@@ -412,9 +414,35 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ApiOperation(value = "失败", notes = "失败")
 	@ResponseBody
 	@RequestMapping("/selectErrlog")
-	public AjaxResult selectErrlog(String quoteId) {
+	public Message<AjaxResult> selectErrlog(String quoteId) {
 		AjaxResult ar = new AjaxResult();
 		ar.setData(cfetsQuotedCommonService.selectErrlog(quoteId));
-		return ar;
+		return new Message<AjaxResult>().success().setData(ar);
 	}
+
+	@ApiOperation(value = "指令列表导出", notes = "指令列表导出")
+	@ResponseBody
+	@RequestMapping("exportEntrust")
+	public void export(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
+			// 导出
+			ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
+				EntrustRequest  entrustRequest = requestDto.getDto(EntrustRequest.class);
+				List dataList = ibuQuoteBondService.listEntrust(entrustRequest).getRoot();
+				return dataList;
+			});
+	}
+
+	//TODO
+	@ApiOperation(value = "当日报价导出", notes = "当日报价导出")
+	@ResponseBody
+	@RequestMapping("exportDayPrice")
+	public void exportDayPrice(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
+		// 导出
+		ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
+			EntrustRequest  entrustRequest = requestDto.getDto(EntrustRequest.class);
+			List dataList = ibuQuoteBondService.listEntrust(entrustRequest).getRoot();
+			return dataList;
+		});
+	}
+
 }

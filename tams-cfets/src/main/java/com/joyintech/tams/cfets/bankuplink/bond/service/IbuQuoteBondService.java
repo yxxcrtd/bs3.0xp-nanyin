@@ -8,6 +8,9 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
+import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
+import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
@@ -18,6 +21,7 @@ import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -74,6 +78,9 @@ public class IbuQuoteBondService extends BaseService {
     @Autowired
     private CfetsEtrDispatcherService cfetsEtrDispatcherService;
 
+    @Autowired
+    private CfetsBondDealQuotedPriceService cfetsBondDealQuotedPriceService;
+
     /**
      * 风险试算check
      * @param entity
@@ -110,7 +117,7 @@ public class IbuQuoteBondService extends BaseService {
 
     /**
      * 指令详细信息
-     * @param dto
+     * @param entrustId
      * @return
      */
     public EntrustDto gettEntrust(String  entrustId){
@@ -787,6 +794,70 @@ public class IbuQuoteBondService extends BaseService {
         }
 
         return com.joyintech.tams.constant.DictCodeList.是否_否.getValue();
+    }
+
+    /**
+     * 撤回
+     * @param bondQuoteInfoDto
+     * @return
+     */
+    public boolean doReCall(BondQuoteInfoDto bondQuoteInfoDto) {
+
+        if (StringUtil.equals(bondQuoteInfoDto.getQuoteRoleType(),
+                BussinessDictCodeList.银行间上行本方角色_询价方.getValue())) {
+            CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,bondQuoteInfoDto);
+            return cfetsBondDealQuotedPriceService.sendBondDialogueQuoteRevoke(cfetsBondDealDialogueQuoteDto);
+            /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                            + "/CfetsBondDealQuotedPrice/sendBondDialogueQuoteRevoke",
+                    bondQuoteInfoDto, boolean.class);*/
+        }
+        else if (StringUtil.equals(bondQuoteInfoDto.getQuoteRoleType(),
+                BussinessDictCodeList.银行间上行本方角色_做市方.getValue())) {
+            CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,bondQuoteInfoDto);
+            return cfetsBondDealQuotedPriceService.sendBondRequestQuoteRevokeReply(cfetsBondDealRequestQuoteDto);
+            /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                            + "/CfetsBondDealQuotedPrice/sendBondRequestQuoteRevokeReply",
+                    bondQuoteInfoDto, boolean.class);*/
+        }
+        else if (StringUtil.equals(bondQuoteInfoDto.getQuoteRoleType(),
+                BussinessDictCodeList.银行间上行本方角色_非做市方.getValue())) {
+            CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,bondQuoteInfoDto);
+            return cfetsBondDealQuotedPriceService.sendBondRequestQuoteRevoke(cfetsBondDealRequestQuoteDto);
+            /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                            + "/CfetsBondDealQuotedPrice/sendBondRequestQuoteRevoke",
+                    bondQuoteInfoDto, boolean.class);*/
+        }
+        return false;
+    }
+
+    /**
+     * 回退
+     * @param bondQuoteInfoDto
+     * @return
+     */
+    public boolean doBack(BondQuoteInfoDto bondQuoteInfoDto) {
+        if (StringUtil.equals(bondQuoteInfoDto.getQuoteType(),
+                BussinessDictCodeList.报价方式_对话报价.getValue())) {
+            CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,bondQuoteInfoDto);
+            return cfetsBondDealQuotedPriceService.bondDialogueQuoteRestore(cfetsBondDealDialogueQuoteDto);
+            /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                            + "/CfetsBondDealQuotedPrice/bondDialogueQuoteRestore",
+                    bondQuoteInfoDto, boolean.class);*/
+        }
+        else if (StringUtil.equals(bondQuoteInfoDto.getQuoteType(),
+                BussinessDictCodeList.报价方式_请求报价.getValue())) {
+            CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,bondQuoteInfoDto);
+            return cfetsBondDealQuotedPriceService.sendBondRequestQuoteRestore(cfetsBondDealRequestQuoteDto);
+            /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                            + "/CfetsBondDealQuotedPrice/sendBondRequestQuoteRestore",
+                    bondQuoteInfoDto, boolean.class);*/
+        }
+        return false;
     }
 
     private void setParam(Map<String,Object> param){
