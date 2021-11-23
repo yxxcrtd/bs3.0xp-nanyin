@@ -2334,4 +2334,17 @@ public class EtrExchangeTradeService extends BaseService{
         List<EtrExchangeTradeMultiPtl001Dto> list = etrExchangeTradeMapper.selectPortfolioTreeDetail(map);
         return list;
     }
+    /**
+     * 查询多组合详情
+     * @param map
+     * @return
+     */
+    public EtrExchangeTradeMulti001Dto selectMultDetail(Map<String, Object> param){
+        param.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
+        param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
+        param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
+        param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+        return etrExchangeTradeMapper.selectMultDetail(param);
+    }
+
 }

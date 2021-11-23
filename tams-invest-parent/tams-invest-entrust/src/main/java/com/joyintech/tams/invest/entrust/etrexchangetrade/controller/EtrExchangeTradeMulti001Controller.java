@@ -463,5 +463,15 @@ public class EtrExchangeTradeMulti001Controller extends BaseController{
         String msg = etrExchangeTradeMulti001Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }
+
+    /**
+     * 获取多组合详情
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("selectMultDetail")
+    public EtrExchangeTradeMulti001Dto selectMultDetail(Map<String, Object> param){
+        return etrExchangeTradeMulti001Service.selectMultDetail(RequestUtil.getPageParam());
+    }
 }
 	

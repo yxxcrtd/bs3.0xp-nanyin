@@ -297,4 +297,6 @@ public interface EtrExchangeTradeMapper {
 	 * @return
 	 */
 	List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(Map<String,Object> map);
+
+	EtrExchangeTradeMulti001Dto selectMultDetail(Map<String,Object> map);
 }

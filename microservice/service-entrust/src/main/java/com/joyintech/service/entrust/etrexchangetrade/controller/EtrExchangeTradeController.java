@@ -500,4 +500,8 @@ public class EtrExchangeTradeController {
     public List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(@RequestBody Map<String,Object> map) {
         return etrExchangeTradeService.selectPortfolioTreeDetail(map);
     }
+    @RequestMapping("selectMultDetail")
+    public void selectMultDetail(@RequestBody Map<String,Object> map){
+        etrExchangeTradeService.selectMultDetail(map);
+    }
 }

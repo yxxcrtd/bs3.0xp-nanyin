@@ -19,6 +19,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *  交易信息 （左边下）
@@ -140,6 +141,27 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal productNetValue;
+
+    /**
+     * 买入全价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal fullPrice;
+    /**
+     * 收益率
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal yield;
+
+    /**
+     * 委托开始日
+     */
+    private Date vdate;
+
+    /**
+     * 委托结束日
+     */
+    private Date mdate;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -291,5 +313,37 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
 
     public void setCcy(String ccy) {
         this.ccy = ccy;
+    }
+
+    public BigDecimal getFullPrice() {
+        return fullPrice;
+    }
+
+    public void setFullPrice(BigDecimal fullPrice) {
+        this.fullPrice = fullPrice;
+    }
+
+    public BigDecimal getYield() {
+        return yield;
+    }
+
+    public void setYield(BigDecimal yield) {
+        this.yield = yield;
+    }
+
+    public Date getVdate() {
+        return vdate;
+    }
+
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
+    }
+
+    public Date getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = mdate;
     }
 }

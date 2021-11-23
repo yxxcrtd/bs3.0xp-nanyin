@@ -148,4 +148,19 @@ public class EtrExchangeTradeMulti001Service extends CommonExportService<EtrExch
 				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getEtrExchangeTradeMultiInfo",entrustId,
 				EtrExchangeTradeMulti001Dto.class);
 	}
+
+	/**
+	 * 多组合详情
+	 *
+	 * @param pageParam 页面参数
+	 * @return 多组合详情
+	 * @see
+	 * @since 1.0
+	 */
+	public EtrExchangeTradeMulti001Dto selectMultDetail(Map<String, Object> pageParam) {
+		EtrExchangeTradeMulti001Dto etrExchangeTradeMulti001Dto = restTemplate.postForObject(
+				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectMultDetail",
+				pageParam, EtrExchangeTradeMulti001Dto.class);
+		return etrExchangeTradeMulti001Dto;
+	}
 }

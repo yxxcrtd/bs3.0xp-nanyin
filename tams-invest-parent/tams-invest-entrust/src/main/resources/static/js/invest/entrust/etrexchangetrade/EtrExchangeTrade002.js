@@ -39,6 +39,12 @@
         },
         dblclick:function(table, data) {
             if(window.parent.dbclickCheck(data)){
+                //多组合单资产指令拼装数据
+                if(data.entrustClass=ENTRUST_CLASS_02) {
+                    Joyin.ajax(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/selectMultDetail', data, function (result) {
+                        data.data.tradeMultiPtl001Dtos = result.tradeMultiPtl001Dtos;
+                    });
+                }
                 if (data.priceModel == PRICE_MODEL_PRM03) {
                     data.entrustPrice = "0.00";//市价指令，价格默认显示0
                 } else {
