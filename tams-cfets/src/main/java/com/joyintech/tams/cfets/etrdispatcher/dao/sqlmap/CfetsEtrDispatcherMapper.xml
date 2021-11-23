@@ -392,7 +392,7 @@
                     OR TO_CHAR(t.entrustDate,'yyyy-MM-dd') ||''= #{year}||'-'||#{search}
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{search}
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
-                    OR to_char(t.transmitTime,'yyyy-MM-dd hh24:mi:ss') = #{search}
+                    OR t.transmitTime = #{search}
                 )
             </where>
         </if>
