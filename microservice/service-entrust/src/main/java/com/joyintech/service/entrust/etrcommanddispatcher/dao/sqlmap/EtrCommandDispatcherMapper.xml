@@ -192,7 +192,7 @@
 		FROM ETR_ENTRUST_DETAIL A
 		LEFT JOIN PTL_PORTFOLIO B ON A.PORTFOLIO_ID=B.PORTFOLIO_ID
 		WHERE
-		ENTRUST_ID in
+		A.ENTRUST_ID in
 		<foreach collection="entrustId.split(',')" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
