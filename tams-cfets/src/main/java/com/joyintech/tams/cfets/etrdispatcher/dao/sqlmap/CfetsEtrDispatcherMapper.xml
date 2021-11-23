@@ -8,6 +8,7 @@
     SELECT
     #{effectFlag} effectFlag,
     ETR_ENTRUST.ENTRUST_STATUS entrustStatus,
+    decode(ETR_ENTRUST.ENTRUST_STATUS,'09',1,'02',2,'03',3,'04',4,'06',5,'05',6,'07',7) entrustStatusOrder,
     ETR_ENTRUST.ENTRUST_TYPE entrustType,
     ETR_ENTRUST.ENTRUST_ID entrustId,
     ETR_ENTRUST.INV_MANAGER_ID invManagerId,
@@ -52,7 +53,7 @@
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
-    ETR_ENTRUST_ADD.TRANSMIT_TIME transmitTime
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'yyyy-MM-dd hh24:mi:ss') transmitTime
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
     PTL_PORTFOLIO
@@ -182,6 +183,7 @@
     SELECT
     #{effectFlag} effectFlag,
     ETR_ENTRUST.ENTRUST_STATUS entrustStatus,
+    decode(ETR_ENTRUST.ENTRUST_STATUS,'09',1,'02',2,'03',3,'04',4,'06',5,'05',6,'07',7) entrustStatusOrder,
     ETR_ENTRUST.ENTRUST_TYPE entrustType,
     ETR_ENTRUST.ENTRUST_ID entrustId,
     ETR_ENTRUST.INV_MANAGER_ID invManagerId,
@@ -223,7 +225,7 @@
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
-    ETR_ENTRUST_ADD.TRANSMIT_TIME transmitTime
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'yyyy-MM-dd hh24:mi:ss') transmitTime
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
     PTL_PORTFOLIO
@@ -351,7 +353,7 @@
         left join SYS_DATADICT_LIST sdl7 on sdl7.DICT_CODE='CCY' and t.ccy=sdl7.ITEM_CODE
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
-        order by t.entrustStatus,t.entrustDate,t.transmitTime,t.finprodMarketId)
+        order by t.entrustStatusOrder,t.transmitTime desc,t.finprodType2,t.finprodMarketId,t.ps)
         <!--前端传入排序字段-->
         <if test="sort != null and sort != '' and direction != null and direction != ''">
             order by ${sort} ${direction}
@@ -390,6 +392,7 @@
                     OR TO_CHAR(t.entrustDate,'yyyy-MM-dd') ||''= #{year}||'-'||#{search}
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{search}
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
+                    OR to_char(t.transmitTime,'yyyy-MM-dd hh24:mi:ss') = #{search}
                 )
             </where>
         </if>

@@ -91,7 +91,7 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     private BigDecimal transRemainderAmt;
 
     @ApiModelProperty(name="transmitTime",value="下达时间",example="HH:MM:SS")
-    private Date transmitTime;
+    private String transmitTime;
 
     /**
      * 获取 otherEntrustStatus
@@ -304,11 +304,11 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
         this.transRemainderAmt = transRemainderAmt;
     }
 
-    public Date getTransmitTime() {
+    public String getTransmitTime() {
         return transmitTime;
     }
 
-    public void setTransmitTime(Date transmitTime) {
+    public void setTransmitTime(String transmitTime) {
         this.transmitTime = transmitTime;
     }
 }
