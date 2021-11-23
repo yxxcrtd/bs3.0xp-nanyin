@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrEntrustDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +60,6 @@ public class EtrCommandDispatcherService extends BaseService<EtrCommandDispatche
         	}
     		dto.setEtr_entrust_list(selectList);
     		dto.setEtr_pledge_list(this.selectPledgeList(selectList));
-    		dto.setEtr_detail_list(selectEtrDetailList(param));
     		if(selectList!=null && !selectList.isEmpty()) {
     			dto.setAMOUNT(selectList.size());
         		dto.setPageCount(1);
@@ -107,18 +105,7 @@ public class EtrCommandDispatcherService extends BaseService<EtrCommandDispatche
     	return pledgelist;
     }
 
-	/**
-	 * 委托指令明细列表查询
-	 * <功能详细描述>
-	 * @param param
-	 * @return
-	 * @see
-	 * @since 1.0
-	 */
-	public List<EtrEntrustDetail> selectEtrDetailList(Map<String, Object> param){
-		return etrTradeSysInterfMapper.selectEtrDetailList(param);
-	}
-    
+
 	@SuppressWarnings("unchecked")
 	public void sendMessageByInf(EtrCommandDispatcherTotalDto dto) {
 		logger.info("调用交易系统指令分发接口【{}】  接口URL：" + ServiceApplication.EXCHANGE_SERVICE_NAME + "/joyin/instruction/distribute");

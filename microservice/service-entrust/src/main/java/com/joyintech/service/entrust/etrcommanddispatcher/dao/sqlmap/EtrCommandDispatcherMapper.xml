@@ -186,16 +186,6 @@
 	    WHERE A.ENTRUST_ID = #{entrustId}
    </select>
 
-	<select id="selectEtrDetailList" resultType="com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrEntrustDetail">
-		SELECT
-			A.*,B.PORTFOLIO_NAME
-		FROM ETR_ENTRUST_DETAIL A
-		LEFT JOIN PTL_PORTFOLIO B ON A.PORTFOLIO_ID=B.PORTFOLIO_ID
-		WHERE
-		A.ENTRUST_ID in
-		<foreach collection="entrustId.split(',')" item="item" open="(" separator="," close=")">
-			#{item}
-		</foreach>
-	</select>
+
 
 </mapper>

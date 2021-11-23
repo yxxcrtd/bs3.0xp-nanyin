@@ -1,4 +1,4 @@
-package com.joyintech.service.entrust.etrcommanddispatcher.dto;
+package com.joyintech.service.trade.investtrade.commanddispatcher.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.background.component.common.pack.common.base.BaseEntity;
@@ -8,7 +8,7 @@ import com.joyintech.framework.json.BigDecimalSerializer;
  * @author meifaxin
  * @create 2021-11-21 13:59
  */
-public class EtrEntrustDetail extends BaseEntity{
+public class EtrEntrustDetailDto extends BaseEntity{
     private static final long serialVersionUID = -7130177040330108562L;
 
     private String entrustId = "";// 委托代码

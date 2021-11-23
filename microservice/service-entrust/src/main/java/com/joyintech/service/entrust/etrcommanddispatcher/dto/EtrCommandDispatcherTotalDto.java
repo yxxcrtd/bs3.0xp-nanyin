@@ -32,8 +32,9 @@ public class EtrCommandDispatcherTotalDto implements Serializable{
     /**回购列表结果集*/
     private List<EtrTradePledgeDto> etr_pledge_list;
 
-	/**指令明细*/
-	private List<EtrEntrustDetail> etr_detail_list;
+	/**回购列表结果集*/
+	private List<EtrEntrustDetailDto> etr_entrust_detail_list;
+
 
 
 	public Integer getAMOUNT() {
@@ -75,11 +76,13 @@ public class EtrCommandDispatcherTotalDto implements Serializable{
 		this.etr_pledge_list = etr_pledge_list;
 	}
 
-	public List<EtrEntrustDetail> getEtr_detail_list() {
-		return etr_detail_list;
+	public List<EtrEntrustDetailDto> getEtr_entrust_detail_list() {
+		return etr_entrust_detail_list;
 	}
 
-	public void setEtr_detail_list(List<EtrEntrustDetail> etr_detail_list) {
-		this.etr_detail_list = etr_detail_list;
+	public void setEtr_entrust_detail_list(List<EtrEntrustDetailDto> etr_entrust_detail_list) {
+		this.etr_entrust_detail_list = etr_entrust_detail_list;
 	}
+
+
 }
