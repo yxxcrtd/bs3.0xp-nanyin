@@ -15,9 +15,22 @@ public class DayEndAccountDto extends StlSecRecon {
 	private String finprodType;
 
 	/**
-	 * 成交编号
+	 * 流水号
 	 */
 	private String tradeId;
+
+	/**
+	 * 成交编号
+	 */
+	private String cjbh;
+
+	public String getCjbh() {
+		return cjbh;
+	}
+
+	public void setCjbh(String cjbh) {
+		this.cjbh = cjbh;
+	}
 
 	/**
 	 * 是否人工修改

@@ -977,6 +977,7 @@
     <select id="selectAllSettleTransData"
             resultType="com.joyintech.tams.common.base.entity.SettleTransData">
         select std.TRADE_ID,
+               std.CJBH,
                std.DEAL_DATE,
                std.SEC_TYPE,
                std.APPLY_TRADE_ID,
