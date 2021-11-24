@@ -35,6 +35,27 @@ public class DayEndAccountDto extends StlSecRecon {
 	private String finprodMarketId;
 
 	/**
+	 * 交易方向
+	 */
+	private String ps;
+
+	public String getPs() {
+		return ps;
+	}
+
+	public void setPs(String ps) {
+		this.ps = ps;
+	}
+
+	/**
+	 * 获取 getPsStr
+	 * @return getPsStr.
+	 */
+	public String getPsStr() {
+		return SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());
+	}
+
+	/**
 	 * 印花税
 	 */
 	@JsonSerialize(using= BigDecimalSerializer.class)
