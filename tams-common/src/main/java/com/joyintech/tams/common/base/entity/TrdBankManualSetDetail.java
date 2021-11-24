@@ -68,31 +68,6 @@ public class TrdBankManualSetDetail extends BaseEntity {
     private String busiType;
 
     /**
-     * 创建人
-     */
-    private String createUser;
-
-    /**
-     * 创建部门
-     */
-    private String createDept;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新人
-     */
-    private String updateUser;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
      * 交收流水序号
      * @return SEQ_NO 交收流水序号
      */
@@ -266,85 +241,5 @@ public class TrdBankManualSetDetail extends BaseEntity {
      */
     public void setBusiType(String busiType) {
         this.busiType = busiType == null ? null : busiType.trim();
-    }
-
-    /**
-     * 创建人
-     * @return CREATE_USER 创建人
-     */
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    /**
-     * 创建人
-     * @param createUser 创建人
-     */
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser == null ? null : createUser.trim();
-    }
-
-    /**
-     * 创建部门
-     * @return CREATE_DEPT 创建部门
-     */
-    public String getCreateDept() {
-        return createDept;
-    }
-
-    /**
-     * 创建部门
-     * @param createDept 创建部门
-     */
-    public void setCreateDept(String createDept) {
-        this.createDept = createDept == null ? null : createDept.trim();
-    }
-
-    /**
-     * 创建时间
-     * @return CREATE_TIME 创建时间
-     */
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    /**
-     * 创建时间
-     * @param createTime 创建时间
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    /**
-     * 更新人
-     * @return UPDATE_USER 更新人
-     */
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    /**
-     * 更新人
-     * @param updateUser 更新人
-     */
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
-    }
-
-    /**
-     * 更新时间
-     * @return UPDATE_TIME 更新时间
-     */
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    /**
-     * 更新时间
-     * @param updateTime 更新时间
-     */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

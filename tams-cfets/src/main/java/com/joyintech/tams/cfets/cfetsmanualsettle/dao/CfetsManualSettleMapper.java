@@ -97,7 +97,7 @@ public interface CfetsManualSettleMapper {
      * @param pageParam
      * @return
      */
-    PortSettleinfoDto queryPortSettleinfo(Map<String, Object> pageParam);
+    List<PortSettleinfoDto> queryPortSettleinfo(Map<String, Object> pageParam);
 
     /**
      * 查询金融产品交易附属表数据

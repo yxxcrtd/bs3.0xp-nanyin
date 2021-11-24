@@ -1,5 +1,8 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dto;
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -115,5 +118,10 @@ public class CfetsManualSettleFlowRespond {
 
     public void setCreateUser(String createUser) {
         this.createUser = createUser;
+    }
+
+    //操作类型
+    public String getOperTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.交收操作类型, this.getOperType());
     }
 }

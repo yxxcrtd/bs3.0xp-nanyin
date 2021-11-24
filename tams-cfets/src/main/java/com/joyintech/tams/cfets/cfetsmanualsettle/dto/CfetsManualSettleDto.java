@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dto;
 
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

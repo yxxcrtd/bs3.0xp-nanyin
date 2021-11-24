@@ -7,9 +7,10 @@
 
         <if test="isContainDelivery01 != null and isContainDelivery01">
         SELECT #{DELIVERY_STATUS_01} settleStatus,
+        #{DELIVERY_STATUS_NAME01} settleStatusStr,
         T1.TOTLE_TRADE_ID tradeId,
-        T1.TRADE_DATE tradeDate,
-        T1.SETTLE_DATE settleDate,
+        to_char(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
+        to_char(T1.SETTLE_DATE,'yyyy-MM-dd') settleDate,
         T2.FINPROD_MARKET_ID finprodMarketId,
         T2.FINPROD_ABBR finprodAbbr,
         T1.FINPROD_TYPE2 finprodType2,
@@ -36,8 +37,7 @@
         NULL AS cleanArgStatus,
         NULL settleSeqNo,
         T1.FINPROD_ID finprodId,
-        T1.CCY ccy,
-        NULL seqNo
+        T1.CCY ccy
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
         LEFT JOIN TRD_PRODUCT_DEAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
@@ -62,7 +62,7 @@
                 #{PINAN_BUSINESS_TYPE_74},#{PINAN_BUSINESS_TYPE_75},#{PINAN_BUSINESS_TYPE_76},#{PINAN_BUSINESS_TYPE_77},
                 #{PINAN_BUSINESS_TYPE_105},#{PINAN_BUSINESS_TYPE_106},#{PINAN_BUSINESS_TYPE_107},#{PINAN_BUSINESS_TYPE_108})
         AND	T1.TRADE_STATUS =#{TRADE_STATUS_01}
-        AND T1.Is_Cancel =#{isCalcY}
+        AND T1.Is_Cancel =#{isCalcN}
         <![CDATA[ AND T1.SETTLE_DATE >= #{settleDateStart}]]>
         <![CDATA[ AND T1.SETTLE_DATE <= #{settleDateEnd}]]>
 <!--        <if test="entrustStatusList != null and entrustStatusList.size() > 0 and !isContainDelivery01">-->
@@ -129,9 +129,10 @@
         </if>
 
         SELECT T0.SETTLE_STATUS settleStatus,
+        sdl.ITEM_VALUE settleStatusStr,
         T1.TOTLE_TRADE_ID tradeId,
-        T1.TRADE_DATE tradeDate,
-        T0.SETTLE_DATE settleDate,
+        to_char(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
+        to_char(T0.SETTLE_DATE,'yyyy-MM-dd') settleDate,
         T2.FINPROD_MARKET_ID finprodMarketId,
         T2.FINPROD_ABBR finprodAbbr,
         T1.FINPROD_TYPE2 finprodType2,
@@ -158,8 +159,7 @@
         NULL AS cleanArgStatus,
         T0.SETTLE_SEQ_NO settleSeqNo,
         T0.FINPROD_ID finprodId,
-        T1.CCY ccy,
-        TO.SEQ_NO seqNo
+        T1.CCY ccy
         FROM TRD_BANK_MANUAL_SETTLE_INFO T0
         LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL T1  ON T0.TRADE_ID =T1.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T2 ON T1.FINPROD_ID = T2.FINPROD_ID
@@ -176,8 +176,9 @@
         LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl5 on sdl5.dict_code ='SHARES_TRADE_PLATFORM' and sdl5.item_code = T1.TRADE_PLAT
-        WHERE T1.TRADE_STATUS =#{TRADE_STATUS_01}
-        AND T1.Is_Cancel =#{isCalcY}
+        WHERE 1=1
+<!--        T1.TRADE_STATUS =#{TRADE_STATUS_01}-->
+<!--        AND T1.Is_Cancel =#{isCalcN}-->
         <![CDATA[ AND T0.SETTLE_DATE >= #{settleDateStart}]]>
         <![CDATA[ AND T0.SETTLE_DATE <= #{settleDateEnd}]]>
         <if test="settleStatusList != null and settleStatusList.size() > 0">
@@ -222,6 +223,7 @@
             T2.FINPROD_MARKET_ID,
             T2.FINPROD_ABBR,
             T1.FINPROD_TYPE2,
+            sdl.ITEM_VALUE,
             sdl1.item_value,
             T1.TG_BUSI_TYPE,
             sdl2.item_value,
@@ -240,15 +242,14 @@
             T0.SETTLE_SEQ_NO,
             T0.FINPROD_ID,
             T1.CCY,
-            T7.SEC_ACCT_NAME,
-            TO.SEQ_NO
+            T7.SEC_ACCT_NAME
     </select>
 
     <select id="findManualSettleFlow"
             resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleFlowRespond">
         SELECT
             rownum seqNo,
-            T1.SETTLE_TIME settleDate,
+            to_char(T1.SETTLE_TIME,'yyyy-MM-dd') settleDate,
             T1.Update_Time jiaoShouDate,
             T2.FINPROD_MARKET_ID finprodMarketId,
             T2.Finprod_Abbr finprodAbbr,
@@ -279,8 +280,8 @@
             T3.UNIT_PRIN intPrinAmt/*单位本金*/,
             T3.PRIN prinAmt/*还本面额/百元*/,
             T1.SHARE_AMT*100 qty,
-            T3.THEORY_INT intAmtTheory/*理论应计利息*/,
-            T3.THEORY_PRIN prinAmtTheory/*理论还本金额*/,
+            T3.THEORY_INT intAmtTheory,/*理论应计利息*/
+            T3.THEORY_PRIN prinAmtTheory/*理论还本金额*/
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
@@ -442,21 +443,30 @@
     </update>
 
     <insert id="mergeInfo"  parameterType="com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo">
-        MERGE INTO TrdBankManualSettleInfo tbms
+        MERGE INTO TRD_BANK_MANUAL_SETTLE_INFO tbms
         USING (
         select
-        #{settleSeqNo},#{settleStatus},#{tradeId},#{settleDate},#{finprodId},
-        #{settleNum},#{settleAmt},#{busiType},#{createUser},#{createDept},
-        #{createTime},#{updateUser},#{updateTime}
+        #{settleSeqNo,jdbcType=VARCHAR} settleSeqNo,
+        #{settleStatus,jdbcType=VARCHAR} settleStatus,
+        #{tradeId,jdbcType=VARCHAR} tradeId,
+        #{settleDate,jdbcType=TIMESTAMP} settleDate,
+        #{finprodId,jdbcType=VARCHAR} finprodId,
+        #{settleNum,jdbcType=DECIMAL} settleNum,
+        #{settleAmt,jdbcType=DECIMAL} settleAmt,
+        #{busiType,jdbcType=VARCHAR} busiType,
+        #{createUser,jdbcType=VARCHAR} createUser,
+        #{createDept,jdbcType=VARCHAR} createDept,
+        #{createTime,jdbcType=TIMESTAMP} createTime,
+        #{updateUser,jdbcType=VARCHAR} updateUser,
+        #{updateTime,jdbcType=TIMESTAMP} updateTime
         from dual
         ) TEMP
         <!-- 业务主键匹配 -->
-        ON tbms.SETTLE_SEQ_NO = TEMP.SETTLE_SEQ_NO
+        ON (tbms.SETTLE_SEQ_NO = TEMP.settleSeqNo)
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN
         UPDATE
         SET
-        tbms.SETTLE_SEQ_NO = TEMP.settleSeqNo,
         tbms.SETTLE_STATUS = TEMP.settleStatus,
         tbms.TRADE_ID = TEMP.tradeId,
         tbms.SETTLE_DATE = TEMP.settleDate,
@@ -467,7 +477,7 @@
         tbms.CREATE_USER = TEMP.createUser,
         tbms.CREATE_DEPT = TEMP.createDept,
         tbms.CREATE_TIME = TEMP.createTime,
-        tbms.UPDATE_USER = TEMP.createUser,
+        tbms.UPDATE_USER = TEMP.updateUser,
         tbms.UPDATE_TIME = TEMP.updateTime
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
@@ -476,14 +486,14 @@
         values(
         TEMP.settleSeqNo,TEMP.settleStatus,TEMP.tradeId,TEMP.settleDate,TEMP.finprodId,
         TEMP.settleNum,TEMP.settleAmt,TEMP.busiType,TEMP.createUser,TEMP.createDept,
-        TEMP.createTime,TEMP.createUser,TEMP.updateTime
+        TEMP.createTime,TEMP.updateUser,TEMP.updateTime
         )
     </insert>
 
     <select id="queryPortSettleinfo" resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortSettleinfoDto">
         SELECT TPDA.portfolio_id portfolioId,
             pp.portfolio_name portfolioName,
-            TPD.prin_amt settleNum,
+            NVL(TPD.SHARE_AMT,TPD.prin_amt) settleNum,
             TPD.trade_amt settleAmt
         FROM TRD_PRODUCT_DEAL TPD
         LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA ON TPDA.Trade_Id = TPD.Trade_Id
@@ -491,7 +501,7 @@
         where TPD.Totle_Trade_Id = #{tradeId}
     </select>
 
-    <select id="queryTrdProductDealsByTotalTradeId" resultType="com.joyintech.tams.common.base.entity.TrdProductDealAdd">
+    <select id="queryTrdProductDealsByTotalTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealAddMapper.BaseResultMap">
         SELECT T1.TRADE_ID,
         T1.WORKFLOW_STATUS,
         T1.PORTFOLIO_ID,
@@ -500,24 +510,40 @@
         T1.GEN_TYPE,
         T1.PUR_CFM_DATE,
         T1.RED_CFM_DATE,
-        T1.REG_DATE, T1.BONUS_CFM_DATE,
+        T1.REG_DATE,
+        T1.BONUS_CFM_DATE,
         T1.ENTRUST_ID,
         T1.PAY_TYPE,
         T1.WORKFLOW_ID,
-        T1.CREATE_USER,
-        T1.CREATE_DEPT,
-        T1.CREATE_TIME,
-        T1.UPDATE_USER,
-        T1.UPDATE_TIME,
         T1.REG_DATE_AMT,
-        T1.DEAL_MODE, T1.EXC_DEAL_TYPE, T1.CUR_PAIR, T1.TERM_TYPE,
-        T1.USD_AMT, T1.OUR_ROLE, T1.QUOT_PRE, T1.PRICED_DATE, T1.PRICED_DATE_RATE,
-        T1.DIF_PAY_AMT, T1.DIF_PAY_CCY, T1.DIF_PS, T1.REF_RATE,
-        T1.WITH_LOCK_PERIOD, T1.LOCK_MDATE, T1.DEVIATION, T1.ASSET_RECOMMAND_ORG,
-        T1.TERMINATE_RATE, T1.PENALTY_INTAMT, T1.EXP_CON_VALUE,
-        T1.SPO_SHARE_NUM, T1.FIRST_UNIT_CPRICE3, T1.PREB, T1.PREC,
+        T1.DEAL_MODE,
+        T1.EXC_DEAL_TYPE ,
+        T1.CUR_PAIR,
+        T1.TERM_TYPE,
+        T1.USD_AMT,
+        T1.OUR_ROLE,
+        T1.QUOT_PRE,
+        T1.PRICED_DATE,
+        T1.PRICED_DATE_RATE,
+        T1.DIF_PAY_AMT,
+        T1.DIF_PAY_CCY,
+        T1.DIF_PS,
+        T1.REF_RATE,
+        T1.WITH_LOCK_PERIOD,
+        T1.LOCK_MDATE,
+        T1.DEVIATION,
+        T1.ASSET_RECOMMAND_ORG,
+        T1.TERMINATE_RATE,
+        T1.PENALTY_INTAMT,
+        T1.EXP_CON_VALUE,
+        T1.SPO_SHARE_NUM,
+        T1.FIRST_UNIT_CPRICE3,
+        T1.PREB,
+        T1.PREC,
         T1.IS_CASHSET
-        FROM TRD_PRODUCT_DEAL_add T1 left join TRD_PRODUCT_DEAL deal on T1.TRADE_ID=deal.TRADE_ID
+        FROM WFL_TRD_PRODUCT_DEAL_add T1
+        left join WFL_TRD_PRODUCT_DEAL deal
+        on T1.TRADE_ID=deal.TRADE_ID
         WHERE deal.TOTLE_TRADE_ID = #{tradeId}
     </select>
 </mapper>

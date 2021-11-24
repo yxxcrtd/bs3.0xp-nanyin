@@ -1,7 +1,9 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dto;
 
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -19,7 +21,7 @@ import java.util.List;
  */
 
 @ApiModel(value="银行间手工交收修改参数",description="银行间手工交收修改参数")
-public class CfetsManualSettleUpdateRequest extends BaseEntity implements ITableRow, ProcessEntity {
+public class CfetsManualSettleUpdateRequest extends BaseEntity implements ProcessEntity{
     // 要素ID
     private String elementId;
 
@@ -30,6 +32,9 @@ public class CfetsManualSettleUpdateRequest extends BaseEntity implements ITable
     private String buttonType;
 
     CfetsManualSettleDto selectedItem;
+
+    @PrimaryKey(PrimaryKey.Field.PK_1)
+    private String tradeId;
 
     @ApiModelProperty(name="settleNumT",value="汇总交收数量",example="A1")
     private BigDecimal settleNumT;
@@ -94,5 +99,13 @@ public class CfetsManualSettleUpdateRequest extends BaseEntity implements ITable
 
     public void setSettleAmtT(BigDecimal settleAmtT) {
         this.settleAmtT = settleAmtT;
+    }
+
+    public String getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;
     }
 }

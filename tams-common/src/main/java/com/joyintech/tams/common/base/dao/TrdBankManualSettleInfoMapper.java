@@ -1,6 +1,7 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
+import org.springframework.stereotype.Repository;
 
 public interface TrdBankManualSettleInfoMapper {
     int deleteByPrimaryKey(String settleSeqNo);

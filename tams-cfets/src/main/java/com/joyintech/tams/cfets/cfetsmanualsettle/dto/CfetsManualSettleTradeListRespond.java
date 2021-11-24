@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
@@ -70,8 +72,8 @@ public class CfetsManualSettleTradeListRespond {
     @ApiModelProperty(name="cleanStatus",value="清算状态CODE",example="A1,A2")
     private String cleanStatus;
 
-    @ApiModelProperty(name="cleanStatusStr",value="清算状态",example="A1,A2")
-    private String cleanStatusStr;
+//    @ApiModelProperty(name="cleanStatusStr",value="清算状态",example="A1,A2")
+//    private String cleanStatusStr;
 
     @ApiModelProperty(name="tradePlat",value="交易场所CODE",example="A1")
     private String tradePlat;
@@ -260,11 +262,7 @@ public class CfetsManualSettleTradeListRespond {
     }
 
     public String getCleanStatusStr() {
-        return cleanStatusStr;
-    }
-
-    public void setCleanStatusStr(String cleanStatusStr) {
-        this.cleanStatusStr = cleanStatusStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.清算状态, this.getCleanStatus());
     }
 
     public String getTradePlat() {

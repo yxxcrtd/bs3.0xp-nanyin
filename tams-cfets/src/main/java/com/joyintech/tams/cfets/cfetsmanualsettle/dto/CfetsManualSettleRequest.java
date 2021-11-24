@@ -2,6 +2,7 @@ package com.joyintech.tams.cfets.cfetsmanualsettle.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 import io.swagger.annotations.ApiModel;
 import java.util.List;
@@ -23,10 +24,14 @@ public class CfetsManualSettleRequest extends BaseEntity implements ITableRow, P
     // 操作类型 保存 提交
     private String operateType;
 
-    // 按钮类型 交收01、交收失败02、回溯04、修改05
+    // 按钮类型 交收01、回溯02、交收失败04、修改05
     private String buttonType;
 
     List<CfetsManualSettleDto> selectedItem;
+
+    //批量交收、回溯、交收失败使用，用来区分是否是同一笔记录
+    @PrimaryKey(PrimaryKey.Field.PK_1)
+    private String totalTrade;
 
     public String getElementId() {
         return elementId;
@@ -58,5 +63,13 @@ public class CfetsManualSettleRequest extends BaseEntity implements ITableRow, P
 
     public void setSelectedItem(List<CfetsManualSettleDto> selectedItem) {
         this.selectedItem = selectedItem;
+    }
+
+    public String getTotalTrade() {
+        return totalTrade;
+    }
+
+    public void setTotalTrade(String totalTrade) {
+        this.totalTrade = totalTrade;
     }
 }

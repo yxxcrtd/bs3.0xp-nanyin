@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -27,17 +29,14 @@ public class CfetsManualSettleInfoRespond {
     @ApiModelProperty(name="ps",value="交易方向CODE",example="A1")
     private String ps;
 
-    @ApiModelProperty(name="psStr",value="交易方向",example="A1")
-    private String psStr;
-
     @ApiModelProperty(name="vDate",value="计息起始日",example="A1")
-    private Date vDate;
+    private String vDate;
 
     @ApiModelProperty(name="mDate",value="计息截止日",example="A1")
-    private Date mDate;
+    private String mDate;
 
     @ApiModelProperty(name="payDate",value="理论支付日",example="A1")
-    private Date payDate;
+    private String payDate;
 
     @ApiModelProperty(name="yield",value="区间票面利率",example="A1")
     private BigDecimal yield;
@@ -89,34 +88,30 @@ public class CfetsManualSettleInfoRespond {
     }
 
     public String getPsStr() {
-        return psStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());
     }
 
-    public void setPsStr(String psStr) {
-        this.psStr = psStr;
-    }
-
-    public Date getvDate() {
+    public String getvDate() {
         return vDate;
     }
 
-    public void setvDate(Date vDate) {
+    public void setvDate(String vDate) {
         this.vDate = vDate;
     }
 
-    public Date getmDate() {
+    public String getmDate() {
         return mDate;
     }
 
-    public void setmDate(Date mDate) {
+    public void setmDate(String mDate) {
         this.mDate = mDate;
     }
 
-    public Date getPayDate() {
+    public String getPayDate() {
         return payDate;
     }
 
-    public void setPayDate(Date payDate) {
+    public void setPayDate(String payDate) {
         this.payDate = payDate;
     }
 

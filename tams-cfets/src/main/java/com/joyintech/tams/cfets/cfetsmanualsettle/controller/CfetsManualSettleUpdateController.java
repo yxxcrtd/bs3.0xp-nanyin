@@ -5,26 +5,25 @@ import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
-import com.joyintech.tams.cfets.cfetsmanualsettle.service.CfetsManualSettleService;
 import com.joyintech.tams.cfets.cfetsmanualsettle.service.CfetsManualSettleUpdateService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +45,20 @@ public class CfetsManualSettleUpdateController extends BaseController {
 
     @Autowired
     private IPlatformDate platformDateImpl;
+
+    @Override
+    public String init(Model model) {
+        CfetsManualSettleUpdateRequest entity = null;
+        String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        // 代办中过来
+        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
+            entity = cfetsManualSettleUpdateService.getBussinessEntityByWorkflowId(
+                    workflowId);
+        }
+        model.addAttribute(GlobalConstant.ENTITY, entity);
+        model.addAttribute("portSettleinfoDtoList", entity.getPortSettleinfoDtoList());
+        return super.init(model);
+    }
 
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
@@ -83,17 +96,21 @@ public class CfetsManualSettleUpdateController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "交收修改", notes = "交收修改")
     @PostMapping("doManualSettleUpdate")
-    public Message<PortSettleinfoDto> doManualSettleUpdate(@RequestBody CfetsManualSettleUpdateRequest cfetsRequest, BindingResult br)
+    public Message<List<PortSettleinfoDto>> doManualSettleUpdate(@RequestBody CfetsManualSettleUpdateRequest cfetsRequest, BindingResult br)
             throws Exception {
         //画面Check
         String returnMsg= cfetsManualSettleUpdateService.checkManualSettleUpdate(cfetsRequest, br);
         if (StringUtil.isNotBlank(returnMsg)) {
-            return new Message<PortSettleinfoDto>().fail().setMessage(returnMsg);
+            return new Message<List<PortSettleinfoDto>>().fail().setMessage(returnMsg);
         }
         //查询待修改记录
-        PortSettleinfoDto portSettleinfoDto = cfetsManualSettleUpdateService.queryPortSettleinfo(cfetsRequest);
-
-        return new Message<PortSettleinfoDto>().fail().setData(portSettleinfoDto);
+        try{
+            List<PortSettleinfoDto> portSettleinfoDtoList = cfetsManualSettleUpdateService.queryPortSettleinfo(cfetsRequest);
+            return new Message<List<PortSettleinfoDto>>().success().setData(portSettleinfoDtoList);
+        }catch (Exception e) {
+            logger.error("查询组合交收信息异常,请联系管理员！",e);
+            return new Message<List<PortSettleinfoDto>>().fail().setMessage("查询组合交收信息异常,请联系管理员！");
+        }
     }
 
     /**
@@ -115,7 +132,9 @@ public class CfetsManualSettleUpdateController extends BaseController {
         params.setElementId(cfetsRequest.getElementId());
         params.setBusinessCode(cfetsRequest.getSelectedItem().getTradeId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_手工交收.getValue());
+        processParameter.setOperationType(OperationType.NEW);
         processParameter.setWorkFlowParameter(params);
+
         try{
             String msg = cfetsManualSettleUpdateService.start(processParameter,cfetsRequest);
             return new Message<AjaxResult>().success().setMessage("处理完成");
