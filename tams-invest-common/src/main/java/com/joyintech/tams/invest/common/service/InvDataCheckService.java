@@ -3,12 +3,15 @@ package com.joyintech.tams.invest.common.service;
 import com.joyintech.background.component.common.check.DataCheckCommonUtil;
 import com.joyintech.background.component.common.check.dao.DataCheckCommonMapper;
 import com.joyintech.background.component.common.check.dto.CheckRule;
+import com.joyintech.framework.base.intf.Page;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +32,15 @@ public class InvDataCheckService {
     private DataCheckCommonMapper dataCheckCommonMapper;
 
     public List<ValidMessage> chbCheckCommon(List<ValidMessage> checkResultList, Object entity, String pageId, String repType) {
-        return dataCheckCommonUtil.chbCheckCommon(checkResultList, entity, pageId, repType, ValidMessage.class);
+        //获取对应画面的page add by zcw 20211124
+        pageId = pageId==null? "" : pageId;
+        String elementId = dataCheckCommonMapper.queryElementIdByPageId(pageId);
+        Page page= CacheUtil.getPage(pageId);
+        // 获取page中SYS_ELEMENT_CONTROL表配置的是否展示or隐藏画面元素。如果隐藏则跳过判断，如果展示则进入判断逻辑
+        if (null != page && null != page.getElementcontrol(elementId) && page.getElementcontrol(elementId).getIsShow()) {
+            return dataCheckCommonUtil.chbCheckCommon(checkResultList, entity, pageId, repType, ValidMessage.class);
+        }
+        return new ArrayList<ValidMessage>();
     }
 
     public Map<String,String> getCheckRule(String pageId, String pageFlag) {

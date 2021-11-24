@@ -32,4 +32,7 @@ public interface DataCheckCommonMapper {
      * @return 数据检查中债匹配类型表
      */
     List<CheckRepType> queryChbCheckRepTypeList(@Param("pageId") String pageId, @Param("repType") String repType);
+
+    String queryElementIdByPageId(@Param("pageId") String pageId);
+
 }
