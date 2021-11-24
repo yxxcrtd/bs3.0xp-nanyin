@@ -51,11 +51,14 @@ public class CfetsTrdConfirmController extends BaseController {
         initPageParams.put("IS_SUPPORT_CSTP_FLAG", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG"));
         //银行间交易执行是否可手工确认
         initPageParams.put("IS_CFETSTRD_MANUALCONFIRM_FLAG", CacheUtil.getSysParam("IS_CFETSTRD_MANUALCONFIRM_FLAG"));
-        //交易员是否可查看全部CSTP下行成交数据 TODO hxy
-        initPageParams.put("IS_QUERYALLTRD_FLAG", CacheUtil.getSysParam("IS_QUERYALLTRD_FLAG"));
+        //交易员是否可查看全部CSTP下行成交数据
+        initPageParams.put("IS_QUERYALLCSTP_FLAG", CacheUtil.getSysParam("IS_QUERYALLCSTP_FLAG"));
 
         //自动刷新时间
         initPageParams.put("cfetsTrdConfirm_regList_refresh_period", CacheUtil.getSysParam("cfetsTrdConfirm_regList_refresh_period"));
+        initPageParams.put("cfetsTrdConfirm_cstpList_refresh_period", CacheUtil.getSysParam("cfetsTrdConfirm_cstpList_refresh_period"));
+        initPageParams.put("cfetsTrdConfirm_matchList_refresh_period", CacheUtil.getSysParam("cfetsTrdConfirm_matchList_refresh_period"));
+
 
         //数据字典初始化数据
         initPageParams.put("REG_ASSET_TYPE", this.getSelectDataFromDataDic(DictCode.登记资产类型, null));
@@ -64,6 +67,7 @@ public class CfetsTrdConfirmController extends BaseController {
         initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));
         initPageParams.put("QUOTE_TYPE", this.getSelectDataFromDataDic(BussinessDictCode.报价方式, null));
         initPageParams.put("TRD_MATCH_TYPE", this.getSelectDataFromDataDic(DictCode.下行交易匹配类型, null));
+        initPageParams.put("CSTP_BUSINESS_TYPE", this.getSelectDataFromDataDic(DictCode.CSTP资产类型, null));
 
         //pageId
         initPageParams.put("pageId", "CfetsTrdConfirm");
@@ -77,7 +81,7 @@ public class CfetsTrdConfirmController extends BaseController {
      * @throws Exception Exception
      * @since 1.0
      */
-    @ApiOperation(value = "交易登记列表分页查询", notes = "交易登记列表分页查询")
+    @ApiOperation(value = "交易执行列表分页查询", notes = "交易执行列表分页查询")
     @PostMapping("/findAllRegInfoList")
     @ResponseBody
     public Message<Page<CfetsTrdConfirmRegInfoListResponse>> findAllRegInfoList(@RequestBody CfetsTrdConfirmRegInfoListRequest dto)
@@ -86,8 +90,8 @@ public class CfetsTrdConfirmController extends BaseController {
             Page<CfetsTrdConfirmRegInfoListResponse> page =cfetsTrdConfirmService.findAllRegInfoList(dto);
             return new Message<Page<CfetsTrdConfirmRegInfoListResponse>>().success().setData(page);
         } catch (Exception e) {
-            logger.error("查询交易登记列表分页数据异常", e);
-            return new Message<Page<CfetsTrdConfirmRegInfoListResponse>>().fail().setMessage("查询交易登记列表分页数据异常");
+            logger.error("查询交易执行列表分页数据异常", e);
+            return new Message<Page<CfetsTrdConfirmRegInfoListResponse>>().fail().setMessage("查询交易执行列表分页数据异常");
         }
     }
     /**
@@ -95,7 +99,7 @@ public class CfetsTrdConfirmController extends BaseController {
      */
     @ResponseBody
     @ApiOperation(value = "交易执行-成交确认", notes = "交易执行-成交确认")
-    @PostMapping("recall")
+    @PostMapping("trdConfirmSave")
     public Message<AjaxResult> trdConfirmSave(@RequestBody CfetsTrdConfirmRegInfoListResponse dto) throws Exception {
         //对选择的数据进行check
         String returnMsg= cfetsTrdConfirmService.trdConfirmSaveCheckMethod(dto);

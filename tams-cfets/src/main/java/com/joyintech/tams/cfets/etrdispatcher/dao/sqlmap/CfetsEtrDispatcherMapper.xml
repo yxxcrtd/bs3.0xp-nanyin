@@ -673,7 +673,7 @@
         FROM
             ETR_DISTRIBUTE edi
         LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
-        where een.ENTRUST_STATUS = '03' OR een.ENTRUST_STATUS = '04'
+        where een.ENTRUST_STATUS in ('02','03','04')
         GROUP BY
             edi.TRADER) a
         ON
@@ -686,7 +686,7 @@
         FROM
             ETR_DISTRIBUTE edi
         LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
-        where een.ENTRUST_STATUS = '03'
+        where een.ENTRUST_STATUS in ('02','03')
         GROUP BY
             edi.TRADER) b
         ON

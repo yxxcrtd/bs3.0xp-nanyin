@@ -176,6 +176,8 @@ public class CfetsQuotedTradeCommonService{
                 });
                 thread.start();
             }
+            //登记数据自动匹配功能
+
         }catch (Exception e){
             resultBaseDto.setErrMsg(e.getMessage());
             logger.error(e.getMessage());
