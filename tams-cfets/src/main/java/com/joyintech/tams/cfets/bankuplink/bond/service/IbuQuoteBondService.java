@@ -149,6 +149,7 @@ public class IbuQuoteBondService extends BaseService {
      */
     public List<ValidMessage> receiveEntrust(Map<String,Object> param){
         List<ValidMessage> errorList=new ArrayList<ValidMessage>();
+        param.put("trader",LoginUserUtil.getUserName());
         List<EtrDistribute> list=getDistributeTrader(param);
         List<String> traderList=new ArrayList<String>();
         for(EtrDistribute etrDis:list){

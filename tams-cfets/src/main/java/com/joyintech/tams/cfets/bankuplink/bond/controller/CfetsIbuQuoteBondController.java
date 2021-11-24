@@ -485,9 +485,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@RequestMapping("exportDayPrice")
 	public void exportDayPrice(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
 		// 导出
-		Map<String, Object> stringObjectMap = JsonUtils.object2Map(requestDto);
 		ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
-			EntrustRequest  entrustRequest = requestDto.getDto(EntrustRequest.class);
+			Map<String,Object>  stringObjectMap = requestDto.getDto(Map.class);
 			List dataList = cfetsBondDealQuotedPrice001Service.listDayPrice(stringObjectMap);
 			return dataList;
 		});
