@@ -123,6 +123,9 @@ where
 		<if test="dealDate != null">
 			AND std.DEAL_DATE = #{dealDate, jdbcType=DATE}
 		</if>
+		<if test="seatNumber != null and seatNumber != '' ">
+			AND std.SEAT_NUMBER = #{seatNumber, jdbcType=VARCHAR}
+		</if>
 		order by std.SHARE_AMT desc
 	</select>
 

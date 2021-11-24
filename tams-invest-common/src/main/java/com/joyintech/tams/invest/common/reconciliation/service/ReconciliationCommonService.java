@@ -565,7 +565,7 @@ public class ReconciliationCommonService {
             stlSecRecon.setCheckResult(dto.getCheckResult());
             stlSecRecon.setStlSecDeme(dto.getParaValue());
             stlSecRecon.setAccount(dto.getAccout());
-            stlSecRecon.setEntrustTradeId(dto.getTradeId());
+            stlSecRecon.setEntrustTradeId(dto.getTradeId2());
             stlSecRecon.setReconInfo(StringUtil.isEmpty(dto.getReconInfo()) ? null : dto.getReconInfo().getBytes());
             reconciliationCommonMapper.insertStlSecRecon(stlSecRecon);
             // 查询成交明细数据
