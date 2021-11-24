@@ -16,6 +16,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -36,6 +37,31 @@ public class EtrExchangeTradeMulti001Dto extends EtrExchangeTrade001Dto implemen
      * 资产市场代码
      */
     private String finprodMarketId;
+
+    /**
+     * 权重方式
+     */
+    private String weightType;
+
+    /**
+     * 折算率
+     */
+    private String conversionRate;
+
+    /**
+     * 分配方式
+     */
+    private String  mulDistriClass;
+
+    /**
+     * 目标值
+     */
+    private BigDecimal targetValue;
+
+    /**
+     * 目标值单位
+     */
+    private String mulTargetUnit;
 
     /**
      * 多组合分配列表
@@ -64,5 +90,45 @@ public class EtrExchangeTradeMulti001Dto extends EtrExchangeTrade001Dto implemen
 
     public void setTradeMultiPtl001Dtos(List<EtrExchangeTradeMultiPtl001Dto> tradeMultiPtl001Dtos) {
         this.tradeMultiPtl001Dtos = tradeMultiPtl001Dtos;
+    }
+
+    public String getWeightType() {
+        return weightType;
+    }
+
+    public void setWeightType(String weightType) {
+        this.weightType = weightType;
+    }
+
+    public String getConversionRate() {
+        return conversionRate;
+    }
+
+    public void setConversionRate(String conversionRate) {
+        this.conversionRate = conversionRate;
+    }
+
+    public String getMulDistriClass() {
+        return mulDistriClass;
+    }
+
+    public void setMulDistriClass(String mulDistriClass) {
+        this.mulDistriClass = mulDistriClass;
+    }
+
+    public BigDecimal getTargetValue() {
+        return targetValue;
+    }
+
+    public void setTargetValue(BigDecimal targetValue) {
+        this.targetValue = targetValue;
+    }
+
+    public String getMulTargetUnit() {
+        return mulTargetUnit;
+    }
+
+    public void setMulTargetUnit(String mulTargetUnit) {
+        this.mulTargetUnit = mulTargetUnit;
     }
 }

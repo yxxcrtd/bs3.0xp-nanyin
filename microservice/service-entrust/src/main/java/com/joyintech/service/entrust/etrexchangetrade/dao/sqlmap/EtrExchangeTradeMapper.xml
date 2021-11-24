@@ -1394,9 +1394,9 @@
     </select>
     <resultMap type="com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTradeMulti001Dto" id="detailInfoMap">
         <id property="portfolioTreeId" column="TREE_ID" />
-<!--        <result property="prodId" column="MUL_CAL_CLASS" />-->
-<!--        <result property="schemeId" column="MUL_TARGET_UNIT" />-->
-<!--        <result property="compareDate" column="WEIGH_TYPE" />-->
+        <result property="mulDistriClass" column="MUL_CAL_CLASS" />
+        <result property="mulTargetUnit" column="MUL_TARGET_UNIT" />
+        <result property="weightType" column="WEIGH_TYPE" />
         <result property="finprodId" column="FINPROD_ID" />
         <result property="finprodName" column="FINPROD_ABBR" />
         <result property="ps" column="PS" />
@@ -1424,7 +1424,7 @@
 
     <select id="selectMultDetail" resultType="com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTradeMulti001Dto">
         select
-        T4.TREE_ID,
+        T4.TREE_ID as portfolioTreeId,
         ,T2.MUL_CAL_CLASS
         ,T2.MUL_TARGET_UNIT
         ,T2.WEIGH_TYPE
