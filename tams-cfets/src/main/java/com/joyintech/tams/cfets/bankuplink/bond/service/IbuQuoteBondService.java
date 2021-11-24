@@ -136,7 +136,9 @@ public class IbuQuoteBondService extends BaseService {
         setParam(param);
         List<CfetsBondDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if(CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)){
-            BeanUtil.copyPropertiesIgnoreNull(result,cfetsBondDealEntrustOrderDtos.get(0));
+            CfetsBondDealEntrustOrderDto cfetsBondDealEntrustOrderDto = cfetsBondDealEntrustOrderDtos.get(0);
+            BeanUtil.copyPropertiesIgnoreNull(result, cfetsBondDealEntrustOrderDto);
+            result.setSecManageAcctName(cfetsBondDealEntrustOrderDto.getSecAcctName());
         }
         return result;
     }
