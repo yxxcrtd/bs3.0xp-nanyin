@@ -139,7 +139,7 @@ public class ReconciliationCommonService {
                     && ArithmeticUtil.subtract(dto.getStampFee(), dto.getStampFee2()).abs().compareTo(wuChaZhi) <= 0
 //                        && ArithmeticUtil.subtract(dto.getOtherFeeamt(), otherFee).abs().compareTo(wuChaZhi) <= 0
                     && ArithmeticUtil.subtract(dto.getGhfAmt(), dto.getGhfAmt2()).abs().compareTo(wuChaZhi) <= 0
-                    && ArithmeticUtil.subtract(dto.getSxfAmt(), dto.getSxfAmt2()).abs().compareTo(wuChaZhi) <= 0
+//                    && ArithmeticUtil.subtract(dto.getSxfAmt(), dto.getSxfAmt2()).abs().compareTo(wuChaZhi) <= 0
                     && ArithmeticUtil.subtract(dto.getCommissionAmt(), dto.getCommissionAmt2()).abs().compareTo(wuChaZhi) <= 0
 //                    && dto.getFinprodType() != null && dto.getFinprodType().equals(dto.getFinprodType2())
 //                    && dto.getPs() != null && dto.getPs().equals(dto.getPs2())
@@ -189,11 +189,11 @@ public class ReconciliationCommonService {
                     checkInfo = checkInfo + "过户费结算数据【" + getGhfAmt2 + "】对账单【" + getGhfAmt + "】\n";
                 }
                 // 待对账数据.手续费 ！= 待对账数据.清算手续费
-                if (ArithmeticUtil.subtract(dto.getSxfAmt(), dto.getSxfAmt2()).compareTo(BigDecimal.ZERO) != 0) {
-                    String getSxfAmt2 = dto.getSxfAmt2() == null ? "空" : dto.getSxfAmt2().toString();
-                    String getSxfAmt = dto.getSxfAmt() == null ? "空" : dto.getSxfAmt().toString();
-                    checkInfo = checkInfo + "手续费结算数据【" + getSxfAmt2 + "】对账单【" + getSxfAmt + "】\n";
-                }
+//                if (ArithmeticUtil.subtract(dto.getSxfAmt(), dto.getSxfAmt2()).compareTo(BigDecimal.ZERO) != 0) {
+//                    String getSxfAmt2 = dto.getSxfAmt2() == null ? "空" : dto.getSxfAmt2().toString();
+//                    String getSxfAmt = dto.getSxfAmt() == null ? "空" : dto.getSxfAmt().toString();
+//                    checkInfo = checkInfo + "手续费结算数据【" + getSxfAmt2 + "】对账单【" + getSxfAmt + "】\n";
+//                }
                 // 待对账数据.成交数量 ！= 待对账数据.清算成交数量
                 if (ArithmeticUtil.subtract(dto.getTradeNum(), dto.getTradeNum2()).compareTo(BigDecimal.ZERO) != 0) {
                     String getTradeNum2 = dto.getTradeNum2() == null ? "空" : dto.getTradeNum2().toString();
@@ -226,9 +226,10 @@ public class ReconciliationCommonService {
             //	待对账数据.金融产品类型 = 待对账数据.清算金融产品类型 and 待对账数据.交易方向 = 待对账数据.清算交易方向
             //	待对账数据.交易场所 = 待对账数据.清算交易场所 and 待对账数据.交易日期 = 待对账数据.清算交易日期
             //		待对账数据.证券账户 = 待对账数据.清算证券账户
-            if (dto.getFinprodType() != null && dto.getFinprodType().equals(dto.getFinprodType2())
-                    && dto.getPs() != null && dto.getPs().equals(dto.getPs2())
-                    && dto.getTradeMarket() != null && dto.getTradeMarket().equals(dto.getTradeMarket2())
+            if (
+//                    dto.getFinprodType() != null && dto.getFinprodType().equals(dto.getFinprodType2())
+//                    && dto.getPs() != null && dto.getPs().equals(dto.getPs2()) &&
+                    dto.getTradeMarket() != null && dto.getTradeMarket().equals(dto.getTradeMarket2())
                     && dto.getTradeDate() != null && dto.getTradeDate().equals(dto.getTradeDate2())
                     && dto.getSecAcctId() != null && dto.getSecAcctId().equals(dto.getSecAcctId2())) {
                 dto.setCheckResult(DictCodeListExt3.对账状态结果_一致.getValue());
