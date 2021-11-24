@@ -70,4 +70,13 @@
         </if>
     </select>
 
+    <select id="queryElementIdByPageId" resultType="java.lang.String">
+        select ELEMENT_ID from (
+            select distinct
+            ELEMENT_ID
+            from SYS_ELEMENT_CONTROL
+            where ELEMENT_ID like 'bussRep%'
+            and PAGE_ID = #{pageId,jdbcType=VARCHAR}
+        )where rownum = 1
+    </select>
 </mapper>
