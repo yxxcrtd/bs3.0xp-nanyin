@@ -44,7 +44,7 @@
     ETR_ENTRUST.REMARK remark,
     ETR_ENTRUST_ADD.BUSI_TYPE_POSITION busiTypePosition,
     ssai.sec_acct_name secAcctId,
-    DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03','01') settleSpeed,
+    DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
     round(decode(ETR_ENTRUST_ADD.BUSI_TYPE_POSITION,#{busiTypePosition01},EEBP.BID_PRICE,#{busiTypePosition02},ETR_ENTRUST_ADD.MATURE_YIELD*100,#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
     round(NVL(T5.ent_finish_amt,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 exeProgress,
@@ -53,7 +53,8 @@
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
-    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'yyyy-MM-dd hh24:mi:ss') transmitTime
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'yyyy-MM-dd hh24:mi:ss') transmitTime,
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
     PTL_PORTFOLIO
@@ -216,7 +217,7 @@
     ETR_ENTRUST.REMARK remark,
     ETR_ENTRUST_ADD.BUSI_TYPE_POSITION busiTypePosition,
     ssai.sec_acct_name secAcctId,
-    DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03','01') settleSpeed,
+    DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
     round(decode(ETR_ENTRUST_ADD.BUSI_TYPE_POSITION,#{busiTypePosition01},EEBP.BID_PRICE,#{busiTypePosition02},ETR_ENTRUST_ADD.MATURE_YIELD*100,#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
     round(NVL(T5.ent_finish_amt,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 exeProgress,
@@ -225,7 +226,8 @@
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
-    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'yyyy-MM-dd hh24:mi:ss') transmitTime
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'yyyy-MM-dd hh24:mi:ss') transmitTime,
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
     PTL_PORTFOLIO
@@ -353,7 +355,7 @@
         left join SYS_DATADICT_LIST sdl7 on sdl7.DICT_CODE='CCY' and t.ccy=sdl7.ITEM_CODE
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
-        order by t.entrustStatusOrder,t.transmitTime desc,t.finprodType2,t.finprodMarketId,t.ps)
+        order by t.entrustStatusOrder,t.transmitTime,t.finprodType2,t.finprodMarketId,t.ps)
         <!--前端传入排序字段-->
         <if test="sort != null and sort != '' and direction != null and direction != ''">
             order by ${sort} ${direction}
@@ -392,7 +394,7 @@
                     OR TO_CHAR(t.entrustDate,'yyyy-MM-dd') ||''= #{year}||'-'||#{search}
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{search}
                     OR replace(TO_CHAR(t.entrustDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
-                    OR t.transmitTime = #{search}
+                    OR t.transmitTimeSer = #{search}
                 )
             </where>
         </if>

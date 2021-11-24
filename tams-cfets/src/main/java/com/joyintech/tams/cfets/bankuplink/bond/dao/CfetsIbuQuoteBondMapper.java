@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dao;
 
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDayRegDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.DealTransactionDetailsDto;
 import org.apache.ibatis.annotations.Param;
@@ -46,4 +47,11 @@ public interface CfetsIbuQuoteBondMapper {
     int selectBondHasEexrPlanCount(Map<String, Object> param);
 
     String getRegistOrg(@Param("secAcctId") String secManageAcctId);
+
+    /**
+     * 当日登记
+     * @param param
+     * @return
+     */
+    List<CfetsBondDayRegDto> listDayReg(Map<String, Object> param);
 }
