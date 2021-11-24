@@ -44,6 +44,9 @@ public class CfetsEtrIbPosPortfolioRequest {
     @ApiModelProperty(name="ownSecAmount",value="本方券券面总额",example="1")
     private BigDecimal ownSecAmount;
 
+    @ApiModelProperty(name="etrSecAmount",value="指令券面总额",example="1")
+    private BigDecimal etrSecAmount;
+
 
     public String getPortfolioId() {
         return portfolioId;
@@ -131,5 +134,13 @@ public class CfetsEtrIbPosPortfolioRequest {
 
     public void setOwnSecAmount(BigDecimal ownSecAmount) {
         this.ownSecAmount = ownSecAmount;
+    }
+
+    public BigDecimal getEtrSecAmount() {
+        return etrSecAmount;
+    }
+
+    public void setEtrSecAmount(BigDecimal etrSecAmount) {
+        this.etrSecAmount = etrSecAmount;
     }
 }

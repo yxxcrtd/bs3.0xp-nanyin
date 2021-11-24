@@ -350,7 +350,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
                 cfetsEtrIbBondinfoService.recallDelegateMethod(entity);
             }
             //更新操作日志
-            cfetsEtrIbBondinfoService.recallDelegateOprHisMethod(dto);
+           // cfetsEtrIbBondinfoService.recallDelegateOprHisMethod(dto);
             // add by zhangrui1 批量撤销预占 start
             EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeList.平安资产类型_债券.getValue(),
                     BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);

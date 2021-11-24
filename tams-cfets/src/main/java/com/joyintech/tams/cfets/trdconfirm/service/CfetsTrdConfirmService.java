@@ -20,11 +20,15 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.cfets.etrib.dao.CfetsEtrIbBondinfoMapper;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfoDto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbPosPortfolioRequest;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbPositionRequest;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtribBondInfo003Dto;
+import com.joyintech.tams.cfets.etrib.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
 import com.joyintech.tams.cfets.trdconfirm.dto.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -129,6 +133,10 @@ public class CfetsTrdConfirmService extends BaseService{
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
     @Autowired(required = false)
+    private CfetsEtribBondInfo003Service cfetsEtribBondInfo003Service;
+    @Autowired(required = false)
+    private CfetsEtrIbBondinfoMapper cfetsEtrIbBondinfoMapper;
+    @Autowired(required = false)
     private IPlatformDate iPlatformDate;
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
@@ -201,7 +209,7 @@ public class CfetsTrdConfirmService extends BaseService{
             String supportCstpFlag=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG");
             if(StringUtil.equals(supportCstpFlag,DictCodeList.是否_是.getValue())){
                 //登记以及报价
-                return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsTrdConfirmMapper.findAllRegInfoList(pageParam));
+                return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsTrdConfirmMapper.findAllRegAndIbuInfoList(pageParam));
             }else{
                 //登记
                 return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsTrdConfirmMapper.findAllRegInfoList(pageParam));
@@ -217,22 +225,18 @@ public class CfetsTrdConfirmService extends BaseService{
         List<CfetsTrdConfirmRegInfoListResponse> selectedItem = dto.getSelectedItem();
         if(StringUtil.isNotEmpty(selectedItem)){
             for(CfetsTrdConfirmRegInfoListResponse item:selectedItem){
-                try{
+                    try{
                         //对dto进行封装
                         CfetsTrdBondInvestTradeDto entity=prepareEntity(item);
-                        //发送头寸
-                        //sendPositionMethod(entity);
-                        //插入交易表
+                        //成交确认提交方法
                         doCompleteMethod(entity,OperationType.NEW);
-                        //日志表
                     }catch (Exception e) {
-                        //若插入数据异常，则冲正头寸
+                        //若插入数据异常，提示错误信息
 
 
                     }
             }
         }
-
     }
     @Transactional(rollbackFor = Exception.class)
     @DTXTransaction
@@ -488,6 +492,15 @@ public class CfetsTrdConfirmService extends BaseService{
             }
 
         }
+        //更新操作记录日志
+        /*CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+        oprHisReq.setEntrustId(dto.getEntrustId());
+        oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
+        oprHisReq.setBusiDes(dto.getRemark());
+        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);*/
+
+        //发送头寸
+        sendPositionMethod(entity);
     }
     /**
      * 7.3写入交易信息进交易报送信息表，为中债报送用
@@ -1054,8 +1067,8 @@ public class CfetsTrdConfirmService extends BaseService{
         pageParam.put("sysDate",iPlatformDate.getSysDate());
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
-        //交易员是否可查看全部CSTP下行成交数据 IS_QUERYALLTRD_FLAG
-        String queryAllTrdFlag=CacheUtil.getSysParam("IS_QUERYALLTRD_FLAG");
+        //交易员是否可查看全部CSTP下行成交数据 IS_QUERYALLCSTP_FLAG
+        String queryAllTrdFlag=CacheUtil.getSysParam("IS_QUERYALLCSTP_FLAG");
         if(StringUtil.equals(queryAllTrdFlag,DictCodeList.是否_否.getValue())){
             String userId = SecurityUtil.getLoginUser().getUserName();
             if (StringUtils.isNotEmpty(userId)) {
@@ -1403,68 +1416,64 @@ public class CfetsTrdConfirmService extends BaseService{
             }
         }
     }
-/*    private  void sendPositionMethod(CfetsTrdBondInvestTradeDto entity){
+    private  void sendPositionMethod(CfetsTrdBondInvestTradeDto entity){
         List<CfetsEtrIbPosPortfolioRequest> ptlList=new ArrayList<>();
-        for (CfetsEtribBondInfo003Dto dto : entity.getEtrInvestBondInfoDtos()) {
+        for (TrdProductDeal dto : entity.getTrdProductDeals()) {
             //调用头寸
             CfetsEtrIbPosPortfolioRequest posport=new CfetsEtrIbPosPortfolioRequest();
             posport.setPortfolioId(dto.getPortfolioId());
-            posport.setEtrId(dto.getEntrustId());
+            posport.setTradeId(dto.getTradeId());
             if(StringUtil.isNotEmpty(dto.getPortfolioId())){
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("portfolioId", dto.getPortfolioId());
                 map.put("acctType", BussinessDictCodeList.资金账户类型_托管账户.getValue());
-                String cashAcctId = this.qryPortfolioCashAcctId(map);
+                String cashAcctId = cfetsEtribBondInfo003Service.qryPortfolioCashAcctId(map);
                 if (StringUtil.isNotEmpty(cashAcctId)) {
                     posport.setCashAcctId(cashAcctId); // 托管户
                 }
             }
-            if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(entity.getFinprodId())) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("portfolioId", dto.getPortfolioId());
-                map.put("finprodId", entity.getFinprodId());
-                String secAcctId = this.qryPortfolioSecAcctId(map);
-                if (StringUtil.isNotEmpty(secAcctId)) {
-                    posport.setSecAcctId(secAcctId); // 证券账户
+            posport.setSecAcctId(entity.getSecManageAcctId());
+            posport.setSecAmount(ArithmeticUtil.multiply(dto.getShareAmt(),new BigDecimal(100)));
+            posport.setCashAmount(dto.getTradeAmt());
+            entity.getTrdProductDealAdds().forEach(trdProductDealAdd -> {
+                if (dto.getTradeId() != null
+                        && dto.getTradeId().equals(trdProductDealAdd.getTradeId())) {
+                    posport.setEtrId(trdProductDealAdd.getEntrustId());
+                    posport.setIntegrateSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
+                    posport.setOwnSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
+                }
+            });
+            //查询指令的券面总额
+            if(StringUtil.isNotEmpty(posport.getEtrId())){
+                CfetsEtrIbBondinfoDto etrDto=cfetsTrdConfirmMapper.findEtrinfoByPrimaryKey(posport.getEtrId());
+                if(null!=etrDto){
+                    posport.setEtrSecAmount(ArithmeticUtil.multiply(etrDto.getShareNum(),new BigDecimal(100)));
                 }
             }
-            posport.setSecAmount(dto.getEntrustNum());
-            posport.setCashAmount(ArithmeticUtil.divide(ArithmeticUtil.multiply(dto.getUnitFprice(), dto.getEntrustNum()),
-                    new BigDecimal(100), 4));
-            if(!StringUtil.isEmptyList(dto.getBussCombDistribtList())){
-                posport.setInvAim(dto.getBussCombDistribtList().get(0).getBusinessModel());
-            }
-            posport.setIntegrateSecAmount(dto.getEntrustIntegrateNum());
-            posport.setOwnSecAmount(dto.getEntrustOwnNum());
             ptlList.add(posport);
         }
         //调用头寸
         CfetsEtrIbPositionRequest req=new CfetsEtrIbPositionRequest();
         req.setInterfaceType("Bond001");
         req.setUserId(SecurityUtil.getLoginUser().getUserName());
-        req.setTotalTradeId(entity.getTotalEtrustId());
-        req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
-        req.setModelType(DictCodeListExt1.子系统代码_委托.getValue());
-        String balanceCheck="Y";
-        if(StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(),"Y")){
-            balanceCheck="N";
-        }
-        req.setBalanceCheck(balanceCheck);
+        req.setTotalTradeId(entity.getTotleTradeId());
+        req.setFlowStatus(DictCodeListExt3.流程节点_审批生效.getValue());
+        req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
         req.setBusiType(DictCodeListExt3.头寸业务类型_现券交易.getValue());
         if(StringUtil.isNotEmpty(entity.getPs())
                 && StringUtil.equals(entity.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
             req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
         }
         req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
-        req.setSettleSpeed(entity.getSettleSpeed());
-        req.setBusiAct("01");
+        req.setSettleSpeed(entity.getSettleSpeed().toString());
+        req.setBusiAct(DictCodeListExt3.业务动作_成交确认.getValue());
         req.setPs(entity.getPs());
-        req.setSystemAct("01");
-        req.setCdate(entity.getEtrDate());
+        req.setSystemAct(DictCodeListExt3.系统动作_关闭.getValue());
+        req.setCdate(entity.getTradeDate());
         req.setCcy(entity.getCcy());
         req.setFinprodId(entity.getFinprodId());
         req.setPtlList(ptlList);
         PositionHttpRequest.send(req);
-    }*/
+    }
 
 }

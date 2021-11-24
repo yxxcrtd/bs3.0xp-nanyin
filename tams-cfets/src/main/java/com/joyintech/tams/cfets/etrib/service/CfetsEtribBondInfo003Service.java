@@ -1605,9 +1605,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         }
         req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
         req.setSettleSpeed(entity.getSettleSpeed());
-        req.setBusiAct("01");
+        req.setBusiAct(DictCodeListExt3.业务动作_投资指令.getValue());
         req.setPs(entity.getPs());
-        req.setSystemAct("01");
+        req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
         req.setCdate(entity.getEtrDate());
         req.setCcy(entity.getCcy());
         req.setFinprodId(entity.getFinprodId());

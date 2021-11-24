@@ -2,6 +2,8 @@ package com.joyintech.tams.cfets.trdconfirm.dao;
 
 
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfoDto;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrInvestBondInfoReqDto;
 import com.joyintech.tams.cfets.trdconfirm.dto.*;
 import com.joyintech.tams.common.base.entity.RegFinProductDeal;
 import org.springframework.stereotype.Repository;
@@ -109,5 +111,17 @@ public interface CfetsTrdConfirmMapper {
      * @return
      */
     int deleteByPrimaryKey(String seqno);
+    /**
+     * 根据指令编号查询数据
+     * @param pageParam
+     * @return
+     */
+    CfetsEtrIbBondinfoDto findEtrinfoByPrimaryKey(String entrustId);
+    /**
+     * 查询所有登记或报价信息
+     * @param pageParam
+     * @return
+     */
+    List<CfetsTrdConfirmRegInfoListResponse> findAllRegAndIbuInfoList(Map<String, Object> pageParam);
 
 }
