@@ -107,6 +107,9 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		initPageParams.put("bondWebSocketUrl", bondWebSocketUrl);
 		//本币导出按钮配置
 		initPageParams.put("EXPORT_SHOW",CacheUtil.getSysParam("EXPORT_SHOW"));
+		initPageParams.put("PAGE_ID_REGIT","IbuQuoteBond004");
+		initPageParams.put("PAGE_ID_DIALOG","CfetsBondDealQuotedPrice004");
+		initPageParams.put("PAGE_ID_REQUEST","CfetsBondDealQuotedPrice005");
 		return new Message<Map<String, Object>>(initPageParams).success();
 	}
 
