@@ -42,7 +42,7 @@
             //交易所（上交和深交）的指令
             if(tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04) {
                // ENTRUST_CLASS=多组合单资产指令 且 资产类型 IN（债券、股票、基金、回购）且 交易场所IN（上交所、深交所）打开场内交易指令画面对应交易平台的多组合指令画面
-                if(data.entrustClass==ENTRUST_CLASS_02&&(data.assetType == F01 || data.assetType == F02||data.assetType == F07||data.assetType == F01 )){
+                if(data.entrustClass==ENTRUST_CLASS_02&&(data.assetType == F01 || data.assetType == F02||data.assetType == F07||data.assetType == F11 )){
                     pagePath = "invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/init";
                     Joyin.dialog(JoyinUtil.getLabel('EtrAgreRepTrade001.detail'), basePath + pagePath,
                         "95%", "90%", {
