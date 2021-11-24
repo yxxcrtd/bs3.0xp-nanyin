@@ -491,4 +491,17 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			return dataList;
 		});
 	}
+
+	@ApiOperation(value = "查询当日登记列表分页数据", notes = "查询当日登记列表分页数据")
+	@PostMapping("/pageDayReg")
+	@ResponseBody
+	public Message<Page<CfetsBondDayRegDto>> pageDayReg(@RequestBody EntrustRequest dto){
+		try {
+			Page<CfetsBondDayRegDto> list = ibuQuoteBondService.listDayReg(dto);
+			return new Message<Page<CfetsBondDayRegDto>>().success().setData(list);
+		}catch (Exception e) {
+			logger.error("查询当日登记列表分页数据异常",e);
+			return new Message<Page<CfetsBondDayRegDto>>().fail().setMessage("查询当日登记列表分页数据异常");
+		}
+	}
 }

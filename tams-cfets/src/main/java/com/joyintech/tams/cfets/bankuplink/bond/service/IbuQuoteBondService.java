@@ -962,6 +962,19 @@ public class IbuQuoteBondService extends BaseService {
         return false;
     }
 
+    /**
+     * 当日登记(分页列表)
+     * @param dto
+     * @return
+     */
+    public Page<CfetsBondDayRegDto> listDayReg(EntrustRequest dto){
+        Map<String, Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("loginUserId", LoginUserUtil.getUserName());
+        pageParam.put("platDate", iPlatformDate.getSysDateStr());
+        setParam(pageParam);
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsIbuQuoteBondMapper.listDayReg(pageParam));
+    }
+
     private void setParam(Map<String,Object> param){
         param.put("finprodType2", BussinessDictCodeList.金融产品类型_债券.getValue());
         param.put("tradeMarket01", BussinessDictCodeList.交易场所_银行间.getValue());
