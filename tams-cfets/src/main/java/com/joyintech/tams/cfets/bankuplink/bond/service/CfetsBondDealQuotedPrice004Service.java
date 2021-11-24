@@ -411,11 +411,23 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         CfetsBondDealDbDto result = new CfetsBondDealDbDto();
         //交易方向
         String ps = entity.getPs();
+        //投管业务类型
+        String tgBusiType = StringUtil.EMPTY;
         //金融产品交易汇总登记
         RegFinProductDealTotal regFinProductDealTotal = new RegFinProductDealTotal();
         BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotal,entity);
         regFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         regFinProductDealTotal.setBranch(0L);
+        if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+            tgBusiType = BussinessDictCodeList.平安业务类型_债券类资产买入.getValue();
+        }
+        if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
+            tgBusiType = BussinessDictCodeList.平安业务类型_债券类资产卖出.getValue();
+        }
+        if(StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
+            tgBusiType = DictCodeListExt1.平安业务类型_债券类资产行权.getValue();
+        }
+        regFinProductDealTotal.setTgBusiType(tgBusiType);
         //金融产品交易汇总登记附属
         RegFinProductDealTotalAdd regFinProductDealTotalAdd = new RegFinProductDealTotalAdd();
         BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotalAdd,entity);
@@ -450,6 +462,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 regFinProductDeal.setShareAmt(ArithmeticUtil.divide(ptlAllocatio.getShareAmt(),new BigDecimal(100),2));
                 regFinProductDeal.setTradeAmt(ptlAllocatio.getFpriceAmt());
                 regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
+                regFinProductDeal.setTgBusiType(tgBusiType);
                 //附属
                 RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
                 regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
@@ -460,7 +473,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getSellAbleNum());
                 }
                 if(null!=ptlAllocatio.getDealFeeAmt()){
-                    regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
+                    regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
                 }
                 if(null!=ptlAllocatio.getSettFeeamt()){
                     regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getSettFeeamt()));
@@ -553,7 +566,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         if(CollectionUtils.isNotEmpty(regFinProductDealAdds)){
             regFinProductDealAdds.forEach(item ->{
                 WflRegFinProductDealAdd wflRegFinProductDealAdd = new WflRegFinProductDealAdd();
-                BeanUtil.copyPropertiesIgnoreNull(item,wflRegFinProductDealAdd);
+                BeanUtil.copyPropertiesIgnoreNull(wflRegFinProductDealAdd,item);
                 wflRegFinProductDealAdd.setWorkflowId(workflowId);
                 wflRegFinProductDealAddMapper.insert(wflRegFinProductDealAdd);
             });
@@ -601,6 +614,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         }else{
             result.put("busiType",DictCodeListExt3.头寸业务类型_现券交易.getValue());
         }
+        result.put("busiAct","02");
         result.put("ps",ps);
         result.put("settleSpeed",entity.getRegFinProductDealTotal().getSettleSpeed());
         result.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
@@ -630,6 +644,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 pltMap.put("integrateSecAmount",regFinProductDealAdd.getLendinShareAmt());
                 pltMap.put("ownSecAmount",regFinProductDealAdd.getOurShareAmt());
                 pltMap.put("etrSecAmount",etrEntrustMapper.selectByPrimaryKey(regFinProductDeal.getEntrustId()).getEntrustNum());
+                ptlList.add(pltMap);
             }
             result.put("ptlList",ptlList);
         }

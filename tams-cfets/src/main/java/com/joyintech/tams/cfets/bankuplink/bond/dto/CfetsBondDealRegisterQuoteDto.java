@@ -36,6 +36,7 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
      * 要素id
      */
     private String elementId;
+
     /**
      * 汇总登记编号
      */
@@ -74,6 +75,14 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     private Date theoreticalExerciseDate;
 
+    /**
+     * 报价方式(登记)
+     */
+    private String quoteStyle;
+
+    private String calculateField;
+
+    private String finprodAbbr;
     /**
      * 组合分配信息
      */
@@ -212,5 +221,29 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setSellAbleNum(BigDecimal sellAbleNum) {
         this.sellAbleNum = sellAbleNum;
+    }
+
+    public String getQuoteStyle() {
+        return quoteStyle;
+    }
+
+    public void setQuoteStyle(String quoteStyle) {
+        this.quoteStyle = quoteStyle;
+    }
+
+    public String getCalculateField() {
+        return calculateField;
+    }
+
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField;
+    }
+
+    public String getFinprodAbbr() {
+        return finprodAbbr;
+    }
+
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
     }
 }

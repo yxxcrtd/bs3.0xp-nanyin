@@ -27,4 +27,7 @@ public interface CfetsIbuQuoteBondEtrMapper {
 
 
     int countNotDjsEtr(Map<String, Object> param);
+
+
+    int countWflEtr(Map<String, Object> param);
 }

@@ -26,6 +26,8 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -61,6 +63,9 @@ public class IbuQuoteBond004Controller extends BaseController {
 
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
+
+    @Autowired
+    private IPlatformDate iPlatformDate;
     /**
      * {@inheritDoc}
      */
@@ -88,13 +93,16 @@ public class IbuQuoteBond004Controller extends BaseController {
         model.addAttribute("PS_T03", DictCodeList.交易方向_行权_回售.getValue());
         CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealRegisterQuoteDto);
+        cfetsBondDealQuoteCommonDto.setSettleMethod(cfetsBondDealRegisterQuoteDto.getDeliveryType());
+        cfetsBondDealQuoteCommonDto.setSettleType(cfetsBondDealRegisterQuoteDto.getClearType());
+        cfetsBondDealQuoteCommonDto.setMatureYield(cfetsBondDealRegisterQuoteDto.getYield());
+        cfetsBondDealQuoteCommonDto.setPrice(cfetsBondDealRegisterQuoteDto.getUnitCprice());
         model.addAttribute("quotaPageModel","new");
         model.addAttribute("ptlAllocatios", JsonUtils.object2Json(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
         //分配方式
         model.addAttribute("distribution",cfetsBondDealQuoteCommonDto.getDistribution());
         //卖空模式
         model.addAttribute("sellPara",CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
-        cfetsBondDealQuoteCommonDto.setPs(DictCodeList.交易方向_行权_回售.getValue());
         model.addAttribute(GlobalConstant.ENTITY, cfetsBondDealQuoteCommonDto);
         return super.init(model);
     }
@@ -123,6 +131,10 @@ public class IbuQuoteBond004Controller extends BaseController {
         CfetsBondDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsBondDealRegisterQuoteDto();
         //前台实体转成后台dto
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRegisterQuoteDto, dto);
+        cfetsBondDealRegisterQuoteDto.setDeliveryType(dto.getSettleMethod());
+        cfetsBondDealRegisterQuoteDto.setClearType(dto.getSettleType());
+        cfetsBondDealRegisterQuoteDto.setUnitCprice(dto.getPrice());
+        cfetsBondDealRegisterQuoteDto.setYield(dto.getMatureYield());
         if (baseGetBusinessId != null) {
             BussinessCodeParameter codeParameter = getBussinessCodeParameter(dto.getPs());
             cfetsBondDealRegisterQuoteDto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
@@ -134,10 +146,15 @@ public class IbuQuoteBond004Controller extends BaseController {
 		WorkFlowParameter<CfetsBondDealRegisterQuoteDto> params = new WorkFlowParameter<CfetsBondDealRegisterQuoteDto>();
 		params.setPageId("IbuQuoteBond004");
 		params.setElementId(cfetsBondDealRegisterQuoteDto.getElementId());
+        params.setElementId("IbuQuoteBond004_btn_submit");
 		params.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
 		params.setBusinessCode(cfetsBondDealRegisterQuoteDto.getTotleTradeId());
+        params.setComment(entity -> getMessage("登记报价编号") + "(" + entity.getTotleTradeId() + ")-"
+                + "业务类型" + "(现券登记)-" + "平台日" + "("
+                + DateUtil.format(iPlatformDate.getSysDate()) + ")");
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券登记报价.getValue());
 		processParameter.setWorkFlowParameter(params);
+        processParameter.setOperationType(OperationType.NEW);
 		String msg = cfetsBondDealQuotedPrice004Service.start(processParameter, cfetsBondDealRegisterQuoteDto);
         return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
 	}

@@ -1,5 +1,9 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
+import com.joyintech.background.component.common.pack.common.base.BaseEntity;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,7 +16,7 @@ import java.util.List;
  * @date 2021/11/10
  */
 @ApiModel(value="债券报价实体(输入输出共用)",description="债券报价实体(输入输出共用)")
-public class CfetsBondDealQuoteCommonDto {
+public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEntity {
 
     @ApiModelProperty(name="quoteId",value="报价编号")
     private String quoteId;
@@ -155,6 +159,9 @@ public class CfetsBondDealQuoteCommonDto {
     @ApiModelProperty(name="counterInfoList",value="可选机构(请求报价专用)")
     private List<CounterInfoDto> counterInfoList;
 
+    @ApiModelProperty(name="tradeMarket",value="交易场所")
+    private String  tradeMarket;
+
     public String getQuoteId() {
         return quoteId;
     }
@@ -268,7 +275,18 @@ public class CfetsBondDealQuoteCommonDto {
     }
 
     public String getSettleSpreed() {
-        return settleSpreed;
+        if (StringUtil.equals(this.getSettleSpreed(), "0")
+                || StringUtil.equals(this.getSettleSpreed(), BussinessDictCodeList.清算速度_T加0.getValue())) {
+            return BussinessDictCodeList.清算速度_T加0.getValue();
+        } else if (StringUtil.equals(this.getSettleSpreed(), "1")
+                || StringUtil.equals(this.getSettleSpreed(), BussinessDictCodeList.清算速度_T加1.getValue())) {
+            return BussinessDictCodeList.清算速度_T加1.getValue();
+        } else if (StringUtil.equals(this.getSettleSpreed(), "2")
+                || StringUtil.equals(this.getSettleSpreed(), BussinessDictCodeList.清算速度_T加2.getValue())) {
+            return BussinessDictCodeList.清算速度_T加2.getValue();
+        } else {
+            return this.getSettleSpreed();
+        }
     }
 
     public void setSettleSpreed(String settleSpreed) {
@@ -529,6 +547,14 @@ public class CfetsBondDealQuoteCommonDto {
 
     public void setCounterInfoList(List<CounterInfoDto> counterInfoList) {
         this.counterInfoList = counterInfoList;
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
     }
 }
 

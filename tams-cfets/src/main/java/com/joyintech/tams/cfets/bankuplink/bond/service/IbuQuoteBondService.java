@@ -15,6 +15,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
+import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.common.base.dao.EtrDistributeMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
@@ -25,7 +26,11 @@ import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +86,8 @@ public class IbuQuoteBondService extends BaseService {
     @Autowired
     private CfetsBondDealQuotedPriceService cfetsBondDealQuotedPriceService;
 
+    @Autowired
+    private CfetsEtrIbBondinfoService cfetsEtrIbBondinfoService;
     /**
      * 风险试算check
      * @param entity
@@ -717,6 +724,93 @@ public class IbuQuoteBondService extends BaseService {
     public AjaxResult entrustRefuce(Map<String,Object> param) {
         return cfetsEtrDispatcherService.refuseEntrust(param);
     }
+
+    public void doForcedFinish(Map<String,Object> param) throws Exception{
+        setParam(param);
+        List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
+        if(entrustDtos != null && entrustDtos.size()>0){
+            List<EtrInvestBondInfoDto> dtolist = new ArrayList<>();
+            for(CfetsBondDealEntrustOrderDto  item : entrustDtos){
+                etrInvestInfoServiceImpl.updateDelegateStatus(item.getEntrustId(), com.joyintech.tams.constant.DictCodeList.委托状态_已完成.getValue());
+                EtrInvestBondInfoDto etrInvestBondInfoDto = new EtrInvestBondInfoDto();
+                BeanUtil.copyPropertiesIgnoreNull(etrInvestBondInfoDto,item);
+                dtolist.add(etrInvestBondInfoDto);
+            }
+            List<String> entrustIdList = dtolist.stream().map(
+                    EtrInvestBondInfoDto::getEntrustId).collect(Collectors.toList());
+            // ZGZGST-2330:委托关闭判断是否有完成额度，分情况处理 fuyongsheng 20210919 edit start
+            if(CollectionUtils.isNotEmpty(entrustIdList)){
+                Map<String, BigDecimal> etrFinishMap = EntrustCompleteUtil.getEtrFinishAmtList(entrustIdList);
+                //委托没有做过交易的，和撤销相同逻辑，删除预占
+                List<EtrInvestBondInfoDto> recallEntrustIdList = new ArrayList<>();
+                //委托已有完成额度，做过交易，走关闭完成的逻辑，更新预占
+                List<String> closeEntrustIdList = new ArrayList<>();
+                for(EtrInvestBondInfoDto etrDto : dtolist) {
+                    if(com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(etrFinishMap) && com.joyintech.background.component.common.pack.common.util.StringUtil.isNotEmpty(etrFinishMap.get(etrDto.getEntrustId()))
+                            && BigDecimal.ZERO.compareTo(etrFinishMap.get(etrDto.getEntrustId()))<0) {
+                        closeEntrustIdList.add(etrDto.getEntrustId());
+                    }
+                    else if(entrustIdList.contains(etrDto.getEntrustId())){
+                        recallEntrustIdList.add(etrDto);
+                    }
+                }
+
+                //没有做过交易，直接关闭的
+                if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(recallEntrustIdList)) {
+                    // add by yushilong 批量撤销预占 start
+                    EntrustRdsCommonAop.doListPreOccupy(recallEntrustIdList, com.joyintech.tams.constant.DictCodeList.平安资产类型_债券.getValue(),
+                            BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+                    // add by yushilong 批量撤销预占 end
+                }
+
+                //已经有委托完成度的
+                if(!com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(closeEntrustIdList)) {
+                    EntrustCompleteUtil.doComplete(closeEntrustIdList);
+                }
+            }
+            // ZGZGST-2330:委托关闭判断是否有完成额度，分情况处理 fuyongsheng 20210919 edit end
+            // add by zhangrui1 批量委托关闭 end
+
+            //发送头寸，批量关闭
+            cfetsEtrIbBondinfoService.closeDelegatePositionMethod(dtolist);
+            //更新操作日志
+            dtolist.forEach(item ->{
+                cfetsEtrIbBondinfoService.closeDelegatOprHisMethod(item);
+            });
+        }
+    }
+    /**
+     * 强制完成check
+     * @param param
+     * @return
+     */
+    public AjaxResult doForcedFinishCheck(Map<String,Object> param){
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        setParam(param);
+        if(!StringUtil.isNotEmpty(param.get("remark"))){
+            errorList.add(new ValidMessage("请输入强制完成原因!"));
+        }
+        if(cfetsIbuQuoteBondEtrMapper.countWflEtr(param)>0){
+            errorList.add(new ValidMessage("存在流程中交易数据，不可进行强制完成!"));
+        }
+        List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
+        if(CollectionUtils.isNotEmpty(entrustDtos)){
+            entrustDtos.forEach(item ->{
+                if(!StringUtil.equals(item.getEntrustStatus(),BussinessDictCodeList.委托状态_已接收.getValue())){
+                    errorList.add(new ValidMessage("只可对已接收指令执行退回操作!"));
+                    return;
+                }
+                if(null!=item.getTradeFinishPercent()&&item.getTradeFinishPercent().compareTo(BigDecimal.ZERO)==0){
+                    errorList.add(new ValidMessage("只可对成交进度>0的已接收未完成指令进行强制完成操作!"));
+                    return;
+                }
+            });
+        }
+        ajaxResult.setErrorList(errorList);
+        return ajaxResult;
+    }
+
 
     /**
      * 风险试算实体组装

@@ -104,7 +104,8 @@
         PA_PTL_PORTFOLIO.PORTFOLIO_SERIES									portfolioSeries,
         ETR_ENTRUST_ADD.OUR_ENT_NUM*100 OUR_ENT_NUM,
         ETR_ENTRUST_ADD.LENDIN_ENT_NUM*100 LENDIN_ENT_NUM,
-        ETR_ENTRUST_ADD.SELL_ABLE_NUM*100 SELL_ABLE_NUM
+        ETR_ENTRUST_ADD.SELL_ABLE_NUM*100 SELL_ABLE_NUM,
+        ETR_ENTRUST.TRADE_MARKET
         FROM
         ETR_ENTRUST
         INNER JOIN
@@ -237,9 +238,9 @@
         <if test="mySide!= null and mySide != ''">
             AND IBU_PORTFOLIO_ACCT_RELA.PARTY_ID = #{mySide}
         </if>
-       <!-- <if test="loginUserId != null and loginUserId != ''">
+        <if test="loginUserId != null and loginUserId != ''">
             AND ETR_DISTRIBUTE.TRADER = #{loginUserId}
-        </if>-->
+        </if>
         <if test="quotaPageModel != null and quotaPageModel eq 'marketResponse'">
             AND STL_SEC_ACCT_INFO.SEC_ACCT_SOURCE = #{secAcctSource}
         </if>

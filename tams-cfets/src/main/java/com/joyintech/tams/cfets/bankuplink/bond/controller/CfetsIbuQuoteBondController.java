@@ -105,6 +105,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		initPageParams.put("SHORT_SELLING_SUPPORTED",CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
 		//CMDS地址
 		initPageParams.put("bondWebSocketUrl", bondWebSocketUrl);
+		//本币导出按钮配置
+		initPageParams.put("EXPORT_SHOW",CacheUtil.getSysParam("EXPORT_SHOW"));
 		return new Message<Map<String, Object>>(initPageParams).success();
 	}
 
@@ -423,12 +425,19 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@RequestMapping("doForcedFinish")
 	public Message<AjaxResult> doForcedFinish(@RequestBody Map<String,Object> param) {
 		AjaxResult ar = null;
-		/*BondQuoteInfoDto bondQuote = new BondQuoteInfoDto();
-		BeanUtil.copyPropertiesIgnoreNull(bondQuote,cfetsBondCheckRequst);
-		if (ibuQuoteBondService.doBack(bondQuote)) {
+		List<String> entrustIds = StringUtil.splitToList(",",(String)param.get("entrustIds"));
+		param.put("entrustIdList",entrustIds);
+		ar = ibuQuoteBondService.doForcedFinishCheck(param);
+		if(CollectionUtils.isNotEmpty(ar.getErrorList())){
+			return new Message<AjaxResult>().success().setData(ar);
+		}
+		try{
+			ibuQuoteBondService.doForcedFinish(param);
 			ar = new AjaxResult(this.getMessage("强制完成成功"));
-		} ;*/
-
+		}
+		catch (Exception e){
+			ar = new AjaxResult(this.getMessage("强制完成异常"));
+		}
 		return new Message<AjaxResult>().success().setData(ar);
 	}
 
