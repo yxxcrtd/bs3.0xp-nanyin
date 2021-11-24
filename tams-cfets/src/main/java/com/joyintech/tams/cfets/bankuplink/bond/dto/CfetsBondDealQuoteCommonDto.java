@@ -275,18 +275,7 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     }
 
     public String getSettleSpreed() {
-        if (StringUtil.equals(this.getSettleSpreed(), "0")
-                || StringUtil.equals(this.getSettleSpreed(), BussinessDictCodeList.清算速度_T加0.getValue())) {
-            return BussinessDictCodeList.清算速度_T加0.getValue();
-        } else if (StringUtil.equals(this.getSettleSpreed(), "1")
-                || StringUtil.equals(this.getSettleSpreed(), BussinessDictCodeList.清算速度_T加1.getValue())) {
-            return BussinessDictCodeList.清算速度_T加1.getValue();
-        } else if (StringUtil.equals(this.getSettleSpreed(), "2")
-                || StringUtil.equals(this.getSettleSpreed(), BussinessDictCodeList.清算速度_T加2.getValue())) {
-            return BussinessDictCodeList.清算速度_T加2.getValue();
-        } else {
-            return this.getSettleSpreed();
-        }
+        return settleSpreed;
     }
 
     public void setSettleSpreed(String settleSpreed) {

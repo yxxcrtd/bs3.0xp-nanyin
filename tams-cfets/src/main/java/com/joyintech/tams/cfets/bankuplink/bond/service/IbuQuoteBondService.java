@@ -237,6 +237,13 @@ public class IbuQuoteBondService extends BaseService {
                 ptlAllocationDto.setShareAmt(ArithmeticUtil.multiply(entrustDto.getAvaNum(),new BigDecimal("10000")));
                 ptlAllocatios.add(ptlAllocationDto);
             }
+            if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreed(), "0")) {
+                cfetsBondDealQuoteCommonDto.setSettleSpreed(BussinessDictCodeList.清算速度_T加0.getValue());
+            } else if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreed(), "1")) {
+                cfetsBondDealQuoteCommonDto.setSettleSpreed(BussinessDictCodeList.清算速度_T加1.getValue());
+            } else if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreed(), "2")) {
+                cfetsBondDealQuoteCommonDto.setSettleSpreed(BussinessDictCodeList.清算速度_T加2.getValue());
+            }
             cfetsBondDealQuoteCommonDto.setPtlAllocatios(ptlAllocatios);
         }
         return cfetsBondDealQuoteCommonDto;
