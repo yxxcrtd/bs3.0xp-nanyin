@@ -10,24 +10,24 @@
 
 package com.joyintech.tams.component.business.report.prod.validator;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.base.intf.Page;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.report.prod.dto.BussRepFinProductInfoDto;
-import com.joyintech.tams.invest.common.calculator.RepCheckUtil;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.calculator.RepCheckUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 申报参数验证类
@@ -794,6 +794,20 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 resultList.add(new ValidMessage("repYieldComment","业绩比较基准说明不得含有中文标点"));
             }
         }
+
+         if (dto != null) {
+             if (!StringUtil.isNotEmpty(dto.getRepTruFeeRate())) {
+                 resultList.add(new ValidMessage("repTruFeeRate", this.getMessage("BUSS_COM_E_0038",
+                         this.getMessage("BussRepFinProductInfo.repTruFeeRate"))));
+             }
+             if (!StringUtil.isNotEmpty(dto.getIsFhxgcp())
+                     && !StringUtil.equals("01", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"))) {
+                 resultList.add(new ValidMessage("isFhxgcp", getMessage("请输入新老产品标记")));
+             }
+             if (!StringUtil.isNotEmpty(dto.getIsYllccp())) {
+                 resultList.add(new ValidMessage("isYllccp", getMessage("请输入是否养老理财")));
+             }
+         }
      }
         return resultList;
     }
