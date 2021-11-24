@@ -3,6 +3,12 @@ package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.
 import java.math.BigDecimal;
 import java.util.*;
 
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto;
+import com.joyintech.tams.report.submitmaintenance.equityinfo.service.EquityInfoDistinctService;
+import com.joyintech.tams.report.submitmaintenance.equityinfo.util.EquityInfoCheckUtil;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dao.SalesTransactionMaintenanceMapper;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
 import org.apache.commons.collections4.CollectionUtils;
@@ -114,7 +120,7 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             headList.add("销售结算资金流动方向");
             headList.add("销售结算资金交易对手方账号");
             headList.add("销售结算资金交易对手方账户名称");
-            headList.add("销售结算资金交易对手方开户行名称");
+            headList.add("销售结算资金交易对手方账户开户行名称");
             headList.add("销售结算资金交易对手方账户开户行号");
             headList.add("销售结算资金交易币种");
             headList.add("销售结算资金交易金额");
@@ -128,11 +134,12 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             }
             if (null != dataList) {
                 List<SalesTransactionMaintenanceDto> entities = new ArrayList<>(dataList.size());
-                List<ExcelValidDto> checkResult= convertToEntity(dataList, entities,userName,deptCode);
-                if(checkResult.isEmpty()) {
-                    for(SalesTransactionMaintenanceDto dto : entities){
-                        salestransactionmaintenanceMapper.insert(dto);
-                    }
+                List<ExcelValidDto> checkResult= checkExcelSales(dataList, entities,userName,deptCode);
+                if (checkResult.isEmpty()) {
+                        entities = convertToEntity(dataList, orgCode);
+                        for(SalesTransactionMaintenanceDto dto : entities){
+                            salestransactionmaintenanceMapper.insert(dto);
+                        }
                 }
                 return checkResult;
             }
@@ -150,14 +157,65 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
      * excel数据转为java对象
      * <p> 将excel导入的数据，按行转为ProRegistCodeManage001Dto  FinProductValuation对象，同时验证各字段值</p>
      * @param dataList excel导入的数据
-     * @param entities 转化后的列表
      * @return 验证信息
      */
-    private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,List<SalesTransactionMaintenanceDto> entities,String userName,String deptCode) {
+    private List<SalesTransactionMaintenanceDto> convertToEntity(List<List<String>> dataList,String orgCode) {
+        Date sysDate = DateUtil.platDateFromCache();
+        // 返回的list定义
+        List<SalesTransactionMaintenanceDto> returnInfoList = new ArrayList<SalesTransactionMaintenanceDto>();
+        SalesTransactionMaintenanceDto salesTransactionMaintenanceDto = null;
+        for (int i = 0; i < dataList.size(); i++ ) {
+            List<String> list = dataList.get(i);
+            salesTransactionMaintenanceDto = new SalesTransactionMaintenanceDto();
+            //提供销售结算资金服务机构代码
+            salesTransactionMaintenanceDto.setInstitutionCode(list.get(0));
+            //产品登记编码
+            salesTransactionMaintenanceDto.setPrdRegistCode(list.get(1));
+            //销售结算资金账号
+            salesTransactionMaintenanceDto.setAccountNo(list.get(2));
+            //销售结算资金账户名称
+            salesTransactionMaintenanceDto.setAccountName(list.get(3));
+            //销售结算资金交易流水号
+            salesTransactionMaintenanceDto.setTradeNo(list.get(4));
+            //销售结算资金流动方向
+            salesTransactionMaintenanceDto.setTradePs(this.subDictcode(list.get(5), " "));
+            //销售结算资金交易对手方账号
+            salesTransactionMaintenanceDto.setTradeCounterAccNo(list.get(6));
+            //销售结算资金交易对手方账户名称
+            salesTransactionMaintenanceDto.setTradeCounterAccName(list.get(7));
+            //销售结算资金交易对手方开户行名称
+            salesTransactionMaintenanceDto.setTradeCounterAccBankName(list.get(8));
+            //销售结算资金交易对手方账户开户行号
+            salesTransactionMaintenanceDto.setTradeCounterAccBankNo(list.get(9));
+            //销售结算资金交易币种
+            salesTransactionMaintenanceDto.setTradeCcy(this.subDictcode(list.get(10), " "));
+            //销售结算资金交易金额
+            salesTransactionMaintenanceDto.setTradeAmt(new BigDecimal(list.get(11)));
+            //估值日
+            salesTransactionMaintenanceDto.setTradeVdate(DateUtil.parse(list.get(12)));
+            //销售结算资金交易时间
+            salesTransactionMaintenanceDto.setTradeTime(list.get(13));
+            //销售结算资金交易附言
+            if(StringUtils.isNotEmpty(list.get(14))){
+                salesTransactionMaintenanceDto.setPostscript(list.get(14));
+            }
+            //备注
+            if(StringUtils.isNotEmpty(list.get(15))){
+                salesTransactionMaintenanceDto.setRemark(list.get(15));
+            }
+            //数据状态
+            salesTransactionMaintenanceDto.setDataStatus("E");
+            salesTransactionMaintenanceDto.setRegistSeqno(UUID.randomUUID().toString().replace("-","").toUpperCase());
+            salesTransactionMaintenanceDto.setReceptDate(sysDate);
+            salesTransactionMaintenanceDto.setOrgCode(orgCode);
+            returnInfoList.add(salesTransactionMaintenanceDto);
+        }
+        return returnInfoList;
+    }
 
+
+    private List<ExcelValidDto> checkExcelSales(List<List<String>> dataList,List<SalesTransactionMaintenanceDto> entities,String userName,String deptCode) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
-        Date sysDate = DateUtil.platDateFromCache();// 获取平台日期
-        Date nowDate = new Date();
         for (int i = 0; i < dataList.size(); i++ ) {
             //是否正常标志
             boolean flag = true;
@@ -256,72 +314,6 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
                     message.add("销售结算资金交易时间格式不对");
                 }
             }
-            //数据状态
-            if(list.get(16) == null || list.get(16).trim().equals("")){
-                flag = false;
-                message.add("数据状态不能为空");
-            }
-            //主键校验
-            if(flag){
-                param.put("institutionCode",list.get(0));
-                param.put("tradeNo",list.get(4));
-                int result = salestransactionmaintenanceMapper.getRegistExcelList(param);
-                if(result > 0 ){
-                    flag = false;
-                    message.add("存在和提供销售结算资金服务机构代码与销售结算资金交易流水号相同的数据");
-                }
-            }
-
-            if(flag){
-                SalesTransactionMaintenanceDto entity = new SalesTransactionMaintenanceDto();
-                //提供销售结算资金服务机构代码
-                entity.setInstitutionCode(list.get(0));
-                //产品登记编码
-                entity.setPrdRegistCode(list.get(1));
-                //销售结算资金账号
-                entity.setAccountNo(list.get(2));
-                //销售结算资金账户名称
-                entity.setAccountName(list.get(3));
-                //销售结算资金交易流水号
-                entity.setTradeNo(list.get(4));
-                //销售结算资金流动方向
-                entity.setTradePs(list.get(5));
-                //销售结算资金交易对手方账号
-                entity.setTradeCounterAccNo(list.get(6));
-                //销售结算资金交易对手方账户名称
-                entity.setTradeCounterAccName(list.get(7));
-                //销售结算资金交易对手方开户行名称
-                entity.setTradeCounterAccBankName(list.get(8));
-                //销售结算资金交易对手方账户开户行号
-                entity.setTradeCounterAccBankNo(list.get(9));
-                //销售结算资金交易币种
-                entity.setTradeCcy(list.get(10));
-                //销售结算资金交易金额
-                entity.setTradeAmt(new BigDecimal(list.get(11)));
-                //估值日
-                entity.setTradeVdate(DateUtil.parse(list.get(12)));
-                //销售结算资金交易时间
-                entity.setTradeTime(list.get(13));
-                //销售结算资金交易附言
-                if(StringUtils.isNotEmpty(list.get(14))){
-                    entity.setPostscript(list.get(14));
-                }
-                //备注
-                if(StringUtils.isNotEmpty(list.get(15))){
-                    entity.setRemark(list.get(15));
-                }
-                //数据状态
-                entity.setDataStatus(list.get(16));
-                entity.setRegistSeqno(UUID.randomUUID().toString().replace("-","").toUpperCase());
-                entity.setReceptDate(sysDate);
-                entity.setOrgCode(CommonUtil.getOrgCode());
-                entity.setCreateUser(userName);
-                entity.setCreateDept(deptCode);
-                entity.setCreateTime(nowDate);
-                entity.setUpdateUser(userName);
-                entity.setUpdateTime(nowDate);
-                entities.add(entity);
-            }
 
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(list.get(0), String.valueOf(i+2),
@@ -389,5 +381,27 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             }
         }
         return flag;
+    }
+
+
+    public static boolean isEmpty(String value) {
+        boolean flag = false;
+        if(StringUtil.isEmpty(value)){
+            flag = true;
+        }
+        else if(StringUtil.isEmpty(value.trim())){
+            flag = true;
+        }
+        return flag;
+    }
+
+    public static String subDictcode(String value, String sign) {
+        if (!isEmpty(value)) {
+            int i = value.indexOf(sign);
+            if (i > -1) {
+                value = value.substring(0, i);
+            }
+        }
+        return value;
     }
 }

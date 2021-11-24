@@ -1096,9 +1096,9 @@ public class EquityInfoValid {
             sb.append("01");
         }
         //投资者分类
-        else if (!CommonUtil.equalsIgnoreNull(list.get(25),
+        else if (!CommonUtil.equalsIgnoreNull(list.get(22),
                 equityInfoRegist001Dto.getHolderClassify())) {
-            map.put("HOLDER_CLASSIFY", list.get(25));
+            map.put("HOLDER_CLASSIFY", list.get(22));
             sb.append("01");
         }
         if (StringUtil.isNotEmpty(sb)) {
@@ -1202,9 +1202,9 @@ public class EquityInfoValid {
             map.put("REMARK", list.get(21));
         }
         //投资者分类
-        else if (!CommonUtil.equalsIgnoreNull(list.get(25),
+        else if (!CommonUtil.equalsIgnoreNull(list.get(22),
                 equityInfoRegist001Dto.getHolderClassify())) {
-            map.put("HOLDER_CLASSIFY", list.get(25));
+            map.put("HOLDER_CLASSIFY", list.get(22));
         }
         else {
             // 风险偏好
@@ -2691,7 +2691,7 @@ public class EquityInfoValid {
                 // 投资者类别
                 message = checkHolderType(message, list.get(8), type,spzMap,objFiledsMap,equityInfo001Dto);
                 // 投资者分类
-                message = checkHolderClassify(message, list.get(25), type,spzMap,objFiledsMap,equityInfo001Dto);
+                message = checkHolderClassify(message, list.get(22), type,spzMap,objFiledsMap,equityInfo001Dto);
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message, list.get(9), type, list.get(8),
                         list.get(6),spzMap,objFiledsMap,equityInfo001Dto);
