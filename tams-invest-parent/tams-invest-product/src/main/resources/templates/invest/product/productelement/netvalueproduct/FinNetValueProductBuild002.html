@@ -1057,7 +1057,8 @@
                 	<div class="page-component" th:data-path="@{/component/core/FileCommon/init}"
                     	th:data-params="|{entityName: 'fileCommonDto', businessId: '${entity?.fjId ?: ''}'}|"></div>
 				</div>
-				<div class="pro-module-wrapper step" title="报送信息">
+				<!-- 通过框架表SYS_ELEMENT_CONTROL控制中债报送信息tab，div需要增加id，add by lilan 2021-11-23  -->
+				<div id="bussRepFinProductInfoCommon" class="pro-module-wrapper step" title="中债报送信息">
 					<!-- 申报参数基本信息 -->
 					<div class="page-component" th:id="|${pageId}_bussRepFinProductInfoDto|"
 						th:data-path="@{/component/report/prod/BussRepFinProductInfoCommon/init}"

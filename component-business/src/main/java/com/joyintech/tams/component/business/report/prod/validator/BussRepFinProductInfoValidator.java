@@ -19,6 +19,9 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.joyintech.framework.base.intf.Page;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
@@ -44,7 +47,11 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
     public List<ValidMessage> valid(Object value) {
         BussRepFinProductInfoDto dto = (BussRepFinProductInfoDto)value;
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-
+        
+     //获取对应画面的page add by lilan 20211123 
+     Page page=CacheUtil.getPage("FinNetValueProductBuild002");
+     // 获取page中SYS_ELEMENT_CONTROL表配置的是否展示or隐藏画面元素。如果隐藏则跳过判断，如果展示则进入判断逻辑
+     if (null != page && null != page.getElementcontrol("bussRepFinProductInfoCommon") && page.getElementcontrol("bussRepFinProductInfoCommon").getIsShow()) {
         // 产品期次
         if (StringUtil.isNotEmpty(dto.getRepFinprodStage())) {
             if (RepCheckUtil.checkByteLength(dto.getRepFinprodStage().toString(), 6)) {
@@ -787,6 +794,7 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
                 resultList.add(new ValidMessage("repYieldComment","业绩比较基准说明不得含有中文标点"));
             }
         }
+     }
         return resultList;
     }
 }
