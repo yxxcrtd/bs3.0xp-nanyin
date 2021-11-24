@@ -566,22 +566,24 @@ public class ReconciliationCommonService {
             reconciliationCommonMapper.insertStlSecRecon(stlSecRecon);
             // 查询成交明细数据
             List<SettleTransData> listSettleTransData = querySettleTransDatas(dto);
-            // 重新结算交易明细数据
-            SettleTransData std = getReCalSettleTransData(listSettleTransData.get(0),dto);
-            // 更新成交明细数据
-            settleTransDataMapper.updateByPrimaryKeySelective(std);
-            StlSecReconDetail detail;
-            SettleTransDataStatus status;
-            for (SettleTransData settleTransData : listSettleTransData) {
-                detail = new StlSecReconDetail();
-                detail.setSeqNo(dto.getSeqNo());
-                detail.setTradeId(settleTransData.getTradeId());
-                detail.setStlSecDeme(dto.getParaValue());
-                reconciliationCommonMapper.insertStlSecReconDetail(detail);
-                status = new SettleTransDataStatus();
-                status.setTradeId(settleTransData.getTradeId());
-                status.setCheckResult(dto.getCheckResult());
-                settleTransDataStatusMapper.insertSelective(status);
+            if(CollectionUtils.isNotEmpty(listSettleTransData)){
+                // 重新结算交易明细数据
+                SettleTransData std = getReCalSettleTransData(listSettleTransData.get(0),dto);
+                // 更新成交明细数据
+                settleTransDataMapper.updateByPrimaryKeySelective(std);
+                StlSecReconDetail detail;
+                SettleTransDataStatus status;
+                for (SettleTransData settleTransData : listSettleTransData) {
+                    detail = new StlSecReconDetail();
+                    detail.setSeqNo(dto.getSeqNo());
+                    detail.setTradeId(settleTransData.getTradeId());
+                    detail.setStlSecDeme(dto.getParaValue());
+                    reconciliationCommonMapper.insertStlSecReconDetail(detail);
+                    status = new SettleTransDataStatus();
+                    status.setTradeId(settleTransData.getTradeId());
+                    status.setCheckResult(dto.getCheckResult());
+                    settleTransDataStatusMapper.insertSelective(status);
+                }
             }
         }
     }
