@@ -593,6 +593,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("电子邮箱");
             headList.add("备注");
             headList.add("投资者分类");
+            headList.add("经办人");
+            headList.add("接入检查结果");
+            headList.add("中债反馈消息");
 
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
@@ -1401,11 +1404,11 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             equityInfo001Dto.setHolderTelephone(list.get(19));
             equityInfo001Dto.setHolderEmail(list.get(20));
             equityInfo001Dto.setRemark(list.get(21));
-            equityInfo001Dto.setAgent(list.get(22));
+            equityInfo001Dto.setAgent(list.get(23));
             equityInfo001Dto.setOrgCode(orgCode);
-            if (!EquityInfoCheckUtil.isEmpty(list.get(25))) {
+            if (!EquityInfoCheckUtil.isEmpty(list.get(22))) {
                 equityInfo001Dto.setHolderClassify(
-                        EquityInfoCheckUtil.subDictcode(list.get(25), " "));
+                        EquityInfoCheckUtil.subDictcode(list.get(22), " "));
             }
             // 增加行号
             equityInfo001Dto.setExcelNum(String.valueOf(i + 2));
