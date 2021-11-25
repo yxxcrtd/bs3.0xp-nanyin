@@ -583,6 +583,9 @@ public class ReconciliationCommonService {
                     detail.setTradeId(settleTransData.getTradeId());
                     detail.setStlSecDeme(dto.getParaValue());
                     reconciliationCommonMapper.insertStlSecReconDetail(detail);
+                    // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit start
+                    settleTransDataStatusMapper.deleteByPrimaryKey(settleTransData.getTradeId());
+                    // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit end
                     status = new SettleTransDataStatus();
                     status.setTradeId(settleTransData.getTradeId());
                     status.setCheckResult(dto.getCheckResult());
