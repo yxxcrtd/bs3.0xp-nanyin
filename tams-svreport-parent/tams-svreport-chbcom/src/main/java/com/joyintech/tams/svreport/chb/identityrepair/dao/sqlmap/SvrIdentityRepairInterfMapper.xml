@@ -57,7 +57,7 @@
 	</update>
 
 	<update id="updataCheck" parameterType="string">
-		updata CHB_EQU_HOLD_CHECK
+		update CHB_EQU_HOLD_CHECK
 		SET
 		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR}
 		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
