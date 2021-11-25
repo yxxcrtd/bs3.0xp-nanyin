@@ -463,7 +463,7 @@
             fp.finprod_abbr finprodAbbr,
             ete.trade_market tradeMarket,
             ete.ps ps,
-            DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03','01') settleSpeed,
+            DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
             ete.price_model priceModel,
             ssai.sec_acct_name secAcctId,
             ete.ccy ccy,

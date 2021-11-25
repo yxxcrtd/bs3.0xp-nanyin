@@ -4,6 +4,7 @@ package com.joyintech.tams.cfets.cfetsmanualsettle.controller;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.Message;
@@ -57,6 +58,9 @@ public class CfetsManualSettleQueryController extends BaseController {
         initPageParams.put("CLEAN_STL", this.getSelectDataFromDataDic(DictCode.结算指令状态, null));
         //结算合同状态
         initPageParams.put("CLEAN_ARG", this.getSelectDataFromDataDic(DictCode.结算合同状态, null));
+
+        //自动刷新时间(ms)
+        initPageParams.put("cfetsManualSettle_tradeList_refresh_period", CacheUtil.getSysParam("cfetsManualSettle_tradeList_refresh_period"));
 
         // 平台日字符串格式
         initPageParams.put("SESSION_SYS_DATE", DateUtil.format(platformDateImpl.getSysDate()));
