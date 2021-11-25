@@ -721,12 +721,22 @@ public class IbuQuoteBondService extends BaseService {
         if(!StringUtil.isNotEmpty(param.get("remark"))){
             errorList.add(new ValidMessage("请输入退回原因!"));
         }
-        if(StringUtil.isNotEmpty(param.get("entrustId"))){
+        if(StringUtil.isNotEmpty(param.get("entrustIds"))){
            param.put("entrustIdList",StringUtil.splitToList(",",(String)param.get("entrustIds")));
         }
-        if(cfetsIbuQuoteBondEtrMapper.countNotDjsEtr(param)>0){
-            errorList.add(new ValidMessage("只可对待分发指令执行退回操作!"));
+        setParam(param);
+        List<CfetsBondDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
+        if(CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)){
+            cfetsBondDealEntrustOrderDtos.forEach(item -> {
+                if(StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_待接收)
+                        ||(StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_待接收)&&item.getTransactioncom().compareTo(BigDecimal.ZERO)!=0)){
+                    errorList.add(new ValidMessage("只可对待分发或者已接收执行进度为0的指令执行退回操作!"));
+                }
+            });
         }
+        /*if(cfetsIbuQuoteBondEtrMapper.countNotDjsEtr(param)>0){
+            errorList.add(new ValidMessage("只可对待分发指令执行退回操作!"));
+        }*/
         ajaxResult.setErrorList(errorList);
         return ajaxResult;
     }
