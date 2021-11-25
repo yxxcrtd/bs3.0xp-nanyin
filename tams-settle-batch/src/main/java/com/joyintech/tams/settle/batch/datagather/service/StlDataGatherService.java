@@ -11,6 +11,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseFinProductCashInputDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonParamDto;
 import com.joyintech.tams.settle.batch.datagather.dto.*;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -956,12 +957,15 @@ public class StlDataGatherService {
     }
 
     public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList) {
+        ExchangeTransMatchCommonParamDto paramDto = new ExchangeTransMatchCommonParamDto();
+        paramDto.setParamDataList(dtoList);
+
         // 调用债券交易计算逻辑
         if(isSingle) {
-            simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionMacthBatch", dtoList, Map.class);
+            simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionMacthBatch", paramDto, Map.class);
         }
         else {
-            restTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionMacthBatch", dtoList, Map.class);
+            restTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionMacthBatch", paramDto, Map.class);
         }
 
     }
