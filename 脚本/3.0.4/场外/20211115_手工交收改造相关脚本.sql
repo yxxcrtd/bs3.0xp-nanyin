@@ -175,6 +175,7 @@ values ('CfetsManualSettle', 'CfetsManualSettle_btn_fail', 'noneApproval', 'syst
 
 
 --交收记录、交收流水表头配置脚本
+delete from cfg_datatable_show where PAGECODE = 'cfetsManualSettleQuery';
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'settleStatusStr', '交收状态', 'settleStatus','1', '1', '0', '1','100','{"colAlign": "left","supportSearch":"模糊"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'tradeId', '原业务编号', '','2', '1', '0', '1','100','{"colAlign": "left","supportSearch":"模糊"}','0','COMM','1','0','','','1');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleTradeList','999999', 'tradeDate', '交易日期', '','3', '1', '0', '1','100','{"colAlign": "left","supportSearch":"精确"}','0','COMM','1','0','','','0');
