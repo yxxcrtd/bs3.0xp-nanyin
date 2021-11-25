@@ -23,6 +23,8 @@ $(function() {
             holderName : $('#holderName').val(),
             // 证件号码
             identifyNumber : $('#identifyNumber').val(),
+            // 投资者分类
+            holderClassify : $('#holderClassify').val(),
             // 数据状态
             status : dataStatus,
             orgCode: orgCode
