@@ -70,7 +70,7 @@
             {field:'finprodType2Str', sortField:'finprodType2',width:200, title: 'ExchangeTransMatch001.finprodType2'},
             {field:'finprodMarketId', sortField:'finprodMarketId',width:200, title: 'ExchangeTransMatch001.finprodId'},
             {field:'finprodAbbr', sortField:'finprodAbbr',width:200, title: 'ExchangeTransMatch001.finprodAbbr'},
-            {field:'seatNumber', sortField:'seatNo',width:200, title: 'ExchangeTransMatch001.seatNo'},
+            {field:'seatNumber', sortField:'seatNumber',width:200, title: 'ExchangeTransMatch001.seatNo'},
             {field:'tradePlatStr', sortField:'tradePlat',width:200, title: 'ExchangeTransMatch001.tradePlat'},
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch001.ps'},
             {field:'remainAmount', sortField:'remainAmount',width:200, title: 'ExchangeTransMatch001.remainAmount',type: 'money'},
