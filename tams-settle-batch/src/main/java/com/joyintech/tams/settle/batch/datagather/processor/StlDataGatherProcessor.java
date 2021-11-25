@@ -130,7 +130,7 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
 
                 exchangeTransMatchCommonDto.setRemainNum(settleTransDataDto.getShareAmt());
                 exchangeTransMatchCommonDto.setRemainAmount(settleTransDataDto.getFpriceAmt());
-                exchangeTransMatchCommonDto.setSeqId(settleTransDataDto.getSeqNo());
+                exchangeTransMatchCommonDto.setSeqId(settleTransDataDto.getTradeId());
 
                 if(StringUtil.isNotEmpty(settleTransDataDto.getEntrustId())){
                     exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(etrEntrustDtos.get(0).getEntrustId()));
