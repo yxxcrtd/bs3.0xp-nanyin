@@ -12,9 +12,10 @@ insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER
 values ('QS_MANAGEMENT_001_008_001', 'STL', '', 'QS_MANAGEMENT_001_008', 'CfetsManualSettle', 1, '01', '交收管理', 'system', '', sysdate, 'system', sysdate);
 
 --自动刷新
-delete from sys_para t where t.para_code='cfetsManualSettleController_tradeList_refresh_period';
+
+delete from sys_para t where t.para_code='cfetsManualSettle_tradeList_refresh_period';
 insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
-values ('STL', 'cfetsManualSettleController_tradeList_refresh_period', '30000', '01', '', '交收列表自动刷新时间（毫秒）', 'system', '', sysdate, 'system', sysdate, '', '01');
+values ('STL', 'cfetsManualSettle_tradeList_refresh_period', '30000', '01', '', '交收列表自动刷新时间（毫秒）', 'system', '', sysdate, 'system', sysdate, '', '01');
 
 --共通业务类型增加枚举值
 delete from sys_datadict_list where DICT_CODE ='COMMON_BUSINESS_TYPE' and ITEM_CODE='STL06';
