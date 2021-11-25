@@ -507,12 +507,4 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		}
 	}
 
-
-	@ApiOperation(value = "当日登记撤销检查", notes = "当日登记撤销检查")
-	@ResponseBody
-	@RequestMapping("/checkDayRegRevokeCheck")
-	public Message<AjaxResult> checkDayRegRevokeCheck(@RequestBody List<CfetsBondRegCheckRequst> cfetsBondRegCheckRequsts) {
-		return new Message<AjaxResult>().success().setData(ibuQuoteBondService.checkDayRegRevokeCheck(cfetsBondRegCheckRequsts));
-	}
-
 }

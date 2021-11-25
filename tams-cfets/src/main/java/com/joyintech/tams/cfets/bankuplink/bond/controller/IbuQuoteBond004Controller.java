@@ -18,7 +18,10 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealRegisterQuoteDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckDetaileRequst;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckRequst;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice004Service;
+import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -44,6 +47,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
 
 /**
@@ -66,9 +72,9 @@ public class IbuQuoteBond004Controller extends BaseController {
 
     @Autowired
     private IPlatformDate iPlatformDate;
-    /**
-     * {@inheritDoc}
-     */
+
+    @Autowired
+    private IbuQuoteBondService ibuQuoteBondService;
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度,
@@ -103,6 +109,44 @@ public class IbuQuoteBond004Controller extends BaseController {
         return super.init(model);
     }
 
+    @ApiOperation(value = "当日登记撤销检查", notes = "当日登记撤销检查")
+    @ResponseBody
+    @RequestMapping("/checkDayRegRevokeCheck")
+    public Message<AjaxResult> checkDayRegRevokeCheck(@RequestBody CfetsBondRegCheckRequst cfetsBondRegCheckRequst) {
+        return new Message<AjaxResult>().success().setData(ibuQuoteBondService.checkDayRegRevokeCheck(cfetsBondRegCheckRequst));
+    }
+
+
+    @ApiOperation(value = "当日登记撤销", notes = "当日登记撤销")
+    @ResponseBody
+    @RequestMapping("regRevoke")
+    public Message<AjaxResult> regRevoke(@RequestBody CfetsBondRegCheckRequst cfetsBondRegCheckRequst) throws WorkFlowException{
+        //前后台转换
+        AjaxResult ajaxResult = ibuQuoteBondService.checkDayRegRevokeCheck(cfetsBondRegCheckRequst);
+        if(CollectionUtils.isNotEmpty(ajaxResult.getErrorList())){
+            return new Message<AjaxResult>().success().setData(ajaxResult);
+        }
+        List<CfetsBondDealRegisterQuoteDto> CfetsBondDealRegisterQuoteDtos = new ArrayList<>();
+        for (CfetsBondRegCheckDetaileRequst cfetsBondRegCheckDetaileRequst : cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts()) {
+            CfetsBondDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsBondDealRegisterQuoteDto();
+            cfetsBondDealRegisterQuoteDto.setTotleTradeId(cfetsBondRegCheckDetaileRequst.getQuoteId());
+            cfetsBondDealRegisterQuoteDto.setRemark(cfetsBondRegCheckRequst.getRemark());
+            cfetsBondDealRegisterQuoteDto.setOperatorType("revoke");
+            CfetsBondDealRegisterQuoteDtos.add(cfetsBondDealRegisterQuoteDto);
+        }
+        ProcessParameter<CfetsBondDealRegisterQuoteDto> processParameter = new ProcessParameter<CfetsBondDealRegisterQuoteDto>();
+        WorkFlowParameter<CfetsBondDealRegisterQuoteDto> workFlowParameter = new WorkFlowParameter<CfetsBondDealRegisterQuoteDto>();
+        workFlowParameter.setPageId("IbuQuoteBond004");
+        workFlowParameter.setElementId("IbuQuoteBond004_btn_revoke");
+        workFlowParameter.setBusinessCode(item -> item.getTotleTradeId());
+        workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
+        workFlowParameter.setComment(entity -> getMessage("CFETSHIS_QUOTEID") + "(" + entity.getTotleTradeId() + ")");
+        processParameter.setWorkFlowParameter(workFlowParameter);
+        processParameter.setOperationType(OperationType.REVOKE);
+        String msg = cfetsBondDealQuotedPrice004Service.start(processParameter,
+                CfetsBondDealRegisterQuoteDtos.toArray(new CfetsBondDealRegisterQuoteDto[CfetsBondDealRegisterQuoteDtos.size()]));
+        return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
+    }
 
     @ApiOperation(value = "登记提交检查", notes = "登记提交检查")
     @PostMapping("/check")

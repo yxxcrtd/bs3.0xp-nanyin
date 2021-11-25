@@ -349,16 +349,21 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      * {@inheritDoc}
      */
     @Override
-    public void doComplete(CfetsBondDealRegisterQuoteDto entity, OperationType type) {
+    public void doComplete(CfetsBondDealRegisterQuoteDto entity, OperationType operationType) {
         CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity);
-        //登录db
-        insert(cfetsBondDealDbDto);
-        //履历表
-        updateCfetsOprHis(entity.getTotleTradeId(),type.name());
-        //头寸
-        PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto));
-        //处理指令执行进度
-        insertEtrFinishStatus(cfetsBondDealDbDto,type);
+        if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
+            //登录db
+            insert(cfetsBondDealDbDto);
+            //履历表
+            updateCfetsOprHis(entity.getTotleTradeId(),operationType.name());
+            //头寸
+            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto));
+            //处理指令执行进度
+            insertEtrFinishStatus(cfetsBondDealDbDto,operationType);
+        }
+        else{
+
+        }
     }
 
     /**

@@ -96,6 +96,7 @@
         FIN_PRODUCT_TYPE.TYPE_4                                             assetTypeOne,
         ETR_ENTRUST.REMARK                                                  remark,
         ETR_ENTRUST.CCY                                                     settleCcy,
+        ETR_ENTRUST.CCY                                                     ccy,
         IBU_PORTFOLIO_ACCT_RELA.CFETS_ACCT_TYPE                                  secAcctSource,
         IBU_PORTFOLIO_ACCT_RELA.PARTY_ID                                  partyId,
         ROUND((NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.ENT_FINISH_AMT,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100	tradeFinishPercent,
@@ -779,7 +780,9 @@
         ) y
     </select>
 
+    <!--当日登记-->
     <select id="listDayReg" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDayRegDto">
+        <!--买卖登记数据-->
         SELECT
             CASE WHEN T1.IS_CANCEL = 'Y' THEN '03'
             ELSE '01' END validStatus,
@@ -818,10 +821,10 @@
             T6.TRADER_ID = T1.COUNTER_TRADER
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER T7 ON
             T7.TRADER_ID = T1.OU_TRADER_ID
-        WHERE PS IN ('T01','T02')  AND TRADE_STATUS ='01'
+        WHERE PS IN ('T01','T02')  AND ((TRADE_STATUS ='01' and (IS_CANCEL IS NULL OR IS_CANCEL = 'N')) OR (TRADE_STATUS ='03' AND IS_CANCEL = 'Y'))
 
         UNION ALL
-
+        <!--回售登记数据-->
         SELECT
              CASE WHEN T1.IS_CANCEL = 'Y' THEN '03'
             ELSE '01' END validStatus,
@@ -860,8 +863,9 @@
             T6.TRADER_ID = T1.COUNTER_TRADER
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER T7 ON
             T7.TRADER_ID = T1.OU_TRADER_ID
-         WHERE PS = 'T03'  AND TRADE_STATUS ='01' AND NOT EXISTS (SELECT 1 FROM TRDQUTO_MATCH_INFO tmi WHERE PRE_TRADE_ID = T1.TOTLE_TRADE_ID and （TRD_CONF_STATUS = #{CONFIRM_STATUS_0} or TRD_CONF_STATUS is null)
+         WHERE PS = 'T03'  AND ((TRADE_STATUS ='01' and (IS_CANCEL IS NULL OR IS_CANCEL = 'N')) OR (TRADE_STATUS ='03' AND IS_CANCEL = 'Y'))  AND NOT EXISTS (SELECT 1 FROM TRDQUTO_MATCH_INFO tmi WHERE PRE_TRADE_ID = T1.TOTLE_TRADE_ID and （TRD_CONF_STATUS = #{CONFIRM_STATUS_0} or TRD_CONF_STATUS is null)
         UNION ALL
+        <!--流程中数据-->
         SELECT
             '04' validStatus,
             T1.PS,

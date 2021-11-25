@@ -998,11 +998,11 @@ public class IbuQuoteBondService extends BaseService {
      * @param cfetsBondRegCheckRequsts
      * @return
      */
-    public AjaxResult checkDayRegRevokeCheck(List<CfetsBondRegCheckRequst> cfetsBondRegCheckRequsts){
+    public AjaxResult checkDayRegRevokeCheck(CfetsBondRegCheckRequst cfetsBondRegCheckRequst){
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
         //是否存在流程中数据
-        cfetsBondRegCheckRequsts.forEach(item ->{
+        cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts().forEach(item ->{
             WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
             wflValidInputParameter.setPageId("IbuQuoteBond004");
             wflValidInputParameter.setBusinessDataPk1(item.getQuoteId());
