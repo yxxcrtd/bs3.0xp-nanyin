@@ -82,21 +82,17 @@ public class IbuQuoteBond004Controller extends BaseController {
         model.addAttribute("calcTypeYield", BussinessDictCodeList.计算选择方式_到期收益率.getValue());
         model.addAttribute("calcTypeExecYield", BussinessDictCodeList.计算选择方式_行权收益率.getValue());
         CfetsBondDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsBondDealRegisterQuoteDto();
+        CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
         if (StringUtil.equals(this.getParam("workflowStatus"), BussinessDictCodeList.交易流程状态_流程中.getValue())
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(getParam(GlobalConstant.WORKFLOW_ID)))) {
             cfetsBondDealRegisterQuoteDto = cfetsBondDealQuotedPrice004Service.getBussinessEntityByWorkflowId(getParam(GlobalConstant.WORKFLOW_ID));
             model.addAttribute(GlobalConstant.WORKFLOW_ID,getParam(GlobalConstant.WORKFLOW_ID));
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealRegisterQuoteDto);
         }
         model.addAttribute("PRICE_MODEL_PRM01",DictCodeListExt2.价格模式_指定价格.getValue());
         model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
         model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
         model.addAttribute("PS_T03", DictCodeList.交易方向_行权_回售.getValue());
-        CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealRegisterQuoteDto);
-        cfetsBondDealQuoteCommonDto.setSettleMethod(cfetsBondDealRegisterQuoteDto.getDeliveryType());
-        cfetsBondDealQuoteCommonDto.setSettleType(cfetsBondDealRegisterQuoteDto.getClearType());
-        cfetsBondDealQuoteCommonDto.setMatureYield(cfetsBondDealRegisterQuoteDto.getYield());
-        cfetsBondDealQuoteCommonDto.setPrice(cfetsBondDealRegisterQuoteDto.getUnitCprice());
         model.addAttribute("quotaPageModel","new");
         model.addAttribute("ptlAllocatios", JsonUtils.object2Json(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
         //分配方式
@@ -131,10 +127,6 @@ public class IbuQuoteBond004Controller extends BaseController {
         CfetsBondDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsBondDealRegisterQuoteDto();
         //前台实体转成后台dto
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRegisterQuoteDto, dto);
-        cfetsBondDealRegisterQuoteDto.setDeliveryType(dto.getSettleMethod());
-        cfetsBondDealRegisterQuoteDto.setClearType(dto.getSettleType());
-        cfetsBondDealRegisterQuoteDto.setUnitCprice(dto.getPrice());
-        cfetsBondDealRegisterQuoteDto.setYield(dto.getMatureYield());
         if (baseGetBusinessId != null) {
             BussinessCodeParameter codeParameter = getBussinessCodeParameter(dto.getPs());
             cfetsBondDealRegisterQuoteDto.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));

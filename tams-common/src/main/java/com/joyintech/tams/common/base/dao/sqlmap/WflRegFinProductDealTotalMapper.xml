@@ -61,6 +61,7 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="QUOTE_TYPE" property="quoteType" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         TOTLE_TRADE_ID TOTLE_TRADE_ID, FINPROD_ID FINPROD_ID, FINPROD_TYPE2 FINPROD_TYPE2, 
@@ -77,7 +78,8 @@
         M_INT_AMT M_INT_AMT, M_TRADE_AMT M_TRADE_AMT, TG_BUSI_TYPE TG_BUSI_TYPE, TRADE_STATUS TRADE_STATUS, 
         P_TRADE_ID P_TRADE_ID, IS_CANCEL IS_CANCEL, IS_OUT_TRADE IS_OUT_TRADE, F_TRADE_ID F_TRADE_ID, 
         REMARK REMARK, DIP_TYPE DIP_TYPE, WORKFLOW_ID WORKFLOW_ID, CREATE_USER CREATE_USER, 
-        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        QUOTE_TYPE QUOTE_TYPE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -112,7 +114,8 @@
         TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, REPO_TYPE, 
         V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, TG_BUSI_TYPE, 
         TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, REMARK, DIP_TYPE, 
-        WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, QUOTE_TYPE
+        )
         select TOTLE_TRADE_ID, FINPROD_ID, FINPROD_TYPE2, 
             BRANCH, MARKET_ID, PS, TRADE_DATE, OU_PARTY_ID, OU_TRADER_ID, COUNTER_ID, COUNTER_TRADER, 
             CCY, SETTLE_SPEED, SETTLE_DATE, UNIT_CPRICE, YIELD, EXER_YIELD, UNIT_INT, UNIT_FPRICE, 
@@ -121,7 +124,8 @@
             TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, REPO_TYPE, 
             V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, TG_BUSI_TYPE, 
             TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, REMARK, DIP_TYPE, 
-            #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, QUOTE_TYPE
+            
              from WFL_REG_FIN_PRODUCT_DEAL_TOTAL
              where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
     </insert>
@@ -293,6 +297,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            </if>
         </set>
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
@@ -353,7 +360,8 @@
         REMARK = #{remark,jdbcType=VARCHAR},
         DIP_TYPE = #{dipType,jdbcType=VARCHAR},
         UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR}
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealTotal" >
@@ -376,7 +384,8 @@
             IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, 
             REMARK, DIP_TYPE, WORKFLOW_ID, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME)
+            UPDATE_USER, UPDATE_TIME, QUOTE_TYPE
+            )
         values (#{totleTradeId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, 
             #{branch,jdbcType=DECIMAL}, #{marketId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
             #{tradeDate,jdbcType=DATE}, #{ouPartyId,jdbcType=VARCHAR}, #{ouTraderId,jdbcType=VARCHAR}, 
@@ -396,7 +405,8 @@
             #{isCancel,jdbcType=VARCHAR}, #{isOutTrade,jdbcType=VARCHAR}, #{fTradeId,jdbcType=VARCHAR}, 
             #{remark,jdbcType=VARCHAR}, #{dipType,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{quoteType,jdbcType=VARCHAR}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealTotal" >
         insert into WFL_REG_FIN_PRODUCT_DEAL_TOTAL
@@ -578,6 +588,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="totleTradeId != null" >
@@ -757,6 +770,9 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="quoteType != null" >
+                #{quoteType,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealTotal" >
@@ -768,7 +784,8 @@
         TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, REPO_TYPE, 
         V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, TG_BUSI_TYPE, 
         TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, REMARK, DIP_TYPE, 
-        WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, QUOTE_TYPE
+        )
         select TOTLE_TRADE_ID, FINPROD_ID, FINPROD_TYPE2, 
             BRANCH, MARKET_ID, PS, TRADE_DATE, OU_PARTY_ID, OU_TRADER_ID, COUNTER_ID, COUNTER_TRADER, 
             CCY, SETTLE_SPEED, SETTLE_DATE, UNIT_CPRICE, YIELD, EXER_YIELD, UNIT_INT, UNIT_FPRICE, 
@@ -777,7 +794,8 @@
             TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, REPO_TYPE, 
             V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, TG_BUSI_TYPE, 
             TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, REMARK, DIP_TYPE, 
-            #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, QUOTE_TYPE
+            
              from WFL_REG_FIN_PRODUCT_DEAL_TOTAL
              where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </insert>
@@ -949,6 +967,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            </if>
         </set>
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
@@ -1008,7 +1029,8 @@
             DIP_TYPE = #{dipType,jdbcType=VARCHAR},
             WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR}
         where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
     </update>
 </mapper>

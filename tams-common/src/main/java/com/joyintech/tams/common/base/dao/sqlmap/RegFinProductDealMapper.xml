@@ -5,7 +5,6 @@
         <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
         <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
         <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
-        <result column="QUOTE_TYPE" property="quoteType" jdbcType="VARCHAR" />
         <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
         <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
         <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
@@ -66,18 +65,17 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
     </resultMap>
     <sql id="Base_Column_List" >
-        TRADE_ID TRADE_ID, BUSI_TYPE BUSI_TYPE, ENTRUST_ID ENTRUST_ID, QUOTE_TYPE QUOTE_TYPE, 
-        PORTFOLIO_ID PORTFOLIO_ID, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, FINPROD_TYPE2 FINPROD_TYPE2, 
-        BRANCH BRANCH, MARKET_ID MARKET_ID, PS PS, TRADE_DATE TRADE_DATE, OU_PARTY_ID OU_PARTY_ID, 
-        OU_TRADER_ID OU_TRADER_ID, COUNTER_ID COUNTER_ID, COUNTER_TRADER COUNTER_TRADER, 
-        CCY CCY, SETTLE_SPEED SETTLE_SPEED, SETTLE_DATE SETTLE_DATE, UNIT_CPRICE UNIT_CPRICE, 
-        YIELD YIELD, EXER_YIELD EXER_YIELD, UNIT_INT UNIT_INT, UNIT_FPRICE UNIT_FPRICE, PAR_VALUE PAR_VALUE, 
-        CPRICE_AMT CPRICE_AMT, INT_AMT INT_AMT, FPRICE_AMT FPRICE_AMT, SHARE_AMT SHARE_AMT, 
-        DELIVERY_TYPE DELIVERY_TYPE, M_DELIVERY_TYPE M_DELIVERY_TYPE, TRADE_AMT TRADE_AMT, 
-        CLEAR_TYPE CLEAR_TYPE, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID, ACCT_ID ACCT_ID, INV_AIM INV_AIM, 
-        TRADE_MARKET TRADE_MARKET, TRADE_MARKET_MODE TRADE_MARKET_MODE, RATE RATE, REPO_TERM REPO_TERM, 
-        TERM_TYPE TERM_TYPE, FACE_VALUE FACE_VALUE, DIS_FACE_VALUE DIS_FACE_VALUE, REPO_TYPE REPO_TYPE, 
-        V_SETTLE_DATE V_SETTLE_DATE, M_SETTLE_DATE M_SETTLE_DATE, ACT_REPO_TERM ACT_REPO_TERM, 
+        TRADE_ID TRADE_ID, BUSI_TYPE BUSI_TYPE, ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID, 
+        FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, FINPROD_TYPE2 FINPROD_TYPE2, BRANCH BRANCH, 
+        MARKET_ID MARKET_ID, PS PS, TRADE_DATE TRADE_DATE, OU_PARTY_ID OU_PARTY_ID, OU_TRADER_ID OU_TRADER_ID, 
+        COUNTER_ID COUNTER_ID, COUNTER_TRADER COUNTER_TRADER, CCY CCY, SETTLE_SPEED SETTLE_SPEED, 
+        SETTLE_DATE SETTLE_DATE, UNIT_CPRICE UNIT_CPRICE, YIELD YIELD, EXER_YIELD EXER_YIELD, 
+        UNIT_INT UNIT_INT, UNIT_FPRICE UNIT_FPRICE, PAR_VALUE PAR_VALUE, CPRICE_AMT CPRICE_AMT, 
+        INT_AMT INT_AMT, FPRICE_AMT FPRICE_AMT, SHARE_AMT SHARE_AMT, DELIVERY_TYPE DELIVERY_TYPE, 
+        M_DELIVERY_TYPE M_DELIVERY_TYPE, TRADE_AMT TRADE_AMT, CLEAR_TYPE CLEAR_TYPE, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID, 
+        ACCT_ID ACCT_ID, INV_AIM INV_AIM, TRADE_MARKET TRADE_MARKET, TRADE_MARKET_MODE TRADE_MARKET_MODE, 
+        RATE RATE, REPO_TERM REPO_TERM, TERM_TYPE TERM_TYPE, FACE_VALUE FACE_VALUE, DIS_FACE_VALUE DIS_FACE_VALUE, 
+        REPO_TYPE REPO_TYPE, V_SETTLE_DATE V_SETTLE_DATE, M_SETTLE_DATE M_SETTLE_DATE, ACT_REPO_TERM ACT_REPO_TERM, 
         M_INT_AMT M_INT_AMT, M_TRADE_AMT M_TRADE_AMT, TG_BUSI_TYPE TG_BUSI_TYPE, TRADE_STATUS TRADE_STATUS, 
         P_TRADE_ID P_TRADE_ID, IS_CANCEL IS_CANCEL, IS_OUT_TRADE IS_OUT_TRADE, F_TRADE_ID F_TRADE_ID, 
         TOTLE_TRADE_ID TOTLE_TRADE_ID, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
@@ -105,47 +103,47 @@
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RegFinProductDeal" >
         insert into REG_FIN_PRODUCT_DEAL (TRADE_ID, BUSI_TYPE, ENTRUST_ID, 
-            QUOTE_TYPE, PORTFOLIO_ID, FINPROD_ID, 
-            FINPROD_TYPE, FINPROD_TYPE2, BRANCH, 
-            MARKET_ID, PS, TRADE_DATE, 
-            OU_PARTY_ID, OU_TRADER_ID, COUNTER_ID, 
-            COUNTER_TRADER, CCY, SETTLE_SPEED, 
-            SETTLE_DATE, UNIT_CPRICE, YIELD, 
-            EXER_YIELD, UNIT_INT, UNIT_FPRICE, 
-            PAR_VALUE, CPRICE_AMT, INT_AMT, 
-            FPRICE_AMT, SHARE_AMT, DELIVERY_TYPE, 
-            M_DELIVERY_TYPE, TRADE_AMT, CLEAR_TYPE, 
-            SEC_MANAGE_ACCT_ID, ACCT_ID, INV_AIM, 
-            TRADE_MARKET, TRADE_MARKET_MODE, RATE, 
-            REPO_TERM, TERM_TYPE, FACE_VALUE, 
-            DIS_FACE_VALUE, REPO_TYPE, V_SETTLE_DATE, 
-            M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, 
-            M_TRADE_AMT, TG_BUSI_TYPE, TRADE_STATUS, 
-            P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, 
-            F_TRADE_ID, TOTLE_TRADE_ID, REMARK, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME)
+            PORTFOLIO_ID, FINPROD_ID, FINPROD_TYPE, 
+            FINPROD_TYPE2, BRANCH, MARKET_ID, 
+            PS, TRADE_DATE, OU_PARTY_ID, 
+            OU_TRADER_ID, COUNTER_ID, COUNTER_TRADER, 
+            CCY, SETTLE_SPEED, SETTLE_DATE, 
+            UNIT_CPRICE, YIELD, EXER_YIELD, 
+            UNIT_INT, UNIT_FPRICE, PAR_VALUE, 
+            CPRICE_AMT, INT_AMT, FPRICE_AMT, 
+            SHARE_AMT, DELIVERY_TYPE, M_DELIVERY_TYPE, 
+            TRADE_AMT, CLEAR_TYPE, SEC_MANAGE_ACCT_ID, 
+            ACCT_ID, INV_AIM, TRADE_MARKET, 
+            TRADE_MARKET_MODE, RATE, REPO_TERM, 
+            TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, 
+            REPO_TYPE, V_SETTLE_DATE, M_SETTLE_DATE, 
+            ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, 
+            TG_BUSI_TYPE, TRADE_STATUS, P_TRADE_ID, 
+            IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, 
+            TOTLE_TRADE_ID, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
         values (#{tradeId,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, 
-            #{quoteType,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
-            #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
-            #{marketId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, #{tradeDate,jdbcType=DATE}, 
-            #{ouPartyId,jdbcType=VARCHAR}, #{ouTraderId,jdbcType=VARCHAR}, #{counterId,jdbcType=VARCHAR}, 
-            #{counterTrader,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{settleSpeed,jdbcType=DECIMAL}, 
-            #{settleDate,jdbcType=DATE}, #{unitCprice,jdbcType=DECIMAL}, #{yield,jdbcType=DECIMAL}, 
-            #{exerYield,jdbcType=DECIMAL}, #{unitInt,jdbcType=DECIMAL}, #{unitFprice,jdbcType=DECIMAL}, 
-            #{parValue,jdbcType=DECIMAL}, #{cpriceAmt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, 
-            #{fpriceAmt,jdbcType=DECIMAL}, #{shareAmt,jdbcType=DECIMAL}, #{deliveryType,jdbcType=VARCHAR}, 
-            #{mDeliveryType,jdbcType=VARCHAR}, #{tradeAmt,jdbcType=DECIMAL}, #{clearType,jdbcType=VARCHAR}, 
-            #{secManageAcctId,jdbcType=VARCHAR}, #{acctId,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, 
-            #{tradeMarket,jdbcType=VARCHAR}, #{tradeMarketMode,jdbcType=VARCHAR}, #{rate,jdbcType=DECIMAL}, 
-            #{repoTerm,jdbcType=DECIMAL}, #{termType,jdbcType=VARCHAR}, #{faceValue,jdbcType=DECIMAL}, 
-            #{disFaceValue,jdbcType=DECIMAL}, #{repoType,jdbcType=VARCHAR}, #{vSettleDate,jdbcType=DATE}, 
-            #{mSettleDate,jdbcType=DATE}, #{actRepoTerm,jdbcType=DECIMAL}, #{mIntAmt,jdbcType=DECIMAL}, 
-            #{mTradeAmt,jdbcType=DECIMAL}, #{tgBusiType,jdbcType=VARCHAR}, #{tradeStatus,jdbcType=VARCHAR}, 
-            #{pTradeId,jdbcType=VARCHAR}, #{isCancel,jdbcType=VARCHAR}, #{isOutTrade,jdbcType=VARCHAR}, 
-            #{fTradeId,jdbcType=VARCHAR}, #{totleTradeId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{portfolioId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, 
+            #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{marketId,jdbcType=VARCHAR}, 
+            #{ps,jdbcType=VARCHAR}, #{tradeDate,jdbcType=DATE}, #{ouPartyId,jdbcType=VARCHAR}, 
+            #{ouTraderId,jdbcType=VARCHAR}, #{counterId,jdbcType=VARCHAR}, #{counterTrader,jdbcType=VARCHAR}, 
+            #{ccy,jdbcType=VARCHAR}, #{settleSpeed,jdbcType=DECIMAL}, #{settleDate,jdbcType=DATE}, 
+            #{unitCprice,jdbcType=DECIMAL}, #{yield,jdbcType=DECIMAL}, #{exerYield,jdbcType=DECIMAL}, 
+            #{unitInt,jdbcType=DECIMAL}, #{unitFprice,jdbcType=DECIMAL}, #{parValue,jdbcType=DECIMAL}, 
+            #{cpriceAmt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{fpriceAmt,jdbcType=DECIMAL}, 
+            #{shareAmt,jdbcType=DECIMAL}, #{deliveryType,jdbcType=VARCHAR}, #{mDeliveryType,jdbcType=VARCHAR}, 
+            #{tradeAmt,jdbcType=DECIMAL}, #{clearType,jdbcType=VARCHAR}, #{secManageAcctId,jdbcType=VARCHAR}, 
+            #{acctId,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, 
+            #{tradeMarketMode,jdbcType=VARCHAR}, #{rate,jdbcType=DECIMAL}, #{repoTerm,jdbcType=DECIMAL}, 
+            #{termType,jdbcType=VARCHAR}, #{faceValue,jdbcType=DECIMAL}, #{disFaceValue,jdbcType=DECIMAL}, 
+            #{repoType,jdbcType=VARCHAR}, #{vSettleDate,jdbcType=DATE}, #{mSettleDate,jdbcType=DATE}, 
+            #{actRepoTerm,jdbcType=DECIMAL}, #{mIntAmt,jdbcType=DECIMAL}, #{mTradeAmt,jdbcType=DECIMAL}, 
+            #{tgBusiType,jdbcType=VARCHAR}, #{tradeStatus,jdbcType=VARCHAR}, #{pTradeId,jdbcType=VARCHAR}, 
+            #{isCancel,jdbcType=VARCHAR}, #{isOutTrade,jdbcType=VARCHAR}, #{fTradeId,jdbcType=VARCHAR}, 
+            #{totleTradeId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RegFinProductDeal" >
         insert into REG_FIN_PRODUCT_DEAL
@@ -158,9 +156,6 @@
             </if>
             <if test="entrustId != null" >
                 ENTRUST_ID,
-            </if>
-            <if test="quoteType != null" >
-                QUOTE_TYPE,
             </if>
             <if test="portfolioId != null" >
                 PORTFOLIO_ID,
@@ -347,9 +342,6 @@
             <if test="entrustId != null" >
                 #{entrustId,jdbcType=VARCHAR},
             </if>
-            <if test="quoteType != null" >
-                #{quoteType,jdbcType=VARCHAR},
-            </if>
             <if test="portfolioId != null" >
                 #{portfolioId,jdbcType=VARCHAR},
             </if>
@@ -527,26 +519,24 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RegFinProductDeal" >
-        insert into REG_FIN_PRODUCT_DEAL(TRADE_ID, BUSI_TYPE, ENTRUST_ID, QUOTE_TYPE, PORTFOLIO_ID, 
-        FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, MARKET_ID, PS, TRADE_DATE, OU_PARTY_ID, 
-        OU_TRADER_ID, COUNTER_ID, COUNTER_TRADER, CCY, SETTLE_SPEED, SETTLE_DATE, UNIT_CPRICE, 
-        YIELD, EXER_YIELD, UNIT_INT, UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, INT_AMT, FPRICE_AMT, 
-        SHARE_AMT, DELIVERY_TYPE, M_DELIVERY_TYPE, TRADE_AMT, CLEAR_TYPE, SEC_MANAGE_ACCT_ID, 
-        ACCT_ID, INV_AIM, TRADE_MARKET, TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, 
-        DIS_FACE_VALUE, REPO_TYPE, V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, 
-        M_TRADE_AMT, TG_BUSI_TYPE, TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, 
-        TOTLE_TRADE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
-        )
-        select TRADE_ID, BUSI_TYPE, ENTRUST_ID, QUOTE_TYPE, PORTFOLIO_ID, 
-            FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, MARKET_ID, PS, TRADE_DATE, OU_PARTY_ID, 
-            OU_TRADER_ID, COUNTER_ID, COUNTER_TRADER, CCY, SETTLE_SPEED, SETTLE_DATE, UNIT_CPRICE, 
-            YIELD, EXER_YIELD, UNIT_INT, UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, INT_AMT, FPRICE_AMT, 
-            SHARE_AMT, DELIVERY_TYPE, M_DELIVERY_TYPE, TRADE_AMT, CLEAR_TYPE, SEC_MANAGE_ACCT_ID, 
-            ACCT_ID, INV_AIM, TRADE_MARKET, TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, 
-            DIS_FACE_VALUE, REPO_TYPE, V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, 
-            M_TRADE_AMT, TG_BUSI_TYPE, TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, 
-            TOTLE_TRADE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
-            
+        insert into REG_FIN_PRODUCT_DEAL(TRADE_ID, BUSI_TYPE, ENTRUST_ID, PORTFOLIO_ID, FINPROD_ID, 
+        FINPROD_TYPE, FINPROD_TYPE2, BRANCH, MARKET_ID, PS, TRADE_DATE, OU_PARTY_ID, OU_TRADER_ID, 
+        COUNTER_ID, COUNTER_TRADER, CCY, SETTLE_SPEED, SETTLE_DATE, UNIT_CPRICE, YIELD, EXER_YIELD, 
+        UNIT_INT, UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, INT_AMT, FPRICE_AMT, SHARE_AMT, DELIVERY_TYPE, 
+        M_DELIVERY_TYPE, TRADE_AMT, CLEAR_TYPE, SEC_MANAGE_ACCT_ID, ACCT_ID, INV_AIM, TRADE_MARKET, 
+        TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, REPO_TYPE, 
+        V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, TG_BUSI_TYPE, 
+        TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, TOTLE_TRADE_ID, REMARK, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, BUSI_TYPE, ENTRUST_ID, PORTFOLIO_ID, FINPROD_ID, 
+            FINPROD_TYPE, FINPROD_TYPE2, BRANCH, MARKET_ID, PS, TRADE_DATE, OU_PARTY_ID, OU_TRADER_ID, 
+            COUNTER_ID, COUNTER_TRADER, CCY, SETTLE_SPEED, SETTLE_DATE, UNIT_CPRICE, YIELD, EXER_YIELD, 
+            UNIT_INT, UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, INT_AMT, FPRICE_AMT, SHARE_AMT, DELIVERY_TYPE, 
+            M_DELIVERY_TYPE, TRADE_AMT, CLEAR_TYPE, SEC_MANAGE_ACCT_ID, ACCT_ID, INV_AIM, TRADE_MARKET, 
+            TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, REPO_TYPE, 
+            V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, TG_BUSI_TYPE, 
+            TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, TOTLE_TRADE_ID, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
              from REG_FIN_PRODUCT_DEAL
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </insert>
@@ -558,9 +548,6 @@
             </if>
             <if test="entrustId != null" >
                 ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
-            </if>
-            <if test="quoteType != null" >
-                QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
             </if>
             <if test="portfolioId != null" >
                 PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
@@ -734,7 +721,6 @@
         update REG_FIN_PRODUCT_DEAL
         set BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
             ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
-            QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
             PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
             FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
             FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},

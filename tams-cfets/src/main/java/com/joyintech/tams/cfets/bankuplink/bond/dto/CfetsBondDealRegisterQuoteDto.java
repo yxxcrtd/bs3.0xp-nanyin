@@ -83,6 +83,24 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
     private String calculateField;
 
     private String finprodAbbr;
+
+    /**
+     * 本方
+     */
+    private String mySide;
+
+    /**
+     * 本方交易员
+     */
+    private String mySideTrader;
+
+    private String  settleMethod;
+
+    private String  settleType;
+
+    private BigDecimal price;
+
+    private BigDecimal matureYield;
     /**
      * 组合分配信息
      */
@@ -245,5 +263,53 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setFinprodAbbr(String finprodAbbr) {
         this.finprodAbbr = finprodAbbr;
+    }
+
+    public String getMySide() {
+        return mySide;
+    }
+
+    public void setMySide(String mySide) {
+        this.mySide = mySide;
+    }
+
+    public String getMySideTrader() {
+        return mySideTrader;
+    }
+
+    public void setMySideTrader(String mySideTrader) {
+        this.mySideTrader = mySideTrader;
+    }
+
+    public String getSettleMethod() {
+        return settleMethod;
+    }
+
+    public void setSettleMethod(String settleMethod) {
+        this.settleMethod = settleMethod;
+    }
+
+    public String getSettleType() {
+        return settleType;
+    }
+
+    public void setSettleType(String settleType) {
+        this.settleType = settleType;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public BigDecimal getMatureYield() {
+        return matureYield;
+    }
+
+    public void setMatureYield(BigDecimal matureYield) {
+        this.matureYield = matureYield;
     }
 }

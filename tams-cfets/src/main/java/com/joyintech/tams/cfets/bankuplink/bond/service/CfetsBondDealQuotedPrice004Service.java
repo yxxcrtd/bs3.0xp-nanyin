@@ -323,6 +323,8 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     public void doUpdate(CfetsBondDealRegisterQuoteDto entity){
         Map<String,Object> map = new HashMap<>();
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
+            // 先删除流程中数据
+            this.deleteBussFlowData(entity.getWorkflowId());
             CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity);
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
@@ -408,6 +410,12 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      * @return
      */
     public CfetsBondDealDbDto prepareEntity(CfetsBondDealRegisterQuoteDto entity) {
+        entity.setOuPartyId(entity.getMySide());
+        entity.setOuTraderId(entity.getMySideTrader());
+        entity.setDeliveryType(entity.getSettleMethod());
+        entity.setClearType(entity.getSettleType());
+        entity.setUnitCprice(entity.getPrice());
+        entity.setYield(entity.getMatureYield());
         CfetsBondDealDbDto result = new CfetsBondDealDbDto();
         //交易方向
         String ps = entity.getPs();

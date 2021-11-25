@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class RegFinProductDeal extends BaseEntity {
     /**
-     * 汇总登记编号
+     * 登记编号
      */
     private String tradeId;
 
@@ -25,11 +25,6 @@ public class RegFinProductDeal extends BaseEntity {
     private String entrustId;
 
     /**
-     * 报价方式
-     */
-    private String quoteType;
-
-    /**
      * 投资组合代码
      */
     private String portfolioId;
@@ -40,7 +35,7 @@ public class RegFinProductDeal extends BaseEntity {
     private String finprodId;
 
     /**
-     * 金融产品类型（估值），债券、理财产品、基金、理财产品模板、理财产品分层
+     * 金融产品类型（估值），债券、理财产品、基金、理财产品模板、理财产品分层2
      */
     private String finprodType;
 
@@ -70,17 +65,17 @@ public class RegFinProductDeal extends BaseEntity {
     private Date tradeDate;
 
     /**
-     * 本方银行间机构，21位编号
+     * 本方机构
      */
     private String ouPartyId;
 
     /**
-     * 本方银行间交易员
+     * 本方交易员
      */
     private String ouTraderId;
 
     /**
-     * 对手方机构，交易对手代码
+     * 对手方机构
      */
     private String counterId;
 
@@ -159,18 +154,18 @@ public class RegFinProductDeal extends BaseEntity {
     private BigDecimal fpriceAmt;
 
     /**
-     * 交易份额，券面总额/100
+     * 交易份额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal shareAmt;
 
     /**
-     * 结算方式，券款对付、见券付款、见款付券
+     * 结算方式
      */
     private String deliveryType;
 
     /**
-     * 到期结算方式，券款对付、见券付款、见款付券
+     * 到期结算方式
      */
     private String mDeliveryType;
 
@@ -201,17 +196,17 @@ public class RegFinProductDeal extends BaseEntity {
     private String invAim;
 
     /**
-     * 交易场所，银行间、上交所、深交所、柜面等
+     * 交易场所
      */
     private String tradeMarket;
 
     /**
-     * 交易市场，一级市场、二级市场
+     * 交易市场
      */
     private String tradeMarketMode;
 
     /**
-     * 利率，回购拆借的利率
+     * 利率，回购利率
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal rate;
@@ -239,7 +234,7 @@ public class RegFinProductDeal extends BaseEntity {
     private BigDecimal disFaceValue;
 
     /**
-     * 回购方式，双边回购
+     * 回购方式
      */
     private String repoType;
 
@@ -276,7 +271,7 @@ public class RegFinProductDeal extends BaseEntity {
     private String tgBusiType;
 
     /**
-     * 交易状态，初始、修改、撤销
+     * 交易状态
      */
     private String tradeStatus;
 
@@ -286,7 +281,7 @@ public class RegFinProductDeal extends BaseEntity {
     private String pTradeId;
 
     /**
-     * 是否已撤销，默认“否”，在交易发生撤销时更新成“是”
+     * 是否已撤销
      */
     private String isCancel;
 
@@ -311,16 +306,16 @@ public class RegFinProductDeal extends BaseEntity {
     private String remark;
 
     /**
-     * 取得 汇总登记编号
-     * @return 汇总登记编号
+     * 取得 登记编号
+     * @return 登记编号
      */
     public String getTradeId() {
         return tradeId;
     }
 
     /**
-     * 设置 汇总登记编号
-     * @param tradeId 汇总登记编号
+     * 设置 登记编号
+     * @param tradeId 登记编号
      */
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId == null ? null : tradeId.trim();
@@ -359,22 +354,6 @@ public class RegFinProductDeal extends BaseEntity {
     }
 
     /**
-     * 取得 报价方式
-     * @return 报价方式
-     */
-    public String getQuoteType() {
-        return quoteType;
-    }
-
-    /**
-     * 设置 报价方式
-     * @param quoteType 报价方式
-     */
-    public void setQuoteType(String quoteType) {
-        this.quoteType = quoteType == null ? null : quoteType.trim();
-    }
-
-    /**
      * 取得 投资组合代码
      * @return 投资组合代码
      */
@@ -407,16 +386,16 @@ public class RegFinProductDeal extends BaseEntity {
     }
 
     /**
-     * 取得 金融产品类型（估值），债券、理财产品、基金、理财产品模板、理财产品分层
-     * @return 金融产品类型（估值），债券、理财产品、基金、理财产品模板、理财产品分层
+     * 取得 金融产品类型（估值），债券、理财产品、基金、理财产品模板、理财产品分层2
+     * @return 金融产品类型（估值），债券、理财产品、基金、理财产品模板、理财产品分层2
      */
     public String getFinprodType() {
         return finprodType;
     }
 
     /**
-     * 设置 金融产品类型（估值），债券、理财产品、基金、理财产品模板、理财产品分层
-     * @param finprodType 金融产品类型（估值），债券、理财产品、基金、理财产品模板、理财产品分层
+     * 设置 金融产品类型（估值），债券、理财产品、基金、理财产品模板、理财产品分层2
+     * @param finprodType 金融产品类型（估值），债券、理财产品、基金、理财产品模板、理财产品分层2
      */
     public void setFinprodType(String finprodType) {
         this.finprodType = finprodType == null ? null : finprodType.trim();
@@ -504,48 +483,48 @@ public class RegFinProductDeal extends BaseEntity {
     }
 
     /**
-     * 取得 本方银行间机构，21位编号
-     * @return 本方银行间机构，21位编号
+     * 取得 本方机构
+     * @return 本方机构
      */
     public String getOuPartyId() {
         return ouPartyId;
     }
 
     /**
-     * 设置 本方银行间机构，21位编号
-     * @param ouPartyId 本方银行间机构，21位编号
+     * 设置 本方机构
+     * @param ouPartyId 本方机构
      */
     public void setOuPartyId(String ouPartyId) {
         this.ouPartyId = ouPartyId == null ? null : ouPartyId.trim();
     }
 
     /**
-     * 取得 本方银行间交易员
-     * @return 本方银行间交易员
+     * 取得 本方交易员
+     * @return 本方交易员
      */
     public String getOuTraderId() {
         return ouTraderId;
     }
 
     /**
-     * 设置 本方银行间交易员
-     * @param ouTraderId 本方银行间交易员
+     * 设置 本方交易员
+     * @param ouTraderId 本方交易员
      */
     public void setOuTraderId(String ouTraderId) {
         this.ouTraderId = ouTraderId == null ? null : ouTraderId.trim();
     }
 
     /**
-     * 取得 对手方机构，交易对手代码
-     * @return 对手方机构，交易对手代码
+     * 取得 对手方机构
+     * @return 对手方机构
      */
     public String getCounterId() {
         return counterId;
     }
 
     /**
-     * 设置 对手方机构，交易对手代码
-     * @param counterId 对手方机构，交易对手代码
+     * 设置 对手方机构
+     * @param counterId 对手方机构
      */
     public void setCounterId(String counterId) {
         this.counterId = counterId == null ? null : counterId.trim();
@@ -761,48 +740,48 @@ public class RegFinProductDeal extends BaseEntity {
     }
 
     /**
-     * 取得 交易份额，券面总额/100
-     * @return 交易份额，券面总额/100
+     * 取得 交易份额
+     * @return 交易份额
      */
     public BigDecimal getShareAmt() {
         return shareAmt;
     }
 
     /**
-     * 设置 交易份额，券面总额/100
-     * @param shareAmt 交易份额，券面总额/100
+     * 设置 交易份额
+     * @param shareAmt 交易份额
      */
     public void setShareAmt(BigDecimal shareAmt) {
         this.shareAmt = shareAmt;
     }
 
     /**
-     * 取得 结算方式，券款对付、见券付款、见款付券
-     * @return 结算方式，券款对付、见券付款、见款付券
+     * 取得 结算方式
+     * @return 结算方式
      */
     public String getDeliveryType() {
         return deliveryType;
     }
 
     /**
-     * 设置 结算方式，券款对付、见券付款、见款付券
-     * @param deliveryType 结算方式，券款对付、见券付款、见款付券
+     * 设置 结算方式
+     * @param deliveryType 结算方式
      */
     public void setDeliveryType(String deliveryType) {
         this.deliveryType = deliveryType == null ? null : deliveryType.trim();
     }
 
     /**
-     * 取得 到期结算方式，券款对付、见券付款、见款付券
-     * @return 到期结算方式，券款对付、见券付款、见款付券
+     * 取得 到期结算方式
+     * @return 到期结算方式
      */
     public String getmDeliveryType() {
         return mDeliveryType;
     }
 
     /**
-     * 设置 到期结算方式，券款对付、见券付款、见款付券
-     * @param mDeliveryType 到期结算方式，券款对付、见券付款、见款付券
+     * 设置 到期结算方式
+     * @param mDeliveryType 到期结算方式
      */
     public void setmDeliveryType(String mDeliveryType) {
         this.mDeliveryType = mDeliveryType == null ? null : mDeliveryType.trim();
@@ -889,48 +868,48 @@ public class RegFinProductDeal extends BaseEntity {
     }
 
     /**
-     * 取得 交易场所，银行间、上交所、深交所、柜面等
-     * @return 交易场所，银行间、上交所、深交所、柜面等
+     * 取得 交易场所
+     * @return 交易场所
      */
     public String getTradeMarket() {
         return tradeMarket;
     }
 
     /**
-     * 设置 交易场所，银行间、上交所、深交所、柜面等
-     * @param tradeMarket 交易场所，银行间、上交所、深交所、柜面等
+     * 设置 交易场所
+     * @param tradeMarket 交易场所
      */
     public void setTradeMarket(String tradeMarket) {
         this.tradeMarket = tradeMarket == null ? null : tradeMarket.trim();
     }
 
     /**
-     * 取得 交易市场，一级市场、二级市场
-     * @return 交易市场，一级市场、二级市场
+     * 取得 交易市场
+     * @return 交易市场
      */
     public String getTradeMarketMode() {
         return tradeMarketMode;
     }
 
     /**
-     * 设置 交易市场，一级市场、二级市场
-     * @param tradeMarketMode 交易市场，一级市场、二级市场
+     * 设置 交易市场
+     * @param tradeMarketMode 交易市场
      */
     public void setTradeMarketMode(String tradeMarketMode) {
         this.tradeMarketMode = tradeMarketMode == null ? null : tradeMarketMode.trim();
     }
 
     /**
-     * 取得 利率，回购拆借的利率
-     * @return 利率，回购拆借的利率
+     * 取得 利率，回购利率
+     * @return 利率，回购利率
      */
     public BigDecimal getRate() {
         return rate;
     }
 
     /**
-     * 设置 利率，回购拆借的利率
-     * @param rate 利率，回购拆借的利率
+     * 设置 利率，回购利率
+     * @param rate 利率，回购利率
      */
     public void setRate(BigDecimal rate) {
         this.rate = rate;
@@ -1001,16 +980,16 @@ public class RegFinProductDeal extends BaseEntity {
     }
 
     /**
-     * 取得 回购方式，双边回购
-     * @return 回购方式，双边回购
+     * 取得 回购方式
+     * @return 回购方式
      */
     public String getRepoType() {
         return repoType;
     }
 
     /**
-     * 设置 回购方式，双边回购
-     * @param repoType 回购方式，双边回购
+     * 设置 回购方式
+     * @param repoType 回购方式
      */
     public void setRepoType(String repoType) {
         this.repoType = repoType == null ? null : repoType.trim();
@@ -1115,16 +1094,16 @@ public class RegFinProductDeal extends BaseEntity {
     }
 
     /**
-     * 取得 交易状态，初始、修改、撤销
-     * @return 交易状态，初始、修改、撤销
+     * 取得 交易状态
+     * @return 交易状态
      */
     public String getTradeStatus() {
         return tradeStatus;
     }
 
     /**
-     * 设置 交易状态，初始、修改、撤销
-     * @param tradeStatus 交易状态，初始、修改、撤销
+     * 设置 交易状态
+     * @param tradeStatus 交易状态
      */
     public void setTradeStatus(String tradeStatus) {
         this.tradeStatus = tradeStatus == null ? null : tradeStatus.trim();
@@ -1147,16 +1126,16 @@ public class RegFinProductDeal extends BaseEntity {
     }
 
     /**
-     * 取得 是否已撤销，默认“否”，在交易发生撤销时更新成“是”
-     * @return 是否已撤销，默认“否”，在交易发生撤销时更新成“是”
+     * 取得 是否已撤销
+     * @return 是否已撤销
      */
     public String getIsCancel() {
         return isCancel;
     }
 
     /**
-     * 设置 是否已撤销，默认“否”，在交易发生撤销时更新成“是”
-     * @param isCancel 是否已撤销，默认“否”，在交易发生撤销时更新成“是”
+     * 设置 是否已撤销
+     * @param isCancel 是否已撤销
      */
     public void setIsCancel(String isCancel) {
         this.isCancel = isCancel == null ? null : isCancel.trim();

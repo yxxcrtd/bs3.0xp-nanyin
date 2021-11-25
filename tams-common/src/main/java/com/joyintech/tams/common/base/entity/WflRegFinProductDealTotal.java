@@ -296,6 +296,11 @@ public class WflRegFinProductDealTotal extends BaseEntity {
     private String workflowId;
 
     /**
+     * 报价方式
+     */
+    private String quoteType;
+
+    /**
      * 取得 汇总登记编号
      * @return 汇总登记编号
      */
@@ -1161,5 +1166,21 @@ public class WflRegFinProductDealTotal extends BaseEntity {
      */
     public void setWorkflowId(String workflowId) {
         this.workflowId = workflowId == null ? null : workflowId.trim();
+    }
+
+    /**
+     * 取得 报价方式
+     * @return 报价方式
+     */
+    public String getQuoteType() {
+        return quoteType;
+    }
+
+    /**
+     * 设置 报价方式
+     * @param quoteType 报价方式
+     */
+    public void setQuoteType(String quoteType) {
+        this.quoteType = quoteType == null ? null : quoteType.trim();
     }
 }
