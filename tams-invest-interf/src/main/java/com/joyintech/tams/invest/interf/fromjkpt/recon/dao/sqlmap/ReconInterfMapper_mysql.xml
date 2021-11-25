@@ -142,7 +142,7 @@
             STR_TO_DATE(T1.JYRQ, '%Y%m%d') TRADE_DATE,
             T4.CUSTOMER_ID CUSTOMER_ID,
             CJBH TRADE_ID,
-            WTBH ENTRUNST_ID,
+            WTBH INSTRUCTION_ID,
         CASE
             WHEN T1.BZLB in ('RMB', '人民币') THEN 'CNY'
             WHEN T1.BZLB in ('HKD', '港币') THEN 'HKD'
@@ -171,7 +171,7 @@
             NULL TRADE_FEE,
             NULL OTHER_FEEAMT,
             YJ COMMISSION_AMT,
-            WTBH ENTRUST_ID,
+            WTBH INSTRUCTION_ID,
             CASE WHEN CJJE >0 THEN 'T02'
             ELSE 'T01' END PS,
             T2.ACCT_NO ACCOUT,
@@ -225,7 +225,7 @@
             STR_TO_DATE(T1.JYRQ, '%Y%m%d') TRADE_DATE,
             T4.CUSTOMER_ID CUSTOMER_ID,
             LSH TRADE_ID,
-            WTBH ENTRUNST_ID,
+            WTBH INSTRUCTION_ID,
         CASE
                 WHEN T1.BZ in ('0', '人民币') THEN 'CNY'
                 WHEN T1.BZ in ('1', '港币') THEN 'HKD'
@@ -259,7 +259,7 @@
             JYGF TRADE_FEE,
             QTF OTHER_FEEAMT,
             JYJ COMMISSION_AMT,
-            WTBH ENTRUST_ID,
+            WTBH INSTRUCTION_ID,
             CASE WHEN QJCJJE >0 THEN 'T02'
             ELSE 'T01' END PS,
             T2.ACCT_NO ACCOUT,
