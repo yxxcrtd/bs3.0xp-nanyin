@@ -81,15 +81,6 @@ public class SvrDayCollectInterf extends BaseService{
 
             logger.debug("销售月报每日明细汇总信息插入数据：插入开始----------");
 			for(ChbDayCollect sub : list){
-				//创建人
-				sub.setCreateUser(CommonUtil.getUserName());
-				//更新人
-				sub.setUpdateUser(CommonUtil.getUserName());
-				//创建部门
-				sub.setCreateDept(CommonUtil.getDeptCode());
-				//创建机构
-				sub.setOrgCode(CommonUtil.getOrgCode());
-
 				if(sub.getHolderType() == null) {
 					sub.setHolderType("01");
 				}

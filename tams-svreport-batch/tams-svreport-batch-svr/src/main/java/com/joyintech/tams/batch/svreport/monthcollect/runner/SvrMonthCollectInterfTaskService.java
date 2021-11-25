@@ -43,20 +43,6 @@ public class SvrMonthCollectInterfTaskService extends BatchBaseService{
         }
         Date batchDateStart = this.getFirstDayDateOfMonth(batchExecuteInfo.getExecuteDate());
         Date batchDateEnd = this.getLastDayOfMonth(batchExecuteInfo.getExecuteDate());
-        if(monthCollectImpMainService.checkAllMonth(batchDateStart,batchDateEnd) == 0){
-            logger.info("请先执行明细汇总批处理，再执行月报生成批处理！");
-            return result;
-        }
-        if(monthCollectImpMainService.checkSubmission(batchDateStart,batchDateEnd) != 0){
-            logger.info("已报送的月报，不再生成报送数据！");
-            return result;
-        }
-        if(monthCollectImpMainService.checkLastDay(batchDateEnd) == 0){
-            logger.info("本月的明细信息不全，请确认数据是否完善，并请先执行明细汇总批处理！");
-        }
-        if(monthCollectImpMainService.checkHold(batchDateEnd) == 0){
-            logger.info("当月月末的持有信息不存在，请确认后重新跑批！");
-        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date bdate=new Date();
         Long bt=bdate.getTime();

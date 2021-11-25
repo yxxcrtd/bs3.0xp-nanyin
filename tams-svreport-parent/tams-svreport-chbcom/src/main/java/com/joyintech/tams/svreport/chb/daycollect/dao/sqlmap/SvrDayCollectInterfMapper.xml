@@ -72,15 +72,14 @@
 	</delete>
 	
 	<insert id="insertBatchData" parameterType="com.joyintech.tams.svreport.chb.daycollect.dto.ChbDayCollect">
-		insert into CHB_SALE_DEAL_SUM(PRD_REGIST_CODE, PROD_ID, INSTITUTION_CODE, AREA_CODE, HOLDER_TYPE, CCY, ISAGENCY, DAY_SALE_AMOUNT_SUM, DAY_VALUE_AMOUNT_SUM,
-		PROD_VALUE, DAY_SALE_QTY_SUM, DAY_VALUE_QTY_SUM,SALE_TOTAL_BY_QTY, VALUE_TOTAL_BY_QTY,REMARK, CREATE_USER, ORG_CODE, CREATE_DEPT, CREATE_TIME,
-		UPDATE_USER, UPDATE_TIME, EQUITY_CONF_DATE)
+		insert into CHB_SALE_DEAL_SUM(PRD_REGIST_CODE, PROD_ID, INSTITUTION_CODE,
+		AREA_CODE, HOLDER_TYPE, CCY, ISAGENCY, DAY_SALE_AMOUNT_SUM, DAY_VALUE_AMOUNT_SUM,
+		PROD_VALUE, DAY_SALE_QTY_SUM, DAY_VALUE_QTY_SUM,SALE_TOTAL_BY_QTY, VALUE_TOTAL_BY_QTY, EQUITY_CONF_DATE)
 		values(
 		#{prdRegistCode},#{prodId},#{institutionCode},#{areaCode}, #{holderType},
 		#{ccy},#{isagency}, #{daySaleAmountSum}, #{dayValueAmountSum}, #{prodValue},
-		#{daySaleQtySum},#{dayValueQtySum},#{saleTotalByQty},#{valueTotalByQty},
-		#{remark,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
-		sysdate,#{updateUser},sysdate,to_date(#{equityConfDate},'yyyy-MM-dd')
+		#{daySaleQtySum},#{dayValueQtySum},#{saleTotalByQty},#{valueTotalByQty}
+		,#{equityConfDate}
 		)
 	</insert>
 

@@ -39,6 +39,20 @@ public class SvrMonthCollectInterf extends BaseService{
     private ChbCommonCheckService chbCommonCheckService;
 
     public void generateData(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
+		if(svrMonthCollectInterfMapper.checkAllMonth(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd)) == 0){
+			logger.info("请先执行明细汇总批处理，再执行月报生成批处理！");
+			return;
+		}
+		if(svrMonthCollectInterfMapper.checkSubmission(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd)) != 0){
+			logger.info("已报送的月报，不再生成报送数据！");
+			return;
+		}
+		if(svrMonthCollectInterfMapper.checkLastDay(DateUtil.format(batchDateEnd)) == 0){
+			logger.info("本月的明细信息不全，请确认数据是否完善，并请先执行明细汇总批处理！");
+		}
+		if(svrMonthCollectInterfMapper.checkHold(DateUtil.format(batchDateEnd)) == 0){
+			logger.info("当月月末的持有信息不存在，请确认后重新跑批！");
+		}
     	//1、开始检数据
     	logger.info("销售月报每月明细汇总信息检索开始------->>>>>>");
 		List<ChbMonthCollect>list = this.getList(batchDate,batchDateStart,batchDateEnd);
@@ -78,14 +92,6 @@ public class SvrMonthCollectInterf extends BaseService{
 
             logger.debug("销售月报每月明细汇总信息插入数据：插入开始----------");
 			for(ChbMonthCollect sub : list){
-				//创建人
-				sub.setCreateUser(CommonUtil.getUserName());
-				//更新人
-				sub.setUpdateUser(CommonUtil.getUserName());
-				//创建部门
-				sub.setCreateDept(CommonUtil.getDeptCode());
-				//创建机构
-				sub.setOrgCode(CommonUtil.getOrgCode());
 				if(!sub.getHolderType().isEmpty()){
 					sub.setReporttype("1_1分投资者类型");
 				}else if(!sub.getInstitutionCode().isEmpty() && !sub.getIsConsign().isEmpty()){
@@ -101,44 +107,6 @@ public class SvrMonthCollectInterf extends BaseService{
 			}
             logger.debug("销售月报每月明细汇总信息插入数据：插入结束----------");
 		}
-	}
-
-	/**
-	 *检查整个月汇总是否有值
-	 * @param batchDateStart
-	 * @param batchDateEnd
-	 * @return
-	 */
-	public int checkAllMonth(Date batchDateStart,Date batchDateEnd){
-		return svrMonthCollectInterfMapper.checkAllMonth(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
-	}
-
-	/**
-	 *检查月末日汇总
-	 * @param batchDateEnd
-	 * @return
-	 */
-	public int checkLastDay(Date batchDateEnd){
-		return svrMonthCollectInterfMapper.checkLastDay(DateUtil.format(batchDateEnd));
-	}
-
-	/**
-	 *检查月末日持有
-	 * @param batchDateEnd
-	 * @return
-	 */
-	public int checkHold(Date batchDateEnd){
-		return svrMonthCollectInterfMapper.checkHold(DateUtil.format(batchDateEnd));
-	}
-
-	/**
-	 * 检查数据是否已报送
-	 * @param batchDateStart
-	 * @param batchDateEnd
-	 * @return
-	 */
-	public int checkSubmission(Date batchDateStart,Date batchDateEnd){
-		return svrMonthCollectInterfMapper.checkSubmission(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 	}
 
 	/**

@@ -27,42 +27,4 @@ public class MonthCollectImpMainService extends AutoSendCBBaseService{
     public void generateSalesTransactionSubInfo(Date batchDate,Date batchDateStart ,Date batchDateEnd){
         svrMonthCollectInterf.generateData(batchDate,batchDateStart,batchDateEnd);
     }
-
-    /**
-     *检查整个月汇总是否有值
-     * @param batchDateStart
-     * @param batchDateEnd
-     * @return
-     */
-    public int checkAllMonth(Date batchDateStart,Date batchDateEnd){
-        return svrMonthCollectInterf.checkAllMonth(batchDateStart,batchDateEnd);
-    }
-
-    /**
-     *检查月末日汇总
-     * @param batchDateEnd
-     * @return
-     */
-    public int checkLastDay(Date batchDateEnd){
-        return svrMonthCollectInterf.checkLastDay(batchDateEnd);
-    }
-
-    /**
-     *检查月末日持有
-     * @param batchDateEnd
-     * @return
-     */
-    public int checkHold(Date batchDateEnd){
-        return svrMonthCollectInterf.checkHold(batchDateEnd);
-    }
-
-    /**
-     * 检查数据是否已报送
-     * @param batchDateStart
-     * @param batchDateEnd
-     * @return
-     */
-    public int checkSubmission(Date batchDateStart,Date batchDateEnd){
-        return svrMonthCollectInterf.checkSubmission(batchDateStart,batchDateEnd);
-    }
 }
