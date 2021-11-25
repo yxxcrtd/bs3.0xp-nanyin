@@ -52,7 +52,7 @@ alter table  CHB_SALE_MONTH_REPORT_DETAIL  add  primary key（DETAILUUID）;
 
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3060';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3060', 'VAL', '销售月报每月明细汇总批处理', null, 'svrMonthCollectInterfTaskService', 3040, 'system', null, sysdate, 'system', sysdate, null);
+values ('3060', 'VAL', '销售信息月度统计表生成', null, 'svrMonthCollectInterfTaskService', 3040, 'system', null, sysdate, 'system', sysdate, null);
 
 INSERT INTO SYS_PAGE VALUES ('SellMonthReport001','REP','/chb/monthreport/SellMonthReport001','report/chb/monthreport/SellMonthReport001','REPORT_001_003_015_002',null,null,'01','01','理财业务销售数据月度统计表','system',null,sysdate,'system',sysdate);
 
