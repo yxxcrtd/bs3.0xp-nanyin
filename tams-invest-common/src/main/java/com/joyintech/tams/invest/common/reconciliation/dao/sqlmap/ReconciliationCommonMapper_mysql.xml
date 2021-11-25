@@ -174,7 +174,10 @@ where
 	</insert>
 
 	<select id="queryCheckDisaccordCount" parameterType="java.util.Map" resultType="java.lang.Integer">
-		SELECT COUNT(1) FROM SETTLE_TRANS_DATA_STATUS WHERE CHECK_RESULT = #{CHECK_RESULT_0,jdbcType=VARCHAR}
+		SELECT COUNT(1) FROM SETTLE_TRANS_DATA_STATUS
+		WHERE
+				CHECK_RESULT IN (#{CHECK_RESULT_0,jdbcType=VARCHAR}, #{CHECK_RESULT_2,jdbcType=VARCHAR})
+		  AND TRADE_ID IN (SELECT TRADE_ID FROM SETTLE_TRANS_DATA WHERE TRADE_DATE = STR_TO_DATE(#{execDate},'%Y%m%d'))
 	</select>
 
 	<delete id="deleteSettleTransDataStatusDisaccords" parameterType="java.util.Map">

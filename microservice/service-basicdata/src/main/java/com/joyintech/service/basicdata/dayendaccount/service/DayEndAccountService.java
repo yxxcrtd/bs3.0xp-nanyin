@@ -154,13 +154,13 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
     private void triggerNextBatchTask(){
         Map<String, Object> param = new HashMap<>();
         param.put("CHECK_RESULT_0", DictCodeListExt3.对账状态结果_不一致.getValue());
+        param.put("CHECK_RESULT_2", DictCodeListExt3.对账状态结果_待处理.getValue());
+        param.put("execDate", DateUtil.format(iPlatformDate.getSysDate(),"yyyyMMdd"));
         // 查询对账结果不一致的数量
         int count = reconciliationCommonMapper.queryCheckDisaccordCount(param);
         if(count == 0){
             param.put("beanNames", Arrays.asList("stlSettleTransDataGatherTask","stlDownDataGatherTask"));
-            if(!param.containsKey("execDate")){
-                param.put("execDate", com.joyintech.background.component.common.pack.common.util.DateUtil.format(iPlatformDate.getSysDate(),"yyyyMMdd"));
-            }
+
             batchManualExcuteService.execute(param);
         }
     }
