@@ -98,8 +98,8 @@ $(function() {
      */
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
-        if (data.accountStatusStr != null && data.accountStatusStr == "一致") {
-            layer.alert("只能修改对账不一致数据");
+        if (data.accountStatusStr != null && (data.accountStatusStr == "一致" || data.accountStatusStr == "手工完成")) {
+            layer.alert("只能修改对账不一致和待处理数据");
             return;
         }
         Joyin.dialog(JoyinUtil.getLabel('DayEndAccount001.title'),
