@@ -137,8 +137,9 @@ comment on column CHB_SALER_STL_DEAL_SUB_HIS.CREATE_TIME is '创建时间 ';
 comment on column CHB_SALER_STL_DEAL_SUB_HIS.UPDATE_USER is '更新人 ';
 comment on column CHB_SALER_STL_DEAL_SUB_HIS.UPDATE_TIME is '更新时间 ';
 
-
-INSERT INTO SYS_MENU VALUES ('REPORT_001_003_015', 'REP',null,'REPORT_001_003','null','15','02','中债四期','system',null,sysdate,'system',sysdate);
-INSERT INTO SYS_MENU VALUES ('REPORT_001_003_015_001', 'REP',null,'REPORT_001_003_015','SalesTransactionMaintenanceRegist001','0','02','销售结算资金交易登记','system',null,sysdate,'system',sysdate);
+delete from SYS_MENU where MENU_ID = 'REPORT_001_003_017';
+delete from SYS_PAGE where PAGE_ID = 'SalesTransactionMaintenanceRegist001';
+delete from SYS_PAGE where PAGE_ID = 'SalesTransactionMaintenanceRegist002';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_003_017', 'SVR', null, 'REPORT_001_003', 'SalesTransactionMaintenanceRegist001', 17, '02', '销售结算资金交易登记', 'system', null, TIMESTAMP '2019-09-12 00:00:00', 'system', TIMESTAMP '2019-09-12 00:00:00');
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenanceRegist001','REP','report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001','report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001','REPORT_001_003_015_001',null,null,'02','02','销售结算资金交易登记','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenanceRegist002','REP','report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist002','report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist002',null,null,null,'02','02','销售结算资金交易登记','system',null,sysdate,'system',sysdate);

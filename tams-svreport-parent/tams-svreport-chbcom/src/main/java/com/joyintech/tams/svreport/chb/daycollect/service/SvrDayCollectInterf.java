@@ -89,8 +89,8 @@ public class SvrDayCollectInterf extends BaseService{
 				sub.setCreateDept(CommonUtil.getDeptCode());
 				//创建机构
 				sub.setOrgCode(CommonUtil.getOrgCode());
-				
-				if(sub.getHolderType().isEmpty()) {
+
+				if(sub.getHolderType() == null) {
 					sub.setHolderType("01");
 				}
 				svrDayCollectInterfMapper.insertBatchData(sub);

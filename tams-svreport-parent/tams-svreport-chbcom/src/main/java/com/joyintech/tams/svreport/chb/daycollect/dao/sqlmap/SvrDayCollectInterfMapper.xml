@@ -76,11 +76,11 @@
 		PROD_VALUE, DAY_SALE_QTY_SUM, DAY_VALUE_QTY_SUM,SALE_TOTAL_BY_QTY, VALUE_TOTAL_BY_QTY,REMARK, CREATE_USER, ORG_CODE, CREATE_DEPT, CREATE_TIME,
 		UPDATE_USER, UPDATE_TIME, EQUITY_CONF_DATE)
 		values(
-		#{prdRegistCode,jdbcType=VARCHAR},#{prodId,jdbcType=VARCHAR},#{institutionCode,jdbcType=VARCHAR},#{areaCode,jdbcType=VARCHAR}, #{holderType,jdbcType=VARCHAR},
-		#{ccy,jdbcType=VARCHAR},#{isagency,jdbcType=VARCHAR}, #{daySaleAmountSum}, #{dayValueAmountSum}, #{prodValue},
+		#{prdRegistCode},#{prodId},#{institutionCode},#{areaCode}, #{holderType},
+		#{ccy},#{isagency}, #{daySaleAmountSum}, #{dayValueAmountSum}, #{prodValue},
 		#{daySaleQtySum},#{dayValueQtySum},#{saleTotalByQty},#{valueTotalByQty},
 		#{remark,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
-		sysdate,#{updateUser,jdbcType=VARCHAR},sysdate,to_date(#{equityConfDate},'yyyy-MM-dd')
+		sysdate,#{updateUser},sysdate,to_date(#{equityConfDate},'yyyy-MM-dd')
 		)
 	</insert>
 
