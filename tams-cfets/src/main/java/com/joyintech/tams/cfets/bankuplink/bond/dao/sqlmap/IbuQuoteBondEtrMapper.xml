@@ -14,7 +14,19 @@
     </select>
 
     <select id="checkDataStatus" resultType="java.lang.Integer">
-		select count(1) from WFL_REG_FIN_PRODUCT_DEAL
+     select count(1)  from  (select ENTRUST_ID from WFL_IBU_QUOTE_BOND2
+				where ENTRUST_ID=#{entrustId}
+			union all
+			 select ENTRUST_ID from  WFL_IBU_QUOTE_CREP
+			 	where ENTRUST_ID=#{entrustId}
+			union all
+			 select ENTRUST_ID from IBU_QUOTE_BOND
+			 	where ENTRUST_ID= #{entrustId} and TRADE_STATUS not in ('06','08')
+			union all
+			 select ENTRUST_ID from IBU_QUOTE_CREP
+			 	where ENTRUST_ID=#{entrustId} and TRADE_STATUS not in ('06','08')
+			 union all
+		    select ENTRUST_ID from WFL_REG_FIN_PRODUCT_DEAL where ENTRUST_ID = #{entrustId})
 	</select>
 
     <select id="listEtrDistributeInterfTmp" resultType="com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp">

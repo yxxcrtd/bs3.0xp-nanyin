@@ -16,13 +16,13 @@ import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
 import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
-import com.joyintech.tams.common.base.dao.EtrDistributeMapper;
-import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
-import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
+import com.joyintech.tams.invest.common.asset.annotation.DictList;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -88,6 +88,11 @@ public class IbuQuoteBondService extends BaseService {
 
     @Autowired
     private CfetsEtrIbBondinfoService cfetsEtrIbBondinfoService;
+
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
+    @Autowired
+    private RegFinProductDealTotalMapper regFinProductDealTotalMapper;
     /**
      * 风险试算check
      * @param entity
@@ -974,8 +979,44 @@ public class IbuQuoteBondService extends BaseService {
         pageParam.put("loginUserId", LoginUserUtil.getUserName());
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
         setParam(pageParam);
+        pageParam.put("CONFIRM_STATUS_0", com.joyintech.tams.constant.DictCodeList.确认状态_未确认.getValue());
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsIbuQuoteBondMapper.listDayReg(pageParam));
     }
+
+    /**
+     * 当日登记撤销检查
+     * @param cfetsBondRegCheckRequsts
+     * @return
+     */
+    public AjaxResult checkDayRegRevokeCheck(List<CfetsBondRegCheckRequst> cfetsBondRegCheckRequsts){
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        //是否存在流程中数据
+        cfetsBondRegCheckRequsts.forEach(item ->{
+            WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+            wflValidInputParameter.setPageId("IbuQuoteBond004");
+            wflValidInputParameter.setBusinessDataPk1(item.getQuoteId());
+            if(null != mstWorkflowCommonService &&
+                    mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)){
+                errorList.add(
+                        new ValidMessage(this.getMessage("COMMON_E_0012",item.getQuoteId())));
+            }
+            //回售登记数据，在理论行权日前一交易日（包含前一交易日）之前均支持回售登记撤销操作，支持隔夜撤销。理论行权日之后（包含理论行权日）回售登记不支持手动撤销
+            if(StringUtil.equals(item.getPs(), com.joyintech.tams.constant.DictCodeList.交易方向_行权_回售.getValue())){
+                RegFinProductDealTotal regFinProductDealTotal = regFinProductDealTotalMapper.selectByPrimaryKey(item.getQuoteId());
+                if(regFinProductDealTotal.getTradeDate().compareTo(regFinProductDealTotal.getSettleDate())>=0){
+                    errorList.add(
+                            new ValidMessage("理论行权日之后(包含理论行权日)回售登记不支持手动撤销!业务编号:"+item.getQuoteId()));
+                }
+            }
+            if(CollectionUtils.isNotEmpty(errorList)){
+                return;
+            }
+        });
+        ajaxResult.setErrorList(errorList);
+        return ajaxResult;
+    }
+
 
     private void setParam(Map<String,Object> param){
         param.put("finprodType2", BussinessDictCodeList.金融产品类型_债券.getValue());
