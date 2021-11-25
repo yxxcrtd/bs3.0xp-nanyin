@@ -26,22 +26,4 @@ public class DayCollectImpMainService extends AutoSendCBBaseService{
     public void generateSalesTransactionSubInfo(Date batchDate){
         svrDayCollectInterf.generateData(batchDate);
     }
-
-    /**
-     * check当月有无当日交易数据
-     * @param batchDate 跑批日
-     * void
-     */
-    public int checkTransaction(Date batchDate){
-        return svrDayCollectInterf.checkTransaction(batchDate);
-    }
-
-    /**
-     * check身份信息
-     * @param batchDate 跑批日
-     * void
-     */
-    public int checkIdentity(Date batchDate){
-        return svrDayCollectInterf.checkIdentity(batchDate);
-    }
 }

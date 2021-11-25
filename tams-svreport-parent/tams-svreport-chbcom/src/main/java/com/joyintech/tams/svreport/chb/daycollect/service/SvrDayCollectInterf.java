@@ -36,6 +36,13 @@ public class SvrDayCollectInterf extends BaseService{
     private ChbCommonCheckService chbCommonCheckService;
 	
     public void generateData(Date batchDate) {
+		if(svrDayCollectInterfMapper.checkTransaction(DateUtil.format(batchDate)) == 0){
+			logger.info("当日交易数据不存在，或者没有接入，请确认后跑批。");
+			return;
+		}
+		if(svrDayCollectInterfMapper.checkIdentity(DateUtil.format(batchDate)) == 0){
+			logger.info("当日身份信息不存在，或者没有接入,批处理继续。");
+		}
     	//1、开始检数据
     	logger.info("销售月报每日明细汇总信息检索开始------->>>>>>");
     	List<ChbDayCollect> list = svrDayCollectInterfMapper.selectBatchData(DateUtil.format(batchDate));
@@ -87,23 +94,5 @@ public class SvrDayCollectInterf extends BaseService{
 			}
             logger.debug("销售月报每日明细汇总信息插入数据：插入结束----------");
 		}
-	}
-
-	/**
-	 * check当月有无当日交易数据
-	 * @param batchDate 跑批日
-	 * void
-	 */
-	public int checkTransaction(Date batchDate){
-		return svrDayCollectInterfMapper.checkTransaction(DateUtil.format(batchDate));
-	}
-
-	/**
-	 * check身份信息
-	 * @param batchDate 跑批日
-	 * void
-	 */
-	public int checkIdentity(Date batchDate){
-		return svrDayCollectInterfMapper.checkIdentity(DateUtil.format(batchDate));
 	}
 }

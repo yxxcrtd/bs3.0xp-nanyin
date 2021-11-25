@@ -9,7 +9,7 @@ public class ChbDayCollect extends BaseEntity {
     //机构代码
     private String orgCode;
     //产品登记编码
-    private String proRegistCode;
+    private String prdRegistCode;
     //产品代码
     private String prodId;
     //销售机构代码
@@ -53,12 +53,12 @@ public class ChbDayCollect extends BaseEntity {
         this.orgCode = orgCode;
     }
 
-    public String getProRegistCode() {
-        return proRegistCode;
+    public String getPrdRegistCode() {
+        return prdRegistCode;
     }
 
-    public void setProRegistCode(String proRegistCode) {
-        this.proRegistCode = proRegistCode;
+    public void setPrdRegistCode(String prdRegistCode) {
+        this.prdRegistCode = prdRegistCode;
     }
 
     public String getProdId() {

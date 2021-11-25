@@ -39,10 +39,6 @@ public class SvrIdentityRepairInterfTaskService extends BatchBaseService{
             logger.info("无启动参数，批处理退出。");
             return result;
         }
-        if(identityRepairImpMainService.idenCheck(batchExecuteInfo.getExecuteDate()) == 0){
-            logger.info("当日身份信息数据不存在，或者没有接入，批处理退出。");
-            return result;
-        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date bdate=new Date();
         Long bt=bdate.getTime();

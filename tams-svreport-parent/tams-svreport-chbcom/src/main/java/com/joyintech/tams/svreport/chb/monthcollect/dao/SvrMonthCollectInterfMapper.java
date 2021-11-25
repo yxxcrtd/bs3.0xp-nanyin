@@ -1,0 +1,83 @@
+package com.joyintech.tams.svreport.chb.monthcollect.dao;
+
+import com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+
+@Repository
+public interface SvrMonthCollectInterfMapper {
+	
+	/**
+	 * 汇总  总、净销售金额
+	 * @return
+	 */
+	List<ChbMonthCollect> selectAmountTotal(@Param("batchDateStart")String batchDateStart, @Param("batchDateEnd")String batchDateEnd);
+
+	/**
+	 * 根据持有数据，生成持有，投资者数量信息
+	 * @param batchDateEnd
+	 * @return
+	 */
+	List<ChbMonthCollect> selectHolderNum(@Param("batchDateEnd")String batchDateEnd);
+    //	查询check表
+	List<ChbMonthCollect> selectHolderNumCheck(@Param("batchDateEnd")String batchDateEnd);
+    //三合一判断后 根据持有数据，生成持有，投资者数量信息
+	List<ChbMonthCollect> selectHolderNumExcheck(@Param("registList")List<ChbMonthCollect> registList,@Param("batchDateEnd")String batchDateEnd);
+	
+	int deleteDetail(@Param("batchDate")String batchDate);
+
+	int deleteReport(@Param("batchDate")String batchDate);
+    /**
+     * 插入数据
+     * @param sub
+     */
+    int insertBatchData(ChbMonthCollect sub);
+
+	/**
+	 *检查整个月汇总是否有值
+	 * @param batchDateStart
+	 * @param batchDateEnd
+	 * @return
+	 */
+	int checkAllMonth(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+
+	/**
+	 *检查月末日汇总
+	 * @param batchDateEnd
+	 * @return
+	 */
+	int checkLastDay(@Param("batchDateEnd")String batchDateEnd);
+
+	/**
+	 *检查月末日持有
+	 * @param batchDateEnd
+	 * @return
+	 */
+	int checkHold(@Param("batchDateEnd")String batchDateEnd);
+
+	/**
+	 * 检查是否已报送
+	 * @param batchDateStart
+	 * @param batchDateEnd
+	 * @return
+	 */
+	int checkSubmission(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+//	获取美元，欧元转人民币汇率
+	BigDecimal getCNYExchange(String ccy);
+//	获取非美欧外币转美元汇率
+	BigDecimal getUSDExchange(String ccy);
+//	获取美元转人民币汇率
+	BigDecimal USDExchangeCNY();
+//	取得银行月报信息
+	List<ChbMonthCollect> selectChbPrdPosition(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+//	分投资者类型获得投资者数量
+	List<ChbMonthCollect> typeHolderNum(@Param("batchDateEnd")String batchDateEnd);
+//	分地区获得投资者数量
+	List<ChbMonthCollect> areaHolderNum(@Param("batchDateEnd")String batchDateEnd);
+//	分销售渠道获得投资者数量
+	List<ChbMonthCollect> channelHolderNum(@Param("batchDateEnd")String batchDateEnd);
+}

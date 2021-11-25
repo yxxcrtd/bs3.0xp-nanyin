@@ -28,13 +28,13 @@ public interface SvrIdentityRepairInterfMapper {
 
 	/**
 	 * 更新数据SUB
-	 * @param sub
+	 * @param
 	 */
-	int updataSub(ChbIdentityRepair sub);
+	int updataSub(@Param("fundAccPlace")String fundAccPlace,@Param("orgIndentifyMark")String orgIndentifyMark);
 
 	/**
 	 * 更新数据CHECK
-	 * @param sub
+	 * @param
 	 */
-	int updataCheck(ChbIdentityRepair sub);
+	int updataCheck(@Param("fundAccPlace")String fundAccPlace,@Param("orgIndentifyMark")String orgIndentifyMark);
 }

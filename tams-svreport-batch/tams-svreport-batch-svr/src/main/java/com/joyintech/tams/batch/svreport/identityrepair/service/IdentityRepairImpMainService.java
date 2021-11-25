@@ -26,13 +26,4 @@ public class IdentityRepairImpMainService extends AutoSendCBBaseService{
     public void generateSalesTransactionSubInfo(Date batchDate){
         svrIdentityRepairInterf.generateData(batchDate);
     }
-
-    /**
-     * 判断跑批日数据的存在性
-     * @param batchDate
-     * @return
-     */
-    public int idenCheck(Date batchDate){
-       return svrIdentityRepairInterf.idenCheck(batchDate);
-    }
 }

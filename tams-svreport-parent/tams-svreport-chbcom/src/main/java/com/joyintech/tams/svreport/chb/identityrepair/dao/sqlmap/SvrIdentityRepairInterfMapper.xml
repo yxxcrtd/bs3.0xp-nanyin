@@ -12,7 +12,7 @@
 		'SUB'  equMark,
 		INDENTIFY_MARK indentifyMark
 		FROM CHB_EQU_SUB
-		WHERE FUND_ACC_PLACE = NULL
+		WHERE FUND_ACC_PLACE is NULL
 
 		UNION ALL
 
@@ -21,7 +21,7 @@
 		INDENTIFY_MARK indentifyMark
 		FROM CHB_EQU_HOLD_CHECK
 		WHERE
-		FUND_ACC_PLACE = NULL
+		FUND_ACC_PLACE is NULL
 		)  tmp1
 		LEFT JOIN (
 		SELECT
@@ -29,7 +29,7 @@
 		INDENTIFY_MARK as indentifyMark,
 		FUND_ACC_PLACE as fundAccPlace
 		FROM CHB_EQUDET_SUB
-		WHERE TO_CHAR(NVL(UPDATE_TIME,CREATE_TIME),'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+		WHERE TO_CHAR(EQUITY_CONF_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
 		group BY
 		ORG_INDENTIFY_MARK,
 		INDENTIFY_MARK,
@@ -46,17 +46,17 @@
 		SELECT COUNT(*)
 		from
 		CHB_EQUDET_SUB
-		WHERE TO_CHAR(NVL(UPDATE_TIME,CREATE_TIME),'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+		WHERE TO_CHAR(EQUITY_CONF_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
 	</select>
 
-	<update id="updataSub" parameterType="com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair">
+	<update id="updataSub" parameterType="string">
 		UPDATE CHB_EQU_SUB
 		SET
 		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR}
 		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
 	</update>
 
-	<update id="updataCheck" parameterType="com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair">
+	<update id="updataCheck" parameterType="string">
 		updata CHB_EQU_HOLD_CHECK
 		SET
 		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR}

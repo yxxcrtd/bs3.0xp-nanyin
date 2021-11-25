@@ -220,7 +220,7 @@ public class SvrSalesTransactionDBInterf extends BaseService{
             }
 			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 			dateList = ChbDeadlineUtil.getChbEndDate(
-	                DictCodeListExt2.报表名称_销售结算资金交易信息登记.getValue(), sub.getDataStatus(), dateMap, DateUtil.now());
+	                DictCodeListExt2.报表名称_销售结算资金交易信息登记.getValue(), sub.getDataStatus(), dateMap, sub.getTradeVdate());
 	        if (!CollectionUtils.isEmpty(dateList)) {
 	        	sub.setChbSubmitDeadline(dateList.get(0));
 	        	sub.setSubmitDeadline(dateList.get(1));

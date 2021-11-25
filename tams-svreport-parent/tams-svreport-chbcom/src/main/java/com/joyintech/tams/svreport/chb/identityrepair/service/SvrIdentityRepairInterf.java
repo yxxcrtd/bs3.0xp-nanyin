@@ -39,6 +39,11 @@ public class SvrIdentityRepairInterf extends BaseService{
     private ChbCommonCheckService chbCommonCheckService;
 	
     public void generateData(Date batchDate) {
+
+		if(svrIdentityRepairInterfMapper.idenCheck(DateUtil.format(batchDate)) == 0){
+			logger.info("当日身份信息数据不存在，或者没有接入，批处理退出。");
+			return;
+		}
     	//1、开始检索维护表数据
     	logger.info("身份信息修复批处理信息检索开始------->>>>>>");
     	List<ChbIdentityRepair> list = svrIdentityRepairInterfMapper.selectBatchData(DateUtil.format(batchDate));
@@ -74,24 +79,16 @@ public class SvrIdentityRepairInterf extends BaseService{
     	if (StringUtil.isNotEmpty(list)) {
             logger.debug("身份信息修复批处理登记插入数据：插入开始----------");
 			for(ChbIdentityRepair sub : list){
+				String fundAccPlace = sub.getFundAccPlace();
+				String orgIndentifyMark = sub.getOrgIndentifyMark();
 				if(sub.getEquMark().equals("SUB")) {
-					svrIdentityRepairInterfMapper.updataSub(sub);
+					svrIdentityRepairInterfMapper.updataSub(fundAccPlace,orgIndentifyMark);
 				}
 				if(sub.getEquMark().equals("CHECK")) {
-					svrIdentityRepairInterfMapper.updataCheck(sub);
+					svrIdentityRepairInterfMapper.updataCheck(fundAccPlace,orgIndentifyMark);
 				}
 			}
             logger.debug("身份信息修复批处理登记插入数据：插入结束----------");
 		}
 	}
-
-	/**
-	 * 判断跑批日数据的存在性
-	 * @param batchDate
-	 * @return
-	 */
-	public int idenCheck(Date batchDate){
-		return svrIdentityRepairInterfMapper.idenCheck(DateUtil.format(batchDate));
-	}
-	
 }
