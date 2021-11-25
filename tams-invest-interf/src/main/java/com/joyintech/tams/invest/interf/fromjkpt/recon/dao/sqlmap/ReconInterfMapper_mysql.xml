@@ -25,7 +25,7 @@
             </foreach>
         </if>
         <if test="entrustIds != null and entrustIds.size()>0">
-            and ENTRUNST_ID not in
+            and INSTRUCTION_ID not in
             <foreach item="item" index="index" collection="entrustIds" open="(" separator=","  close=")">
                 #{item.entrustTradeId}
             </foreach>
