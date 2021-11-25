@@ -89,7 +89,10 @@ public class SvrDayCollectInterf extends BaseService{
 				sub.setCreateDept(CommonUtil.getDeptCode());
 				//创建机构
 				sub.setOrgCode(CommonUtil.getOrgCode());
-
+				
+				if(sub.getHolderType().isEmpty()) {
+					sub.setHolderType("01");
+				}
 				svrDayCollectInterfMapper.insertBatchData(sub);
 			}
             logger.debug("销售月报每日明细汇总信息插入数据：插入结束----------");
