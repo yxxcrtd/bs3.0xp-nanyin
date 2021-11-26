@@ -641,7 +641,7 @@ public class CfetsTrdConfirmService extends BaseService{
         if(StringUtil.isNotEmpty(dto.getDealType())
           && StringUtil.equals(dto.getDealType(),BussinessDictCodeList.报价方式_登记报价.getValue())
         ){
-            return prepareEntity(dto);
+            return prepareEntity(dto.getTotleTradeId());
         }else{
             //报价数据
             return prepareIbuEntity(dto);
@@ -654,14 +654,14 @@ public class CfetsTrdConfirmService extends BaseService{
      * @see
      * @since 1.0
      */
-    public CfetsTrdBondInvestTradeDto prepareEntity(CfetsTrdConfirmRegInfoListResponse dto) {
+    public CfetsTrdBondInvestTradeDto prepareEntity(String totleTradeId) {
         //如果是登记数据
         //根据汇总交易编号查询登记数据
-        CfetsTrdConfirmRegInfoListResponse dtoReg=cfetsTrdConfirmMapper.selectRegInfoByKey(dto.getTotleTradeId());
+        CfetsTrdConfirmRegInfoListResponse dtoReg=cfetsTrdConfirmMapper.selectRegInfoByKey(totleTradeId);
         CfetsTrdBondInvestTradeDto entity=new CfetsTrdBondInvestTradeDto();
         BeanUtil.copyPropertiesIgnoreNull(entity,dtoReg);
         if (baseGetBusinessId != null) {
-            BussinessCodeParameter codeParameter = getBussinessCodeParameter(dto.getPs());
+            BussinessCodeParameter codeParameter = getBussinessCodeParameter(dtoReg.getPs());
             entity.setTotleTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
         }
         else {
@@ -700,10 +700,7 @@ public class CfetsTrdConfirmService extends BaseService{
         entity.setPrinAmt(dtoReg.getCpriceAmt());
 
         // 券面总额
-        entity.setTotalFaceValue(dto.getFaceValue());
-        if (entity.getFinprodId().indexOf("F01_") != 0) {
-            entity.setFinprodId("F01_" + dto.getFinprodId());
-        }
+        entity.setTotalFaceValue(dtoReg.getFaceValue());
         // 金融产品交易Entity 构造开始----------------------------------------------------------
 
 
@@ -776,14 +773,14 @@ public class CfetsTrdConfirmService extends BaseService{
         CfetsTrdConfirmMatchDto matchDto=new CfetsTrdConfirmMatchDto();
         if(StringUtil.equals(supportCstpFlag,DictCodeList.是否_否.getValue())){
             matchDto.setSeqno(IDGenerator.generate());
-            matchDto.setPreTradeId(dto.getTotleTradeId());
+            matchDto.setPreTradeId(totleTradeId);
             matchDto.setTrdConfStatus(DictCodeList.确认状态_已确认.getValue());
             matchDto.setCreateUser(SecurityUtil.getLoginUser().getUserName());
             matchDto.setCreateDept(CommonUtil.getDeptCode());
             matchDto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
             entity.setCfetsTrdConfirmMatchDto(matchDto);
         }else{
-            matchDto.setPreTradeId(dto.getTotleTradeId());
+            matchDto.setPreTradeId(totleTradeId);
             matchDto.setTrdConfStatus(DictCodeList.确认状态_已确认.getValue());
             matchDto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
             entity.setCfetsTrdConfirmMatchDto(matchDto);
@@ -876,9 +873,9 @@ public class CfetsTrdConfirmService extends BaseService{
         bussTrdTransferOrderDto.setPayAcctNoList(null);
         bussTrdTransferOrderDto.setRecAcctNoList(null);
         bussTrdTransferOrderDto.setIsTotalTrade(BussinessDictCodeList.是否_是.getValue());
-        if (StringUtil.isNotEmpty(dto.getSecManageAcctId())) {
+        if (StringUtil.isNotEmpty(dtoReg.getSecManageAcctId())) {
             Map<String, Object> param = new HashMap<String, Object>();
-            param.put("secAcctId", dto.getSecManageAcctId());
+            param.put("secAcctId", dtoReg.getSecManageAcctId());
             String secAcctSource = cfetsTrdConfirmMapper.selectSecAcctSource(param);
             if (StringUtil.equals(BussinessDictCodeList.账户来源_自营.getValue(), secAcctSource)
                     && StringUtil.equals(dtoReg.getPs(), BussinessDictCodeList.交易方向_买入.getValue())) {
@@ -890,7 +887,7 @@ public class CfetsTrdConfirmService extends BaseService{
         entity.setBussTrdTransferOrder(bussTrdTransferOrderService.save(bussTrdTransferOrder));
         // =====================划款指令信息=====================
 
-        entity.getBussTrdTransferOrder().get(0).setTradeId(dto.getTotleTradeId());
+        entity.getBussTrdTransferOrder().get(0).setTradeId(entity.getTotleTradeId());
         // 划款指令表Entity 构造结束----------------------------------------------------------
 
         entity.setPaTrdProductDeals(paTrdProductDeals);
