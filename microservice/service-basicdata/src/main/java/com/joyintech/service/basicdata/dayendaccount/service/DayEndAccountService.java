@@ -117,6 +117,8 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             if(StringUtil.isNotEmpty(dto.getFinprodId())){
                 FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getFinprodId());
                 if(finProduct == null){
+                    // 标的表不存在回购资产,市场代码统一使用金融代码
+                    dto.setFinprodMarketId(dto.getFinprodId());
                     continue;
                 }
                 dto.setFinprodMarketId(finProduct.getFinprodMarketId());
