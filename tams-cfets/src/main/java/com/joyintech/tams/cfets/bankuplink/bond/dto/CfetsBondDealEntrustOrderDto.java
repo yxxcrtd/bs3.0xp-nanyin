@@ -202,6 +202,12 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal sellAbleNum;
 
+    /**
+     * 全价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal unitFprice;
+
     public String getPortfolioSeries() {
         return portfolioSeries;
     }
@@ -989,5 +995,13 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
 
     public void setSellAbleNum(BigDecimal sellAbleNum) {
         this.sellAbleNum = sellAbleNum;
+    }
+
+    public BigDecimal getUnitFprice() {
+        return unitFprice;
+    }
+
+    public void setUnitFprice(BigDecimal unitFprice) {
+        this.unitFprice = unitFprice;
     }
 }
