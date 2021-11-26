@@ -452,7 +452,7 @@ public class StlDataDealSzdJsmxProcessService {
 						// 交易方向
 						settleTransData.setPs(DictCodeList.交易方向_买入.getValue());
 						// 金融产品代码
-						settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdJsmx.getZqdm1() + ".SH");
+						settleTransData.setFinprodId(szdJsmx.getZqdm1());
 						// 交易份额
 						settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
 						// 期限品种
@@ -543,7 +543,7 @@ public class StlDataDealSzdJsmxProcessService {
 						// 交易方向
 						settleTransData.setPs(DictCodeList.交易方向_到期.getValue());
 						// 金融产品代码
-						settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdJsmx.getZqdm1() + ".SH");
+						settleTransData.setFinprodId(szdJsmx.getZqdm1());
 						// 交易份额
 						settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
 						// 期限品种
@@ -616,7 +616,7 @@ public class StlDataDealSzdJsmxProcessService {
 							// 回购利率
 							settleTransData.setIntRate(new BigDecimal(szdJsmx.getJg1()));
 							// 金融产品代码
-							settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdJsmx.getZqdm1() + ".SH");
+							settleTransData.setFinprodId(szdJsmx.getZqdm1());
 							// 交易份额
 							settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
 							// 起息日
@@ -706,7 +706,7 @@ public class StlDataDealSzdJsmxProcessService {
 								settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_报价逆回购_到期.getValue());
 							}
 							// 金融产品代码
-							settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdJsmx.getZqdm1() + ".SH");
+							settleTransData.setFinprodId(szdJsmx.getZqdm1());
 							// 交易份额
 							settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
 							// 期限品种
@@ -773,7 +773,7 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券协议逆回购_逾期返售解除质押.getValue());
 						}
 						// 金融产品代码
-						settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdJsmx.getZqdm1() + ".SH");
+						settleTransData.setFinprodId(szdJsmx.getZqdm1());
 						// 交易份额
 						settleTransData.setShareAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
 						// 期限品种
