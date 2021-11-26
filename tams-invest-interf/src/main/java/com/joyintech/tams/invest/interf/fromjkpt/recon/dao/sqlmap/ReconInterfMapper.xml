@@ -345,7 +345,7 @@ WHERE
     <!--委托代码汇总-->
     <select id="listStlSecReconDealTotalByEntrustId" resultType="com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecReconDealDto">
         SELECT
-        ENTRUST_ID as INSTRUCTION_ID,
+        INSTRUCTION_ID,
         CUSTOMER_ID,
         SEAT_NUMBER,
         FINPROD_ID,
@@ -374,7 +374,7 @@ WHERE
             <include refid="com.joyintech.tams.invest.interf.fromjkpt.recon.dao.ReconInterfMapper.detailesql" />
         ) resultData
         GROUP BY
-        ENTRUST_ID,
+        INSTRUCTION_ID,
         CUSTOMER_ID,
         SEAT_NUMBER,
         FINPROD_ID,
