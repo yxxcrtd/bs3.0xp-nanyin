@@ -363,10 +363,10 @@
                 AND C.PS = #{ps}
             </if>
             <if test="tradeDateBegin != null and tradeDateBegin != ''">
-                <![CDATA[ AND A.TRADE_DATE  >= STR_TO_DATE(#{tradeDateBegin},'%Y-%m-%d') ]]>
+                <![CDATA[ AND C.TRADE_DATE  >= STR_TO_DATE(#{tradeDateBegin},'%Y-%m-%d') ]]>
             </if>
             <if test="tradeDateEnd != null and tradeDateEnd != ''">
-                <![CDATA[ AND A.TRADE_DATE  <= STR_TO_DATE(#{tradeDateEnd},'%Y-%m-%d') ]]>
+                <![CDATA[ AND C.TRADE_DATE  <= STR_TO_DATE(#{tradeDateEnd},'%Y-%m-%d') ]]>
             </if>
             <if test="finprodId!=null and finprodId!='' ">
                 AND E.FINPROD_MARKET_ID = #{finprodId}
