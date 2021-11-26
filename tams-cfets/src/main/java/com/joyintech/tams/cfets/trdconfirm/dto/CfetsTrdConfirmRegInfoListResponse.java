@@ -11,6 +11,9 @@
 package com.joyintech.tams.cfets.trdconfirm.dto;
 
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -93,11 +96,14 @@ public class CfetsTrdConfirmRegInfoListResponse{
     @ApiModelProperty(name="trader",value="交易员",example="admin")
     private String trader;
 
-    @ApiModelProperty(name="tradeDate",value="登记日期",example="admin")
+    @ApiModelProperty(name="tradeDate",value="登记日期Date",example="admin")
     private Date tradeDate;
 
     @ApiModelProperty(name="counterTrader",value="对手方交易员",example="admin")
     private String counterTrader;
+
+    @ApiModelProperty(name="dealType",value="交易类型",example="01")
+    private String dealType;
 
     @ApiModelProperty(name="portfolioIds",value="组合代码",example="字符串1")
     private String portfolioIds;
@@ -137,6 +143,10 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     @ApiModelProperty(name="counterId",value="交易对手代码",example="字符串1")
     private String counterId;
+
+    @ApiModelProperty(name="counterIdName",value="对手方",example="字符串1")
+    private String counterIdName;
+
 
     @ApiModelProperty(name="ourShareAmt",value="本方券券面总额",example="字符串1")
     private BigDecimal ourShareAmt;
@@ -232,6 +242,20 @@ public class CfetsTrdConfirmRegInfoListResponse{
     private String   regStatus;
     @ApiModelProperty(name="dipType",value="分配方式",example="字符串1")
     private String   dipType;
+    @ApiModelProperty(name="execid",value="成交编号",example="字符串1")
+    private String   execid;
+    @ApiModelProperty(name="cpPartyId",value="对手方银行间机构",example="字符串1")
+    private String   cpPartyId;
+    @ApiModelProperty(name="cpTrader",value="对手方银行间交易员",example="字符串1")
+    private String   cpTrader;
+    @ApiModelProperty(name="pledgeFinprodIds",value="质押券债券",example="字符串1")
+    private String   pledgeFinprodIds;
+    @ApiModelProperty(name="pledgeRatios",value="质押券折算比例",example="字符串1")
+    private String   pledgeRatios;
+    @ApiModelProperty(name="pledgeFaceValues",value="质押券面值",example="字符串1")
+    private String   pledgeFaceValues;
+    @ApiModelProperty(name="idDirectTrd",value="是否直接交易",example="字符串1")
+    private String  isDirectTrd;
     @ApiModelProperty(name="selectedItem",value="选中数据",example="字符串1")
     private transient List<CfetsTrdConfirmRegInfoListResponse> selectedItem;
 
@@ -429,7 +453,12 @@ public class CfetsTrdConfirmRegInfoListResponse{
     }
 
     public String getFinprodType2Name() {
-        return finprodType2Name;
+
+        if (StringUtil.isEmpty(getFinprodType2())) {
+            return null;
+        }
+        return SysDataUtil.getNameFromDataDict(DictCode.登记资产类型, getFinprodType2());
+
     }
 
     public void setFinprodType2Name(String finprodType2Name) {
@@ -469,7 +498,7 @@ public class CfetsTrdConfirmRegInfoListResponse{
     }
 
     public String getPsName() {
-        return psName;
+        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, getPs());
     }
 
     public void setPsName(String psName) {
@@ -485,7 +514,7 @@ public class CfetsTrdConfirmRegInfoListResponse{
     }
 
     public String getTradeMarketName() {
-        return tradeMarketName;
+        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, getTradeMarket());
     }
 
     public void setTradeMarketName(String tradeMarketName) {
@@ -501,7 +530,8 @@ public class CfetsTrdConfirmRegInfoListResponse{
     }
 
     public String getSettleSpeedName() {
-        return settleSpeedName;
+        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, getSettleSpeed());
+
     }
 
     public void setSettleSpeedName(String settleSpeedName) {
@@ -850,5 +880,78 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setMdeliveryType(String mdeliveryType) {
         this.mdeliveryType = mdeliveryType;
+    }
+
+    public String getDealType() {
+        return dealType;
+    }
+
+    public void setDealType(String dealType) {
+        this.dealType = dealType;
+    }
+
+    public String getExecid() {
+        return execid;
+    }
+
+    public void setExecid(String execid) {
+        this.execid = execid;
+    }
+
+    public String getCounterIdName() {
+        return counterIdName;
+    }
+
+    public void setCounterIdName(String counterIdName) {
+        this.counterIdName = counterIdName;
+    }
+
+    public String getCpPartyId() {
+        return cpPartyId;
+    }
+
+    public void setCpPartyId(String cpPartyId) {
+        this.cpPartyId = cpPartyId;
+    }
+
+    public String getCpTrader() {
+        return cpTrader;
+    }
+
+    public void setCpTrader(String cpTrader) {
+        this.cpTrader = cpTrader;
+    }
+
+    public String getPledgeFinprodIds() {
+        return pledgeFinprodIds;
+    }
+
+    public void setPledgeFinprodIds(String pledgeFinprodIds) {
+        this.pledgeFinprodIds = pledgeFinprodIds;
+    }
+
+    public String getPledgeRatios() {
+        return pledgeRatios;
+    }
+
+    public void setPledgeRatios(String pledgeRatios) {
+        this.pledgeRatios = pledgeRatios;
+    }
+
+    public String getPledgeFaceValues() {
+        return pledgeFaceValues;
+    }
+
+    public void setPledgeFaceValues(String pledgeFaceValues) {
+        this.pledgeFaceValues = pledgeFaceValues;
+    }
+
+
+    public String getIsDirectTrd() {
+        return isDirectTrd;
+    }
+
+    public void setIsDirectTrd(String isDirectTrd) {
+        this.isDirectTrd = isDirectTrd;
     }
 }

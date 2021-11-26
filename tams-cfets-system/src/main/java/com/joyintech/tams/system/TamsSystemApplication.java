@@ -56,7 +56,11 @@ public class TamsSystemApplication extends WebApplication {
 	public Docket dataCfetsEtrInfoQuerySettleDocket() {
 		return SwaggerConfig.createDocket("银行间指令查询", "com.joyintech.tams.cfets.cfetsetrinfoquery.controller");
 	}
-	
+
+	@Bean
+	public Docket dataCfetsTrdConfirm() {
+		return SwaggerConfig.createDocket("银行间交易成交确认", "com.joyintech.tams.cfets.trdconfirm.controller");
+	}
 	public static void main(String[] args) throws Exception {
     	initLog();
     	initSpring(args);

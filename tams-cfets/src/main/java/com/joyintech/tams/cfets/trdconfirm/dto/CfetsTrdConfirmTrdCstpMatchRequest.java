@@ -48,6 +48,9 @@ public class CfetsTrdConfirmTrdCstpMatchRequest {
     @ApiModelProperty(name="counterId",value="对手方",example="字符串1")
     private String counterId;
 
+    @ApiModelProperty(name="trdConfStatus",value="成交确认状态",example="字符串1")
+    private String trdConfStatus;
+
     @ApiModelProperty(name="pageMode",value="分页对象")
     private PageMode pageMode;
 
@@ -158,6 +161,14 @@ public class CfetsTrdConfirmTrdCstpMatchRequest {
 
     public void setExeid(String exeid) {
         this.exeid = exeid;
+    }
+
+    public String getTrdConfStatus() {
+        return trdConfStatus;
+    }
+
+    public void setTrdConfStatus(String trdConfStatus) {
+        this.trdConfStatus = trdConfStatus;
     }
 }
 

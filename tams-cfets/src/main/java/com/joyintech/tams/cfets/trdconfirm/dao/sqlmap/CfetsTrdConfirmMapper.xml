@@ -22,6 +22,8 @@
         left join SYS_DATADICT_LIST dicttradeMarket on aaa.tradeMarket=dicttradeMarket.ITEM_CODE and dicttradeMarket.DICT_CODE='TRADE_PLACE'
        <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
+        <include refid="vagueQueryExceWhere"></include>
+
         order by aaa.finprodType2, aaa.ps DESC)
         <!--前端传入排序字段-->
         <if test="sort != null and sort != '' and direction != null and direction != ''">
@@ -30,13 +32,13 @@
     </select>
     <sql id="onlyRegInfo">
         select  decode(reg.trade_status,'D','撤销','有效') as effectiveStatusName,
-        reg.finprod_type2 as finprodType2,
+        decode(reg.finprod_type2,'F01','01','02') as finprodType2,
         reg.finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         reg.trade_market as tradeMarket,
-        reg.settle_speed as settleSpeed,
+        decode(reg.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdName,
         nvl(reg.face_value,0)/10000 as faceValue,
@@ -48,15 +50,24 @@
         reg.ou_trader_id as trader,
         reg.trade_date as tradeDate,
         reg.counter_id as counterId,
+        mcci.PARTY_ABBR as counterIdName,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         reg.quote_type as quoteType,
         reg.remark as remark,
         reg.totle_trade_id as totleTradeId,
         decode(reg.trade_status,'D','03','02') effectiveStatus,
-        case when  match.trd_conf_status is null and reg.trade_status in ('E','M') then '01'
-             when  match.trd_conf_status='1' and reg.trade_status in ('E','M') then '02'
-             when   reg.trade_status ='D' then '03' end as regStatus
+        case when  match.trd_conf_status is null and reg.trade_status in ('01', '02') then '01'
+             when  match.trd_conf_status='1' and reg.trade_status in ('01', '02') then '02'
+             when   reg.trade_status ='D' then '03' end as regStatus,
+        '04' as dealType,
+        reg.settle_date as settleDate,
+        reg.delivery_type as deliveryType,
+        reg.v_settle_date as vsettleDate,
+        reg.m_settle_date as msettleDate,
+        null as pledgeFinprodIds,
+        null as pledgeRatios,
+        null as pledgeFaceValues
         from reg_fin_product_deal_total reg
         left join fin_product fp
         on fp.finprod_id=reg.finprod_id
@@ -80,10 +91,11 @@
         on reg.totle_trade_id=match.pre_trade_id
         left join stl_sec_acct_info stlinfo
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
         where reg.trade_date= #{sysDate}
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
-            and reg.trade_status in ('E','M')
+            and reg.trade_status in ('01', '02')
         </if>
         <if test="userId != null and userId != ''">
             and (reg.create_user= #{userId} or reg.update_user= #{userId})
@@ -126,14 +138,14 @@
         </if>
     </sql>
     <sql id="onlyWflRegInfo">
-        select  decode(reg.trade_status,'D','撤销','有效') as effectiveStatusName,
-        reg.finprod_type2 as finprodType2,
+        select  '流程中' as effectiveStatusName,
+        decode(reg.finprod_type2,'F01','01','02') as finprodType2,
         reg.finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         reg.trade_market as tradeMarket,
-        reg.settle_speed as settleSpeed,
+        decode(reg.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdName,
         nvl(reg.face_value,0)/10000 as faceValue,
@@ -145,13 +157,22 @@
         reg.ou_trader_id as trader,
         reg.trade_date as tradeDate,
         reg.counter_id as counterId,
+        mcci.PARTY_ABBR as counterIdName,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         null as quoteType,
         reg.remark as remark,
         reg.totle_trade_id as totleTradeId,
         '01' effectiveStatus,
-        null regStatus
+        null regStatus,
+        '04' as dealType,
+        reg.settle_date as settleDate,
+        reg.delivery_type as deliveryType,
+        reg.v_settle_date as vsettleDate,
+        reg.m_settle_date as msettleDate,
+        null as pledgeFinprodIds,
+        null as pledgeRatios,
+        null as pledgeFaceValues
         from wfl_reg_fin_product_deal_total reg
         left join fin_product fp
         on fp.finprod_id=reg.finprod_id
@@ -175,10 +196,11 @@
         on reg.totle_trade_id=match.pre_trade_id
         left join stl_sec_acct_info stlinfo
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
         where reg.trade_date= #{sysDate}
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
-            and reg.trade_status in ('E','M')
+            and reg.trade_status in ('01', '02')
         </if>
         <if test="userId != null and userId != ''">
             and (reg.create_user= #{userId} or reg.update_user= #{userId})
@@ -224,9 +246,9 @@
         <if test="search != null and search != '' and search !='有效' ">
             <where>
                 ((aaa.effectiveStatusName || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
-                || '|' || dictps.ITEM_VALUE || '|' || dicttradeMarket.ITEM_VALUE || '|T+' || aaa.settleSpreed
+                || '|' || dictps.ITEM_VALUE || '|' || dicttradeMarket.ITEM_VALUE || '|T+' || aaa.settleSpeed
                 || '|' || aaa.secManageAcctIdName || '|' || aaa.busiCode || '|' || aaa.trader
-                || '|' || aaa.counterId || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
+                || '|' || aaa.counterId  || '|' || aaa.counterIdName || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
                 || '|' || aaa.quoteType || '|' || aaa.remark
                 like '%' || #{search} || '%')
                 or to_char(aaa.faceValue,'FM9999999999999990.99')=#{search} or to_char(aaa.faceValue)=#{search}
@@ -234,12 +256,64 @@
                 or aaa.termDays||'' =#{search}
                 or to_char(aaa.tradeAmt,'FM9999999999999990.99')=#{search} or to_char(aaa.tradeAmt)=#{search}
                 or aaa.tradeDate||'' =#{search}
-                or aaa.tradeDate=#{year}||'-'||#{search}
-                or replace(aaa.tradeDate,'-','/')=#{search}
-                or replace(aaa.tradeDate,'-','/')=#{year}||'/'||#{search}
+                or aaa.tradeDate||'' =#{year}||'-'||#{search}
+                or replace(aaa.tradeDate,'-','/')||'' =#{search}
+                or replace(aaa.tradeDate,'-','/')||'' =#{year}||'/'||#{search}
                 )
             </where>
         </if>
+    </sql>
+    <sql id="vagueQueryExceWhere">
+        <where>
+            <if test="tradeDate != null and !tradeDate.equals('')">
+                AND aaa.tradeDate = #{tradeDate,jdbcType=Date}
+            </if>
+            <if test="quoteid != null and !''.equals(quoteid)">
+                and aaa.totleTradeId = #{quoteid,jdbcType=VARCHAR}
+            </if>
+            <if test="finprodMarketId != null and !''.equals(finprodMarketId)">
+               and  aaa.finprodMarketId = #{finprodMarketId,jdbcType=VARCHAR}
+            </if>
+            <if test="ps != null and !''.equals(ps)">
+                and aaa.ps = #{ps,jdbcType=VARCHAR}
+            </if>
+            <if test="secManageAcctId != null and !''.equals(secManageAcctId)">
+                and aaa.secManageAcctId = #{secManageAcctId,jdbcType=VARCHAR}
+            </if>
+            <if test="tradeYield != null and !''.equals(tradeYield)">
+                and aaa.tradeYield = #{tradeYield,jdbcType=VARCHAR}
+            </if>
+            <if test="faceValue != null and !''.equals(faceValue)">
+                and aaa.faceValue = #{faceValue,jdbcType=VARCHAR}
+            </if>
+            <if test="settleDate != null and !''.equals(settleDate)">
+                and aaa.settleDate = #{settleDate,jdbcType=DATE}
+            </if>
+            <if test="deliveryType != null and !''.equals(deliveryType)">
+                and aaa.deliverytype = #{deliveryType,jdbcType=VARCHAR}
+            </if>
+            <if test="term != null and !''.equals(term)">
+               and aaa.termDays= #{term,jdbcType=VARCHAR}
+            </if>
+            <if test="vsettleDate != null and !''.equals(vsettleDate)">
+                and aaa.vsettleDate = #{vsettleDate}
+            </if>
+            <if test="msettleDate != null and !''.equals(msettleDate)">
+                and aaa.msettleDate = #{msettleDate}
+            </if>
+            <if test="tradeAmt != null and !''.equals(tradeAmt)">
+                and aaa.tradeAmt = #{tradeAmt}
+            </if>
+            <if test="pledgeFinprodIds != null and !''.equals(pledgeFinprodIds)">
+                and aaa.pledgeFinprodIds = #{pledgeFinprodIds}
+            </if>
+            <if test="pledgeRatios != null and !''.equals(pledgeRatios)">
+                and aaa.pledgeRatios = #{pledgeRatios}
+            </if>
+            <if test="pledgeFaceValues != null and !''.equals(pledgeFaceValues)">
+                and aaa.pledgeFaceValues = #{pledgeFaceValues}
+            </if>
+        </where>
     </sql>
 
     <!-- 登记和报价管理查询 -->
@@ -281,7 +355,7 @@
         fp.finprod_abbr as finprodAbbr,
         ib.ps as ps,
         '01' as tradeMarket,
-        ib.settle_speed as settleSpeed,
+        decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdName,
         nvl(ib.share_amt,0)/100 as faceValue,
@@ -292,6 +366,7 @@
         ib.ou_trader_id as trader,
         ib.quote_date as tradeDate,
         ibd.cp_party_id as counterId,
+        mcci.PARTY_ABBR as counterIdName,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         ib.quote_type as quoteType,
@@ -300,7 +375,15 @@
         '02' effectiveStatus,
         case when  match.trd_conf_status is null  then '01'
         when  match.trd_conf_status='1' then '02'
-        end as regStatus
+        end as regStatus,
+        ib.quote_type as dealType,
+        ib.settle_date as settleDate,
+        ib.delivery_type as deliveryType,
+        null as vsettleDate,
+        null as msettleDate,
+        null as pledgeFinprodIds,
+        null as pledgeRatios,
+        null as pledgeFaceValues
         from ibu_quote_bond ib
         left join (
         select I.*
@@ -327,6 +410,8 @@
         on ib.quote_id=match.pre_trade_id
         left join stl_sec_acct_info stlinfo
         on ib.sec_manage_acct_id=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ibd.cp_party_id= mcci.party_id
+
         where ib.quote_date= #{sysDate}
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
@@ -337,7 +422,7 @@
         <if test="ps != null and !ps.equals('')">
             AND ib.ps=#{ps}
         </if>
-        <if test="regAssetType != null !regAssetType.equals('')">
+        <if test="regAssetType != null and  regAssetType!= ''">
             AND '01'=#{regAssetType}
         </if>
         <if test="tradeMarket != null and !tradeMarket.equals('')">
@@ -359,7 +444,7 @@
             AND ib.quote_type= #{quoteType,jdbcType=VARCHAR}
         </if>
         <if test="counterId != null and counterId != ''">
-            AND ib.cp_party_id= #{counterId,jdbcType=VARCHAR}
+            AND ibd.cp_party_id= #{counterId,jdbcType=VARCHAR}
         </if>
         union all
         select  '有效' as effectiveStatusName,
@@ -369,7 +454,7 @@
         null as finprodAbbr,
         ic.repo_ps as ps,
         '01' as tradeMarket,
-        ic.settle_speed as settleSpeed,
+        decode(ic.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         ic.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdName,
         null as faceValue,
@@ -380,6 +465,7 @@
         ic.ou_trader_id as trader,
         ic.quote_date as tradeDate,
         ic.cp_party_id as counterId,
+        mcci.PARTY_ABBR as counterIdName,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         ic.quote_type as quoteType,
@@ -388,8 +474,24 @@
         '02' effectiveStatus,
         case when  match.trd_conf_status is null  then '01'
         when  match.trd_conf_status='1' then '02'
-        end as regStatus
+        end as regStatus,
+        ic.quote_type as dealType,
+        ic.quote_date as settleDate,
+        null as deliveryType,
+        ic.v_settle_date as vsettleDate,
+        ic.m_settle_date as msettleDate,
+        icpledge.pledgeFinprodId as pledgeFinprodIds,
+        icpledge.pledgeRatio as pledgeRatios,
+        icpledge.pledgeFaceValue as pledgeFaceValues
         from ibu_quote_crep ic
+        left join (
+        select I.quote_id,
+        wm_concat(i.pledge_finprod_id) as pledgeFinprodId,wm_concat(i.pledge_ratio) pledgeRatio,
+        wm_concat(i.pledge_face_value) pledgeFaceValue
+        from (select * from ibu_quote_crep_pledge order by pledge_finprod_id) I
+        group by  I.quote_id
+        )icpledge
+        on  ic.quote_id=icpledge.quote_id
         left join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
         from ibu_quote_etr_re ir
@@ -407,6 +509,7 @@
         on ic.quote_id=match.pre_trade_id
         left join stl_sec_acct_info stlinfo
         on ic.sec_manage_acct_id=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ic.cp_party_id= mcci.party_id
         where ic.quote_date= #{sysDate}
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
@@ -417,7 +520,7 @@
         <if test="ps != null and !ps.equals('')">
             AND ic.repo_ps=#{ps}
         </if>
-        <if test="regAssetType != null !regAssetType.equals('')">
+        <if test="regAssetType != null and regAssetType != ''">
             AND '02'=#{regAssetType}
         </if>
         <if test="tradeMarket != null and !tradeMarket.equals('')">
@@ -514,6 +617,65 @@
         left join reg_fin_product_deal_total_add regAdd
         on reg.totle_trade_id=regAdd.Totle_Trade_Id
         where reg.totle_trade_id= #{totleTradeId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectIbuInfoByKey" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse">
+        select
+        'F01' as finprodType2,
+        ib.finprod_id as finprodId,
+        fp.finprod_market_id as finprodMarketId,
+        fp.finprod_abbr as finprodAbbr,
+        ib.ps as ps,
+        '01' as tradeMarket,
+        ib.settle_speed as settleSpeed,
+        ib.sec_manage_acct_id as secManageAcctId,
+        nvl(ib.share_amt,0)*100 as faceValue,
+        ibd.yield  tradeYield,
+        null as termDays,
+        ib.fprice_amt  as tradeAmt,
+        ib.ou_trader_id as trader,
+        ib.quote_date as tradeDate,
+        ibd.cp_party_id as counterId,
+        ib.quote_type as quoteType,
+        ib.remark as remark,
+        ib.quote_id as totleTradeId,
+        ib.OU_PARTY_ID as ouPartyId,
+        ib.OU_TRADER_ID as ouTraderId,
+        ibd.CP_PARTY_ID as cpPartyId,
+        ibd.CP_TRADER as cpTrader,
+        i.OURDEPOSITACCOUNTNUMBER as secManageAcctId,
+        ib.settle_date as settleDate,
+        fp.ccy  as ccy,
+        ibd.unit_cprice unitCprice,
+        ibd.unit_fprice as unitFprice,
+        ibd.unit_int as unitInt,
+        ibd.yield as yield,
+        ibd.share_amt as shareAmt,
+        ibd.par_value as parValue,
+        ibd.fprice_amt fpriceAmt,
+        ibd.cprice_amt as cpriceAmt,
+        ibd.int_amt as intAmt,
+        ibd.exer_yield as exerYield
+
+
+        from ibu_quote_bond ib
+        left join (
+        select I.*
+        from ibu_quote_bond_det I
+        INNER JOIN (SELECT quote_id ,MAX(update_time) UPDATETIME FROM  ibu_quote_bond_det GROUP BY quote_id)	II ON  I.quote_id = II.quote_id AND II.UPDATETIME = I.Update_Time
+        )ibd
+        on  ib.quote_id=ibd.quote_id
+        left join fin_product fp
+        on ib.finprod_id=fp.finprod_id
+        left join trdquto_match_info match
+        on ib.quote_id=match.pre_trade_id
+        left join (
+        select i.* from
+        interf_cstp_trade I
+        INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
+        )i
+        on match.exe_id=i.execid
+
+        where  ib.quote_id= #{totleTradeId,jdbcType=VARCHAR}
     </select>
     <select id="findAllRegFeeInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegFeeInfoDto">
         select reg.trade_id as tradeId,
@@ -667,18 +829,36 @@
         WHERE
         SEC_ACCT_ID = #{secAcctId}
     </select>
+    <select id="findAllIbuDealList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsRegFinProductDealDto" parameterType="java.lang.String" >
+        select
+        reg.ENTRUST_ID as entrustId,
+        reg.PORTFOLIO_ID as portfolioId,
+        reg.share_amt as shareAmt,
+        reg.fprice_amt as fpriceAmt,
+        reg.remark as remark
+        from IBU_QUOTE_ETR_RE  reg
+        where reg.quote_id= #{totleTradeId,jdbcType=VARCHAR}
+    </select>
     <insert id="insertTrdQutoMatchInfo" parameterType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmMatchDto" >
         insert into trdquto_match_info (SEQNO, CSTP_TRADE_ID, EXE_ID,
         PRE_TRADE_ID, MATCH_TYPE, MATCH_STATUS,
         TRD_CONF_STATUS, CREATE_USER, CREATE_DEPT,
         CREATE_TIME, UPDATE_USER, UPDATE_TIME
         )
-        values (#{seqNo,jdbcType=VARCHAR}, #{cstpTradeId,jdbcType=VARCHAR}, #{exeId,jdbcType=VARCHAR},
-        #{preTradeId,jdbcType=VARCHAR}, #{matchType,jdbcType=VARCHAR},, #{matchStatus,jdbcType=VARCHAR},
+        values (#{seqno,jdbcType=VARCHAR}, #{cstpTradeId,jdbcType=VARCHAR}, #{exeId,jdbcType=VARCHAR},
+        #{preTradeId,jdbcType=VARCHAR}, #{matchType,jdbcType=VARCHAR}, #{matchStatus,jdbcType=VARCHAR},
         #{trdConfStatus,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
         sysdate, #{updateUser,jdbcType=VARCHAR},sysdate
         )
     </insert>
+
+    <update id="updateTrdQutoMatchInfo" parameterType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmMatchDto" >
+        update trdquto_match_info
+        set TRD_CONF_STATUS= #{trdConfStatus,jdbcType=VARCHAR},
+        UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = sysdate
+        where PRE_TRADE_ID=#{preTradeId,jdbcType=VARCHAR}
+    </update>
     <select id="findAllCstpInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmCstpInfoListResponse">
         select * from (select aaa.*
         from (select I.Execid  as execid,
@@ -699,8 +879,13 @@
         su.USER_NAME trader,
         I.Counterinstitutioncode as counterTrader,
         I.Clearingmethod as settType,
-        I.Tradetime as tradeDate,
-        nvl(ts.dealtext,tr.dealtext) as remark
+        nvl(ts.dealdate,tr.dealdate) as tradeDate,
+        nvl(ts.dealtext,tr.dealtext) as remark,
+        nvl(ts.dealno,tr.tradeid) as cstpTradeId,
+        I.deliveryType as deliveryType,
+        to_date(I.Settldate,'yyyy-MM-dd') as vsettleDate,
+        to_date(I.Settldate2,'yyyy-MM-dd') as msettleDate,
+        nvl(ts.settdate,tr.dealdate) as settleDate
         from INTERF_CSTP_TRADE I
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
         left join INTERF_OPICS_TRAD_REPO tr on tr.oritradeid = I.EXECID
@@ -768,6 +953,8 @@
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryCstpWhere"></include>
+        <include refid="vagueQueryCstpMatchWhere"></include>
+
         order by aaa.businesstype,aaa.ps,aaa.finprodMarketId)
         <!--前端传入排序字段-->
         <if test="sort != null and sort != '' and direction != null and direction != ''">
@@ -779,7 +966,7 @@
         <if test="search != null and search != '' and search !='有效' ">
             <where>
                 ((aaa.execid || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
-                || '|' || dictps.ITEM_VALUE || '|T+' || aaa.settleSpreed
+                || '|' || dictps.ITEM_VALUE || '|T+' || aaa.settleSpeed
                 || '|' || aaa.acctNo || '|' || aaa.quoteid  || '|' || aaa.traderid || '|' || aaa.trader
                 || '|' || aaa.counterTrader || '|' || aaa.settType || '|' || aaa.remark
                 like '%' || #{search} || '%')
@@ -794,6 +981,46 @@
                 )
             </where>
         </if>
+    </sql>
+    <sql id="vagueQueryCstpMatchWhere">
+        <where>
+            <if test="totleTradeId != null and !''.equals(totleTradeId)">
+                and aaa.quoteid = #{totleTradeId,jdbcType=VARCHAR}
+            </if>
+            <if test="finprodMarketId != null and !''.equals(finprodMarketId)">
+                and aaa.finprodMarketId = #{finprodMarketId,jdbcType=VARCHAR}
+            </if>
+            <if test="ps != null and !''.equals(ps)">
+                and aaa.ps = #{ps,jdbcType=VARCHAR}
+            </if>
+            <if test="secManageAcctId != null and !''.equals(secManageAcctId)">
+                and aaa.acctNo = #{secManageAcctId,jdbcType=VARCHAR}
+            </if>
+            <if test="tradeYield != null and !''.equals(tradeYield)">
+                and aaa.tradeYield = #{tradeYield,jdbcType=VARCHAR}
+            </if>
+            <if test="faceValue != null and !''.equals(faceValue)">
+                and aaa.lastqty = #{faceValue,jdbcType=VARCHAR}
+            </if>
+            <if test="settleDate != null and !''.equals(settleDate)">
+                and aaa.settleDate = #{settleDate,jdbcType=DATE}
+            </if>
+            <if test="deliveryType != null and !''.equals(deliveryType)">
+                and aaa.deliverytype = #{deliveryType,jdbcType=VARCHAR}
+            </if>
+            <if test="term != null and !''.equals(term)">
+                and aaa.termDays = #{term,jdbcType=VARCHAR}
+            </if>
+            <if test="vsettleDate != null and !''.equals(vsettleDate)">
+                and aaa.vsettleDate = #{vsettleDate}
+            </if>
+            <if test="msettleDate != null and !''.equals(msettleDate)">
+                and aaa.msettleDate = #{msettleDate}
+            </if>
+            <if test="tradeAmt != null and !''.equals(tradeAmt)">
+                and aaa.tradeAmt = #{tradeAmt}
+            </if>
+        </where>
     </sql>
     <select id="findAllTrdCstpInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmTrdCstpMatchResponse">
         select * from (select aaa.*
@@ -823,7 +1050,9 @@
         decode(regfee.fee_type,'07',regfee.fee_amt,null) as settleFeeAmt,
         reg.counter_id as counterId,
         reg.quote_type as busiTypeStr,
-        reg.quote_type as quoteType
+        reg.quote_type as quoteType,
+        m.trd_conf_status as trdConfStatus,
+        m.match_status as matchStatus
         from trdquto_match_info m
         left join reg_fin_product_deal_total reg
         on m.pre_trade_id=reg.totle_trade_id
@@ -901,6 +1130,12 @@
         <if test="counterId != null and counterId != ''">
             and reg.counter_id= #{counterId}
         </if>
+        <if test="trdConfStatusList!=null  and trdConfStatusList.size() > 0 ">
+            AND m.trd_conf_status IN
+            <foreach collection="trdConfStatusList" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
 
         union all
         select   m.seqno as seqno,
@@ -927,7 +1162,9 @@
         null as settleFeeAmt,
         nvl(ib.cp_party_id,ic.cp_party_id) as counterId,
         nvl(ib.quote_type,ic.quote_type) as busiTypeStr,
-        nvl(ib.quote_type,ic.quote_type) as quoteType
+        nvl(ib.quote_type,ic.quote_type) as quoteType,
+        m.trd_conf_status as trdConfStatus,
+        m.match_status as matchStatus
         from trdquto_match_info m
         left join (
         select
@@ -1014,6 +1251,12 @@
         <if test="counterId != null and counterId != ''">
             and nvl(ib.cp_party_id,ic.cp_party_id)= #{counterId}
         </if>
+        <if test="trdConfStatusList!=null  and trdConfStatusList.size() > 0 ">
+            AND m.trd_conf_status IN
+            <foreach collection="trdConfStatusList" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         )aaa
         left join SYS_DATADICT_LIST sdl on aaa.matchType=sdl.ITEM_CODE and sdl.DICT_CODE='TRD_MATCH_TYPE'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
@@ -1031,7 +1274,7 @@
             <where>
                 ((aaa.execid || '|' || aaa.busiCode || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId
                 || '|' || aaa.finprodAbbr || '|' || dictps.ITEM_VALUE
-                || '|' || aaa.finprodType2Name || '|T+' || aaa.settleSpreed
+                || '|' || aaa.finprodType2Name || '|T+' || aaa.settleSpeed
                 || '|' || aaa.secManageAcctId || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
                 || '|' || aaa.counterId || '|' || dictquoteTpe.ITEM_VALUE
                 like '%' || #{search} || '%')
@@ -1089,10 +1332,10 @@
         from reg_fin_product_deal regdeal
         left join ptl_portfolio pp
         on regdeal.portfolio_id=pp.portfolio_id
-        where regdeal.totle_trade_id=#{busiCode}
+        where regdeal.totle_trade_id=#{busiCode,jdbcType=VARCHAR}
         group by regdeal.totle_trade_id)deal
         on reg.totle_trade_id=deal.totle_trade_id
-        where reg.totle_trade_id=#{busiCode} and reg.finprod_type2='F01'
+        where reg.totle_trade_id=#{busiCode,jdbcType=VARCHAR} and reg.finprod_type2='F01'
 
         union all
 
@@ -1129,7 +1372,7 @@
         on ib.finprod_id=fp.finprod_id
         left join (
         select ibd.* from ibu_quote_bond_det ibd
-        where ibd.quote_id=#{busiCode}
+        where ibd.quote_id=#{busiCode,jdbcType=VARCHAR}
         and rownum=1
         order by ibd.update_time desc
         )ibd
@@ -1139,10 +1382,10 @@
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
-        where ir.quote_id=#{busiCode}
+        where ir.quote_id=#{busiCode,jdbcType=VARCHAR}
         group by ir.quote_id)deal
         on ib.quote_id=deal.quote_id
-        where ib.quote_id=#{busiCode}
+        where ib.quote_id=#{busiCode,jdbcType=VARCHAR}
     )
     <!--前端传入排序字段-->
     <if test="sort != null and sort != '' and direction != null and direction != ''">
@@ -1277,7 +1520,7 @@
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
         LEFT JOIN SYS_USER_ADD sua ON ts.TRAD =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
-        where I.EXECID=#{exeid}
+        where I.EXECID=#{exeid,jdbcType=VARCHAR}
         )
         <!--前端传入排序字段-->
         <if test="sort != null and sort != '' and direction != null and direction != ''">
@@ -1322,7 +1565,7 @@
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
         LEFT JOIN SYS_USER_ADD sua ON tr.BUYTRADER =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
-        where I.EXECID=#{exeid}
+        where I.EXECID=#{exeid,jdbcType=VARCHAR}
         )
         <!--前端传入排序字段-->
         <if test="sort != null and sort != '' and direction != null and direction != ''">
@@ -1342,7 +1585,17 @@
         ETR_ENTRUST T1
         where  T1.ENTRUST_ID = #{entrustId}
     </select>
-
+    <!--查询交易对手-->
+    <select id="selectCounterId" resultType="String">
+        select
+        mcp.COUNTER_ID
+        from
+        MST_COUNTER_PARTY mcp
+        INNER JOIN MST_CFETS_CUSTOMER_INFO mcci
+        ON mcp.COUNTER_NAME = mcci.PARTY_NAME
+        WHERE
+        mcci.PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}
+    </select>
 </mapper>
 
 

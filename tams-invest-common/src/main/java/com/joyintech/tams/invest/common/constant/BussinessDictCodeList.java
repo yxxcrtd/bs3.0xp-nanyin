@@ -5217,6 +5217,10 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      */
     报价方式_请求报价(BussinessDictCode.报价方式, "02", "请求报价"),
     /**
+     * 报价方式_登记报价
+     */
+    报价方式_登记报价(BussinessDictCode.报价方式, "04", "登记报价"),
+    /**
      * 清算类型_净额清算
      */
     清算类型_净额清算(BussinessDictCode.清算类型, "02", "净额清算"),

@@ -4,6 +4,8 @@ import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.List;
+
 /**
  * 银行间交易成交确认
  * 查询Cstp下行列表分页查询条件DTO
@@ -46,6 +48,9 @@ public class CfetsTrdConfirmCstpInfoListRequest {
 
     @ApiModelProperty(name="search",value="关键字",example="12")
     private String search;
+
+    @ApiModelProperty(name="selectedItem",value="选中数据",example="字符串1")
+    private transient List<CfetsTrdConfirmRegInfoListResponse> selectedItem;
 
     public String getRegAssetType() {
         return regAssetType;
@@ -133,6 +138,15 @@ public class CfetsTrdConfirmCstpInfoListRequest {
 
     public void setSearch(String search) {
         this.search = search;
+    }
+
+
+    public List<CfetsTrdConfirmRegInfoListResponse> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<CfetsTrdConfirmRegInfoListResponse> selectedItem) {
+        this.selectedItem = selectedItem;
     }
 }
 

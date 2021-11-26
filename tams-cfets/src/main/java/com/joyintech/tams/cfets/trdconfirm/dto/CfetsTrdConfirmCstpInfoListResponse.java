@@ -110,6 +110,16 @@ public class CfetsTrdConfirmCstpInfoListResponse {
     private Date   msettleDate;
     @ApiModelProperty(name="mTradeAmt",value="到期结算金额",example="字符串1")
     private BigDecimal   miradeAmt;
+    @ApiModelProperty(name="cstpTradeId",value="下行交易编号",example="字符串1")
+    private String cstpTradeId;
+    @ApiModelProperty(name="deliveryType",value="结算方式",example="字符串1")
+    private String  deliveryType;
+    @ApiModelProperty(name="pledgeFinprodIds",value="质押券债券",example="字符串1")
+    private String   pledgeFinprodIds;
+    @ApiModelProperty(name="pledgeRatios",value="质押券折算比例",example="字符串1")
+    private String   pledgeRatios;
+    @ApiModelProperty(name="pledgeFaceValues",value="质押券面值",example="字符串1")
+    private String   pledgeFaceValues;
 
     public String getExecid() {
         return execid;
@@ -326,5 +336,45 @@ public class CfetsTrdConfirmCstpInfoListResponse {
 
     public void setMiradeAmt(BigDecimal miradeAmt) {
         this.miradeAmt = miradeAmt;
+    }
+
+    public String getCstpTradeId() {
+        return cstpTradeId;
+    }
+
+    public void setCstpTradeId(String cstpTradeId) {
+        this.cstpTradeId = cstpTradeId;
+    }
+
+    public String getDeliveryType() {
+        return deliveryType;
+    }
+
+    public void setDeliveryType(String deliveryType) {
+        this.deliveryType = deliveryType;
+    }
+
+    public String getPledgeFinprodIds() {
+        return pledgeFinprodIds;
+    }
+
+    public void setPledgeFinprodIds(String pledgeFinprodIds) {
+        this.pledgeFinprodIds = pledgeFinprodIds;
+    }
+
+    public String getPledgeRatios() {
+        return pledgeRatios;
+    }
+
+    public void setPledgeRatios(String pledgeRatios) {
+        this.pledgeRatios = pledgeRatios;
+    }
+
+    public String getPledgeFaceValues() {
+        return pledgeFaceValues;
+    }
+
+    public void setPledgeFaceValues(String pledgeFaceValues) {
+        this.pledgeFaceValues = pledgeFaceValues;
     }
 }

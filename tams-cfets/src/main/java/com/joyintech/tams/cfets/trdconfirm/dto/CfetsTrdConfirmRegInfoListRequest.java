@@ -4,6 +4,8 @@ import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.List;
+
 /**
  * 银行间交易成交确认
  * 交易登记列表分页查询条件DTO
@@ -12,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @see CfetsTrdConfirmRegInfoListRequest
  * @since 1.0
  */
-@ApiModel(value="查询交易登记列表请求参数",description="查询交易登记列表请求参数")
+@ApiModel(value="查询交易执行列表请求参数",description="查询交易执行列表请求参数")
 public class CfetsTrdConfirmRegInfoListRequest {
 
     @ApiModelProperty(name="portfolioId",value="组合代码集合",example="字符串1,字符串2,...")
@@ -29,6 +31,9 @@ public class CfetsTrdConfirmRegInfoListRequest {
 
     @ApiModelProperty(name="tradeMarket",value="交易场所",example="01")
     private String tradeMarket;
+
+    @ApiModelProperty(name="dealType",value="交易类型",example="01")
+    private String dealType;
 
     @ApiModelProperty(name="settleSpeed",value="清算速度",example="01")
     private String settleSpeed;
@@ -53,6 +58,9 @@ public class CfetsTrdConfirmRegInfoListRequest {
 
     @ApiModelProperty(name="search",value="关键字",example="12")
     private String search;
+
+    @ApiModelProperty(name="selectedItem",value="选中数据",example="字符串1")
+    private transient List<CfetsTrdConfirmCstpInfoListResponse> selectedItem;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -159,5 +167,21 @@ public class CfetsTrdConfirmRegInfoListRequest {
     }
 
 
+    public String getDealType() {
+        return dealType;
+    }
+
+    public void setDealType(String dealType) {
+        this.dealType = dealType;
+    }
+
+
+    public List<CfetsTrdConfirmCstpInfoListResponse> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<CfetsTrdConfirmCstpInfoListResponse> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
 }
 

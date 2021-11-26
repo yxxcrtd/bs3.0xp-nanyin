@@ -6,6 +6,7 @@ import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfoDto;
 import com.joyintech.tams.cfets.etrib.dto.CfetsEtrInvestBondInfoReqDto;
 import com.joyintech.tams.cfets.trdconfirm.dto.*;
 import com.joyintech.tams.common.base.entity.RegFinProductDeal;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,6 +36,12 @@ public interface CfetsTrdConfirmMapper {
      */
     CfetsTrdConfirmRegInfoListResponse selectRegInfoByKey(String totleTradeId);
     /**
+     * 根据主键查询报价信息
+     * @param pageParam
+     * @return
+     */
+    CfetsTrdConfirmRegInfoListResponse selectIbuInfoByKey(String totleTradeId);
+    /**
      * 查询所有登记费用信息
      * @param pageParam
      * @return
@@ -50,6 +57,13 @@ public interface CfetsTrdConfirmMapper {
     List<CfetsRegFinProductDealDto> findAllRegDealList(String totleTradeId);
 
     /**
+     * 查询所以报价明细数据
+     * @param totleTradeId
+     * @return
+     */
+    List<CfetsRegFinProductDealDto> findAllIbuDealList(String totleTradeId);
+
+    /**
      * 查询所有登记明细费用信息
      * @param pageParam
      * @return
@@ -63,11 +77,17 @@ public interface CfetsTrdConfirmMapper {
      */
     String selectSecAcctSource(Map<String, Object> param);
     /**
-     * 更新操作记录
+     * 新建下行成交匹配关系
      * @param record
      * @return
      */
     int insertTrdQutoMatchInfo(CfetsTrdConfirmMatchDto record);
+    /**
+     * 更新下行成交匹配关系
+     * @param record
+     * @return
+     */
+    int updateTrdQutoMatchInfo(CfetsTrdConfirmMatchDto record);
     /**
      * 查询所有Cstp下行信息
      * @param pageParam
@@ -123,5 +143,12 @@ public interface CfetsTrdConfirmMapper {
      * @return
      */
     List<CfetsTrdConfirmRegInfoListResponse> findAllRegAndIbuInfoList(Map<String, Object> pageParam);
+
+    /**
+     * 查询交易对手
+     * @param cpPartyId
+     * @return
+     */
+    String selectCounterId(@Param("cpPartyId") String cpPartyId);
 
 }

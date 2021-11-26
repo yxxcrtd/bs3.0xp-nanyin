@@ -114,6 +114,12 @@ public class CfetsTrdConfirmTrdCstpMatchResponse {
     @ApiModelProperty(name="seqno",value="流水号",example="字符串1")
     private String seqno;
 
+    @ApiModelProperty(name="trdConfStatus",value="成交确认状态",example="字符串1")
+    private String trdConfStatus;
+
+    @ApiModelProperty(name="matchStatus",value="匹配状态",example="字符串1")
+    private String matchStatus;
+
     @ApiModelProperty(name="selectedItem",value="流水号",example="字符串1")
     private transient List<CfetsTrdConfirmTrdCstpMatchResponse> selectedItem;
 
@@ -349,5 +355,21 @@ public class CfetsTrdConfirmTrdCstpMatchResponse {
 
     public void setSelectedItem(List<CfetsTrdConfirmTrdCstpMatchResponse> selectedItem) {
         this.selectedItem = selectedItem;
+    }
+
+    public String getTrdConfStatus() {
+        return trdConfStatus;
+    }
+
+    public void setTrdConfStatus(String trdConfStatus) {
+        this.trdConfStatus = trdConfStatus;
+    }
+
+    public String getMatchStatus() {
+        return matchStatus;
+    }
+
+    public void setMatchStatus(String matchStatus) {
+        this.matchStatus = matchStatus;
     }
 }
