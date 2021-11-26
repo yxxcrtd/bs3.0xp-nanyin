@@ -22,7 +22,6 @@ import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
-import com.joyintech.tams.invest.common.asset.annotation.DictList;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -994,6 +993,16 @@ public class IbuQuoteBondService extends BaseService {
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsIbuQuoteBondMapper.listDayReg(pageParam));
     }
 
+    /**
+     * 当日登记check
+     * @param dataList
+     * @return
+     */
+    public AjaxResult exportDayRegCheck(List<CfetsBondDayRegDto> dataList){
+        AjaxResult ajaxResult = new AjaxResult();
+        return ajaxResult;
+
+    }
     public List<CfetsBondDayRegDto> listDayReg(Map<String,Object> pageParam){
         pageParam.put("loginUserId", LoginUserUtil.getUserName());
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
