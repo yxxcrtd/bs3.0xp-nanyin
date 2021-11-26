@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.invest.batch.resaleregautodeal.dao.ResaleRegAutoDealMapper">
+
+    <!--查询需要处理的回售登记数据-->
+    <select id="listTotleTradeId">
+        SELECT
+            TOTLE_TRADE_ID
+        FROM
+            REG_FIN_PRODUCT_DEAL_TOTAL T1
+        WHERE
+            PS = 'T03'
+            AND TRADE_STATUS = '01'
+            AND (IS_CANCEL = 'N'
+            OR IS_CANCEL IS NULL)
+            AND EXISTS (
+            SELECT
+                1
+            FROM
+                REG_FIN_PRODUCT_DEAL_TOTAL_ADD T2
+            WHERE
+                ACT_SETTE_DATE = TO_DATE(#{cdate}, 'yyyy-MM-dd')
+                AND T2.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID)
+            AND NOT EXISTS (
+            SELECT
+                1
+            FROM
+                TRDQUTO_MATCH_INFO T3
+            WHERE
+                T3.PRE_TRADE_ID = T1.TOTLE_TRADE_ID
+                AND MATCH_STATUS = '1')
+    </select>
+
+</mapper>

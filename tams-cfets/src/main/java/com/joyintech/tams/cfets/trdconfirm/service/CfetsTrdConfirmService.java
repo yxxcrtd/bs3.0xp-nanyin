@@ -641,7 +641,7 @@ public class CfetsTrdConfirmService extends BaseService{
         if(StringUtil.isNotEmpty(dto.getDealType())
           && StringUtil.equals(dto.getDealType(),BussinessDictCodeList.报价方式_登记报价.getValue())
         ){
-            return prepareEntity(dto.getTotleTradeId());
+            return prepareEntity(dto.getTotleTradeId(),DictCodeListExt1.生成方式_画面录入.getValue());
         }else{
             //报价数据
             return prepareIbuEntity(dto);
@@ -654,7 +654,7 @@ public class CfetsTrdConfirmService extends BaseService{
      * @see
      * @since 1.0
      */
-    public CfetsTrdBondInvestTradeDto prepareEntity(String totleTradeId) {
+    public CfetsTrdBondInvestTradeDto prepareEntity(String totleTradeId,String genType) {
         //如果是登记数据
         //根据汇总交易编号查询登记数据
         CfetsTrdConfirmRegInfoListResponse dtoReg=cfetsTrdConfirmMapper.selectRegInfoByKey(totleTradeId);
@@ -821,7 +821,7 @@ public class CfetsTrdConfirmService extends BaseService{
             trdProductDealAdd.setTradeId(deal.getTradeId()); // 交易编号
             trdProductDealAdd.setPortfolioId(regDeal.getPortfolioId()); // 投资组合代码
             trdProductDealAdd.setEntrustId(regDeal.getEntrustId()); // 委托代码
-            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_画面录入.getValue()); // 生成方式
+            trdProductDealAdd.setGenType(genType); // 生成方式
             trdProductDealAdd.setOurShareAmt(regDeal.getOurShareAmt());
             trdProductDealAdd.setLendinShareAmt(regDeal.getLendinShareAmt());
             trdProductDealAdd.setOurCpriceAmt(regDeal.getOurCpriceAmt());
