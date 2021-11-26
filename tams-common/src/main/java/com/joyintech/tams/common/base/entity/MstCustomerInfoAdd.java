@@ -6,6 +6,12 @@ import com.joyintech.framework.json.BigDecimalSerializer;
 import java.math.BigDecimal;
 
 public class MstCustomerInfoAdd extends BaseEntity {
+	
+	/**
+	 * 序列化ID
+	 */
+	private static final long serialVersionUID = -1878849706798601908L;
+	
     /**
      * 客户代码
      */

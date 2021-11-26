@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
-	<localRepository>E:\maven\home\tams\joyinwork\maven_2.1.2</localRepository>
+	<localRepository>F:\maven_3.0</localRepository>
 	<mirrors>
 		<mirror>
 			<id>nexus</id>
