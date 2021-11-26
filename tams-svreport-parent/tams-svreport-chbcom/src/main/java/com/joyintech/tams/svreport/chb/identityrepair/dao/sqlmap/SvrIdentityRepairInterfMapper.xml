@@ -6,7 +6,8 @@
 		SELECT
 		tmp1.equMark,
 		tmp1.indentifyMark,
-		tmp2.fundAccPlace
+		tmp2.fundAccPlace,
+		tmp2.orgIndentifyMark
 		FROM(
 		SELECT
 		'SUB'  equMark,
@@ -38,7 +39,8 @@
 		GROUP BY
 		tmp1.equMark,
 		tmp1.indentifyMark,
-		tmp2.fundAccPlace
+		tmp2.fundAccPlace,
+		tmp2.orgIndentifyMark
 	</select>
 
 
