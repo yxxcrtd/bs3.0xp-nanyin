@@ -171,7 +171,6 @@
             NULL TRADE_FEE,
             NULL OTHER_FEEAMT,
             YJ COMMISSION_AMT,
-            WTBH INSTRUCTION_ID,
             CASE WHEN CJJE >0 THEN 'T02'
             ELSE 'T01' END PS,
             T2.ACCT_NO ACCOUT,
@@ -259,7 +258,6 @@
             JYGF TRADE_FEE,
             QTF OTHER_FEEAMT,
             JYJ COMMISSION_AMT,
-            WTBH INSTRUCTION_ID,
             CASE WHEN QJCJJE >0 THEN 'T02'
             ELSE 'T01' END PS,
             T2.ACCT_NO ACCOUT,
