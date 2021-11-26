@@ -185,14 +185,16 @@ $(function() {
         });
         // 绑定查询事件
         $('#DayEndAccount001_btn_account').click(function() {
-            var dataList = table.getAllCheckedRows();
-            Joyin.ajaxJson(basePath + 'invest/basicdata/dayendaccount/DayEndAccount001/qryAccount', dataList, function(result) {
-                if (result.setMessage != null) {
-                    layer.alert(result.setMessage);
-                } else {
-                    table.reload();
-                }
-            });
+            Joyin.confirm("是否确认手工对账", function () {
+                var dataList = table.getAllCheckedRows();
+                Joyin.ajaxJson(basePath + 'invest/basicdata/dayendaccount/DayEndAccount001/qryAccount', dataList, function(result) {
+                    if (result.setMessage != null) {
+                        layer.alert(result.setMessage);
+                    } else {
+                        table.reload();
+                    }
+                });
+            })
         });
     });
 }());
