@@ -311,11 +311,11 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         if ("save".equals(entity.getOperatorType())) {
             return;
         }
-        CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity);
+        CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,type.name());
         //登录业务流程
         insertWfl(cfetsBondDealDbDto);
         //头寸
-        PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto));
+        PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,type.name()));
 
     }
     
@@ -325,12 +325,12 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             // 先删除流程中数据
             this.deleteBussFlowData(entity.getWorkflowId());
-            CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity);
+            CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,entity.getOperatorType());
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
             ProcessMark newEntity;
             //头寸
-            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto));
+            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,entity.getOperatorType()));
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsBondDealRegisterQuoteDto.class, true);
                 // 工作流ID
@@ -350,20 +350,15 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      */
     @Override
     public void doComplete(CfetsBondDealRegisterQuoteDto entity, OperationType operationType) {
-        CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity);
-        if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
-            //登录db
-            insert(cfetsBondDealDbDto);
-            //履历表
-            updateCfetsOprHis(entity.getTotleTradeId(),operationType.name());
-            //头寸
-            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto));
-            //处理指令执行进度
-            insertEtrFinishStatus(cfetsBondDealDbDto,operationType);
-        }
-        else{
-
-        }
+        CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,operationType.name());
+        //登录db
+        insert(cfetsBondDealDbDto,operationType.name());
+        //履历表
+        updateCfetsOprHis(entity.getTotleTradeId(),operationType.name());
+        //头寸
+        PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,operationType.name()));
+        //处理指令执行进度
+        insertEtrFinishStatus(cfetsBondDealDbDto,operationType);
     }
 
     /**
@@ -414,130 +409,171 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      * @param entity
      * @return
      */
-    public CfetsBondDealDbDto prepareEntity(CfetsBondDealRegisterQuoteDto entity) {
-        entity.setOuPartyId(entity.getMySide());
-        entity.setOuTraderId(entity.getMySideTrader());
-        entity.setDeliveryType(entity.getSettleMethod());
-        entity.setClearType(entity.getSettleType());
-        entity.setUnitCprice(entity.getPrice());
-        entity.setYield(entity.getMatureYield());
+    public CfetsBondDealDbDto prepareEntity(CfetsBondDealRegisterQuoteDto entity,String operationType) {
         CfetsBondDealDbDto result = new CfetsBondDealDbDto();
-        //交易方向
-        String ps = entity.getPs();
-        //投管业务类型
-        String tgBusiType = StringUtil.EMPTY;
-        //金融产品交易汇总登记
-        RegFinProductDealTotal regFinProductDealTotal = new RegFinProductDealTotal();
-        BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotal,entity);
-        regFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-        regFinProductDealTotal.setBranch(0L);
-        if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
-            tgBusiType = BussinessDictCodeList.平安业务类型_债券类资产买入.getValue();
-        }
-        if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
-            tgBusiType = BussinessDictCodeList.平安业务类型_债券类资产卖出.getValue();
-        }
-        if(StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
-            tgBusiType = DictCodeListExt1.平安业务类型_债券类资产行权.getValue();
-        }
-        regFinProductDealTotal.setTgBusiType(tgBusiType);
-        //金融产品交易汇总登记附属
-        RegFinProductDealTotalAdd regFinProductDealTotalAdd = new RegFinProductDealTotalAdd();
-        BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotalAdd,entity);
-        if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
-            regFinProductDealTotalAdd.setLendinFpriceAmt(entity.getSaleinFpriceAmt());
-            regFinProductDealTotalAdd.setLendinIntAmt(entity.getSaleinIntAmt());
-            regFinProductDealTotalAdd.setLendinShareAmt(entity.getSellAbleNum());
-        }
-        //汇总登记费用明细表
-        List<RegTradeFeeTotal> regTradeFeeTotals = new ArrayList<>();
-        if(null!=entity.getDealFeeAmt()){
-            regTradeFeeTotals.add(ibuQuoteBondService.prepareRegTradeFeeTotal(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),entity.getDealFeeAmt()));
-        }
-        if(null!=entity.getSettFeeamt()){
-            //交易手续费
-            regTradeFeeTotals.add(ibuQuoteBondService.prepareRegTradeFeeTotal(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),entity.getSettFeeamt()));
-        }
-        //交易登记明细
-        List<RegFinProductDeal> regFinProductDeals = new ArrayList<>();
-        List<RegFinProductDealAdd> regFinProductDealAdds = new ArrayList<>();
-        List<RegTradeFee> regTradeFees = new ArrayList<>();
-        if(CollectionUtils.isNotEmpty(entity.getPtlAllocatios())){
-            for (PtlAllocationDto ptlAllocatio : entity.getPtlAllocatios()) {
-                RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
-                BeanUtil.copyPropertiesIgnoreNull(regFinProductDeal,entity);
-                BussinessCodeParameter codeParameter = getBussinessCodeParameter(entity.getPs());
-                regFinProductDeal.setTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
-                regFinProductDeal.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
-                regFinProductDeal.setEntrustId(ptlAllocatio.getEntrustId());
-                regFinProductDeal.setPortfolioId(ptlAllocatio.getPortfolioId());
-                regFinProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-                regFinProductDeal.setShareAmt(ArithmeticUtil.divide(ptlAllocatio.getShareAmt(),new BigDecimal(100),2));
-                regFinProductDeal.setTradeAmt(ptlAllocatio.getFpriceAmt());
-                regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
-                regFinProductDeal.setTgBusiType(tgBusiType);
-                //附属
-                RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
-                regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
-                regFinProductDealAdd.setOurShareAmt(ptlAllocatio.getOurEntNum());
-                regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getLendinEntNum());
-                regFinProductDealAdd.setActSetteDate(entity.getActSetteDate());
-                if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
-                    regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getSellAbleNum());
-                }
-                if(null!=ptlAllocatio.getDealFeeAmt()){
-                    regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
-                }
-                if(null!=ptlAllocatio.getSettFeeamt()){
-                    regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getSettFeeamt()));
-                }
-                regFinProductDeals.add(regFinProductDeal);
-                regFinProductDealAdds.add(regFinProductDealAdd);
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            result.setWorkflowId(entity.getWorkflowId());
+            result.setOperationType(entity.getOperatorType());
+            result.setRegFinProductDealTotal(regFinProductDealTotalMapper.selectByPrimaryKey(entity.getTotleTradeId()));
+            result.setRegFinProductDealTotalAdd(regFinProductDealTotalAddMapper.selectByPrimaryKey(entity.getTotleTradeId()));
+            result.setRegTradeFeeTotals(cfetsIbuQuoteBondMapper.listRegTradeFeeTotal(entity.getTotleTradeId()));
+            result.setRegFinProductDeals(cfetsIbuQuoteBondMapper.listRegFinProductDeal(entity.getTotleTradeId()));
+            result.setRegFinProductDealAdds(cfetsIbuQuoteBondMapper.listRegFinProductDealAdd(entity.getTotleTradeId()));
+            result.setRegTradeFees(cfetsIbuQuoteBondMapper.listRegTradeFee(entity.getTotleTradeId()));
+        }else{
+            entity.setOuPartyId(entity.getMySide());
+            entity.setOuTraderId(entity.getMySideTrader());
+            entity.setDeliveryType(entity.getSettleMethod());
+            entity.setClearType(entity.getSettleType());
+            entity.setUnitCprice(entity.getPrice());
+            entity.setYield(entity.getMatureYield());
+            //交易方向
+            String ps = entity.getPs();
+            //投管业务类型
+            String tgBusiType = StringUtil.EMPTY;
+            //金融产品交易汇总登记
+            RegFinProductDealTotal regFinProductDealTotal = new RegFinProductDealTotal();
+            BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotal,entity);
+            regFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            regFinProductDealTotal.setBranch(0L);
+            if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+                tgBusiType = BussinessDictCodeList.平安业务类型_债券类资产买入.getValue();
             }
+            if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
+                tgBusiType = BussinessDictCodeList.平安业务类型_债券类资产卖出.getValue();
+            }
+            if(StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
+                tgBusiType = DictCodeListExt1.平安业务类型_债券类资产行权.getValue();
+            }
+            regFinProductDealTotal.setTgBusiType(tgBusiType);
+            //金融产品交易汇总登记附属
+            RegFinProductDealTotalAdd regFinProductDealTotalAdd = new RegFinProductDealTotalAdd();
+            BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotalAdd,entity);
+            if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+                regFinProductDealTotalAdd.setLendinFpriceAmt(entity.getSaleinFpriceAmt());
+                regFinProductDealTotalAdd.setLendinIntAmt(entity.getSaleinIntAmt());
+                regFinProductDealTotalAdd.setLendinShareAmt(entity.getSellAbleNum());
+            }
+            //汇总登记费用明细表
+            List<RegTradeFeeTotal> regTradeFeeTotals = new ArrayList<>();
+            if(null!=entity.getDealFeeAmt()){
+                regTradeFeeTotals.add(ibuQuoteBondService.prepareRegTradeFeeTotal(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),entity.getDealFeeAmt()));
+            }
+            if(null!=entity.getSettFeeamt()){
+                //交易手续费
+                regTradeFeeTotals.add(ibuQuoteBondService.prepareRegTradeFeeTotal(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),entity.getSettFeeamt()));
+            }
+            //交易登记明细
+            List<RegFinProductDeal> regFinProductDeals = new ArrayList<>();
+            List<RegFinProductDealAdd> regFinProductDealAdds = new ArrayList<>();
+            List<RegTradeFee> regTradeFees = new ArrayList<>();
+            if(CollectionUtils.isNotEmpty(entity.getPtlAllocatios())){
+                for (PtlAllocationDto ptlAllocatio : entity.getPtlAllocatios()){
+                    RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
+                    BeanUtil.copyPropertiesIgnoreNull(regFinProductDeal,entity);
+                    BussinessCodeParameter codeParameter = getBussinessCodeParameter(entity.getPs());
+                    regFinProductDeal.setTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+                    regFinProductDeal.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
+                    regFinProductDeal.setEntrustId(ptlAllocatio.getEntrustId());
+                    regFinProductDeal.setPortfolioId(ptlAllocatio.getPortfolioId());
+                    regFinProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                    regFinProductDeal.setShareAmt(ArithmeticUtil.divide(ptlAllocatio.getShareAmt(),new BigDecimal(100),2));
+                    regFinProductDeal.setTradeAmt(ptlAllocatio.getFpriceAmt());
+                    regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
+                    regFinProductDeal.setTgBusiType(tgBusiType);
+                    //附属
+                    RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
+                    regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
+                    regFinProductDealAdd.setOurShareAmt(ptlAllocatio.getOurEntNum());
+                    regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getLendinEntNum());
+                    regFinProductDealAdd.setActSetteDate(entity.getActSetteDate());
+                    if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+                        regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getSellAbleNum());
+                    }
+                    if(null!=ptlAllocatio.getDealFeeAmt()){
+                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
+                    }
+                    if(null!=ptlAllocatio.getSettFeeamt()){
+                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getSettFeeamt()));
+                    }
+                    regFinProductDeals.add(regFinProductDeal);
+                    regFinProductDealAdds.add(regFinProductDealAdd);
+                }
+            }
+            result.setWorkflowId(entity.getWorkflowId());
+            result.setOperationType(entity.getOperatorType());
+            result.setRegFinProductDealTotal(regFinProductDealTotal);
+            result.setRegFinProductDealTotalAdd(regFinProductDealTotalAdd);
+            result.setRegTradeFeeTotals(regTradeFeeTotals);
+            result.setRegFinProductDeals(regFinProductDeals);
+            result.setRegFinProductDealAdds(regFinProductDealAdds);
+            result.setRegTradeFees(regTradeFees);
         }
-        result.setWorkflowId(entity.getWorkflowId());
-        result.setOperationType(entity.getOperatorType());
-        result.setRegFinProductDealTotal(regFinProductDealTotal);
-        result.setRegFinProductDealTotalAdd(regFinProductDealTotalAdd);
-        result.setRegTradeFeeTotals(regTradeFeeTotals);
-        result.setRegFinProductDeals(regFinProductDeals);
-        result.setRegFinProductDealAdds(regFinProductDealAdds);
-        result.setRegTradeFees(regTradeFees);
         return result;
     }
 
-    private void insert(CfetsBondDealDbDto entity){
+    private void insert(CfetsBondDealDbDto entity,String operationType){
         RegFinProductDealTotal regFinProductDealTotal = entity.getRegFinProductDealTotal();
-        regFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
-        regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+        String totleTradeId = regFinProductDealTotal.getTotleTradeId();
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            regFinProductDealTotal.setTotleTradeId(StringUtil.join(totleTradeId,"R"));
+            regFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+            regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+            regFinProductDealTotal.setpTradeId(totleTradeId);
+        }else{
+            regFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+            regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+        }
         regFinProductDealTotalMapper.insert(regFinProductDealTotal);
+        entity.getRegFinProductDealTotalAdd().setTotleTradeId(regFinProductDealTotal.getTotleTradeId());
         regFinProductDealTotalAddMapper.insert(entity.getRegFinProductDealTotalAdd());
         List<RegTradeFeeTotal> regTradeFeeTotals = entity.getRegTradeFeeTotals();
         if(CollectionUtils.isNotEmpty(regTradeFeeTotals)){
             regTradeFeeTotals.forEach(item ->{
+                item.setTradeId(regFinProductDealTotal.getTotleTradeId());
                 regTradeFeeTotalMapper.insert(item);
             });
         }
         List<RegFinProductDeal> regFinProductDeals = entity.getRegFinProductDeals();
         if(CollectionUtils.isNotEmpty(regFinProductDeals)){
             regFinProductDeals.forEach(item ->{
-                item.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
-                item.setIsCancel(DictCodeList.是否_否.getValue());
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    String tradeId = item.getTradeId();
+                    item.setTradeId(StringUtil.join(tradeId,"R"));
+                    item.setTotleTradeId(StringUtil.join(totleTradeId,"R"));
+                    item.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+                    item.setIsCancel(DictCodeList.是否_否.getValue());
+                    item.setpTradeId(tradeId);
+                }else{
+                    item.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                    item.setIsCancel(DictCodeList.是否_否.getValue());
+                }
                 regFinProductDealMapper.insert(item);
             });
         }
         List<RegFinProductDealAdd> regFinProductDealAdds = entity.getRegFinProductDealAdds();
         if(CollectionUtils.isNotEmpty(regFinProductDealAdds)){
             regFinProductDealAdds.forEach(item ->{
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    item.setTradeId(StringUtil.join(item.getTradeId(),"R"));
+                }
                 regFinProductDealAddMapper.insert(item);
             });
         }
         List<RegTradeFee> regTradeFees = entity.getRegTradeFees();
         if(CollectionUtils.isNotEmpty(regTradeFees)){
             regTradeFees.forEach(item ->{
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    item.setTradeId(StringUtil.join(item.getTradeId(),"R"));
+                }
                 regTradeFeeMapper.insert(item);
             });
         }
+        //更新原登记数据状态
+        //汇总
+        cfetsIbuQuoteBondMapper.updateRegFinProductDealTotal(totleTradeId);
+        //明细
+        cfetsIbuQuoteBondMapper.updateRegFinProductDeal(totleTradeId);
     }
     /**
      * 插入业务流程表
@@ -613,53 +649,60 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      * @param entity
      * @return
      */
-    private Map<String,Object> preparePosition(CfetsBondDealDbDto entity){
+    private Map<String,Object> preparePosition(CfetsBondDealDbDto entity,String operationType){
         Map<String,Object> result = new HashMap<>();
-        String ps = entity.getRegFinProductDealTotal().getPs();
-        result.put("interfaceType","Bond001");
-        result.put("userId", SecurityUtil.getLoginUser().getUserName());
-        result.put("totalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
-        result.put("flowStatus",DictCodeListExt3.流程节点_流程提交.getValue());
-        result.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
-        result.put("balanceCheck","Y");
-        if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
-            result.put("busiType",DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            result.put("interfaceType","Bond001");
+            result.put("totalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
+            result.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
+            result.put("userId", SecurityUtil.getLoginUser().getUserName());
         }else{
-            result.put("busiType",DictCodeListExt3.头寸业务类型_现券交易.getValue());
-        }
-        result.put("busiAct","02");
-        result.put("ps",ps);
-        result.put("settleSpeed",entity.getRegFinProductDealTotal().getSettleSpeed());
-        result.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
-        result.put("systemAct","01");
-        result.put("cdate",DateUtil.format(entity.getRegFinProductDealTotal().getTradeDate()));
-        result.put("ccy",entity.getRegFinProductDealTotal().getCcy());
-        result.put("finprodId",entity.getRegFinProductDealTotal().getFinprodId());
-        if(CollectionUtils.isNotEmpty(entity.getRegFinProductDeals())){
-            List<Map<String,Object>> ptlList = new ArrayList<>();
-            Map<String,List<RegFinProductDealAdd>> regFinProductDealAddMap = new HashMap<>();
-            if(CollectionUtils.isNotEmpty(entity.getRegFinProductDealAdds())){
-                entity.getRegFinProductDealAdds().stream().collect(Collectors.groupingBy(RegFinProductDealAdd::getTradeId,Collectors.toList()))
-                        .forEach(regFinProductDealAddMap::put);
+            String ps = entity.getRegFinProductDealTotal().getPs();
+            result.put("interfaceType","Bond001");
+            result.put("userId", SecurityUtil.getLoginUser().getUserName());
+            result.put("totalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
+            result.put("flowStatus",DictCodeListExt3.流程节点_流程提交.getValue());
+            result.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
+            result.put("balanceCheck","Y");
+            if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
+                result.put("busiType",DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
+            }else{
+                result.put("busiType",DictCodeListExt3.头寸业务类型_现券交易.getValue());
             }
-            for (RegFinProductDeal regFinProductDeal : entity.getRegFinProductDeals()) {
-                Map<String,Object> pltMap = new HashMap<>();
-                String portfolioId = regFinProductDeal.getPortfolioId();
-                pltMap.put("portfolioId", portfolioId);
-                pltMap.put("tradeId",regFinProductDeal.getTradeId());
-                pltMap.put("etrId",regFinProductDeal.getEntrustId());
-                pltMap.put("cashAcctId",cfetsIbuQuoteBondMapper.getACCTNO(portfolioId,BussinessDictCodeList.资金账户类型_托管账户.getValue()));
-                pltMap.put("secAcctId",cfetsIbuQuoteBondMapper.getSecAcctId(portfolioId,regFinProductDeal.getFinprodId()));
-                pltMap.put("secAmount",regFinProductDeal.getShareAmt());
-                pltMap.put("cashAmount",regFinProductDeal.getTradeAmt());
-                RegFinProductDealAdd regFinProductDealAdd = regFinProductDealAddMap.get(regFinProductDeal.getTradeId()).get(0);
-                //TODO 投资目的
-                pltMap.put("integrateSecAmount",regFinProductDealAdd.getLendinShareAmt());
-                pltMap.put("ownSecAmount",regFinProductDealAdd.getOurShareAmt());
-                pltMap.put("etrSecAmount",etrEntrustMapper.selectByPrimaryKey(regFinProductDeal.getEntrustId()).getEntrustNum());
-                ptlList.add(pltMap);
+            result.put("busiAct","02");
+            result.put("ps",ps);
+            result.put("settleSpeed",entity.getRegFinProductDealTotal().getSettleSpeed());
+            result.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
+            result.put("systemAct","01");
+            result.put("cdate",DateUtil.format(entity.getRegFinProductDealTotal().getTradeDate()));
+            result.put("ccy",entity.getRegFinProductDealTotal().getCcy());
+            result.put("finprodId",entity.getRegFinProductDealTotal().getFinprodId());
+            if(CollectionUtils.isNotEmpty(entity.getRegFinProductDeals())){
+                List<Map<String,Object>> ptlList = new ArrayList<>();
+                Map<String,List<RegFinProductDealAdd>> regFinProductDealAddMap = new HashMap<>();
+                if(CollectionUtils.isNotEmpty(entity.getRegFinProductDealAdds())){
+                    entity.getRegFinProductDealAdds().stream().collect(Collectors.groupingBy(RegFinProductDealAdd::getTradeId,Collectors.toList()))
+                            .forEach(regFinProductDealAddMap::put);
+                }
+                for (RegFinProductDeal regFinProductDeal : entity.getRegFinProductDeals()) {
+                    Map<String,Object> pltMap = new HashMap<>();
+                    String portfolioId = regFinProductDeal.getPortfolioId();
+                    pltMap.put("portfolioId", portfolioId);
+                    pltMap.put("tradeId",regFinProductDeal.getTradeId());
+                    pltMap.put("etrId",regFinProductDeal.getEntrustId());
+                    pltMap.put("cashAcctId",cfetsIbuQuoteBondMapper.getACCTNO(portfolioId,BussinessDictCodeList.资金账户类型_托管账户.getValue()));
+                    pltMap.put("secAcctId",cfetsIbuQuoteBondMapper.getSecAcctId(portfolioId,regFinProductDeal.getFinprodId()));
+                    pltMap.put("secAmount",regFinProductDeal.getShareAmt());
+                    pltMap.put("cashAmount",regFinProductDeal.getTradeAmt());
+                    RegFinProductDealAdd regFinProductDealAdd = regFinProductDealAddMap.get(regFinProductDeal.getTradeId()).get(0);
+                    //TODO 投资目的
+                    pltMap.put("integrateSecAmount",regFinProductDealAdd.getLendinShareAmt());
+                    pltMap.put("ownSecAmount",regFinProductDealAdd.getOurShareAmt());
+                    pltMap.put("etrSecAmount",etrEntrustMapper.selectByPrimaryKey(regFinProductDeal.getEntrustId()).getEntrustNum());
+                    ptlList.add(pltMap);
+                }
+                result.put("ptlList",ptlList);
             }
-            result.put("ptlList",ptlList);
         }
         return result;
     }

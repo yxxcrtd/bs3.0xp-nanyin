@@ -21,6 +21,11 @@ public class CfetsBondDealDbDto {
      */
     private String operationType;
 
+    /**
+     * 汇总登记编号
+     */
+    private String totleTradeId;
+
     private RegFinProductDealTotal regFinProductDealTotal;
 
     private RegFinProductDealTotalAdd regFinProductDealTotalAdd;
@@ -47,6 +52,14 @@ public class CfetsBondDealDbDto {
 
     public void setOperationType(String operationType) {
         this.operationType = operationType;
+    }
+
+    public String getTotleTradeId() {
+        return totleTradeId;
+    }
+
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
     }
 
     public RegFinProductDealTotal getRegFinProductDealTotal() {

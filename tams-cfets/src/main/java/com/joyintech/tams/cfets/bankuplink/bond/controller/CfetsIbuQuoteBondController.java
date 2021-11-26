@@ -499,12 +499,23 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ResponseBody
 	public Message<Page<CfetsBondDayRegDto>> pageDayReg(@RequestBody EntrustRequest dto){
 		try {
-			Page<CfetsBondDayRegDto> list = ibuQuoteBondService.listDayReg(dto);
+			Page<CfetsBondDayRegDto> list = ibuQuoteBondService.pageDayReg(dto);
 			return new Message<Page<CfetsBondDayRegDto>>().success().setData(list);
 		}catch (Exception e) {
 			logger.error("查询当日登记列表分页数据异常",e);
 			return new Message<Page<CfetsBondDayRegDto>>().fail().setMessage("查询当日登记列表分页数据异常");
 		}
+	}
+
+	@ApiOperation(value = "当日登记导出", notes = "当日登记导出")
+	@PostMapping("/exportDayReg")
+	@ResponseBody
+	public void exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
+		ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
+			Map<String,Object>  stringObjectMap = requestDto.getDto(Map.class);
+			List dataList = ibuQuoteBondService.listDayReg(stringObjectMap);
+			return dataList;
+		});
 	}
 
 }

@@ -984,7 +984,7 @@ public class IbuQuoteBondService extends BaseService {
      * @param dto
      * @return
      */
-    public Page<CfetsBondDayRegDto> listDayReg(EntrustRequest dto){
+    public Page<CfetsBondDayRegDto> pageDayReg(EntrustRequest dto){
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("loginUserId", LoginUserUtil.getUserName());
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
@@ -993,9 +993,17 @@ public class IbuQuoteBondService extends BaseService {
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsIbuQuoteBondMapper.listDayReg(pageParam));
     }
 
+    public List<CfetsBondDayRegDto> listDayReg(Map<String,Object> pageParam){
+        pageParam.put("loginUserId", LoginUserUtil.getUserName());
+        pageParam.put("platDate", iPlatformDate.getSysDateStr());
+        setParam(pageParam);
+        pageParam.put("CONFIRM_STATUS_0", com.joyintech.tams.constant.DictCodeList.确认状态_未确认.getValue());
+        return  cfetsIbuQuoteBondMapper.listDayReg(pageParam);
+    }
+
     /**
      * 当日登记撤销检查
-     * @param cfetsBondRegCheckRequsts
+     * @param cfetsBondRegCheckRequst
      * @return
      */
     public AjaxResult checkDayRegRevokeCheck(CfetsBondRegCheckRequst cfetsBondRegCheckRequst){
