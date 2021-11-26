@@ -187,8 +187,6 @@ public class SvrChbSalerStlDealInfoFileImpService extends FileImpService {
                         if (value != null&&""!=value) {
                             if(field.getName().equals("tradeVdate")){
                                 field.set(chbSalerStlDealInfo, DateUtil.parse(value));
-                            }else if(field.getName().equals("tradeTime")){
-                                field.set(chbSalerStlDealInfo, DateUtil.parse(map.get("TRADE_VDATE") +" " +value,"yyyy-MM-dd HHmmss"));
                             }
                         }
                     } catch ( IllegalAccessException e) {

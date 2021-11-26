@@ -1930,6 +1930,8 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
 
     上游接口文件类型_销售结算资金交易信息表(DictCode.上游接口文件类型, "35", "销售结算资金交易信息表"),
 
+    上游接口文件类型_理财业务销售数据月度统计表(DictCode.上游接口文件类型, "36", "理财业务销售数据月度统计表"),
+
     //add by zhuhanlu 20201104 基金投向维护 end
     共通业务类型_期货保证金比例设置(DictCode.共通业务类型,"MST31","期货保证金比例设置"),
     /**

@@ -77,7 +77,7 @@ public class ChbSalerStlDealInfo extends ChbSalerStlDealInfoKey {
     /**
      * 销售结算资金交易时间 
      */
-    private Date tradeTime;
+    private String tradeTime;
 
     /**
      * 销售结算资金交易附言 
@@ -312,7 +312,7 @@ public class ChbSalerStlDealInfo extends ChbSalerStlDealInfoKey {
      * 取得 销售结算资金交易时间 
      * @return 销售结算资金交易时间 
      */
-    public Date getTradeTime() {
+    public String getTradeTime() {
         return tradeTime;
     }
 
@@ -321,7 +321,7 @@ public class ChbSalerStlDealInfo extends ChbSalerStlDealInfoKey {
      * @param tradeTime 销售结算资金交易时间 
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setTradeTime(Date tradeTime) {
+    public void setTradeTime(String tradeTime) {
         this.tradeTime = tradeTime;
     }
 
