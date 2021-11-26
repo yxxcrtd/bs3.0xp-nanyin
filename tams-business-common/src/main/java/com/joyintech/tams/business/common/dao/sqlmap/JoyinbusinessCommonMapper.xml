@@ -274,4 +274,61 @@
             or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{search},'%')))
         </if>
     </select>
+
+    <!--ͨ查询指令可用现金 -->
+    <select id="selectCommandAvailableCash" parameterType="com.joyintech.tams.business.common.dto.CashPositionFlowDto" resultType="java.math.BigDecimal">
+        select
+        sum(t.amount) as amount
+        from ETR_CASH_POSITION t
+        where
+        t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+        <if test="acctId != null and acctId != '' ">
+            and t.acct_id = #{acctId,jdbcType=VARCHAR}
+        </if>
+        <if test="chlFinprodId != null and chlFinprodId != '' ">
+            and t.chl_finprod_id = #{chlFinprodId,jdbcType=VARCHAR}
+        </if>
+        and t.hoding_type = #{hodingType,jdbcType=VARCHAR}
+        and t.cdate = #{cdate,jdbcType=DATE}
+        and t.ccy = #{ccy,jdbcType=VARCHAR}
+        <if test="acctType != null and acctType.size() > 0 ">
+            and t.acct_id in (
+            select t1.acct_no from ptl_capacct_info t1
+            where t1.acct_type in
+            <foreach collection="acctType" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            and t1.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+            )
+        </if>
+    </select>
+
+    <!--ͨ查询手工调整流水-->
+    <!--ͨ查询指令可用现金 -->
+    <select id="selectManualCashFlow" parameterType="com.joyintech.tams.business.common.dto.CashPositionFlowDto" resultType="java.math.BigDecimal">
+        select
+        sum(t.amount) as amount
+        from ETR_CASH_POSITION_FLOW t
+        where
+        t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+        <if test="acctId != null and acctId != '' ">
+            and t.acct_id = #{acctId,jdbcType=VARCHAR}
+        </if>
+        <if test="chlFinprodId != null and chlFinprodId != '' ">
+            and t.chl_finprod_id = #{chlFinprodId,jdbcType=VARCHAR}
+        </if>
+        and t.hoding_type = #{hodingType,jdbcType=VARCHAR}
+        and t.cdate = #{cdate,jdbcType=DATE}
+        and t.ccy = #{ccy,jdbcType=VARCHAR}
+        <if test="acctType != null and acctType.size() > 0 ">
+            and t.acct_id in (
+            select t1.acct_no from ptl_capacct_info t1
+            where t1.acct_type in
+            <foreach collection="acctType" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            and t1.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+            )
+        </if>
+    </select>
 </mapper>

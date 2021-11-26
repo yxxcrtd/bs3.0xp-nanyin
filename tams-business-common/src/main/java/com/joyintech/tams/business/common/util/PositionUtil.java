@@ -1,6 +1,7 @@
 package com.joyintech.tams.business.common.util;
 
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -8,14 +9,20 @@ import com.joyintech.tams.business.common.constant.PositionDictCodeListExt;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.service.CashPositionService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +30,14 @@ import java.util.Map;
 public class PositionUtil {
 
     private static PtlPortfolioMapper ptlPortfolioMapper;
+
+    private static CashPositionService cashPositionService;
+
+    /**
+     * 平台日期
+     */
+    private static IPlatformDate iPlatformDate;
+    
     /**
      * 初始化头寸通用信息
      * @param totalTradeId
@@ -116,8 +131,105 @@ public class PositionUtil {
         return new Message().fail().setMessage("无返回信息，未知异常").setData(null);
     }
 
+    /**
+     * 头寸C_02、 C_03、 C_04不足需要再校验
+     * @param req
+     * @param msgMap
+     * @return
+     */
+    public static boolean checkForFL0007(Object req, Map msgMap) {
+        BaseMap tamsReq = JsonUtils.json2Object(JsonUtils.object2Json(req), BaseMap.class);
+        
+        Map responseMap_data = (Map) msgMap.get("data");
+        if (responseMap_data != null){
+            List checkResults = (List) responseMap_data.get("checkResults");
+            List newcheckResults = new ArrayList();
+            if (checkResults != null) {
+                for (int i=0; i<checkResults.size();i++){
+                    BaseMap flow = BaseMap.newMap((Map) checkResults.get(i));
+                    String HODING_TYPE = flow.getString("HODING_TYPE");
+                    String PORTFOLIO_ID = flow.getString("PORTFOLIO_ID");
+                    Date CDATE = flow.getDate("CDATE");
+                    if (CDATE == null){
+                        CDATE=iPlatformDate.getSysDate();
+                    }
+                    if (StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_托管户可用资金.getValue())
+                            || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可取资金.getValue())
+                            || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可用资金.getValue())
+                        ){
+                        // 需要校验投管现金
+                        // 校验仍不足时add
+                        BaseMap paramMap = BaseMap.newMap()
+                                .put("portfolioId", PORTFOLIO_ID)
+                                .put("ccy", DictCodeList.币种_人民币_CNY.getValue())
+                                .put("vdate", CDATE)
+                                ;
+                        BigDecimal doAdd = BigDecimal.ZERO;
+                        // 原投管余额
+                        BigDecimal cashT = cashPositionService.etrQryCommandAvailableCash(paramMap);
+                        // 头寸余额
+                        BigDecimal CHECKBALANCE = flow.getBigDecimal("CHECKBALANCE");
+                        // 发生额
+                        BigDecimal tamsCash = getCashByPId(PORTFOLIO_ID, tamsReq);
+                        doAdd = doAdd.add(ArithmeticUtil.doAdd(cashT, CHECKBALANCE));
+                        BigDecimal doSub = doAdd.subtract(tamsCash);
+                        if (doSub.compareTo(BigDecimal.ZERO) > 0){
+                            // 头寸+投管余额足够
+                            continue;
+                        }else{
+                            flow.put("CHECKBALANCE", doAdd);
+                            newcheckResults.add(flow);
+                        }
+                    }else{
+                        newcheckResults.add(flow);
+                    }
+                }
+            }
+            if (newcheckResults.isEmpty()){
+                // 不存在最终余额不足情况，重发
+                tamsReq.put("balanceCheck", "N");
+                PositionHttpRequest.send(tamsReq);
+                return true;
+            }else{
+                responseMap_data.put("checkResults", newcheckResults);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 从请求数据中获取金额
+     * @param PORTFOLIO_ID
+     * @param tamsReq
+     * @return
+     */
+    private static BigDecimal getCashByPId(String PORTFOLIO_ID, BaseMap tamsReq){
+        BigDecimal rs = BigDecimal.ZERO;
+        if (tamsReq != null) {
+            List list = (List) tamsReq.get("ptlList");
+            if (list != null && !list.isEmpty()){
+                for (int i=0;i<list.size(); i++){
+                    BaseMap each = BaseMap.newMap((Map) list.get(i));
+                    if (StringUtil.equals(PORTFOLIO_ID, each.get("portfolioId"))){
+                        return each.getBigDecimal("cashAmount");
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     @Autowired
     public void setPtlPortfolioMapper(PtlPortfolioMapper ptlPortfolioMapper) {
         PositionUtil.ptlPortfolioMapper = ptlPortfolioMapper;
+    }
+    @Autowired
+    public void setCashPositionService(CashPositionService cashPositionService) {
+        PositionUtil.cashPositionService = cashPositionService;
+    }
+    @Autowired(required = false)
+    public void setiPlatformDate(IPlatformDate iPlatformDate) {
+        PositionUtil.iPlatformDate = iPlatformDate;
     }
 }
