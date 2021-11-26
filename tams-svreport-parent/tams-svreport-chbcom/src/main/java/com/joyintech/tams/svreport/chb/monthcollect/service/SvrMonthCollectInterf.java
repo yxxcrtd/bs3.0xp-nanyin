@@ -3,6 +3,8 @@ package com.joyintech.tams.svreport.chb.monthcollect.service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.svreport.chb.monthcollect.dao.SvrMonthCollectInterfMapper;
 import com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -55,10 +58,10 @@ public class SvrMonthCollectInterf extends BaseService{
 		}
     	//1、开始检数据
     	logger.info("销售月报每月明细汇总信息检索开始------->>>>>>");
-		List<ChbMonthCollect>list = this.getList(batchDate,batchDateStart,batchDateEnd);
+		Map<String,Map<String,Map<String,ChbMonthCollect>>> AllMap = this.getList(batchDate,batchDateStart,batchDateEnd);
     	logger.info("销售月报每月明细汇总信息检索结束-------<<<<<<");
 
-    	if(StringUtil.isEmptyList(list)){
+    	if(AllMap.size() == 0){
     		logger.info("没有检索到数据,批处理结束!");
     		return;
     	}
@@ -74,39 +77,89 @@ public class SvrMonthCollectInterf extends BaseService{
 //		}
 		//更新表
     	logger.info("销售月报每月明细汇总信息入库开始------->>>>>>");
-    	dbData(list,batchDate,batchDateStart ,batchDateEnd);
+    	dbData(AllMap,batchDate,batchDateStart ,batchDateEnd);
     	logger.info("销售月报每月明细汇总信息入库结束-------<<<<<<");
     }
     
     /**
      * 先删后插
      */
-    private void dbData(List<ChbMonthCollect> list,Date batchDate,Date batchDateStart ,Date batchDateEnd) {
-    	
-    	if (StringUtil.isNotEmpty(list)) {
+    private void dbData(Map<String,Map<String,Map<String,ChbMonthCollect>>> AllMap,Date batchDate,Date batchDateStart ,Date batchDateEnd) {
+    	if (AllMap.size() != 0) {
+			//获取下个月的第一天
+			Date nextMonFirDay = getFirstDayOfNextMonth(DateUtil.format(batchDate));
+			//中债报送截止日
+			Date chbSubmitDeadline = new Date();
+			List<Date> dateList = null;
+			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+			dateList = ChbDeadlineUtil.getChbEndDate(
+					DictCodeListExt2.报表名称_销售信息月度统计表.getValue(), "01", dateMap, batchDate);
+			if (!CollectionUtils.isEmpty(dateList)) {
+				//获取中债截止日
+				chbSubmitDeadline = dateList.get(0);
+			}
+			int index=DateUtil.format(batchDate).lastIndexOf("-");
+			String termid = DateUtil.format(batchDate).substring(0, index);
+			int termidIndex=termid.lastIndexOf("-");
+			String termidYYYY = termid.substring(0, termidIndex);
+			String termidMM = termid.substring(termidIndex+1);
+			String reportName = "销售数据月度统计表_"+ termidYYYY + "年" + termidMM + "月";
 			//清除当月月报信息 若已报送则停止跑批
 			logger.debug("当月汇总数据清除开始----------");
-			svrMonthCollectInterfMapper.deleteDetail(DateUtil.format(batchDate));
-			svrMonthCollectInterfMapper.deleteReport(DateUtil.format(batchDate));
+			svrMonthCollectInterfMapper.deleteDetail(termid);
+			svrMonthCollectInterfMapper.deleteReport(termid);
 			logger.debug("当月汇总数据清除结束----------");
 
             logger.debug("销售月报每月明细汇总信息插入数据：插入开始----------");
-			for(ChbMonthCollect sub : list){
-				if(!sub.getHolderType().isEmpty()){
-					sub.setReporttype("1_1分投资者类型");
-				}else if(!sub.getInstitutionCode().isEmpty() && !sub.getIsConsign().isEmpty()){
-					sub.setReporttype("1_3分销售渠道");
-				}else if(!sub.getAreaCode().isEmpty()){
-					sub.setReporttype("1_2分地区类型");
+			for(String key:AllMap.keySet()){
+            //以投资者分类插入
+			if(key.equals("holderType")) {
+				String reportuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+				svrMonthCollectInterfMapper.insertIntoReport(DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+				for (String flag : AllMap.get("holderType").keySet()) {
+					for(String A : AllMap.get("holderType").get(flag).keySet()){
+						String detailuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+						ChbMonthCollect detail = AllMap.get("holderType").get(flag).get(A);
+						detail.setReportuuid(reportuuid);
+						detail.setDetailuuid(detailuuid);
+						detail.setReporttype("1_1");
+						svrMonthCollectInterfMapper.insertIntoDetail(detail);
+					}
 				}
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//				sub.setChbSubmitDeadline(getFirstDayOfNextMonth(batchDate));
-				sub.setReportfrequ("M-月报");
-				sub.setReportName("销售数据月度统计表_");
-				svrMonthCollectInterfMapper.insertBatchData(sub);
+			}
+			//以地区分类插入
+			if(key.equals("area")) {
+				String reportuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+				svrMonthCollectInterfMapper.insertIntoReport(DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+				for (String flag : AllMap.get("area").keySet()) {
+					for(String A : AllMap.get("area").get(flag).keySet()){
+						String detailuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+						ChbMonthCollect detail = AllMap.get("area").get(flag).get(A);
+						detail.setReportuuid(reportuuid);
+						detail.setDetailuuid(detailuuid);
+						detail.setReporttype("1_2");
+						svrMonthCollectInterfMapper.insertIntoDetail(detail);
+					}
+				}
+			}
+			//以渠道插入
+			if(key.equals("institution")) {
+				String reportuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+				svrMonthCollectInterfMapper.insertIntoReport(DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+				for (String flag : AllMap.get("institution").keySet()) {
+					for(String A : AllMap.get("institution").get(flag).keySet()){
+						String detailuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+						ChbMonthCollect detail = AllMap.get("institution").get(flag).get(A);
+						detail.setReportuuid(reportuuid);
+						detail.setDetailuuid(detailuuid);
+						detail.setReporttype("1_3");
+						svrMonthCollectInterfMapper.insertIntoDetail(detail);
+					}
+				}
 			}
             logger.debug("销售月报每月明细汇总信息插入数据：插入结束----------");
 		}
+    	}
 	}
 
 	/**
@@ -116,7 +169,7 @@ public class SvrMonthCollectInterf extends BaseService{
 	 * @param batchDateEnd
 	 * @return
 	 */
-	public List<ChbMonthCollect> getList(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
+	public Map<String,Map<String,Map<String,ChbMonthCollect>>> getList(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
 		//汇总  总、净销售金额
 		List<ChbMonthCollect> listAmountTotal = svrMonthCollectInterfMapper.selectAmountTotal(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 //		//判断是否为三合一 生成持有余额、投资者数量信息
@@ -169,6 +222,69 @@ public class SvrMonthCollectInterf extends BaseService{
 					holderTypeCollect.get(flag).setHolderNum(typeHolderNum.get(m).getHolderNum());
 				}
 			}
+		//转换成以产品为key的父级map
+		Map<String,Map<String,ChbMonthCollect>> holderTypeCollectMap = new HashMap<String,Map<String,ChbMonthCollect>>();
+		for(String key: holderTypeCollect.keySet()){
+			int index=key.lastIndexOf(":");
+			String proId = key.substring(0, index);
+			if(holderTypeCollectMap.get(proId) == null){
+				Map<String,ChbMonthCollect> holderTypeMap = new HashMap<String,ChbMonthCollect>();
+				holderTypeMap.put(key,holderTypeCollect.get(key));
+				holderTypeCollectMap.put(proId,holderTypeMap);
+			}
+			else {
+				holderTypeCollectMap.get(proId).put(key,holderTypeCollect.get(key));
+			}
+		}
+		//处理最大行值
+		for(int i =0;i < chbPrdPosition.size() ;i++){
+			for(String key :holderTypeCollectMap.keySet()){
+				if(chbPrdPosition.get(i).getPrdRegistCode().equals(key)){
+					BigDecimal SaleAmountTotalAll = new BigDecimal("0");
+					BigDecimal SaleAmountTotalMax = new BigDecimal("0");
+					String SaleAmountFlag = "";
+					BigDecimal ValueAmountTotalAll = new BigDecimal("0");
+					BigDecimal ValueAmountTotalMax = new BigDecimal("0");
+					String ValueAmountFlag = "";
+					BigDecimal BalanceAmtAll = new BigDecimal("0");
+					BigDecimal BalanceAmtMax = new BigDecimal("0");
+					String BalanceAmtFlag = "";
+					for(String flag:holderTypeCollectMap.get(key).keySet()){
+						BigDecimal SaleAmountTotal = holderTypeCollectMap.get(key).get(flag).getSaleAmountTotal();
+						BigDecimal ValueAmountTota = holderTypeCollectMap.get(key).get(flag).getValueAmountTotal();
+						BigDecimal BalanceAmt = holderTypeCollectMap.get(key).get(flag).getBalanceAmt();
+						SaleAmountTotalAll.add(SaleAmountTotal);
+						ValueAmountTotalAll.add(ValueAmountTota);
+						BalanceAmtAll.add(BalanceAmt);
+						if(SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1){}
+						else{
+							SaleAmountTotalMax = SaleAmountTotal;
+							SaleAmountFlag = flag;
+						}
+						if(ValueAmountTotalMax.compareTo(ValueAmountTota) == 1){}
+						else{
+							ValueAmountTotalMax = ValueAmountTota;
+							ValueAmountFlag = flag;
+						}
+						if(BalanceAmtMax.compareTo(BalanceAmt) == 1){}
+						else{
+							BalanceAmtMax = BalanceAmt;
+							BalanceAmtFlag = flag;
+						}
+					}
+					//处理总销售金额
+					BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+					holderTypeCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+					//处理净销售金额
+					BigDecimal ValueAmountTotalDiff =ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+					holderTypeCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+					//处理余额
+					BigDecimal BalanceAmtDiff =BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+					holderTypeCollectMap.get(key).get(BalanceAmtFlag).setSaleAmountTotal(BalanceAmtDiff);
+
+				}
+			}
+		}
 
 
 		//以地区汇总
@@ -200,6 +316,69 @@ public class SvrMonthCollectInterf extends BaseService{
 				areaCollect.get(flag).setHolderNum(areaHolderNum.get(m).getHolderNum());
 			}
 		}
+		//转换成以产品为key的父级map
+		Map<String,Map<String,ChbMonthCollect>> areaCollectMap = new HashMap<String,Map<String,ChbMonthCollect>>();
+		for(String key: areaCollect.keySet()){
+			int index=key.lastIndexOf(":");
+			String proId = key.substring(0, index);
+			if(areaCollectMap.get(proId) == null){
+				Map<String,ChbMonthCollect> areaMap = new HashMap<String,ChbMonthCollect>();
+				areaMap.put(key,areaCollect.get(key));
+				areaCollectMap.put(proId,areaMap);
+			}
+			else {
+				areaCollectMap.get(proId).put(key,areaCollect.get(key));
+			}
+		}
+		//处理最大行值
+		for(int i =0;i < chbPrdPosition.size() ;i++){
+			for(String key :areaCollectMap.keySet()){
+				if(chbPrdPosition.get(i).getPrdRegistCode().equals(key)){
+					BigDecimal SaleAmountTotalAll = new BigDecimal("0");
+					BigDecimal SaleAmountTotalMax = new BigDecimal("0");
+					String SaleAmountFlag = "";
+					BigDecimal ValueAmountTotalAll = new BigDecimal("0");
+					BigDecimal ValueAmountTotalMax = new BigDecimal("0");
+					String ValueAmountFlag = "";
+					BigDecimal BalanceAmtAll = new BigDecimal("0");
+					BigDecimal BalanceAmtMax = new BigDecimal("0");
+					String BalanceAmtFlag = "";
+					for(String flag:areaCollectMap.get(key).keySet()){
+						BigDecimal SaleAmountTotal = areaCollectMap.get(key).get(flag).getSaleAmountTotal();
+						BigDecimal ValueAmountTota = areaCollectMap.get(key).get(flag).getValueAmountTotal();
+						BigDecimal BalanceAmt = areaCollectMap.get(key).get(flag).getBalanceAmt();
+						SaleAmountTotalAll.add(SaleAmountTotal);
+						ValueAmountTotalAll.add(ValueAmountTota);
+						BalanceAmtAll.add(BalanceAmt);
+						if(SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1){}
+						else{
+							SaleAmountTotalMax = SaleAmountTotal;
+							SaleAmountFlag = flag;
+						}
+						if(ValueAmountTotalMax.compareTo(ValueAmountTota) == 1){}
+						else{
+							ValueAmountTotalMax = ValueAmountTota;
+							ValueAmountFlag = flag;
+						}
+						if(BalanceAmtMax.compareTo(BalanceAmt) == 1){}
+						else{
+							BalanceAmtMax = BalanceAmt;
+							BalanceAmtFlag = flag;
+						}
+					}
+					//处理总销售金额
+					BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+					areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+					//处理净销售金额
+					BigDecimal ValueAmountTotalDiff =ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+					areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+					//处理余额
+					BigDecimal BalanceAmtDiff =BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+					areaCollectMap.get(key).get(BalanceAmtFlag).setSaleAmountTotal(BalanceAmtDiff);
+
+				}
+			}
+		}
 
 		//以分销渠道汇总
 		List<ChbMonthCollect >channelHolderNum = svrMonthCollectInterfMapper.channelHolderNum(DateUtil.format(batchDateEnd));//取得投资者数量
@@ -218,8 +397,11 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setBalanceShares(a.getValueAmountTotal());
 				institutionCollect.put(falg, bb);
 			}else{
+				//总销售金额
 				institutionCollect.get(falg).setSaleAmountTotal(institutionCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+				//净销售金额
 				institutionCollect.get(falg).setValueAmountTotal(institutionCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+				//余额
 				institutionCollect.get(falg).setBalanceAmt(institutionCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
 				institutionCollect.get(falg).setBalanceShares(institutionCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
 			}
@@ -231,21 +413,77 @@ public class SvrMonthCollectInterf extends BaseService{
 				institutionCollect.get(flag).setHolderNum(channelHolderNum.get(m).getHolderNum());
 			}
 		}
-//		分类后组装成新的List
-		List<ChbMonthCollect> list = null;
-		for (ChbMonthCollect value : holderTypeCollect.values()) {
-			list.add(holderTypeCollect.get(value));
+		//转换成以产品为key的父级map
+		Map<String,Map<String,ChbMonthCollect>> institutionCollectMap = new HashMap<String,Map<String,ChbMonthCollect>>();
+		for(String key: institutionCollect.keySet()){
+			int index=key.lastIndexOf(":");
+			String proId = key.substring(0, index);
+			if(institutionCollectMap.get(proId) == null){
+				Map<String,ChbMonthCollect> channelMap = new HashMap<String,ChbMonthCollect>();
+				channelMap.put(key,institutionCollect.get(key));
+				institutionCollectMap.put(proId,channelMap);
+			}
+			else {
+				institutionCollectMap.get(proId).put(key,institutionCollect.get(key));
+			}
 		}
-		for (ChbMonthCollect value : areaCollect.values()) {
-			list.add(areaCollect.get(value));
-		}
-		for (ChbMonthCollect value : institutionCollect.values()) {
-			list.add(institutionCollect.get(value));
-		}
+		//处理最大行值
+		for(int i =0;i < chbPrdPosition.size() ;i++){
+			for(String key :institutionCollectMap.keySet()){
+				if(chbPrdPosition.get(i).getPrdRegistCode().equals(key)){
+					BigDecimal SaleAmountTotalAll = new BigDecimal("0");
+					BigDecimal SaleAmountTotalMax = new BigDecimal("0");
+					String SaleAmountFlag = "";
+					BigDecimal ValueAmountTotalAll = new BigDecimal("0");
+					BigDecimal ValueAmountTotalMax = new BigDecimal("0");
+					String ValueAmountFlag = "";
+					BigDecimal BalanceAmtAll = new BigDecimal("0");
+					BigDecimal BalanceAmtMax = new BigDecimal("0");
+					String BalanceAmtFlag = "";
+					for(String flag:institutionCollectMap.get(key).keySet()){
+						BigDecimal SaleAmountTotal = institutionCollectMap.get(key).get(flag).getSaleAmountTotal();
+						BigDecimal ValueAmountTota = institutionCollectMap.get(key).get(flag).getValueAmountTotal();
+						BigDecimal BalanceAmt = institutionCollectMap.get(key).get(flag).getBalanceAmt();
+						SaleAmountTotalAll.add(SaleAmountTotal);
+						ValueAmountTotalAll.add(ValueAmountTota);
+						BalanceAmtAll.add(BalanceAmt);
+						if(SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1){}
+						else{
+							SaleAmountTotalMax = SaleAmountTotal;
+							SaleAmountFlag = flag;
+							}
+						if(ValueAmountTotalMax.compareTo(ValueAmountTota) == 1){}
+						else{
+							ValueAmountTotalMax = ValueAmountTota;
+							ValueAmountFlag = flag;
+						}
+						if(BalanceAmtMax.compareTo(BalanceAmt) == 1){}
+						else{
+							BalanceAmtMax = BalanceAmt;
+							BalanceAmtFlag = flag;
+						}
+						}
+					//处理总销售金额
+					BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+					institutionCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+					//处理净销售金额
+					BigDecimal ValueAmountTotalDiff =ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+					institutionCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+					//处理余额
+					BigDecimal BalanceAmtDiff =BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+					institutionCollectMap.get(key).get(BalanceAmtFlag).setSaleAmountTotal(BalanceAmtDiff);
+
+					}
+				}
+			}
 
 
-
-		return list;
+       //处理后组装成新的总map
+		Map<String,Map<String,Map<String,ChbMonthCollect>>> AllMap= new HashMap<String,Map<String,Map<String,ChbMonthCollect>>>();
+		AllMap.put("holderType",holderTypeCollectMap);
+		AllMap.put("area",areaCollectMap);
+		AllMap.put("institution",institutionCollectMap);
+		return AllMap;
 	}
 
 	/**
@@ -287,33 +525,24 @@ public class SvrMonthCollectInterf extends BaseService{
 		}
 		return listAmountTotal;
 	}
-
 	/**
-	 * 获取指定日期下个月的第7天
-	 * @param batchDate
+
+	 * 获取指定日期下个月的第一天
+	 * @param dateStr
 	 * @return
 	 */
-	public static String getFirstDayOfNextMonth(Date batchDate){
+	public static Date getFirstDayOfNextMonth(String dateStr){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			Date date = sdf.parse(String.valueOf(batchDate));
+			Date date = sdf.parse(dateStr);
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(date);
 			calendar.set(Calendar.DAY_OF_MONTH,1);
 			calendar.add(Calendar.MONTH, 1);
-			Date newDate = addDate(calendar.getTime(), 6);
-			return sdf.format(newDate);
+			return calendar.getTime();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-
-	public static Date addDate(Date date,long day) throws ParseException {
-		long time = date.getTime(); // 得到指定日期的毫秒数
-		day = day*24*60*60*1000; // 要加上的天数转换成毫秒数
-		time+=day; // 相加得到新的毫秒数
-		return new Date(time); // 将毫秒数转换成日期
-	}
-
 }

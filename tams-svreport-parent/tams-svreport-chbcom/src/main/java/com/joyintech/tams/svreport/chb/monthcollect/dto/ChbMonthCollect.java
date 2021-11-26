@@ -275,8 +275,12 @@ public class ChbMonthCollect extends BaseEntity {
         return orgCode;
     }
 
+    /**
+     * 机构代码
+     * @param orgCode 机构代码
+     */
     public void setOrgCode(String orgCode) {
-        this.orgCode = orgCode;
+        this.orgCode = orgCode == null ? null : orgCode.trim();
     }
 
     public String getDetailuuid() {

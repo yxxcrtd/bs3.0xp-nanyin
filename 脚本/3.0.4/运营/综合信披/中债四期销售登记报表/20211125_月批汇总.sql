@@ -59,5 +59,10 @@ delete from SYS_MENU where MENU_ID = 'REPORT_001_003_018';
 INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_003_018', 'SVR', null, 'REPORT_001_003', 'SellMonthReport001', 18, '02', '理财业务销售数据月度统计表登记', 'system', null, TIMESTAMP '2019-09-12 00:00:00', 'system', TIMESTAMP '2019-09-12 00:00:00');
 INSERT INTO SYS_PAGE VALUES ('SellMonthReport001','REP','/chb/monthreport/SellMonthReport001','report/chb/monthreport/SellMonthReport001','REPORT_001_003_015_002',null,null,'01','01','理财业务销售数据月度统计表','system',null,sysdate,'system',sysdate);
 
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_REPORT_CODE' and ITEM_CODE = '36';
+insert into SYS_DATADICT_LIST VALUES ('SVR_REPORT_CODE','36','销售信息月度统计表','36','0','system',null,sysdate,'system',sysdate,null);
+DELETE FROM CHB_REG_TIME_POINTS WHERE CHB_REG_TIME_POINTS.SEQNO = '36';
+INSERT INTO CHB_REG_TIME_POINTS VALUES('36',null,'36',null,'03','03','02','业务发生后下个月1号的第N个工作日','7','7','12','4','E',null,null,'qq2',sysdate,'system',sysdate,null);
+
 
 

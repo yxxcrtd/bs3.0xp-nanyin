@@ -158,15 +158,28 @@
 	</select>
 
 	<delete id="deleteDetail">
-		DELETE FROM CHB_SALE_MONTH_REPORT_DETAIL WHERE REPORTUUID = (select REPORTUUID FROM CHB_SALE_MONTH_REPORT WHERE TERMID = to_date(#{batchDate,jdbcType=VARCHAR},'yyyy-mm'))
+		DELETE FROM CHB_SALE_MONTH_REPORT_DETAIL WHERE REPORTUUID = (select REPORTUUID FROM CHB_SALE_MONTH_REPORT WHERE TERMID = #{termid,jdbcType=VARCHAR})
 	</delete>
 
 	<delete id="deleteReport">
-	DELETE FROM CHB_SALE_MONTH_REPORT WHERE TERMID = to_date(#{batchDate,jdbcType=VARCHAR},'yyyy-mm')
+	DELETE FROM CHB_SALE_MONTH_REPORT WHERE TERMID = #{termid,jdbcType=VARCHAR}
 	</delete>
 	
-	<insert id="insertBatchData" parameterType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
+	<insert id="insertIntoDetail" parameterType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
+		insert into CHB_SALE_MONTH_REPORT_DETAIL(DETAILUUID,REPORTUUID,REPORTTYPE,PRD_REGIST_CODE,IS_CONSIGN,INSTITUTION_CODE
+		,AREA_CODE,HOLDER_TYPE,HOLDER_NUM,SALE_AMOUNT_TOTAL,VALUE_AMOUNT_TOTAL,BALANCE_AMT,BALANCE_SHARES
+		,SALE_SHARES_TOTAL,VALUE_SHARES_TOTAL)values
+		(#{detailuuid},#{reportuuid},#{reporttype},#{prdRegistCode},#{isConsign},#{institutionCode},#{areaCode}
+		,#{holderType},#{holderNum},#{saleAmountTotal},#{valueAmountTotal},#{balanceAmt},#{balanceShares},#{saleSharesTotal}
+		,#{valueSharesTotal})
+	</insert>
 
+	<insert id="insertIntoReport">
+		insert into CHB_SALE_MONTH_REPORT (REPORTUUID,TERMID,REPORT_NAME,STARTDATE,ENDDATE,REPORTFREQU,DATA_STATUS
+		,SEND_STATUS,STATUS_DATE,CHB_SUBMIT_DEADLINE)values
+		(#{reportuuid},#{termid,jdbcType=VARCHAR},#{reportName},to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd'),to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		,'M','01',null,sysdate,to_date(#{CHB_SUBMIT_DEADLINE,jdbcType=VARCHAR},'yyyy-mm-dd')
+		)
 	</insert>
 
 <!--	检查整个月汇总是否有值-->
@@ -208,12 +221,16 @@
 <!--	取得银行月报信息-->
 	<select id="selectChbPrdPosition" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		SELECT
-		PRODID prodid,
-		DIRTYAMTSUM dirtyamtsum,
-		CLEANAMTSUM cleanamtsum,
-		ENDAMTSUM_OTH endamtsumOth
+		A.PRODID prodid,
+		B.REG_CODE prdRegistCode,
+		A.DIRTYAMTSUM dirtyamtsum,
+		A.CLEANAMTSUM cleanamtsum,
+		A.ENDAMTSUM_OTH endamtsumOth
 		FROM
-		CHB_MONTH_PRD_POSITION
+		CHB_MONTH_PRD_POSITION A
+		left
+		CHB_PRDRESIST_CODE B
+		on A.PRODID = B.PRODID
 		WHERE STARTDATE = to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and  ENDDATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 	</select>
 <!--	分投资者类型获得投资者数量-->
