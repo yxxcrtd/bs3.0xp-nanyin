@@ -405,7 +405,7 @@ public class CfetsEtrDispatcherDealListInfoResponse extends CfetsEtrDispatcherBa
     }
 
     public String getOtherEffectFlag() {
-        return SysDataUtil.getNameFromDataDict(DictCode.有效状态, this.getEffectFlag());
+        return SysDataUtil.getNameFromDataDict(DictCode.交易流程状态, this.getEffectFlag());
     }
 
     public String getOtherCcy() {

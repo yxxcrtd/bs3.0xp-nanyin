@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.etrdispatcher.dto;
 
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -50,8 +52,8 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     @ApiModelProperty(name="settleSpeed",value="清算速度code",example="T+0")
     private String settleSpeed;
 
-    @ApiModelProperty(name="settleSpeedStr",value="清算速度",example="T+0")
-    private String settleSpeedStr;
+//    @ApiModelProperty(name="settleSpeedStr",value="清算速度",example="T+0")
+//    private String settleSpeedStr;
 
     @ApiModelProperty(name="settleDate",value="结算日期",example="2021-01-01")
     private String settleDate;
@@ -222,13 +224,13 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
         this.settleSpeed = settleSpeed;
     }
 
-    public String getSettleSpeedStr() {
-        return settleSpeedStr;
-    }
-
-    public void setSettleSpeedStr(String settleSpeedStr) {
-        this.settleSpeedStr = settleSpeedStr;
-    }
+//    public String getSettleSpeedStr() {
+//        return settleSpeedStr;
+//    }
+//
+//    public void setSettleSpeedStr(String settleSpeedStr) {
+//        this.settleSpeedStr = settleSpeedStr;
+//    }
 
     public BigDecimal getUnitPrice() {
         return unitPrice;
@@ -492,5 +494,20 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
 
     public void setSettleDate(String settleDate) {
         this.settleDate = settleDate;
+    }
+
+    public String getExeDate() {
+        return exeDate;
+    }
+
+    public void setExeDate(String exeDate) {
+        this.exeDate = exeDate;
+    }
+    public String getOtherPs() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.交易方向,super.getPs());
+    }
+
+    public String getOtherSettleSpeed() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.清算速度,this.getSettleSpeed());
     }
 }

@@ -237,7 +237,7 @@
         select SEQ_NO,
         ENTRUST_ID,
         OPER_TYPE,
-        to_char(OPER_DATE, 'yyyy-MM-dd'),
+        to_char(OPER_DATE, 'yyyy-MM-dd') OPER_DATE,
         OPER_TIME,
         BUSI_DES,
         USER_ID
