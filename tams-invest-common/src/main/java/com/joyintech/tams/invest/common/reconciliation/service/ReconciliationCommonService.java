@@ -51,7 +51,7 @@ public class ReconciliationCommonService {
     private SettleTransDataStatusMapper settleTransDataStatusMapper;
 
     @Autowired
-    private StlSecReconDealMapper stlSecReconDealMapper;
+    private StlSecReconDetailMapper stlSecReconDetailMapper;
 
     @Autowired
     private ReconciliationCommonMapper reconciliationCommonMapper;
@@ -582,6 +582,12 @@ public class ReconciliationCommonService {
                     detail.setSeqNo(dto.getSeqNo());
                     detail.setTradeId(settleTransData.getTradeId());
                     detail.setStlSecDeme(dto.getParaValue());
+                    StlSecReconDetailKey detailKey = new StlSecReconDetailKey();
+                    detailKey.setTradeId(settleTransData.getTradeId());
+                    detailKey.setSeqNo(dto.getSeqNo());
+                    // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit start
+                    stlSecReconDetailMapper.deleteByPrimaryKey(detailKey);
+                    // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit end
                     reconciliationCommonMapper.insertStlSecReconDetail(detail);
                     // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit start
                     settleTransDataStatusMapper.deleteByPrimaryKey(settleTransData.getTradeId());
