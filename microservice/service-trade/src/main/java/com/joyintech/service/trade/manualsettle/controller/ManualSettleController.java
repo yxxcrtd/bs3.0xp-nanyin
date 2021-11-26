@@ -57,5 +57,10 @@ public class ManualSettleController {
     public void settledelay(@RequestBody ManualSettleDto dto) throws Exception {
          manualSettleService.settle(dto);
     }
+    @PostMapping("findPageExport/{page}/{length}")
+    public Page<ManualSettleDto> findPageExport(@RequestBody Map<String, Object> param,
+                                           @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+        return manualSettleService.findPageExport(page, length, param);
+    }
 } 
 

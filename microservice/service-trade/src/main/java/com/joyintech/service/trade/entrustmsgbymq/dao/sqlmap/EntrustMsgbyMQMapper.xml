@@ -178,4 +178,8 @@
 			FINPROD_ID = #{finprodId,jdbcType=VARCHAR} AND
 			OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
 	</select>
+
+	<select id="selectPledgeId" resultType="string">
+		select FINPROD_ID from INF_CONTRACT_DETAILFILE where DEAL_NO=#{getvTradeId}
+	</select>
 </mapper>

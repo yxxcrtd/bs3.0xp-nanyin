@@ -157,4 +157,6 @@ public interface EntrustMsgbyMQMapper {
 	FinDealPledge selectFinDealPledgeByPrimaryKey(FinDealPledgeKey finDealPledgeKey);
 
     FinProductOthCode selectFinProductOthCode(Map<String, Object> map);
+
+    String selectPledgeId(String getvTradeId);
 }

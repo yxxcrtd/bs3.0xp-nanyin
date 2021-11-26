@@ -1,6 +1,7 @@
 package com.joyintech.service.trade.manualsettle.service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -9,6 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.joyintech.framework.util.*;
+import com.joyintech.service.trade.entrustmsgbymq.dto.TrdTempDto;
+import com.joyintech.service.trade.entrustmsgbymq.service.TradePreClearingService;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.position.dto.PostionParameter;
+import com.joyintech.tams.invest.common.position.service.CommonPositionService;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +26,10 @@ import org.springframework.stereotype.Service;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.trade.entrustmsgbymq.dao.EntrustMsgbyMQMapper;
 import com.joyintech.service.trade.manualsettle.dao.ManualSettleMapper;
 import com.joyintech.service.trade.manualsettle.dto.ManualSettleDto;
 import com.joyintech.service.trade.manualsettle.dto.ManualSettleFlowDto;
-import com.joyintech.tams.common.base.dao.StlPayTempOrdersMapper;
-import com.joyintech.tams.common.base.dao.TrdManualSettleFlowMapper;
-import com.joyintech.tams.common.base.dao.TrdProductTempDealAddMapper;
-import com.joyintech.tams.common.base.dao.TrdProductTempDealMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.StlPayTempOrders;
-import com.joyintech.tams.common.base.entity.TrdManualSettleFlow;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.TrdProductTempDeal;
-import com.joyintech.tams.common.base.entity.TrdProductTempDealAdd;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -84,6 +78,15 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
 
     @Autowired
     private BaseTradeProductDealCommService baseTradeProductDealCommService;
+
+    @Autowired
+    private TradePreClearingService tradePreClearingService;
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
+
+    @Autowired
+    private CommonPositionService commonPositionService;
 
     public Page<ManualSettleDto> selectForPage(int page, int length, Map<String, Object> pageParam)
             throws Exception {
@@ -140,9 +143,81 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
                     item.setEntrustId(entrustId);
                 }
             });
-            // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[实际]的组合持仓流水及现金流水
-            finProductTradeDto.setNeedHandleFinishEntrust(true);
-            baseTradeProductDealCommService.execute(finProductTradeDto);
+
+            //质押式回购 持仓流水
+            if(!dto.getBusiType().equals("01")&&!dto.getBusiType().equals("02")&&!dto.getBusiType().equals("03")&&!dto.getBusiType().equals("04")){
+                if(StringUtil.equals(dto.getPageModel(),DictCodeListExt3.交收操作类型_交收.getValue())) {
+                    InfContractDetailfile infContractDetailfile = manualSettleMapper.selectInfContractDetailfile(dto.getEntrustNo(), dto.getDealNo());
+                    TrdTempDto trdTempDto = new TrdTempDto();
+                    // 指令信息处理
+                    tradePreClearingService.buildPositionBaseData(trdTempDto, infContractDetailfile);
+                    tradePreClearingService.trdRepo(trdTempDto, infContractDetailfile);
+                    // 场景参数设置
+                    PostionParameter parameter = new PostionParameter();
+                    parameter.setPs(trdTempDto.getPs());
+                    parameter.setTradeMarket(trdTempDto.getTradeMarket());
+                    parameter.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
+                    parameter.setOperationType("NEW");
+                    parameter.setTradeType("02");
+                    parameter.setBusinessType(DictCodeList.回购类型_质押式协议回购.getValue().concat(trdTempDto.getFinprodType2()));
+                    // 数据来源设置
+                    if (StringUtil.equals(trdTempDto.getPs(), DictCodeListExt3.交易方向_解除质押.getValue())) {
+//                    InfContractDetailfile infContractDetailfile = (InfContractDetailfile)trdTempDto.getData();
+                        BigDecimal faceValue = trdCommonBaseService.getFaceValue(infContractDetailfile.getFinprodId(), infContractDetailfile.getTradeDate());
+                        trdTempDto.setTradeAmt((faceValue == null ? BigDecimal.valueOf(100) : faceValue).multiply(infContractDetailfile.getShareAmt()));
+                    }
+                    trdTempDto.setIsFinish(DictCodeList.是否_是.getValue());
+                    trdTempDto.setTradeDate(DateUtil.platDateFromCache());
+                    if (StringUtil.equals(trdTempDto.getPs(), DictCodeListExt3.交易方向_到期续做.getValue()) && StringUtil.isNotEmpty(trdTempDto.getRedoType())) {
+                        parameter.setPs(parameter.getPs() + trdTempDto.getRedoType());
+                    }
+                    parameter.setCustom(trdTempDto);
+                    commonPositionService.process(parameter);
+
+                    // 3.调用基础组件.【投资委托组件.完成委托】，写入委托完成状况信息(投资委托场合才执行此步)
+                    if (!finProductTradeDto.isNeedHandleFinishEntrust()) {
+                        baseTradeProductDealCommService.finishEntrust(finProductTradeDto.getBaseTradeProductDealDtos(), false);
+                    }
+                }else{
+                    List<PtlCashPosition> ptlCashPositions = manualSettleMapper.listPtlCashPositionFlow(stlPayOrdersDto.getOrderId());
+                    List<PtlSecPosition> ptlSecPositions = manualSettleMapper.listPtlSecPositionFlow(trdProductDeal.getTradeId());
+                    List<EtrCashPosition> etrCashPositions = manualSettleMapper.listEtrCashPositionFlow(stlPayOrdersDto.getOrderId());
+                    List<EtrSecPosition> etrSecPositions = manualSettleMapper.listEtrSecPositionFlow(trdProductDeal.getTradeId());
+
+                    // 删除日间委托完成度
+                    manualSettleMapper.deleteEtrFinishStatus(trdProductDeal.getTradeId());
+                    //更新余额
+                    ptlCashPositions.stream().forEach(item ->{
+                        if(null!=item.getAmount()){
+                            item.setAmount(item.getAmount().negate());
+                            manualSettleMapper.updatePtlCashPosition(item);
+                        }
+                    });
+                    ptlSecPositions.stream().forEach(item ->{
+                        if(null!=item.getAmount()){
+                            item.setAmount(item.getAmount().negate());
+                            manualSettleMapper.updatePtlSecPosition(item);
+                        }
+                    });
+                    etrCashPositions.stream().forEach(item ->{
+                        if(null!=item.getAmount()){
+                            item.setAmount(item.getAmount().negate());
+                            manualSettleMapper.updateEtrCashPosition(item);
+                        }
+                    });
+                    etrSecPositions.stream().forEach(item ->{
+                        if(null!=item.getAmount()){
+                            item.setAmount(item.getAmount().negate());
+                            manualSettleMapper.updateEtrSecPosition(item);
+                        }
+                    });
+                }
+
+            }else {
+                // 调用业务组件.【金融产品交易共通.交易产品接口】,写入[实际]的组合持仓流水及现金流水
+                finProductTradeDto.setNeedHandleFinishEntrust(true);
+                baseTradeProductDealCommService.execute(finProductTradeDto);
+            }
             //针对回溯  删除交收及回溯的流水
             if(StringUtil.equals(dto.getPageModel(),DictCodeListExt3.交收操作类型_回溯.getValue())){
                 if (stlPayOrdersDto != null&&StringUtil.isNotEmpty(stlPayOrdersDto.getOrderId())) {
@@ -154,6 +229,7 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
                     manualSettleMapper.deletePtlSecFlow(trdProductDeal.getTradeId());
                 }
             }
+
         }
         else if(StringUtil.equals(dto.getPageModel(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
             EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
@@ -238,6 +314,12 @@ public class ManualSettleService extends BaseService<ManualSettleDto> {
             param.put("settleStatus",DictCodeListExt3.交收状态_交收失败.getValue());
         }
         manualSettleMapper.updateSettleInfo(param);
+    }
+
+    public Page<ManualSettleDto> findPageExport(int page, int length, Map<String, Object> pageParam)
+            throws Exception {
+        Page<ManualSettleDto> pageDto = super.queryForPage(page, length, () -> manualSettleMapper.findPageExport(pageParam));
+        return pageDto;
     }
 } 
 

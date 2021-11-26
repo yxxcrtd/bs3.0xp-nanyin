@@ -1,10 +1,13 @@
 package com.joyintech.service.trade.manualsettle.dto;
 
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.TrdManualSettleInfo;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -113,6 +116,58 @@ public class ManualSettleDto extends TrdManualSettleInfo implements ITableRow, P
 
     public void setCounterName(String counterName) {
         this.counterName = counterName;
+    }
+
+    /**
+     * 交收时间
+     */
+    private Date settleTime;
+
+    /**
+     * 操作类型 数据字典
+     */
+    private String operType;
+
+    /**
+     * 操作员
+     */
+    private String operator;
+
+    /**
+     * 交收流水序号
+     */
+    private String seqNo;
+
+    public Date getSettleTime() {
+        return settleTime;
+    }
+
+    public void setSettleTime(Date settleTime) {
+        this.settleTime = settleTime;
+    }
+
+    public String getOperType() {
+        return operType;
+    }
+
+    public void setOperType(String operType) {
+        this.operType = operType;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public String getSeqNo() {
+        return seqNo;
+    }
+
+    public void setSeqNo(String seqNo) {
+        this.seqNo = seqNo;
     }
 }
 

@@ -67,10 +67,17 @@
             ,{field:'finprodName', title: 'EtrTransactionDetail001.finprodName', width:'150'}
             ,{field:'settleNum',title: '交割数量', width:'150', type:'money'}
             ,{field:'settleAmt', title: '交割金额', width:'150', type:'money'}
+            ,{field:'prin', title: '回购金额', width:'150', type:'money'}
+            ,{field:'mTradeAmt', title: '到期结算金额', width:'150', type:'money'}
+            ,{field:'pledgeId', title: '质押券代码', width:'150'}
+            ,{field:'pledgeName', title: '质押券名称', width:'150'}
+            ,{field:'pledgeNumber', title: '质押券数量', width:'150'}
+            ,{field:'bPledgeId', title: '原质押券代码', width:'150'}
             ,{field:'busiType', title: '业务类别', width:'150', visible:false}
             ,{field:'busiTypeStr', title: '业务类别', width:'150',sortField:'busiType'}
             ,{field:'counterId', title: '交易对手', width:'150', visible:false}
             ,{field:'counterName', title: '交易对手', width:'150'}
+            ,{field:'dealNo',visible:false}
         ],
         done: function(res){
             $('#dataTable').next('.layui-table-view').find('.layui-table-header').eq(1).find('th[data-field="1"]').find('span').html("序号");
@@ -101,6 +108,12 @@
             ,{field:'finprodName', title:'资产名称', width:'150'}
             ,{field:'settleNum',title:'交收数量', width:'150', type:'money'}
             ,{field:'settleAmt',title:'交收金额', width:'150', type:'money'}
+            ,{field:'prin', title: '回购金额', width:'150', type:'money'}
+            ,{field:'mTradeAmt', title: '到期结算金额', width:'150', type:'money'}
+            ,{field:'pledgeId', title: '质押券代码', width:'150'}
+            ,{field:'pledgeName', title: '质押券名称', width:'150'}
+            ,{field:'pledgeNumber', title: '质押券数量', width:'150'}
+            ,{field:'bPledgeId', title: '原质押券代码', width:'150'}
             ,{field:'operType', title:'操作类型', width:'200', visible:false}
             ,{field:'operTypeStr', title:'操作类型', width:'200'}
             ,{field:'operator',title:'操作员', width:'150'}

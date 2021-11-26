@@ -107,6 +107,36 @@ public class TrdManualSettleInfo extends BaseEntity {
     private String dealNo;
 
     /**
+     *回购金额（质押式回购）
+     */
+    private BigDecimal prin;
+
+    /**
+     *到期结算金额（质押式回购）
+     */
+    private BigDecimal mTradeAmt;
+
+    /**
+     * 质押数量（质押式回购）
+     */
+    private BigDecimal pledgeNumber;
+
+    /**
+     * 质押券代码（质押式回购）
+     */
+    private String pledgeId;
+
+    /**
+     * 原质押券代码（质押式回购）
+     */
+    private String bPledgeId;
+
+    /**
+     * 质押券名称（质押式回购）
+     */
+    private String pledgeName;
+
+    /**
      * 取得 待交割序号
      * @return 待交割序号
      */
@@ -410,5 +440,53 @@ public class TrdManualSettleInfo extends BaseEntity {
      */
     public void setDealNo(String dealNo) {
         this.dealNo = dealNo == null ? null : dealNo.trim();
+    }
+
+    public BigDecimal getPrin() {
+        return prin;
+    }
+
+    public void setPrin(BigDecimal prin) {
+        this.prin = prin;
+    }
+
+    public BigDecimal getmTradeAmt() {
+        return mTradeAmt;
+    }
+
+    public void setmTradeAmt(BigDecimal mTradeAmt) {
+        this.mTradeAmt = mTradeAmt;
+    }
+
+    public BigDecimal getPledgeNumber() {
+        return pledgeNumber;
+    }
+
+    public void setPledgeNumber(BigDecimal pledgeNumber) {
+        this.pledgeNumber = pledgeNumber;
+    }
+
+    public String getPledgeId() {
+        return pledgeId;
+    }
+
+    public void setPledgeId(String pledgeId) {
+        this.pledgeId = pledgeId;
+    }
+
+    public String getbPledgeId() {
+        return bPledgeId;
+    }
+
+    public void setbPledgeId(String bPledgeId) {
+        this.bPledgeId = bPledgeId;
+    }
+
+    public String getPledgeName() {
+        return pledgeName;
+    }
+
+    public void setPledgeName(String pledgeName) {
+        this.pledgeName = pledgeName;
     }
 }
