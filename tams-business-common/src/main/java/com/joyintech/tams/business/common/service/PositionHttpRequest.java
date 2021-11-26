@@ -6,6 +6,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.HttpUtil;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -45,9 +46,21 @@ public class PositionHttpRequest {
         
         if (!StringUtil.equals("success", msgMap.get("code") + "")){
             if(StringUtil.equals("FL0007", msgMap.get("code"))){
-                throw new PositionException(CODE_BUSI_RK + "|" + JsonUtils.object2Json(msgMap));
+                // 头寸引擎提示现金不足时需要再校验原投管现金
+                // 返回true，表示现金够，重新发送
+                boolean isEnough = PositionUtil.checkForFL0007(req, msgMap);
+                if (!isEnough){
+                    // 软控时，加上原投管现金仍不足时需前端确认
+                    throw new PositionException(CODE_BUSI_RK + "|" + JsonUtils.object2Json(msgMap));
+                }
             }else if(StringUtil.equals("CT0001", msgMap.get("code"))){
-                throw new PositionException(CODE_BUSI_YK + "|" + JsonUtils.object2Json(msgMap));
+                // 头寸引擎提示现金不足时需要再校验原投管现金
+                // 返回true，表示现金够，重新发送
+                boolean isEnough = PositionUtil.checkForFL0007(req, msgMap);
+                if (!isEnough){
+                    // 确控时，加上原投管现金仍不足时提示前端
+                    throw new PositionException(CODE_BUSI_YK + "|" + JsonUtils.object2Json(msgMap));
+                }
             }else {
                 revokeCheck(msgMap, req);
             }

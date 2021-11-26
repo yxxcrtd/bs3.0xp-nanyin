@@ -1,9 +1,11 @@
 package com.joyintech.tams.business.common.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.business.common.dto.CashPositionFlowDto;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -92,4 +94,13 @@ public interface JoyinbusinessCommonMapper {
      * @since 1.0
      */
     List<SelectOptionDto> queryMySideTraderList(Map<String, Object> param);
+
+    BigDecimal selectCommandAvailableCash(CashPositionFlowDto dto);
+
+    /**
+     * 查询手工调整流水数据
+     * @param dto
+     * @return
+     */
+    BigDecimal selectManualCashFlow(CashPositionFlowDto dto);
 }

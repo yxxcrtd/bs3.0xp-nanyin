@@ -451,7 +451,7 @@ from
                     select SEC_ID, NETPRICE from (
                         SELECT ROW_NUMBER () over(
                             PARTITION BY SEC_ID 
-                            ORDER BY VALUE_DATE DESC, DECODE(VALUE_DATE, #{VALUATION_SOURCE_CBC}, 1, 0) DESC
+                            ORDER BY VALUE_DATE DESC, DECODE(VALUE_SOURCE, #{VALUATION_SOURCE_CBC}, 1, 0) DESC
                         ) rn, a.*
                         FROM MST_BOND_VALUATION_INFO a
                         WHERE VALUE_DATE <![CDATA[<=]]> to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') 
