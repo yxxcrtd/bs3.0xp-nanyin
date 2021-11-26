@@ -1044,9 +1044,11 @@ public class IbuQuoteBondService extends BaseService {
         param.put("entrustStatusUnAccept", BussinessDictCodeList.委托状态_待接收.getValue());
         param.put("entrustStatusAccept", BussinessDictCodeList.委托状态_已接收.getValue());
         param.put("entrustStatusComple", BussinessDictCodeList.委托状态_已完成.getValue());
+        param.put("entrustStatusReturn", BussinessDictCodeList.委托状态_已退回.getValue());
         param.put("secAcctSource", BussinessDictCodeList.账户来源_自营.getValue());
         param.put("psT01", BussinessDictCodeList.交易方向_买入.getValue());
         param.put("psT02", BussinessDictCodeList.交易方向_卖出.getValue());
+        param.put("psT03", BussinessDictCodeList.交易方向_行权回售.getValue());
     }
 }
 
