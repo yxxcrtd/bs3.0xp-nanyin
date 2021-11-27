@@ -55,6 +55,7 @@
 		)
 		SELECT <!-- 查询委托汇总数据 -->
 			tmp.SEQ_NO,
+			tmp.TRADE_ID,
 			tmp.FINPROD_ID,
 			tmp.TRADE_MARKET,
 			tmp.CUSTOMER_ID,
@@ -129,6 +130,7 @@
 		<!-- 查询证券汇总数据 -->
 		SELECT
 			tmp.SEQ_NO,
+			tmp.TRADE_ID,
 			tmp.FINPROD_ID,
 			tmp.TRADE_MARKET,
 			tmp.CUSTOMER_ID,
@@ -208,6 +210,7 @@
 		<!-- 查询成交明细数据 -->
 		SELECT
 			tmp.SEQ_NO,
+			tmp.TRADE_ID,
 			tmp.FINPROD_ID,
 			tmp.TRADE_MARKET,
 			tmp.CUSTOMER_ID,
@@ -259,6 +262,7 @@
 		<!-- 查询成交明细数据 -->
 		SELECT
 			tmp.SEQ_NO,
+			tmp.TRADE_ID,
 			tmp.FINPROD_ID,
 			tmp.TRADE_MARKET,
 			tmp.CUSTOMER_ID,
@@ -302,7 +306,6 @@
 		FROM
 			tmp
 		LEFT JOIN SETTLE_TRANS_DATA std ON tmp.FINPROD_ID = std.FINPROD_ID
-											AND tmp.PS = std.PS
 											AND tmp.SEC_ACCT_ID = std.SEC_ACCT_ID
 											AND tmp.SEAT_NUMBER = std.SEAT_NUMBER
 											AND tmp.TRADE_DATE = std.TRADE_DATE

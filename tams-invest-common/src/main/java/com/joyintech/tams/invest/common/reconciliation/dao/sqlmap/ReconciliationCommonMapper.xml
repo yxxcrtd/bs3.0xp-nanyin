@@ -126,6 +126,15 @@ where
 		<if test="seatNumber != null and seatNumber != '' ">
 			AND std.SEAT_NUMBER = #{seatNumber, jdbcType=VARCHAR}
 		</if>
+		<if test="cjbh != null and cjbh != '' ">
+			AND std.CJBH = #{cjbh, jdbcType=VARCHAR}
+		</if>
+		<if test="secAcctId != null and secAcctId != '' ">
+			AND std.SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
+		</if>
+		<if test="tradeDate != null and tradeDate != '' ">
+			AND std.TRADE_DATE = #{tradeDate, jdbcType=DATE}
+		</if>
 		order by std.SHARE_AMT desc
 	</select>
 

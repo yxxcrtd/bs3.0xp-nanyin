@@ -619,7 +619,16 @@ public class ReconciliationCommonService {
             param.put("dealDate", dto.getTradeDate());
             param.put("seatNumber", dto.getSeatNumber());
         }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getParaValue())){
-            param.put("tradeId", dto.getTradeId());
+            if(StringUtil.isEmpty(dto.getTradeId())){
+                param.put("finprodId", dto.getFinprodId());
+                param.put("secAcctId", dto.getSecAcctId());
+                param.put("seatNumber", dto.getSeatNumber());
+                param.put("tradeDate", dto.getTradeDate());
+            }else {
+                param.put("cjbh", dto.getTradeId());
+                param.put("seatNumber", dto.getSeatNumber());
+                param.put("tradeDate", dto.getTradeDate());
+            }
         }
         return reconciliationCommonMapper.getSettleTransData(param);
     }
