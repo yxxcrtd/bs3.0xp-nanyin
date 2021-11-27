@@ -204,4 +204,109 @@
                 AND T1.PARTY_CUSTOMER_ID = #{ourinstitutioncode}
             </if>
     </select>
+    <select id="selectMatchDtoByExecId" parameterType="String"  resultType="com.joyintech.service.bankuplink.common.dto.TrdConfirmMatchDto">
+        select t.pre_trade_id as preTradeId
+        from trdquto_match_info t
+        where t.exe_id=#{execid,jdbcType=VARCHAR} and  t.match_status is null
+    </select>
+    <select id="selectRegDtoByPrimaryKey"  resultType="com.joyintech.service.bankuplink.common.dto.TrdConfirmRegAndIbuInfoDto">
+        select reg.trade_date as tradeDate,
+        reg.finprod_id as finprodId,
+        reg.trade_market as tradeMarket,
+        reg.ps as ps,
+        reg.settle_speed as settleSpeed,
+        reg.sec_manage_acct_id as secManageAcctId,
+        reg.yield as tradeYield,
+        reg.face_value as faceValue,
+        reg.settle_date as settleDate,
+        reg.delivery_type as deliveryType,
+        reg.finprod_type2  as finprodType2,
+        fp.finprod_market_id as finprodMarketId,
+        reg.totle_trade_id as totleTradeId
+        from reg_fin_product_deal_total reg
+        left join fin_product fp
+        on reg.finprod_id=fp.finprod_id
+        where reg.trade_market='01'
+        <if test="totleTradeId != null and totleTradeId != ''">
+            and reg.totle_trade_id=#{totleTradeId,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodType2 != null and finprodType2 != ''">
+            and reg.finprod_type2 = #{finprodType2}
+        </if>
+        <if test="tradeDate != null and tradeDate != ''">
+            and reg.trade_date = #{tradeDate}
+        </if>
+        <if test="finprodMarketId != null and finprodMarketId != ''">
+            and fp.finprod_market_id = #{finprodMarketId}
+        </if>
+        <if test="ps != null and ps != ''">
+            and reg.ps = #{ps}
+        </if>
+        <if test="settleSpeed != null and settleSpeed != ''">
+            and reg.settle_date = #{settleSpeed}
+        </if>
+        <if test="secManageAcctId != null and secManageAcctId != ''">
+            and reg.sec_manage_acct_id = #{secManageAcctId}
+        </if>
+        <if test="tradeYield != null and tradeYield != ''">
+            and (to_char(reg.yield,'FM990.9999')=#{tradeYield}
+            or to_char(reg.yield)=#{tradeYield})
+        </if>
+        <if test="faceValue != null and faceValue != ''">
+            and (to_char(reg.face_value,'FM9999999999999990.999999')=#{faceValue}
+            or to_char(reg.face_value)=#{faceValue})
+        </if>
+        <if test="settleDate != null and settleDate != ''">
+            and reg.settle_date = #{settleDate}
+        </if>
+        <if test="deliveryType != null and deliveryType != ''">
+            and reg.delivery_type = #{deliveryType}
+        </if>
+    </select>
+    <select id="selectIbuDtoByPrimaryKey" parameterType="String"  resultType="com.joyintech.service.bankuplink.common.dto.TrdConfirmRegAndIbuInfoDto">
+        select
+        ib.quote_date as tradeDate,
+        ib.finprod_id as finprodId,
+        fp.finprod_market_id as finprodMarketId,
+        ib.ps as ps,
+        decode(ib.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
+        ib.sec_manage_acct_id as secManageAcctId,
+        ibd.yield as tradeYield,
+        nvl(ib.share_amt,0)*100 as faceValue,
+        ib.settle_date as settleDate,
+        ib.delivery_type as deliveryType,
+        ib.quote_id as totleTradeId
+        from ibu_quote_bond ib
+        left join (
+        select I.*
+        from ibu_quote_bond_det I
+        INNER JOIN (SELECT quote_id ,MAX(update_time) UPDATETIME FROM  ibu_quote_bond_det GROUP BY quote_id)	II ON  I.quote_id = II.quote_id AND II.UPDATETIME = I.Update_Time
+        )ibd
+        on  ib.quote_id=ibd.quote_id
+        left join fin_product fp
+        on ib.finprod_id=fp.finprod_id
+        where  ib.quote_id =#{quoteId,jdbcType=VARCHAR}
+    </select>
+    <insert id="insertTrdQutoMatchInfo" parameterType="com.joyintech.service.bankuplink.common.dto.TrdConfirmMatchDto" >
+        insert into trdquto_match_info (SEQNO, CSTP_TRADE_ID, EXE_ID,
+        PRE_TRADE_ID, MATCH_TYPE, MATCH_STATUS,
+        TRD_CONF_STATUS, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        values (#{seqno,jdbcType=VARCHAR}, #{cstpTradeId,jdbcType=VARCHAR}, #{exeId,jdbcType=VARCHAR},
+        #{preTradeId,jdbcType=VARCHAR}, #{matchType,jdbcType=VARCHAR}, #{matchStatus,jdbcType=VARCHAR},
+        #{trdConfStatus,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+        sysdate, #{updateUser,jdbcType=VARCHAR},sysdate
+        )
+    </insert>
+    <update id="updateTrdQutoMatchInfo" parameterType="com.joyintech.service.bankuplink.common.dto.TrdConfirmMatchDto" >
+        update trdquto_match_info
+        set match_type= #{matchType,jdbcType=VARCHAR},
+        match_status= #{matchStatus,jdbcType=VARCHAR},
+        UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = sysdate
+        where PRE_TRADE_ID=#{preTradeId,jdbcType=VARCHAR}
+    </update>
+
+
 </mapper>
