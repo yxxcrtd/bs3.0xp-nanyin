@@ -864,7 +864,7 @@
         from (select I.Execid  as execid,
         I.Businesstype as businesstype,
         decode(I.BUSINESSTYPE,'BOND',ts.SECID,'REPO',tr.secid) as finprodMarketId,
-        decode(I.BUSINESSTYPE,'BOND',null,'REPO',null) as finprodAbbr,
+        decode(I.BUSINESSTYPE,'BOND',fp.finprod_abbr,'REPO',null) as finprodAbbr,
         nvl(ts.ps,tr.ps) as ps,
         decode(decode(I.BUSINESSTYPE,'BOND',ts.SETTLE_SPEED,'REPO',tr.SETTLE_SPEED),'1','01','2','02','3','03') settleSpeed,
       <!--  nvl(ts.OURDEPOSITACCOUNTNUMBER,ts.OURDEPOSITACCOUNTNUMBER) as  acctNo,-->
@@ -890,6 +890,9 @@
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
         left join INTERF_OPICS_TRAD_REPO tr on tr.oritradeid = I.EXECID
         left join INTERF_TRAD_SECDEAL ts on ts.FEDEALNO = I.EXECID
+        left join fin_product fp
+        on ts.SECID=fp.finprod_market_id
+        and fp.finprod_type='F01'
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON I.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
         LEFT JOIN SYS_USER_ADD sua ON nvl(ts.TRAD,tr.BUYTRADER) =sua.IBU_TRADER
@@ -1026,7 +1029,7 @@
         select * from (select aaa.*
         from (
         select
-        m.seqno as seqno,
+        distinct m.seqno as seqno,
         m.match_type as matchType,
         m.pre_trade_id as busiCode,
         m.exe_id as execid,
@@ -1039,6 +1042,7 @@
     <!--    nvl(ts.OURDEPOSITACCOUNTNUMBER,ts.OURDEPOSITACCOUNTNUMBER) as secManageAcctId,-->
         case when ipar.portfolio_id is not null
         then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end as  secManageAcctId,
+        stlinfo.sec_acct_name as secManageAcctIdName,
         decode(ct.BUSINESSTYPE,'BOND',nvl(reg.face_value,0)/10000,null) as printAmt,
         decode(ct.BUSINESSTYPE,'BOND',reg.yield,reg.rate) as tradeYield,
         decode(ct.BUSINESSTYPE,'REPO',reg.repo_term,null) as termDays,
@@ -1046,13 +1050,15 @@
         reg.trade_date as tradeDate,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
-        decode(regfee.fee_type,'06',regfee.fee_amt,null) as trdFeeAmt,
-        decode(regfee.fee_type,'07',regfee.fee_amt,null) as settleFeeAmt,
+        regfee.trdFeeAmt as trdFeeAmt,
+        regfee.settleFeeAmt as settleFeeAmt,
         reg.counter_id as counterId,
-        reg.quote_type as busiTypeStr,
+        mccic.PARTY_ABBR as counterIdName,
         reg.quote_type as quoteType,
         m.trd_conf_status as trdConfStatus,
-        m.match_status as matchStatus
+        m.match_status as matchStatus,
+        '04' as dealType,
+        m.pre_trade_id as totleTradeId
         from trdquto_match_info m
         left join reg_fin_product_deal_total reg
         on m.pre_trade_id=reg.totle_trade_id
@@ -1072,7 +1078,12 @@
         </if>
         group by regdeal.totle_trade_id)deal
         on reg.totle_trade_id=deal.totle_trade_id
-        left join reg_trade_fee_total regfee
+        left join (
+            select fee.trade_id,sum(decode(fee.fee_type,'B06',fee.fee_amt)) as trdFeeAmt,
+            sum(decode(fee.fee_type,'B08',fee.fee_amt)) as settleFeeAmt
+            from reg_trade_fee_total fee
+            group by fee.trade_id
+        ) regfee
         on reg.totle_trade_id=regfee.trade_id
         left join (SELECT I.*
         FROM INTERF_CSTP_TRADE I
@@ -1090,7 +1101,12 @@
         and ts.Dealno=m.cstp_trade_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ct.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
-        where ct.BUSINESSTYPE in ('BOND','REPO')
+        left join stl_sec_acct_info stlinfo
+        on (case when ipar.portfolio_id is not null
+        then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end)=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON reg.counter_id= mccic.party_id
+
+        where 1=1
         <if test="regAssetType != null  and regAssetType!=''">
             AND ct.BUSINESSTYPE = #{regAssetType}
         </if>
@@ -1151,6 +1167,7 @@
        <!-- nvl(ts.OURDEPOSITACCOUNTNUMBER,ts.OURDEPOSITACCOUNTNUMBER) as secManageAcctId,-->
         case when ipar.portfolio_id is not null
         then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end as  secManageAcctId,
+        stlinfo.sec_acct_name as secManageAcctIdName,
         decode(ct.BUSINESSTYPE,'BOND',nvl(ib.share_amt,0)/100,null) as printAmt,
         decode(ct.BUSINESSTYPE,'BOND',ib.yield,ic.rate) as tradeYield,
         decode(ct.BUSINESSTYPE,'REPO',ic.term,null) as termDays,
@@ -1161,10 +1178,12 @@
         null as trdFeeAmt,
         null as settleFeeAmt,
         nvl(ib.cp_party_id,ic.cp_party_id) as counterId,
-        nvl(ib.quote_type,ic.quote_type) as busiTypeStr,
+        mccic.PARTY_ABBR as counterIdName,
         nvl(ib.quote_type,ic.quote_type) as quoteType,
         m.trd_conf_status as trdConfStatus,
-        m.match_status as matchStatus
+        m.match_status as matchStatus,
+        nvl(ib.quote_type,ic.quote_type) as dealType,
+        m.pre_trade_id as totleTradeId
         from trdquto_match_info m
         left join (
         select
@@ -1211,7 +1230,11 @@
         and ts.Dealno=m.cstp_trade_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ct.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
-        where ct.BUSINESSTYPE in ('BOND','REPO')
+        left join stl_sec_acct_info stlinfo
+        on (case when ipar.portfolio_id is not null
+        then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end)=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON nvl(ib.cp_party_id,ic.cp_party_id)= mcci.party_id
+        where ct.BUSINESSTYPE in ('BOND','REPO')  and (ic.quote_id is not null or ib.quote_id is not null)
         <if test="regAssetType != null  and regAssetType!=''">
             AND ct.BUSINESSTYPE = #{regAssetType}
         </if>
@@ -1275,8 +1298,8 @@
                 ((aaa.execid || '|' || aaa.busiCode || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId
                 || '|' || aaa.finprodAbbr || '|' || dictps.ITEM_VALUE
                 || '|' || aaa.finprodType2Name || '|T+' || aaa.settleSpeed
-                || '|' || aaa.secManageAcctId || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
-                || '|' || aaa.counterId || '|' || dictquoteTpe.ITEM_VALUE
+                || '|' || aaa.secManageAcctIdName || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
+                || '|' || aaa.counterIdName || '|' || dictquoteTpe.ITEM_VALUE
                 like '%' || #{search} || '%')
                 or to_char(aaa.printAmt,'FM9999999999999990.99')=#{search} or to_char(aaa.printAmt)=#{search}
                 or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
@@ -1296,12 +1319,13 @@
     select * from (
         select reg.totle_trade_id as busiCode,
         reg.trade_date as tradeDate,
-        reg.quote_type as busiType,
+        '04' as busiType,
         fp.finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         reg.sec_manage_acct_id as secManageAcctId,
+        stlinfo.sec_acct_name as secManageAcctIdName,
         reg.settle_speed as settleSpeed,
         reg.unit_cprice as unitCprice,
         reg.yield as yield,
@@ -1312,20 +1336,27 @@
         reg.cprice_amt as cpriceAmt,
         reg.int_amt as intAmt,
         reg.fprice_amt as fpriceAmt,
-        decode(regfee.fee_type,'06',regfee.fee_amt,null) as trdFeeAmt,
-        decode(regfee.fee_type,'07',regfee.fee_amt,null) as settleFeeAmt,
+        regfee.trdFeeAmt as trdFeeAmt,
+        regfee.settleFeeAmt as settleFeeAmt,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         reg.clear_type as clearType,
         reg.delivery_type as deliveryType,
         reg.ccy as ccy,
         reg.counter_id as counterId,
+        mccic.PARTY_ABBR as counterIdName,
         reg.counter_trader as counterTrader,
-        reg.remark as remark
+        reg.remark as remark,
+        reg.settle_date as settleDate
         from reg_fin_product_deal_total reg
         left join fin_product fp
         on reg.finprod_id=fp.finprod_id
-        left join reg_trade_fee_total regfee
+        left join (
+            select fee.trade_id,sum(decode(fee.fee_type,'B06',fee.fee_amt)) as trdFeeAmt,
+            sum(decode(fee.fee_type,'B08',fee.fee_amt)) as settleFeeAmt
+            from reg_trade_fee_total fee
+            group by fee.trade_id
+        ) regfee
         on reg.totle_trade_id=regfee.trade_id
         left join(
         select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
@@ -1335,6 +1366,9 @@
         where regdeal.totle_trade_id=#{busiCode,jdbcType=VARCHAR}
         group by regdeal.totle_trade_id)deal
         on reg.totle_trade_id=deal.totle_trade_id
+        left join stl_sec_acct_info stlinfo
+        on reg.sec_manage_acct_id=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON reg.counter_id= mccic.party_id
         where reg.totle_trade_id=#{busiCode,jdbcType=VARCHAR} and reg.finprod_type2='F01'
 
         union all
@@ -1347,6 +1381,7 @@
         fp.finprod_abbr as finprodAbbr,
         ib.ps as ps,
         ib.sec_manage_acct_id as secManageAcctId,
+        stlinfo.sec_acct_name as secManageAcctIdName,
         ib.settle_speed as settleSpeed,
         ibd.unit_cprice as unitCprice,
         ibd.yield as yield,
@@ -1365,8 +1400,10 @@
         ib.delivery_type as deliveryType,
         ib.sett_ccy as ccy,
         ibd.cp_party_id as counterId,
+        mccic.PARTY_ABBR as counterIdName,
         ibd.cp_trader as counterTrader,
-        ib.remark as remark
+        ib.remark as remark,
+        ib.settle_date as settleDate
         from  ibu_quote_bond ib
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
@@ -1385,6 +1422,10 @@
         where ir.quote_id=#{busiCode,jdbcType=VARCHAR}
         group by ir.quote_id)deal
         on ib.quote_id=deal.quote_id
+        left join stl_sec_acct_info stlinfo
+        on ib.sec_manage_acct_id=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+
         where ib.quote_id=#{busiCode,jdbcType=VARCHAR}
     )
     <!--前端传入排序字段-->
@@ -1396,10 +1437,11 @@
         select * from (
         select reg.totle_trade_id as busiCode,
         reg.trade_date as tradeDate,
-        reg.quote_type as busiType,
+        '04' as busiType,
         reg.repo_type as termType,
         reg.ps as ps,
         reg.sec_manage_acct_id as secManageAcctId,
+        stlinfo.sec_acct_name as secManageAcctIdName,
         reg.settle_speed as settleSpeed,
         reg.repo_term as repoTerm,
         reg.v_settle_date as vsettleDate,
@@ -1409,8 +1451,8 @@
         reg.trade_amt as tradeAmt,
         reg.int_amt as intAmt,
         reg.m_trade_amt as mtradeAmt,
-        null as trdFeeAmt,
-        null as settleFeeAmt,
+        regfee.trdFeeAmt as trdFeeAmt,
+        regfee.settleFeeAmt as settleFeeAmt,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         reg.clear_type as clearType,
@@ -1418,12 +1460,18 @@
         reg.m_delivery_type as mdeliveryType,
         reg.ccy as ccy,
         reg.counter_id as counterId,
+        mccic.PARTY_ABBR as counterIdName,
         reg.counter_trader as counterTrader,
         reg.remark as remark
         from reg_fin_product_deal_total reg
         left join fin_product fp
         on reg.finprod_id=fp.finprod_id
-        left join reg_trade_fee_total regfee
+        left join (
+            select fee.trade_id,sum(decode(fee.fee_type,'B06',fee.fee_amt)) as trdFeeAmt,
+            sum(decode(fee.fee_type,'B08',fee.fee_amt)) as settleFeeAmt
+            from reg_trade_fee_total fee
+            group by fee.trade_id
+        ) regfee
         on reg.totle_trade_id=regfee.trade_id
         left join(
         select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
@@ -1433,6 +1481,9 @@
         where regdeal.totle_trade_id=#{busiCode}
         group by regdeal.totle_trade_id)deal
         on reg.totle_trade_id=deal.totle_trade_id
+        left join stl_sec_acct_info stlinfo
+        on reg.sec_manage_acct_id=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON reg.counter_id= mccic.party_id
         where reg.totle_trade_id=#{busiCode} and reg.finprod_type2 in ('F02','F03')
 
         union all
@@ -1443,6 +1494,7 @@
         ic.term_type as termType,
         ic.repo_ps as ps,
         ic.sec_manage_acct_id as secManageAcctId,
+        stlinfo.sec_acct_name as secManageAcctIdName,
         ic.settle_speed as settleSpeed,
         ic.term as repoTerm,
         ic.v_settle_date as vsettleDate,
@@ -1461,6 +1513,7 @@
         ic.m_delivery_type as mdeliveryType,
         ic.ccy as ccy,
         ic.cp_party_id as counterId,
+        mccic.PARTY_ABBR as counterIdName,
         ic.cp_trader_id as counterTrader,
         ic.remark as remark
         from  ibu_quote_crep ic
@@ -1469,9 +1522,13 @@
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
+        left join stl_sec_acct_info stlinfo
+        on ic.sec_manage_acct_id=stlinfo.sec_acct_id
         where ir.quote_id=#{busiCode}
         group by ir.quote_id)deal
         on ic.quote_id=deal.quote_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ic.cp_party_id= mccic.party_id
+
         where ic.quote_id=#{busiCode}
         )
         <!--前端传入排序字段-->
@@ -1491,6 +1548,7 @@
        <!-- ts.ourdepositaccountnumber as acctNo,-->
         case when ipar.portfolio_id is not null
         then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  acctNo,
+        stlinfo.sec_acct_name as acctNoName,
         ts.settdate as settleDate,
         ts.price_8 as unitCprice,
         I.Underlyingyield2 as yield,
@@ -1506,8 +1564,10 @@
         I.Settlcurrency  as settCcy,
         I.Quoteid as quoteid,
         I.ourinstitutioncode as traderid,
+        mccit.PARTY_ABBR as traderidName,
         su.USER_NAME trader,
         I.Counterinstitutioncode as counterId,
+        mccic.PARTY_ABBR as counterIdName,
         I.Institutionenglishshortname as counterTrader,
         ts.dealtext
         from INTERF_CSTP_TRADE I
@@ -1520,6 +1580,11 @@
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
         LEFT JOIN SYS_USER_ADD sua ON ts.TRAD =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
+        left join stl_sec_acct_info stlinfo
+        on (case when ipar.portfolio_id is not null
+        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end)=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id
         where I.EXECID=#{exeid,jdbcType=VARCHAR}
         )
         <!--前端传入排序字段-->
@@ -1535,7 +1600,8 @@
         tr.ps as ps,
         <!--tr.ourdepositaccountnumber as acctNo,-->
         case when ipar.portfolio_id is not null
-        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  acctNo,
+        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  secManageAcctId,
+        stlinfo.sec_acct_name as secManageAcctIdName,
         tr.settle_speed as settleSpeed,
         tr.term as repoTerm,
         I.Settldate as vsettleDate,
@@ -1553,8 +1619,10 @@
         I.Settlcurrency  as settCcy,
         I.Quoteid as quoteid,
         I.ourinstitutioncode as traderid,
+        mccit.PARTY_ABBR as traderidName,
         su.USER_NAME trader,
         I.Counterinstitutioncode as counterId,
+        mccic.PARTY_ABBR as traderidName,
         I.Institutionenglishshortname as counterTrader,
         tr.dealtext as remark
         from INTERF_CSTP_TRADE I
@@ -1565,6 +1633,10 @@
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
         LEFT JOIN SYS_USER_ADD sua ON tr.BUYTRADER =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
+        on (case when ipar.portfolio_id is not null
+        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end)=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id
         where I.EXECID=#{exeid,jdbcType=VARCHAR}
         )
         <!--前端传入排序字段-->

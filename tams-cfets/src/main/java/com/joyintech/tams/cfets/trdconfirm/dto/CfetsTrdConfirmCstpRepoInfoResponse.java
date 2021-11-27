@@ -11,6 +11,8 @@
 package com.joyintech.tams.cfets.trdconfirm.dto;
 
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -85,29 +87,42 @@ public class CfetsTrdConfirmCstpRepoInfoResponse {
     @ApiModelProperty(name="settleFeeAmt",value="结算服务费（元）",example="字符串1")
     private BigDecimal settleFeeAmt;
 
-    @ApiModelProperty(name="clearType",value="清算类型",example="字符串1")
+    @ApiModelProperty(name="clearType",value="清算类型Code",example="字符串1")
     private String clearType;
+    @ApiModelProperty(name="clearTypeName",value="清算类型",example="字符串1")
+    private String clearTypeName;
 
-    @ApiModelProperty(name="deliveryType",value="首次结算方式",example="字符串1")
+    @ApiModelProperty(name="deliveryType",value="首次结算方式Code",example="字符串1")
     private String deliveryType;
+    @ApiModelProperty(name="deliveryTypeName",value="首次结算方式",example="字符串1")
+    private String deliveryTypeName;
 
-    @ApiModelProperty(name="mdeliveryType",value="到期结算方式",example="字符串1")
+    @ApiModelProperty(name="mdeliveryType",value="到期结算方式Code",example="字符串1")
     private String mdeliveryType;
+    @ApiModelProperty(name="mdeliveryTypeName",value="到期结算方式",example="字符串1")
+    private String mdeliveryTypeName;
 
-    @ApiModelProperty(name="settCcy",value="结算币种",example="字符串1")
+    @ApiModelProperty(name="settCcy",value="结算币种Code",example="字符串1")
     private String settCcy;
+    @ApiModelProperty(name="settCcyName",value="结算币种",example="字符串1")
+    private String settCcyName;
 
     @ApiModelProperty(name="quoteid",value="报价编号",example="字符串1")
     private String quoteid;
 
-    @ApiModelProperty(name="traderid",value="本方",example="字符串1")
+    @ApiModelProperty(name="traderid",value="本方id",example="字符串1")
     private String traderid;
+    @ApiModelProperty(name="traderidName",value="本方",example="字符串1")
+    private String traderidName;
 
     @ApiModelProperty(name="trader",value="本方交易员",example="字符串1")
     private String trader;
 
-    @ApiModelProperty(name="counterId",value="对手方",example="字符串1")
+    @ApiModelProperty(name="counterId",value="对手方id",example="字符串1")
     private String counterId;
+
+    @ApiModelProperty(name="counterIdName",value="对手方",example="字符串1")
+    private String counterIdName;
 
     @ApiModelProperty(name="counterTrader",value="对手方交易员",example="字符串1")
     private String counterTrader;
@@ -148,7 +163,7 @@ public class CfetsTrdConfirmCstpRepoInfoResponse {
     }
 
     public String getPsName() {
-        return psName;
+        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, getPs());
     }
 
     public void setPsName(String psName) {
@@ -180,7 +195,8 @@ public class CfetsTrdConfirmCstpRepoInfoResponse {
     }
 
     public String getSettleSpeedName() {
-        return settleSpeedName;
+        return "T+" + this.getSettleSpeed();
+      //  return SysDataUtil.getNameFromDataDict(DictCode.清算速度, getSettleSpeed());
     }
 
     public void setSettleSpeedName(String settleSpeedName) {
@@ -345,5 +361,52 @@ public class CfetsTrdConfirmCstpRepoInfoResponse {
 
     public void setMtradeAmt(BigDecimal mtradeAmt) {
         this.mtradeAmt = mtradeAmt;
+    }
+
+    public String getClearTypeName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.清算类型, getClearType());
+    }
+
+    public void setClearTypeName(String clearTypeName) {
+        this.clearTypeName = clearTypeName;
+    }
+
+    public String getDeliveryTypeName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, getDeliveryType());
+    }
+
+    public void setDeliveryTypeName(String deliveryTypeName) {
+        this.deliveryTypeName = deliveryTypeName;
+    }
+
+    public String getMdeliveryTypeName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, getMdeliveryType());    }
+
+    public void setMdeliveryTypeName(String mdeliveryTypeName) {
+        this.mdeliveryTypeName = mdeliveryTypeName;
+    }
+
+    public String getSettCcyName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, getSettCcy());
+    }
+
+    public void setSettCcyName(String settCcyName) {
+        this.settCcyName = settCcyName;
+    }
+
+    public String getTraderidName() {
+        return traderidName;
+    }
+
+    public void setTraderidName(String traderidName) {
+        this.traderidName = traderidName;
+    }
+
+    public String getCounterIdName() {
+        return counterIdName;
+    }
+
+    public void setCounterIdName(String counterIdName) {
+        this.counterIdName = counterIdName;
     }
 }

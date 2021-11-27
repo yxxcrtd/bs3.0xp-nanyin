@@ -11,6 +11,7 @@
 package com.joyintech.tams.cfets.trdconfirm.service;
 
 import com.google.common.collect.Lists;
+import com.joyintech.background.component.common.pack.common.validation.annotation.Length;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.BaseService;
@@ -326,7 +327,7 @@ public class CfetsTrdConfirmService extends BaseService{
             trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             trdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
        //     trdFinProductDealTotal.setPortfolioId(entity.getActPortfolioId());
-            trdFinProductDealTotal.setSettleSpeed(Long.parseLong(entity.getSettleSpeedStr()));
+            trdFinProductDealTotal.setSettleSpeed(entity.getSettleSpeed());
             trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal);
 
             PaTrdFinProductDealTotal paTrdFinDealTotal = entity.getPaTrdFinProductDealTotal();
@@ -1857,7 +1858,13 @@ public class CfetsTrdConfirmService extends BaseService{
             req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
         }
         req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
-        req.setSettleSpeed(entity.getSettleSpeed().toString());
+        if(entity.getSettleSpeed().compareTo(new Long(0))==0){
+            req.setSettleSpeed("01");
+        }else if(entity.getSettleSpeed().compareTo(new Long(1))==0){
+            req.setSettleSpeed("02");
+        }else if(entity.getSettleSpeed().compareTo(new Long(2))==0){
+            req.setSettleSpeed("03");
+        }
         req.setBusiAct(DictCodeListExt3.业务动作_成交确认.getValue());
         req.setPs(entity.getPs());
         req.setSystemAct(DictCodeListExt3.系统动作_关闭.getValue());

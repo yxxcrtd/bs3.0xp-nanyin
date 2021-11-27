@@ -11,6 +11,8 @@
 package com.joyintech.tams.cfets.trdconfirm.dto;
 
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -130,7 +132,12 @@ public class CfetsTrdConfirmCstpInfoListResponse {
     }
 
     public String getBusinesstypeName() {
-        return businesstypeName;
+        if("BOND".equals(getBusinesstype())){
+            return "现券买卖";
+        }else{
+            return "质押式回购";
+        }
+      //  return SysDataUtil.getNameFromDataDict(DictCode.CSTP资产类型, getBusinesstype());
     }
 
     public void setBusinesstypeName(String businesstypeName) {
@@ -178,7 +185,7 @@ public class CfetsTrdConfirmCstpInfoListResponse {
     }
 
     public String getPsName() {
-        return psName;
+        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, getPs());
     }
 
     public void setPsName(String psName) {
@@ -194,7 +201,7 @@ public class CfetsTrdConfirmCstpInfoListResponse {
     }
 
     public String getSettleSpeedName() {
-        return settleSpeedName;
+        return SysDataUtil.getNameFromDataDict(DictCode.清算速度, getSettleSpeed());
     }
 
     public void setSettleSpeedName(String settleSpeedName) {
