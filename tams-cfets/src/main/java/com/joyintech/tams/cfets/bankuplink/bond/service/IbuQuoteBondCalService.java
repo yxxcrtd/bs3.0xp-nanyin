@@ -240,11 +240,11 @@ public class IbuQuoteBondCalService extends BaseService {
         }
     }
 
-    public Date getNextWorkDay(Date tradeDate) {
+    public Date getNextWorkDay(Date tradeDate,int days) {
         if (dateCalService != null) {
             List<String> holiday = dateCalService.getDealCalendarHoliday(tradeDate,
                     DateUtil.addDays(tradeDate, 31), CacheUtil.getSysParam("ibuVar_calendarId"));
-            return dateCalService.calculationTradingDay(tradeDate, 1, holiday, "1");
+            return dateCalService.calculationTradingDay(tradeDate, days, holiday, "1");
         }
         return null;
     }

@@ -195,7 +195,18 @@ public class IbuQuoteBondService extends BaseService {
         setParam(param);
         List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if (!StringUtil.isEmptyList(entrustDtos)) {
-            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto, entrustDtos.get(0));
+            CfetsBondDealEntrustOrderDto cfetsBondDealEntrustOrderDto = entrustDtos.get(0);
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto, cfetsBondDealEntrustOrderDto);
+            //清算速度处理
+            if(StringUtil.equals(cfetsBondDealEntrustOrderDto.getSettleSpreed(),"0")){
+                cfetsBondDealQuoteCommonDto.setSettleSpreedCode(BussinessDictCodeList.清算速度_T加0.getValue());
+            }
+            if(StringUtil.equals(cfetsBondDealEntrustOrderDto.getSettleSpreed(),"1")){
+                cfetsBondDealQuoteCommonDto.setSettleSpreedCode(BussinessDictCodeList.清算速度_T加1.getValue());
+            }
+            if(StringUtil.equals(cfetsBondDealEntrustOrderDto.getSettleSpreed(),"2")){
+                cfetsBondDealQuoteCommonDto.setSettleSpreedCode(BussinessDictCodeList.清算速度_T加2.getValue());
+            }
             cfetsBondDealQuoteCommonDto.setShareAmt(entrustDtos.stream().map(CfetsBondDealEntrustOrderDto::getEntrustAvaNum).reduce(BigDecimal.ZERO, BigDecimal::add));
             cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getShareAmt(),new BigDecimal("10000")));
             if(StringUtil.equals(sellPara,"02")){
@@ -210,10 +221,7 @@ public class IbuQuoteBondService extends BaseService {
             }
             //处理结算日期
             cfetsBondDealQuoteCommonDto.setTradeDate(iPlatformDate.getSysDate());
-            cfetsBondDealQuoteCommonDto.setSettleDate(ibuQuoteBondCalService.getNextWorkDay(cfetsBondDealQuoteCommonDto.getTradeDate()));
-            if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreedCode(),BussinessDictCodeList.清算速度_T加2.getValue())){
-                cfetsBondDealQuoteCommonDto.setSettleDate(ibuQuoteBondCalService.getNextWorkDay(cfetsBondDealQuoteCommonDto.getSettleDate()));
-            }
+            cfetsBondDealQuoteCommonDto.setSettleDate(ibuQuoteBondCalService.getNextWorkDay(cfetsBondDealQuoteCommonDto.getTradeDate(),null==cfetsBondDealEntrustOrderDto.getSettleSpreed()?0:Integer.parseInt(cfetsBondDealEntrustOrderDto.getSettleSpreed())));
             //处理锚定值
             Map<String,Object> anchoringValueMap = handcalAnchoringValue(entrustDtos);
             Set<String> set = anchoringValueMap.keySet();
