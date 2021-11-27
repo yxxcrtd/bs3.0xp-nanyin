@@ -34,7 +34,8 @@
 
         	<!-- 查询接口导入校验信息 -->
         	INTERF_CHECK_RESULT as interfCheckResult,
-		    HOLDER_CLASSIFY as holderClassify
+		    HOLDER_CLASSIFY as holderClassify,
+			FUND_ACC_PLACE as fundAccPlace
         	
    		from CHB_EQU_HOLD A
 		 <where>
@@ -102,6 +103,7 @@
         	T.STATUS as status,
         	'' as interfCheckResult,
 		    T.HOLDER_CLASSIFY as holderClassify,
+			T.FUND_ACC_PLACE as fundAccPlace,
         	'' as agent,
         	status.SUBMIT_FEEDBACK_MSG as repFailedInfo
 		 FROM CHB_EQU_SUB T left join CHB_SUBMIT_STATUS status
@@ -150,6 +152,7 @@
         	T.STATUS as status,
         	'' as interfCheckResult,
 		    T.HOLDER_CLASSIFY as holderClassify,
+			T.FUND_ACC_PLACE as fundAccPlace,
         	'' as agent,
         	status.SUBMIT_FEEDBACK_MSG as repFailedInfo
 		 FROM CHB_EQU_SUB T left join CHB_SUBMIT_STATUS status
@@ -209,7 +212,7 @@
             HOLDER_EMAIL, REMARK, STATUS, 
             WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
             UPDATE_TIME, CREATE_USER, CREATE_TIME, 
-            DATA_SOURCE,ORG_CODE ,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT,HOLDER_CLASSIFY)
+            DATA_SOURCE,ORG_CODE ,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT,HOLDER_CLASSIFY,FUND_ACC_PLACE)
             select A.* from (
             <foreach collection="list" item="item" index="index" separator="union all">
             	select 
@@ -250,7 +253,8 @@
             		#{item.agent,jdbcType=VARCHAR} AGENT,
                     #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
 				    #{item.interfCheckResult,jdbcType=VARCHAR} INTERF_CHECK_RESULT,
-				    #{item.holderClassify,jdbcType=CHAR} HOLDER_CLASSIFY
+				    #{item.holderClassify,jdbcType=CHAR} HOLDER_CLASSIFY,
+					#{item.fundAccPlace,jdbcType=CHAR} FUND_ACC_PLACE
 				from dual
             </foreach>
             )A
@@ -354,6 +358,9 @@
 				<if test="item.holderClassify != null and item.holderClassify != '' " >
 					HOLDER_CLASSIFY = #{item.holderClassify,jdbcType=CHAR},
 				</if>
+				<if test="item.fundAccPlace != null and item.fundAccPlace != '' " >
+					FUND_ACC_PLACE = #{item.fundAccPlace,jdbcType=CHAR},
+				</if>
 <!--             	<if test="item.deptCode != null and item.deptCode != '' " >
                 	DEPT_CODE = #{item.deptCode,jdbcType=VARCHAR},
             	</if>
@@ -396,7 +403,7 @@
             HOLDER_EMAIL, REMARK, STATUS, 
             WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
             UPDATE_TIME, CREATE_USER, CREATE_TIME, 
-            DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT,HOLDER_CLASSIFY)
+            DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT,HOLDER_CLASSIFY,FUND_ACC_PLACE)
         select  seq_equity_info.NEXTVAL,
         A.Indentify_Mark,A.Regist_Bank_Code,A.Org_Indentify_Mark,
         A.Is_Belong_Bank,A.The_Bank_Name,A.The_Bank_Code,A.Holder_Mark,
@@ -408,7 +415,7 @@
         A.Holder_Email,A.Remark,A.Status,
         A.Workflow_Id,A.Dept_Code,A.Update_User,
         A.Update_Time,A.Create_User,A.Create_Time,A.Data_Source,A.ORG_CODE,
-        A.AGENT, A.CREATE_DEPT, A.INTERF_CHECK_RESULT, A.HOLDER_CLASSIFY
+        A.AGENT, A.CREATE_DEPT, A.INTERF_CHECK_RESULT, A.HOLDER_CLASSIFY,A.FUND_ACC_PLACE
         from chb_equ_hold A
         <where>
   			<foreach collection="list" index="index" item="item" open="(" separator=") or (" close=")">     
@@ -453,6 +460,7 @@
         	AGENT  as agent,
         	INTERF_CHECK_RESULT as interfCheckResult,
 		    HOLDER_CLASSIFY as holderClassify,
+			FUND_ACC_PLACE as fundAccPlace,
 			ORG_CODE as orgCode
    		from CHB_EQU_HOLD A
 		 <where>
@@ -475,7 +483,7 @@
             HOLDER_EMAIL, REMARK, STATUS, 
             WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
             UPDATE_TIME, CREATE_USER, CREATE_TIME, 
-            DATA_SOURCE, ORG_CODE ,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT,HOLDER_CLASSIFY)
+            DATA_SOURCE, ORG_CODE ,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT,HOLDER_CLASSIFY,FUND_ACC_PLACE)
             select A.* from (
             <foreach collection="list" item="item" index="index" separator="union all">
             	select 
@@ -516,7 +524,8 @@
             		#{item.agent,jdbcType=VARCHAR} AGENT,
             		#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
             		#{item.interfCheckResult,jdbcType=VARCHAR} INTERF_CHECK_RESULT,
-				    #{item.holderClassify,jdbcType=CHAR} HOLDER_CLASSIFY
+				    #{item.holderClassify,jdbcType=CHAR} HOLDER_CLASSIFY,
+					#{item.fundAccPlace,jdbcType=CHAR} FUND_ACC_PLACE
             	from dual
             </foreach>
             )A
@@ -533,8 +542,9 @@
         	HOLDER_REGION as holderRegion,
         	HOLDER_TYPE as holderType,
 		    HOLDER_CLASSIFY as holderClassify,
+			FUND_ACC_PLACE as fundAccPlace,
         	PERSONAL_IDENTIFY_TYPE as personalIdentifyType,
-        	INSTITUTION_IDENTIFY_TYPE as institutionInentifyType,
+        	INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
         	nvl(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as inentify_Type,
         	IDENTIFY_NUMBER as identifyNumber,
         	OTHER_IDENTIFY_NAME as otherIdentifyName,
@@ -614,6 +624,7 @@
         	HOLDER_REGION as holderRegion,
         	HOLDER_TYPE as holderType,
 		    HOLDER_CLASSIFY as holderClassify,
+			FUND_ACC_PLACE as fundAccPlace,
         	PERSONAL_IDENTIFY_TYPE as personalIdentifyType,
         	INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
         	nvl(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as inentify_Type,
@@ -654,6 +665,7 @@
                 	HOLDER_REGION = #{item.holderRegion,jdbcType=VARCHAR},
                 	HOLDER_TYPE = #{item.holderType,jdbcType=CHAR},
 				    HOLDER_CLASSIFY = #{item.holderClassify,jdbcType=CHAR},
+					FUND_ACC_PLACE = #{item.fundAccPlace,jdbcType=CHAR} ,
                 	PERSONAL_IDENTIFY_TYPE = #{item.personalIdentifyType,jdbcType=CHAR},
                 	INSTITUTION_IDENTIFY_TYPE = #{item.institutionIdentifyType,jdbcType=VARCHAR},
                 	OTHER_IDENTIFY_NAME = #{item.otherIdentifyName,jdbcType=VARCHAR},
@@ -703,7 +715,7 @@
             HOLDER_EMAIL, REMARK, STATUS, 
             WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
             UPDATE_TIME, CREATE_USER, CREATE_TIME, 
-            DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT , INTERF_CHECK_RESULT, HOLDER_CLASSIFY)
+            DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT , INTERF_CHECK_RESULT, HOLDER_CLASSIFY,FUND_ACC_PLACE)
         select  seq_equity_info.NEXTVAL,
         A.Indentify_Mark,A.Regist_Bank_Code,A.Org_Indentify_Mark,
         A.Is_Belong_Bank,A.The_Bank_Name,A.The_Bank_Code,A.Holder_Mark,
@@ -715,7 +727,7 @@
         A.Holder_Email,A.Remark,A.Status,
         A.Workflow_Id,A.Dept_Code,A.Update_User,
         A.Update_Time,A.Create_User,A.Create_Time,A.Data_Source,A.ORG_CODE,
-        A.AGENT, A.CREATE_DEPT, A.INTERF_CHECK_RESULT ,A.HOLDER_CLASSIFY
+        A.AGENT, A.CREATE_DEPT, A.INTERF_CHECK_RESULT ,A.HOLDER_CLASSIFY,A.FUND_ACC_PLACE
         from chb_equ_hold A
         <where>
   			<foreach collection="list" index="index" item="item" open="(" separator=") or (" close=")">     
@@ -881,6 +893,9 @@
 				<if test="holderClassify != null and holderClassify != '' " >
 					HOLDER_CLASSIFY = #{holderClassify,jdbcType=CHAR},
 				</if>
+				<if test="fundAccPlace != null and fundAccPlace != '' " >
+					FUND_ACC_PLACE = #{fundAccPlace,jdbcType=CHAR},
+				</if>
 			</set> 
             <where>
         		<if test="type !=null and type == '02'.toString()">
@@ -924,6 +939,7 @@
             DEPT_CODE                  as deptCode,
             CREATE_DEPT                  as createDept,
 		    HOLDER_CLASSIFY           as holderClassify
+			,FUND_ACC_PLACE      as     fundAccPlace
    		from
    		 CHB_EQU_HOLD A
 		<where>
@@ -970,6 +986,7 @@
         	AGENT as agent,
         	INTERF_CHECK_RESULT as interfCheckResult,
 		    HOLDER_CLASSIFY as holderClassify
+		    ,FUND_ACC_PLACE as fundAccPlace
    		from
    		 CHB_EQU_HOLD 
 		where STATUS = 'A'

@@ -56,7 +56,7 @@ public class EquityInfo002Controller extends BaseController {
    public String init(Model model) {
        super.setSelectOptionToModel(model, DictCode.是否_中债,DictCode.性别_中债,
            DictCode.境内外,DictCode.投资者类别,DictCode.投资者分类,
-           DictCode.投资者风险偏好,DictCode.权益人类别,DictCode.个人证件类别,
+           DictCode.投资者风险偏好,DictCode.权益人类别,DictCode.个人证件类别,DictCode.销售区域_中债,
            DictCode.机构证件类别,DictCode.SPV资金托管账户开户行,DictCode.所属国家或地区);
            Map<String,Object>map=RequestUtil.getPageParam();
            if(map.containsKey("indentifyMark")){

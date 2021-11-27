@@ -44,6 +44,7 @@
     <result column="INTERF_CHECK_RESULT" property="interfCheckResult" jdbcType="VARCHAR" />
     <result column="MERGER_INDENTIFY_MARK" property="mergerindentifymark" jdbcType="VARCHAR" />
 	<result column="HOLDER_CLASSIFY" property="holderClassify" jdbcType="VARCHAR" />
+	  <result column="FUND_ACC_PLACE" property="fundAccPlace" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
 	INDENTIFY_MARK, ORG_INDENTIFY_MARK,
@@ -58,7 +59,7 @@
 	WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
 	UPDATE_TIME, CREATE_USER, CREATE_TIME,DATA_DATE,
 	DATA_SOURCE, ORG_CODE, AGENT,
-	CREATE_DEPT, INTERF_CHECK_RESULT,OPERATE_STATUS,MERGER_INDENTIFY_MARK,HOLDER_CLASSIFY
+	CREATE_DEPT, INTERF_CHECK_RESULT,OPERATE_STATUS,MERGER_INDENTIFY_MARK,HOLDER_CLASSIFY,FUND_ACC_PLACE
   </sql>
   <insert id="insert" parameterType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto" >
     insert into CHB_EQU_HOLD_CHECK (INDENTIFY_MARK, ORG_INDENTIFY_MARK, 
@@ -73,7 +74,7 @@
       WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
       UPDATE_TIME, CREATE_USER, CREATE_TIME,DATA_DATE, 
       DATA_SOURCE, ORG_CODE, AGENT, 
-      CREATE_DEPT, INTERF_CHECK_RESULT,OPERATE_STATUS,MERGER_INDENTIFY_MARK,HOLDER_CLASSIFY)
+      CREATE_DEPT, INTERF_CHECK_RESULT,OPERATE_STATUS,MERGER_INDENTIFY_MARK,HOLDER_CLASSIFY,FUND_ACC_PLACE)
     values (#{indentifyMark,jdbcType=VARCHAR}, #{orgIndentifyMark,jdbcType=VARCHAR}, 
       #{registBankCode,jdbcType=VARCHAR}, #{isBelongBank,jdbcType=CHAR}, #{theBankName,jdbcType=VARCHAR}, 
       #{theBankCode,jdbcType=VARCHAR}, #{holderMark,jdbcType=CHAR}, #{holderRegion,jdbcType=VARCHAR}, 
@@ -87,7 +88,7 @@
       sysdate, #{createUser,jdbcType=VARCHAR}, sysdate, 
       sysdate,#{dataSource,jdbcType=CHAR}, #{orgCode,jdbcType=VARCHAR}, #{agent,jdbcType=VARCHAR}, 
       #{createDept,jdbcType=VARCHAR}, #{interfCheckResult,jdbcType=VARCHAR}, #{operatestatus,jdbcType=VARCHAR}
-      , #{mergerindentifymark,jdbcType=VARCHAR},#{holderClassify,jdbcType=CHAR})
+      , #{mergerindentifymark,jdbcType=VARCHAR},#{holderClassify,jdbcType=VARCHAR},#{fundAccPlace,jdbcType=VARCHAR})
 
   </insert>
   
@@ -106,7 +107,7 @@
 	a.DATA_SOURCE, a.ORG_CODE, a.AGENT,
 	a.CREATE_DEPT, a.INTERF_CHECK_RESULT,a.OPERATE_STATUS,a.MERGER_INDENTIFY_MARK,
 	IM.IMARK,sub.INDENTIFY_MARK isOrNoSubmit,
-	a.HOLDER_CLASSIFY
+	a.HOLDER_CLASSIFY,a.FUND_ACC_PLACE
 	from CHB_EQU_HOLD_CHECK a
 	left join chb_equ_sub sub
   on sub.INDENTIFY_MARK=a.MERGER_INDENTIFY_MARK
@@ -293,7 +294,7 @@
 	a.UPDATE_TIME, a.CREATE_USER, a.CREATE_TIME,a.DATA_DATE,
 	a.DATA_SOURCE, a.ORG_CODE, a.AGENT,
 	a.CREATE_DEPT, a.INTERF_CHECK_RESULT,a.OPERATE_STATUS,a.MERGER_INDENTIFY_MARK,
-	IM.IMARK,a.HOLDER_CLASSIFY
+	IM.IMARK,a.HOLDER_CLASSIFY,a.FUND_ACC_PLACE
 	from CHB_EQU_HOLD_CHECK a
     left join (
   SELECT INDENTIFY_MARK IMARK,
@@ -426,6 +427,9 @@
 		<if test="holderClassify != null">
 			HOLDER_CLASSIFY,
 		</if>
+		<if test="fundAccPlace != null">
+			FUND_ACC_PLACE,
+		</if>
 
 	</trim>
 	<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -536,6 +540,9 @@
 		<if test="holderClassify != null">
 			#{holderClassify,jdbcType=VARCHAR},
 		</if>
+		<if test="fundAccPlace != null">
+			#{fundAccPlace,jdbcType=CHAR}
+		</if>
 
 	</trim>
 </insert>
@@ -623,7 +630,8 @@
 		HOLD.AGENT,
 		HOLD.CREATE_DEPT,
 		HOLD.INTERF_CHECK_RESULT,
-		HOLD.HOLDER_CLASSIFY
+		HOLD.HOLDER_CLASSIFY,
+	  	HOLD.FUND_ACC_PLACE
   	  from CHB_EQU_HOLD_CHECK HOLD
       where 1=1
       <if test="keys !=null and keys.size()>0">

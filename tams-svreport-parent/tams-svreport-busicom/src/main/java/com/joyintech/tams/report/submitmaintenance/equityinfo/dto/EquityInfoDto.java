@@ -54,6 +54,21 @@ public class EquityInfoDto{
      */
     private String holderClassify;
 
+
+    /**
+     * null
+     */
+    private String fundAccPlace;
+
+
+    public String getFundAccPlace() {
+        return fundAccPlace;
+    }
+
+    public void setFundAccPlace(String fundAccPlace) {
+        this.fundAccPlace = fundAccPlace;
+    }
+
     /**
      * null
      */

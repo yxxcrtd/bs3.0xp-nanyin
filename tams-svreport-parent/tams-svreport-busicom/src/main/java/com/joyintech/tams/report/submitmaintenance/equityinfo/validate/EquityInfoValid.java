@@ -562,6 +562,11 @@ public class EquityInfoValid {
             map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
             sb.append("01");
         }
+        else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getFundAccPlace(),
+                equityInfoRegist001Dto.getFundAccPlace())) {
+            map.put("FUND_ACC_PLACE", equityInfo001Dto.getFundAccPlace());
+            sb.append("01");
+        }
         // 个人证件类别
         else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getPersonalIdentifyType(),
                 equityInfoRegist001Dto.getPersonalIdentifyType())) {
@@ -703,6 +708,11 @@ public class EquityInfoValid {
                 && !equityInfo001Dto.getHolderClassify().equals(
                 equityInfoRegist001Dto.getHolderClassify())) {
             map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
+        }
+        else if (StringUtil.isNotEmpty(equityInfo001Dto.getFundAccPlace())
+                && !equityInfo001Dto.getFundAccPlace().equals(
+                equityInfoRegist001Dto.getFundAccPlace())) {
+            map.put("FUND_ACC_PLACE", equityInfo001Dto.getFundAccPlace());
         }
         // 个人证件类别
         else if (StringUtil.isNotEmpty(equityInfo001Dto.getPersonalIdentifyType())
@@ -1101,6 +1111,12 @@ public class EquityInfoValid {
             map.put("HOLDER_CLASSIFY", list.get(22));
             sb.append("01");
         }
+        //投资者分类
+//        else if (!CommonUtil.equalsIgnoreNull(list.get(23),
+//                equityInfoRegist001Dto.getFundAccPlace())) {
+//            map.put("FUND_ACC_PLACE", list.get(23));
+//            sb.append("01");
+//        }
         if (StringUtil.isNotEmpty(sb)) {
             map.put("type02", sb.toString());
         }
@@ -1206,6 +1222,11 @@ public class EquityInfoValid {
                 equityInfoRegist001Dto.getHolderClassify())) {
             map.put("HOLDER_CLASSIFY", list.get(22));
         }
+//        //TODO  销售区域
+//        else if (!CommonUtil.equalsIgnoreNull(list.get(23),
+//                equityInfoRegist001Dto.getFundAccPlace())) {
+//            map.put("FUND_ACC_PLACE", list.get(23));
+//        }
         else {
             // 风险偏好
             if (!CommonUtil.equalsIgnoreNull(list.get(17),

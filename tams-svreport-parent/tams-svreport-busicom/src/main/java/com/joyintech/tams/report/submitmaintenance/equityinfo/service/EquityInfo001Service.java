@@ -593,6 +593,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("电子邮箱");
             headList.add("备注");
             headList.add("投资者分类");
+            headList.add("账号开户所在地");
             headList.add("经办人");
             headList.add("接入检查结果");
             headList.add("中债反馈消息");
@@ -721,6 +722,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 equityInfo001DtoI.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
                 equityInfo001DtoI.setUpdateTime(DateUtil.now());
                 equityInfo001DtoI.setType(statusType);
+                //添加  账号开户所在地/投资者类型 入库
+                equityInfo001DtoI.setHolderClassify(equityInfo001Dto.getHolderClassify());
+                equityInfo001DtoI.setFundAccPlace(equityInfo001Dto.getFundAccPlace());
                 listI.add(equityInfo001DtoI);
             }
             // 插入前维护表有待处理，将dto放入listN
@@ -1297,6 +1301,8 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                             equityInfo001Dto.getHolderType()));
                     equityInfo001Dto.setHolderClassify(SysDataUtil.getNameFromDataDict(DictCode.投资者分类,
                             equityInfo001Dto.getHolderClassify()));
+                    equityInfo001Dto.setFundAccPlace(SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债,
+                            equityInfo001Dto.getFundAccPlace()));
                     if (StringUtil.isNotEmpty(equityInfo001Dto.getPersonalIdentifyType())) {
                         equityInfo001Dto.setInentifyType(SysDataUtil.getNameFromDataDict(
                             DictCode.个人证件类别, equityInfo001Dto.getPersonalIdentifyType()));
@@ -1322,8 +1328,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                             DictCode.SPV资金托管账户开户行, equityInfo001Dto.getSpvCapAccBank()));
                     equityInfo001Dto.setHolderType(SysDataUtil.getZZDictCodeAndName(DictCode.投资者类别,
                             equityInfo001Dto.getHolderType()));
-                    equityInfo001Dto.setHolderClassify(SysDataUtil.getNameFromDataDict(DictCode.投资者分类,
+                    equityInfo001Dto.setHolderClassify(SysDataUtil.getZZDictCodeAndName(DictCode.投资者分类,
                             equityInfo001Dto.getHolderClassify()));
+                    equityInfo001Dto.setFundAccPlace(SysDataUtil.getZZDictCodeAndName(DictCode.销售区域_中债,
+                            equityInfo001Dto.getFundAccPlace()));
                     equityInfo001Dto.setHolderRiskPrefer(SysDataUtil.getZZDictCodeAndName(
                             DictCode.投资风险偏好, equityInfo001Dto.getHolderRiskPrefer()));
                     equityInfo001Dto.setPersonalIdentifyType(SysDataUtil.getZZDictCodeAndName(
@@ -1404,11 +1412,15 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             equityInfo001Dto.setHolderTelephone(list.get(19));
             equityInfo001Dto.setHolderEmail(list.get(20));
             equityInfo001Dto.setRemark(list.get(21));
-            equityInfo001Dto.setAgent(list.get(23));
+            equityInfo001Dto.setAgent(list.get(24));
             equityInfo001Dto.setOrgCode(orgCode);
             if (!EquityInfoCheckUtil.isEmpty(list.get(22))) {
                 equityInfo001Dto.setHolderClassify(
                         EquityInfoCheckUtil.subDictcode(list.get(22), " "));
+            }//todo
+            if (!EquityInfoCheckUtil.isEmpty(list.get(23))) {
+                equityInfo001Dto.setFundAccPlace(
+                        EquityInfoCheckUtil.subDictcode(list.get(23), " "));
             }
             // 增加行号
             equityInfo001Dto.setExcelNum(String.valueOf(i + 2));
@@ -2536,6 +2548,8 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             list.set(8, regist001Dto.getHolderType());
             // 投资者分类
             list.set(25, regist001Dto.getHolderClassify());
+            // 投资者分类 todo
+            list.set(26, regist001Dto.getFundAccPlace());
             // 个人证件类别
             list.set(9, regist001Dto.getPersonalIdentifyType());
             // 机构证件类别

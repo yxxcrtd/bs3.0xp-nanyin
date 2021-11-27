@@ -66,6 +66,16 @@ public class EquityInfoRegist001Dto extends TableRow {
      */
     private String seqList;
 
+    private String  fundAccPlace;
+
+    public String getFundAccPlace() {
+        return fundAccPlace;
+    }
+
+    public void setFundAccPlace(String fundAccPlace) {
+        this.fundAccPlace = fundAccPlace;
+    }
+
     /**
      * 删除原因
      */

@@ -118,8 +118,18 @@ public class EquityInfo001Dto extends TableRow {
     private String remark;// 备注
     
     private String interfCheckResult;//接口接入数据检查结果
-    
-   
+
+
+    private String fundAccPlace;// 账号开户所在地
+
+    public String getFundAccPlace() {
+        return fundAccPlace;
+    }
+
+    public void setFundAccPlace(String fundAccPlace) {
+        this.fundAccPlace = fundAccPlace;
+    }
+
     /**
      * 经办人
      */
