@@ -15,8 +15,12 @@ public class PtlAllocationDto {
     @ApiModelProperty(name="portfolioId",value="指令代码")
     private String entrustId;
 
-    @ApiModelProperty(name="portfolioId",value="组合名称")
+    @ApiModelProperty(name="portfolioId",value="组合代码")
     private String portfolioId;
+
+    @ApiModelProperty(name="portfolioName",value="组合名称")
+    private String portfolioName;
+
 
     @ApiModelProperty(name="avaNum",value="剩余指令额度(万元)")
     private BigDecimal avaNum;
@@ -83,6 +87,14 @@ public class PtlAllocationDto {
 
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
     }
 
     public BigDecimal getAvaNum() {
