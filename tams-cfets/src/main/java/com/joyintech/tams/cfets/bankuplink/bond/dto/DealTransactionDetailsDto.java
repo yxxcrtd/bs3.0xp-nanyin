@@ -26,6 +26,10 @@ public class DealTransactionDetailsDto {
     @ApiModelProperty(name="quoteType",value="交易类型")
     private String quoteType;
 
+    @ApiModelProperty(name="quoteTypeStr",value="交易类型名称")
+    private String quoteTypeStr;
+
+
     @ApiModelProperty(name="quoteRoleType",value="本方角色")
     private String quoteRoleType;
 
@@ -391,6 +395,14 @@ public class DealTransactionDetailsDto {
 
     public void setSettleSpreedStr(String settleSpreedStr) {
         this.settleSpreedStr = settleSpreedStr;
+    }
+
+    public String getQuoteTypeStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, this.getQuoteType());
+    }
+
+    public void setQuoteTypeStr(String quoteTypeStr) {
+        this.quoteTypeStr = quoteTypeStr;
     }
 }
 

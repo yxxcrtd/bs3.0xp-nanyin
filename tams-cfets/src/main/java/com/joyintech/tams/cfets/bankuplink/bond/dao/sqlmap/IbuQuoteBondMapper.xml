@@ -194,7 +194,7 @@
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'PS')E ON ETR_ENTRUST.PS = E.ITEM_CODE
         WHERE
         ETR_ENTRUST.FINPROD_TYPE2 = #{finprodType2}
-        AND ETR_ENTRUST.TRADE_MARKET in (#{tradeMarket01},#{tradeMarket04})
+        AND ETR_ENTRUST.TRADE_MARKET in (#{tradeMarket01},#{tradeMarket02})
         AND ETR_ENTRUST.TRADE_MARKET_MODE = #{tradeMarketMode}
         AND ETR_ENTRUST.PS IN (#{psT01}, #{psT02},#{psT03})
         AND ETR_ENTRUST.ENTRUST_STATUS IN (#{entrustStatusUnAccept}, #{entrustStatusAccept}, #{entrustStatusComple},#{entrustStatusReturn})

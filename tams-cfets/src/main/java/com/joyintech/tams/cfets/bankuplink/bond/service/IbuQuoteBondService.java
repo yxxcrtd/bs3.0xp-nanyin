@@ -1050,7 +1050,7 @@ public class IbuQuoteBondService extends BaseService {
     private void setParam(Map<String,Object> param){
         param.put("finprodType2", BussinessDictCodeList.金融产品类型_债券.getValue());
         param.put("tradeMarket01", BussinessDictCodeList.交易场所_银行间.getValue());
-        param.put("tradeMarket04", BussinessDictCodeList.交易场所_商业银行柜台市场.getValue());
+        param.put("tradeMarket02", BussinessDictCodeList.交易场所_商业银行柜台市场.getValue());
         param.put("tradeMarketMode", BussinessDictCodeList.交易市场_二级市场.getValue());
         param.put("entrustStatusUnAccept", BussinessDictCodeList.委托状态_待接收.getValue());
         param.put("entrustStatusAccept", BussinessDictCodeList.委托状态_已接收.getValue());
