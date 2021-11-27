@@ -223,7 +223,7 @@ public class SellMonthReport extends BaseEntity implements  Cloneable{
     }
 
     public String getReportName() {
-        return "销售数据月度统计表_" + this.getTermid();
+        return reportName;
     }
 
     public void setReportName(String reportName) {
@@ -544,8 +544,8 @@ public class SellMonthReport extends BaseEntity implements  Cloneable{
         this.createDept = createDept == null ? null : createDept.trim();
     }
 
-    public String getStatusStr(){
-        return SvrDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getStatus());
+    public String getDataStatusStr(){
+        return SvrDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getDataStatus());
     }
 
     public String getSendStatusStr(){

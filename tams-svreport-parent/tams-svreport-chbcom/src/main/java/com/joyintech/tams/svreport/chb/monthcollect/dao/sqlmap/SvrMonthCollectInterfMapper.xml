@@ -156,12 +156,23 @@
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 		)GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy
 	</select>
+<!--查询需要删除的reportuuid-->
+	<select id="selectReportuuid" resultType="string" parameterType="string">
+		select REPORTUUID FROM CHB_SALE_MONTH_REPORT WHERE TERMID = #{termid,jdbcType=VARCHAR}
+	</select>
 
-	<delete id="deleteDetail">
-		DELETE FROM CHB_SALE_MONTH_REPORT_DETAIL WHERE REPORTUUID = (select REPORTUUID FROM CHB_SALE_MONTH_REPORT WHERE TERMID = #{termid,jdbcType=VARCHAR})
+<!--	删除月报详情表-->
+	<delete id="deleteDetail" parameterType="java.util.List">
+		DELETE FROM CHB_SALE_MONTH_REPORT_DETAIL WHERE
+		REPORTUUID in
+		(
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
 	</delete>
 
-	<delete id="deleteReport">
+	<delete id="deleteReport" parameterType="string">
 	DELETE FROM CHB_SALE_MONTH_REPORT WHERE TERMID = #{termid,jdbcType=VARCHAR}
 	</delete>
 	
@@ -169,16 +180,18 @@
 		insert into CHB_SALE_MONTH_REPORT_DETAIL(DETAILUUID,REPORTUUID,REPORTTYPE,PRD_REGIST_CODE,IS_CONSIGN,INSTITUTION_CODE
 		,AREA_CODE,HOLDER_TYPE,HOLDER_NUM,SALE_AMOUNT_TOTAL,VALUE_AMOUNT_TOTAL,BALANCE_AMT,BALANCE_SHARES
 		,SALE_SHARES_TOTAL,VALUE_SHARES_TOTAL)values
-		(#{detailuuid},#{reportuuid},#{reporttype},#{prdRegistCode},#{isConsign},#{institutionCode},#{areaCode}
-		,#{holderType},#{holderNum},#{saleAmountTotal},#{valueAmountTotal},#{balanceAmt},#{balanceShares},#{saleSharesTotal}
-		,#{valueSharesTotal})
+		(#{detailuuid,jdbcType=VARCHAR},#{reportuuid,jdbcType=VARCHAR},#{reporttype,jdbcType=VARCHAR},#{prdRegistCode},
+		#{isConsign,jdbcType=VARCHAR},#{institutionCode,jdbcType=VARCHAR},#{areaCode,jdbcType=VARCHAR}
+		,#{holderType,jdbcType=VARCHAR},#{holderNum,jdbcType=DECIMAL},#{saleAmountTotal,jdbcType=DECIMAL},
+		#{valueAmountTotal,jdbcType=DECIMAL},#{balanceAmt,jdbcType=DECIMAL},#{balanceShares,jdbcType=DECIMAL},#{saleSharesTotal,jdbcType=DECIMAL}
+		,#{valueSharesTotal,jdbcType=DECIMAL})
 	</insert>
 
 	<insert id="insertIntoReport">
-		insert into CHB_SALE_MONTH_REPORT (REPORTUUID,TERMID,REPORT_NAME,STARTDATE,ENDDATE,REPORTFREQU,DATA_STATUS
-		,SEND_STATUS,STATUS_DATE,CHB_SUBMIT_DEADLINE)values
-		(#{reportuuid},#{termid,jdbcType=VARCHAR},#{reportName},to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd'),to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-		,'M','01',null,sysdate,to_date(#{CHB_SUBMIT_DEADLINE,jdbcType=VARCHAR},'yyyy-mm-dd')
+		insert into CHB_SALE_MONTH_REPORT (REPORTTYPE,REPORTUUID,TERMID,REPROT_NAME,STARTDATE,ENDDATE,REPORTFREQU,DATA_STATUS
+		,SEND_STATUS,STATUS_DATE,CHB_SUBMIT_DEADLINE,REPORT_DATE)values
+		(#{reporttype,jdbcType=VARCHAR},#{reportuuid,jdbcType=VARCHAR},#{termid,jdbcType=VARCHAR},#{reportName,jdbcType=VARCHAR},to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd'),to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		,'M','01','01',sysdate,to_date(#{chbSubmitDeadline,jdbcType=VARCHAR},'yyyy-mm-dd'),sysdate
 		)
 	</insert>
 
@@ -228,7 +241,7 @@
 		A.ENDAMTSUM_OTH endamtsumOth
 		FROM
 		CHB_MONTH_PRD_POSITION A
-		left
+		left join
 		CHB_PRDRESIST_CODE B
 		on A.PRODID = B.PRODID
 		WHERE STARTDATE = to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and  ENDDATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')

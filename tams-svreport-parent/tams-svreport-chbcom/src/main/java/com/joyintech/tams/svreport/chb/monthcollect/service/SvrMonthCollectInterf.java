@@ -93,7 +93,7 @@ public class SvrMonthCollectInterf extends BaseService{
 			List<Date> dateList = null;
 			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 			dateList = ChbDeadlineUtil.getChbEndDate(
-					DictCodeListExt2.报表名称_销售信息月度统计表.getValue(), "01", dateMap, batchDate);
+					DictCodeListExt2.报表名称_销售信息月度统计表.getValue(), "01", dateMap, nextMonFirDay);
 			if (!CollectionUtils.isEmpty(dateList)) {
 				//获取中债截止日
 				chbSubmitDeadline = dateList.get(0);
@@ -106,7 +106,11 @@ public class SvrMonthCollectInterf extends BaseService{
 			String reportName = "销售数据月度统计表_"+ termidYYYY + "年" + termidMM + "月";
 			//清除当月月报信息 若已报送则停止跑批
 			logger.debug("当月汇总数据清除开始----------");
-			svrMonthCollectInterfMapper.deleteDetail(termid);
+			//查询要删除的reportUUID
+			List<String> list = svrMonthCollectInterfMapper.selectReportuuid(termid);
+			// 根据reportuuid删除明细表
+			svrMonthCollectInterfMapper.deleteDetail(list);
+			//根据期数删除月报主表
 			svrMonthCollectInterfMapper.deleteReport(termid);
 			logger.debug("当月汇总数据清除结束----------");
 
@@ -114,8 +118,9 @@ public class SvrMonthCollectInterf extends BaseService{
 			for(String key:AllMap.keySet()){
             //以投资者分类插入
 			if(key.equals("holderType")) {
+				String reporttype = "1_1";
 				String reportuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-				svrMonthCollectInterfMapper.insertIntoReport(DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+				svrMonthCollectInterfMapper.insertIntoReport(reporttype,DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 				for (String flag : AllMap.get("holderType").keySet()) {
 					for(String A : AllMap.get("holderType").get(flag).keySet()){
 						String detailuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
@@ -129,8 +134,9 @@ public class SvrMonthCollectInterf extends BaseService{
 			}
 			//以地区分类插入
 			if(key.equals("area")) {
+				String reporttype = "1_2";
 				String reportuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-				svrMonthCollectInterfMapper.insertIntoReport(DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+				svrMonthCollectInterfMapper.insertIntoReport(reporttype,DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 				for (String flag : AllMap.get("area").keySet()) {
 					for(String A : AllMap.get("area").get(flag).keySet()){
 						String detailuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
@@ -144,8 +150,9 @@ public class SvrMonthCollectInterf extends BaseService{
 			}
 			//以渠道插入
 			if(key.equals("institution")) {
+				String reporttype = "1_3";
 				String reportuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-				svrMonthCollectInterfMapper.insertIntoReport(DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+				svrMonthCollectInterfMapper.insertIntoReport(reporttype,DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 				for (String flag : AllMap.get("institution").keySet()) {
 					for(String A : AllMap.get("institution").get(flag).keySet()){
 						String detailuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
@@ -209,10 +216,18 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setBalanceShares(a.getValueAmountTotal());
 				holderTypeCollect.put(falg, bb);
 			}else{
-				holderTypeCollect.get(falg).setSaleAmountTotal(holderTypeCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+				if(a.getSaleAmountTotal() != null) {
+					holderTypeCollect.get(falg).setSaleAmountTotal(holderTypeCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+				}
+				if(a.getValueAmountTotal() != null){
 				holderTypeCollect.get(falg).setValueAmountTotal(holderTypeCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
-				holderTypeCollect.get(falg).setBalanceAmt(holderTypeCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
-				holderTypeCollect.get(falg).setBalanceShares(holderTypeCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
+				}
+				if(a.getBalanceAmt()  != null) {
+					holderTypeCollect.get(falg).setBalanceAmt(holderTypeCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
+				}
+				if(a.getBalanceShares() != null) {
+					holderTypeCollect.get(falg).setBalanceShares(holderTypeCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
+				}
 			}
 		}
 		//赋值投资者数量
@@ -303,10 +318,18 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setBalanceShares(a.getValueAmountTotal());
 				areaCollect.put(falg, bb);
 			}else{
-				areaCollect.get(falg).setSaleAmountTotal(areaCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
-				areaCollect.get(falg).setValueAmountTotal(areaCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
-				areaCollect.get(falg).setBalanceAmt(areaCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
-				areaCollect.get(falg).setBalanceShares(areaCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
+				if(a.getSaleAmountTotal() != null) {
+					areaCollect.get(falg).setSaleAmountTotal(areaCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+				}
+				if(a.getValueAmountTotal() != null){
+					areaCollect.get(falg).setValueAmountTotal(areaCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+				}
+				if(a.getBalanceAmt()  != null) {
+					areaCollect.get(falg).setBalanceAmt(areaCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
+				}
+				if(a.getBalanceShares() != null) {
+					areaCollect.get(falg).setBalanceShares(areaCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
+				}
 			}
 		}
 		//赋值投资者数量
@@ -397,13 +420,18 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setBalanceShares(a.getValueAmountTotal());
 				institutionCollect.put(falg, bb);
 			}else{
-				//总销售金额
-				institutionCollect.get(falg).setSaleAmountTotal(institutionCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
-				//净销售金额
-				institutionCollect.get(falg).setValueAmountTotal(institutionCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
-				//余额
-				institutionCollect.get(falg).setBalanceAmt(institutionCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
-				institutionCollect.get(falg).setBalanceShares(institutionCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
+				if(a.getSaleAmountTotal() != null) {
+					institutionCollect.get(falg).setSaleAmountTotal(institutionCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+				}
+				if(a.getValueAmountTotal() != null){
+					institutionCollect.get(falg).setValueAmountTotal(institutionCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+				}
+				if(a.getBalanceAmt()  != null) {
+					institutionCollect.get(falg).setBalanceAmt(institutionCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
+				}
+				if(a.getBalanceShares() != null) {
+					institutionCollect.get(falg).setBalanceShares(institutionCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
+				}
 			}
 		}
 		//赋值投资者数量

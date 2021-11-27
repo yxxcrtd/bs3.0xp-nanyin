@@ -27,9 +27,11 @@ public interface SvrMonthCollectInterfMapper {
 	List<ChbMonthCollect> selectHolderNumCheck(@Param("batchDateEnd")String batchDateEnd);
     //三合一判断后 根据持有数据，生成持有，投资者数量信息
 	List<ChbMonthCollect> selectHolderNumExcheck(@Param("registList")List<ChbMonthCollect> registList,@Param("batchDateEnd")String batchDateEnd);
-	
-	int deleteDetail(@Param("termid")String termid);
-
+//查询需要删除的reportuuid
+	List<String> selectReportuuid (@Param("termid")String termid);
+//删除report明细表
+	int deleteDetail(List<String> list);
+//删除report主表
 	int deleteReport(@Param("termid")String termid);
     /**
      * 插入数据
@@ -37,7 +39,7 @@ public interface SvrMonthCollectInterfMapper {
      */
     int insertIntoDetail(ChbMonthCollect sub);
 
-	int insertIntoReport(@Param("reportuuid")String chbSubmitDeadline,@Param("reportuuid")String reportuuid,@Param("termid")String termid,@Param("reportName")String reportName,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+	int insertIntoReport(@Param("reporttype")String reporttype,@Param("chbSubmitDeadline")String chbSubmitDeadline,@Param("reportuuid")String reportuuid,@Param("termid")String termid,@Param("reportName")String reportName,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 
 	/**
 	 *检查整个月汇总是否有值

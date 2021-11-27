@@ -128,6 +128,19 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		}
 	}
 
+	public ResponseEntity<byte[]> download(String pageId, Map<String, Object> selectParam,String datas) throws IOException {
+		// 导出文件
+		List<File> sourceFiles = new ArrayList<>();
+		List<SellMonthReport> dataList=new ArrayList<SellMonthReport>();
+		dataList= com.joyintech.framework.util.JsonUtils.json2List(datas,SellMonthReport.class);
+		SellMonthReport data = dataList.get(0);
+
+
+		return null;
+//		return ExportUtil.export(outFile.getName(), outFile, true);
+	}
+
+
 	/**
 	 * 手工处理
 	 * <一句话功能简述> <功能详细描述>
@@ -180,38 +193,6 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		}
 	}
 
- 	
-    @Override
-    public ResponseEntity<byte[]> export(String pageId, Map<String, Object> selectParam){
-    	@SuppressWarnings("unchecked")
-        Map<String,Object> data = restTemplate.postForObject(
-    	                SvrServiceApplication.CHB_SERVICE_NAME + "/SellMonthReport/createData",selectParam,
-    	                Map.class);
-		String exceltemplate = "";
-		//分投资者分类
-		if("1_1".equals(selectParam.get("reporttype"))) {
-			exceltemplate = "Investorreport";
-		}
-		//分地区
-		if("1_2".equals(selectParam.get("reporttype"))){
-			exceltemplate = "Regionalreport";
-		}
-		//分销售渠道
-		if("1_3".equals(selectParam.get("reporttype"))){
-			exceltemplate = "Channelreport";
-		}
-		String termname = data.get("termname").toString();
-	    String fileName = exceltemplate+"_"+termname+".xls";
-
-		try {
-            return exportMonthReportExcel(data,exceltemplate,fileName);
-        } catch (IOException e) {
-            logger.error("导出理财业务销售数据月度报表错误:"+e.getMessage(),e);
-            return null;
-        }
-
-    }
-
     public Map<Object, Object> createData(Map<String, Object> selectParam){
     	dealSearchParam(selectParam);
     	Map<Object,Object> data  = new HashMap<Object,Object>();
@@ -244,56 +225,6 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
     	return  data;
     }
 
-	public ResponseEntity<byte[]>  exportMonthReportExcel(Map<String,Object> data,String exceltemplate,String fileName) throws IOException {
-	    File depositfile = TisUtil.createFile(data, exceltemplate, fileName);
-		return ExportUtil.export(fileName, depositfile, true);
-	}
-	public String priview(String pageid,Map<String, Object> selectParam) {
-		String exceltemplate = "";
-		//分投资者分类
-		if("1_1".equals(selectParam.get("reporttype"))) {
-			 exceltemplate = "Investorreport";
-		}
-		//分地区
-		if("1_2".equals(selectParam.get("reporttype"))){
-			 exceltemplate = "Regionalreport";
-		}
-		//分销售渠道
-		if("1_3".equals(selectParam.get("reporttype"))){
-			 exceltemplate = "Channelreport";
-		}
-		@SuppressWarnings("unchecked")
-        Map<String,Object> data = restTemplate.postForObject(
-                SvrServiceApplication.CHB_SERVICE_NAME + "/SellMonthReport/createData",selectParam,
-                Map.class);
-
-		data.put("termname",data.get("termname").toString());
-	    String termname = data.get("termname").toString();
-	    String flieName = exceltemplate+"_"+termname+".xls";
-		//G06需要将文件按命名规则生成并打包成zip
-		if(null!=data.get("fileName")){
-			flieName = data.get("fileName").toString();
-		}
-	    File depositfile = TisUtil.createFile(data, exceltemplate, flieName);
-		return this.priView(depositfile, true);
-	}
-    /**
-     * 导出文件
-     *
-     * @param downloadFile 需要被下载的文件
-     * @param deleteAfterExport 下载后是否删除当前原文件
-     * @return 返回responseEntity
-     * @throws IOException 异常
-     * @see
-     * @since 1.0
-     */
-    public String priView( File downloadFile, boolean deleteAfterExport){
-    	  String rs =  XlsxToHtml.readExcelToHtml(downloadFile,true);
-        if (deleteAfterExport) {
-            downloadFile.delete();
-        }
-        return rs;
-    }
 	public SellMonthReportDetail divide10000(SellMonthReportDetail detail) {
 		BigDecimal tenthousand = new BigDecimal(10000);
 		if(detail.getSaleAmountTotal()!=null)
@@ -311,7 +242,6 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		return detail;
 
 	}
-
     /**
      * @Description 导出预览为零的数据显示空还是显示零
      * @param detail

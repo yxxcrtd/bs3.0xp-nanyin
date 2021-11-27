@@ -54,8 +54,8 @@ $(function() {
             { title: "报送日期", width : 200, field: 'submitTime', type: 'datetime',sortField:'submitTime'},
             { title: "报送截止日", width : 200, field: 'chbSubmitDeadline', type: 'datetime',sortField:'chbSubmitDeadline'},
             { title: "反馈状态",  width : 130,field: 'submitFeedbackStatusStr',sortField:'submitFeedbackStatus'},
-            {title: '统计年月', width : 130,field:'termname',sortField:'termid'},
-            {title: '报表名称',width : 310,field:'reportName',sortField:'termid'},
+            {title: '统计年月', width : 130,field:'termid',sortField:'termid'},
+            {title: '报表名称',width : 310,field:'reportName',sortField:'reportName'},
 			{
             title : '操作',
 			field : 'operation',
@@ -116,7 +116,7 @@ $(function() {
             param.expKeys = keyList.join(',')
             param.flag = flag;
             param.exportflag = 'exportSelected';
-            Joyin.exportExcel('export', param);
+            Joyin.exportExcel('download', param);
             //判断所选导出的数据是否已经报送送成功，若报送成功，则无需"手工处理"，只对报送失败的数据进行处理
             var isNotSendData = false;
             for(var j=expArr.length-1;j>=0;j--){

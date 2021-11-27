@@ -99,19 +99,12 @@ public class SellMonthReport001Controller extends BaseController{
 	 * @since 1.6.0
 	 */
 	@ResponseBody
-	@RequestMapping(value = ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() {
-		List<SellMonthReportDetail> dtoList = sellMonthReportDelail001Service.setDataList(RequestUtil.getParameters(getRequest()));
-		File outFile = sellMonthReportDelail001Service.makeFile(
-				"/com/joyintech/tams/report/submitmanagement/salestransactionmaintenanceregist/conf/export_conf.xml", dtoList);
-		return ExportUtil.export(
-				"销售结算资金交易登记" + GlobalConstant.OPEN_PARENTHESIS
-						+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
-						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
-				outFile, true);
-
+	@RequestMapping("download")
+	public ResponseEntity<byte[]> download() throws IOException {
+		String datas = this.getParam("keyList");
+		return sellMonthReport001Service.download(this.getPageId(), RequestUtil.getPageParam(),datas);
 	}
-
+	List<SellMonthReportDetail> dtoList = sellMonthReportDelail001Service.setDataList(RequestUtil.getParameters(getRequest()));
 	/**
 	 * 手工处理功能
 	 *
@@ -143,33 +136,33 @@ public class SellMonthReport001Controller extends BaseController{
 		sellMonthReportMService.cancelMannul(map);
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
 	}
-
-	/**
-	 * 查看详情
-	 *
-	 * @return DtPage
-	 */
-	@ResponseBody
-	@RequestMapping(value = "preView")
-	public void preView(HttpServletRequest request, HttpServletResponse response) {
-		String htmlExcel = sellMonthReport001Service.priview(this.getPageId(), RequestUtil.getPageParam());
-		response.reset();
-		response.setContentType("text/html;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		InputStream res = new ByteArrayInputStream(htmlExcel.getBytes(Charset.forName("UTF-8")));
-		byte[] buf = new byte[1024 * 10];
-		int len = 0;
-		OutputStream out;
-		try {
-			out = response.getOutputStream();
-			while ((len = res.read(buf)) != -1)
-				out.write(buf, 0, len);
-			out.flush();
-			res.close();
-			out.close();
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-			return;
-		}
-	}
+//
+//	/**
+//	 * 查看详情
+//	 *
+//	 * @return DtPage
+//	 */
+//	@ResponseBody
+//	@RequestMapping(value = "preView")
+//	public void preView(HttpServletRequest request, HttpServletResponse response) {
+//		String htmlExcel = sellMonthReport001Service.priview(this.getPageId(), RequestUtil.getPageParam());
+//		response.reset();
+//		response.setContentType("text/html;charset=UTF-8");
+//		response.setCharacterEncoding("UTF-8");
+//		InputStream res = new ByteArrayInputStream(htmlExcel.getBytes(Charset.forName("UTF-8")));
+//		byte[] buf = new byte[1024 * 10];
+//		int len = 0;
+//		OutputStream out;
+//		try {
+//			out = response.getOutputStream();
+//			while ((len = res.read(buf)) != -1)
+//				out.write(buf, 0, len);
+//			out.flush();
+//			res.close();
+//			out.close();
+//		} catch (IOException e) {
+//			logger.error(e.getMessage(), e);
+//			return;
+//		}
+//	}
 }
