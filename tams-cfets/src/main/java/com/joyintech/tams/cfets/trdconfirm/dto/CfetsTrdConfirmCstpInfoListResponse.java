@@ -62,8 +62,11 @@ public class CfetsTrdConfirmCstpInfoListResponse {
     @ApiModelProperty(name="settleSpeedName",value="清算速度",example="1")
     private String settleSpeedName;
 
-    @ApiModelProperty(name="acctNo",value="托管账户",example="1")
+    @ApiModelProperty(name="acctNo",value="托管账户Code",example="1")
     private String acctNo;
+
+    @ApiModelProperty(name="acctNoName",value="托管账户",example="1")
+    private String acctNoName;
 
 
     @ApiModelProperty(name="lastqty",value="券面总额",example="1")
@@ -84,15 +87,26 @@ public class CfetsTrdConfirmCstpInfoListResponse {
 
     @ApiModelProperty(name="traderid",value="本方",example="T01")
     private String traderid;
+    @ApiModelProperty(name="traderidName",value="本方",example="T01")
+    private String traderidName;
 
     @ApiModelProperty(name="trader",value="本方交易员",example="T01")
     private String trader;
 
-    @ApiModelProperty(name="counterTrader",value="对手方",example="T01")
+    @ApiModelProperty(name="counterTrader",value="对手方交易员",example="T01")
     private String counterTrader;
 
-    @ApiModelProperty(name="settType",value="清算类型",example="T01")
-    private String settType;
+    @ApiModelProperty(name="counterId",value="对手方Code",example="T01")
+    private String counterId;
+    @ApiModelProperty(name="counterIdName",value="对手方",example="T01")
+    private String counterIdName;
+
+
+    @ApiModelProperty(name="clearType",value="清算类型",example="T01")
+    private String clearType;
+    @ApiModelProperty(name="clearTypeName",value="清算类型",example="T01")
+    private String clearTypeName;
+
 
     @ApiModelProperty(name="tradeDate",value="成交日期",example="T01")
     private Date tradeDate;
@@ -280,13 +294,7 @@ public class CfetsTrdConfirmCstpInfoListResponse {
         this.counterTrader = counterTrader;
     }
 
-    public String getSettType() {
-        return settType;
-    }
 
-    public void setSettType(String settType) {
-        this.settType = settType;
-    }
 
     public Date getTradeDate() {
         return tradeDate;
@@ -383,5 +391,53 @@ public class CfetsTrdConfirmCstpInfoListResponse {
 
     public void setPledgeFaceValues(String pledgeFaceValues) {
         this.pledgeFaceValues = pledgeFaceValues;
+    }
+
+    public String getAcctNoName() {
+        return acctNoName;
+    }
+
+    public void setAcctNoName(String acctNoName) {
+        this.acctNoName = acctNoName;
+    }
+
+    public String getTraderidName() {
+        return traderidName;
+    }
+
+    public void setTraderidName(String traderidName) {
+        this.traderidName = traderidName;
+    }
+
+    public String getCounterId() {
+        return counterId;
+    }
+
+    public void setCounterId(String counterId) {
+        this.counterId = counterId;
+    }
+
+    public String getCounterIdName() {
+        return counterIdName;
+    }
+
+    public void setCounterIdName(String counterIdName) {
+        this.counterIdName = counterIdName;
+    }
+
+    public String getClearType() {
+        return clearType;
+    }
+
+    public void setClearType(String clearType) {
+        this.clearType = clearType;
+    }
+
+    public String getClearTypeName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.清算类型, getClearType());
+    }
+
+    public void setClearTypeName(String clearTypeName) {
+        this.clearTypeName = clearTypeName;
     }
 }

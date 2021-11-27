@@ -1396,14 +1396,14 @@ public class CfetsTrdConfirmService extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-        if (StringUtil.equals(dto.getSettleSpeed(),
+      /*  if (StringUtil.equals(dto.getSettleSpeed(),
                 DictCodeList.清算速度_T_0.getValue())) {
             pageParam.put("settleSpeed","0");
         }
         if (StringUtil.equals(dto.getSettleSpeed(),
                 DictCodeList.清算速度_T_1.getValue())) {
             pageParam.put("settleSpeed","1");
-        }
+        }*/
         String acctNo=(String)pageParam.get("acctNo");
         if(StringUtil.isNotEmpty(acctNo)){
             pageParam.put("acctNoList", StringUtil.splitToList(GlobalConstant.COMMA,acctNo));
@@ -1417,6 +1417,10 @@ public class CfetsTrdConfirmService extends BaseService{
             pageParam.put("counterTraderList", StringUtil.splitToList(GlobalConstant.COMMA,counterTrader));
         }
         pageParam.put("sysDate",iPlatformDate.getSysDate());
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        int year = c.get(Calendar.YEAR);
+        pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
         //针对查询可匹配成交回报
@@ -1725,9 +1729,13 @@ public class CfetsTrdConfirmService extends BaseService{
 
         String trdConfStatus=(String)pageParam.get("trdConfStatus");
         if(StringUtil.isNotEmpty(trdConfStatus)){
-            pageParam.put("trdConfStatusList", StringUtil.splitToList(GlobalConstant.COMMA,secAcctId));
+            pageParam.put("trdConfStatusList", StringUtil.splitToList(GlobalConstant.COMMA,trdConfStatus));
         }
         pageParam.put("sysDate",iPlatformDate.getSysDate());
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        int year = c.get(Calendar.YEAR);
+        pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
         String userId = SecurityUtil.getLoginUser().getUserName();

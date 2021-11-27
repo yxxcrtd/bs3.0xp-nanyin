@@ -870,15 +870,18 @@
       <!--  nvl(ts.OURDEPOSITACCOUNTNUMBER,ts.OURDEPOSITACCOUNTNUMBER) as  acctNo,-->
         case when ipar.portfolio_id is not null
         then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  acctNo,
+        stlinfo.sec_acct_name as acctNoName,
         nvl(I.LASTQTY,0)/10000 as lastqty,
-        decode(I.BUSINESSTYPE, 'BOND', I.UNDERLYINGYIELD2, 'REPO', I.PRICE) tradeYield,
+        decode(I.BUSINESSTYPE, 'BOND', I.yield2, 'REPO', I.PRICE) tradeYield,
         decode(I.BUSINESSTYPE, 'BOND', '', 'REPO', I.TRADELIMITDAYS) termDays,
         I.TRADECASHAMT as tradeAmt,
         QUOTE.QUOTEID as quoteid,
         I.ourinstitutioncode as traderid,
+        mccit.PARTY_ABBR as traderidName,
         su.USER_NAME trader,
-        I.Counterinstitutioncode as counterTrader,
-        I.Clearingmethod as settType,
+        I.Counterinstitutioncode as counterId,
+        mccic.PARTY_ABBR as counterIdName,
+        I.Clearingmethod as clearType,
         nvl(ts.dealdate,tr.dealdate) as tradeDate,
         nvl(ts.dealtext,tr.dealtext) as remark,
         nvl(ts.dealno,tr.tradeid) as cstpTradeId,
@@ -906,6 +909,11 @@
         LEFT JOIN IBU_QUOTE_CREP iqc ON i.EXECID = iqc.EXECID
         LEFT JOIN IBU_QUOTE_ETR_RE iqerr ON iqc.QUOTE_ID = iqerr.QUOTE_ID
         ) QUOTE ON QUOTE.EXECID=I.EXECID
+        left join stl_sec_acct_info stlinfo
+        on (case when ipar.portfolio_id is not null
+        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end)=stlinfo.sec_acct_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id
         where I.BUSINESSTYPE in ('BOND','REPO')
         <if test="regAssetType != null  and regAssetType!=''">
             AND I.BUSINESSTYPE = #{regAssetType}
@@ -918,6 +926,10 @@
             or ts.SECID in
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                 CONCAT(#{item},'.IB')
+            </foreach>
+            or fp.finprod_id in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
             </foreach>
             )
         </if>
@@ -954,6 +966,9 @@
         )aaa
         left join SYS_DATADICT_LIST sdl on aaa.businesstype=sdl.ITEM_CODE and sdl.DICT_CODE='CSTP_BUSINESS_TYPE'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
+        left join SYS_DATADICT_LIST dictct on aaa.clearType=dictct.ITEM_CODE and dictct.DICT_CODE='CLEAR_TYPE'
+        left join SYS_DATADICT_LIST dictss on aaa.settleSpeed=dictss.ITEM_CODE and dictss.DICT_CODE='ACCOUNT_SPEED'
+
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryCstpWhere"></include>
         <include refid="vagueQueryCstpMatchWhere"></include>
@@ -969,18 +984,18 @@
         <if test="search != null and search != '' and search !='有效' ">
             <where>
                 ((aaa.execid || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
-                || '|' || dictps.ITEM_VALUE || '|T+' || aaa.settleSpeed
-                || '|' || aaa.acctNo || '|' || aaa.quoteid  || '|' || aaa.traderid || '|' || aaa.trader
-                || '|' || aaa.counterTrader || '|' || aaa.settType || '|' || aaa.remark
+                || '|' || dictps.ITEM_VALUE || '|' || dictss.ITEM_VALUE
+                || '|' || aaa.acctNoName || '|' || aaa.quoteid  || '|' || aaa.traderidName || '|' || aaa.trader
+                || '|' || aaa.counterIdName || '|' || dictct.ITEM_VALUE || '|' || aaa.remark
                 like '%' || #{search} || '%')
-                or to_char(aaa.lastqty,'FM9999999999999990.99')=#{search} or to_char(aaa.lastqty)=#{search}
+                or to_char(aaa.lastqty,'FM9999999999999990.90')=#{search} or to_char(aaa.lastqty)=#{search}
                 or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
                 or aaa.termDays||'' =#{search}
-                or to_char(aaa.tradeAmt,'FM9999999999999990.99')=#{search} or to_char(aaa.tradeAmt)=#{search}
+                or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
                 or aaa.tradeDate||'' =#{search}
-                or aaa.tradeDate=#{year}||'-'||#{search}
-                or replace(aaa.tradeDate,'-','/')=#{search}
-                or replace(aaa.tradeDate,'-','/')=#{year}||'/'||#{search}
+                or aaa.tradeDate||''=#{year}||'-'||#{search}
+                or replace(aaa.tradeDate,'-','/')||''=#{search}
+                or replace(aaa.tradeDate,'-','/')||''=#{year}||'/'||#{search}
                 )
             </where>
         </if>
@@ -1064,7 +1079,7 @@
         on m.pre_trade_id=reg.totle_trade_id
         left join fin_product fp
         on reg.finprod_id=fp.finprod_id
-        left join(
+        inner join(
         select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
         from reg_fin_product_deal regdeal
         left join ptl_portfolio pp
@@ -1107,6 +1122,9 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON reg.counter_id= mccic.party_id
 
         where 1=1
+        <if test="ps != null  and ps!=''">
+            AND reg.ps = #{ps}
+        </if>
         <if test="regAssetType != null  and regAssetType!=''">
             AND ct.BUSINESSTYPE = #{regAssetType}
         </if>
@@ -1138,7 +1156,7 @@
             and m.exe_id LIKE CONCAT('%',CONCAT(#{exeid},'%'))
         </if>
         <if test="busiCode != null and !''.equals(busiCode)">
-            and m.pre_trade_id LIKE CONCAT('%',CONCAT(#{quoteid},'%'))
+            and m.pre_trade_id LIKE CONCAT('%',CONCAT(#{busiCode},'%'))
         </if>
         <if test="matchType != null and matchType != ''">
             and m.match_type= #{matchType}
@@ -1200,7 +1218,7 @@
         on m.pre_trade_id=ic.quote_id
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
-        left join(
+        inner join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
@@ -1235,6 +1253,9 @@
         then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON nvl(ib.cp_party_id,ic.cp_party_id)= mcci.party_id
         where ct.BUSINESSTYPE in ('BOND','REPO')  and (ic.quote_id is not null or ib.quote_id is not null)
+        <if test="ps != null  and ps!=''">
+            AND nvl(ib.ps,ic.repo_ps) = #{ps}
+        </if>
         <if test="regAssetType != null  and regAssetType!=''">
             AND ct.BUSINESSTYPE = #{regAssetType}
         </if>
@@ -1266,7 +1287,7 @@
             and m.exe_id LIKE CONCAT('%',CONCAT(#{exeid},'%'))
         </if>
         <if test="busiCode != null and !''.equals(busiCode)">
-            and m.pre_trade_id LIKE CONCAT('%',CONCAT(#{quoteid},'%'))
+            and m.pre_trade_id LIKE CONCAT('%',CONCAT(#{busiCode},'%'))
         </if>
         <if test="matchType != null and matchType != ''">
             and m.match_type= #{matchType}
@@ -1283,7 +1304,7 @@
         )aaa
         left join SYS_DATADICT_LIST sdl on aaa.matchType=sdl.ITEM_CODE and sdl.DICT_CODE='TRD_MATCH_TYPE'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
-        left join SYS_DATADICT_LIST dictquoteTpe on aaa.quoteType=dictquoteTpe.ITEM_CODE and dictquoteTpe.DICT_CODE='QUOTE_TYPE'
+        left join SYS_DATADICT_LIST dictquoteTpe on aaa.dealType=dictquoteTpe.ITEM_CODE and dictquoteTpe.DICT_CODE='QUOTE_TYPE'
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryTrdCstpWhere"></include>
         order by aaa.matchType,aaa.quoteType,aaa.finprodType2,aaa.ps,aaa.finprodMarketId)
@@ -1301,16 +1322,16 @@
                 || '|' || aaa.secManageAcctIdName || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
                 || '|' || aaa.counterIdName || '|' || dictquoteTpe.ITEM_VALUE
                 like '%' || #{search} || '%')
-                or to_char(aaa.printAmt,'FM9999999999999990.99')=#{search} or to_char(aaa.printAmt)=#{search}
+                or to_char(aaa.printAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.printAmt)=#{search}
                 or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
                 or aaa.termDays||'' =#{search}
-                or to_char(aaa.tradeAmt,'FM9999999999999990.99')=#{search} or to_char(aaa.tradeAmt)=#{search}
-                or to_char(aaa.trdFeeAmt,'FM9999999999999990.99')=#{search} or to_char(aaa.trdFeeAmt)=#{search}
-                or to_char(aaa.settleFeeAmt,'FM9999999999999990.99')=#{search} or to_char(aaa.settleFeeAmt)=#{search}
+                or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
+                or to_char(aaa.trdFeeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.trdFeeAmt)=#{search}
+                or to_char(aaa.settleFeeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.settleFeeAmt)=#{search}
                 or aaa.tradeDate||'' =#{search}
-                or aaa.tradeDate=#{year}||'-'||#{search}
-                or replace(aaa.tradeDate,'-','/')=#{search}
-                or replace(aaa.tradeDate,'-','/')=#{year}||'/'||#{search}
+                or aaa.tradeDate||''=#{year}||'-'||#{search}
+                or replace(aaa.tradeDate,'-','/')||''=#{search}
+                or replace(aaa.tradeDate,'-','/')||''=#{year}||'/'||#{search}
                 )
             </where>
         </if>
@@ -1551,7 +1572,7 @@
         stlinfo.sec_acct_name as acctNoName,
         ts.settdate as settleDate,
         ts.price_8 as unitCprice,
-        I.Underlyingyield2 as yield,
+        I.yield2 as yield,
         I.Strikeyield as exerYield,
         ts.prinamt as lastqty,
         ts.unit_int as unitInt,
