@@ -42,6 +42,8 @@ public interface DayEndAccountMapper {
 
     List<SelectOptionDto> queryAssetCode(Map<String, Object> param);
 
+    List<String> queryFinProdIds(Map<String, Object> param);
+
     int queryStlSecReconDealCount(Map<String, Object> param);
 
     int querySettleTransDataCount(Map<String, Object> param);

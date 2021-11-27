@@ -90,8 +90,11 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         }
         Object finprodIdObj = pageParam.get("finprodId");
         if (finprodIdObj != null) {
-            pageParam.put("finprodIdList",
-                    StringUtil.splitToList(GlobalConstant.COMMA, (String)finprodIdObj));
+            List<String> finprodMarketIdList = StringUtil.splitToList(GlobalConstant.COMMA, (String)finprodIdObj);
+            Map<String, Object> finProdIdParam = new HashMap<>();
+            finProdIdParam.put("finprodMarketIdList", finprodMarketIdList);
+            List<String> finprodList = dayEndAccountMapper.queryFinProdIds(finProdIdParam);
+            pageParam.put("finprodIdList",finprodList);
         }
         else {
             pageParam.put("finprodIdList", new ArrayList<>());
