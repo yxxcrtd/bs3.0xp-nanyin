@@ -35,19 +35,20 @@
     <result column="IS_TRANSFER" property="isTransfer" jdbcType="VARCHAR" />
     <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
     <result column="IS_YLLCCP" property="isYllccp" jdbcType="VARCHAR" />
+    <result column="YIELD_E" property="yieldE" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
     OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
     CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
-    TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE
+    TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE,YIELD_E
   </sql>
   
   <sql id="Base_Column_List_inst" >
     POSUUID, PRODID, STARTDATE, ENDDATE, BOOKDATE, CCY, RAISEMODE, IVSTORIENTATION, TERMTYPE,
     OPERATE_MODE, PROFIT_TYPE, SALE_TARGET, CON_PRD_TRAGET, ORD_IDENTIFIED, DIRTYAMTSUM, 
     CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
-    TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE, INSTITUTION_CODE
+    TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, VDATE,OPENDURATION,CASH_MANA_CATE, INSTITUTION_CODE,YIELD_E
   </sql>
   
   
@@ -76,7 +77,7 @@
       CLEANAMTSUM, REDEEMAMT, TERMINATIONAMT, 
       ENDAMTSUM_OTH, CUSTOMERAMT, REDEEMINTAMT, 
       TERMINATIONINTAMT, CASHAMT, DURATIONFLAG, 
-      VDATE)
+      VDATE,YIELD_E)
     values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{startdate,jdbcType=TIMESTAMP}, 
       #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR}, 
       #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{termtype,jdbcType=VARCHAR},
@@ -85,7 +86,7 @@
       #{cleanamtsum,jdbcType=DECIMAL}, #{redeemamt,jdbcType=DECIMAL}, #{terminationamt,jdbcType=DECIMAL}, 
       #{endamtsumOth,jdbcType=DECIMAL}, #{customeramt,jdbcType=DECIMAL}, #{redeemintamt,jdbcType=DECIMAL}, 
       #{terminationintamt,jdbcType=DECIMAL}, #{cashamt,jdbcType=DECIMAL}, #{durationflag,jdbcType=VARCHAR}, 
-      #{vdate,jdbcType=TIMESTAMP})
+      #{vdate,jdbcType=TIMESTAMP},#{yieldE,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition" >
     insert into CHB_MONTH_PRD_POSITION
@@ -165,6 +166,12 @@
       <if test="vdate != null" >
         VDATE,
       </if>
+        <if test="cashamt != null" >
+            CASHAMT,
+        </if>
+        <if test="yieldE != null" >
+            YIELD_E,
+        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="posuuid != null" >
@@ -241,6 +248,9 @@
       </if>
       <if test="vdate != null" >
         #{vdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yieldE != null" >
+        #{yieldE,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -319,6 +329,9 @@
       <if test="vdate != null" >
         VDATE = #{vdate,jdbcType=TIMESTAMP},
       </if>
+      <if test="yieldE != null" >
+          YIELD_E = #{yieldE,jdbcType=DECIMAL},
+      </if>
     </set>
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
@@ -347,7 +360,8 @@
       TERMINATIONINTAMT = #{terminationintamt,jdbcType=DECIMAL},
       CASHAMT = #{cashamt,jdbcType=DECIMAL},
       DURATIONFLAG = #{durationflag,jdbcType=VARCHAR},
-      VDATE = #{vdate,jdbcType=TIMESTAMP}
+      VDATE = #{vdate,jdbcType=TIMESTAMP},
+      YIELD_E = #{yieldE,jdbcType=DECIMAL}
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
   
@@ -358,7 +372,7 @@
     pos.OPERATE_MODE, pos.PROFIT_TYPE, pos.SALE_TARGET, pos.CON_PRD_TRAGET, pos.ORD_IDENTIFIED, pos.DIRTYAMTSUM,
     pos.CLEANAMTSUM, pos.REDEEMAMT, pos.TERMINATIONAMT, pos.ENDAMTSUM_OTH, pos.CUSTOMERAMT, pos.REDEEMINTAMT,
     pos.TERMINATIONINTAMT, pos.CASHAMT, pos.DURATIONFLAG, pos.VDATE,pos.OPENDURATION,pos.CASH_MANA_CATE, di.INSTITUTION_CODE,
-    pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP
+    pos.PAYAMTSUM,pos.CLOSETERMDAY,info.IS_TRANSFER,info.IS_FHXGCP,info.IS_YLLCCP,pos.YIELD_E
        from CHB_MONTH_PRD_POSITION pos
       left join (      select distinct  di.business_id　finprod_market_id,di.institution_code
       from DATA_AUTH_NOTIFY_INST di where di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
@@ -403,6 +417,7 @@
 	    ,CUSTOMERAMT
 	    ,PAYAMTSUM  /**本期兑付金额*/
 	    ,CLOSETERMDAY  /**封闭式产品期限*/
+        ,YIELD_E
 	)
 	with 
 	/*产品存续状态*/
@@ -445,6 +460,21 @@
 	    end  closetermday  /**新加字段封闭式产品期限*/
 	    ,nvl(val.prod_value,1) prod_value
       	,nvl(val.CCY,'CNY') prod_value_ccy
+      <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 start -->
+      ,case when info.PRODTYPE = 'M' then rpi.UNIT_VALUE_T
+      when info.PRODTYPE = 'R' then rpi.YIELD_E
+      when info.PRODTYPE = 'N' then
+      case when val.CHANGE_DATE >= #{startdate, jdbcType=DATE} and val2.CHANGE_DATE >= #{startdate, jdbcType=DATE}
+      <!-- （月末最近公布累计净值-月末次近公布累计净值）/月末次近公布累计净值*计息基础/区间天数*100%；区间天数=两个净值日的差 -->
+      then (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) / nvl(val2.UNIT_VALUE_TOTAL, 1) / to_number(val.CHANGE_DATE - val2.CHANGE_DATE) * 100
+      when val.CHANGE_DATE >= #{startdate, jdbcType=DATE}
+      then (nvl(val.UNIT_VALUE_TOTAL, 1) - 1) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) / to_number(val.CHANGE_DATE - info.RAISE_PENDDATE) * 100
+      else
+      rpi.RATE_BENCHMARK
+      end
+      else 0
+      end as YIELD_E
+      <!-- add by dubaojun 2020-06-05 增加理财子公司所需字段的入库 end -->
 	    from chb_prd_baseinfo info
 	    left join
 	    (
@@ -456,7 +486,23 @@
 	        ) where my_rank=1
 	    )val
 	    on nvl (info.fprod_id,info.prod_id)=val.prod_id
-	     left join pd on info.prod_id=pd.prod_id
+        <!-- add by dubaojun 2020-06-06 增加理财子公司所需字段的入库 start -->
+    left join
+        (
+        select PROD_ID,CCY,PROD_VALUE,CHANGE_DATE,UNIT_VALUE_TOTAL
+        from (
+        select rank() over(partition by prod_id order by change_date desc) my_rank,
+        prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL
+        from CHB_PRD_PERIODYIELD
+        where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+        and CHANG_TYPE='01'
+        ) where my_rank = 2
+        )val2
+        on info.PROD_ID=val2.PROD_ID
+    left join REP_PROD_INDEX rpi
+    on rpi.PROD_ID = info.PROD_ID
+    and rpi.VALUE_DATE = #{enddate,jdbcType=DATE}
+    left join pd on info.prod_id=pd.prod_id
 	    where info.FPROD_ID is null
 	    and  info.vdate <![CDATA[<=]]>  #{enddate,jdbcType=DATE}
        /**历史到期产品不统计*/
@@ -762,7 +808,7 @@
         ,deal.payamtsum   /**本期兑付金额*/
         ,prod.closetermday  /*封闭式产品期限*/
          /*add  新加2个字段   by  dongxiangyang  end*/
-
+        ,prod.YIELD_E
     from  pi prod
     left join dm deal  on deal.prodid=prod.prodid
     left join pm on deal.prodid=pm.prodid and deal.ccy=pm.ccy 
@@ -835,7 +881,8 @@
            ,case when prod.operate_mode in ('01','02')
               then prod.mdate-prod.vdate else null
               end  closetermday  /**新加字段封闭式产品期限*/
-        FROM
+            ,pos1.YIELD_E
+    FROM
            /* chb_prd_baseinfo prod */
            /* left join CHB_MONTH_PRD_POSITION pos1*/
             CHB_MONTH_PRD_POSITION pos1          
