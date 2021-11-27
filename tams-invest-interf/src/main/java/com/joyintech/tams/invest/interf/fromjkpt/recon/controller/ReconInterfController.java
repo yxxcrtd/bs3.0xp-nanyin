@@ -54,7 +54,6 @@ public class ReconInterfController {
      * @param param
      */
     @Transactional
-    @DTXTransaction
     @PostMapping("executecash")
     public void executecash(@RequestBody Map<String,Object> param) {
         try{
@@ -82,7 +81,6 @@ public class ReconInterfController {
      * @param param
      */
     @Transactional
-    @DTXTransaction
     @PostMapping("executeposition")
     public void executeposition(@RequestBody Map<String,Object> param) {
         try{
@@ -111,7 +109,6 @@ public class ReconInterfController {
      * @param param
      */
     @Transactional
-    @DTXTransaction
     @PostMapping("executerecon")
     public void executerecon(@RequestBody Map<String,Object> param) {
         try{
@@ -131,7 +128,6 @@ public class ReconInterfController {
 
 
     @Transactional
-    @DTXTransaction
     @PostMapping("execute")
     public void execute(@RequestBody Map<String,Object> param) {
         try{
@@ -150,5 +146,60 @@ public class ReconInterfController {
         }
     }
 
+    /**
+     * 接口平台的对账单文件解析完成后，通知投管做后续的业务处理
+     * 包括 资金余额、持仓余额、对账单、批处理启动
+     * @param param
+     */
+    @Transactional
+    @PostMapping("executeReconAll")
+    public void executeReconAll(@RequestBody Map<String,Object> param) {
+        try {
+            //----------------------------------------------------------------------------------------------
+            logger.debug("接口平台调用对账单处理第一步-资金余额业务处理开始");
+            if(!param.containsKey("execDate")){
+                param.put("execDate", DateUtil.format(iPlatformDate.getSysDate(),"yyyyMMdd"));
+            } else {
+                param.put("execDate", DateUtil.format(DateUtil.parse(
+                        param.get("execDate").toString()),"yyyyMMdd"));
+            }
+            reconInterfService.deleteStlCashRecon(param);
+            List<StlCashReconDto> stlCashReconDtos = reconInterfService.listStlCashRecon(param);
+            stlCashReconDtos.stream().forEach(item->{
+                stlCashReconMapper.insertSelective(item);
+            });
+            logger.debug("接口平台调用对账单处理第一步-资金余额业务处理成功");
+            //----------------------------------------------------------------------------------------------
+
+
+            //----------------------------------------------------------------------------------------------
+            logger.debug("接口平台调用对账单处理第二步-持仓余额业务处理开始");
+            reconInterfService.deleteStlSecpRecon(param);
+            List<StlSecpReconDto> stlSecpReconDtos = reconInterfService.listStlSecpRecon(param);
+            stlSecpReconDtos.stream().forEach(item ->{
+                stlSecpReconMapper.insertSelective(item);
+            });
+            logger.debug("接口平台调用对账单处理第二步-持仓余额业务处理成功");
+            //----------------------------------------------------------------------------------------------
+
+
+            //----------------------------------------------------------------------------------------------
+            logger.debug("接口平台调用对账单处理第三步-对账单业务处理开始");
+            reconInterfService.executerecon(param);
+            logger.debug("接口平台调用对账单处理第三步-对账单业务处理成功");
+            //----------------------------------------------------------------------------------------------
+
+
+            //----------------------------------------------------------------------------------------------
+            logger.debug("接口平台调用对账单处理第四步-调用批处理开始");
+            param.put("beanNames", Arrays.asList("autoReconciliationTask","stlSettleTransDataGatherTask","stlDownDataGatherTask"));
+            batchManualExcuteService.execute(param);
+            logger.debug("接口平台调用对账单处理第四步-批处理成功");
+            //----------------------------------------------------------------------------------------------
+        }catch (Exception e){
+            logger.error("接口平台调用对账单处理失败!" + e.getMessage());
+            throw e;
+        }
+    }
 }
 
