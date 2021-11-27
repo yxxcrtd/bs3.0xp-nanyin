@@ -308,7 +308,7 @@ where
 		FROM
 			SETTLE_TRANS_DATA_STATUS
 		WHERE
-			CHECK_RESULT = #{CHECK_RESULT_0,jdbcType=VARCHAR}
+			CHECK_RESULT in (#{CHECK_RESULT_0,jdbcType=VARCHAR}, #{CHECK_RESULT_2,jdbcType=VARCHAR})
 	</delete>
 
 	<delete id="batchDeleteStlSecReconDetail" parameterType="java.util.Map">
@@ -348,7 +348,7 @@ where
 		FROM
 			STL_SEC_RECON
 		WHERE
-			CHECK_RESULT = #{CHECK_RESULT_0,jdbcType=VARCHAR}
+			CHECK_RESULT in (#{CHECK_RESULT_0,jdbcType=VARCHAR}, #{CHECK_RESULT_2,jdbcType=VARCHAR})
 			AND SETTLE_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
 	</select>
 </mapper>

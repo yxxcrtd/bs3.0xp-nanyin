@@ -99,6 +99,7 @@ public class ReconciliationCommonService {
         Map<String, Object> param = new HashMap<>();
         param.put("batchDate", DateUtil.format(batchDate));
         param.put("CHECK_RESULT_0", DictCodeListExt3.对账状态结果_不一致.getValue());
+        param.put("CHECK_RESULT_2", DictCodeListExt3.对账状态结果_待处理.getValue());
         // 删除成交明细状态表对账结果为不一致的数据
         reconciliationCommonMapper.deleteSettleTransDataStatusDisaccords(param);
         // 查询券商对账结果表对账结果为不一致的数据
