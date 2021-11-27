@@ -110,6 +110,8 @@ public enum BatchBeanName {
     资产利率基本信息接口数据接入("4101","svrAssetRateInfoInterfTaskService","SvrAssetRateInfoImpMainService","资产利率基本信息接口数据接入"),
 	投资者身份信息登记导出("3074","equityInfoExportService","equityInfoExportMainService","投资者身份信息登记导出"),
 	投资者持有信息登记导出("3076","investorsHoldInfoExportService","investorsHoldInfoExportMainService","投资者持有信息登记导出"),
+    // TODO
+    理财产品转型情况月度统计表生成("3042","investorsHoldInfoExportService","investorsHoldInfoExportMainService","理财产品转型情况月度统计表生成"),
 
             ;
 	/**
