@@ -50,7 +50,7 @@
 					PARA_VALUE
 			)ssrp ON ssrd.CUSTOMER_ID = ssrp.CUSTOMER_ID
 			WHERE
-				(ssr.CHECK_RESULT is NULL or ssr.CHECK_RESULT = #{CHECK_RESULT_0})
+				(ssr.CHECK_RESULT is NULL or ssr.CHECK_RESULT in (#{CHECK_RESULT_0}, #{CHECK_RESULT_2}))
 				AND ssrd.TRADE_DATE = STR_TO_DATE(#{batchDate}, '%Y-%m-%d')
 		)
 		SELECT <!-- 查询委托汇总数据 -->
