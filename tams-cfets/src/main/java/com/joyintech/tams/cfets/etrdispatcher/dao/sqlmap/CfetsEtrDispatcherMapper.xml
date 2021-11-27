@@ -700,7 +700,7 @@
         tpdp.trade_id tradeId,
         to_char(tpdp.trade_date,'yyyy-MM-dd') exeDate,
         to_char(tpdp.settle_date,'yyyy-MM-dd') tradeDate,
-        tpdp.busi_type busiType,
+        #{quoteType} busiType,
         tpdp.portfolio_id portfolioId,
         pp.portfolio_name portfolioName,
         fp.finprod_market_id finprodMarketId,
