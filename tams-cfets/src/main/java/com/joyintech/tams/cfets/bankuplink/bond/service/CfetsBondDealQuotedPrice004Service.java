@@ -149,7 +149,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(StringUtil.isEmpty(entity.getCcy())){
                 errorList.add(new ValidMessage("请输入币种"));
             }
-            if(StringUtil.isEmpty(entity.getSettleSpreed())){
+            if(StringUtil.isEmpty(entity.getSettleSpreedCode())){
                 errorList.add(new ValidMessage("请输入清算速度"));
             }
             if(null==entity.getSettleDate()){
@@ -427,6 +427,14 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             entity.setClearType(entity.getSettleType());
             entity.setUnitCprice(entity.getPrice());
             entity.setYield(entity.getMatureYield());
+            Long settleSpreed = 0L;
+            if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加0.getValue())) {
+                settleSpreed = 0L;
+            } else if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加1.getValue())) {
+                settleSpreed = 1L;
+            } else if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加2.getValue())) {
+                settleSpreed = 2L;
+            }
             //交易方向
             String ps = entity.getPs();
             //投管业务类型
@@ -434,6 +442,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             //金融产品交易汇总登记
             RegFinProductDealTotal regFinProductDealTotal = new RegFinProductDealTotal();
             BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotal,entity);
+            regFinProductDealTotal.setSettleSpeed(settleSpreed);
             regFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             regFinProductDealTotal.setBranch(0L);
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
@@ -481,6 +490,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     regFinProductDeal.setTradeAmt(ptlAllocatio.getFpriceAmt());
                     regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
                     regFinProductDeal.setTgBusiType(tgBusiType);
+                    regFinProductDeal.setSettleSpeed(settleSpreed);
                     //附属
                     RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
                     regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());

@@ -1,8 +1,6 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
 import com.joyintech.background.component.common.pack.common.base.BaseEntity;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -66,8 +64,8 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="ccy",value="币种")
     private String ccy;
 
-    @ApiModelProperty(name="settleSpreed",value="清算速度")
-    private String settleSpreed;
+    @ApiModelProperty(name="settleSpreedCode",value="清算速度")
+    private String settleSpreedCode;
 
     @ApiModelProperty(name="tradeDate",value="交易日期")
     private Date tradeDate;
@@ -274,12 +272,12 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
         this.ccy = ccy;
     }
 
-    public String getSettleSpreed() {
-        return settleSpreed;
+    public String getSettleSpreedCode() {
+        return settleSpreedCode;
     }
 
-    public void setSettleSpreed(String settleSpreed) {
-        this.settleSpreed = settleSpreed;
+    public void setSettleSpreedCode(String settleSpreedCode) {
+        this.settleSpreedCode = settleSpreedCode;
     }
 
     public Date getSettleDate() {

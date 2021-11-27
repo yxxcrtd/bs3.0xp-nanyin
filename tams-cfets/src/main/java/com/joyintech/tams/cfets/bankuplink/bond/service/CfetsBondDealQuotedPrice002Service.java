@@ -116,7 +116,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
             if(StringUtil.isEmpty(entity.getCcy())){
                 errorList.add(new ValidMessage("请输入币种"));
             }
-            if(StringUtil.isEmpty(entity.getSettleSpreed())){
+            if(StringUtil.isEmpty(entity.getSettleSpreedCode())){
                 errorList.add(new ValidMessage("请输入清算速度"));
             }
             if(null==entity.getSettleDate()){

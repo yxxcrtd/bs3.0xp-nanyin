@@ -41,8 +41,8 @@ public class DealTransactionDetailsDto {
     @ApiModelProperty(name="finprodMarketId",value="资产代码")
     private String finprodMarketId;
 
-    @ApiModelProperty(name="finprodName",value="资产简称")
-    private String finprodName;
+    @ApiModelProperty(name="finprodAbbr",value="资产简称")
+    private String finprodAbbr;
 
     @ApiModelProperty(name="tradeStatus",value="报价状态")
     private String tradeStatus;
@@ -68,11 +68,11 @@ public class DealTransactionDetailsDto {
     @ApiModelProperty(name="exerYield",value="行权收益率（%）")
     private BigDecimal exerYield;
 
-    @ApiModelProperty(name="settleSpeed",value="清算速度")
-    private Long settleSpeed;
+    @ApiModelProperty(name="settleSpreed",value="清算速度")
+    private Long settleSpreed;
 
-    @ApiModelProperty(name="settleSpeed",value="清算速度")
-    private String settleSpeedStr;
+    @ApiModelProperty(name="settleSpreedStr",value="清算速度")
+    private String settleSpreedStr;
 
     @ApiModelProperty(name="ouPartyId",value="本方")
     private String ouPartyId;
@@ -164,12 +164,12 @@ public class DealTransactionDetailsDto {
         this.finprodMarketId = finprodMarketId;
     }
 
-    public String getFinprodName() {
-        return finprodName;
+    public String getFinprodAbbr() {
+        return finprodAbbr;
     }
 
-    public void setFinprodName(String finprodName) {
-        this.finprodName = finprodName;
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
     }
 
     public String getTradeStatus() {
@@ -220,12 +220,12 @@ public class DealTransactionDetailsDto {
         this.exerYield = exerYield;
     }
 
-    public Long getSettleSpeed() {
-        return settleSpeed;
+    public Long getSettleSpreed() {
+        return settleSpreed;
     }
 
-    public void setSettleSpeed(Long settleSpeed) {
-        this.settleSpeed = settleSpeed;
+    public void setSettleSpreed(Long settleSpreed) {
+        this.settleSpreed = settleSpreed;
     }
 
     public String getOuPartyId() {
@@ -376,21 +376,21 @@ public class DealTransactionDetailsDto {
         this.sendStatusStr = sendStatusStr;
     }
 
-    public String getSettleSpeedStr() {
-        if (this.getSettleSpeed() != null && this.getSettleSpeed() == 0L) {
+    public String getSettleSpreedStr() {
+        if (this.getSettleSpreed() != null && this.getSettleSpreed() == 0L) {
             return BussinessDictCodeList.清算速度_T加0.getCodeName();
         }
-        else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 1L) {
+        else if (this.getSettleSpreed() != null && this.getSettleSpreed() == 1L) {
             return BussinessDictCodeList.清算速度_T加1.getCodeName();
         }
-        else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 2L) {
+        else if (this.getSettleSpreed() != null && this.getSettleSpreed() == 2L) {
             return BussinessDictCodeList.清算速度_T加2.getCodeName();
         }
         return null;
     }
 
-    public void setSettleSpeedStr(String settleSpeedStr) {
-        this.settleSpeedStr = settleSpeedStr;
+    public void setSettleSpreedStr(String settleSpreedStr) {
+        this.settleSpreedStr = settleSpreedStr;
     }
 }
 

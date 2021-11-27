@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 委托指令
@@ -207,6 +208,11 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal unitFprice;
+
+    /**
+     * 指令下达时间
+     */
+    private Date transmitTime;
 
     public String getPortfolioSeries() {
         return portfolioSeries;
@@ -1003,5 +1009,13 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
 
     public void setUnitFprice(BigDecimal unitFprice) {
         this.unitFprice = unitFprice;
+    }
+
+    public Date getTransmitTime() {
+        return transmitTime;
+    }
+
+    public void setTransmitTime(Date transmitTime) {
+        this.transmitTime = transmitTime;
     }
 }

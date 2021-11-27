@@ -108,7 +108,8 @@
         ETR_ENTRUST_ADD.SELL_ABLE_NUM*100 SELL_ABLE_NUM,
         ETR_ENTRUST.TRADE_MARKET,
         ETR_ENTRUST.ENTRUST_DATE ENTRUST_DATE,
-        ETR_ENTRUST_ADD.FULL_PRICE
+        ETR_ENTRUST_ADD.FULL_PRICE,
+        ETR_ENTRUST_ADD.TRANSMIT_TIME
         FROM
         ETR_ENTRUST
         INNER JOIN
@@ -364,7 +365,7 @@
         NULL reqEffTime,
         NULL resEffTime,
         NULL shareAmtHun,
-        T1.TOTLE_TRADE_ID cfetsQuoteId,
+        T1.TOTLE_TRADE_ID quoteId,
         T2.EXE_ID,
         T1.REMARK
         FROM
@@ -422,7 +423,7 @@
         NULL reqEffTime,
         NULL resEffTime,
         NULL shareAmtHun,
-        T1.TOTLE_TRADE_ID cfetsQuoteId,
+        T1.TOTLE_TRADE_ID quoteId,
         '' EXE_ID,
         T1.REMARK
         FROM
@@ -477,7 +478,7 @@
         ,y.I_Q_B_D_RE_EFF_TIME  resEffTime
         ,CASE WHEN y.I_Q_B_QUOTE_TYPE = '02' THEN y.I_Q_B_SHARE_AMT
         ELSE NULL  END shareAmtHun
-        ,y.I_Q_B_QUOTE_ID cfetsQuoteId
+        ,y.I_Q_B_QUOTE_ID quoteId
         ,y.I_Q_B_D_EXECID EXE_ID
         ,y.I_Q_B_REMARK REMARK
         from

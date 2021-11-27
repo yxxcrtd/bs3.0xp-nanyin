@@ -211,7 +211,7 @@ public class IbuQuoteBondService extends BaseService {
             //处理结算日期
             cfetsBondDealQuoteCommonDto.setTradeDate(iPlatformDate.getSysDate());
             cfetsBondDealQuoteCommonDto.setSettleDate(ibuQuoteBondCalService.getNextWorkDay(cfetsBondDealQuoteCommonDto.getTradeDate()));
-            if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreed(),BussinessDictCodeList.清算速度_T加2.getValue())){
+            if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreedCode(),BussinessDictCodeList.清算速度_T加2.getValue())){
                 cfetsBondDealQuoteCommonDto.setSettleDate(ibuQuoteBondCalService.getNextWorkDay(cfetsBondDealQuoteCommonDto.getSettleDate()));
             }
             //处理锚定值
@@ -244,12 +244,12 @@ public class IbuQuoteBondService extends BaseService {
                 ptlAllocationDto.setShareAmt(ArithmeticUtil.multiply(entrustDto.getAvaNum(),new BigDecimal("10000")));
                 ptlAllocatios.add(ptlAllocationDto);
             }
-            if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreed(), "0")) {
-                cfetsBondDealQuoteCommonDto.setSettleSpreed(BussinessDictCodeList.清算速度_T加0.getValue());
-            } else if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreed(), "1")) {
-                cfetsBondDealQuoteCommonDto.setSettleSpreed(BussinessDictCodeList.清算速度_T加1.getValue());
-            } else if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreed(), "2")) {
-                cfetsBondDealQuoteCommonDto.setSettleSpreed(BussinessDictCodeList.清算速度_T加2.getValue());
+            if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreedCode(), "0")) {
+                cfetsBondDealQuoteCommonDto.setSettleSpreedCode(BussinessDictCodeList.清算速度_T加0.getValue());
+            } else if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreedCode(), "1")) {
+                cfetsBondDealQuoteCommonDto.setSettleSpreedCode(BussinessDictCodeList.清算速度_T加1.getValue());
+            } else if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreedCode(), "2")) {
+                cfetsBondDealQuoteCommonDto.setSettleSpreedCode(BussinessDictCodeList.清算速度_T加2.getValue());
             }
             cfetsBondDealQuoteCommonDto.setPtlAllocatios(ptlAllocatios);
         }
@@ -310,11 +310,11 @@ public class IbuQuoteBondService extends BaseService {
                 boolean partyIdFlag = true;
                 for (CfetsBondDealEntrustOrderDto item : entrustDtos) {
                     if(!StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_已接收.getValue())){
-                        message = "指令" + item.getEntrustId() + "委托状态不是已接,不可交易执行!";
+                        message = "指令" + item.getEntrustId() + "委托状态不是已接收,不可交易执行!";
                         ajaxResult.setMessage(message);
                         return ajaxResult;
                     }
-                    if (StringUtil.isEmpty(item.getPartyId())) {
+                    if (StringUtil.isEmpty(item.getPartyId())&&StringUtil.equals(exportShow,"01")) {
                         message = "指令" + item.getEntrustId() + "下组合未关联交易账户，请至[银行间业务参数管理-CFETS关联账户]中维护";
                         ajaxResult.setMessage(message);
                         return ajaxResult;
@@ -346,7 +346,7 @@ public class IbuQuoteBondService extends BaseService {
                 }
                 //提示
                 if (StringUtil.isNotEmpty(message)) {
-                    ajaxResult.setMessage(message.substring(0, message.length() - 2));
+                    ajaxResult.setMessage(StringUtil.join("所选指令不满足汇总条件：[",message.substring(0, message.length() - 2),"]不同"));
                     return ajaxResult;
                 }
                 //价格模式判断
