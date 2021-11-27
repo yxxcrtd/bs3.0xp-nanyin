@@ -70,20 +70,23 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                     || StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
                     || (StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                         &&StringUtil.equals(settleTransDataDto.getPs(), DictCodeListExt1.交易方向_债转股.getValue()))){
-                String checkResult = settleTransDataDto.getCheckResult();
-                if (StringUtil.isEmpty(checkResult)
-                        || StringUtil.equals(checkResult, DictCodeListExt3.对账状态结果_一致.getValue())
-                        || StringUtil.equals(checkResult, DictCodeListExt3.对账状态结果_手工完成.getValue())) {
-                    BeanUtils.copyProperties(settleTransDataDto, dealTotal);
-                    //  汇总交易编号
-                    dealTotal.setSeqId(IDGenerator.generate());
-                    settleTransDataList.add(dealTotal);
-                    //当笔成交数据明细.附属表流水号 非空
-                    if(StringUtil.isNotEmpty(settleTransDataDto.getTradeIdAdd())){
-                        SettleTransDataTotalAdd settleTransDataTotalAdd=new SettleTransDataTotalAdd();
-                        BeanUtils.copyProperties(settleTransDataDto, settleTransDataTotalAdd);
-                        settleTransDataTotalAdd.setTradeId(dealTotal.getSeqId());
-                        settleTransDataAddList.add(settleTransDataTotalAdd);
+                for (StlSettleTransDataGatherDto tempData : list) {
+                    String checkResult = tempData.getCheckResult();
+                    if (StringUtil.isEmpty(checkResult)
+                            || StringUtil.equals(checkResult, DictCodeListExt3.对账状态结果_一致.getValue())
+                            || StringUtil.equals(checkResult, DictCodeListExt3.对账状态结果_手工完成.getValue())) {
+                        dealTotal = new SettleTransDataTotal();
+                        BeanUtils.copyProperties(tempData, dealTotal);
+                        //  汇总交易编号
+                        dealTotal.setSeqId(IDGenerator.generate());
+                        settleTransDataList.add(dealTotal);
+                        //当笔成交数据明细.附属表流水号 非空
+                        if(StringUtil.isNotEmpty(tempData.getTradeIdAdd())){
+                            SettleTransDataTotalAdd settleTransDataTotalAdd = new SettleTransDataTotalAdd();
+                            BeanUtils.copyProperties(tempData, settleTransDataTotalAdd);
+                            settleTransDataTotalAdd.setTradeId(dealTotal.getSeqId());
+                            settleTransDataAddList.add(settleTransDataTotalAdd);
+                        }
                     }
                 }
             }else {
