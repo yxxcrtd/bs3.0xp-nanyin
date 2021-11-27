@@ -267,7 +267,9 @@ END TRADE_MARKET ,
     T5.SEC_ACCT_ID SEC_ACCT_ID,
     XWDM SEAT_NUMBER,
     JSFS SETTLEMEN_TYPE,
-    CJSL TRADE_NUM,
+    case when SJSF > 0 then abs(CJSL) * -1
+        else abs(CJSL)
+        end as TRADE_NUM,
     CJJJ PRICE,
     DWYJLX UNIT,
     CJQJ FULL_PRICE,
