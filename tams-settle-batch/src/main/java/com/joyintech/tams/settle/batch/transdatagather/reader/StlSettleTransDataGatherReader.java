@@ -3,6 +3,7 @@ package com.joyintech.tams.settle.batch.transdatagather.reader;
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
@@ -75,13 +76,13 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                         || StringUtil.equals(checkResult, DictCodeListExt3.对账状态结果_手工完成.getValue())) {
                     BeanUtils.copyProperties(settleTransDataDto, dealTotal);
                     //  汇总交易编号
-                    dealTotal.setSeqId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易));
+                    dealTotal.setSeqId(IDGenerator.generate());
                     settleTransDataList.add(dealTotal);
                     //当笔成交数据明细.附属表流水号 非空
                     if(StringUtil.isNotEmpty(settleTransDataDto.getTradeIdAdd())){
                         SettleTransDataTotalAdd settleTransDataTotalAdd=new SettleTransDataTotalAdd();
                         BeanUtils.copyProperties(settleTransDataDto, settleTransDataTotalAdd);
-                        settleTransDataTotalAdd.setTradeId(settleTransDataDto.getTradeIdAdd());
+                        settleTransDataTotalAdd.setTradeId(dealTotal.getSeqId());
                         settleTransDataAddList.add(settleTransDataTotalAdd);
                     }
                 }
@@ -100,7 +101,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                 }
                 if(flag){
                     //  汇总交易编号
-                    dealTotal.setSeqId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易));
+                    dealTotal.setSeqId(IDGenerator.generate());
                     //执行日期
                     dealTotal.setDealDate(tradeDate);
                     //证券品种

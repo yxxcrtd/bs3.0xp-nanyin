@@ -124,7 +124,7 @@
                   where DEAL_DATE = #{dealDate,jdbcType=DATE}
                     and SEQ_ID not in
                         (
-                            select SEQ_ID
+                            select SEQ_NO
                             from SETTLE_TRANS_DATA_TOTAL_STATUS
                             where MATCH_STATUS != #{matchStatus}
             )
