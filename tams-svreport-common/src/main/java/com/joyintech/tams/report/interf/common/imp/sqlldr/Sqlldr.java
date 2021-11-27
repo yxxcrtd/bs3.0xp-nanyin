@@ -123,7 +123,7 @@ public class Sqlldr implements ImpExcutor {
 //			LOGGER.info("执行命令：" + sh + command);
 
             //根据ImpArgument实体类设计的白名单校验
-            String pattern = "[0-9a-zA-Z_]{1,}[/][0-9a-zA-Z_]{1,}[@][0-9a-zA-Z_ =./|]{1,}";
+            String pattern = "[0-9a-zA-Z_]{1,}[/][0-9a-zA-Z_]{1,}[@][0-9a-zA-Z_ =./|:]{1,}";
             Pattern pa = Pattern.compile(pattern);
             Matcher matcher = pa.matcher(command);
             if (matcher.matches()){
