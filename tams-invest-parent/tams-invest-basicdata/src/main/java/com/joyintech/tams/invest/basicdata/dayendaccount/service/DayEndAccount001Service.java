@@ -130,4 +130,10 @@ public class DayEndAccount001Service extends CommonExportService<DayEndAccountDt
 				ServiceApplication.BASICDATA_SERVICE_NAME + "/DayEndAccount/selectPage", parameters,
 				DayEndAccountDto.class);
 	}
+
+	public Page<SelectOptionDto> selectSecAcctId(Map<String, Object> param) {
+		return restTemplate.postForPage(
+				ServiceApplication.BASICDATA_SERVICE_NAME + "/DayEndAccount/selectSecAcctId", param,
+				SelectOptionDto.class);
+	}
 }

@@ -1238,6 +1238,9 @@
             <if test="tradeDateEnd!=null and tradeDateEnd!=''">
                 AND t1.CDATE&lt;=to_date(#{tradeDateEnd},'yyyy-MM-dd')
             </if>
+            <if test="secAcctId!=null and secAcctId!=''">
+                AND 1=2
+            </if>
         </where>
         ) table1
 
@@ -1358,7 +1361,7 @@
         case when f1.TERM_TYPE like 'G%' then '03'
         when f1.TERM_TYPE like 'R%' then '04' else '04'
         end tradeMarket,
-        '07' TYPE_8,
+        'F07' TYPE_8,
         f1.TERM_TYPE,
         SUM(p1.AMOUNT) AMOUNT
         FROM PTL_SEC_POSITION p1
@@ -1381,7 +1384,7 @@
         LEFT JOIN STL_SEC_ACCT_INFO s1
         ON t1.SEC_ACCT_ID=s1.SEC_ACCT_ID
         LEFT JOIN STL_CAPACCT_INFO s2
-        ON s1.TRD_ACCT_ID=s2.BUSI_ACCT_NO
+        ON s1.TRD_ACCT_ID=s2.ACCT_NO
         AND s1.TRD_ACCT_CCY=s2.CCY
         LEFT JOIN MST_SALE_DEPARTMENT m1
         ON s2.OWN_DEPT=m1.SALE_DEPID
@@ -1410,6 +1413,9 @@
             </if>
             <if test="tradeDateEnd!=null and tradeDateEnd!=''">
                 AND t1.CDATE&lt;=to_date(#{tradeDateEnd},'yyyy-MM-dd')
+            </if>
+            <if test="secAcctId!=null and secAcctId!=''">
+                AND t1.SEC_ACCT_ID=#{secAcctId}
             </if>
         </where>
         ) table2
@@ -1472,5 +1478,9 @@
           AND p1.CDATE =to_date(#{settleDate},'yyyy-MM-dd')
         GROUP BY p1.PORTFOLIO_ID,
                  p3.PORTFOLIO_NAME
+    </select>
+
+    <select id="selectSecAcctId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select BOND_ID id,BOND_ID text from STL_SEC_ACCT_INFO
     </select>
 </mapper>

@@ -715,4 +715,8 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             }
         }
     }
+
+    public Page<SelectOptionDto> selectSecAcctId(int page, int length,Map<String, Object> param) {
+        return super.queryForPageForSelectReturn(page, length, () -> dayEndAccountMapper.selectSecAcctId(param));
+    }
 }

@@ -86,4 +86,6 @@ public interface DayEndAccountMapper {
     List<DayEndAccountDto> selectPage(Map<String, Object> param);
     List<DayEndAccountDto> selectPage1(Map<String, Object> param);
     List<DayEndAccountDto> selectPage2(Map<String, Object> param);
+
+    List<SelectOptionDto> selectSecAcctId(Map<String, Object> param);
 }

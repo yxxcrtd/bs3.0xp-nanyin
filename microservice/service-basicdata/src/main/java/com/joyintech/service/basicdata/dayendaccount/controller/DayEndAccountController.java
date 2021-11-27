@@ -109,4 +109,11 @@ public class DayEndAccountController {
                                                 @PathVariable("length") int length) throws Exception {
         return dayEndAccountService.selectPage(page, length, param);
     }
+
+    @RequestMapping("selectSecAcctId/{page}/{length}")
+    public Page<SelectOptionDto> selectSecAcctId(@RequestBody Map<String, Object> param,
+                                                 @PathVariable("page") int page,
+                                                 @PathVariable("length") int length) {
+        return dayEndAccountService.selectSecAcctId(page,length,param);
+    }
 }

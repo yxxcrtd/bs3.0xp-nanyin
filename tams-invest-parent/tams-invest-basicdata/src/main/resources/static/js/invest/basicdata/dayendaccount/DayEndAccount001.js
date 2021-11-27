@@ -30,7 +30,8 @@ $(function() {
             customerId: $('#customerId').val(),
             accountStatus:$('#accountStatusTotal').val(),
             tradeDateBegin: $('#settleDateTotal').startDate(),
-            tradeDateEnd: $('#settleDateTotal').endDate()
+            tradeDateEnd: $('#settleDateTotal').endDate(),
+            secAcctId: $('#secAcctId').val()
         };
         if ($("#busiAcctNoTotal").val()) {
             pageParam.busiAcctNo = $("#busiAcctNoTotal").val().join(",");

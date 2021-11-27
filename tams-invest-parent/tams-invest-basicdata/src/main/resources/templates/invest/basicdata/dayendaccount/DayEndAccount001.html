@@ -64,6 +64,14 @@
                                              allowClear="true" formatoption="true" data-th-initValue="${entity?.accountStatus}"></select>
                                  </div>
                              </div>
+                             <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
+                                 <label class="layui-form-label form-label-wrap">证券账户账号</label>
+                                 <div class="layui-input-inline input-inline">
+                                     <select type="text" id="secAcctId" name="secAcctId" allowClear="true" formatOption="false"
+                                             class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
+                                             data-th-data-url="@{/invest/basicdata/dayendaccount/DayEndAccount001/selectSecAcctId}"></select>
+                                 </div>
+                             </div>
                              <div style="float: right;margin-right: -68px;margin-bottom: 5px;">
                                  <a id="DayEndAccount001_total_btn_reset" class="layui-btn layui-btn-sm btn-reset btn-default">重置</a>
                              </div>

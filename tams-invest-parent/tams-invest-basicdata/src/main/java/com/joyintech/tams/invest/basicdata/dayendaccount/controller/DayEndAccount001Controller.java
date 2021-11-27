@@ -114,4 +114,11 @@ public class DayEndAccount001Controller extends BaseController {
             throws Exception {
         return dayEndAccount001Service.selectPage(RequestUtil.getParameters(getRequest()));
     }
+
+    @RequestMapping("selectSecAcctId")
+    @ResponseBody
+    public Page<SelectOptionDto> selectSecAcctId() {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        return dayEndAccount001Service.selectSecAcctId(param);
+    }
 }
