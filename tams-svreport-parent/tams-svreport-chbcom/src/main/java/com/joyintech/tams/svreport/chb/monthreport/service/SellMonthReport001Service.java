@@ -7,6 +7,7 @@ import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import com.joyintech.tams.svreport.chb.monthreport.dao.SellMonthReportDetailMapper;
@@ -133,11 +134,38 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		List<File> sourceFiles = new ArrayList<>();
 		List<SellMonthReport> dataList=new ArrayList<SellMonthReport>();
 		dataList= com.joyintech.framework.util.JsonUtils.json2List(datas,SellMonthReport.class);
-		SellMonthReport data = dataList.get(0);
-
-
-		return null;
-//		return ExportUtil.export(outFile.getName(), outFile, true);
+		SellMonthReport report = dataList.get(0);
+		String reportuuid = report.getReportuuid();
+		String reporttype = report.getReporttype();
+		Map<String,Object> data  = new HashMap<String,Object>();
+		List<SellMonthReportDetail> tempList=new ArrayList<SellMonthReportDetail>();
+		String fileName = "销售月度统计表"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
+		//分投资者分类导出
+		if(!reporttype.isEmpty() && reporttype.equals("1_1")){
+			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
+			data.put("data1", tempList);
+			//模板名
+			fileName = "销售月度统计表（分投资者）"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
+		}
+		//分地区导出
+		if(!reporttype.isEmpty() && reporttype.equals("1_2")){
+			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
+			data.put("data2", tempList);
+			//模板名
+			fileName = "销售月度统计表（分地区）"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
+		}
+       //分销售渠道导出
+		if(!reporttype.isEmpty() && reporttype.equals("1_3")){
+			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
+			data.put("data3", tempList);
+			//模板名
+			fileName = "销售月度统计表（分渠道）"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
+		}
+		File depositfile = TisUtil.createFile(data, "pbc/" +"sellMonthReport_export", fileName);
+		sourceFiles.add(depositfile);
+		File outFile = null;
+		outFile = sourceFiles.get(0);
+		return ExportUtil.export(outFile.getName(), outFile, true);
 	}
 
 

@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.chb.monthreport.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.tams.report.common.base.annotate.TableName;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -9,11 +10,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * 描述:CHB_MONTH_REPORT_DETAIL表的实体类
+ * 描述:SellMonthReportDetail
  * @version
  * @author:  Administrator
  * @创建时间: 2019-01-24
  */
+@TableName("CHB_SALE_MONTH_REPORT_DETAIL")
 public class SellMonthReportDetail extends BaseEntity {
     /**
      * 明细uuid

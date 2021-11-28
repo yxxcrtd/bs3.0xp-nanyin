@@ -104,7 +104,6 @@ public class SellMonthReport001Controller extends BaseController{
 		String datas = this.getParam("keyList");
 		return sellMonthReport001Service.download(this.getPageId(), RequestUtil.getPageParam(),datas);
 	}
-	List<SellMonthReportDetail> dtoList = sellMonthReportDelail001Service.setDataList(RequestUtil.getParameters(getRequest()));
 	/**
 	 * 手工处理功能
 	 *
