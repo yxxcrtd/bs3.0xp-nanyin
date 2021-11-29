@@ -13,6 +13,7 @@ package com.joyintech.tams.report.home.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -252,6 +253,26 @@ public interface ReportHomeMapper {
 	 * @version 1.7 2019年6月22日
 	 */
 	List<SubmitInformationRegistrationDto> selectPbcPrdBaseinfoEndSubNew(Map<String, Object> parmMap);
+
+	/**
+	 * @Description 销售结算资金交易登记
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 * @version 1.7 2019年6月22日
+	 */
+	List<SubmitInformationRegistrationDto> selectSalesTransactionMaintenanceRegist001(Map<String, Object> parmMap);
+
+	/**
+	 * @Description 理财业务销售数据月度统计表登记
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 * @version 1.7 2019年6月22日
+	 */
+	List<SubmitInformationRegistrationDto> selectSellMonthReport(Map<String, Object> parmMap);
+
+
 	
 	/**
 	 * @Description 资产负债信息统计
