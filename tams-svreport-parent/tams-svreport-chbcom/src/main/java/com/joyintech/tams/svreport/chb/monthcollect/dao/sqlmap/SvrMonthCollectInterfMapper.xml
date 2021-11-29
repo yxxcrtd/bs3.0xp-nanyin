@@ -165,11 +165,12 @@
 	<delete id="deleteDetail" parameterType="java.util.List">
 		DELETE FROM CHB_SALE_MONTH_REPORT_DETAIL WHERE
 		REPORTUUID in
-		(
-		<foreach collection="list" item="item" separator=",">
-			#{item}
+		<if test="list!=null and list.size()>0">
+		<foreach collection="list" item="item" open="(" separator=","
+				 close=")">
+			#{item,jdbcType=VARCHAR}
 		</foreach>
-		)
+		</if>
 	</delete>
 
 	<delete id="deleteReport" parameterType="string">
