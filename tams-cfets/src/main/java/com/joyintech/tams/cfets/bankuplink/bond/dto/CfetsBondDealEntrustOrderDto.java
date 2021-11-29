@@ -16,6 +16,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 
@@ -213,6 +214,8 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
      * 指令下达时间
      */
     private Date transmitTime;
+
+    private String tradeMarketStr;
 
     public String getPortfolioSeries() {
         return portfolioSeries;
@@ -1017,5 +1020,13 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
 
     public void setTransmitTime(Date transmitTime) {
         this.transmitTime = transmitTime;
+    }
+
+    public String getTradeMarketStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, getTradeMarket());
+    }
+
+    public void setTradeMarketStr(String tradeMarketStr) {
+        this.tradeMarketStr = tradeMarketStr;
     }
 }
