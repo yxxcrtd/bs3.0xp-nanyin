@@ -108,10 +108,12 @@ public class SvrMonthCollectInterf extends BaseService{
 			logger.debug("当月汇总数据清除开始----------");
 			//查询要删除的reportUUID
 			List<String> list = svrMonthCollectInterfMapper.selectReportuuid(termid);
-			// 根据reportuuid删除明细表
-			svrMonthCollectInterfMapper.deleteDetail(list);
-			//根据期数删除月报主表
-			svrMonthCollectInterfMapper.deleteReport(termid);
+			if(list.size() > 0 && !list.isEmpty()) {
+			    // 根据reportuuid删除明细表
+				svrMonthCollectInterfMapper.deleteDetail(list);
+				//根据期数删除月报主表
+				svrMonthCollectInterfMapper.deleteReport(termid);
+			}
 			logger.debug("当月汇总数据清除结束----------");
 
             logger.debug("销售月报每月明细汇总信息插入数据：插入开始----------");

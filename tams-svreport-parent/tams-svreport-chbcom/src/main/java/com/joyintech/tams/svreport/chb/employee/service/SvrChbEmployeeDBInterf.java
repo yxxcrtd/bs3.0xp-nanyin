@@ -239,8 +239,6 @@ public class SvrChbEmployeeDBInterf extends BaseService{
 	        	sub.setChbSubmitDeadline(dateList.get(0));
 	        	sub.setSubmitDeadline(dateList.get(1));
 	        }
-            // 准备插入处理修改未报送的数据
-            insertList.add(sub);
     	}
     	
     	//4、持久化DB
