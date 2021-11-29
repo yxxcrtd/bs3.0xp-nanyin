@@ -193,8 +193,11 @@
 				) d ON b.BROKER_ID = d.CUSTOMER_ID
 			WHERE
 			1=1
-			<if test="accountStatus != null and accountStatus != ''">
+			<if test="accountStatus != null and accountStatus != '' and accountStatus != '2'.toString()">
 				AND c.CHECK_RESULT = #{accountStatus}
+			</if>
+			<if test="accountStatus != null and accountStatus != '' and accountStatus == '2'.toString()">
+				AND c.CHECK_RESULT IS NULL
 			</if>
 			AND d.PARA_VALUE = #{PARA_VALUE_02}
 			<if test="accountList != null and accountList.size() > 0">
@@ -331,8 +334,11 @@
 					) d ON b.BROKER_ID = d.CUSTOMER_ID
 				WHERE
 				1=1
-				<if test="accountStatus != null and accountStatus != ''">
+				<if test="accountStatus != null and accountStatus != '' and accountStatus != '2'.toString()">
 					AND c.CHECK_RESULT = #{accountStatus}
+				</if>
+				<if test="accountStatus != null and accountStatus != '' and accountStatus == '2'.toString()">
+					AND c.CHECK_RESULT IS NULL
 				</if>
 				AND d.PARA_VALUE = #{PARA_VALUE_01}
 				<if test="accountList != null and accountList.size() > 0">
@@ -469,8 +475,11 @@
 					) d ON b.BROKER_ID = d.CUSTOMER_ID
 				WHERE
 				1=1
-				<if test="accountStatus != null and accountStatus != ''">
+				<if test="accountStatus != null and accountStatus != '' and accountStatus != '2'.toString()">
 					AND c.CHECK_RESULT = #{accountStatus}
+				</if>
+				<if test="accountStatus != null and accountStatus != '' and accountStatus == '2'.toString()">
+					AND c.CHECK_RESULT IS NULL
 				</if>
 				AND d.PARA_VALUE = #{PARA_VALUE_03}
 				<if test="accountList != null and accountList.size() > 0">

@@ -178,7 +178,7 @@ $(function() {
         });
         // 绑定明细数据页签重置事件
         $('#DayEndAccount001_detail_btn_reset').click(function() {
-            $("#portfolioId").val('').trigger("change");
+            $("#busiAcctNo").val('').trigger("change");
             $('#finprodId').val('').trigger("change");
             $('#tradeMarket').val('').trigger("change");
             $('#settleDate').val('').trigger("change");
