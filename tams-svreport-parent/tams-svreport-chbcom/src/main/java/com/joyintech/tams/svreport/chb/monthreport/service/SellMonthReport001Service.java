@@ -143,21 +143,21 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		//分投资者分类导出
 		if(!reporttype.isEmpty() && reporttype.equals("1_1")){
 			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
-			data.put("data1", tempList);
+			data.put("dataList1", tempList);
 			//模板名
 			fileName = "销售月度统计表（分投资者）"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
 		}
 		//分地区导出
 		if(!reporttype.isEmpty() && reporttype.equals("1_2")){
 			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
-			data.put("data2", tempList);
+			data.put("dataList2", tempList);
 			//模板名
 			fileName = "销售月度统计表（分地区）"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
 		}
        //分销售渠道导出
 		if(!reporttype.isEmpty() && reporttype.equals("1_3")){
 			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
-			data.put("data3", tempList);
+			data.put("dataList3", tempList);
 			//模板名
 			fileName = "销售月度统计表（分渠道）"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
 		}
