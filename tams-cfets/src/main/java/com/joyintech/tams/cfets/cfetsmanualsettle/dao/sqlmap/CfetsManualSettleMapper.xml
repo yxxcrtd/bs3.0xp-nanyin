@@ -33,6 +33,8 @@
         sdl5.item_value tradePlatStr,
         T7.SEC_ACCT_NAME secAcctId,
         T6.COUNTER_NAME counterName,
+        T1.TRADE_MARKET_MODE tradeMarketMode,
+        sdl6.item_value tradeMarketModeStr,
         NULL AS cleanStlStatus,
         NULL AS cleanArgStatus,
         NULL settleSeqNo,
@@ -55,6 +57,7 @@
         LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl5 on sdl5.dict_code ='SHARES_TRADE_PLATFORM' and sdl5.item_code = T1.TRADE_PLAT
+        LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
         WHERE T8.SETTLE_SEQ_NO IS NULL
 <!--            (T8.SETTLE_SEQ_NO IS NULL OR T8.SETTLE_STATUS = #{DELIVERY_STATUS_01})-->
         AND T1.TG_BUSI_TYPE IN (#{PINAN_BUSINESS_TYPE_09},#{PINAN_BUSINESS_TYPE_10},#{PINAN_BUSINESS_TYPE_11},
@@ -119,7 +122,9 @@
             T6.COUNTER_NAME,
             T1.FINPROD_ID,
             T1.CCY,
-            T7.SEC_ACCT_NAME
+            T7.SEC_ACCT_NAME,
+            T1.TRADE_MARKET_MODE,
+            sdl6.item_value
         union all
         </if>
 
@@ -150,6 +155,8 @@
         sdl5.item_value tradePlatStr,
         T7.SEC_ACCT_NAME secAcctId,
         T6.COUNTER_NAME counterName,
+        T1.TRADE_MARKET_MODE tradeMarketMode,
+        sdl6.item_value tradeMarketModeStr,
         NULL AS cleanStlStatus,
         NULL AS cleanArgStatus,
         T0.SETTLE_SEQ_NO settleSeqNo,
@@ -172,6 +179,7 @@
         LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl5 on sdl5.dict_code ='SHARES_TRADE_PLATFORM' and sdl5.item_code = T1.TRADE_PLAT
+        LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
         WHERE 1=1
 <!--        T1.TRADE_STATUS =#{TRADE_STATUS_01}-->
 <!--        AND T1.Is_Cancel =#{isCalcN}-->
@@ -238,7 +246,9 @@
             T0.SETTLE_SEQ_NO,
             T0.FINPROD_ID,
             T1.CCY,
-            T7.SEC_ACCT_NAME)t
+            T7.SEC_ACCT_NAME,
+            T1.TRADE_MARKET_MODE,
+            sdl6.item_value)t
         left join SYS_DATADICT_LIST sdl on sdl.DICT_CODE='SETTLE_STATUS' and t.cleanStatus=sdl.ITEM_CODE
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>

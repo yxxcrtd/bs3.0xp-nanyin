@@ -72,16 +72,10 @@ public class CfetsManualSettleTradeListRespond {
     @ApiModelProperty(name="cleanStatus",value="清算状态CODE",example="A1,A2")
     private String cleanStatus;
 
-    @ApiModelProperty(name="tradePlat",value="交易场所CODE",example="A1")
-    private String tradePlat;
-
-    @ApiModelProperty(name="tradePlatStr",value="交易场所",example="银行间")
-    private String tradePlatStr;
-
-    @ApiModelProperty(name="tradeMarket",value="交易市场CODE",example="01")
+    @ApiModelProperty(name="tradeMarket",value="交易场所CODE",example="01")
     private String tradeMarket;
 
-    @ApiModelProperty(name="tradeMarketStr",value="交易市场",example="银行间")
+    @ApiModelProperty(name="tradeMarketStr",value="交易场所",example="银行间")
     private String tradeMarketStr;
 
     @ApiModelProperty(name="secAcctId",value="证券账户",example="XXX证券账户")
@@ -116,6 +110,12 @@ public class CfetsManualSettleTradeListRespond {
 
     @ApiModelProperty(name="spcdCode",value="特殊字段",example="01一级投标02二级交易03行权交易04存续期交易")
     private String spcdCode;
+
+    @ApiModelProperty(name="tradeMarketMode",value="交易市场",example="01一级投标02二级交易03行权交易04存续期交易")
+    private String tradeMarketMode;
+
+    @ApiModelProperty(name="tradeMarketModeStr",value="交易市场",example="01一级投标02二级交易03行权交易04存续期交易")
+    private String tradeMarketModeStr;
 
     public String getSettleStatus() {
         return settleStatus;
@@ -265,22 +265,6 @@ public class CfetsManualSettleTradeListRespond {
         return SysDataUtil.getNameFromDataDict(DictCode.清算状态, this.getCleanStatus());
     }
 
-    public String getTradePlat() {
-        return tradePlat;
-    }
-
-    public void setTradePlat(String tradePlat) {
-        this.tradePlat = tradePlat;
-    }
-
-    public String getTradePlatStr() {
-        return tradePlatStr;
-    }
-
-    public void setTradePlatStr(String tradePlatStr) {
-        this.tradePlatStr = tradePlatStr;
-    }
-
     public String getTradeMarket() {
         return tradeMarket;
     }
@@ -383,5 +367,21 @@ public class CfetsManualSettleTradeListRespond {
 
     public void setSpcdCode(String spcdCode) {
         this.spcdCode = spcdCode;
+    }
+
+    public String getTradeMarketMode() {
+        return tradeMarketMode;
+    }
+
+    public void setTradeMarketMode(String tradeMarketMode) {
+        this.tradeMarketMode = tradeMarketMode;
+    }
+
+    public String getTradeMarketModeStr() {
+        return tradeMarketModeStr;
+    }
+
+    public void setTradeMarketModeStr(String tradeMarketModeStr) {
+        this.tradeMarketModeStr = tradeMarketModeStr;
     }
 }
