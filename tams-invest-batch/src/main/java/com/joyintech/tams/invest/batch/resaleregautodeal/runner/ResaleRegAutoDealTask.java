@@ -17,7 +17,7 @@ import java.util.Date;
 /**
  * 回售登记数据自动生成成交数据
  */
-@Service("ResaleRegAutoDealTask")
+@Service("resaleRegAutoDealTask")
 @Scope("prototype")
 public class ResaleRegAutoDealTask extends BatchBaseService{
 
