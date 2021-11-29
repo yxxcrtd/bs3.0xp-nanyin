@@ -5,6 +5,7 @@ create table TRDQUTO_MATCH_INFO
    SEQNO                VARCHAR(32)          not null,
    CSTP_TRADE_ID        VARCHAR(32),
    EXE_ID               VARCHAR(32),
+   TRD_ID               VARCHAR(32),
    PRE_TRADE_ID         VARCHAR(32),
    MATCH_TYPE           VARCHAR(50),
    MATCH_STATUS         VARCHAR(50),
@@ -27,7 +28,10 @@ comment on column TRDQUTO_MATCH_INFO.CSTP_TRADE_ID is
 '下行交易编号';
 
 comment on column TRDQUTO_MATCH_INFO.EXE_ID is
-'成交编号';
+'成交编号,外部系统的编号';
+
+comment on column TRDQUTO_MATCH_INFO.TRD_ID is
+'成交确认编号,金融产品汇总交易的交易编号';
 
 comment on column TRDQUTO_MATCH_INFO.PRE_TRADE_ID is
 '报价编号/登记编号';
