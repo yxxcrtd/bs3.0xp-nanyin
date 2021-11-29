@@ -777,11 +777,13 @@ public class CfetsTrdConfirmService extends BaseService{
             matchDto.setCreateUser(SecurityUtil.getLoginUser().getUserName());
             matchDto.setCreateDept(CommonUtil.getDeptCode());
             matchDto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+            matchDto.setTrdId(entity.getTotleTradeId());
             entity.setCfetsTrdConfirmMatchDto(matchDto);
         }else{
             matchDto.setPreTradeId(totleTradeId);
             matchDto.setTrdConfStatus(DictCodeList.确认状态_已确认.getValue());
             matchDto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+            matchDto.setTrdId(entity.getTotleTradeId());
             entity.setCfetsTrdConfirmMatchDto(matchDto);
         }
 
@@ -1043,6 +1045,7 @@ public class CfetsTrdConfirmService extends BaseService{
         matchDto.setPreTradeId(dto.getTotleTradeId());
         matchDto.setTrdConfStatus(DictCodeList.确认状态_已确认.getValue());
         matchDto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+        matchDto.setTrdId(entity.getTotleTradeId());
         entity.setCfetsTrdConfirmMatchDto(matchDto);
 
 

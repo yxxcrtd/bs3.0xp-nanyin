@@ -840,12 +840,12 @@
         where reg.quote_id= #{totleTradeId,jdbcType=VARCHAR}
     </select>
     <insert id="insertTrdQutoMatchInfo" parameterType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmMatchDto" >
-        insert into trdquto_match_info (SEQNO, CSTP_TRADE_ID, EXE_ID,
+        insert into trdquto_match_info (SEQNO, CSTP_TRADE_ID, EXE_ID,TRD_ID,
         PRE_TRADE_ID, MATCH_TYPE, MATCH_STATUS,
         TRD_CONF_STATUS, CREATE_USER, CREATE_DEPT,
         CREATE_TIME, UPDATE_USER, UPDATE_TIME
         )
-        values (#{seqno,jdbcType=VARCHAR}, #{cstpTradeId,jdbcType=VARCHAR}, #{exeId,jdbcType=VARCHAR},
+        values (#{seqno,jdbcType=VARCHAR}, #{cstpTradeId,jdbcType=VARCHAR}, #{exeId,jdbcType=VARCHAR},#{trdId,jdbcType=VARCHAR},
         #{preTradeId,jdbcType=VARCHAR}, #{matchType,jdbcType=VARCHAR}, #{matchStatus,jdbcType=VARCHAR},
         #{trdConfStatus,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
         sysdate, #{updateUser,jdbcType=VARCHAR},sysdate
@@ -856,7 +856,8 @@
         update trdquto_match_info
         set TRD_CONF_STATUS= #{trdConfStatus,jdbcType=VARCHAR},
         UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
-        UPDATE_TIME = sysdate
+        UPDATE_TIME = sysdate,
+        TRD_ID=#{trdId,jdbcType=VARCHAR}
         where PRE_TRADE_ID=#{preTradeId,jdbcType=VARCHAR}
     </update>
     <select id="findAllCstpInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmCstpInfoListResponse">
