@@ -309,6 +309,7 @@ public class IbuQuoteBondService extends BaseService {
                 boolean finprodIdFlag = true;
                 boolean secManageAcctIdFlag = true;
                 boolean partyIdFlag = true;
+                boolean tradeMarketFlag = true;
                 for (CfetsBondDealEntrustOrderDto item : entrustDtos) {
                     if(!StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_已接收.getValue())){
                         message = "指令" + item.getEntrustId() + "委托状态不是已接收,不可交易执行!";
@@ -335,6 +336,10 @@ public class IbuQuoteBondService extends BaseService {
                     if (secManageAcctIdFlag && !StringUtil.equals(one.getSecManageAcctId(), item.getSecManageAcctId())) {
                         secManageAcctIdFlag = false;
                         message = message + "证券账户OR";
+                    }
+                    if (tradeMarketFlag && !StringUtil.equals(one.getTradeMarket(), item.getTradeMarket())) {
+                        tradeMarketFlag = false;
+                        message = message + "交易场所OR";
                     }
                     //EXPORT_SHOW ==01 本币交易导出按钮配置为显示
                     if (StringUtil.equals(exportShow, "01")) {
