@@ -9,32 +9,22 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import com.joyintech.tams.svreport.chb.monthreport.dao.SellMonthReportDetailMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReportDetail;
-import org.apache.commons.collections4.CollectionUtils;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.common.constant.SvrServiceApplication;
-import com.joyintech.tams.report.common.service.SvrCommonExportService;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
-import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dao.SellMonthReportMapper;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport;
-import org.apache.commons.lang.StringUtils;
 import com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -42,8 +32,6 @@ import java.util.*;
 
 @Service
 public class SellMonthReport001Service extends CommonExportService<SellMonthReport> {
-//	@Autowired
-//    private  MonthReportAssetService monthReportAssetService;
 	@Autowired
     private SellMonthReportMapper sellMonthReportMapper;
 	@Autowired
@@ -139,27 +127,60 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		String reporttype = report.getReporttype();
 		Map<String,Object> data  = new HashMap<String,Object>();
 		List<SellMonthReportDetail> tempList=new ArrayList<SellMonthReportDetail>();
+		List<SellMonthReport> dateTempList=new ArrayList<SellMonthReport>();
 		String fileName = "销售月度统计表"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
-		//分投资者分类导出
-		if(!reporttype.isEmpty() && reporttype.equals("1_1")){
+		if(!reportuuid.isEmpty() && reportuuid != "") {
+			//分投资者分类
 			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
+			if(!tempList.isEmpty()) {
+				for (SellMonthReportDetail detail : tempList) {
+					BigDecimal oneW = new BigDecimal("10000");
+					BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
+					BigDecimal valueAmountTotal = detail.getValueAmountTotal();
+					BigDecimal balanceAmt = detail.getBalanceAmt();
+					detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+					detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+					detail.setBalanceAmt(balanceAmt.divide(oneW));
+				}
+			}
 			data.put("dataList1", tempList);
-			//模板名
-			fileName = "销售月度统计表（分投资者）"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
-		}
-		//分地区导出
-		if(!reporttype.isEmpty() && reporttype.equals("1_2")){
+			//分地区
 			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
+			if(!tempList.isEmpty()) {
+				for (SellMonthReportDetail detail : tempList) {
+					BigDecimal oneW = new BigDecimal("10000");
+					BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
+					BigDecimal valueAmountTotal = detail.getValueAmountTotal();
+					BigDecimal balanceAmt = detail.getBalanceAmt();
+					detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+					detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+					detail.setBalanceAmt(balanceAmt.divide(oneW));
+				}
+			}
 			data.put("dataList2", tempList);
-			//模板名
-			fileName = "销售月度统计表（分地区）"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
-		}
-       //分销售渠道导出
-		if(!reporttype.isEmpty() && reporttype.equals("1_3")){
+			//分销售渠道
 			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
+			if(!tempList.isEmpty()) {
+				for (SellMonthReportDetail detail : tempList) {
+					BigDecimal oneW = new BigDecimal("10000");
+					BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
+					BigDecimal valueAmountTotal = detail.getValueAmountTotal();
+					BigDecimal balanceAmt = detail.getBalanceAmt();
+					detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+					detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+					detail.setBalanceAmt(balanceAmt.divide(oneW));
+				}
+			}
 			data.put("dataList3", tempList);
-			//模板名
-			fileName = "销售月度统计表（分渠道）"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
+			//查询时间
+			dateTempList = sellMonthReportDetailMapper.selectReportDate(reportuuid);
+			data.put("data", dateTempList);
+		}
+		else{
+			data.put("data", dateTempList);
+			data.put("dataList1", tempList);
+			data.put("dataList2", tempList);
+			data.put("dataList3", tempList);
 		}
 		File depositfile = TisUtil.createFile(data, "pbc/" +"sellMonthReport_export", fileName);
 		sourceFiles.add(depositfile);
@@ -193,8 +214,8 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		}
 		if (!chbRegistList.isEmpty() && chbRegistList.size() != 0) {
 			for (int i = 0 ; i < chbRegistList.size() ; i++) {
-				String reportuuid = chbRegistList.get(i).getReportuuid();
-				sellMonthReportMapper.updateInterfSubmitAndSeqBatch(reportuuid);
+				String termid = chbRegistList.get(i).getTermid();
+				sellMonthReportMapper.updateInterfSubmitAndSeqBatch(termid);
 			}
 			}
 	}
@@ -215,8 +236,8 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		}
 		if (!list.isEmpty() && list.size() != 0) {
 			for (int i = 0 ; i < list.size() ; i++) {
-				String reportuuid = list.get(i).getReportuuid();
-				sellMonthReportMapper.cancelMannultRegist(reportuuid);
+				String termid = list.get(i).getTermid();
+				sellMonthReportMapper.cancelMannultRegist(termid);
 			}
 		}
 	}

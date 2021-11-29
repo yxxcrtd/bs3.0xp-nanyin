@@ -60,8 +60,15 @@
         from CHB_SALE_MONTH_REPORT_DETAIL
         <where>
             <if test="reportuuid != null and reportuuid != ''">
-                and reportuuid =  #{reportuuid,jdbcType=VARCHAR}
+               reportuuid =  #{reportuuid,jdbcType=VARCHAR}
             </if>
         </where>
+    </select>
+
+    <select id="selectReportDate" parameterType="string" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReport">
+        select
+        TERMID,ISSUE_PARTY_ID,ISSUE_PARTY_NAME
+        from CHB_SALE_MONTH_REPORT
+        where reportuuid =  #{reportuuid,jdbcType=VARCHAR}
     </select>
 </mapper>
