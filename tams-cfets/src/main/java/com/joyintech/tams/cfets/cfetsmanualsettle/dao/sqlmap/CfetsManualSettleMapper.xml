@@ -309,7 +309,7 @@
             T3.UNIT_INT unitIntAmt/*单位应计利息*/,
             T3.UNIT_PRIN intPrinAmt/*单位本金*/,
             T3.PRIN prinAmt/*还本面额/百元*/,
-            T1.SHARE_AMT*100 qty,
+            T1.SHARE_AMT/100 qty,
             T3.THEORY_INT intAmtTheory,/*理论应计利息*/
             T3.THEORY_PRIN prinAmtTheory,/*理论还本金额*/
             T1.FINPROD_TYPE2 finprodType2,
@@ -609,7 +609,7 @@
         TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,
         TO_CHAR(T61.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate1,
         TO_CHAR(T61.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate1,
-        T1.SHARE_AMT*100 qty,
+        T1.SHARE_AMT/100 qty,
         T1.unit_cprice unitPrice,
         T1.cprice_amt cpriceAmt,
         T1.int_amt intAmt,
