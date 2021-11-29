@@ -50,6 +50,15 @@ public class CfetsManualSettleInfoRespond {
     @ApiModelProperty(name="prinAmt",value="还本面额",example="A1")
     private BigDecimal prinAmt;
 
+    @ApiModelProperty(name="finprodType2",value="资产类型CODE",example="A1")
+    private String finprodType2;
+
+    @ApiModelProperty(name="tradeDate",value="成交日期",example="A1")
+    private String tradeDate;
+
+    @ApiModelProperty(name="settleDate",value="结算日期",example="A1")
+    private String settleDate;
+
     //理论付息信息
     @ApiModelProperty(name="qty",value="券面总额",example="A1")
     private BigDecimal qty;
@@ -177,5 +186,33 @@ public class CfetsManualSettleInfoRespond {
 
     public void setPortIntFenPeiInfoDtoList(List<PortIntFenPeiInfoDto> portIntFenPeiInfoDtoList) {
         this.portIntFenPeiInfoDtoList = portIntFenPeiInfoDtoList;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
+    public String getFinprodType2Str() {
+        return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用, this.getFinprodType2());
+    }
+
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+    public String getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(String settleDate) {
+        this.settleDate = settleDate;
     }
 }

@@ -72,9 +72,6 @@ public class CfetsManualSettleTradeListRespond {
     @ApiModelProperty(name="cleanStatus",value="清算状态CODE",example="A1,A2")
     private String cleanStatus;
 
-//    @ApiModelProperty(name="cleanStatusStr",value="清算状态",example="A1,A2")
-//    private String cleanStatusStr;
-
     @ApiModelProperty(name="tradePlat",value="交易场所CODE",example="A1")
     private String tradePlat;
 
@@ -116,6 +113,9 @@ public class CfetsManualSettleTradeListRespond {
 
     @ApiModelProperty(name="seqNo",value="交收流水序号",example="不展示仅供后台使用")
     private String seqNo;
+
+    @ApiModelProperty(name="spcdCode",value="特殊字段",example="01一级投标02二级交易03行权交易04存续期交易")
+    private String spcdCode;
 
     public String getSettleStatus() {
         return settleStatus;
@@ -375,5 +375,13 @@ public class CfetsManualSettleTradeListRespond {
 
     public void setSeqNo(String seqNo) {
         this.seqNo = seqNo;
+    }
+
+    public String getSpcdCode() {
+        return spcdCode;
+    }
+
+    public void setSpcdCode(String spcdCode) {
+        this.spcdCode = spcdCode;
     }
 }

@@ -1,9 +1,12 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.dto.PositionRulePtlData;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
 import com.joyintech.tams.common.base.dao.TrdBankManualSetDetailMapper;
@@ -11,9 +14,12 @@ import com.joyintech.tams.common.base.dao.TrdBankManualSettleFlowMapper;
 import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
 import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.service.MapperDelegateService;
+import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -60,6 +66,9 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
 
     @Autowired
     private TrdBankManualSetDetailMapper trdBankManualSetDetailMapper;
+
+    @Autowired
+    private AutoPeriodCommonService autoPeriodCommonService;
 
     /**
      * 手工交收修改check
@@ -126,7 +135,10 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
 
             TrdBankManualSettleFlow trdBankManualSettleFlow = new TrdBankManualSettleFlow();
             //交收流水编号=调用【共通】生成
-            trdBankManualSettleFlow.setSeqNo(IDGenerator.generate());
+//            trdBankManualSettleFlow.setSeqNo(IDGenerator.generate());
+            BussinessCodeParameter parameter = new BussinessCodeParameter();
+            parameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_手工交收);
+            trdBankManualSettleFlow.setSeqNo(autoPeriodCommonService.buildBussinessCode(parameter));
             //交收编号=银行间手工交收信息Entiy.交收编号
             trdBankManualSettleFlow.setSettleSeqNo(trdBankManualSettleInfo.getSettleSeqNo());
             //交收时间=当前时间
@@ -182,40 +194,163 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
             for(TrdBankManualSetDetail trdBankManualSetDetail:listTrdBnakSetDetails){
                 trdBankManualSetDetailMapper.insertSelective(trdBankManualSetDetail);
             }
-
-            //更新相关交易表
-            //【金融产品交易汇总表】
-            //【金融产品交易汇总附属表】
-            TrdFinProductDealTotal record =new TrdFinProductDealTotal();
-            // 金融产品交易汇总
-            record = trdFinProductDealTotalMapper.selectByPrimaryKey(cfetsManualSettleUpdateRequest.getSelectedItem().getTradeId());
-            record.setTotleTradeId(cfetsManualSettleUpdateRequest.getSelectedItem().getTradeId());
-            record.setIntAmt(cfetsManualSettleUpdateRequest.getSettleAmtT());
-            record.setFpriceAmt(record.getPrinAmt().add(record.getIntAmt()));
-            record.setTradeAmt(record.getFpriceAmt());
-            trdFinProductDealTotalMapper.updateByPrimaryKeySelective(record);
-
-            //【金融产品交易表】TRD_PRODUCT_DEAL
-            //【金融产品交易附属表】
-            List<TrdProductDealAdd> trdProductDealAdds = cfetsManualSettleMapper.queryTrdProductDealsByTotalTradeId(cfetsManualSettleUpdateRequest.getSelectedItem().getTradeId());
-            for(TrdBankManualSetDetail trdBankManualSetDetail : listTrdBnakSetDetails){
-                for(TrdProductDealAdd trdProductDealAdd : trdProductDealAdds){
-                    if(StringUtil.equals(trdProductDealAdd.getPortfolioId(),trdBankManualSetDetail.getPortfolioId())){
-                        TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(trdProductDealAdd.getTradeId());
-                        trdProductDeal.setIntAmt(trdBankManualSetDetail.getSettleAmt());
-                        trdProductDeal.setFpriceAmt(trdProductDeal.getPrinAmt().add(trdProductDeal.getIntAmt()));
-                        trdProductDeal.setShareAmt(trdProductDeal.getFpriceAmt());
-                        trdProductDealMapper.updateByPrimaryKeySelective(trdProductDeal);
-                        continue;
-                    }
-                }
-            }
+//            //更新相关交易表
+//            //【金融产品交易汇总表】
+//            //【金融产品交易汇总附属表】
+//            TrdFinProductDealTotal record =new TrdFinProductDealTotal();
+//            // 金融产品交易汇总
+//            record = trdFinProductDealTotalMapper.selectByPrimaryKey(cfetsManualSettleUpdateRequest.getSelectedItem().getTradeId());
+//            record.setTotleTradeId(cfetsManualSettleUpdateRequest.getSelectedItem().getTradeId());
+//            record.setIntAmt(cfetsManualSettleUpdateRequest.getSettleAmtT());
+//            record.setFpriceAmt(record.getPrinAmt().add(record.getIntAmt()));
+//            record.setTradeAmt(record.getFpriceAmt());
+//            trdFinProductDealTotalMapper.updateByPrimaryKeySelective(record);
+//
+//            //【金融产品交易表】TRD_PRODUCT_DEAL
+//            //【金融产品交易附属表】
+//            List<TrdProductDealAdd> trdProductDealAdds = cfetsManualSettleMapper.queryTrdProductDealsByTotalTradeId(cfetsManualSettleUpdateRequest.getSelectedItem().getTradeId());
+//            for(TrdBankManualSetDetail trdBankManualSetDetail : listTrdBnakSetDetails){
+//                for(TrdProductDealAdd trdProductDealAdd : trdProductDealAdds){
+//                    if(StringUtil.equals(trdProductDealAdd.getPortfolioId(),trdBankManualSetDetail.getPortfolioId())){
+//                        TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(trdProductDealAdd.getTradeId());
+//                        trdProductDeal.setIntAmt(trdBankManualSetDetail.getSettleAmt());
+//                        trdProductDeal.setFpriceAmt(trdProductDeal.getPrinAmt().add(trdProductDeal.getIntAmt()));
+//                        trdProductDeal.setShareAmt(trdProductDeal.getFpriceAmt());
+//                        trdProductDealMapper.updateByPrimaryKeySelective(trdProductDeal);
+//                        continue;
+//                    }
+//                }
+//            }
+        //头寸 TODO
+        //sendPositionMethod(cfetsManualSettleUpdateRequest);
         }
         catch (Exception e) {
             logger.error("交收修改失败",e);
         }
-        //头寸 TODO
-        //sendPositionMethod(cfetsManualSettleRequest);
+    }
 
+    /**
+     * 构建发送头寸信息
+     * @param cfetsManualSettleRequest
+     * @return
+     */
+    private void sendPositionMethod(CfetsManualSettleUpdateRequest cfetsManualSettleRequest) {
+        List<PositionRulePtlData> ptlList=new ArrayList<>();
+        //组装组合金额信息
+//        for(CfetsManualSettleDto cfetsManualSettleDto : cfetsManualSettleRequest.getSelectedItem()){
+        CfetsManualSettleDto cfetsManualSettleDto =  cfetsManualSettleRequest.getSelectedItem();
+            //IF(所选行.业务类型 = 数据字典.平安业务类型.债券中间收息 ||所选行.业务类型 = 数据字典.平安业务类型.债券中间还本
+            // ||所选行.业务类型 = 数据字典.平安业务类型.债券到期|| 所选行.业务类型 = 数据字典.平安业务类型.债券资产行权 )
+            if(StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券中间收息.getValue())
+                    ||StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券中间还本.getValue())
+                    ||StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券到期.getValue())
+                    ||StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券类资产行权.getValue())){
+
+                if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_回溯.getValue())){
+                    //调用cancel接口
+                    PositionHttpRequest.sendRevoke(cfetsManualSettleDto.getTradeId(),DictCodeListExt1.子系统代码_交易.getValue());
+                }else if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收.getValue())
+                        ||StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())
+                        ||StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收修改.getValue())){
+                    List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleDto.getTradeId());
+
+                    for(CfetsManualSettleDealInfo dto : listTemp){
+                        PositionRulePtlData positionRulePtlData = new PositionRulePtlData();
+                        positionRulePtlData.setPortfolioId(dto.getPortfolioId());
+                        positionRulePtlData.setTradeId(dto.getTradeId());
+                        positionRulePtlData.setEtrId(dto.getEntrustId());
+                        if(StringUtil.isNotEmpty(dto.getPortfolioId())){
+                            Map<String, Object> map = new HashMap<String, Object>();
+                            map.put("portfolioId", dto.getPortfolioId());
+                            map.put("acctType", BussinessDictCodeList.资金账户类型_托管账户.getValue());
+                            map.put("ccy", dto.getCcy());
+                            String cashAcctId = this.qryPortfolioCashAcctId(map);
+                            if (StringUtil.isNotEmpty(cashAcctId)) {
+                                positionRulePtlData.setCashAcctId(cashAcctId); // 托管户
+                            }
+                        }
+                        if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+                            Map<String, Object> map = new HashMap<String, Object>();
+                            map.put("portfolioId", dto.getPortfolioId());
+                            map.put("finprodId", dto.getFinprodId());
+                            String secAcctId = this.qryPortfolioSecAcctId(map);
+                            if (StringUtil.isNotEmpty(secAcctId)) {
+                                positionRulePtlData.setSecAcctId(secAcctId); // 证券账户
+                            }
+                        }
+                        positionRulePtlData.setSecAmount(dto.getShareAmt());
+                        positionRulePtlData.setCashAmount(dto.getTradeAmt());
+                        positionRulePtlData.setInvAim(dto.getInvAim());
+                        positionRulePtlData.setOwnSecAmount(dto.getOurShareAmt());
+                        positionRulePtlData.setIntegrateSecAmount(dto.getLendinShareAmt());
+
+                        ptlList.add(positionRulePtlData);
+                    }
+
+                    CfetsManualSettlePositionDto req = new CfetsManualSettlePositionDto();
+                    req.setInterfaceType("Bond001");
+                    //指令或交易标识	ETR:指令,TRD:交易
+                    req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
+                    //用户名	当前操作用户
+                    req.setUserId(SecurityUtil.getLoginUser().getUserName());
+                    //汇总交易编号	单交易时传交易编号
+                    req.setTotalTradeId(cfetsManualSettleDto.getTradeId());
+                    //流程状态	流程节点 ，提交 审批通过
+                    req.setFlowStatus(DictCodeListExt3.流程节点_审批生效.getValue());
+                    //余额校验	Y：需校验   N：不需校验
+                    String balanceCheck="N";
+                    req.setBalanceCheck(balanceCheck);
+                    // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+                    req.setBusiType(DictCodeListExt3.头寸业务类型_现券交易.getValue());
+                    if(StringUtil.isNotEmpty(cfetsManualSettleDto.getPs())){
+                        if(StringUtil.equals(cfetsManualSettleDto.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+                            req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
+                        }else if(StringUtil.equals(cfetsManualSettleDto.getPs(),BussinessDictCodeList.交易方向_到期.getValue())
+                                ||StringUtil.equals(cfetsManualSettleDto.getPs(),BussinessDictCodeList.交易方向_还本.getValue())
+                                ||StringUtil.equals(cfetsManualSettleDto.getPs(),BussinessDictCodeList.交易方向_收息.getValue())){
+                            req.setBusiType(DictCodeListExt3.头寸业务类型_债券存续期交易.getValue());
+                        }
+                    }
+                    //交易场所
+                    req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
+                    //清算速度
+                    if(!StringUtil.isEmptyList(listTemp) && StringUtil.isNotEmpty(listTemp.get(0).getSettleSpeed())){
+                        req.setSettleSpeed(listTemp.get(0).getSettleSpeed().toString());
+                    }else{
+                        req.setSettleSpeed("0");
+                    }
+                    //业务动作BUSI_ACT 09:交收确认 10:交收失败
+                    req.setBusiAct("09");
+                    //交易方向
+                    req.setPs(cfetsManualSettleDto.getPs());
+                    //新建 修改 关闭
+                    req.setSystemAct("01");
+                    req.setCdate(platformDateImpl.getSysDate());
+                    req.setCcy(cfetsManualSettleDto.getCcy());
+                    req.setFinprodId(cfetsManualSettleDto.getFinprodId());
+                    req.setPtlList(ptlList);
+                    PositionHttpRequest.send(req);
+                }
+            }
+//        }
+    }
+
+
+    /**
+     * 查询证券账户
+     * @param param
+     * @return
+     */
+    public String qryPortfolioSecAcctId(Map<String, Object> param) {
+        return cfetsManualSettleMapper.qryPortfolioSecAcctId(param);
+    }
+
+    /**
+     * 查询托管户
+     * @param param
+     * @return
+     */
+    public String qryPortfolioCashAcctId(Map<String, Object> param) {
+        return cfetsManualSettleMapper.qryPortfolioCashAcctId(param);
     }
 }
