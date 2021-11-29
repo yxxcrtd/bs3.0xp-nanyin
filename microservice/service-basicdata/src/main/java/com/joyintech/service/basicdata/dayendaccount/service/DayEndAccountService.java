@@ -113,6 +113,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         pageParam.put("PS_T56", DictCodeListExt3.交易方向_到期续做.getValue());
         pageParam.put("PS_T95", DictCodeListExt3.交易方向_到期购回.getValue());
         pageParam.put("PS_T96", DictCodeListExt3.交易方向_提前购回.getValue());
+        pageParam.put("prodType2_F07", DictCodeList.平安资产类型_质押式回购.getValue());
         pageParam.put("prodType2_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         pageParam.put("prodType2_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         Page<DayEndAccountDto> result = super.queryForPage(page, length, () -> dayEndAccountMapper.findAccountInfo(pageParam));
