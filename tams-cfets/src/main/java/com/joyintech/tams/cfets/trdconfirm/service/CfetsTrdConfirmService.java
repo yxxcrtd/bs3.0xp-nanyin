@@ -77,8 +77,6 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.joyintech.tams.invest.common.constant.BussinessDictCode.报价方式_登记;
-import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
 
 
 /**
@@ -1061,8 +1059,6 @@ public class CfetsTrdConfirmService extends BaseService{
         List<TrdProductDeal> deals = new ArrayList<>();
         entity.setTrdProductDeals(deals);
 
-
-
         //根据报价编号查询所有报价记明细
         List<CfetsRegFinProductDealDto>  regDealList=cfetsTrdConfirmMapper.findAllIbuDealList(dtoReg.getTotleTradeId());
         for(CfetsRegFinProductDealDto regDeal:regDealList){
@@ -1267,6 +1263,16 @@ public class CfetsTrdConfirmService extends BaseService{
                     RoundingMode.HALF_UP);
         }
         return result;
+    }
+    public static BussinessCodeParameter getBussinessCodeParameter(String ps) {
+        BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+        if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), ps)) {
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券买入);
+        }
+        else {
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券卖出);
+        }
+        return codeParameter;
     }
 
     /**
@@ -1515,6 +1521,9 @@ public class CfetsTrdConfirmService extends BaseService{
                 if (!StringUtil.equals(regInfo.getFinprodMarketId(), cstpInfo.getFinprodMarketId())) {
                     str.append(",资产代码");
                 }
+                if (!StringUtil.equals(regInfo.getTradeMarket(), BussinessDictCodeList.交易场所_银行间.getValue())) {
+                    str.append(",交易场所");
+                }
                 if (!StringUtil.equals(regInfo.getPs(), cstpInfo.getPs())) {
                     str.append(",交易方向");
                 }
@@ -1577,8 +1586,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     if (!StringUtil.equals(regInfo.getRepoTerm(), cstpInfo.getTermDays())) {
                         str.append(",回购期限");
                     }
-                    //TODO hxy
-                    if (!StringUtil.equals(regInfo.getTradeMarket(), cstpInfo.getTradeMarket())) {
+                    if (!StringUtil.equals(regInfo.getTradeMarket(), BussinessDictCodeList.交易场所_银行间.getValue())) {
                         str.append(",交易场所");
                     }
                     if (!StringUtil.equals(regInfo.getPs(), cstpInfo.getPs())) {

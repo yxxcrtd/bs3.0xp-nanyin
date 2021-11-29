@@ -14,6 +14,7 @@ package com.joyintech.tams.cfets.trdconfirm.dto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -105,14 +106,20 @@ public class CfetsTrdConfirmRegInfoListResponse{
     @ApiModelProperty(name="dealType",value="交易类型",example="01")
     private String dealType;
 
+    @ApiModelProperty(name="dealTypeName",value="交易类型",example="01")
+    private String dealTypeName;
+
     @ApiModelProperty(name="portfolioIds",value="组合代码",example="字符串1")
     private String portfolioIds;
 
     @ApiModelProperty(name="portfolioNames",value="组合名称",example="字符串1")
     private String portfolioNames;
 
-    @ApiModelProperty(name="quoteType",value="报价方式",example="字符串1")
+    @ApiModelProperty(name="quoteType",value="报价方式Code",example="字符串1")
     private String quoteType;
+
+    @ApiModelProperty(name="quoteTypeName",value="报价方式",example="字符串1")
+    private String quoteTypeName;
 
 /*    @ApiModelProperty(name="exportNum",value="导出次数",example="1")
     private BigDecimal exportNum;*/
@@ -953,5 +960,21 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setIsDirectTrd(String isDirectTrd) {
         this.isDirectTrd = isDirectTrd;
+    }
+
+    public String getDealTypeName() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, getDealType());
+    }
+
+    public void setDealTypeName(String dealTypeName) {
+        this.dealTypeName = dealTypeName;
+    }
+
+    public String getQuoteTypeName() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式_登记, getDealType());
+    }
+
+    public void setQuoteTypeName(String quoteTypeName) {
+        this.quoteTypeName = quoteTypeName;
     }
 }

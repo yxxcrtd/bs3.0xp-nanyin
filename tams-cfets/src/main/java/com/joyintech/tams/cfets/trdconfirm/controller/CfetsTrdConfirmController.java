@@ -53,8 +53,11 @@ public class CfetsTrdConfirmController extends BaseController {
         Map<String, Object> initPageParams = new HashMap<>();
         //是否支持CSTP下行接口
         initPageParams.put("IS_SUPPORT_CSTP_FLAG", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG"));
-        //银行间交易执行是否可手工确认
-        initPageParams.put("IS_CFETSTRD_MANUALCONFIRM_FLAG", CacheUtil.getSysParam("IS_CFETSTRD_MANUALCONFIRM_FLAG"));
+        //银行间债券交易执行是否可手工确认
+        initPageParams.put("IS_CFETSSECTRD_MANUALCONFIRM_FLAG", CacheUtil.getSysParam("IS_CFETSSECTRD_MANUALCONFIRM_FLAG"));
+        //银行间回购交易执行是否可手工确认
+        initPageParams.put("IS_CFETSREPOTRD_MANUALCONFIRM_FLAG", CacheUtil.getSysParam("IS_CFETSREPOTRD_MANUALCONFIRM_FLAG"));
+
         //交易员是否可查看全部CSTP下行成交数据
         initPageParams.put("IS_QUERYALLCSTP_FLAG", CacheUtil.getSysParam("IS_QUERYALLCSTP_FLAG"));
 
