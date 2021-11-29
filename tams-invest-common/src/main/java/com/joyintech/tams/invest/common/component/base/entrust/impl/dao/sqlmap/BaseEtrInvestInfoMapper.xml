@@ -216,4 +216,9 @@
 		</set>
 		where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
 	</update>
+
+	<delete id="deleteEtrDistributeInterfTmp">
+		DELETE FROM ETR_DISTRIBUTE_INTERF_TMP  WHERE ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+	</delete>
+
 </mapper>
