@@ -629,17 +629,20 @@ public class IbuQuoteBondService extends BaseService {
             }
             initValueFlag = false;
         }
-        CfetsBondDealEntrustOrderDto resultDto = groupByCalculateField.get(translateKey).get(0);
+        CfetsBondDealEntrustOrderDto  resultDto = null;
+        if(groupByCalculateField.containsKey(translateKey)){
+            resultDto =  groupByCalculateField.get(translateKey).get(0);
+        }
         if(StringUtil.equals(translateKey,"01")){
-            result.put(translateKey,initValueFlag?resultDto.getPrice():null);
+            result.put(translateKey,initValueFlag&&null!=resultDto?resultDto.getPrice():null);
             return result;
         }
         if(StringUtil.equals(translateKey,"02")){
-            result.put(translateKey,initValueFlag?resultDto.getMatureYield():null);
+            result.put(translateKey,initValueFlag&&null!=resultDto?resultDto.getMatureYield():null);
             return result;
         }
         if(StringUtil.equals(translateKey,"03")){
-            result.put(translateKey,initValueFlag?resultDto.getExerYield():null);
+            result.put(translateKey,initValueFlag&&null!=resultDto?resultDto.getExerYield():null);
             return result;
         }
         return null;
