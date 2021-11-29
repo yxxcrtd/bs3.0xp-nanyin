@@ -1686,7 +1686,7 @@ public class CfetsTrdConfirmService extends BaseService{
             matchDto.setCstpTradeId(cstpInfo.getCstpTradeId());
             matchDto.setExeId(cstpInfo.getExecid());
             matchDto.setPreTradeId(regInfo.getTotleTradeId());
-            matchDto.setMatchType("1");
+            matchDto.setMatchType(DictCodeListExt3.下行交易匹配类型_手动匹配.getValue());
             matchDto.setMatchStatus(BussinessDictCodeList.匹配状态_已匹配.getValue());
             matchDto.setTrdConfStatus(DictCodeList.确认状态_未确认.getValue());
             matchDto.setCreateUser(SecurityUtil.getLoginUser().getUserName());
