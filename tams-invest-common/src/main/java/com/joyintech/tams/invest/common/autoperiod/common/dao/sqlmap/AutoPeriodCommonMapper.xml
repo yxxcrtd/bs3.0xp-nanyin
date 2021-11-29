@@ -64,4 +64,69 @@
             AND T2.CDATE > T1.CDATE
         )
     </select>
+
+    <delete id="deletePaTrdFinDealTotalData">
+        delete from PA_TRD_FIN_PRODUCT_DEAL_TOTAL tfpft
+        where tfpft.TOTLE_TRADE_ID in (
+        select TOTLE_TRADE_ID from TRD_FIN_PRODUCT_DEAL_TOTAL
+        where trade_date =#{batchDate}
+          and BUSI_TYPE = #{busiType}
+          and update_user = #{updateUser}
+          <if test="finProdType2 != null and finProdType2 != ''">
+            and FINPROD_TYPE2 = #{finProdType2}
+          </if>
+        )
+    </delete>
+
+    <delete id="deleteTrdFinProductDealTotalData">
+        delete from TRD_FIN_PRODUCT_DEAL_TOTAL tfpft
+        where tfpft.trade_date =#{batchDate}
+          and tfpft.BUSI_TYPE = #{busiType}
+          and tfpft.update_user = #{updateUser}
+        <if test="finProdType2 != null and finProdType2 != ''">
+            and tfpft.FINPROD_TYPE2 = #{finProdType2}
+        </if>
+    </delete>
+
+    <delete id="deleteTrdProductDeal">
+        delete from trd_product_deal tfpft
+        where tfpft.trade_date =#{batchDate}
+        and tfpft.update_user = #{updateUser}
+        <if test="finProdType2 != null and finProdType2 != ''">
+            and tfpft.FINPROD_TYPE2 = #{finProdType2}
+        </if>
+    </delete>
+
+    <delete id="deleteTrdProductDealAdd">
+        delete from trd_product_deal_add tfpft
+        where tfpft.trade_id in (
+            select trade_id from trd_product_deal
+            where trade_date =#{batchDate}
+            and update_user = #{updateUser}
+            <if test="finProdType2 != null and finProdType2 != ''">
+                and FINPROD_TYPE2 = #{finProdType2}
+            </if>
+        )
+    </delete>
+
+    <select id="selectDealCapacctInfo" resultType="java.lang.String">
+        SELECT
+        DISTINCT
+        B.ACCT_NO as acctNo
+        FROM
+        STL_SEC_ACCT_INFO A, STL_CAPACCT_INFO B
+        WHERE
+        A.SEC_ACCT_ID =
+        #{secManageAcctId}
+        AND A.TRD_ACCT_ID = B.ACCT_NO
+        AND B.CCY = #{ccy}
+        AND ROWNUM =1
+    </select>
+
+    <delete id="deleteStlPayOrdersData">
+        delete from STL_PAY_ORDERS tfpft
+        where tfpft.settle_date =#{batchDate}
+        and tfpft.update_user = #{updateUser}
+    </delete>
+
 </mapper>

@@ -25,6 +25,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTrdDurDbInertDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurDbInertDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
@@ -154,6 +155,25 @@ public class AutoPeriodCommonService extends BaseService {
             return Long.parseLong(date + "02");
         }
         return null;
+    }
+
+    public static String change交易方向To投管类型(String ps) {
+        String tgBusiType = null;
+        if (StringUtil.isNotEmpty(ps)) {
+            if (ps.contains(DictCodeList.交易方向_到期.getValue())) {
+                tgBusiType = DictCodeListExt1.平安业务类型_债券到期.getValue();
+            }
+            else if (ps.contains(DictCodeList.交易方向_还本.getValue())) {
+                tgBusiType = DictCodeListExt1.平安业务类型_债券中间还本.getValue();
+            }
+            else if(ps.contains(DictCodeList.交易方向_收息.getValue())){
+                tgBusiType = DictCodeListExt1.平安业务类型_债券中间收息.getValue();
+            }
+            else if(ps.contains(DictCodeList.交易方向_行权_赎回.getValue())){
+                tgBusiType = DictCodeListExt1.平安业务类型_债券类资产行权.getValue();
+            }
+        }
+        return tgBusiType;
     }
 
     /**
@@ -481,5 +501,82 @@ public class AutoPeriodCommonService extends BaseService {
 
     public List<PtlSecPosition> findAllProvided(Map<String, Object> params) {
         return autoPeriodCommonMapper.findAllProvided(params);
+    }
+
+    /**
+     * 登录存续期流程数据
+     *
+     * @param trdBondDurDbInertDto
+     * @see
+     * @since 1.0
+     */
+    public void insertCfetsDealData(TrdBondDurDbInertDto trdBondDurDbInertDto) {
+        if (trdBondDurDbInertDto == null) {
+            return;
+        }
+
+        if (trdBondDurDbInertDto.getTrdFinProductDealTotal() != null) {
+            trdFinProductDealTotalMapper.insert(trdBondDurDbInertDto.getTrdFinProductDealTotal());
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getStlPayOrdersList())) {
+            for (StlPayOrders StlPayOrders : trdBondDurDbInertDto.getStlPayOrdersList()) {
+                stlPayOrdersMapper.insert(StlPayOrders);
+            }
+        }
+
+        if (trdBondDurDbInertDto.getPaTrdFinProductDealTotal() != null) {
+            paTrdFinProductDealTotalMapper.insert(trdBondDurDbInertDto.getPaTrdFinProductDealTotal());
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getTrdProductDealList())) {
+            for (TrdProductDeal trdProductDeal : trdBondDurDbInertDto.getTrdProductDealList()) {
+                trdProductDealMapper.insert(trdProductDeal);
+            }
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getTrdProductDealAdds())) {
+            for (TrdProductDealAdd trdProductDealAdd : trdBondDurDbInertDto.getTrdProductDealAdds()) {
+                trdProductDealAddMapper.insert(trdProductDealAdd);
+            }
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getPtlTrades())) {
+            for (PtlTrade ptlTrade : trdBondDurDbInertDto.getPtlTrades()) {
+                ptlTradeMapper.insert(ptlTrade);
+            }
+        }
+    }
+
+    /**
+     * 删除实际表数据
+     *
+     * @param busiType 业务类型
+     * @param finProdType2 金融产品类型（投管）
+     * @see
+     * @since 1.0
+     */
+    public void deleteActData(String busiType, String finProdType2,Date batchDate) {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("busiType", busiType);
+        paramMap.put("finProdType2", finProdType2);
+        paramMap.put("updateUser", "system");
+        paramMap.put("batchDate", batchDate);
+
+        autoPeriodCommonMapper.deletePaTrdFinDealTotalData(paramMap);
+        autoPeriodCommonMapper.deleteTrdFinProductDealTotalData(paramMap);
+        autoPeriodCommonMapper.deleteTrdProductDeal(paramMap);
+        autoPeriodCommonMapper.deleteTrdProductDealAdd(paramMap);
+        autoPeriodCommonMapper.deleteStlPayOrdersData(paramMap);
+    }
+
+    /**
+     * 检索交易关联资金账户共通
+     * @param secManageAcctId 证券托管户ID
+     * @param ccy 币种
+     * @return 交易关联资金账户
+     */
+    public String selectDealCapacctInfo(String secManageAcctId, String ccy) {
+        return autoPeriodCommonMapper.selectDealCapacctInfo(secManageAcctId,ccy);
     }
 }
