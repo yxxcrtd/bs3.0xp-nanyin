@@ -111,12 +111,32 @@
       params.tradeDate = sysDate;
       params.finprodId = $("#finprodId").val();
       params.secAcctId = $("#secAcctId").val();
-        params.multiParam=100;
-      if (window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery["bussTrdAvailableCashQuery"]) {
-        window.BussTrdAvailableCashQuery["bussTrdAvailableCashQuery"].updateCash(function () {
-            return params
-        });
-    }}
+
+      // modify by etliu 20211129 start
+      // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+      //   params.multiParam=100;
+      // if (window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery["bussTrdAvailableCashQuery"]) {
+      //   window.BussTrdAvailableCashQuery["bussTrdAvailableCashQuery"].updateCash(function () {
+      //       return params
+      //   });
+      // }
+        if (
+            params.portfolioId == '' || params.portfolioId == null || typeof (params.portfolioId) == undefined
+            || params.ccy == '' || params.ccy == null || typeof (params.ccy) == undefined
+            || params.tradeDate == '' || params.tradeDate == null || typeof (params.tradeDate) == undefined
+            || params.finprodId == '' || params.finprodId == null || typeof (params.finprodId) == undefined
+            || params.secAcctId == '' || params.secAcctId == null || typeof (params.secAcctId) == undefined
+        ) {
+            $("#assetAvailablePosition").val('');
+            return;
+        }
+
+        Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getAssetAvailablePosition', params,
+            function (result) {
+                $('#assetAvailablePosition').val(result.position).trigger('blur');
+            });
+        // modify by etliu 20211129 end
+    }
     
    
     //添加风险试算验证

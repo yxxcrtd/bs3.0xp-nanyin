@@ -334,11 +334,15 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
         if(StringUtil.isNotEmpty(calId)){
             List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(vdate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(vdate)), 15),calId);
             Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(vdate)), 1, holidayList, "1");
-            param.put("vdate1",DateUtil.format(tradeDay));
+            param.put("sysDateT1",DateUtil.format(tradeDay));
         }
-        return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/getProAvailableCash",param,
-            Map.class);
+        // modify by etliu 20211129 start
+        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/getProAvailableCash",param,
+//            Map.class);
+        return etrCommonService.getProAvailableCash(param);
+        // modify by etliu 20211129 end
     }
 
     /**
@@ -349,13 +353,17 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
      * @see
      * @since 1.0
      */
-    public BigDecimal getAssetAvailablePosition(PtlSecPositionFlowDto dto) {
+    public BigDecimal getAssetAvailablePosition(EtrSecPositionDto dto) {
         Date sysDate =  CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
         dto.setCdate(DateUtil.parse(DateUtil.format(sysDate)));
         dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-        return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/getAssetAvailablePosition",dto,
-            BigDecimal.class);
+        // modify by etliu 20211129 start
+        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/getAssetAvailablePosition",dto,
+//            BigDecimal.class);
+        return etrCommonService.getAssetAvailablePosition(dto);
+        // modify by etliu 20211129 end
     }
     
     /**

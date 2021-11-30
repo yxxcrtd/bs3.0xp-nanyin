@@ -363,11 +363,15 @@ public class EtrPlanAssetRService extends CommonExportService<EtrPlanAssetRDto> 
         if(StringUtil.isNotEmpty(calId)){
             List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(vdate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(vdate)), 15),calId);
             Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(vdate)), 1, holidayList, "1");
-            param.put("vdate1",DateUtil.format(tradeDay));
+            param.put("sysDateT1",DateUtil.format(tradeDay));
         }
-        return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetR/getProAvailableCash",param,
-            Map.class);
+        // modify by etliu 20211129 start
+        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetR/getProAvailableCash",param,
+//            Map.class);
+        return etrCommonService.getProAvailableCash(param);
+        // modify by etliu 20211129 end
     }
 
     /**
@@ -378,16 +382,20 @@ public class EtrPlanAssetRService extends CommonExportService<EtrPlanAssetRDto> 
      * @see
      * @since 1.0
      */
-    public BigDecimal getAssetAvailablePosition(PtlSecPositionFlowDto dto) {
+    public BigDecimal getAssetAvailablePosition(EtrSecPositionDto dto) {
         Date sysDate = DateUtil.platDateFromCache();
         dto.setCdate(DateUtil.parse(DateUtil.format(sysDate)));
         dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-        if (StringUtil.isNotEmpty(dto.getSecAcctId())) {
-            dto.setChannel(true);
-        }
-        return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetR/getAssetAvailablePosition",dto,
-            BigDecimal.class);
+//        if (StringUtil.isNotEmpty(dto.getSecAcctId())) {
+//            dto.setChannel(true);
+//        }
+        // modify by etliu 20211129 start
+        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetR/getAssetAvailablePosition",dto,
+//            BigDecimal.class);
+        return etrCommonService.getAssetAvailablePosition(dto);
+        // modify by etliu 20211129 end
     }
 
     /**

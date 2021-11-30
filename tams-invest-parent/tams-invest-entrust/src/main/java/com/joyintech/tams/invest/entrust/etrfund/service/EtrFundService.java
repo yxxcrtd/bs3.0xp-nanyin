@@ -358,21 +358,32 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
      * @since 1.0
      */
     public Map<String,Object> getProAvailableCash(Map<String,Object> param) {
-        Date sysDate = DateUtil.platDateFromCache();
-        param.put("vdate", DateUtil.format(sysDate));
-        /*List<String> acctTypeList = new ArrayList<>();
-        acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
-        acctTypeList.add(DictCodeListExt1.资金账户类型_券商资金账户.getValue());
-        dto.setAcctType(acctTypeList);*/
-        if(StringUtil.isNotEmpty(param.get("finprodId"))){
-            FinProduct finProduct = finProductMapper.selectByPrimaryKey((String)param.get("finprodId"));
-            List<String> holidayList = dateCalService.getDealCalendarHoliday(sysDate,DateUtil.addDay(sysDate, 15),finProduct.getCalendarId());
-            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(sysDate).toString()), 1, holidayList, "1");
-            param.put("vdate1", DateUtil.format(tradeDay));
+        // modify by etliu 20211129 start
+        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+//        Date sysDate = DateUtil.platDateFromCache();
+//        param.put("vdate", DateUtil.format(sysDate));
+//        /*List<String> acctTypeList = new ArrayList<>();
+//        acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
+//        acctTypeList.add(DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+//        dto.setAcctType(acctTypeList);*/
+//        if(StringUtil.isNotEmpty(param.get("finprodId"))){
+//            FinProduct finProduct = finProductMapper.selectByPrimaryKey((String)param.get("finprodId"));
+//            List<String> holidayList = dateCalService.getDealCalendarHoliday(sysDate,DateUtil.addDay(sysDate, 15),finProduct.getCalendarId());
+//            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(sysDate).toString()), 1, holidayList, "1");
+//            param.put("vdate1", DateUtil.format(tradeDay));
+//        }
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrFund/getProAvailableCash",param,
+//            Map.class);
+        Date vdate = DateUtil.parse((String)param.get("vdate"));
+        String calId = (String)param.get("calId");
+        if(StringUtil.isNotEmpty(calId)){
+            List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(vdate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(vdate)), 15),calId);
+            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(vdate)), 1, holidayList, "1");
+            param.put("sysDateT1",DateUtil.format(tradeDay));
         }
-        return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrFund/getProAvailableCash",param,
-            Map.class);
+        return etrCommonService.getProAvailableCash(param);
+        // modify by etliu 20211129 end
     }
 
     /**
