@@ -9,9 +9,16 @@ import java.util.Map;
 @Repository
 public interface AutoReconciliationMapper {
     /**
-     * 获取待处理的对账数据
+     * 获取待自动对账的对账数据
      * @param param param
      * @return
      */
     List<DayEndAccountDaichuliDto> queryAccountTodoList(Map<String, Object> param);
+
+    /**
+     * 获取待手工对账的对账数据
+     * @param param param
+     * @return
+     */
+    List<DayEndAccountDaichuliDto> queryManualAccountTodoList(Map<String, Object> param);
 }

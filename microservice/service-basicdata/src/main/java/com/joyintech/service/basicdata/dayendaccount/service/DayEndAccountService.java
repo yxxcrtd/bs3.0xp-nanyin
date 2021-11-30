@@ -601,6 +601,8 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             for (SettleTransData settleTransData : listSettleTransData) {
                 DayEndAccountDto dealDetail = new DayEndAccountDto();
                 dealDetail.setCommissionAmt(settleTransData.getCommissionAmt());
+                dealDetail.setCjbh(settleTransData.getCjbh());
+                dealDetail.setPs(settleTransData.getPs());
                 dealDetail.setJsfAmt(settleTransData.getJsfAmt());
                 dealDetail.setZgfAmt(settleTransData.getZgfAmt());
                 dealDetail.setStampFee(settleTransData.getStampFee());

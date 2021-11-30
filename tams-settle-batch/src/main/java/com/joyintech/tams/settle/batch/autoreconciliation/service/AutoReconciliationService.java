@@ -49,7 +49,7 @@ public class AutoReconciliationService {
         param.put("PARA_VALUE_03", DictCodeListStl.对账维度_成交明细.getValue());
         param.put("CHECK_RESULT_0", DictCodeListExt3.对账状态结果_不一致.getValue());
         param.put("CHECK_RESULT_2", DictCodeListExt3.对账状态结果_待处理.getValue());
-        // 删除对账结果不一致数据
+        // 删除对账结果不一致和待处理数据
         reconciliationCommonService.deleteCheckDisaccords(batchDate);
         param.put("PS_T01", DictCodeList.交易方向_买入.getValue());
         param.put("PS_T07", DictCodeList.交易方向_到期.getValue());
@@ -60,8 +60,11 @@ public class AutoReconciliationService {
         param.put("PS_T96", DictCodeListExt3.交易方向_提前购回.getValue());
         param.put("prodType2_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         param.put("prodType2_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
-        //获取待处理的对账数据
-        List<DayEndAccountDaichuliDto> list = autoReconciliationMapper.queryAccountTodoList(param);
-        reconciliationCommonService.executeReconciliation(list);
+        // 获取待自动对账的对账数据
+        List<DayEndAccountDaichuliDto> autoAccountList = autoReconciliationMapper.queryAccountTodoList(param);
+        reconciliationCommonService.executeReconciliation(autoAccountList);
+        // 处理待处理的对账数据
+        List<DayEndAccountDaichuliDto> manualAccountList = autoReconciliationMapper.queryManualAccountTodoList(param);
+        reconciliationCommonService.executeManualReconciliation(manualAccountList);
     }
 }

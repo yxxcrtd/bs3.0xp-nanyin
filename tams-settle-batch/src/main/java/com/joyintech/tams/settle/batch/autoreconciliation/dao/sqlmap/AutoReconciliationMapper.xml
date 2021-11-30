@@ -313,4 +313,32 @@
 			tmp.TRADE_ID IS NULL
 			AND tmp.PARA_VALUE = #{PARA_VALUE_03}
 	</select>
+
+	<select id="queryManualAccountTodoList" resultType="com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto">
+		SELECT
+			std.TRADE_ID,
+			stds.CHECK_RESULT
+		FROM
+			SETTLE_TRANS_DATA std
+		LEFT JOIN
+			MST_SALE_DEPARTMENT msd ON (std.SEAT_NUMBER = msd.SH_SEATNO OR std.SEAT_NUMBER = msd.SZ_SEATNO)
+		LEFT JOIN
+			SETTLE_TRANS_DATA_STATUS stds ON std.TRADE_ID = stds.TRADE_ID
+		INNER JOIN (
+			SELECT
+				CUSTOMER_ID,
+				PARA_VALUE,
+				MAX(CONFIG_DATE)
+			FROM
+				STL_SEC_RECON_PARA
+			WHERE
+				CONFIG_DATE &lt;= TO_DATE(#{batchDate},'YYYY-MM-DD')
+				AND PARA_CODE = #{PARA_CODE_02}
+			GROUP BY
+			CUSTOMER_ID,PARA_VALUE
+		) d ON msd.BROKER_ID = d.CUSTOMER_ID
+		WHERE
+			stds.CHECK_RESULT IS NULL
+		  AND std.DEAL_DATE = TO_DATE(#{batchDate}, 'YYYY-MM-DD')
+	</select>
 </mapper>

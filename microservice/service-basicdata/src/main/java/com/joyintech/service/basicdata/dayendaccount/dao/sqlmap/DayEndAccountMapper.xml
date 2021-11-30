@@ -196,7 +196,7 @@
                         AND c.CHECK_RESULT = #{accountStatus}
                     </if>
                     <if test="accountStatus != null and accountStatus != '' and accountStatus == '2'.toString()">
-                        AND c.CHECK_RESULT IS NULL
+                        AND (c.CHECK_RESULT IS NULL OR c.CHECK_RESULT = #{accountStatus})
                     </if>
                     AND d.PARA_VALUE = #{PARA_VALUE_02}
                     <if test="accountList != null and accountList.size() > 0">
@@ -336,7 +336,7 @@
                         AND c.CHECK_RESULT = #{accountStatus}
                     </if>
                     <if test="accountStatus != null and accountStatus != '' and accountStatus == '2'.toString()">
-                        AND c.CHECK_RESULT IS NULL
+                        AND (c.CHECK_RESULT IS NULL OR c.CHECK_RESULT = #{accountStatus})
                     </if>
                     AND d.PARA_VALUE = #{PARA_VALUE_01}
                     <if test="accountList != null and accountList.size() > 0">
@@ -476,7 +476,7 @@
                     AND c.CHECK_RESULT = #{accountStatus}
                 </if>
                 <if test="accountStatus != null and accountStatus != '' and accountStatus == '2'.toString()">
-                    AND c.CHECK_RESULT IS NULL
+                    AND (c.CHECK_RESULT IS NULL OR c.CHECK_RESULT = #{accountStatus})
                 </if>
                 AND d.PARA_VALUE = #{PARA_VALUE_03}
                 <if test="accountList != null and accountList.size() > 0">
@@ -1112,7 +1112,7 @@
 
     <select id="selectSettleTransData" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
         select
-        std.TRADE_ID, std.DEAL_DATE, std.SEC_TYPE,
+        std.TRADE_ID, std.CJBH, std.DEAL_DATE, std.SEC_TYPE,
         std.APPLY_TRADE_ID, std.FINPROD_ID, std.FINPROD_TYPE,
         std.FINPROD_TYPE2, std.BRANCH, BUSI_TYPE,
         std.TRADE_DATE, std.SETTLE_DATE, std.VDATE,
