@@ -818,7 +818,7 @@
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
             0,
-            T1.TOTLE_TRADE_ID
+            T1.TOTLE_TRADE_ID quoteId
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -860,7 +860,7 @@
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
             0,
-            T1.TOTLE_TRADE_ID
+            T1.TOTLE_TRADE_ID quoteId
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -900,7 +900,7 @@
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
             0,
-            T1.TOTLE_TRADE_ID
+            T1.TOTLE_TRADE_ID quoteId
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON

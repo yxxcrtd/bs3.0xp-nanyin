@@ -264,6 +264,9 @@ public class IbuQuoteBondService extends BaseService {
     public List<EntrustDto> ptlAllocationAdd(PtlAllocationAddRequest ptlAllocationAddRequest){
         Map<String, Object> param = BeanUtil.object2Map(ptlAllocationAddRequest);
         param.put("notentrustIdList",ptlAllocationAddRequest.getEntrustIdList());
+        param.put("loginUserId", LoginUserUtil.getUserName());
+        param.put("platDate", iPlatformDate.getSysDateStr());
+        param.put("entrustStatus",Arrays.asList(com.joyintech.tams.constant.DictCodeList.委托状态_已接收.getValue()));
         setParam(param);
         List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if (!StringUtil.isEmptyList(entrustDtos)) {
