@@ -15,6 +15,8 @@ import com.joyintech.tams.business.common.entity.CfgDataTableShowFlag;
 import com.joyintech.tams.business.common.entity.CfgReadonlyFormShow;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
+import com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherTradeListResponse;
+import com.joyintech.tams.common.base.entity.User;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -190,13 +192,25 @@ public class CfetsManualSettleQueryService extends BaseService{
             cfetsManualSettleFlowRespond.setFinprodAbbr(cfetsManualSettleDto.getFinprodAbbr());
             cfetsManualSettleFlowRespond.setSettleNum(cfetsManualSettleDto.getSettleNum());
             cfetsManualSettleFlowRespond.setSettleAmt(cfetsManualSettleDto.getSettleAmt());
+            cfetsManualSettleFlowRespond.setCreateUser(LoginUserUtil.getUserName());
 
             cfetsManualSettleFlowRespondList.add(cfetsManualSettleFlowRespond);
-
             pageLimit.setRoot(cfetsManualSettleFlowRespondList);
         }else{
             pageLimit =  super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                     () -> cfetsManualSettleMapper.findManualSettleFlow(pageParam));
+        }
+        //将交易员和投资经理转为真实姓名
+        List<CfetsManualSettleFlowRespond> list = pageLimit.getRoot();
+        if(!list.isEmpty()){
+            for(CfetsManualSettleFlowRespond cfetsManualSettleFlowRespond : list) {
+                if (StringUtil.isNotEmpty(cfetsManualSettleFlowRespond.getCreateUser())) {
+                    User user=cfetsManualSettleMapper.getRealNameByUserName(cfetsManualSettleFlowRespond.getCreateUser());
+                    if(StringUtil.isNotEmpty(user)){
+                        cfetsManualSettleFlowRespond.setCreateUser(user.getRealName());
+                    }
+                }
+            }
         }
 
         return pageLimit;
