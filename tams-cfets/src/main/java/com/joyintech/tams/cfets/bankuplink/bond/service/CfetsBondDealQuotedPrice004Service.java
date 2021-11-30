@@ -720,11 +720,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     pltMap.put("tradeId",regFinProductDeal.getTradeId());
                     pltMap.put("etrId",regFinProductDeal.getEntrustId());
                     pltMap.put("cashAcctId",cfetsIbuQuoteBondMapper.getACCTNO(portfolioId,BussinessDictCodeList.资金账户类型_托管账户.getValue()));
-                    pltMap.put("secAcctId",cfetsIbuQuoteBondMapper.getSecAcctId(portfolioId,regFinProductDeal.getFinprodId()));
+                    pltMap.put("secAcctId",cfetsIbuQuoteBondMapper.getSecAcctId(portfolioId,regFinProductDeal.getFinprodId(),regFinProductDeal.getTradeMarket()));
                     pltMap.put("secAmount",regFinProductDeal.getShareAmt());
                     pltMap.put("cashAmount",regFinProductDeal.getTradeAmt());
                     RegFinProductDealAdd regFinProductDealAdd = regFinProductDealAddMap.get(regFinProductDeal.getTradeId()).get(0);
-                    //TODO 投资目的
                     pltMap.put("integrateSecAmount",regFinProductDealAdd.getLendinShareAmt());
                     pltMap.put("ownSecAmount",regFinProductDealAdd.getOurShareAmt());
                     pltMap.put("etrSecAmount",etrEntrustMapper.selectByPrimaryKey(regFinProductDeal.getEntrustId()).getEntrustNum());

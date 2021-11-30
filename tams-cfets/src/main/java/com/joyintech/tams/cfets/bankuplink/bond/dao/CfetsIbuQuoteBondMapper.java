@@ -36,7 +36,7 @@ public interface CfetsIbuQuoteBondMapper {
      * @param finprodId
      * @return
      */
-    String getSecAcctId(@Param("portfolioId") String portfolioId,@Param("finprodId") String finprodId);
+    String getSecAcctId(@Param("portfolioId") String portfolioId,@Param("finprodId") String finprodId,@Param("tradeMarket") String tradeMarket);
 
     /**
      * 获取资金账户
