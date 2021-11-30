@@ -11,6 +11,7 @@
 package com.joyintech.tams.report.submitmaintenance.equityinfo.util;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -20,6 +21,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -36,8 +41,6 @@ import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRu
 import com.joyintech.tams.report.submitmaintenance.transformrule.service.TransformRule001Service;
 import com.joyintech.tams.report.system.regtimepoints.dto.RegTimePoints001Dto;
 import com.joyintech.tools.constant.InterfConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -287,6 +290,61 @@ public class EquityInfoCheckUtil {
          }
          return flag;
      }
+     
+     
+     /**
+      * 按照配置表的内容，对数据进行循环生僻字转化
+      * <一句话功能简述>
+      * <功能详细描述>
+      * 
+      * 
+      */
+      public static void replaceByExchangeRule(List<ChbTransformRuleObjDto> objFileds
+                                           ,Map<String,TransformRule001Dto> spzMap,List<EquityInfo001Dto> listEquityInfo001Dto) {
+       
+    	  for(EquityInfo001Dto recDto: listEquityInfo001Dto){
+			Map<String, String> tempMap=new HashMap<String, String>();
+			try {
+				
+				for(ChbTransformRuleObjDto objfiled : objFileds){
+					boolean flag = false;
+					String srcValue = "";
+						
+					Field fId = recDto.getClass().getDeclaredField(objfiled.getInfoProperty());	
+					
+					//存在转化对象的情况下，进行以下处理
+					if(fId != null) {
+						fId.setAccessible(true);
+						String changeResule ="";
+						srcValue = (String)fId.get(recDto);
+						char[] chars=  srcValue.toCharArray();
+						for(char cc:chars){
+							String key= objfiled.getTransType() + cc;
+							  if(spzMap.containsKey(key)){                	  
+								  flag = true;
+								  changeResule = changeResule +  spzMap.get(key).getTargetField();  
+							  }else {
+								  changeResule = changeResule +  cc;
+							  }                       
+							}
+							
+						if(flag) {
+							tempMap.put(objfiled.getInfoProperty(),changeResule);
+							
+						}
+					}				
+				}  
+				
+				recDto.setTempMap(tempMap);
+				
+			}
+			catch(Exception e) {
+				throw new BusinessException("生僻字转换异常" + e.getMessage());
+		    }
+		  }
+    	  
+      }
+     
     public static void updateChcekDto(Object obj,String property,String value){
          Method m;
          try {
