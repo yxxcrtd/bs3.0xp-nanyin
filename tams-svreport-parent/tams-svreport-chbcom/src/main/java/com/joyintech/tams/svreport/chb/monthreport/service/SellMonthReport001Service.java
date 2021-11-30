@@ -9,6 +9,8 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.svreport.chb.monthreport.dao.SellMonthReportDetailMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReportDetail;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -19,6 +21,7 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
 import com.joyintech.tams.svreport.chb.monthreport.dao.SellMonthReportMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReport;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,7 +154,7 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 				}
 				//分地区
 			if(monthReport.getReporttype().equals("1_2")) {
-				tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
+				tempList = sellMonthReportDetailMapper.selectReportDetail(monthReport.getReportuuid());
 				if (!tempList.isEmpty()) {
 					for (SellMonthReportDetail detail : tempList) {
 						BigDecimal oneW = new BigDecimal("10000");
@@ -167,7 +170,7 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 			}
 				//分销售渠道
 			if(monthReport.getReporttype().equals("1_3")) {
-				tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
+				tempList = sellMonthReportDetailMapper.selectReportDetail(monthReport.getReportuuid());
 				if (!tempList.isEmpty()) {
 					for (SellMonthReportDetail detail : tempList) {
 						BigDecimal oneW = new BigDecimal("10000");
@@ -199,6 +202,88 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		return ExportUtil.export(outFile.getName(), outFile, true);
 	}
 
+
+	public String priview(String pageid,Map<String, Object> selectParam,String datas) throws Exception {
+		String reportuuid = selectParam.get("reportuuid").toString();
+		String termid = selectParam.get("termid").toString();
+		Map<String,Object> data  = new HashMap<String,Object>();
+		List<SellMonthReportDetail> tempList=new ArrayList<SellMonthReportDetail>();
+		List<SellMonthReport> dateTempList=new ArrayList<SellMonthReport>();
+		String fileName = "销售月度统计表"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
+		//查询当前期数的reportuuid主键
+		List<SellMonthReport> reportuuidList = sellMonthReportDetailMapper.selectReportuuid(termid);
+		if(reportuuidList.size() != 0){
+			for(SellMonthReport monthReport :reportuuidList) {
+				//分投资者分类
+				if(monthReport.getReporttype().equals("1_1")) {
+					tempList = sellMonthReportDetailMapper.selectReportDetail(monthReport.getReportuuid());
+					if (!tempList.isEmpty()) {
+						for (SellMonthReportDetail detail : tempList) {
+							BigDecimal oneW = new BigDecimal("10000");
+							BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
+							BigDecimal valueAmountTotal = detail.getValueAmountTotal();
+							BigDecimal balanceAmt = detail.getBalanceAmt();
+							detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+							detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+							detail.setBalanceAmt(balanceAmt.divide(oneW));
+						}
+					}
+					data.put("dataList1", tempList);
+				}
+				//分地区
+				if(monthReport.getReporttype().equals("1_2")) {
+					tempList = sellMonthReportDetailMapper.selectReportDetail(monthReport.getReportuuid());
+					if (!tempList.isEmpty()) {
+						for (SellMonthReportDetail detail : tempList) {
+							BigDecimal oneW = new BigDecimal("10000");
+							BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
+							BigDecimal valueAmountTotal = detail.getValueAmountTotal();
+							BigDecimal balanceAmt = detail.getBalanceAmt();
+							detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+							detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+							detail.setBalanceAmt(balanceAmt.divide(oneW));
+						}
+					}
+					data.put("dataList2", tempList);
+				}
+				//分销售渠道
+				if(monthReport.getReporttype().equals("1_3")) {
+					tempList = sellMonthReportDetailMapper.selectReportDetail(monthReport.getReportuuid());
+					if (!tempList.isEmpty()) {
+						for (SellMonthReportDetail detail : tempList) {
+							BigDecimal oneW = new BigDecimal("10000");
+							BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
+							BigDecimal valueAmountTotal = detail.getValueAmountTotal();
+							BigDecimal balanceAmt = detail.getBalanceAmt();
+							detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+							detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+							detail.setBalanceAmt(balanceAmt.divide(oneW));
+						}
+					}
+					data.put("dataList3", tempList);
+					//查询时间
+					dateTempList = sellMonthReportDetailMapper.selectReportDate(reportuuid);
+					data.put("data", dateTempList);
+				}
+			}
+		}
+		else{
+			data.put("data", dateTempList);
+			data.put("dataList1", tempList);
+			data.put("dataList2", tempList);
+			data.put("dataList3", tempList);
+		}
+		File depositfile = TisUtil.createFile(data, "pbc/" +"sellMonthReport_export", fileName);
+		return this.priView(depositfile, true);
+	}
+	//预览导出
+	public String priView( File downloadFile, boolean deleteAfterExport){
+		String rs =  XlsxToHtml.readExcelToHtml(downloadFile,true);
+		if (deleteAfterExport) {
+			downloadFile.delete();
+		}
+		return rs;
+	}
 
 	/**
 	 * 手工处理
