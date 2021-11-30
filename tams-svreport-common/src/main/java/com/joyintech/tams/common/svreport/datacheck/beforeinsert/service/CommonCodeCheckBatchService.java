@@ -1771,6 +1771,8 @@ public class CommonCodeCheckBatchService {
         // 拼装错误信息
         ChbSalerStlDeaErrodataWithBLOBs chbSalerStlDeaErrodata = new ChbSalerStlDeaErrodataWithBLOBs();
 
+        chbSalerStlDeaErrodata.setRegistSeqno(IDGenerator.generate(36));
+
         // 提供销售结算资金服务机构代码
         chbSalerStlDeaErrodata.setInstitutionCode(map.get("INSTITUTION_CODE"));
         //产品登记编码

@@ -841,7 +841,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             List<Map<String, String>> mapList = listToMap(dataList);
 
             // 检查数据是否合法
-                List<ExcelValidDto> checkResult = checkDataInfo(dataList,mapList,queryList, entitiesList,bankCode,deptCode,orgCode,userName);
+            List<ExcelValidDto> checkResult = checkDataInfo(dataList,mapList,queryList, entitiesList,bankCode,deptCode,orgCode,userName);
 
             if (checkResult.isEmpty()) {
                 try {
@@ -899,6 +899,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         // item.setDataStatus(DictCodeList.维护数据状态_有效.getValue());
                         item.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
                         item.setDeptCode(deptCode);
+                        //不管是否有变更都需要赋值
+                        item.setOrgIndentifyMark(item.getIndentifyMark());
                         setOrgIndentifyMark(item,equityInfocheckMap);
                         // 设值createDept
                         String createDept = item.getDeptCode();
@@ -2393,6 +2395,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     ibd.setOrgIndentifyMark(ibd.getIndentifyMark());
                     ibd.setIndentifyMark(
                             equityInfocheckMap.get(ibd.getIndentifyMark()).getMergerindentifymark());
+                }else{
+                    //不管是否有变更都需要赋值
+                    ibd.setOrgIndentifyMark(ibd.getIndentifyMark());
                 }
                 /*edit by xuyang for业务确认日期为空时，防止获取报送时点报错 徽商个性化 20200822*/
                 if(ibd.getEquityConfDate()!=null) {

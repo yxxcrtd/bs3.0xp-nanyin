@@ -6,6 +6,9 @@ import com.joyintech.framework.json.CustomDateDeserialize;
 import java.util.Date;
 
 public class ChbSalerStlDeaErrodata extends BaseEntity {
+
+
+    private String registSeqno;
     /**
      * 提供销售结算资金服务机构代码 
      */
@@ -55,6 +58,14 @@ public class ChbSalerStlDeaErrodata extends BaseEntity {
      * 部门代码 
      */
     private String deptCode;
+
+    public String getRegistSeqno() {
+        return registSeqno;
+    }
+
+    public void setRegistSeqno(String registSeqno) {
+        this.registSeqno = registSeqno;
+    }
 
     /**
      * 取得 提供销售结算资金服务机构代码 
