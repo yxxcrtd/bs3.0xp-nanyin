@@ -23,8 +23,8 @@
         cols: [
             { title: "机构代码", field:'orgCode'},
             { title: "机构名称", field:'orgName', sortField:'orgCode'},
-            { title: "登记银行代码", field:'registBankCode'},
-            { title: "总行机构代码", field:'pbcBankCode'},
+            { title: "中债登记机构代码", field:'registBankCode'},
+            { title: "人行登记机构代码", field:'pbcBankCode'},
             { title: "是否理财子公司", field:'isFinSubCompany'},
             { title: "社会信用代码", field:'insitituteCode'},
             { field:'operation', title: '操作', type:'action', buttons: ['edit', 'delt']}
