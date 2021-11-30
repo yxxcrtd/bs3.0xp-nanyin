@@ -3393,7 +3393,7 @@
             linkInvAim();
         });
         // 价格模式
-        $("#priceModel_jj,#priceModel_dz,#priceModel_gd").change(function(e,isNotTrigger) {
+        $("#priceModel_jj,#priceModel_dz,#priceModel_gd,#secId_jj").change(function(e,isNotTrigger) {
             if(setPageItemsFlag){
                 return;
             }
