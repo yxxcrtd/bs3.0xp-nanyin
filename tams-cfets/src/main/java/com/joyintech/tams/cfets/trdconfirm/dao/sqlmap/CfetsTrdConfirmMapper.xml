@@ -22,7 +22,6 @@
         left join SYS_DATADICT_LIST dicttradeMarket on aaa.tradeMarket=dicttradeMarket.ITEM_CODE and dicttradeMarket.DICT_CODE='TRADE_PLACE'
        <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
-        <include refid="vagueQueryExceWhere"></include>
 
         order by aaa.finprodType2, aaa.ps DESC)
         <!--前端传入排序字段-->
@@ -92,7 +91,7 @@
         left join stl_sec_acct_info stlinfo
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
-        where reg.trade_date= #{sysDate}
+        where reg.trade_date= #{sysDate,jdbcType=DATE}
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
             and reg.trade_status in ('01', '02')
@@ -200,7 +199,7 @@
         left join stl_sec_acct_info stlinfo
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
-        where reg.trade_date= #{sysDate}
+        where reg.trade_date= #{sysDate,jdbcType=DATE}
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
             and reg.trade_status in ('01', '02')
@@ -272,7 +271,7 @@
     <sql id="vagueQueryExceWhere">
         <where>
             <if test="tradeDate != null and !tradeDate.equals('')">
-                AND aaa.tradeDate = #{tradeDate,jdbcType=Date}
+                AND aaa.tradeDate = #{tradeDate,jdbcType=DATE}
             </if>
             <if test="quoteid != null and !''.equals(quoteid)">
                 and aaa.totleTradeId = #{quoteid,jdbcType=VARCHAR}
@@ -302,10 +301,10 @@
                and aaa.termDays= #{term,jdbcType=VARCHAR}
             </if>
             <if test="vsettleDate != null and !''.equals(vsettleDate)">
-                and aaa.vsettleDate = #{vsettleDate}
+                and aaa.vsettleDate = #{vsettleDate,jdbcType=DATE}
             </if>
             <if test="msettleDate != null and !''.equals(msettleDate)">
-                and aaa.msettleDate = #{msettleDate}
+                and aaa.msettleDate = #{msettleDate,jdbcType=DATE}
             </if>
             <if test="tradeAmt != null and !''.equals(tradeAmt)">
                 and aaa.tradeAmt = #{tradeAmt}
@@ -420,7 +419,7 @@
         on ib.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ibd.cp_party_id= mcci.party_id
 
-        where ib.quote_date= #{sysDate}
+        where ib.quote_date= #{sysDate,jdbcType=DATE}
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
         </if>
@@ -456,6 +455,12 @@
         </if>
         <if test="counterId != null and counterId != ''">
             AND ibd.cp_party_id= #{counterId,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodIdList != null and finprodIdList.size() > 0">
+            AND ib.finprod_id in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
         union all
         select  '有效' as effectiveStatusName,
@@ -521,7 +526,7 @@
         left join stl_sec_acct_info stlinfo
         on ic.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ic.cp_party_id= mcci.party_id
-        where ic.quote_date= #{sysDate}
+        where ic.quote_date= #{sysDate,jdbcType=DATE}
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
         </if>
@@ -557,6 +562,12 @@
         </if>
         <if test="counterId != null and counterId != ''">
             AND ic.cp_party_id= #{counterId,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodIdList != null and finprodIdList.size() > 0">
+            AND ic.term_type in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
     </sql>
 
