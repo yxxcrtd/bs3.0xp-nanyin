@@ -275,24 +275,24 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         entity.setExerYield(ArithmeticUtil.round(entity.getExerYield(), 4, RoundingMode.HALF_UP));
         for (PtlAllocationDto ptlAllocationDto : ptlAllocatios) {
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
-                if(StringUtil.equals(anchoringValue,"price")&&entity.getPrice().compareTo(ptlAllocationDto.getPrice())>0){
+                if(StringUtil.equals(anchoringValue,"01")&&entity.getPrice().compareTo(ptlAllocationDto.getPrice())>0){
                     errorList.add(new ValidMessage("登记交易净价不能大于指令净价！"));
                 }
-                if(StringUtil.equals(anchoringValue,"matureYield")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())<0){
+                if(StringUtil.equals(anchoringValue,"02")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())<0){
                     errorList.add(new ValidMessage("登记交易到期收益率不能小于指令到期收益率！"));
                 }
-                if(StringUtil.equals(anchoringValue,"exerYield")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())<0){
+                if(StringUtil.equals(anchoringValue,"03")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())<0){
                     errorList.add(new ValidMessage("登记交易行权收益率不能小于指令行权收益率！"));
                 }
             }
             if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
-                if(StringUtil.equals(anchoringValue,"price")&&entity.getPrice().compareTo(ptlAllocationDto.getPrice())<0){
+                if(StringUtil.equals(anchoringValue,"01")&&entity.getPrice().compareTo(ptlAllocationDto.getPrice())<0){
                     errorList.add(new ValidMessage("登记交易净价不能小于指令净价！"));
                 }
-                if(StringUtil.equals(anchoringValue,"matureYield")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())>0){
-                    errorList.add(new ValidMessage("登记交易到期收益率不能大于于指令到期收益率！"));
+                if(StringUtil.equals(anchoringValue,"02")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())>0){
+                    errorList.add(new ValidMessage("登记交易到期收益率不能大于指令到期收益率！"));
                 }
-                if(StringUtil.equals(anchoringValue,"exerYield")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())>0){
+                if(StringUtil.equals(anchoringValue,"03")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())>0){
                     errorList.add(new ValidMessage("登记交易行权收益率不能大于指令行权收益率！"));
                 }
             }
