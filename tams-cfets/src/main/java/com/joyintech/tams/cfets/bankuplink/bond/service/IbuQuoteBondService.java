@@ -729,9 +729,6 @@ public class IbuQuoteBondService extends BaseService {
         if(!StringUtil.isNotEmpty(param.get("remark"))){
             errorList.add(new ValidMessage("请输入退回原因!"));
         }
-        if(StringUtil.isNotEmpty(param.get("entrustIds"))){
-           param.put("entrustIdList",StringUtil.splitToList(",",(String)param.get("entrustIds")));
-        }
         setParam(param);
         List<CfetsBondDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if(CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)){

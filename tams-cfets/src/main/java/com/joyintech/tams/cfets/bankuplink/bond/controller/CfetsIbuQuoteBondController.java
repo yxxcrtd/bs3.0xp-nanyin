@@ -195,6 +195,9 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	public Message<AjaxResult> entrustRefuce(@RequestBody Map<String,Object> param){
 		try{
 			AjaxResult result = new AjaxResult();
+            if(com.joyintech.framework.util.StringUtil.isNotEmpty(param.get("entrustId"))){
+                param.put("entrustIdList", com.joyintech.framework.util.StringUtil.splitToList(",",(String)param.get("entrustIds")));
+            }
 			result = ibuQuoteBondService.entrustRefuceCheck(param);
 			if(CollectionUtils.isNotEmpty(result.getErrorList())){
 				return new Message<AjaxResult>().success().setData(result);
