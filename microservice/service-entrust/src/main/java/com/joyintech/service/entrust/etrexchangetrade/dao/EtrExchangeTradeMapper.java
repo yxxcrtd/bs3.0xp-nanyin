@@ -298,5 +298,18 @@ public interface EtrExchangeTradeMapper {
 	 */
 	List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(Map<String,Object> map);
 
+	/**
+	 * 获取多组合分配资金账户
+	 * @param paraMap
+	 * @return
+	 */
+	List<SelectOptionDto> selectMultiAcctNo(Map<String,Object> paraMap);
+
+	/**
+	 * 查询组合+资金账户+交易场所对应的证券账户（多组合）
+	 * @param paraMap
+	 * @return
+	 */
+	public String selectMultiSecAcctId(Map<String,Object> paraMap);
 	EtrExchangeTradeMulti001Dto selectMultDetail(Map<String,Object> map);
 }

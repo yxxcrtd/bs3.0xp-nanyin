@@ -82,6 +82,12 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     private EtrDistributeMapper etrDistributeMapper;
 
     /**
+     * 委托指令明细
+     */
+    @Autowired
+    private EtrEntrustDetailMapper etrEntrustDetailMapper;
+
+    /**
      * 投资委托信息Mapper
      */
     @Autowired
@@ -153,6 +159,9 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
 
     @Autowired
     private WflEtrEntrustWwMapper wflEtrEntrustWwMapper;
+
+    @Autowired
+    private WflEtrEntrustDetailMapper wflEtrEntrustDetailMapper;
 
     @Autowired
     private EtrEntrustWwMapper etrEntrustWwMapper;
@@ -1184,6 +1193,17 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                     wflEtrEntrustBidPriceMapper.insertSelective(wflEtrEntrustBidPrice);
                 }
             }
+
+            //保存List<委托指令明细>
+            if(!StringUtil.isEmptyList(dto.getEtrEntrustDetailList())){
+                for(EtrEntrustDetail etrEntrustDetail : dto.getEtrEntrustDetailList()) {
+                    WflEtrEntrustDetail wflEtrEntrustDetail = new WflEtrEntrustDetail();
+                    BeanUtil.copyPropertiesIgnoreNull(wflEtrEntrustDetail,etrEntrustDetail);
+                    wflEtrEntrustDetail.setWorkflowId(dto.getWorkFlowId());
+                    wflEtrEntrustDetail.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                }
+            }
+
             if (mstFileCommonService != null && dto.getMstFileInputParameter() != null) {
                 dto.getMstFileInputParameter().setBussinessId(dto.getWorkFlowId());
                 mstFileCommonService.updateBusinessId(dto.getMstFileInputParameter());

@@ -619,6 +619,15 @@ public class EtrExchangeTradeService extends BaseService{
         }
     }
 
+
+    public void doCompleteMulti(EtrExchangeTradeMulti001Dto dto, String operationType) throws IllegalAccessException, InvocationTargetException {
+        EtrExchangeTrade001Dto etrExchangeTrade001Dto = new EtrExchangeTrade001Dto();
+        BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto,dto);
+        etrExchangeTrade001Dto.setPortfolioId(dto.getPortfolioTreeId());
+        etrExchangeTrade001Dto.setAcctNo(dto.getTradeMultiPtl001Dtos().get(0).getAcctNo());
+        this.doComplete(dto, operationType);
+    }
+
     /**
      * 构造投资指令DTO
      * @param dto
@@ -638,7 +647,13 @@ public class EtrExchangeTradeService extends BaseService{
         baseDto.setCreateTime(dto.getCreateTime());// 创建时间
         baseDto.setUpdateUser(LoginUserUtil.getUserName());// 更新用户
         baseDto.setUpdateTime(new Date());// 更新时间
-        baseDto.setEntrustClass(DictCodeListExt3.投资指令类型_单组合单资产指令.getValue());// 数据字典.指令类型.单组合单资产
+        if(StringUtil.equals(dto.getIsMulti(),DictCodeList.是否_是.getValue()) ) {
+            baseDto.setEntrustClass(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());// 数据字典.指令类型.单组合单资产
+        }
+        else {
+            baseDto.setEntrustClass(DictCodeListExt3.投资指令类型_单组合单资产指令.getValue());// 数据字典.指令类型.单组合单资产
+        }
+
         baseDto.setEntrustType(dto.getEntrustBussType());// 指令业务类型
         baseDto.setEntrustId(dto.getEntrustId());// 指令编号
         if (iPlatformDate != null) {
@@ -806,6 +821,22 @@ public class EtrExchangeTradeService extends BaseService{
      */
     public Page<EtrExchangeTrade002Dto> findZqzyPositionsPage(int page, int length,
             Map<String, Object> pageParam) {
+        getZqzyPositionParam(pageParam);
+        Page<EtrExchangeTrade002Dto> result = super.queryForPage(page, length, () -> etrExchangeTradeMapper.findZqzyPositionsPage(pageParam));
+        return result;
+    }
+
+    /**
+     *
+     * @param pageParam
+     * @return
+     */
+    public List<EtrExchangeTrade002Dto> findZqzyPositionsList(Map<String, Object> pageParam) {
+        getZqzyPositionParam(pageParam);
+        return etrExchangeTradeMapper.findZqzyPositionsPage(pageParam);
+    }
+
+    private void getZqzyPositionParam(Map<String, Object> pageParam) {
         pageParam.put("POSITION_TYPE_03", BussinessDictCodeList.持仓类型_实际.getValue());
         pageParam.put("POSITION_TYPE_04", BussinessDictCodeList.持仓类型_质押.getValue());
         pageParam.put("POSITION_TYPE_05", BussinessDictCodeList.持仓类型_融入.getValue());
@@ -834,8 +865,6 @@ public class EtrExchangeTradeService extends BaseService{
             pageParam.put("date", iPlatformDate.getSysDate());
             //pageParam.put("date", DateUtil.parse("2020-08-13"));
         }
-        Page<EtrExchangeTrade002Dto> result = super.queryForPage(page, length, () -> etrExchangeTradeMapper.findZqzyPositionsPage(pageParam));
-        return result;
     }
 
     /**
@@ -2077,6 +2106,31 @@ public class EtrExchangeTradeService extends BaseService{
         return entity;
     }
 
+    public BaseEtrInvestInfoDto buildMultiEtrFlow(EtrExchangeTradeMulti001Dto dto) {
+	    dto.setSecAcctId(dto.getTradeMultiPtl001Dtos().get(0).getSecAcctId());
+        BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildEtrFlow(dto);
+
+        EtrEntrust etrEntrust = baseEtrInvestInfoDto.getEtrEntrust();
+        EtrEntrustAdd etrEntrustAdd = baseEtrInvestInfoDto.getEtrEntrustAdd();
+        etrEntrustAdd.setWeighType(dto.getWeightType());
+        etrEntrustAdd.setMulDistriClass(dto.getMulDistriClass());
+        etrEntrustAdd.setMulTarget(dto.getTargetValue());
+        etrEntrustAdd.setMulUnit(dto.getMulTargetUnit());
+
+        List<EtrEntrustDetail> etrEntrustDetailList = new ArrayList<>();
+        baseEtrInvestInfoDto.setEtrEntrustDetailList(etrEntrustDetailList);
+        for(EtrExchangeTradeMultiPtl001Dto item : dto.getTradeMultiPtl001Dtos()) {
+            EtrEntrustDetail etrEntrustDetail = new EtrEntrustDetail();
+            etrEntrustDetail.setPortfolioId(item.getPortfolioId());
+            etrEntrustDetail.setEntrustId(etrEntrust.getEntrustId());
+            etrEntrustDetail.setEntrustAmt(item.getEntrustAmt());
+            etrEntrustDetail.setEntrustNum(item.getEntrustNum());
+            etrEntrustDetail.setDisRate(ArithmeticUtil.divide(item.getProportion(),new BigDecimal(100),4));
+            etrEntrustDetail.setTargetType(dto.getTargetType());
+            etrEntrustDetailList.add(etrEntrustDetail);
+        }
+        return baseEtrInvestInfoDto;
+    }
 
 	/**
 	 * 每日债券估值市场行情价格查询
@@ -2333,6 +2387,23 @@ public class EtrExchangeTradeService extends BaseService{
     public List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(Map<String,Object> map) {
         List<EtrExchangeTradeMultiPtl001Dto> list = etrExchangeTradeMapper.selectPortfolioTreeDetail(map);
         return list;
+    }
+    /**
+     * 获取多组合分配资金账户
+     * @param paraMap
+     * @return
+     */
+    public Page<SelectOptionDto> selectMultiAcctNo(Map<String,Object> paraMap, int page, int length) {
+        return super.queryForPageForSelectReturn(page,length,()->etrExchangeTradeMapper.selectMultiAcctNo(paraMap));
+    }
+
+    /**
+     * 查询组合+资金账户+交易场所对应的证券账户（多组合）
+     * @param paraMap
+     * @return
+     */
+    public String selectMultiSecAcctId(Map<String,Object> paraMap) {
+        return etrExchangeTradeMapper.selectMultiSecAcctId(paraMap);
     }
     /**
      * 查询多组合详情

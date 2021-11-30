@@ -32,6 +32,9 @@
     //指令真实价格
     var factPrice = zeroPrice;
 
+    //当前编辑的组合代码
+    var curPortfolioId = "";
+
 
     /**===============================================定义变量end========================================= **/
 
@@ -42,6 +45,7 @@
      */
     function getSearchParams() {
         var object = $.serializeToObject('#sumbitForm_'+currentTab);
+        object.finprodType2 =  $("#finprodType2_" + currentTab).val();
         //根据指令方向设置质押式回购的金融产品类型
         if (object.finprodType2 && object.finprodType2 == FINPROD_TYPE_TG_ZYSHG) {
             if(object.ps == PS_03) {
@@ -56,6 +60,7 @@
         object.tradeMarket = $("#tradeMarket_" + currentTab).val();
         object.entrustId = $("#entrustId_" + currentTab).val();
         object.entrustStatus = $("#entrustStatus_" + currentTab).val();
+        object.isMulti = "Y";
         object.tradePlat = currentTab;
         if(currentTab == 'jj'){//竞价
             object.tradePlat = SHARES_TRADE_PLATFORM_02;
@@ -108,101 +113,126 @@
     /**
      * 获取风险试算数据
      */
-    var getriskdata = function (object) {
-        var obj = {}
-        //债券
-        if(object.finprodType2 == FINPROD_TYPE_TG_F01) {
-            var tradeAmount = 0;
-            if(object.ps == PS_T49) {
-                tradeAmount = object.entrustNum;
-            }
-            else {
-                tradeAmount =  object.entrustAmt;
-            }
-            obj = {
-                tradeDirection: object.ps,
-                timePoint: MY_SUP_TIME_TYPE_02,
-                valDate: iPlatformDate,
-                portfolioCode: object.portfolioId,
-                tradeAmount: tradeAmount,
-                assetType: object.finprodType2,
-                isEnabled: '01',
-                assetCode: object.finprodId
-            }
-
-        }
-        //基金
-        else if (object.finprodType2 == FINPROD_TYPE_TG_F06) {
-            //买入
-            if(object.ps == PS_T01) {
+    var getRiskCheckData = function (object) {
+        var checkData = {};
+        var objects = new Array();
+        for (var index in object.tradeMultiPtl001Dtos) {
+            var item =  object.tradeMultiPtl001Dtos[index];
+            var obj = {}
+            //债券
+            if(object.finprodType2 == FINPROD_TYPE_TG_F01) {
+                var tradeAmount = 0;
+                if(object.ps == PS_T49) {
+                    tradeAmount = item.entrustNum;
+                }
+                else {
+                    tradeAmount = item.entrustAmt;
+                }
                 obj = {
-                    tradeDirection: object.ps,
+                    tradeDirection: item.ps,
                     timePoint: MY_SUP_TIME_TYPE_02,
                     valDate: iPlatformDate,
-                    portfolioCode: object.portfolioId,
-                    tradeAmount: object.entrustAmt,
-                    assetType: object.finprodType2,
+                    portfolioCode: item.portfolioId,
+                    tradeAmount: tradeAmount,
+                    assetType: item.finprodType2,
                     isEnabled: '01',
-                    assetCode: object.finprodId
+                    assetCode: item.finprodId
+                }
+
+            }
+            //基金
+            else if (object.finprodType2 == FINPROD_TYPE_TG_F06) {
+                //买入
+                if(object.ps == PS_T01) {
+                    obj = {
+                        tradeDirection: item.ps,
+                        timePoint: MY_SUP_TIME_TYPE_02,
+                        valDate: iPlatformDate,
+                        portfolioCode: item.portfolioId,
+                        tradeAmount: item.entrustAmt,
+                        assetType: item.finprodType2,
+                        isEnabled: '01',
+                        assetCode: item.finprodId
+                    }
+                }
+                //卖出
+                else if(object.ps == PS_T02){
+                    obj = {
+                        tradeDirection: item.ps,
+                        timePoint: MY_SUP_TIME_TYPE_02,
+                        valDate: iPlatformDate,
+                        portfolioCode: item.portfolioId,
+                        tradeAmount: item.entrustAmt,
+                        assetType: item.finprodType2,
+                        isEnabled: '01',
+                        assetCode: item.finprodId,
+                        amtType:'1'
+                    }
                 }
             }
-            //卖出
-            else if(object.ps == PS_T02){
+            //股票
+            else if (object.finprodType2 == FINPROD_TYPE_TG_F10) {
                 obj = {
-                    tradeDirection: object.ps,
+                    tradeDirection: item.ps,
                     timePoint: MY_SUP_TIME_TYPE_02,
                     valDate: iPlatformDate,
-                    portfolioCode: object.portfolioId,
-                    tradeAmount: object.entrustAmt,
-                    assetType: object.finprodType2,
+                    portfolioCode: item.portfolioId,
+                    tradeAmount: item.entrustAmt,
+                    assetType: item.finprodType2,
                     isEnabled: '01',
-                    assetCode: object.finprodId,
-                    amtType:'1'
+                    assetCode: item.finprodId
                 }
             }
-        }
-        //股票
-        else if (object.finprodType2 == FINPROD_TYPE_TG_F10) {
-            obj = {
-                tradeDirection: object.ps,
-                timePoint: MY_SUP_TIME_TYPE_02,
-                valDate: iPlatformDate,
-                portfolioCode: object.portfolioId,
-                tradeAmount: object.entrustAmt,
-                assetType: object.finprodType2,
-                isEnabled: '01',
-                assetCode: object.finprodId
+            //质押式回购
+            else if (object.finprodType2 == FINPROD_TYPE_TG_F02 || object.finprodType2 == FINPROD_TYPE_TG_F03) {
+                obj = {
+                    tradeDirection: item.ps,
+                    timePoint: MY_SUP_TIME_TYPE_02,
+                    valDate: iPlatformDate,
+                    portfolioCode: item.portfolioId,
+                    tradeAmount: item.entrustAmt,
+                    assetType: ps == PS_03?FINPROD_TYPE_TG_F02:FINPROD_TYPE_TG_F03,
+                    isEnabled: '01',
+                    assetCode: item.finprodId
+                }
             }
-        }
-        //质押式回购
-        else if (object.finprodType2 == FINPROD_TYPE_TG_F02 || object.finprodType2 == FINPROD_TYPE_TG_F03) {
-            obj = {
-                tradeDirection: object.ps,
-                timePoint: MY_SUP_TIME_TYPE_02,
-                valDate: iPlatformDate,
-                portfolioCode: object.portfolioId,
-                tradeAmount: object.entrustAmt,
-                assetType: object.finprodType2,
-                isEnabled: '01',
-                assetCode: object.finprodId
+
+            //增加交易对手影响试算
+            if(currentTab=='dz' || currentTab=='gd') {
+                obj.counterId = object.counterId;
             }
-        }
 
-        //增加交易对手影响试算
-        if(currentTab=='dz' || currentTab=='gd') {
-            obj.counterId = object.counterId;
+            var riskdata = {
+                tradeDirection: ['ps', 'EtrExchangeTrade001.ps'],
+                portfolioCode: ['portfolioId', 'EtrExchangeTrade001.portfolioId'],
+                tradeAmount: ['entrustNum',getRiskMathPrompt()],
+                assetType: ['assetType1', 'EtrExchangeTrade003.finprodType2'],
+                data: obj,
+                // add by zhangrui1 交易对手影响风险试算 start
+                counterId: ['counterId', 'EtrExchangeTrade001.counterId']
+            }
+            objects.push(riskdata);
         }
+        checkData.data = objects;
+        return checkData;
+    }
 
-        var riskdata = {
-            tradeDirection: ['ps', 'EtrExchangeTrade001.ps'],
-            portfolioCode: ['portfolioId', 'EtrExchangeTrade001.portfolioId'],
-            tradeAmount: ['entrustNum',getRiskMathPrompt()],
-            assetType: ['assetType1', 'EtrExchangeTrade003.finprodType2'],
-            data: obj,
-            // add by zhangrui1 交易对手影响风险试算 start
-            counterId: ['counterId', 'EtrExchangeTrade001.counterId']
+    var getRiskData = function (object) {
+        var objects = new Array();
+        for (var index in object.tradeMultiPtl001Dtos) {
+            var item = object.tradeMultiPtl001Dtos[index];
+            if(item == PS_03) {
+                item.finprodType2 = FINPROD_TYPE_TG_F02;
+            }
+            else if(item == PS_04){
+                item.finprodType2 = FINPROD_TYPE_TG_F03;
+            }
+            item.vdate = object.vdate;
+            item.mdate = object.mdate;
+            item.invAim = object.invAim;
+            objects.push(item);
         }
-        return riskdata;
+        return objects;
     }
 
     /**
@@ -220,33 +250,9 @@
      */
     var getRiskInterfUrl = function () {
 
-        var object = getSearchParams();
-        var riskInterfUrl;
-        if(object) {
 
-            //债券
-            if(object.finprodType2 == FINPROD_TYPE_TG_F01) {
-                if(object.ps == PS_T49) {
-                    riskInterfUrl = basePath +  'riskrds/interf/doInfData/0/RSK011/F01';
-                }
-                else {
-                    riskInterfUrl = basePath +  'riskrds/interf/doInfData/0/RSK002/F01';
-                }
-            }
-            //基金
-            else if (object.finprodType2 == FINPROD_TYPE_TG_F06) {
-                riskInterfUrl = basePath +  'riskrds/interf/doInfData/0/RSK002/F02';
-            }
-            //股票
-            else if (object.finprodType2 == FINPROD_TYPE_TG_F10) {
-                riskInterfUrl = basePath +  'riskrds/interf/doInfData/0/RSK002/F11';
-            }
-            //质押式回购
-            else if (object.finprodType2 == FINPROD_TYPE_TG_F02 || object.finprodType2 == FINPROD_TYPE_TG_F03) {
-                riskInterfUrl = basePath +  'riskrds/interf/doInfData/0/RSK002/F07';
-            }
+        var riskInterfUrl = basePath + 'riskRdsTrial/interf/trialList/'+ pageId + '/0';
 
-        }
         return riskInterfUrl;
     }
 
@@ -562,56 +568,6 @@
             return Number(num1) - Number(num2)
         }
     };
-
-    var addBtnClick = function() {
-        var input = $(this).parent().find('input');
-        if (input.attr("disabled") === 'disabled' || input.attr("disabled") === true){
-            return
-        }
-        var name = input.attr("name");
-        var num = Number(input.val());
-        switch (name) {
-            case 'price':
-                addMinPriceStep('add',num,input);
-                break;
-            case 'entrustPrice':
-                addMinPriceStep('add',num,input);
-                break;
-            case 'entrustNum':
-                addMinNumStep('add',num,input);
-                break;
-            case 'entrustAmt':
-                input.val(num + Number(0.01)).blur().trigger('change');
-                break;
-            default:
-                input.val(num + Number(1)).blur().trigger('change');
-        }
-    };
-
-    var subBtnClick = function () {
-        var input = $(this).parent().find('input');
-        if (input.attr("disabled") === 'disabled' || input.attr("disabled") === true){
-            return
-        }
-        var name = input.attr("name");
-        var num = Number(input.val());
-        switch (name) {
-            case 'price':
-                addMinPriceStep('sub',num,input);
-                break;
-            case 'entrustPrice':
-                addMinPriceStep('sub',num,input);
-                break;
-            case 'entrustNum':
-                addMinNumStep('sub',num,input);
-                break;
-            case 'entrustAmt':
-                input.val(num - Number(0.01)).blur().trigger('change');
-                break;
-            default:
-                input.val(num - Number(1)).blur().trigger('change');
-        }
-    };
     /**===============================================工具类的方法end========================================= **/
 
     /**===============================================页面业务处理方法start========================================= **/
@@ -619,10 +575,8 @@
      * 多组合代码变更时，联动其他字段
      *
      */
-    var portfolioTreeIdChange = function(init) {
-        if(dateTable) {
-            dateTable.reload();
-        }
+    var portfolioTreeIdChange = function() {
+        linkRefreshTable();
     };
 
 
@@ -797,51 +751,20 @@
      * 委托方向变更时，需要联动计算收益率等
      */
     var psChange = function(init) {
-        if(currentTab != 'jj') {
-            linkDeclaType();
-        }
-
+        linkDeclaType();
         controlEntrustPrice();
         calcPriceAndYield(init);
         linkTargetType();
         linkMulDistriClass();
+
+        linkConversionRate();
+        linkRefreshTable();
     };
 
     /**
      * 分配方式变动方法
      */
     var mulDistriClassChange = function () {
-        var mulDistriClass = $("mulDistriClass"+currentTab).val();
-        if(mulDistriClass == MUL_DISTRI_CLASS_01) {
-
-        }
-        else if(mulDistriClass == MUL_DISTRI_CLASS_02) {
-
-        }
-        else if(mulDistriClass == MUL_DISTRI_CLASS_03) {
-
-        }
-        else if(mulDistriClass == MUL_DISTRI_CLASS_04) {
-
-        }
-        else if(mulDistriClass == MUL_DISTRI_CLASS_05) {
-
-        }
-        else if(mulDistriClass == MUL_DISTRI_CLASS_06) {
-
-        }
-        else if(mulDistriClass == MUL_DISTRI_CLASS_07) {
-
-        }
-        else if(mulDistriClass == MUL_DISTRI_CLASS_08) {
-
-        }
-        else if(mulDistriClass == MUL_DISTRI_CLASS_09) {
-
-        }
-        else if(mulDistriClass == MUL_DISTRI_CLASS_09) {
-
-        }
 
         //联动目标值
         linkTargetValue();
@@ -849,6 +772,8 @@
         linkMulTargetUnit();
         //联动权重方式
         linkWeightType();
+        //联动组合分配列表
+        linkRefreshTable();
     }
 
     /**
@@ -1549,7 +1474,7 @@
         $("#weightType_" + currentTab).val("");
         var mulDistriClass = $("#mulDistriClass_" + currentTab).val();
         if(mulDistriClass == MUL_DISTRI_CLASS_03 || mulDistriClass == MUL_DISTRI_CLASS_04) {
-            $("#weightType_div_" + currentTab).show;
+            $("#weightType_div_" + currentTab).show();
         }
         else {
             $("#weightType_div_" + currentTab).hide();
@@ -1615,55 +1540,14 @@
         $("#targetValue" + currentTab).val("");
     }
 
-    /**
-     * 联动表数据
-     */
-    var linkTableDate = function(){
-        if(dateTable) {
-            var mulDistriClass = $("#mulDistriClass_" + currentTab).val();
-            var finprodType2 = $("#finprodType2_" + currentTab).val();
-            var ps =  $("#ps_" + currentTab).val();
-            var price =  $("#price_" + currentTab).val();
-            var fprice =  $("#fprice_" + currentTab).val();
-            var yield =  $("#yield_" + currentTab).val();
-            var entrustPrice =  $("#entrustPrice_" + currentTab).val();
-            var array = dateTable.getAllRows();
-            for(var i=0;i<array.length;i++) {
-                //设置交易方向
-                if(ps == PS_T100) {
-                    array[i].ps = "";
-                }
-                else {
-                    array[i].ps = ps?ps:"";
-                }
-
-                //设置价格
-                if(finprodType2 == FINPROD_TYPE_TG_F01) {
-                    if(ps == PS_T01 || ps == PS_T01) {
-                        array[i].price = price?price:"";
-                        array[i].fprice = fprice?fprice:"";
-                        array[i].yield = yield?yield:"";
-                    }
-                    else if(ps == PS_T68 || ps == PS_T69 || ps == PS_T100) {
-                        array[i].entrustPrice = entrustPrice ? entrustPrice:"";
-                    }
-                }
-                else if(finprodType2 == FINPROD_TYPE_TG_ZYSHG){
-                    array[i].entrustPrice = entrustPrice ? entrustPrice:"";
-                }
-                else {
-                    array[i].entrustPrice = entrustPrice ? entrustPrice:"";
-                }
-
-
-            }
-
-            dateTable.clear(function () {
-                for(var i;i<array.length;i++) {
-                    dateTable.addRow(array[i]);
-                }
-            })
-
+    var linkConversionRate = function () {
+        var ps = $("#ps_" + currentTab).val();
+        $("#conversionRate_" + currentTab).val("");
+        if(ps == PS_T68 || ps == PS_T69) {
+            $("#conversionRate_div_" + currentTab).show();
+        }
+        else {
+            $("#conversionRate_div_" + currentTab).hide();
         }
     }
 
@@ -2464,7 +2348,7 @@
                 // 隐藏重置按钮
 
                 linkTradePlat(entrustType, true);
-                portfolioTreeIdChange(true);
+                portfolioTreeIdChange();
                 targetTypeChange(true);
                 entrustNumChange();
                 psChange(true);
@@ -2644,6 +2528,8 @@
                 type9 = '';
             };
         }
+        
+        linkRefreshTable();
     };
 
     /**
@@ -2726,9 +2612,7 @@
         resetFlag = true;
         $("#entrustId_" + currentTab).val('').trigger('change');
         $("#entrustStatus_" + currentTab).val('').trigger('change');
-        if(!opt){
-            $("#portfolioTreeId_" + currentTab).val("").trigger('change');
-        }
+        $("#portfolioTreeId_" + currentTab).val("").trigger('change');
         $("#secId_" + currentTab).val("").trigger('change');
         $("#ps_" + currentTab).val('').trigger('change');
         $("#priceModel_" + currentTab).val('').trigger('change',true);
@@ -2745,6 +2629,7 @@
         $("#mulDistriClass_" + currentTab).val('').trigger('change');
         $("#targetValue_" + currentTab).val('').trigger('change');
 
+
         /***
          * 清空行情列表
          */
@@ -2754,6 +2639,12 @@
 
         if(currentTab=='dz') {
             parent.EtrExchangeTradeHq.clearDzHqTable();
+        }
+
+        if(dateTable){
+            dateTable.clear(function () {
+
+            });
         }
         //清空操作结束
         resetFlag = null;
@@ -2783,6 +2674,150 @@
             $("#content_div_gd").show();
         }
 
+        if(dateTable){
+            dateTable.clear(function () {
+
+            });
+        }
+    }
+
+    var linkRefreshTable = function(){
+        //刷新组合分配
+        if(dateTable) {
+            dateTable.reload();
+        }
+        var mulDistriClass = $("#mulDistriClass_" + currentTab).val();
+        var isShowProportion = (mulDistriClass == MUL_DISTRI_CLASS_03|| mulDistriClass == MUL_DISTRI_CLASS_04) ? true:false;
+        if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01) {
+            if($("#ps_" + currentTab).val() == PS_T68 || $("#ps_" + currentTab).val() == PS_T69
+                || ($("#ps_" + currentTab).val() == PS_T100 && mulDistriClass == MUL_DISTRI_CLASS_10)) {
+                dateTable.showColumns(
+                    [{field:'portfolioName',visible:true} , {field:'acctName',visible:true},
+                        {field:'finprodMarketId',visible:true}, {field:'finprodName',visible:true} ,
+                        {field:'proportionStr',visible:isShowProportion} ,{field:'psStr',visible:true},
+                        {field:'price',visible:false},  {field:'fprice',visible:false},
+                        {field:'yield',visible:false}, {field:'entrustPrice',title: 'EtrExchangeTrade001.conversionRate',visible:true},
+                        {field:'entrustNum',visible:true}, {field:'entrustAmt',title: 'EtrExchangeTrade001.secNum',visible:true},
+                        {field:'availableCashT',visible:true}, {field:'availablePositionsT',visible:true},
+                        {field:'availableCashT1',visible:true}, {field:'availablePositionsT1',visible:true},
+                        {field:'productNetValue',visible:true}]);
+            }
+            else {
+                dateTable.showColumns(
+                    [{field:'portfolioName',visible:true} , {field:'acctName',visible:true},
+                        {field:'finprodMarketId',visible:true}, {field:'finprodName',visible:true} ,
+                        {field:'proportionStr',visible:isShowProportion} ,{field:'psStr',visible:true},
+                        {field:'price',visible:true},  {field:'fprice',visible:true},
+                        {field:'yield', visible:true}, {field:'entrustPrice',title: 'EtrExchangeTrade003.price',visible:false},
+                        {field:'entrustNum',visible:true}, {field:'entrustAmt',title: 'EtrExchangeTrade001.entrustAmt',visible:true},
+                        {field:'availableCashT',visible:true}, {field:'availablePositionsT',visible:true},
+                        {field:'availableCashT1',visible:true}, {field:'availablePositionsT1',visible:true},
+                        {field:'productNetValue',visible:true}]);
+            }
+
+        }
+        else if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_ZYSHG){
+            dateTable.showColumns(
+                [{field:'portfolioName',visible:true} , {field:'acctName',visible:true},
+                    {field:'finprodMarketId',visible:true}, {field:'finprodName',visible:true} ,
+                    {field:'proportionStr',visible:isShowProportion} ,{field:'psStr',visible:true},
+                    {field:'price',visible:false},  {field:'fprice',visible:false},
+                    {field:'yield', visible:true}, {field:'entrustPrice',title: 'EtrExchangeTrade001.repoYield',visible:true},
+                    {field:'entrustNum',visible:true}, {field:'entrustAmt', title: 'EtrExchangeTrade001.entrustAmt', visible:true},
+                    {field:'availableCashT',visible:true}, {field:'availablePositionsT',visible:true},
+                    {field:'availableCashT1',visible:true}, {field:'availablePositionsT1',visible:true},
+                    {field:'productNetValue',visible:true}]);
+        }
+        else if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F06){
+            dateTable.showColumns(
+                [{field:'portfolioName',visible:true} , {field:'acctName',visible:true},
+                    {field:'finprodMarketId',visible:true}, {field:'finprodName',visible:true} ,
+                    {field:'proportionStr',visible:isShowProportion} ,{field:'psStr',visible:true},
+                    {field:'price',visible:false},  {field:'fprice',visible:false},
+                    {field:'yield', visible:false}, {field:'entrustPrice',title: 'EtrExchangeTrade003.price',visible:true},
+                    {field:'entrustNum',visible:true}, {field:'entrustAmt', title: 'EtrExchangeTrade001.entrustAmt', visible:true},
+                    {field:'availableCashT',visible:true}, {field:'availablePositionsT',visible:true},
+                    {field:'availableCashT1',visible:true}, {field:'availablePositionsT1',visible:true},
+                    {field:'productNetValue',visible:true}]);
+
+        }
+        else if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F10){
+            dateTable.showColumns(
+                [{field:'portfolioName',visible:true} , {field:'acctName',visible:true},
+                    {field:'finprodMarketId',visible:true}, {field:'finprodName',visible:true} ,
+                    {field:'proportionStr',visible:isShowProportion} ,{field:'psStr',visible:true},
+                    {field:'price',visible:false},  {field:'fprice',visible:false},
+                    {field:'yield', visible:false}, {field:'entrustPrice',title: 'EtrExchangeTrade003.price',visible:true},
+                    {field:'entrustNum',visible:true}, {field:'entrustAmt', title: 'EtrExchangeTrade001.entrustAmt', visible:true},
+                    {field:'availableCashT',visible:true}, {field:'availablePositionsT',visible:true},
+                    {field:'availableCashT1',visible:true}, {field:'availablePositionsT1',visible:true},
+                    {field:'productNetValue',visible:true}]);
+        }
+        else {
+            dateTable.showColumns(
+                [{field:'portfolioName',visible:true} , {field:'acctName',visible:true},
+                    {field:'finprodMarketId',visible:true}, {field:'finprodName',visible:true} ,
+                    {field:'proportionStr',visible:isShowProportion} ,{field:'psStr',visible:true},
+                    {field:'price',visible:true},  {field:'fprice',visible:true},
+                    {field:'yield', visible:true}, {field:'entrustPrice',title: 'EtrExchangeTrade003.price',visible:false},
+                    {field:'entrustNum',visible:true}, {field:'entrustAmt', title: 'EtrExchangeTrade001.entrustAmt',visible:true},
+                    {field:'availableCashT',visible:true}, {field:'availablePositionsT',visible:true},
+                    {field:'availableCashT1',visible:true}, {field:'availablePositionsT1',visible:true},
+                    {field:'productNetValue',visible:true}]);
+        }
+
+
+        linkTableData();
+    }
+
+    /**
+     * 联动表数据
+     */
+    var linkTableData = function(){
+        if(dateTable) {
+            var mulDistriClass = $("#mulDistriClass_" + currentTab).val();
+            var finprodType2 = $("#finprodType2_" + currentTab).val();
+            var ps =  $("#ps_" + currentTab).val();
+            var priceValue =  $("#price_" + currentTab).val();
+            var fpriceValue =  $("#fprice_" + currentTab).val();
+            var yieldValue =  $("#yield_" + currentTab).val();
+            var entrustPriceValue =  $("#entrustPrice_" + currentTab).val();
+            var array = dateTable.getAllRows();
+            for(var i=0;i<array.length;i++) {
+                //设置交易方向
+                if(ps == PS_T100) {
+                    array[i].ps = "";
+                }
+                else {
+                    array[i].ps = ps?ps:"";
+                }
+
+                //设置价格
+                if(finprodType2 == FINPROD_TYPE_TG_F01) {
+                    if(ps == PS_T01 || ps == PS_T02) {
+                        array[i].price = priceValue?priceValue:"";
+                        array[i].fprice = fpriceValue?fpriceValue:"";
+                        array[i].yield = yieldValue?yieldValue:"";
+                    }
+                    else if(ps == PS_T68 || ps == PS_T69 || ps == PS_T100) {
+                        array[i].entrustPrice = entrustPriceValue ? entrustPriceValue:"";
+                    }
+                }
+                else if(finprodType2 == FINPROD_TYPE_TG_ZYSHG){
+                    array[i].entrustPrice = entrustPriceValue ? entrustPriceValue:"";
+                }
+                else {
+                    array[i].entrustPrice = entrustPriceValue ? entrustPriceValue:"";
+                }
+            }
+
+            dateTable.clear(function () {
+                for(var i=0;i<array.length;i++) {
+                    dateTable.addRow(array[i]);
+                }
+            })
+
+        }
     }
     /**
      * 003画面双击刷新001
@@ -2928,7 +2963,8 @@
     parent.EtrExchangeTradeMulti001 = {
         dbclickRefresh:dbclickRefresh,
         getSearchParams:getSearchParams,
-        getriskdata:getriskdata,
+        getRiskCheckData:getRiskCheckData,
+        getRiskData:getRiskData,
         riskResultdata:riskResultdata,
         cluflag:cluflag,
         doReset:doReset,
@@ -2963,16 +2999,23 @@
         page:false,
         cols:[
             {field:'portfolioName', title: 'EtrExchangeTrade002.portfolioName', sortField:'portfolioName',width : 200},
-            {field:'acctName', title: 'EtrExchangeTrade001.acctNo', sortField:'acctName',width : 200},
+            {field:'acctNo', title: 'EtrExchangeTrade001.acctNo', width : 200,sortable:false,edit : true,
+                editOption: {
+                    type: 'select', multiple: false, searchable: true, showField: 'id', parentIds:'portfolioId',
+                    url: JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/selectMultiAcctNo"),
+                    postData:function () {
+                        return {portfolioId:curPortfolioId,portfolioTreeId: $("#portfolioTreeId_"+currentTab).val()};
+                    }
+                }
+            },
             {field:'finprodMarketId', title: 'EtrExchangeTrade001.finprodId', sortField:'finprodMarketId',width : 200},
             {field:'finprodName', title: 'EtrExchangeTrade001.finprodName', sortField:'finprodName',width : 200},
             {field:'proportionStr', title: 'EtrExchangeTrade001.proportion', sortField:'proportion',width : 200},
             {field:'psStr', title: 'EtrExchangeTrade001.ps', sortField:'ps',width : 200},
-            {field:'price', title: 'EtrExchangeTrade001.price', sortField:'price',width : 200,type:'number'},
-            {field:'fprice', title: 'EtrExchangeTrade001.fprice', sortField:'fprice',width : 200,type:'number'},
-            {field:'yield', title: 'EtrExchangeTrade001.yield', sortField:'yield',width : 200,type:'number'},
-            {field:'entrustPrice', title: 'EtrExchangeTrade003.price', sortField:'entrustPrice',width : 200,type:'number'},
-            {field:'conversionRate', title: 'EtrExchangeTrade001.conversionRate', sortField:'conversionRate',width : 200,type:'number'},
+            {field:'price', title: 'EtrExchangeTrade001.price', sortField:'price',width : 200,type:'number' ,digit:3 ,edit : true},
+            {field:'fprice', title: 'EtrExchangeTrade001.fprice', sortField:'fprice',width : 200,type:'number' ,digit:3 ,edit : true},
+            {field:'yield', title: 'EtrExchangeTrade001.yield', sortField:'yield',width : 200,type:'number' ,digit:6 ,edit : true},
+            {field:'entrustPrice', title: 'EtrExchangeTrade003.price', sortField:'entrustPrice',width : 200,type:'number',digit:3 ,edit : true},
             {field:'entrustNum', title: 'EtrExchangeTrade001.entrustNum', sortField:'entrustNum',width : 200,type:'number',edit : true},
             {field:'entrustAmt', title: 'EtrExchangeTrade001.entrustAmt', sortField:'entrustAmt',width : 200,type:'number',edit : true},
             {field:'availableCashT', title: 'EtrExchangeTrade001.availableCashT', sortField:'availableCashT',width : 200,type:'number'},
@@ -2980,15 +3023,170 @@
             {field:'availableCashT1', title: 'EtrExchangeTrade001.availableCashT1', sortField:'availableCashT1',width : 200,type:'number'},
             {field:'availablePositionsT1', title: 'EtrExchangeTrade001.availablePositionsT1', sortField:'availablePositionsT1',width : 200,type:'number'},
             {field:'productNetValue', title: 'EtrExchangeTrade001.productNetValue', sortField:'productNetValue',width : 200,type:'number'},
-            {field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt']},
-
             {field:'portfolioId', visible:false},
             {field:'finprodId', visible:false},
-            {field:'acctNo', visible:false},
-            {field:'finprodMarketId', visible:false},
-            {field:'finprodMarketId', visible:false}
+            {field:'ps', visible:false},
+            {field:'acctName', visible:false},
+            {field:'secAcctId', visible:false},
+            {field:'finprodType2', visible:false},
+            {field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt']}
         ],
+        beforeEditCell:function (preVal, field, rowData){
+            var calculateField = $("[name=calculateField_" + currentTab + "]:radio").next(".layui-form-radioed").prev("input").val();
+            var ps =  $("#ps_" + currentTab).val();
+            if((field=="price" || field=="fprice" || field=="yield") && ps != PS_T100){
+                // 选择的计算方式为“净价”时
+                if(calculateField == SEC_CALC_MODE_01 && field=="price") {
+                    return true;
+                }
+                // 选择的计算方式为“全价”时
+                else if(calculateField == SEC_CALC_MODE_02 && field=="fprice") {
+                    return true;
+                }
+                // 选择的计算方式为“到期收益率”时
+                else if(calculateField == SEC_CALC_MODE_03 && field=="yield") {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else if (field == "entrustPrice") {
+                if(ps == PS_T68 || ps == PS_T69) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+            else if(field == "acctNo") {
+                curPortfolioId = rowData.portfolioId;
+                return true;
+            }
+            else {
+                return false;
+            }
+        },
+        editCell : function(value, data, field, cell, column){
+            if(field=="price" || field=="fprice" || field=="yield"){
+                var finprodId = data.finprodId;
+                // 默认使用百元券面计算
+                var prinAmt = new BigNumber(100);
+                var finprodType2 = data.finprodType2;
+                var ps = data.ps;
+                // 以下条件不满足时直接返回
+                if(finprodType2 != FINPROD_TYPE_TG_F01 || !finprodId || !prinAmt || !ps) {
+                    return;
+                }
+                var tradeMarket = $("#tradeMarket_" + currentTab).val();
+                var calculateField = $("[name=calculateField_" + currentTab + "]:radio").next(".layui-form-radioed").prev("input").val();
+                var priceModel = $("#priceModel_" + currentTab).val();
+                var param = {
+                    finprodId: finprodId,
+                    prinAmt: prinAmt,
+                    tradeMarket: tradeMarket,
+                    ps: ps,
+                    calculateField: calculateField
+                };
+                // 选择的计算方式为“净价”时
+                if(calculateField == SEC_CALC_MODE_01) {
+                    var price = data.price;
+                    // 首先格式化价格
+                    if(price) {
+                        param.price = price;
+                        Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/calcPriceAndYield', param, function(result) {
+                            var fprice = formatPrice(price, result.fprice);
+                            data.fprice = fprice;
+                            data.yield = result.yield;
+                        }, false);
+                    }
+                    else {
+                        data.fprice = "";
+                        data.yield = "";
+                    }
+                }
+                // 选择的计算方式为“全价”时
+                else if(calculateField == SEC_CALC_MODE_02) {
+                    var fprice = data.fprice;
+                    fprice = formatPrice(fprice);
+                    if(fprice) {
+                        param.fprice = fprice;
+                        Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/calcPriceAndYield', param, function(result) {
+                            var cprice = formatPrice(fprice,result.cprice);
+                            data.price = cprice;
+                            data.yield = result.yield;
+                        }, false);
+                    }
+                    else {
+                        data.price = "";
+                        data.yield = "";
+                    }
+                }
+                // 选择的计算方式为“到期收益率”时
+                else if(calculateField == SEC_CALC_MODE_03) {
+                    var yield = data.yield;
+                    if(yield) {
+                        param.yield = yield;
+                        Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/calcPriceAndYield', param, function(result) {
+                            data.price = formatPrice(result.cprice);
+                            data.fprice = formatPrice(result.cprice,result.fprice);
+                        }, false);
+                    }
+                    else {
+                        data.price = "";
+                        data.fprice = "";
+                    }
+                }
 
+                var object = getSearchParams();
+                var ptlList = [];
+                ptlList.push(data);
+                object.tradeMultiPtl001Dtos = ptlList;
+                Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/calc', object, function(result) {
+                    if(result) {
+                        if(result.data&& result.data.tradeMultiPtl001Dtos) {
+                            $("#targetType_"+currentTab).val("");
+                            $("#targetType_"+currentTab).val(result.data.targetType);
+                            for(var i=0;i<result.data.tradeMultiPtl001Dtos.length;i++) {
+                                dateTable.renderRow(data.LAY_TABLE_INDEX, result.data.tradeMultiPtl001Dtos[i]);
+                            }
+                        }
+                    }
+                }, false);
+            }
+            else if (field == "entrustPrice") {
+                var object = getSearchParams();
+                var ptlList = [];
+                ptlList.push(data);
+                object.tradeMultiPtl001Dtos = ptlList;
+                Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/calc', object, function(result) {
+                    if(result) {
+                        if(result.data&& result.data.tradeMultiPtl001Dtos) {
+                            $("#targetType_"+currentTab).val("");
+                            $("#targetType_"+currentTab).val(result.data.targetType);
+                            for(var i=0;i<result.data.tradeMultiPtl001Dtos.length;i++) {
+                                dateTable.renderRow(data.LAY_TABLE_INDEX, result.data.tradeMultiPtl001Dtos[i]);
+                            }
+                        }
+                    }
+                }, false);
+            }
+            else if(field == "acctNo") {
+                if(data.acctNo && $("#tradeMarket_"+currentTab).val()) {
+                    var param = {};
+                    param.portfolioId = data.portfolioId;
+                    param.acctNo = data.acctNo;
+                    param.tradeMarket = $("#tradeMarket_"+currentTab).val();
+                    Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/selectMultiSecAcctId', param, function(result) {
+                        if(result) {
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"secAcctId":result});
+                        }
+                    });
+                }
+
+                curPortfolioId = "";
+            }
+        }
     });
 
     /**
@@ -3029,9 +3227,55 @@
             }
         });
         // 加号点击事件
-        $('.increase-button').click(addBtnClick());
+        $('.increase-button').click(function () {
+            var input = $(this).parent().find('input');
+            if (input.attr("disabled") === 'disabled' || input.attr("disabled") === true){
+                return
+            }
+            var name = input.attr("name");
+            var num = Number(input.val());
+            switch (name) {
+                case 'price':
+                    addMinPriceStep('add',num,input);
+                    break;
+                case 'entrustPrice':
+                    addMinPriceStep('add',num,input);
+                    break;
+                case 'entrustNum':
+                    addMinNumStep('add',num,input);
+                    break;
+                case 'entrustAmt':
+                    input.val(num + Number(0.01)).blur().trigger('change');
+                    break;
+                default:
+                    input.val(num + Number(1)).blur().trigger('change');
+            }
+        });
         // 减号点击事件
-        $('.decrease-button').click(subBtnClick());
+        $('.decrease-button').click(function () {
+            var input = $(this).parent().find('input');
+            if (input.attr("disabled") === 'disabled' || input.attr("disabled") === true){
+                return
+            }
+            var name = input.attr("name");
+            var num = Number(input.val());
+            switch (name) {
+                case 'price':
+                    addMinPriceStep('sub',num,input);
+                    break;
+                case 'entrustPrice':
+                    addMinPriceStep('sub',num,input);
+                    break;
+                case 'entrustNum':
+                    addMinNumStep('sub',num,input);
+                    break;
+                case 'entrustAmt':
+                    input.val(num - Number(0.01)).blur().trigger('change');
+                    break;
+                default:
+                    input.val(num - Number(1)).blur().trigger('change');
+            }
+        });
 
         layui.use(['form'], function() {
             // 绑定计算模式的点击事件
@@ -3046,7 +3290,7 @@
         // 绑定各种字段的change事件
         // 组合名称
         $("#portfolioTreeId_jj,#portfolioTreeId_dz,#portfolioTreeId_gd").change(function() {
-            portfolioTreeIdChange(false);
+            portfolioTreeIdChange();
         });
         // 证券代码
         $("#secId_jj,#secId_dz,#secId_gd").change(function() {
@@ -3094,6 +3338,8 @@
             if(currentTab == 'jj' && $("#price_jj").val()){
                 calDeviationDegree();
             }
+
+            linkTableData();
         });
 
         // 委托价格
@@ -3116,13 +3362,6 @@
             entrustAmtChange();
         });
 
-
-        // 折算率
-        $("#conversionRate_jj,#conversionRate_dz,#conversionRate_gd").change(function() {
-
-        });
-
-
         // 金融产品类型（投管）
         $("#finprodType2_jj,#finprodType2_dz,#finprodType2_gd").change(function() {
             finprodType2Change();
@@ -3143,6 +3382,11 @@
         // 数据来源变更时
         $("#dataSource_jj,#dataSource_dz,#dataSource_gd").change(function() {
             dataSourceChange();
+        });
+
+        // 数据来源变更时
+        $("#mulDistriClass_jj,#mulDistriClass_dz,#mulDistriClass_gd").change(function() {
+            mulDistriClassChange();
         });
 
         //查询资产信息
@@ -3171,9 +3415,30 @@
 
         //计算逻辑
         $("#etrExchangeTradeMulti001_btn_calc").click(function () {
-            Joyin.ajaxJson(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/calc', param, function(result) {
-                if (result){
+            Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/calcCheck', getSearchParams(), function(result1) {
+                if (result1){
+                    Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/calc', getSearchParams(), function(result) {
+                        if (result){
+                            if(result.data&& result.data.tradeMultiPtl001Dtos) {
+                                $("#targetType_"+currentTab).val("");
+                                $("#targetType_"+currentTab).val(result.data.targetType);
+                                dateTable.clear(function () {
+                                    for(var i=0;i<result.data.tradeMultiPtl001Dtos.length;i++) {
+                                        dateTable.addRow(result.data.tradeMultiPtl001Dtos[i]);
+                                    }
+                                })
+                            }
+                        }
+                    });
+                }
+            });
+        });
 
+        $("#etrExchangeTradeMulti001_btn_add").click(function () {
+            Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/addRow', getSearchParams(), function(result) {
+                if (result) {
+                    if(result.data)
+                    dateTable.addRow(result.data);
                 }
             });
         });

@@ -85,6 +85,10 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 		List<ValidMessage> errorList = new ArrayList<>();
 		// TODO Auto-generated method stub
 		EtrExchangeTrade001Dto dto = (EtrExchangeTrade001Dto) value;
+		//如果来自多组合，不校验。
+		if(StringUtil.equals(dto.getIsMulti(),DictCodeList.是否_是.getValue())) {
+			return  errorList;
+		}
 		if (dto.getOperateType().equals("save") || dto.getOperateType().equals("submit")) {
 			Boolean isNonTradingTime = etrExchangeTrade001Service.isNonTradingTime(dto);
 			if (isNonTradingTime) {

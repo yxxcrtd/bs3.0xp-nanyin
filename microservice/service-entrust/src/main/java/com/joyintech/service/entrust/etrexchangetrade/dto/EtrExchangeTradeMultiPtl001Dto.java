@@ -61,6 +61,11 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
     private String acctName;
 
     /**
+     * 证券账户
+     */
+    private String secAcctId;
+
+    /**
      * 资产代码
      */
     private String finprodId;
@@ -74,6 +79,11 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
      * 资产名称
      */
     private String finprodName;
+
+    /**
+     * 资产类型
+     */
+    private String finprodType2;
 
     /**
      * 分配比例
@@ -315,6 +325,22 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
         this.ccy = ccy;
     }
 
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
+	}
+	
     public BigDecimal getFullPrice() {
         return fullPrice;
     }

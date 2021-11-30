@@ -72,6 +72,11 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
     private String acctName;
 
     /**
+     * 证券账户
+     */
+    private String secAcctId;
+
+    /**
      * 资产代码
      */
     private String finprodId;
@@ -85,6 +90,11 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
      * 资产名称
      */
     private String finprodName;
+
+    /**
+     * 资产类型
+     */
+    private String finprodType2;
 
     /**
      * 分配比例
@@ -210,7 +220,7 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
     }
 
     public BigDecimal getProportion() {
-        return proportion;
+        return StringUtil.isNotEmpty(proportion)?proportion:BigDecimal.ZERO;
     }
 
     public void setProportion(BigDecimal proportion) {
@@ -242,7 +252,7 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
     }
 
     public BigDecimal getAvailableCashT() {
-        return availableCashT;
+        return StringUtil.isNotEmpty(availableCashT)?availableCashT:BigDecimal.ZERO;
     }
 
     public void setAvailableCashT(BigDecimal availableCashT) {
@@ -250,7 +260,7 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
     }
 
     public BigDecimal getAvailablePositionsT() {
-        return availablePositionsT;
+        return StringUtil.isNotEmpty(availablePositionsT)?availablePositionsT:BigDecimal.ZERO;
     }
 
     public void setAvailablePositionsT(BigDecimal availablePositionsT) {
@@ -258,7 +268,7 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
     }
 
     public BigDecimal getAvailableCashT1() {
-        return availableCashT1;
+        return StringUtil.isNotEmpty(availableCashT1)?availableCashT1:BigDecimal.ZERO;
     }
 
     public void setAvailableCashT1(BigDecimal availableCashT1) {
@@ -266,7 +276,7 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
     }
 
     public BigDecimal getAvailablePositionsT1() {
-        return availablePositionsT1;
+        return StringUtil.isNotEmpty(availablePositionsT1)?availablePositionsT1:BigDecimal.ZERO;
     }
 
     public void setAvailablePositionsT1(BigDecimal availablePositionsT1) {
@@ -274,7 +284,7 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
     }
 
     public BigDecimal getProductNetValue() {
-        return productNetValue;
+        return StringUtil.isNotEmpty(productNetValue)?productNetValue:BigDecimal.ZERO;
     }
 
     public void setProductNetValue(BigDecimal productNetValue) {
@@ -338,7 +348,7 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
     }
 
     public BigDecimal getEntrustPrice() {
-        return entrustPrice;
+        return StringUtil.isNotEmpty(entrustPrice)?entrustPrice:BigDecimal.ZERO;
     }
 
     public void setEntrustPrice(BigDecimal entrustPrice) {
@@ -347,18 +357,27 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
 
 
     public String getProportionStr() {
-        if(StringUtil.isNotEmpty(this.getProportion())) {
-            return ArithmeticUtil.multiply(this.getProportion(),new BigDecimal(100)).toString()  +"%";
-        }
-        else {
-            return "0%";
-        }
-
+        return this.getProportion() +"%";
     }
 
     public String getPsStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());
     }
 
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
+    }
 
 }

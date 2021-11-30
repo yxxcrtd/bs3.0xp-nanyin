@@ -58,6 +58,11 @@ public class BaseEtrInvestInfoDto {
      * 投标标位表dto
      */
     private List<EtrEntrustBidPrice> bidPriceList;
+
+    /**
+     * 委托指令明细
+     */
+    private List<EtrEntrustDetail> etrEntrustDetailList;
     /**
      * 清算速度
      */
@@ -412,4 +417,11 @@ public class BaseEtrInvestInfoDto {
         this.changeToFinprodName = changeToFinprodName;
     }
 
+    public List<EtrEntrustDetail> getEtrEntrustDetailList() {
+        return etrEntrustDetailList;
+    }
+
+    public void setEtrEntrustDetailList(List<EtrEntrustDetail> etrEntrustDetailList) {
+        this.etrEntrustDetailList = etrEntrustDetailList;
+    }
 }

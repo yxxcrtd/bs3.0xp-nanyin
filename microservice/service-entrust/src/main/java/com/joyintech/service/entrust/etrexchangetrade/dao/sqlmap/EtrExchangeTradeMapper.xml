@@ -1362,35 +1362,62 @@
             A.TREE_ID treeId,
             A.PORTFOLIO_ID portfolioId,
             B.PORTFOLIO_NAME portfolioName,
-            A.ACCT_NO acctNo,
-            D.ACCT_NAME acctName,
+            <!--A.ACCT_NO acctNo,
+            D.ACCT_NAME acctName,-->
             <if test="finprodId != null and finprodId != ''">
                 E.FINPROD_ID finprodId,
                 E.FINPROD_MARKET_ID finprodMarketId,
                 E.FINPROD_ABBR finprodName,
+                E.FINPROD_TYPE2 finprodType2,
             </if>
             <if test="ps != null and ps != ''">
                 #{ps} ps,
             </if>
-            A.CCY ccy
+            A.CCY ccy,
+            nvl(F.TDY_ASSET_NETVALUE,0) productNetValue
         from
             MUTIPTL_PORTFOLIO_DETAIL A
         INNER JOIN PTL_PORTFOLIO B
             ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
         INNER JOIN PTL_PORTFOLIO_AUTHORITY C
             ON B.PORTFOLIO_ID = C.PORTFOLIO_ID
-        INNER JOIN STL_CAPACCT_INFO D
-            ON A.ACCT_NO = D.ACCT_NO
+        <!--INNER JOIN STL_CAPACCT_INFO D
+            ON A.ACCT_NO = D.ACCT_NO-->
         <if test="finprodId != null and finprodId != ''">
-            LEFT JOIN FIN_PRODUCT E
+        LEFT JOIN FIN_PRODUCT E
             ON E.FINPROD_ID = #{finprodId}
         </if>
+        LEFT JOIN PTL_PORTFOLIO_VALUATION F
+            ON F.PORTFOLIO_ID = A.PORTFOLIO_ID
+            AND F.CDATE <![CDATA[<=]]> to_date(#{ptlDate},'yyyy-mm-dd') -1
+            AND A.CCY = F.CCY
         <where>
             A.TREE_ID = #{portfolioTreeId}
             AND A.EFF_DATE <![CDATA[<=]]> to_date(#{ptlDate},'yyyy-mm-dd')
             AND C.USER_ID = #{userId}
         </where>
 
+    </select>
+
+    <select id="selectMultiAcctNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select A.ACCT_NO id,
+               B.ACCT_NAME text
+          from MUTIPTL_PORTFOLIO_DETAIL A
+         INNER JOIN STL_CAPACCT_INFO B
+            ON A.ACCT_NO = B.ACCT_NO
+         WHERE A.PORTFOLIO_ID = #{portfolioId}
+           AND A.TREE_ID = #{portfolioTreeId}
+    </select>
+
+    <select id="selectMultiSecAcctId" resultType="java.lang.String">
+        select B.SEC_ACCT_ID
+          from PTL_SEC_ACCT A
+         INNER JOIN STL_SEC_ACCT_INFO B
+            ON A.ACCT_NO = B.SEC_ACCT_ID
+         WHERE A.PORTFOLIO_ID = #{portfolioId}
+           AND B.TRD_ACCT_ID = #{acctNo}
+           AND B.TRADE_PLACE = #{tradeMarket}
+           AND B.SEC_ACCT_TYPE = 'SEC'
     </select>
     <resultMap type="com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTradeMulti001Dto" id="detailInfoMap">
         <id property="portfolioTreeId" column="TREE_ID" />

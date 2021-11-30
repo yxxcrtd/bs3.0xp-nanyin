@@ -175,7 +175,7 @@
         <form class="layui-form pro-module-form" id="sumbitForm_jj">
             <input type="hidden" id="entrustBussType_jj" name="entrustBussType" data-th-value="${entity?.entrustBussType}">
             <input type="hidden" id="acctTradeMarket_jj" name="acctTradeMarket">
-            <input type="hidden" id="tradeMarket_jj" name="tradeMarket">
+            <input type="hidden" id="tradeMarket_jj" name="tradeMarket" data-th-value="${entity?.tradeMarket}">
             <input type="hidden" id="board_jj" name="board">
             <input type="hidden" id="secIdObjRelative_jj" name="secIdObjRelative">
             <input type="hidden" id="factPrice_jj" name="factPrice">
@@ -183,6 +183,9 @@
             <input type="text" id="finprodType2_jj" name="finprodType2" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodType2}">
             <input type="text" id="entrustId_jj" name="entrustId" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustId}">
             <input type="text" id="entrustStatus_jj" name="entrustStatus" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustStatus}">
+            <input type="text" id="entrustAmt_jj" name="entrustAmt" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustAmt}">
+            <input type="text" id="entrustNum_jj" name="entrustNum" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustNum}">
+            <input type="text" id="targetType_jj" name="targetType" disabled="disabled" style="display: none;" data-th-value="${entity?.targetType}">
             <div class="layui-form-item">
                 <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
                     <label class="layui-form-label" data-th-text="#{EtrExchangeTrade001.portfolioNames}">多组合名称</label>
@@ -229,13 +232,13 @@
                     </div>
                 </div>
 
-                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
-                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.targetType}">目标类型</label>
-                    <div class="layui-input-inline input-inline">
-                        <select type="text" id="targetType_jj" name="targetType" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
-                                data-th-data-result='${TARGET_CLASS}' allowClear="true" th:initValue="${entity?.targetType}" required></select>
-                    </div>
-                </div>
+<!--                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">-->
+<!--                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.targetType}">目标类型</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--                        <select type="text" id="targetType_jj" name="targetType" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"-->
+<!--                                data-th-data-result='${TARGET_CLASS}' allowClear="true" th:initValue="${entity?.targetType}" required></select>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div class="form-inline-wrap" style="width: 50%; padding-top:2px;" id="price_div_jj">
                     <label class="layui-form-label">
@@ -295,19 +298,19 @@
                     </div>
                 </div>
 
-                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;" id="weightType_div_jj;">
-                    <label class="layui-form-label" th:text="#{EtrExchangeTrade001.weightType}">权重方式</label>
-                    <div class="layui-input-inline input-inline">
-                        <select type="text" id="weightType_jj" name="weightType" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
-                                data-th-data-result='${WEIGH_TYPE}' allowClear="true" th:initValue="${entity?.weightType}" required></select>
-                    </div>
-                </div>
-
                 <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
                     <label class="layui-form-label " th:text="#{EtrExchangeTrade001.mulDistriClass}">分配方式</label>
                     <div class="layui-input-inline input-inline">
                         <select type="text" id="mulDistriClass_jj" name="mulDistriClass" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result='${MUL_DISTRI_CLASS}' allowClear="true" th:initValue="${entity?.mulDistriClass}" required></select>
+                    </div>
+                </div>
+
+                <div id="weightType_div_jj" class="form-inline-wrap" style="width: 50%; padding-top:2px;">
+                    <label class="layui-form-label" th:text="#{EtrExchangeTrade001.weightType}">权重方式</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="weightType_jj" name="weightType" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result='${WEIGH_TYPE}' allowClear="true" th:initValue="${entity?.weightType}" required></select>
                     </div>
                 </div>
 
@@ -351,7 +354,7 @@
         <input type="hidden" id="dataSource_dz" name="dataSource" data-th-value="${entity?.dataSource}">
         <input type="hidden" id="entrustBussType_dz" name="entrustBussType" data-th-value="${entity?.entrustBussType}">
         <input type="hidden" id="acctTradeMarket_dz" name="acctTradeMarket">
-        <input type="hidden" id="tradeMarket_dz" name="tradeMarket">
+        <input type="hidden" id="tradeMarket_dz" name="tradeMarket" data-th-value="${entity?.tradeMarket}">
         <input type="hidden" id="board_dz" name="board">
         <input type="hidden" id="secIdObjRelative_dz" name="secIdObjRelative">
         <input type="hidden" id="factPrice_dz" name="factPrice">
@@ -359,6 +362,9 @@
         <input type="text" id="finprodType2_dz" name="finprodType2" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodType2}">
         <input type="text" id="entrustId_dz" name="entrustId" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustId}">
         <input type="text" id="entrustStatus_dz" name="entrustStatus" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustStatus}">
+        <input type="text" id="entrustAmt_dz" name="entrustAmt" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustAmt}">
+        <input type="text" id="entrustNum_dz" name="entrustNum" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustNum}">
+        <input type="text" id="targetType_dz" name="targetType" disabled="disabled" style="display: none;" data-th-value="${entity?.targetType}">
         <form class="layui-form pro-module-form" id="sumbitForm_dz">
             <div class="layui-form-item">
                 <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
@@ -416,13 +422,13 @@
                     </div>
                 </div>
 
-                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
-                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.targetType}">目标类型</label>
-                    <div class="layui-input-inline input-inline">
-                        <select type="text" id="targetType_dz" name="targetType" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
-                                data-th-data-result='${TARGET_CLASS}' allowClear="true" th:initValue="${entity?.targetType}" required></select>
-                    </div>
-                </div>
+<!--                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">-->
+<!--                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.targetType}">目标类型</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--                        <select type="text" id="targetType_dz" name="targetType" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"-->
+<!--                                data-th-data-result='${TARGET_CLASS}' allowClear="true" th:initValue="${entity?.targetType}" required></select>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div class="form-inline-wrap" style="width: 50%; padding-top:2px;" id="price_div_dz">
                     <label class="layui-form-label">
@@ -434,6 +440,7 @@
                                data-th-value="${entity?.price}" required="required" autocomplete="off" maxlength=9>
                         <span class="input-right-show priceTitle">元</span>
                         <button type="button" class="increase-button">+</button>
+                        <label class="label-deviation-degree" id="deviationDegree"></label>
                     </div>
                 </div>
 
@@ -470,26 +477,6 @@
                     </div>
                 </div>
 
-                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
-                    <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.entrustNum}">指令数量</label>
-                    <div class="layui-input-inline input-inline">
-                        <button type="button" class="decrease-button">-</button>
-                        <input type="text" id="entrustNum_dz" name="entrustNum" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='0'
-                               class="layui-input form-input text-number price" data-th-value="${entity?.entrustNum}" required="required" disabled="disabled" autocomplete="off" maxlength=9>
-                        <span id="entrustNumUnit_dz" class="input-right-show priceTitle">份</span>
-                        <button type="button" class="increase-button">+</button>
-                    </div>
-                </div>
-
-                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
-                    <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.entrustAmt}">指令金额</label>
-                    <div class="layui-input-inline input-inline">
-                        <input type="text" id="entrustAmt_dz" name="entrustAmt" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='2'
-                               class="layui-input form-input text-number" data-th-value="${entity?.entrustAmt}" required="required" autocomplete="off" oninput="if(value>999999999)value=999999999">
-                        <span class="input-right-show">元</span>
-                    </div>
-                </div>
-
                 <div class="form-inline-wrap" style="width: 50%; padding-top:2px;" id="counterId_div_dz">
                     <label class="layui-form-label" data-th-utext="#{EtrExchangeTrade001.counterId}">交易对手</label>
                     <div class="layui-input-inline input-inline">
@@ -513,6 +500,31 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="agreeOnId_dz" name="agreeOnId" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                data-th-value="${entity?.agreeOnId}" maxlength=6>
+                    </div>
+                </div>
+
+                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
+                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.mulDistriClass}">分配方式</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="mulDistriClass_dz" name="mulDistriClass" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result='${MUL_DISTRI_CLASS}' allowClear="true" th:initValue="${entity?.mulDistriClass}" required></select>
+                    </div>
+                </div>
+
+                <div id="weightType_div_dz" class="form-inline-wrap" style="width: 50%; padding-top:2px;">
+                    <label class="layui-form-label" th:text="#{EtrExchangeTrade001.weightType}">权重方式</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="weightType_dz" name="weightType" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result='${WEIGH_TYPE}' allowClear="true" th:initValue="${entity?.weightType}" required></select>
+                    </div>
+                </div>
+
+                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
+                    <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.targetValue}">目标值</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="targetValue_dz" name="targetValue" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='2'
+                               class="layui-input form-input text-number" data-th-value="${entity?.targetValue}" required="required" autocomplete="off" maxlength=9>
+                        <span id="mulTargetUnit_dz"  name="mulTargetUnit" class="input-right-show"></span>
                     </div>
                 </div>
 
@@ -569,6 +581,9 @@
         <input type="text" id="finprodType2_gd" name="finprodType2" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodType2}">
         <input type="text" id="entrustId_gd" name="entrustId" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustId}">
         <input type="text" id="entrustStatus_gd" name="entrustStatus" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustStatus}">
+        <input type="text" id="entrustAmt_gd" name="entrustAmt" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustAmt}">
+        <input type="text" id="entrustNum_gd" name="entrustNum" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustNum}">
+        <input type="text" id="targetType_gd" name="targetType" disabled="disabled" style="display: none;" data-th-value="${entity?.targetType}">
         <form class="layui-form pro-module-form" id="sumbitForm_gd">
             <div class="layui-form-item">
                 <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
@@ -635,13 +650,13 @@
                     </div>
                 </div>
 
-                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
-                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.targetType}">目标类型</label>
-                    <div class="layui-input-inline input-inline">
-                        <select type="text" id="targetType_gd" name="targetType" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
-                                data-th-data-result='${TARGET_CLASS}' allowClear="true" th:initValue="${entity?.targetType}" required></select>
-                    </div>
-                </div>
+<!--                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">-->
+<!--                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.targetType}">目标类型</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--                        <select type="text" id="targetType_gd" name="targetType" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"-->
+<!--                                data-th-data-result='${TARGET_CLASS}' allowClear="true" th:initValue="${entity?.targetType}" required></select>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div class="form-inline-wrap" style="width: 50%; padding-top:2px;" id="price_div_gd">
                     <label class="layui-form-label">
@@ -685,26 +700,6 @@
                                class="layui-input form-input text-number price" data-th-value="${entity?.entrustPrice}" required="required" autocomplete="off" maxlength=9>
                         <span class="input-right-show priceTitle">元</span>
                         <button type="button" class="increase-button">+</button>
-                    </div>
-                </div>
-
-                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
-                    <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.entrustNum}">指令数量</label>
-                    <div class="layui-input-inline input-inline">
-                        <button type="button" class="decrease-button">-</button>
-                        <input type="text" id="entrustNum_gd" name="entrustNum" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='0'
-                               class="layui-input form-input text-number price" data-th-value="${entity?.entrustNum}" required="required" disabled="disabled" autocomplete="off" maxlength=9>
-                        <span id="entrustNumUnit_gd" class="input-right-show priceTitle">份</span>
-                        <button type="button" class="increase-button">+</button>
-                    </div>
-                </div>
-
-                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
-                    <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.entrustAmt}">指令金额</label>
-                    <div class="layui-input-inline input-inline">
-                        <input type="text" id="entrustAmt_gd" name="entrustAmt" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='2'
-                               class="layui-input form-input text-number" data-th-value="${entity?.entrustAmt}" required="required" autocomplete="off" maxlength=9>
-                        <span class="input-right-show">元</span>
                     </div>
                 </div>
 
@@ -773,6 +768,31 @@
                 </div>
 
                 <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
+                    <label class="layui-form-label " th:text="#{EtrExchangeTrade001.mulDistriClass}">分配方式</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="mulDistriClass_gd" name="mulDistriClass" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result='${MUL_DISTRI_CLASS}' allowClear="true" th:initValue="${entity?.mulDistriClass}" required></select>
+                    </div>
+                </div>
+
+                <div id="weightType_div_gd" class="form-inline-wrap" style="width: 50%; padding-top:2px;">
+                    <label class="layui-form-label" th:text="#{EtrExchangeTrade001.weightType}">权重方式</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="weightType_gd" name="weightType" class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result='${WEIGH_TYPE}' allowClear="true" th:initValue="${entity?.weightType}" required></select>
+                    </div>
+                </div>
+
+                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
+                    <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.targetValue}">目标值</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="targetValue_gd" name="targetValue" placeholder="请输入内容" data-pattern="" data-fixtype="2" data-textrange='2'
+                               class="layui-input form-input text-number" data-th-value="${entity?.targetValue}" required="required" autocomplete="off" maxlength=9>
+                        <span id="mulTargetUnit_gd"  name="mulTargetUnit" class="input-right-show"></span>
+                    </div>
+                </div>
+
+                <div class="form-inline-wrap" style="width: 50%; padding-top:2px;">
                     <label class="layui-form-label " data-th-text="#{EtrExchangeTrade001.vdate}">开始日期</label>
                     <div class="layui-input-inline input-inline">
                         <input required class="layui-input form-input input-dateSelect" id="vdate_gd" name="vdate" placeholder="请选择时间"
@@ -791,12 +811,14 @@
     </div>
     <div>
         <h3 class="pro-module-title"><span class="title-des">组合分配</span>
-            <a class="layui-btn layui-btn-sm btn-create" th:id="ptl_distribution_btn_add">
+            <a class="layui-btn layui-btn-sm btn-create" id="etrExchangeTradeMulti001_btn_add">
                 <i class="iconfont icon-found"></i><span data-th-utext="#{BussRepoSec.add}">添加</span>
             </a>
             <a id="etrExchangeTradeMulti001_btn_calc" class="layui-btn layui-btn-sm" style="width: 50px;">计算</a>
         </h3>
-        <table class="layui-table" id="dateTable"></table>
+        <div>
+            <table class="layui-table" id="dateTable"></table>
+        </div>
     </div>
 </div>
 <div layout:fragment="script">

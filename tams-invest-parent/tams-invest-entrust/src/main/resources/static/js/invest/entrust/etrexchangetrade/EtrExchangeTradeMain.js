@@ -12,41 +12,66 @@ var currentEtrTypeTab = "0";
 
   function saveOrSubmit(operateType) {
       var s;
-      var object = EtrExchangeTrade001.getSearchParams();
-      if(object.entrustPrice&&object.entrustPrice<0){
-          checkMessage(object.entrustPriceLabel);
-          return;
+      var object = {};
+      var riskdata = {};
+      if(currentEtrTypeTab == '0') {
+          object = EtrExchangeTrade001.getSearchParams();
+          if(object.entrustPrice&&object.entrustPrice<0){
+              checkMessage(object.entrustPriceLabel);
+              return;
+          }
+          if(object.entrustNum&&object.entrustNum<0){
+              checkMessage(object.entrustNumLabel);
+              return;
+          }
+          if(object.entrustAmt&&object.entrustAmt<0){
+              checkMessage(object.entrustAmtLabel);
+              return;
+          }
+          if(object.toShareAvailableNum&&object.toShareAvailableNum<0){
+              checkMessage(object.toShareAvailableNumLabel);
+              return;
+          }
       }
-      if(object.entrustNum&&object.entrustNum<0){
-          checkMessage(object.entrustNumLabel);
-          return;
+      else {
+          object = EtrExchangeTradeMulti001.getSearchParams();
       }
-      if(object.entrustAmt&&object.entrustAmt<0){
-          checkMessage(object.entrustAmtLabel);
-          return;
-      }
-      if(object.toShareAvailableNum&&object.toShareAvailableNum<0){
-          checkMessage(object.toShareAvailableNumLabel);
-          return;
-      }
+
       object.operateType = operateType;
       //object.pageModel = pageModel;
-            
-      var riskdata = EtrExchangeTrade001.getriskdata(object);
-      if(BaseRiskMathComm && EtrExchangeTrade001.isNeedRiskcal()) {
-          s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-          if(!s && s != ''){
-              return;
-          }
-          if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
-              return;
+
+      if(currentEtrTypeTab == '0') {
+          riskdata = EtrExchangeTrade001.getriskdata(object);
+          if(BaseRiskMathComm && EtrExchangeTrade001.isNeedRiskcal()) {
+              s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+              if(!s && s != ''){
+                  return;
+              }
+              if (window.BaseRiskMathComm.isCalcConditionChanged(riskdata)){
+                  return;
+              }
           }
       }
+      else {
+          riskdata = EtrExchangeTradeMulti001.getRiskData(object);
+          var riskCheckData = EtrExchangeTradeMulti001.getRiskCheckData(object);
+          if(BaseRiskMathComm && EtrExchangeTradeMulti001.isNeedRiskcal()) {
+              s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+              if(!s && s != ''){
+                  return;
+              }
+              if (window.BaseRiskMathComm.isCalcConditionChanged(riskCheckData)){
+                  return;
+              }
+          }
+      }
+
       //验证
       if(!checkDbClickData(object)){
           return;
       }
-      //TODO 风险和授信
+      if(currentEtrTypeTab == '0') {
+          //TODO 风险和授信
 //      Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
           Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTrade001/check',object,
               function(result) {
@@ -77,7 +102,32 @@ var currentEtrTypeTab = "0";
                   });
               });
 //      })
-      
+      }
+      else {
+          //TODO 风险和授信
+//      Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+          Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/check',object,
+              function(result) {
+                  Joyin.confirm(result.data,function() {
+                      if (object.operateType === 'save') {
+                          WorkFlow.doSaveList(basePath+'/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/save',object,"EtrExchangeTrade001_btn_save",null,function() {
+                              if (EtrExchangeTradeMulti001) {
+                                  EtrExchangeTradeMulti001.doReset(true);
+                              }
+                              JoyinUtil.disableButton("EtrExchangeTrade001_btn_save", false);
+                          })
+                      }else {
+                          WorkFlow.doSubmitList(basePath+'/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/save',object,"EtrExchangeTrade001_btn_submit",null,function() {
+                              if (EtrExchangeTradeMulti001) {
+                                  EtrExchangeTradeMulti001.doReset(true);
+                              }
+                              JoyinUtil.disableButton("EtrExchangeTrade001_btn_submit", false);
+                          })
+                      }
+                  });
+              });
+//      })
+      }
   }
   
 
@@ -89,12 +139,25 @@ var currentEtrTypeTab = "0";
    * @returns
    */
   function doRiskcal() {
-      var object = EtrExchangeTrade001.getSearchParams();
-      if(object && EtrExchangeTrade001.isNeedRiskcal()) {
-          var riskdata = EtrExchangeTrade001.getriskdata(object);
-          var riskInterfUrl = EtrExchangeTrade001.getRiskInterfUrl();
-          if(riskdata && riskInterfUrl) {
-              window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object,riskdata,riskMathRedisCallback);
+      if(currentEtrTypeTab == '0') {
+          var object = EtrExchangeTrade001.getSearchParams();
+          if(object && EtrExchangeTrade001.isNeedRiskcal()) {
+              var riskdata = EtrExchangeTrade001.getriskdata(object);
+              var riskInterfUrl = EtrExchangeTrade001.getRiskInterfUrl();
+              if(riskdata && riskInterfUrl) {
+                  window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object,riskdata,riskMathRedisCallback);
+              }
+          }
+      }
+      else {
+          var object = EtrExchangeTradeMulti001.getSearchParams();
+          if(object && EtrExchangeTradeMulti001.isNeedRiskcal()) {
+              var riskCheckData = EtrExchangeTradeMulti001.getRiskCheckData(object);
+              var riskData = EtrExchangeTradeMulti001.getRiskData(object);
+              var riskInterfUrl = EtrExchangeTradeMulti001.getRiskInterfUrl();
+              if(riskData && riskInterfUrl) {
+                  window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, riskData,riskCheckData,riskMathRedisCallback);
+              }
           }
       }
 
@@ -106,8 +169,15 @@ var currentEtrTypeTab = "0";
    * @returns
    */
   function riskMathRedisCallback(object,cluflag) {
-      EtrExchangeTrade001.riskResultdata = object;
-      EtrExchangeTrade001.cluflag = cluflag;
+      if(currentEtrTypeTab == '0') {
+          EtrExchangeTrade001.riskResultdata = object;
+          EtrExchangeTrade001.cluflag = cluflag;
+      }
+      else {
+          EtrExchangeTradeMulti001.riskResultdata = object;
+          EtrExchangeTradeMulti001.cluflag = cluflag;
+      }
+
       Joyin.dialog(JoyinUtil.getLabel('EtrExchangeTradeRiskcal'), '/invest/entrust/etrexchangetrade/EtrExchangeTradeRiskcal/init', '60%', '75%',null); 
   }
 
@@ -250,15 +320,29 @@ var closeEtr = function(){
  * @returns
  */
 function doReset() {
-	if (EtrExchangeTrade001) {
-        Joyin.confirm('重置后会清空页面，确认重置？', function () {
-            EtrExchangeTrade001.doReset();
-            //重置风险试算标识置为01
-            // if(BaseRiskMathComm) {
-            //     BaseRiskMathComm.resetRiskMathFlag();
-            // }
-        });
-	}
+    if(currentEtrTypeTab == '0') {
+        if (EtrExchangeTrade001) {
+            Joyin.confirm('重置后会清空页面，确认重置？', function () {
+                EtrExchangeTrade001.doReset();
+                //重置风险试算标识置为01
+                // if(BaseRiskMathComm) {
+                //     BaseRiskMathComm.resetRiskMathFlag();
+                // }
+            });
+        }
+    }
+    else {
+        if (EtrExchangeTradeMulti001) {
+            Joyin.confirm('重置后会清空页面，确认重置？', function () {
+                EtrExchangeTradeMulti001.doReset();
+                //重置风险试算标识置为01
+                // if(BaseRiskMathComm) {
+                //     BaseRiskMathComm.resetRiskMathFlag();
+                // }
+            });
+        }
+    }
+
 }
 
 

@@ -238,6 +238,11 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
      * 清算速度
      */
     private String settleSpeed;
+
+    /**
+     * 是否多组合
+     */
+    private String isMulti;
     
     /**
      * 取得 委托代码
@@ -690,5 +695,13 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
 
     public String getTargetTypeStr() {
         return  SysDataUtil.getNameFromDataDict(DictCode.目标类型, this.getTargetType());
+    }
+
+    public String getIsMulti() {
+        return isMulti;
+    }
+
+    public void setIsMulti(String isMulti) {
+        this.isMulti = isMulti;
     }
 }
