@@ -96,8 +96,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                             && StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))) {
                         returnList.add(cfetsDto);
                     }
-                    returnMessage = "存在不允许交收的记录，是否剔除这些记录？";
                 }
+                returnMessage = "存在不允许交收的记录，是否剔除这些记录？";
             }
         }else if(StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())){
             for(CfetsManualSettleDto cfetsDto : cfetsRequest.getSelectedItem()) {
@@ -105,8 +105,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                 if(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())){
                     returnList.add(cfetsDto);
                 }
+                returnMessage = "存在不允许交收失败的记录，是否剔除这些记录？";
             }
-            returnMessage = "存在不允许交收失败的记录，是否剔除这些记录？";
 
         }else if(StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())){
             for(CfetsManualSettleDto cfetsDto : cfetsRequest.getSelectedItem()) {
@@ -115,8 +115,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                         && StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_已交收.getValue())){
                     returnList.add(cfetsDto);
                 }
+                returnMessage = "非已交收记录不允许回溯，是否剔除这些记录？";
             }
-            returnMessage = "非已交收记录不允许回溯，是否剔除这些记录？";
         }
 
         if(returnList.size() != cfetsRequest.getSelectedItem().size() && !StringUtil.isBlank(returnMessage)){
