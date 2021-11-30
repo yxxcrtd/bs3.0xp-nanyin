@@ -49,7 +49,7 @@ public class ExchangeTransMatch001Controller  extends BaseController {
      */
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model, DictCode.下行交易匹配状态,DictCode.交易场所,DictCode.平安资产类型,DictCode.交易类型,DictCode.交易平台,DictCode.下行交易匹配类型,DictCode.交易方向);
+        this.setSelectOptionToModel(model, DictCode.下行交易匹配状态,DictCode.交易场所,DictCode.金融产品类型_投管用,DictCode.交易类型,DictCode.交易平台,DictCode.下行交易匹配类型,DictCode.交易方向);
 
         model.addAttribute("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         model.addAttribute("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());

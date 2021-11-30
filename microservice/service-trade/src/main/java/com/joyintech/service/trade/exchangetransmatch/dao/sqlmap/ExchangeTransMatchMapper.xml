@@ -216,8 +216,9 @@
                T.ENTRUST_ID text
           from ETR_ENTRUST T
         <where>
+            T.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F01},#{FINPROD_TYPE_TG_F02},#{FINPROD_TYPE_TG_F03},#{FINPROD_TYPE_TG_F06},#{FINPROD_TYPE_TG_F10})
             <if test="search != null and search != ''">
-                and A.APPLY_TRADE_ID like concat(concat('%',#{search}),'%')
+                and T.ENTRUST_ID like concat(concat('%',#{search}),'%')
             </if>
         </where>
     </select>
