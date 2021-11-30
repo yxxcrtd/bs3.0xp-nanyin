@@ -116,7 +116,6 @@
                 e.TRADE_MARKET,
                 e.CHECK_RESULT,
                 CASE WHEN h.TYPE_8 IS NOT NULL THEN h.TYPE_8
-                WHEN e.FINPROD_TYPE2 IS NOT NULL THEN e.FINPROD_TYPE2
                 WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
                 END  FINPROD_TYPE,
                 e.APPLY_TRADE_ID ENTRUST_TRADE_ID,
@@ -257,7 +256,6 @@
                 e.TRADE_MARKET,
                 e.CHECK_RESULT,
                 CASE WHEN h.TYPE_8 IS NOT NULL THEN h.TYPE_8
-                WHEN e.FINPROD_TYPE2 IS NOT NULL THEN e.FINPROD_TYPE2
                 WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
                 END  FINPROD_TYPE,
                 e.APPLY_TRADE_ID ENTRUST_TRADE_ID,
@@ -398,7 +396,6 @@
                 e.TRADE_MARKET,
                 e.CHECK_RESULT,
                 CASE WHEN h.TYPE_8 IS NOT NULL THEN h.TYPE_8
-                WHEN e.FINPROD_TYPE2 IS NOT NULL THEN e.FINPROD_TYPE2
                 WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
                 END  FINPROD_TYPE,
                 e.APPLY_TRADE_ID ENTRUST_TRADE_ID,
