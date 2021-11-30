@@ -25,6 +25,9 @@ public class PtlAllocationDto {
     @ApiModelProperty(name="avaNum",value="剩余指令额度(万元)")
     private BigDecimal avaNum;
 
+    @ApiModelProperty(name="avaNumold",value="剩余指令额度(万元)(备份)")
+    private BigDecimal avaNumOld;
+
     @ApiModelProperty(name="shareAmt",value="券面总额(万元)")
     private BigDecimal shareAmt;
 
@@ -231,6 +234,14 @@ public class PtlAllocationDto {
 
     public void setUnitFprice(BigDecimal unitFprice) {
         this.unitFprice = unitFprice;
+    }
+
+    public BigDecimal getAvaNumOld() {
+        return avaNumOld;
+    }
+
+    public void setAvaNumOld(BigDecimal avaNumOld) {
+        this.avaNumOld = avaNumOld;
     }
 }
 

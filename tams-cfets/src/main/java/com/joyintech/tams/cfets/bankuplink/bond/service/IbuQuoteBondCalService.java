@@ -59,7 +59,7 @@ public class IbuQuoteBondCalService extends BaseService {
                     continue;
                 }
                 if(StringUtil.equals(item.getFeeType(),BussinessDictCodeList.费用类型_结算手续费.getValue())){
-                    calRespone.setSettFeeamt(item.getFeeAmt());
+                    calRespone.setSettFeeAmt(item.getFeeAmt());
                     continue;
                 }
             }
@@ -98,13 +98,25 @@ public class IbuQuoteBondCalService extends BaseService {
      */
     public List<PtlAllocationDto> autoAllocation(AutoAllocationRequest autoAllocationRequest){
         List<PtlAllocationDto> result = new ArrayList<>();
+        //备份剩余额度
+        List<PtlAllocationDto> ptlAllocations = autoAllocationRequest.getPtlAllocations();
+        if(CollectionUtils.isNotEmpty(ptlAllocations)){
+            ptlAllocations.forEach(item ->{
+                item.setAvaNumOld(item.getAvaNum());
+            });
+        }
         //平均分配
         if(StringUtil.equals(autoAllocationRequest.getDistribution(),"139")){
-            return aveDistribution(autoAllocationRequest);
+            result = aveDistribution(autoAllocationRequest);
         }
         //比例分配
         if(StringUtil.equals(autoAllocationRequest.getDistribution(),"143")){
-            return propDistribution(autoAllocationRequest);
+            result = propDistribution(autoAllocationRequest);
+        }
+        if(CollectionUtils.isNotEmpty(ptlAllocations)){
+            ptlAllocations.forEach(item ->{
+                item.setAvaNum(item.getAvaNumOld());
+            });
         }
         return result;
     }
