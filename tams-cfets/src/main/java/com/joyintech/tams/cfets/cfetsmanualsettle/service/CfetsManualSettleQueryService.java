@@ -182,7 +182,9 @@ public class CfetsManualSettleQueryService extends BaseService{
         Map<String,Object> pageParam = BeanUtil.object2Map(cfetsManualSettleDto);
         List<CfetsManualSettleFlowRespond> cfetsManualSettleFlowRespondList = new ArrayList<CfetsManualSettleFlowRespond>();
         Page<CfetsManualSettleFlowRespond> pageLimit = new Page<CfetsManualSettleFlowRespond>();
-        if(StringUtil.isBlank((String)pageParam.get("settleStatus")) ||StringUtil.equals(DictCodeListExt3.交收状态_未交收.getValue(),(String)pageParam.get("settleStatus"))){
+        if(StringUtil.isBlank((String)pageParam.get("settleStatus"))
+                ||(StringUtil.equals(DictCodeListExt3.交收状态_未交收.getValue(),(String)pageParam.get("settleStatus"))
+                    && StringUtil.isBlank((String)pageParam.get("settleSeqNo")))){
             CfetsManualSettleFlowRespond cfetsManualSettleFlowRespond = new CfetsManualSettleFlowRespond();
             //组装流水信息
             cfetsManualSettleFlowRespond.setSeqNo(1);
