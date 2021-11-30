@@ -1074,20 +1074,20 @@
         m.match_type as matchType,
         m.pre_trade_id as busiCode,
         m.exe_id as execid,
-        ct.BUSINESSTYPE as finprodType2,
-        decode(ct.BUSINESSTYPE,'BOND','债券','REPO','质押式回购') as finprodType2Name,
-        decode(ct.BUSINESSTYPE,'BOND',fp.finprod_market_id,'REPO',reg.term_type) as finprodMarketId,
-        decode(ct.BUSINESSTYPE,'BOND',fp.finprod_abbr,null) as finprodAbbr,
+        decode(reg.finprod_type2,'F01','BOND','REPO') as finprodType2,
+        decode(reg.finprod_type2,'F01','债券','质押式回购') as finprodType2Name,
+        decode(reg.finprod_type2,'F01',fp.finprod_market_id,reg.term_type) as finprodMarketId,
+        fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         reg.settle_speed as settleSpeed,
     <!--    nvl(ts.OURDEPOSITACCOUNTNUMBER,ts.OURDEPOSITACCOUNTNUMBER) as secManageAcctId,-->
         case when ipar.portfolio_id is not null
         then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end as  secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdName,
-        decode(ct.BUSINESSTYPE,'BOND',nvl(reg.face_value,0)/10000,null) as printAmt,
-        decode(ct.BUSINESSTYPE,'BOND',reg.yield,reg.rate) as tradeYield,
-        decode(ct.BUSINESSTYPE,'REPO',reg.repo_term,null) as termDays,
-        decode(ct.BUSINESSTYPE,'BOND',reg.fprice_amt,tr.vdealamt) as tradeAmt,
+        case when reg.finprod_type2='F01' then nvl(reg.face_value,0)/10000 end as printAmt,
+        decode(reg.finprod_type2,'F01',reg.yield,reg.rate) as tradeYield,
+        reg.repo_term as termDays,
+        decode(reg.finprod_type2,'F01',reg.fprice_amt,tr.vdealamt) as tradeAmt,
         reg.trade_date as tradeDate,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
@@ -1101,7 +1101,7 @@
         '04' as dealType,
         m.pre_trade_id as totleTradeId
         from trdquto_match_info m
-        left join reg_fin_product_deal_total reg
+        inner join reg_fin_product_deal_total reg
         on m.pre_trade_id=reg.totle_trade_id
         left join fin_product fp
         on reg.finprod_id=fp.finprod_id

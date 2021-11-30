@@ -1,6 +1,6 @@
 /**
- * 场外成交确认
- * @author sjj
+ * 银行间成交确认
+ * @author
  * @version 1.0 2021年10月26日
  * @see CfetsEtrDispatcherController
  * @since 1.0
