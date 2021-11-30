@@ -179,7 +179,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         if(null==entity.getDealFeeAmt()){
             errorList.add(new ValidMessage("请输入交易手续费"));
         }
-        if(null==entity.getSettFeeamt()){
+        if(null==entity.getSettFeeAmt()){
             errorList.add(new ValidMessage("请输入结算服务费"));
         }
         if(CollectionUtils.isEmpty(entity.getPtlAllocatios())){
@@ -195,7 +195,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     errorList.add(new ValidMessage("请输入组合分配交易手续费"));
                     break;
                 }
-                if(null==ptlAllocatio.getSettFeeamt()){
+                if(null==ptlAllocatio.getSettFeeAmt()){
                     errorList.add(new ValidMessage("请输入组合分配结算服务费"));
                     break;
                 }
@@ -215,7 +215,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 }
                 shareAmtTotal = ArithmeticUtil.doAdd(shareAmtTotal,ptlAllocatio.getShareAmt());
                 dealFeeAmtTotal = ArithmeticUtil.doAdd(dealFeeAmtTotal,ptlAllocatio.getDealFeeAmt());
-                settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal,ptlAllocatio.getSettFeeamt());
+                settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal,ptlAllocatio.getSettFeeAmt());
             }
             //券面总额   交易手续费  结算服务费  总和需要相等
             if(null!=entity.getShareAmt()&&entity.getShareAmt().compareTo(shareAmtTotal)!=0){
@@ -224,7 +224,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(null!=entity.getDealFeeAmt()&&entity.getDealFeeAmt().compareTo(dealFeeAmtTotal)!=0){
                 errorList.add(new ValidMessage("组合分配交易手续费总和需要等于交易手续费"));
             }
-            if(null!=entity.getSettFeeamt()&&entity.getSettFeeamt().compareTo(settFeeamtTotal)!=0){
+            if(null!=entity.getSettFeeAmt()&&entity.getSettFeeAmt().compareTo(settFeeamtTotal)!=0){
                 errorList.add(new ValidMessage("组合分配结算服务费总和需要等于结算服务费"));
             }
         }
@@ -503,8 +503,8 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     if(null!=ptlAllocatio.getDealFeeAmt()){
                         regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
                     }
-                    if(null!=ptlAllocatio.getSettFeeamt()){
-                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getSettFeeamt()));
+                    if(null!=ptlAllocatio.getSettFeeAmt()){
+                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getSettFeeAmt()));
                     }
                     regFinProductDeals.add(regFinProductDeal);
                     regFinProductDealAdds.add(regFinProductDealAdd);

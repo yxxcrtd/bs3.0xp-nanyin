@@ -262,7 +262,7 @@ public class IbuQuoteBondService extends BaseService {
      * @param ptlAllocationAddRequest
      * @return
      */
-    public List<PtlAllocationDto> ptlAllocationAdd(PtlAllocationAddRequest ptlAllocationAddRequest){
+    public List<EntrustDto> ptlAllocationAdd(PtlAllocationAddRequest ptlAllocationAddRequest){
         Map<String, Object> param = BeanUtil.object2Map(ptlAllocationAddRequest);
         param.put("notentrustIdList",ptlAllocationAddRequest.getEntrustIdList());
         setParam(param);
@@ -278,12 +278,12 @@ public class IbuQuoteBondService extends BaseService {
      * @param list
      * @return
      */
-    public List<PtlAllocationDto>  initPtlAllocation(List<CfetsBondDealEntrustOrderDto> list){
-        List<PtlAllocationDto> result = new ArrayList<>();
+    public List<EntrustDto>  initPtlAllocation(List<CfetsBondDealEntrustOrderDto> list){
+        List<EntrustDto> result = new ArrayList<>();
         for (CfetsBondDealEntrustOrderDto item : list) {
-            PtlAllocationDto ptlAllocationDto = new PtlAllocationDto();
-            BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto,item);
-            result.add(ptlAllocationDto);
+            EntrustDto entrustDto = new EntrustDto();
+            BeanUtil.copyPropertiesIgnoreNull(entrustDto,item);
+            result.add(entrustDto);
         }
         return result;
     }

@@ -40,8 +40,8 @@ public class PtlAllocationDto {
     @ApiModelProperty(name="dealFeeAmt",value="交易手续费(元)")
     private BigDecimal dealFeeAmt;
 
-    @ApiModelProperty(name="settFeeamt",value="结算服务费(元)")
-    private BigDecimal settFeeamt;
+    @ApiModelProperty(name="settFeeAmt",value="结算服务费(元)")
+    private BigDecimal settFeeAmt;
 
     @ApiModelProperty(name="cpriceAmt",value="净价总额(元)")
     private BigDecimal cpriceAmt;
@@ -145,12 +145,12 @@ public class PtlAllocationDto {
         this.dealFeeAmt = dealFeeAmt;
     }
 
-    public BigDecimal getSettFeeamt() {
-        return settFeeamt;
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
     }
 
-    public void setSettFeeamt(BigDecimal settFeeamt) {
-        this.settFeeamt = settFeeamt;
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
     }
 
     public BigDecimal getCpriceAmt() {

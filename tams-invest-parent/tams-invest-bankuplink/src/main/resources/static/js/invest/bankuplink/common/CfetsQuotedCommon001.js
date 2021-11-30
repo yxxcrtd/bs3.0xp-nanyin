@@ -27,7 +27,7 @@
         ,{field:'lendinEntNum', width:150, title: '融入券券面总额（万元）',edit:true,sortable: false,type:'number', digit:2,visible:sellPara=="02"&&ps=='T02'?true:false}
         ,{field:'sellAbleNum', width:150, title: '卖空购回券面总额（万元）',edit:true,sortable: false,type:'number', digit:2,visible:sellPara=="02"&&ps=='T01'?true:false}
         ,{field:'dealFeeAmt', width:150, title: '交易手续费（元）',edit:true,sortable: false,type:'number', digit:2}
-        ,{field:'settFeeamt', width:150, title: '结算服务费（元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'settFeeAmt', width:150, title: '结算服务费（元）',edit:true,sortable: false,type:'number', digit:2}
         ,{field:'cpriceAmt', width:150, title: '净价总额（元）',edit:true,sortable: false,type:'number', digit:2,visible:ps!='T03'?true:false}
         ,{field:'intAmt', width:150, title: '应计利息总额（元）',edit:true,sortable: false,type:'number', digit:2,visible:ps!='T03'?true:false}
         ,{field:'fpriceAmt', width:150, title: '全价总额（元）',edit:true,sortable: false,type:'number', digit:2,visible:ps!='T03'?true:false}
@@ -77,6 +77,8 @@
         ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}
         ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:2}
         ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:2}
+        ,{field:'dealFeeAmt', width:150, title: '交易手续费（元）',edit:true,sortable: false,type:'number', digit:2}
+        ,{field:'settFeeAmt', width:150, title: '结算服务费（元）',edit:true,sortable: false,type:'number', digit:2}
         // ,{field:'settleAmt', width:150, title: '结算金额',sortable: false,type:'number', digit:2}
         , {
             field: 'proAvailableCash',

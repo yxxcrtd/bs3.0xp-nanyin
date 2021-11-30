@@ -226,13 +226,13 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ApiOperation(value = "组合分配添加初始化", notes = "组合分配添加初始化")
 	@PostMapping("/ptlAllocationAdd")
 	@ResponseBody
-	public Message<List<PtlAllocationDto>> ptlAllocationAdd(@RequestBody PtlAllocationAddRequest ptlAllocationAddRequest) {
+	public Message<List<EntrustDto>> ptlAllocationAdd(@RequestBody PtlAllocationAddRequest ptlAllocationAddRequest) {
 		try {
-			List<PtlAllocationDto> list = ibuQuoteBondService.ptlAllocationAdd(ptlAllocationAddRequest);
-			return new Message<List<PtlAllocationDto>>().success().setData(list);
+			List<EntrustDto> list = ibuQuoteBondService.ptlAllocationAdd(ptlAllocationAddRequest);
+			return new Message<List<EntrustDto>>().success().setData(list);
 		} catch (Exception e) {
 			logger.error("组合分配添加初始化异常", e);
-			return new Message<List<PtlAllocationDto>>().fail().setMessage("组合分配添加初始化异常");
+			return new Message<List<EntrustDto>>().fail().setMessage("组合分配添加初始化异常");
 		}
 	}
 

@@ -202,17 +202,17 @@ public class IbuQuoteBondCalService extends BaseService {
         for (PtlAllocationDto item : ptlAllocations) {
             item.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),intAmt),shareAmt,4));
             item.setDealFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),dealFeeAmt),shareAmt,4));
-            item.setSettFeeamt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),settFeeamt),shareAmt,4));
+            item.setSettFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),settFeeamt),shareAmt,4));
             tailDifferenceIntAmt = ArithmeticUtil.subtract(tailDifferenceIntAmt,item.getIntAmt());
             tailDifferenceDealFeeAmt = ArithmeticUtil.subtract(tailDifferenceDealFeeAmt,item.getDealFeeAmt());
-            tailDifferenceSettFeeamt = ArithmeticUtil.subtract(tailDifferenceSettFeeamt,item.getSettFeeamt());
+            tailDifferenceSettFeeamt = ArithmeticUtil.subtract(tailDifferenceSettFeeamt,item.getSettFeeAmt());
         }
         //尾差放在分在券面最大的委托上
         ptlAllocations.sort((p1,p2) -> p1.getShareAmt().compareTo(p2.getShareAmt()));
         for (PtlAllocationDto ptlAllocation : ptlAllocations) {
             ptlAllocation.setIntAmt(ArithmeticUtil.doAdd(ptlAllocation.getIntAmt(),tailDifferenceIntAmt));
             ptlAllocation.setDealFeeAmt(ArithmeticUtil.doAdd(ptlAllocation.getDealFeeAmt(),tailDifferenceDealFeeAmt));
-            ptlAllocation.setSettFeeamt(ArithmeticUtil.doAdd(ptlAllocation.getSettFeeamt(),tailDifferenceSettFeeamt));
+            ptlAllocation.setSettFeeAmt(ArithmeticUtil.doAdd(ptlAllocation.getSettFeeAmt(),tailDifferenceSettFeeamt));
             break;
         }
     }
