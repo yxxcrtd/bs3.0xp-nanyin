@@ -118,6 +118,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		initPageParams.put("PAGE_ID_REQUEST","CfetsBondDealQuotedPrice005");
 		//01: 开启银行间报价 02:关闭银行间报价（事后录入）
 		initPageParams.put("ibuFlag_quote_switch",CacheUtil.getSysParam("ibuFlag_quote_switch"));
+		//刷新时间
+		initPageParams.put("ibuQuoteBond_etrTable_refresh_period", CacheUtil.getSysParam("ibuQuoteBond_etrTable_refresh_period"));
 		return new Message<Map<String, Object>>(initPageParams).success();
 	}
 

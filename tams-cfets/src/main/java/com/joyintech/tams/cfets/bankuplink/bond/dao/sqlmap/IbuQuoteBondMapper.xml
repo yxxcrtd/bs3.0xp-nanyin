@@ -111,7 +111,7 @@
         ETR_ENTRUST.ENTRUST_DATE ENTRUST_DATE,
         ETR_ENTRUST_ADD.FULL_PRICE,
         ETR_ENTRUST_ADD.TRANSMIT_TIME,
-        ROUND((NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT,0)) finishDealAmt
+        ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT,0)) finishDealAmt
         FROM
         ETR_ENTRUST
         INNER JOIN
