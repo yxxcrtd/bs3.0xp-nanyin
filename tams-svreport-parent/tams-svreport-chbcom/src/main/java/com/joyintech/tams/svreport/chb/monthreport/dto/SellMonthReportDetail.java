@@ -167,6 +167,8 @@ public class SellMonthReportDetail extends BaseEntity {
         this.isConsign = isConsign;
     }
 
+    public String getIsConsignStr() {return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsConsign());}
+
     public String getInstitutionCode() {
         return institutionCode;
     }

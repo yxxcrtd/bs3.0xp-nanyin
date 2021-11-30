@@ -124,59 +124,69 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		dataList= com.joyintech.framework.util.JsonUtils.json2List(datas,SellMonthReport.class);
 		SellMonthReport report = dataList.get(0);
 		String reportuuid = report.getReportuuid();
-		String reporttype = report.getReporttype();
+		String termid = report.getTermid();
 		Map<String,Object> data  = new HashMap<String,Object>();
 		List<SellMonthReportDetail> tempList=new ArrayList<SellMonthReportDetail>();
 		List<SellMonthReport> dateTempList=new ArrayList<SellMonthReport>();
 		String fileName = "销售月度统计表"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
-		if(!reportuuid.isEmpty() && reportuuid != "") {
-			//分投资者分类
-			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
-			if(!tempList.isEmpty()) {
-				for (SellMonthReportDetail detail : tempList) {
-					BigDecimal oneW = new BigDecimal("10000");
-					BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
-					BigDecimal valueAmountTotal = detail.getValueAmountTotal();
-					BigDecimal balanceAmt = detail.getBalanceAmt();
-					detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
-					detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
-					detail.setBalanceAmt(balanceAmt.divide(oneW));
+		//查询当前期数的reportuuid主键
+		List<SellMonthReport> reportuuidList = sellMonthReportDetailMapper.selectReportuuid(termid);
+		if(reportuuidList.size() != 0){
+		for(SellMonthReport monthReport :reportuuidList) {
+				//分投资者分类
+				if(monthReport.getReporttype().equals("1_1")) {
+					tempList = sellMonthReportDetailMapper.selectReportDetail(monthReport.getReportuuid());
+					if (!tempList.isEmpty()) {
+						for (SellMonthReportDetail detail : tempList) {
+							BigDecimal oneW = new BigDecimal("10000");
+							BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
+							BigDecimal valueAmountTotal = detail.getValueAmountTotal();
+							BigDecimal balanceAmt = detail.getBalanceAmt();
+							detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+							detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+							detail.setBalanceAmt(balanceAmt.divide(oneW));
+						}
+					}
+					data.put("dataList1", tempList);
 				}
-			}
-			data.put("dataList1", tempList);
-			//分地区
-			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
-			if(!tempList.isEmpty()) {
-				for (SellMonthReportDetail detail : tempList) {
-					BigDecimal oneW = new BigDecimal("10000");
-					BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
-					BigDecimal valueAmountTotal = detail.getValueAmountTotal();
-					BigDecimal balanceAmt = detail.getBalanceAmt();
-					detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
-					detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
-					detail.setBalanceAmt(balanceAmt.divide(oneW));
+				//分地区
+			if(monthReport.getReporttype().equals("1_2")) {
+				tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
+				if (!tempList.isEmpty()) {
+					for (SellMonthReportDetail detail : tempList) {
+						BigDecimal oneW = new BigDecimal("10000");
+						BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
+						BigDecimal valueAmountTotal = detail.getValueAmountTotal();
+						BigDecimal balanceAmt = detail.getBalanceAmt();
+						detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+						detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+						detail.setBalanceAmt(balanceAmt.divide(oneW));
+					}
 				}
+				data.put("dataList2", tempList);
 			}
-			data.put("dataList2", tempList);
-			//分销售渠道
-			tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
-			if(!tempList.isEmpty()) {
-				for (SellMonthReportDetail detail : tempList) {
-					BigDecimal oneW = new BigDecimal("10000");
-					BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
-					BigDecimal valueAmountTotal = detail.getValueAmountTotal();
-					BigDecimal balanceAmt = detail.getBalanceAmt();
-					detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
-					detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
-					detail.setBalanceAmt(balanceAmt.divide(oneW));
+				//分销售渠道
+			if(monthReport.getReporttype().equals("1_3")) {
+				tempList = sellMonthReportDetailMapper.selectReportDetail(reportuuid);
+				if (!tempList.isEmpty()) {
+					for (SellMonthReportDetail detail : tempList) {
+						BigDecimal oneW = new BigDecimal("10000");
+						BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
+						BigDecimal valueAmountTotal = detail.getValueAmountTotal();
+						BigDecimal balanceAmt = detail.getBalanceAmt();
+						detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+						detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+						detail.setBalanceAmt(balanceAmt.divide(oneW));
+					}
 				}
+				data.put("dataList3", tempList);
+				//查询时间
+				dateTempList = sellMonthReportDetailMapper.selectReportDate(reportuuid);
+				data.put("data", dateTempList);
 			}
-			data.put("dataList3", tempList);
-			//查询时间
-			dateTempList = sellMonthReportDetailMapper.selectReportDate(reportuuid);
-			data.put("data", dateTempList);
 		}
-		else{
+		}
+		 else{
 			data.put("data", dateTempList);
 			data.put("dataList1", tempList);
 			data.put("dataList2", tempList);

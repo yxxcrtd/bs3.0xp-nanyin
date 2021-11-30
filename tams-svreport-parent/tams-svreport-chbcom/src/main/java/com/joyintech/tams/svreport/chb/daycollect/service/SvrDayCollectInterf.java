@@ -82,7 +82,7 @@ public class SvrDayCollectInterf extends BaseService{
             logger.debug("销售月报每日明细汇总信息插入数据：插入开始----------");
 			for(ChbDayCollect sub : list){
 				if(sub.getHolderType() == null) {
-					sub.setHolderType("01");
+					sub.setHolderType("00");
 				}
 				svrDayCollectInterfMapper.insertBatchData(sub);
 			}
