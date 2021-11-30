@@ -1,17 +1,21 @@
 package com.joyintech.tams.svreport.chb.monthreport.service;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
+import com.joyintech.tams.common.svreport.chb.constant.ProdConstants;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthFeePositionMapper;
+import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthPrdPositionMapper;
+import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper;
+import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportTemplateMapper;
+import com.joyintech.tams.svreport.chb.monthreport.dto.*;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,25 +23,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
-import com.joyintech.tams.common.svreport.chb.constant.ProdConstants;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthFeePositionMapper;
-import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthPrdPositionMapper;
-import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper;
-import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportTemplateMapper;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthFeePosition;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportPrdConstants;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportTemplate;
-import com.joyintech.tams.svreport.chb.monthreport.dto.PrdSaletargetDealDetail;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * 银行月度报表生成产品端数据处理类
@@ -243,6 +232,10 @@ public class MonthReportProdService {
 		Map<String,ChbMonthReport> resultinits = new HashMap<>();
 		//生成主表数据
 		ChbMonthReport chbMonthReport = monthReportServiceUtil.buildNewReport(report, ifTrigger);
+		// 生成的数据已报送则不重新生成
+		if (chbMonthReport == null){
+			return;
+		}
 		//主表详情数据
 		Map<String, ChbMonthReportDetail> result = new HashMap<String, ChbMonthReportDetail>();
 		//公用模板
@@ -406,7 +399,12 @@ public class MonthReportProdService {
 			if(null!=pos.getInstitutionCode()&&!resultinits.containsKey(pos.getInstitutionCode())&&CommonUtil.isBAmodel()){
 				//各机构信息新建并保存
 				report.setOrgCode(pos.getInstitutionCode());
-				resultinits.put(pos.getInstitutionCode(), monthReportServiceUtil.buildNewReport(report, ifTrigger));
+				ChbMonthReport chbMonth = monthReportServiceUtil.buildNewReport(report, ifTrigger);
+				// 生成的数据已报送则不重新生成
+				if(chbMonth == null){
+					return;
+				}
+				resultinits.put(pos.getInstitutionCode(), chbMonth);
 				//各机构对应的详情信息保存
 				Map<String, ChbMonthReportDetail> Instresult = new HashMap<String, ChbMonthReportDetail>();
 
