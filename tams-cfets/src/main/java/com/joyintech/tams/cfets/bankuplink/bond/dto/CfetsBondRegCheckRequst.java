@@ -15,7 +15,7 @@ public class CfetsBondRegCheckRequst {
     @ApiModelProperty(name="remark",value="撤销原因",required = true)
     private String remark;
 
-    @ApiModelProperty(name="remark",value="撤销原因",required = true)
+    @ApiModelProperty(name="cfetsBondRegCheckDetaileRequsts",value="入参明细",required = true)
     private List<CfetsBondRegCheckDetaileRequst> cfetsBondRegCheckDetaileRequsts;
 
     public String getRemark() {
