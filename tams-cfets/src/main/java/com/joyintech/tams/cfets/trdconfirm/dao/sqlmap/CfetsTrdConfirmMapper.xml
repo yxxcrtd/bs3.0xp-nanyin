@@ -20,7 +20,10 @@
         left join SYS_DATADICT_LIST sdl on aaa.finprodType2=sdl.ITEM_CODE and sdl.DICT_CODE='FINPROD_TYPE_TG'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
         left join SYS_DATADICT_LIST dicttradeMarket on aaa.tradeMarket=dicttradeMarket.ITEM_CODE and dicttradeMarket.DICT_CODE='TRADE_PLACE'
-       <!-- 关键字模糊查询 -->
+        left join SYS_DATADICT_LIST dictsp on aaa.settleSpeed=dictsp.ITEM_CODE and dictsp.DICT_CODE='ACCOUNT_SPEED'
+        left join SYS_DATADICT_LIST dictquote on aaa.quoteType=dictquote.ITEM_CODE and dictquote.DICT_CODE='QUOTE_TYPE'
+
+        <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
 
         order by aaa.finprodType2, aaa.ps DESC)
@@ -251,10 +254,10 @@
         <if test="search != null and search != '' and search !='有效' ">
             <where>
                 ((aaa.effectiveStatusName || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
-                || '|' || dictps.ITEM_VALUE || '|' || dicttradeMarket.ITEM_VALUE || '|T+' || aaa.settleSpeed
+                || '|' || dictps.ITEM_VALUE || '|' || dicttradeMarket.ITEM_VALUE || '|' || dictsp.ITEM_VALUE
                 || '|' || aaa.secManageAcctIdName || '|' || aaa.busiCode || '|' || aaa.trader
                 || '|' || aaa.counterId  || '|' || aaa.counterIdName || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
-                || '|' || aaa.quoteType || '|' || aaa.remark
+                || '|' || dictquote.ITEM_VALUE  || '|' || aaa.remark
                 like '%' || #{search} || '%')
                 or to_char(aaa.faceValue,'FM9999999999999990.99')=#{search} or to_char(aaa.faceValue)=#{search}
                 or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
