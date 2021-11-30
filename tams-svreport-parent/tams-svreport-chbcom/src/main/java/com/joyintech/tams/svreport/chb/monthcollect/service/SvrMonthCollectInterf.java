@@ -42,11 +42,12 @@ public class SvrMonthCollectInterf extends BaseService{
     private ChbCommonCheckService chbCommonCheckService;
 
     public void generateData(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
-		if(svrMonthCollectInterfMapper.checkAllMonth(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd)) == 0){
+    	Date batchEndDate = getFirstDayOfNextMonth(DateUtil.format(batchDateEnd));
+		if(svrMonthCollectInterfMapper.checkAllMonth(DateUtil.format(batchDateStart),DateUtil.format(batchEndDate)) == 0){
 			logger.info("请先执行明细汇总批处理，再执行月报生成批处理！");
 			return;
 		}
-		if(svrMonthCollectInterfMapper.checkSubmission(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd)) != 0){
+		if(svrMonthCollectInterfMapper.checkSubmission(DateUtil.format(batchDateStart),DateUtil.format(batchEndDate)) != 0){
 			logger.info("已报送的月报，不再生成报送数据！");
 			return;
 		}
@@ -179,8 +180,9 @@ public class SvrMonthCollectInterf extends BaseService{
 	 * @return
 	 */
 	public Map<String,Map<String,Map<String,ChbMonthCollect>>> getList(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
+		Date batchEndDate = this.getFirstDayOfNextMonth(DateUtil.format(batchDateEnd));
 		//汇总  总、净销售金额
-		List<ChbMonthCollect> listAmountTotal = svrMonthCollectInterfMapper.selectAmountTotal(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+		List<ChbMonthCollect> listAmountTotal = svrMonthCollectInterfMapper.selectAmountTotal(DateUtil.format(batchDateStart),DateUtil.format(batchEndDate));
 //		//判断是否为三合一 生成持有余额、投资者数量信息
 //		if(DictCodeListExt2.是否对三合一人员进行统计报送_是.getValue().equals("1")){//是三合一
 			//获取check表的
