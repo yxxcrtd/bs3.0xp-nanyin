@@ -338,7 +338,7 @@ public class CfetsBondDayRegDto {
     }
 
     public String getQuoteTypeStr() {
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式_登记, this.getQuoteTypeStr());
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式_登记, this.getQuoteType());
     }
 
     public void setQuoteTypeStr(String quoteTypeStr) {
@@ -346,7 +346,7 @@ public class CfetsBondDayRegDto {
     }
 
     public String getSettleMethodStr() {
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, this.getQuoteTypeStr());
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, this.getSettleMethod());
     }
 
     public void setSettleMethodStr(String settleMethodStr) {
@@ -354,7 +354,7 @@ public class CfetsBondDayRegDto {
     }
 
     public String getSettleTypeStr() {
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.清算类型, this.getQuoteTypeStr());
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.清算类型, this.getSettleType());
     }
 
     public void setSettleTypeStr(String settleTypeStr) {
