@@ -2,6 +2,8 @@ package com.joyintech.tams.svreport.chb.monthreport.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 
 import java.math.BigDecimal;
@@ -188,6 +190,10 @@ public class SellMonthReportDetail extends BaseEntity {
     public void setHolderType(String holderType) {
         this.holderType = holderType;
     }
+
+    public String getHolderTypeStr() {return SysDataUtil.getNameFromDataDict(DictCode.销售月表投资者类型, this.getHolderType());}
+    public String getAreaCodeStr() {return SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债, this.getAreaCode());}
+    public String getReporttypeStr() {return SysDataUtil.getNameFromDataDict(DictCode.销售结算报表类型, this.getReporttype());}
 
     public BigDecimal getHolderNum() {
         return holderNum;

@@ -13,8 +13,10 @@ INSERT INTO CHB_REG_TIME_POINTS VALUES('34',null,'34',null,'03','03','02','业�
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'SalesTransactionMaintenance001';
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'SalesTransactionMaintenance002';
 delete from SYS_MENU where MENU_ID = 'REPORT_001_001_018';
+delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_018';
+INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 7, '中债四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
 INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 'REP', null, 'REPORT_001_001', 'SalesTransactionMaintenance001', 15, '02', '销售结算资金交易信息维护', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
-INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance001','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','REPORT_001_001_016_003',null,null,'02','01','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance001','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','REPORT_001_001_018',null,null,'02','01','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance002','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002',null,null,null,'02','01','销售结算资金交易信息维护新建','system',null,sysdate,'system',sysdate);
 
 DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'SalesTransactionMaintenance002';

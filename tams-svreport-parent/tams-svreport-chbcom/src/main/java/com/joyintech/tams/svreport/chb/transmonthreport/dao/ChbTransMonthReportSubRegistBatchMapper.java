@@ -1,6 +1,6 @@
 package com.joyintech.tams.svreport.chb.transmonthreport.dao;
 
-import com.joyintech.tams.common.base.entity.ChbTransMonthReportSub;
+import com.joyintech.tams.common.base.entity.ChbTransMonth;
 import com.joyintech.tams.common.base.entity.ChbTransMonthTemplate;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
 import org.apache.ibatis.annotations.Param;
@@ -25,7 +25,7 @@ public interface ChbTransMonthReportSubRegistBatchMapper {
      * @param chbMonthReportSub 删除参数
      * @return 删除数据条数
      */
-    int deleteByModel(ChbTransMonthReportSub chbMonthReportSub);
+    int deleteByModel(ChbTransMonth chbMonthReportSub);
 
     /**
      * 根据期限代码查询已报送的数据
@@ -33,7 +33,7 @@ public interface ChbTransMonthReportSubRegistBatchMapper {
      * @param termid 期限代码
      * @return 已报送的数据
      */
-    List<ChbTransMonthReportSub> selectSendDataByTermId(@Param("termid") String termid);
+    List<ChbTransMonth> selectSendDataByTermId(@Param("termid") String termid);
 
     /**
      * 根据期限代码查询未报送的数据
@@ -41,7 +41,7 @@ public interface ChbTransMonthReportSubRegistBatchMapper {
      * @param termid 期限代码
      * @return 未报送的数据
      */
-    List<ChbTransMonthReportSub> selectUnSendDataByTermId(@Param("termid") String termid);
+    List<ChbTransMonth> selectUnSendDataByTermId(@Param("termid") String termid);
 
     /**
      * 根据配置的报表类型查询报表模板

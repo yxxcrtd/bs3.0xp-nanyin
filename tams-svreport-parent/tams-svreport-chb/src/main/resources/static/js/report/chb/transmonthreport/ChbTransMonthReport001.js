@@ -74,7 +74,7 @@ $(function() {
 
 
     // 导入按钮点击事件
-    $('#ChbTransMonthReport001_btn_import').click(function() {
+    $('#SvrTransMonthReport001_btn_import').click(function() {
         Joyin.confirm("请确认是否要导入数据？", function() {
             Joyin.uploadFile(function(fileName) {
                 Joyin.ajax('importFile', {fileName: fileName});
@@ -85,17 +85,17 @@ $(function() {
     });
 
     //导出所有查询结果
-    $('#ChbTransMonthReport001_btn_export').click(function() {
+    $('#SvrTransMonthReport001_btn_export').click(function() {
         exportExcel("1");
     });
 
     //导出中债Excel
-    $('#ChbTransMonthReport001_btn_chbexport').click(function() {
+    $('#SvrTransMonthReport001_btn_chbexport').click(function() {
         exportExcel("0");
     });
 
     //导出删除模板
-    $('#ChbTransMonthReport001_btn_exportDel').click(function(){
+    $('#SvrTransMonthReport001_btn_exportDel').click(function(){
         /*if(!table.isSearched()) {
             return;
         }*/
@@ -226,7 +226,7 @@ $(function() {
     /**
      * 报送
      */
-    $('#ChbTransMonthReport001_btn_submit').click(function(){
+    $('#SvrTransMonthReport001_btn_submit').click(function(){
         var rows = table.getAllCheckedRows();
         if(rows.length === 0) {
             var sendStatus = $('#sendStatus').val();
@@ -289,7 +289,7 @@ $(function() {
         var btns = {};
         var keyList = [];
         var dialogIndex = -1;
-        var path = '/chb/subsidiamonthreport/ChbTransMonthReport001/preView';
+        var path = '/chb/transmonthreport/ChbTransMonthReport001/preView';
         if(data.status=='03'){
             Joyin.error("删除状态数据不支持预览");
             return;
@@ -302,7 +302,7 @@ $(function() {
 
     });
     //数据检查
-    $('#ChbTransMonthReport001_btn_checkData').click(dateCheckMethod);
+    $('#SvrTransMonthReport001_btn_checkData').click(dateCheckMethod);
     function dateCheckMethod(){
         var checkArr=table.getAllCheckedRows();
         if(checkArr.length === 0) {
@@ -348,7 +348,7 @@ $(function() {
     /**
      * 手工处理
      */
-    $('#ChbTransMonthReport001_btn_manual').click(function(){
+    $('#SvrTransMonthReport001_btn_manual').click(function(){
         var rows = table.getAllCheckedRows();
         if(rows.length === 0) {
             var sendStatus = $("#sendStatus").val();
@@ -389,7 +389,7 @@ $(function() {
     /**
      * 重新计算
      */
-    $('#ChbTransMonthReport001_btn_recal').click(function(){
+    $('#SvrTransMonthReport001_btn_recal').click(function(){
 
         var paramObj = getSearchParams();
         if ($('#enddate').val()==null
@@ -450,7 +450,7 @@ $(function() {
     /**
      * 取消手工处理
      */
-    $('#ChbTransMonthReport001_btn_cancelManual').click(function() {
+    $('#SvrTransMonthReport001_btn_cancelManual').click(function() {
         var manArr=table.getAllCheckedRows();
         if(!manArr || manArr.length ==0){
             var sendStatus = $("#sendStatus").val();
@@ -485,7 +485,7 @@ $(function() {
 
     });
     // 二次报送
-    $('#ChbTransMonthReport001_btn_submitAgain').click(function() {
+    $('#SvrTransMonthReport001_btn_submitAgain').click(function() {
         var paramObj = getSearchParams();
 
         var submitArr = table.getAllCheckedRows();
@@ -580,7 +580,7 @@ $(function() {
 
     $(function(){
         // 绑定按钮事件
-        $('#ChbTransMonthReport001_btn_search').click(function() {
+        $('#SvrTransMonthReport001_btn_search').click(function() {
             table.load();
         });
     });

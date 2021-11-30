@@ -539,13 +539,23 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
     }
 
     public ChbTransMonthReportSubDetailDto divide10000(ChbTransMonthReportSubDetailDto detail) {
-        // 期末余额
-        if (detail.getNewBalance() != null) {
-            detail.setNewBalance(detail.getNewBalance().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
-        }
-        // 期末余额
-        if (detail.getOldBalance() != null) {
-            detail.setOldBalance(detail.getOldBalance().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
+        if("AMT1_2".equals(detail.getPropertycode()) || "AMT2_9".equals(detail.getPropertycode()) || "AMT4_2".equals(detail.getPropertycode()) || "AMT5_2".equals(detail.getPropertycode()) || "AMT6_2".equals(detail.getPropertycode())){
+        }else{
+            // 期末余额
+            if (detail.getNewBalance() != null) {
+                detail.setNewBalance(detail.getNewBalance().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
+            }
+            // 加权期末余额
+            if (detail.getNewTerms() != null) {
+                detail.setNewTerms(detail.getNewTerms().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
+            }
+            // 期末余额
+            if (detail.getOldBalance() != null) {
+                detail.setOldBalance(detail.getOldBalance().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
+            }
+            if (detail.getOldTerms() != null) {
+                detail.setOldTerms(detail.getOldTerms().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
+            }
         }
         return detail;
     }

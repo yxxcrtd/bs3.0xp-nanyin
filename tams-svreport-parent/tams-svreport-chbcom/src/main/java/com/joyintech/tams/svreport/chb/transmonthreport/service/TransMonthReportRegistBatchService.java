@@ -3,8 +3,8 @@ package com.joyintech.tams.svreport.chb.transmonthreport.service;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.batch.report.autosendcb.common.service.SvrCBBaseService;
-import com.joyintech.tams.common.base.dao.ChbTransMonthReportSubMapper;
-import com.joyintech.tams.common.base.entity.ChbTransMonthReportSub;
+import com.joyintech.tams.common.base.dao.ChbTransMonthMapper;
+import com.joyintech.tams.common.base.entity.ChbTransMonth;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.chb.util.ToolsUtil;
@@ -49,7 +49,7 @@ public class TransMonthReportRegistBatchService extends SvrCBBaseService{
     @Autowired
     private ChbTransMonthReportSubRegistBatchMapper chbTransMonthReportSubRegistBatchMapper;
     @Autowired
-    private ChbTransMonthReportSubMapper chbTransMonthReportSubMapper;
+    private ChbTransMonthMapper chbTransMonthMapper;
     @Autowired
     private ChbTransMonthReportProdBatchService chbTransMonthReportProdBatchService;
     @Autowired
@@ -117,55 +117,56 @@ public class TransMonthReportRegistBatchService extends SvrCBBaseService{
         report.setStatusDate(ToolsUtil.getCurrentTime(executeDate));
         report.setProdids(prodids);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-        ChbTransMonthReportSub chbTransMonthReportSub = new ChbTransMonthReportSub();
-        chbTransMonthReportSub.setTermid(sdf.format(firstday));
+        ChbTransMonth chbTransMonth = new ChbTransMonth();
+        chbTransMonth.setTermid(sdf.format(firstday));
         // 报表ID
-        chbTransMonthReportSub.setReportuuid(UUID.randomUUID().toString());
+        chbTransMonth.setReportuuid(UUID.randomUUID().toString());
 
         // 报表类型
-        chbTransMonthReportSub.setReporttype(ChbMonthReportPrdConstants.REPORT_TYPE_MONTH);
+        chbTransMonth.setReporttype(ChbMonthReportPrdConstants.REPORT_TYPE_MONTH);
 
         // 起止日期
-        chbTransMonthReportSub.setStartdate(firstday);
-        chbTransMonthReportSub.setEnddate(lastday);
+        chbTransMonth.setStartdate(firstday);
+        chbTransMonth.setEnddate(lastday);
 
         // 数据日期：批处理日期
-        chbTransMonthReportSub.setStatusDate(report.getStatusDate());
+        chbTransMonth.setStatusDate(report.getStatusDate());
 
         // 报表频率：月报
-        chbTransMonthReportSub.setReportfrequ(ChbMonthReportPrdConstants.REPORT_FREQU_M);
+        chbTransMonth.setReportfrequ(ChbMonthReportPrdConstants.REPORT_FREQU_M);
 
         // 发行机构代码取值
-        chbTransMonthReportSub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
-        chbTransMonthReportSub.setIssuePartyName(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME));
+        chbTransMonth.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
+        chbTransMonth.setIssuePartyName(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME));
 
         // 用户信息
-        chbTransMonthReportSub.setOrgCode(CommonUtil.getOrgCode());
-        chbTransMonthReportSub.setCreateDept(CommonUtil.getDeptCode());
-        chbTransMonthReportSub.setCreateUser(CommonUtil.getUserName());
-        chbTransMonthReportSub.setUpdateUser(CommonUtil.getUserName());
+        chbTransMonth.setOrgCode(CommonUtil.getOrgCode());
+        chbTransMonth.setCreateDept(CommonUtil.getDeptCode());
+        chbTransMonth.setCreateUser(CommonUtil.getUserName());
+        chbTransMonth.setUpdateUser(CommonUtil.getUserName());
 
         // 数据状态
-        chbTransMonthReportSub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
-        chbTransMonthReportSub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+        chbTransMonth.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+        chbTransMonth.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
         // 报送时点
         // 当前批次报送时点集合
         Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
         List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_理财产品转型情况月度统计表.getValue(),
-                chbTransMonthReportSub.getStatus(), dateMap, chbTransMonthReportSub.getEnddate());
+                chbTransMonth.getStatus(), dateMap, chbTransMonth.getEnddate());
         if (!StringUtil.isEmptyList(dateList)) {
-            chbTransMonthReportSub.setChbSubmitDeadline(dateList.get(0));
-            chbTransMonthReportSub.setSubmitDeadline(dateList.get(1));
+            chbTransMonth.setChbSubmitDeadline(dateList.get(0));
+            chbTransMonth.setSubmitDeadline(dateList.get(1));
         }
         // 插入月报主表数据
-        List<ChbTransMonthReportSub> ybs = chbTransMonthReportSubRegistBatchMapper.selectSendDataByTermId(chbTransMonthReportSub.getTermid());
+        List<ChbTransMonth> ybs = chbTransMonthReportSubRegistBatchMapper.selectSendDataByTermId(chbTransMonth.getTermid());
         calendar.setTime(executeDate);
-        ChbTransMonthReportSub chbDelReport = new ChbTransMonthReportSub();
-        chbDelReport.setTermid(chbTransMonthReportSub.getTermid());
+        ChbTransMonth chbDelReport = new ChbTransMonth();
+        chbDelReport.setTermid(chbTransMonth.getTermid());
         // 查询未报送
-        List<ChbTransMonthReportSub> wbs = chbTransMonthReportSubRegistBatchMapper.selectUnSendDataByTermId(chbTransMonthReportSub.getTermid());
-        if (calendar.get(Calendar.DATE) == 1 && ybs != null && !ybs.isEmpty() && (wbs == null || wbs.isEmpty())
+        List<ChbTransMonth> wbs = chbTransMonthReportSubRegistBatchMapper.selectUnSendDataByTermId(chbTransMonth.getTermid());
+        if (calendar.get(Calendar.DATE) == 1 && ybs != null && !ybs.isEmpty() && (wbs == null || wbs.isEmpty() && ! ifTrigger)
                 && !ifTrigger) {
+            // 生成的数据已报送则不重新生成
             return;
         }
         if (wbs != null && !wbs.isEmpty()) {
@@ -177,12 +178,12 @@ public class TransMonthReportRegistBatchService extends SvrCBBaseService{
                 chbDelReport.setReportuuid(wbs.get(0).getReportuuid());
                 chbTransMonthReportSubRegistBatchMapper.deleteByModel(chbDelReport);
             }
-            chbTransMonthReportSub.setStatus("02");// 修改
+            chbTransMonth.setStatus("02");// 修改
         } else {
             chbTransMonthReportSubRegistBatchMapper.deleteByModel(chbDelReport);
         }
-        chbTransMonthReportSubMapper.insert(chbTransMonthReportSub);
-        report.setReportuuid(chbTransMonthReportSub.getReportuuid());
+        chbTransMonthMapper.insert(chbTransMonth);
+        report.setReportuuid(chbTransMonth.getReportuuid());
 
         // 生成产品端月报明细
         chbTransMonthReportProdBatchService.genMonthPrd(report);

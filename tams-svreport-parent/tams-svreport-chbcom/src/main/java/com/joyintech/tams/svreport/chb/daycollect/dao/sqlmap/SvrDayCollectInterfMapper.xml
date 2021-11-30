@@ -76,9 +76,9 @@
 		AREA_CODE, HOLDER_TYPE, CCY, ISAGENCY, DAY_SALE_AMOUNT_SUM, DAY_VALUE_AMOUNT_SUM,
 		PROD_VALUE, DAY_SALE_QTY_SUM, DAY_VALUE_QTY_SUM,SALE_TOTAL_BY_QTY, VALUE_TOTAL_BY_QTY, EQUITY_CONF_DATE)
 		values(
-		#{prdRegistCode},#{prodId},#{institutionCode},#{areaCode}, #{holderType},
-		#{ccy},#{isagency}, #{daySaleAmountSum}, #{dayValueAmountSum}, #{prodValue},
-		#{daySaleQtySum},#{dayValueQtySum},#{saleTotalByQty},#{valueTotalByQty}
+		#{prdRegistCode,jdbcType=VARCHAR},#{prodId,jdbcType=VARCHAR},#{institutionCode,jdbcType=VARCHAR},#{areaCode,jdbcType=VARCHAR}, #{holderType,jdbcType=CHAR},
+		#{ccy,jdbcType=CHAR},#{isagency,jdbcType=CHAR}, #{daySaleAmountSum,jdbcType=DECIMAL}, #{dayValueAmountSum,jdbcType=DECIMAL}, #{prodValue,jdbcType=DECIMAL},
+		#{daySaleQtySum,jdbcType=DECIMAL},#{dayValueQtySum,jdbcType=DECIMAL},#{saleTotalByQty,jdbcType=DECIMAL},#{valueTotalByQty,jdbcType=DECIMAL}
 		,#{equityConfDate}
 		)
 	</insert>

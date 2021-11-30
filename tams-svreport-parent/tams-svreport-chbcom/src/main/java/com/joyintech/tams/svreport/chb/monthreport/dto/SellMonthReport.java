@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.chb.monthreport.dto;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.system.base.entity.SysInstitution;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -221,6 +222,8 @@ public class SellMonthReport extends BaseEntity implements  Cloneable{
     public void setReporttype(String reporttype) {
         this.reporttype = reporttype == null ? null : reporttype.trim();
     }
+
+    public String getReporttypeStr() {return SysDataUtil.getNameFromDataDict(DictCode.销售结算报表类型, this.getReporttype());}
 
     public String getReportName() {
         return reportName;

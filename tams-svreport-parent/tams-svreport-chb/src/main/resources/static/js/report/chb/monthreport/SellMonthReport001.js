@@ -47,7 +47,7 @@ $(function() {
         },
         cols:[
             { title: "主键", field: 'reportuuid',sortable:false,visible:false},
-            { title: "报表类型", field: 'reporttype',sortable:false,visible:false},
+            { title: "报表类型", width : 130, field: 'reporttypeStr',sortField:'reporttype'},
             { title: "数据状态", width : 130, field: 'dataStatusStr',sortField:'dataStatus'},
             { title: "数据日期", width : 200, field: 'statusDate', type: 'datetime',sortField:'statusDate'},
             { title: "报送状态", width : 130, field: 'sendStatusStr',sortField:'sendStatus'},
