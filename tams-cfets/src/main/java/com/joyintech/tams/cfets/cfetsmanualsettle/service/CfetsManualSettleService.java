@@ -131,39 +131,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
         return ajaxResult;
     }
 
-//    /**
-//     * 手工交收画面共通check
-//     * @param cfetsRequest
-//     * @return message
-//     */
-//    public String checkManualSettleSave(CfetsManualSettleRequest cfetsRequest, BindingResult br) {
-//        String returnMsg ="";
-//        if(cfetsRequest == null || StringUtil.isEmptyList(cfetsRequest.getSelectedItem())){
-//            returnMsg = "至少选择一条记录！";
-//            return returnMsg;
-//        }
-//        for(CfetsManualSettleDto cfetsDto : cfetsRequest.getSelectedItem()) {
-//            //交收失败
-//            if(StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())){
-//                //判断勾选记录交收状态是否为“待交收”
-//                if(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())){
-//                    returnMsg = "存在不允许交收失败的记录，是否剔除这些记录？";
-//                    break;
-//                }
-//            }
-//            //回溯
-//            else if(StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())){
-//                //判断勾选记录交收状态是否为“已交收”
-//                if(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_已交收.getValue())){
-//                    returnMsg = "非已交收记录不允许回溯，是否剔除这些记录？";
-//                    break;
-//                }
-//            }
-//        }
-//
-//        return returnMsg;
-//    }
-
     @Override
     public void doInsert(CfetsManualSettleRequest entity, OperationType type) {
 
