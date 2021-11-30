@@ -93,7 +93,24 @@ public class ReconciliationCommonService {
     }
 
     /**
-     * 删除对账结果不一致数据
+     * 处理待手工对账对账
+     * @param list
+     */
+    public void executeManualReconciliation(List<DayEndAccountDaichuliDto> list) {
+        if(CollectionUtils.isEmpty(list)){
+            return;
+        }
+        for(DayEndAccountDaichuliDto daichuliDto:list){
+            settleTransDataStatusMapper.deleteByPrimaryKey(daichuliDto.getTradeId());
+            SettleTransDataStatus status = new SettleTransDataStatus();
+            status.setTradeId(daichuliDto.getTradeId());
+            status.setCheckResult(DictCodeListExt3.对账状态结果_待处理.getValue());
+            settleTransDataStatusMapper.insertSelective(status);
+        }
+    }
+
+    /**
+     * 删除对账结果不一致和待处理数据
      */
     public void deleteCheckDisaccords(Date batchDate){
         Map<String, Object> param = new HashMap<>();
@@ -271,8 +288,8 @@ public class ReconciliationCommonService {
      * @param dto
      */
     public void chuliWucha(DayEndAccountDaichuliDto dto) {
-        dto.setTradeAmtCe(ArithmeticUtil.subtract(dto.getTradeAmt(), dto.getTradeAmt2()));
-        dto.setTradeNumCe(ArithmeticUtil.subtract(dto.getTradeNum(), dto.getTradeNum2()));
+        dto.setTradeAmtCe(ArithmeticUtil.subtract(dto.getTradeAmt().abs(), dto.getTradeAmt2().abs()));
+        dto.setTradeNumCe(ArithmeticUtil.subtract(dto.getTradeNum().abs(), dto.getTradeNum2().abs()));
         dto.setStampFeeCe(ArithmeticUtil.subtract(dto.getStampFee(), dto.getStampFee2()));
         dto.setJsfAmtCe(ArithmeticUtil.subtract(dto.getJsfAmt(), dto.getJsfAmt2()));
         dto.setGhfAmtCe(ArithmeticUtil.subtract(dto.getGhfAmt(), dto.getGhfAmt2()));
