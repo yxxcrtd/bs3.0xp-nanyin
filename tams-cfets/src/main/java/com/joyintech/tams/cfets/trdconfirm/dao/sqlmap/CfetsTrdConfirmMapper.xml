@@ -133,6 +133,9 @@
         <if test="quoteType != null and quoteType != ''">
             AND reg.quote_type= #{quoteType,jdbcType=VARCHAR}
         </if>
+        <if test="dealType != null and dealType != ''">
+            AND '04'= #{dealType,jdbcType=VARCHAR}
+        </if>
         <if test="counterId != null and counterId != ''">
             AND reg.counter_id= #{counterId,jdbcType=VARCHAR}
         </if>
@@ -160,7 +163,7 @@
         mcci.PARTY_ABBR as counterIdName,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
-        null as quoteType,
+        reg.quote_type as quoteType,
         reg.remark as remark,
         reg.totle_trade_id as totleTradeId,
         '01' effectiveStatus,
@@ -237,6 +240,9 @@
         </if>
         <if test="quoteType != null and quoteType != ''">
             AND reg.quote_type= #{quoteType,jdbcType=VARCHAR}
+        </if>
+        <if test="dealType != null and dealType != ''">
+            AND '04'= #{dealType,jdbcType=VARCHAR}
         </if>
         <if test="counterId != null and counterId != ''">
             AND reg.counter_id= #{counterId,jdbcType=VARCHAR}
@@ -341,6 +347,8 @@
         left join SYS_DATADICT_LIST dicttradeMarket on aaa.tradeMarket=dicttradeMarket.ITEM_CODE and dicttradeMarket.DICT_CODE='TRADE_PLACE'
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
+        <include refid="vagueQueryExceWhere"></include>
+
         order by aaa.finprodType2, aaa.ps DESC)
         <!--前端传入排序字段-->
         <if test="sort != null and sort != '' and direction != null and direction != ''">
@@ -369,7 +377,7 @@
         mcci.PARTY_ABBR as counterIdName,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
-        ib.quote_type as quoteType,
+        null as quoteType,
         ib.remark as remark,
         ib.quote_id as totleTradeId,
         '02' effectiveStatus,
@@ -440,8 +448,11 @@
         <if test="busiCode != null and busiCode != ''">
             AND ib.quote_id like '%' || #{busiCode,jdbcType=VARCHAR} || '%'
         </if>
+        <if test="dealType != null and dealType != ''">
+            AND ib.quote_type= #{dealType,jdbcType=VARCHAR}
+        </if>
         <if test="quoteType != null and quoteType != ''">
-            AND ib.quote_type= #{quoteType,jdbcType=VARCHAR}
+            AND null= #{quoteType,jdbcType=VARCHAR}
         </if>
         <if test="counterId != null and counterId != ''">
             AND ibd.cp_party_id= #{counterId,jdbcType=VARCHAR}
@@ -468,7 +479,7 @@
         mcci.PARTY_ABBR as counterIdName,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
-        ic.quote_type as quoteType,
+        null as quoteType,
         ic.remark as remark,
         ic.quote_id as totleTradeId,
         '02' effectiveStatus,
@@ -538,8 +549,11 @@
         <if test="busiCode != null and busiCode != ''">
             AND ic.quote_id like '%' || #{busiCode,jdbcType=VARCHAR} || '%'
         </if>
+        <if test="dealType != null and dealType != ''">
+            AND ic.quote_type= #{dealType,jdbcType=VARCHAR}
+        </if>
         <if test="quoteType != null and quoteType != ''">
-            AND ic.quote_type= #{quoteType,jdbcType=VARCHAR}
+            AND null= #{quoteType,jdbcType=VARCHAR}
         </if>
         <if test="counterId != null and counterId != ''">
             AND ic.cp_party_id= #{counterId,jdbcType=VARCHAR}
