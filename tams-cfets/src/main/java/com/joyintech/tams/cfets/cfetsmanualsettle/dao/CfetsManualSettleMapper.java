@@ -4,6 +4,7 @@ import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
 import com.joyintech.tams.common.base.entity.TrdBankManualSetDetail;
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
+import com.joyintech.tams.common.base.entity.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -118,4 +119,14 @@ public interface CfetsManualSettleMapper {
      * @return CfetsManualSettleInfoF32Respond
      */
     CfetsManualSettleInfoOtherListRespond findManualSettleInfoOther(Map<String, Object> pageParam);
+
+    /**
+     * 根据用户名查找真实姓名
+     * <功能详细描述>
+     * @param userName
+     * @return
+     * @see
+     * @since 1.0
+     */
+    User getRealNameByUserName(@Param("userName")String userName);
 }

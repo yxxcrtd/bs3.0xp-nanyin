@@ -119,7 +119,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
             returnMessage = "非已交收记录不允许回溯，是否剔除这些记录？";
         }
 
-        if(returnList.size() != cfetsRequest.getSelectedItem().size()){
+        if(returnList.size() != cfetsRequest.getSelectedItem().size() && !StringUtil.isBlank(returnMessage)){
             ajaxResult.setMessageType(MessageType.提示消息);
             ajaxResult.setMessage(returnMessage);
             ajaxResult.setData(returnList);
@@ -188,14 +188,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
             cfetsManualSettleMapper.mergeInfo(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo());
             //新增交收流水
             trdBankManualSettleFlowMapper.insertSelective(cfetsManualSettleInsertDto.getTrdBankManualSettleFlow());
-            //回溯交收明细更新，其他情况新增
-            if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_回溯.getValue())){
-                cfetsManualSettleMapper.updateByTradeId(cfetsManualSettleInsertDto.getListTrdBnakSetDetails());
-            }else{
-                //新增交收明细
-                for(TrdBankManualSetDetail trdBankManualSetDetail:cfetsManualSettleInsertDto.getListTrdBnakSetDetails()){
-                    trdBankManualSetDetailMapper.insertSelective(trdBankManualSetDetail);
-                }
+            //新增交收明细
+            for(TrdBankManualSetDetail trdBankManualSetDetail:cfetsManualSettleInsertDto.getListTrdBnakSetDetails()){
+                trdBankManualSetDetailMapper.insertSelective(trdBankManualSetDetail);
             }
         }
         //发送头寸
@@ -234,8 +229,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                 //银行间手工交收明细Entiy
                 TrdBankManualSetDetail trdBankManualSetDetail =new TrdBankManualSetDetail();
                 //交收流水序号=调用【共通】生成
-//                trdBankManualSetDetail.setSeqNo(cfetsManualSettleDto.getSeqNo() != null?
-//                        cfetsManualSettleDto.getSeqNo() : IDGenerator.generate());
                 trdBankManualSetDetail.setSeqNo(IDGenerator.generate());
                 //交收编号=银行间手工交收信息Entiy.交收编号
                 trdBankManualSetDetail.setSettleSeqNo(trdBankManualSettleInfo.getSettleSeqNo());
@@ -263,9 +256,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                 }else if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
                     trdBankManualSetDetail.setSettleStatus(DictCodeListExt3.交收状态_交收失败.getValue());
                 }else if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_回溯.getValue())){
-                    trdBankManualSetDetail =new TrdBankManualSetDetail();
-                    trdBankManualSetDetail.setSeqNo(cfetsManualSettleDto.getSeqNo());
-                    trdBankManualSetDetail.setSettleSeqNo(cfetsManualSettleDto.getSettleSeqNo());
                     trdBankManualSetDetail.setSettleStatus(DictCodeListExt3.交收状态_未交收.getValue());
                 }
 

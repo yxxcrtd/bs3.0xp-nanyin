@@ -482,6 +482,179 @@
         AND R.FINPROD_ID = #{finprodId}
     </select>
 
+    <insert id="mergeInfo"  parameterType="com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo">
+        MERGE INTO TRD_BANK_MANUAL_SETTLE_INFO tbms
+        USING (
+        select
+        <if test="settleSeqNo != null">
+            #{settleSeqNo,jdbcType=VARCHAR} settleSeqNo,
+        </if>
+        <if test="settleStatus != null">
+            #{settleStatus,jdbcType=VARCHAR} settleStatus,
+        </if>
+        <if test="tradeId != null">
+            #{tradeId,jdbcType=VARCHAR} tradeId,
+        </if>
+        <if test="settleDate != null">
+            #{settleDate,jdbcType=TIMESTAMP} settleDate,
+        </if>
+        <if test="finprodId != null">
+            #{finprodId,jdbcType=VARCHAR} finprodId,
+        </if>
+        <if test="settleNum != null">
+            #{settleNum,jdbcType=DECIMAL} settleNum,
+        </if>
+        <if test="settleAmt != null">
+            #{settleAmt,jdbcType=DECIMAL} settleAmt,
+        </if>
+        <if test="busiType != null">
+            #{busiType,jdbcType=VARCHAR} busiType,
+        </if>
+        <if test="createUser != null">
+            #{createUser,jdbcType=VARCHAR} createUser,
+        </if>
+        <if test="createDept != null">
+            #{createDept,jdbcType=VARCHAR} createDept,
+        </if>
+        <if test="createTime != null">
+            #{createTime,jdbcType=TIMESTAMP} createTime,
+        </if>
+        <if test="updateUser != null">
+            #{updateUser,jdbcType=VARCHAR} updateUser,
+        </if>
+        <if test="updateTime != null">
+            #{updateTime,jdbcType=TIMESTAMP} updateTime
+        </if>
+        from dual
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON (tbms.SETTLE_SEQ_NO = TEMP.settleSeqNo)
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN
+        UPDATE
+        SET
+        <if test="settleStatus != null">
+            tbms.SETTLE_STATUS = TEMP.settleStatus,
+        </if>
+        <if test="tradeId != null">
+            tbms.TRADE_ID = TEMP.tradeId,
+        </if>
+        <if test="settleDate != null">
+            tbms.SETTLE_DATE = TEMP.settleDate,
+        </if>
+        <if test="finprodId != null">
+            tbms.FINPROD_ID = TEMP.finprodId,
+        </if>
+        <if test="settleNum != null">
+            tbms.SETTLE_NUM = TEMP.settleNum,
+        </if>
+        <if test="settleAmt != null">
+            tbms.SETTLE_AMT = TEMP.settleAmt,
+        </if>
+        <if test="busiType != null">
+            tbms.BUSI_TYPE = TEMP.busiType,
+        </if>
+        <if test="createUser != null">
+            tbms.CREATE_USER = TEMP.createUser,
+        </if>
+        <if test="createDept != null">
+            tbms.CREATE_DEPT = TEMP.createDept,
+        </if>
+        <if test="createTime != null">
+            tbms.CREATE_TIME = TEMP.createTime,
+        </if>
+        <if test="updateUser != null">
+            tbms.UPDATE_USER = TEMP.updateUser,
+        </if>
+        <if test="updateTime != null">
+            tbms.UPDATE_TIME = TEMP.updateTime
+        </if>
+        <!-- 未匹配到这插入 -->
+        WHEN NOT MATCHED THEN
+        INSERT (
+        <if test="settleSeqNo != null">
+            SETTLE_SEQ_NO
+        </if>
+        <if test="settleStatus != null">
+            ,SETTLE_STATUS
+        </if>
+        <if test="tradeId != null">
+            ,TRADE_ID
+        </if>
+        <if test="settleDate != null">
+            ,SETTLE_DATE
+        </if>
+        <if test="finprodId != null">
+            ,FINPROD_ID
+        </if>
+        <if test="settleNum != null">
+            ,SETTLE_NUM
+        </if>
+        <if test="settleAmt != null">
+            ,SETTLE_AMT
+        </if>
+        <if test="busiType != null">
+            ,BUSI_TYPE
+        </if>
+        <if test="createUser != null">
+            ,CREATE_USER
+        </if>
+        <if test="createDept != null">
+            ,CREATE_DEPT
+        </if>
+        <if test="createTime != null">
+            ,CREATE_TIME
+        </if>
+        <if test="updateUser != null">
+            ,UPDATE_USER
+        </if>
+        <if test="updateTime != null">
+            ,UPDATE_TIME
+        </if>
+        )
+        values(
+        <if test="settleSeqNo != null">
+            TEMP.settleSeqNo
+        </if>
+        <if test="settleStatus != null">
+            ,TEMP.settleStatus
+        </if>
+        <if test="tradeId != null">
+            ,TEMP.tradeId
+        </if>
+        <if test="settleDate != null">
+            ,TEMP.settleDate
+        </if>
+        <if test="finprodId != null">
+            ,TEMP.finprodId
+        </if>
+        <if test="settleNum != null">
+            ,TEMP.settleNum
+        </if>
+        <if test="settleAmt != null">
+            ,TEMP.settleAmt
+        </if>
+        <if test="busiType != null">
+            ,TEMP.busiType
+        </if>
+        <if test="createUser != null">
+            ,TEMP.createUser
+        </if>
+        <if test="createDept != null">
+            ,TEMP.createDept
+        </if>
+        <if test="createTime != null">
+            ,TEMP.createTime
+        </if>
+        <if test="updateUser != null">
+            ,TEMP.updateUser
+        </if>
+        <if test="updateTime != null">
+            ,TEMP.updateTime
+        </if>
+        )
+    </insert>
+
     <update id="updateByTradeId" parameterType="java.util.List">
         begin
         <foreach collection="listTrdBnakSetDetails" item="item" index="index" open="" close=";" separator=";">
@@ -495,54 +668,6 @@
         </foreach>
         end;
     </update>
-
-    <insert id="mergeInfo"  parameterType="com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo">
-        MERGE INTO TRD_BANK_MANUAL_SETTLE_INFO tbms
-        USING (
-        select
-        #{settleSeqNo,jdbcType=VARCHAR} settleSeqNo,
-        #{settleStatus,jdbcType=VARCHAR} settleStatus,
-        #{tradeId,jdbcType=VARCHAR} tradeId,
-        #{settleDate,jdbcType=TIMESTAMP} settleDate,
-        #{finprodId,jdbcType=VARCHAR} finprodId,
-        #{settleNum,jdbcType=DECIMAL} settleNum,
-        #{settleAmt,jdbcType=DECIMAL} settleAmt,
-        #{busiType,jdbcType=VARCHAR} busiType,
-        #{createUser,jdbcType=VARCHAR} createUser,
-        #{createDept,jdbcType=VARCHAR} createDept,
-        #{createTime,jdbcType=TIMESTAMP} createTime,
-        #{updateUser,jdbcType=VARCHAR} updateUser,
-        #{updateTime,jdbcType=TIMESTAMP} updateTime
-        from dual
-        ) TEMP
-        <!-- 业务主键匹配 -->
-        ON (tbms.SETTLE_SEQ_NO = TEMP.settleSeqNo)
-        <!-- 匹配到则更新 -->
-        WHEN MATCHED THEN
-        UPDATE
-        SET
-        tbms.SETTLE_STATUS = TEMP.settleStatus,
-        tbms.TRADE_ID = TEMP.tradeId,
-        tbms.SETTLE_DATE = TEMP.settleDate,
-        tbms.FINPROD_ID = TEMP.finprodId,
-        tbms.SETTLE_NUM = TEMP.settleNum,
-        tbms.SETTLE_AMT = TEMP.settleAmt,
-        tbms.BUSI_TYPE = TEMP.busiType,
-        tbms.CREATE_USER = TEMP.createUser,
-        tbms.CREATE_DEPT = TEMP.createDept,
-        tbms.CREATE_TIME = TEMP.createTime,
-        tbms.UPDATE_USER = TEMP.updateUser,
-        tbms.UPDATE_TIME = TEMP.updateTime
-        <!-- 未匹配到这插入 -->
-        WHEN NOT MATCHED THEN
-        INSERT (SETTLE_SEQ_NO,SETTLE_STATUS,TRADE_ID,SETTLE_DATE,FINPROD_ID,SETTLE_NUM
-        ,SETTLE_AMT,BUSI_TYPE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
-        values(
-        TEMP.settleSeqNo,TEMP.settleStatus,TEMP.tradeId,TEMP.settleDate,TEMP.finprodId,
-        TEMP.settleNum,TEMP.settleAmt,TEMP.busiType,TEMP.createUser,TEMP.createDept,
-        TEMP.createTime,TEMP.updateUser,TEMP.updateTime
-        )
-    </insert>
 
     <select id="queryPortSettleinfo" resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortSettleinfoDto">
         SELECT TPDA.portfolio_id portfolioId,
@@ -657,5 +782,15 @@
         WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
         AND T1.TOTLE_TRADE_ID = #{tradeId}
         AND T1.TRADE_STATUS = #{TRADE_STATUS01} AND T1.IS_CANCEL = #{YESNO_N}
+    </select>
+
+    <!-- 根据用户名得到真实姓名 -->
+    <select id="getRealNameByUserName" resultType="com.joyintech.tams.common.base.entity.User">
+        SELECT
+        T1.REAL_NAME realName
+        FROM
+        SYS_USER T1
+        where
+        T1.USER_NAME = #{userName}
     </select>
 </mapper>
