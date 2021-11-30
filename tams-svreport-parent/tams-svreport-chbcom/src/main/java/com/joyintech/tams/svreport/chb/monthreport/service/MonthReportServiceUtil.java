@@ -1,34 +1,22 @@
 package com.joyintech.tams.svreport.chb.monthreport.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.base.entity.SysInstitution;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.report.system.instregbankcode.dao.SysInstRegBankCode001Mapper;
 import com.joyintech.tams.report.system.instregbankcode.dto.SysInstRegBankCode001Dto;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportPrdConstants;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 
@@ -102,6 +90,7 @@ public class MonthReportServiceUtil {
 		  chbDelReport.setOrgCode(chbMonthReport.getOrgCode());
 		//查询未报送
 		List<ChbMonthReport> wbs=chbMonthReportMapper.selectUnSendDataByTermId(chbMonthReport.getTermid());
+		// 生成的数据已报送则不重新生成
 		if ( calendar.get(Calendar.DATE)==1 &&ybs!=null&&!ybs.isEmpty()&&(wbs==null||wbs.isEmpty())&&!ifTrigger) {
 			return null;
 		}

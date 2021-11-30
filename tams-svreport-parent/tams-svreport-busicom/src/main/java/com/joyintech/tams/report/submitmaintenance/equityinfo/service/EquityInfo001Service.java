@@ -668,6 +668,20 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         
         List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, equityList.size());
         
+        //生僻字按照已经维护的规则进行转化
+        Map<String, Object> paramap=new HashMap<String, Object>();
+        paramap.put("statusList", Arrays.asList("E"));
+        List<TransformRule001Dto> allList=transformRule001Mapper.selectAllData(paramap);
+        Map<String,TransformRule001Dto> spzMap=allList.stream().collect(
+                Collectors.toMap(x -> x.getTransType()+x.getOrgField(),part->part));
+        List<ChbTransformRuleObjDto> allRuleObjList=chbTransformRuleObjDtoMapper.selectAllDataByTableId(CHB_EQU_HOLD);
+        Map<String,List<ChbTransformRuleObjDto>> objFiledsMap=allRuleObjList.stream().collect(
+                JoyinCollectors.groupingBy(
+                        x -> x.getInfoProperty() ));
+        
+        //设置数据结构的转化规则字段内容
+        EquityInfoCheckUtil.replaceByExchangeRule(allRuleObjList,spzMap,equityList);
+        
         for (int i = 0; i < equityList.size(); i++ ) {
         	EquityInfo001Dto  equityInfo001Dto = equityList.get(i);
             equityInfo001Dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
@@ -2439,7 +2453,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                     EquityInfoDistinctService equityInfoDistinctService =
                             SpringContextUtil.getBean(EquityInfoDistinctService.class);
                     List<String> keys = equityInfoDistinctService.getKeys(equityList);
-		    equityInfoDistinctService.checkSendedData(equityList,keys,"01");
+                    equityInfoDistinctService.checkSendedData(equityList,keys,"01");
                     List<String> mergerKeys=equityInfoDistinctService.checkAllData(equityList,keys,"01");
                     equityInfoDistinctService.merger(equityList,"dto");
                     equityInfoDistinctService.deleteEquitInfoAndSub(mergerKeys);

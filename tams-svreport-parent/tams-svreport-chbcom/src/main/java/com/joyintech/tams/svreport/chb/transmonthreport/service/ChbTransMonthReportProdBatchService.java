@@ -111,7 +111,7 @@ public class ChbTransMonthReportProdBatchService {
             detail.setPropertycode(k.getPropertycode());
             result.put(k.getPropertycode(), detail);
         }
-        if (listKey.size() != 29) {
+        if (listKey.size() != 31) {
             logger.error("理财产品转型情况月度统计表模板配置错误，请检查");
             return;
         }
@@ -127,10 +127,14 @@ public class ChbTransMonthReportProdBatchService {
         ChbTransMonthReportSubDetailDto line2Sub2 = result.get(ChbTransMonthReportConstants.QYL); // 2.2 权益类
         ChbTransMonthReportSubDetailDto line2Sub3 = result.get(ChbTransMonthReportConstants.SPJJRYSPL); // 2.3 商品及金融衍生品类
         ChbTransMonthReportSubDetailDto line2Sub4 = result.get(ChbTransMonthReportConstants.HHL); // 2.4 混合类
-        ChbTransMonthReportSubDetailDto line3Sub1 = result.get(ChbTransMonthReportConstants.FBSCP); // 3.1 封闭式
-        ChbTransMonthReportSubDetailDto line3Sub2 = result.get(ChbTransMonthReportConstants.KFSCP); // 3.2 开放式
-        ChbTransMonthReportSubDetailDto line3Sub2Sub1 = result.get(ChbTransMonthReportConstants.XJGLLCP); // 其中：3.2.1 现金管理类产品
-        ChbTransMonthReportSubDetailDto line3Sub2Sub2 = result.get(ChbTransMonthReportConstants.FBQZBNYSDDQKFCP); // 3.2.2 封闭期在半年以上的定期开放式产品
+
+        ChbTransMonthReportSubDetailDto line3Sub1Sub1 = result.get(ChbTransMonthReportConstants.FBSJZX); // 3.1.1 封闭式净值型
+        ChbTransMonthReportSubDetailDto line3Sub1Sub2 = result.get(ChbTransMonthReportConstants.KFSJZX); // 3.1.2 开放式净值型
+        ChbTransMonthReportSubDetailDto line3Sub1Sub2Sub1 = result.get(ChbTransMonthReportConstants.XJGLLCP); // 其中：3.1.2.a 现金管理类产品
+        ChbTransMonthReportSubDetailDto line3Sub1Sub2Sub2 = result.get(ChbTransMonthReportConstants.FBQZBNYSDDQKFCP); // 3.1.2.b 封闭期在半年以上的定期开放式产品
+        ChbTransMonthReportSubDetailDto line3Sub2Sub1 = result.get(ChbTransMonthReportConstants.FBSFJZX); // 3.2.1 封闭式非净值型
+        ChbTransMonthReportSubDetailDto line3Sub2Sub2 = result.get(ChbTransMonthReportConstants.KFSFJZX); // 3.2.2 开放式非净值型
+
         ChbTransMonthReportSubDetailDto line4Sub1Sub1 = result.get(ChbTransMonthReportConstants.FBSSGYYN); // 4.1.1 3个月（含）以内
         ChbTransMonthReportSubDetailDto line4Sub1Sub2 = result.get(ChbTransMonthReportConstants.FBSSLGY); // 4.1.2 3-6个月(含)
         ChbTransMonthReportSubDetailDto line4Sub1Sub3 = result.get(ChbTransMonthReportConstants.FBSLSGY); // 4.1.3 6-12个月（含）
@@ -147,7 +151,7 @@ public class ChbTransMonthReportProdBatchService {
 
         ChbTransMonthReportSubDetailDto lineSum1Sub3 = result.get(ChbTransMonthReportConstants.SUM_MJFS); // 1.3 合 计
         ChbTransMonthReportSubDetailDto lineSum2Sub5 = result.get(ChbTransMonthReportConstants.SUM_TZXZ); // 2.5 合 计
-        ChbTransMonthReportSubDetailDto lineSum3Sub3 = result.get(ChbTransMonthReportConstants.SUM_CPYZMS); // 3.3 合 计
+        ChbTransMonthReportSubDetailDto lineSum3Sub3 = result.get(ChbTransMonthReportConstants.SUM_YZMS); // 3.3 合 计
         ChbTransMonthReportSubDetailDto lineSum4Sub1Sub6 = result.get(ChbTransMonthReportConstants.SUM_FBSCP); // 4.1.6 合计
         ChbTransMonthReportSubDetailDto lineSum4Sub2Sub9 = result.get(ChbTransMonthReportConstants.SUM_KFSCP); // 4.2.9 合计
         ChbTransMonthReportSubDetailDto lineSum4Sub3 = result.get(ChbTransMonthReportConstants.SUM_QX); // 4.3 合计
@@ -223,26 +227,26 @@ public class ChbTransMonthReportProdBatchService {
                 }
 
                 /* 3 按产品运作模式划分 */
-                // 第9行 3.1 封闭式
-                if (ProdConstants.OPERATEMODE_FBSJZX.equals(pos.getOperateMode())
-                        || ProdConstants.OPERATEMODE_FBSFJZX.equals(pos.getOperateMode())) { // 封闭式
-                    calcMonthReportSubDetail(line3Sub1, pos);
+                if (ProdConstants.OPERATEMODE_FBSJZX.equals(pos.getOperateMode())){
+                    calcMonthReportSubDetail(line3Sub1Sub1, pos);
                 }
-
-                // 第10行 3.2 开放式
-                else if (ProdConstants.OPERATEMODE_KFSJZX.equals(pos.getOperateMode())
-                        || ProdConstants.OPERATEMODE_KFSFJZX.equals(pos.getOperateMode())) { // 开放式
-                    calcMonthReportSubDetail(line3Sub2, pos);
-
-                    // 第11行 其中：3.2.1 现金管理类产品
+                if (ProdConstants.OPERATEMODE_KFSJZX.equals(pos.getOperateMode())){
+                    calcMonthReportSubDetail(line3Sub1Sub2, pos);
+                    //  其中：3.1.2.a 现金管理类产品
                     if ("01".equals(pos.getCashmanacate())) { // 现金管理类产品
-                        calcMonthReportSubDetail(line3Sub2Sub1, pos);
+                        calcMonthReportSubDetail(line3Sub1Sub2Sub1, pos);
                     }
 
-                    // 第12行 3.2.2 封闭期在半年以上的定期开放式产品
+                    // 3.1.2.b 封闭期在半年以上的定期开放式产品
                     if ("02".equals(pos.getOpenduration())) { // 封闭期在半年以上的定期开放式产品
-                        calcMonthReportSubDetail(line3Sub2Sub2, pos);
+                        calcMonthReportSubDetail(line3Sub1Sub2Sub2, pos);
                     }
+                }
+                if (ProdConstants.OPERATEMODE_FBSFJZX.equals(pos.getOperateMode())){
+                    calcMonthReportSubDetail(line3Sub2Sub1, pos);
+                }
+                if (ProdConstants.OPERATEMODE_KFSFJZX.equals(pos.getOperateMode())){
+                    calcMonthReportSubDetail(line3Sub2Sub2, pos);
                 }
 
                 /* 4 按期限划分 */
@@ -318,7 +322,7 @@ public class ChbTransMonthReportProdBatchService {
         // 合计:2.按投资性质划分 2.5 合 计
         calcSumLine(lineSum2Sub5, line2Sub1, line2Sub2, line2Sub3, line2Sub4);
         // 合计:3.按产品运作模式划分   3.3 合 计
-        calcSumLine(lineSum3Sub3, line3Sub1, line3Sub2);
+        calcSumLine(lineSum3Sub3, line3Sub1Sub1, line3Sub1Sub2, line3Sub2Sub1, line3Sub2Sub2);
         // 合计:4.1 封闭式产品 4.1.6 合计
         calcSumLine(lineSum4Sub1Sub6,line4Sub1Sub1, line4Sub1Sub2,
                 line4Sub1Sub3, line4Sub1Sub4, line4Sub1Sub5);

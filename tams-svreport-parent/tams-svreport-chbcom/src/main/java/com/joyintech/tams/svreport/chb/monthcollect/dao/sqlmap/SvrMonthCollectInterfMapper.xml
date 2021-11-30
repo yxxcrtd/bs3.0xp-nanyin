@@ -13,7 +13,7 @@
 		sum(DAY_VALUE_AMOUNT_SUM) valueAmountTotal,
 		CCY ccy
 		FROM
-		CHB_SALE_DEAL_SUM WHERE EQUITY_CONF_DATE between to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		CHB_SALE_DEAL_SUM WHERE EQUITY_CONF_DATE between to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchEndDate,jdbcType=VARCHAR},'yyyy-mm-dd')
 		GROUP BY PRD_REGIST_CODE,INSTITUTION_CODE,AREA_CODE,HOLDER_TYPE,CCY,PROD_ID
 	</select>
 <!--	根据持有数据，生成持有持有余额-->
@@ -198,7 +198,7 @@
 
 <!--	检查整个月汇总是否有值-->
 	<select id="checkAllMonth" resultType="java.lang.Integer">
-		SELECT COUNT(*) from CHB_SALE_DEAL_SUM WHERE EQUITY_CONF_DATE between to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		SELECT COUNT(*) from CHB_SALE_DEAL_SUM WHERE EQUITY_CONF_DATE between to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchEndDate,jdbcType=VARCHAR},'yyyy-mm-dd')
 	</select>
 
 	<!--	检查月末日汇总-->
@@ -218,7 +218,7 @@
 	FROM CHB_SALE_MONTH_REPORT_DETAIL detail
 	left join CHB_SALE_DEAL_SUM  su
 	ON detail.PRD_REGIST_CODE = su.PRD_REGIST_CODE and detail.INSTITUTION_CODE = su.INSTITUTION_CODE
-	WHERE su.EQUITY_CONF_DATE BETWEEN to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+	WHERE su.EQUITY_CONF_DATE BETWEEN to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchEndDate,jdbcType=VARCHAR},'yyyy-mm-dd')
 	) B
 	ON A.REPORTUUID = B.reportuuid   WHERE A.SEND_STATUS in ('02','03')
 	</select>
