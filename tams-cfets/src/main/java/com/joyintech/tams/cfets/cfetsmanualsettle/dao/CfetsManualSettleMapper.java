@@ -1,10 +1,8 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dao;
 
-import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
 import com.joyintech.tams.common.base.entity.TrdBankManualSetDetail;
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -112,4 +110,12 @@ public interface CfetsManualSettleMapper {
 //     * @return
 //     */
 //    TrdProductDeal queryTrdProductDealsByTradeId(@Param("tradeId") String tradeId);
+
+    /**
+     * 一级市场投标交收流水列表分页查询
+     *
+     * @param pageParam 参数
+     * @return CfetsManualSettleInfoF32Respond
+     */
+    CfetsManualSettleInfoOtherListRespond findManualSettleInfoOther(Map<String, Object> pageParam);
 }

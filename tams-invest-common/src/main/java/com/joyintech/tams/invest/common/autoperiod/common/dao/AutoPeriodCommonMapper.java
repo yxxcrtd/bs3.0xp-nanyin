@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.PtlSecPosition;
 import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -36,4 +37,16 @@ public interface AutoPeriodCommonMapper {
     int deleteWflTrdProductDeal(Map<String, Object> paramMap);
 
     List<PtlSecPosition> findAllProvided(Map<String, Object> params);
+
+    int deletePaTrdFinDealTotalData(Map<String, Object> paramMap);
+
+    int deleteTrdFinProductDealTotalData(Map<String, Object> paramMap);
+
+    int deleteTrdProductDeal(Map<String, Object> paramMap);
+
+    int deleteTrdProductDealAdd(Map<String, Object> paramMap);
+
+    int deleteStlPayOrdersData(Map<String, Object> paramMap);
+
+    String selectDealCapacctInfo(@Param("secManageAcctId") String secManageAcctId, @Param("ccy")String ccy);
 }

@@ -65,7 +65,7 @@ public class CfetsManualSettleQueryController extends BaseController {
         // 平台日字符串格式
         initPageParams.put("SESSION_SYS_DATE", DateUtil.format(platformDateImpl.getSysDate()));
 
-        initPageParams.put("pageId", "CfetsManualSettle");
+        initPageParams.put("pageId", "cfetsManualSettleQuery");
         return new Message<Map<String, Object>>(initPageParams).success();
     }
 

@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
@@ -21,6 +23,59 @@ public class PortIntFenPeiInfoDto {
 
     @ApiModelProperty(name="intAmtTheoryd",value="理论应收利息（元）",example="A1")
     private BigDecimal intAmtTheoryd;
+
+    @ApiModelProperty(name="cpriceAmt",value="净价总额",example="100")
+    private BigDecimal cpriceAmt;
+
+    @ApiModelProperty(name="intAmt",value="应计利息总额（元）",example="100")
+    private BigDecimal intAmt;
+
+    @ApiModelProperty(name="fpriceAmt",value="全价总额",example="1000000")
+    private BigDecimal fpriceAmt;
+
+    @ApiModelProperty(name="jyFeeAmt",value="交易手续费",example="1000000")
+    private BigDecimal jyFeeAmt;
+
+    @ApiModelProperty(name="jsFeeAmt",value="结算手续费",example="1000000")
+    private BigDecimal jsFeeAmt;
+
+    @ApiModelProperty(name="tradeAmt",value="交易金额",example="1000000")
+    private BigDecimal tradeAmt;
+
+    @ApiModelProperty(name="entrustId",value="委托代码",example="A1")
+    private String entrustId;
+
+    @ApiModelProperty(name="rowNums",value="序号",example="A1")
+    private Number rowNums;
+
+    @ApiModelProperty(name="unFinshAmt",value="剩余指令额度（万元）",example="1000000")
+    private BigDecimal unFinshAmt;
+
+    @ApiModelProperty(name="secAcctId",value="证券账户",example="A1")
+    private String secAcctId;
+
+    @ApiModelProperty(name="priceModel",value="价格模式",example="01")
+    private String priceModel;
+
+    @ApiModelProperty(name="matureYield",value="到期收益率",example="1000000")
+    private BigDecimal matureYield;
+
+    @ApiModelProperty(name="exeYield",value="行权收益率",example="1000000")
+    private BigDecimal exeYield;
+
+    @ApiModelProperty(name="busiTypePosition",value="业务模式",example="01")
+    private String busiTypePosition;
+
+    @ApiModelProperty(name="unitPrice",value="净价",example="1000000")
+    private BigDecimal unitPrice;
+
+    public String getPriceModelStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.价格模式, this.getPriceModel());
+    }
+
+    public String getBusiTypePositionSre() {
+        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, this.getPriceModel());
+    }
 
     public String getPortfolioId() {
         return portfolioId;
@@ -60,5 +115,125 @@ public class PortIntFenPeiInfoDto {
 
     public void setIntAmtTheoryd(BigDecimal intAmtTheoryd) {
         this.intAmtTheoryd = intAmtTheoryd;
+    }
+
+    public BigDecimal getCpriceAmt() {
+        return cpriceAmt;
+    }
+
+    public void setCpriceAmt(BigDecimal cpriceAmt) {
+        this.cpriceAmt = cpriceAmt;
+    }
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
+    }
+
+    public BigDecimal getJyFeeAmt() {
+        return jyFeeAmt;
+    }
+
+    public void setJyFeeAmt(BigDecimal jyFeeAmt) {
+        this.jyFeeAmt = jyFeeAmt;
+    }
+
+    public BigDecimal getJsFeeAmt() {
+        return jsFeeAmt;
+    }
+
+    public void setJsFeeAmt(BigDecimal jsFeeAmt) {
+        this.jsFeeAmt = jsFeeAmt;
+    }
+
+    public BigDecimal getTradeAmt() {
+        return tradeAmt;
+    }
+
+    public void setTradeAmt(BigDecimal tradeAmt) {
+        this.tradeAmt = tradeAmt;
+    }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
+
+    public Number getRowNums() {
+        return rowNums;
+    }
+
+    public void setRowNums(Number rowNums) {
+        this.rowNums = rowNums;
+    }
+
+    public BigDecimal getUnFinshAmt() {
+        return unFinshAmt;
+    }
+
+    public void setUnFinshAmt(BigDecimal unFinshAmt) {
+        this.unFinshAmt = unFinshAmt;
+    }
+
+    public String getPriceModel() {
+        return priceModel;
+    }
+
+    public void setPriceModel(String priceModel) {
+        this.priceModel = priceModel;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
+    }
+
+    public BigDecimal getMatureYield() {
+        return matureYield;
+    }
+
+    public void setMatureYield(BigDecimal matureYield) {
+        this.matureYield = matureYield;
+    }
+
+    public BigDecimal getExeYield() {
+        return exeYield;
+    }
+
+    public void setExeYield(BigDecimal exeYield) {
+        this.exeYield = exeYield;
+    }
+
+    public String getBusiTypePosition() {
+        return busiTypePosition;
+    }
+
+    public void setBusiTypePosition(String busiTypePosition) {
+        this.busiTypePosition = busiTypePosition;
+    }
+
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
     }
 }

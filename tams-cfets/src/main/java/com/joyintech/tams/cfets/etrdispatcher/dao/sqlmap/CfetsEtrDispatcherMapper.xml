@@ -53,7 +53,7 @@
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
-    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'yyyy-MM-dd hh24:mi:ss') transmitTime,
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
@@ -226,7 +226,7 @@
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
-    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'yyyy-MM-dd hh24:mi:ss') transmitTime,
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
