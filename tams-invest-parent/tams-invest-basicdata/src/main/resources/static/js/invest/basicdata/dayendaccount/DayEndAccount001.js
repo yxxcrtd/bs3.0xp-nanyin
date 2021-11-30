@@ -167,10 +167,11 @@ $(function() {
         });
         // 绑定汇总头寸页签重置事件
         $('#DayEndAccount001_total_btn_reset').click(function() {
-            $("#portfolioIdTotal").val('').trigger("change");
-            $('#tradeMarketTotal').val('').trigger("change");
+            $("#busiAcctNoTotal").val('').trigger("change");
             $('#settleDateTotal').val('').trigger("change");
+            $('#customerId').val('').trigger("change");
             $('#accountStatusTotal').val('').trigger("change");
+            $('#secAcctId').val('').trigger("change");
         });
         // 绑定明细数据页签查询事件
         $('#DayEndAccount001_detail_btn_search').click(function() {

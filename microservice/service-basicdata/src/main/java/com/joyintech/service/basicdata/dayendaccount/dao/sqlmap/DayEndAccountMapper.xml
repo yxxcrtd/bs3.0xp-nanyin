@@ -1526,5 +1526,11 @@
 
     <select id="selectSecAcctId" resultType="com.joyintech.framework.select.SelectOptionDto">
         select BOND_ID id,BOND_ID text from STL_SEC_ACCT_INFO
+        <where>
+            BOND_ID is not null
+            <if test="search!=null and search != ''">
+                and BOND_ID like concat(concat('%',#{search}),'%')
+            </if>
+        </where>
     </select>
 </mapper>
