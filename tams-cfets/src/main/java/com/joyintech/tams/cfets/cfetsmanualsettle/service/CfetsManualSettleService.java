@@ -80,24 +80,27 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                 if (StringUtil.equals(cfetsDto.getSettleStatus(), DictCodeListExt3.交收状态_未交收.getValue())) {
                     if ((StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue())
                             && StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
-                            && StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
+                            && !StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
                             || ((StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_到期.getValue())
                             || StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_提前终止.getValue())
                             || StringUtil.equals(cfetsDto.getPs(), DictCodeListExt3.交易方向_投资端_逾期返售.getValue()))
                             && StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())
-                            && StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
+                            && !StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
                             || (StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_到期.getValue())
                             && (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券买断式正回购.getValue())
                             || StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券借贷融入.getValue()))
-                            && StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
+                            && !StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
                             || (StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue())
                             && (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券买断式逆回购.getValue())
                             || StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue()))
-                            && StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))) {
+                            && !StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))) {
+                        returnMessage = "存在不允许交收的记录，是否剔除这些记录？";
+                    }else{
                         returnList.add(cfetsDto);
                     }
+                }else{
+                    returnMessage = "存在不允许交收的记录，是否剔除这些记录？";
                 }
-                returnMessage = "存在不允许交收的记录，是否剔除这些记录？";
             }
         }else if(StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())){
             for(CfetsManualSettleDto cfetsDto : cfetsRequest.getSelectedItem()) {
@@ -435,7 +438,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                     //交易场所
                     req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
                     //清算速度
-                    req.setSettleSpeed(listTemp.get(0).getSettleSpeed().toString());
+                    if(!StringUtil.isEmptyList(listTemp) && StringUtil.isNotEmpty(listTemp.get(0).getSettleSpeed())){
+                        req.setSettleSpeed(listTemp.get(0).getSettleSpeed().toString());
+                    }else{
+                        req.setSettleSpeed("0");
+                    }
                     //业务动作BUSI_ACT 09:交收确认 10:交收失败
                     req.setBusiAct("09");
 //                    if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收.getValue())){
