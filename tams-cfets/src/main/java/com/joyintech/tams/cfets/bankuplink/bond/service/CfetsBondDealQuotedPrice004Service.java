@@ -303,6 +303,25 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         }
         return ajaxResult;
     }
+
+    /**
+     * 检查可用额度
+     * @param entity
+     * @return
+     */
+    public AjaxResult checkEntrustAvaNum(CfetsBondDealQuoteCommonDto entity) {
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        for (PtlAllocationDto ptlAllocationDto : entity.getPtlAllocatios()) {
+            if(ptlAllocationDto.getAvaNum().compareTo(ptlAllocationDto.getShareAmt())<0){
+                errorList.add(new ValidMessage("登记指令剩余额度不能小于券面总额！"));
+                ajaxResult.setErrorList(errorList);
+                break;
+            }
+        }
+        return ajaxResult;
+    }
+
     /**
      * 插入操作
      */

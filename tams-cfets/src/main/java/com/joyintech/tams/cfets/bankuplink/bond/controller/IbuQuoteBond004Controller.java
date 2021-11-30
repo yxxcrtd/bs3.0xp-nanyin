@@ -158,6 +158,9 @@ public class IbuQuoteBond004Controller extends BaseController {
             //chenck价格  收益率
             ajaxResult = cfetsBondDealQuotedPrice004Service.checkcheckAnchoring(cfetsBondDealQuoteCommonDto);
         }
+        if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
+            ajaxResult = cfetsBondDealQuotedPrice004Service.checkEntrustAvaNum(cfetsBondDealQuoteCommonDto);
+        }
         return new Message<AjaxResult>().success().setData(ajaxResult);
     }
 
