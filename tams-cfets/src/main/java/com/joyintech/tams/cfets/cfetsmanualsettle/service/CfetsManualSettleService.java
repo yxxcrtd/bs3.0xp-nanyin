@@ -111,7 +111,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
         }else if(StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())){
             for(CfetsManualSettleDto cfetsDto : cfetsRequest.getSelectedItem()) {
                 //判断勾选记录交收状态是否为“已交收”
-                if(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_已交收.getValue())){
+                if(StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate()))
+                        && StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_已交收.getValue())){
                     returnList.add(cfetsDto);
                 }
             }
@@ -295,6 +296,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
             trdBankManualSettleInfo.setSettleSeqNo(IDGenerator.generate());
             //原业务编号
             trdBankManualSettleInfo.setTradeId(cfetsManualSettleDto.getTradeId());
+            //金融产品代码
+            trdBankManualSettleInfo.setFinprodId(cfetsManualSettleDto.getFinprodId());
             //交收时间=平台日
             trdBankManualSettleInfo.setSettleDate(platformDateImpl.getSysDate());
             //交收数量

@@ -120,6 +120,8 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
             trdBankManualSettleInfo.setTradeId(cfetsManualSettleUpdateRequest.getSelectedItem().getTradeId());
             //交收时间=平台日
             trdBankManualSettleInfo.setSettleDate(platformDateImpl.getSysDate());
+            //金融产品代码
+            trdBankManualSettleInfo.setFinprodId(cfetsManualSettleUpdateRequest.getSelectedItem().getFinprodId());
             //交收数量
             trdBankManualSettleInfo.setSettleNum(cfetsManualSettleUpdateRequest.getSettleNumT());
             //交收金额

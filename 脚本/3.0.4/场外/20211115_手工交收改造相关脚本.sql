@@ -133,31 +133,58 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('cfetsManualSettleQuery', '999999', 'PINAN_ASSET_TYPE', 'F16', '', '', 'system', '', sysdate, 'system', sysdate, '');
 
 --业务类型
+delete from sys_page_dictlist where PAGE_ID = 'cfetsManualSettleQuery' and DICT_ID='BUSI_TYPE_POSITION';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '01', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '02', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '03', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '04', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '05', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '06', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '07', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '08', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '10', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '11', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '12', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '13', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('cfetsManualSettleQuery', '999999', 'BUSI_TYPE_POSITION', '15', '', '', 'system', '', sysdate, 'system', sysdate, '');
 
 --交易方向
-delete from sys_page_dictlist where PAGE_ID = 'CfetsManualSettle' and DICT_ID='PS';
+delete from sys_page_dictlist where PAGE_ID = 'cfetsManualSettleQuery' and DICT_ID='PS';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CfetsManualSettle', '999999', 'PS', 'T01', '', '', 'system', '', sysdate, 'system', sysdate, '');
+values ('cfetsManualSettleQuery', '999999', 'PS', 'T01', '', '', 'system', '', sysdate, 'system', sysdate, '');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CfetsManualSettle', '999999', 'PS', 'T02', '', '', 'system', '', sysdate, 'system', sysdate, '');
+values ('cfetsManualSettleQuery', '999999', 'PS', 'T02', '', '', 'system', '', sysdate, 'system', sysdate, '');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CfetsManualSettle', '999999', 'PS', 'T03', '', '', 'system', '', sysdate, 'system', sysdate, '');
+values ('cfetsManualSettleQuery', '999999', 'PS', 'T03', '', '', 'system', '', sysdate, 'system', sysdate, '');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CfetsManualSettle', '999999', 'PS', 'T07', '', '', 'system', '', sysdate, 'system', sysdate, '');
+values ('cfetsManualSettleQuery', '999999', 'PS', 'T07', '', '', 'system', '', sysdate, 'system', sysdate, '');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CfetsManualSettle', '999999', 'PS', 'T08', '', '', 'system', '', sysdate, 'system', sysdate, '');
+values ('cfetsManualSettleQuery', '999999', 'PS', 'T08', '', '', 'system', '', sysdate, 'system', sysdate, '');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CfetsManualSettle', '999999', 'PS', 'T09', '', '', 'system', '', sysdate, 'system', sysdate, '');
+values ('cfetsManualSettleQuery', '999999', 'PS', 'T09', '', '', 'system', '', sysdate, 'system', sysdate, '');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CfetsManualSettle', '999999', 'PS', 'T39', '', '', 'system', '', sysdate, 'system', sysdate, '');
+values ('cfetsManualSettleQuery', '999999', 'PS', 'T39', '', '', 'system', '', sysdate, 'system', sysdate, '');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CfetsManualSettle', '999999', 'PS', '03', '', '', 'system', '', sysdate, 'system', sysdate, '');
+values ('cfetsManualSettleQuery', '999999', 'PS', '03', '', '', 'system', '', sysdate, 'system', sysdate, '');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CfetsManualSettle', '999999', 'PS', '04', '', '', 'system', '', sysdate, 'system', sysdate, '');
+values ('cfetsManualSettleQuery', '999999', 'PS', '04', '', '', 'system', '', sysdate, 'system', sysdate, '');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CfetsManualSettle', '999999', 'PS', '05', '', '', 'system', '', sysdate, 'system', sysdate, '');
+values ('cfetsManualSettleQuery', '999999', 'PS', '05', '', '', 'system', '', sysdate, 'system', sysdate, '');
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CfetsManualSettle', '999999', 'PS', '06', '', '', 'system', '', sysdate, 'system', sysdate, '');
+values ('cfetsManualSettleQuery', '999999', 'PS', '06', '', '', 'system', '', sysdate, 'system', sysdate, '');
 
 
 --配置画面流程
@@ -319,7 +346,7 @@ insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DIC
 delete from cfg_datatable_show where PAGECODE = 'cfetsManualSettleQuery' and DTCODE='CfetsManualSettleFlow';
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'seqNo', '序号', '','1', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'settleDate', '交收日期', '','2', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
-insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'jiaoShouDate', '交收时间', '','3', '1', '0', '0','100','{"colAlign": "left","dataType":"date"}','0','COMM','1','0','','','0');
+insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'jiaoShouDate', '交收时间', '','3', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'finprodMarketId', '资产代码', '','4', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'finprodAbbr', '资产简称', '','5', '1', '0', '0','100','{"colAlign": "left"}','0','COMM','1','0','','','0');
 insert into cfg_datatable_show (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3,ISKEY) values('cfetsManualSettleQuery', 'CfetsManualSettleFlow','999999', 'settleNum', '交收数量（元）', '','6', '1', '0', '0','100','{"colAlign": "left","dataType":"amount","precision":"2"}','0','COMM','1','0','','','0');

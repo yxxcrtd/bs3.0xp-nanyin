@@ -295,7 +295,7 @@
         SELECT
             rownum seqNo,
             to_char(T1.SETTLE_TIME,'yyyy-MM-dd') settleDate,
-            T1.Update_Time jiaoShouDate,
+            to_char(T1.Update_Time,'hh24:mi:ss') jiaoShouDate,
             T2.FINPROD_MARKET_ID finprodMarketId,
             T2.Finprod_Abbr finprodAbbr,
             T1.SETTLE_NUM settleNum,
@@ -306,7 +306,7 @@
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_FLOW T1 ON T0.SETTLE_SEQ_NO = T1.SETTLE_SEQ_NO
         LEFT JOIN FIN_PRODUCT T2 ON T0.FINPROD_ID = T2.FINPROD_ID
         WHERE T0.SETTLE_SEQ_NO = #{settleSeqNo}
-        ORDER BY T1.UPDATE_TIME
+        ORDER BY T1.UPDATE_TIME DESC
     </select>
 
     <select id="findManualSettleInfo"
