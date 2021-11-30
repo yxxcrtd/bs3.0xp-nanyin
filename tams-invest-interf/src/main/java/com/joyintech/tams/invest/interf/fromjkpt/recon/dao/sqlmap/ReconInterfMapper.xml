@@ -176,10 +176,10 @@ CASE
     WHEN T1.BZLB in ('HKD', '港币') THEN 'HKD'
     WHEN T1.BZLB in ('USD', '美元') THEN 'USD'
 END CCY,
-    CASE WHEN JYSC = '1' THEN '03'
-        WHEN JYSC = '上海' THEN '03'
-        WHEN JYSC = '2' THEN '04'
-        WHEN JYSC = '深圳' THEN '04'
+    CASE WHEN JYLB = '1' THEN '03'
+        WHEN JYLB = '上海' THEN '03'
+        WHEN JYLB = '2' THEN '04'
+        WHEN JYLB = '深圳' THEN '04'
     END TRADE_MARKET ,
     T5.SEC_ACCT_ID SEC_ACCT_ID,
     XWBH SEAT_NUMBER,
