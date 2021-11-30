@@ -162,6 +162,9 @@ public class CfetsManualSettleQueryService extends BaseService{
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
 
+        pageParam.put("sort",dto.getPageMode().getSort());
+        pageParam.put("direction",dto.getPageMode().getDirection());
+
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> cfetsManualSettleMapper.findPage(pageParam));
     }
