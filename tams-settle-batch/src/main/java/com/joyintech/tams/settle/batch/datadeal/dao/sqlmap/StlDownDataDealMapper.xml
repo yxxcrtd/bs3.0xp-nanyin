@@ -104,13 +104,17 @@
            		</foreach>
        		</if>
        		and TRADE_ID in(
-				SELECT t1.TRADE_ID
-				FROM
-					SETTLE_TRANS_DATA t1
-					left join SETTLE_TRANS_DATA_STATUS t2
-						on t1.TRADE_ID = t2.TRADE_ID
-				WHERE
-					t2.CHECK_RESULT IS NULL OR t2.CHECK_RESULT in ('0', '2')
+       			SELECT
+       				t3.TRADE_ID
+       			FROM(
+					SELECT t1.TRADE_ID
+					FROM
+						SETTLE_TRANS_DATA t1
+						left join SETTLE_TRANS_DATA_STATUS t2
+							on t1.TRADE_ID = t2.TRADE_ID
+					WHERE
+						t2.CHECK_RESULT IS NULL OR t2.CHECK_RESULT in ('0', '2')
+				)t3
 			)
         </where>
     </delete>
