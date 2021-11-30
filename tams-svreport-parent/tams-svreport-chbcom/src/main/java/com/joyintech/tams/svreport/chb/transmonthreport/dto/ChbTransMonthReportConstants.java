@@ -27,16 +27,22 @@ public class ChbTransMonthReportConstants {
     public static final String HHL = "HHL";
     /** 2.5 合 计 */
     public static final String SUM_TZXZ = "SUM_TZXZ";
-    /** 3.1 封闭式 */
-    public static final String FBSCP = "FBSCP";
-    /** 3.2 开放式 */
-    public static final String KFSCP = "KFSCP";
-    /** 其中：3.2.1 现金管理类产品 */
+
+    /** 3.1.1 封闭式净值型 */
+    public static final String FBSJZX = "FBSJZX";
+    /** 3.1.2 开放式净值型 */
+    public static final String KFSJZX = "KFSJZX";
+    /** 其中：3.1.2.a 现金管理类产品 */
     public static final String XJGLLCP = "XJGLLCP";
-    /** 3.2.2 封闭期在半年以上的定期开放式产品 */
+    /** 3.1.2.b 封闭期在半年以上的定期开放式产品 */
     public static final String FBQZBNYSDDQKFCP = "FBQZBNYSDDQKFCP";
-    /** 3.3 合 计 */
-    public static final String SUM_CPYZMS = "SUM_CPYZMS";
+    /** 3.2.1 封闭式非净值型 */
+    public static final String FBSFJZX = "FBSFJZX";
+    /** 3.2.2 开放式非净值型 */
+    public static final String KFSFJZX = "KFSFJZX";
+    /** 合计:3.按产品运作模式划分 */
+    public static final String SUM_YZMS = "SUM_YZMS";
+
     /** 4.1.1 3个月（含）以内 */
     public static final String FBSSGYYN = "FBSSGYYN";
     /** 4.1.2 3-6个月(含) */

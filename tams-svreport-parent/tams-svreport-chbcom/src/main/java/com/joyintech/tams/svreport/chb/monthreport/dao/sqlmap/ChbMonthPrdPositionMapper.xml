@@ -478,9 +478,9 @@
 	    from chb_prd_baseinfo info
 	    left join
 	    (
-	        select prod_id,ccy,prod_value from (
-	        select rank() over(partition by prod_id order by change_date desc) 
-	        my_rank,prod_id,ccy,prod_value from CHB_PRD_PERIODYIELD
+	        select prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL from (
+	        select rank() over(partition by prod_id order by change_date desc)
+	        my_rank,prod_id,ccy,prod_value,CHANGE_DATE,UNIT_VALUE_TOTAL from CHB_PRD_PERIODYIELD
 	        where CHANGE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE} and CHANG_TYPE='01'
 	        AND STATUS IN ('E','M')
 	        ) where my_rank=1

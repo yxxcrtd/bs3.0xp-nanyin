@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.chb.transmonthreport.dao.ChbTransMonthReportMapper" >
-    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbTransMonth" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthReportSubDto" >
         <id column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
         <result column="TERMID" property="termid" jdbcType="VARCHAR" />
         <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
@@ -108,6 +108,69 @@
         ORDER BY STATUS_DATE
     </select>
 
+    <insert id="insertReportHis" parameterType="java.util.Map">
+        insert into CHB_TRANS_MONTH_HIS (
+        REPORTUUID, TERMID, REPORTTYPE, STARTDATE, ENDDATE, ISSUE_PARTY_ID,
+        ISSUE_PARTY_NAME, REPORTFREQU, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, CREATE_DEPT)
+        select
+        REPORTUUID, TERMID, REPORTTYPE, STARTDATE, ENDDATE, ISSUE_PARTY_ID,
+        ISSUE_PARTY_NAME, REPORTFREQU, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, CREATE_DEPT
+        from CHB_TRANS_MONTH
+        <where>
+            <if test="registList !=null and registList.size() > 0">
+                TERMID IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.termid,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            and SEND_STATUS in ('02','03')
+        </where>
+    </insert>
+
+    <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
+        delete from CHB_TRANS_MONTH
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                TERMID
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.termid,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            and SEND_STATUS in ('02','03')
+        </where>
+    </delete>
+
+    <insert id="insertReportDataFromHis" parameterType="java.util.Map">
+        insert into CHB_TRANS_MONTH (
+        REPORTUUID, TERMID, REPORTTYPE, STARTDATE, ENDDATE, ISSUE_PARTY_ID,
+        ISSUE_PARTY_NAME, REPORTFREQU, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, CREATE_DEPT)
+        select
+        REPORTUUID, TERMID, REPORTTYPE, STARTDATE, ENDDATE, ISSUE_PARTY_ID,
+        ISSUE_PARTY_NAME, REPORTFREQU, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, CREATE_DEPT
+        from CHB_TRANS_MONTH_HIS  his
+        INNER join (
+        SELECT max(CREATE_TIME) CREATE_TIME from CHB_TRANS_MONTH_HIS
+        <where>
+            <if test="registList !=null and registList.size() > 0">
+                TERMID
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.termid,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where> ) maxtime
+        on his.CREATE_TIME=maxtime.CREATE_TIME
+    </insert>
+
     <delete id="deleteReportDataHis" parameterType="java.util.Map">
         delete
         from CHB_TRANS_MONTH_HIS  his
@@ -130,8 +193,8 @@
                 sub.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
             </if>
             sub.SUBMIT_FEEDBACK_STATUS = '03',
-            sub.submit_time = now(),
-            sub.UPDATE_TIME = now()
+            sub.submit_time = SYSDATE,
+            sub.UPDATE_TIME = SYSDATE
         </set>
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
@@ -144,7 +207,7 @@
         update CHB_TRANS_MONTH
         <set>
             SEND_STATUS = '01',
-            UPDATE_TIME = now(),
+            UPDATE_TIME = SYSDATE,
             SUBMIT_TIME = null,
             SUBMIT_FEEDBACK_STATUS = null
         </set>
@@ -154,5 +217,49 @@
             </foreach>
         </where>
     </update>
+
+    <select id="searchByKeys" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_TRANS_MONTH
+        <where>
+            <foreach collection="list" open="REPORTUUID in(" close=")" item="item" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+        ORDER BY STATUS_DATE
+    </select>
+
+    <select id="selectMonthReportSubByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_TRANS_MONTH
+        where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </select>
+
+    <resultMap type="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthReportSubDetailDto" id="resultMap_ChbMonthReportSubDetailDto"
+               extends="com.joyintech.tams.common.base.dao.ChbTransMonthDetailMapper.BaseResultMap">
+    </resultMap>
+    <select id="selectMonthReportSubDetail" resultMap="resultMap_ChbMonthReportSubDetailDto">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbTransMonthDetailMapper.Base_Column_List" />
+        from CHB_TRANS_MONTH_DETAIL
+        <where>
+            <if test="termid != null and termid != ''">
+                and TERMID =  #{termid,jdbcType=VARCHAR}
+            </if>
+            <if test="reportuuid != null and reportuuid != ''">
+                and REPORTUUID =  #{reportuuid,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询所有的余额模板 -->
+    <select id="selectAllBalanceTemplate" resultType="String">
+        select
+            PROPERTYCODE
+        from CHB_TRANS_MONTH_TEMPLATE
+        where REPORTTYPE='BALANCE'
+    </select>
 
 </mapper>

@@ -47,8 +47,8 @@ import java.util.Map;
  * @since 1.0
  */
 @Controller
-@PageId("SvrSubsidiaMonthReport001")
-@RequestMapping("/chb/subsidiamonthreport/ChbTransMonthReport001")
+@PageId("SvrTransMonthReport001")
+@RequestMapping("/chb/transmonthreport/ChbTransMonthReport001")
 public class ChbTransMonthReport001Controller extends BaseController{
 	/**
 	 * service
