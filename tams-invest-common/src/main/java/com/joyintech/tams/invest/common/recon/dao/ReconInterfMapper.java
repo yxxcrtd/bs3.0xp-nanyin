@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.common.recon.dao;
 
+import com.joyintech.tams.common.base.entity.InterfFundBonusFjy;
 import com.joyintech.tams.common.base.entity.StlSecRecon;
 import com.joyintech.tams.common.base.entity.StlSecReconPara;
 import com.joyintech.tams.invest.common.recon.dto.StlCashReconDto;
@@ -70,4 +71,18 @@ public interface ReconInterfMapper {
      * @return
      */
     List<StlSecRecon> listStlSecRecon();
+
+    /**
+     * 查询基金分红设置FJY文件
+     * @param param
+     * @return
+     */
+    List<InterfFundBonusFjy> findInterfFundBonusFjy(Map<String,Object> param);
+
+    /**
+     * 查询数量
+     * @param param
+     * @return
+     */
+    Integer queryFinProductOthCodeCount(Map<String,Object> param);
 }

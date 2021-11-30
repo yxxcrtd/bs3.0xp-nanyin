@@ -138,5 +138,18 @@ public class ReconInterfController {
         }
     }
 
+    @Transactional
+    @DTXTransaction
+    @PostMapping("executeFundBonusFjy")
+    public void executeFundBonusFjy(@RequestBody Map<String,Object> param) {
+        try{
+            logger.debug("接口平台调用基金分红设置FJY文件处理开始");
+            reconInterfService.executeFundBonusFjy(param);
+            logger.debug("接口平台调用基金分红设置FJY文件处理成功");
+        }catch (Exception e){
+            logger.error("接口平台调用基金分红设置FJY文件处理失败!"+e.getMessage());
+        }
+    }
+
 }
 
