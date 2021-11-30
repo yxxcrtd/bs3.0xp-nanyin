@@ -234,11 +234,11 @@ public class IbuQuoteBondService extends BaseService {
                     break;
                 }
                 if(StringUtil.equals(key,"02")){
-                    cfetsBondDealQuoteCommonDto.setMatureYield((BigDecimal)anchoringValueMap.get(key));
+                    cfetsBondDealQuoteCommonDto.setMatureYield(ArithmeticUtil.divide((BigDecimal)anchoringValueMap.get(key),100,4));
                     break;
                 }
                 if(StringUtil.equals(key,"03")){
-                    cfetsBondDealQuoteCommonDto.setExerYield((BigDecimal)anchoringValueMap.get(key));
+                    cfetsBondDealQuoteCommonDto.setExerYield(ArithmeticUtil.divide((BigDecimal)anchoringValueMap.get(key),100,4));
                     break;
                 }
             }
