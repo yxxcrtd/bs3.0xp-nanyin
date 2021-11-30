@@ -42,10 +42,10 @@
 	    from CHB_SALE_MONTH_REPORT_DETAIL
    		<where>
 			<if test="termid != null and termid != ''">
-				and termid =  #{termid,jdbcType=VARCHAR}
+				and TERMID =  #{termid,jdbcType=VARCHAR}
 			</if>
 			<if test="reportuuid != null and reportuuid != ''">
-				and reportuuid =  #{reportuuid,jdbcType=VARCHAR}
+				and REPORTUUID =  #{reportuuid,jdbcType=VARCHAR}
 			</if>
 		</where>
   </select>
@@ -60,7 +60,7 @@
         from CHB_SALE_MONTH_REPORT_DETAIL
         <where>
             <if test="reportuuid != null and reportuuid != ''">
-               reportuuid =  #{reportuuid,jdbcType=VARCHAR}
+                REPORTUUID =  #{reportuuid,jdbcType=VARCHAR}
             </if>
         </where>
     </select>
@@ -69,6 +69,13 @@
         select
         TERMID,ISSUE_PARTY_ID,ISSUE_PARTY_NAME
         from CHB_SALE_MONTH_REPORT
-        where reportuuid =  #{reportuuid,jdbcType=VARCHAR}
+        where REPORTUUID =  #{reportuuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectReportuuid" parameterType="string" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReport">
+        select
+        REPORTUUID,REPORTTYPE
+        from CHB_SALE_MONTH_REPORT
+        where TERMID =  #{termid,jdbcType=VARCHAR}
     </select>
 </mapper>

@@ -22,5 +22,7 @@ public interface SellMonthReportDetailMapper {
 
     List<SellMonthReport> selectReportDate(@Param("reportuuid") String reportuuid);
 
+    List<SellMonthReport> selectReportuuid(@Param("termid") String termid);
+
    List<String> selectAllPropertyCode();
 }

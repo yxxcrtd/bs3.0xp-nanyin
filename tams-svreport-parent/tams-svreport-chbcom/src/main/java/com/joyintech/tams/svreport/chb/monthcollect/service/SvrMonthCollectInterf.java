@@ -1,15 +1,15 @@
 package com.joyintech.tams.svreport.chb.monthcollect.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.DictCode;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.svreport.chb.monthcollect.dao.SvrMonthCollectInterfMapper;
 import com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tools.collectors.JoyinCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +118,8 @@ public class SvrMonthCollectInterf extends BaseService{
 			logger.debug("当月汇总数据清除结束----------");
 
             logger.debug("销售月报每月明细汇总信息插入数据：插入开始----------");
+			String bankCode =CommonUtil.getUserBankCode(null);
+
 			for(String key:AllMap.keySet()){
             //以投资者分类插入
 			if(key.equals("holderType")) {
@@ -131,6 +133,11 @@ public class SvrMonthCollectInterf extends BaseService{
 						detail.setReportuuid(reportuuid);
 						detail.setDetailuuid(detailuuid);
 						detail.setReporttype("1_1");
+						if(detail.getInstitutionCode().equals("bankCode")){
+							detail.setIsConsign(DictCodeList.是否_中债_否.getValue());
+						}else{
+							detail.setIsConsign(DictCodeList.是否_中债_是.getValue());
+						}
 						svrMonthCollectInterfMapper.insertIntoDetail(detail);
 					}
 				}
@@ -183,10 +190,9 @@ public class SvrMonthCollectInterf extends BaseService{
 		Date batchEndDate = this.getFirstDayOfNextMonth(DateUtil.format(batchDateEnd));
 		//汇总  总、净销售金额
 		List<ChbMonthCollect> listAmountTotal = svrMonthCollectInterfMapper.selectAmountTotal(DateUtil.format(batchDateStart),DateUtil.format(batchEndDate));
-//		//判断是否为三合一 生成持有余额、投资者数量信息
-//		if(DictCodeListExt2.是否对三合一人员进行统计报送_是.getValue().equals("1")){//是三合一
 			//获取check表的
 			List<ChbMonthCollect> registList = svrMonthCollectInterfMapper.selectHolderNumCheck(DateUtil.format(batchDateEnd));
+			//报送表去除check表中识别标识相等的数据后再与check表合并
 			List<ChbMonthCollect> List = svrMonthCollectInterfMapper.selectHolderNumExcheck(registList,DateUtil.format(batchDateEnd));
 
 			listAmountTotal.stream().forEach(item -> {
@@ -211,13 +217,17 @@ public class SvrMonthCollectInterf extends BaseService{
 			String falg = a.getPrdRegistCode()+ ":" + a.getHolderType();
 			if (holderTypeCollect.get(falg) == null){
 				ChbMonthCollect bb = new ChbMonthCollect();
+				bb.setInstitutionCode(a.getInstitutionCode());
+				bb.setCcy(a.getCcy());
+				bb.setIsConsign(a.getIsConsign());
+				bb.setAreaCode(a.getAreaCode());
 				bb.setCnyAmt(a.getCnyAmt());
 				bb.setPrdRegistCode(a.getPrdRegistCode());
 				bb.setHolderType(a.getHolderType());
 				bb.setSaleAmountTotal(a.getValueAmountTotal());
 				bb.setValueAmountTotal(a.getValueAmountTotal());
-				bb.setBalanceAmt(a.getValueAmountTotal());
-				bb.setBalanceShares(a.getValueAmountTotal());
+				bb.setBalanceAmt(a.getBalanceAmt());
+				bb.setBalanceShares(a.getBalanceShares());
 				holderTypeCollect.put(falg, bb);
 			}else{
 				if(a.getSaleAmountTotal() != null) {
@@ -235,12 +245,14 @@ public class SvrMonthCollectInterf extends BaseService{
 			}
 		}
 		//赋值投资者数量
-			for(int m = 0; m < typeHolderNum.size();m++){
+		for(String key :holderTypeCollect.keySet()){
+			for(int m = 0; m < typeHolderNum.size();m++) {
 				String flag = typeHolderNum.get(m).getPrdRegistCode() + ":" + typeHolderNum.get(m).getHolderType();
-				if(holderTypeCollect.get(flag) != null){
+				if(flag.equals(key)){
 					holderTypeCollect.get(flag).setHolderNum(typeHolderNum.get(m).getHolderNum());
 				}
 			}
+		}
 		//转换成以产品为key的父级map
 		Map<String,Map<String,ChbMonthCollect>> holderTypeCollectMap = new HashMap<String,Map<String,ChbMonthCollect>>();
 		for(String key: holderTypeCollect.keySet()){
@@ -313,13 +325,17 @@ public class SvrMonthCollectInterf extends BaseService{
 			String falg = a.getPrdRegistCode()+ ":" + a.getAreaCode();
 			if (areaCollect.get(falg) == null){
 				ChbMonthCollect bb = new ChbMonthCollect();
+				bb.setInstitutionCode(a.getInstitutionCode());
+				bb.setCcy(a.getCcy());
+				bb.setIsConsign(a.getIsConsign());
+				bb.setAreaCode(a.getAreaCode());
 				bb.setCnyAmt(a.getCnyAmt());
 				bb.setPrdRegistCode(a.getPrdRegistCode());
-				bb.setAreaCode(a.getAreaCode());
+				bb.setHolderType(a.getHolderType());
 				bb.setSaleAmountTotal(a.getValueAmountTotal());
 				bb.setValueAmountTotal(a.getValueAmountTotal());
-				bb.setBalanceAmt(a.getValueAmountTotal());
-				bb.setBalanceShares(a.getValueAmountTotal());
+				bb.setBalanceAmt(a.getBalanceAmt());
+				bb.setBalanceShares(a.getBalanceShares());
 				areaCollect.put(falg, bb);
 			}else{
 				if(a.getSaleAmountTotal() != null) {
@@ -337,10 +353,12 @@ public class SvrMonthCollectInterf extends BaseService{
 			}
 		}
 		//赋值投资者数量
-		for(int m = 0; m < areaHolderNum.size();m++){
-			String flag = areaHolderNum.get(m).getPrdRegistCode() + ":" + areaHolderNum.get(m).getAreaCode();
-			if(areaCollect.get(flag) != null){
-				areaCollect.get(flag).setHolderNum(areaHolderNum.get(m).getHolderNum());
+		for(String key :areaCollect.keySet()){
+			for(int m = 0; m < areaHolderNum.size();m++) {
+				String flag = areaHolderNum.get(m).getPrdRegistCode() + ":" + areaHolderNum.get(m).getHolderType();
+				if(flag.equals(key)){
+					areaCollect.get(flag).setHolderNum(areaHolderNum.get(m).getHolderNum());
+				}
 			}
 		}
 		//转换成以产品为key的父级map
@@ -414,14 +432,17 @@ public class SvrMonthCollectInterf extends BaseService{
 			String falg = a.getPrdRegistCode()+ ":" + a.getInstitutionCode();
 			if (institutionCollect.get(falg) == null){
 				ChbMonthCollect bb = new ChbMonthCollect();
-				bb.setCnyAmt(a.getCnyAmt());
-				bb.setIsConsign(a.getIsConsign());
 				bb.setInstitutionCode(a.getInstitutionCode());
+				bb.setCcy(a.getCcy());
+				bb.setIsConsign(a.getIsConsign());
+				bb.setAreaCode(a.getAreaCode());
+				bb.setCnyAmt(a.getCnyAmt());
 				bb.setPrdRegistCode(a.getPrdRegistCode());
+				bb.setHolderType(a.getHolderType());
 				bb.setSaleAmountTotal(a.getValueAmountTotal());
 				bb.setValueAmountTotal(a.getValueAmountTotal());
-				bb.setBalanceAmt(a.getValueAmountTotal());
-				bb.setBalanceShares(a.getValueAmountTotal());
+				bb.setBalanceAmt(a.getBalanceAmt());
+				bb.setBalanceShares(a.getBalanceShares());
 				institutionCollect.put(falg, bb);
 			}else{
 				if(a.getSaleAmountTotal() != null) {
@@ -439,10 +460,12 @@ public class SvrMonthCollectInterf extends BaseService{
 			}
 		}
 		//赋值投资者数量
-		for(int m = 0; m < channelHolderNum.size();m++){
-			String flag = channelHolderNum.get(m).getPrdRegistCode() + ":" + channelHolderNum.get(m).getInstitutionCode();
-			if(institutionCollect.get(flag) != null){
-				institutionCollect.get(flag).setHolderNum(channelHolderNum.get(m).getHolderNum());
+		for(String key :institutionCollect.keySet()){
+			for(int m = 0; m < channelHolderNum.size();m++) {
+				String flag = channelHolderNum.get(m).getPrdRegistCode() + ":" + channelHolderNum.get(m).getHolderType();
+				if(flag.equals(key)){
+					institutionCollect.get(flag).setHolderNum(channelHolderNum.get(m).getHolderNum());
+				}
 			}
 		}
 		//转换成以产品为key的父级map

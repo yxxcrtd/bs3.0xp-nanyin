@@ -54,4 +54,4 @@ comment on column CHB_SALE_DEAL_SUM.EQUITY_CONF_DATE is '业务确认日期 ';
 
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3058';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3058', 'VAL', '销售月报每日明细汇总批处理', null, 'svrDayCollectInterfTaskService', 3040, 'system', null, sysdate, 'system', sysdate, null);
+values ('3058', 'VAL', '销售月报每日明细汇总批处理', null, 'svrDayCollectInterfTaskService', 3030, 'system', null, sysdate, 'system', sysdate, null);
