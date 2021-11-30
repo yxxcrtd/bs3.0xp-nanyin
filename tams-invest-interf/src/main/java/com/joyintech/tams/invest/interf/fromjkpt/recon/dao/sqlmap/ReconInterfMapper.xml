@@ -96,6 +96,9 @@
     FROM
         STL_SEC_RECON
     WHERE CHECK_RESULT = '1'
+    <if test="execDate != null">
+        AND SETTLE_DATE = TO_DATE(#{execDate,jdbcType=VARCHAR},'yyyyMMdd')
+    </if>
     </select>
 
     <!--资金余额-->

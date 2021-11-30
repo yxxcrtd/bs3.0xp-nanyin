@@ -69,5 +69,5 @@ public interface ReconInterfMapper {
      * 对账结果
      * @return
      */
-    List<StlSecRecon> listStlSecRecon();
+    List<StlSecRecon> listStlSecRecon(Map<String,Object> param);
 }

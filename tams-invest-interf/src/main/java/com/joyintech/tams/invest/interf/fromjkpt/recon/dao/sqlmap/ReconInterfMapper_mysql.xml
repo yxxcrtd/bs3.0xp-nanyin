@@ -67,7 +67,11 @@
         ENTRUST_TRADE_ID
     FROM
         STL_SEC_RECON
-    WHERE CHECK_RESULT = '1'
+    WHERE
+        CHECK_RESULT = '1'
+        <if test="execDate != null">
+            AND SETTLE_DATE = STR_TO_DATE(#{execDate},'%Y%m%d')
+        </if>
     </select>
 
     <!--资金余额-->
