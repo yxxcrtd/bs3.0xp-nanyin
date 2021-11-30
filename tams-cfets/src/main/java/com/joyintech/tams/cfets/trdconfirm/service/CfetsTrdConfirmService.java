@@ -281,7 +281,7 @@ public class CfetsTrdConfirmService extends BaseService{
                         doCompleteMethod(entity,OperationType.NEW);
                     }catch (Exception e) {
                         //若插入数据异常，提示错误信息
-
+                        logger.info(item.getTotleTradeId()+"111111111");
 
                     }
             }
@@ -385,11 +385,23 @@ public class CfetsTrdConfirmService extends BaseService{
 
             //无下行时，插入下行成交匹配关系.有下行时，手工匹配或自动匹配插入下行成交匹配表
             String supportCstpFlag=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG");
-            if(StringUtil.equals(supportCstpFlag,DictCodeList.是否_否.getValue()) && null!=entity.getCfetsTrdConfirmMatchDto()){
-                 cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
-            }else{
-                //查询成交匹配关系，更新下行成交匹配表字段
-                cfetsTrdConfirmMapper.updateTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
+            if(null!=entity.getCfetsTrdConfirmMatchDto()){
+                if(StringUtil.equals(supportCstpFlag,DictCodeList.是否_否.getValue())){
+                    cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
+                }else{
+                    //根据登记编号查询下行成交匹配表
+                    boolean flag=cfetsTrdConfirmMapper.isExistMatchInfo(entity.getCfetsTrdConfirmMatchDto().getPreTradeId());
+                    if(flag){
+                        //若存在对应的成交匹配数据，则更新下行成交匹配表
+                        cfetsTrdConfirmMapper.updateTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
+                    }else{
+                        //不存在对应的成交匹配数据，插入下行成交匹配表
+                        entity.getCfetsTrdConfirmMatchDto().setSeqno(IDGenerator.generate());
+                        entity.getCfetsTrdConfirmMatchDto().setCreateUser(SecurityUtil.getLoginUser().getUserName());
+                        entity.getCfetsTrdConfirmMatchDto().setCreateDept(CommonUtil.getDeptCode());
+                        cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
+                    }
+                }
             }
 
             // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易业务流程表
@@ -748,7 +760,7 @@ public class CfetsTrdConfirmService extends BaseService{
         TrdTradeFeeTotal trdTradeFeeDetail = null;
         //根据汇总交易编号查询费用信息
 
-        List<TrdTradeFeeTotal> ttfdList = getTrdTradeFeeDetails(dtoReg.getTotleTradeId());
+        List<TrdTradeFeeTotal> ttfdList = getTrdTradeFeeDetails(dtoReg.getTotleTradeId(),entity.getTotleTradeId());
 
         entity.setFeeAmt(get费用金额(ttfdList, null, null));
         entity.setFeeAmtPay(get费用金额(ttfdList, DictCodeList.是否_是.getValue(), null));
@@ -1240,13 +1252,13 @@ public class CfetsTrdConfirmService extends BaseService{
         }
         return result;
     }
-    private List<TrdTradeFeeTotal> getTrdTradeFeeDetails(String tradeId) {
+    private List<TrdTradeFeeTotal> getTrdTradeFeeDetails(String tradeId,String totleTradeId) {
         //根据汇总交易编号查询费用信息
         List<CfetsTrdConfirmRegFeeInfoDto> regFeeList=cfetsTrdConfirmMapper.findAllRegFeeInfoList(tradeId);
         List<TrdTradeFeeTotal> ttfdList = new ArrayList<>();
         for(CfetsTrdConfirmRegFeeInfoDto regFeeInfo:regFeeList){
             TrdTradeFeeTotal ttfd = new TrdTradeFeeTotal();
-            ttfd.setTotleTradeId(tradeId);
+            ttfd.setTotleTradeId(totleTradeId);
             ttfd.setFeeType(regFeeInfo.getFeeType());
             ttfd.setIsPayWithTrade(regFeeInfo.getIsPayWithTrade());
             ttfd.setFeeAmt(regFeeInfo.getFeeAmt());

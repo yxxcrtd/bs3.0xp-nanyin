@@ -1715,6 +1715,11 @@
         WHERE
         mcci.PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}
     </select>
+    <select id="isExistMatchInfo" resultType="Boolean">
+        SELECT count(*)
+        from Trdquto_Match_Info t
+        where t.pre_trade_id=#{preTradeId,jdbcType=VARCHAR}
+    </select>
 </mapper>
 
 

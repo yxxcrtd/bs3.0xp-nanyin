@@ -151,4 +151,12 @@ public interface CfetsTrdConfirmMapper {
      */
     String selectCounterId(@Param("cpPartyId") String cpPartyId);
 
+    /**
+     * 判断是否存在下行匹配关系
+     * @param pageParam
+     * @return
+     */
+    public boolean isExistMatchInfo(@Param("preTradeId") String preTradeId);
+
+
 }
