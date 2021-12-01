@@ -267,6 +267,7 @@ public class IbuQuoteBondService extends BaseService {
         param.put("notentrustIdList",ptlAllocationAddRequest.getEntrustIdList());
         param.put("platDate", iPlatformDate.getSysDateStr());
         param.put("entrustStatus",Arrays.asList(com.joyintech.tams.constant.DictCodeList.委托状态_已接收.getValue()));
+        param.remove("entrustIdList");
         setParam(param);
         List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if (!StringUtil.isEmptyList(entrustDtos)) {
