@@ -242,6 +242,7 @@ public class IbuQuoteBondService extends BaseService {
                     break;
                 }
             }
+            //
             //处理组合分配
             List<PtlAllocationDto> ptlAllocatios = new ArrayList<>();
             for (CfetsBondDealEntrustOrderDto entrustDto : entrustDtos) {
@@ -264,7 +265,6 @@ public class IbuQuoteBondService extends BaseService {
     public List<EntrustDto> ptlAllocationAdd(PtlAllocationAddRequest ptlAllocationAddRequest){
         Map<String, Object> param = BeanUtil.object2Map(ptlAllocationAddRequest);
         param.put("notentrustIdList",ptlAllocationAddRequest.getEntrustIdList());
-        param.put("loginUserId", LoginUserUtil.getUserName());
         param.put("platDate", iPlatformDate.getSysDateStr());
         param.put("entrustStatus",Arrays.asList(com.joyintech.tams.constant.DictCodeList.委托状态_已接收.getValue()));
         setParam(param);
@@ -1067,6 +1067,7 @@ public class IbuQuoteBondService extends BaseService {
         param.put("psT01", BussinessDictCodeList.交易方向_买入.getValue());
         param.put("psT02", BussinessDictCodeList.交易方向_卖出.getValue());
         param.put("psT03", BussinessDictCodeList.交易方向_行权回售.getValue());
+        param.put("loginUserId", LoginUserUtil.getUserName());
     }
 }
 

@@ -46,7 +46,7 @@
         ON SYS_USER_ADD.ibu_trader = MST_CFETS_CUSTOMER_TRADER.TRADER_ID
         INNER JOIN
         SYS_USER
-        ON sys_user.user_name = '${loginUserId}'
+        ON sys_user.user_name = #{loginUserId}
         AND sys_user.USER_ID = SYS_USER_ADD.USER_ID
         WHERE
         MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID
@@ -68,7 +68,7 @@
         ON SYS_USER_ADD.ibu_trader = MST_CFETS_CUSTOMER_TRADER.TRADER_ID
         INNER JOIN
         SYS_USER
-        ON sys_user.user_name = '${loginUserId}'
+        ON sys_user.user_name = #{loginUserId}
         AND sys_user.USER_ID = SYS_USER_ADD.USER_ID
         WHERE
         MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = MST_CFETS_CUSTOMER_INFO.PARTY_ID
