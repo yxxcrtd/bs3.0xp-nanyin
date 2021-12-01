@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.common.reconciliation.service;
 
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -100,13 +101,8 @@ public class ReconciliationCommonService {
         if(CollectionUtils.isEmpty(list)){
             return;
         }
-        for(DayEndAccountDaichuliDto daichuliDto:list){
-            settleTransDataStatusMapper.deleteByPrimaryKey(daichuliDto.getTradeId());
-            SettleTransDataStatus status = new SettleTransDataStatus();
-            status.setTradeId(daichuliDto.getTradeId());
-            status.setCheckResult(DictCodeListExt3.对账状态结果_待处理.getValue());
-            settleTransDataStatusMapper.insertSelective(status);
-        }
+        //将待手工对账的待处理数据List存入
+        saveManualAccountInfo(list);
     }
 
     /**
@@ -567,25 +563,17 @@ public class ReconciliationCommonService {
         return feePlan;
     }
 
+    /**
+     * 登录自动对账结果数据
+     * @param list
+     */
     private void saveAccountInfo(List<DayEndAccountDaichuliDto> list) {
+        if(CollectionUtils.isEmpty(list)){
+            return;
+        }
         for (DayEndAccountDaichuliDto dto : list) {
-            //根据券商对账单删除之前的对账数据
-            stlSecReconMapper.deleteByPrimaryKey(dto.getSeqNo());
-            //封装新的对账单数据
-            StlSecRecon stlSecRecon = new StlSecRecon();
-            stlSecRecon.setSeqNo(dto.getSeqNo());
-            stlSecRecon.setCustomerId(dto.getCustomerId());
-            stlSecRecon.setPortfolioId(dto.getPortfolioId());
-            stlSecRecon.setFinprodId(dto.getFinprodId());
-            stlSecRecon.setMarketId(dto.getMarketId());
-            stlSecRecon.setSettleDate(dto.getTradeDate());
-            stlSecRecon.setTradeMarket(dto.getTradeMarket());
-            stlSecRecon.setCheckResult(dto.getCheckResult());
-            stlSecRecon.setStlSecDeme(dto.getParaValue());
-            stlSecRecon.setAccount(dto.getAccout());
-            stlSecRecon.setEntrustTradeId(dto.getTradeId2());
-            stlSecRecon.setReconInfo(StringUtil.isEmpty(dto.getReconInfo()) ? null : dto.getReconInfo().getBytes());
-            reconciliationCommonMapper.insertStlSecRecon(stlSecRecon);
+            // 登录自动对账对账单结果表
+            saveStlSecRecon(dto);
             // 查询成交明细数据
             List<SettleTransData> listSettleTransData = querySettleTransDatas(dto);
             if(CollectionUtils.isNotEmpty(listSettleTransData)){
@@ -593,34 +581,114 @@ public class ReconciliationCommonService {
                 SettleTransData std = getReCalSettleTransData(listSettleTransData.get(0),dto);
                 // 更新成交明细数据
                 settleTransDataMapper.updateByPrimaryKeySelective(std);
-                StlSecReconDetail detail;
-                SettleTransDataStatus status;
-                for (SettleTransData settleTransData : listSettleTransData) {
-                    detail = new StlSecReconDetail();
-                    detail.setSeqNo(dto.getSeqNo());
-                    detail.setTradeId(settleTransData.getTradeId());
-                    detail.setStlSecDeme(dto.getParaValue());
-                    StlSecReconDetailKey detailKey = new StlSecReconDetailKey();
-                    detailKey.setTradeId(settleTransData.getTradeId());
-                    detailKey.setSeqNo(dto.getSeqNo());
-                    // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit start
-                    stlSecReconDetailMapper.deleteByPrimaryKey(detailKey);
-                    // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit end
-                    reconciliationCommonMapper.insertStlSecReconDetail(detail);
-                    // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit start
-                    settleTransDataStatusMapper.deleteByPrimaryKey(settleTransData.getTradeId());
-                    // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit end
-                    status = new SettleTransDataStatus();
-                    status.setTradeId(settleTransData.getTradeId());
-                    status.setCheckResult(dto.getCheckResult());
-                    settleTransDataStatusMapper.insertSelective(status);
-                }
+                // 登录成交明细状态表和券商对账单详情表
+                saveSettleTransDataStatusDetail(dto, listSettleTransData);
             }
         }
     }
 
     /**
-     * 查询清算明细
+     * 登录待手工对账的结果数据
+     * @param list
+     */
+    private void saveManualAccountInfo(List<DayEndAccountDaichuliDto> list) {
+        if(CollectionUtils.isEmpty(list)){
+            return;
+        }
+        for (DayEndAccountDaichuliDto dto : list) {
+            dto.setSeqNo(IDGenerator.generate());
+            // 登录待手工对账对账单结果表
+            saveManualStlSecRecon(dto);
+            // 查询待手工对账的成交明细数据
+            List<SettleTransData> listSettleTransData = queryManualSettleTransDatas(dto);
+            if(CollectionUtils.isEmpty(listSettleTransData)){
+                continue;
+            }
+            // 登录成交明细状态表和券商对账单详情表
+            saveSettleTransDataStatusDetail(dto, listSettleTransData);
+        }
+    }
+
+    /**
+     * 登录自动对账券商对账单结果表
+     * @param dto
+     */
+    private void saveStlSecRecon(DayEndAccountDaichuliDto dto){
+        //根据券商对账单删除之前的对账数据
+        stlSecReconMapper.deleteByPrimaryKey(dto.getSeqNo());
+        //封装新的对账单数据
+        StlSecRecon stlSecRecon = new StlSecRecon();
+        stlSecRecon.setSeqNo(dto.getSeqNo());
+        stlSecRecon.setCustomerId(dto.getCustomerId());
+        stlSecRecon.setPortfolioId(dto.getPortfolioId());
+        stlSecRecon.setFinprodId(dto.getFinprodId());
+        stlSecRecon.setMarketId(dto.getMarketId());
+        stlSecRecon.setSettleDate(dto.getTradeDate());
+        stlSecRecon.setTradeMarket(dto.getTradeMarket());
+        stlSecRecon.setCheckResult(dto.getCheckResult());
+        stlSecRecon.setStlSecDeme(dto.getParaValue());
+        stlSecRecon.setAccount(dto.getAccout());
+        stlSecRecon.setEntrustTradeId(dto.getTradeId2());
+        stlSecRecon.setReconInfo(StringUtil.isEmpty(dto.getReconInfo()) ? null : dto.getReconInfo().getBytes());
+        reconciliationCommonMapper.insertStlSecRecon(stlSecRecon);
+    }
+
+    /**
+     * 登录待手工对账单结果表
+     * @param dto
+     */
+    private void saveManualStlSecRecon(DayEndAccountDaichuliDto dto){
+        //根据券商对账单删除之前的对账数据
+        stlSecReconMapper.deleteByPrimaryKey(dto.getSeqNo());
+        //封装新的对账单数据
+        StlSecRecon stlSecRecon = new StlSecRecon();
+        stlSecRecon.setSeqNo(dto.getSeqNo());
+        stlSecRecon.setCustomerId(dto.getCustomerId());
+        stlSecRecon.setFinprodId(dto.getFinprodId());
+        stlSecRecon.setSettleDate(dto.getTradeDate2());
+        stlSecRecon.setTradeMarket(dto.getTradeMarket2());
+        stlSecRecon.setCheckResult(dto.getCheckResult());
+        stlSecRecon.setStlSecDeme(dto.getParaValue());
+        stlSecRecon.setAccount(dto.getAccout());
+        stlSecRecon.setEntrustTradeId(dto.getTradeId2());
+        reconciliationCommonMapper.insertStlSecRecon(stlSecRecon);
+    }
+
+    /**
+     * 登录成交明细状态表和券商对账单详情表
+     * @param dto
+     * @param listSettleTransData
+     */
+    private void saveSettleTransDataStatusDetail(DayEndAccountDaichuliDto dto, List<SettleTransData> listSettleTransData){
+        if(CollectionUtils.isEmpty(listSettleTransData)){
+            return;
+        }
+        StlSecReconDetail detail;
+        SettleTransDataStatus status;
+        for (SettleTransData settleTransData : listSettleTransData) {
+            detail = new StlSecReconDetail();
+            detail.setSeqNo(dto.getSeqNo());
+            detail.setTradeId(settleTransData.getTradeId());
+            detail.setStlSecDeme(dto.getParaValue());
+            StlSecReconDetailKey detailKey = new StlSecReconDetailKey();
+            detailKey.setTradeId(settleTransData.getTradeId());
+            detailKey.setSeqNo(dto.getSeqNo());
+            // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit start
+            stlSecReconDetailMapper.deleteByPrimaryKey(detailKey);
+            // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit end
+            reconciliationCommonMapper.insertStlSecReconDetail(detail);
+            // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit start
+            settleTransDataStatusMapper.deleteByPrimaryKey(settleTransData.getTradeId());
+            // GZYHTZJY-597:为防止主键冲突,先删除再插入 fuyongsheng 20211125 edit end
+            status = new SettleTransDataStatus();
+            status.setTradeId(settleTransData.getTradeId());
+            status.setCheckResult(dto.getCheckResult());
+            settleTransDataStatusMapper.insertSelective(status);
+        }
+    }
+
+    /**
+     * 查询自动对账清算明细
      * @param dto
      * @return
      */
@@ -646,6 +714,31 @@ public class ReconciliationCommonService {
                 param.put("seatNumber", dto.getSeatNumber());
                 param.put("tradeDate", dto.getTradeDate());
             }
+        }
+        return reconciliationCommonMapper.getSettleTransData(param);
+    }
+
+    /**
+     * 查询待手工对账明细
+     * @param dto
+     * @return
+     */
+    private List<SettleTransData> queryManualSettleTransDatas(DayEndAccountDaichuliDto dto){
+        //调用【清算明细查询】
+        Map<String, Object> param = new HashMap<String, Object>();
+        if(DictCodeListStl.对账维度_委托汇总.getValue().equals(dto.getParaValue())){
+            param.put("applyTradeId", dto.getTradeId2());
+            param.put("dealDate", dto.getTradeDate2());
+            param.put("seatNumber", dto.getSeatNumber());
+        }else if(DictCodeListStl.对账维度_证券汇总.getValue().equals(dto.getParaValue())){
+            param.put("finprodId", dto.getFinprodId());
+            param.put("dealDate", dto.getTradeDate2());
+            param.put("seatNumber", dto.getSeatNumber());
+        }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getParaValue())){
+            param.put("finprodId", dto.getFinprodId());
+            param.put("secAcctId", dto.getSecAcctId2());
+            param.put("seatNumber", dto.getSeatNumber());
+            param.put("tradeDate", dto.getTradeDate2());
         }
         return reconciliationCommonMapper.getSettleTransData(param);
     }

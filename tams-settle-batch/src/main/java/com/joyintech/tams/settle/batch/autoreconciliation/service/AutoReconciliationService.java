@@ -58,12 +58,13 @@ public class AutoReconciliationService {
         param.put("PS_T56", DictCodeListExt3.交易方向_到期续做.getValue());
         param.put("PS_T95", DictCodeListExt3.交易方向_到期购回.getValue());
         param.put("PS_T96", DictCodeListExt3.交易方向_提前购回.getValue());
+        param.put("prodType2_F07", DictCodeList.平安资产类型_质押式回购.getValue());
         param.put("prodType2_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         param.put("prodType2_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         // 获取待自动对账的对账数据
         List<DayEndAccountDaichuliDto> autoAccountList = autoReconciliationMapper.queryAccountTodoList(param);
         reconciliationCommonService.executeReconciliation(autoAccountList);
-        // 处理待处理的对账数据
+        // 处理没有券商对账单,只有结算明细的待处理对账数据
         List<DayEndAccountDaichuliDto> manualAccountList = autoReconciliationMapper.queryManualAccountTodoList(param);
         reconciliationCommonService.executeManualReconciliation(manualAccountList);
     }
