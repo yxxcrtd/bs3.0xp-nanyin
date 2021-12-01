@@ -123,6 +123,9 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
     private String dueDate;
     //利率互换 end
 
+    @ApiModelProperty(name="isRight",value="是否含权",example="A1")
+    private String isRight;
+
 
     public String getBusiPs() {
         return busiPs;
@@ -382,5 +385,13 @@ public class CfetsEtrDispatcherInfoResponse extends CfetsEtrDispatcherBaseInfo{
 
     public String getOtherSettleSpeed() {
         return SysDataUtil.getNameFromDataDict(DictCode.清算速度, this.getSettleSpeed());
+    }
+
+    public String getIsRight() {
+        return isRight;
+    }
+
+    public void setIsRight(String isRight) {
+        this.isRight = isRight;
     }
 }

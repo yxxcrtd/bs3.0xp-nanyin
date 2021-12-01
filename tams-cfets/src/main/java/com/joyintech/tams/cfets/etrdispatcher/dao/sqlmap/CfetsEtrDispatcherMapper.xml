@@ -486,7 +486,8 @@
             to_char(eted.MDATE,'yyyy-MM-dd') || ' - ' || to_char(eted.MDATE2,'yyyy-MM-dd') as dueDate,
             eted.TERM_DAYS repoTerm,
             eted.FIRST_UNIT_CPRICE || ' - ' || eted.FIRST_UNIT_CPRICE2 firstprice,
-            pss.pledge_stock_name pledgeStockName
+            pss.pledge_stock_name pledgeStockName,
+            fp.Is_Right isRight
         FROM ETR_ENTRUST ete
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
