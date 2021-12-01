@@ -30,7 +30,8 @@
 		UPDATE_TIME,
 		REMARK
 	    FROM CHB_SALER_STL_DEAL_INFO
-		WHERE TO_CHAR(TRADE_VDATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+		WHERE TO_CHAR(NVL(UPDATE_TIME,CREATE_TIME),'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+		
 	</select>
 	
 	 <select id="selectRegSalesTransactionData" resultType="com.joyintech.tams.common.base.entity.ChbSalesTransactionInfoSub">

@@ -188,7 +188,8 @@
 		update CHB_SALE_MONTH_REPORT
 		set
 		SEND_STATUS = '03',
-		SUBMIT_FEEDBACK_STATUS = '03'
+		SUBMIT_FEEDBACK_STATUS = '03',
+		submit_time = sysdate
 		where
 		TERMID = #{termid,jdbcType=CHAR}
 	</update>
@@ -198,7 +199,8 @@
 		update CHB_SALE_MONTH_REPORT
 		set
 		SEND_STATUS = '01',
-		SUBMIT_FEEDBACK_STATUS = null
+		SUBMIT_FEEDBACK_STATUS = null,
+		submit_time = null
 		where
 		TERMID = #{termid,jdbcType=CHAR}
 	</update>

@@ -10,15 +10,18 @@
 
 package com.joyintech.tams.report.submitmaintenance.businessdetailed.util;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto;
+import com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.util.EquityInfoCheckUtil;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.validate.EquityInfoValid;
 import com.joyintech.tams.report.submitmaintenance.transformrule.dto.ChbTransformRuleObjDto;
 import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto;
 import com.joyintech.tams.report.submitmaintenance.transformrule.service.TransformRule001Service;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +61,59 @@ public class BusinessDetailInfoCheckUtil {
         }
         return flag;
     }
+    
+    /**
+     * 按照配置表的内容，对数据进行循环生僻字转化
+     * <一句话功能简述>
+     * <功能详细描述>
+     * 
+     * 
+     */
+     public static void replaceByExchangeRuleForDtl(List<ChbTransformRuleObjDto> objFileds
+                                          ,Map<String,TransformRule001Dto> spzMap,List<EquiteBusiDetails001Dto> listEquiteBusiDetails001Dto) {
+      
+   	  for(EquiteBusiDetails001Dto recDto: listEquiteBusiDetails001Dto){
+			Map<String, String> tempMap=new HashMap<String, String>();
+			try {
+				
+				for(ChbTransformRuleObjDto objfiled : objFileds){
+					boolean flag = false;
+					String srcValue = "";
+						
+					Field fId = recDto.getClass().getDeclaredField(objfiled.getInfoProperty());	
+					
+					//存在转化对象的情况下，进行以下处理
+					if(fId != null) {
+						fId.setAccessible(true);
+						String changeResule ="";
+						srcValue = (String)fId.get(recDto);
+						char[] chars=  srcValue.toCharArray();
+						for(char cc:chars){
+							String key= objfiled.getTransType() + cc;
+							  if(spzMap.containsKey(key)){                	  
+								  flag = true;
+								  changeResule = changeResule +  spzMap.get(key).getTargetField();  
+							  }else {
+								  changeResule = changeResule +  cc;
+							  }                       
+							}
+							
+						if(flag) {
+							tempMap.put(objfiled.getInfoProperty(),changeResule);
+							
+						}
+					}				
+				}  
+				
+				recDto.setTempMap(tempMap);
+				
+			}
+			catch(Exception e) {
+				throw new BusinessException("生僻字转换异常" + e.getMessage());
+		    }
+		  }
+   	  
+     }
     
     /**
      * 包含生僻字检测的白名单校验 及白名单以外的但在变形转换规则表中能找到 算检测通过

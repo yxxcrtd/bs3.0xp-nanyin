@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -23,6 +22,7 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -44,7 +44,6 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -78,7 +77,6 @@ import com.joyintech.framework.export.handler.ReportCfgHandler;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.progressbar.ProgressBarService;
-import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
@@ -93,6 +91,7 @@ import com.joyintech.framework.util.ZipFileUtil;
 import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.base.entity.ChbEqudet;
 import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
+import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
@@ -120,10 +119,15 @@ import com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto;
 import com.joyintech.tams.report.submitmaintenance.businessdetailed.dao.EquityBusiDetails001Mapper;
 import com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto;
 import com.joyintech.tams.report.submitmaintenance.businessdetailed.entity.InterestsBusinessDetailed;
+import com.joyintech.tams.report.submitmaintenance.businessdetailed.util.BusinessDetailInfoCheckUtil;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfo001Mapper;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.util.EquityInfoCheckUtil;
 import com.joyintech.tams.report.submitmaintenance.exchangerate.dao.Exchangerate001Mapper;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dao.ChbTransformRuleObjDtoMapper;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dao.TransformRule001Mapper;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dto.ChbTransformRuleObjDto;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto;
 import com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dao.EquityBusiInfoRegist001Mapper;
 import com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.EquityBusiInfoRegist001Dto;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
@@ -175,6 +179,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      * CHB_EQUDET_NAME
      */
     private static final String CHB_EQUDET_NAME = "CHB_EQUDET";
+    
+    /**
+     * CHB_EQUDET
+     */
+    private static final String CHB_EQUDET = "CHB_EQUDET";
 
     /**
      * CHB_EQUDET_SUB_NAME
@@ -187,6 +196,12 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
     @Autowired
     private EquityBusiDetails001Mapper equityBusiDetails001Mapper;
 
+    @Autowired
+    private TransformRule001Mapper transformRule001Mapper;
+    
+    @Autowired
+    private ChbTransformRuleObjDtoMapper chbTransformRuleObjDtoMapper;
+    
     /**
      * 查询对应币种的汇率
      */
@@ -1457,6 +1472,28 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     }
                 }
             }
+            
+          //判断导入数据是否存在已导入的数据
+            //查询已经在数据库中存在的数据记录
+            List<EquiteBusiDetails001Dto> listExistDto = equityBusiDetails001Mapper.selectTMPExistInInfo(
+            		queryList);           
+            Map<String, EquiteBusiDetails001Dto> exitsChbEqudetDataMap = StringUtil.isEmptyList(
+            		listExistDto) ? new HashMap<String, EquiteBusiDetails001Dto>() : listExistDto.stream().collect(
+                    JoyinCollectors.toMap(
+                            x -> x.getBusiSeqno() + GlobalConstant.UNDER_LINE + x.getRegistBankCode(),
+                            x -> x));
+            
+            for (int i = 0; i < mapList.size(); i++ ) {
+            	String compreKey = mapList.get(i).get("busiSeqno") + GlobalConstant.UNDER_LINE + mapList.get(i).get("registBankCode");
+            	if (exitsChbEqudetDataMap.get(compreKey) != null) {
+                    result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                            this.getMessage("REPORT_COMMON_FILE_E_0028",
+                            		mapList.get(i).get("busiSeqno"))));                    
+                    return result;
+                }
+            }
+            
+            
 
             //获取所有的身份信息
             Map<String, String> indentifyMap = getAllIndentifyInfo();
@@ -3058,9 +3095,34 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 			   sequenceList=  CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, details.size());
 		   }
            int index = 0;
-           
+        
+           //生僻字转化处理   
+           //生僻字按照已经维护的规则进行转化
+             Map<String, Object> paramap=new HashMap<String, Object>();
+             paramap.put("statusList", Arrays.asList("E"));
+             List<TransformRule001Dto> allList=transformRule001Mapper.selectAllData(paramap);
+             Map<String,TransformRule001Dto> spzMap=allList.stream().collect(
+                     Collectors.toMap(x -> x.getTransType()+x.getOrgField(),part->part));
+             List<ChbTransformRuleObjDto> allRuleObjList=chbTransformRuleObjDtoMapper.selectAllDataByTableId(CHB_EQUDET);
+             Map<String,List<ChbTransformRuleObjDto>> objFiledsMap=allRuleObjList.stream().collect(
+                     JoyinCollectors.groupingBy(
+                             x -> x.getInfoProperty() ));
+             
+             //设置数据结构的转化规则字段内容
+             BusinessDetailInfoCheckUtil.replaceByExchangeRuleForDtl(allRuleObjList, spzMap, details);   
+             
+             
+          //生僻字转化后设置数据结构              
         for (EquiteBusiDetails001Dto detail : details) {
             EquityBusiInfoRegist001Dto dto = new EquityBusiInfoRegist001Dto();
+            
+            //用规则转换后的字段替换转化前的字段
+            if(detail.getTempMap()!=null){
+      	       for(String key:detail.getTempMap().keySet()){
+      	           EquityInfoCheckUtil.updateChcekDto(detail,key,detail.getTempMap().get(key));
+      	       }
+      	    }
+            
             BeanUtil.copyPropertiesIgnoreNull(dto, detail);
             dto.setCustName(ChbSensitiveInfoUtil.handle汉字变形(dto.getCustName()));
             //证件类型是身份证或者临时身份证，客户编号脱敏

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -17,16 +20,19 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 行内资产负债编码
      */
+	@PrimaryKey(Field.PK_1)
     private String assetCode;
 
     /**
      * 资产类型
      */
+	@PrimaryKey(Field.PK_2)
     private String assetType;
 
     /**
      * 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
      */
+	@PrimaryKey(Field.PK_3)
     private String assetType2;
 
     /**

@@ -135,33 +135,34 @@ public class SellMonthReport001Controller extends BaseController{
 		sellMonthReportMService.cancelMannul(map);
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
 	}
-//
-//	/**
-//	 * 查看详情
-//	 *
-//	 * @return DtPage
-//	 */
-//	@ResponseBody
-//	@RequestMapping(value = "preView")
-//	public void preView(HttpServletRequest request, HttpServletResponse response) {
-//		String htmlExcel = sellMonthReport001Service.priview(this.getPageId(), RequestUtil.getPageParam());
-//		response.reset();
-//		response.setContentType("text/html;charset=UTF-8");
-//		response.setCharacterEncoding("UTF-8");
-//		InputStream res = new ByteArrayInputStream(htmlExcel.getBytes(Charset.forName("UTF-8")));
-//		byte[] buf = new byte[1024 * 10];
-//		int len = 0;
-//		OutputStream out;
-//		try {
-//			out = response.getOutputStream();
-//			while ((len = res.read(buf)) != -1)
-//				out.write(buf, 0, len);
-//			out.flush();
-//			res.close();
-//			out.close();
-//		} catch (IOException e) {
-//			logger.error(e.getMessage(), e);
-//			return;
-//		}
-//	}
+
+	/**
+	 * 查看详情
+	 *
+	 * @return DtPage
+	 */
+	@ResponseBody
+	@RequestMapping(value = "preView")
+	public void preView(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String datas = this.getParam("keyList");
+		String htmlExcel = sellMonthReport001Service.priview(this.getPageId(), RequestUtil.getPageParam(),datas);
+		response.reset();
+		response.setContentType("text/html;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		InputStream res = new ByteArrayInputStream(htmlExcel.getBytes(Charset.forName("UTF-8")));
+		byte[] buf = new byte[1024 * 10];
+		int len = 0;
+		OutputStream out;
+		try {
+			out = response.getOutputStream();
+			while ((len = res.read(buf)) != -1)
+				out.write(buf, 0, len);
+			out.flush();
+			res.close();
+			out.close();
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			return;
+		}
+	}
 }

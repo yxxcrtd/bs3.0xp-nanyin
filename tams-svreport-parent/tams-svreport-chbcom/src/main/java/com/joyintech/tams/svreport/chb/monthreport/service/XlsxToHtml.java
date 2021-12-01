@@ -44,9 +44,46 @@ public class XlsxToHtml {
      */
     private static Logger logger = LoggerFactory.getLogger(XlsxToHtml.class);
 
+    public static String readExcelToHtmlThree(File file , boolean isWithStyle){
+
+        InputStream is = null;
+        String htmlExcel = null;
+        Workbook wb = null;
+        try {
+            is = new FileInputStream(file);
+            wb = WorkbookFactory.create(is);
+            if (wb instanceof XSSFWorkbook) {
+                XSSFWorkbook xWb = (XSSFWorkbook) wb;
+                htmlExcel = XlsxToHtml.getExcelInfoThree(xWb,isWithStyle);
+            }else if(wb instanceof HSSFWorkbook){
+                HSSFWorkbook hWb = (HSSFWorkbook) wb;
+                htmlExcel = XlsxToHtml.getExcelInfoThree(hWb,isWithStyle);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+        }finally{
+            try {
+                if(is!=null)
+                {
+                    is.close();
+                }
+
+            } catch (IOException e) {
+                logger.error(e.getMessage(),e);
+            }
+            try {
+                if(wb!=null)
+                {
+                    wb.close();
+                }
+            } catch (IOException e) {
+                logger.error(e.getMessage(),e);
+            }
+        }
+        return htmlExcel;
+    }
     /**
      * 程序入口方法
-     * @param filePath 文件的路径
      * @param isWithStyle 是否需要表格样式 包含 字体 颜色 边框 对齐方式
      * @return <table>...</table> 字符串
      */
@@ -88,8 +125,73 @@ public class XlsxToHtml {
          }
          return htmlExcel;
      }
-     
-     
+
+    public static String getExcelInfoThree(Workbook wb,boolean isWithStyle){
+
+        StringBuffer sb = new StringBuffer();
+        evaluator=wb.getCreationHelper().createFormulaEvaluator();
+        for(int i=0;i<3;i++){
+            Sheet sheet = wb.getSheetAt(i);//获取第一个Sheet的内容
+            int lastRowNum = sheet.getLastRowNum();
+            Map<String, String> map[] = getRowSpanColSpanMap(sheet);
+            sb.append("<table style='border-collapse:collapse;' width='100%'>");
+            Row row = null;        //兼容
+            Cell cell = null;    //兼容
+
+            for (int rowNum = sheet.getFirstRowNum(); rowNum <= lastRowNum; rowNum++) {
+                row = sheet.getRow(rowNum);
+                if (row == null) {
+                    sb.append("<tr><td > &nbsp;</td></tr>");
+                    continue;
+                }
+                sb.append("<tr>");
+                int lastColNum = row.getLastCellNum();
+                for (int colNum = 0; colNum < lastColNum; colNum++) {
+                    cell = row.getCell(colNum);
+                    if (cell == null) {    //特殊情况 空白的单元格会返回null
+                        sb.append("<td>&nbsp;</td>");
+                        continue;
+                    }
+
+                    String stringValue = getCellValue(cell);
+                    if (map[0].containsKey(rowNum + "," + colNum)) {
+                        String pointString = map[0].get(rowNum + "," + colNum);
+                        map[0].remove(rowNum + "," + colNum);
+                        int bottomeRow = Integer.valueOf(pointString.split(",")[0]);
+                        int bottomeCol = Integer.valueOf(pointString.split(",")[1]);
+                        int rowSpan = bottomeRow - rowNum + 1;
+                        int colSpan = bottomeCol - colNum + 1;
+                        sb.append("<td rowspan= '" + rowSpan + "' colspan= '"+ colSpan + "' ");
+                    } else if (map[1].containsKey(rowNum + "," + colNum)) {
+                        map[1].remove(rowNum + "," + colNum);
+                        continue;
+                    } else {
+                        sb.append("<td ");
+                    }
+
+                    //判断是否需要样式
+                    if(isWithStyle){
+                        dealExcelStyle(wb, sheet, cell, sb);//处理单元格样式
+                    }
+
+                    sb.append(">");
+                    if (stringValue == null || "".equals(stringValue.trim())) {
+                        sb.append(" &nbsp; ");
+                    } else {
+                        // 将ascii码为160的空格转换为html下的空格（&nbsp;）
+                        sb.append(stringValue.replace(String.valueOf((char) 160),"&nbsp;"));
+                    }
+                    sb.append("</td>");
+                }
+                sb.append("</tr>");
+            }
+
+            sb.append("</table>");
+
+        }
+
+        return sb.toString();
+    }
      
      public static String getExcelInfo(Workbook wb,boolean isWithStyle){
          
