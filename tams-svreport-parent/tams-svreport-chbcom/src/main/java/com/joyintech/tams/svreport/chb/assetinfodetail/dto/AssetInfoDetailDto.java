@@ -18,6 +18,8 @@ import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.*;
 import com.joyintech.tams.svreport.chb.assetinfodetail.validator.AssetInfoDetailValidator;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import javax.validation.Valid;
@@ -38,8 +40,8 @@ import java.util.List;
 @ValidLogic(targetClass = AssetInfoDetailValidator.class, groups = { ValidateGroupEdit.class,
 		ValidateGroupDelete.class })
 public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,ProcessEntity {
-
-
+	
+	
 	private  String dataStatus;
 
 	private String vDateStr;
@@ -47,7 +49,6 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	private String mDateStr;
 
 	private String  errMsg;
-
 
 	/**
 	 * 操作类型
@@ -57,6 +58,7 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	/**
 	 * 要素id
 	 */
+	@PrimaryKey(Field.PK_1)
 	private String elementId;
 
 	/**
