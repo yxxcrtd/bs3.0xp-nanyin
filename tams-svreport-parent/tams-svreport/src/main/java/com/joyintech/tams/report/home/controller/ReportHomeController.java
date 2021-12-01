@@ -13,6 +13,7 @@ package com.joyintech.tams.report.home.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.base.service.ActiveReminderSubPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +38,7 @@ import com.joyintech.tams.report.home.service.ReportHomeMService;
 @Controller
 @PageId("SvreportHome001")
 @RequestMapping("/system/reportHome")
-public class ReportHomeController extends BaseController {
+public class ReportHomeController extends BaseController implements ActiveReminderSubPage {
 
     /**
      * 业务dao
@@ -101,4 +102,10 @@ public class ReportHomeController extends BaseController {
    public AjaxResult getHoldInfoSourceInfo() {
        return reportHomeMService.getHoldInfoSourceInfo();
    }
+
+    @Override
+    public String getMyActiveReminderPage() {
+        String url = "/system/reportHome/init";
+        return url;
+    }
 }
