@@ -124,12 +124,24 @@ public class CfetsManualSettleInfoOtherListRespond {
     @ApiModelProperty(name="spanTextOne",value="分配方式",example="字符串1")
     private String spanTextOne;
 
+    @ApiModelProperty(name="exerciseDate",value="理论行权日",example="字符串1")
+    private String exerciseDate;
+
+    @ApiModelProperty(name="actExerciseDate",value="实际行权日",example="字符串1")
+    private String actExerciseDate;
+
+    @ApiModelProperty(name="exerciseDate1",value="理论行权日",example="字符串1")
+    private String exerciseDate1;
+
+    @ApiModelProperty(name="actExerciseDate1",value="实际行权日",example="字符串1")
+    private String actExerciseDate1;
+
     public String getSpanTextOneStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.分配方式, this.getDeliveryType());
+        return SysDataUtil.getNameFromDataDict(DictCode.分配方式, this.getSpanTextOne());
     }
 
     public String getClearTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.清算类型, this.getDeliveryType());
+        return SysDataUtil.getNameFromDataDict(DictCode.清算类型, this.getClearType());
     }
 
     public String getDeliveryTypeStr() {
@@ -442,5 +454,37 @@ public class CfetsManualSettleInfoOtherListRespond {
 
     public void setCounterTrade(String counterTrade) {
         this.counterTrade = counterTrade;
+    }
+
+    public String getExerciseDate() {
+        return exerciseDate;
+    }
+
+    public void setExerciseDate(String exerciseDate) {
+        this.exerciseDate = exerciseDate;
+    }
+
+    public String getActExerciseDate() {
+        return actExerciseDate;
+    }
+
+    public void setActExerciseDate(String actExerciseDate) {
+        this.actExerciseDate = actExerciseDate;
+    }
+
+    public String getExerciseDate1() {
+        return exerciseDate1;
+    }
+
+    public void setExerciseDate1(String exerciseDate1) {
+        this.exerciseDate1 = exerciseDate1;
+    }
+
+    public String getActExerciseDate1() {
+        return actExerciseDate1;
+    }
+
+    public void setActExerciseDate1(String actExerciseDate1) {
+        this.actExerciseDate1 = actExerciseDate1;
     }
 }
