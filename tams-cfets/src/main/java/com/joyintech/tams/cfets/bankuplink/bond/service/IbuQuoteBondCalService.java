@@ -5,16 +5,17 @@ import com.joyintech.framework.util.*;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.AutoAllocationRequest;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CalRequest;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CalRespone;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
 import com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,12 @@ public class IbuQuoteBondCalService extends BaseService {
 
     @Autowired
     private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
+
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
+
+    @Autowired
+    private FinProductMapper finProductMapper;
     /**
      * 数据联动计算
      * @param calRequest
@@ -68,6 +75,14 @@ public class IbuQuoteBondCalService extends BaseService {
                     continue;
                 }
             }
+        }
+        //计算偏离度
+        if(StringUtil.isNotEmpty(calRequest.getFinprodId())&&null!=calRequest.getPrice()){
+            Map<String,Object> calParam = new HashMap<>();
+            calParam.put("finprodId",calRequest.getFinprodId());
+            calParam.put("finprodMarketId",finProductMapper.selectByPrimaryKey(calRequest.getFinprodId()).getFinprodMarketId());
+            calParam.put("unitCprice",calRequest.getPrice());
+            calRespone.setDeviationDegree(calcDeviationDegree(calParam));
         }
         return calRespone;
         /*return restTemplate.postForObject(
@@ -293,6 +308,49 @@ public class IbuQuoteBondCalService extends BaseService {
             return dateCalService.calculationTradingDay(tradeDate, days, holiday, "1");
         }
         return null;
+    }
+
+    /**
+     * 计算费用（交易端 废弃）
+     * @param entity
+     * @return
+     */
+    public List<TrdTradeFeeDetail> calcAmt(CfetsBondDealQuoteCommonDto entity){
+        /*TrdBondInvestTradeDto dto = new TrdBondInvestTradeDto();
+        dto.setPrinAmt(entity.getShareAmt());
+        dto.setIntegrateTradeAmt(entity.getLendinEntNum());
+        dto.setTradeAmt(entity.getFpriceAmt());
+        dto.setTradeMarket(entity.getTradeMarket());
+        dto.setYield(entity.getMatureYield());
+        dto.setExerYield(entity.getExerYield());
+        dto.setFinprodId(entity.getFinprodId());
+        dto.setPs(entity.getPs());
+        dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+        dto.setSettleDate(entity.getSettleDate());
+        dto.setUnitInt(entity.getUnitInt());
+        dto.setUnitCprice(entity.getPrice());
+        dto.setUnitFprice(entity.getUnitFprice());
+        if(StringUtil.equals(entity.getCalculateField(),"01")){
+            dto.setCalculateField("unitCprice");
+        }
+        if(StringUtil.equals(entity.getCalculateField(),"02")){
+            dto.setCalculateField("yield");
+        }
+        if(StringUtil.equals(entity.getCalculateField(),"03")){
+            dto.setCalculateField("exerYield");
+        }
+        trdBondInvestTrade002Service.calcAmt(dto);*/
+        return null;
+    }
+
+
+    /**
+     * 计算偏离度
+     * @param param
+     * @return
+     */
+    public String calcDeviationDegree(Map<String,Object> param){
+        return  trdBondInvestTrade002Service.calcDeviationDegree(param);
     }
 }
 

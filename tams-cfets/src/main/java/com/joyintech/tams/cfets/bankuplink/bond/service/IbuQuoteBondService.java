@@ -32,6 +32,8 @@ import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +48,7 @@ import java.util.stream.Collectors;
 @Service
 public class IbuQuoteBondService extends BaseService {
 
+    private static final Logger logger = LoggerFactory.getLogger(IbuQuoteBondService.class);
     @Autowired
     private IPlatformDate iPlatformDate;
 
@@ -92,6 +95,7 @@ public class IbuQuoteBondService extends BaseService {
     private MstWorkflowCommonService mstWorkflowCommonService;
     @Autowired
     private RegFinProductDealTotalMapper regFinProductDealTotalMapper;
+
     /**
      * 风险试算check
      * @param entity
@@ -265,6 +269,32 @@ public class IbuQuoteBondService extends BaseService {
                 ptlAllocatios.add(ptlAllocationDto);
             }
             cfetsBondDealQuoteCommonDto.setPtlAllocatios(ptlAllocatios);
+            //计算费用
+            try{
+                CalRequest calRequest = new CalRequest();
+                calRequest.setFpriceAmt(cfetsBondDealQuoteCommonDto.getFpriceAmt());
+                calRequest.setSettleDate(cfetsBondDealQuoteCommonDto.getSettleDate());
+                calRequest.setPs(cfetsBondDealQuoteCommonDto.getPs());
+                calRequest.setFpriceAmt(cfetsBondDealQuoteCommonDto.getFpriceAmt());
+                calRequest.setSecManageAcctId(cfetsBondDealQuoteCommonDto.getSecManageAcctId());
+                List<TrdTradeFeeDetail> trdTradeFeeDetails = ibuQuoteBondCalService.calFee(calRequest);
+                if(CollectionUtils.isNotEmpty(trdTradeFeeDetails)){
+                    trdTradeFeeDetails.forEach(item ->{
+                        if(StringUtil.equals(item.getFeeType(),BussinessDictCodeList.费用类型_交易手续费.getValue())){
+                            cfetsBondDealQuoteCommonDto.setDealFeeAmt(item.getFeeAmt());
+                            return;
+                        }
+                        if(StringUtil.equals(item.getFeeType(),BussinessDictCodeList.费用类型_结算手续费.getValue())){
+                            cfetsBondDealQuoteCommonDto.setSettFeeAmt(item.getFeeAmt());
+                            return;
+                        }
+                    });
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                logger.error("计算费用异常:"+e.getMessage());
+            }
         }
         return cfetsBondDealQuoteCommonDto;
     }

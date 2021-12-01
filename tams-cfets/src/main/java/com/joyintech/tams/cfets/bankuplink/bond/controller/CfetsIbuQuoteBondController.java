@@ -557,4 +557,12 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			});
 		}
 	}
+
+	@ApiOperation(value = "计算偏离度", notes = "计算偏离度(参数资产代码finprodId和净价unitCprice)")
+	@PostMapping("/calcDeviationDegree")
+	@ResponseBody
+	public Message<String> calcDeviationDegree(@RequestBody Map<String,Object> param){
+		String deviationDegree =  ibuQuoteBondCalService.calcDeviationDegree(param);
+		return new Message<String>().success().setData(deviationDegree);
+	}
 }
