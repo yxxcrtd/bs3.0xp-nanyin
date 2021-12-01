@@ -213,7 +213,7 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
     /**
      * 指令下达时间
      */
-    private Date transmitTime;
+    private String transmitTime;
 
     private String tradeMarketStr;
 
@@ -1020,11 +1020,11 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
         this.unitFprice = unitFprice;
     }
 
-    public Date getTransmitTime() {
+    public String getTransmitTime() {
         return transmitTime;
     }
 
-    public void setTransmitTime(Date transmitTime) {
+    public void setTransmitTime(String transmitTime) {
         this.transmitTime = transmitTime;
     }
 

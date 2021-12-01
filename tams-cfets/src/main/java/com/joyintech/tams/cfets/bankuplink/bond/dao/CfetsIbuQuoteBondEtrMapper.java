@@ -3,6 +3,7 @@ package com.joyintech.tams.cfets.bankuplink.bond.dao;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
 import com.joyintech.tams.common.base.entity.EtrDistributeInterfTmp;
 import com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -30,4 +31,6 @@ public interface CfetsIbuQuoteBondEtrMapper {
 
 
     int countWflEtr(Map<String, Object> param);
+
+    FinExercisePlan getFinExercisePlan(Map<String, Object> param);
 }
