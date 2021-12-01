@@ -259,6 +259,7 @@ public class IbuQuoteBondService extends BaseService {
                 PtlAllocationDto ptlAllocationDto = new PtlAllocationDto();
                 BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto,entrustDto);
                 ptlAllocationDto.setAvaNum(ArithmeticUtil.multiply(entrustDto.getEntrustAvaNum(),new BigDecimal("10000")));
+                //券面总额应默认等于剩余指令额度
                 ptlAllocationDto.setShareAmt(ArithmeticUtil.multiply(entrustDto.getAvaNum(),new BigDecimal("10000")));
                 ptlAllocatios.add(ptlAllocationDto);
             }
