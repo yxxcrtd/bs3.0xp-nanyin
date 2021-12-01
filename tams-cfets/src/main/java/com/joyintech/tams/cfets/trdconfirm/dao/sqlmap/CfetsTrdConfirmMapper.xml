@@ -892,6 +892,7 @@
         select * from (select aaa.*
         from (select I.Execid  as execid,
         I.Businesstype as businesstype,
+        fp.finprod_id as finprodId,
         decode(I.BUSINESSTYPE,'BOND',ts.SECID,'REPO',tr.secid) as finprodMarketId,
         decode(I.BUSINESSTYPE,'BOND',fp.finprod_abbr,'REPO',null) as finprodAbbr,
         nvl(ts.ps,tr.ps) as ps,
@@ -1079,6 +1080,7 @@
         m.exe_id as execid,
         decode(reg.finprod_type2,'F01','BOND','REPO') as finprodType2,
         decode(reg.finprod_type2,'F01','债券','质押式回购') as finprodType2Name,
+        fp.finprod_id as finprodId,
         decode(reg.finprod_type2,'F01',fp.finprod_market_id,reg.term_type) as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
@@ -1207,6 +1209,7 @@
         m.exe_id as execid,
         ct.BUSINESSTYPE as finprodType2,
         decode(ct.BUSINESSTYPE,'BOND','债券','REPO','质押式回购') as finprodType2Name,
+        fp.finprod_id as finprodId,
         decode(ct.BUSINESSTYPE,'BOND',fp.finprod_market_id,'REPO',ic.term_type) as finprodMarketId,
         decode(ct.BUSINESSTYPE,'BOND',fp.finprod_abbr,null) as finprodAbbr,
         nvl(ib.ps,ic.repo_ps) as ps,

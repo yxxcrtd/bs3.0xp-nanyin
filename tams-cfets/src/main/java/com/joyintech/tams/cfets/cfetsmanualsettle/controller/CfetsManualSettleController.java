@@ -6,6 +6,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
 import com.joyintech.tams.cfets.cfetsmanualsettle.service.CfetsManualSettleService;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -47,17 +48,8 @@ public class CfetsManualSettleController extends BaseController {
     public Message<AjaxResult> doManualSettleCheck(@RequestBody CfetsManualSettleRequest cfetsRequest, BindingResult br)
             throws Exception {
         //画面Check
-//        if (StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())) {
         AjaxResult ajaxResult = cfetsManualSettleService.checkManualSettleSave(cfetsRequest, br);
         return new Message<AjaxResult>().success().setData(ajaxResult);
-//        }else{
-//            String returnMsg = cfetsManualSettleService.checkManualSettleSave(cfetsRequest, br);
-//            if (StringUtil.isNotBlank(returnMsg)) {
-//                return new Message<AjaxResult>().fail().setMessage(returnMsg);
-//            }else{
-//                return new Message<AjaxResult>().success().setMessage(returnMsg);
-//            }
-//        }
     }
     /**
      * 手动交收
@@ -81,48 +73,12 @@ public class CfetsManualSettleController extends BaseController {
         processParameter.setWorkFlowParameter(params);
         try{
             String msg = cfetsManualSettleService.start(processParameter,cfetsRequest);
-//        String msg = cfetsManualSettleService.start(processParameter,
-//                cfetsRequest.getSelectedItem().toArray(new CfetsManualSettleRequest[]{}));
             return new Message<AjaxResult>().success().setMessage("处理完成");
         }catch (Exception e) {
             logger.error("交收失败",e);
-            return new Message<AjaxResult>().fail().setMessage("交收失败");
-            //return PositionUtil.ajaxErrorReturn(e);
+            //return new Message<AjaxResult>().fail().setMessage("交收失败");
+            return PositionUtil.ajaxErrorReturn(e);
         }
     }
-//    /**
-//     * 手动交收失败
-//     * 前台传入整条数据
-//     * @param cfetsRequest br
-//     * @return Message<AjaxResult>
-//     * @author sjj
-//     */
-//    @ResponseBody
-//    @ApiOperation(value = "交收失败", notes = "交收失败")
-//    @PostMapping("doManualSettleFaile")
-//    public Message<AjaxResult> doManualSettleFaile(@RequestBody CfetsManualSettleRequest cfetsRequest, BindingResult br)
-//            throws Exception {
-//        //画面Check
-//        String returnMsg= cfetsManualSettleService.checkManualSettleFaile(cfetsRequest, br);
-//        if (StringUtil.isNotBlank(returnMsg)) {
-//            return new Message<AjaxResult>().fail().setMessage(returnMsg);
-//        }
-//        //交收失败
-//        ProcessParameter<CfetsManualSettleRequest> processParameter = new ProcessParameter<CfetsManualSettleRequest>();
-//        WorkFlowParameter<CfetsManualSettleRequest> params = new WorkFlowParameter<CfetsManualSettleRequest>();
-//        params.setPageId("CfetsManualSettle");
-//        params.setElementId(cfetsRequest.getElementId());
-//        params.setBusinessCode(IDGenerator.generate());
-//        params.setBusinessType(DictCodeListExt3.共通业务类型_手工交收.getValue());
-//        processParameter.setWorkFlowParameter(params);
-//        try{
-//            String msg = cfetsManualSettleService.start(processParameter,cfetsRequest);
-//            return new Message<AjaxResult>().success().setMessage("处理完成");
-//        }catch (Exception e) {
-//            logger.error("交收失败",e);
-//            return new Message<AjaxResult>().fail().setMessage("交收失败");
-//            //return PositionUtil.ajaxErrorReturn(e);
-//        }
-//    }
 
 }
