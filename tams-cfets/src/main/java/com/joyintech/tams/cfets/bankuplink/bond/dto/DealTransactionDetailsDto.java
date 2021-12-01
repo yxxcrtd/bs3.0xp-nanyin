@@ -72,11 +72,11 @@ public class DealTransactionDetailsDto {
     @ApiModelProperty(name="exerYield",value="行权收益率（%）")
     private BigDecimal exerYield;
 
-    @ApiModelProperty(name="settleSpreed",value="清算速度")
-    private Long settleSpreed;
+    @ApiModelProperty(name="settleSpeed",value="清算速度")
+    private Long settleSpeed;
 
     @ApiModelProperty(name="settleSpreedStr",value="清算速度")
-    private String settleSpreedStr;
+    private String settleSpeedStr;
 
     @ApiModelProperty(name="ouPartyId",value="本方")
     private String ouPartyId;
@@ -99,7 +99,7 @@ public class DealTransactionDetailsDto {
     @ApiModelProperty(name="cpPartyName",value="对手方名称")
     private String cpPartyName;
 
-    @ApiModelProperty(name="ouTraderName",value="对手方交易员名称")
+    @ApiModelProperty(name="cpTraderName",value="对手方交易员名称")
     private String cpTraderName;
 
     @ApiModelProperty(name="shareAmtHun",value="回复量（万）")
@@ -224,12 +224,12 @@ public class DealTransactionDetailsDto {
         this.exerYield = exerYield;
     }
 
-    public Long getSettleSpreed() {
-        return settleSpreed;
+    public Long getSettleSpeed() {
+        return settleSpeed;
     }
 
-    public void setSettleSpreed(Long settleSpreed) {
-        this.settleSpreed = settleSpreed;
+    public void setSettleSpeed(Long settleSpeed) {
+        this.settleSpeed = settleSpeed;
     }
 
     public String getOuPartyId() {
@@ -380,21 +380,21 @@ public class DealTransactionDetailsDto {
         this.sendStatusStr = sendStatusStr;
     }
 
-    public String getSettleSpreedStr() {
-        if (this.getSettleSpreed() != null && this.getSettleSpreed() == 0L) {
+    public String getSettleSpeedStr() {
+        if (this.getSettleSpeed()!= null && this.getSettleSpeed() == 0L) {
             return BussinessDictCodeList.清算速度_T加0.getCodeName();
         }
-        else if (this.getSettleSpreed() != null && this.getSettleSpreed() == 1L) {
+        else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 1L) {
             return BussinessDictCodeList.清算速度_T加1.getCodeName();
         }
-        else if (this.getSettleSpreed() != null && this.getSettleSpreed() == 2L) {
+        else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 2L) {
             return BussinessDictCodeList.清算速度_T加2.getCodeName();
         }
         return null;
     }
 
-    public void setSettleSpreedStr(String settleSpreedStr) {
-        this.settleSpreedStr = settleSpreedStr;
+    public void setSettleSpeedStr(String settleSpeedStr) {
+        this.settleSpeedStr = settleSpeedStr;
     }
 
     public String getQuoteTypeStr() {
