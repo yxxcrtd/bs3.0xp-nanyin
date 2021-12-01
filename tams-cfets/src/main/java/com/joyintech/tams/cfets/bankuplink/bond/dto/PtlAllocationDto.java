@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -63,6 +65,15 @@ public class PtlAllocationDto {
 
     @ApiModelProperty(name="secManageAcctId",value="证券账户")
     private String secManageAcctId;
+
+    @ApiModelProperty(required = false,name="priceModelStr",value="价格模式名称")
+    private String priceModelStr;
+
+    @ApiModelProperty(required = false,name="businessModelStr",value="业务模式名称")
+    private String businessModelStr;
+
+    @ApiModelProperty(required = false,name="secAcctName",value="证券账户")
+    private String secAcctName;
 
     @ApiModelProperty(name="price",value="净价(元)")
     private BigDecimal price;
@@ -242,6 +253,30 @@ public class PtlAllocationDto {
 
     public void setAvaNumOld(BigDecimal avaNumOld) {
         this.avaNumOld = avaNumOld;
+    }
+
+    public String getPriceModelStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.价格模式, getPriceModel());
+    }
+
+    public void setPriceModelStr(String priceModelStr) {
+        this.priceModelStr = priceModelStr;
+    }
+
+    public String getBusinessModelStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, getBusinessModel());
+    }
+
+    public void setBusinessModelStr(String businessModelStr) {
+        this.businessModelStr = businessModelStr;
+    }
+
+    public String getSecAcctName() {
+        return secAcctName;
+    }
+
+    public void setSecAcctName(String secAcctName) {
+        this.secAcctName = secAcctName;
     }
 }
 

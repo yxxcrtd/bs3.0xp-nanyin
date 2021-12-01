@@ -449,6 +449,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             RegFinProductDealTotal regFinProductDealTotal = new RegFinProductDealTotal();
             BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotal,entity);
             regFinProductDealTotal.setSettleSpeed(settleSpreed);
+            regFinProductDealTotal.setQuoteType(entity.getQuoteStyle());
             regFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             regFinProductDealTotal.setBranch(0L);
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
