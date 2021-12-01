@@ -20,6 +20,8 @@ public class CfetsSearchInfoRequest {
     private String mySide;
     @ApiModelProperty(name="counterId",value="对手方",example="T03")
     private String counterId;
+    @ApiModelProperty(name="dealType",value="交易类型",example="04")
+    private String dealType;
 
 
     public String getSearch() {
@@ -60,5 +62,13 @@ public class CfetsSearchInfoRequest {
 
     public void setCounterId(String counterId) {
         this.counterId = counterId;
+    }
+
+    public String getDealType() {
+        return dealType;
+    }
+
+    public void setDealType(String dealType) {
+        this.dealType = dealType;
     }
 }
