@@ -459,7 +459,8 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             dto.setAssetType11(jsonObject.get("assetType11").toString());
             long lt = Long.parseLong(jsonObject.get("biddate").toString());
             Date date = new Date(lt);
-            dto.setEntrustDate(date);
+//            dto.setEntrustDate(date);
+            dto.setEntrustDate(DateUtil.parse(rowData.get(12).toString().trim()));
             dto.setFinprodId(jsonObject.get("finprodId").toString());
             //缴款方式
             String etrPayType = rowData.get(5).toString().trim();
@@ -589,6 +590,12 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
                 String message = etrCommonService.checkIsBlank(rowData.get(1).toString(), "EtrBondFirstLBidding002.vdate", lineNo);
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
                 message = etrCommonService.checkIsDate(rowData.get(1).toString(), "EtrBondFirstLBidding002.vdate", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+
+                //投标日期调用共通check非空和是否正确
+                message = etrCommonService.checkIsBlank(rowData.get(12).toString(), "EtrBondFirstLBidding002.bidDate", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+                message = etrCommonService.checkIsDate(rowData.get(12).toString(), "EtrBondFirstLBidding002.bidDate", lineNo);
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
 
                 //委托结束日
