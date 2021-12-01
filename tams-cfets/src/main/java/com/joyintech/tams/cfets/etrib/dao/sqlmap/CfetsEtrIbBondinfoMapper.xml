@@ -702,7 +702,9 @@ from
         MBVI.INTEREST_DURATION interestDuration,
         MBVI.SDURATION sDuration,
         MBVI.M_CONVEXITY mConvexity,
-        MBVI.BPVALUE bpvalue
+        MBVI.BPVALUE bpvalue,
+        CASE WHEN T2.TYPE_10 = '13' THEN round(((TO_NUMBER(t1.MDATE,t1.VDATE))/12),2)||'天'
+            else  round(((months_between(t1.MDATE,t1.VDATE))),2)||'年' end as deadline
 
         FROM FIN_PRODUCT t1
         LEFT JOIN
