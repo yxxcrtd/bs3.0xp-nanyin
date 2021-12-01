@@ -78,6 +78,16 @@ public interface EquityBusiDetails001Mapper {
      * @since 1.0
      */
     List<EquiteBusiDetails001Dto> selectAllChbEqudetData(@Param("keyList") List<EquiteBusiDetails001Dto> keyList);
+    
+    /**
+     * 通过TMP表批量获取维护表中数据
+     * --查询导入文件中的数据在维护表中已经存在的数据
+     * @param keyList 主键list
+     * @return 数据库中已经存在的数据
+     * @see
+     * @since 1.0
+     */
+    List<EquiteBusiDetails001Dto> selectTMPExistInInfo(@Param("keyList") List<EquiteBusiDetails001Dto> keyList);
 
     /**
      * 通过主键批量获取投资者明细信息登记表中数据
