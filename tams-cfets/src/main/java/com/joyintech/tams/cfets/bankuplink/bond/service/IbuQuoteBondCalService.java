@@ -29,6 +29,11 @@ import java.util.*;
 @Service
 public class IbuQuoteBondCalService extends BaseService {
 
+    /**
+     * 递增维度
+     */
+    private static  BigDecimal dimension = new BigDecimal("0.01");
+
     @Autowired(required = false)
     private DateCalService dateCalService;
 
@@ -144,7 +149,7 @@ public class IbuQuoteBondCalService extends BaseService {
         }
         handleTailDifference(ptlAllocations,tailDifference);
         calOtherForPtlAllocation(ptlAllocations,request.getPs(),request.getPrice(),request.getUnitFprice());
-        calFee(ptlAllocations,shareAmt,request.getDealFeeAmt(),request.getSettFeeamt(),request.getIntAmt());
+        calFee(ptlAllocations,shareAmt,request.getDealFeeAmt(),request.getSettFeeAmt(),request.getIntAmt());
         return ptlAllocations;
     }
 
@@ -167,18 +172,18 @@ public class IbuQuoteBondCalService extends BaseService {
         }
         handleTailDifference(ptlAllocations,tailDifference);
         calOtherForPtlAllocation(ptlAllocations,request.getPs(),request.getPrice(),request.getUnitFprice());
-        calFee(ptlAllocations,shareAmt,request.getDealFeeAmt(),request.getSettFeeamt(),request.getIntAmt());
+        calFee(ptlAllocations,shareAmt,request.getDealFeeAmt(),request.getSettFeeAmt(),request.getIntAmt());
         return ptlAllocations;
     }
 
     /**
-     *  尾差处理
+     *  尾差处理(券面)
      * @param ptlAllocations
      * @param tailDifference
      */
     public void handleTailDifference(List<PtlAllocationDto>  ptlAllocations,BigDecimal tailDifference){
         //递增维度
-        BigDecimal addDimension = new BigDecimal("0.01");
+        BigDecimal addDimension = dimension;
         int size = ptlAllocations.size();
         //委托维度 已经完全分配的集合
         Set<String> set = new HashSet<>();
@@ -202,31 +207,60 @@ public class IbuQuoteBondCalService extends BaseService {
     }
 
     /**
+     *  尾差处理(费用)
+     * @param ptlAllocations
+     * @param tailDifference
+     */
+    public void handleFeeTailDifference(List<PtlAllocationDto>  ptlAllocations,BigDecimal tailDifference,String feeType){
+        //递增维度
+        BigDecimal addDimension = dimension;
+        int size = ptlAllocations.size();
+        //委托维度 已经完全分配的集合
+        Set<String> set = new HashSet<>();
+        while(tailDifference.compareTo(BigDecimal.ZERO)>0&&size>0){
+            if(tailDifference.compareTo(new BigDecimal("1"))>=0){
+                addDimension = ArithmeticUtil.divide(tailDifference,size,4);
+            }
+            for (PtlAllocationDto item : ptlAllocations) {
+                if(StringUtil.equals(feeType,BussinessDictCodeList.费用类型_交易手续费.getValue())){
+                    item.setDealFeeAmt(ArithmeticUtil.doAdd(item.getDealFeeAmt(),addDimension));
+                }
+                if(StringUtil.equals(feeType,BussinessDictCodeList.费用类型_结算手续费.getValue())){
+                    item.setSettFeeAmt(ArithmeticUtil.doAdd(item.getSettFeeAmt(),addDimension));
+                }
+                tailDifference = ArithmeticUtil.subtract(tailDifference,addDimension);
+            }
+        }
+    }
+
+    /**
      *  计算费用
      * @param ptlAllocations
      * @param shareAmt 券面总额
      * @param dealFeeAmt 交易费
-     * @param settFeeamt  结算费
+     * @param settFeeAmt  结算费
      * @param intAmt  应计利息总额
      */
-    public void calFee(List<PtlAllocationDto> ptlAllocations,BigDecimal shareAmt,BigDecimal dealFeeAmt,BigDecimal settFeeamt,BigDecimal intAmt){
-        BigDecimal tailDifferenceIntAmt = intAmt;BigDecimal tailDifferenceDealFeeAmt = dealFeeAmt;BigDecimal tailDifferenceSettFeeamt = settFeeamt;
+    public void calFee(List<PtlAllocationDto> ptlAllocations,BigDecimal shareAmt,BigDecimal dealFeeAmt,BigDecimal settFeeAmt,BigDecimal intAmt){
+        BigDecimal tailDifferenceIntAmt = intAmt;BigDecimal tailDifferenceDealFeeAmt = dealFeeAmt;BigDecimal tailDifferenceSettFeeamt = settFeeAmt;
         for (PtlAllocationDto item : ptlAllocations) {
             item.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),intAmt),shareAmt,4));
             item.setDealFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),dealFeeAmt),shareAmt,4));
-            item.setSettFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),settFeeamt),shareAmt,4));
+            item.setSettFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),settFeeAmt),shareAmt,4));
             tailDifferenceIntAmt = ArithmeticUtil.subtract(tailDifferenceIntAmt,item.getIntAmt());
             tailDifferenceDealFeeAmt = ArithmeticUtil.subtract(tailDifferenceDealFeeAmt,item.getDealFeeAmt());
             tailDifferenceSettFeeamt = ArithmeticUtil.subtract(tailDifferenceSettFeeamt,item.getSettFeeAmt());
         }
+        handleFeeTailDifference(ptlAllocations,tailDifferenceDealFeeAmt,BussinessDictCodeList.费用类型_交易手续费.getValue());
+        handleFeeTailDifference(ptlAllocations,tailDifferenceSettFeeamt,BussinessDictCodeList.费用类型_结算手续费.getValue());
         //尾差放在分在券面最大的委托上
-        ptlAllocations.sort((p1,p2) -> p1.getShareAmt().compareTo(p2.getShareAmt()));
+        /*ptlAllocations.sort((p1,p2) -> p1.getShareAmt().compareTo(p2.getShareAmt()));
         for (PtlAllocationDto ptlAllocation : ptlAllocations) {
             ptlAllocation.setIntAmt(ArithmeticUtil.doAdd(ptlAllocation.getIntAmt(),tailDifferenceIntAmt));
             ptlAllocation.setDealFeeAmt(ArithmeticUtil.doAdd(ptlAllocation.getDealFeeAmt(),tailDifferenceDealFeeAmt));
             ptlAllocation.setSettFeeAmt(ArithmeticUtil.doAdd(ptlAllocation.getSettFeeAmt(),tailDifferenceSettFeeamt));
             break;
-        }
+        }*/
     }
     /**
      * 计算组合列表其他值(除费用)
