@@ -196,6 +196,7 @@ public class IbuQuoteBondService extends BaseService {
         if (!StringUtil.isEmptyList(entrustDtos)) {
             CfetsBondDealEntrustOrderDto cfetsBondDealEntrustOrderDto = entrustDtos.get(0);
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto, cfetsBondDealEntrustOrderDto);
+            cfetsBondDealQuoteCommonDto.setRemark(StringUtil.EMPTY);
             //清算速度处理
             if(StringUtil.equals(cfetsBondDealEntrustOrderDto.getSettleSpreed(),"0")){
                 cfetsBondDealQuoteCommonDto.setSettleSpreedCode(BussinessDictCodeList.清算速度_T加0.getValue());

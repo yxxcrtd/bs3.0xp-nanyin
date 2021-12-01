@@ -357,13 +357,14 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ApiOperation(value = "查询交易成交信息", notes = "查询交易成交信息")
 	@PostMapping("/listDealTransactionDetails/{entrustId}")
 	@ResponseBody
-	public Message<List<DealTransactionDetailsDto>> listDealTransactionDetails(@PathVariable("entrustId") String entrustId){
+	public Message<Map<String,Object>> listDealTransactionDetails(@PathVariable("entrustId") String entrustId){
 		try {
-			List<DealTransactionDetailsDto> result = ibuQuoteBondService.listDealTransactionDetails(entrustId);
-			return new Message<List<DealTransactionDetailsDto>>().success().setData(result);
+			Map<String,Object> result = new HashMap<>();
+			result.put("root",ibuQuoteBondService.listDealTransactionDetails(entrustId));
+			return new Message<Map<String,Object>>().success().setData(result);
 		}catch (Exception e) {
 			logger.error("查询交易成交信息异常",e);
-			return new Message<List<DealTransactionDetailsDto>>().fail().setMessage("查询交易成交信息异常");
+			return new Message<Map<String,Object>>().fail().setMessage("查询交易成交信息异常");
 		}
 	}
 
