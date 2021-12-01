@@ -342,6 +342,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                 status.setCheckResult(DictCodeListExt3.对账状态结果_手工完成.getValue());
                 settleTransDataStatusMapper.updateByPrimaryKeySelective(status);
             }else if(DictCodeListExt3.对账状态结果_待处理.getValue().equals(dto.getCheckResult())){
+                settleTransDataStatusMapper.deleteByPrimaryKey(settleTransData.getTradeId());
                 // 插入成交明细数据状态表
                 SettleTransDataStatus status = new SettleTransDataStatus();
                 status.setTradeId(settleTransData.getTradeId());
