@@ -215,6 +215,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                         break;
                     }
                 }
+                if(ptlAllocatio.getAvaNum().compareTo(ptlAllocatio.getShareAmt())<0){
+                    errorList.add(new ValidMessage("登记指令剩余额度不能小于券面总额！"));
+                }
                 shareAmtTotal = ArithmeticUtil.doAdd(shareAmtTotal,ptlAllocatio.getShareAmt());
                 dealFeeAmtTotal = ArithmeticUtil.doAdd(dealFeeAmtTotal,ptlAllocatio.getDealFeeAmt());
                 settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal,ptlAllocatio.getSettFeeAmt());
@@ -301,24 +304,6 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(CollectionUtils.isNotEmpty(errorList)){
                 ajaxResult.setErrorList(errorList);
                 return ajaxResult;
-            }
-        }
-        return ajaxResult;
-    }
-
-    /**
-     * 检查可用额度
-     * @param entity
-     * @return
-     */
-    public AjaxResult checkEntrustAvaNum(CfetsBondDealQuoteCommonDto entity) {
-        AjaxResult ajaxResult = new AjaxResult();
-        List<ValidMessage> errorList = new ArrayList<>();
-        for (PtlAllocationDto ptlAllocationDto : entity.getPtlAllocatios()) {
-            if(ptlAllocationDto.getAvaNum().compareTo(ptlAllocationDto.getShareAmt())<0){
-                errorList.add(new ValidMessage("登记指令剩余额度不能小于券面总额！"));
-                ajaxResult.setErrorList(errorList);
-                break;
             }
         }
         return ajaxResult;
@@ -522,10 +507,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                         regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getSellAbleNum());
                     }
                     if(null!=ptlAllocatio.getDealFeeAmt()){
-                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
+                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(regFinProductDeal.getTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
                     }
                     if(null!=ptlAllocatio.getSettFeeAmt()){
-                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getSettFeeAmt()));
+                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(regFinProductDeal.getTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getSettFeeAmt()));
                     }
                     regFinProductDeals.add(regFinProductDeal);
                     regFinProductDealAdds.add(regFinProductDealAdd);
