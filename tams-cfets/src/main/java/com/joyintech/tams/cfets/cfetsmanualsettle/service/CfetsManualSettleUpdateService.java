@@ -154,7 +154,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
             //金融产品代码=画面.资产简称
             trdBankManualSettleFlow.setFinprodAbbr(cfetsManualSettleUpdateRequest.getSelectedItem().getFinprodAbbr());
             //操作类型=交收
-            trdBankManualSettleFlow.setOperType(DictCodeListExt3.交收操作类型_交收.getValue());
+            trdBankManualSettleFlow.setOperType(DictCodeListExt3.交收操作类型_交收修改.getValue());
 
             List<TrdBankManualSetDetail> listTrdBnakSetDetails =new ArrayList<TrdBankManualSetDetail>();
 
