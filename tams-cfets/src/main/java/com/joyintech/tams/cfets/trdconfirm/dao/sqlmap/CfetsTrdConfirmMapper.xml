@@ -398,7 +398,8 @@
         left join (
         select I.*
         from ibu_quote_bond_det I
-        INNER JOIN (SELECT quote_id ,MAX(update_time) UPDATETIME FROM  ibu_quote_bond_det GROUP BY quote_id)	II ON  I.quote_id = II.quote_id AND II.UPDATETIME = I.Update_Time
+        INNER JOIN (SELECT quote_id ,MAX(update_time) UPDATETIME
+        FROM  ibu_quote_bond_det GROUP BY quote_id)	II ON  I.quote_id = II.quote_id AND II.UPDATETIME = I.Update_Time
         )ibd
         on  ib.quote_id=ibd.quote_id
         left join fin_product fp

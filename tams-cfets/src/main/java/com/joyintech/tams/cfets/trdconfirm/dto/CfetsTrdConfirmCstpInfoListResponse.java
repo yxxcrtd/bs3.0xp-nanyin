@@ -124,8 +124,8 @@ public class CfetsTrdConfirmCstpInfoListResponse {
     private Date   vsettleDate;
     @ApiModelProperty(name="mSettleDate",value="到期结算日",example="字符串1")
     private Date   msettleDate;
-    @ApiModelProperty(name="mTradeAmt",value="到期结算金额",example="字符串1")
-    private BigDecimal   miradeAmt;
+    @ApiModelProperty(name="mtradeAmt",value="到期结算金额",example="字符串1")
+    private BigDecimal   mtradeAmt;
     @ApiModelProperty(name="cstpTradeId",value="下行交易编号",example="字符串1")
     private String cstpTradeId;
     @ApiModelProperty(name="deliveryType",value="结算方式",example="字符串1")
@@ -345,14 +345,6 @@ public class CfetsTrdConfirmCstpInfoListResponse {
         this.msettleDate = msettleDate;
     }
 
-    public BigDecimal getMiradeAmt() {
-        return miradeAmt;
-    }
-
-    public void setMiradeAmt(BigDecimal miradeAmt) {
-        this.miradeAmt = miradeAmt;
-    }
-
     public String getCstpTradeId() {
         return cstpTradeId;
     }
@@ -439,5 +431,13 @@ public class CfetsTrdConfirmCstpInfoListResponse {
 
     public void setClearTypeName(String clearTypeName) {
         this.clearTypeName = clearTypeName;
+    }
+
+    public BigDecimal getMtradeAmt() {
+        return mtradeAmt;
+    }
+
+    public void setMtradeAmt(BigDecimal mtradeAmt) {
+        this.mtradeAmt = mtradeAmt;
     }
 }
