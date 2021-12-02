@@ -92,6 +92,9 @@ public class CfetsEtrInfoQueryListResponse extends EtrEntrust {
     @ApiModelProperty(name="transmitTime",value="下达时间",example="HH:MM:SS")
     private String transmitTime;
 
+    @ApiModelProperty(name="invManagerName",value="投资经理",example="A1")
+    private String invManagerName;
+
     /**
      * 获取 otherEntrustStatus
      * @return otherEntrustStatus.
@@ -309,5 +312,13 @@ public class CfetsEtrInfoQueryListResponse extends EtrEntrust {
 
     public void setTransmitTime(String transmitTime) {
         this.transmitTime = transmitTime;
+    }
+
+    public String getInvManagerName() {
+        return invManagerName;
+    }
+
+    public void setInvManagerName(String invManagerName) {
+        this.invManagerName = invManagerName;
     }
 }
