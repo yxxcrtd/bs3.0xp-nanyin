@@ -544,14 +544,15 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			).collect(Collectors.toList());
 			for(int i=0;i<collect.size();i++){
 				List<CfetsBondDayRegDto> cfetsBondDayRegDtos = collect.get(i);
-				String excelAndSheetName = "当日登记本币交易导出_"+iPlatformDate.getSysDateStr()+String.format(" %04d", i);
+				String appendString = collect.size()>1?String.format("%04d", i):StringUtil.EMPTY;
+				String excelAndSheetName = "当日登记本币交易导出_"+iPlatformDate.getSysDateStr()+appendString;
 				ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
 							return cfetsBondDayRegDtos;
 					});
 			}
 		}
 		else{
-			String excelAndSheetName = "债券对话报价本币交易导出_"+iPlatformDate.getSysDateStr();
+			String excelAndSheetName = "当日登记本币交易导出_"+iPlatformDate.getSysDateStr();
 			ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
 				return dataList;
 			});

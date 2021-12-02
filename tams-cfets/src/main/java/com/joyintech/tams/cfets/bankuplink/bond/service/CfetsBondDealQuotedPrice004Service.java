@@ -456,6 +456,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             regFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             regFinProductDealTotal.setFaceValue(entity.getShareAmt());
             regFinProductDealTotal.setShareAmt(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(100),2));
+            regFinProductDealTotal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
             regFinProductDealTotal.setBranch(0L);
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
                 tgBusiType = BussinessDictCodeList.平安业务类型_债券类资产买入.getValue();
