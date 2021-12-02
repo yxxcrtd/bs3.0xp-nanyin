@@ -357,6 +357,8 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     @Override
     public void doComplete(CfetsBondDealRegisterQuoteDto entity, OperationType operationType) {
         CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,operationType.name());
+        //删除业务流程数据
+        deleteBussFlowData(entity.getWorkflowId());
         //登录db
         insert(cfetsBondDealDbDto,operationType.name());
         //履历表
@@ -475,9 +477,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(null!=entity.getDealFeeAmt()){
                 regTradeFeeTotals.add(ibuQuoteBondService.prepareRegTradeFeeTotal(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),entity.getDealFeeAmt()));
             }
-            if(null!=entity.getSettFeeamt()){
+            if(null!=entity.getSettFeeAmt()){
                 //交易手续费
-                regTradeFeeTotals.add(ibuQuoteBondService.prepareRegTradeFeeTotal(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),entity.getSettFeeamt()));
+                regTradeFeeTotals.add(ibuQuoteBondService.prepareRegTradeFeeTotal(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),entity.getSettFeeAmt()));
             }
             //交易登记明细
             List<RegFinProductDeal> regFinProductDeals = new ArrayList<>();

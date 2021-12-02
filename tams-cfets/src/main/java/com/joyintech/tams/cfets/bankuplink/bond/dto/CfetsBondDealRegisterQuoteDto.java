@@ -56,7 +56,7 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
     /**
      * 结算服务费
      */
-    private BigDecimal  settFeeamt;
+    private BigDecimal  settFeeAmt;
 
     private BigDecimal ourFpriceAmt;
 
@@ -155,12 +155,12 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
         this.dealFeeAmt = dealFeeAmt;
     }
 
-    public BigDecimal getSettFeeamt() {
-        return settFeeamt;
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
     }
 
-    public void setSettFeeamt(BigDecimal settFeeamt) {
-        this.settFeeamt = settFeeamt;
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
     }
 
     public List<PtlAllocationDto> getPtlAllocatios() {
