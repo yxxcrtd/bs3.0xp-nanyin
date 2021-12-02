@@ -249,10 +249,18 @@ public class SvrMonthCollectInterf extends BaseService{
 				}
 				if(List.size() != 0) {
 					if (a.getBalanceAmt() != null) {
-						holderTypeCollect.get(falg).setBalanceAmt(holderTypeCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
+						if(holderTypeCollect.get(falg).getBalanceAmt() != null) {
+							holderTypeCollect.get(falg).setBalanceAmt(holderTypeCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
+						}else{
+							holderTypeCollect.get(falg).setBalanceAmt(a.getBalanceAmt());
+						}
 					}
 					if (a.getBalanceShares() != null) {
-						holderTypeCollect.get(falg).setBalanceShares(holderTypeCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
+						if(holderTypeCollect.get(falg).getBalanceShares() != null) {
+							holderTypeCollect.get(falg).setBalanceShares(holderTypeCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
+						}else{
+							holderTypeCollect.get(falg).setBalanceShares(a.getBalanceShares());
+						}
 					}
 				}
 			}
@@ -298,13 +306,13 @@ public class SvrMonthCollectInterf extends BaseService{
 						BigDecimal ValueAmountTota = holderTypeCollectMap.get(key).get(flag).getValueAmountTotal();
 						BigDecimal BalanceAmt = holderTypeCollectMap.get(key).get(flag).getBalanceAmt();
 						if(SaleAmountTotal != null) {
-							SaleAmountTotalAll.add(SaleAmountTotal);
+							SaleAmountTotalAll = SaleAmountTotalAll.add(SaleAmountTotal);
 						}
 						if(ValueAmountTota != null) {
-							ValueAmountTotalAll.add(ValueAmountTota);
+							ValueAmountTotalAll = ValueAmountTotalAll.add(ValueAmountTota);
 						}
 						if(BalanceAmt != null) {
-							BalanceAmtAll.add(BalanceAmt);
+							BalanceAmtAll = BalanceAmtAll.add(BalanceAmt);
 						}
 						if(SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1){}
 						else{
@@ -328,16 +336,20 @@ public class SvrMonthCollectInterf extends BaseService{
 					if(chbPrdPosition.get(i).getDirtyamtsum() == null){
 						chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
 					}
-					BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
-					holderTypeCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+					if(SaleAmountFlag != null && SaleAmountFlag != "") {
+						BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+						holderTypeCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+					}
 					//处理净销售金额
 					if(chbPrdPosition.get(i).getCleanamtsum() == null){
 						chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
 					}
-					BigDecimal ValueAmountTotalDiff =ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
-					holderTypeCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+					if(ValueAmountFlag != null && ValueAmountFlag != "") {
+						BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+						holderTypeCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+					}
 					//处理余额
-					if(List.size() != 0) {
+					if(BalanceAmtFlag != null && BalanceAmtFlag != "") {
 						if(chbPrdPosition.get(i).getEndamtsumOth() == null){
 							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 						}
@@ -377,10 +389,18 @@ public class SvrMonthCollectInterf extends BaseService{
 				}
 				if(List.size() != 0) {
 					if (a.getBalanceAmt() != null) {
-						areaCollect.get(falg).setBalanceAmt(areaCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
+						if(areaCollect.get(falg).getBalanceAmt() != null) {
+							areaCollect.get(falg).setBalanceAmt(areaCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
+						}else{
+							areaCollect.get(falg).setBalanceAmt(a.getBalanceAmt());
+						}
 					}
 					if (a.getBalanceShares() != null) {
+						if(areaCollect.get(falg).getBalanceShares() != null) {
 						areaCollect.get(falg).setBalanceShares(areaCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
+						}else{
+							areaCollect.get(falg).setBalanceShares(a.getBalanceShares());
+						}
 					}
 				}
 			}
@@ -426,13 +446,13 @@ public class SvrMonthCollectInterf extends BaseService{
 						BigDecimal ValueAmountTota = areaCollectMap.get(key).get(flag).getValueAmountTotal();
 						BigDecimal BalanceAmt = areaCollectMap.get(key).get(flag).getBalanceAmt();
 						if(SaleAmountTotal != null) {
-							SaleAmountTotalAll.add(SaleAmountTotal);
+							SaleAmountTotalAll = SaleAmountTotalAll.add(SaleAmountTotal);
 						}
 						if(ValueAmountTota != null) {
-							ValueAmountTotalAll.add(ValueAmountTota);
+							ValueAmountTotalAll = ValueAmountTotalAll.add(ValueAmountTota);
 						}
 						if(BalanceAmt != null) {
-							BalanceAmtAll.add(BalanceAmt);
+							BalanceAmtAll = BalanceAmtAll.add(BalanceAmt);
 						}
 						if(SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1){}
 						else{
@@ -456,16 +476,20 @@ public class SvrMonthCollectInterf extends BaseService{
 					if(chbPrdPosition.get(i).getDirtyamtsum() == null){
 						chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
 					}
-					BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
-					areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+					if(SaleAmountFlag != null && SaleAmountFlag != "") {
+						BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+						areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+					}
 					//处理净销售金额
 					if(chbPrdPosition.get(i).getCleanamtsum() == null){
 						chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
 					}
-					BigDecimal ValueAmountTotalDiff =ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
-					areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+					if(ValueAmountFlag != null && ValueAmountFlag != "") {
+						BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+						areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+					}
 					//处理余额
-					if(List.size() != 0) {
+					if(BalanceAmtFlag != null && BalanceAmtFlag != ""){
 						if(chbPrdPosition.get(i).getEndamtsumOth() == null){
 							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 						}
@@ -504,10 +528,18 @@ public class SvrMonthCollectInterf extends BaseService{
 				}
 				if(List.size() != 0) {
 					if (a.getBalanceAmt() != null) {
-						institutionCollect.get(falg).setBalanceAmt(institutionCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
+						if(institutionCollect.get(falg).getBalanceAmt() != null) {
+							institutionCollect.get(falg).setBalanceAmt(institutionCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
+						}else{
+							institutionCollect.get(falg).setBalanceAmt(a.getBalanceAmt());
+						}
 					}
 					if (a.getBalanceShares() != null) {
-						institutionCollect.get(falg).setBalanceShares(institutionCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
+						if(institutionCollect.get(falg).getBalanceShares() != null) {
+							institutionCollect.get(falg).setBalanceShares(institutionCollect.get(falg).getBalanceShares().add(a.getBalanceShares()));
+						}else{
+							institutionCollect.get(falg).setBalanceShares(a.getBalanceShares());
+						}
 					}
 				}
 			}
@@ -553,13 +585,13 @@ public class SvrMonthCollectInterf extends BaseService{
 						BigDecimal ValueAmountTota = institutionCollectMap.get(key).get(flag).getValueAmountTotal();
 						BigDecimal BalanceAmt = institutionCollectMap.get(key).get(flag).getBalanceAmt();
 						if(SaleAmountTotal != null) {
-							SaleAmountTotalAll.add(SaleAmountTotal);
+							SaleAmountTotalAll = SaleAmountTotalAll.add(SaleAmountTotal);
 						}
 						if(ValueAmountTota != null) {
-							ValueAmountTotalAll.add(ValueAmountTota);
+							ValueAmountTotalAll = ValueAmountTotalAll.add(ValueAmountTota);
 						}
 						if(BalanceAmt != null) {
-							BalanceAmtAll.add(BalanceAmt);
+							BalanceAmtAll = BalanceAmtAll.add(BalanceAmt);
 						}
 						if(SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1){}
 						else{
@@ -583,16 +615,20 @@ public class SvrMonthCollectInterf extends BaseService{
 					if(chbPrdPosition.get(i).getDirtyamtsum() == null){
 						chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
 					}
-					BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
-					institutionCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+					if(SaleAmountFlag != null && SaleAmountFlag != "") {
+						BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+						institutionCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+					}
 					//处理净销售金额
 					if(chbPrdPosition.get(i).getCleanamtsum() == null){
 						chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
 					}
-					BigDecimal ValueAmountTotalDiff =ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
-					institutionCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+					if(ValueAmountFlag != null && ValueAmountFlag != "") {
+						BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+						institutionCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+					}
 					//处理余额
-					if(List.size() != 0) {
+					if(BalanceAmtFlag != null && BalanceAmtFlag != "") {
 						if(chbPrdPosition.get(i).getEndamtsumOth() == null){
 							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 						}
