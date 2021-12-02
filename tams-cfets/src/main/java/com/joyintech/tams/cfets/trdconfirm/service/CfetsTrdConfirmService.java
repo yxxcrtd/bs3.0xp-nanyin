@@ -896,6 +896,7 @@ public class CfetsTrdConfirmService extends BaseService{
             }
         }
         bussTrdTransferOrderDto.setTradeId(entity.getTotleTradeId());
+        bussTrdTransferOrderDto.setOrderRetStatus(DictCodeList.指令处理状态_处理成功.getValue());
         bussTrdTransferOrder.add(bussTrdTransferOrderDto);
         entity.setBussTrdTransferOrder(bussTrdTransferOrderService.save(bussTrdTransferOrder));
         // =====================划款指令信息=====================
@@ -1652,9 +1653,9 @@ public class CfetsTrdConfirmService extends BaseService{
                     //判断可选要素是否一致
                     StringBuilder validateStr = new StringBuilder();
                     //TODO hxy 到期结算金额cstp没有查数据
-                    if (!StringUtil.equals(regInfo.getMiradeAmt(), cstpInfo.getMiradeAmt())) {
-                        validateStr.append("到期结算金额要素不一致（到期结算金额：CSTP成交数据为" + cstpInfo.getMiradeAmt()
-                                + ",交易执行数据为" + regInfo.getMiradeAmt() + ", 将以接口数据数据为准）,");
+                    if (!StringUtil.equals(regInfo.getMtradeAmt(), cstpInfo.getMtradeAmt())) {
+                        validateStr.append("到期结算金额要素不一致（到期结算金额：CSTP成交数据为" + cstpInfo.getMtradeAmt()
+                                + ",交易执行数据为" + regInfo.getMtradeAmt() + ", 将以接口数据数据为准）,");
                     }
                     if (!StringUtil.equals(regInfo.getCounterTrader(), cstpInfo.getCounterTrader())) {
                         validateStr.append("对手方要素不一致（对手方：CSTP成交数据为" + cstpInfo.getCounterTrader()

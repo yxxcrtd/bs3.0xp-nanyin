@@ -1086,10 +1086,9 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
         for (CfetsEtribBondInfo003Dto dto: entity.getEtrInvestBondInfoDtos()) {
             try {
                 doCompleteMethod(dto, entity.getOperateType());
-            } catch (IllegalAccessException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                throw new RuntimeException("新建指令失败", e);
             }
         }
     }

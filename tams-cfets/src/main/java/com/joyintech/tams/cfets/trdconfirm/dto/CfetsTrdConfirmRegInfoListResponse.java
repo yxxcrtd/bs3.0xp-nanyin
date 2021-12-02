@@ -229,8 +229,8 @@ public class CfetsTrdConfirmRegInfoListResponse{
     private Date   msettleDate;
     @ApiModelProperty(name="mIntAmt",value="到期利息",example="字符串1")
     private BigDecimal   mintAmt;
-    @ApiModelProperty(name="mTradeAmt",value="到期结算金额",example="字符串1")
-    private BigDecimal   miradeAmt;
+    @ApiModelProperty(name="mtradeAmt",value="到期结算金额",example="字符串1")
+    private BigDecimal   mtradeAmt;
     @ApiModelProperty(name="actRepoTerm",value="实际占款天数",example="字符串1")
     private BigDecimal   actRepoTerm;
     @ApiModelProperty(name="tgBusiType",value="投管业务类型",example="字符串1")
@@ -857,14 +857,6 @@ public class CfetsTrdConfirmRegInfoListResponse{
         this.mintAmt = mintAmt;
     }
 
-    public BigDecimal getMiradeAmt() {
-        return miradeAmt;
-    }
-
-    public void setMiradeAmt(BigDecimal miradeAmt) {
-        this.miradeAmt = miradeAmt;
-    }
-
     public String getPtradeId() {
         return ptradeId;
     }
@@ -976,5 +968,13 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setQuoteTypeName(String quoteTypeName) {
         this.quoteTypeName = quoteTypeName;
+    }
+
+    public BigDecimal getMtradeAmt() {
+        return mtradeAmt;
+    }
+
+    public void setMtradeAmt(BigDecimal mtradeAmt) {
+        this.mtradeAmt = mtradeAmt;
     }
 }

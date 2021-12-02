@@ -78,7 +78,7 @@ public class CfetsTrdConfirmCstpRepoInfoResponse {
     @ApiModelProperty(name="mIntAmt",value="回购利息（元）",example="字符串1")
     private BigDecimal   mintAmt;
 
-    @ApiModelProperty(name="mTradeAmt",value="到期结算金额（元）",example="字符串1")
+    @ApiModelProperty(name="mtradeAmt",value="到期结算金额（元）",example="字符串1")
     private BigDecimal   mtradeAmt;
 
     @ApiModelProperty(name="trdFeeAmt",value="交易手续费（元）",example="字符串1")
