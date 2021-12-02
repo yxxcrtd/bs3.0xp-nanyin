@@ -24,7 +24,7 @@ values ('COMMON_BUSINESS_TYPE', 'STL06', '手工交收', 1301, '0', 'system', ''
 --交收操作类型增加枚举值
 delete from sys_datadict_list where DICT_CODE ='DELIVERY_OP_TYPE' and ITEM_CODE = '05';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('DELIVERY_OP_TYPE', '05', '交收修改', 1, '0', 'system', '', sysdate, 'system', sysdate, '');
+values ('DELIVERY_OP_TYPE', '05', '交收数据修改', 1, '0', 'system', '', sysdate, 'system', sysdate, '');
 
 --清算状态
 delete from sys_datadict where dict_code='SETTLE_STATUS';
