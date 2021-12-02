@@ -21,7 +21,6 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * 委托指令
@@ -216,6 +215,10 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
     private String transmitTime;
 
     private String tradeMarketStr;
+
+    private String priceModelStr;
+
+    private String businessModelStr;
 
     /**
      * 已成交金额
@@ -1042,5 +1045,27 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
 
     public void setFinishDealAmt(BigDecimal finishDealAmt) {
         this.finishDealAmt = finishDealAmt;
+    }
+
+    public void setPriceModelStr(String priceModelStr) {
+        this.priceModelStr = priceModelStr;
+    }
+
+    public void setBusinessModelStr(String businessModelStr) {
+        this.businessModelStr = businessModelStr;
+    }
+
+    public String getPriceModelStr() {
+        if (StringUtil.isEmpty(getPriceModel())) {
+            return StringUtil.EMPTY;
+        }
+        return SysDataUtil.getNameFromDataDict(DictCode.价格模式, getPriceModel());
+    }
+
+    public String getBusinessModelStr() {
+        if (StringUtil.isEmpty(getBusinessModel())) {
+            return StringUtil.EMPTY;
+        }
+        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, getBusinessModel());
     }
 }
