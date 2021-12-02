@@ -21,6 +21,7 @@
             <!--update by zhangpuyu 2019/11/18 end -->
             <Cell order="16" name="投标日">entrustDateText</Cell>
             <Cell order="17" name="备注">remark</Cell>
+            <Cell order="18" name="当前处理人">nextUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

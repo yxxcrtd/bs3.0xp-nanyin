@@ -21,7 +21,7 @@ import com.joyintech.service.entrust.etrinvestbondinfo.dto.BussEtrInvestPersonIn
 
 /**
  * 计划类净值委托DTO 〈功能详细描述〉
- * 
+ *
  * @author xiexinting
  * @version 1.0 2018年10月8日
  * @see EtrPlanAssetNDto
@@ -117,9 +117,9 @@ public class EtrPlanAssetNDto extends EtrEntrust {
      */
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal transactioncom;
-    
-    
-    
+
+
+
     /**
      * 获取 fileArray
      * @return fileArray.
@@ -131,7 +131,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
 
 
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -153,7 +153,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
 
 
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -173,7 +173,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 assetType2
      * @param assetType2 assetType2
@@ -195,7 +195,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
 
 
-    
+
     /**
      * 设置 etrInvestPersonInfo
      * @param etrInvestPersonInfo etrInvestPersonInfo
@@ -215,7 +215,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 elementId
      * @param elementId elementId
@@ -233,7 +233,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
         return selectedItem;
     }
 
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -242,7 +242,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
         this.selectedItem = selectedItem;
     }
 
-    
+
     /**
      * 获取 operateType
      * @return operateType.
@@ -251,7 +251,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
         return operateType;
     }
 
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -260,7 +260,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
         this.operateType = operateType;
     }
 
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -269,7 +269,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
         return CloseWay;
     }
 
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -280,7 +280,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
     /**
      * 获取 portfolioName
-     * 
+     *
      * @return portfolioName.
      */
     public String getPortfolioName() {
@@ -289,7 +289,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
     /**
      * 设置 portfolioName
-     * 
+     *
      * @param portfolioName portfolioName
      */
     public void setPortfolioName(String portfolioName) {
@@ -298,7 +298,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
     /**
      * 获取 assetType1
-     * 
+     *
      * @return assetType1.
      */
     public String getAssetType1() {
@@ -307,7 +307,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
     /**
      * 设置 assetType1
-     * 
+     *
      * @param assetType1 assetType1
      */
     public void setAssetType1(String assetType1) {
@@ -316,7 +316,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
     /**
      * 获取 finprodName
-     * 
+     *
      * @return finprodName.
      */
     public String getFinprodName() {
@@ -325,7 +325,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
     /**
      * 设置 finprodName
-     * 
+     *
      * @param finprodName finprodName
      */
     public void setFinprodName(String finprodName) {
@@ -334,7 +334,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
     /**
      * 获取 finishAmt
-     * 
+     *
      * @return finishAmt.
      */
     public BigDecimal getFinishAmt() {
@@ -343,7 +343,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
     /**
      * 设置 finishAmt
-     * 
+     *
      * @param finishAmt finishAmt
      */
     public void setFinishAmt(BigDecimal finishAmt) {
@@ -352,7 +352,7 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
     /**
      * 获取 transactioncom
-     * 
+     *
      * @return transactioncom.
      */
     public BigDecimal getTransactioncom() {
@@ -361,11 +361,23 @@ public class EtrPlanAssetNDto extends EtrEntrust {
 
     /**
      * 设置 transactioncom
-     * 
+     *
      * @param transactioncom transactioncom
      */
     public void setTransactioncom(BigDecimal transactioncom) {
         this.transactioncom = transactioncom;
     }
 
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
 }

@@ -2,9 +2,9 @@
 <Workbook filePath="EtrPlanAssetN.xlsx" name="计划类净值指令">
     <Worksheet javaBean="com.joyintech.tams.invest.entrust.etrplanassetn.dto.EtrPlanAssetNDto">
         <Row>
-             <Cell order="1" name="委托状态">busEntrustStatus</Cell>
+            <Cell order="1" name="委托状态">busEntrustStatus</Cell>
             <Cell order="2" name="投资经理">invManagerId</Cell>
-            <Cell order="3" name="组合代码">portfolioId</Cell>           
+            <Cell order="3" name="组合代码">portfolioId</Cell>
             <Cell order="4" name="组合名称">portfolioName</Cell>
             <!-- add by zhangpuyu 2019/7/29 start-->
             <Cell order="5" name="资产类型">busAssetType1</Cell>
@@ -20,6 +20,7 @@
             <Cell order="14" name="指令金额">entrustAmt</Cell>
             <Cell order="15" name="已完成额度">finishAmt</Cell>
             <Cell order="16" name="交易完成度">transactioncom</Cell>
+            <Cell order="17" name="当前处理人">nextUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

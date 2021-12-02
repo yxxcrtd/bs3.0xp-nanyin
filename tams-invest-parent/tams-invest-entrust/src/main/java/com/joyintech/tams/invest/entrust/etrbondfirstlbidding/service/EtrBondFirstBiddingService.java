@@ -243,7 +243,7 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
         EtrBondFirstLBiddingDto dto = this.getBussinessEntity(entity);
         CommonBusinessService commonBusinessService = SpringContextUtil.getBean(CommonBusinessService.class);
         if (taskId != null) {
-        	try {
+            try {
                 BigDecimal amount = dto.getEntrustNum();
                 if (amount == null) {
                     amount = dto.getEntrustAmt();
@@ -459,8 +459,7 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             dto.setAssetType11(jsonObject.get("assetType11").toString());
             long lt = Long.parseLong(jsonObject.get("biddate").toString());
             Date date = new Date(lt);
-//            dto.setEntrustDate(date);
-            dto.setEntrustDate(DateUtil.parse(rowData.get(12).toString().trim()));
+            dto.setEntrustDate(date);
             dto.setFinprodId(jsonObject.get("finprodId").toString());
             //缴款方式
             String etrPayType = rowData.get(5).toString().trim();
@@ -592,12 +591,6 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
                 message = etrCommonService.checkIsDate(rowData.get(1).toString(), "EtrBondFirstLBidding002.vdate", lineNo);
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
 
-                //投标日期调用共通check非空和是否正确
-                message = etrCommonService.checkIsBlank(rowData.get(12).toString(), "EtrBondFirstLBidding002.bidDate", lineNo);
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-                message = etrCommonService.checkIsDate(rowData.get(12).toString(), "EtrBondFirstLBidding002.bidDate", lineNo);
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-
                 //委托结束日
                 message = etrCommonService.checkIsBlank(rowData.get(2).toString(), "EtrBondFirstLBidding002.mdate", lineNo);
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
@@ -726,9 +719,9 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
      * @return
      */
     public Integer checkIsBidClose(EtrBondFirstLBiddingDto dto){
-       return restTemplate.postForObject(
+        return restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/checkIsBidClose", dto,
-               Integer.class);
+                Integer.class);
     }
     /**
      * 获取新建界面的主承销商下拉框
@@ -744,4 +737,12 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
                 , param,
                 SelectOptionDto.class);
     }
+
+    public Integer checkDataNoPortfolioId(String finprodId,String entrustId) {
+        return restTemplate.getForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/checkDataNoPortfolioId?finprodId="+finprodId
+                        +"&entrustId="+entrustId,
+                Integer.class);
+    }
+
 }

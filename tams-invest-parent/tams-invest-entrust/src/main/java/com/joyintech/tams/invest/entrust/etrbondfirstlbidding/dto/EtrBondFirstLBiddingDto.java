@@ -37,7 +37,7 @@ import java.util.List;
 
 /**
  * 债券一级投标委托dto 〈功能详细描述〉
- * 
+ *
  * @author yangjm
  * @version 1.0 2019年5月6日
  * @see EtrBondFirstLBiddingDto
@@ -45,7 +45,7 @@ import java.util.List;
  */
 @PageId("EtrBondFirstLBidding002")
 @ValidLogic(targetClass = EtrBondFirstLBiddingDtoValidator.class, groups = {ValidateGroupEdit.class,
-    ValidateGroupDelete.class})
+        ValidateGroupDelete.class})
 public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity {
 
     /**
@@ -60,23 +60,23 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     /**
      * 一级新债日历进入委托界面的标识
      */
-     private String mId;
-     /**
-      * 获取mId
-      * @return
-      */
+    private String mId;
+    /**
+     * 获取mId
+     * @return
+     */
     public String getmId() {
-		return mId;
-	}
+        return mId;
+    }
     /**
      * 设置mId
      * @param mId
      */
-	public void setmId(String mId) {
-		this.mId = mId;
-	}
-	// by zhaodongdong 20191116 end
-	/**
+    public void setmId(String mId) {
+        this.mId = mId;
+    }
+    // by zhaodongdong 20191116 end
+    /**
      * 资产二级分类（原资产一级分类，委托页面的债券一级分类，修改：王贵奇，2019/9/27）
      */
     private String assetType1;
@@ -152,13 +152,13 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      */
     private String assetType11;
     /** 新增个性分类三、四。王贵奇，2019/9/27 结束**/
-    
+
 
     /**
      * 预计委托可用现金
      */
     private BigDecimal expectAvailableCash;
-    
+
     /**
      * 文件上传dto
      */
@@ -167,38 +167,38 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      * 市场代码
      */
     private String finprodMarketId;
-    
+
     /**
      * 投资人员信息DTO
      */
     @Valid
     private BussEtrInvestPersonInfoDto etrInvestPersonInfo;
-   
+
     /**
      * 接收状态
      */
     private String recStatus;
-    
-   /**
-    * 中标状态
-    */
+
+    /**
+     * 中标状态
+     */
     private String isWin;
-    
+
     /**
      * 指定交易员
      */
     private String trader;
-    
+
     /**
      * 委托关闭方式
      */
     private String CloseWay;
-    
+
     /**
      * 选中的数据
      */
     private transient List<EtrBondFirstLBiddingDto> selectedItem;
-   
+
     /**
      * 操作类型
      */
@@ -208,7 +208,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      * 组合名称
      */
     private String portfolioName;
-    
+
 
     /**
      * 金融产品全称
@@ -224,37 +224,37 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      * 缴款方式
      */
     private String etrPayType;
-    
+
     /**
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
+
     /**
      * 资产起息日
      */
     private Date finvdate;
-    
+
     /**
      * 资产到期日
      */
     private Date finmdate;
-   
+
     /**
      * 投标券面总额
      */
     private BigDecimal bidPriceTotal;
-    
+
     /**
      * 中标券面总额
      */
     private BigDecimal winPriceTotal;
-    
+
     /**
      * 投标标位
      */
     private String bidPrice;
-    
+
     /**
      * 投标券面 
      */
@@ -263,7 +263,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      * 投标标位表dto
      */
     private List<EtrEntrustBidPrice> bidPriceList;
-    
+
     /**
      * 中标标位
      */
@@ -273,7 +273,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      * 中标标位名称
      */
     private String winPriceStr;
-    
+
     /**
      * 中标券面
      */
@@ -385,7 +385,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
         this.finprodAbbr = finprodAbbr;
     }
     //add by lishuping 20191030 end
-    
+
     /**
      * 获取 assetType1
      * @return assetType1.
@@ -401,7 +401,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setAssetType1(String assetType1) {
         this.assetType1 = assetType1;
     }
-    
+
     /**
      * 新增个性分类三、四getters和setters。王贵奇，2019/9/27 开始
      * 获取 assetType10
@@ -433,7 +433,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
         this.assetType11 = assetType11;
     }
     /** 新增个性分类三、四getters和setters。王贵奇，2019/9/27 结束 **/
-    
+
     /**
      * 获取 fileArray
      * @return fileArray.
@@ -441,7 +441,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public List<SysUploadFileInfo> getFileArray() {
         return fileArray;
     }
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -449,17 +449,17 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setFileArray(List<SysUploadFileInfo> fileArray) {
         this.fileArray = fileArray;
     }
-    
+
     /**
      * 获取 finprodMarketId
      * @return finprodMarketId.
      */
-    @PrimaryKey(value = Field.PK_2)
+//    @PrimaryKey(value = Field.PK_2)
     @NotEmpty(fieldName = "EtrInvestAllInfo001.finprodId", groups = {ValidateGroupEdit.class})
     public String getFinprodMarketId() {
         return finprodMarketId;
     }
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -467,7 +467,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setFinprodMarketId(String finprodMarketId) {
         this.finprodMarketId = finprodMarketId;
     }
-    
+
     /**
      * 获取 etrInvestPersonInfo
      * @return etrInvestPersonInfo.
@@ -475,7 +475,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public BussEtrInvestPersonInfoDto getEtrInvestPersonInfo() {
         return etrInvestPersonInfo;
     }
-    
+
     /**
      * 设置 etrInvestPersonInfo
      * @param etrInvestPersonInfo etrInvestPersonInfo
@@ -483,7 +483,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setEtrInvestPersonInfo(BussEtrInvestPersonInfoDto etrInvestPersonInfo) {
         this.etrInvestPersonInfo = etrInvestPersonInfo;
     }
-    
+
     /**
      * 获取 recStatus
      * @return recStatus.
@@ -491,7 +491,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getRecStatus() {
         return recStatus;
     }
-    
+
     /**
      * 设置 recStatus
      * @param recStatus recStatus
@@ -499,7 +499,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setRecStatus(String recStatus) {
         this.recStatus = recStatus;
     }
-    
+
     /**
      * 获取 trader
      * @return trader.
@@ -507,7 +507,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getTrader() {
         return trader;
     }
-    
+
     /**
      * 设置 trader
      * @param trader trader
@@ -515,7 +515,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setTrader(String trader) {
         this.trader = trader;
     }
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -523,7 +523,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getCloseWay() {
         return CloseWay;
     }
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -531,7 +531,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setCloseWay(String closeWay) {
         CloseWay = closeWay;
     }
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -539,7 +539,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public List<EtrBondFirstLBiddingDto> getSelectedItem() {
         return selectedItem;
     }
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -547,7 +547,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setSelectedItem(List<EtrBondFirstLBiddingDto> selectedItem) {
         this.selectedItem = selectedItem;
     }
-    
+
     /**
      * 获取 operateType
      * @return operateType.
@@ -555,7 +555,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getOperateType() {
         return operateType;
     }
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -563,7 +563,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setOperateType(String operateType) {
         this.operateType = operateType;
     }
-    
+
     /**
      * 获取 portfolioName
      * @return portfolioName.
@@ -571,7 +571,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getPortfolioName() {
         return portfolioName;
     }
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -579,7 +579,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
-    
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -587,7 +587,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getFinprodName() {
         return finprodName;
     }
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -595,7 +595,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setFinprodName(String finprodName) {
         this.finprodName = finprodName;
     }
-    
+
     /**
      * 获取 finprodType2
      * @return finprodType2.
@@ -603,7 +603,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getFinprodType2() {
         return finprodType2;
     }
-    
+
     /**
      * 设置 finprodType2
      * @param finprodType2 finprodType2
@@ -617,10 +617,10 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      */
     @Override
     @NotEmpty(fieldName = "EtrBondFirstLBidding002.bidDate", groups = {ValidateGroupEdit.class})
-     public Date getEntrustDate() {
+    public Date getEntrustDate() {
         return super.getEntrustDate();
     }
-    
+
     /**
      * 获取 etrPayType
      * @return etrPayType.
@@ -692,7 +692,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setFinmdate(Date finmdate) {
         this.finmdate = finmdate;
     }
-    
+
     /**
      * 取得 委托代码
      * @return 委托代码
@@ -703,15 +703,15 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
         return super.getEntrustId();
     }
     /**
-     * 
+     *
      * 取得组合代码
      */
     @Override
-    @NotEmpty(fieldName = "EtrInvestBondInfo002.portfolioId", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "EtrInvestBondInfo002.portfolioId", groups = {ValidateGroupEdit.class})
     public String getPortfolioId() {
         return super.getPortfolioId();
     }
-    
+
     /**
      * 取得 委托开始日
      * @return 委托开始日
@@ -721,7 +721,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public Date getVdate() {
         return super.getVdate();
     }
-    
+
     /**
      * 取得 委托结束日
      * @return 委托结束日
@@ -731,7 +731,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public Date getMdate() {
         return super.getMdate();
     }
-    
+
     /**
      * 取得 币种
      * @return 币种
@@ -741,7 +741,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getCcy() {
         return super.getCcy();
     }
-    
+
     /**
      * 取得 投资目的
      * @return 投资目的
@@ -760,9 +760,9 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getTradeMarket() {
         return super.getTradeMarket();
     }
-   
+
     /**
-     * 
+     *
      * 设置委托状态数据字典
      * <功能详细描述>
      * @return
@@ -773,7 +773,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.委托状态, super.getEntrustStatus());
     }
     /**
-     * 
+     *
      * 设置币种数据字典
      * <功能详细描述>
      * @return
@@ -785,7 +785,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
 
     }
     /**
-     * 
+     *
      * 设置交易场所数据字典
      * <功能详细描述>
      * @return
@@ -796,7 +796,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, super.getTradeMarket());
     }
     /**
-     * 
+     *
      * 设置交易平台数据字典
      * <功能详细描述>
      * @return
@@ -806,7 +806,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getBusTradePlat(){
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.交易平台, super.getTradePlat());
     }
-    
+
     /**
      * 获取 bidPriceTotal
      * @return bidPriceTotal.
@@ -814,7 +814,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public BigDecimal getBidPriceTotal() {
         return bidPriceTotal;
     }
-    
+
     /**
      * 设置 bidPriceTotal
      * @param bidPriceTotal bidPriceTotal
@@ -822,7 +822,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setBidPriceTotal(BigDecimal bidPriceTotal) {
         this.bidPriceTotal = bidPriceTotal;
     }
-    
+
     /**
      * 获取 winPriceTotal
      * @return winPriceTotal.
@@ -830,7 +830,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public BigDecimal getWinPriceTotal() {
         return winPriceTotal;
     }
-    
+
     /**
      * 设置 winPriceTotal
      * @param winPriceTotal winPriceTotal
@@ -838,10 +838,10 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setWinPriceTotal(BigDecimal winPriceTotal) {
         this.winPriceTotal = winPriceTotal;
     }
-    
+
     /**
      * 设置中标状态数据字典
-     * 
+     *
      * @return
      * @see
      * @since 1.0
@@ -852,7 +852,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
         }
         return null;
     }
-    
+
     /**
      * 获取 isWin
      * @return isWin.
@@ -860,7 +860,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getIsWin() {
         return isWin;
     }
-    
+
     /**
      * 设置 isWin
      * @param isWin isWin
@@ -868,7 +868,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setIsWin(String isWin) {
         this.isWin = isWin;
     }
-    
+
     /**
      * 获取 bidPrice
      * @return bidPrice.
@@ -876,7 +876,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public String getBidPrice() {
         return bidPrice;
     }
-    
+
     /**
      * 设置 bidPrice
      * @param bidPrice bidPrice
@@ -884,7 +884,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setBidPrice(String bidPrice) {
         this.bidPrice = bidPrice;
     }
-    
+
     /**
      * 获取 bidPrinAmt
      * @return bidPrinAmt.
@@ -892,7 +892,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public BigDecimal getBidPrinAmt() {
         return bidPrinAmt;
     }
-    
+
     /**
      * 设置 bidPrinAmt
      * @param bidPrinAmt bidPrinAmt
@@ -900,7 +900,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setBidPrinAmt(BigDecimal bidPrinAmt) {
         this.bidPrinAmt = bidPrinAmt;
     }
-    
+
     /**
      * 获取 winPrice
      * @return winPrice.
@@ -908,7 +908,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public BigDecimal getWinPrice() {
         return winPrice;
     }
-    
+
     /**
      * 设置 winPrice
      * @param winPrice winPrice
@@ -930,7 +930,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
     public void setWinPrinAmt(BigDecimal winPrinAmt) {
         this.winPrinAmt = winPrinAmt;
     }
-    
+
     /**
      * 缴款方式数据字典
      * <一句话功能简述>
@@ -1288,11 +1288,21 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
         this.biddingRange = biddingRange;
     }
 
-     public String getBusinessModel() {
+    public String getBusinessModel() {
         return businessModel;
     }
 
     public void setBusinessModel(String businessModel) {
         this.businessModel = businessModel;
+    }
+
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
     }
 }

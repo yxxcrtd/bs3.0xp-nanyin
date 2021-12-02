@@ -27,6 +27,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
@@ -42,6 +43,7 @@ import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto;
+import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto;
 import com.joyintech.tams.invest.entrust.etrwtspotex.dto.EtrInvestPersonInfoDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -52,6 +54,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 存款委托
@@ -121,9 +124,20 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
             param.remove("type11");
         }
         // type9-11 created by wangguiqi on 2019/7/19 -end
-        return restTemplate.postForPage(
+        Page<EtrBrowDepoInfoDto> page = restTemplate.postForPage(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBrowDepoInfo/findPage", param,
                 EtrBrowDepoInfoDto.class);
+        List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+                param, SysUser.class);
+        for(EtrBrowDepoInfoDto dto:page.getRoot()){
+            if(StringUtil.isNotEmpty(dto.getNextUser())){
+                String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+                        .map(SysUser::getRealName)
+                        .collect(Collectors.joining(",","",""));
+                dto.setNextUser(sysUsers);
+            }
+        }
+        return page;
     }
 
     /**
@@ -529,7 +543,7 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
             return null;
         }
     }
- // add by gaopeng 20191219 多组合多资产导入 start
+    // add by gaopeng 20191219 多组合多资产导入 start
     /**
      * 获取委托列表数据
      *
@@ -572,7 +586,7 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
             etrBrowDepoInfoDto.setAssetType11(jsonObject.get("type11").toString());
             //资产代码与名称拼接
             etrBrowDepoInfoDto.setFinprodAbbr(etrBrowDepoInfoDto.getFinprodMarketId()
-                + ":" + selectOptionDto.getText());
+                    + ":" + selectOptionDto.getText());
             //交易方向
             etrBrowDepoInfoDto.setPs(data.get(5).toString().split(":")[0]);
             //币种
@@ -587,30 +601,30 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
             etrBrowDepoInfoDto.setDateEnd(DateUtil.parse(data.get(10).toString()));
             //期限
             if(StringUtil.isNotBlank(data.get(11).toString())) {
-                etrBrowDepoInfoDto.setTermDays(new Long(data.get(11).toString())); 
+                etrBrowDepoInfoDto.setTermDays(new Long(data.get(11).toString()));
             }
             Map<String, Object> param = new HashMap<>();
             // 通道
-            if (StringUtil.isNotBlank(data.get(12).toString())) {
-                etrBrowDepoInfoDto.setChlId(data.get(12).toString());
-                param = new HashMap<>();
-                param.put("initValue", data.get(12).toString());
-                param.put("page", 1);
-                param.put("length", 20);
-                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                    ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
-                    param, SelectOptionDto.class);
-                if (!StringUtil.isEmptyList(selectOptionDtoPage.getRoot())) {
-                    etrBrowDepoInfoDto.setChlIdName(selectOptionDtoPage.getRoot().get(0).getText());
-                }
-            }
+//            if (StringUtil.isNotBlank(data.get(12).toString())) {
+//                etrBrowDepoInfoDto.setChlId(data.get(12).toString());
+//                param = new HashMap<>();
+//                param.put("initValue", data.get(12).toString());
+//                param.put("page", 1);
+//                param.put("length", 20);
+//                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+//                    ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
+//                    param, SelectOptionDto.class);
+//                if (!StringUtil.isEmptyList(selectOptionDtoPage.getRoot())) {
+//                    etrBrowDepoInfoDto.setChlIdName(selectOptionDtoPage.getRoot().get(0).getText());
+//                }
+//            }
             etrBrowDepoInfoDto.setBussEtrInvestPersonInfoDto(new BussEtrInvestPersonInfoDto());
             // 投资经理
             etrBrowDepoInfoDto.getBussEtrInvestPersonInfoDto().setInvManagerId(etrBrowDepoInfoDto.getCreateUser());
             // 投资处室
             etrBrowDepoInfoDto.getBussEtrInvestPersonInfoDto().setRoom(etrBrowDepoInfoDto.getCreateDept());
             // 备注
-            etrBrowDepoInfoDto.setRemark(data.get(13).toString());
+            etrBrowDepoInfoDto.setRemark(data.get(12).toString());
             param.put("portfolioId", etrBrowDepoInfoDto.getPortfolioId());
             param.put("ccy", etrBrowDepoInfoDto.getCcy());
             param.put("vdate", etrBrowDepoInfoDto.getVdate());
@@ -620,7 +634,7 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
             // 指令可用现金
             if (cashMap != null && cashMap.get("cashT") != null) {
                 etrBrowDepoInfoDto.setProAvailableCash(
-                    new BigDecimal(cashMap.get("cashT").toString()));
+                        new BigDecimal(cashMap.get("cashT").toString()));
             }
             else {
                 etrBrowDepoInfoDto.setProAvailableCash(BigDecimal.ZERO);
@@ -664,90 +678,90 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
             // excel的行号
             String lineNo = String.valueOf(i + 1);
             List<String> rowData = objects.get(i);
-                // 委托开始日日期非空
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 委托开始日日期非空
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(1).toString(), "EtrBrowDepoInfo001.entrustVDate", lineNo));
-                // 委托开始日日期格式check
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 委托开始日日期格式check
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsDate(rowData.get(1).toString(), "EtrBrowDepoInfo001.entrustVDate", lineNo));
-                // 委托结束日日期非空
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 委托结束日日期非空
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(2).toString(), "EtrBrowDepoInfo001.entrustMDate", lineNo));
-                // 委托结束日日期格式check
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 委托结束日日期格式check
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsDate(rowData.get(2).toString(), "EtrBrowDepoInfo001.entrustMDate", lineNo));
-                // 委托开始、终止日是否是平台日check
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 委托开始、终止日是否是平台日check
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
-                // 组合代码非空
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 组合代码非空
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(3).toString(), "EtrBrowDepoInfo001.portfolioId", lineNo));
-                // 组合代码check
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 组合代码check
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkPortfolioIdExist(rowData.get(3).toString(), "EtrBrowDepoInfo001.portfolioId", lineNo));
-                //资产代码
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            //资产代码
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(4).toString(), "EtrBrowDepoInfo001.finprodId", lineNo));
-                if (StringUtil.isNotEmpty(rowData.get(4).toString())) {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("initValue", rowData.get(4).toString());
-                    map.put("page", 1);
-                    map.put("length", 20);
-                    Page<SelectOptionDto> finprodIds = getSelectFinprodMarketId(map);
-                    if (finprodIds.getRoot().isEmpty()) {
-                        confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0017",getMessage("EtrBrowDepoInfo001.finprodId"), lineNo));
-                    }
+            if (StringUtil.isNotEmpty(rowData.get(4).toString())) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("initValue", rowData.get(4).toString());
+                map.put("page", 1);
+                map.put("length", 20);
+                Page<SelectOptionDto> finprodIds = getSelectFinprodMarketId(map);
+                if (finprodIds.getRoot().isEmpty()) {
+                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0017",getMessage("EtrBrowDepoInfo001.finprodId"), lineNo));
                 }
-                // 交易方向非空
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            }
+            // 交易方向非空
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrBrowDepoInfo001.ps", lineNo));
-                // 币种非空
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 币种非空
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(6).toString(), "EtrBrowDepoInfo001.ccy", lineNo));
-                // 本金金额(元)非空
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 本金金额(元)非空
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(7).toString(), "EtrBrowDepoInfo003.entrustAmt", lineNo));
-                // 本金金额(元)是数值
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 本金金额(元)是数值
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsNumber(rowData.get(7).toString(), "EtrBrowDepoInfo003.entrustAmt", lineNo));
-                // 本金金额(元)是大于0
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 本金金额(元)是大于0
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsGtZero(rowData.get(7).toString(), "EtrBrowDepoInfo003.entrustAmt", lineNo));
-                //借款利率（%）是数值
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            //借款利率（%）是数值
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsNumber(rowData.get(8).toString(), "EtrBrowDepoInfo003.price", lineNo));
-                // 借款利率（%）是大于0
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 借款利率（%）是大于0
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsGtZero(rowData.get(8).toString(), "EtrBrowDepoInfo003.price", lineNo));
-                // 起息日日期格式check
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 起息日日期格式check
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsDate(rowData.get(9).toString(), "EtrBrowDepoInfo001.vdate", lineNo));
-                // 到息日日期格式check
-                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+            // 到息日日期格式check
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsDate(rowData.get(10).toString(), "EtrBrowDepoInfo001.mdate", lineNo));
-                // 通道存在
-                if (StringUtil.isNotBlank(rowData.get(12).toString())) {
-                    Map<String, Object> param = new HashMap<>();
-                    param.put("initValue", rowData.get(12).toString());
-                    param.put("page", 1);
-                    param.put("length", 20);
-                    Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+            // 通道存在
+            if (StringUtil.isNotBlank(rowData.get(12).toString())) {
+                Map<String, Object> param = new HashMap<>();
+                param.put("initValue", rowData.get(12).toString());
+                param.put("page", 1);
+                param.put("length", 20);
+                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
                         ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
                         param, SelectOptionDto.class);
-                    if (selectOptionDtoPage.getRoot().isEmpty()) {
-                        confirmMsg =  etrCommonService.StringAddByBr(confirmMsg,
+                if (selectOptionDtoPage.getRoot().isEmpty()) {
+                    confirmMsg =  etrCommonService.StringAddByBr(confirmMsg,
                             getMessage("ETR_E_0017", getMessage("invest.channelId"), lineNo));
-                    }
                 }
-                if (StringUtil.isBlank(confirmMsg)) {
-                    jsonArrays.add(rowData);
-                } else {
-                    totalMsg = etrCommonService.StringAddByBr(totalMsg, confirmMsg);
-                        errorNum++ ;
-                }
+            }
+            if (StringUtil.isBlank(confirmMsg)) {
+                jsonArrays.add(rowData);
+            } else {
+                totalMsg = etrCommonService.StringAddByBr(totalMsg, confirmMsg);
+                errorNum++ ;
+            }
         }
         totalMsg = etrCommonService.StringAddByBr(totalMsg,
-            getMessage("ETR_C_0001", String.valueOf(errorNum)));
+                getMessage("ETR_C_0001", String.valueOf(errorNum)));
         Map<String, Object> resultMap = new HashMap<>();
         if (StringUtil.isNotBlank(totalMsg)) {
             resultMap.put("confirmMsg", totalMsg);

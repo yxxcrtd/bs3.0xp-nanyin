@@ -23,6 +23,7 @@
             <Cell order="15" name="已完成额度">finishAmt</Cell>
             <Cell order="16" name="交易完成度">transactioncom</Cell>
             <!-- 项目类资产五级分类改造 modify by renping 2019-08-01 end -->
+            <Cell order="17" name="当前处理人">nextUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

@@ -25,6 +25,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
 import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
@@ -36,9 +37,9 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
-import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
+import com.joyintech.tams.invest.entrust.etrplanassetr.dto.EtrPlanAssetRDto;
 import com.joyintech.tams.invest.entrust.etrproject.dto.EtrProjectDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -49,6 +50,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 项目类委托画面端service 〈功能详细描述〉
@@ -97,8 +99,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
         dto.setEntrustDate(sysDate);
         basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
         restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doComplete", dto,
-            Integer.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doComplete", dto,
+                Integer.class);
     }
 
     /**
@@ -106,22 +108,22 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     @Override
     public void doInsert(EtrProjectDto dto, OperationType type) {
-    	//流程交易表插入一条记录，用于在待办中显示交易方向
-    	WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
-    	wflTrdProductDeal.setWorkflowId(dto.getWorkflowId());
-    	wflTrdProductDeal.setPs(dto.getPs());
-    	wflTrdProductDeal.setTradeId(dto.getWorkflowId());
-    	wflTrdProductDeal.setFinprodId(dto.getFinprodId());
-    	wflTrdProductDeal.setWorkflowStatus("A");
-    	wflTrdProductDealMapper.insertSelective(wflTrdProductDeal);
+        //流程交易表插入一条记录，用于在待办中显示交易方向
+        WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
+        wflTrdProductDeal.setWorkflowId(dto.getWorkflowId());
+        wflTrdProductDeal.setPs(dto.getPs());
+        wflTrdProductDeal.setTradeId(dto.getWorkflowId());
+        wflTrdProductDeal.setFinprodId(dto.getFinprodId());
+        wflTrdProductDeal.setWorkflowStatus("A");
+        wflTrdProductDealMapper.insertSelective(wflTrdProductDeal);
 
         // OperationType枚举值与dto的operateType不同,后续逻辑使用的是dto的operateType,所以不能覆盖
         // ZGZGST-1479:fuyongsheng 20210825 delete start
         // dto.setOperateType(type.toString());
         // ZGZGST-1479:fuyongsheng 20210825 delete end
         restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doInsert", dto,
-            Integer.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doInsert", dto,
+                Integer.class);
     }
 
     /**
@@ -130,8 +132,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
     @Override
     public void doUpdate(EtrProjectDto dto) {
         restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doUpdate", dto,
-            Integer.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doUpdate", dto,
+                Integer.class);
     }
 
     @Override
@@ -160,9 +162,20 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
             param.put("ccyList", dateList);
         }
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForPage(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/findPage", param,
-            EtrProjectDto.class);
+        Page<EtrProjectDto> page = restTemplate.postForPage(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/findPage", param,
+                EtrProjectDto.class);
+        List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+                param, SysUser.class);
+        for(EtrProjectDto dto:page.getRoot()){
+            if(StringUtil.isNotEmpty(dto.getNextUser())){
+                String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+                        .map(SysUser::getRealName)
+                        .collect(Collectors.joining(",","",""));
+                dto.setNextUser(sysUsers);
+            }
+        }
+        return page;
     }
 
     /**
@@ -179,8 +192,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
         map.put("userId", user.getUserName());
         map.put("param", param);
         return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME
-                + "/EtrProject/getentrustId", map,
-            SuggestDto.class);
+                        + "/EtrProject/getentrustId", map,
+                SuggestDto.class);
     }
 
     /**
@@ -193,8 +206,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     public List<SuggestDto> getfinprodId(String param) {
         return restTemplate.getForList(ServiceApplication.ENTRUST_SERVICE_NAME
-                + "/EtrProject/getfinprodId?finprodId=" + param,
-            SuggestDto.class);
+                        + "/EtrProject/getfinprodId?finprodId=" + param,
+                SuggestDto.class);
     }
 
     /**
@@ -206,8 +219,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     public boolean deleteDelegate(String entrustId) {
         return restTemplate.getForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/delete?entrustId=" + entrustId,
-            boolean.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/delete?entrustId=" + entrustId,
+                boolean.class);
     }
 
     /**
@@ -220,9 +233,9 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     public boolean closeDelegate(String entrustId, String closeWay) {
         return restTemplate.getForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/close?entrustId=" + entrustId
-                + "&closeWay=" + closeWay,
-            boolean.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/close?entrustId=" + entrustId
+                        + "&closeWay=" + closeWay,
+                boolean.class);
     }
 
     /**
@@ -234,7 +247,7 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     public boolean recallDelegate(EtrProjectDto dto) {
         return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/recall", dto, boolean.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/recall", dto, boolean.class);
     }
 
     /**
@@ -247,7 +260,7 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
     @Override
     protected void buildExportParam(ExportParam exportParam) {
         exportParam.config("/com/joyintech/tams/invest/entrust/etrproject/conf/export_conf.xml").dataSource(
-            DataSourceType.MASERT);
+                DataSourceType.MASERT);
     }
 
     @Override
@@ -272,8 +285,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     public String searchType(String finprodId) {
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                + "/EtrProject/searchType?finprodId=" + finprodId,
-            String.class);
+                        + "/EtrProject/searchType?finprodId=" + finprodId,
+                String.class);
     }
 
     /**
@@ -286,8 +299,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     public BigDecimal searchIssueAmt(String finprodId) {
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                + "/EtrProject/searchIssueAmt?finprodId=" + finprodId,
-            BigDecimal.class);
+                        + "/EtrProject/searchIssueAmt?finprodId=" + finprodId,
+                BigDecimal.class);
     }
 
     /**
@@ -301,8 +314,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
     public Page<SelectOptionDto> getentrustIdAdd(Map<String, Object> map) {
         map.put("userId", SecurityUtil.getLoginUser().getUserName());
         return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME
-                + "/EtrProject/getentrustIdAdd", map,
-            SelectOptionDto.class);
+                        + "/EtrProject/getentrustIdAdd", map,
+                SelectOptionDto.class);
     }
 
     /**
@@ -315,8 +328,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     public Page<SelectOptionDto> getfinprodIdForAdd(Map<String, Object> map) {
         return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME
-                + "/EtrProject/getfinprodIdForAdd", map,
-            SelectOptionDto.class);
+                        + "/EtrProject/getfinprodIdForAdd", map,
+                SelectOptionDto.class);
     }
 
     /**
@@ -329,8 +342,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     public EtrProjectDto selectByKey(String entrustId) {
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                + "/EtrProject/selectByKey?entrustId=" + entrustId,
-            EtrProjectDto.class);
+                        + "/EtrProject/selectByKey?entrustId=" + entrustId,
+                EtrProjectDto.class);
     }
 
     /**
@@ -365,20 +378,16 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      * @see
      * @since 1.0
      */
-    public BigDecimal getAssetAvailablePosition(EtrSecPositionDto dto) {
+    public BigDecimal getAssetAvailablePosition(PtlSecPositionFlowDto dto) {
         Date sysDate = DateUtil.platDateFromCache();
         dto.setCdate(DateUtil.parse(DateUtil.format(sysDate)));
         dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-//        if (StringUtil.isNotEmpty(dto.getSecAcctId())) {
-//            dto.setChannel(true);
-//        }
-        // modify by etliu 20211129 start
-        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
-//        return restTemplate.postForObject(
-//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/getAssetAvailablePosition", dto,
-//            BigDecimal.class);
-        return etrCommonService.getAssetAvailablePosition(dto);
-        // modify by etliu 20211129 end
+        if (StringUtil.isNotEmpty(dto.getSecAcctId())) {
+            dto.setChannel(true);
+        }
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/getAssetAvailablePosition", dto,
+                BigDecimal.class);
     }
 
     /**
@@ -390,8 +399,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
     public List<ValidMessage> check(EtrProjectDto dto) {
         dto.setCloseWay(DictCodeListExt1.委托关闭方式_人工.getValue());
         return restTemplate.postForList(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/check", dto,
-            ValidMessage.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/check", dto,
+                ValidMessage.class);
     }
 
     /**
@@ -411,8 +420,8 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
         map.put("tradeMarket", dto.getTradeMarket());
         map.put("ps", dto.getPs());
         return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/common/SelectLimitAmt/selectLimitAmt", map,
-            BigDecimal.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/SelectLimitAmt/selectLimitAmt", map,
+                BigDecimal.class);
     }
 
 
@@ -422,16 +431,16 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
         EtrProjectDto dto = this.getBussinessEntity(entity);
         if (taskId != null) {
             try {BigDecimal amount = dto.getEntrustAmt();
-	            if (amount == null) {
-	                amount = dto.getEntrustNum();
-	            }
-	            Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), amount, LoginUserUtil.getUserName(),
-	                    BussinessDictCodeList.平安资产类型_项目类资产.getValue(), dto.getAssetType1(), null, dto.getPs()
-	                    // 资产类型改为授权类型 add by renping 2019-08-06  start
-	                    , dto.getFinprodId(), dto.getWorkflowId()
-	                    // 资产类型改为授权类型 add by renping 2019-08-06  end
-	                    );
-	            return commonBusinessService.是否需要上级审批_委托用(params);
+                if (amount == null) {
+                    amount = dto.getEntrustNum();
+                }
+                Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), amount, LoginUserUtil.getUserName(),
+                        BussinessDictCodeList.平安资产类型_项目类资产.getValue(), dto.getAssetType1(), null, dto.getPs()
+                        // 资产类型改为授权类型 add by renping 2019-08-06  start
+                        , dto.getFinprodId(), dto.getWorkflowId()
+                        // 资产类型改为授权类型 add by renping 2019-08-06  end
+                );
+                return commonBusinessService.是否需要上级审批_委托用(params);
             }
             catch (WorkFlowException e) {
                 // 未设置授权或设置成不授权时，抛出异常，当前用户只能退回
@@ -534,11 +543,7 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
             dto.setProAvailableCash(BigDecimal.valueOf(Double.valueOf(proAvailableCash.get("cashT").toString())));
             //指令可用持仓
             map.put("finprodId", dto.getFinprodId());
-
-            // modify by etliu 20211129 start
-//            PtlSecPositionFlowDto ptlSecPositionFlowDto=new PtlSecPositionFlowDto();
-            EtrSecPositionDto ptlSecPositionFlowDto=new EtrSecPositionDto();
-            // modify by etliu 20211129 end
+            PtlSecPositionFlowDto ptlSecPositionFlowDto=new PtlSecPositionFlowDto();
             ptlSecPositionFlowDto.setCcy(dto.getCcy());
             ptlSecPositionFlowDto.setFinprodId(dto.getFinprodId());
             ptlSecPositionFlowDto.setPortfolioId(dto.getPortfolioId());
