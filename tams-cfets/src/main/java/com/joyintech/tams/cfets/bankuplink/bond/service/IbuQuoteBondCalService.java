@@ -287,17 +287,19 @@ public class IbuQuoteBondCalService extends BaseService {
         //模式
         String sellPara = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
         for (PtlAllocationDto item : ptlAllocations) {
+            BigDecimal shareAmt = item.getShareAmt();
             if(StringUtil.equals(sellPara,"02")){
-                item.setOurEntNum(item.getShareAmt());
+                item.setOurEntNum(shareAmt);
                 if(StringUtil.equals(ps, DictCodeList.交易方向_卖出.getValue())){
-                    item.setLendinEntNum(item.getShareAmt());
+                    item.setLendinEntNum(shareAmt);
                 }
                 if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())){
-                    item.setSellAbleNum(item.getShareAmt());
+                    item.setSellAbleNum(shareAmt);
                 }
             }
-            item.setCpriceAmt(ArithmeticUtil.multiply(item.getShareAmt(),price));
-            item.setFpriceAmt(ArithmeticUtil.multiply(item.getShareAmt(),unitFprice));
+
+            item.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt,price),new BigDecimal(100),4));
+            item.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt,unitFprice),new BigDecimal(100),4));
         }
     }
 

@@ -450,9 +450,12 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             //金融产品交易汇总登记
             RegFinProductDealTotal regFinProductDealTotal = new RegFinProductDealTotal();
             BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotal,entity);
+            regFinProductDealTotal.setTradeAmt(entity.getFpriceAmt());
             regFinProductDealTotal.setSettleSpeed(settleSpreed);
             regFinProductDealTotal.setQuoteType(entity.getQuoteStyle());
             regFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            regFinProductDealTotal.setFaceValue(entity.getShareAmt());
+            regFinProductDealTotal.setShareAmt(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(100),2));
             regFinProductDealTotal.setBranch(0L);
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
                 tgBusiType = BussinessDictCodeList.平安业务类型_债券类资产买入.getValue();
@@ -496,6 +499,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     regFinProductDeal.setPortfolioId(ptlAllocatio.getPortfolioId());
                     regFinProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
                     regFinProductDeal.setShareAmt(ArithmeticUtil.divide(ptlAllocatio.getShareAmt(),new BigDecimal(100),2));
+                    regFinProductDeal.setFaceValue(ptlAllocatio.getShareAmt());
                     regFinProductDeal.setTradeAmt(ptlAllocatio.getFpriceAmt());
                     regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
                     regFinProductDeal.setTgBusiType(tgBusiType);
