@@ -12,6 +12,8 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
@@ -22,6 +24,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
@@ -97,6 +100,8 @@ public class IbuQuoteBondService extends BaseService {
     @Autowired
     private RegFinProductDealTotalMapper regFinProductDealTotalMapper;
 
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
     /**
      * 风险试算check
      * @param entity
@@ -170,6 +175,14 @@ public class IbuQuoteBondService extends BaseService {
         //无错误时，进行接收操作
         if(errorList.size() == 0){
             etrInvesInfo.receptionDelegate(list);
+            List<String> entrustIds = StringUtil.splitToList(",",(String)param.get("entrustIds"));
+            for(String entrustId:entrustIds){
+                //更新操作记录日志
+                CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+                oprHisReq.setEntrustId(entrustId);
+                oprHisReq.setOperType(DictCodeListExt3.操作类型_接收.getValue());
+                joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+            }
         }
         return errorList;
     }
@@ -763,7 +776,11 @@ public class IbuQuoteBondService extends BaseService {
         }else{
             boolean status = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId,com.joyintech.tams.constant.DictCodeListExt3.委托状态_待分发.getValue());
         }
-
+        //更新操作记录日志
+        CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+        oprHisReq.setEntrustId(entrustId);
+        oprHisReq.setOperType(DictCodeListExt3.操作类型_放弃.getValue());
+        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
         return "3";
     }
 
