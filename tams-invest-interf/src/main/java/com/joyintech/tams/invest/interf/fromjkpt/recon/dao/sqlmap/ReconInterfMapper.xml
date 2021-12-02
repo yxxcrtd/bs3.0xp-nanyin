@@ -15,7 +15,7 @@
         <if test="collect != null and collect.size()>0">
             and  CUSTOMER_ID IN
             <foreach item="item" index="index" collection="collect" open="(" separator=","  close=")">
-                #{item.paraValue}
+                #{item.customerId}
             </foreach>
         </if>
         <if test="finprodIds != null and finprodIds.size()>0">
@@ -95,10 +95,11 @@
         ENTRUST_TRADE_ID
     FROM
         STL_SEC_RECON
-    WHERE CHECK_RESULT = '1'
-    <if test="execDate != null">
-        AND SETTLE_DATE = TO_DATE(#{execDate,jdbcType=VARCHAR},'yyyyMMdd')
-    </if>
+    WHERE
+        (CHECK_RESULT = '1' OR CHECK_RESULT = '3')
+        <if test="execDate != null">
+            AND SETTLE_DATE = TO_DATE(#{execDate,jdbcType=VARCHAR},'yyyyMMdd')
+        </if>
     </select>
 
     <!--资金余额-->

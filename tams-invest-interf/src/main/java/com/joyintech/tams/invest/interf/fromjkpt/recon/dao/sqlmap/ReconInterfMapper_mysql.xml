@@ -15,7 +15,7 @@
         <if test="collect != null and collect.size()>0">
             and  CUSTOMER_ID IN
             <foreach item="item" index="index" collection="collect" open="(" separator=","  close=")">
-                #{item.paraValue}
+                #{item.customerId}
             </foreach>
         </if>
         <if test="finprodIds != null and finprodIds.size()>0">
@@ -68,7 +68,7 @@
     FROM
         STL_SEC_RECON
     WHERE
-        CHECK_RESULT = '1'
+        (CHECK_RESULT = '1' OR CHECK_RESULT = '3')
         <if test="execDate != null">
             AND SETTLE_DATE = STR_TO_DATE(#{execDate},'%Y%m%d')
         </if>
