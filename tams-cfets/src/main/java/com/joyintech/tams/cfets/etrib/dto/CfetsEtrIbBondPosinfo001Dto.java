@@ -1,11 +1,13 @@
 package com.joyintech.tams.cfets.etrib.dto;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 /**
  * 银行间债券指令，持仓信息
@@ -143,7 +145,20 @@ public class CfetsEtrIbBondPosinfo001Dto{
     }
     
     public String getBusiModelStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, getBusiModel());
+        String str = getBusiModel();
+        if (StringUtil.isNotEmpty(str)) {
+            if (StringUtil.contains(str, ",")){
+                String[] arr = str.split(",");
+                for (int i=0; i<arr.length; i++){
+                    String each = arr[i];
+                    String rsStr = SysDataUtil.getNameFromDataDict(DictCode.业务模式, each);
+                    str = str.replace(each, rsStr);
+                }
+            }else{
+                return SysDataUtil.getNameFromDataDict(DictCode.业务模式, getBusiModel());
+            }
+        }
+        return str;
     }
 
     public void setBusiModelStr(String busiModelStr) {

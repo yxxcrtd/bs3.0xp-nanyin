@@ -348,7 +348,7 @@ from
             d.FINPROD_ABBR as finprodAbbr,
             d.FINPROD_MARKET_ID as finprodMarketId,
             c.TYPE_11 as secType1, /*债券一级分类code*/
-            etrptl.INV_AIM as busiModel,  /*业务模式code*/
+            invaim.INV_AIM as busiModel,  /*业务模式code*/
             /*指令汇总可用持仓、指令可质押持仓、指令已质押持仓*/
             ROUND(etrptl.ETR_SUM_KYCC/10000,2) as etrPledgePrin,
             ROUND(etrptl.ETR_PLEDGE_KZYCC/10000,2) as etrAvaPledgePrin,
@@ -475,6 +475,49 @@ from
                     ) WHERE rn =1
                 ) tt on tt.SEC_ID=d.FINPROD_MARKET_ID
             </if>
+            <!-- 业务模式查交易表 -->
+            left join (
+                select FINPROD_ID, PORTFOLIO_ID, listagg(INV_AIM, ',') WITHIN GROUP (ORDER BY PORTFOLIO_ID, FINPROD_ID) as INV_AIM
+                from (
+                    SELECT FINPROD_ID, PORTFOLIO_ID, INV_AIM
+                    FROM (
+                        select
+                        a.INV_AIM , a.TRADE_DATE ,a.FINPROD_ID,b.PORTFOLIO_ID,
+                        ROW_NUMBER () over(
+                        PARTITION BY a.TRADE_ID
+                        ORDER BY a.TRADE_DATE DESC
+                        ) rn
+                        from TRD_PRODUCT_DEAL a
+                        LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+                        WHERE 1=1
+                        <if test="finprodId != null and finprodId != ''">
+                            AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+                        </if>
+                        <if test="portfolioIdList != null">
+                            AND b.PORTFOLIO_ID in
+                            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                                #{item}
+                            </foreach>
+                        </if>
+                        AND a.TRADE_DATE &lt;= to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') - 1
+                    ) WHERE rn = 1
+                    UNION
+                    SELECT a.FINPROD_ID, b.PORTFOLIO_ID, a.INV_AIM
+                    from TRD_PRODUCT_DEAL a
+                    LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+                    WHERE 1=1
+                    <if test="finprodId != null and finprodId != ''">
+                        AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+                    </if>
+                    <if test="portfolioIdList != null">
+                        AND b.PORTFOLIO_ID in
+                        <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    AND a.TRADE_DATE = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd')
+                ) GROUP BY FINPROD_ID, PORTFOLIO_ID
+            ) invaim on invaim.FINPROD_ID=etrptl.FINPROD_ID and invaim.PORTFOLIO_ID=etrptl.PORTFOLIO_ID
             <if test="search != null and search != ''">
                 <!--模糊查询使用-->
                 LEFT JOIN (
@@ -505,7 +548,7 @@ from
         <if test="search != null and search != ''">
             and (
                 etrptl.PORTFOLIO_ID || '|' || e.PORTFOLIO_NAME || '|' || etrptl.FINPROD_ID || '|' || 
-                d.FINPROD_ABBR || '|' || d.FINPROD_MARKET_ID || '|' || c.TYPE_11 || '|' || etrptl.INV_AIM || '|' || 
+                d.FINPROD_ABBR || '|' || d.FINPROD_MARKET_ID || '|' || c.TYPE_11 || '|' || invaim.INV_AIM || '|' || 
                 f.ITEM_VALUE || '|' || g.ITEM_VALUE 
                 like '%' || #{search} || '%' 
                 <if test="search_isNumberFlag != null and search_isNumberFlag == true">
