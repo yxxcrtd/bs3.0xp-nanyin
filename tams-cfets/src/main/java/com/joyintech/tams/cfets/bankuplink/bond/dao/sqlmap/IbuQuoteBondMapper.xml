@@ -270,25 +270,25 @@
         <if test="quotaPageModel != null and quotaPageModel eq 'marketResponse'">
             AND STL_SEC_ACCT_INFO.SEC_ACCT_SOURCE = #{secAcctSource}
         </if>
-        <if test="keywords != null and keywords != ''">
-            AND (SYS_USER.USER_NAME LIKE '%' || #{keywords} || '%' OR SYS_USER.REAL_NAME LIKE '%' || #{keywords} || '%'
+        <if test="search != null and search != ''">
+            AND (SYS_USER.USER_NAME LIKE '%' || #{search} || '%' OR SYS_USER.REAL_NAME LIKE '%' || #{search} || '%'
             OR
-            ETR_ENTRUST.ENTRUST_STATUS like '%' || #{keywords} || '%' OR D.ITEM_VALUE LIKE '%' || #{keywords} || '%' OR
-            ETR_ENTRUST.PORTFOLIO_ID LIKE '%' || #{keywords} || '%' OR
-            PTL_PORTFOLIO.PORTFOLIO_NAME LIKE '%' || #{keywords} || '%' OR
-            ETR_ENTRUST.FINPROD_ID LIKE '%' || #{keywords} || '%' OR
-            FIN_PRODUCT.FINPROD_ABBR LIKE '%' || #{keywords} || '%' OR
-            ETR_ENTRUST_ADD.SEC_ACCT_ID LIKE '%' || #{keywords} || '%' OR
-            ETR_ENTRUST.PS LIKE '%' || #{keywords} || '%' OR E.ITEM_VALUE LIKE '%' || #{keywords} || '%' OR
-            ETR_ENTRUST_ADD.SETTLE_SPREED LIKE '%' || decode(#{keywords},'T+0','0','T+1','1','T+2','2',#{keywords}) ||
+            ETR_ENTRUST.ENTRUST_STATUS like '%' || #{search} || '%' OR D.ITEM_VALUE LIKE '%' || #{search} || '%' OR
+            ETR_ENTRUST.PORTFOLIO_ID LIKE '%' || #{search} || '%' OR
+            PTL_PORTFOLIO.PORTFOLIO_NAME LIKE '%' || #{search} || '%' OR
+            ETR_ENTRUST.FINPROD_ID LIKE '%' || #{search} || '%' OR
+            FIN_PRODUCT.FINPROD_ABBR LIKE '%' || #{search} || '%' OR
+            ETR_ENTRUST_ADD.SEC_ACCT_ID LIKE '%' || #{search} || '%' OR
+            ETR_ENTRUST.PS LIKE '%' || #{search} || '%' OR E.ITEM_VALUE LIKE '%' || #{search} || '%' OR
+            ETR_ENTRUST_ADD.SETTLE_SPREED LIKE '%' || decode(#{search},'T+0','0','T+1','1','T+2','2',#{search}) ||
             '%' OR
-            ETR_ENTRUST.PRICE LIKE '%' || #{keywords} || '%' OR
-            ETR_ENTRUST_ADD.MATURE_YIELD LIKE '%' || #{keywords} || '%' OR
-            MST_CFETS_CI.PARTY_ABBR LIKE '%' || #{keywords} || '%' OR
-            MST_CFETS_CT.TRADER_NAME LIKE '%' || #{keywords} || '%' OR
-            ETR_ENTRUST.VDATE LIKE '%' || #{keywords} || '%' OR
-            ETR_ENTRUST.MDATE LIKE '%' || #{keywords} || '%' OR
-            ETR_ENTRUST.ENTRUST_ID LIKE '%' || #{keywords} || '%')
+            ETR_ENTRUST.PRICE LIKE '%' || #{search} || '%' OR
+            ETR_ENTRUST_ADD.MATURE_YIELD LIKE '%' || #{search} || '%' OR
+            MST_CFETS_CI.PARTY_ABBR LIKE '%' || #{search} || '%' OR
+            MST_CFETS_CT.TRADER_NAME LIKE '%' || #{search} || '%' OR
+            ETR_ENTRUST.VDATE LIKE '%' || #{search} || '%' OR
+            ETR_ENTRUST.MDATE LIKE '%' || #{search} || '%' OR
+            ETR_ENTRUST.ENTRUST_ID LIKE '%' || #{search} || '%')
         </if>
         <if test="entrustIdList != null and entrustIdList.size() > 0">
             and ETR_ENTRUST.ENTRUST_ID in
