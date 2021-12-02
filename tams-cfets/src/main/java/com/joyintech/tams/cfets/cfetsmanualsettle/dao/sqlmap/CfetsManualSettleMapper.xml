@@ -32,7 +32,7 @@
         T1.TRADE_PLAT tradePlat,
         sdl5.item_value tradePlatStr,
         T7.SEC_ACCT_NAME secAcctId,
-        T6.COUNTER_NAME counterName,
+        T6.PARTY_NAME counterName,
         T1.TRADE_MARKET_MODE tradeMarketMode,
         sdl6.item_value tradeMarketModeStr,
         NULL AS cleanStlStatus,
@@ -46,7 +46,7 @@
         LEFT JOIN TRD_PRODUCT_DEAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
         LEFT JOIN TRD_PRODUCT_DEAL_ADD T4 ON T3.TRADE_ID = T4.TRADE_ID
         LEFT JOIN PTL_PORTFOLIO T5 ON T4.PORTFOLIO_ID = T5.PORTFOLIO_ID
-        LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.COUNTER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO T6 ON T1.COUNTER_ID = T6.PARTY_ID
         LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
         LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
@@ -119,7 +119,7 @@
             sdl4.item_value,
             T1.TRADE_PLAT,
             sdl5.item_value,
-            T6.COUNTER_NAME,
+            T6.PARTY_NAME,
             T1.FINPROD_ID,
             T1.CCY,
             T7.SEC_ACCT_NAME,
