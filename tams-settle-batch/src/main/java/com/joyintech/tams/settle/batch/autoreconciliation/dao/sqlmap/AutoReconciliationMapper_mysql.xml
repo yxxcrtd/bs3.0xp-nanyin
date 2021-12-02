@@ -203,7 +203,7 @@
 				TRADE_MARKET,
 				TRADE_DATE,
 				SEC_ACCT_ID
-				) std ON tmp.FINPROD_ID = std.FINPROD_ID AND tmp.TRADE_DATE = std.TRADE_DATE
+				) std ON tmp.FINPROD_ID = std.FINPROD_ID AND tmp.TRADE_DATE = std.TRADE_DATE AND tmp.PS = std.PS
 			WHERE
 				tmp.PARA_VALUE = #{PARA_VALUE_01}
 		UNION ALL
