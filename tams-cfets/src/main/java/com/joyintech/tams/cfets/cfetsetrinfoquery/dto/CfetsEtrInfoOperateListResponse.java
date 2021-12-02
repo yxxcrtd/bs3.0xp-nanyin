@@ -34,7 +34,7 @@ public class CfetsEtrInfoOperateListResponse{
     private String operDate;
 
     @ApiModelProperty(name="operTime",value="操作时间",example="2021-01-01")
-    private Date operTime;
+    private String operTime;
 
     @ApiModelProperty(name="operType",value="操作类型",example="A1")
     private String operType;
@@ -73,11 +73,11 @@ public class CfetsEtrInfoOperateListResponse{
         this.operDate = operDate;
     }
 
-    public Date getOperTime() {
+    public String getOperTime() {
         return operTime;
     }
 
-    public void setOperTime(Date operTime) {
+    public void setOperTime(String operTime) {
         this.operTime = operTime;
     }
 
