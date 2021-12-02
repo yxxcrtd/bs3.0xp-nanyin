@@ -84,7 +84,7 @@ public class CfetsEntrustStatusService {
             closeItem.setPs(t.getPs());
             closeItem.setCloseId(t.getCloseId());
             closeItem.setSystemAct(DictCodeListExt3.系统动作_关闭.getValue());
-            closeItem.setBusiAct(DictCodeListExt3.业务动作_指令手动关闭.getValue());
+            closeItem.setBusiAct(DictCodeListExt3.业务动作_指令日终关闭.getValue());
             etrList.add(closeItem);
         }
         req.setData(etrList);
