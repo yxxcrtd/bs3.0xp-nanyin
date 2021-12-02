@@ -40,8 +40,8 @@
         ,{field:'secAcctName', width:150, title: '证券账户',edit:true,sortable: false}
         ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}
         ,{field:'unitFprice', width:120, title: '全价(元)',sortable: false,type:'number', digit:2,visible:ps=='T03'?true:false}
-        ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:2,visible:ps!='T03'?true:false}
-        ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:2,visible:ps!='T03'?true:false}
+        ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:4,visible:ps!='T03'?true:false}
+        ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:4,visible:ps!='T03'?true:false}
         ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt'],
             render(data, type, row, meta) {
                 // 报价修改时组合信息只可以添加和修改额度，不允许删除(初始化的组合信息不允许删除，手工添加的组合信息可以删除)

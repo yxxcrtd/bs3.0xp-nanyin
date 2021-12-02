@@ -99,7 +99,17 @@ public class IbuQuoteBond004Controller extends BaseController {
             cfetsBondDealQuoteCommonDto.setMatureYield(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getMatureYield(),new BigDecimal(100)));
             cfetsBondDealQuoteCommonDto.setExerYield(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getExerYield(),new BigDecimal(100)));
             //券面万元
-            cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.divide(cfetsBondDealQuoteCommonDto.getShareAmt(),new BigDecimal(10000),4));
+            cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.divide(cfetsBondDealQuoteCommonDto.getShareAmt(),new BigDecimal(10000),2));
+            //分配列表元转化万元
+            if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
+                cfetsBondDealQuoteCommonDto.getPtlAllocatios().stream().forEach(item ->{
+                    item.setAvaNum(ArithmeticUtil.divide(item.getAvaNum(),new BigDecimal(10000),2));
+                    item.setShareAmt(ArithmeticUtil.divide(item.getShareAmt(),new BigDecimal(10000),2));
+                    item.setOurEntNum(ArithmeticUtil.divide(item.getOurEntNum(),new BigDecimal(10000),2));
+                    item.setLendinEntNum(ArithmeticUtil.divide(item.getLendinEntNum(),new BigDecimal(10000),2));
+                    item.setSellAbleNum(ArithmeticUtil.divide(item.getSellAbleNum(),new BigDecimal(10000),2));
+                });
+            }
         }
         model.addAttribute("PRICE_MODEL_PRM01",DictCodeListExt2.价格模式_指定价格.getValue());
         model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
