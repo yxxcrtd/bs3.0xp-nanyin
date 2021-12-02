@@ -7,6 +7,7 @@
 		SELECT *
 		FROM (
 		select
+		null                      as disabledThing,
 		erro.REGIST_SEQNO         as registSeqno,
 		'01'                      as maintainStatus,
 		erro.DATA_STATUS          as dataStatus,
@@ -54,6 +55,7 @@
 
 
 		select
+		'01'                      as disabledThing,
 		info.REGIST_SEQNO         as registSeqno,
 		'02'                      as maintainStatus,
 		info.DATA_STATUS          as dataStatus,
@@ -102,6 +104,7 @@
 	<select id="selectDetail"
 			resultType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
 		select
+		'01'                disabledThing,
 		a.REGIST_SEQNO     registSeqno,
 		'02'               maintainStatus,
 		a.INSTITUTION_CODE institutionCode,
@@ -130,6 +133,7 @@
 	<select id="selectErroDetail"
 			resultType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
 		select
+		null                disabledThing,
 		a.REGIST_SEQNO      registSeqno,
 		'01'               maintainStatus,
 		a.INSTITUTION_CODE institutionCode,
