@@ -436,6 +436,17 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		return new Message<AjaxResult>().success().setData(ar);
 	}
 
+	@ApiOperation(value = "强制完成检查", notes = "强制完成检查")
+	@ResponseBody
+	@RequestMapping("/doForcedFinishCheck")
+	public Message<AjaxResult> doForcedFinishCheck(@RequestBody Map<String,Object> param) {
+		BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
+		AjaxResult ar = null;
+		List<String> entrustIds = StringUtil.splitToList(",",(String)param.get("entrustIds"));
+		param.put("entrustIdList",entrustIds);
+		return new Message<AjaxResult>().success().setData(ibuQuoteBondService.doForcedFinishCheck(param));
+	}
+
 
 	@ApiOperation(value = "强制完成", notes = "强制完成")
 	@ResponseBody
