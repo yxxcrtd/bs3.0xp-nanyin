@@ -6,6 +6,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
@@ -257,6 +258,10 @@ public class IbuQuoteBondService extends BaseService {
                     cfetsBondDealQuoteCommonDto.setTheoreticalExerciseDate(finExercisePlan.getExerciseDate());
                     cfetsBondDealQuoteCommonDto.setActSetteDate(finExercisePlan.getActExerciseDate());
                 }
+            }
+            //本方交易员应默认当前登录用户姓名
+            if(StringUtil.isEmpty(cfetsBondDealQuoteCommonDto.getMySideTrader())&&null!=SecurityUtil.getLoginUser()){
+                cfetsBondDealQuoteCommonDto.setMySideTrader(SecurityUtil.getLoginUser().getRealName());
             }
             //处理组合分配
             List<PtlAllocationDto> ptlAllocatios = new ArrayList<>();
