@@ -37,7 +37,7 @@
         ,{field:'priceModel', width:100, title: '价格模式', sortable: false, edit:true
             ,editOption:{type:'select',id:"priceModel",formatoption:true,result:BUSINESS_MODEL}
             , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }
-        ,{field:'secManageAcctId', width:150, title: '证券账户',edit:true,sortable: false}
+        ,{field:'secAcctName', width:150, title: '证券账户',edit:true,sortable: false}
         ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}
         ,{field:'unitFprice', width:120, title: '全价(元)',sortable: false,type:'number', digit:2,visible:ps=='T03'?true:false}
         ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:2,visible:ps!='T03'?true:false}
