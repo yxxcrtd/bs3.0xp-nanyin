@@ -1,6 +1,7 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import io.swagger.annotations.ApiModel;
@@ -31,6 +32,8 @@ public class CfetsBondDayRegDto {
     @ApiModelProperty(name="quoteType",value="报价方式")
     private String quoteType;
 
+    @ApiModelProperty(name="quoteTypeStr",value="报价方式名称")
+    private String quoteTypeStr;
 
     @ApiModelProperty(name="finprodMarketId",value="资产代码")
     private String finprodMarketId;
@@ -78,17 +81,32 @@ public class CfetsBondDayRegDto {
     @ApiModelProperty(name="settleSpeed",value="清算速度")
     private Long settleSpeed;
 
-    @ApiModelProperty(name="settleSpeed",value="清算速度")
+    @ApiModelProperty(name="settleSpeedStr",value="清算速度")
     private String settleSpeedStr;
 
     @ApiModelProperty(name="settleMethod",value="结算方式")
     private String  settleMethod;
 
-    @ApiModelProperty(name="settleType",value="清算类型")
+    @ApiModelProperty(name="settleMethodStr",value="结算方式名称")
+    private String  settleMethodStr;
+
+    @ApiModelProperty(name="settleType",value="清算类型名称")
     private String  settleType;
+
+    @ApiModelProperty(name="settleTypeStr",value="清算类型名称")
+    private String  settleTypeStr;
+
+    @ApiModelProperty(required = false,name="tradeMarket",value="交易场所代码")
+    private String tradeMarket;
+
+    @ApiModelProperty(required = false,name="tradeMarketStr",value="交易场所名称")
+    private String tradeMarketStr;
 
     @ApiModelProperty(name="theoreticalExerciseDate",value="理论行权日")
     private Date theoreticalExerciseDate;
+
+    @ApiModelProperty(name="settleDate",value="结算日期")
+    private Date settleDate;
 
     @ApiModelProperty(name="tradeDate",value="登记日期")
     private Date tradeDate;
@@ -317,6 +335,54 @@ public class CfetsBondDayRegDto {
 
     public void setQuoteId(String quoteId) {
         this.quoteId = quoteId;
+    }
+
+    public String getQuoteTypeStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式_登记, this.getQuoteType());
+    }
+
+    public void setQuoteTypeStr(String quoteTypeStr) {
+        this.quoteTypeStr = quoteTypeStr;
+    }
+
+    public String getSettleMethodStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, this.getSettleMethod());
+    }
+
+    public void setSettleMethodStr(String settleMethodStr) {
+        this.settleMethodStr = settleMethodStr;
+    }
+
+    public String getSettleTypeStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.清算类型, this.getSettleType());
+    }
+
+    public void setSettleTypeStr(String settleTypeStr) {
+        this.settleTypeStr = settleTypeStr;
+    }
+
+    public String getTradeMarketStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, getTradeMarket());
+    }
+
+    public void setTradeMarketStr(String tradeMarketStr) {
+        this.tradeMarketStr = tradeMarketStr;
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
+    }
+
+    public Date getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(Date settleDate) {
+        this.settleDate = settleDate;
     }
 }
 

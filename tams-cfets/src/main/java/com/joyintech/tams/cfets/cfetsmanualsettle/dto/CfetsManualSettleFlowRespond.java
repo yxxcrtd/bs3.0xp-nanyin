@@ -27,8 +27,8 @@ public class CfetsManualSettleFlowRespond {
     @ApiModelProperty(name="settleDate",value="交收日期",example="2021-01-01")
     private String settleDate;
 
-    @ApiModelProperty(name="jiaoShouDate",value="交收时间",example="2021-01-01 HH:SS")
-    private Date jiaoShouDate;
+    @ApiModelProperty(name="jiaoShouDate",value="交收时间",example="HH:SS")
+    private String jiaoShouDate;
 
     @ApiModelProperty(name="finprodMarketId",value="资产简称",example="字符串1")
     private String finprodMarketId;
@@ -64,11 +64,11 @@ public class CfetsManualSettleFlowRespond {
         this.settleDate = settleDate;
     }
 
-    public Date getJiaoShouDate() {
+    public String getJiaoShouDate() {
         return jiaoShouDate;
     }
 
-    public void setJiaoShouDate(Date jiaoShouDate) {
+    public void setJiaoShouDate(String jiaoShouDate) {
         this.jiaoShouDate = jiaoShouDate;
     }
 

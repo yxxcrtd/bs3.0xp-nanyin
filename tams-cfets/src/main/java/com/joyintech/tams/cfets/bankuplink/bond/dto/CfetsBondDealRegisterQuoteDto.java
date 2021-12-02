@@ -101,6 +101,8 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
     private BigDecimal price;
 
     private BigDecimal matureYield;
+
+    private String settleSpreedCode;
     /**
      * 组合分配信息
      */
@@ -311,5 +313,13 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setMatureYield(BigDecimal matureYield) {
         this.matureYield = matureYield;
+    }
+
+    public String getSettleSpreedCode() {
+        return settleSpreedCode;
+    }
+
+    public void setSettleSpreedCode(String settleSpreedCode) {
+        this.settleSpreedCode = settleSpreedCode;
     }
 }

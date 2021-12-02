@@ -1,5 +1,9 @@
 package com.joyintech.tams.cfets.etrdispatcher.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -32,9 +36,6 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     @ApiModelProperty(name="busiType",value="交易类型code",example="TRD69")
     private String busiType;
 
-    @ApiModelProperty(name="busiTypeStr",value="交易类型",example="债券交易-登记")
-    private String busiTypeStr;
-
     @ApiModelProperty(name="secAcctId",value="证券账户code",example="XXX证券账户")
     private String secAcctId;
 
@@ -49,9 +50,6 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
 
     @ApiModelProperty(name="settleSpeed",value="清算速度code",example="T+0")
     private String settleSpeed;
-
-    @ApiModelProperty(name="settleSpeedStr",value="清算速度",example="T+0")
-    private String settleSpeedStr;
 
     @ApiModelProperty(name="settleDate",value="结算日期",example="2021-01-01")
     private String settleDate;
@@ -189,14 +187,6 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
         this.busiType = busiType;
     }
 
-    public String getBusiTypeStr() {
-        return busiTypeStr;
-    }
-
-    public void setBusiTypeStr(String busiTypeStr) {
-        this.busiTypeStr = busiTypeStr;
-    }
-
     public String getSecAcctId() {
         return secAcctId;
     }
@@ -220,14 +210,6 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
 
     public void setSettleSpeed(String settleSpeed) {
         this.settleSpeed = settleSpeed;
-    }
-
-    public String getSettleSpeedStr() {
-        return settleSpeedStr;
-    }
-
-    public void setSettleSpeedStr(String settleSpeedStr) {
-        this.settleSpeedStr = settleSpeedStr;
     }
 
     public BigDecimal getUnitPrice() {
@@ -492,5 +474,24 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
 
     public void setSettleDate(String settleDate) {
         this.settleDate = settleDate;
+    }
+
+    public String getExeDate() {
+        return exeDate;
+    }
+
+    public void setExeDate(String exeDate) {
+        this.exeDate = exeDate;
+    }
+    public String getOtherPs() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.交易方向,super.getPs());
+    }
+
+    public String getOtherSettleSpeed() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.清算速度,this.getSettleSpeed());
+    }
+
+    public String getBusiTypeStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, this.getBusiType());
     }
 }

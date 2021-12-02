@@ -5,16 +5,17 @@ import com.joyintech.framework.util.*;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.AutoAllocationRequest;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CalRequest;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CalRespone;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
 import com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,11 @@ import java.util.*;
 @Service
 public class IbuQuoteBondCalService extends BaseService {
 
+    /**
+     * 递增维度
+     */
+    private static  BigDecimal dimension = new BigDecimal("0.01");
+
     @Autowired(required = false)
     private DateCalService dateCalService;
 
@@ -40,6 +46,12 @@ public class IbuQuoteBondCalService extends BaseService {
 
     @Autowired
     private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
+
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
+
+    @Autowired
+    private FinProductMapper finProductMapper;
     /**
      * 数据联动计算
      * @param calRequest
@@ -59,10 +71,18 @@ public class IbuQuoteBondCalService extends BaseService {
                     continue;
                 }
                 if(StringUtil.equals(item.getFeeType(),BussinessDictCodeList.费用类型_结算手续费.getValue())){
-                    calRespone.setSettFeeamt(item.getFeeAmt());
+                    calRespone.setSettFeeAmt(item.getFeeAmt());
                     continue;
                 }
             }
+        }
+        //计算偏离度
+        if(StringUtil.isNotEmpty(calRequest.getFinprodId())&&null!=calRequest.getPrice()){
+            Map<String,Object> calParam = new HashMap<>();
+            calParam.put("finprodId",calRequest.getFinprodId());
+            calParam.put("finprodMarketId",finProductMapper.selectByPrimaryKey(calRequest.getFinprodId()).getFinprodMarketId());
+            calParam.put("unitCprice",calRequest.getPrice());
+            calRespone.setDeviationDegree(calcDeviationDegree(calParam));
         }
         return calRespone;
         /*return restTemplate.postForObject(
@@ -98,13 +118,25 @@ public class IbuQuoteBondCalService extends BaseService {
      */
     public List<PtlAllocationDto> autoAllocation(AutoAllocationRequest autoAllocationRequest){
         List<PtlAllocationDto> result = new ArrayList<>();
+        //备份剩余额度
+        List<PtlAllocationDto> ptlAllocations = autoAllocationRequest.getPtlAllocations();
+        if(CollectionUtils.isNotEmpty(ptlAllocations)){
+            ptlAllocations.forEach(item ->{
+                item.setAvaNumOld(item.getAvaNum());
+            });
+        }
         //平均分配
         if(StringUtil.equals(autoAllocationRequest.getDistribution(),"139")){
-            return aveDistribution(autoAllocationRequest);
+            result = aveDistribution(autoAllocationRequest);
         }
         //比例分配
         if(StringUtil.equals(autoAllocationRequest.getDistribution(),"143")){
-            return propDistribution(autoAllocationRequest);
+            result = propDistribution(autoAllocationRequest);
+        }
+        if(CollectionUtils.isNotEmpty(ptlAllocations)){
+            ptlAllocations.forEach(item ->{
+                item.setAvaNum(item.getAvaNumOld());
+            });
         }
         return result;
     }
@@ -132,7 +164,7 @@ public class IbuQuoteBondCalService extends BaseService {
         }
         handleTailDifference(ptlAllocations,tailDifference);
         calOtherForPtlAllocation(ptlAllocations,request.getPs(),request.getPrice(),request.getUnitFprice());
-        calFee(ptlAllocations,shareAmt,request.getDealFeeAmt(),request.getSettFeeamt(),request.getIntAmt());
+        calFee(ptlAllocations,shareAmt,request.getDealFeeAmt(),request.getSettFeeAmt(),request.getIntAmt());
         return ptlAllocations;
     }
 
@@ -155,18 +187,18 @@ public class IbuQuoteBondCalService extends BaseService {
         }
         handleTailDifference(ptlAllocations,tailDifference);
         calOtherForPtlAllocation(ptlAllocations,request.getPs(),request.getPrice(),request.getUnitFprice());
-        calFee(ptlAllocations,shareAmt,request.getDealFeeAmt(),request.getSettFeeamt(),request.getIntAmt());
+        calFee(ptlAllocations,shareAmt,request.getDealFeeAmt(),request.getSettFeeAmt(),request.getIntAmt());
         return ptlAllocations;
     }
 
     /**
-     *  尾差处理
+     *  尾差处理(券面)
      * @param ptlAllocations
      * @param tailDifference
      */
     public void handleTailDifference(List<PtlAllocationDto>  ptlAllocations,BigDecimal tailDifference){
         //递增维度
-        BigDecimal addDimension = new BigDecimal("0.01");
+        BigDecimal addDimension = dimension;
         int size = ptlAllocations.size();
         //委托维度 已经完全分配的集合
         Set<String> set = new HashSet<>();
@@ -190,31 +222,60 @@ public class IbuQuoteBondCalService extends BaseService {
     }
 
     /**
+     *  尾差处理(费用)
+     * @param ptlAllocations
+     * @param tailDifference
+     */
+    public void handleFeeTailDifference(List<PtlAllocationDto>  ptlAllocations,BigDecimal tailDifference,String feeType){
+        //递增维度
+        BigDecimal addDimension = dimension;
+        int size = ptlAllocations.size();
+        //委托维度 已经完全分配的集合
+        Set<String> set = new HashSet<>();
+        while(tailDifference.compareTo(BigDecimal.ZERO)>0&&size>0){
+            if(tailDifference.compareTo(new BigDecimal("1"))>=0){
+                addDimension = ArithmeticUtil.divide(tailDifference,size,4);
+            }
+            for (PtlAllocationDto item : ptlAllocations) {
+                if(StringUtil.equals(feeType,BussinessDictCodeList.费用类型_交易手续费.getValue())){
+                    item.setDealFeeAmt(ArithmeticUtil.doAdd(item.getDealFeeAmt(),addDimension));
+                }
+                if(StringUtil.equals(feeType,BussinessDictCodeList.费用类型_结算手续费.getValue())){
+                    item.setSettFeeAmt(ArithmeticUtil.doAdd(item.getSettFeeAmt(),addDimension));
+                }
+                tailDifference = ArithmeticUtil.subtract(tailDifference,addDimension);
+            }
+        }
+    }
+
+    /**
      *  计算费用
      * @param ptlAllocations
      * @param shareAmt 券面总额
      * @param dealFeeAmt 交易费
-     * @param settFeeamt  结算费
+     * @param settFeeAmt  结算费
      * @param intAmt  应计利息总额
      */
-    public void calFee(List<PtlAllocationDto> ptlAllocations,BigDecimal shareAmt,BigDecimal dealFeeAmt,BigDecimal settFeeamt,BigDecimal intAmt){
-        BigDecimal tailDifferenceIntAmt = intAmt;BigDecimal tailDifferenceDealFeeAmt = dealFeeAmt;BigDecimal tailDifferenceSettFeeamt = settFeeamt;
+    public void calFee(List<PtlAllocationDto> ptlAllocations,BigDecimal shareAmt,BigDecimal dealFeeAmt,BigDecimal settFeeAmt,BigDecimal intAmt){
+        BigDecimal tailDifferenceIntAmt = intAmt;BigDecimal tailDifferenceDealFeeAmt = dealFeeAmt;BigDecimal tailDifferenceSettFeeamt = settFeeAmt;
         for (PtlAllocationDto item : ptlAllocations) {
             item.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),intAmt),shareAmt,4));
             item.setDealFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),dealFeeAmt),shareAmt,4));
-            item.setSettFeeamt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),settFeeamt),shareAmt,4));
+            item.setSettFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),settFeeAmt),shareAmt,4));
             tailDifferenceIntAmt = ArithmeticUtil.subtract(tailDifferenceIntAmt,item.getIntAmt());
             tailDifferenceDealFeeAmt = ArithmeticUtil.subtract(tailDifferenceDealFeeAmt,item.getDealFeeAmt());
-            tailDifferenceSettFeeamt = ArithmeticUtil.subtract(tailDifferenceSettFeeamt,item.getSettFeeamt());
+            tailDifferenceSettFeeamt = ArithmeticUtil.subtract(tailDifferenceSettFeeamt,item.getSettFeeAmt());
         }
+        handleFeeTailDifference(ptlAllocations,tailDifferenceDealFeeAmt,BussinessDictCodeList.费用类型_交易手续费.getValue());
+        handleFeeTailDifference(ptlAllocations,tailDifferenceSettFeeamt,BussinessDictCodeList.费用类型_结算手续费.getValue());
         //尾差放在分在券面最大的委托上
-        ptlAllocations.sort((p1,p2) -> p1.getShareAmt().compareTo(p2.getShareAmt()));
+        /*ptlAllocations.sort((p1,p2) -> p1.getShareAmt().compareTo(p2.getShareAmt()));
         for (PtlAllocationDto ptlAllocation : ptlAllocations) {
             ptlAllocation.setIntAmt(ArithmeticUtil.doAdd(ptlAllocation.getIntAmt(),tailDifferenceIntAmt));
             ptlAllocation.setDealFeeAmt(ArithmeticUtil.doAdd(ptlAllocation.getDealFeeAmt(),tailDifferenceDealFeeAmt));
-            ptlAllocation.setSettFeeamt(ArithmeticUtil.doAdd(ptlAllocation.getSettFeeamt(),tailDifferenceSettFeeamt));
+            ptlAllocation.setSettFeeAmt(ArithmeticUtil.doAdd(ptlAllocation.getSettFeeAmt(),tailDifferenceSettFeeamt));
             break;
-        }
+        }*/
     }
     /**
      * 计算组合列表其他值(除费用)
@@ -240,13 +301,56 @@ public class IbuQuoteBondCalService extends BaseService {
         }
     }
 
-    public Date getNextWorkDay(Date tradeDate) {
+    public Date getNextWorkDay(Date tradeDate,int days) {
         if (dateCalService != null) {
             List<String> holiday = dateCalService.getDealCalendarHoliday(tradeDate,
                     DateUtil.addDays(tradeDate, 31), CacheUtil.getSysParam("ibuVar_calendarId"));
-            return dateCalService.calculationTradingDay(tradeDate, 1, holiday, "1");
+            return dateCalService.calculationTradingDay(tradeDate, days, holiday, "1");
         }
         return null;
+    }
+
+    /**
+     * 计算费用（交易端 废弃）
+     * @param entity
+     * @return
+     */
+    public List<TrdTradeFeeDetail> calcAmt(CfetsBondDealQuoteCommonDto entity){
+        /*TrdBondInvestTradeDto dto = new TrdBondInvestTradeDto();
+        dto.setPrinAmt(entity.getShareAmt());
+        dto.setIntegrateTradeAmt(entity.getLendinEntNum());
+        dto.setTradeAmt(entity.getFpriceAmt());
+        dto.setTradeMarket(entity.getTradeMarket());
+        dto.setYield(entity.getMatureYield());
+        dto.setExerYield(entity.getExerYield());
+        dto.setFinprodId(entity.getFinprodId());
+        dto.setPs(entity.getPs());
+        dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+        dto.setSettleDate(entity.getSettleDate());
+        dto.setUnitInt(entity.getUnitInt());
+        dto.setUnitCprice(entity.getPrice());
+        dto.setUnitFprice(entity.getUnitFprice());
+        if(StringUtil.equals(entity.getCalculateField(),"01")){
+            dto.setCalculateField("unitCprice");
+        }
+        if(StringUtil.equals(entity.getCalculateField(),"02")){
+            dto.setCalculateField("yield");
+        }
+        if(StringUtil.equals(entity.getCalculateField(),"03")){
+            dto.setCalculateField("exerYield");
+        }
+        trdBondInvestTrade002Service.calcAmt(dto);*/
+        return null;
+    }
+
+
+    /**
+     * 计算偏离度
+     * @param param
+     * @return
+     */
+    public String calcDeviationDegree(Map<String,Object> param){
+        return  trdBondInvestTrade002Service.calcDeviationDegree(param);
     }
 }
 

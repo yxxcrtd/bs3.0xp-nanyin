@@ -1078,6 +1078,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         Map<String, Object> map = new HashMap<>();
         map.put("secId",secId);
         map.put("sysDate",iPlatformDate.getSysDate());
+        //债券估值行情取值规则 01：优先取中债；02：根据托管机构取值
+        map.put("BOND_VALUATION_RULE", CacheUtil.getSysParam("BOND_VALUATION_RULE"));
+        map.put("VALUATION_SOURCE_CBC", DictCodeList.估值来源_中债登_CBC.getValue());
+        map.put("VALUATION_SOURCE_SCH", DictCodeList.估值来源_上清所_SCH.getValue());
+        map.put("REGIST_ORG_01", DictCodeList.登记托管机构_中央国债登记结算有限责任公司.getValue());
+        map.put("REGIST_ORG_02", DictCodeList.登记托管机构_上海清算所.getValue());
+        map.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         CfetsEtrFinProductDto dto = cfetsetrIbBondinfoMapper.getEtrFinProductInfo(map);
         if (dto != null) {
             map.put("marketId",dto.getMarketId());

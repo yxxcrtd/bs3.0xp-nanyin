@@ -516,7 +516,6 @@ public class SecCalRequestQuoteService extends BaseService {
         BigDecimal zfbj = BigDecimal.ZERO;
 
         Date xqDate = nextExeDate;
-
         for (int i = 0; i < listSaSecscheduleVO.size(); i++ ) {
             // 回售日等于理论付息结束日
             if (isHsr) {           	

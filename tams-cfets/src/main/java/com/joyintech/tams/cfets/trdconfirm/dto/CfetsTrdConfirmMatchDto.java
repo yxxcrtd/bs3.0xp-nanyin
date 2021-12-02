@@ -33,6 +33,8 @@ public class CfetsTrdConfirmMatchDto {
     private String cstpTradeId;
     @ApiModelProperty(name="exeId",value="成交编号",example="字符串1")
     private String exeId;
+    @ApiModelProperty(name="trdId",value="成交确认编号",example="字符串1")
+    private String trdId;
     @ApiModelProperty(name="preTradeId",value="报价编号/登记编号",example="字符串1")
     private String preTradeId;
     @ApiModelProperty(name="matchType",value="匹配方式，手工匹配，自动匹配",example="字符串1")
@@ -146,5 +148,13 @@ public class CfetsTrdConfirmMatchDto {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getTrdId() {
+        return trdId;
+    }
+
+    public void setTrdId(String trdId) {
+        this.trdId = trdId;
     }
 }

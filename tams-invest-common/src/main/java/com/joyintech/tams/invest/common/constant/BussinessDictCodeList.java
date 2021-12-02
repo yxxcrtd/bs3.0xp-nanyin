@@ -860,7 +860,7 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     /**
      * 商业银行柜台市场
      */
-    交易场所_商业银行柜台市场(BussinessDictCode.交易场所, "04", "商业银行柜台市场"),
+    交易场所_商业银行柜台市场(BussinessDictCode.交易场所, "02", "商业银行柜台市场"),
     /**
      * 机构间私募系统
      */

@@ -18,7 +18,7 @@ public class PtlAllocationAddRequest {
     @ApiModelProperty(required = true,name="ps",value="交易方向")
     private String ps;
 
-    @ApiModelProperty(required = true,name="ps",value="清算速度")
+    @ApiModelProperty(required = true,name="settleSpreed",value="清算速度")
     private String settleSpreed;
 
     @ApiModelProperty(required = true,name="entrustIdList",value="排除已经选择的指令")

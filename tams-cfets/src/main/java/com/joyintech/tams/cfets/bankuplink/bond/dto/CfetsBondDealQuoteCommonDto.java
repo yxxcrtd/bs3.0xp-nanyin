@@ -1,8 +1,6 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
 import com.joyintech.background.component.common.pack.common.base.BaseEntity;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -66,8 +64,8 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="ccy",value="币种")
     private String ccy;
 
-    @ApiModelProperty(name="settleSpreed",value="清算速度")
-    private String settleSpreed;
+    @ApiModelProperty(name="settleSpreedCode",value="清算速度")
+    private String settleSpreedCode;
 
     @ApiModelProperty(name="tradeDate",value="交易日期")
     private Date tradeDate;
@@ -123,8 +121,8 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="dealFeeAmt",value="交易手续费")
     private BigDecimal  dealFeeAmt;
 
-    @ApiModelProperty(name="settFeeamt",value="结算服务费")
-    private BigDecimal  settFeeamt;
+    @ApiModelProperty(name="settFeeAmt",value="结算服务费")
+    private BigDecimal  settFeeAmt;
 
     @ApiModelProperty(name="remark",value="备注")
     private String  remark;
@@ -161,6 +159,12 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     @ApiModelProperty(name="tradeMarket",value="交易场所")
     private String  tradeMarket;
+
+    @ApiModelProperty(name="isRight",value="是否含权债")
+    private String isRight;
+
+    @ApiModelProperty(name="secManageAcctId",value="证券账户")
+    private String secManageAcctId;
 
     public String getQuoteId() {
         return quoteId;
@@ -274,12 +278,12 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
         this.ccy = ccy;
     }
 
-    public String getSettleSpreed() {
-        return settleSpreed;
+    public String getSettleSpreedCode() {
+        return settleSpreedCode;
     }
 
-    public void setSettleSpreed(String settleSpreed) {
-        this.settleSpreed = settleSpreed;
+    public void setSettleSpreedCode(String settleSpreedCode) {
+        this.settleSpreedCode = settleSpreedCode;
     }
 
     public Date getSettleDate() {
@@ -378,12 +382,12 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
         this.dealFeeAmt = dealFeeAmt;
     }
 
-    public BigDecimal getSettFeeamt() {
-        return settFeeamt;
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
     }
 
-    public void setSettFeeamt(BigDecimal settFeeamt) {
-        this.settFeeamt = settFeeamt;
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
     }
 
     public String getRemark() {
@@ -544,6 +548,22 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setTradeMarket(String tradeMarket) {
         this.tradeMarket = tradeMarket;
+    }
+
+    public String getIsRight() {
+        return isRight;
+    }
+
+    public void setIsRight(String isRight) {
+        this.isRight = isRight;
+    }
+
+    public String getSecManageAcctId() {
+        return secManageAcctId;
+    }
+
+    public void setSecManageAcctId(String secManageAcctId) {
+        this.secManageAcctId = secManageAcctId;
     }
 }
 

@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -41,6 +42,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *  初始化查询页面
@@ -77,6 +80,9 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@Autowired
 	private CfetsQuotedCommonService cfetsQuotedCommonService;
 
+	@Autowired
+	private IPlatformDate iPlatformDate;
+
 	@ApiOperation(value = "初始化参数", notes = "初始化参数")
 	@PostMapping("/initParams")
 	@ResponseBody
@@ -112,6 +118,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		initPageParams.put("PAGE_ID_REQUEST","CfetsBondDealQuotedPrice005");
 		//01: 开启银行间报价 02:关闭银行间报价（事后录入）
 		initPageParams.put("ibuFlag_quote_switch",CacheUtil.getSysParam("ibuFlag_quote_switch"));
+		//刷新时间
+		initPageParams.put("ibuQuoteBond_etrTable_refresh_period", CacheUtil.getSysParam("ibuQuoteBond_etrTable_refresh_period"));
 		return new Message<Map<String, Object>>(initPageParams).success();
 	}
 
@@ -187,6 +195,9 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	public Message<AjaxResult> entrustRefuce(@RequestBody Map<String,Object> param){
 		try{
 			AjaxResult result = new AjaxResult();
+            if(com.joyintech.framework.util.StringUtil.isNotEmpty(param.get("entrustId"))){
+                param.put("entrustIdList", com.joyintech.framework.util.StringUtil.splitToList(",",(String)param.get("entrustIds")));
+            }
 			result = ibuQuoteBondService.entrustRefuceCheck(param);
 			if(CollectionUtils.isNotEmpty(result.getErrorList())){
 				return new Message<AjaxResult>().success().setData(result);
@@ -220,13 +231,13 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ApiOperation(value = "组合分配添加初始化", notes = "组合分配添加初始化")
 	@PostMapping("/ptlAllocationAdd")
 	@ResponseBody
-	public Message<List<PtlAllocationDto>> ptlAllocationAdd(@RequestBody PtlAllocationAddRequest ptlAllocationAddRequest) {
+	public Message<List<EntrustDto>> ptlAllocationAdd(@RequestBody PtlAllocationAddRequest ptlAllocationAddRequest) {
 		try {
-			List<PtlAllocationDto> list = ibuQuoteBondService.ptlAllocationAdd(ptlAllocationAddRequest);
-			return new Message<List<PtlAllocationDto>>().success().setData(list);
+			List<EntrustDto> list = ibuQuoteBondService.ptlAllocationAdd(ptlAllocationAddRequest);
+			return new Message<List<EntrustDto>>().success().setData(list);
 		} catch (Exception e) {
 			logger.error("组合分配添加初始化异常", e);
-			return new Message<List<PtlAllocationDto>>().fail().setMessage("组合分配添加初始化异常");
+			return new Message<List<EntrustDto>>().fail().setMessage("组合分配添加初始化异常");
 		}
 	}
 
@@ -346,13 +357,14 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ApiOperation(value = "查询交易成交信息", notes = "查询交易成交信息")
 	@PostMapping("/listDealTransactionDetails/{entrustId}")
 	@ResponseBody
-	public Message<List<DealTransactionDetailsDto>> listDealTransactionDetails(@PathVariable("entrustId") String entrustId){
+	public Message<Map<String,Object>> listDealTransactionDetails(@PathVariable("entrustId") String entrustId){
 		try {
-			List<DealTransactionDetailsDto> result = ibuQuoteBondService.listDealTransactionDetails(entrustId);
-			return new Message<List<DealTransactionDetailsDto>>().success().setData(result);
+			Map<String,Object> result = new HashMap<>();
+			result.put("root",ibuQuoteBondService.listDealTransactionDetails(entrustId));
+			return new Message<Map<String,Object>>().success().setData(result);
 		}catch (Exception e) {
 			logger.error("查询交易成交信息异常",e);
-			return new Message<List<DealTransactionDetailsDto>>().fail().setMessage("查询交易成交信息异常");
+			return new Message<Map<String,Object>>().fail().setMessage("查询交易成交信息异常");
 		}
 	}
 
@@ -460,7 +472,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@RequestMapping("exportEntrust")
 	public void export(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
 			// 导出
-			ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
+			ExcelUitl.doExport(requestDto, response, "指令列表", () -> {
 				EntrustRequest  entrustRequest = requestDto.getDto(EntrustRequest.class);
 				List dataList = ibuQuoteBondService.listEntrust(entrustRequest).getRoot();
 				return dataList;
@@ -487,7 +499,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@RequestMapping("exportDayPrice")
 	public void exportDayPrice(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
 		// 导出
-		ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
+		ExcelUitl.doExport(requestDto, response, "当日报价", () -> {
 			Map<String,Object>  stringObjectMap = requestDto.getDto(Map.class);
 			List dataList = cfetsBondDealQuotedPrice001Service.listDayPrice(stringObjectMap);
 			return dataList;
@@ -507,15 +519,50 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		}
 	}
 
+	@ApiOperation(value = "当日登记导出检查", notes = "当日登记导出检查")
+	@PostMapping("/exportDayRegCheck")
+	@ResponseBody
+	public Message<AjaxResult> exportDayRegCheck(@RequestBody CfetsExportRequestDto requestDto){
+		Map<String,Object>  stringObjectMap = requestDto.getDto(Map.class);
+		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(stringObjectMap);
+		AjaxResult ajaxResult = ibuQuoteBondService.exportDayRegCheck(dataList);
+		return new Message<AjaxResult>().success().setData(ajaxResult);
+	}
+
 	@ApiOperation(value = "当日登记导出", notes = "当日登记导出")
 	@PostMapping("/exportDayReg")
 	@ResponseBody
 	public void exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
-		ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
-			Map<String,Object>  stringObjectMap = requestDto.getDto(Map.class);
-			List dataList = ibuQuoteBondService.listDayReg(stringObjectMap);
-			return dataList;
-		});
+		Map<String,Object>  stringObjectMap = requestDto.getDto(Map.class);
+		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(stringObjectMap);
+		String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
+		if(StringUtil.isNotEmpty(ibuExportCountMax)){
+			int max = Integer.parseInt(ibuExportCountMax);
+			int fileCount = (dataList.size()+max-1)/ max;
+			List<List<CfetsBondDayRegDto>> collect = Stream.iterate(0, n -> n + 1).limit(fileCount).map(
+					a -> dataList.stream().skip(a * max).limit(max).collect(Collectors.toList())
+			).collect(Collectors.toList());
+			for(int i=0;i<collect.size();i++){
+				List<CfetsBondDayRegDto> cfetsBondDayRegDtos = collect.get(i);
+				String excelAndSheetName = "债券对话报价本币交易导出_"+iPlatformDate.getSysDateStr()+String.format(" %04d", i);
+				ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
+							return cfetsBondDayRegDtos;
+					});
+			}
+		}
+		else{
+			String excelAndSheetName = "债券对话报价本币交易导出_"+iPlatformDate.getSysDateStr();
+			ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
+				return dataList;
+			});
+		}
 	}
 
+	@ApiOperation(value = "计算偏离度", notes = "计算偏离度(参数资产代码finprodId和净价unitCprice)")
+	@PostMapping("/calcDeviationDegree")
+	@ResponseBody
+	public Message<String> calcDeviationDegree(@RequestBody Map<String,Object> param){
+		String deviationDegree =  ibuQuoteBondCalService.calcDeviationDegree(param);
+		return new Message<String>().success().setData(deviationDegree);
+	}
 }

@@ -149,7 +149,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(StringUtil.isEmpty(entity.getCcy())){
                 errorList.add(new ValidMessage("请输入币种"));
             }
-            if(StringUtil.isEmpty(entity.getSettleSpreed())){
+            if(StringUtil.isEmpty(entity.getSettleSpreedCode())){
                 errorList.add(new ValidMessage("请输入清算速度"));
             }
             if(null==entity.getSettleDate()){
@@ -164,6 +164,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(null==entity.getSettleType()){
                 errorList.add(new ValidMessage("请输入清算类型"));
             }
+            if(null==entity.getDealFeeAmt()){
+                errorList.add(new ValidMessage("请输入交易手续费"));
+            }
         }
         if(StringUtil.equals(sellPara,"02")){
             if(null==entity.getOurEntNum()){
@@ -176,10 +179,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 errorList.add(new ValidMessage("请输入卖空购回券面总额"));
             }
         }
-        if(null==entity.getDealFeeAmt()){
-            errorList.add(new ValidMessage("请输入交易手续费"));
-        }
-        if(null==entity.getSettFeeamt()){
+        if(null==entity.getSettFeeAmt()){
             errorList.add(new ValidMessage("请输入结算服务费"));
         }
         if(CollectionUtils.isEmpty(entity.getPtlAllocatios())){
@@ -191,11 +191,13 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     errorList.add(new ValidMessage("请输入组合分配券面总额"));
                     break;
                 }
-                if(null==ptlAllocatio.getDealFeeAmt()){
-                    errorList.add(new ValidMessage("请输入组合分配交易手续费"));
-                    break;
+                if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
+                    if(null==ptlAllocatio.getDealFeeAmt()){
+                        errorList.add(new ValidMessage("请输入组合分配交易手续费"));
+                        break;
+                    }
                 }
-                if(null==ptlAllocatio.getSettFeeamt()){
+                if(null==ptlAllocatio.getSettFeeAmt()){
                     errorList.add(new ValidMessage("请输入组合分配结算服务费"));
                     break;
                 }
@@ -213,9 +215,12 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                         break;
                     }
                 }
+                if(ptlAllocatio.getAvaNum().compareTo(ptlAllocatio.getShareAmt())<0){
+                    errorList.add(new ValidMessage("登记指令剩余额度不能小于券面总额！"));
+                }
                 shareAmtTotal = ArithmeticUtil.doAdd(shareAmtTotal,ptlAllocatio.getShareAmt());
                 dealFeeAmtTotal = ArithmeticUtil.doAdd(dealFeeAmtTotal,ptlAllocatio.getDealFeeAmt());
-                settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal,ptlAllocatio.getSettFeeamt());
+                settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal,ptlAllocatio.getSettFeeAmt());
             }
             //券面总额   交易手续费  结算服务费  总和需要相等
             if(null!=entity.getShareAmt()&&entity.getShareAmt().compareTo(shareAmtTotal)!=0){
@@ -224,7 +229,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(null!=entity.getDealFeeAmt()&&entity.getDealFeeAmt().compareTo(dealFeeAmtTotal)!=0){
                 errorList.add(new ValidMessage("组合分配交易手续费总和需要等于交易手续费"));
             }
-            if(null!=entity.getSettFeeamt()&&entity.getSettFeeamt().compareTo(settFeeamtTotal)!=0){
+            if(null!=entity.getSettFeeAmt()&&entity.getSettFeeAmt().compareTo(settFeeamtTotal)!=0){
                 errorList.add(new ValidMessage("组合分配结算服务费总和需要等于结算服务费"));
             }
         }
@@ -275,24 +280,24 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         entity.setExerYield(ArithmeticUtil.round(entity.getExerYield(), 4, RoundingMode.HALF_UP));
         for (PtlAllocationDto ptlAllocationDto : ptlAllocatios) {
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
-                if(StringUtil.equals(anchoringValue,"price")&&entity.getPrice().compareTo(ptlAllocationDto.getPrice())>0){
+                if(StringUtil.equals(anchoringValue,"01")&&entity.getPrice().compareTo(ptlAllocationDto.getPrice())>0){
                     errorList.add(new ValidMessage("登记交易净价不能大于指令净价！"));
                 }
-                if(StringUtil.equals(anchoringValue,"matureYield")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())<0){
+                if(StringUtil.equals(anchoringValue,"02")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())<0){
                     errorList.add(new ValidMessage("登记交易到期收益率不能小于指令到期收益率！"));
                 }
-                if(StringUtil.equals(anchoringValue,"exerYield")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())<0){
+                if(StringUtil.equals(anchoringValue,"03")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())<0){
                     errorList.add(new ValidMessage("登记交易行权收益率不能小于指令行权收益率！"));
                 }
             }
             if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
-                if(StringUtil.equals(anchoringValue,"price")&&entity.getPrice().compareTo(ptlAllocationDto.getPrice())<0){
+                if(StringUtil.equals(anchoringValue,"01")&&entity.getPrice().compareTo(ptlAllocationDto.getPrice())<0){
                     errorList.add(new ValidMessage("登记交易净价不能小于指令净价！"));
                 }
-                if(StringUtil.equals(anchoringValue,"matureYield")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())>0){
-                    errorList.add(new ValidMessage("登记交易到期收益率不能大于于指令到期收益率！"));
+                if(StringUtil.equals(anchoringValue,"02")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())>0){
+                    errorList.add(new ValidMessage("登记交易到期收益率不能大于指令到期收益率！"));
                 }
-                if(StringUtil.equals(anchoringValue,"exerYield")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())>0){
+                if(StringUtil.equals(anchoringValue,"03")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())>0){
                     errorList.add(new ValidMessage("登记交易行权收益率不能大于指令行权收益率！"));
                 }
             }
@@ -303,6 +308,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         }
         return ajaxResult;
     }
+
     /**
      * 插入操作
      */
@@ -427,6 +433,14 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             entity.setClearType(entity.getSettleType());
             entity.setUnitCprice(entity.getPrice());
             entity.setYield(entity.getMatureYield());
+            Long settleSpreed = 0L;
+            if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加0.getValue())) {
+                settleSpreed = 0L;
+            } else if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加1.getValue())) {
+                settleSpreed = 1L;
+            } else if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加2.getValue())) {
+                settleSpreed = 2L;
+            }
             //交易方向
             String ps = entity.getPs();
             //投管业务类型
@@ -434,6 +448,8 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             //金融产品交易汇总登记
             RegFinProductDealTotal regFinProductDealTotal = new RegFinProductDealTotal();
             BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotal,entity);
+            regFinProductDealTotal.setSettleSpeed(settleSpreed);
+            regFinProductDealTotal.setQuoteType(entity.getQuoteStyle());
             regFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             regFinProductDealTotal.setBranch(0L);
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
@@ -481,6 +497,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     regFinProductDeal.setTradeAmt(ptlAllocatio.getFpriceAmt());
                     regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
                     regFinProductDeal.setTgBusiType(tgBusiType);
+                    regFinProductDeal.setSettleSpeed(settleSpreed);
                     //附属
                     RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
                     regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
@@ -491,10 +508,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                         regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getSellAbleNum());
                     }
                     if(null!=ptlAllocatio.getDealFeeAmt()){
-                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
+                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(regFinProductDeal.getTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
                     }
-                    if(null!=ptlAllocatio.getSettFeeamt()){
-                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getSettFeeamt()));
+                    if(null!=ptlAllocatio.getSettFeeAmt()){
+                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(regFinProductDeal.getTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getSettFeeAmt()));
                     }
                     regFinProductDeals.add(regFinProductDeal);
                     regFinProductDealAdds.add(regFinProductDealAdd);
@@ -691,11 +708,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     pltMap.put("tradeId",regFinProductDeal.getTradeId());
                     pltMap.put("etrId",regFinProductDeal.getEntrustId());
                     pltMap.put("cashAcctId",cfetsIbuQuoteBondMapper.getACCTNO(portfolioId,BussinessDictCodeList.资金账户类型_托管账户.getValue()));
-                    pltMap.put("secAcctId",cfetsIbuQuoteBondMapper.getSecAcctId(portfolioId,regFinProductDeal.getFinprodId()));
+                    pltMap.put("secAcctId",cfetsIbuQuoteBondMapper.getSecAcctId(portfolioId,regFinProductDeal.getFinprodId(),regFinProductDeal.getTradeMarket()));
                     pltMap.put("secAmount",regFinProductDeal.getShareAmt());
                     pltMap.put("cashAmount",regFinProductDeal.getTradeAmt());
                     RegFinProductDealAdd regFinProductDealAdd = regFinProductDealAddMap.get(regFinProductDeal.getTradeId()).get(0);
-                    //TODO 投资目的
                     pltMap.put("integrateSecAmount",regFinProductDealAdd.getLendinShareAmt());
                     pltMap.put("ownSecAmount",regFinProductDealAdd.getOurShareAmt());
                     pltMap.put("etrSecAmount",etrEntrustMapper.selectByPrimaryKey(regFinProductDeal.getEntrustId()).getEntrustNum());

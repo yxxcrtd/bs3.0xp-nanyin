@@ -1,13 +1,10 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.json.BigDecimalSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author zznn
@@ -49,8 +46,11 @@ public class CalRespone {
     @ApiModelProperty(name="dealFeeAmt",value="交易手续费(元)")
     private BigDecimal dealFeeAmt;
 
-    @ApiModelProperty(name="settFeeamt",value="结算服务费(元)")
-    private BigDecimal settFeeamt;
+    @ApiModelProperty(name="settFeeAmt",value="结算服务费(元)")
+    private BigDecimal settFeeAmt;
+
+    @ApiModelProperty(name="deviationDegree",value="偏离度")
+    private String deviationDegree;
 
     public BigDecimal getShareAmt() {
         return shareAmt;
@@ -140,12 +140,20 @@ public class CalRespone {
         this.dealFeeAmt = dealFeeAmt;
     }
 
-    public BigDecimal getSettFeeamt() {
-        return settFeeamt;
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
     }
 
-    public void setSettFeeamt(BigDecimal settFeeamt) {
-        this.settFeeamt = settFeeamt;
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
+    }
+
+    public String getDeviationDegree() {
+        return deviationDegree;
+    }
+
+    public void setDeviationDegree(String deviationDegree) {
+        this.deviationDegree = deviationDegree;
     }
 }
 

@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -15,11 +17,18 @@ public class PtlAllocationDto {
     @ApiModelProperty(name="portfolioId",value="指令代码")
     private String entrustId;
 
-    @ApiModelProperty(name="portfolioId",value="组合名称")
+    @ApiModelProperty(name="portfolioId",value="组合代码")
     private String portfolioId;
+
+    @ApiModelProperty(name="portfolioName",value="组合名称")
+    private String portfolioName;
+
 
     @ApiModelProperty(name="avaNum",value="剩余指令额度(万元)")
     private BigDecimal avaNum;
+
+    @ApiModelProperty(name="avaNumold",value="剩余指令额度(万元)(备份)")
+    private BigDecimal avaNumOld;
 
     @ApiModelProperty(name="shareAmt",value="券面总额(万元)")
     private BigDecimal shareAmt;
@@ -36,8 +45,8 @@ public class PtlAllocationDto {
     @ApiModelProperty(name="dealFeeAmt",value="交易手续费(元)")
     private BigDecimal dealFeeAmt;
 
-    @ApiModelProperty(name="settFeeamt",value="结算服务费(元)")
-    private BigDecimal settFeeamt;
+    @ApiModelProperty(name="settFeeAmt",value="结算服务费(元)")
+    private BigDecimal settFeeAmt;
 
     @ApiModelProperty(name="cpriceAmt",value="净价总额(元)")
     private BigDecimal cpriceAmt;
@@ -56,6 +65,15 @@ public class PtlAllocationDto {
 
     @ApiModelProperty(name="secManageAcctId",value="证券账户")
     private String secManageAcctId;
+
+    @ApiModelProperty(required = false,name="priceModelStr",value="价格模式名称")
+    private String priceModelStr;
+
+    @ApiModelProperty(required = false,name="businessModelStr",value="业务模式名称")
+    private String businessModelStr;
+
+    @ApiModelProperty(required = false,name="secAcctName",value="证券账户")
+    private String secAcctName;
 
     @ApiModelProperty(name="price",value="净价(元)")
     private BigDecimal price;
@@ -83,6 +101,14 @@ public class PtlAllocationDto {
 
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
     }
 
     public BigDecimal getAvaNum() {
@@ -133,12 +159,12 @@ public class PtlAllocationDto {
         this.dealFeeAmt = dealFeeAmt;
     }
 
-    public BigDecimal getSettFeeamt() {
-        return settFeeamt;
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
     }
 
-    public void setSettFeeamt(BigDecimal settFeeamt) {
-        this.settFeeamt = settFeeamt;
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
     }
 
     public BigDecimal getCpriceAmt() {
@@ -219,6 +245,38 @@ public class PtlAllocationDto {
 
     public void setUnitFprice(BigDecimal unitFprice) {
         this.unitFprice = unitFprice;
+    }
+
+    public BigDecimal getAvaNumOld() {
+        return avaNumOld;
+    }
+
+    public void setAvaNumOld(BigDecimal avaNumOld) {
+        this.avaNumOld = avaNumOld;
+    }
+
+    public String getPriceModelStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.价格模式, getPriceModel());
+    }
+
+    public void setPriceModelStr(String priceModelStr) {
+        this.priceModelStr = priceModelStr;
+    }
+
+    public String getBusinessModelStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, getBusinessModel());
+    }
+
+    public void setBusinessModelStr(String businessModelStr) {
+        this.businessModelStr = businessModelStr;
+    }
+
+    public String getSecAcctName() {
+        return secAcctName;
+    }
+
+    public void setSecAcctName(String secAcctName) {
+        this.secAcctName = secAcctName;
     }
 }
 

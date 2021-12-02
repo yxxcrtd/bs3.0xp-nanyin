@@ -49,7 +49,7 @@ public class CfetsManualSettleQueryController extends BaseController {
         //资产类型
         initPageParams.put("PINAN_ASSET_TYPE", this.getSelectDataFromDataDic(DictCode.平安资产类型, null));
         //业务类型
-        initPageParams.put("FINPROD_TYPE_TG", this.getSelectDataFromDataDic(DictCode.金融产品类型_投管用, null));
+        initPageParams.put("FINPROD_TYPE_TG", this.getSelectDataFromDataDic(DictCode.头寸业务类型, null));
         //交易方向
         initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
         //清算状态
@@ -65,7 +65,7 @@ public class CfetsManualSettleQueryController extends BaseController {
         // 平台日字符串格式
         initPageParams.put("SESSION_SYS_DATE", DateUtil.format(platformDateImpl.getSysDate()));
 
-        initPageParams.put("pageId", "CfetsManualSettle");
+        initPageParams.put("pageId", "cfetsManualSettleQuery");
         return new Message<Map<String, Object>>(initPageParams).success();
     }
 

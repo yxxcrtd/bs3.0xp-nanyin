@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.invest.batch.cfetssettle.dao.CfetsSettleMapper">
+
+	<resultMap id="TodoSettleCommonMap" type="com.joyintech.tams.invest.batch.cfetssettle.dto.CfetsSettleAllInfoDto">
+		<id column="totalTradeId" property="totalTradeId" jdbcType="VARCHAR" />
+		<result column="tradeDate" property="tradeDate" jdbcType="DATE" />
+		<result column="settleDate" property="settleDate" jdbcType="DATE" />
+		<result column="finprodId" property="finprodId" jdbcType="VARCHAR" />
+		<result column="finprodAbbr" property="finprodAbbr" jdbcType="VARCHAR" />
+		<result column="finprodType2" property="finprodType2" jdbcType="VARCHAR" />
+		<result column="ps" property="ps" jdbcType="VARCHAR" />
+		<result column="settleNumT" property="settleNumT" jdbcType="DECIMAL" />
+		<result column="settleAmtT" property="settleAmtT" jdbcType="DECIMAL" />
+		<result column="cleanStatus" property="cleanStatus" jdbcType="VARCHAR" />
+		<result column="tradeMarket" property="tradeMarket" jdbcType="VARCHAR" />
+		<result column="tradePlat" property="tradePlat" jdbcType="VARCHAR" />
+		<result column="secManageAcctId" property="secManageAcctId" jdbcType="VARCHAR" />
+		<result column="settleSeqNo" property="settleSeqNo" jdbcType="VARCHAR" />
+		<result column="tgBusiType" property="tgBusiType" jdbcType="VARCHAR" />
+		<collection property="portList" ofType="com.joyintech.tams.invest.batch.cfetssettle.dto.CfetsSettleDetailInfoDto">
+			<id column="tradeId" property="tradeId" jdbcType="VARCHAR" />
+			<result column="shareAmt" property="shareAmt" jdbcType="DECIMAL" />
+			<result column="tradeAmt" property="tradeAmt" jdbcType="DECIMAL" />
+			<result column="portfolioId" property="portfolioId" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+
+	<select id="selectAllSettleToDoList" resultMap="TodoSettleCommonMap">
+		SELECT
+		T1.TOTLE_TRADE_ID totalTradeId,
+		T1.TRADE_DATE tradeDate,
+		T1.SETTLE_DATE settleDate,
+		T1.FINPROD_ID finprodId,
+		T2.FINPROD_ABBR finprodAbbr,
+		T1.FINPROD_TYPE2 finprodType2,
+		T1.PS ps,
+		T1.SHARE_AMT settleNumT,
+		T1.TRADE_AMT settleAmtT,
+		case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
+		when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
+		when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
+		ELSE NULL END cleanStatus,
+		T1.TRADE_MARKET tradeMarket,
+		T1.TRADE_PLAT tradePlat,
+		T1.SEC_MANAGE_ACCT_ID secAcctId,
+		T8.SETTLE_SEQ_NO settleSeqNo,
+		T1.TG_BUSI_TYPE tgBusiType,
+		T3.TRADE_ID tradeId,
+		T3.SHARE_AMT settleNum,
+		T3.TRADE_AMT settleAmt,
+		T4.PORTFOLIO_ID portfolioId
+<!--		,T1.TG_BUSI_TYPE tgBusiType,-->
+<!--		T2.FINPROD_MARKET_ID finprodMarketId,-->
+<!--		sdl4.item_value tradeMarketStr,-->
+<!--		sdl5.item_value tradePlatStr,-->
+<!--		T6.COUNTER_NAME counterName,-->
+<!--		T1.CCY ccy,-->
+		FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+<!--		金融产品交易汇总表 T1-->
+<!--		LEFT JOIN 金融产品交易表 T3 ON T1.汇总交易编号 = T3.汇总交易编号-->
+<!--		LEFT JOIN 金融产品交易附属表 T4 ON T3.交易编号 = T4.交易编号-->
+<!--		LEFT JOIN 银行间手工交收信息表 T8 ON T1.汇总交易编号 = T8.原交易编号-->
+<!--		LEFT JOIN 划款指令 T9 ON T1.金融产品交易汇总表.汇总交易编号 = 划款指令.交易编号-->
+<!--		LEFT JOIN 划款指令发送状态 T10 ON T9.指令编号 = T10.指令编号-->
+		LEFT JOIN FIN_PRODUCT T2 ON T1.FINPROD_ID = T2.FINPROD_ID
+		LEFT JOIN TRD_PRODUCT_DEAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
+		LEFT JOIN TRD_PRODUCT_DEAL_ADD T4 ON T3.TRADE_ID = T4.TRADE_ID
+<!--		LEFT JOIN PTL_PORTFOLIO T5 ON T4.PORTFOLIO_ID = T5.PORTFOLIO_ID-->
+<!--		LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.COUNTER_ID-->
+<!--		LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID-->
+		LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
+		LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
+		LEFT JOIN INF_PAY_ORDERS_STATUS T10 ON T9.ORDER_ID = T10.ORDER_ID
+		WHERE (T8.SETTLE_SEQ_NO IS NULL OR T8.SETTLE_STATUS = #{DELIVERY_STATUS_01})
+		AND T1.TG_BUSI_TYPE IN (#{PINAN_BUSINESS_TYPE_09},#{PINAN_BUSINESS_TYPE_10},#{PINAN_BUSINESS_TYPE_11},
+		#{PINAN_BUSINESS_TYPE_35},#{PINAN_BUSINESS_TYPE_36},#{PINAN_BUSINESS_TYPE_36},
+		#{PINAN_BUSINESS_TYPE_20},#{PINAN_BUSINESS_TYPE_51},#{PINAN_BUSINESS_TYPE_52},
+		#{PINAN_BUSINESS_TYPE_74},#{PINAN_BUSINESS_TYPE_75},#{PINAN_BUSINESS_TYPE_76},#{PINAN_BUSINESS_TYPE_77},
+		#{PINAN_BUSINESS_TYPE_105},#{PINAN_BUSINESS_TYPE_106},#{PINAN_BUSINESS_TYPE_107},#{PINAN_BUSINESS_TYPE_108})
+		AND	T1.TRADE_STATUS =#{TRADE_STATUS_01}
+		AND T1.Is_Cancel =#{isCalcY}
+		AND T1.SETTLE_DATE = #{batchDate}
+	</select>
+
+	<delete id="deleteTodayCfetsSettleInfo">
+		delete from TRD_BANK_MANUAL_SETTLE_INFO
+		where SETTLE_DATE = #{batchDate,jdbcType=DATE}
+		AND CREATE_USER = #{createrUser}
+	</delete>
+
+	<delete id="deleteTodayCfetsSettleFlow">
+		delete from TRD_BANK_MANUAL_SETTLE_FLOW
+		WHERE SETTLE_SEQ_NO
+		 IN (SELECT SETTLE_SEQ_NO FROM TRD_BANK_MANUAL_SETTLE_INFO
+			   WHERE SETTLE_DATE= #{batchDate}
+		       AND CREATE_USER = #{createrUser})
+	</delete>
+
+	<delete id="deleteTodayCfetsSettleDetail">
+		delete from TRD_BANK_MANUAL_SET_DETAIL
+		WHERE SETTLE_SEQ_NO
+		IN (SELECT SETTLE_SEQ_NO FROM TRD_BANK_MANUAL_SETTLE_INFO
+			  WHERE SETTLE_DATE= #{batchDate}
+			  AND CREATE_USER = #{createrUser})
+	</delete>
+
+	<insert id="mergeInfo"  parameterType="com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo">
+		MERGE INTO TRD_BANK_MANUAL_SETTLE_INFO tbms
+		USING (
+		select
+		<if test="settleSeqNo != null">
+			#{settleSeqNo,jdbcType=VARCHAR} settleSeqNo,
+		</if>
+		<if test="settleStatus != null">
+			#{settleStatus,jdbcType=VARCHAR} settleStatus,
+		</if>
+		<if test="tradeId != null">
+			#{tradeId,jdbcType=VARCHAR} tradeId,
+		</if>
+		<if test="settleDate != null">
+			#{settleDate,jdbcType=TIMESTAMP} settleDate,
+		</if>
+		<if test="finprodId != null">
+			#{finprodId,jdbcType=VARCHAR} finprodId,
+		</if>
+		<if test="settleNum != null">
+			#{settleNum,jdbcType=DECIMAL} settleNum,
+		</if>
+		<if test="settleAmt != null">
+			#{settleAmt,jdbcType=DECIMAL} settleAmt,
+		</if>
+		<if test="busiType != null">
+			#{busiType,jdbcType=VARCHAR} busiType,
+		</if>
+		<if test="createUser != null">
+			#{createUser,jdbcType=VARCHAR} createUser,
+		</if>
+		<if test="createDept != null">
+			#{createDept,jdbcType=VARCHAR} createDept,
+		</if>
+		<if test="createTime != null">
+			#{createTime,jdbcType=TIMESTAMP} createTime,
+		</if>
+		<if test="updateUser != null">
+			#{updateUser,jdbcType=VARCHAR} updateUser,
+		</if>
+		<if test="updateTime != null">
+			#{updateTime,jdbcType=TIMESTAMP} updateTime
+		</if>
+		from dual
+		) TEMP
+		<!-- 业务主键匹配 -->
+		ON (tbms.SETTLE_SEQ_NO = TEMP.settleSeqNo)
+		<!-- 匹配到则更新 -->
+		WHEN MATCHED THEN
+		UPDATE
+		SET
+		<if test="settleStatus != null">
+			tbms.SETTLE_STATUS = TEMP.settleStatus,
+		</if>
+		<if test="tradeId != null">
+			tbms.TRADE_ID = TEMP.tradeId,
+		</if>
+		<if test="settleDate != null">
+			tbms.SETTLE_DATE = TEMP.settleDate,
+		</if>
+		<if test="finprodId != null">
+			tbms.FINPROD_ID = TEMP.finprodId,
+		</if>
+		<if test="settleNum != null">
+			tbms.SETTLE_NUM = TEMP.settleNum,
+		</if>
+		<if test="settleAmt != null">
+			tbms.SETTLE_AMT = TEMP.settleAmt,
+		</if>
+		<if test="busiType != null">
+			tbms.BUSI_TYPE = TEMP.busiType,
+		</if>
+		<if test="createUser != null">
+			tbms.CREATE_USER = TEMP.createUser,
+		</if>
+		<if test="createDept != null">
+			tbms.CREATE_DEPT = TEMP.createDept,
+		</if>
+		<if test="createTime != null">
+			tbms.CREATE_TIME = TEMP.createTime,
+		</if>
+		<if test="updateUser != null">
+			tbms.UPDATE_USER = TEMP.updateUser,
+		</if>
+		<if test="updateTime != null">
+			tbms.UPDATE_TIME = TEMP.updateTime
+		</if>
+		<!-- 未匹配到这插入 -->
+		WHEN NOT MATCHED THEN
+		INSERT (
+		<if test="settleSeqNo != null">
+			SETTLE_SEQ_NO
+		</if>
+		<if test="settleStatus != null">
+			,SETTLE_STATUS
+		</if>
+		<if test="tradeId != null">
+			,TRADE_ID
+		</if>
+		<if test="settleDate != null">
+			,SETTLE_DATE
+		</if>
+		<if test="finprodId != null">
+			,FINPROD_ID
+		</if>
+		<if test="settleNum != null">
+			,SETTLE_NUM
+		</if>
+		<if test="settleAmt != null">
+			,SETTLE_AMT
+		</if>
+		<if test="busiType != null">
+			,BUSI_TYPE
+		</if>
+		<if test="createUser != null">
+			,CREATE_USER
+		</if>
+		<if test="createDept != null">
+			,CREATE_DEPT
+		</if>
+		<if test="createTime != null">
+			,CREATE_TIME
+		</if>
+		<if test="updateUser != null">
+			,UPDATE_USER
+		</if>
+		<if test="updateTime != null">
+			,UPDATE_TIME
+		</if>
+		)
+		values(
+		<if test="settleSeqNo != null">
+			TEMP.settleSeqNo
+		</if>
+		<if test="settleStatus != null">
+			,TEMP.settleStatus
+		</if>
+		<if test="tradeId != null">
+			,TEMP.tradeId
+		</if>
+		<if test="settleDate != null">
+			,TEMP.settleDate
+		</if>
+		<if test="finprodId != null">
+			,TEMP.finprodId
+		</if>
+		<if test="settleNum != null">
+			,TEMP.settleNum
+		</if>
+		<if test="settleAmt != null">
+			,TEMP.settleAmt
+		</if>
+		<if test="busiType != null">
+			,TEMP.busiType
+		</if>
+		<if test="createUser != null">
+			,TEMP.createUser
+		</if>
+		<if test="createDept != null">
+			,TEMP.createDept
+		</if>
+		<if test="createTime != null">
+			,TEMP.createTime
+		</if>
+		<if test="updateUser != null">
+			,TEMP.updateUser
+		</if>
+		<if test="updateTime != null">
+			,TEMP.updateTime
+		</if>
+		)
+	</insert>
+</mapper>

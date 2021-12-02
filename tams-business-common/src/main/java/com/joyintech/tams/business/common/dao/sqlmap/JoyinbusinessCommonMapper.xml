@@ -247,6 +247,15 @@
             </if>
         </where>
     </select>
+    <select id="queryCounterPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct mst.counter_id id,mst.counter_name  text
+        from MST_COUNTER_PARTY mst
+        where mst.counter_type in ('01','02')
+            <if test="search != null and !search.equals('')">
+                AND	(mst.counter_id like concat('%',concat(#{search},'%'))
+                or mst.counter_name like concat('%',concat(#{search},'%')))
+            </if>
+    </select>
     <select id="queryMySideTraderList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
         MST_CFETS_CUSTOMER_TRADER.TRADER_NAME text,

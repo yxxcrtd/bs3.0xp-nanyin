@@ -16,10 +16,12 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 委托指令
@@ -207,6 +209,19 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal unitFprice;
+
+    /**
+     * 指令下达时间
+     */
+    private String transmitTime;
+
+    private String tradeMarketStr;
+
+    /**
+     * 已成交金额
+     */
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal finishDealAmt;
 
     public String getPortfolioSeries() {
         return portfolioSeries;
@@ -1003,5 +1018,29 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
 
     public void setUnitFprice(BigDecimal unitFprice) {
         this.unitFprice = unitFprice;
+    }
+
+    public String getTransmitTime() {
+        return transmitTime;
+    }
+
+    public void setTransmitTime(String transmitTime) {
+        this.transmitTime = transmitTime;
+    }
+
+    public String getTradeMarketStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, getTradeMarket());
+    }
+
+    public void setTradeMarketStr(String tradeMarketStr) {
+        this.tradeMarketStr = tradeMarketStr;
+    }
+
+    public BigDecimal getFinishDealAmt() {
+        return finishDealAmt;
+    }
+
+    public void setFinishDealAmt(BigDecimal finishDealAmt) {
+        this.finishDealAmt = finishDealAmt;
     }
 }

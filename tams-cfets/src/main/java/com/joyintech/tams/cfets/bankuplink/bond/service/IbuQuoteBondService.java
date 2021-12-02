@@ -22,7 +22,6 @@ import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
-import com.joyintech.tams.invest.common.asset.annotation.DictList;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -33,6 +32,8 @@ import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
 @Service
 public class IbuQuoteBondService extends BaseService {
 
+    private static final Logger logger = LoggerFactory.getLogger(IbuQuoteBondService.class);
     @Autowired
     private IPlatformDate iPlatformDate;
 
@@ -93,6 +95,7 @@ public class IbuQuoteBondService extends BaseService {
     private MstWorkflowCommonService mstWorkflowCommonService;
     @Autowired
     private RegFinProductDealTotalMapper regFinProductDealTotalMapper;
+
     /**
      * 风险试算check
      * @param entity
@@ -143,8 +146,7 @@ public class IbuQuoteBondService extends BaseService {
         if(CollectionUtils.isNotEmpty(cfetsBondDealEntrustOrderDtos)){
             CfetsBondDealEntrustOrderDto cfetsBondDealEntrustOrderDto = cfetsBondDealEntrustOrderDtos.get(0);
             BeanUtil.copyPropertiesIgnoreNull(result, cfetsBondDealEntrustOrderDto);
-            result.setSecManageAcctName(cfetsBondDealEntrustOrderDto.getSecAcctName());
-            result.setFpriceAmt(ArithmeticUtil.multiply(result.getEntrustNum(),result.getUnitFprice()));
+            result.setFpriceAmt(ArithmeticUtil.multiply(result.getEntrustNum(),result.getUnitFprice(),new BigDecimal("10000")));
         }
         return result;
     }
@@ -196,7 +198,19 @@ public class IbuQuoteBondService extends BaseService {
         setParam(param);
         List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if (!StringUtil.isEmptyList(entrustDtos)) {
-            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto, entrustDtos.get(0));
+            CfetsBondDealEntrustOrderDto cfetsBondDealEntrustOrderDto = entrustDtos.get(0);
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto, cfetsBondDealEntrustOrderDto);
+            cfetsBondDealQuoteCommonDto.setRemark(StringUtil.EMPTY);
+            //清算速度处理
+            if(StringUtil.equals(cfetsBondDealEntrustOrderDto.getSettleSpreed(),"0")){
+                cfetsBondDealQuoteCommonDto.setSettleSpreedCode(BussinessDictCodeList.清算速度_T加0.getValue());
+            }
+            if(StringUtil.equals(cfetsBondDealEntrustOrderDto.getSettleSpreed(),"1")){
+                cfetsBondDealQuoteCommonDto.setSettleSpreedCode(BussinessDictCodeList.清算速度_T加1.getValue());
+            }
+            if(StringUtil.equals(cfetsBondDealEntrustOrderDto.getSettleSpreed(),"2")){
+                cfetsBondDealQuoteCommonDto.setSettleSpreedCode(BussinessDictCodeList.清算速度_T加2.getValue());
+            }
             cfetsBondDealQuoteCommonDto.setShareAmt(entrustDtos.stream().map(CfetsBondDealEntrustOrderDto::getEntrustAvaNum).reduce(BigDecimal.ZERO, BigDecimal::add));
             cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getShareAmt(),new BigDecimal("10000")));
             if(StringUtil.equals(sellPara,"02")){
@@ -211,10 +225,7 @@ public class IbuQuoteBondService extends BaseService {
             }
             //处理结算日期
             cfetsBondDealQuoteCommonDto.setTradeDate(iPlatformDate.getSysDate());
-            cfetsBondDealQuoteCommonDto.setSettleDate(ibuQuoteBondCalService.getNextWorkDay(cfetsBondDealQuoteCommonDto.getTradeDate()));
-            if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreed(),BussinessDictCodeList.清算速度_T加2.getValue())){
-                cfetsBondDealQuoteCommonDto.setSettleDate(ibuQuoteBondCalService.getNextWorkDay(cfetsBondDealQuoteCommonDto.getSettleDate()));
-            }
+            cfetsBondDealQuoteCommonDto.setSettleDate(ibuQuoteBondCalService.getNextWorkDay(cfetsBondDealQuoteCommonDto.getTradeDate(),null==cfetsBondDealEntrustOrderDto.getSettleSpreed()?0:Integer.parseInt(cfetsBondDealEntrustOrderDto.getSettleSpreed())));
             //处理锚定值
             Map<String,Object> anchoringValueMap = handcalAnchoringValue(entrustDtos);
             Set<String> set = anchoringValueMap.keySet();
@@ -228,12 +239,23 @@ public class IbuQuoteBondService extends BaseService {
                     break;
                 }
                 if(StringUtil.equals(key,"02")){
-                    cfetsBondDealQuoteCommonDto.setMatureYield((BigDecimal)anchoringValueMap.get(key));
+                    cfetsBondDealQuoteCommonDto.setMatureYield(ArithmeticUtil.divide((BigDecimal)anchoringValueMap.get(key),100,4));
                     break;
                 }
                 if(StringUtil.equals(key,"03")){
-                    cfetsBondDealQuoteCommonDto.setExerYield((BigDecimal)anchoringValueMap.get(key));
+                    cfetsBondDealQuoteCommonDto.setExerYield(ArithmeticUtil.divide((BigDecimal)anchoringValueMap.get(key),100,4));
                     break;
+                }
+            }
+            //处理行权日
+            if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getPs(),com.joyintech.tams.constant.DictCodeList.交易方向_行权_回售.getValue())){
+                Map<String,Object> planParam = new HashMap<>();
+                planParam.put("finprodId",cfetsBondDealQuoteCommonDto.getFinprodId());
+                planParam.put("platDate", iPlatformDate.getSysDateStr());
+                FinExercisePlan finExercisePlan = cfetsIbuQuoteBondEtrMapper.getFinExercisePlan(planParam);
+                if(null!=finExercisePlan){
+                    cfetsBondDealQuoteCommonDto.setTheoreticalExerciseDate(finExercisePlan.getExerciseDate());
+                    cfetsBondDealQuoteCommonDto.setActSetteDate(finExercisePlan.getActExerciseDate());
                 }
             }
             //处理组合分配
@@ -242,17 +264,37 @@ public class IbuQuoteBondService extends BaseService {
                 PtlAllocationDto ptlAllocationDto = new PtlAllocationDto();
                 BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto,entrustDto);
                 ptlAllocationDto.setAvaNum(ArithmeticUtil.multiply(entrustDto.getEntrustAvaNum(),new BigDecimal("10000")));
+                //券面总额应默认等于剩余指令额度
                 ptlAllocationDto.setShareAmt(ArithmeticUtil.multiply(entrustDto.getAvaNum(),new BigDecimal("10000")));
                 ptlAllocatios.add(ptlAllocationDto);
             }
-            if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreed(), "0")) {
-                cfetsBondDealQuoteCommonDto.setSettleSpreed(BussinessDictCodeList.清算速度_T加0.getValue());
-            } else if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreed(), "1")) {
-                cfetsBondDealQuoteCommonDto.setSettleSpreed(BussinessDictCodeList.清算速度_T加1.getValue());
-            } else if (StringUtil.equals(cfetsBondDealQuoteCommonDto.getSettleSpreed(), "2")) {
-                cfetsBondDealQuoteCommonDto.setSettleSpreed(BussinessDictCodeList.清算速度_T加2.getValue());
-            }
             cfetsBondDealQuoteCommonDto.setPtlAllocatios(ptlAllocatios);
+            //计算费用
+            try{
+                CalRequest calRequest = new CalRequest();
+                calRequest.setFpriceAmt(cfetsBondDealQuoteCommonDto.getFpriceAmt());
+                calRequest.setSettleDate(cfetsBondDealQuoteCommonDto.getSettleDate());
+                calRequest.setPs(cfetsBondDealQuoteCommonDto.getPs());
+                calRequest.setFpriceAmt(cfetsBondDealQuoteCommonDto.getFpriceAmt());
+                calRequest.setSecManageAcctId(cfetsBondDealQuoteCommonDto.getSecManageAcctId());
+                List<TrdTradeFeeDetail> trdTradeFeeDetails = ibuQuoteBondCalService.calFee(calRequest);
+                if(CollectionUtils.isNotEmpty(trdTradeFeeDetails)){
+                    trdTradeFeeDetails.forEach(item ->{
+                        if(StringUtil.equals(item.getFeeType(),BussinessDictCodeList.费用类型_交易手续费.getValue())){
+                            cfetsBondDealQuoteCommonDto.setDealFeeAmt(item.getFeeAmt());
+                            return;
+                        }
+                        if(StringUtil.equals(item.getFeeType(),BussinessDictCodeList.费用类型_结算手续费.getValue())){
+                            cfetsBondDealQuoteCommonDto.setSettFeeAmt(item.getFeeAmt());
+                            return;
+                        }
+                    });
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                logger.error("计算费用异常:"+e.getMessage());
+            }
         }
         return cfetsBondDealQuoteCommonDto;
     }
@@ -262,9 +304,12 @@ public class IbuQuoteBondService extends BaseService {
      * @param ptlAllocationAddRequest
      * @return
      */
-    public List<PtlAllocationDto> ptlAllocationAdd(PtlAllocationAddRequest ptlAllocationAddRequest){
+    public List<EntrustDto> ptlAllocationAdd(PtlAllocationAddRequest ptlAllocationAddRequest){
         Map<String, Object> param = BeanUtil.object2Map(ptlAllocationAddRequest);
         param.put("notentrustIdList",ptlAllocationAddRequest.getEntrustIdList());
+        param.put("platDate", iPlatformDate.getSysDateStr());
+        param.put("entrustStatus",Arrays.asList(com.joyintech.tams.constant.DictCodeList.委托状态_已接收.getValue()));
+        param.remove("entrustIdList");
         setParam(param);
         List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if (!StringUtil.isEmptyList(entrustDtos)) {
@@ -278,12 +323,12 @@ public class IbuQuoteBondService extends BaseService {
      * @param list
      * @return
      */
-    public List<PtlAllocationDto>  initPtlAllocation(List<CfetsBondDealEntrustOrderDto> list){
-        List<PtlAllocationDto> result = new ArrayList<>();
+    public List<EntrustDto>  initPtlAllocation(List<CfetsBondDealEntrustOrderDto> list){
+        List<EntrustDto> result = new ArrayList<>();
         for (CfetsBondDealEntrustOrderDto item : list) {
-            PtlAllocationDto ptlAllocationDto = new PtlAllocationDto();
-            BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto,item);
-            result.add(ptlAllocationDto);
+            EntrustDto entrustDto = new EntrustDto();
+            BeanUtil.copyPropertiesIgnoreNull(entrustDto,item);
+            result.add(entrustDto);
         }
         return result;
     }
@@ -309,13 +354,14 @@ public class IbuQuoteBondService extends BaseService {
                 boolean finprodIdFlag = true;
                 boolean secManageAcctIdFlag = true;
                 boolean partyIdFlag = true;
+                boolean tradeMarketFlag = true;
                 for (CfetsBondDealEntrustOrderDto item : entrustDtos) {
                     if(!StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_已接收.getValue())){
-                        message = "指令" + item.getEntrustId() + "委托状态不是已接,不可交易执行!";
+                        message = "指令" + item.getEntrustId() + "委托状态不是已接收,不可交易执行!";
                         ajaxResult.setMessage(message);
                         return ajaxResult;
                     }
-                    if (StringUtil.isEmpty(item.getPartyId())) {
+                    if (StringUtil.isEmpty(item.getPartyId())&&StringUtil.equals(exportShow,"01")) {
                         message = "指令" + item.getEntrustId() + "下组合未关联交易账户，请至[银行间业务参数管理-CFETS关联账户]中维护";
                         ajaxResult.setMessage(message);
                         return ajaxResult;
@@ -336,6 +382,10 @@ public class IbuQuoteBondService extends BaseService {
                         secManageAcctIdFlag = false;
                         message = message + "证券账户OR";
                     }
+                    if (tradeMarketFlag && !StringUtil.equals(one.getTradeMarket(), item.getTradeMarket())) {
+                        tradeMarketFlag = false;
+                        message = message + "交易场所OR";
+                    }
                     //EXPORT_SHOW ==01 本币交易导出按钮配置为显示
                     if (StringUtil.equals(exportShow, "01")) {
                         //交易场所+交易方向+清算速度+标的+证券账户+交易账户必须一致
@@ -347,7 +397,7 @@ public class IbuQuoteBondService extends BaseService {
                 }
                 //提示
                 if (StringUtil.isNotEmpty(message)) {
-                    ajaxResult.setMessage(message.substring(0, message.length() - 2));
+                    ajaxResult.setMessage(StringUtil.join("所选指令不满足汇总条件：[",message.substring(0, message.length() - 2),"]不同"));
                     return ajaxResult;
                 }
                 //价格模式判断
@@ -624,17 +674,20 @@ public class IbuQuoteBondService extends BaseService {
             }
             initValueFlag = false;
         }
-        CfetsBondDealEntrustOrderDto resultDto = groupByCalculateField.get(translateKey).get(0);
+        CfetsBondDealEntrustOrderDto  resultDto = null;
+        if(groupByCalculateField.containsKey(translateKey)){
+            resultDto =  groupByCalculateField.get(translateKey).get(0);
+        }
         if(StringUtil.equals(translateKey,"01")){
-            result.put(translateKey,initValueFlag?resultDto.getPrice():null);
+            result.put(translateKey,initValueFlag&&null!=resultDto?resultDto.getPrice():null);
             return result;
         }
         if(StringUtil.equals(translateKey,"02")){
-            result.put(translateKey,initValueFlag?resultDto.getMatureYield():null);
+            result.put(translateKey,initValueFlag&&null!=resultDto?resultDto.getMatureYield():null);
             return result;
         }
         if(StringUtil.equals(translateKey,"03")){
-            result.put(translateKey,initValueFlag?resultDto.getExerYield():null);
+            result.put(translateKey,initValueFlag&&null!=resultDto?resultDto.getExerYield():null);
             return result;
         }
         return null;
@@ -721,9 +774,6 @@ public class IbuQuoteBondService extends BaseService {
         List<ValidMessage> errorList = new ArrayList<>();
         if(!StringUtil.isNotEmpty(param.get("remark"))){
             errorList.add(new ValidMessage("请输入退回原因!"));
-        }
-        if(StringUtil.isNotEmpty(param.get("entrustIds"))){
-           param.put("entrustIdList",StringUtil.splitToList(",",(String)param.get("entrustIds")));
         }
         setParam(param);
         List<CfetsBondDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
@@ -994,6 +1044,16 @@ public class IbuQuoteBondService extends BaseService {
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsIbuQuoteBondMapper.listDayReg(pageParam));
     }
 
+    /**
+     * 当日登记check
+     * @param dataList
+     * @return
+     */
+    public AjaxResult exportDayRegCheck(List<CfetsBondDayRegDto> dataList){
+        AjaxResult ajaxResult = new AjaxResult();
+        return ajaxResult;
+
+    }
     public List<CfetsBondDayRegDto> listDayReg(Map<String,Object> pageParam){
         pageParam.put("loginUserId", LoginUserUtil.getUserName());
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
@@ -1040,7 +1100,7 @@ public class IbuQuoteBondService extends BaseService {
     private void setParam(Map<String,Object> param){
         param.put("finprodType2", BussinessDictCodeList.金融产品类型_债券.getValue());
         param.put("tradeMarket01", BussinessDictCodeList.交易场所_银行间.getValue());
-        param.put("tradeMarket04", BussinessDictCodeList.交易场所_商业银行柜台市场.getValue());
+        param.put("tradeMarket02", BussinessDictCodeList.交易场所_商业银行柜台市场.getValue());
         param.put("tradeMarketMode", BussinessDictCodeList.交易市场_二级市场.getValue());
         param.put("entrustStatusUnAccept", BussinessDictCodeList.委托状态_待接收.getValue());
         param.put("entrustStatusAccept", BussinessDictCodeList.委托状态_已接收.getValue());
@@ -1050,6 +1110,7 @@ public class IbuQuoteBondService extends BaseService {
         param.put("psT01", BussinessDictCodeList.交易方向_买入.getValue());
         param.put("psT02", BussinessDictCodeList.交易方向_卖出.getValue());
         param.put("psT03", BussinessDictCodeList.交易方向_行权回售.getValue());
+        param.put("loginUserId", LoginUserUtil.getUserName());
     }
 }
 

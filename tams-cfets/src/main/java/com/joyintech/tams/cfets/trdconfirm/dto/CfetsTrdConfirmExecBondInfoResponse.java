@@ -11,6 +11,9 @@
 package com.joyintech.tams.cfets.trdconfirm.dto;
 
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -107,23 +110,38 @@ public class CfetsTrdConfirmExecBondInfoResponse {
     @ApiModelProperty(name="portfolioNames",value="组合名称",example="字符串1")
     private String portfolioNames;
 
-    @ApiModelProperty(name="clearType",value="清算类型",example="字符串1")
+    @ApiModelProperty(name="clearType",value="清算类型Code",example="字符串1")
     private String clearType;
 
-    @ApiModelProperty(name="deliveryType",value="结算方式",example="字符串1")
+    @ApiModelProperty(name="clearTypeName",value="清算类型",example="字符串1")
+    private String clearTypeName;
+
+    @ApiModelProperty(name="deliveryType",value="结算方式Code",example="字符串1")
     private String deliveryType;
 
-    @ApiModelProperty(name="ccy",value="币种",example="字符串1")
+    @ApiModelProperty(name="deliveryTypeName",value="结算方式",example="字符串1")
+    private String deliveryTypeName;
+
+    @ApiModelProperty(name="ccy",value="币种Code",example="字符串1")
     private String ccy;
+
+    @ApiModelProperty(name="ccyName",value="币种",example="字符串1")
+    private String ccyName;
 
     @ApiModelProperty(name="counterId",value="对手方",example="字符串1")
     private String counterId;
+
+    @ApiModelProperty(name="counterIdName",value="对手方",example="字符串1")
+    private String counterIdName;
 
     @ApiModelProperty(name="counterTrader",value="对手方交易员",example="字符串1")
     private String counterTrader;
 
     @ApiModelProperty(name="remark",value="备注",example="字符串1")
     private String remark;
+
+    @ApiModelProperty(name="settleDate",value="结算日期",example="admin")
+    private Date settleDate;
 
     public String getBusiCode() {
         return busiCode;
@@ -150,7 +168,8 @@ public class CfetsTrdConfirmExecBondInfoResponse {
     }
 
     public String getBusiTypeStr() {
-        return busiTypeStr;
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, getBusiType());
+        //return busiTypeStr;
     }
 
     public void setBusiTypeStr(String busiTypeStr) {
@@ -190,7 +209,7 @@ public class CfetsTrdConfirmExecBondInfoResponse {
     }
 
     public String getPsName() {
-        return psName;
+        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, getPs());
     }
 
     public void setPsName(String psName) {
@@ -222,7 +241,8 @@ public class CfetsTrdConfirmExecBondInfoResponse {
     }
 
     public String getSettleSpeedName() {
-        return settleSpeedName;
+        return "T+" + this.getSettleSpeed();
+       // return SysDataUtil.getNameFromDataDict(DictCode.清算速度, getSettleSpeed());
     }
 
     public void setSettleSpeedName(String settleSpeedName) {
@@ -380,5 +400,45 @@ public class CfetsTrdConfirmExecBondInfoResponse {
 
     public void setPortfolioNames(String portfolioNames) {
         this.portfolioNames = portfolioNames;
+    }
+
+    public Date getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(Date settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    public String getClearTypeName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.清算类型, getClearType());
+    }
+
+    public void setClearTypeName(String clearTypeName) {
+        this.clearTypeName = clearTypeName;
+    }
+
+    public String getDeliveryTypeName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, getDeliveryType());
+    }
+
+    public void setDeliveryTypeName(String deliveryTypeName) {
+        this.deliveryTypeName = deliveryTypeName;
+    }
+
+    public String getCcyName() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, getCcy());
+    }
+
+    public void setCcyName(String ccyName) {
+        this.ccyName = ccyName;
+    }
+
+    public String getCounterIdName() {
+        return counterIdName;
+    }
+
+    public void setCounterIdName(String counterIdName) {
+        this.counterIdName = counterIdName;
     }
 }

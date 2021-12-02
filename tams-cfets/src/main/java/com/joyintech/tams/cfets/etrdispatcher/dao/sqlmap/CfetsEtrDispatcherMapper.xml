@@ -53,7 +53,7 @@
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
-    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'yyyy-MM-dd hh24:mi:ss') transmitTime,
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
@@ -226,7 +226,7 @@
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.ent_finish_amt,0)/100) as execRemainderAmt,
     NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
-    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'yyyy-MM-dd hh24:mi:ss') transmitTime,
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
@@ -486,7 +486,8 @@
             to_char(eted.MDATE,'yyyy-MM-dd') || ' - ' || to_char(eted.MDATE2,'yyyy-MM-dd') as dueDate,
             eted.TERM_DAYS repoTerm,
             eted.FIRST_UNIT_CPRICE || ' - ' || eted.FIRST_UNIT_CPRICE2 firstprice,
-            pss.pledge_stock_name pledgeStockName
+            pss.pledge_stock_name pledgeStockName,
+            fp.Is_Right isRight
         FROM ETR_ENTRUST ete
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
@@ -675,6 +676,11 @@
         FROM
             ETR_DISTRIBUTE edi
         LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
+        INNER JOIN PTL_PORTFOLIO
+        ON PTL_PORTFOLIO.PORTFOLIO_ID = een.PORTFOLIO_ID
+        INNER JOIN PTL_PORTFOLIO_AUTHORITY
+        ON PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
+        AND edi.TRADER = PTL_PORTFOLIO_AUTHORITY.USER_ID
         where een.ENTRUST_STATUS in ('02','03','04')
         GROUP BY
             edi.TRADER) a
@@ -688,6 +694,11 @@
         FROM
             ETR_DISTRIBUTE edi
         LEFT JOIN ETR_ENTRUST een ON edi.ENTRUST_ID = een.ENTRUST_ID
+        INNER JOIN PTL_PORTFOLIO
+        ON PTL_PORTFOLIO.PORTFOLIO_ID = een.PORTFOLIO_ID
+        INNER JOIN PTL_PORTFOLIO_AUTHORITY
+        ON PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
+        AND edi.TRADER = PTL_PORTFOLIO_AUTHORITY.USER_ID
         where een.ENTRUST_STATUS in ('02','03')
         GROUP BY
             edi.TRADER) b
@@ -700,7 +711,7 @@
         tpdp.trade_id tradeId,
         to_char(tpdp.trade_date,'yyyy-MM-dd') exeDate,
         to_char(tpdp.settle_date,'yyyy-MM-dd') tradeDate,
-        tpdp.busi_type busiType,
+        #{quoteType} busiType,
         tpdp.portfolio_id portfolioId,
         pp.portfolio_name portfolioName,
         fp.finprod_market_id finprodMarketId,

@@ -1,6 +1,6 @@
 /**
- * 场外成交确认
- * @author sjj
+ * 银行间成交确认
+ * @author
  * @version 1.0 2021年10月26日
  * @see CfetsEtrDispatcherController
  * @since 1.0
@@ -16,6 +16,9 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbfindEtrinfoRequest;
 import com.joyintech.tams.cfets.trdconfirm.dto.*;
 import com.joyintech.tams.cfets.trdconfirm.service.CfetsTrdConfirmService;
 import com.joyintech.tams.constant.DictCode;
@@ -29,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.joyintech.tams.business.common.pojo.Message;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 
@@ -49,8 +53,11 @@ public class CfetsTrdConfirmController extends BaseController {
         Map<String, Object> initPageParams = new HashMap<>();
         //是否支持CSTP下行接口
         initPageParams.put("IS_SUPPORT_CSTP_FLAG", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG"));
-        //银行间交易执行是否可手工确认
-        initPageParams.put("IS_CFETSTRD_MANUALCONFIRM_FLAG", CacheUtil.getSysParam("IS_CFETSTRD_MANUALCONFIRM_FLAG"));
+        //银行间债券交易执行是否可手工确认
+        initPageParams.put("IS_CFETSSECTRD_MANUALCONFIRM_FLAG", CacheUtil.getSysParam("IS_CFETSSECTRD_MANUALCONFIRM_FLAG"));
+        //银行间回购交易执行是否可手工确认
+        initPageParams.put("IS_CFETSREPOTRD_MANUALCONFIRM_FLAG", CacheUtil.getSysParam("IS_CFETSREPOTRD_MANUALCONFIRM_FLAG"));
+
         //交易员是否可查看全部CSTP下行成交数据
         initPageParams.put("IS_QUERYALLCSTP_FLAG", CacheUtil.getSysParam("IS_QUERYALLCSTP_FLAG"));
 
@@ -290,7 +297,37 @@ public class CfetsTrdConfirmController extends BaseController {
         }
     }
 
+    @PostMapping(value="/exportFindAllRegInfo")
+    @ResponseBody
+    @ApiOperation(value = "交易执行列表导出", notes = "交易执行列表导出")
+    public void exportFindAllRegInfo(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(req, response, "交易执行列表管理", () -> {
+            List dataList = cfetsTrdConfirmService.findAllRegInfoList(req.getDto(CfetsTrdConfirmRegInfoListRequest.class)).getRoot();
+            return dataList;
+        });
+    }
 
+    @PostMapping(value="/exportFindAllCstpInfo")
+    @ResponseBody
+    @ApiOperation(value = "CSTP成交回报列表导出", notes = "CSTP成交回报列表导出")
+    public void exportFindAllCstpInfo(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(req, response, "CSTP成交回报列表管理", () -> {
+            List dataList = cfetsTrdConfirmService.findAllCstpInfoList(req.getDto(CfetsTrdConfirmCstpInfoListRequest.class)).getRoot();
+            return dataList;
+        });
+    }
 
+    @PostMapping(value="/exportFindAllTrdCstpInfo")
+    @ResponseBody
+    @ApiOperation(value = "匹配确认列表导出", notes = "匹配确认列表导出")
+    public void exportFindAllTrdCstpInfo(@RequestBody CfetsExportRequestDto req, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(req, response, "匹配确认列表列表管理", () -> {
+            List dataList = cfetsTrdConfirmService.findAllTrdCstpInfoList(req.getDto(CfetsTrdConfirmTrdCstpMatchRequest.class)).getRoot();
+            return dataList;
+        });
+    }
 
 }

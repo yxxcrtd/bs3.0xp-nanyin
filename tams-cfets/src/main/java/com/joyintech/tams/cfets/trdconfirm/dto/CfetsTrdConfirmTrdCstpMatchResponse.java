@@ -11,6 +11,9 @@
 package com.joyintech.tams.cfets.trdconfirm.dto;
 
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -102,8 +105,12 @@ public class CfetsTrdConfirmTrdCstpMatchResponse {
     @ApiModelProperty(name="settleFeeAmt",value="结算手续费",example="字符串1")
     private BigDecimal settleFeeAmt;
 
-    @ApiModelProperty(name="counterId",value="对手方",example="字符串1")
+    @ApiModelProperty(name="counterId",value="对手方Code",example="字符串1")
     private String counterId;
+
+    @ApiModelProperty(name="counterIdName",value="对手方",example="字符串1")
+    private String counterIdName;
+
 
     @ApiModelProperty(name="busiTypeStr",value="交易类型",example="字符串1")
     private String busiTypeStr;
@@ -120,11 +127,17 @@ public class CfetsTrdConfirmTrdCstpMatchResponse {
     @ApiModelProperty(name="matchStatus",value="匹配状态",example="字符串1")
     private String matchStatus;
 
+    @ApiModelProperty(name="dealType",value="交易类型",example="01")
+    private String dealType;
+
+    @ApiModelProperty(name="totleTradeId",value="汇总登记编号",example="字符串1")
+    private String totleTradeId;
+
     @ApiModelProperty(name="selectedItem",value="流水号",example="字符串1")
     private transient List<CfetsTrdConfirmTrdCstpMatchResponse> selectedItem;
 
     public String getMatchTypeName() {
-        return matchTypeName;
+        return SysDataUtil.getNameFromDataDict(DictCode.下行交易匹配类型, getMatchType());
     }
 
     public void setMatchTypeName(String matchTypeName) {
@@ -198,7 +211,7 @@ public class CfetsTrdConfirmTrdCstpMatchResponse {
     }
 
     public String getPsName() {
-        return psName;
+        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, getPs());
     }
 
     public void setPsName(String psName) {
@@ -214,7 +227,8 @@ public class CfetsTrdConfirmTrdCstpMatchResponse {
     }
 
     public String getSettleSpeedName() {
-        return settleSpeedName;
+        return "T+" + this.getSettleSpeed();
+        //return SysDataUtil.getNameFromDataDict(DictCode.清算速度, getSettleSpeed());
     }
 
     public void setSettleSpeedName(String settleSpeedName) {
@@ -326,7 +340,8 @@ public class CfetsTrdConfirmTrdCstpMatchResponse {
     }
 
     public String getBusiTypeStr() {
-        return busiTypeStr;
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, getDealType());
+
     }
 
     public void setBusiTypeStr(String busiTypeStr) {
@@ -371,5 +386,29 @@ public class CfetsTrdConfirmTrdCstpMatchResponse {
 
     public void setMatchStatus(String matchStatus) {
         this.matchStatus = matchStatus;
+    }
+
+    public String getDealType() {
+        return dealType;
+    }
+
+    public void setDealType(String dealType) {
+        this.dealType = dealType;
+    }
+
+    public String getTotleTradeId() {
+        return totleTradeId;
+    }
+
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
+    }
+
+    public String getCounterIdName() {
+        return counterIdName;
+    }
+
+    public void setCounterIdName(String counterIdName) {
+        this.counterIdName = counterIdName;
     }
 }
