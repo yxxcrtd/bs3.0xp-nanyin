@@ -713,7 +713,6 @@ public class IbuQuoteBondService extends BaseService {
                 BussinessDictCodeList.委托状态_已接收.getValue())) {
             return "1";
         }
-
         EtrFinishStatusKey etrFinishStatusKey = new EtrFinishStatusKey();
         etrFinishStatusKey.setEntrustId(entrustId);
         List<EtrFinishStatus> etrFinishStatusList = etrInvestInfoMapper.selectEtrFinishStatusByPrimaryKey(

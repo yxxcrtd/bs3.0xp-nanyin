@@ -162,4 +162,5 @@
                 T2.EXERCISE_DATE = T1.EXERCISE_DATE
                 AND T2.FINPROD_ID = T1.FINPROD_ID )
     </select>
+
 </mapper>
