@@ -363,8 +363,8 @@
         FROM TRD_PRODUCT_DEAL TPD
         INNER JOIN TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID = TPDA.TRADE_ID
         LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = TPDA.PORTFOLIO_ID
-        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON tpd.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpd.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type =#{feeType07}
+        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpd.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
+        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType07}
         LEFT JOIN ETR_ENTRUST ee ON TPDA.Entrust_Id = ee.entrust_id
         LEFT JOIN ETR_FINISH_STATUS efs ON ee.Entrust_Id = efs.entrust_id AND TPD.TRADE_ID = efs.trade_id
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
