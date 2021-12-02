@@ -372,7 +372,7 @@
         T4.FINPROD_ABBR ,
         T1.TRADE_STATUS,
         '' SEND_STATUS,
-        T1.SHARE_AMT,
+        T1.SHARE_AMT/100,
         T1.UNIT_CPRICE price,
         T1.YIELD matureYield,
         T1.EXER_YIELD exerYield,
@@ -430,7 +430,7 @@
         T4.FINPROD_ABBR ,
         T1.TRADE_STATUS,
         '' SEND_STATUS,
-        T1.SHARE_AMT,
+        T1.SHARE_AMT/100,
         T1.UNIT_CPRICE price,
         T1.YIELD matureYield,
         T1.EXER_YIELD exerYield,
@@ -484,7 +484,7 @@
         ,y.EXT_FINPROD_ABBR FINPROD_ABBR
         ,y.I_Q_B_TRADE_STATUS TRADE_STATUS
         ,y.I_Q_B_SEND_STATUS SEND_STATUS
-        ,y.I_Q_B_D_PRIN_AMT  SHARE_AMT
+        ,y.I_Q_B_D_PRIN_AMT/100  SHARE_AMT
         ,y.I_Q_B_D_UNIT_FPRICE price
         ,y.I_Q_B_D_YIELD matureYield
         ,y.I_Q_B_D_EXER_YIELD exerYield
