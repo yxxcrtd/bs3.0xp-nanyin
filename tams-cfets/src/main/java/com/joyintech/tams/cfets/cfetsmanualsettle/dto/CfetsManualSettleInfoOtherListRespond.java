@@ -136,6 +136,12 @@ public class CfetsManualSettleInfoOtherListRespond {
     @ApiModelProperty(name="actExerciseDate1",value="实际行权日",example="字符串1")
     private String actExerciseDate1;
 
+    @ApiModelProperty(name="tradeId",value="成交编号",example="字符串1")
+    private String tradeId;
+
+    @ApiModelProperty(name="isRight",value="是否含权",example="A1")
+    private String isRight;
+
     public String getSpanTextOneStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.分配方式, this.getSpanTextOne());
     }
@@ -486,5 +492,21 @@ public class CfetsManualSettleInfoOtherListRespond {
 
     public void setActExerciseDate1(String actExerciseDate1) {
         this.actExerciseDate1 = actExerciseDate1;
+    }
+
+    public String getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;
+    }
+
+    public String getIsRight() {
+        return isRight;
+    }
+
+    public void setIsRight(String isRight) {
+        this.isRight = isRight;
     }
 }
