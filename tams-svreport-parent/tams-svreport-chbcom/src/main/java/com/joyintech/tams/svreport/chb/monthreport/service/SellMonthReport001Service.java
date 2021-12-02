@@ -127,11 +127,12 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		dataList= com.joyintech.framework.util.JsonUtils.json2List(datas,SellMonthReport.class);
 		SellMonthReport report = dataList.get(0);
 		String reportuuid = report.getReportuuid();
+		String reportName = report.getReportName();
 		String termid = report.getTermid();
 		Map<String,Object> data  = new HashMap<String,Object>();
 		List<SellMonthReportDetail> tempList=new ArrayList<SellMonthReportDetail>();
 		List<SellMonthReport> dateTempList=new ArrayList<SellMonthReport>();
-		String fileName = "销售月度统计表"+ termid +".xls";
+		String fileName = reportName +".xls";
 		//查询当前期数的reportuuid主键
 		List<SellMonthReport> reportuuidList = sellMonthReportDetailMapper.selectReportuuid(termid);
 		if(reportuuidList.size() != 0){
