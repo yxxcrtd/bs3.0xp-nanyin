@@ -37,6 +37,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrplanassetr.dto.EtrPlanAssetRDto;
@@ -378,16 +379,20 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      * @see
      * @since 1.0
      */
-    public BigDecimal getAssetAvailablePosition(PtlSecPositionFlowDto dto) {
+    public BigDecimal getAssetAvailablePosition(EtrSecPositionDto dto) {
         Date sysDate = DateUtil.platDateFromCache();
         dto.setCdate(DateUtil.parse(DateUtil.format(sysDate)));
         dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-        if (StringUtil.isNotEmpty(dto.getSecAcctId())) {
-            dto.setChannel(true);
-        }
-        return restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/getAssetAvailablePosition", dto,
-                BigDecimal.class);
+//        if (StringUtil.isNotEmpty(dto.getSecAcctId())) {
+//            dto.setChannel(true);
+//        }
+        // modify by etliu 20211129 start
+        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/getAssetAvailablePosition", dto,
+//            BigDecimal.class);
+        return etrCommonService.getAssetAvailablePosition(dto);
+        // modify by etliu 20211129 end
     }
 
     /**
@@ -543,7 +548,11 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
             dto.setProAvailableCash(BigDecimal.valueOf(Double.valueOf(proAvailableCash.get("cashT").toString())));
             //指令可用持仓
             map.put("finprodId", dto.getFinprodId());
-            PtlSecPositionFlowDto ptlSecPositionFlowDto=new PtlSecPositionFlowDto();
+
+            // modify by etliu 20211129 start
+//            PtlSecPositionFlowDto ptlSecPositionFlowDto=new PtlSecPositionFlowDto();
+            EtrSecPositionDto ptlSecPositionFlowDto=new EtrSecPositionDto();
+            // modify by etliu 20211129 end
             ptlSecPositionFlowDto.setCcy(dto.getCcy());
             ptlSecPositionFlowDto.setFinprodId(dto.getFinprodId());
             ptlSecPositionFlowDto.setPortfolioId(dto.getPortfolioId());

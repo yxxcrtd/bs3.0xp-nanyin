@@ -27,6 +27,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
@@ -50,11 +51,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -221,6 +219,8 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             List<String> bondTypeList = StringUtil.splitToList(",", bondType);
             param.put("bondTypeList", bondTypeList);
         }
+        List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+                param, SysUser.class);
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
         //配置单位 edit by yeming 20210730 start
         Page<EtrBondFirstLBiddingDto> page = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/findPage",
@@ -231,6 +231,12 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             }
             if(dto.getWinPriceTotal() != null) {
                 dto.setWinPriceTotal(dto.getWinPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(StringUtil.isNotEmpty(dto.getNextUser())){
+                String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+                        .map(SysUser::getRealName)
+                        .collect(Collectors.joining(",","",""));
+                dto.setNextUser(sysUsers);
             }
         }
         return page;
@@ -459,7 +465,8 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             dto.setAssetType11(jsonObject.get("assetType11").toString());
             long lt = Long.parseLong(jsonObject.get("biddate").toString());
             Date date = new Date(lt);
-            dto.setEntrustDate(date);
+//            dto.setEntrustDate(date);
+            dto.setEntrustDate(DateUtil.parse(rowData.get(12).toString().trim()));
             dto.setFinprodId(jsonObject.get("finprodId").toString());
             //缴款方式
             String etrPayType = rowData.get(5).toString().trim();
@@ -589,6 +596,12 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
                 String message = etrCommonService.checkIsBlank(rowData.get(1).toString(), "EtrBondFirstLBidding002.vdate", lineNo);
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
                 message = etrCommonService.checkIsDate(rowData.get(1).toString(), "EtrBondFirstLBidding002.vdate", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+
+                //投标日期调用共通check非空和是否正确
+                message = etrCommonService.checkIsBlank(rowData.get(12).toString(), "EtrBondFirstLBidding002.bidDate", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+                message = etrCommonService.checkIsDate(rowData.get(12).toString(), "EtrBondFirstLBidding002.bidDate", lineNo);
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
 
                 //委托结束日
@@ -737,12 +750,4 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
                 , param,
                 SelectOptionDto.class);
     }
-
-    public Integer checkDataNoPortfolioId(String finprodId,String entrustId) {
-        return restTemplate.getForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/checkDataNoPortfolioId?finprodId="+finprodId
-                        +"&entrustId="+entrustId,
-                Integer.class);
-    }
-
 }

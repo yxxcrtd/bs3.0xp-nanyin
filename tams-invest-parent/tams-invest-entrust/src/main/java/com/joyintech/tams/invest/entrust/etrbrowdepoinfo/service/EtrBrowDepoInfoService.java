@@ -605,26 +605,26 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
             }
             Map<String, Object> param = new HashMap<>();
             // 通道
-//            if (StringUtil.isNotBlank(data.get(12).toString())) {
-//                etrBrowDepoInfoDto.setChlId(data.get(12).toString());
-//                param = new HashMap<>();
-//                param.put("initValue", data.get(12).toString());
-//                param.put("page", 1);
-//                param.put("length", 20);
-//                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-//                    ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
-//                    param, SelectOptionDto.class);
-//                if (!StringUtil.isEmptyList(selectOptionDtoPage.getRoot())) {
-//                    etrBrowDepoInfoDto.setChlIdName(selectOptionDtoPage.getRoot().get(0).getText());
-//                }
-//            }
+            if (StringUtil.isNotBlank(data.get(12).toString())) {
+                etrBrowDepoInfoDto.setChlId(data.get(12).toString());
+                param = new HashMap<>();
+                param.put("initValue", data.get(12).toString());
+                param.put("page", 1);
+                param.put("length", 20);
+                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+                        ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
+                        param, SelectOptionDto.class);
+                if (!StringUtil.isEmptyList(selectOptionDtoPage.getRoot())) {
+                    etrBrowDepoInfoDto.setChlIdName(selectOptionDtoPage.getRoot().get(0).getText());
+                }
+            }
             etrBrowDepoInfoDto.setBussEtrInvestPersonInfoDto(new BussEtrInvestPersonInfoDto());
             // 投资经理
             etrBrowDepoInfoDto.getBussEtrInvestPersonInfoDto().setInvManagerId(etrBrowDepoInfoDto.getCreateUser());
             // 投资处室
             etrBrowDepoInfoDto.getBussEtrInvestPersonInfoDto().setRoom(etrBrowDepoInfoDto.getCreateDept());
             // 备注
-            etrBrowDepoInfoDto.setRemark(data.get(12).toString());
+            etrBrowDepoInfoDto.setRemark(data.get(13).toString());
             param.put("portfolioId", etrBrowDepoInfoDto.getPortfolioId());
             param.put("ccy", etrBrowDepoInfoDto.getCcy());
             param.put("vdate", etrBrowDepoInfoDto.getVdate());

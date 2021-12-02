@@ -454,7 +454,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      * 获取 finprodMarketId
      * @return finprodMarketId.
      */
-//    @PrimaryKey(value = Field.PK_2)
+    @PrimaryKey(value = Field.PK_2)
     @NotEmpty(fieldName = "EtrInvestAllInfo001.finprodId", groups = {ValidateGroupEdit.class})
     public String getFinprodMarketId() {
         return finprodMarketId;
@@ -707,7 +707,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      * 取得组合代码
      */
     @Override
-//    @NotEmpty(fieldName = "EtrInvestBondInfo002.portfolioId", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "EtrInvestBondInfo002.portfolioId", groups = {ValidateGroupEdit.class})
     public String getPortfolioId() {
         return super.getPortfolioId();
     }

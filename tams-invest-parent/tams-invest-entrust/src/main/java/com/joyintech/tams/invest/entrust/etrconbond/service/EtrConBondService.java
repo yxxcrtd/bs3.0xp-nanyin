@@ -409,21 +409,21 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
                 }
             }
             // 通道
-//            if (StringUtil.isNotBlank(data.get(9).toString())) {
-//                etrConBondDto.setChlId(data.get(9).toString());
-//                param = new HashMap<>();
-//                param.put("initValue", data.get(9).toString());
-//                param.put("page", 1);
-//                param.put("length", 20);
-//                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-//                    ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
-//                    param, SelectOptionDto.class);
-//                if (!StringUtil.isEmptyList(selectOptionDtoPage.getRoot())) {
-//                    etrConBondDto.setChlIdName(selectOptionDtoPage.getRoot().get(0).getText());
-//                }
-//            }
+            if (StringUtil.isNotBlank(data.get(9).toString())) {
+                etrConBondDto.setChlId(data.get(9).toString());
+                param = new HashMap<>();
+                param.put("initValue", data.get(9).toString());
+                param.put("page", 1);
+                param.put("length", 20);
+                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+                        ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
+                        param, SelectOptionDto.class);
+                if (!StringUtil.isEmptyList(selectOptionDtoPage.getRoot())) {
+                    etrConBondDto.setChlIdName(selectOptionDtoPage.getRoot().get(0).getText());
+                }
+            }
             // 备注
-            etrConBondDto.setRemark(data.get(9).toString());
+            etrConBondDto.setRemark(data.get(10).toString());
             param.put("portfolioId", etrConBondDto.getPortfolioId());
             param.put("ccy", etrConBondDto.getCcy());
             param.put("vdate", etrConBondDto.getPurchDate());
@@ -549,30 +549,28 @@ public class EtrConBondService extends CommonExportService<EtrConBondDto> implem
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(7).toString(), "EtrConBond003.invAim", lineNo));
             // 证券账户
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(8).toString(), "EtrConBond003.secAcctId", lineNo));
             // 通道
-//                if ((StringUtil.isBlank(rowData.get(8).toString ())
-//                     && StringUtil.isBlank(rowData.get(9).toString()))
-//                    || (StringUtil.isNotBlank(rowData.get(8).toString())
-//                        && StringUtil.isNotBlank(rowData.get(9).toString()))) {
-//                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0020",
-//                    getMessage( "EtrConBond003.secAcctId"), getMessage("invest.channelId"), lineNo));
-//                }
+            if ((StringUtil.isBlank(rowData.get(8).toString ())
+                    && StringUtil.isBlank(rowData.get(9).toString()))
+                    || (StringUtil.isNotBlank(rowData.get(8).toString())
+                    && StringUtil.isNotBlank(rowData.get(9).toString()))) {
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0020",
+                        getMessage( "EtrConBond003.secAcctId"), getMessage("invest.channelId"), lineNo));
+            }
             // 通道存在
-//                if (StringUtil.isNotBlank(rowData.get(9).toString())) {
-//                    Map<String, Object> param = new HashMap<>();
-//                    param.put("initValue", rowData.get(9).toString());
-//                    param.put("page", 1);
-//                    param.put("length", 20);
-//                    Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-//                        ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
-//                        param, SelectOptionDto.class);
-//                    if (selectOptionDtoPage.getRoot().isEmpty()) {
-//                        confirmMsg =  etrCommonService.StringAddByBr(confirmMsg,
-//                            getMessage("ETR_E_0017", getMessage("invest.channelId"), lineNo));
-//                    }
-//                }
+            if (StringUtil.isNotBlank(rowData.get(9).toString())) {
+                Map<String, Object> param = new HashMap<>();
+                param.put("initValue", rowData.get(9).toString());
+                param.put("page", 1);
+                param.put("length", 20);
+                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+                        ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
+                        param, SelectOptionDto.class);
+                if (selectOptionDtoPage.getRoot().isEmpty()) {
+                    confirmMsg =  etrCommonService.StringAddByBr(confirmMsg,
+                            getMessage("ETR_E_0017", getMessage("invest.channelId"), lineNo));
+                }
+            }
             if (StringUtil.isBlank(confirmMsg)) {
                 jsonArrays.add(rowData);
             } else {

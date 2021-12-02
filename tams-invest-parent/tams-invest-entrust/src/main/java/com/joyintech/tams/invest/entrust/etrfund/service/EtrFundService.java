@@ -373,21 +373,32 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
      * @since 1.0
      */
     public Map<String,Object> getProAvailableCash(Map<String,Object> param) {
-        Date sysDate = DateUtil.platDateFromCache();
-        param.put("vdate", DateUtil.format(sysDate));
-        /*List<String> acctTypeList = new ArrayList<>();
-        acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
-        acctTypeList.add(DictCodeListExt1.资金账户类型_券商资金账户.getValue());
-        dto.setAcctType(acctTypeList);*/
-        if(StringUtil.isNotEmpty(param.get("finprodId"))){
-            FinProduct finProduct = finProductMapper.selectByPrimaryKey((String)param.get("finprodId"));
-            List<String> holidayList = dateCalService.getDealCalendarHoliday(sysDate,DateUtil.addDay(sysDate, 15),finProduct.getCalendarId());
-            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(sysDate).toString()), 1, holidayList, "1");
-            param.put("vdate1", DateUtil.format(tradeDay));
+        // modify by etliu 20211129 start
+        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+//        Date sysDate = DateUtil.platDateFromCache();
+//        param.put("vdate", DateUtil.format(sysDate));
+//        /*List<String> acctTypeList = new ArrayList<>();
+//        acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
+//        acctTypeList.add(DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+//        dto.setAcctType(acctTypeList);*/
+//        if(StringUtil.isNotEmpty(param.get("finprodId"))){
+//            FinProduct finProduct = finProductMapper.selectByPrimaryKey((String)param.get("finprodId"));
+//            List<String> holidayList = dateCalService.getDealCalendarHoliday(sysDate,DateUtil.addDay(sysDate, 15),finProduct.getCalendarId());
+//            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(sysDate).toString()), 1, holidayList, "1");
+//            param.put("vdate1", DateUtil.format(tradeDay));
+//        }
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrFund/getProAvailableCash",param,
+//            Map.class);
+        Date vdate = DateUtil.parse((String)param.get("vdate"));
+        String calId = (String)param.get("calId");
+        if(StringUtil.isNotEmpty(calId)){
+            List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(vdate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(vdate)), 15),calId);
+            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(vdate)), 1, holidayList, "1");
+            param.put("sysDateT1",DateUtil.format(tradeDay));
         }
-        return restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrFund/getProAvailableCash",param,
-                Map.class);
+        return etrCommonService.getProAvailableCash(param);
+        // modify by etliu 20211129 end
     }
 
     /**
@@ -653,27 +664,27 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
                 dto.setSecAcctIdName(secAcctIds.get(0).getText());
             }
             // 通道
-//            dto.setChlId(data.get(10).toString().trim());
-//            try {
-//                if (StringUtil.isNotEmpty(dto.getChlId())) {
-//                    Map<String, Object> param = new HashMap<>();
-//                    param.put("initValue", data.get(10).toString());
-//                    param.put("page", 1);
-//                    param.put("length", 20);
-//                    Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-//                        ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
-//                        param, SelectOptionDto.class);
-//                    // 通道名称
-//                    dto.setChlIdName(selectOptionDtoPage.getRoot().get(0).getText());
-//                }
-//            }
-//            catch (Exception e) {
-//                dto.setChlIdName(null);
-//            }
+            dto.setChlId(data.get(10).toString().trim());
+            try {
+                if (StringUtil.isNotEmpty(dto.getChlId())) {
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("initValue", data.get(10).toString());
+                    param.put("page", 1);
+                    param.put("length", 20);
+                    Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+                            ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
+                            param, SelectOptionDto.class);
+                    // 通道名称
+                    dto.setChlIdName(selectOptionDtoPage.getRoot().get(0).getText());
+                }
+            }
+            catch (Exception e) {
+                dto.setChlIdName(null);
+            }
             // 备注
-            dto.setRemark(data.get(11).toString().trim());
+            dto.setRemark(data.get(12).toString().trim());
             // 转入资产代码，转入资产名称, 转入金融产品代码
-            dto.setChangeToFinprodMarketId(data.get(12).toString().trim());
+            dto.setChangeToFinprodMarketId(data.get(13).toString().trim());
             if(StringUtil.isNotEmpty(dto.getChangeToFinprodMarketId())) {
                 Map<String, Object> mapcTfinprod = new HashMap<String, Object>();
                 mapcTfinprod.put("initValue", dto.getChangeToFinprodMarketId());
@@ -744,12 +755,12 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
             if (StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
                     && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
                     || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()))) {
-                if(!StringUtil.isNotBlank(data.get(10).toString().trim())) {
+                if(!StringUtil.isNotBlank(data.get(11).toString().trim())) {
                     dto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
                     dto.setCounterIdName(getCounterName(dto.getCounterId()));
                 }else {
-                    dto.setCounterId(data.get(10).toString().trim());
-                    String counterName = getCounterName(data.get(10).toString().trim());
+                    dto.setCounterId(data.get(11).toString().trim());
+                    String counterName = getCounterName(data.get(11).toString().trim());
                     dto.setCounterIdName(counterName);
                 }
             }
@@ -758,12 +769,12 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
                     DictCodeListExt1.交易场所_深圳证券交易所.getValue())
                     && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
                     || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()))) {
-                if(!StringUtil.isNotBlank(data.get(10).toString().trim())) {
+                if(!StringUtil.isNotBlank(data.get(11).toString().trim())) {
                     dto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
                     dto.setCounterIdName(getCounterName(dto.getCounterId()));
                 }else {
-                    dto.setCounterId(data.get(10).toString().trim());
-                    String counterName = getCounterName(data.get(10).toString().trim());
+                    dto.setCounterId(data.get(11).toString().trim());
+                    String counterName = getCounterName(data.get(11).toString().trim());
                     dto.setCounterIdName(counterName);
                 }
             }
@@ -799,8 +810,8 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
                 }
             }
             else {
-                dto.setCounterId(data.get(10).toString().trim());
-                String counterName = getCounterName(data.get(10).toString().trim());
+                dto.setCounterId(data.get(11).toString().trim());
+                String counterName = getCounterName(data.get(11).toString().trim());
                 dto.setCounterIdName(counterName);
             }
             // 当证券账户有值时，查询交易所资金账户可用现金
@@ -827,21 +838,21 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
                 }
             }
             // 当通道有值时，查询通道可用现金
-//            if (StringUtil.isNotBlank(data.get(10).toString())
-//                && StringUtil.isNotEmpty(dto.getPortfolioId())
-//                && StringUtil.isNotEmpty(dto.getCcy())) {
-//                Map<String, Object> mapChlId = new HashMap<String, Object>();
-//                mapChlId.put("portfolioId", dto.getPortfolioId());
-//                mapChlId.put("chlFinprodId", dto.getChlId());
-//                mapChlId.put("ccy", dto.getCcy());
-//                if (StringUtil.isNotEmpty(getChannelAvailableCash(mapChlId))) {
-//                    dto.setChlIdCash(getChannelAvailableCash(mapChlId));
-//                }
-//                else {
-//                    dto.setChlIdCash(BigDecimal.ZERO);
-//                }
-//
-//            }
+            if (StringUtil.isNotBlank(data.get(10).toString())
+                    && StringUtil.isNotEmpty(dto.getPortfolioId())
+                    && StringUtil.isNotEmpty(dto.getCcy())) {
+                Map<String, Object> mapChlId = new HashMap<String, Object>();
+                mapChlId.put("portfolioId", dto.getPortfolioId());
+                mapChlId.put("chlFinprodId", dto.getChlId());
+                mapChlId.put("ccy", dto.getCcy());
+                if (StringUtil.isNotEmpty(getChannelAvailableCash(mapChlId))) {
+                    dto.setChlIdCash(getChannelAvailableCash(mapChlId));
+                }
+                else {
+                    dto.setChlIdCash(BigDecimal.ZERO);
+                }
+
+            }
             // 指令可用现金
             if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
                     || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())
