@@ -236,12 +236,28 @@
         <if test="ps != null and ps != ''">
             AND ETR_ENTRUST.PS = #{ps}
         </if>
-        <if test="settleSpreed != null and settleSpreed != ''">
-            AND DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED, 0, '01', 1, '02') = #{settleSpreed}
+        <if test="priceModel != null and priceModel != ''">
+            AND ETR_ENTRUST.PRICE_MODEL = #{priceModel}
         </if>
+        <if test="entrustId != null and entrustId != ''">
+            AND ETR_ENTRUST.ENTRUST_ID = #{entrustId}
+        </if>
+        <if test="settleSpeed != null and settleSpeed != ''">
+            AND DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED, 0, '01', 1, '02') = #{settleSpeed}
+        </if>
+        <if test="tradeMarket!= null and tradeMarket != ''">
+            AND ETR_ENTRUST.TRADE_MARKET = #{tradeMarket}
+        </if>
+        <!--投资经理-->
         <if test="invManagerId != null and invManagerId.size() > 0">
             AND ETR_ENTRUST.INV_MANAGER_ID IN
             <foreach collection="invManagerId" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodMarketIds != null and finprodMarketIds.size() > 0">
+            AND FIN_PRODUCT.FINPROD_MARKET_ID IN
+            <foreach collection="finprodMarketIds" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
