@@ -132,7 +132,7 @@ where
 		<if test="secAcctId != null and secAcctId != '' ">
 			AND std.SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
 		</if>
-		<if test="tradeDate != null and tradeDate != '' ">
+		<if test="tradeDate != null">
 			AND std.TRADE_DATE = #{tradeDate, jdbcType=DATE}
 		</if>
 		order by std.SHARE_AMT desc
