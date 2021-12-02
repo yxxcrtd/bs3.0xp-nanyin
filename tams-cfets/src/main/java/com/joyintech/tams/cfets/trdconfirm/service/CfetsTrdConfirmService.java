@@ -704,7 +704,7 @@ public class CfetsTrdConfirmService extends BaseService{
         entity.setExerYield(dtoReg.getExerYield());
         entity.setInvAim(dtoReg.getInvAim());
         entity.setpTradeId();*/
-
+        entity.setSettleSpeed(new Long(dtoReg.getSettleSpeed()));
         // 单位面值
         entity.setParValue(this.getUnitPrice(entity.getFinprodId(), dtoReg.getSettleDate()));
         // 交易本金 = 画面.净价总额
@@ -723,11 +723,11 @@ public class CfetsTrdConfirmService extends BaseService{
         entity.setTradeAmt(dtoReg.getTradeAmt());
         // 到期收益率 = 画面.到期收益率/100
         if (dtoReg.getYield() != null) {
-            entity.setYield(ArithmeticUtil.divide(dtoReg.getYield(), new BigDecimal(100), 14));
+            entity.setYield(dtoReg.getYield());
         }
         // 行权收益率 = 画面.行权收益率/100
         if (dtoReg.getExerYield() != null) {
-            entity.setExerYield(ArithmeticUtil.divide(dtoReg.getExerYield(), new BigDecimal(100), 14));
+            entity.setExerYield(dtoReg.getExerYield());
         }
         // 是否结清 = 数据字典缓存.是否.是
         entity.setIsClean(DictCodeList.是否_否.getValue());
