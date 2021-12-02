@@ -25,7 +25,7 @@ import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 
 /**
  * 债券一级投标委托dto 〈功能详细描述〉
- * 
+ *
  * @author yangjm
  * @version 1.0 2019年5月6日
  * @see EtrBondFirstLBiddingDto
@@ -33,7 +33,7 @@ import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
  */
 public class EtrBondFirstLBiddingDto extends EtrEntrust {
 
-     
+
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
@@ -62,7 +62,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
      * 投标区间%
      */
     private String biddingRange;
-    
+
     /**
      * 资产二级分类（原资产一级分类，委托页面的债券一级分类，修改：王贵奇，2019/9/27）
      */
@@ -77,12 +77,12 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
      */
     private String assetType11;
     /** 新增个性分类三、四。王贵奇，2019/9/27 结束**/
-    
+
     /**
      * 预计委托可用现金
      */
     private BigDecimal expectAvailableCash;
-    
+
     /**
      * 文件上传dto
      */
@@ -91,30 +91,30 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
      * 市场代码
      */
     private String finprodMarketId;
-    
+
     /**
      * 投资人员信息DTO
      */
     @Valid
     private BussEtrInvestPersonInfoDto etrInvestPersonInfo;
-    
-  
-   
+
+
+
     /**
      * 接收状态
      */
     private String recStatus;
-    
+
     /**
      * 指定交易员
      */
     private String trader;
-    
+
     /**
      * 委托关闭方式
      */
     private String CloseWay;
-    
+
     /**
      * 选中的数据
      */
@@ -128,7 +128,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
      * 组合名称
      */
     private String portfolioName;
-    
+
 
     /**
      * 金融产品全称
@@ -144,52 +144,52 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
      * 缴款方式
      */
     private String etrPayType;
-    
+
     /**
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
-    
+
+
     /**
      * 投标券面总额
      */
     private BigDecimal bidPriceTotal;
-    
+
     /**
      * 中标券面总额
      */
     private BigDecimal winPriceTotal;
-    
+
     /**
      * 中标状态
      */
-     private String isWin;
-     
-     /**
-      * 投标标位
-      */
-     private String bidPrice;
-     
-     /**
-      * 投标券面 
-      */
-     private BigDecimal bidPrinAmt;
-     /**
-      * 投标标位表dto
-      */
-     private List<EtrEntrustBidPrice> bidPriceList;
-     
-     /**
-      * 中标标位
-      */
-     private BigDecimal winPrice;
-     private String winPriceStr;
-     
-     /**
-      * 中标券面
-      */
-     private BigDecimal winPrinAmt;
+    private String isWin;
+
+    /**
+     * 投标标位
+     */
+    private String bidPrice;
+
+    /**
+     * 投标券面
+     */
+    private BigDecimal bidPrinAmt;
+    /**
+     * 投标标位表dto
+     */
+    private List<EtrEntrustBidPrice> bidPriceList;
+
+    /**
+     * 中标标位
+     */
+    private BigDecimal winPrice;
+    private String winPriceStr;
+
+    /**
+     * 中标券面
+     */
+    private BigDecimal winPrinAmt;
 
     //add by lishuping 20191030 start
     /**
@@ -245,7 +245,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setAssetType1(String assetType1) {
         this.assetType1 = assetType1;
     }
-    
+
     /**
      * 新增个性分类三、四getters和setters。王贵奇，2019/9/27 开始
      * 获取 assetType10
@@ -276,7 +276,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
         this.assetType11 = assetType11;
     }
     /** 新增个性分类三、四getters和setters。王贵奇，2019/9/27 结束 **/
-    
+
     /**
      * 获取 fileArray
      * @return fileArray.
@@ -284,7 +284,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public List<SysUploadFileInfo> getFileArray() {
         return fileArray;
     }
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -292,7 +292,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setFileArray(List<SysUploadFileInfo> fileArray) {
         this.fileArray = fileArray;
     }
-    
+
     /**
      * 获取 finprodMarketId
      * @return finprodMarketId.
@@ -300,7 +300,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public String getFinprodMarketId() {
         return finprodMarketId;
     }
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -308,7 +308,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setFinprodMarketId(String finprodMarketId) {
         this.finprodMarketId = finprodMarketId;
     }
-    
+
     /**
      * 获取 etrInvestPersonInfo
      * @return etrInvestPersonInfo.
@@ -316,7 +316,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public BussEtrInvestPersonInfoDto getEtrInvestPersonInfo() {
         return etrInvestPersonInfo;
     }
-    
+
     /**
      * 设置 etrInvestPersonInfo
      * @param etrInvestPersonInfo etrInvestPersonInfo
@@ -324,7 +324,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setEtrInvestPersonInfo(BussEtrInvestPersonInfoDto etrInvestPersonInfo) {
         this.etrInvestPersonInfo = etrInvestPersonInfo;
     }
-    
+
     /**
      * 获取 recStatus
      * @return recStatus.
@@ -332,7 +332,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public String getRecStatus() {
         return recStatus;
     }
-    
+
     /**
      * 设置 recStatus
      * @param recStatus recStatus
@@ -340,7 +340,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setRecStatus(String recStatus) {
         this.recStatus = recStatus;
     }
-    
+
     /**
      * 获取 trader
      * @return trader.
@@ -348,7 +348,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public String getTrader() {
         return trader;
     }
-    
+
     /**
      * 设置 trader
      * @param trader trader
@@ -356,7 +356,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setTrader(String trader) {
         this.trader = trader;
     }
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -364,7 +364,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public String getCloseWay() {
         return CloseWay;
     }
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -372,7 +372,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setCloseWay(String closeWay) {
         CloseWay = closeWay;
     }
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -380,7 +380,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public List<EtrBondFirstLBiddingDto> getSelectedItem() {
         return selectedItem;
     }
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -388,7 +388,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setSelectedItem(List<EtrBondFirstLBiddingDto> selectedItem) {
         this.selectedItem = selectedItem;
     }
-    
+
     /**
      * 获取 operateType
      * @return operateType.
@@ -396,7 +396,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public String getOperateType() {
         return operateType;
     }
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -404,7 +404,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setOperateType(String operateType) {
         this.operateType = operateType;
     }
-    
+
     /**
      * 获取 portfolioName
      * @return portfolioName.
@@ -412,7 +412,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public String getPortfolioName() {
         return portfolioName;
     }
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -420,7 +420,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
-    
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -428,7 +428,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public String getFinprodName() {
         return finprodName;
     }
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -436,7 +436,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setFinprodName(String finprodName) {
         this.finprodName = finprodName;
     }
-    
+
     /**
      * 获取 finprodType2
      * @return finprodType2.
@@ -444,7 +444,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public String getFinprodType2() {
         return finprodType2;
     }
-    
+
     /**
      * 设置 finprodType2
      * @param finprodType2 finprodType2
@@ -452,8 +452,8 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setFinprodType2(String finprodType2) {
         this.finprodType2 = finprodType2;
     }
-   
-    
+
+
     /**
      * 获取 bidPriceTotal
      * @return bidPriceTotal.
@@ -461,7 +461,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public BigDecimal getBidPriceTotal() {
         return bidPriceTotal;
     }
-    
+
     /**
      * 设置 bidPriceTotal
      * @param bidPriceTotal bidPriceTotal
@@ -469,7 +469,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setBidPriceTotal(BigDecimal bidPriceTotal) {
         this.bidPriceTotal = bidPriceTotal;
     }
-    
+
     /**
      * 获取 winPriceTotal
      * @return winPriceTotal.
@@ -477,7 +477,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public BigDecimal getWinPriceTotal() {
         return winPriceTotal;
     }
-    
+
     /**
      * 设置 winPriceTotal
      * @param winPriceTotal winPriceTotal
@@ -527,7 +527,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setRiskTrialRetDto(List<RiskTrialRetDto> riskTrialRetDto) {
         this.riskTrialRetDto = riskTrialRetDto;
     }
-    
+
     /**
      * 获取 isWin
      * @return isWin.
@@ -535,7 +535,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public String getIsWin() {
         return isWin;
     }
-    
+
     /**
      * 设置 isWin
      * @param isWin isWin
@@ -543,7 +543,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setIsWin(String isWin) {
         this.isWin = isWin;
     }
-    
+
     /**
      * 获取 bidPrice
      * @return bidPrice.
@@ -551,7 +551,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public String getBidPrice() {
         return bidPrice;
     }
-    
+
     /**
      * 设置 bidPrice
      * @param bidPrice bidPrice
@@ -559,7 +559,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setBidPrice(String bidPrice) {
         this.bidPrice = bidPrice;
     }
-    
+
     /**
      * 获取 bidPrinAmt
      * @return bidPrinAmt.
@@ -567,7 +567,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public BigDecimal getBidPrinAmt() {
         return bidPrinAmt;
     }
-    
+
     /**
      * 设置 bidPrinAmt
      * @param bidPrinAmt bidPrinAmt
@@ -575,7 +575,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public void setBidPrinAmt(BigDecimal bidPrinAmt) {
         this.bidPrinAmt = bidPrinAmt;
     }
-    
+
     /**
      * 获取 winPrice
      * @return winPrice.
@@ -583,7 +583,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     public BigDecimal getWinPrice() {
         return winPrice;
     }
-    
+
     /**
      * 设置 winPrice
      * @param winPrice winPrice
@@ -731,5 +731,15 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
 
     public void setBusinessModel(String businessModel) {
         this.businessModel = businessModel;
+    }
+
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
     }
 }
