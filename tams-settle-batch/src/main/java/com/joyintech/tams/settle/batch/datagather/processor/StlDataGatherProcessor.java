@@ -135,7 +135,7 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
                 if(StringUtil.isNotEmpty(settleTransDataDto.getEntrustId())){
                     exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(etrEntrustDtos.get(0).getEntrustId()));
                 }else{
-                    String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(), DateUtil.format(settleTransDataDto.getTradeDate()),settleTransDataDto.getTradePlat()),"_");
+                    String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(), DateUtil.format(settleTransDataDto.getTradeDate()),settleTransDataDto.getTradePlat(),settleTransDataDto.getPs()),"_");
                     if(etrEntrustMap.containsKey(busiKey)){
                         List<EtrEntrustDto> etrEntrusts = etrEntrustMap.get(busiKey);
                         if(null!=etrEntrusts&&!StringUtil.isEmptyList(etrEntrusts)){
