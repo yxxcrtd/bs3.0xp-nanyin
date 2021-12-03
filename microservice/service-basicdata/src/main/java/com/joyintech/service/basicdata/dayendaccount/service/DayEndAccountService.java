@@ -196,26 +196,17 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             return;
         }
         for(DayEndAccountDto dto : dtoList){
-            if(DictCodeListExt3.对账状态结果_不一致.getValue().equals(dto.getCheckResult())){
-                // 查询成交明细数据
-                List<SettleTransData> settleTransDatas = querySettleTransDatas(dto);
-                // 更新成交明细数据
-                updateSettleTransDatas(dto, settleTransDatas);
-                // 更新成交明细状态表
-                updateSettleTransDataStatus(dto, settleTransDatas);
-                // 更新券商对账单结果表
-                StlSecRecon stlSecRecon = new StlSecRecon();
-                stlSecRecon.setSeqNo(dto.getSeqNo());
-                stlSecRecon.setCheckResult(DictCodeListExt3.对账状态结果_手工完成.getValue());
-                stlSecReconMapper.updateByPrimaryKeySelective(stlSecRecon);
-            }else if(DictCodeListExt3.对账状态结果_待处理.getValue().equals(dto.getCheckResult())){
-                // 查询成交明细数据
-                List<SettleTransData> settleTransDatas = querySettleTransDatas(dto);
-                // 更新成交明细数据
-                updateSettleTransDatas(dto, settleTransDatas);
-                // 更新成交明细状态表
-                updateSettleTransDataStatus(dto, settleTransDatas);
-            }
+            // 查询成交明细数据
+            List<SettleTransData> settleTransDatas = querySettleTransDatas(dto);
+            // 更新成交明细数据
+            updateSettleTransDatas(dto, settleTransDatas);
+            // 更新成交明细状态表
+            updateSettleTransDataStatus(dto, settleTransDatas);
+            // 更新券商对账单结果表
+            StlSecRecon stlSecRecon = new StlSecRecon();
+            stlSecRecon.setSeqNo(dto.getSeqNo());
+            stlSecRecon.setCheckResult(DictCodeListExt3.对账状态结果_手工完成.getValue());
+            stlSecReconMapper.updateByPrimaryKeySelective(stlSecRecon);
         }
     }
 
