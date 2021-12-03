@@ -502,10 +502,9 @@ INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance002','REP','report/subm
 --销售结算资金交易信息维护按钮配置
 DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'SalesTransactionMaintenance002';
 DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'SalesTransactionMaintenance001';
-INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenance002','SalesTransactionMaintenance002_btn_submit','01','02',null,'提交','system',null,sysdate,'system',sysdate,'C',null);
-INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenance002','SalesTransactionMaintenance002_btn_save','01','02',null,'保存','system',null,sysdate,'system',sysdate,'C',null);
-INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenance001','SalesTransactionMaintenance001_btn_delete','01','02',null,'删除','system',null,sysdate,'system',sysdate,'C',null);
-INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenance002','SalesTransactionMaintenance001_btn_delete','01','02',null,'删除','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenance001','SalesTransactionMaintenance001_btn_add','01','01',null,'新建','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenance001','SalesTransactionMaintenance001_btn_import','01','01',null,'导入','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenance001','SalesTransactionMaintenance001_btn_delete','01','01',null,'删除','system',null,sysdate,'system',sysdate,'C',null);
 --销售结算资金交易信息维护按钮工作流配置
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'SalesTransactionMaintenance002';
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'SalesTransactionMaintenance001';
@@ -524,6 +523,12 @@ INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenanceRegist001','REP','report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001','report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001','REPORT_001_003_017',null,null,'02','02','销售结算资金交易登记','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenanceRegist002','REP','report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist002','report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist002',null,null,null,'02','02','销售结算资金交易登记','system',null,sysdate,'system',sysdate);
 
+--销售结算资金交易信息登记按钮配置
+DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'SalesTransactionMaintenanceRegist001';
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenanceRegist001','SalesTransactionMaintenanceRegist001_btn_manual','01','01',null,'手工处理','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenanceRegist001','SalesTransactionMaintenanceRegist001_btn_canManual','01','01',null,'取消手工处理','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenanceRegist001','SalesTransactionMaintenanceRegist001_btn_chbexport','01','01',null,'导出中债','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenanceRegist001','SalesTransactionMaintenanceRegist001_btn_search','01','01',null,'查询','system',null,sysdate,'system',sysdate,'C',null);
 --销售月报每日明细汇总批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3058';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
@@ -552,6 +557,12 @@ delete from SYS_MENU where MENU_ID = 'REPORT_001_003_018';
 INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_003_018', 'SVR', null, 'REPORT_001_003', 'SellMonthReport001', 18, '02', '理财业务销售数据月度统计表', 'system', null, TIMESTAMP '2019-09-12 00:00:00', 'system', TIMESTAMP '2019-09-12 00:00:00');
 INSERT INTO SYS_PAGE VALUES ('SellMonthReport001','REP','/chb/monthreport/SellMonthReport001','report/chb/monthreport/SellMonthReport001','REPORT_001_003_018',null,null,'01','01','理财业务销售数据月度统计表','system',null,sysdate,'system',sysdate);
 
+--理财业务销售数据月度统计表按钮配置
+DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID = 'SellMonthReport001';
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SellMonthReport001','SellMonthReport001_btn_manual','01','01',null,'手工处理','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SellMonthReport001','SellMonthReport001_btn_cancelManual','01','01',null,'取消手工处理','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SellMonthReport001','SellMonthReport001_btn_chbexport','01','01',null,'导出中债','system',null,sysdate,'system',sysdate,'C',null);
+INSERT INTO SYS_PAGE_ELEMENT VALUES('SellMonthReport001','SellMonthReport001_btn_search','01','01',null,'查询','system',null,sysdate,'system',sysdate,'C',null);
 --销售信息月度统计表批处理生成报送截止日配置
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_REPORT_CODE' and ITEM_CODE = '36';
 insert into SYS_DATADICT_LIST VALUES ('SVR_REPORT_CODE','36','销售信息月度统计表','36','0','system',null,sysdate,'system',sysdate,null);

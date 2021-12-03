@@ -45,7 +45,7 @@ public class SalesTransactionMaintenanceValid implements BeanValidator {
         //调用数据库配置脚本check方法
         errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, dto, "SalesTransactionMaintenance002", null, ValidMessage.class);
 
-            if (!dto.getTradeTime().isEmpty()) {
+            if (dto.getTradeTime() != null && dto.getTradeTime() != "") {
                 if (dto.getTradeTime().length() != 6) {
                     errorList.add(new ValidMessage("", "交易时间填写错误（例23：59:59填写235959）"));
                 }else if (Integer.parseInt(dto.getTradeTime().substring(0,1)) == 2 && Integer.parseInt(dto.getTradeTime().substring(1,2)) > 3){

@@ -174,7 +174,7 @@ $(function(){
    /**
     * 取消手工处理
     */
-       $('#SalesTransactionMaintenanceRegist001_btn_cancelManual').click(function() {
+       $('#SalesTransactionMaintenanceRegist001_btn_canManual').click(function() {
            var manArr=table.getAllCheckedRows();
            if(!manArr || manArr.length ==0){
         	   var sendStatus = $("#sendStatus").val();

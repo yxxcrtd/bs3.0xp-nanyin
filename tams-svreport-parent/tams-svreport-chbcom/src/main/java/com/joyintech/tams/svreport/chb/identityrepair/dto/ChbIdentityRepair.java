@@ -2,9 +2,6 @@ package com.joyintech.tams.svreport.chb.identityrepair.dto;
 
 import com.joyintech.framework.base.BaseEntity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 public class ChbIdentityRepair extends BaseEntity {
     //身份所在表标识
     private String equMark;
@@ -16,6 +13,10 @@ public class ChbIdentityRepair extends BaseEntity {
     private String orgIndentifyMark;
     //机构代码
     private String orgCode;
+    //登记银行代码
+    private String registBankCode;
+    //代销机构代码
+    private String agencyCode;
     //备注
     private String remark;
 
@@ -65,5 +66,21 @@ public class ChbIdentityRepair extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getRegistBankCode() {
+        return registBankCode;
+    }
+
+    public void setRegistBankCode(String registBankCode) {
+        this.registBankCode = registBankCode;
+    }
+
+    public String getAgencyCode() {
+        return agencyCode;
+    }
+
+    public void setAgencyCode(String agencyCode) {
+        this.agencyCode = agencyCode;
     }
 }
