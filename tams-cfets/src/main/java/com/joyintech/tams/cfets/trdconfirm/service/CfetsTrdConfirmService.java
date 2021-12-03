@@ -670,6 +670,7 @@ public class CfetsTrdConfirmService extends BaseService{
         //根据汇总交易编号查询登记数据
         CfetsTrdConfirmRegInfoListResponse dtoReg=cfetsTrdConfirmMapper.selectRegInfoByKey(totleTradeId);
         CfetsTrdBondInvestTradeDto entity=new CfetsTrdBondInvestTradeDto();
+        entity.setRegIbuId(totleTradeId);
         BeanUtil.copyPropertiesIgnoreNull(entity,dtoReg);
         if (baseGetBusinessId != null) {
             BussinessCodeParameter codeParameter = getBussinessCodeParameter(dtoReg.getPs());
@@ -944,7 +945,7 @@ public class CfetsTrdConfirmService extends BaseService{
         bondTradeDto.setQuoteId(dtoReg.getTotleTradeId());
        // bondTradeDto.setInterfTradSecdeal(interfCstpSecdeal);
         CfetsTrdBondInvestTradeDto entity=new CfetsTrdBondInvestTradeDto();
-
+        entity.setRegIbuId(dto.getTotleTradeId());
         BeanUtil.copyPropertiesIgnoreNull(entity,dtoReg);
         if (baseGetBusinessId != null) {
             BussinessCodeParameter codeParameter = getBussinessCodeParameter(dto.getPs());
@@ -1858,14 +1859,14 @@ public class CfetsTrdConfirmService extends BaseService{
                 }
             }
             posport.setSecAcctId(entity.getSecManageAcctId());
-            posport.setSecAmount(ArithmeticUtil.multiply(dto.getShareAmt(),new BigDecimal(100)));
-            posport.setCashAmount(dto.getTradeAmt());
+            posport.setSecAmount(ArithmeticUtil.multiply(dto.getShareAmt()==null?BigDecimal.ZERO:dto.getShareAmt(),new BigDecimal(100)));
+            posport.setCashAmount(dto.getTradeAmt()==null?BigDecimal.ZERO:dto.getTradeAmt());
             entity.getTrdProductDealAdds().forEach(trdProductDealAdd -> {
                 if (dto.getTradeId() != null
                         && dto.getTradeId().equals(trdProductDealAdd.getTradeId())) {
                     posport.setEtrId(trdProductDealAdd.getEntrustId());
-                    posport.setIntegrateSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
-                    posport.setOwnSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
+                    posport.setIntegrateSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getLendinShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
+                    posport.setOwnSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getOurShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
                 }
             });
             //查询指令的券面总额
@@ -1882,7 +1883,7 @@ public class CfetsTrdConfirmService extends BaseService{
         req.setInterfaceType("Bond001");
         req.setUserId(SecurityUtil.getLoginUser().getUserName());
         req.setTotalTradeId(entity.getTotleTradeId());
-        req.setFlowStatus(DictCodeListExt3.流程节点_审批生效.getValue());
+        req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
         req.setBusiType(DictCodeListExt3.头寸业务类型_现券交易.getValue());
         if(StringUtil.isNotEmpty(entity.getPs())
@@ -1900,11 +1901,12 @@ public class CfetsTrdConfirmService extends BaseService{
         req.setBalanceCheck("N");
         req.setBusiAct(DictCodeListExt3.业务动作_成交确认.getValue());
         req.setPs(entity.getPs());
-        req.setSystemAct(DictCodeListExt3.系统动作_关闭.getValue());
+        req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
         req.setCdate(entity.getTradeDate());
         req.setCcy(entity.getCcy());
         req.setFinprodId(entity.getFinprodId());
         req.setPtlList(ptlList);
+        req.setbTotalTradeId(entity.getRegIbuId());
         PositionHttpRequest.send(req);
     }
 

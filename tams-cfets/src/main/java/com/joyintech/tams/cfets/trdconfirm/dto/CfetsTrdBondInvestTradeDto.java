@@ -348,6 +348,10 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
      * 交易所资金账户可用现金
      */
     private BigDecimal tradeMarketCash;
+    /**
+     * 登记或报价的汇总编号
+     */
+    private String regIbuId;
 
     public BigDecimal getExchangeAmt() {
         return exchangeAmt;
@@ -2396,5 +2400,13 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 
     public void setCfetsTrdConfirmMatchDto(CfetsTrdConfirmMatchDto cfetsTrdConfirmMatchDto) {
         this.cfetsTrdConfirmMatchDto = cfetsTrdConfirmMatchDto;
+    }
+
+    public String getRegIbuId() {
+        return regIbuId;
+    }
+
+    public void setRegIbuId(String regIbuId) {
+        this.regIbuId = regIbuId;
     }
 }
