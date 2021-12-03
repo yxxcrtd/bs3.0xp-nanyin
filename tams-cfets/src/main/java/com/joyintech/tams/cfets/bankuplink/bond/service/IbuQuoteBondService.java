@@ -274,7 +274,8 @@ public class IbuQuoteBondService extends BaseService {
             }
             //本方交易员应默认当前登录用户姓名
             if(StringUtil.isEmpty(cfetsBondDealQuoteCommonDto.getMySideTrader())&&null!=SecurityUtil.getLoginUser()){
-                cfetsBondDealQuoteCommonDto.setMySideTrader(SecurityUtil.getLoginUser().getRealName());
+                cfetsBondDealQuoteCommonDto.setMySideTrader(SecurityUtil.getLoginUser().getUserName());
+                cfetsBondDealQuoteCommonDto.setOuTraderName(SecurityUtil.getLoginUser().getRealName());
             }
             //处理组合分配
             List<PtlAllocationDto> ptlAllocatios = new ArrayList<>();
