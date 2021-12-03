@@ -15,11 +15,11 @@
         T2.FINPROD_ABBR finprodAbbr,
         T1.FINPROD_TYPE2 finprodType2,
         sdl1.item_value finprodType2Str,
-        T1.TG_BUSI_TYPE tgBusiType,
+        btm.busi_type tgBusiType,
         sdl2.item_value tgBusiTypeStr,
         T1.PS ps,
         sdl3.item_value psStr,
-        T1.SHARE_AMT settleNum,
+        T1.SHARE_AMT*100 settleNum,
         T1.TRADE_AMT settleAmt,
         LISTAGG(T4.PORTFOLIO_ID,';') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
         LISTAGG(T5.PORTFOLIO_NAME,';') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
@@ -53,7 +53,8 @@
         LEFT JOIN INF_PAY_ORDERS_STATUS T10 ON T9.ORDER_ID = T10.ORDER_ID
         LEFT JOIN SYS_DATADICT_LIST sdl on sdl.dict_code ='DELIVERY_STATUS' and sdl.item_code = T8.Settle_Status
         LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='FINPROD_TYPE_TG' and sdl1.item_code = T1.FINPROD_TYPE2
-        LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='PINAN_BUSINESS_TYPE' and sdl2.item_code = T1.TG_BUSI_TYPE
+        LEFT JOIN BUSI_TYPE_MAPPING btm ON T1.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
+        LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.busi_type
         LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl5 on sdl5.dict_code ='SHARES_TRADE_PLATFORM' and sdl5.item_code = T1.TRADE_PLAT
@@ -90,7 +91,7 @@
             AND T1.Finprod_Type2= #{finprodType2}
         </if>
         <if test="tgBusiType != null and tgBusiType!='' ">
-            AND T1.TG_BUSI_TYPE = #{tgBusiType}
+            AND btm.busi_type = #{tgBusiType}
         </if>
         <if test="ps != null and ps!='' ">
             AND T1.PS= #{ps}
@@ -106,7 +107,7 @@
             T2.FINPROD_ABBR,
             T1.FINPROD_TYPE2,
             sdl1.item_value,
-            T1.TG_BUSI_TYPE,
+            btm.busi_type,
             sdl2.item_value,
             T1.PS,
             sdl3.item_value,
@@ -137,7 +138,7 @@
         T2.FINPROD_ABBR finprodAbbr,
         T1.FINPROD_TYPE2 finprodType2,
         sdl1.item_value finprodType2Str,
-        T1.TG_BUSI_TYPE tgBusiType,
+        btm.busi_type tgBusiType,
         sdl2.item_value tgBusiTypeStr,
         T1.PS ps,
         sdl3.item_value psStr,
@@ -175,7 +176,8 @@
         LEFT JOIN INF_PAY_ORDERS_STATUS T10 ON T9.ORDER_ID = T10.ORDER_ID
         LEFT JOIN SYS_DATADICT_LIST sdl on sdl.dict_code ='DELIVERY_STATUS' and sdl.item_code = T0.Settle_Status
         LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='FINPROD_TYPE_TG' and sdl1.item_code = T1.FINPROD_TYPE2
-        LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='PINAN_BUSINESS_TYPE' and sdl2.item_code = T1.TG_BUSI_TYPE
+        LEFT JOIN BUSI_TYPE_MAPPING btm ON T1.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
+        LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.busi_type
         LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl5 on sdl5.dict_code ='SHARES_TRADE_PLATFORM' and sdl5.item_code = T1.TRADE_PLAT
@@ -212,7 +214,7 @@
             AND T1.Finprod_Type2= #{finprodType2}
         </if>
         <if test="tgBusiType != null and tgBusiType!='' ">
-            AND T1.TG_BUSI_TYPE = #{tgBusiType}
+            AND btm.busi_type= #{tgBusiType}
         </if>
         <if test="ps != null and ps!='' ">
             AND T1.PS= #{ps}
@@ -229,7 +231,7 @@
             T1.FINPROD_TYPE2,
             sdl.ITEM_VALUE,
             sdl1.item_value,
-            T1.TG_BUSI_TYPE,
+            btm.busi_type,
             sdl2.item_value,
             T1.PS,
             sdl3.item_value,
@@ -364,7 +366,7 @@
         INNER JOIN TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID = TPDA.TRADE_ID
         LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = TPDA.PORTFOLIO_ID
         LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpd.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType07}
+        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN ETR_ENTRUST ee ON TPDA.Entrust_Id = ee.entrust_id
         LEFT JOIN ETR_FINISH_STATUS efs ON ee.Entrust_Id = efs.entrust_id AND TPD.TRADE_ID = efs.trade_id
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
@@ -779,7 +781,7 @@
         LEFT JOIN FIN_EXERCISE_PLAN T6 ON T1.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='01'
         LEFT JOIN FIN_EXERCISE_PLAN T61 ON T1.FINPROD_ID = T61.FINPROD_ID AND T61.EXERCISE_TYPE ='02'
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON T1.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON T1.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type = #{feeType07}
+        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON T1.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type = #{feeType08}
         LEFT JOIN TRDQUTO_MATCH_INFO T7 ON T7.Trd_Id = T1.TOTLE_TRADE_ID
         LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL T8 ON T8.TOTLE_TRADE_ID = T7.PRE_TRADE_ID
         LEFT JOIN MST_CFETS_CUSTOMER_INFO T9 ON T9.PARTY_ID = T8.OU_PARTY_ID

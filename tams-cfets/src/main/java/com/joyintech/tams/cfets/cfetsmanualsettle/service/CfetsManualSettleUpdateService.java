@@ -125,7 +125,12 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
             //交收数量
             trdBankManualSettleInfo.setSettleNum(cfetsManualSettleUpdateRequest.getSettleNumT());
             //交收金额
-            trdBankManualSettleInfo.setSettleAmt(cfetsManualSettleUpdateRequest.getSettleAmtT());
+//            trdBankManualSettleInfo.setSettleAmt(cfetsManualSettleUpdateRequest.getSettleAmtT());
+            if(StringUtil.equals(cfetsManualSettleUpdateRequest.getSelectedItem().getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
+                    && StringUtil.equals(cfetsManualSettleUpdateRequest.getSelectedItem().getPs(),DictCodeList.交易方向_买入.getValue())){
+            }else{
+                trdBankManualSettleInfo.setSettleAmt(cfetsManualSettleUpdateRequest.getSettleAmtT());
+            }
             //业务类别
             trdBankManualSettleInfo.setBusiType(cfetsManualSettleUpdateRequest.getSelectedItem().getTgBusiType());
             //交收状态

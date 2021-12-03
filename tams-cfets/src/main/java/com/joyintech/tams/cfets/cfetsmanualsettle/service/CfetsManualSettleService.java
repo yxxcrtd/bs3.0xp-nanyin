@@ -263,7 +263,11 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
             //交收数量
             trdBankManualSettleInfo.setSettleNum(cfetsManualSettleDto.getSettleNum());
             //交收金额
-            trdBankManualSettleInfo.setSettleAmt(cfetsManualSettleDto.getSettleAmt());
+            if(StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
+                    && StringUtil.equals(cfetsManualSettleDto.getPs(),DictCodeList.交易方向_买入.getValue())){
+            }else{
+                trdBankManualSettleInfo.setSettleAmt(cfetsManualSettleDto.getSettleAmt());
+            }
             //业务类别
             trdBankManualSettleInfo.setBusiType(cfetsManualSettleDto.getTgBusiType());
             //交收状态
@@ -327,15 +331,15 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
      * @return
      */
     private void sendPositionMethod(CfetsManualSettleRequest cfetsManualSettleRequest) {
-        List<PositionRulePtlData> ptlList=new ArrayList<>();
         //组装组合金额信息
         for(CfetsManualSettleDto cfetsManualSettleDto : cfetsManualSettleRequest.getSelectedItem()){
-            //IF(所选行.业务类型 = 数据字典.平安业务类型.债券中间收息 ||所选行.业务类型 = 数据字典.平安业务类型.债券中间还本
-            // ||所选行.业务类型 = 数据字典.平安业务类型.债券到期|| 所选行.业务类型 = 数据字典.平安业务类型.债券资产行权 )
-            if(StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券中间收息.getValue())
-                    ||StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券中间还本.getValue())
-                    ||StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券到期.getValue())
-                    ||StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券类资产行权.getValue())){
+            List<PositionRulePtlData> ptlList=new ArrayList<>();
+//            //IF(所选行.业务类型 = 数据字典.平安业务类型.债券中间收息 ||所选行.业务类型 = 数据字典.平安业务类型.债券中间还本
+//            // ||所选行.业务类型 = 数据字典.平安业务类型.债券到期|| 所选行.业务类型 = 数据字典.平安业务类型.债券资产行权 )
+//            if(StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券中间收息.getValue())
+//                    ||StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券中间还本.getValue())
+//                    ||StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券到期.getValue())
+//                    ||StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt1.平安业务类型_债券类资产行权.getValue())){
 
                 if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_回溯.getValue())){
                     //调用cancel接口
@@ -394,7 +398,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                     // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
                     req.setBusiType(DictCodeListExt3.头寸业务类型_现券交易.getValue());
                     if(StringUtil.isNotEmpty(cfetsManualSettleDto.getPs())){
-                        if(StringUtil.equals(cfetsManualSettleDto.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())){
+                        if(StringUtil.equals(cfetsManualSettleDto.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())
+                            ||StringUtil.equals(cfetsManualSettleDto.getPs(),BussinessDictCodeList.交易方向_行权赎回.getValue())){
                             req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
                         }else if(StringUtil.equals(cfetsManualSettleDto.getPs(),BussinessDictCodeList.交易方向_到期.getValue())
                                 ||StringUtil.equals(cfetsManualSettleDto.getPs(),BussinessDictCodeList.交易方向_还本.getValue())
@@ -412,9 +417,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                     }
                     //业务动作BUSI_ACT 09:交收确认 10:交收失败
                     req.setBusiAct("09");
-//                    if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收.getValue())){
-//                        req.setBusiAct("09");
-//                    }else
                     if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
                         req.setBusiAct("10");
                     }
@@ -428,7 +430,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                     req.setPtlList(ptlList);
                     PositionHttpRequest.send(req);
                 }
-            }
+//            }
         }
     }
 

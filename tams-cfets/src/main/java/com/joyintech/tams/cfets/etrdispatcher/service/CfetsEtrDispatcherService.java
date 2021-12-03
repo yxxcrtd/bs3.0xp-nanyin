@@ -586,7 +586,7 @@ public class CfetsEtrDispatcherService extends BaseService{
     public Page<CfetsEtrDispatcherExeListInfoResponse> getEtrDispatcherExeListInfo(CfetsEtrDispatcherInfoRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
-        pageParam.put("feeType07", BussinessDictCodeList.费用类型_结算费.getValue());
+        pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
         pageParam.put("TRADE_FLOW_STATUS01", DictCodeListExt1.交易流程状态_流程中.getValue());
         pageParam.put("TRADE_FLOW_STATUS02", DictCodeListExt1.交易流程状态_有效.getValue());
         pageParam.put("TRADE_FLOW_STATUS03", DictCodeListExt1.交易流程状态_撤销.getValue());
@@ -611,7 +611,7 @@ public class CfetsEtrDispatcherService extends BaseService{
     public Page<CfetsEtrDispatcherDealListInfoResponse> getEtrDispatcherDealListInfo(CfetsEtrDispatcherInfoRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
-        pageParam.put("feeType07", BussinessDictCodeList.费用类型_结算费.getValue());
+        pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
         pageParam.put("TRADE_FLOW_STATUS01", DictCodeListExt1.交易流程状态_流程中.getValue());
         pageParam.put("TRADE_FLOW_STATUS02", DictCodeListExt1.交易流程状态_有效.getValue());
         pageParam.put("TRADE_FLOW_STATUS03", DictCodeListExt1.交易流程状态_撤销.getValue());

@@ -42,11 +42,11 @@
     B.TRADER trader,
     B.realName realName,
     ETR_ENTRUST.REMARK remark,
-    ETR_ENTRUST_ADD.BUSI_TYPE_POSITION busiTypePosition,
+    btm.busi_type busiTypePosition,
     ssai.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-    round(decode(ETR_ENTRUST_ADD.BUSI_TYPE_POSITION,#{busiTypePosition01},EEBP.BID_PRICE,#{busiTypePosition02},ETR_ENTRUST_ADD.MATURE_YIELD*100,#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
+    round(decode(btm.busi_type,#{busiTypePosition01},EEBP.BID_PRICE,#{busiTypePosition02},ETR_ENTRUST_ADD.MATURE_YIELD*100,#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
     round(NVL(T5.ent_finish_amt,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 exeProgress,
     round(NVL(T5.FINISH_AMT,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 dealProgress,
     NVL(T5.ent_finish_amt,0)/100  as execFinishAmt,
@@ -104,6 +104,7 @@
         ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         LEFT JOIN SYS_USER su1 ON ETR_ENTRUST.INV_MANAGER_ID = su1.USER_NAME
+        LEFT JOIN BUSI_TYPE_MAPPING btm ON ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
     <where>
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
         <if test="entrustStatusList != null and entrustStatusList.size() > 0">
@@ -136,7 +137,7 @@
             AND ETR_ENTRUST_ADD.ASSET_TYPE  = #{finprodType2}
         </if>
         <if test="busiTypePosition != null and busiTypePosition!='' ">
-            AND ETR_ENTRUST_ADD.BUSI_TYPE_POSITION  = #{busiTypePosition}
+            AND btm.busi_type  = #{busiTypePosition}
         </if>
         <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
             AND FIN_PRODUCT.FINPROD_MARKET_ID IN(
@@ -215,11 +216,11 @@
     B.TRADER trader,
     B.realName realName,
     ETR_ENTRUST.REMARK remark,
-    ETR_ENTRUST_ADD.BUSI_TYPE_POSITION busiTypePosition,
+    btm.busi_type busiTypePosition,
     ssai.sec_acct_name secAcctId,
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
-    round(decode(ETR_ENTRUST_ADD.BUSI_TYPE_POSITION,#{busiTypePosition01},EEBP.BID_PRICE,#{busiTypePosition02},ETR_ENTRUST_ADD.MATURE_YIELD*100,#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
+    round(decode(btm.busi_type,#{busiTypePosition01},EEBP.BID_PRICE,#{busiTypePosition02},ETR_ENTRUST_ADD.MATURE_YIELD*100,#{busiTypePosition03},ETR_ENTRUST.PRICE,''),4) etrPrice,
     round(NVL(T5.ent_finish_amt,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 exeProgress,
     round(NVL(T5.FINISH_AMT,0)*100/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 dealProgress,
     NVL(T5.ent_finish_amt,0)/100  as execFinishAmt,
@@ -272,6 +273,7 @@
     ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
     LEFT JOIN STL_SEC_ACCT_INFO ssai ON ETR_ENTRUST_ADD.SEC_ACCT_ID = ssai.SEC_ACCT_ID
     LEFT JOIN SYS_USER su2 ON ETR_ENTRUST.INV_MANAGER_ID = su2.USER_NAME
+    LEFT JOIN BUSI_TYPE_MAPPING btm ON ETR_ENTRUST.FINPROD_TYPE2 = btm.Finprod_Type_Tg AND ETR_ENTRUST.Ps = btm.ps
     <where>
         AND ETR_ENTRUST.FINPROD_TYPE2 = 'F36'
         AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
@@ -305,7 +307,7 @@
             AND ETR_ENTRUST_ADD.ASSET_TYPE  = #{finprodType2}
         </if>
         <if test="busiTypePosition!= null and busiTypePosition!='' ">
-            AND ETR_ENTRUST_ADD.BUSI_TYPE_POSITION = #{busiTypePosition}
+            AND btm.busi_type = #{busiTypePosition}
         </if>
         <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
             AND FIN_PRODUCT.FINPROD_MARKET_ID IN(
@@ -552,7 +554,7 @@
         LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
         LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpd.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType07}
+        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt
         ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = fpt.FINPROD_ID
@@ -573,7 +575,7 @@
         LEFT JOIN FIN_PRODUCT fp ON tpd.finprod_id = fp.finprod_id
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpd.counter_id = mcp.counter_id
         LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpd.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType07}
+        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt
         ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = fpt.FINPROD_ID
@@ -782,7 +784,7 @@
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.COUNTER_ID = mcp.counter_id
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON tpdp.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpdp.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type =#{feeType07}
+        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpdp.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type =#{feeType08}
         WHERE tpdp.entrust_id = #{entrustId}
 
         union all
@@ -796,7 +798,7 @@
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.COUNTER_ID = mcp.counter_id
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON tpdp.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpdp.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type =#{feeType07}
+        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpdp.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type =#{feeType08}
         WHERE tpdp.entrust_id = #{entrustId}
 
         union all
