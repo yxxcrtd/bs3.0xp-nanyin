@@ -1608,7 +1608,8 @@
         ts.unit_int as unitInt,
         ts.dirtyprice as unitFprice,
         I.tradecashamt as tradeAmt,
-        I.accruedinteresttotalamt as intAmt,
+       <!-- I.accruedinteresttotalamt as intAmt,-->
+        ts.convintamt as intAmt,
         ts.settamt as mtradeAmt,
         I.Clearingmethod as clearType,
         I.Deliverytype as deliveryType,
@@ -1620,7 +1621,7 @@
         I.Counterinstitutioncode as counterId,
         mccic.PARTY_ABBR as counterIdName,
         I.Institutionenglishshortname as counterTrader,
-        ts.dealtext
+        ts.dealtext as remark
         from INTERF_CSTP_TRADE I
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
         left join INTERF_TRAD_SECDEAL ts
