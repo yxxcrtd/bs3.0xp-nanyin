@@ -30,11 +30,11 @@ public interface SvrIdentityRepairInterfMapper {
 	 * 更新数据SUB
 	 * @param
 	 */
-	int updataSub(@Param("fundAccPlace")String fundAccPlace,@Param("orgIndentifyMark")String orgIndentifyMark);
+	int updataSub(@Param("agencyCode")String agencyCode,@Param("registBankCode")String registBankCode,@Param("fundAccPlace")String fundAccPlace,@Param("orgIndentifyMark")String orgIndentifyMark);
 
 	/**
 	 * 更新数据CHECK
 	 * @param
 	 */
-	int updataCheck(@Param("fundAccPlace")String fundAccPlace,@Param("orgIndentifyMark")String orgIndentifyMark);
+	int updataCheck(@Param("agencyCode")String agencyCode,@Param("registBankCode")String registBankCode,@Param("fundAccPlace")String fundAccPlace,@Param("orgIndentifyMark")String orgIndentifyMark);
 }

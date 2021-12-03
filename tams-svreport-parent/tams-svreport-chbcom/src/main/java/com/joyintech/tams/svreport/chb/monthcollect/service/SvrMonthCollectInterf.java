@@ -364,25 +364,33 @@ public class SvrMonthCollectInterf extends BaseService{
 						if(BalanceAmt != null) {
 							BalanceAmtAll = BalanceAmtAll.add(BalanceAmt);
 						}
-						if(SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1){}
-						else{
-							SaleAmountTotalMax = SaleAmountTotal;
-							SaleAmountFlag = flag;
+						if(SaleAmountTotal != null) {
+							if (SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1) {
+							} else {
+								SaleAmountTotalMax = SaleAmountTotal;
+								SaleAmountFlag = flag;
+							}
 						}
-						if(ValueAmountTotalMax.compareTo(ValueAmountTota) == 1){}
-						else{
-							ValueAmountTotalMax = ValueAmountTota;
-							ValueAmountFlag = flag;
+						if(ValueAmountTota != null) {
+							if (ValueAmountTotalMax.compareTo(ValueAmountTota) == 1) {
+							} else {
+								ValueAmountTotalMax = ValueAmountTota;
+								ValueAmountFlag = flag;
+							}
 						}
-						if(SaleSharesTotalMax.compareTo(SaleSharesTotal) == 1){}
-						else{
-							SaleSharesTotalMax = SaleSharesTotal;
-							SaleSharesTotalFlag = flag;
+						if(SaleSharesTotal != null) {
+							if (SaleSharesTotalMax.compareTo(SaleSharesTotal) == 1) {
+							} else {
+								SaleSharesTotalMax = SaleSharesTotal;
+								SaleSharesTotalFlag = flag;
+							}
 						}
-						if(ValueSharesTotalMax.compareTo(ValueSharesTotal) == 1){}
-						else{
-							ValueSharesTotalMax = ValueSharesTotal;
-							ValueSharesTotalFlag = flag;
+						if(ValueSharesTotal != null) {
+							if (ValueSharesTotalMax.compareTo(ValueSharesTotal) == 1) {
+							} else {
+								ValueSharesTotalMax = ValueSharesTotal;
+								ValueSharesTotalFlag = flag;
+							}
 						}
 						if(BalanceShares != null) {
 							if (BalanceSharesMax.compareTo(BalanceShares) == 1) {
@@ -578,25 +586,34 @@ public class SvrMonthCollectInterf extends BaseService{
 						if(BalanceAmt != null) {
 							BalanceAmtAll = BalanceAmtAll.add(BalanceAmt);
 						}
-						if(SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1){}
-						else{
-							SaleAmountTotalMax = SaleAmountTotal;
-							SaleAmountFlag = flag;
+
+						if(SaleAmountTotal != null) {
+							if (SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1) {
+							} else {
+								SaleAmountTotalMax = SaleAmountTotal;
+								SaleAmountFlag = flag;
+							}
 						}
-						if(ValueAmountTotalMax.compareTo(ValueAmountTota) == 1){}
-						else{
-							ValueAmountTotalMax = ValueAmountTota;
-							ValueAmountFlag = flag;
+						if(ValueAmountTota != null) {
+							if (ValueAmountTotalMax.compareTo(ValueAmountTota) == 1) {
+							} else {
+								ValueAmountTotalMax = ValueAmountTota;
+								ValueAmountFlag = flag;
+							}
 						}
-						if(SaleSharesTotalMax.compareTo(SaleSharesTotal) == 1){}
-						else{
-							SaleSharesTotalMax = SaleSharesTotal;
-							SaleSharesTotalFlag = flag;
+						if(SaleSharesTotal != null) {
+							if (SaleSharesTotalMax.compareTo(SaleSharesTotal) == 1) {
+							} else {
+								SaleSharesTotalMax = SaleSharesTotal;
+								SaleSharesTotalFlag = flag;
+							}
 						}
-						if(ValueSharesTotalMax.compareTo(ValueSharesTotal) == 1){}
-						else{
-							ValueSharesTotalMax = ValueSharesTotal;
-							ValueSharesTotalFlag = flag;
+						if(ValueSharesTotal != null) {
+							if (ValueSharesTotalMax.compareTo(ValueSharesTotal) == 1) {
+							} else {
+								ValueSharesTotalMax = ValueSharesTotal;
+								ValueSharesTotalFlag = flag;
+							}
 						}
 						if(BalanceShares != null) {
 							if (BalanceSharesMax.compareTo(BalanceShares) == 1) {
@@ -791,25 +808,33 @@ public class SvrMonthCollectInterf extends BaseService{
 						if(BalanceAmt != null) {
 							BalanceAmtAll = BalanceAmtAll.add(BalanceAmt);
 						}
-						if(SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1){}
-						else{
-							SaleAmountTotalMax = SaleAmountTotal;
-							SaleAmountFlag = flag;
+						if(SaleAmountTotal != null) {
+							if (SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1) {
+							} else {
+								SaleAmountTotalMax = SaleAmountTotal;
+								SaleAmountFlag = flag;
 							}
-						if(ValueAmountTotalMax.compareTo(ValueAmountTota) == 1){}
-						else{
-							ValueAmountTotalMax = ValueAmountTota;
-							ValueAmountFlag = flag;
 						}
-						if(SaleSharesTotalMax.compareTo(SaleSharesTotal) == 1){}
-						else{
-							SaleSharesTotalMax = SaleSharesTotal;
-							SaleSharesTotalFlag = flag;
+						if(ValueAmountTota != null) {
+							if (ValueAmountTotalMax.compareTo(ValueAmountTota) == 1) {
+							} else {
+								ValueAmountTotalMax = ValueAmountTota;
+								ValueAmountFlag = flag;
+							}
 						}
-						if(ValueSharesTotalMax.compareTo(ValueSharesTotal) == 1){}
-						else{
-							ValueSharesTotalMax = ValueSharesTotal;
-							ValueSharesTotalFlag = flag;
+						if(SaleSharesTotal != null) {
+							if (SaleSharesTotalMax.compareTo(SaleSharesTotal) == 1) {
+							} else {
+								SaleSharesTotalMax = SaleSharesTotal;
+								SaleSharesTotalFlag = flag;
+							}
+						}
+						if(ValueSharesTotal != null) {
+							if (ValueSharesTotalMax.compareTo(ValueSharesTotal) == 1) {
+							} else {
+								ValueSharesTotalMax = ValueSharesTotal;
+								ValueSharesTotalFlag = flag;
+							}
 						}
 						if(BalanceShares != null) {
 							if (BalanceSharesMax.compareTo(BalanceShares) == 1) {

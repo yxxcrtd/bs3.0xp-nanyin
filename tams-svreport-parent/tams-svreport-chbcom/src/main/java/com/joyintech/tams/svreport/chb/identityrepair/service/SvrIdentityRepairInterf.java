@@ -81,11 +81,13 @@ public class SvrIdentityRepairInterf extends BaseService{
 			for(ChbIdentityRepair sub : list){
 				String fundAccPlace = sub.getFundAccPlace();
 				String orgIndentifyMark = sub.getOrgIndentifyMark();
+				String agencyCode = sub.getAgencyCode();
+				String registBankCode = sub.getRegistBankCode();
 				if(sub.getEquMark().equals("SUB")) {
-					svrIdentityRepairInterfMapper.updataSub(fundAccPlace,orgIndentifyMark);
+					svrIdentityRepairInterfMapper.updataSub(agencyCode,registBankCode,fundAccPlace,orgIndentifyMark);
 				}
 				if(sub.getEquMark().equals("CHECK")) {
-					svrIdentityRepairInterfMapper.updataCheck(fundAccPlace,orgIndentifyMark);
+					svrIdentityRepairInterfMapper.updataCheck(agencyCode,registBankCode,fundAccPlace,orgIndentifyMark);
 				}
 			}
             logger.debug("身份信息修复批处理登记插入数据：插入结束----------");

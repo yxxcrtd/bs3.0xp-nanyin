@@ -146,10 +146,22 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 							BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
 							BigDecimal valueAmountTotal = detail.getValueAmountTotal();
 							BigDecimal balanceAmt = detail.getBalanceAmt();
-							detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
-							detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+							if(saleAmountTotal != null) {
+								detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+							}else{
+								detail.setSaleAmountTotal(BigDecimal.ZERO);
+							}
+							if(valueAmountTotal != null) {
+								detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+							}
+							else{
+								detail.setValueAmountTotal(BigDecimal.ZERO);
+							}
 							if(balanceAmt != null) {
 								detail.setBalanceAmt(balanceAmt.divide(oneW));
+							}
+							else{
+								detail.setBalanceAmt(BigDecimal.ZERO);
 							}
 						}
 					}
@@ -164,10 +176,22 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 						BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
 						BigDecimal valueAmountTotal = detail.getValueAmountTotal();
 						BigDecimal balanceAmt = detail.getBalanceAmt();
-						detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
-						detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+						if(saleAmountTotal != null) {
+							detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+						}else{
+							detail.setSaleAmountTotal(BigDecimal.ZERO);
+						}
+						if(valueAmountTotal != null) {
+							detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+						}
+						else{
+							detail.setValueAmountTotal(BigDecimal.ZERO);
+						}
 						if(balanceAmt != null) {
 							detail.setBalanceAmt(balanceAmt.divide(oneW));
+						}
+						else{
+							detail.setBalanceAmt(BigDecimal.ZERO);
 						}
 					}
 				}
@@ -182,10 +206,22 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 						BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
 						BigDecimal valueAmountTotal = detail.getValueAmountTotal();
 						BigDecimal balanceAmt = detail.getBalanceAmt();
-						detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
-						detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+						if(saleAmountTotal != null) {
+							detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+						}else{
+							detail.setSaleAmountTotal(BigDecimal.ZERO);
+						}
+						if(valueAmountTotal != null) {
+							detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+						}
+						else{
+							detail.setValueAmountTotal(BigDecimal.ZERO);
+						}
 						if(balanceAmt != null) {
 							detail.setBalanceAmt(balanceAmt.divide(oneW));
+						}
+						else{
+							detail.setBalanceAmt(BigDecimal.ZERO);
 						}
 					}
 				}
@@ -227,10 +263,22 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 							BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
 							BigDecimal valueAmountTotal = detail.getValueAmountTotal();
 							BigDecimal balanceAmt = detail.getBalanceAmt();
-							detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
-							detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+							if(saleAmountTotal != null) {
+								detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+							}else{
+								detail.setSaleAmountTotal(BigDecimal.ZERO);
+							}
+							if(valueAmountTotal != null) {
+								detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+							}
+							else{
+								detail.setValueAmountTotal(BigDecimal.ZERO);
+							}
 							if(balanceAmt != null) {
 								detail.setBalanceAmt(balanceAmt.divide(oneW));
+							}
+							else{
+								detail.setBalanceAmt(BigDecimal.ZERO);
 							}
 						}
 					}
@@ -245,10 +293,22 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 							BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
 							BigDecimal valueAmountTotal = detail.getValueAmountTotal();
 							BigDecimal balanceAmt = detail.getBalanceAmt();
-							detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
-							detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+							if(saleAmountTotal != null) {
+								detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+							}else{
+								detail.setSaleAmountTotal(BigDecimal.ZERO);
+							}
+							if(valueAmountTotal != null) {
+								detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+							}
+							else{
+								detail.setValueAmountTotal(BigDecimal.ZERO);
+							}
 							if(balanceAmt != null) {
 								detail.setBalanceAmt(balanceAmt.divide(oneW));
+							}
+							else{
+								detail.setBalanceAmt(BigDecimal.ZERO);
 							}
 						}
 					}
@@ -263,10 +323,22 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 							BigDecimal saleAmountTotal = detail.getSaleAmountTotal();
 							BigDecimal valueAmountTotal = detail.getValueAmountTotal();
 							BigDecimal balanceAmt = detail.getBalanceAmt();
-							detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
-							detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
-							if (balanceAmt != null) {
+							if(saleAmountTotal != null) {
+								detail.setSaleAmountTotal(saleAmountTotal.divide(oneW));
+							}else{
+								detail.setSaleAmountTotal(BigDecimal.ZERO);
+							}
+							if(valueAmountTotal != null) {
+								detail.setValueAmountTotal(valueAmountTotal.divide(oneW));
+							}
+							else{
+								detail.setValueAmountTotal(BigDecimal.ZERO);
+							}
+							if(balanceAmt != null) {
 								detail.setBalanceAmt(balanceAmt.divide(oneW));
+							}
+							else{
+								detail.setBalanceAmt(BigDecimal.ZERO);
 							}
 						}
 					}
