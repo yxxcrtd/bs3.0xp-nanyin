@@ -79,7 +79,7 @@ public class IbuQuoteBondCalService extends BaseService {
             }
         }
         //计算偏离度
-        if(StringUtil.isNotEmpty(calRequest.getFinprodId())&&null!=calRequest.getPrice()){
+        if(StringUtil.isNotEmpty(calRequest.getFinprodId())&&(null!=calRespone.getPrice()||null!=calRequest.getPrice())){
             Map<String,Object> calParam = new HashMap<>();
             calParam.put("finprodId",calRequest.getFinprodId());
             calParam.put("finprodMarketId",finProductMapper.selectByPrimaryKey(calRequest.getFinprodId()).getFinprodMarketId());
