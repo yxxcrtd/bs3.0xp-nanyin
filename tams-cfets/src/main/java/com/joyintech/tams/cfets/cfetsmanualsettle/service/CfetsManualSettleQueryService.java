@@ -193,7 +193,12 @@ public class CfetsManualSettleQueryService extends BaseService{
             cfetsManualSettleFlowRespond.setFinprodMarketId(cfetsManualSettleDto.getFinprodMarketId());
             cfetsManualSettleFlowRespond.setFinprodAbbr(cfetsManualSettleDto.getFinprodAbbr());
             cfetsManualSettleFlowRespond.setSettleNum(cfetsManualSettleDto.getSettleNum());
-            cfetsManualSettleFlowRespond.setSettleAmt(cfetsManualSettleDto.getSettleAmt());
+
+            if(StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
+                    && StringUtil.equals(cfetsManualSettleDto.getPs(),DictCodeList.交易方向_买入.getValue())){
+            }else{
+                cfetsManualSettleFlowRespond.setSettleAmt(cfetsManualSettleDto.getSettleAmt());
+            }
             cfetsManualSettleFlowRespond.setCreateUser(LoginUserUtil.getUserName());
 
             cfetsManualSettleFlowRespondList.add(cfetsManualSettleFlowRespond);

@@ -16,6 +16,11 @@ delete from sys_para t where t.para_code='cfetsManualSettle_tradeList_refresh_pe
 insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
 values ('STL', 'cfetsManualSettle_tradeList_refresh_period', '30000', '01', '', '交收列表自动刷新时间（毫秒）', 'system', '', sysdate, 'system', sysdate, '', '01');
 
+--增加日终自动交收系统参数
+delete from sys_para where SYSTEM_CODE ='INV' and PARA_CODE='auto_settle_flag';
+insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
+values ('INV', 'auto_settle_flag', 'N', '', '', '日终自动交收Y:自动交收;N:不自动交收', 'system', '', sysdate, 'system', sysdate, '', '01');
+
 --共通业务类型增加枚举值
 delete from sys_datadict_list where DICT_CODE ='COMMON_BUSINESS_TYPE' and ITEM_CODE='STL06';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)

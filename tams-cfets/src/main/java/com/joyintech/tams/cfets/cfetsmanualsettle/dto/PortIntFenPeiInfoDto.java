@@ -73,8 +73,8 @@ public class PortIntFenPeiInfoDto {
         return SysDataUtil.getNameFromDataDict(DictCode.价格模式, this.getPriceModel());
     }
 
-    public String getBusiTypePositionSre() {
-        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, this.getPriceModel());
+    public String getBusiTypePositionStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.业务模式, this.getBusiTypePosition());
     }
 
     public String getPortfolioId() {

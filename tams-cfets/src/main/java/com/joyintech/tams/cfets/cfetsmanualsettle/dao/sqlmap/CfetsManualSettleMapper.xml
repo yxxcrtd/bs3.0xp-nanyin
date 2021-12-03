@@ -400,7 +400,7 @@
             UNIT_FPRICE UNIT_FPRICE,
             PAR_VALUE PAR_VALUE,
             CPRICE_AMT CPRICE_AMT,
-            SHARE_AMT SHARE_AMT,
+            SHARE_AMT*100 SHARE_AMT,
             PRIN_AMT PRIN_AMT,
             INT_AMT INT_AMT,
             FPRICE_AMT FPRICE_AMT,
@@ -449,8 +449,8 @@
             DEAL_AMT DEAL_AMT,
             TPDA.PORTFOLIO_ID,
             TPDA.ENTRUST_ID,
-            TDTA.OUR_SHARE_AMT,
-            TDTA.LENDIN_SHARE_AMT
+            TPDA.OUR_SHARE_AMT,
+            TPDA.LENDIN_SHARE_AMT
         FROM
         TRD_PRODUCT_DEAL TPD
         LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA
