@@ -103,6 +103,11 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
     private BigDecimal matureYield;
 
     private String settleSpreedCode;
+
+    /**
+     * 组合分配方式
+     */
+    private String distribution;
     /**
      * 组合分配信息
      */
@@ -321,5 +326,13 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setSettleSpreedCode(String settleSpreedCode) {
         this.settleSpreedCode = settleSpreedCode;
+    }
+
+    public String getDistribution() {
+        return distribution;
+    }
+
+    public void setDistribution(String distribution) {
+        this.distribution = distribution;
     }
 }
