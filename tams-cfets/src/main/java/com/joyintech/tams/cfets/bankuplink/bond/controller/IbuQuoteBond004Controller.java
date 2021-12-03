@@ -108,6 +108,8 @@ public class IbuQuoteBond004Controller extends BaseController {
                     item.setOurEntNum(ArithmeticUtil.divide(item.getOurEntNum(),new BigDecimal(10000),2));
                     item.setLendinEntNum(ArithmeticUtil.divide(item.getLendinEntNum(),new BigDecimal(10000),2));
                     item.setSellAbleNum(ArithmeticUtil.divide(item.getSellAbleNum(),new BigDecimal(10000),2));
+                    item.setMatureYield(ArithmeticUtil.multiply(item.getMatureYield(),new BigDecimal(100)));
+                    item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));
                 });
             }
         }
