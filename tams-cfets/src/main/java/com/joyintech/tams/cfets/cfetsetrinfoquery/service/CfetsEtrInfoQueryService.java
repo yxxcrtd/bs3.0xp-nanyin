@@ -123,6 +123,7 @@ public class CfetsEtrInfoQueryService extends BaseService{
         pageParam.put("IRS_TYPE", DictCode.互换方式.getValue());
         pageParam.put("PS", DictCode.交易方向.getValue());
         pageParam.put("effectFlag",DictCodeListExt1.有效状态_有效.getValue());
+        pageParam.put("effectFlag04",DictCodeListExt1.有效状态_流程中.getValue());
         pageParam.put("finType_zq", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("ps_49", DictCodeListExt3.交易方向_债转股.getValue());
 
