@@ -1897,6 +1897,7 @@ public class CfetsTrdConfirmService extends BaseService{
         }else if(entity.getSettleSpeed().compareTo(new Long(2))==0){
             req.setSettleSpeed("03");
         }
+        req.setBalanceCheck("N");
         req.setBusiAct(DictCodeListExt3.业务动作_成交确认.getValue());
         req.setPs(entity.getPs());
         req.setSystemAct(DictCodeListExt3.系统动作_关闭.getValue());
