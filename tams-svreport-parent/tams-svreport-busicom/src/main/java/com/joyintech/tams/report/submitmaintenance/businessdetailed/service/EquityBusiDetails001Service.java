@@ -1233,6 +1233,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                         item.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
                         item.setDeptCode(deptCode);
+                        item.setOrgIndentifyMark(item.getIndentifyMark());
                         setOrgIndentifyMark(item,equityInfocheckMap);
                         // 设值createDept
                         String createDept = item.getDeptCode();
