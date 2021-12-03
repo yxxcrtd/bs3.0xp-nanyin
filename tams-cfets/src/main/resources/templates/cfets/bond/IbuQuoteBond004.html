@@ -131,11 +131,15 @@
                                     <label class="layui-form-label form-label-wrap"
                                            th:text="#{CfetsBondDealQuotedPrice002.myTradeId}">本方交易员</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select required type="text" id="CfetsBondDealQuotedPrice004_mySideTrader" name="mySideTrader"
+                                        <input type="text" name="mySideTrader"
+                                               data-th-value="${entity?.mySideTrader}"
+                                               class="layui-input form-input" placeholder="请输入内容"
+                                               data-th-placeholder="#{SysCommon.placeholder}">
+                                        <!--<select required type="text" id="CfetsBondDealQuotedPrice004_mySideTrader" name="mySideTrader"
                                                 class="layui-input form-input input-select" parentIds="CfetsBondDealQuotedPrice004_mySide"
                                                 th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
                                                 th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideTraderList}" allowClear="true"
-                                                formatoption="true" th:initValue="${entity?.mySideTrader}"></select>
+                                                formatoption="true" th:initValue="${entity?.mySideTrader}"></select>-->
                                     </div>
                                 </div>
                             </div>

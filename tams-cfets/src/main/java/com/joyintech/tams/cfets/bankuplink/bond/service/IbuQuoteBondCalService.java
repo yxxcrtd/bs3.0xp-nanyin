@@ -10,13 +10,13 @@ import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
 import com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +29,8 @@ import java.util.*;
  */
 @Service
 public class IbuQuoteBondCalService extends BaseService {
+
+    private static final Logger logger = LoggerFactory.getLogger(IbuQuoteBondService.class);
 
     /**
      * 递增维度
@@ -125,22 +127,51 @@ public class IbuQuoteBondCalService extends BaseService {
                 item.setAvaNumOld(item.getAvaNum());
             });
         }
-        //平均分配
-        if(StringUtil.equals(autoAllocationRequest.getDistribution(),"139")){
-            result = aveDistribution(autoAllocationRequest);
-        }
-        //比例分配
-        if(StringUtil.equals(autoAllocationRequest.getDistribution(),"143")){
-            result = propDistribution(autoAllocationRequest);
-        }
-        if(CollectionUtils.isNotEmpty(ptlAllocations)){
-            ptlAllocations.forEach(item ->{
-                item.setAvaNum(item.getAvaNumOld());
-            });
+        try{
+            //无分配模式
+            if(StringUtil.isEmpty(autoAllocationRequest.getDistribution())){
+                //通过各自的券面总额计算金额
+                noneDistribution(autoAllocationRequest);
+            }
+            //平均分配
+            if(StringUtil.equals(autoAllocationRequest.getDistribution(),"139")){
+                result = aveDistribution(autoAllocationRequest);
+            }
+            //比例分配
+            if(StringUtil.equals(autoAllocationRequest.getDistribution(),"143")){
+                result = propDistribution(autoAllocationRequest);
+            }
+            if(CollectionUtils.isNotEmpty(ptlAllocations)){
+                ptlAllocations.forEach(item ->{
+                    item.setAvaNum(item.getAvaNumOld());
+                });
+            }
+        }catch (Exception e){
+            logger.error("自动匹配计算异常:"+e.getMessage());
         }
         return result;
     }
 
+    /**
+     * 无分配模式
+     * @param request
+     * @return
+     */
+    public List<PtlAllocationDto> noneDistribution(AutoAllocationRequest request){
+        List<PtlAllocationDto>  ptlAllocations = request.getPtlAllocations();
+        ptlAllocations.forEach(item ->{
+            CalRequest calRequest = new CalRequest();
+            BeanUtil.copyPropertiesIgnoreNull(calRequest,request);
+            calRequest.setShareAmt(item.getShareAmt());
+            CalRespone calRespone = calculation(calRequest);
+            item.setDealFeeAmt(calRespone.getDealFeeAmt());
+            item.setSettFeeAmt(calRespone.getSettFeeAmt());
+            item.setCpriceAmt(calRespone.getCpriceAmt());
+            item.setFpriceAmt(calRespone.getFpriceAmt());
+            item.setIntAmt(calRespone.getIntAmt());
+        });
+        return ptlAllocations;
+    }
     /**
      * 平均分配
      * @return
