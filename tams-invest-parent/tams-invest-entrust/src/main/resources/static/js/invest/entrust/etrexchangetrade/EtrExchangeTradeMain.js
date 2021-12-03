@@ -449,6 +449,29 @@ var importEtr = function() {
     });
 }
 
+/***
+ * 绑定单组合或多组合平台TAB切换事件
+ */
+var setZlPlatform =function(etrType,deleteOther) {
+    currentEtrTypeTab = etrType;
+    layui.use(['element'], function() {
+        var element = layui.element;
+        if(etrType) {
+            element.tabChange('zlPlatform', etrType);
+        }
+        if(deleteOther) {
+            var tabtitle = $(".layui-tab-title li");
+            $.each(tabtitle, function (i) {
+                var layId = $(this).attr("lay-id");
+                if(etrType && etrType != layId) {
+                    element.tabDelete('zlPlatform', layId);
+                }
+            });
+        }
+    });
+}
+
+
 $(function() {
 
     layui.use(['element'], function() {
@@ -525,6 +548,11 @@ $(function() {
     $('#EtrExchangeTrade001_btn_riskcal').click(function() {
         doRiskcal();
     });
+    if(pageModel==PAGE_MODEL_REFERENCE || pageModel==PAGE_MODEL_EDIT){
+        currentEtrTypeTab = isMulti=='Y'?1:0;
+        setZlPlatform(currentEtrTypeTab,true);
+    }
+
 }());
 
 var getIsNeedMutiPtl = function () {

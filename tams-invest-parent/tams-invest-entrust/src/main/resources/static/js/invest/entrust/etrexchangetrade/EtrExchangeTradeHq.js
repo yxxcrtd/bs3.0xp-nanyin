@@ -507,7 +507,6 @@
                     });
                 }
         });
-
     }
 
     /***
@@ -692,9 +691,14 @@
                     currentTab = 'zy';
                 }
                 //设置TAB页
-                parent.EtrExchangeTrade001.setCurrentTab(currentTab);
+                if(parent.EtrExchangeTrade001) {
+                    parent.EtrExchangeTrade001.setCurrentTab(currentTab);
+                }
+
                 if(window.parent.getIsNeedMutiPtl() == '01') {
-                    parent.EtrExchangeTradeMulti001.setCurrentTab(currentTab);
+                    if(parent.EtrExchangeTradeMulti001) {
+                        parent.EtrExchangeTradeMulti001.setCurrentTab(currentTab);
+                    }
                 }
             });
 

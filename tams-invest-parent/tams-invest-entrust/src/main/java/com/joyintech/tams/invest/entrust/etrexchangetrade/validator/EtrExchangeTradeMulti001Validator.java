@@ -161,7 +161,7 @@ public class EtrExchangeTradeMulti001Validator implements EtrCommonValidator {
 				}
 
 				for(String key:indexMap.keySet()) {
-					errorList.add(new ValidMessage("", "第"+indexMap.get(key)+"行：请输入组合分配列表的指令价格、净价、全价、到期收益率或回购利率！"));
+					errorList.add(new ValidMessage("", "第"+indexMap.get(key)+"行：组合分配列表的组合和资金账户重复！"));
 				}
 
 				if(StringUtil.equals(dto.getWeightType(),DictCodeListExt3.权重方式_自定义.getValue())

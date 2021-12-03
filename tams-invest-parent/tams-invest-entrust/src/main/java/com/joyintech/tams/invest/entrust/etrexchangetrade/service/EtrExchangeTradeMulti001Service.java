@@ -18,6 +18,8 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.MutiptlPortfolioDetail;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
@@ -76,6 +78,9 @@ public class EtrExchangeTradeMulti001Service extends CommonExportService<EtrExch
 	 */
 	@Autowired(required=false)
 	private IPlatformDate iPlatformDate;
+
+	@Autowired
+	private FinProductMapper finProductMapper;
 
 	@Override
 	public void doComplete(EtrExchangeTradeMulti001Dto entity, OperationType operationType) {
@@ -234,23 +239,34 @@ public class EtrExchangeTradeMulti001Service extends CommonExportService<EtrExch
 				SelectOptionDto.class);
 	}
 
+	public List<SelectOptionDto> selectPortfolioId(Map<String,Object> map){
+		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectPortfolioId", map,
+				SelectOptionDto.class);
+	}
+
 	/**
 	 * 查询多组合明细列表
-	 * @param map
+	 * @param param
 	 * @return
 	 */
-	public List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(@RequestBody Map<String,Object> map) {
-		String portfolioTreeId = (String)map.get("portfolioTreeId");
+	public List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(Map<String, Object> param) {
 		List<EtrExchangeTradeMultiPtl001Dto> list = new ArrayList<>();
-		if(StringUtil.isNotEmpty(portfolioTreeId)) {
+		if(StringUtil.isNotEmpty(param.get("workflowId"))) {
+			EtrExchangeTradeMulti001Dto entity = this.getBussinessEntityByWorkflowId((String)param.get("workflowId"));
+			//如果是单组合的流程数据则，多组合置空
+			if(StringUtil.isNotEmpty(entity) && StringUtil.equals(entity.getIsMulti(),DictCodeList.是否_是.getValue())) {
+				list = entity.getTradeMultiPtl001Dtos();
+			}
+		}
+		else if(StringUtil.isNotEmpty(param.get("portfolioTreeId"))) {
 			Date platformDate = DateUtil.platDateFromCache();
-			map.put("ptlDate",DateUtil.format(platformDate));
-			map.put("userId", LoginUserUtil.getUserName());
+			param.put("ptlDate",DateUtil.format(platformDate));
+			param.put("userId", LoginUserUtil.getUserName());
 
-			String tradeMarket = (String)map.get("tradeMarket");
+			String tradeMarket = (String) param.get("tradeMarket");
 
 			String calId = StringUtil.equals(tradeMarket,DictCodeListExt1.交易场所_上海证券交易所.getValue())?DictCodeList.交易日历_上海交易所日历.getValue():DictCodeList.交易日历_深圳交易所日历.getValue();
-			list = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectPortfolioTreeDetail", map,
+			list = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectPortfolioTreeDetail", param,
 					EtrExchangeTradeMultiPtl001Dto.class);
 			if(!StringUtil.isEmptyList(list)) {
 				list.stream().forEach(item->{
@@ -269,7 +285,7 @@ public class EtrExchangeTradeMulti001Service extends CommonExportService<EtrExch
 						//组合T+1日可用现金
 						item.setAvailableCashT1(StringUtil.isNotEmpty(cash.get("cashT1"))?(BigDecimal)cash.get("cashT1"): BigDecimal.ZERO);
 					}
-					if(StringUtil.isNotEmpty(map.get("finprodId"))) {
+					if(StringUtil.isNotEmpty(param.get("finprodId"))) {
 						EtrSecPositionDto etrSecPositionDto = new EtrSecPositionDto();
 						etrSecPositionDto.setFinprodId((String)paramMap.get("finprodId"));
 						etrSecPositionDto.setPortfolioId((String)paramMap.get("portfolioId"));
@@ -648,8 +664,16 @@ public class EtrExchangeTradeMulti001Service extends CommonExportService<EtrExch
     public EtrExchangeTradeMultiPtl001Dto addRow(EtrExchangeTradeMulti001Dto dto) {
 	    EtrExchangeTradeMultiPtl001Dto newRow = new EtrExchangeTradeMultiPtl001Dto();
 	    newRow.setFinprodId(dto.getFinprodId());
-        newRow.setFinprodMarketId(dto.getFinprodMarketId());
+        newRow.setFinprodMarketId(StringUtil.isNotEmpty(dto.getFinprodMarketId())?dto.getFinprodMarketId():dto.getStockId());
         newRow.setFinprodType2(dto.getFinprodType2());
+        if(!StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+		&& !StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+        	FinProduct finProduct = finProductMapper.selectByPrimaryKey(newRow.getFinprodId());
+        	if(StringUtil.isNotEmpty(finProduct)) {
+				newRow.setFinprodName(finProduct.getFinprodAbbr());
+			}
+		}
+
         if(!StringUtil.equals(dto.getPs(),DictCodeListExt3.交易方向_调整到.getValue())) {
             newRow.setPs(dto.getPs());
         }

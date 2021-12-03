@@ -379,5 +379,4 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
     public void setSecAcctId(String secAcctId) {
         this.secAcctId = secAcctId;
     }
-
 }

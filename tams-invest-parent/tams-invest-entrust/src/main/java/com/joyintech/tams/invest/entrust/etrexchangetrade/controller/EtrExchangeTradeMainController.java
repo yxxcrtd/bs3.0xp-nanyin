@@ -79,6 +79,14 @@ public class EtrExchangeTradeMainController extends BaseController{
         model.addAttribute("entrustId", entrustId);
 
         model.addAttribute("isNeedMutiPtl", isNeedMutiPtl);
+
+        if (StringUtil.isNotEmpty(workflowId)) {
+            //流程代办checkImportData
+            EtrExchangeTrade001Dto entity = etrExchangeTrade001Service.getBussinessEntityByWorkflowId(workflowId);
+            if(StringUtil.isNotEmpty(entity)) {
+                model.addAttribute("isMulti", StringUtil.isNotEmpty(entity.getIsMulti())?entity.getIsMulti():DictCodeList.是否_否.getValue());
+            }
+        }
         return super.init(model);
     }
 }

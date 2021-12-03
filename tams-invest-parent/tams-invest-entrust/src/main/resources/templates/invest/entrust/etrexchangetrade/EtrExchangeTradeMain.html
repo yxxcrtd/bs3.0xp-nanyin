@@ -75,8 +75,8 @@
 		<div class="right_bottom_panel" id = "right_bottom_panel_dev" >
 			<div class="layui-tab"  style="height: calc(100% - 50px);" lay-filter="zlPlatform">
 				<ul class="layui-tab-title">
-					<li class="layui-this" id="danEtr_li">单组合指令</li>
-					<li id="duoEtr_li">多组合指令</li>
+					<li class="layui-this" lay-id="0">单组合指令</li>
+					<li lay-id="1">多组合指令</li>
 					<img id="enlarge" th:src="@{'/img/enlarge.png'}" style="width: 20px;height: 20px; cursor: pointer;"></img>
 					<img id="narrow" th:src="@{'/img/narrow.png'}" style="width: 20px;height: 20px; cursor: pointer; display: none;"></img>
 				</ul>
@@ -127,6 +127,7 @@
 		var SHARES_TRADE_PLATFORM_04 = /*[[${SHARES_TRADE_PLATFORM_04}]]*/'';
 
 		var isNeedMutiPtl = /*[[${isNeedMutiPtl}]]*/'';
+		var isMulti = /*[[${isMulti}]]*/'';
 	</script>
 	<script data-th-src="@{/js/invest/entrust/etrexchangetrade/split.min.js}" type="text/javascript"></script>
 	<script data-th-src="@{/js/component/entrust/EtrShowFinPlanAssetDetailInfo.js}" type="text/javascript"></script>

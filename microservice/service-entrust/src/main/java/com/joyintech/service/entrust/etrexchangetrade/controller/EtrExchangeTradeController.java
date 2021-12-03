@@ -541,6 +541,17 @@ public class EtrExchangeTradeController {
     }
 
     /**
+     * 查询多组合树关联的组合
+     * @param map
+     * @return
+     */
+    @PostMapping("selectPortfolioId")
+    public List<SelectOptionDto> selectPortfolioId(@RequestBody Map<String,Object> map){
+        return etrExchangeTradeService.selectPortfolioId(map);
+    }
+
+
+    /**
      * 查询多组合明细
      * @param map
      * @return

@@ -181,6 +181,7 @@
             <input type="hidden" id="factPrice_jj" name="factPrice">
             <input type="text" id="finprodId_jj" name="finprodId" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodId}">
             <input type="text" id="finprodType2_jj" name="finprodType2" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodType2}">
+            <input type="text" id="finprodName_jj" name="finprodName" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodName}">
             <input type="text" id="entrustId_jj" name="entrustId" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustId}">
             <input type="text" id="entrustStatus_jj" name="entrustStatus" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustStatus}">
             <input type="text" id="entrustAmt_jj" name="entrustAmt" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustAmt}">
@@ -360,6 +361,7 @@
         <input type="hidden" id="factPrice_dz" name="factPrice">
         <input type="text" id="finprodId_dz" name="finprodId" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodId}">
         <input type="text" id="finprodType2_dz" name="finprodType2" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodType2}">
+        <input type="text" id="finprodName_dz" name="finprodName" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodName}">
         <input type="text" id="entrustId_dz" name="entrustId" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustId}">
         <input type="text" id="entrustStatus_dz" name="entrustStatus" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustStatus}">
         <input type="text" id="entrustAmt_dz" name="entrustAmt" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustAmt}">
@@ -579,6 +581,7 @@
         <input type="hidden" id="factPrice_gd" name="factPrice">
         <input type="text" id="finprodId_gd" name="finprodId" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodId}">
         <input type="text" id="finprodType2_gd" name="finprodType2" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodType2}">
+        <input type="text" id="finprodName_gd" name="finprodName" disabled="disabled" style="display: none;" data-th-value="${entity?.finprodName}">
         <input type="text" id="entrustId_gd" name="entrustId" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustId}">
         <input type="text" id="entrustStatus_gd" name="entrustStatus" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustStatus}">
         <input type="text" id="entrustAmt_gd" name="entrustAmt" disabled="disabled" style="display: none;" data-th-value="${entity?.entrustAmt}">
@@ -886,6 +889,7 @@
         var SHARES_TRADE_PLATFORM_04 = /*[[${SHARES_TRADE_PLATFORM_04}]]*/'';
         var SHARES_TRADE_PLATFORM_05 = /*[[${SHARES_TRADE_PLATFORM_05}]]*/'';
         var entrustType = /*[[${entity?.entrustBussType}]]*/'';
+        var isMulti = /*[[${entity?.isMulti}]]*/'';
         var parentPageModel = /*[[${parentPageModel}]]*/'';
         var ENTRUST_RECORD_NEW = /*[[${ENTRUST_RECORD_NEW}]]*/'';
         var ENTRUST_RECORD_MODIFY = /*[[${ENTRUST_RECORD_MODIFY}]]*/'';
@@ -926,6 +930,7 @@
         var MUL_DISTRI_CLASS_08 = /*[[${MUL_DISTRI_CLASS_08}]]*/'';
         var MUL_DISTRI_CLASS_09 = /*[[${MUL_DISTRI_CLASS_09}]]*/'';
         var MUL_DISTRI_CLASS_10 = /*[[${MUL_DISTRI_CLASS_10}]]*/'';
+        var workflowId = /*[[${workflowId}]]*/'';
 
         var WEIGH_TYPE_01 = /*[[${WEIGH_TYPE_01}]]*/'';
         var WEIGH_TYPE_02 = /*[[${WEIGH_TYPE_02}]]*/'';

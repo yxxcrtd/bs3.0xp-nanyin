@@ -1357,6 +1357,17 @@
             </where>
     </select>
 
+    <select id="selectPortfolioId" resultType="com.joyintech.framework.select.SelectOptionDto">
+            select A.PORTFOLIO_ID id,
+                   B.PORTFOLIO_NAME text
+              from MUTIPTL_PORTFOLIO_DETAIL A
+             INNER JOIN PTL_PORTFOLIO B
+            ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
+            <where>
+               A.TREE_ID = #{portfolioTreeId}
+            </where>
+    </select>
+
     <select id="selectPortfolioTreeDetail" resultType="com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTradeMultiPtl001Dto">
         select
             A.TREE_ID treeId,
@@ -1371,7 +1382,11 @@
                 E.FINPROD_TYPE2 finprodType2,
             </if>
             <if test="ps != null and ps != ''">
-                #{ps} ps,
+                case when #{ps} = #{PS_T100}
+                    then null
+                else
+                    #{ps}
+                end ps,
             </if>
             A.CCY ccy,
             nvl(F.TDY_ASSET_NETVALUE,0) productNetValue
@@ -1395,6 +1410,16 @@
             A.TREE_ID = #{portfolioTreeId}
             AND A.EFF_DATE <![CDATA[<=]]> to_date(#{ptlDate},'yyyy-mm-dd')
             AND C.USER_ID = #{userId}
+            <if test="portfolioId != null and portfolioId != ''">
+                AND A.PORTFOLIO_ID  = #{portfolioId}
+            </if>
+            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                and  A.PORTFOLIO_ID in
+                <foreach collection="portfolioIdList" item="item" open="("
+                         close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
         </where>
 
     </select>

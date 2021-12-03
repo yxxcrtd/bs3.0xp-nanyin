@@ -113,10 +113,17 @@ public class EtrExchangeTradeMulti001Controller extends BaseController{
         if (StringUtil.isNotEmpty(workflowId)) {
         	 //流程代办checkImportData
             entity = etrExchangeTradeMulti001Service.getBussinessEntityByWorkflowId(workflowId);
-            String[] secIds = StringUtil.split(entity.getFinprodId(),"_");
-            if(secIds.length == 2 && StringUtil.isEmpty(entity.getStockId())){
-                entity.setStockId(secIds[1]);
+            //如果是单组合的流程数据则，多组合置空
+            if(StringUtil.isNotEmpty(entity) && !StringUtil.equals(entity.getIsMulti(),DictCodeList.是否_是.getValue())) {
+                entity = new EtrExchangeTradeMulti001Dto();
             }
+            else {
+                String[] secIds = StringUtil.split(entity.getFinprodId(),"_");
+                if(secIds.length == 2 && StringUtil.isEmpty(entity.getStockId())){
+                    entity.setStockId(secIds[1]);
+                }
+            }
+
             //add by chenjiaxing 流程中不显示资产名称 end
         }
         else if (StringUtil.isNotEmpty(entrustId) && !"true".equals(isFromToDoList)) {
@@ -233,10 +240,24 @@ public class EtrExchangeTradeMulti001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("selectPortfolioTreeDetail")
-    public List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail() {
-        return etrExchangeTradeMulti001Service.selectPortfolioTreeDetail(RequestUtil.getPageParam());
+    public List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(@RequestParam Map<String, Object> param) {
+        return etrExchangeTradeMulti001Service.selectPortfolioTreeDetail(param);
     }
 
+    /**
+     * 选择组合代码后查询其他字段信息
+     * @param paraMap
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("selectAddPortfolioDetail")
+    public EtrExchangeTradeMultiPtl001Dto selectAddPortfolioDetail(@RequestBody Map<String,Object> paraMap){
+        List<EtrExchangeTradeMultiPtl001Dto> list = etrExchangeTradeMulti001Service.selectPortfolioTreeDetail(paraMap);
+        if(StringUtil.isEmptyList(list)) {
+            return null;
+        }
+        return list.get(0);
+    }
 
     /**
      * 获取多组合分配资金账户
@@ -255,8 +276,23 @@ public class EtrExchangeTradeMulti001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("selectMultiSecAcctId")
-    public String selectMultiSecAcctId(@RequestBody Map<String,Object> paraMap){
-        return etrExchangeTradeMulti001Service.selectMultiSecAcctId(paraMap);
+    public AjaxResult selectMultiSecAcctId(@RequestBody Map<String,Object> paraMap){
+        AjaxResult result = new AjaxResult();
+        String secAcctId = etrExchangeTradeMulti001Service.selectMultiSecAcctId(paraMap);
+        result.setData(secAcctId);
+        return result;
+    }
+
+
+    /**
+     *
+     * @param dto
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("selectPortfolioId")
+    public List<SelectOptionDto> selectPortfolioId(@RequestParam Map<String, Object> param){
+        return etrExchangeTradeMulti001Service.selectPortfolioId(param);
     }
 
     /**
@@ -512,19 +548,22 @@ public class EtrExchangeTradeMulti001Controller extends BaseController{
                     errorList.add(new ValidMessage("", "第"+(i+1)+"行：请输入组合分配列表的指令价格、净价、全价、到期收益率或回购利率！"));
                 }
 
-                EtrExchangeTrade001Dto etrExchangeTrade001Dto = etrExchangeTradeMulti001Service.genEtrExchangeTrade001Dto(dto,tradeMultiPtl001Dto);
-                etrExchangeTrade001Service.setEntrustBussType(etrExchangeTrade001Dto);
-                AjaxResult ajax  = etrExchangeTrade001Service.checkSave(etrExchangeTrade001Dto);
-                if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList())) {
-                    for(ValidMessage validMessage:ajax.getErrorList()) {
-                        if(!StringUtil.equals(validMessage.getField(),"entrustAmt")
-                                && !StringUtil.equals(validMessage.getField(),"entrustNum")) {
-                            validMessage.setMessage("第"+(i+1)+"行："+validMessage.getMessage());
-                            errorList.add(validMessage);
-                        }
+                if(StringUtil.isNotEmpty(tradeMultiPtl001Dto.getFinprodType2()) && StringUtil.isNotEmpty(tradeMultiPtl001Dto.getPs())) {
+                    EtrExchangeTrade001Dto etrExchangeTrade001Dto = etrExchangeTradeMulti001Service.genEtrExchangeTrade001Dto(dto,tradeMultiPtl001Dto);
+                    etrExchangeTrade001Service.setEntrustBussType(etrExchangeTrade001Dto);
+                    AjaxResult ajax  = etrExchangeTrade001Service.checkSave(etrExchangeTrade001Dto);
+                    if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList())) {
+                        for(ValidMessage validMessage:ajax.getErrorList()) {
+                            if(!StringUtil.equals(validMessage.getField(),"entrustAmt")
+                                    && !StringUtil.equals(validMessage.getField(),"entrustNum")) {
+                                validMessage.setMessage("第"+(i+1)+"行："+validMessage.getMessage());
+                                errorList.add(validMessage);
+                            }
 
+                        }
                     }
                 }
+
             }
 
             for(String key:indexMap.keySet()) {
@@ -644,6 +683,7 @@ public class EtrExchangeTradeMulti001Controller extends BaseController{
                 etrExchangeTrade001Dto.setCreateTime(new Date());// 创建时间
                 etrExchangeTrade001Dto.setBusinessTypeName(businessType);//此处存的是类型
                 etrExchangeTrade001Dto.setOptType(ENTRUST_RECORD_NEW);
+                etrExchangeTrade001Dto.setIsMulti(DictCodeList.是否_否.getValue());
 
                 etrExchangeTrade001DtoList.add(etrExchangeTrade001Dto);
             }

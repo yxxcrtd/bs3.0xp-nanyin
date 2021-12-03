@@ -163,16 +163,6 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal yield;
 
-    /**
-     * 委托开始日
-     */
-    private Date vdate;
-
-    /**
-     * 委托结束日
-     */
-    private Date mdate;
-
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -357,19 +347,4 @@ public class EtrExchangeTradeMultiPtl001Dto extends BaseEntity {
         this.yield = yield;
     }
 
-    public Date getVdate() {
-        return vdate;
-    }
-
-    public void setVdate(Date vdate) {
-        this.vdate = vdate;
-    }
-
-    public Date getMdate() {
-        return mdate;
-    }
-
-    public void setMdate(Date mdate) {
-        this.mdate = mdate;
-    }
 }

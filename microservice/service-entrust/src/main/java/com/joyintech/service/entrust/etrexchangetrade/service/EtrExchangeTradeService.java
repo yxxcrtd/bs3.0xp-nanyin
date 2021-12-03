@@ -625,7 +625,8 @@ public class EtrExchangeTradeService extends BaseService{
         BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto,dto);
         etrExchangeTrade001Dto.setPortfolioId(dto.getPortfolioTreeId());
         etrExchangeTrade001Dto.setAcctNo(dto.getTradeMultiPtl001Dtos().get(0).getAcctNo());
-        this.doComplete(dto, operationType);
+        etrExchangeTrade001Dto.setSecAcctId(dto.getTradeMultiPtl001Dtos().get(0).getSecAcctId());
+        this.doComplete(etrExchangeTrade001Dto, operationType);
     }
 
     /**
@@ -2380,11 +2381,21 @@ public class EtrExchangeTradeService extends BaseService{
     }
 
     /**
+     * 查询多组合树关联的组合
+     * @param map
+     * @return
+     */
+    public List<SelectOptionDto> selectPortfolioId(Map<String,Object> map){
+        return etrExchangeTradeMapper.selectPortfolioId(map);
+    }
+
+    /**
      * 查询多组合明细
      * @param map
      * @return
      */
     public List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(Map<String,Object> map) {
+        map.put("PS_T100",DictCodeListExt3.交易方向_调整到.getValue());
         List<EtrExchangeTradeMultiPtl001Dto> list = etrExchangeTradeMapper.selectPortfolioTreeDetail(map);
         return list;
     }

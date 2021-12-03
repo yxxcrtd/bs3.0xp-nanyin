@@ -292,6 +292,13 @@ public interface EtrExchangeTradeMapper {
 	List<SelectOptionDto> selectPortfolioTreeId(Map<String,Object> map);
 
 	/**
+	 * 查询多组合树关联的组合
+	 * @param map
+	 * @return
+	 */
+	List<SelectOptionDto> selectPortfolioId(Map<String,Object> map);
+
+	/**
 	 * 查询多组合明细
 	 * @param map
 	 * @return

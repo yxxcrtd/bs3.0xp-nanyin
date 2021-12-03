@@ -10,21 +10,14 @@
  
 package com.joyintech.tams.invest.entrust.etrexchangetrade.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.framework.util.SysDataUtil;
+
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.validator.EtrExchangeTrade001Validator;
+
 import com.joyintech.tams.invest.entrust.etrexchangetrade.validator.EtrExchangeTradeMulti001Validator;
-import com.joyintech.workflow.engine.annotation.PrimaryKey;
-import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
+
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;

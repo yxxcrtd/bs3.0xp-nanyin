@@ -57,11 +57,13 @@
         }
         // 隐藏项需要手动获取
         object.finprodId = $("#finprodId_" + currentTab).val();
+        object.finprodName = $("#finprodName_" + currentTab).val();
         object.tradeMarket = $("#tradeMarket_" + currentTab).val();
         object.entrustId = $("#entrustId_" + currentTab).val();
         object.entrustStatus = $("#entrustStatus_" + currentTab).val();
         object.isMulti = "Y";
         object.tradePlat = currentTab;
+        object.workflowId = workflowId;
         if(currentTab == 'jj'){//竞价
             object.tradePlat = SHARES_TRADE_PLATFORM_02;
         }else if(currentTab == 'dz'){//大宗
@@ -575,8 +577,14 @@
      * 多组合代码变更时，联动其他字段
      *
      */
-    var portfolioTreeIdChange = function() {
-        linkRefreshTable();
+    var portfolioTreeIdChange = function(init) {
+        if(!init) {
+            if(dateTable.table) {
+                dateTable.clear(function () {
+                    linkRefreshTable();
+                });
+            }
+        }
     };
 
 
@@ -1341,11 +1349,12 @@
     var linkMulDistriClass = function () {
         var ps = $("#ps_" + currentTab).val();
         var finprodType2 = $("#finprodType2_" + currentTab).val();
+        var curMulDistriClass = $("#mulDistriClass_" + currentTab).val();
         if (finprodType2 == FINPROD_TYPE_TG_F01) {
             if(ps == PS_T01) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_01, MUL_DISTRI_CLASS_02, MUL_DISTRI_CLASS_03, MUL_DISTRI_CLASS_04, MUL_DISTRI_CLASS_05, MUL_DISTRI_CLASS_08],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -1353,7 +1362,7 @@
             else if(ps == PS_T02) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_01, MUL_DISTRI_CLASS_02, MUL_DISTRI_CLASS_03, MUL_DISTRI_CLASS_04, MUL_DISTRI_CLASS_05, MUL_DISTRI_CLASS_08],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -1361,7 +1370,7 @@
             else if(ps == PS_T68 || ps == PS_T69) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_10],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -1370,14 +1379,14 @@
                 if(currentTab == 'jj') {
                     $("#mulDistriClass_" + currentTab).updateChosenArr({
                         item: [MUL_DISTRI_CLASS_08, MUL_DISTRI_CLASS_10],
-                        chosen: null,
+                        chosen: curMulDistriClass,
                         disabled: false
                     });
                 }
                 else {
                     $("#mulDistriClass_" + currentTab).updateChosenArr({
                         item: [MUL_DISTRI_CLASS_08],
-                        chosen: null,
+                        chosen: curMulDistriClass,
                         disabled: false
                     });
                 }
@@ -1390,7 +1399,7 @@
             if(ps == PS_T01) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_01, MUL_DISTRI_CLASS_02, MUL_DISTRI_CLASS_03, MUL_DISTRI_CLASS_04, MUL_DISTRI_CLASS_05, MUL_DISTRI_CLASS_08],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -1398,7 +1407,7 @@
             else if(ps == PS_T02) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_01, MUL_DISTRI_CLASS_02, MUL_DISTRI_CLASS_03, MUL_DISTRI_CLASS_04, MUL_DISTRI_CLASS_05, MUL_DISTRI_CLASS_08],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -1406,7 +1415,7 @@
             else if(ps == PS_T100) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_08],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -1417,7 +1426,7 @@
             if(ps == PS_T01) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_01, MUL_DISTRI_CLASS_02, MUL_DISTRI_CLASS_03, MUL_DISTRI_CLASS_04, MUL_DISTRI_CLASS_05, MUL_DISTRI_CLASS_06, MUL_DISTRI_CLASS_08],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -1425,7 +1434,7 @@
             else if(ps == PS_T02) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_01, MUL_DISTRI_CLASS_02, MUL_DISTRI_CLASS_03, MUL_DISTRI_CLASS_04, MUL_DISTRI_CLASS_05, MUL_DISTRI_CLASS_08],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -1433,7 +1442,7 @@
             else if(ps == PS_T100) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_08],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -1443,7 +1452,7 @@
             if(ps == PS_03) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_07, MUL_DISTRI_CLASS_09],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -1451,7 +1460,7 @@
             else if(ps == PS_04) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_06, MUL_DISTRI_CLASS_09],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -1459,7 +1468,7 @@
             else if(ps == PS_T100) {
                 $("#mulDistriClass_" + currentTab).updateChosenArr({
                     item: [MUL_DISTRI_CLASS_09],
-                    chosen: null,
+                    chosen: curMulDistriClass,
                     disabled: false
                 });
                 return;
@@ -2346,9 +2355,10 @@
             hideLeftTopPanel();
             if(parentPageModel==PAGE_MODEL_REFERENCE || parentPageModel==PAGE_MODEL_EDIT){
                 // 隐藏重置按钮
-
-                linkTradePlat(entrustType, true);
-                portfolioTreeIdChange();
+                if(isMulti == 'Y') {
+                    linkTradePlat(entrustType, true);
+                }
+                portfolioTreeIdChange(true);
                 targetTypeChange(true);
                 entrustNumChange();
                 psChange(true);
@@ -2358,6 +2368,7 @@
                 if(availableNum!=""){
                     window.parent.checkSalesOfSmallShares(availableNum);
                 }
+
             }
             setTimeout(function () {
                 initFlag = false;
@@ -2673,11 +2684,12 @@
             $("#content_div_dz").hide();
             $("#content_div_gd").show();
         }
+        if(parentPageModel==PAGE_MODEL_NEW){
+            if(dateTable){
+                dateTable.clear(function () {
 
-        if(dateTable){
-            dateTable.clear(function () {
-
-            });
+                });
+            }
         }
     }
 
@@ -2811,12 +2823,9 @@
                 }
             }
 
-            dateTable.clear(function () {
-                for(var i=0;i<array.length;i++) {
-                    dateTable.addRow(array[i]);
-                }
-            })
-
+            for(var i=0;i<array.length;i++) {
+                dateTable.renderRow(i,array[i])
+            };
         }
     }
     /**
@@ -2998,10 +3007,19 @@
         loadonce:true,
         page:false,
         cols:[
-            {field:'portfolioName', title: 'EtrExchangeTrade002.portfolioName', sortField:'portfolioName',width : 200},
+            {field:'portfolioId', title: 'EtrExchangeTrade002.portfolioId', sortField:'portfolioId',width : 200,edit : true,
+                editOption:{
+                    type: 'select', multiple: false, searchable: true, showField: 'id',
+                    url: JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/selectPortfolioId"),
+                    postData:function () {
+                        return getSearchParams();
+                    }
+                }
+            },
+            {field:'portfolioName',title: 'EtrExchangeTrade002.portfolioName', sortField:'portfolioName',width : 200},
             {field:'acctNo', title: 'EtrExchangeTrade001.acctNo', width : 200,sortable:false,edit : true,
                 editOption: {
-                    type: 'select', multiple: false, searchable: true, showField: 'id', parentIds:'portfolioId',
+                    type: 'select', multiple: false, searchable: true, showField: 'id',
                     url: JoyinUtil.getRealPath("/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/selectMultiAcctNo"),
                     postData:function () {
                         return {portfolioId:curPortfolioId,portfolioTreeId: $("#portfolioTreeId_"+currentTab).val()};
@@ -3010,7 +3028,7 @@
             },
             {field:'finprodMarketId', title: 'EtrExchangeTrade001.finprodId', sortField:'finprodMarketId',width : 200},
             {field:'finprodName', title: 'EtrExchangeTrade001.finprodName', sortField:'finprodName',width : 200},
-            {field:'proportionStr', title: 'EtrExchangeTrade001.proportion', sortField:'proportion',width : 200},
+            {field:'proportion', title: 'EtrExchangeTrade001.proportion', sortField:'proportion',width : 200,edit : true},
             {field:'psStr', title: 'EtrExchangeTrade001.ps', sortField:'ps',width : 200},
             {field:'price', title: 'EtrExchangeTrade001.price', sortField:'price',width : 200,type:'number' ,digit:3 ,edit : true},
             {field:'fprice', title: 'EtrExchangeTrade001.fprice', sortField:'fprice',width : 200,type:'number' ,digit:3 ,edit : true},
@@ -3023,7 +3041,6 @@
             {field:'availableCashT1', title: 'EtrExchangeTrade001.availableCashT1', sortField:'availableCashT1',width : 200,type:'number'},
             {field:'availablePositionsT1', title: 'EtrExchangeTrade001.availablePositionsT1', sortField:'availablePositionsT1',width : 200,type:'number'},
             {field:'productNetValue', title: 'EtrExchangeTrade001.productNetValue', sortField:'productNetValue',width : 200,type:'number'},
-            {field:'portfolioId', visible:false},
             {field:'finprodId', visible:false},
             {field:'ps', visible:false},
             {field:'acctName', visible:false},
@@ -3062,6 +3079,25 @@
             else if(field == "acctNo") {
                 curPortfolioId = rowData.portfolioId;
                 return true;
+            }
+            else if(field == "proportion") {
+                if($("#mulDistriClass_"+currentTab).val() == MUL_DISTRI_CLASS_03
+                || $("#mulDistriClass_"+currentTab).val() == MUL_DISTRI_CLASS_04) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+
+            }
+            else if (field == "portfolioId") {
+                if(!$("#portfolioTreeId_"+currentTab).val()) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+
             }
             else {
                 return false;
@@ -3179,12 +3215,27 @@
                     param.tradeMarket = $("#tradeMarket_"+currentTab).val();
                     Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/selectMultiSecAcctId', param, function(result) {
                         if(result) {
-                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"secAcctId":result});
+                            dateTable.renderRow(data.LAY_TABLE_INDEX, {"secAcctId":result.data});
                         }
                     });
                 }
 
                 curPortfolioId = "";
+            }
+            else if (field == "portfolioId") {
+                var param = {};
+                param.portfolioId = data.portfolioId;
+                param.tradeMarket = $("#tradeMarket_"+currentTab).val();
+                param.ps = $("#ps_"+currentTab).val();
+                param.portfolioTreeId = $("#portfolioTreeId_"+currentTab).val();
+                param.finprodId = $("#finprodId_"+currentTab).val();
+
+                dateTable.renderRow(data.LAY_TABLE_INDEX, {"acctNo":null});
+                Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/selectAddPortfolioDetail', param, function(result) {
+                    if(result) {
+                        dateTable.renderRow(data.LAY_TABLE_INDEX,result);
+                    }
+                });
             }
         }
     });
@@ -3290,7 +3341,7 @@
         // 绑定各种字段的change事件
         // 组合名称
         $("#portfolioTreeId_jj,#portfolioTreeId_dz,#portfolioTreeId_gd").change(function() {
-            portfolioTreeIdChange();
+            portfolioTreeIdChange(false);
         });
         // 证券代码
         $("#secId_jj,#secId_dz,#secId_gd").change(function() {
@@ -3437,8 +3488,9 @@
         $("#etrExchangeTradeMulti001_btn_add").click(function () {
             Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/addRow', getSearchParams(), function(result) {
                 if (result) {
-                    if(result.data)
-                    dateTable.addRow(result.data);
+                    if(result.data) {
+                        dateTable.addRow(result.data);
+                    }
                 }
             });
         });

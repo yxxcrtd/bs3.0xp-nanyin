@@ -3015,8 +3015,9 @@
             hideLeftTopPanel();
             if(parentPageModel==PAGE_MODEL_REFERENCE || parentPageModel==PAGE_MODEL_EDIT){
                 // 隐藏重置按钮
-
-                linkTradePlat(entrustType, true);
+                if(isMulti != 'Y') {
+                    linkTradePlat(entrustType, true);
+                }
                 portfolioIdChange(true);
                 acctNoChange(true);
                 secIdChange();
