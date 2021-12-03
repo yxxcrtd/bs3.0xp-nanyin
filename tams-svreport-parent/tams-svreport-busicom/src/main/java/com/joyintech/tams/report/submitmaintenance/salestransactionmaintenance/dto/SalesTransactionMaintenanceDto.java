@@ -31,6 +31,7 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
     private String bankCode;// 登记银行代码
     private String registSeqno;//主键uuid
     private String maintainStatus;//报送信息维护状态
+    private String disabledThing;//置灰控制
     /**
      * 原始数据
      */
@@ -390,5 +391,13 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
      */
     public void setErrMsg(String errMsg) {
         this.errMsg = errMsg == null ? null : errMsg.trim();
+    }
+
+    public String getDisabledThing() {
+        return disabledThing;
+    }
+
+    public void setDisabledThing(String disabledThing) {
+        this.disabledThing = disabledThing;
     }
 }

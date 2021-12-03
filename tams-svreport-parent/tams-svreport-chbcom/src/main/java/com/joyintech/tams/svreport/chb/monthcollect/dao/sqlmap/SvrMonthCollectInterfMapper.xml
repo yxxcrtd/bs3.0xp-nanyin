@@ -10,6 +10,8 @@
 		HOLDER_TYPE holderType,
 		sum(DAY_SALE_AMOUNT_SUM) saleAmountTotal,
 		sum(DAY_VALUE_AMOUNT_SUM) valueAmountTotal,
+		sum(DAY_SALE_QTY_SUM)   saleSharesTotal,
+		sum(DAY_VALUE_QTY_SUM)   valueSharesTotal,
 		CCY ccy
 		FROM
 		CHB_SALE_DEAL_SUM WHERE EQUITY_CONF_DATE between to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchEndDate,jdbcType=VARCHAR},'yyyy-mm-dd')
@@ -251,7 +253,7 @@
 		select
 		prdRegistCode,
 		holderType,
-		count(indentifyMark) holderNum
+		count(DISTINCT(indentifyMark)) holderNum
 		FROM
 		(select
 		A.PRD_REGIST_CODE prdRegistCode,
@@ -272,12 +274,12 @@
 	<select id="areaHolderNum" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
 		prdRegistCode,
-		fundAccPlace,
+		areaCode,
 		count(DISTINCT(indentifyMark)) holderNum
 		FROM
 		(select
 		A.PRD_REGIST_CODE prdRegistCode,
-		B.FUND_ACC_PLACE  fundAccPlace,
+		B.FUND_ACC_PLACE  areaCode,
 		A.INDENTIFY_MARK indentifyMark
 		FROM CHB_INVESTHOLD_INFO_SUB A
 		LEFT JOIN CHB_EQU_SUB B
@@ -287,12 +289,12 @@
 
 		select
 		A.PRD_REGIST_CODE prdRegistCode,
-		B.FUND_ACC_PLACE  fundAccPlace,
-		A.INDENTIFY_MARK indentifyMark
+		B.FUND_ACC_PLACE  areaCode,
+		A.MERGER_INDENTIFY_MARK indentifyMark
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-		)GROUP BY prdRegistCode,fundAccPlace
+		)GROUP BY prdRegistCode,areaCode
 	</select>
 
 <!--	分销售渠道获得投资者数量-->
@@ -304,7 +306,7 @@
 		FROM
 		(select
 		A.PRD_REGIST_CODE prdRegistCode,
-		B.THE_BANK_CODE  institutionCode,
+		NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE)  institutionCode,
 		A.INDENTIFY_MARK indentifyMark
 		FROM CHB_INVESTHOLD_INFO_SUB A
 		LEFT JOIN CHB_EQU_SUB B
@@ -314,8 +316,8 @@
 
 		select
 		A.PRD_REGIST_CODE prdRegistCode,
-		B.THE_BANK_CODE  institutionCode,
-		A.INDENTIFY_MARK indentifyMark
+		NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE)  institutionCode,
+		A.MERGER_INDENTIFY_MARK indentifyMark
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')

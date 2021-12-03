@@ -96,11 +96,11 @@
 			<if test="statusDateEnd != null and statusDateEnd != ''">
 				and to_char(STATUS_DATE,'yyyy-MM-dd') &lt;= #{statusDateEnd,jdbcType=VARCHAR}
 			</if>
-			<if test="submitDateStart != null and submitDateStart != ''">
-				and to_char(SUBMIT_TIME,'yyyy-MM-dd') &gt;= #{submitDateStart,jdbcType=VARCHAR}
+			<if test="submitTimeStart != null and submitTimeStart != ''">
+				and to_char(SUBMIT_TIME,'yyyy-MM-dd') &gt;= #{submitTimeStart,jdbcType=VARCHAR}
 			</if>
-			<if test="submitDateEnd != null and submitDateEnd != ''">
-				and to_char(SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
+			<if test="submitTimeEnd != null and submitTimeEnd != ''">
+				and to_char(SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitTimeEnd,jdbcType=VARCHAR}
 			</if>
 			<if test="termidDateStart != null and submitDateStart != ''">
 				and termid &gt;= #{termidDateStart,jdbcType=VARCHAR}
