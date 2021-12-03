@@ -1859,14 +1859,14 @@ public class CfetsTrdConfirmService extends BaseService{
                 }
             }
             posport.setSecAcctId(entity.getSecManageAcctId());
-            posport.setSecAmount(ArithmeticUtil.multiply(dto.getShareAmt(),new BigDecimal(100)));
-            posport.setCashAmount(dto.getTradeAmt());
+            posport.setSecAmount(ArithmeticUtil.multiply(dto.getShareAmt()==null?BigDecimal.ZERO:dto.getShareAmt(),new BigDecimal(100)));
+            posport.setCashAmount(dto.getTradeAmt()==null?BigDecimal.ZERO:dto.getTradeAmt());
             entity.getTrdProductDealAdds().forEach(trdProductDealAdd -> {
                 if (dto.getTradeId() != null
                         && dto.getTradeId().equals(trdProductDealAdd.getTradeId())) {
                     posport.setEtrId(trdProductDealAdd.getEntrustId());
-                    posport.setIntegrateSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
-                    posport.setOwnSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
+                    posport.setIntegrateSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getLendinShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
+                    posport.setOwnSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getOurShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
                 }
             });
             //查询指令的券面总额
