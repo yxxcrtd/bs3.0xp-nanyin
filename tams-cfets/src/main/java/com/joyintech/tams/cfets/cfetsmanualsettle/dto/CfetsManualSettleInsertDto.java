@@ -14,6 +14,16 @@ public class CfetsManualSettleInsertDto {
 
     private List<TrdBankManualSetDetail> listTrdBnakSetDetails;
 
+    //币种
+    private String ccy;
+
+    //交易方向
+    private String ps;
+
+    //原交易编号
+    private String tradeId;
+
+
     public TrdBankManualSettleInfo getTrdBankManualSettleInfo() {
         return trdBankManualSettleInfo;
     }
@@ -36,5 +46,29 @@ public class CfetsManualSettleInsertDto {
 
     public void setListTrdBnakSetDetails(List<TrdBankManualSetDetail> listTrdBnakSetDetails) {
         this.listTrdBnakSetDetails = listTrdBnakSetDetails;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    public String getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;
     }
 }

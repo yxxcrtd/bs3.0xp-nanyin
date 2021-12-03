@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
+import com.joyintech.tams.invest.batch.cfetssettle.dto.CfetsSettleDealInfo;
 import com.joyintech.tams.invest.batch.cfetssettle.dto.CfetsSettleAllInfoDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 
@@ -74,4 +76,27 @@ public interface CfetsSettleMapper {
      * @since 1.0
      */
     void mergeInfo(TrdBankManualSettleInfo trdBankManualSettleInfo);
+
+    /**
+     * 成交确认明细查询
+     *
+     * @param tradeId 参数
+     * @return List<CfetsManualSettleDealInfo>
+     */
+    List<CfetsSettleDealInfo> getDealDetailsByTradeId(@Param("tradeId") String tradeId);
+
+    /**
+     * 查询证券账户
+     * @param param
+     * @return
+     */
+    String qryPortfolioSecAcctId(Map<String, Object> param);
+
+    /**
+     * 查询托管户
+     * @param param
+     * @return
+     */
+    String qryPortfolioCashAcctId(Map<String, Object> param);
+
 }

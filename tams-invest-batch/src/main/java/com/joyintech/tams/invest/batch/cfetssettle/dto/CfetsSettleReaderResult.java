@@ -15,6 +15,7 @@ import com.joyintech.tams.common.base.entity.TrdBankManualSetDetail;
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleFlow;
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
 import com.joyintech.tams.invest.batch.resetbaseruleinfo.dto.ResetBaseRuleInfoDto;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -36,6 +37,15 @@ public class CfetsSettleReaderResult extends NeedOperateEntity{
     private TrdBankManualSettleFlow trdBankManualSettleFlow;
 
     private List<TrdBankManualSetDetail> listTrdBnakSetDetails;
+
+    //投管业务类型
+    private String tgBusiType;
+
+    //币种
+    private String ccy;
+
+    //交易方向
+    private String ps;
 
     public TrdBankManualSettleInfo getTrdBankManualSettleInfo() {
         return trdBankManualSettleInfo;
@@ -59,5 +69,29 @@ public class CfetsSettleReaderResult extends NeedOperateEntity{
 
     public void setListTrdBnakSetDetails(List<TrdBankManualSetDetail> listTrdBnakSetDetails) {
         this.listTrdBnakSetDetails = listTrdBnakSetDetails;
+    }
+
+    public String getTgBusiType() {
+        return tgBusiType;
+    }
+
+    public void setTgBusiType(String tgBusiType) {
+        this.tgBusiType = tgBusiType;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
     }
 }

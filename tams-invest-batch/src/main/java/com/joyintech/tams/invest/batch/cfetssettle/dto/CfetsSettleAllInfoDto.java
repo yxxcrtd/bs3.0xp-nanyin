@@ -54,90 +54,11 @@ public class CfetsSettleAllInfoDto {
     private String settleSeqNo;
     //投管业务类型
     private String tgBusiType;
+    //币种
+    private String ccy;
 
     @Valid
     private List<CfetsSettleDetailInfoDto> cfetsSettleDetailInfoDtoList;
-
-//    //交易编号
-//    private String tradeId;
-//    //组合交收数量
-//    private BigDecimal settleNum;
-//    //组合交收金额
-//    private BigDecimal settleAmt;
-//    //组合代码
-//    private String portfolioId;
-
-//
-//    @ApiModelProperty(name="finprodMarketId",value="资产简称",example="字符串1")
-//    private String finprodMarketId;
-//
-//
-//
-//    @ApiModelProperty(name="finprodType2Str",value="资产类型",example="A1")
-//    private String finprodType2Str;
-//
-//    @ApiModelProperty(name="tgBusiType",value="业务类型CODE",example="A1")
-//    private String tgBusiType;
-//
-//    @ApiModelProperty(name="tgBusiTypeStr",value="业务类型",example="A1")
-//    private String tgBusiTypeStr;
-//
-//
-//    @ApiModelProperty(name="psStr",value="交易方向",example="A1")
-//    private String psStr;
-//
-//
-//
-//    @ApiModelProperty(name="portfolioId",value="组合名称集合",example="字符串1")
-//    private String portfolioId;
-//
-//    @ApiModelProperty(name="portfolioName",value="组合名称",example="字符串1")
-//    private String portfolioName;
-//
-//
-//
-//    @ApiModelProperty(name="cleanStatusStr",value="清算状态",example="A1,A2")
-//    private String cleanStatusStr;
-//
-//    @ApiModelProperty(name="tradePlat",value="交易场所CODE",example="A1")
-//    private String tradePlat;
-//
-//    @ApiModelProperty(name="tradePlatStr",value="交易场所",example="银行间")
-//    private String tradePlatStr;
-//
-//
-//
-//    @ApiModelProperty(name="tradeMarketStr",value="交易市场",example="银行间")
-//    private String tradeMarketStr;
-//
-//
-//
-//    @ApiModelProperty(name="counterName",value="交易对手",example="admin")
-//    private String counterName;
-//
-//    @ApiModelProperty(name="cleanStlStatus",value="结算指令状态CODE",example="A1")
-//    private String cleanStlStatus;
-//
-//    @ApiModelProperty(name="cleanStlStatusStr",value="结算指令状态",example="A1")
-//    private String cleanStlStatusStr;
-//
-//    @ApiModelProperty(name="cleanArgStatus",value="结算合同状态CODE",example="A1")
-//    private String cleanArgStatus;
-//
-//    @ApiModelProperty(name="cleanArgStatusStr",value="结算合同状态",example="A1")
-//    private String cleanArgStatusStr;
-//
-//    @ApiModelProperty(name="settleSeqNo",value="交收编号",example="A1")
-//    private String settleSeqNo;
-//
-//
-//
-//    @ApiModelProperty(name="ccy",value="币种",example="不展示仅供后台使用")
-//    private String ccy;
-//
-//    @ApiModelProperty(name="seqNo",value="交收流水序号",example="不展示仅供后台使用")
-//    private String seqNo;
-
 
     public String getTotalTradeId() {
         return totalTradeId;
@@ -265,5 +186,13 @@ public class CfetsSettleAllInfoDto {
 
     public void setCfetsSettleDetailInfoDtoList(List<CfetsSettleDetailInfoDto> cfetsSettleDetailInfoDtoList) {
         this.cfetsSettleDetailInfoDtoList = cfetsSettleDetailInfoDtoList;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
     }
 }
