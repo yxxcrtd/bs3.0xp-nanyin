@@ -102,6 +102,9 @@ public class IbuQuoteBondService extends BaseService {
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+
+    @Autowired
+    private BaseEtrInvestInfoMapper baseEtrInvestInfoMapper;
     /**
      * 风险试算check
      * @param entity
@@ -829,7 +832,15 @@ public class IbuQuoteBondService extends BaseService {
         if(entrustDtos != null && entrustDtos.size()>0){
             List<EtrInvestBondInfoDto> dtolist = new ArrayList<>();
             for(CfetsBondDealEntrustOrderDto  item : entrustDtos){
-                etrInvestInfoServiceImpl.updateDelegateStatus(item.getEntrustId(), com.joyintech.tams.constant.DictCodeList.委托状态_已完成.getValue());
+                // 委托指令查询
+                EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(item.getEntrustId());
+                // 更改委托状态
+                etrEntrust.setEntrustStatus(com.joyintech.tams.constant.DictCodeList.委托状态_已完成.getValue());
+                etrEntrust.setRemark(StringUtil.join(etrEntrust.getRemark(),(String)param.get("remark")));
+                // 修改委托指令表中值
+                int flag = etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
+                // 修改委托指令分发表中值 add by yangwenjun 20201209
+                baseEtrInvestInfoMapper.updatEetrDistribute(etrEntrust);
                 EtrInvestBondInfoDto etrInvestBondInfoDto = new EtrInvestBondInfoDto();
                 BeanUtil.copyPropertiesIgnoreNull(etrInvestBondInfoDto,item);
                 dtolist.add(etrInvestBondInfoDto);
