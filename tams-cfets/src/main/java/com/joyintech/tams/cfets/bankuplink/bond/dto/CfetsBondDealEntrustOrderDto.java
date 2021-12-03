@@ -226,6 +226,13 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal finishDealAmt;
 
+    /**
+     * 剩余成交额度
+     */
+    @JsonSerialize(using = BigDecimalSerializer.class)
+    private BigDecimal avaDealAmt;
+
+
     public String getPortfolioSeries() {
         return portfolioSeries;
     }
@@ -1067,5 +1074,13 @@ public class CfetsBondDealEntrustOrderDto extends EtrEntrust {
             return StringUtil.EMPTY;
         }
         return SysDataUtil.getNameFromDataDict(DictCode.业务模式, getBusinessModel());
+    }
+
+    public BigDecimal getAvaDealAmt() {
+        return avaDealAmt;
+    }
+
+    public void setAvaDealAmt(BigDecimal avaDealAmt) {
+        this.avaDealAmt = avaDealAmt;
     }
 }

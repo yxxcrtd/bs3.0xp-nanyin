@@ -111,7 +111,8 @@
         ETR_ENTRUST.ENTRUST_DATE ENTRUST_DATE,
         ETR_ENTRUST_ADD.FULL_PRICE unitFprice,
         to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') TRANSMIT_TIME,
-        ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/10000 finishDealAmt
+        ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/10000 finishDealAmt,
+        NVL(ETR_ENTRUST.ENTRUST_NUM, 0)/100 - ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/10000 avaDealAmt
         FROM
         ETR_ENTRUST
         INNER JOIN
