@@ -5,7 +5,7 @@
     <select id="listEntrust" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto">
         select * from (SELECT
         ETR_ENTRUST.ENTRUST_STATUS entrustStatus,
-        ROUND(NVL(T5.FINISH_AMT,0)+NVL(T6.ENT_FINISH_AMT*100,0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 transactioncom,
+        trunc(NVL(T5.FINISH_AMT,0)+NVL(T6.ENT_FINISH_AMT*100,0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100 transactioncom,
         ETR_ENTRUST.INV_MANAGER_ID invManagerId,
         (SELECT
         real_name
@@ -99,7 +99,7 @@
         ETR_ENTRUST.CCY ccy,
         IBU_PORTFOLIO_ACCT_RELA.CFETS_ACCT_TYPE secAcctSource,
         IBU_PORTFOLIO_ACCT_RELA.PARTY_ID partyId,
-        ROUND((NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
+        trunc((NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
         tradeFinishPercent,
         ETR_ENTRUST.PRICE_MODEL priceModel,
         ETR_ENTRUST_ADD.SEC_ACCT_ID secManageAcctId,
