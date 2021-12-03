@@ -151,13 +151,11 @@
 
     <select id="countFailEtr" resultType="java.lang.Integer">
         SELECT COUNT(1) FROM  ETR_ENTRUST WHERE ENTRUST_STATUS != #{entrustStatus}
-        <where>
-            <if test="entrustIdList != null and entrustIdList.size() > 0">
-                and ENTRUST_ID in
-                <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
-        </where>
+        <if test="entrustIdList != null and entrustIdList.size() > 0">
+            and ENTRUST_ID in
+            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
     </select>
 </mapper>
