@@ -294,7 +294,7 @@
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-		)GROUP BY prdRegistCode,fundAccPlace
+		)GROUP BY prdRegistCode,areaCode
 	</select>
 
 <!--	分销售渠道获得投资者数量-->
@@ -306,7 +306,7 @@
 		FROM
 		(select
 		A.PRD_REGIST_CODE prdRegistCode,
-		B.THE_BANK_CODE  institutionCode,
+		NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE)  institutionCode,
 		A.INDENTIFY_MARK indentifyMark
 		FROM CHB_INVESTHOLD_INFO_SUB A
 		LEFT JOIN CHB_EQU_SUB B
@@ -316,7 +316,7 @@
 
 		select
 		A.PRD_REGIST_CODE prdRegistCode,
-		B.THE_BANK_CODE  institutionCode,
+		NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE)  institutionCode,
 		A.MERGER_INDENTIFY_MARK indentifyMark
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
