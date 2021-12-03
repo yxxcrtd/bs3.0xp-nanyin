@@ -731,19 +731,19 @@ public class IbuQuoteBondService extends BaseService {
                 BussinessDictCodeList.委托状态_已接收.getValue())) {
             return "1";
         }
-        EtrFinishStatusKey etrFinishStatusKey = new EtrFinishStatusKey();
+        /*EtrFinishStatusKey etrFinishStatusKey = new EtrFinishStatusKey();
         etrFinishStatusKey.setEntrustId(entrustId);
         List<EtrFinishStatus> etrFinishStatusList = etrInvestInfoMapper.selectEtrFinishStatusByPrimaryKey(
                 etrFinishStatusKey);
         if (!StringUtil.isEmptyList(etrFinishStatusList)) {
             return "1";
-        }
+        }*/
         Map<String,Object> param= new HashMap<>();
         param.put("entrustId", entrustId);
-        List<EtrQuoteFinishStatus> etrQuoteFinishStatusList =  cfetsIbuQuoteBondEtrMapper.listEtrQuoteFinishStatus(param);
+        /*List<EtrQuoteFinishStatus> etrQuoteFinishStatusList =  cfetsIbuQuoteBondEtrMapper.listEtrQuoteFinishStatus(param);
         if (!StringUtil.isEmptyList(etrQuoteFinishStatusList)) {
             return "1";
-        }
+        }*/
         EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustId);
         if (etrEntrustAdd == null) {
             return "1";
