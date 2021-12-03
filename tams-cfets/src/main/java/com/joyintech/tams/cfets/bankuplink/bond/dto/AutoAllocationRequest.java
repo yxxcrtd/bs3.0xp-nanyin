@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,6 +41,15 @@ public class AutoAllocationRequest {
 
     @ApiModelProperty(name="intAmt",value="应计利息总额(元)")
     private BigDecimal intAmt;
+
+    @ApiModelProperty(name="finprodId",value="资产代码")
+    private String finprodId;
+
+    @ApiModelProperty(name="settleDate",value="结算日期")
+    private Date settleDate;
+
+    @ApiModelProperty(name="secManageAcctId",value="证券账户")
+    private String secManageAcctId;
 
     @ApiModelProperty(required = true,name="ptlAllocations",value="组合分配列表")
     private List<PtlAllocationDto>  ptlAllocations;
@@ -122,6 +132,30 @@ public class AutoAllocationRequest {
 
     public void setPtlAllocations(List<PtlAllocationDto> ptlAllocations) {
         this.ptlAllocations = ptlAllocations;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
+    public Date getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(Date settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    public String getSecManageAcctId() {
+        return secManageAcctId;
+    }
+
+    public void setSecManageAcctId(String secManageAcctId) {
+        this.secManageAcctId = secManageAcctId;
     }
 }
 

@@ -19,6 +19,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealDbDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
@@ -119,6 +120,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
 
     @Autowired
     private BaseEtrInvestInfoService baseEtrInvestInfoServiceImpl;
+
+    @Autowired
+    private CfetsIbuQuoteBondEtrMapper cfetsIbuQuoteBondEtrMapper;
     /**
      * 提交保存check 必填项
      * @param entity
@@ -185,8 +189,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         if(CollectionUtils.isEmpty(entity.getPtlAllocatios())){
             errorList.add(new ValidMessage("组合分配不可为空"));
         }else{
+            List<String> entrustIdList = new ArrayList<>();
             BigDecimal shareAmtTotal = BigDecimal.ZERO;BigDecimal dealFeeAmtTotal = BigDecimal.ZERO;BigDecimal settFeeamtTotal = BigDecimal.ZERO;
             for (PtlAllocationDto ptlAllocatio : entity.getPtlAllocatios()) {
+                entrustIdList.add(ptlAllocatio.getEntrustId());
                 if(null==ptlAllocatio.getShareAmt()){
                     errorList.add(new ValidMessage("请输入组合分配券面总额"));
                     break;
@@ -231,6 +237,13 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             }
             if(null!=entity.getSettFeeAmt()&&entity.getSettFeeAmt().compareTo(settFeeamtTotal)!=0){
                 errorList.add(new ValidMessage("组合分配结算服务费总和需要等于结算服务费"));
+            }
+            //检查指令是否是已接收状态
+            Map<String,Object> paramFail = new HashMap<>();
+            paramFail.put("entrustIdList",entrustIdList);
+            paramFail.put("entrustStatus",BussinessDictCodeList.委托状态_已接收.getValue());
+            if(cfetsIbuQuoteBondEtrMapper.countFailEtr(paramFail)>0){
+                errorList.add(new ValidMessage("指令非已接收状态，不可提交!"));
             }
         }
         if(StringUtil.isNotEmpty(entity.getFinprodId())){

@@ -368,6 +368,7 @@
         '04' QUOTE_TYPE,
         T3.TRADE_DATE settleDate,
         T1.PS,
+        T1.FINPROD_ID,
         T4.FINPROD_MARKET_ID ,
         T4.FINPROD_ABBR ,
         T1.TRADE_STATUS,
@@ -426,6 +427,7 @@
         '04' QUOTE_TYPE,
         null settleDate,
         T1.PS,
+        T1.FINPROD_ID,
         T4.FINPROD_MARKET_ID ,
         T4.FINPROD_ABBR ,
         T1.TRADE_STATUS,
@@ -480,6 +482,7 @@
         ,y.I_Q_B_QUOTE_TYPE
         ,y.I_Q_B_SETTLE_DATE settleDate
         ,y.I_Q_B_PS ps
+        ,y.I_Q_B_FINPROD_ID FINPROD_ID
         ,y.I_Q_B_FINPROD_MARKET_ID FINPROD_MARKET_ID
         ,y.EXT_FINPROD_ABBR FINPROD_ABBR
         ,y.I_Q_B_TRADE_STATUS TRADE_STATUS

@@ -42,7 +42,10 @@ public class DealTransactionDetailsDto {
     @ApiModelProperty(name="psStr",value="本方方向名称")
     private String psStr;
 
-    @ApiModelProperty(name="finprodMarketId",value="资产代码")
+    @ApiModelProperty(name="finprodId",value="资产代码")
+    private String finprodId;
+
+    @ApiModelProperty(name="finprodMarketId",value="市场代码")
     private String finprodMarketId;
 
     @ApiModelProperty(name="finprodAbbr",value="资产简称")
@@ -403,6 +406,14 @@ public class DealTransactionDetailsDto {
 
     public void setQuoteTypeStr(String quoteTypeStr) {
         this.quoteTypeStr = quoteTypeStr;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
     }
 }
 

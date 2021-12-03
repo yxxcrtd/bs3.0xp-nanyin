@@ -48,20 +48,6 @@
         </where>
     </select>
 
-    <select id="countNotDjsEtr" resultType="java.lang.Integer">
-        SELECT
-            COUNT(1)
-        FROM
-            ETR_ENTRUST ee
-        WHERE
-            ENTRUST_STATUS != '02'
-        <if test="entrustIdList != null and entrustIdList.size() > 0">
-            and ENTRUST_ID not in
-            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-    </select>
 
     <!--指令是否在流程中-->
     <select id="countWflEtr" resultType="java.lang.Integer">
@@ -163,4 +149,15 @@
                 AND T2.FINPROD_ID = T1.FINPROD_ID )
     </select>
 
+    <select id="countFailEtr" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM  ETR_ENTRUST WHERE ENTRUST_STATUS != #{entrustStatus}
+        <where>
+            <if test="entrustIdList != null and entrustIdList.size() > 0">
+                and ENTRUST_ID in
+                <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

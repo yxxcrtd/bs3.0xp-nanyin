@@ -26,11 +26,9 @@ public interface CfetsIbuQuoteBondEtrMapper {
 
     List<EtrQuoteFinishStatus> listEtrQuoteFinishStatus(Map<String, Object> param);
 
-
-    int countNotDjsEtr(Map<String, Object> param);
-
-
     int countWflEtr(Map<String, Object> param);
 
     FinExercisePlan getFinExercisePlan(Map<String, Object> param);
+
+    int countFailEtr(Map<String, Object> param);
 }

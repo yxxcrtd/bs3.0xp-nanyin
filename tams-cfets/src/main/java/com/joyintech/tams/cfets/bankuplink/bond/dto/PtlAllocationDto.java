@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @ApiModel(value="组合分配",description="组合分配")
 public class PtlAllocationDto {
 
-    @ApiModelProperty(name="portfolioId",value="指令代码")
+    @ApiModelProperty(name="entrustId",value="指令代码")
     private String entrustId;
 
     @ApiModelProperty(name="portfolioId",value="组合代码")

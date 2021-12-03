@@ -119,7 +119,6 @@ public class IbuQuoteBondCalService extends BaseService {
      * @return
      */
     public List<PtlAllocationDto> autoAllocation(AutoAllocationRequest autoAllocationRequest){
-        List<PtlAllocationDto> result = new ArrayList<>();
         //备份剩余额度
         List<PtlAllocationDto> ptlAllocations = autoAllocationRequest.getPtlAllocations();
         if(CollectionUtils.isNotEmpty(ptlAllocations)){
@@ -131,15 +130,15 @@ public class IbuQuoteBondCalService extends BaseService {
             //无分配模式
             if(StringUtil.isEmpty(autoAllocationRequest.getDistribution())){
                 //通过各自的券面总额计算金额
-                noneDistribution(autoAllocationRequest);
+                ptlAllocations = noneDistribution(autoAllocationRequest);
             }
             //平均分配
             if(StringUtil.equals(autoAllocationRequest.getDistribution(),"139")){
-                result = aveDistribution(autoAllocationRequest);
+                ptlAllocations = aveDistribution(autoAllocationRequest);
             }
             //比例分配
             if(StringUtil.equals(autoAllocationRequest.getDistribution(),"143")){
-                result = propDistribution(autoAllocationRequest);
+                ptlAllocations = propDistribution(autoAllocationRequest);
             }
             if(CollectionUtils.isNotEmpty(ptlAllocations)){
                 ptlAllocations.forEach(item ->{
@@ -149,7 +148,7 @@ public class IbuQuoteBondCalService extends BaseService {
         }catch (Exception e){
             logger.error("自动匹配计算异常:"+e.getMessage());
         }
-        return result;
+        return ptlAllocations;
     }
 
     /**
