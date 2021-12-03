@@ -47,7 +47,7 @@
     <!--删除对账结果-->
     <delete id="deleteStlSecRecon">
         delete from STL_SEC_RECON where SEQ_NO  in(
-            select SEQ_NO from STL_SEC_RECON_DEAL where RADE_DATE = to_date(#{execDate,jdbcType=VARCHAR},'yyyyMMdd')
+            select SEQ_NO from STL_SEC_RECON_DEAL where TRADE_DATE = to_date(#{execDate,jdbcType=VARCHAR},'yyyyMMdd')
             <include refid="deleteconditon"></include>
         )
     </delete>
@@ -55,7 +55,7 @@
     <!--删除对账明细-->
     <delete id="deleteStlSecReconDetail">
         delete from STL_SEC_RECON_DETAIL where SEQ_NO  in(
-            select SEQ_NO from STL_SEC_RECON_DEAL where RADE_DATE = to_date(#{execDate,jdbcType=VARCHAR},'yyyyMMdd')
+            select SEQ_NO from STL_SEC_RECON_DEAL where TRADE_DATE = to_date(#{execDate,jdbcType=VARCHAR},'yyyyMMdd')
             and <include refid="deleteconditon"></include>
         )
     </delete>
