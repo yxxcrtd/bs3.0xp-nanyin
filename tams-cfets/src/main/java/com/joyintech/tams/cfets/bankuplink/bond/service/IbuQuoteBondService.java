@@ -881,11 +881,11 @@ public class IbuQuoteBondService extends BaseService {
      * @param param
      * @return
      */
-    public AjaxResult doForcedFinishCheck(Map<String,Object> param){
+    public AjaxResult doForcedFinishCheck(Map<String,Object> param,boolean isremark){
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
         setParam(param);
-        if(!StringUtil.isNotEmpty(param.get("remark"))){
+        if(!StringUtil.isNotEmpty(param.get("remark"))&&isremark){
             errorList.add(new ValidMessage("请输入强制完成原因!"));
         }
         if(cfetsIbuQuoteBondEtrMapper.countWflEtr(param)>0){

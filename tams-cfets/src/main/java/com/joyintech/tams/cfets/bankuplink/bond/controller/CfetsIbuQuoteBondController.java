@@ -444,7 +444,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		AjaxResult ar = null;
 		List<String> entrustIds = StringUtil.splitToList(",",(String)param.get("entrustIds"));
 		param.put("entrustIdList",entrustIds);
-		return new Message<AjaxResult>().success().setData(ibuQuoteBondService.doForcedFinishCheck(param));
+		return new Message<AjaxResult>().success().setData(ibuQuoteBondService.doForcedFinishCheck(param,false));
 	}
 
 
@@ -455,7 +455,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		AjaxResult ar = null;
 		List<String> entrustIds = StringUtil.splitToList(",",(String)param.get("entrustIds"));
 		param.put("entrustIdList",entrustIds);
-		ar = ibuQuoteBondService.doForcedFinishCheck(param);
+		ar = ibuQuoteBondService.doForcedFinishCheck(param,true);
 		if(CollectionUtils.isNotEmpty(ar.getErrorList())){
 			return new Message<AjaxResult>().success().setData(ar);
 		}
