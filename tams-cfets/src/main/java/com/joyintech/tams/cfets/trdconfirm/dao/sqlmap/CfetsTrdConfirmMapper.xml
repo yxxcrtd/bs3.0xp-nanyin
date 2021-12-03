@@ -347,6 +347,9 @@
         left join SYS_DATADICT_LIST sdl on aaa.finprodType2=sdl.ITEM_CODE and sdl.DICT_CODE='FINPROD_TYPE_TG'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
         left join SYS_DATADICT_LIST dicttradeMarket on aaa.tradeMarket=dicttradeMarket.ITEM_CODE and dicttradeMarket.DICT_CODE='TRADE_PLACE'
+        left join SYS_DATADICT_LIST dictsp on aaa.settleSpeed=dictsp.ITEM_CODE and dictsp.DICT_CODE='ACCOUNT_SPEED'
+        left join SYS_DATADICT_LIST dictquote on aaa.quoteType=dictquote.ITEM_CODE and dictquote.DICT_CODE='QUOTE_TYPE'
+
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
         <include refid="vagueQueryExceWhere"></include>
@@ -898,13 +901,12 @@
         decode(I.BUSINESSTYPE,'BOND',fp.finprod_abbr,'REPO',null) as finprodAbbr,
         nvl(ts.ps,tr.ps) as ps,
         decode(decode(I.BUSINESSTYPE,'BOND',ts.SETTLE_SPEED,'REPO',tr.SETTLE_SPEED),'1','01','2','02','3','03') settleSpeed,
-      <!--  nvl(ts.OURDEPOSITACCOUNTNUMBER,ts.OURDEPOSITACCOUNTNUMBER) as  acctNo,-->
-        case when ipar.portfolio_id is not null
-        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  acctNo,
+        nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER) as  acctNo,
+     <!--   case when ipar.portfolio_id is not null then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  acctNo,-->
         stlinfo.sec_acct_name as acctNoName,
         nvl(I.LASTQTY,0)/10000 as lastqty,
         decode(I.BUSINESSTYPE, 'BOND', I.yield2, 'REPO', I.PRICE) tradeYield,
-        decode(I.BUSINESSTYPE, 'BOND', '', 'REPO', I.TRADELIMITDAYS) termDays,
+        I.TRADELIMITDAYS termDays,
         I.TRADECASHAMT as tradeAmt,
         QUOTE.QUOTEID as quoteid,
         I.ourinstitutioncode as traderid,
@@ -936,13 +938,10 @@
         FROM  INTERF_CSTP_TRADE i
         LEFT JOIN IBU_QUOTE_BOND_DET iqbd ON i.EXECID = iqbd.EXECID
         LEFT JOIN IBU_QUOTE_BOND iqb ON iqbd.QUOTE_ID = iqb.QUOTE_ID
-        LEFT JOIN IBU_QUOTE_ETR_RE iqerb ON iqb.QUOTE_ID = iqerb.QUOTE_ID
         LEFT JOIN IBU_QUOTE_CREP iqc ON i.EXECID = iqc.EXECID
-        LEFT JOIN IBU_QUOTE_ETR_RE iqerr ON iqc.QUOTE_ID = iqerr.QUOTE_ID
         ) QUOTE ON QUOTE.EXECID=I.EXECID
         left join stl_sec_acct_info stlinfo
-        on (case when ipar.portfolio_id is not null
-        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end)=stlinfo.sec_acct_id
+        on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id
         where I.BUSINESSTYPE in ('BOND','REPO')
@@ -986,7 +985,7 @@
             and decode(decode(I.BUSINESSTYPE,'BOND',ts.SETTLE_SPEED,'REPO',tr.SETTLE_SPEED),'1','01','2','02','3','03') = #{settleSpeed}
         </if>
         <if test="acctNoList!=null  and acctNoList.size() > 0 ">
-            AND nvl(ts.OURDEPOSITACCOUNTNUMBER,ts.OURDEPOSITACCOUNTNUMBER) IN
+            AND nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER) IN
             <foreach collection="acctNoList" item="item" separator="," open="(" close=")">
                 #{item}
             </foreach>
@@ -1086,9 +1085,9 @@
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         reg.settle_speed as settleSpeed,
-    <!--    nvl(ts.OURDEPOSITACCOUNTNUMBER,ts.OURDEPOSITACCOUNTNUMBER) as secManageAcctId,-->
-        case when ipar.portfolio_id is not null
-        then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end as  secManageAcctId,
+        nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER) as secManageAcctId,
+      <!--  case when ipar.portfolio_id is not null
+        then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end as  secManageAcctId,-->
         stlinfo.sec_acct_name as secManageAcctIdName,
         case when reg.finprod_type2='F01' then nvl(reg.face_value,0)/10000 end as printAmt,
         decode(reg.finprod_type2,'F01',reg.yield,reg.rate) as tradeYield,
@@ -1149,8 +1148,7 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ct.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
         left join stl_sec_acct_info stlinfo
-        on (case when ipar.portfolio_id is not null
-        then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end)=stlinfo.sec_acct_id
+        on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON reg.counter_id= mccic.party_id
 
         where 1=1
@@ -1178,7 +1176,7 @@
             and reg.settle_speed = #{settleSpeed}
         </if>
         <if test="secAcctIdList!=null  and secAcctIdList.size() > 0 ">
-            AND nvl(ts.OURDEPOSITACCOUNTNUMBER,ts.OURDEPOSITACCOUNTNUMBER) IN
+            AND nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER) IN
             <foreach collection="secAcctIdList" item="item" separator="," open="(" close=")">
                 #{item}
             </foreach>
@@ -1215,9 +1213,9 @@
         decode(ct.BUSINESSTYPE,'BOND',fp.finprod_abbr,null) as finprodAbbr,
         nvl(ib.ps,ic.repo_ps) as ps,
         nvl(ib.settle_speed,ic.settle_speed) as settleSpeed,
-       <!-- nvl(ts.OURDEPOSITACCOUNTNUMBER,ts.OURDEPOSITACCOUNTNUMBER) as secManageAcctId,-->
-        case when ipar.portfolio_id is not null
-        then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end as  secManageAcctId,
+        nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER) as secManageAcctId,
+       <!-- case when ipar.portfolio_id is not null
+        then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end as  secManageAcctId,-->
         stlinfo.sec_acct_name as secManageAcctIdName,
         decode(ct.BUSINESSTYPE,'BOND',nvl(ib.share_amt,0)/100,null) as printAmt,
         decode(ct.BUSINESSTYPE,'BOND',ib.yield,ic.rate) as tradeYield,
@@ -1282,8 +1280,7 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ct.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
         left join stl_sec_acct_info stlinfo
-        on (case when ipar.portfolio_id is not null
-        then ct.OURDEPOSITACCOUNTNUMBER	else ct.COUNTERDEPOSITACCOUNTNUMBER end)=stlinfo.sec_acct_id
+        on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON nvl(ib.cp_party_id,ic.cp_party_id)= mcci.party_id
         where ct.BUSINESSTYPE in ('BOND','REPO')  and (ic.quote_id is not null or ib.quote_id is not null)
         <if test="ps != null  and ps!=''">
@@ -1310,7 +1307,7 @@
             and nvl(ib.settle_speed,ic.settle_speed) = #{settleSpeed}
         </if>
         <if test="secAcctIdList!=null  and secAcctIdList.size() > 0 ">
-            AND nvl(ts.OURDEPOSITACCOUNTNUMBER,ts.OURDEPOSITACCOUNTNUMBER) IN
+            AND nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER) IN
             <foreach collection="secAcctIdList" item="item" separator="," open="(" close=")">
                 #{item}
             </foreach>
@@ -1599,9 +1596,9 @@
         fp.finprod_abbr as finprodAbbr,
         ts.ps as ps,
         ts.settle_speed as settleSpeed,
-       <!-- ts.ourdepositaccountnumber as acctNo,-->
-        case when ipar.portfolio_id is not null
-        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  acctNo,
+        ts.ourdepositaccountnumber as acctNo,
+     <!--   case when ipar.portfolio_id is not null
+        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  acctNo,-->
         stlinfo.sec_acct_name as acctNoName,
         ts.settdate as settleDate,
         ts.price_8 as unitCprice,
@@ -1635,8 +1632,7 @@
         LEFT JOIN SYS_USER_ADD sua ON ts.TRAD =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
         left join stl_sec_acct_info stlinfo
-        on (case when ipar.portfolio_id is not null
-        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end)=stlinfo.sec_acct_id
+        on ts.ourdepositaccountnumber=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id
         where I.EXECID=#{exeid,jdbcType=VARCHAR}
@@ -1652,9 +1648,9 @@
         tr.dealdate as tradeDate,
         tr.term_type as termType,
         tr.ps as ps,
-        <!--tr.ourdepositaccountnumber as acctNo,-->
-        case when ipar.portfolio_id is not null
-        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  secManageAcctId,
+        tr.ourdepositaccountnumber as secManageAcctId,
+       <!-- case when ipar.portfolio_id is not null
+        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  secManageAcctId,-->
         stlinfo.sec_acct_name as secManageAcctIdName,
         tr.settle_speed as settleSpeed,
         tr.term as repoTerm,
@@ -1687,8 +1683,7 @@
         LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
         LEFT JOIN SYS_USER_ADD sua ON tr.BUYTRADER =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
-        on (case when ipar.portfolio_id is not null
-        then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end)=stlinfo.sec_acct_id
+        on tr.ourdepositaccountnumber=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccit ON I.ourinstitutioncode= mccit.party_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON I.Counterinstitutioncode= mccic.party_id
         where I.EXECID=#{exeid,jdbcType=VARCHAR}
