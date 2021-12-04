@@ -363,4 +363,11 @@ where
 			CHECK_RESULT in (#{CHECK_RESULT_0,jdbcType=VARCHAR}, #{CHECK_RESULT_2,jdbcType=VARCHAR})
 			AND SETTLE_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
 	</select>
+
+	<select id="queryStlSecReconDetails" parameterType="java.util.Map" resultType="com.joyintech.tams.common.base.entity.StlSecReconDetail">
+		select
+		<include refid="com.joyintech.tams.common.base.dao.StlSecReconDetailMapper.Base_Column_List" />
+		from stl_sec_recon_detail
+		where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+	</select>
 </mapper>
