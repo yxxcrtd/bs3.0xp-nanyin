@@ -2028,30 +2028,31 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     								+ "[REG_EMPLOYEE_TYPE="+REGEMPLOYEETYPE+"]",
     								"登记人员类别"));
     					}
-    				}else if (CHB_ASSET_INFO_LIST.contains(tableName)){
-    					String TARGETTYPE = strList.get(14) ;
-    					//产品销售区域多选校验
-    					if(!BaseCheckLib.inDatadict3(TARGETTYPE,DictCode.标的类别.getValue(),true,true)){
-    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(275), String.valueOf(i + 2), "结构性存款挂钩标的类别不在值域范围内并且多选选项不可重复。"
-    								+ "["+TARGETTYPE+"]",
-    								"结构性存款挂钩标的类别"));
-    					}
-    					String TARGETTYPE3 = strList.get(126) ;
-    					//投资者风险偏好多选校验
-    					if(!BaseCheckLib.inDatadict3(TARGETTYPE3,DictCode.标的类别.getValue(),true,true)){
-    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(275), String.valueOf(i + 2), "标的类别不在值域范围内并且标的类别的多选选项不可重复。"
-    								+ "["+TARGETTYPE3+"]",
-    								"标的类别"));
-    					}
-    					
-    					String CHBSECTYPE03 = strList.get(18) ;
-    					//具体类别校验
-    					if(!BaseCheckLib.inDatadict3(CHBSECTYPE03,DictCode.具体类别.getValue(),true,false)){
-    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(275), String.valueOf(i + 2), "具体类别不在值域范围内并且具体类别的不可多选。"
-    								+ "["+CHBSECTYPE03+"]",
-    								"具体类别"));
-    					}
     				}
+//    				else if (CHB_ASSET_INFO_LIST.contains(tableName)){
+//    					String TARGETTYPE = strList.get(14) ;
+//    					//产品销售区域多选校验
+//    					if(!BaseCheckLib.inDatadict3(TARGETTYPE,DictCode.标的类别.getValue(),true,true)){
+//    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(275), String.valueOf(i + 2), "结构性存款挂钩标的类别不在值域范围内并且多选选项不可重复。"
+//    								+ "["+TARGETTYPE+"]",
+//    								"结构性存款挂钩标的类别"));
+//    					}
+//    					String TARGETTYPE3 = strList.get(126) ;
+//    					//投资者风险偏好多选校验
+//    					if(!BaseCheckLib.inDatadict3(TARGETTYPE3,DictCode.标的类别.getValue(),true,true)){
+//    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(275), String.valueOf(i + 2), "标的类别不在值域范围内并且标的类别的多选选项不可重复。"
+//    								+ "["+TARGETTYPE3+"]",
+//    								"标的类别"));
+//    					}
+//    					
+//    					String CHBSECTYPE03 = strList.get(18) ;
+//    					//具体类别校验
+//    					if(!BaseCheckLib.inDatadict3(CHBSECTYPE03,DictCode.具体类别.getValue(),true,false)){
+//    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(275), String.valueOf(i + 2), "具体类别不在值域范围内并且具体类别的不可多选。"
+//    								+ "["+CHBSECTYPE03+"]",
+//    								"具体类别"));
+//    					}
+//    				}
     			}
     		}
             // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
