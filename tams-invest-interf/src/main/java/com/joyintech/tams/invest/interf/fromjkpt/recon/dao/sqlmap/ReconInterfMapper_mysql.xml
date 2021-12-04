@@ -113,7 +113,7 @@
             ELSE T3.FINPROD_MARKET_ID END marketId,
             CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
             ELSE T3.FINPROD_ID END finprodId,
-            T3.CCY  jylb
+            IFNULL(T3.CCY,'CNY')  jylb
         FROM
             INTERF_ZX_GFYE T1
         LEFT JOIN FIN_PRODUCT T3 ON
