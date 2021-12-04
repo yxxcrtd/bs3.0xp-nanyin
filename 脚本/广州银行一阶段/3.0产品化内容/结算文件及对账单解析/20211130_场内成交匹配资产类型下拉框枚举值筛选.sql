@@ -1,19 +1,15 @@
-???prompt Importing table SYS_PAGE_DICTLIST...
-set feedback off
-set define off
+delete from SYS_PAGE_DICTLIST where PAGE_ID = 'ExchangeTransMatch001' and DICT_ID in ('MATCH_STATUS', 'PS');
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ExchangeTransMatch001', '999999', 'MATCH_STATUS', '02', null, null, 'system', null, '11-NOV-21 10.54.35.000000 PM', 'system', '11-NOV-21 10.54.35.000000 PM', null);
+values ('ExchangeTransMatch001', '999999', 'MATCH_STATUS', '02', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ExchangeTransMatch001', '999999', 'MATCH_STATUS', '03', null, null, 'system', null, '11-NOV-21 10.54.35.000000 PM', 'system', '11-NOV-21 10.54.35.000000 PM', null);
+values ('ExchangeTransMatch001', '999999', 'MATCH_STATUS', '03', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ExchangeTransMatch001', '999999', 'PS', '03', null, null, 'system', null, '11-NOV-21 10.54.35.000000 PM', 'system', '11-NOV-21 10.54.35.000000 PM', null);
+values ('ExchangeTransMatch001', '999999', 'PS', '03', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ExchangeTransMatch001', '999999', 'PS', '04', null, null, 'system', null, '11-NOV-21 10.54.35.000000 PM', 'system', '11-NOV-21 10.54.35.000000 PM', null);
+values ('ExchangeTransMatch001', '999999', 'PS', '04', null, null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ExchangeTransMatch001', '999999', 'PS', 'T01', null, null, 'system', null, '11-NOV-21 10.54.35.000000 PM', 'system', '11-NOV-21 10.54.35.000000 PM', null);
-
-prompt Done.
+values ('ExchangeTransMatch001', '999999', 'PS', 'T01', null, null, 'system', null, sysdate, 'system', sysdate, null);
