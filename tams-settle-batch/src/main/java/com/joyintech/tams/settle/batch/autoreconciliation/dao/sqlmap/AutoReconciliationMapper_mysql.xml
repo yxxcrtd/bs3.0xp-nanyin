@@ -334,7 +334,8 @@
 		    NULL SEC_ACCT_ID2,
 			e.BROKER_ID CUSTOMER_ID,
 			e.PARA_VALUE,
-			e.SEAT_NUMBER
+			e.SEAT_NUMBER,
+		    NULL PS2
 		FROM(
 			SELECT
 				a.FINPROD_ID,
@@ -411,7 +412,8 @@
 				NULL SEC_ACCT_ID2,
 				e.BROKER_ID CUSTOMER_ID,
 				e.PARA_VALUE,
-				e.SEAT_NUMBER
+				e.SEAT_NUMBER,
+			    e.PS PS2
 			FROM(
 				SELECT
 					a.FINPROD_ID,
@@ -420,6 +422,7 @@
 					a.DEAL_DATE,
 					a.ACCT_NO,
 					a.SEAT_NUMBER,
+				    a.PS,
 					#{CHECK_RESULT_2} CHECK_RESULT,
 					b.BROKER_ID,
 					d.PARA_VALUE
@@ -454,6 +457,7 @@
 					a.FINPROD_ID,
 					a.FINPROD_TYPE2,
 					a.TRADE_MARKET,
+					a.PS,
 					b.BROKER_ID,
 					d.PARA_VALUE
 			) e
@@ -487,7 +491,8 @@
 			    e.SEC_ACCT_ID SEC_ACCT_ID2,
 				e.BROKER_ID CUSTOMER_ID,
 				e.PARA_VALUE,
-				e.SEAT_NUMBER
+				e.SEAT_NUMBER,
+			    NULL PS2
 			FROM(
 				SELECT
 					a.FINPROD_ID,

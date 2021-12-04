@@ -135,6 +135,9 @@ where
 		<if test="tradeDate != null">
 			AND std.TRADE_DATE = #{tradeDate, jdbcType=DATE}
 		</if>
+		<if test="ps != null and ps != ''">
+			AND std.PS = #{ps, jdbcType=VARCHAR}
+		</if>
 		order by std.SHARE_AMT desc
 	</select>
 
