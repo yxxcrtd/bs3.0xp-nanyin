@@ -739,6 +739,7 @@ public class ReconciliationCommonService {
             param.put("secAcctId", dto.getSecAcctId2());
             param.put("seatNumber", dto.getSeatNumber());
             param.put("tradeDate", dto.getTradeDate2());
+            param.put("cjbh", dto.getTradeId2());
         }
         return reconciliationCommonMapper.getSettleTransData(param);
     }
