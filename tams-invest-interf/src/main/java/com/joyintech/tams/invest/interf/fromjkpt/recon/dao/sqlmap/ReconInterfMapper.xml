@@ -56,7 +56,7 @@
     <delete id="deleteStlSecReconDetail">
         delete from STL_SEC_RECON_DETAIL where SEQ_NO  in(
             select SEQ_NO from STL_SEC_RECON_DEAL where TRADE_DATE = to_date(#{execDate,jdbcType=VARCHAR},'yyyyMMdd')
-            and <include refid="deleteconditon"></include>
+            <include refid="deleteconditon"></include>
         )
     </delete>
     <!--查询对账单参数-->
