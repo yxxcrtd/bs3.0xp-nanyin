@@ -762,8 +762,9 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         secInfoModelDto.setCalculateField(cfetsBondDealDialogueQuoteDto.getCalculateField());
         secInfoModelDto.setCleanprice(cfetsBondDealDialogueQuoteDto.getPrice());
         secInfoModelDto.setDpriceamt(cfetsBondDealDialogueQuoteDto.getFpriceAmt());
-        secInfoModelDto.setMatureyield(cfetsBondDealDialogueQuoteDto.getMatureYield());
-        secInfoModelDto.setExerciseyield(cfetsBondDealDialogueQuoteDto.getExerYield());
+        //不改变共通  收益率跟原报价画面一样 乘以100参与计算
+        secInfoModelDto.setMatureyield(ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getMatureYield(),new BigDecimal(100)));
+        secInfoModelDto.setExerciseyield(ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getExerYield(),new BigDecimal(100)));
         // 根据债券交易的录入信息计算各项指标
         secCalRequestQuoteService.calSecDeal(secInfoModelDto);
         // 返回结果处理
@@ -790,7 +791,10 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         cfetsBondDealDialogueQuoteDto.setParValue(secInfoModelDto.getAbsPrinAmtHun());
         // 本金额(元) = 面值 * 券面总额  / 100
         cfetsBondDealDialogueQuoteDto.setParValueAmt(secInfoModelDto.getAbsPrinAmt());
-        
+
+        //计算结果到期收益率和行权收益率除以100
+        cfetsBondDealDialogueQuoteDto.setMatureYield(ArithmeticUtil.divide(cfetsBondDealDialogueQuoteDto.getMatureYield(),new BigDecimal(100),6));
+        cfetsBondDealDialogueQuoteDto.setExerYield(ArithmeticUtil.divide(cfetsBondDealDialogueQuoteDto.getExerYield(),new BigDecimal(100),6));
         return cfetsBondDealDialogueQuoteDto;
     	/*cfetsBondDealDialogueQuoteDto.setUnitInt(new BigDecimal(10).setScale(5, RoundingMode.HALF_UP));
         cfetsBondDealDialogueQuoteDto.setUnitFprice(new BigDecimal(11).setScale(4, RoundingMode.HALF_UP));
