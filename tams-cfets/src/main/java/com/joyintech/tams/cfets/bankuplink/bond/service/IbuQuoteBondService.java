@@ -497,31 +497,33 @@ public class IbuQuoteBondService extends BaseService {
                                     message = "存在多条指定价格指令，行权收益率需一致";
                                     break;
                                 }
-                            }
-                            if (StringUtil.isNotEmpty(message)) {
-                                ajaxResult.setMessage(message);
-                                return ajaxResult;
-                            }
-                            if (StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue())) {
-                                if (priceFlag && StringUtil.equals(translateKey, "01") && priceModelOne.getPrice().compareTo(maximumPrice) > 0) {
-                                    message = "同时存在指定价格指令和限价指令，指定价格指令的净价不能大于限价指令中净价的最小值";
+                                if (StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue())) {
+                                    if (priceFlag && StringUtil.equals(translateKey, "01") && item.getPrice().compareTo(maximumPrice) > 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的净价不能大于限价指令中净价的最小值";
+                                        break;
+                                    }
+                                    if (matureYieldFlag && StringUtil.equals(translateKey, "02") && item.getMatureYield().compareTo(maximumMatureYield) < 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能小于限价指令中到期收益率的最大值";
+                                        break;
+                                    }
+                                    if (exerYieldFlag && StringUtil.equals(translateKey, "03") && item.getExerYield().compareTo(maximumExerYield) < 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能小于限价指令中行权收益率的最大值";
+                                        break;
+                                    }
                                 }
-                                if (matureYieldFlag && StringUtil.equals(translateKey, "02") && priceModelOne.getMatureYield().compareTo(maximumMatureYield) < 0) {
-                                    message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能小于限价指令中到期收益率的最大值";
-                                }
-                                if (exerYieldFlag && StringUtil.equals(translateKey, "03") && priceModelOne.getExerYield().compareTo(maximumExerYield) < 0) {
-                                    message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能小于限价指令中行权收益率的最大值";
-                                }
-                            }
-                            if (StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_卖出.getValue())) {
-                                if (priceFlag && StringUtil.equals(translateKey, "01") && priceModelOne.getPrice().compareTo(maximumPrice) < 0) {
-                                    message = "同时存在指定价格指令和限价指令，指定价格指令的净价不能小于限价指令中净价的最大值";
-                                }
-                                if (matureYieldFlag && StringUtil.equals(translateKey, "02") && priceModelOne.getMatureYield().compareTo(maximumMatureYield) > 0) {
-                                    message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能大于限价指令中到期收益率的最小值";
-                                }
-                                if (exerYieldFlag && StringUtil.equals(translateKey, "03") && priceModelOne.getExerYield().compareTo(maximumExerYield) > 0) {
-                                    message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能大于限价指令中行权收益率的最小值";
+                                if (StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_卖出.getValue())) {
+                                    if (priceFlag && StringUtil.equals(translateKey, "01") && item.getPrice().compareTo(maximumPrice) < 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的净价不能小于限价指令中净价的最大值";
+                                        break;
+                                    }
+                                    if (matureYieldFlag && StringUtil.equals(translateKey, "02") && item.getMatureYield().compareTo(maximumMatureYield) > 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能大于限价指令中到期收益率的最小值";
+                                        break;
+                                    }
+                                    if (exerYieldFlag && StringUtil.equals(translateKey, "03") && item.getExerYield().compareTo(maximumExerYield) > 0) {
+                                        message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能大于限价指令中行权收益率的最小值";
+                                        break;
+                                    }
                                 }
                             }
                             if (StringUtil.isNotEmpty(message)) {
@@ -542,7 +544,6 @@ public class IbuQuoteBondService extends BaseService {
                                 ajaxResult.setMessage(message);
                                 return ajaxResult;
                             }
-                            //
                             if (threeFlag) {
                                 if (StringUtil.equals(ps, com.joyintech.tams.constant.DictCodeList.交易方向_买入.getValue())) {
                                     if (priceModelOne.getPrice().compareTo(maximumPrice) > 0) {
