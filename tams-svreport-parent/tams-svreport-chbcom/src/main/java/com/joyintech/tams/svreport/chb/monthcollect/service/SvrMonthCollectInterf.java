@@ -48,7 +48,9 @@ public class SvrMonthCollectInterf extends BaseService{
 			logger.info("请先执行明细汇总批处理，再执行月报生成批处理！");
 			return;
 		}
-		if(svrMonthCollectInterfMapper.checkSubmission(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd)) != 0){
+		int index=DateUtil.format(batchDate).lastIndexOf("-");
+		String termid = DateUtil.format(batchDate).substring(0, index);
+		if(svrMonthCollectInterfMapper.checkSubmission(termid) != 0){
 			logger.info("已报送的月报，不再生成报送数据！");
 			return;
 		}

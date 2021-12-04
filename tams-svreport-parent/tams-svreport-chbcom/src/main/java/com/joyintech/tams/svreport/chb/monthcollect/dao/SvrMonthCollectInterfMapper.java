@@ -65,11 +65,10 @@ public interface SvrMonthCollectInterfMapper {
 
 	/**
 	 * 检查是否已报送
-	 * @param batchDateStart
-	 * @param batchDateEnd
+	 * @param termid
 	 * @return
 	 */
-	int checkSubmission(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+	int checkSubmission(@Param("termid")String termid);
 //	获取美元，欧元转人民币汇率
 	BigDecimal getCNYExchange(@Param("ccy")String ccy,@Param("batchDateEnd")String batchDateEnd);
 //	获取非美欧外币转美元汇率
