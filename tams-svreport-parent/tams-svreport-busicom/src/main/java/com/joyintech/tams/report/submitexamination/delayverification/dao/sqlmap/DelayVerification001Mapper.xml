@@ -103,10 +103,8 @@
                      	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
-                           /* add by songyawei 20200702 start */
+                    where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                        /* add by songyawei 20200702 start */
                            <if test="flag">
                            	and inst.institution_code IN 
                            	<foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
@@ -128,9 +126,7 @@
 	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
+                            where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -174,9 +170,7 @@
                      	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
+                        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                            /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -199,9 +193,7 @@
 	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
+                            where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -245,9 +237,7 @@
                      	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
+                            where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                            /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -270,9 +260,7 @@
 	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
+                                where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -316,9 +304,7 @@
                      	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
+                        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                            /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -341,9 +327,7 @@
 	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
+                                where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -387,9 +371,7 @@
                      	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
+                            where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                            /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -412,9 +394,7 @@
 	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
+                                where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -458,9 +438,7 @@
                      	LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces.regist_seqno
                      </if>
                      /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
+                                where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                            /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -484,9 +462,7 @@
                             LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
 	                     </if>
 	                     /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
+                                where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -530,9 +506,7 @@
                      	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
+                        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                            /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -555,9 +529,7 @@
 	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
+                            where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -602,9 +574,7 @@
                         LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
                      </if>
                      /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
+                            where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                            /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -628,9 +598,7 @@
                             LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
 	                     </if>
 	                     /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
+                            where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -675,9 +643,7 @@
                         LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
                      </if>
                      /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
+                            where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                            /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN
@@ -701,9 +667,7 @@
                             LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
 	                     </if>
 	                     /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
+                            where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -742,9 +706,7 @@
                         ces.ORG_CODE,
                         ces.CREATE_DEPT
                      from CHB_MONTH_REPORT ces
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
+                        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                            /* add by songyawei 20200702 start */
                             <if test="flag">
                             and ces.ORG_CODE IN 
@@ -762,9 +724,7 @@
                         ces.ORG_CODE,
                         ces.CREATE_DEPT
                         from CHB_MONTH_REPORT_HIS ces
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
+                        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and ces.ORG_CODE IN 
@@ -804,9 +764,7 @@
             ces.ORG_CODE,
             ces.CREATE_DEPT
             from CHB_SALER_STL_DEAL_SUB ces
-            where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-            and ces.DATA_STATUS = '01'
+                where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
             /* add by songyawei 20200702 start */
             <if test="flag">
                 and ces.ORG_CODE IN
@@ -824,9 +782,7 @@
             ces.ORG_CODE,
             ces.CREATE_DEPT
             from CHB_SALER_STL_DEAL_SUB_HIS ces
-            where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-            and ces.DATA_STATUS = '01'
+                where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
             /* add by songyawei 20200702 start */
             <if test="flag">
                 and ces.ORG_CODE IN
@@ -865,10 +821,8 @@
             ces.SEND_STATUS,
             ces.ORG_CODE,
             ces.CREATE_DEPT
-            from CHB_SALE_MONTH_REPORT ces
-            where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-            and ces.DATA_STATUS = '01'
+            from (SELECT DISTINCT termId,SEND_STATUS,CHB_SUBMIT_DEADLINE,ORG_CODE,SUBMIT_TIME,CREATE_DEPT FROM CHB_SALE_MONTH_REPORT) ces
+            where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
             /* add by songyawei 20200702 start */
             <if test="flag">
                 and ces.ORG_CODE IN
@@ -936,9 +890,7 @@
                      	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PRODID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
+                        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -961,9 +913,7 @@
 	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PRODID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
+                                where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             /* add by songyawei 20200702 start */
                             <if test="flag">
                             	and inst.institution_code IN 
@@ -1001,9 +951,7 @@
                         ces.SUBMIT_STATUS,
                         ces.CREATE_DEPT
                      from CHB_EQU_SUB ces
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                           and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                           and ces.STATUS = '01'
+                            where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     union all
                     <!-- 履历表数据 -->
                     select
@@ -1012,10 +960,8 @@
                         ces.SUBMIT_STATUS,
                         ces.CREATE_DEPT
                         from CHB_EQU_SUB_HIS ces
-                         where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                            and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                            and ces.STATUS = '01'
-                )temp       
+                        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                )temp
                 <where>
                     <if test="isNotCount !=null and isNotCount=='01'">
                     <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -1050,9 +996,7 @@
                      	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ceqs.ACCOUNT AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
-						 where ceqs.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-						   and ceqs.CHB_SUBMIT_DEADLINE &lt;= #{searchDateEnd}
-						   /* add by songyawei 20200702 start */
+                            where ceqs.CHB_SUBMIT_DEADLINE &lt;= #{searchDateEnd}
                             <if test="flag">
                             	and inst.institution_code IN 
                            		<foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
@@ -1073,9 +1017,7 @@
 	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ceqs.ACCOUNT AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
-						 where ceqs.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-							and ceqs.CHB_SUBMIT_DEADLINE &lt;= #{searchDateEnd} <!-- 中债报送截止日落在查询日期范围 -->
-							/* add by songyawei 20200702 start */
+                            where ceqs.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                             <if test="flag">
                             	and inst.institution_code IN 
                            		<foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
@@ -1134,9 +1076,7 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                    <!--and ces.STATUS = '01'-->
+                where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
@@ -1161,9 +1101,7 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.ACCOUNT_ID  AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                    and ces.STATUS = '01'
+                where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
@@ -1208,9 +1146,7 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                   <!--and ces.STATUS = '01'-->
+                    where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                    /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
@@ -1235,9 +1171,7 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                    and ces.STATUS = '01'
+                    where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
@@ -1283,9 +1217,7 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                   <!-- and ces.STATUS = '01'-->
+                    where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                    /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
@@ -1311,10 +1243,8 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                    and ces.STATUS = '01'
-                    /* add by songyawei 20200702 start */
+                        where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                        /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
                    		<foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
@@ -1359,10 +1289,8 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID  AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                    <!--and ces.STATUS = '01'-->
-                    /* add by songyawei 20200702 start */
+                        where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                        /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
                    		<foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
@@ -1388,9 +1316,7 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID =  ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                    and ces.STATUS = '01'
+                    where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
@@ -1436,9 +1362,7 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                    <!--and ces.STATUS = '01'-->
+                    where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
@@ -1465,10 +1389,8 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                    and ces.STATUS = '01'
-                    /* add by songyawei 20200702 start */
+                        where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+                        /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
                    		<foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
@@ -1513,9 +1435,7 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                    <!--and ces.STATUS = '01'-->
+                    where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
@@ -1542,9 +1462,7 @@
                  	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
-                where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                    and ces.STATUS = '01'
+                    where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and inst.institution_code IN 
@@ -1584,9 +1502,7 @@
                     ces.ORG_CODE,
                     ces.CREATE_DEPT
                 from PBC_REPORT ces
-                where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                    <!--and ces.STATUS = '01'-->
+                    where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     and ces.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
                     /* add by songyawei 20200702 start */
                     <if test="flag">
@@ -1607,9 +1523,7 @@
                     ces.ORG_CODE,
                     ces.CREATE_DEPT
                 from PBC_REPORT_HIS ces
-                where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                    and ces.STATUS = '01'
+                    where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     and ces.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 不查询资产负债信息 -->
                     /* add by songyawei 20200702 start */
                     <if test="flag">
@@ -1649,11 +1563,8 @@
                     ces.SEND_STATUS,
                     ces.ORG_CODE,
                     ces.CREATE_DEPT
-                from PBC_REPORT ces
-                where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                    <!--and ces.STATUS = '01'-->
-                    and ces.reporttype != 'ONEPRD_ASSET_DEBT'<!-- 不查询资产负债信息 -->
+                from (SELECT DISTINCT termId,CHB_SUBMIT_DEADLINE,SEND_STATUS,ORG_CODE,SUBMIT_TIME,CREATE_DEPT FROM PBC_REPORT WHERE reporttype != 'ONEPRD_ASSET_DEBT') ces
+                    where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and ces.ORG_CODE IN 
@@ -1672,11 +1583,8 @@
                     ces.SEND_STATUS,
                     ces.ORG_CODE,
                     ces.CREATE_DEPT
-                from PBC_REPORT_HIS ces
-                where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                    and ces.STATUS = '01'
-                    and ces.reporttype != 'ONEPRD_ASSET_DEBT'<!-- 不查询资产负债信息 -->
+            from (SELECT DISTINCT termId,CHB_SUBMIT_DEADLINE,SEND_STATUS,ORG_CODE,SUBMIT_TIME,CREATE_DEPT FROM PBC_REPORT_HIS WHERE reporttype != 'ONEPRD_ASSET_DEBT') ces
+                where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     /* add by songyawei 20200702 start */
                     <if test="flag">
                     	and ces.ORG_CODE IN 
@@ -1722,9 +1630,7 @@
                 LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
             </if>
             /* add by songyawei 20200702 end */
-            where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-            and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-            <!--and ces.STATUS = '01'-->
+                where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
             /* add by songyawei 20200702 start */
             <if test="flag">
                 and inst.institution_code IN
@@ -1749,9 +1655,7 @@
                         LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                     </if>
                     /* add by songyawei 20200702 end */
-                    where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                    and ces.STATUS = '01'
+                    where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     /* add by songyawei 20200702 start */
                     <if test="flag">
                         and inst.institution_code IN
@@ -1800,9 +1704,7 @@
                 LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.Prod_Id  AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
             </if>
             /* add by songyawei 20200702 end */
-            where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-            and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-            <!--and ces.STATUS = '01'-->
+                where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
             /* add by songyawei 20200702 start */
             <if test="flag">
                 and inst.institution_code IN
@@ -1829,9 +1731,7 @@
                         LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID =  ppas.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                     </if>
                     /* add by songyawei 20200702 end */
-                    where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
-                    and ces.STATUS = '01'
+                    where ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
                     /* add by songyawei 20200702 start */
                     <if test="flag">
                         and inst.institution_code IN
@@ -1853,9 +1753,7 @@
                         #{item,jdbcType=VARCHAR}
                     </foreach>
                 </if>
-            </where>
-
-        )
+            </where>)
 </select>
 <select id="countUnquaData">
 SELECT 
@@ -2028,7 +1926,16 @@ SELECT
                     </otherwise>
                 </choose>
             FROM
-                ${tableId} info
+
+                <choose>
+                    <when test="tableId != null and tableId == 'CHB_SALE_MONTH_REPORT'">
+                        (SELECT DISTINCT termId,CHB_SUBMIT_DEADLINE,SEND_STATUS,ORG_CODE,CREATE_DEPT,SUBMIT_TIME,DATA_STATUS,CREATE_USER FROM CHB_SALE_MONTH_REPORT) info
+                    </when>
+                    <otherwise>
+                        ${tableId} info
+                    </otherwise>
+                </choose>
+
                 /* add by songyawei 20200702 start */
                     <!-- 1. 个人申报登记 -->
                     <if test="flag">
@@ -2102,7 +2009,7 @@ SELECT
                 </choose> 
                 WHERE
                 info.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                and info.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                <!-- and info.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}-->
                 and (
                     <choose>
                     <when test="tableId !=null and  (
@@ -2273,7 +2180,15 @@ SELECT
                             </otherwise>
                         </choose>
                     FROM
-                        ${hisTableId} info
+
+                        <choose>
+                            <when test="tableId != null and tableId == 'CHB_SALE_MONTH_REPORT'">
+                                (SELECT  null termId,null  CHB_SUBMIT_DEADLINE,null SEND_STATUS,null ORG_CODE,null CREATE_DEPT, null SUBMIT_TIME,null  DATA_STATUS,null CREATE_USER FROM dual where 1=2) info
+                            </when>
+                            <otherwise>
+                                ${hisTableId} info
+                            </otherwise>
+                        </choose>
                         /* add by songyawei 20200702 start */
 	                    <!-- 1. 个人申报登记 -->
 	                    <if test="flag">
@@ -2346,7 +2261,7 @@ SELECT
                         WHERE
                         info.SUBMIT_TIME &gt; info.CHB_SUBMIT_DEADLINE
                         and info.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                        and info.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                        <!--and info.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}-->
                         /* add by songyawei 20200702 start */
 		                <if test="flag and tableId != null and tableId!='CHB_MONTH_REPORT' and tableId!='CHB_EQU_SUB' ">
 		                	and inst.institution_code IN 
@@ -2447,7 +2362,7 @@ SELECT
 	                </when>
 	                <!-- 8. 人行月报 -->
 	                <when test="tableId != null and tableId == 'PBC_REPORT' and index != null and index==8 ">
-	                    info.reporttype ||'|'|| info.TERMID  as code,
+	                    '期次' || info.TERMID  as code,
 	                    info.CHB_SUBMIT_DEADLINE as submitDeadline,
 	                </when>
                     <!-- 10. 新人行单产品月报-产品基本信息 -->
@@ -2470,7 +2385,15 @@ SELECT
                 info.CREATE_DEPT AS createDept,
                 info.STATUS
             FROM
-                ${tableId} info
+                <choose>
+                    <when test="tableId != null and tableId == 'PBC_REPORT' and index != null and index==8">
+                        (SELECT DISTINCT termId,CHB_SUBMIT_DEADLINE,SEND_STATUS,ORG_CODE,SUBMIT_TIME,CREATE_DEPT,CREATE_USER,STATUS FROM PBC_REPORT
+                        WHERE reporttype != 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->) info
+                    </when>
+                    <otherwise>
+                        ${tableId} info
+                    </otherwise>
+                </choose>
                 /* add by songyawei 20200702 start */
                 <if test="flag">
                 	<!-- 1. 人行单产品月报-资产池基本信息 -->
@@ -2517,7 +2440,8 @@ SELECT
                 <choose>
                     <when test="tableId != null and tableId == 'PBC_REPORT'">
                         and info.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                        and info.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                        <!--and info.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}-->
+
                         and (
                         
                             (info.SEND_STATUS = #{nosubmit}
@@ -2527,9 +2451,6 @@ SELECT
                             and info.SUBMIT_TIME &gt; info.CHB_SUBMIT_DEADLINE)
                             
                         )
-                        <if test="index == 8"><!-- 人行月报 -->
-                            and info.reporttype != 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
-                        </if>
                         <if test="index == 7"><!-- 人行月报 -->
                             and info.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
                         </if>
@@ -2607,7 +2528,7 @@ SELECT
                             </when>
                             <!-- 8. 人行月报 -->
                             <when test="tableId != null and tableId == 'PBC_REPORT' and index != null and index==8 ">
-                                info.reporttype ||'|'|| info.TERMID  as code,
+                                '期次'|| info.TERMID  as code,
                                 info.CHB_SUBMIT_DEADLINE as submitDeadline,
                             </when>
                             <!-- 10. 新人行单产品月报-产品基本信息 -->
@@ -2629,7 +2550,15 @@ SELECT
                         info.CREATE_DEPT AS createDept,
                         info.STATUS
                     FROM
-                        ${hisTableId} info
+                        <choose>
+                            <when test="tableId != null and tableId == 'PBC_REPORT' and index != null and index==8">
+                                (SELECT DISTINCT termId,CHB_SUBMIT_DEADLINE,SEND_STATUS,ORG_CODE,SUBMIT_TIME,CREATE_DEPT,CREATE_USER,STATUS FROM PBC_REPORT_HIS
+                                WHERE reporttype != 'ONEPRD_ASSET_DEBT') info
+                            </when>
+                            <otherwise>
+                                ${hisTableId} info
+                            </otherwise>
+                        </choose>
                         /* add by songyawei 20200702 start */
                         <if test="flag">
 		                	<!-- 1. 人行单产品月报-资产池基本信息 -->
@@ -2676,10 +2605,8 @@ SELECT
                             <when test="tableId != null and tableId == 'PBC_REPORT'">
                                 and info.SUBMIT_TIME &gt; info.CHB_SUBMIT_DEADLINE
                                 and info.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
-                                and info.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
-		                        <if test="index == 8"><!-- 人行月报 -->
-		                            and info.reporttype != 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
-		                        </if>
+                                <!-- and info.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}-->
+
 		                        <if test="index == 7"><!-- 人行月报 -->
 		                            and info.reporttype = 'ONEPRD_ASSET_DEBT'<!-- 只查询资产负债信息 -->
 		                        </if>

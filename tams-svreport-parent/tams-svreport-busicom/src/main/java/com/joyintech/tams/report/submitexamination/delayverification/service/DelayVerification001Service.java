@@ -216,12 +216,12 @@ public class DelayVerification001Service extends BaseService<DelayVerification00
                 delayVerification002Dto.setCode(codeString);
             } else if (DictCodeListExt2.报表名称_人行月度统计报表.getValue().equals(reportIndex)){
                 // 人行月报的唯一标识单独处理
-                List<String> codeList = StringUtil.splitToList(GlobalConstant.VERTICAL_LINE, delayVerification002Dto.getCode());
-                String reporttype = codeList.get(0);
-                String termid = codeList.get(1);
-                String termName = termid.substring(0, 4)+"年"+termid.substring(4, 6)+"月";
-                String codeString = SvrDataUtil.getNameFromDataDict(DictCode.人行报表名称,reporttype)+"_"+termName;
-                delayVerification002Dto.setCode(codeString);
+//                List<String> codeList = StringUtil.splitToList(GlobalConstant.VERTICAL_LINE, delayVerification002Dto.getCode());
+//                String reporttype = codeList.get(0);
+//                String termid = codeList.get(1);
+//                String termName = termid.substring(0, 4)+"年"+termid.substring(4, 6)+"月";
+//                String codeString = SvrDataUtil.getNameFromDataDict(DictCode.人行报表名称,reporttype)+"_"+termName;
+//                delayVerification002Dto.setCode(codeString);
             }
             delayVerification002Dto.setRepName(SysDataUtil.getNameFromDataDict(DictCode.报表名称,
                 reportIndex));
