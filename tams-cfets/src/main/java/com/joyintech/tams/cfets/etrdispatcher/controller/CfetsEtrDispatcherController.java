@@ -67,7 +67,7 @@ public class CfetsEtrDispatcherController extends BaseController {
         initPageParams.put("SHORTSELLINGSUPPORTED01", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
         //自动刷新时间(ms)
         initPageParams.put("cfetsEtrDispatcher_tradeList_refresh_period", CacheUtil.getSysParam("cfetsEtrDispatcher_tradeList_refresh_period"));
-
+        initPageParams.put("cfetsEtrDispatcher_dealersTable_refresh_period", CacheUtil.getSysParam("cfetsEtrDispatcher_dealersTable_refresh_period"));
         initPageParams.put("pageId", "CfetsEtrDispatcher");
         return new Message<Map<String, Object>>(initPageParams).success();
     }
