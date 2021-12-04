@@ -206,7 +206,7 @@ public class IbuQuoteBond002Controller extends BaseController {
             }
         }
 
-        if (sb.length() > 0){
+        /*if (sb.length() > 0){
             sb.append("请确认是否继续？");
             ar.setData(sb);
         }
@@ -223,7 +223,7 @@ public class IbuQuoteBond002Controller extends BaseController {
             }
 
             ar.setData(this.getMessage("COMMON_C_0001", msg));
-        }
+        }*/
         return new Message<AjaxResult>().success().setData(ar);
     }
 

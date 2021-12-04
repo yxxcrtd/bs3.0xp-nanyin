@@ -70,6 +70,8 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     private BigDecimal saleinIntAmt;
 
+    private BigDecimal lendinShareAmt;
+
     private BigDecimal sellAbleNum;
 
 
@@ -334,5 +336,13 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setDistribution(String distribution) {
         this.distribution = distribution;
+    }
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
     }
 }

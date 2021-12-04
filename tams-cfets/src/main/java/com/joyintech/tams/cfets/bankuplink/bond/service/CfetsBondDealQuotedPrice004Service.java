@@ -488,7 +488,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
                 regFinProductDealTotalAdd.setLendinFpriceAmt(entity.getSaleinFpriceAmt());
                 regFinProductDealTotalAdd.setLendinIntAmt(entity.getSaleinIntAmt());
-                regFinProductDealTotalAdd.setLendinShareAmt(entity.getSellAbleNum());
+                regFinProductDealTotalAdd.setLendinShareAmt(ArithmeticUtil.divide(entity.getSellAbleNum(),new BigDecimal(100),2));
+            }
+            if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
+                regFinProductDealTotalAdd.setLendinShareAmt(ArithmeticUtil.divide(entity.getLendinShareAmt(),new BigDecimal(100),2));
             }
             //汇总登记费用明细表
             List<RegTradeFeeTotal> regTradeFeeTotals = new ArrayList<>();

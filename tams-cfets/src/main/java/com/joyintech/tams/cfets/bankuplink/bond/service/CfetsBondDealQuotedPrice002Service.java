@@ -204,6 +204,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
                 }else {
                     param.put("sysDate", entity.getTradeDate());
                 }
+                param.put("finprodId",entity.getFinprodId());
                 //未来有行权计划
                 if(cfetsIbuQuoteBondMapper.countBondHasEexrPlan(param)>0){
                     if(null==entity.getPrice()&&null==entity.getMatureYield()&&null==entity.getExerYield()){
@@ -1175,9 +1176,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
 	 * @param dto
 	 */
 	public void doInsetOrUpdateForPtlPositionHold(CfetsBondDealDialogueQuoteDto dto) {
-        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,dto);
-        cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(cfetsBondDealDialogueQuoteDto);
+        cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(preparEntity(dto));
 		/*restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/doInsetOrUpdateDialogueForPtlPositionHold", dto,
 				Integer.class);*/
 	}
@@ -1496,9 +1495,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
 				entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_修改中.getValue());
 			}
 		}
-        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto();
-		BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,entity);
-        return cfetsBondDealQuotedPriceService.insertWflBondDialogueQuote(cfetsBondDealDialogueQuoteDto);
+        return cfetsBondDealQuotedPriceService.insertWflBondDialogueQuote(preparEntity(entity));
 		/*return restTemplate.postForObject(
 				ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/insertWflBondDialogueQuote",
 				entity, Boolean.class);*/
@@ -1563,6 +1560,24 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
                         + "/CfetsBondDealQuotedPrice/queryEntrustDealedAmt2",
                 map, BigDecimal.class);*/
+    }
+
+    /**
+     * 前端实体转微服务端
+     * @param entity
+     * @return
+     */
+    public com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto preparEntity(CfetsBondDealDialogueQuoteDto entity){
+        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto();
+        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,entity);
+        List<com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto> cfetsBondDealDialogueQuoteDtoList = new ArrayList<>();
+        entity.getCfetsBondDealDialogueQuoteDtoList().forEach(item ->{
+            com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDtoPtl = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto();
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDtoPtl,item);
+            cfetsBondDealDialogueQuoteDtoList.add(cfetsBondDealDialogueQuoteDtoPtl);
+        });
+        cfetsBondDealDialogueQuoteDto.setCfetsBondDealDialogueQuoteDtoList(cfetsBondDealDialogueQuoteDtoList);
+        return cfetsBondDealDialogueQuoteDto;
     }
 
 }

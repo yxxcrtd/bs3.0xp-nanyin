@@ -217,6 +217,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                 }else {
                     param.put("sysDate", entity.getTradeDate());
                 }
+                param.put("finprodId",entity.getFinprodId());
                 //未来有行权计划
                 if(cfetsIbuQuoteBondMapper.countBondHasEexrPlan(param)>0){
                     if(null==entity.getPrice()&&null==entity.getMatureYield()&&null==entity.getExerYield()){
