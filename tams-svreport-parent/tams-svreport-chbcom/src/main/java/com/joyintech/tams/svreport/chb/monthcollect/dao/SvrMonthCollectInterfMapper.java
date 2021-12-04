@@ -71,11 +71,11 @@ public interface SvrMonthCollectInterfMapper {
 	 */
 	int checkSubmission(@Param("batchDateStart")String batchDateStart,@Param("batchEndDate")String batchEndDate);
 //	获取美元，欧元转人民币汇率
-	BigDecimal getCNYExchange(String ccy);
+	BigDecimal getCNYExchange(@Param("ccy")String ccy,@Param("batchDateEnd")String batchDateEnd);
 //	获取非美欧外币转美元汇率
-	BigDecimal getUSDExchange(String ccy);
+	BigDecimal getUSDExchange(@Param("ccy")String ccy,@Param("batchDateEnd")String batchDateEnd);
 //	获取美元转人民币汇率
-	BigDecimal USDExchangeCNY();
+	BigDecimal USDExchangeCNY(@Param("batchDateEnd")String batchDateEnd);
 //	取得银行月报信息
 	List<ChbMonthCollect> selectChbPrdPosition(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 //	分投资者类型获得投资者数量

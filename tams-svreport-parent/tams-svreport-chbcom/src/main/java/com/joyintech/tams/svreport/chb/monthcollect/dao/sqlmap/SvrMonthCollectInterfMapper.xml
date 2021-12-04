@@ -10,8 +10,8 @@
 		HOLDER_TYPE holderType,
 		sum(DAY_SALE_AMOUNT_SUM) saleAmountTotal,
 		sum(DAY_VALUE_AMOUNT_SUM) valueAmountTotal,
-		sum(DAY_SALE_QTY_SUM)   saleSharesTotal,
-		sum(DAY_VALUE_QTY_SUM)   valueSharesTotal,
+		sum(DAY_SALE_QTY_SUM * PROD_VALUE)   saleSharesTotal,
+		sum(DAY_VALUE_QTY_SUM * PROD_VALUE)   valueSharesTotal,
 		CCY ccy
 		FROM
 		CHB_SALE_DEAL_SUM WHERE EQUITY_CONF_DATE between to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchEndDate,jdbcType=VARCHAR},'yyyy-mm-dd')
@@ -225,13 +225,13 @@
 	</select>
 
 	<select id="getCNYExchange" resultType="java.math.BigDecimal">
-		select  EXCHANGE_PRICE  from CHB_MST_EXCHANGE_INFO  WHERE CCY_ORIGINAL =#{ccy,jdbcType=VARCHAR} and CCY_CONVERT = 'CNY'
+		select  EXCHANGE_PRICE  from CHB_MST_EXCHANGE_INFO  WHERE CCY_ORIGINAL =#{ccy,jdbcType=VARCHAR} and CCY_CONVERT = 'CNY' and PUBLISH_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 	</select>
 	<select id="getUSDExchange" resultType="java.math.BigDecimal">
-		select  EXCHANGE_PRICE  from CHB_MST_EXCHANGE_INFO  WHERE CCY_ORIGINAL =#{ccy,jdbcType=VARCHAR} and CCY_CONVERT = 'USD'
+		select  EXCHANGE_PRICE  from CHB_MST_EXCHANGE_INFO  WHERE CCY_ORIGINAL =#{ccy,jdbcType=VARCHAR} and CCY_CONVERT = 'USD' and PUBLISH_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 	</select>
 	<select id="USDExchangeCNY" resultType="java.math.BigDecimal">
-		select  EXCHANGE_PRICE  from CHB_MST_EXCHANGE_INFO  WHERE CCY_ORIGINAL ='USD' and CCY_CONVERT = 'CNY'
+		select  EXCHANGE_PRICE  from CHB_MST_EXCHANGE_INFO  WHERE CCY_ORIGINAL ='USD' and CCY_CONVERT = 'CNY' and PUBLISH_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 	</select>
 <!--	取得银行月报信息-->
 	<select id="selectChbPrdPosition" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
