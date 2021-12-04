@@ -44,12 +44,11 @@ public class SvrMonthCollectInterf extends BaseService{
     private ChbCommonCheckService chbCommonCheckService;
 
     public void generateData(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
-    	Date batchEndDate = getFirstDayOfNextMonth(DateUtil.format(batchDateEnd));
-		if(svrMonthCollectInterfMapper.checkAllMonth(DateUtil.format(batchDateStart),DateUtil.format(batchEndDate)) == 0){
+		if(svrMonthCollectInterfMapper.checkAllMonth(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd)) == 0){
 			logger.info("请先执行明细汇总批处理，再执行月报生成批处理！");
 			return;
 		}
-		if(svrMonthCollectInterfMapper.checkSubmission(DateUtil.format(batchDateStart),DateUtil.format(batchEndDate)) != 0){
+		if(svrMonthCollectInterfMapper.checkSubmission(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd)) != 0){
 			logger.info("已报送的月报，不再生成报送数据！");
 			return;
 		}
@@ -193,9 +192,8 @@ public class SvrMonthCollectInterf extends BaseService{
 	 * @return
 	 */
 	public Map<String,Map<String,Map<String,ChbMonthCollect>>> getList(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
-		Date batchEndDate = this.getFirstDayOfNextMonth(DateUtil.format(batchDateEnd));
 		//汇总  总、净销售金额
-		List<ChbMonthCollect> listAmountTotal = svrMonthCollectInterfMapper.selectAmountTotal(DateUtil.format(batchDateStart),DateUtil.format(batchEndDate));
+		List<ChbMonthCollect> listAmountTotal = svrMonthCollectInterfMapper.selectAmountTotal(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 			//获取check表的
 			List<ChbMonthCollect> registList = svrMonthCollectInterfMapper.selectHolderNumCheck(DateUtil.format(batchDateEnd));
 			//报送表去除check表中识别标识相等的数据后再与check表合并
@@ -260,19 +258,34 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setSaleSharesTotal(a.getSaleSharesTotal());
 				holderTypeCollect.put(falg, bb);
 			}else{
+				if(a.getSaleSharesTotal() != null) {
+					if(holderTypeCollect.get(falg).getSaleSharesTotal() != null) {
+						holderTypeCollect.get(falg).setSaleSharesTotal(holderTypeCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
+					}else{
+						holderTypeCollect.get(falg).setSaleSharesTotal(a.getSaleSharesTotal());
+					}
+				}
+				if(a.getValueSharesTotal() != null){
+					if(holderTypeCollect.get(falg).getValueSharesTotal() != null) {
+						holderTypeCollect.get(falg).setValueSharesTotal(holderTypeCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
+					}else{
+						holderTypeCollect.get(falg).setValueSharesTotal(a.getValueSharesTotal());
+					}
+				}
 				if(a.getSaleAmountTotal() != null) {
-					holderTypeCollect.get(falg).setSaleAmountTotal(holderTypeCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					if(holderTypeCollect.get(falg).getSaleAmountTotal() != null) {
+						holderTypeCollect.get(falg).setSaleAmountTotal(holderTypeCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					}else{
+						holderTypeCollect.get(falg).setSaleAmountTotal(a.getSaleAmountTotal());
+					}
 				}
 				if(a.getValueAmountTotal() != null){
-				holderTypeCollect.get(falg).setValueAmountTotal(holderTypeCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					if(holderTypeCollect.get(falg).getValueAmountTotal() != null) {
+						holderTypeCollect.get(falg).setValueAmountTotal(holderTypeCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					}else{
+						holderTypeCollect.get(falg).setValueAmountTotal(a.getValueAmountTotal());
+					}
 				}
-				if(a.getValueSharesTotal() != null) {
-					holderTypeCollect.get(falg).setValueSharesTotal(holderTypeCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
-				}
-				if(a.getSaleSharesTotal() != null){
-					holderTypeCollect.get(falg).setSaleSharesTotal(holderTypeCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
-				}
-				if(List.size() != 0) {
 					if (a.getBalanceAmt() != null) {
 						if(holderTypeCollect.get(falg).getBalanceAmt() != null) {
 							holderTypeCollect.get(falg).setBalanceAmt(holderTypeCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
@@ -287,7 +300,6 @@ public class SvrMonthCollectInterf extends BaseService{
 							holderTypeCollect.get(falg).setBalanceShares(a.getBalanceShares());
 						}
 					}
-				}
 			}
 		}
 		//赋值投资者数量
@@ -479,16 +491,32 @@ public class SvrMonthCollectInterf extends BaseService{
 				areaCollect.put(falg, bb);
 			}else{
 				if(a.getSaleSharesTotal() != null) {
-					areaCollect.get(falg).setSaleSharesTotal(areaCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
+					if(areaCollect.get(falg).getSaleSharesTotal() != null) {
+						areaCollect.get(falg).setSaleSharesTotal(areaCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
+					}else{
+						areaCollect.get(falg).setSaleSharesTotal(a.getSaleSharesTotal());
+					}
 				}
 				if(a.getValueSharesTotal() != null){
-					areaCollect.get(falg).setValueSharesTotal(areaCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
+					if(areaCollect.get(falg).getValueSharesTotal() != null) {
+						areaCollect.get(falg).setValueSharesTotal(areaCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
+					}else{
+						areaCollect.get(falg).setValueSharesTotal(a.getValueSharesTotal());
+					}
 				}
 				if(a.getSaleAmountTotal() != null) {
-					areaCollect.get(falg).setSaleAmountTotal(areaCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					if(areaCollect.get(falg).getSaleAmountTotal() != null) {
+						areaCollect.get(falg).setSaleAmountTotal(areaCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					}else{
+						areaCollect.get(falg).setSaleAmountTotal(a.getSaleAmountTotal());
+					}
 				}
 				if(a.getValueAmountTotal() != null){
-					areaCollect.get(falg).setValueAmountTotal(areaCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					if(areaCollect.get(falg).getValueAmountTotal() != null) {
+						areaCollect.get(falg).setValueAmountTotal(areaCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					}else{
+						areaCollect.get(falg).setValueAmountTotal(a.getValueAmountTotal());
+					}
 				}
 					if (a.getBalanceAmt() != null) {
 						if(areaCollect.get(falg).getBalanceAmt() != null) {
@@ -694,17 +722,33 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setSaleSharesTotal(a.getSaleSharesTotal());
 				institutionCollect.put(falg, bb);
 			}else{
-				if(a.getValueSharesTotal() != null) {
-					institutionCollect.get(falg).setValueSharesTotal(institutionCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
+				if(a.getSaleSharesTotal() != null) {
+					if(institutionCollect.get(falg).getSaleSharesTotal() != null) {
+						institutionCollect.get(falg).setSaleSharesTotal(institutionCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
+					}else{
+						institutionCollect.get(falg).setSaleSharesTotal(a.getSaleSharesTotal());
+					}
 				}
-				if(a.getSaleSharesTotal() != null){
-					institutionCollect.get(falg).setSaleSharesTotal(institutionCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
+				if(a.getValueSharesTotal() != null){
+					if(institutionCollect.get(falg).getValueSharesTotal() != null) {
+						institutionCollect.get(falg).setValueSharesTotal(institutionCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
+					}else{
+						institutionCollect.get(falg).setValueSharesTotal(a.getValueSharesTotal());
+					}
 				}
 				if(a.getSaleAmountTotal() != null) {
-					institutionCollect.get(falg).setSaleAmountTotal(institutionCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					if(institutionCollect.get(falg).getSaleAmountTotal() != null) {
+						institutionCollect.get(falg).setSaleAmountTotal(institutionCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					}else{
+						institutionCollect.get(falg).setSaleAmountTotal(a.getSaleAmountTotal());
+					}
 				}
 				if(a.getValueAmountTotal() != null){
-					institutionCollect.get(falg).setValueAmountTotal(institutionCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					if(institutionCollect.get(falg).getValueAmountTotal() != null) {
+						institutionCollect.get(falg).setValueAmountTotal(institutionCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					}else{
+						institutionCollect.get(falg).setValueAmountTotal(a.getValueAmountTotal());
+					}
 				}
 					if (a.getBalanceAmt() != null) {
 						if(institutionCollect.get(falg).getBalanceAmt() != null) {
