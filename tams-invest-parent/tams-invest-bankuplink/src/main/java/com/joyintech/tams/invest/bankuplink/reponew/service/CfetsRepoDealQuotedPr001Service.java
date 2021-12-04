@@ -617,6 +617,7 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
      * @return
      */
     public List<SelectOptionDto> getSecAcctId(Map<String, Object> map) {
+        map.put("tradeMarket",BussinessDictCodeList.交易场所_银行间.getValue());
         List<SuggestDto> tempList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrNewStock/getSecAcctId",map, SuggestDto.class);
         List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
         if (!StringUtil.isEmptyList(tempList)) {

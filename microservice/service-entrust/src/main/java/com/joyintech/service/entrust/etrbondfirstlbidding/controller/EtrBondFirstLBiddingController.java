@@ -226,7 +226,7 @@ public class EtrBondFirstLBiddingController {
     @DTXTransaction
     @PostMapping("doBack")
     public void doBack(@RequestBody EtrBondFirstLBiddingDto dto){
-        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
+        WFlowCommonService.doBackFlowExecute(dto.getWorkflowId(), dto.getEntrustId());
     }
     /**
      * 

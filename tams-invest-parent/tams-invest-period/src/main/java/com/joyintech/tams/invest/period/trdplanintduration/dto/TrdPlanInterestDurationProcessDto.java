@@ -60,7 +60,8 @@ public class TrdPlanInterestDurationProcessDto extends TrdPlanInterestDurationDt
             if (getCashType() != null && getCashType().contains(DictCodeList.现金流类型_中间还本.getValue())) {
                 return DictCodeListExt1.平安业务类型_计划类资产_利率型_中间还本.getCodeName();
             }
-            else if (getCashType() != null && getCashType().contains(DictCodeList.现金流类型_到期还本.getValue())) {
+            else if (getCashType() != null && (getCashType().contains(DictCodeList.现金流类型_到期还本.getValue())
+            || getCashType().contains(DictCodeList.现金流类型_到期收息.getValue()))) {
                 return DictCodeListExt1.平安业务类型_计划类资产_利率型_到期.getCodeName();
             }
             else {
@@ -78,7 +79,8 @@ public class TrdPlanInterestDurationProcessDto extends TrdPlanInterestDurationDt
             if (getCashType() != null && getCashType().contains(DictCodeList.现金流类型_中间还本.getValue())) {
                 return DictCodeListExt1.平安业务类型_计划类资产_利率型_中间还本.getValue();
             }
-            else if (getCashType() != null && getCashType().contains(DictCodeList.现金流类型_到期还本.getValue())) {
+            else if (getCashType() != null && (getCashType().contains(DictCodeList.现金流类型_到期还本.getValue()))
+            || getCashType().contains(DictCodeList.现金流类型_到期收息.getValue())) {
                 return DictCodeListExt1.平安业务类型_计划类资产_利率型_到期.getValue();
             }
             else {

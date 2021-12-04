@@ -73,6 +73,13 @@ public interface EtrExchangeTradeMapper {
      */
     List<SelectOptionDto> getSecAcctId(Map<String, Object> param);
 
+	/**
+	 *质押券代码下拉框查询
+	 * @param param
+	 * @return
+	 */
+	List<SelectOptionDto> selectZyq(Map<String, Object> param);
+
     /**
      * 获取债券基本信息
      * 
@@ -114,6 +121,20 @@ public interface EtrExchangeTradeMapper {
      * @return
      */
     String getInvAim();
+
+	/**
+	 * 联动债券的投资目的
+	 * @param map
+	 * @return
+	 */
+	String linkInvAim(Map<String, Object> map);
+
+	/**
+	 * 联动债券的投资目的-查询当日委托
+	 * @param map
+	 * @return
+	 */
+	String linkInvAimEtr(Map<String, Object> map);
 
     /**
      * 对手方交易商联想文本框初始化。

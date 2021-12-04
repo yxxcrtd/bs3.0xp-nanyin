@@ -48,7 +48,7 @@
         <module>../../microservice/service-period</module>
         <module>../../microservice/service-portfolio</module>
         <module>../../microservice/service-product</module>
-        <module>../../microservice/service-quote</module>
+        <module>../../microservice/service-quote-new</module>
         <module>../../microservice/service-report</module>
         <module>../../microservice/service-risk</module>
 		<module>../../microservice/service-risk-redis</module>

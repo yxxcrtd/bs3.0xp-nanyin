@@ -190,8 +190,8 @@ $(function () {
             cellMinWidth : 100,
     		cols: [
                {field:'taxClassStr',sortable:'taxClass',width:150, title: '增值税品种', sort: true},
-               {field:'channelId',width:150, title: '通道代码', sort: true},
-               {field:'channelName',width:150, title: '通道名称', sort: true},
+               {field:'channelId',visible: false,width:150, title: '通道代码', sort: true},
+               {field:'channelName',visible: false,width:150, title: '通道名称', sort: true},
                {field:'portfolioId',width:150, title: '组合代码', sort: true},
                {field:'profitType',visible: false},
                {field:'finprodId',visible: false},
@@ -349,7 +349,7 @@ $(function () {
 	//提交 zou
 	var docommit = function(object){
        Joyin.ajaxJson(basePath + 'invest/product/paythevatquery/PayTheVatQuery002/check', object, function(result) {
-           WorkFlow.doSubmitList(basePath + 'invest/product/paythevatquery/PayTheVatQuery002/docommit', 
+           WorkFlow.doSubmitList(basePath + 'invest/product/paythevatquery/PayTheVatQuery002/docommit',
                    object, "FinproductPayTheVatQuery002_btn_submit",null,function(data){
                    var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
@@ -386,7 +386,7 @@ $(function () {
                editOption: {type: 'select', multiple: false, searchable: false, showField: 'text', result: YES_NO}
            }
            , {field: 'payTypeText', width: 130, title: 'BussTrdTransferOrder.payType', sortable: false, sortable: false}
-           , {field: 'settleDateText', width: 130, title: 'BussTrdTransferOrder.settleDate', sortable: false}
+           , {field: 'settleDateText', width: 130, title: 'BussTrdTransferOrder.payDate', sortable: false}
            , {field: 'settleAmt', width: 130, title: 'BussTrdTransferOrder.settleAmt', type: 'money', sortable: false}
            , {field: 'ccyText', width: 130, title: 'BussTrdTransferOrder.ccy', sortable: false}
            , {
@@ -756,105 +756,126 @@ $(function () {
         //绑定联动
         linkBind();
         //绑定删除事件
-        
-        //绑定提交事件
-        $('#FinproductPayTheVatQuery002_btn_submit').click(function(){
+        // 保存按钮
+        $('#FinproductPayTheVatQuery002_btn_save').click(saveAction);
+        // 提交按钮
+        $('#FinproductPayTheVatQuery002_btn_submit').click(submitAction);
+
+        function saveAction(){
+            saveOrSubmitAction('save');
+        };
+
+        function submitAction(){
+            saveOrSubmitAction('submit');
+        };
+        //绑定保存提交事件
+        function   saveOrSubmitAction(operateType) {
             // add by jiangpeng on 20210512 ZGBSSE-363
             //校验是否修改了纳税结束日
-            if(isPayTaxMDateChange()) {
+            if (isPayTaxMDateChange()) {
                 Joyin.error("纳税结束日发生调整，请重新查询!");
                 return;
             }
             // add by jiangpeng on 20210512 ZGBSSE-363
-        	// 检查生成划款指令参数是否发生变化
+            // 检查生成划款指令参数是否发生变化
             if (isCalcConditionChanged()) {
                 return;
             }
-            
+
             if (table != null && table != '') {
-            	var datas = table.getAllCheckedRows();
-                if(datas==null || datas.length<1){
-               		Joyin.alert("请选中数据进行操作!",2);
-                    return; 
-               	}
+                var datas = table.getAllCheckedRows();
+                if (datas == null || datas.length < 1) {
+                    Joyin.alert("请选中数据进行操作!", 2);
+                    return;
+                }
                 // modify by jiangpeng on 20210512 ZGBSSE-364
-                if($("#taxClass").val() == TAX_CLASS_02) {
+                if ($("#taxClass").val() == TAX_CLASS_02) {
                     var str = $('#channelId').select2('data')[0].object.split(',');
                     var payType = str[1];//划款方式
-                    if(payType == PAY_MODE_02) {
+                    if (payType == PAY_MODE_02) {
                         buildRemark();
                     }
                 }
                 // modify by jiangpeng on 20210512 ZGBSSE-364
-               var object = {};
-               if(datas[datas.length-1].portfolioName=='合计'){
-            	   datas.splice(datas.length-1, 1);
-               }
-               object.listpayTheVatQuery002TableDto = datas;
-               object.bussTrdTransferOrder = orderstable.getAllRows();
-               object.taxidenType = $.trim($('#taxidenType').val());
-               object.payTaxVDate = $.trim($('#payTaxVDate').val());
-               object.payTaxMDate = $.trim($('#payTaxMDate').val());
-               object.totleTradeId = $.trim($('#totleTradeId').val());
-               object.portfolioId = $.trim($('#portfolioId').val());
-               object.finprodId = $.trim($('#finprodId').val());
-               object.refundTaxVDate = $.trim($('#refundTaxVDate').val());
-               object.refundTaxMDate = $.trim($('#refundTaxMDate').val());
-               object.remark =  $.trim($('#remark').val());
-               object.taxClass = $.trim($('#taxClass').val());
-               object.operateType = "submit";
-               //获取纳税截止日的值，并赋给payment
-           	   if ($("#taxidenType").val() == '' || $("#taxidenType").val() == null){
-                   Joyin.alert("类型不可为空",2);
-                   return; 
-           	   } else if ($("#taxidenType").val()=='C12'){
-                   payment1 = $.trim($('#payTaxMDate').val());
-                   payment2 = $.trim($('#payTaxVDate').val());
-                   //为空时给提示
-                   if(payment2 == ''||payment2 == null){
-                       Joyin.alert("缴税日期不可为空",2);
-                       return;
-                   }
-               }else if ($("#taxidenType").val()=='C13'){
-                   payment1 = $.trim($('#refundTaxMDate').val());
-                   payment2 = $.trim($('#refundTaxVDate').val()); 
-                   //为空时给提示
-                   if(payment2 == ''||payment2 == null){
-                       Joyin.alert("退税日期不可为空",2);
-                       return;
-                   }
-               }
-               object.payment1 = payment1;
-               object.payment2 = payment2;
-               object.pageModel = pageModel;
-               object.portfolioId = $.trim($('#portfolioId').val());
-               if(object.taxClass == TAX_CLASS_02) {
-                   if($('#channelId').select2('data')[0].object) {
-                       var str = $('#channelId').select2('data')[0].object.split(',');
-                       object.payType = str[1]; 
-                   }
-                  object.channelId = $.trim($('#channelId').val());
-               } 
-               var ccy =$.trim($('#ccy').val());
-			   if(ccy=='' || ccy == null){
-				   Joyin.alert("请输入币种",2);
-                   return;          	   
-			   }
-               object.ccy = ccy;
+                var object = {};
+                if (datas[datas.length - 1].portfolioName == '合计') {
+                    datas.splice(datas.length - 1, 1);
+                }
+                object.listpayTheVatQuery002TableDto = datas;
+                object.bussTrdTransferOrder = orderstable.getAllRows();
+                object.taxidenType = $.trim($('#taxidenType').val());
+                object.payTaxVDate = $.trim($('#payTaxVDate').val());
+                object.payTaxMDate = $.trim($('#payTaxMDate').val());
+                object.totleTradeId = $.trim($('#totleTradeId').val());
+                object.portfolioId = $.trim($('#portfolioId').val());
+                object.finprodId = $.trim($('#finprodId').val());
+                object.refundTaxVDate = $.trim($('#refundTaxVDate').val());
+                object.refundTaxMDate = $.trim($('#refundTaxMDate').val());
+                object.remark = $.trim($('#remark').val());
+                object.taxClass = $.trim($('#taxClass').val());
+                object.operateType = operateType;//"submit";
+                //获取纳税截止日的值，并赋给payment
+                if ($("#taxidenType").val() == '' || $("#taxidenType").val() == null) {
+                    Joyin.alert("类型不可为空", 2);
+                    return;
+                } else if ($("#taxidenType").val() == 'C12') {
+                    payment1 = $.trim($('#payTaxMDate').val());
+                    payment2 = $.trim($('#payTaxVDate').val());
+                    //为空时给提示
+                    if (payment2 == '' || payment2 == null) {
+                        Joyin.alert("缴税日期不可为空", 2);
+                        return;
+                    }
+                } else if ($("#taxidenType").val() == 'C13') {
+                    payment1 = $.trim($('#refundTaxMDate').val());
+                    payment2 = $.trim($('#refundTaxVDate').val());
+                    //为空时给提示
+                    if (payment2 == '' || payment2 == null) {
+                        Joyin.alert("退税日期不可为空", 2);
+                        return;
+                    }
+                }
+                object.payment1 = payment1;
+                object.payment2 = payment2;
+                object.pageModel = pageModel;
+                object.portfolioId = $.trim($('#portfolioId').val());
+                if (object.taxClass == TAX_CLASS_02) {
+                    if ($('#channelId').select2('data')[0].object) {
+                        var str = $('#channelId').select2('data')[0].object.split(',');
+                        object.payType = str[1];
+                    }
+                    object.channelId = $.trim($('#channelId').val());
+                }
+                var ccy = $.trim($('#ccy').val());
+                if (ccy == '' || ccy == null) {
+                    Joyin.alert("请输入币种", 2);
+                    return;
+                }
+                object.ccy = ccy;
                 // 校验缴税日期与产品账套日期
-                Joyin.ajaxJson(basePath +'invest/product/paythevatquery/PayTheVatQuery002/checkdate', object, function(result) {
-                		if(!result != null){
-                             //Joyin.alert("返回值为空 ",2);
-                             docommit(object);
-                         }
-                     });              
-            }else{
-                Joyin.alert("列表无数据，请确认后重新输入！",2);
+                Joyin.ajaxJson(basePath + 'invest/product/paythevatquery/PayTheVatQuery002/checkdate', object, function (result) {
+                        if(operateType === 'save') {
+                            //Joyin.alert("返回值为空 ",2);
+                            WorkFlow.doSaveList(basePath + 'invest/product/paythevatquery/PayTheVatQuery002/docommit',
+                                object, "FinproductPayTheVatQuery002_btn_save",null,function(data){
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
+                                });                             }
+                        else {
+                            //Joyin.alert("返回值为空 ",2);
+                            WorkFlow.doSubmitList(basePath + 'invest/product/paythevatquery/PayTheVatQuery002/docommit',
+                                object, "FinproductPayTheVatQuery002_btn_submit",null,function(data){
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
+                                });
+                        }
+                });
+            } else {
+                Joyin.alert("列表无数据，请确认后重新输入！", 2);
                 //Joyin.error(JoyinUtil.getMessage("列表无数据，请确认后重新输入！"));
                 return;
             }
-            
-        });
+        }
         // ZGBUGTWO-109 产品缴纳增值税退回后重新提交提示需要生产指令 add by lizhi 20200712 start
         if (pageModel != PAGE_MODEL_REFERENCE) {
 			calcConditionObjBackUp = stlCommandInput();

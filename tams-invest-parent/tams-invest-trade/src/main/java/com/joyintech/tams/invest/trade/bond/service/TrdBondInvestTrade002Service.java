@@ -57,6 +57,7 @@ import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.trade.BaseTradeProductDealService;
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
@@ -327,6 +328,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     @Autowired
     private FileAttachmentProcess fileAttachmentProcess;
+
+    @Autowired
+    private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
 
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
@@ -648,6 +652,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         trdDealTotalAdd.setLendinFpriceAmt2(dto.getIntegrateIntAmt() == null ? BigDecimal.ZERO : dto.getIntegrateIntAmt());
         trdDealTotalAdd.setAssetRecommandOrg(dto.getAssetRecommandOrg());
         trdDealTotalAdd.setEntrustId(dto.getEntrustId());
+        trdDealTotalAdd.setDeviation(dto.getDeviation());
         return trdDealTotalAdd;
     }
 
@@ -1932,9 +1937,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                         copyFileInfoByFileNo(uploadFile.getFileNo(), 反向交易编号);
                     }
                 }
+            }
 
-
-
+            //成交录单---调用共通
+            if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
+                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),trdFinProductDealTotal.getTotleTradeId(),operationType);
             }
         }
         // 撤销
@@ -1987,6 +1994,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             }
             /**add by sunhui 20210721 重庆银行：一级债缴款后撤销重新占用中标维护占用的头寸   end**/
 
+            //成交录单---调用共通
+
+            exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),OperationType.REVOKE);
+
         }
         // 如果中标结果进来 add by gejiaao 2019年8月6日 start
 //        if (StringUtil.isNotEmpty(entity.getBondFirstSign())) {
@@ -2011,6 +2022,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
         }
         // 增加调动接口 by 赵东东 20191206 end
+
     }
 
     private List<TrdTradeFeeTotal> getTrdTradeFeeDetails(TrdBondInvestTradeDto entity) {

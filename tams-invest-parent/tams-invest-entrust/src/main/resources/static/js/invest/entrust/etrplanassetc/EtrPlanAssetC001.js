@@ -5,12 +5,12 @@
     /**
      * 获取查询参数
      */
-    var searchform =function(){ 
-       var data = $.serializeToObject('#searchForm');
-       if($('#assetType1').val()){
-           data.assetType1 = $('#assetType1').val().join(",");
-       }
-      /* 添加三-四级分类查询参数 lishuping 2019/7/29 start*/
+    var searchform =function(){
+        var data = $.serializeToObject('#searchForm');
+        if($('#assetType1').val()){
+            data.assetType1 = $('#assetType1').val().join(",");
+        }
+        /* 添加三-四级分类查询参数 lishuping 2019/7/29 start*/
         if($('#assetType10').val()){
             data.assetType10 = $('#assetType10').val().join(",");
         }
@@ -18,12 +18,12 @@
             data.assetType11 = $('#assetType11').val().join(",");
         }
         /* 添加三-四级分类查询参数 lishuping 2019/7/29 end*/
-       if($('#portfolioId').val()){
-           data.portfolioId = $('#portfolioId').val().join(",");
-       }
-       return data;
+        if($('#portfolioId').val()){
+            data.portfolioId = $('#portfolioId').val().join(",");
+        }
+        return data;
     };
-    /** 
+    /**
      * 新建
      */
     function showDialog() {
@@ -44,9 +44,9 @@
             data.operateType = "dblclick";
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("EtrPlanAssetC002.refence"),
-                    JoyinUtil.getRealPath("invest/entrust/etrplanassetc/EtrPlanAssetC002/init"),
-                    "98%", "95%", data,
-                    function(){table.reload();});
+                JoyinUtil.getRealPath("invest/entrust/etrplanassetc/EtrPlanAssetC002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
         },
         cols:[
             {field:'entrustStatus',visible:false}
@@ -84,10 +84,15 @@
             ,{field:'busEntrustAmt',type:'number', title: 'EtrPlanAssetC001.entrustAmt', width:'10%',sortField:"entrustAmt"}
             ,{field:'finishAmt',type:'number', title: 'EtrPlanAssetC001.finishAmt', width:'10%',sortField:"finishAmt"}
             ,{field:'transactioncom', title: 'EtrPlanAssetC001.transactioncom',render : function(data, type, row, meta){
-                return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.finishAmt/row.busEntrustAmt*100).toFixed(2)+"%'><span class='layui-progress-text'>"+(row.finishAmt/row.busEntrustAmt*100).toFixed(2)+"%</span></div></div>";
-            }, width:'10%',sortable:false}
+                    var transactioncom = 0;
+                    if(row && row.busEntrustAmt > 0){
+                        transactioncom=row.finishAmt/row.busEntrustAmt*100;
+                    }
+                    return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.finishAmt/row.busEntrustAmt*100).toFixed(2)+"%'><span class='layui-progress-text'>"+(transactioncom).toFixed(2)+"%</span></div></div>";
+                }, width:'10%',sortable:false}
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:'10%' ,sortable:false}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit'] , width:'10%'}
-            ],
+        ],
     });
     /**
      * 导出
@@ -104,9 +109,9 @@
         data.pageModel=PAGE_MODEL_EDIT;
         Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC001/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrPlanAssetC002.edit"),
-                    JoyinUtil.getRealPath("invest/entrust/etrplanassetc/EtrPlanAssetC002/init"),
-                    "98%", "95%", data,
-               function(){table.reload();});
+                JoyinUtil.getRealPath("invest/entrust/etrplanassetc/EtrPlanAssetC002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
         });
     });
     /**
@@ -127,8 +132,8 @@
      */
     table.bind('click','.portfolioIdLink', function(row) {
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-                "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+            basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+            "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                 portfolioId:row.portfolioId});//主键组合代码
     });
     /**
@@ -137,15 +142,15 @@
     table.bind('click','.finprodIdLink', function(row) {
         //在新建界面进行显示单行的详细信息
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                 basePath
-                + "invest/asset/plan/plancur/FinPlanAssetC002/init",
-                "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
-                                finprodId:row.finprodId,  //金融产品代码
-                                //valDate:data.valDate,//估值日
-                                //finprodMarketId:data.finprodMarketId//市场代码
-                                });
+            basePath
+            + "invest/asset/plan/plancur/FinPlanAssetC002/init",
+            "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                finprodId:row.finprodId,  //金融产品代码
+                //valDate:data.valDate,//估值日
+                //finprodMarketId:data.finprodMarketId//市场代码
+            });
     });
-    // add by zhangpuyu 2020/1/2 start 
+    // add by zhangpuyu 2020/1/2 start
     // 导入按钮点击事件
     $('#EtrPlanAssetC001_btn_import').click(function() {
         Joyin.uploadFile({pageId : 'EtrPlanAssetC003MTM'}, function(fileName) {
@@ -169,7 +174,7 @@
             table.reload();
         });
     });
-    // add by zhangpuyu 2020/1/2 end 
+    // add by zhangpuyu 2020/1/2 end
     /**
      * 编辑按钮事件
      */
@@ -200,25 +205,49 @@
         $('#EtrPlanAssetC001_btn_close').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }
+            }
+            for(var i=0; i<selArr.length; i++){
+                if(selArr[i].entrustStatusStr == '待接收'){
+                    Joyin.error('不能对待接收的数据进行关闭操作');
+                    return;
+                }
+                if(selArr[i].entrustStatusStr == '已关闭'){
+                    Joyin.error('已关闭状态的数据不允许再次关闭');
+                    return;
+                }
+                if(selArr[i].entrustStatusStr == '流程中'){
+                    Joyin.error('不能对流程中的数据进行关闭操作');
+                    return;
+                }
+                if(selArr[i].busEntrustStatus == '待接收'){
+                    Joyin.error('不能对待接收的数据进行关闭操作');
+                    return;
+                }
+                if(selArr[i].busEntrustStatus == '已关闭'){
+                    Joyin.error('已关闭状态的数据不允许再次关闭');
+                    return;
+                }
+                if(selArr[i].busEntrustStatus == '流程中'){
+                    Joyin.error('不能对流程中的数据进行关闭操作');
+                    return;
+                }
+            }
 //            else if(selArr && selArr.length>1){
 //                 Joyin.error(JoyinUtil.getMessage("ETR_COM_X"));
 //                 return;
-//             } 
-            else {
-                var object = {selectedItem: selArr, operateType:"close"};
-                Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC001/check', object, function(result) {
-                    Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
-                        Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC001/close', object, function(result) {
-                            table.reload();
-                        });
+//             }
+            var object = {selectedItem: selArr, operateType:"close"};
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC001/check', object, function(result) {
+                Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetc/EtrPlanAssetC001/close', object, function(result) {
+                        table.reload();
                     });
                 });
-             }
+            });
         });
         /**
          * 撤销
@@ -226,11 +255,11 @@
         $('#EtrPlanAssetC001_btn_revoke').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }
+            }
 //            else if(selArr && selArr.length>1){
 //                 Joyin.error(JoyinUtil.getMessage("ETR_COM_X"));
 //                 return;
@@ -244,13 +273,13 @@
                         });
                     });
                 });
-             }
+            }
         });
         //是否展示资产四五级分类
         if(IS_SHOW_TYPE == '01'){
-        	$('#assetType11Div').show();
+            $('#assetType11Div').show();
         }else{
-        	$('#assetType11Div').hide();
+            $('#assetType11Div').hide();
         }
     });
 }());

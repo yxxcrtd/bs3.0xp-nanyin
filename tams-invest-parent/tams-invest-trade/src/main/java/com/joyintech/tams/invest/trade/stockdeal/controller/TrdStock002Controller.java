@@ -129,6 +129,10 @@ public class TrdStock002Controller extends BaseController {
         String workflowStatus = this.getParam("workflowStatus");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String entrustId = this.getParam("entrustId");
+
+		//获取成交匹配录单
+		String tranRecord = this.getParam("tranRecord");
+
 //        String validStatus = this.getParam("validStatus");
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
@@ -169,6 +173,10 @@ public class TrdStock002Controller extends BaseController {
         		}
             }
         }
+        //成交匹配录单
+        else if(StringUtil.isNotEmpty(tranRecord)) {
+        	dto = JsonUtils.json2Object(tranRecord,TrdStockDto.class);
+		}
         dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
         if (StringUtil.isNotBlank(tradeId)) {
             model.addAttribute("tradeId", tradeId);

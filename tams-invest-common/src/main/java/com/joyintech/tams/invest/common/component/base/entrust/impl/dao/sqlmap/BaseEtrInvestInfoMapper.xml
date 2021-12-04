@@ -81,6 +81,15 @@
 		from ETR_PLEDGE
 		where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
 	</select>
+	<select id="selectWflEtrPledgeByPrimaryKey" resultMap="EtrPledgeMap"
+			parameterType="com.joyintech.tams.common.base.entity.EtrPledgeKey">
+		select
+			ENTRUST_ID , FINPROD_ID , PLEDGE_FACE_VALUE ,
+			PLEDGE_NUMBER , PLEDGE_RATIO , PLEDGE_AMT , CREATE_USER ,
+			CREATE_DEPT , CREATE_TIME , UPDATE_USER , UPDATE_TIME
+		from WFL_ETR_PLEDGE
+		where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+	</select>
 	<select id="selectAllEtrDistribute" resultMap="EtrDistributeMap">
 		select
 		ENTRUST_ID , TRADER , REC_STATUS , TRADING_HEADER ,

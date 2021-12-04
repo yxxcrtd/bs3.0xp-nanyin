@@ -78,7 +78,7 @@
         }
         //面值
         ,{field : 'faceValue', visible:false }
-        ,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['edit'],
+        ,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['edit'],visible:false,
                 render: function (data, type, row, meta) {
                     //实际交易组合无子组合交易明细
                     if(row.investYesorno =='Y'){
@@ -86,7 +86,9 @@
                     }
                     return '<i class="btn layui-icon detail" data-ignore="true" title="明细">&#xe60a;</i>';
                 }
-    }],
+    }
+
+    ],
         editCell : function(value, row, field, cell, column) {
             if (field == 'tradeAmt') {
                 if (!value) {

@@ -186,6 +186,12 @@
             <if test="pageModel != null and pageModel != '2' and pageModel != ''">
                 AND C.FINPROD_ID IS NULL
             </if>
+            <if test="pageId != null and pageId == 'TrdBondMarketTradeIb001'">
+                AND A.TRADE_MARKET in ('01','05')
+            </if>
+            <if test="pageId != null and pageId == 'TrdBondMarketTradeEx001'">
+                AND A.TRADE_MARKET in ('03','04')
+            </if>
         </where>
         
         UNION
@@ -216,6 +222,12 @@
             </if>
             <if test="tradeMarket != null and tradeMarket != ''">
                 AND A.MARKET2 = #{tradeMarket}
+            </if>
+            <if test="pageId != null and pageId == 'TrdBondMarketTradeIb001'">
+                AND A.MARKET2 in ('01','05')
+            </if>
+            <if test="pageId != null and pageId == 'TrdBondMarketTradeEx001'">
+                AND A.MARKET2 in ('03','04')
             </if>
         </where>
     </select>

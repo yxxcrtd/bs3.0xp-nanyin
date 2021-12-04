@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,6 +56,9 @@ public class SettleCommonService {
 
     @Value("${application.micorservice.contextPath.commonService:http://commonService}")
 	private String commonServiceName;
+
+	@Autowired(required = false)
+	private FinProductMapper finProductMapper;
 
     // 数据清算附属信息（核算信息）全量获取
 	public Map<String, List<StlDownDataDealAccountInfoDto>> getAllStlDownDataDealAccountInfoDtoList(boolean isNeedSeatNumber) {
@@ -126,7 +131,7 @@ public class SettleCommonService {
 
 	/**
 	 * 生成业务编号
-	 * @param commonBusinessType 共通业务类型
+	 * @param dictCodeList 共通业务类型
 	 * @return 业务编号
 	 * @throws Exception
 	 */
@@ -152,7 +157,7 @@ public class SettleCommonService {
 
     /**
      * 生成业务编号
-     * @param commonBusinessType 共通业务类型
+     * @param seqno 共通业务类型
      * @return 业务编号
      * @throws Exception
      */
@@ -172,4 +177,13 @@ public class SettleCommonService {
 		}
 
     }
+
+	/**
+	 * 根据金融产品代码查询金融产品信息
+	 * @param finprodId 金融产品代码
+	 * @return 金融产品信息
+	 */
+	public FinProduct selectFinProduct(String finprodId) {
+		return finProductMapper.selectByPrimaryKey(finprodId);
+	}
 }

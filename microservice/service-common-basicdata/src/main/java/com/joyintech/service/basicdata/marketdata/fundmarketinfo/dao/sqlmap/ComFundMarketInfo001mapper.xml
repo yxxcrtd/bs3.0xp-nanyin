@@ -18,7 +18,8 @@
 		A.BUY_ONE_PRICE AS buyOnePrice,
 		A.SELL_ONE_PRICE AS sellOnePrice,
 		B.FINPROD_ABBR AS fundName,
-		C.TYPE_1 AS fundType
+		C.TYPE_1 AS fundType,
+		wfl.PROCESS_STATE as processState
 		FROM
 		mst_FUND_MARKET_INFO A
 		LEFT JOIN
@@ -29,6 +30,8 @@
 		FIN_PRODUCT_TYPE C
 		ON
 		C.FINPROD_ID = B.FINPROD_ID
+		LEFT JOIN SYS_WFL_BUSINESS_LIST wfl on wfl.trade_id=B.FINPROD_ID AND PAGE_ID ='ComFundMarketInfo002' AND BUSINESS_TYPE = 'MST28'
+		 AND BUSINESS_TYPE = 'MST28' AND ACTION_TYPE IN ( 'modify', 'delete' )  AND PROCESS_STATE='ING'
 		WHERE
 		1=1
 		<if test="finprodType !=null and finprodType !='' ">

@@ -203,4 +203,16 @@ public class EtrSecLendController {
     public Map<String, Object> getAssetAvailablePosition(@RequestBody Map<String, Object> param) {
         return etrSecLendService.getAssetAvailablePosition(param);
     }
+
+
+    /**
+     * 退回更新流程,删除流水
+     * @param dto
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doBackFlow")
+    public void doBackFlow(@RequestBody EtrSecLendDto dto) {
+        etrSecLendService.doBackFlow(dto);
+    }
 }

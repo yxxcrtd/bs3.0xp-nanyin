@@ -164,11 +164,11 @@ public class TrdPlanCcyInvestTrade002Service extends BaseService<TrdPlanCcyInves
                             ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/getSysDateMark?workflowId="+ entity.getWorkflowId(),
                             String.class);
                     confirmDto.setCreateUser(createUser);
-            		try {
-            			WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(),"","", confirmDto.getCreateUser(),OperationType.NEW,false,confirmDto);
-            		}catch (Exception e) {
-                        logger.error(e.getMessage(),e);
-            		}
+//            		try {
+//            			WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(),"","", confirmDto.getCreateUser(),OperationType.NEW,false,confirmDto);
+//            		}catch (Exception e) {
+//                        logger.error(e.getMessage(),e);
+//            		}
             		
             	}
             }

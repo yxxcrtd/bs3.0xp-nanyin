@@ -116,15 +116,15 @@ public class TrdPlanRateInvestTrade001Controller extends BaseController{
         //add by yzg 是否查询资产减值清理交易 20201022 start
         model.addAttribute("IS_QUERY_ASSETS_LOSS", CacheUtil.getSysParam("IS_QUERY_ASSETS_LOSS"));
         //如果为是交易方向添加清理核销
-        if(StringUtil.equals(CacheUtil.getSysParam("IS_QUERY_ASSETS_LOSS"), "01")) {
- 	       SelectDto selectDto = getSelectDataFromDataDic(DictCode.交易方向,null);
- 	       SelectOptionDto selectOptionDto = new SelectOptionDto();
- 	       selectOptionDto.setId(DictCodeListExt3.交易方向_清理核销.getValue());
- 	       selectOptionDto.setText(DictCodeListExt3.交易方向_清理核销.getCodeName());
- 	       selectOptionDto.setCol(DictCode.交易方向.getValue());
- 	       selectDto.getOptions().add(selectOptionDto);
- 	       model.addAttribute(DictCode.交易方向.getValue(), JsonUtils.objectArray2Json(selectDto.getOptions().toArray()));
-        }
+//        if(StringUtil.equals(CacheUtil.getSysParam("IS_QUERY_ASSETS_LOSS"), "01")) {
+// 	       SelectDto selectDto = getSelectDataFromDataDic(DictCode.交易方向,null);
+// 	       SelectOptionDto selectOptionDto = new SelectOptionDto();
+// 	       selectOptionDto.setId(DictCodeListExt3.交易方向_清理核销.getValue());
+// 	       selectOptionDto.setText(DictCodeListExt3.交易方向_清理核销.getCodeName());
+// 	       selectOptionDto.setCol(DictCode.交易方向.getValue());
+// 	       selectDto.getOptions().add(selectOptionDto);
+// 	       model.addAttribute(DictCode.交易方向.getValue(), JsonUtils.objectArray2Json(selectDto.getOptions().toArray()));
+//        }
         //add by yzg 是否查询资产减值清理交易 20201022 end
         return super.init(model);
     }

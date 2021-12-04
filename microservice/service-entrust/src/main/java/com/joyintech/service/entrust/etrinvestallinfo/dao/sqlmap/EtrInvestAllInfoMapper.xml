@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper
-	namespace="com.joyintech.service.entrust.etrinvestallinfo.dao.EtrInvestAllInfoMapper">
+		namespace="com.joyintech.service.entrust.etrinvestallinfo.dao.EtrInvestAllInfoMapper">
 	<select id="getentrustId" resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT
 		PORTFOLIO_ID code,
@@ -17,7 +17,7 @@
 		</where>
 	</select>
 
-   <select id="getfinprodIdPub" resultType="com.joyintech.framework.select.SuggestDto">
+	<select id="getfinprodIdPub" resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT
 		FINPROD_MARKET_ID code,
 		FINPROD_MARKET_ID name,
@@ -26,14 +26,14 @@
 		FIN_PRODUCT.FINPROD_ID
 		FROM
 		FIN_PRODUCT
-		LEFT JOIN 
-			FIN_PRODUCT_TYPE
-		ON 
-			FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID
+		LEFT JOIN
+		FIN_PRODUCT_TYPE
+		ON
+		FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID
 		<where>
-		    FINPROD_TYPE2 in ('F01','F06','F10','F32')
+			FINPROD_TYPE2 in ('F01','F06','F10','F32')
 			<if test="finprodId != null and !finprodId.equals('')">
-			AND (FINPROD_MARKET_ID like concat('%',concat(#{finprodId},'%'))
+				AND (FINPROD_MARKET_ID like concat('%',concat(#{finprodId},'%'))
 				or FINPROD_ABBR like concat('%',concat(#{finprodId},'%')))
 			</if>
 			AND FIN_PRODUCT_TYPE.TYPE_8 IS NOT NULL
@@ -49,14 +49,14 @@
 		FIN_PRODUCT.FINPROD_ID
 		FROM
 		FIN_PRODUCT
-		LEFT JOIN 
-			FIN_PRODUCT_TYPE
-		ON 
-			FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID
+		LEFT JOIN
+		FIN_PRODUCT_TYPE
+		ON
+		FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID
 		<where>
-		    FINPROD_TYPE2 not in ('F01','F06','F10','F32')
+			FINPROD_TYPE2 not in ('F01','F06','F10','F32')
 			<if test="finprodId != null and !finprodId.equals('')">
-			AND (FINPROD_MARKET_ID like concat('%',concat(#{finprodId},'%'))
+				AND (FINPROD_MARKET_ID like concat('%',concat(#{finprodId},'%'))
 				or FINPROD_ABBR like concat('%',concat(#{finprodId},'%')))
 			</if>
 			AND FIN_PRODUCT_TYPE.TYPE_8 IS NOT NULL
@@ -64,22 +64,22 @@
 	</select>
 
 	<select id="select"
-		resultType="com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoDto">
+			resultType="com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoDto">
 		select * from (
-		SELECT 
+		SELECT
 		T1.ENTRUST_STATUS entrustStatus,
 		T1.ENTRUST_ID entrustId,
 		T1.PORTFOLIO_ID portfolioId,
 		T2.PORTFOLIO_NAME portfolioName,
 		CASE WHEN T4.ASSET_TYPE = 'F07' AND T1.PS IN('03','04') THEN T1.STOCK_ID ELSE T3.FINPROD_ID end finprodId,
-		CASE WHEN T4.ASSET_TYPE = 'F07' AND T1.PS IN('03','04') THEN T1.STOCK_ID ELSE T3.FINPROD_MARKET_ID end finprodMarketId, 
+		CASE WHEN T4.ASSET_TYPE = 'F07' AND T1.PS IN('03','04') THEN T1.STOCK_ID ELSE T3.FINPROD_MARKET_ID end finprodMarketId,
 		T3.FINPROD_TYPE2 finprodType2,
 		CASE WHEN T4.ASSET_TYPE = 'F07' AND T1.PS IN('03','04') AND T1.TRADE_MARKET NOT IN ('03','04')  AND T4.ASSET_TYPE1 = 'H01' THEN T1.FINPROD_ID ELSE T3.FINPROD_NAME end finprodName,
 		T1.PS ps,
-		CASE 
-		WHEN T4.ASSET_TYPE IN (#{ASSET_TYPE_16}) 
+		CASE
+		WHEN T4.ASSET_TYPE IN (#{ASSET_TYPE_16})
 		THEN (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'IRS_TYPE' AND ITEM_CODE = T4.BUSI_PS)
-		WHEN T4.ASSET_TYPE IN (#{ASSET_TYPE_07},#{ASSET_TYPE_10}, #{ASSET_TYPE_12},#{ASSET_TYPE_16}) 
+		WHEN T4.ASSET_TYPE IN (#{ASSET_TYPE_07},#{ASSET_TYPE_10}, #{ASSET_TYPE_12},#{ASSET_TYPE_16})
 		THEN (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'BACK_LEND_DIRECTION' AND ITEM_CODE = T4.BUSI_PS)
 		ELSE (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = 'PS' AND ITEM_CODE = T1.PS)
 		END AS psStr,
@@ -96,25 +96,26 @@
 		T1.entrust_Type entrustType,
 		T1.REMARK remark
 		,T4.PB_EXPORTSTATUS pbExportstatus/*PB是否已导出;PB上下行关联改造 add by caoxue 2019-12-27*/
-        <!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 start -->
-        ,SSAI.SEC_ACCT_NAME AS secAcctName
-        <!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 end -->
+		<!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 start -->
+		,SSAI.SEC_ACCT_NAME AS secAcctName
+		<!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 end -->
 		<!-- add by wanshiwei 2021-09-22 指令创建来源 start -->
 		,T4.ENTRUST_CREATE_SOURCE AS entrustCreateSource
 		<!-- add by wanshiwei 2021-09-22 指令创建来源 end -->
-		FROM ETR_ENTRUST T1 
+		,'' nextUser
+		FROM ETR_ENTRUST T1
 		LEFT JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
 		LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
 		<!-- INNER JOIN PTL_PORTFOLIO_AUTHORITY T6
 		ON
 		T2.PORTFOLIO_ID = T6.PORTFOLIO_ID -->
 		LEFT JOIN ETR_ENTRUST_ADD T4 ON T4.ENTRUST_ID = T1.ENTRUST_ID
-        <!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 start -->
-        LEFT JOIN
-            STL_SEC_ACCT_INFO SSAI
-        ON
-            T4.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
-        <!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 end -->
+		<!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 start -->
+		LEFT JOIN
+		STL_SEC_ACCT_INFO SSAI
+		ON
+		T4.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
+		<!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 end -->
 		INNER JOIN
 		PTL_PORTFOLIO_AUTHORITY T6
 		ON
@@ -124,97 +125,97 @@
 			AND T6.USER_ID = #{userId}
 			<!-- AND T6.USER_ID = #{userId}
 			AND T1.INV_MANAGER_ID=#{userId} -->
-		<!-- <if test="portfolioId != null and !portfolioId.equals('')">
-			AND (T1.PORTFOLIO_ID like concat('%',concat(#{portfolioId},'%'))
-				OR T2.PORTFOLIO_NAME like concat('%',concat(#{portfolioId},'%')))
-		</if> -->
-		<if test="portfolioIdList != null and portfolioIdList.size() >0">
+			<!-- <if test="portfolioId != null and !portfolioId.equals('')">
+                AND (T1.PORTFOLIO_ID like concat('%',concat(#{portfolioId},'%'))
+                    OR T2.PORTFOLIO_NAME like concat('%',concat(#{portfolioId},'%')))
+            </if> -->
+			<if test="portfolioIdList != null and portfolioIdList.size() >0">
 				AND ((T2.PORTFOLIO_ID IN
-			<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
-				<if test="(index % 998) == 0">
-                            null) OR T2.PORTFOLIO_ID IN (
-                     </if>
-				#{prot,jdbcType=VARCHAR}
-			</foreach>)
-				    or
-			(T2.PARENT_PORTFOLIO_ID IN
-			<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
-				<if test="(index % 998) == 0">
-                            null) OR T2.PARENT_PORTFOLIO_ID IN (
-                     </if>
-				#{prot,jdbcType=VARCHAR}
-			</foreach>))
-		</if>
-		<if test="finprodType2List != null">
-			and T4.ASSET_TYPE in 
-			<foreach collection="finprodType2List" item="item" open="(" close=")" separator=",">
-				#{item}
-			</foreach>
-		</if>
-		<if test="finprodId != null and !finprodId.equals('')">
-		    and	(T3.FINPROD_MARKET_ID like concat('%',concat(#{finprodId},'%')) 
-				or T3.FINPROD_ABBR like concat('%',concat(#{finprodId},'%')))
-		</if>
-		<if test="tradeMarket != null and !tradeMarket.equals('')">
-			and #{tradeMarket} = T1.TRADE_MARKET
-		</if>
-		<if test="tradePlat != null and !tradePlat.equals('')">
-			and #{tradePlat} = T4.SETTLE_SPREED
-		</if>
-		<if test="ps != null and !ps.equals('')">
-			<!-- <if test="ps.equals(ps01) or ps.equals(ps02) or ps.equals(ps03) or ps.equals(ps04) or ps.equals(ps05) or ps.equals(ps06)">
-				and #{ps} = T4.BUSI_PS
-			</if>
-			<if test="!ps.equals(ps01) and !ps.equals(ps02) and !ps.equals(ps03) and !ps.equals(ps04) and !ps.equals(ps05) and !ps.equals(ps06)">
-				and #{ps} = T1.PS
-			</if> -->
-				AND (case
-					<if test="IRSType_01.equals(IRSps) or IRSType_02.equals(IRSps) or PS_T01.equals(ps)">
-					when  T4.ASSET_TYPE IN (#{ASSET_TYPE_16}) 
-					then  T4.BUSI_PS
+				<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
+					<if test="(index % 998) == 0">
+						null) OR T2.PORTFOLIO_ID IN (
 					</if>
-					<if test="!IRSType_01.equals(IRSps) and !IRSType_02.equals(IRSps)">
+					#{prot,jdbcType=VARCHAR}
+				</foreach>)
+				or
+				(T2.PARENT_PORTFOLIO_ID IN
+				<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
+					<if test="(index % 998) == 0">
+						null) OR T2.PARENT_PORTFOLIO_ID IN (
+					</if>
+					#{prot,jdbcType=VARCHAR}
+				</foreach>))
+			</if>
+			<if test="finprodType2List != null">
+				and T4.ASSET_TYPE in
+				<foreach collection="finprodType2List" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="finprodId != null and !finprodId.equals('')">
+				and	(T3.FINPROD_MARKET_ID like concat('%',concat(#{finprodId},'%'))
+				or T3.FINPROD_ABBR like concat('%',concat(#{finprodId},'%')))
+			</if>
+			<if test="tradeMarket != null and !tradeMarket.equals('')">
+				and #{tradeMarket} = T1.TRADE_MARKET
+			</if>
+			<if test="tradePlat != null and !tradePlat.equals('')">
+				and #{tradePlat} = T4.SETTLE_SPREED
+			</if>
+			<if test="ps != null and !ps.equals('')">
+				<!-- <if test="ps.equals(ps01) or ps.equals(ps02) or ps.equals(ps03) or ps.equals(ps04) or ps.equals(ps05) or ps.equals(ps06)">
+                    and #{ps} = T4.BUSI_PS
+                </if>
+                <if test="!ps.equals(ps01) and !ps.equals(ps02) and !ps.equals(ps03) and !ps.equals(ps04) and !ps.equals(ps05) and !ps.equals(ps06)">
+                    and #{ps} = T1.PS
+                </if> -->
+				AND (case
+				<if test="IRSType_01.equals(IRSps) or IRSType_02.equals(IRSps) or PS_T01.equals(ps)">
+					when  T4.ASSET_TYPE IN (#{ASSET_TYPE_16})
+					then  T4.BUSI_PS
+				</if>
+				<if test="!IRSType_01.equals(IRSps) and !IRSType_02.equals(IRSps)">
 					when  T4.ASSET_TYPE IN (#{ASSET_TYPE_07}, #{ASSET_TYPE_08}, #{ASSET_TYPE_10}, #{ASSET_TYPE_12})
 					then  T4.BUSI_PS
-					</if>
-					else  T1.PS
-					end) =#{ps}
-		</if>
+				</if>
+				else  T1.PS
+				end) =#{ps}
+			</if>
 			<if test="entrustStatusList != null">
 				AND T1.ENTRUST_STATUS in
 				<foreach collection="entrustStatusList" item="item" open="(" close=")" separator=",">
 					#{item}
 				</foreach>
 			</if>
-		<!--<if test="entrustStatus != null and !entrustStatus.equals('')">-->
+			<!--<if test="entrustStatus != null and !entrustStatus.equals('')">-->
 			<!--and #{entrustStatus} = T1.ENTRUST_STATUS-->
-		<!--</if>-->
-		<if test="startDate != null and !startDate.equals('')">
-			and to_date(#{startDate},'yyyy-MM-dd') &lt;= T1.VDATE
-		</if>
-		<if test="endDate != null and !endDate.equals('')">
-			and to_date(#{endDate},'yyyy-MM-dd') &gt;= T1.MDATE
-		</if>
-		<if test="etridList != null and etridList.size() >0">
-			and (T1.ENTRUST_ID in
-            <foreach collection="etridList" item="item" index= "index" open="(" close=")" separator="," >
-                <if test="(index % 998) == 0">
-                	null) or T1.ENTRUST_ID in (
-                </if>
-                #{item}
-            </foreach>)
-		</if>
-		<if test="pbExportstatus != null and !pbExportstatus.equals('')">
-		 	and (#{pbExportstatus} = T4.PB_EXPORTSTATUS
+			<!--</if>-->
+			<if test="startDate != null and !startDate.equals('')">
+				and to_date(#{startDate},'yyyy-MM-dd') &lt;= T1.VDATE
+			</if>
+			<if test="endDate != null and !endDate.equals('')">
+				and to_date(#{endDate},'yyyy-MM-dd') &gt;= T1.MDATE
+			</if>
+			<if test="etridList != null and etridList.size() >0">
+				and (T1.ENTRUST_ID in
+				<foreach collection="etridList" item="item" index= "index" open="(" close=")" separator="," >
+					<if test="(index % 998) == 0">
+						null) or T1.ENTRUST_ID in (
+					</if>
+					#{item}
+				</foreach>)
+			</if>
+			<if test="pbExportstatus != null and !pbExportstatus.equals('')">
+				and (#{pbExportstatus} = T4.PB_EXPORTSTATUS
 				<if test='pbExportstatus =="N"'>
-				 or T4.PB_EXPORTSTATUS is null
+					or T4.PB_EXPORTSTATUS is null
 				</if>
-			)
-		</if>
+				)
+			</if>
 		</where>
 		union
 		SELECT
-		T1.ENTRUST_STATUS entrustStatus,
+		'08' entrustStatus,
 		T1.ENTRUST_ID entrustId,
 		T1.PORTFOLIO_ID portfolioId,
 		T2.PORTFOLIO_NAME portfolioName,
@@ -249,7 +250,9 @@
 		<!-- add by wanshiwei 2021-09-22 指令创建来源 start -->
 		,T4.ENTRUST_CREATE_SOURCE AS entrustCreateSource
 		<!-- add by wanshiwei 2021-09-22 指令创建来源 end -->
+		,SWBL.NEXT_USER nextUser
 		FROM WFL_ETR_ENTRUST T1
+		LEFT JOIN SYS_WFL_BUSINESS_LIST SWBL ON SWBL.SEQ_NO = T1.WORKFLOW_ID and SWBL.PROCESS_STATE != 'END'
 		LEFT JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
 		LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
 		<!-- INNER JOIN PTL_PORTFOLIO_AUTHORITY T6
@@ -328,7 +331,7 @@
 				end) =#{ps}
 			</if>
 			<if test="entrustStatusList != null">
-				AND T1.ENTRUST_STATUS in
+				AND '08' in
 				<foreach collection="entrustStatusList" item="item" open="(" close=")" separator=",">
 					#{item}
 				</foreach>
@@ -351,10 +354,10 @@
 			<if test="pbExportstatus != null and !pbExportstatus.equals('')">
 				and (#{pbExportstatus} = T4.PB_EXPORTSTATUS
 				<if test='pbExportstatus =="N"'>
-				 or T4.PB_EXPORTSTATUS is null
+					or T4.PB_EXPORTSTATUS is null
 				</if>
-			)
-		</if>
+				)
+			</if>
 		</where>
 		union
 		SELECT
@@ -387,12 +390,13 @@
 		T1.entrust_Type entrustType,
 		T1.REMARK remark
 		,T4.PB_EXPORTSTATUS pbExportstatus/*PB是否已导出;PB上下行关联改造 add by caoxue 2019-12-27*/
-        <!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 start -->
-        ,SSAI.SEC_ACCT_NAME AS secAcctName
-        <!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 end -->
+		<!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 start -->
+		,SSAI.SEC_ACCT_NAME AS secAcctName
+		<!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 end -->
 		<!-- add by wanshiwei 2021-09-22 指令创建来源 start -->
 		,T4.ENTRUST_CREATE_SOURCE AS entrustCreateSource
 		<!-- add by wanshiwei 2021-09-22 指令创建来源 end -->
+		,'' nextUser
 		FROM ETR_ENTRUST T1
 		LEFT JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
 		LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
@@ -400,15 +404,15 @@
 		ON
 		T2.PORTFOLIO_ID = T6.PORTFOLIO_ID -->
 		LEFT JOIN ETR_ENTRUST_ADD T4 ON T4.ENTRUST_ID = T1.ENTRUST_ID
-        <!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 start -->
-        LEFT JOIN
-            STL_SEC_ACCT_INFO SSAI
-        ON
-            T4.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
-        <!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 end -->
+		<!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 start -->
+		LEFT JOIN
+		STL_SEC_ACCT_INFO SSAI
+		ON
+		T4.SEC_ACCT_ID = SSAI.SEC_ACCT_ID
+		<!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 end -->
 		<where>
 
-		    AND  T1.FINPROD_TYPE2 = 'F36'
+			AND  T1.FINPROD_TYPE2 = 'F36'
 			<!-- AND T6.USER_ID = #{userId}
 			AND T1.INV_MANAGER_ID=#{userId} -->
 			<!-- <if test="portfolioId != null and !portfolioId.equals('')">
@@ -479,13 +483,13 @@
 			</if>
 			<if test="etridList != null and etridList.size() >0">
 				and (T1.ENTRUST_ID in
-	            <foreach collection="etridList" item="item" index= "index" open="(" close=")" separator="," >
-	                <if test="(index % 998) == 0">
-	                	null) or T1.ENTRUST_ID in (
-	                </if>
-	                #{item}
-	            </foreach>
-	            )
+				<foreach collection="etridList" item="item" index= "index" open="(" close=")" separator="," >
+					<if test="(index % 998) == 0">
+						null) or T1.ENTRUST_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
 			</if>
 			<if test="pbExportstatus != null and !pbExportstatus.equals('')">
 				and (#{pbExportstatus} = T4.PB_EXPORTSTATUS
@@ -498,24 +502,24 @@
 		) order by vdate desc
 	</select>
 	<select id="selectExportPB"
-		resultType="com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoDto">
-		SELECT 
-		  dict1.DICT_ITEM_VAL_CNNAME tradeMarket,/*交易市场*/
-		  T4.ASSET_TYPE assetType,
-		  decode(T4.ASSET_TYPE,#{assetBond},SUBSTR(TRIM(T3.FINPROD_MARKET_ID), 0, LENGTH(TRIM(T3.FINPROD_MARKET_ID)) - 3),#{ASSET_TYPE_08},dict2.DICT_ITEM_VAL_CNNAME,null) finprodMarketId,/*证券代码：资产代码/期限品种*/
-		  decode(T4.ASSET_TYPE,#{assetBond},dict3.DICT_ITEM_VAL_CNNAME,#{ASSET_TYPE_08},dict4.DICT_ITEM_VAL_CNNAME,null) ps,/*委托方向：交易方向*/
-		  trunc((
-		  CASE
-		    WHEN T4.ASSET_TYPE = #{assetBond}
-		    THEN T1.ENTRUST_NUM*100
-		    ELSE NVL(T1.ENTRUST_AMT,T1.ENTRUST_NUM)
-		  END)/100) entrustAmt,/*指令数量：券面总额/委托金额*/
-		  trunc(decode(T4.ASSET_TYPE,'F01',decode(T1.PRICE_MODEL,'PRM03',0,decode(fpd.IS_NETPRICE,'Y',t1.price,t1.price)),'F07',decode(T1.PRICE_MODEL,'PRM03',0,t1.price*100),null),3) price,/*指令价格*/
-  		  dict5.DICT_ITEM_VAL_CNNAME priceModel,/*价格模式*/
-		  dict6.DICT_ITEM_VAL_CNNAME invAim,/*投资类型：投资目的*/
-		  pb_prd.pb_id finprodId,/*产品编号：产品*/
-		  pb_ptl.pb_id portfolioId,/*账户编号：子组合*/
-		  T1.ENTRUST_ID entrustId/*记录号:委托代码*/
+			resultType="com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoDto">
+		SELECT
+		dict1.DICT_ITEM_VAL_CNNAME tradeMarket,/*交易市场*/
+		T4.ASSET_TYPE assetType,
+		decode(T4.ASSET_TYPE,#{assetBond},SUBSTR(TRIM(T3.FINPROD_MARKET_ID), 0, LENGTH(TRIM(T3.FINPROD_MARKET_ID)) - 3),#{ASSET_TYPE_08},dict2.DICT_ITEM_VAL_CNNAME,null) finprodMarketId,/*证券代码：资产代码/期限品种*/
+		decode(T4.ASSET_TYPE,#{assetBond},dict3.DICT_ITEM_VAL_CNNAME,#{ASSET_TYPE_08},dict4.DICT_ITEM_VAL_CNNAME,null) ps,/*委托方向：交易方向*/
+		trunc((
+		CASE
+		WHEN T4.ASSET_TYPE = #{assetBond}
+		THEN T1.ENTRUST_NUM*100
+		ELSE NVL(T1.ENTRUST_AMT,T1.ENTRUST_NUM)
+		END)/100) entrustAmt,/*指令数量：券面总额/委托金额*/
+		trunc(decode(T4.ASSET_TYPE,'F01',decode(T1.PRICE_MODEL,'PRM03',0,decode(fpd.IS_NETPRICE,'Y',t1.price,t1.price)),'F07',decode(T1.PRICE_MODEL,'PRM03',0,t1.price*100),null),3) price,/*指令价格*/
+		dict5.DICT_ITEM_VAL_CNNAME priceModel,/*价格模式*/
+		dict6.DICT_ITEM_VAL_CNNAME invAim,/*投资类型：投资目的*/
+		pb_prd.pb_id finprodId,/*产品编号：产品*/
+		pb_ptl.pb_id portfolioId,/*账户编号：子组合*/
+		T1.ENTRUST_ID entrustId/*记录号:委托代码*/
 		FROM ETR_ENTRUST T1
 		LEFT JOIN FIN_PRODUCT T3
 		ON T1.FINPROD_ID = T3.FINPROD_ID
@@ -546,36 +550,36 @@
 		LEFT JOIN SYS_PAGE_DICTLIST dict6
 		ON dict6.DICT_ID       = 'INV_AIM'
 		AND dict6.PAGE_ID      = 'EtrInvestAllInfoPB'
-		AND dict6.dict_item_val=T1.INV_AIM 
+		AND dict6.dict_item_val=T1.INV_AIM
 		LEFT JOIN trd_pb_relation pb_prd
 		ON pb_prd.prd_portfolio_id = T1.PORTFOLIO_ID and pb_prd.factor_type='0'
 		LEFT JOIN trd_pb_relation pb_ptl
 		ON pb_ptl.prd_portfolio_id = T1.PORTFOLIO_ID and pb_ptl.factor_type='1'
 		<where>
-		<if test="etridList != null and etridList.size() >0">
-			and (T1.ENTRUST_ID in
-            <foreach collection="etridList" item="item" index= "index" open="(" close=")" separator="," >
-                <if test="(index % 998) == 0">
-                	null) or T1.ENTRUST_ID in (
-                </if>
-                #{item}
-            </foreach>
-            )
-		</if>
+			<if test="etridList != null and etridList.size() >0">
+				and (T1.ENTRUST_ID in
+				<foreach collection="etridList" item="item" index= "index" open="(" close=")" separator="," >
+					<if test="(index % 998) == 0">
+						null) or T1.ENTRUST_ID in (
+					</if>
+					#{item}
+				</foreach>
+				)
+			</if>
 		</where>
 		ORDER BY T1.vdate DESC
 	</select>
 	<update id="updateExportPB" >
-        update ETR_ENTRUST_ADD
-        set PB_EXPORTSTATUS='Y'
-        <where>
-		<if test="etridList != null and etridList.size() >0">
-			and ENTRUST_ID in <foreach collection="etridList" index="index"  item="item" open="(" close=")" separator=",">
-			#{item}
-		</foreach>
-		</if>
+		update ETR_ENTRUST_ADD
+		set PB_EXPORTSTATUS='Y'
+		<where>
+			<if test="etridList != null and etridList.size() >0">
+				and ENTRUST_ID in <foreach collection="etridList" index="index"  item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+			</if>
 		</where>
-    </update>
+	</update>
 
 	<!-- add by zengchengfa 20210730 查询导出pdf数据 -->
 	<select id="selectExportPdf" resultType="com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoExportPdfDto">

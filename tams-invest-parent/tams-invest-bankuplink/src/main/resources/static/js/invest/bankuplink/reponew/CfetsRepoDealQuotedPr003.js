@@ -610,13 +610,16 @@
     var setBussRepoSecInput = function () {
         //组合分配列表
         var portfolioId = "";
+        var entrustId = "";
         var ptlAllocationList = dzhTable.getAllRows();
         if (ptlAllocationList && ptlAllocationList.length > 0) {
             $.each(ptlAllocationList, function (i, e) {
                 portfolioId += e.portfolioId + ",";
+                entrustId += e.entrustId + ",";
             });
         }
         var data = {
+            entrustId:entrustId,
             portfolioId: portfolioId,
             ps: $("#CfetsRepoDealQuotedPrice002_ps").val(),
             secAcctId: $('#secAcctId').val(),

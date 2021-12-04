@@ -106,4 +106,10 @@ public class TrdBondDuration001Service extends CommonExportService<TrdBondDurati
                 ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/getBusiCode",
                 RequestUtil.getPageParam(), SelectOptionDto.class);
     }
+
+    public Page<SelectOptionDto> getBusiCodeNew() {
+        return restTemplate.postForPage(
+                ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/getBusiCodeNew",
+                RequestUtil.getPageParam(), SelectOptionDto.class);
+    }
 }

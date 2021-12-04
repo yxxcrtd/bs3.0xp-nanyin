@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.entrust.etribbondinfo.service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -19,12 +19,14 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingDto;
 import com.joyintech.tams.component.business.basicdata.service.BusiProductRatingService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
+import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrFinProductDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto;
 import org.apache.commons.lang3.StringUtils;
@@ -36,10 +38,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.RoundingMode;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 银行间债券指令
@@ -50,9 +51,9 @@ import java.util.Map;
  */
 @Service
 public class EtrIbBondinfo001Service extends CommonExportService<EtrIbBondinfo001Dto> {
-    /**
-     * 市场行情接口地址
-     */
+	/**
+	 * 市场行情接口地址
+	 */
 /*    @Value("${MarketInfoInterf.BaseUrl}")
     private String MarketInfoInterf_BaseUrl;*/
 
@@ -77,14 +78,14 @@ public class EtrIbBondinfo001Service extends CommonExportService<EtrIbBondinfo00
 	@Autowired
 	private EtribBondInfo003Service etribBondInfo003Service;
 
-    /**
-     * 分页查询产品持仓信息
-     * <功能详细描述>
-     * @param param 查询参数
-     * @return 分页结果
-     * @see
-     * @since 1.0
-     */
+	/**
+	 * 分页查询产品持仓信息
+	 * <功能详细描述>
+	 * @param param 查询参数
+	 * @return 分页结果
+	 * @see
+	 * @since 1.0
+	 */
 	public Page<EtrIbBondinfo001Dto> findPositionsPage(Map<String, Object> param) {
 		try {
 			String userId = SecurityUtil.getLoginUser().getUserName();
@@ -104,7 +105,7 @@ public class EtrIbBondinfo001Service extends CommonExportService<EtrIbBondinfo00
 
 	/**
 	 * 分页查询债券质押持仓信息
-	 * 
+	 *
 	 * @param param
 	 *            查询参数
 	 * @return 分页结果
@@ -117,9 +118,20 @@ public class EtrIbBondinfo001Service extends CommonExportService<EtrIbBondinfo00
 			if (StringUtils.isNotEmpty(userId)) {
 				logger.info("请求用户【{}】", "userId = " + userId);
 				param.put("userId", SecurityUtil.getLoginUser().getUserName());
-				return restTemplate.postForPage(
+				List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+						param, SysUser.class);
+				Page<EtrIbBondinfo001Dto>  page = restTemplate.postForPage(
 						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo001/findZqzyPositionsPage", param,
 						EtrIbBondinfo001Dto.class);
+				for(EtrIbBondinfo001Dto dto:page.getRoot()){
+					if(StringUtil.isNotEmpty(dto.getNextUser())){
+						String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+								.map(SysUser::getRealName)
+								.collect(Collectors.joining(",","",""));
+						dto.setNextUser(sysUsers);
+					}
+				}
+				return page;
 			}
 		} catch (Exception ex) {
 			logger.info(ex.getMessage());
@@ -158,8 +170,8 @@ public class EtrIbBondinfo001Service extends CommonExportService<EtrIbBondinfo00
 	 */
 	public EtrFinProductDto findSecinfo(Map<String, Object> paramMap) {
 		EtrFinProductDto dto = restTemplate.postForObject(
-					ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo001/getEtrFinProductInfo", paramMap,
-					EtrFinProductDto.class);
+				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo001/getEtrFinProductInfo", paramMap,
+				EtrFinProductDto.class);
 		if (dto != null) {
 			Map<String,Object> param = new HashMap<String,Object>();
 			param.put("oCode", dto.getIssuer());

@@ -1,15 +1,18 @@
 package com.joyintech.service.basicdata.standardcouponreconversionrate.controller;
 
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.basicdata.standardcouponreconversionrate.dto.StandardCouponReConversionRateDto;
 import com.joyintech.service.basicdata.standardcouponreconversionrate.service.StandardCouponReConversionRateService;
+import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -56,11 +59,9 @@ public class StandardCouponReConversionRateController {
      * @return
      */
     @PostMapping("/selectByPrimaryKey")
-    public StandardCouponReConversionRateDto selectByPrimaryKey(@RequestBody StandardCouponReConversionRateDto dto) {
+    public StandardCouponReConversionRateDto selectByPrimaryKey(@RequestBody StandardCouponReConversionRateDto dto){
         return standardCouponReConversionRateService.selectByPrimaryKey(dto);
     }
-
-
 
     /**
      * 删除
@@ -122,8 +123,51 @@ public class StandardCouponReConversionRateController {
         return standardCouponReConversionRateService.getPtlSecAcctInfo(map);
     }
 
+    /**
+     * 获取组合资金账户
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("getFinprodIdInfo")
+    public List<SelectOptionDto> getFinprodIdInfo(@RequestBody Map<String, Object> map) throws Exception {
+        return standardCouponReConversionRateService.getFinprodIdInfo(map);
+    }
+
     @PostMapping("brokerIdChange")
     public List<SelectOptionDto> brokerIdChange(@RequestBody Map<String, Object> map){
         return standardCouponReConversionRateService.brokerIdChange(map);
+    }
+
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param param 导入的文件名
+     * @return 处理结果
+     */
+    @SuppressWarnings("unchecked")
+    @PostMapping("checkConfirmMsgForImportData")
+    public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
+        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
+        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
+        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
+        return standardCouponReConversionRateService.checkConfirmMsgForImportData(dataList);
+    }
+
+    /**
+     * 导入数据文件
+     *
+     * @param param 导入的文件名
+     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     */
+    @SuppressWarnings("unchecked")
+    @PostMapping("importData")
+    public List<ExcelValidDto> importData(@RequestBody Map<String, Object> param) {
+        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
+        List<List<String>> tempList = (List<List<String>>) param.get("tempList");
+        String userName=param.get("userName")==null?null:param.get("userName").toString();
+        String orgCode=param.get("orgCode")==null?null:param.get("orgCode").toString();
+        String deptCode=param.get("deptCode")==null?null:param.get("deptCode").toString();
+        return this.standardCouponReConversionRateService.importData(dataList,tempList,userName,orgCode,deptCode);
     }
 }

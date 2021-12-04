@@ -217,7 +217,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         if (DictCodeListExt1.委托操作类型_撤回.getValue().equals(delegateOperationType)) {
             if (etrInvestInfoDto.getEtrEntrust() != null) {
                 if (!(DictCodeList.委托状态_待接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
-                		||DictCodeListExt3.委托状态_待分发.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus()))) {
+                		)) {
                     errorList.add(new ValidMessage(
                         // “待接收”
                         this.getMessage("ETR_E_0010", this.getMessage("BaseEtrInvestInfoServiceImpl.toReceiveOrtoReceive"))));

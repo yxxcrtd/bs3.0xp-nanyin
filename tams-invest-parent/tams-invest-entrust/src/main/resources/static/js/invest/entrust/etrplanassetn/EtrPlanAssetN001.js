@@ -5,25 +5,25 @@
     /**
      * 获取查询参数
      */
-    var searchform =function(){ 
-       var data = $.serializeToObject('#searchForm');
-       if($('#assetType1').val()){
-           data.assetType1 = $('#assetType1').val().join(",");
-       }
-       /* 添加三-四级分类查询参数  zhangpuyu 2019/7/29 start*/
-       if($('#assetType10').val()){
-           data.assetType10 = $('#assetType10').val().join(",");
-       }
-       if($('#assetType11').val()){
-           data.assetType11 = $('#assetType11').val().join(",");
-       }
-       /* 添加三-四级分类查询参数 zhangpuyu 2019/7/29 end*/
-       if($('#portfolioId').val()){
-           data.portfolioId = $('#portfolioId').val().join(",");
-       }
-       return data;
+    var searchform =function(){
+        var data = $.serializeToObject('#searchForm');
+        if($('#assetType1').val()){
+            data.assetType1 = $('#assetType1').val().join(",");
+        }
+        /* 添加三-四级分类查询参数  zhangpuyu 2019/7/29 start*/
+        if($('#assetType10').val()){
+            data.assetType10 = $('#assetType10').val().join(",");
+        }
+        if($('#assetType11').val()){
+            data.assetType11 = $('#assetType11').val().join(",");
+        }
+        /* 添加三-四级分类查询参数 zhangpuyu 2019/7/29 end*/
+        if($('#portfolioId').val()){
+            data.portfolioId = $('#portfolioId').val().join(",");
+        }
+        return data;
     };
-    /** 
+    /**
      * 新建
      */
     function showDialog() {
@@ -47,9 +47,9 @@
             data.operateType = "dblclick";
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("EtrPlanAssetN002.refence"),
-                    JoyinUtil.getRealPath("invest/entrust/etrplanassetn/EtrPlanAssetN002/init"),
-                    "98%", "95%", data,
-                    function(){table.reload();});
+                JoyinUtil.getRealPath("invest/entrust/etrplanassetn/EtrPlanAssetN002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
         },
         cols:[
             {field:'entrustStatus',visible:false}
@@ -90,15 +90,16 @@
             ,{field:'busEntrustAmt',type:'number', title: 'EtrPlanAssetN001.entrustAmt1', width:'10%',sortField:"entrustAmt"}
             ,{field:'finishAmt',type:'number', title: 'EtrPlanAssetN001.finishAmt', width:'10%',sortField:"finishAmt"}
             ,{field:'transactioncom', title: 'EtrPlanAssetN001.transactioncom',render : function(data, type, row, meta){
-                return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.finishAmt/row.busEntrustAmt*100).toFixed(2)+"%'><span class='layui-progress-text'>"+(row.finishAmt/row.busEntrustAmt*100).toFixed(2)+"%</span></div></div>";
-            }, width:'10%',sortable:false}
+                    return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.finishAmt/row.busEntrustAmt*100).toFixed(2)+"%'><span class='layui-progress-text'>"+(row.finishAmt/row.busEntrustAmt*100).toFixed(2)+"%</span></div></div>";
+                }, width:'10%',sortable:false}
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:'10%' ,sortable:false}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit'] , width:'10%'}
-            ],
+        ],
     });
     /**
      * 导出
      */
-    var exportExcel = function(){       
+    var exportExcel = function(){
         Joyin.exportExcel(basePath+"invest/entrust/etrplanassetn/EtrPlanAssetN001/export", searchform());
     };
 
@@ -110,9 +111,9 @@
         data.pageModel=PAGE_MODEL_EDIT;
         Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN002/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrPlanAssetN002.edit"),
-                    JoyinUtil.getRealPath("invest/entrust/etrplanassetn/EtrPlanAssetN002/init"),
-                    "98%", "95%", data,
-               function(){table.reload();});
+                JoyinUtil.getRealPath("invest/entrust/etrplanassetn/EtrPlanAssetN002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
         });
     });
     /**
@@ -133,8 +134,8 @@
      */
     table.bind('click','.portfolioIdLink', function(row) {
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-                "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+            basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+            "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                 portfolioId:row.portfolioId});//主键组合代码
     });
     /**
@@ -143,13 +144,13 @@
     table.bind('click','.finprodIdLink', function(row) {
         //在新建界面进行显示单行的详细信息
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                 basePath
-                + "invest/asset/plan/planNet/FinPlanNetAsset002/init",
-                "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
-                                finprodId:row.finprodId,  //金融产品代码
-                                //valDate:data.valDate,//估值日
-                                //finprodMarketId:data.finprodMarketId//市场代码
-                                });
+            basePath
+            + "invest/asset/plan/planNet/FinPlanNetAsset002/init",
+            "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                finprodId:row.finprodId,  //金融产品代码
+                //valDate:data.valDate,//估值日
+                //finprodMarketId:data.finprodMarketId//市场代码
+            });
     });
     /**
      * 编辑按钮事件
@@ -181,25 +182,49 @@
         $('#EtrPlanAssetN001_btn_close').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }
+            }
+            for(var i=0; i<selArr.length; i++){
+                if(selArr[i].entrustStatusStr == '待接收'){
+                    Joyin.error('不能对待接收的数据进行关闭操作');
+                    return;
+                }
+                if(selArr[i].entrustStatusStr == '已关闭'){
+                    Joyin.error('已关闭状态的数据不允许再次关闭');
+                    return;
+                }
+                if(selArr[i].entrustStatusStr == '流程中'){
+                    Joyin.error('不能对流程中的数据进行关闭操作');
+                    return;
+                }
+                if(selArr[i].busEntrustStatus == '待接收'){
+                    Joyin.error('不能对待接收的数据进行关闭操作');
+                    return;
+                }
+                if(selArr[i].busEntrustStatus == '已关闭'){
+                    Joyin.error('已关闭状态的数据不允许再次关闭');
+                    return;
+                }
+                if(selArr[i].busEntrustStatus == '流程中'){
+                    Joyin.error('不能对流程中的数据进行关闭操作');
+                    return;
+                }
+            }
 //            else if(selArr && selArr.length>1){
 //                 Joyin.error(JoyinUtil.getMessage("ETR_COM_X"));
 //                 return;
-//             } 
-            else {
-                var object = {selectedItem: selArr, operateType:"close"};
-                Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN001/check', object, function(result) {
-                    Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
-                        Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN001/close', object, function(result) {
-                            table.reload();
-                        });
+//             }
+            var object = {selectedItem: selArr, operateType:"close"};
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN001/check', object, function(result) {
+                Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN001/close', object, function(result) {
+                        table.reload();
                     });
                 });
-             }
+            });
         });
         /**
          * 撤销
@@ -207,11 +232,11 @@
         $('#EtrPlanAssetN001_btn_revoke').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }
+            }
 //            else if(selArr && selArr.length>1){
 //                 Joyin.error(JoyinUtil.getMessage("ETR_COM_X"));
 //                 return;
@@ -225,41 +250,41 @@
                         });
                     });
                 });
-             }
+            }
         });   //是否展示资产四五级分类
         if(IS_SHOW_TYPE == '01'){
-        	$('#assetType11Div').show();
+            $('#assetType11Div').show();
         }else{
-        	$('#assetType11Div').hide();
+            $('#assetType11Div').hide();
         }
 
         // 导入按钮点击事件
         $('#EtrPlanAssetN001_btn_import').click(function() {
             // Joyin.confirm("请确认是否要导入数据？", function() {
-                Joyin.uploadFile({pageId:'EtrPlanAssetN003MTM'},function(fileName) {
-                    Joyin.ajax(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN003/checkImportData', {fileName: fileName}, function(checkResult) {
-                                setTimeout( function () {
-                                    Joyin.confirm(checkResult.data.confirmMsg,function() {
-                                        var result={};
-                                        result.operateType = "import";
-                                        result.pageModel='';
-                                        result.tempList = checkResult.data.correctData;
-                                        Joyin.dialog(JoyinUtil.getLabel("EtrPlanAssetN003"),
-                                            JoyinUtil.getRealPath("/invest/entrust/etrplanassetn/EtrPlanAssetN003/init"),
-                                            "98%", "95%", result,
-                                            function(){table.reload();});
-                                    });
-                                    if(checkResult.data.errorMsg){
-                                        Joyin.error(checkResult.data.errorMsg);
-                                        return;
-                                    }
-                                },1000);
-                        }
-                    );
+            Joyin.uploadFile({pageId:'EtrPlanAssetN003MTM'},function(fileName) {
+                Joyin.ajax(basePath + 'invest/entrust/etrplanassetn/EtrPlanAssetN003/checkImportData', {fileName: fileName}, function(checkResult) {
+                        setTimeout( function () {
+                            Joyin.confirm(checkResult.data.confirmMsg,function() {
+                                var result={};
+                                result.operateType = "import";
+                                result.pageModel='';
+                                result.tempList = checkResult.data.correctData;
+                                Joyin.dialog(JoyinUtil.getLabel("EtrPlanAssetN003"),
+                                    JoyinUtil.getRealPath("/invest/entrust/etrplanassetn/EtrPlanAssetN003/init"),
+                                    "98%", "95%", result,
+                                    function(){table.reload();});
+                            });
+                            if(checkResult.data.errorMsg){
+                                Joyin.error(checkResult.data.errorMsg);
+                                return;
+                            }
+                        },1000);
+                    }
+                );
 
-                },function() {
-                    table.reload();
-                });
+            },function() {
+                table.reload();
+            });
             // });
         });
     });

@@ -5,6 +5,8 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.component.business.common.dto.FinFundTargetDto;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.basicdata.mstfundbonusnotice.dto.MstFundBonusNotice001Dto;
 import com.joyintech.tams.invest.basicdata.mstfundbonusnotice.service.MstFundBonusNotice001Service;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -52,9 +54,14 @@ public class MstFundBonusNoticeValidator implements BeanValidator {
                                 "MST_FUND_BONUS_NOTICE001", getMessage("MstFundBonusNotice001.fundId")
                                 , getMessage("MstFundBonusNotice001.regDate"))));
                     }
+                //股票标的是否存在
+                FinFundTargetDto finStockInfoDto=mstFundBonusNotice001Service.selectByFinprodId(DictCodeListExt1.金融产品类型_投管用_基金.getValue()+"_"+dto.getFundId());
+                if(finStockInfoDto==null){
+                    resultList.add(new ValidMessage("fundId", getMessage(
+                            "MST_SHARE_BONUS_NOTICE002", getMessage("MstShareBonusNotice001.sharesId")
+                    )));
+                }
             }
-
-
 
         }
         return resultList;

@@ -1022,4 +1022,19 @@ public class CommonUtil {
 
 		return EncryptUtil.getInstance().md5(tmpStr);
 	}
+
+	/**
+	 * 判断指定的字符串是否是数字
+	 * @param str
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public static boolean isNumeric(String str) {
+		if (str == null || str.trim().equals(""))
+			return false;
+		if (str.endsWith("."))  //不想调换复杂的正则表达式，对于[3.]这种数据也认为是合法的数字
+			str = str.substring(0,str.length()-1);
+		return str.matches("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$");
+	}
 }

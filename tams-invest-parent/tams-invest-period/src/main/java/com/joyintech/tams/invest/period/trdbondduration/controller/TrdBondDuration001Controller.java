@@ -226,4 +226,17 @@ public class TrdBondDuration001Controller extends BaseController {
         }
         return commonCheck(result, dto.getOperateType());
     }
+
+    /**
+     * 获取所有交易编号
+     *
+     * @return 下拉框集合
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("getBusiCodeNew")
+    public Page<SelectOptionDto> getBusiCodeNew() {
+        return trdBondDuration001Service.getBusiCodeNew();
+    }
 }

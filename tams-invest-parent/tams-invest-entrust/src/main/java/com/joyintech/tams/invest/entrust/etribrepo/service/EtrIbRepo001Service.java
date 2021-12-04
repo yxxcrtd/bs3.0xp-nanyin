@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.entrust.etribrepo.service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -18,11 +18,13 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
+import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtribBondInfo003Service;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrFinProductDto;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrIbRepo001Dto;
@@ -35,9 +37,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 银行间债券指令
@@ -48,9 +52,9 @@ import java.util.Map;
  */
 @Service
 public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
-	 /**
-     * 市场行情接口地址
-     */
+	/**
+	 * 市场行情接口地址
+	 */
 /*    @Value("${MarketInfoInterf.BaseUrl}")
     private String MarketInfoInterf_BaseUrl;*/
 	/**
@@ -58,7 +62,7 @@ public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
 	 */
 	@Value("${MarketInfoInterf.cmdsUrl}")
 	private String MarketInfoInterf_cmdsUrl;
-	
+
 	@Autowired
 	private EtribRepoInfo003Service etribRepoInfo003Service;
 
@@ -71,26 +75,38 @@ public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
 	@Autowired
 	private EtrCommonService etrCommonService;
 
-	
+
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-    /**
-     * 分页查询产品持仓信息
-     * <功能详细描述>
-     * @param param 查询参数
-     * @return 分页结果
-     * @see
-     * @since 1.0
-     */
+	/**
+	 * 分页查询产品持仓信息
+	 * <功能详细描述>
+	 * @param param 查询参数
+	 * @return 分页结果
+	 * @see
+	 * @since 1.0
+	 */
 	public Page<EtrIbRepo001Dto> findZlglPage(Map<String, Object> param) {
 		try {
 			String userId = SecurityUtil.getLoginUser().getUserName();
 			if (StringUtils.isNotEmpty(userId)) {
 				logger.info("请求用户【{}】", "userId = " + userId);
+				List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+						param, SysUser.class);
 				param.put("userId", SecurityUtil.getLoginUser().getUserName());
-				return restTemplate.postForPage(
+				Page<EtrIbRepo001Dto> page = restTemplate.postForPage(
 						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepo001/findZlglPage", param,
 						EtrIbRepo001Dto.class);
+
+				for(EtrIbRepo001Dto dto:page.getRoot()){
+					if(StringUtil.isNotEmpty(dto.getNextUser())){
+						String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+								.map(SysUser::getRealName)
+								.collect(Collectors.joining(",","",""));
+						dto.setNextUser(sysUsers);
+					}
+				}
+				return page;
 			}
 		} catch (Exception ex) {
 			logger.info(ex.getMessage());
@@ -100,7 +116,7 @@ public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
 
 	/**
 	 * 分页查询债券质押持仓信息
-	 * 
+	 *
 	 * @param param
 	 *            查询参数
 	 * @return 分页结果
@@ -113,9 +129,20 @@ public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
 			if (StringUtils.isNotEmpty(userId)) {
 				logger.info("请求用户【{}】", "userId = " + userId);
 				param.put("userId", SecurityUtil.getLoginUser().getUserName());
-				return restTemplate.postForPage(
+				List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+						param, SysUser.class);
+				Page<EtrIbRepo001Dto> page = restTemplate.postForPage(
 						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepo001/findZlglPositionPage", param,
 						EtrIbRepo001Dto.class);
+				for(EtrIbRepo001Dto dto:page.getRoot()){
+					if(StringUtil.isNotEmpty(dto.getNextUser())){
+						String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+								.map(SysUser::getRealName)
+								.collect(Collectors.joining(",","",""));
+						dto.setNextUser(sysUsers);
+					}
+				}
+				return page;
 			}
 		} catch (Exception ex) {
 			logger.info(ex.getMessage());
@@ -133,11 +160,11 @@ public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
 			exportParam.config("/com/joyintech/tams/invest/entrust/etribrepo/config/export_conf2.xml").dataSource(DataSourceType.MASERT);
 		}
 	}
-	
+
 	/**
-     * 设置日期格式
-     * {@inheritDoc}
-     */
+	 * 设置日期格式
+	 * {@inheritDoc}
+	 */
 //    @Override
 //    public void setCellValue(String beanName, Cell cell, String propName, Object value) {
 //        if(("vdate".equals(propName)) && value != null){
@@ -160,7 +187,7 @@ public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
 			return findZlglPositionPage(selectParam);
 		}
 	}
-	
+
 	/**
 	 * 持仓信息
 	 * @param paramMap
@@ -188,7 +215,7 @@ public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
 				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepo001/getSecManageAcctId", param,
 				SelectOptionDto.class);
 	}
-	
+
 	/**
 	 * 回购信息
 	 * @param paramMap
@@ -196,36 +223,36 @@ public class EtrIbRepo001Service extends CommonExportService<EtrIbRepo001Dto> {
 	 */
 	public EtrFinProductDto findhginfo(Map<String, Object> paramMap) {
 		EtrFinProductDto dto = restTemplate.postForObject(
-					ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepo001/getEtrFinProductInfo", paramMap,
-					EtrFinProductDto.class);
+				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepo001/getEtrFinProductInfo", paramMap,
+				EtrFinProductDto.class);
 		return null;
 	}
 
-	
-    /**
-    * 查询登录用户是否满足指定的角色岗位 
-    */
-   public Long selectUserRolePosList(Map<String, Object> param){
-       param.put("userId", SecurityUtil.getLoginUser().getUserName());
-       return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/selectUserRolePosList",
-           param, Long.class);
-   }
-   
-   // 出库操作
-   public Long outSave(EtrIbRepo001Dto dto) {
-       Long insertCount = 0L;
-       if (!StringUtil.isEmptyList(dto.getSelectedItem())) {
-           insertCount += restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepo001/outSave",
-                   dto, Long.class);
-       }
-       return insertCount;
-   }
 
-   /**
-    * 查询质押式回购实时行情
-    * @param pageParam
-    * @return
-    */
+	/**
+	 * 查询登录用户是否满足指定的角色岗位
+	 */
+	public Long selectUserRolePosList(Map<String, Object> param){
+		param.put("userId", SecurityUtil.getLoginUser().getUserName());
+		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/selectUserRolePosList",
+				param, Long.class);
+	}
+
+	// 出库操作
+	public Long outSave(EtrIbRepo001Dto dto) {
+		Long insertCount = 0L;
+		if (!StringUtil.isEmptyList(dto.getSelectedItem())) {
+			insertCount += restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepo001/outSave",
+					dto, Long.class);
+		}
+		return insertCount;
+	}
+
+	/**
+	 * 查询质押式回购实时行情
+	 * @param pageParam
+	 * @return
+	 */
 	public Map<String, Object> findQuotations(Map<String, Object> pageParam) {
 		String termType = (String) pageParam.get("termType");
 		String MarketType = (String) pageParam.get("MarketType");

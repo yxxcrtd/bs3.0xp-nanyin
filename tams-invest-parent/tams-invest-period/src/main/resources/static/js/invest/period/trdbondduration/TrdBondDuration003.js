@@ -180,6 +180,9 @@ var TrdBondDuration003 = function () {
 
             //理论应计利息
             let intAmt = result[0].intAmt;
+            if(!intAmt){
+                intAmt=0;
+            }
             let intAmtTheory = JoyinMath.doMul(intAmt,JoyinMath.doDiv(券面总额,100),2, JoyinMath.ROUND_HALF_UP);
             if(isUpdateAmtflag){
                 $("#intAmtTheory").val(intAmtTheory).trigger('blur');

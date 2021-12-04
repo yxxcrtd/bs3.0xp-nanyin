@@ -330,13 +330,15 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
         model.addAttribute("isEleShow", isEleShow);
         //查看交易方向添加清理核销 add by yzg 20201102 start
         if(StringUtil.equals(this.getParam("pageModel"), GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE)) {
-        	SelectDto selectDto = getSelectDataFromDataDic(DictCode.交易方向,null);
-        	SelectOptionDto selectOptionDto = new SelectOptionDto();
-        	selectOptionDto.setId(DictCodeListExt3.交易方向_清理核销.getValue());
-        	selectOptionDto.setText(DictCodeListExt3.交易方向_清理核销.getCodeName());
-        	selectOptionDto.setCol(DictCode.交易方向.getValue());
-        	selectDto.getOptions().add(selectOptionDto);
-        	model.addAttribute(DictCode.交易方向.getValue(), JsonUtils.objectArray2Json(selectDto.getOptions().toArray()));
+            if(StringUtil.equals(CacheUtil.getSysParam("IS_QUERY_ASSETS_LOSS"), "01")) {
+                SelectDto selectDto = getSelectDataFromDataDic(DictCode.交易方向,null);
+                SelectOptionDto selectOptionDto = new SelectOptionDto();
+                selectOptionDto.setId(DictCodeListExt3.交易方向_清理核销.getValue());
+                selectOptionDto.setText(DictCodeListExt3.交易方向_清理核销.getCodeName());
+                selectOptionDto.setCol(DictCode.交易方向.getValue());
+                selectDto.getOptions().add(selectOptionDto);
+                model.addAttribute(DictCode.交易方向.getValue(), JsonUtils.objectArray2Json(selectDto.getOptions().toArray()));
+            }
         }
         //查看交易方向添加个清理核销 add by yzg 20201102 end
         return super.init(model);

@@ -52,11 +52,11 @@ $(function () {
 	   });
 	  
 	  $(function () {
-	      if(isShowWaterTrafficTax) {
-	          $('#waterTrafficTax_div').show();
-	      } else {
-	          $('#waterTrafficTax_div').hide();
-	      }
+	      // if(isShowWaterTrafficTax) {
+	      //     $('#waterTrafficTax_div').show();
+	      // } else {
+	      //     $('#waterTrafficTax_div').hide();
+	      // }
 
 	      if(payType && payType == '02'){
                $("#bussTrdTransferOrder_div").hide();

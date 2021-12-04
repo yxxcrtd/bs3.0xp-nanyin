@@ -118,7 +118,7 @@
             width : 150,
             edit : true,
             type : 'number',
-            digit:16
+            digit:4
         }, {
             field : 'vdateY',
             type : 'date',
@@ -1290,6 +1290,18 @@
             msg = JoyinUtil.getMessage('COMMON_E_0057',JoyinUtil.getLabel("FinPayInterestStdInfo.table.title"));
         }
         else {
+             if(previewParams.finInterestFactorDto.couponSpecies != newParam.finInterestFactorDto.couponSpecies||previewParams.finInterestFactorDto.rateType != newParam.finInterestFactorDto.rateType
+                ||previewParams.finInterestFactorDto.basis != newParam.finInterestFactorDto.basis||previewParams.finInterestFactorDto.basisStyle != newParam.finInterestFactorDto.basisStyle
+                || !isNumEquals(previewParams.finInterestFactorDto.rate, newParam.finInterestFactorDto.rate) || !isNumEquals(previewParams.finInterestFactorDto.highestRate, newParam.finInterestFactorDto.highestRate)
+                || !isNumEquals(previewParams.finInterestFactorDto.lowestRate, newParam.finInterestFactorDto.lowestRate) || previewParams.finInterestFactorDto.benchmarkId != newParam.finInterestFactorDto.benchmarkId
+                || previewParams.finInterestFactorDto.coefficient != newParam.finInterestFactorDto.coefficient || !isNumEquals(previewParams.finInterestFactorDto.spreadRate, newParam.finInterestFactorDto.spreadRate)
+                ||previewParams.finInterestFactorDto.resetType != newParam.finInterestFactorDto.resetType||previewParams.finInterestFactorDto.observeBefDay != newParam.finInterestFactorDto.observeBefDay
+                ||previewParams.finInterestFactorDto.observeBefUnit != newParam.finInterestFactorDto.observeBefUnit|| !isNumEquals(previewParams.finInterestFactorDto.investRate, newParam.finInterestFactorDto.investRate)
+                ||!isNumEquals(previewParams.finInterestFactorDto.loadRate, newParam.finInterestFactorDto.loadRate) || !isNumEquals(previewParams.finInterestFactorDto.buyOutRate, newParam.finInterestFactorDto.buyOutRate)
+                || !isNumEquals(previewParams.finInterestFactorDto.referRate, newParam.finInterestFactorDto.referRate)
+                ||previewParams.finInterestFactorDto.calRateType != newParam.finInterestFactorDto.calRateType) {
+                msg = JoyinUtil.getMessage('BUSS_COM_E_0037', [JoyinUtil.getLabel("FinPayInterestStdInfo.InterestFactor"),JoyinUtil.getLabel("FinPayInterestStdInfo.title")]);
+            }
             //第一条计息开始日==起息日
             var firstVdateUnadjust = new Date(list[0].vdate).format('yyyy-MM-dd');
             //最后一条计息截止日==到期日

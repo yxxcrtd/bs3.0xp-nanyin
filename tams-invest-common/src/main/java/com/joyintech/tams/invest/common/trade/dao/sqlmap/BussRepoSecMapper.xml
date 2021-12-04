@@ -353,6 +353,9 @@
               AND mbvi.LAST_PERIOD &lt;= to_number(#{endDays1End})
            </if>
   		   <!-- 可质押列表增加“债项评级”、“到期日”、“登记托管机构”、“剩余期限”字段 add by renping 20191011 end -->
+            <if test='mdate!=null and mdate!=""'>
+                AND fp.mdate >= to_date(#{mdate},'yyyy-MM-dd')
+            </if>
         </where>
        <if test="isWithInvAim">
           ORDER BY
@@ -426,8 +429,11 @@
            <if test='tradeMarket!=null and tradeMarket!=""'>
                AND fp.TRADE_MARKET = #{tradeMarket}
            </if>
-            <if test='tradePlace!=null and tradePlace!=""'>
+            <if test="tradePlace!=null and tradePlace!='' and tradePlace != 'null'">
                 AND fp.TRADE_MARKET = #{tradePlace}
+            </if>
+            <if test='mdate!=null and mdate!=""'>
+                AND fp.mdate >= to_date(#{mdate},'yyyy-MM-dd')
             </if>
         </where>
    </select>
@@ -1591,9 +1597,12 @@
         LEFT JOIN FIN_PRODUCT_TYPE FPT
         ON fp.FINPROD_ID = FPT.FINPROD_ID
         left join PTL_PORTFOLIO pp on  pp.portfolio_id = ava.portfolio_id
+        LEFT JOIN FIN_PRODUCT_ADD FPA
+        ON FPA.FINPROD_ID = fp.FINPROD_ID
         <where>
             AND ava.AMOUNT &gt; 0
             AND  NVL(ava.AMOUNT, 0) - NVL(pledge.AMOUNT, 0) + nvl(AVA_FLOW.amount, 0)  &gt; 0
+            AND (FPA.IS_ISSUE_ASSET IS NULL OR FPA.IS_ISSUE_ASSET = 'N')
             <if test="repRegistOrg != null and repRegistOrg.size() > 0">
                 AND fp.REGIST_ORG in
                 <foreach collection="repRegistOrg" item="item" open="(" close=")" separator=",">
@@ -1627,5 +1636,12 @@
             ELSE 0
             END
         </if>
+    </select>
+
+    <select id="selectFinprodIdByPledge" resultType="java.lang.String" >
+        select
+            FINPROD_ID
+        from ETR_ENTRUST_PLEDGE
+        where PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR}
     </select>
 </mapper>

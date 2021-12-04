@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.entrust.etrbrowdepoinfo.dto;
 
 import java.math.BigDecimal;
@@ -44,11 +44,11 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @see EtrBrowDepoInfoDto
  * @since 1.0
  */
-@PageId("EtrBrowDepoInfo002") 
+@PageId("EtrBrowDepoInfo002")
 @ValidLogic(targetClass = EtrBrowDepoInfoValidator.class, groups = {ValidateGroupEdit.class,
-    ValidateGroupDelete.class})
+        ValidateGroupDelete.class})
 public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
-    
+
     /**
      * 序号
      */
@@ -58,59 +58,59 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
      * 存款资产本金
      */
     private BigDecimal iusseAmt;
-    
+
     /**
      * 资产简称
      */
     private String finprodAbbr;
-    
+
     /**
      * 页面提交模式
      */
     private String pageModel;
-    
+
     /**
      * 操作类型
      */
     private String operateType;
-    
+
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private String elementId;
-    
+
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = -1164891656947671931L;
-    
+
     /**
      * 选中的数据
      */
     private transient List<EtrBrowDepoInfoDto> selectedItem;
-    
+
     /**
      * 委托关闭方式
      */
     private String CloseWay;
-    
+
     /**
      * 期限天数，到期日-起息日
      */
     private Long termDays;
-    
+
     //组合名称
     private String portfolioName;
-    
+
     //资产类型
     private String finprodType2;
-    
+
     //资产代码
     private String finprodMarketId;
-    
+
     //资产名称
     private String finprodName;
-    
+
     //付息频率
     private  String payFreq;
 
@@ -121,45 +121,45 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
 
     //已完成额度
     private long finishAmt;
-    
+
     //交易完成度
     private long transactioncom;
-    
+
     //起息日
     private Date dateStart;
-    
+
     //到期日
     private Date dateEnd;
-    
+
     //资产可用持仓
     private BigDecimal assetAvailablePosition;
-    
+
     //投资人员信息
     @Valid
     private BussEtrInvestPersonInfoDto bussEtrInvestPersonInfoDto;
-    
+
     /**
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
-    /**新增资产二、三、四级分类	王贵奇	2019/7/30 开始*/   
-    
+
+    /**新增资产二、三、四级分类	王贵奇	2019/7/30 开始*/
+
     /**
      * 资产二级类型
      */
-    private String assetType1;    
-    
+    private String assetType1;
+
     /**
      * 资产三级类型
      */
-    private String assetType10;   
-    
+    private String assetType10;
+
     /**
      * 通道名称
      */
     private String chlIdName;
-    
+
     /**
      * 资产四级类型
      */
@@ -170,44 +170,44 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
      */
     private String isAgreementEnd;
 
-    
-	public String getAssetType1() {
-		return assetType1;
-	}
 
-	public void setAssetType1(String assetType1) {
-		this.assetType1 = assetType1;
-	}
+    public String getAssetType1() {
+        return assetType1;
+    }
 
-	public String getAssetType10() {
-		return assetType10;
-	}
+    public void setAssetType1(String assetType1) {
+        this.assetType1 = assetType1;
+    }
 
-	public void setAssetType10(String assetType10) {
-		this.assetType10 = assetType10;
-	}
+    public String getAssetType10() {
+        return assetType10;
+    }
 
-	public String getAssetType11() {
-		return assetType11;
-	}
+    public void setAssetType10(String assetType10) {
+        this.assetType10 = assetType10;
+    }
 
-	public void setAssetType11(String assetType11) {
-		this.assetType11 = assetType11;
-	}
+    public String getAssetType11() {
+        return assetType11;
+    }
 
-	public String getAssetType1Str(){
+    public void setAssetType11(String assetType11) {
+        this.assetType11 = assetType11;
+    }
+
+    public String getAssetType1Str(){
         return SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类, getAssetType1());
     }
-    
+
     public String getAssetType10Str(){
         return SysDataUtil.getNameFromDataDict(DictCode.行内资产三级分类, getAssetType10());
     }
-    
+
     public String getAssetType11Str(){
         return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类, getAssetType11());
     }
-	/**新增资产二、三、四级分类	王贵奇	2019/7/30 结束*/
-    
+    /**新增资产二、三、四级分类	王贵奇	2019/7/30 结束*/
+
     public BigDecimal getIusseAmt() {
         return iusseAmt;
     }
@@ -224,7 +224,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return riskTrialRetDto;
     }
 
-    
+
     /**
      * 设置 riskTrialRetDto
      * @param riskTrialRetDto riskTrialRetDto
@@ -235,27 +235,27 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
 
 
     /**
-     * 
+     *
      */
     private List<SysUploadFileInfo> fileArray;
-    
+
     @PrimaryKey(value=Field.PK_1)
     public String getEntrustId(){
         return super.getEntrustId();
     }
-    
+
     public String getEntrustStatusStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.委托状态, super.getEntrustStatus());
     }
-    
+
     public String getCcyStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
     }
-    
+
     public String getPsStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
     }
-    
+
     /**
      * 取得 组合代码
      * @return 组合代码
@@ -264,7 +264,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
     public String getPortfolioId() {
         return super.getPortfolioId();
     }
-    
+
     /**
      * 取得 委托开始日
      * @return 委托开始日
@@ -273,19 +273,19 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
     public Date getVdate() {
         return super.getVdate();
     }
-    
+
     public String getVdateStr() {
         return DateUtil.format(super.getVdate());
     }
-    
+
     public String getDateStartStr() {
         return DateUtil.format(this.getDateStart());
     }
-    
+
     public String getDateEndStr() {
         return DateUtil.format(this.getDateEnd());
     }
-    
+
     /**
      * 取得 委托结束日
      * @return 委托结束日
@@ -294,11 +294,11 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
     public Date getMdate() {
         return super.getMdate();
     }
-    
+
     public String getMdateStr() {
         return DateUtil.format(super.getMdate());
     }
-    
+
     /**
      * 取得 币种
      * @return 币种
@@ -317,7 +317,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
     public String getPs() {
         return super.getPs();
     }
-    
+
     /**
      * 取得 委托额度，交易金额
      * @return 委托额度，交易金额
@@ -327,11 +327,11 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
     public BigDecimal getEntrustAmt() {
         return super.getEntrustAmt();
     }
-    
+
     public String getEntrustAmtStr(){
         return super.getEntrustAmt() != null ? super.getEntrustAmt().toString():null;
-    } 
-    
+    }
+
     /**
      * 取得 委托价格，净价、利率等
      * @return 委托价格，净价、利率等
@@ -339,7 +339,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
     public BigDecimal getPrice() {
         return super.getPrice();
     }
-    
+
     /**
      * 获取 portfolioName
      * @return portfolioName.
@@ -348,7 +348,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return portfolioName;
     }
 
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -357,7 +357,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.portfolioName = portfolioName;
     }
 
-    
+
     /**
      * 获取 finprodType2
      * @return finprodType2.
@@ -367,12 +367,12 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
     public String getFinprodType2() {
         return finprodType2;
     }
-    
-    
+
+
     public String getFinprodType2Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.存款类资产类型, this.getFinprodType2());
     }
-    
+
     /**
      * 设置 finprodType2资产类型
      * @param finprodType2 finprodType2
@@ -381,7 +381,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.finprodType2 = finprodType2;
     }
 
-    
+
     /**
      * 获取 finprodId资产代码
      * @return finprodId.
@@ -392,8 +392,8 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return super.getFinprodId();
     }
 
-    
-    
+
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -402,7 +402,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return finprodName;
     }
 
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -411,7 +411,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.finprodName = finprodName;
     }
 
-    
+
     /**
      * 获取 payFreq
      * @return payFreq.
@@ -420,7 +420,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return payFreq;
     }
 
-    
+
     /**
      * 设置 payFreq
      * @param payFreq payFreq
@@ -429,7 +429,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.payFreq = payFreq;
     }
 
-    
+
     /**
      * 获取 finishAmt
      * @return finishAmt.
@@ -438,7 +438,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return finishAmt;
     }
 
-    
+
     /**
      * 设置 finishAmt
      * @param finishAmt finishAmt
@@ -447,7 +447,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.finishAmt = finishAmt;
     }
 
-    
+
     /**
      * 获取 transactioncom
      * @return transactioncom.
@@ -456,7 +456,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return transactioncom;
     }
 
-    
+
     /**
      * 设置 transactioncom
      * @param transactioncom transactioncom
@@ -465,7 +465,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.transactioncom = transactioncom;
     }
 
-    
+
     /**
      * 获取 serialversionuid
      * @return serialversionuid.
@@ -475,7 +475,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
     }
 
 
-    
+
     /**
      * 获取 operationType
      * @return operationType.
@@ -485,7 +485,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
     }
 
 
-    
+
     /**
      * 设置 operationType
      * @param operationType operationType
@@ -494,7 +494,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.operateType = operateType;
     }
 
-    
+
     /**
      * 获取 elementId
      * @return elementId.
@@ -503,7 +503,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return elementId;
     }
 
-    
+
     /**
      * 设置 elementId
      * @param elementId elementId
@@ -512,7 +512,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.elementId = elementId;
     }
 
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -521,7 +521,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return selectedItem;
     }
 
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -530,7 +530,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.selectedItem = selectedItem;
     }
 
-    
+
     /**
      * 获取 dateStart
      * @return dateStart.
@@ -540,7 +540,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return dateStart;
     }
 
-    
+
     /**
      * 设置 dateStart
      * @param dateStart dateStart
@@ -549,7 +549,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.dateStart = dateStart;
     }
 
-    
+
     /**
      * 获取 dateEnd
      * @return dateEnd.
@@ -559,7 +559,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return dateEnd;
     }
 
-    
+
     /**
      * 设置 dateEnd
      * @param dateEnd dateEnd
@@ -568,7 +568,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.dateEnd = dateEnd;
     }
 
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -585,7 +585,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         CloseWay = closeWay;
     }
 
-    
+
     /**
      * 获取 termDays
      * @return termDays.
@@ -595,7 +595,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return termDays;
     }
 
-    
+
     /**
      * 设置 termDays
      * @param termDays termDays
@@ -604,7 +604,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.termDays = termDays;
     }
 
-    
+
     /**
      * 获取 pageModel
      * @return pageModel.
@@ -613,7 +613,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return pageModel;
     }
 
-    
+
     /**
      * 设置 pageModel
      * @param pageModel pageModel
@@ -622,7 +622,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.pageModel = pageModel;
     }
 
-    
+
     /**
      * 获取 bussEtrInvestPersonInfoDto
      * @return bussEtrInvestPersonInfoDto.
@@ -631,7 +631,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return bussEtrInvestPersonInfoDto;
     }
 
-    
+
     /**
      * 设置 bussEtrInvestPersonInfoDto
      * @param bussEtrInvestPersonInfoDto bussEtrInvestPersonInfoDto
@@ -640,7 +640,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.bussEtrInvestPersonInfoDto = bussEtrInvestPersonInfoDto;
     }
 
-    
+
     /**
      * 获取 fileArray
      * @return fileArray.
@@ -649,7 +649,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return fileArray;
     }
 
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -658,7 +658,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.fileArray = fileArray;
     }
 
-    
+
     /**
      * 获取 finprodMarketId
      * @return finprodMarketId.
@@ -668,7 +668,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return finprodMarketId;
     }
 
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -677,7 +677,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         this.finprodMarketId = finprodMarketId;
     }
 
-    
+
     /**
      * 获取 assetAvailablePosition
      * @return assetAvailablePosition.
@@ -686,7 +686,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
         return assetAvailablePosition;
     }
 
-    
+
     /**
      * 设置 assetAvailablePosition
      * @param assetAvailablePosition assetAvailablePosition
@@ -767,5 +767,18 @@ public class EtrBrowDepoInfoDto extends EtrEntrust implements ProcessEntity{
      */
     public void setFinprodAbbr(String finprodAbbr) {
         this.finprodAbbr = finprodAbbr;
+    }
+
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
     }
 }

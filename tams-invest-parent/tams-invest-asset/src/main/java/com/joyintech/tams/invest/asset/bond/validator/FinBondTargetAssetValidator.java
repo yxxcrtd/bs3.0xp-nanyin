@@ -214,12 +214,16 @@ public class FinBondTargetAssetValidator implements BeanValidator{
                         getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.type12"))));
         	}
         }
-        if((StringUtil.equals(dto.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())
-        ||StringUtil.equals(dto.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue()))&&!StringUtil.isEmpty(dto.getConFinprodMarketId())){
-            if(StringUtil.isEmpty(dto.getFinProductConvertible().getConFinprodId())) {
+        if(StringUtil.equals(dto.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())
+        ||StringUtil.equals(dto.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue())){
+            if(StringUtil.isEmpty(dto.getConFinprodMarketId())){
                 resultList.add(new ValidMessage("conFinprodMarketId",
                         getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.finProductConvertible.conFinprodId"))));
             }
+//            if(StringUtil.isEmpty(dto.getFinProductConvertible().getConFinprodId())) {
+//                resultList.add(new ValidMessage("conFinprodMarketId",
+//                        getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.finProductConvertible.conFinprodId"))));
+//            }
             if(StringUtil.isEmpty(dto.getFinProductConvertible().getConShareId())) {
                 resultList.add(new ValidMessage("finProductConvertible.conShareId",
                         getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.finProductConvertible.conShareId"))));

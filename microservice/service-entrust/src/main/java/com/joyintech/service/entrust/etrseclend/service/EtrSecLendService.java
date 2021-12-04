@@ -370,12 +370,14 @@ public class EtrSecLendService extends BaseService {
             if( dto.getBussRepoSec().getTotalPrinAmt()  != null){
                 dto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply( dto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
             }
-            for (PledgeBondInfoDto pledgeBond :  dto.getBussRepoSec().getPledgeBondList()) {
-                if (pledgeBond.getAvaPledgePrin() != null) {
-                    pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
-                }
-                if (pledgeBond.getPledgePrin() != null) {
-                    pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+            if(StringUtil.isNotEmpty(dto.getBussRepoSec()) && !StringUtil.isEmptyList(dto.getBussRepoSec().getPledgeBondList())) {
+                for (PledgeBondInfoDto pledgeBond : dto.getBussRepoSec().getPledgeBondList()) {
+                    if (pledgeBond.getAvaPledgePrin() != null) {
+                        pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
+                    }
+                    if (pledgeBond.getPledgePrin() != null) {
+                        pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+                    }
                 }
             }
             List<EtrPledge> etrPledgeList = new ArrayList<>();
@@ -661,6 +663,19 @@ public class EtrSecLendService extends BaseService {
             result.put("position", ArithmeticUtil.multiply(position, new BigDecimal(100)));
         }
         return result;
+    }
+
+    /**
+     * 退回更新流程,删除流水
+     * @param dto
+     */
+    public void doBackFlow(EtrSecLendDto dto) {
+        //删除流水
+        baseEtrCashPositionCommService.entrustCloseExecute(dto.getEntrustId());
+        //删除流程中数据
+//        Map<String, Object> param = new HashMap<>();
+//        param.put("workflowId", dto.getWorkflowId());
+//        etrSecLendMapper.deleteWflwflEtrTarget(dto.getWorkflowId());
     }
     
 }

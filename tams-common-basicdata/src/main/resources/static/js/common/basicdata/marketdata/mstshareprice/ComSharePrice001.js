@@ -70,7 +70,7 @@ $(function() {
          data.pageModel = PAGE_MODEL_EDIT;
          var dealDate = new Date(parseInt(data.dealDate));
          dealDate= dealDate.format('yyyy-MM-dd');
-//         Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstshareprice/ComSharePrice002/check', data, function(result) {
+        Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/mstshareprice/ComSharePrice002/check', data, function(result) {
          Joyin.confirm("请确认是否修改?", function(){
              Joyin.dialog(JoyinUtil.getLabel("ComSharePrice002.edit"),
                  basePath + "common/basicdata/marketdata/mstshareprice/ComSharePrice002/init",
@@ -80,7 +80,7 @@ $(function() {
                      table.reload();
                  });
          });
-//         });
+        });
      });
      
      /**

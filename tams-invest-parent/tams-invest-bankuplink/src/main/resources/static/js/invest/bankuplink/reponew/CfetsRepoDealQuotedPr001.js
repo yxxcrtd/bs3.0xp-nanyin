@@ -1003,7 +1003,7 @@
             $("#mySideTrader_wtcx").empty();
             $("#counterId_wtcx").empty();
             $("#counterTrader_wtcx").empty();
-            $(".termEmpty_wtcx").val("");
+            $("#term_wtcx").val("");
             $("#quoteId_wtcx").val("");
         });
 
@@ -1100,7 +1100,7 @@
         /**
          * 指令执行导出按钮点击事件
          */
-        $('.zlgl-transfer-form #CfetsRepoDealQuotedPr001_btn_export').click(function () {
+        $('#CfetsRepoDealQuotedPrice001_entrustOrder_btn_export').click(function () {
             exportExcel('zlzx');
         });
 

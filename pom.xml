@@ -84,7 +84,7 @@
         <module>microservice/service-risk-redis</module>
         <module>microservice/service-risk-redis-inf</module>
         <module>microservice/service-exchange</module>
-        <module>microservice/service-quote</module>
+        <module>microservice/service-quote-new</module>
 <!--         几许中心包 -->
         <module>JixuCenter</module>
 

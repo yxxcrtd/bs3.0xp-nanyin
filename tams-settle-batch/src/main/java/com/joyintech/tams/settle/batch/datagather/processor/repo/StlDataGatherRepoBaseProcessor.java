@@ -1,6 +1,9 @@
 package com.joyintech.tams.settle.batch.datagather.processor.repo;
 
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -39,6 +42,9 @@ public abstract class StlDataGatherRepoBaseProcessor extends StlDataGatherProces
     protected String getSecType() {
         return DictCodeListExt1.证券品种_回购.getValue();
     }
+
+    @Override
+    protected List<String> getFinprodType() {return Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());}
 
     @Override
     protected List<TotalTrdProductDealDto> generateDealTotal(List<TrdProductDealDto> dealList) {

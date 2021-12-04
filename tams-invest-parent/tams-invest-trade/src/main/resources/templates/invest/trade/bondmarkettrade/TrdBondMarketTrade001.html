@@ -33,7 +33,7 @@
                             <select type="text" id="appearMarketId" name="appearMarketId"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}"
-                                    th:data-url="@{/invest/trade/bondmarkettrade/TrdBondMarketTrade001/getAppearMarketId}"
+                                    th:data-url="@{/invest/trade/bondmarkettrade/TrdBondMarketTrade001/getAppearMarketId(pageId=${pageId})}"
                                 allowClear="true"
                                 multiple="true" >
                              </select>

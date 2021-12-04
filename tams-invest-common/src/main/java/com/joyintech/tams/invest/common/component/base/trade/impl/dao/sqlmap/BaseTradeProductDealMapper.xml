@@ -1174,7 +1174,7 @@
 	left join TRD_TRADE_FEE_DETAIL ttfd on ttfd.TRADE_ID = ipd.TRADE_ID
 	LEFT JOIN PTL_TRADE PT ON ipd.TRADE_ID = PT.BUSI_NO
 	LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
-	WHERE PP.INVEST_YESORNO = 'Y'
+	WHERE ((PP.PORTFOLIO_ID IS NOT NULL AND PP.INVEST_YESORNO = 'Y') or PP.PORTFOLIO_ID IS  NULL)
 	and (tdeal.ps in ('T65', 'T66') or tdeal.ps=ipd.ps)
 	AND tdeal.totle_trade_id = #{tradeId,jdbcType=VARCHAR}
 	</select>

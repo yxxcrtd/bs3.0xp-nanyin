@@ -85,6 +85,9 @@
                     sysDateT1:sysDateT1,
                     calId:calId
                 };
+                if( portfolioIds[i]==null|| portfolioIds[i]==''){
+                    continue;
+                }
                 Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/findSecAmountInfo', param, function (result) {
                     if (result) {
                         // document.getElementById('positionAmount').innerHTML = JoyinUtil.formatNumber(result.positionAmount, 2, 10000, 2)+'万元';

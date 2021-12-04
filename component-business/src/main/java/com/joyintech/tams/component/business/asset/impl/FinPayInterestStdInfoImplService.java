@@ -332,8 +332,11 @@ public class FinPayInterestStdInfoImplService extends BaseService<FinPayInterest
         }else{
             if(Boolean.parseBoolean(dto.getIsAgainCalInt())
                 ||(Boolean.parseBoolean(dto.getIscallbackPayByRepay()))){
-                invRepayList.addAll(dto.getInvRepayList());
-
+                //add by wm 20211115 付息计划编辑页面无还本计划，为空不赋值 start
+                if(!StringUtil.isEmptyList(dto.getInvRepayList())){
+                    invRepayList.addAll(dto.getInvRepayList());
+                }
+                //add by wm 20211115 付息计划编辑页面无还本计划，为空不赋值 end
                 for(FinCashPlanDto cashPlan:invRepayList){
                     if(dto.getIsPayIntFlag()!=null && dto.getIsPayIntFlag().equals(DictCodeList.是否_是.getValue())){
                         cashPlan.setIsPayInt(DictCodeList.是否_否.getValue());

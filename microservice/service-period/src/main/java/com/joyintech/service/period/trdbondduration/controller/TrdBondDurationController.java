@@ -235,4 +235,17 @@ public class TrdBondDurationController {
                                               @PathVariable("page") int page, @PathVariable("length") int length){
         return trdBondDurationService.getFinprodId(page, length, param);
     }
+
+    /**
+     * 画面查询方法-交易编号
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @PostMapping("getBusiCodeNew/{page}/{length}")
+    public Page<SelectOptionDto> getBusiCodeNew(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
+                                             @PathVariable("length") int length) {
+        return trdBondDurationService.getBusiCodeNew(page, length, param);
+    }
+
 }
