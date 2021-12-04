@@ -703,7 +703,6 @@ public class ReconciliationCommonService {
             param.put("finprodId", dto.getFinprodId());
             param.put("dealDate", dto.getTradeDate());
             param.put("seatNumber", dto.getSeatNumber());
-            param.put("ps", dto.getPs());
         }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getParaValue())){
             if(StringUtil.isEmpty(dto.getTradeId())){
                 param.put("finprodId", dto.getFinprodId());
@@ -735,7 +734,6 @@ public class ReconciliationCommonService {
             param.put("finprodId", dto.getFinprodId());
             param.put("dealDate", dto.getTradeDate2());
             param.put("seatNumber", dto.getSeatNumber());
-            param.put("ps", dto.getPs2());
         }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getParaValue())){
             param.put("finprodId", dto.getFinprodId());
             param.put("secAcctId", dto.getSecAcctId2());

@@ -203,7 +203,7 @@
 				TRADE_MARKET,
 				TRADE_DATE,
 				SEC_ACCT_ID
-			) std ON tmp.FINPROD_ID = std.FINPROD_ID AND tmp.TRADE_DATE = std.TRADE_DATE AND tmp.PS = std.PS
+			) std ON tmp.FINPROD_ID = std.FINPROD_ID AND tmp.TRADE_DATE = std.TRADE_DATE
 		WHERE
 			tmp.PARA_VALUE = #{PARA_VALUE_01}
 		UNION ALL
@@ -334,8 +334,7 @@
 				NULL SEC_ACCT_ID2,
 				e.BROKER_ID CUSTOMER_ID,
 				e.PARA_VALUE,
-				e.SEAT_NUMBER,
-			    NULL PS2
+				e.SEAT_NUMBER
 			FROM(
 				SELECT
 					a.FINPROD_ID,
@@ -413,8 +412,7 @@
 				NULL SEC_ACCT_ID2,
 				e.BROKER_ID CUSTOMER_ID,
 				e.PARA_VALUE,
-				e.SEAT_NUMBER,
-			    e.PS PS2
+				e.SEAT_NUMBER
 			FROM(
 				SELECT
 					a.FINPROD_ID,
@@ -423,7 +421,6 @@
 					a.DEAL_DATE,
 					a.ACCT_NO,
 					a.SEAT_NUMBER,
-				    a.PS,
 					#{CHECK_RESULT_2} CHECK_RESULT,
 					b.BROKER_ID,
 					d.PARA_VALUE
@@ -458,7 +455,6 @@
 					a.FINPROD_ID,
 					a.FINPROD_TYPE2,
 					a.TRADE_MARKET,
-					a.PS,
 					b.BROKER_ID,
 					d.PARA_VALUE
 			) e
@@ -492,8 +488,7 @@
 				e.SEC_ACCT_ID SEC_ACCT_ID2,
 				e.BROKER_ID CUSTOMER_ID,
 				e.PARA_VALUE,
-				e.SEAT_NUMBER,
-			    NULL PS2
+				e.SEAT_NUMBER
 			FROM(
 				SELECT
 					a.FINPROD_ID,
