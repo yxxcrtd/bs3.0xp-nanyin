@@ -397,6 +397,8 @@ public class StlDataDealSzdJsmxProcessService {
 			SettleTransData settleTransData = new SettleTransData();
 			// 流水号 = UUID
 			settleTransData.setTradeId(IDGenerator.generate());
+			// 成交编号
+			settleTransData.setCjbh(szdJsmx.getCjbh());
 			// 定义变量.成交数据明细附属表DTO
 			SettleTransDataAdd settleTransDataAdd = new SettleTransDataAdd();
 			// 定义变量.成交数据明细质押品信息表
