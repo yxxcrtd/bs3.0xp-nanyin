@@ -202,6 +202,10 @@ public class StlDataDealSzdJsmxProcessService {
 				// 交易方向
 				settleTransData.setPs(getSzdJsmxBondPs(stlDownDataDealOperatorDto.getDataFile(), szdJsmx.getMmbz(), szdJsmx.getYwlx(),
 						szdJsmx.getZqlb(), szdJsmx.getJllx(), szdJsmx.getQsbz(), szdJsmx.getGhlx()));
+				// 针对债券-回售特殊处理为竞价平台
+				if (StringUtil.equals(settleTransData.getPs(), DictCodeList.交易方向_行权_回售.getValue())){
+					settleTransData.setTradePlat(DictCodeList.交易平台_竞价撮合平台.getValue());
+				}
 				// 交易份额
 				if (StringUtil.equals(settleTransData.getPs(), DictCodeList.交易方向_行权_回售.getValue())
 						|| StringUtil.equals(settleTransData.getPs(), DictCodeListExt1.交易方向_债转股.getValue())){
