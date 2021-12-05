@@ -27,3 +27,21 @@ IS
 COMMENT ON COLUMN BUSI_TYPE_MAPPING.BUSI_TYPE_NAME
 IS
     '业务类型名称';
+
+delete from BUSI_TYPE_MAPPING;
+insert into BUSI_TYPE_MAPPING (SEQNO, FINPROD_TYPE_TG, PS, BUSI_TYPE, BUSI_TYPE_NAME)
+values ('1', 'F01', 'T01', '02', '现券买卖');
+insert into BUSI_TYPE_MAPPING (SEQNO, FINPROD_TYPE_TG, PS, BUSI_TYPE, BUSI_TYPE_NAME)
+values ('2', 'F01', 'T02', '02', '现券买卖');
+insert into BUSI_TYPE_MAPPING (SEQNO, FINPROD_TYPE_TG, PS, BUSI_TYPE, BUSI_TYPE_NAME)
+values ('3', 'F01', 'T03', '03', '债券行权交易');
+insert into BUSI_TYPE_MAPPING (SEQNO, FINPROD_TYPE_TG, PS, BUSI_TYPE, BUSI_TYPE_NAME)
+values ('4', 'F01', 'T39', '03', '债券行权交易');
+insert into BUSI_TYPE_MAPPING (SEQNO, FINPROD_TYPE_TG, PS, BUSI_TYPE, BUSI_TYPE_NAME)
+values ('5', 'F01', 'T07', '04', '债券存续期交易');
+insert into BUSI_TYPE_MAPPING (SEQNO, FINPROD_TYPE_TG, PS, BUSI_TYPE, BUSI_TYPE_NAME)
+values ('6', 'F01', 'T08', '04', '债券存续期交易');
+insert into BUSI_TYPE_MAPPING (SEQNO, FINPROD_TYPE_TG, PS, BUSI_TYPE, BUSI_TYPE_NAME)
+values ('7', 'F01', 'T09', '04', '债券存续期交易');
+
+
