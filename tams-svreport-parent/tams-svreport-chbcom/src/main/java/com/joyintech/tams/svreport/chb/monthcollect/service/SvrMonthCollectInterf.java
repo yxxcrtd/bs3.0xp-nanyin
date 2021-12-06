@@ -46,7 +46,6 @@ public class SvrMonthCollectInterf extends BaseService{
     public void generateData(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
 		if(svrMonthCollectInterfMapper.checkAllMonth(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd)) == 0){
 			logger.info("请先执行明细汇总批处理，再执行月报生成批处理！");
-			return;
 		}
 		int index=DateUtil.format(batchDate).lastIndexOf("-");
 		String termid = DateUtil.format(batchDate).substring(0, index);
