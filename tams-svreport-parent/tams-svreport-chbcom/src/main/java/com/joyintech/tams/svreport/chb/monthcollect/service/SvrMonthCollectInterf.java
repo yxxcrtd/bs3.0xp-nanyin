@@ -44,12 +44,12 @@ public class SvrMonthCollectInterf extends BaseService{
     private ChbCommonCheckService chbCommonCheckService;
 
     public void generateData(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
-    	Date batchEndDate = getFirstDayOfNextMonth(DateUtil.format(batchDateEnd));
-		if(svrMonthCollectInterfMapper.checkAllMonth(DateUtil.format(batchDateStart),DateUtil.format(batchEndDate)) == 0){
+		if(svrMonthCollectInterfMapper.checkAllMonth(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd)) == 0){
 			logger.info("请先执行明细汇总批处理，再执行月报生成批处理！");
-			return;
 		}
-		if(svrMonthCollectInterfMapper.checkSubmission(DateUtil.format(batchDateStart),DateUtil.format(batchEndDate)) != 0){
+		int index=DateUtil.format(batchDate).lastIndexOf("-");
+		String termid = DateUtil.format(batchDate).substring(0, index);
+		if(svrMonthCollectInterfMapper.checkSubmission(termid) != 0){
 			logger.info("已报送的月报，不再生成报送数据！");
 			return;
 		}
@@ -68,16 +68,6 @@ public class SvrMonthCollectInterf extends BaseService{
     		logger.info("没有检索到数据,批处理结束!");
     		return;
     	}
-//
-//		// 调用check逻辑
-//		logger.debug("销售结算资金交易信息登记数据检查开始------检查前数据个数：" + list.size());
-//		List<ChbDayCollect> checkList = chbCommonCheckService.checkData(list, ChbCheckTableInfo.理财业务销售数据基础汇总表SUM);
-//		logger.debug("销售结算资金交易信息登记数据检查结束------检查后数据个数：" + list.size());
-//
-//		if(StringUtil.isEmptyList(checkList)){
-//			logger.info("检查后的数据全部不合规，批处理结束");
-//			return;
-//		}
 		//更新表
     	logger.info("销售月报每月明细汇总信息入库开始------->>>>>>");
     	dbData(AllMap,batchDate,batchDateStart ,batchDateEnd);
@@ -120,6 +110,7 @@ public class SvrMonthCollectInterf extends BaseService{
 			logger.debug("当月汇总数据清除结束----------");
 
             logger.debug("销售月报每月明细汇总信息插入数据：插入开始----------");
+            //获取本行登记代码
 			String bankCode ="C88888";
 
 			for(String key:AllMap.keySet()){
@@ -140,6 +131,7 @@ public class SvrMonthCollectInterf extends BaseService{
 						}else{
 							detail.setIsConsign(DictCodeList.是否_中债_是.getValue());
 						}
+						detail = amtOrShares(detail);
 						svrMonthCollectInterfMapper.insertIntoDetail(detail);
 					}
 				}
@@ -161,6 +153,7 @@ public class SvrMonthCollectInterf extends BaseService{
 						}else{
 							detail.setIsConsign(DictCodeList.是否_中债_是.getValue());
 						}
+						detail = amtOrShares(detail);
 						svrMonthCollectInterfMapper.insertIntoDetail(detail);
 					}
 				}
@@ -182,6 +175,7 @@ public class SvrMonthCollectInterf extends BaseService{
 						}else{
 							detail.setIsConsign(DictCodeList.是否_中债_是.getValue());
 						}
+						detail = amtOrShares(detail);
 						svrMonthCollectInterfMapper.insertIntoDetail(detail);
 					}
 				}
@@ -199,29 +193,14 @@ public class SvrMonthCollectInterf extends BaseService{
 	 * @return
 	 */
 	public Map<String,Map<String,Map<String,ChbMonthCollect>>> getList(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
-		String IsOrNotAmt  = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_CHBMONTH_REPORT);
-		Date batchEndDate = this.getFirstDayOfNextMonth(DateUtil.format(batchDateEnd));
 		//汇总  总、净销售金额
-		List<ChbMonthCollect> listAmountTotal = svrMonthCollectInterfMapper.selectAmountTotal(DateUtil.format(batchDateStart),DateUtil.format(batchEndDate));
+		List<ChbMonthCollect> listAmountTotal = svrMonthCollectInterfMapper.selectAmountTotal(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 			//获取check表的
 			List<ChbMonthCollect> registList = svrMonthCollectInterfMapper.selectHolderNumCheck(DateUtil.format(batchDateEnd));
 			//报送表去除check表中识别标识相等的数据后再与check表合并
 			List<ChbMonthCollect> List = svrMonthCollectInterfMapper.selectHolderNumExcheck(registList,DateUtil.format(batchDateEnd));
 		    List<ChbMonthCollect> listAmountTotalExList = new ArrayList<>();
-//			listAmountTotal.stream().forEach(item -> {
-//				List.stream().forEach(item1 ->{
-//					if (item.getPrdRegistCode().equals(item1.getPrdRegistCode()) && item.getInstitutionCode().equals(item1.getInstitutionCode())
-//							&& item.getAreaCode().equals(item1.getAreaCode()) && item.getHolderType().equals(item1.getHolderType())
-//							&& item.getCcy().equals(item1.getCcy())){
-//						item.setBalanceShares(item1.getBalanceShares());
-//						item.setBalanceAmt(item1.getBalanceAmt());
-//						item.setCnyAmt(item1.getCnyAmt());
-//					}
-//					else {
-//						listAmountTotalExList.add(item1);
-//					}
-//				});
-//			});
+//		通过五个主key来拼接数据
 			for(ChbMonthCollect collect:listAmountTotal){
 				for(ChbMonthCollect listCollect:List){
 					if (collect.getPrdRegistCode().equals(listCollect.getPrdRegistCode()) && collect.getInstitutionCode().equals(listCollect.getInstitutionCode())
@@ -231,13 +210,29 @@ public class SvrMonthCollectInterf extends BaseService{
 						collect.setBalanceAmt(listCollect.getBalanceAmt());
 						collect.setCnyAmt(listCollect.getCnyAmt());
 					}
-					else listAmountTotalExList.add(listCollect);
 				}
 			}
-		    for(ChbMonthCollect collect :listAmountTotalExList){
-			listAmountTotal.add(collect);
+			//不能拼接的List数据当做单条数据放在listAmountTotal中
+		    Map<String,ChbMonthCollect> listAmountTotalMap = new HashMap<String,ChbMonthCollect>();
+		    for(ChbMonthCollect collect:listAmountTotal){
+		    	String totalFalg = collect.getPrdRegistCode() + collect.getInstitutionCode() + collect.getAreaCode() + collect.getHolderType() + collect.getCcy();
+                if(listAmountTotalMap.get(totalFalg) == null){
+					listAmountTotalMap.put(totalFalg,collect);
+				}
+			}
+		    for(ChbMonthCollect listCollect:List){
+				String totalFalg = listCollect.getPrdRegistCode() + listCollect.getInstitutionCode() + listCollect.getAreaCode() + listCollect.getHolderType() + listCollect.getCcy();
+				if(listAmountTotalMap.get(totalFalg) == null){
+					listAmountTotalMap.put(totalFalg,listCollect);
+				}
 		    }
-			listAmountTotal = this.currencyExchange(listAmountTotal);
+		    //获取新的拼接List组合
+		   for(String key :listAmountTotalMap.keySet()){
+			   listAmountTotalExList.add(listAmountTotalMap.get(key));
+		   }
+
+            //进行汇率转换
+			listAmountTotal = this.currencyExchange(listAmountTotalExList,batchDateEnd);
 
         //取得银行月报信息
 		List<ChbMonthCollect >chbPrdPosition = svrMonthCollectInterfMapper.selectChbPrdPosition(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
@@ -264,19 +259,34 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setSaleSharesTotal(a.getSaleSharesTotal());
 				holderTypeCollect.put(falg, bb);
 			}else{
+				if(a.getSaleSharesTotal() != null) {
+					if(holderTypeCollect.get(falg).getSaleSharesTotal() != null) {
+						holderTypeCollect.get(falg).setSaleSharesTotal(holderTypeCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
+					}else{
+						holderTypeCollect.get(falg).setSaleSharesTotal(a.getSaleSharesTotal());
+					}
+				}
+				if(a.getValueSharesTotal() != null){
+					if(holderTypeCollect.get(falg).getValueSharesTotal() != null) {
+						holderTypeCollect.get(falg).setValueSharesTotal(holderTypeCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
+					}else{
+						holderTypeCollect.get(falg).setValueSharesTotal(a.getValueSharesTotal());
+					}
+				}
 				if(a.getSaleAmountTotal() != null) {
-					holderTypeCollect.get(falg).setSaleAmountTotal(holderTypeCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					if(holderTypeCollect.get(falg).getSaleAmountTotal() != null) {
+						holderTypeCollect.get(falg).setSaleAmountTotal(holderTypeCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					}else{
+						holderTypeCollect.get(falg).setSaleAmountTotal(a.getSaleAmountTotal());
+					}
 				}
 				if(a.getValueAmountTotal() != null){
-				holderTypeCollect.get(falg).setValueAmountTotal(holderTypeCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					if(holderTypeCollect.get(falg).getValueAmountTotal() != null) {
+						holderTypeCollect.get(falg).setValueAmountTotal(holderTypeCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					}else{
+						holderTypeCollect.get(falg).setValueAmountTotal(a.getValueAmountTotal());
+					}
 				}
-				if(a.getValueSharesTotal() != null) {
-					holderTypeCollect.get(falg).setValueSharesTotal(holderTypeCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
-				}
-				if(a.getSaleSharesTotal() != null){
-					holderTypeCollect.get(falg).setSaleSharesTotal(holderTypeCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
-				}
-				if(List.size() != 0) {
 					if (a.getBalanceAmt() != null) {
 						if(holderTypeCollect.get(falg).getBalanceAmt() != null) {
 							holderTypeCollect.get(falg).setBalanceAmt(holderTypeCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
@@ -291,7 +301,6 @@ public class SvrMonthCollectInterf extends BaseService{
 							holderTypeCollect.get(falg).setBalanceShares(a.getBalanceShares());
 						}
 					}
-				}
 			}
 		}
 		//赋值投资者数量
@@ -407,14 +416,13 @@ public class SvrMonthCollectInterf extends BaseService{
 							}
 						}
 					}
-					if(IsOrNotAmt.equals("02")) {
 						//处理总销售份额
 						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
 						}
 						if (SaleSharesTotalFlag != null && SaleSharesTotalFlag != "") {
 							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
-							holderTypeCollectMap.get(key).get(SaleSharesTotalFlag).setSaleAmountTotal(SaleSharesTotalDiff);
+							holderTypeCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 						}
 						//处理净销份额
 						if (chbPrdPosition.get(i).getCleanamtsum() == null) {
@@ -422,7 +430,7 @@ public class SvrMonthCollectInterf extends BaseService{
 						}
 						if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
 							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
-							holderTypeCollectMap.get(key).get(ValueSharesTotalFlag).setValueAmountTotal(ValueSharesTotalDiff);
+							holderTypeCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 						}
 						//处理份额
 						if (BalanceSharesFlag != null && BalanceSharesFlag != "") {
@@ -430,10 +438,8 @@ public class SvrMonthCollectInterf extends BaseService{
 								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 							}
 							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
-							holderTypeCollectMap.get(key).get(BalanceSharesFlag).setBalanceAmt(BalanceSharesDiff);
+							holderTypeCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 						}
-					}
-                    else {
 						//处理总销售金额
 						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
@@ -458,7 +464,6 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
 							holderTypeCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 						}
-					}
 				}
 			}
 		}
@@ -487,18 +492,33 @@ public class SvrMonthCollectInterf extends BaseService{
 				areaCollect.put(falg, bb);
 			}else{
 				if(a.getSaleSharesTotal() != null) {
-					areaCollect.get(falg).setSaleSharesTotal(areaCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
+					if(areaCollect.get(falg).getSaleSharesTotal() != null) {
+						areaCollect.get(falg).setSaleSharesTotal(areaCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
+					}else{
+						areaCollect.get(falg).setSaleSharesTotal(a.getSaleSharesTotal());
+					}
 				}
 				if(a.getValueSharesTotal() != null){
-					areaCollect.get(falg).setValueSharesTotal(areaCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
+					if(areaCollect.get(falg).getValueSharesTotal() != null) {
+						areaCollect.get(falg).setValueSharesTotal(areaCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
+					}else{
+						areaCollect.get(falg).setValueSharesTotal(a.getValueSharesTotal());
+					}
 				}
 				if(a.getSaleAmountTotal() != null) {
-					areaCollect.get(falg).setSaleAmountTotal(areaCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					if(areaCollect.get(falg).getSaleAmountTotal() != null) {
+						areaCollect.get(falg).setSaleAmountTotal(areaCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					}else{
+						areaCollect.get(falg).setSaleAmountTotal(a.getSaleAmountTotal());
+					}
 				}
 				if(a.getValueAmountTotal() != null){
-					areaCollect.get(falg).setValueAmountTotal(areaCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					if(areaCollect.get(falg).getValueAmountTotal() != null) {
+						areaCollect.get(falg).setValueAmountTotal(areaCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					}else{
+						areaCollect.get(falg).setValueAmountTotal(a.getValueAmountTotal());
+					}
 				}
-				if(List.size() != 0) {
 					if (a.getBalanceAmt() != null) {
 						if(areaCollect.get(falg).getBalanceAmt() != null) {
 							areaCollect.get(falg).setBalanceAmt(areaCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
@@ -513,7 +533,6 @@ public class SvrMonthCollectInterf extends BaseService{
 							areaCollect.get(falg).setBalanceShares(a.getBalanceShares());
 						}
 					}
-				}
 			}
 		}
 		//赋值投资者数量
@@ -630,14 +649,13 @@ public class SvrMonthCollectInterf extends BaseService{
 							}
 						}
 					}
-					if(IsOrNotAmt.equals("02")) {
 						//处理总销售份额
 						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
 						}
 						if (SaleSharesTotalFlag != null && SaleSharesTotalFlag != "") {
 							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
-							areaCollectMap.get(key).get(SaleSharesTotalFlag).setSaleAmountTotal(SaleSharesTotalDiff);
+							areaCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 						}
 						//处理净销份额
 						if (chbPrdPosition.get(i).getCleanamtsum() == null) {
@@ -645,7 +663,7 @@ public class SvrMonthCollectInterf extends BaseService{
 						}
 						if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
 							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
-							areaCollectMap.get(key).get(ValueSharesTotalFlag).setValueAmountTotal(ValueSharesTotalDiff);
+							areaCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 						}
 						//处理份额
 						if (BalanceSharesFlag != null && BalanceSharesFlag != "") {
@@ -653,10 +671,8 @@ public class SvrMonthCollectInterf extends BaseService{
 								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 							}
 							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
-							areaCollectMap.get(key).get(BalanceSharesFlag).setBalanceAmt(BalanceSharesDiff);
+							areaCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 						}
-					}
-					else {
 						//处理总销售金额
 						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
@@ -681,7 +697,6 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
 							areaCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 						}
-					}
 				}
 			}
 		}
@@ -708,19 +723,34 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setSaleSharesTotal(a.getSaleSharesTotal());
 				institutionCollect.put(falg, bb);
 			}else{
-				if(a.getValueSharesTotal() != null) {
-					institutionCollect.get(falg).setValueSharesTotal(institutionCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
+				if(a.getSaleSharesTotal() != null) {
+					if(institutionCollect.get(falg).getSaleSharesTotal() != null) {
+						institutionCollect.get(falg).setSaleSharesTotal(institutionCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
+					}else{
+						institutionCollect.get(falg).setSaleSharesTotal(a.getSaleSharesTotal());
+					}
 				}
-				if(a.getSaleSharesTotal() != null){
-					institutionCollect.get(falg).setSaleSharesTotal(institutionCollect.get(falg).getSaleSharesTotal().add(a.getSaleSharesTotal()));
+				if(a.getValueSharesTotal() != null){
+					if(institutionCollect.get(falg).getValueSharesTotal() != null) {
+						institutionCollect.get(falg).setValueSharesTotal(institutionCollect.get(falg).getValueSharesTotal().add(a.getValueSharesTotal()));
+					}else{
+						institutionCollect.get(falg).setValueSharesTotal(a.getValueSharesTotal());
+					}
 				}
 				if(a.getSaleAmountTotal() != null) {
-					institutionCollect.get(falg).setSaleAmountTotal(institutionCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					if(institutionCollect.get(falg).getSaleAmountTotal() != null) {
+						institutionCollect.get(falg).setSaleAmountTotal(institutionCollect.get(falg).getSaleAmountTotal().add(a.getSaleAmountTotal()));
+					}else{
+						institutionCollect.get(falg).setSaleAmountTotal(a.getSaleAmountTotal());
+					}
 				}
 				if(a.getValueAmountTotal() != null){
-					institutionCollect.get(falg).setValueAmountTotal(institutionCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					if(institutionCollect.get(falg).getValueAmountTotal() != null) {
+						institutionCollect.get(falg).setValueAmountTotal(institutionCollect.get(falg).getValueAmountTotal().add(a.getValueAmountTotal()));
+					}else{
+						institutionCollect.get(falg).setValueAmountTotal(a.getValueAmountTotal());
+					}
 				}
-				if(List.size() != 0) {
 					if (a.getBalanceAmt() != null) {
 						if(institutionCollect.get(falg).getBalanceAmt() != null) {
 							institutionCollect.get(falg).setBalanceAmt(institutionCollect.get(falg).getBalanceAmt().add(a.getBalanceAmt()));
@@ -735,7 +765,6 @@ public class SvrMonthCollectInterf extends BaseService{
 							institutionCollect.get(falg).setBalanceShares(a.getBalanceShares());
 						}
 					}
-				}
 			}
 		}
 		//赋值投资者数量
@@ -851,14 +880,13 @@ public class SvrMonthCollectInterf extends BaseService{
 							}
 						}
 						}
-					if(IsOrNotAmt.equals("02")) {
 						//处理总销售份额
 						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
 						}
 						if (SaleSharesTotalFlag != null && SaleSharesTotalFlag != "") {
 							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
-							institutionCollectMap.get(key).get(SaleSharesTotalFlag).setSaleAmountTotal(SaleSharesTotalDiff);
+							institutionCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 						}
 						//处理净销份额
 						if (chbPrdPosition.get(i).getCleanamtsum() == null) {
@@ -866,7 +894,7 @@ public class SvrMonthCollectInterf extends BaseService{
 						}
 						if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
 							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
-							institutionCollectMap.get(key).get(ValueSharesTotalFlag).setValueAmountTotal(ValueSharesTotalDiff);
+							institutionCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 						}
 						//处理份额
 						if (BalanceSharesFlag != null && BalanceSharesFlag != "") {
@@ -874,10 +902,8 @@ public class SvrMonthCollectInterf extends BaseService{
 								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 							}
 							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
-							institutionCollectMap.get(key).get(BalanceSharesFlag).setBalanceAmt(BalanceSharesDiff);
+							institutionCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 						}
-					}
-					else {
 						//处理总销售金额
 						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
@@ -903,7 +929,6 @@ public class SvrMonthCollectInterf extends BaseService{
 							institutionCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 						}
 					}
-					}
 				}
 			}
 
@@ -913,6 +938,7 @@ public class SvrMonthCollectInterf extends BaseService{
 		AllMap.put("holderType",holderTypeCollectMap);
 		AllMap.put("area",areaCollectMap);
 		AllMap.put("institution",institutionCollectMap);
+
 		return AllMap;
 	}
 
@@ -921,17 +947,23 @@ public class SvrMonthCollectInterf extends BaseService{
 	 * @param listAmountTotal
 	 * @return
 	 */
-	public List<ChbMonthCollect> currencyExchange (List<ChbMonthCollect> listAmountTotal){
+	public List<ChbMonthCollect> currencyExchange (List<ChbMonthCollect> listAmountTotal,Date batchDateEnd){
+		//获取美元兑人民币
+		BigDecimal USDExchangeCNY = svrMonthCollectInterfMapper.USDExchangeCNY(DateUtil.format(batchDateEnd));
 		if (!listAmountTotal.isEmpty() && listAmountTotal.size() != 0) {
 			for (int i = 0; i < listAmountTotal.size(); i++) {
 				String ccy = listAmountTotal.get(i).getCcy();
 				if(ccy.equals("EUR") || ccy.equals("USD")){
 					//获取欧元或者美元兑人民币的汇率
-					BigDecimal exchangeCNY = svrMonthCollectInterfMapper.getCNYExchange(ccy);
+					BigDecimal exchangeCNY = svrMonthCollectInterfMapper.getCNYExchange(ccy,DateUtil.format(batchDateEnd));
 					if(exchangeCNY != null) {
 						//余额
 						if(listAmountTotal.get(i).getBalanceAmt() != null) {
 							listAmountTotal.get(i).setBalanceAmt(exchangeCNY.multiply(listAmountTotal.get(i).getBalanceAmt()));
+						}
+						//份额
+						if(listAmountTotal.get(i).getBalanceShares() != null) {
+							listAmountTotal.get(i).setBalanceShares(exchangeCNY.multiply(listAmountTotal.get(i).getBalanceShares()));
 						}
 						//总销份额
 						listAmountTotal.get(i).setSaleSharesTotal((exchangeCNY.multiply(listAmountTotal.get(i).getSaleSharesTotal())));
@@ -945,13 +977,15 @@ public class SvrMonthCollectInterf extends BaseService{
 				}
 				if(!ccy.equals("EUR") && !ccy.equals("USD") && !ccy.equals("CNY")){
 					//获取其他货币兑美元
-					BigDecimal exchangeUSD = svrMonthCollectInterfMapper.getUSDExchange(ccy);
-					//获取美元兑人民币
-					BigDecimal USDExchangeCNY = svrMonthCollectInterfMapper.USDExchangeCNY();
+					BigDecimal exchangeUSD = svrMonthCollectInterfMapper.getUSDExchange(ccy,DateUtil.format(batchDateEnd));
 					if(exchangeUSD != null && USDExchangeCNY != null) {
 						//余额
 						if(listAmountTotal.get(i).getBalanceAmt() != null) {
 							listAmountTotal.get(i).setBalanceAmt((exchangeUSD.multiply(listAmountTotal.get(i).getBalanceAmt())).multiply(USDExchangeCNY));
+						}
+						//份额
+						if(listAmountTotal.get(i).getBalanceShares() != null) {
+							listAmountTotal.get(i).setBalanceShares((exchangeUSD.multiply(listAmountTotal.get(i).getBalanceShares())).multiply(USDExchangeCNY));
 						}
 						//总销份额
 						listAmountTotal.get(i).setSaleSharesTotal((exchangeUSD.multiply(listAmountTotal.get(i).getSaleSharesTotal())).multiply(USDExchangeCNY));
@@ -987,4 +1021,33 @@ public class SvrMonthCollectInterf extends BaseService{
 		}
 		return null;
 	}
+
+	/**
+	 * 根据系统参数来控制显示份额还是金额
+	 * @param detail
+	 * @return
+	 */
+	public ChbMonthCollect  amtOrShares(ChbMonthCollect detail){
+		String IsOrNotAmt  = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_CHBMONTH_REPORT);
+		if(IsOrNotAmt.equals("02") && IsOrNotAmt != "" && IsOrNotAmt !=null){
+			detail.setSaleAmountTotal(detail.getSaleSharesTotal());
+			detail.setValueAmountTotal(detail.getValueSharesTotal());
+			detail.setBalanceAmt(detail.getBalanceShares());
+			detail.setValueSharesTotal(null);
+			detail.setSaleSharesTotal(null);
+			detail.setBalanceShares(null);
+			if(detail.getHolderNum() == null){
+				detail.setHolderNum(BigDecimal.ZERO);
+			}
+		}else{
+			detail.setValueSharesTotal(null);
+			detail.setSaleSharesTotal(null);
+			detail.setBalanceShares(null);
+			if(detail.getHolderNum() == null){
+				detail.setHolderNum(BigDecimal.ZERO);
+			}
+		}
+		return detail;
+	}
+
 }

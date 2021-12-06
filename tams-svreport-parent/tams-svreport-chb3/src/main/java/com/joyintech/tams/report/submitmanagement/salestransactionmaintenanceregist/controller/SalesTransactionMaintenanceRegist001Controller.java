@@ -50,8 +50,6 @@ public class SalesTransactionMaintenanceRegist001Controller extends BaseControll
     public String init(Model model) {
         super.setSelectOptionToModel(model, DictCode.报送数据状态,
             DictCode.报送状态,DictCode.报送反馈状态);
-
-        model.addAttribute("sysDate", iPlatformDate.getSysDateStr());
         return super.init(model);
     }
     /**

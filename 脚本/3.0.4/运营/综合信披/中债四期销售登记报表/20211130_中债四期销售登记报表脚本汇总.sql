@@ -595,7 +595,7 @@ values ('CUST_TYPE', '09', '其他金融机构', 9, '0', 'system', null, SYSDATE
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('CUST_TYPE', '10', 'SPV', 10, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('CUST_TYPE', '11', '其他机构和非法人组织', 11, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+values ('CUST_TYPE', '99', '其他机构和非法人组织', 99, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
 
 --销售结算报表类型枚举值
 DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SALE_REPORT_TYPE';
@@ -731,9 +731,7 @@ values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-009','Sale
 Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
 values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-010','SalesTransactionMaintenance002','lessThanCharLength','tradeNo',null,'61','Y','销售结算资金交易流水号不能超过60字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
-values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-011','SalesTransactionMaintenance002','isNotEmpty','tradePs',null,null,'N','销售结算资金流动方向要素不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
-Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
-values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-012','SalesTransactionMaintenance002','isNotEmpty','tradePs','==','TRADE_PS','Y','销售结算资金流动方向不再值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-012','SalesTransactionMaintenance002','isNotEmpty','tradePs','==','TRADE_PS','Y','销售结算资金流动方向不可为空或不再值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
 values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-013','SalesTransactionMaintenance002','isNotEmpty','tradeCounterAccNo',null,null,'N','销售结算资金交易对手方账号要素不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
@@ -751,9 +749,7 @@ values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-019','Sale
 Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
 values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-020','SalesTransactionMaintenance002','lessThanCharLength','tradeCounterAccBankNo',null,'13','Y','销售结算资金交易对手方账户开户行号不能超过12字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
-values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-021','SalesTransactionMaintenance002','isNotEmpty','tradeCcy',null,null,'N','销售结算资金交易币种要素不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
-Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
-values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-022','SalesTransactionMaintenance002','isNotEmpty','tradeCcy','==','CURRENCY_CHB','Y','销售结算资金交易币种不在值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-022','SalesTransactionMaintenance002','isNotEmpty','tradeCcy','==','CURRENCY_CHB','Y','销售结算资金交易币种不可为空或不在值域范围内。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
 values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-023','SalesTransactionMaintenance002','isNotEmpty','tradeAmt',null,null,'N','销售结算资金交易金额要素不可为空。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)

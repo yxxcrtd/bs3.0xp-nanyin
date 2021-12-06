@@ -30,7 +30,6 @@
 		erro.ERR_MSG              as errMsg
 		from CHB_SALER_STL_DEA_ERRODATA erro
 		where 1=1
-		and erro.DATA_STATUS in ('E','M')
 		<if test="tradePs != null and tradePs != ''">
 			and erro.TRADE_PS = #{tradePs,jdbcType=VARCHAR}
 		</if>
@@ -78,7 +77,6 @@
 		null                      as errMsg
 		from CHB_SALER_STL_DEAL_INFO info
 		where 1=1
-		and info.DATA_STATUS in ('E','M')
 		<if test="tradePs != null and tradePs != ''">
 			and info.TRADE_PS = #{tradePs,jdbcType=VARCHAR}
 		</if>
@@ -126,7 +124,6 @@
 		from CHB_SALER_STL_DEAL_INFO a
 		where
 		REGIST_SEQNO=#{registSeqno}
-		and DATA_STATUS IN ('E','M')
 	</select>
 
 	<!--	双击查看详细信息查询erro-->

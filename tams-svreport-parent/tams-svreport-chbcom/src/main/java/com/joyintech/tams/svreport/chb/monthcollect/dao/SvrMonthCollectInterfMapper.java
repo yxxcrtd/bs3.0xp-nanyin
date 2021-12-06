@@ -15,7 +15,7 @@ public interface SvrMonthCollectInterfMapper {
 	 * 汇总  总、净销售金额
 	 * @return
 	 */
-	List<ChbMonthCollect> selectAmountTotal(@Param("batchDateStart")String batchDateStart, @Param("batchEndDate")String batchEndDate);
+	List<ChbMonthCollect> selectAmountTotal(@Param("batchDateStart")String batchDateStart, @Param("batchDateEnd")String batchDateEnd);
 
 	/**
 	 * 根据持有数据，生成持有，投资者数量信息
@@ -44,10 +44,10 @@ public interface SvrMonthCollectInterfMapper {
 	/**
 	 *检查整个月汇总是否有值
 	 * @param batchDateStart
-	 * @param batchEndDate
+	 * @param batchDateEnd
 	 * @return
 	 */
-	int checkAllMonth(@Param("batchDateStart")String batchDateStart,@Param("batchEndDate")String batchEndDate);
+	int checkAllMonth(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 
 	/**
 	 *检查月末日汇总
@@ -65,17 +65,16 @@ public interface SvrMonthCollectInterfMapper {
 
 	/**
 	 * 检查是否已报送
-	 * @param batchDateStart
-	 * @param batchEndDate
+	 * @param termid
 	 * @return
 	 */
-	int checkSubmission(@Param("batchDateStart")String batchDateStart,@Param("batchEndDate")String batchEndDate);
+	int checkSubmission(@Param("termid")String termid);
 //	获取美元，欧元转人民币汇率
-	BigDecimal getCNYExchange(String ccy);
+	BigDecimal getCNYExchange(@Param("ccy")String ccy,@Param("batchDateEnd")String batchDateEnd);
 //	获取非美欧外币转美元汇率
-	BigDecimal getUSDExchange(String ccy);
+	BigDecimal getUSDExchange(@Param("ccy")String ccy,@Param("batchDateEnd")String batchDateEnd);
 //	获取美元转人民币汇率
-	BigDecimal USDExchangeCNY();
+	BigDecimal USDExchangeCNY(@Param("batchDateEnd")String batchDateEnd);
 //	取得银行月报信息
 	List<ChbMonthCollect> selectChbPrdPosition(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 //	分投资者类型获得投资者数量
