@@ -209,6 +209,9 @@ public class TrdBondInvestTrade002Controller extends BaseController {
         //成交匹配录单
         else if(StringUtil.isNotEmpty(tranRecord)) {
             dto = JsonUtils.json2Object(tranRecord,TrdBondInvestTradeDto.class);
+            if(dto.getSettleDate() != null && dto.getTradeDate() != null){
+                dto.setSettleSpeedStr(String.valueOf(DateUtil.getBetweenDayNumber(dto.getTradeDate(), dto.getSettleDate())));
+            }
         }
         else {
             String entrustId = this.getParam("entrustId");//委托

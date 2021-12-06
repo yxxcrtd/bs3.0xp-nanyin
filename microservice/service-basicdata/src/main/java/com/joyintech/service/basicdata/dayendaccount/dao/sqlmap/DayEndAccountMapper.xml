@@ -17,6 +17,7 @@
             a.ENTRUST_TRADE_ID,
             a.CUSTOMER_ID,
             a.STL_SEC_DEME,
+            b.TRADE_ID,
             b.SEAT_NUMBER,
             b.COMMISSION_AMT,
             b.JSF_AMT,

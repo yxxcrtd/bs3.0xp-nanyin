@@ -408,6 +408,8 @@ public class StlDataDealSzdSjsjgProcessService {
     		settleTransData.setPrinAmt(abs(szdSjsjg.getJgzjje()));
     		settleTransData.setShareAmt(abs(szdSjsjg.getJgjssl()));
             settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券_回售_行权回售.getValue());
+            // 针对债券-回售特殊处理为竞价平台
+            settleTransData.setTradePlat(DictCodeList.交易平台_竞价撮合平台.getValue());
             // 交易日期
             settleTransData.setTradeDate(DateUtil.parseDate(szdSjsjg.getJgqsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
     	}

@@ -234,7 +234,16 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getStlSecDeme())){
             //调用【清算明细查询】
             Map<String, Object> param = new HashMap<>();
-            param.put("tradeId", dto.getTradeId());
+            if(StringUtil.isNotEmpty(dto.getTradeId())){ // 有券商对账单
+                param.put("cjbh", dto.getTradeId());
+            }else { // 无券商对账单
+                param.put("seqNo", dto.getSeqNo());
+                List<StlSecReconDetail> details = reconciliationCommonMapper.queryStlSecReconDetails(param);
+                if(CollectionUtils.isNotEmpty(details)){
+                    param.put("tradeId", details.get(0).getTradeId());
+                }
+            }
+            param.put("dealDate", dto.getSettleDate());
             settleTransDatas = reconciliationCommonMapper.getSettleTransData(param);
         }
         return settleTransDatas;
