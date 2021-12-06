@@ -5,8 +5,10 @@ import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDownDataDealService;
 import com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper;
 import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeReaderDto;
@@ -44,6 +46,15 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
             searchParam.put("dealDate", execInfo.getExecuteDate());
             setSearchParam(searchParam);
             List<SettleTransDataDto> settleTransDataDtos = stlDataGatherMapper.selectSettleTransData(searchParam);
+            // GZYHTZJY-717:回购无法自动匹配:交易方向需特殊处理 fuyongsheng 20211206 add start
+            settleTransDataDtos.forEach(settleTransDataDto -> {
+                if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(settleTransDataDto.getFinprodType2())){
+                    settleTransDataDto.setPs(DictCodeListExt3.交易方向_正回购.getValue());
+                }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(settleTransDataDto.getFinprodType2())){
+                    settleTransDataDto.setPs( DictCodeListExt3.交易方向_逆回购.getValue());
+                }
+            });
+            // GZYHTZJY-717:回购无法自动匹配:交易方向需特殊处理 fuyongsheng 20211206 add end
             Map<String, List<SettleTransDataDto>> tempMap = settleTransDataDtos.stream().collect(JoyinCollectors.groupingBy(SettleTransDataDto::getOrderId));
             return tempMap.values().stream().map(InvestTradeReaderDto::new).collect(Collectors.toList());
         }else{
