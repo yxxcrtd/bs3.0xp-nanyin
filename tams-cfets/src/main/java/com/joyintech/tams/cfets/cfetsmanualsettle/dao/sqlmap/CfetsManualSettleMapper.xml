@@ -358,8 +358,8 @@
         EE.PRICE_MODEL priceModel,
         (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
         ssai.sec_acct_name secAcctId,
-        TPD.YIELD matureYield,
-        TPD.EXER_YIELD exeYield,
+        TPD.YIELD*100 matureYield,
+        TPD.EXER_YIELD*100 exeYield,
         EE.BUSINESS_MODEL busiTypePosition,
         TPD.UNIT_CPRICE unitPrice
         FROM TRD_PRODUCT_DEAL TPD
@@ -760,8 +760,8 @@
         T1.Trade_Amt tradeAmt,
         T1.unit_fprice allPrice,
         T1.fprice_amt fpriceAmt,
-        T1.Yield matureYield,
-        T1.Exer_Yield exeYield,
+        T1.Yield*100 matureYield,
+        T1.Exer_Yield*100 exeYield,
         T1.UNIT_INT unitInt,
         T1.TRADE_MARKET tradeMarket,
         T1.TRADE_MARKET_MODE tradeMarketMode,
