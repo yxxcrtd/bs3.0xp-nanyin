@@ -36,7 +36,7 @@
 		T2.FINPROD_ABBR finprodAbbr,
 		T1.FINPROD_TYPE2 finprodType2,
 		T1.PS ps,
-		T1.SHARE_AMT settleNumT,
+		T1.SHARE_AMT*100 settleNumT,
 		T1.TRADE_AMT settleAmtT,
 		case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
 		when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
@@ -50,13 +50,13 @@
 		T3.TRADE_ID tradeId,
 		T3.SHARE_AMT settleNum,
 		T3.TRADE_AMT settleAmt,
-		T4.PORTFOLIO_ID portfolioId
+		T4.PORTFOLIO_ID portfolioId,
 <!--		,T1.TG_BUSI_TYPE tgBusiType,-->
 <!--		T2.FINPROD_MARKET_ID finprodMarketId,-->
 <!--		sdl4.item_value tradeMarketStr,-->
 <!--		sdl5.item_value tradePlatStr,-->
 <!--		T6.COUNTER_NAME counterName,-->
-		T1.CCY ccy,
+		T1.CCY ccy
 		FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
 <!--		金融产品交易汇总表 T1-->
 <!--		LEFT JOIN 金融产品交易表 T3 ON T1.汇总交易编号 = T3.汇总交易编号-->

@@ -413,7 +413,7 @@
 
     <select id="getEtrInfoQueryOperate"
             resultType="com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoOperateListResponse">
-        select SEQ_NO,
+        SELECT rownum SEQ_NO,t.* from (select
         ENTRUST_ID,
         OPER_TYPE,
         to_char(OPER_DATE,'yyyy-MM-dd')  OPER_DATE,
@@ -423,7 +423,7 @@
         from ETR_ENTRUST_OPER_HIS
         LEFT JOIN SYS_USER SU on ETR_ENTRUST_OPER_HIS.user_id = SU.user_name
         WHERE entrust_id = #{entrustId}
-        order by OPER_TIME desc
+        order by OPER_TIME desc) t
     </select>
 
     <select id="queryRolePosByLoginUser" resultType="java.lang.Integer">
