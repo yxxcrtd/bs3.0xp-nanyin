@@ -10,7 +10,7 @@
 		null                      as disabledThing,
 		erro.REGIST_SEQNO         as registSeqno,
 		'01'                      as maintainStatus,
-		erro.DATA_STATUS          as dataStatus,
+		'A'              as dataStatus,
 		null             as accountName,
 		null             as tradeCounterAccNo,
 		null             as tradeCounterAccName,
