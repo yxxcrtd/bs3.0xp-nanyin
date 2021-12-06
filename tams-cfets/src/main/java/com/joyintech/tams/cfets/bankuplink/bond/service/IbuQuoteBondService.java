@@ -618,7 +618,7 @@ public class IbuQuoteBondService extends BaseService {
                                     break;
                                 }
                             } else {
-                                if (priceModelOne.getPrice().compareTo(item.getPrice()) != 0 && priceModelOne.getMatureYield().compareTo(item.getMatureYield()) != 0 && priceModelOne.getExerYield().compareTo(item.getExerYield()) != 0) {
+                                if (priceModelOne.getPrice().compareTo(item.getPrice()) != 0 && priceModelOne.getMatureYield().compareTo(item.getMatureYield()) != 0 && (null!=priceModelOne.getExerYield()&&priceModelOne.getExerYield().compareTo(item.getExerYield()) != 0)) {
                                     message = "存在多条指定价格指令，净价/到期收益率/行权收益率三者中任一数据需一致";
                                     break;
                                 }
