@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +47,9 @@ public class RskSupervisionPortfPointService extends BaseService<RskPortfolioInd
     @Autowired
     private PtlPortfolioMapper ptlPortfolioMapper;
 
+    @Autowired
+    private IPlatformDate iPlatformDate;
+
     /**
      * 组合树Tab画面查询方法
      * 
@@ -78,6 +82,9 @@ public class RskSupervisionPortfPointService extends BaseService<RskPortfolioInd
     public Page<RskPortfolioIndicator002Dto> selectTableIndForPage(int page, int length,
                                                                    Map<String, Object> param)
     {
+        if(!StringUtil.isNotEmpty(param.get("platDate"))){
+            param.put("platDate",iPlatformDate.getSysDate());
+        }
         return super.queryForPage(page, length,
             () -> rskSupervisionPortfPointMapper.selectTableIndForPage(param));
     }

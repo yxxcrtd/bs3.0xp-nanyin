@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.service.entrust.etrplanassetc.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -95,7 +95,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
      * 组合名称
      */
     private String portfolioName;
-    
+
     /**
      * 资产一级分类
      */
@@ -147,7 +147,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal finishAmt;
-    
+
     /**
      * 交易完成度
      */
@@ -157,9 +157,9 @@ public class EtrPlanAssetCDto extends EtrEntrust {
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
-    
-    
+
+
+
     /**
      * 获取 entrustNum2
      * @return entrustNum2.
@@ -168,7 +168,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
         return entrustNum2;
     }
 
-    
+
     /**
      * 设置 entrustNum2
      * @param entrustNum2 entrustNum2
@@ -177,7 +177,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
         this.entrustNum2 = entrustNum2;
     }
 
-    
+
     /**
      * 获取 entrustAmt2
      * @return entrustAmt2.
@@ -186,7 +186,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
         return entrustAmt2;
     }
 
-    
+
     /**
      * 设置 entrustAmt2
      * @param entrustAmt2 entrustAmt2
@@ -202,7 +202,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public Date getFinvdate() {
         return finvdate;
     }
-    
+
     /**
      * 设置 finvdate
      * @param finvdate finvdate
@@ -210,7 +210,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setFinvdate(Date finvdate) {
         this.finvdate = finvdate;
     }
-    
+
     /**
      * 获取 finmdate
      * @return finmdate.
@@ -218,7 +218,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public Date getFinmdate() {
         return finmdate;
     }
-    
+
     /**
      * 设置 finmdate
      * @param finmdate finmdate
@@ -226,7 +226,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setFinmdate(Date finmdate) {
         this.finmdate = finmdate;
     }
-    
+
     /**
      * 获取 assetAvailablePosition
      * @return assetAvailablePosition.
@@ -234,7 +234,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public BigDecimal getAssetAvailablePosition() {
         return assetAvailablePosition;
     }
-    
+
     /**
      * 设置 assetAvailablePosition
      * @param assetAvailablePosition assetAvailablePosition
@@ -242,7 +242,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setAssetAvailablePosition(BigDecimal assetAvailablePosition) {
         this.assetAvailablePosition = assetAvailablePosition;
     }
-    
+
     /**
      * 获取 calendarId
      * @return calendarId.
@@ -250,7 +250,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public String getCalendarId() {
         return calendarId;
     }
-    
+
     /**
      * 设置 calendarId
      * @param calendarId calendarId
@@ -258,7 +258,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setCalendarId(String calendarId) {
         this.calendarId = calendarId;
     }
-    
+
     /**
      * 获取 fileArray
      * @return fileArray.
@@ -266,7 +266,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public List<SysUploadFileInfo> getFileArray() {
         return fileArray;
     }
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -274,7 +274,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setFileArray(List<SysUploadFileInfo> fileArray) {
         this.fileArray = fileArray;
     }
-    
+
     /**
      * 获取 finprodMarketId
      * @return finprodMarketId.
@@ -282,7 +282,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public String getFinprodMarketId() {
         return finprodMarketId;
     }
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -290,7 +290,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setFinprodMarketId(String finprodMarketId) {
         this.finprodMarketId = finprodMarketId;
     }
-    
+
     /**
      * 获取 etrInvestPersonInfo
      * @return etrInvestPersonInfo.
@@ -298,7 +298,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public BussEtrInvestPersonInfoDto getEtrInvestPersonInfo() {
         return etrInvestPersonInfo;
     }
-    
+
     /**
      * 设置 etrInvestPersonInfo
      * @param etrInvestPersonInfo etrInvestPersonInfo
@@ -306,7 +306,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setEtrInvestPersonInfo(BussEtrInvestPersonInfoDto etrInvestPersonInfo) {
         this.etrInvestPersonInfo = etrInvestPersonInfo;
     }
-    
+
     /**
      * 获取 elementId
      * @return elementId.
@@ -314,7 +314,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public String getElementId() {
         return elementId;
     }
-    
+
     /**
      * 设置 elementId
      * @param elementId elementId
@@ -322,7 +322,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setElementId(String elementId) {
         this.elementId = elementId;
     }
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -330,7 +330,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public List<EtrPlanAssetCDto> getSelectedItem() {
         return selectedItem;
     }
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -338,7 +338,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setSelectedItem(List<EtrPlanAssetCDto> selectedItem) {
         this.selectedItem = selectedItem;
     }
-    
+
     /**
      * 获取 operateType
      * @return operateType.
@@ -346,7 +346,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public String getOperateType() {
         return operateType;
     }
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -354,7 +354,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setOperateType(String operateType) {
         this.operateType = operateType;
     }
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -362,7 +362,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public String getCloseWay() {
         return CloseWay;
     }
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -370,7 +370,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setCloseWay(String closeWay) {
         CloseWay = closeWay;
     }
-    
+
     /**
      * 获取 portfolioName
      * @return portfolioName.
@@ -378,7 +378,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public String getPortfolioName() {
         return portfolioName;
     }
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -386,7 +386,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
-    
+
     /**
      * 获取 assetType1
      * @return assetType1.
@@ -394,7 +394,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public String getAssetType1() {
         return assetType1;
     }
-    
+
     /**
      * 设置 assetType1
      * @param assetType1 assetType1
@@ -402,7 +402,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setAssetType1(String assetType1) {
         this.assetType1 = assetType1;
     }
-    
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -410,7 +410,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public String getFinprodName() {
         return finprodName;
     }
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -418,7 +418,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setFinprodName(String finprodName) {
         this.finprodName = finprodName;
     }
-    
+
     /**
      * 获取 finishAmt
      * @return finishAmt.
@@ -426,7 +426,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public BigDecimal getFinishAmt() {
         return finishAmt;
     }
-    
+
     /**
      * 设置 finishAmt
      * @param finishAmt finishAmt
@@ -434,7 +434,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setFinishAmt(BigDecimal finishAmt) {
         this.finishAmt = finishAmt;
     }
-    
+
     /**
      * 获取 transactioncom
      * @return transactioncom.
@@ -442,7 +442,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public BigDecimal getTransactioncom() {
         return transactioncom;
     }
-    
+
     /**
      * 设置 transactioncom
      * @param transactioncom transactioncom
@@ -450,7 +450,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setTransactioncom(BigDecimal transactioncom) {
         this.transactioncom = transactioncom;
     }
-    
+
     /**
      * 获取 riskTrialRetDto
      * @return riskTrialRetDto.
@@ -458,7 +458,7 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public List<RiskTrialRetDto> getRiskTrialRetDto() {
         return riskTrialRetDto;
     }
-    
+
     /**
      * 设置 riskTrialRetDto
      * @param riskTrialRetDto riskTrialRetDto
@@ -466,6 +466,17 @@ public class EtrPlanAssetCDto extends EtrEntrust {
     public void setRiskTrialRetDto(List<RiskTrialRetDto> riskTrialRetDto) {
         this.riskTrialRetDto = riskTrialRetDto;
     }
-    
-    
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
+
 }

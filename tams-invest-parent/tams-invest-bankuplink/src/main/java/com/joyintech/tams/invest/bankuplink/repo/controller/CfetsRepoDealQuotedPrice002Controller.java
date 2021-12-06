@@ -96,13 +96,13 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
      */
     @Autowired
     private CfetsRepoDealQuotedPrice004Service cfetsRepoDealQuotedPrice004Service;
-    
+
     /**
      * {@linkplain}
      */
     @Autowired
-	 private IPlatformDate iPlatformDate;
-    
+    private IPlatformDate iPlatformDate;
+
     /**
      * {@linkplain}
      */
@@ -115,18 +115,18 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.回购拆借方向, BussinessDictCode.清算速度,
-            BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种,
-            BussinessDictCode.计息基础, BussinessDictCode.回购期限品种);
+                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种,
+                BussinessDictCode.计息基础, BussinessDictCode.回购期限品种);
         model.addAttribute("ACCOUNT_SPEED_1", BussinessDictCodeList.清算速度_T加1.getValue());
         model.addAttribute("yesNoFlag_yes", BussinessDictCodeList.是否_是.getValue());
         model.addAttribute("assetTypeOne_abs", BussinessDictCodeList.平安资产一级分类_资产支持证券.getValue());
         model.addAttribute("psZHG", BussinessDictCodeList.回购拆借方向_正回购.getValue());
         // 可否无委托回复
         model.addAttribute("ibuFlag_answerQuoteWithOutEntrust",
-            CacheUtil.getSysParam("ibuFlag_answerQuoteWithOutEntrust"));
+                CacheUtil.getSysParam("ibuFlag_answerQuoteWithOutEntrust"));
         // 本方交易员是否可编辑
         model.addAttribute("ibuFlag_ouTraderIdCanEdit",
-            CacheUtil.getSysParam("ibuFlag_ouTraderIdCanEdit"));
+                CacheUtil.getSysParam("ibuFlag_ouTraderIdCanEdit"));
         model.addAttribute("quoteRoleTypeEnquiry", BussinessDictCodeList.银行间上行本方角色_询价方.getValue());
         model.addAttribute("quoteRoleTypeReply", BussinessDictCodeList.银行间上行本方角色_回复方.getValue());
         String entrustId = this.getParam("entrustId");
@@ -138,16 +138,16 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
         model.addAttribute("editOperation", this.getParam("editOperation"));//区分双击进去修改页面与点击修改进入页面
         CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
         if (StringUtil.equals(this.getParam("workflowStatus"),DictCodeListExt1.有效状态_流程中.getValue())
-            || (!WorkFlowUtil.isNotFromToDoList()
+                || (!WorkFlowUtil.isNotFromToDoList()
                 && StringUtil.isNotBlank(getParam(GlobalConstant.WORKFLOW_ID)))) {
             model.addAttribute(GlobalConstant.WORKFLOW_ID,getParam(GlobalConstant.WORKFLOW_ID));
             cfetsRepoDealQuotedPrice001Dto = cfetsRepoDealQuotedPrice002Service.getBussinessEntityByWorkflowId(
-                getParam(GlobalConstant.WORKFLOW_ID));
+                    getParam(GlobalConstant.WORKFLOW_ID));
             if (cfetsRepoDealQuotedPrice001Dto.getQuoteId() != null) {
-            	// 画面模式
-            	cfetsRepoDealQuotedPrice001Dto.setDialogueRecord(cfetsRepoDealQuotedPrice002Service.selectDialogueRecord(cfetsRepoDealQuotedPrice001Dto).getDialogueRecord());
+                // 画面模式
+                cfetsRepoDealQuotedPrice001Dto.setDialogueRecord(cfetsRepoDealQuotedPrice002Service.selectDialogueRecord(cfetsRepoDealQuotedPrice001Dto).getDialogueRecord());
                 if (StringUtil.isNotEmpty(this.getParam("quotaPageModel"))) {
-                	cfetsRepoDealQuotedPrice001Dto.setQuotaPageModel(this.getParam("quotaPageModel"));
+                    cfetsRepoDealQuotedPrice001Dto.setQuotaPageModel(this.getParam("quotaPageModel"));
                 }
                 //撤销流程中数据 查询有效数据
                 /*if(StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getOperatorType(),"revoke")){
@@ -158,33 +158,33 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
             }
         }
         else if (StringUtil.isNotEmpty(quoteId)) {
-        	cfetsRepoDealQuotedPrice001Dto = this.queryRepoInfoByQuoteId(quoteId, operation);
-        	// 画面模式
+            cfetsRepoDealQuotedPrice001Dto = this.queryRepoInfoByQuoteId(quoteId, operation);
+            // 画面模式
             if (StringUtil.isNotEmpty(this.getParam("quotaPageModel"))) {
-            	cfetsRepoDealQuotedPrice001Dto.setQuotaPageModel(this.getParam("quotaPageModel"));
+                cfetsRepoDealQuotedPrice001Dto.setQuotaPageModel(this.getParam("quotaPageModel"));
             }
-           model.addAttribute(GlobalConstant.ENTITY,cfetsRepoDealQuotedPrice001Dto);
+            model.addAttribute(GlobalConstant.ENTITY,cfetsRepoDealQuotedPrice001Dto);
         }
         else if (StringUtil.isNotEmpty(entrustId)) {
             cfetsRepoDealQuotedPrice001Dto = cfetsRepoDealQuotedPrice002Service.queryEntrustInfoByEntrustId(entrustId, null);
-           // 画面模式
+            // 画面模式
             if (StringUtil.isNotEmpty(this.getParam("quotaPageModel"))) {
-            	cfetsRepoDealQuotedPrice001Dto.setQuotaPageModel(this.getParam("quotaPageModel"));
+                cfetsRepoDealQuotedPrice001Dto.setQuotaPageModel(this.getParam("quotaPageModel"));
             }
             // cfetsRepoDealQuotedPrice001Dto.setMySideTrader();// TODO 查询用户对应的交易员
             model.addAttribute(GlobalConstant.ENTITY, cfetsRepoDealQuotedPrice001Dto);
         }else{
-        	cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
-        	// 画面模式
+            cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
+            // 画面模式
             if (StringUtil.isNotEmpty(this.getParam("quotaPageModel"))) {
-            	cfetsRepoDealQuotedPrice001Dto.setQuotaPageModel(this.getParam("quotaPageModel"));
+                cfetsRepoDealQuotedPrice001Dto.setQuotaPageModel(this.getParam("quotaPageModel"));
             }
             // cfetsRepoDealQuotedPrice001Dto.setMySideTrader();// TODO 查询用户对应的交易员
             model.addAttribute(GlobalConstant.ENTITY, cfetsRepoDealQuotedPrice001Dto);
         }
         // 质押品超过剩余可质押面额是否继续
         model.addAttribute("ibuFlag_repoOverAvaCanContinue",
-            CacheUtil.getSysParam("ibuFlag_repoOverAvaCanContinue"));
+                CacheUtil.getSysParam("ibuFlag_repoOverAvaCanContinue"));
         model.addAttribute("settleSpreedT0", BussinessDictCodeList.清算速度_T加0.getValue());
         model.addAttribute("settleSpreedT1", BussinessDictCodeList.清算速度_T加1.getValue());
         cfetsRepoDealQuotedPrice002Service.单独处理页面质押券列表(cfetsRepoDealQuotedPrice001Dto);
@@ -204,9 +204,9 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
     @RequestMapping("handlePledgeList")
     public CfetsRepoDealQuotedPrice001Dto handlePledgeList(@RequestBody CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto){
         if (!StringUtil.isEmptyList(cfetsRepoDealQuotedPrice001Dto.getPledgeBondList())
-            && StringUtil.isNotEmpty(cfetsRepoDealQuotedPrice001Dto.getPortfolioId())) {
+                && StringUtil.isNotEmpty(cfetsRepoDealQuotedPrice001Dto.getPortfolioId())) {
             List<String> bondCodes = cfetsRepoDealQuotedPrice001Dto.getPledgeBondList().stream().map(
-                obj -> StringUtil.isNotEmpty(obj.getBondCode())?obj.getBondCode():obj.getFinprodId()).collect(Collectors.toList());
+                    obj -> StringUtil.isNotEmpty(obj.getBondCode())?obj.getBondCode():obj.getFinprodId()).collect(Collectors.toList());
             // 查询债券相关信息
             List<CfetsRepoDealQuotedPrice003Dto> pledgeBondList = null;
             Map<String, Object> param = new HashMap<>();
@@ -215,21 +215,21 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
             param.put("quoteId", cfetsRepoDealQuotedPrice001Dto.getQuoteId());
             param.put("finprodMarketIds", bondCodes);
             if (StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getPs(),
-                BussinessDictCodeList.回购拆借方向_正回购.getValue())) {
+                    BussinessDictCodeList.回购拆借方向_正回购.getValue())) {
                 // 正回购
                 try {
-					pledgeBondList = cfetsRepoDealQuotedPrice003Service.queryPledgeBondList(
-					    param).getRoot();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                    pledgeBondList = cfetsRepoDealQuotedPrice003Service.queryPledgeBondList(
+                            param).getRoot();
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
             else if (StringUtil.equals(cfetsRepoDealQuotedPrice001Dto.getPs(),
-                BussinessDictCodeList.回购拆借方向_逆回购.getValue())) {
+                    BussinessDictCodeList.回购拆借方向_逆回购.getValue())) {
                 // 逆回购
                 pledgeBondList = cfetsRepoDealQuotedPrice004Service.queryPledgeBondList(
-                    param).getRoot();
+                        param).getRoot();
             }
             if (!StringUtil.isEmptyList(pledgeBondList)) {
                 for (CfetsRepoDealQuotedPrice003Dto pledge : pledgeBondList) {
@@ -267,16 +267,16 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
                                                                   String operation) {
         // 根据报价id查询数据
         CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = cfetsRepoDealQuotedPrice002Service.queryEntrustInfoByQuoteId(
-            quoteId);
+                quoteId);
         if (StringUtil.equals(operation, "CfetsRepoDealQuotedPrice001.copy")
-            && StringUtil.isNotEmpty(quoteId)) {
+                && StringUtil.isNotEmpty(quoteId)) {
             cfetsRepoDealQuotedPrice001Dto.setQuoteId(null);
             cfetsRepoDealQuotedPrice001Dto.setVersion(-1L);
             cfetsRepoDealQuotedPrice001Dto.setCfetsQuoteId(null);
         }
         if (StringUtil.isNotEmpty(cfetsRepoDealQuotedPrice001Dto.getEntrustId())) {
             CfetsRepoDealQuotedPrice001Dto dto = cfetsRepoDealQuotedPrice002Service.queryEntrustInfoByEntrustId(
-                cfetsRepoDealQuotedPrice001Dto.getEntrustId(), null);
+                    cfetsRepoDealQuotedPrice001Dto.getEntrustId(), null);
             cfetsRepoDealQuotedPrice001Dto.setSecAcctId(dto.getSecAcctId());
         }
         // 处理质押品信息
@@ -499,43 +499,43 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
         cfetsRepoDealQuotedPrice002Service.submit(cfetsRepoDealQuotedPrice001Dto);
         return new AjaxResult(this.getMessage("CFETS_COMMON_SUBMIT"));
     }
-    
-    @ResponseBody
-	@RequestMapping("save")
-	public AjaxResult save(@RequestBody CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto, BindingResult br) throws WorkFlowException {
-		if (br.hasErrors()) {
-			return new AjaxResult(br);
-		}
-		if (!StringUtil.isNotEmpty(cfetsRepoDealQuotedPrice001Dto.getQuoteId())) {
-			BussinessCodeParameter codeParameter = new BussinessCodeParameter();
-			codeParameter.setSeqNo("IBU_003");
-			String code = bussGetBussinessIdService != null
-					? bussGetBussinessIdService.buildBussinessCode(codeParameter) : IDGenerator.generate();
-					cfetsRepoDealQuotedPrice001Dto.setQuoteId(code);
-		}
-		ProcessParameter<CfetsRepoDealQuotedPrice001Dto> processParameter = new ProcessParameter<CfetsRepoDealQuotedPrice001Dto>();
-		WorkFlowParameter<CfetsRepoDealQuotedPrice001Dto> params = cfetsRepoDealQuotedPrice002Service.getWorkFlowParameter(cfetsRepoDealQuotedPrice001Dto);
-		params.setPageId(cfetsRepoDealQuotedPrice001Dto.getPageId());
-		params.setElementId(cfetsRepoDealQuotedPrice001Dto.getElementId());
-		params.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
-		params.setBusinessCode(cfetsRepoDealQuotedPrice001Dto.getQuoteId());
-		params.setComment(entity -> getMessage("对话报价编号") + "(" + entity.getQuoteId() + ")-"
-				+ "业务类型" + "(" + DictCodeListExt3.报价系统区分类型_质押式回购对话报价.getCodeName() + ")-" + "平台日" + "("
-				+ DateUtil.format(iPlatformDate.getSysDate()) + ")");
-		processParameter.setWorkFlowParameter(params);
 
-		cfetsRepoDealQuotedPrice001Dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
-		cfetsRepoDealQuotedPrice001Dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
-		cfetsRepoDealQuotedPrice001Dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
-		cfetsRepoDealQuotedPrice001Dto.setCreateTime(new Date());// 创建时间
-		String msg = cfetsRepoDealQuotedPrice002Service.start(processParameter, cfetsRepoDealQuotedPrice001Dto);
-		//cfetsRepoDealQuotedPrice002Service.insertWflBondDialogueQuote(cfetsRepoDealQuotedPrice001Dto);
-		return new AjaxResult(msg);
-	}
+    @ResponseBody
+    @RequestMapping("save")
+    public AjaxResult save(@RequestBody CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto, BindingResult br) throws WorkFlowException {
+        if (br.hasErrors()) {
+            return new AjaxResult(br);
+        }
+        if (!StringUtil.isNotEmpty(cfetsRepoDealQuotedPrice001Dto.getQuoteId())) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setSeqNo("IBU_003");
+            String code = bussGetBussinessIdService != null
+                    ? bussGetBussinessIdService.buildBussinessCode(codeParameter) : IDGenerator.generate();
+            cfetsRepoDealQuotedPrice001Dto.setQuoteId(code);
+        }
+        ProcessParameter<CfetsRepoDealQuotedPrice001Dto> processParameter = new ProcessParameter<CfetsRepoDealQuotedPrice001Dto>();
+        WorkFlowParameter<CfetsRepoDealQuotedPrice001Dto> params = cfetsRepoDealQuotedPrice002Service.getWorkFlowParameter(cfetsRepoDealQuotedPrice001Dto);
+        params.setPageId(cfetsRepoDealQuotedPrice001Dto.getPageId());
+        params.setElementId(cfetsRepoDealQuotedPrice001Dto.getElementId());
+        params.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
+        params.setBusinessCode(cfetsRepoDealQuotedPrice001Dto.getQuoteId());
+        params.setComment(entity -> getMessage("对话报价编号") + "(" + entity.getQuoteId() + ")-"
+                + "业务类型" + "(" + DictCodeListExt3.报价系统区分类型_质押式回购对话报价.getCodeName() + ")-" + "平台日" + "("
+                + DateUtil.format(iPlatformDate.getSysDate()) + ")");
+        processParameter.setWorkFlowParameter(params);
+
+        cfetsRepoDealQuotedPrice001Dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
+        cfetsRepoDealQuotedPrice001Dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
+        cfetsRepoDealQuotedPrice001Dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
+        cfetsRepoDealQuotedPrice001Dto.setCreateTime(new Date());// 创建时间
+        String msg = cfetsRepoDealQuotedPrice002Service.start(processParameter, cfetsRepoDealQuotedPrice001Dto);
+        //cfetsRepoDealQuotedPrice002Service.insertWflBondDialogueQuote(cfetsRepoDealQuotedPrice001Dto);
+        return new AjaxResult(msg);
+    }
 
     /**
      * 对话报价验证
-     * 
+     *
      * @param entrustId 委托id
      * @param 处理结果
      * @return
@@ -563,10 +563,10 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
         }
         return ar;
     }
-    
+
     /**
      * 对话报价验证
-     * 
+     *
      * @param entrustId 委托id
      * @param 处理结果
      * @return
@@ -576,9 +576,9 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("checkEditList")
     public AjaxResult checkEditList(@RequestBody Map<String, Object> param) {
-    	List<Map<String, Object>> dataList = (List<Map<String, Object>>)param.get("dataList");
-    	AjaxResult ar = null;
-    	for(Map<String, Object> data:dataList){
+        List<Map<String, Object>> dataList = (List<Map<String, Object>>)param.get("dataList");
+        AjaxResult ar = null;
+        for(Map<String, Object> data:dataList){
             //多组合标识或者本方询价方为回复方 均跳转多组合界面
             String isDzh = (String)param.get("isDzh");
             String quoteRoleType = (String)param.get("quoteRoleType");
@@ -586,17 +586,17 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
                 data.put("entrustId",StringUtil.EMPTY);
             }
             ar = cfetsRepoDealQuotedPrice002Service.checkEdit(data);
-    		if(!StringUtil.isEmptyList(ar.getErrorList())){
-    			return ar;
-    		}
-    	}
+            if(!StringUtil.isEmptyList(ar.getErrorList())){
+                return ar;
+            }
+        }
         return ar;
     }
-    
+
 
     /**
      * 对话报价回复成交验证
-     * 
+     *
      * @param param 参数
      * @param 处理结果
      * @return
@@ -613,8 +613,8 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
         AjaxResult ar = cfetsRepoDealQuotedPrice002Service.checkRepoDeal(cfetsRepoDealQuotedPrice001Dto);
         return ar;
     }
-    
-    
+
+
 
     /**
      * 撤回
@@ -630,7 +630,7 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
         cfetsRepoDealQuotedPrice002Service.revert(param);
         return new AjaxResult(this.getMessage("CFETS_COMMON_REVOKE"));
     }
-    
+
     /**
      * 撤回
      *
@@ -643,9 +643,9 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
     @RequestMapping("revertList")
     public AjaxResult revertList(@RequestBody Map<String, Object> param) {
         List<Map<String, Object>> dataList = (List<Map<String, Object>>)param.get("dataList");
-    	for(Map<String, Object> data:dataList){
-    		cfetsRepoDealQuotedPrice002Service.revert(data);
-    	}
+        for(Map<String, Object> data:dataList){
+            cfetsRepoDealQuotedPrice002Service.revert(data);
+        }
         return new AjaxResult(this.getMessage("CFETS_COMMON_REVOKE"));
     }
 
@@ -711,7 +711,7 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
 
     /**
      * 根据委托代码查询委托基本信息
-     * 
+     *
      * @param entrustId 委托代码
      * @return 委托基本信息
      * @see
@@ -727,7 +727,7 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
 
     /**
      * 回复成交质押品数据校验
-     * 
+     *
      * @param entrustId 委托id
      * @param 处理结果
      * @return
@@ -754,7 +754,7 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
 
     /**
      * 现券买卖历史报价 撤销
-     * 
+     *
      * @param dto
      * @param br
      * @return
@@ -763,7 +763,7 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("repoRevoke")
     public AjaxResult bondRevoke(@RequestBody CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto)
-        throws WorkFlowException {
+            throws WorkFlowException {
         ProcessParameter<CfetsRepoDealQuotedPrice001Dto> processParameter = new ProcessParameter<CfetsRepoDealQuotedPrice001Dto>();
         WorkFlowParameter<CfetsRepoDealQuotedPrice001Dto> workFlowParameter = new WorkFlowParameter<CfetsRepoDealQuotedPrice001Dto>();
         workFlowParameter.setPageId("CfetsRepoDealQuotedPrice002");
@@ -771,13 +771,13 @@ public class CfetsRepoDealQuotedPrice002Controller extends BaseController {
         workFlowParameter.setBusinessCode(cfetsRepoDealQuotedPrice001Dto.getQuoteId());
         workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
         workFlowParameter.setComment(
-            entity -> getMessage("CFETSHIS_QUOTEID") + "(" + entity.getQuoteId() + ")");
+                entity -> getMessage("CFETSHIS_QUOTEID") + "(" + entity.getQuoteId() + ")");
         processParameter.setOperationType(OperationType.REVOKE);
         processParameter.setWorkFlowParameter(workFlowParameter);
         cfetsRepoDealQuotedPrice001Dto = this.queryRepoInfoByQuoteId(cfetsRepoDealQuotedPrice001Dto.getQuoteId(), null);
         cfetsRepoDealQuotedPrice001Dto.setOperatorType("revoke");
         String msg = cfetsRepoDealQuotedPrice002Service.start(processParameter,
-            cfetsRepoDealQuotedPrice001Dto);
+                cfetsRepoDealQuotedPrice001Dto);
 
         return new AjaxResult(msg);
     }

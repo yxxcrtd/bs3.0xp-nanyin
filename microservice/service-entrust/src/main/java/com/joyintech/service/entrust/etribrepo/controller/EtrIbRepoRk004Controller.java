@@ -177,9 +177,11 @@ public class EtrIbRepoRk004Controller {
 									if (!StringUtil.isEmptyList(zxList)) {
 										String b = zxList.stream().map(BusiFinProductRatingDto::getGradeResult).min(String::compareTo).get();
 										if (dd.getSecGradeResult().compareTo(b) >= 0) {//不低于债项评级
-											tempList.addAll(finProductList);
+											tempList.add(dto2);
 										}
 									}
+								}else{
+									tempList.add(dto2);
 								}
 							}
 						}
@@ -196,7 +198,7 @@ public class EtrIbRepoRk004Controller {
 							if (!StringUtil.isEmptyList(zxList)) {
 								String b = zxList.stream().map(BusiFinProductRatingDto::getGradeResult).min(String::compareTo).get();
 								if (dd.getSecGradeResult().compareTo(b) >= 0) {//不低于债项评级
-									tempList.addAll(finProductList);
+									tempList.add(dto2);
 								}
 							}
 						}

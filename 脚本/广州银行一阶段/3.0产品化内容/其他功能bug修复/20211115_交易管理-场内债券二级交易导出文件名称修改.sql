@@ -1,0 +1,1 @@
+UPDATE SYS_PAGE SET REMARK = '债券交易管理查询' WHERE PAGE_ID = 'TrdBondInvestTradeEx001';

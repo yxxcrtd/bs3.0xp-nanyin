@@ -1,0 +1,8 @@
+delete from sys_page_dictlist where PAGE_ID= 'TrdOutRightRepoTrade002' and SUB_PAGE_ID='999999' and DICT_ID='SETT_MODE';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TrdOutRightRepoTrade002', '999999', 'SETT_MODE', '01', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TrdOutRightRepoTrade002', '999999', 'SETT_MODE', '02', '', '', 'system', '', sysdate, 'system', sysdate, '');
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('TrdOutRightRepoTrade002', '999999', 'SETT_MODE', '03', '', '', 'system', '', sysdate, 'system', sysdate, '');
+

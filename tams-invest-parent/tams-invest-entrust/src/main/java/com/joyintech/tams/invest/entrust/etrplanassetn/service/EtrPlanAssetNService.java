@@ -26,6 +26,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
@@ -40,6 +41,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
+import com.joyintech.tams.invest.entrust.etrplanassetc.dto.EtrPlanAssetCDto;
 import com.joyintech.tams.invest.entrust.etrplanassetn.dto.EtrPlanAssetNDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -51,6 +53,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 计划类净值委托service 〈功能详细描述〉
@@ -113,9 +116,20 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
         }
         /*添加三四级分类 zhangpuyu 2019/7/31 end*/
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForPage(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/findPage", param,
-            EtrPlanAssetNDto.class);
+        Page<EtrPlanAssetNDto> page = restTemplate.postForPage(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/findPage", param,
+                EtrPlanAssetNDto.class);
+        List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+                param, SysUser.class);
+        for(EtrPlanAssetNDto dto:page.getRoot()){
+            if(StringUtil.isNotEmpty(dto.getNextUser())){
+                String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+                        .map(SysUser::getRealName)
+                        .collect(Collectors.joining(",","",""));
+                dto.setNextUser(sysUsers);
+            }
+        }
+        return page;
     }
 
     /**
@@ -132,8 +146,8 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
         map.put("userId", user.getUserName());
         map.put("param", param);
         return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME
-                                       + "/EtrPlanAssetN/getentrustId" , map,
-            SuggestDto.class);
+                        + "/EtrPlanAssetN/getentrustId" , map,
+                SuggestDto.class);
     }
 
     /**
@@ -146,8 +160,8 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
      */
     public List<SuggestDto> getfinprodId(String param) {
         return restTemplate.getForList(ServiceApplication.ENTRUST_SERVICE_NAME
-                                       + "/EtrPlanAssetN/getfinprodId?finprodId=" + param,
-            SuggestDto.class);
+                        + "/EtrPlanAssetN/getfinprodId?finprodId=" + param,
+                SuggestDto.class);
     }
 
     /**
@@ -159,8 +173,8 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
      */
     public boolean deleteDelegate(String entrustId) {
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                                         + "/EtrPlanAssetN/delete?entrustId=" + entrustId,
-            boolean.class);
+                        + "/EtrPlanAssetN/delete?entrustId=" + entrustId,
+                boolean.class);
     }
 
     /**
@@ -173,9 +187,9 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
      */
     public boolean closeDelegate(String entrustId, String closeWay) {
         return restTemplate.getForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/close?entrustId=" + entrustId
-                                         + "&closeWay=" + closeWay,
-            boolean.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/close?entrustId=" + entrustId
+                        + "&closeWay=" + closeWay,
+                boolean.class);
     }
 
     /**
@@ -187,7 +201,7 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
      */
     public boolean recallDelegate(EtrPlanAssetNDto dto) {
         return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/recall", dto, boolean.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/recall", dto, boolean.class);
     }
 
     /**
@@ -200,35 +214,35 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
         dto.setEntrustDate(sysDate);
         basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
         restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/doComplete", dto,
-            Integer.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/doComplete", dto,
+                Integer.class);
     }
 
     /**
      *
      * 流程发起时调用
      */
-     @Override
-     public void doInsert(EtrPlanAssetNDto dto, OperationType type){
-         // OperationType枚举值与dto的operateType不同,后续逻辑使用的是dto的operateType,所以不能覆盖
-         // ZGZGST-1464:fuyongsheng 20210825 delete start
-         // dto.setOperateType(type.toString());
-         // ZGZGST-1464:fuyongsheng 20210825 delete end
-         restTemplate.postForObject(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/doInsert",dto,
-             Integer.class);
-     }
+    @Override
+    public void doInsert(EtrPlanAssetNDto dto, OperationType type){
+        // OperationType枚举值与dto的operateType不同,后续逻辑使用的是dto的operateType,所以不能覆盖
+        // ZGZGST-1464:fuyongsheng 20210825 delete start
+        // dto.setOperateType(type.toString());
+        // ZGZGST-1464:fuyongsheng 20210825 delete end
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/doInsert",dto,
+                Integer.class);
+    }
 
-     /**
-      *
-      * 流程修改时调用
-      */
-     @Override
-     public void doUpdate(EtrPlanAssetNDto dto){
-         restTemplate.postForObject(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/doUpdate",dto,
-             Integer.class);
-     }
+    /**
+     *
+     * 流程修改时调用
+     */
+    @Override
+    public void doUpdate(EtrPlanAssetNDto dto){
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/doUpdate",dto,
+                Integer.class);
+    }
 
     @Override
     public void doBack(EtrPlanAssetNDto dto) {
@@ -248,8 +262,8 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
     public Page<SelectOptionDto> getentrustIdAdd(Map<String, Object> map) {
         map.put("userId", SecurityUtil.getLoginUser().getUserName());
         return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME
-                                       + "/EtrPlanAssetN/getentrustIdAdd" ,map,
-            SelectOptionDto.class);
+                        + "/EtrPlanAssetN/getentrustIdAdd" ,map,
+                SelectOptionDto.class);
     }
 
     /**
@@ -262,7 +276,7 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
      */
     public Page<SelectOptionDto> getfinprodIdForAdd(Map<String, Object> map) {
         return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME
-                                       + "/EtrPlanAssetN/getfinprodIdForAdd",map,SelectOptionDto.class);
+                + "/EtrPlanAssetN/getfinprodIdForAdd",map,SelectOptionDto.class);
     }
 
     public Page<SelectOptionDto> getfinprodIdForAdd1(Map<String, Object> map) {
@@ -279,8 +293,8 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
     public List<ValidMessage> check(EtrPlanAssetNDto dto) {
         dto.setCloseWay(DictCodeListExt1.委托关闭方式_人工.getValue());
         return restTemplate.postForList(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/check", dto,
-            ValidMessage.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/check", dto,
+                ValidMessage.class);
     }
 
     /**
@@ -293,8 +307,8 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
      */
     public EtrPlanAssetNDto selectByKey(String entrustId) {
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                                         + "/EtrPlanAssetN/selectByKey?entrustId=" + entrustId,
-            EtrPlanAssetNDto.class);
+                        + "/EtrPlanAssetN/selectByKey?entrustId=" + entrustId,
+                EtrPlanAssetNDto.class);
     }
 
     /**
@@ -308,8 +322,8 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
     @SuppressWarnings("unchecked")
     public Map<String, String> searchType(String finprodId) {
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                                         + "/EtrPlanAssetN/searchType?finprodId=" + finprodId,
-                                         Map.class);
+                        + "/EtrPlanAssetN/searchType?finprodId=" + finprodId,
+                Map.class);
     }
 
     /**
@@ -322,7 +336,7 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
     @Override
     protected void buildExportParam(ExportParam exportParam) {
         exportParam.config("/com/joyintech/tams/invest/entrust/etrplanassetn/conf/export_conf.xml")
-            .dataSource(DataSourceType.MASERT);
+                .dataSource(DataSourceType.MASERT);
     }
     @Override
     public Page<EtrPlanAssetNDto> selectPageData(Map<String, Object> selectParam) {
@@ -391,9 +405,9 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
         map.put("tradeMarket", dto.getTradeMarket());
         map.put("ps",dto.getPs());
         return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/common/SelectLimitAmt/selectLimitAmt", map,
-            BigDecimal.class);
- }
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/SelectLimitAmt/selectLimitAmt", map,
+                BigDecimal.class);
+    }
 
 
     @Override
@@ -402,7 +416,7 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
         EtrPlanAssetNDto dto = this.getBussinessEntity(entity);
         if (taskId != null) {
             try {
-            	BigDecimal amount = dto.getEntrustAmt();
+                BigDecimal amount = dto.getEntrustAmt();
                 if (amount == null) {
                     amount = dto.getEntrustNum();
                 }
@@ -590,7 +604,7 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                     confirmmsg = etrCommonService.StringAddByBr(confirmmsg, message);
 
                     //资产代码check
-                        message = etrCommonService.checkIsBlank(rowData.get(4).toString(), "EtrPlanAssetN002.finprodId", lineNo);
+                    message = etrCommonService.checkIsBlank(rowData.get(4).toString(), "EtrPlanAssetN002.finprodId", lineNo);
                     confirmmsg = etrCommonService.StringAddByBr(confirmmsg, message);
                     if (StringUtil.isNotEmpty(rowData.get(4).toString())) {
                         Map<String, Object> map = new HashMap<>();
@@ -606,7 +620,7 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                     message = etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrPlanAssetN002.ps", lineNo);
                     confirmmsg = etrCommonService.StringAddByBr(confirmmsg, message);
 
-                   // 对委托金额与委托份额的check
+                    // 对委托金额与委托份额的check
                     Map<String, Object> map33 = new HashMap<String,Object>();
                     map33.put("search", rowData.get(4).toString());
                     map33.put("page", 1);

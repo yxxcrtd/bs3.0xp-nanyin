@@ -65,9 +65,10 @@ public class ComNetAssetQuotationInfo001Validator implements BeanValidator{
 						 */
                         //add wangwei 1 YUCHUBS-521债券估值行情、基金估值行情、计划类资产估值行情：功能优化
                         //修改/删除时，仅能修改/删除导入日为平台日的数据
-//                        if (StringUtil.isNotEmpty(selectDto.getImportDate()) && DateUtil.compareDate(DateUtil.formatDate(selectDto.getImportDate()), DateUtil.format(sysDate))  != 0) {
-//                        	errorList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
-//                        }
+                        if (StringUtil.isNotEmpty(selectDto.getImportDate()) && DateUtil.compareDate(DateUtil.formatDate(selectDto.getImportDate()), DateUtil.format(sysDate))  != 0) {
+                        	errorList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
+                        }
+                        selectDto.setFinprodId(selectDto.getFinProdMarketId());
                     }
                 }
             }
@@ -104,9 +105,9 @@ public class ComNetAssetQuotationInfo001Validator implements BeanValidator{
                     
                     //add wangwei 1 YUCHUBS-521债券估值行情、基金估值行情、计划类资产估值行情：功能优化
                     //修改/删除时，仅能修改/删除导入日为平台日的数据
-//                    if (StringUtil.isNotEmpty(dto.getImportDate()) && DateUtil.compareDate(DateUtil.formatDate(dto.getImportDate()), DateUtil.format(sysDate))  != 0) {
-//                    	errorList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
-//                    }
+                    if (StringUtil.isNotEmpty(dto.getImportDate()) && DateUtil.compareDate(DateUtil.formatDate(dto.getImportDate()), DateUtil.format(sysDate))  != 0) {
+                    	errorList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
+                    }
                     
                 } 
             }

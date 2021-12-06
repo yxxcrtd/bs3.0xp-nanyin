@@ -94,15 +94,15 @@ $(function() {
              ,{field:'typeAbbr', title: 'FinPlanProfitAsset001.type',sortField:'type'}*/
              /* end、zhuyongkang、2019.7.18 */ 
              ,{field:'transMode', title: 'FinPlanProfitAsset001.transMode',visible:false}
-             ,{field:'ccyAbbr', title: 'FinPlanProfitAsset001.currency',sortField:'ccy'}
-             ,{field:'vdate', title: 'FinPlanProfitAsset001.vDate',type:'date'}
-             ,{field:'mdate', title: 'FinPlanProfitAsset001.mDate',type:'date'}
-             ,{field:'manager',title: 'FinPlanProfitAsset001.manager'}
-             ,{field:'trusteeId',visible :false}
-             ,{field:'issuer',title: 'FinPlanProfitAsset002.issuer'}
+             ,{field:'manager', width:'12%',title: 'FinPlanProfitAsset001.manager'}
+            ,{field:'issuer', width:'12%',title: 'FinPlanProfitAsset002.issuer'}
+             ,{field:'trusteeId',width:'12%', title: 'FinPlanProfitAsset002.trusteeId'}
+            ,{field:'ccyAbbr',width:'12%', title: 'FinPlanProfitAsset001.currency',sortField:'ccy'}
+            ,{field:'vdate',width:'12%', title: 'FinPlanProfitAsset001.vDate',type:'date'}
+            ,{field:'mdate',width:'12%', title: 'FinPlanProfitAsset001.mDate',type:'date'}
              // 增加推荐方与推荐费率 add by renping 20191014 start
              ,{field:'recommenderName',  title: 'FinPlanProfitAsset002.recommender', visible:false,width:150,  sortField:'recommender'}
-             ,{field:'parentPlanStr',  title: 'FinPlanProfitAsset002.parentPlan', width:150, sort:false}
+             ,{field:'parentPlanStr',  title: 'FinPlanProfitAsset002.parentPlan', width:150, sort:false,visible:false}
              // 增加推荐方与推荐费率 add by renping 20191014 end
              // 调整操作列宽 by 赵东东 2019.10.29
              ,{field:'operation',width:100,title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}

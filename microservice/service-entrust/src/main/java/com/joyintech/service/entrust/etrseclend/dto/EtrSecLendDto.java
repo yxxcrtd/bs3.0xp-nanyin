@@ -73,7 +73,7 @@ public class EtrSecLendDto extends EtrEntrust {
      * 清算速度
      */
     private String settleSpeed;
-    
+
     /**
      * 券面总额
      */
@@ -344,7 +344,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 targetFinprodId
      * @return targetFinprodId.
@@ -354,7 +354,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 targetFinprodId
      * @param targetFinprodId targetFinprodId
@@ -364,7 +364,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 targetFinprodName
      * @return targetFinprodName.
@@ -374,7 +374,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 targetFinprodName
      * @param targetFinprodName targetFinprodName
@@ -384,7 +384,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 busiPs
      * @return busiPs.
@@ -394,7 +394,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 busiPs
      * @param busiPs busiPs
@@ -402,7 +402,7 @@ public class EtrSecLendDto extends EtrEntrust {
     public void setBusiPs(String busiPs) {
         this.busiPs = busiPs;
     }
-    
+
     /**
      * 获取 totalAmt
      * @return totalAmt.
@@ -410,7 +410,7 @@ public class EtrSecLendDto extends EtrEntrust {
     public BigDecimal getTotalAmt() {
         return totalAmt;
     }
-    
+
     /**
      * 设置 totalAmt
      * @param totalAmt totalAmt
@@ -419,8 +419,8 @@ public class EtrSecLendDto extends EtrEntrust {
         this.totalAmt = totalAmt;
     }
 
-    
-    
+
+
     /**
      * 获取 busiRate
      * @return busiRate.
@@ -430,7 +430,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 busiRate
      * @param busiRate busiRate
@@ -449,7 +449,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 secAcctId
      * @param secAcctId secAcctId
@@ -459,7 +459,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 termType
      * @return termType.
@@ -469,7 +469,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 termType
      * @param termType termType
@@ -478,7 +478,7 @@ public class EtrSecLendDto extends EtrEntrust {
         this.termType = termType;
     }
 
-    
+
     /**
      * 获取 calendarId
      * @return calendarId.
@@ -488,7 +488,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 calendarId
      * @param calendarId calendarId
@@ -499,7 +499,7 @@ public class EtrSecLendDto extends EtrEntrust {
 
 
 
-    
+
     /**
      * 获取 objectAvailablePosition
      * @return objectAvailablePosition.
@@ -509,7 +509,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 objectAvailablePosition
      * @param objectAvailablePosition objectAvailablePosition
@@ -519,7 +519,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 settleSpeed
      * @return settleSpeed.
@@ -529,7 +529,7 @@ public class EtrSecLendDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 settleSpeed
      * @param settleSpeed settleSpeed
@@ -545,6 +545,20 @@ public class EtrSecLendDto extends EtrEntrust {
     public void setBussRepoSec(BussRepoSecDto bussRepoSec) {
         this.bussRepoSec = bussRepoSec;
     }
+
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
+
 }
 
 

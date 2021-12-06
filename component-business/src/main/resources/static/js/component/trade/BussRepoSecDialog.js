@@ -56,6 +56,7 @@
                 // add by meifaxin 20210929 银行间 start
                 param.tradePlace = tradePlace;
                 // add by meifaxin 20210929 银行间 end
+                param.mdate = mdate;
                 return param;
             }
         },
@@ -622,11 +623,26 @@
      * 画面加载完成
      */
     $(function () {
-    	//Modify by gaopeng 2019/10/12 start
+        if(getElementById("ps").val() == BACK_LEND_DIRECTION_04){
+            getElementById("portfolioId").parent().parent().hide();
+            getElementById("endDays1Start").parent().parent().parent().hide();
+        }else if(getElementById("ps").val() == BACK_LEND_DIRECTION_03){
+            getElementById("portfolioId").parent().parent().show();
+            getElementById("endDays1Start").parent().parent().parent().show();
+        }
+
+        //Modify by gaopeng 2019/10/12 start
     	//判断是否存在委托代码，存在即隐藏添加质押券按钮
     	if(getElementById("entrustId").val()!=null&&getElementById("entrustId").val()!=""&&pageModel==2){
     		getElementById("btn_joyin").hide();
     	}
+
+    	// GZYHTZJY-510:银行间债券借贷交易,新建页面借贷方向为融出时,质押券信息，添加质押卷界面应没有【新建债券】按钮 fuyongsheng 20211122 edit start
+        if(isBondLendTrade && getElementById("ps").val() == BACK_LEND_DIRECTION_06){
+            getElementById("btn_add").hide();
+        }
+        // GZYHTZJY-510:银行间债券借贷交易,新建页面借贷方向为融出时,质押券信息，添加质押卷界面应没有【新建债券】按钮 fuyongsheng 20211122 edit end
+
     	//Modify by gaopeng 2019/10/12 end
         // 初始化时，直接加载质押券列表
         pledgeBondDetailTbl.load();
@@ -656,8 +672,11 @@
             $('#portfolioId_div').hide();
         }
     	setTimeout(function () {
-            window.CfetsPledgedBond.refreshCfetsPldegeBond((entity && entity.pledgeBondList) ? entity.pledgeBondList : []);
+    	    if (window.CfetsPledgedBond) {
+                window.CfetsPledgedBond.refreshCfetsPldegeBond((entity && entity.pledgeBondList) ? entity.pledgeBondList : []);
+            }
         },1000);
+
 
     });
 }());

@@ -556,18 +556,24 @@ public class TrdBondInvestTradeService extends BaseService {
 //            else {
 //                resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_1.getValue());
 //            }
-            if (resultDto.getSettleSpeed() != null) {
-                resultDto.setSettleSpeedStr(String.valueOf(resultDto.getSettleSpeed()));
-            }
+//            if (resultDto.getSettleSpeed() != null) {
+//                resultDto.setSettleSpeedStr(String.valueOf(resultDto.getSettleSpeed()));
+//            }
             // etliu 20200716 modify 画面上的清算速度已经是输入框，显示数值，不是下拉框显示数据字典了 end
+            // 清算速度
+            if (resultDto.getSettleSpeed() == null || resultDto.getSettleSpeed() == 0L) {
+                //del by xr 展示位0、1、2
+//                resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_0.getValue());
+                resultDto.setSettleSpeedStr("0");
+            }
             else if(resultDto.getSettleSpeed() == 1L){
 //                resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_1.getValue());
-               resultDto.setSettleSpeedStr("1");
+                resultDto.setSettleSpeedStr("1");
             }else if(resultDto.getSettleSpeed() == 2L){
-               resultDto.setSettleSpeedStr("2");
-           }else{
-               resultDto.setSettleSpeedStr(resultDto.getSettleSpeed().toString());
-           }
+                resultDto.setSettleSpeedStr("2");
+            }else{
+                resultDto.setSettleSpeedStr(resultDto.getSettleSpeed().toString());
+            }
             // 到期收益率
             if (resultDto.getYield() != null) {
                 resultDto.setYield(ArithmeticUtil.multiply(resultDto.getYield(), BigDecimal.valueOf(100)));

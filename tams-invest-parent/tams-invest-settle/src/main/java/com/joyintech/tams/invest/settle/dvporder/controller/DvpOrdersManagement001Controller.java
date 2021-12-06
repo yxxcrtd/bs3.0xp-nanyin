@@ -9,6 +9,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -90,6 +91,7 @@ public class DvpOrdersManagement001Controller extends BaseController {
         model.addAttribute("PINAN_BUSINESS_TYPE_76", DictCodeListExt1.平安业务类型_买断式正回购到期.getValue());
         model.addAttribute("PINAN_BUSINESS_TYPE_107", DictCodeListExt2.平安业务类型_债券借贷融入到期.getValue());
         model.addAttribute("PINAN_BUSINESS_TYPE_108", DictCodeListExt2.平安业务类型_债券借贷融出到期.getValue());
+        model.addAttribute("PINAN_BUSINESS_TYPE_81", BussinessDictCodeList.平安业务类型_DVP划款.getValue());
         return super.init(model);
     }
 

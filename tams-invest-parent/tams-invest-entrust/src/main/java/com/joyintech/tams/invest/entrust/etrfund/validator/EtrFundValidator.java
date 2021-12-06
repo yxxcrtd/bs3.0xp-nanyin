@@ -209,6 +209,16 @@ public class EtrFundValidator implements EtrCommonValidator {
                     }
                 }
             }
+            else if(etrFundDto.getPs().equals(DictCodeList.交易方向_卖出.getValue())){
+                if(!StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
+                    errorList.add(new ValidMessage("entrustAmt", getMessage("ETR_X_012", getMessage("EtrFund001.entrustAmt"))));
+                }
+                if(StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
+                    if(etrFundDto.getEntrustAmt().compareTo(new BigDecimal(0)) != 1){
+                        errorList.add(new ValidMessage("entrustAmt", getMessage("ETR_X_008",getMessage("EtrFund001.entrustAmt"))));
+                    }
+                }
+            }
             else{
             	if(StringUtil.isEmpty(etrFundDto.getFinprodMarketId())){
             		errorList.add(new ValidMessage("finprodMarketId", getMessage("ETR_X_012", getMessage("EtrFund001.finprodId"))));
@@ -369,6 +379,16 @@ public class EtrFundValidator implements EtrCommonValidator {
                     }
                 }
             }
+            else if(etrFundDto.getPs().equals(DictCodeList.交易方向_卖出.getValue())){
+                if(!StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
+                    errorList.add(new ValidMessage("entrustAmt", getMessage("ETR_X_012", getMessage("EtrFund001.entrustAmt"))));
+                }
+                if(StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
+                    if(etrFundDto.getEntrustAmt().compareTo(new BigDecimal(0)) != 1){
+                        errorList.add(new ValidMessage("entrustAmt", getMessage("ETR_X_008",getMessage("EtrFund001.entrustAmt"))));
+                    }
+                }
+            }
             else{
             	if(StringUtil.isEmpty(etrFundDto.getFinprodMarketId())){
             		errorList.add(new ValidMessage("finprodMarketId", getMessage("ETR_X_012", getMessage("EtrFund001.finprodId"))));
@@ -407,8 +427,9 @@ public class EtrFundValidator implements EtrCommonValidator {
         // 增加可用现金的硬校验并增加开关 by 赵东东 20200121 start
         if(StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())&&StringUtil.isNotEmpty(etrFundDto.getProAvailableCash())&&
             (StringUtil.equals(etrFundDto.getPs(),DictCodeList.交易方向_买入.getValue())
-                ||StringUtil.equals(etrFundDto.getPs(),DictCodeList.交易方向_申购.getValue())
-                ||StringUtil.equals(etrFundDto.getPs(),DictCodeListExt2.交易方向_认购.getValue()))&&StringUtil.equals(
+//                ||StringUtil.equals(etrFundDto.getPs(),DictCodeList.交易方向_申购.getValue())
+//                ||StringUtil.equals(etrFundDto.getPs(),DictCodeListExt2.交易方向_认购.getValue())
+            )&&StringUtil.equals(
                     CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH),
                     DictCodeListExt1.是或否_否.getValue())) {
             if(etrFundDto.getEntrustAmt().compareTo(etrFundDto.getProAvailableCash())>0) {

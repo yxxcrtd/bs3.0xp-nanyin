@@ -33,7 +33,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 
 /**
  * 现券对话报价验证类
- * 
+ *
  * @author zhangliang
  * @version 1.0 2020年5月14日
  * @see CfetsBondDealDialogueQuoteDtoValidator
@@ -73,27 +73,27 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                 validList.add(new ValidMessage("portfolioId", this.getMessage("FW_E_0006", this.getMessage("CfetsBondDealQuotedPrice002.portfolioName"))));
             }
         }
-        
+
         if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "save")
-            || StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "submit")) {
+                || StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "submit")) {
             if (StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getAvaNum())) {
                 if (cfetsBondDealDialogueQuoteDto.getAvaNum().compareTo(BigDecimal.ZERO) <= 0) {
                     validList.add(new ValidMessage("avaNum", "券面总额必须大于0！"));
                 }
                 // 券面需要为1000的整数倍（接口规则要求）
                 String numStr = ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),
-                    BigDecimal.valueOf(10)).toPlainString();
+                        BigDecimal.valueOf(10)).toPlainString();
                 if (Double.parseDouble(numStr) % 1.0d > 0) {
                     validList.add(new ValidMessage("avaNum", this.getMessage("QUOTE_UPLOAD_038_2", cfetsBondDealDialogueQuoteDto.getAvaNum().toPlainString())));
                 }
             }
             if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getQuoteId())){
-            	CfetsBondDealDialogueQuoteDto tradeStatusDto = cfetsBondDealQuotedPrice002Service
-						.getBondDialogueQuote(cfetsBondDealDialogueQuoteDto.getQuoteId(), null);
-            	if(StringUtils.equals(tradeStatusDto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已成交.getValue()) ||
-            			StringUtils.equals(tradeStatusDto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已终止.getValue())){
-            		validList.add(new ValidMessage("tradeStatus", this.getMessage("CFETS_COMMON_E_040")));
-            	}
+                CfetsBondDealDialogueQuoteDto tradeStatusDto = cfetsBondDealQuotedPrice002Service
+                        .getBondDialogueQuote(cfetsBondDealDialogueQuoteDto.getQuoteId(), null);
+                if(StringUtils.equals(tradeStatusDto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已成交.getValue()) ||
+                        StringUtils.equals(tradeStatusDto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已终止.getValue())){
+                    validList.add(new ValidMessage("tradeStatus", this.getMessage("CFETS_COMMON_E_040")));
+                }
             }
             if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "new")) {
                 //多组合
@@ -155,6 +155,7 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                         validList.add(new ValidMessage("",getMessage("报价券面总额必须和各指令分配后券面总额汇总值相等")));
                     }
                     //汇总提交是否满足
+                    map.put("quotaPageModel",cfetsBondDealDialogueQuoteDto.getQuotaPageModel());
                     map.put("entrustIdList",entrustIdList);
                     AjaxResult ar = cfetsBondDealQuotedPrice002Service.checkEntrustList(map);
                     if(!StringUtil.isEmptyList(ar.getErrorList())){
@@ -174,17 +175,17 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                     validList.add(new ValidMessage("entrustId", this.getMessage("CFETS_COMMON_E_004")));
                 }
             }
-         }
+        }
         // 对话报价-回复
         if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "dialogueResponse")) {
             // 需要区分成交和拒绝，拒绝只需要判断状态 是否变化
             // 查询报价信息检查状态是否变化
             if (StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getQuoteId())) {
-				CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDtoNew = cfetsBondDealQuotedPrice002Service
-						.getBondDialogueQuote(cfetsBondDealDialogueQuoteDto.getQuoteId(), null);
+                CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDtoNew = cfetsBondDealQuotedPrice002Service
+                        .getBondDialogueQuote(cfetsBondDealDialogueQuoteDto.getQuoteId(), null);
                 BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
                 BeanUtil.copyPropertiesIgnoreNull(bondQuoteInfoDto,
-                    cfetsBondDealDialogueQuoteDtoNew);
+                        cfetsBondDealDialogueQuoteDtoNew);
                 if (!StringUtil.equals(bondQuoteInfoDto.getAnswerFlag(), "01")) {
                     validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_E_008")));
                 }
@@ -211,9 +212,9 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                     }
                     else {
                         if (!StringUtil.equals(
-                            CacheUtil.getSysParam("ibuFlag_answerQuoteWithOutEntrust"), "02")) {
+                                CacheUtil.getSysParam("ibuFlag_answerQuoteWithOutEntrust"), "02")) {
                             validList.add(
-                                new ValidMessage("entrustId", this.getMessage("CFETS_COMMON_E_009")));
+                                    new ValidMessage("entrustId", this.getMessage("CFETS_COMMON_E_009")));
                         }
                     }
                 }
@@ -222,28 +223,28 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
         else {
             // 7) 需要验证交易的偏离度是否超参数值。交易偏离度=（交易净价-上一日中债估值净价）/上一日中债估值净价*100%；上一日净价为小于平台日的最新净价
             if (!StringUtil.equals(CacheUtil.getSysParam("ibuFlag_dealDeviation"), "02")
-                && StringUtil.isNotEmpty(CacheUtil.getSysParam("ibuVar_dealDeviationVal"))){
+                    && StringUtil.isNotEmpty(CacheUtil.getSysParam("ibuVar_dealDeviationVal"))){
                 cfetsBondDealQuotedPrice002Service.checkDealDeviation(cfetsBondDealDialogueQuoteDto, validList, null, true);
             }
 
             if (!StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getCalculateField())) {
                 validList.add(
-                    new ValidMessage(this.getMessage("CFETS_COMMON_E_011")));
+                        new ValidMessage(this.getMessage("CFETS_COMMON_E_011")));
             }
 
             if (StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getAssetTypeOne())) {
                 if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getAssetTypeOne(),
-                    BussinessDictCodeList.平安资产一级分类_资产支持证券.getValue())) {
+                        BussinessDictCodeList.平安资产一级分类_资产支持证券.getValue())) {
                     if (!StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getParValue())) {
                         validList.add(new ValidMessage("parValue", this.getMessage("FW_E_0006",
-                            this.getMessage("CfetsBondDealQuotedPrice002.perHundAmt"))));
+                                this.getMessage("CfetsBondDealQuotedPrice002.perHundAmt"))));
                     }
                     if (!StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getParValueAmt())) {
                         validList.add(new ValidMessage("parValueAmt", this.getMessage("FW_E_0006",
-                            this.getMessage("CfetsBondDealQuotedPrice002.prinAmt"))));
+                                this.getMessage("CfetsBondDealQuotedPrice002.prinAmt"))));
                     }
                     if (!StringUtil.equals(cfetsBondDealDialogueQuoteDto.getCalculateField(),
-                        BussinessDictCodeList.计算选择方式_净价.getValue())) {
+                            BussinessDictCodeList.计算选择方式_净价.getValue())) {
                         validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_E_036")));
                     }
                 }
@@ -269,7 +270,7 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
             }
 
             if (!StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustAvaAmt"), "02")){
-            	if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getEntrustId())){
+                if(StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getEntrustId())){
 //            		CfetsBondDealDialogueQuoteDto entrustDto = cfetsBondDealQuotedPrice002Service.queryEntrustInfoByEntrustId(cfetsBondDealDialogueQuoteDto.getEntrustId());
 //        			BigDecimal entrustAmt = entrustDto.getEntrustNum() == null ? BigDecimal.ZERO : entrustDto.getEntrustNum().divide(new BigDecimal(100));//券面总额/100
 //        			BigDecimal usedShareAmt = cfetsBondDealQuotedPrice002Service.checkUsedShareAmt(cfetsBondDealDialogueQuoteDto);//已占用额度
@@ -277,31 +278,31 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
 //        				validList.add(new ValidMessage("avaNum",this.getMessage("CFETS_COMMON_E_010")));
 //        			}
                     cfetsBondDealQuotedPrice002Service.checkEntrustAvaNum(cfetsBondDealDialogueQuoteDto, validList, null, true);
-            	}
+                }
             }
 
             if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "marketResponse")) {
-            	if (StringUtil.isEmpty(cfetsBondDealDialogueQuoteDto.getEntrustId())) {
-            		if (!StringUtil.equals(CacheUtil.getSysParam("ibuFlag_answerQuoteWithOutEntrust"), "02")) {
+                if (StringUtil.isEmpty(cfetsBondDealDialogueQuoteDto.getEntrustId())) {
+                    if (!StringUtil.equals(CacheUtil.getSysParam("ibuFlag_answerQuoteWithOutEntrust"), "02")) {
                         validList.add(new ValidMessage("entrustId", this.getMessage("CFETS_COMMON_E_009")));
                     }
-            	}
+                }
 
-            	// 回复量不能超请求报价的券面总额
+                // 回复量不能超请求报价的券面总额
                 if (cfetsBondDealDialogueQuoteDto.getResponseAmt() != null) {
-                	if (cfetsBondDealDialogueQuoteDto.getAvaNum() != null) {
+                    if (cfetsBondDealDialogueQuoteDto.getAvaNum() != null) {
                         if (cfetsBondDealDialogueQuoteDto.getResponseAmt().compareTo(
-                            cfetsBondDealDialogueQuoteDto.getAvaNum()) > 0) {
+                                cfetsBondDealDialogueQuoteDto.getAvaNum()) > 0) {
                             validList.add(
-                                new ValidMessage("responseAmt", this.getMessage("CFETS_COMMON_E_013")));
+                                    new ValidMessage("responseAmt", this.getMessage("CFETS_COMMON_E_013")));
                         }
                     }
-                	if (cfetsBondDealDialogueQuoteDto.getResponseAmt().compareTo(BigDecimal.ZERO) <= 0) {
+                    if (cfetsBondDealDialogueQuoteDto.getResponseAmt().compareTo(BigDecimal.ZERO) <= 0) {
                         validList.add(new ValidMessage("avaNum", "回复量必须大于0！"));
                     }
                     // 券面需要为1000的整数倍（接口规则要求）
                     String numStr = ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getResponseAmt(),
-                        BigDecimal.valueOf(10)).toPlainString();
+                            BigDecimal.valueOf(10)).toPlainString();
                     if (Double.parseDouble(numStr) % 1.0d > 0) {
                         validList.add(new ValidMessage("responseAmt", "回复量" + cfetsBondDealDialogueQuoteDto.getResponseAmt().toPlainString() + "需要为1000元的整数倍"));
                     }

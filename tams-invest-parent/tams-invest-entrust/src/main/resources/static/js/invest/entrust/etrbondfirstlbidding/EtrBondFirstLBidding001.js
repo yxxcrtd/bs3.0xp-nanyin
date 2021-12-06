@@ -2,17 +2,17 @@ $(function() {
     /**
      * 获取查询参数
      */
-    var getSearchParams = function() { 
+    var getSearchParams = function() {
         var object = $.serializeToObject('#searchForm');
 //      object.finprodId = $('#finprodId_hidden').val();
-      if(object.bondType){
-          object.bondType = object.bondType.join(',');
-      }
-      if(object.portfolioId){
-          object.portfolioId = object.portfolioId.join(',');
-      }
-      return object;
-  };
+        if(object.bondType){
+            object.bondType = object.bondType.join(',');
+        }
+        if(object.portfolioId){
+            object.portfolioId = object.portfolioId.join(',');
+        }
+        return object;
+    };
 
     /**
      * 定义数据表格
@@ -30,15 +30,15 @@ $(function() {
             data.operateType = "dblclick";
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("EtrBondFirstLBidding002.refrence"),
-                    JoyinUtil.getRealPath("/invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/init"),
-                    "98%", "95%", data,
-                    function(){table.reload();});
+                JoyinUtil.getRealPath("/invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
         },
         /**
          * 定义表头
          */
         cols:[
-        	{field:'entrustStatus',visible:false}
+            {field:'entrustStatus',visible:false}
             ,{field:'busEntrustStatus', title: 'EtrInvestBondInfo001.entrustStatus', width:'10%',sortField:"entrustStatus"}
             ,{field:'isWin',visible:false}
             ,{field:'etrPayType',visible:false}
@@ -48,7 +48,9 @@ $(function() {
             ,{field:'invManagerId', title: 'EtrInvestBondInfo001.invManagerId', width:'10%',sortField:"invManagerId"}
             ,{field:'portfolioId', title: 'EtrInvestBondInfo001.portfolioId', width:'10%',
                 render : function(data, type, row, meta) {
-                    return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
+                    if(row.portfolioId){
+                        return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
+                    }
                 },sortField:"portfolioId"
             }
             ,{field:'portfolioName', title: 'EtrInvestBondInfo001.portfolioName', width:'10%',sortField:"portfolioName"}
@@ -70,9 +72,10 @@ $(function() {
             ,{field:'vdate', title: 'EtrInvestBondInfo001.vdate', width:'10%',type:'date',sortField:"vdate"}
             ,{field:'mdate', title: 'EtrInvestBondInfo001.mdate', width:'10%',type:'date',sortField:"mdate"}
             ,{field:'entrustDate', title:'EtrBondFirstLBidding001.entrustDate',width:'10%',type:'date',sortable:false}
-           /* ,{field:'17', title:'已完成额度',width:'10%',sortable:false}
-            ,{field:'18', title:'交易完成度',width:'10%',sortable:false}*/
+            /* ,{field:'17', title:'已完成额度',width:'10%',sortable:false}
+             ,{field:'18', title:'交易完成度',width:'10%',sortable:false}*/
             ,{field:'remark', title: 'EtrInvestBondInfo001.remark', width:'10%',sortable:false}
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:'10%',sortable:false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']}
         ]
     });
@@ -95,17 +98,17 @@ $(function() {
             Joyin.dialog(JoyinUtil.getLabel("债券一级指令新建"),
                 basePath + "invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/init",
                 "98%", "98%",{parentPageId:pageId}); table.load(); });
-        
+
         //撤回事件
         $('#'+pageId+'_btn_revoke').click(function(){
 
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }else {
+            }else {
                 var object = {selectedItem: selArr, operateType:"recall"};
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_C_0032","撤销"), function(){
@@ -114,19 +117,19 @@ $(function() {
                         });
                     });
                 });
-             }
-        
+            }
+
         });
         //关闭事件
         $('#'+pageId+'_btn_close').click(function(){
 
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }else {
+            }else {
                 var object = {selectedItem: selArr, operateType:"close"};
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
@@ -135,31 +138,31 @@ $(function() {
                         });
                     });
                 });
-             }
-        
+            }
+
         });
 
         // 导入按钮点击事件
         $('#'+pageId+'_btn_import').click(function () {
             Joyin.uploadFile({pageId: 'EtrBondFirstLBidding003MTM'}, function (fileName) {
                 Joyin.ajax(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/checkImportData', {fileName: fileName}, function (checkResult) {
-                            setTimeout(function () {
-                                Joyin.confirm(checkResult.data.confirmMsg, function () {
-                                    var result={};
-                                    result.operateType = "import";
-                                    result.pageModel = '';
-                                    result.tempList = checkResult.data.correctData;
-                                    Joyin.dialog(JoyinUtil.getLabel("EtrBondFirstLBidding003.add"),
-                                        JoyinUtil.getRealPath("/invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/init"),
-                                        "98%", "95%", result,
-                                        function () {});
-                                });
-                                //数据是否大于100check
-                                if(checkResult.data.errorMsg){
-                                    Joyin.error(checkResult.data.errorMsg);
-                                    return;
-                                }
-                            }, 1000);
+                    setTimeout(function () {
+                        Joyin.confirm(checkResult.data.confirmMsg, function () {
+                            var result={};
+                            result.operateType = "import";
+                            result.pageModel = '';
+                            result.tempList = checkResult.data.correctData;
+                            Joyin.dialog(JoyinUtil.getLabel("EtrBondFirstLBidding003.add"),
+                                JoyinUtil.getRealPath("/invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding003/init"),
+                                "98%", "95%", result,
+                                function () {});
+                        });
+                        //数据是否大于100check
+                        if(checkResult.data.errorMsg){
+                            Joyin.error(checkResult.data.errorMsg);
+                            return;
+                        }
+                    }, 1000);
                 });
             }, function () {
                 table.reload();
@@ -169,18 +172,18 @@ $(function() {
         /**
          * 导出
          */
-        var exportExcel = function(){       
+        var exportExcel = function(){
             Joyin.exportExcel(basePath+"invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding001/export", getSearchParams());
         };
     });
-    
+
     /**
      * 组合代码链接
      */
     table.bind('click','.portfolioIdLink', function(row) {
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-                "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+            basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+            "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                 portfolioId:row.portfolioId});//主键组合代码
     });
     /**
@@ -189,11 +192,11 @@ $(function() {
     table.bind('click','.finprodIdLink', function(row) {
         //在新建界面进行显示单行的详细信息
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                 basePath
-                + "invest/asset/tenderbond/FinTenderBondTargetAsset002/init",
-                "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
-                                finprodId:row.finprodId  //金融产品代码 
-                                });
+            basePath
+            + "invest/asset/tenderbond/FinTenderBondTargetAsset002/init",
+            "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                finprodId:row.finprodId  //金融产品代码
+            });
     });
     /**
      * 绑定编辑事件
@@ -202,11 +205,11 @@ $(function() {
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
         data.parentPageId = pageId;
-         Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding001/check', data, function(result) {
+        Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding001/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrBondFirstLBidding002.edit"),
-                    JoyinUtil.getRealPath("/invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/init"),
-                    "98%", "95%", data,
-               function(){table.reload();});
-         });
+                JoyinUtil.getRealPath("/invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
+        });
     });
 }());

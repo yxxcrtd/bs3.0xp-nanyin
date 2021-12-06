@@ -9,6 +9,7 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.invest.basicdata.mstsecuritiesaccount.dto.MstSecuritiesAccountDto;
 import com.joyintech.tams.invest.basicdata.mstsharebonusnotice.dto.MstShareBonusNotice001Dto;
 import com.joyintech.tams.invest.basicdata.mstshareprice.dto.MstSharePriceDto;
@@ -94,5 +95,19 @@ public class MstShareBonusNotice001Service extends CommonExportService<MstShareB
     public List<MstShareBonusNotice001Dto> selectAllList(Map<String, Object> pageParam) {
         return restTemplate.postForList(ServiceApplication.BASICDATA_SERVICE_NAME
                 + "/MstShareBonusNotice/selectAllList",pageParam,MstShareBonusNotice001Dto.class);
+    }
+
+    /**
+     * 修改/双击查看根据金融产品代码查询dto
+     * <功能详细描述>
+     * @param finprodId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public FinStockInfoDto selectByFinprodId(String finprodId) {
+        return restTemplate.getForObject(
+                ServiceApplication.ASSET_SERVICE_NAME + "/FinStockInfo/selectByFinprodId?finprodId="
+                        +finprodId,FinStockInfoDto.class);
     }
 }

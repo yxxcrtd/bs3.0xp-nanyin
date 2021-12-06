@@ -1,16 +1,21 @@
 package com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.validator.ComFundMarketInfoValidator;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -20,6 +25,9 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @see ComFundMarketInfo001dto
  * @since 1.0
  */
+@PageId("ComFundMarketInfo001Dto")
+@ValidLogic(targetClass = ComFundMarketInfoValidator.class, groups = {ValidateGroupEdit.class,
+        ValidateGroupDelete.class})
 public class ComFundMarketInfo001dto extends BaseEntity implements ProcessEntity {
 
     /**
@@ -461,5 +469,15 @@ public class ComFundMarketInfo001dto extends BaseEntity implements ProcessEntity
 
     public void setOperateType(String operateType) {
         this.operateType = operateType;
+    }
+
+    private String processState;
+
+    public String getProcessState() {
+        return processState;
+    }
+
+    public void setProcessState(String processState) {
+        this.processState = processState;
     }
 }

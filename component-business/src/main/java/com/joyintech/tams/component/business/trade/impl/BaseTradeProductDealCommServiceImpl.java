@@ -679,6 +679,12 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                             || DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2()))){
                         dto.setAmount(baseTradeProductDealDto.getSecAmount());
                     }
+                    if (DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
+                            && DictCodeList.交易方向_到期.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getPs())
+                            && (DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2())
+                            || DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2()))){
+                        dto.setAmount(ArithmeticUtil.divide(dto.getAmount(),new BigDecimal(100),4));
+                    }
                 }
                 ptlSecPositionFlows.addAll(ptlSecPositionFlowDtoss);
             }
@@ -696,16 +702,16 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 cashInputDto.setIeFlag(finProductTradeDto.getIeFlag());
                 if (是否处理持仓) {
                     List<PtlCashPositionFlowDto> resultList = assetPositionsCashCommServiceImpl.cashDeal(cashInputDto);
-                    if (持仓类型 == DictCodeList.持仓类型_可用
-                            && AllTradeCommonUtil.自动生成反向交易(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(),
-                            baseTradeProductDealDto.getTrdProductDeal().getPs(), baseTradeProductDealDto.getTrdProductDeal().getCounterId())) {
-                        resultList.addAll(处理交易对手流水(baseTradeProductDealDto.getStlPayOrdersList(), baseTradeProductDealDto.getTrdProductDeal(),
-                                baseTradeProductDealDto.getTrdProductDealAdd()));
-                    }
-                    if (持仓类型 == DictCodeList.持仓类型_实际 && resultList != null && !resultList.isEmpty()) {
-                    	//交易所品种头寸改造相关内容
-                    	addJiaoyisuoChuli(resultList, cashInputDto);
-                    }
+//                    if (持仓类型 == DictCodeList.持仓类型_可用
+//                            && AllTradeCommonUtil.自动生成反向交易(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(),
+//                            baseTradeProductDealDto.getTrdProductDeal().getPs(), baseTradeProductDealDto.getTrdProductDeal().getCounterId())) {
+//                        resultList.addAll(处理交易对手流水(baseTradeProductDealDto.getStlPayOrdersList(), baseTradeProductDealDto.getTrdProductDeal(),
+//                                baseTradeProductDealDto.getTrdProductDealAdd()));
+//                    }
+//                    if (持仓类型 == DictCodeList.持仓类型_实际 && resultList != null && !resultList.isEmpty()) {
+//                    	//交易所品种头寸改造相关内容
+//                    	addJiaoyisuoChuli(resultList, cashInputDto);
+//                    }
                     ptlCashPositionFlows.addAll(resultList);
                 }
             }
@@ -717,11 +723,11 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                 baseTradeProductDealDto.setAssetType2(finProductTradeDto.getAssetType2());
                 baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDto, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
 
-                if (!DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus()) && AllTradeCommonUtil.自动生成反向交易(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(),
-                        baseTradeProductDealDto.getTrdProductDeal().getPs(), baseTradeProductDealDto.getTrdProductDeal().getCounterId())) {
-                    BaseTradeProductDealDto baseTradeProductDealDtoC = 把交易信息转换成交易对手的交易信息(baseTradeProductDealDto);
-                    baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDtoC, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
-                }
+//                if (!DictCodeListExt1.交易流程状态_撤销.getValue().equals(finProductTradeDto.getWorkflowStatus()) && AllTradeCommonUtil.自动生成反向交易(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(),
+//                        baseTradeProductDealDto.getTrdProductDeal().getPs(), baseTradeProductDealDto.getTrdProductDeal().getCounterId())) {
+//                    BaseTradeProductDealDto baseTradeProductDealDtoC = 把交易信息转换成交易对手的交易信息(baseTradeProductDealDto);
+//                    baseEtrCashPositionCommService.executeEtrCashPosition(baseTradeProductDealDtoC, 持仓类型, needNegative,finProductTradeDto.getIeFlag(),finProductTradeDto.getIsOverdueDeal());
+//                }
             }
         }
         if (needNegative) {

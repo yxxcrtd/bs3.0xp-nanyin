@@ -13,14 +13,18 @@ package com.joyintech.tams.invest.entrust.etrinvestallinfo.service;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.exportpdf.service.CommonExportPdfService;
+import com.joyintech.tams.invest.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto;
 import com.joyintech.tams.invest.entrust.etrinvestallinfo.dto.EtrAllInfoExportPdfDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +45,7 @@ import com.joyintech.tams.invest.entrust.etrrepo.dto.EtrRepoDto;
 
 /**
  * 所有投资委托画面段service 〈功能详细描述〉
- * 
+ *
  * @author xiexinting
  * @version 1.0 2018年9月7日
  * @see EtrInvestAllInfoService
@@ -58,7 +62,7 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
 
     /**
      * 获取组合代码的联想文本框 <功能详细描述>
-     * 
+     *
      * @param param
      * @return
      * @see
@@ -67,13 +71,13 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
 
     public List<SuggestDto> getentrustId(String param) {
         return restTemplate.getForList(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestAllInfo/getentrustId?entrustId="+param,
-            SuggestDto.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestAllInfo/getentrustId?entrustId="+param,
+                SuggestDto.class);
     }
 
     /**
      * 获取资产编号的联想文本框 <功能详细描述>
-     * 
+     *
      * @param param
      * @return
      * @see
@@ -81,14 +85,14 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
      */
     public List<SuggestDto> getfinprodId(String param) {
         return restTemplate.getForList(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestAllInfo/getfinprodId?finprodId="+param,
-            SuggestDto.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestAllInfo/getfinprodId?finprodId="+param,
+                SuggestDto.class);
 
     }
 
     /**
      * 所有投资委托信息查询 <功能详细描述>
-     * 
+     *
      * @param param
      * @return
      * @throws Exception
@@ -112,26 +116,37 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
         }
         //交易方向为利率互换 转换
         if(StringUtil.isNotEmpty((String)param.get("ps"))){
-        	if( StringUtil.equals((String)param.get("ps") , DictCode.互换方式.getValue()+DictCodeListExt2.互换方式_收取固定.getValue()) ){
-        		param.put("ps", DictCodeListExt2.互换方式_收取固定.getValue());
-        		param.put("IRSps", DictCodeListExt2.互换方式_收取固定.getValue());
+            if( StringUtil.equals((String)param.get("ps") , DictCode.互换方式.getValue()+DictCodeListExt2.互换方式_收取固定.getValue()) ){
+                param.put("ps", DictCodeListExt2.互换方式_收取固定.getValue());
+                param.put("IRSps", DictCodeListExt2.互换方式_收取固定.getValue());
             }
             if( StringUtil.equals((String)param.get("ps") , DictCode.互换方式.getValue()+DictCodeListExt2.互换方式_收取浮动.getValue()) ){
-            	param.put("ps", DictCodeListExt2.互换方式_收取浮动.getValue());
-            	param.put("IRSps", DictCodeListExt2.互换方式_收取浮动.getValue());
+                param.put("ps", DictCodeListExt2.互换方式_收取浮动.getValue());
+                param.put("IRSps", DictCodeListExt2.互换方式_收取浮动.getValue());
             }
         }
         param.put("IRSType_01", DictCodeListExt2.互换方式_收取固定.getValue());
         param.put("IRSType_02", DictCodeListExt2.互换方式_收取浮动.getValue());
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForPage(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestAllInfo/findPage", param,
-            EtrInvestAllInfoDto.class);
+        Page<EtrInvestAllInfoDto> page = restTemplate.postForPage(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestAllInfo/findPage", param,
+                EtrInvestAllInfoDto.class);
+        List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+                param, SysUser.class);
+        for(EtrInvestAllInfoDto dto:page.getRoot()){
+            if(StringUtil.isNotEmpty(dto.getNextUser())){
+                String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+                        .map(SysUser::getRealName)
+                        .collect(Collectors.joining(",","",""));
+                dto.setNextUser(sysUsers);
+            }
+        }
+        return page;
     }
-    
+
     /**
      * 导出
-     * 
+     *
      * @param exportParam 导出信息
      * @see
      * @since 1.0
@@ -139,7 +154,7 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
     @Override
     protected void buildExportParam(ExportParam exportParam) {
         exportParam.config("/com/joyintech/tams/invest/entrust/etrinvestallinfo/conf/export_conf.xml")
-            .dataSource(DataSourceType.MASERT);
+                .dataSource(DataSourceType.MASERT);
     }
     @Override
     public Page<EtrInvestAllInfoDto> selectPageData(Map<String, Object> selectParam) {
@@ -147,43 +162,43 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
     }
     /**
      * PB文件导出前数据检查 add by caoxue 2019-12-31
-     * 
+     *
      * @return 返回检查结果
      * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
     public EtrRepoDto checkPBRepoType(Map<String, Object> params) {
-    	if(StringUtil.isNotEmpty((String)params.get("entrustId"))){
-        	EtrRepoDto etrRepoDto = restTemplate.getForObject(
-    				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/selectByKey?entrustId=" + params.get("entrustId"),
-    				EtrRepoDto.class);
+        if(StringUtil.isNotEmpty((String)params.get("entrustId"))){
+            EtrRepoDto etrRepoDto = restTemplate.getForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/selectByKey?entrustId=" + params.get("entrustId"),
+                    EtrRepoDto.class);
 
-        	return etrRepoDto;
-    	}
-    	return null;
+            return etrRepoDto;
+        }
+        return null;
     }
     /**
      * 查询PB导出信息 add by caoxue 2019-12-31
-     * 
+     *
      * @param param
      * @return
      * @throws Exception
      * @see
      * @since 1.0
      */
-	public List<EtrInvestAllInfoDto> selectExportPB(Map<String, Object> param) {
-		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestAllInfo/selectExportPB", param,
-				EtrInvestAllInfoDto.class);
-	}
+    public List<EtrInvestAllInfoDto> selectExportPB(Map<String, Object> param) {
+        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestAllInfo/selectExportPB", param,
+                EtrInvestAllInfoDto.class);
+    }
 
     /**
      * 导出pdf数据 add by zengchengfa 20210730
      * @param param
      * @return
      */
-	public List<EtrAllInfoExportPdfDto> selectExportPdf(Map param){
-	    return restTemplate.postForList(
+    public List<EtrAllInfoExportPdfDto> selectExportPdf(Map param){
+        return restTemplate.postForList(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestAllInfo/selectExportPdf", param,
                 EtrAllInfoExportPdfDto.class);
     }
@@ -225,7 +240,7 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
             if(StringUtil.isNotEmpty(exportPdfDto.getConRatio())){
                 // 多个质押券,折算比例中间有,分隔
                 if(exportPdfDto.getConRatio().contains(",")){
-                   String[] conRatios = exportPdfDto.getConRatio().split(",");
+                    String[] conRatios = exportPdfDto.getConRatio().split(",");
                     StringJoiner joiner = new StringJoiner(",");
                     for(int index=0; index<conRatios.length; index++){
                         joiner.add(df2.format(new BigDecimal(conRatios[index]).setScale(2, BigDecimal.ROUND_HALF_UP)));

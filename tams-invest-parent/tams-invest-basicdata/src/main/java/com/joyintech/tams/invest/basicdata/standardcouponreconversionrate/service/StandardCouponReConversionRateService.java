@@ -1,9 +1,19 @@
 package com.joyintech.tams.invest.basicdata.standardcouponreconversionrate.service;
 
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.tams.invest.common.dto.InvAjaxResult;
+import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
+import com.joyintech.tams.invest.common.util.ExcelUtil;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -73,6 +83,7 @@ public class StandardCouponReConversionRateService extends CommonExportService<S
                 StandardCouponReConversionRateDto.class);
     }
 
+
     /**
      * 导出查询
      */
@@ -98,6 +109,8 @@ public class StandardCouponReConversionRateService extends CommonExportService<S
         if (entity.getOperateType().equals("DELETE")) {
             action = "delete";
         } else if (entity.getOperateType().equals("NEW")) {
+            //生成序列号
+            entity.setSeqNo(IDGenerator.generate(32));
             action = "insert";
         } else {
             action = "update";
@@ -118,9 +131,62 @@ public class StandardCouponReConversionRateService extends CommonExportService<S
                 SelectOptionDto.class);
     }
 
+    //add by chenjiaxing 标准券再折算率改造 20211019 start
+    /**
+     * 查询券商资产
+     * @return
+     */
+    public List<SelectOptionDto> getFinprodIdInfo(Map<String, Object> map) {
+        return restTemplate.postForList(
+                ServiceApplication.BASICDATA_SERVICE_NAME
+                        + "/StandardCouponReConversionRate/getFinprodIdInfo", map,
+                SelectOptionDto.class);
+    }
+    //add by chenjiaxing 标准券再折算率改造 20211019 end
+
     public List<SelectOptionDto> brokerIdChange(Map<String, Object> map) {
         return restTemplate.postForList(ServiceApplication.BASICDATA_SERVICE_NAME
                         + "/StandardCouponReConversionRate/brokerIdChange", map,
                 SelectOptionDto.class);
+    }
+
+    /**
+     * 导入数据文件之前检查数据
+     *
+     * @param fileName 导入的文件名
+     * @return 处理结果
+     */
+    public AjaxResult checkConfirmMsgForImportData(String fileName)  {
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("dataList", ExcelUtil.getDataList1(fileName));
+        param.put("orgCode", CommonUtil.getOrgCode());
+        param.put("deptCode", CommonUtil.getDeptCode());
+        return restTemplate.postForObject(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/StandardCouponReConversionRate/checkConfirmMsgForImportData",
+                param,
+                InvAjaxResult.class);
+    }
+
+    /**
+     * 导入数据文件
+     *
+     * @param fileName 导入的文件名
+     * @return 导入结果，包含验证内容，如果验证失败，返回message
+     */
+    public List<ExcelValidDto> importData(String fileName) {
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("dataList", ExcelUtil.getDataList1(fileName));
+        param.put("tempList", ExcelUtil.getTempList1(fileName));
+        param.put("userName", CommonUtil.getUserName());
+        param.put("orgCode", CommonUtil.getOrgCode());
+        param.put("deptCode", CommonUtil.getDeptCode());
+        restTemplate.postForList(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstBondQuotationInfo/importData",
+                param,
+                ExcelValidDto.class);
+        return restTemplate.postForList(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/StandardCouponReConversionRate/importData",
+                param,
+                ExcelValidDto.class);
     }
 }

@@ -166,6 +166,11 @@ public class TrdBondToStock001Dto extends TrdFinProductDealTotal implements Proc
     private List<UploadFile> uploadFileList;
     
     private RiskCreditListCommonDto riskCreditListCommonDto;
+
+    /**
+     * 成交匹配的流水号 seqId
+     */
+    private String dealSqeId;
     
     /**
      * 撤销原因
@@ -794,5 +799,13 @@ public class TrdBondToStock001Dto extends TrdFinProductDealTotal implements Proc
     }
     public void setRiskCreditListCommonDto(RiskCreditListCommonDto riskCreditListCommonDto) {
         this.riskCreditListCommonDto = riskCreditListCommonDto;
+    }
+
+    public String getDealSqeId() {
+        return dealSqeId;
+    }
+
+    public void setDealSqeId(String dealSqeId) {
+        this.dealSqeId = dealSqeId;
     }
 }

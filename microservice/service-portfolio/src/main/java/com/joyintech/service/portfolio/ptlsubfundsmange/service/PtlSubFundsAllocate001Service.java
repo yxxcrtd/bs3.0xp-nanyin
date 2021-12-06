@@ -11,11 +11,16 @@
 package com.joyintech.service.portfolio.ptlsubfundsmange.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.service.portfolio.ptlsubfundsmange.dto.PtlSubFundsAllocateDataDto;
+import com.joyintech.service.portfolio.ptlsubfundsmange.dto.PtlSubFundsMangeDto;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
@@ -53,6 +58,9 @@ public class PtlSubFundsAllocate001Service extends BaseService<PtlSubFundsAlloca
 
     @Autowired
     private MapperDelegateService bussCommonMapperDelegateService;
+
+    @Autowired
+    private PtlSubFundsMangeService ptlSubFundsMangeService;
 
     /**
      * 子组合间资金调配-组合代码联想框
@@ -122,7 +130,19 @@ public class PtlSubFundsAllocate001Service extends BaseService<PtlSubFundsAlloca
         param.put("loginUserName", LoginUserUtil.getUserName());
         param.put("portfolioType", DictCodeListExt1.组合类型_投资类组合.getValue());
         param.put("investYesOrNo", DictCodeList.是否_否.getValue());
-        return ptlSubFundsAllocate001Mapper.getPortfolioIds(param);
+        List<PtlSubFundsMangeDto> list = ptlSubFundsMangeService.findPage(new HashMap<String,Object>(){{
+            put("distributionstatus","01");
+            put("userId", SecurityUtil.getLoginUser().getUserName());
+        }});
+        List<String> l = new ArrayList<>();
+        for(PtlSubFundsMangeDto dto : list){
+            if(StringUtil.isNotEmpty(dto.getProdId()))l.add(dto.getProdId());
+        }
+        List<SelectOptionDto> list1 = ptlSubFundsAllocate001Mapper.getPortfolioIds(param);
+        list1=list1.stream().filter(item->{
+            return l.contains(item.getId());
+        }).collect(Collectors.toList());
+        return list1;
     }
 
     public Page<PtlSubFundsAllocateDto> getSubFundsAllocate(int page, int length, Map<String, Object> pageParam)

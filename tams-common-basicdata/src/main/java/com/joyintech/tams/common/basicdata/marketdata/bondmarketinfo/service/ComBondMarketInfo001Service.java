@@ -14,13 +14,17 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.basicdata.marketdata.bondmarketinfo.dto.ComBondMarketInfo001Dto;
 import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
+import com.joyintech.tams.common.basicdata.util.ComBasicDataExcelUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -179,6 +183,17 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
     private List<ExcelValidDto> checkExcelData(List<List<String>> dataList)
         throws ParseException {
         List<ExcelValidDto> checkResult = new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(dataList)){
+            for(int j=0; j<dataList.size(); j++){
+                List<ExcelValidDto> result = checkExcelCow(j, dataList.get(j));
+                if (CollectionUtils.isNotEmpty(result)) {
+                    checkResult.addAll(result);
+                }
+            }
+        }
+        if(CollectionUtils.isNotEmpty(checkResult)){
+            return checkResult;
+        }
         List<ComBondMarketInfo001Dto> equityList = converToBean(dataList,null);
         ComBondMarketInfo001Dto ComBondMarketInfo001Dto = null;
         List<Integer> duplicateDataList=new ArrayList<Integer>();
@@ -186,9 +201,9 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
             for (int i = 0; i < equityList.size(); i++ ) {
                 ComBondMarketInfo001Dto = equityList.get(i);
                 // 检查表内数据每行是否合法
-                if (checkExcelCow(i, dataList.get(i)) != null) {
-                    checkResult.addAll(checkExcelCow(i, dataList.get(i)));
-                }
+//                if (checkExcelCow(i, dataList.get(i)) != null) {
+//                    checkResult.addAll(checkExcelCow(i, dataList.get(i)));
+//                }
                 if(ComBondMarketInfo001Dto.getSecId() == null
                 		|| ComBondMarketInfo001Dto.getValueDate() == null
                 		|| duplicateDataList.contains(i)){
@@ -238,50 +253,62 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
             List<String> list = dataList.get(i);
             ComBondMarketInfo001Dto = new ComBondMarketInfo001Dto();
             if (StringUtil.isNotEmpty(list.get(0))) {
+                //基金标的是否存在
+                Map<String, Object> params=new HashMap<>();
+                params.put("finprodType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                params.put("initValue",list.get(0));
+                try {
+                    Page<SelectOptionDto> page=getFinProductList(params);
+                    if(page.getTotal()==0){
+                        continue;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 /** modify by yanya on 20210329 去除截取前四位字符的逻辑**/
-                //ComBondMarketInfo001Dto.setSecId(list.get(0).trim().substring(4));
-                ComBondMarketInfo001Dto.setSecId(list.get(0).trim());
+                ComBondMarketInfo001Dto.setSecId(list.get(0).trim().substring(4));
+                //ComBondMarketInfo001Dto.setSecId(list.get(0).trim());
             }
             if (StringUtil.isNotEmpty(list.get(1))) {
                 ComBondMarketInfo001Dto.setFinprodAbbr(list.get(1).trim());
             }
-            if (StringUtil.isNotEmpty(list.get(2))) {
+            if (StringUtil.isNotEmpty(list.get(2))&&!ComBasicDataExcelUtil.isErrorDate(list.get(2))) {
                 ComBondMarketInfo001Dto.setValueDate(list.get(2).trim());
             }
-            if (StringUtil.isNotEmpty(list.get(3))) {
+            if (StringUtil.isNotEmpty(list.get(3))&&CommonUtil.isFloatNumeric(list.get(3))) {
                 ComBondMarketInfo001Dto.setCloPrice(new BigDecimal(list.get(3).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(4))) {
+            if (StringUtil.isNotEmpty(list.get(4))&&CommonUtil.isFloatNumeric(list.get(4))) {
                 ComBondMarketInfo001Dto.setAvgPrice(new BigDecimal(list.get(4).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(5))) {
+            if (StringUtil.isNotEmpty(list.get(5))&&CommonUtil.isFloatNumeric(list.get(5))) {
                 ComBondMarketInfo001Dto.setBuyOnePrice(new BigDecimal(list.get(5).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(6))) {
+            if (StringUtil.isNotEmpty(list.get(6))&&CommonUtil.isFloatNumeric(list.get(6))) {
                 ComBondMarketInfo001Dto.setSellOnePrice(new BigDecimal(list.get(6).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(7))) {
+            if (StringUtil.isNotEmpty(list.get(7))&&CommonUtil.isFloatNumeric(list.get(7))) {
                 ComBondMarketInfo001Dto.setMaxPrice(new BigDecimal(list.get(7).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(8))) {
+            if (StringUtil.isNotEmpty(list.get(8))&&CommonUtil.isFloatNumeric(list.get(8))) {
                 ComBondMarketInfo001Dto.setMinPrice(new BigDecimal(list.get(8).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(9))) {
+            if (StringUtil.isNotEmpty(list.get(9))&&CommonUtil.isFloatNumeric(list.get(9))) {
                 ComBondMarketInfo001Dto.setCloPriceFull(new BigDecimal(list.get(9).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(10))) {
+            if (StringUtil.isNotEmpty(list.get(10))&&CommonUtil.isFloatNumeric(list.get(10))) {
                 ComBondMarketInfo001Dto.setAvgPriceFull(new BigDecimal(list.get(10).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(11))) {
+            if (StringUtil.isNotEmpty(list.get(11))&&CommonUtil.isFloatNumeric(list.get(11))) {
                 ComBondMarketInfo001Dto.setBuyOnePriceFull(new BigDecimal(list.get(11).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(12))) {
+            if (StringUtil.isNotEmpty(list.get(12))&&CommonUtil.isFloatNumeric(list.get(12))) {
                 ComBondMarketInfo001Dto.setSellOnePriceFull(new BigDecimal(list.get(12).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(13))) {
+            if (StringUtil.isNotEmpty(list.get(13))&&CommonUtil.isFloatNumeric(list.get(13))) {
                 ComBondMarketInfo001Dto.setMaxPriceFull(new BigDecimal(list.get(13).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(14))) {
+            if (StringUtil.isNotEmpty(list.get(14))&&CommonUtil.isFloatNumeric(list.get(14))) {
                 ComBondMarketInfo001Dto.setMinPriceFull(new BigDecimal(list.get(14).trim()));
             }
             // Date date = new Date();
@@ -313,8 +340,22 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
         }
         if (StringUtil.isEmpty(list.get(0))) {
             // 验证导入债券代码是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "债券代码为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i+2), "债券代码为空");
             excelValidDtolist.add(dto);
+        }else{
+            //基金标的是否存在
+            Map<String, Object> params=new HashMap<>();
+            params.put("finprodType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            params.put("initValue",list.get(0));
+            try {
+                Page<SelectOptionDto> page=getFinProductList(params);
+                if(page.getTotal()==0){
+                    ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i+2), "标的信息 不存在！");
+                    excelValidDtolist.add(dto);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         if (StringUtil.isEmpty(list.get(1))) {
             // 验证导入估值来源是否为空
@@ -323,68 +364,144 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
         }
         if (StringUtil.isEmpty(list.get(2))) {
             // 验证导入估值日期是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "估值日期为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(2), String.valueOf(i+2), "估值日期为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(ComBasicDataExcelUtil.isErrorDate(list.get(2))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(2), String.valueOf(i+2), "估值日期格式不对");
+                excelValidDtolist.add(dto);
+            }else{
+                //导入已存在的债券信息
+                Map<String, Object> params=new HashMap<>();
+                params.put("secId", list.get(0).substring(4,list.get(0).length()));
+                params.put("valueDate",list.get(2));
+                List<ComBondMarketInfo001Dto> keyList=queryDtoByKey(params);
+                if(keyList!=null&&keyList.size()>0){
+                    ExcelValidDto dto = new ExcelValidDto(list.get(2), String.valueOf(i+2), "债券信息已存在");
+                    excelValidDtolist.add(dto);
+                }
+            }
+
         }
         if (StringUtil.isEmpty(list.get(3))) {
             // 验证导入收盘价净价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "收盘价净价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i+2), "收盘价净价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(3))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i+2), "收盘价净价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(4))) {
             // 验证导入平均价净价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "平均价净价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(4), String.valueOf(i+2), "平均价净价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(4))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(4), String.valueOf(i+2), "平均价净价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(5))) {
             // 验证导入买一价净价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "买一价净价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(5), String.valueOf(i+2), "买一价净价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(5))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(5), String.valueOf(i+2), "买一价净价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(6))) {
             // 验证导入卖一价净价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "卖一价净价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(6), String.valueOf(i+2), "卖一价净价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(6))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(6), String.valueOf(i+2), "卖一价净价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(7))) {
             // 验证导入最高价净价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "最高价净价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(7), String.valueOf(i+2), "最高价净价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(7))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(7), String.valueOf(i+2), "最高价净价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(8))) {
             // 验证导入最低价净价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "最低价净价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(8), String.valueOf(i+2), "最低价净价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(8))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(8), String.valueOf(i+2), "最低价净价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(9))) {
             // 验证导入收盘价全价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "收盘价全价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(9), String.valueOf(i+2), "收盘价全价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(9))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(9), String.valueOf(i+2), "收盘价全价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(10))) {
             // 验证导入平均价全价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "平均价全价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i+2), "平均价全价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(10))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i+2), "平均价全价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(11))) {
             // 验证导入买一价全价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "买一价全价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(10), String.valueOf(i+2), "买一价全价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(11))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(11), String.valueOf(i+2), "买一价全价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(12))) {
             // 验证导入卖一价全价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "卖一价全价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(12), String.valueOf(i+2), "卖一价全价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(12))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(12), String.valueOf(i+2), "卖一价全价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(13))) {
             // 验证导入最高价全价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "最高价全价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(13), String.valueOf(i+2), "最高价全价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(13))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(13), String.valueOf(i+2), "最高价全不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(14))) {
             // 验证导入最低价全价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "最低价全价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(14), String.valueOf(i+2), "最低价全价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(14))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(14), String.valueOf(i+2), "最低价全价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         return excelValidDtolist;
     }
@@ -415,31 +532,33 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
         throws ParseException {
     	List<ComBondMarketInfo001Dto> equityList = converToBean(dataList,null);
     	List<Integer> duplicateData=new ArrayList<Integer>();
-      for (int i = 0; i < dataList.size(); i++ ) {
-      	ComBondMarketInfo001Dto ComBondMarketInfo001Dto = equityList.get(i);
-      	if(ComBondMarketInfo001Dto.getSecId() == null
-        		|| ComBondMarketInfo001Dto.getValueDate() == null
-        		|| duplicateData.contains(i)){
-      		continue;
+    	if(!CollectionUtils.isEmpty(equityList)) {
+            for (int i = 0; i < dataList.size(); i++) {
+                ComBondMarketInfo001Dto ComBondMarketInfo001Dto = equityList.get(i);
+                if (ComBondMarketInfo001Dto.getSecId() == null
+                        || ComBondMarketInfo001Dto.getValueDate() == null
+                        || duplicateData.contains(i)) {
+                    continue;
+                }
+                // 检查表内数据是否有主键重复
+                for (int k = i + 1; k < dataList.size(); k++) {
+                    if (equityList.get(k).getSecId() == null
+                            || equityList.get(k).getValueDate() == null) {
+                        continue;
+                    }
+                    if (equityList.get(k).getSecId().equals(
+                            ComBondMarketInfo001Dto.getSecId())
+                            && equityList.get(k).getValueDate().equals(ComBondMarketInfo001Dto.getValueDate())) {
+                        if (!duplicateData.contains(k)) {
+                            duplicateData.add(k);
+                        }
+                    }
+                }
+            }
         }
-          // 检查表内数据是否有主键重复
-          for (int k = i + 1; k < dataList.size(); k++ ) {
-        	  if(equityList.get(k).getSecId() == null
-              		|| equityList.get(k).getValueDate() == null){
-        		  continue;
-              }
-              if (equityList.get(k).getSecId().equals(
-              		ComBondMarketInfo001Dto.getSecId())
-                      && equityList.get(k).getValueDate().equals(ComBondMarketInfo001Dto.getValueDate())) {
-              	if(!duplicateData.contains(k)){
-              		duplicateData.add(k);
-              	}
-              }
-          }
-      }
-      if(duplicateData.isEmpty()){
-    	  duplicateData.add(-1);
-      }
+//      if(duplicateData.isEmpty()){
+//    	  duplicateData.add(-1);
+//      }
       return duplicateData;
     }
 }

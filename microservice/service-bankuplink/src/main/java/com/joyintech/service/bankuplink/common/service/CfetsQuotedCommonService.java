@@ -249,10 +249,11 @@ public class CfetsQuotedCommonService extends BaseService {
 //                etrDistributeMapper.insertSelective(etrDistribute);
 //            }
 //        }
-		
+
+        boolean status = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId,com.joyintech.tams.constant.DictCodeList.委托状态_待接收.getValue());
 		//2.查询指令分发的临时表数据  插入  指令分发表，并将状态改为  待接收。
-		List<EtrDistributeInterfTmp> distmpList = cfetsQuotedCommonMapper.selectEtrDistributeInterfTmpList(param);
-		
+		/*List<EtrDistributeInterfTmp> distmpList = cfetsQuotedCommonMapper.selectEtrDistributeInterfTmpList(param);
+
 		if(!StringUtil.isEmptyList(distmpList)) {
 			boolean status = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId,com.joyintech.tams.constant.DictCodeList.委托状态_待接收.getValue());
 			
@@ -270,7 +271,7 @@ public class CfetsQuotedCommonService extends BaseService {
 			this.etrInvestInfoServiceImpl.distributeDelegate(disList);
 		}else{
 			boolean status = etrInvestInfoServiceImpl.updateDelegateStatus(entrustId,com.joyintech.tams.constant.DictCodeListExt3.委托状态_待分发.getValue());
-		}
+		}*/
 
 //        EtrEntrust etrEntrustUpdate = new EtrEntrust();
 //        etrEntrustUpdate.setEntrustId(entrustId);

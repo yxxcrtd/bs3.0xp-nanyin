@@ -30,11 +30,16 @@
 		a.BUY_ONE_PRICE_FULL AS buyOnePriceFull, /**买一价全价**/
 		a.SELL_ONE_PRICE_FULL AS sellOnePriceFull, /**卖一价全价**/
 		a.MAX_PRICE_FULL AS maxPriceFull, /**最高价全价**/
-		a.MIN_PRICE_FULL AS minPriceFull /**最低价全价**/
+		a.MIN_PRICE_FULL AS minPriceFull, /**最低价全价**/
 		<!--全价和净价分开 add by lishuping 20191125 end-->
+		wfl.PROCESS_STATE as processState
 		FROM mst_BOND_MARKET_INFO a
 <!-- 		LEFT  JOIN MST_BOND_VALUATION_INFO ON MST_BOND_VALUATION_INFO.SEC_ID = a.SEC_ID -->
 		INNER JOIN FIN_PRODUCT c ON a.SEC_ID=c.FINPROD_MARKET_ID
+		LEFT JOIN SYS_WFL_BUSINESS_LIST wfl
+		on wfl.trade_id=c.FINPROD_ID AND PAGE_ID ='ComBondMarketInfo002'
+		AND BUSINESS_TYPE = 'MST27'
+		AND ACTION_TYPE IN ( 'modify', 'delete' )  and PROCESS_STATE='ING'
 		WHERE 1 = 1
 		<if test="finprodType !=null and finprodType !='' ">
 			AND c.FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}

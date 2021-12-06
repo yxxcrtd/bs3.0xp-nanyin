@@ -272,7 +272,7 @@ public class EtrIbRepoInfo004Controller extends BaseController {
                     param) : IDGenerator.generate();
                 dto.setEntrustId(code);
 //                dto.setZyqk(etrIbRepoInfo004Service.getZyqkId(dto.getZyqk()));
-                dto.setZyqk("999999");
+//                dto.setZyqk("999999");
             }
 //            dto.setWorkflowParameter("new|||1|EtrIbRepoinfo002|EtrIbRepoMain_btn_submit|true");
         }

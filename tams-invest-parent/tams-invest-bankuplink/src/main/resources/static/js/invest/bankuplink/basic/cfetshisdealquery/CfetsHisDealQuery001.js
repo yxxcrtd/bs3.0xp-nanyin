@@ -320,7 +320,9 @@
         dblclick:function(table, data) {
             data.operateType = "dblclick";
             data.pageModel=PAGE_MODEL_REFERENCE;
-
+            if(data.workflowId){
+                data.workflowStatus = '04';
+            }
             if(data.isDzh == 'Y'){
                 Joyin.dialog(JoyinUtil.getLabel("质押式回购历史报价明细"),
                     JoyinUtil.getRealPath("/invest/bankuplink/repo/CfetsRepoDealQuotedPrice003/init"),

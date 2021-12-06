@@ -575,6 +575,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     收付方向_支付(DictCode.收付方向,"04","支付"),
     债项评级_债项评级低的优先质押(DictCode.债项评级,"01","债项评级低的优先质押"),
     债项评级_债项评级高的优先质押(DictCode.债项评级,"02","债项评级高的优先质押"),
+    交易类型_交易数据(DictCode.交易类型,"03","交易数据"),
     交易类型_投资指令(DictCode.交易类型,"02","投资指令"),
     交易类型_预录入(DictCode.交易类型,"01","预录入"),
     // 质押券优先级设置字典 2020-1-8 lizhi end
@@ -1586,7 +1587,17 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     估值市价_外汇交易中心(DictCode.估值市价, "12", "外汇交易中心"),
     录入方式_模型生成(DictCode.录入方式,"07","模型"),
 
-
+    //add by chenjiaxing 20211015 start
+    共通业务类型_券商流水核对(DictCode.共通业务类型,"STL07","券商流水核对"),
+    对账状态结果_不一致(DictCode.对账状态结果,"0","不一致"),
+    对账状态结果_一致(DictCode.对账状态结果,"1","一致"),
+    对账状态结果_待处理(DictCode.对账状态结果,"2","待处理"),
+    对账状态结果_手工完成(DictCode.对账状态结果,"3","手工完成"),
+    //add by chenjiaxing 20211015 end
+	
+	下行交易匹配状态_未匹配(DictCode.下行交易匹配状态,"0","未匹配"),
+    下行交易匹配状态_部分匹配(DictCode.下行交易匹配状态,"1","部分匹配"),
+    下行交易匹配状态_匹配完成(DictCode.下行交易匹配状态,"2","匹配完成"),
     ;
     /**
      * 对应于数据字典code

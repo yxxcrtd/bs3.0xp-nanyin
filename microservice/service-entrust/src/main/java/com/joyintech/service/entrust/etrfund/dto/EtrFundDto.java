@@ -15,7 +15,7 @@ import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 
 /**
  * 基金委托Dto 〈功能详细描述〉
- * 
+ *
  * @author huwenbin
  * @version 1.0 2018年10月8日
  * @see EtrFundDto
@@ -111,7 +111,7 @@ public class EtrFundDto extends EtrEntrust {
     private BussEtrInvestPersonInfoDto bussEtrInvestPersonInfoDto;
 
     /**
-     * 
+     *
      */
     private List<SysUploadFileInfo> fileArray;
 
@@ -167,7 +167,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * finprodAbbr
-     * 
+     *
      * @return finprodAbbr
      */
     public String getFinprodAbbr() {
@@ -176,7 +176,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * finprodAbbr
-     * 
+     *
      * @param finprodAbbr finprodAbbr
      */
     public void setFinprodAbbr(String finprodAbbr) {
@@ -186,7 +186,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 pageModel
-     * 
+     *
      * @return pageModel.
      */
     public String getPageModel() {
@@ -195,7 +195,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 pageModel
-     * 
+     *
      * @param pageModel pageModel
      */
     public void setPageModel(String pageModel) {
@@ -204,7 +204,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 elementId
-     * 
+     *
      * @return elementId.
      */
     public String getElementId() {
@@ -213,7 +213,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 elementId
-     * 
+     *
      * @param elementId elementId
      */
     public void setElementId(String elementId) {
@@ -222,7 +222,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 selectedItem
-     * 
+     *
      * @return selectedItem.
      */
     public List<EtrFundDto> getSelectedItem() {
@@ -231,7 +231,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 selectedItem
-     * 
+     *
      * @param selectedItem selectedItem
      */
     public void setSelectedItem(List<EtrFundDto> selectedItem) {
@@ -240,7 +240,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 closeWay
-     * 
+     *
      * @return closeWay.
      */
     public String getCloseWay() {
@@ -249,7 +249,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 closeWay
-     * 
+     *
      * @param closeWay closeWay
      */
     public void setCloseWay(String closeWay) {
@@ -258,7 +258,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 operateType
-     * 
+     *
      * @return operateType.
      */
     public String getOperateType() {
@@ -267,7 +267,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 operateType
-     * 
+     *
      * @param operateType operateType
      */
     public void setOperateType(String operateType) {
@@ -276,7 +276,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 finprodName
-     * 
+     *
      * @return finprodName.
      */
     public String getFinprodName() {
@@ -285,7 +285,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 finprodName
-     * 
+     *
      * @param finprodName finprodName
      */
     public void setFinprodName(String finprodName) {
@@ -294,7 +294,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 portfolioName
-     * 
+     *
      * @return portfolioName.
      */
     public String getPortfolioName() {
@@ -303,7 +303,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 portfolioName
-     * 
+     *
      * @param portfolioName portfolioName
      */
     public void setPortfolioName(String portfolioName) {
@@ -312,7 +312,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 finishAmt
-     * 
+     *
      * @return finishAmt.
      */
     public BigDecimal getFinishAmt() {
@@ -321,7 +321,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 finishAmt
-     * 
+     *
      * @param finishAmt finishAmt
      */
     public void setFinishAmt(BigDecimal finishAmt) {
@@ -330,7 +330,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 transactioncom
-     * 
+     *
      * @return transactioncom.
      */
     public long getTransactioncom() {
@@ -339,7 +339,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 transactioncom
-     * 
+     *
      * @param transactioncom transactioncom
      */
     public void setTransactioncom(long transactioncom) {
@@ -348,7 +348,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 serialversionuid
-     * 
+     *
      * @return serialversionuid.
      */
     public static long getSerialversionuid() {
@@ -357,7 +357,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 trader
-     * 
+     *
      * @return trader.
      */
     public String getTrader() {
@@ -366,7 +366,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 trader
-     * 
+     *
      * @param trader trader
      */
     public void setTrader(String trader) {
@@ -375,7 +375,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 entrustOperationType
-     * 
+     *
      * @return entrustOperationType.
      */
     public String getEntrustOperationType() {
@@ -384,7 +384,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 entrustOperationType
-     * 
+     *
      * @param entrustOperationType entrustOperationType
      */
     public void setEntrustOperationType(String entrustOperationType) {
@@ -393,7 +393,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 assetType1
-     * 
+     *
      * @return assetType1.
      */
     public String getAssetType1() {
@@ -402,7 +402,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 assetType1
-     * 
+     *
      * @param assetType1 assetType1
      */
     public void setAssetType1(String assetType1) {
@@ -412,7 +412,7 @@ public class EtrFundDto extends EtrEntrust {
     /** 新增个性分类三、四 王贵奇 2019/7/29 开始 **/
     /**
      * 获取 assetType10
-     * 
+     *
      * @return assetType10.
      */
     public String getAssetType10() {
@@ -421,7 +421,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 assetType10
-     * 
+     *
      * @param assetType10 assetType10
      */
     public void setAssetType10(String assetType10) {
@@ -430,7 +430,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 assetType11
-     * 
+     *
      * @return assetType11.
      */
     public String getAssetType11() {
@@ -439,7 +439,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 assetType11
-     * 
+     *
      * @param assetType11 assetType11
      */
     public void setAssetType11(String assetType11) {
@@ -450,7 +450,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 bussEtrInvestPersonInfoDto
-     * 
+     *
      * @return bussEtrInvestPersonInfoDto.
      */
     public BussEtrInvestPersonInfoDto getBussEtrInvestPersonInfoDto() {
@@ -459,7 +459,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 bussEtrInvestPersonInfoDto
-     * 
+     *
      * @param bussEtrInvestPersonInfoDto bussEtrInvestPersonInfoDto
      */
     public void setBussEtrInvestPersonInfoDto(BussEtrInvestPersonInfoDto bussEtrInvestPersonInfoDto) {
@@ -468,7 +468,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 fileArray
-     * 
+     *
      * @return fileArray.
      */
     public List<SysUploadFileInfo> getFileArray() {
@@ -477,7 +477,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 fileArray
-     * 
+     *
      * @param fileArray fileArray
      */
     public void setFileArray(List<SysUploadFileInfo> fileArray) {
@@ -486,7 +486,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 获取 finprodMarketId
-     * 
+     *
      * @return finprodMarketId.
      */
     public String getFinprodMarketId() {
@@ -495,7 +495,7 @@ public class EtrFundDto extends EtrEntrust {
 
     /**
      * 设置 finprodMarketId
-     * 
+     *
      * @param finprodMarketId finprodMarketId
      */
     public void setFinprodMarketId(String finprodMarketId) {
@@ -578,5 +578,17 @@ public class EtrFundDto extends EtrEntrust {
      */
     public void setChangeToFinprodName(String changeToFinprodName) {
         this.changeToFinprodName = changeToFinprodName;
+    }
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
     }
 }

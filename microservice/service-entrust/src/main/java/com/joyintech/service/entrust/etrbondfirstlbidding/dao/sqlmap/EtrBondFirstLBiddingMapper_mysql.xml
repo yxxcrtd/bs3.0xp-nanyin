@@ -48,7 +48,7 @@
 		NULL
 		ELSE
 		concat(ORDPRICE.WIN_PRICE * 100 , '%')
-		END) rder by (ORDPRICE.WIN_PRICE) separator  ',')  WIN_PRICE
+		END) order by (ORDPRICE.WIN_PRICE) separator  ',')  WIN_PRICE
         FROM BID_ORDER_BID_PRICE ORDPRICE
         GROUP BY ORDPRICE.ENTRUST_ID) T5
         ON T5.ENTRUST_ID = T1.ENTRUST_ID

@@ -144,17 +144,18 @@
             type: 'number',
             digit: 2
         }
-        , {/*证券账户*/
-            field: 'secManageAcctId',
-            width: 100,
-            title: 'EtribBondInfo003.secAcct',
-            edit:true,
-            sortable: false,
-            editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId',
-                multiple: false, showField:'text',searchable: true,
-                url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
-            }
-        },   {
+        // , {/*证券账户*/
+        //     field: 'secManageAcctId',
+        //     width: 100,
+        //     title: 'EtribBondInfo003.secAcct',
+        //     edit:true,
+        //     sortable: false,
+        //     editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId',
+        //         multiple: false, showField:'text',searchable: true,
+        //         url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
+        //     }
+        // }
+        ,   {
             field: 'proAvailableCash',
             width: 40,
             title: 'EtribRepoInfo003.proAvailableCash',
@@ -1227,4 +1228,15 @@
            table.clear();
         });
     });
+    //add by meifaxin  20211108 新增的时候有在质押券库字段,待办中缺少质押券库字段bug start
+    setTimeout(function () {
+        if(pageModel == PAGE_MODEL_REFERENCE) {
+            if (repo_pledge_model == '03') {
+                if ($('#ps').val() !== '04') {
+                    table.showColumns([{field: 'zyqk', visible: true}]);
+                }
+            }
+        }
+    },500);
+    //add by meifaxin  20211108 新增的时候有在质押券库字段,待办中缺少质押券库字段bug end
 }());

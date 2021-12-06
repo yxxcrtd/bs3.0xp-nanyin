@@ -850,6 +850,19 @@ public class EtrExchangeTradeService extends BaseService{
     }
 
     /**
+     * 质押券代码下拉框查询
+     * @param page
+     * @param length
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> selectZyq(int page, int length,Map<String, Object> param) {
+        return super.queryForPage(page, length, () -> etrExchangeTradeMapper.selectZyq(param));
+    }
+
+
+
+    /**
      * 查询债券基本信息
      *
      * @param map 参数
@@ -1539,6 +1552,14 @@ public class EtrExchangeTradeService extends BaseService{
      */
     public String getInvAim(){
         return this.etrExchangeTradeMapper.getInvAim();
+    }
+
+    public String linkInvAim(Map<String, Object> param) {
+        String invAim = this.etrExchangeTradeMapper.linkInvAim(param);
+        if(!StringUtil.isNotEmpty(invAim)) {
+            invAim = this.etrExchangeTradeMapper.linkInvAimEtr(param);
+        }
+        return invAim;
     }
 
     /**

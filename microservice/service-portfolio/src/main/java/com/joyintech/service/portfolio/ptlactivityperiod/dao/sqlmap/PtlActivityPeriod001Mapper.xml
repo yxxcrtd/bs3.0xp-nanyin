@@ -540,4 +540,19 @@ select * from (
 		and PTL.FINPROD_ID = #{busiAcctNo}
 	</where>
     </select>
+
+	<select id="isZuHe" resultType="com.joyintech.tams.common.base.entity.PtlPortfolio" parameterType="java.lang.String">
+		SELECT * from PTL_PORTFOLIO WHERE PORTFOLIO_ID = #{str}
+	</select>
+
+	<select id="isZiJing" resultType="com.joyintech.tams.common.base.entity.StlCapacctInfo" parameterType="java.lang.String">
+		SELECT * from STL_CAPACCT_INFO WHERE BUSI_ACCT_NO = #{str}
+	</select>
+
+	<select id="checkZuHeAndZiJing" resultType="com.joyintech.tams.common.base.entity.PtlCapacctInfo">
+		SELECT * FROM PTL_CAPACCT_INFO
+		WHERE PORTFOLIO_ID = #{portfolioId}
+		AND ACCT_NO in ( SELECT ACCT_NO FROM STL_CAPACCT_INFO WHERE BUSI_ACCT_NO = #{busiAcctNo} )
+	</select>
+
 </mapper>

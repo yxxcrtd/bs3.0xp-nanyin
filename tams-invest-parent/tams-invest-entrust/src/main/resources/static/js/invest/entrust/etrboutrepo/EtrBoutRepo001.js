@@ -5,14 +5,14 @@
     /**
      * 获取查询参数
      */
-    var searchform =function(){ 
+    var searchform =function(){
         var data = $.serializeToObject('#searchForm');
         if($('#portfolioId').val()){
             data.portfolioId = $('#portfolioId').val().join(",");
         }
         return data;
     };
-    /** 
+    /**
      * 新建
      */
     function showDialog() {
@@ -33,9 +33,9 @@
             data.operateType = "dblclick";
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("EtrBoutRepo002.refrence"),
-                    JoyinUtil.getRealPath("invest/entrust/etrboutrepo/EtrBoutRepo002/init"),
-                    "98%", "95%", data,
-                    function(){table.reload();});
+                JoyinUtil.getRealPath("invest/entrust/etrboutrepo/EtrBoutRepo002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
         },
         cols:[
             {field:'entrustStatus',visible:false}
@@ -62,15 +62,16 @@
             ,{field:'finishAmt',type:'number', title: 'EtrBoutRepo001.finishAmt', width:'10%',sortField:"finishAmt"}
             ,{field: 'priceModelStr', title: 'EtrStock001.priceModel', width: '10%', sortField: "priceModel"} //新增价格模式	王贵奇	2019/10/10
             ,{field:'transactioncom', title: 'EtrBoutRepo001.transactioncom',render : function(data, type, row, meta){
-                return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.finishAmt/row.entrustAmt*100).toFixed(2)+"%'><span class='layui-progress-text'>"+(row.finishAmt/row.entrustAmt*100).toFixed(2)+"%</span></div></div>";
-            }, width:'10%',sortable:false}
+                    return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.finishAmt/row.entrustAmt/100).toFixed(2)+"%'><span class='layui-progress-text'>"+(row.finishAmt/row.entrustAmt/100).toFixed(2)+"%</span></div></div>";
+                }, width:'10%',sortable:false}
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:'10%',sortable:false}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit'] , width:'10%'}
-            ],
+        ],
     });
     /**
      * 导出
      */
-    var exportExcel = function(){       
+    var exportExcel = function(){
         Joyin.exportExcel(basePath+"invest/entrust/etrboutrepo/EtrBoutRepo001/export", searchform());
     };
 
@@ -85,9 +86,9 @@
         data.tradeMarket="01";
         Joyin.ajaxJson(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo001/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrBoutRepo002.edit"),
-                    JoyinUtil.getRealPath("invest/entrust/etrboutrepo/EtrBoutRepo002/init"),
-                    "98%", "95%", data,
-               function(){table.reload();});
+                JoyinUtil.getRealPath("invest/entrust/etrboutrepo/EtrBoutRepo002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
         });
     });
 //    /**
@@ -108,8 +109,8 @@
      */
     table.bind('click','.portfolioIdLink', function(row) {
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-                "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+            basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+            "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                 portfolioId:row.portfolioId});//主键组合代码
     });
     /**
@@ -155,11 +156,11 @@
         $('#EtrBoutRepo001_btn_close').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }else {
+            }else {
                 var object = {selectedItem: selArr, operateType:"close"};
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
@@ -168,33 +169,33 @@
                         });
                     });
                 });
-             }
+            }
         });
         // 多对多导入
         $('#EtrBoutRepo001_btn_import').click(function() {
-                Joyin.uploadFile({pageId:'EtrBoutRepo003MTM'},function(fileName) {
-                            Joyin.ajax(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo003/checkImportData', {fileName: fileName}, function(checkResult) {
-                                // 若是模板数据大于100条，提示重新导入，若是小于100条，进入多对多指令界面
-                                if(!checkResult.data.errorMsg){
-                                setTimeout( function () {
-                                    Joyin.confirm(checkResult.data.confirmMsg,function() {
-                                        var result = {};
-                                        result.operateType = "import";
-                                        result.pageModel='';
-                                        result.tempList = checkResult.data.correctData;
-                                        Joyin.dialog(JoyinUtil.getLabel("EtrBoutRepo003.edit"),
-                                            JoyinUtil.getRealPath("invest/entrust/etrboutrepo/EtrBoutRepo003/init"),
-                                            "98%", "95%", result,
-                                            function(){table.reload();});
-                                    });
-                                },1000);
-                                }else{
-                                    Joyin.alert(checkResult.data.errorMsg);
-                                }
+            Joyin.uploadFile({pageId:'EtrBoutRepo003MTM'},function(fileName) {
+                Joyin.ajax(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo003/checkImportData', {fileName: fileName}, function(checkResult) {
+                    // 若是模板数据大于100条，提示重新导入，若是小于100条，进入多对多指令界面
+                    if(!checkResult.data.errorMsg){
+                        setTimeout( function () {
+                            Joyin.confirm(checkResult.data.confirmMsg,function() {
+                                var result = {};
+                                result.operateType = "import";
+                                result.pageModel='';
+                                result.tempList = checkResult.data.correctData;
+                                Joyin.dialog(JoyinUtil.getLabel("EtrBoutRepo003.edit"),
+                                    JoyinUtil.getRealPath("invest/entrust/etrboutrepo/EtrBoutRepo003/init"),
+                                    "98%", "95%", result,
+                                    function(){table.reload();});
                             });
-                },function() {
-                    table.reload();
+                        },1000);
+                    }else{
+                        Joyin.alert(checkResult.data.errorMsg);
+                    }
                 });
+            },function() {
+                table.reload();
+            });
         });
         /**
          * 撤销
@@ -202,11 +203,11 @@
         $('#EtrBoutRepo001_btn_revoke').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }else {
+            }else {
                 var object = {selectedItem: selArr, operateType:"recall"};
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_C_0032","撤销"), function(){
@@ -215,7 +216,7 @@
                         });
                     });
                 });
-             }
+            }
         });
     });
 }());

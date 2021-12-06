@@ -21,4 +21,10 @@ public class StlDataGatherRepo1Reader extends StlDataGatherRepoBaseReader {
     protected List<String> getPSList() {
         return Arrays.asList(DictCodeList.交易方向_买入.getValue());
     }
+    @Override
+    protected boolean isCreateTrade(){
+        return false;
+    }
+
+
 }

@@ -22,17 +22,17 @@ public class EtrIbBondinfo001Dto extends BaseEntity {
      * 组合代码
      */
     private String portfolioId;
-    
+
     /**
      * 持仓数量
      */
     private BigDecimal amount;
-    
+
     /**
      * 单位成本
      */
     private BigDecimal unitCost;
-    
+
     /**
      * 投资目的
      */
@@ -492,29 +492,37 @@ public class EtrIbBondinfo001Dto extends BaseEntity {
         this.parentPortfolioId = parentPortfolioId;
     }
 
-	public BigDecimal getAmount() {
-		return amount;
-	}
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 
-	public BigDecimal getUnitCost() {
-		return unitCost;
-	}
+    public BigDecimal getUnitCost() {
+        return unitCost;
+    }
 
-	public void setUnitCost(BigDecimal unitCost) {
-		this.unitCost = unitCost;
-	}
+    public void setUnitCost(BigDecimal unitCost) {
+        this.unitCost = unitCost;
+    }
 
-	public String getInvAim() {
-		return invAim;
-	}
+    public String getInvAim() {
+        return invAim;
+    }
 
-	public void setInvAim(String invAim) {
-		this.invAim = invAim;
-	}
-    
-    
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
+    }
+
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
 }

@@ -211,7 +211,8 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
 
         // 3) 正回购本金金额不能大于质押券信息中汇总券面总额，若大于，则提示：“正回购委托金额不能大于质押券汇总券面总额”（除11的其他正回购）
         if (DictCodeList.回购拆借方向_正回购.getValue().equals(inputDto.getPs())
-                && DictCodeList.回购类型_质押式协议回购.getValue().equals(inputDto.getRepoType())
+                && (DictCodeList.回购类型_质押式协议回购.getValue().equals(inputDto.getRepoType())
+                    ||DictCodeList.回购类型_质押式回购.getValue().equals(inputDto.getRepoType()))
                 && inputDto.getPrinAmt() != null) {
         	if (inputDto.getBussRepoSec() == null) {
                 ValidMessage validMessage = new ValidMessage("prinAmt",

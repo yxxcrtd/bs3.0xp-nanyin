@@ -14,7 +14,7 @@
         WHERE
             T1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TGF29}, #{FINPROD_TYPE_TGF30})
             AND T1.TRADE_STATUS = #{TRADE_STATUS_01}
-            AND T1.IS_CANCEL = #{IS_CANCEL_N}
+            <!--AND T1.IS_CANCEL = #{IS_CANCEL_N}-->
             AND T1.PS = #{PS_T07}
             AND T1.P_TOTLE_TRADE_ID IS NULL
             AND T1.PORTFOLIO_ID <include refid="com.joyintech.service.period.trdbondduration.dao.TrdBondDurationMapper.portfolioAth"/>

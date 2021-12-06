@@ -10,18 +10,6 @@
 
 package com.joyintech.tams.settle.batch.datagather.processor;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
@@ -36,13 +24,15 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.settle.batch.datadeal.constant.StlDataDealProcessConstant;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDataDealProcessCommonService;
-import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeReaderDto;
-import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeWriteDto;
-import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
-import com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto;
-import com.joyintech.tams.settle.batch.datagather.dto.TotalTrdProductDealDto;
-import com.joyintech.tams.settle.batch.datagather.dto.TrdProductDealDto;
+import com.joyintech.tams.settle.batch.datagather.dto.*;
 import com.joyintech.tams.settle.common.service.SettleCommonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 基金分红处理
@@ -68,6 +58,9 @@ public class StlDataGatherFund2Processor extends StlDataGatherProcessor {
     protected String getSecType() {
         return DictCodeListExt1.证券品种_基金.getValue();
     }
+
+	@Override
+	protected List<String> getFinprodType() {return Arrays.asList(DictCodeListExt1.金融产品类型_投管用_基金.getValue());}
 
     @Override
     public InvestTradeWriteDto process(NeedOperateEntity operateEntity) throws Exception {

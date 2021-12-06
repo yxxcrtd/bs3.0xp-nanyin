@@ -92,7 +92,7 @@
 									<div class="layui-input-inline input-inline">
 										<select type="text" name="myAcctNo" id="myAcctNo"
 											class="layui-input form-input input-select" allowClear="true"
-											placeholder="请输入内容"
+											placeholder="请输入内容" required
 											data-th-placeholder="#{SysCommon.placeholder}"
 											data-th-initValue='${entity?.myAcctNo}'
 											data-th-data-url="@{/invest/settle/ordernewbuild/OrderNewBuild002/queryCapacctInfo}">
@@ -105,7 +105,7 @@
 										<div class="layui-input-inline input-inline">
 												<select type="text" name="counterAcctNo" id="counterAcctNo"
 													class="layui-input form-input input-select" allowClear="true"
-													placeholder="请输入内容"
+													placeholder="请输入内容" required
 													data-th-placeholder="#{SysCommon.placeholder}"
 													data-th-initValue='${entity?.counterAcctNo}'
 													data-th-data-url="@{/invest/settle/ordernewbuild/OrderNewBuild002/queryCapacctInfo}">
