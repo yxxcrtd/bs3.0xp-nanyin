@@ -210,7 +210,7 @@ public class IbuQuoteBondCalService extends BaseService {
         //剩余额度汇总
         BigDecimal avaNumTotal = ptlAllocations.stream().map(PtlAllocationDto::getAvaNum).reduce(BigDecimal.ZERO, BigDecimal::add);
         //尾差
-        BigDecimal tailDifference = avaNumTotal;
+        BigDecimal tailDifference = shareAmt;
         for (PtlAllocationDto ptlAllocation : ptlAllocations) {
             ptlAllocation.setShareAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt,ptlAllocation.getShareAmt()),avaNumTotal,4));
             tailDifference = ArithmeticUtil.subtract(tailDifference,ptlAllocation.getShareAmt());
