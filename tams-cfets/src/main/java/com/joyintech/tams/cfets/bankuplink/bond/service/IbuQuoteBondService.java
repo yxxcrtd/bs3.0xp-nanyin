@@ -302,6 +302,7 @@ public class IbuQuoteBondService extends BaseService {
                 calRequest.setPs(cfetsBondDealQuoteCommonDto.getPs());
                 calRequest.setFpriceAmt(cfetsBondDealQuoteCommonDto.getFpriceAmt());
                 calRequest.setSecManageAcctId(cfetsBondDealQuoteCommonDto.getSecManageAcctId());
+                calRequest.setShareAmt(cfetsBondDealQuoteCommonDto.getShareAmt());
                 List<TrdTradeFeeDetail> trdTradeFeeDetails = ibuQuoteBondCalService.calFee(calRequest);
                 if(CollectionUtils.isNotEmpty(trdTradeFeeDetails)){
                     trdTradeFeeDetails.forEach(item ->{
