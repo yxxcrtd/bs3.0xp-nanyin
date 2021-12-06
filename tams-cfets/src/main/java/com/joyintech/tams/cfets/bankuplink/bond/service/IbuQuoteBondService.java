@@ -275,7 +275,13 @@ public class IbuQuoteBondService extends BaseService {
                     cfetsBondDealQuoteCommonDto.setTheoreticalExerciseDate(finExercisePlan.getExerciseDate());
                     cfetsBondDealQuoteCommonDto.setActSetteDate(finExercisePlan.getActExerciseDate());
                 }else{
-                    cfetsBondDealQuoteCommonDto.setExercisePlan(false);
+                    planParam.put("exerciseType", com.joyintech.tams.constant.DictCodeList.行权方式_回售.getValue());
+                    finExercisePlan = cfetsIbuQuoteBondEtrMapper.getFinExercisePlan(planParam);
+                    if(null!=finExercisePlan){
+                        cfetsBondDealQuoteCommonDto.setExercisePlan(true);
+                    }else{
+                        cfetsBondDealQuoteCommonDto.setExercisePlan(false);
+                    }
                 }
             }
             //本方交易员应默认当前登录用户姓名

@@ -130,6 +130,9 @@
             FIN_EXERCISE_PLAN T1
         WHERE
             FINPROD_ID = #{finprodId}
+            <if test="exerciseType != null and !exerciseType.equals('')">
+                AND EXERCISE_TYPE = #{exerciseType}
+            </if>
             AND EXISTS (
             SELECT
                 1
