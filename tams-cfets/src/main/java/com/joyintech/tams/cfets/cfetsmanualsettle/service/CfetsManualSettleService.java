@@ -297,6 +297,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
             if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
                     ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())){
                 trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_已交收.getValue());
+            }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
+                trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_交收失败.getValue());
             }
         }
         return trdBankManualSettleInfo;
