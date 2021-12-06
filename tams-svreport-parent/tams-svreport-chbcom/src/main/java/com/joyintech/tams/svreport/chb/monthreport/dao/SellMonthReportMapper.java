@@ -9,16 +9,14 @@ import java.util.Map;
 
 @Repository
 public interface SellMonthReportMapper {
-//根据主键查询
-    SellMonthReport selectByPrimaryKey(String reportuuid);
-//分页查询
+    //根据主键查询
+    List<SellMonthReport> selectByPrimaryKey(String reportuuid);
+    //分页查询
     List<SellMonthReport> searchPage(Map<String,Object> map);
     //手工处理
     int updateInterfSubmitAndSeqBatch(@Param("termid")String termid);
     //取消手工处理
     int cancelMannultRegist(@Param("termid")String termid);
-    //查询报表类型
-    String searchReporttype(Map<String,Object> map);
     /**
      * 查询
      * @param param
