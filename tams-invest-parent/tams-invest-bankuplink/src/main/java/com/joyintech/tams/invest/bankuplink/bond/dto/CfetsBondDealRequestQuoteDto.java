@@ -160,10 +160,6 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
      */
     private String mySideTrader;
 
-    private String  settleMethod;
-
-    private String  settleType;
-
     private BigDecimal price;
 
     private BigDecimal matureYield;
@@ -607,16 +603,6 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
     @Override
     public void setMySideTrader(String mySideTrader) {
         this.mySideTrader = mySideTrader;
-    }
-
-    @Override
-    public void setSettleMethod(String settleMethod) {
-        this.settleMethod = settleMethod;
-    }
-
-    @Override
-    public void setSettleType(String settleType) {
-        this.settleType = settleType;
     }
 
     @Override

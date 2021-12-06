@@ -120,12 +120,12 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
             if(StringUtil.isEmpty(entity.getMySideTrader())){
                 errorList.add(new ValidMessage("请输入本方交易员"));
             }
-            if(StringUtil.isEmpty(entity.getCounterId())){
+            /*if(StringUtil.isEmpty(entity.getCounterId())){
                 errorList.add(new ValidMessage("请输入对手方"));
             }
             if(StringUtil.isEmpty(entity.getCounterTrader())&&(StringUtil.equals(entity.getQuoteStyle(),"01")||StringUtil.equals(entity.getQuoteStyle(),"02"))){
                 errorList.add(new ValidMessage("请输入对手方交易员"));
-            }
+            }*/
             if(StringUtil.isEmpty(entity.getCcy())){
                 errorList.add(new ValidMessage("请输入币种"));
             }
@@ -143,6 +143,17 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
             }
             if(null==entity.getSettleType()){
                 errorList.add(new ValidMessage("请输入清算类型"));
+            }
+            List<com.joyintech.tams.cfets.bankuplink.bond.dto.CounterInfoDto> counterInfoList = entity.getCounterInfoList();
+            if(CollectionUtils.isNotEmpty(counterInfoList)){
+                counterInfoList.forEach(item ->{
+                    if(StringUtil.isEmpty(item.getCounterId())){
+                        errorList.add(new ValidMessage("请选择对手方机构"));
+                        return;
+                    }
+                });
+            }else{
+                errorList.add(new ValidMessage("请添加对手方信息"));
             }
         }
         if(StringUtil.equals(sellPara,"02")){
@@ -557,8 +568,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
 	@Override
 	public void doComplete(CfetsBondDealRequestQuoteDto entity, OperationType type) {
 		// 历史报价撤销
-        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,entity);
+        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = preparEntity(entity);
         BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
         BeanUtil.copyPropertiesIgnoreNull(bondQuoteInfoDto,entity);
         if (StringUtil.equals(entity.getOptType(), "revoke")) {
@@ -735,9 +745,10 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      * @return
      */
 	public Boolean insertWflBondRequestQuote(CfetsBondDealRequestQuoteDto dto) {
-		return restTemplate.postForObject(
+        return cfetsBondDealQuotedPriceService.insertWflBondRequestQuote(preparEntity(dto));
+		/*return restTemplate.postForObject(
 				ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/insertWflBondRequestQuote",
-				dto, Boolean.class);
+				dto, Boolean.class);*/
 	}
 	
     // add by etliu 20210309 银行间上下行多组合 start
@@ -833,9 +844,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
 	 * @param dto
 	 */
 	public void doInsetOrUpdateForPtlPositionHold(CfetsBondDealRequestQuoteDto dto) {
-        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,dto);
-        cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(cfetsBondDealRequestQuoteDto);
+        cfetsBondDealQuotedPriceService.doInsetOrUpdateForPtlPositionHold(preparEntity(dto));
 		/*restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/doInsetOrUpdateRequestForPtlPositionHold", dto,
 				Integer.class);*/
 	}
@@ -906,5 +915,22 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
         return validList;
     }
 
+    /**
+     * 前端实体转微服务端
+     * @param entity
+     * @return
+     */
+    public com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto preparEntity(CfetsBondDealRequestQuoteDto entity){
+        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto();
+        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,entity);
+        List<com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto> cfetsBondDealRequestQuoteDtoList = new ArrayList<>();
+        entity.getCfetsBondDealRequestQuoteDtoList().forEach(item ->{
+            com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDtoPtl = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto();
+            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDtoPtl,item);
+            cfetsBondDealRequestQuoteDtoList.add(cfetsBondDealRequestQuoteDtoPtl);
+        });
+        cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsBondDealRequestQuoteDtoList);
+        return cfetsBondDealRequestQuoteDto;
+    }
 
 }

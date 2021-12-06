@@ -292,6 +292,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         entity.setMatureYield(ArithmeticUtil.round(entity.getMatureYield(), 4, RoundingMode.HALF_UP));
         entity.setExerYield(ArithmeticUtil.round(entity.getExerYield(), 4, RoundingMode.HALF_UP));
         for (PtlAllocationDto ptlAllocationDto : ptlAllocatios) {
+            ptlAllocationDto.setPrice(ArithmeticUtil.round(ptlAllocationDto.getPrice(), 4, RoundingMode.HALF_UP));
+            ptlAllocationDto.setMatureYield(ArithmeticUtil.round(ptlAllocationDto.getMatureYield(), 4, RoundingMode.HALF_UP));
+            ptlAllocationDto.setExerYield(ArithmeticUtil.round(ptlAllocationDto.getExerYield(), 4, RoundingMode.HALF_UP));
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
                 if(StringUtil.equals(anchoringValue,"01")&&entity.getPrice().compareTo(ptlAllocationDto.getPrice())>0){
                     errorList.add(new ValidMessage("登记交易净价不能大于指令净价！"));

@@ -13,23 +13,20 @@ package com.joyintech.tams.cfets.bankuplink.bond.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
-import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
-import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
-import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
+import com.joyintech.tams.invest.bankuplink.bond.dto.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -574,6 +571,68 @@ public class CfetsQuotedCommonService extends BaseService {
     }
 
     /**
+     * 前台转后台
+     * @param cfetsBondDealQuoteCommonDto
+     * @return
+     */
+    public CfetsBondDealDialogueQuoteDto createDialogue(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
+        CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
+        preparCfetsBondDealQuoteCommon(cfetsBondDealQuoteCommonDto);
+        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,cfetsBondDealQuoteCommonDto);
+        cfetsBondDealDialogueQuoteDto.setAvaNum(cfetsBondDealQuoteCommonDto.getShareAmt());
+        cfetsBondDealDialogueQuoteDto.setSettleSpreed(cfetsBondDealQuoteCommonDto.getSettleSpreedCode());
+        return cfetsBondDealDialogueQuoteDto;
+    }
+
+    /**
+     * 后台转前台
+     * @param cfetsBondDealDialogueQuoteDto
+     * @return
+     */
+    public CfetsBondDealQuoteCommonDto createDialogue2(CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto){
+        CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
+        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealDialogueQuoteDto);
+        cfetsBondDealQuoteCommonDto.setShareAmt(cfetsBondDealDialogueQuoteDto.getAvaNum());
+        return cfetsBondDealQuoteCommonDto;
+    }
+
+    /***
+     * 前台转后台
+     * @param cfetsBondDealQuoteCommonDto
+     * @return
+     */
+    public CfetsBondDealRequestQuoteDto createReueust(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
+        CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
+        preparCfetsBondDealQuoteCommon(cfetsBondDealQuoteCommonDto);
+        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,cfetsBondDealQuoteCommonDto);
+        cfetsBondDealRequestQuoteDto.setAvaNum(cfetsBondDealQuoteCommonDto.getShareAmt());
+        cfetsBondDealRequestQuoteDto.setSettleSpreed(cfetsBondDealQuoteCommonDto.getSettleSpreedCode());
+        if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getCounterInfoList())){
+            List<CounterInfoDto> counterInfoDtos= new ArrayList<>();
+            cfetsBondDealQuoteCommonDto.getCounterInfoList().forEach(item ->{
+                CounterInfoDto counterInfoDto = new CounterInfoDto();
+                BeanUtil.copyPropertiesIgnoreNull(counterInfoDto,item);
+                counterInfoDtos.add(counterInfoDto);
+            });
+            cfetsBondDealRequestQuoteDto.setCounterInfoList(counterInfoDtos);
+        }
+        return cfetsBondDealRequestQuoteDto;
+    }
+
+    /**
+     * 后台转前台
+     * @param cfetsBondDealRequestQuoteDto
+     * @return
+     */
+    public CfetsBondDealQuoteCommonDto createReueust2(CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto){
+        CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
+        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealRequestQuoteDto);
+        cfetsBondDealQuoteCommonDto.setShareAmt(cfetsBondDealRequestQuoteDto.getAvaNum());
+        return cfetsBondDealQuoteCommonDto;
+    }
+
+
+    /**
      * 对话组合分配列表  后台转前台
      * @param cfetsBondDealDialogueQuoteDtoList
      * @return
@@ -640,4 +699,30 @@ public class CfetsQuotedCommonService extends BaseService {
         }
         return result;
     }
+
+    /**
+     * 前端元-万元  % 转换(对话、请求)
+     * @param cfetsBondDealQuoteCommonDto
+     */
+    public void preparCfetsBondDealQuoteCommon(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
+        //收益率*100
+        cfetsBondDealQuoteCommonDto.setMatureYield(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getMatureYield(),new BigDecimal(100)));
+        cfetsBondDealQuoteCommonDto.setExerYield(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getExerYield(),new BigDecimal(100)));
+        //券面万元
+        cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.divide(cfetsBondDealQuoteCommonDto.getShareAmt(),new BigDecimal(10000),2));
+        //分配列表元转化万元
+        if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
+            cfetsBondDealQuoteCommonDto.getPtlAllocatios().stream().forEach(item ->{
+                item.setAvaNum(ArithmeticUtil.divide(item.getAvaNum(),new BigDecimal(10000),2));
+                item.setShareAmt(ArithmeticUtil.divide(item.getShareAmt(),new BigDecimal(10000),2));
+                item.setOurEntNum(ArithmeticUtil.divide(item.getOurEntNum(),new BigDecimal(10000),2));
+                item.setLendinEntNum(ArithmeticUtil.divide(item.getLendinEntNum(),new BigDecimal(10000),2));
+                item.setSellAbleNum(ArithmeticUtil.divide(item.getSellAbleNum(),new BigDecimal(10000),2));
+                item.setMatureYield(ArithmeticUtil.multiply(item.getMatureYield(),new BigDecimal(100)));
+                item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));
+            });
+        }
+    }
+
+
 }

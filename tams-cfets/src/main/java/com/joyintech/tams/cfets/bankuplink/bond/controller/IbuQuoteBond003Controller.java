@@ -125,7 +125,7 @@ public class IbuQuoteBond003Controller extends BaseController {
             }
         }
         //复制操作 返回前台
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealRequestQuoteDto);
+        cfetsBondDealQuoteCommonDto = cfetsQuotedCommonServiceVue.createReueust2(cfetsBondDealRequestQuoteDto);
         if(CollectionUtils.isNotEmpty(cfetsBondDealRequestQuoteDto.getCfetsBondDealRequestQuoteDtoList())){
             cfetsBondDealQuoteCommonDto.setPtlAllocatios(cfetsQuotedCommonServiceVue.createRequestPtlAllocationList(cfetsBondDealRequestQuoteDto.getCfetsBondDealRequestQuoteDtoList()));
         }
@@ -147,8 +147,7 @@ public class IbuQuoteBond003Controller extends BaseController {
         if(CollectionUtils.isNotEmpty(ar.getErrorList())){
             return new Message<AjaxResult>().success().setData(ar);
         }
-        CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,cfetsBondDealQuoteCommonDto);
+        CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = cfetsQuotedCommonServiceVue.createReueust(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
             cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealRequestQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
         }
@@ -175,7 +174,7 @@ public class IbuQuoteBond003Controller extends BaseController {
             }
         }
 
-        if (sb.length() > 0) {
+        /*if (sb.length() > 0) {
             sb.append("请确认是否继续？");
             ar.setData(sb);
         }
@@ -185,7 +184,7 @@ public class IbuQuoteBond003Controller extends BaseController {
                 msg = this.getMessage("SysCommon.submit");
             }
             ar.setData(this.getMessage("COMMON_C_0001", msg));
-        }
+        }*/
         return new Message<AjaxResult>().success().setData(ar);
     }
 
@@ -329,8 +328,7 @@ public class IbuQuoteBond003Controller extends BaseController {
         if (br.hasErrors()) {
             return new Message<AjaxResult>().success().setData(new AjaxResult(br));
         }
-        CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,cfetsBondDealQuoteCommonDto);
+        CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = cfetsQuotedCommonServiceVue.createReueust(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
             cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealRequestQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
         }

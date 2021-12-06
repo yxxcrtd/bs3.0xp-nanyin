@@ -27,9 +27,7 @@ public class CounterInfoDto {
 
     @ApiModelProperty(name="cpTrader",value="对手方交易员")
     private String cpTrader;
-    /**
-     * 交易状态
-     */
+
     @ApiModelProperty(name="tradeStatus",value="交易状态")
     private String tradeStatus;
 

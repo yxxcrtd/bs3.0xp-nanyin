@@ -16,6 +16,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealRegisterQuoteDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckDetaileRequst;
@@ -181,7 +182,7 @@ public class IbuQuoteBond004Controller extends BaseController {
     @ApiOperation(value = "登记提交(保存)", notes = "登记提交(保存)")
 	@RequestMapping("save")
     @ResponseBody
-	public Message<AjaxResult> save(@RequestBody CfetsBondDealQuoteCommonDto dto, BindingResult br) throws WorkFlowException {
+	public Message<AjaxResult> save(@RequestBody CfetsBondDealQuoteCommonDto dto, BindingResult br) throws Exception{
         if (br.hasErrors()) {
             return new Message<AjaxResult>().success().setData(new AjaxResult(br));
 		}
@@ -208,8 +209,14 @@ public class IbuQuoteBond004Controller extends BaseController {
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券登记报价.getValue());
 		processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);
-		String msg = cfetsBondDealQuotedPrice004Service.start(processParameter, cfetsBondDealRegisterQuoteDto);
-        return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
+        String msg = null;
+        try{
+            msg = cfetsBondDealQuotedPrice004Service.start(processParameter, cfetsBondDealRegisterQuoteDto);
+            return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
+        }
+        catch (Exception e) {
+            return PositionUtil.ajaxErrorReturn(e);
+        }
 	}
 
 
