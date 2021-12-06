@@ -90,12 +90,10 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
         //IF(所选行.业务类型 = 数据字典.平安业务类型.债券中间收息 ||所选行.业务类型 = 数据字典.平安业务类型.债券中间还本
         // ||所选行.业务类型 = 数据字典.平安业务类型.债券到期 ||所选行.业务类型 = 数据字典.平安业务类型.债券类资产行权
         //  ||所选行.业务类型 = 数据字典.平安业务类型.融出债券收息还本（收） )
-        if(!(StringUtil.equals(cfetsRequest.getSelectedItem().getTgBusiType(),DictCodeListExt1.平安业务类型_债券中间收息.getValue())
-                ||StringUtil.equals(cfetsRequest.getSelectedItem().getTgBusiType(),DictCodeListExt1.平安业务类型_债券中间还本.getValue())
-                ||StringUtil.equals(cfetsRequest.getSelectedItem().getTgBusiType(),DictCodeListExt1.平安业务类型_债券到期.getValue())
-                ||StringUtil.equals(cfetsRequest.getSelectedItem().getTgBusiType(),DictCodeListExt1.平安业务类型_债券类资产行权.getValue())
-                ||StringUtil.equals(cfetsRequest.getSelectedItem().getTgBusiType(),DictCodeListExt3.平安业务类型_融出债券付息还本_收.getValue()))){
-            returnMsg = "只允许存续期交易进行交收数据修改！";
+        if(!(StringUtil.equals(cfetsRequest.getSelectedItem().getTgBusiType(),DictCodeListExt3.头寸业务类型_债券存续期交易.getValue())
+                ||(StringUtil.equals(cfetsRequest.getSelectedItem().getTgBusiType(),DictCodeListExt3.头寸业务类型_债券行权交易.getValue())
+                    && StringUtil.equals(cfetsRequest.getSelectedItem().getPs(),BussinessDictCodeList.交易方向_行权赎回.getValue())))){
+            returnMsg = "只允许存续期交易、债券行权赎回进行交收数据修改！";
         }
         return returnMsg;
     }

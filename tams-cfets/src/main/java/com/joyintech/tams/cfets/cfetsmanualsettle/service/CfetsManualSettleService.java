@@ -111,7 +111,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
         }else if(StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())){
             for(CfetsManualSettleDto cfetsDto : cfetsRequest.getSelectedItem()) {
                 //判断勾选记录交收状态是否为“待交收”
-                if(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())){
+                if(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())
+                    ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
+                    ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券行权交易.getValue())){
                     returnList.add(cfetsDto);
                 }
                 returnMessage = "存在不允许交收失败的记录，是否剔除这些记录？";
