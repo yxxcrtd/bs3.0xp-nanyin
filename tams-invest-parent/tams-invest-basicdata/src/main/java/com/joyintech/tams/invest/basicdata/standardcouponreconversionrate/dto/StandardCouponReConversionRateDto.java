@@ -145,6 +145,7 @@ public class StandardCouponReConversionRateDto extends StdBondMoreConvrateInfo i
     private String startDate;
 
     @Override
+    @PrimaryKey(PrimaryKey.Field.PK_3)
     @NotEmpty(fieldName = "StandardCouponReConversionRate001.startDate",groups = {ValidateGroupEdit.class})
     public String getStartDate() {
         return startDate;
