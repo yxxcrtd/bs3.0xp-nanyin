@@ -166,6 +166,9 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="isRight",value="是否含权债")
     private String isRight;
 
+    @ApiModelProperty(name="isExercisePlan",value="是否有未来回售行权计划")
+    private boolean isExercisePlan;
+
     @ApiModelProperty(name="secManageAcctId",value="证券账户")
     private String secManageAcctId;
 
@@ -575,6 +578,14 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setSecManageAcctId(String secManageAcctId) {
         this.secManageAcctId = secManageAcctId;
+    }
+
+    public boolean isExercisePlan() {
+        return isExercisePlan;
+    }
+
+    public void setExercisePlan(boolean exercisePlan) {
+        isExercisePlan = exercisePlan;
     }
 }
 

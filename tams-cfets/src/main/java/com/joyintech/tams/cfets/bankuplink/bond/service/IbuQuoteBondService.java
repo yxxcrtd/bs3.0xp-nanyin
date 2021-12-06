@@ -271,12 +271,15 @@ public class IbuQuoteBondService extends BaseService {
                 planParam.put("platDate", iPlatformDate.getSysDateStr());
                 FinExercisePlan finExercisePlan = cfetsIbuQuoteBondEtrMapper.getFinExercisePlan(planParam);
                 if(null!=finExercisePlan){
+                    cfetsBondDealQuoteCommonDto.setExercisePlan(true);
                     cfetsBondDealQuoteCommonDto.setTheoreticalExerciseDate(finExercisePlan.getExerciseDate());
                     cfetsBondDealQuoteCommonDto.setActSetteDate(finExercisePlan.getActExerciseDate());
+                }else{
+                    cfetsBondDealQuoteCommonDto.setExercisePlan(false);
                 }
             }
             //本方交易员应默认当前登录用户姓名
-            if(StringUtil.isEmpty(cfetsBondDealQuoteCommonDto.getMySideTrader())&&null!=SecurityUtil.getLoginUser()){
+            if(StringUtil.isEmpty(cfetsBondDealQuoteCommonDto.getOuTraderName())&&null!=SecurityUtil.getLoginUser()){
                 cfetsBondDealQuoteCommonDto.setMySideTrader(SecurityUtil.getLoginUser().getUserName());
                 cfetsBondDealQuoteCommonDto.setOuTraderName(SecurityUtil.getLoginUser().getRealName());
             }
