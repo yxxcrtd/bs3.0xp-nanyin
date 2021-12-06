@@ -1031,9 +1031,8 @@
 		SUBMIT_DEADLINE,
 		CHB_SUBMIT_DEADLINE,
 		ORG_CODE
-		FROM  PBC_REPORT
+		FROM  (SELECT DISTINCT termId,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,SEND_STATUS,ORG_CODE,SUBMIT_TIME,CREATE_DEPT,DEPT_CODE,SUBMIT_FEEDBACK_STATUS,STATUS FROM PBC_REPORT WHERE reporttype != 'ONEPRD_ASSET_DEBT') PBC_REPORT
 		WHERE 1=1
-		and reporttype != 'ONEPRD_ASSET_DEBT'
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
@@ -1518,7 +1517,7 @@
 			end SEND_STATUS,
 		PR.SUBMIT_DEADLINE,
 		PR.CHB_SUBMIT_DEADLINE ]]>
-		FROM  CHB_SALE_MONTH_REPORT PR
+		FROM  (SELECT DISTINCT termId,SEND_STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,ORG_CODE,SUBMIT_TIME,CREATE_DEPT,DATA_STATUS,DEPT_CODE,SUBMIT_FEEDBACK_STATUS FROM CHB_SALE_MONTH_REPORT) PR
 		WHERE 1=1
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and PR.CREATE_DEPT in(" separator="," close=")">
