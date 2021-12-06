@@ -512,12 +512,12 @@
         tpd.ps ps,
         ssai.sec_acct_name secAcctId,
         to_char(tpd.trade_date,'yyyy-MM-dd') tradeDate,
-        tpd.settle_speed settleSpeed,
+        DECODE(tpd.settle_speed,0,'01',1,'02','2','03') settleSpeed,
         to_char(tpd.settle_date,'yyyy-MM-dd') settleDate,
         tpd.unit_cprice unitPrice,
         tpd.yield*100 matureYield,
         tpd.exer_yield*100 exerYield,
-        tpd.share_amt shareNum,
+        tpd.share_amt*100 shareNum,
         tpd.unit_int unitInt,
         tpd.unit_fprice allPrice,
         tpd.cprice_amt cpriceAmt,
@@ -722,12 +722,12 @@
         fp.finprod_abbr finprodAbbr,
         tpdp.ps ps,
         ssai.sec_acct_name secAcctId,
-        tpdp.settle_speed settleSpeed,
+        DECODE(tpdp.settle_speed,0,'01',1,'02','2','03') settleSpeed,
         to_char(tpdp.settle_date,'yyyy-MM-dd') settleDate,
         tpdp.unit_cprice unitPrice,
-        tpdp.yield matureYield,
-        tpdp.exer_yield exerYield,
-        tpdp.share_amt shareNum,
+        tpdp.yield*100 matureYield,
+        tpdp.exer_yield*100 exerYield,
+        tpdp.share_amt*100 shareNum,
         tpdp.unit_int unitInt,
         tpdp.unit_fprice allPrice,
         tpdp.cprice_amt cpriceAmt,
@@ -736,11 +736,12 @@
         ttft.fee_amt jyFeeAmt,
         ttft1.fee_amt jsFeeAmt,
         tpdp.ccy ccy,
-        '' settleType,
+        tpdp.clear_type settleType,
         tpdp.COUNTER_ID counterId,
         mcp.counter_name counterName,
         tpdp.COUNTER_TRADER counterTrader,
-        tpdp.remark remark
+        tpdp.remark remark,
+        tpdp.Delivery_Type deliveryType
     </sql>
     <sql id="etrDispatcherExeListInfo1">
         '' effectFlag,
@@ -755,12 +756,12 @@
         fp.finprod_abbr finprodAbbr,
         tpdp.ps ps,
         tpdp.sec_manage_acct_id secAcctId,
-        tpdp.settle_speed settleSpeed,
+        DECODE(tpdp.settle_speed,0,'01',1,'02','2','03') settleSpeed,
         to_char(tpdp.settle_date, 'yyyy-MM-dd') settleDate,
         tpdpa.unit_cprice unitPrice,
-        tpdpa.yield matureYield,
-        tpdpa.exer_yield exerYield,
-        tpdpa.share_amt shareNum,
+        tpdpa.yield*100 matureYield,
+        tpdpa.exer_yield*100 exerYield,
+        tpdpa.share_amt*100 shareNum,
         tpdpa.unit_int unitInt,
         tpdpa.unit_fprice allPrice,
         tpdpa.cprice_amt cpriceAmt,
@@ -773,7 +774,8 @@
         tpdpa.cp_party_id counterId,
         tpdpa.cp_trader counterName,
         tpdpa.cp_trader counterTrader,
-        tpdp.remark remark
+        tpdp.remark remark,
+        tpdp.Delivery_Type deliveryType
     </sql>
     <select id="getEtrDispatcherExeListInfo"
             resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherExeListInfoResponse">
@@ -785,8 +787,8 @@
         LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.COUNTER_ID = mcp.counter_id
-        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON tpdp.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpdp.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type =#{feeType08}
+        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpdp.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
+        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpdp.trade_id  = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         WHERE tpdp.entrust_id = #{entrustId}
 
         union all
@@ -799,8 +801,8 @@
         LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.COUNTER_ID = mcp.counter_id
-        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON tpdp.totle_trade_id = ttft.totle_trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpdp.totle_trade_id = ttft1.totle_trade_id AND ttft1.fee_type =#{feeType08}
+        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpdp.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
+        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpdp.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         WHERE tpdp.entrust_id = #{entrustId}
 
         union all
