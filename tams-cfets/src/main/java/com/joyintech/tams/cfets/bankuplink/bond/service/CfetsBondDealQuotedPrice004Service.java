@@ -614,10 +614,12 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             });
         }
         //更新原登记数据状态
-        //汇总
-        cfetsIbuQuoteBondMapper.updateRegFinProductDealTotal(totleTradeId);
-        //明细
-        cfetsIbuQuoteBondMapper.updateRegFinProductDeal(totleTradeId);
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            //汇总
+            cfetsIbuQuoteBondMapper.updateRegFinProductDealTotal(totleTradeId);
+            //明细
+            cfetsIbuQuoteBondMapper.updateRegFinProductDeal(totleTradeId);
+        }
     }
     /**
      * 插入业务流程表

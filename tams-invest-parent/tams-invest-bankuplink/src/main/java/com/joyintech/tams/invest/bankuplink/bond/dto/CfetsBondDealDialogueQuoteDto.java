@@ -35,7 +35,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @see CfetsBondDealDialogueQuoteDto
  * @since 1.0
  */
-//@ValidLogic(targetClass = CfetsBondDealDialogueQuoteDtoValidator.class)
+@ValidLogic(targetClass = CfetsBondDealDialogueQuoteDtoValidator.class)
 public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto implements ProcessEntity {
 
     /**

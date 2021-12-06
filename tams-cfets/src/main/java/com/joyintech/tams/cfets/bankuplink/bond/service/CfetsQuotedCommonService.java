@@ -593,6 +593,7 @@ public class CfetsQuotedCommonService extends BaseService {
         CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealDialogueQuoteDto);
         cfetsBondDealQuoteCommonDto.setShareAmt(cfetsBondDealDialogueQuoteDto.getAvaNum());
+        cfetsBondDealQuoteCommonDto.setSettleSpreedCode(cfetsBondDealDialogueQuoteDto.getSettleSpreed());
         return cfetsBondDealQuoteCommonDto;
     }
 
