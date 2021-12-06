@@ -132,7 +132,7 @@ public class IbuQuoteBond002Controller extends BaseController {
         if(CollectionUtils.isNotEmpty(cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList())){
             cfetsBondDealQuoteCommonDto.setPtlAllocatios(cfetsQuotedCommonServiceVue.createPtlAllocationList(cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList()));
         }
-        return new Message<CfetsBondDealQuoteCommonDto>().setData(cfetsBondDealQuoteCommonDto);
+        return new Message<CfetsBondDealQuoteCommonDto>().success().setData(cfetsBondDealQuoteCommonDto);
     }
 
      /**

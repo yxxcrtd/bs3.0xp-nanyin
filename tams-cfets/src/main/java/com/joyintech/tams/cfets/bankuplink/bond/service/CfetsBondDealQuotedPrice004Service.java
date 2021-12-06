@@ -528,11 +528,11 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     //附属
                     RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
                     regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
-                    regFinProductDealAdd.setOurShareAmt(ptlAllocatio.getOurEntNum());
-                    regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getLendinEntNum());
+                    regFinProductDealAdd.setOurShareAmt(ArithmeticUtil.divide(ptlAllocatio.getOurEntNum(),new BigDecimal(100),2));
+                    regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.divide(ptlAllocatio.getLendinEntNum(),new BigDecimal(100),2));
                     regFinProductDealAdd.setActSetteDate(entity.getActSetteDate());
                     if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
-                        regFinProductDealAdd.setLendinShareAmt(ptlAllocatio.getSellAbleNum());
+                        regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.divide(ptlAllocatio.getSellAbleNum(),new BigDecimal(100),2));
                     }
                     if(null!=ptlAllocatio.getDealFeeAmt()){
                         regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(regFinProductDeal.getTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
