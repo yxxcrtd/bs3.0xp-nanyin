@@ -96,6 +96,11 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
      */
     private String mySideTrader;
 
+    private String counterName;
+
+    private String counterTraderName;
+
+
     private String  settleMethod;
 
     private String  settleType;
@@ -344,5 +349,21 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setLendinShareAmt(BigDecimal lendinShareAmt) {
         this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public String getCounterName() {
+        return counterName;
+    }
+
+    public void setCounterName(String counterName) {
+        this.counterName = counterName;
+    }
+
+    public String getCounterTraderName() {
+        return counterTraderName;
+    }
+
+    public void setCounterTraderName(String counterTraderName) {
+        this.counterTraderName = counterTraderName;
     }
 }

@@ -97,8 +97,12 @@ public class IbuQuoteBond004Controller extends BaseController {
             model.addAttribute(GlobalConstant.WORKFLOW_ID,getParam(GlobalConstant.WORKFLOW_ID));
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealRegisterQuoteDto);
             //收益率*100
-            cfetsBondDealQuoteCommonDto.setMatureYield(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getMatureYield(),new BigDecimal(100)));
-            cfetsBondDealQuoteCommonDto.setExerYield(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getExerYield(),new BigDecimal(100)));
+            if(null!=cfetsBondDealQuoteCommonDto.getMatureYield()){
+                cfetsBondDealQuoteCommonDto.setMatureYield(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getMatureYield(),new BigDecimal(100)));
+            }
+            if(null!=cfetsBondDealQuoteCommonDto.getExerYield()){
+                cfetsBondDealQuoteCommonDto.setExerYield(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getExerYield(),new BigDecimal(100)));
+            }
             //券面万元
             cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.divide(cfetsBondDealQuoteCommonDto.getShareAmt(),new BigDecimal(10000),2));
             //分配列表元转化万元
