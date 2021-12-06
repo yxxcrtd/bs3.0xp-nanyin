@@ -413,7 +413,7 @@
 
     <select id="getEtrInfoQueryOperate"
             resultType="com.joyintech.tams.cfets.cfetsetrinfoquery.dto.CfetsEtrInfoOperateListResponse">
-        select SEQ_NO,
+        select row_number() over(order by ETR_ENTRUST_OPER_HIS.Update_Time) SEQ_NO,
         ENTRUST_ID,
         OPER_TYPE,
         to_char(OPER_DATE,'yyyy-MM-dd')  OPER_DATE,
