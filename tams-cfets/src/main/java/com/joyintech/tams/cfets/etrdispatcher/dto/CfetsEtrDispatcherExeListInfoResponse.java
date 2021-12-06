@@ -135,14 +135,8 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     @ApiModelProperty(name="deliveryType",value="结算方式code",example="03")
     private String deliveryType;
 
-    @ApiModelProperty(name="deliveryTypeStr",value="结算方式",example="券款对付")
-    private String deliveryTypeStr;
-
     @ApiModelProperty(name="settleType",value="清算类型code",example="A1")
     private String settleType;
-
-    @ApiModelProperty(name="settleTypeStr",value="清算类型",example="A1")
-    private String settleTypeStr;
 
     @ApiModelProperty(name="counterTrader",value="对手方交易员",example="A1")
     private String counterTrader;
@@ -429,11 +423,11 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     }
 
     public String getDeliveryTypeStr() {
-        return deliveryTypeStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, this.getDeliveryType());
     }
 
-    public void setDeliveryTypeStr(String deliveryTypeStr) {
-        this.deliveryTypeStr = deliveryTypeStr;
+    public String getOtherCcy() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
     }
 
     public String getCounterTrader() {
@@ -453,11 +447,7 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     }
 
     public String getSettleTypeStr() {
-        return settleTypeStr;
-    }
-
-    public void setSettleTypeStr(String settleTypeStr) {
-        this.settleTypeStr = settleTypeStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.清算类型, this.getSettleType());
     }
 
     public String getTradeDate() {
