@@ -24,9 +24,11 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,6 +57,9 @@ public class DayEndAccount001Controller extends BaseController {
         // 下拉框初始化
         this.setSelectOptionToModel(model, BussinessDictCode.交易场所);
         this.setSelectOptionToModel(model, DictCode.对账状态结果);
+        String accountStatus = (String)model.asMap().get("ACCOUNT_STATUS");
+        String ACCOUNT_STATUS1 = accountStatus.replace(",{\"id\":\"2\",\"text\":\"待处理\",\"col\":\"ACCOUNT_STATUS\"},{\"id\":\"3\",\"text\":\"手工完成\",\"col\":\"ACCOUNT_STATUS\"}","");
+        model.addAttribute("ACCOUNT_STATUS1",ACCOUNT_STATUS1);
         model.addAttribute("settleDateTotal", DateUtil.platDateFromCache());
         return super.init(model);
     }
@@ -85,9 +90,8 @@ public class DayEndAccount001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("qryAccount")
-    public AjaxResult qryAccount() {
-        Map<String, Object> param = RequestUtil.getPageParam();
-        return dayEndAccount001Service.qryAccount(param);
+    public AjaxResult qryAccount(@RequestBody List<DayEndAccountDto> dataList) {
+        return dayEndAccount001Service.qryAccount(dataList);
     }
 
     @RequestMapping("selectCustomerId")
@@ -109,5 +113,12 @@ public class DayEndAccount001Controller extends BaseController {
     public Page<DayEndAccountDto> selectPage()
             throws Exception {
         return dayEndAccount001Service.selectPage(RequestUtil.getParameters(getRequest()));
+    }
+
+    @RequestMapping("selectSecAcctId")
+    @ResponseBody
+    public Page<SelectOptionDto> selectSecAcctId() {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        return dayEndAccount001Service.selectSecAcctId(param);
     }
 }

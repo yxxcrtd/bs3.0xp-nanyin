@@ -2,7 +2,6 @@ package com.joyintech.tams.invest.common.reconciliation.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.tams.common.base.entity.StlSecRecon;
 import com.joyintech.tams.common.base.entity.StlSecReconDeal;
 
 import java.math.BigDecimal;

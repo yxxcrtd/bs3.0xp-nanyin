@@ -70,7 +70,11 @@
                 ,{field:'listName', title : 'AssetNameManagement001.listName', width:400,sortField:'LIST_NAME',
                     render: function (data, type, row, meta) {
                             var obj = {};
-                            return  '<a href="javascript:void(0);" onclick="seeAllInfo('+row.workflowId+','+row.workflowStatus+','+row.listId+');" >'+row.listName+'</a>';
+                            // modify by etliu 20211201 start
+                            // TISHKS-432：资产名单管理中，列表数据中的名单名称需要可以链接进去，查看名单明细数据，同机构名单管理一样
+                        // return  '<a href="javascript:void(0);" onclick="seeAllInfo('+row.workflowId+','+row.workflowStatus+','+row.listId+');" >'+row.listName+'</a>';
+                            return  '<a href="javascript:void(0);" onclick="seeAllInfo(\''+ (row.workflowId ? row.workflowId : '') +'\',\''+ (row.workflowStatus ? row.workflowStatus : '') +'\',\''+row.listId+'\');" >'+row.listName+'</a>';
+                            // modify by etliu 20211201 end
                     }
                 }
                 ,{field:'listTypeStr', width:300 ,title:'AssetNameManagement001.listType',sortField:'LIST_TYPE'}

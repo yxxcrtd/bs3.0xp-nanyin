@@ -10,6 +10,7 @@
                 END matchStatus,
                 ROUND(F.MARCH_QTY / A.SHARE_AMT,4) matchProgress,
                 A.TRADE_MARKET tradeMarket,
+                A.TRADE_MARKET_MODE tradeMarketMode,
                 A.APPLY_TRADE_ID applyTradeId,
                 A.SEC_ACCT_ID secAcctId,
                 C.SEC_ACCT_NAME secAcctName,
@@ -34,6 +35,7 @@
                 nvl(A.FPRICE_AMT,0) - nvl(F.MARCH_AMT,0) remainAmount,
                 A.UNIT_FPRICE unitFprice,
                 A.UNIT_CPRICE unitCprice,
+                A.UNIT_INT unitInt,
                 A.CCY ccy,
                 A.TRADE_DATE dealDate,
                 A.TRADE_DATE tradeDate,
@@ -214,8 +216,9 @@
                T.ENTRUST_ID text
           from ETR_ENTRUST T
         <where>
+            T.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F01},#{FINPROD_TYPE_TG_F02},#{FINPROD_TYPE_TG_F03},#{FINPROD_TYPE_TG_F06},#{FINPROD_TYPE_TG_F10})
             <if test="search != null and search != ''">
-                and A.APPLY_TRADE_ID like concat(concat('%',#{search}),'%')
+                and T.ENTRUST_ID like concat(concat('%',#{search}),'%')
             </if>
         </where>
     </select>
@@ -441,10 +444,10 @@
                 AND C.PS = #{ps}
             </if>
             <if test="tradeDateBegin != null and tradeDateBegin != ''">
-                <![CDATA[ AND A.TRADE_DATE  >= to_date(#{tradeDateBegin},'yyyy-mm-dd') ]]>
+                <![CDATA[ AND C.TRADE_DATE  >= to_date(#{tradeDateBegin},'yyyy-mm-dd') ]]>
             </if>
             <if test="tradeDateEnd != null and tradeDateEnd != ''">
-                <![CDATA[ AND A.TRADE_DATE  <= to_date(#{tradeDateEnd},'yyyy-mm-dd') ]]>
+                <![CDATA[ AND C.TRADE_DATE  <= to_date(#{tradeDateEnd},'yyyy-mm-dd') ]]>
             </if>
             <if test="finprodId!=null and finprodId!='' ">
                 AND E.FINPROD_MARKET_ID = #{finprodId}

@@ -238,6 +238,7 @@
                     $('#expectedCashAvailable_div').show();
                     $('#div_channelCash').hide();
                     $('#entrustAmt_div').show();
+                    $('#entrustAmt').attr("disabled",false);
                     $('#entrustNum_div').hide();
                     $('#entrustNum').val('');
                     $('#assetAvailablePosition_div').hide();

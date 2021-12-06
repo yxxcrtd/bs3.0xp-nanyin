@@ -12,7 +12,7 @@
         }
         return data;
     }
-    
+
     /***
      * 定义表格
      */
@@ -23,17 +23,17 @@
             data: function() {
                 return searchForm();
             }
-            },
+        },
         dblclick: function (table, data) {
             data.operateType = "dblclick";
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("EtrSecLend.refrence"),
-                    JoyinUtil.getRealPath("invest/entrust/etrseclend/EtrSecLend002/init"),
-                    "98%", "95%", data,
-                    function(){table.reload();});
+                JoyinUtil.getRealPath("invest/entrust/etrseclend/EtrSecLend002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
         },
         cols: [
-             {field:'busEntrustStatus', title: 'EtrSecLend.entrustStatus', width:'8%',sortField:"entrustStatus"}
+            {field:'busEntrustStatus', title: 'EtrSecLend.entrustStatus', width:'8%',sortField:"entrustStatus"}
             ,{field:'invManagerId', title: 'EtrSecLend.invManagerId', width:'10%',sortField:"invManagerId"}
             ,{field:'entrustId',visible:false}
             ,{field:'targetFinprodId',visible:false}
@@ -59,19 +59,20 @@
             ,{field:'finishAmt',type:'number', title: 'EtrSecLend.finishAmt', width:'10%',sortField:"finishAmt"}
             ,{field:'transactioncom', title: 'EtrSecLend.transactioncom',render : function(data, type, row, meta){
                     return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.transactioncom*100).toFixed(2)+"%'><span class='layui-progress-text'>"+(row.transactioncom*100).toFixed(2)+"%</span></div></div>";
-             }, width:'10%',sortable:false}
+                }, width:'10%',sortable:false}
             ,{field:'remark', title: 'EtrSecLend.remark', width:'10%',sortField:"remark"}
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:'10%',sortable:false}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit'] , width:'10%'}
         ],
     });
-    
+
     /**
      * 组合代码链接
      */
     table.bind('click','.portfolioIdLink', function(row) {
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-                "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+            basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+            "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                 portfolioId:row.portfolioId});//主键组合代码
     });
     /**
@@ -80,15 +81,15 @@
     table.bind('click','.finprodIdLink', function(row) {
         //在新建界面进行显示单行的详细信息
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                 basePath
-                + "invest/asset/bond/FinBondTargetAsset002/init",
-                "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
-                                finprodId:row.targetFinprodId,  //金融产品代码
-                                //valDate:data.valDate,//估值日
-                                //finprodMarketId:data.finprodMarketId//市场代码
-                                });
+            basePath
+            + "invest/asset/bond/FinBondTargetAsset002/init",
+            "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                finprodId:row.targetFinprodId,  //金融产品代码
+                //valDate:data.valDate,//估值日
+                //finprodMarketId:data.finprodMarketId//市场代码
+            });
     });
-    
+
     /***
      * 新建
      */

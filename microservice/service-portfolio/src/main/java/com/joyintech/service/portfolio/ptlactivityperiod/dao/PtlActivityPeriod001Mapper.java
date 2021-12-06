@@ -14,6 +14,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.PtlCapacctInfo;
+import com.joyintech.tams.common.base.entity.PtlPortfolio;
+import com.joyintech.tams.common.base.entity.StlCapacctInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -198,4 +201,39 @@ public interface PtlActivityPeriod001Mapper {
      * @since 1.0
      */
     List<PtlActivityPeriod001Dto> findChildrenPortfolioDetails(Map<String,Object> map);
+
+
+    /**
+     * 组合明细
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param str
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<PtlPortfolio> isZuHe(String str);
+
+    /**
+     * 验证资金账户明细
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param str
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<StlCapacctInfo> isZiJing(String str);
+
+    /**
+     * 验证资金账号与组合代码是否存在关联
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<PtlCapacctInfo> checkZuHeAndZiJing(Map<String,Object> map);
+
 }

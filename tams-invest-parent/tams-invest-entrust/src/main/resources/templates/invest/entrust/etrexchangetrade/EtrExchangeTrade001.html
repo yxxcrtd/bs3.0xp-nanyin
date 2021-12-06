@@ -491,7 +491,7 @@
                     <div class="layui-input-inline input-inline">
                         <div style="width: 73%">
                             <select required type="text" id="secId_dz" name="secId" class="layui-input form-input input-select" placeholder="请输入内容" th:initValue="${entity?.stockId}"
-                                    parentIds="acctTradeMarket_dz" data-th-placeholder="#{SysCommon.placeholder}" data-th-data-url="@{'/invest/entrust/etrexchangetrade/EtrExchangeTrade001/getFinprodMarketInfo?tradePlat='+${SHARES_TRADE_PLATFORM_04}}" formatoption=false></select>
+                                    parentIds="acctTradeMarket_dz" data-th-placeholder="#{SysCommon.placeholder}" data-th-data-url="@{'/invest/entrust/etrexchangetrade/EtrExchangeTrade001/getFinprodMarketInfo?tradePlat='+${SHARES_TRADE_PLATFORM_04}+'&tradePlat_05='+${SHARES_TRADE_PLATFORM_05}}" formatoption=false></select>
                         </div>
                         <div style="width: 20%;">
                             <a id="EtrExchangeTrade001DZ_btn_search" class="layui-btn layui-btn-sm form-input-text">查看</a>
@@ -1088,6 +1088,10 @@
         var ENTRUST_RECORD_MODIFY = /*[[${ENTRUST_RECORD_MODIFY}]]*/'';
         var FINPROD_OTH_CODE_TYPE_05 = /*[[${FINPROD_OTH_CODE_TYPE_05}]]*/'';
         var FINPROD_OTH_CODE_TYPE_06 = /*[[${FINPROD_OTH_CODE_TYPE_06}]]*/'';
+        // add by etliu 20211013 start
+        // TISHKS-5 bug修复：在场内下指令时，资产选了万科之后，出现申购选项，但理论上不应该出现(万科很早就上市了)，我在申报信息维护中也没有看到万科的新股申报
+        var FINPROD_OTH_CODE_TYPE_07 = /*[[${FINPROD_OTH_CODE_TYPE_07}]]*/'';
+        // add by etliu 20211013 end
         var YES_OR_NO_Y = /*[[${YES_OR_NO_Y}]]*/'';
         var WINDTYPEONE_B07 = /*[[${WINDTYPEONE_B07}]]*/'';
         var WINDTYPEONE_B13 = /*[[${WINDTYPEONE_B13}]]*/'';

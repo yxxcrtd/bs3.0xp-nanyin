@@ -20,6 +20,11 @@ public class StlSecReconDeal extends BaseEntity {
     private String tradeId;
 
     /**
+     * 委托编号
+     */
+    private String instructionId;
+
+    /**
      * 券商代码
      */
     private String customerId;
@@ -113,11 +118,6 @@ public class StlSecReconDeal extends BaseEntity {
      * 交易币种
      */
     private String ccy;
-
-    /**
-     * null
-     */
-    private String termType;
 
     /**
      * 成交数量
@@ -224,12 +224,6 @@ public class StlSecReconDeal extends BaseEntity {
     private BigDecimal commissionAmt;
 
     /**
-     * null
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal otherFeeamt;
-
-    /**
      * 一级总费用
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
@@ -265,6 +259,22 @@ public class StlSecReconDeal extends BaseEntity {
      */
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId == null ? null : tradeId.trim();
+    }
+
+    /**
+     * 取得 委托编号
+     * @return 委托编号
+     */
+    public String getInstructionId() {
+        return instructionId;
+    }
+
+    /**
+     * 设置 委托编号
+     * @param instructionId 委托编号
+     */
+    public void setInstructionId(String instructionId) {
+        this.instructionId = instructionId == null ? null : instructionId.trim();
     }
 
     /**
@@ -575,22 +585,6 @@ public class StlSecReconDeal extends BaseEntity {
     }
 
     /**
-     * 取得 null
-     * @return null
-     */
-    public String getTermType() {
-        return termType;
-    }
-
-    /**
-     * 设置 null
-     * @param termType null
-     */
-    public void setTermType(String termType) {
-        this.termType = termType == null ? null : termType.trim();
-    }
-
-    /**
      * 取得 成交数量
      * @return 成交数量
      */
@@ -873,22 +867,6 @@ public class StlSecReconDeal extends BaseEntity {
      */
     public void setCommissionAmt(BigDecimal commissionAmt) {
         this.commissionAmt = commissionAmt;
-    }
-
-    /**
-     * 取得 null
-     * @return null
-     */
-    public BigDecimal getOtherFeeamt() {
-        return otherFeeamt;
-    }
-
-    /**
-     * 设置 null
-     * @param otherFeeamt null
-     */
-    public void setOtherFeeamt(BigDecimal otherFeeamt) {
-        this.otherFeeamt = otherFeeamt;
     }
 
     /**

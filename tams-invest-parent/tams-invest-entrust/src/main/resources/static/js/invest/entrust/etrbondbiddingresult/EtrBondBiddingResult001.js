@@ -286,7 +286,7 @@ $(function() {
             paramObjs.entrustId = entrustId.substr(1,entrustId.length);
             paramObjs.winCprice = selArr[0].winCprice;//第一条的中标净价
             //改造定义参数 sunhui end
-            Joyin.dialog(JoyinUtil.getLabel("TrdBondInvestTrade003"), basePath + "invest/trade/bond/TrdBondInvestTrade003/init", "98%", "98%", paramObjs, function () {
+            Joyin.dialog(JoyinUtil.getLabel("EtrBondBiddingResultBatch001"), basePath + "invest/trade/bond/TrdBondInvestTrade003/init", "98%", "98%", paramObjs, function () {
                 table.reload();
             });
         }
@@ -305,7 +305,7 @@ $(function() {
             selArr[0].oFinprodId = result.oFinprodId;
             // add by zhangrui1 end
             selArr[0].parentPageId=pageId;
-            Joyin.dialog(JoyinUtil.getLabel("TrdBondInvestTrade002"), basePath + "invest/trade/bond/TrdBondInvestTrade002/init", "98%", "98%", selArr[0], function () {
+            Joyin.dialog(JoyinUtil.getLabel("EtrBondBiddingResult001"), basePath + "invest/trade/bond/TrdBondInvestTrade002/init", "98%", "98%", selArr[0], function () {
                 table.reload();
             });
         }

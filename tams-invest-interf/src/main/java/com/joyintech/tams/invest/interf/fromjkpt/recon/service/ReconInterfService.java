@@ -1,0 +1,206 @@
+package com.joyintech.tams.invest.interf.fromjkpt.recon.service;
+
+/**
+ * @author zznn
+ * @date 2021/10/25
+ */
+
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.dao.FinProductOthCodeMapper;
+import com.joyintech.tams.common.base.dao.StlSecReconDealMapper;
+
+
+import com.joyintech.tams.common.base.entity.StlSecRecon;import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductOthCode;
+import com.joyintech.tams.common.base.entity.InterfFundBonusFjy;
+import com.joyintech.tams.common.base.entity.StlSecReconPara;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.invest.interf.fromjkpt.recon.dao.ReconInterfMapper;
+import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlCashReconDto;
+import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecReconDealDto;
+import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecpReconDto;
+import org.apache.commons.collections4.CollectionUtils;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Service
+public class ReconInterfService {
+
+    @Autowired
+    private ReconInterfMapper reconInterfMapper;
+
+    @Autowired
+    private StlSecReconDealMapper stlSecReconDealMapper;
+
+    /**
+     * 平台日获取接口
+     */
+    @Autowired(required=false)
+    private IPlatformDate iPlatformDate;
+
+    @Autowired
+    private FinProductMapper finProductMapper;
+
+    @Autowired
+    private FinProductOthCodeMapper finProductOthCodeMapper;
+
+    public int deleteStlCashRecon(Map<String,Object> param){
+       return  reconInterfMapper.deleteStlCashRecon(param);
+    }
+
+    public int deleteStlSecpRecon(Map<String,Object> param){
+        return  reconInterfMapper.deleteStlSecpRecon(param);
+    }
+    public List<StlCashReconDto> listStlCashRecon(Map<String,Object> param){
+        return reconInterfMapper.listStlCashRecon(param);
+    }
+
+    public List<StlSecpReconDto> listStlSecpRecon(Map<String,Object> param){
+        return reconInterfMapper.listStlSecpRecon(param);
+    }
+
+
+    public void executerecon(Map<String,Object> param){
+        param.put("RECON_PARA_CODE_02", DictCodeListStl.参数代码_对账维度.getValue());
+        setParam(param);
+        //明细
+        if(param.containsKey("collect")){
+            param.put("tradeIds",reconInterfMapper.listStlSecRecon(param));
+            List<StlSecReconDealDto> stlSecReconDealDtos = reconInterfMapper.listStlSecReconDealDetaile(param);
+            if(null!=stlSecReconDealDtos&&!StringUtil.isEmptyList(stlSecReconDealDtos)){
+                //删除对账单数据
+                deleteAll(param);
+                stlSecReconDealDtos.forEach(item ->{
+                    item.setSeqNo(IDGenerator.generate());
+                    stlSecReconDealMapper.insertSelective(item);
+                });
+            }
+        }
+
+        //委托汇总
+        if(param.containsKey("collectEntrustId")){
+            Map<String,Object> paramtotal = new HashMap<>();
+            paramtotal.put("execDate",param.get("execDate"));
+            paramtotal.put("collect",param.get("collectEntrustId"));
+            paramtotal.put("finprodIds",reconInterfMapper.listStlSecRecon(paramtotal));
+            List<StlSecReconDealDto> stlSecReconDealDtos = reconInterfMapper.listStlSecReconDealTotalByEntrustId(paramtotal);
+            if(null!=stlSecReconDealDtos&&!StringUtil.isEmptyList(stlSecReconDealDtos)){
+                //删除对账单及相关业务数据
+                deleteAll(paramtotal);
+                stlSecReconDealDtos.forEach(item ->{
+                    item.setSeqNo(IDGenerator.generate());
+                    stlSecReconDealMapper.insertSelective(item);
+                });
+            }
+        }
+
+        //证券代码汇总
+        if(param.containsKey("collectByMarketId")){
+            Map<String,Object> paramtotal = new HashMap<>();
+            paramtotal.put("execDate",param.get("execDate"));
+            paramtotal.put("collect",param.get("collectByMarketId"));
+            List<StlSecRecon> stlSecRecons = reconInterfMapper.listStlSecRecon(paramtotal);
+            if(CollectionUtils.isNotEmpty(stlSecRecons)){
+                stlSecRecons.removeIf(secRecon -> StringUtil.isEmpty(secRecon.getEntrustTradeId()));
+            }
+            paramtotal.put("entrustIds", stlSecRecons);
+            List<StlSecReconDealDto> stlSecReconDealDtos = reconInterfMapper.listStlSecReconDealTotalByMarketId(paramtotal);
+            if(null!=stlSecReconDealDtos&&!StringUtil.isEmptyList(stlSecReconDealDtos)){
+                //删除对账单及业务数据
+                deleteAll(paramtotal);
+                stlSecReconDealDtos.forEach(item ->{
+                    item.setSeqNo(IDGenerator.generate());
+                    stlSecReconDealMapper.insertSelective(item);
+                });
+            }
+        }
+    }
+
+    /**
+     * 构造查询参数
+     * @param param
+     */
+    private void setParam(Map<String,Object> param){
+        List<StlSecReconPara> stlSecReconParas = reconInterfMapper.listStlSecReconPara(param);
+        if(null!=stlSecReconParas&&!StringUtil.isEmptyList(stlSecReconParas)){
+            //证券汇总
+            List<StlSecReconPara> collectByMarketId = stlSecReconParas.stream().filter(item -> StringUtil.equals(item.getParaValue(), "01")).collect(Collectors.toList());
+            //委托汇总
+            List<StlSecReconPara> collectEntrustId = stlSecReconParas.stream().filter(item -> StringUtil.equals(item.getParaValue(), "02")).collect(Collectors.toList());
+            //成交明细
+            List<StlSecReconPara> collect = stlSecReconParas.stream().filter(item -> StringUtil.equals(item.getParaValue(), "03")).collect(Collectors.toList());
+            //处理一致的对账单
+            if(!StringUtil.isEmptyList(collectByMarketId)){
+                param.put("collectByMarketId",collectByMarketId);
+            }
+            if(!StringUtil.isEmptyList(collectEntrustId)){
+                param.put("collectEntrustId",collectEntrustId);
+            }
+            if(!StringUtil.isEmptyList(collect)){
+                param.put("collect",collect);
+            }
+        }
+    }
+
+
+    /**
+     * 删除对账单、对账单结果及明细
+     * @param param
+     */
+    private void deleteAll(Map<String,Object> param){
+        int i = reconInterfMapper.deleteStlSecpReconDeal(param);
+        if(i>0){
+            reconInterfMapper.deleteStlSecRecon(param);
+            reconInterfMapper.deleteStlSecReconDetail(param);
+        }
+    }
+
+    /**
+     * 处理基金分红设置FJY文件
+     * @param param
+     */
+    public void executeFundBonusFjy(Map<String,Object> param){
+        param.put("platFormDate", iPlatformDate.getSysDate());
+        param.put("fjyywlx", "OD");
+        List<InterfFundBonusFjy> fundBonusFjys = reconInterfMapper.findInterfFundBonusFjy(param);
+        if(CollectionUtils.isEmpty(fundBonusFjys)){
+            return;
+        }
+        for(InterfFundBonusFjy fundBonusFjy : fundBonusFjys){
+            FinProduct finProduct = finProductMapper.selectByPrimaryKey("F06_" + fundBonusFjy.getCpzqdm() + ".SH");
+            if(null == finProduct){
+                continue;
+            }
+            Map<String, Object> queryParam = new HashMap<>();
+            queryParam.put("branch", Long.valueOf("0"));
+            queryParam.put("finProdId", finProduct.getFinprodId());
+            queryParam.put("othType", DictCodeListExt3.金融产品其他代码类型_基金分红设置代码.getValue());
+            Integer count = reconInterfMapper.queryFinProductOthCodeCount(queryParam);
+            FinProductOthCode finProductOthCode = new FinProductOthCode();
+            finProductOthCode.setFinprodId(finProduct.getFinprodId());
+            finProductOthCode.setBranch(Long.valueOf("0"));
+            finProductOthCode.setOthType(DictCodeListExt3.金融产品其他代码类型_基金分红设置代码.getValue());
+            finProductOthCode.setOthCode(fundBonusFjy.getFjyzqdm());
+            finProductOthCode.setOthName(finProduct.getFinprodName());
+            finProductOthCode.setDeclaredStartDate(fundBonusFjy.getFjyddsrdatestart());
+            finProductOthCode.setDeclaredEndDate(fundBonusFjy.getFjyddsrdateend());
+            if(count > 0){
+                finProductOthCodeMapper.insertSelective(finProductOthCode);
+            }else{
+                finProductOthCodeMapper.updateByPrimaryKeySelective(finProductOthCode);
+            }
+        }
+    }
+}
+

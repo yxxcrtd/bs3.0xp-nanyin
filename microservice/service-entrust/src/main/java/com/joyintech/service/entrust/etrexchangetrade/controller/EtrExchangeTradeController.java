@@ -179,6 +179,17 @@ public class EtrExchangeTradeController {
         return etrExchangeTradeService.getSecAcctId(page, length, param);
     }
 
+
+
+    /**
+     * 质押券代码下拉框查询
+     */
+    @RequestMapping("selectZyq/{page}/{length}")
+    public Page<SelectOptionDto> selectZyq(@RequestBody Map<String, Object> param,
+                                              @PathVariable("page") int page,
+                                              @PathVariable("length") int length) {
+        return etrExchangeTradeService.selectZyq(page, length, param);
+    }
     /**
      * 查询债券利率重置信息
      *
@@ -288,6 +299,15 @@ public class EtrExchangeTradeController {
     @RequestMapping("getInvAim")
     public String getInvAim() {
        return etrExchangeTradeService.getInvAim();
+    }
+
+    /**
+     * 获取投资目的
+     * @return
+     */
+    @RequestMapping("linkInvAim")
+    public String linkInvAim(@RequestBody Map<String, Object> param) {
+        return etrExchangeTradeService.linkInvAim(param);
     }
     
     /**

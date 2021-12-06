@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -78,12 +79,12 @@ public class DayEndAccount001Service extends CommonExportService<DayEndAccountDt
 
 	/**
 	 * 对账
-	 * @param param
+	 * @param dtoList
 	 * @return
 	 */
-	public AjaxResult qryAccount(Map<String, Object> param) {
+	public AjaxResult qryAccount(List<DayEndAccountDto> dtoList) {
 		AccountResult result = restTemplate.postForObject(
-				ServiceApplication.BASICDATA_SERVICE_NAME + "/DayEndAccount/qryAccount", param,
+				ServiceApplication.BASICDATA_SERVICE_NAME + "/DayEndAccount/qryAccount", dtoList,
 				AccountResult.class);
 		AjaxResult ajaxResult = new AjaxResult();
 		ajaxResult.setMessage(result.getMessage());
@@ -98,6 +99,17 @@ public class DayEndAccount001Service extends CommonExportService<DayEndAccountDt
 	public DayEndAccount002Dto getReconDealInfo(Map<String, Object> param) {
 		return restTemplate.postForObject(
 				ServiceApplication.BASICDATA_SERVICE_NAME + "/DayEndAccount/getReconDealInfo", param,
+				DayEndAccount002Dto.class);
+	}
+
+	/**
+	 * 查询成交明细
+	 * @param param
+	 * @return
+	 */
+	public DayEndAccount002Dto getDealDetailInfo(Map<String, Object> param) {
+		return restTemplate.postForObject(
+				ServiceApplication.BASICDATA_SERVICE_NAME + "/DayEndAccount/getDealDetailInfo", param,
 				DayEndAccount002Dto.class);
 	}
 
@@ -117,5 +129,11 @@ public class DayEndAccount001Service extends CommonExportService<DayEndAccountDt
 		return restTemplate.postForPage(
 				ServiceApplication.BASICDATA_SERVICE_NAME + "/DayEndAccount/selectPage", parameters,
 				DayEndAccountDto.class);
+	}
+
+	public Page<SelectOptionDto> selectSecAcctId(Map<String, Object> param) {
+		return restTemplate.postForPage(
+				ServiceApplication.BASICDATA_SERVICE_NAME + "/DayEndAccount/selectSecAcctId", param,
+				SelectOptionDto.class);
 	}
 }

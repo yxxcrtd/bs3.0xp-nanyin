@@ -183,14 +183,14 @@ public class EtrIbRepo001Dto extends BaseEntity {
      * 债券名称
      */
     private String finProdName;
-    
+
     // 质押券管理页面选中的数据
     private  List<EtrIbRepo001Dto> selectedItem = new ArrayList<>();
-    
+
     private String pledgeStockId;
-    
+
     private String pledgeStockName;
-    
+
     public String getEntrustStatusName(){
         if (StringUtil.isEmpty(getEntrustStatus())) {
             return null;
@@ -499,29 +499,29 @@ public class EtrIbRepo001Dto extends BaseEntity {
         this.finProdName = finProdName;
     }
 
-	public List<EtrIbRepo001Dto> getSelectedItem() {
-		return selectedItem;
-	}
+    public List<EtrIbRepo001Dto> getSelectedItem() {
+        return selectedItem;
+    }
 
-	public void setSelectedItem(List<EtrIbRepo001Dto> selectedItem) {
-		this.selectedItem = selectedItem;
-	}
+    public void setSelectedItem(List<EtrIbRepo001Dto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
 
-	public String getPledgeStockId() {
-		return pledgeStockId;
-	}
+    public String getPledgeStockId() {
+        return pledgeStockId;
+    }
 
-	public void setPledgeStockId(String pledgeStockId) {
-		this.pledgeStockId = pledgeStockId;
-	}
+    public void setPledgeStockId(String pledgeStockId) {
+        this.pledgeStockId = pledgeStockId;
+    }
 
-	public String getVdateStr() {
-		return DateUtil.format(this.getVdate());
-	}
+    public String getVdateStr() {
+        return DateUtil.format(this.getVdate());
+    }
 
-	public String getMdateStr() {
-		return DateUtil.format(this.getMdate());
-	}
+    public String getMdateStr() {
+        return DateUtil.format(this.getMdate());
+    }
 
     private String parentPortfolioId;
 
@@ -534,13 +534,13 @@ public class EtrIbRepo001Dto extends BaseEntity {
         this.parentPortfolioId = parentPortfolioId;
     }
 
-	public String getPledgeStockName() {
-		return pledgeStockName;
-	}
+    public String getPledgeStockName() {
+        return pledgeStockName;
+    }
 
-	public void setPledgeStockName(String pledgeStockName) {
-		this.pledgeStockName = pledgeStockName;
-	}
+    public void setPledgeStockName(String pledgeStockName) {
+        this.pledgeStockName = pledgeStockName;
+    }
 
     //add by chenjiaxing ZGZGST-2609 指令管理-银行间指令-银行间质押式回购指令画面，交易对手显示不对 20210916 start
     /**
@@ -556,4 +556,14 @@ public class EtrIbRepo001Dto extends BaseEntity {
         this.counterId = counterId;
     }
     //add by chenjiaxing ZGZGST-2609 指令管理-银行间指令-银行间质押式回购指令画面，交易对手显示不对 20210916 end
+
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
 }

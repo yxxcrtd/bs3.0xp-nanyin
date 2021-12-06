@@ -42,6 +42,8 @@ public interface DayEndAccountMapper {
 
     List<SelectOptionDto> queryAssetCode(Map<String, Object> param);
 
+    List<String> queryFinProdIds(Map<String, Object> param);
+
     int queryStlSecReconDealCount(Map<String, Object> param);
 
     int querySettleTransDataCount(Map<String, Object> param);
@@ -75,6 +77,8 @@ public interface DayEndAccountMapper {
 
     List<SettleTransData> selectAllSettleTransData(Map<String, Object> param);
 
+    List<SettleTransData> selectSettleTransData(Map<String, Object> param);
+
     List<DayEndAccountDto> listTotalAccountInfo(Map<String, Object> param);
 
     List<SelectOptionDto> selectCustomerId(Map<String, Object> param);
@@ -84,4 +88,6 @@ public interface DayEndAccountMapper {
     List<DayEndAccountDto> selectPage(Map<String, Object> param);
     List<DayEndAccountDto> selectPage1(Map<String, Object> param);
     List<DayEndAccountDto> selectPage2(Map<String, Object> param);
+
+    List<SelectOptionDto> selectSecAcctId(Map<String, Object> param);
 }

@@ -4,15 +4,15 @@ $(function() {
      */
     var getSearchParams = function() {
         var pageParam = {
-            portfolioId: $('#portfolioId').val(),
+            account: $('#busiAcctNo').val(),
             finprodId: $('#finprodId').val(),
             tradeMarket: $('#tradeMarket').val(),
             tradeDateBegin: $('#settleDate').startDate(),
             tradeDateEnd: $('#settleDate').endDate(),
             accountStatus: $('#accountStatus').val()
         };
-        if ($("#portfolioId").val()) {
-            pageParam.portfolioId = $("#portfolioId").val().join(",");
+        if ($("#busiAcctNo").val()) {
+            pageParam.account = $("#busiAcctNo").val().join(",");
         } else {
             pageParam.portfolioId = null;
         }
@@ -26,14 +26,15 @@ $(function() {
 
     var getSearchParams1 = function() {
         var pageParam = {
-            busiAcctNo: $('#busiAcctNo').val(),
+            busiAcctNo: $('#busiAcctNoTotal').val(),
             customerId: $('#customerId').val(),
             accountStatus:$('#accountStatusTotal').val(),
             tradeDateBegin: $('#settleDateTotal').startDate(),
-            tradeDateEnd: $('#settleDateTotal').endDate()
+            tradeDateEnd: $('#settleDateTotal').endDate(),
+            secAcctId: $('#secAcctId').val()
         };
-        if ($("#busiAcctNo").val()) {
-            pageParam.busiAcctNo = $("#busiAcctNo").val().join(",");
+        if ($("#busiAcctNoTotal").val()) {
+            pageParam.busiAcctNo = $("#busiAcctNoTotal").val().join(",");
         } else {
             pageParam.busiAcctNo = null;
         }
@@ -58,21 +59,20 @@ $(function() {
         dblclick:function(table, data) {
 
         },
-        checkbox: false,
         isMulti:true,
         /**
          * 定义表头
          */
         cols: [[
             { title: 'DayEndAccount001.dzylb',align:'center',sortable: false, colspan: 6}
-            ,{ title: 'DayEndAccount001.cnqssj',align:'center',sortable: false, colspan: 8}
-            ,{ title: 'DayEndAccount001.qsdzdsj',align:'center',sortable: false, colspan: 8}
+            ,{ title: 'DayEndAccount001.cnqssj',align:'center',sortable: false, colspan: 7}
+            ,{ title: 'DayEndAccount001.qsdzdsj',align:'center',sortable: false, colspan: 7}
             , {field: 'seqNo', width: 150, visible: false}
             ,{field:'operation', title: 'SysCommon.operation',rowspan: 2, type:'action', buttons: ['edit']}
         ],[
-            {field:'portfolioId',sortable: false, title: 'DayEndAccount001.portfolioId',width:120}
+            {field:'busiAcctNo',sortable: false, title: 'DayEndAccount001.busiAcctNo',width:120}
             ,{field:'settleDate', type:'date',sortable: false, title: 'DayEndAccount001.settleDate',width:120}
-            ,{field:'finprodId',sortable: false, title: 'DayEndAccount001.finprodId',width:120}
+            ,{field:'finprodMarketId',sortable: false, title: 'DayEndAccount001.finprodId',width:120}
             ,{field:'tradeMarketStr',sortable: false, title: 'DayEndAccount001.tradeMarket',width:120}
             ,{field:'accountStatusStr',sortable: false, title: 'DayEndAccount001.accountStatus',width:120}
             ,{field:'finprodTypeStr',sortable: false, title: 'DayEndAccount001.finprodType',width:120}
@@ -94,21 +94,18 @@ $(function() {
             ,{field:'tradeNum', type:'money',sortable: false, title: 'DayEndAccount001.tradeNum',width:120}
         ]]
     });
-    
     /**
      * 绑定编辑事件
      */
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
-        if (data.accountStatusStr != null && data.accountStatusStr == "一致") {
-            layer.alert("只能修改对账不一致数据");
+        if (data.accountStatusStr != null && (data.accountStatusStr == "一致" || data.accountStatusStr == "手工完成")) {
+            layer.alert("只能修改对账不一致和待处理数据");
             return;
         }
         Joyin.dialog(JoyinUtil.getLabel('DayEndAccount001.title'),
                 basePath + 'invest/basicdata/dayendaccount/DayEndAccount002/init',//打开新界面
-                '80%', '80%', {pageModel:PAGE_MODEL_EDIT,//请求的page_model
-                                seqNo:data.seqNo
-                                },function(){
+                '80%', '80%', data,function(){
                                     table.reload();//回调函数，表格刷新
                                 });
     });
@@ -147,10 +144,10 @@ $(function() {
             ,{field:'acctName',sortable: false, title: '资金账户名称',width:150}
             ,{field:'settleDate', type:'date',sortable: false, title: '清算日期',width:120}
             ,{field:'accountStatusStr', type:'money',sortable: false, title: '对账状态',width:120}
-            ,{field:'finprodId',sortable: false, title: '资产代码',width:120}
+            ,{field:'finprodMarketId',sortable: false, title: '资产代码',width:120}
             ,{field:'finprodName',sortable: false, title: '资产名称',width:120}
             ,{field:'tradeMarketStr', sortable: false, title: '交易市场',width:120}
-            ,{field:'finprodType', sortable: false, title: '类型',width:120}
+            ,{field:'finprodTypeStr1', sortable: false, title: '类型',width:120}
             ,{field:'xiTongAmount', type:'money',sortable: false, title: '系统持仓',width:120}
             ,{field:'quanShangAmount', type:'money',sortable: false, title: '券商持仓',width:120}
             ,{field:'childInfo', width:150, visible: false}
@@ -170,10 +167,11 @@ $(function() {
         });
         // 绑定汇总头寸页签重置事件
         $('#DayEndAccount001_total_btn_reset').click(function() {
-            $("#portfolioIdTotal").val('').trigger("change");
-            $('#tradeMarketTotal').val('').trigger("change");
+            $("#busiAcctNoTotal").val('').trigger("change");
             $('#settleDateTotal').val('').trigger("change");
+            $('#customerId').val('').trigger("change");
             $('#accountStatusTotal').val('').trigger("change");
+            $('#secAcctId').val('').trigger("change");
         });
         // 绑定明细数据页签查询事件
         $('#DayEndAccount001_detail_btn_search').click(function() {
@@ -181,7 +179,7 @@ $(function() {
         });
         // 绑定明细数据页签重置事件
         $('#DayEndAccount001_detail_btn_reset').click(function() {
-            $("#portfolioId").val('').trigger("change");
+            $("#busiAcctNo").val('').trigger("change");
             $('#finprodId').val('').trigger("change");
             $('#tradeMarket').val('').trigger("change");
             $('#settleDate').val('').trigger("change");
@@ -189,13 +187,16 @@ $(function() {
         });
         // 绑定查询事件
         $('#DayEndAccount001_btn_account').click(function() {
-            Joyin.ajaxJson(basePath + 'invest/basicdata/dayendaccount/DayEndAccount001/qryAccount', getSearchParams(), function(result) {
-                if (result.setMessage != null) {
-                    layer.alert(result.setMessage);
-                } else {
-                    table.reload();
-                }
-            });
+            Joyin.confirm("是否确认手工对账", function () {
+                var dataList = table.getAllCheckedRows();
+                Joyin.ajaxJson(basePath + 'invest/basicdata/dayendaccount/DayEndAccount001/qryAccount', dataList, function(result) {
+                    if (result.setMessage != null) {
+                        layer.alert(result.setMessage);
+                    } else {
+                        table.reload();
+                    }
+                });
+            })
         });
     });
 }());

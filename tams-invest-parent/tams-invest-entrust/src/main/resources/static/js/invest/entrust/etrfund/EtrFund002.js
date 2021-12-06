@@ -599,7 +599,7 @@
             $("#entrustAmt0").show();
             $("#entrustNum0").show();
             $("#entrustNum").attr("disabled",false);
-            $("#entrustAmt").val('').attr("disabled",true);
+            $("#entrustAmt").val('').attr("disabled",false);
             $('#changeToFinprodMarketId_div').hide();
             $('#changeToFinprodMarketId').val('');
             getAssetAvailablePosition();
@@ -779,6 +779,14 @@
         psChange();
         elementShowCtrl();
         initFlag = false;
+        secAcctIdDisabled();
+    }
+
+    // 场外基金指令是不需要证券账户的
+    var secAcctIdDisabled =  function(){
+        if($("#tradeMarket").val()&&$("#tradeMarket").val()==TRADE_PLACE_06){
+            $("#secAcctId").val('').trigger("change").prop("disabled", true);
+        }
     }
 
     // 画面初始化控件显示控制

@@ -90,4 +90,14 @@ public class DvpOrdersManagement001Dto extends DvpOrdersManagementDto implements
     public String getRemark() {
         return super.getRemark();
     }
+
+    private String orderId;
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
 }

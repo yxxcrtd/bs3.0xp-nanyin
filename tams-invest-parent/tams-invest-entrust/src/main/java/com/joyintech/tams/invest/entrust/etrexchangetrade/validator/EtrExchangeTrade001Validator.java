@@ -89,7 +89,14 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 		if(StringUtil.equals(dto.getIsMulti(),DictCodeList.是否_是.getValue())) {
 			return  errorList;
 		}
-		if (dto.getOperateType().equals("save") || dto.getOperateType().equals("submit")) {
+
+		if(dto.getOperateType().equals("save")) {
+			if (!StringUtil.isNotEmpty(dto.getStockId())&&!StringUtil.isNotEmpty(dto.getFinprodId())) {
+				errorList.add(new ValidMessage("stockId", "资产名称不可为空！"));
+			}
+
+		}
+		else if (dto.getOperateType().equals("submit")) {
 			Boolean isNonTradingTime = etrExchangeTrade001Service.isNonTradingTime(dto);
 			if (isNonTradingTime) {
 				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
@@ -109,8 +116,24 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				}
 			}else{
 				if(!StringUtil.isNotEmpty(dto.getInvAim())
-						&&dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+						&& dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+						&& !StringUtil.equals(DictCodeListExt3.交易方向_质押券入库.getValue(), dto.getPs())
+						&& !StringUtil.equals(DictCodeListExt3.交易方向_质押券出库.getValue(), dto.getPs())){
 					errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
+				} else {
+					if(StringUtil.isNotEmpty(dto.getInvAim())
+							&& StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+							&& !StringUtil.equals(DictCodeListExt3.交易方向_质押券入库.getValue(), dto.getPs())
+							&& !StringUtil.equals(DictCodeListExt3.交易方向_质押券出库.getValue(), dto.getPs())) {
+						Map<String, Object> param = new HashMap<>();
+						param.put("portfolioId",dto.getPortfolioId());
+						param.put("secAcctId",dto.getSecAcctId());
+						param.put("finprodId",dto.getFinprodId());
+						String historyInvAim = etrExchangeTrade001Service.linkInvAim(param);
+						if(StringUtil.isNotEmpty(historyInvAim) && !StringUtil.equals(historyInvAim,dto.getInvAim())) {
+							errorList.add(new ValidMessage("invAim", "已存在交易，投资目的只能为"+SysDataUtil.getNameFromDataDict(DictCode.投资目的, historyInvAim)));
+						}
+					}
 				}
 			}
 			// GZYHTZJY-111:放开投资目的的校验逻辑 fuyongshneg 20211030 edit end
@@ -508,6 +531,50 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 					errorList.add(new ValidMessage(entrustStatusStr + "的指令不允许修改!"));
 				}
 			}
+			// TISHKS-119:增加指令数量和指令金额的最大值校验 fuyongsheng 20211113 edit start
+			MinTrdUnitLimitDto minTrdUnitLimitDto = null;
+			if (org.apache.commons.lang.StringUtils.isNotEmpty(dto.getFinprodId()) && org.apache.commons.lang3.StringUtils.isNotEmpty(dto.getTradeMarket())
+					&& org.apache.commons.lang3.StringUtils.isNotEmpty(dto.getFinprodType2())) {
+				minTrdUnitLimitDto = etrExchangeTrade001Service.getInterfSysMinTrdUnit(dto.getFinprodId(), dto.getTradePlat(),
+						dto.getTradeMarket(), dto.getFinprodType2(), dto.getPs());
+			}
+			if (null != minTrdUnitLimitDto) {
+				if (null != dto.getEntrustNum()) {
+					//格式化指令数量 最小交易单位整数倍
+					BigDecimal entrustNum = etrExchangeTrade001Service.formatEntrustNum(dto.getEntrustNum(), minTrdUnitLimitDto);
+					dto.setEntrustNum(entrustNum);
+					// 重新计算指令金额
+					Map<String, Object> map1 = new HashMap<>();
+					map1.put("entrustPrice", dto.getEntrustPrice());
+					map1.put("entrustNum", dto.getEntrustNum());
+					map1.put("finprodId", dto.getFinprodId());
+					map1.put("finprodType2", dto.getFinprodType2());
+					map1.put("ps", dto.getPs());
+					map1.put("tradeMarket", dto.getTradeMarket());
+					map1.put("currentTab",dto.getTradePlat());
+					map1.put("targetType", DictCodeListExt3.目标类型_数量.getValue());
+					map1.put("minTrdUnitLimitDto", minTrdUnitLimitDto);
+					dto.setEntrustAmt(etrExchangeTrade001Service.calcEntrustNumAndAmt(map1).get("entrustAmt"));
+				} else {
+					// 重新计算指令数量
+					Map<String, Object> map2 = new HashMap<>();
+					map2.put("entrustPrice", dto.getEntrustPrice());
+					map2.put("entrustAmt", dto.getEntrustAmt());
+					map2.put("finprodId", dto.getFinprodId());
+					map2.put("finprodType2", dto.getFinprodType2());
+					map2.put("ps", dto.getPs());
+					map2.put("tradeMarket", dto.getTradeMarket());
+					map2.put("currentTab", dto.getTradePlat());
+					map2.put("targetType", DictCodeListExt3.目标类型_金额.getValue());
+					map2.put("minTrdUnitLimitDto", minTrdUnitLimitDto);
+					dto.setEntrustNum(etrExchangeTrade001Service.calcEntrustNumAndAmt(map2).get("entrustNum"));
+				}
+				String confirmMsg = etrExchangeTrade001Service.checkMinTrdUnit(dto, minTrdUnitLimitDto, null);
+				if(StringUtil.isNotEmpty(confirmMsg)){
+					errorList.add(new ValidMessage(confirmMsg));
+				}
+			}
+			// TISHKS-119:增加指令数量和指令金额的最大值校验 fuyongsheng 20211113 edit end
 		}
 		return errorList;
 	}

@@ -1501,6 +1501,11 @@ $(function(){
      * 画面加载完成
      */
     $(function() {
+
+        $('#CSTPSelect001_btn_reset').hide();
+
+        $('#CSTPSelect001_btn_search').hide();
+
         //导出
         $('#CSTP_btn_export').click(function() {
             exportExcel();
@@ -1517,7 +1522,7 @@ $(function(){
         	exportExcelQueDing();
         });
         //查询
-        $('#CSTPSelect001_btn_search').click(function(){
+        $('#CSTPSelect001Receive_btn_search').click(function(){
             table.options.ajax.data=function(){
                 return getPageParams('');
             }
@@ -1531,12 +1536,39 @@ $(function(){
             EntrustTable.load();
             $('#TrdCommandReceive001_priceAmtAll').val(0);
         });
+
         $('#trdMatchInfo #CSTPSelect001_btn_search').click(function(){
             TrdMatchInfo.options.ajax.data=function(){
                 return TrdMatchInfoPageParams();
             }
             TrdMatchInfo.load();
         });
+
+        //匹配信息查询
+        $('#CSTPSelect001_trdMatchInfo_btn_search').click(function () {
+            TrdMatchInfo.options.ajax.data=function(){
+                return TrdMatchInfoPageParams();
+            }
+            TrdMatchInfo.load();
+        });
+
+        //委托交易重置按钮
+        $('#CSTPSelect001_trdMatchInfo_btn_reset').click(function () {
+            $('#trdMatchInfo_TrdMatchType').val('').trigger('change');
+            $('#trdMatchInfo_portfolioId').val('').trigger('change');
+            $('#trdMatchInfo_finprodType2').val('').trigger('change');
+            $('#trdMatchInfo_portfolioId').val('').trigger('change');
+            $('#trdMatchInfo_ps').val('').trigger('change');
+            $('#trdMatchInfo_tradeMarket').val('').trigger('change');
+            $('#trdMatchInfo_finprodMarketId').val('').trigger('change');
+            $('#trdMatchInfo_execid').val('').trigger('change');
+            $('#trdMatchInfo_tradeDate').val('').trigger('change');
+            $('#trdMatchInfo_repoTerm').val('').trigger('change');
+            $('#trdMatchInfo_repoTerm2').val('').trigger('change');
+            $('#trdMatchInfo_priceAmt').val('').trigger('change');
+            $('#trdMatchInfo_priceAmt2').val('').trigger('change');
+        });
+
         $('#CSTPSelect001_btn_canPiPei').click(function(){
             if(table.getAllCheckedRows().length==0||table.getAllCheckedRows().length>1){
                 Joyin.error(JoyinUtil

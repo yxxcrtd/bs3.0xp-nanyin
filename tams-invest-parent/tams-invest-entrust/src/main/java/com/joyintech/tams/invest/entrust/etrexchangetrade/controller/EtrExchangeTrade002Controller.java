@@ -144,6 +144,17 @@ public class EtrExchangeTrade002Controller extends BaseController{
     }
 
     /**
+     * 查询质押券代码下拉框
+     * @param params
+     * @return
+     */
+    @RequestMapping("selectZyq")
+    @ResponseBody
+    public Page<SelectOptionDto> selectZyq(@RequestParam Map<String, Object> params) {
+        return etrExchangeTrade002Service.selectZyq(params);
+    }
+
+    /**
      * 查询上交所和深交所标准券数量
      *
      * @return 上交所和深交所标准券数量

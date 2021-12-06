@@ -146,6 +146,13 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 settleTransDataTotalStatus.setUpdateTime(new Date());
                 settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
                 settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
+            } else {
+                settleTransDataTotalStatus = new SettleTransDataTotalStatus();
+                settleTransDataTotalStatus.setSeqNo(dto.getSeqId());
+                settleTransDataTotalStatus.setMatchStatus(DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
+                settleTransDataTotalStatus.setUpdateTime(new Date());
+                settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
+                settleTransDataTotalStatusMapper.insert(settleTransDataTotalStatus);
             }
         }
         else {
@@ -181,6 +188,16 @@ public class ExchangeTransMatchCommonService extends BaseService {
                     settleTransDataTotalStatus.setUpdateTime(new Date());
                     settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
                     settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
+                } else {
+                    settleTransDataTotalStatus = new SettleTransDataTotalStatus();
+                    settleTransDataTotalStatus.setSeqNo(totalSeqId);
+                    //取得剩余匹配份额
+                    BigDecimal remainNum = exchangeTransMatchCommonMapper.getRemainNum(totalSeqId);
+                    settleTransDataTotalStatus.setMatchStatus(BigDecimal.ZERO.compareTo(remainNum) >=0
+                            ?DictCodeListExt3.下行交易匹配状态_未匹配.getValue():DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+                    settleTransDataTotalStatus.setUpdateTime(new Date());
+                    settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
+                    settleTransDataTotalStatusMapper.insert(settleTransDataTotalStatus);
                 }
 
                 //成交数据与投管交易关系（SETTLE_TRANS_TG_MAPPING）：删除
@@ -466,6 +483,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
             settleTransDataTotalStatus.setUpdateTime(new Date());
             settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
             settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
+        } else {
+            settleTransDataTotalStatus = new SettleTransDataTotalStatus();
+            settleTransDataTotalStatus.setSeqNo(dto.getSeqId());
+            settleTransDataTotalStatus.setMatchStatus(matchStatus);
+            settleTransDataTotalStatusMapper.insert(settleTransDataTotalStatus);
         }
         logger.error("处理匹配成交相关的表---结束");
     }
@@ -746,6 +768,16 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 settleTransDataTotalStatus.setUpdateTime(new Date());
                 settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
                 settleTransDataTotalStatusMapper.updateByPrimaryKey(settleTransDataTotalStatus);
+            }  else {
+                settleTransDataTotalStatus = new SettleTransDataTotalStatus();
+                settleTransDataTotalStatus.setSeqNo(dto.getSeqNo());
+                //取得剩余匹配份额
+                BigDecimal remainNum = exchangeTransMatchCommonMapper.getRemainNum(dto.getSeqNo());
+                settleTransDataTotalStatus.setMatchStatus(BigDecimal.ZERO.compareTo(remainNum) >=0
+                        ?DictCodeListExt3.下行交易匹配状态_未匹配.getValue():DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+                settleTransDataTotalStatus.setUpdateTime(new Date());
+                settleTransDataTotalStatus.setUpdateUser(StringUtil.isNotEmpty(LoginUserUtil.getUserName())?LoginUserUtil.getUserName():"system");
+                settleTransDataTotalStatusMapper.insert(settleTransDataTotalStatus);
             }
 
         }

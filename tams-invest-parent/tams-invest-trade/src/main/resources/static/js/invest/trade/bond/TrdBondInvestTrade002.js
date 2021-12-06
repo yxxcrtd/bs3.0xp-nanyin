@@ -807,9 +807,10 @@ var calculateField;
             }
             if (shortSellingSupported == '01') {
                 $("#assetIntegrateSaleAvailablePosition_div").hide();
-                // 场内交易不展示融入券
+                // 该交易方向下：场内交易不展示融入券、展示本方券应计利息总额
                 if(parentPageId && parentPageId == "TrdBondInvestTradeEx001"){
                     $("#assetIntegrateAvailablePosition_div").hide();
+                    $("#ownIntAmt_div").show();
                 }else{
                     $("#assetIntegrateAvailablePosition_div").show();
                 }
@@ -833,9 +834,10 @@ var calculateField;
             	window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showCash(true);
             }
             if (shortSellingSupported == '01') {
-                // 场内交易不展示融入券
+                // 该交易方向下：场内交易不展示融入券、本方券应计利息总额
                 if(parentPageId && parentPageId == "TrdBondInvestTradeEx001"){
                     $("#assetIntegrateSaleAvailablePosition_div").hide();
+                    $("#ownIntAmt_div").hide();
                 }else{
                     $("#assetIntegrateSaleAvailablePosition_div").show();
                 }
@@ -965,7 +967,7 @@ var calculateField;
     $("#settleSpeed").on("change", function () {
         // TISHKS-227:对清算速度进行数字校验 fuyongsheng 20211105 add start
         var settleSpeed = $("#settleSpeed").val();
-        var reg = /^[0-9]*$/;
+        var reg = /^\d{1}$/;
         // 校验清算速度是否为数字
         if(settleSpeed && !reg.test(settleSpeed)){
             Joyin.error(JoyinUtil.getLabel("TrdBondInvestTrade002.settleSpreed")+ "数字格式不正确!");

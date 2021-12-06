@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.entrust.etrconbond.dto.EtrConBondDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
 import com.joyintech.tams.invest.entrust.etrfund.dto.EtrFundDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo002Dto;
+import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtribBondInfo003Dto;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrIbRepoinfo002Dto;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.invest.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
@@ -728,6 +729,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
             // 指令关闭
             CreditLinesInputDto creditLinesInputDto = new CreditLinesInputDto();
             creditLinesInputDto.setTradeId(((EtrEntrust) object).getEntrustId());
+            if(StringUtil.isEmpty(creditLinesInputDto.getTradeId()) && object instanceof EtribBondInfo003Dto)
+                creditLinesInputDto.setTradeId(((EtribBondInfo003Dto)object).getTotalEtrustId());
             creditLinesInputDto.setTradeStatus(status);
             inputDtoList.add(creditLinesInputDto);
         }else {
@@ -823,6 +826,40 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 }
                 //界面上的券面总额单位是万元，换算为元
                 inputDto.setEntrustNum(inputDto.getEntrustNum().multiply(new BigDecimal(10000)));
+                creditLinesInputDto.setTradeAmt(inputDto.getEntrustNum());
+                if (inputDto.getEntrustNum() != null){
+                    creditLinesInputDto.setShareAmt(inputDto.getEntrustNum().divide(new BigDecimal(100), RoundingMode.HALF_UP));
+                }
+                //最新面值
+                BigDecimal newFaceValue = creditLinesDealsMapper.getFaceValue(creditLinesInputDto);
+                if (newFaceValue == null){
+                    newFaceValue = new BigDecimal(100);
+                }
+                if (creditLinesInputDto.getShareAmt() != null) {
+                    creditLinesInputDto.setTradeAmt(newFaceValue.multiply(creditLinesInputDto.getShareAmt()));
+                }else if (creditLinesInputDto.getTradeAmt() != null){
+                    creditLinesInputDto.setTradeAmt(newFaceValue.multiply(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),100,2)));
+                }
+            }
+        }
+        if (object instanceof EtribBondInfo003Dto){
+            EtribBondInfo003Dto pageInputDto = (EtribBondInfo003Dto) object;
+            EtribBondInfo003Dto inputDto = new EtribBondInfo003Dto();
+            BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+            if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(),inputDto.getPs())){
+                creditLinesInputDto = new CreditLinesInputDto();
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
+                creditLinesInputDto.setTradeId(inputDto.getTotalEtrustId());
+                creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
+                creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                creditLinesInputDto.setTradeDate(inputDto.getVdate());
+                creditLinesInputDto.setTradeStatus(status);
+                creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+                if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
+                    creditLinesInputDto.setCounterId(inputDto.getEtrInvestPersonInfo().getCounterId());
+                }
+                //界面上的券面总额单位是万元，换算为元
+//                inputDto.setEntrustNum(inputDto.getEntrustNum().multiply(new BigDecimal(10000)));
                 creditLinesInputDto.setTradeAmt(inputDto.getEntrustNum());
                 if (inputDto.getEntrustNum() != null){
                     creditLinesInputDto.setShareAmt(inputDto.getEntrustNum().divide(new BigDecimal(100), RoundingMode.HALF_UP));

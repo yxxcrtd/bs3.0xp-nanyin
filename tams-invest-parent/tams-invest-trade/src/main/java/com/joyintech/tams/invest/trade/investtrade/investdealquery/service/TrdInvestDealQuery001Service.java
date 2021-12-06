@@ -298,8 +298,16 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 
 				// add by caozhenming 20210730 start
 				String finprodType2 = dto.getFinprodType2();
-				// 交易价格
-				dto.setTradePrice(dto.getUnitCprice());
+
+				// modify by etliu 20211111 start
+				// TISHKS-331：需求中描述“交易价格”字段除债券二级交易和股票展示外，其他不展示
+				if (DictCodeList.平安资产类型_债券.getValue().equals(finprodType2)
+					|| DictCodeListExt2.平安资产类型_股票.getValue().equals(finprodType2)) {
+					// 交易价格
+					dto.setTradePrice(dto.getUnitCprice());
+				}
+				// modify by etliu 20211111 TISHKS-331 start
+
 				// 利率
 				if ( DictCodeList.平安资产类型_存款.getValue().equals(finprodType2)
 						|| DictCodeList.平安资产类型_计划类资产_利率型.getValue().equals(finprodType2)

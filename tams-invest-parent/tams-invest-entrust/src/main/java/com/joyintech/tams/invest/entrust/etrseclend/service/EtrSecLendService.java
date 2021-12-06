@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -123,9 +124,17 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
         Page<EtrSecLendDto> page = restTemplate.postForPage(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/findPage", param,
                 EtrSecLendDto.class);
+        List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+                param, SysUser.class);
         for(EtrSecLendDto dto:page.getRoot()){
             if(dto.getTotalAmt() != null) {
                 dto.setTotalAmt(dto.getTotalAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(StringUtil.isNotEmpty(dto.getNextUser())){
+                String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+                        .map(SysUser::getRealName)
+                        .collect(Collectors.joining(",","",""));
+                dto.setNextUser(sysUsers);
             }
         }
         return page;
@@ -144,7 +153,7 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
      */
     public Page<SelectOptionDto> getFinprodId(Map<String, Object> parameters) {
         return restTemplate.postForPage(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/getFinprodId", parameters, SelectOptionDto.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/getFinprodId", parameters, SelectOptionDto.class);
     }
     /**
      * 查询证券托管户：联想框文本框
@@ -156,8 +165,8 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
      */
     public List<SelectOptionDto> getSecManageAcctId(Map<String, Object> parameters) {
         List<SuggestDto> tempList = restTemplate.postForList(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/getSecManageAcctId",
-            parameters, SuggestDto.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/getSecManageAcctId",
+                parameters, SuggestDto.class);
 
         List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
         if (!StringUtil.isEmptyList(tempList)) {
@@ -184,8 +193,8 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
     public List<ValidMessage> check(EtrSecLendDto dto) {
         dto.setCloseWay(DictCodeListExt1.委托关闭方式_人工.getValue());
         return restTemplate.postForList(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/check", dto,
-            ValidMessage.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/check", dto,
+                ValidMessage.class);
     }
 
     /**
@@ -196,12 +205,12 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
         dto.setOperateType(operationType.toString());
         Date sysDate = DateUtil.platDateFromCache();
         dto.setEntrustDate(sysDate);
-        deleteWflEntity(dto);
+//        deleteWflEntity(dto);
         basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
         restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/doComplete",dto,
-            Integer.class);
-         //新增或修改质押券信息
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/doComplete",dto,
+                Integer.class);
+        //新增或修改质押券信息
 //         if(bussRepoSecService != null){
 //                bussRepoSecService.insert(dto.getBussRepoSec(),dto.getEntrustId());
 //         }
@@ -210,53 +219,53 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
      *
      * 流程发起时调用
      */
-     @Override
-     public void doInsert(EtrSecLendDto dto, OperationType type){
-         dto.setOperateType(type.toString());
-         restTemplate.postForObject(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/doInsert",dto,
-             Integer.class);
-       //新增或修改质押券信息
-         if(bussRepoSecService != null && dto.getBussRepoSec() != null){
-               bussRepoSecService.deletePledgeBond(dto.getEntrustId(), dto.getBussRepoSec().getPageFrom());
-               bussRepoSecService.insert(dto.getBussRepoSec(),dto.getEntrustId());
-         }
-     }
-     
-     @Override
-    public void doBack(EtrSecLendDto entity) {
-          doBackFlow(entity);
-         //deleteWflEntity(entity);
+    @Override
+    public void doInsert(EtrSecLendDto dto, OperationType type){
+        dto.setOperateType(type.toString());
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/doInsert",dto,
+                Integer.class);
+        //新增或修改质押券信息
+        if(bussRepoSecService != null && dto.getBussRepoSec() != null){
+            bussRepoSecService.deletePledgeBond(dto.getEntrustId(), dto.getBussRepoSec().getPageFrom());
+            bussRepoSecService.insert(dto.getBussRepoSec(),dto.getEntrustId());
+        }
     }
-     
-    
-     
-     /**
-      * 删除流程中数据和流水
-      * @param dto
-      */
-     public void deleteWflEntity(EtrSecLendDto dto) {
-    	 restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME+"/EtrSecLend/doDeleteFlow", 
-    			 dto, Void.class);
-     }
 
-     /**
-      *
-      * 流程修改时调用
-      */
-     @Override
-     public void doUpdate(EtrSecLendDto dto){
-    	 deleteWflEntity(dto);
-         restTemplate.postForObject(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/doInsert",dto,
-             Integer.class);
-         
-       //新增或修改质押券信息
-         if(bussRepoSecService != null && dto.getBussRepoSec() != null){
-               bussRepoSecService.deletePledgeBond(dto.getEntrustId(), dto.getBussRepoSec().getPageFrom());
-               bussRepoSecService.insert(dto.getBussRepoSec(),dto.getEntrustId());
-         }
-     }
+    @Override
+    public void doBack(EtrSecLendDto entity) {
+        doBackFlow(entity);
+        //deleteWflEntity(entity);
+    }
+
+
+
+    /**
+     * 删除流程中数据和流水
+     * @param dto
+     */
+    public void deleteWflEntity(EtrSecLendDto dto) {
+        restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME+"/EtrSecLend/doDeleteFlow",
+                dto, Void.class);
+    }
+
+    /**
+     *
+     * 流程修改时调用
+     */
+    @Override
+    public void doUpdate(EtrSecLendDto dto){
+        deleteWflEntity(dto);
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/doInsert",dto,
+                Integer.class);
+
+        //新增或修改质押券信息
+        if(bussRepoSecService != null && dto.getBussRepoSec() != null){
+            bussRepoSecService.deletePledgeBond(dto.getEntrustId(), dto.getBussRepoSec().getPageFrom());
+            bussRepoSecService.insert(dto.getBussRepoSec(),dto.getEntrustId());
+        }
+    }
     /**
      *
      * 删除投资委托
@@ -268,7 +277,7 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
      */
     public boolean deleteDelegate(String entrustId) {
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/delete?entrustId="+entrustId,
-            boolean.class);
+                boolean.class);
     }
     /**
      * 修改/双击查看详情查询信息 <功能详细描述>
@@ -289,8 +298,8 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
             portfolioId="";
         }
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                                         + "/EtrSecLend/selectByKey?entrustId=" + entrustId+"&finprodId="+finprodId+"&portfolioId="+portfolioId,
-            EtrSecLendDto.class);
+                        + "/EtrSecLend/selectByKey?entrustId=" + entrustId+"&finprodId="+finprodId+"&portfolioId="+portfolioId,
+                EtrSecLendDto.class);
     }
 
 
@@ -304,8 +313,8 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
      */
     public boolean recallDelegate(EtrSecLendDto dto) {
         return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/recall", dto,
-            boolean.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/recall", dto,
+                boolean.class);
     }
     /**
      * 关闭委托
@@ -317,8 +326,8 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
      */
     public boolean closeDelegate(String entrustId,String closeWay) {
         return restTemplate.getForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/close?entrustId="+entrustId+"&closeWay="+closeWay,
-            boolean.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/close?entrustId="+entrustId+"&closeWay="+closeWay,
+                boolean.class);
     }
 
     /**
@@ -331,7 +340,7 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
     @Override
     protected void buildExportParam(ExportParam exportParam) {
         exportParam.config("/com/joyintech/tams/invest/entrust/etrseclend/conf/export_conf.xml")
-            .dataSource(DataSourceType.MASERT);
+                .dataSource(DataSourceType.MASERT);
     }
     @Override
     public Page<EtrSecLendDto> selectPageData(Map<String, Object> selectParam) {
@@ -361,8 +370,8 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
             param.put("sysDateT1",DateUtil.format(tradeDay));
         }
         return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/getAssetAvailablePosition",param,
-            Map.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/getAssetAvailablePosition",param,
+                Map.class);
     }
 
     @Override
@@ -371,12 +380,12 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
         EtrSecLendDto dto = this.getBussinessEntity(entity);
         if (taskId != null) {
             try {
-            	Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getTotalAmt()/*.multiply(new BigDecimal(10000))*/, LoginUserUtil.getUserName(),
+                Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getTotalAmt()/*.multiply(new BigDecimal(10000))*/, LoginUserUtil.getUserName(),
                         DictCodeListExt2.平安资产类型_债券借贷.getValue(), null, dto.getTradeMarket(), dto.getBusiPs()
                         // 资产类型改为授权类型 add by renping 2019-08-06  start
                         , dto.getFinprodId(), dto.getWorkflowId()
                         // 资产类型改为授权类型 add by renping 2019-08-06  end
-                        );
+                );
                 return commonBusinessService.是否需要上级审批_委托用(params);
             }
             catch (WorkFlowException e) {

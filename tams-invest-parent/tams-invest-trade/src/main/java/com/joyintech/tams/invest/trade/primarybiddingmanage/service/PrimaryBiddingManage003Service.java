@@ -195,7 +195,7 @@ public class PrimaryBiddingManage003Service extends BaseService<TrdBiddingManage
 
     @Override
     public void doInsert(TrdBiddingManage003Dto entity, OperationType type) {
-        if(OperationType.NEW.equals(type)){
+        if(OperationType.NEW.equals(type) && !StringUtil.equals(entity.getOperateType(),"save")){
             if(entity.getBidOrderBidPriceList()!=null && entity.getBidOrderBidPriceList().size()>0){
                 for(BidOrderBidPriceDto dto:entity.getBidOrderBidPriceList()){
                     if(!StringUtil.isNotEmpty(dto.getWinPrinAmt())){
@@ -210,13 +210,15 @@ public class PrimaryBiddingManage003Service extends BaseService<TrdBiddingManage
 
     @Override
     public void doUpdate(TrdBiddingManage003Dto entity) {
-        if(entity.getBidOrderBidPriceList()!=null && entity.getBidOrderBidPriceList().size()>0){
-            for(BidOrderBidPriceDto dto:entity.getBidOrderBidPriceList()){
-                if(!StringUtil.isNotEmpty(dto.getWinPrinAmt())){
-                    dto.setWinPrinAmt(dto.getTheWinPrinAmt());
+        if(!StringUtil.equals(entity.getOperateType(),"save")) {
+            if(entity.getBidOrderBidPriceList()!=null && entity.getBidOrderBidPriceList().size()>0){
+                for(BidOrderBidPriceDto dto:entity.getBidOrderBidPriceList()){
+                    if(!StringUtil.isNotEmpty(dto.getWinPrinAmt())){
+                        dto.setWinPrinAmt(dto.getTheWinPrinAmt());
+                    }
+                    dto.setPayDate(entity.getPayDate());
+                    baseEtrCashPositionCommService.executeBidResultsMaintenanceExecute(dto);
                 }
-                dto.setPayDate(entity.getPayDate());
-                baseEtrCashPositionCommService.executeBidResultsMaintenanceExecute(dto);
             }
         }
     }

@@ -3,6 +3,7 @@ package com.joyintech.tams.settle.batch.transdatagather.reader;
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
 public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDataGatherParamDto> {
     @Autowired
     private StlSettleTransDataGatherService stlSettleTransDataGatherService;
-    @Autowired
+    @Autowired(required = false)
     private SettleCommonService settleCommonService;
 
     @Override
@@ -69,16 +70,24 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                     || StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
                     || (StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                         &&StringUtil.equals(settleTransDataDto.getPs(), DictCodeListExt1.交易方向_债转股.getValue()))){
-                BeanUtils.copyProperties(settleTransDataDto, dealTotal);
-                //  汇总交易编号
-                dealTotal.setSeqId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易));
-                settleTransDataList.add(dealTotal);
-                //当笔成交数据明细.附属表流水号 非空
-                if(StringUtil.isNotEmpty(settleTransDataDto.getTradeIdAdd())){
-                    SettleTransDataTotalAdd settleTransDataTotalAdd=new SettleTransDataTotalAdd();
-                    BeanUtils.copyProperties(settleTransDataDto, settleTransDataTotalAdd);
-                    settleTransDataTotalAdd.setTradeId(settleTransDataDto.getTradeIdAdd());
-                    settleTransDataAddList.add(settleTransDataTotalAdd);
+                for (StlSettleTransDataGatherDto tempData : list) {
+                    String checkResult = tempData.getCheckResult();
+                    if (StringUtil.isEmpty(checkResult)
+                            || StringUtil.equals(checkResult, DictCodeListExt3.对账状态结果_一致.getValue())
+                            || StringUtil.equals(checkResult, DictCodeListExt3.对账状态结果_手工完成.getValue())) {
+                        dealTotal = new SettleTransDataTotal();
+                        BeanUtils.copyProperties(tempData, dealTotal);
+                        //  汇总交易编号
+                        dealTotal.setSeqId(IDGenerator.generate());
+                        settleTransDataList.add(dealTotal);
+                        //当笔成交数据明细.附属表流水号 非空
+                        if(StringUtil.isNotEmpty(tempData.getTradeIdAdd())){
+                            SettleTransDataTotalAdd settleTransDataTotalAdd = new SettleTransDataTotalAdd();
+                            BeanUtils.copyProperties(tempData, settleTransDataTotalAdd);
+                            settleTransDataTotalAdd.setTradeId(dealTotal.getSeqId());
+                            settleTransDataAddList.add(settleTransDataTotalAdd);
+                        }
+                    }
                 }
             }else {
                 //对账结果核对if 变量.temp_当前成交数据明细数据list 中所有数据都满足【对账结果 为空 或者为 对账一致 或者为 手工完成】
@@ -95,7 +104,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                 }
                 if(flag){
                     //  汇总交易编号
-                    dealTotal.setSeqId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易));
+                    dealTotal.setSeqId(IDGenerator.generate());
                     //执行日期
                     dealTotal.setDealDate(tradeDate);
                     //证券品种
@@ -236,6 +245,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             ||StringUtil.equals(settleTransDataDto.getPs(), BussinessDictCodeList.交易方向_卖出.getValue()))) {
                         unitCprice = ArithmeticUtil.divide(totalFpriceamt, totalShareAmt, 8);
                         dealTotal.setUnitCprice(unitCprice);
+                        dealTotal.setUnitFprice(unitCprice);
                     }
                     //单位面值  空
                     // 交易份额

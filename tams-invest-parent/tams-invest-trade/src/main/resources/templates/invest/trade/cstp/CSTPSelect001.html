@@ -159,7 +159,7 @@
                                                        class="layui-input form-input text-number" readonly>
                                             </div>
                                             <div style="float: left">
-                                                <a class="layui-btn layui-btn-sm btn-search" id="CSTPSelect001_btn_search">查询</a>
+                                                <a class="layui-btn layui-btn-sm btn-search" id="CSTPSelect001Receive_btn_search">查询</a>
                                                 <a class="layui-btn layui-btn-sm btn-reset" id="CSTPSelect001_cleanProdGroup">重置</a>
                                                 <a class="layui-btn layui-btn-sm" id="CSTPSelect001_much">
                                                     <i class="icon jyiconfont"></i><span class="icon jyiconfont jyicon-more" style="font-size: 12px">更多</span>
@@ -354,7 +354,7 @@
                         <div class='joyin-form-wrap joyin-filter-form condition-area curr-form transfer-form'>
                             <form class="layui-form" id="searchFormTwo">
                                 <div class="layui-form-item">
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                                    <div class="layui-inline layui-col-md3 layui-col-sm3 layui-col-lg3 layui-col-xs3">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="匹配方式">匹配方式</label>
                                         <div class="layui-input-inline input-inline">
@@ -366,7 +366,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                                    <div class="layui-inline layui-col-md3 layui-col-sm4 layui-col-lg3 layui-col-xs3">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="#{TrdRepoTrade001.portfolioId}">组合代码</label>
                                         <div class="layui-input-inline input-inline">
@@ -379,7 +379,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                                    <div class="layui-inline layui-col-md3 layui-col-sm3 layui-col-lg3 layui-col-xs3">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="#{TrdCommandReceive001.finprodType2}">资产类型</label>
                                         <div class="layui-input-inline input-inline">
@@ -391,9 +391,12 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="layui-inline layui-col-md1 layui-col-xs1 layui-col-sm1 layui-col-lg1" style="float: right">
+                                        <a class="layui-btn layui-btn-sm btn-search" id="CSTPSelect001_trdMatchInfo_btn_search">查询</a>
+                                    </div>
                                 </div>
                                 <div  class="layui-form-item">
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                                    <div class="layui-inline layui-col-md3 layui-col-sm3 layui-col-lg3 layui-col-xs3">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="#{TrdCommandReceive001.ps}">交易方向</label>
                                         <div class="layui-input-inline input-inline">
@@ -405,7 +408,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                                    <div class="layui-inline layui-col-md3 layui-col-sm3 layui-col-lg3 layui-col-xs3">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="#{TrdCommandReceive001.tradeMarket}">交易场所</label>
                                         <div class="layui-input-inline input-inline">
@@ -417,7 +420,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                                    <div class="layui-inline layui-col-md3 layui-col-sm3 layui-col-lg3 layui-col-xs3">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="#{TrdCommandReceive001.finprodMarketId}">资产代码</label>
                                         <div class="layui-input-inline input-inline">
@@ -429,10 +432,14 @@
                                                    data-th-data-effectivefieldsalias='|{"code":"#{CSTPSelect001.finprodId}","shortName":"#{CSTPSelect001.finprodName}"}|'>
                                         </div>
                                     </div>
+
+                                    <div class="layui-inline layui-col-md1 layui-col-xs1 layui-col-sm1 layui-col-lg1" style="float: right">
+                                        <a class="layui-btn layui-btn-sm btn-reset" id="CSTPSelect001_trdMatchInfo_btn_reset">重置</a>
+                                    </div>
                                 </div>
                                 <div  class="layui-form-item">
                                     <div
-                                            class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                                            class="layui-inline layui-col-md3 layui-col-sm3 layui-col-lg3 layui-col-xs3">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="#{CSTPSelect001.execid}">成交编号</label>
                                         <div class="layui-input-inline input-inline">
@@ -444,7 +451,7 @@
                                         </div>
                                     </div>
                                     <div
-                                            class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                                            class="layui-inline layui-col-md3 layui-col-sm3 layui-col-lg3 layui-col-xs3">
                                         <label class="layui-form-label form-lable" data-th-text="#{CSTPSelect001.tradeDate}">交易日期</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="trdMatchInfo_tradeDate" name="tradeDate"
@@ -453,7 +460,7 @@
                                         </div>
                                     </div>
                                      <div
-                                            class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+                                            class="layui-inline layui-col-md3 layui-col-sm3 layui-col-lg3 layui-col-xs3">
                                          <label class="layui-form-label form-lable"
                                                 data-th-text="回购期限">回购期限</label>
                                          <input type="text" id="trdMatchInfo_repoTerm" name="repoTerm" placeholder="请输入内容"
@@ -468,7 +475,7 @@
                                 </div>
                                 <div class="layui-form-item">
                                     <div
-                                            class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+                                            class="layui-inline layui-col-xs3 layui-col-md3 layui-col-sm3 layui-col-lg3">
                                         <label class="layui-form-label form-lable"
                                                data-th-text="交易金额">交易金额</label>
                                         <input type="text" id="trdMatchInfo_priceAmt" name="repoTerm" placeholder="请输入内容"

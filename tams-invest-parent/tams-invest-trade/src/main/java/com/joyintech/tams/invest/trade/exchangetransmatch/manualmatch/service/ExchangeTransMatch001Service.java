@@ -5,6 +5,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.SettleTransDataTotalAddMapper;
@@ -12,6 +13,7 @@ import com.joyintech.tams.common.base.dao.SettleTransDataTotalMapper;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
+import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -269,6 +271,17 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                         trdBondInvestTradeDto.setPs(DictCodeList.交易方向_买入.getValue());
                     }
 
+                    TrdInvestPersonInfo002Dto trdInvestPersonInfo = new TrdInvestPersonInfo002Dto();
+                    if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                        trdBondInvestTradeDto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                        trdInvestPersonInfo.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                    }
+                    else if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                        trdBondInvestTradeDto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+                        trdInvestPersonInfo.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                    }
+                    trdInvestPersonInfo.setTrader(LoginUserUtil.getUserName());
+                    trdBondInvestTradeDto.setTrdInvestPersonInfo(trdInvestPersonInfo);
                     dtoStr = JsonUtils.object2Json(trdBondInvestTradeDto);
                 }
                 else if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())) {
@@ -280,6 +293,19 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                     trdConBondDto.setIsOutTrade(DictCodeList.是否_是.getValue());
                     trdConBondDto.setTradeAmt(dto.getRemainAmount());
                     trdConBondDto.setShareAmt(dto.getRemainNum());
+
+                    if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                        trdConBondDto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                    }
+                    else if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                        trdConBondDto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+                    }
+
+
+                    TrdInvestPersonInfo002Dto trdInvestPersonInfo = new TrdInvestPersonInfo002Dto();
+                    trdInvestPersonInfo.setCounterId(trdConBondDto.getCounterId());
+                    trdInvestPersonInfo.setTrader(LoginUserUtil.getUserName());
+                    trdConBondDto.setTrdInvestPersonInfo(trdInvestPersonInfo);
 
                     dtoStr = JsonUtils.object2Json(trdConBondDto);
                 }
@@ -293,6 +319,18 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                     trdConBond003Dto.setbTradeId(exchangeTransMatchBondCommonService.selectBTradeId(settleTransDataTotal.getApplyTradeId(),settleTransDataTotal.getPs()));
                     trdConBond003Dto.setTradeAmt(dto.getRemainAmount());
                     trdConBond003Dto.setShareAmt(dto.getRemainNum());
+
+                    if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                        trdConBond003Dto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                    }
+                    else if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                        trdConBond003Dto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+                    }
+
+                    TrdInvestPersonInfo002Dto trdInvestPersonInfo = new TrdInvestPersonInfo002Dto();
+                    trdInvestPersonInfo.setCounterId(trdConBond003Dto.getCounterId());
+                    trdInvestPersonInfo.setTrader(LoginUserUtil.getUserName());
+                    trdConBond003Dto.setTrdInvestPersonInfo(trdInvestPersonInfo);
 
                     dtoStr = JsonUtils.object2Json(trdConBond003Dto);
                 }
@@ -311,6 +349,18 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                         trdBondToStock001Dto.setConPrice(settleTransDataTotalAdd.getConPrice());
                         trdBondToStock001Dto.setTradeAmt(dto.getRemainAmount());
                         trdBondToStock001Dto.setShareAmt(dto.getRemainNum());
+
+                        if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                            trdBondToStock001Dto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                        }
+                        else if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                            trdBondToStock001Dto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+                        }
+
+                        TrdInvestPersonInfo002Dto trdInvestPersonInfo = new TrdInvestPersonInfo002Dto();
+                        trdInvestPersonInfo.setCounterId(trdBondToStock001Dto.getCounterId());
+                        trdInvestPersonInfo.setTrader(LoginUserUtil.getUserName());
+                        trdBondToStock001Dto.setTrdInvestPersonInfo(trdInvestPersonInfo);
 
                         dtoStr = JsonUtils.object2Json(trdBondToStock001Dto);
                     }
@@ -343,6 +393,19 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 else {
                     trdRepoTrade002Dto.setPs(DictCodeList.回购拆借方向_逆回购.getValue());
                 }
+
+                if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                    trdRepoTrade002Dto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                }
+                else if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                    trdRepoTrade002Dto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+                }
+
+                TrdInvestPersonInfo002Dto trdInvestPersonInfo = new TrdInvestPersonInfo002Dto();
+                trdInvestPersonInfo.setCounterId(trdRepoTrade002Dto.getCounterId());
+                trdInvestPersonInfo.setTrader(LoginUserUtil.getUserName());
+                trdRepoTrade002Dto.setTrdInvestPersonInfo(trdInvestPersonInfo);
+
                 dtoStr = JsonUtils.object2Json(trdRepoTrade002Dto);
             }
             else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
@@ -353,6 +416,19 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 trdFundInvestTradeDto.setSecManageAcctId(settleTransDataTotal.getSecAcctId());
                 trdFundInvestTradeDto.setDealSqeId(settleTransDataTotal.getSeqId());
                 trdFundInvestTradeDto.setFinprodMarketId(dto.getFinprodMarketId());
+
+                if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                    trdFundInvestTradeDto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                }
+                else if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                    trdFundInvestTradeDto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+                }
+
+                TrdInvestPersonInfo002Dto trdInvestPersonInfo = new TrdInvestPersonInfo002Dto();
+                trdInvestPersonInfo.setCounterId(trdFundInvestTradeDto.getCounterId());
+                trdInvestPersonInfo.setTrader(LoginUserUtil.getUserName());
+                trdFundInvestTradeDto.setTrdInvestPersonInfo(trdInvestPersonInfo);
+
                 dtoStr = JsonUtils.object2Json(trdFundInvestTradeDto);
             }
             else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
@@ -364,6 +440,19 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 trdStockConnectDto.setIsOutTrade(DictCodeList.是否_是.getValue());
                 trdStockConnectDto.setTradeAmt(dto.getRemainAmount());
                 trdStockConnectDto.setShareAmt(dto.getRemainNum());
+
+                if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+                    trdStockConnectDto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+                }
+                else if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                    trdStockConnectDto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+                }
+
+                TrdInvestPersonInfo002Dto trdInvestPersonInfo = new TrdInvestPersonInfo002Dto();
+                trdInvestPersonInfo.setCounterId(trdStockConnectDto.getCounterId());
+                trdInvestPersonInfo.setTrader(LoginUserUtil.getUserName());
+                trdStockConnectDto.setTrdInvestPersonInfo(trdInvestPersonInfo);
+
                 dtoStr = JsonUtils.object2Json(trdStockConnectDto);
             }
         }

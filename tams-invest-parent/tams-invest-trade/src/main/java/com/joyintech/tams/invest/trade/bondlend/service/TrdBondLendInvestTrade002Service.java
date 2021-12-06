@@ -1874,7 +1874,7 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         // 日期
         resultDto.setCdate(input.getTradeDate());
         // 数量
-        BigDecimal shareAmt = input.getShareAmt().multiply(new BigDecimal(10000)).divide(new BigDecimal(100));
+        BigDecimal shareAmt = input.getShareAmt().divide(new BigDecimal(100));
         if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), input.getFinprodType2())) {
             resultDto.setAmount(isNegate ? shareAmt.negate() : shareAmt);// 撤销及退回 取反
         } else {
@@ -1887,7 +1887,7 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         // 投资目的
         resultDto.setInvAim(StringUtil.isEmpty(input.getInvAim()) ? "999999" : input.getInvAim());
         // 融出交易流程最后一步
-        if (!isNegate && isDoComplete && StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), input.getFinprodType2())) {
+        if (!isNegate && (isDoComplete||isDoBack) && StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), input.getFinprodType2())) {
             // modify by jiangpeng on 20210506 start
             // ZGBSS-1150 【债券借贷存续期】：融出到期交易和撤销融入到期交易产生的错误
             // 融出交易生效时已入库持仓流水,此处不用在重复入库,只需冲销掉提交流程时入的流程中流水
@@ -2047,7 +2047,7 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
         // add by jiangpeng on 20210428 start
         // ZGBSSE-122 实时头寸查询，2019-5-30，债券借贷融出，交易可用持仓
         if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue(), entity.getFinprodType2())) {
-            ptlOutSecPositionFlowLogic(entity, true, true,false);
+            ptlOutSecPositionFlowLogic(entity, false, true,false);
         }
         // add by jiangpeng on 20210428 end
     }

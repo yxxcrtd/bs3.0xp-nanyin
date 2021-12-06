@@ -27,6 +27,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
@@ -50,11 +51,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -221,6 +219,8 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             List<String> bondTypeList = StringUtil.splitToList(",", bondType);
             param.put("bondTypeList", bondTypeList);
         }
+        List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+                param, SysUser.class);
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
         //配置单位 edit by yeming 20210730 start
         Page<EtrBondFirstLBiddingDto> page = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/findPage",
@@ -231,6 +231,12 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             }
             if(dto.getWinPriceTotal() != null) {
                 dto.setWinPriceTotal(dto.getWinPriceTotal().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+            }
+            if(StringUtil.isNotEmpty(dto.getNextUser())){
+                String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+                        .map(SysUser::getRealName)
+                        .collect(Collectors.joining(",","",""));
+                dto.setNextUser(sysUsers);
             }
         }
         return page;
@@ -243,7 +249,7 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
         EtrBondFirstLBiddingDto dto = this.getBussinessEntity(entity);
         CommonBusinessService commonBusinessService = SpringContextUtil.getBean(CommonBusinessService.class);
         if (taskId != null) {
-        	try {
+            try {
                 BigDecimal amount = dto.getEntrustNum();
                 if (amount == null) {
                     amount = dto.getEntrustAmt();
@@ -459,7 +465,8 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             dto.setAssetType11(jsonObject.get("assetType11").toString());
             long lt = Long.parseLong(jsonObject.get("biddate").toString());
             Date date = new Date(lt);
-            dto.setEntrustDate(date);
+//            dto.setEntrustDate(date);
+            dto.setEntrustDate(DateUtil.parse(rowData.get(12).toString().trim()));
             dto.setFinprodId(jsonObject.get("finprodId").toString());
             //缴款方式
             String etrPayType = rowData.get(5).toString().trim();
@@ -566,109 +573,123 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
-        List<List<String>> objects=ExcelUtil.getTempList(fileName);
-        if(objects.size()-1 > 100){
+        try {
+            List<List<String>> objects = ExcelUtil.getTempList(fileName);
+            if (objects.size() - 1 > 100) {
+                Map<String, Object> resultMap = new HashMap<>();
+                resultMap.put("errorMsg", getMessage("ETR_E_0021"));
+                AjaxResult wr = new AjaxResult();
+                wr.setData(resultMap);
+                return wr;
+            }
+            String totalMsg = "";
+            JSONArray jsonArrays = new JSONArray();
+            // 失败条数
+            int errorNum = 0;
+            for (int i = 1; i < objects.size(); i++) {
+                String confirmMsg = "";
+                List<String> rowData = objects.get(i);
+                // excel的行号
+                String lineNo = String.valueOf(i + 1);
+
+                //委托开始日调用共通check非空和是否正确
+                String message = etrCommonService.checkIsBlank(rowData.get(1).toString(), "EtrBondFirstLBidding002.vdate", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+                message = etrCommonService.checkIsDate(rowData.get(1).toString(), "EtrBondFirstLBidding002.vdate", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+
+                //投标日期调用共通check非空和是否正确
+                message = etrCommonService.checkIsBlank(rowData.get(12).toString(), "EtrBondFirstLBidding002.bidDate", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+                message = etrCommonService.checkIsDate(rowData.get(12).toString(), "EtrBondFirstLBidding002.bidDate", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+
+                //委托结束日
+                message = etrCommonService.checkIsBlank(rowData.get(2).toString(), "EtrBondFirstLBidding002.mdate", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+                message = etrCommonService.checkIsDate(rowData.get(2).toString(), "EtrBondFirstLBidding002.mdate", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+
+                // 委托开始、终止日是否是平台日check
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(), lineNo));
+
+                //组合代码
+                message = etrCommonService.checkIsBlank(rowData.get(3).toString(), "EtrBondFirstLBidding002.portfolioId", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+                message = etrCommonService.checkPortfolioIdExist(rowData.get(3).toString(), "EtrBondFirstLBidding002.portfolioId", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+
+                //资产代码
+                message = etrCommonService.checkIsBlank(rowData.get(4).toString(), "EtrBondFirstLBidding002.finprodId", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+                if (StringUtil.isNotEmpty(rowData.get(4).toString())) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("search", rowData.get(4).toString());
+                    map.put("page", 1);
+                    map.put("length", 20);
+                    Page<SelectOptionDto> finprodIds = getfinprodIdForAdd(map);
+                    if (finprodIds.getRoot().isEmpty()) {
+                        confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0017", getMessage("EtrBondFirstLBidding002.finprodId"), lineNo));
+                    }
+                }
+
+                //缴款方式
+                message = etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrBondFirstLBidding002.payType", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+
+                //投资目的
+                message = etrCommonService.checkIsBlank(rowData.get(6).toString(), "EtrBondFirstLBidding002.invAim", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+
+                //交易对手
+                message = etrCommonService.checkIsBlank(rowData.get(7).toString(), "EtrInvestPersonInfo002.counterId", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+                if (StringUtil.isNotBlank(rowData.get(7).toString())) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("search", rowData.get(7).toString());
+                    map.put("page", 1);
+                    map.put("length", 20);
+                    map.put("counterType", DictCodeListExt1.交易对手类型_市场机构.getValue());
+                    Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME +
+                            "/common/EntrustCommonPersonSelect/getCounterId", map, SelectOptionDto.class);
+                    if (selectOptionDtoPage.getRoot().isEmpty()) {
+                        confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0017", getMessage("EtrInvestPersonInfo002.counterId"), lineNo));
+                    }
+                }
+                //投标标位
+                confirmMsg = checkBidPrice(confirmMsg, lineNo, rowData.get(8).toString(), "EtrBondFirstLBidding001.bidPrice");
+                //投标券面总额
+                confirmMsg = checkIsDouble(confirmMsg, lineNo, rowData.get(9).toString(), "EtrBondFirstLBidding001.bidPriceTotal");
+                //最低成交金额
+                confirmMsg = checkIsDouble(confirmMsg, lineNo, rowData.get(10).toString(), "EtrBondFirstLBidding003.dealAmount");
+//            主承销商
+                message = etrCommonService.checkIsBlank(rowData.get(11).toString(), "EtrBondFirstLBidding002.mainConsignee", lineNo);
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+                if (StringUtil.isBlank(confirmMsg)) {
+                    jsonArrays.add(rowData);
+                } else {
+                    totalMsg = etrCommonService.StringAddByBr(totalMsg, confirmMsg);
+                    errorNum++;
+                }
+            }
+            totalMsg = etrCommonService.StringAddByBr(totalMsg, getMessage("ETR_C_0001", String.valueOf(errorNum)));
             Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("errorMsg", getMessage("ETR_E_0021"));
+            if (StringUtil.isNotBlank(totalMsg)) {
+
+                resultMap.put("confirmMsg", totalMsg);
+            }
+            resultMap.put("correctData", JSONArray.toJSONString(jsonArrays));
+            AjaxResult wr = new AjaxResult();
+            wr.setData(resultMap);
+            return wr;
+        }catch (IndexOutOfBoundsException e){
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("errorMsg", "文件格式不正确");
             AjaxResult wr = new AjaxResult();
             wr.setData(resultMap);
             return wr;
         }
-        String totalMsg = "";
-        JSONArray jsonArrays = new JSONArray();
-        // 失败条数
-        int errorNum = 0;
-        for (int i = 1; i < objects.size(); i++) {
-            String confirmMsg = "";
-            List<String> rowData = objects.get(i);
-            // excel的行号
-            String lineNo = String.valueOf(i + 1);
-
-            //委托开始日调用共通check非空和是否正确
-            String message = etrCommonService.checkIsBlank(rowData.get(1).toString(), "EtrBondFirstLBidding002.vdate", lineNo);
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-            message = etrCommonService.checkIsDate(rowData.get(1).toString(), "EtrBondFirstLBidding002.vdate", lineNo);
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-
-            //委托结束日
-            message = etrCommonService.checkIsBlank(rowData.get(2).toString(), "EtrBondFirstLBidding002.mdate", lineNo);
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-            message = etrCommonService.checkIsDate(rowData.get(2).toString(), "EtrBondFirstLBidding002.mdate", lineNo);
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-
-            // 委托开始、终止日是否是平台日check
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
-
-            //组合代码
-            message = etrCommonService.checkIsBlank(rowData.get(3).toString(), "EtrBondFirstLBidding002.portfolioId", lineNo);
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-            message = etrCommonService.checkPortfolioIdExist(rowData.get(3).toString(),"EtrBondFirstLBidding002.portfolioId", lineNo);
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-
-            //资产代码
-            message = etrCommonService.checkIsBlank(rowData.get(4).toString(), "EtrBondFirstLBidding002.finprodId", lineNo);
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-            if (StringUtil.isNotEmpty(rowData.get(4).toString())) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("search", rowData.get(4).toString());
-                map.put("page", 1);
-                map.put("length", 20);
-                Page<SelectOptionDto> finprodIds = getfinprodIdForAdd(map);
-                if (finprodIds.getRoot().isEmpty()) {
-                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0017",getMessage("EtrBondFirstLBidding002.finprodId"), lineNo));
-                }
-            }
-
-            //缴款方式
-            message = etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrBondFirstLBidding002.payType", lineNo);
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-
-            //投资目的
-            message = etrCommonService.checkIsBlank(rowData.get(6).toString(), "EtrBondFirstLBidding002.invAim", lineNo);
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-
-            //交易对手
-            message = etrCommonService.checkIsBlank(rowData.get(7).toString(), "EtrInvestPersonInfo002.counterId", lineNo);
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-            if (StringUtil.isNotBlank(rowData.get(7).toString())) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("search", rowData.get(7).toString());
-                map.put("page", 1);
-                map.put("length", 20);
-                map.put("counterType", DictCodeListExt1.交易对手类型_市场机构.getValue());
-                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME +
-                        "/common/EntrustCommonPersonSelect/getCounterId", map, SelectOptionDto.class);
-                if (selectOptionDtoPage.getRoot().isEmpty()) {
-                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage("ETR_E_0017",getMessage("EtrInvestPersonInfo002.counterId"), lineNo));
-                }
-            }
-            //投标标位
-            confirmMsg = checkBidPrice(confirmMsg, lineNo, rowData.get(8).toString(), "EtrBondFirstLBidding001.bidPrice");
-            //投标券面总额
-            confirmMsg = checkIsDouble(confirmMsg, lineNo, rowData.get(9).toString(), "EtrBondFirstLBidding001.bidPriceTotal");
-            //最低成交金额
-            confirmMsg = checkIsDouble(confirmMsg, lineNo, rowData.get(10).toString(), "EtrBondFirstLBidding003.dealAmount");
-//            主承销商
-            message = etrCommonService.checkIsBlank(rowData.get(11).toString(), "EtrBondFirstLBidding002.mainConsignee", lineNo);
-            confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
-            if (StringUtil.isBlank(confirmMsg)) {
-                jsonArrays.add(rowData);
-            } else {
-                totalMsg = etrCommonService.StringAddByBr(totalMsg, confirmMsg);
-                errorNum++;
-            }
-        }
-        totalMsg = etrCommonService.StringAddByBr(totalMsg, getMessage("ETR_C_0001",String.valueOf(errorNum)));
-        Map<String, Object> resultMap = new HashMap<>();
-        if (StringUtil.isNotBlank(totalMsg)) {
-
-            resultMap.put("confirmMsg", totalMsg);
-        }
-        resultMap.put("correctData", JSONArray.toJSONString(jsonArrays));
-        AjaxResult wr = new AjaxResult();
-        wr.setData(resultMap);
-        return wr;
     }
 
     /**
@@ -711,9 +732,9 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
      * @return
      */
     public Integer checkIsBidClose(EtrBondFirstLBiddingDto dto){
-       return restTemplate.postForObject(
+        return restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/checkIsBidClose", dto,
-               Integer.class);
+                Integer.class);
     }
     /**
      * 获取新建界面的主承销商下拉框

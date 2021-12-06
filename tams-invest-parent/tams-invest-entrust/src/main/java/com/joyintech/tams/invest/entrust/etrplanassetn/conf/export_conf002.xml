@@ -8,8 +8,8 @@
             <!-- add by zhangpuyu 2019/7/29 start-->
             <Cell order="4" name="资产类型">busAssetType1</Cell>
             <Cell order="5" name="资产类型">busAssetType10</Cell>
-<!--             <Cell order="6" name="资产类型">busAssetType11</Cell>
- -->            <!-- add by zhangpuyu 2019/7/29 end-->
+            <!--             <Cell order="6" name="资产类型">busAssetType11</Cell>
+             -->            <!-- add by zhangpuyu 2019/7/29 end-->
             <Cell order="6" name="资产代码">finprodMarketId</Cell>
             <Cell order="7" name="资产名称">finprodName</Cell>
             <Cell order="8" name="交易方向">busPs</Cell>
@@ -19,6 +19,7 @@
             <Cell order="12" name="指令金额">entrustAmt</Cell>
             <Cell order="13" name="已完成额度">finishAmt</Cell>
             <Cell order="14" name="交易完成度">transactioncom</Cell>
+            <Cell order="15" name="当前处理人">nextUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

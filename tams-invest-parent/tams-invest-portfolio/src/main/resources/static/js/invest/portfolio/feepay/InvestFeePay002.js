@@ -553,9 +553,15 @@ $(function() {
                 for ( var key1 in currentCalcConditionObj[key]) {
                     if (typeof currentCalcConditionObj[key][key1] != "object"
                         && currentCalcConditionObj[key][key1] != calcConditionObjBackUp[key][key1]) {
-                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
-                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-                            [labelText, "生成划款指令"]));
+                    	if(key1=='finprodType2'){
+							var labelText = JoyinUtil.getLabel("InvestFeePay002.feeType");
+							Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+								[labelText, "生成划款指令"]));
+						}else{
+							var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
+							Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+								[labelText, "生成划款指令"]));
+						}
                         return true;
                     }
                 }
@@ -566,9 +572,15 @@ $(function() {
                     var backupDealObj = calcConditionObjBackUp[key].deal;
                     if (typeof currentDealObj[key1] != "object"
                         && currentDealObj[key1] != backupDealObj[key1]) {
-                        var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
-                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-                            [labelText, "生成划款指令"]));
+						if(key1=='finprodType2'){
+							var labelText = JoyinUtil.getLabel("InvestFeePay002.feeType");
+							Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+								[labelText, "生成划款指令"]));
+						}else{
+							var labelText = JoyinUtil.getLabel("BussTrdTransferOrder." + key1);
+							Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+								[labelText, "生成划款指令"]));
+						}
                         return true;
                     }
                 }

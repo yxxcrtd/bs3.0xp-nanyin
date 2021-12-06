@@ -92,7 +92,7 @@ public class EtrSecLendValidator implements EtrCommonValidator {
             // 交易方向为融出时，显示可用持仓，券面总额不可大于可用持仓；
             if (StringUtil.equals(DictCodeList.回购拆借方向_融出.getValue(), dto.getBusiPs())) {
                 if (totalAmt != null && objectAvailablePosition != null
-                    && totalAmt.compareTo(objectAvailablePosition.multiply(new BigDecimal(100))) > 0) {
+                    && totalAmt.compareTo(objectAvailablePosition) > 0) {
                         errorList.add(new ValidMessage("totalAmt",
                             getMessage("BUSS_COM_E_0003",
                                 getMessage("EtrSecLend.totalAmt"),

@@ -601,7 +601,7 @@
         $("#CfetsBondDealQuotedPriceMuti002_finprodId").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceMuti002_ps").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceMuti002_settleType").val("").trigger("change");
-        $("#CfetsBondDealQuotedPriceMuti002_settleSpreed").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_settleSpreed").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceMuti002_tradeDate").val(sysDate).trigger("change");
         $("#CfetsBondDealQuotedPriceMuti002_settleDate").val(sysDate).trigger("change");
         $("#CfetsBondDealQuotedPriceMuti002_settleMethod").val("").trigger("change");

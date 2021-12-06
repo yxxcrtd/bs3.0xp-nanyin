@@ -121,6 +121,11 @@ public class ExchangeTransMatchService extends BaseService {
      * @return
      */
     public Page<SelectOptionDto> getBusiCode(Map<String, Object> map, int page, int length) {
+        map.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        map.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        map.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        map.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+        map.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getBusiCode(map));
     }
 

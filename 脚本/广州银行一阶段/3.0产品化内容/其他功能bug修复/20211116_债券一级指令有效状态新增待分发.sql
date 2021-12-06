@@ -1,0 +1,3 @@
+delete from sys_page_dictlist t where t.page_id='EtrBondFirstLBiddingIb001' and t.dict_id='ENTRUST_STATUS' and t.dict_item_val ='09';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('EtrBondFirstLBiddingIb001', '999999', 'ENTRUST_STATUS', '09', '', '', 'system', '', sysdate, 'system', sysdate, '');

@@ -1,0 +1,6 @@
+-- ----------------------------
+-- Table structure for SETTLE_TRANS_DATA
+-- ----------------------------
+ALTER TABLE SETTLE_TRANS_DATA DROP COLUMN IS_MODIFY;
+ALTER TABLE SETTLE_TRANS_DATA ADD IS_MODIFY VARCHAR2(10 BYTE);
+COMMENT ON COLUMN SETTLE_TRANS_DATA.IS_MODIFY is '是否人工修改';

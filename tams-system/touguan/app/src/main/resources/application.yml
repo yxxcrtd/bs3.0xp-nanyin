@@ -161,6 +161,7 @@ jixu:
 shiro:
   sessionId: JSESSIONID
   casClientName: tams
+  #loginUrl: http://192.168.90.76:1667/joyinsso/login.html#/login
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
     /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
     /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
@@ -190,7 +191,7 @@ application:
     isExceptionWhenSendTimeout: 01  #中债报送文件发送超时的时候，是否抛出异常
   cache:
     file: classpath:ehcache_app.xml
-  remindPage: invest/remindMain  
+  remindPage: invest/remindMain
   menuType: hover
   sysCode: TAMS
   menuPosition: top  #菜单默认位置（设置主题后失效），支持left和top两种
@@ -222,39 +223,39 @@ application:
     lastChromeVersion: 73
     customerName: 某某银行
   runOptimize: Y  #启动优化开关
-#  不使用服务注册中心,tams和tams-service-container分开部署的方式
-#  loadbalance: false
-#  micorservice:
-#    contextPath:
-#      single: true
-#      commonService: http://127.0.0.1:8114
-#      basicDataService: http://127.0.0.1:8114
-#      documentService: http://127.0.0.1:8114
-#      entrustService: http://127.0.0.1:8114
-#      periodService: http://127.0.0.1:8114
-#      assetService: http://127.0.0.1:8114
-#      portfolioService: http://127.0.0.1:8114
-#      productService: http://127.0.0.1:8114
-#      quotaService: http://127.0.0.1:8114
-#      reportService: http://127.0.0.1:8114
-#      riskService: http://127.0.0.1:8114
-#      riskRdsService: http://127.0.0.1:8114
-#      riskInfService: http://127.0.0.1:8114
-#      settleService: http://127.0.0.1:8114
-#      tradeService: http://127.0.0.1:8114
-#      disclosureService: http://127.0.0.1:8114
-#      valuationService: http://127.0.0.1:8114
-#      chbService: http://127.0.0.1:8114
-#      chb3Service: http://127.0.0.1:8114
-#      svrcomService: http://127.0.0.1:8114
-#      pbcService: http://127.0.0.1:8114
-#      channelService: http://127.0.0.1:8114 
-#      customerInterfService: http://127.0.0.1:8114
-#      tamsServer: http://127.0.0.1:8114
-#      investInterfService: http://127.0.0.1:8114
-#      adapterService: http://127.0.0.1:8114
+  #  不使用服务注册中心,tams和tams-service-container分开部署的方式
+  #  loadbalance: false
+  #  micorservice:
+  #    contextPath:
+  #      single: true
+  #      commonService: http://127.0.0.1:8114
+  #      basicDataService: http://127.0.0.1:8114
+  #      documentService: http://127.0.0.1:8114
+  #      entrustService: http://127.0.0.1:8114
+  #      periodService: http://127.0.0.1:8114
+  #      assetService: http://127.0.0.1:8114
+  #      portfolioService: http://127.0.0.1:8114
+  #      productService: http://127.0.0.1:8114
+  #      quotaService: http://127.0.0.1:8114
+  #      reportService: http://127.0.0.1:8114
+  #      riskService: http://127.0.0.1:8114
+  #      riskRdsService: http://127.0.0.1:8114
+  #      riskInfService: http://127.0.0.1:8114
+  #      settleService: http://127.0.0.1:8114
+  #      tradeService: http://127.0.0.1:8114
+  #      disclosureService: http://127.0.0.1:8114
+  #      valuationService: http://127.0.0.1:8114
+  #      chbService: http://127.0.0.1:8114
+  #      chb3Service: http://127.0.0.1:8114
+  #      svrcomService: http://127.0.0.1:8114
+  #      pbcService: http://127.0.0.1:8114
+  #      channelService: http://127.0.0.1:8114
+  #      customerInterfService: http://127.0.0.1:8114
+  #      tamsServer: http://127.0.0.1:8114
+  #      investInterfService: http://127.0.0.1:8114
+  #      adapterService: http://127.0.0.1:8114
 
-#  不使用服务注册中心,tams和tams-service-container整体部署的方式
+  #  不使用服务注册中心,tams和tams-service-container整体部署的方式
   loadbalance: false
   micorservice:
     contextPath:
@@ -330,32 +331,32 @@ spring:
   profiles: allinone
   thymeleaf:
     cache: false
-#   redis:   ##单节点配置
-#     database: 0
-#     host: 192.168.70.246
-#     port: 6379
-#     timeout: 20000
+  #   redis:   ##单节点配置
+  #     database: 0
+  #     host: 192.168.70.246
+  #     port: 6379
+  #     timeout: 20000
   redis:
     cluster:
-      nodes: 192.168.70.246:6379,192.168.70.246:6380,192.168.70.246:6381,192.168.70.246:6382,192.168.70.246:6383,192.168.70.246:6384
+      nodes: 192.168.70.97:6379,192.168.70.97:6380,192.168.70.97:6381,192.168.70.97:6382,192.168.70.97:6383,192.168.70.97:6384
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
-    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
+    username: GZBANK_TEST
+    password: GZBANK_TEST
+    reportSqlldrDatabaseName: 192.168.70.88:1521/orcl
   rabbitmq:
     # 需求环境使用mq配置如下
-    addresses: 192.168.60.111:5672
+    addresses: 192.168.70.97:5672
     username: rbmq
     password: rbmq
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30INIT_XUQIU
-  sqldirpassword: BS30INIT_XUQIU
+  sqldiruserName: GZBANK_TEST
+  sqldirpassword: GZBANK_TEST
 shiro:
   ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
   #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
@@ -370,31 +371,31 @@ shiro:
     /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
     /TrdExchangeWorkflow/**,/invest/trade/bond/TrdBondInvestTrade002/**,/invest/trade/trdrepotrade/TrdRepoTrade002/**,/invest/trade/forwex/TrdForwexInvestTrade002/**,/invest/trade/api/**,/commonPosition/**,
     /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,
-    /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo,/settleDownLink/**,/reconInterf/**
+    /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo,/settleDownLink/**,/reconInterf/**,/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/**
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.90.5:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.88:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 log:
   path: /home/tams/logs/tams/touguan
   level: debug
@@ -410,7 +411,7 @@ xinping:
     urlPort: 9191
 tx-lcn:
   client:
-    managerAddress: 192.168.70.246:8070
+    managerAddress: 192.168.70.97:8070
 
 # 场内交易使用配置
 netty:
@@ -455,6 +456,18 @@ trade:
     risk:
       alive: 5000
       capacity: 128
+agent:
+  terminal:
+    host: http://192.168.90.208:1668/dsp
+    url: /datarouter/http/json/callTrigger
+  query:
+    interval: 100000
+    count: 2
+  keep:
+    fixRate: 300000
+  cache:
+    path: cache
+    clean: 0 0 16 ? * MON-FRI
 
 position:
   flag: false #是否控制账户持仓，true控制，false不控制
@@ -478,8 +491,8 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
   rabbitmq:
     # 需求环境使用mq配置如下
@@ -489,8 +502,8 @@ spring:
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30INIT_XUQIU
-  sqldirpassword: BS30INIT_XUQIU
+  sqldiruserName: GZBANK_TEST
+  sqldirpassword: GZBANK_TEST
 shiro:
   ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
   #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
@@ -510,26 +523,26 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 log:
   path: /home/tams/logs/tams/touguan
   level: debug
@@ -590,16 +603,7 @@ trade:
     risk:
       alive: 5000
       capacity: 128
-quote:
-  flag: true #是否使用接口平台行情，true 是，false 否
-  ws:
-    host: ws://192.168.10.191:16667/dsp
-    url: /exchange
-  http:
-    host: http://192.168.10.191:1669/dsp
-    url: /datarouter/http/json/callTrigger
-    gpCode: GZYH
-    triggerCode: GZ_HQ_SH
+
 position:
   flag: false #是否控制账户持仓，true控制，false不控制
 
@@ -623,8 +627,8 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
   rabbitmq:
     # 需求环境使用mq配置如下
@@ -634,8 +638,8 @@ spring:
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS30INIT_XUQIU
-  sqldirpassword: BS30INIT_XUQIU
+  sqldiruserName: GZBANK_TEST
+  sqldirpassword: GZBANK_TEST
 shiro:
   ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
   #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
@@ -655,26 +659,26 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS30INIT_XUQIU
-    password: BS30INIT_XUQIU
+    username: GZBANK_TEST
+    password: GZBANK_TEST
 log:
   path: /home/tams/logs/tams/touguan
   level: debug

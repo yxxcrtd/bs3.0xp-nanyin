@@ -119,18 +119,36 @@ public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEn
      * @return
      */
     protected void generateSettleTransData(List<SettleTransDataDto> settleTransDataList) {
+        // modify by etliu 20211204 start
+        // GZYHTZJY-711: 自动匹配应优先处理能够匹配到上行委托的数据，再根据业务字段匹配指令
+        List<SettleTransDataDto> tempSettleTransDataList = new ArrayList<>();
+        tempSettleTransDataList.addAll(settleTransDataList.stream().filter(
+                x -> StringUtil.isNotBlank(x.getEntrustId())).collect(Collectors.toList()));
+        tempSettleTransDataList.addAll(settleTransDataList.stream().filter(
+                x -> StringUtil.isBlank(x.getEntrustId())).collect(Collectors.toList()));
+        // modify by etliu 20211204 end
+
         List<ExchangeTransMatchCommonDto>  exchangeTransMatchCommons = new ArrayList<>();
         List<EtrEntrustDto> etrEntrustDtos = stlDataGatherMapper.listEtrEntrust(getFinprodType(),this.getBatchExecuteInfo().getExecuteDate());
         Map<String, List<EtrEntrustDto>> etrEntrustMap = etrEntrustDtos.stream().collect(Collectors.groupingBy(EtrEntrustDto::getBusiKey, Collectors.toList()));
         if(null!=etrEntrustDtos&&!StringUtil.isEmptyList(etrEntrustDtos)){
-            for (SettleTransDataDto settleTransDataDto : settleTransDataList) {
+            // modify by etliu 20211204 start
+            // GZYHTZJY-711: 自动匹配应优先处理能够匹配到上行委托的数据，再根据业务字段匹配指令
+//            for (SettleTransDataDto settleTransDataDto : settleTransDataList) {
+            for (SettleTransDataDto settleTransDataDto : tempSettleTransDataList) {
+            // modify by etliu 20211204 end
                 ExchangeTransMatchCommonDto exchangeTransMatchCommonDto = new ExchangeTransMatchCommonDto();
                 BeanUtil.copyPropertiesIgnoreNull(exchangeTransMatchCommonDto,settleTransDataDto);
                 exchangeTransMatchCommonDto.setMatchType("0");
+
+                exchangeTransMatchCommonDto.setRemainNum(settleTransDataDto.getShareAmt());
+                exchangeTransMatchCommonDto.setRemainAmount(settleTransDataDto.getFpriceAmt());
+                exchangeTransMatchCommonDto.setSeqId(settleTransDataDto.getTradeId());
+
                 if(StringUtil.isNotEmpty(settleTransDataDto.getEntrustId())){
                     exchangeTransMatchCommonDto.setEntrustIdList(Arrays.asList(etrEntrustDtos.get(0).getEntrustId()));
                 }else{
-                    String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(), DateUtil.format(settleTransDataDto.getTradeDate()),settleTransDataDto.getTradePlat()),"_");
+                    String busiKey = StringUtil.joinString(Arrays.asList(settleTransDataDto.getSecAcctId(),settleTransDataDto.getAcctNo(),settleTransDataDto.getFinprodId(), DateUtil.format(settleTransDataDto.getTradeDate()),settleTransDataDto.getTradePlat(),settleTransDataDto.getPs()),"_");
                     if(etrEntrustMap.containsKey(busiKey)){
                         List<EtrEntrustDto> etrEntrusts = etrEntrustMap.get(busiKey);
                         if(null!=etrEntrusts&&!StringUtil.isEmptyList(etrEntrusts)){

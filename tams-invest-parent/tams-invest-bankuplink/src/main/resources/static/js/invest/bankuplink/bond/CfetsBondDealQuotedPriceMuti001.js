@@ -29,7 +29,7 @@
             else{
                 $('#CfetsBondDealQuotedPriceMuti001_div_exerYield').toggle(false);
             }
-            if (data.assetType1 == assetTypeOne_abs){
+            if (data.paassetType1 == assetTypeOne_abs){
                 $('#CfetsBondDealQuotedPriceMuti001_div_abs1').toggle(true);
                 $('#CfetsBondDealQuotedPriceMuti001_div_abs2').toggle(true);
 
@@ -281,7 +281,8 @@
         }
         else{
             if (!quotaPageModel || (quotaPageModel != 'dialogueResponse')) {
-                $('#CfetsBondDealQuotedPriceMuti001_settleSpreed').val('01').trigger('change').attr('disabled', false);
+                //$('#CfetsBondDealQuotedPriceMuti001_settleSpreed').val('01').trigger('change').attr('disabled', false);
+                $('#CfetsBondDealQuotedPriceMuti001_settleSpreed').trigger('change').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_settleDate').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_ps').attr('disabled', false);

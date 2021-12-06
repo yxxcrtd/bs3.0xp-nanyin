@@ -10,6 +10,7 @@
         END matchStatus,
         ROUND(F.MARCH_QTY / A.SHARE_AMT,4) matchProgress,
         A.TRADE_MARKET tradeMarket,
+        A.TRADE_MARKET_MODE tradeMarketMode,
         A.APPLY_TRADE_ID applyTradeId,
         A.SEC_ACCT_ID secAcctId,
         C.SEC_ACCT_NAME secAcctName,
@@ -34,6 +35,7 @@
         ifnull(A.FPRICE_AMT,0) - ifnull(F.MARCH_AMT,0) remainAmount,
         A.UNIT_FPRICE unitFprice,
         A.UNIT_CPRICE unitCprice,
+        A.UNIT_INT unitInt,
         A.CCY ccy,
         A.TRADE_DATE dealDate,
         A.TRADE_DATE tradeDate,
@@ -67,10 +69,10 @@
                 AND A.SEC_ACCT_ID = #{secAcctNo}
             </if>
             <if test="applyNoList!=null and applyNoList.size()>0 ">
-                AND (aa.APPLY_TRADE_ID IN
+                AND (A.APPLY_TRADE_ID IN
                 <foreach item="item" index="index" collection="applyNoList" open="(" close=")" separator=",">
                     <if test="(index % 998) == 0">
-                        null) or aa.APPLY_TRADE_ID in (
+                        null) or A.APPLY_TRADE_ID in (
                     </if>
                     #{item}
                 </foreach>)
@@ -361,10 +363,10 @@
                 AND C.PS = #{ps}
             </if>
             <if test="tradeDateBegin != null and tradeDateBegin != ''">
-                <![CDATA[ AND A.TRADE_DATE  >= STR_TO_DATE(#{tradeDateBegin},'%Y-%m-%d') ]]>
+                <![CDATA[ AND C.TRADE_DATE  >= STR_TO_DATE(#{tradeDateBegin},'%Y-%m-%d') ]]>
             </if>
             <if test="tradeDateEnd != null and tradeDateEnd != ''">
-                <![CDATA[ AND A.TRADE_DATE  <= STR_TO_DATE(#{tradeDateEnd},'%Y-%m-%d') ]]>
+                <![CDATA[ AND C.TRADE_DATE  <= STR_TO_DATE(#{tradeDateEnd},'%Y-%m-%d') ]]>
             </if>
             <if test="finprodId!=null and finprodId!='' ">
                 AND E.FINPROD_MARKET_ID = #{finprodId}

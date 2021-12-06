@@ -23,7 +23,7 @@
                              <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
                                  <label class="layui-form-label form-lable" data-th-text="资金账户">资金账户</label>
                                  <div class="layui-input-inline input-inline">
-                                     <select type="text" id="busiAcctNo" name="busiAcctNo"
+                                     <select type="text" id="busiAcctNoTotal" name="busiAcctNo"
                                              class="layui-input form-input input-select" placeholder="请输入内容"
                                              data-th-placeholder="#{SysCommon.placeholder}"
                                              data-th-data-url="@{/invest/basicdata/dayendaccount/DayEndAccount001/queryBusiAcctNo}"
@@ -60,8 +60,16 @@
                                  <div class="layui-input-inline input-inline">
                                      <select type="text" id="accountStatusTotal" name="accountStatusTotal"
                                              class="layui-input form-input input-select" placeholder="请输入内容"
-                                             data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result='${ACCOUNT_STATUS}'
+                                             data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result='${ACCOUNT_STATUS1}'
                                              allowClear="true" formatoption="true" data-th-initValue="${entity?.accountStatus}"></select>
+                                 </div>
+                             </div>
+                             <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
+                                 <label class="layui-form-label form-label-wrap">证券账户账号</label>
+                                 <div class="layui-input-inline input-inline">
+                                     <select type="text" id="secAcctId" name="secAcctId" allowClear="true" formatOption="false"
+                                             class="layui-input form-input input-select" th:placeholder="#{SysCommon.placeholder}"
+                                             data-th-data-url="@{/invest/basicdata/dayendaccount/DayEndAccount001/selectSecAcctId}"></select>
                                  </div>
                              </div>
                              <div style="float: right;margin-right: -68px;margin-bottom: 5px;">
@@ -86,11 +94,10 @@
                              <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
                                  <label class="layui-form-label form-lable" data-th-text="资金账户">资金账户</label>
                                  <div class="layui-input-inline input-inline">
-                                     <select type="text" id="portfolioId" name="portfolioId"
+                                     <select type="text" id="busiAcctNo" name="busiAcctNo"
                                              class="layui-input form-input input-select" placeholder="请输入内容"
                                              data-th-placeholder="#{SysCommon.placeholder}"
-                                             data-th-data-url="@{/business/common/CommonSelect/selectPortfolioId}"
-                                             data-th-value="${entity?.portfolioId}"
+                                             data-th-data-url="@{/invest/basicdata/dayendaccount/DayEndAccount001/queryBusiAcctNo}"
                                              multiple="true" >
                                      </select>
                                  </div>

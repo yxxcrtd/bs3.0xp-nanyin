@@ -1005,10 +1005,11 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         dto.setSettleSpeed(0L);
         // 交易市场
         dto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
-        // 投资目的
-        dto.setInvAim(AllTradeCommonUtil.getInvAim(infContractDetailfile.getPortfolioId()));
-        // 场内指令
+
         EtrEntrust etrEntrust = entrustMsgbyMQMapper.queryEtrEntrust(infContractDetailfile.getEntrustId());
+        // 投资目的
+        dto.setInvAim(StringUtil.isNotEmpty(etrEntrust.getInvAim())?etrEntrust.getInvAim():AllTradeCommonUtil.getInvAim(infContractDetailfile.getPortfolioId()));
+        // 场内指令
         TrdBondInvestTradeDto inputDto = new TrdBondInvestTradeDto();
         inputDto.setSettleDate(dto.getSettleDate());
         inputDto.setFinprodId(etrEntrust.getFinprodId());

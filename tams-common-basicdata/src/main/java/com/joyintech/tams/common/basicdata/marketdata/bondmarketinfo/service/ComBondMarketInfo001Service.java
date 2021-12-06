@@ -253,6 +253,18 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
             List<String> list = dataList.get(i);
             ComBondMarketInfo001Dto = new ComBondMarketInfo001Dto();
             if (StringUtil.isNotEmpty(list.get(0))) {
+                //基金标的是否存在
+                Map<String, Object> params=new HashMap<>();
+                params.put("finprodType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                params.put("initValue",list.get(0));
+                try {
+                    Page<SelectOptionDto> page=getFinProductList(params);
+                    if(page.getTotal()==0){
+                        continue;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 /** modify by yanya on 20210329 去除截取前四位字符的逻辑**/
                 ComBondMarketInfo001Dto.setSecId(list.get(0).trim().substring(4));
                 //ComBondMarketInfo001Dto.setSecId(list.get(0).trim());
@@ -520,31 +532,33 @@ public class ComBondMarketInfo001Service  extends CommonExportService<ComBondMar
         throws ParseException {
     	List<ComBondMarketInfo001Dto> equityList = converToBean(dataList,null);
     	List<Integer> duplicateData=new ArrayList<Integer>();
-      for (int i = 0; i < dataList.size(); i++ ) {
-      	ComBondMarketInfo001Dto ComBondMarketInfo001Dto = equityList.get(i);
-      	if(ComBondMarketInfo001Dto.getSecId() == null
-        		|| ComBondMarketInfo001Dto.getValueDate() == null
-        		|| duplicateData.contains(i)){
-      		continue;
+    	if(!CollectionUtils.isEmpty(equityList)) {
+            for (int i = 0; i < dataList.size(); i++) {
+                ComBondMarketInfo001Dto ComBondMarketInfo001Dto = equityList.get(i);
+                if (ComBondMarketInfo001Dto.getSecId() == null
+                        || ComBondMarketInfo001Dto.getValueDate() == null
+                        || duplicateData.contains(i)) {
+                    continue;
+                }
+                // 检查表内数据是否有主键重复
+                for (int k = i + 1; k < dataList.size(); k++) {
+                    if (equityList.get(k).getSecId() == null
+                            || equityList.get(k).getValueDate() == null) {
+                        continue;
+                    }
+                    if (equityList.get(k).getSecId().equals(
+                            ComBondMarketInfo001Dto.getSecId())
+                            && equityList.get(k).getValueDate().equals(ComBondMarketInfo001Dto.getValueDate())) {
+                        if (!duplicateData.contains(k)) {
+                            duplicateData.add(k);
+                        }
+                    }
+                }
+            }
         }
-          // 检查表内数据是否有主键重复
-          for (int k = i + 1; k < dataList.size(); k++ ) {
-        	  if(equityList.get(k).getSecId() == null
-              		|| equityList.get(k).getValueDate() == null){
-        		  continue;
-              }
-              if (equityList.get(k).getSecId().equals(
-              		ComBondMarketInfo001Dto.getSecId())
-                      && equityList.get(k).getValueDate().equals(ComBondMarketInfo001Dto.getValueDate())) {
-              	if(!duplicateData.contains(k)){
-              		duplicateData.add(k);
-              	}
-              }
-          }
-      }
-      if(duplicateData.isEmpty()){
-    	  duplicateData.add(-1);
-      }
+//      if(duplicateData.isEmpty()){
+//    	  duplicateData.add(-1);
+//      }
       return duplicateData;
     }
 }

@@ -38,8 +38,8 @@
 				and bo.is_win = bobp.is_win
 				and bobp.WIN_PRICE is not null
 				and wtp.YIELD is not null
-				  and wtfpdt.TOTLE_TRADE_ID is not null
-			  	and bobp.TRADE_ID is not null
+				and wtfpdt.TOTLE_TRADE_ID is not null
+				and bobp.TRADE_ID is not null
 				<if test="portfolioIdList != null and portfolioIdList.size() >0">
 					AND  ee.PORTFOLIO_ID IN
 					<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >

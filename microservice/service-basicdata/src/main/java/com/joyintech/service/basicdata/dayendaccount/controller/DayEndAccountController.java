@@ -60,13 +60,19 @@ public class DayEndAccountController {
     }
 
     @RequestMapping("qryAccount")
-    public AccountResult qryAccount(@RequestBody Map<String, Object> param) {
-        return dayEndAccountService.qryAccount(param);
+    public AccountResult qryAccount(@RequestBody List<DayEndAccountDto> dtoList) {
+        return dayEndAccountService.qryAccount(dtoList);
     }
     @RequestMapping("getReconDealInfo")
     public DayEndAccount002Dto getReconDealInfo(@RequestBody Map<String, Object> param) {
         return dayEndAccountService.getReconDealInfo(param);
     }
+
+    @RequestMapping("getDealDetailInfo")
+    public DayEndAccount002Dto getDealDetailInfo(@RequestBody Map<String, Object> param) {
+        return dayEndAccountService.getDealDetailInfo(param);
+    }
+
     /**
      *
      * 工作流完成操作
@@ -102,5 +108,12 @@ public class DayEndAccountController {
                                                 @PathVariable("page") int page,
                                                 @PathVariable("length") int length) throws Exception {
         return dayEndAccountService.selectPage(page, length, param);
+    }
+
+    @RequestMapping("selectSecAcctId/{page}/{length}")
+    public Page<SelectOptionDto> selectSecAcctId(@RequestBody Map<String, Object> param,
+                                                 @PathVariable("page") int page,
+                                                 @PathVariable("length") int length) {
+        return dayEndAccountService.selectSecAcctId(page,length,param);
     }
 }

@@ -202,7 +202,7 @@
             else{
                 $('#CfetsBondDealQuotedPriceSingle001_div_exerYield').toggle(false);
             }
-            if (data.assetType1 == assetTypeOne_abs){
+            if (data.paassetType1 == assetTypeOne_abs){
                 $('#CfetsBondDealQuotedPriceSingle001_div_abs1').toggle(true);
                 $('#CfetsBondDealQuotedPriceSingle001_div_abs2').toggle(true);
 
@@ -618,9 +618,9 @@
             //修改无委托初始化增加不可修改项 add by yzg 20210123 end
             $('#CfetsBondDealQuotedPriceSingle001_btn_done').toggle(false);
             $('#CfetsBondDealQuotedPriceSingle001_btn_refuse').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(true);
 
         }
         // 含权、资产一级类型
@@ -882,6 +882,8 @@
         $("#CfetsBondDealQuotedPriceSingle001_settleSpreed").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_tradeDate").val(sysDate).trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_settleDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle001_tradeDate").val().trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle001_settleDate").val().trigger("change")
         $("#CfetsBondDealQuotedPriceSingle001_responseAmt").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_settleMethod").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_secManageAcctId").val("").trigger("change");

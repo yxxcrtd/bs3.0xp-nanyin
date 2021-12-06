@@ -202,7 +202,15 @@ $(function() {
          }
 
         var object = {selectedItem: selArr,finprodId:finprodId,finprodMarketId:finprodMarketId,finprodName:finprodName,calendarId:calendarId, operateType:operateType,ccy: $("#ccy").val()};
+        //添加流程中校验
+        Joyin.ajaxJson(basePath + 'invest/asset/common/FinStageManagement/isWorkFlowCheck', object, function(result){
+            if (result){
+                Joyin.error(JoyinUtil.getMessage("已存在流程中数据，无法重复提交"));
+                return;
+            }else{
                 finalSubmit(object);
+            }
+        });
            /* Joyin.ajaxJson(basePath + 'invest/asset/common/FinStageManagement/isTransInAssetCheck', object, function(result) {
                 if(result){
                     finalSubmit(object);

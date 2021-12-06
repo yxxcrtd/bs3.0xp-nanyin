@@ -40,6 +40,7 @@ import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommSer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -58,13 +59,13 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
      */
     @Autowired
     private PtlActivityPeriod001Mapper ptlActivityPeriod001Mapper;
-    
+
     /**
      * 注入业务主键生成工具类
      */
     @Autowired(required =false)
     public BaseGetBusinessId baseGetBussinessId;
-    
+
 
     /**
      * 分页查询
@@ -127,14 +128,14 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
      * @see
      * @since 1.0
      */
-    
+
     public List<SuggestDto> getBusiNo(Map<String,Object> map){
         map.put("busiType", DictCodeList.共通业务类型_活期结息.getValue());
         map.put("yesOrNo_Y", DictCodeList.是否_是.getValue());
         map.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
         return ptlActivityPeriod001Mapper.getBusiNo(map);
     }
-    
+
     /**
      * 获取账号下拉框
      * @param map 请求参数
@@ -145,9 +146,9 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
     public Page<SelectOptionDto> getBusiAcctNo(Map<String,Object> map,int page,int length){
         return this.queryForPageForSelectReturn(page,length,()->ptlActivityPeriod001Mapper.getBusiAcctNo(map));
     }
-    
+
     public Page<SelectOptionDto> getBankDep(Map<String,Object> map,int page,int length){
-        return this.queryForPageForSelectReturn(page,length,()->ptlActivityPeriod001Mapper.getBankDep(map)); 
+        return this.queryForPageForSelectReturn(page,length,()->ptlActivityPeriod001Mapper.getBankDep(map));
     }
     /**
      * 获取组合名称
@@ -191,7 +192,7 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
         map.put("YES_OR_NO_N",DictCodeList.是否_否.getValue());
         return ptlActivityPeriod001Mapper.getVDate(map);
     }
-    
+
     /**
      * 获取划款信息
      * @param tradeId 交易编号
@@ -202,7 +203,7 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
     public List<BussTrdTransferOrderDto> selectBussTrdTransferOrder(Map<String,Object> map){
         return ptlActivityPeriod001Mapper.selectBussTrdTransferOrder(map);
     }
-    
+
     /**
      * 划款金额默认为理论计提金额
      * @param paramMap 请求参数集合
@@ -214,13 +215,13 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
         String portfolioId = (String) paramMap.get("portfolioId");
         String busiAcctNo = (String) paramMap.get("busiAcctNo");
         String mdate = (String) paramMap.get("mdate");
-        
+
         if (StringUtil.isBlank(portfolioId)
             || StringUtil.isBlank(busiAcctNo)
             || StringUtil.isBlank(mdate)) {
             return null;
         }
-        
+
         Date lastDay = DateUtil.addDay(DateUtil.parse(mdate), -1);
         Map<String, Object> selectParamMap = new HashMap<String, Object>();
         selectParamMap.put("portfolioId", portfolioId);
@@ -234,7 +235,7 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
         BigDecimal initTradeAmt = ptlActivityPeriod001Mapper.initTradeAmt(selectParamMap) ;
         return initTradeAmt == null ? BigDecimal.ZERO:initTradeAmt;
     }
-    
+
    /**
     * 查询明细信息
     * <一句话功能简述>
@@ -251,22 +252,22 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
         map.put("BUSI_TYPE_PTL03", DictCodeList.共通业务类型_活期结息.getValue());
         map.put("FINPROD_TYPE2_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         map.put("FINPROD_TYPE2_F21", DictCodeListExt1.金融产品类型_投管用_资金账户.getValue());
-        return ptlActivityPeriod001Mapper.findDetailsPage(map); 
- 
+        return ptlActivityPeriod001Mapper.findDetailsPage(map);
+
     }
-    
+
     public List<PtlActivityPeriod001Dto> findDetailsByBusiNo(Map<String,Object> map) {
-        
+
         map.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         map.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
         map.put("BUSI_TYPE_PTL03", DictCodeList.共通业务类型_活期结息.getValue());
         map.put("FINPROD_TYPE2_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         map.put("FINPROD_TYPE2_F21", DictCodeListExt1.金融产品类型_投管用_资金账户.getValue());
         List<PtlActivityPeriod001Dto> list = ptlActivityPeriod001Mapper.findDetailsByBusiNo(map);
-        
+
         return list;
     }
-    
+
     /**
      * 子组合明细信息
      * <一句话功能简述>
@@ -278,9 +279,9 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
      */
     public List<PtlActivityPeriod001Dto> findChildrenPortfolioDetails(Map<String,Object> map) {
         return ptlActivityPeriod001Mapper.findChildrenPortfolioDetails(map);
-        
+
     }
-    
+
     /**
      * 获取报送登记编号
      * @param map 组合代码（市场代码）
@@ -291,7 +292,7 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
     public List<String> getProdRegistCode(Map<String,Object> map) {
         return ptlActivityPeriod001Mapper.getProdRegistCode(map);
     }
-    
+
     /**
      * 获取账号
      * @param map 请求参数
@@ -301,5 +302,42 @@ public class PtlActivityPeriod001Service extends BaseService<PtlActivityPeriod00
      */
     public String getRepAcctNo(Map<String,Object> map) {
         return ptlActivityPeriod001Mapper.getRepAcctNo(map);
+    }
+
+    /**
+     * 验证组合
+     * @param str 请求参数
+     * @return 账号
+     * @see
+     * @since 1.0
+     */
+    public List<PtlPortfolio> isZuHe(String str) {
+        return ptlActivityPeriod001Mapper.isZuHe(str);
+    }
+
+    /**
+     * 验证资金
+     * @param str 请求参数
+     * @return 账号
+     * @see
+     * @since 1.0
+     */
+    public List<StlCapacctInfo> isZiJing(String str) {
+        return ptlActivityPeriod001Mapper.isZiJing(str);
+    }
+
+    /**
+     * 验证资金账号与组合代码是否存在关联
+     * @param map 请求参数
+     * @return 账号
+     * @see
+     * @since 1.0
+     */
+    public String checkZuHeAndZiJing(Map<String,Object> map) {
+        List<PtlCapacctInfo> result = ptlActivityPeriod001Mapper.checkZuHeAndZiJing(map);
+        if(result.size()==0){
+            return "false";
+        }
+        return "true";
     }
 }

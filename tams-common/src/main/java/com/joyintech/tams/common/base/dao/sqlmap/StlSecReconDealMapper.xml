@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.StlSecReconDeal" >
         <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
         <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="INSTRUCTION_ID" property="instructionId" jdbcType="VARCHAR" />
         <result column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
         <result column="TRADE_NO" property="tradeNo" jdbcType="VARCHAR" />
         <result column="SALE_DEPID" property="saleDepid" jdbcType="VARCHAR" />
@@ -23,7 +24,6 @@
         <result column="SETTLEMEN_TYPE" property="settlemenType" jdbcType="VARCHAR" />
         <result column="ORDER_DATE" property="orderDate" jdbcType="DATE" />
         <result column="CCY" property="ccy" jdbcType="VARCHAR" />
-        <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
         <result column="TRADE_NUM" property="tradeNum" jdbcType="DECIMAL" />
         <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL" />
         <result column="HAPPEN_AMT" property="happenAmt" jdbcType="DECIMAL" />
@@ -41,7 +41,6 @@
         <result column="SETTLE_FEE" property="settleFee" jdbcType="DECIMAL" />
         <result column="TRADE_FEE" property="tradeFee" jdbcType="DECIMAL" />
         <result column="COMMISSION_AMT" property="commissionAmt" jdbcType="DECIMAL" />
-        <result column="OTHER_FEEAMT" property="otherFeeamt" jdbcType="DECIMAL" />
         <result column="TOTAL_TEEAMT" property="totalTeeamt" jdbcType="DECIMAL" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
@@ -50,17 +49,16 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        SEQ_NO SEQ_NO, TRADE_ID TRADE_ID, CUSTOMER_ID CUSTOMER_ID, TRADE_NO TRADE_NO, SALE_DEPID SALE_DEPID, 
-        SEAT_NUMBER SEAT_NUMBER, PORTFOLIO_ID PORTFOLIO_ID, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, 
-        MARKET_ID MARKET_ID, FINPROD_NAME FINPROD_NAME, TRADE_MARKET TRADE_MARKET, TRADE_PLAT TRADE_PLAT, 
-        TRADE_DATE TRADE_DATE, SETTLE_DATE SETTLE_DATE, ACCOUT ACCOUT, SEC_ACCT_ID SEC_ACCT_ID, 
-        PS PS, SETTLEMEN_TYPE SETTLEMEN_TYPE, ORDER_DATE ORDER_DATE, CCY CCY, TERM_TYPE TERM_TYPE, 
-        TRADE_NUM TRADE_NUM, TRADE_AMT TRADE_AMT, HAPPEN_AMT HAPPEN_AMT, PRICE PRICE, FULL_PRICE FULL_PRICE, 
-        UNIT UNIT, INT_AMT INT_AMT, HGDQJE HGDQJE, HGDQR HGDQR, STAMP_FEE STAMP_FEE, JSF_AMT JSF_AMT, 
-        GHF_AMT GHF_AMT, ZGF_AMT ZGF_AMT, SXF_AMT SXF_AMT, SETTLE_FEE SETTLE_FEE, TRADE_FEE TRADE_FEE, 
-        COMMISSION_AMT COMMISSION_AMT, OTHER_FEEAMT OTHER_FEEAMT, TOTAL_TEEAMT TOTAL_TEEAMT, 
-        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_TIME UPDATE_TIME, 
-        UPDATE_USER UPDATE_USER
+        SEQ_NO SEQ_NO, TRADE_ID TRADE_ID, INSTRUCTION_ID INSTRUCTION_ID, CUSTOMER_ID CUSTOMER_ID, 
+        TRADE_NO TRADE_NO, SALE_DEPID SALE_DEPID, SEAT_NUMBER SEAT_NUMBER, PORTFOLIO_ID PORTFOLIO_ID, 
+        FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, MARKET_ID MARKET_ID, FINPROD_NAME FINPROD_NAME, 
+        TRADE_MARKET TRADE_MARKET, TRADE_PLAT TRADE_PLAT, TRADE_DATE TRADE_DATE, SETTLE_DATE SETTLE_DATE, 
+        ACCOUT ACCOUT, SEC_ACCT_ID SEC_ACCT_ID, PS PS, SETTLEMEN_TYPE SETTLEMEN_TYPE, ORDER_DATE ORDER_DATE, 
+        CCY CCY, TRADE_NUM TRADE_NUM, TRADE_AMT TRADE_AMT, HAPPEN_AMT HAPPEN_AMT, PRICE PRICE, 
+        FULL_PRICE FULL_PRICE, UNIT UNIT, INT_AMT INT_AMT, HGDQJE HGDQJE, HGDQR HGDQR, STAMP_FEE STAMP_FEE, 
+        JSF_AMT JSF_AMT, GHF_AMT GHF_AMT, ZGF_AMT ZGF_AMT, SXF_AMT SXF_AMT, SETTLE_FEE SETTLE_FEE, 
+        TRADE_FEE TRADE_FEE, COMMISSION_AMT COMMISSION_AMT, TOTAL_TEEAMT TOTAL_TEEAMT, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_TIME UPDATE_TIME, UPDATE_USER UPDATE_USER
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -83,38 +81,38 @@
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDeal" >
-        insert into STL_SEC_RECON_DEAL (SEQ_NO, TRADE_ID, CUSTOMER_ID, 
-            TRADE_NO, SALE_DEPID, SEAT_NUMBER, 
-            PORTFOLIO_ID, FINPROD_ID, FINPROD_TYPE, 
-            MARKET_ID, FINPROD_NAME, TRADE_MARKET, 
-            TRADE_PLAT, TRADE_DATE, SETTLE_DATE, 
-            ACCOUT, SEC_ACCT_ID, PS, 
-            SETTLEMEN_TYPE, ORDER_DATE, CCY, 
-            TERM_TYPE, TRADE_NUM, TRADE_AMT, 
+        insert into STL_SEC_RECON_DEAL (SEQ_NO, TRADE_ID, INSTRUCTION_ID, 
+            CUSTOMER_ID, TRADE_NO, SALE_DEPID, 
+            SEAT_NUMBER, PORTFOLIO_ID, FINPROD_ID, 
+            FINPROD_TYPE, MARKET_ID, FINPROD_NAME, 
+            TRADE_MARKET, TRADE_PLAT, TRADE_DATE, 
+            SETTLE_DATE, ACCOUT, SEC_ACCT_ID, 
+            PS, SETTLEMEN_TYPE, ORDER_DATE, 
+            CCY, TRADE_NUM, TRADE_AMT, 
             HAPPEN_AMT, PRICE, FULL_PRICE, 
             UNIT, INT_AMT, HGDQJE, 
             HGDQR, STAMP_FEE, JSF_AMT, 
             GHF_AMT, ZGF_AMT, SXF_AMT, 
             SETTLE_FEE, TRADE_FEE, COMMISSION_AMT, 
-            OTHER_FEEAMT, TOTAL_TEEAMT, CREATE_USER, 
-            CREATE_DEPT, CREATE_TIME, UPDATE_TIME, 
-            UPDATE_USER)
-        values (#{seqNo,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, 
-            #{tradeNo,jdbcType=VARCHAR}, #{saleDepid,jdbcType=VARCHAR}, #{seatNumber,jdbcType=VARCHAR}, 
-            #{portfolioId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, 
-            #{marketId,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, 
-            #{tradePlat,jdbcType=VARCHAR}, #{tradeDate,jdbcType=DATE}, #{settleDate,jdbcType=DATE}, 
-            #{accout,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
-            #{settlemenType,jdbcType=VARCHAR}, #{orderDate,jdbcType=DATE}, #{ccy,jdbcType=VARCHAR}, 
-            #{termType,jdbcType=VARCHAR}, #{tradeNum,jdbcType=DECIMAL}, #{tradeAmt,jdbcType=DECIMAL}, 
+            TOTAL_TEEAMT, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_TIME, UPDATE_USER
+            )
+        values (#{seqNo,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, #{instructionId,jdbcType=VARCHAR}, 
+            #{customerId,jdbcType=VARCHAR}, #{tradeNo,jdbcType=VARCHAR}, #{saleDepid,jdbcType=VARCHAR}, 
+            #{seatNumber,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
+            #{finprodType,jdbcType=VARCHAR}, #{marketId,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, 
+            #{tradeMarket,jdbcType=VARCHAR}, #{tradePlat,jdbcType=VARCHAR}, #{tradeDate,jdbcType=DATE}, 
+            #{settleDate,jdbcType=DATE}, #{accout,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, 
+            #{ps,jdbcType=VARCHAR}, #{settlemenType,jdbcType=VARCHAR}, #{orderDate,jdbcType=DATE}, 
+            #{ccy,jdbcType=VARCHAR}, #{tradeNum,jdbcType=DECIMAL}, #{tradeAmt,jdbcType=DECIMAL}, 
             #{happenAmt,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{fullPrice,jdbcType=DECIMAL}, 
             #{unit,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{hgdqje,jdbcType=DECIMAL}, 
             #{hgdqr,jdbcType=DATE}, #{stampFee,jdbcType=DECIMAL}, #{jsfAmt,jdbcType=DECIMAL}, 
             #{ghfAmt,jdbcType=DECIMAL}, #{zgfAmt,jdbcType=DECIMAL}, #{sxfAmt,jdbcType=DECIMAL}, 
             #{settleFee,jdbcType=DECIMAL}, #{tradeFee,jdbcType=DECIMAL}, #{commissionAmt,jdbcType=DECIMAL}, 
-            #{otherFeeamt,jdbcType=DECIMAL}, #{totalTeeamt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
-            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR})
+            #{totalTeeamt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDeal" >
         insert into STL_SEC_RECON_DEAL
@@ -124,6 +122,9 @@
             </if>
             <if test="tradeId != null" >
                 TRADE_ID,
+            </if>
+            <if test="instructionId != null" >
+                INSTRUCTION_ID,
             </if>
             <if test="customerId != null" >
                 CUSTOMER_ID,
@@ -182,9 +183,6 @@
             <if test="ccy != null" >
                 CCY,
             </if>
-            <if test="termType != null" >
-                TERM_TYPE,
-            </if>
             <if test="tradeNum != null" >
                 TRADE_NUM,
             </if>
@@ -236,9 +234,6 @@
             <if test="commissionAmt != null" >
                 COMMISSION_AMT,
             </if>
-<!--            <if test="otherFeeamt != null" >-->
-<!--                OTHER_FEEAMT,-->
-<!--            </if>-->
             <if test="totalTeeamt != null" >
                 TOTAL_TEEAMT,
             </if>
@@ -264,6 +259,9 @@
             </if>
             <if test="tradeId != null" >
                 #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="instructionId != null" >
+                #{instructionId,jdbcType=VARCHAR},
             </if>
             <if test="customerId != null" >
                 #{customerId,jdbcType=VARCHAR},
@@ -322,9 +320,6 @@
             <if test="ccy != null" >
                 #{ccy,jdbcType=VARCHAR},
             </if>
-            <if test="termType != null" >
-                #{termType,jdbcType=VARCHAR},
-            </if>
             <if test="tradeNum != null" >
                 #{tradeNum,jdbcType=DECIMAL},
             </if>
@@ -376,9 +371,6 @@
             <if test="commissionAmt != null" >
                 #{commissionAmt,jdbcType=DECIMAL},
             </if>
-<!--            <if test="otherFeeamt != null" >-->
-<!--                #{otherFeeamt,jdbcType=DECIMAL},-->
-<!--            </if>-->
             <if test="totalTeeamt != null" >
                 #{totalTeeamt,jdbcType=DECIMAL},
             </if>
@@ -400,20 +392,20 @@
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDeal" >
-        insert into STL_SEC_RECON_DEAL(SEQ_NO, TRADE_ID, CUSTOMER_ID, TRADE_NO, SALE_DEPID, 
-        SEAT_NUMBER, PORTFOLIO_ID, FINPROD_ID, FINPROD_TYPE, MARKET_ID, FINPROD_NAME, TRADE_MARKET, 
-        TRADE_PLAT, TRADE_DATE, SETTLE_DATE, ACCOUT, SEC_ACCT_ID, PS, SETTLEMEN_TYPE, ORDER_DATE, 
-        CCY, TERM_TYPE, TRADE_NUM, TRADE_AMT, HAPPEN_AMT, PRICE, FULL_PRICE, UNIT, INT_AMT, 
+        insert into STL_SEC_RECON_DEAL(SEQ_NO, TRADE_ID, INSTRUCTION_ID, CUSTOMER_ID, TRADE_NO, 
+        SALE_DEPID, SEAT_NUMBER, PORTFOLIO_ID, FINPROD_ID, FINPROD_TYPE, MARKET_ID, FINPROD_NAME, 
+        TRADE_MARKET, TRADE_PLAT, TRADE_DATE, SETTLE_DATE, ACCOUT, SEC_ACCT_ID, PS, SETTLEMEN_TYPE, 
+        ORDER_DATE, CCY, TRADE_NUM, TRADE_AMT, HAPPEN_AMT, PRICE, FULL_PRICE, UNIT, INT_AMT, 
         HGDQJE, HGDQR, STAMP_FEE, JSF_AMT, GHF_AMT, ZGF_AMT, SXF_AMT, SETTLE_FEE, TRADE_FEE, 
-        COMMISSION_AMT, OTHER_FEEAMT, TOTAL_TEEAMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-        UPDATE_TIME, UPDATE_USER)
-        select SEQ_NO, TRADE_ID, CUSTOMER_ID, TRADE_NO, SALE_DEPID, 
-            SEAT_NUMBER, PORTFOLIO_ID, FINPROD_ID, FINPROD_TYPE, MARKET_ID, FINPROD_NAME, TRADE_MARKET, 
-            TRADE_PLAT, TRADE_DATE, SETTLE_DATE, ACCOUT, SEC_ACCT_ID, PS, SETTLEMEN_TYPE, ORDER_DATE, 
-            CCY, TERM_TYPE, TRADE_NUM, TRADE_AMT, HAPPEN_AMT, PRICE, FULL_PRICE, UNIT, INT_AMT, 
+        COMMISSION_AMT, TOTAL_TEEAMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_TIME, 
+        UPDATE_USER)
+        select SEQ_NO, TRADE_ID, INSTRUCTION_ID, CUSTOMER_ID, TRADE_NO, 
+            SALE_DEPID, SEAT_NUMBER, PORTFOLIO_ID, FINPROD_ID, FINPROD_TYPE, MARKET_ID, FINPROD_NAME, 
+            TRADE_MARKET, TRADE_PLAT, TRADE_DATE, SETTLE_DATE, ACCOUT, SEC_ACCT_ID, PS, SETTLEMEN_TYPE, 
+            ORDER_DATE, CCY, TRADE_NUM, TRADE_AMT, HAPPEN_AMT, PRICE, FULL_PRICE, UNIT, INT_AMT, 
             HGDQJE, HGDQR, STAMP_FEE, JSF_AMT, GHF_AMT, ZGF_AMT, SXF_AMT, SETTLE_FEE, TRADE_FEE, 
-            COMMISSION_AMT, OTHER_FEEAMT, TOTAL_TEEAMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER
+            COMMISSION_AMT, TOTAL_TEEAMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER
              from STL_SEC_RECON_DEAL
              where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </insert>
@@ -422,6 +414,9 @@
         <set >
             <if test="tradeId != null" >
                 TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="instructionId != null" >
+                INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR},
             </if>
             <if test="customerId != null" >
                 CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
@@ -480,9 +475,6 @@
             <if test="ccy != null" >
                 CCY = #{ccy,jdbcType=VARCHAR},
             </if>
-            <if test="termType != null" >
-                TERM_TYPE = #{termType,jdbcType=VARCHAR},
-            </if>
             <if test="tradeNum != null" >
                 TRADE_NUM = #{tradeNum,jdbcType=DECIMAL},
             </if>
@@ -534,9 +526,6 @@
             <if test="commissionAmt != null" >
                 COMMISSION_AMT = #{commissionAmt,jdbcType=DECIMAL},
             </if>
-            <if test="otherFeeamt != null" >
-                OTHER_FEEAMT = #{otherFeeamt,jdbcType=DECIMAL},
-            </if>
             <if test="totalTeeamt != null" >
                 TOTAL_TEEAMT = #{totalTeeamt,jdbcType=DECIMAL},
             </if>
@@ -552,6 +541,7 @@
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDeal" >
         update STL_SEC_RECON_DEAL
         set TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            INSTRUCTION_ID = #{instructionId,jdbcType=VARCHAR},
             CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
             TRADE_NO = #{tradeNo,jdbcType=VARCHAR},
             SALE_DEPID = #{saleDepid,jdbcType=VARCHAR},
@@ -571,7 +561,6 @@
             SETTLEMEN_TYPE = #{settlemenType,jdbcType=VARCHAR},
             ORDER_DATE = #{orderDate,jdbcType=DATE},
             CCY = #{ccy,jdbcType=VARCHAR},
-            TERM_TYPE = #{termType,jdbcType=VARCHAR},
             TRADE_NUM = #{tradeNum,jdbcType=DECIMAL},
             TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
             HAPPEN_AMT = #{happenAmt,jdbcType=DECIMAL},
@@ -589,7 +578,6 @@
             SETTLE_FEE = #{settleFee,jdbcType=DECIMAL},
             TRADE_FEE = #{tradeFee,jdbcType=DECIMAL},
             COMMISSION_AMT = #{commissionAmt,jdbcType=DECIMAL},
-            OTHER_FEEAMT = #{otherFeeamt,jdbcType=DECIMAL},
             TOTAL_TEEAMT = #{totalTeeamt,jdbcType=DECIMAL},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR}

@@ -34,7 +34,7 @@
                         <label class="layui-form-label form-lable" data-th-text="#{EtrBoutRepo001.ccy}">币种</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="ccy" name="ccy" class="layui-input form-input input-select"
-                                data-th-data-result='${CCY}' allowClear="true"
+                                data-th-data-result='${CCY}' allowClear="true" th:initValue="${CCY_default}"
                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" formatoption="true">
                             </input>
                         </div>

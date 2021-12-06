@@ -3,441 +3,105 @@
 <mapper namespace="com.joyintech.service.basicdata.dayendaccount.dao.DayEndAccountMapper_mysql">
 
 	<select id="findAccountInfo" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
-		WITH temp1 AS(
+		SELECT
+			a.SEQ_NO,
+			a.ACCOUT busiAcctNo,
+			a.SETTLE_DATE,
+			a.FINPROD_ID,
+			a.TRADE_MARKET,
+			a.CHECK_RESULT,
+			CASE WHEN f.TYPE_8 IS NOT NULL THEN f.TYPE_8
+			WHEN b.FINPROD_TYPE IS NOT NULL THEN b.FINPROD_TYPE
+			WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
+			END  FINPROD_TYPE,
+			a.ENTRUST_TRADE_ID,
+			a.CUSTOMER_ID,
+			a.STL_SEC_DEME,
+		    b.TRADE_ID,
+			b.SEAT_NUMBER,
+			b.COMMISSION_AMT,
+			b.JSF_AMT,
+			b.ZGF_AMT,
+			b.STAMP_FEE,
+			b.SETTLE_FEE,
+			b.GHF_AMT,
+			b.SXF_AMT,
+			b.TRADE_AMT,
+			b.TRADE_NUM,
+			b.PS,
+			b.SEC_ACCT_ID,
+			e.COMMISSION_AMT COMMISSION_AMT2,
+			e.JSF_AMT JSF_AMT2,
+			e.ZGF_AMT ZGF_AMT2,
+			e.STAMP_FEE STAMP_FEE2,
+			e.SETTLE_FEE SETTLE_FEE2,
+			e.GHF_AMT GHF_AMT2,
+			e.SXF_AMT SXF_AMT2,
+			e.FPRICE_AMT TRADE_AMT2,
+			e.SHARE_AMT TRADE_NUM2
+		FROM
+			STL_SEC_RECON a
+		LEFT JOIN
+			STL_SEC_RECON_DEAL b ON a.SEQ_NO = b.SEQ_NO
+		LEFT JOIN (
 			SELECT
-				a.ACCOUT busiAcctNo,
-				a.SETTLE_DATE,
-				a.FINPROD_ID,
-				a.TRADE_MARKET,
-				a.CHECK_RESULT,
-				f.TYPE_8 FINPROD_TYPE,
-				a.ENTRUST_TRADE_ID TRADE_ID,
-				a.CUSTOMER_ID,
-				a.STL_SEC_DEME,
-				b.COMMISSION_AMT,
-				b.JSF_AMT,
-				b.ZGF_AMT,
-				b.STAMP_FEE,
-				b.SETTLE_FEE,
-				b.GHF_AMT,
-				b.SXF_AMT,
-				b.TRADE_AMT,
-				b.TRADE_NUM,
-				e.COMMISSION_AMT COMMISSION_AMT2,
-				e.JSF_AMT JSF_AMT2,
-				e.ZGF_AMT ZGF_AMT2,
-				e.STAMP_FEE STAMP_FEE2,
-				e.SETTLE_FEE SETTLE_FEE2,
-				e.GHF_AMT GHF_AMT2,
-				e.SXF_AMT SXF_AMT2,
-				e.FPRICE_AMT TRADE_AMT2,
-				e.SHARE_AMT TRADE_NUM2
+				c.SEQ_NO,
+				SUM(d.COMMISSION_AMT) COMMISSION_AMT,
+				SUM(d.JSF_AMT) JSF_AMT,
+				SUM(d.ZGF_AMT) ZGF_AMT,
+				SUM(d.STAMP_FEE) STAMP_FEE,
+				SUM(d.SETTLE_FEE) SETTLE_FEE,
+				SUM(d.GHF_AMT) GHF_AMT,
+				SUM(d.SXF_AMT) SXF_AMT,
+				SUM(
+					CASE WHEN d.PS = #{PS_T01} AND d.FINPROD_TYPE2 != #{prodType2_F02} THEN d.FPRICE_AMT*-1
+					WHEN d.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND d.FINPROD_TYPE2 = #{prodType2_F02} THEN d.FPRICE_AMT*-1
+					ELSE d.FPRICE_AMT END
+				) FPRICE_AMT,
+				SUM(
+					CASE WHEN d.PS = #{PS_T01} AND d.FINPROD_TYPE2 != #{prodType2_F02} THEN d.SHARE_AMT
+					WHEN d.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND d.FINPROD_TYPE2 = #{prodType2_F02} THEN d.SHARE_AMT
+					ELSE d.SHARE_AMT*-1 END
+				) SHARE_AMT
 			FROM
-				STL_SEC_RECON a
-			LEFT JOIN
-				STL_SEC_RECON_DEAL b ON a.SEQ_NO = b.SEQ_NO
-			LEFT JOIN (
-				SELECT
-					c.SEQ_NO,
-					SUM(d.COMMISSION_AMT) COMMISSION_AMT,
-					SUM(d.JSF_AMT) JSF_AMT,
-					SUM(d.ZGF_AMT) ZGF_AMT,
-					SUM(d.STAMP_FEE) STAMP_FEE,
-					SUM(d.SETTLE_FEE) SETTLE_FEE,
-					SUM(d.GHF_AMT) GHF_AMT,
-					SUM(d.SXF_AMT) SXF_AMT,
-					SUM(d.FPRICE_AMT) FPRICE_AMT,
-					SUM(d.SHARE_AMT) SHARE_AMT
-				FROM
-					STL_SEC_RECON_DETAIL c
-				INNER JOIN
-					SETTLE_TRANS_DATA d ON c.TRADE_ID = d.TRADE_ID
-				GROUP BY
-					c.SEQ_NO
-				)e ON a.SEQ_NO = e.SEQ_NO
-			LEFT JOIN
-				FIN_PRODUCT_TYPE f ON a.FINPROD_ID = f.FINPROD_ID
-			WHERE
-			1=1
-			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-				AND a.ACCOUT IN
-				<foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
-					#{item}
-				</foreach>
-			</if>
-			<if test="finprodIdList != null and finprodIdList.size() > 0">
-				AND a.FINPROD_ID IN
-				<foreach collection="finprodIdList" index="index" item="item" open="(" close=")" separator=",">
-					#{item}
-				</foreach>
-			</if>
-			<if test="tradeMarket != null and tradeMarket != ''">
-				AND a.TRADE_MARKET = #{tradeMarket}
-			</if>
-			<if test="tradeDateBegin != null and tradeDateBegin != ''">
-				AND a.SETTLE_DATE >= STR_TO_DATE(#{tradeDateBegin}, '%Y-%m-%d')
-			</if>
-			<if test="tradeDateEnd != null and tradeDateEnd != ''">
-				AND a.SETTLE_DATE &lt;= STR_TO_DATE(#{tradeDateEnd}, '%Y-%m-%d')
-			</if>
-			<if test="accountStatus != null and accountStatus != ''">
-				AND a.CHECK_RESULT = #{accountStatus}
-			</if>
-			ORDER BY
-				CUSTOMER_ID,SETTLE_DATE DESC
-		),
-		temp2 AS(
-			SELECT
-				e.ACCT_NO busiAcctNo,
-				e.DEAL_DATE SETTLE_DATE,
-				NVL(h.FINPROD_ID,g.FINPROD_ID) FINPROD_ID,
-				e.TRADE_MARKET,
-				e.CHECK_RESULT,
-				h.TYPE_8 FINPROD_TYPE,
-				e.APPLY_TRADE_ID TRADE_ID,
-				e.BROKER_ID CUSTOMER_ID,
-				e.PARA_VALUE STL_SEC_DEME,
-				null COMMISSION_AMT,
-				null JSF_AMT,
-				null ZGF_AMT,
-				null STAMP_FEE,
-				null SETTLE_FEE,
-				null GHF_AMT,
-				null SXF_AMT,
-				null TRADE_AMT,
-				null TRADE_NUM,
-				e.COMMISSION_AMT COMMISSION_AMT2,
-				e.JSF_AMT JSF_AMT2,
-				e.ZGF_AMT ZGF_AMT2,
-				e.STAMP_FEE STAMP_FEE2,
-				e.SETTLE_FEE SETTLE_FEE2,
-				e.GHF_AMT GHF_AMT2,
-				e.SXF_AMT SXF_AMT2,
-				e.FPRICE_AMT TRADE_AMT2,
-				e.SHARE_AMT TRADE_NUM2
-			FROM(
-				SELECT
-					a.FINPROD_ID,
-					a.TRADE_MARKET,
-					a.DEAL_DATE,
-					a.ACCT_NO,
-					a.SEAT_NUMBER,
-					a.APPLY_TRADE_ID,
-					NVL(c.CHECK_RESULT,#{CHECK_RESULT_2}) CHECK_RESULT,
-					b.BROKER_ID,
-					d.PARA_VALUE,
-					SUM(a.COMMISSION_AMT) COMMISSION_AMT,
-					SUM(a.JSF_AMT) JSF_AMT,
-					SUM(a.ZGF_AMT) ZGF_AMT,
-					SUM(a.STAMP_FEE) STAMP_FEE,
-					SUM(a.SETTLE_FEE) SETTLE_FEE,
-					SUM(a.GHF_AMT) GHF_AMT,
-					SUM(a.SXF_AMT) SXF_AMT,
-					SUM(a.FPRICE_AMT) FPRICE_AMT,
-					SUM(a.SHARE_AMT) SHARE_AMT
-				FROM
-					SETTLE_TRANS_DATA a
-				LEFT JOIN
-					MST_SALE_DEPARTMENT b ON (a.SEAT_NUMBER = b.SH_SEATNO OR a.SEAT_NUMBER = b.SZ_SEATNO)
-				LEFT JOIN
-					SETTLE_TRANS_DATA_STATUS c ON a.SEQ_NO = c.TRADE_ID
-				INNER JOIN (
-					SELECT
-						CUSTOMER_ID,
-						PARA_VALUE,
-						MAX(CONFIG_DATE)
-					FROM
-						STL_SEC_RECON_PARA
-					WHERE
-						CONFIG_DATE &lt;= STR_TO_DATE(#{sysDate},'%Y-%m-%d')
-					AND PARA_CODE = #{PARA_CODE_02}
-					GROUP BY
-						CUSTOMER_ID,PARA_VALUE
-				) d ON b.BROKER_ID = d.CUSTOMER_ID
-			WHERE
-			1=1
-			<if test="accountStatus != null and accountStatus != ''">
-				AND c.CHECK_RESULT = #{accountStatus}
-			</if>
-			AND d.PARA_VALUE = #{PARA_VALUE_02}
-			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-				AND a.ACCT_NO IN
-				<foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
-					#{item}
-				</foreach>
-			</if>
-			<if test="finprodIdList != null and finprodIdList.size() > 0">
-				AND a.FINPROD_ID IN
-				<foreach collection="finprodIdList" index="index" item="item" open="(" close=")" separator=",">
-					#{item}
-				</foreach>
-			</if>
-			<if test="tradeMarket != null and tradeMarket != ''">
-				AND a.TRADE_MARKET = #{tradeMarket}
-			</if>
-			<if test="tradeDateBegin != null and tradeDateBegin != ''">
-				AND a.DEAL_DATE >= STR_TO_DATE(#{tradeDateBegin}, '%Y-%m-%d')
-			</if>
-			<if test="tradeDateEnd != null and tradeDateEnd != ''">
-				AND a.DEAL_DATE &lt;= STR_TO_DATE(#{tradeDateEnd}, '%Y-%m-%d')
-			</if>
-			AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
+				STL_SEC_RECON_DETAIL c
+			INNER JOIN
+				SETTLE_TRANS_DATA d ON c.TRADE_ID = d.TRADE_ID
 			GROUP BY
-				a.DEAL_DATE,
-				a.ACCT_NO,
-				a.SEAT_NUMBER,
-				a.APPLY_TRADE_ID,
-				a.FINPROD_ID,
-				a.TRADE_MARKET,
-				b.BROKER_ID,
-				c.CHECK_RESULT,
-				d.PARA_VALUE) e
-			LEFT JOIN
-				FIN_PRODUCT f ON e.FINPROD_ID = f.FINPROD_ID
-			LEFT JOIN
-				FIN_TRADE_PRODUCT g ON e.FINPROD_ID = g.FINPROD_ID AND g.BRANCH = 0
-			LEFT JOIN
-				FIN_PRODUCT_TYPE h ON e.FINPROD_ID = h.FINPROD_ID
-			ORDER BY
-				e.BROKER_ID,e.DEAL_DATE DESC
-		),
-		temp3 AS(
-			SELECT
-				e.ACCT_NO busiAcctNo,
-				e.DEAL_DATE SETTLE_DATE,
-				NVL(h.FINPROD_ID,g.FINPROD_ID) FINPROD_ID,
-				e.TRADE_MARKET,
-				e.CHECK_RESULT,
-				h.TYPE_8 FINPROD_TYPE,
-				e.APPLY_TRADE_ID TRADE_ID,
-				e.BROKER_ID CUSTOMER_ID,
-				e.PARA_VALUE STL_SEC_DEME,
-				null COMMISSION_AMT,
-				null JSF_AMT,
-				null ZGF_AMT,
-				null STAMP_FEE,
-				null SETTLE_FEE,
-				null GHF_AMT,
-				null SXF_AMT,
-				null TRADE_AMT,
-				null TRADE_NUM,
-				e.COMMISSION_AMT COMMISSION_AMT2,
-				e.JSF_AMT JSF_AMT2,
-				e.ZGF_AMT ZGF_AMT2,
-				e.STAMP_FEE STAMP_FEE2,
-				e.SETTLE_FEE SETTLE_FEE2,
-				e.GHF_AMT GHF_AMT2,
-				e.SXF_AMT SXF_AMT2,
-				e.FPRICE_AMT TRADE_AMT2,
-				e.SHARE_AMT TRADE_NUM2
-			FROM(
-				SELECT
-					a.FINPROD_ID,
-					a.TRADE_MARKET,
-					a.DEAL_DATE,
-					a.ACCT_NO,
-					a.SEAT_NUMBER,
-					a.APPLY_TRADE_ID,
-					NVL(c.CHECK_RESULT,#{CHECK_RESULT_2}) CHECK_RESULT,
-					b.BROKER_ID,
-					d.PARA_VALUE,
-					SUM(a.COMMISSION_AMT) COMMISSION_AMT,
-					SUM(a.JSF_AMT) JSF_AMT,
-					SUM(a.ZGF_AMT) ZGF_AMT,
-					SUM(a.STAMP_FEE) STAMP_FEE,
-					SUM(a.SETTLE_FEE) SETTLE_FEE,
-					SUM(a.GHF_AMT) GHF_AMT,
-					SUM(a.SXF_AMT) SXF_AMT,
-					SUM(a.FPRICE_AMT) FPRICE_AMT,
-					SUM(a.SHARE_AMT) SHARE_AMT
-				FROM
-					SETTLE_TRANS_DATA a
-				LEFT JOIN
-					MST_SALE_DEPARTMENT b ON (a.SEAT_NUMBER = b.SH_SEATNO OR a.SEAT_NUMBER = b.SZ_SEATNO)
-				LEFT JOIN
-					SETTLE_TRANS_DATA_STATUS c ON a.SEQ_NO = c.TRADE_ID
-				INNER JOIN (
-					SELECT
-						CUSTOMER_ID,
-						PARA_VALUE,
-						MAX(CONFIG_DATE)
-					FROM
-						STL_SEC_RECON_PARA
-					WHERE
-						CONFIG_DATE &lt;= STR_TO_DATE(#{sysDate},'%Y-%m-%d')
-						AND PARA_CODE = #{PARA_CODE_02}
-					GROUP BY
-						CUSTOMER_ID,PARA_VALUE
-					) d ON b.BROKER_ID = d.CUSTOMER_ID
-				WHERE
-				1=1
-				<if test="accountStatus != null and accountStatus != ''">
-					AND c.CHECK_RESULT = #{accountStatus}
-				</if>
-				AND d.PARA_VALUE = #{PARA_VALUE_01}
-				<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-					AND a.ACCT_NO IN
-					<foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
-						#{item}
-					</foreach>
-				</if>
-				<if test="finprodIdList != null and finprodIdList.size() > 0">
-					AND a.FINPROD_ID IN
-					<foreach collection="finprodIdList" index="index" item="item" open="(" close=")" separator=",">
-						#{item}
-					</foreach>
-				</if>
-				<if test="tradeMarket != null and tradeMarket != ''">
-					AND a.TRADE_MARKET = #{tradeMarket}
-				</if>
-					<if test="tradeDateBegin != null and tradeDateBegin != ''">
-						AND a.DEAL_DATE >= STR_TO_DATE(#{tradeDateBegin}, '%Y-%m-%d')
-					</if>
-					<if test="tradeDateEnd != null and tradeDateEnd != ''">
-						AND a.DEAL_DATE &lt;= STR_TO_DATE(#{tradeDateEnd}, '%Y-%m-%d')
-					</if>
-					AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
-				GROUP BY
-					a.DEAL_DATE,
-					a.ACCT_NO,
-					a.SEAT_NUMBER,
-					a.APPLY_TRADE_ID,
-					a.FINPROD_ID,
-					a.TRADE_MARKET,
-					b.BROKER_ID,
-					c.CHECK_RESULT,
-					d.PARA_VALUE) e
-			LEFT JOIN
-				FIN_PRODUCT f ON e.FINPROD_ID = f.FINPROD_ID
-			LEFT JOIN
-				FIN_TRADE_PRODUCT g ON e.FINPROD_ID = g.FINPROD_ID AND g.BRANCH = 0
-			LEFT JOIN
-				FIN_PRODUCT_TYPE h ON e.FINPROD_ID = h.FINPROD_ID
-			ORDER BY
-				e.BROKER_ID,e.DEAL_DATE DESC
-		),
-		temp4 AS(
-			SELECT
-				e.ACCT_NO busiAcctNo,
-				e.DEAL_DATE SETTLE_DATE,
-				NVL(h.FINPROD_ID,g.FINPROD_ID) FINPROD_ID,
-				e.TRADE_MARKET,
-				e.CHECK_RESULT,
-				h.TYPE_8 FINPROD_TYPE,
-				e.APPLY_TRADE_ID TRADE_ID,
-				e.BROKER_ID CUSTOMER_ID,
-				e.PARA_VALUE STL_SEC_DEME,
-				null COMMISSION_AMT,
-				null JSF_AMT,
-				null ZGF_AMT,
-				null STAMP_FEE,
-				null SETTLE_FEE,
-				null GHF_AMT,
-				null SXF_AMT,
-				null TRADE_AMT,
-				null TRADE_NUM,
-				e.COMMISSION_AMT COMMISSION_AMT2,
-				e.JSF_AMT JSF_AMT2,
-				e.ZGF_AMT ZGF_AMT2,
-				e.STAMP_FEE STAMP_FEE2,
-				e.SETTLE_FEE SETTLE_FEE2,
-				e.GHF_AMT GHF_AMT2,
-				e.SXF_AMT SXF_AMT2,
-				e.FPRICE_AMT TRADE_AMT2,
-				e.SHARE_AMT TRADE_NUM2
-			FROM(
-				SELECT
-					a.FINPROD_ID,
-					a.TRADE_MARKET,
-					a.DEAL_DATE,
-					a.ACCT_NO,
-					a.SEAT_NUMBER,
-					a.APPLY_TRADE_ID,
-					NVL(c.CHECK_RESULT,#{CHECK_RESULT_2}) CHECK_RESULT,
-					b.BROKER_ID,
-					d.PARA_VALUE,
-					SUM(a.COMMISSION_AMT) COMMISSION_AMT,
-					SUM(a.JSF_AMT) JSF_AMT,
-					SUM(a.ZGF_AMT) ZGF_AMT,
-					SUM(a.STAMP_FEE) STAMP_FEE,
-					SUM(a.SETTLE_FEE) SETTLE_FEE,
-					SUM(a.GHF_AMT) GHF_AMT,
-					SUM(a.SXF_AMT) SXF_AMT,
-					SUM(a.FPRICE_AMT) FPRICE_AMT,
-					SUM(a.SHARE_AMT) SHARE_AMT
-				FROM
-					SETTLE_TRANS_DATA a
-				LEFT JOIN
-					MST_SALE_DEPARTMENT b ON (a.SEAT_NUMBER = b.SH_SEATNO OR a.SEAT_NUMBER = b.SZ_SEATNO)
-				LEFT JOIN
-					SETTLE_TRANS_DATA_STATUS c ON a.SEQ_NO = c.TRADE_ID
-				INNER JOIN (
-					SELECT
-						CUSTOMER_ID,
-						PARA_VALUE,
-						MAX(CONFIG_DATE)
-					FROM
-						STL_SEC_RECON_PARA
-					WHERE
-						CONFIG_DATE &lt;= STR_TO_DATE(#{sysDate},'%Y-%m-%d')
-						AND PARA_CODE = #{PARA_CODE_02}
-					GROUP BY
-						CUSTOMER_ID,PARA_VALUE
-					) d ON b.BROKER_ID = d.CUSTOMER_ID
-				WHERE
-				1=1
-				<if test="accountStatus != null and accountStatus != ''">
-					AND c.CHECK_RESULT = #{accountStatus}
-				</if>
-				AND d.PARA_VALUE = #{PARA_VALUE_03}
-				<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-					AND a.ACCT_NO IN
-					<foreach collection="portfolioIdList" index="index" item="item" open="(" close=")" separator=",">
-						#{item}
-					</foreach>
-				</if>
-				<if test="finprodIdList != null and finprodIdList.size() > 0">
-					AND a.FINPROD_ID IN
-					<foreach collection="finprodIdList" index="index" item="item" open="(" close=")" separator=",">
-						#{item}
-					</foreach>
-				</if>
-				<if test="tradeMarket != null and tradeMarket != ''">
-					AND a.TRADE_MARKET = #{tradeMarket}
-				</if>
-				<if test="tradeDateBegin != null and tradeDateBegin != ''">
-					AND a.DEAL_DATE >= STR_TO_DATE(#{tradeDateBegin}, '%Y-%m-%d')
-				</if>
-				<if test="tradeDateEnd != null and tradeDateEnd != ''">
-					AND a.DEAL_DATE &lt;= STR_TO_DATE(#{tradeDateEnd}, '%Y-%m-%d')
-				</if>
-				AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
-				GROUP BY
-					a.DEAL_DATE,
-					a.ACCT_NO,
-					a.SEAT_NUMBER,
-					a.APPLY_TRADE_ID,
-					a.FINPROD_ID,
-					a.TRADE_MARKET,
-					b.BROKER_ID,
-					c.CHECK_RESULT,
-					d.PARA_VALUE) e
-			LEFT JOIN
-				FIN_PRODUCT f ON e.FINPROD_ID = f.FINPROD_ID
-			LEFT JOIN
-				FIN_TRADE_PRODUCT g ON e.FINPROD_ID = g.FINPROD_ID AND g.BRANCH = 0
-			LEFT JOIN
-				FIN_PRODUCT_TYPE h ON e.FINPROD_ID = h.FINPROD_ID
-			ORDER BY
-				e.BROKER_ID,e.DEAL_DATE DESC
-		)
-		SELECT * FROM temp1
-		UNION ALL
-		SELECT * FROM temp2
-		UNION ALL
-		SELECT * FROM temp3
-		UNION ALL
-		SELECT * FROM temp4
+				c.SEQ_NO
+			)e ON a.SEQ_NO = e.SEQ_NO
+		LEFT JOIN
+			FIN_PRODUCT_TYPE f ON a.FINPROD_ID = f.FINPROD_ID
+		LEFT JOIN
+			T_INSTRUMENT ins ON a.FINPROD_ID = ins.STOCK_CODE
+		WHERE
+		1=1
+		<if test="accountList != null and accountList.size() > 0">
+			AND a.ACCOUT IN
+			<foreach collection="accountList" index="index" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="finprodIdList != null and finprodIdList.size() > 0">
+			AND a.FINPROD_ID IN
+			<foreach collection="finprodIdList" index="index" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="tradeMarket != null and tradeMarket != ''">
+			AND a.TRADE_MARKET = #{tradeMarket}
+		</if>
+		<if test="tradeDateBegin != null and tradeDateBegin != ''">
+			AND a.SETTLE_DATE >= STR_TO_DATE(#{tradeDateBegin}, '%Y-%m-%d')
+		</if>
+		<if test="tradeDateEnd != null and tradeDateEnd != ''">
+			AND a.SETTLE_DATE &lt;= STR_TO_DATE(#{tradeDateEnd}, '%Y-%m-%d')
+		</if>
+		<if test="accountStatus != null and accountStatus != ''">
+			AND a.CHECK_RESULT = #{accountStatus}
+		</if>
+		ORDER BY
+			CUSTOMER_ID,SETTLE_DATE DESC
 	</select>
 
 	<select id="queryAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -456,6 +120,21 @@
 				)
 			</if>
 			AND FINPROD_TYPE2 in (#{FINPROD_TYPE_TG_F01},#{FINPROD_TYPE_TG_F06},#{FINPROD_TYPE_TG_F10})
+		</where>
+	</select>
+
+	<select id="queryFinProdIds" resultType="String">
+		SELECT
+		FINPROD_ID
+		FROM FIN_PRODUCT
+		<where>
+			1=1
+			<if test="finprodMarketIdList != null and finprodMarketIdList.size() > 0">
+				AND FINPROD_MARKET_ID IN
+				<foreach collection="finprodMarketIdList" index="index" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
 		</where>
 	</select>
 
@@ -506,7 +185,6 @@ select
 	ssrd.FINPROD_TYPE,
 	ssrd.PS,
 	ssrd.SEC_ACCT_ID,
-	ssrd.TERM_TYPE,
 	ssrd.COMMISSION_AMT,
 	ssrd.JSF_AMT,
 	ssrd.ZGF_AMT,
@@ -515,8 +193,7 @@ select
 	ssrd.GHF_AMT,
 	ssrd.SXF_AMT,
 	ssrd.TRADE_AMT,
-	ssrd.TRADE_NUM,
-	ssrd.OTHER_FEEAMT
+	ssrd.TRADE_NUM
 from
 	STL_SEC_RECON_DEAL ssrd
 	left join STL_SEC_RECON ssr on ssr.SEQ_NO = ssrd.SEQ_NO
@@ -558,7 +235,6 @@ select <!-- 查询委托维度对账数据 -->
 	a.FINPROD_TYPE,
 	a.PS,
 	a.SEC_ACCT_ID,
-	a.TERM_TYPE,
 	a.COMMISSION_AMT,
 	a.JSF_AMT,
 	a.ZGF_AMT,
@@ -566,7 +242,6 @@ select <!-- 查询委托维度对账数据 -->
 	a.SETTLE_FEE,
 	a.GHF_AMT,
 	a.SXF_AMT,
-	a.OTHER_FEEAMT,
 	a.TRADE_AMT,
 	a.TRADE_NUM,
 	ss.APPLY_TRADE_ID TRADE_ID2,
@@ -628,7 +303,6 @@ select
 	b.FINPROD_TYPE,
 	b.PS,
 	b.SEC_ACCT_ID,
-	b.TERM_TYPE,
 	b.COMMISSION_AMT,
 	b.JSF_AMT,
 	b.ZGF_AMT,
@@ -636,7 +310,6 @@ select
 	b.SETTLE_FEE,
 	b.GHF_AMT,
 	b.SXF_AMT,
-	b.OTHER_FEEAMT,
 	b.TRADE_AMT,
 	b.TRADE_NUM,
 	std.TRADE_ID TRADE_ID2,
@@ -676,7 +349,6 @@ select
 		b.FINPROD_TYPE,
 		b.PS,
 		b.SEC_ACCT_ID,
-		b.TERM_TYPE,
 		b.COMMISSION_AMT,
 		b.JSF_AMT,
 		b.ZGF_AMT,
@@ -684,7 +356,6 @@ select
 		b.SETTLE_FEE,
 		b.GHF_AMT,
 		b.SXF_AMT,
-		b.OTHER_FEEAMT,
 		b.TRADE_AMT,
 		b.TRADE_NUM,
 		std.TRADE_ID TRADE_ID2,
@@ -725,9 +396,9 @@ from
 		<if test="planInfo.assetClassify2 == null or planInfo.assetClassify2 == '' ">
 			, 99 as order3
 		</if>
-		<if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">
-			, IF(tfg.ASSET_CLASSIFY3=#{planInfo.assetClassify3, jdbcType=VARCHAR}, 1, 99) order9
-		</if>
+<!--		<if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">-->
+<!--			, IF(tfg.ASSET_CLASSIFY3=#{planInfo.assetClassify3, jdbcType=VARCHAR}, 1, 99) order9-->
+<!--		</if>-->
 		<if test="planInfo.assetClassify3 == null or planInfo.assetClassify3 == '' ">
 			, 99 as order9
 		</if>
@@ -785,11 +456,11 @@ from
 			AND
 			(tfg.ASSET_CLASSIFY2 = #{planInfo.assetClassify2, jdbcType=VARCHAR} or tfg.ASSET_CLASSIFY2 = '' or tfg.ASSET_CLASSIFY2 = null)
 		</if>
-		<if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">
-			AND
-			(tfg.ASSET_CLASSIFY3 = #{planInfo.assetClassify3, jdbcType=VARCHAR} or tfg.ASSET_CLASSIFY3 = '' or tfg.ASSET_CLASSIFY3 = null)
-		</if>
-		ORDER  BY order1, order2, order3, order4, order5, order6, order7, order8, order9, tfg.EFF_DATE
+<!--		<if test="planInfo.assetClassify3 != null and planInfo.assetClassify3 != '' ">-->
+<!--			AND-->
+<!--			(tfg.ASSET_CLASSIFY3 = #{planInfo.assetClassify3, jdbcType=VARCHAR} or tfg.ASSET_CLASSIFY3 = '' or tfg.ASSET_CLASSIFY3 = null)-->
+<!--		</if>-->
+		ORDER  BY order1, order2, order3, order4, order5, order6, order7, order8, tfg.EFF_DATE
 	</select>
 	<select id="getTrdFeeConfigDetail"
 			resultType="com.joyintech.tams.common.base.entity.TrdFeeConfigDetail">
@@ -866,7 +537,7 @@ from
 	<select id="selectAllSettleTransData"
 			resultType="com.joyintech.tams.common.base.entity.SettleTransData">
 		select
-			std.TRADE_ID, std.DEAL_DATE, std.SEC_TYPE,
+			std.TRADE_ID, std.CJBH, std.DEAL_DATE, std.SEC_TYPE,
             std.APPLY_TRADE_ID, std.FINPROD_ID, std.FINPROD_TYPE,
             std.FINPROD_TYPE2, std.BRANCH, BUSI_TYPE,
             std.TRADE_DATE, std.SETTLE_DATE, std.VDATE,
@@ -896,6 +567,55 @@ from
 		ssrd.SEQ_NO = #{seqNo, jdbcType=VARCHAR}
 	</select>
 
+	<select id="selectSettleTransData" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
+		select
+			std.TRADE_ID, std.CJBH,std.DEAL_DATE, std.SEC_TYPE,
+			std.APPLY_TRADE_ID, std.FINPROD_ID, std.FINPROD_TYPE,
+			std.FINPROD_TYPE2, std.BRANCH, BUSI_TYPE,
+			std.TRADE_DATE, std.SETTLE_DATE, std.VDATE,
+			std.MDATE, std.VPAY_DATE, std.MPAY_DATE,
+			std.TERM_TYPE, std.SETTLE_SPEED, std.CCY,
+			std.UNIT_CPRICE, std.UNIT_INT, std.UNIT_FPRICE,
+			std.PAR_VALUE, std.CPRICE_AMT, std.SHARE_AMT,
+			std.PRIN_AMT, std.INT_AMT, std.FPRICE_AMT,
+			std.STAMP_FEE, std.JSF_AMT, std.GHF_AMT,
+			std.ZGF_AMT, std.SXF_AMT, std.SETTLE_FEE,
+			std.COMMISSION_AMT, std.IS_PAY_WITH_TRADE, std.TRADE_AMT,
+			std.PS, std.TRADE_MARKET, std.TRADE_MARKET_MODE,
+			std.TRADE_PLAT, std.PLEDGE_SEC_NUM, std.SEAT_NUMBER,
+			std.PORTFOLIO_ID, std.SEC_ACCT_ID, std.ACCT_NO,
+			std.BATCH_NUMBER, std.M_PRIN_AMT, std.M_INT_AMT,
+			std.M_TRADE_AMT, std.INT_RATE, std.BASIS,
+			std.BUSI_SCENE_CALSS, std.SETTLE_MODE, std.STAMP_FEE_RAW,
+			std.JSF_AMT_RAW, std.GHF_AMT_RAW, std.ZGF_AMT_RAW,
+			std.SXF_AMT_RAW, std.SETTLE_FEE_RAW, std.COMMISSION_AMT_RAW,
+			std.TRADE_AMT_RAW, std.TRADE_ID_RAW, std.SEQ_NO,
+			std.CREATE_USER, std.CREATE_DEPT, std.CREATE_TIME,
+			std.UPDATE_USER, std.UPDATE_TIME, std.IS_PURCH_TYPE_YX
+		from
+			settle_trans_data std
+		WHERE
+		    1=1
+			<if test="finprodId!=null and finprodId != ''">
+				AND std.FINPROD_ID = #{finprodId}
+			</if>
+			<if test="entrustTradeId!=null and entrustTradeId != ''">
+				AND std.APPLY_TRADE_ID = #{entrustTradeId}
+			</if>
+			<if test="account!=null and account != ''">
+				AND std.ACCT_NO = #{account}
+			</if>
+			<if test="seatNumber!=null and seatNumber != ''">
+				AND std.SEAT_NUMBER = #{seatNumber}
+			</if>
+			<if test="tradeMarket!=null and tradeMarket != ''">
+				AND std.TRADE_MARKET = #{tradeMarket}
+			</if>
+			<if test="settleDate!=null and settleDate != ''">
+				AND std.DEAL_DATE = #{settleDate}
+			</if>
+	</select>
+
 	<select id="selectCustomerId" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select CUSTOMER_ID id,CUSTOMER_NAME text
 		from MST_CUSTOMER_INFO where IS_BROKER='Y'
@@ -905,7 +625,7 @@ from
 	</select>
 
 	<select id="queryBusiAcctNo" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select p.ACCT_NO id,s.ACCT_NAME text from
+		select DISTINCT p.ACCT_NO id,s.ACCT_NAME text from
 		PTL_CAPACCT_INFO p
 		left join STL_CAPACCT_INFO s
 		on p.ACCT_NO = s.ACCT_NO
@@ -931,12 +651,11 @@ from
 		AND p.CCY = t1.CCY
 		AND p.CDATE = t1.CDATE
 		) = 1 then (
-		SELECT distinct p2.PORTFOLIO_ID
-		FROM PTL_CAPACCT_INFO p1
-		LEFT JOIN PTL_PORTFOLIO p2
-		ON p1.PORTFOLIO_ID = p2.PORTFOLIO_ID
-		WHERE p1.ACCT_TYPE = 'A07'
-		AND p1.ACCT_NO = t1.ACCT_ID
+		SELECT distinct p.PORTFOLIO_ID
+		FROM PTL_CASH_POSITION p
+		WHERE p.ACCT_ID = t1.ACCT_ID
+		AND p.CCY = t1.CCY
+		AND p.CDATE = t1.CDATE
 		)
 		else null end portfolioId,
 		case
@@ -946,12 +665,13 @@ from
 		AND p.CCY = t1.CCY
 		AND p.CDATE = t1.CDATE
 		) = 1 then (
-		SELECT distinct p2.PORTFOLIO_NAME
-		FROM PTL_CAPACCT_INFO p1
+		SELECT DISTINCT p2.PORTFOLIO_NAME
+		FROM PTL_CASH_POSITION p
 		LEFT JOIN PTL_PORTFOLIO p2
-		ON p1.PORTFOLIO_ID = p2.PORTFOLIO_ID
-		WHERE p1.ACCT_TYPE = 'A07'
-		AND p1.ACCT_NO = t1.ACCT_ID
+		ON p2.PORTFOLIO_ID = p.PORTFOLIO_ID
+		WHERE p.ACCT_ID = t1.ACCT_ID
+		AND p.CCY = t1.CCY
+		AND p.CDATE = t1.CDATE
 		)
 		else null end portfolioName,
 		null secAcctId,
@@ -1016,7 +736,7 @@ from
 
 		union all
 		select
-		table2.*,ifnull(table2.portfolioId,,'null')||','||'2'||','||table2.finprodId||','||DATE_FORMAT(table2.settleDate,'%Y-%m-%d')||','||table2.secAcctId
+		table2.*,ifnull(table2.portfolioId,'null')||','||'2'||','||table2.finprodId||','||DATE_FORMAT(table2.settleDate,'%Y-%m-%d')||','||table2.secAcctId
 		from (
 		SELECT
 		'root' parentInfo,

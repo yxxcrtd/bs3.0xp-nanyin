@@ -9,6 +9,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
@@ -165,6 +166,14 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         dealTotal.setIsOutTrade(DictCodeList.是否_是.getValue());
         // 交易场所
         dealTotal.setTradeMarket(dealDto.getTradeMarket());
+
+        if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+            dealTotal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+        }
+        else if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+            dealTotal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+        }
+
         // 交易平台
         dealTotal.setTradePlat(dealDto.getTradePlat());
         // 交易市场
@@ -279,6 +288,13 @@ public class ExchangeTransMatchBondCommonService extends BaseService {
         trdProductDeal.setTradePlat(dealDto.getTradePlat());
         // 交易市场
         trdProductDeal.setTradeMarketMode(dealDto.getTradeMarketMode());
+
+        if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+            trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
+        }
+        else if(StringUtil.equals(dealDto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+            trdProductDeal.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHENZHEN);
+        }
         // 本方交易员
         trdProductDeal.setTrader(null);
         // 对手方交易员

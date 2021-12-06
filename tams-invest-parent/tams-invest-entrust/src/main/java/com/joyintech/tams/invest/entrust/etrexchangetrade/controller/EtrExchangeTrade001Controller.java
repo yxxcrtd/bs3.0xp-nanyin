@@ -148,7 +148,8 @@ public class EtrExchangeTrade001Controller extends BaseController{
         	 //流程代办checkImportData
             entity = etrExchangeTrade001Service.getBussinessEntityByWorkflowId(
                 workflowId);
-            //如果是多组合的流程数据则，单组合置空
+            //add by chenjiaxing 流程中不显示资产名称 start
+                        //如果是多组合的流程数据则，单组合置空
             if(StringUtil.isNotEmpty(entity) && StringUtil.equals(entity.getIsMulti(),DictCodeList.是否_是.getValue())) {
                 entity = new EtrExchangeTrade001Dto();
             }
@@ -159,7 +160,6 @@ public class EtrExchangeTrade001Controller extends BaseController{
                     entity.setStockId(secIds[1]);
                 }
             }
-
             //add by chenjiaxing 流程中不显示资产名称 end
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
@@ -225,7 +225,9 @@ public class EtrExchangeTrade001Controller extends BaseController{
         
         return super.init(model);
     }
+    
 
+    
     /**
      * 查询交易行情信息
      * <一句话功能简述>
@@ -301,8 +303,9 @@ public class EtrExchangeTrade001Controller extends BaseController{
 		}
 
         etrExchangeTrade001Service.setEntrustBussType(dto);
+
 		AjaxResult ajax  = etrExchangeTrade001Service.checkSave(dto);
-		if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList())) {
+		if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList()) && !StringUtil.equals(dto.getOperateType(),"save")) {
 			return ajax;
 		}
 		
@@ -460,8 +463,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
 		}
 		//业务类型
 		String businessType = etrExchangeTrade001Service.setEntrustBussType(dto);
-
-        //业务编号生成规则参数
+		//add end
 		if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
             BussinessCodeParameter param = etrExchangeTrade001Service.genBussinessCodeParameter(dto);
             String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
@@ -726,6 +728,19 @@ public class EtrExchangeTrade001Controller extends BaseController{
     public String getInvAim() {
         return etrExchangeTrade001Service.getInvAim();
     }
+
+
+    /***
+     * 取更新时间最新记录.投资目的  指令业务类型 = 数据字典.委托类型.大宗债券指令
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/linkInvAim")
+    public AjaxResult linkInvAim(@RequestBody Map<String, Object> param) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setData(etrExchangeTrade001Service.linkInvAim(param));
+        return ajaxResult;
+    }
     
 	/**
 	 * 
@@ -906,5 +921,22 @@ public class EtrExchangeTrade001Controller extends BaseController{
 //        ajaxResult.setData("2");
          return ajaxResult;
     }
+
+    // add by etliu 20211013 start
+    // TISHKS-5 bug修复：在场内下指令时，资产选了万科之后，出现申购选项，但理论上不应该出现(万科很早就上市了)，我在申报信息维护中也没有看到万科的新股申报
+    /**
+     * 当前选中股票是否存在新股申购期
+     *
+     * @param params 画面参数
+     * @return 当前选中股票是否处在新股申购期
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("isXinGuShenGou")
+    @ResponseBody
+    public String isXinGuShenGou(@RequestParam Map<String, Object> params) {
+        return etrExchangeTrade001Service.isXinGuShenGou(params);
+    }
+    // add by etliu 20211013 end
 }
 	

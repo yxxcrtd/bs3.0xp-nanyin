@@ -9,8 +9,8 @@
             <!-- <Cell order="4" name="资产类型">busAssetType1</Cell> -->
             <Cell order="4" name="资产二级分类">type9Name</Cell>
             <Cell order="5" name="资产三级分类">type10Name</Cell>
-<!--             <Cell order="6" name="资产四级分类">type11Name</Cell>
- -->            <Cell order="6" name="资产代码">finprodId</Cell>
+            <!--             <Cell order="6" name="资产四级分类">type11Name</Cell>
+             -->            <Cell order="6" name="资产代码">finprodId</Cell>
             <Cell order="7" name="资产名称">finprodName</Cell>
             <!--新增投资经理 yzg 20190903 start  -->
             <Cell order="8" name="投资经理">invManagerId</Cell>
@@ -23,6 +23,7 @@
             <Cell order="14" name="已完成额度">finishAmt</Cell>
             <Cell order="15" name="交易完成度">transactioncom</Cell>
             <!-- 项目类资产五级分类改造 modify by renping 2019-08-01 end -->
+            <Cell order="16" name="当前处理人">nextUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

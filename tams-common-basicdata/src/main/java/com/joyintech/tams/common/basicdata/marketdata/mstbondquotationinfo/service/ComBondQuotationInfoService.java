@@ -389,9 +389,11 @@ public class ComBondQuotationInfoService extends CommonExportService<ComBondQuot
                 ComBondQuotationInfoDto.setBpyield(
                     new BigDecimal(list.get(14).trim()).divide(new BigDecimal(100)));
             }
-            if (StringUtil.isNotEmpty(list.get(15))) {
-                ComBondQuotationInfoDto.setNetvaluationExercise(new BigDecimal(list.get(15).trim()));
-            }
+            // TISHKS-6:删除估价净价（行权）字段 fuyongsheng 20211112 edit start
+//            if (StringUtil.isNotEmpty(list.get(15))) {
+//                ComBondQuotationInfoDto.setNetvaluationExercise(new BigDecimal(list.get(15).trim()));
+//            }
+            // TISHKS-6:删除估价净价（行权）字段 fuyongsheng 20211112 edit end
             // Date date = new Date();
             ComBondQuotationInfoDto.setCreateUser(CommonUtil.getUserName());
             ComBondQuotationInfoDto.setCreateDept(CommonUtil.getDeptCode());
@@ -441,13 +443,23 @@ public class ComBondQuotationInfoService extends CommonExportService<ComBondQuot
         }
         if (StringUtil.isEmpty(list.get(5))) {
             // 验证导入市价全价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "市价全价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "估价全价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isNumeric(list.get(5))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "估价全价格式错误");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(6))) {
             // 验证导入市价净价是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "市价净价为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "估价净价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isNumeric(list.get(6))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "估价净价格式错误");
+                excelValidDtolist.add(dto);
+            }
         }
         return excelValidDtolist;
     }
@@ -476,6 +488,10 @@ public class ComBondQuotationInfoService extends CommonExportService<ComBondQuot
      */
     public List<Integer> duplicateCheck(List<List<String>> dataList)
         throws ParseException {
+        List<ExcelValidDto> checkResult = checkExcelData(dataList);
+        if(CollectionUtils.isNotEmpty(checkResult)){
+            return new ArrayList<>();
+        }
     	List<ComBondQuotationInfoDto> equityList = converToBean(dataList,null);
     	List<Integer> duplicateData=new ArrayList<Integer>();
       for (int i = 0; i < dataList.size(); i++ ) {

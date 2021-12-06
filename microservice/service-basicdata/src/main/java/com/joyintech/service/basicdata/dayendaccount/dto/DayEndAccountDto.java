@@ -15,9 +15,61 @@ public class DayEndAccountDto extends StlSecRecon {
 	private String finprodType;
 
 	/**
-	 * 成交编号
+	 * 流水号
 	 */
 	private String tradeId;
+
+	/**
+	 * 成交编号
+	 */
+	private String cjbh;
+
+	public String getCjbh() {
+		return cjbh;
+	}
+
+	public void setCjbh(String cjbh) {
+		this.cjbh = cjbh;
+	}
+
+	/**
+	 * 是否人工修改
+	 */
+	private String isModify;
+
+	public String getIsModify() {
+		return isModify;
+	}
+
+	public void setIsModify(String isModify) {
+		this.isModify = isModify;
+	}
+
+	/**
+	 * 交易方向
+	 */
+	private String ps;
+
+	public String getPs() {
+		return ps;
+	}
+
+	public void setPs(String ps) {
+		this.ps = ps;
+	}
+
+	public String getFinprodMarketId() {
+		return finprodMarketId;
+	}
+
+	public void setFinprodMarketId(String finprodMarketId) {
+		this.finprodMarketId = finprodMarketId;
+	}
+
+	/**
+	 * 金融产品市场代码
+	 */
+	private String finprodMarketId;
 
 	/**
 	 * 印花税
@@ -169,6 +221,19 @@ public class DayEndAccountDto extends StlSecRecon {
 	 */
 	@JsonSerialize(using=BigDecimalSerializer.class)
 	private BigDecimal commissionAmtFlg;
+
+	/**
+	 * 席位号
+	 */
+	private String seatNumber;
+
+	public String getSeatNumber() {
+		return seatNumber;
+	}
+
+	public void setSeatNumber(String seatNumber) {
+		this.seatNumber = seatNumber;
+	}
 
 	public BigDecimal getStampFeeFlg() {
 		return stampFeeFlg;

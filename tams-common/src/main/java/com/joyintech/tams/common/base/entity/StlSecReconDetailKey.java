@@ -14,6 +14,11 @@ public class StlSecReconDetailKey extends BaseEntity {
     private String tradeId;
 
     /**
+     * 对账维度
+     */
+    private String stlSecDeme;
+
+    /**
      * 取得 券商对账单流水号
      * @return 券商对账单流水号
      */
@@ -43,5 +48,13 @@ public class StlSecReconDetailKey extends BaseEntity {
      */
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId == null ? null : tradeId.trim();
+    }
+
+    public String getStlSecDeme() {
+        return stlSecDeme;
+    }
+
+    public void setStlSecDeme(String stlSecDeme) {
+        this.stlSecDeme = this.stlSecDeme = stlSecDeme == null ? null : stlSecDeme.trim();
     }
 }

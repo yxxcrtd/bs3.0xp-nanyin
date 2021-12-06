@@ -104,7 +104,7 @@ public class ExchangeTransMatch004Dto extends SettleTransDataTotal implements IT
     }
 
     public String getTradeMarketStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.交易平台, this.getTradeMarket());
+        return SysDataUtil.getNameFromDataDict(DictCode.交易场所, this.getTradeMarket());
     }
 
     public String getFinprodType2Str() {

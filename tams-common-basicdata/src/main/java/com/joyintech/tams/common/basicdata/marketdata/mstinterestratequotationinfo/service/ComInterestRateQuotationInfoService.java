@@ -135,7 +135,7 @@ public class ComInterestRateQuotationInfoService extends CommonExportService<Com
             else {
                 List<ExcelValidDto> checkResult = new ArrayList<>();
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
-                        getMessage("文件名称错误，请下载模板后上传")));
+                         "文件名称错误，请下载模板后上传"));
                 return checkResult;
             }
         }
@@ -285,6 +285,14 @@ public class ComInterestRateQuotationInfoService extends CommonExportService<Com
             // 验证导入利率值是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i+2), "利率值为空");
             excelValidDtolist.add(dto);
+        }else{
+            // TISHKS-61:增加利率值格式校验 fuyongsheng 20211112 edit start
+            if(!checkFigure(list.get(3))){
+                // 验证导入利率值是否为数字
+                ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i+2), "利率值格式错误");
+                excelValidDtolist.add(dto);
+            }
+            // TISHKS-61:增加利率值格式校验 fuyongsheng 20211112 edit end
         }
         if (StringUtil.isEmpty(list.get(4))) {
             // 验证导入生效日是否为空
@@ -315,4 +323,19 @@ public class ComInterestRateQuotationInfoService extends CommonExportService<Com
                 equityList, Integer.class);
     }
     // add by zwq 20210222  end
+
+    /**
+     * 判断是否为数字
+     *
+     * @param
+     * @return 返回boolean
+     */
+    private boolean checkFigure(String figure) {
+        try{
+            new BigDecimal(figure);
+            return true;
+        }catch(Exception e){
+            return false;
+        }
+    }
 }

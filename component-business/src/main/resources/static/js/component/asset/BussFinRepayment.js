@@ -232,6 +232,8 @@
         }
         
     }
+    var beforePrinAmt ;
+    var beforeIntAmt ;
     var table =$("#bussFinRepaymentTable").joyintable({
         ajax: {
             url: JoyinUtil.getRealPath('/component/asset/BussFinRepayment/initInfo'),
@@ -285,9 +287,16 @@
             if(rowData.updateFlg=='02'){
                 return false;
             }
+            if(field=='prinAmt'){
+                beforePrinAmt =preVal
+            }
+            if(field=='intAmt'){
+                beforeIntAmt =preVal
+            }
             return true;
         },
         editCell : function(value, data, field, cell, column){
+            debugger;
             //项目类资产还本计划维护
             if(INT_ASSET_TYPE == FINPROD_TYPE_TG_F18&&INT_ASSET_TYPE_REPAY==COMMON_BUSINESS_TYPE_FINPROD10){
                 //还款金额
@@ -298,6 +307,12 @@
                 isEditRepayTable = true;
             }else{
                 if(field=='prinAmt'||field=='intAmt'){
+                    if(field=='prinAmt'&&data.prinAmt==beforePrinAmt){
+                        return
+                    }
+                    if(field=='intAmt'&&data.prinAmt==beforeIntAmt){
+                        return
+                    }
                     var rowData = {};
                     rowData.cashAmt = JoyinMath.doAdd(data.prinAmt,data.intAmt,2);
                     //清空支付日，编辑还本金额后是否重新计算利息是根据支付日是否为空判断!

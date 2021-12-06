@@ -4,7 +4,7 @@ $(function() {
      * 定义数据表格
      */
     var cols = [
-        {field:'portfolioId',sortable: false, title: 'DayEndAccount001.portfolioId',width:120}
+        {field:'account',sortable: false, title: 'DayEndAccount001.busiAcctNo',width:120}
         ,{field:'settleDate', type:'date',sortable: false, title: 'DayEndAccount001.settleDate',width:120}
         ,{field:'finprodId',sortable: false, title: 'DayEndAccount001.finprodId',width:120}
         ,{field:'tradeMarketStr',sortable: false, title: 'DayEndAccount001.tradeMarket',width:120}
@@ -44,7 +44,8 @@ $(function() {
      * 定义数据表格
      */
     var colsDetail = [
-        {field:'tradeId',sortable: false, title: 'DayEndAccount001.tradeId',width:120}
+         {field:'cjbh',sortable: false, title: 'DayEndAccount001.tradeId',width:120}
+        ,{field:'psStr',sortable: false, title: 'DayEndAccount001.ps',width:120}
         ,{field:'commissionAmt', type:'money',edit: true,sortable: false, title: 'DayEndAccount001.commissionAmt',width:120}
         ,{field:'jsfAmt', type:'money',edit: true,sortable: false, title: 'DayEndAccount001.jsfAmt',width:120}
         ,{field:'zgfAmt', type:'money',edit: true,sortable: false, title: 'DayEndAccount001.zgfAmt',width:120}
@@ -71,11 +72,7 @@ $(function() {
         ajax: {
             url: JoyinUtil.getRealPath('invest/basicdata/dayendaccount/DayEndAccount002/findDataDetailPage'),
             type: 'POST',
-            data: function() {
-                return {seqNo: $('#seqNo').val(),
-                    workflowId: $('#workflowId').val()
-                };
-            }
+            data: entity
         },
         cols: colsDetail,
         height: 250,
@@ -165,7 +162,6 @@ $(function() {
      * 画面加载完成
      */
     $(function() {
-        debugger;
         /**
          * 提交
          */

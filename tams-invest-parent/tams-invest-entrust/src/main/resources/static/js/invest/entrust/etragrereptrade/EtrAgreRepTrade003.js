@@ -30,17 +30,17 @@
         }
     }
     //add by meifaxin 20211101 上下左右拖拽end
-    
+
     function getSearchParams(){
         var data ={};
         data.entrustStatus = $('#searchForm').find('input:radio:checked').val();
         return data;
     }
-    
+
     /**
      * 定义数据表格
      */
-    var dateTable = $("#dateTable").joyintable({ 
+    var dateTable = $("#dateTable").joyintable({
         ajax: {
             url: 'selectEtrEntrust',//请求路径
             type: 'POST',//请求类型
@@ -49,13 +49,13 @@
             }//ajax请求数据
         },
         dblclick:function(table, data) {
-        	if(data.entrustStatus != ENTRUST_STATUS_05&&data.entrustStatus != ENTRUST_STATUS_07){
+            if(data.entrustStatus != ENTRUST_STATUS_05&&data.entrustStatus != ENTRUST_STATUS_07){
                 //Joyin.error(data.entrustStatusString+"的指令不允许修改!");
-    	        Joyin.error("委托状态不是已撤回、已退回，无法修改!");
-    	        return false;
-        	}
+                Joyin.error("委托状态不是已撤回、已退回，无法修改!");
+                return false;
+            }
             window.parent.doResetRiskMathFlag();
-        	parent.EtrAgreRepTrade001.setEtrExchangeItems(data);
+            parent.EtrAgreRepTrade001.setEtrExchangeItems(data);
         },
         /**
          * 定义表格名称
@@ -63,7 +63,7 @@
         searchOnInit:true,
         /*loadonce:true,*/
         cols:[
-             {field:'entrustId', title: 'EtrExchangeTrade003.entrustId', sortField:'entrustId',width : 200}//
+            {field:'entrustId', title: 'EtrExchangeTrade003.entrustId', sortField:'entrustId',width : 200}//
             ,{field:'entrustStatus', title: 'EtrExchangeTrade003.entrustStatus',visible:false, sortField:'entrustStatus',width : 150}//组合名称
             ,{field:'entrustStatusString', title: 'EtrExchangeTrade003.entrustStatus', sortField:'entrustStatus',width : 150}//组合名称
             ,{field:'implementPercentAge', title: 'EtrExchangeTrade003.implementPercentAge',render: function (data, type, row, meta) {
@@ -74,16 +74,16 @@
                         + "%</span></div></div>";
                 }, sortField:'implementPercent',width : 150}//证券账户代码
             ,{field:'dealPercentAge', title: 'EtrExchangeTrade003.dealPercentAge',render: function (data, type, row, meta) {
-            	// 申报类指令成交进度显示为N/A 涉及指令业务类型：1.配股 2.配债 3.债转股 4.行权回售 5.新股申购 6.可转债申购
-            	// 数据字典:上农商_指令业务类型("ENTRUST_BUSS_TYPE")
-            	if(row.entrustType == "09" || row.entrustType == "10" || row.entrustType == "11" || row.entrustType == "12" || row.entrustType == "13" || row.entrustType == "16"){
-            		return '<span class="s-color-gray">N/A</span>';
-            	}
-                return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"
-                + (row.dealPercentAge)
-                + "%'><span class='layui-progress-text' style='color:black;'>"
-                + (row.dealPercentAge)
-                + "%</span></div></div>";
+                    // 申报类指令成交进度显示为N/A 涉及指令业务类型：1.配股 2.配债 3.债转股 4.行权回售 5.新股申购 6.可转债申购
+                    // 数据字典:上农商_指令业务类型("ENTRUST_BUSS_TYPE")
+                    if(row.entrustType == "09" || row.entrustType == "10" || row.entrustType == "11" || row.entrustType == "12" || row.entrustType == "13" || row.entrustType == "16"){
+                        return '<span class="s-color-gray">N/A</span>';
+                    }
+                    return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"
+                        + (row.dealPercentAge)
+                        + "%'><span class='layui-progress-text' style='color:black;'>"
+                        + (row.dealPercentAge)
+                        + "%</span></div></div>";
                 },sortField:'dealPercent', width : 150}//证券账户名称
 
             ,{field:'portfolioName', title: 'EtrExchangeTrade003.portfolioName', sortField:'portfolioName',width : 150}//资产代码
@@ -120,6 +120,7 @@
             ,{field:'counterName', title: '交易对手',sortField:'counterName', width : 150}
             ,{field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//持仓成本
             ,{field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date',sortField:'MDATE'}//最新价
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:150 ,sortable:false}
         ]
     });
 
@@ -144,8 +145,8 @@
      * 画面加载完成
      */
     $(function() {
-    	
-    	/**
+
+        /**
          * 关闭委托
          */
         $('#EtrExchangeTrade003_btn_import').click(function() {

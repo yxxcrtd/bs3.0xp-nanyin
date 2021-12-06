@@ -100,6 +100,22 @@ public class EtrExchangeTrade002Service extends CommonExportService<EtrExchangeT
         return tempList;
     }
 
+
+	/**
+	 * 查询质押券代码下拉框
+	 *
+	 * @param parameters 画面参数
+	 * @return 证券代码联想框文本框
+	 * @see
+	 * @since 1.0
+	 */
+	public Page<SelectOptionDto> selectZyq(Map<String, Object> parameters) {
+		Page<SelectOptionDto> tempList = restTemplate.postForPage(
+				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectZyq",
+				parameters, SelectOptionDto.class);
+		return tempList;
+	}
+
     /**
      * 查询上交所和深交所标准券数量
      *

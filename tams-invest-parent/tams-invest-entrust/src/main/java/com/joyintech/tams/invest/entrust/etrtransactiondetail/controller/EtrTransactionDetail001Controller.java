@@ -110,8 +110,8 @@ public class EtrTransactionDetail001Controller  extends BaseController{
 			return StringUtil.equals(option.getId(), DictCodeList.平安资产类型_债券.getValue())
 					|| StringUtil.equals(option.getId(), DictCodeListExt2.平安资产类型_股票.getValue())
 					|| StringUtil.equals(option.getId(), DictCodeList.平安资产类型_基金.getValue())
-					|| StringUtil.equals(option.getId(), DictCodeList.平安资产类型_质押式回购.getValue())
-					|| StringUtil.equals(option.getId(), DictCodeListExt3.平安资产类型_期货.getValue());
+					|| StringUtil.equals(option.getId(), DictCodeList.平安资产类型_质押式回购.getValue());
+//					|| StringUtil.equals(option.getId(), DictCodeListExt3.平安资产类型_期货.getValue());
 		}).collect(Collectors.toList());
 		model.addAttribute("PINAN_ASSET_TYPE", JsonUtils.objectArray2Json(assetType.toArray()));
 	}

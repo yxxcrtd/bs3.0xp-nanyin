@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper
-	namespace="com.joyintech.service.entrust.common.dao.EntrustCommonMapper">
+		namespace="com.joyintech.service.entrust.common.dao.EntrustCommonMapper">
 	<select id="assetIsTestBySppi" resultType="java.lang.String">
 		select nvl(IS_SPPI_PASS,sppi_test_status) IS_SPPI_PASS
 		from  fin_product   fp
@@ -12,10 +12,13 @@
 		</if>
 	</select>
 
+	<select id="getAllUserList" resultType="com.joyintech.system.base.entity.SysUser">
+		select * from sys_user
+	</select>
+
 	<select id="getZyqk" resultType="java.lang.String">
 		select distinct PLEDGE_STOCK_ID
 		from  PTL_SEC_STOCK
 		where PLEDGE_STOCK_NAME = #{zyqkName}
 	</select>
-
 </mapper>
