@@ -621,6 +621,8 @@
                 AND (SYS_USER.USER_NAME like concat(concat('%',
                 #{dealers,jdbcType=VARCHAR}),'%')
                 OR SYS_USER.REAL_NAME like concat(concat('%',
+                #{dealers,jdbcType=VARCHAR}),'%')
+                OR SYS_USER.USER_ID like concat(concat('%',
                 #{dealers,jdbcType=VARCHAR}),'%'))
             </if>
         </where>
