@@ -39,6 +39,13 @@ public interface ReconciliationCommonMapper {
     List<SettleTransData> getSettleTransData(Map<String, Object> param);
 
     /**
+     * 查询对账单明细表
+     * @param param
+     * @return
+     */
+    List<StlSecReconDetail> queryStlSecReconDetails(Map<String, Object> param);
+
+    /**
      * 删除成交明细数据
      * @param param param
      */
