@@ -1036,10 +1036,16 @@ public class SvrMonthCollectInterf extends BaseService{
 			detail.setValueSharesTotal(null);
 			detail.setSaleSharesTotal(null);
 			detail.setBalanceShares(null);
+			if(detail.getHolderNum() == null){
+				detail.setHolderNum(BigDecimal.ZERO);
+			}
 		}else{
 			detail.setValueSharesTotal(null);
 			detail.setSaleSharesTotal(null);
 			detail.setBalanceShares(null);
+			if(detail.getHolderNum() == null){
+				detail.setHolderNum(BigDecimal.ZERO);
+			}
 		}
 		return detail;
 	}
