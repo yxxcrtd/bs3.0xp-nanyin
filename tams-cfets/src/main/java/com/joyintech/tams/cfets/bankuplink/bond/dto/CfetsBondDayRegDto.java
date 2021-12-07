@@ -35,6 +35,9 @@ public class CfetsBondDayRegDto {
     @ApiModelProperty(name="quoteTypeStr",value="报价方式名称")
     private String quoteTypeStr;
 
+    @ApiModelProperty(name="finprodId",value="资产代码")
+    private String finprodId;
+
     @ApiModelProperty(name="finprodMarketId",value="资产代码")
     private String finprodMarketId;
 
@@ -130,6 +133,14 @@ public class CfetsBondDayRegDto {
         }else{
             return BussinessDictCodeList.有效状态_有效.getCodeName();
         }
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
     }
 
     public String getFinprodMarketId() {
