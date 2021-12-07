@@ -825,6 +825,7 @@ public class AutoPeriodBondCommonService {
         trdFinProductDealTotal.setFpriceAmt(trdFinProductDealTotal.getTradeAmt());
         trdFinProductDealTotal.setTradeMarket(entity.getTradeMarket());
         trdFinProductDealTotal.setTradeMarketMode(BussinessDictCodeList.交易市场_二级市场.getValue());
+        trdFinProductDealTotal.setCounterId(entity.getIssuer());
         return trdFinProductDealTotal;
     }
 

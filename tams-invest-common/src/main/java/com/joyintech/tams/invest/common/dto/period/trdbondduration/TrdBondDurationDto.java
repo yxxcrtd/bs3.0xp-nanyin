@@ -285,6 +285,11 @@ public class TrdBondDurationDto extends BaseEntity {
     private List<UploadFile> uploadFileList;
 
     /**
+     * 发行人
+     */
+    private String issuer;
+
+    /**
      * finprodAbbr
      * @return finprodAbbr
      */
@@ -1202,5 +1207,13 @@ public class TrdBondDurationDto extends BaseEntity {
 
     public void setUploadFileList(List<UploadFile> uploadFileList) {
         this.uploadFileList = uploadFileList;
+    }
+
+    public String getIssuer() {
+        return issuer;
+    }
+
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
     }
 }

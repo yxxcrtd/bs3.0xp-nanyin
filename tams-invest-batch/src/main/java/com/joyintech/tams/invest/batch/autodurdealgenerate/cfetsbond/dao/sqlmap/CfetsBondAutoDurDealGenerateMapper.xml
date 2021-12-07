@@ -146,6 +146,7 @@
         TO_CHAR(t8.MDATE, 'yyyy-MM-dd') mDate,
         T10.FINPROD_ID,
         T10.CCY,
+        T10.ISSUER issuer,
         ROUND(t8.INT_AMT, 12) unitIntAmt,/*单位应计利息*/
         TO_CHAR(T10.VDATE, 'yyyy-MM-dd') vDateWhole,/*起息日*/
         TO_CHAR(T10.MDATE, 'yyyy-MM-dd') mDateWhole,/*到期日*/
@@ -258,6 +259,7 @@
         t8.MDATE,
         T10.FINPROD_ID,
         T10.CCY,
+        T10.ISSUER,
         T10.VDATE,
         T10.MDATE,
         T8.RANGE_YIELD ,
@@ -282,6 +284,7 @@
         t1.mDate,
         t1.FINPROD_ID,
         t1.CCY,
+        t1.issuer,
         t1.unitIntAmt ,
         t1.vDateWhole ,
         t1.mDateWhole ,
