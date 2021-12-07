@@ -240,7 +240,7 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
     private String settleSpeed;
 
     /**
-     * 是否多组合
+     * 是否多组合系列户的指令
      */
     private String isMulti;
     

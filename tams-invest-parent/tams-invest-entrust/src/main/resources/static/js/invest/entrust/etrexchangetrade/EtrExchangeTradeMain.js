@@ -178,7 +178,7 @@ var currentEtrTypeTab = "0";
           EtrExchangeTradeMulti001.cluflag = cluflag;
       }
 
-      Joyin.dialog(JoyinUtil.getLabel('EtrExchangeTradeRiskcal'), '/invest/entrust/etrexchangetrade/EtrExchangeTradeRiskcal/init', '60%', '75%',null); 
+      Joyin.dialog(JoyinUtil.getLabel('EtrExchangeTradeRiskcal'), '/invest/entrust/etrexchangetrade/EtrExchangeTradeRiskcal/init', '60%', '75%',null);
   }
 
   /**
@@ -452,18 +452,25 @@ var importEtr = function() {
 /***
  * 绑定单组合或多组合平台TAB切换事件
  */
-var setZlPlatform =function(etrType,deleteOther) {
-    currentEtrTypeTab = etrType;
+var setZlPlatform =function(isMulti,deleteOther) {
+    currentEtrTypeTab = isMulti=='Y'?1:0;
+    isMulti = isMulti=='Y'?true:false;
     layui.use(['element'], function() {
         var element = layui.element;
-        if(etrType) {
-            element.tabChange('zlPlatform', etrType);
+        if(currentEtrTypeTab) {
+            element.tabChange('zlPlatform', currentEtrTypeTab);
         }
         if(deleteOther) {
             var tabtitle = $(".layui-tab-title li");
             $.each(tabtitle, function (i) {
                 var layId = $(this).attr("lay-id");
-                if(etrType && etrType != layId) {
+                if(isMulti && layId == '0') {
+                    element.tabDelete('zlPlatform', layId);
+                }
+                else if(!isMulti &&  layId == '1') {
+                    element.tabDelete('zlPlatform', layId);
+                }
+                else if(!layId) {
                     element.tabDelete('zlPlatform', layId);
                 }
             });
@@ -549,8 +556,8 @@ $(function() {
         doRiskcal();
     });
     if(pageModel==PAGE_MODEL_REFERENCE || pageModel==PAGE_MODEL_EDIT){
-        currentEtrTypeTab = isMulti=='Y'?1:0;
-        setZlPlatform(currentEtrTypeTab,true);
+
+        setZlPlatform(isMulti,true);
     }
 
 }());
@@ -569,5 +576,6 @@ parent.EtrExchangeTradeMain = {
     dialogSelf:dialogSelf
 }
 EtrExchangeTradeMain = {
-    dialogSelf:dialogSelf
+    dialogSelf:dialogSelf,
+    currentEtrTypeTab:currentEtrTypeTab
 }

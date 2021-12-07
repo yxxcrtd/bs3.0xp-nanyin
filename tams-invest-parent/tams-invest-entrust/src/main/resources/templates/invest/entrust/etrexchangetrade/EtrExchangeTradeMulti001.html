@@ -813,12 +813,37 @@
         </form>
     </div>
     <div>
-        <h3 class="pro-module-title"><span class="title-des">组合分配</span>
-            <a class="layui-btn layui-btn-sm btn-create" id="etrExchangeTradeMulti001_btn_add">
-                <i class="iconfont icon-found"></i><span data-th-utext="#{BussRepoSec.add}">添加</span>
-            </a>
-            <a id="etrExchangeTradeMulti001_btn_calc" class="layui-btn layui-btn-sm" style="width: 50px;">计算</a>
-        </h3>
+        <div>
+            <div class="layui-row layui-col-space5" style="width: 100%; margin-top:8px">
+                <h3 class="pro-module-title"><span class="title-des">组合分配</span>
+                    <a class="layui-btn layui-btn-sm btn-create" id="etrExchangeTradeMulti001_btn_add">
+                        <i class="iconfont icon-found"></i><span data-th-utext="#{BussRepoSec.add}">添加</span>
+                    </a>
+                    <a id="etrExchangeTradeMulti001_btn_calc" class="layui-btn layui-btn-sm" style="width: 50px;">计算</a>
+                </h3>
+                <div class="layui-col-md12 layui-inline">
+                    <div class="layui-row grid-demo">
+                        <div class="layui-col-md2 layui-col-space5">
+                            <label style="font-size: 12px;">资产代码：</label> <span
+                                style="font-size: 12px;" id="finprodId_total">--</span>
+                        </div>
+                        <div class="layui-col-md2 layui-col-space5">
+                            <label style="font-size: 12px;">资产名称：</label> <span
+                                style="font-size: 12px;" id="finprodName_total">--</span>
+                        </div>
+                        <div class="layui-col-md2 layui-col-space5">
+                            <label style="font-size: 12px;">指令数量：</label>
+                            <span style="font-size: 12px;" id="entrustNum_total">--</span>
+                        </div>
+                        <div class="layui-col-md2 layui-col-space5">
+                            <label id="entrustAmout_total_label" style="font-size: 12px; font-weight: bolder">指令金额：</label>
+                            <span style="font-size: 12px; font-weight: bolder" id="entrustAmout_total">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div>
             <table class="layui-table" id="dateTable"></table>
         </div>

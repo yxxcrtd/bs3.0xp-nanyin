@@ -1201,6 +1201,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                     BeanUtil.copyPropertiesIgnoreNull(wflEtrEntrustDetail,etrEntrustDetail);
                     wflEtrEntrustDetail.setWorkflowId(dto.getWorkFlowId());
                     wflEtrEntrustDetail.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                    wflEtrEntrustDetailMapper.insertSelective(wflEtrEntrustDetail);
                 }
             }
 
@@ -1289,6 +1290,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             wflEtrPledgeMapper.deleteByWorkflowId(workflowId);
             // 全删委托投标标位表
             wflEtrEntrustBidPriceMapper.deleteByWorkflowId(workflowId);
+            //场内多组合系列户指令需要删除委托指令明细流程表
+            wflEtrEntrustDetailMapper.deleteByWorkflowId(workflowId);
             return true;
         }
         return false;

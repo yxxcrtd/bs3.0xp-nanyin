@@ -2640,6 +2640,20 @@
         $("#mulDistriClass_" + currentTab).val('').trigger('change');
         $("#targetValue_" + currentTab).val('').trigger('change');
 
+        if(currentTab == 'dz' || currentTab == 'gd') {
+            $("#declaType_" + currentTab).val('').trigger('change');
+            $("#counterId_" + currentTab).val('').trigger('change');
+            $("#seatId_" + currentTab).val('').trigger('change');
+            $("#agreeOnId_" + currentTab).val('').trigger('change');
+
+            if(currentTab == 'gd') {
+                $("#trader_" + currentTab).val('').trigger('change');
+                $("#counterOrg_" + currentTab).val('').trigger('change');
+                $("#counterTrader_" + currentTab).val('').trigger('change');
+                $("#settleSpeed_" + currentTab).val('').trigger('change');
+            }
+        }
+
 
         /***
          * 清空行情列表
@@ -3236,6 +3250,46 @@
                         dateTable.renderRow(data.LAY_TABLE_INDEX,result);
                     }
                 });
+            }
+        },
+        done: function (table, allData) {
+            if(dateTable.getAllRows()) {
+                var array = dateTable.getAllRows();
+                if(array.length>0) {
+                    if(array[0].ps == PS_T68 || array[0].ps == PS_T69) {
+                        $("#entrustAmout_total_label").text("标准券数量");
+                    }
+                    else {
+                        $("#entrustAmout_total_label").text("指令金额");
+                    }
+                    if(array[0].finprodMarketId) {
+                        $("#finprodId_total").text(array[0].finprodMarketId);
+                        $("#finprodName_total").text(array[0].finprodName);
+
+                        var entrustNumTotal = 0;
+                        var entrustAmoutTotal = 0;
+                        for(var i=0;i<array.length;i++) {
+                            entrustNumTotal = parseFloat(entrustNumTotal) + parseFloat(isNumber(array[i].entrustNum)?array[i].entrustNum:0);
+                            entrustAmoutTotal = parseFloat(entrustAmoutTotal) + parseFloat(isNumber(array[i].entrustAmt)?array[i].entrustAmt:0);
+                        }
+                        $("#entrustNum_total").text(entrustNumTotal);
+                        $("#entrustAmout_total").text(entrustAmoutTotal);
+                    }
+                    else {
+                        $("#finprodId_total").text("--");
+                        $("#finprodName_total").text("--");
+                        $("#entrustNum_total").text("--");
+                        $("#entrustAmout_total").text("--");
+                    }
+
+                }
+                else {
+                    $("#finprodId_total").text("--");
+                    $("#finprodName_total").text("--");
+                    $("#entrustNum_total").text("--");
+                    $("#entrustAmout_total").text("--");
+                }
+
             }
         }
     });

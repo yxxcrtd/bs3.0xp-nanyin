@@ -165,9 +165,13 @@ public class EtrExchangeTradeService extends BaseService{
     @Autowired(required = false)
     private FinProductMapper finProductMapper;
 
+    @Autowired
+    private EtrEntrustDetailMapper etrEntrustDetailMapper;
+
     public static final String ENTRUST_RECORD_NEW = "new";
     
     public static final String ENTRUST_RECORD_MODIFY = "modify";
+
 
     /**
      * 工作流完成方法
@@ -627,6 +631,14 @@ public class EtrExchangeTradeService extends BaseService{
         etrExchangeTrade001Dto.setAcctNo(dto.getTradeMultiPtl001Dtos().get(0).getAcctNo());
         etrExchangeTrade001Dto.setSecAcctId(dto.getTradeMultiPtl001Dtos().get(0).getSecAcctId());
         this.doComplete(etrExchangeTrade001Dto, operationType);
+
+        //插入指令多组合明细表
+        BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildMultiEtrFlow(dto);
+        if(!StringUtil.isEmptyList(baseEtrInvestInfoDto.getEtrEntrustDetailList())) {
+            for (EtrEntrustDetail etrEntrustDetail:baseEtrInvestInfoDto.getEtrEntrustDetailList()) {
+                etrEntrustDetailMapper.insertSelective(etrEntrustDetail);
+            }
+        }
     }
 
     /**

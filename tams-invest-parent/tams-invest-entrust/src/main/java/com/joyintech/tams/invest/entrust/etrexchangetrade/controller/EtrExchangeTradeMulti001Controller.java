@@ -286,7 +286,7 @@ public class EtrExchangeTradeMulti001Controller extends BaseController{
 
     /**
      *
-     * @param dto
+     * @param param
      * @return
      */
     @ResponseBody
@@ -616,40 +616,33 @@ public class EtrExchangeTradeMulti001Controller extends BaseController{
             BigDecimal totalEntrustNum = dto.getTradeMultiPtl001Dtos().stream().map(EtrExchangeTradeMultiPtl001Dto::getEntrustNum).reduce(BigDecimal::add).get();
             dto.setEntrustAmt(totalEntrustAmt);
             dto.setEntrustNum(totalEntrustNum);
+            dto.setBusinessTypeName(businessType);
 
-            List<EtrExchangeTrade001Dto> etrExchangeTrade001DtoList = new ArrayList<>();
-            for(EtrExchangeTradeMultiPtl001Dto item:dto.getTradeMultiPtl001Dtos()) {
-                EtrExchangeTrade001Dto etrExchangeTrade001Dto = etrExchangeTradeMulti001Service.genEtrExchangeTrade001Dto(dto,item);
-
-                if (dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue())) {
-                    etrExchangeTrade001Dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
-                } else if (dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) {
-                    etrExchangeTrade001Dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
-                }
-                etrExchangeTrade001Dto.setEntrustId(dto.getEntrustId());
-                etrExchangeTrade001Dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
-                etrExchangeTrade001Dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
-                etrExchangeTrade001Dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
-                etrExchangeTrade001Dto.setCreateTime(new Date());// 创建时间
-                etrExchangeTrade001Dto.setBusinessTypeName(businessType);//此处存的是类型
-                etrExchangeTrade001Dto.setOptType(ENTRUST_RECORD_NEW);
-
-                etrExchangeTrade001DtoList.add(etrExchangeTrade001Dto);
-            }
 
             // ----------预占功能 start----------
             if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
                 // add by zhangrui1 start
-                AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(getPageId(), etrExchangeTrade001DtoList,
-                        BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue());
-                if (null != ar) {
+                String finprodType2 = "";
+                if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                    finprodType2 =  DictCodeList.平安资产类型_债券.getValue();
+                }
+                else if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
+                    finprodType2 =  DictCodeList.平安资产类型_基金.getValue();
+                }
+                else if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+                    finprodType2 =  DictCodeListExt2.平安资产类型_股票.getValue();
+                }
+                else if((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) ) {
+                    finprodType2 =  DictCodeList.平安资产类型_质押式回购.getValue();
+                }
+                //债转股需要走批量接口
+                String infCode =  BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
+                AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto, infCode, finprodType2);
+                if (StringUtil.isNotEmpty(ar)) {
                     return ar;
                 }
-                EntrustRdsCommonAop.riskListToChildren(dto.getRiskTrialRetDto(), etrExchangeTrade001DtoList,
-                        (etrExchangeTrade001Dto, list) -> etrExchangeTrade001Dto.setRiskTrialRetDto(list));
             }
             // ----------预占功能 end----------
-
             ProcessParameter<EtrExchangeTradeMulti001Dto> processParameter = new ProcessParameter<EtrExchangeTradeMulti001Dto>();
             WorkFlowParameter<EtrExchangeTradeMulti001Dto> params = new WorkFlowParameter<EtrExchangeTradeMulti001Dto>();
             params.setPageId("EtrExchangeTradeMain");
