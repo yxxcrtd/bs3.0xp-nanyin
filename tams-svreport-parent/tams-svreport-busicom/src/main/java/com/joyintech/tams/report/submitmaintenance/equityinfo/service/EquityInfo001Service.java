@@ -2555,10 +2555,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             list.set(7, regist001Dto.getHolderRegion());
             // 投资者类别
             list.set(8, regist001Dto.getHolderType());
-            // 投资者分类
-            list.set(25, regist001Dto.getHolderClassify());
-            // 投资者分类 todo
-            list.set(26, regist001Dto.getFundAccPlace());
+
             // 个人证件类别
             list.set(9, regist001Dto.getPersonalIdentifyType());
             // 机构证件类别
@@ -2582,6 +2579,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             // 手机号码
             if (StringUtil.isBlank(list.get(18))) {
                 list.set(18, regist001Dto.getHolderCellphone());
+            }
+            // 手机号码
+            if (list.size()>=26&&StringUtil.isBlank(list.get(25))) {
+                list.set(25, regist001Dto.getHolderClassify());
             }
             // 固定电话
             if (StringUtil.isBlank(list.get(19))) {
