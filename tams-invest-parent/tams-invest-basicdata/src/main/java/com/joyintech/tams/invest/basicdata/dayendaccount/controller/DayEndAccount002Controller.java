@@ -187,7 +187,10 @@ public class DayEndAccount002Controller extends BaseController {
         }
         String portfolioId = dayEndAccountDto.getPortfolioId();
         String finprodId = dayEndAccountDto.getFinprodId();
-        params.setComment(entity -> "组合代码" + "(" + portfolioId + ")" + "-" + "资产代码" + "(" + finprodId + ")");
+        // ZGZGST-4149:不展示组合代码 fuyongsheng 20211207 edit start
+        // params.setComment(entity -> "组合代码" + "(" + portfolioId + ")" + "-" + "资产代码" + "(" + finprodId + ")");
+        params.setComment(entity -> "资产代码" + "(" + finprodId + ")");
+        // ZGZGST-4149:不展示组合代码 fuyongsheng 20211207 edit end
         ProcessParameter<DayEndAccount002Dto> parameter = new ProcessParameter<DayEndAccount002Dto>();
         parameter.setWorkFlowParameter(params);
         String msg = dayEndAccount002Service.start(parameter, dto);
