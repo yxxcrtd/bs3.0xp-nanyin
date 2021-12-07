@@ -1,13 +1,12 @@
 package com.joyintech.background.component.uplink.interbank.database.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.background.component.common.pack.common.base.BaseEntity;
-import com.joyintech.background.component.common.pack.common.json.BigDecimalSerializer;
-import com.joyintech.background.component.common.pack.common.json.CustomDateDeserialize;
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.json.CustomDateDeserialize;
+import java.math.BigDecimal;
+import java.util.Date;
 
 public class IbuQuoteBond extends BaseEntity {
     /**
@@ -171,6 +170,23 @@ public class IbuQuoteBond extends BaseEntity {
      * 业务发生时间
      */
     private String transactime;
+
+    /**
+     * 交易手续费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal dealFeeAmt;
+
+    /**
+     * 结算服务费
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal settFeeAmt;
+
+    /**
+     * 分配方式
+     */
+    private String dipType;
 
     /**
      * 取得 报价编号（内部代码）
@@ -685,5 +701,53 @@ public class IbuQuoteBond extends BaseEntity {
      */
     public void setTransactime(String transactime) {
         this.transactime = transactime == null ? null : transactime.trim();
+    }
+
+    /**
+     * 取得 交易手续费
+     * @return 交易手续费
+     */
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    /**
+     * 设置 交易手续费
+     * @param dealFeeAmt 交易手续费
+     */
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
+    }
+
+    /**
+     * 取得 结算服务费
+     * @return 结算服务费
+     */
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
+    }
+
+    /**
+     * 设置 结算服务费
+     * @param settFeeAmt 结算服务费
+     */
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
+    }
+
+    /**
+     * 取得 分配方式
+     * @return 分配方式
+     */
+    public String getDipType() {
+        return dipType;
+    }
+
+    /**
+     * 设置 分配方式
+     * @param dipType 分配方式
+     */
+    public void setDipType(String dipType) {
+        this.dipType = dipType == null ? null : dipType.trim();
     }
 }

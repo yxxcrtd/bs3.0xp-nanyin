@@ -1,7 +1,6 @@
 package com.joyintech.background.component.uplink.interbank.database.entity;
 
-
-import com.joyintech.background.component.common.pack.common.base.BaseEntity;
+import com.joyintech.framework.base.BaseEntity;
 
 public class WflIbuQuoteEtrReKey extends BaseEntity {
     /**

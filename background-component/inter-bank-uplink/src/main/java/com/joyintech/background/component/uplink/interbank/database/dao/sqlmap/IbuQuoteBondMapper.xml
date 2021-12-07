@@ -39,6 +39,9 @@
         <result column="SEC_MANAGE_ACCT_ID" property="secManageAcctId" jdbcType="VARCHAR" />
         <result column="BRANCH_ID" property="branchId" jdbcType="VARCHAR" />
         <result column="TRANSACTIME" property="transactime" jdbcType="VARCHAR" />
+        <result column="DEAL_FEE_AMT" property="dealFeeAmt" jdbcType="DECIMAL" />
+        <result column="SETT_FEE_AMT" property="settFeeAmt" jdbcType="DECIMAL" />
+        <result column="DIP_TYPE" property="dipType" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         QUOTE_ID QUOTE_ID, QUOTE_TYPE QUOTE_TYPE, QUOTE_ROLE_TYPE QUOTE_ROLE_TYPE, VERSION VERSION, 
@@ -50,7 +53,7 @@
         OU_TRADER_ID OU_TRADER_ID, B_VERSION B_VERSION, REMARK REMARK, CREATE_USER CREATE_USER, 
         CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
         MY_ACCT_NO MY_ACCT_NO, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID, BRANCH_ID BRANCH_ID, 
-        TRANSACTIME TRANSACTIME
+        TRANSACTIME TRANSACTIME, DEAL_FEE_AMT DEAL_FEE_AMT, SETT_FEE_AMT SETT_FEE_AMT, DIP_TYPE DIP_TYPE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -85,7 +88,8 @@
             REMARK, CREATE_USER, CREATE_TIME, 
             CREATE_DEPT, UPDATE_USER, UPDATE_TIME, 
             MY_ACCT_NO, SEC_MANAGE_ACCT_ID, BRANCH_ID, 
-            TRANSACTIME)
+            TRANSACTIME, DEAL_FEE_AMT, SETT_FEE_AMT,
+            DIP_TYPE)
         values (#{quoteId,jdbcType=VARCHAR}, #{quoteType,jdbcType=VARCHAR}, #{quoteRoleType,jdbcType=VARCHAR}, 
             #{version,jdbcType=DECIMAL}, #{exeType,jdbcType=VARCHAR}, #{pQuoteId,jdbcType=VARCHAR}, 
             #{cfetsQuoteId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, 
@@ -98,7 +102,8 @@
             #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{createDept,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
             #{myAcctNo,jdbcType=VARCHAR}, #{secManageAcctId,jdbcType=VARCHAR}, #{branchId,jdbcType=VARCHAR}, 
-            #{transactime,jdbcType=VARCHAR})
+            #{transactime,jdbcType=VARCHAR}, #{dealFeeAmt,jdbcType=DECIMAL}, #{settFeeAmt,jdbcType=DECIMAL},
+            #{dipType,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond" >
         insert into IBU_QUOTE_BOND
@@ -214,6 +219,15 @@
             <if test="transactime != null" >
                 TRANSACTIME,
             </if>
+            <if test="dealFeeAmt != null" >
+                DEAL_FEE_AMT,
+            </if>
+            <if test="settFeeAmt != null" >
+                SETT_FEE_AMT,
+            </if>
+            <if test="dipType != null" >
+                DIP_TYPE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="quoteId != null" >
@@ -327,6 +341,15 @@
             <if test="transactime != null" >
                 #{transactime,jdbcType=VARCHAR},
             </if>
+            <if test="dealFeeAmt != null" >
+                #{dealFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeAmt != null" >
+                #{settFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dipType != null" >
+                #{dipType,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond" >
@@ -335,13 +358,13 @@
         QUOTE_DATE, SETTLE_DATE, SETTLE_SPEED, DELIVERY_TYPE, SETT_TYPE, SETT_CCY, PS, SHARE_AMT, 
         FPRICE_AMT, TRADE_STATUS, SEND_STATUS, EFF_TIME, OU_PARTY_ID, OU_TRADER_ID, B_VERSION, 
         REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, UPDATE_USER, UPDATE_TIME, MY_ACCT_NO, 
-        SEC_MANAGE_ACCT_ID, BRANCH_ID, TRANSACTIME)
+        SEC_MANAGE_ACCT_ID, BRANCH_ID, TRANSACTIME, DEAL_FEE_AMT, SETT_FEE_AMT, DIP_TYPE)
         select QUOTE_ID, QUOTE_TYPE, QUOTE_ROLE_TYPE, VERSION, EXE_TYPE, 
             P_QUOTE_ID, CFETS_QUOTE_ID, FINPROD_ID, FINPROD_TYPE2, BRANCH, PORTFOLIO_ID, ENTRUST_ID, 
             QUOTE_DATE, SETTLE_DATE, SETTLE_SPEED, DELIVERY_TYPE, SETT_TYPE, SETT_CCY, PS, SHARE_AMT, 
             FPRICE_AMT, TRADE_STATUS, SEND_STATUS, EFF_TIME, OU_PARTY_ID, OU_TRADER_ID, B_VERSION, 
             REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, MY_ACCT_NO, 
-            SEC_MANAGE_ACCT_ID, BRANCH_ID, TRANSACTIME
+            SEC_MANAGE_ACCT_ID, BRANCH_ID, TRANSACTIME, DEAL_FEE_AMT, SETT_FEE_AMT, DIP_TYPE
              from IBU_QUOTE_BOND
              where 1 = 1 and QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
     </insert>
@@ -447,6 +470,15 @@
             <if test="transactime != null" >
                 TRANSACTIME = #{transactime,jdbcType=VARCHAR},
             </if>
+            <if test="dealFeeAmt != null" >
+                DEAL_FEE_AMT = #{dealFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeAmt != null" >
+                SETT_FEE_AMT = #{settFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dipType != null" >
+                DIP_TYPE = #{dipType,jdbcType=VARCHAR},
+            </if>
         </set>
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
     </update>
@@ -484,7 +516,10 @@
             MY_ACCT_NO = #{myAcctNo,jdbcType=VARCHAR},
             SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
             BRANCH_ID = #{branchId,jdbcType=VARCHAR},
-            TRANSACTIME = #{transactime,jdbcType=VARCHAR}
+            TRANSACTIME = #{transactime,jdbcType=VARCHAR},
+            DEAL_FEE_AMT = #{dealFeeAmt,jdbcType=DECIMAL},
+            SETT_FEE_AMT = #{settFeeAmt,jdbcType=DECIMAL},
+            DIP_TYPE = #{dipType,jdbcType=VARCHAR}
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
     </update>
 </mapper>
