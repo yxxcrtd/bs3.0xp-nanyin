@@ -801,6 +801,9 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteBondDto.setOuTraderId(cfetsBondDealDialogueQuoteDto.getMySideTrader());
         ibuQuoteBondDto.setRemark(cfetsBondDealDialogueQuoteDto.getRemark());
         ibuQuoteBondDto.setSendStatus(DictCodeList.银行间上行发送状态_待发送.getValue());
+        ibuQuoteBondDto.setDipType(cfetsBondDealDialogueQuoteDto.getDistribution());
+        ibuQuoteBondDto.setDealFeeAmt(cfetsBondDealDialogueQuoteDto.getDealFeeAmt());
+        ibuQuoteBondDto.setSettFeeAmt(cfetsBondDealDialogueQuoteDto.getSettFeeAmt());
         inputBean.setIbuQuoteBondDto(ibuQuoteBondDto);
 
         // 银行间报价金额基对手信息
@@ -858,6 +861,8 @@ public class IbuComponentCommonService extends BaseService {
 	           	ibuQuoteEtrReDto.setShareAmt(ArithmeticUtil.multiply(
                		 item.getAvaNum(), new BigDecimal(100)));
 	           	ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                ibuQuoteEtrReDto.setSettFeeAmt(item.getDealFeeAmt());
 	           	ibuQuoteEtrReDtoList.add(ibuQuoteEtrReDto);
             });
             inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrReDtoList);
@@ -987,6 +992,9 @@ public class IbuComponentCommonService extends BaseService {
         	ibuQuoteBondDto.setWorkflowId(cfetsBondDealRequestQuoteDto.getWorkflowId());
         }
         ibuQuoteBondDto.setSendStatus(DictCodeList.银行间上行发送状态_待发送.getValue());
+        ibuQuoteBondDto.setDipType(cfetsBondDealRequestQuoteDto.getDistribution());
+        ibuQuoteBondDto.setDealFeeAmt(cfetsBondDealRequestQuoteDto.getDealFeeAmt());
+        ibuQuoteBondDto.setSettFeeAmt(cfetsBondDealRequestQuoteDto.getSettFeeAmt());
         inputBean.setIbuQuoteBondDto(ibuQuoteBondDto);
 
         // 银行间报价金额基对手信息列表
@@ -1044,6 +1052,8 @@ public class IbuComponentCommonService extends BaseService {
                 if(StringUtils.isNotEmpty(cfetsBondDealRequestQuoteDto.getWorkflowId())){
                     ibuQuoteEtrReDto.setWorkflowId(cfetsBondDealRequestQuoteDto.getWorkflowId());
                 }
+                ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
 	           	ibuQuoteEtrReDtoList.add(ibuQuoteEtrReDto);
             });
             inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrReDtoList);
