@@ -20,30 +20,17 @@
 <!--	根据持有数据，生成持有持有余额-->
 	<select id="selectHolderNum" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
-		prdRegistCode,
-		institutionCode,
-		areaCode,
-		holderType,
-		ccy,
-		sum(amount) balanceAmt,
-		sum(qty) balanceShares,
-		sum(cnyAmt) cnyAmt
+		prdRegistCode, institutionCode, areaCode, holderType, ccy, sum(amount) balanceAmt, sum(qty) balanceShares, sum(cnyAmt) cnyAmt
 		FROM
 		(select
-		A.PRD_REGIST_CODE prdRegistCode,
-		NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode,
-		B.FUND_ACC_PLACE areaCode,
+		A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
 		CASE B.HOLDER_CLASSIFY
 		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		when   '02' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		END  as  holderType,
-		A.INDENTIFY_MARK indentifyMark,
-		A.CCY ccy,
-		A.AMOUNT amount,
-		A.QTY qty,
-		A.CNY_AMT cnyAmt
+		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
 		FROM CHB_INVESTHOLD_INFO_SUB A
 		LEFT JOIN CHB_EQU_SUB B
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
@@ -53,31 +40,17 @@
 <!--	查询check表-->
 	<select id="selectHolderNumCheck" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
-		indentifyMark,
-		prdRegistCode,
-		institutionCode,
-		areaCode,
-		holderType,
-		ccy,
-		sum(amount) balanceAmt,
-		sum(qty) balanceShares,
-		sum(cnyAmt) cnyAmt
+		indentifyMark, prdRegistCode, institutionCode, areaCode, holderType, ccy, sum(amount) balanceAmt, sum(qty) balanceShares, sum(cnyAmt) cnyAmt
 		FROM
 		(select
-		A.PRD_REGIST_CODE prdRegistCode,
-		NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode,
-		B.FUND_ACC_PLACE areaCode,
+		A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
 		CASE B.HOLDER_CLASSIFY
 		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		when   '02' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		END  as  holderType,
-		A.INDENTIFY_MARK indentifyMark,
-		A.CCY ccy,
-		A.AMOUNT amount,
-		A.QTY qty,
-		A.CNY_AMT cnyAmt
+		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
@@ -87,34 +60,23 @@
 	<!--生成持有余额-->
 	<select id="selectHolderNumExcheck" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
-		prdRegistCode,
-		institutionCode,
-		areaCode,
-		holderType,
-		ccy,
-		sum(amount) balanceAmt,
-		sum(qty) balanceShares,
-		sum(cnyAmt) cnyAmt
+		prdRegistCode, institutionCode, areaCode, holderType, ccy, sum(amount) balanceAmt, sum(qty) balanceShares, sum(cnyAmt) cnyAmt
 		FROM
-		(select
-		A.PRD_REGIST_CODE prdRegistCode,
-		NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode,
-		B.FUND_ACC_PLACE areaCode,
+		(select prdRegistCode,institutionCode,areaCode,holderType,indentifyMark,ccy,amount,qty,cnyAmt
+		FROM
+		(select A.STATUS,A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
 		CASE B.HOLDER_CLASSIFY
 		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		when   '02' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		END  as  holderType,
-		A.INDENTIFY_MARK indentifyMark,
-		A.CCY ccy,
-		A.AMOUNT amount,
-		A.QTY qty,
-		A.CNY_AMT cnyAmt
+		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt,
+		ROW_NUMBER() over( partition by A.PRD_REGIST_CODE,B.FUND_ACC_PLACE,A.INDENTIFY_MARK,A.HOLD_DATE order by A.UPDATE_TIME desc ) monthMarkNo
 		FROM CHB_INVESTHOLD_INFO_SUB A
 		LEFT JOIN CHB_EQU_SUB B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-		) temp1
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd'))
+		where monthMarkNo = 1 and STATUS != '03') temp1
 	    <where>
 		    <if test="registList !=null and registList.size()>0">
 			    temp1.indentifyMark NOT IN
@@ -127,31 +89,16 @@
 
 		UNION ALL
 
-		select
-		prdRegistCode,
-		institutionCode,
-		areaCode,
-		holderType,
-		ccy,
-		sum(amount) balanceAmt,
-		sum(qty) balanceShares,
-		sum(cnyAmt) cnyAmt
+		select prdRegistCode, institutionCode, areaCode, holderType, ccy, sum(amount) balanceAmt, sum(qty) balanceShares, sum(cnyAmt) cnyAmt
 		FROM
-		(select
-		A.PRD_REGIST_CODE prdRegistCode,
-		NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode,
-		B.FUND_ACC_PLACE areaCode,
+		(select A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
 		CASE B.HOLDER_CLASSIFY
 		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		when   '02' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		END  as  holderType,
-		A.INDENTIFY_MARK indentifyMark,
-		A.CCY ccy,
-		A.AMOUNT amount,
-		A.QTY qty,
-		A.CNY_AMT cnyAmt
+		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
@@ -228,11 +175,7 @@
 <!--	取得银行月报信息-->
 	<select id="selectChbPrdPosition" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		SELECT
-		A.PRODID prodid,
-		B.REG_CODE prdRegistCode,
-		A.DIRTYAMTSUM dirtyamtsum,
-		A.CLEANAMTSUM cleanamtsum,
-		A.ENDAMTSUM_OTH endamtsumOth
+		A.PRODID prodid, B.REG_CODE prdRegistCode, A.DIRTYAMTSUM dirtyamtsum, A.CLEANAMTSUM cleanamtsum, A.ENDAMTSUM_OTH endamtsumOth
 		FROM
 		CHB_MONTH_PRD_POSITION A
 		left join
@@ -243,11 +186,12 @@
 <!--	分投资者类型获得投资者数量-->
 	<select id="typeHolderNum" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
-		prdRegistCode,
-		holderType,
-		count(DISTINCT(indentifyMark)) holderNum
+		prdRegistCode, holderType, count(DISTINCT(indentifyMark)) holderNum
+		FROM
+		(select prdRegistCode,holderType,indentifyMark
 		FROM
 		(select
+		A.STATUS,
 		A.PRD_REGIST_CODE prdRegistCode,
 		CASE B.HOLDER_CLASSIFY
 		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
@@ -255,34 +199,34 @@
 		when   '02' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		END  as  holderType,
-		A.INDENTIFY_MARK indentifyMark
+		A.INDENTIFY_MARK indentifyMark,
+		ROW_NUMBER() over( partition by A.PRD_REGIST_CODE,A.INDENTIFY_MARK,A.HOLD_DATE order by A.UPDATE_TIME desc ) holderMarkNo
 		FROM CHB_INVESTHOLD_INFO_SUB A
 		LEFT JOIN CHB_EQU_SUB B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-		)GROUP BY prdRegistCode,holderType
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd'))
+		WHERE holderMarkNo = 1 and STATUS != '03')
+		GROUP BY prdRegistCode,holderType
 	</select>
 
 <!--	分地区获得投资者数量-->
 	<select id="areaHolderNum" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
-		prdRegistCode,
-		areaCode,
-		count(DISTINCT(indentifyMark)) holderNum
+		prdRegistCode, areaCode, count(DISTINCT(indentifyMark)) holderNum
+		FROM
+		(select prdRegistCode,areaCode,indentifyMark
 		FROM
 		(select
-		A.PRD_REGIST_CODE prdRegistCode,
-		B.FUND_ACC_PLACE  areaCode,
-		A.INDENTIFY_MARK indentifyMark
+		A.PRD_REGIST_CODE prdRegistCode, B.FUND_ACC_PLACE  areaCode, A.INDENTIFY_MARK indentifyMark,A.STATUS,
+		ROW_NUMBER() over( partition by A.PRD_REGIST_CODE,B.FUND_ACC_PLACE,A.INDENTIFY_MARK order by A.UPDATE_TIME desc ) holderMarkNo
 		FROM CHB_INVESTHOLD_INFO_SUB A
 		LEFT JOIN CHB_EQU_SUB B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd'))
+		WHERE holderMarkNo = 1 and STATUS != '03'
 
 		UNION ALL
 
 		select
-		A.PRD_REGIST_CODE prdRegistCode,
-		B.FUND_ACC_PLACE  areaCode,
-		A.MERGER_INDENTIFY_MARK indentifyMark
+		A.PRD_REGIST_CODE prdRegistCode, B.FUND_ACC_PLACE  areaCode, A.MERGER_INDENTIFY_MARK indentifyMark
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
@@ -292,17 +236,19 @@
 <!--	分销售渠道获得投资者数量-->
 	<select id="channelHolderNum" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
-		prdRegistCode,
-		institutionCode,
-		count(DISTINCT(indentifyMark)) holderNum
+		prdRegistCode, institutionCode, count(DISTINCT(indentifyMark)) holderNum
 		FROM
+		(select prdRegistCode,institutionCode,indentifyMark
+		from
 		(select
 		A.PRD_REGIST_CODE prdRegistCode,
 		NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE)  institutionCode,
-		A.INDENTIFY_MARK indentifyMark
+		A.INDENTIFY_MARK indentifyMark,A.STATUS,
+		ROW_NUMBER() over( partition by A.PRD_REGIST_CODE,B.THE_BANK_CODE,A.INDENTIFY_MARK order by A.UPDATE_TIME desc ) holderMarkNo
 		FROM CHB_INVESTHOLD_INFO_SUB A
 		LEFT JOIN CHB_EQU_SUB B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd'))
+		WHERE holderMarkNo = 1 and STATUS != '03'
 
 		UNION ALL
 
