@@ -1686,6 +1686,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     资产类型_可质押持仓(DictCode.头寸资产类型,"S_002","可质押持仓"),
     资产类型_融入券卖空待购回持仓(DictCode.头寸资产类型,"S_003","融入券卖空待购回持仓"),
     资产类型_汇总可用现金(DictCode.头寸资产类型,"S_004","汇总可用现金"),
+    资产类型_交易汇总可用持仓(DictCode.头寸资产类型,"S_005","交易汇总可用持仓"),
     /**
      * 操作类型
      */
