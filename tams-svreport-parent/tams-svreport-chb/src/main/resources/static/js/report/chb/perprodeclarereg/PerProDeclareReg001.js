@@ -861,7 +861,7 @@ $(function() {
 			if(flag){
 				Joyin.confirm('所选产品已存在附件，是否覆盖？',
 						function(){
-					Joyin.dialog(JoyinUtil.getLabel("DocumentManagement002"), basePath
+					Joyin.dialog(JoyinUtil.getLabel("资产基本信息修改"), basePath
 		                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
 		                    "60%", {
 		                        pageModel : PAGE_MODEL_NEW,
@@ -872,7 +872,7 @@ $(function() {
 		                    });
 				})
 			}else{
-				Joyin.dialog(JoyinUtil.getLabel("DocumentManagement002"), basePath
+				Joyin.dialog(JoyinUtil.getLabel("资产基本信息修改"), basePath
 	                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
 	                    "60%", {
 	                        pageModel : PAGE_MODEL_NEW,
@@ -1052,7 +1052,7 @@ $(function() {
 					if(flag){
 						Joyin.confirm('所选产品已存在附件，是否覆盖？',
 								function(){
-							Joyin.dialog(JoyinUtil.getLabel("DocumentManagement002"), basePath
+							Joyin.dialog(JoyinUtil.getLabel("附件上传-修改"), basePath
 				                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
 				                    "60%", {
 				                        pageModel : PAGE_MODEL_NEW,
@@ -1063,7 +1063,7 @@ $(function() {
 				                    });
 						})
 					}else{
-						Joyin.dialog(JoyinUtil.getLabel("DocumentManagement002"), basePath
+						Joyin.dialog(JoyinUtil.getLabel("附件上传"), basePath
 			                    + "report/chb/perprodeclarereg/PerProDeclareReg002/init", "70%",
 			                    "60%", {
 			                        pageModel : PAGE_MODEL_NEW,
