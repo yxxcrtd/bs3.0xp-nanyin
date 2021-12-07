@@ -1,8 +1,6 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dao;
 
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDayRegDto;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.DealTransactionDetailsDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.common.base.entity.RegFinProductDeal;
 import com.joyintech.tams.common.base.entity.RegFinProductDealAdd;
 import com.joyintech.tams.common.base.entity.RegTradeFee;
@@ -70,4 +68,14 @@ public interface CfetsIbuQuoteBondMapper {
     List<RegFinProductDealAdd> listRegFinProductDealAdd(@Param("totleTradeId") String totleTradeId);
 
     List<RegTradeFee> listRegTradeFee(@Param("totleTradeId") String totleTradeId);
+
+    CfetsBondDealQuoteCommonDto getCfetsBondDealQuoteCommonDto(@Param("quoteId") String quoteId);
+
+    CfetsBondDealQuoteCommonDto getWflCfetsBondDealQuoteCommonDto(@Param("quoteId") String quoteId);
+
+    List<PtlAllocationDto> listPtlAllocationDto(@Param("quoteId") String quoteId);
+
+    List<PtlAllocationDto> listWflPtlAllocationDto(@Param("quoteId") String quoteId);
+
+
 }

@@ -132,6 +132,14 @@ public class IbuQuoteBond004Controller extends BaseController {
         return super.init(model);
     }
 
+    @ApiOperation(value = "登记初始化", notes = "登记初始化")
+    @PostMapping("/initReg")
+    @ResponseBody
+    public Message<CfetsBondDealQuoteCommonDto> initPrice(@RequestBody CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
+        cfetsBondDealQuoteCommonDto = cfetsBondDealQuotedPrice004Service.initReg(cfetsBondDealQuoteCommonDto);
+        return new Message<CfetsBondDealQuoteCommonDto>().success().setData(cfetsBondDealQuoteCommonDto);
+    }
+
     @ApiOperation(value = "当日登记撤销检查", notes = "当日登记撤销检查")
     @ResponseBody
     @RequestMapping("/checkDayRegRevokeCheck")

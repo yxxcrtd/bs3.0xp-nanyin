@@ -326,6 +326,27 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     }
 
     /**
+     * 初始化登记
+     * @param cfetsBondDealQuoteCommonDto
+     * @return
+     */
+    public CfetsBondDealQuoteCommonDto initReg(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
+        String quoteId = cfetsBondDealQuoteCommonDto.getQuoteId();
+        if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getValidStatus(), BussinessDictCodeList.有效状态_流程中.getValue())){
+            cfetsBondDealQuoteCommonDto = cfetsIbuQuoteBondMapper.getWflCfetsBondDealQuoteCommonDto(quoteId);
+            if(null!=cfetsBondDealQuoteCommonDto){
+                cfetsBondDealQuoteCommonDto.setPtlAllocatios(cfetsIbuQuoteBondMapper.listWflPtlAllocationDto(quoteId));
+            }
+        }else{
+            cfetsBondDealQuoteCommonDto = cfetsIbuQuoteBondMapper.getCfetsBondDealQuoteCommonDto(quoteId);
+            if(null!=cfetsBondDealQuoteCommonDto){
+                cfetsBondDealQuoteCommonDto.setPtlAllocatios(cfetsIbuQuoteBondMapper.listPtlAllocationDto(quoteId));
+            }
+        }
+        return cfetsBondDealQuoteCommonDto;
+    }
+
+    /**
      * 插入操作
      */
     @Override
@@ -337,7 +358,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         //登录业务流程
         insertWfl(cfetsBondDealDbDto);
         //头寸
-        PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,type.name()));
+        //PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,type.name()));
 
     }
     
@@ -380,7 +401,11 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         //履历表
         updateCfetsOprHis(entity.getTotleTradeId(),operationType.name());
         //头寸
-        PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,operationType.name()));
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        }else{
+            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,operationType.name()));
+        }
         //处理指令执行进度
         insertEtrFinishStatus(cfetsBondDealDbDto,operationType);
     }
@@ -525,6 +550,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
                     regFinProductDeal.setTgBusiType(tgBusiType);
                     regFinProductDeal.setSettleSpeed(settleSpreed);
+                    regFinProductDeal.setInvAim(ptlAllocatio.getBusinessModel());
                     //附属
                     RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
                     regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
@@ -707,7 +733,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             result.put("interfaceType","Bond001");
             result.put("userId", SecurityUtil.getLoginUser().getUserName());
             result.put("totalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
-            result.put("flowStatus",DictCodeListExt3.流程节点_流程提交.getValue());
+            result.put("flowStatus",DictCodeListExt3.流程节点_审批生效.getValue());
             result.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             result.put("balanceCheck","Y");
             if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){

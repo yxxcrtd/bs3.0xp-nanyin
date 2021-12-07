@@ -98,12 +98,12 @@ public class PositionHttpRequest {
      * @param totalId
      * @param modelType
      */
-    public static void sendRevoke(String totalId, String modelType){
+    public static void sendRevoke(String totalId, String modelType,String interfaceType){
         BaseMap bm = BaseMap.newMap()
                 .put("totalTradeId", totalId)
                 .put("modelType", modelType)
                 .put("userId", LoginUserUtil.getUserName())
-                .put("interfaceType", "Bond001");
+                .put("interfaceType", interfaceType);
         String msg = cancel(bm);
         Map message = JsonUtils.json2Object(msg, Map.class);
         if (message == null || !StringUtil.equals("success", message.get("code"))){
