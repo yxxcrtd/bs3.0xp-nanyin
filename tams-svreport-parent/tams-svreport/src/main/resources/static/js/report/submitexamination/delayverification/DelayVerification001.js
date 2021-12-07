@@ -240,7 +240,7 @@ $(function () {
                 data: [{value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}, {value: 0,num: 0},
                        {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0},
                        {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0},
-                       {value: 0, num: 0}/*   {value: 0, num: 0}, {value: 0, num: 0}*/
+                       {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}
                 ]
             }
         ]
@@ -253,7 +253,7 @@ $(function () {
             }
         },
         xAxis: [{
-            data: ['','','','','','','','','','','',''],
+            data: ['','','','','','','','','','','','','','',''],
             axisLabel: {
                 interval: 0,
                 textStyle: {

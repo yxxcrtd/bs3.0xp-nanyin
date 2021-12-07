@@ -7,6 +7,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
@@ -48,6 +50,22 @@ public class SalesTransactionMaintenanceRegist001Controller extends BaseControll
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
+        Map<String, Object> map = RequestUtil.getPageParam();
+        if (StringUtil.isNotEmpty(map.get("submitStatus"))) {
+            model.addAttribute("submitStatus", map.get("submitStatus").toString().trim());
+            if (StringUtil.isNotEmpty(map.get("status"))) {
+                model.addAttribute("status", map.get("status").toString().trim());
+            }
+            if(StringUtil.isNotEmpty(map.get("submitFeedbackStatus"))){
+                model.addAttribute("submitFeedbackStatus", map.get("submitFeedbackStatus").toString().trim());
+            }
+            model.addAttribute("searchDataStart", map.get("searchDataStart"));
+            model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
+            model.addAttribute("isMain", "01");
+        }
+        model.addAttribute("SVR_REPORT_CODE", DictCodeListExt2.报表名称_销售结算资金交易登记.getValue());
+        model.addAttribute("FILE_HANDLE_STATUS", DictCodeListExt3.中债一二三期文件处理状态_未处理.getValue());
+
         super.setSelectOptionToModel(model, DictCode.报送数据状态,
             DictCode.报送状态,DictCode.报送反馈状态);
         return super.init(model);

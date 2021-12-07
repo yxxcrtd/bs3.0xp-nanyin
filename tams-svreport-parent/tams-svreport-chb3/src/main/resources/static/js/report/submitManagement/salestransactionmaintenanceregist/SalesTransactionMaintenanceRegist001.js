@@ -210,9 +210,6 @@ $(function(){
        });
 
     var init= function(){
-        $('#updateTime').val('');
-        $('#submitDate').val('');
-
         if(isMain=='01'){
             setTimeout(function() {
                 if($('#sendStatus').val()=='02'||$('#sendStatus').val()=='03'){
