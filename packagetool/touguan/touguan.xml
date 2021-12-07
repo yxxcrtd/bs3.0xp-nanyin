@@ -78,6 +78,6 @@
         <module>../../tams-common-basicdata</module>
 
         <module>../../tams-svreport-common</module>
-        <module>../../tams-svreport-interf</module>
+        <module>../../tams-svreport-parent/tams-svreport-interf</module>
     </modules>
 </project>
