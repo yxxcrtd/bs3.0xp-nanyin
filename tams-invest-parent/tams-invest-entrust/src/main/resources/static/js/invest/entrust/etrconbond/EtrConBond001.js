@@ -2,14 +2,14 @@ $(function() {
     /**
      * 获取查询参数
      */
-    var getSearchParams = function() { 
+    var getSearchParams = function() {
         var object = $.serializeToObject('#searchForm');
 //      object.finprodId = $('#finprodId_hidden').val();
-      if(object.portfolioId){
-          object.portfolioId = object.portfolioId.join(',');
-      }
-      return object;
-  };
+        if(object.portfolioId){
+            object.portfolioId = object.portfolioId.join(',');
+        }
+        return object;
+    };
     /**
      * 定义数据表格
      */
@@ -26,9 +26,9 @@ $(function() {
             data.operateType = "dblclick";
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("EtrConBond002.refrence"),
-                    JoyinUtil.getRealPath("/invest/entrust/etrconbond/EtrConBond002/init"),
-                    "98%", "95%", data,
-                    function(){table.reload();});
+                JoyinUtil.getRealPath("/invest/entrust/etrconbond/EtrConBond002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
         },
         /**
          * 定义表头
@@ -61,6 +61,7 @@ $(function() {
             ,{field:'busCcy', title: 'EtrInvestBondInfo001.ccy', width:'10%',sortField:"ccy"}
             ,{field:'remark', title: 'EtrInvestBondInfo001.remark', width:'10%',sortable:false}
             ,{field:'invManagerId', title: 'EtrInvestBondInfo001.invManagerId', width:'10%',sortField:"invManagerId"}
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:'10%',sortable:false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']}
         ]
     });
@@ -98,7 +99,7 @@ $(function() {
                 table.reload();
             });
         });
-      	//add by gaopeng 20191223 导入按钮 end
+        //add by gaopeng 20191223 导入按钮 end
         /**
          * 导出按钮
          */
@@ -111,17 +112,17 @@ $(function() {
                 basePath + "invest/entrust/etrconbond/EtrConBond002/init",
                 "98%", "98%"); table.load(); });
 
-        
+
         //撤回事件
         $('#EtrConBond001_btn_revoke').click(function(){
 
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }else {
+            }else {
                 var object = {selectedItem: selArr, operateType:"recall"};
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrconbond/EtrConBond001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_C_0032","撤销"), function(){
@@ -130,19 +131,19 @@ $(function() {
                         });
                     });
                 });
-             }
-        
+            }
+
         });
         //关闭事件
         $('#EtrConBond001_btn_close').click(function(){
 
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }else {
+            }else {
                 var object = {selectedItem: selArr, operateType:"close"};
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrconbond/EtrConBond001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
@@ -151,24 +152,24 @@ $(function() {
                         });
                     });
                 });
-             }
-        
+            }
+
         });
         /**
          * 导出
          */
-        var exportExcel = function(){       
+        var exportExcel = function(){
             Joyin.exportExcel(basePath+"invest/entrust/etrconbond/EtrConBond001/export", getSearchParams());
         };
     });
-    
+
     /**
      * 组合代码链接
      */
     table.bind('click','.portfolioIdLink', function(row) {
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-                "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+            basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+            "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                 portfolioId:row.portfolioId});//主键组合代码
     });
     /**
@@ -177,11 +178,11 @@ $(function() {
     table.bind('click','.finprodIdLink', function(row) {
         //在新建界面进行显示单行的详细信息
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                 basePath
-                + "invest/asset/bond/FinBondTargetAsset002/init",
-                "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
-                                finprodId:row.finprodId  //金融产品代码 
-                                });
+            basePath
+            + "invest/asset/bond/FinBondTargetAsset002/init",
+            "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                finprodId:row.finprodId  //金融产品代码
+            });
     });
     /**
      * 绑定编辑事件
@@ -189,11 +190,11 @@ $(function() {
     table.bind('click', '.edit', function(data, index) {
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
-         Joyin.ajaxJson(basePath + 'invest/entrust/etrconbond/EtrConBond002/check', data, function(result) {
+        Joyin.ajaxJson(basePath + 'invest/entrust/etrconbond/EtrConBond002/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrConBond002.edit"),
-                    JoyinUtil.getRealPath("/invest/entrust/etrconbond/EtrConBond002/init"),
-                    "98%", "95%", data,
-               function(){table.reload();});
-         });
+                JoyinUtil.getRealPath("/invest/entrust/etrconbond/EtrConBond002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
+        });
     });
 }());

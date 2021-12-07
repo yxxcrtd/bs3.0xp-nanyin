@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.entrust.etragrereptrade.service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -15,6 +15,9 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.system.base.entity.SysUser;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade003Dto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTrade002Dto;
@@ -24,7 +27,10 @@ import com.joyintech.tams.invest.entrust.etragrereptrade.dto.UnOpenQuota002Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *  交易所指令交易（债券股票回购基金场内指令交易）
@@ -49,7 +55,7 @@ public class EtrAgreRepTrade003Service extends CommonExportService<EtrAgreRepTra
     public Page<EtrAgreRepTrade002Dto> findPositionsPage(Map<String, Object> param) {
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
         return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrAgreRepTrade/findPositionsPage",
-            param, EtrAgreRepTrade002Dto.class);
+                param, EtrAgreRepTrade002Dto.class);
     }
 
 
@@ -64,8 +70,8 @@ public class EtrAgreRepTrade003Service extends CommonExportService<EtrAgreRepTra
      */
     public Page<SelectOptionDto> getSecAcctId(Map<String, Object> parameters) {
         Page<SelectOptionDto> tempList = restTemplate.postForPage(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getSecAcctId",
-            parameters, SelectOptionDto.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getSecAcctId",
+                parameters, SelectOptionDto.class);
         return tempList;
     }
 
@@ -101,7 +107,18 @@ public class EtrAgreRepTrade003Service extends CommonExportService<EtrAgreRepTra
     public Page<EtrAgreRepTrade003Dto> selectEtrEntrust(Map<String, Object> param) {
         param.put("userId", LoginUserUtil.getUserName());
         param.put("sysDate",iPlatformDate.getSysDateStr());
-        return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrAgreRepTrade/selectEtrEntrust",
+        Page<EtrAgreRepTrade003Dto> page = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrAgreRepTrade/selectEtrEntrust",
                 param, EtrAgreRepTrade003Dto.class);
+        List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+                param, SysUser.class);
+        for(EtrAgreRepTrade003Dto dto:page.getRoot()){
+            if(StringUtil.isNotEmpty(dto.getNextUser())){
+                String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+                        .map(SysUser::getRealName)
+                        .collect(Collectors.joining(",","",""));
+                dto.setNextUser(sysUsers);
+            }
+        }
+        return page;
     }
 }

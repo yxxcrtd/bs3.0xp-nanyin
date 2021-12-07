@@ -19,6 +19,7 @@
             <!--<Cell order="14" name="指令份额">entrustNumStr</Cell>-->
             <Cell order="15" name="已完成额度">finishAmt</Cell>
             <Cell order="16" name="交易完成度">transactioncom</Cell>
+            <Cell order="17" name="当前处理人">nextUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

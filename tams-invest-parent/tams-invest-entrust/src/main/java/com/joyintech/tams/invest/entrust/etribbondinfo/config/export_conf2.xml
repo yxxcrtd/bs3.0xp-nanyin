@@ -24,6 +24,7 @@
             <Cell order="20" name="已完成额度（万元）">finishAmt</Cell>
             <Cell order="21" name="交易完成度">transactioncom</Cell>
             <Cell order="22" name="备注">remark</Cell>
+            <Cell order="23" name="当前处理人">nextUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

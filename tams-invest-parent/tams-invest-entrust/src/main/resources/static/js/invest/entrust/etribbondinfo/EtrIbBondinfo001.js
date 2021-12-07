@@ -16,8 +16,8 @@
     }
     $(".layui-tab").show();
     // ==========================================================================
-    
-    
+
+
     // 持仓
     function getPositionsSearchParams(){
         var data = $.serializeToObject('#searchForm_cc');
@@ -42,7 +42,7 @@
     serachKey = function () {
         positionsTable_zqzy.reload();
     }
-    
+
     // 导入按钮点击事件
     $('#EtrIbBondinfo001_btn_import').click(function() {
         window.parent.importEtr();
@@ -156,12 +156,13 @@
             ,{field:'settleSpreedName', title: 'EtrInvestBondInfo002.settleSpreed', width : 100}
             ,{field:'vdate', title: 'EtrInvestBondInfo001.vdate', width:100,type:'date',sortField:"vdate"}
             ,{field:'mdate', title: 'EtrInvestBondInfo001.mdate', width:100,type:'date',sortField:"mdate"}
-            
+
             ,{field:'transactioncom', title: 'EtrInvestBondInfo001.transactioncom',render : function(data, type, row, meta){
                     return "<div class='layui-progress layui-progress-big' style='margin-top:3px;'><div class='layui-progress-bar layui-bg-green' style='width:"+row.transactioncom+"%'><span class='layui-progress-text'>"+row.transactioncom+"%</span></div></div>";
                 }, width:100,sortable:false}
             ,{field:'remark', title: 'EtrInvestBondInfo001.remark', width:180,sortable:false}
             ,{field:'finishAmt',type:'money', title: 'EtrIbBondinfo001.finishAmt', fixed:'right',width:100}
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:220,sortable:false}
             ,{field:'counterId', visible:false}
         ]
     });
@@ -175,7 +176,7 @@
         parent.EtrIbBondinfoMain.dialogSelf.dialog(JoyinUtil.getLabel("SysCommon.refrence"),basePath
             + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
             {pageModel:PAGE_MODEL_REFERENCE, portfolioId:row.portfolioId});
-        
+
         // Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
         //     basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
         //     "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
@@ -192,7 +193,7 @@
                 //valDate:data.valDate,//估值日
                 //finprodMarketId:data.finprodMarketId//市场代码
             });
-        
+
         //在新建界面进行显示单行的详细信息
         // Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
         //     basePath
@@ -212,7 +213,7 @@
         parent.EtrIbBondinfoMain.dialogSelf.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
             basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
             {pageModel:PAGE_MODEL_REFERENCE, portfolioId:row.portfolioId});
-        
+
         // Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
         //     basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
         //     "100%", "100%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
@@ -268,7 +269,7 @@
         $(".CC-transfer-form #EtrIbBondinfo001_btn_search").click(function () {
             positionsTable.load();
         })
-        
+
         var resetBtn = $('<a class="layui-btn layui-btn-sm btn-reset"></a>');
         resetBtn.attr('id', pageId + '_btn_reset')
             .text(JoyinUtil.getLabel('SysCommon.reset'));
@@ -278,8 +279,8 @@
             $("#searchForm_cc #secType1").val('').trigger("change");
             $("#searchForm_cc #finprodId").val('').trigger("change");
         })
-        
-        $(".transfer-form #EtrIbBondinfo001_btn_search").click(function () { 
+
+        $(".transfer-form #EtrIbBondinfo001_btn_search").click(function () {
             // 指令管理tab-->查询
             if($("#EtrIbBondinfo001_selectorConditionFilter").css("display")=="none"){
                 $("#EtrIbBondinfo001_selectorConditionFilter").show();
@@ -310,7 +311,7 @@
         $("input[name=entrustStatus]").click(function(){
             positionsTable_zqzy.table ? positionsTable_zqzy.reload() : positionsTable_zqzy.load();
         });
-        
+
         $(".CC-transfer-form #EtrIbBondinfo001_btn_export").click(getPositionsExportExcel)
         $(".transfer-form #EtrIbBondinfo001_btn_export").click(getZqzyPositionExportExcel)
 

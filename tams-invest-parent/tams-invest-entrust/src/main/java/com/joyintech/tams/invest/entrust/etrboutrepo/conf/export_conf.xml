@@ -19,6 +19,7 @@
             <!-- add by zhangpuyu 2019/11/15 start-->
             <Cell order="15" name="价格模式">priceModelStr</Cell>
             <!-- add by zhangpuyu 2019/11/15 end-->
+            <Cell order="16" name="当前处理人">nextUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

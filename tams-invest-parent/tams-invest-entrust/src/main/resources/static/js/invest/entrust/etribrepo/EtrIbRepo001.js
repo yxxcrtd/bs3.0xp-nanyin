@@ -16,35 +16,35 @@
     }
     $(".layui-tab").show();
     // ==========================================================================
-	
+
     function getPositionsSearchParams(){
         var data = $.serializeToObject('#searchForm_cc');
         data.portfolioId = data.portfolioId ? data.portfolioId.join(','):'';
         if(data.entrustDate){
-        	data.startDate= $("#entrustDate").startDate();
-        	data.endDate= $("#entrustDate").endDate();
+            data.startDate= $("#entrustDate").startDate();
+            data.endDate= $("#entrustDate").endDate();
         }
         if(data.entrustStatus =='00'){
-        	entrustStatusIsAll = YES_OR_NO_Y;
-        	data.entrustStatus = "";
+            entrustStatusIsAll = YES_OR_NO_Y;
+            data.entrustStatus = "";
         }
         data.isDvp = true;
         return data;
     }
-    
-	function getZqzyPositionParams() {
-		var data = $.serializeToObject('#searchForm_zqzy');
+
+    function getZqzyPositionParams() {
+        var data = $.serializeToObject('#searchForm_zqzy');
         data.portfolioId = data.portfolioId_zqzy ? data.portfolioId_zqzy.join(','):'';
         data.secAcctId = data.secAcctId ? data.secAcctId.join(','):'';
         data.zyqk = data.zyqk ? data.zyqk.join(','):'';
         data.isDvp = false;
-		return data;
-	}
+        return data;
+    }
 
     /**
      * 定义数据表格
      */
-    var zlglTable = $("#zlglTable").joyintable({ 
+    var zlglTable = $("#zlglTable").joyintable({
         ajax: {
             url: 'findZlglPage',//请求路径
             type: 'POST',//请求类型
@@ -90,17 +90,18 @@
                     return "<div class='layui-progress layui-progress-big' style='margin-top: 3px;'><div class='layui-progress-bar layui-bg-green' style='width:"+row.transactioncom+"%'><span class='layui-progress-text'>"+row.transactioncom+"%</span></div></div>";
                 }, width:100,sortable:false}
             ,{field:'remark', title: 'EtrInvestBondInfo001.remark', width:180,sortable:false}
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:220,sortable:false}
             ,{field:'counterId', title: '交易对手', width:180,sortable:false ,visible:false}
         ]
     });
 
     //数字转千分符
     function thousandBitSeparator(num) {
-    return num && num
-        .toString()
-        .replace(/(\d)(?=(\d{3})+\.)/g, function($0, $1) {
-            return $1 + ",";
-        });
+        return num && num
+            .toString()
+            .replace(/(\d)(?=(\d{3})+\.)/g, function($0, $1) {
+                return $1 + ",";
+            });
     }
 
     /**
@@ -114,8 +115,8 @@
     });
 
     /**
-	 * 刷新列表
-	 */
+     * 刷新列表
+     */
     var refreshzlglTable = function(){
         zlglTable.table ? zlglTable.reload() : zlglTable.load();
     }
@@ -135,10 +136,10 @@
     };
     var zyqglTable = null;
     if(repo_pledge_model =='03'){
-    	 /**
+        /**
          * 定义数据表格
          */
-        zyqglTable = $("#zyqglTable").joyintable({ 
+        zyqglTable = $("#zyqglTable").joyintable({
             ajax: {
                 url: 'findZlglPositionPage',//请求路径
                 type: 'POST',//请求类型
@@ -171,23 +172,23 @@
                 , {field: 'lastPeriod', title: 'EtrIbRepo001.lastPeriod', width:150}
                 , {field: 'registOrgName', title: 'EtrIbRepo001.registOrg', width:150,sortField:'registOrg'}
                 , {field: 'pledgeStockName', title: '质押券库', width:150, visible: function() {
-					return repo_pledge_model=='03'?true:false
-				}() , sortField: 'pledgeStockId'}
+                        return repo_pledge_model=='03'?true:false
+                    }(),sortField:'pledgeStockId'}
                 , {field: 'pledgeStockId', visible: false}
-                ],
+            ],
             //计算总可质押券面总额
             done : function(allData, table){
                 var totalPledStrdPrinAmt = '0';
                 if (allData && allData.length > 0){
                     $.each(allData, function(id, value){
-                    	totalPledStrdPrinAmt = JoyinMath.doAdd(totalPledStrdPrinAmt, value.pledStrdPrinAmt, 2, JoyinMath.ROUND_HALF_UP);
-                    });          	
+                        totalPledStrdPrinAmt = JoyinMath.doAdd(totalPledStrdPrinAmt, value.pledStrdPrinAmt, 2, JoyinMath.ROUND_HALF_UP);
+                    });
                 }
-               // $('#totalFinProdBalance').attr("value",thousandBitSeparator(totalFinProdBalance));
+                // $('#totalFinProdBalance').attr("value",thousandBitSeparator(totalFinProdBalance));
                 $('#pledStrdPrinAmt').attr("value",thousandBitSeparator(totalPledStrdPrinAmt));
             }
         });
-        
+
         /**
          * 组合代码链接
          */
@@ -200,13 +201,13 @@
     }
 
     /**
-	 * 画面加载完成
-	 */
+     * 画面加载完成
+     */
     $(function() {
-    	
-    	// 导入按钮点击事件
+
+        // 导入按钮点击事件
         $('#EtrIbRepo001_btn_import').click(function() {
-        	window.parent.importEtr();
+            window.parent.importEtr();
         });
         //优化查询
         // 指令管理tab-->委托单选按钮查询
@@ -219,11 +220,11 @@
         $('#EtrIbRepo001_btn_close').click(function() {
             if (zlglTable != null && zlglTable != '') {
                 var selArr = zlglTable.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }else {
+            }else {
                 for(var index in selArr){
                     if(selArr[index].entrustStatus == '08'){
                         Joyin.error("流程中的数据不允许关闭");
@@ -234,11 +235,11 @@
                 Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/entrustCheckCloseList', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("ETR_C_0002"), function(){
                         Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo001/close', object, function(result) {
-                        	zlglTable.reload();
+                            zlglTable.reload();
                         });
                     });
                 });
-             }
+            }
         });
         /**
          * 撤销
@@ -246,11 +247,11 @@
         $('#EtrIbRepo001_btn_revoke').click(function() {
             if (zlglTable != null && zlglTable != '') {
                 var selArr = zlglTable.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }else {
+            }else {
                 for(var index in selArr){
                     if(selArr[index].entrustStatus == '08'){
                         Joyin.error("流程中的数据不允许撤回");
@@ -261,80 +262,80 @@
                 Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo001/check', object, function(result) {
                     Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_C_0032","撤销"), function(){
                         Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo001/recall', object, function(result) {
-                        	zlglTable.reload();
+                            zlglTable.reload();
                         });
                     });
                 });
-             }
+            }
         });
-        
+
         $(".cc-transfer-form #EtrIbRepo001_btn_search").click(function () {
 //            zlglTable.load();
-        	$('.sgePortDiv').find('span.select2-container--default').attr('style', 'width: 210px !important');
+            $('.sgePortDiv').find('span.select2-container--default').attr('style', 'width: 210px !important');
             $('#dayOfferSelectorConditionFilter001').hide();
-    		if($("#selectorConditionFilter001").css("display")=="none"){
-				//clearBasicCondition();
-				$("#selectorConditionFilter001").show();
-			}
-			else{
-				//clearBasicCondition();
-				$("#selectorConditionFilter001").hide();
-			}
+            if($("#selectorConditionFilter001").css("display")=="none"){
+                //clearBasicCondition();
+                $("#selectorConditionFilter001").show();
+            }
+            else{
+                //clearBasicCondition();
+                $("#selectorConditionFilter001").hide();
+            }
         })
         $(".transfer-form #EtrIbRepo001_btn_search").click(function () {
             zyqglTable.load();
         })
-        
+
         /**
-    	 * 委托指令查询弹出框查询
-    	 */
-    	$('#EtrIbRepo001_btn_realseach').click(function() {
+         * 委托指令查询弹出框查询
+         */
+        $('#EtrIbRepo001_btn_realseach').click(function() {
 //    		fetsBondDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
-    		zlglTable.table ? zlglTable.reload() : zlglTable.load();
-    		$("#selectorConditionFilter001").hide();
-        });
-        
-        $('#EtrIbRepo001_cc_search').click(function() {
-//    		fetsBondDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
-    		zlglTable.table ? zlglTable.reload() : zlglTable.load();
-    		$("#selectorConditionFilter001").hide();
+            zlglTable.table ? zlglTable.reload() : zlglTable.load();
+            $("#selectorConditionFilter001").hide();
         });
 
-		/**
-    	 * 委托指令查询弹出框重置
-    	 */
-    	$('#EtrIbRepo001_btn_seachReset').click(function() {
-			$("#portfolioId").empty();
-			$("#finprodId").empty();
-			$("#ps").val('').trigger("change");
-			$("#settleSpreed").val('').trigger("change");
-			$("#invManagerId").empty();
-			$("#entrustId").empty();
-			$("#entrustDate").val("");
+        $('#EtrIbRepo001_cc_search').click(function() {
+//    		fetsBondDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+            zlglTable.table ? zlglTable.reload() : zlglTable.load();
+            $("#selectorConditionFilter001").hide();
+        });
+
+        /**
+         * 委托指令查询弹出框重置
+         */
+        $('#EtrIbRepo001_btn_seachReset').click(function() {
+            $("#portfolioId").empty();
+            $("#finprodId").empty();
+            $("#ps").val('').trigger("change");
+            $("#settleSpreed").val('').trigger("change");
+            $("#invManagerId").empty();
+            $("#entrustId").empty();
+            $("#entrustDate").val("");
             $("#termType").val('').trigger("change");
         });
 
-    	/**
-    	 * 委托指令查询弹出框关闭
-    	 */
-    	$('#EtrIbRepo001_btn_seachClose').click(function() {
-			$("#selectorConditionFilter001").hide();
+        /**
+         * 委托指令查询弹出框关闭
+         */
+        $('#EtrIbRepo001_btn_seachClose').click(function() {
+            $("#selectorConditionFilter001").hide();
         });
-        
+
         $(".cc-transfer-form #EtrIbRepo001_btn_export").click(getPositionsExportExcel)
         $(".transfer-form #EtrIbRepo001_btn_export").click(getZqzyPositionExportExcel)
-        
+
         /**
          * 绑定自动入库设置按钮事件
          */
         $('#EtrIbRepo001_btn_priority').click(function () {
             Joyin.dialog(JoyinUtil.getLabel("自动入库设置"), basePath
                 + "invest/entrust/etribrepo/EtrIbRepoRk/init", "99%", "99%", {
-                	pageModel: PAGE_MODEL_NEW
-            	}, function () {
+                pageModel: PAGE_MODEL_NEW
+            }, function () {
             });
         });
-        
+
         // 绑定入库按钮事件
         $('#EtrIbRepo001_btn_in').click(function () {
             var param = {};
@@ -362,21 +363,21 @@
             }
             // 出库操作,是否确认对所选债券进行出库操作？
             Joyin.confirm(JoyinUtil.getMessage('EtrStandardBond001.outSave_001'), function() {
-            	var data = {};
-        		data.selectedItem = selArr;
+                var data = {};
+                data.selectedItem = selArr;
                 Joyin.ajaxJson(basePath + 'invest/entrust/etribrepo/EtrIbRepo001/outSave', data, function(result) {
-                	zyqglTable.reload();
+                    zyqglTable.reload();
                 });
             });
         });
-        
+
         /**
          * 定时刷新
          */
         setInterval(function(){
             refreshzlglTable();
             if(repo_pledge_model =='03'){
-            	 refreshZqzyzlglTable();
+                refreshZqzyzlglTable();
             }
         },300000);
     });

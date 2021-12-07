@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.service.entrust.etrexchangetrade.dto;
 
 import com.joyintech.framework.util.StringUtil;
@@ -26,12 +26,12 @@ import java.math.BigDecimal;
  * @since 1.0
  */
 public class EtrExchangeTrade003Dto extends EtrEntrust{
-    
+
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = -3012626876825089762L;
-    
+
     /**
      * 执行进度
      */
@@ -40,7 +40,7 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
      * 成交进度
      */
     private BigDecimal dealPercent;
-    
+
     /**
      * 组合名称
      */
@@ -84,33 +84,33 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
      * 对手方交易商
      */
     private String counterOrg;
-    
-    
+
+
     /**
      * 申报类型 [db字段：DEAL_MODE，交易方式]
      */
     private String declaType;
-    
+
     /**
      * 计算方式 [净价、全价、收益率]
      */
     private String calMode;
-    
+
     /**
      * 全价
      */
     private BigDecimal fprice;
-    
+
     /**
      * 收益率
      */
     private BigDecimal  yield;
-    
+
     /**
      * 资产类型
      */
     private String assetType;
-    
+
     /**
      * 获取 implementPercent
      * @return implementPercent.
@@ -126,7 +126,7 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
     public void setImplementPercent(BigDecimal implementPercent) {
         this.implementPercent = implementPercent;
     }
-    
+
     /**
      * 获取执行百分比
      * @return
@@ -148,7 +148,7 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
     public BigDecimal getDealPercent() {
         return dealPercent;
     }
-    
+
     /**
      * 获取成交百分比
      * @return
@@ -186,7 +186,7 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
-    
+
     /**
      * 获取 getPsStr
      * @return getPsStr.
@@ -253,7 +253,7 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
 
     /**
      * 获取 trader
-     * 
+     *
      * @return trader
      */
     public String getTrader() {
@@ -262,7 +262,7 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
 
     /**
      * 设置 trader
-     * 
+     *
      * @param trader String
      */
     public void setTrader(String trader) {
@@ -271,7 +271,7 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
 
     /**
      * 获取 counterOrg
-     * 
+     *
      * @return counterOrg
      */
     public String getCounterOrg() {
@@ -280,56 +280,56 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
 
     /**
      * 设置 counterOrg
-     * 
+     *
      * @param counterOrg String
      */
     public void setCounterOrg(String counterOrg) {
         this.counterOrg = counterOrg;
     }
 
-	public String getDeclaType() {
-		return declaType;
-	}
+    public String getDeclaType() {
+        return declaType;
+    }
 
-	public void setDeclaType(String declaType) {
-		this.declaType = declaType;
-	}
+    public void setDeclaType(String declaType) {
+        this.declaType = declaType;
+    }
 
-	public String getCalMode() {
-		return calMode;
-	}
+    public String getCalMode() {
+        return calMode;
+    }
 
-	public void setCalMode(String calMode) {
-		this.calMode = calMode;
-	}
-
-
-	public BigDecimal getYield() {
-		return yield;
-	}
-
-	public void setYield(BigDecimal yield) {
-		this.yield = yield;
-	}
+    public void setCalMode(String calMode) {
+        this.calMode = calMode;
+    }
 
 
-	public BigDecimal getFprice() {
-		return fprice;
-	}
+    public BigDecimal getYield() {
+        return yield;
+    }
 
-	public void setFprice(BigDecimal fprice) {
-		this.fprice = fprice;
-	}
+    public void setYield(BigDecimal yield) {
+        this.yield = yield;
+    }
 
-	public String getAssetType() {
-		return assetType;
-	}
 
-	public void setAssetType(String assetType) {
-		this.assetType = assetType;
-	}
+    public BigDecimal getFprice() {
+        return fprice;
+    }
 
-	//add by chenjiaxing 20210824 start
+    public void setFprice(BigDecimal fprice) {
+        this.fprice = fprice;
+    }
+
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
+    }
+
+    //add by chenjiaxing 20210824 start
     /**
      * 证券账户代码
      */
@@ -369,4 +369,16 @@ public class EtrExchangeTrade003Dto extends EtrEntrust{
         this.dealCurAcctName = dealCurAcctName;
     }
     //add by chenjiaxing 20210824 end
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
 }

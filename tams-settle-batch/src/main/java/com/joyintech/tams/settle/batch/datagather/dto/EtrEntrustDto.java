@@ -40,7 +40,7 @@ public class EtrEntrustDto extends EtrEntrust {
     }
 
     public String getBusiKey(){
-        return StringUtil.joinString(Arrays.asList(getSecAcctId(),getDealCurAcct(),getFinprodId(), DateUtil.format(getEntrustDate()),getTradePlat()),"_");
+        return StringUtil.joinString(Arrays.asList(getSecAcctId(),getDealCurAcct(),getFinprodId(), DateUtil.format(getEntrustDate()),getTradePlat(),getPs()),"_");
     }
 }
 

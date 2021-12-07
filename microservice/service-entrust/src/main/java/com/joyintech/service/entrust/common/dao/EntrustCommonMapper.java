@@ -7,9 +7,10 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.service.entrust.common.dao;
 
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.common.base.entity.EtrQuoteFinishStatus;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -31,6 +32,12 @@ public interface EntrustCommonMapper {
 
 	String assetIsTestBySppi(Map<String, Object> map);
 
-	String getZyqk(@Param("zyqkName")String zyqkName);
 
+	/**
+	 * 获取所有用户信息
+	 * @return
+	 */
+	List<SysUser> getAllUserList();
+
+	String getZyqk(@Param("zyqkName")String zyqkName);
 }

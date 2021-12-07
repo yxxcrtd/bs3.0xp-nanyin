@@ -8,16 +8,19 @@ package com.joyintech.tams.invest.interf.fromjkpt.recon.service;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.common.base.dao.StlSecReconDealMapper;
+import com.joyintech.tams.common.base.entity.StlSecRecon;
 import com.joyintech.tams.common.base.entity.StlSecReconPara;
 import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.invest.interf.fromjkpt.recon.dao.ReconInterfMapper;
 import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlCashReconDto;
 import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecReconDealDto;
 import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecpReconDto;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,7 +55,7 @@ public class ReconInterfService {
         setParam(param);
         //明细
         if(param.containsKey("collect")){
-            param.put("tradeIds",reconInterfMapper.listStlSecRecon());
+            param.put("tradeIds",reconInterfMapper.listStlSecRecon(param));
             List<StlSecReconDealDto> stlSecReconDealDtos = reconInterfMapper.listStlSecReconDealDetaile(param);
             if(null!=stlSecReconDealDtos&&!StringUtil.isEmptyList(stlSecReconDealDtos)){
                 //删除对账单数据
@@ -69,7 +72,7 @@ public class ReconInterfService {
             Map<String,Object> paramtotal = new HashMap<>();
             paramtotal.put("execDate",param.get("execDate"));
             paramtotal.put("collect",param.get("collectEntrustId"));
-            paramtotal.put("finprodIds",reconInterfMapper.listStlSecRecon());
+            paramtotal.put("finprodIds",reconInterfMapper.listStlSecRecon(paramtotal));
             List<StlSecReconDealDto> stlSecReconDealDtos = reconInterfMapper.listStlSecReconDealTotalByEntrustId(paramtotal);
             if(null!=stlSecReconDealDtos&&!StringUtil.isEmptyList(stlSecReconDealDtos)){
                 //删除对账单及相关业务数据
@@ -86,7 +89,11 @@ public class ReconInterfService {
             Map<String,Object> paramtotal = new HashMap<>();
             paramtotal.put("execDate",param.get("execDate"));
             paramtotal.put("collect",param.get("collectByMarketId"));
-            paramtotal.put("entrustIds",reconInterfMapper.listStlSecRecon());
+            List<StlSecRecon> stlSecRecons = reconInterfMapper.listStlSecRecon(paramtotal);
+            if(CollectionUtils.isNotEmpty(stlSecRecons)){
+                stlSecRecons.removeIf(secRecon -> StringUtil.isEmpty(secRecon.getEntrustTradeId()));
+            }
+            paramtotal.put("entrustIds", stlSecRecons);
             List<StlSecReconDealDto> stlSecReconDealDtos = reconInterfMapper.listStlSecReconDealTotalByMarketId(paramtotal);
             if(null!=stlSecReconDealDtos&&!StringUtil.isEmptyList(stlSecReconDealDtos)){
                 //删除对账单及业务数据

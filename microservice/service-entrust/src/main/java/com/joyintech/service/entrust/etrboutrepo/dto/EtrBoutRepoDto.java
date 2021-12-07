@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.service.entrust.etrboutrepo.dto;
 
 import java.math.BigDecimal;
@@ -156,10 +156,10 @@ public class EtrBoutRepoDto extends EtrEntrust {
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
-    
-    
-    
+
+
+
+
     /**
      * 获取 repoTerm2
      * @return repoTerm2.
@@ -172,7 +172,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
 
 
 
-    
+
     /**
      * 设置 repoTerm2
      * @param repoTerm2 repoTerm2
@@ -196,7 +196,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
 
 
 
-    
+
     /**
      * 设置 termDays
      * @param termDays termDays
@@ -208,7 +208,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
 
 
 
-    
+
     /**
      * 获取 termDays2
      * @return termDays2.
@@ -220,7 +220,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
 
 
 
-    
+
     /**
      * 设置 termDays2
      * @param termDays2 termDays2
@@ -242,7 +242,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
 
 
 
-    
+
     /**
      * 设置 firstprice2
      * @param firstprice2 firstprice2
@@ -262,7 +262,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 firstprice
      * @param firstprice firstprice
@@ -280,7 +280,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
         return finprodMarketId;
     }
 
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -296,7 +296,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getSecuritiesCust() {
         return securitiesCust;
     }
-    
+
     /**
      * 设置 securitiesCust
      * @param securitiesCust securitiesCust
@@ -304,7 +304,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setSecuritiesCust(String securitiesCust) {
         this.securitiesCust = securitiesCust;
     }
-    
+
     /**
      * 获取 tradeCalendar
      * @return tradeCalendar.
@@ -312,7 +312,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getTradeCalendar() {
         return tradeCalendar;
     }
-    
+
     /**
      * 设置 tradeCalendar
      * @param tradeCalendar tradeCalendar
@@ -320,7 +320,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setTradeCalendar(String tradeCalendar) {
         this.tradeCalendar = tradeCalendar;
     }
-    
+
     /**
      * 获取 availableDay
      * @return availableDay.
@@ -328,7 +328,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public Date getAvailableDay() {
         return availableDay;
     }
-    
+
     /**
      * 设置 availableDay
      * @param availableDay availableDay
@@ -336,7 +336,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setAvailableDay(Date availableDay) {
         this.availableDay = availableDay;
     }
-    
+
     /**
      * 获取 mdateAdd
      * @return mdateAdd.
@@ -344,7 +344,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public Date getMdateAdd() {
         return mdateAdd;
     }
-    
+
     /**
      * 设置 mdateAdd
      * @param mdateAdd mdateAdd
@@ -352,7 +352,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setMdateAdd(Date mdateAdd) {
         this.mdateAdd = mdateAdd;
     }
-    
+
     /**
      * 获取 vdateAdd
      * @return vdateAdd.
@@ -360,7 +360,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public Date getVdateAdd() {
         return vdateAdd;
     }
-    
+
     /**
      * 设置 vdateAdd
      * @param vdateAdd vdateAdd
@@ -368,7 +368,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setVdateAdd(Date vdateAdd) {
         this.vdateAdd = vdateAdd;
     }
-    
+
     /**
      * 获取 settleSpreed
      * @return settleSpreed.
@@ -376,7 +376,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getSettleSpreed() {
         return settleSpreed;
     }
-    
+
     /**
      * 设置 settleSpreed
      * @param settleSpreed settleSpreed
@@ -384,7 +384,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setSettleSpreed(String settleSpreed) {
         this.settleSpreed = settleSpreed;
     }
-    
+
     /**
      * 获取 settleSpeed
      * @return settleSpeed.
@@ -392,7 +392,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public Long getSettleSpeed() {
         return settleSpeed;
     }
-    
+
     /**
      * 设置 settleSpeed
      * @param settleSpeed settleSpeed
@@ -400,7 +400,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setSettleSpeed(Long settleSpeed) {
         this.settleSpeed = settleSpeed;
     }
-    
+
     /**
      * 获取 rate
      * @return rate.
@@ -408,7 +408,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getRate() {
         return rate;
     }
-    
+
     /**
      * 设置 rate
      * @param rate rate
@@ -416,7 +416,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setRate(String rate) {
         this.rate = rate;
     }
-    
+
     /**
      * 获取 repoTerm
      * @return repoTerm.
@@ -424,7 +424,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getRepoTerm() {
         return repoTerm;
     }
-    
+
     /**
      * 设置 repoTerm
      * @param repoTerm repoTerm
@@ -432,7 +432,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setRepoTerm(String repoTerm) {
         this.repoTerm = repoTerm;
     }
-    
+
     /**
      * 获取 termType
      * @return termType.
@@ -440,7 +440,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getTermType() {
         return termType;
     }
-    
+
     /**
      * 设置 termType
      * @param termType termType
@@ -448,7 +448,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setTermType(String termType) {
         this.termType = termType;
     }
-    
+
     /**
      * 获取 assetAvailablePosition
      * @return assetAvailablePosition.
@@ -456,7 +456,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public BigDecimal getAssetAvailablePosition() {
         return assetAvailablePosition;
     }
-    
+
     /**
      * 设置 assetAvailablePosition
      * @param assetAvailablePosition assetAvailablePosition
@@ -464,7 +464,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setAssetAvailablePosition(BigDecimal assetAvailablePosition) {
         this.assetAvailablePosition = assetAvailablePosition;
     }
-    
+
     /**
      * 获取 fileArray
      * @return fileArray.
@@ -472,7 +472,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public List<SysUploadFileInfo> getFileArray() {
         return fileArray;
     }
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -480,7 +480,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setFileArray(List<SysUploadFileInfo> fileArray) {
         this.fileArray = fileArray;
     }
-    
+
     /**
      * 获取 etrInvestPersonInfo
      * @return etrInvestPersonInfo.
@@ -488,7 +488,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public BussEtrInvestPersonInfoDto getEtrInvestPersonInfo() {
         return etrInvestPersonInfo;
     }
-    
+
     /**
      * 设置 etrInvestPersonInfo
      * @param etrInvestPersonInfo etrInvestPersonInfo
@@ -496,7 +496,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setEtrInvestPersonInfo(BussEtrInvestPersonInfoDto etrInvestPersonInfo) {
         this.etrInvestPersonInfo = etrInvestPersonInfo;
     }
-    
+
     /**
      * 获取 elementId
      * @return elementId.
@@ -504,7 +504,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getElementId() {
         return elementId;
     }
-    
+
     /**
      * 设置 elementId
      * @param elementId elementId
@@ -512,7 +512,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setElementId(String elementId) {
         this.elementId = elementId;
     }
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -520,7 +520,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public List<EtrBoutRepoDto> getSelectedItem() {
         return selectedItem;
     }
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -528,7 +528,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setSelectedItem(List<EtrBoutRepoDto> selectedItem) {
         this.selectedItem = selectedItem;
     }
-    
+
     /**
      * 获取 operateType
      * @return operateType.
@@ -536,7 +536,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getOperateType() {
         return operateType;
     }
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -544,7 +544,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setOperateType(String operateType) {
         this.operateType = operateType;
     }
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -552,7 +552,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getCloseWay() {
         return CloseWay;
     }
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -560,7 +560,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setCloseWay(String closeWay) {
         CloseWay = closeWay;
     }
-    
+
     /**
      * 获取 portfolioName
      * @return portfolioName.
@@ -568,7 +568,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getPortfolioName() {
         return portfolioName;
     }
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -576,7 +576,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
-    
+
     /**
      * 获取 assetType1
      * @return assetType1.
@@ -584,7 +584,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getAssetType1() {
         return assetType1;
     }
-    
+
     /**
      * 设置 assetType1
      * @param assetType1 assetType1
@@ -592,7 +592,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setAssetType1(String assetType1) {
         this.assetType1 = assetType1;
     }
-    
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -600,7 +600,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public String getFinprodName() {
         return finprodName;
     }
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -608,7 +608,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setFinprodName(String finprodName) {
         this.finprodName = finprodName;
     }
-    
+
     /**
      * 获取 finishAmt
      * @return finishAmt.
@@ -616,7 +616,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public BigDecimal getFinishAmt() {
         return finishAmt;
     }
-    
+
     /**
      * 设置 finishAmt
      * @param finishAmt finishAmt
@@ -624,7 +624,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setFinishAmt(BigDecimal finishAmt) {
         this.finishAmt = finishAmt;
     }
-    
+
     /**
      * 获取 transactioncom
      * @return transactioncom.
@@ -632,7 +632,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public BigDecimal getTransactioncom() {
         return transactioncom;
     }
-    
+
     /**
      * 设置 transactioncom
      * @param transactioncom transactioncom
@@ -640,7 +640,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setTransactioncom(BigDecimal transactioncom) {
         this.transactioncom = transactioncom;
     }
-    
+
     /**
      * 获取 riskTrialRetDto
      * @return riskTrialRetDto.
@@ -648,7 +648,7 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public List<RiskTrialRetDto> getRiskTrialRetDto() {
         return riskTrialRetDto;
     }
-    
+
     /**
      * 设置 riskTrialRetDto
      * @param riskTrialRetDto riskTrialRetDto
@@ -656,6 +656,17 @@ public class EtrBoutRepoDto extends EtrEntrust {
     public void setRiskTrialRetDto(List<RiskTrialRetDto> riskTrialRetDto) {
         this.riskTrialRetDto = riskTrialRetDto;
     }
-    
-    
+
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
 }

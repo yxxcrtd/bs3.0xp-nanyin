@@ -196,7 +196,8 @@ public class StlDataDealSzdSjsmxProcessService {
             setRepoDeal(szdSjsmx, settleTransData);
             // 期限品种
             setTermType(szdSjsmx, settleTransData);
-
+            // 目前回购交易平台只有竞价
+            settleTransData.setTradePlat(DictCodeList.交易平台_竞价撮合平台.getValue());
             settleTransDataAdd.setTradeId(settleTransData.getTradeId());
             settleTransDataAdd.setRepoType(settleTransData.getBusiType());
             settleTransDataAdd.setSeRepDayType(CacheUtil.getSysParam(StlDataDealProcessConstant.STL_SE_REP_DAY_TYPE));

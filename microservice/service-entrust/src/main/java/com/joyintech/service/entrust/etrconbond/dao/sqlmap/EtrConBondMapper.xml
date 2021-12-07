@@ -45,7 +45,8 @@
         T1.ENTRUST_DATE entrustDate,
         T7.PURCH_MODLE purchModle,
         T7.PURCH_TYPE purchType,
-        TT.PRIN_AMT winlotteryAmt
+        TT.PRIN_AMT winlotteryAmt,
+        '' nextUser
         FROM ETR_ENTRUST T1
         INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
         INNER JOIN PTL_PORTFOLIO_AUTHORITY T11 ON T11.PORTFOLIO_ID = T2.PORTFOLIO_ID AND T11.USER_ID = #{userId}
@@ -115,7 +116,7 @@
     <sql id="onlyWtfEtrEntrust">
         SELECT
         T1.ENTRUST_ID entrustId,
-        T1.ENTRUST_STATUS entrustStatus,
+        '08' entrustStatus,
         T8.REAL_NAME invManagerId,
         T1.PORTFOLIO_ID portfolioId,
         T2.PORTFOLIO_NAME portfolioName,
@@ -132,7 +133,8 @@
         T1.ENTRUST_DATE entrustDate,
         T7.PURCH_MODLE purchModle,
         T7.PURCH_TYPE purchType,
-        TT.PRIN_AMT winlotteryAmt
+        TT.PRIN_AMT winlotteryAmt,
+        SWBL.NEXT_USER nextUser
         FROM WFL_ETR_ENTRUST T1
         INNER JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
         INNER JOIN PTL_PORTFOLIO_AUTHORITY T11 ON T11.PORTFOLIO_ID = T2.PORTFOLIO_ID AND T11.USER_ID = #{userId}
@@ -150,6 +152,7 @@
         )TT on   T1.ENTRUST_ID = TT.ENTRUST_ID
         LEFT JOIN WFL_ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
         LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
+        LEFT JOIN SYS_WFL_BUSINESS_LIST SWBL ON SWBL.SEQ_NO = T1.WORKFLOW_ID and SWBL.PROCESS_STATE != 'END'
         <where>
             AND T3.FINPROD_TYPE2 =#{bond}
             AND (T4.TYPE_6 = #{type6_B14} OR T4.TYPE_6 = #{type6_B15})
@@ -195,7 +198,7 @@
             </if>
         </where>
     </sql>
-    
+
     <!-- 获取资产代码联想文本框信息 -->
     <select id="getFinprodId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
@@ -297,7 +300,7 @@
             <result column="contactInfo" property="contactInfo"/>
         </association>
     </resultMap>
-    
+
     <select id="selectByKey"
             resultMap="selByKeyResult">
         SELECT

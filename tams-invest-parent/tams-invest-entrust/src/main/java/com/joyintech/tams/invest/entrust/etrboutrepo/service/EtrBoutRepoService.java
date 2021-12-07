@@ -7,17 +7,15 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.entrust.etrboutrepo.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.joyintech.system.base.entity.SysUser;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -102,7 +100,7 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
     @Autowired
     private EtrStockService etrStockService;
     /**
-            * 计划净值型指令Service
+     * 计划净值型指令Service
      */
     @Autowired
     private EtrPlanAssetNService etrPlanAssetNService;
@@ -113,7 +111,7 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
     private EtrCommonService etrCommonService;
     /**
      * 项目类委托分页查询 <功能详细描述>
-     * 
+     *
      * @param pageParam
      * @return
      * @see
@@ -131,6 +129,8 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
 //        }
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
         //配置单位 edit by yeming 20210802 start
+        List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+                param, SysUser.class);
         Page<EtrBoutRepoDto> page = restTemplate.postForPage(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/findPage", param,
                 EtrBoutRepoDto.class);
@@ -138,6 +138,12 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
             if(dto.getEntrustAmt() != null) {
                 dto.setEntrustAmt(dto.getEntrustAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
                 System.out.println(dto.getEntrustAmt());
+            }
+            if(StringUtil.isNotEmpty(dto.getNextUser())){
+                String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+                        .map(SysUser::getRealName)
+                        .collect(Collectors.joining(",","",""));
+                dto.setNextUser(sysUsers);
             }
         }
 
@@ -150,7 +156,7 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
 
     /**
      * 组合代码联想文本框 <功能详细描述>
-     * 
+     *
      * @param param
      * @return
      * @see
@@ -162,12 +168,12 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
         map.put("userId", user.getUserName());
         map.put("param", param);
         return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME
-                                       + "/EtrBoutRepo/getentrustId" , map,
-            SuggestDto.class);
+                        + "/EtrBoutRepo/getentrustId" , map,
+                SuggestDto.class);
     }
     /**
      * 关闭委托 <功能详细描述>
-     * 
+     *
      * @param entrustId
      * @param closeWay
      * @see
@@ -175,36 +181,36 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
      */
     public boolean closeDelegate(String entrustId, String closeWay) {
         return restTemplate.getForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/close?entrustId=" + entrustId
-                                         + "&closeWay=" + closeWay,
-            boolean.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/close?entrustId=" + entrustId
+                        + "&closeWay=" + closeWay,
+                boolean.class);
     }
 
     /**
      * 撤回委托 <功能详细描述>
-     * 
+     *
      * @param entity
      * @see
      * @since 1.0
      */
     public boolean recallDelegate(EtrBoutRepoDto dto) {
         return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/recall", dto, boolean.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/recall", dto, boolean.class);
     }
     /**
-     * 校验方法 
-     * 
+     * 校验方法
+     *
      * @see
      * @since 1.0
      */
     public List<ValidMessage> check(EtrBoutRepoDto dto) {
         dto.setCloseWay(DictCodeListExt1.委托关闭方式_人工.getValue());
         return restTemplate.postForList(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/check", dto,
-            ValidMessage.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/check", dto,
+                ValidMessage.class);
     }
     /**
-     * 
+     *
      * 查询授权额度
      * <功能详细描述>
      * @param map
@@ -220,12 +226,12 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
         map.put("tradeMarket", dto.getTradeMarket());
         map.put("ps",dto.getPs());
         return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/common/SelectLimitAmt/selectLimitAmt", map,
-            BigDecimal.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/SelectLimitAmt/selectLimitAmt", map,
+                BigDecimal.class);
     }
     /**
      * 导出
-     * 
+     *
      * @param exportParam 导出信息
      * @see
      * @since 1.0
@@ -233,7 +239,7 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
     @Override
     protected void buildExportParam(ExportParam exportParam) {
         exportParam.config("/com/joyintech/tams/invest/entrust/etrboutrepo/conf/export_conf.xml").dataSource(
-            DataSourceType.MASERT);
+                DataSourceType.MASERT);
     }
     @Override
     public Page<EtrBoutRepoDto> selectPageData(Map<String, Object> selectParam) {
@@ -245,7 +251,7 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
             cell.setCellValue(value+"%");
         }
     }
-   
+
     /**
      * 工作流完成
      */
@@ -259,30 +265,30 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
         dto.setEntrustDate(sysDate);
         basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
         restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/doComplete", dto,
-            Integer.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/doComplete", dto,
+                Integer.class);
     }
     /**
-     * 
+     *
      * 流程发起时调用
      */
-     @Override
-     public void doInsert(EtrBoutRepoDto dto, OperationType type){
-         restTemplate.postForObject(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/doInsert",dto,
-             Integer.class);
-     }
+    @Override
+    public void doInsert(EtrBoutRepoDto dto, OperationType type){
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/doInsert",dto,
+                Integer.class);
+    }
 
-     /**
-      * 
-      * 流程修改时调用
-      */
-     @Override
-     public void doUpdate(EtrBoutRepoDto dto){
-         restTemplate.postForObject(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/doUpdate",dto,
-             Integer.class);
-     }
+    /**
+     *
+     * 流程修改时调用
+     */
+    @Override
+    public void doUpdate(EtrBoutRepoDto dto){
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/doUpdate",dto,
+                Integer.class);
+    }
 
     @Override
     public void doBack(EtrBoutRepoDto dto) {
@@ -292,161 +298,161 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
     }
 
     /**
-      * 新建页面组合代码联想下拉框 <功能详细描述>
-      * 
-      * @param search
-      * @return
-      * @see
-      * @since 1.0
-      */
-     public Page<SelectOptionDto> getentrustIdAdd(Map<String, Object> map) {
-         map.put("userId", SecurityUtil.getLoginUser().getUserName());
-         return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME
-                                        + "/EtrBoutRepo/getentrustIdAdd" , map,
-             SelectOptionDto.class);
-     }
-     
-     /**
-      * 查询修改/查看返显数据 <功能详细描述>
-      * 
-      * @param entrustId
-      * @return
-      * @see
-      * @since 1.0
-      */
-     public EtrBoutRepoDto selectByKey(String entrustId) {
-         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                                          + "/EtrBoutRepo/selectByKey?entrustId=" + entrustId,
-             EtrBoutRepoDto.class);
-     }
-     /**
-      * 查询证券托管户：联想框文本框
-      *
-      * @param parameters 画面参数
-      * @return 证券托管户：联想框文本框
-      * @see
-      * @since 1.0
-      */
-     public List<SelectOptionDto> getSecManageAcctId(Map<String, Object> parameters) {
-         List<SuggestDto> tempList = restTemplate.postForList(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/getSecManageAcctId",
-             parameters, SuggestDto.class);
+     * 新建页面组合代码联想下拉框 <功能详细描述>
+     *
+     * @param search
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> getentrustIdAdd(Map<String, Object> map) {
+        map.put("userId", SecurityUtil.getLoginUser().getUserName());
+        return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME
+                        + "/EtrBoutRepo/getentrustIdAdd" , map,
+                SelectOptionDto.class);
+    }
 
-         List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
-         if (!StringUtil.isEmptyList(tempList)) {
-             for (SuggestDto suggestDto : tempList) {
-                 SelectOptionDto selectOptionDto = new SelectOptionDto();
-                 selectOptionDto.setId(suggestDto.getCode());
-                 selectOptionDto.setText(suggestDto.getName());
-                 if (StringUtil.isNotBlank((String) parameters.get("portfolioId"))) {
-                     selectOptionDto.setParentId((String) parameters.get("portfolioId"));
-                 }
-                 resultList.add(selectOptionDto);
-             }
-         }
+    /**
+     * 查询修改/查看返显数据 <功能详细描述>
+     *
+     * @param entrustId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public EtrBoutRepoDto selectByKey(String entrustId) {
+        return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
+                        + "/EtrBoutRepo/selectByKey?entrustId=" + entrustId,
+                EtrBoutRepoDto.class);
+    }
+    /**
+     * 查询证券托管户：联想框文本框
+     *
+     * @param parameters 画面参数
+     * @return 证券托管户：联想框文本框
+     * @see
+     * @since 1.0
+     */
+    public List<SelectOptionDto> getSecManageAcctId(Map<String, Object> parameters) {
+        List<SuggestDto> tempList = restTemplate.postForList(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/getSecManageAcctId",
+                parameters, SuggestDto.class);
 
-         return resultList;
-     }
-     /**
-      * 组合可用现金查询
-      * <功能详细描述>
-      * @param dto
-      * @return
-      * @see
-      * @since 1.0
-      */
-     public Map<String, Object> getProAvailableCash(Map<String, Object> param) {
-         Date vdate = DateUtil.parse((String)param.get("vdate"));
-         String calId = (String)param.get("calId");
-         if(StringUtil.isNotEmpty(calId)){
-             List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(vdate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(vdate)), 15),calId);
-             Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(vdate)), 1, holidayList, "1");
-             param.put("vdate1",DateUtil.format(tradeDay));
-         }
-         return restTemplate.postForObject(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/getProAvailableCash",param,
-             Map.class);
-     }
-     /**
-      * 
-      * 判断是否为节假日
-      * <功能详细描述>
-      * @param param
-      * @return
-      * @see
-      * @since 1.0
-      */
-     public Map<String, Object> judgeIsHday(Map<String, Object> param){
-         String mdateAdd = (String)param.get("mdateAdd");
-         String calId = (String)param.get("calId");
-         boolean result = dateCalService.isDealCalendarHoliday(mdateAdd,calId);
+        List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
+        if (!StringUtil.isEmptyList(tempList)) {
+            for (SuggestDto suggestDto : tempList) {
+                SelectOptionDto selectOptionDto = new SelectOptionDto();
+                selectOptionDto.setId(suggestDto.getCode());
+                selectOptionDto.setText(suggestDto.getName());
+                if (StringUtil.isNotBlank((String) parameters.get("portfolioId"))) {
+                    selectOptionDto.setParentId((String) parameters.get("portfolioId"));
+                }
+                resultList.add(selectOptionDto);
+            }
+        }
+
+        return resultList;
+    }
+    /**
+     * 组合可用现金查询
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public Map<String, Object> getProAvailableCash(Map<String, Object> param) {
+        Date vdate = DateUtil.parse((String)param.get("vdate"));
+        String calId = (String)param.get("calId");
+        if(StringUtil.isNotEmpty(calId)){
+            List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(vdate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(vdate)), 15),calId);
+            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(vdate)), 1, holidayList, "1");
+            param.put("vdate1",DateUtil.format(tradeDay));
+        }
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/getProAvailableCash",param,
+                Map.class);
+    }
+    /**
+     *
+     * 判断是否为节假日
+     * <功能详细描述>
+     * @param param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public Map<String, Object> judgeIsHday(Map<String, Object> param){
+        String mdateAdd = (String)param.get("mdateAdd");
+        String calId = (String)param.get("calId");
+        boolean result = dateCalService.isDealCalendarHoliday(mdateAdd,calId);
 //         AjaxResult msg =new AjaxResult();
 //         msg.setMessage("到期日为节假日");
 //         msg.setMessageType(MessageType.错误消息);
-         if(result == true){
-             List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(mdateAdd),DateUtil.addDay(DateUtil.parse(mdateAdd), 15),calId);
-             Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(mdateAdd), 1, holidayList, "1");
-             param.put("mdateAdd2",DateUtil.format(tradeDay));
-             param.put("msg", "到期日为节假日");
-         }
-         return param;
-     }
-     /**
-      * 
-      * 查询标准券额度
-      * <功能详细描述>
-      * @param map
-      * @return
-      * @see
-      * @since 1.0
-      */
-     public BigDecimal selectStandardAmt(Map<String, Object> map){
-         BigDecimal standardAmt = new BigDecimal(0);
-         BigDecimal amt = restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/selectAmt",map,
-             BigDecimal.class);
-         BigDecimal wflamt = restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/selectWflAmt",map,
-             BigDecimal.class);
-         Map<String, Object> prinAmt = restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/selectStandardAmt",map,
-             Map.class);
-         if(amt!=null){
-             standardAmt.add(amt);
-         }
-         if(wflamt!=null){
-             standardAmt.add(wflamt);
-         }
-         if(prinAmt!=null && prinAmt.get("PRIN_AMT") != null){
-             standardAmt.add(new BigDecimal((String)prinAmt.get("PRIN_AMT")));
-         }
-         return standardAmt;
-     }
+        if(result == true){
+            List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(mdateAdd),DateUtil.addDay(DateUtil.parse(mdateAdd), 15),calId);
+            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(mdateAdd), 1, holidayList, "1");
+            param.put("mdateAdd2",DateUtil.format(tradeDay));
+            param.put("msg", "到期日为节假日");
+        }
+        return param;
+    }
+    /**
+     *
+     * 查询标准券额度
+     * <功能详细描述>
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public BigDecimal selectStandardAmt(Map<String, Object> map){
+        BigDecimal standardAmt = new BigDecimal(0);
+        BigDecimal amt = restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/selectAmt",map,
+                BigDecimal.class);
+        BigDecimal wflamt = restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/selectWflAmt",map,
+                BigDecimal.class);
+        Map<String, Object> prinAmt = restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/selectStandardAmt",map,
+                Map.class);
+        if(amt!=null){
+            standardAmt.add(amt);
+        }
+        if(wflamt!=null){
+            standardAmt.add(wflamt);
+        }
+        if(prinAmt!=null && prinAmt.get("PRIN_AMT") != null){
+            standardAmt.add(new BigDecimal((String)prinAmt.get("PRIN_AMT")));
+        }
+        return standardAmt;
+    }
 
-     // add by renping 授权增加 2019-08-22 start
-     @Override
-     public Map<String, Object> getRuntimeVariables(ProcessMark entity, String taskId) throws WorkFlowException {
-         EtrBoutRepoDto dto = this.getBussinessEntity(entity);
-         if (taskId != null) {
-             try {
-                 BigDecimal amount = dto.getEntrustAmt();
-                 if (amount == null) {
-                     amount = dto.getEntrustNum();
-                 }
-                 Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), amount, LoginUserUtil.getUserName(),
-                         BussinessDictCodeList.平安资产类型_买断式回购.getValue(), dto.getFinprodType2(), dto.getTradeMarket(), dto.getPs()
-                         , null, entity.getWorkflowId()
-                         );
-                 params.put("term", new BigDecimal(dto.getRepoTerm()));
-                 return commonBusinessService.是否需要上级审批_委托用(params);
-             }
-             catch (WorkFlowException e) {
-                 // 未设置授权或设置成不授权时，抛出异常，当前用户只能退回
-                 throw new WorkFlowException(e);
-             }
-         }
-         else {
-             return null;
-         }
-     }
-     // add by renping 授权增加 2019-08-22 end
+    // add by renping 授权增加 2019-08-22 start
+    @Override
+    public Map<String, Object> getRuntimeVariables(ProcessMark entity, String taskId) throws WorkFlowException {
+        EtrBoutRepoDto dto = this.getBussinessEntity(entity);
+        if (taskId != null) {
+            try {
+                BigDecimal amount = dto.getEntrustAmt();
+                if (amount == null) {
+                    amount = dto.getEntrustNum();
+                }
+                Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), amount, LoginUserUtil.getUserName(),
+                        BussinessDictCodeList.平安资产类型_买断式回购.getValue(), dto.getFinprodType2(), dto.getTradeMarket(), dto.getPs()
+                        , null, entity.getWorkflowId()
+                );
+                params.put("term", new BigDecimal(dto.getRepoTerm()));
+                return commonBusinessService.是否需要上级审批_委托用(params);
+            }
+            catch (WorkFlowException e) {
+                // 未设置授权或设置成不授权时，抛出异常，当前用户只能退回
+                throw new WorkFlowException(e);
+            }
+        }
+        else {
+            return null;
+        }
+    }
+    // add by renping 授权增加 2019-08-22 end
 
 
     /**
@@ -456,14 +462,14 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
      */
     public String getCounterName(String counterId) {
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                                         + "/EtrBondFirstLBidding/getCounterName?counterId="
-                                         + counterId,
-            String.class);
+                        + "/EtrBondFirstLBidding/getCounterName?counterId="
+                        + counterId,
+                String.class);
     }
 
     /**
      * 获取委托列表数据
-     * 
+     *
      * @return
      */
     public List<EtrBoutRepoDto> getEntrustListData(String tempList) {
@@ -510,11 +516,11 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
             // 首次净价
             if (StringUtil.isNotBlank(data.get(10).toString())) {
                 dto.setFirstprice(
-                    BigDecimal.valueOf(Double.valueOf(data.get(10).toString().trim())));
+                        BigDecimal.valueOf(Double.valueOf(data.get(10).toString().trim())));
             }
             if (StringUtil.isNotBlank(data.get(11).toString())) {
                 dto.setFirstprice2(
-                    BigDecimal.valueOf(Double.valueOf(data.get(11).toString().trim())));
+                        BigDecimal.valueOf(Double.valueOf(data.get(11).toString().trim())));
             }
             // 币种
             if (StringUtil.isNotBlank(data.get(12).toString())) {
@@ -530,8 +536,8 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
             }
             // 当期限品种不为空，回购期限为空时，根据期限品种带出回购期限
             if (StringUtil.isNotBlank(data.get(16).toString())
-                && StringUtil.isBlank(data.get(14).toString())
-                && StringUtil.isBlank(data.get(15).toString())) {
+                    && StringUtil.isBlank(data.get(14).toString())
+                    && StringUtil.isBlank(data.get(15).toString())) {
                 String[] s = data.get(16).toString().split(":");
                 if (StringUtil.equals(s[0], DictCodeList.回购期限品种_R001.getValue())) {
                     dto.setRepoTerm("1");
@@ -613,8 +619,8 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                     param.put("page", 1);
                     param.put("length", 20);
                     Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                        ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
-                        param, SelectOptionDto.class);
+                            ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
+                            param, SelectOptionDto.class);
                     // 通道名称
                     dto.setChlIdName(selectOptionDtoPage.getRoot().get(0).getText());
                 }
@@ -654,15 +660,15 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
             // 交易日历名称
             dto.setCalendarId(data.get(17).toString());
             if(dto.getCalendarId().contains(":")){
-            	dto.setCalendarId( dto.getCalendarId().split(":")[0]);
+                dto.setCalendarId( dto.getCalendarId().split(":")[0]);
             }
             Map<String, Object> param = new HashMap<>();
             param.put("initValue", dto.getCalendarId());
             param.put("page", 1);
             param.put("length", 20);
             Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/selectCalendarId", param,
-                SelectOptionDto.class);
+                    ServiceApplication.COMMON_SERVICE_NAME + "/CommonSelect/selectCalendarId", param,
+                    SelectOptionDto.class);
             if (!selectOptionDtoPage.getRoot().isEmpty()) {
                 dto.setCalendarIdName(selectOptionDtoPage.getRoot().get(0).getText());
             }
@@ -683,7 +689,7 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                 Map<String, Object> map2 = getProAvailableCash(map);
                 if (StringUtil.isNotEmpty(map2.get("cashT"))) {
                     dto.setProAvailableCash(
-                        BigDecimal.valueOf(Double.valueOf(map2.get("cashT").toString())));
+                            BigDecimal.valueOf(Double.valueOf(map2.get("cashT").toString())));
                 }
                 else {
                     dto.setProAvailableCash(BigDecimal.ZERO);
@@ -699,13 +705,13 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                 etrSecPositionDto.setCcy(dto.getCcy());
                 etrSecPositionDto.setFinprodId(dto.getFinprodId());
                 if(StringUtil.isNotEmpty(dto.getSecuritiesCust())) {
-                etrSecPositionDto.setSecAcctId(dto.getSecuritiesCust());
+                    etrSecPositionDto.setSecAcctId(dto.getSecuritiesCust());
                 }else {
                     etrSecPositionDto.setSecAcctId(dto.getChlId());
                 }
                 etrSecPositionDto.setPortfolioId(dto.getPortfolioId());
                 dto.setAssetAvailablePosition(
-                    etrPlanAssetNService.getAssetAvailablePosition(etrSecPositionDto));
+                        etrPlanAssetNService.getAssetAvailablePosition(etrSecPositionDto));
             }
             else {
                 dto.setAssetAvailablePosition(null);
@@ -729,7 +735,7 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
 
     /**
      * 验证导入的数据
-     * 
+     *
      * @param tempList 导入的数据
      * @return wr 报错信息与正确的数据
      */
@@ -761,35 +767,35 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                 if (isEntrust) {
                     // 委托开始日非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(1).toString(),
-                            "EtrBoutRepo001.vdate", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(1).toString(),
+                                    "EtrBoutRepo001.vdate", lineNo));
                     // 委托开始日格式check
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsDate(rowData.get(1).toString(),
-                            "EtrBoutRepo001.vdate", lineNo));
+                            etrCommonService.checkIsDate(rowData.get(1).toString(),
+                                    "EtrBoutRepo001.vdate", lineNo));
                     // 委托终止日非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(2).toString(),
-                            "EtrBoutRepo001.mdate", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(2).toString(),
+                                    "EtrBoutRepo001.mdate", lineNo));
                     // 委托终止日格式check
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsDate(rowData.get(2).toString(),
-                            "EtrBoutRepo001.mdate", lineNo));
+                            etrCommonService.checkIsDate(rowData.get(2).toString(),
+                                    "EtrBoutRepo001.mdate", lineNo));
                     // 委托开始、终止日是否是平台日check
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                             EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
                     // 组合代码非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(3).toString(),
-                            "EtrBoutRepo001.portfolioId", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(3).toString(),
+                                    "EtrBoutRepo001.portfolioId", lineNo));
                     // 组合代码check
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkPortfolioIdExist(rowData.get(3).toString(),
-                            "EtrBoutRepo001.portfolioId", lineNo));
+                            etrCommonService.checkPortfolioIdExist(rowData.get(3).toString(),
+                                    "EtrBoutRepo001.portfolioId", lineNo));
                     // 资产代码非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(4).toString(),
-                            "EtrBoutRepo001.finprodId", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(4).toString(),
+                                    "EtrBoutRepo001.finprodId", lineNo));
                     // 资产代码是否存在
                     if (StringUtil.isNotBlank(rowData.get(4).toString())) {
                         Map<String, Object> map1 = new HashMap<String, Object>();
@@ -797,70 +803,70 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                         map1.put("page", 1);
                         map1.put("length", 20);
                         Page<SelectOptionDto> page = etrInvestBondInfoService.getfinprodIdForAdd(
-                            map1);
+                                map1);
                         if (page.getRoot().isEmpty()) {
                             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                getMessage("ETR_BR_004", lineNo));
+                                    getMessage("ETR_BR_004", lineNo));
                         }
                     }
                     // 交易方向非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(5).toString(),
-                            "EtrBoutRepo001.ps", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(5).toString(),
+                                    "EtrBoutRepo001.ps", lineNo));
                     // 交易场所非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(6).toString(),
-                            "EtrFund002.tradePlat", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(6).toString(),
+                                    "EtrFund002.tradePlat", lineNo));
                     // 券面总额非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(7).toString(),
-                            "EtrBoutRepo001.entrustAmt", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(7).toString(),
+                                    "EtrBoutRepo001.entrustAmt", lineNo));
                     // 当价格模式是市价指令时回购利率不可填，其他的价格模式时，回购利率必填
                     if (StringUtil.isNotBlank(rowData.get(9).toString())) {
                         String[] s = rowData.get(9).toString().trim().split(":");
                         if (StringUtil.equals(s[0], DictCodeListExt2.价格模式_市价指令.getValue())) {
                             if (StringUtil.isNotBlank(rowData.get(8).toString())) {
                                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
-                                    "ETR_BR_001", getMessage("EtrBoutRepo001.price"), lineNo));
+                                        "ETR_BR_001", getMessage("EtrBoutRepo001.price"), lineNo));
                             }
                         }
                         else {
                             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                etrCommonService.checkIsBlank(rowData.get(8).toString(),
-                                    "EtrBoutRepo001.price", lineNo));
+                                    etrCommonService.checkIsBlank(rowData.get(8).toString(),
+                                            "EtrBoutRepo001.price", lineNo));
                         }
                     }
                     // 价格模式非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(9).toString(),
-                            "EtrStock001.priceModel", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(9).toString(),
+                                    "EtrStock001.priceModel", lineNo));
                     // 当价格模式是市价指令时首次净价不可填，其他的价格模式时，首次净价必填
                     if (StringUtil.isNotBlank(rowData.get(9).toString())) {
                         String[] s = rowData.get(9).toString().trim().split(":");
                         if (StringUtil.equals(s[0], DictCodeListExt2.价格模式_市价指令.getValue())) {
                             if (StringUtil.isNotBlank(rowData.get(10).toString())) {
                                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                    getMessage("ETR_BR_001",
-                                        getMessage("EtrBoutRepo003.firstprice"), lineNo));
+                                        getMessage("ETR_BR_001",
+                                                getMessage("EtrBoutRepo003.firstprice"), lineNo));
                             }
                             if (StringUtil.isNotBlank(rowData.get(11).toString())) {
                                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                    getMessage("ETR_BR_001",
-                                        getMessage("EtrBoutRepo003.firstprice2"), lineNo));
+                                        getMessage("ETR_BR_001",
+                                                getMessage("EtrBoutRepo003.firstprice2"), lineNo));
                             }
                         }
                         else {
                             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                etrCommonService.checkIsBlank(rowData.get(10).toString(),
-                                    "EtrBoutRepo003.firstprice", lineNo));
+                                    etrCommonService.checkIsBlank(rowData.get(10).toString(),
+                                            "EtrBoutRepo003.firstprice", lineNo));
                             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                etrCommonService.checkIsBlank(rowData.get(11).toString(),
-                                    "EtrBoutRepo003.firstprice2", lineNo));
+                                    etrCommonService.checkIsBlank(rowData.get(11).toString(),
+                                            "EtrBoutRepo003.firstprice2", lineNo));
                         }
                     }
                     // 首次净价（最小）不能大于首次净价（最大）
                     if (StringUtil.isNotBlank(rowData.get(10).toString().trim())
-                        && StringUtil.isNotBlank(rowData.get(11).toString().trim())) {
+                            && StringUtil.isNotBlank(rowData.get(11).toString().trim())) {
                         if(!isNotNumeric(rowData.get(10)) && !isNotNumeric(rowData.get(11))){
                             BigDecimal a = BigDecimal.valueOf(
                                     Double.valueOf(rowData.get(10).toString().trim()));
@@ -875,60 +881,60 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                     }
                     // 币种非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(12).toString(),
-                            "EtrBoutRepo001.ccy", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(12).toString(),
+                                    "EtrBoutRepo001.ccy", lineNo));
                     // 清算速度非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(13).toString(),
-                            "EtrBoutRepo001.ccy", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(13).toString(),
+                                    "EtrBoutRepo001.ccy", lineNo));
                     // 当期限品种为空时，回购期限不能为空
                     if (StringUtil.isBlank(rowData.get(16).toString())) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                            etrCommonService.checkIsBlank(rowData.get(14).toString(),
-                                "EtrBoutRepo003.repoTerm", lineNo));
+                                etrCommonService.checkIsBlank(rowData.get(14).toString(),
+                                        "EtrBoutRepo003.repoTerm", lineNo));
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                            etrCommonService.checkIsBlank(rowData.get(15).toString(),
-                                "EtrBoutRepo003.repoTerm2", lineNo));
+                                etrCommonService.checkIsBlank(rowData.get(15).toString(),
+                                        "EtrBoutRepo003.repoTerm2", lineNo));
                     }
                     // 当回购期限不为空时
                     else if (StringUtil.isNotBlank(rowData.get(16).toString())) {
                         // 回购期限不能一个有值一个无值
                         if ((StringUtil.isBlank(rowData.get(14).toString())
-                             && StringUtil.isNotBlank(rowData.get(15).toString()))
-                            || (StringUtil.isBlank(rowData.get(15).toString())
+                                && StringUtil.isNotBlank(rowData.get(15).toString()))
+                                || (StringUtil.isBlank(rowData.get(15).toString())
                                 && StringUtil.isNotBlank(rowData.get(14).toString()))) {
                             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                getMessage("ETR_BR_003", lineNo));
+                                    getMessage("ETR_BR_003", lineNo));
                         }
                         // 期限品种为R9M和R1Y时，回购期限不能为空
                         String[] s = rowData.get(16).toString().trim().split(":");
                         if (StringUtil.equals(s[0], DictCodeList.回购期限品种_R9M.getValue())
-                            || StringUtil.equals(s[0], DictCodeList.回购期限品种_R1Y.getValue())) {
+                                || StringUtil.equals(s[0], DictCodeList.回购期限品种_R1Y.getValue())) {
                             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                etrCommonService.checkIsBlank(rowData.get(14).toString(),
-                                    "EtrBoutRepo003.repoTerm", lineNo));
+                                    etrCommonService.checkIsBlank(rowData.get(14).toString(),
+                                            "EtrBoutRepo003.repoTerm", lineNo));
                             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                etrCommonService.checkIsBlank(rowData.get(15).toString(),
-                                    "EtrBoutRepo003.repoTerm2", lineNo));
+                                    etrCommonService.checkIsBlank(rowData.get(15).toString(),
+                                            "EtrBoutRepo003.repoTerm2", lineNo));
                         }
                     }
                     // 回购期限（最小）不能大于回购期限（最大）
                     if (StringUtil.isNotBlank(rowData.get(14).toString().trim())
-                        && StringUtil.isNotBlank(rowData.get(15).toString().trim())) {
+                            && StringUtil.isNotBlank(rowData.get(15).toString().trim())) {
                         float f = Float.parseFloat(rowData.get(14).toString().trim());
                         float f1 = Float.parseFloat(rowData.get(15).toString().trim());
                         if (f > f1) {
                             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                getMessage("ETR_BR_002", getMessage("EtrBoutRepo003.repoTerm"),
-                                    getMessage("EtrBoutRepo003.repoTerm2"), lineNo));
+                                    getMessage("ETR_BR_002", getMessage("EtrBoutRepo003.repoTerm"),
+                                            getMessage("EtrBoutRepo003.repoTerm2"), lineNo));
                         }
                     }
-                 // 交易日历非空
+                    // 交易日历非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(17).toString(), "EtrBoutRepo002.calendarId", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(17).toString(), "EtrBoutRepo002.calendarId", lineNo));
                     // 交易日历check
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkCalendarIdExist(rowData.get(17).toString(), "EtrBoutRepo002.calendarId", lineNo));
+                            etrCommonService.checkCalendarIdExist(rowData.get(17).toString(), "EtrBoutRepo002.calendarId", lineNo));
                     // TISHKS-205:买断式回购指令导入模板文件删除通道字段 fuyongsheng 20211105 edit start
                     // 通道
 //                    if ((StringUtil.isBlank(rowData.get(18).toString())
@@ -941,10 +947,10 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
 //                    }
                     // 证券账户非空
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(18).toString(), "EtrStock002.secAcctId", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(18).toString(), "EtrStock002.secAcctId", lineNo));
                     // 证券账户存在
                     if (StringUtil.isNotBlank(rowData.get(18).toString())
-                        && StringUtil.isNotBlank(rowData.get(3).toString())) {
+                            && StringUtil.isNotBlank(rowData.get(3).toString())) {
                         Map<String, Object> map = new HashMap<>();
                         map.put("initValue", rowData.get(18).toString());
                         map.put("page", 1);
@@ -953,7 +959,7 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                         List<SelectOptionDto> secAcctIds = etrStockService.getSecAcctId(map);
                         if (secAcctIds.isEmpty()) {
                             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
-                                "ETR_E_0017", getMessage("EtrStock002.secAcctId"), lineNo));
+                                    "ETR_E_0017", getMessage("EtrStock002.secAcctId"), lineNo));
                         }
                     }
                     // 通道存在
@@ -981,11 +987,11 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                     map.put("counterType", null);
                     map.put("innerTrade", false);
                     Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                        ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
-                        map, SelectOptionDto.class);
+                            ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
+                            map, SelectOptionDto.class);
                     if (selectOptionDtoPage.getRoot().isEmpty()) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
-                            "ETR_E_0017", getMessage("etrInvestPersonInfo.counterId"), lineNo));
+                                "ETR_E_0017", getMessage("etrInvestPersonInfo.counterId"), lineNo));
                     }
                 }
                 if (StringUtil.isBlank(confirmMsg)) {
@@ -1000,7 +1006,7 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                 }
             }
             totalMsg = etrCommonService.StringAddByBr(totalMsg,
-                getMessage("ETR_C_0001", String.valueOf(errorNum)));
+                    getMessage("ETR_C_0001", String.valueOf(errorNum)));
             Map<String, Object> resultMap = new HashMap<>();
             if (StringUtil.isNotBlank(totalMsg)) {
                 resultMap.put("confirmMsg", totalMsg);
