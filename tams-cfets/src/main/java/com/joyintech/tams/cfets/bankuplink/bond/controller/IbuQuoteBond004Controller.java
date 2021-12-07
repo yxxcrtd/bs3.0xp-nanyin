@@ -198,6 +198,10 @@ public class IbuQuoteBond004Controller extends BaseController {
         if (br.hasErrors()) {
             return new Message<AjaxResult>().success().setData(new AjaxResult(br));
 		}
+        AjaxResult ajaxResult = cfetsBondDealQuotedPrice004Service.checkNotEmpty(dto);
+        if(!CollectionUtils.isEmpty(ajaxResult.getErrorList())){
+            return new Message<AjaxResult>().success().setData(ajaxResult);
+        }
         CfetsBondDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsBondDealRegisterQuoteDto();
         //前台实体转成后台dto
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRegisterQuoteDto, dto);
