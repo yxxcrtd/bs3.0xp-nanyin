@@ -308,7 +308,7 @@ public class CfetsSettleService extends BaseService{
 
         param.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
 
-        param.put("isCalcY", BussinessDictCodeList.是否_是.getValue());
+        param.put("isCalcN", BussinessDictCodeList.是否_否.getValue());
 
         param.put("batchDate", batchDate);
 

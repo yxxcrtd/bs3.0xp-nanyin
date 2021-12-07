@@ -182,9 +182,8 @@
         LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
         LEFT JOIN SYS_DATADICT_LIST sdl5 on sdl5.dict_code ='SHARES_TRADE_PLATFORM' and sdl5.item_code = T1.TRADE_PLAT
         LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
-        WHERE 1=1
-<!--        T1.TRADE_STATUS =#{TRADE_STATUS_01}-->
-<!--        AND T1.Is_Cancel =#{isCalcN}-->
+        WHERE T1.TRADE_STATUS =#{TRADE_STATUS_01}
+        AND T1.Is_Cancel =#{isCalcN}
         <![CDATA[ AND T0.SETTLE_DATE >= #{settleDateStart}]]>
         <![CDATA[ AND T0.SETTLE_DATE <= #{settleDateEnd}]]>
         <if test="settleStatusList != null and settleStatusList.size() > 0">
