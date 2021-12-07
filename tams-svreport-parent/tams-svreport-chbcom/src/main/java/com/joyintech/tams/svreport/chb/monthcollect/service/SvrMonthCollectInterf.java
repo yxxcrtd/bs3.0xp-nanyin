@@ -424,7 +424,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
 							holderTypeCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 						}else{
-							holderTypeCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalAll);
+							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
+							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
+							holderTypeCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 						}
 					}
 					//处理净销份额
@@ -433,7 +435,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
 							holderTypeCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 						}else{
-							holderTypeCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalAll);
+							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
+							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
+							holderTypeCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 						}
 					}
 					//处理份额
@@ -442,7 +446,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
 							holderTypeCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 						}else{
-							holderTypeCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesAll);
+							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
+							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
+							holderTypeCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 						}
 					}
 					//处理总销售金额
@@ -451,7 +457,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
 							holderTypeCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
 						}else{
-							holderTypeCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalAll);
+							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
+							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+							holderTypeCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
 						}
 					}
 					//处理净销售金额
@@ -460,7 +468,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
 							holderTypeCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
 						}else{
-							holderTypeCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalAll);
+							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
+							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+							holderTypeCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
 						}
 					}
 					//处理余额
@@ -469,7 +479,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
 							holderTypeCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 						}else{
-							holderTypeCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtAll);
+							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
+							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+							holderTypeCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 						}
 					}
 				}
@@ -663,7 +675,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
 							areaCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 						}else{
-							areaCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalAll);
+							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
+							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
+							areaCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 						}
 					}
 					//处理净销份额
@@ -672,7 +686,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
 							areaCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 						}else{
-							areaCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalAll);
+							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
+							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
+							areaCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 						}
 					}
 					//处理份额
@@ -681,7 +697,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
 							areaCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 						}else{
-							areaCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesAll);
+							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
+							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
+							areaCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 						}
 					}
 					//处理总销售金额
@@ -690,7 +708,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
 							areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
 						}else{
-							areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalAll);
+							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
+							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+							areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
 						}
 					}
 					//处理净销售金额
@@ -699,7 +719,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
 							areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
 						}else{
-							areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalAll);
+							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
+							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+							areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
 						}
 					}
 					//处理余额
@@ -708,7 +730,9 @@ public class SvrMonthCollectInterf extends BaseService{
 							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
 							areaCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 						}else{
-							areaCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtAll);
+							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
+							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+							areaCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 						}
 					}
 				}
@@ -900,7 +924,9 @@ public class SvrMonthCollectInterf extends BaseService{
 								BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
 								institutionCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 							}else{
-								institutionCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalAll);
+								chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
+								BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
+								institutionCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 							}
 						}
 						//处理净销份额
@@ -909,7 +935,9 @@ public class SvrMonthCollectInterf extends BaseService{
 								BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
 								institutionCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 							}else{
-								institutionCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalAll);
+								chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
+								BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
+								institutionCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 							}
 						}
 						//处理份额
@@ -918,7 +946,9 @@ public class SvrMonthCollectInterf extends BaseService{
 								BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
 								institutionCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 							}else{
-								institutionCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesAll);
+								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
+								BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
+								institutionCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 							}
 						}
 						//处理总销售金额
@@ -927,7 +957,9 @@ public class SvrMonthCollectInterf extends BaseService{
 								BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
 								institutionCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
 							}else{
-								institutionCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalAll);
+								chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
+								BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+								institutionCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
 							}
 						}
 						//处理净销售金额
@@ -936,7 +968,9 @@ public class SvrMonthCollectInterf extends BaseService{
 								BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
 								institutionCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
 							}else{
-								institutionCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalAll);
+								chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
+								BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+								institutionCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
 							}
 						}
 						//处理余额
@@ -945,7 +979,9 @@ public class SvrMonthCollectInterf extends BaseService{
 								BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
 								institutionCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 							}else{
-								institutionCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtAll);
+								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
+								BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+								institutionCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 							}
 						}
 					}
