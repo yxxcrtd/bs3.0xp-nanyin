@@ -4,6 +4,7 @@ import com.joyintech.tams.common.base.dao.SettleTransDataTotalAddMapper;
 import com.joyintech.tams.common.base.dao.SettleTransDataTotalMapper;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.transdatagather.dao.StlSettleTransDataGatherMapper;
@@ -86,5 +87,9 @@ public class StlSettleTransDataGatherService {
 
     public int insetSettleTransDataTotalAdd(SettleTransDataTotalAdd settleTransDataTotalAdd) {
         return settleTransDataTotalAddMapper.insert(settleTransDataTotalAdd);
+    }
+
+    public int insetSettleTransDataTotalPledge(SettleTransDataTotalPledge settleTransDataTotalPledge) {
+        return stlSettleTransDataGatherMapper.insetSettleTransDataTotalPledge(settleTransDataTotalPledge);
     }
 }
