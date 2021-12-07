@@ -205,4 +205,11 @@
 		where
 		INSTITUTION_CODE = #{orgCode,jdbcType=VARCHAR}
 	</select>
+
+	<!--	查询中债银行机构代码-->
+	<select id="selectIssuePartyId" parameterType="string" resultType="string">
+		select REGIST_BANK_CODE from CHB_ORG_REGIST_BANK_CODE
+		where
+		ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+	</select>
 </mapper>

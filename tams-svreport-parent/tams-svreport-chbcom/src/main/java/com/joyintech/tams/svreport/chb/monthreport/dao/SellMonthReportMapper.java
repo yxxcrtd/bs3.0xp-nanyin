@@ -30,4 +30,11 @@ public interface SellMonthReportMapper {
      * @return
      */
     String selectOrgName(@Param("orgCode")String orgCode);
+
+    /**
+     * 根据机构代码查询中债登记代码
+     * @param orgCode
+     * @return
+     */
+    String selectIssuePartyId(@Param("orgCode")String orgCode);
 }

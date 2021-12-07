@@ -17,6 +17,7 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
 import com.joyintech.tams.svreport.chb.monthreport.dao.SellMonthReportMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReport;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,7 +130,14 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		List<SellMonthReport> dateTempList=new ArrayList<SellMonthReport>();
 		//查询时间 机构与机构名
 		dateTempList = sellMonthReportMapper.selectByPrimaryKey(reportuuid);
-		data.put("data", dateTempList);
+		//获取机构名称及银行登记编码
+		for(SellMonthReport Monthreport : dateTempList){
+			String orgCode = CommonUtil.getOrgCode();
+			String issuePartyId = sellMonthReportMapper.selectIssuePartyId(orgCode);
+			String issuePartyName = sellMonthReportMapper.selectOrgName(orgCode);
+			Monthreport.setIssuePartyName(issuePartyName);
+			Monthreport.setIssuePartyId(issuePartyId);
+		}
 		String fileName = reportName +".xls";
 		//查询当前期数的reportuuid主键
 		List<SellMonthReport> reportuuidList = sellMonthReportDetailMapper.selectReportuuid(termid);
@@ -164,6 +172,7 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 						}
 					}
 					data.put("dataList1", tempList);
+					data.put("data", dateTempList);
 				}
 				//分地区
 			if(monthReport.getReporttype().equals("1_2")) {
@@ -253,13 +262,14 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		List<SellMonthReport> dateTempList=new ArrayList<SellMonthReport>();
 		//查询时间
 		dateTempList = sellMonthReportMapper.selectByPrimaryKey(reportuuid);
-		//获取机构名称
+		//获取机构名称及银行登记编码
 		for(SellMonthReport report : dateTempList){
-			String orgCode = report.getIssuePartyId();
+			String orgCode = CommonUtil.getOrgCode();
+			String issuePartyId = sellMonthReportMapper.selectIssuePartyId(orgCode);
 			String issuePartyName = sellMonthReportMapper.selectOrgName(orgCode);
 			report.setIssuePartyName(issuePartyName);
+			report.setIssuePartyId(issuePartyId);
 		}
-		data.put("data", dateTempList);
 		String fileName = "销售月度统计表"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
 				//分投资者分类
 				if(reporttype.equals("1_1")) {
@@ -290,6 +300,7 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 						}
 					}
 					data.put("dataList1", tempList);
+					data.put("data", dateTempList);
 				}
 				//分地区
 				if(reporttype.equals("1_2")) {

@@ -280,7 +280,7 @@ public class SellMonthReport extends BaseEntity implements  Cloneable{
      * @return ISSUE_PARTY_ID 发行机构代码
      */
     public String getIssuePartyId() {
-        return CommonUtil.getOrgCode();
+        return issuePartyId;
     }
 
     /**
