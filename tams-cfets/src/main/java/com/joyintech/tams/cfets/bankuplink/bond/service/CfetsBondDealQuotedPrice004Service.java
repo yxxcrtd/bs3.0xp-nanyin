@@ -764,11 +764,11 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     pltMap.put("etrId",regFinProductDeal.getEntrustId());
                     pltMap.put("cashAcctId",cfetsIbuQuoteBondMapper.getACCTNO(portfolioId,BussinessDictCodeList.资金账户类型_托管账户.getValue()));
                     pltMap.put("secAcctId",cfetsIbuQuoteBondMapper.getSecAcctId(portfolioId,regFinProductDeal.getFinprodId(),regFinProductDeal.getTradeMarket()));
-                    pltMap.put("secAmount",regFinProductDeal.getShareAmt());
+                    pltMap.put("secAmount",ArithmeticUtil.multiply(regFinProductDeal.getShareAmt(),new BigDecimal(100))); //券面总额
                     pltMap.put("cashAmount",regFinProductDeal.getTradeAmt());
                     RegFinProductDealAdd regFinProductDealAdd = regFinProductDealAddMap.get(regFinProductDeal.getTradeId()).get(0);
-                    pltMap.put("integrateSecAmount",regFinProductDealAdd.getLendinShareAmt());
-                    pltMap.put("ownSecAmount",regFinProductDealAdd.getOurShareAmt());
+                    pltMap.put("integrateSecAmount",ArithmeticUtil.multiply(regFinProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
+                    pltMap.put("ownSecAmount",ArithmeticUtil.multiply(regFinProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
                     pltMap.put("etrSecAmount",etrEntrustMapper.selectByPrimaryKey(regFinProductDeal.getEntrustId()).getEntrustNum());
                     ptlList.add(pltMap);
                 }
