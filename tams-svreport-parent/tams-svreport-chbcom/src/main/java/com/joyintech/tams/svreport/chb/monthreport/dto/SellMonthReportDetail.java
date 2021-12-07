@@ -167,7 +167,7 @@ public class SellMonthReportDetail extends BaseEntity {
         this.isConsign = isConsign;
     }
 
-    public String getIsConsignStr() {return (this.getIsConsign() + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsConsign()));}
+    public String getIsConsignStr() {return (this.getIsConsign() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsConsign()));}
 
     public String getInstitutionCode() {
         return institutionCode;
@@ -193,8 +193,8 @@ public class SellMonthReportDetail extends BaseEntity {
         this.holderType = holderType;
     }
 
-    public String getHolderTypeStr() {return (this.getHolderType() + SysDataUtil.getNameFromDataDict(DictCode.销售月表投资者类型, this.getHolderType()));}
-    public String getAreaCodeStr() {return (this.getAreaCode() + SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债, this.getAreaCode()));}
+    public String getHolderTypeStr() {return (this.getHolderType() + " " + SysDataUtil.getNameFromDataDict(DictCode.销售月表投资者类型, this.getHolderType()));}
+    public String getAreaCodeStr() {return (this.getAreaCode() + " " + SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债, this.getAreaCode()));}
     public String getReporttypeStr() {return SysDataUtil.getNameFromDataDict(DictCode.销售结算报表类型, this.getReporttype());}
 
     public BigDecimal getHolderNum() {

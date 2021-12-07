@@ -39,7 +39,7 @@ public interface SvrMonthCollectInterfMapper {
      */
     int insertIntoDetail(ChbMonthCollect sub);
 
-	int insertIntoReport(@Param("reporttype")String reporttype,@Param("chbSubmitDeadline")String chbSubmitDeadline,@Param("reportuuid")String reportuuid,@Param("termid")String termid,@Param("reportName")String reportName,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+	int insertIntoReport(@Param("reporttype")String reporttype,@Param("submitDeadline")String submitDeadline,@Param("chbSubmitDeadline")String chbSubmitDeadline,@Param("reportuuid")String reportuuid,@Param("termid")String termid,@Param("reportName")String reportName,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 
 	/**
 	 *检查整个月汇总是否有值

@@ -242,6 +242,11 @@ public abstract class FileImpService extends InterfService{
                                 })) {
                                     File lf = new SafelyFile(localPath + fileName);
                                     if (!lf.exists()) {
+                                        // 本地文件夹不存在先创建文件夹 add by zcw
+                                        File saveFileDir = new File(localPath);
+                                        if (!saveFileDir.exists()) {
+                                            saveFileDir.mkdirs();
+                                        }
                                         lf.createNewFile();
                                         FileUtils.copyFile(ff, lf);
 //                                        logger.info("下载文件：{}成功！",localPath + fileName);

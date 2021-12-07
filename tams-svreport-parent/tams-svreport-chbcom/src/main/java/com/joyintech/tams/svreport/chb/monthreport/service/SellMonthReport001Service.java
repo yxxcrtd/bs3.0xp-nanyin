@@ -9,19 +9,15 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.svreport.chb.monthreport.dao.SellMonthReportDetailMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReportDetail;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
 import com.joyintech.tams.svreport.chb.monthreport.dao.SellMonthReportMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReport;
-import org.apache.commons.lang.StringUtils;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,6 +128,16 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		Map<String,Object> data  = new HashMap<String,Object>();
 		List<SellMonthReportDetail> tempList=new ArrayList<SellMonthReportDetail>();
 		List<SellMonthReport> dateTempList=new ArrayList<SellMonthReport>();
+		//查询时间 机构与机构名
+		dateTempList = sellMonthReportMapper.selectByPrimaryKey(reportuuid);
+		//获取机构名称及银行登记编码
+		for(SellMonthReport Monthreport : dateTempList){
+			String orgCode = CommonUtil.getOrgCode();
+			String issuePartyId = sellMonthReportMapper.selectIssuePartyId(orgCode);
+			String issuePartyName = sellMonthReportMapper.selectOrgName(orgCode);
+			Monthreport.setIssuePartyName(issuePartyName);
+			Monthreport.setIssuePartyId(issuePartyId);
+		}
 		String fileName = reportName +".xls";
 		//查询当前期数的reportuuid主键
 		List<SellMonthReport> reportuuidList = sellMonthReportDetailMapper.selectReportuuid(termid);
@@ -166,6 +172,7 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 						}
 					}
 					data.put("dataList1", tempList);
+					data.put("data", dateTempList);
 				}
 				//分地区
 			if(monthReport.getReporttype().equals("1_2")) {
@@ -226,9 +233,6 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 					}
 				}
 				data.put("dataList3", tempList);
-				//查询时间
-				dateTempList = sellMonthReportDetailMapper.selectReportDate(reportuuid);
-				data.put("data", dateTempList);
 			}
 		}
 		}
@@ -247,12 +251,25 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 
 
 	public String priview(String pageid,Map<String, Object> selectParam,String datas) throws Exception {
+		//月报主表UUID
 		String reportuuid = selectParam.get("reportuuid").toString();
+		//期数
 		String termid = selectParam.get("termid").toString();
+		//报表类型
 		String reporttype = selectParam.get("reporttype").toString();
 		Map<String,Object> data  = new HashMap<String,Object>();
 		List<SellMonthReportDetail> tempList=new ArrayList<SellMonthReportDetail>();
 		List<SellMonthReport> dateTempList=new ArrayList<SellMonthReport>();
+		//查询时间
+		dateTempList = sellMonthReportMapper.selectByPrimaryKey(reportuuid);
+		//获取机构名称及银行登记编码
+		for(SellMonthReport report : dateTempList){
+			String orgCode = CommonUtil.getOrgCode();
+			String issuePartyId = sellMonthReportMapper.selectIssuePartyId(orgCode);
+			String issuePartyName = sellMonthReportMapper.selectOrgName(orgCode);
+			report.setIssuePartyName(issuePartyName);
+			report.setIssuePartyId(issuePartyId);
+		}
 		String fileName = "销售月度统计表"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
 				//分投资者分类
 				if(reporttype.equals("1_1")) {
@@ -283,6 +300,7 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 						}
 					}
 					data.put("dataList1", tempList);
+					data.put("data", dateTempList);
 				}
 				//分地区
 				if(reporttype.equals("1_2")) {
@@ -344,10 +362,6 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 					}
 					data.put("dataList3", tempList);
 				}
-					//查询时间
-					dateTempList = sellMonthReportDetailMapper.selectReportDate(reportuuid);
-					data.put("data", dateTempList);
-
 		File depositfile = TisUtil.createFile(data, "pbc/" +"sellMonthReport_export", fileName);
 		return this.priView(depositfile, true,reporttype);
 	}
@@ -408,112 +422,6 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 			for (int i = 0 ; i < list.size() ; i++) {
 				String termid = list.get(i).getTermid();
 				sellMonthReportMapper.cancelMannultRegist(termid);
-			}
-		}
-	}
-
-    public Map<Object, Object> createData(Map<String, Object> selectParam){
-    	dealSearchParam(selectParam);
-    	Map<Object,Object> data  = new HashMap<Object,Object>();
-    	@SuppressWarnings("unchecked")
-		List<SellMonthReport> dataList =  (List<SellMonthReport>) selectParam.get("reportList");// 查询参数列表
-    	String reportuuid = "";
-    	if(dataList!=null&&dataList.size()>0){
-    		reportuuid =dataList.get(0).getReportuuid();
-    	}else{
-    		reportuuid =selectParam.get("reportuuid").toString();
-    	}
-    	// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
-    	String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
-		SellMonthReport monthreport = sellMonthReportMapper.selectByPrimaryKey(reportuuid);
-//    	if(monthreport==null)
-    	data.put("report", monthreport);
-    	data.put("termname", monthreport.getTermname());
-    	selectParam.put("termid", monthreport.getTermid());
-    	selectParam.put("reportuuid", reportuuid);
-		List<SellMonthReportDetail> detailList  = sellMonthReportDetailMapper.selectByModel(selectParam);
-		List<String> propertyCodeList=sellMonthReportDetailMapper.selectAllPropertyCode();
-		Map<String,String>map =new HashMap<String,String>();
-		for(String propertyCode:propertyCodeList){
-			data.put(propertyCode, map);
-		}
-		for(SellMonthReportDetail detail : detailList){
-			dealProdData(detail,isShowZero);
-			data.put(detail.getPrdRegistCode(), divide10000(detail));
-		}
-    	return  data;
-    }
-
-	public SellMonthReportDetail divide10000(SellMonthReportDetail detail) {
-		BigDecimal tenthousand = new BigDecimal(10000);
-		if(detail.getSaleAmountTotal()!=null)
-			detail.setSaleAmountTotal(detail.getSaleAmountTotal().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
-		if(detail.getValueAmountTotal()!=null)
-			detail.setValueAmountTotal(detail.getValueAmountTotal().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
-		if(detail.getBalanceAmt()!=null)
-			detail.setValueSharesTotal(detail.getBalanceAmt().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
-		if(detail.getBalanceShares()!=null)
-			detail.setValueSharesTotal(detail.getBalanceShares().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
-		if(detail.getSaleSharesTotal()!=null)
-			detail.setValueSharesTotal(detail.getSaleSharesTotal().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
-		if(detail.getValueSharesTotal()!=null)
-			detail.setValueSharesTotal(detail.getValueSharesTotal().divide(tenthousand, 9, BigDecimal.ROUND_HALF_UP));
-		return detail;
-
-	}
-    /**
-     * @Description 导出预览为零的数据显示空还是显示零
-     * @param detail
-     * @version 1.7 2019年7月4日
-     * @param isShowZero 
-     */
-    private void dealProdData(SellMonthReportDetail detail, String isShowZero) {
-    	// 显示成零
-		if("01".equals(isShowZero)){
-			if(detail.getHolderNum()==null){
-				detail.setHolderNum(BigDecimal.ZERO);
-			}
-			if(detail.getSaleAmountTotal()==null){
-				detail.setSaleAmountTotal(BigDecimal.ZERO);
-			}
-			if(detail.getValueAmountTotal()==null){
-				detail.setValueAmountTotal(BigDecimal.ZERO);
-			}
-			if(detail.getBalanceAmt()==null){
-				detail.setBalanceAmt(BigDecimal.ZERO);
-			}
-			if(detail.getBalanceShares()==null){
-				detail.setBalanceShares(BigDecimal.ZERO);
-			}
-			if(detail.getSaleSharesTotal()==null){
-				detail.setSaleSharesTotal(BigDecimal.ZERO);
-			}
-			if(detail.getValueSharesTotal()==null){
-				detail.setValueSharesTotal(BigDecimal.ZERO);
-			}
-
-		} else if("02".equals(isShowZero)){
-
-			if(detail.getHolderNum()!=null&&(BigDecimal.ZERO).compareTo(detail.getHolderNum())==0){
-				detail.setHolderNum(null);
-			}
-			if(detail.getSaleAmountTotal()!=null&&(BigDecimal.ZERO).compareTo(detail.getSaleAmountTotal())==0){
-				detail.setSaleAmountTotal(null);
-			}
-			if(detail.getValueAmountTotal()!=null&&(BigDecimal.ZERO).compareTo(detail.getValueAmountTotal())==0){
-				detail.setValueAmountTotal(null);
-			}
-			if(detail.getBalanceAmt()!=null&&(BigDecimal.ZERO).compareTo(detail.getBalanceAmt())==0){
-				detail.setBalanceAmt(null);
-			}
-			if(detail.getBalanceShares()!=null&&(BigDecimal.ZERO).compareTo(detail.getBalanceShares())==0){
-				detail.setBalanceShares(null);
-			}
-			if(detail.getSaleSharesTotal()!=null&&(BigDecimal.ZERO).compareTo(detail.getSaleSharesTotal())==0){
-				detail.setSaleSharesTotal(null);
-			}
-			if(detail.getValueSharesTotal()!=null&&(BigDecimal.ZERO).compareTo(detail.getValueSharesTotal())==0){
-				detail.setValueSharesTotal(null);
 			}
 		}
 	}

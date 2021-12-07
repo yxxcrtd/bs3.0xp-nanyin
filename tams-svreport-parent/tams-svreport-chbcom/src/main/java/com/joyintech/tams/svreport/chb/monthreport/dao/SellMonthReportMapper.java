@@ -9,20 +9,32 @@ import java.util.Map;
 
 @Repository
 public interface SellMonthReportMapper {
-//根据主键查询
-    SellMonthReport selectByPrimaryKey(String reportuuid);
-//分页查询
+    //根据主键查询
+    List<SellMonthReport> selectByPrimaryKey(String reportuuid);
+    //分页查询
     List<SellMonthReport> searchPage(Map<String,Object> map);
     //手工处理
     int updateInterfSubmitAndSeqBatch(@Param("termid")String termid);
     //取消手工处理
     int cancelMannultRegist(@Param("termid")String termid);
-    //查询报表类型
-    String searchReporttype(Map<String,Object> map);
     /**
      * 查询
      * @param param
      * @return
      */
     List<SellMonthReportDetail> setDataList(Map<String, Object> param);
+
+    /**
+     * 根据机构代码查询机构名称
+     * @param orgCode
+     * @return
+     */
+    String selectOrgName(@Param("orgCode")String orgCode);
+
+    /**
+     * 根据机构代码查询中债登记代码
+     * @param orgCode
+     * @return
+     */
+    String selectIssuePartyId(@Param("orgCode")String orgCode);
 }

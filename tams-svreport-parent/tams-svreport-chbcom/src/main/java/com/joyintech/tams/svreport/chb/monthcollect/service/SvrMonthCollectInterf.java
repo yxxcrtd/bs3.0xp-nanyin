@@ -78,11 +78,14 @@ public class SvrMonthCollectInterf extends BaseService{
      * 先删后插
      */
     private void dbData(Map<String,Map<String,Map<String,ChbMonthCollect>>> AllMap,Date batchDate,Date batchDateStart ,Date batchDateEnd) {
+		//获取本行登记代码
+		String bankCode =CommonUtil.selectBankCode();
     	if (AllMap.size() != 0) {
 			//获取下个月的第一天
 			Date nextMonFirDay = getFirstDayOfNextMonth(DateUtil.format(batchDate));
 			//中债报送截止日
 			Date chbSubmitDeadline = new Date();
+			Date submitDeadline = new Date();
 			List<Date> dateList = null;
 			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 			dateList = ChbDeadlineUtil.getChbEndDate(
@@ -90,6 +93,7 @@ public class SvrMonthCollectInterf extends BaseService{
 			if (!CollectionUtils.isEmpty(dateList)) {
 				//获取中债截止日
 				chbSubmitDeadline = dateList.get(0);
+				submitDeadline = dateList.get(1);
 			}
 			int index=DateUtil.format(batchDate).lastIndexOf("-");
 			String termid = DateUtil.format(batchDate).substring(0, index);
@@ -110,15 +114,13 @@ public class SvrMonthCollectInterf extends BaseService{
 			logger.debug("当月汇总数据清除结束----------");
 
             logger.debug("销售月报每月明细汇总信息插入数据：插入开始----------");
-            //获取本行登记代码
-			String bankCode ="C88888";
 
 			for(String key:AllMap.keySet()){
             //以投资者分类插入
 			if(key.equals("holderType")) {
 				String reporttype = "1_1";
 				String reportuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-				svrMonthCollectInterfMapper.insertIntoReport(reporttype,DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+				svrMonthCollectInterfMapper.insertIntoReport(reporttype,DateUtil.format(submitDeadline),DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 				for (String flag : AllMap.get("holderType").keySet()) {
 					for(String A : AllMap.get("holderType").get(flag).keySet()){
 						String detailuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
@@ -140,7 +142,7 @@ public class SvrMonthCollectInterf extends BaseService{
 			if(key.equals("area")) {
 				String reporttype = "1_2";
 				String reportuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-				svrMonthCollectInterfMapper.insertIntoReport(reporttype,DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+				svrMonthCollectInterfMapper.insertIntoReport(reporttype,DateUtil.format(submitDeadline),DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 				for (String flag : AllMap.get("area").keySet()) {
 					for(String A : AllMap.get("area").get(flag).keySet()){
 						String detailuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
@@ -162,7 +164,7 @@ public class SvrMonthCollectInterf extends BaseService{
 			if(key.equals("institution")) {
 				String reporttype = "1_3";
 				String reportuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-				svrMonthCollectInterfMapper.insertIntoReport(reporttype,DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+				svrMonthCollectInterfMapper.insertIntoReport(reporttype,DateUtil.format(submitDeadline),DateUtil.format(chbSubmitDeadline),reportuuid,termid,reportName,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 				for (String flag : AllMap.get("institution").keySet()) {
 					for(String A : AllMap.get("institution").get(flag).keySet()){
 						String detailuuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
@@ -416,54 +418,72 @@ public class SvrMonthCollectInterf extends BaseService{
 							}
 						}
 					}
-						//处理总销售份额
-						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
+					//处理总销售份额
+					if (SaleSharesTotalFlag != null && SaleSharesTotalFlag != "") {
+						if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
+							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
+							holderTypeCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
+						}else{
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
-						}
-						if (SaleSharesTotalFlag != null && SaleSharesTotalFlag != "") {
 							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
 							holderTypeCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 						}
-						//处理净销份额
-						if (chbPrdPosition.get(i).getCleanamtsum() == null) {
+					}
+					//处理净销份额
+					if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
+						if (chbPrdPosition.get(i).getCleanamtsum() != null) {
+							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
+							holderTypeCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
+						}else{
 							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
-						}
-						if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
 							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
 							holderTypeCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 						}
-						//处理份额
-						if (BalanceSharesFlag != null && BalanceSharesFlag != "") {
-							if (chbPrdPosition.get(i).getEndamtsumOth() == null) {
-								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
-							}
+					}
+					//处理份额
+					if (BalanceSharesFlag != null && BalanceSharesFlag != "") {
+						if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
+							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
+							holderTypeCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
+						}else{
+							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
 							holderTypeCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 						}
-						//处理总销售金额
-						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
+					}
+					//处理总销售金额
+					if (SaleAmountFlag != null && SaleAmountFlag != "") {
+						if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
+							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+							holderTypeCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+						}else{
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
-						}
-						if (SaleAmountFlag != null && SaleAmountFlag != "") {
 							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
 							holderTypeCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
 						}
-						//处理净销售金额
-						if (chbPrdPosition.get(i).getCleanamtsum() == null) {
+					}
+					//处理净销售金额
+					if (ValueAmountFlag != null && ValueAmountFlag != "") {
+						if (chbPrdPosition.get(i).getCleanamtsum() != null) {
+							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+							holderTypeCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+						}else{
 							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
-						}
-						if (ValueAmountFlag != null && ValueAmountFlag != "") {
 							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
 							holderTypeCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
 						}
-						//处理余额
-						if (BalanceAmtFlag != null && BalanceAmtFlag != "") {
-							if (chbPrdPosition.get(i).getEndamtsumOth() == null) {
-								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
-							}
+					}
+					//处理余额
+					if (BalanceAmtFlag != null && BalanceAmtFlag != "") {
+						if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
+							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+							holderTypeCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
+						}else{
+							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
 							holderTypeCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 						}
+					}
 				}
 			}
 		}
@@ -649,54 +669,72 @@ public class SvrMonthCollectInterf extends BaseService{
 							}
 						}
 					}
-						//处理总销售份额
-						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
+					//处理总销售份额
+					if (SaleSharesTotalFlag != null && SaleSharesTotalFlag != "") {
+						if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
+							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
+							areaCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
+						}else{
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
-						}
-						if (SaleSharesTotalFlag != null && SaleSharesTotalFlag != "") {
 							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
 							areaCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 						}
-						//处理净销份额
-						if (chbPrdPosition.get(i).getCleanamtsum() == null) {
+					}
+					//处理净销份额
+					if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
+						if (chbPrdPosition.get(i).getCleanamtsum() != null) {
+							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
+							areaCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
+						}else{
 							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
-						}
-						if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
 							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
 							areaCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 						}
-						//处理份额
-						if (BalanceSharesFlag != null && BalanceSharesFlag != "") {
-							if (chbPrdPosition.get(i).getEndamtsumOth() == null) {
-								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
-							}
+					}
+					//处理份额
+					if (BalanceSharesFlag != null && BalanceSharesFlag != "") {
+						if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
+							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
+							areaCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
+						}else{
+							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
 							areaCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 						}
-						//处理总销售金额
-						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
+					}
+					//处理总销售金额
+					if (SaleAmountFlag != null && SaleAmountFlag != "") {
+						if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
+							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+							areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+						}else{
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
-						}
-						if (SaleAmountFlag != null && SaleAmountFlag != "") {
 							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
 							areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
 						}
-						//处理净销售金额
-						if (chbPrdPosition.get(i).getCleanamtsum() == null) {
+					}
+					//处理净销售金额
+					if (ValueAmountFlag != null && ValueAmountFlag != "") {
+						if (chbPrdPosition.get(i).getCleanamtsum() != null) {
+							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+							areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+						}else{
 							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
-						}
-						if (ValueAmountFlag != null && ValueAmountFlag != "") {
 							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
 							areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
 						}
-						//处理余额
-						if (BalanceAmtFlag != null && BalanceAmtFlag != "") {
-							if (chbPrdPosition.get(i).getEndamtsumOth() == null) {
-								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
-							}
+					}
+					//处理余额
+					if (BalanceAmtFlag != null && BalanceAmtFlag != "") {
+						if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
+							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+							areaCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
+						}else{
+							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
 							areaCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 						}
+					}
 				}
 			}
 		}
@@ -881,52 +919,70 @@ public class SvrMonthCollectInterf extends BaseService{
 						}
 						}
 						//处理总销售份额
-						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
-							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
-						}
 						if (SaleSharesTotalFlag != null && SaleSharesTotalFlag != "") {
-							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
-							institutionCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
+							if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
+								BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
+								institutionCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
+							}else{
+								chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
+								BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
+								institutionCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
+							}
 						}
 						//处理净销份额
-						if (chbPrdPosition.get(i).getCleanamtsum() == null) {
-							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
-						}
-						if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
-							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
-							institutionCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
+					    if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
+							if (chbPrdPosition.get(i).getCleanamtsum() != null) {
+								BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
+								institutionCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
+							}else{
+								chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
+								BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
+								institutionCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
+							}
 						}
 						//处理份额
 						if (BalanceSharesFlag != null && BalanceSharesFlag != "") {
-							if (chbPrdPosition.get(i).getEndamtsumOth() == null) {
+							if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
+								BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
+								institutionCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
+							}else{
 								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
+								BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
+								institutionCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 							}
-							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
-							institutionCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 						}
 						//处理总销售金额
-						if (chbPrdPosition.get(i).getDirtyamtsum() == null) {
-							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
-						}
 						if (SaleAmountFlag != null && SaleAmountFlag != "") {
-							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
-							institutionCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+							if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
+								BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+								institutionCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+							}else{
+								chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
+								BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+								institutionCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
+							}
 						}
 						//处理净销售金额
-						if (chbPrdPosition.get(i).getCleanamtsum() == null) {
-							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
-						}
 						if (ValueAmountFlag != null && ValueAmountFlag != "") {
-							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
-							institutionCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+							if (chbPrdPosition.get(i).getCleanamtsum() != null) {
+								BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+								institutionCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+							}else{
+								chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
+								BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+								institutionCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+							}
 						}
 						//处理余额
 						if (BalanceAmtFlag != null && BalanceAmtFlag != "") {
-							if (chbPrdPosition.get(i).getEndamtsumOth() == null) {
+							if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
+								BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+								institutionCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
+							}else{
 								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
+								BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+								institutionCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 							}
-							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
-							institutionCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 						}
 					}
 				}

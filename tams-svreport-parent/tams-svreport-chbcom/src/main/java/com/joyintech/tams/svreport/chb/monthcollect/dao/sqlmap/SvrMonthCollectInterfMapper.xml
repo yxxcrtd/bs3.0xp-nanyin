@@ -191,9 +191,9 @@
 
 	<insert id="insertIntoReport">
 		insert into CHB_SALE_MONTH_REPORT (REPORTTYPE,REPORTUUID,TERMID,REPROT_NAME,STARTDATE,ENDDATE,REPORTFREQU,DATA_STATUS
-		,SEND_STATUS,STATUS_DATE,CHB_SUBMIT_DEADLINE,REPORT_DATE)values
+		,SEND_STATUS,STATUS_DATE,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,REPORT_DATE)values
 		(#{reporttype,jdbcType=VARCHAR},#{reportuuid,jdbcType=VARCHAR},#{termid,jdbcType=VARCHAR},#{reportName,jdbcType=VARCHAR},to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd'),to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-		,'M','01','01',sysdate,to_date(#{chbSubmitDeadline,jdbcType=VARCHAR},'yyyy-mm-dd'),sysdate
+		,'M','01','01',sysdate,to_date(#{chbSubmitDeadline,jdbcType=VARCHAR},'yyyy-mm-dd'),to_date(#{submitDeadline,jdbcType=VARCHAR},'yyyy-mm-dd'),sysdate
 		)
 	</insert>
 

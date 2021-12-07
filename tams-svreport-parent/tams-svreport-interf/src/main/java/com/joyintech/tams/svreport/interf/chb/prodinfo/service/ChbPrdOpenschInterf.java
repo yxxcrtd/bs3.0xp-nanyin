@@ -1,11 +1,20 @@
 package com.joyintech.tams.svreport.interf.chb.prodinfo.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.base.entity.ChbPrdOpensch;
+import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
+import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdOpenschInterfMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -21,19 +30,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.tams.common.base.entity.ChbPrdOpensch;
-import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
-import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdOpenschInterfMapper;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @Description 开放计划数据接口处理类
@@ -44,7 +45,7 @@ import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdOpenschInterfMa
 @SuppressWarnings("rawtypes")
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ChbPrdOpenschInterf extends BaseService{
+public class ChbPrdOpenschInterf extends BaseInterfService{
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -63,6 +64,16 @@ public class ChbPrdOpenschInterf extends BaseService{
 	 * @version 3.0 2019年2月19日
 	 */
 	public List<String> generatePrdOpenschData(Date batchDate,List<String> prodIdlist){
+		// 查询数据
+		List<ChbPrdOpensch> openSchlist = getBusEntity(null, "D");
+		// 入库
+		if(!StringUtil.isEmptyList(openSchlist)){
+			insertData2(openSchlist);
+		}
+		return null;
+	}
+	@Override
+	public List<ChbPrdOpensch> getBusEntity(List<String> prodIdlist, String source) {
 		//从FIN_OPEN_PLAN获取数据进入CHB_PRD_OPENSCH
 		//切换数据源查询信息
 		ChbPrdOpenschInterf chbPrdOpenschInterf2 =  SpringContextUtil.getBean(ChbPrdOpenschInterf.class);
@@ -70,10 +81,10 @@ public class ChbPrdOpenschInterf extends BaseService{
 		Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.产品开放计划信息接口.getInterId());
 		//查询有开放计划变更的产品集合
 		List<String> prodidlist = chbPrdOpenschInterf2.selectOpenSchProdid(lastUpdatetime,prodIdlist);
-		logger.debug("读取上游开放计划信息----结束-----:" +  df.format(new Date()));
+		List<ChbPrdOpensch> openSchlist = new ArrayList<ChbPrdOpensch>();
 		if(CollectionUtils.isNotEmpty(prodidlist)){
 			//查询申赎或者赎回的计划
-			List<ChbPrdOpensch> openSchlist = chbPrdOpenschInterf2.selectOpenSchData(null,prodidlist);
+			openSchlist = chbPrdOpenschInterf2.selectOpenSchData(null,prodidlist);
 			//查询申赎同频的计划
 			List<ChbPrdOpensch> openSchsublist = chbPrdOpenschInterf2.selectOpenSchData("03",prodidlist);
 			if(CollectionUtils.isNotEmpty(openSchlist)){
@@ -87,10 +98,12 @@ public class ChbPrdOpenschInterf extends BaseService{
 					//有效状态
 					opensch.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
 					//数据来源
-					opensch.setDataSource("BS");
+					if("D".equals(source)){
+						opensch.setDataSource("16");
+					}
 					//发行机构代码
 					opensch.setIssuePartyId(CommonUtil.selectBankCode());
-					
+
 					if(opensch.getUpdateTime().compareTo(lastUpdatetime) > 0){
 						lastUpdatetime = opensch.getUpdateTime();
 					}
@@ -106,7 +119,9 @@ public class ChbPrdOpenschInterf extends BaseService{
 					//有效状态
 					opensch.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
 					//数据来源
-					opensch.setDataSource("BS");
+					if("D".equals(source)){
+						opensch.setDataSource("16");
+					}
 					//发行机构代码
 					opensch.setIssuePartyId(CommonUtil.selectBankCode());
 					//申购计划
@@ -118,24 +133,36 @@ public class ChbPrdOpenschInterf extends BaseService{
 					openschsub.setPlanType("02");
 					openschsub.setSeqno(IDGenerator.generate(36));
 					openSchlist.add(openschsub);
-					
+
 					if(opensch.getUpdateTime().compareTo(lastUpdatetime) > 0){
 						lastUpdatetime = opensch.getUpdateTime();
 					}
 				}
 			}
 			//先删后插
-			deleteData(prodidlist);
+			if("D".equals(source)){
+				deleteData(prodidlist);
+			}
 //			insertData(prodidlist, openSchlist);
-			insertData2(openSchlist);
 			//新的最后更新时间
-	    	if(lastUpdatetime!=null){
-	        	ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品开放计划信息接口.getInterId(), lastUpdatetime);;
-	    	}
+			if(lastUpdatetime!=null){
+				ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品开放计划信息接口.getInterId(), lastUpdatetime);;
+			}
 		}
-		return prodidlist;
+		logger.debug("读取上游开放计划信息----结束-----:" +  df.format(new Date()));
+
+		return openSchlist;
 	}
 
+	@Override
+	public Class getEntityClass() {
+		return ChbPrdOpensch.class;
+	}
+
+	@Override
+	public String getFileName() {
+		return InterfDefine.产品开放计划接口数据.getCode();
+	}
 	/**
 	 * 根据产品删除开放计划
 	 * @param prodidlist

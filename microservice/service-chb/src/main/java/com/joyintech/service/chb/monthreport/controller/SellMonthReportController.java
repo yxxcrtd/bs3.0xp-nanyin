@@ -60,12 +60,4 @@ public class SellMonthReportController {
     public void cancelMannul(@RequestBody Map<String, Object> map) {
         sellMonthReport001Service.cancelMannul(map);
     }
-//
-//
-	@Transactional
-	@DTXTransaction
-    @PostMapping("createData")
-    public Map<Object, Object> createData(@RequestBody Map<String, Object> selectParam) {
-        return sellMonthReport001Service.createData(selectParam);
-    }
 }
