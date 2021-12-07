@@ -78,6 +78,8 @@ public class SvrMonthCollectInterf extends BaseService{
      * 先删后插
      */
     private void dbData(Map<String,Map<String,Map<String,ChbMonthCollect>>> AllMap,Date batchDate,Date batchDateStart ,Date batchDateEnd) {
+		//获取本行登记代码
+		String bankCode =CommonUtil.selectBankCode();
     	if (AllMap.size() != 0) {
 			//获取下个月的第一天
 			Date nextMonFirDay = getFirstDayOfNextMonth(DateUtil.format(batchDate));
@@ -112,8 +114,6 @@ public class SvrMonthCollectInterf extends BaseService{
 			logger.debug("当月汇总数据清除结束----------");
 
             logger.debug("销售月报每月明细汇总信息插入数据：插入开始----------");
-            //获取本行登记代码
-			String bankCode ="C88888";
 
 			for(String key:AllMap.keySet()){
             //以投资者分类插入
