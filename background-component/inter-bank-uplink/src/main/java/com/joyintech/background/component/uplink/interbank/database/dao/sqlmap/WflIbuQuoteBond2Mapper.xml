@@ -760,6 +760,8 @@
         <result column="I_Q_B_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="I_Q_B_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="I_Q_B_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="I_Q_B_DEAL_FEE_AMT" property="dealFeeAmt" jdbcType="DECIMAL" />
+        <result column="I_Q_B_SETT_FEE_AMT" property="settFeeAmt" jdbcType="DECIMAL" />
     </resultMap>
     <resultMap id="IqbdBaseResultMap" type="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBondDet" >
         <id column="I_Q_B_D_DET_ID" property="detId" jdbcType="VARCHAR" />
@@ -827,6 +829,7 @@
 			nvl(fa.ibu_trader, a.OU_TRADER_ID) AS I_Q_B_OU_TRADER_ID, a.B_VERSION AS I_Q_B_B_VERSION, a.MY_ACCT_NO AS I_Q_B_MY_ACCT_NO, a.SEC_MANAGE_ACCT_ID AS I_Q_B_SEC_MANAGE_ACCT_ID, 
 			a.BRANCH_ID AS I_Q_B_BRANCH_ID, a.REMARK AS I_Q_B_REMARK, a.CREATE_USER AS I_Q_B_CREATE_USER, a.CREATE_TIME AS I_Q_B_CREATE_TIME, 
 			a.CREATE_DEPT AS I_Q_B_CREATE_DEPT, a.UPDATE_USER AS I_Q_B_UPDATE_USER, a.UPDATE_TIME AS I_Q_B_UPDATE_TIME, b.FINPROD_MARKET_ID AS I_Q_B_FINPROD_MARKET_ID
+			,a.DEAL_FEE_AMT I_Q_B_DEAL_FEE_AMT,a.SETT_FEE_AMT I_Q_B_SETT_FEE_AMT
         from WFL_IBU_QUOTE_BOND2 a
         left join FIN_PRODUCT b
         on a.FINPROD_ID = b.FINPROD_ID

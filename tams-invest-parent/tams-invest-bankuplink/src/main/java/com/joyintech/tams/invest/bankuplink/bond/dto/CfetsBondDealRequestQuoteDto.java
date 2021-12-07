@@ -12,7 +12,9 @@ package com.joyintech.tams.invest.bankuplink.bond.dto;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.invest.bankuplink.bond.validator.CfetsBondDealRequestQuoteDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
@@ -29,7 +31,7 @@ import java.util.List;
  * @since 1.0
  */
 //@PageId(value = "CfetsBondDealQuotedPrice003")
-//@ValidLogic(targetClass = CfetsBondDealRequestQuoteDtoValidator.class)
+@ValidLogic(targetClass = CfetsBondDealRequestQuoteDtoValidator.class)
 public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto implements ProcessEntity {
 
     /**
@@ -149,20 +151,6 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
     private String calculateField;
 
     private String finprodAbbr;
-
-    /**
-     * 本方
-     */
-    private String mySide;
-
-    /**
-     * 本方交易员
-     */
-    private String mySideTrader;
-
-    private BigDecimal price;
-
-    private BigDecimal matureYield;
 
     private String settleSpreedCode;
 
@@ -595,35 +583,6 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
         this.finprodAbbr = finprodAbbr;
     }
 
-    @Override
-    public void setMySide(String mySide) {
-        this.mySide = mySide;
-    }
-
-    @Override
-    public void setMySideTrader(String mySideTrader) {
-        this.mySideTrader = mySideTrader;
-    }
-
-    @Override
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    @Override
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    @Override
-    public BigDecimal getMatureYield() {
-        return matureYield;
-    }
-
-    @Override
-    public void setMatureYield(BigDecimal matureYield) {
-        this.matureYield = matureYield;
-    }
 
     public String getSettleSpreedCode() {
         return settleSpreedCode;

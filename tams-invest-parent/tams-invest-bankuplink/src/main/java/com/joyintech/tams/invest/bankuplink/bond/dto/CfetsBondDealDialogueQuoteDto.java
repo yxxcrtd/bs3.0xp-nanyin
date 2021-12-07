@@ -184,20 +184,6 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
 
     private String finprodAbbr;
 
-    /**
-     * 本方
-     */
-    private String mySide;
-
-    /**
-     * 本方交易员
-     */
-    private String mySideTrader;
-
-    private BigDecimal price;
-
-    private BigDecimal matureYield;
-
     private String settleSpreedCode;
 
     /**
@@ -738,26 +724,6 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
         this.finprodAbbr = finprodAbbr;
     }
 
-    @Override
-    public void setMySide(String mySide) {
-        this.mySide = mySide;
-    }
-
-    @Override
-    public void setMySideTrader(String mySideTrader) {
-        this.mySideTrader = mySideTrader;
-    }
-
-
-    @Override
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    @Override
-    public void setMatureYield(BigDecimal matureYield) {
-        this.matureYield = matureYield;
-    }
 
     public String getSettleSpreedCode() {
         return settleSpreedCode;

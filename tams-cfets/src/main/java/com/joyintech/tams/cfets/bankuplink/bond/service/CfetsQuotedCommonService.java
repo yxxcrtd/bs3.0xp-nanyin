@@ -581,6 +581,7 @@ public class CfetsQuotedCommonService extends BaseService {
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,cfetsBondDealQuoteCommonDto);
         cfetsBondDealDialogueQuoteDto.setAvaNum(cfetsBondDealQuoteCommonDto.getShareAmt());
         cfetsBondDealDialogueQuoteDto.setSettleSpreed(cfetsBondDealQuoteCommonDto.getSettleSpreedCode());
+        cfetsBondDealDialogueQuoteDto.setSettleCcy(cfetsBondDealQuoteCommonDto.getCcy());
         return cfetsBondDealDialogueQuoteDto;
     }
 
@@ -592,8 +593,9 @@ public class CfetsQuotedCommonService extends BaseService {
     public CfetsBondDealQuoteCommonDto createDialogue2(CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto){
         CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealDialogueQuoteDto);
-        cfetsBondDealQuoteCommonDto.setShareAmt(cfetsBondDealDialogueQuoteDto.getAvaNum());
+        cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000)));
         cfetsBondDealQuoteCommonDto.setSettleSpreedCode(cfetsBondDealDialogueQuoteDto.getSettleSpreed());
+        cfetsBondDealQuoteCommonDto.setCcy(cfetsBondDealDialogueQuoteDto.getSettleCcy());
         return cfetsBondDealQuoteCommonDto;
     }
 
@@ -608,6 +610,7 @@ public class CfetsQuotedCommonService extends BaseService {
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,cfetsBondDealQuoteCommonDto);
         cfetsBondDealRequestQuoteDto.setAvaNum(cfetsBondDealQuoteCommonDto.getShareAmt());
         cfetsBondDealRequestQuoteDto.setSettleSpreed(cfetsBondDealQuoteCommonDto.getSettleSpreedCode());
+        cfetsBondDealRequestQuoteDto.setSettleCcy(cfetsBondDealQuoteCommonDto.getCcy());
         if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getCounterInfoList())){
             List<CounterInfoDto> counterInfoDtos= new ArrayList<>();
             cfetsBondDealQuoteCommonDto.getCounterInfoList().forEach(item ->{
@@ -628,7 +631,9 @@ public class CfetsQuotedCommonService extends BaseService {
     public CfetsBondDealQuoteCommonDto createReueust2(CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto){
         CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealRequestQuoteDto);
-        cfetsBondDealQuoteCommonDto.setShareAmt(cfetsBondDealRequestQuoteDto.getAvaNum());
+        cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealRequestQuoteDto.getAvaNum()));
+        cfetsBondDealQuoteCommonDto.setSettleSpreedCode(cfetsBondDealRequestQuoteDto.getSettleSpreed());
+        cfetsBondDealQuoteCommonDto.setCcy(cfetsBondDealRequestQuoteDto.getSettleCcy());
         return cfetsBondDealQuoteCommonDto;
     }
 
@@ -643,8 +648,8 @@ public class CfetsQuotedCommonService extends BaseService {
         for (CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto : cfetsBondDealDialogueQuoteDtoList) {
             PtlAllocationDto ptlAllocationDto = new PtlAllocationDto();
             BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto,cfetsBondDealDialogueQuoteDto);
-            ptlAllocationDto.setShareAmt(cfetsBondDealDialogueQuoteDto.getAvaNum());
-            ptlAllocationDto.setAvaNum(cfetsBondDealDialogueQuoteDto.getEntrustAvaNum());
+            ptlAllocationDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(),new BigDecimal(10000)));
+            ptlAllocationDto.setAvaNum(ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getEntrustAvaNum(),new BigDecimal(10000)));
             result.add(ptlAllocationDto);
         }
         return result;

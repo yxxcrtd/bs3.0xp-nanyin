@@ -659,6 +659,9 @@ public class IbuComponentCommonService extends BaseService {
             //已成交/空的记录点击撤销，提交流程后，状态变成已成交/成功，应该还是已成交/空
             ibuQuoteBondDto.setSendStatus(StringUtil.EMPTY);
 		}
+        ibuQuoteBondDto.setDealFeeAmt(cfetsBondDealDialogueQuoteDto.getDealFeeAmt());
+        ibuQuoteBondDto.setSettFeeAmt(cfetsBondDealDialogueQuoteDto.getSettFeeAmt());
+        ibuQuoteBondDto.setDipType(cfetsBondDealDialogueQuoteDto.getDistribution());
         inputBean.setWflIbuQuoteBond2Dto(ibuQuoteBondDto);
 
         // 银行间报价金额基对手信息
@@ -727,6 +730,8 @@ public class IbuComponentCommonService extends BaseService {
                 		 item.getAvaNum(), new BigDecimal(100)));
             	 wflIbuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
             	 wflIbuQuoteEtrReDto.setWorkflowId(cfetsBondDealDialogueQuoteDto.getWorkflowId());
+                 wflIbuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                 wflIbuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
                  wflIbuQuoteEtrReDtoList.add(wflIbuQuoteEtrReDto);
              });
              inputBean.setWflIbuQuoteEtrReDtoList(wflIbuQuoteEtrReDtoList);
@@ -1145,6 +1150,9 @@ public class IbuComponentCommonService extends BaseService {
 			  ibuQuoteBondDto.setTradeStatus(DictCodeList.银行间上行报价状态_已成交.getValue());
 		      ibuQuoteBondDto.setSendStatus(DictCodeList.银行间上行发送状态_成功.getValue());
 		}
+        ibuQuoteBondDto.setDealFeeAmt(cfetsBondDealRequestQuoteDto.getDealFeeAmt());
+        ibuQuoteBondDto.setSettFeeAmt(cfetsBondDealRequestQuoteDto.getSettFeeAmt());
+        ibuQuoteBondDto.setDipType(cfetsBondDealRequestQuoteDto.getDistribution());
         inputBean.setWflIbuQuoteBond2Dto(ibuQuoteBondDto);
 
         // 银行间报价金额基对手信息列表
@@ -1220,6 +1228,8 @@ public class IbuComponentCommonService extends BaseService {
                 if(StringUtils.isNotEmpty(cfetsBondDealRequestQuoteDto.getWorkflowId())){
                     wflIbuQuoteEtrReDto.setWorkflowId(cfetsBondDealRequestQuoteDto.getWorkflowId());
                 }
+                wflIbuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
+                wflIbuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
                 wflIbuQuoteEtrReDtoList.add(wflIbuQuoteEtrReDto);
             });
             inputBean.setWflIbuQuoteEtrReDtoList(wflIbuQuoteEtrReDtoList);
@@ -1712,6 +1722,9 @@ public class IbuComponentCommonService extends BaseService {
                     bondDialogueQuoteDto.getIbuQuoteBondDto().getTradeStatus());
                 cfetsBondDealDialogueQuoteDto.setRemark(
                         bondDialogueQuoteDto.getIbuQuoteBondDto().getRemark());
+                cfetsBondDealDialogueQuoteDto.setDealFeeAmt(bondDialogueQuoteDto.getIbuQuoteBondDto().getDealFeeAmt());
+                cfetsBondDealDialogueQuoteDto.setSettFeeAmt(bondDialogueQuoteDto.getIbuQuoteBondDto().getSettFeeAmt());
+                cfetsBondDealDialogueQuoteDto.setDistribution(bondDialogueQuoteDto.getIbuQuoteBondDto().getDipType());
             }
         }
 
