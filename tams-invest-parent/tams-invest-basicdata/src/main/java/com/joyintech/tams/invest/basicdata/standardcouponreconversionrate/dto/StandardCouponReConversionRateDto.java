@@ -155,4 +155,23 @@ public class StandardCouponReConversionRateDto extends StdBondMoreConvrateInfo i
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
+
+    private String finprodMarketId;
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
+
+
+    public String getFinprodMarketIdStr() {
+        if(StringUtil.equals(getFinprodId(),"BROKER")){
+            return "所有";
+        }else{
+            return this.getFinprodMarketId();
+        }
+    }
 }

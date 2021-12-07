@@ -7,6 +7,7 @@
         sbmci.BROKER_ID brokerId, /*券商代码*/
         mci.CUSTOMER_NAME brokerName, /*券商名称*/
         sbmci.FINPROD_ID finprodId, /*资产代码*/
+        fin.FINPROD_MARKET_ID finprodMarketId,
         fin.FINPROD_ABBR finprodAbbr, /*资产名称*/
         sbmci.MORE_CONVRATE * 100 moreConvrate,/*标准券折算率%*/
         sbmci.START_DATE startDate,/*开始日期*/
@@ -203,6 +204,7 @@
         concat(FINPROD_ID,concat(':',FINPROD_ABBR)) text
         from FIN_PRODUCT
         where FINPROD_TYPE2 = #{F01_TG}
+        AND TRADE_MARKET IN (#{TRADE_PLACE_03},#{TRADE_PLACE_04})
         order by FINPROD_ID
     </select>
 
@@ -243,6 +245,7 @@
         from FIN_PRODUCT
         where FINPROD_TYPE2 = #{F01_TG}
         and FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
+        AND TRADE_MARKET IN (#{TRADE_PLACE_03},#{TRADE_PLACE_04})
         AND ROWNUM = 1
     </select>
 </mapper>
