@@ -84,7 +84,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                 //④交易方向=买入 AND 业务类型 IN（数据字典.FINPROD_TYPE_TG.债券买断式逆回购 ，数据字典.FINPROD_TYPE_TG.债券质押式逆回购 )AND 清算状态！=“清算成功”
                 //④交易方向=买入 AND 业务类型 IN（数据字典.FINPROD_TYPE_TG.债券买断式逆回购 ，数据字典.FINPROD_TYPE_TG.债券质押式逆回购 )AND 清算状态！=“清算成功”
                 if (StringUtil.equals(cfetsDto.getSettleStatus(), DictCodeListExt3.交收状态_未交收.getValue())) {
-                    if ((StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue())
+                    if (!(StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate())))
+                            ||(StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue())
                             && StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                             && !StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
                             || ((StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_到期.getValue())
@@ -111,7 +112,8 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
         }else if(StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())){
             for(CfetsManualSettleDto cfetsDto : cfetsRequest.getSelectedItem()) {
                 //判断勾选记录交收状态是否为“待交收”
-                if(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())
+                if((StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate())))
+                    ||StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())
                     ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
                     ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券行权交易.getValue())){
                     returnList.add(cfetsDto);
