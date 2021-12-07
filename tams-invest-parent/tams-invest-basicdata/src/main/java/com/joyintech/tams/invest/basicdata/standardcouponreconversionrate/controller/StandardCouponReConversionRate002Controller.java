@@ -181,7 +181,7 @@ public class StandardCouponReConversionRate002Controller extends BaseController 
                 new WorkFlowParameter<StandardCouponReConversionRateDto>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(dto.getFinprodId ()+ dto.getBrokerId ());
+        params.setBusinessCode(dto.getFinprodId ()+"-"+dto.getBrokerId ());
         params.setBusinessType(DictCodeListExt3.共通业务类型_标准券再折算率.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(entity -> SpringContextUtil.getTextValue("资产代码") + "("+ entity.getFinprodId () + ")");

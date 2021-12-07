@@ -34,7 +34,8 @@ $(function() {
                         ,{field:'accountTypeStr',width:200,  title: '资金账户'}*/
             ,{field:'finprodId',width:200,  title: '资产代码',visible:false}
             /**修改资产代码 排序 liuzilong 2021-11-09**/
-            ,{field:'finprodIdStr',width:200,  title: '资产代码' ,sortField:"finprodId", sort: true}
+            ,{field:'finprodIdStr',width:200,  title: '资产代码' ,visible:false}
+            ,{field:'finprodMarketIdStr',width:200,  title: '资产代码',sortField:"finprodMarketId", sort: true}
             ,{field:'finprodAbbr',width:200,  title: '资产名称'}
             ,{field:'moreConvrate',width:200,typeapplication:'number', title: '标准券再折算率（%）'}
             ,{field:'startDate',width:200,  title: '开始使用日期'}

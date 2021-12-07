@@ -278,7 +278,10 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                     settleTransDataMapper.updateByPrimaryKeySelective(std);
                 }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getStlSecDeme())){
                     for(SettleTransData settleTransData : settleTransDatas){
-                        settleTransData.setTradeId(dto.getTradeId()); // 流水号
+                        // ZGZGST-4148 fuyongsheng 20211207 edit start
+                        // settleTransData.setTradeId(dto.getTradeId()); // 流水号
+                        settleTransData.setTradeId(settleTransData.getTradeId()); // 流水号
+                        // ZGZGST-4148 fuyongsheng 20211207 edit end
                         settleTransData.setCommissionAmt(dto.getCommissionAmt()); // 佣金
                         settleTransData.setJsfAmt(dto.getJsfAmt()); // 经手费
                         settleTransData.setZgfAmt(dto.getZgfAmt()); // 证管费
