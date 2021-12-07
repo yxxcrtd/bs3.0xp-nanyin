@@ -23,4 +23,11 @@ public interface SellMonthReportMapper {
      * @return
      */
     List<SellMonthReportDetail> setDataList(Map<String, Object> param);
+
+    /**
+     * 根据机构代码查询机构名称
+     * @param orgCode
+     * @return
+     */
+    String selectOrgName(@Param("orgCode")String orgCode);
 }

@@ -198,4 +198,11 @@
 		where
 		TERMID = #{termid,jdbcType=CHAR}
 	</update>
+
+<!--	查询机构名称-->
+	<select id="selectOrgName" parameterType="string" resultType="string">
+		select INSTITUTION_NAME from SYS_INSTITUTION
+		where
+		INSTITUTION_CODE = #{orgCode,jdbcType=VARCHAR}
+	</select>
 </mapper>

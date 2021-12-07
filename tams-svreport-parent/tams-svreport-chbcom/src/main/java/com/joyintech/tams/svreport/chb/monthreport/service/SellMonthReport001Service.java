@@ -253,6 +253,12 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		List<SellMonthReport> dateTempList=new ArrayList<SellMonthReport>();
 		//查询时间
 		dateTempList = sellMonthReportMapper.selectByPrimaryKey(reportuuid);
+		//获取机构名称
+		for(SellMonthReport report : dateTempList){
+			String orgCode = report.getIssuePartyId();
+			String issuePartyName = sellMonthReportMapper.selectOrgName(orgCode);
+			report.setIssuePartyName(issuePartyName);
+		}
 		data.put("data", dateTempList);
 		String fileName = "销售月度统计表"+ DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
 				//分投资者分类
