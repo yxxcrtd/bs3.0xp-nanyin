@@ -555,7 +555,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(CollectionUtils.isNotEmpty(entity.getPtlAllocatios())){
                 for (PtlAllocationDto ptlAllocatio : entity.getPtlAllocatios()){
                     RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
-                    BeanUtil.copyPropertiesIgnoreNull(regFinProductDeal,ptlAllocatio);
+                    BeanUtil.copyPropertiesIgnoreNull(regFinProductDeal,regFinProductDealTotal);
                     BussinessCodeParameter codeParameter = getBussinessCodeParameter(entity.getPs());
                     regFinProductDeal.setTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
                     regFinProductDeal.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
@@ -566,6 +566,8 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     regFinProductDeal.setFaceValue(ptlAllocatio.getShareAmt());
                     regFinProductDeal.setTradeAmt(ptlAllocatio.getFpriceAmt());
                     regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
+                    regFinProductDeal.setCpriceAmt(ptlAllocatio.getCpriceAmt());
+                    regFinProductDeal.setIntAmt(ptlAllocatio.getIntAmt());
                     regFinProductDeal.setTgBusiType(tgBusiType);
                     regFinProductDeal.setSettleSpeed(settleSpreed);
                     regFinProductDeal.setInvAim(ptlAllocatio.getBusinessModel());
