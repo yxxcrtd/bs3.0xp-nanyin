@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.settle.batch.autoreconciliation.dao.AutoReconciliationMapper_mysql">
 
 	<select id="queryAccountTodoList" resultType="com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto">
-		<!-- 查询委托维度数据 -->
+		<!-- 查询券商对账单数据 -->
 		WITH tmp AS(
 			SELECT
 				ssrd.SEQ_NO,
@@ -222,7 +222,7 @@
 				tmp.PARA_VALUE = #{PARA_VALUE_01}
 				AND (securities.REPO_TYPE IS NULL OR securities.REPO_TYPE != #{TARGET_BACK_TYPE_H01})
 		UNION ALL
-		<!-- 查询成交明细数据 -->
+		<!-- 查询成交明细数据1 -->
 		SELECT
 			tmp.SEQ_NO,
 			tmp.TRADE_ID,
@@ -277,7 +277,7 @@
 			AND tmp.PARA_VALUE = #{PARA_VALUE_03}
 			AND (stda.REPO_TYPE IS NULL OR stda.REPO_TYPE != #{TARGET_BACK_TYPE_H01})
 		UNION ALL
-		<!-- 查询成交明细数据 -->
+		<!-- 查询成交明细数据2 -->
 		SELECT
 			tmp.SEQ_NO,
 			tmp.TRADE_ID,
@@ -331,6 +331,167 @@
 			tmp.TRADE_ID IS NULL
 			AND tmp.PARA_VALUE = #{PARA_VALUE_03}
 			AND (stda.REPO_TYPE IS NULL OR stda.REPO_TYPE != #{TARGET_BACK_TYPE_H01})
+		UNION ALL
+		<!-- 查询协议回购成交明细数据 -->
+		SELECT
+			ssrd.SEQ_NO,
+			ssrd.TRADE_ID,
+			ssrd.FINPROD_ID,
+			ssrd.TRADE_MARKET,
+			ssrd.CUSTOMER_ID,
+			ssrd.ACCOUT,
+			#{PARA_VALUE_03} PARA_VALUE,
+			ssrd.FINPROD_TYPE,
+			ssrd.PS,
+			ssrd.TRADE_DATE,
+			ssrd.SEC_ACCT_ID,
+			ssrd.CHECK_RESULT,
+			ssrd.SEAT_NUMBER,
+			ssrd.COMMISSION_AMT,
+			ssrd.JSF_AMT,
+			ssrd.ZGF_AMT,
+			ssrd.STAMP_FEE,
+			ssrd.SETTLE_FEE,
+			ssrd.GHF_AMT,
+			ssrd.SXF_AMT,
+			ssrd.TRADE_AMT,
+			ssrd.TRADE_NUM,
+			ssrd.TOTAL_TEEAMT,
+			std.TRADE_ID TRADE_ID2,
+			std.COMMISSION_AMT COMMISSION_AMT2,
+			std.JSF_AMT JSF_AMT2,
+			std.ZGF_AMT ZGF_AMT2,
+			std.STAMP_FEE STAMP_FEE2,
+			std.SETTLE_FEE SETTLE_FEE2,
+			std.GHF_AMT GHF_AMT2,
+			std.SXF_AMT SXF_AMT2,
+			CASE
+				WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.FPRICE_AMT*-1
+				WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RS03} THEN std.FPRICE_AMT*-1
+				WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.FPRICE_AMT*-1
+				ELSE FPRICE_AMT
+			END TRADE_AMT2,
+			CASE
+				WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.SHARE_AMT
+				WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RS03} THEN std.SHARE_AMT
+				WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.SHARE_AMT
+				ELSE std.SHARE_AMT*-1
+			END TRADE_NUM2,
+			std.FINPROD_TYPE2 FINPROD_TYPE2,
+			std.PS PS2,
+			std.TRADE_MARKET TRADE_MARKET2,
+			std.TRADE_DATE TRADE_DATE2,
+			std.SEC_ACCT_ID SEC_ACCT_ID2
+		FROM
+			STL_SEC_RECON_DEAL ssrd
+		LEFT JOIN
+			STL_SEC_RECON ssr ON ssrd.SEQ_NO = ssr.SEQ_NO
+		LEFT JOIN
+			MST_SALE_DEPARTMENT msd ON ssrd.SEAT_NUMBER = b.SH_SEATNO
+		INNER JOIN
+			SETTLE_TRANS_DATA std ON ssrd.TRADE_ID = std.CJBH AND ssrd.SEAT_NUMBER = std.SEAT_NUMBER AND ssrd.TRADE_DATE = std.TRADE_DATE
+		LEFT JOIN
+			SETTLE_TRANS_DATA_ADD stda ON std.TRADE_ID = stda.TRADE_ID
+		WHERE
+			(ssrd.CHECK_RESULT IS NULL OR ssrd.CHECK_RESULT = #{CHECK_RESULT_0})
+			AND stda.REPO_TYPE = #{TARGET_BACK_TYPE_H01}
+			AND msd.INTER_TYPE = #{INTER_TYPE_1}
+			AND ssrd.TRADE_MARKET = #{TRADE_MARKET_03}
+			AND ssrd.TRADE_DATE = STR_TO_DATE(#{batchDate}, '%Y-%m-%d')
+			AND EXISTS (SELECT 1 FROM STL_SEC_RECON_PARA ssrp WHERE ssrd.CUSTOMER_ID = ssrp.CUSTOMER_ID)
+		UNION ALL
+		<!-- 查询协议回购委托汇总数据 -->
+		SELECT
+			ssrd.SEQ_NO,
+			ssrd.TRADE_ID,
+			ssrd.FINPROD_ID,
+			ssrd.TRADE_MARKET,
+			ssrd.CUSTOMER_ID,
+			ssrd.ACCOUT,
+			#{PARA_VALUE_02} PARA_VALUE,
+			ssrd.FINPROD_TYPE,
+			ssrd.PS,
+			ssrd.TRADE_DATE,
+			ssrd.SEC_ACCT_ID,
+			ssrd.CHECK_RESULT,
+			ssrd.SEAT_NUMBER,
+			ssrd.COMMISSION_AMT,
+			ssrd.JSF_AMT,
+			ssrd.ZGF_AMT,
+			ssrd.STAMP_FEE,
+			ssrd.SETTLE_FEE,
+			ssrd.GHF_AMT,
+			ssrd.SXF_AMT,
+			ssrd.TRADE_AMT,
+			ssrd.TRADE_NUM,
+			ssrd.TOTAL_TEEAMT,
+			entrust.APPLY_TRADE_ID TRADE_ID2,
+			entrust.COMMISSION_AMT2,
+			entrust.JSF_AMT2,
+			entrust.ZGF_AMT2,
+			entrust.STAMP_FEE2,
+			entrust.SETTLE_FEE2,
+			entrust.GHF_AMT2,
+			entrust.SXF_AMT2,
+			entrust.FPRICE_AMT2 TRADE_AMT2,
+			entrust.SHARE_AMT2 TRADE_NUM2,
+			entrust.FINPROD_TYPE2 FINPROD_TYPE2,
+			entrust.PS PS2,
+			entrust.TRADE_MARKET TRADE_MARKET2,
+			entrust.TRADE_DATE TRADE_DATE2,
+			entrust.SEC_ACCT_ID SEC_ACCT_ID2
+		FROM
+			STL_SEC_RECON_DEAL ssrd
+		LEFT JOIN
+			STL_SEC_RECON ssr ON ssrd.SEQ_NO = ssr.SEQ_NO
+		INNER JOIN (
+			SELECT
+				std.APPLY_TRADE_ID,
+				SUM(std.COMMISSION_AMT) COMMISSION_AMT2,
+				SUM(std.JSF_AMT) JSF_AMT2,
+				SUM(std.ZGF_AMT) ZGF_AMT2,
+				SUM(std.STAMP_FEE) STAMP_FEE2,
+				SUM(std.SETTLE_FEE) SETTLE_FEE2,
+				SUM(std.GHF_AMT) GHF_AMT2,
+				SUM(std.SXF_AMT) SXF_AMT2,
+				SUM(
+					CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.FPRICE_AMT*-1
+					WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.FPRICE_AMT*-1
+					ELSE std.FPRICE_AMT END
+				) FPRICE_AMT2,
+				SUM(
+					CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.SHARE_AMT
+					WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.SHARE_AMT
+					ELSE std.SHARE_AMT*-1 END
+				) SHARE_AMT2,
+				std.FINPROD_TYPE2,
+				std.PS,
+				std.TRADE_MARKET,
+				std.TRADE_DATE,
+				std.SEC_ACCT_ID,
+				std.SEAT_NUMBER
+			FROM
+				SETTLE_TRANS_DATA std
+			LEFT JOIN
+				SETTLE_TRANS_DATA_ADD stda ON std.TRADE_ID = stda.TRADE_ID
+			WHERE
+				stda.REPO_TYPE = #{TARGET_BACK_TYPE_H01}
+			GROUP BY
+				std.APPLY_TRADE_ID,
+				std.FINPROD_TYPE2,
+				std.PS,
+				std.TRADE_MARKET,
+				std.TRADE_DATE,
+				std.SEC_ACCT_ID,
+				std.SEAT_NUMBER
+		) entrust ON ssrd.INSTRUCTION_ID = entrust.APPLY_TRADE_ID AND ssrd.SEAT_NUMBER = entrust.SEAT_NUMBER AND ssrd.TRADE_DATE = entrust.TRADE_DATE
+		LEFT JOIN
+			MST_SALE_DEPARTMENT msd ON ssrd.CUSTOMER_ID = msd.BROKER_ID AND (std.SEAT_NUMBER = msd.SH_SEATNO OR std.SEAT_NUMBER = msd.SZ_SEATNO)
+		WHERE
+			(ssrd.CHECK_RESULT IS NULL OR ssrd.CHECK_RESULT = #{CHECK_RESULT_0})
+			AND ((msd.INTER_TYPE = #{INTER_TYPE_1} AND ssrd.TRADE_MARKET = #{TRADE_MARKET_04}) OR msd.INTER_TYPE IN(#{INTER_TYPE_2},#{INTER_TYPE_4}))
+			AND ssrd.TRADE_DATE = STR_TO_DATE(#{batchDate}, '%Y-%m-%d')
+			AND EXISTS (SELECT 1 FROM STL_SEC_RECON_PARA ssrp WHERE ssrd.CUSTOMER_ID = ssrp.CUSTOMER_ID)
 	</select>
 
 	<select id="queryManualAccountTodoList" resultType="com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto">

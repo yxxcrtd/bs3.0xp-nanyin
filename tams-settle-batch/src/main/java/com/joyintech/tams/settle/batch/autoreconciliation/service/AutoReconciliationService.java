@@ -5,6 +5,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.settle.batch.autoreconciliation.dao.AutoReconciliationMapper;
 import com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto;
 import com.joyintech.tams.invest.common.reconciliation.service.ReconciliationCommonService;
@@ -64,6 +65,12 @@ public class AutoReconciliationService {
         param.put("prodType2_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         param.put("prodType2_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         param.put("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
+        param.put("BUSI_SCENE_CALSS_0902RS03", DictCodeListStl.业务场景分类明细_债券协议正回购_到期.getValue());
+        param.put("INTER_TYPE_1", DictCodeListExt3.柜台接口类型_恒生.getValue());
+        param.put("INTER_TYPE_2", DictCodeListExt3.柜台接口类型_金证w版.getValue());
+        param.put("INTER_TYPE_4", DictCodeListExt3.柜台接口类型_金证u版.getValue());
+        param.put("TRADE_MARKET_03", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
+        param.put("TRADE_MARKET_04", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
         // 获取待自动对账的对账数据
         List<DayEndAccountDaichuliDto> autoAccountList = autoReconciliationMapper.queryAccountTodoList(param);
         reconciliationCommonService.executeReconciliation(autoAccountList);
