@@ -519,15 +519,74 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @return
      */
     public Page<CfetsEtrIbBondPosinfo001Dto> queryPositionsPage(CfetsEtrIbBondPosiPage001RequestDto requestDto) {
+        String platDate = iPlatformDate.getSysDateStr();
         if (!StringUtil.isNotBlank(requestDto.getCdate())){
-            requestDto.setCdate(iPlatformDate.getSysDateStr());
+            requestDto.setCdate(platDate); 
         }
+        // 初始化请求参数
+        BaseMap req = getRequestMap(requestDto); 
+        // 分页查询列表
+        Page<CfetsEtrIbBondPosinfo001Dto> pages = super.queryForPage(
+                requestDto.getPageNo(), requestDto.getPageSize(), () -> cfetsetrIbBondinfoMapper.queryPositionsPage(req));
+        // 根据查询结果查询估值、交易数据，用来加工单位成本等字段
+        final List pList = new ArrayList<String>();
+        final List fList = new ArrayList<String>();
+        if (pages != null && pages.getRoot() != null && !pages.getRoot().isEmpty()){
+            pages.getRoot().stream().forEach(c -> {
+                if (!pList.contains(c.getPortfolioId())){
+                    pList.add(c.getPortfolioId());
+                }
+                if (!fList.contains(c.getFinprodId())){
+                    fList.add(c.getFinprodId());
+                }
+            });
+        }
+        // 查询单位成本数据
+        Map<String, CfetsUnitCostDto> unitCostMap = calcEachCostAmtMap(DateUtil.parse(platDate), pList, fList, requestDto.getSecType1());
+        // 计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
+        return calculationAmount(unitCostMap, pages);
+    }
 
+    private Page<CfetsEtrIbBondPosinfo001Dto> calculationAmount(Map<String, CfetsUnitCostDto> unitCostMap, Page<CfetsEtrIbBondPosinfo001Dto> pages) {
+        if(pages != null && pages.getRoot()!= null && !pages.getRoot().isEmpty()){
+            pages.getRoot().forEach( r->{
+                CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId());
+                if (dto != null){
+                    // 1.持仓成本（万元）
+                    r.setPositionsAmt(ArithmeticUtil.divide(dto.getBuyCostAmt(), BigDecimal.valueOf(10000), 2));
+                    // 2.持仓成本价（元） 取单位成本
+                    r.setUnitCost(dto.getUnitCost());
+                }
+
+                // 3.最新净价（元） 优先从内存获取债券最新净价，没有则使用dto中债券估值行情的值r.getPrice()
+                BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId());
+                if (price != null) {
+                    r.setPrice(price);
+                }
+                // else{
+                // 是否需要从http查询一次，并放入缓存? 待定
+                // }
+
+                if (r.getPrice() != null){
+                    // 4.持仓市值（万元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
+                    BigDecimal doAdd = ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt());
+                    r.setPositionsPrice(ArithmeticUtil.multiply(doAdd, r.getPrice()).divide(BigDecimal.valueOf(100)));
+
+                    if (r.getPositionsAmt() != null){
+                        // 5.浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
+                        r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
+                    }
+                }
+            });
+        }
+        return pages;
+    }
+
+    private BaseMap getRequestMap(CfetsEtrIbBondPosiPage001RequestDto requestDto) {
         User user = SecurityUtil.getLoginUser();
         if (user == null){
-            return null;
+            throw new RuntimeException("获取不到登录用户!");
         }
-        
         // 市价净价取值估值配置
         String BOND_VALUATION_RULE = CacheUtil.getSysParam("BOND_VALUATION_RULE");
         BaseMap req = BaseMap.newMap(BeanUtil.object2Map(requestDto))
@@ -561,7 +620,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
 
         List<String> finprodIdList = null;
-        if (requestDto != null && requestDto.getPortfolioId() != null){
+        if (requestDto != null && requestDto.getFinprodId() != null){
             int index = StringUtil.indexOf(requestDto.getFinprodId(), ",");
             if (index > 0){
                 finprodIdList = Arrays.asList(requestDto.getFinprodId().split(","));
@@ -571,72 +630,22 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 }
             }
         }
-        // 分页查询列表
-        Page<CfetsEtrIbBondPosinfo001Dto> result = super.queryForPage(
-                requestDto.getPageNo(), requestDto.getPageSize(), () -> cfetsetrIbBondinfoMapper.queryPositionsPage(req));
-
-        /**
-         * 根据组合、资产、交易日期、一级分类查询单位成本数据
-         */
-        Map<String, CfetsUnitCostDto> unitCostMap = calcEachCostAmtMap(requestDto);
-        
-        // 计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
-        if(result != null && result.getRoot()!= null && !result.getRoot().isEmpty()){
-            result.getRoot().forEach( r->{
-                CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId() + r.getBusiModel());
-                if (dto != null){
-                    // 1.持仓成本（万元）
-                    r.setPositionsAmt(ArithmeticUtil.divide(dto.getBuyCostAmt(), BigDecimal.valueOf(10000), 2));
-                    // 2.持仓成本价（元） 取单位成本
-                    r.setUnitCost(dto.getUnitCost());
-                }
-                
-                // 3.最新净价（元） 优先从内存获取债券最新净价，没有则使用dto中债券估值行情的值r.getPrice()
-                BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId());
-                if (price != null) {
-                    r.setPrice(price);
-                }
-                // else{
-                    // 是否需要从http查询一次，并放入缓存? 待定
-                // }
-                
-                if (r.getPrice() != null){
-                    // 4.持仓市值（万元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
-                    BigDecimal doAdd = ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt());
-                    r.setPositionsPrice(ArithmeticUtil.multiply(doAdd, r.getPrice()).divide(BigDecimal.valueOf(100)));
-
-                    if (r.getPositionsAmt() != null){
-                        // 5.浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
-                        r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
-                    }
-                }
-            });
-        }
-        
-        return result;
+        return req;
     }
 
     /**
      * @param requestDto
      * @return
      */
-    private Map<String, CfetsUnitCostDto> calcEachCostAmtMap(CfetsEtrIbBondPosiPage001RequestDto requestDto) {
+    private Map<String, CfetsUnitCostDto> calcEachCostAmtMap(Date cdate, List<String> portfolioIdList, List<String> finprodIdList, String secType1) {
         /** 返回结果
          * KEY:组合+资产代码+投资目的
-         * VALUE:持仓单位成本dto：
+         * VALUE:持仓单位成本dto
          */
         Map<String, CfetsUnitCostDto> resultMap = new HashMap<>();
         
-        Date cdate = DateUtil.parse(requestDto.getCdate());
-        List<String> portfolioIdList = null;
-        if (StringUtil.isNotEmpty(requestDto.getPortfolioId())){
-            portfolioIdList = Arrays.asList(requestDto.getPortfolioId());
-        }
-        String finprodId = requestDto.getFinprodId();
-        String secType1 = requestDto.getSecType1();
-        
         // 查询前一日持仓指标
-        List<BaseMap> lastCostAmt = selectLastCostAmt(cdate, portfolioIdList, finprodId, secType1);
+        List<BaseMap> lastCostAmt = selectLastCostAmt(cdate, portfolioIdList, finprodIdList, secType1);
         
         if (lastCostAmt != null){
             lastCostAmt.forEach(e->{
@@ -657,7 +666,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         }
         
         // 当日交易数据查询
-        List<BaseMap> currTrdData = selectCurrTrdData(cdate, portfolioIdList, finprodId, secType1);
+        List<BaseMap> currTrdData = selectCurrTrdData(cdate, portfolioIdList, finprodIdList, secType1);
         if (currTrdData != null){
             currTrdData.forEach(i -> {
                 String key = getKey(i);
@@ -674,8 +683,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     dto.setBuyCostAmt(thisBuyCostAmt);
                     // 数量
                     dto.setShareAmt(dto.getShareAmt().add(i.getBigDecimal("AMT")));
-                    // 单位成本 = 成本（万元）/数量
-                    dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt().multiply(BigDecimal.valueOf(10000.0)), dto.getShareAmt(), 4));
+                    // 单位成本 = 成本/数量
+                    dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt(), dto.getShareAmt(), 4));
                 }else{ // 卖出或行权回售
                     // 成本
                     BigDecimal thisBuyCostAmt = dto.getBuyCostAmt()
@@ -683,8 +692,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     dto.setBuyCostAmt(thisBuyCostAmt);
                     // 数量
                     dto.setShareAmt(dto.getShareAmt().subtract(i.getBigDecimal("AMT")));
-                    // 单位成本 = 成本（万元）/数量
-                    dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt().multiply(BigDecimal.valueOf(10000.0)), dto.getShareAmt(), 2));
+                    // 单位成本 = 成本/数量
+                    dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt(), dto.getShareAmt(), 2));
                 }
                 
                 resultMap.put(key, dto);
@@ -694,7 +703,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     }
 
     private static String getKey(BaseMap bm){
-        return bm.getString("PORTFOLIO_ID") + bm.get("FINPROD_ID") + bm.get("INV_AIM");
+        return bm.getString("PORTFOLIO_ID") + bm.get("FINPROD_ID");
     }
     
     /**
@@ -704,14 +713,14 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @param finprodId 资产代码
      * @param secType1 债券一级分类
      */
-    public List<BaseMap> selectLastCostAmt(Date cdate, List<String> portfolioIdList, String finprodId, String secType1){
+    public List<BaseMap> selectLastCostAmt(Date cdate, List<String> portfolioIdList, List<String> finprodIdList, String secType1){
         BaseMap reqMap = BaseMap.newMap()
                 .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())    // 债券
                 .put("SVR_TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue())           // 银行间
                 .put("cdate", DateUtil.addDay(cdate, -1));
 
-        if(portfolioIdList != null && portfolioIdList.size()>0) reqMap.put("portfolioIdList", portfolioIdList);
-        if(StringUtil.isNotEmpty(finprodId)) reqMap.put("finprodId",finprodId);
+        if(portfolioIdList != null && !portfolioIdList.isEmpty()) reqMap.put("portfolioIdList", portfolioIdList);
+        if(finprodIdList != null && !finprodIdList.isEmpty()) reqMap.put("finprodIdList",finprodIdList);
         if(StringUtil.isNotEmpty(secType1)) reqMap.put("secType1",secType1);
         
         List<BaseMap> list = cfetsetrIbBondinfoMapper.selectLastCostAmt(reqMap);
@@ -731,7 +740,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @param finprodId 资产代码
      * @param secType1 债券一级分类
      */
-    public List<BaseMap> selectCurrTrdData(Date cdate, List<String> portfolioIdList, String finprodId, String secType1){
+    public List<BaseMap> selectCurrTrdData(Date cdate, List<String> portfolioIdList, List<String> finprodIdList, String secType1){
         BaseMap reqMap = BaseMap.newMap()
                 .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())    // 债券
                 .put("SVR_TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue())           // 银行间
@@ -742,8 +751,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 .put("YN_N", DictCodeList.是否_否.getValue())
                 .put("cdate", cdate);
 
-        if(portfolioIdList != null && portfolioIdList.size()>0) reqMap.put("portfolioIdList", portfolioIdList);
-        if(StringUtil.isNotEmpty(finprodId)) reqMap.put("finprodId",finprodId);
+        if(portfolioIdList != null && !portfolioIdList.isEmpty()) reqMap.put("portfolioIdList", portfolioIdList);
+        if(finprodIdList != null && !finprodIdList.isEmpty()) reqMap.put("finprodIdList",finprodIdList);
         if(StringUtil.isNotEmpty(secType1)) reqMap.put("secType1",secType1);
 
         List<BaseMap> list = cfetsetrIbBondinfoMapper.selectCurrTrdData(reqMap);

@@ -567,7 +567,7 @@ from
     <!-- 查询前一日持仓指标 -->
     <select id="selectLastCostAmt" parameterType="Map" resultType="com.joyintech.tams.business.common.pojo.BaseMap">
         select
-        a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM,
+        a.PORTFOLIO_ID, a.FINPROD_ID,
         sum(nvl(a.BUY_COST_AMT, 0)) BUY_COST_AMT, sum(nvl(a.SHARE_AMT, 0)) SHARE_AMT
         from PTL_SEC_VALUTION a
         LEFT JOIN FIN_PRODUCT b ON a.FINPROD_ID =b.FINPROD_ID and b.FINPROD_TYPE2 =#{FINPROD_TYPE_TG_F01}
@@ -579,14 +579,17 @@ from
                 #{item}
             </foreach>
         </if>
-        <if test="finprodId != null and finprodId != ''">
-            and b.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        <if test="finprodIdList != null">
+            AND b.FINPROD_ID in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
         <if test="secType1 != null and secType1 != ''">
             and c.TYPE_8 = #{secType1,jdbcType=VARCHAR}
         </if>
-        GROUP BY a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM
-        ORDER BY a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM
+        GROUP BY a.PORTFOLIO_ID, a.FINPROD_ID
+        ORDER BY a.PORTFOLIO_ID, a.FINPROD_ID
     </select>
 
     <!-- 当日交易数据查询 -->
@@ -611,8 +614,11 @@ from
                 #{item}
             </foreach>
         </if>
-        <if test="finprodId != null and finprodId != ''">
-            and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        <if test="finprodIdList != null">
+            AND a.FINPROD_ID in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
         <if test="secType1 != null and secType1 != ''">
             and d.TYPE_8 = #{secType1,jdbcType=VARCHAR}
