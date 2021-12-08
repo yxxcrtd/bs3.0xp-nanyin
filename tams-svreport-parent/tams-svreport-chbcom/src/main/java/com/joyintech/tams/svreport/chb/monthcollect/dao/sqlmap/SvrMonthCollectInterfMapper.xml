@@ -43,9 +43,11 @@
 		select
 		prdRegistCode, institutionCode, areaCode, holderType, ccy, sum(amount) balanceAmt, sum(qty) balanceShares, sum(cnyAmt) cnyAmt
 		FROM
-		(select prdRegistCode,institutionCode,areaCode,holderType,indentifyMark,ccy,amount,qty,cnyAmt
+		(
+		select prdRegistCode,institutionCode,areaCode,holderType,indentifyMark,ccy,amount,qty,cnyAmt
 		FROM
-		(select A.STATUS,A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
+		(
+		select A.STATUS,A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
 		CASE B.HOLDER_CLASSIFY
 		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
@@ -56,23 +58,17 @@
 		ROW_NUMBER() over( partition by A.PRD_REGIST_CODE,B.FUND_ACC_PLACE,A.INDENTIFY_MARK,A.HOLD_DATE order by A.UPDATE_TIME desc ) monthMarkNo
 		FROM CHB_INVESTHOLD_INFO_SUB A
 		LEFT JOIN CHB_EQU_SUB B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd'))
-		where monthMarkNo = 1 and STATUS != '03') temp1
-	    <where>
-		    <if test="registList !=null and registList.size()>0">
-			    temp1.indentifyMark NOT IN
-			    <foreach collection="registList" item="regist" open="(" separator=","  close=")">
-			    	#{regist.indentifyMark,jdbcType=VARCHAR}
-			    </foreach>
-		    </if>
-	    </where>
-		GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
+		left join CHB_INVESTHOLD_INFO_CHECK C
+		ON A.INDENTIFY_MARK = C.INDENTIFY_MARK
+		WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		AND C.INDENTIFY_MARK = null
+		)
+		where monthMarkNo = 1 and STATUS != '03'
 
 		UNION ALL
 
-		select prdRegistCode, institutionCode, areaCode, holderType, ccy, sum(amount) balanceAmt, sum(qty) balanceShares, sum(cnyAmt) cnyAmt
-		FROM
-		(select A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
+		select A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
 		CASE B.HOLDER_CLASSIFY
 		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
@@ -82,8 +78,10 @@
 		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-		)GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
+		WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		)
+		GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy
 	</select>
 <!--查询需要删除的reportuuid-->
 	<select id="selectReportuuid" resultType="string" parameterType="string">
@@ -243,5 +241,59 @@
 		)GROUP BY prdRegistCode,institutionCode
 	</select>
 
+<!--    取得人民币兑SAFE汇率-->
+	<select id="CNYExchange" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ccyExcharge">
+		SELECT
+		EXCHARGE_CODE exchargeCode,
+		OPEN_PRICE openPrice,
+		CLOSE_PRICE closePrice,
+		HIGH_PRICE highPrice,
+		LOW_PRICE lowPrice,
+		MID_PRICE midPrice
+		FROM
+		(
+		select
+		EXCHARGE_CODE,
+		OPEN_PRICE,
+		CLOSE_PRICE,
+		HIGH_PRICE,
+		LOW_PRICE,
+		MID_PRICE,
+		ROW_NUMBER() over( partition by EXCHARGE_CODE order by TRADE_DATE desc ) excNo
+		FROM
+		MST_EXCHARGE_QUOTE quote
+		WHERE
+		DATASOURCE_TYPE = 'SAFE'
+		AND EXCHARGE_CODE like '%CNY/%'
+		AND TRADE_DATE BETWEEN to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		) WHERE excNo = 1
+	</select>
 
+	<!--   获取美元兑 CFETS:外汇交易中心-->
+	<select id="USDExchange" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ccyExcharge">
+		SELECT
+		EXCHARGE_CODE exchargeCode,
+		OPEN_PRICE openPrice,
+		CLOSE_PRICE closePrice,
+		HIGH_PRICE highPrice,
+		LOW_PRICE lowPrice,
+		MID_PRICE midPrice
+		FROM
+		(
+		select
+		EXCHARGE_CODE,
+		OPEN_PRICE,
+		CLOSE_PRICE,
+		HIGH_PRICE,
+		LOW_PRICE,
+		MID_PRICE,
+		ROW_NUMBER() over( partition by EXCHARGE_CODE order by TRADE_DATE desc ) excNo
+		FROM
+		MST_EXCHARGE_QUOTE quote
+		WHERE
+		DATASOURCE_TYPE = 'CFETS'
+		AND EXCHARGE_CODE like '%USD/%'
+		AND TRADE_DATE BETWEEN to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		) WHERE excNo = 1
+	</select>
 </mapper>

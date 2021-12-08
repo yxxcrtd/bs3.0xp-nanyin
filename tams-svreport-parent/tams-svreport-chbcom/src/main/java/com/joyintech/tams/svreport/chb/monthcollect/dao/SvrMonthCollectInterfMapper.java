@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.monthcollect.dao;
 
 import com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect;
+import com.joyintech.tams.svreport.chb.monthcollect.dto.ccyExcharge;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +20,7 @@ public interface SvrMonthCollectInterfMapper {
     //	查询check表
 	List<ChbMonthCollect> selectHolderNumCheck(@Param("batchDateEnd")String batchDateEnd);
     //三合一判断后 根据持有数据，生成持有，投资者数量信息
-	List<ChbMonthCollect> selectHolderNumExcheck(@Param("registList")List<ChbMonthCollect> registList,@Param("batchDateEnd")String batchDateEnd);
+	List<ChbMonthCollect> selectHolderNumExcheck(@Param("batchDateEnd")String batchDateEnd);
 //查询需要删除的reportuuid
 	List<String> selectReportuuid (@Param("termid")String termid);
 //删除report明细表
@@ -76,4 +77,8 @@ public interface SvrMonthCollectInterfMapper {
 	List<ChbMonthCollect> areaHolderNum(@Param("batchDateEnd")String batchDateEnd);
 //	分销售渠道获得投资者数量
 	List<ChbMonthCollect> channelHolderNum(@Param("batchDateEnd")String batchDateEnd);
+//获取人民币对
+	List<ccyExcharge> CNYExchange(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+//获取美元对
+	List<ccyExcharge> USDExchange(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 }
