@@ -120,11 +120,15 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.my}">本方</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select required type="text" id="CfetsBondDealQuotedPrice004_mySide" name="mySide"
+                                        <input type="text" name="counterName"
+                                               data-th-value="${entity?.counterName}"
+                                               class="layui-input form-input" placeholder="请输入内容"
+                                               data-th-placeholder="#{SysCommon.placeholder}">
+                                        <!--<select required type="text" id="CfetsBondDealQuotedPrice004_mySide" name="mySide"
                                                 class="layui-input form-input input-select" parentIds="CfetsBondDealQuotedPrice004_portfolioName"
                                                 th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
                                                 th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideList}" allowClear="true"
-                                                formatoption="true" th:initValue="${entity?.mySide}"></select>
+                                                formatoption="true" th:initValue="${entity?.mySide}"></select>-->
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
@@ -147,10 +151,6 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.counterId}">对手方</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" name="ouTraderName"
-                                               data-th-value="${entity?.ouTraderName}"
-                                               class="layui-input form-input" placeholder="请输入内容"
-                                               data-th-placeholder="#{SysCommon.placeholder}">
                                         <input type="text" name="counterName"
                                                data-th-value="${entity?.counterName}"
                                                class="layui-input form-input" placeholder="请输入内容"

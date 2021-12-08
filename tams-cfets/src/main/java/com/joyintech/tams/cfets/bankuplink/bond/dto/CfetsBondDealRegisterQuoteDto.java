@@ -91,6 +91,7 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
      */
     private String mySide;
 
+    private String mySideAbbr;
     /**
      * 本方交易员
      */
@@ -285,6 +286,14 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setMySide(String mySide) {
         this.mySide = mySide;
+    }
+
+    public String getMySideAbbr() {
+        return mySideAbbr;
+    }
+
+    public void setMySideAbbr(String mySideAbbr) {
+        this.mySideAbbr = mySideAbbr;
     }
 
     public String getMySideTrader() {

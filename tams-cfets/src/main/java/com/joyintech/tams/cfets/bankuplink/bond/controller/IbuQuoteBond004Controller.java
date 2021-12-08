@@ -171,7 +171,7 @@ public class IbuQuoteBond004Controller extends BaseController {
         workFlowParameter.setElementId("IbuQuoteBond004_btn_revoke");
         workFlowParameter.setBusinessCode(item -> item.getTotleTradeId());
         workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
-        workFlowParameter.setComment(entity -> getMessage("CFETSHIS_QUOTEID") + "(" + entity.getTotleTradeId() + ")");
+        workFlowParameter.setComment(entity ->  "登记报价编号(" + entity.getTotleTradeId() + ")");
         processParameter.setWorkFlowParameter(workFlowParameter);
         processParameter.setOperationType(OperationType.REVOKE);
         String msg = cfetsBondDealQuotedPrice004Service.start(processParameter,

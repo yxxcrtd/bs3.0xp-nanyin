@@ -399,9 +399,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         //删除业务流程数据
         deleteBussFlowData(entity.getWorkflowId());
         //登录db
-        insert(cfetsBondDealDbDto,operationType.name());
+        insert(cfetsBondDealDbDto,operationType);
         //履历表
-        updateCfetsOprHis(entity.getTotleTradeId(),operationType.name());
+        updateCfetsOprHis(entity.getTotleTradeId(),operationType);
         //头寸
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
@@ -584,7 +584,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         return result;
     }
 
-    private void insert(CfetsBondDealDbDto entity,String operationType){
+    private void insert(CfetsBondDealDbDto entity,OperationType operationType){
         RegFinProductDealTotal regFinProductDealTotal = entity.getRegFinProductDealTotal();
         String totleTradeId = regFinProductDealTotal.getTotleTradeId();
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
@@ -783,12 +783,12 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     /**
      * 处理履历
      */
-    private void updateCfetsOprHis(String totleTradeId,String operationType){
+    private void updateCfetsOprHis(String totleTradeId,OperationType operationType){
         CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
         oprHisReq.setEntrustId(totleTradeId);
-        if(StringUtil.equals(operationType, "NEW")){
+        if(operationType.equals(OperationType.NEW)){
             oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
-        }else if(StringUtil.equals(operationType, "REVOKE")){
+        }else if(operationType.equals(OperationType.REVOKE)){
             oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
         }
         oprHisReq.setBusiDes("报价登记");
