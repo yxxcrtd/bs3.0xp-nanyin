@@ -500,4 +500,20 @@ public class EtrExchangeTradeController {
         return etrExchangeTradeService.calcDeviationDegree(param);
     }
     //add by chenjiaxing 20210907 债券竞价交易添加偏离度展示 end
+
+    // add by etliu 20211207 start
+    // 交易所债券非交易类业务迁移
+    /**
+     *
+     * @Description //查询行权回售数据
+     * @Param [map]
+     * @return 行权回售数据
+     * @version 1.0
+     * @see
+     **/
+    @PostMapping("selectFinExercisePlanData")
+    public List<FinExercisePlan> selectFinExercisePlanData(@RequestBody Map<String, Object> map){
+        return etrExchangeTradeService.selectFinExercisePlanData(map);
+    }
+    // add by etliu 20211207 end
 }
