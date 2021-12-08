@@ -864,7 +864,7 @@
             AND T8.OPER_TYPE = #{OPR_TYPE_09}
         </if>
         WHERE PS IN ('T01','T02')  AND ((TRADE_STATUS ='01' and (IS_CANCEL IS NULL OR IS_CANCEL = 'N')) OR (TRADE_STATUS ='03' AND IS_CANCEL = 'Y'))
-
+        and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
         UNION ALL
         <!--回售登记数据-->
         SELECT
@@ -913,6 +913,7 @@
             AND T8.OPER_TYPE = #{OPR_TYPE_09}
         </if>
          WHERE PS = 'T03'  AND ((TRADE_STATUS ='01' and (IS_CANCEL IS NULL OR IS_CANCEL = 'N')) OR (TRADE_STATUS ='03' AND IS_CANCEL = 'Y'))  AND NOT EXISTS (SELECT 1 FROM TRDQUTO_MATCH_INFO tmi WHERE PRE_TRADE_ID = T1.TOTLE_TRADE_ID and (TRD_CONF_STATUS = #{CONFIRM_STATUS_0} or TRD_CONF_STATUS is null))
+        and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
         UNION ALL
         <!--流程中数据-->
         SELECT
@@ -959,7 +960,7 @@
         <if test="OPR_TYPE_09 !=null and OPR_TYPE_09 !=''">
             AND T8.OPER_TYPE = #{OPR_TYPE_09}
         </if>
-         WHERE PS IN ('T01','T02','T03')
+         WHERE PS IN ('T01','T02','T03') and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
     </select>
 
     <update id="updateRegFinProductDealTotal">
