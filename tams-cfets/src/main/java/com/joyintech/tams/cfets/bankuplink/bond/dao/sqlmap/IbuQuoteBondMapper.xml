@@ -1240,4 +1240,12 @@ SELECT
             LEFT JOIN ETR_ENTRUST_ADD T7 ON T7.ENTRUST_ID = T1.ENTRUST_ID
             where T1.TOTLE_TRADE_ID   = #{quoteId}
     </select>
+
+    <!--统计匹配数-->
+    <select id="countMatchInfo" resultType="java.lang.Integer">
+        SELECT  COUNT(1) FROM  TRDQUTO_MATCH_INFO tmi WHERE PRE_TRADE_ID = #{quoteId}
+        <if test="CONFIRM_STATUS_1 !=null and CONFIRM_STATUS_1 !=''">
+            AND TRD_CONF_STATUS = #{CONFIRM_STATUS_1}
+        </if>
+    </select>
 </mapper>

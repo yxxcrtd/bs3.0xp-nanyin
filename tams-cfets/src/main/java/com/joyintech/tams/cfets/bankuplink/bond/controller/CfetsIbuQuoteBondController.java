@@ -407,7 +407,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		return new Message<AjaxResult>().success().setData(ar);
 	}
 
-	@ApiOperation(value = "批量撤回", notes = "批量撤回")
+	@ApiOperation(value = "报价批量撤回", notes = "报价批量撤回")
 	@ResponseBody
 	@RequestMapping("doReCallList")
 	public Message<AjaxResult> doReCallList(@RequestBody List<CfetsBondCheckRequst> cfetsBondCheckRequsts) {

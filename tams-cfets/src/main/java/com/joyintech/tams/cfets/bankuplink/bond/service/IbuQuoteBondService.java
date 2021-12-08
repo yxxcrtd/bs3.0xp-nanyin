@@ -1133,12 +1133,15 @@ public class IbuQuoteBondService extends BaseService {
                 errorList.add(
                         new ValidMessage(this.getMessage("COMMON_E_0012",item.getQuoteId())));
             }
+            //是否已确认成交
+            if(cfetsIbuQuoteBondMapper.countMatchInfo(item.getQuoteId(),com.joyintech.tams.constant.DictCodeList.确认状态_已确认.getValue())>0){
+                errorList.add(new ValidMessage("当日登记所选登记数据已成交确认不支持撤销!业务编号:"+item.getQuoteId()));
+            }
             //回售登记数据，在理论行权日前一交易日（包含前一交易日）之前均支持回售登记撤销操作，支持隔夜撤销。理论行权日之后（包含理论行权日）回售登记不支持手动撤销
             if(StringUtil.equals(item.getPs(), com.joyintech.tams.constant.DictCodeList.交易方向_行权_回售.getValue())){
                 RegFinProductDealTotal regFinProductDealTotal = regFinProductDealTotalMapper.selectByPrimaryKey(item.getQuoteId());
                 if(regFinProductDealTotal.getTradeDate().compareTo(regFinProductDealTotal.getSettleDate())>=0){
-                    errorList.add(
-                            new ValidMessage("理论行权日之后(包含理论行权日)回售登记不支持手动撤销!业务编号:"+item.getQuoteId()));
+                    errorList.add(new ValidMessage("理论行权日之后(包含理论行权日)回售登记不支持手动撤销!业务编号:"+item.getQuoteId()));
                 }
             }
             if(CollectionUtils.isNotEmpty(errorList)){
