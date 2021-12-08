@@ -509,6 +509,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 tgBusiType = BussinessDictCodeList.平安业务类型_债券类资产卖出.getValue();
             }
             if(StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
+                regFinProductDealTotal.setSettleDate(entity.getTheoreticalExerciseDate());
                 tgBusiType = DictCodeListExt1.平安业务类型_债券类资产行权.getValue();
             }
             regFinProductDealTotal.setTgBusiType(tgBusiType);
