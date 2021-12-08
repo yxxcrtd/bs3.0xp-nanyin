@@ -81,6 +81,11 @@ public class ValCleanOrder extends BaseEntity {
     private String channelId;
 
     /**
+     * 交收状态
+     */
+    private String settleStatus;
+
+    /**
      * 取得 产品代码
      * @return 产品代码
      */
@@ -303,5 +308,20 @@ public class ValCleanOrder extends BaseEntity {
      */
     public void setChannelId(String channelId) {
         this.channelId = channelId == null ? null : channelId.trim();
+    }
+    /**
+     * 取得 交收状态
+     * @return 交收状态
+     */
+    public String getSettleStatus() {
+        return settleStatus;
+    }
+
+    /**
+     * 设置 交收状态
+     * @param settleStatus 交收状态
+     */
+    public void setSettleStatus(String settleStatus) {
+        this.settleStatus = settleStatus == null ? null : settleStatus.trim();
     }
 }

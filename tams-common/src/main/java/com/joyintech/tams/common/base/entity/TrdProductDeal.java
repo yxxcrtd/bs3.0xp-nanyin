@@ -9,7 +9,22 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class TrdProductDeal extends BaseEntity {
-	//费用类型
+    /***
+     * @author  殷亚
+     * @description 是否生成结算指令    区别isClean在实体类中实际的意义是:是否结清
+     * @date 2021-12-3 11:04
+     */
+    private String isOrders;
+
+    public String getIsOrders() {
+        return isOrders;
+    }
+
+    public void setIsOrders(String isOrders) {
+        this.isOrders = isOrders;
+    }
+
+    //费用类型
 	private String feeType;
 	
     public String getFeeType() {

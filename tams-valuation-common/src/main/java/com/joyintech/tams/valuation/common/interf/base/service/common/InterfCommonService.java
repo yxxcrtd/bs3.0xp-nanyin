@@ -4364,7 +4364,10 @@ public class InterfCommonService {
         dto.setMappingType("01");
         //全价总额
         dto.setFpriceAmt(tradeDeal.getFpriceAmt());
-        
+        /**add by yinya 通过接口中是否生成结算指令的字段，控制接入交易的时候，只自动生成随交易支付(IS_BOOK为Y)的结算指令**/
+        if(StringUtil.equals(tradeDeal.getIsOrders(),DictCodeList.是否_否.getValue())){
+            dto.setIsTrade(DictCodeList.是否_是.getValue());
+        }
         Map<String,String> paramMap = new HashMap<String,String>();
         if(dto.getTradeMarket() != null){
         	paramMap.put("TRADE_MARKET", dto.getTradeMarket());
@@ -4811,6 +4814,10 @@ public class InterfCommonService {
         dto.setMappingType("02");
         //全价总额
         dto.setFpriceAmt(tradeDeal.getFpriceAmt());
+        /**add by yinya 通过接口中是否生成结算指令的字段，控制接入交易的时候，只自动生成随交易支付(IS_BOOK为Y)的结算指令**/
+        if(StringUtil.equals(tradeDeal.getIsOrders(),DictCodeList.是否_否.getValue())){
+            dto.setIsTrade(DictCodeList.是否_是.getValue());
+        }
         //定义 变量.参数条件Map = null
         Map<String,String> paramMap = new HashMap<String,String>();
         
@@ -4850,6 +4857,7 @@ public class InterfCommonService {
         
         //变量.交易标的DTO.参数条件Map  = 变量.参数条件Map
         dto.setParamMap(paramMap);
+
         //查询交易需要生成的指令
         //定义 变量.交易对应指令集合 = 调用共通设计->【详细设计-接口共通方法设计.xlsx】->查询交易需要生成的指令SHEET
         List<StlOrdersMapping> somlist = this.queryStlOrdersMapping(dto);
