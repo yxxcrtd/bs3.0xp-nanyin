@@ -707,8 +707,13 @@ public class IbuQuoteBondService extends BaseService {
         }else{
             FinProduct finProduct = finProductMapper.selectByPrimaryKey(entrustDtos.get(0).getFinprodId());
             if(StringUtil.equals(finProduct.getIsRight(), com.joyintech.tams.constant.DictCodeList.是否_是.getValue())){
-                //行权收益率
-                translateKey = "03";
+                //锚定值非行权收益率，在交易执行面板，应该默认选择到期收益率
+                if(!groupByCalculateField.containsKey("03")){
+                    translateKey = "02";
+                }else{
+                    //行权收益率
+                    translateKey = "03";
+                }
             }else{
                 //到期收益率
                 translateKey = "02";
