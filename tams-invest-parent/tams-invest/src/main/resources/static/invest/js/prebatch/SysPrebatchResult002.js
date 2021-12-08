@@ -35,7 +35,7 @@
             ,{field:'finprodId', title: 'SysPrebatchResult002.finprodId', width:'10%',sortField:'finprod_Id'}
             ,{field:'finprodName', title: 'SysPrebatchResult002.finprodName', width:'10%',sortField:'finprod_name'}
             ,{field:'tradeId', title: 'SysPrebatchResult002.tradeId', width:'12%',sortField:'trade_id'}
-            ,{field:'tradeAmt', title: 'SysPrebatchResult002.tradeAmt', width:'8%',sortField:'trade_Amt'}
+            ,{field:'tradeAmt', title: 'SysPrebatchResult002.tradeAmt', width:'8%',type:'money', sortField:'trade_Amt'}
             ,{field:'nextUser', title: 'SysPrebatchResult002.nextUser', width:'12%',sortable:false}
             ,{field:'remark', title: 'SysPrebatchResult002.remark', width:'12%',sortable:false}
             ,{field:'seqNo', visible: false}
