@@ -252,13 +252,13 @@ public class CfetsEtrDispatcherService extends BaseService{
 
         //根据组合权限表添加检索权限
         Page<CfetsEtrDispatcherTradeListResponse> pageLimit = new Page<CfetsEtrDispatcherTradeListResponse>();
-//        if(StringUtil.isNotEmpty(SecurityUtil.getLoginUser())) {
-            pageParam.put("userId", "xq2");
+        if(StringUtil.isNotEmpty(SecurityUtil.getLoginUser())) {
+            pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
             pageLimit = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                     () -> cfetsEtrDispatcherMapper.findAllEtrDispatcherCommon(pageParam));
-//        }else{
-//            return pageLimit;
-//        }
+        }else{
+            return pageLimit;
+        }
 
         //将交易员和投资经理转为真实姓名
         List<CfetsEtrDispatcherTradeListResponse> list = pageLimit.getRoot();

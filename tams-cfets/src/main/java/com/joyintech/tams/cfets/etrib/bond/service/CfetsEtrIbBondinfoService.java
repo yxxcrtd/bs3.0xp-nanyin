@@ -544,6 +544,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 .put("REGIST_ORG_02", DictCodeList.登记托管机构_上海清算所.getValue())
                 .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())
                 .put("search_isNumberFlag", BaseMap.isNumeric(requestDto.getSearch()))
+                .put("DATE_TYPE_0", "0") // 头寸处理速度
                 .put("userId", user.getUserName())
                 ;
 

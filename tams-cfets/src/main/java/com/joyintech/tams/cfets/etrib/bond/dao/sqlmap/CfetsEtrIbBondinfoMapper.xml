@@ -388,7 +388,7 @@ from
                         AND PPA.USER_ID = #{userId}
                     </if>
                     LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_001},#{S_002})
-                    WHERE a.cdate = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd')
+                    WHERE a.cdate = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') AND a.DATE_TYPE =#{DATE_TYPE_0}
                     <if test="portfolioId != null and portfolioId != ''">
                         AND a.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
                     </if>
@@ -420,7 +420,7 @@ from
                     <if test="userId != null and userId != ''">
                         AND PPA.USER_ID = #{userId}
                     </if>
-                    where a.cdate = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd')
+                    where a.cdate = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') AND a.DATE_TYPE =#{DATE_TYPE_0}
                     <if test="portfolioId != null and portfolioId != ''">
                         AND a.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
                     </if>
