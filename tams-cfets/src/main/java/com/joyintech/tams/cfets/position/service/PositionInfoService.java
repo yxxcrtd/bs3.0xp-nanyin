@@ -84,7 +84,7 @@ public class PositionInfoService {
         BigDecimal realCash = BigDecimal.ZERO; // 账户现金
 
         if (StringUtil.isEmpty(ccy)){
-            calId =DictCodeList.币种_人民币_CNY.getValue();
+            ccy =DictCodeList.币种_人民币_CNY.getValue();
         }
         if (StringUtil.isEmpty(calId)){
             calId = "03"; // 默认取03银行间
@@ -140,7 +140,7 @@ public class PositionInfoService {
         BigDecimal cashT1 = BigDecimal.ZERO; // 指令t1日可用
         BigDecimal realCash = BigDecimal.ZERO; // 账户现金
         if (StringUtil.isEmpty(ccy)){
-            calId =DictCodeList.币种_人民币_CNY.getValue();
+            ccy =DictCodeList.币种_人民币_CNY.getValue();
         }
         if (StringUtil.isEmpty(calId)){
             calId = "03"; // 默认取03银行间
@@ -236,7 +236,7 @@ public class PositionInfoService {
                 .put("cdate", cdate)
                 .put("finprodId", finprodId);
         // 查询头寸信息
-        Map map = positionInfoMapper.queryEtrPosition(bm);
+        Map map = positionInfoMapper.queryTrdPosition(bm);
         return BaseMap.newMap(map);
     }
 
@@ -249,7 +249,6 @@ public class PositionInfoService {
             requestDto.setCdate(iPlatformDate.getSysDateStr());
         }
     }
-
 
     private List<BaseMap> nullData(String flag) {
         List<BaseMap> resp = new ArrayList<>();
