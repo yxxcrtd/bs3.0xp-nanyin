@@ -31,6 +31,17 @@ public class StlDownDataDealAccountInfoDto {
 	// 登记托管机构
 	String registOrg;
 
+	// 股东代码
+	String shareholdersCode;
+
+	public String getShareholdersCode() {
+		return shareholdersCode;
+	}
+
+	public void setShareholdersCode(String shareholdersCode) {
+		this.shareholdersCode = shareholdersCode;
+	}
+
 	public String getSecAcctId() {
 		return secAcctId;
 	}
