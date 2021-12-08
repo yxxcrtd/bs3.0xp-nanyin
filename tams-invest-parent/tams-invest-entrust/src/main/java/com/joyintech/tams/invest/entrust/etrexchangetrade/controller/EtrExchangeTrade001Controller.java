@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.entity.FinProductConvertible;
 import com.joyintech.tams.common.base.entity.FinProductQuto;
-import com.joyintech.tams.invest.common.asset.service.BaseCommonAssetCommonService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
@@ -113,12 +112,6 @@ public class EtrExchangeTrade001Controller extends BaseController{
 
     @Value("${quote.ws.url}")
     private String wsUrl;
-
-    // add by etliu 20211207 start
-    // 交易所债券非交易类业务迁移
-    @Autowired
-    private BaseCommonAssetCommonService baseCommonAssetCommonService;
-    // add by etliu 20211207 end
     
     @Override
     public String init(Model model) {
@@ -1243,12 +1236,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
         }
         String finprodId = (String) param.get("finprodId");
         if (!map.containsKey(DictCodeList.交易方向_行权_回售.getValue())) {
-            param.put("paramDate", DateUtil.format(sysDate));
-            List<String> finprodIdList = new ArrayList<>();
-            finprodIdList.add(finprodId);
-            param.put("finprodIdList", finprodIdList);
-
-            List<FinExercisePlan> exercisePlanList = baseCommonAssetCommonService.selectAssetxqhs(param);
+            List<FinExercisePlan> exercisePlanList = etrExchangeTrade001Service.selectFinExercisePlanData(finprodId, sysDate);
             if (!StringUtil.isEmptyList(exercisePlanList)) {
                 map.put(DictCodeList.交易方向_行权_回售.getValue(), exercisePlanList.get(0).getExercisePrice());
             }
