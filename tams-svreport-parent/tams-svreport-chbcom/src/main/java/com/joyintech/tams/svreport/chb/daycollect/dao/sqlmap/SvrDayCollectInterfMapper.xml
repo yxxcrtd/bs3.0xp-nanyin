@@ -107,6 +107,6 @@
 
 	<!--	check身份信息-->
 	<select id="checkIdentity" resultType="java.lang.Integer">
-		SELECT COUNT(*) from CHB_EQU_HOLD_CHECK WHERE TO_CHAR(DATA_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+		SELECT COUNT(*) from CHB_EQU_SUB
 	</select>
 </mapper>

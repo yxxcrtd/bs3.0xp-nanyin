@@ -32,7 +32,7 @@ public class SvrDayCollectInterf extends BaseService{
 			return;
 		}
 		if(svrDayCollectInterfMapper.checkIdentity(DateUtil.format(batchDate)) == 0){
-			logger.info("当日身份信息不存在，或者没有接入,批处理继续。");
+			logger.info("身份信息不存在，或者没有接入,批处理继续。");
 		}
     	//1、开始检数据
     	logger.info("销售月报每日明细汇总信息检索开始------->>>>>>");
