@@ -19,6 +19,7 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.service.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.dto.PositionBondExecuteParam;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
@@ -127,6 +128,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     private CfetsEtribBondInfo003Service cfetsetribBondInfo003Service;
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+    @Autowired
+    private EtrInvestBondInfoService etrInvestBondInfoService;
     /**
      * 持仓信息查询
      *
@@ -544,10 +547,10 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         // 查询单位成本数据
         Map<String, CfetsUnitCostDto> unitCostMap = calcEachCostAmtMap(DateUtil.parse(platDate), pList, fList, requestDto.getSecType1());
         // 计算单位成本、计算持仓成本、最新净价、持仓市值、浮动盈亏
-        return calculationAmount(unitCostMap, pages);
+        return calculationAmount(unitCostMap, pages, platDate);
     }
 
-    private Page<CfetsEtrIbBondPosinfo001Dto> calculationAmount(Map<String, CfetsUnitCostDto> unitCostMap, Page<CfetsEtrIbBondPosinfo001Dto> pages) {
+    private Page<CfetsEtrIbBondPosinfo001Dto> calculationAmount(Map<String, CfetsUnitCostDto> unitCostMap, Page<CfetsEtrIbBondPosinfo001Dto> pages, String platDate) {
         if(pages != null && pages.getRoot()!= null && !pages.getRoot().isEmpty()){
             pages.getRoot().forEach( r->{
                 CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId());
@@ -562,10 +565,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 BigDecimal price = BondSocketClient.getLocalCachePrice(r.getFinprodMarketId());
                 if (price != null) {
                     r.setPrice(price);
+                }else{
+                    // 取标的可用面值
+                    price = etrInvestBondInfoService.getAvailableNum(BaseMap.newMap().put("finprodId", r.getFinprodId()).put("sysdate", platDate));
+                    r.setPrice(price);
                 }
-                // else{
-                // 是否需要从http查询一次，并放入缓存? 待定
-                // }
 
                 if (r.getPrice() != null){
                     // 4.持仓市值（万元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
