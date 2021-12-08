@@ -19,8 +19,8 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="quoteId",value="报价编号")
     private String quoteId;
 
-    @ApiModelProperty(name="operateType",value="操作类型" ,example = "save")
-    private String operateType;
+    @ApiModelProperty(name="operateType",value="操作类型" ,example = "save,submit")
+    private String operatorType;
 
     @ApiModelProperty(name="quotaPageModel",value="报价操作类型" ,example = "marketResponse")
     private String quotaPageModel;
@@ -192,12 +192,12 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
         this.quoteId = quoteId;
     }
 
-    public String getOperateType() {
-        return operateType;
+    public String getOperatorType() {
+        return operatorType;
     }
 
-    public void setOperateType(String operateType) {
-        this.operateType = operateType;
+    public void setOperatorType(String operatorType) {
+        this.operatorType = operatorType;
     }
 
     public String getQuotaPageModel() {

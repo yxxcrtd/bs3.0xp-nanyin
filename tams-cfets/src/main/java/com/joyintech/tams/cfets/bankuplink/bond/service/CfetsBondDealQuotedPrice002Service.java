@@ -1029,7 +1029,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
                     cfetsBondDealQuotedPriceService.insertBondDialogueQuote(cfetsBondDealDialogueQuoteDto);
 					/*restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
 							+ "/CfetsBondDealQuotedPrice/insertBondDialogueQuote", entity, boolean.class);*/
-				} else if (StringUtil.equals(entity.getOperatorType(), "submit")) {
+                    } else if (StringUtil.equals(entity.getOperatorType(), "submit")) {
 					// 提交
                     cfetsBondDealQuotedPriceService.sendUpdateBondDialogueQuote(cfetsBondDealDialogueQuoteDto);
 					/*restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME

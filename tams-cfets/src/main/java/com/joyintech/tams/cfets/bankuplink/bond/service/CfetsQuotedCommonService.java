@@ -731,4 +731,15 @@ public class CfetsQuotedCommonService extends BaseService {
     }
 
 
+    /**
+     * 头寸check
+     * @param cfetsBondDealQuoteCommonDto
+     * @return
+     */
+    public  AjaxResult  positionCheck(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
+        AjaxResult ajaxResult = new AjaxResult();
+        return ajaxResult;
+    }
+
+
 }

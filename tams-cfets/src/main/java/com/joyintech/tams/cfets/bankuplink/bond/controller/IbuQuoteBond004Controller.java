@@ -185,9 +185,9 @@ public class IbuQuoteBond004Controller extends BaseController {
     public Message<AjaxResult> check(@RequestBody CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
         //check必填项
         AjaxResult ajaxResult = cfetsBondDealQuotedPrice004Service.checkNotEmpty(cfetsBondDealQuoteCommonDto);
-        //if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
+        if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
             ajaxResult = cfetsBondDealQuotedPrice004Service.checkcheckAnchoring(cfetsBondDealQuoteCommonDto);
-       // }
+        }
         return new Message<AjaxResult>().success().setData(ajaxResult);
     }
 
@@ -198,10 +198,6 @@ public class IbuQuoteBond004Controller extends BaseController {
         if (br.hasErrors()) {
             return new Message<AjaxResult>().success().setData(new AjaxResult(br));
 		}
-        AjaxResult ajaxResult = cfetsBondDealQuotedPrice004Service.checkNotEmpty(dto);
-        if(!CollectionUtils.isEmpty(ajaxResult.getErrorList())){
-            return new Message<AjaxResult>().success().setData(ajaxResult);
-        }
         CfetsBondDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsBondDealRegisterQuoteDto();
         //前台实体转成后台dto
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRegisterQuoteDto, dto);

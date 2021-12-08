@@ -370,7 +370,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             return;
         }
         if (!type.equals(OperationType.REVOKE) && !type.equals(OperationType.DELETE)) {
-            CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,type.name());
+            CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,type);
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
             //头寸
@@ -385,12 +385,12 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             // 先删除流程中数据
             this.deleteBussFlowData(entity.getWorkflowId());
-            CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,entity.getOperatorType());
+            CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,StringUtil.equals(entity.getOperatorType(),"revoke")?OperationType.REVOKE:OperationType.NEW);
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
             ProcessMark newEntity;
             //头寸
-            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,entity.getOperatorType()));
+            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,OperationType.NEW));
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsBondDealRegisterQuoteDto.class, true);
                 // 工作流ID
@@ -410,7 +410,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      */
     @Override
     public void doComplete(CfetsBondDealRegisterQuoteDto entity, OperationType operationType) {
-        CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,operationType.name());
+        CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,operationType);
         //删除业务流程数据
         deleteBussFlowData(entity.getWorkflowId());
         //登录db
@@ -421,7 +421,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         }else{
-            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,operationType.name()));
+            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,operationType));
         }
         //处理指令执行进度
         insertEtrFinishStatus(cfetsBondDealDbDto,operationType);
@@ -475,7 +475,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      * @param entity
      * @return
      */
-    public CfetsBondDealDbDto prepareEntity(CfetsBondDealRegisterQuoteDto entity,String operationType) {
+    public CfetsBondDealDbDto prepareEntity(CfetsBondDealRegisterQuoteDto entity,OperationType operationType) {
         CfetsBondDealDbDto result = new CfetsBondDealDbDto();
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             result.setWorkflowId(entity.getWorkflowId());
@@ -741,7 +741,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
      * @param entity
      * @return
      */
-    private Map<String,Object> preparePosition(CfetsBondDealDbDto entity,String operationType){
+    private Map<String,Object> preparePosition(CfetsBondDealDbDto entity,OperationType operationType){
         Map<String,Object> result = new HashMap<>();
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             result.put("interfaceType","Bond001");
