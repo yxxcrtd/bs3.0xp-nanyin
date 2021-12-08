@@ -3729,4 +3729,24 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		return DictCodeList.是否_否.getValue();
 	}
 	// add by etliu 20211013 end
+
+	// add by etliu 20211207 start
+	// 交易所债券非交易类业务迁移
+	/**
+	 * 查询转股信息
+	 * @param finprodId finprodId
+	 * @param paramDate paramDate
+	 * @return 转股信息
+	 */
+	public FinProductConvertible selectConverseShareData(String finprodId, Date paramDate) {
+		if (StringUtils.isNotEmpty(finprodId)) {
+			FinProductConvertible finProductConvertible = finProductConvertibleMapper.selectByPrimaryKey(finprodId);
+			if (finProductConvertible != null && finProductConvertible.getConVdate() != null
+					&& DateUtil.compareDate(finProductConvertible.getConVdate(), paramDate) <= 0) {
+				return finProductConvertible;
+			}
+		}
+		return null;
+	}
+	// add by etliu 20211207 end
 }

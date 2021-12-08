@@ -466,21 +466,24 @@ public class AssetDeclarationCodeMaintenanceService extends CommonExportService<
 	 */
 	private String getOthCodeTypeByName(String othCodeName) {
 		String OthCodeType = new String();
-		if (DictCodeListExt3.金融产品其他代码类型_回售代码.getCodeName().equals(othCodeName)) {
+		// add by etliu 20211207 start
+		// 交易所债券非交易类业务迁移
+		/*if (DictCodeListExt3.金融产品其他代码类型_回售代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_回售代码.getValue();
 		} else if (DictCodeListExt3.金融产品其他代码类型_质押代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_质押代码.getValue();
-		} else if (DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getCodeName().equals(othCodeName)) {
+		} else */if (DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue();
-		} else if (DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getCodeName().equals(othCodeName)) {
+		}/* else if (DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getValue();
-		} else if (DictCodeListExt3.金融产品其他代码类型_配债代码.getCodeName().equals(othCodeName)) {
+		} */else if (DictCodeListExt3.金融产品其他代码类型_配债代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_配债代码.getValue();
 		} else if (DictCodeListExt3.金融产品其他代码类型_配股代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_配股代码.getValue();
 		} else if (DictCodeListExt3.金融产品其他代码类型_新股申购代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue();
 		}
+		// add by etliu 20211207 end
 		return OthCodeType;
 	}
 
