@@ -3748,5 +3748,21 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		}
 		return null;
 	}
+
+	/**
+	 *
+	 * @Description //查询行权回售数据
+	 * @Param [map]
+	 * @return 行权回售数据
+	 * @version 1.0
+	 * @see
+	 **/
+	public List<FinExercisePlan> selectFinExercisePlanData(String finprodId, Date paramDate){
+		Map<String, Object> map = new HashMap<>();
+		map.put("finprodId", finprodId);
+		map.put("sysDate", DateUtil.format(paramDate));
+		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectFinExercisePlanData", map,
+				FinExercisePlan.class);
+	}
 	// add by etliu 20211207 end
 }

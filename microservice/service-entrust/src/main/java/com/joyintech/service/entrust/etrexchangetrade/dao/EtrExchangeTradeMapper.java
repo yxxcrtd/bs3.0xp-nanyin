@@ -307,4 +307,17 @@ public interface EtrExchangeTradeMapper {
     //add by chenjiaxing 20210907 债券竞价交易添加偏离度 start
 	BigDecimal getLastNetPrice(Map<String, Object> param);
 	//add by chenjiaxing 20210907 债券竞价交易添加偏离度 end
+
+	// add by etliu 20211207 start
+	// 交易所债券非交易类业务迁移
+	/**
+	 *
+	 * @Description //查询行权回售数据
+	 * @Param [map]
+	 * @return 行权回售数据
+	 * @version 1.0
+	 * @see
+	 **/
+	List<FinExercisePlan> selectFinExercisePlanData(Map<String, Object> map);
+	// add by etliu 20211207 end
 }
