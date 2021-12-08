@@ -117,6 +117,9 @@ public class CfetsBondDayRegDto {
     @ApiModelProperty(name="quoteId",value="业务编号")
     private String quoteId;
 
+    @ApiModelProperty(name="statisticalTimes",value="导出次数")
+    private int statisticalTimes;
+
     public String getValidStatus() {
         return validStatus;
     }
@@ -394,6 +397,14 @@ public class CfetsBondDayRegDto {
 
     public void setSettleDate(Date settleDate) {
         this.settleDate = settleDate;
+    }
+
+    public int getStatisticalTimes() {
+        return statisticalTimes;
+    }
+
+    public void setStatisticalTimes(int statisticalTimes) {
+        this.statisticalTimes = statisticalTimes;
     }
 }
 

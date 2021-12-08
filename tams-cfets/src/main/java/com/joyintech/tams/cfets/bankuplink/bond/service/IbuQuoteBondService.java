@@ -1091,6 +1091,7 @@ public class IbuQuoteBondService extends BaseService {
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("loginUserId", LoginUserUtil.getUserName());
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
+        pageParam.put("OPR_TYPE_09",DictCodeListExt3.操作类型_导出.getValue());
         setParam(pageParam);
         pageParam.put("CONFIRM_STATUS_0", com.joyintech.tams.constant.DictCodeList.确认状态_未确认.getValue());
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsIbuQuoteBondMapper.listDayReg(pageParam));
