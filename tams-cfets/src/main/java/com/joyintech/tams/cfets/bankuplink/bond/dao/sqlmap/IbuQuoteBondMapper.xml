@@ -842,6 +842,8 @@
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
             0,
+            T1.DELIVERY_TYPE settleMethod,
+            T1.CLEAR_TYPE settleType,
             T1.TOTLE_TRADE_ID quoteId
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -885,6 +887,8 @@
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
             0,
+            T1.DELIVERY_TYPE settleMethod,
+            T1.CLEAR_TYPE settleType,
             T1.TOTLE_TRADE_ID quoteId
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -926,6 +930,8 @@
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
             0,
+            T1.DELIVERY_TYPE settleMethod,
+            T1.CLEAR_TYPE settleType,
             T1.TOTLE_TRADE_ID quoteId
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1

@@ -1697,7 +1697,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     操作类型_退回(DictCode.操作类型,"05","退回"),
     操作类型_分发(DictCode.操作类型,"06","分发"),
     操作类型_接收(DictCode.操作类型,"07","接收"),
-    操作类型_放弃(DictCode.操作类型,"07","放弃"),
+    操作类型_放弃(DictCode.操作类型,"08","放弃"),
+    操作类型_导出(DictCode.操作类型,"09","导出"),
     ;
     /**
      * 对应于数据字典code
