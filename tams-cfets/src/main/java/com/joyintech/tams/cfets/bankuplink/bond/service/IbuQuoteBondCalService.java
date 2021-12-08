@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -180,7 +181,7 @@ public class IbuQuoteBondCalService extends BaseService {
         List<PtlAllocationDto>  ptlAllocations = request.getPtlAllocations();
         //降序
         ptlAllocations.sort((p1,p2) -> p1.getAvaNum().compareTo(p2.getAvaNum()));
-        BigDecimal avg = ArithmeticUtil.divide(shareAmt,ptlAllocations.size(),4);
+        BigDecimal avg = ArithmeticUtil.divide(shareAmt,new BigDecimal(ptlAllocations.size()),2,RoundingMode.DOWN);
         //剩余尾差
         BigDecimal tailDifference = shareAmt;
         for (PtlAllocationDto item : ptlAllocations) {
@@ -212,7 +213,7 @@ public class IbuQuoteBondCalService extends BaseService {
         //尾差
         BigDecimal tailDifference = shareAmt;
         for (PtlAllocationDto ptlAllocation : ptlAllocations) {
-            ptlAllocation.setShareAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt,ptlAllocation.getShareAmt()),avaNumTotal,4));
+            ptlAllocation.setShareAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt,ptlAllocation.getShareAmt()),avaNumTotal,2,RoundingMode.DOWN));
             tailDifference = ArithmeticUtil.subtract(tailDifference,ptlAllocation.getShareAmt());
         }
         handleTailDifference(ptlAllocations,tailDifference);
@@ -237,7 +238,7 @@ public class IbuQuoteBondCalService extends BaseService {
                 addDimension = ArithmeticUtil.divide(tailDifference,size,4);
             }
             for (PtlAllocationDto item : ptlAllocations) {
-                if((item.getAvaNum().compareTo(item.getShareAmt())==0||tailDifference.compareTo(BigDecimal.ZERO)<=0)) {
+                if((item.getAvaNum().compareTo(BigDecimal.ZERO)==0||tailDifference.compareTo(BigDecimal.ZERO)<=0)) {
                     if (set.add(item.getEntrustId())) {
                         size--;
                         continue;
@@ -264,16 +265,18 @@ public class IbuQuoteBondCalService extends BaseService {
         Set<String> set = new HashSet<>();
         while(tailDifference.compareTo(BigDecimal.ZERO)>0&&size>0){
             if(tailDifference.compareTo(new BigDecimal("1"))>=0){
-                addDimension = ArithmeticUtil.divide(tailDifference,size,4);
+                addDimension = ArithmeticUtil.divide(tailDifference,size,2);
             }
             for (PtlAllocationDto item : ptlAllocations) {
-                if(StringUtil.equals(feeType,BussinessDictCodeList.费用类型_交易手续费.getValue())){
-                    item.setDealFeeAmt(ArithmeticUtil.doAdd(item.getDealFeeAmt(),addDimension));
+                if(tailDifference.compareTo(BigDecimal.ZERO)>0){
+                    if(StringUtil.equals(feeType,BussinessDictCodeList.费用类型_交易手续费.getValue())){
+                        item.setDealFeeAmt(ArithmeticUtil.doAdd(item.getDealFeeAmt(),addDimension));
+                    }
+                    if(StringUtil.equals(feeType,BussinessDictCodeList.费用类型_结算手续费.getValue())){
+                        item.setSettFeeAmt(ArithmeticUtil.doAdd(item.getSettFeeAmt(),addDimension));
+                    }
+                    tailDifference = ArithmeticUtil.subtract(tailDifference,addDimension);
                 }
-                if(StringUtil.equals(feeType,BussinessDictCodeList.费用类型_结算手续费.getValue())){
-                    item.setSettFeeAmt(ArithmeticUtil.doAdd(item.getSettFeeAmt(),addDimension));
-                }
-                tailDifference = ArithmeticUtil.subtract(tailDifference,addDimension);
             }
         }
     }
@@ -289,9 +292,9 @@ public class IbuQuoteBondCalService extends BaseService {
     public void calFee(List<PtlAllocationDto> ptlAllocations,BigDecimal shareAmt,BigDecimal dealFeeAmt,BigDecimal settFeeAmt,BigDecimal intAmt){
         BigDecimal tailDifferenceIntAmt = intAmt;BigDecimal tailDifferenceDealFeeAmt = dealFeeAmt;BigDecimal tailDifferenceSettFeeamt = settFeeAmt;
         for (PtlAllocationDto item : ptlAllocations) {
-            item.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),intAmt),shareAmt,4));
-            item.setDealFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),dealFeeAmt),shareAmt,4));
-            item.setSettFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),settFeeAmt),shareAmt,4));
+            item.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),intAmt),shareAmt,2,RoundingMode.DOWN));
+            item.setDealFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),dealFeeAmt),shareAmt,2, RoundingMode.DOWN));
+            item.setSettFeeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getShareAmt(),settFeeAmt),shareAmt,2, RoundingMode.DOWN));
             tailDifferenceIntAmt = ArithmeticUtil.subtract(tailDifferenceIntAmt,item.getIntAmt());
             tailDifferenceDealFeeAmt = ArithmeticUtil.subtract(tailDifferenceDealFeeAmt,item.getDealFeeAmt());
             tailDifferenceSettFeeamt = ArithmeticUtil.subtract(tailDifferenceSettFeeamt,item.getSettFeeAmt());
