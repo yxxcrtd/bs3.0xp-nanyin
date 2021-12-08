@@ -921,15 +921,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      * @return
      */
     public com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto preparEntity(CfetsBondDealRequestQuoteDto entity){
-        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,entity);
-        List<com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto> cfetsBondDealRequestQuoteDtoList = new ArrayList<>();
-        entity.getCfetsBondDealRequestQuoteDtoList().forEach(item ->{
-            com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDtoPtl = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto();
-            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDtoPtl,item);
-            cfetsBondDealRequestQuoteDtoList.add(cfetsBondDealRequestQuoteDtoPtl);
-        });
-        cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsBondDealRequestQuoteDtoList);
+        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = JsonUtils.json2Object(JsonUtils.object2Json(entity),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto.class);
         return cfetsBondDealRequestQuoteDto;
     }
 

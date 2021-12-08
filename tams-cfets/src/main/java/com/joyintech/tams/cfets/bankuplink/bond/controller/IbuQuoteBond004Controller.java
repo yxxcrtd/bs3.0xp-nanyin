@@ -22,6 +22,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealRegisterQuoteDt
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckDetaileRequst;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckRequst;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice004Service;
+import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
@@ -77,6 +78,8 @@ public class IbuQuoteBond004Controller extends BaseController {
 
     @Autowired
     private IbuQuoteBondService ibuQuoteBondService;
+    @Autowired
+    private CfetsQuotedCommonService cfetsQuotedCommonService;
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度,
@@ -187,6 +190,9 @@ public class IbuQuoteBond004Controller extends BaseController {
         AjaxResult ajaxResult = cfetsBondDealQuotedPrice004Service.checkNotEmpty(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
             ajaxResult = cfetsBondDealQuotedPrice004Service.checkcheckAnchoring(cfetsBondDealQuoteCommonDto);
+        }
+        if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
+            ajaxResult = cfetsQuotedCommonService.positionCheck(cfetsBondDealQuoteCommonDto);
         }
         return new Message<AjaxResult>().success().setData(ajaxResult);
     }

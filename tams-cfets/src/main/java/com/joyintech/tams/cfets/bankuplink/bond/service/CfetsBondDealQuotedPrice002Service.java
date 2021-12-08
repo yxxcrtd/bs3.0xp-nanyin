@@ -982,8 +982,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         // add by etliu 20210309 银行间上下行多组合 end
         BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
         BeanUtil.copyPropertiesIgnoreNull(bondQuoteInfoDto,entity);
-        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,entity);
+        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = preparEntity(entity);
         // 历史报价撤销
 		if (StringUtil.equals(entity.getOptType(), "revoke")) {
 			entity.setQuoteType(BussinessDictCodeList.报价方式_对话报价.getValue());
@@ -1568,15 +1567,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      * @return
      */
     public com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto preparEntity(CfetsBondDealDialogueQuoteDto entity){
-        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,entity);
-        List<com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto> cfetsBondDealDialogueQuoteDtoList = new ArrayList<>();
-        entity.getCfetsBondDealDialogueQuoteDtoList().forEach(item ->{
-            com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDtoPtl = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto();
-            BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDtoPtl,item);
-            cfetsBondDealDialogueQuoteDtoList.add(cfetsBondDealDialogueQuoteDtoPtl);
-        });
-        cfetsBondDealDialogueQuoteDto.setCfetsBondDealDialogueQuoteDtoList(cfetsBondDealDialogueQuoteDtoList);
+        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = JsonUtils.json2Object(JsonUtils.object2Json(entity),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto.class);
         return cfetsBondDealDialogueQuoteDto;
     }
 

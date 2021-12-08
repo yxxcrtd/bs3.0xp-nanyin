@@ -16,18 +16,24 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
+import com.joyintech.tams.cfets.position.service.PositionInfoService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.bankuplink.bond.dto.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 银行间上行共通Service
@@ -39,6 +45,9 @@ import java.util.*;
  */
 @Service("vueCfetsQuotedCommonService")
 public class CfetsQuotedCommonService extends BaseService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CfetsQuotedCommonService.class);
+
 
     /**
      * {@linkplain}
@@ -72,6 +81,9 @@ public class CfetsQuotedCommonService extends BaseService {
 
     @Autowired
     private com.joyintech.service.bankuplink.common.service.CfetsQuotedCommonService cfetsQuotedCommonServiceMicro;
+
+    @Autowired
+    private PositionInfoService positionInfoService;
     /**
      * 委托放弃处理
      * 
@@ -738,6 +750,42 @@ public class CfetsQuotedCommonService extends BaseService {
      */
     public  AjaxResult  positionCheck(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
         AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        String ps = cfetsBondDealQuoteCommonDto.getPs();
+        try{
+            if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())){
+                //按组合汇总全价总额
+                Map<String, BigDecimal> map = cfetsBondDealQuoteCommonDto.getPtlAllocatios().stream().collect(Collectors.groupingBy(PtlAllocationDto::getPortfolioId,
+                                                Collectors.mapping(PtlAllocationDto::getFpriceAmt,
+                                                        Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+                for(String key : map.keySet()){
+                    BigDecimal fpriceAmt = map.get(key);
+                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), cfetsBondDealQuoteCommonDto.getSecManageAcctId(), cfetsBondDealQuoteCommonDto.getCcy(), "03");
+                    if(null!=baseMap&&fpriceAmt.compareTo((BigDecimal) baseMap.get("cashT"))>0){
+                        errorList.add(new ValidMessage(StringUtil.join("组合可用现金不足,组合代码:[",key,"]")));
+                        ajaxResult.setErrorList(errorList);
+                        break;
+                    }
+                }
+            }
+            if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
+                //按组合汇总券面总额
+                Map<String, BigDecimal> map = cfetsBondDealQuoteCommonDto.getPtlAllocatios().stream().collect(Collectors.groupingBy(PtlAllocationDto::getPortfolioId,
+                        Collectors.mapping(PtlAllocationDto::getShareAmt,
+                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+                for(String key : map.keySet()){
+                    BigDecimal shareAmt = map.get(key);
+                    BaseMap baseMap = positionInfoService.queryTrdPosition(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), cfetsBondDealQuoteCommonDto.getFinprodId());
+                    if(null!=baseMap&&shareAmt.compareTo((BigDecimal) baseMap.get("ZCTRKYCC"))>0){
+                        errorList.add(new ValidMessage(StringUtil.join("组合资产可用持仓不足,组合代码:[",key,"]")));
+                        ajaxResult.setErrorList(errorList);
+                        break;
+                    }
+                }
+            }
+        }catch (Exception e){
+            logger.error("头寸验证异常:"+e.getMessage());
+        }
         return ajaxResult;
     }
 
