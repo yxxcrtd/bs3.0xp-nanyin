@@ -578,7 +578,8 @@ public class RepurchaseDealTemplateRecService {
         if(valFinProductDeal.getTradeStatus().equals(DictCodeListExt1.交易状态_撤销.getValue())){
         	valFinProductDeal.setpTradeId(interfCommonService.getFTradeId(valFinProductDeal));
         }
-        
+        //是否生成结算指令 add by yinya on 20211201
+        valFinProductDeal.setIsOrders(dto.getIsClean());
         return valFinProductDeal;
     }
 
