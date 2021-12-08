@@ -1605,18 +1605,21 @@ public class EquityInfoValid {
                                          Map<String,List<ChbTransformRuleObjDto>> objFiledsMap,
                                          EquityInfo001Dto equityInfo001Dto) {
         List<ChbTransformRuleObjDto> objFileds=null;
-        if(objFiledsMap!=null){
-            objFileds=objFiledsMap.get("holderClassify");
-        }
+
+        //添加系统参数三期是否校验投资者分类字段.01 验证字段,02不验证字段
+        String HolderClassify = CacheUtil.getSysParam("HAS_HOLDER_CLASSIFY");
+        if(StringUtil.isNotEmpty(HolderClassify)&&DictCodeList.是否_中债_是.getValue().equals(HolderClassify)) {
+            if (objFiledsMap != null) {
+                objFileds = objFiledsMap.get("holderClassify");
+            }
             if (EquityInfoCheckUtil.isEmpty(holderClassify)) {
                 message.add(this.getMessage("CHB_EQUITYINFO_E_005", "新增或重要信息变更", "投资者分类"));
-            }
-            else if (EquityInfoCheckUtil.isDictCodeExist(DictCode.投资者分类, holderClassify)) {
+            } else if (EquityInfoCheckUtil.isDictCodeExist(DictCode.投资者分类, holderClassify)) {
                 message.add(this.getMessage("CHB_EQUITYINFO_E_004", "投资者分类"));
-            }
-            else if (EquityInfoCheckUtil.whiteListCheck( holderClassify,objFileds,spzMap,equityInfo001Dto)) {
+            } else if (EquityInfoCheckUtil.whiteListCheck(holderClassify, objFileds, spzMap, equityInfo001Dto)) {
                 message.add(this.getMessage("CHB_EQUITYINFO_E_035", "投资者分类"));
             }
+        }
         return message;
     }
 
@@ -3120,13 +3123,10 @@ public class EquityInfoValid {
                 // 投资者类别
                 message = checkHolderType(message, SysDataUtil.getZZDictCodeAndName(DictCode.投资者类别,
                         equityInfo001Dto.getHolderType()), type,spzMap,objFiledsMap,equityInfo001Dto);
-                //添加系统参数三期是否校验投资者分类字段.01 验证字段,02不验证字段
-                String HolderClassify = CacheUtil.getSysParam("HAS_HOLDER_CLASSIFY");
-                if(StringUtil.isNotEmpty(HolderClassify)&&DictCodeList.是否_中债_是.getValue().equals(HolderClassify)){
+
                     // 投资者分类
-                    message = checkHolderClassify(message, SysDataUtil.getZZDictCodeAndName(DictCode.投资者分类,
-                            equityInfo001Dto.getHolderClassify()), type,spzMap,objFiledsMap,equityInfo001Dto);
-                }
+                message = checkHolderClassify(message, SysDataUtil.getZZDictCodeAndName(DictCode.投资者分类,
+                        equityInfo001Dto.getHolderClassify()), type,spzMap,objFiledsMap,equityInfo001Dto);
 
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message,
