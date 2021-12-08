@@ -29,7 +29,7 @@ public class TamsSystemApplication extends WebApplication {
 
 	@Bean
 	public Docket dataCfetsDocket() {
-		return SwaggerConfig.createDocket("指令管理-银行间指令", "com.joyintech.tams.cfets.etrib.controller");
+		return SwaggerConfig.createDocket("指令管理-银行间指令", "com.joyintech.tams.cfets.etrib");
 	}
 	
 	@Bean
