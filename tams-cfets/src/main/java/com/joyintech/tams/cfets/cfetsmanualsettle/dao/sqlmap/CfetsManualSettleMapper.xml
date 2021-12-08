@@ -303,7 +303,7 @@
             T1.SETTLE_NUM settleNum,
             T1.SETTLE_AMT settleAmt,
             T1.OPER_TYPE operType,
-            T1.UPDATE_USER createUser
+            decode(T1.UPDATE_USER,'SYSTEM','系统自动处理',T1.UPDATE_USER) createUser
         FROM TRD_BANK_MANUAL_SETTLE_INFO T0
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_FLOW T1 ON T0.SETTLE_SEQ_NO = T1.SETTLE_SEQ_NO
         LEFT JOIN FIN_PRODUCT T2 ON T0.FINPROD_ID = T2.FINPROD_ID
