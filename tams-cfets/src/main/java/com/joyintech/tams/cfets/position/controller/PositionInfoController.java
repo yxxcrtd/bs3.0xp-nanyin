@@ -2,7 +2,7 @@ package com.joyintech.tams.cfets.position.controller;
 
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondPosiInfoRequestDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosiInfoRequestDto;
 import com.joyintech.tams.cfets.position.dto.PositionCashRequestDto;
 import com.joyintech.tams.cfets.position.dto.PositionInfoRequestDto;
 import com.joyintech.tams.cfets.position.service.PositionInfoService;
@@ -25,12 +25,12 @@ public class PositionInfoController {
     @Autowired
     private PositionInfoService positionInfoService;
     
-    @ApiOperation(value = "指令头寸信息查询", notes = "指令头寸信息查询")
-    @PostMapping("/queryEtrPositionInfo")
+    @ApiOperation(value = "交易头寸信息查询", notes = "交易头寸信息查询")
+    @PostMapping("/queryTrdPositionHead")
     @ResponseBody
-    public Message<List<BaseMap>> queryEtrPositionInfo(@RequestBody CfetsEtrIbBondPosiInfoRequestDto requestDto) {
-//        List<BaseMap> m = cfetsEtrIbBondinfoService.queryPositionInfo(requestDto);
-        return new Message<List<BaseMap>>().success().setData(null);
+    public Message<List<BaseMap>> queryTrdPositionHead(@RequestBody PositionInfoRequestDto requestDto) {
+        List<BaseMap> list = positionInfoService.queryTrdPositionHead(requestDto);
+        return new Message<List<BaseMap>>().success().setData(list);
     }
 
     @ApiOperation(value = "指令现金查询", notes = "指令现金查询")
@@ -56,8 +56,7 @@ public class PositionInfoController {
                 positionInfoService.queryEtrPosition(
                         requestDto.getPortfolioIdList(),
                         requestDto.getCdate(),
-                        requestDto.getFinprodId(),
-                        requestDto.getAcctId()
+                        requestDto.getFinprodId()
                 )
         );
     }
@@ -85,8 +84,7 @@ public class PositionInfoController {
                 positionInfoService.queryTrdPosition(
                         requestDto.getPortfolioIdList(),
                         requestDto.getCdate(),
-                        requestDto.getFinprodId(),
-                        requestDto.getAcctId()
+                        requestDto.getFinprodId()
                 )
         );
     }

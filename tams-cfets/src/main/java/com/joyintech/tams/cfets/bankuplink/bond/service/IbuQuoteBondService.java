@@ -18,7 +18,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
-import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
+import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;

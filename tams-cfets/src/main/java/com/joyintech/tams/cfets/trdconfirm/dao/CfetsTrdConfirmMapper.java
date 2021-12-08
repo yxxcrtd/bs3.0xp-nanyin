@@ -2,8 +2,8 @@ package com.joyintech.tams.cfets.trdconfirm.dao;
 
 
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrIbBondinfoDto;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtrInvestBondInfoReqDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondinfoDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrInvestBondInfoReqDto;
 import com.joyintech.tams.cfets.trdconfirm.dto.*;
 import com.joyintech.tams.common.base.entity.RegFinProductDeal;
 import org.apache.ibatis.annotations.Param;

@@ -17,8 +17,8 @@ import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondCalService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtribdoRiskcalResponse;
-import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
+import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
