@@ -29,7 +29,7 @@ public class TamsSystemApplication extends WebApplication {
 
 	@Bean
 	public Docket dataCfetsDocket() {
-		return SwaggerConfig.createDocket("指令管理-银行间指令", "com.joyintech.tams.cfets.etrib.controller");
+		return SwaggerConfig.createDocket("指令管理-银行间指令", "com.joyintech.tams.cfets.etrib");
 	}
 	
 	@Bean
@@ -60,6 +60,10 @@ public class TamsSystemApplication extends WebApplication {
 	@Bean
 	public Docket dataCfetsTrdConfirm() {
 		return SwaggerConfig.createDocket("银行间交易成交确认", "com.joyintech.tams.cfets.trdconfirm.controller");
+	}
+	@Bean
+	public Docket dataCfetsPosition() {
+		return SwaggerConfig.createDocket("头寸相关查询", "com.joyintech.tams.cfets.position.controller");
 	}
 	public static void main(String[] args) throws Exception {
     	initLog();

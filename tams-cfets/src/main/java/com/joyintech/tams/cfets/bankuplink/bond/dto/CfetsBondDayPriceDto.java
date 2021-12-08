@@ -121,6 +121,9 @@ public class CfetsBondDayPriceDto {
     @ApiModelProperty(name="remark",value="备注")
     private String remark;
 
+    @ApiModelProperty(name="answerFlag",value="是否回复标志 01表示回复")
+    private String answerFlag;
+
     public String getValidStatus() {
         return validStatus;
     }
@@ -412,6 +415,14 @@ public class CfetsBondDayPriceDto {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getAnswerFlag() {
+        return answerFlag;
+    }
+
+    public void setAnswerFlag(String answerFlag) {
+        this.answerFlag = answerFlag;
     }
 }
 

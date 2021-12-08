@@ -18,7 +18,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
-import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
+import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
@@ -1091,6 +1091,7 @@ public class IbuQuoteBondService extends BaseService {
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("loginUserId", LoginUserUtil.getUserName());
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
+        pageParam.put("OPR_TYPE_09",DictCodeListExt3.操作类型_导出.getValue());
         setParam(pageParam);
         pageParam.put("CONFIRM_STATUS_0", com.joyintech.tams.constant.DictCodeList.确认状态_未确认.getValue());
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsIbuQuoteBondMapper.listDayReg(pageParam));
@@ -1132,12 +1133,15 @@ public class IbuQuoteBondService extends BaseService {
                 errorList.add(
                         new ValidMessage(this.getMessage("COMMON_E_0012",item.getQuoteId())));
             }
+            //是否已确认成交
+            if(cfetsIbuQuoteBondMapper.countMatchInfo(item.getQuoteId(),com.joyintech.tams.constant.DictCodeList.确认状态_已确认.getValue())>0){
+                errorList.add(new ValidMessage("当日登记所选登记数据已成交确认不支持撤销!业务编号:"+item.getQuoteId()));
+            }
             //回售登记数据，在理论行权日前一交易日（包含前一交易日）之前均支持回售登记撤销操作，支持隔夜撤销。理论行权日之后（包含理论行权日）回售登记不支持手动撤销
             if(StringUtil.equals(item.getPs(), com.joyintech.tams.constant.DictCodeList.交易方向_行权_回售.getValue())){
                 RegFinProductDealTotal regFinProductDealTotal = regFinProductDealTotalMapper.selectByPrimaryKey(item.getQuoteId());
                 if(regFinProductDealTotal.getTradeDate().compareTo(regFinProductDealTotal.getSettleDate())>=0){
-                    errorList.add(
-                            new ValidMessage("理论行权日之后(包含理论行权日)回售登记不支持手动撤销!业务编号:"+item.getQuoteId()));
+                    errorList.add(new ValidMessage("理论行权日之后(包含理论行权日)回售登记不支持手动撤销!业务编号:"+item.getQuoteId()));
                 }
             }
             if(CollectionUtils.isNotEmpty(errorList)){

@@ -23,6 +23,9 @@ public class BaseMap extends HashMap<String, Object> {
 	}
 
 	public static BaseMap newMap(Map map){
+		if (map == null) {
+			return new BaseMap();
+		}
 		BaseMap bm = new BaseMap();
 		bm.putAll(map);
 		return bm;

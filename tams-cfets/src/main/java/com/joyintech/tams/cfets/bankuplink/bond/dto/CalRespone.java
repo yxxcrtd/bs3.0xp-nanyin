@@ -49,6 +49,12 @@ public class CalRespone {
     @ApiModelProperty(name="settFeeAmt",value="结算服务费(元)")
     private BigDecimal settFeeAmt;
 
+    @ApiModelProperty(name="parValue",value="每百元本金额(元)")
+    private BigDecimal parValue;
+
+    @ApiModelProperty(name="parValueAmt",value="本金额(元)")
+    private BigDecimal parValueAmt;
+
     @ApiModelProperty(name="deviationDegree",value="偏离度")
     private String deviationDegree;
 
@@ -154,6 +160,22 @@ public class CalRespone {
 
     public void setDeviationDegree(String deviationDegree) {
         this.deviationDegree = deviationDegree;
+    }
+
+    public BigDecimal getParValue() {
+        return parValue;
+    }
+
+    public void setParValue(BigDecimal parValue) {
+        this.parValue = parValue;
+    }
+
+    public BigDecimal getParValueAmt() {
+        return parValueAmt;
+    }
+
+    public void setParValueAmt(BigDecimal parValueAmt) {
+        this.parValueAmt = parValueAmt;
     }
 }
 

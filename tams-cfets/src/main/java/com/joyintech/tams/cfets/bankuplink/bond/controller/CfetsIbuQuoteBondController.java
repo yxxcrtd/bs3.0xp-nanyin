@@ -17,8 +17,8 @@ import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondCalService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
-import com.joyintech.tams.cfets.etrib.dto.CfetsEtribdoRiskcalResponse;
-import com.joyintech.tams.cfets.etrib.service.CfetsEtrIbBondinfoService;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
+import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -407,7 +407,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		return new Message<AjaxResult>().success().setData(ar);
 	}
 
-	@ApiOperation(value = "批量撤回", notes = "批量撤回")
+	@ApiOperation(value = "报价批量撤回", notes = "报价批量撤回")
 	@ResponseBody
 	@RequestMapping("doReCallList")
 	public Message<AjaxResult> doReCallList(@RequestBody List<CfetsBondCheckRequst> cfetsBondCheckRequsts) {

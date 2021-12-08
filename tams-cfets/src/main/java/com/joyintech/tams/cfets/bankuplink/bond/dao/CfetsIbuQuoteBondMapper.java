@@ -77,5 +77,5 @@ public interface CfetsIbuQuoteBondMapper {
 
     List<PtlAllocationDto> listWflPtlAllocationDto(@Param("quoteId") String quoteId);
 
-
+    int countMatchInfo(@Param("quoteId") String quoteId,@Param("CONFIRM_STATUS_1") String CONFIRM_STATUS_1);
 }

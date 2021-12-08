@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.EtrEntrustOperHisMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.EtrEntrustOperHis" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <result column="OPER_TYPE" property="operType" jdbcType="VARCHAR" />
+        <result column="OPER_DATE" property="operDate" jdbcType="DATE" />
+        <result column="OPER_TIME" property="operTime" jdbcType="TIMESTAMP" />
+        <result column="BUSI_DES" property="busiDes" jdbcType="VARCHAR" />
+        <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="STATISTICAL_TIMES" property="statisticalTimes" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, ENTRUST_ID ENTRUST_ID, OPER_TYPE OPER_TYPE, OPER_DATE OPER_DATE, OPER_TIME OPER_TIME, 
+        BUSI_DES BUSI_DES, USER_ID USER_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, STATISTICAL_TIMES STATISTICAL_TIMES
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.EtrEntrustOperHisMapper.Base_Column_List" />
+        from ETR_ENTRUST_OPER_HIS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.EtrEntrustOperHisMapper.Base_Column_List" />
+        from ETR_ENTRUST_OPER_HIS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.EtrEntrustOperHisMapper.Base_Column_List" />
+        from ETR_ENTRUST_OPER_HIS
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from ETR_ENTRUST_OPER_HIS
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustOperHis" >
+        insert into ETR_ENTRUST_OPER_HIS (SEQ_NO, ENTRUST_ID, OPER_TYPE, 
+            OPER_DATE, OPER_TIME, BUSI_DES, 
+            USER_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            STATISTICAL_TIMES)
+        values (#{seqNo,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, #{operType,jdbcType=VARCHAR}, 
+            #{operDate,jdbcType=DATE}, #{operTime,jdbcType=TIMESTAMP}, #{busiDes,jdbcType=VARCHAR}, 
+            #{userId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{statisticalTimes,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustOperHis" >
+        insert into ETR_ENTRUST_OPER_HIS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID,
+            </if>
+            <if test="operType != null" >
+                OPER_TYPE,
+            </if>
+            <if test="operDate != null" >
+                OPER_DATE,
+            </if>
+            <if test="operTime != null" >
+                OPER_TIME,
+            </if>
+            <if test="busiDes != null" >
+                BUSI_DES,
+            </if>
+            <if test="userId != null" >
+                USER_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="statisticalTimes != null" >
+                STATISTICAL_TIMES,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="operType != null" >
+                #{operType,jdbcType=VARCHAR},
+            </if>
+            <if test="operDate != null" >
+                #{operDate,jdbcType=DATE},
+            </if>
+            <if test="operTime != null" >
+                #{operTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="busiDes != null" >
+                #{busiDes,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null" >
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="statisticalTimes != null" >
+                #{statisticalTimes,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustOperHis" >
+        insert into ETR_ENTRUST_OPER_HIS(SEQ_NO, ENTRUST_ID, OPER_TYPE, OPER_DATE, OPER_TIME, 
+        BUSI_DES, USER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        STATISTICAL_TIMES)
+        select SEQ_NO, ENTRUST_ID, OPER_TYPE, OPER_DATE, OPER_TIME, 
+            BUSI_DES, USER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            STATISTICAL_TIMES
+             from ETR_ENTRUST_OPER
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustOperHis" >
+        update ETR_ENTRUST_OPER_HIS
+        <set >
+            <if test="entrustId != null" >
+                ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="operType != null" >
+                OPER_TYPE = #{operType,jdbcType=VARCHAR},
+            </if>
+            <if test="operDate != null" >
+                OPER_DATE = #{operDate,jdbcType=DATE},
+            </if>
+            <if test="operTime != null" >
+                OPER_TIME = #{operTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="busiDes != null" >
+                BUSI_DES = #{busiDes,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null" >
+                USER_ID = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="statisticalTimes != null" >
+                STATISTICAL_TIMES = #{statisticalTimes,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustOperHis" >
+        update ETR_ENTRUST_OPER_HIS
+        set ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            OPER_TYPE = #{operType,jdbcType=VARCHAR},
+            OPER_DATE = #{operDate,jdbcType=DATE},
+            OPER_TIME = #{operTime,jdbcType=TIMESTAMP},
+            BUSI_DES = #{busiDes,jdbcType=VARCHAR},
+            USER_ID = #{userId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            STATISTICAL_TIMES = #{statisticalTimes,jdbcType=DECIMAL}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>
