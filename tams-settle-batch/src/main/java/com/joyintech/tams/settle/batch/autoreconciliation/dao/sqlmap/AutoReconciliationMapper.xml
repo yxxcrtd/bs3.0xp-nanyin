@@ -553,6 +553,10 @@
 					(stds.CHECK_RESULT IS NULL OR stds.CHECK_RESULT = #{CHECK_RESULT_2})
 					AND ssrp.PARA_VALUE = #{PARA_VALUE_02}
 				  	AND std.DEAL_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
+				  	AND (
+						std.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
+						OR (std.FINPROD_TYPE2 = #{prodType2_F01} AND std.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+					)
 					AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = std.TRADE_ID)
 				GROUP BY
 					std.DEAL_DATE,
@@ -631,6 +635,10 @@
 					(stds.CHECK_RESULT IS NULL OR stds.CHECK_RESULT = #{CHECK_RESULT_2})
 					AND ssrp.PARA_VALUE = #{PARA_VALUE_01}
 				  	AND std.DEAL_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
+					AND (
+						std.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
+						OR (std.FINPROD_TYPE2 = #{prodType2_F01} AND std.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+					)
 					AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = std.TRADE_ID)
 				GROUP BY
 					std.DEAL_DATE,
@@ -710,6 +718,10 @@
 				(stds.CHECK_RESULT IS NULL OR stds.CHECK_RESULT = #{CHECK_RESULT_2})
 				AND ssrp.PARA_VALUE = #{PARA_VALUE_03}
 			  	AND std.DEAL_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
+				AND (
+					std.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
+					OR (std.FINPROD_TYPE2 = #{prodType2_F01} AND std.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+				)
 				AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = std.TRADE_ID)
 		) detail
 		LEFT JOIN
