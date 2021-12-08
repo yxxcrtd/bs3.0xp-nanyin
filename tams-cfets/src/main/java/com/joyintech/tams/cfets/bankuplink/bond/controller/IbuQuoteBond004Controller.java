@@ -185,9 +185,9 @@ public class IbuQuoteBond004Controller extends BaseController {
     public Message<AjaxResult> check(@RequestBody CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
         //check必填项
         AjaxResult ajaxResult = cfetsBondDealQuotedPrice004Service.checkNotEmpty(cfetsBondDealQuoteCommonDto);
-        if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
+        //if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
             ajaxResult = cfetsBondDealQuotedPrice004Service.checkcheckAnchoring(cfetsBondDealQuoteCommonDto);
-        }
+       // }
         return new Message<AjaxResult>().success().setData(ajaxResult);
     }
 

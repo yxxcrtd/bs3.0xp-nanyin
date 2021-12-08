@@ -295,9 +295,17 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             ptlAllocationDto.setPrice(ArithmeticUtil.round(ptlAllocationDto.getPrice(), 4, RoundingMode.HALF_UP));
             ptlAllocationDto.setMatureYield(ArithmeticUtil.round(ptlAllocationDto.getMatureYield(), 4, RoundingMode.HALF_UP));
             ptlAllocationDto.setExerYield(ArithmeticUtil.round(ptlAllocationDto.getExerYield(), 4, RoundingMode.HALF_UP));
+            String priceModel = ptlAllocationDto.getPriceModel();
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
-                if(StringUtil.equals(anchoringValue,"01")&&entity.getPrice().compareTo(ptlAllocationDto.getPrice())>0){
-                    errorList.add(new ValidMessage("登记交易净价不能大于指令净价！"));
+                if(StringUtil.equals(anchoringValue,"01")){
+                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_指定价格.getValue())
+                    &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())!=0){
+                        errorList.add(new ValidMessage("存在指定价格指令，需按指定价格进行交易!指令代码:"+ptlAllocationDto.getEntrustId()));
+                    }
+                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_限价指令.getValue())
+                            &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())>0){
+                        errorList.add(new ValidMessage("登记交易净价不能大于指令净价!指令代码:"+ptlAllocationDto.getEntrustId()));
+                    }
                 }
                 if(StringUtil.equals(anchoringValue,"02")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())<0){
                     errorList.add(new ValidMessage("登记交易到期收益率不能小于指令到期收益率！"));
@@ -306,9 +314,16 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     errorList.add(new ValidMessage("登记交易行权收益率不能小于指令行权收益率！"));
                 }
             }
-            if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
-                if(StringUtil.equals(anchoringValue,"01")&&entity.getPrice().compareTo(ptlAllocationDto.getPrice())<0){
-                    errorList.add(new ValidMessage("登记交易净价不能小于指令净价！"));
+            if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
+                if(StringUtil.equals(anchoringValue,"01")){
+                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_指定价格.getValue())
+                            &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())!=0){
+                        errorList.add(new ValidMessage("存在指定价格指令，需按指定价格进行交易!指令代码:"+ptlAllocationDto.getEntrustId()));
+                    }
+                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_限价指令.getValue())
+                            &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())<0){
+                        errorList.add(new ValidMessage("登记交易净价不能小于指令净价!指令代码:"+ptlAllocationDto.getEntrustId()));
+                    }
                 }
                 if(StringUtil.equals(anchoringValue,"02")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())>0){
                     errorList.add(new ValidMessage("登记交易到期收益率不能大于指令到期收益率！"));
