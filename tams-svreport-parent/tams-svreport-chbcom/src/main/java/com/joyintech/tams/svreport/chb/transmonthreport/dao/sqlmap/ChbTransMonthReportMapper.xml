@@ -52,10 +52,10 @@
         from CHB_TRANS_MONTH
         <where>
             <if test="submitDeadLineStart != null and submitDeadLineStart != ''">
-                DATE_FORMAT(CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+                to_char(CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
             </if>
             <if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
-                and DATE_FORMAT(CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+                and to_char(CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
             </if>
             <if test="sendStatusList != null and sendStatusList.size()&gt;0">
                 <foreach close=")" collection="sendStatusList" item="item" open="and SEND_STATUS in(" separator=",">
@@ -73,16 +73,16 @@
                 </foreach>
             </if>
             <if test="statusDateStart != null and statusDateStart != ''">
-                and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart,jdbcType=VARCHAR}
+                and to_char(STATUS_DATE,'yyyy-MM-dd') &gt;= #{statusDateStart,jdbcType=VARCHAR}
             </if>
             <if test="statusDateEnd != null and statusDateEnd != ''">
-                and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd,jdbcType=VARCHAR}
+                and to_char(STATUS_DATE,'yyyy-MM-dd') &lt;= #{statusDateEnd,jdbcType=VARCHAR}
             </if>
             <if test="submitDateStart != null and submitDateStart != ''">
-                and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitDateStart,jdbcType=VARCHAR}
+                and to_char(STATUS_DATE,'yyyy-MM-dd') &gt;= #{submitDateStart,jdbcType=VARCHAR}
             </if>
             <if test="submitDateEnd != null and submitDateEnd != ''">
-                and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
+                and to_char(STATUS_DATE,'yyyy-MM-dd') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
             </if>
             <if test="termidDateStart != null and submitDateStart != ''">
                 and TERMID &gt;= #{termidDateStart,jdbcType=VARCHAR}
@@ -102,7 +102,7 @@
                 and TERMID = #{termid,jdbcType=VARCHAR}
             </if>
             <if test="enddate != null and enddate != ''">
-                and DATE_FORMAT(ENDDATE,'%Y-%m') = #{enddate,jdbcType=VARCHAR}
+                and to_char(ENDDATE,'yyyy-MM') (ENDDATE,'%Y-%m') = #{enddate,jdbcType=VARCHAR}
             </if>
         </where>
         ORDER BY STATUS_DATE
