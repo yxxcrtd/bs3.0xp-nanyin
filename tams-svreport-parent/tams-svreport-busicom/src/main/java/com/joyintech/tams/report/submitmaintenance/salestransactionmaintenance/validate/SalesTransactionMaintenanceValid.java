@@ -54,6 +54,13 @@ public class SalesTransactionMaintenanceValid implements BeanValidator {
                     errorList.add(new ValidMessage("", "交易时间填写错误（例23:59:59填写235959）"));
                 }
             }
+            if("0".equals(dto.getPageModel()) || ("1".equals(dto.getPageModel()) && "01".equals(dto.getMaintainStatus())))
+            if(dto.getInstitutionCode() != null && dto.getInstitutionCode() != "" && dto.getPrdRegistCode() != null && dto.getPrdRegistCode() != ""
+               && dto.getAccountNo() != null && dto.getAccountNo() != "" && dto.getTradeNo() != null && dto.getTradeNo() != ""){
+                if(salestransactionmaintenance002Service.selectTradeNo(dto.getInstitutionCode(),dto.getPrdRegistCode(),dto.getAccountNo(),dto.getTradeNo()) != 0){
+                    errorList.add(new ValidMessage("", "提供销售结算资金服务机构代码、产品登记编码与销售结算资金账号相等时，销售结算资金交易流水号不能重复。"));
+                }
+            }
         return errorList;
     }
 

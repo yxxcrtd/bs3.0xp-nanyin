@@ -79,4 +79,9 @@ public interface SalesTransactionMaintenanceMapper {
      */
     List<SelectOptionDto> getTradeNo(Map<String, Object> pageParam);
 
+    /**
+     * 提供销售结算资金服务机构代码、产品登记编码与销售结算资金账号相等时，销售结算资金交易流水号不能重复
+     */
+    int selectTradeNo(@Param("institutionCode")String institutionCode,@Param("prdRegistCode")String prdRegistCode,@Param("accountNo")String accountNo,@Param("tradeNo")String tradeNo);
+
 }

@@ -150,4 +150,11 @@ public class SalesTransactionMaintenance002Service extends BaseService{
     public List<SuggestDto> getPrdRegistCode(Map<String, Object> map) {
         return salestransactionmaintenanceMapper.getPrdRegistCode(map);
     }
+
+    /**
+     * 提供销售结算资金服务机构代码、产品登记编码与销售结算资金账号相等时，销售结算资金交易流水号不能重复
+     */
+    public int selectTradeNo(String institutionCode,String prdRegistCode,String accountNo,String tradeNo) {
+        return salestransactionmaintenanceMapper.selectTradeNo(institutionCode,prdRegistCode,accountNo,tradeNo);
+    }
 }

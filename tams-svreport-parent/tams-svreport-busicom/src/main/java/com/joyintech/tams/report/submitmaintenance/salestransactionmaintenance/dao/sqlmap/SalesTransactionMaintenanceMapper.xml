@@ -332,4 +332,13 @@
 		UPDATE_TIME = SYSDATE
 		where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
 	</update>
+
+	<select id="selectTradeNo" resultType="java.lang.Integer">
+		SELECT count(*) from CHB_SALER_STL_DEAL_INFO
+		where
+		INSTITUTION_CODE=#{institutionCode,jdbcType=VARCHAR}
+		and PRD_REGIST_CODE=#{prdRegistCode,jdbcType=VARCHAR}
+		and ACCOUNT_NO=#{accountNo,jdbcType=VARCHAR}
+		and TRADE_NO=#{tradeNo,jdbcType=VARCHAR}
+	</select>
 </mapper>
