@@ -204,12 +204,18 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                         totalmPrinAmt= ArithmeticUtil.doAdd(totalmPrinAmt, item.getmPrinAmt());
                         totalmIntAmt= ArithmeticUtil.doAdd(totalmIntAmt, item.getmIntAmt());
                         totalmTradeAmt= ArithmeticUtil.doAdd(totalmTradeAmt, item.getmTradeAmt());
+                        // ZGZGST-4156:计算佣金汇总 fuyongsheng 20211208 add start
+                        totalCommissionAmt = ArithmeticUtil.doAdd(totalCommissionAmt, item.getCommissionAmt());
+                        // ZGZGST-4156:计算佣金汇总 fuyongsheng 20211208 add end
                         totalStampFeeRaw=ArithmeticUtil.doAdd(totalStampFeeRaw, item.getStampFeeRaw());
                         totalJsfAmtRaw=ArithmeticUtil.doAdd(totalJsfAmtRaw, item.getJsfAmtRaw());
                         totalZgfAmtRaw=ArithmeticUtil.doAdd(totalZgfAmtRaw, item.getZgfAmtRaw());
                         totalSxfAmtRaw=ArithmeticUtil.doAdd(totalSxfAmtRaw, item.getSxfAmtRaw());
                         totalSettleFeeRaw=ArithmeticUtil.doAdd(totalSettleFeeRaw, item.getSettleFeeRaw());
-                        totalCommissionAmtRaw=ArithmeticUtil.doAdd(totalCommissionAmtRaw, item.getCommissionAmt());
+                        // ZGZGST-4156:计算佣金汇总 fuyongsheng 20211208 modify start
+                        // totalCommissionAmtRaw=ArithmeticUtil.doAdd(totalCommissionAmtRaw, item.getCommissionAmt());
+                        totalCommissionAmtRaw=ArithmeticUtil.doAdd(totalCommissionAmtRaw, item.getCommissionAmtRaw());
+                        // ZGZGST-4156:计算佣金汇总 fuyongsheng 20211208 modify end
                         totaltradeAmtRaw=ArithmeticUtil.doAdd(totaltradeAmtRaw, item.getTradeAmtRaw());
                     }
                     if(StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
