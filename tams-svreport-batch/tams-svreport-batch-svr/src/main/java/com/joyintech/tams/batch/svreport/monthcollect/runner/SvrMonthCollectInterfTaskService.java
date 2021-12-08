@@ -3,7 +3,6 @@ package com.joyintech.tams.batch.svreport.monthcollect.runner;
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.tams.batch.svreport.daycollect.service.DayCollectImpMainService;
 import com.joyintech.tams.batch.svreport.monthcollect.service.MonthCollectImpMainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

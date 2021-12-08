@@ -16,13 +16,6 @@ public interface SvrMonthCollectInterfMapper {
 	 * @return
 	 */
 	List<ChbMonthCollect> selectAmountTotal(@Param("batchDateStart")String batchDateStart, @Param("batchDateEnd")String batchDateEnd);
-
-	/**
-	 * 根据持有数据，生成持有，投资者数量信息
-	 * @param batchDateEnd
-	 * @return
-	 */
-	List<ChbMonthCollect> selectHolderNum(@Param("batchDateEnd")String batchDateEnd);
     //	查询check表
 	List<ChbMonthCollect> selectHolderNumCheck(@Param("batchDateEnd")String batchDateEnd);
     //三合一判断后 根据持有数据，生成持有，投资者数量信息

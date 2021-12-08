@@ -1,14 +1,12 @@
 package com.joyintech.tams.svreport.chb.monthcollect.service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.constant.DictCode;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
-import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.svreport.chb.monthcollect.dao.SvrMonthCollectInterfMapper;
 import com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -36,12 +34,6 @@ public class SvrMonthCollectInterf extends BaseService{
 	
 	@Autowired
 	private SvrMonthCollectInterfMapper svrMonthCollectInterfMapper;
-
-    /**
-     * 入库前校验用Service
-     */
-    @Autowired
-    private ChbCommonCheckService chbCommonCheckService;
 
     public void generateData(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
 		if(svrMonthCollectInterfMapper.checkAllMonth(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd)) == 0){
