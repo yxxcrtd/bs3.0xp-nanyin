@@ -102,7 +102,7 @@
                 and TERMID = #{termid,jdbcType=VARCHAR}
             </if>
             <if test="enddate != null and enddate != ''">
-                and to_char(ENDDATE,'yyyy-MM') (ENDDATE,'%Y-%m') = #{enddate,jdbcType=VARCHAR}
+                and to_char(ENDDATE,'yyyy-MM') = #{enddate,jdbcType=VARCHAR}
             </if>
         </where>
         ORDER BY STATUS_DATE
