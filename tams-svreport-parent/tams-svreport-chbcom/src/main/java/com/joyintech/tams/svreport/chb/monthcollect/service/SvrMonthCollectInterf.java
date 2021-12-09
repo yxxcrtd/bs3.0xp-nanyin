@@ -244,7 +244,7 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setCnyAmt(a.getCnyAmt());
 				bb.setPrdRegistCode(a.getPrdRegistCode());
 				bb.setHolderType(a.getHolderType());
-				bb.setSaleAmountTotal(a.getValueAmountTotal());
+				bb.setSaleAmountTotal(a.getSaleAmountTotal());
 				bb.setValueAmountTotal(a.getValueAmountTotal());
 				bb.setBalanceAmt(a.getBalanceAmt());
 				bb.setBalanceShares(a.getBalanceShares());
@@ -494,7 +494,7 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setCnyAmt(a.getCnyAmt());
 				bb.setPrdRegistCode(a.getPrdRegistCode());
 				bb.setHolderType(a.getHolderType());
-				bb.setSaleAmountTotal(a.getValueAmountTotal());
+				bb.setSaleAmountTotal(a.getSaleAmountTotal());
 				bb.setValueAmountTotal(a.getValueAmountTotal());
 				bb.setBalanceAmt(a.getBalanceAmt());
 				bb.setBalanceShares(a.getBalanceShares());
@@ -744,7 +744,7 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setCnyAmt(a.getCnyAmt());
 				bb.setPrdRegistCode(a.getPrdRegistCode());
 				bb.setHolderType(a.getHolderType());
-				bb.setSaleAmountTotal(a.getValueAmountTotal());
+				bb.setSaleAmountTotal(a.getSaleAmountTotal());
 				bb.setValueAmountTotal(a.getValueAmountTotal());
 				bb.setBalanceAmt(a.getBalanceAmt());
 				bb.setBalanceShares(a.getBalanceShares());
