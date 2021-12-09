@@ -36,6 +36,9 @@ public interface ChbPrdBaseinfoMapper {
 
     ChbPrdBaseinfo selectByProdid(@Param("prodId")String prodId);
 
+
+    List<ChbPrdBaseinfo> selectAllProd(@Param("prodId")String prodId);
+
     /**
      * 功能:根据查询参数查询批处理产品
      * @since 1.7.0

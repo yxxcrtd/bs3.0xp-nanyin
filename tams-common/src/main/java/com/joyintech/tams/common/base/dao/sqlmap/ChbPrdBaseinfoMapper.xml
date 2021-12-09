@@ -101,7 +101,189 @@
         <result column="C_P_B_AGENT" property="agent" jdbcType="VARCHAR" />
         <result column="C_P_B_RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
         <result column="C_P_B_MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
+        <result column="IS_TRANSFER" property="isTransfer" jdbcType="VARCHAR" />
+        <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+        <result column="IS_YLLCCP" property="isYllccp" jdbcType="VARCHAR" />
     </resultMap>
+
+    <resultMap id="BaseResultMap01" type="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo" >
+        <id column="PRODUUID" property="produuid" jdbcType="CHAR" />
+        <result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+        <result column="LACKS" property="lacks" jdbcType="VARCHAR" />
+        <result column="PROD_INS_ID" property="prodInsId" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="INVESTOR_TYPE" property="investorType" jdbcType="VARCHAR" />
+        <result column="IS_INTACT" property="isIntact" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="BASIC" property="basic" jdbcType="VARCHAR" />
+        <result column="PRODTYPE" property="prodtype" jdbcType="VARCHAR" />
+        <result column="ISAGENCY" property="isagency" jdbcType="VARCHAR" />
+        <result column="SALETARGET" property="saletarget" jdbcType="VARCHAR" />
+        <result column="DURATIONFLAG" property="durationflag" jdbcType="VARCHAR" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="TERMINATEDATE" property="terminatedate" jdbcType="DATE" />
+        <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+        <result column="OPEN_BUSS_REMARK" property="openBussRemark" jdbcType="VARCHAR" />
+        <result column="RAISE_PSTRDATE" property="raisePstrdate" jdbcType="DATE" />
+        <result column="RAISE_PENDDATE" property="raisePenddate" jdbcType="DATE" />
+        <result column="DECLARE_STATUS" property="declareStatus" jdbcType="VARCHAR" />
+        <result column="ISSUING_STATUS" property="issuingStatus" jdbcType="VARCHAR" />
+        <result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+        <result column="TERMTYPE" property="termtype" jdbcType="VARCHAR" />
+        <result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
+        <result column="RAISE_VDATE" property="raiseVdate" jdbcType="DATE" />
+        <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="DATE" />
+        <result column="TEMPLATE_NAME" property="templateName" jdbcType="VARCHAR" />
+        <result column="PROD_BRAND" property="prodBrand" jdbcType="VARCHAR" />
+        <result column="PROD_STAGE" property="prodStage" jdbcType="DECIMAL" />
+        <result column="DESIGNER_NAME" property="designerName" jdbcType="VARCHAR" />
+        <result column="DESIGNER_ID" property="designerId" jdbcType="VARCHAR" />
+        <result column="APPROVER_NAME" property="approverName" jdbcType="VARCHAR" />
+        <result column="APPROVER_ID" property="approverId" jdbcType="VARCHAR" />
+        <result column="MANAGER_NAME" property="managerName" jdbcType="VARCHAR" />
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+        <result column="BOOK_MODE" property="bookMode" jdbcType="VARCHAR" />
+        <result column="LIAISON_NAME" property="liaisonName" jdbcType="VARCHAR" />
+        <result column="LIAISON_TEL" property="liaisonTel" jdbcType="VARCHAR" />
+        <result column="LIAISON_MOBILE" property="liaisonMobile" jdbcType="VARCHAR" />
+        <result column="LIAISON_EMAIL" property="liaisonEmail" jdbcType="VARCHAR" />
+        <result column="INVEST_ARAE" property="investArae" jdbcType="VARCHAR" />
+        <result column="INVEST_COUNTRY" property="investCountry" jdbcType="VARCHAR" />
+        <result column="FINAN_SER_MODEL" property="finanSerModel" jdbcType="VARCHAR" />
+        <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="CMMODE" property="cmmode" jdbcType="VARCHAR" />
+        <result column="PMMODE" property="pmmode" jdbcType="VARCHAR" />
+        <result column="MNAME" property="mname" jdbcType="VARCHAR" />
+        <result column="INV_ASSET_TYPE" property="invAssetType" jdbcType="VARCHAR" />
+        <result column="CONT_MODE" property="contMode" jdbcType="VARCHAR" />
+        <result column="COOPERATION_NAME" property="cooperationName" jdbcType="VARCHAR" />
+        <result column="CON_PRD_TRAGET" property="conPrdTraget" jdbcType="VARCHAR" />
+        <result column="IS_YIELD" property="isYield" jdbcType="VARCHAR" />
+        <result column="IS_YIELD_MEAS_BASIS" property="isYieldMeasBasis" jdbcType="VARCHAR" />
+        <result column="INV_TYPE_RAT" property="invTypeRat" jdbcType="VARCHAR" />
+        <result column="RISK_TYPE" property="riskType" jdbcType="VARCHAR" />
+        <result column="SALE_AREA" property="saleArea" jdbcType="VARCHAR" />
+        <result column="SALE_AMT_STR" property="saleAmtStr" jdbcType="DECIMAL" />
+        <result column="CASH_PRIN_CCY" property="cashPrinCcy" jdbcType="VARCHAR" />
+        <result column="CASH_PROF_CCY" property="cashProfCcy" jdbcType="VARCHAR" />
+        <result column="RAISE_AMT_PLAN" property="raiseAmtPlan" jdbcType="DECIMAL" />
+        <result column="SALE_FEE_RATE" property="saleFeeRate" jdbcType="DECIMAL" />
+        <result column="INVEST_PRIN_DATE" property="investPrinDate" jdbcType="VARCHAR" />
+        <result column="INVEST_PROF_DATE" property="investProfDate" jdbcType="VARCHAR" />
+        <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
+        <result column="IN_DEP_CODE" property="inDepCode" jdbcType="VARCHAR" />
+        <result column="IN_DEP_NAME" property="inDepName" jdbcType="VARCHAR" />
+        <result column="OUT_DEP_CTRY" property="outDepCtry" jdbcType="VARCHAR" />
+        <result column="OUT_DEP_NAME" property="outDepName" jdbcType="VARCHAR" />
+        <result column="TERM_RIGHT_FLAG" property="termRightFlag" jdbcType="VARCHAR" />
+        <result column="CUS_REDEEM_FLAG" property="cusRedeemFlag" jdbcType="VARCHAR" />
+        <result column="CREDIT_FLAG" property="creditFlag" jdbcType="VARCHAR" />
+        <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+        <result column="PRICED_MODE" property="pricedMode" jdbcType="VARCHAR" />
+        <result column="PRD_VDATE" property="prdVdate" jdbcType="DATE" />
+        <result column="PRD_MDATE" property="prdMdate" jdbcType="DATE" />
+        <result column="EXP_AVG_YIELD" property="expAvgYield" jdbcType="DECIMAL" />
+        <result column="IS_CONSTRACTE" property="isConstracte" jdbcType="VARCHAR" />
+        <result column="GRADE_TYPE" property="gradeType" jdbcType="VARCHAR" />
+        <result column="YIELD_COMMENT" property="yieldComment" jdbcType="VARCHAR" />
+        <result column="OPEN_MODE" property="openMode" jdbcType="VARCHAR" />
+        <result column="OPEN_CIRCLE" property="openCircle" jdbcType="VARCHAR" />
+        <result column="OPEN_CIRCLE_DAYS" property="openCircleDays" jdbcType="DECIMAL" />
+        <result column="RULE_COMMENT" property="ruleComment" jdbcType="VARCHAR" />
+        <result column="FIRST_OPEN_DAY" property="firstOpenDay" jdbcType="DATE" />
+        <result column="HOLIDAY_ON_FLAG" property="holidayOnFlag" jdbcType="VARCHAR" />
+        <result column="AVG_OPEN_COUNT" property="avgOpenCount" jdbcType="DECIMAL" />
+        <result column="OPEN_BUSS" property="openBuss" jdbcType="VARCHAR" />
+        <result column="HIGH_YIELD_ISSUE" property="highYieldIssue" jdbcType="DECIMAL" />
+        <result column="LOW_YIELD_ISSUE" property="lowYieldIssue" jdbcType="DECIMAL" />
+        <result column="CREDIT_MODE" property="creditMode" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="OPENTYPEP" property="opentypep" jdbcType="VARCHAR" />
+        <result column="OPENDAYP" property="opendayp" jdbcType="VARCHAR" />
+        <result column="OPENCYCLEP" property="opencyclep" jdbcType="VARCHAR" />
+        <result column="OPENCYCLEUNITP" property="opencycleunitp" jdbcType="VARCHAR" />
+        <result column="WEEKP" property="weekp" jdbcType="VARCHAR" />
+        <result column="DAYP" property="dayp" jdbcType="VARCHAR" />
+        <result column="WORKDAYP" property="workdayp" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
+        <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="AGENT" property="agent" jdbcType="VARCHAR" />
+        <result column="FIDUCIARY_DUTY" property="fiduciaryDuty" jdbcType="VARCHAR" />
+        <result column="TRANSFER_TYPE" property="transferType" jdbcType="VARCHAR" />
+        <result column="IS_MARKET_FUND" property="isMarketFund" jdbcType="VARCHAR" />
+        <result column="EXC_FIN_SECTOR" property="excFinSector" jdbcType="VARCHAR" />
+        <result column="IS_SHORT_TERM" property="isShortTerm" jdbcType="VARCHAR" />
+        <result column="SHORT_TERM" property="shortTerm" jdbcType="DECIMAL" />
+        <result column="IS_FREE_REDEM" property="isFreeRedem" jdbcType="VARCHAR" />
+        <result column="CASH_MANA_CATE" property="cashManaCate" jdbcType="VARCHAR" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="INVEST_FEE_RATE" property="investFeeRate" jdbcType="DECIMAL" />
+        <result column="CUSTOMER_TYPE" property="customerType" jdbcType="VARCHAR" />
+        <result column="HIGH_YIELD" property="highYield" jdbcType="DECIMAL" />
+        <result column="LOW_YIELD" property="lowYield" jdbcType="DECIMAL" />
+        <result column="CALENDAR_ID" property="calendarId" jdbcType="VARCHAR" />
+        <result column="YIELD_LOW" property="yieldLow" jdbcType="DECIMAL" />
+        <result column="YIELD_HIGH" property="yieldHigh" jdbcType="DECIMAL" />
+        <result column="YIELD_REMARK" property="yieldRemark" jdbcType="VARCHAR" />
+        <result column="BUSI_ACCT_NO" property="busiAcctNo" jdbcType="VARCHAR" />
+        <result column="ACCT_NAME" property="acctName" jdbcType="VARCHAR" />
+        <result column="IS_TRANSFER" property="isTransfer" jdbcType="VARCHAR" />
+        <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+        <result column="IS_YLLCCP" property="isYllccp" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List01" >
+        PRODUUID PRODUUID, FPROD_ID FPROD_ID, PROD_ID PROD_ID, ORG_CODE ORG_CODE, PROD_NAME PROD_NAME,
+        REG_CODE REG_CODE, LACKS LACKS, PROD_INS_ID PROD_INS_ID, PROFIT_TYPE PROFIT_TYPE,
+        INVESTOR_TYPE INVESTOR_TYPE, IS_INTACT IS_INTACT, STATUS STATUS, BASIC BASIC, PRODTYPE PRODTYPE,
+        ISAGENCY ISAGENCY, SALETARGET SALETARGET, DURATIONFLAG DURATIONFLAG, MDATE MDATE,
+        VDATE VDATE, TERMINATEDATE TERMINATEDATE, IVSTORIENTATION IVSTORIENTATION, OPEN_BUSS_REMARK OPEN_BUSS_REMARK,
+        RAISE_PSTRDATE RAISE_PSTRDATE, RAISE_PENDDATE RAISE_PENDDATE, DECLARE_STATUS DECLARE_STATUS,
+        ISSUING_STATUS ISSUING_STATUS, RISK_LEVEL RISK_LEVEL, TERMTYPE TERMTYPE, RAISE_CCY RAISE_CCY,
+        RAISE_VDATE RAISE_VDATE, RAISE_ENDDATE RAISE_ENDDATE, TEMPLATE_NAME TEMPLATE_NAME,
+        PROD_BRAND PROD_BRAND, PROD_STAGE PROD_STAGE, DESIGNER_NAME DESIGNER_NAME, DESIGNER_ID DESIGNER_ID,
+        APPROVER_NAME APPROVER_NAME, APPROVER_ID APPROVER_ID, MANAGER_NAME MANAGER_NAME,
+        MANAGER_ID MANAGER_ID, BOOK_MODE BOOK_MODE, LIAISON_NAME LIAISON_NAME, LIAISON_TEL LIAISON_TEL,
+        LIAISON_MOBILE LIAISON_MOBILE, LIAISON_EMAIL LIAISON_EMAIL, INVEST_ARAE INVEST_ARAE,
+        INVEST_COUNTRY INVEST_COUNTRY, FINAN_SER_MODEL FINAN_SER_MODEL, OPERATE_MODE OPERATE_MODE,
+        CMMODE CMMODE, PMMODE PMMODE, MNAME MNAME, INV_ASSET_TYPE INV_ASSET_TYPE, CONT_MODE CONT_MODE,
+        COOPERATION_NAME COOPERATION_NAME, CON_PRD_TRAGET CON_PRD_TRAGET, IS_YIELD IS_YIELD,
+        IS_YIELD_MEAS_BASIS IS_YIELD_MEAS_BASIS, INV_TYPE_RAT INV_TYPE_RAT, RISK_TYPE RISK_TYPE,
+        SALE_AREA SALE_AREA, SALE_AMT_STR SALE_AMT_STR, CASH_PRIN_CCY CASH_PRIN_CCY, CASH_PROF_CCY CASH_PROF_CCY,
+        RAISE_AMT_PLAN RAISE_AMT_PLAN, SALE_FEE_RATE SALE_FEE_RATE, INVEST_PRIN_DATE INVEST_PRIN_DATE,
+        INVEST_PROF_DATE INVEST_PROF_DATE, TRU_FEE_RATE TRU_FEE_RATE, IN_DEP_CODE IN_DEP_CODE,
+        IN_DEP_NAME IN_DEP_NAME, OUT_DEP_CTRY OUT_DEP_CTRY, OUT_DEP_NAME OUT_DEP_NAME, TERM_RIGHT_FLAG TERM_RIGHT_FLAG,
+        CUS_REDEEM_FLAG CUS_REDEEM_FLAG, CREDIT_FLAG CREDIT_FLAG, CREDIT_TYPE CREDIT_TYPE,
+        PRICED_MODE PRICED_MODE, PRD_VDATE PRD_VDATE, PRD_MDATE PRD_MDATE, EXP_AVG_YIELD EXP_AVG_YIELD,
+        IS_CONSTRACTE IS_CONSTRACTE, GRADE_TYPE GRADE_TYPE, YIELD_COMMENT YIELD_COMMENT,
+        OPEN_MODE OPEN_MODE, OPEN_CIRCLE OPEN_CIRCLE, OPEN_CIRCLE_DAYS OPEN_CIRCLE_DAYS,
+        RULE_COMMENT RULE_COMMENT, FIRST_OPEN_DAY FIRST_OPEN_DAY, HOLIDAY_ON_FLAG HOLIDAY_ON_FLAG,
+        AVG_OPEN_COUNT AVG_OPEN_COUNT, OPEN_BUSS OPEN_BUSS, HIGH_YIELD_ISSUE HIGH_YIELD_ISSUE,
+        LOW_YIELD_ISSUE LOW_YIELD_ISSUE, CREDIT_MODE CREDIT_MODE, ISSUE_PARTY_ID ISSUE_PARTY_ID,
+        OPENTYPEP OPENTYPEP, OPENDAYP OPENDAYP, OPENCYCLEP OPENCYCLEP, OPENCYCLEUNITP OPENCYCLEUNITP,
+        WEEKP WEEKP, DAYP DAYP, WORKDAYP WORKDAYP, REMARK REMARK, DEPT_CODE DEPT_CODE, WORKFLOW_ID WORKFLOW_ID,
+        DATA_SOURCE DATA_SOURCE, RAISE_TYPE RAISE_TYPE, MANAGE_TYPE MANAGE_TYPE, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, AGENT AGENT,
+        FIDUCIARY_DUTY FIDUCIARY_DUTY, TRANSFER_TYPE TRANSFER_TYPE, IS_MARKET_FUND IS_MARKET_FUND,
+        EXC_FIN_SECTOR EXC_FIN_SECTOR, IS_SHORT_TERM IS_SHORT_TERM, SHORT_TERM SHORT_TERM,
+        IS_FREE_REDEM IS_FREE_REDEM, CASH_MANA_CATE CASH_MANA_CATE, YIELD YIELD, INVEST_FEE_RATE INVEST_FEE_RATE,
+        CUSTOMER_TYPE CUSTOMER_TYPE, HIGH_YIELD HIGH_YIELD, LOW_YIELD LOW_YIELD, CALENDAR_ID CALENDAR_ID,
+        YIELD_LOW YIELD_LOW, YIELD_HIGH YIELD_HIGH, YIELD_REMARK YIELD_REMARK, BUSI_ACCT_NO BUSI_ACCT_NO,
+        ACCT_NAME ACCT_NAME, IS_TRANSFER IS_TRANSFER, IS_FHXGCP IS_FHXGCP, IS_YLLCCP IS_YLLCCP
+    </sql>
+
     <sql id="Base_Column_List" >
         PROD_ID as C_P_B_PROD_ID, STATUS as C_P_B_STATUS, ORG_CODE as C_P_B_ORG_CODE, PROD_NAME as C_P_B_PROD_NAME, 
         REG_CODE as C_P_B_REG_CODE, PROD_INS_ID as C_P_B_PROD_INS_ID, PROFIT_TYPE as C_P_B_PROFIT_TYPE, 
@@ -136,7 +318,7 @@
         UPDATE_USER as C_P_B_UPDATE_USER, UPDATE_TIME as C_P_B_UPDATE_TIME, CREATE_USER as C_P_B_CREATE_USER, 
         CREATE_TIME as C_P_B_CREATE_TIME, HIGH_YIELD_ISSUE as C_P_B_HIGH_YIELD_ISSUE, LOW_YIELD_ISSUE as C_P_B_LOW_YIELD_ISSUE, 
         CREDIT_MODE as C_P_B_CREDIT_MODE, AGENT as C_P_B_AGENT, RAISE_TYPE as C_P_B_RAISE_TYPE, 
-        MANAGE_TYPE as C_P_B_MANAGE_TYPE
+        MANAGE_TYPE as C_P_B_MANAGE_TYPE,IS_TRANSFER,IS_FHXGCP,IS_YLLCCP
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -1700,6 +1882,17 @@
         <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper.Base_Column_List" />
         from CHB_PRD_BASEINFO
         where PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="selectAllProd" resultMap="BaseResultMap01" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper.Base_Column_List01" />
+        from CHB_PRD_BASEINFO
+        where 1=1
+        <if test="prodId != null and prodId != ''">
+            PROD_ID = #{prodId,jdbcType=VARCHAR}
+        </if>
     </select>
     <select id="selectProductByName" resultType="com.joyintech.framework.base.dto.Product">
         select 
