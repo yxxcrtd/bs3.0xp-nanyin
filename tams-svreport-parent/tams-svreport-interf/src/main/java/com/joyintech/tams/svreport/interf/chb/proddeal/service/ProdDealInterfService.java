@@ -217,7 +217,10 @@ public class ProdDealInterfService extends BaseInterfService {
 			}
 
 			if(!StringUtil.isEmptyList(updList)){
-				updatePrdBaseInfo(updList);
+				// 一体化共库时走删除逻辑
+				if("D".equals(source)){
+					updatePrdBaseInfo(updList);
+				}
 			}
 			logger.debug("反向更新要素信息:----结束-----" + df.format(new Date()));
 
