@@ -374,7 +374,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
             //头寸
-            //PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,type.name()));
+            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,type));
         }
 
     }
@@ -420,9 +420,9 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         //头寸
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
-        }else{
+        }/*else{
             PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,operationType));
-        }
+        }*/
         //处理指令执行进度
         insertEtrFinishStatus(cfetsBondDealDbDto,operationType);
     }
@@ -753,7 +753,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             result.put("interfaceType","Bond001");
             result.put("userId", SecurityUtil.getLoginUser().getUserName());
             result.put("totalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
-            result.put("flowStatus",DictCodeListExt3.流程节点_审批生效.getValue());
+            result.put("flowStatus",DictCodeListExt3.流程节点_流程提交.getValue());
             result.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             result.put("balanceCheck","Y");
             if(StringUtil.equals(ps,BussinessDictCodeList.交易方向_行权回售.getValue())){
