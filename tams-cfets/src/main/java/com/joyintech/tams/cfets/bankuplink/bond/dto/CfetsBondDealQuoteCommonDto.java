@@ -631,5 +631,6 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     public void setAssetTypeOne(String assetTypeOne) {
         this.assetTypeOne = assetTypeOne;
     }
+
 }
 

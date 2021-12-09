@@ -105,6 +105,9 @@ public class CfetsBondDayRegDto {
     @ApiModelProperty(required = false,name="tradeMarketStr",value="交易场所名称")
     private String tradeMarketStr;
 
+    @ApiModelProperty(name="actSetteDate",value="实际行权日")
+    private Date actSetteDate;
+
     @ApiModelProperty(name="theoreticalExerciseDate",value="理论行权日")
     private Date theoreticalExerciseDate;
 
@@ -119,6 +122,18 @@ public class CfetsBondDayRegDto {
 
     @ApiModelProperty(name="statisticalTimes",value="导出次数")
     private int statisticalTimes;
+
+    @ApiModelProperty(name="assetType",value="债券分类")
+    private String assetType;
+
+    @ApiModelProperty(name="assetTypeStr",value="债券分类名称")
+    private String assetTypeStr;
+
+    @ApiModelProperty(name="exeId",value="成交编号")
+    private String exeId;
+
+    @ApiModelProperty(name="dealDate",value="成交日期")
+    private Date dealDate;
 
     public String getValidStatus() {
         return validStatus;
@@ -405,6 +420,46 @@ public class CfetsBondDayRegDto {
 
     public void setStatisticalTimes(int statisticalTimes) {
         this.statisticalTimes = statisticalTimes;
+    }
+
+    public Date getActSetteDate() {
+        return actSetteDate;
+    }
+
+    public void setActSetteDate(Date actSetteDate) {
+        this.actSetteDate = actSetteDate;
+    }
+
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
+    }
+
+    public String getExeId() {
+        return exeId;
+    }
+
+    public void setExeId(String exeId) {
+        this.exeId = exeId;
+    }
+
+    public Date getDealDate() {
+        return dealDate;
+    }
+
+    public void setDealDate(Date dealDate) {
+        this.dealDate = dealDate;
+    }
+
+    public String getAssetTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类, getAssetType());
+    }
+
+    public void setAssetTypeStr(String assetTypeStr) {
+        this.assetTypeStr = assetTypeStr;
     }
 }
 
