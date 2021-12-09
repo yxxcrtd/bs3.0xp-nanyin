@@ -1617,6 +1617,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     目标值单位_百分比(DictCode.目标值单位,"05","%"),
     目标值单位_元(DictCode.目标值单位,"06","元"),
     目标值单位_万元(DictCode.目标值单位,"07","万元"),
+
+    申购方式_网下申购(DictCode.申购方式,"02","网下申购"),
+    平安业务类型_债券质押式逆回购(DictCode.平安业务类型,"19","债券质押式逆回购"),
+    平安业务类型_债券质押式正回购(DictCode.平安业务类型,"20","债券质押式正回购"),
     ;
     /**
      * 对应于数据字典code
