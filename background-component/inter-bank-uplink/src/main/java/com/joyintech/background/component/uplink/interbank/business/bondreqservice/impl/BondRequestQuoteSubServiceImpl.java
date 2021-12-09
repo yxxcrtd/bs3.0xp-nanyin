@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import com.joyintech.background.component.uplink.interbank.database.dao.*;
+import com.joyintech.background.component.uplink.interbank.database.entity.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -53,16 +55,6 @@ import com.joyintech.background.component.uplink.interbank.business.dto.local.Bo
 import com.joyintech.background.component.uplink.interbank.common.CommonUtils;
 import com.joyintech.background.component.uplink.interbank.common.DictCodeList;
 import com.joyintech.background.component.uplink.interbank.common.IbuDictCode;
-import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteBondHisMapper;
-import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteBondMapper;
-import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteMapper;
-import com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteBond2Mapper;
-import com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteBondDetMapper;
-import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond;
-import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBondDet;
-import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBondDetHis;
-import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBondHis;
-import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteEtrReHis;
 
 /**
  * 现券请求报价服务
@@ -89,6 +81,12 @@ public class BondRequestQuoteSubServiceImpl extends BaseService<IbuQuoteBond> im
     
     @Autowired
     WflIbuQuoteBondDetMapper wflIbuQuoteBondDetMapper;
+
+    @Autowired
+    IbuQuoteEtrReMapper ibuQuoteEtrReMapper;
+
+    @Autowired
+    IbuQuoteBondDetHisMapper ibuQuoteBondDetHisMapper;
     
     /** 非做市方；Key为交易状态，发送状态；Value为允许的操作类型：List<银行间上行操作类型代码> */
     private static Table<String, String, List<String>> statusTable03 = HashBasedTable.create();
@@ -442,6 +440,13 @@ public class BondRequestQuoteSubServiceImpl extends BaseService<IbuQuoteBond> im
                 
                 //多组合
     	        if (CollectionUtils.isNotEmpty(inputBean.getIbuQuoteEtrReDtoList())) {
+                     for (IbuQuoteEtrReDto IbuQuoteEtrReDto :inputBean.getIbuQuoteEtrReDtoList()) {
+                         IbuQuoteEtrReKey ibuQuoteEtrReKey = new IbuQuoteEtrReKey();
+                         ibuQuoteEtrReKey.setEntrustId(IbuQuoteEtrReDto.getEntrustId());
+                         ibuQuoteEtrReKey.setQuoteId(IbuQuoteEtrReDto.getQuoteId());
+                         ibuQuoteEtrReKey.setVersion(IbuQuoteEtrReDto.getVersion());
+                         ibuQuoteEtrReMapper.deleteByPrimaryKey(ibuQuoteEtrReKey);
+                     }
     	            affectRows += ibuQuoteMapper.batchInsetIbuQuoteEtrRe(inputBean.getIbuQuoteEtrReDtoList());
     	        }
 
@@ -523,6 +528,12 @@ public class BondRequestQuoteSubServiceImpl extends BaseService<IbuQuoteBond> im
         int affectRows = quoteBondHisMapper.insertSelective(quoteBondHis);
         
         if (CollectionUtils.isNotEmpty(quoteBondDetHisList)) {
+            for (IbuQuoteBondDetHis ibuQuoteBondDetHis :quoteBondDetHisList) {
+                IbuQuoteBondDetHisKey ibuQuoteBondDetHisKey = new IbuQuoteBondDetHisKey();
+                ibuQuoteBondDetHisKey.setDetId(ibuQuoteBondDetHis.getDetId());
+                ibuQuoteBondDetHisKey.setVersion(ibuQuoteBondDetHis.getVersion());
+                ibuQuoteBondDetHisMapper.deleteByPrimaryKey(ibuQuoteBondDetHisKey);
+            }
             affectRows += ibuQuoteMapper.batchInsetIbuQuoteBondDetHis(quoteBondDetHisList);
         }
         

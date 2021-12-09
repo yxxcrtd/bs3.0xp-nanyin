@@ -95,8 +95,7 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @Controller
 @PageId("TrdBondInvestTrade002")
 @RequestMapping("/invest/trade/bond/TrdBondInvestTrade002")
-public class
-TrdBondInvestTrade002Controller extends BaseController {
+public class TrdBondInvestTrade002Controller extends BaseController {
 	@Autowired
 	private TradeCommonService tradeCommonService;
     /**
@@ -153,7 +152,10 @@ TrdBondInvestTrade002Controller extends BaseController {
         String isCstp = this.getParam("isCstp");
         String isCstpSure = this.getParam("isCstpSure");
 
-        // add by etliu 20210501 银行间场内场外拆分 start
+        //获取成交匹配录单
+        String tranRecord = this.getParam("tranRecord");
+
+       // add by etliu 20210501 银行间场内场外拆分 start
         model.addAttribute("parentPageId", this.getParam("parentPageId"));
         PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
         PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
@@ -167,8 +169,10 @@ TrdBondInvestTrade002Controller extends BaseController {
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdBondInvestTrade002Service.getBussinessEntityByWorkflowId(
                 workflowId);
-            dto.setYield(ArithmeticUtil.multiply(dto.getYield(), new BigDecimal(100)));
-            dto.setExerYield(ArithmeticUtil.multiply(dto.getExerYield(), new BigDecimal(100)));
+            // add by ld 20211120 审批页面利率多了100倍 start
+//            dto.setYield(ArithmeticUtil.multiply(dto.getYield(), new BigDecimal(100)));
+//            dto.setExerYield(ArithmeticUtil.multiply(dto.getExerYield(), new BigDecimal(100)));
+            // add by ld 20211120 审批页面利率多了100倍 end
             if (dto.getTotalFaceValue() != null) {
                 dto.setTradeAmt(dto.getTotalFaceValue());
             }
@@ -202,6 +206,13 @@ TrdBondInvestTrade002Controller extends BaseController {
                 }
             }
         }
+        //成交匹配录单
+        else if(StringUtil.isNotEmpty(tranRecord)) {
+            dto = JsonUtils.json2Object(tranRecord,TrdBondInvestTradeDto.class);
+            if(dto.getSettleDate() != null && dto.getTradeDate() != null){
+                dto.setSettleSpeedStr(String.valueOf(DateUtil.getBetweenDayNumber(dto.getTradeDate(), dto.getSettleDate())));
+            }
+        }
         else {
             String entrustId = this.getParam("entrustId");//委托
             String preTradeId = this.getParam("preTradeId");//预录入
@@ -227,6 +238,8 @@ TrdBondInvestTrade002Controller extends BaseController {
                 //modify by sunhui 20210723 重庆银行：分销缴款进来时已经是万元了，不需要再除以10000---产品bug   end
             }
             dto.setTradeAmt(winPrinAmtBig);
+            dto.setSettleSpeed(0L);
+            dto.setSettleSpeedStr("0");
             dto.setYield(BigDecimal.valueOf(Double.valueOf(yield == null ? "0" : yield)));
             model.addAttribute("bondFirstSign",bondFirstSign);
             model.addAttribute("winPrinAmt",winPrinAmtBig);

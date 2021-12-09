@@ -27,6 +27,8 @@
 </head>
 <body>
     <div layout:fragment="content">
+        <img id="enlarge" th:src="@{'/img/enlarge.png'}" style="width: 24px;height: 24px; cursor: pointer;"></img>
+        <img id="narrow" th:src="@{'/img/narrow.png'}" style="width: 24px;height: 24px; cursor: pointer; display: none;"></img>
         <div class="price-boundary" id = "cashPositionInfo">
             <div class="typical-price item-kyje" id="accAvailableCash_div" >港股通可用金额(元):<a id="accAvailableCash" class="price-anchor">0.00</a></div>
             <div class="typical-price item-kyje" id="positionNum_div">持仓数量:<a id="positionNum" class="price-anchor">0.00</a></div>

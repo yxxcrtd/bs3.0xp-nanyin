@@ -3,33 +3,25 @@
 <mapper namespace="com.joyintech.service.basicdata.standardcouponreconversionrate.dao.BasicStandardCouponReConversionRateMapper">
     <select id="select" resultType="com.joyintech.service.basicdata.standardcouponreconversionrate.dto.StandardCouponReConversionRateDto">
         select
-        sbmci.BROKER_ID brokerId,
-        mci.CUSTOMER_NAME brokerName,
-        sbmci.ACCT_NO accountType,
-        sci.ACCT_NAME accountTypeStr,
-        sbmci.MORE_CONVRATE * 100 tandardRate
+        sbmci.SEQ_NO seqNo,
+        sbmci.BROKER_ID brokerId, /*券商代码*/
+        mci.CUSTOMER_NAME brokerName, /*券商名称*/
+        sbmci.FINPROD_ID finprodId, /*资产代码*/
+        fin.FINPROD_MARKET_ID finprodMarketId,
+        fin.FINPROD_ABBR finprodAbbr, /*资产名称*/
+        sbmci.MORE_CONVRATE * 100 moreConvrate,/*标准券折算率%*/
+        sbmci.START_DATE startDate,/*开始日期*/
+        sbmci.END_DATE endDate/*结束日期*/
         from STD_BOND_MORE_CONVRATE_INFO sbmci
-        left join mst_customer_info mci on mci.CUSTOMER_ID = sbmci.BROKER_ID
-        left join STL_CAPACCT_INFO sci on sbmci.ACCT_NO = sci.ACCT_NO
+        left join MST_CUSTOMER_INFO mci on sbmci.BROKER_ID = mci.CUSTOMER_ID
+        left join FIN_PRODUCT fin on sbmci.FINPROD_ID = fin.FINPROD_ID
         <where>
             <if test="brokerId !=null and brokerId != ''">
                 sbmci.BROKER_ID = #{brokerId,jdbcType=VARCHAR}
             </if>
-            <if test="accountType != null and accountType != ''">
-                AND sbmci.ACCT_NO =  #{accountType,jdbcType=VARCHAR}
+            <if test="finprodId != null and finprodId != ''">
+                AND sbmci.FINPROD_ID =  #{finprodId,jdbcType=VARCHAR}
             </if>
-            <!--<if test="brokerIdList != null">-->
-                <!--sbmci.BROKER_ID in-->
-                <!--<foreach collection="brokerIdList" item="item" open="(" close=")" separator=",">-->
-                    <!--#{item}-->
-                <!--</foreach>-->
-            <!--</if>-->
-            <!--<if test="accountTypeList != null">-->
-                <!--AND sbmci.ACCT_NO in-->
-                <!--<foreach collection="accountTypeList" item="item" open="(" close=")" separator=",">-->
-                    <!--#{item}-->
-                <!--</foreach>-->
-            <!--</if>-->
         </where>
     </select>
 
@@ -37,7 +29,7 @@
     <select id="getMstCustomerInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
         select t.customer_id as id,
         concat(t.customer_id,concat(':',t.customer_name)) as text
---         t.customer_name as text
+        --         t.customer_name as text
         from mst_customer_info t where t.IS_BROKER = 'Y'
         <if test="brokerId !=null and brokerId != ''">
             AND (t.customer_id like concat(concat('%',#{brokerId,jdbcType=VARCHAR}),'%') OR t.customer_name like concat(concat('%',#{brokerId,jdbcType=VARCHAR}),'%'))
@@ -48,12 +40,17 @@
     <select id="selectByPrimaryKey" resultType="com.joyintech.service.basicdata.standardcouponreconversionrate.dto.StandardCouponReConversionRateDto"
             parameterType="java.lang.String">
         select
+            sbmci.SEQ_NO seqNo,
             sbmci.BROKER_ID brokerId,
-            sbmci.ACCT_NO accountType,
-            sbmci.MORE_CONVRATE * 100 tandardRate
+            sbmci.FINPROD_ID finprodId,
+            sbmci.START_DATE startDate,
+            sbmci.MORE_CONVRATE * 100 moreConvrate,
+            sbmci.START_DATE startDate,/*开始日期*/
+            sbmci.END_DATE endDate/*结束日期*/
         from STD_BOND_MORE_CONVRATE_INFO sbmci
         where sbmci.BROKER_ID = #{brokerId,jdbcType=VARCHAR}
-        and sbmci.ACCT_NO =  #{accountType,jdbcType=VARCHAR}
+          and sbmci.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and sbmci.START_DATE = #{startDate,jdbcType=VARCHAR}
     </select>
 
 
@@ -156,49 +153,59 @@
 
     <!--组合资金账户表 -->
     <!--<resultMap type="com.joyintech.framework.select.SelectOptionDto" id="resultMap_getPtlSecAcctInfo">-->
-        <!--<id column="id" property="id" jdbcType="VARCHAR"/>-->
-        <!--<result column="text" property="text" jdbcType="VARCHAR"/>-->
-        <!--<result column="parentId" property="parentId" jdbcType="VARCHAR"/>-->
-        <!--<collection property="object" javaType="java.util.ArrayList" ofType="java.util.Map">-->
-            <!--<id column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR"/>-->
-            <!--<result column="TRADE_PLACE" property="tradeMarket" jdbcType="VARCHAR"/>-->
-            <!--<result column="CCY" property="ccy" jdbcType="VARCHAR"/>-->
-        <!--</collection>-->
+    <!--<id column="id" property="id" jdbcType="VARCHAR"/>-->
+    <!--<result column="text" property="text" jdbcType="VARCHAR"/>-->
+    <!--<result column="parentId" property="parentId" jdbcType="VARCHAR"/>-->
+    <!--<collection property="object" javaType="java.util.ArrayList" ofType="java.util.Map">-->
+    <!--<id column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR"/>-->
+    <!--<result column="TRADE_PLACE" property="tradeMarket" jdbcType="VARCHAR"/>-->
+    <!--<result column="CCY" property="ccy" jdbcType="VARCHAR"/>-->
+    <!--</collection>-->
     <!--</resultMap>-->
     <select id="getPtlSecAcctInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
         select DISTINCT
-            t.ACCT_NO as id,
-            concat(t.ACCT_NO,concat(':',R.ACCT_NAME)) as text
---         R.ACCT_NAME,
---         t.PORTFOLIO_ID as parentId,
---         v.SEC_ACCT_ID,
---         v.TRADE_PLACE,
---         t.CCY
+        t.ACCT_NO as id,
+        concat(t.ACCT_NO,concat(':',R.ACCT_NAME)) as text
+        --         R.ACCT_NAME,
+        --         t.PORTFOLIO_ID as parentId,
+        --         v.SEC_ACCT_ID,
+        --         v.TRADE_PLACE,
+        --         t.CCY
         from PTL_CAPACCT_INFO t
---         left join STL_SEC_ACCT_INFO v
---         on t.ACCT_NO = v.TRD_ACCT_ID
+        --         left join STL_SEC_ACCT_INFO v
+        --         on t.ACCT_NO = v.TRD_ACCT_ID
         LEFT JOIN STL_CAPACCT_INFO R
         ON T.ACCT_NO = R.ACCT_NO
         AND T.CCY = R.CCY
         <where>
             t.ACCT_TYPE = 'A07'
             <!--<if test="portfolioId != null and portfolioId != ''">-->
-                <!--and t.PORTFOLIO_ID = #{portfolioId}-->
+            <!--and t.PORTFOLIO_ID = #{portfolioId}-->
             <!--</if>-->
             <!--<if test="tradeMarket != null and tradeMarket!= ''">-->
-                <!--and v.TRADE_PLACE = #{tradeMarket}-->
+            <!--and v.TRADE_PLACE = #{tradeMarket}-->
             <!--</if>-->
             <if test="accountType != null and accountType != ''">
                 and t.ACCT_NO = #{accountType}
             </if>
             <!--<if test="initValue != null and initValue != ''">-->
-                <!--and t.ACCT_NO = #{initValue}-->
+            <!--and t.ACCT_NO = #{initValue}-->
             <!--</if>-->
             <!--<if test="search != null and !search.equals('')">-->
-                <!--AND t.ACCT_NO like concat('%',concat(#{search},'%'))-->
+            <!--AND t.ACCT_NO like concat('%',concat(#{search},'%'))-->
             <!--</if>-->
         </where>
         order by t.ACCT_NO
+    </select>
+
+    <select id="getFinprodIdInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct
+        FINPROD_ID   id,
+        concat(FINPROD_ID,concat(':',FINPROD_ABBR)) text
+        from FIN_PRODUCT
+        where FINPROD_TYPE2 = #{F01_TG}
+        AND TRADE_MARKET IN (#{TRADE_PLACE_03},#{TRADE_PLACE_04})
+        order by FINPROD_ID
     </select>
 
     <select id="brokerIdChange" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -220,4 +227,25 @@
         </where>
     </select>
 
+    <!-- 校验券商是否存在 -->
+    <select id="checkMstCustomerInfo" resultType="java.lang.String">
+        select T1.CUSTOMER_ID
+        from MST_CUSTOMER_INFO T1
+        left join MST_CUSTOMER_INFO_ADD T2
+        on T1.CUSTOMER_ID = T2.CUSTOMER_ID
+        where T1.IS_BROKER = 'Y'
+        <if test="insitituteCode !=null and insitituteCode != ''">
+            AND (T2.INSITITUTE_CODE = #{insitituteCode,jdbcType=VARCHAR})
+        </if>
+        AND ROWNUM = 1
+    </select>
+
+    <select id="checkFinprodIdInfo" resultType="java.lang.String">
+        select FINPROD_ID
+        from FIN_PRODUCT
+        where FINPROD_TYPE2 = #{F01_TG}
+        and FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
+        AND TRADE_MARKET IN (#{TRADE_PLACE_03},#{TRADE_PLACE_04})
+        AND ROWNUM = 1
+    </select>
 </mapper>

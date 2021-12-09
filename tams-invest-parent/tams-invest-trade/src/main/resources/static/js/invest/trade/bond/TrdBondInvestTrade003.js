@@ -1804,7 +1804,7 @@ var table;
         if(entrustId){
             $('#TrdBondInvestTrade003_distribution').attr('disabled',false);
             $('#TrdBondInvestTrade003_btn_autoAllocation').removeClass('layui-btn-disabled');
-            Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade003/getEntrustInfos', {'entrustId':entrustId,'bondFirstSign':bondFirstSign},function (data) {
+            Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade003/getEntrustInfos', {'entrustId':entrustId,'bondFirstSign':bondFirstSign,'winPrinAmtList':winPrinAmtList},function (data) {
                 // 基本要素信息由投资委托带出，其中有：委托代码、组合代码、资产代码、清算速度、交易方向、交易场所、交易平台、交易市场、投资目的等，不可编辑
                 // 金融要素信息由投资委托带出，其中有：币种、券面总额、净价、到期收益率、行权收益率等
                 tradeAmtAll = 0;

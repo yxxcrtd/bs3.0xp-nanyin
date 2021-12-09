@@ -16,7 +16,7 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 
 /**
  * 所有投资委托微服务端dto 〈功能详细描述〉
- * 
+ *
  * @author xiexinting
  * @version 1.0 2018年9月7日
  * @see EtrInvestAllInfoDto
@@ -58,21 +58,21 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 	 * 清算速度
 	 */
 	private Long settleSpreed;
-	
+
 	/**
 	 * 交易方向文字列
 	 */
 	private String psStr;
-	
+
 	/**
 	 * PB是否已导出
 	 */
 	private String pbExportstatus;
 
-    /**
-     * 证券账户名称
-     */
-    private String secAcctName;
+	/**
+	 * 证券账户名称
+	 */
+	private String secAcctName;
 
 	/**
 	 * 指令创建来源
@@ -81,7 +81,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 获取 settleSpreed
-	 * 
+	 *
 	 * @return settleSpreed.
 	 */
 	public Long getSettleSpreed() {
@@ -90,7 +90,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 设置 settleSpreed
-	 * 
+	 *
 	 * @param settleSpreed
 	 *            settleSpreed
 	 */
@@ -100,7 +100,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 获取 busiPs
-	 * 
+	 *
 	 * @return busiPs.
 	 */
 	public String getBusiPs() {
@@ -109,7 +109,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 设置 busiPs
-	 * 
+	 *
 	 * @param busiPs
 	 *            busiPs
 	 */
@@ -119,7 +119,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 获取 assetType
-	 * 
+	 *
 	 * @return assetType.
 	 */
 	public String getAssetType() {
@@ -128,7 +128,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 设置 assetType
-	 * 
+	 *
 	 * @param assetType
 	 *            assetType
 	 */
@@ -138,7 +138,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 获取 finprodMarketId
-	 * 
+	 *
 	 * @return finprodMarketId.
 	 */
 	public String getFinprodMarketId() {
@@ -147,7 +147,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 设置 finprodMarketId
-	 * 
+	 *
 	 * @param finprodMarketId
 	 *            finprodMarketId
 	 */
@@ -162,7 +162,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 获取 portfolioName
-	 * 
+	 *
 	 * @return portfolioName.
 	 */
 	public String getPortfolioName() {
@@ -171,7 +171,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 设置 portfolioName
-	 * 
+	 *
 	 * @param portfolioName
 	 *            portfolioName
 	 */
@@ -181,7 +181,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 获取 finprodName
-	 * 
+	 *
 	 * @return finprodName.
 	 */
 	public String getFinprodName() {
@@ -190,7 +190,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 设置 finprodName
-	 * 
+	 *
 	 * @param finprodName
 	 *            finprodName
 	 */
@@ -200,7 +200,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 获取 finprodType2
-	 * 
+	 *
 	 * @return finprodType2.
 	 */
 	public String getFinprodType2() {
@@ -209,7 +209,7 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 
 	/**
 	 * 设置 finprodType2
-	 * 
+	 *
 	 * @param finprodType2
 	 *            finprodType2
 	 */
@@ -240,23 +240,23 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 		this.pbExportstatus = pbExportstatus;
 	}
 
-    /**
-     * 获取 secAcctName
-     * 
-     * @return secAcctName
-     */
-    public String getSecAcctName() {
-        return secAcctName;
-    }
+	/**
+	 * 获取 secAcctName
+	 *
+	 * @return secAcctName
+	 */
+	public String getSecAcctName() {
+		return secAcctName;
+	}
 
-    /**
-     * 设置 secAcctName
-     * 
-     * @param secAcctName String
-     */
-    public void setSecAcctName(String secAcctName) {
-        this.secAcctName = secAcctName;
-    }
+	/**
+	 * 设置 secAcctName
+	 *
+	 * @param secAcctName String
+	 */
+	public void setSecAcctName(String secAcctName) {
+		this.secAcctName = secAcctName;
+	}
 
 	/**
 	 * 取得 指令创建来源
@@ -276,5 +276,18 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 	 */
 	public void setEntrustCreateSource(String entrustCreateSource) {
 		this.entrustCreateSource = entrustCreateSource == null ? null : entrustCreateSource.trim();
+	}
+
+	/**
+	 * 当前处理人
+	 */
+	private String nextUser;
+
+	public String getNextUser() {
+		return nextUser;
+	}
+
+	public void setNextUser(String nextUser) {
+		this.nextUser = nextUser;
 	}
 }

@@ -290,6 +290,8 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
         param.put("manager", manager);
         param.put("roleOne", DictCodeList.角色岗位_投资经理.getValue());
         param.put("roleTwo", DictCodeList.角色岗位_项目经理岗.getValue());
+        //领导也属于投资经理范畴
+        param.put("roleThree", DictCodeList.角色岗位_领导.getValue());
         return trdCommandDispatcher001Mapper.getManagers(param);
     }
 

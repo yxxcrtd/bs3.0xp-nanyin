@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.service.entrust.etrbrowdepoinfo.dto;
 
 import java.util.Date;
@@ -25,22 +25,22 @@ import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
  * @since 1.0
  */
 public class EtrBrowDepoInfoDto extends EtrEntrust {
-    
+
     /**
      * 指定交易员
      */
     private String trader;
-    
+
     /**
      * 委托关闭方式
      */
     private String CloseWay;
-    
+
     /**
      * 选中的数据
      */
     private transient List<EtrBrowDepoInfoDto> selectedItem;
-    
+
     /**
      * 操作类型
      */
@@ -50,77 +50,77 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = -1164891656947671931L;
-    
+
     /**
      * 期限天数，到期日-起息日
      */
     private Long termDays;
-    
+
     /**
      * 组合名称
      */
     private String portfolioName;
-    
+
     /**
      * 资产类型
      */
     private String finprodType2;
-    
+
     //资产代码
     private String finprodMarketId;
-    
+
     /**
      * 资产名称
      */
     private String finprodName;
-    
+
     /**
      * 付息频率
      */
     private  String payFreq;
-    
+
     /**
      * 已完成额度
      */
     private long finishAmt;
-    
+
     /**交易完成度
-     * 
+     *
      */
     private long transactioncom;
-    
+
     /**
      * 起息日
      */
     private Date dateStart;
-    
+
     /**
      * 到期日
      */
     private Date dateEnd;
-    
+
     /**
      * 投资人员信息
      */
     private BussEtrInvestPersonInfoDto bussEtrInvestPersonInfoDto;
-    
+
     /**
-     * 
+     *
      */
     private List<SysUploadFileInfo> fileArray;
-    
-    /**新增资产二、三、四级分类	王贵奇	2019/8/7 开始*/   
-    
+
+    /**新增资产二、三、四级分类	王贵奇	2019/8/7 开始*/
+
     /**
      * 资产二级类型
      */
-    private String assetType1;    
-    
+    private String assetType1;
+
     /**
      * 资产三级类型
      */
-    private String assetType10;   
-    
+    private String assetType10;
+
     /**
      * 资产四级类型
      */
@@ -132,33 +132,33 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     private String isAgreementEnd;
 
     public String getAssetType1() {
-		return assetType1;
-	}
+        return assetType1;
+    }
 
-	public void setAssetType1(String assetType1) {
-		this.assetType1 = assetType1;
-	}
+    public void setAssetType1(String assetType1) {
+        this.assetType1 = assetType1;
+    }
 
-	public String getAssetType10() {
-		return assetType10;
-	}
+    public String getAssetType10() {
+        return assetType10;
+    }
 
-	public void setAssetType10(String assetType10) {
-		this.assetType10 = assetType10;
-	}
+    public void setAssetType10(String assetType10) {
+        this.assetType10 = assetType10;
+    }
 
-	public String getAssetType11() {
-		return assetType11;
-	}
+    public String getAssetType11() {
+        return assetType11;
+    }
 
-	public void setAssetType11(String assetType11) {
-		this.assetType11 = assetType11;
-	}
+    public void setAssetType11(String assetType11) {
+        this.assetType11 = assetType11;
+    }
 
-	/**新增资产二、三、四级分类	王贵奇	2019/8/7 结束*/
+    /**新增资产二、三、四级分类	王贵奇	2019/8/7 结束*/
 
 
-	/**
+    /**
      * 获取 portfolioName
      * @return portfolioName.
      */
@@ -166,7 +166,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         return portfolioName;
     }
 
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -175,7 +175,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         this.portfolioName = portfolioName;
     }
 
-    
+
     /**
      * 获取 finprodType2
      * @return finprodType2.
@@ -184,7 +184,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         return finprodType2;
     }
 
-    
+
     /**
      * 设置 finprodType2
      * @param finprodType2 finprodType2
@@ -193,7 +193,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         this.finprodType2 = finprodType2;
     }
 
-    
+
     /**
      * 获取 finprodId
      * @return finprodId.
@@ -202,7 +202,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         return super.getFinprodId();
     }
 
-    
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -211,7 +211,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         return finprodName;
     }
 
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -220,7 +220,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         this.finprodName = finprodName;
     }
 
-    
+
     /**
      * 获取 payFreq
      * @return payFreq.
@@ -229,7 +229,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         return payFreq;
     }
 
-    
+
     /**
      * 设置 payFreq
      * @param payFreq payFreq
@@ -238,7 +238,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         this.payFreq = payFreq;
     }
 
-    
+
     /**
      * 获取 finishAmt
      * @return finishAmt.
@@ -247,7 +247,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         return finishAmt;
     }
 
-    
+
     /**
      * 设置 finishAmt
      * @param finishAmt finishAmt
@@ -256,7 +256,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         this.finishAmt = finishAmt;
     }
 
-    
+
     /**
      * 获取 transactioncom
      * @return transactioncom.
@@ -265,7 +265,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         return transactioncom;
     }
 
-    
+
     /**
      * 设置 transactioncom
      * @param transactioncom transactioncom
@@ -274,7 +274,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         this.transactioncom = transactioncom;
     }
 
-    
+
     /**
      * 获取 serialversionuid
      * @return serialversionuid.
@@ -284,7 +284,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 operateType
      * @return operateType.
@@ -294,7 +294,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -304,7 +304,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 trader
      * @return trader.
@@ -314,7 +314,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 trader
      * @param trader trader
@@ -324,7 +324,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -334,7 +334,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -344,7 +344,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -354,7 +354,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -363,9 +363,9 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
         this.selectedItem = selectedItem;
     }
 
-    
-    
-    
+
+
+
     /**
      * 获取 dateStart
      * @return dateStart.
@@ -375,7 +375,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 dateStart
      * @param dateStart dateStart
@@ -385,7 +385,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 dateEnd
      * @return dateEnd.
@@ -395,7 +395,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 dateEnd
      * @param dateEnd dateEnd
@@ -414,7 +414,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 termDays
      * @param termDays termDays
@@ -424,7 +424,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 bussEtrInvestPersonInfoDto
      * @return bussEtrInvestPersonInfoDto.
@@ -434,7 +434,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 bussEtrInvestPersonInfoDto
      * @param bussEtrInvestPersonInfoDto bussEtrInvestPersonInfoDto
@@ -444,7 +444,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 fileArray
      * @return fileArray.
@@ -454,7 +454,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -464,7 +464,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 获取 finprodMarketId
      * @return finprodMarketId.
@@ -474,7 +474,7 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -489,5 +489,17 @@ public class EtrBrowDepoInfoDto extends EtrEntrust {
 
     public void setIsAgreementEnd(String isAgreementEnd) {
         this.isAgreementEnd = isAgreementEnd;
+    }
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
     }
 }

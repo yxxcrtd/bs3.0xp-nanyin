@@ -1,15 +1,7 @@
 package com.joyintech.tams.settle.batch.datagather.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.common.base.entity.EtrFinishStatus;
-import com.joyintech.tams.common.base.entity.FinDealPledge;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
-import com.joyintech.tams.common.base.entity.StlPayOrders;
-import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
-import com.joyintech.tams.common.base.entity.TrdFinProductBarter;
-import com.joyintech.tams.common.base.entity.TrdFinProductBarterTotal;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
+import com.joyintech.tams.common.base.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +69,8 @@ public class InvestTradeWriteDto extends NeedToWriteEntity {
      * 回购质押品
      */
     private List<FinDealPledge> dealPledgeList;
+
+    private List<TrdProductDealAdd> trdProductDealAddList;
     
     /**
      * 日间委托完成度表有一笔交易编号等于自身委托编号的记录，这条记录每次正向跑批时需要实时更新
@@ -203,7 +197,15 @@ public class InvestTradeWriteDto extends NeedToWriteEntity {
 		return settleTransTgMappingList;
 	}
 
-	public void setSettleTransTgMappingList(List<SettleTransTgMapping> settleTransTgMappingList) {
+    public List<TrdProductDealAdd> getTrdProductDealAddList() {
+        return trdProductDealAddList;
+    }
+
+    public void setTrdProductDealAddList(List<TrdProductDealAdd> trdProductDealAddList) {
+        this.trdProductDealAddList = trdProductDealAddList;
+    }
+
+    public void setSettleTransTgMappingList(List<SettleTransTgMapping> settleTransTgMappingList) {
 		this.settleTransTgMappingList = settleTransTgMappingList;
 	}
 }

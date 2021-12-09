@@ -46,7 +46,18 @@ public class TrdRepoTrade002Dto extends TrdProductDeal implements ProcessEntity 
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = -441611713511199822L;
+    /**
+     * 成交匹配的流水号 seqId
+     */
+    private String dealSqeId;
 
+    public String getDealSqeId() {
+        return dealSqeId;
+    }
+
+    public void setDealSqeId(String dealSqeId) {
+        this.dealSqeId = dealSqeId;
+    }
     /**
      * 首期交付日
      */

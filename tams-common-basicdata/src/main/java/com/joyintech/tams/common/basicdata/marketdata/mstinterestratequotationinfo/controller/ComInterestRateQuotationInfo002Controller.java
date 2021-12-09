@@ -73,7 +73,7 @@ public class ComInterestRateQuotationInfo002Controller extends BaseController {
             Map<String, Object> map = new HashMap<>();
             map.put("intRateId", intRateId);
             map.put("effDate", effDateStr);
-            map.put("ccy", ccy);
+            map.put("ccy", StringUtil.isNotEmpty(ccy)?ccy:"");
             ComInterestRateQuotationInfoDto dto = comInterestRateQuotationInfoService.selectByPrimaryKey(
                 map);
             // 设置到model中

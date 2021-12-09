@@ -86,6 +86,8 @@ public class TrdConBond003Controller extends BaseController {
         String pageModel = getParam("pageModel");
         String ps = this.getParam("ps");
         String validStatus= this.getParam("validStatus");
+        //获取成交匹配录单
+        String tranRecord = this.getParam("tranRecord");
         if (StringUtil.isNotEmpty(tradeId)&&(!StringUtil.equals(validStatus, DictCodeListExt1.交易流程状态_流程中.getValue()))) {
             dto = trdConBond003Service.getTrdConBond003Dto(tradeId);
             if(StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
@@ -130,6 +132,10 @@ public class TrdConBond003Controller extends BaseController {
                 model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
                 model.addAttribute("workflowId",workflowId);
             }
+        //成交匹配录单
+        else if(StringUtil.isNotEmpty(tranRecord)) {
+            dto = JsonUtils.json2Object(tranRecord,TrdConBond003Dto.class);
+        }
         else {
             String entrustId = this.getParam("entrustId");
             if (StringUtil.isNotEmpty(entrustId)) {

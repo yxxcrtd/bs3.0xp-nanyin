@@ -484,6 +484,9 @@
      */
     var portfolioIdChange = function(init) {
         linkAcctNo(init);
+        // GZYHTZJY-143:修改查询证券账户传参 fuyongsheng 20211101 edit start
+        linkSecAcctId();
+        // GZYHTZJY-143:修改查询证券账户传参 fuyongsheng 20211101 edit end
         showCashData();
     };
 
@@ -600,7 +603,9 @@
                 $("#ps").val('').trigger('change');
                 $("#repSecId").val('').trigger('change');
             }
-            // linkSecAcctId();
+            // GZYHTZJY-143:修改查询证券账户传参 fuyongsheng 20211101 edit start
+            linkSecAcctId();
+            // GZYHTZJY-143:修改查询证券账户传参 fuyongsheng 20211101 edit end
             linkAcctNo(false);
             pageShowEdit(false);
             $("#acctTradeMarket").val(tradeMarket);
@@ -2086,10 +2091,15 @@
          * 交易场所+资金账户联动证券账户
          */
         var linkSecAcctId = function() {
+            // GZYHTZJY-143:修改查询证券账户传参 fuyongsheng 20211101 edit start
+            var portfolioId = $("#portfolioId").val();
+            // GZYHTZJY-143:修改查询证券账户传参 fuyongsheng 20211101 edit end
             var tradeMarket = $("#tradeMarket").val();
             var acctNo = $("#acctNo").val();
             if(tradeMarket && acctNo) {
-                var list = getAcctNoSelectList(null, acctNo, tradeMarket);
+                // GZYHTZJY-143:修改查询证券账户传参 fuyongsheng 20211101 edit start
+                var list = getAcctNoSelectList(portfolioId, acctNo, tradeMarket);
+                // GZYHTZJY-143:修改查询证券账户传参 fuyongsheng 20211101 edit end
                 if(list && list.length > 0 && list[0].object) {
                     var object = list[0].object;
                     for(var index in object) {

@@ -19,6 +19,8 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdplannetduration.dto.TrdPlanNetDuration001Dto;
 import com.joyintech.tams.invest.period.trdplannetduration.service.TrdPlanNetDuration001Service;
@@ -126,7 +128,7 @@ public class TrdPlanNetDuration002Controller extends BaseController {
             trader = dto.getTrader();
             type = dto.getType();
         }
-        else if (StringUtil.isNotEmpty(statusValid)) {
+        else if (StringUtil.isNotEmpty(statusValid) && !StringUtil.equals(statusValid,DictCodeListExt1.画面数据状态_撤销.getValue())) {
             dto = trdPlanNetDuration001Service.findEffectiveData(param);
             Map<String, Object> pageParam = new HashMap<>();
             pageParam.put("busiCode", dto.getTotleTradeId());
@@ -143,6 +145,15 @@ public class TrdPlanNetDuration002Controller extends BaseController {
                     DateUtil.format(dto.getExRightsDate()));
                 dto.setQty(ArithmeticUtil.divide(dto.getTradeAmt(), unitPrice, 4));
             }
+        }else if (StringUtil.isNotEmpty(statusValid) && StringUtil.equals(statusValid,DictCodeListExt1.画面数据状态_撤销.getValue())) {
+            dto = trdPlanNetDuration001Service.findEffectiveData(param);
+            Map<String, Object> pageParam = new HashMap<>();
+            pageParam.put("busiCode", dto.getTotleTradeId());
+            pageParam.put("statusValid", statusValid);
+            pageParam.put("chlId", dto.getChlId());
+            // 查询利息信息
+            dto.setFinAssetIntInfoList(trdPlanNetDuration001Service.findAssetIntInfo(pageParam));
+            trader = dto.getTrader();
         }
         else {
             dto = new TrdPlanNetDuration001Dto();

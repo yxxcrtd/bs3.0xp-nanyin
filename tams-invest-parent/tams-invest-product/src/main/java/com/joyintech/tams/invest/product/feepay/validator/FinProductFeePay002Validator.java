@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.feepay.validator;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +92,11 @@ public class FinProductFeePay002Validator implements BeanValidator {
                 mstWorkflowCommonService.isInWflProcess(inputParameter)) {
             validList.add(new ValidMessage(this.getMessage("COMMON_E_0012", finProductFeePay002Dto.getFinprodId()+":"+finProductFeePay002Dto.getFeeName())));
         }
-
+        // TISHKS-9: 增加费用金额大于0校验 fuyongsheng 20211110 edit start
+        if(finProductFeePay002Dto.getActPayAmt().compareTo(BigDecimal.ZERO) == 0){
+            validList.add(new ValidMessage(this.getMessage("费用金额必须大于0", String.valueOf(finProductFeePay002Dto.getActPayAmt()))));
+        }
+        // TISHKS-9: 增加费用金额大于0校验 fuyongsheng 20211110 edit end
         if(bussCommonMapperDelegateService != null && StringUtil.isNotEmpty(finProductFeePay002Dto.getFinprodId())) {
             FinProduct finProduct = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class, finProductFeePay002Dto.getFinprodId(), FinProduct.class);
             if(finProduct != null && finProduct.getVdate() != null && (DateUtil.compareDate(finProductFeePay002Dto.getPayDate(), finProduct.getVdate())<0)){

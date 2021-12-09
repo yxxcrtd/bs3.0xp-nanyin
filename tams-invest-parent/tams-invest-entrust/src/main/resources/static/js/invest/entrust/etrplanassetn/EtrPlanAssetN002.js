@@ -311,7 +311,7 @@
                 });
                 finprodId = data.finprodId;
                 $('#finprodIdhid').val(data.finprodId).trigger('change');
-                $('#finprodName').val(data.finprodId).trigger('change');
+                $('#finprodName').val($('#finprodId').val()).trigger('change');
                 $('#calendarId').val(data.calendarId).trigger('change');
                 $('#finvdate').val(new Date(data.finvdate)).trigger('change');
                 $('#finmdate').val(new Date(data.finmdate)).trigger('change');

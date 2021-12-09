@@ -63,10 +63,12 @@
         //, {field: 'securitiesCustName', title: 'EtrRepo003.securitiesCust', width: 150, sortable: false}
         // , {field: 'chlIdName', title: 'invest.channelId', width: 150, sortable: false}
         , {field: 'proAvailableCash', title: 'EtrRepo003.proAvailableCash', type: 'number', width: 150, sortable: false}
+        , {field: 'zyqkName', title: 'EtrRepo003.zyqk', width: 150, sortable: false}
         , {field: 'remark', title: 'EtrRepo003.remark', width: 150, sortable: false}
         // , {field: 'zyqk', title: 'EtrRepo003.zyqk', width: 150, sortable: false}
         , {field: 'fileArray', width: 150, visible: false}
         , {field: 'businessId', width: 150, visible: false}
+        , {field: 'zyqk', width: 150, visible: false}
         , {field: 'fileArrayName', title: 'EtrRepo003.fileArray', type: 'text', width: 150, sortable: false}
         , {
             field: 'operation1', title: 'SysCommon.operation', render: function (data, type, row, meta) {

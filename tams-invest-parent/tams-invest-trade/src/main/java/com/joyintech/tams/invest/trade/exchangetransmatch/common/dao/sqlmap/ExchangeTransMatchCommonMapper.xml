@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.invest.trade.exchangetransmatch.common.dao.ExchangeTransMatchCommonMapper" >
+    <select id="getEtrEntrustByIdList" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto">
+        select
+        T2.TARGET_TYPE targetType,
+        T2.TRADER trader,
+        NVL(T1.ENTRUST_NUM,0) - NVL(S.MARCH_QTY_EN,0) remainEntrustNum,
+        NVL(T1.ENTRUST_AMT,0) - NVL(S.MARCH_AMT_EN,0) remainEntrustAmt,
+        T1.*
+        from ETR_ENTRUST T1
+        left join
+            ETR_ENTRUST_ADD T2
+            ON T1.ENTRUST_ID = T2.ENTRUST_ID
+        LEFT JOIN (SELECT ENTRUNST_TRADE_ID,
+                    NVL(SUM(MARCH_QTY_EN), 0) MARCH_QTY_EN,
+                    NVL(SUM(MARCH_AMT_EN), 0) MARCH_AMT_EN
+                        FROM SETTLE_TRANS_DATA_TOTAL_MATCH
+                    GROUP BY ENTRUNST_TRADE_ID) S
+            ON S.ENTRUNST_TRADE_ID = T1.ENTRUST_ID
+        <where>
+            <if test="entrustIdList!=null and entrustIdList.size()>0 ">
+                AND (T1.ENTRUST_ID IN
+                <foreach item="item" index="index" collection="entrustIdList" open="(" close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) or T1.ENTRUST_ID in (
+                    </if>
+                    #{item,jdbcType=VARCHAR}
+                </foreach>)
+            </if>
+        </where>
+    </select>
+
+    <select id="getNextWorkDay" parameterType="java.util.Map" resultType="java.util.Date">
+        SELECT
+        	MIN(B.CDATE)
+        FROM
+        	VAL_VW_MST_HOLIDAY B
+        WHERE
+        	B.IS_HOLIDAY = 0 and B.CDATE > #{nowday, jdbcType=DATE} and B.TRADE_CALENDAR_ID = #{calendarId, jdbcType=DATE}
+    </select>
+
+    <!-- 前置交易编号查询 -->
+    <select id="selectBTradeId" resultType="java.lang.String">
+        SELECT DISTINCT
+        TRADE_ID_TG
+        FROM
+        SETTLE_TRANS_DATA_TOTAL t1
+        INNER JOIN SETTLE_TRANS_TG_MAPPING t2
+        ON t1.TRADE_ID = t2.TRADE_ID
+        <where>
+            t1.APPLY_TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+            <if test="ps != null">
+                and t1.PS = #{ps,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryTotalAddByTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper.BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper.Base_Column_List" />
+        from TRD_DEAL_TOTAL_ADD
+        where TOTLE_TRADE_ID = (select TOTLE_TRADE_ID from trd_product_deal where trade_id = #{tradeId,jdbcType=VARCHAR})
+    </select>
+
+    <!-- 根据汇总流水号获取成交明细 -->
+    <select id="getSettleTransDataList" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
+        select
+        A.*
+          from SETTLE_TRANS_DATA A
+         INNER JOIN SETTLE_TRANS_DATA_TOTAL B
+            ON A.APPLY_TRADE_ID = B.APPLY_TRADE_ID
+           AND A.DEAL_DATE = B.DEAL_DATE
+           AND A.SEAT_NUMBER = B.SEAT_NUMBER
+           AND A.PS = B.PS
+           AND A.FINPROD_TYPE2 = A.FINPROD_TYPE2
+        <where>
+            B.SEQ_ID = #{seqId,jdbcType=VARCHAR}
+        </where>
+    </select>
+
+    <delete id="deleteSettleTransDataTotalMatch" parameterType="java.lang.String" >
+        delete from SETTLE_TRANS_DATA_TOTAL_MATCH T
+         where T.SEQ_NO = #{totalSeqId}
+           AND T.ENTRUNST_TRADE_ID = #{entrunstId}
+    </delete>
+
+    <delete id="deleteSettleTransTgMapping" parameterType="java.lang.String" >
+        delete from SETTLE_TRANS_TG_MAPPING T
+        WHERE T.TRADE_ID_TG =  #{tradeId}
+    </delete>
+
+    <select id="getTotalSeqId" resultType="java.lang.String">
+            select DISTINCT A.SEQ_ID
+              from SETTLE_TRANS_DATA_TOTAL A
+             INNER JOIN SETTLE_TRANS_DATA B
+                ON B.APPLY_TRADE_ID = A.APPLY_TRADE_ID
+               AND B.DEAL_DATE = A.DEAL_DATE
+               AND B.SEAT_NUMBER = A.SEAT_NUMBER
+             INNER JOIN SETTLE_TRANS_TG_MAPPING C
+                ON C.TRADE_ID = B.TRADE_ID
+             WHERE C.TRADE_ID_TG = #{tradeId}
+    </select>
+
+    <select id="getEntrunstId" resultType="java.lang.String">
+            SELECT DISTINCT ENTRUST_ID
+              from (SELECT A.ENTRUST_ID
+                      FROM ETR_ENTRUST A
+                     INNER JOIN TRD_PRODUCT_DEAL_ADD B
+                        ON A.ENTRUST_ID = B.ENTRUST_ID
+                     WHERE B.TRADE_ID = #{tradeId}
+                    UNION ALL
+                    SELECT A1.ENTRUST_ID
+                      FROM ETR_ENTRUST A1
+                     INNER JOIN TRD_DEAL_TOTAL_ADD B1
+                        ON A1.ENTRUST_ID = B1.ENTRUST_ID
+                     WHERE B1.TOTLE_TRADE_ID = #{tradeId})
+    </select>
+
+    <select id="getRemainNum" resultType="java.math.BigDecimal">
+            select NVL(SUM(T.MARCH_QTY),0)
+              from SETTLE_TRANS_DATA_TOTAL_MATCH T
+             WHERE T.SEQ_NO = #{totalSeqId}
+    </select>
+
+    <select id="getSettleTransTgMapping" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto">
+            select
+                'N'    isTotalDeal,
+                <!--<include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />-->
+                A.*
+              from SETTLE_TRANS_TG_MAPPING A
+             INNER JOIN SETTLE_TRANS_DATA B
+                ON A.TRADE_ID = B.TRADE_ID
+             INNER JOIN SETTLE_TRANS_DATA_TOTAL C
+                ON B.APPLY_TRADE_ID = C.APPLY_TRADE_ID
+               AND B.DEAL_DATE = C.DEAL_DATE
+               AND B.SEAT_NUMBER = C.SEAT_NUMBER
+             INNER JOIN SETTLE_TRANS_DATA_TOTAL_MATCH D
+                ON C.SEQ_ID = D.SEQ_NO
+             INNER JOIN TRD_PRODUCT_DEAL E
+                ON E.TRADE_ID = A.TRADE_ID_TG
+             INNER JOIN TRD_PRODUCT_DEAL_ADD F
+                ON E.TRADE_ID = F.TRADE_ID
+               AND F.ENTRUST_ID = D.ENTRUNST_TRADE_ID
+             WHERE
+                A.TG_DATA_STATUS = #{tgDataStatus}
+               AND D.SEQ_NO = #{seqNo}
+               AND D.ENTRUNST_TRADE_ID = #{entrunstId}
+               AND D.MATCH_CLASS = #{matchClass}
+            union  all
+            select
+            'Y'   isTotalDeal,
+            <!--<include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />-->
+            A.*
+            from SETTLE_TRANS_TG_MAPPING A
+            INNER JOIN SETTLE_TRANS_DATA B
+                ON A.TRADE_ID = B.TRADE_ID
+            INNER JOIN SETTLE_TRANS_DATA_TOTAL C
+                ON B.APPLY_TRADE_ID = C.APPLY_TRADE_ID
+                AND B.DEAL_DATE = C.DEAL_DATE
+                AND B.SEAT_NUMBER = C.SEAT_NUMBER
+            INNER JOIN SETTLE_TRANS_DATA_TOTAL_MATCH D
+                ON C.SEQ_ID = D.SEQ_NO
+            INNER JOIN TRD_PRODUCT_DEAL E
+                ON  E.TOTLE_TRADE_ID = A.TRADE_ID_TG
+            INNER JOIN TRD_PRODUCT_DEAL_ADD F
+                ON E.TRADE_ID = F.TRADE_ID
+                AND F.ENTRUST_ID = D.ENTRUNST_TRADE_ID
+            WHERE
+                A.TG_DATA_STATUS = #{tgDataStatus}
+                AND D.SEQ_NO = #{seqNo}
+                AND D.ENTRUNST_TRADE_ID = #{entrunstId}
+                AND D.MATCH_CLASS = #{matchClass}
+    </select>
+</mapper>

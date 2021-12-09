@@ -94,7 +94,7 @@
     <!-- 查询指令持仓流水 2019/12/15 add by yjm-->
     <select id="selectCommandPositionFlow" parameterType="com.joyintech.tams.common.base.entity.EtrSecPositionFlow" resultType="java.math.BigDecimal">
      	select
-        	t.amount as amount 
+        	sum(t.amount) as amount
         from etr_sec_position_flow t 
         where         
         	t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}  
@@ -1011,5 +1011,25 @@
             order by msp.DEAL_DATE desc
         )
         where rn = 1
+    </select>
+
+    <select id="selectShengYuEntrustAmt" resultType="java.math.BigDecimal">
+        select t1.ENTRUST_AMT - nvl(t2.PLEDGE_FACE_VALUE,0) shengYuEntrustAmt
+        from (select ENTRUST_AMT from ETR_ENTRUST where ENTRUST_ID=#{entrustId}) t1,
+             (select sum(PLEDGE_FACE_VALUE) PLEDGE_FACE_VALUE from FIN_DEAL_TARGET where FINPROD_ID
+                                                                                             in (select TRADE_ID from TRD_PRODUCT_DEAL where TRADE_STATUS = '01' and (IS_CANCEL = 'N' or IS_CANCEL is null)
+                                                                                                                                         and TRADE_ID in (select TRADE_ID from TRD_PRODUCT_DEAL_ADD where ENTRUST_ID=#{entrustId}
+                     ))) t2
+    </select>
+
+    <select id="selectZhiLingChiCang" resultType="java.math.BigDecimal">
+        select sum(AMOUNT) from ETR_SEC_POSITION_FLOW where TRADE_ID = #{entrustId} and FINPROD_ID=#{finprodId}
+    </select>
+
+    <select id="selectJiaoYiChiCang" resultType="java.math.BigDecimal">
+        select sum(PLEDGE_NUMBER) from FIN_DEAL_PLEDGE where FINPROD_ID in (
+            select TRADE_ID from TRD_PRODUCT_DEAL where TRADE_STATUS = '01' and (IS_CANCEL = 'N' or IS_CANCEL is null)
+                                                    and TRADE_ID in (select TRADE_ID from TRD_PRODUCT_DEAL_ADD where ENTRUST_ID = #{entrustId})
+        ) and PLEDGE_FINPROD_ID=#{finprodId};
     </select>
 </mapper>

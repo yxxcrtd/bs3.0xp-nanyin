@@ -79,6 +79,9 @@ public class TrdBondToStock002Controller extends BaseController {
         model.addAttribute("entrustAmtUnit", entrustAmtUnit);
         //配置单位 add by yeming 20210726 end
         TrdBondToStock001Dto entity;
+
+        //获取成交匹配录单
+        String tranRecord = this.getParam("tranRecord");
 //        流程中数据
         if(StringUtil.isNotEmpty(workflowId)){
             entity = trdBondToStock002Service.getBussinessEntityByWorkflowId(workflowId);
@@ -135,6 +138,10 @@ public class TrdBondToStock002Controller extends BaseController {
             if(StringUtil.isNotBlank(entity.getRemark())&&StringUtil.contains(entity.getRemark(),"退回原因")){
                 entity.setRemark("");
             }
+        }
+        //成交匹配录单
+        else if(StringUtil.isNotEmpty(tranRecord)) {
+            entity = JsonUtils.json2Object(tranRecord,TrdBondToStock001Dto.class);
         }
         else{
             entity = new TrdBondToStock001Dto();

@@ -5,7 +5,7 @@
     /**
      * 获取查询参数
      */
-    var searchform =function(){ 
+    var searchform =function(){
         var data = $.serializeToObject('#searchForm');
         if($('#ccy').val()){
             data.ccy = $('#ccy').val();
@@ -25,12 +25,12 @@
         if($('#type12').val()){
             data.type12 = $('#type12').val().join(",");
         }
-        if(data.entrustStatus){
-            data.entrustStatus = data.entrustStatus.join(',');
-        }
+        // if(data.entrustStatus){
+        //     data.entrustStatus = data.entrustStatus.join(',');
+        // }
         return data;
     };
-    /** 
+    /**
      * 新建
      */
     function showDialog() {
@@ -51,9 +51,9 @@
             data.operateType = "dblclick";
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("EtrProject002.reference"),
-                    JoyinUtil.getRealPath("invest/entrust/etrproject/EtrProject002/init"),
-                    "98%", "95%", data,
-                    function(){table.reload();});
+                JoyinUtil.getRealPath("invest/entrust/etrproject/EtrProject002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
         },
         cols:[
             {field:'entrustStatus',visible:false}
@@ -92,15 +92,16 @@
             ,{field:'entrustAmt',type:'number', title: 'EtrProject001.entrustAmt', width:'10%',sortField:"entrustAmt"}
             ,{field:'finishAmt',type:'number', title: 'EtrProject001.finishAmt', width:'10%',sortField:"finishAmt"}
             ,{field:'transactioncom', title: 'EtrProject001.transactioncom',render : function(data, type, row, meta){
-                return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.finishAmt/row.entrustAmt*100).toFixed(2)+"%'><span class='layui-progress-text'>"+(row.finishAmt/row.entrustAmt*100).toFixed(2)+"%</span></div></div>";
-            }, width:'10%',sortable:false}
+                    return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"+(row.finishAmt/row.entrustAmt*100).toFixed(2)+"%'><span class='layui-progress-text'>"+(row.finishAmt/row.entrustAmt*100).toFixed(2)+"%</span></div></div>";
+                }, width:'10%',sortable:false}
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:150 ,sortable:false}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit'] , width:'10%'}
-            ],
+        ],
     });
     /**
      * 导出
      */
-    var exportExcel = function(){       
+    var exportExcel = function(){
         Joyin.exportExcel(basePath+"invest/entrust/etrproject/EtrProject001/export", searchform());
     };
 
@@ -112,9 +113,9 @@
         data.pageModel=PAGE_MODEL_EDIT;
         Joyin.ajaxJson(basePath + 'invest/entrust/etrproject/EtrProject002/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrProject002.edit"),
-                    JoyinUtil.getRealPath("invest/entrust/etrproject/EtrProject002/init"),
-                    "98%", "95%", data,
-               function(){table.reload();});
+                JoyinUtil.getRealPath("invest/entrust/etrproject/EtrProject002/init"),
+                "98%", "95%", data,
+                function(){table.reload();});
         });
     });
 //    /**
@@ -135,8 +136,8 @@
      */
     table.bind('click','.portfolioIdLink', function(row) {
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
-                "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
+            basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
+            "98%", "90%", {pageModel:PAGE_MODEL_REFERENCE,//page_model:查看
                 portfolioId:row.portfolioId});//主键组合代码
     });
     /**
@@ -145,12 +146,12 @@
     table.bind('click','.finprodIdLink', function(row) {
         //在新建界面进行显示单行的详细信息
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
-                basePath + "invest/asset/project/FinProjectTargetAsset002/init",
-                "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
-                                finprodId:row.finprodId,  //金融产品代码
-                                //valDate:data.valDate,//估值日
-                                //finprodMarketId:data.finprodMarketId//市场代码
-                                });
+            basePath + "invest/asset/project/FinProjectTargetAsset002/init",
+            "95%", "80%", {pageModel:PAGE_MODEL_REFERENCE,
+                finprodId:row.finprodId,  //金融产品代码
+                //valDate:data.valDate,//估值日
+                //finprodMarketId:data.finprodMarketId//市场代码
+            });
     });
     /**
      * 编辑按钮事件
@@ -182,11 +183,11 @@
         $('#EtrProject001_btn_close').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }else {
+            }else {
                 for(var index in selArr){
                     if(selArr[index].entrustStatus == '08'){
                         Joyin.error("流程中的数据不允许关闭");
@@ -201,7 +202,7 @@
                         });
                     });
                 });
-             }
+            }
         });
         /**
          * 撤销
@@ -209,11 +210,11 @@
         $('#EtrProject001_btn_revoke').click(function() {
             if (table != null && table != '') {
                 var selArr = table.getAllCheckedRows();
-             }
+            }
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
-             }else {
+            }else {
                 for(var index in selArr){
                     if(selArr[index].entrustStatus == '08'){
                         Joyin.error("流程中的数据不允许撤回");
@@ -228,43 +229,43 @@
                         });
                     });
                 });
-             }
+            }
         });
-      //是否展示资产四五级分类
+        //是否展示资产四五级分类
         if(IS_SHOW_TYPE == '01'){
-        	$('#assetType11Div').show();
+            $('#assetType11Div').show();
         }else{
-        	$('#assetType11Div').hide();
+            $('#assetType11Div').hide();
         }
 
         // 导入按钮点击事件
         $('#EtrProject001_btn_import').click(function() {
             // Joyin.confirm("请确认是否要导入数据？", function() {
-                Joyin.uploadFile({pageId:'EtrProject003MTM'},function(fileName) {
-                    Joyin.ajax(basePath + 'invest/entrust/etrproject/EtrProject003/checkImportData', {fileName: fileName}, function(checkResult) {
-                                setTimeout( function () {
-                                    Joyin.confirm(checkResult.data.confirmMsg,function() {
-                                        var result={};
-                                        result.operateType = "import";
-                                        result.pageModel='';
-                                        result.tempList = checkResult.data.correctData;
-                                        Joyin.dialog(JoyinUtil.getLabel("EtrProject003"),
-                                            JoyinUtil.getRealPath("/invest/entrust/etrproject/EtrProject003/init"),
-                                            "98%", "95%", result,
-                                            function(){table.reload();});
-                                    });
-                                    //数据是否大于100check
-                                    if(checkResult.data.errorMsg){
-                                        Joyin.error(checkResult.data.errorMsg);
-                                        return;
-                                    }
-                                },1000);
-                        }
-                    );
+            Joyin.uploadFile({pageId:'EtrProject003MTM'},function(fileName) {
+                Joyin.ajax(basePath + 'invest/entrust/etrproject/EtrProject003/checkImportData', {fileName: fileName}, function(checkResult) {
+                        setTimeout( function () {
+                            Joyin.confirm(checkResult.data.confirmMsg,function() {
+                                var result={};
+                                result.operateType = "import";
+                                result.pageModel='';
+                                result.tempList = checkResult.data.correctData;
+                                Joyin.dialog(JoyinUtil.getLabel("EtrProject003"),
+                                    JoyinUtil.getRealPath("/invest/entrust/etrproject/EtrProject003/init"),
+                                    "98%", "95%", result,
+                                    function(){table.reload();});
+                            });
+                            //数据是否大于100check
+                            if(checkResult.data.errorMsg){
+                                Joyin.error(checkResult.data.errorMsg);
+                                return;
+                            }
+                        },1000);
+                    }
+                );
 
-                },function() {
-                    table.reload();
-                });
+            },function() {
+                table.reload();
+            });
             // });
         });
     });

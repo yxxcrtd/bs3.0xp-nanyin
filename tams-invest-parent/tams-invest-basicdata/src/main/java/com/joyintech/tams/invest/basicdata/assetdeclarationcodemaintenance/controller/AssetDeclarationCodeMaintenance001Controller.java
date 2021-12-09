@@ -145,11 +145,14 @@ public class AssetDeclarationCodeMaintenance001Controller extends BaseController
 			for (SelectOptionDto dto : selectDto1.getOptions()) {
 				// 债券
 				if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(assetsType)) {
-					if (DictCodeListExt3.金融产品其他代码类型_回售代码.getValue().equals(dto.getId())
-							|| DictCodeListExt3.金融产品其他代码类型_质押代码.getValue().equals(dto.getId())
-							|| DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue().equals(dto.getId())
-							|| DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getValue().equals(dto.getId())
-							|| DictCodeListExt3.金融产品其他代码类型_配债代码.getValue().equals(dto.getId())) {
+					if (
+						// 业务类型下拉框删除：回售、标准券出入库、可转债转股选项 fuyongsheng 20211103 edit start
+						// DictCodeListExt3.金融产品其他代码类型_回售代码.getValue().equals(dto.getId()) ||
+						// DictCodeListExt3.金融产品其他代码类型_质押代码.getValue().equals(dto.getId()) ||
+						DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue().equals(dto.getId())
+						// || DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getValue().equals(dto.getId())
+						// 业务类型下拉框删除：回售、标准券出入库、可转债转股选项 fuyongsheng 20211103 edit end
+						|| DictCodeListExt3.金融产品其他代码类型_配债代码.getValue().equals(dto.getId())) {
 						othOtherType.add(dto);
 					}
 				} else if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(assetsType)) {

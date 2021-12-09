@@ -1,23 +1,10 @@
 package com.joyintech.tams.settle.batch.datagather.processor.bond;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.EtrFinishStatus;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.StlPayOrders;
-import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -30,6 +17,14 @@ import com.joyintech.tams.settle.batch.datagather.dto.TrdProductDealDto;
 import com.joyintech.tams.settle.batch.datagather.processor.StlDataGatherProcessor;
 import com.joyintech.tams.settle.batch.datagather.service.StlDataGatherService;
 import com.joyintech.tams.settle.common.service.SettleCommonService;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 债券买入、卖出、行权回售
@@ -49,12 +44,16 @@ public abstract class StlDataGatherBondBaseProcessor extends StlDataGatherProces
     @Autowired
     private SettleCommonService settleCommonService;
 
+
     protected abstract void setDealTotal(TotalTrdProductDealDto dealTotal, TrdProductDealDto trdProductDealDto);
 
     @Override
     protected String getSecType() {
         return DictCodeListExt1.证券品种_债券.getValue();
     }
+
+    @Override
+    protected List<String> getFinprodType() {return Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券.getValue());}
 
     /**
      * 生成汇总交易，每条明细生成一条汇总交易

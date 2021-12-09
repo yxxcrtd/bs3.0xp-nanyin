@@ -218,6 +218,8 @@ public class EtribRepoInfo003Controller extends BaseController {
                 messages.add(new ValidMessage("mdate", "请输入指令终止日。"));
             if(!StringUtil.isNotEmpty(dtoList.get(0).getSettleSpreed()))
                 messages.add(new ValidMessage("settleSpreed", "请输入清算速度。"));
+            if(!StringUtil.isNotEmpty(dtoList.get(0).getRepoTerm()))
+                messages.add(new ValidMessage("repoTerm", "请输入回购期限。"));
             if (StringUtil.isNotEmpty(dtoList.get(0).getChlId())) {
                 chlId = true;
             }
@@ -319,6 +321,9 @@ public class EtribRepoInfo003Controller extends BaseController {
         // 针对每个单组合绑定附件
         List<UploadFile> files = fileAttachmentProcess.fetchByBusinessCode(RepoInfoDto.getBusinessId());
         for(EtribRepoInfo003Dto dto: RepoInfoDto.getEtrInvestRepoInfoDtos()) {
+            // TISHKS-270:多组合指令回购类型展示为空 fuyongsheng 20211112 add start
+            dto.setAssetType1(DictCodeList.回购类型_质押式回购.getValue());
+            // TISHKS-270:多组合指令回购类型展示为空 fuyongsheng 20211112 add end
             List<String> fileNos = new ArrayList<>();
             if(!dto.equals(RepoInfoDto.getEtrInvestRepoInfoDtos().get(0))) {
                 if (CollectionUtils.isNotEmpty(files)) {

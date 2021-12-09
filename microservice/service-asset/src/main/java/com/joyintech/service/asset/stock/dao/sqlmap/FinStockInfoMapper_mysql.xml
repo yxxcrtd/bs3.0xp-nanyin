@@ -7,6 +7,7 @@
         FIN_PRODUCT.FINPROD_MARKET_ID as finprodMarketId,
         FIN_PRODUCT_ADD.BOARD as board,
         MST_CUSTOMER_INFO.CUSTOMER_NAME as customerName,
+        MST_CUSTOMER_INFO.CUSTOMER_ID as issuer,
         FIN_PRODUCT.FINPROD_ABBR as finprodAbbr,
         FIN_PRODUCT.TRADE_MARKET as tradeMarket,
         C.S_SHARES as sShares,

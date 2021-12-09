@@ -48,8 +48,8 @@ $(function () {
 		   {field:'finprodId',title: '产品代码', visible:false},
 		   {field:'finprodMarketId',width:150, title: '产品代码', sort: true},
 		   {field:'finprodAbbr',width:150, title: '产品简称', sort: true},
-		   {field:'channelId',width:150,title: '通道代码', visible:true,sort: true},
-           {field:'channelName',width:150, title: '通道名称', sort: true},
+		   // {field:'channelId',width:150,title: '通道代码', visible:true,sort: true},
+           // {field:'channelName',visible:true,width:150, title: '通道名称', sort: true},
 		   {field:'ccyStr',width:100, title: '币种', sort: true,sortField:'ccy'},
             /*ZGBUG-332 【增值税缴纳】不支持退补税，列表表头，不应展示退税 guyunfei 20200311 end*/
            {field:'vDate',width:130, title: '缴税开始日', sort: true},

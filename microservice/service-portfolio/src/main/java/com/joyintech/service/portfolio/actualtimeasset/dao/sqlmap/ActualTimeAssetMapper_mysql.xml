@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.portfolio.actualtimeasset.dao.ActualTimeAssetMapper_mysql">
 	<select id="findPage" resultType="com.joyintech.service.portfolio.actualtimeasset.dto.ActualTimeAssetDto">
+		select * from(
     	select distinct tt.* from 
 		     (
 		     	select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr,type8,type7,
@@ -348,7 +349,12 @@
 	       ) tt 
 		   where <![CDATA[  actualPositionAmount <> 0 or tradePositionAmount <> 0 or instructionsAmount <> 0
 		   					or pledgeAmount <> 0 or preReductionAmount <> 0  ]]> 
-		   order by portfolioId desc,type8 desc,secAcctId desc,finprodMarketId desc 
+		   order by portfolioId desc,type8 desc,secAcctId desc,finprodMarketId desc )abc
+		<where>
+			<if test="finprodId != null and finprodId !=''">
+				and abc.finprodId = #{finprodId,jdbcType=VARCHAR}
+			</if>
+		</where>
     </select>
 	<sql id="Base_Left_join_Sql" >
 		left join (

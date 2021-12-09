@@ -23,7 +23,8 @@
             <Cell order="19" name="交易完成度">dealPercent</Cell>
             <Cell order="20" name="币种">otherCcy</Cell>
             <Cell order="21" name="本方交易员">trader</Cell>
-            <Cell order="22" name="备注">remark</Cell>
+            <Cell order="22" name="业务编号"></Cell>
+            <Cell order="23" name="备注">remark</Cell>
         </Row>
     </Worksheet>
 </Workbook>

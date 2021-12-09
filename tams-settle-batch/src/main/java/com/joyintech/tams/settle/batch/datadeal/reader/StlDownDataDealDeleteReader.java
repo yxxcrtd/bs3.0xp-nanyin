@@ -1,20 +1,18 @@
 package com.joyintech.tams.settle.batch.datadeal.reader;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.SettleBatchPara;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.datadeal.dto.StlDownDataDealDeleteOperatorDto;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDownDataDealReaderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 数据清算批处理step1数据删除reader
@@ -36,7 +34,7 @@ public class StlDownDataDealDeleteReader extends BaseReader<StlDownDataDealDelet
 		// 批处理执行信息
         SysBatchExecInfo execInfo = getBatchExecuteInfo();
         // 数据清算参数表
-        List<SettleBatchPara> list = stlDownDataDealService.selectAllParam(execInfo.getExecuteDate());
+        //List<SettleBatchPara> list = stlDownDataDealService.selectAllParam(execInfo.getExecuteDate());
         // 组合代码List
         List<String> portfolioIdList = new ArrayList<String>();
         // 证券品种List
@@ -46,7 +44,7 @@ public class StlDownDataDealDeleteReader extends BaseReader<StlDownDataDealDelet
         // 新股申购业务类型List
         List<String> xgsgBusinessTypeList = new ArrayList<String>();
         
-        if (list != null && list.size() > 0) {
+        /*if (list != null && list.size() > 0) {
 	        for (SettleBatchPara settleBatchPara : list) {
 	        	// 组合代码
 	        	if (StringUtil.isNotEmpty(settleBatchPara.getPortfolioId())) {
@@ -74,8 +72,10 @@ public class StlDownDataDealDeleteReader extends BaseReader<StlDownDataDealDelet
 	        		otherBusinessTypeList.add(DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
 	        		xgsgBusinessTypeList.add(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
 	        	}
-	        }
-	        
+	        }*/
+			secTypeList = Arrays.asList(DictCodeListExt1.证券品种_债券.getValue(),DictCodeListExt1.证券品种_基金.getValue(),DictCodeListExt1.证券品种_股票.getValue(),DictCodeListExt1.证券品种_回购.getValue());
+			otherBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
+			xgsgBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
 	        // 删除【成交数据与投管交易关系】
 	        stlDownDataDealService.deleteSettleTransTgMapping(execInfo.getExecuteDate(), portfolioIdList, secTypeList);
 	        
@@ -96,8 +96,7 @@ public class StlDownDataDealDeleteReader extends BaseReader<StlDownDataDealDelet
 	        
 	        // 删除交易所品种额度（新股申购业务类型List）
 	        stlDownDataDealService.deleteFinProdQuotByXgsgBussType(execInfo.getExecuteDate(), xgsgBusinessTypeList);
-        }
-        
-        return new ArrayList<StlDownDataDealDeleteOperatorDto>();
+
+        	return new ArrayList<StlDownDataDealDeleteOperatorDto>();
 	}
 }

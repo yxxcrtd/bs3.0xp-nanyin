@@ -4,6 +4,7 @@
 
     <!-- 分页查询 -->
     <select id="findPage" resultType="com.joyintech.service.portfolio.actualtimeasset.dto.ActualTimeAssetDto">
+		select * from(
         select distinct tt.* from
         (
             select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr, type9, type10, type11, type12, type8, type7, type6,
@@ -15,7 +16,7 @@
 					case when type8 in ('F01','F04','F11') or (type8 = 'F02' and tradeMarket in ('03','04','09')) then marketPrice else 1 end as marketPrice,
 					case when type8 in (#{finprodType2_F01},#{finprodType2_F10}) then (PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06)*100 else (PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06) end as actualPositionAmount,
 					<!-- etliu modify 20210227 start -->
-					case when type8 in (#{finprodType2_F01},#{finprodType2_F10}) then (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08 + andOneDataAmout)*100
+					case when type8 in (#{finprodType2_F01},#{finprodType2_F10}) then (PTL_FLOW_AMOUNT01-PTL_FLOW_AMOUNT10 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08 + andOneDataAmout)*100
 					<!-- etliu modify 20210227 end -->
 						else (PTL_FLOW_AMOUNT01 + PTL_AMOUNT03 + PTL_AMOUNT05 - PTL_AMOUNT06 - PTL_AMOUNT04 + PTL_AMOUNT08) end as tradePositionAmount,
 					case when type8 in (#{finprodType2_F01},#{finprodType2_F10}) then ETR_FLOW_AMOUNTE01*100 else ETR_FLOW_AMOUNTE01 end as instructionsAmount,
@@ -32,6 +33,7 @@
 						nvl(sum(PTL_AMOUNT06),0) as PTL_AMOUNT06,
 						nvl(sum(PTL_AMOUNT08),0) as PTL_AMOUNT08,
 						nvl(sum(PTL_FLOW_AMOUNT01),0) as PTL_FLOW_AMOUNT01,
+						nvl(sum(PTL_FLOW_AMOUNT10),0) as PTL_FLOW_AMOUNT10,
 						nvl(sum(ETR_FLOW_AMOUNTE01),0) as ETR_FLOW_AMOUNTE01,
 						nvl(sum(ETR_FLOW_AMOUNT04),0) as ETR_FLOW_AMOUNT04
 						<!-- etliu add 20210227 start -->
@@ -40,7 +42,7 @@
 					from (
 						SELECT
 							   t6.portfolio_id, DECODE(t6.sec_acct_id, '999999', NULL, t6.sec_acct_id) sec_acct_id, t6.finprod_id, t6.PTL_AMOUNT03, t6.PTL_AMOUNT04, t6.PTL_AMOUNT05,
-							   t6.PTL_AMOUNT06, t6.PTL_AMOUNT08, t7.PTL_FLOW_AMOUNT01, t8.ETR_FLOW_AMOUNTE01, t8.ETR_FLOW_AMOUNT04
+							   t6.PTL_AMOUNT06, t6.PTL_AMOUNT08, t7.PTL_FLOW_AMOUNT01,t7.PTL_FLOW_AMOUNT10, t8.ETR_FLOW_AMOUNTE01, t8.ETR_FLOW_AMOUNT04
 							   <!-- etliu add 20210227 start -->
 							   , t_andOneData.andOneDataAmout
 							   <!-- etliu add 20210227 end -->
@@ -83,8 +85,9 @@
 							select
 								portfolio_id,
 								finprod_id,sec_acct_id,
-								nvl(sum(case when hoding_type = '01' then AMOUNT end),0) PTL_FLOW_AMOUNT01
-							from PTL_SEC_POSITION_FLOW
+								nvl(sum(case when hoding_type = '01' then AMOUNT end),0) PTL_FLOW_AMOUNT01,
+								nvl(sum(case when hoding_type = '10' then AMOUNT end),0) PTL_FLOW_AMOUNT10
+								from PTL_SEC_POSITION_FLOW
 							<!-- modify by swwan 多组合查询 20210719 start -->
 							where 1=1
 							<if test="portfolioIdList != null and portfolioIdList.size() >0">
@@ -494,7 +497,12 @@
 		<if test="type8 != null and type8 != ''">
 			and type8 = #{type8,jdbcType=VARCHAR}
 		</if>
-        order by portfolioId desc,type8 desc,secAcctId desc,finprodMarketId desc
+        order by portfolioId desc,type8 desc,secAcctId desc,finprodMarketId desc)abc
+		<where>
+			<if test="finprodId != null and finprodId !=''">
+				and abc.finprodId = #{finprodId,jdbcType=VARCHAR}
+			</if>
+		</where>
     </select>
 
     <!-- 证券账户 -->

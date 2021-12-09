@@ -11,6 +11,7 @@ $(function() {
 
         object.operateType = operateType;
         object.pageModel = pageModel;
+        object.seqNo = seqNo;
         if (pageModel == PAGE_MODEL_NEW) {
             object.operateType = 'new';
         } else if (pageModel == PAGE_MODEL_EDIT) {
@@ -31,51 +32,10 @@ $(function() {
     }
 
     var init = function() {
-        // if(pageModel == PAGE_MODEL_NEW){
-        //
-        //     $("#brokerId").select2();
-        //     $("#brokerId").val(['BROKER']).trigger("change");
-        //
-        //     $("#accountType").select2();
-        //     $("#accountType").val(['BROKER']).trigger("change");
-        //
-        //
-        //     $("#tandardRate").val("90");
-        // }
-        $('#brokerId').change(function(){
-            var borker = $("#brokerId").val();
-            if(borker == "BROKER"){
-                $('#accountType').textSelect('setValue', 'BROKER');
-                $('#accountType').prop('disabled',true);
-            }else if(borker != ""){
-                Joyin.ajaxJson(basePath + 'invest/basicdata/standardcouponreconversionrate/StandardCouponReConversionRate002/brokerIdChange?borker='+$("#brokerId").val(), null, function(result) {
-                    if (borker != null || borker != "") {
-                        if (result != null && result != '' && result.length > 0) {
-                            var itemSH = [];
-                            for (var m = 0; m < result.length; m++) {
-                                itemSH.push(result[m].id);
-                            }
-                            $('#accountType').updateChosenArr({
-                                item: itemSH,
-                                disabled: false
-                            });
-                        } else {
-                            $('#accountType').updateChosenArr({
-                                item: [""],
-                                disabled: false
-                            });
-                        }
-                    }
-                });
-            }
-
-        });
         if (pageModel == PAGE_MODEL_EDIT) {
             $("#brokerId").attr("disabled", "disabled");
-            $("#accountType").attr("disabled", "disabled");
+            $("#finprodId").attr("disabled", "disabled");
         }
-
-
     }
 
     $.fn.updateChosenArr = function updateChosenArr(obj){
@@ -108,21 +68,11 @@ $(function() {
 
     }
 
-
-
     /**
      * 画面加载完成
      */
     $(function() {
-
         init();
-
-
-
-
-
-
-
         // 绑定按钮事件
         $('#StandardCouponReConversionRate002_btn_save').click(function() {
             saveOrSubmit('save');

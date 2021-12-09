@@ -46,7 +46,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  */
 @PageId("EtrPlanAssetN002")
 @ValidLogic(targetClass = EtrPlanAssetNValidator.class , groups = {ValidateGroupEdit.class,
-    ValidateGroupDelete.class})
+        ValidateGroupDelete.class})
 public class EtrPlanAssetNDto extends EtrEntrust implements ProcessEntity {
     /**
      * 资产二级分类名称
@@ -69,7 +69,7 @@ public class EtrPlanAssetNDto extends EtrEntrust implements ProcessEntity {
     /**
      * 备注
      */
-  private String  remark;
+    private String  remark;
     /**
      * 交易方向名称
      */
@@ -326,24 +326,24 @@ public class EtrPlanAssetNDto extends EtrEntrust implements ProcessEntity {
         this.assetType11 = assetType11;
     }
     /**
-    *
-    * 行内资产三级分类数据字典转换
-    * <功能详细描述>
-    * @return
-    * @see
-    * @since 1.0
-    */
+     *
+     * 行内资产三级分类数据字典转换
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
     public String getBusAssetType10(){
         return SysDataUtil.getNameFromDataDict(DictCode.行内资产三级分类, this.getAssetType10());
     }
     /**
-    *
-    * 行内资产四级分类数据字典转换
-    * <功能详细描述>
-    * @return
-    * @see
-    * @since 1.0
-    */
+     *
+     * 行内资产四级分类数据字典转换
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
     public String getBusAssetType11(){
         return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类, this.getAssetType11());
     }
@@ -838,11 +838,11 @@ public class EtrPlanAssetNDto extends EtrEntrust implements ProcessEntity {
         this.counterType = counterType;
     }
     public String getVdateStr(){
-		return DateUtil.format(this.getVdate());
-	}
+        return DateUtil.format(this.getVdate());
+    }
     public String getMdateStr(){
-		return DateUtil.format(this.getMdate());
-	}
+        return DateUtil.format(this.getMdate());
+    }
 
     public String getAssetType1Name() {
         return assetType1Name;
@@ -876,5 +876,16 @@ public class EtrPlanAssetNDto extends EtrEntrust implements ProcessEntity {
     public void setAppProAvailableCash1(BigDecimal appProAvailableCash1) {
         this.appProAvailableCash1 = appProAvailableCash1;
     }
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
 
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
 }

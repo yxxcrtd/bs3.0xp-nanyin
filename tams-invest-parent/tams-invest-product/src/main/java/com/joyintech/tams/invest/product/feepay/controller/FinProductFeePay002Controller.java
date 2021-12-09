@@ -18,6 +18,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.tams.common.base.dao.WflTrdFinProductDealTotalMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,9 +44,6 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.MstFeeinfoMapper;
 import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.entity.MstFeeinfo;
-import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
@@ -85,6 +84,10 @@ public class FinProductFeePay002Controller extends BaseController {
      */
     @Autowired
     private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
+
+    @Autowired
+    private WflTrdFinProductDealTotalMapper wflTrdFinProductDealTotalMapper;
+
     @Autowired
     private MstFeeinfoMapper mstFeeinfoMapper;
 
@@ -153,62 +156,81 @@ public class FinProductFeePay002Controller extends BaseController {
             }
         }
         else if (StringUtil.isNotEmpty(this.getParam("tradeId"))) {
-            FinProductFeePay001Dto finProductFeePay001Dto = BeanUtil.mapToObject(
-                RequestUtil.getPageParam(), FinProductFeePay001Dto.class);
-            FinProductFeePay002Dto finProductFeePay002Dto = new FinProductFeePay002Dto();
-            if(StringUtil.isNotEmpty(finProductFeePay001Dto.getFeeId())){
-                finProductFeePay002Dto.setTradeId(finProductFeePay001Dto.getTradeId());
-                finProductFeePay002Dto.setPtlId(finProductFeePay001Dto.getPtlId());
-                finProductFeePay002Dto.setFeeId(finProductFeePay001Dto.getFeeId());
-                finProductFeePay002Dto.setFeeType(finProductFeePay001Dto.getFeeType());
-                finProductFeePay002Dto.setCashId(finProductFeePay001Dto.getCashId());
-                finProductFeePay002Dto.setCcy(finProductFeePay001Dto.getCcy());
-                finProductFeePay002Dto.setIsPerpaid(finProductFeePay001Dto.getIsPerpaid());
-                //增加根据组合id查询产品收益模式和处理模式字段
-                FinProductFeePay001Dto finProductFeePay001DtoT = finProductFeePay002Service.queryByPtlId(finProductFeePay001Dto.getPtlId());
-                if(finProductFeePay001DtoT!=null){
-                	finProductFeePay002Dto.setProfitType(finProductFeePay001DtoT.getProfitType());
-                	finProductFeePay002Dto.setDealMode(finProductFeePay001DtoT.getDealMode());
-                }
-            }else{
-                //BS19 zhangnian
-                finProductFeePay002Dto =finProductFeePay002Service.selectFeeByTradeId(this.getParam("tradeId"));
-                finProductFeePay001Dto.setFeeId(finProductFeePay002Dto.getFeeId());
-            }
-            finProductFeePay002Dto.setChargeType(queryFeeInfoByFeeId(finProductFeePay002Dto.getFeeId()).getChargeType());
-            // 根据交易编号查询交易信息
-            TrdFinProductDealTotal trdFinProductDealTotal = trdFinProductDealTotalMapper.selectByPrimaryKey(finProductFeePay001Dto.getTradeId());
-            if (trdFinProductDealTotal != null) {
-                finProductFeePay002Dto.setStartDate(trdFinProductDealTotal.getVdate());
-                finProductFeePay002Dto.setEndDate(trdFinProductDealTotal.getMdate());
-                finProductFeePay002Dto.setPayDate(trdFinProductDealTotal.getSettleDate());
-                finProductFeePay002Dto.setActPayAmt(trdFinProductDealTotal.getTradeAmt());
-                if (!StringUtil.equals(finProductFeePay001Dto.getFeeType(),
-                    DictCodeList.费用品种类型_账户维护费.getValue())) {
-                    // 查询费用待支付费用
-                    finProductFeePay002Dto.setPayAmt(finProductFeePay002Service.queryUnpayPosition(
-                        finProductFeePay001Dto.getPtlId(), finProductFeePay001Dto.getFeeType(),
-                        DateUtil.format(trdFinProductDealTotal.getMdate())));
-                    // 实付 - 理论
-                    finProductFeePay002Dto.setAdjustAmt(
-                        ArithmeticUtil.subtract(finProductFeePay002Dto.getActPayAmt(),
-                            finProductFeePay002Dto.getPayAmt()));
-                }
-
-                // 结算服务费、账户维护费
-                if (StringUtil.equals(finProductFeePay001Dto.getFeeType(),
-                    DictCodeList.费用品种类型_账户维护费.getValue())
-                    || StringUtil.equals(finProductFeePay001Dto.getFeeType(),
-                        DictCodeList.费用品种类型_结算服务费.getValue())) {
-                    List<TrdProductDeal> feeInfoList = finProductFeePay002Service.queryTrdProductDealByTotleTradeId(
-                        finProductFeePay001Dto.getTradeId());
-                    if (!StringUtil.isEmptyList(feeInfoList)) {
-                        finProductFeePay002Dto.setRegTrustOrg(feeInfoList.get(0).getRegistOrg());
+            // TISHKS-9:产品费用支付由于组合代码可能未关联费用,统一对流程中的数据进行特殊处理 fuyongsheng 20211116 edit start
+            WflTrdFinProductDealTotalKey key = new WflTrdFinProductDealTotalKey();
+            key.setTotleTradeId(this.getParam("tradeId"));
+            key.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            WflTrdFinProductDealTotal wflDealTotal = wflTrdFinProductDealTotalMapper.selectByPrimaryKey(key);
+            if(wflDealTotal != null){
+                ProcessMark pro = finProductFeePay002Service.getBusinessInfo(wflDealTotal.getWorkflowId());
+                if (pro != null) {
+                    FinProductFeePay002Dto entity = (FinProductFeePay002Dto)JsonUtils.json2Object(
+                            pro.getBusinessData(), FinProductFeePay002Dto.class);
+                    model.addAttribute(GlobalConstant.ENTITY, entity);
+                    if (!StringUtil.isEmptyList(entity.getBussTrdTransferOrder())) {
+                        model.addAttribute("entity_bussTrdTransferOrder",
+                                JsonUtils.object2Json(entity.getBussTrdTransferOrder().get(0)));
                     }
                 }
-                finProductFeePay002Dto.setRemark(trdFinProductDealTotal.getRemark());
+            }else{
+                FinProductFeePay001Dto finProductFeePay001Dto = BeanUtil.mapToObject(
+                        RequestUtil.getPageParam(), FinProductFeePay001Dto.class);
+                FinProductFeePay002Dto finProductFeePay002Dto = new FinProductFeePay002Dto();
+                if(StringUtil.isNotEmpty(finProductFeePay001Dto.getFeeId())){
+                    finProductFeePay002Dto.setTradeId(finProductFeePay001Dto.getTradeId());
+                    finProductFeePay002Dto.setPtlId(finProductFeePay001Dto.getPtlId());
+                    finProductFeePay002Dto.setFeeId(finProductFeePay001Dto.getFeeId());
+                    finProductFeePay002Dto.setFeeType(finProductFeePay001Dto.getFeeType());
+                    finProductFeePay002Dto.setCashId(finProductFeePay001Dto.getCashId());
+                    finProductFeePay002Dto.setCcy(finProductFeePay001Dto.getCcy());
+                    finProductFeePay002Dto.setIsPerpaid(finProductFeePay001Dto.getIsPerpaid());
+                    //增加根据组合id查询产品收益模式和处理模式字段
+                    FinProductFeePay001Dto finProductFeePay001DtoT = finProductFeePay002Service.queryByPtlId(finProductFeePay001Dto.getPtlId());
+                    if(finProductFeePay001DtoT!=null){
+                        finProductFeePay002Dto.setProfitType(finProductFeePay001DtoT.getProfitType());
+                        finProductFeePay002Dto.setDealMode(finProductFeePay001DtoT.getDealMode());
+                    }
+                }else{
+                    //BS19 zhangnian
+                    finProductFeePay002Dto =finProductFeePay002Service.selectFeeByTradeId(this.getParam("tradeId"));
+                    finProductFeePay001Dto.setFeeId(finProductFeePay002Dto.getFeeId());
+                }
+                finProductFeePay002Dto.setChargeType(queryFeeInfoByFeeId(finProductFeePay002Dto.getFeeId()).getChargeType());
+                // 根据交易编号查询交易信息
+                TrdFinProductDealTotal trdFinProductDealTotal = trdFinProductDealTotalMapper.selectByPrimaryKey(finProductFeePay001Dto.getTradeId());
+                if (trdFinProductDealTotal != null) {
+                    finProductFeePay002Dto.setStartDate(trdFinProductDealTotal.getVdate());
+                    finProductFeePay002Dto.setEndDate(trdFinProductDealTotal.getMdate());
+                    finProductFeePay002Dto.setPayDate(trdFinProductDealTotal.getSettleDate());
+                    finProductFeePay002Dto.setActPayAmt(trdFinProductDealTotal.getTradeAmt());
+                    if (!StringUtil.equals(finProductFeePay001Dto.getFeeType(),
+                            DictCodeList.费用品种类型_账户维护费.getValue())) {
+                        // 查询费用待支付费用
+                        finProductFeePay002Dto.setPayAmt(finProductFeePay002Service.queryUnpayPosition(
+                                finProductFeePay001Dto.getPtlId(), finProductFeePay001Dto.getFeeType(),
+                                DateUtil.format(trdFinProductDealTotal.getMdate())));
+                        // 实付 - 理论
+                        finProductFeePay002Dto.setAdjustAmt(
+                                ArithmeticUtil.subtract(finProductFeePay002Dto.getActPayAmt(),
+                                        finProductFeePay002Dto.getPayAmt()));
+                    }
+
+                    // 结算服务费、账户维护费
+                    if (StringUtil.equals(finProductFeePay001Dto.getFeeType(),
+                            DictCodeList.费用品种类型_账户维护费.getValue())
+                            || StringUtil.equals(finProductFeePay001Dto.getFeeType(),
+                            DictCodeList.费用品种类型_结算服务费.getValue())) {
+                        List<TrdProductDeal> feeInfoList = finProductFeePay002Service.queryTrdProductDealByTotleTradeId(
+                                finProductFeePay001Dto.getTradeId());
+                        if (!StringUtil.isEmptyList(feeInfoList)) {
+                            finProductFeePay002Dto.setRegTrustOrg(feeInfoList.get(0).getRegistOrg());
+                        }
+                    }
+                    finProductFeePay002Dto.setRemark(trdFinProductDealTotal.getRemark());
+                }
+                model.addAttribute(GlobalConstant.ENTITY, finProductFeePay002Dto);
             }
-            model.addAttribute(GlobalConstant.ENTITY, finProductFeePay002Dto);
+            // TISHKS-9:产品费用支付由于组合代码可能未关联费用,统一对流程中的数据进行特殊处理 fuyongsheng 20211116 edit end
             model.addAttribute("tradeId", this.getParam("tradeId"));
         }
         else {

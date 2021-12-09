@@ -15,6 +15,7 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.entity.FinProductConvertible;
 import com.joyintech.tams.common.base.entity.FinProductQuto;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
@@ -22,6 +23,7 @@ import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
@@ -101,6 +103,15 @@ public class EtrExchangeTrade001Controller extends BaseController{
 	public static final String ENTRUST_RECORD_NEW = "new";
 
 	public static final String ENTRUST_RECORD_MODIFY = "modify";
+
+    @Value("${quote.flag:false}")
+    private boolean useInterfQuoteFlag;
+
+    @Value("${quote.ws.host}")
+    private String wsHost;
+
+    @Value("${quote.ws.url}")
+    private String wsUrl;
     
     @Override
     public String init(Model model) {
@@ -202,6 +213,9 @@ public class EtrExchangeTrade001Controller extends BaseController{
             }
         }
         model.addAttribute("etrExchange_HqArea_refresh_period", etrExchange_HqArea_refresh_period);
+
+        model.addAttribute("useInterfQuoteFlag", useInterfQuoteFlag);
+        model.addAttribute("wsUri", wsHost + wsUrl);
         
         return super.init(model);
     }
@@ -467,6 +481,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
 		if (result.hasErrors()) {
 			return new AjaxResult(result);
 		}
+
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
 			// add  start
 			if (StringUtils.equals(dto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
@@ -524,7 +539,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
 			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue());
 		}
 		AjaxResult ajax  = etrExchangeTrade001Service.checkSave(dto);
-		if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList())) {
+		if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList()) && !StringUtil.equals(dto.getOperateType(),"save")) {
 			return ajax;
 		}
 		
@@ -1077,6 +1092,19 @@ public class EtrExchangeTrade001Controller extends BaseController{
     public String getInvAim() {
         return etrExchangeTrade001Service.getInvAim();
     }
+
+
+    /***
+     * 取更新时间最新记录.投资目的  指令业务类型 = 数据字典.委托类型.大宗债券指令
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/linkInvAim")
+    public AjaxResult linkInvAim(@RequestBody Map<String, Object> param) {
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setData(etrExchangeTrade001Service.linkInvAim(param));
+        return ajaxResult;
+    }
     
 	/**
 	 * 
@@ -1196,6 +1224,31 @@ public class EtrExchangeTrade001Controller extends BaseController{
 				}
 			}
 		}
+
+		// add by etliu 20211207 start
+        // 交易所债券非交易类业务迁移
+        if (!map.containsKey(DictCodeListExt3.交易方向_质押券入库.getValue())) {
+            BigDecimal converseRatio = selectStdsecConverseRatio(param);
+            if (null != converseRatio) {
+                map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
+                map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
+            }
+        }
+        String finprodId = (String) param.get("finprodId");
+        if (!map.containsKey(DictCodeList.交易方向_行权_回售.getValue())) {
+            List<FinExercisePlan> exercisePlanList = etrExchangeTrade001Service.selectFinExercisePlanData(finprodId, sysDate);
+            if (!StringUtil.isEmptyList(exercisePlanList)) {
+                map.put(DictCodeList.交易方向_行权_回售.getValue(), exercisePlanList.get(0).getExercisePrice());
+            }
+        }
+        if (!map.containsKey(DictCodeListExt1.交易方向_债转股.getValue())) {
+            FinProductConvertible finProductConvertible = etrExchangeTrade001Service.selectConverseShareData(finprodId, sysDate);
+            if (finProductConvertible != null) {
+                map.put(DictCodeListExt1.交易方向_债转股.getValue(), finProductConvertible.getConPrice());
+            }
+        }
+        // add by etliu 20211207 end
+
 		return map;
 	}
 	
@@ -1240,6 +1293,8 @@ public class EtrExchangeTrade001Controller extends BaseController{
     @RequestMapping(value = "/initHq")
     public String initHq(Model model){
 
+        model.addAttribute("useInterfQuoteFlag", useInterfQuoteFlag);
+        model.addAttribute("wsUri", wsHost + wsUrl);
         return "invest/entrust/etrexchangetrade/EtrExchangeTradeHq";
     }
 

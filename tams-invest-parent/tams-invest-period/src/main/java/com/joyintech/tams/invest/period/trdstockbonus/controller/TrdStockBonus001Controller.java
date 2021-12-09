@@ -85,6 +85,7 @@ public class TrdStockBonus001Controller extends BaseController{
         super.setSelectOptionToModel(model, DictCode.交易流程状态,DictCode.通道类型
             ,DictCode.股票分红类型);
         model.addAttribute("TRADE_FLOW_STATUS_02", DictCodeListExt1.交易流程状态_有效.getValue());
+        model.addAttribute("TRADE_FLOW_STATUS_03", DictCodeListExt1.交易流程状态_撤销.getValue());
         return super.init(model);
     }
     

@@ -55,7 +55,7 @@
 	        LEFT JOIN MST_SALE_DEPARTMENT L ON K.OWN_DEPT = L.SALE_DEPID
 	        LEFT JOIN ETR_ENTRUST M ON B.ENTRUST_ID = M.ENTRUST_ID
         <where>
-        	A.PS IN ('T01', 'T02') AND A.TRADE_DATE = #{dealDate,jdbcType=DATE}
+        	A.PS IN ('T01', 'T02','03','04') AND A.TRADE_DATE = #{dealDate,jdbcType=DATE}
         	<if test="portfolioIdList != null and portfolioIdList.size() > 0">
 				AND (
 				<foreach collection="portfolioIdList" item="portfolioId" open="B.PORTFOLIO_ID IN (" close=")" separator=",">

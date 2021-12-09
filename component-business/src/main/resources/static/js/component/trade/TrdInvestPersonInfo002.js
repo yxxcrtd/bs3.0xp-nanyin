@@ -92,6 +92,9 @@
         	//getElementById('counterId').removeAttr("required");
             //交易对手必填 modified by lishuping 20191029 end
         	star();
+        }else if(pageId =='TrdBondLendInvestTrade002'){
+            getElementById('counterId').attr("required", true);
+            star();
         }
         getElementById('counterId').on('change', function () {
             var counterIdSelect = getElementById('counterId');

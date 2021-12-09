@@ -132,6 +132,8 @@ public class BussRepoSecDialogController extends BaseController {
         model.addAttribute("BACK_LEND_DIRECTION_04", DictCodeList.回购拆借方向_逆回购.getValue());
         // 回购拆借方向_正回购
         model.addAttribute("BACK_LEND_DIRECTION_03", DictCodeList.回购拆借方向_正回购.getValue());
+        // 回购拆借方向_融出
+        model.addAttribute("BACK_LEND_DIRECTION_06", DictCodeList.回购拆借方向_融出.getValue());
         setSelectOptionToModel(model, DictCode.WIND一级分类_含债券一级分类等
                 , DictCode.登记托管机构_中债);
 
@@ -152,6 +154,8 @@ public class BussRepoSecDialogController extends BaseController {
         //add by meifaxin 20190928 区分银行间 start
         model.addAttribute("tradePlace",this.getParam("tradePlace"));
         //add by meifaxin 20190928 区分银行间 end
+        model.addAttribute("mdate",this.getParam("mdate"));
+        model.addAttribute("isBondLendTrade",this.getParam("isBondLendTrade"));
         return "component/trade/BussRepoSecDialog";
     }
 

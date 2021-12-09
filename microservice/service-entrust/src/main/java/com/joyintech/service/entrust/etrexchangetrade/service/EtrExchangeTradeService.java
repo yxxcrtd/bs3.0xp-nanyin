@@ -24,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.joyintech.background.component.common.pack.common.security.User;
 import com.joyintech.background.component.order.exchange.business.dto.EtrBlockTradeBondDto;
@@ -850,6 +849,19 @@ public class EtrExchangeTradeService extends BaseService{
     }
 
     /**
+     * 质押券代码下拉框查询
+     * @param page
+     * @param length
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> selectZyq(int page, int length,Map<String, Object> param) {
+        return super.queryForPage(page, length, () -> etrExchangeTradeMapper.selectZyq(param));
+    }
+
+
+
+    /**
      * 查询债券基本信息
      *
      * @param map 参数
@@ -1339,7 +1351,7 @@ public class EtrExchangeTradeService extends BaseService{
      * @param entity
      * @return
      */
-    public BindingResult checkSave(@RequestBody EtrExchangeTrade001Dto entity, BindingResult result)
+    public BindingResult checkSave(EtrExchangeTrade001Dto entity, BindingResult result)
         throws IllegalAccessException, InvocationTargetException {
 
         EtrParameterDto paraDto = new EtrParameterDto();
@@ -1539,6 +1551,14 @@ public class EtrExchangeTradeService extends BaseService{
      */
     public String getInvAim(){
         return this.etrExchangeTradeMapper.getInvAim();
+    }
+
+    public String linkInvAim(Map<String, Object> param) {
+        String invAim = this.etrExchangeTradeMapper.linkInvAim(param);
+        if(!StringUtil.isNotEmpty(invAim)) {
+            invAim = this.etrExchangeTradeMapper.linkInvAimEtr(param);
+        }
+        return invAim;
     }
 
     /**
@@ -1827,7 +1847,7 @@ public class EtrExchangeTradeService extends BaseService{
         return resultMap;
     }
 
-    public EtrDistribute getDistributeByEntrustId(@RequestBody Map<String, Object> map) {
+    public EtrDistribute getDistributeByEntrustId(Map<String, Object> map) {
 		return etrExchangeTradeMapper.getDistributeByEntrustId(map);
 	}
     
@@ -1837,7 +1857,7 @@ public class EtrExchangeTradeService extends BaseService{
 	 * @param map
 	 * @return
 	 */
-	public String selectStdsecConverseRatio(@RequestBody Map<String, Object> map) {
+	public String selectStdsecConverseRatio(Map<String, Object> map) {
 		map.put("date", iPlatformDate.getSysDate());
 		return etrExchangeTradeMapper.selectStdsecConverseRatio(map);
 	}
@@ -1847,7 +1867,7 @@ public class EtrExchangeTradeService extends BaseService{
 	 * @param map
 	 * @return
 	 */
-	public String queryStandandTicketCanUse(@RequestBody Map<String, Object> map) {
+	public String queryStandandTicketCanUse(Map<String, Object> map) {
 		map.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
 		map.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
 		map.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
@@ -2083,7 +2103,7 @@ public class EtrExchangeTradeService extends BaseService{
 	 * @param map
 	 * @return
 	 */
-	public String qryMstBondMarketPrice(@RequestBody Map<String, Object> map) {
+	public String qryMstBondMarketPrice(Map<String, Object> map) {
 		String mstBondMarketPrice = etrExchangeTradeMapper.qryMstBondMarketInfo(map);
 		if (StringUtils.isEmpty(mstBondMarketPrice)) {
 			mstBondMarketPrice = etrExchangeTradeMapper.qryInterfBondMarketInfo(map);
@@ -2097,7 +2117,7 @@ public class EtrExchangeTradeService extends BaseService{
 	 * @param map
 	 * @return
 	 */
-	public String qryMstFundMarketPrice(@RequestBody Map<String, Object> map) {
+	public String qryMstFundMarketPrice(Map<String, Object> map) {
 		String mstBondMarketPrice = etrExchangeTradeMapper.qryMstFundMarketInfo(map);
 		if (StringUtils.isEmpty(mstBondMarketPrice)) {
 			mstBondMarketPrice = etrExchangeTradeMapper.qryInterfFundMarketInfo(map);
@@ -2111,7 +2131,7 @@ public class EtrExchangeTradeService extends BaseService{
 	 * @param map
 	 * @return
 	 */
-	public String qryMstShareMarketPrice(@RequestBody Map<String, Object> map) {
+	public String qryMstShareMarketPrice(Map<String, Object> map) {
 		String mstBondMarketPrice = etrExchangeTradeMapper.qryMstShareMarketInfo(map);
 		if (StringUtils.isEmpty(mstBondMarketPrice)) {
 			mstBondMarketPrice = etrExchangeTradeMapper.qryInterfShareMarketInfo(map);
@@ -2314,4 +2334,24 @@ public class EtrExchangeTradeService extends BaseService{
         return null;
     }
     //add by chenjiaxing 债券竞价交易展示偏离度 end
+
+    // add by etliu 20211207 start
+    // 交易所债券非交易类业务迁移
+    /**
+     *
+     * @Description //查询行权回售数据
+     * @Param [map]
+     * @return 行权回售数据
+     * @version 1.0
+     * @see
+     **/
+    public List<FinExercisePlan> selectFinExercisePlanData(Map<String, Object> map){
+        map.put("exerciseType", DictCodeList.行权方式_回售.getValue());
+        if (map.containsKey("sysDate")) {
+            map.put("sysDate", DateUtil.parse((String) map.get("sysDate")));
+        }
+
+        return etrExchangeTradeMapper.selectFinExercisePlanData(map);
+    }
+    // add by etliu 20211207 end
 }

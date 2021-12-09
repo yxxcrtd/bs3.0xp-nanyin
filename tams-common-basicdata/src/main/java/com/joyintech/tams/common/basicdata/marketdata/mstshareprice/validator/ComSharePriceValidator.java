@@ -53,6 +53,15 @@ public class ComSharePriceValidator implements BeanValidator{
     	ComSharePriceDto dto = (ComSharePriceDto)value;
         List<ValidMessage> resultList = new ArrayList<ValidMessage>();
         if (WorkFlowUtil.isNotFromToDoList()) {
+            if (StringUtil.equals(dto.getOperateType(), "delete")) {
+                if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
+                    for(ComSharePriceDto entity : dto.getSelectedItem()){
+                        if(StringUtil.isNotEmpty(entity.getProcessState())){
+                            resultList.add(new ValidMessage("流程中的数据不能删除!"));
+                        }
+                    }
+                }
+            }
         	Map<String, Object> pageParam =new HashMap<>();
         	pageParam.put("sharesId",dto.getSharesId());
         	if(StringUtil.isEmpty(DateUtil.format(dto.getDealDate()))){
@@ -66,7 +75,7 @@ public class ComSharePriceValidator implements BeanValidator{
             	//新建
             	if (list != null && !list.isEmpty()) {
             		resultList.add(new ValidMessage("sharesId", getMessage(
-                        "MST_SHAREPRICE_0002", getMessage("MstSharePrice001.sharesId") 
+                        "MST_SHAREPRICE_0002", getMessage("MstSharePrice001.sharesId")
                                            , getMessage("MstSharePrice001.dealDate"))));
 
                 }
@@ -77,6 +86,9 @@ public class ComSharePriceValidator implements BeanValidator{
                 	resultList.add(new ValidMessage("sharesId",
                         getMessage("MST_SHAREPRICE_0002", getMessage("MstSharePrice001.sharesId"),
                             getMessage("MstSharePrice001.dealDate"))));
+                }
+                if(StringUtil.isNotEmpty(dto.getProcessState())){
+                    resultList.add(new ValidMessage("流程中的数据不能修改!"));
                 }
             }
         }

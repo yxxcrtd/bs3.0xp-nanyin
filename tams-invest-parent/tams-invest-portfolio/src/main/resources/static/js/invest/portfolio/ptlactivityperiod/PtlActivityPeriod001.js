@@ -21,7 +21,7 @@ $(function() {
     /**
      * 定义数据表格
      */
-    var table=$("#dataTable").joyintable({ 
+    var table=$("#dataTable").joyintable({
         ajax: {
             url: 'findPage',//请求路径
             type: 'POST',//请求类型
@@ -62,7 +62,7 @@ $(function() {
             ,{field:'tradeStatus',visible:false}
         ]
     });
-    
+
     /**
      * 绑定编辑事件
      */
@@ -72,9 +72,9 @@ $(function() {
                 basePath +"invest/portfolio/ptlactivityperiod/PtlActivityPeriod002/init",
                 "80%", "80%", {pageModel:PAGE_MODEL_EDIT,//page_model:编辑
                                 portfolioId:data.portfolioId});//主键组合代码
-        
+
     });
-    
+
     /**
      * 导出
      */
@@ -101,6 +101,36 @@ $(function() {
                     basePath+ "invest/portfolio/ptlactivityperiod/PtlActivityPeriod002/init",
                         "90%", "80%", {pageModel:PAGE_MODEL_NEW});
         });
+
+        // 导入按钮点击事件
+        $('#PtlActivityPeriod001_btn_import').click(function () {
+            Joyin.confirm("请确认是否要导入数据？", function () {
+                Joyin.uploadFile({pageId: 'PtlActivityPeriod004MTM'}, function (fileName) {
+                    Joyin.ajax(basePath + 'invest/portfolio/ptlactivityperiod/PtlActivityPeriod004/checkImportData', {fileName: fileName}, function (checkResult) {
+                            setTimeout(function () {
+                                Joyin.confirm(checkResult.data.confirmMsg, function () {
+                                    var result = {};
+                                    result.operateType = "import";
+                                    result.pageModel = '';
+                                    result.tempList = checkResult.data.correctData;
+                                    Joyin.dialog(JoyinUtil.getLabel("PtlActivityPeriod004"),
+                                        JoyinUtil.getRealPath("invest/portfolio/ptlactivityperiod/PtlActivityPeriod004/init"),
+                                        "98%", "95%", result,
+                                        function () {table.reload();});
+                                });
+                            }, 1000);
+                            if (checkResult.data.errorMsg) {
+                                Joyin.error(checkResult.data.errorMsg);
+                                return;
+                            }
+                        }
+                    );
+                }, function () {
+                    table.reload();
+                });
+            });
+        });
+
         //绑定删除按钮
         $('#PtlActivityPeriod001_btn_delete').click(function() {
             if(table!=null && table!=''){

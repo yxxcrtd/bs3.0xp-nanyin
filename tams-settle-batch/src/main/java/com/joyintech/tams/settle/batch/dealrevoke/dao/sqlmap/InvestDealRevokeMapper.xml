@@ -37,11 +37,14 @@
         	ON A.TRADE_ID = B.TRADE_ID_TG
         INNER JOIN TRD_FIN_PRODUCT_DEAL_TOTAL C
         	ON A.TOTLE_TRADE_ID = C.TOTLE_TRADE_ID
+        LEFT JOIN SETTLE_TRANS_DATA_STATUS D
+        ON D.TRADE_ID = B.TRADE_ID
         <where>
             A.TRADE_STATUS = #{TRADE_STATUS_01}
             AND (A.IS_CANCEL IS NULL OR A.IS_CANCEL = 'N')
+            AND (D.CHECK_RESULT is null or D.CHECK_RESULT = '0')
             <if test="dealDateStr != null">
-                AND TO_CHAR(B.CREATE_TIME, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
+                AND TO_CHAR(B.DEAL_DATE, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
             </if>
             <if test="busiType != null">
                 AND C.BUSI_TYPE = #{busiType,jdbcType=DATE}
@@ -59,6 +62,36 @@
             <if test="portfolioIdList != null and portfolioIdList.size() > 0">
                 <foreach collection="portfolioIdList" item="portfolioId" open="AND C.PORTFOLIO_ID IN (" close=")" separator=",">
                     #{portfolioId,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+        UNION
+        SELECT
+        DISTINCT A.TOTLE_TRADE_ID
+        FROM
+        TRD_PRODUCT_DEAL A
+        INNER JOIN SETTLE_TRANS_TG_MAPPING B
+        ON A.TRADE_ID = B.TRADE_ID_TG
+        INNER JOIN TRD_FIN_PRODUCT_DEAL_TOTAL C
+        ON A.TOTLE_TRADE_ID = C.TOTLE_TRADE_ID
+        <where>
+            A.TRADE_STATUS = #{TRADE_STATUS_01}
+            AND (A.IS_CANCEL IS NULL OR A.IS_CANCEL = 'N')
+            AND B.TRADE_ID is null
+            <if test="dealDateStr != null">
+                AND TO_CHAR(A.TRADE_DATE, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
+            </if>
+            <if test="busiType != null">
+                AND C.BUSI_TYPE = #{busiType,jdbcType=DATE}
+            </if>
+            <if test="busiTypeList != null and busiTypeList.size() > 0">
+                <foreach collection="busiTypeList" item="busiType" open="AND C.BUSI_TYPE IN (" close=")" separator=",">
+                    #{busiType,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="psList != null and psList.size() > 0">
+                <foreach collection="psList" item="ps" open="AND A.PS IN (" close=")" separator=",">
+                    #{ps,jdbcType=VARCHAR}
                 </foreach>
             </if>
         </where>
@@ -102,11 +135,13 @@
         FROM TRD_PRODUCT_DEAL tpd
         INNER JOIN TRD_PRODUCT_DEAL_ADD tpda ON tpd.TRADE_ID = tpda.TRADE_ID
         INNER JOIN SETTLE_TRANS_TG_MAPPING sttm ON tpd.TRADE_ID = sttm.TRADE_ID_TG
+        LEFT JOIN SETTLE_TRANS_DATA_STATUS D ON D.TRADE_ID = sttm.TRADE_ID
         <where>
             tpd.TRADE_STATUS = #{TRADE_STATUS_01}
             AND (tpd.IS_CANCEL IS NULL OR tpd.IS_CANCEL = 'N')
+            AND (D.CHECK_RESULT is null or D.CHECK_RESULT = '0')
             <if test="dealDateStr != null">
-                AND TO_CHAR(sttm.CREATE_TIME, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
+                AND TO_CHAR(sttm.DEAL_DATE, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
             </if>
             <if test="finprodType2List != null and finprodType2List.size() > 0">
                 <foreach collection="finprodType2List" item="type" open="AND tpd.FINPROD_TYPE2 IN (" close=")" separator=",">
@@ -124,6 +159,35 @@
                 </foreach>
             </if>
             AND tpd.TOTLE_TRADE_ID is null
+        </where>
+        union
+        SELECT
+        DISTINCT tpd.TRADE_ID
+        FROM TRD_PRODUCT_DEAL tpd
+        INNER JOIN TRD_PRODUCT_DEAL_ADD tpda ON tpd.TRADE_ID = tpda.TRADE_ID
+        INNER JOIN SETTLE_TRANS_TG_MAPPING sttm ON tpd.TRADE_ID = sttm.TRADE_ID_TG
+        <where>
+            tpd.TRADE_STATUS = #{TRADE_STATUS_01}
+            AND (tpd.IS_CANCEL IS NULL OR tpd.IS_CANCEL = 'N')
+            AND sttm.TRADE_ID is null
+            <if test="dealDateStr != null">
+                AND TO_CHAR(tpd.TRADE_DATE, 'yyyy-MM-dd') = #{dealDateStr,jdbcType=VARCHAR}
+            </if>
+            <if test="finprodType2List != null and finprodType2List.size() > 0">
+                <foreach collection="finprodType2List" item="type" open="AND tpd.FINPROD_TYPE2 IN (" close=")" separator=",">
+                    #{type,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="psList != null and psList.size() > 0">
+                <foreach collection="psList" item="ps" open="AND tpd.PS IN (" close=")" separator=",">
+                    #{ps,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                <foreach collection="portfolioIdList" item="portfolioId" open="AND tpda.PORTFOLIO_ID IN (" close=")" separator=",">
+                    #{portfolioId,jdbcType=VARCHAR}
+                </foreach>
+            </if>
         </where>
     </select>
 

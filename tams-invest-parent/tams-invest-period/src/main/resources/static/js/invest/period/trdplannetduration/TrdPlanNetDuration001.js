@@ -54,15 +54,15 @@
             ,{field:'unitCprice',width:'10%',title:'TrdPlanNetDuration001.unitCprice',type:'money',digit:4,sortField:'UNIT_CPRICE'}//交易场所
             ,{field:'tradeAmt',width:'10%',title:'TrdPlanNetDuration001.tradeAmt',type:'money', sortField:'tradeAmt'}//交易场所
             ,{field:'qty',width:'10%',title:'TrdPlanNetDuration001.qty',type:'money', sortField:'qty'}//交易场所
-            , {field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['edit']
+            , {field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['edit','edit2']
                 ,
                 render: function (data, type, row, meta) {
                     if (row.updateFlag != '01'||IsChongQing == 'Y')
-                        return "";
+                        return '<i class="btn layui-icon edit2 edit2" title="编辑" data-ignore="false"></i>';
                     else
                         //modifiled by liupengfei for 多级法人改造 确认按钮权限控制 S
                         if(purviewElements.indexOf('_edit')!=-1){
-                            return '<i class="btn layui-icon edit" title="确认">&#x1005;</i>';
+                            return '<i class="btn layui-icon edit2 edit2" title="编辑" data-ignore="false"></i>'+'<i class="btn layui-icon edit" title="确认">&#x1005;</i>';
                         }
                         //modifiled by liupengfei for 多级法人改造 确认按钮权限控制 E
                 }
@@ -72,6 +72,22 @@
 
     /**
      * 绑定编辑事件
+     */
+    table.bind('click', '.edit2', function(data, index) {
+        debugger
+        if(data.statusValid != PAGE_DATA_STATUS_06){
+            return Joyin.error(JoyinUtil.getMessage('REVOKE_ERROE_001'));
+        }
+        pageModel = PAGE_MODEL_EDIT;
+        data.mode = 'edit';
+        data.operateType = 'edit';
+
+        data.type = "00";
+        Joyin.dialog(JoyinUtil.getLabel('TrdPlanNetDuration002.add'), '../TrdPlanNetDuration002/init', '85%', '95%',data);
+    });
+
+    /**
+     * 绑定确认事件
      */
     table.bind('click', '.edit', function(data, index) {
         if(data.statusValid != PAGE_DATA_STATUS_05){

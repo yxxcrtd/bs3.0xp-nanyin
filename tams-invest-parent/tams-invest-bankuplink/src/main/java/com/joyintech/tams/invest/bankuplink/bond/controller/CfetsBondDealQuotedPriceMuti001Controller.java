@@ -207,6 +207,9 @@ public class CfetsBondDealQuotedPriceMuti001Controller extends BaseController {
             for(CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuote:cfetsBondDealDialogueQuoteDtoList){
             	cfetsBondDealDialogueQuote.setMatureYield(cfetsBondDealDialogueQuoteDto.getMatureYield());
             	cfetsBondDealDialogueQuote.setExerYield(cfetsBondDealDialogueQuoteDto.getExerYield());
+                if (StringUtil.equals(this.getParam("quotaPageModel"), "edit")) {
+                    cfetsBondDealDialogueQuote.setEntrustAvaNum(ArithmeticUtil.doAdd(cfetsBondDealDialogueQuote.getAvaNum(),cfetsBondDealDialogueQuote.getEntrustAvaNum()));
+                }
             }
             cfetsBondDealDialogueQuoteDto.setCfetsBondDealDialogueQuoteDtoList(cfetsBondDealDialogueQuoteDtoList);
             // 补充本方交易员(做市报价回复的场景)

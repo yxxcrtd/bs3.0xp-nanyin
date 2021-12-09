@@ -58,7 +58,7 @@ $(function () {
                 field: 'bizCode', title: '业务编号', width: 200, render: function (data, type, row, meta) {
                     return "<a class='pro-link' style='cursor: pointer;' " +
                         "href='javascript:openOperateWindow(\"" + PAGE_STATUS_05 + "\",\"" + row.paBussType + "\",\"" + row.portfolioId + "\",\""
-                        + row.bizCode + "\",\"" + row.finprodId + "\")'>" + data + "</a>";
+                        + row.bizCode + "\",\"" + row.finprodId + "\",\"" + row.orderId + "\")'>" + data + "</a>";
                 }
             }
             , {field: 'paBussTypeString', title: '业务类型', width: 200, sortField:'PA_BUSS_TYPE'}
@@ -287,7 +287,7 @@ $(function () {
     })
 });
 
-var openOperateWindow = function (statusValid, paBussType, portfolioId, bizCode, finprodId) {
+var openOperateWindow = function (statusValid, paBussType, portfolioId, bizCode, finprodId,orderId) {
     var url = '';
     var data = {
         pageModel: PAGE_MODEL_REFERENCE,
@@ -313,6 +313,9 @@ var openOperateWindow = function (statusValid, paBussType, portfolioId, bizCode,
         url = 买断式回购存续URL;
     } else if (paBussType == 债券借贷融入到期 || paBussType == 债券借贷融出到期) {
         url = 债券借贷存续URL;
+    }else if (paBussType == DVP划款) {
+        data.orderId = orderId;
+        url = DVP资金调拨URL;
     }
 
     var title = JoyinUtil.getLabel("SysCommon.refrence");

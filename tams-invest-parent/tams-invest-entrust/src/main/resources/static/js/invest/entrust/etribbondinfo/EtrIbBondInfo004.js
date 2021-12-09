@@ -169,7 +169,8 @@
         var objects = object.selectedItem;
         for (var index in objects) {
             var temp = objects[index];
-            
+            temp.entrustNum = JoyinMath.doMul(temp.entrustNum,10000);
+            temp.entrustOwnNum = temp.entrustNum;
             // 指令授信 start
             temp.inputValue1 = 'F01';
             temp.finprodType2 = 'F01';

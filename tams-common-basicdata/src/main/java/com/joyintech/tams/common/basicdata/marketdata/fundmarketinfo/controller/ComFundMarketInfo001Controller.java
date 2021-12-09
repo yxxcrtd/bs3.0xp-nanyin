@@ -10,12 +10,20 @@
 
 package com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto;
+import com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.service.ComFundMarketInfo001Service;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,25 +34,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.groups.ValidateGroupDelete;
-import com.joyintech.system.constant.SystemGlobalConstant;
-import com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.dto.ComFundMarketInfo001dto;
-import com.joyintech.tams.common.basicdata.marketdata.fundmarketinfo.service.ComFundMarketInfo001Service;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -77,9 +71,9 @@ public class ComFundMarketInfo001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody ComFundMarketInfo001dto dto) {
-        AjaxResult ajaxResult = new AjaxResult();
-        return ajaxResult;
+    public AjaxResult check(@RequestBody  @Validated({
+            ValidateGroupDelete.class}) ComFundMarketInfo001dto dto, BindingResult result) {
+        return commonCheck(result, dto.getOperateType());
     }
 
     /**
@@ -176,7 +170,7 @@ public class ComFundMarketInfo001Controller extends BaseController {
         params.setBusinessType(DictCodeListExt3.共通业务类型_每日基金行情信息.getValue());
         // 设置流程业务说明, entity即传入的dto
         // 业务说明：债券代码 + "(" + 债券代码 + ")" + "-" + "估值日" + "-" + "估值日"
-        params.setComment(entity ->"基金代码(" + entity.getFundCode() + ")" + "-" + "估值日期(" + entity.getValueDate()+ ")"
+        params.setComment(entity ->"基金代码(" + entity.getFinprodId() + ")" + "-" + "估值日期(" + entity.getValueDate()+ ")"
                 + "-" + "基金类型(" + entity.getFundTypeFmt() + ")");
         processParameter.setWorkFlowParameter(params);
         String msg = comFundMarketInfo001Service.start(processParameter,

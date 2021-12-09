@@ -548,7 +548,7 @@ public class FinPlanProfitAssetDto extends FinProduct implements ProcessEntity {
      * @return 市场代码，可以按规则生成，或者手输，不校验唯一。对于理财产品分层，同母金融产品代码对应的市场代码。
      */
 //    @Pattern(fieldName = "FinPlanProfitAsset002.finprodMarketId", regx = "^(?=.*[a-zA-Z]+)(?=.*[0-9]+)[a-zA-Z0-9]+$", message = "{0}格式应为字母加数字")
-    @NotEmpty(fieldName="FinPlanProfitAsset002.finprodMarketId",groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName="FinPlanProfitAsset002.finprodMarketId",groups = {ValidateGroupEdit.class})
     @Code(fieldName = "FinPlanProfitAsset002.finprodMarketId", length = 32, groups = {ValidateGroupEdit.class})
     public String getFinprodMarketId() {
         return super.getFinprodMarketId();
@@ -1743,7 +1743,7 @@ public class FinPlanProfitAssetDto extends FinProduct implements ProcessEntity {
 
     @Override
     @Length(fieldName = "FinPlanProfitAsset002.contractNo", max = 400, groups = {ValidateGroupEdit.class})
-    @NotEmpty(fieldName = "FinPlanProfitAsset002.contractNo", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "FinPlanProfitAsset002.contractNo", groups = {ValidateGroupEdit.class})
     public String getContractNo(){
         return super.getContractNo();
     }

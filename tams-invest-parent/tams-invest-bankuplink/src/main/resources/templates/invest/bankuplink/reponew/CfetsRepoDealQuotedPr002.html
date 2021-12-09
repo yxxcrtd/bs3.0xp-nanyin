@@ -21,9 +21,9 @@
             <input type="hidden" id="CfetsRepoDealQuotedPrice002_quoteId" name="quoteId"
                    class="layui-input form-input" placeholder="请输入内容"
                    th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.quoteId}">
-            <input type="hidden" id="CfetsRepoDealQuotedPrice002_secAcctId" name="secAcctId"
+           <!-- <input type="hidden" id="CfetsRepoDealQuotedPrice002_secAcctId" name="secAcctId"
                    class="layui-input form-input" placeholder="请输入内容"
-                   th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.secAcctId}">
+                   th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.secAcctId}">-->
             <input type="hidden" id="CfetsRepoDealQuotedPrice002_quoteRoleType" name="quoteRoleType"
                    class="layui-input form-input" placeholder="请输入内容"
                    th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.quoteRoleType}">
@@ -41,6 +41,7 @@
             <input type="hidden" id="CfetsBondDealQuotedPrice002_hidden_pQuoteId" th:value="${entity?.pQuoteId}"
                    name="pQuoteId"/>
             <input type="hidden" id="CfetsBondDealQuotedPrice002_responseMySide" name="responseMySide"/>
+            <input type="hidden" name="workflowId" th:value="${workflowId}"/>
             <div class="layui-form-item">
                 <div class="layui-form-item">
                     <div class="layui-input-inline input-inline"
