@@ -26,6 +26,12 @@ public class PositionCashRequestDto {
     @ApiModelProperty(name="calId",value="交易日历",example="03", notes = "默认为03银行间")
     private String calId;
 
+    @ApiModelProperty(name="acctTypeList",value="交易现金查询账户类型集合",example="['A01','A07']")
+    private List<String> acctTypeList;
+
+    @ApiModelProperty(name="acctTypes",value="账户现金查询账户类型集合",example="['A01','A07']")
+    private List<String> acctTypes;
+
     public List<String> getPortfolioIdList() {
         return portfolioIdList;
     }
@@ -64,5 +70,21 @@ public class PositionCashRequestDto {
 
     public void setCalId(String calId) {
         this.calId = calId;
+    }
+
+    public List<String> getAcctTypeList() {
+        return acctTypeList;
+    }
+
+    public void setAcctTypeList(List<String> acctTypeList) {
+        this.acctTypeList = acctTypeList;
+    }
+
+    public List<String> getAcctTypes() {
+        return acctTypes;
+    }
+
+    public void setAcctTypes(List<String> acctTypes) {
+        this.acctTypes = acctTypes;
     }
 }

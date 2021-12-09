@@ -159,6 +159,18 @@
             <if test="acctId != null and acctId != ''">
                 and a.ACCT_ID = #{acctId,jdbcType=VARCHAR}
             </if>
+            <if test="acctTypes != null and portfolioIdList != null and !acctTypes.isEmpty() ">
+                and a.ACCT_ID in (
+                    SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID in
+                    <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                    and ACCT_TYPE in
+                    <foreach collection="acctTypes" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                )
+            </if>
             <if test="portfolioIdList != null">
                 AND a.PORTFOLIO_ID in
                 <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">

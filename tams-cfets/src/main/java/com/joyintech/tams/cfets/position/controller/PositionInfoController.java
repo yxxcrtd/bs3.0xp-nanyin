@@ -71,7 +71,9 @@ public class PositionInfoController {
                         requestDto.getCdate(),
                         requestDto.getAcctId(),
                         requestDto.getCcy(),
-                        requestDto.getCalId()
+                        requestDto.getCalId(),
+                        requestDto.getAcctTypeList(),
+                        requestDto.getAcctTypes()
                 )
         );
     }

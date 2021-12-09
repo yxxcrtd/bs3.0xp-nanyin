@@ -105,10 +105,10 @@ public class PositionUtil {
                                 }
                             }
                         }
-                        strb.append("】，请确认是否继续？");
                     }
 
                     if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, arr[0])){
+                        strb.append("】，请确认是否继续？");
                         /**
                          * 余额不足，软控确认
                          */
@@ -118,6 +118,7 @@ public class PositionUtil {
                                 .put("data", data);
                         return new Message().success().setData(bm);
                     }else {
+                        strb.append("】");
                         /**
                          * 余额不足，硬控提示
                          */
