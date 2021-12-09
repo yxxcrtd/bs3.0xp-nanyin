@@ -1104,6 +1104,13 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     柜台接口类型_金证kcbp(DictCode.柜台接口类型,"1","金证kcbp"),
     柜台接口类型_恒生ufx(DictCode.柜台接口类型,"2","恒生ufx"),
     柜台接口类型_ctp(DictCode.柜台接口类型,"5","ctp"),
+
+    // add by fuyongsheng 20211207 自动对账协议回购 start
+    柜台接口类型_恒生(DictCode.柜台接口类型,"1","恒生"),
+    柜台接口类型_金证w版(DictCode.柜台接口类型,"2","金证w版"),
+    柜台接口类型_金证u版(DictCode.柜台接口类型,"4","金证u版"),
+    // add by fuyongsheng 20211207 自动对账协议回购 end
+
     共通业务类型_席位信息管理(DictCode.共通业务类型,"MST26","席位信息管理"),
     共通业务类型_标准券再折算率(DictCode.共通业务类型,"SCRCR01","标准券再折算率"),
 

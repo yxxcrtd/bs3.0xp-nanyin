@@ -305,6 +305,8 @@ public class StlDataDealProcessConstant {
 	public static final String SJSFX_YWLB_A3 = "FXA3";
 	// 业务类别_老股东优先可配售记录
 	public static final String SJSFX_YWLB_A4 = "FXA4";
+	// 业务类别_信用配售确认记录 修改为 向二级市场投资者按市值配售新股认购确认记录
+	public static final String SJSFX_YWLB_A5 = "FXA5";
 	// 证券类别：10-国债现货
 	public static final String SJSMX_ZQLB_10 = "10";
 	// 证券类别：11-公司/企业债
