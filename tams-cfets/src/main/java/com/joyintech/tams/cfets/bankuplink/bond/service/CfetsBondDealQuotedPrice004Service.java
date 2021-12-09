@@ -427,6 +427,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         insertEtrFinishStatus(cfetsBondDealDbDto,operationType);
     }
 
+
     /**
      * 处理指令完成度
      * @param cfetsBondDealDbDto
@@ -464,6 +465,15 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
         }
     }
 
+    /**
+     * 退回
+     * @param entity
+     */
+    @Override
+    public void doBack(CfetsBondDealRegisterQuoteDto entity) {
+        //退回冲销头寸
+        PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+    }
 
     @Override
     public void doDelete(String workflowId) {
