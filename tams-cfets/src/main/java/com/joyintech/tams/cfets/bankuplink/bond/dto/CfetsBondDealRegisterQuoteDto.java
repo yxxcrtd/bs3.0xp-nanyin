@@ -97,6 +97,8 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
      */
     private String mySideTrader;
 
+    private String ouTraderName;
+
     private String counterName;
 
     private String counterTraderName;
@@ -302,6 +304,14 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setMySideTrader(String mySideTrader) {
         this.mySideTrader = mySideTrader;
+    }
+
+    public String getOuTraderName() {
+        return ouTraderName;
+    }
+
+    public void setOuTraderName(String ouTraderName) {
+        this.ouTraderName = ouTraderName;
     }
 
     public String getSettleMethod() {

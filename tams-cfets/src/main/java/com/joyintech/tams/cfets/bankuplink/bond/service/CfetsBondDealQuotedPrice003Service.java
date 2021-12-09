@@ -219,7 +219,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
                 errorList.add(new ValidMessage("组合分配结算服务费总和需要等于结算服务费"));
             }
         }
-        if(StringUtil.isNotEmpty(entity.getFinprodId())){
+        /*if(StringUtil.isNotEmpty(entity.getFinprodId())){
             FinProduct finProduct = finProductMapper.selectByPrimaryKey(entity.getFinprodId());
             if(StringUtil.equals(finProduct.getIsRight(),DictCodeList.是否_是.getValue())){
                 Map<String,Object> param = new HashMap<>();
@@ -244,7 +244,7 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
             if(StringUtil.isEmpty(entity.getCalculateField())){
                 errorList.add(new ValidMessage("请输入锚定值(净价或者到期收益率或者行权收益率)"));
             }
-        }
+        }*/
         ajaxResult.setErrorList(errorList);
         return ajaxResult;
     }
