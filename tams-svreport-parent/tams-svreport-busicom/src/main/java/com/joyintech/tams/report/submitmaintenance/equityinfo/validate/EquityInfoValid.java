@@ -709,11 +709,6 @@ public class EquityInfoValid {
                 equityInfoRegist001Dto.getHolderClassify())) {
             map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
         }
-        else if (StringUtil.isNotEmpty(equityInfo001Dto.getFundAccPlace())
-                && !equityInfo001Dto.getFundAccPlace().equals(
-                equityInfoRegist001Dto.getFundAccPlace())) {
-            map.put("FUND_ACC_PLACE", equityInfo001Dto.getFundAccPlace());
-        }
         // 个人证件类别
         else if (StringUtil.isNotEmpty(equityInfo001Dto.getPersonalIdentifyType())
                 && !equityInfo001Dto.getPersonalIdentifyType().equals(
