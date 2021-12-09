@@ -43,18 +43,6 @@ public class ReconInterfService {
     @Autowired
     private StlSecReconDealMapper stlSecReconDealMapper;
 
-    /**
-     * 平台日获取接口
-     */
-    @Autowired(required=false)
-    private IPlatformDate iPlatformDate;
-
-    @Autowired
-    private FinProductMapper finProductMapper;
-
-    @Autowired
-    private FinProductOthCodeMapper finProductOthCodeMapper;
-
     public int deleteStlCashRecon(Map<String,Object> param){
        return  reconInterfMapper.deleteStlCashRecon(param);
     }
@@ -166,41 +154,5 @@ public class ReconInterfService {
         }
     }
 
-    /**
-     * 处理基金分红设置FJY文件
-     * @param param
-     */
-    public void executeFundBonusFjy(Map<String,Object> param){
-        param.put("platFormDate", iPlatformDate.getSysDate());
-        param.put("fjyywlx", "OD");
-        List<InterfFundBonusFjy> fundBonusFjys = reconInterfMapper.findInterfFundBonusFjy(param);
-        if(CollectionUtils.isEmpty(fundBonusFjys)){
-            return;
-        }
-        for(InterfFundBonusFjy fundBonusFjy : fundBonusFjys){
-            FinProduct finProduct = finProductMapper.selectByPrimaryKey("F06_" + fundBonusFjy.getCpzqdm() + ".SH");
-            if(null == finProduct){
-                continue;
-            }
-            Map<String, Object> queryParam = new HashMap<>();
-            queryParam.put("branch", Long.valueOf("0"));
-            queryParam.put("finProdId", finProduct.getFinprodId());
-            queryParam.put("othType", DictCodeListExt3.金融产品其他代码类型_基金分红设置代码.getValue());
-            Integer count = reconInterfMapper.queryFinProductOthCodeCount(queryParam);
-            FinProductOthCode finProductOthCode = new FinProductOthCode();
-            finProductOthCode.setFinprodId(finProduct.getFinprodId());
-            finProductOthCode.setBranch(Long.valueOf("0"));
-            finProductOthCode.setOthType(DictCodeListExt3.金融产品其他代码类型_基金分红设置代码.getValue());
-            finProductOthCode.setOthCode(fundBonusFjy.getFjyzqdm());
-            finProductOthCode.setOthName(finProduct.getFinprodName());
-            finProductOthCode.setDeclaredStartDate(fundBonusFjy.getFjyddsrdatestart());
-            finProductOthCode.setDeclaredEndDate(fundBonusFjy.getFjyddsrdateend());
-            if(count > 0){
-                finProductOthCodeMapper.insertSelective(finProductOthCode);
-            }else{
-                finProductOthCodeMapper.updateByPrimaryKeySelective(finProductOthCode);
-            }
-        }
-    }
 }
 
