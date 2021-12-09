@@ -2,10 +2,12 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
@@ -59,6 +61,19 @@ public class ExchangeTransMatchBond1Service extends ExchangeTransMatchBondCommon
         trdFinProductDealTotal.setDeliveryType("DVP");
     }
 
+    // ZGZGST-4155:场内匹配生成的交易数据中展示对应的指令编号 fuyongsheng add 20211208 start
+    @Override
+    public TrdDealTotalAdd generateDealTotalAdd(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
+        TrdDealTotalAdd trdDealTotalAdd =  new TrdDealTotalAdd();
+        BeanUtil.copyPropertiesIgnoreNull(trdDealTotalAdd, trdFinProductDealTotal);
+        trdDealTotalAdd.setTotleTradeId(trdFinProductDealTotal.getTotleTradeId());
+        trdDealTotalAdd.setPurchDate(trdFinProductDealTotal.getTradeDate());
+        trdDealTotalAdd.setPurAmt(trdFinProductDealTotal.getPrinAmt());
+        trdDealTotalAdd.setEntrustId(entrustDto.getEntrustId());
+
+        return trdDealTotalAdd;
+    }
+    // ZGZGST-4155:场内匹配生成的交易数据中展示对应的指令编号 fuyongsheng add 20211208 end
 
     @Override
     protected TrdProductDeal createDeal(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {

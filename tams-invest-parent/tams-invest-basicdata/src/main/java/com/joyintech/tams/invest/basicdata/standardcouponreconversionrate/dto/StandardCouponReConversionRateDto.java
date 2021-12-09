@@ -145,6 +145,7 @@ public class StandardCouponReConversionRateDto extends StdBondMoreConvrateInfo i
     private String startDate;
 
     @Override
+    @PrimaryKey(PrimaryKey.Field.PK_3)
     @NotEmpty(fieldName = "StandardCouponReConversionRate001.startDate",groups = {ValidateGroupEdit.class})
     public String getStartDate() {
         return startDate;
@@ -153,5 +154,24 @@ public class StandardCouponReConversionRateDto extends StdBondMoreConvrateInfo i
     @Override
     public void setStartDate(String startDate) {
         this.startDate = startDate;
+    }
+
+    private String finprodMarketId;
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
+
+
+    public String getFinprodMarketIdStr() {
+        if(StringUtil.equals(getFinprodId(),"BROKER")){
+            return "所有";
+        }else{
+            return this.getFinprodMarketId();
+        }
     }
 }

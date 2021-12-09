@@ -10,6 +10,12 @@
  
 package com.joyintech.tams.invest.batch.entrust.service;
 
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListRsk;
+import com.joyintech.tams.invest.common.trade.CreditLinesUpdate;
+import com.joyintech.tams.invest.common.trade.CreditLinesUpdateImpl;
+import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +26,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.entrust.dao.EntrustStatusMapper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +64,30 @@ public class EntrustStatusService {
             List<String> entrustIdList = entrustStatusMapper.selectEntrustIds(params);
             entrustIdList.forEach(s -> baseEtrCashPositionCommService.entrustCloseExecute(s));
             entrustStatusMapper.updateDistributeStatus(params);//add by yangwenjun 20201211 更新委托指令分发表中的接收状态
+
+            // 日终关闭委托时，同步释放授信预占
+            closeDelegateDealCredit(entrustIdList);
+
             entrustStatusMapper.updateEntrustStatus(params);
+        }
+    }
+
+    /**
+     * 日终关闭委托时，同步将授信占用释放（将占用记录更新成无效状态）
+     * @param entrustIdList
+     */
+    private void closeDelegateDealCredit(List<String> entrustIdList) {
+        CreditLinesUpdate creditLinesUpdate = SpringContextUtil.getBean(CreditLinesUpdateImpl.class);
+        if (creditLinesUpdate != null) {
+            List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+            entrustIdList.forEach(entrustId -> {
+                CreditLinesInputDto inputDto = new CreditLinesInputDto();
+                inputDto.setTradeId(entrustId);
+                inputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
+                inputDto.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+                inputDtoList.add(inputDto);
+            });
+            creditLinesUpdate.occupyCreditLinesEtr(inputDtoList,null);
         }
     }
 }

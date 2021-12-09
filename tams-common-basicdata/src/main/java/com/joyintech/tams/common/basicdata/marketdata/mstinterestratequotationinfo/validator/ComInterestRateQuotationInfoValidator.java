@@ -58,12 +58,26 @@ public class ComInterestRateQuotationInfoValidator implements BeanValidator {
                     }
                     // TISHKS-61 :流程中数据不可删除 fuyongsheng 20211116 edit end
                     // 判断发布日是否小于平台时间
-//                    if (cur.getEffDate().compareTo(sysDate) < 0) {
-//                        // 添加错误信息
-//                        errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0015",
-//                            getMessage("ComInterestRateQuotationInfo002.effDate"),
-//                            getMessage("ComInterestRateQuotationInfo002.date"))));
-//                    }
+                    if (cur.getEffDate()!=null&&cur.getEffDate().compareTo(sysDate) < 0) {
+                        // 添加错误信息
+                        errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0015",
+                            getMessage("ComInterestRateQuotationInfo002.effDate"),
+                            getMessage("ComInterestRateQuotationInfo002.date"))));
+                    }
+                }
+            }else{
+                // TISHKS-61 :流程中数据不可删除 fuyongsheng 20211116 edit start
+                if(comInterestRateQuotationInfoService.checkBusinessDataInFlow(dto)){
+                    errorList.add(new ValidMessage("流程中的数据不可删除！"));
+                    return errorList;
+                }
+                // TISHKS-61 :流程中数据不可删除 fuyongsheng 20211116 edit end
+                // 判断发布日是否小于平台时间
+                if (dto.getEffDate()!=null&&dto.getEffDate().compareTo(sysDate) < 0) {
+                    // 添加错误信息
+                    errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0015",
+                            getMessage("ComInterestRateQuotationInfo002.effDate"),
+                            getMessage("ComInterestRateQuotationInfo002.date"))));
                 }
             }
         }
