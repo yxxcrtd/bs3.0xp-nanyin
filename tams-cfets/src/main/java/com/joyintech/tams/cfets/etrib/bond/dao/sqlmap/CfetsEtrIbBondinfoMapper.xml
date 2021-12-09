@@ -372,13 +372,12 @@ from
                 SELECT
                 (CASE WHEN aa.PORTFOLIO_ID IS NULL THEN bb.PORTFOLIO_ID ELSE aa.PORTFOLIO_ID END ) AS PORTFOLIO_ID,
                 (CASE WHEN aa.FINPROD_ID IS NULL THEN bb.FINPROD_ID ELSE aa.FINPROD_ID END ) AS FINPROD_ID,
-                nvl(bb.INV_AIM,aa.INV_AIM) AS INV_AIM,
                 nvl(aa.ETR_SUM_KYCC,0) AS ETR_SUM_KYCC, nvl(aa.ETR_PLEDGE_KZYCC,0) ETR_PLEDGE_KZYCC, nvl(aa.ETR_PLEDGE_YZYCC,0) ETR_PLEDGE_YZYCC,
                 nvl(bb.PTL_BOND_BFQKYCC,0) PTL_BOND_BFQKYCC, nvl(bb.PTL_BOND_BFQZTCC,0) PTL_BOND_BFQZTCC,
                 NVL(bb.PTL_BOND_ZHCC,0) PTL_BOND_ZHCC
                 FROM (
                     SELECT
-                    a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM,
+                    a.PORTFOLIO_ID, a.FINPROD_ID,
                     sum(CASE WHEN b.S_HOLDINGTYPE=#{S_001} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) ETR_SUM_KYCC,
                     sum(CASE WHEN b.S_HOLDINGTYPE=#{S_002} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) ETR_PLEDGE_KZYCC,
                     sum(CASE WHEN a.HODING_TYPE=#{A_012} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) ETR_PLEDGE_YZYCC
@@ -407,11 +406,11 @@ from
                             #{item}
                         </foreach>
                     </if>
-                    GROUP BY a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM
+                    GROUP BY a.PORTFOLIO_ID, a.FINPROD_ID
                 ) aa
                 FULL OUTER JOIN (
                     <!-- 本方券可用持仓、本方券在途持仓、账户持仓 -->
-                    select a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM,
+                    select a.PORTFOLIO_ID, a.FINPROD_ID,
                     sum(CASE WHEN a.HODING_TYPE =#{A_004} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_BFQKYCC,
                     sum(CASE WHEN a.HODING_TYPE =#{A_008} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_BFQZTCC,
                     sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_ZHCC
@@ -439,8 +438,8 @@ from
                             #{item}
                         </foreach>
                     </if>
-                    GROUP BY a.PORTFOLIO_ID, a.FINPROD_ID, a.INV_AIM
-                ) bb ON aa.PORTFOLIO_ID=bb.PORTFOLIO_ID AND aa.FINPROD_ID=bb.FINPROD_ID AND aa.INV_AIM=bb.INV_AIM
+                    GROUP BY a.PORTFOLIO_ID, a.FINPROD_ID
+                ) bb ON aa.PORTFOLIO_ID=bb.PORTFOLIO_ID AND aa.FINPROD_ID=bb.FINPROD_ID 
             ) etrptl
             LEFT JOIN FIN_PRODUCT_TYPE c ON etrptl.FINPROD_ID = c.FINPROD_ID
             LEFT JOIN FIN_PRODUCT d ON etrptl.FINPROD_ID=d.FINPROD_ID
@@ -525,7 +524,7 @@ from
                 ) f on f.ITEM_CODE=c.TYPE_11
                 LEFT JOIN (
                     SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST WHERE DICT_CODE= 'BUSINESS_MODEL'
-                ) g on g.ITEM_CODE = etrptl.INV_AIM
+                ) g on g.ITEM_CODE = invaim.INV_AIM
             </if>
             <!-- 账户持仓为0时数据不展示 -->
             where (
