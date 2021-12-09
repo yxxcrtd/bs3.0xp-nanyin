@@ -157,6 +157,12 @@ public interface CfetsTrdConfirmMapper {
      * @return
      */
     public boolean isExistMatchInfo(@Param("preTradeId") String preTradeId);
+    /**
+     * 根据交易汇总编号删除匹配关系表
+     * @param seqno
+     * @return
+     */
+    int deleteByTrdId(String trdId);
 
 
 }

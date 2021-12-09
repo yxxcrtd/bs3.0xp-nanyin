@@ -1723,6 +1723,10 @@
         from Trdquto_Match_Info t
         where t.pre_trade_id=#{preTradeId,jdbcType=VARCHAR}
     </select>
+    <delete id="deleteByTrdId" parameterType="java.lang.String" >
+        delete from TRDQUTO_MATCH_INFO
+        where trd_id = #{trdId,jdbcType=VARCHAR}
+    </delete>
 </mapper>
 
 
