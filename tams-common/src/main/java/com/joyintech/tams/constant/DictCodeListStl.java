@@ -260,6 +260,7 @@ public enum DictCodeListStl implements BaseDictCodeList {
 		清算数据源表_深中登ZSMX(DictCode.清算数据源表,"ZSMX","深中登ZSMX"),
 		清算数据源表_上中登ZQY(DictCode.清算数据源表,"ZQY","上中登ZQY"),
 		清算数据源表_深中登SJSKS(DictCode.清算数据源表,"SJSKS","深中登SJSKS"),
+	     清算数据源表_上中登TZXX(DictCode.清算数据源表,"TZXX","上中登TZXX"),
 		
 		// PTL_TRADE的业务表
 		业务表_结算指令表(DictCode.业务表,"01","结算指令表"),

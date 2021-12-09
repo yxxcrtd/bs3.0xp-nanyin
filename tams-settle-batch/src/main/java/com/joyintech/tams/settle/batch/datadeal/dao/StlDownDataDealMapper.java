@@ -4,20 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-
-import com.joyintech.tams.common.base.entity.SettleBatchPara;
-import com.joyintech.tams.common.base.entity.SettleDataRule;
-import com.joyintech.tams.common.base.entity.SzdAbcsj;
-import com.joyintech.tams.common.base.entity.SzdJsmx;
-import com.joyintech.tams.common.base.entity.SzdSjsfx;
-import com.joyintech.tams.common.base.entity.SzdSjsjg;
-import com.joyintech.tams.common.base.entity.SzdSjsks;
-import com.joyintech.tams.common.base.entity.SzdSjsmx;
-import com.joyintech.tams.common.base.entity.SzdZqbd;
-import com.joyintech.tams.common.base.entity.SzdZqy;
-import com.joyintech.tams.common.base.entity.SzdZsmx;
 
 /**
  * 数据清算Mapper
@@ -122,4 +111,6 @@ public interface StlDownDataDealMapper {
     
     // 查询深中登SJSKS
     List<SzdSjsks> selectSzdSjsks(@Param("dealDate") Date dealDate, @Param("dataFile") String dataFile, @Param("searchMap") Map<String, List<String>> searchMap);
+    // 查询上中登TZXX
+    List<SzdTzxx> selectSzdTzxx(@Param("dealDate") Date dealDate, @Param("dataFile") String dataFile, @Param("searchMap") Map<String, List<String>> searchMap);
 }

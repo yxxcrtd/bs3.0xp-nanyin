@@ -3,15 +3,7 @@ package com.joyintech.tams.settle.batch.datadeal.dto.step2;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.joyintech.tams.common.base.entity.SzdAbcsj;
-import com.joyintech.tams.common.base.entity.SzdJsmx;
-import com.joyintech.tams.common.base.entity.SzdSjsfx;
-import com.joyintech.tams.common.base.entity.SzdSjsjg;
-import com.joyintech.tams.common.base.entity.SzdSjsks;
-import com.joyintech.tams.common.base.entity.SzdSjsmx;
-import com.joyintech.tams.common.base.entity.SzdZqbd;
-import com.joyintech.tams.common.base.entity.SzdZqy;
-import com.joyintech.tams.common.base.entity.SzdZsmx;
+import com.joyintech.tams.common.base.entity.*;
 
 /**
  * 清算数据DTO（step2 reader用）
@@ -49,6 +41,9 @@ public class StlDownDataDealOperatorBaseDto {
 	
 	// SJSKS清算数据List
 	List<SzdSjsks> szdSjsksList;
+
+	// TZXX清算数据List
+	List<SzdTzxx> szdTzxxList;
 	
 	public StlDownDataDealOperatorBaseDto() {
 		jsmxList = new ArrayList<SzdJsmx>();
@@ -60,6 +55,7 @@ public class StlDownDataDealOperatorBaseDto {
 		zsmxList = new ArrayList<SzdZsmx>();
 		szdZqyList = new ArrayList<SzdZqy>();
 		szdSjsksList = new ArrayList<SzdSjsks>();
+		szdTzxxList=new ArrayList<SzdTzxx>();
 	}
 	
 	public List<SzdJsmx> getJsmxList() {
@@ -132,5 +128,13 @@ public class StlDownDataDealOperatorBaseDto {
 
 	public void setSzdSjsksList(List<SzdSjsks> szdSjsksList) {
 		this.szdSjsksList = szdSjsksList;
+	}
+
+	public List<SzdTzxx> getSzdTzxxList() {
+		return szdTzxxList;
+	}
+
+	public void setSzdTzxxList(List<SzdTzxx> szdTzxxList) {
+		this.szdTzxxList = szdTzxxList;
 	}
 }

@@ -551,4 +551,18 @@
         	</foreach>
         </where>
     </select>
+
+	<select id="selectSzdTzxx" parameterType="java.util.Map"
+			resultMap="com.joyintech.tams.common.base.dao.SzdTzxxMapper.BaseResultMap">
+		<include refid="com.joyintech.tams.common.base.dao.SzdTzxxMapper.Sql_All_Data"></include>
+		<where>
+			IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(DATA_FILE) LIKE CONCAT(#{dataFile}, '%'))
+			<foreach item="searchMapValue" index="searchMapKey" collection="searchMap">
+				AND ${searchMapKey} IN
+				<foreach collection="searchMapValue" item ="searchMapValueData" open="(" close=")" separator=",">
+					#{searchMapValueData}
+				</foreach>
+			</foreach>
+		</where>
+	</select>
 </mapper>

@@ -127,3 +127,7 @@ comment on column SZD_TZXX.UPDATE_USER is
 
 comment on column SZD_TZXX.UPDATE_TIME is
 '更新时间';
+
+
+delete from SETTLE_DATA_RULE where SEQNO='191';
+insert into SETTLE_DATA_RULE (SEQNO, TABLE_NAME, DATA_FILE, FINPROD_TYPE, INTERF_FIELD_CNNAME, TABLE_FIELD, FIELD_CODE, FIELD_VALUE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) values('191','TZXX','TZXX','06','通知类别','TZLB','008','A股','红利登记信息', 'system', '00001', sysdate, 'system', sysdate);

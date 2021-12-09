@@ -62,6 +62,7 @@ public class StlDataDownTask extends BatchBaseService {
                 .batch("SzdZsmx", getBean(SzdZsmxReader.class), getBean(SzdZsmxProcessor.class), getBean(SzdZsmxWriter.class), new StlDataDownStepListener())
                 .batch("SzdZqy", getBean(SzdZqyReader.class), getBean(SzdZqyProcessor.class), getBean(SzdZqyWriter.class), new StlDataDownStepListener())
                 .batch("SzdSjsks", getBean(SzdSjsksReader.class), getBean(SzdSjsksProcessor.class), getBean(SzdSjsksWriter.class), new StlDataDownStepListener())
+                .batch("SzdTzxx", getBean(SzdTzxxReader.class), getBean(SzdTzxxProcessor.class), getBean(SzdTzxxWriter.class), new StlDataDownStepListener())
                 .buildFlow("上中登股息红利税补缴数据导入", "SzdAbcsj")
                 .buildFlow("上中登JSMX导入", "SzdJsmx")
                 .buildFlow("深中登发行信息库导入", "SzdSjsfx")
@@ -71,8 +72,9 @@ public class StlDataDownTask extends BatchBaseService {
                 .buildFlow("深中登征税明细信息库数据导入", "SzdZsmx")
                 .buildFlow("上中登证券权益数据导入", "SzdZqy")
                 .buildFlow("深中登发行可申购额度信息数据导入", "SzdSjsks")
+                .buildFlow("上中登权益登记通知信息TZXX接口", "SzdTzxx")
                 .parallelBuilder(this.getBatchTask().getBeanName() + StringUtil.SPACE + this.getBatchTask().getTaskId(),
-                        "上中登股息红利税补缴数据导入","上中登JSMX导入","深中登发行信息库导入","深中登SJSJG导入","深中登SJSMX导入","上中登ZQBD导入","深中登征税明细信息库数据导入","上中登证券权益数据导入","深中登发行可申购额度信息数据导入")
+                        "上中登股息红利税补缴数据导入","上中登JSMX导入","深中登发行信息库导入","深中登SJSJG导入","深中登SJSMX导入","上中登ZQBD导入","深中登征税明细信息库数据导入","上中登证券权益数据导入","深中登发行可申购额度信息数据导入","上中登权益登记通知信息TZXX接口")
 //                .builder(this.getBatchTask().getBeanName() + StringUtil.SPACE + this.getBatchTask().getTaskId())
                 .run();
     }
