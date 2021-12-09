@@ -112,7 +112,13 @@
         ETR_ENTRUST_ADD.FULL_PRICE unitFprice,
         to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') TRANSMIT_TIME,
         ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/10000 finishDealAmt,
-        NVL(ETR_ENTRUST.ENTRUST_NUM, 0)/100 - ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/10000 avaDealAmt
+        NVL(ETR_ENTRUST.ENTRUST_NUM, 0)/100 - ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/10000 avaDealAmt,
+        D.ITEM_VALUE entrustStatusStr,
+        E.ITEM_VALUE psStr,
+        F.ITEM_VALUE priceModelStr,
+        H.ITEM_VALUE businessModelStr,
+        G.ITEM_VALUE settleSpreedStr,
+        I.ITEM_VALUE tradeMarketStr
         FROM
         ETR_ENTRUST
         INNER JOIN
@@ -197,6 +203,14 @@
         ETR_ENTRUST.ENTRUST_STATUS = D.ITEM_CODE
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'PS')E ON ETR_ENTRUST.PS =
         E.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'PRICE_MODEL')F ON ETR_ENTRUST.PRICE_MODEL =
+        F.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'BUSINESS_MODEL')G ON ETR_ENTRUST.BUSINESS_MODEL =
+        G.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'ACCOUNT_SPEED')H ON ETR_ENTRUST_ADD.SETTLE_SPREED =
+        H.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'TRADE_PLACE')I ON ETR_ENTRUST.TRADE_MARKET =
+        I.ITEM_CODE
         WHERE
         ETR_ENTRUST.FINPROD_TYPE2 = #{finprodType2}
         AND ETR_ENTRUST.TRADE_MARKET in (#{tradeMarket01},#{tradeMarket02})
@@ -297,26 +311,6 @@
         <if test="quotaPageModel != null and quotaPageModel eq 'marketResponse'">
             AND STL_SEC_ACCT_INFO.SEC_ACCT_SOURCE = #{secAcctSource}
         </if>
-        <if test="search != null and search != ''">
-            AND (SYS_USER.USER_NAME LIKE '%' || #{search} || '%' OR SYS_USER.REAL_NAME LIKE '%' || #{search} || '%'
-            OR
-            ETR_ENTRUST.ENTRUST_STATUS like '%' || #{search} || '%' OR D.ITEM_VALUE LIKE '%' || #{search} || '%' OR
-            ETR_ENTRUST.PORTFOLIO_ID LIKE '%' || #{search} || '%' OR
-            PTL_PORTFOLIO.PORTFOLIO_NAME LIKE '%' || #{search} || '%' OR
-            ETR_ENTRUST.FINPROD_ID LIKE '%' || #{search} || '%' OR
-            FIN_PRODUCT.FINPROD_ABBR LIKE '%' || #{search} || '%' OR
-            ETR_ENTRUST_ADD.SEC_ACCT_ID LIKE '%' || #{search} || '%' OR
-            ETR_ENTRUST.PS LIKE '%' || #{search} || '%' OR E.ITEM_VALUE LIKE '%' || #{search} || '%' OR
-            ETR_ENTRUST_ADD.SETTLE_SPREED LIKE '%' || decode(#{search},'T+0','0','T+1','1','T+2','2',#{search}) ||
-            '%' OR
-            ETR_ENTRUST.PRICE LIKE '%' || #{search} || '%' OR
-            ETR_ENTRUST_ADD.MATURE_YIELD LIKE '%' || #{search} || '%' OR
-            MST_CFETS_CI.PARTY_ABBR LIKE '%' || #{search} || '%' OR
-            MST_CFETS_CT.TRADER_NAME LIKE '%' || #{search} || '%' OR
-            ETR_ENTRUST.VDATE LIKE '%' || #{search} || '%' OR
-            ETR_ENTRUST.MDATE LIKE '%' || #{search} || '%' OR
-            ETR_ENTRUST.ENTRUST_ID LIKE '%' || #{search} || '%')
-        </if>
         <if test="entrustIdList != null and entrustIdList.size() > 0">
             and ETR_ENTRUST.ENTRUST_ID in
             <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
@@ -330,8 +324,38 @@
             </foreach>
         </if>
         order by decode(ETR_ENTRUST.ENTRUST_STATUS,'09',1,'02',2,'03',3,'04',4,'06',5,'05',6,'07',7),ETR_ENTRUST_ADD.TRANSMIT_TIME,ETR_ENTRUST.FINPROD_ID,ETR_ENTRUST.ps)
-        <if test="sort != null and sort != '' and direction != null and direction != ''">
-            order by ${sort} ${direction}
+        <where>
+            <if test="search != null and search != ''">
+            (
+                entrustStatusStr like '%' || #{search} || '%' OR
+                psStr like '%' || #{search} || '%' OR
+                priceModelStr like '%' || #{search} || '%' OR
+                businessModelStr like '%' || #{search} || '%' OR
+                settleSpreedStr like '%' || #{search} || '%' OR
+                tradeMarketStr like '%' || #{search} || '%' OR
+                portfolioId LIKE '%' || #{search} || '%' OR
+                portfolioName LIKE '%' || #{search} || '%' OR
+                finprodMarketId LIKE '%' || #{search} || '%' OR
+                finprodAbbr LIKE '%' || #{search} || '%' OR
+                secManageAcctId LIKE '%' || #{search} || '%' OR
+                secAcctName LIKE '%' || #{search} || '%' OR
+                invManagerName  LIKE '%' || #{search} || '%' OR
+                remark LIKE '%' || #{search} || '%' OR
+                to_char(VDATE,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
+                to_char(MDATE,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
+                entrustId LIKE '%' || #{search} || '%' OR
+                TRANSMIT_TIME =  #{search} OR
+                to_char(transactioncom,'FM99990.9990')=#{search} or  transactioncom||'' =#{search} or
+                to_char(tradeFinishPercent,'FM99990.9990')=#{search} or  tradeFinishPercent||'' =#{search} or
+                to_char(entrustNum,'FM99990.9990')=#{search} or  entrustNum||'' =#{search} or
+                to_char(price,'FM99990.9990')=#{search} or  price||'' =#{search} or
+                to_char(matureYield,'FM99990.9990')=#{search} or  matureYield||'' =#{search} or
+                to_char(exerYield,'FM99990.9990')=#{search} or  exerYield||'' =#{search}
+            )
+            </if>
+        </where>
+        <if test="pageMode.sort != null and pageMode.sort != '' and pageMode.direction != null and pageMode.direction != ''">
+            order by ${pageMode.sort} ${pageMode.direction}
         </if>
     </select>
 
