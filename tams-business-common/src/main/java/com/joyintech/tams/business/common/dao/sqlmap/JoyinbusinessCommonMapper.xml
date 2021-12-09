@@ -237,7 +237,8 @@
     <select id="queryMySideList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT DISTINCT
         MST_CFETS_CUSTOMER_INFO.PARTY_ID id,
-        MST_CFETS_CUSTOMER_INFO.PARTY_ABBR text
+        MST_CFETS_CUSTOMER_INFO.PARTY_ABBR text,
+        MST_CFETS_CUSTOMER_INFO.PARTY_ID as object
         FROM
         MST_CFETS_CUSTOMER_INFO
         <where>
@@ -247,8 +248,38 @@
             </if>
         </where>
     </select>
+    <select id="queryMySideAndPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT DISTINCT
+        MST_CFETS_CUSTOMER_INFO.PARTY_ID id,
+        MST_CFETS_CUSTOMER_INFO.PARTY_ABBR text,
+        MST_CFETS_CUSTOMER_INFO.PARTY_ID as object
+        FROM
+        MST_CFETS_CUSTOMER_INFO
+        inner join MST_COUNTER_PARTY mst
+        on MST_CFETS_CUSTOMER_INFO.party_id=mst.party_id
+        <where>
+            <if test="search != null and !search.equals('')">
+                AND	(MST_CFETS_CUSTOMER_INFO.PARTY_ID like concat('%',concat(#{search},'%'))
+                or MST_CFETS_CUSTOMER_INFO.PARTY_ABBR like concat('%',concat(#{search},'%')))
+            </if>
+        </where>
+    </select>
+    <select id="queryCstpPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct I.Counterinstitutioncode id,
+        I.Institutionchinesefullname text
+        from  INTERF_CSTP_TRADE I
+        <where>
+            <if test="search != null and !search.equals('')">
+                AND	(I.Counterinstitutioncode like concat('%',concat(#{search},'%'))
+                or I.Institutionchinesefullname like concat('%',concat(#{search},'%')))
+            </if>
+            <if test="sysDate != null and !sysDate.equals('')">
+                AND  to_date(I.Tradedate,'yyyy-MM-dd')= #{sysDate,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
     <select id="queryCounterPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
-        select distinct mst.counter_id id,mst.counter_name  text
+        select distinct mst.counter_id id,mst.counter_name  text,mst.party_id as object
         from MST_COUNTER_PARTY mst
         where mst.counter_type in ('01','02')
             <if test="search != null and !search.equals('')">

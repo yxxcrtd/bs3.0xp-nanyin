@@ -18,6 +18,7 @@ import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,8 @@ public class JoyinbusinessCommonService extends BaseService {
 
     @Autowired
     private JoyinbusinessCommonMapper joyinbusinessCommonMapper;
+    @Autowired(required = false)
+    private IPlatformDate iPlatformDate;
 
     /**
      * 根据条件查询证券账户
@@ -129,9 +132,18 @@ public class JoyinbusinessCommonService extends BaseService {
     public Page<SelectOptionDto> queryMySideList(CfetsSearchInfoRequest dto) {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("search", dto.getSearch());
-        if(StringUtil.equals(dto.getDealType(),"04")){
+        param.put("sysDate",iPlatformDate.getSysDate());
+        if(StringUtil.equals(dto.getDealType(),"01")){
+            //系统内的交易对手
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryCounterPartyList(param));
+        }else if(StringUtil.equals(dto.getDealType(),"02")){
+            //银行间机构关联到系统的交易对手
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideAndPartyList(param));
+        }else if(StringUtil.equals(dto.getDealType(),"03")){
+            //CSTP下行接口对手方
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryCstpPartyList(param));
         }else{
+            //组合关联的银行间机构,此处前端能拿到组合的21位码
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideList(param));
         }
     }

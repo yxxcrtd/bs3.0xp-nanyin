@@ -1183,7 +1183,7 @@
         ir.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
         (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
-        ir.face_value/10000 as faceValue,
+        nvl(ir.share_amt,0)/100 as faceValue,
         null as trdFeeAmt,
         null as settleFeeAmt,
         null as cpriceAmt,
@@ -1193,7 +1193,7 @@
         EE.BUSINESS_MODEL as businessModel,
         ib.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
-        reg.unit_cprice as unitCprice,
+        null as unitCprice,
         null as yield,
         null as exerYield
         from ibu_quote_etr_re ir
@@ -1213,7 +1213,7 @@
         group by t.entrust_id
         )efs ON ee.Entrust_Id = efs.entrust_id
         left join stl_sec_acct_info stlinfo
-        on reg.sec_manage_acct_id=stlinfo.sec_acct_id
+        on ib.sec_manage_acct_id=stlinfo.sec_acct_id
         where ir.quote_id=#{quoteId,jdbcType=VARCHAR}
 
     </select>
@@ -1479,7 +1479,7 @@
         left join fin_product fp
         on ts.SECID=fp.finprod_market_id
         and fp.finprod_type='F01'
-        where  I.execid= #{execid,jdbcType=VARCHAR}
+        where  I.execid = #{execId,jdbcType=VARCHAR}
     </select>
     <select id="selectCstpRepoFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryCstpInfoListResponse">
 
@@ -1497,8 +1497,8 @@
         tr.repointamt as intAmt,
         null as repoType,
         I.Clearingmethod as clearType,
-        I.Settldate as vsettleDate,
-        I.Settldate2 as msettleDate,
+        to_date(I.Settldate,'yyyy-MM-dd') as vsettleDate,
+        to_date(I.Settldate2,'yyyy-MM-dd') as msettleDate,
         I.Cashholdingdays as actRepoTerm,
         tr.term_type as termType,
         I.Deliverytype as deliveryType,
@@ -1523,7 +1523,7 @@
         from INTERF_CSTP_TRADE I
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
         left join INTERF_OPICS_TRAD_REPO  tr on tr.oritradeid = I.EXECID
-        where I.execid= #{execid,jdbcType=VARCHAR}
+        where I.execid= #{execId,jdbcType=VARCHAR}
 
     </select>
     <select id="queryAllTradeInfoList"

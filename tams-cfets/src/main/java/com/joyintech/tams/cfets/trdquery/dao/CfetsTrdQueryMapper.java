@@ -61,7 +61,7 @@ public interface CfetsTrdQueryMapper {
      * @param pageParam
      * @return
      */
-    List<CfetsTrdQueryRegInfoListResponse> queryAllIbuInfoList(Map<String, Object> pageParam);
+    List<CfetsTrdQueryIbuInfoListResponse> queryAllIbuInfoList(Map<String, Object> pageParam);
     /**
      * 根据主键查询债券报价信息
      * @param pageParam
