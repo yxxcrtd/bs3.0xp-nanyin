@@ -561,7 +561,7 @@ public class IbuQuoteBondService extends BaseService {
                                             message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能小于限价指令中到期收益率的最大值";
                                             break;
                                         }
-                                        if (item.getExerYield().compareTo(maximumExerYield) < 0) {
+                                        if (null!=item.getExerYield()&&item.getExerYield().compareTo(maximumExerYield) < 0) {
                                             message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能小于限价指令中行权收益率的最大值";
                                             break;
                                         }
@@ -575,7 +575,7 @@ public class IbuQuoteBondService extends BaseService {
                                             message = "同时存在指定价格指令和限价指令，指定价格指令的到期收益率不能大于限价指令中到期收益率的最小值";
                                             break;
                                         }
-                                        if (item.getExerYield().compareTo(maximumExerYield) > 0) {
+                                        if (null!=item.getExerYield()&&item.getExerYield().compareTo(maximumExerYield) > 0) {
                                             message = "同时存在指定价格指令和限价指令，指定价格指令的行权收益率不能大于限价指令中行权收益率的最小值";
                                             break;
                                         }
