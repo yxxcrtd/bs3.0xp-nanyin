@@ -306,7 +306,7 @@ public class CommonProductRatingDto extends BaseEntity {
 	 * @return
 	 */
 	public String getGradeOrgIdName() {
-		return SysDataUtil.getNameFromDataDict(DictCode.评级机构, getGradeOrgId());
+		return null!=getGradeOrgId() ? SysDataUtil.getNameFromDataDict(DictCode.评级机构, getGradeOrgId()):null;
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class CommonProductRatingDto extends BaseEntity {
 	 * @return
 	 */
 	public String getGradeResultDis() {
-		return SysDataUtil.getNameFromDataDict(DictCode.评级结果, getGradeResult());
+		return null!=getGradeResult()?SysDataUtil.getNameFromDataDict(DictCode.评级结果, getGradeResult()):null;
 	}
 	
 	/**
@@ -322,7 +322,7 @@ public class CommonProductRatingDto extends BaseEntity {
 	 * @return
 	 */
 	public String getoTypeName() {
-		return SysDataUtil.getNameFromDataDict(DictCode.评级类型, getoType());
+		return null!=getoType()?SysDataUtil.getNameFromDataDict(DictCode.评级类型, getoType()):null;
 	}
 	
 	/**
@@ -330,7 +330,7 @@ public class CommonProductRatingDto extends BaseEntity {
 	 * @return String  
 	 */
 	public String getShortLongTermName() {
-	    return SysDataUtil.getNameFromDataDict(DictCode.长期短期, getShortLongTerm());
+	    return null!=getShortLongTerm()?SysDataUtil.getNameFromDataDict(DictCode.长期短期, getShortLongTerm()):null;
 	}
 
 	public String getMstDisType() {
