@@ -244,7 +244,7 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setCnyAmt(a.getCnyAmt());
 				bb.setPrdRegistCode(a.getPrdRegistCode());
 				bb.setHolderType(a.getHolderType());
-				bb.setSaleAmountTotal(a.getValueAmountTotal());
+				bb.setSaleAmountTotal(a.getSaleAmountTotal());
 				bb.setValueAmountTotal(a.getValueAmountTotal());
 				bb.setBalanceAmt(a.getBalanceAmt());
 				bb.setBalanceShares(a.getBalanceShares());
@@ -494,7 +494,7 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setCnyAmt(a.getCnyAmt());
 				bb.setPrdRegistCode(a.getPrdRegistCode());
 				bb.setHolderType(a.getHolderType());
-				bb.setSaleAmountTotal(a.getValueAmountTotal());
+				bb.setSaleAmountTotal(a.getSaleAmountTotal());
 				bb.setValueAmountTotal(a.getValueAmountTotal());
 				bb.setBalanceAmt(a.getBalanceAmt());
 				bb.setBalanceShares(a.getBalanceShares());
@@ -744,7 +744,7 @@ public class SvrMonthCollectInterf extends BaseService{
 				bb.setCnyAmt(a.getCnyAmt());
 				bb.setPrdRegistCode(a.getPrdRegistCode());
 				bb.setHolderType(a.getHolderType());
-				bb.setSaleAmountTotal(a.getValueAmountTotal());
+				bb.setSaleAmountTotal(a.getSaleAmountTotal());
 				bb.setValueAmountTotal(a.getValueAmountTotal());
 				bb.setBalanceAmt(a.getBalanceAmt());
 				bb.setBalanceShares(a.getBalanceShares());
@@ -1099,22 +1099,24 @@ public class SvrMonthCollectInterf extends BaseService{
 						}
 					}
 				}
-				if(!ccy.equals("EUR") && !ccy.equals("USD") && !ccy.equals("CNY") && !ccy.equals("JPY")){//美元对 CFETS:外汇交易中心
+				if(!ccy.equals("EUR") && !ccy.equals("USD") && !ccy.equals("CNY") && !ccy.equals("JPY")) {//美元对 CFETS:外汇交易中心
 					String USDExccy = "USD/" + ccy;
-					BigDecimal USDcharge = USDExchangeMap.get(USDExccy).getOpenPrice();//外币折算美元
+				  if (USDExchangeMap.get(USDExccy) != null){
+						BigDecimal USDcharge = USDExchangeMap.get(USDExccy).getOpenPrice();//外币折算美元
 					BigDecimal USDchargeCNY = USDExchangeMap.get("USD/CNY").getOpenPrice();//美元折算人民币
 					//余额
-					if(listAmountTotal.get(i).getBalanceAmt() != null && USDcharge != null && USDchargeCNY != null) {
-						listAmountTotal.get(i).setBalanceAmt((listAmountTotal.get(i).getBalanceAmt().divide(USDcharge,9,BigDecimal.ROUND_HALF_UP)).multiply(USDchargeCNY));
+					if (listAmountTotal.get(i).getBalanceAmt() != null && USDcharge != null && USDchargeCNY != null) {
+						listAmountTotal.get(i).setBalanceAmt((listAmountTotal.get(i).getBalanceAmt().divide(USDcharge, 9, BigDecimal.ROUND_HALF_UP)).multiply(USDchargeCNY));
 					}
 					//总销售金额
-					if(listAmountTotal.get(i).getSaleAmountTotal() != null && USDcharge != null && USDchargeCNY != null) {
-						listAmountTotal.get(i).setSaleAmountTotal((listAmountTotal.get(i).getSaleAmountTotal().divide(USDcharge,9,BigDecimal.ROUND_HALF_UP)).multiply(USDchargeCNY));
+					if (listAmountTotal.get(i).getSaleAmountTotal() != null && USDcharge != null && USDchargeCNY != null) {
+						listAmountTotal.get(i).setSaleAmountTotal((listAmountTotal.get(i).getSaleAmountTotal().divide(USDcharge, 9, BigDecimal.ROUND_HALF_UP)).multiply(USDchargeCNY));
 					}
 					//净销售金额
-					if(listAmountTotal.get(i).getValueAmountTotal() != null && USDcharge != null && USDchargeCNY != null) {
-						listAmountTotal.get(i).setValueAmountTotal((listAmountTotal.get(i).getValueAmountTotal().divide(USDcharge,9,BigDecimal.ROUND_HALF_UP)).multiply(USDchargeCNY));
+					if (listAmountTotal.get(i).getValueAmountTotal() != null && USDcharge != null && USDchargeCNY != null) {
+						listAmountTotal.get(i).setValueAmountTotal((listAmountTotal.get(i).getValueAmountTotal().divide(USDcharge, 9, BigDecimal.ROUND_HALF_UP)).multiply(USDchargeCNY));
 					}
+				  }
 				}
 			}
 		}

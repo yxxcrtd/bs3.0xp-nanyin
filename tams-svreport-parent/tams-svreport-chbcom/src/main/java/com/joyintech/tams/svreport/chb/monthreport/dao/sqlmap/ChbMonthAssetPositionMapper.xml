@@ -491,7 +491,7 @@
 		and pos.trade_type in ('01','02','05') /*直投交易,通道交易,资管计划交易*/
 		and  pos.cDATE =#{enddate,jdbcType=DATE}
           <if test="prodids !=null and prodids.size()>0">
-              and pos.prodid in
+              and pos.prod_id in
               <foreach collection="prodids" item="item" index="index" open="(" separator="," close=")">
                   <if test="(index % 999) == 998">
                       null) OR pos.prodid in (

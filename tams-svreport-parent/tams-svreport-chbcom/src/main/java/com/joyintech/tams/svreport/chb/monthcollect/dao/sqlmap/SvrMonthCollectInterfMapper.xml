@@ -62,13 +62,16 @@
 		left join CHB_INVESTHOLD_INFO_CHECK C
 		ON A.INDENTIFY_MARK = C.INDENTIFY_MARK
 		WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-		AND C.INDENTIFY_MARK = null
+		AND C.INDENTIFY_MARK is null
 		)
 		where monthMarkNo = 1 and STATUS != '03'
 
 		UNION ALL
 
-		select A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
+		SELECT
+		tmp.prdRegistCode,tmp.institutionCode,tmp.areaCode,tmp.holderType,tmp.indentifyMark,tmp.ccy,tmp.amount,tmp.qty,tmp.cnyAmt
+		FROM(
+		select A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,A.MERGER_INDENTIFY_MARK,A.HOLD_DATE,
 		CASE B.HOLDER_CLASSIFY
 		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
@@ -79,7 +82,13 @@
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
-		WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		WHERE
+		A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		) tmp
+		left join CHB_INVESTHOLD_INFO_SUB C
+		on tmp.MERGER_INDENTIFY_MARK = C.INDENTIFY_MARK  and tmp.HOLD_DATE = C.HOLD_DATE
+		where
+		INDENTIFY_MARK is not null
 		)
 		GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy
 	</select>
@@ -204,11 +213,21 @@
 
 		UNION ALL
 
+		SELECT
+		tmp.prdRegistCode,tmp.areaCode,tmp.indentifyMark
+		FROM
+		(
 		select
-		A.PRD_REGIST_CODE prdRegistCode, B.FUND_ACC_PLACE  areaCode, A.MERGER_INDENTIFY_MARK indentifyMark
+		A.PRD_REGIST_CODE prdRegistCode, B.FUND_ACC_PLACE  areaCode, A.MERGER_INDENTIFY_MARK indentifyMark,A.HOLD_DATE
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
+		WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		)tmp
+		left join CHB_INVESTHOLD_INFO_SUB C
+		on tmp.indentifyMark = C.INDENTIFY_MARK  and tmp.HOLD_DATE = C.HOLD_DATE
+		where
+		INDENTIFY_MARK is not null
 		)GROUP BY prdRegistCode,areaCode
 	</select>
 
@@ -231,13 +250,21 @@
 
 		UNION ALL
 
+		SELECT
+		tmp.prdRegistCode,tmp.institutionCode,tmp.indentifyMark
+		FROM
+		(
 		select
-		A.PRD_REGIST_CODE prdRegistCode,
-		NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE)  institutionCode,
-		A.MERGER_INDENTIFY_MARK indentifyMark
+		A.PRD_REGIST_CODE prdRegistCode,NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE)  institutionCode,A.MERGER_INDENTIFY_MARK indentifyMark,A.HOLD_DATE
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
+		WHERE A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		)tmp
+		left join CHB_INVESTHOLD_INFO_SUB C
+		on tmp.indentifyMark = C.INDENTIFY_MARK  and tmp.HOLD_DATE = C.HOLD_DATE
+		where
+		INDENTIFY_MARK is not null
 		)GROUP BY prdRegistCode,institutionCode
 	</select>
 
