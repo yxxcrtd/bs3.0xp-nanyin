@@ -210,10 +210,10 @@
                 #{item}
             </foreach>
         </if>
-        <if test="platDate != null">
+        <!--<if test="platDate != null">
             AND ETR_ENTRUST.VDATE &lt;= to_date(#{platDate}, 'yyyy-MM-dd')
             AND ETR_ENTRUST.MDATE &gt;= to_date(#{platDate}, 'yyyy-MM-dd')
-        </if>
+        </if>-->
         <if test="entrustDateStart != null">
             AND ETR_ENTRUST.VDATE &lt;= to_date(#{entrustDateStart}, 'yyyy-MM-dd')
             AND ETR_ENTRUST.MDATE &lt;= to_date(#{entrustDateStart}, 'yyyy-MM-dd')
@@ -222,9 +222,9 @@
             AND ETR_ENTRUST.VDATE &gt;= to_date(#{entrustDateEnd}, 'yyyy-MM-dd')
             AND ETR_ENTRUST.MDATE &gt;= to_date(#{entrustDateEnd}, 'yyyy-MM-dd')
         </if>
-        <if test="portfolioId != null and portfolioId.size() > 0">
+        <if test="portfolioIds != null and portfolioIds.size() > 0">
             AND ETR_ENTRUST.PORTFOLIO_ID IN
-            <foreach collection="portfolioId" item="item" open="(" close=")" separator=",">
+            <foreach collection="portfolioIds" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
@@ -249,10 +249,9 @@
         <if test="tradeMarket!= null and tradeMarket != ''">
             AND ETR_ENTRUST.TRADE_MARKET = #{tradeMarket}
         </if>
-        <!--投资经理-->
-        <if test="invManagerId != null and invManagerId.size() > 0">
+        <if test="invManagerIds != null and invManagerIds.size() > 0">
             AND ETR_ENTRUST.INV_MANAGER_ID IN
-            <foreach collection="invManagerId" item="item" open="(" close=")" separator=",">
+            <foreach collection="invManagerIds" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
@@ -261,6 +260,33 @@
             <foreach collection="finprodMarketIds" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="tradeMarkets  != null and tradeMarkets .size() > 0">
+            AND ETR_ENTRUST.TRADE_MARKET IN
+            <foreach collection="tradeMarkets " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="pss  != null and pss .size() > 0">
+            AND ETR_ENTRUST.PS IN
+            <foreach collection="pss " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="priceModels  != null and priceModels .size() > 0">
+            AND ETR_ENTRUST.PRICE_MODEL IN
+            <foreach collection="priceModels " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="settleSpeeds  != null and settleSpeeds .size() > 0">
+            AND ETR_ENTRUST_ADD.SETTLE_SPREED IN
+            <foreach collection="settleSpeeds " item="item" open="(" close=")" separator=",">
+                DECODE(#{item}, '01', 0, '02', 1)
+            </foreach>
+        </if>
+        <if test="secManageAcctId!= null and secManageAcctId != ''">
+            and ETR_ENTRUST_ADD.SEC_ACCT_ID = #{secManageAcctId}
         </if>
         <if test="mySide!= null and mySide != ''">
             AND IBU_PORTFOLIO_ACCT_RELA.PARTY_ID = #{mySide}
