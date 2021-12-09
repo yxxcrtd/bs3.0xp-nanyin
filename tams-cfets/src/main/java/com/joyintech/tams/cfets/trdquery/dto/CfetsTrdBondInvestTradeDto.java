@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.common.dto.cstp.InterfTradSecdealDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.risk.dto.RiskCreditListCommonDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.invest.trade.bond.validator.TrdBondInvestTradeDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -693,6 +694,17 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
      *投标标位
      */
     private BigDecimal bidPrice;
+    /**
+     * 清算状态
+     */
+    private String cleanStatus;
+    /**
+     * 交收状态
+     */
+    private String settleStatus;
+
+
+
 
     public BigDecimal getBidPrice() {
         return bidPrice;
@@ -1889,6 +1901,11 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 	private List<TrdTradeFeeDetail> trdTradeFeeDetails;
 
     /**
+     * 选中的数据
+     */
+    private transient List<CfetsTrdBondInvestTradeDto> selectedItem;
+
+    /**
      * 获取 trdTradeFeeTotals
      *
      * @return trdTradeFeeTotals
@@ -2453,5 +2470,29 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 
     public void setQty(BigDecimal qty) {
         this.qty = qty;
+    }
+
+    public List<CfetsTrdBondInvestTradeDto> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<CfetsTrdBondInvestTradeDto> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public String getCleanStatus() {
+        return cleanStatus;
+    }
+
+    public void setCleanStatus(String cleanStatus) {
+        this.cleanStatus = cleanStatus;
+    }
+
+    public String getSettleStatus() {
+        return settleStatus;
+    }
+
+    public void setSettleStatus(String settleStatus) {
+        this.settleStatus = settleStatus;
     }
 }

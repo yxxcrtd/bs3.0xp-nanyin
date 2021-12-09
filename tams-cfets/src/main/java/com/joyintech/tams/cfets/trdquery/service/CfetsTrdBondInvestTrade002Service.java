@@ -4378,26 +4378,27 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
      * @param br
      * @return
      */
-    public AjaxResult  checkRevoke(CfetsTrdBondInvestTradeDto inputDto) {
-        WflValidInputParameter parameter = new WflValidInputParameter();
-        parameter.setPageId("CfetsTrdBondInvestTrade002");
-        parameter.setBusinessDataPk1(inputDto.getTotleTradeId() + "R");
-        parameter.setBusinessDataPk2("F01");
-        if (mstWorkflowCommonService.isInWflProcess(parameter)) {
-            AjaxResult m = new AjaxResult();
-            m.setStatuCode(220);
-            m.setMessage(this.getMessage("BUSS_COM_E_0041"));
-            return m;
+    public AjaxResult  checkRevoke(CfetsTrdBondInvestTradeDto input) {
+        List<CfetsTrdBondInvestTradeDto> list=input.getSelectedItem();
+        for(CfetsTrdBondInvestTradeDto inputDto:list){
+            WflValidInputParameter parameter = new WflValidInputParameter();
+            parameter.setPageId("CfetsTrdBondInvestTrade002");
+            parameter.setBusinessDataPk1(inputDto.getTotleTradeId() + "R");
+            parameter.setBusinessDataPk2("F01");
+            if (mstWorkflowCommonService.isInWflProcess(parameter)) {
+                AjaxResult m = new AjaxResult();
+                m.setStatuCode(220);
+                m.setMessage(this.getMessage("BUSS_COM_E_0041"));
+                return m;
+            }
+            CfetsTrdBondInvestTradeDto dto = this.getTrdBondInvestTradeDto(inputDto.getTotleTradeId() + "R");
+            if(com.joyintech.framework.util.StringUtil.isNotEmpty(dto)){
+                AjaxResult m = new AjaxResult();
+                m.setStatuCode(220);
+                m.setMessage("已撤销的交易不允许撤销");
+                return m;
+            }
         }
-        CfetsTrdBondInvestTradeDto dto = this.getTrdBondInvestTradeDto(inputDto.getTotleTradeId() + "R");
-        if(com.joyintech.framework.util.StringUtil.isNotEmpty(dto)){
-            AjaxResult m = new AjaxResult();
-            m.setStatuCode(220);
-            m.setMessage("已撤销的交易不允许撤销");
-            return m;
-        }
-
-
         return null;
     }
 }

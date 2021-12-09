@@ -1216,6 +1216,45 @@
         on ib.sec_manage_acct_id=stlinfo.sec_acct_id
         where ir.quote_id=#{quoteId,jdbcType=VARCHAR}
 
+        union all
+
+        select ir.entrust_id as entrustId,
+        ir.portfolio_id as portfolioId,
+        pp.portfolio_name as portfolioName,
+        (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
+        nvl(ir.share_amt,0)/100 as faceValue,
+        null as trdFeeAmt,
+        null as settleFeeAmt,
+        null as cpriceAmt,
+        null as intAmt,
+        ir.fprice_amt as fpriceAmt,
+        EE.PRICE_MODEL as priceModel,
+        EE.BUSINESS_MODEL as businessModel,
+        ib.sec_manage_acct_id as secManageAcctId,
+        stlinfo.sec_acct_name as secManageAcctIdStr,
+        null as unitCprice,
+        null as yield,
+        null as exerYield
+        from wfl_ibu_quote_etr_re ir
+        inner join ptl_portfolio pp
+        on ir.portfolio_id=pp.portfolio_id
+        <if test="userId != null and userId != ''">
+            inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
+            ON ir.portfolio_id = PPA.PORTFOLIO_ID
+            AND PPA.USER_ID = #{userId}
+        </if>
+        inner join wfl_ibu_quote_bond2 ib
+        on ir.quote_id=ib.quote_id
+        LEFT JOIN ETR_ENTRUST ee ON ir.entrust_id = ee.entrust_id
+        LEFT JOIN (
+        select t.entrust_id, sum(t.ent_finish_amt) as ent_finish_amt
+        from ETR_FINISH_STATUS t
+        group by t.entrust_id
+        )efs ON ee.Entrust_Id = efs.entrust_id
+        left join stl_sec_acct_info stlinfo
+        on ib.sec_manage_acct_id=stlinfo.sec_acct_id
+        where ir.quote_id=#{quoteId,jdbcType=VARCHAR}
+
     </select>
     <select id="selectIbuRepoTableFenPeiInfoList"
             resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsPortfolioIdFenPeiInfoResponse">
@@ -1247,6 +1286,36 @@
         )efs ON ee.Entrust_Id = efs.entrust_id
 
         where ir.quote_id=#{quoteId,jdbcType=VARCHAR}
+        union all
+        select ir.entrust_id as entrustId,
+        ir.portfolio_id as portfolioId,
+        pp.portfolio_name as portfolioName,
+        (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
+        ir.fprice_amt as tradeAmt,
+        null as trdFeeAmt,
+        null as settleFeeAmt,
+        null as intAmt,
+        null as mtradeAmt,
+        null as disFaceValue,
+        EE.PRICE_MODEL as priceModel,
+        null tradeYield
+        from wfl_ibu_quote_etr_re ir
+        inner join ptl_portfolio pp
+        on ir.portfolio_id=pp.portfolio_id
+        <if test="userId != null and userId != ''">
+            inner JOIN  PTL_PORTFOLIO_AUTHORITY PPA
+            ON ir.portfolio_id = PPA.PORTFOLIO_ID
+            AND PPA.USER_ID = #{userId}
+        </if>
+        LEFT JOIN ETR_ENTRUST ee ON ir.entrust_id = ee.entrust_id
+        LEFT JOIN (
+        select t.entrust_id, sum(t.ent_finish_amt) as ent_finish_amt
+        from ETR_FINISH_STATUS t
+        group by t.entrust_id
+        )efs ON ee.Entrust_Id = efs.entrust_id
+
+        where ir.quote_id=#{quoteId,jdbcType=VARCHAR}
+
 
     </select>
     <select id="selectIbuTablePledgeInfoList"

@@ -894,7 +894,7 @@
     </update>
     <select id="findAllCstpInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmCstpInfoListResponse">
         select * from (select aaa.*
-        from (select I.Execid  as execid,
+        from (select distinct I.Execid  as execid,
         I.Businesstype as businesstype,
         fp.finprod_id as finprodId,
         decode(I.BUSINESSTYPE,'BOND',ts.SECID,'REPO',tr.secid) as finprodMarketId,
@@ -929,8 +929,8 @@
         left join fin_product fp
         on ts.SECID=fp.finprod_market_id
         and fp.finprod_type='F01'
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON I.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
-        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
+      <!--  LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON I.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
+        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID-->
         LEFT JOIN SYS_USER_ADD sua ON nvl(ts.TRAD,tr.BUYTRADER) =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
         LEFT JOIN (
@@ -1145,8 +1145,8 @@
         left join INTERF_TRAD_SECDEAL ts
         on ts.FEDEALNO = m.exe_id
         and ts.Dealno=m.cstp_trade_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ct.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
-        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
+       <!-- LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ct.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
+        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID-->
         left join stl_sec_acct_info stlinfo
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON reg.counter_id= mccic.party_id
@@ -1277,11 +1277,11 @@
         left join INTERF_TRAD_SECDEAL ts
         on ts.FEDEALNO = m.exe_id
         and ts.Dealno=m.cstp_trade_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ct.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
-        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
+       <!-- LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ct.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
+        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID-->
         left join stl_sec_acct_info stlinfo
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON nvl(ib.cp_party_id,ic.cp_party_id)= mcci.party_id
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON nvl(ib.cp_party_id,ic.cp_party_id)= mccic.party_id
         where ct.BUSINESSTYPE in ('BOND','REPO')  and (ic.quote_id is not null or ib.quote_id is not null)
         <if test="ps != null  and ps!=''">
             AND nvl(ib.ps,ic.repo_ps) = #{ps}
@@ -1589,7 +1589,7 @@
     </select>
     <select id="findAllCstpBondList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmCstpBondInfoResponse">
         select * from (
-        select ts.fedealno as execid,
+        select distinct ts.fedealno as execid,
         ts.dealdate as tradeDate,
         fp.finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
@@ -1628,8 +1628,8 @@
         on ts.FEDEALNO = I.EXECID
         left join fin_product fp
         on ts.secid=fp.finprod_market_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON I.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
-        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
+       <!-- LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON I.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
+        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID-->
         LEFT JOIN SYS_USER_ADD sua ON ts.TRAD =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
         left join stl_sec_acct_info stlinfo
@@ -1645,7 +1645,7 @@
     </select>
     <select id="findAllCstpRepoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmCstpRepoInfoResponse">
         select * from (
-        select tr.oritradeid as execid,
+        select distinct tr.oritradeid as execid,
         tr.dealdate as tradeDate,
         tr.term_type as termType,
         tr.ps as ps,
@@ -1680,8 +1680,8 @@
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
         left join INTERF_OPICS_TRAD_REPO  tr
         on tr.oritradeid = I.EXECID
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON I.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
-        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID
+      <!--  LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON I.OURINSTITUTIONCODE= mcci.PARTY_CUSTOMER_ID
+        LEFT JOIN IBU_PORTFOLIO_ACCT_RELA ipar ON mcci.PARTY_ID =ipar.PARTY_ID-->
         LEFT JOIN SYS_USER_ADD sua ON tr.BUYTRADER =sua.IBU_TRADER
         LEFT JOIN SYS_USER su ON sua.USER_ID =su.USER_ID
         on tr.ourdepositaccountnumber=stlinfo.sec_acct_id
