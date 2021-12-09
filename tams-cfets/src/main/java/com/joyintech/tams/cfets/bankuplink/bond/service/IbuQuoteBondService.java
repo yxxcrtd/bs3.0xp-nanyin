@@ -269,16 +269,13 @@ public class IbuQuoteBondService extends BaseService {
                 Map<String,Object> planParam = new HashMap<>();
                 planParam.put("finprodId",cfetsBondDealQuoteCommonDto.getFinprodId());
                 planParam.put("platDate", iPlatformDate.getSysDateStr());
+                planParam.put("exerciseType", com.joyintech.tams.constant.DictCodeList.行权方式_回售.getValue());
                 FinExercisePlan finExercisePlan = cfetsIbuQuoteBondEtrMapper.getFinExercisePlan(planParam);
                 if(null!=finExercisePlan){
                     cfetsBondDealQuoteCommonDto.setExercisePlan(true);
                     cfetsBondDealQuoteCommonDto.setTheoreticalExerciseDate(finExercisePlan.getExerciseDate());
                     cfetsBondDealQuoteCommonDto.setActSetteDate(finExercisePlan.getActExerciseDate());
-                    planParam.put("exerciseType", com.joyintech.tams.constant.DictCodeList.行权方式_回售.getValue());
-                    finExercisePlan = cfetsIbuQuoteBondEtrMapper.getFinExercisePlan(planParam);
-                    if(null!=finExercisePlan){
-                        cfetsBondDealQuoteCommonDto.setExercisePlan(true);
-                    }
+                    cfetsBondDealQuoteCommonDto.setExercisePlan(true);
                 }else{
                         cfetsBondDealQuoteCommonDto.setExercisePlan(false);
                 }

@@ -354,7 +354,7 @@
             )
             </if>
         </where>
-        <if test="pageMode.sort != null and pageMode.sort != '' and pageMode.direction != null and pageMode.direction != ''">
+        <if test="pageMode != null and pageMode.sort != null and pageMode.sort != '' and pageMode.direction != null and pageMode.direction != ''">
             order by ${pageMode.sort} ${pageMode.direction}
         </if>
     </select>
