@@ -847,6 +847,7 @@ public class IbuQuoteBondService extends BaseService {
      * @return
      */
     public AjaxResult entrustRefuce(Map<String,Object> param) {
+        param.put("rekReason",(String)param.get("remark"));
         return cfetsEtrDispatcherService.refuseEntrust(param);
     }
 
@@ -860,7 +861,7 @@ public class IbuQuoteBondService extends BaseService {
                 EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(item.getEntrustId());
                 // 更改委托状态
                 etrEntrust.setEntrustStatus(com.joyintech.tams.constant.DictCodeList.委托状态_已完成.getValue());
-                etrEntrust.setRemark(StringUtil.join("指令退回原因:",etrEntrust.getRemark(),(String)param.get("remark")));
+                etrEntrust.setRemark(StringUtil.join(etrEntrust.getRemark(),(String)param.get("remark")));
                 // 修改委托指令表中值
                 int flag = etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
                 // 修改委托指令分发表中值 add by yangwenjun 20201209
