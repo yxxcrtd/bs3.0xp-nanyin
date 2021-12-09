@@ -760,7 +760,7 @@ public class CfetsQuotedCommonService extends BaseService {
                                                         Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
                 for(String key : map.keySet()){
                     BigDecimal fpriceAmt = map.get(key);
-                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), cfetsBondDealQuoteCommonDto.getSecManageAcctId(), cfetsBondDealQuoteCommonDto.getCcy(), "03");
+                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), cfetsBondDealQuoteCommonDto.getSecManageAcctId(), cfetsBondDealQuoteCommonDto.getCcy(), "03", null, null);
                     if(null!=baseMap&&fpriceAmt.compareTo((BigDecimal) baseMap.get("cashT"))>0){
                         errorList.add(new ValidMessage(StringUtil.join("组合可用现金不足,组合代码:[",key,"]")));
                         ajaxResult.setErrorList(errorList);

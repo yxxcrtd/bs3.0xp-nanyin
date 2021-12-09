@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.position.service;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -12,6 +13,7 @@ import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -60,7 +62,7 @@ public class PositionInfoService {
         }
 
         // 现金 map.cashT、map.cashT1、map.realCash
-        BaseMap cashMap = queryTrdAvailableCash(requestDto.getPortfolioIdList(), requestDto.getCdate(), requestDto.getAcctId(), null, null);
+        BaseMap cashMap = queryTrdAvailableCash(requestDto.getPortfolioIdList(), requestDto.getCdate(), requestDto.getAcctId(), null, null,null,null);
         // 查询头寸信息
         BaseMap positionMap = queryTrdPosition(requestDto.getPortfolioIdList(), requestDto.getCdate(), requestDto.getFinprodId());
 
@@ -134,7 +136,7 @@ public class PositionInfoService {
      * 查询交易t0、t1、账户现金
      * @@return map.cashT、map.cashT1、map.realCash
      */
-    public BaseMap queryTrdAvailableCash(List<String> portfolioIdList, String cdate, String acctId, String ccy, String calId){
+    public BaseMap queryTrdAvailableCash(List<String> portfolioIdList, String cdate, String acctId, String ccy, String calId, List<String> acctTypeList, List<String> acctTypes) {
         BaseMap rs = new BaseMap();
         BigDecimal cashT = BigDecimal.ZERO; // 指令t日可用
         BigDecimal cashT1 = BigDecimal.ZERO; // 指令t1日可用
@@ -148,14 +150,16 @@ public class PositionInfoService {
         if (StringUtil.isEmpty(cdate)){
             cdate = iPlatformDate.getSysDateStr();
         }
+        //账户类型
         if (portfolioIdList != null) {
             for (String portfolioId : portfolioIdList) {
                 PtlCashPositionFlowDto positionQueryDto = new PtlCashPositionFlowDto();
                 positionQueryDto.setPortfolioId(portfolioId);
                 positionQueryDto.setCcy(ccy);
                 positionQueryDto.setCdate(DateUtil.parse(cdate));
+                positionQueryDto.setAcctType(acctTypeList);
                 // 实际现金（账户现金）
-                cashT = ArithmeticUtil.doAdd(realCash, basePtlCashPositionInfoService.queryUsableCashPosition(positionQueryDto));
+                cashT = ArithmeticUtil.doAdd(cashT, basePtlCashPositionInfoService.queryUsableCashPosition(positionQueryDto));
 
                 List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(cdate), DateUtil.addDay(DateUtil.parse(cdate), 15),calId);
                 Date t1Day = dateCalService.calculationTradingDay(DateUtil.parse(cdate), 1, holidayList, "1");
@@ -163,7 +167,8 @@ public class PositionInfoService {
                 positionQueryDto1.setPortfolioId(portfolioId);
                 positionQueryDto1.setCcy(ccy);
                 positionQueryDto1.setCdate(t1Day);
-                cashT1 = ArithmeticUtil.doAdd(realCash, basePtlCashPositionInfoService.queryUsableCashPosition(positionQueryDto1));
+                positionQueryDto.setAcctType(acctTypeList);
+                cashT1 = ArithmeticUtil.doAdd(cashT1, basePtlCashPositionInfoService.queryUsableCashPosition(positionQueryDto1));
                 
             }
         }
@@ -173,7 +178,8 @@ public class PositionInfoService {
                 .put("C_01", DictCodeListExt3.资产类型_现金账户持仓.getValue())
                 .put("portfolioIdList", portfolioIdList)
                 .put("cdate", cdate)
-                .put("acctId", acctId);
+                .put("acctId", acctId)
+                .put("acctTypes", acctTypes);
         Map map = positionInfoMapper.queryTrdAvailableCash(inMap);
         BaseMap outMap = BaseMap.newMap(map);
         rs.put("cashT", ArithmeticUtil.doAdd(cashT, outMap.getBigDecimal("T0KYXJ")));
