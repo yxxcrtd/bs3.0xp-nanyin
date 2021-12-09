@@ -147,7 +147,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(StringUtil.isEmpty(entity.getCounterId())){
                 errorList.add(new ValidMessage("请输入对手方"));
             }
-            if(StringUtil.isEmpty(entity.getCounterTrader())&&(StringUtil.equals(entity.getQuoteStyle(),"01")||StringUtil.equals(entity.getQuoteStyle(),"02"))){
+            if(StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"),"01")&&StringUtil.isEmpty(entity.getCounterTrader())&&(StringUtil.equals(entity.getQuoteStyle(),"01")||StringUtil.equals(entity.getQuoteStyle(),"02"))){
                 errorList.add(new ValidMessage("请输入对手方交易员"));
             }
             if(StringUtil.isEmpty(entity.getCcy())){
