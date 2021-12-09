@@ -11,6 +11,7 @@
 package com.joyintech.tams.cfets.trdconfirm.dto;
 
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
@@ -146,7 +147,7 @@ public class CfetsTrdConfirmCstpInfoListResponse {
     }
 
     public String getBusinesstypeName() {
-        if("BOND".equals(getBusinesstype())){
+        if(StringUtil.equals("BOND",getBusinesstype())){
             return "现券买卖";
         }else{
             return "质押式回购";

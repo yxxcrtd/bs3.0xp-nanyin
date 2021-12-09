@@ -1296,10 +1296,10 @@ from
         select
         tt.portfolio_id as portfolioId,
         pp.portfolio_name portfolioName，
-        tt.inv_aim as businessModel,
+        invaim.INV_AIM as businessModel,
         nvl(tt.entrustNum,0)/10000 as entrustNum
         from
-        (select a.portfolio_id,a.finprod_id,a.inv_aim,
+        (select a.portfolio_id,a.finprod_id,
         sum(CASE WHEN b.S_HOLDINGTYPE=#{S_001} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END) as entrustNum
         from ETR_SEC_POSITION_RULE a
         LEFT JOIN PTL_POSITION_CFG b
@@ -1312,7 +1312,21 @@ from
         </if>
         where a.cdate= #{platDate}
         and a.finprod_id=#{finprodId,jdbcType=VARCHAR}
-        group by  a.portfolio_id,a.finprod_id,a.inv_aim)tt
+        group by  a.portfolio_id,a.finprod_id)tt
+        <!-- 业务模式查交易表 -->
+        left join (
+            SELECT FINPROD_ID, PORTFOLIO_ID, INV_AIM
+            FROM (
+                select
+                a.INV_AIM , a.TRADE_DATE ,a.FINPROD_ID,b.PORTFOLIO_ID,
+                ROW_NUMBER () over(PARTITION BY a.FINPROD_ID,b.PORTFOLIO_ID ORDER BY a.TRADE_DATE DESC) rn
+                from TRD_PRODUCT_DEAL a
+                LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+                WHERE 1=1 AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+                AND a.TRADE_DATE &lt;= #{platDate,jdbcType=DATE}
+            ) WHERE rn = 1
+        ) invaim
+        on invaim.FINPROD_ID=tt.FINPROD_ID and invaim.PORTFOLIO_ID=tt.PORTFOLIO_ID
         left join PTL_PORTFOLIO pp
         on pp.portfolio_id=tt.portfolio_id
         where tt.entrustNum>0
