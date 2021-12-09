@@ -300,11 +300,8 @@
         from MST_CFETS_CUSTOMER_INFO t1 LEFT JOIN MST_CFETS_CUSTOMER_RELA t2
         on t1.party_id = t2.sparty_id
         WHERE 1 = 1
-        <if test="mySide != null and !mySide.equals('')">
-            AND t1.PARTY_ID = #{mySide}
-        </if>
-        <if test="counterId != null and !counterId.equals('')">
-            AND t1.PARTY_ID = #{counterId}
+        <if test="partyId != null and !partyId.equals('')">
+            AND t1.PARTY_ID = #{partyId}
         </if>
         ) t3 on MST_CFETS_CUSTOMER_TRADER.PARTY_ID = t3.PARTY_ID
         ) MST_CFETS_CUSTOMER_TRADER

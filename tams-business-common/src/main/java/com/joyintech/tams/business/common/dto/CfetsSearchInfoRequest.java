@@ -16,10 +16,8 @@ public class CfetsSearchInfoRequest {
     private PageMode pageMode;
     @ApiModelProperty(name="ps",value="交易方向",example="T03")
     private String ps;
-    @ApiModelProperty(name="mySide",value="本方",example="T03")
-    private String mySide;
-    @ApiModelProperty(name="counterId",value="对手方",example="T03")
-    private String counterId;
+    @ApiModelProperty(name="partyId",value="本方/对手方",example="111")
+    private String partyId;
     @ApiModelProperty(name="dealType",value="交易类型",example="04")
     private String dealType;
 
@@ -48,27 +46,19 @@ public class CfetsSearchInfoRequest {
         this.ps = ps;
     }
 
-    public String getMySide() {
-        return mySide;
-    }
-
-    public void setMySide(String mySide) {
-        this.mySide = mySide;
-    }
-
-    public String getCounterId() {
-        return counterId;
-    }
-
-    public void setCounterId(String counterId) {
-        this.counterId = counterId;
-    }
-
     public String getDealType() {
         return dealType;
     }
 
     public void setDealType(String dealType) {
         this.dealType = dealType;
+    }
+
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
     }
 }
