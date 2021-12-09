@@ -36,7 +36,7 @@
         <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
             <input type="hidden" id="CfetsBondDealQuotedPrice004_hidden_finprodId" th:value="${entity?.finprodId}" />
             <input type="hidden" id="CfetsBondDealQuotedPrice004_hidden_calculateField" th:value="${entity?.calculateField}" />
-            <div class="pro-module-wrapper pro-module-base" th:title="#{CfetsBondDealQuotedPrice004.baseinfo}">
+            <div class="pro-module-wrapper pro-module-base" th:title="#{CfetsBondDealQuotedPrice003.baseinfo}">
                 <div class="pro-module-wrap">
                     <div class="pro-module">
                         <h3 class="pro-module-title">
@@ -120,7 +120,7 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap" th:text="#{CfetsBondDealQuotedPrice002.my}">本方</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" name="counterName"
+                                        <input type="text" name="mySideAbbr"
                                                data-th-value="${entity?.mySideAbbr}"
                                                class="layui-input form-input" placeholder="请输入内容"
                                                data-th-placeholder="#{SysCommon.placeholder}">
