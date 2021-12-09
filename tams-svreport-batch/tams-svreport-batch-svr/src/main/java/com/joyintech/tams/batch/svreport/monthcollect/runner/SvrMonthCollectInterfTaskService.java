@@ -1,9 +1,10 @@
 package com.joyintech.tams.batch.svreport.monthcollect.runner;
 
-import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
-import com.joyintech.batch.batchbase.exception.BatchException;
-import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.tams.batch.svreport.monthcollect.service.MonthCollectImpMainService;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -12,9 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
+import com.joyintech.batch.batchbase.exception.BatchException;
+import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.tams.batch.svreport.monthcollect.service.MonthCollectImpMainService;
 
 /**
  * 功能:月汇总
@@ -40,14 +42,33 @@ public class SvrMonthCollectInterfTaskService extends BatchBaseService{
             logger.info("无启动参数，批处理退出。");
             return result;
         }
-        Date batchDateStart = this.getFirstDayDateOfMonth(batchExecuteInfo.getExecuteDate());
-        Date batchDateEnd = this.getLastDayOfMonth(batchExecuteInfo.getExecuteDate());
+        
+        //
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(batchExecuteInfo.getExecuteDate());
+        
+        if ( calendar.get(Calendar.DATE)!=1) {  //每月1日生成上月的数据
+        	result.setStatus(BatchStatus.COMPLETED);
+        	return result;
+        }
+                
+        // 获取上月的第一天
+        calendar.add(Calendar.MONTH, -1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date firstday = calendar.getTime();
+        // 获取上月的最后一天
+        calendar.add(Calendar.MONTH, 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 0);
+        Date lastday = calendar.getTime();        
+        
+        Date batchDateStart = firstday;
+        Date batchDateEnd = lastday;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date bdate=new Date();
         Long bt=bdate.getTime();
         logger.info("销售月报每日明细汇总批处理启动:"+sdf.format(bdate));
         try {
-            monthCollectImpMainService.generateSalesTransactionSubInfo(batchExecuteInfo.getExecuteDate(),batchDateStart,batchDateEnd);
+            monthCollectImpMainService.generateSalesTransactionSubInfo(batchDateStart,batchDateStart,batchDateEnd);
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {
