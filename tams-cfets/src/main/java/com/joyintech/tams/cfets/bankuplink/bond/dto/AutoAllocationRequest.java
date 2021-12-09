@@ -39,6 +39,9 @@ public class AutoAllocationRequest {
     @ApiModelProperty(name="cpriceAmt",value="净价总额(元)")
     private BigDecimal cpriceAmt;
 
+    @ApiModelProperty(name="fpriceAmt",value="全价总额(元)")
+    private BigDecimal fpriceAmt;
+
     @ApiModelProperty(name="intAmt",value="应计利息总额(元)")
     private BigDecimal intAmt;
 
@@ -116,6 +119,14 @@ public class AutoAllocationRequest {
 
     public void setCpriceAmt(BigDecimal cpriceAmt) {
         this.cpriceAmt = cpriceAmt;
+    }
+
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
     }
 
     public BigDecimal getIntAmt() {
