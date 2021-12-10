@@ -19,10 +19,10 @@
         sdl2.item_value tgBusiTypeStr,
         T1.PS ps,
         sdl3.item_value psStr,
-        T1.SHARE_AMT*100 settleNum,
+        T1.SHARE_AMT/100 settleNum,
         T1.TRADE_AMT settleAmt,
-        LISTAGG(T4.PORTFOLIO_ID,';') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
-        LISTAGG(T5.PORTFOLIO_NAME,';') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
+        LISTAGG(T4.PORTFOLIO_ID,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
+        LISTAGG(T5.PORTFOLIO_NAME,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
         case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
              when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
              when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
@@ -145,8 +145,8 @@
         sdl3.item_value psStr,
         T0.SETTLE_NUM settleNum,
         T0.SETTLE_AMT settleAmt,
-        LISTAGG(T4.PORTFOLIO_ID,';') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
-        LISTAGG(T5.PORTFOLIO_NAME,';') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
+        LISTAGG(T4.PORTFOLIO_ID,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID))  portfolioId,
+        LISTAGG(T5.PORTFOLIO_NAME,',') WITHIN GROUP (ORDER BY (T1.TOTLE_TRADE_ID)) portfolioName,
         case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
              when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
              when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
@@ -356,7 +356,7 @@
         TPD.TRADE_AMT tradeAmt,
         TPDA.Entrust_Id entrustId,
         EE.PRICE_MODEL priceModel,
-        (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
+        (nvl(ee.entrust_num,0) - nvl(efs.finish_amt,0))/100 unFinshAmt,
         ssai.sec_acct_name secAcctId,
         TPD.YIELD*100 matureYield,
         TPD.EXER_YIELD*100 exeYield,
@@ -524,6 +524,9 @@
         <if test="updateUser != null">
             #{updateUser,jdbcType=VARCHAR} updateUser,
         </if>
+        <if test="remark != null">
+            #{remark,jdbcType=VARCHAR} remark,
+        </if>
         <if test="updateTime != null">
             #{updateTime,jdbcType=TIMESTAMP} updateTime
         </if>
@@ -567,6 +570,9 @@
         </if>
         <if test="updateUser != null">
             tbms.UPDATE_USER = TEMP.updateUser,
+        </if>
+        <if test="remark != null">
+            tbms.REMARK = TEMP.remark,
         </if>
         <if test="updateTime != null">
             tbms.UPDATE_TIME = TEMP.updateTime
@@ -613,6 +619,9 @@
         <if test="updateTime != null">
             ,UPDATE_TIME
         </if>
+        <if test="remark != null">
+            ,REMARK
+        </if>
         )
         values(
         <if test="settleSeqNo != null">
@@ -654,6 +663,9 @@
         <if test="updateTime != null">
             ,TEMP.updateTime
         </if>
+        <if test="remark != null">
+            ,TEMP.remark
+        </if>
         )
     </insert>
 
@@ -672,9 +684,17 @@
     </update>
 
     <select id="queryPortSettleinfo" resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortSettleinfoDto">
-        SELECT TPDA.portfolio_id portfolioId,
+        SELECT TPD.TRADE_ID tradeId,
+            TPDA.ENTRUST_ID entrustId,
+            TPD.CCY ccy,
+            TPD.FINPROD_ID finprodId,
+            TPD.INV_AIM invAim,
+            TPDA.OUR_SHARE_AMT ourShareAmt,
+            TPDA.LENDIN_SHARE_AMT lendinShareAmt,
+            DECODE(TPD.SETTLE_SPEED,0,'01',1,'02','2','03') settleSpeed,
+            TPDA.portfolio_id portfolioId,
             pp.portfolio_name portfolioName,
-            NVL(TPD.SHARE_AMT,TPD.prin_amt) settleNum,
+            NVL(TPD.SHARE_AMT/100,TPD.prin_amt/100) settleNum,
             TPD.trade_amt settleAmt
         FROM TRD_PRODUCT_DEAL TPD
         LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA ON TPDA.Trade_Id = TPD.Trade_Id
@@ -804,5 +824,42 @@
         SYS_USER T1
         where
         T1.USER_NAME = #{userName}
+    </select>
+
+    <sql id="getMaxHisNo">
+        select
+        max(HIS_NO)	       HIS_NO,
+        WORKFLOW_ID
+        from SYS_DATA_PROCESS_MARK
+        <where>
+            <if test="pageId != null and pageId !=''">
+                PAGE_ID = #{pageId}
+            </if>
+        </where>
+        group by  WORKFLOW_ID
+    </sql>
+
+    <select id="getBusinessData" parameterType="com.joyintech.tams.component.business.core.dto.WflValidInputParameter" resultType="java.lang.String">
+        select pm.STATUS status
+        from SYS_DATA_PROCESS_MARK pm
+        inner join (<include refid="getMaxHisNo"/>) tempHis on  pm.HIS_NO = tempHis.HIS_NO and pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
+        <where>
+            <if test="seachMode != null and seachMode !='' and seachMode == '01'.toString()">
+                pm.status in ('A','U','P')
+            </if>
+            <if test="pageId != null and pageId !=''">
+                and pm.PAGE_ID = #{pageId}
+            </if>
+            <if test="businessDataPk1 != null and businessDataPk1 !=''">
+                and pm.BUSINESS_DATA_PK1 = #{businessDataPk1}
+            </if>
+            <if test="businessDataPk2 != null and businessDataPk2 !=''">
+                and pm.BUSINESS_DATA_PK2 = #{businessDataPk2}
+            </if>
+            <if test="workflowId != null and workflowId !=''">
+                and pm.WORKFLOW_ID != #{workflowId}
+            </if>
+        </where>
+        order by pm.create_time desc
     </select>
 </mapper>

@@ -189,7 +189,7 @@ public class CfetsManualSettleQueryService extends BaseService{
             //组装流水信息
             cfetsManualSettleFlowRespond.setSeqNo(1);
             cfetsManualSettleFlowRespond.setSettleDate(cfetsManualSettleDto.getSettleDate());
-            cfetsManualSettleFlowRespond.setJiaoShouDate(DateUtil.format(new Date(),"hh:mm:ss"));
+            cfetsManualSettleFlowRespond.setJiaoShouDate(DateUtil.format(new Date(),"HH:mm:ss"));
             cfetsManualSettleFlowRespond.setFinprodMarketId(cfetsManualSettleDto.getFinprodMarketId());
             cfetsManualSettleFlowRespond.setFinprodAbbr(cfetsManualSettleDto.getFinprodAbbr());
             cfetsManualSettleFlowRespond.setSettleNum(cfetsManualSettleDto.getSettleNum());
