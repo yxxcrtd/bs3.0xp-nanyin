@@ -284,6 +284,8 @@ public class IbuQuoteBondService extends BaseService {
                 }else{
                         cfetsBondDealQuoteCommonDto.setExercisePlan(false);
                 }
+                cfetsBondDealQuoteCommonDto.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getPrice(),cfetsBondDealQuoteCommonDto.getShareAmt()),new BigDecimal(100),2));
+                cfetsBondDealQuoteCommonDto.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getUnitFprice(),cfetsBondDealQuoteCommonDto.getShareAmt()),new BigDecimal(100),2));
             }
             //登记本方交易员应默认当前登录用户姓名
             cfetsBondDealQuoteCommonDto.setQuoteMySideTrader(cfetsBondDealQuoteCommonDto.getMySideTrader());
