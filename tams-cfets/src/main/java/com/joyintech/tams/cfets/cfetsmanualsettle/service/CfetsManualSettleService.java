@@ -15,6 +15,7 @@ import com.joyintech.tams.common.base.dao.TrdBankManualSettleFlowMapper;
 import com.joyintech.tams.common.base.entity.TrdBankManualSetDetail;
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleFlow;
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -41,7 +42,7 @@ import java.util.*;
  * @since 1.0
  */
 @Service("CfetsManualSettleService")
-public class CfetsManualSettleService extends BaseService<CfetsManualSettleRequest> implements BaseProcessService<CfetsManualSettleRequest>{
+public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> implements BaseProcessService<CfetsManualSettleDto> {
 
     /**
      * 日志
@@ -74,183 +75,158 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
     public AjaxResult checkManualSettleSave(CfetsManualSettleRequest cfetsRequest, BindingResult br) {
         AjaxResult ajaxResult = new AjaxResult();
         List<CfetsManualSettleDto> returnList = new ArrayList<CfetsManualSettleDto>();
-        String returnMessage = null;
-        if(StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())){
+        if(StringUtil.equals(cfetsRequest.getSelectedItem().get(0).getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())){
             for(CfetsManualSettleDto cfetsDto : cfetsRequest.getSelectedItem()) {
-                //判断勾选记录交收状态是否为“待交收”，
-                //①交易方向=买入 AND 业务类型 = 数据字典.FINPROD_TYPE_TG.债券 AND 清算状态！=“清算成功”
-                //②交易方向 IN （到期，提前终止，逾期返售） AND 业务类型 = 数据字典.FINPROD_TYPE_TG.债券质押式正回购 AND 清算状态！=“清算成功”
-                //③交易方向=到期 AND 业务类型  IN（ 数据字典.FINPROD_TYPE_TG.债券买断式正回购，债券借贷融入） AND 清算状态！=“清算成功”
-                //④交易方向=买入 AND 业务类型 IN（数据字典.FINPROD_TYPE_TG.债券买断式逆回购 ，数据字典.FINPROD_TYPE_TG.债券质押式逆回购 )AND 清算状态！=“清算成功”
-                //④交易方向=买入 AND 业务类型 IN（数据字典.FINPROD_TYPE_TG.债券买断式逆回购 ，数据字典.FINPROD_TYPE_TG.债券质押式逆回购 )AND 清算状态！=“清算成功”
-                if (StringUtil.equals(cfetsDto.getSettleStatus(), DictCodeListExt3.交收状态_未交收.getValue())) {
-                    if (!(StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate())))
-                            ||(StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue())
-                            && StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
-                            && !StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
-                            || ((StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_到期.getValue())
-                            || StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_提前终止.getValue())
-                            || StringUtil.equals(cfetsDto.getPs(), DictCodeListExt3.交易方向_投资端_逾期返售.getValue()))
-                            && StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())
-                            && !StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
-                            || (StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_到期.getValue())
-                            && (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券买断式正回购.getValue())
-                            || StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券借贷融入.getValue()))
-                            && !StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
-                            || (StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue())
-                            && (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券买断式逆回购.getValue())
-                            || StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue()))
-                            && !StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))) {
-                        returnMessage = "存在不允许交收的记录，是否剔除这些记录？";
-                    }else{
-                        returnList.add(cfetsDto);
-                    }
-                }else{
-                    returnMessage = "存在不允许交收的记录，是否剔除这些记录？";
-                }
-            }
-        }else if(StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())){
-            for(CfetsManualSettleDto cfetsDto : cfetsRequest.getSelectedItem()) {
-                //判断勾选记录交收状态是否为“待交收”
-                if((StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate())))
-                    &&(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())
-                        ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
-                        ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券行权交易.getValue()))){
+
+            //是否存在流程中的数据
+            Boolean isInwflFlag = this.isInwfl(cfetsDto.getTradeId());
+            //判断勾选记录交收状态是否为“待交收”，
+            //①交易方向=买入 AND 业务类型 = 数据字典.FINPROD_TYPE_TG.债券 AND 清算状态！=“清算成功”
+            //②交易方向 IN （到期，提前终止，逾期返售） AND 业务类型 = 数据字典.FINPROD_TYPE_TG.债券质押式正回购 AND 清算状态！=“清算成功”
+            //③交易方向=到期 AND 业务类型  IN（ 数据字典.FINPROD_TYPE_TG.债券买断式正回购，债券借贷融入） AND 清算状态！=“清算成功”
+            //④交易方向=买入 AND 业务类型 IN（数据字典.FINPROD_TYPE_TG.债券买断式逆回购 ，数据字典.FINPROD_TYPE_TG.债券质押式逆回购 )AND 清算状态！=“清算成功”
+            //④交易方向=买入 AND 业务类型 IN（数据字典.FINPROD_TYPE_TG.债券买断式逆回购 ，数据字典.FINPROD_TYPE_TG.债券质押式逆回购 )AND 清算状态！=“清算成功”
+            if(!isInwflFlag && StringUtil.equals(cfetsDto.getSettleStatus(), DictCodeListExt3.交收状态_未交收.getValue())
+                && StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate()))
+                && ((StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue())
+                        && StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+                        && StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
+                    || ((StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_到期.getValue())
+                        || StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_提前终止.getValue())
+                        || StringUtil.equals(cfetsDto.getPs(), DictCodeListExt3.交易方向_投资端_逾期返售.getValue()))
+                        && StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())
+                        && StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
+                    || (StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_到期.getValue())
+                        && (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券买断式正回购.getValue())
+                        || StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券借贷融入.getValue()))
+                        && StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue()))
+                    || (StringUtil.equals(cfetsDto.getPs(), DictCodeList.交易方向_买入.getValue())
+                        && (StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券买断式逆回购.getValue())
+                        || StringUtil.equals(cfetsDto.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue()))
+                        && StringUtil.equals(cfetsDto.getCleanStatus(), DictCodeListExt3.清算状态_清算成功.getValue())))){
                     returnList.add(cfetsDto);
                 }
-                returnMessage = "存在不允许交收失败的记录，是否剔除这些记录？";
+            }
+        }else if(StringUtil.equals(cfetsRequest.getSelectedItem().get(0).getButtonType(), DictCodeListExt3.交收操作类型_交收失败.getValue())){
+            for(CfetsManualSettleDto cfetsDto : cfetsRequest.getSelectedItem()) {
+                //是否存在流程中的数据
+                Boolean isInwflFlag = this.isInwfl(cfetsDto.getTradeId());
+                //判断勾选记录交收状态是否为“待交收”
+                if(!isInwflFlag && (StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate())))
+                    &&(StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())
+                        &&(StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
+                            ||StringUtil.equals(cfetsDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券行权交易.getValue())))){
+                    returnList.add(cfetsDto);
+                }
             }
 
-        }else if(StringUtil.equals(cfetsRequest.getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())){
+        }else if(StringUtil.equals(cfetsRequest.getSelectedItem().get(0).getButtonType(), DictCodeListExt3.交收操作类型_回溯.getValue())){
             for(CfetsManualSettleDto cfetsDto : cfetsRequest.getSelectedItem()) {
+                //是否存在流程中的数据
+                Boolean isInwflFlag = this.isInwfl(cfetsDto.getTradeId());
                 //判断勾选记录交收状态是否为“已交收”
-                if(StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate()))
+                if(!isInwflFlag && StringUtil.equals(cfetsDto.getSettleDate(),DateUtil.format(platformDateImpl.getSysDate()))
                         && StringUtil.equals(cfetsDto.getSettleStatus(),DictCodeListExt3.交收状态_已交收.getValue())){
                     returnList.add(cfetsDto);
                 }
-                returnMessage = "非已交收记录不允许回溯，是否剔除这些记录？";
             }
         }
 
-        if(returnList.size() != cfetsRequest.getSelectedItem().size() && !StringUtil.isBlank(returnMessage)){
+        if(returnList.size() != cfetsRequest.getSelectedItem().size()){
             ajaxResult.setMessageType(MessageType.提示消息);
-            ajaxResult.setMessage(returnMessage);
             ajaxResult.setData(returnList);
         }
 
         return ajaxResult;
     }
 
-    @Override
-    public void doInsert(CfetsManualSettleRequest entity, OperationType type) {
-
-    }
-
-    @Override
-    public void doUpdate(CfetsManualSettleRequest entity) {
-
-    }
-
-    @Override
-    public void doBack(CfetsManualSettleRequest entity) {
-
-    }
-
-    @Override
-    public void doComplete(CfetsManualSettleRequest cfetsManualSettleRequest, OperationType operationType) {
-        //处理业务数据
-        List<CfetsManualSettleInsertDto> insertDtoLists = handleSettleData(cfetsManualSettleRequest);
-
-        //插入银行间手工交收相关表
-        for(CfetsManualSettleInsertDto cfetsManualSettleInsertDto : insertDtoLists){
-
-            //存在交收编号，说明是做过交收后又回溯，则做更新动作
-            cfetsManualSettleMapper.mergeInfo(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo());
-            //新增交收流水
-            trdBankManualSettleFlowMapper.insertSelective(cfetsManualSettleInsertDto.getTrdBankManualSettleFlow());
-            //新增交收明细
-            for(TrdBankManualSetDetail trdBankManualSetDetail:cfetsManualSettleInsertDto.getListTrdBnakSetDetails()){
-                trdBankManualSetDetailMapper.insertSelective(trdBankManualSetDetail);
-            }
-            //发送头寸
-            if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
-                    ||StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_回溯.getValue())
-                    ||StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())
-                    ||StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收修改.getValue())){
-                sendPositionMethod(cfetsManualSettleInsertDto,cfetsManualSettleRequest.getButtonType());
-            }
+    /**
+     * 判断选择的记录是否存在流程中
+     * @param tradeId
+     * @return Boolean
+     */
+    private Boolean isInwfl(String tradeId) {
+        Boolean returnMsg =false;
+        WflValidInputParameter wflValidInputParameter  = new WflValidInputParameter();
+        wflValidInputParameter.setPageId("CfetsManualSettle");
+        wflValidInputParameter.setBusinessDataPk1(tradeId);
+        //查询流程中数据"01"
+        wflValidInputParameter.setSeachMode("01");
+        List<String> result = cfetsManualSettleMapper.getBusinessData(wflValidInputParameter);
+        if(!StringUtil.isEmptyList(result)){
+            //存在流程中数据
+            returnMsg = true;
         }
+        return returnMsg;
     }
 
     /**
      * 构建银行间手工交收信息
-     * @param cfetsManualSettleRequest
+     * @param cfetsManualSettleDto
      * @return CfetsManualSettleInsertDto
      */
-    private List<CfetsManualSettleInsertDto> handleSettleData(CfetsManualSettleRequest cfetsManualSettleRequest) {
+    private List<CfetsManualSettleInsertDto> handleSettleData(CfetsManualSettleDto cfetsManualSettleDto) {
 
         List<CfetsManualSettleInsertDto> empList = new ArrayList<CfetsManualSettleInsertDto>();
 
-        for(CfetsManualSettleDto cfetsManualSettleDto : cfetsManualSettleRequest.getSelectedItem()){
-            //手工交收入库dto
-            CfetsManualSettleInsertDto cfetsManualSettleInsertDto = new CfetsManualSettleInsertDto();
+        //手工交收入库dto
+        CfetsManualSettleInsertDto cfetsManualSettleInsertDto = new CfetsManualSettleInsertDto();
 
-            //银行间手工交收信息Entity
-            TrdBankManualSettleInfo trdBankManualSettleInfo = this.createTrdBankManualSettleInfo(cfetsManualSettleDto,cfetsManualSettleRequest.getButtonType());
+        //银行间手工交收信息Entity
+        TrdBankManualSettleInfo trdBankManualSettleInfo = this.createTrdBankManualSettleInfo(cfetsManualSettleDto);
 
-            //银行间手工交收流水信息Entity
-            TrdBankManualSettleFlow trdBankManualSettleFlow = this.createTrdBankManualSettleFlow(cfetsManualSettleDto,trdBankManualSettleInfo,cfetsManualSettleRequest.getButtonType());
+        //银行间手工交收流水信息Entity
+        TrdBankManualSettleFlow trdBankManualSettleFlow = this.createTrdBankManualSettleFlow(cfetsManualSettleDto,trdBankManualSettleInfo);
 
-            //调用【成交确认明细查询】
-            List<TrdBankManualSetDetail> listTrdBnakSetDetails =new ArrayList<TrdBankManualSetDetail>();
+        //调用【成交确认明细查询】
+        List<TrdBankManualSetDetail> listTrdBnakSetDetails =new ArrayList<TrdBankManualSetDetail>();
 
-            List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleDto.getTradeId());
-            for(CfetsManualSettleDealInfo cfetsManualSettleDealInfo : listTemp){
-                //银行间手工交收明细Entiy
-                TrdBankManualSetDetail trdBankManualSetDetail =new TrdBankManualSetDetail();
-                //交收流水序号=调用【共通】生成
-                trdBankManualSetDetail.setSeqNo(IDGenerator.generate());
-                //交收编号=银行间手工交收信息Entiy.交收编号
-                trdBankManualSetDetail.setSettleSeqNo(trdBankManualSettleInfo.getSettleSeqNo());
-                //交收日期=平台日
-                trdBankManualSetDetail.setSettleDate(platformDateImpl.getSysDate());
-                //原业务编号=成交确认明细.交易编号
-                trdBankManualSetDetail.setTradeId(cfetsManualSettleDealInfo.getTradeId());
-                //金融产品代码=画面.资产代码
-                trdBankManualSetDetail.setFinprodId(cfetsManualSettleDto.getFinprodId());
-                //金融产品简称=画面.资产简称
-                trdBankManualSetDetail.setFinprodAbbr(cfetsManualSettleDto.getFinprodAbbr());
-                //组合代码=成交确认明细.投资组合代码
-                trdBankManualSetDetail.setPortfolioId(cfetsManualSettleDealInfo.getPortfolioId());
-                //交割数量=成交确认明细.交易份额
-                trdBankManualSetDetail.setSettleNum(cfetsManualSettleDealInfo.getShareAmt());
-                //交割金额=成交确认明细.交易金额
-                trdBankManualSetDetail.setSettleAmt(cfetsManualSettleDealInfo.getTradeAmt());
-                //业务类别=画面.投管业务类型
-                trdBankManualSetDetail.setBusiType(cfetsManualSettleDto.getTgBusiType());
+        List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleDto.getTradeId());
+        for(CfetsManualSettleDealInfo cfetsManualSettleDealInfo : listTemp){
+            //银行间手工交收明细Entiy
+            TrdBankManualSetDetail trdBankManualSetDetail =new TrdBankManualSetDetail();
+            //交收流水序号=调用【共通】生成
+            trdBankManualSetDetail.setSeqNo(IDGenerator.generate());
+            //交收编号=银行间手工交收信息Entiy.交收编号
+            trdBankManualSetDetail.setSettleSeqNo(trdBankManualSettleInfo.getSettleSeqNo());
+            //交收日期=平台日
+            trdBankManualSetDetail.setSettleDate(platformDateImpl.getSysDate());
+            //原业务编号=成交确认明细.交易编号
+            trdBankManualSetDetail.setTradeId(cfetsManualSettleDealInfo.getTradeId());
+            //金融产品代码=画面.资产代码
+            trdBankManualSetDetail.setFinprodId(cfetsManualSettleDto.getFinprodId());
+            //金融产品简称=画面.资产简称
+            trdBankManualSetDetail.setFinprodAbbr(cfetsManualSettleDto.getFinprodAbbr());
+            //组合代码=成交确认明细.投资组合代码
+            trdBankManualSetDetail.setPortfolioId(cfetsManualSettleDealInfo.getPortfolioId());
+            //交割数量=成交确认明细.交易份额
+            trdBankManualSetDetail.setSettleNum(cfetsManualSettleDealInfo.getShareAmt());
+            //交割金额=成交确认明细.交易金额
+            trdBankManualSetDetail.setSettleAmt(cfetsManualSettleDealInfo.getTradeAmt());
+            //业务类别=画面.投管业务类型
+            trdBankManualSetDetail.setBusiType(cfetsManualSettleDto.getTgBusiType());
 
-                //交收状态=数据字典.交收状态.已交收
-                if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收.getValue())
-                        ||StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收修改.getValue())){
-                    trdBankManualSetDetail.setSettleStatus(DictCodeListExt3.交收状态_已交收.getValue());
-                }else if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
-                    trdBankManualSetDetail.setSettleStatus(DictCodeListExt3.交收状态_交收失败.getValue());
-                }else if(StringUtil.equals(cfetsManualSettleRequest.getButtonType(),DictCodeListExt3.交收操作类型_回溯.getValue())){
-                    trdBankManualSetDetail.setSettleStatus(DictCodeListExt3.交收状态_未交收.getValue());
-                }
-
-                listTrdBnakSetDetails.add(trdBankManualSetDetail);
+            //交收状态=数据字典.交收状态.已交收
+            if(StringUtil.equals(cfetsManualSettleDto.getButtonType(),DictCodeListExt3.交收操作类型_交收.getValue())
+                    ||StringUtil.equals(cfetsManualSettleDto.getButtonType(),DictCodeListExt3.交收操作类型_交收修改.getValue())){
+                trdBankManualSetDetail.setSettleStatus(DictCodeListExt3.交收状态_已交收.getValue());
+            }else if(StringUtil.equals(cfetsManualSettleDto.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
+                trdBankManualSetDetail.setSettleStatus(DictCodeListExt3.交收状态_交收失败.getValue());
+            }else if(StringUtil.equals(cfetsManualSettleDto.getButtonType(),DictCodeListExt3.交收操作类型_回溯.getValue())){
+                trdBankManualSetDetail.setSettleStatus(DictCodeListExt3.交收状态_未交收.getValue());
             }
 
-            cfetsManualSettleInsertDto.setTrdBankManualSettleInfo(trdBankManualSettleInfo);
-            cfetsManualSettleInsertDto.setTrdBankManualSettleFlow(trdBankManualSettleFlow);
-            cfetsManualSettleInsertDto.setListTrdBnakSetDetails(listTrdBnakSetDetails);
-            cfetsManualSettleInsertDto.setCcy(cfetsManualSettleDto.getCcy());
-            cfetsManualSettleInsertDto.setPs(cfetsManualSettleDto.getPs());
-            cfetsManualSettleInsertDto.setTradeId(cfetsManualSettleDto.getTradeId());
-
-            empList.add(cfetsManualSettleInsertDto);
+            listTrdBnakSetDetails.add(trdBankManualSetDetail);
         }
+
+        cfetsManualSettleInsertDto.setTrdBankManualSettleInfo(trdBankManualSettleInfo);
+        cfetsManualSettleInsertDto.setTrdBankManualSettleFlow(trdBankManualSettleFlow);
+        cfetsManualSettleInsertDto.setListTrdBnakSetDetails(listTrdBnakSetDetails);
+        cfetsManualSettleInsertDto.setCcy(cfetsManualSettleDto.getCcy());
+        cfetsManualSettleInsertDto.setPs(cfetsManualSettleDto.getPs());
+        cfetsManualSettleInsertDto.setTradeId(cfetsManualSettleDto.getTradeId());
+
+        empList.add(cfetsManualSettleInsertDto);
 
         return empList;
     }
@@ -258,11 +234,12 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
     /**
      * 构建银行间手工交收信息Entity
      * @param cfetsManualSettleDto
-     * @param buttonType 交收操作类型
+     * @param
      * @return
      */
-    private TrdBankManualSettleInfo createTrdBankManualSettleInfo(CfetsManualSettleDto cfetsManualSettleDto,String buttonType) {
+    private TrdBankManualSettleInfo createTrdBankManualSettleInfo(CfetsManualSettleDto cfetsManualSettleDto) {
         TrdBankManualSettleInfo trdBankManualSettleInfo =new TrdBankManualSettleInfo();
+        String buttonType = cfetsManualSettleDto.getButtonType();
         //首次交收、交收失败、首次修改（回溯后修改）
         if(StringUtil.isBlank(cfetsManualSettleDto.getSettleSeqNo())){
             BussinessCodeParameter parameter = new BussinessCodeParameter();
@@ -292,17 +269,20 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
                 trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_已交收.getValue());
             }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
                 trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_交收失败.getValue());
+                trdBankManualSettleInfo.setRemark(cfetsManualSettleDto.getRemark());
             }
         }else{
             //回溯、再次交收（回溯后交收）、首次修改（回溯后修改）
             trdBankManualSettleInfo.setSettleSeqNo(cfetsManualSettleDto.getSettleSeqNo());
+            trdBankManualSettleInfo.setFinprodId(cfetsManualSettleDto.getFinprodId());
             //交收状态
             trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_未交收.getValue());
             if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
                     ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())){
                 trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_已交收.getValue());
             }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
-                trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_交收失败.getValue());
+                trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_交收失败.getValue());//TODO
+                trdBankManualSettleInfo.setRemark(cfetsManualSettleDto.getRemark());
             }
         }
         return trdBankManualSettleInfo;
@@ -312,16 +292,15 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
      * 银行间手工交收流水信息Entity
      * @param cfetsManualSettleDto
      * @param trdBankManualSettleInfo 交收信息表
-     * @param buttonType 交收操作类型
+     * @param
      * @return
      */
 
     private TrdBankManualSettleFlow createTrdBankManualSettleFlow(CfetsManualSettleDto cfetsManualSettleDto,
-                                                                  TrdBankManualSettleInfo trdBankManualSettleInfo,String buttonType) {
+                                                                  TrdBankManualSettleInfo trdBankManualSettleInfo) {
         TrdBankManualSettleFlow trdBankManualSettleFlow = new TrdBankManualSettleFlow();
+        String buttonType = cfetsManualSettleDto.getButtonType();
         //交收流水编号=调用【共通】生成
-//        trdBankManualSettleFlow.setSeqNo(cfetsManualSettleDto.getSeqNo() != null?
-//                cfetsManualSettleDto.getSeqNo() : IDGenerator.generate());
         trdBankManualSettleFlow.setSeqNo(IDGenerator.generate());
         //交收编号=银行间手工交收信息Entiy.交收编号
         trdBankManualSettleFlow.setSettleSeqNo(trdBankManualSettleInfo.getSettleSeqNo());
@@ -358,7 +337,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
         TrdBankManualSettleInfo trdBankManualSettleInfo = cfetsManualSettleRequest.getTrdBankManualSettleInfo();
         if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue())){
             //调用cancel接口
-            PositionHttpRequest.sendRevoke(trdBankManualSettleInfo.getSettleSeqNo(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+//            PositionHttpRequest.sendRevoke(trdBankManualSettleInfo.getSettleSeqNo(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
                     ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())
                      ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())){
@@ -472,5 +451,32 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleReque
      */
     public String qryPortfolioCashAcctId(Map<String, Object> param) {
         return cfetsManualSettleMapper.qryPortfolioCashAcctId(param);
+    }
+
+
+    @Override
+    public void doComplete(CfetsManualSettleDto entity, OperationType type) {
+        //处理业务数据
+        List<CfetsManualSettleInsertDto> insertDtoLists = handleSettleData(entity);
+
+        //插入银行间手工交收相关表
+        for(CfetsManualSettleInsertDto cfetsManualSettleInsertDto : insertDtoLists){
+
+            //存在交收编号，说明是做过交收后又回溯，则做更新动作
+            cfetsManualSettleMapper.mergeInfo(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo());
+            //新增交收流水
+            trdBankManualSettleFlowMapper.insertSelective(cfetsManualSettleInsertDto.getTrdBankManualSettleFlow());
+            //新增交收明细
+            for(TrdBankManualSetDetail trdBankManualSetDetail:cfetsManualSettleInsertDto.getListTrdBnakSetDetails()){
+                trdBankManualSetDetailMapper.insertSelective(trdBankManualSetDetail);
+            }
+            //发送头寸
+            if(StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
+                    ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_回溯.getValue())
+                    ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())
+                    ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收修改.getValue())){
+                sendPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
+            }
+        }
     }
 }

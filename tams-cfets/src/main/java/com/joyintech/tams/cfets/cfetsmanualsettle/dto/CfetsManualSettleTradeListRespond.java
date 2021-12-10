@@ -111,10 +111,10 @@ public class CfetsManualSettleTradeListRespond {
     @ApiModelProperty(name="spcdCode",value="特殊字段",example="01一级投标02二级交易03行权交易04存续期交易")
     private String spcdCode;
 
-    @ApiModelProperty(name="tradeMarketMode",value="交易市场",example="01一级投标02二级交易03行权交易04存续期交易")
+    @ApiModelProperty(name="tradeMarketMode",value="交易市场",example="01/02")
     private String tradeMarketMode;
 
-    @ApiModelProperty(name="tradeMarketModeStr",value="交易市场",example="01一级投标02二级交易03行权交易04存续期交易")
+    @ApiModelProperty(name="tradeMarketModeStr",value="交易市场",example="一级/二级市场")
     private String tradeMarketModeStr;
 
     public String getSettleStatus() {

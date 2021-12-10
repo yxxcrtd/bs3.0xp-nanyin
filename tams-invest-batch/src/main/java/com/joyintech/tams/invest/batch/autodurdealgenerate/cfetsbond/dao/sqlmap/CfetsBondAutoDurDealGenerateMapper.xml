@@ -199,6 +199,7 @@
         T1.AMOUNT > 0
         <!--AND T1.HODING_TYPE IN ('03', '05', '06','11')-->
         AND T1.HODING_TYPE = 'A_004'
+        AND T1.DATE_TYPE = 0
         and nvl(pp.PARENT_PORTFOLIO_ID,'null') = 'null'
         AND T1.SEC_ACCT_ID = #{secAcctId}
         AND T2.FINPROD_ID = #{finprodId} AND T2.MDATE = to_date(#{mDate}, 'yyyy-MM-dd')
