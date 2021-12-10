@@ -15,6 +15,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.business.common.exception.PositionException;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
@@ -228,7 +229,11 @@ public class IbuQuoteBond004Controller extends BaseController {
 		processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);
         String msg = null;
-        msg = cfetsBondDealQuotedPrice004Service.start(processParameter, cfetsBondDealRegisterQuoteDto);
+        try{
+            msg = cfetsBondDealQuotedPrice004Service.start(processParameter, cfetsBondDealRegisterQuoteDto);
+        }catch (PositionException e){
+            return new Message<AjaxResult>().success().setData(new AjaxResult("流程启动异常:"+e.getMessage()));
+        }
         return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
 	}
 
