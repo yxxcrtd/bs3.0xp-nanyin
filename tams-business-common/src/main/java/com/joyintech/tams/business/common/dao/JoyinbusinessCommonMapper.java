@@ -3,10 +3,12 @@ package com.joyintech.tams.business.common.dao;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.business.common.dto.CashPositionFlowDto;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.dto.PtlCashPositionFlowDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -125,6 +127,28 @@ public interface JoyinbusinessCommonMapper {
 
     BigDecimal selectCommandAvailableCash(CashPositionFlowDto dto);
 
+    /**
+     * 查询可用现金
+     *
+     * @param positionQueryDto PtlCashPositionFlowDto
+     */
+    BigDecimal selectCashPositionFlow(PtlCashPositionFlowDto positionQueryDto);
+    /**
+     * 查询最大日期
+     *
+     * @param positionQueryDto
+     * @return 最大日期
+     * @date 2018/9/30
+     */
+    Date selectCashPositionMaxCdate(PtlCashPositionFlowDto positionQueryDto);
+    /**
+     * 查询在途、实际现金
+     *
+     * @param positionQueryDto
+     * @return java.math.BigDecimal
+     * @date 2018/9/30
+     */
+    BigDecimal selectCashPositionNew(PtlCashPositionFlowDto positionQueryDto);
     /**
      * 查询手工调整流水数据
      * @param dto

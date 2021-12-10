@@ -22,6 +22,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.position.service.PositionInfoService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.bankuplink.bond.dto.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -760,7 +761,7 @@ public class CfetsQuotedCommonService extends BaseService {
                                                         Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
                 for(String key : map.keySet()){
                     BigDecimal fpriceAmt = map.get(key);
-                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), cfetsBondDealQuoteCommonDto.getSecManageAcctId(), cfetsBondDealQuoteCommonDto.getCcy(), "03", null, null);
+                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), cfetsBondDealQuoteCommonDto.getSecManageAcctId(), cfetsBondDealQuoteCommonDto.getCcy(), "03", Arrays.asList(DictCodeListExt1.资金账户类型_产品托管户.getValue()), null);
                     if(null!=baseMap&&fpriceAmt.compareTo((BigDecimal) baseMap.get("cashT"))>0){
                         errorList.add(new ValidMessage(StringUtil.join("组合可用现金不足,组合代码:[",key,"]")));
                         ajaxResult.setErrorList(errorList);

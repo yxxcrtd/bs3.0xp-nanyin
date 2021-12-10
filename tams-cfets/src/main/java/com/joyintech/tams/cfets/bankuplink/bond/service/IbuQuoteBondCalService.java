@@ -330,7 +330,7 @@ public class IbuQuoteBondCalService extends BaseService {
             BigDecimal shareAmt = ArithmeticUtil.multiply(item.getShareAmt(),new BigDecimal(10000));
             item.setShareAmt(shareAmt);
             //TODO 需求变更
-            item.setOurEntNum(shareAmt);
+            //item.setOurEntNum(shareAmt);
             /*if(StringUtil.equals(sellPara,"02")){
                 item.setOurEntNum(shareAmt);
                 if(StringUtil.equals(ps, DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps, DictCodeList.交易方向_行权_回售.getValue())){
