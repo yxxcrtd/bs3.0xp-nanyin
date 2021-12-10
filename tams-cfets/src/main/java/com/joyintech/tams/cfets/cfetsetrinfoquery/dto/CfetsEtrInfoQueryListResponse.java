@@ -95,6 +95,9 @@ public class CfetsEtrInfoQueryListResponse extends EtrEntrust {
     @ApiModelProperty(name="invManagerName",value="投资经理",example="A1")
     private String invManagerName;
 
+    @ApiModelProperty(name="calculateField",value="计算方式",example="计算方式供前台判断使用")
+    private String calculateField;
+
     /**
      * 获取 otherEntrustStatus
      * @return otherEntrustStatus.
@@ -320,5 +323,13 @@ public class CfetsEtrInfoQueryListResponse extends EtrEntrust {
 
     public void setInvManagerName(String invManagerName) {
         this.invManagerName = invManagerName;
+    }
+
+    public String getCalculateField() {
+        return calculateField;
+    }
+
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField;
     }
 }

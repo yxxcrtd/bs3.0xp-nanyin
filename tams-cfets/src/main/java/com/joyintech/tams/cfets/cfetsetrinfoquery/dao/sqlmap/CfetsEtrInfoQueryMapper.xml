@@ -54,7 +54,8 @@
     NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
     (NVL(ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
-    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer
+    to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
+    ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
     FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
     PTL_PORTFOLIO
@@ -231,7 +232,8 @@
         NVL(T5.FINISH_AMT,0)/100  as transFinishAmt,
         (NVL(WFL_ETR_ENTRUST.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as transRemainderAmt,
         NULL transmitTime,
-        NULL transmitTimeSer
+        NULL transmitTimeSer,
+        WFL_ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
         FROM (SELECT * FROM WFL_ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
         LEFT JOIN
         PTL_PORTFOLIO

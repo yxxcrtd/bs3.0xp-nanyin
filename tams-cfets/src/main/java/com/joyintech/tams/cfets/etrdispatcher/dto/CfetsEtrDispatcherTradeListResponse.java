@@ -93,6 +93,9 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     @ApiModelProperty(name="transmitTime",value="下达时间",example="HH:MM:SS")
     private String transmitTime;
 
+    @ApiModelProperty(name="calculateField",value="计算方式",example="计算方式供前台判断使用")
+    private String calculateField;
+
     /**
      * 获取 otherEntrustStatus
      * @return otherEntrustStatus.
@@ -310,5 +313,13 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     public void setTransmitTime(String transmitTime) {
         this.transmitTime = transmitTime;
+    }
+
+    public String getCalculateField() {
+        return calculateField;
+    }
+
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField;
     }
 }
