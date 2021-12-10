@@ -280,7 +280,9 @@ public class IbuQuoteBondService extends BaseService {
                         cfetsBondDealQuoteCommonDto.setExercisePlan(false);
                 }
             }
-            //本方交易员应默认当前登录用户姓名
+            //登记本方交易员应默认当前登录用户姓名
+            cfetsBondDealQuoteCommonDto.setQuoteMySideTrader(cfetsBondDealQuoteCommonDto.getMySideTrader());
+            cfetsBondDealQuoteCommonDto.setQuoteOuTraderName(cfetsBondDealQuoteCommonDto.getOuTraderName());
             if(StringUtil.isEmpty(cfetsBondDealQuoteCommonDto.getOuTraderName())&&null!=SecurityUtil.getLoginUser()){
                 cfetsBondDealQuoteCommonDto.setMySideTrader(SecurityUtil.getLoginUser().getUserName());
                 cfetsBondDealQuoteCommonDto.setOuTraderName(SecurityUtil.getLoginUser().getRealName());

@@ -545,6 +545,10 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ResponseBody
 	public void exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
 		Map<String,Object>  stringObjectMap = requestDto.getDto(Map.class);
+		//只能导出买卖数据
+
+		//现阶段只支持对话报价
+
 		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(stringObjectMap);
 		String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
 		if(StringUtil.isNotEmpty(ibuExportCountMax)){

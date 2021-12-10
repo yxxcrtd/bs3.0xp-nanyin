@@ -61,6 +61,13 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="ouTraderName",value="本方交易员名称")
     private String ouTraderName;
 
+    @ApiModelProperty(name="quoteMySideTrader",value="本方交易员(对话、请求)")
+    private String quoteMySideTrader;
+
+    @ApiModelProperty(name="quoteOuTraderName",value="本方交易员名称(对话、请求)")
+    private String quoteOuTraderName;
+
+
     @ApiModelProperty(name="counterId",value="对手方")
     private String counterId;
 
@@ -632,5 +639,20 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
         this.assetTypeOne = assetTypeOne;
     }
 
+    public String getQuoteMySideTrader() {
+        return quoteMySideTrader;
+    }
+
+    public void setQuoteMySideTrader(String quoteMySideTrader) {
+        this.quoteMySideTrader = quoteMySideTrader;
+    }
+
+    public String getQuoteOuTraderName() {
+        return quoteOuTraderName;
+    }
+
+    public void setQuoteOuTraderName(String quoteOuTraderName) {
+        this.quoteOuTraderName = quoteOuTraderName;
+    }
 }
 
