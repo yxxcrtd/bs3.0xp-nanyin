@@ -9,7 +9,6 @@ import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.component.business.common.service.DateCalService;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
 import com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -330,6 +329,8 @@ public class IbuQuoteBondCalService extends BaseService {
         for (PtlAllocationDto item : ptlAllocations) {
             BigDecimal shareAmt = ArithmeticUtil.multiply(item.getShareAmt(),new BigDecimal(10000));
             item.setShareAmt(shareAmt);
+            //TODO 需求变更
+            item.setOurEntNum(shareAmt);
             /*if(StringUtil.equals(sellPara,"02")){
                 item.setOurEntNum(shareAmt);
                 if(StringUtil.equals(ps, DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps, DictCodeList.交易方向_行权_回售.getValue())){

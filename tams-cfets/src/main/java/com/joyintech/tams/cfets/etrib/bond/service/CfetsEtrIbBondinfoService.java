@@ -566,9 +566,11 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 if (price != null) {
                     r.setPrice(price);
                 }else{
-                    // 取标的可用面值
-                    price = etrInvestBondInfoService.getAvailableNum(BaseMap.newMap().put("finprodId", r.getFinprodId()).put("sysdate", platDate));
-                    r.setPrice(price);
+                    if (r.getPrice() == null) {
+                        // 取标的可用面值
+                        price = etrInvestBondInfoService.getAvailableNum(BaseMap.newMap().put("finprodId", r.getFinprodId()).put("sysdate", platDate));
+                        r.setPrice(price);
+                    }
                 }
 
                 if (r.getPrice() != null){

@@ -368,4 +368,49 @@
             )
         </if>
     </select>
+
+    <insert id="mergeCfetsOprHis" parameterType="java.util.List">
+        MERGE INTO ETR_ENTRUST_OPER_HIS EEOP
+        USING (
+        <foreach collection="list" item="item" open="select * from("
+                 close=")" separator="union all">
+            SELECT
+            '${item.seqNo}' SEQ_NO,
+            '${item.entrustId}' ENTRUST_ID,
+            '${item.operType}' OPER_TYPE,
+            '${item.operDate}' OPER_DATE,
+            '${item.operTime}' OPER_TIME,
+            '${item.busiDes}' BUSI_DES,
+            '${item.userId}' USER_ID,
+            '${item.createUser}' CREATE_USER,
+            '${item.createDept}' CREATE_DEPT,
+            '${item.createTime}' CREATE_TIME,
+            '${item.updateUser}' UPDATE_USER,
+            '${item.updateTime}' UPDATE_TIME
+            FROM
+            sysibm.SYSDUMMY1
+        </foreach>
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON(EEOP.ENTRUST_ID = TEMP.ENTRUST_ID
+        )
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN UPDATE SET
+        STATISTICAL_TIMES = NVL(STATISTICAL_TIMES,0)+1,
+        CREATE_USER = TEMP.CREATE_USER,
+        CREATE_DEPT = TEMP.CREATE_DEPT,
+        CREATE_TIME = TEMP.CREATE_TIME,
+        UPDATE_USER = TEMP.UPDATE_USER,
+        UPDATE_TIME = TEMP.UPDATE_TIME
+        <!-- 未匹配到这插入 -->
+        WHEN NOT MATCHED THEN INSERT
+        (SEQ_NO, ENTRUST_ID, OPER_TYPE,
+        OPER_DATE, OPER_TIME, BUSI_DES,
+        USER_ID, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME,STATISTICAL_TIMES)
+        values (TEMP.SEQ_NO, TEMP.ENTRUST_ID, TEMP.OPER_TYPE,
+        TEMP.OPER_DATE, TEMP.OPER_TIME, TEMP.BUSI_DES,
+        TEMP.USER_ID, TEMP.CREATE_USER, TEMP.CREATE_DEPT,
+        TEMP.CREATE_TIME, TEMP.UPDATE_USER, TEMP.UPDATE_TIME,1)
+    </insert>
 </mapper>

@@ -10,6 +10,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
@@ -533,11 +534,10 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ApiOperation(value = "当日登记导出检查", notes = "当日登记导出检查")
 	@PostMapping("/exportDayRegCheck")
 	@ResponseBody
-	public Message<AjaxResult> exportDayRegCheck(@RequestBody CfetsExportRequestDto requestDto){
+	public Message<Map<String,Object>> exportDayRegCheck(@RequestBody CfetsExportRequestDto requestDto){
 		Map<String,Object>  stringObjectMap = requestDto.getDto(Map.class);
 		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(stringObjectMap);
-		AjaxResult ajaxResult = ibuQuoteBondService.exportDayRegCheck(dataList);
-		return new Message<AjaxResult>().success().setData(ajaxResult);
+		return new Message<Map<String,Object>>().success().setData(ibuQuoteBondService.exportDayRegCheck(dataList));
 	}
 
 	@ApiOperation(value = "当日登记导出", notes = "当日登记导出")
@@ -545,6 +545,9 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ResponseBody
 	public void exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
 		Map<String,Object>  stringObjectMap = requestDto.getDto(Map.class);
+		BaseMap params = requestDto.getParams();
+		String operationFlag = (String)params.get("operationFlag");
+		stringObjectMap.put("operationFlag",operationFlag);
 		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(stringObjectMap);
 		String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
 		if(StringUtil.isNotEmpty(ibuExportCountMax)){
@@ -568,6 +571,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 				return dataList;
 			});
 		}
+		//处理导出次数
+		ibuQuoteBondService.handExportTimes(dataList);
 	}
 
 	@ApiOperation(value = "计算偏离度", notes = "计算偏离度(参数资产代码finprodId和净价unitCprice)")

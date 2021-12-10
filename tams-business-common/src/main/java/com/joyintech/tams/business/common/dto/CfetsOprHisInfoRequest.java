@@ -48,6 +48,9 @@ public class CfetsOprHisInfoRequest {
     @ApiModelProperty(name="updateTime",value="更新时间",example="1")
     private Date updateTime;
 
+    @ApiModelProperty(name="statisticalTimes",value="导出次数")
+    private int statisticalTimes;
+
     public String getSeqNo() {
         return seqNo;
     }
@@ -144,5 +147,11 @@ public class CfetsOprHisInfoRequest {
         this.updateTime = updateTime;
     }
 
+    public int getStatisticalTimes() {
+        return statisticalTimes;
+    }
 
+    public void setStatisticalTimes(int statisticalTimes) {
+        this.statisticalTimes = statisticalTimes;
+    }
 }
