@@ -12,6 +12,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
+import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
@@ -35,6 +36,7 @@ import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,6 +107,9 @@ public class IbuQuoteBondService extends BaseService {
 
     @Autowired
     private BaseEtrInvestInfoMapper baseEtrInvestInfoMapper;
+
+    @Autowired
+    private JoyinbusinessCommonMapper joyinbusinessCommonMapper;
     /**
      * 风险试算check
      * @param entity
@@ -1106,9 +1111,29 @@ public class IbuQuoteBondService extends BaseService {
      * @param dataList
      * @return
      */
-    public AjaxResult exportDayRegCheck(List<CfetsBondDayRegDto> dataList){
-        AjaxResult ajaxResult = new AjaxResult();
-        return ajaxResult;
+    public Map<String,Object> exportDayRegCheck(List<CfetsBondDayRegDto> dataList){
+        Map<String,Object> result = new HashMap<>();
+        //是否首次导出
+        String message = StringUtil.EMPTY;
+        List<String>  quoteIds = new ArrayList<>();
+        for (CfetsBondDayRegDto item : dataList) {
+            if(!StringUtil.equals(item.getTradeMarket(),DictCodeListExt1.交易场所_银行间.getValue())){
+                message = StringUtil.join("交易场所非银行间,不可导出!业务编号:"+item.getQuoteId());
+                break;
+            }
+            if(!StringUtil.equals(item.getAssetType(),dataList.get(0).getAssetType())){
+                message = StringUtil.join("资产类型不统一,不可导出!");
+                break;
+            }
+            if(item.getStatisticalTimes()!=0){
+                quoteIds.add(item.getQuoteId());
+            }
+        }
+        result.put("message",message);
+        if(CollectionUtils.isNotEmpty(quoteIds)){
+            result.put("quoteIds",quoteIds);
+        }
+        return result;
 
     }
     public List<CfetsBondDayRegDto> listDayReg(Map<String,Object> pageParam){
@@ -1156,6 +1181,26 @@ public class IbuQuoteBondService extends BaseService {
         return ajaxResult;
     }
 
+    /**
+     * 本币交易导出履历处理
+     * @param dataList
+     */
+    public  void handExportTimes(List<CfetsBondDayRegDto> dataList){
+        List<CfetsOprHisInfoRequest> result = new ArrayList<>();
+        dataList.forEach(item ->{
+            CfetsOprHisInfoRequest cfetsOprHisInfoRequest = new CfetsOprHisInfoRequest();
+            cfetsOprHisInfoRequest.setEntrustId(item.getQuoteId());
+            cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_导出.getValue());
+            cfetsOprHisInfoRequest.setSeqNo(IDGenerator.generate(32));
+            cfetsOprHisInfoRequest.setOperDate(DateUtil.platDateFromCache());
+            cfetsOprHisInfoRequest.setUserId(SecurityUtil.getLoginUser().getUserName());
+            cfetsOprHisInfoRequest.setCreateUser(SecurityUtil.getLoginUser().getUserName());
+            cfetsOprHisInfoRequest.setCreateDept(CommonUtil.getDeptCode());
+            cfetsOprHisInfoRequest.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+            result.add(cfetsOprHisInfoRequest);
+        });
+        joyinbusinessCommonMapper.mergeCfetsOprHis(result);
+    }
 
     private void setParam(Map<String,Object> param){
         param.put("finprodType2", BussinessDictCodeList.金融产品类型_债券.getValue());

@@ -3,6 +3,7 @@ package com.joyintech.tams.business.common.dao;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.business.common.dto.CashPositionFlowDto;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -130,4 +131,6 @@ public interface JoyinbusinessCommonMapper {
      * @return
      */
     BigDecimal selectManualCashFlow(CashPositionFlowDto dto);
+
+    void mergeCfetsOprHis(@Param("list") List<CfetsOprHisInfoRequest> list);
 }
