@@ -337,7 +337,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         TrdBankManualSettleInfo trdBankManualSettleInfo = cfetsManualSettleRequest.getTrdBankManualSettleInfo();
         if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_回溯.getValue())){
             //调用cancel接口
-//            PositionHttpRequest.sendRevoke(trdBankManualSettleInfo.getSettleSeqNo(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+            PositionHttpRequest.sendRevoke(trdBankManualSettleInfo.getSettleSeqNo(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
                     ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())
                      ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())){
