@@ -404,6 +404,12 @@ public class StlDataDealProcessConstant {
 	public static final String SJSJG_YWLB_BJRK = "BJRK";
 	// 业务类别：报价回购质押券出库
 	public static final String SJSJG_YWLB_BJCK = "BJCK";
+	// 业务类别：质押式回购质押券入库
+	public static final String SJSJG_YWLB_ZYRK = "ZYRK";
+	// 业务类别：质押式回购质押券入库
+	public static final String SJSJG_YWLB_ZY01 = "ZY01";
+	// 业务类别：质押式回购质押券出库
+	public static final String SJSJG_YWLB_ZYCK = "ZYCK";
 	// 业务类别：货币ETF收益
 	public static final String SJSJG_YWLB_EFSY = "EFSY";
 	// 业务类别：现金分红
@@ -425,7 +431,10 @@ public class StlDataDealProcessConstant {
 	// 证券变动-变动类型-00K
 	public static final String BDLX_00K = "00K";
 	
-	// SJSJG-业务类别-PGQZ
+	// SJSJG-业务类别-PGQZ 配股配债权证到帐
 	public static final String YWLB_PGQZ = "PGQZ";
+
+	// SJSJG-业务类别-TGSS 股份上市
+	public static final String SJSJG_YWLB_TGSS = "TGSS";
 	
 }

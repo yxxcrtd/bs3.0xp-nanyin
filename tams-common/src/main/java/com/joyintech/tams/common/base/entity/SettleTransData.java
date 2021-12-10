@@ -369,6 +369,28 @@ public class SettleTransData extends BaseEntity {
     private String isPurchTypeYx;
 
     /**
+     * 零碎份额资金
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal fragmentaryFunds;
+
+    /**
+     * 取得 零碎份额资金
+     * @return 零碎份额资金
+     */
+    public BigDecimal getFragmentaryFunds() {
+        return fragmentaryFunds;
+    }
+
+    /**
+     * 设置 零碎份额资金
+     * @param fragmentaryFunds 零碎份额资金
+     */
+    public void setFragmentaryFunds(BigDecimal fragmentaryFunds) {
+        this.fragmentaryFunds = fragmentaryFunds;
+    }
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
