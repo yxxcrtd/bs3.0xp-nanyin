@@ -1141,6 +1141,7 @@ public class IbuQuoteBondService extends BaseService {
     public List<CfetsBondDayRegDto> listDayReg(Map<String,Object> pageParam){
         pageParam.put("loginUserId", LoginUserUtil.getUserName());
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
+        pageParam.put("OPR_TYPE_09",DictCodeListExt3.操作类型_导出.getValue());
         setParam(pageParam);
         pageParam.put("CONFIRM_STATUS_0", com.joyintech.tams.constant.DictCodeList.确认状态_未确认.getValue());
         return  cfetsIbuQuoteBondMapper.listDayReg(pageParam);
@@ -1195,6 +1196,7 @@ public class IbuQuoteBondService extends BaseService {
             cfetsOprHisInfoRequest.setOperType(DictCodeListExt3.操作类型_导出.getValue());
             cfetsOprHisInfoRequest.setSeqNo(IDGenerator.generate(32));
             cfetsOprHisInfoRequest.setOperDate(DateUtil.platDateFromCache());
+            cfetsOprHisInfoRequest.setOperTime(DateUtil.platDateFromCache());
             cfetsOprHisInfoRequest.setUserId(SecurityUtil.getLoginUser().getUserName());
             cfetsOprHisInfoRequest.setCreateUser(SecurityUtil.getLoginUser().getUserName());
             cfetsOprHisInfoRequest.setCreateDept(CommonUtil.getDeptCode());

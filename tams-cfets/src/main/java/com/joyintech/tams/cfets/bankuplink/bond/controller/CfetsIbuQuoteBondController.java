@@ -535,8 +535,15 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@PostMapping("/exportDayRegCheck")
 	@ResponseBody
 	public Message<Map<String,Object>> exportDayRegCheck(@RequestBody CfetsExportRequestDto requestDto){
-		Map<String,Object>  stringObjectMap = requestDto.getDto(Map.class);
-		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(stringObjectMap);
+		Map<String,Object> param = new HashMap<>();
+		List<String> quoteIds = new ArrayList<>();
+		if(CollectionUtils.isNotEmpty(requestDto.getData())){
+			for (BaseMap item : requestDto.getData()) {
+				quoteIds.add((String)item.get("quoteId"));
+			}
+			param.put("quoteIds",quoteIds);
+		}
+		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(param);
 		return new Message<Map<String,Object>>().success().setData(ibuQuoteBondService.exportDayRegCheck(dataList));
 	}
 
@@ -544,13 +551,22 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@PostMapping("/exportDayReg")
 	@ResponseBody
 	public void exportDayReg(@RequestBody CfetsExportRequestDto requestDto, HttpServletResponse response){
-		Map<String,Object>  stringObjectMap = requestDto.getDto(Map.class);
-		BaseMap params = requestDto.getParams();
-		String operationFlag = (String)params.get("operationFlag");
-		stringObjectMap.put("operationFlag",operationFlag);
-		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(stringObjectMap);
+		Map<String,Object> param = new HashMap<>();
+		List<String> quoteIds = new ArrayList<>();
+		if(CollectionUtils.isNotEmpty(requestDto.getData())){
+			for (BaseMap item : requestDto.getData()) {
+				quoteIds.add((String)item.get("quoteId"));
+			}
+			param.put("quoteIds",quoteIds);
+		}
+		if(null!=requestDto.getParams()){
+			String operationFlag = (String) requestDto.getParams().get("operationFlag");
+			param.put("operationFlag",operationFlag);
+		}
+		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(param);
 		String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
-		if(StringUtil.isNotEmpty(ibuExportCountMax)){
+		requestDto.setData(null);
+		if(StringUtil.isNotEmpty(ibuExportCountMax)&&CollectionUtils.isNotEmpty(dataList)){
 			int max = Integer.parseInt(ibuExportCountMax);
 			int fileCount = (dataList.size()+max-1)/ max;
 			List<List<CfetsBondDayRegDto>> collect = Stream.iterate(0, n -> n + 1).limit(fileCount).map(
@@ -572,7 +588,9 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			});
 		}
 		//处理导出次数
-		ibuQuoteBondService.handExportTimes(dataList);
+		if(CollectionUtils.isNotEmpty(dataList)){
+			ibuQuoteBondService.handExportTimes(dataList);
+		}
 	}
 
 	@ApiOperation(value = "计算偏离度", notes = "计算偏离度(参数资产代码finprodId和净价unitCprice)")

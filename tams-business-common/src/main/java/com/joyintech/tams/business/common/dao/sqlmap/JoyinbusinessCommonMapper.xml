@@ -378,21 +378,21 @@
             '${item.seqNo}' SEQ_NO,
             '${item.entrustId}' ENTRUST_ID,
             '${item.operType}' OPER_TYPE,
-            '${item.operDate}' OPER_DATE,
-            '${item.operTime}' OPER_TIME,
+            #{item.operDate,jdbcType=DATE} OPER_DATE,
+            #{item.operTime,jdbcType=TIMESTAMP} OPER_TIME,
             '${item.busiDes}' BUSI_DES,
             '${item.userId}' USER_ID,
             '${item.createUser}' CREATE_USER,
             '${item.createDept}' CREATE_DEPT,
-            '${item.createTime}' CREATE_TIME,
+            sysdate CREATE_TIME,
             '${item.updateUser}' UPDATE_USER,
-            '${item.updateTime}' UPDATE_TIME
+            sysdate UPDATE_TIME
             FROM
-            sysibm.SYSDUMMY1
+            dual
         </foreach>
         ) TEMP
         <!-- 业务主键匹配 -->
-        ON(EEOP.ENTRUST_ID = TEMP.ENTRUST_ID
+        ON(EEOP.ENTRUST_ID = TEMP.ENTRUST_ID and EEOP.OPER_TYPE = TEMP.OPER_TYPE
         )
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN UPDATE SET

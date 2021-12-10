@@ -228,13 +228,8 @@ public class IbuQuoteBond004Controller extends BaseController {
 		processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);
         String msg = null;
-        try{
-            msg = cfetsBondDealQuotedPrice004Service.start(processParameter, cfetsBondDealRegisterQuoteDto);
-            return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
-        }
-        catch (Exception e) {
-            return PositionUtil.ajaxErrorReturn(e);
-        }
+        msg = cfetsBondDealQuotedPrice004Service.start(processParameter, cfetsBondDealRegisterQuoteDto);
+        return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
 	}
 
 
