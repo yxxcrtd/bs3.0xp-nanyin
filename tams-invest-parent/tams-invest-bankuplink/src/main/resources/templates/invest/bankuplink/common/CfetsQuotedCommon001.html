@@ -17,7 +17,7 @@
                         <select type="text" id="cfetsQuoTedCommon_distribution"
                                 class="layui-input form-input input-select"
                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                allowClear="true" formatoption="true"
+                                allowClear="true" formatoption="true"  th:initValue="${distribution}"
                                 data-th-data-result='${DISTRIBUTION}'>
                         </select>
                      </div>
@@ -51,6 +51,8 @@
     var quotaPageModel = /*[[${quotaPageModel}]]*/'';
     var SHOW_INVAIM_OR_BUSSINSSMODEL = /*[[${SHOW_INVAIM_OR_BUSSINSSMODEL}]]*/'';
     var BUSINESS_MODEL = /*[[${BUSINESS_MODEL}]]*/'';
+    var sellPara = /*[[${sellPara}]]*/'';
+    var ps = /*[[${ps}]]*/'';
 </script>
 <script data-th-src="@{/js/invest/bankuplink/common/CfetsQuotedCommon001.js}" type="text/javascript"></script>
 </body>

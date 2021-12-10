@@ -1,0 +1,1 @@
+update cfg_datatable_show set  extendcfg='{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}' where pagecode='CfetsEtrBondInfo' and  dtcode='ETRINFOS'  and colcode='shareNum';

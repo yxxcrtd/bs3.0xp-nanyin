@@ -305,8 +305,32 @@
             <if test="cancelExerciseDate != null" >
                 CANCEL_EXERCISE_DATE,
             </if>
-	    <if test="replaceAmt != null" >
+	         <if test="replaceAmt != null" >
                 REPLACE_AMT,
+            </if>
+            <if test="ourShareAmt != null" >
+                our_share_amt,
+            </if>
+            <if test="lendinShareAmt != null" >
+                lendin_share_amt,
+            </if>
+            <if test="ourCpriceAmt != null" >
+                our_cprice_amt,
+            </if>
+            <if test="lendinCpriceAmt != null" >
+                lendin_cprice_amt,
+            </if>
+            <if test="ourFpriceAmt != null" >
+                our_fprice_amt,
+            </if>
+            <if test="lendinFpriceAmt != null" >
+                lendin_fprice_amt,
+            </if>
+            <if test="ourIntAmt != null" >
+                our_int_amt,
+            </if>
+            <if test="lendinIntAmt != null" >
+                lendin_int_amt,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -475,8 +499,32 @@
             <if test="cancelExerciseDate != null" >
                 #{cancelExerciseDate,jdbcType=DATE},
             </if>
-	    <if test="replaceAmt != null" >
+	        <if test="replaceAmt != null" >
                 #{replaceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourShareAmt != null" >
+                #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourCpriceAmt != null" >
+                #{ourCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinCpriceAmt != null" >
+                #{lendinCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourFpriceAmt != null" >
+                #{ourFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinFpriceAmt != null" >
+                #{lendinFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourIntAmt != null" >
+                #{ourIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinIntAmt != null" >
+                #{lendinIntAmt,jdbcType=DECIMAL},
             </if>
         </trim>
     </insert>

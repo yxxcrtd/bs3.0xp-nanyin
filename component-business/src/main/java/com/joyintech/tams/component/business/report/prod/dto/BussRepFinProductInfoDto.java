@@ -17,7 +17,6 @@ import com.joyintech.tams.common.base.entity.RepProdDeclare;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.Email;
 import com.joyintech.framework.validation.annotation.IDCard;
-import com.joyintech.framework.validation.annotation.OfficePhone;
 import com.joyintech.framework.validation.annotation.Rate;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.tams.component.business.report.prod.validator.BussRepFinProductInfoValidator;

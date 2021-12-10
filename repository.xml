@@ -1,13 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<settings>
-	<localRepository>F:\maven_3.0</localRepository>
-	<mirrors>
-		<mirror>
-			<id>nexus</id>
-			<name>nexus maven</name>
-			<url>http://192.168.90.83:8082/nexus/content/repositories/thirdparty/
-			</url>
-			<mirrorOf>central</mirrorOf>
-		</mirror>
-	</mirrors>
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <!-- localRepository
+   | The path to the local repository maven will use to store artifacts.
+   |
+   | Default: ${user.home}/.m2/repository
+  <localRepository>/path/to/local/repo</localRepository>
+
+  -->
+  <localRepository>E:\maven_lib</localRepository>
+
+<!-- 
+<offline>true</offline>
+  -->
+
+  <mirrors>
+     
+    <mirror>
+       <id>central</id>
+       <mirrorOf>*</mirrorOf>
+       <url>http://192.168.90.83:8082/nexus/content/repositories/thirdparty/</url>
+    </mirror> 
+  
+
+    <mirror>  
+    	<id>alimaven</id>  
+    	<name>aliyun maven</name>  
+    	<url>http://maven.aliyun.com/nexus/content/groups/public/</url>  
+    	<mirrorOf>central</mirrorOf>          
+    </mirror> 
+
+  </mirrors>
+
+  <profiles>
+
+
+   <profile>
+       <id>central-profile</id>
+       <repositories>
+           <repository>
+              <id>maven-public</id>
+              <url>http://192.168.90.83:8082/nexus/content/repositories/thirdparty/</url>
+              <releases>
+		    	<enabled>true</enabled>
+			<updatePolicy>always</updatePolicy>
+	      </releases>
+              <snapshots>
+			<enabled>true</enabled>
+			<updatePolicy>always</updatePolicy>
+		</snapshots>
+           </repository>
+        </repositories>
+
+       <pluginRepositories>
+           <pluginRepository>
+              <id>maven-public</id>
+              <url>http://192.168.90.83:8082/nexus/content/repositories/thirdparty/</url><!--220.180.239.103-->
+              <releases><enabled>true</enabled></releases>
+              <snapshots><enabled>true</enabled></snapshots>
+           </pluginRepository>
+        </pluginRepositories>
+
+    </profile>
+
+
+
+  </profiles>
+
+    <activeProfiles>
+    	<activeProfile>central-profile</activeProfile>
+  </activeProfiles>
 </settings>

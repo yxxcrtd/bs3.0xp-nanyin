@@ -10,12 +10,12 @@
 
 package com.joyintech.service.bankuplink.bond.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.framework.json.BigDecimalSerializer;
 
 
 
@@ -117,8 +117,12 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto {
      * 组合分配信息
      */
     private List<CfetsBondDealRequestQuoteDto> cfetsBondDealRequestQuoteDtoList;
-    
-    
+
+    private BigDecimal dealFeeAmt;
+
+    private BigDecimal settFeeAmt;
+
+    private String distribution;
     public String getPortfolioId() {
 		return portfolioId;
 	}
@@ -419,4 +423,28 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto {
 	public void setCfetsBondDealRequestQuoteDtoList(List<CfetsBondDealRequestQuoteDto> cfetsBondDealRequestQuoteDtoList) {
 		this.cfetsBondDealRequestQuoteDtoList = cfetsBondDealRequestQuoteDtoList;
 	}
+
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
+    }
+
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
+    }
+
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
+    }
+
+    public String getDistribution() {
+        return distribution;
+    }
+
+    public void setDistribution(String distribution) {
+        this.distribution = distribution;
+    }
 }

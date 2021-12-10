@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper">
+
+    <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SelectOptionDto">
+            SELECT distinct
+            A.ACCT_NO id,
+            B.SEC_ACCT_NAME text
+            FROM PTL_SEC_ACCT A
+            INNER JOIN STL_SEC_ACCT_INFO B
+            ON A.ACCT_NO = B.SEC_ACCT_ID
+            <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
+                LEFT JOIN FIN_PRODUCT FP
+                ON FP.FINPROD_ID IN (
+                <foreach item="item" index="index" collection="finprodMarketIdList" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <where>
+                <if test="portfolioIdList != null and portfolioIdList.size()>0">
+                    AND A.PORTFOLIO_ID IN(
+                    <foreach item="item" index="index" collection="portfolioIdList" separator=",">
+                        #{item}
+                    </foreach>
+                    )
+                </if>
+                <if test="search != null and search != ''">
+                    AND
+                    (
+                    A.ACCT_NO LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    OR
+                    B.SEC_ACCT_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    )
+                </if>
+                <if test="initValue != null and initValue != ''">
+                    AND (A.ACCT_NO = #{initValue, jdbcType=VARCHAR} OR
+                    (PORTFOLIO_ID || A.ACCT_NO) = #{initValue, jdbcType=VARCHAR}
+                    )
+                </if>
+                <if test="tradeMarket !=null and tradeMarket !='' ">
+                    AND B.TRADE_PLACE = #{tradeMarket, jdbcType=VARCHAR}
+                </if>
+                <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
+                    AND B.TRADE_PLACE = FP.TRADE_MARKET
+                </if>
+            </where>
+    </select>
+
+    <!-- 委托代码模糊查询 -->
+    <select id="getEntrustId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        PORTFOLIO_ID portfolioId,
+        ENTRUST_ID id
+        FROM ETR_ENTRUST
+        <where>
+            AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
+            <if test="etrId != null and etrId != ''">
+                AND ENTRUST_ID like concat(concat('%',#{etrId,jdbcType=VARCHAR}),'%')
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="finprodIdMap" type="com.joyintech.framework.select.SelectOptionDto">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="text" property="text" jdbcType="VARCHAR"/>
+        <association property="object" javaType="java.util.Map">
+            <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+            <result column="CALENDAR_ID" property="calendarId" jdbcType="VARCHAR" />
+            <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+            <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+            <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
+            <result column="TYPE_9" property="assetType1" jdbcType="VARCHAR" />
+            <result column="TYPE_10" property="assetType10" jdbcType="VARCHAR" />
+            <result column="TYPE_11" property="assetType11" jdbcType="VARCHAR" />
+            <result column="VDATE" property="finvdate" jdbcType="VARCHAR" />
+            <result column="MDATE" property="finmdate" jdbcType="VARCHAR" />
+            <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+            <result column="PRICE" property="price" jdbcType="DOUBLE" />
+        </association>
+    </resultMap>
+    <select id="getfinprodIdForAdd" resultMap="finprodIdMap">
+        SELECT
+        T1.FINPROD_MARKET_ID id,
+        T1.FINPROD_ABBR text,
+        T1.FINPROD_NAME,
+        T1.FINPROD_ID,
+        T1.CALENDAR_ID,
+        T1.TRADE_MARKET,
+        T1.IS_RIGHT,
+        T2.TYPE_9,
+        T2.TYPE_10,
+        T2.TYPE_11,
+        to_char(T1.VDATE,'yyyy-MM-dd') VDATE,
+        to_char(T1.MDATE, 'yyyy-MM-dd') MDATE,
+        T1.CCY,
+        null as PRICE
+        FROM
+        FIN_PRODUCT T1
+        LEFT JOIN
+        FIN_PRODUCT_TYPE T2
+        ON T1.FINPROD_ID = T2.FINPROD_ID
+        <include refid="getfinprodIdForAddWhere"></include>
+    </select>
+    <sql id="getfinprodIdForAddWhere">
+        <where>
+            T1.FINPROD_TYPE2 = #{assestType}
+            AND T1.TRADE_MARKET in(#{TRADE_PLACE_01},#{TRADE_PLACE_02})
+            <if test="initValue != null and !initValue.equals('')">
+                and T1.FINPROD_MARKET_ID = #{initValue}
+            </if>
+            <if test="search != null and !search.equals('')">
+                and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+                or T1.FINPROD_NAME like concat('%',concat(#{search},'%'))
+                or T1.FINPROD_ABBR like concat('%',concat(#{search},'%'))
+                or T1.FINPROD_ID like concat('%',concat(#{search},'%'))
+                )
+            </if>
+        </where>
+    </sql>
+    <select id="selectPortfolioIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT DISTINCT
+        A.PORTFOLIO_ID id,
+        　　 A.PORTFOLIO_NAME  text,
+        B.IS_GUARANTEE object,
+        A.PROFIT_TYPE  col
+        FROM PTL_PORTFOLIO A
+        LEFT JOIN PA_PTL_PORTFOLIO B
+        ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
+        INNER JOIN PTL_PORTFOLIO_AUTHORITY PPA
+        ON A.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>
+        <where>
+            <if test="search != null and search != ''">
+                (A.PORTFOLIO_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                OR
+                A.PORTFOLIO_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                )
+            </if>
+        </where>
+    </select>
+    <!-- 投资经理联想框 -->
+    <select id="getManagers" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT distinct
+        SYS_USER.USER_NAME id,
+        SYS_USER.REAL_NAME text
+        ,SYS_USER.DEPT_CODE deptCode
+        FROM
+        SYS_USER
+        INNER JOIN
+        SYS_USER_ROLE
+        ON 	SYS_USER.USER_NAME = SYS_USER_ROLE.USER_ID
+        INNER JOIN SYS_ROLE
+        ON SYS_USER_ROLE.ROLE_ID = SYS_ROLE.ROLE_ID
+        <where>
+            AND SYS_ROLE.ROLE_POS IN( #{roleOne}, #{roleTwo} )
+            <if test="manager !=null and manager != '' ">
+                AND (SYS_USER.USER_NAME like concat(concat('%',
+                #{manager,jdbcType=VARCHAR}),'%')
+                OR SYS_USER.REAL_NAME like concat(concat('%',
+                #{manager,jdbcType=VARCHAR}),'%'))
+            </if>
+        </where>
+    </select>
+    <select id="getRightfinprodIdForAdd" resultMap="finprodIdMap">
+        SELECT distinct
+        T1.FINPROD_MARKET_ID id,
+        T1.FINPROD_ABBR text,
+        T1.FINPROD_NAME,
+        T1.FINPROD_ID,
+        T1.CALENDAR_ID,
+        T1.TRADE_MARKET,
+        T1.IS_RIGHT,
+        T2.TYPE_9,
+        T2.TYPE_10,
+        T2.TYPE_11,
+        to_char(T1.VDATE,'yyyy-MM-dd') VDATE,
+        to_char(T1.MDATE, 'yyyy-MM-dd') MDATE,
+        T1.CCY,
+        pr.price as PRICE
+        from ptl_sec_position_rule ptl
+        INNER JOIN
+        PTL_PORTFOLIO_AUTHORITY PPA
+        ON ptl.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        <if test="userId != null and userId != ''">
+            AND PPA.USER_ID = #{userId}
+        </if>
+        inner join fin_product T1
+        on ptl.finprod_id=T1.finprod_id
+        and  T1.is_right='Y'
+        inner join FIN_EXERCISE_PLAN p
+        on p.finprod_id=T1.finprod_id
+        and p.finprod_id=ptl.finprod_id
+        left join (
+            select row_number() over(partition by pd.finprod_id order by pd.exercise_date) idx,
+            pd.finprod_id,
+            pd.exercise_price as price
+            from FIN_EXERCISE_PLAN pd
+            where pd.exercise_date<![CDATA[>]]>#{platDate}
+        )pr
+        on pr.finprod_id=T1.finprod_id
+        and pr.finprod_id=ptl.finprod_id
+        and pr.idx=1
+        LEFT JOIN  FIN_PRODUCT_TYPE T2
+        ON T1.FINPROD_ID = T2.FINPROD_ID
+        where
+            T1.FINPROD_TYPE2 = #{assestType}
+            AND T1.TRADE_MARKET in(#{TRADE_PLACE_01},#{TRADE_PLACE_02})
+            and  T1.is_right='Y'
+            and  ptl.cdate=#{platDate}
+            and p.exercise_date>#{platDate}
+            and ptl.amount>0
+            <if test="search != null and !search.equals('')">
+                and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+                or T1.FINPROD_NAME like concat('%',concat(#{search},'%'))
+                or T1.FINPROD_ABBR like concat('%',concat(#{search},'%'))
+                or T1.FINPROD_ID like concat('%',concat(#{search},'%'))
+                )
+            </if>
+    </select>
+    <insert id="insertCfetsOprHis" parameterType="com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest" >
+        insert into ETR_ENTRUST_OPER_HIS (SEQ_NO, ENTRUST_ID, OPER_TYPE,
+        OPER_DATE, OPER_TIME, BUSI_DES,
+        USER_ID, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        values (#{seqNo,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, #{operType,jdbcType=VARCHAR},
+        #{operDate,jdbcType=DATE}, sysdate, #{busiDes,jdbcType=VARCHAR},
+        #{userId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+        sysdate, #{updateUser,jdbcType=VARCHAR},sysdate
+        )
+    </insert>
+    <select id="queryMySideList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT DISTINCT
+        MST_CFETS_CUSTOMER_INFO.PARTY_ID id,
+        MST_CFETS_CUSTOMER_INFO.PARTY_ABBR text,
+        MST_CFETS_CUSTOMER_INFO.PARTY_ID as object
+        FROM
+        MST_CFETS_CUSTOMER_INFO
+        <where>
+            <if test="search != null and !search.equals('')">
+                AND	(MST_CFETS_CUSTOMER_INFO.PARTY_ID like concat('%',concat(#{search},'%'))
+                or MST_CFETS_CUSTOMER_INFO.PARTY_ABBR like concat('%',concat(#{search},'%')))
+            </if>
+        </where>
+    </select>
+    <select id="queryMySideAndPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT DISTINCT
+        MST_CFETS_CUSTOMER_INFO.PARTY_ID id,
+        MST_CFETS_CUSTOMER_INFO.PARTY_ABBR text,
+        MST_CFETS_CUSTOMER_INFO.PARTY_ID as object
+        FROM
+        MST_CFETS_CUSTOMER_INFO
+        inner join MST_COUNTER_PARTY mst
+        on MST_CFETS_CUSTOMER_INFO.party_id=mst.party_id
+        <where>
+            <if test="search != null and !search.equals('')">
+                AND	(MST_CFETS_CUSTOMER_INFO.PARTY_ID like concat('%',concat(#{search},'%'))
+                or MST_CFETS_CUSTOMER_INFO.PARTY_ABBR like concat('%',concat(#{search},'%')))
+            </if>
+        </where>
+    </select>
+    <select id="queryCstpPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct I.Counterinstitutioncode id,
+        I.Institutionchinesefullname text
+        from  INTERF_CSTP_TRADE I
+        <where>
+            <if test="search != null and !search.equals('')">
+                AND	(I.Counterinstitutioncode like concat('%',concat(#{search},'%'))
+                or I.Institutionchinesefullname like concat('%',concat(#{search},'%')))
+            </if>
+            <if test="sysDate != null and !sysDate.equals('')">
+                AND  to_date(I.Tradedate,'yyyy-MM-dd')= #{sysDate,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
+    <select id="queryCounterPartyList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct mst.counter_id id,mst.counter_name  text,mst.party_id as object
+        from MST_COUNTER_PARTY mst
+        where mst.counter_type in ('01','02')
+            <if test="search != null and !search.equals('')">
+                AND	(mst.counter_id like concat('%',concat(#{search},'%'))
+                or mst.counter_name like concat('%',concat(#{search},'%')))
+            </if>
+    </select>
+    <select id="queryMySideTraderList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
+        MST_CFETS_CUSTOMER_TRADER.TRADER_NAME text,
+        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID   parentId
+        FROM (SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID,
+        MST_CFETS_CUSTOMER_TRADER.TRADER_NAME,
+        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID
+        FROM MST_CFETS_CUSTOMER_TRADER
+        INNER JOIN(
+        SELECT nvl(t2.mparty_id,t1.party_id) PARTY_ID
+        from MST_CFETS_CUSTOMER_INFO t1 LEFT JOIN MST_CFETS_CUSTOMER_RELA t2
+        on t1.party_id = t2.sparty_id
+        WHERE 1 = 1
+        <if test="partyId != null and !partyId.equals('')">
+            AND t1.PARTY_ID = #{partyId}
+        </if>
+        ) t3 on MST_CFETS_CUSTOMER_TRADER.PARTY_ID = t3.PARTY_ID
+        ) MST_CFETS_CUSTOMER_TRADER
+        WHERE 1 = 1
+        <if test="search != null and !search.equals('')">
+            AND	(MST_CFETS_CUSTOMER_TRADER.TRADER_ID like concat('%',concat(#{search},'%'))
+            or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{search},'%')))
+        </if>
+    </select>
+
+    <!--ͨ查询指令可用现金 -->
+    <select id="selectCommandAvailableCash" parameterType="com.joyintech.tams.business.common.dto.CashPositionFlowDto" resultType="java.math.BigDecimal">
+        select
+        sum(t.amount) as amount
+        from ETR_CASH_POSITION t
+        where
+        t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+        <if test="acctId != null and acctId != '' ">
+            and t.acct_id = #{acctId,jdbcType=VARCHAR}
+        </if>
+        <if test="chlFinprodId != null and chlFinprodId != '' ">
+            and t.chl_finprod_id = #{chlFinprodId,jdbcType=VARCHAR}
+        </if>
+        and t.hoding_type = #{hodingType,jdbcType=VARCHAR}
+        and t.cdate = #{cdate,jdbcType=DATE}
+        and t.ccy = #{ccy,jdbcType=VARCHAR}
+        <if test="acctType != null and acctType.size() > 0 ">
+            and t.acct_id in (
+            select t1.acct_no from ptl_capacct_info t1
+            where t1.acct_type in
+            <foreach collection="acctType" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            and t1.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+            )
+        </if>
+    </select>
+
+    <!--ͨ查询手工调整流水-->
+    <!--ͨ查询指令可用现金 -->
+    <select id="selectManualCashFlow" parameterType="com.joyintech.tams.business.common.dto.CashPositionFlowDto" resultType="java.math.BigDecimal">
+        select
+        sum(t.amount) as amount
+        from ETR_CASH_POSITION_FLOW t
+        where
+        t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+        <if test="acctId != null and acctId != '' ">
+            and t.acct_id = #{acctId,jdbcType=VARCHAR}
+        </if>
+        <if test="chlFinprodId != null and chlFinprodId != '' ">
+            and t.chl_finprod_id = #{chlFinprodId,jdbcType=VARCHAR}
+        </if>
+        and t.hoding_type = #{hodingType,jdbcType=VARCHAR}
+        and t.cdate = #{cdate,jdbcType=DATE}
+        and t.ccy = #{ccy,jdbcType=VARCHAR}
+        <if test="acctType != null and acctType.size() > 0 ">
+            and t.acct_id in (
+            select t1.acct_no from ptl_capacct_info t1
+            where t1.acct_type in
+            <foreach collection="acctType" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            and t1.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+            )
+        </if>
+    </select>
+</mapper>

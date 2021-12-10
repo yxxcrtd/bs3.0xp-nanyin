@@ -1,0 +1,5 @@
+
+delete from sys_page_dictlist where page_id='MstSecuritiesAccount002' and dict_id='TRADE_PLACE' and dict_item_val='02';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('MstSecuritiesAccount002', '999999', 'TRADE_PLACE', '02', null, null, 'system', null, sysdate, 'system', sysdate, null);
+

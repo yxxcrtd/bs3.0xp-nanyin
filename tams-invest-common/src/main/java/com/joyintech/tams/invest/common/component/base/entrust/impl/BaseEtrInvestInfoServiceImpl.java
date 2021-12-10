@@ -160,6 +160,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     @Autowired
     private EtrEntrustWwDetailMapper etrEntrustWwDetailMapper;
 
+    @Autowired
+    private EtrDistributeInterfTmpMapper etrDistributeInterfTmpMapper;
     /**
      * 委托操作相关校验 <一句话功能简述> <功能详细描述>
      *
@@ -829,6 +831,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                 EtrDistributeKey key = new EtrDistributeKey();
                 key.setEntrustId(etrDistribute.getEntrustId());
                 List<EtrDistribute> etrDistributeList = etrInvestInfoMapper.selectEtrDistributeByPrimaryKey(key);
+                //删除临时分发表 ETR_DISTRIBUTE_INTERF_TMP
+                baseEtrInvestInfoMapper.deleteEtrDistributeInterfTmp(etrDistribute.getEntrustId());
                 for (EtrDistribute entity : etrDistributeList) {
                     if (StringUtil.equals(entity.getTrader(), etrDistribute.getTrader())) {
                         Map<String, Object> param2 = new HashMap<String, Object>();
@@ -843,6 +847,10 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                         etrDistributeKey.setTrader(entity.getTrader());
                         etrInvestInfoMapper.deleteEtrDistributeByPrimaryKey(etrDistributeKey);
                     }
+                    //存入临时表ETR_DISTRIBUTE_INTERF_TMP,本币交易放弃指令后到待接收状态,需要找个指令对应的交易员
+                    EtrDistributeInterfTmp etrDistributeInterfTmp = new EtrDistributeInterfTmp();
+                    BeanUtil.copyPropertiesIgnoreNull(etrDistributeInterfTmp,entity);
+                    etrDistributeInterfTmpMapper.insert(etrDistributeInterfTmp);
                 }
             }
             return true;
@@ -1117,9 +1125,9 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             String remark=StringUtil.isEmpty(etrEntrust.getRemark()) ? "" : etrEntrust.getRemark();
             // update by qk end HFZG-6 质押式回购退回，指令分发详情页面中的备注显示异常
             if(StringUtil.isNotBlank(reason)){
-                reason=remark+"\n"+"退回原因：" + reason;
+                reason=remark+"\n"+"指令退回原因：" + reason;
             }else{
-                reason="退回原因：" + reason;
+                reason="指令退回原因：" + reason;
             }
             // 更改委托状态
             etrEntrust.setRemark(reason);

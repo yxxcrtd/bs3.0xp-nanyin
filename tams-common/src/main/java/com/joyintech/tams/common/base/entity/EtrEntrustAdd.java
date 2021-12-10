@@ -502,6 +502,14 @@ public class EtrEntrustAdd extends BaseEntity {
      * 指令创建来源
      */
     private String entrustCreateSource;
+    /**
+     * 头寸业务类型
+     */
+    private String busiTypePosition;
+    /**
+     * 指令下达时间
+     */
+    private Date transmitTime;
 
     /**
      * 取得 委托代码
@@ -2004,5 +2012,21 @@ public class EtrEntrustAdd extends BaseEntity {
      */
     public void setEntrustCreateSource(String entrustCreateSource) {
         this.entrustCreateSource = entrustCreateSource == null ? null : entrustCreateSource.trim();
+    }
+
+    public String getBusiTypePosition() {
+        return busiTypePosition;
+    }
+
+    public void setBusiTypePosition(String busiTypePosition) {
+        this.busiTypePosition = busiTypePosition;
+    }
+
+    public Date getTransmitTime() {
+        return transmitTime;
+    }
+
+    public void setTransmitTime(Date transmitTime) {
+        this.transmitTime = transmitTime;
     }
 }

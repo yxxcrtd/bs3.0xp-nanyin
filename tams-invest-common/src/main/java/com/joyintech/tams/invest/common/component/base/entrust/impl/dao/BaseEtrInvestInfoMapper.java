@@ -143,7 +143,7 @@ public interface BaseEtrInvestInfoMapper {
 
     List<EtrSecPositionFlowDto> selectEtrClosedSecFlow(String entrustId);
 
-	void deleteDistributeInterfTmp(String entrustId);
-
     void updatEetrDistribute(EtrEntrust etrEntrust);
+
+    void deleteEtrDistributeInterfTmp(@Param("entrustId") String entrustId);
 }

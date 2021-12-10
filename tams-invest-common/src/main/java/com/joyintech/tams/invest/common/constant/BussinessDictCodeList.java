@@ -860,7 +860,7 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     /**
      * 商业银行柜台市场
      */
-    交易场所_商业银行柜台市场(BussinessDictCode.交易场所, "04", "商业银行柜台市场"),
+    交易场所_商业银行柜台市场(BussinessDictCode.交易场所, "02", "商业银行柜台市场"),
     /**
      * 机构间私募系统
      */
@@ -957,6 +957,10 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 待审批
      */
     委托状态_流程中(BussinessDictCode.委托状态,"08","流程中"),
+    /**
+     * 待分发
+     */
+    委托状态_待分发(BussinessDictCode.委托状态,"09","待分发"),
 
     /**
      * 已退回
@@ -5212,6 +5216,10 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 报价方式_请求报价
      */
     报价方式_请求报价(BussinessDictCode.报价方式, "02", "请求报价"),
+    /**
+     * 报价方式_登记报价
+     */
+    报价方式_登记报价(BussinessDictCode.报价方式, "04", "登记报价"),
     /**
      * 清算类型_净额清算
      */

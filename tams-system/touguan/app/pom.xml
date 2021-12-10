@@ -164,6 +164,19 @@
 			</exclusions>
 		</dependency>
 
+		<!--银行间-->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>tams-cfets</artifactId>
+			<version>3.0.4</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>tams-touguan</finalName>
@@ -213,18 +226,6 @@
 			</resource>
 			<resource>
 				<directory>src/main/resources</directory>
-				<includes>
-					<include>**/*.xml</include>
-					<include>**/*.txt</include>
-					<include>**/*.png</include>
-					<include>**/*.properties</include>
-					<include>**/*.ini</include>
-					<include>**/*.yml</include>
-					<include>**/*.js</include>
-					<include>**/*.html</include>
-					<include>**/*.xls</include>
-				</includes>
-				<filtering>false</filtering>
 			</resource>
 		</resources>
 	</build>

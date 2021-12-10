@@ -153,7 +153,12 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
      * 组合分配信息
      */
     private List<CfetsBondDealDialogueQuoteDto> cfetsBondDealDialogueQuoteDtoList;
-    
+
+    private BigDecimal dealFeeAmt;
+
+    private BigDecimal settFeeAmt;
+
+    private String distribution;
     
     public String getPortfolioId() {
 		return portfolioId;
@@ -537,5 +542,29 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
 
     public void setIsDzh(String isDzh) {
         this.isDzh = isDzh;
+    }
+
+    public BigDecimal getDealFeeAmt() {
+        return dealFeeAmt;
+    }
+
+    public void setDealFeeAmt(BigDecimal dealFeeAmt) {
+        this.dealFeeAmt = dealFeeAmt;
+    }
+
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
+    }
+
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
+    }
+
+    public String getDistribution() {
+        return distribution;
+    }
+
+    public void setDistribution(String distribution) {
+        this.distribution = distribution;
     }
 }

@@ -16,12 +16,16 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="CB_FPRICE_AMT" property="cbFpriceAmt" jdbcType="DECIMAL" />
         <result column="SC_FPRICE_AMT" property="scFpriceAmt" jdbcType="DECIMAL" />
+        <result column="DEAL_FEE_AMT" property="dealFeeAmt" jdbcType="DECIMAL" />
+        <result column="SETT_FEE_AMT" property="settFeeAmt" jdbcType="DECIMAL" />
+        <result column="DIP_TYPE" property="dipType" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         QUOTE_ID QUOTE_ID, VERSION VERSION, ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID, 
         SHARE_AMT SHARE_AMT, FPRICE_AMT FPRICE_AMT, REMARK REMARK, CREATE_USER CREATE_USER, 
         CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
-        CB_FPRICE_AMT CB_FPRICE_AMT, SC_FPRICE_AMT SC_FPRICE_AMT
+        CB_FPRICE_AMT CB_FPRICE_AMT, SC_FPRICE_AMT SC_FPRICE_AMT, DEAL_FEE_AMT DEAL_FEE_AMT,
+        SETT_FEE_AMT SETT_FEE_AMT, DIP_TYPE DIP_TYPE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -52,12 +56,14 @@
             PORTFOLIO_ID, SHARE_AMT, FPRICE_AMT, 
             REMARK, CREATE_USER, CREATE_TIME, 
             CREATE_DEPT, UPDATE_USER, UPDATE_TIME, 
-            CB_FPRICE_AMT, SC_FPRICE_AMT)
+            CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT,
+            SETT_FEE_AMT, DIP_TYPE)
         values (#{quoteId,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{entrustId,jdbcType=VARCHAR}, 
             #{portfolioId,jdbcType=VARCHAR}, #{shareAmt,jdbcType=DECIMAL}, #{fpriceAmt,jdbcType=DECIMAL}, 
             #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{createDept,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{cbFpriceAmt,jdbcType=DECIMAL}, #{scFpriceAmt,jdbcType=DECIMAL})
+            #{cbFpriceAmt,jdbcType=DECIMAL}, #{scFpriceAmt,jdbcType=DECIMAL}, #{dealFeeAmt,jdbcType=DECIMAL},
+            #{settFeeAmt,jdbcType=DECIMAL}, #{dipType,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteEtrReHis" >
         insert into IBU_QUOTE_ETR_RE_HIS
@@ -104,6 +110,15 @@
             <if test="scFpriceAmt != null" >
                 SC_FPRICE_AMT,
             </if>
+            <if test="dealFeeAmt != null" >
+                DEAL_FEE_AMT,
+            </if>
+            <if test="settFeeAmt != null" >
+                SETT_FEE_AMT,
+            </if>
+            <if test="dipType != null" >
+                DIP_TYPE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="quoteId != null" >
@@ -148,15 +163,24 @@
             <if test="scFpriceAmt != null" >
                 #{scFpriceAmt,jdbcType=DECIMAL},
             </if>
+            <if test="dealFeeAmt != null" >
+                #{dealFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeAmt != null" >
+                #{settFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dipType != null" >
+                #{dipType,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertHisByBasicInfo" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteEtrReHis" >
         insert into IBU_QUOTE_ETR_RE_HIS(QUOTE_ID, VERSION, ENTRUST_ID, PORTFOLIO_ID, SHARE_AMT, 
         FPRICE_AMT, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, UPDATE_USER, UPDATE_TIME, 
-        CB_FPRICE_AMT, SC_FPRICE_AMT)
+        CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT, SETT_FEE_AMT, DIP_TYPE)
         select QUOTE_ID, VERSION, ENTRUST_ID, PORTFOLIO_ID, SHARE_AMT, 
             FPRICE_AMT, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
-            CB_FPRICE_AMT, SC_FPRICE_AMT
+            CB_FPRICE_AMT, SC_FPRICE_AMT, DEAL_FEE_AMT, SETT_FEE_AMT, DIP_TYPE
              from IBU_QUOTE_ETR_RE
              where 1 = 1 and QUOTE_ID = #{quoteId,jdbcType=VARCHAR} and VERSION = #{version,jdbcType=DECIMAL} and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </insert>
@@ -187,6 +211,15 @@
             <if test="scFpriceAmt != null" >
                 SC_FPRICE_AMT = #{scFpriceAmt,jdbcType=DECIMAL},
             </if>
+            <if test="dealFeeAmt != null" >
+                DEAL_FEE_AMT = #{dealFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="settFeeAmt != null" >
+                SETT_FEE_AMT = #{settFeeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dipType != null" >
+                DIP_TYPE = #{dipType,jdbcType=VARCHAR},
+            </if>
         </set>
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
           and VERSION = #{version,jdbcType=DECIMAL}
@@ -201,7 +234,10 @@
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             CB_FPRICE_AMT = #{cbFpriceAmt,jdbcType=DECIMAL},
-            SC_FPRICE_AMT = #{scFpriceAmt,jdbcType=DECIMAL}
+            SC_FPRICE_AMT = #{scFpriceAmt,jdbcType=DECIMAL},
+            DEAL_FEE_AMT = #{dealFeeAmt,jdbcType=DECIMAL},
+            SETT_FEE_AMT = #{settFeeAmt,jdbcType=DECIMAL},
+            DIP_TYPE = #{dipType,jdbcType=VARCHAR}
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
           and VERSION = #{version,jdbcType=DECIMAL}
           and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}

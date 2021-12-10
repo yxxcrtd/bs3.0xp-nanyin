@@ -1,0 +1,1 @@
+ update cfg_datatable_show set iskey=1 where dtcode='ETRINFOS' and pagecode='CfetsEtrBondInfo' and colcode='entrustId';

@@ -291,7 +291,9 @@ public class TrdCommonBaseService extends BaseService {
     	ArrayList<BigDecimal> wflPrinAmts = trdCommonBaseMapper.queryWflPrinAmt(map);
     	BigDecimal wflPrinAmt = BigDecimal.ZERO;
     	for(BigDecimal temp: wflPrinAmts) {
-    		wflPrinAmt = wflPrinAmt.add(temp);
+    	    if(StringUtil.isNotEmpty(temp)){
+                wflPrinAmt = wflPrinAmt.add(temp);
+            }
     	}
 		return wflPrinAmt;
 	};

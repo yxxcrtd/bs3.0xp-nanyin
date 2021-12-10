@@ -10,12 +10,15 @@
 
 package com.joyintech.service.bankuplink.common.dao;
 
+import com.joyintech.service.bankuplink.common.dto.TrdConfirmMatchDto;
+import com.joyintech.service.bankuplink.common.dto.TrdConfirmRegAndIbuInfoDto;
 import com.joyintech.tams.common.base.entity.InterfOpicsTradRepo;
 import com.joyintech.tams.common.base.entity.InterfTradRepoasst;
 import com.joyintech.tams.invest.common.dto.cstp.InterfTradSecdealDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -147,4 +150,29 @@ public interface CstpTradeMapper {
     String getIsDzh(@Param("quoteId") String quoteId);
 
     int getPtlByOurinstitutioncode(@Param("ourinstitutioncode") String ourinstitutioncode);
+    /**
+     * 根据成交编号，查询下行成交匹配关系
+     */
+    TrdConfirmMatchDto selectMatchDtoByExecId(@Param("quoteid") String quoteid);
+    /**
+     * 根据登记编号，查询登记信息
+     */
+    List<TrdConfirmRegAndIbuInfoDto> selectRegDtoByPrimaryKey(Map<String, Object> map);
+    /**
+     * 根据报价编号，查询报价信息
+     */
+    TrdConfirmRegAndIbuInfoDto selectIbuDtoByPrimaryKey(@Param("quoteId") String quoteId);
+    /**
+     * 新建下行成交匹配关系
+     * @param record
+     * @return
+     */
+    int insertTrdQutoMatchInfo(TrdConfirmMatchDto record);
+    /**
+     * 更新下行成交匹配关系
+     * @param record
+     * @return
+     */
+    int updateTrdQutoMatchInfo(TrdConfirmMatchDto record);
+
 }

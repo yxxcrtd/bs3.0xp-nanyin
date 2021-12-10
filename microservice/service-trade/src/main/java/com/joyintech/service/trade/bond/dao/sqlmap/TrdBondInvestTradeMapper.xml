@@ -1098,6 +1098,8 @@
         <!-- 可能存在多条规则  20210617 yzg start -->
       left join (select FINPROD_ID, max(eff_date) as EFF_DATE
                       from FIN_CASH_CALC_RULE
+        where   FINPROD_TYPE2 = #{finprodType2}
+                and IS_INITIAL = #{YES_NO_Y}
                      group by FINPROD_ID) T1
        		on T1.FINPROD_ID = A.FINPROD_ID 
        <!-- 可能存在多条规则  20210617 yzg end -->

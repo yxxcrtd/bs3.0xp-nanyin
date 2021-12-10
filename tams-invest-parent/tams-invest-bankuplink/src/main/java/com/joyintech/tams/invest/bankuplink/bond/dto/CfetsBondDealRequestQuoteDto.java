@@ -10,11 +10,6 @@
 
 package com.joyintech.tams.invest.bankuplink.bond.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -22,6 +17,10 @@ import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.invest.bankuplink.bond.validator.CfetsBondDealRequestQuoteDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 请求报价dto
@@ -121,31 +120,45 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
      * 业务编号
      */
     private String businessId;
-    /**
-     * 证券账户
-     */
-    private String secManageAcctId;
 
     /**
-     * 组合系列
+     * 结算服务费
      */
-    private String portfolioSeries;
+    private BigDecimal  settFeeAmt;
 
-    public String getPortfolioSeries() {
-        return portfolioSeries;
-    }
+    private BigDecimal ourFpriceAmt;
 
-    public void setPortfolioSeries(String portfolioSeries) {
-        this.portfolioSeries = portfolioSeries;
-    }
+    private BigDecimal lendinFpriceAmt;
 
-    public String getSecManageAcctId() {
-        return secManageAcctId;
-    }
+    private BigDecimal saleinFpriceAmt;
 
-    public void setSecManageAcctId(String secManageAcctId) {
-        this.secManageAcctId = secManageAcctId;
-    }
+    private BigDecimal ourIntAmt;
+
+    private BigDecimal lendinIntAmt;
+
+    private BigDecimal saleinIntAmt;
+
+    private BigDecimal sellAbleNum;
+
+
+    private Date theoreticalExerciseDate;
+
+    /**
+     * 报价方式(登记)
+     */
+    private String quoteStyle;
+
+    private String calculateField;
+
+    private String finprodAbbr;
+
+    private String settleSpreedCode;
+
+    /**
+     * 组合分配方式
+     */
+    private String distribution;
+
 
     public String getBusinessId() {
         return businessId;
@@ -161,24 +174,6 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
 
     public void setFileArray(List<SysUploadFileInfo> fileArray) {
         this.fileArray = fileArray;
-    }
-
-    /**
-     * 获取 quoteId
-     * 
-     * @return quoteId.
-     */
-    public String getQuoteId() {
-        return quoteId;
-    }
-
-    /**
-     * 设置 quoteId
-     * 
-     * @param quoteId quoteId
-     */
-    public void setQuoteId(String quoteId) {
-        this.quoteId = quoteId;
     }
 
     /**
@@ -486,5 +481,122 @@ public class CfetsBondDealRequestQuoteDto extends CfetsBondDealEntrustOrderDto i
 
     public void setSecManageAvailablePosition(BigDecimal secManageAvailablePosition) {
         this.secManageAvailablePosition = secManageAvailablePosition;
+    }
+
+    public BigDecimal getSettFeeAmt() {
+        return settFeeAmt;
+    }
+
+    public void setSettFeeAmt(BigDecimal settFeeAmt) {
+        this.settFeeAmt = settFeeAmt;
+    }
+
+    public BigDecimal getOurFpriceAmt() {
+        return ourFpriceAmt;
+    }
+
+    public void setOurFpriceAmt(BigDecimal ourFpriceAmt) {
+        this.ourFpriceAmt = ourFpriceAmt;
+    }
+
+    public BigDecimal getLendinFpriceAmt() {
+        return lendinFpriceAmt;
+    }
+
+    public void setLendinFpriceAmt(BigDecimal lendinFpriceAmt) {
+        this.lendinFpriceAmt = lendinFpriceAmt;
+    }
+
+    public BigDecimal getSaleinFpriceAmt() {
+        return saleinFpriceAmt;
+    }
+
+    public void setSaleinFpriceAmt(BigDecimal saleinFpriceAmt) {
+        this.saleinFpriceAmt = saleinFpriceAmt;
+    }
+
+    public BigDecimal getOurIntAmt() {
+        return ourIntAmt;
+    }
+
+    public void setOurIntAmt(BigDecimal ourIntAmt) {
+        this.ourIntAmt = ourIntAmt;
+    }
+
+    public BigDecimal getLendinIntAmt() {
+        return lendinIntAmt;
+    }
+
+    public void setLendinIntAmt(BigDecimal lendinIntAmt) {
+        this.lendinIntAmt = lendinIntAmt;
+    }
+
+    public BigDecimal getSaleinIntAmt() {
+        return saleinIntAmt;
+    }
+
+    public void setSaleinIntAmt(BigDecimal saleinIntAmt) {
+        this.saleinIntAmt = saleinIntAmt;
+    }
+
+    public BigDecimal getSellAbleNum() {
+        return sellAbleNum;
+    }
+
+    public void setSellAbleNum(BigDecimal sellAbleNum) {
+        this.sellAbleNum = sellAbleNum;
+    }
+
+    public Date getTheoreticalExerciseDate() {
+        return theoreticalExerciseDate;
+    }
+
+    public void setTheoreticalExerciseDate(Date theoreticalExerciseDate) {
+        this.theoreticalExerciseDate = theoreticalExerciseDate;
+    }
+
+    public String getQuoteStyle() {
+        return quoteStyle;
+    }
+
+    public void setQuoteStyle(String quoteStyle) {
+        this.quoteStyle = quoteStyle;
+    }
+
+    @Override
+    public String getCalculateField() {
+        return calculateField;
+    }
+
+    @Override
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField;
+    }
+
+    @Override
+    public String getFinprodAbbr() {
+        return finprodAbbr;
+    }
+
+    @Override
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
+    }
+
+
+    public String getSettleSpreedCode() {
+        return settleSpreedCode;
+    }
+
+    public void setSettleSpreedCode(String settleSpreedCode) {
+        this.settleSpreedCode = settleSpreedCode;
+    }
+
+    public String getDistribution() {
+        return distribution;
+    }
+
+    public void setDistribution(String distribution) {
+        this.distribution = distribution;
     }
 }

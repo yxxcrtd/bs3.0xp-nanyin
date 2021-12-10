@@ -10,23 +10,6 @@
 
 package com.joyintech.tams.invest.product.productelement.netvalueproduct.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
-import com.joyintech.tams.component.business.prod.dto.BussFinProductFundAccountInfoDto;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -34,18 +17,12 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.prod.dto.BussFinProductFeeInfoDto;
-//import org.json.JSONObject;
-import com.joyintech.tams.component.business.report.prod.dto.BussRepFinProductInfoDto;
+import com.joyintech.tams.component.business.prod.dto.BussFinProductFundAccountInfoDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -60,6 +37,22 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+//import org.json.JSONObject;
 
 /**
  * 产品信息新建
@@ -310,55 +303,55 @@ public class FinNetValueProductBuild002Controller extends BaseController {
 
         //开放式 的产品 是否设置最短持有期限 和 最短持有期限（天） 必输 yjm start 20190807
         List<ValidMessage> errorList = new ArrayList<>();
-        BussRepFinProductInfoDto repFinProductInfoDto = dto.getBussRepFinProductInfoDto();
-        if (StringUtil.isNotEmpty(repFinProductInfoDto)){
-            if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
-                if (StringUtil.isEmpty(repFinProductInfoDto.getIsShortTerm())){
-                    errorList.add(new ValidMessage("bussRepFinProductInfoDto.isShortTerm", this.getMessage("BUSS_COM_E_0038",
-                            this.getMessage("BussRepFinProductInfo.isShortTerm"))));
-                }else {
-                    //modify by wm 增加只有当是否设置最短持有期限为是时，最短持有期限(天)才必输
-                    if (!StringUtil.isNotEmpty(repFinProductInfoDto.getShortTerm())&&StringUtil.equals(repFinProductInfoDto.getIsShortTerm(), DictCodeList.是否_中债_是.getValue())){
-                        errorList.add(new ValidMessage("bussRepFinProductInfoDto.shortTerm", this.getMessage("BUSS_COM_E_0038",
-                                this.getMessage("BussRepFinProductInfo.shortTerm"))));
-                    }
-                    if (!StringUtil.isNotEmpty(repFinProductInfoDto.getIsFreeRedem()) && StringUtil.equals(repFinProductInfoDto.getIsShortTerm(), DictCodeList.是否_中债_是.getValue())){
-                        errorList.add(new ValidMessage("bussRepFinProductInfoDto.isFreeRedem", this.getMessage("BUSS_COM_E_0038",
-                                this.getMessage("BussRepFinProductInfo.isFreeRedem"))));
-                    }
-                }
-
-            }
-
-            if(StringUtil.isNotEmpty(dto.getProfitType()) && StringUtil.isNotEmpty(dto.getOperationType()) && StringUtil.isNotEmpty(repFinProductInfoDto.getRepOperateMode())){
-                if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
-//                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
-//                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式非净值型.getValue())){
+//        BussRepFinProductInfoDto repFinProductInfoDto = dto.getBussRepFinProductInfoDto();
+//        if (StringUtil.isNotEmpty(repFinProductInfoDto)){
+//            if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
+//                if (StringUtil.isEmpty(repFinProductInfoDto.getIsShortTerm())){
+//                    errorList.add(new ValidMessage("bussRepFinProductInfoDto.isShortTerm", this.getMessage("BUSS_COM_E_0038",
+//                            this.getMessage("BussRepFinProductInfo.isShortTerm"))));
+//                }else {
+//                    //modify by wm 增加只有当是否设置最短持有期限为是时，最短持有期限(天)才必输
+//                    if (!StringUtil.isNotEmpty(repFinProductInfoDto.getShortTerm())&&StringUtil.equals(repFinProductInfoDto.getIsShortTerm(), DictCodeList.是否_中债_是.getValue())){
+//                        errorList.add(new ValidMessage("bussRepFinProductInfoDto.shortTerm", this.getMessage("BUSS_COM_E_0038",
+//                                this.getMessage("BussRepFinProductInfo.shortTerm"))));
+//                    }
+//                    if (!StringUtil.isNotEmpty(repFinProductInfoDto.getIsFreeRedem()) && StringUtil.equals(repFinProductInfoDto.getIsShortTerm(), DictCodeList.是否_中债_是.getValue())){
+//                        errorList.add(new ValidMessage("bussRepFinProductInfoDto.isFreeRedem", this.getMessage("BUSS_COM_E_0038",
+//                                this.getMessage("BussRepFinProductInfo.isFreeRedem"))));
+//                    }
+//                }
+//
+//            }
+//
+//            if(StringUtil.isNotEmpty(dto.getProfitType()) && StringUtil.isNotEmpty(dto.getOperationType()) && StringUtil.isNotEmpty(repFinProductInfoDto.getRepOperateMode())){
+//                if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
+////                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
+////                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式非净值型.getValue())){
+////                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+////                        }
+////                    }
+//                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue()) ||
+//                            StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
+//                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式净值型.getValue())){
 //                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
 //                        }
 //                    }
-                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue()) ||
-                            StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
-                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式净值型.getValue())){
-                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
-                        }
-                    }
-                }
-                if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_封闭式.getValue())){
-//                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
-//                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式非净值型.getValue())){
+//                }
+//                if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_封闭式.getValue())){
+////                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
+////                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式非净值型.getValue())){
+////                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+////                        }
+////                    }
+//                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue()) ||
+//                            StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
+//                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式净值型.getValue())){
 //                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
 //                        }
 //                    }
-                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_净值型.getValue()) ||
-                            StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
-                        if (!StringUtil.equals(repFinProductInfoDto.getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式净值型.getValue())){
-                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
-                        }
-                    }
-                }
-            }
-        }
+//                }
+//            }
+//        }
         
         // add by zhangJin 20191022 start 校验：封闭式产品 浮动管理费 首次计提日 只能 产品到期日 或 产品到期日-1
         if (dto.getBussFinProductFloatFeeDto() != null

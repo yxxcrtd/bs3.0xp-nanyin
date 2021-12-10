@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.invest.batch.cfetsentrust.dao.CfetsEntrustStatusMapper">
+
+	<select id="selectEntrustIds" resultType="com.joyintech.tams.invest.batch.cfetsentrust.dto.CfetsEntrustClosePosEtrReqDto">
+		SELECT ENTRUST_ID  as closeId,ps as ps
+		FROM ETR_ENTRUST
+		WHERE
+		ENTRUST_ID IN ( SELECT ENTRUST_ID FROM ETR_ENTRUST WHERE ENTRUST_STATUS IN ( #{ENTRUST_STATUS_01}, #{ENTRUST_STATUS_02}, #{ENTRUST_STATUS_03}, #{ENTRUST_STATUS_05},#{ENTRUST_STATUS_08},#{ENTRUST_STATUS_07} )
+		<if test="sysDate != null and sysDate != ''">
+			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
+		</if>
+		and portfolio_id='JZHCP-xq005'
+		)
+	</select>
+
+	<update id="updateEntrustStatus">
+	UPDATE ETR_ENTRUST
+	SET ENTRUST_STATUS = '06'
+	WHERE
+		ENTRUST_ID IN ( SELECT ENTRUST_ID FROM ETR_ENTRUST WHERE ENTRUST_STATUS IN (  #{ENTRUST_STATUS_01}, #{ENTRUST_STATUS_02}, #{ENTRUST_STATUS_03}, #{ENTRUST_STATUS_05},#{ENTRUST_STATUS_08},#{ENTRUST_STATUS_07} )
+		<if test="sysDate != null and sysDate != ''">
+			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
+		</if>
+		and portfolio_id='JZHCP-xq005'
+		)
+	</update>
+	<update id="updateDistributeStatus">
+		UPDATE ETR_DISTRIBUTE
+		SET REC_STATUS = '06'
+		WHERE
+		ENTRUST_ID IN ( SELECT ENTRUST_ID FROM ETR_ENTRUST WHERE ENTRUST_STATUS IN (  #{ENTRUST_STATUS_01}, #{ENTRUST_STATUS_02}, #{ENTRUST_STATUS_03}, #{ENTRUST_STATUS_05},#{ENTRUST_STATUS_08},#{ENTRUST_STATUS_07})
+		<if test="sysDate != null and sysDate != ''">
+			<![CDATA[AND MDATE <= TO_DATE(#{sysDate},'YYYY-MM-DD')]]>
+		</if>
+		and portfolio_id='JZHCP-xq005'
+		)
+	</update>
+</mapper>

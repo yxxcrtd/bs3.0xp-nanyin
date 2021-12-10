@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.productelement.netvalueproduct.validator;
 
+import com.joyintech.framework.base.intf.Page;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -111,15 +112,6 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
             finNetValueProductBuild001Service.wflInFlowCheck(entity.getWorkflowId(), entity.getFinprodId(), validList);
         }
 
-        if (entity != null && entity.getBussRepFinProductInfoDto() != null) {
-
-            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepTruFeeRate())) {
-                validList.add(new ValidMessage("bussRepFinProductInfoDto.repTruFeeRate", this.getMessage("BUSS_COM_E_0038",
-                        this.getMessage("BussRepFinProductInfo.repTruFeeRate"))));
-            }
-
-        }
-
         if (StringUtil.isNotEmpty(entity.getFinprodMarketId())) {
             // 规则：代码(1~3位，第1位为大写字母，第2~3位为数字或大写字母)+销售渠道代码(1位大写字母)+品牌代码(1位大写字母)+年份(2位数字)+产品序号(4位数）
 //            Pattern pattern = Pattern.compile("^[A-Za-z]{1}[A-Za-z0-9]{0,2}[A-Za-z]{2}[0-9]{6}$");
@@ -205,14 +197,6 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 validList.add(new ValidMessage("finprodAbbr", getMessage("BUSS_COM_I_0017",
                     getMessage("FinProductScheduling002.prodAbbr"))));
             }
-        }
-
-        if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsFhxgcp())
-        		&& !StringUtil.equals("01", CacheUtil.getSysParam("SVR_IS_SUBSIDIARY"))) {
-            validList.add(new ValidMessage("bussRepFinProductInfoDto.isFhxgcp", getMessage("请输入新老产品标记")));
-        }
-        if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsYllccp())) {
-            validList.add(new ValidMessage("bussRepFinProductInfoDto.isYllccp", getMessage("请输入是否养老理财")));
         }
 
         //是否现金管理类产品 必填 开放式产品必输
@@ -870,50 +854,53 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
 //	        }
 //        }
         //add by yejiejie 2019-2-14 start
-        //净值化产品的募集要素中， 产品的募集币种在兑付本金及兑付收益币种的包含之中
-        if(StringUtil.isNotEmpty(entity.getCcy())){
-        	//add by wl 2019-4-2 start
-        	if(entity.getCcy().equals(entity.getBussRepFinProductInfoDto().getRepCashProfCcy())){
-        		if(StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepCashPrinCcy()) && StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepCashPrinCcy(), entity.getBussRepFinProductInfoDto().getRepCashProfCcy())){
-        			if(entity.getCcy().equals(entity.getBussRepFinProductInfoDto().getRepCashPrinCcy())){
 
-        			}else{
-        				validList.add(new ValidMessage("ccy", getMessage("产品的募集币种、兑付本金及兑付收益币种必须相同")));
-        			}
-        		}else{
-    				validList.add(new ValidMessage("ccy", getMessage("产品的募集币种、兑付本金及兑付收益币种必须相同")));
-    			}
-        	}else{
-				validList.add(new ValidMessage("ccy", getMessage("产品的募集币种、兑付本金及兑付收益币种必须相同")));
-			}
-        	//add by wl 2019-4-2 end
-        	//兑付本金币种
-        	/*String repCashPrinCcyFlag = "0";
-        	List<String> repCashPrinCcyList = StringUtil.splitToList(GlobalConstant.COMMA,
-                    entity.getBussRepFinProductInfoDto().getRepCashPrinCcy());
-        	for (int i = 0; i < repCashPrinCcyList.size(); i++) {
-				if(StringUtil.equals(repCashPrinCcyList.get(i),entity.getCcy())){
-					repCashPrinCcyFlag = "1";
-				}
-			}
-        	if(!StringUtil.equals("1",repCashPrinCcyFlag)){
-        		//兑付本金币种不包含募集币种
-        		validList.add(new ValidMessage("ccy", getMessage("FIN_PROD_E_0093")));
-        	}
-        	//兑付收益币种
-        	String repCashProfCcyFlag = "0";
-        	List<String> repCashProfCcyList = StringUtil.splitToList(GlobalConstant.COMMA,
-                    entity.getBussRepFinProductInfoDto().getRepCashProfCcy());
-        	for (int i = 0; i < repCashProfCcyList.size(); i++) {
-				if(StringUtil.equals(repCashProfCcyList.get(i),entity.getCcy())){
-					repCashProfCcyFlag = "1";
-				}
-			}
-        	if(!StringUtil.equals("1",repCashProfCcyFlag)){
-        		//兑付收益币种不包含募集币种
-        		validList.add(new ValidMessage("ccy", getMessage("FIN_PROD_E_0094")));
-        	}*/
-        }
+        //净值化产品的募集要素中， 产品的募集币种在兑付本金及兑付收益币种的包含之中
+        // add by zcw 中债画面元素已被注释 start
+//        if(StringUtil.isNotEmpty(entity.getCcy())){
+//        	//add by wl 2019-4-2 start
+//        	if(entity.getCcy().equals(entity.getBussRepFinProductInfoDto().getRepCashProfCcy())){
+//        		if(StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepCashPrinCcy()) && StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepCashPrinCcy(), entity.getBussRepFinProductInfoDto().getRepCashProfCcy())){
+//        			if(entity.getCcy().equals(entity.getBussRepFinProductInfoDto().getRepCashPrinCcy())){
+//
+//        			}else{
+//        				validList.add(new ValidMessage("ccy", getMessage("产品的募集币种、兑付本金及兑付收益币种必须相同")));
+//        			}
+//        		}else{
+//    				validList.add(new ValidMessage("ccy", getMessage("产品的募集币种、兑付本金及兑付收益币种必须相同")));
+//    			}
+//        	}else{
+//				validList.add(new ValidMessage("ccy", getMessage("产品的募集币种、兑付本金及兑付收益币种必须相同")));
+//			}
+//        	//add by wl 2019-4-2 end
+//        	//兑付本金币种
+//        	/*String repCashPrinCcyFlag = "0";
+//        	List<String> repCashPrinCcyList = StringUtil.splitToList(GlobalConstant.COMMA,
+//                    entity.getBussRepFinProductInfoDto().getRepCashPrinCcy());
+//        	for (int i = 0; i < repCashPrinCcyList.size(); i++) {
+//				if(StringUtil.equals(repCashPrinCcyList.get(i),entity.getCcy())){
+//					repCashPrinCcyFlag = "1";
+//				}
+//			}
+//        	if(!StringUtil.equals("1",repCashPrinCcyFlag)){
+//        		//兑付本金币种不包含募集币种
+//        		validList.add(new ValidMessage("ccy", getMessage("FIN_PROD_E_0093")));
+//        	}
+//        	//兑付收益币种
+//        	String repCashProfCcyFlag = "0";
+//        	List<String> repCashProfCcyList = StringUtil.splitToList(GlobalConstant.COMMA,
+//                    entity.getBussRepFinProductInfoDto().getRepCashProfCcy());
+//        	for (int i = 0; i < repCashProfCcyList.size(); i++) {
+//				if(StringUtil.equals(repCashProfCcyList.get(i),entity.getCcy())){
+//					repCashProfCcyFlag = "1";
+//				}
+//			}
+//        	if(!StringUtil.equals("1",repCashProfCcyFlag)){
+//        		//兑付收益币种不包含募集币种
+//        		validList.add(new ValidMessage("ccy", getMessage("FIN_PROD_E_0094")));
+//        	}*/
+//        }
+        // add by zcw 中债画面元素已被注释 end
         //add by yejiejie 2019-2-14 end
       //update zhangweiqi 资金账户不能为空，且至少有个托管户 begin
         /*if(StringUtil.isEmptyList(entity.getBussFinProductFundAccountInfoDto())){
@@ -1226,63 +1213,121 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 }
             }
         }
+        //获取对应画面的page add by lilan 20211123
+        Page page=CacheUtil.getPage("FinNetValueProductBuild002");
+        // 获取page中SYS_ELEMENT_CONTROL表配置的是否展示or隐藏画面元素。如果隐藏则跳过判断，如果展示则进入判断逻辑
+        if (null != page && null != page.getElementcontrol("bussRepFinProductInfoCommon") && page.getElementcontrol("bussRepFinProductInfoCommon").getIsShow()) {
 
-      //当发行方式为开放式时，校验产品运作模式不能为封闭式净值型和封闭式非净值型，反之不能为开放式净值型和开放式非净值型
-        if(StringUtil.equals(entity.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
-            if(StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(),DictCodeListExt2.产品运作模式_封闭式净值型.getValue()) ||
-                StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式非净值型.getValue())){
-                validList.add(
-                    new ValidMessage("bussRepFinProductInfoDto.repOperateMode",this.getMessage("FIN_PROD_E_0114",
-                        this.getMessage("FinProductBuild002.operationType"),this.getMessage("BussRepFinProductInfo.repOperateMode"))));
-            }
-        }
-        else if(StringUtil.equals(entity.getOperationType(), DictCodeList.开放类型_封闭式.getValue())){
-            if(StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(),DictCodeListExt2.产品运作模式_开放式净值型.getValue()) ||
-                StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式非净值型.getValue())){
-                validList.add(
-                    new ValidMessage("bussRepFinProductInfoDto.repOperateMode",this.getMessage("FIN_PROD_E_0115",
-                        this.getMessage("FinProductBuild002.operationType"),this.getMessage("BussRepFinProductInfo.repOperateMode"))));
-            }
-        }
-
-     // 2019年8月23日 魏鹏 add
-        //当产品运作模式选择“开放式净值型”和“开放式非净值型”时，开放模式为必填
-        if (StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto())) {
-            if ((DictCodeListExt2.产品运作模式_开放式净值型.getValue().equals(
-                entity.getBussRepFinProductInfoDto().getRepOperateMode())
-                 || DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(
-                     entity.getBussRepFinProductInfoDto().getRepOperateMode()))) {
-//                if (!StringUtil.isNotEmpty(
-//                    entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
-//                    validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
-//                        this.getMessage("FIN_PROD_E_0133")));
-//                }
-            }
-            else{
-                // 选择封闭式净值型和“封闭式非净值型”时，开放模式必须为空
-                if (StringUtil.isNotEmpty(
-                        entity.getBussRepFinProductInfoDto().getRepOperateMode()) && StringUtil.isNotEmpty(
-                    entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
-                    validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
-                        this.getMessage("FIN_PROD_E_0134")));
+          //当发行方式为开放式时，校验产品运作模式不能为封闭式净值型和封闭式非净值型，反之不能为开放式净值型和开放式非净值型
+            if(StringUtil.equals(entity.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
+                if(StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(),DictCodeListExt2.产品运作模式_封闭式净值型.getValue()) ||
+                    StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式非净值型.getValue())){
+                    validList.add(
+                        new ValidMessage("bussRepFinProductInfoDto.repOperateMode",this.getMessage("FIN_PROD_E_0114",
+                            this.getMessage("FinProductBuild002.operationType"),this.getMessage("BussRepFinProductInfo.repOperateMode"))));
                 }
             }
-        }
-        // 2019年8月23日 魏鹏 add end
+            else if(StringUtil.equals(entity.getOperationType(), DictCodeList.开放类型_封闭式.getValue())){
+                if(StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(),DictCodeListExt2.产品运作模式_开放式净值型.getValue()) ||
+                    StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式非净值型.getValue())){
+                    validList.add(
+                        new ValidMessage("bussRepFinProductInfoDto.repOperateMode",this.getMessage("FIN_PROD_E_0115",
+                            this.getMessage("FinProductBuild002.operationType"),this.getMessage("BussRepFinProductInfo.repOperateMode"))));
+                }
+            }
 
-        if (StringUtil.isNotEmpty(entity.getFirstSaleVdate())) {
-    		if(DateUtil.compareDate(entity.getFirstSaleVdate(),entity.getBussRepFinProductInfoDto().getRepRaisePstrdate()) < 0
-    				||DateUtil.compareDate(entity.getBussRepFinProductInfoDto().getRepRaisePenddate(),entity.getFirstSaleVdate())<0){
-                validList.add(new ValidMessage("firstSaleVdate",this.getMessage("FIN_PROD_E_0226")));
-    		}
-        }
+            // add by zcw 中债子画面已经check了 start
+    //     // 2019年8月23日 魏鹏 add
+    //        //当产品运作模式选择“开放式净值型”和“开放式非净值型”时，开放模式为必填
+    //        if (StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto())) {
+    //            if ((DictCodeListExt2.产品运作模式_开放式净值型.getValue().equals(
+    //                entity.getBussRepFinProductInfoDto().getRepOperateMode())
+    //                 || DictCodeListExt2.产品运作模式_开放式非净值型.getValue().equals(
+    //                     entity.getBussRepFinProductInfoDto().getRepOperateMode()))) {
+    ////                if (!StringUtil.isNotEmpty(
+    ////                    entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
+    ////                    validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
+    ////                        this.getMessage("FIN_PROD_E_0133")));
+    ////                }
+    //            }
+    //            else{
+    //                // 选择封闭式净值型和“封闭式非净值型”时，开放模式必须为空
+    //                if (StringUtil.isNotEmpty(
+    //                        entity.getBussRepFinProductInfoDto().getRepOperateMode()) && StringUtil.isNotEmpty(
+    //                    entity.getBussRepFinProductInfoDto().getRepOpenMode())) {
+    //                    validList.add(new ValidMessage("bussRepFinProductInfoDto.repOpenMode",
+    //                        this.getMessage("FIN_PROD_E_0134")));
+    //                }
+    //            }
+    //        }
+            // 2019年8月23日 魏鹏 add end
+        // add by zcw 中债子画面已经check了 end
+            if (StringUtil.isNotEmpty(entity.getFirstSaleVdate())) {
+                if(DateUtil.compareDate(entity.getFirstSaleVdate(),entity.getBussRepFinProductInfoDto().getRepRaisePstrdate()) < 0
+                        ||DateUtil.compareDate(entity.getBussRepFinProductInfoDto().getRepRaisePenddate(),entity.getFirstSaleVdate())<0){
+                    validList.add(new ValidMessage("firstSaleVdate",this.getMessage("FIN_PROD_E_0226")));
+                }
+            }
 
-        //目标客户类型
-        if ((StringUtil.equals(entity.getDealMode(), DictCodeList.处理模式_周期型.getValue())
-            || StringUtil.equals(entity.getDealMode(),DictCodeList.处理模式_普通.getValue()))
-            && entity.getBussRepFinProductInfoDto()!=null && !StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepInvestorType())) {
-            validList.add(new ValidMessage("bussFinProductSaleParamDto.investorType", this.getMessage("BUSS_COM_E_0038",
-                this.getMessage("BussRepFinProductInfo.repInvestorType"))));
+            //目标客户类型
+            if ((StringUtil.equals(entity.getDealMode(), DictCodeList.处理模式_周期型.getValue())
+                || StringUtil.equals(entity.getDealMode(),DictCodeList.处理模式_普通.getValue()))
+                && entity.getBussRepFinProductInfoDto()!=null && !StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepInvestorType())) {
+                validList.add(new ValidMessage("bussFinProductSaleParamDto.investorType", this.getMessage("BUSS_COM_E_0038",
+                    this.getMessage("BussRepFinProductInfo.repInvestorType"))));
+            }
+
+            //开放式 的产品 是否设置最短持有期限 和 最短持有期限（天） 必输 yjm start 20190807
+            if (StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto())){
+                if (StringUtil.equals(entity.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
+                    if (StringUtil.isEmpty(entity.getBussRepFinProductInfoDto().getIsShortTerm())){
+                        validList.add(new ValidMessage("bussRepFinProductInfoDto.isShortTerm", this.getMessage("BUSS_COM_E_0038",
+                                this.getMessage("BussRepFinProductInfo.isShortTerm"))));
+                    }else {
+                        //modify by wm 增加只有当是否设置最短持有期限为是时，最短持有期限(天)才必输
+                        if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getShortTerm())&&StringUtil.equals(entity.getBussRepFinProductInfoDto().getIsShortTerm(), DictCodeList.是否_中债_是.getValue())){
+                            validList.add(new ValidMessage("bussRepFinProductInfoDto.shortTerm", this.getMessage("BUSS_COM_E_0038",
+                                    this.getMessage("BussRepFinProductInfo.shortTerm"))));
+                        }
+                        if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getIsFreeRedem()) && StringUtil.equals(entity.getBussRepFinProductInfoDto().getIsShortTerm(), DictCodeList.是否_中债_是.getValue())){
+                            validList.add(new ValidMessage("bussRepFinProductInfoDto.isFreeRedem", this.getMessage("BUSS_COM_E_0038",
+                                    this.getMessage("BussRepFinProductInfo.isFreeRedem"))));
+                        }
+                    }
+
+                }
+
+                if(StringUtil.isNotEmpty(entity.getProfitType()) && StringUtil.isNotEmpty(entity.getOperationType()) && StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepOperateMode())){
+                    if (StringUtil.equals(entity.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
+//                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
+//                        if (!StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式非净值型.getValue())){
+//                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+//                        }
+//                    }
+                        if (StringUtil.equals(entity.getProfitType(), DictCodeList.收益类型_净值型.getValue()) ||
+                                StringUtil.equals(entity.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
+                            if (!StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(), DictCodeListExt2.产品运作模式_开放式净值型.getValue())){
+                                validList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+                            }
+                        }
+                    }
+                    if (StringUtil.equals(entity.getOperationType(), DictCodeList.开放类型_封闭式.getValue())){
+//                    if (StringUtil.equals(dto.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
+//                        if (!StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式非净值型.getValue())){
+//                            errorList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+//                        }
+//                    }
+                        if (StringUtil.equals(entity.getProfitType(), DictCodeList.收益类型_净值型.getValue()) ||
+                                StringUtil.equals(entity.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
+                            if (!StringUtil.equals(entity.getBussRepFinProductInfoDto().getRepOperateMode(), DictCodeListExt2.产品运作模式_封闭式净值型.getValue())){
+                                validList.add(new ValidMessage("bussRepFinProductInfoDto.operationType",this.getMessage("FIN_PROD_E_0301")));
+                            }
+                        }
+                    }
+                }
+            }
+            
+            
         }
         //到期日与清盘日判断
         if(StringUtil.isNotEmpty(entity.getLiquidationDate())&&StringUtil.isNotEmpty(entity.getMdate())){

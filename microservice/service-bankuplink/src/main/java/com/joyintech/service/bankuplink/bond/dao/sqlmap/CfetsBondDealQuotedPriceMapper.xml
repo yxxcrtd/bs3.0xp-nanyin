@@ -583,7 +583,9 @@
 	        A.PORTFOLIO_ID AS portfolioId,
 	        B.PORTFOLIO_NAME AS portfolioName,
 	        (NVL(A.ENTRUST_NUM,0) /100 -NVL(T5.FINISH_AMT, 0)/10000 ) AS entrustAvaNum, <!--委托完成度更新时 以元为单位-->
-	         IQER.SHARE_AMT/100 as avaNum
+	         IQER.SHARE_AMT/100 as avaNum,
+			IQER.DEAL_FEE_AMT DEAL_FEE_AMT,
+			IQER.SETT_FEE_AMT SETT_FEE_AMT
         FROM
         IBU_QUOTE_ETR_RE  IQER
         LEFT JOIN ETR_ENTRUST A ON  A.ENTRUST_ID = IQER.ENTRUST_ID
@@ -611,7 +613,9 @@
 	        A.PORTFOLIO_ID AS portfolioId,
 	        B.PORTFOLIO_NAME AS portfolioName,
 	        (NVL(A.ENTRUST_NUM,0) /100 -NVL(T5.FINISH_AMT, 0)/10000 ) AS entrustAvaNum,  <!--委托完成度更新时 以元为单位-->
-	         IQER.SHARE_AMT/100 as avaNum
+	         IQER.SHARE_AMT/100 as avaNum,
+			IQER.DEAL_FEE_AMT DEAL_FEE_AMT,
+			IQER.SETT_FEE_AMT SETT_FEE_AMT
         FROM
         WFL_IBU_QUOTE_ETR_RE  IQER
         LEFT JOIN ETR_ENTRUST A ON  A.ENTRUST_ID = IQER.ENTRUST_ID

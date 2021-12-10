@@ -919,6 +919,7 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	交易状态_修改(DictCode.交易状态,"02","修改"),
 	交易状态_撤销(DictCode.交易状态,"03","撤销"),
 	交易场所_银行间(DictCode.交易场所,"01","银行间"),
+	交易场所_商业银行柜台(DictCode.交易场所,"02","商业银行柜台"),
 	交易场所_上海证券交易所(DictCode.交易场所,"03","上海证券交易所"),
 	交易场所_深圳证券交易所(DictCode.交易场所,"04","深圳证券交易所"),
 	交易场所_机构间私募系统(DictCode.交易场所,"05","机构间私募系统"),
@@ -1913,6 +1914,8 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
     共通业务类型_手动释放头寸(DictCode.共通业务类型,"MR1","手动释放头寸"),
     共通业务类型_规划策略池维护(DictCode.共通业务类型, "PRDPLAN06", "规划策略池维护"),
 	// 从DictCodeList.java移过来，超过65535的限制了 end
+	登记资产类型_债券(DictCode.登记资产类型,"01","债券"),
+	登记资产类型_质押式回购(DictCode.登记资产类型,"02","质押式回购"),
 	;
 
     /**

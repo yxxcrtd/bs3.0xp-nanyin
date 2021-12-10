@@ -20,10 +20,10 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.invest.interf.dto.InterfStatus;
 import com.joyintech.tams.invest.interf.service.InterfaceLogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import java.util.List;
  * @see InterfaceLog001Controller
  * @since 1.0
  */
-@Controller
+@RestController
 @PageId("InterfaceLog001")
 @RequestMapping("/system/log/InterfaceLog001")
 public class InterfaceLog001Controller extends BaseController{

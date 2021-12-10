@@ -20,6 +20,7 @@ import java.util.Map;
  */
 @Lazy(false)
 @Component
+@Lazy(false)
 public class SpringUtil implements ApplicationContextAware {
 
     /**
