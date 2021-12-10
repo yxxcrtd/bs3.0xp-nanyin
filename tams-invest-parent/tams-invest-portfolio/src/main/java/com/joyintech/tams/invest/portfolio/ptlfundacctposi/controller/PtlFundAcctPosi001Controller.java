@@ -20,6 +20,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.portfolio.ptlfundacctposi.dto.PtlFundAcctPosiDto;
 import com.joyintech.tams.invest.portfolio.ptlfundacctposi.service.PtlFundAcctPosiService;
 
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 
@@ -54,13 +56,14 @@ public class PtlFundAcctPosi001Controller extends BaseController{
      */
     @Override
     public String init(Model model){
-    	this.setSelectOptionToModel(model, DictCode.资金账户类型);
+    	this.setSelectOptionToModel(model, DictCode.资金账户类型,DictCode.是否);
         /*this.setSelectOptionToModel(model, BussinessDictCode.资金账户类型,BussinessDictCode.交易流程状态);*/
         Date sysDate = DateUtil.platDateFromCache();
         String morenDate = DateUtil.format(sysDate);
         // update by caiqun 20200819 东莞 工单YHZGCPB20200814003  start
         //model.addAttribute("sysDate", morenDate);
         model.addAttribute("sysDate", morenDate + " - " + morenDate);
+        model.addAttribute("YES_OR_NO_YES", DictCodeListExt1.是否_是.getValue());
         // update by caiqun 20200819 东莞 工单YHZGCPB20200814003  end
         return super.init(model);
     }
@@ -105,5 +108,19 @@ public class PtlFundAcctPosi001Controller extends BaseController{
         return ptlFundAcctPosiService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 
+    }
+
+    /**
+     * 获取托管机构
+     * @return 托管机构下拉框集合
+     * @see
+     * @since 1.0
+     */
+
+    @ResponseBody
+    @RequestMapping("/getOriginalInterestHolder")
+    public Page<SelectOptionDto> getOriginalInterestHolder(){
+        Map<String,Object> map = RequestUtil.getPageParam();
+        return ptlFundAcctPosiService.getOriginalInterestHolder(map);
     }
 }

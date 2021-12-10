@@ -87,4 +87,14 @@ public interface PtlFundAcctPosiMapper {
 	List<PtlFundAcctPosiDto> select2(Map<String, Object> pageParam);
 	
 	List<String> getAllCcy(Map<String,Object> pageParam);
+
+
+	/**
+	 * 获得市场机构信息
+	 * <功能详细描述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	List<SelectOptionDto> getOriginalInterestHolder(Map<String, Object> paramMap);
 }
