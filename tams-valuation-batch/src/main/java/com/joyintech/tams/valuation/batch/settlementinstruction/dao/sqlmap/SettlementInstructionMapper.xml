@@ -59,6 +59,8 @@
 		    AND C.BUSI_TYPE = D.BUSI_TYPE
 		    AND B.HAPPEN_DATE = D.SETTLE_DATE
 		    AND D.ORDER_STATUS != #{orderStatus}
+		    <!-- add by yinya 增加结算状态的条件 -->
+		    AND D.SETTLE_STATUS=#{settleStatus}
 		    )
             <!-- add jinmaodong 20190801 清算款增加四级科目设计变更 START -->
         LEFT JOIN TRD_PRODUCT_DEAL DEAL_ADD
@@ -85,6 +87,7 @@
 		<if test="IS_SUB_BOOKSET != null and IS_SUB_BOOKSET != ''">
 			AND A.IS_SUB_BOOKSET = #{IS_SUB_BOOKSET}
 		</if>
+
 
 	</select>
 	

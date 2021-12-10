@@ -101,6 +101,8 @@ public class RevDealBookProcessorService {
                     dto.setSeqno(dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型));
                     // 入账日期 DTO.入账日期
                     dto.setBookDate(rev.getBookDate());
+                    dto.setHappenDate(rev.getBookDate());
+                    dto.setTaskId(rev.getTaskId());
                     // 账套日期 DTO.账套日期
                     dto.setBooksetDate(rev.getBooksetDate());
                     // 原币发生额 变量.原账务明细（当前表）.原币发生额 *-1
@@ -118,7 +120,7 @@ public class RevDealBookProcessorService {
                     dto.setBookOrder(
                         new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.处理序列)));
                     // 余额方向（发生日）
-                    dto.setBalFlagHappenDate(null);
+                    dto.setBalFlagHappenDate(info.getBalFlagHappenDate());
                     // 原币余额（发生日）
                     dto.setoAmtHappenDate(null);
                     // 本位币余额（发生日）

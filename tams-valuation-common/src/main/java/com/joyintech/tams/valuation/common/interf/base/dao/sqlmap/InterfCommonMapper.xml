@@ -716,6 +716,9 @@
 		AND FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
 		AND CHANNEL_ASSET = #{channelAsset,jdbcType=VARCHAR}<!-- modify by dongjun on 20190314 remark:通道变更 -->
 		AND MAPPING_TYPE = #{mappingType,jdbcType=VARCHAR} /**add by yanya on 20191017 增加映射类型**/
+		<if test="isTrade != null">
+			AND IS_BOOK = #{isTrade,jdbcType=VARCHAR}
+		</if>
 		<if test="busiType != null and busiType =='02' ">
 			AND INV_AIM = #{invAim,jdbcType=VARCHAR}
 		</if>

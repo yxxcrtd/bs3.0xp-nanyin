@@ -138,9 +138,9 @@
 			LEFT JOIN FIN_PRODUCT_LOSS_STAGE R ON
 				A.FINPROD_ID = R.FINPROD_ID AND
 				D.HAPPEN_DATE >= R.EFF_DATE AND
-				D.HAPPEN_DATE &lt; R.INVALID_DATE -->    
-		WHERE 		
-			(K.IS_TRADE = #{isTradeY,jdbcType=VARCHAR}	
+				D.HAPPEN_DATE &lt; R.INVALID_DATE -->
+		WHERE
+			(K.IS_TRADE = #{isTradeY,jdbcType=VARCHAR}
 			OR K.IS_TRADE IS NULL)
 			AND A1.TRADE_ID IS NULL
 			AND D.SEQ_NO = #{seqNo}
@@ -149,11 +149,13 @@
             AND D.HAPPEN_DATE = #{HAPPEN_DATE,jdbcType=DATE}
             AND D.IS_SUB_BOOKSET = #{IS_SUB_BOOKSET}
             AND D.TASK_ID = #{taskId}
+		    <!-- add by yinya 如果清算指令有交收失败的记录，则不出交易的账务 -->
+            AND NOT EXISTS  (SELECT S.TRADE_ID FROM STL_ORDERS S WHERE S.SETTLE_STATUS='02' AND S.TRADE_ID=A.TRADE_ID)
 		ORDER BY
 			D.BOOKSET_ID,
-			B2.BOK_DETAIL_ID								
+			B2.BOK_DETAIL_ID
 	</select>
-	
-	
-	
+
+
+
 </mapper>

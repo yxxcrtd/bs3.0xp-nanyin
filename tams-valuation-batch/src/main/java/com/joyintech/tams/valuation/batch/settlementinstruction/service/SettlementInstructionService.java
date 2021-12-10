@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.valuation.batch.vatdraw.service.VatDrawCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +62,11 @@ import com.joyintech.tams.valuation.common.interf.base.service.common.InterfComm
  */
 @Service
 public class SettlementInstructionService {
-	
+    /**
+     * 公用方法services
+     */
+    @Autowired
+    private VatDrawCommonService vatDrawCommonService;
     /**
      * 查询处理对象信息Mapper
      */
@@ -112,6 +117,9 @@ public class SettlementInstructionService {
         sqlMap.put("isTrade", DictCodeList.是否_否.getValue());
         //交易状态
         sqlMap.put("orderStatus", DictCodeListExt1.交易状态_撤销.getValue());
+
+        //结算状态 add by yinya 增加结算状态的判断，只处理结算成功的
+        sqlMap.put("settleStatus", DictCodeList.成功失败标志_成功.getValue());
         
         sqlMap.putAll(param);
         //查询处理对象信息
@@ -205,12 +213,11 @@ public class SettlementInstructionService {
         String booksetId = acctEntity.getBooksetId(); //账套代码
         TreeNode bookSetTreeNodNow = acctEntity.getBookSetTreeNode();// 会计场景
         List<SettlementInstructionDTO> settlementInstructionDTO = acctEntity.getListSettlementInstructionDTO(); // 金融产品交易信息list
-        
+
         // 循环金融产品交易信息list,进行逻辑处理
         for (SettlementInstructionDTO dto : settlementInstructionDTO) {
             // 初始化定义 - 记账场景要素管理
             AccountDriver ad = new AccountDriver();
-
             // 初始化定义 - 存放该笔记账的场景要素 map定义
             Map<String, Object> accountSceneMap = new HashMap<>();
             // 初始化定义 - 存放该笔记账的相关金额要素 map定义
@@ -230,7 +237,6 @@ public class SettlementInstructionService {
             accountSceneMap.put(BookConstant.TASK_ID, taskId);// 任务代码
             accountSceneMap.put(BookConstant.B_CCY, dto.getStandardCcy());// 本位币
             accountSceneMap.put(BookConstant.CCY, dto.getCcy());// 交易币种
-            
             accountSceneMap.put(BookConstant.BUSI_ID1, dto.getBusiId());//业务明细代码
             
             
@@ -369,7 +375,6 @@ public class SettlementInstructionService {
             ad.setAccountSceneMap(accountSceneMap);// 记账场景要素
             ad.setAccountAmountMap(accountAmountMap);// 记账金额要素
             ad.setAccountCurrencyMap(accountCurrencyMap);// 记账金额币种要素
-
             // 记账凭证生成
             BookGenerateResult resultNowNow = bookLogic.genAccount(ad, new SysBatchExecInfo());
             // 因为当前属于同一个维度，故将生成的账务名中的账务明细（当前表）数据，累加到返回数据中
