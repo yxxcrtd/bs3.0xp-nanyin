@@ -11,6 +11,8 @@ import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
 import com.joyintech.tams.cfets.cfetsmanualsettle.service.CfetsManualSettleService;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
@@ -111,13 +113,19 @@ public class CfetsManualSettleController extends BaseController {
         }
 
         String finalOpertType1 = finalOpertType;
-        params.setComment((entity) -> WorkFlowUtil.concatComment(
+        params.setComment((entity) -> {
+            String settleArg = getMessage("交收金额") + GlobalConstant.COLON + entity.getSettleAmt();
+            if(StringUtil.equals(entity.getPs(), BussinessDictCodeList.交易方向_买入.getValue())){
+                settleArg = getMessage("交收数量") + GlobalConstant.COLON + entity.getSettleNum();
+            }
+            return WorkFlowUtil.concatComment(
                 getMessage("交收日期") + GlobalConstant.COLON + entity.getSettleDate(),
                 getMessage("原业务编号") + GlobalConstant.COLON + entity.getTradeId(),
                 getMessage("业务类型") + GlobalConstant.COLON + entity.getTgBusiTypeStr(),
                 getMessage("资产简称") + GlobalConstant.COLON + entity.getFinprodAbbr(),
                 getMessage("交收操作") + GlobalConstant.COLON + finalOpertType1,
-                getMessage("交收金额") + GlobalConstant.COLON + entity.getSettleAmt()));
+                settleArg);
+        });
         processParameter.setWorkFlowParameter(params);
         try{
             String msg = cfetsManualSettleService.start(processParameter,

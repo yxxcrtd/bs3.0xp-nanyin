@@ -145,6 +145,7 @@ public class CfetsManualSettleQueryService extends BaseService{
         //交收状态
         pageParam.put("DELIVERY_STATUS_01", DictCodeListExt3.交收状态_未交收.getValue());
         pageParam.put("DELIVERY_STATUS_02", DictCodeListExt3.交收状态_已交收.getValue());
+        pageParam.put("DELIVERY_STATUS_04", DictCodeListExt3.交收状态_交收失败.getValue());
         pageParam.put("DELIVERY_STATUS_NAME01", DictCodeListExt3.交收状态_未交收.getCodeName());
 
         pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());

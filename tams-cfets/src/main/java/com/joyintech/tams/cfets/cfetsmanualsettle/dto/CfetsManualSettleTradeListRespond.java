@@ -117,6 +117,9 @@ public class CfetsManualSettleTradeListRespond {
     @ApiModelProperty(name="tradeMarketModeStr",value="交易市场",example="一级/二级市场")
     private String tradeMarketModeStr;
 
+    @ApiModelProperty(name="remark",value="交收失败原因",example="交收失败原因")
+    private String remark;
+
     public String getSettleStatus() {
         return settleStatus;
     }
@@ -383,5 +386,13 @@ public class CfetsManualSettleTradeListRespond {
 
     public void setTradeMarketModeStr(String tradeMarketModeStr) {
         this.tradeMarketModeStr = tradeMarketModeStr;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }
