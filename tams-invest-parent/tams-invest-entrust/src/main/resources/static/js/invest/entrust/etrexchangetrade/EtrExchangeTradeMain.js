@@ -315,7 +315,10 @@ function hideLeftTopPanel(){
     $("div.top_panel").each(function(i,v){
         $(v).css("display","none");
     });
-    $("#right_bottom_panel_dev").css("width","100%");
+    $("#enlarge").hide();
+    $("#right_bottom_panel_dev").css("float","left");
+    $("#right_bottom_panel_dev").css("width","95%");
+    $("#bottom_panel_dev").css("height","450px");
     $("#right_bottom_panel_dev").css("height","420px");
 }
 
@@ -326,6 +329,7 @@ function showLeftTopPanel(){
     $("div.top_panel").each(function(i,v){
         $(v).css("display","inline");
     });
+    $("#enlarge").show();
 }
 
 
