@@ -39,6 +39,8 @@ import com.joyintech.tams.invest.portfolio.ptlcashflow.dto.PtlCashFlowDto;
 import com.joyintech.tams.invest.portfolio.ptlfundacctposi.dto.PtlFundAcctPosiDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.web.bind.annotation.RequestParam;
+
 /**
  * 
  * 组合资金账户头寸
@@ -158,6 +160,16 @@ public class PtlFundAcctPosiService extends CommonExportService<PtlFundAcctPosiD
             cell.setCellValue(DateUtil.format((Date)value));
         }
     }
-    
-   
+
+    /**
+     * 获得市托管机构信息
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> getOriginalInterestHolder(@RequestParam Map<String, Object> map) {
+        return restTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAcctPosi/getOriginalInterestHolder", map,
+                SelectOptionDto.class);
+    }
 }
