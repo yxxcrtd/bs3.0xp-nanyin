@@ -5,7 +5,6 @@ import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -16,10 +15,8 @@ import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
 import com.joyintech.tams.svreport.interf.chb.investmentsinfo.dao.ChbProdInfoRateInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbProdInfoRate;
 import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdPeriodYieldInterfMapper;
-import com.joyintech.tams.svreport.interf.chb.prodinfo.service.ChbPrdPeriodyieldInterf;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
@@ -68,20 +65,20 @@ public class ChbProdInfoRateInterf extends BaseService {
         Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.产品利率基本信息接口.getInterId());
         List<ChbProdInfoRate> prodInfoRatelist = new ArrayList<ChbProdInfoRate>();
         //单位净值取值来源读系统参数 01:估值核算系统，02:信息批露系统，03:第三方
-        String valueSource = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_NET_UNIT_VALUE_SOURCE);
-        if("01".equals(valueSource)){
+//        String valueSource = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_NET_UNIT_VALUE_SOURCE);
+//        if("01".equals(valueSource)){
             //单位净值取自估值核算系统
             ChbProdInfoRateInterf chbProdInfoRateInterf2 =  SpringContextUtil.getBean(ChbProdInfoRateInterf.class);
             prodInfoRatelist = chbProdInfoRateInterf2.selectPrdPeriodyieldData(lastUpdatetime,prodidList);
-        }else if("02".equals(valueSource)){
-            //TODO 单位净值取自信息批露系统
-
-        }else if("03".equals(valueSource)){
-            //TODO 单位净值取自第三方系统
-
-        }else{
-            logger.debug("单位净值取值来源配置错误！");;
-        }
+//        }else if("02".equals(valueSource)){
+//            //TODO 单位净值取自信息批露系统
+//
+//        }else if("03".equals(valueSource)){
+//            //TODO 单位净值取自第三方系统
+//
+//        }else{
+//            logger.debug("单位净值取值来源配置错误！");;
+//        }
         logger.debug("读取上游报价信息----结束-----:" +  df.format(new Date()));
         if(CollectionUtils.isNotEmpty(prodInfoRatelist)){
             for(ChbProdInfoRate dto : prodInfoRatelist){

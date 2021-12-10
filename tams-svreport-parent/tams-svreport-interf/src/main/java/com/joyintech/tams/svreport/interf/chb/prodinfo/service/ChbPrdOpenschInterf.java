@@ -65,7 +65,7 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 	 */
 	public List<String> generatePrdOpenschData(Date batchDate,List<String> prodIdlist){
 		// 查询数据
-		List<ChbPrdOpensch> openSchlist = getBusEntity(null, "D");
+		List<ChbPrdOpensch> openSchlist = getBusEntity(prodIdlist, "D");
 		// 入库
 		if(!StringUtil.isEmptyList(openSchlist)){
 			insertData2(openSchlist);
