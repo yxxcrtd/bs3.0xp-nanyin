@@ -1,20 +1,5 @@
 package com.joyintech.tams.cfets.etrib.repo.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
@@ -22,7 +7,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.business.common.pojo.Message;
@@ -41,6 +25,20 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 〈一句话功能简述〉 资产系列管理
@@ -127,10 +125,10 @@ public class CfetsEtrIbRepoRkController extends BaseController {
     @ResponseBody
     @PostMapping(ACTION_DELETE)
     @ApiOperation(value = "delete", notes = "delete")
-    public AjaxResult delete(@RequestBody CfetsEtrIbRepoRkDto dto, BindingResult br)
+    public Message<AjaxResult> delete(@RequestBody CfetsEtrIbRepoRkDto dto, BindingResult br)
         throws Exception {
         if (br.hasErrors()) {
-            return new AjaxResult(br);
+            return new Message<AjaxResult>().setData(new AjaxResult(br));
         }
         //查询系列名称
         CfetsEtrIbRepoRkDto businessInfoBySeqno = cfetsEtrIbRepoRKService.getBusinessInfoByPledgeStockId(dto.getPledgeStockId());
@@ -150,7 +148,7 @@ public class CfetsEtrIbRepoRkController extends BaseController {
         });
         processParameter.setWorkFlowParameter(params);
         String msg = cfetsEtrIbRepoRKService.start(processParameter, dto);
-        return new AjaxResult(msg);
+        return new Message<AjaxResult>().setData(new AjaxResult(msg));
     }
     
     /**
@@ -165,12 +163,12 @@ public class CfetsEtrIbRepoRkController extends BaseController {
     @ResponseBody
     @PostMapping("checkq")
     @ApiOperation(value = "保存按钮点击时的check", notes = "保存按钮点击时的check")
-    public AjaxResult check(@RequestBody @Validated({
+    public Message<AjaxResult> check(@RequestBody @Validated({
             ValidateGroupEdit.class}) CfetsEtrIbRepoRkDto dto, BindingResult result) {
         if (result != null && result.hasErrors()) {
-            return new AjaxResult(result);
+            return new Message<AjaxResult>().setData(new AjaxResult(result));
         }
-        return commonCheck(result, dto.getOperateType());
+        return new Message<AjaxResult>().setData(commonCheck(result, dto.getOperateType()));
     }
     
     /**
@@ -183,10 +181,10 @@ public class CfetsEtrIbRepoRkController extends BaseController {
     @ResponseBody
     @PostMapping("save")
     @ApiOperation(value = "批量提交", notes = "批量提交")
-    public AjaxResult save(@RequestBody CfetsEtrIbRepoRkDto RepoInfoDto, BindingResult br)
+    public Message<AjaxResult> save(@RequestBody CfetsEtrIbRepoRkDto RepoInfoDto, BindingResult br)
             throws Exception {
         if (br.hasErrors()) {
-            return new AjaxResult(br);
+            return new Message<AjaxResult>().setData(new AjaxResult(br));
         }
         // 临时主键
 //        BussinessCodeParameter param = new BussinessCodeParameter();
@@ -218,7 +216,7 @@ public class CfetsEtrIbRepoRkController extends BaseController {
         });
         processParameter.setWorkFlowParameter(params);
         String msg = cfetsEtrIbRepoRKService.start(processParameter, RepoInfoDto);
-        return new AjaxResult(msg);
+        return new Message<AjaxResult>().setData(new AjaxResult(msg));
     }
 
 }

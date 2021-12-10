@@ -37,6 +37,9 @@ public class CfetsEtrRepoZLCXRequest {
     @ApiModelProperty(name="invManagerId",value="投资经理",example="wp")
     private String invManagerId;
 
+    @ApiModelProperty(name="keywords",value="关键词",example="wp")
+    private String keywords;
+
     public PageMode getPageMode() {
         return pageMode;
     }
@@ -93,4 +96,19 @@ public class CfetsEtrRepoZLCXRequest {
         this.entrustStatusList = entrustStatusList;
     }
 
+    public String getEntrustDate() {
+        return entrustDate;
+    }
+
+    public void setEntrustDate(String entrustDate) {
+        this.entrustDate = entrustDate;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
 }

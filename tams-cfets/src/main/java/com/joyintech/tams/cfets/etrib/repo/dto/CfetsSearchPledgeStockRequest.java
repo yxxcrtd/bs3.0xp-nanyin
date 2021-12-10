@@ -1,7 +1,5 @@
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
-import com.joyintech.tams.business.common.dto.PageMode;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,26 +10,14 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value="下拉框请求参数",description="下拉框请求参数")
 public class CfetsSearchPledgeStockRequest {
 
-    @ApiModelProperty(name="search",value="模糊查询输入值",example="1")
-    private String search;
-    @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1}")
-    private PageMode pageMode;
+    @ApiModelProperty(name="portfolioId",value="组合代码",example="wp")
+    private String portfolioId;
 
-    public String getSearch() {
-        return search;
+    public String getPortfolioId() {
+        return portfolioId;
     }
 
-    public void setSearch(String search) {
-        this.search = search;
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
     }
-
-    public PageMode getPageMode() {
-        return pageMode;
-    }
-
-    public void setPageMode(PageMode pageMode) {
-        this.pageMode = pageMode;
-    }
-
-
 }

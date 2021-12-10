@@ -10,43 +10,7 @@
  
 package com.joyintech.tams.cfets.etrib.repo.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletResponse;
-
-import com.joyintech.framework.base.dto.UploadFile;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.business.common.pojo.BaseMap;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosiInfoRequestDto;
-import com.joyintech.tams.cfets.etrib.repo.dto.*;
-import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
-import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
-import com.joyintech.tams.invest.entrust.etribrepo.dto.EtribRepoInfo003Dto;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
@@ -55,17 +19,38 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosiInfoRequestDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
+import com.joyintech.tams.cfets.etrib.repo.dto.*;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfoService;
+import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
 import com.joyintech.tams.component.business.trade.BussEtrInvestPersonInfoService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-
+import com.joyintech.tams.invest.common.client.ClientData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 银行间债券指令
@@ -103,6 +88,14 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
 
     @Value("${BondWebSocketUrl}")
     private String RepoWebSocketUrl;
+
+    /**
+     * 风险接口组件Controller
+     */
+    @Autowired
+    private InterfRiskRdsController interfRiskRdsController;
+
+
 
 
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
@@ -206,13 +199,13 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
      */
     @PostMapping("getPledgeStockIdByPortfolioId")
     @ApiOperation(value = "质押库：下拉框", notes = "质押库：下拉框")
-    public Message<Page<SelectOptionDto>> getPledgeStockIdByPortfolioId(@RequestBody CfetsSearchPledgeStockRequest params) {
+    public Message<List<SelectOptionDto>> getPledgeStockIdByPortfolioId(@RequestBody CfetsSearchPledgeStockRequest params) {
     	try {
-    		Page<SelectOptionDto> page = cfetsEtrIbRepoinfoService.getPledgeStockIdByPortfolioId(params);
-			return new Message<Page<SelectOptionDto>>().success().setData(page);
+            List<SelectOptionDto> page = cfetsEtrIbRepoinfoService.getPledgeStockIdByPortfolioId(params);
+			return new Message<List<SelectOptionDto>>().success().setData(page);
 		} catch (Exception e) {
 			logger.error("查询功能异常", e);
-			return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+			return new Message<List<SelectOptionDto>>().fail().setMessage("查询异常");
 		}
     	
     }
@@ -227,9 +220,10 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
      */
     @ApiOperation(value = "出库操作", notes = "出库操作")
     @PostMapping("outSave")
-    public AjaxResult outSave(@RequestBody CfetsEtrRepoSaveRequest dto) {
+    public Message<AjaxResult> outSave(@RequestBody CfetsEtrRepoSaveRequest dto) {
      // 校验操作的角色是否是投资经理
         Map<String,Object> map = new HashMap<>();
+        AjaxResult ajax = null;
         map.put("role_pos", DictCodeListExt2.角色岗位_投资经理.getValue());
         map.put("userId", SecurityUtil.getLoginUser().getUserName());
         Long count = cfetsEtrIbRepoinfoService.selectUserRolePosList(map) ;
@@ -237,18 +231,19 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
             Long outFlat = cfetsEtrIbRepoinfoService.outSave(dto);
             // 标记为大于0，出库成功
             if(outFlat > 0){
-                return new AjaxResult(this.getMessage("EtrStandardBond001.outSave_002"));
+                ajax= new AjaxResult(this.getMessage("EtrStandardBond001.outSave_002"));
+                return new Message<AjaxResult>().success().setData(ajax);
             }else{
-                return new AjaxResult(this.getMessage("EtrStandardBond001.outSave_003"));
+                ajax=  new AjaxResult(this.getMessage("EtrStandardBond001.outSave_003"));
+                return new Message<AjaxResult>().success().setData(ajax);
             }
         }else{
-            AjaxResult ar = new AjaxResult();
             List<JoyinMessage> joyinMessages = new ArrayList<>();
             joyinMessages.add(
                     new JoyinMessage("角色岗位为投资经理才能操作", MessageType.警告消息));
-            ar.setJoyinMessages(joyinMessages);
+            ajax.setJoyinMessages(joyinMessages);
 
-            return ar ;
+            return new Message<AjaxResult>().fail().setData(ajax);
         }
     }
     
@@ -282,4 +277,100 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         List<BaseMap> m = cfetsEtrIbRepoinfoService.queryPositionInfo(requestDto);
         return new Message<List<BaseMap>>().success().setData(m);
     }
+
+    @ResponseBody
+    @ApiOperation(value = "风险试算", notes = "风险试算")
+    @PostMapping("doRiskcal")
+    public Message<AjaxResult> doRiskcal(@RequestBody CfetsEtribRepoInfo003Dto dto) throws Exception {
+        try {
+            //风险试算check
+            String  message = cfetsEtrIbRepoinfoService.doRiskcalCheckMethod(dto);
+            if (StringUtil.isNotEmpty(message)) {
+                return new Message<AjaxResult>().fail().setMessage(message);
+            }
+            CfetsEtribdoRiskcalResponse result=new CfetsEtribdoRiskcalResponse();
+            //风险试算组装dto
+            Map<String, Object> dataMap= null;
+            //TODO
+//                    cfetsEtrIbBondinfoService.doRiskcalPackageEquity(dto);
+            List<String> resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F07");
+            result.setRiskMathFlag("02");
+            Boolean forbidFlag=false;
+            Boolean cluflag=true;
+            List<CfetsEtribdoRiskcalResponse> resultlist=new ArrayList<>();
+            if(!StringUtil.isEmptyList(resultArrList) ){
+                for(String row:resultArrList){
+                    ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
+                    if(StringUtil.isNotEmpty(resultArr) && StringUtil.isNotEmpty(resultArr.getHead())
+                            && StringUtil.isNotEmpty(resultArr.getHead().get("std400msgt"))
+                    ){
+                        if (StringUtil.equals(resultArr.getHead().get("std400msgt"),"E")) {
+                            return new Message<AjaxResult>().fail().setMessage(resultArr.getHead().get("stdrtninfo").toString());
+                        }
+                    }
+                    if (!StringUtil.isNotEmpty(resultArr) || !StringUtil.isNotEmpty(resultArr.getBody())
+                            || !StringUtil.isNotEmpty(resultArr.getBody().get("RSK_LIST"))
+                            || !StringUtil.isNotEmpty(resultArr.getBody().get("rskStatus"))) {
+                        return new Message<AjaxResult>().success().setMessage("无");
+                    }
+                    List<Map<String, Object>> riskList = (List<Map<String, Object>>)resultArr.getBody().get("RSK_LIST");
+                    for(Map<String, Object> map: riskList){
+                        if(StringUtil.equals(map.get("kriStatus"),"0") && !StringUtil.equals(map.get("kriTrend"),"向好")){
+                            forbidFlag=true;
+                        }
+                        map.put("kriStatusCn",cfetsEtrIbRepoinfoService.getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
+                        resultlist.add(BeanUtil.mapToObject(map, CfetsEtribdoRiskcalResponse.class));
+                    }
+                    result.setRiskcalReturnList(resultlist);
+                    result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());
+                    //当置为不通过时就不再进来了
+                    if(cluflag) {
+                        if(!StringUtil.equals(resultArr.getBody().get("rskStatus"),"3")){
+                            if(StringUtil.equals(resultArr.getBody().get("rskStatus"),"4")&&forbidFlag){
+                                cluflag=false;
+                                resultArr.getBody().put("rskStatus","3");
+                                result.setRskStatus("3");
+                            }
+                        }else{
+                            cluflag=false;
+                        }
+                        if (!cluflag) {
+                            result.setRiskTrialSpan("试算不通过");
+                        } else {
+                            result.setRiskTrialSpan("试算通过");
+                        }
+                    }
+                }
+            }
+            AjaxResult m =new AjaxResult();
+            m.setData(result);
+            return new Message<AjaxResult>().success().setData(m);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<AjaxResult>().fail().setMessage("查询异常");
+        }
+    }
+
+
+    @ResponseBody
+    @ApiOperation(value = "修改委托", notes = "修改委托")
+    @PostMapping("modifyDelegate")
+    public Message<AjaxResult> modifyDelegate(@RequestBody CfetsEtribRepoInfo003Dto dto) throws Exception {
+        //对选择的数据进行check
+        AjaxResult ajaxResult = cfetsEtrIbRepoinfoService.modifyDelegateCheckMethod(dto);
+        if (!com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+            return new Message<AjaxResult>().fail().setData(ajaxResult);
+        }
+        try {
+            CfetsEtribRepoInfo003Dto item = dto.getSelectedItem().get(0);
+            CfetsEtribRepoInfo003Dto result = cfetsEtrIbRepoinfoService.findEtrinfo(item);
+            AjaxResult m =new AjaxResult();
+            m.setData(result);
+            return new Message<AjaxResult>().success().setData(m);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<AjaxResult>().fail().setMessage("查询异常");
+        }
+    }
+
 }

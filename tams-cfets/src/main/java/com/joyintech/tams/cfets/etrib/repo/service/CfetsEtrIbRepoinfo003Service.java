@@ -10,18 +10,6 @@
 
 package com.joyintech.tams.cfets.etrib.repo.service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.security.SecurityUtil;
@@ -31,8 +19,9 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbPosPortfolioRequest;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbPositionRequest;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioCashRequest;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioSecRequest;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPositionRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.WflEtrEntrustMapper;
@@ -55,6 +44,17 @@ import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommSer
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 王波
@@ -115,7 +115,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
      * 流程结束后操作
      *
      * @param dto           实体类
-     * @param operationType 操作类型
+     * @param type 操作类型
      */
     @Override
     public void doComplete(CfetsEtribRepoInfo003Dto dto, OperationType type) {
@@ -302,7 +302,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     /**
      * 流程启动时为附件绑定工作流代码 <功能详细描述>
      *
-     * @param dto
+     * @param entity
      * @param operateType
      * @see
      * @since 1.0
@@ -321,10 +321,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     }
      
     private  void sendPositionMethod(CfetsEtribRepoInfo003Dto entity){
-        List<CfetsEtrIbPosPortfolioRequest> ptlList=new ArrayList<>();
+        List<CfetsEtrIbRepoPosPortfolioCashRequest> ptlCashList=new ArrayList<>();
+        List<CfetsEtrIbRepoPosPortfolioSecRequest> ptlSecList=new ArrayList<>();
         for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
             //调用头寸
-            CfetsEtrIbPosPortfolioRequest posport=new CfetsEtrIbPosPortfolioRequest();
+            CfetsEtrIbRepoPosPortfolioCashRequest posport=new CfetsEtrIbRepoPosPortfolioCashRequest();
             posport.setPortfolioId(dto.getPortfolioId());
             posport.setEtrId(dto.getEntrustId());
             if(StringUtil.isNotEmpty(dto.getPortfolioId())){
@@ -338,23 +339,30 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     posport.setCashAcctId(cashAcctId); // 托管户
                 }
             }
-            if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(entity.getFinprodId())) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("portfolioId", dto.getPortfolioId());
-                map.put("finprodId", entity.getFinprodId());
-                String secAcctId = "";//TODO
+            posport.setCashAmount(dto.getEntrustAmt());
+            ptlCashList.add(posport);
+            if (StringUtil.isNotEmpty(dto.getBussRepoSec()) && !StringUtil.isEmptyList(dto.getBussRepoSec().getPledgeBondList())) {
+                for(PledgeBondInfoDto pledgeBondInfoDto:dto.getBussRepoSec().getPledgeBondList()){
+                    CfetsEtrIbRepoPosPortfolioSecRequest secport=new CfetsEtrIbRepoPosPortfolioSecRequest();
+                    secport.setPortfolioId(dto.getPortfolioId());
+                    secport.setEtrId(dto.getEntrustId());
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("portfolioId", dto.getPortfolioId());
+                    map.put("finprodId", entity.getFinprodId());
+                    String secAcctId = "";//TODO
 //                		this.qryPortfolioSecAcctId(map);
-                if (StringUtil.isNotEmpty(secAcctId)) {
-                    posport.setSecAcctId(secAcctId); // 证券账户
+                    if (StringUtil.isNotEmpty(secAcctId)) {
+                        secport.setSecAcctId(secAcctId); // 证券账户
+                    }
+                    secport.setSecAmount(pledgeBondInfoDto.getPledgePrin());
+                    secport.setOwnSecAmount(pledgeBondInfoDto.getPledgePrin());
+                    secport.setIntegrateSecAmount(BigDecimal.ZERO);
+                    ptlSecList.add(secport);
                 }
             }
-            posport.setCashAmount(dto.getEntrustAmt());
-            posport.setIntegrateSecAmount(dto.getEntrustIntegrateNum());
-            posport.setOwnSecAmount(dto.getEntrustOwnNum());
-            ptlList.add(posport);
         }
         //调用头寸
-        CfetsEtrIbPositionRequest req=new CfetsEtrIbPositionRequest();
+        CfetsEtrIbRepoPositionRequest req=new CfetsEtrIbRepoPositionRequest();
         req.setInterfaceType("REPO001");
         req.setUserId(SecurityUtil.getLoginUser().getUserName());
         req.setTotalTradeId(entity.getTotalEtrustId());
@@ -367,14 +375,14 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         req.setBalanceCheck(balanceCheck);
         req.setBusiType(DictCodeListExt3.头寸业务类型_质押式回购首期.getValue());
         req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
-        req.setSettleSpeed(entity.getSettleSpeed());
+        req.setSettleSpeed(entity.getSettleSpreed());
         req.setBusiAct(DictCodeListExt3.业务动作_投资指令.getValue());
         req.setPs(entity.getPs());
         req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
         req.setCdate(entity.getEntrustDate());
         req.setCcy(entity.getCcy());
-        req.setFinprodId(entity.getFinprodId());
-        req.setPtlList(ptlList);
+        req.setPtlCashList(ptlCashList);
+        req.setPtlSecList(ptlSecList);
         PositionHttpRequest.send(req);
     }
 
@@ -426,9 +434,9 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             entity.setEtrPledgeList(getEtrPledgeListByBussRepoSecDto(dto.getBussRepoSec(),dto.getEntrustId()));
             entity.setWorkFlowId(dto.getWorkflowId());
             WFlowCommonService.insertFlow(entity);
-            if(baseEtrCashPositionCommService!=null){
-                baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-            }
+//            if(baseEtrCashPositionCommService!=null){
+//                baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//            }
         }catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -459,6 +467,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 	   	 }
 	   	 return null;
 	}
+
 
 
 

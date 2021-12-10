@@ -10,44 +10,24 @@
 
 package com.joyintech.tams.cfets.etrib.repo.service;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.tams.business.common.pojo.BaseMap;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosiInfoRequestDto;
-import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
-import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosiInfoRequestDto;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbdoRiskcalDto;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoinfoMapper;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoRkDto;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoPledgeAssetDetailRequest;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoSaveRequest;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXPositionRequest;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXPositionResponse;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXRequest;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXResponse;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsSearchPledgeStockRequest;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsTreePortfolioResponse;
+import com.joyintech.tams.cfets.etrib.repo.dto.*;
 import com.joyintech.tams.common.base.dao.EtrEntrustPledgeMapper;
 import com.joyintech.tams.common.base.dao.EtrSecStockConfigMapper;
 import com.joyintech.tams.common.base.dao.EtrSecStockMapper;
@@ -59,8 +39,19 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
+import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * 银行间债券指令
@@ -423,9 +414,9 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
     * 获取质押库下拉框
     * @return 质押库下拉框
     */
-   public Page<SelectOptionDto> getPledgeStockIdByPortfolioId(CfetsSearchPledgeStockRequest cfetsSearchPledgeStockRequest) {
+   public List<SelectOptionDto> getPledgeStockIdByPortfolioId(CfetsSearchPledgeStockRequest cfetsSearchPledgeStockRequest) {
 	   Map<String,Object> param = BeanUtil.object2Map(cfetsSearchPledgeStockRequest);
-       return super.queryForPage(cfetsSearchPledgeStockRequest.getPageMode().getPageNo(), cfetsSearchPledgeStockRequest.getPageMode().getPageSize(), ()-> cfetsEtrIbRepoinfoMapper.getPledgeStockIdByPortfolioId(param)); 
+       return  cfetsEtrIbRepoinfoMapper.getPledgeStockIdByPortfolioId(param);
    }
 
 	public Long selectUserRolePosList(Map<String, Object> map) {
@@ -543,6 +534,112 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         }
         DecimalFormat df1 = new DecimalFormat(pattern);
         return df1.format(b);
+    }
+
+    public String doRiskcalCheckMethod(CfetsEtribRepoInfo003Dto dto){
+        //参数不能为空
+        if(StringUtil.isEmptyList(dto.getEtrInvestRepoInfoDtos())){
+            return "组合分配列表不能为空";
+        }
+        List<String> messages = new ArrayList<>();
+        if(StringUtil.isNotEmpty(dto.getEtrInvestRepoInfoDtos())){
+            for(CfetsEtribRepoInfo003Dto item:dto.getEtrInvestRepoInfoDtos()){
+                if(!StringUtil.isNotEmpty(item.getPortfolioId())){
+                    messages.add("请输入组合名称。");
+                }
+                if(!StringUtil.isNotEmpty(item.getEntrustNum())){
+                    messages.add("请输入指令金额。");
+                }
+            }
+        }
+//        if(!StringUtil.isNotEmpty(dto.getFinprodId())){
+//            messages.add("请输入资产代码。");
+//        }
+        if(messages.size()>0) {
+            return  StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE);
+        }
+        return null;
+    }
+
+    public  Map<String, Object> doRiskcalPackageEquity(CfetsEtribRepoInfo003Dto dto) {
+        Map<String, Object> dataMap=new HashMap<>();
+        //风险试算封装dto
+        CfetsEtrIbdoRiskcalDto d=new CfetsEtrIbdoRiskcalDto();
+        BeanUtil.copyPropertiesIgnoreNull(d,dto);
+        List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
+        for(CfetsEtribRepoInfo003Dto pt:dto.getEtrInvestRepoInfoDtos()){
+            pt.setInvAim(pt.getBusinessModel());
+            bussTrdTransfenpeiDto.add(BeanUtil.object2Map(pt));
+        }
+        d.setBussTrdTransfenpeiDto(bussTrdTransfenpeiDto);
+        d.setBusiType("02");
+        d.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
+        d.setFinprodType2(DictCodeList.平安资产类型_质押式回购.getValue());
+        d.setVdate(dto.getEntrustDate());
+        d.setMdate(dto.getEntrustDate());;
+        d.setCcy("CNY");
+        d.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+
+        dataMap=BeanUtil.object2Map(d);
+        return dataMap;
+
+    }
+
+    public  String getKriStatusCnByKriStatus(String kriStatus){
+        if(StringUtil.isNotEmpty(kriStatus)){
+            if(StringUtil.equals(kriStatus,"0")){
+                return "正常";
+            }else if(StringUtil.equals(kriStatus,"1")){
+                return "预警";
+            }else  if(StringUtil.equals(kriStatus,"2")){
+                return "审批";
+            }else  if(StringUtil.equals(kriStatus,"3")){
+                return "违规";
+            }else  if(StringUtil.equals(kriStatus,"4")){
+                return "异常";
+            }
+        }
+        return null;
+    }
+
+    public AjaxResult modifyDelegateCheckMethod(CfetsEtribRepoInfo003Dto dto){
+        if(!StringUtil.isNotEmpty(dto)|| StringUtil.isEmptyList(dto.getSelectedItem())){
+            AjaxResult res=new AjaxResult();
+            ValidMessage validMessage= new ValidMessage();
+            validMessage.setMessage(getMessage("COMMON_E_0002"));
+            res.setErrorList(Arrays.asList(validMessage));
+            return res;
+        }
+        List<CfetsEtribRepoInfo003Dto> selectedItem = dto.getSelectedItem();
+        AjaxResult ajaxResult=new AjaxResult();
+        if(StringUtil.isNotEmpty(selectedItem)){
+            if(selectedItem.size()>1){
+                AjaxResult res=new AjaxResult();
+                ValidMessage  validMessage= new ValidMessage();
+                validMessage.setMessage("委托指令修改仅允许一条数据");
+                res.setErrorList(Arrays.asList(validMessage));
+                return res;
+            }
+            for(CfetsEtribRepoInfo003Dto Item:selectedItem){
+                if(!StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托接收状态_已撤回.getValue())
+                        && !StringUtil.equals(Item.getEntrustStatus(),BussinessDictCodeList.委托状态_已退回.getValue())
+                ){
+                    AjaxResult res=new AjaxResult();
+                    ValidMessage  validMessage= new ValidMessage();
+                    validMessage.setMessage("只有指令状态为已撤回、已退回的指令允许修改");
+                    res.setErrorList(Arrays.asList(validMessage));
+                    return res;
+                }
+            };
+        }
+        return new AjaxResult();
+    }
+
+    public CfetsEtribRepoInfo003Dto findEtrinfo(CfetsEtribRepoInfo003Dto dto) {
+        Map<String,Object> param= BeanUtil.object2Map(dto);
+        param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
+        param.put("sysDate", iPlatformDate.getSysDateStr());
+        return  cfetsEtrIbRepoinfoMapper.findEtrinfo(param);
     }
 
 }

@@ -13,14 +13,11 @@ package com.joyintech.tams.cfets.etrib.repo.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.cfets.etrib.repo.dto.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoRkDto;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXPositionResponse;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXResponse;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsTreePortfolioResponse;
 import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
 import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
@@ -122,5 +119,6 @@ public interface CfetsEtrIbRepoinfoMapper {
     int deleteWflEtrEntrustAddByEntrustId(String entrustId);
 
     Map queryPositionInfo(Map RequestDto);
-    
+
+    CfetsEtribRepoInfo003Dto findEtrinfo(Map<String,Object> map);
 }

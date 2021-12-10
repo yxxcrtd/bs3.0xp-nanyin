@@ -1,24 +1,5 @@
 package com.joyintech.tams.cfets.etrib.repo.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibAvaPledgeBondResponse;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXPositionRequest;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -27,8 +8,11 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLib001Dto;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibAvaPledgeBondResponse;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibDto;
+import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXPositionRequest;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsIbRepoLibService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
@@ -39,6 +23,21 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @PageId("CfetsEtrIbRepoLib")
 @RequestMapping("/cfets/etrib/cfetsEtrIbRepoLib")
@@ -114,9 +113,9 @@ public class CfetsEtrIbRepoLibController extends BaseController{
     @PostMapping("check")
     @ResponseBody
     @ApiOperation(value = "根据画面条件检索已入库债券信息", notes = "根据画面条件检索已入库债券信息")
-    public AjaxResult check(@Validated({ValidateGroupEdit.class}) @RequestBody CfetsEtrIbRepoLibDto dto, BindingResult result)
+    public Message<AjaxResult> check(@Validated({ValidateGroupEdit.class}) @RequestBody CfetsEtrIbRepoLibDto dto, BindingResult result)
             throws Exception {
-        return commonCheck(result, null);
+        return new Message<AjaxResult>().setData(commonCheck(result, null));
     }
 
     /**
@@ -129,10 +128,10 @@ public class CfetsEtrIbRepoLibController extends BaseController{
     @ResponseBody
     @PostMapping("save")
     @ApiOperation(value = "保存处理", notes = "保存处理")
-    public AjaxResult save(@Validated({ValidateGroupEdit.class}) @RequestBody CfetsEtrIbRepoLibDto dto, BindingResult result)
+    public Message<AjaxResult> save(@Validated({ValidateGroupEdit.class}) @RequestBody CfetsEtrIbRepoLibDto dto, BindingResult result)
             throws Exception {
         if (result != null && result.hasErrors()) {
-            return commonCheck(result, null);
+            return new Message<AjaxResult>().setData(commonCheck(result, null));
         }
         if(StringUtil.isBlank(dto.getTradeId())) {
             if (baseGetBusinessId != null) {
@@ -162,6 +161,6 @@ public class CfetsEtrIbRepoLibController extends BaseController{
                 getMessage("证券账户") + GlobalConstant.OPEN_PARENTHESIS +  entity.getPledgeBondList().get(0).getSecAcctId() + GlobalConstant.CLOSE_PARENTHESIS,
                 getMessage("债券代码") + GlobalConstant.OPEN_PARENTHESIS + entity.getPledgeBondList().get(0).getFinprodMarketId() + GlobalConstant.CLOSE_PARENTHESIS));
         String msg = cfetsIbRepoLibService.start(processParameter, dto);
-        return new AjaxResult(msg);
+        return new Message<AjaxResult>().setData(new AjaxResult(msg));
     }
 }

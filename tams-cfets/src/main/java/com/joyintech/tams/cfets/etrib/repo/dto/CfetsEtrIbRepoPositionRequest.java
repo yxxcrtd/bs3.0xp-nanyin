@@ -56,6 +56,9 @@ public class CfetsEtrIbRepoPositionRequest {
     @ApiModelProperty(name="ccy",value="币种",example="CNY")
     private String ccy;
 
+	@ApiModelProperty(name="repoPledgeModel",value="质押券模式",example="01")
+	private String repoPledgeModel;
+
     @ApiModelProperty(name="bTotalTradeId",value="前次交易编号",example="1")
     private String bTotalTradeId;
 
