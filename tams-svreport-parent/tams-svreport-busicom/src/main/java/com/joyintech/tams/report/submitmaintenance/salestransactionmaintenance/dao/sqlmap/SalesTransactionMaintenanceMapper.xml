@@ -333,6 +333,12 @@
 		where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
 	</update>
 
+	<delete id="deleteErr" parameterType="java.lang.String" >
+		delete from CHB_SALER_STL_DEA_ERRODATA
+		where
+		REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+	</delete>
+
 	<select id="selectTradeNo" resultType="java.lang.Integer">
 		SELECT count(*) from CHB_SALER_STL_DEAL_INFO
 		where
