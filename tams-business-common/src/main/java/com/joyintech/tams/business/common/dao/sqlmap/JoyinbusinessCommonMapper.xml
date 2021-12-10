@@ -312,6 +312,69 @@
         </if>
     </select>
 
+    <select id="selectCashPositionFlow" resultType="java.math.BigDecimal" >
+        select
+        SUM(AMOUNT)
+        from PTL_CASH_POSITION_FLOW
+        where CDATE <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+        <include refid="whereSql"/>
+        <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+            and ACCT_ID in (
+            SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+            <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+            )
+        </if>
+    </select>
+
+    <sql id="whereSql">
+        <if test="hodingType != null and hodingType != ''">
+            and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        </if>
+        <if test="portfolioId != null and portfolioId != ''">
+            and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        </if>
+        <if test="acctId != null and acctId != ''">
+            and ACCT_ID = #{acctId, jdbcType=VARCHAR}
+        </if>
+        <if test="chlFinprodId != null and chlFinprodId != ''">
+            and CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR}
+        </if>
+        <if test="ccy != null and ccy != ''">
+            and CCY = #{ccy,jdbcType=VARCHAR}
+        </if>
+        <if test="isFrozenPositionFlag != null and isFrozenPositionFlag != ''">
+            and ORDER_ID = #{orderId,jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <select id="selectCashPositionNew" resultType="java.math.BigDecimal" >
+        select
+        SUM(AMOUNT)
+        from PTL_CASH_POSITION_FLOW
+        where CDATE &lt;= #{cdate,jdbcType=DATE}
+        <include refid="whereSql"/>
+        <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+            and ACCT_ID in (
+            SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+            <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+            )
+        </if>
+    </select>
+
+    <select id="selectCashPositionMaxCdate" resultType="java.util.Date" >
+        select
+        max(CDATE)
+        from PTL_CASH_POSITION
+        where CDATE <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+        <include refid="whereSql"/>
+        <if test="acctType != null and !acctType.isEmpty() and needAcctType">
+            and ACCT_ID in (
+            SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID = #{portfolioId}
+            <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
+            )
+        </if>
+    </select>
+    
     <!--ͨ查询指令可用现金 -->
     <select id="selectCommandAvailableCash" parameterType="com.joyintech.tams.business.common.dto.CashPositionFlowDto" resultType="java.math.BigDecimal">
         select
