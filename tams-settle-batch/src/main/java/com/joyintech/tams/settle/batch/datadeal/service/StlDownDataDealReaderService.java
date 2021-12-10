@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -436,5 +437,15 @@ public class StlDownDataDealReaderService {
 	// 查询上中登TZXX
 	public List<SzdTzxx> selectSzdTzxx(Date dealDate, String dataFile, Map<String, List<String>> searchMap) {
 		return stlDownDataDealMapper.selectSzdTzxx(dealDate, dataFile, searchMap);
+	}
+
+	// 删除【送股权益登记】
+	int deleteShareBonusRegByCdate(Date dealDate){
+		return stlDownDataDealMapper.deleteShareBonusRegByCdate(dealDate);
+	}
+
+	// 删除【基金分红公告】
+	int deletemstFundBonusNoticeByCdate(Date dealDate){
+    	return stlDownDataDealMapper.deletemstFundBonusNoticeByCdate(dealDate);
 	}
 }

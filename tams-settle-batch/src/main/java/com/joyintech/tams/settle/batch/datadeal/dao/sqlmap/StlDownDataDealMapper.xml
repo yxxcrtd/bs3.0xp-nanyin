@@ -521,7 +521,7 @@
         <where>
       		CDATE = #{dealDate,jdbcType=DATE}
        		<if test="xgsgBusinessTypeList != null and xgsgBusinessTypeList.size() > 0">
-           		AND 
+           		AND
            		<foreach collection="xgsgBusinessTypeList" item="xgsgBusinessType" open="OTH_TYPE IN (" close=")" separator=",">
            			#{xgsgBusinessType,jdbcType=VARCHAR}
            		</foreach>
@@ -565,4 +565,18 @@
 			</foreach>
 		</where>
 	</select>
+
+	<delete id="deleteShareBonusRegByCdate">
+		DELETE FROM SHARE_BONUS_REG
+		<where>
+			CDATE = #{dealDate,jdbcType=DATE}
+		</where>
+	</delete>
+
+	<delete id="deletemstFundBonusNoticeByCdate">
+		DELETE FROM MST_FUND_BONUS_NOTICE
+		<where>
+			CDATE = #{dealDate,jdbcType=DATE}
+		</where>
+	</delete>
 </mapper>

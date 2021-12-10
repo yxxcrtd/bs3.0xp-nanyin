@@ -113,4 +113,10 @@ public interface StlDownDataDealMapper {
     List<SzdSjsks> selectSzdSjsks(@Param("dealDate") Date dealDate, @Param("dataFile") String dataFile, @Param("searchMap") Map<String, List<String>> searchMap);
     // 查询上中登TZXX
     List<SzdTzxx> selectSzdTzxx(@Param("dealDate") Date dealDate, @Param("dataFile") String dataFile, @Param("searchMap") Map<String, List<String>> searchMap);
+
+    // 删除【送股权益登记】
+    int deleteShareBonusRegByCdate(@Param("dealDate") Date dealDate);
+
+    // 删除【基金分红公告】
+    int deletemstFundBonusNoticeByCdate(@Param("dealDate") Date dealDate);
 }

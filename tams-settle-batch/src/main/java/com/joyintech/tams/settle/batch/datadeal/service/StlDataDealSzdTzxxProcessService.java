@@ -42,8 +42,8 @@ public class StlDataDealSzdTzxxProcessService {
     public StlDownDataDealWriteDto generatorStlDownDataDealSzdTzxxWriteDto(StlDownDataDealOperatorDto stlDownDataDealOperatorDto) {
         StlDownDataDealWriteDto stlDownDataDealWriteDto = new StlDownDataDealWriteDto();
         if (stlDownDataDealOperatorDto != null && stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto() != null &&
-                stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdSjsksList() != null &&
-                stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdSjsksList().size() > 0) {
+                stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdTzxxList() != null &&
+                stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdTzxxList().size() > 0) {
             List<MstFundBonusNotice> mstFundBonusNoticeArrayList = new ArrayList<MstFundBonusNotice>();
             for (SzdTzxx szdTzxx : stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdTzxxList()) {
                 MstFundBonusNotice mstFundBonusNotice = new MstFundBonusNotice();

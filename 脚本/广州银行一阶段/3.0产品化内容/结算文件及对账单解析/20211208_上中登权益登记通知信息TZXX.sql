@@ -131,3 +131,71 @@ comment on column SZD_TZXX.UPDATE_TIME is
 
 delete from SETTLE_DATA_RULE where SEQNO='191';
 insert into SETTLE_DATA_RULE (SEQNO, TABLE_NAME, DATA_FILE, FINPROD_TYPE, INTERF_FIELD_CNNAME, TABLE_FIELD, FIELD_CODE, FIELD_VALUE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) values('191','TZXX','TZXX','06','通知类别','TZLB','008','A股','红利登记信息', 'system', '00001', sysdate, 'system', sysdate);
+
+
+
+
+drop table  cascade constraints;
+
+/*==============================================================*/
+/* Table: SHARE_BONUS_REG                                       */
+/*==============================================================*/
+create table SHARE_BONUS_REG
+(
+    SHARES_ID            VARCHAR(32)          not null,
+    SEC_ACCT_ID          VARCHAR(32)          not null,
+    REG_DATE             DATE                 not null,
+    DEL_DATE             DATE,
+    DEVIDENT_DATE        DATE,
+    REDSHARE_LISTING_DATE DATE,
+    PER_DEVIDENT_AMT     NUMERIC(30, 14),
+    PER_DEVIDENT_CASH    NUMERIC(30, 14),
+    CREATE_USER          VARCHAR(20)          not null,
+    CREATE_DEPT          VARCHAR(32),
+    CREATE_TIME          TIMESTAMP            not null,
+    UPDATE_USER          VARCHAR(20)          not null,
+    UPDATE_TIME          TIMESTAMP            not null,
+    constraint PK_SHARE_BONUS_REG primary key (SHARES_ID, REG_DATE)
+);
+
+comment on table SHARE_BONUS_REG is
+'送股权益登记';
+
+comment on column SHARE_BONUS_REG.SHARES_ID is
+'股票代码，市场代码';
+
+comment on column SHARE_BONUS_REG.SEC_ACCT_ID is
+'股票代码，市场代码';
+
+comment on column SHARE_BONUS_REG.REG_DATE is
+'权益登记日';
+
+comment on column SHARE_BONUS_REG.DEL_DATE is
+'除权除息日';
+
+comment on column SHARE_BONUS_REG.DEVIDENT_DATE is
+'派息日';
+
+comment on column SHARE_BONUS_REG.REDSHARE_LISTING_DATE is
+'红股上市日';
+
+comment on column SHARE_BONUS_REG.PER_DEVIDENT_AMT is
+'每股送转';
+
+comment on column SHARE_BONUS_REG.PER_DEVIDENT_CASH is
+'每股派息';
+
+comment on column SHARE_BONUS_REG.CREATE_USER is
+'创建人';
+
+comment on column SHARE_BONUS_REG.CREATE_DEPT is
+'创建部门';
+
+comment on column SHARE_BONUS_REG.CREATE_TIME is
+'创建时间';
+
+comment on column SHARE_BONUS_REG.UPDATE_USER is
+'更新人';
+
+comment on column SHARE_BONUS_REG.UPDATE_TIME is
+'更新时间';
