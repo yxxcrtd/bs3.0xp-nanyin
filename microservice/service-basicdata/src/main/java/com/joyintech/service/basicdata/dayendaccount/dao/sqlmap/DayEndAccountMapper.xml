@@ -1008,7 +1008,7 @@
         LEFT JOIN STL_SECP_RECON s3
         ON t1.SEC_ACCT_ID=s3.ACCT_NO
         AND t1.CDATE=s3.CDATE
-        AND f1.FINPROD_ID=s3.FINPROD_ID
+        AND t1.FINPROD_ID=s3.FINPROD_ID
         left join FIN_PRODUCT_TYPE f2
         on f1.FINPROD_ID=f2.FINPROD_ID
         <where>
