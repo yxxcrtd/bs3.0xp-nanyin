@@ -117,8 +117,8 @@ public class DealTransactionDetailsDto {
     @ApiModelProperty(name="quoteId",value="业务编号")
     private String quoteId;
 
-    @ApiModelProperty(name="execid",value="成交编号")
-    private String execid;
+    @ApiModelProperty(name="trdId",value="成交编号")
+    private String trdId;
 
     @ApiModelProperty(name="remark",value="备注")
     private String remark;
@@ -299,12 +299,12 @@ public class DealTransactionDetailsDto {
         this.quoteId = quoteId;
     }
 
-    public String getExecid() {
-        return execid;
+    public String getTrdId() {
+        return trdId;
     }
 
-    public void setExecid(String execid) {
-        this.execid = execid;
+    public void setTrdId(String trdId) {
+        this.trdId = trdId;
     }
 
     public String getRemark() {

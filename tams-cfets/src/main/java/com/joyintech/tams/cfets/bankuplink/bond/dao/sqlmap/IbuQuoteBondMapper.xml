@@ -444,7 +444,7 @@
         NULL resEffTime,
         NULL shareAmtHun,
         T1.TOTLE_TRADE_ID quoteId,
-        T2.EXE_ID,
+        T2.TRD_ID TRD_ID,
         T1.REMARK
         FROM
         REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -504,7 +504,7 @@
         NULL resEffTime,
         NULL shareAmtHun,
         T1.TOTLE_TRADE_ID quoteId,
-        '' EXE_ID,
+        '' TRD_ID,
         T1.REMARK
         FROM
         WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -560,7 +560,7 @@
         ,CASE WHEN y.I_Q_B_QUOTE_TYPE = '02' THEN y.I_Q_B_SHARE_AMT
         ELSE NULL  END shareAmtHun
         ,y.I_Q_B_QUOTE_ID quoteId
-        ,y.I_Q_B_D_EXECID EXE_ID
+        ,y.I_Q_B_D_EXECID TRD_ID
         ,y.I_Q_B_REMARK REMARK
         from
         (select a.QUOTE_ID          AS I_Q_B_QUOTE_ID,

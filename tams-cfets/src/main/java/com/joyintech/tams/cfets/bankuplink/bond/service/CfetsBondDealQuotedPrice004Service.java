@@ -390,7 +390,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             insertWfl(cfetsBondDealDbDto);
             ProcessMark newEntity;
             //头寸
-            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,OperationType.NEW));
+            //PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,OperationType.NEW));
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsBondDealRegisterQuoteDto.class, true);
                 // 工作流ID

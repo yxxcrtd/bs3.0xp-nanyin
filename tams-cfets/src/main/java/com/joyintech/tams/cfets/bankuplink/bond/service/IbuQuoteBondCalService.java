@@ -70,6 +70,9 @@ public class IbuQuoteBondCalService extends BaseService {
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,calRequest);
         cfetsBondDealDialogueQuoteDto.setAvaNum(calRequest.getShareAmt());
         BeanUtil.copyPropertiesIgnoreNull(calRespone,cfetsBondDealQuotedPriceService.calcAmt(cfetsBondDealDialogueQuoteDto));
+        if(null!=calRespone.getFpriceAmt()){
+            calRequest.setFpriceAmt(calRespone.getFpriceAmt());
+        }
         List<TrdTradeFeeDetail> trdTradeFeeDetails = calFee(calRequest);
         if(CollectionUtils.isNotEmpty(trdTradeFeeDetails)){
             for (TrdTradeFeeDetail item : trdTradeFeeDetails) {
