@@ -125,7 +125,7 @@
 		fundAccPlace,
 		agencyCode,
 		orgIndentifyMark,
-		ROW_NUMBER() over( partition by tmp.indentifyMark ,tmp.orgMark order by tmp.tableNo,tmp.UPDATE_TIME desc ) indMarkNo
+		ROW_NUMBER() over( partition by tmp.indentifyMark ,tmp.orgMark order by tmp.tableNo desc,tmp.UPDATE_TIME desc ) indMarkNo
 		FROM（
 		----从SUB表查询相关记录
 		SELECT
