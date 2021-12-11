@@ -72,12 +72,12 @@ public class CfetsSettleService extends BaseService{
      * @param executeDate 跑批日
      * @return
      */
-    private TrdBankManualSettleFlow createTrdBankManualSettleFlow(CfetsSettleAllInfoDto cfetsSettleAllInfoDto , Date executeDate) {
+    private TrdBankManualSettleFlow createTrdBankManualSettleFlow(CfetsSettleAllInfoDto cfetsSettleAllInfoDto,TrdBankManualSettleInfo trdBankManualSettleInfo, Date executeDate) {
         TrdBankManualSettleFlow trdBankManualSettleFlow = new TrdBankManualSettleFlow();
         //交收流水编号=调用【共通】生成
         trdBankManualSettleFlow.setSeqNo(IDGenerator.generate());
         //交收编号=银行间手工交收信息Entiy.交收编号
-        trdBankManualSettleFlow.setSettleSeqNo(cfetsSettleAllInfoDto.getSettleSeqNo());
+        trdBankManualSettleFlow.setSettleSeqNo(trdBankManualSettleInfo.getSettleSeqNo());
         //交收时间=当前时间
         trdBankManualSettleFlow.setSettleTime(new Date());
         //交收数量=画面.交收数量
@@ -321,7 +321,7 @@ public class CfetsSettleService extends BaseService{
                 //银行间手工交收信息Entity
                 TrdBankManualSettleInfo trdBankManualSettleInfo = this.createTrdBankManualSettleInfo(cfetsSettleAllInfoDto, batchDate);
                 //银行间手工交收流水信息Entity
-                TrdBankManualSettleFlow trdBankManualSettleFlow = this.createTrdBankManualSettleFlow(cfetsSettleAllInfoDto, batchDate);
+                TrdBankManualSettleFlow trdBankManualSettleFlow = this.createTrdBankManualSettleFlow(cfetsSettleAllInfoDto,trdBankManualSettleInfo, batchDate);
                 //银行间手工交收明细信息Entity
                 List<TrdBankManualSetDetail> listTrdBnakSetDetails = new ArrayList<TrdBankManualSetDetail>();
                 for (CfetsSettleDetailInfoDto CfetsSettleDetailInfoDto : cfetsSettleAllInfoDto.getCfetsSettleDetailInfoDtoList()) {
