@@ -116,8 +116,8 @@
         D.ITEM_VALUE entrustStatusStr,
         E.ITEM_VALUE psStr,
         F.ITEM_VALUE priceModelStr,
-        H.ITEM_VALUE businessModelStr,
-        G.ITEM_VALUE settleSpreedStr,
+        H.ITEM_VALUE settleSpreedStr,
+        G.ITEM_VALUE businessModelStr,
         I.ITEM_VALUE tradeMarketStr
         FROM
         ETR_ENTRUST
@@ -348,7 +348,7 @@
                 to_char(VDATE,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
                 to_char(MDATE,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
                 entrustId LIKE '%' || #{search} || '%' OR
-                transmitTime =  #{search} OR
+                transmitTime  LIKE '%' || #{search} || '%' OR
                 to_char(transactioncom,'FM99990.9990')=#{search} or  transactioncom||'' =#{search} or
                 to_char(tradeFinishPercent,'FM99990.9990')=#{search} or  tradeFinishPercent||'' =#{search} or
                 to_char(entrustNum,'FM99990.9990')=#{search} or  entrustNum||'' =#{search} or
