@@ -556,17 +556,17 @@ public class EquityInfoValid {
             map.put("HOLDER_TYPE", equityInfo001Dto.getHolderType());
             sb.append("01");
         }
-        // 投资者分类
-        else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getHolderClassify(),
-                equityInfoRegist001Dto.getHolderClassify())) {
-            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
-            sb.append("01");
-        }
-        else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getFundAccPlace(),
-                equityInfoRegist001Dto.getFundAccPlace())) {
-            map.put("FUND_ACC_PLACE", equityInfo001Dto.getFundAccPlace());
-            sb.append("01");
-        }
+//        // 投资者分类
+//        else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getHolderClassify(),
+//                equityInfoRegist001Dto.getHolderClassify())) {
+//            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
+//            sb.append("01");
+//        }
+//        else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getFundAccPlace(),
+//                equityInfoRegist001Dto.getFundAccPlace())) {
+//            map.put("FUND_ACC_PLACE", equityInfo001Dto.getFundAccPlace());
+//            sb.append("01");
+//        }
         // 个人证件类别
         else if (!CommonUtil.equalsIgnoreNull(equityInfo001Dto.getPersonalIdentifyType(),
                 equityInfoRegist001Dto.getPersonalIdentifyType())) {
@@ -703,12 +703,12 @@ public class EquityInfoValid {
                 equityInfoRegist001Dto.getHolderType())) {
             map.put("HOLDER_TYPE", equityInfo001Dto.getHolderType());
         }
-        // 投资者分类
-        else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderClassify())
-                && !equityInfo001Dto.getHolderClassify().equals(
-                equityInfoRegist001Dto.getHolderClassify())) {
-            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
-        }
+//        // 投资者分类
+//        else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderClassify())
+//                && !equityInfo001Dto.getHolderClassify().equals(
+//                equityInfoRegist001Dto.getHolderClassify())) {
+//            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
+//        }
         // 个人证件类别
         else if (StringUtil.isNotEmpty(equityInfo001Dto.getPersonalIdentifyType())
                 && !equityInfo001Dto.getPersonalIdentifyType().equals(
@@ -1100,12 +1100,12 @@ public class EquityInfoValid {
             map.put("HOLDER_EMAIL", list.get(20));
             sb.append("01");
         }
-        //投资者分类
-        else if (!CommonUtil.equalsIgnoreNull(list.get(22),
-                equityInfoRegist001Dto.getHolderClassify())) {
-            map.put("HOLDER_CLASSIFY", list.get(22));
-            sb.append("01");
-        }
+//        //投资者分类
+//        else if (!CommonUtil.equalsIgnoreNull(list.get(22),
+//                equityInfoRegist001Dto.getHolderClassify())) {
+//            map.put("HOLDER_CLASSIFY", list.get(22));
+//            sb.append("01");
+//        }
         //投资者分类
 //        else if (!CommonUtil.equalsIgnoreNull(list.get(23),
 //                equityInfoRegist001Dto.getFundAccPlace())) {
@@ -1212,11 +1212,11 @@ public class EquityInfoValid {
         else if (!CommonUtil.equalsIgnoreNull(list.get(21), equityInfoRegist001Dto.getRemark())) {
             map.put("REMARK", list.get(21));
         }
-        //投资者分类
-        else if (!CommonUtil.equalsIgnoreNull(list.get(22),
-                equityInfoRegist001Dto.getHolderClassify())) {
-            map.put("HOLDER_CLASSIFY", list.get(22));
-        }
+//        //投资者分类
+//        else if (!CommonUtil.equalsIgnoreNull(list.get(22),
+//                equityInfoRegist001Dto.getHolderClassify())) {
+//            map.put("HOLDER_CLASSIFY", list.get(22));
+//        }
 //        //TODO  销售区域
 //        else if (!CommonUtil.equalsIgnoreNull(list.get(23),
 //                equityInfoRegist001Dto.getFundAccPlace())) {

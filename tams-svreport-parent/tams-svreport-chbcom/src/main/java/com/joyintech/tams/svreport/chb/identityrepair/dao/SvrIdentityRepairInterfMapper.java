@@ -1,8 +1,5 @@
 package com.joyintech.tams.svreport.chb.identityrepair.dao;
 
-import com.joyintech.tams.common.base.entity.ChbSalesTransactionInfo;
-import com.joyintech.tams.common.base.entity.ChbSalesTransactionInfoSub;
-import com.joyintech.tams.svreport.chb.daycollect.dto.ChbDayCollect;
 import com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,12 +9,24 @@ import java.util.List;
 
 @Repository
 public interface SvrIdentityRepairInterfMapper {
-	
+
 	/**
-	 * 查询所有从业人员信息数据
+	 * 从明细数据进行身份信息的修复
 	 * @return
 	 */
 	List<ChbIdentityRepair> selectBatchData(@Param("batchDate")String batchDate);
+
+	/**
+	 * 身份变更的情况下，查询最近一条的变更前数据--非识别标识变更
+	 * @return
+	 */
+	List<ChbIdentityRepair> selectBatchDataForChg(@Param("batchDate")String batchDate);
+
+	/**
+	 * 身份变更的情况下，查询最近一条的变更前数据--识别标识变更
+	 * @return
+	 */
+	List<ChbIdentityRepair> selectBatchDataForChgByIde(@Param("batchDate")String batchDate);
 
 	/**
 	 * 判断跑批日数据的存在性
