@@ -172,7 +172,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 errorList.add(new ValidMessage("请输入交易手续费"));
             }
         }
-        if(StringUtil.equals(sellPara,"02")){
+        /*if(StringUtil.equals(sellPara,"02")){
             if(null==entity.getOurEntNum()){
                 errorList.add(new ValidMessage("请输入本方券券面总额"));
             }
@@ -182,7 +182,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(null==entity.getSellAbleNum()&&StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())){
                 errorList.add(new ValidMessage("请输入卖空购回券面总额"));
             }
-        }
+        }*/
         if(null==entity.getSettFeeAmt()){
             errorList.add(new ValidMessage("请输入结算服务费"));
         }
@@ -207,7 +207,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                     errorList.add(new ValidMessage("请输入组合分配结算服务费"));
                     break;
                 }
-                if(StringUtil.equals(sellPara,"02")){
+                /*if(StringUtil.equals(sellPara,"02")){
                     if(null==ptlAllocatio.getOurEntNum()){
                         errorList.add(new ValidMessage("请输入组合分配本方券券面总额"));
                         break;
@@ -220,7 +220,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                         errorList.add(new ValidMessage("请输入组合分配卖空购回券面总额"));
                         break;
                     }
-                }
+                }*/
                 if(ptlAllocatio.getAvaNum().compareTo(ptlAllocatio.getShareAmt())<0){
                     errorList.add(new ValidMessage("登记指令剩余额度不能小于券面总额！"));
                 }

@@ -132,7 +132,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
                 errorList.add(new ValidMessage("请输入清算类型"));
             }
         }
-        if(StringUtil.equals(sellPara,"02")){
+        /*if(StringUtil.equals(sellPara,"02")){
             if(null==entity.getOurEntNum()){
                 errorList.add(new ValidMessage("请输入本方券券面总额"));
             }
@@ -142,7 +142,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
             if(null==entity.getSellAbleNum()&&StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())){
                 errorList.add(new ValidMessage("请输入卖空购回券面总额"));
             }
-        }
+        }*/
         if(null==entity.getDealFeeAmt()){
             errorList.add(new ValidMessage("请输入交易手续费"));
         }
@@ -166,7 +166,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
                     errorList.add(new ValidMessage("请输入组合分配结算服务费"));
                     break;
                 }
-                if(StringUtil.equals(sellPara,"02")){
+                /*if(StringUtil.equals(sellPara,"02")){
                     if(null==ptlAllocatio.getOurEntNum()){
                         errorList.add(new ValidMessage("请输入组合分配本方券券面总额"));
                         break;
@@ -179,7 +179,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
                         errorList.add(new ValidMessage("请输入组合分配卖空购回券面总额"));
                         break;
                     }
-                }
+                }*/
                 shareAmtTotal = ArithmeticUtil.doAdd(shareAmtTotal,ptlAllocatio.getShareAmt());
                 dealFeeAmtTotal = ArithmeticUtil.doAdd(dealFeeAmtTotal,ptlAllocatio.getDealFeeAmt());
                 settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal,ptlAllocatio.getSettFeeAmt());
