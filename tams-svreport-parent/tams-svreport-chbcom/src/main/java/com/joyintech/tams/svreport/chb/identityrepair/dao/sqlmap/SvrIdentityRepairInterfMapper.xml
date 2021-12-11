@@ -41,20 +41,8 @@
 		FUND_ACC_PLACE as fundAccPlace,
 		NVL(AGENCY_CODE,REGIST_BANK_CODE)  as agencyCode
 		FROM CHB_EQUDET_SUB
-		WHERE TO_CHAR(EQUITY_CONF_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
-		group BY
-		ORG_INDENTIFY_MARK,
-		AGENCY_CODE,
-		INDENTIFY_MARK,
-		FUND_ACC_PLACE)  tmp2
+		WHERE TO_CHAR(EQUITY_CONF_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR})  tmp2
 		ON tmp1.indentifyMark = tmp2.orgIndentifyMark
-		GROUP BY
-		tmp1.equMark,
-		tmp1.indentifyMark,
-		tmp1.registBankCode,
-		tmp2.fundAccPlace,
-		tmp2.agencyCode,
-		tmp2.orgIndentifyMark
 	</select>
 
 	<select id="selectBatchDataForChg" resultType="com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair">
