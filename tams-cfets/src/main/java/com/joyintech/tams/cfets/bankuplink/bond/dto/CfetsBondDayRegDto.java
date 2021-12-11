@@ -130,7 +130,7 @@ public class CfetsBondDayRegDto {
     private String assetTypeStr;
 
     @ApiModelProperty(name="exeId",value="成交编号")
-    private String exeId;
+    private String trdId;
 
     @ApiModelProperty(name="dealDate",value="成交日期")
     private Date dealDate;
@@ -438,12 +438,12 @@ public class CfetsBondDayRegDto {
         this.assetType = assetType;
     }
 
-    public String getExeId() {
-        return exeId;
+    public String getTrdId() {
+        return trdId;
     }
 
-    public void setExeId(String exeId) {
-        this.exeId = exeId;
+    public void setTrdId(String trdId) {
+        this.trdId = trdId;
     }
 
     public Date getDealDate() {

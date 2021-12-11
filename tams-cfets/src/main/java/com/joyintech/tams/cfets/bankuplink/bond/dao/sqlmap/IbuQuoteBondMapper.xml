@@ -897,7 +897,7 @@
             T1.TOTLE_TRADE_ID quoteId,
             T9.ACT_SETTE_DATE ,
             T10.TYPE_12 assetType,
-            T11.EXE_ID ,
+            T11.TRD_ID ,
             T12.TRADE_DATE dealDate
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -964,7 +964,7 @@
             T1.TOTLE_TRADE_ID quoteId,
             T9.ACT_SETTE_DATE ,
             T10.TYPE_12 assetType,
-            T11.EXE_ID ,
+            T11.TRD_ID ,
             T12.TRADE_DATE dealDate
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -1030,7 +1030,7 @@
             T1.TOTLE_TRADE_ID quoteId,
             NULL ACT_SETTE_DATE ,
             T10.TYPE_12 assetType,
-            NULL EXE_ID,
+            NULL TRD_ID,
             NULL dealDate
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
