@@ -761,7 +761,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             result.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
             result.put("userId", SecurityUtil.getLoginUser().getUserName());
         }else{
-            String ps = entity.getRegFinProductDealTotal().getPs();
+            String ps = entity.getRegFinProductDealTotal().getPs();String settleSpreed = StringUtil.EMPTY;
             result.put("interfaceType","Bond001");
             result.put("userId", SecurityUtil.getLoginUser().getUserName());
             result.put("totalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
@@ -775,7 +775,14 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             }
             result.put("busiAct","02");
             result.put("ps",ps);
-            result.put("settleSpeed",entity.getRegFinProductDealTotal().getSettleSpeed());
+            if (entity.getRegFinProductDealTotal().getSettleSpeed() == 0L) {
+                settleSpreed =  BussinessDictCodeList.清算速度_T加0.getValue();
+            } else if (entity.getRegFinProductDealTotal().getSettleSpeed() == 1L) {
+                settleSpreed = BussinessDictCodeList.清算速度_T加1.getValue();
+            } else if (entity.getRegFinProductDealTotal().getSettleSpeed() == 2L) {
+                settleSpreed = BussinessDictCodeList.清算速度_T加2.getValue();
+            }
+            result.put("settleSpeed",settleSpreed);
             result.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
             result.put("systemAct","01");
             result.put("cdate",DateUtil.format(entity.getRegFinProductDealTotal().getTradeDate()));
