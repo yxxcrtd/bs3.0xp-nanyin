@@ -157,4 +157,6 @@ public interface JoyinbusinessCommonMapper {
     BigDecimal selectManualCashFlow(CashPositionFlowDto dto);
 
     void mergeCfetsOprHis(@Param("list") List<CfetsOprHisInfoRequest> list);
+
+    String isNeedWorkflow(Map<String, String> param);
 }

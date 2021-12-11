@@ -151,4 +151,18 @@ public class JoyinbusinessCommonService extends BaseService {
         Map<String, Object> param = BeanUtil.object2Map(dto);
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideTraderList(param));
     }
+
+    /**
+     * 查询页面、按钮是否走流程
+     * @param param
+     * @return
+     */
+    public String isNeedWorkflow(Map<String, String> param) {
+        param.put("noneApproval", "noneApproval");
+        param.put("yesOrNo01",DictCodeList.是否_中债_是.getValue());
+        param.put("yesOrNo02",DictCodeList.是否_中债_否.getValue());
+        param.put("yesOrNoY",DictCodeList.是否_是.getValue());
+        param.put("yesOrNoN",DictCodeList.是否_否.getValue());
+        return joyinbusinessCommonMapper.isNeedWorkflow(param);
+    }
 }

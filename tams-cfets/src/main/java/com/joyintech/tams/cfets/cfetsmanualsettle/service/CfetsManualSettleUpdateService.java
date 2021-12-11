@@ -7,7 +7,10 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.controller.JoyinbusinessCommonController;
+import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
@@ -70,6 +73,9 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
 
     @Autowired
     private AutoPeriodCommonService autoPeriodCommonService;
+
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
 
     /**
      * 手工交收修改check
@@ -353,5 +359,16 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
      */
     public String qryPortfolioCashAcctId(Map<String, Object> param) {
         return cfetsManualSettleMapper.qryPortfolioCashAcctId(param);
+    }
+
+    /**
+     * 查询页面、按钮是否走流程
+     * @param param
+     * @return
+     */
+    public String isNeedWorkflow(Map<String, String> param) {
+        param.put("pageId", "CfetsManualSettleUpdate");
+        param.put("element_id", "CfetsManualSettleUpdate_btn_submit");
+        return joyinbusinessCommonService.isNeedWorkflow(param);
     }
 }

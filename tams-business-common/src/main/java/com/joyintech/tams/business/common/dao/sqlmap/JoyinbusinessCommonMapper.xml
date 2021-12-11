@@ -476,4 +476,15 @@
         TEMP.USER_ID, TEMP.CREATE_USER, TEMP.CREATE_DEPT,
         TEMP.CREATE_TIME, TEMP.UPDATE_USER, TEMP.UPDATE_TIME,1)
     </insert>
+
+
+    <select id="isNeedWorkflow" resultType="java.lang.String">
+        SELECT decode(sp.is_need_workflow,#{yesOrNo02},#{yesOrNoN},
+                #{yesOrNo01},decode(swbm.module_id, #{noneApproval}, #{yesOrNoN}, #{yesOrNoY}))
+        from sys_wfl_business_module swbm
+        left join sys_page sp
+        on sp.page_id = swbm.page_id
+        where swbm.page_id = #{pageId}
+        and swbm.element_id = #{element_id}
+    </select>
 </mapper>

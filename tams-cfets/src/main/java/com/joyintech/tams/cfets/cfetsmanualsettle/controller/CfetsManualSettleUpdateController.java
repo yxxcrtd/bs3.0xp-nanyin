@@ -7,6 +7,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleUpdateRequest;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortSettleinfoDto;
@@ -87,6 +88,10 @@ public class CfetsManualSettleUpdateController extends BaseController {
         initPageParams.put("SESSION_SYS_DATE", DateUtil.format(platformDateImpl.getSysDate()));
 
         initPageParams.put("pageId", "CfetsManualSettleUpdate");
+
+        Map<String,String> param =new HashMap<String,String>();
+        initPageParams.put("isNeedWorkflow", (Object) cfetsManualSettleUpdateService.isNeedWorkflow(param));
+
         return new Message<Map<String, Object>>(initPageParams).success();
     }
 

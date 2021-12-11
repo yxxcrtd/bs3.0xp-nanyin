@@ -7,6 +7,7 @@ import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.dao.CfgReadonlyFormShowMapper;
 import com.joyintech.tams.business.common.dto.PositionRulePtlData;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
@@ -25,6 +26,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.shiro.crypto.hash.Hash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +68,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
 
     @Autowired
     private AutoPeriodCommonService autoPeriodCommonService;
+
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
 
     /**
      * 手工交收交收check
@@ -133,9 +138,15 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
         }
 
         if(returnList.size() != cfetsRequest.getSelectedItem().size()){
-            ajaxResult.setMessageType(MessageType.提示消息);
             ajaxResult.setData(returnList);
         }
+
+        //查询页面、按钮是否走流程
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("pageId","CfetsManualSettle");
+        param.put("element_id",cfetsRequest.getSelectedItem().get(0).getElementId());
+
+        ajaxResult.setMessage(this.isNeedWorkflow(param));
 
         return ajaxResult;
     }
@@ -478,5 +489,14 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                 sendPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
             }
         }
+    }
+
+    /**
+     * 查询页面、按钮是否走流程
+     * @param param
+     * @return
+     */
+    public String isNeedWorkflow(Map<String, String> param) {
+        return joyinbusinessCommonService.isNeedWorkflow(param);
     }
 }
