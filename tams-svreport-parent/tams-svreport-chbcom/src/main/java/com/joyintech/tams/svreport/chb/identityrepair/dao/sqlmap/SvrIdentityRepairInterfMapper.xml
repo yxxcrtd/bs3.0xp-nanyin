@@ -7,7 +7,7 @@
 		tmp1.equMark,
 		tmp1.indentifyMark,
 		tmp1.registBankCode,
-		NVL(tmp1fundAccPlace,tmp2.fundAccPlace) fundAccPlace,
+		NVL(tmp1.fundAccPlace,tmp2.fundAccPlace) fundAccPlace,
 		NVL(tmp1.theBankCode,tmp2.agencyCode) agencyCode,
 		tmp2.orgIndentifyMark
 		FROM(
