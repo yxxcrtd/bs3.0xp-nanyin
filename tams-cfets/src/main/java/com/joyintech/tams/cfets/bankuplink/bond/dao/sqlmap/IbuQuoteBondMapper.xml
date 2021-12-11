@@ -309,6 +309,12 @@
         <if test="quotaPageModel != null and quotaPageModel eq 'marketResponse'">
             AND STL_SEC_ACCT_INFO.SEC_ACCT_SOURCE = #{secAcctSource}
         </if>
+        <if test="entrustIds != null and entrustIds.size() > 0">
+            and ETR_ENTRUST.ENTRUST_ID in
+            <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
         <if test="entrustIdList != null and entrustIdList.size() > 0">
             and ETR_ENTRUST.ENTRUST_ID in
             <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
