@@ -141,6 +141,12 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     @ApiModelProperty(name="counterTrader",value="对手方交易员",example="A1")
     private String counterTrader;
 
+    @ApiModelProperty(name="exerciseDate",value="理论行权日",example="字符串1")
+    private String exerciseDate;
+
+    @ApiModelProperty(name="actExerciseDate",value="实际行权日",example="字符串1")
+    private String actExerciseDate;
+
     public String getEffectFlag() {
         return effectFlag;
     }
@@ -483,5 +489,21 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
 
     public String getBusiTypeStr() {
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, this.getBusiType());
+    }
+
+    public String getExerciseDate() {
+        return exerciseDate;
+    }
+
+    public void setExerciseDate(String exerciseDate) {
+        this.exerciseDate = exerciseDate;
+    }
+
+    public String getActExerciseDate() {
+        return actExerciseDate;
+    }
+
+    public void setActExerciseDate(String actExerciseDate) {
+        this.actExerciseDate = actExerciseDate;
     }
 }

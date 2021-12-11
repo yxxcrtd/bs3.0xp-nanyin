@@ -743,7 +743,9 @@
         nvl(mcp.counter_name,tpdp.COUNTER_ID) counterName,
         nvl(mcct.trader_name,tpdp.COUNTER_TRADER) counterTrader,
         tpdp.remark remark,
-        tpdp.Delivery_Type deliveryType
+        tpdp.Delivery_Type deliveryType,
+        TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
+        TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate
     </sql>
     <sql id="etrDispatcherExeListInfo1">
         '' effectFlag,
@@ -777,7 +779,9 @@
         nvl(mcp.party_name,tpdpa.cp_party_id) counterName,
         nvl(mcct.trader_name,tpdpa.CP_TRADER) counterTrader,
         tpdp.remark remark,
-        tpdp.Delivery_Type deliveryType
+        tpdp.Delivery_Type deliveryType,
+        TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
+        TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate
     </sql>
     <select id="getEtrDispatcherExeListInfo"
             resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherExeListInfoResponse">
@@ -792,6 +796,7 @@
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdp.COUNTER_TRADER= mcct.trader_id
         LEFT JOIN REG_TRADE_FEE ttft ON tpdp.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
         LEFT JOIN REG_TRADE_FEE ttft1 ON tpdp.trade_id  = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
+        LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
         WHERE tpdp.entrust_id = #{entrustId}
 
         union all
@@ -807,6 +812,7 @@
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdp.COUNTER_TRADER= mcct.trader_id
         LEFT JOIN REG_TRADE_FEE ttft ON tpdp.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
         LEFT JOIN REG_TRADE_FEE ttft1 ON tpdp.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
+        LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
         WHERE tpdp.entrust_id = #{entrustId}
 
         union all
@@ -819,6 +825,7 @@
         LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON tpdpa.cp_party_id = mcp.party_id
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdpa.CP_TRADER= mcct.trader_id
+        LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
         WHERE tpdp.entrust_id = #{entrustId}
 
         union all
@@ -831,6 +838,7 @@
         LEFT JOIN FIN_PRODUCT fp ON tpdp.finprod_id = fp.finprod_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcp ON tpdpa.cp_party_id = mcp.party_id
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdpa.CP_TRADER= mcct.trader_id
+        LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
         WHERE tpdp.entrust_id = #{entrustId}
     </select>
 

@@ -33,7 +33,8 @@
             {field: 'secAcctId',width: "150", title: '证券账户', sortable:false},
             {field: 'counterName',width: "150", title: '交易对手', sortable:false},
             {field: 'cleanStlStatusStr',width: "150", title: '结算指令状态', sortable:false},
-            {field: 'cleanArgStatusStr',width: "150", title: '结算合同状态', sortable:false}
+            {field: 'cleanArgStatusStr',width: "150", title: '结算合同状态', sortable:false},
+            {field: 'remark',width: "150", title: '备注', sortable:false}
         ],
         beforeEditCell:function(){
         	return false;

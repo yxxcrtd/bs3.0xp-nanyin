@@ -37,7 +37,7 @@
         sdl6.item_value tradeMarketModeStr,
         NULL AS cleanStlStatus,
         NULL AS cleanArgStatus,
-        NULL settleSeqNo,
+        T8.SETTLE_SEQ_NO settleSeqNo,
         T1.FINPROD_ID finprodId,
         T1.CCY ccy,
         decode(T1.PS,#{PS_T07},'04',#{PS_T08},'04',#{PS_T09},'04',#{PS_T39},'03',#{PS_T03},'01',#{PS_T01},'02',#{PS_T02},'02','02') spcdCode,
@@ -126,7 +126,8 @@
             T1.CCY,
             T7.SEC_ACCT_NAME,
             T1.TRADE_MARKET_MODE,
-            sdl6.item_value
+            sdl6.item_value,
+            T8.SETTLE_SEQ_NO
         union all
         </if>
 
