@@ -95,7 +95,7 @@ public class SalesTransactionMaintenance002Controller extends BaseController {
             SalesTransactionMaintenanceService.save(dto);
             return new AjaxResult("保存成功");
         }
-        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT) && dto.getMaintainStatus() == "02"){
+        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT) && dto.getMaintainStatus().equals("02")){
             SalesTransactionMaintenanceService.update(dto);
             return new AjaxResult("操作成功");
         }
