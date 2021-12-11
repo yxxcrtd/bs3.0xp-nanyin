@@ -1119,6 +1119,14 @@ public class IbuQuoteBondService extends BaseService {
         String message = StringUtil.EMPTY;
         List<String>  quoteIds = new ArrayList<>();
         for (CfetsBondDayRegDto item : dataList) {
+            if(StringUtil.equals(item.getPs(),com.joyintech.tams.constant.DictCodeList.交易方向_行权_回售.getValue())){
+                message = StringUtil.join("交易方向行权-回售,不可导出!业务编号:"+item.getQuoteId());
+                break;
+            }
+            if(!StringUtil.equals(item.getValidStatus(),BussinessDictCodeList.有效状态_有效.getValue())){
+                message = StringUtil.join("非有效状态,不可导出!业务编号:"+item.getQuoteId());
+                break;
+            }
             if(!StringUtil.equals(item.getTradeMarket(),DictCodeListExt1.交易场所_银行间.getValue())){
                 message = StringUtil.join("交易场所非银行间,不可导出!业务编号:"+item.getQuoteId());
                 break;
