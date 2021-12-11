@@ -229,12 +229,10 @@
             AND ETR_ENTRUST.MDATE &gt;= to_date(#{platDate}, 'yyyy-MM-dd')
         </if>-->
         <if test="entrustDateStart != null">
-            AND ETR_ENTRUST.VDATE &lt;= to_date(#{entrustDateStart}, 'yyyy-MM-dd')
-            AND ETR_ENTRUST.MDATE &lt;= to_date(#{entrustDateStart}, 'yyyy-MM-dd')
+            AND ETR_ENTRUST.ENTRUST_DATE >= to_date(#{entrustDateStart}, 'yyyy-MM-dd')
         </if>
         <if test="entrustDateEnd != null">
-            AND ETR_ENTRUST.VDATE &gt;= to_date(#{entrustDateEnd}, 'yyyy-MM-dd')
-            AND ETR_ENTRUST.MDATE &gt;= to_date(#{entrustDateEnd}, 'yyyy-MM-dd')
+            <![CDATA[ AND ETR_ENTRUST.ENTRUST_DATE <= to_date(#{entrustDateEnd}, 'yyyy-MM-dd') ]]>
         </if>
         <if test="portfolioIds != null and portfolioIds.size() > 0">
             AND ETR_ENTRUST.PORTFOLIO_ID IN
