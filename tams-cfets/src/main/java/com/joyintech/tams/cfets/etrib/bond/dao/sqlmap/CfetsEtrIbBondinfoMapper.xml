@@ -666,7 +666,7 @@ from
                 select
                 a.PORTFOLIO_ID,
                 sum(
-                CASE WHEN b.S_HOLDINGTYPE=#{S_003} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+                CASE WHEN b.S_HOLDINGTYPE=#{S_003} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
                 ) AS rrqmkdgh, /*融入券卖空待购回持仓*/
                 sum(
                 CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
