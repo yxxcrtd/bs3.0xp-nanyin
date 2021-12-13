@@ -1071,7 +1071,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
      * @see
      * @since 1.0
      */
-    private void doCompleteRevoke(CfetsTrdBondInvestTradeDto entity) {
+    public void doCompleteRevoke(CfetsTrdBondInvestTradeDto entity) {
         // 调用基础组合.【金融产品交易组件.查询金融产品交易信息】获取原交易信息
         if (entity.getTotleTradeId().lastIndexOf('R') == entity.getTotleTradeId().length() - 1) {
             entity.setTotleTradeId(entity.getTotleTradeId().substring(0, entity.getTotleTradeId().length() - 1));

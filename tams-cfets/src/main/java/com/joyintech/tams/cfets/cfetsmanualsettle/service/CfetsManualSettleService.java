@@ -11,11 +11,13 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
+import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
+import com.joyintech.tams.cfets.trdquery.service.CfetsTrdBondInvestTrade002Service;
 import com.joyintech.tams.common.base.dao.TrdBankManualSetDetailMapper;
 import com.joyintech.tams.common.base.dao.TrdBankManualSettleFlowMapper;
-import com.joyintech.tams.common.base.entity.TrdBankManualSetDetail;
-import com.joyintech.tams.common.base.entity.TrdBankManualSettleFlow;
-import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
+import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
+import com.joyintech.tams.common.base.dao.TrdTradeFeeTotalMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -71,6 +73,12 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+
+    @Autowired
+    private TrdTradeFeeTotalMapper trdTradeFeeTotalMapper;
+
+    @Autowired
+    private CfetsTrdBondInvestTrade002Service cfetsTrdBondInvestTrade002Service;
 
     /**
      * 手工交收交收check
@@ -137,9 +145,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             }
         }
 
-        if(returnList.size() != cfetsRequest.getSelectedItem().size()){
-            ajaxResult.setData(returnList);
-        }
+        ajaxResult.setData(returnList);
 
         //查询页面、按钮是否走流程
         Map<String, String> param = new HashMap<String, String>();
@@ -292,7 +298,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())){
                 trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_已交收.getValue());
             }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
-                trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_交收失败.getValue());//TODO
+                trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_交收失败.getValue());
                 trdBankManualSettleInfo.setRemark(cfetsManualSettleDto.getRemark());
             }
         }
@@ -488,6 +494,16 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
                     ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收修改.getValue())){
                 sendPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
             }
+            //交收失败后，自动撤销原交易、交易登记、行权登记数据，关闭对应指令
+//            if(StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
+//                CfetsTrdBondInvestTradeDto revokeEntity = this.getTrdBondInvestTradeDto(entity.getTradeId());
+//                cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity);
+//                //关闭对应指令
+//                List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId());
+//                for(CfetsManualSettleDealInfo dealInfo : listTemp){
+////                    this.closeDelegateMethod(dealInfo.getEntrustId(),"");
+//                }
+//            }
         }
     }
 
@@ -498,5 +514,57 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
      */
     public String isNeedWorkflow(Map<String, String> param) {
         return joyinbusinessCommonService.isNeedWorkflow(param);
+    }
+    /**
+     * 债券投资交易新建画面查看模式查询债券投资交易信息
+     *
+     * @param tradeId 交易编号
+     * @return 债券投资交易信息
+     * @see
+     * @since 1.0
+     */
+    public CfetsTrdBondInvestTradeDto getTrdBondInvestTradeDto(String tradeId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("tradeId", tradeId);
+        params.put("B09", DictCodeListExt1.一次性费用类型_通道费.getValue());
+        params.put("Y", DictCodeList.是否_是.getValue());
+        CfetsTrdBondInvestTradeDto resultDto = cfetsManualSettleMapper.getTrdBondInvestTradeDto(params);
+        if (resultDto != null) {
+            if (resultDto.getSettleSpeed() != null) {
+                resultDto.setSettleSpeedStr(String.valueOf(resultDto.getSettleSpeed()));
+            }
+            else if(resultDto.getSettleSpeed() == 1L){
+                resultDto.setSettleSpeedStr("1");
+            }else if(resultDto.getSettleSpeed() == 2L){
+                resultDto.setSettleSpeedStr("2");
+            }else{
+                resultDto.setSettleSpeedStr(resultDto.getSettleSpeed().toString());
+            }
+            // 到期收益率
+            if (resultDto.getYield() != null) {
+                resultDto.setYield(ArithmeticUtil.multiply(resultDto.getYield(), BigDecimal.valueOf(100)));
+            }
+            // 行权收益率
+            if (resultDto.getExerYield() != null) {
+                resultDto.setExerYield(ArithmeticUtil.multiply(resultDto.getExerYield(), BigDecimal.valueOf(100)));
+            }
+
+            // 交易手续费
+            TrdTradeFeeTotalKey trdTradeFeeTotalKey = new TrdTradeFeeTotalKey();
+            trdTradeFeeTotalKey.setTotleTradeId(resultDto.getTotleTradeId());
+            trdTradeFeeTotalKey.setFeeType(BussinessDictCodeList.费用类型_交易手续费.getValue());
+            TrdTradeFeeTotal trdTradeFeeTotal = trdTradeFeeTotalMapper.selectByPrimaryKey(trdTradeFeeTotalKey);
+            if (trdTradeFeeTotal != null) {
+                resultDto.setProcedureAmt(trdTradeFeeTotal.getFeeAmt());
+            }
+
+            // 结算费服务费
+            trdTradeFeeTotalKey.setFeeType(BussinessDictCodeList.费用类型_结算手续费.getValue());
+            trdTradeFeeTotal = trdTradeFeeTotalMapper.selectByPrimaryKey(trdTradeFeeTotalKey);
+            if (trdTradeFeeTotal != null) {
+                resultDto.setSettleServiceAmt(trdTradeFeeTotal.getFeeAmt());
+            }
+        }
+        return resultDto;
     }
 }
