@@ -364,6 +364,12 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                             "F01,T23,P,TRADEAMT,29|"+
                             "F01,T02,P,PRINAMT,29|"+
                             /**modify by wujie on 20200213 end**/
+
+                            /**add by yinya on 20211213 end**/
+                             "F01,T03,P,PRINAMT,02|"+
+                             "F01,T39,P,PRINAMT,02|"+
+                            /**add by yinya on 20211213 end**/
+
                             
                             "F06,T02,P,TRADEAMT|"+
                             "F06,T24,P,TRADEAMT|"+
@@ -415,6 +421,11 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
                             + "F01,T22,P,TRADEAMT,29|"
                             + "F01,T02,P,INTAMT,29|"
                             /**modify by wujie on 20200213 end**/
+
+                            /**add by yinya on 20211213 end**/
+                            + "F01,T03,P,INTAMT,02|"
+                            + "F01,T39,P,INTAMT,02|"
+                            /**add by yinya on 20211213 end**/
                             
                             + "F06,T11,P,TRADEAMT|"
                             + "F06,T02,P,INTAMT|"
@@ -440,6 +451,8 @@ public class CashFlowsStatement001Service extends CommonExportService<CashFlowsS
             {"收到的其他与投资活动有关的现金",小计指标2_1,
                     	"F01,T22,P,TRADEAMT,37|"
                     	+ "F01,T02,P,TRADEAMT,37|"
+                                + "F01,T03,P,TRADEAMT,37|"
+                                + "F01,T39,P,TRADEAMT,37|"
                     	+ "F17,T22,P,TRADEAMT,37|"
                     	+ "F17,T02,P,TRADEAMT,37|"
                     	+ "F07,T22,P,TRADEAMT,37|"
