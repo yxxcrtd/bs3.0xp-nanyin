@@ -156,4 +156,17 @@ public class SettleTransDataPledge extends BaseEntity {
     public void setPledgeAmt(BigDecimal pledgeAmt) {
         this.pledgeAmt = pledgeAmt;
     }
+
+    /**
+     * 置换方向
+     */
+    private String tradeType;
+
+    public String getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(String tradeType) {
+        this.tradeType = tradeType;
+    }
 }

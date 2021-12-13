@@ -1422,4 +1422,30 @@ public class SettleTransData extends BaseEntity {
     public void setIsModify(String isModify) {
         this.isModify = isModify;
     }
+
+    /**
+     * 置换方向
+     */
+    private String tradeType;
+
+    public String getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(String tradeType) {
+        this.tradeType = tradeType;
+    }
+
+    /**
+     * 首期成交编号
+     */
+    private String vTradeId;
+
+    public String getvTradeId() {
+        return vTradeId;
+    }
+
+    public void setvTradeId(String vTradeId) {
+        this.vTradeId = vTradeId;
+    }
 }
