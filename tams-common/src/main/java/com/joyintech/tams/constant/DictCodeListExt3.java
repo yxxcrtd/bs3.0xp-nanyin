@@ -1579,6 +1579,11 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 	估值市价_第三方估值(DictCode.估值市价, "13", "第三方估值"),
 	评级对象显示类型_发行人评级(DictCode.评级对象显示类型,"91","发行人评级"),
 	//20211008 从DictCodeList迁移过来  by yflv end
+	
+	//20211213 从DictCodeList迁移过来  by yflv start
+	CSTP资产类型_现券买卖(DictCode.CSTP资产类型,"BOND","现券买卖"),
+	CSTP资产类型_质押式回购(DictCode.CSTP资产类型,"REPO","质押式回购"),
+	//20211213 从DictCodeList迁移过来  by yflv end
 
     估值市价_外管局(DictCode.估值市价, "10", "外管局"),
     估值市价_央行(DictCode.估值市价, "11", "央行"),
