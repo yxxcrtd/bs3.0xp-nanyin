@@ -15,6 +15,11 @@ public class DayEndAccountDto extends StlSecRecon {
 	private String finprodType;
 
 	/**
+	 * 金融产品类型（投管用）
+	 */
+	private String finprodType2;
+
+	/**
 	 * 流水号
 	 */
 	private String tradeId;
@@ -441,6 +446,15 @@ public class DayEndAccountDto extends StlSecRecon {
 
 	public void setFinprodType(String finprodType) {
 		this.finprodType = finprodType;
+	}
+
+
+	public String getFinprodType2() {
+		return finprodType2;
+	}
+
+	public void setFinprodType2(String finprodType2) {
+		this.finprodType2 = finprodType2;
 	}
 
 	public String getTradeId() {
