@@ -416,6 +416,8 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 trdFundInvestTradeDto.setSecManageAcctId(settleTransDataTotal.getSecAcctId());
                 trdFundInvestTradeDto.setDealSqeId(settleTransDataTotal.getSeqId());
                 trdFundInvestTradeDto.setFinprodMarketId(dto.getFinprodMarketId());
+                trdFundInvestTradeDto.setTradeAmt(dto.getRemainAmount());
+                trdFundInvestTradeDto.setShareAmt(dto.getRemainNum());
 
                 if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
                     trdFundInvestTradeDto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);

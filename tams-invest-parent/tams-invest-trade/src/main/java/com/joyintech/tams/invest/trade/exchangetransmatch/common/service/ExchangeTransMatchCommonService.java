@@ -104,6 +104,8 @@ public class ExchangeTransMatchCommonService extends BaseService {
     @Autowired
     private TrdFinProductBarterMapper trdFinProductBarterMapper;
     @Autowired
+    private TrdTradeFeeTotalMapper trdTradeFeeTotalMapper;
+    @Autowired
     private TrdTradeFeeDetailMapper trdTradeFeeDetailMapper;
     @Autowired
     private TrdFinProductBarterTotalMapper trdFinProductBarterTotalMapper;
@@ -585,6 +587,12 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
             if(StringUtil.isNotEmpty(baseTradeProductDealDto.getPaTrdFinProductDealTotal())){
                 paTrdFinProductDealTotalMapper.insertSelective(baseTradeProductDealDto.getPaTrdFinProductDealTotal());
+            }
+
+            if(!StringUtil.isEmptyList(baseTradeProductDealDto.getTrdTradeFeeTotalList())) {
+                for(TrdTradeFeeTotal trdTradeFeeTotal:baseTradeProductDealDto.getTrdTradeFeeTotalList()) {
+                    trdTradeFeeTotalMapper.insertSelective(trdTradeFeeTotal);
+                }
             }
 
             if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdDealTotalAdd())){

@@ -41,7 +41,14 @@
         A.TRADE_DATE tradeDate,
         A.SETTLE_DATE settleDate,
         D.ACCT_NO acctNo,
-        D.ACCT_NAME acctName
+        D.ACCT_NAME acctName,
+        ifnull(A.STAMP_FEE,0) stampFee,
+        ifnull(A.JSF_AMT,0) jsfAmt,
+        ifnull(A.GHF_AMT,0) ghfAmt,
+        ifnull(A.ZGF_AMT,0) zgfAmt,
+        ifnull(A.SXF_AMT,0) sxfAmt,
+        ifnull(A.SETTLE_FEE,0) settleFee,
+        ifnull(A.COMMISSION_AMT,0) commissionAmt
         from SETTLE_TRANS_DATA_TOTAL A
         LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B
         ON A.SEQ_ID = B.SEQ_NO
