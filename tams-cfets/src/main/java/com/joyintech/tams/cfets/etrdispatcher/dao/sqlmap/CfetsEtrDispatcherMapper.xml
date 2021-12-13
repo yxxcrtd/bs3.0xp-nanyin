@@ -501,6 +501,52 @@
         LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
         WHERE ete.entrust_id = #{entrustId}
+
+        union all
+
+        SELECT
+        to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
+        ete.portfolio_id portfolioId,
+        pp.portfolio_name portfolioName,
+        ete.inv_aim busiModel,
+        fp.finprod_market_id finprodMarketId,
+        fp.finprod_abbr finprodAbbr,
+        ete.trade_market tradeMarket,
+        ete.ps ps,
+        DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
+        ete.price_model priceModel,
+        ssai.sec_acct_name secAcctId,
+        ete.ccy ccy,
+        ete.entrust_num/100 shareNum,
+        eted.our_ent_num/100 entrustOwnNum,
+        eted.lendin_ent_num integrateSecAmount,
+        ete.price unitPrice,
+        eted.full_price allPrice,
+        eted.mature_yield*100 matureYield,
+        eted.exer_yield*100 exerYield,
+        eted.full_price*ete.entrust_num fpriceAmt,
+        ete.remark remark,
+        mci.CUSTOMER_NAME mainConsignee,
+        to_char(eted.payment_date,'yyyy-MM-dd') paymentDate,
+        to_char(eted.listing_date,'yyyy-MM-dd')  listingDate,
+        ete.entrust_num entrustNum,
+        ete.entrust_amt entrustAmt,
+        eted.deal_mode dealMode,
+        eted.term_type termType,
+        to_char(eted.MDATE,'yyyy-MM-dd') || ' - ' || to_char(eted.MDATE2,'yyyy-MM-dd') as dueDate,
+        eted.TERM_DAYS repoTerm,
+        eted.FIRST_UNIT_CPRICE || ' - ' || eted.FIRST_UNIT_CPRICE2 firstprice,
+        pss.pledge_stock_name pledgeStockName,
+        fp.Is_Right isRight
+        FROM WFL_ETR_ENTRUST ete
+        INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
+        LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
+        LEFT JOIN FIN_PRODUCT fp ON ete.finprod_id = fp.finprod_id
+        LEFT JOIN WFL_ETR_ENTRUST_PLEDGE eep ON ete.portfolio_id = eep.portfolio_id
+        LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
+        LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
+        WHERE ete.entrust_id = #{entrustId}
     </select>
 
     <sql id="etrDispatcherDealListInfo">
