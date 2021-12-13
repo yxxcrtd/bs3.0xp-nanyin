@@ -20,11 +20,6 @@ public class SettleTransData extends BaseEntity {
     private String cjbh;
 
     /**
-     * 是否人工修改
-     */
-    private String isModify;
-
-    /**
      * 执行日期
      */
     private Date dealDate;
@@ -369,26 +364,20 @@ public class SettleTransData extends BaseEntity {
     private String isPurchTypeYx;
 
     /**
+     * 是否人工修改
+     */
+    private String isModify;
+
+    /**
+     * 首期成交编号
+     */
+    private String fCjbh;
+
+    /**
      * 零碎份额资金
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal fragmentaryFunds;
-
-    /**
-     * 取得 零碎份额资金
-     * @return 零碎份额资金
-     */
-    public BigDecimal getFragmentaryFunds() {
-        return fragmentaryFunds;
-    }
-
-    /**
-     * 设置 零碎份额资金
-     * @param fragmentaryFunds 零碎份额资金
-     */
-    public void setFragmentaryFunds(BigDecimal fragmentaryFunds) {
-        this.fragmentaryFunds = fragmentaryFunds;
-    }
 
     /**
      * 取得 流水号
@@ -1437,37 +1426,51 @@ public class SettleTransData extends BaseEntity {
         this.isPurchTypeYx = isPurchTypeYx == null ? null : isPurchTypeYx.trim();
     }
 
+    /**
+     * 取得 是否人工修改
+     * @return 是否人工修改
+     */
     public String getIsModify() {
         return isModify;
     }
 
+    /**
+     * 设置 是否人工修改
+     * @param isModify 是否人工修改
+     */
     public void setIsModify(String isModify) {
-        this.isModify = isModify;
+        this.isModify = isModify == null ? null : isModify.trim();
     }
 
     /**
-     * 置换方向
+     * 取得 首期成交编号
+     * @return 首期成交编号
      */
-    private String tradeType;
-
-    public String getTradeType() {
-        return tradeType;
-    }
-
-    public void setTradeType(String tradeType) {
-        this.tradeType = tradeType;
+    public String getfCjbh() {
+        return fCjbh;
     }
 
     /**
-     * 首期成交编号
+     * 设置 首期成交编号
+     * @param fCjbh 首期成交编号
      */
-    private String vTradeId;
-
-    public String getvTradeId() {
-        return vTradeId;
+    public void setfCjbh(String fCjbh) {
+        this.fCjbh = fCjbh == null ? null : fCjbh.trim();
     }
 
-    public void setvTradeId(String vTradeId) {
-        this.vTradeId = vTradeId;
+    /**
+     * 取得 零碎份额资金
+     * @return 零碎份额资金
+     */
+    public BigDecimal getFragmentaryFunds() {
+        return fragmentaryFunds;
+    }
+
+    /**
+     * 设置 零碎份额资金
+     * @param fragmentaryFunds 零碎份额资金
+     */
+    public void setFragmentaryFunds(BigDecimal fragmentaryFunds) {
+        this.fragmentaryFunds = fragmentaryFunds;
     }
 }
