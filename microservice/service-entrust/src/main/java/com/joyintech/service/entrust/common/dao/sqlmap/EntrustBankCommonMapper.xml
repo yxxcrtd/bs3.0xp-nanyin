@@ -30,4 +30,13 @@
 			 	where ENTRUST_ID=#{entrustId} and TRADE_STATUS not in (#{QUOTE_STUTAS_IBU_08},#{QUOTE_STUTAS_IBU_14},#{QUOTE_STUTAS_IBU_15})
 			 	)
 	</select>
+	<select id="checkRegDataStatus" resultType="java.lang.Integer">
+		select count(*) from (
+		select ENTRUST_ID from wfl_reg_fin_product_deal
+		where ENTRUST_ID=#{entrustId}  and trade_status='01' and is_cancel='N'
+		union all
+		select ENTRUST_ID from reg_fin_product_deal
+		where ENTRUST_ID= #{entrustId}  and trade_status='01' and is_cancel='N'
+		)
+	</select>
 </mapper>
