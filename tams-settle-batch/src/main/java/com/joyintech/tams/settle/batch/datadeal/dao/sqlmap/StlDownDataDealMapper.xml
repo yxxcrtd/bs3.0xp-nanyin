@@ -521,7 +521,7 @@
         <where>
       		CDATE = #{dealDate,jdbcType=DATE}
        		<if test="xgsgBusinessTypeList != null and xgsgBusinessTypeList.size() > 0">
-           		AND 
+           		AND
            		<foreach collection="xgsgBusinessTypeList" item="xgsgBusinessType" open="OTH_TYPE IN (" close=")" separator=",">
            			#{xgsgBusinessType,jdbcType=VARCHAR}
            		</foreach>
@@ -551,4 +551,32 @@
         	</foreach>
         </where>
     </select>
+
+	<select id="selectSzdTzxx" parameterType="java.util.Map"
+			resultMap="com.joyintech.tams.common.base.dao.SzdTzxxMapper.BaseResultMap">
+		<include refid="com.joyintech.tams.common.base.dao.SzdTzxxMapper.Sql_All_Data"></include>
+		<where>
+			IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(DATA_FILE) LIKE CONCAT(#{dataFile}, '%'))
+			<foreach item="searchMapValue" index="searchMapKey" collection="searchMap">
+				AND ${searchMapKey} IN
+				<foreach collection="searchMapValue" item ="searchMapValueData" open="(" close=")" separator=",">
+					#{searchMapValueData}
+				</foreach>
+			</foreach>
+		</where>
+	</select>
+
+	<delete id="deleteShareBonusRegByCdate">
+		DELETE FROM SHARE_BONUS_REG
+		<where>
+			CDATE = #{dealDate,jdbcType=DATE}
+		</where>
+	</delete>
+
+	<delete id="deletemstFundBonusNoticeByCdate">
+		DELETE FROM MST_FUND_BONUS_NOTICE
+		<where>
+			CDATE = #{dealDate,jdbcType=DATE}
+		</where>
+	</delete>
 </mapper>

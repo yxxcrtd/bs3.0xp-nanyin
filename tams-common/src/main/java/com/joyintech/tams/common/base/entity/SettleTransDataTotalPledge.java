@@ -3,12 +3,11 @@ package com.joyintech.tams.common.base.entity;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
-
 import java.math.BigDecimal;
 
 public class SettleTransDataTotalPledge extends BaseEntity {
     /**
-     * 成交编号
+     * 流水号
      */
     private String tradeId;
 
@@ -47,16 +46,21 @@ public class SettleTransDataTotalPledge extends BaseEntity {
     private BigDecimal pledgeAmt;
 
     /**
-     * 取得 成交编号
-     * @return 成交编号
+     * 置换方向，中途换券、解除质押时登录
+     */
+    private String displaceDirection;
+
+    /**
+     * 取得 流水号
+     * @return 流水号
      */
     public String getTradeId() {
         return tradeId;
     }
 
     /**
-     * 设置 成交编号
-     * @param tradeId 成交编号
+     * 设置 流水号
+     * @param tradeId 流水号
      */
     public void setTradeId(String tradeId) {
         this.tradeId = tradeId == null ? null : tradeId.trim();
@@ -156,5 +160,21 @@ public class SettleTransDataTotalPledge extends BaseEntity {
      */
     public void setPledgeAmt(BigDecimal pledgeAmt) {
         this.pledgeAmt = pledgeAmt;
+    }
+
+    /**
+     * 取得 置换方向，中途换券、解除质押时登录
+     * @return 置换方向，中途换券、解除质押时登录
+     */
+    public String getDisplaceDirection() {
+        return displaceDirection;
+    }
+
+    /**
+     * 设置 置换方向，中途换券、解除质押时登录
+     * @param displaceDirection 置换方向，中途换券、解除质押时登录
+     */
+    public void setDisplaceDirection(String displaceDirection) {
+        this.displaceDirection = displaceDirection == null ? null : displaceDirection.trim();
     }
 }

@@ -380,6 +380,9 @@
             <if test="isModify != null" >
                 IS_MODIFY,
             </if>
+            <if test="fragmentaryFunds != null" >
+                FRAGMENTARY_FUNDS,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -594,6 +597,9 @@
             </if>
             <if test="isModify != null" >
                 #{isModify,jdbcType=VARCHAR},
+            </if>
+            <if test="fragmentaryFunds != null" >
+                #{fragmentaryFunds,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

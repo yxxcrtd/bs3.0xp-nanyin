@@ -4,11 +4,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.FinProductQuto;
-import com.joyintech.tams.common.base.entity.SettleTransData;
-import com.joyintech.tams.common.base.entity.SettleTransDataAdd;
-import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
-import com.joyintech.tams.common.base.entity.SzdZqbd;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -86,6 +82,9 @@ public class StlDataDealSzdZqbdProcessService {
             	List<FinProductQuto> finProductQutoList = generatorSharesFinProductQutoList(pgSzdZqbdList, map, stlDownDataDealOperatorDto);
             	stlDownDataDealWriteDto.setFinProductQutoList(finProductQutoList);
             }
+            //
+            List<ShareBonusReg> shareBonusRegList = generatorShareBonusRegList(stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList(), map, stlDownDataDealOperatorDto);
+            stlDownDataDealWriteDto.setShareBonusRegList(shareBonusRegList);
         }
         if (StringUtil.equals(DictCodeListExt1.证券品种_债券.getValue(), stlDownDataDealOperatorDto.getFinprodType())) {
         	if (stlDownDataDealOperatorDto != null && stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto() != null &&
@@ -175,6 +174,15 @@ public class StlDataDealSzdZqbdProcessService {
                 settleTransData.setPs(DictCodeListExt2.交易方向_配股.getValue());
                 // 业务场景明细分类
                 settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_股票_配股认购_配股.getValue());
+            }
+            // 送股-除权登记
+            if(StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                    && StringUtil.equals(szdZqbd.getQylb(), StlDataDealProcessConstant.QYLB_S)
+                    && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00K)) {
+                // 交易方向
+                settleTransData.setPs(DictCodeList.交易方向_除权登记.getValue());
+                // 业务场景明细分类
+                settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_股票_分红_除权登记.getValue());
             }
             return true;
         });
@@ -368,5 +376,43 @@ public class StlDataDealSzdZqbdProcessService {
 			}
     	}
     	return list;
+    }
+
+    private List<ShareBonusReg> generatorShareBonusRegList(List<SzdZqbd> pgSzdZqbdList,
+                                                           Map<String, List<StlDownDataDealAccountInfoDto>> map,
+                                                           StlDownDataDealOperatorDto stlDownDataDealOperatorDto) {
+        List<ShareBonusReg> list = new ArrayList<ShareBonusReg>();
+        for(SzdZqbd szdZqbd : pgSzdZqbdList) {
+            // KEY = 证券账户号码 + 交易单元
+            String key = szdZqbd.getZqzh() + szdZqbd.getXwh();
+            // 组合代码不在输入的组合代码List里面不处理
+            List<StlDownDataDealAccountInfoDto> accountInfoDtolist = map.get(key);
+
+            if (CollectionUtils.isEmpty(accountInfoDtolist)) {
+                continue;
+            }
+            // 组合代码不在输入的组合代码List里面不处理
+            else if (stlDownDataDealOperatorDto.getPortfolioIdList().size() > 0 && !stlDownDataDealOperatorDto.getPortfolioIdList().contains(accountInfoDtolist.get(0).getPortfolioId())) {
+                continue;
+            }
+            // 送股-除权登记
+            if(StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                    && StringUtil.equals(szdZqbd.getQylb(), StlDataDealProcessConstant.QYLB_S)
+                    && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00K)) {
+                ShareBonusReg shareBonusReg = new ShareBonusReg();
+                shareBonusReg.setSharesId(szdZqbd.getZqzh() + ".SH");
+                shareBonusReg.setSecAcctId(accountInfoDtolist.get(0).getSecAcctId());
+                try {
+                    shareBonusReg.setRegDate(DateUtil.parseDate(szdZqbd.getBdrq(),DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    shareBonusReg.setDelDate(DateUtil.addDay(shareBonusReg.getRegDate(), 1));
+                    shareBonusReg.setRedShareListingDate(DateUtil.addDay(shareBonusReg.getRegDate(), 2));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                shareBonusReg.setPerDevidentAmt(new BigDecimal(szdZqbd.getBdsl()));
+                list.add(shareBonusReg);
+            }
+        }
+        return list;
     }
 }

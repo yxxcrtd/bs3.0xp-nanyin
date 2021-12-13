@@ -6,6 +6,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.datadeal.dto.StlDownDataDealDeleteOperatorDto;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDownDataDealReaderService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -97,6 +98,11 @@ public class StlDownDataDealDeleteReader extends BaseReader<StlDownDataDealDelet
 	        // 删除交易所品种额度（新股申购业务类型List）
 	        stlDownDataDealService.deleteFinProdQuotByXgsgBussType(execInfo.getExecuteDate(), xgsgBusinessTypeList);
 
+			// 删除【送股权益登记】
+		    stlDownDataDealService.deleteShareBonusRegByCdate(execInfo.getExecuteDate());
+
+			// 删除【基金分红公告】
+		    stlDownDataDealService.deletemstFundBonusNoticeByCdate(execInfo.getExecuteDate());
         	return new ArrayList<StlDownDataDealDeleteOperatorDto>();
 	}
 }

@@ -72,17 +72,4 @@ public interface ReconInterfMapper {
      */
     List<StlSecRecon> listStlSecRecon(Map<String,Object> param);
 
-    /**
-     * 查询基金分红设置FJY文件
-     * @param param
-     * @return
-     */
-    List<InterfFundBonusFjy> findInterfFundBonusFjy(Map<String,Object> param);
-
-    /**
-     * 查询数量
-     * @param param
-     * @return
-     */
-    Integer queryFinProductOthCodeCount(Map<String,Object> param);
 }
