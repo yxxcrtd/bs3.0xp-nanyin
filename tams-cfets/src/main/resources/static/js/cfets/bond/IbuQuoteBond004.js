@@ -399,6 +399,11 @@
         }
     }
 
+    window.componentLoadCallback = function(isDone, pagePath, params){
+        if(isDone){
+            $('#submitForm').find('input,text,textarea,select').attr('disabled','disabled');
+        }
+    }
     $(function () {
         // 初始化页面
         initPage();
