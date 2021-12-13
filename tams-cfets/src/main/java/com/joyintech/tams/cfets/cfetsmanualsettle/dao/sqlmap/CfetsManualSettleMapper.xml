@@ -868,4 +868,83 @@
         </where>
         order by pm.create_time desc
     </select>
+
+    <resultMap id="trdBondInvestTradeFullResultMap" type="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto"
+               extends="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
+        <result column="fee_amt"    property="channelFee"   jdbcType="DECIMAL"/>
+        <result column="ENTRUST_ID"         property="entrustId"        jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID"       property="portfolioId"      jdbcType="VARCHAR" />
+        <result column="integrateTradeAmt"       property="integrateTradeAmt"      jdbcType="DECIMAL" />
+        <result column="ownTradeAmt"       property="ownTradeAmt"      jdbcType="DECIMAL" />
+        <result column="integrateCpriceAmt"       property="integrateCpriceAmt"      jdbcType="DECIMAL" />
+        <result column="integrateIntAmt"       property="integrateIntAmt"      jdbcType="DECIMAL" />
+        <result column="ownIntAmt"       property="ownIntAmt"      jdbcType="DECIMAL" />
+        <result column="integrateFpriceAmt"       property="integrateFpriceAmt"      jdbcType="DECIMAL" />
+        <result column="ownFpriceAmt"       property="ownFpriceAmt"      jdbcType="DECIMAL" />
+        <result column="PORTFOLIO_NAME"     property="portfolioName"    jdbcType="VARCHAR" />
+        <result column="FINPROD_ID"         property="finprodId"        jdbcType="VARCHAR" />
+        <result column="FINPROD_NAME"       property="finprodName"      jdbcType="VARCHAR" />
+        <result column="CALENDAR_ID"       property="calendarId"      jdbcType="VARCHAR" />
+        <result column="WORKFLOW_ID"       property="workflowId"       jdbcType="VARCHAR" />
+        <result column="WORKFLOW_STATUS"       property="workflowStatus"       jdbcType="VARCHAR" />
+        <result column="ASSET_RECOMMAND_ORG"       property="assetRecommandOrg"       jdbcType="VARCHAR" />
+        <result column="REFUND_RATE"       property="refundRate"      jdbcType="DECIMAL" />
+        <result column="REFUND_AMOUNT"       property="refundAmount"      jdbcType="DECIMAL" />
+        <result column="businessModel"       property="businessModel"      jdbcType="VARCHAR" />
+        <association property="trdInvestPersonInfo" javaType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdInvestPersonInfoDto">
+            <result column="TRADER"             property="trader"           jdbcType="VARCHAR" />
+            <result column="COUNTER_ID"         property="counterId"        jdbcType="VARCHAR" />
+            <result column="COUNTER_TRADER"     property="counterTrader"    jdbcType="VARCHAR" />
+            <result column="COUNTER_CONTACT"    property="contactInfo"   jdbcType="VARCHAR" />
+        </association>
+    </resultMap>
+    <select id="getTrdBondInvestTradeDto" resultMap="trdBondInvestTradeFullResultMap">
+        SELECT DISTINCT
+        tpd.TOTLE_TRADE_ID, tpd.FINPROD_TYPE2, tpda.ENTRUST_ID, PP.PORTFOLIO_ID,
+        tpd.SETTLE_SPEED, tpd.TRADE_DATE, tpd.SETTLE_DATE, tpd.PS,
+        tpd.FINPROD_ID, fp.finprod_abbr FINPROD_NAME,fp.CALENDAR_ID, tpd.TRADE_MARKET,
+        tpd.TRADE_PLAT, tpd.TRADE_MARKET_MODE,
+        nvl(tpd.INV_AIM,trd_product_deal.INV_AIM) INV_AIM,
+        tpd.F_TRADE_ID,
+        tpd.SEC_MANAGE_ACCT_ID, nvl(tpd.CCY,trd_product_deal.CCY) CCY,
+        tpd.SHARE_AMT * 100 as TRADE_AMT,
+        nvl(tpda.LENDIN_SHARE_AMT, 0) * 100 integrateTradeAmt,
+        nvl(tpda.OUR_SHARE_AMT, tpd.SHARE_AMT) * 100 ownTradeAmt,
+        tpd.UNIT_CPRICE,
+        tpd.UNIT_INT, tpd.UNIT_FPRICE,
+        tpd.CPRICE_AMT,
+        nvl(tpda.LENDIN_CPRICE_AMT, 0) integrateCpriceAmt,
+        nvl(tpda.OUR_CPRICE_AMT, tpd.CPRICE_AMT) ownCpriceAmt,
+        tpd.INT_AMT,
+        nvl(tpda.LENDIN_FPRICE_AMT2, 0) integrateIntAmt,
+        nvl(tpda.OUR_FPRICE_AMT2, tpd.INT_AMT) ownIntAmt,
+        tpd.FPRICE_AMT,
+        nvl(tpda.LENDIN_FPRICE_AMT, 0) integrateFpriceAmt,
+        nvl(tpda.OUR_FPRICE_AMT, tpd.FPRICE_AMT) ownFpriceAmt,
+        tpd.YIELD, tpd.EXER_YIELD, tpd.REMARK,
+        tpd.TRADER, tpd.COUNTER_ID, tpd.COUNTER_TRADER, tpd.COUNTER_CONTACT,tpd.CHL_ID
+        <!-- 通道交易 新增 强成西 2019/03/26 start -->
+        ,det.FEE_AMT
+        <!-- 通道交易 新增 强成西 2019/03/26 end -->
+        <!-- 推荐方 新增 zhuyongkang 20191023 start -->
+        ,tpda.ASSET_RECOMMAND_ORG
+        <!-- 推荐方 新增 zhuyongkang 20191023 start -->
+        ,tpd.PRIN_AMT
+        <!-- 撤销时无此字段 空指针 -->
+        ,ptpd.REFUND_RATE*100 as REFUND_RATE
+        ,ptpd.REFUND_AMOUNT as REFUND_AMOUNT
+        ,TRD_PRODUCT_DEAL.BUSINESS_MODEL as businessModel
+        FROM TRD_FIN_PRODUCT_DEAL_TOTAL tpd
+        LEFT JOIN TRD_DEAL_TOTAL_ADD tpda ON tpda.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
+        LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL ptpd ON ptpd.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
+        LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = tpd.FINPROD_ID
+        <!-- 通道交易 新增 强成西 2019/03/26 start -->
+        left join TRD_TRADE_FEE_DETAIL det ON det.TRADE_ID = tpd.TOTLE_TRADE_ID
+        and det.FEE_TYPE=#{B09}
+        and det.IS_PAY_WITH_TRADE=#{Y}
+        <!-- 通道交易 新增 强成西 2019/03/26 end -->
+        LEFT JOIN PTL_PORTFOLIO PP ON tpd.PORTFOLIO_ID = PP.PORTFOLIO_ID
+        left join trd_product_deal on TRD_PRODUCT_DEAL.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
+        WHERE tpd.TOTLE_TRADE_ID = #{tradeId}
+    </select>
 </mapper>

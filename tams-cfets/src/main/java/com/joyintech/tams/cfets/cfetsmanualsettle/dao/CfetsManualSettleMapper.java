@@ -1,6 +1,7 @@
 package com.joyintech.tams.cfets.cfetsmanualsettle.dao;
 
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
+import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
 import com.joyintech.tams.common.base.entity.TrdBankManualSetDetail;
 import com.joyintech.tams.common.base.entity.TrdBankManualSettleInfo;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
@@ -141,4 +142,12 @@ public interface CfetsManualSettleMapper {
      * @since 1.0
      */
     List<String> getBusinessData(WflValidInputParameter wflValidInputParameter);
+
+    /**
+     * 查询债券交易基本信息
+     * @param params
+     * @return
+     */
+    CfetsTrdBondInvestTradeDto getTrdBondInvestTradeDto(Map<String, Object> params);
+
 }
