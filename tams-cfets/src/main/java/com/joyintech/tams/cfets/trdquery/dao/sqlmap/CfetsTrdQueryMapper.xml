@@ -2230,7 +2230,7 @@
     </select>
     <select id="selectRegTotalInfoById"  resultType="com.joyintech.tams.common.base.entity.RegFinProductDealTotal">
         select
-        reg.totle_trade_id  as totleTradeId
+        reg.totle_trade_id  as totleTradeId,
         reg.remark as remark
         from
         reg_fin_product_deal_total reg
