@@ -744,7 +744,9 @@ insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPER
 values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-032', 'SalesTransactionMaintenance002', 'isCustomizedStringForWhitelist', 'institutionCode', null, '^([CZ][0-9]{5})$', 'Y','金融机构代码格式不对。请输入正确的金融机构代码', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
 
---更改投资者明细与投资者信息到中债四期菜单
+--更改投资者明细与投资者信息到中债三四期菜单
+DELETE FROM SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_019';
+INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_019', 8, '中债三四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
 delete from SYS_MENU where PAGE_ID = 'EquityInfo001';
 delete from SYS_MENU where PAGE_ID = 'SvrEquityBusinessDetails001';
 INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_019', 'REP', null, 'REPORT_001_001', 'EquityInfo001', 16, '02', '投资者身份信息', 'system', null, TIMESTAMP '2021-06-30 20:38:58', 'system', TIMESTAMP '2021-06-30 20:38:58');
