@@ -1270,6 +1270,7 @@ from
         where to_char(a.cdate,'yyyy-MM-dd') = to_char(#{cdate},'yyyy-MM-dd') and (b.S_HOLDINGTYPE IN (#{S_003}) or a.HODING_TYPE in (#{A_004}))
         and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         and  a.PORTFOLIO_ID  = #{portfolioId,jdbcType=VARCHAR}
+        and a.date_type='0'
     </select>
     <select id="findPtlInfo"
             resultType="com.joyintech.tams.common.base.entity.PtlPortfolio">
@@ -1311,6 +1312,7 @@ from
         </if>
         where a.cdate= #{platDate}
         and a.finprod_id=#{finprodId,jdbcType=VARCHAR}
+        and a.date_type='0'
         group by  a.portfolio_id,a.finprod_id)tt
         <!-- 业务模式查交易表 -->
         left join (

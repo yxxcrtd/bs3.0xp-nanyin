@@ -1569,8 +1569,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 if(!StringUtil.isEmptyList(busmodelList)){
                     for(String bus:busmodelList){
                          if(!StringUtil.equals(bus,distrib.getBusinessModel())){
-                            /* messages.add("组合【"+distrib.getPortfolioId()+"】、资产【"+ allDto.getFinprodMarketId()+"】存在多个业务模式，不允许下指令，请先做资产重分类");
-                             break;*/
+                            messages.add("组合【"+distrib.getPortfolioId()+"】、资产【"+ allDto.getFinprodMarketId()+"】存在多个业务模式，不允许下指令，请先做资产重分类");
+                             break;
                          }
                     }
                 }
