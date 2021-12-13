@@ -5,6 +5,8 @@ import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.StlSecRecon;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 
 import java.math.BigDecimal;
@@ -15,6 +17,11 @@ public class DayEndAccountDto extends StlSecRecon {
 	 * 金融产品类型
 	 */
 	private String finprodType;
+
+	/**
+	 * 金融产品类型
+	 */
+	private String finprodType2;
 
 	/**
 	 * 流水号
@@ -65,7 +72,16 @@ public class DayEndAccountDto extends StlSecRecon {
 	 * @return getPsStr.
 	 */
 	public String getPsStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());
+		// ZGZGST-4194:成交明细表回购方向与指令方向不一致,需特殊处理 fuyongsheng 20211213 edit start
+		// return SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());
+		if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(this.getFinprodType2())){
+			return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_正回购.getValue());
+		}else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(this.getFinprodType2())){
+			return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_逆回购.getValue());
+		}else{
+			return SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());
+		}
+		// ZGZGST-4194:成交明细表回购方向与指令方向不一致,需特殊处理 fuyongsheng 20211213 edit end
 	}
 
 	/**
@@ -449,6 +465,15 @@ public class DayEndAccountDto extends StlSecRecon {
 
 	public void setFinprodType(String finprodType) {
 		this.finprodType = finprodType;
+	}
+
+
+	public String getFinprodType2() {
+		return finprodType2;
+	}
+
+	public void setFinprodType2(String finprodType2) {
+		this.finprodType2 = finprodType2;
 	}
 
 	public String getTradeId() {
