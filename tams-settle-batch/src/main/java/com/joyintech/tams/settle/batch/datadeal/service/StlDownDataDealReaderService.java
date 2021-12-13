@@ -440,12 +440,12 @@ public class StlDownDataDealReaderService {
 	}
 
 	// 删除【送股权益登记】
-	int deleteShareBonusRegByCdate(Date dealDate){
+	public int deleteShareBonusRegByCdate(Date dealDate){
 		return stlDownDataDealMapper.deleteShareBonusRegByCdate(dealDate);
 	}
 
 	// 删除【基金分红公告】
-	int deletemstFundBonusNoticeByCdate(Date dealDate){
+	public int deletemstFundBonusNoticeByCdate(Date dealDate){
     	return stlDownDataDealMapper.deletemstFundBonusNoticeByCdate(dealDate);
 	}
 }
