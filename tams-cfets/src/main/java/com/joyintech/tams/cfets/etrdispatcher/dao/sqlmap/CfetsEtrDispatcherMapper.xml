@@ -791,7 +791,9 @@
         tpdp.remark remark,
         tpdp.Delivery_Type deliveryType,
         TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
-        TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate
+        TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,
+        tpdp.TOTLE_TRADE_ID totalTradeId,
+        tpdp.FINPROD_TYPE2
     </sql>
     <sql id="etrDispatcherExeListInfo1">
         '' effectFlag,
@@ -827,7 +829,9 @@
         tpdp.remark remark,
         tpdp.Delivery_Type deliveryType,
         TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
-        TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate
+        TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,
+        tpdp.quote_id totalTradeId,
+        tpdp.FINPROD_TYPE2
     </sql>
     <select id="getEtrDispatcherExeListInfo"
             resultType="com.joyintech.tams.cfets.etrdispatcher.dto.CfetsEtrDispatcherExeListInfoResponse">
@@ -856,8 +860,8 @@
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpdp.sec_manage_acct_id = ssai.SEC_ACCT_ID
         LEFT JOIN MST_COUNTER_PARTY mcp ON tpdp.COUNTER_ID = mcp.counter_id
         LEFT JOIN MST_CFETS_CUSTOMER_TRADER mcct ON tpdp.COUNTER_TRADER= mcct.trader_id
-        LEFT JOIN REG_TRADE_FEE ttft ON tpdp.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
-        LEFT JOIN REG_TRADE_FEE ttft1 ON tpdp.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
+        LEFT JOIN WFL_REG_TRADE_FEE ttft ON tpdp.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
+        LEFT JOIN WFL_REG_TRADE_FEE ttft1 ON tpdp.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
         LEFT JOIN FIN_EXERCISE_PLAN T6 ON tpdp.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='02'
         WHERE tpdp.entrust_id = #{entrustId}
 

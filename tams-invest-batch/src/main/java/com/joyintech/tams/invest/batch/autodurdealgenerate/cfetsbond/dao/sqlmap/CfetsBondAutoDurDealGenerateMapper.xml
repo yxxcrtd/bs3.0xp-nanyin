@@ -180,7 +180,7 @@
         from (SELECT
         T1.FINPROD_ID,
         T1.PORTFOLIO_ID,
-        DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1,'11', T1.AMOUNT*-1, T1.AMOUNT) AMOUNT,
+        DECODE(T1.HODING_TYPE, '06', T1.AMOUNT*-1,'11', T1.AMOUNT*-1, T1.AMOUNT)/100 AMOUNT,
         T1.SEC_ACCT_ID,
         t2.vdate,
         t2.mdate,
@@ -324,7 +324,7 @@
             INVEST_YESORNO,
             FINPROD_ID,
             CDATE,
-            SUM(AMOUNT) AMOUNT,
+            SUM(AMOUNT)/100 AMOUNT,
             vDate,
             mDate,
             yield,

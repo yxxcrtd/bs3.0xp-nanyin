@@ -36,7 +36,7 @@
 		T2.FINPROD_ABBR finprodAbbr,
 		T1.FINPROD_TYPE2 finprodType2,
 		T1.PS ps,
-		T1.SHARE_AMT*100 settleNumT,
+		T1.SHARE_AMT/100 settleNumT,
 		T1.TRADE_AMT settleAmtT,
 		case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
 		when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}

@@ -147,6 +147,12 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
     @ApiModelProperty(name="actExerciseDate",value="实际行权日",example="字符串1")
     private String actExerciseDate;
 
+    @ApiModelProperty(name="totalTradeId",value="汇总交易编号",example="A1")
+    private String totalTradeId;
+
+    @ApiModelProperty(name="finprodType2",value="资产类型",example="债券、回购")
+    private String finprodType2;
+
     public String getEffectFlag() {
         return effectFlag;
     }
@@ -505,5 +511,21 @@ public class CfetsEtrDispatcherExeListInfoResponse extends CfetsEtrDispatcherBas
 
     public void setActExerciseDate(String actExerciseDate) {
         this.actExerciseDate = actExerciseDate;
+    }
+
+    public String getTotalTradeId() {
+        return totalTradeId;
+    }
+
+    public void setTotalTradeId(String totalTradeId) {
+        this.totalTradeId = totalTradeId;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
     }
 }
