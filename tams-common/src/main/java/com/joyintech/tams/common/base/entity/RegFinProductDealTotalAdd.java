@@ -66,6 +66,14 @@ public class RegFinProductDealTotalAdd extends BaseEntity {
      * 实际行权日
      */
     private Date actSetteDate;
+    /**
+     * 行权净价
+     */
+    private BigDecimal exercisePrice;
+    /**
+     * 赎回比例
+     */
+    private BigDecimal redeemRate;
 
     /**
      * 取得 汇总登记编号
@@ -226,5 +234,21 @@ public class RegFinProductDealTotalAdd extends BaseEntity {
     @JsonDeserialize(using = CustomDateDeserialize.class)
     public void setActSetteDate(Date actSetteDate) {
         this.actSetteDate = actSetteDate;
+    }
+
+    public BigDecimal getExercisePrice() {
+        return exercisePrice;
+    }
+
+    public void setExercisePrice(BigDecimal exercisePrice) {
+        this.exercisePrice = exercisePrice;
+    }
+
+    public BigDecimal getRedeemRate() {
+        return redeemRate;
+    }
+
+    public void setRedeemRate(BigDecimal redeemRate) {
+        this.redeemRate = redeemRate;
     }
 }

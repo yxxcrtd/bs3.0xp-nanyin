@@ -20,12 +20,17 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.trdquery.controller.CfetsTrdQueryController;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryRegInfoListRequest;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryRegInfoListResponse;
+import com.joyintech.tams.cfets.trdquery.service.CfetsTrdQueryService;
+import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemRegInfoListRequest;
+import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemRegInfoListResponse;
+import com.joyintech.tams.cfets.trdredeem.service.CfetsTrdRedeemService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +44,9 @@ import java.util.Map;
 @Api(tags = "银行间赎回登记")
 public class CfetsTrdRedeemController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(CfetsTrdRedeemController.class);
+
+    @Autowired
+    private CfetsTrdRedeemService cfetsTrdRedeemService;
 
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
@@ -84,16 +92,17 @@ public class CfetsTrdRedeemController extends BaseController {
     @ApiOperation(value = "赎回登记列表分页查询", notes = "赎回登记列表分页查询")
     @PostMapping("/queryAllRedeemRegInfoList")
     @ResponseBody
-    public Message<Page<CfetsTrdQueryRegInfoListResponse>> queryAllRegInfoList(@RequestBody CfetsTrdQueryRegInfoListRequest dto)
+    public Message<Page<CfetsTrdRedeemRegInfoListResponse>> queryAllRedeemRegInfoList(@RequestBody CfetsTrdRedeemRegInfoListRequest dto)
             throws Exception {
         try {
-            Page<CfetsTrdQueryRegInfoListResponse> page =null;//cfetsTrdQueryService.queryAllRegInfoList(dto);
-            return new Message<Page<CfetsTrdQueryRegInfoListResponse>>().success().setData(page);
+            Page<CfetsTrdRedeemRegInfoListResponse> page =cfetsTrdRedeemService.queryAllRedeemRegInfoList(dto);
+            return new Message<Page<CfetsTrdRedeemRegInfoListResponse>>().success().setData(page);
         } catch (Exception e) {
-            logger.error("查询交易登记列表分页数据异常", e);
-            return new Message<Page<CfetsTrdQueryRegInfoListResponse>>().fail().setMessage("查询交易登记列表分页数据异常");
+            logger.error("查询赎回登记列表分页数据异常", e);
+            return new Message<Page<CfetsTrdRedeemRegInfoListResponse>>().fail().setMessage("查询赎回登记列表分页数据异常");
         }
     }
+
 
 
 }

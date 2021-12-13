@@ -157,6 +157,7 @@ public class CfetsTrdBondInvestTrade002Controller extends BaseController {
                 dto.setTradeAmt(dto.getTotalFaceValue());
             }
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
+            model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(dto.getCfetsBussCombDistribtList()));
             model.addAttribute("workflowId",workflowId);
             if (StringUtil.isNotEmpty(dto.getBondFirstSign())){
                 model.addAttribute("bondFirstSign",dto.getBondFirstSign());

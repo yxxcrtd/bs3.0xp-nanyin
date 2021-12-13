@@ -1699,6 +1699,8 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     操作类型_接收(DictCode.操作类型,"07","接收"),
     操作类型_放弃(DictCode.操作类型,"08","放弃"),
     操作类型_导出(DictCode.操作类型,"09","导出"),
+
+    共通业务类型_赎回登记(DictCode.共通业务类型,"TRD91","赎回登记"),
     ;
     /**
      * 对应于数据字典code

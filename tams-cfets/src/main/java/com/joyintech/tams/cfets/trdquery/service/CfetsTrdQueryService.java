@@ -834,6 +834,82 @@ public class CfetsTrdQueryService extends BaseService{
         entity.setSelectedItem(list);
         return cfetsManualSettleQueryService.findManualSettleInfo(pageCode,dtCode,spcdCode,entity);
     }
+    /**
+     * 只读表单设置及数据查询_成交信息查询
+     * @param pageCode
+     * @param dtCode
+     * @param spcdCode
+     * @return
+     */
+    public Map<String, Object> findTradeDetailInfo(String pageCode, String dtCode, String spcdCode, CfetsTrdQueryTradeInfoListResponse dto) {
+        Map<String, Object> resultData = new HashMap<>();
+        if(StringUtil.isBlank(spcdCode)){
+            return resultData;
+        }
+        String spcdCodeTemp =spcdCode;
+        //基本信息
+        List<CfgReadonlyFormShow> infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
+        //金额信息
+        spcdCode = spcdCode+",M";
+        List<CfgReadonlyFormShow> infoForm1 = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
+        //组合
+        spcdCode = spcdCode+",P";
+
+        //List<CfgReadonlyFormShow> infoForm2 = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
+        List<CfgDataTableShow> infoForm2;
+        //获取登录用户的ID
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCode(pageCode, dtCode,spcdCode, userId);
+        if (null == flag) {
+            infoForm2 = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_NO, USER_ID);
+        } else {
+            infoForm2 = cfgDataTableMapper.getByPageCode(pageCode, dtCode,spcdCode, EFFERANGE_IS, userId);;
+        }
+        resultData.put(dtCode+"_form",infoForm);
+        resultData.put(dtCode+"_form1",infoForm1);
+        resultData.put(dtCode+"_form2",infoForm2);
+
+
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("FINPROD_TYPE_TGF01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        pageParam.put("TRADE_STATUS01", DictCodeListExt1.交易状态_初始.getValue());
+        pageParam.put("YESNO_N", DictCodeList.是否_否.getValue());
+        pageParam.put("spcdCode", spcdCode);
+        pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
+        pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
+
+        if(StringUtil.equals(spcdCodeTemp,"04")){
+            CfetsManualSettleInfoRespond cfetsManualSettleInfoRespond = cfetsManualSettleMapper.findManualSettleInfo(pageParam);
+            resultData.put(dtCode+"_data",cfetsManualSettleInfoRespond);
+            resultData.put(dtCode+"_data1",cfetsManualSettleInfoRespond);
+        }else{
+            //现券买卖 或回售
+            CfetsManualSettleInfoOtherListRespond cfetsManualSettleInfoOtherListRespond = cfetsTrdQueryMapper.findManualSettleInfoOther(pageParam);
+            resultData.put(dtCode+"_data",cfetsManualSettleInfoOtherListRespond);
+            resultData.put(dtCode+"_data1",cfetsManualSettleInfoOtherListRespond);
+        }
+
+        //组合分配信息
+        pageParam.put("userName", LoginUserUtil.getUserName());
+        pageParam.put("CASH_TYPE_1_02", DictCodeListExt1.现金流一级类型_利息.getValue());
+        pageParam.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
+        List<PortIntFenPeiInfoDto> portIntFenPeiInfoDtoList =  cfetsTrdQueryMapper.findPortIntFenPeiInfoList(pageParam);
+
+
+        resultData.put(dtCode+"_data2",portIntFenPeiInfoDtoList);
+
+        return resultData;
+    }
+    /**
+     * 审批记录分页查询
+     * @param dto 入数
+     * @return Page<CfetsTrdQueryTradeInfoListResponse>
+     */
+    public Page<CfetsTrdQueryWorkflowResponse> queryAllWorkFlowInfoList(CfetsTrdQueryWorkflowRequest dto) {
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                () -> cfetsTrdQueryMapper.queryAllWorkFlowInfoList(pageParam));
+    }
 
 
 

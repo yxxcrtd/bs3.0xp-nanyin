@@ -71,6 +71,14 @@ public class WflRegFinProDealTotalAdd extends BaseEntity {
      * 工作流代码
      */
     private String workflowId;
+    /**
+     * 行权净价
+     */
+    private BigDecimal exercisePrice;
+    /**
+     * 赎回比例
+     */
+    private BigDecimal redeemRate;
 
     /**
      * 取得 汇总登记编号
@@ -247,5 +255,21 @@ public class WflRegFinProDealTotalAdd extends BaseEntity {
      */
     public void setWorkflowId(String workflowId) {
         this.workflowId = workflowId == null ? null : workflowId.trim();
+    }
+
+    public BigDecimal getExercisePrice() {
+        return exercisePrice;
+    }
+
+    public void setExercisePrice(BigDecimal exercisePrice) {
+        this.exercisePrice = exercisePrice;
+    }
+
+    public BigDecimal getRedeemRate() {
+        return redeemRate;
+    }
+
+    public void setRedeemRate(BigDecimal redeemRate) {
+        this.redeemRate = redeemRate;
     }
 }

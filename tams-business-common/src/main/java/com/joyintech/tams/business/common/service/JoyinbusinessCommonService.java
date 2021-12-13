@@ -134,10 +134,10 @@ public class JoyinbusinessCommonService extends BaseService {
         param.put("search", dto.getSearch());
         param.put("sysDate",iPlatformDate.getSysDate());
         if(StringUtil.equals(dto.getDealType(),"01")){
-            //系统内的交易对手
+            //系统内的交易对手，即市场机构和资管产品的数据
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryCounterPartyList(param));
         }else if(StringUtil.equals(dto.getDealType(),"02")){
-            //银行间机构关联到系统的交易对手
+            //银行间机构，且必须关联到系统的交易对手
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideAndPartyList(param));
         }else if(StringUtil.equals(dto.getDealType(),"03")){
             //CSTP下行接口对手方

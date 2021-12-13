@@ -1136,6 +1136,95 @@
         group by ir.quote_id)deal
         on ib.quote_id=deal.quote_id
         where ib.quote_id= #{quoteId,jdbcType=VARCHAR}
+        union all
+        select null as  dialogueRecord,
+        ib.ou_party_id as traderid,
+        ib.ou_trader_id as trader,
+        ibd.cp_party_id as counterId,
+        ibd.cp_trader as counterTrader,
+        ib.finprod_id as finprodId,
+        fp.finprod_market_id as finprodMarketId,
+        fp.finprod_abbr as finprodAbbr,
+        ib.ps as ps,
+        ib.quote_type as quoteType,
+        ib.quote_date as quoteDate,
+        ib.settle_speed as settleSpeed,
+        ib.settle_date as settleDate,
+        ib.sett_ccy as ccy,
+        ibd.unit_cprice as unitCprice,
+        ibd.yield as yield,
+        ibd.exer_yield as exerYield,
+        deal.faceValue as faceValue,
+        ib.delivery_type as deliveryType,
+        ib.sett_type as clearType,
+        null as trdFeeAmt,
+        null as settleFeeAmt,
+        ibd.unit_int as unitInt,
+        ibd.unit_fprice as unitFprice,
+        ibd.cprice_amt as cpriceAmt,
+        ibd.int_amt as intAmt,
+        ibd.fprice_amt as fpriceAmt,
+        null as distriType,
+        ib.remark
+        from wfl_ibu_quote_bond2 ib
+        left join fin_product fp
+        on ib.finprod_id=fp.finprod_id
+        left join (
+        select ibd.quote_id,ibd.cp_party_id as cp_party_id,
+        ibd.cp_trader cp_trader,ibd.yield as yield,
+        ibd.unit_cprice,
+        ibd.exer_yield,
+        ibd.unit_int,
+        ibd.unit_fprice,
+        ibd.cprice_amt,
+        ibd.int_amt,
+        ibd.fprice_amt
+        from wfl_ibu_quote_bond_det ibd
+        inner join wfl_ibu_quote_bond2 t1
+        on ibd.quote_id=t1.quote_id and t1.quote_type='01'
+        where   ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+        union all
+        select ibd.quote_id,wm_concat(ibd.cp_party_id) as cp_party_id,
+        wm_concat(ibd.cp_trader) cp_trader,
+        null as yield,
+        null as unit_cprice,
+        null as exer_yield,
+        null as  unit_int,
+        null as unit_fprice,
+        null as cprice_amt,
+        null as int_amt,
+        null as fprice_amt
+        from wfl_ibu_quote_bond_det ibd
+        inner join wfl_ibu_quote_bond2 t1
+        on ibd.quote_id=t1.quote_id and t1.quote_type='02'
+        and t1.trade_status!='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+        group by ibd.quote_id
+        union all
+        select ibd.quote_id,ibd.cp_party_id as cp_party_id,ibd.cp_party_id cp_trader,
+        ibd.yield as yield,
+        ibd.unit_cprice,
+        ibd.exer_yield,
+        ibd.unit_int,
+        ibd.unit_fprice,
+        ibd.cprice_amt,
+        ibd.int_amt,
+        ibd.fprice_amt
+        from wfl_ibu_quote_bond_det ibd
+        inner join wfl_ibu_quote_bond2 t1
+        on ibd.quote_id=t1.quote_id and t1.quote_type='02'
+        and t1.trade_status='07'
+        where ibd.trade_status='07' and ibd.quote_id= #{quoteId,jdbcType=VARCHAR}
+        )ibd
+        on ib.quote_id=ibd.quote_id
+        left join(
+        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        sum(nvl(ir.share_amt,0))/100 as faceValue
+        from wfl_ibu_quote_etr_re ir
+        left join ptl_portfolio pp
+        on ir.portfolio_id=pp.portfolio_id
+        group by ir.quote_id)deal
+        on ib.quote_id=deal.quote_id
+        where ib.quote_id= #{quoteId,jdbcType=VARCHAR}
     </select>
     <select id="selectIbuRepoFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryIbuInfoListResponse">
         select
@@ -1171,6 +1260,45 @@
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
         sum(nvl(ir.share_amt,0))/100 as faceValue
         from ibu_quote_etr_re ir
+        left join ptl_portfolio pp
+        on ir.portfolio_id=pp.portfolio_id
+        group by ir.quote_id)deal
+        on ic.quote_id=deal.quote_id
+        where ic.quote_id= #{quoteId,jdbcType=VARCHAR}
+        union all
+        select
+        ic.ou_party_id as traderid,
+        ic.ou_trader_id as trader,
+        ic.cp_party_id as counterId,
+        ic.cp_trader_id as counterTrader,
+        ic.repo_ps as ps,
+        ic.quote_type as quoteType,
+        ic.quote_date as quoteDate,
+        ic.term as repoTerm,
+        ic.rate as tradeYield,
+        ic.ccy as secCcy,
+        ic.sett_ccy settCcy,
+        ic.fprice_amt as tradeAmt,
+        deal.faceValue as faceValue,
+        ic.share_ct_amt as disFaceValue,
+        ic.sett_type as clearType,
+        ic.v_delivery_type as deliveryType,
+        ic.m_delivery_type as mdeliveryType,
+        null as trdFeeAmt,
+        null as settleFeeAmt,
+        ic.v_settle_date vsettleDate,
+        ic.m_settle_date msettleDate,
+        ic.m_int_amt as intAmt,
+        ic.m_trade_amt as mtradeAmt,
+        (ic.m_settle_date-ic.v_settle_date) as actRepoTerm,
+        ic.term_type as termType,
+        null as distriType,
+        ic.remark
+        from wfl_ibu_quote_crep ic
+        left join(
+        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        sum(nvl(ir.share_amt,0))/100 as faceValue
+        from wfl_ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
         group by ir.quote_id)deal
@@ -1599,7 +1727,8 @@
             resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryTradeInfoListResponse">
         select * from (SELECT aaa.* FROM(
             SELECT
-            case when T1.trade_status in ('01','02') then  #{STATUS_VALID_01} else  #{STATUS_VALID_03} end as  effectiveStatus,
+            decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03}) as  effectiveStatus,
+            <!--case when T1.is_cancel='N' then  #{STATUS_VALID_01} else  #{STATUS_VALID_03} end as  effectiveStatus,-->
             case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
                  when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
                  when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
@@ -1620,7 +1749,7 @@
             T1.TRADE_MARKET_MODE tradeMarketMode,
             sdl6.item_value tradeMarketModeStr,
             T1.settle_speed as settleSpeed,
-            'T+'||T1.settle_speed assettleSpeedStr,
+            'T+'||T1.settle_speed as settleSpeedStr,
             T1.SEC_MANAGE_ACCT_ID as secManageAcctId,
             T7.SEC_ACCT_NAME secManageAcctIdStr,
             nvl(T1.share_amt,0)/100 as faceValue,
@@ -1650,7 +1779,8 @@
             LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
             LEFT JOIN SYS_DATADICT_LIST sdl7 on sdl7.dict_code ='CCY' and sdl7.item_code = T1.ccy
 
-            WHERE   T1.TG_BUSI_TYPE IN (#{PINAN_BUSINESS_TYPE_09},#{PINAN_BUSINESS_TYPE_10},#{PINAN_BUSINESS_TYPE_11},
+            WHERE   T1.trade_status='01' and
+            T1.TG_BUSI_TYPE IN (#{PINAN_BUSINESS_TYPE_09},#{PINAN_BUSINESS_TYPE_10},#{PINAN_BUSINESS_TYPE_11},
             #{PINAN_BUSINESS_TYPE_20}, #{PINAN_BUSINESS_TYPE_74},#{PINAN_BUSINESS_TYPE_75})
             <![CDATA[ AND T1.trade_date >= #{startDate}]]>
             <![CDATA[ AND T1.trade_date <= #{endDate}]]>
@@ -1872,6 +2002,124 @@
             </where>
         </if>
     </sql>
+    <select id="queryAllWorkFlowInfoList"
+            resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryWorkflowResponse">
+        select  T2.ASSIGNEE_ hiUser,
+        T2.TASK_DEF_KEY_ nodeId,
+        T2.NAME_ nodeName,
+        NVL(T2.END_TIME_, T2.CLAIM_TIME_) operTime
+        from SYS_WFL_BUSINESS_LIST T1
+        left join ACT_HI_TASKINST T2
+        on T1.workflow_id=T2.PROC_INST_ID_
+        left join ACT_HI_COMMENT T3
+        ON T3.TASK_ID_ = T2.ID_
+        AND T3.PROC_INST_ID_ = T2.PROC_INST_ID_
+        AND T3.USER_ID_ = T2.ASSIGNEE_
+        where T1.TRADE_ID= #{busiCode}
+    </select>
+    <select id="findManualSettleInfoOther"
+            resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.CfetsManualSettleInfoOtherListRespond">
+        SELECT
+        distinct
+        T4.FINPROD_MARKET_ID finprodMarketId,
+        T4.FINPROD_ABBR finprodAbbr,
+        T1.PS ps,
+        TO_CHAR(T1.TRADE_DATE,'yyyy-MM-dd') tradeDate,
+        DECODE(T1.SETTLE_SPEED,0,'01',1,'02','2','03') settleSpeed,
+        TO_CHAR(T1.SETTLE_DATE,'yyyy-MM-dd') settleDate,
+        T1.CCY ccy,
+        T1.REMARK remark,
+        TO_CHAR(T8.TRADE_DATE,'yyyy-MM-dd') regDate,
+        TO_CHAR(T6.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate,
+        TO_CHAR(T6.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate,
+        TO_CHAR(T61.EXERCISE_DATE,'yyyy-MM-dd') exerciseDate1,
+        TO_CHAR(T61.ACT_EXERCISE_DATE,'yyyy-MM-dd') actExerciseDate1,
+        T.SHARE_AMT/100 qty,
+        T.unit_cprice unitPrice,
+        T.cprice_amt cpriceAmt,
+        T.int_amt intAmt,
+        ttft.fee_amt jyFeeAmt,
+        ttft1.fee_amt jsFeeAmt,
+        T.Trade_Amt tradeAmt,
+        T.unit_fprice allPrice,
+        T.fprice_amt fpriceAmt,
+        T.Yield*100 matureYield,
+        T.Exer_Yield*100 exeYield,
+        T.UNIT_INT unitInt,
+        T1.TRADE_MARKET tradeMarket,
+        T1.TRADE_MARKET_MODE tradeMarketMode,
+        T1.TRADE_PLAT tradePlat,
+        T1.TOTLE_TRADE_ID tradeId,
+        NVL(T9.PARTY_NAME,T8.OU_PARTY_ID) ouPartyId ,
+        NVL(T10.REAL_NAME,T8.OU_TRADER_ID) ouTraderId,
+        NVL(T11.COUNTER_NAME,T8.COUNTER_ID) counterId,
+        NVL(T12.TRADER_NAME,T8.COUNTER_TRADER) counterTrade,
+        sdl.item_value spanTextOne,
+        T4.IS_RIGHT isRight,
+        T1.Delivery_Type deliveryType,
+        T1.clear_type clearType
+        FROM trd_product_deal T
+        left join TRD_FIN_PRODUCT_DEAL_TOTAL T1
+        on T.totle_trade_id=T1.TOTLE_TRADE_ID
+        LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
+        LEFT JOIN FIN_PRODUCT T4 ON T1.FINPROD_ID = T4.FINPROD_ID
+        LEFT JOIN FIN_EXERCISE_PLAN T6 ON T1.FINPROD_ID = T6.FINPROD_ID AND T6.EXERCISE_TYPE ='01'
+        LEFT JOIN FIN_EXERCISE_PLAN T61 ON T1.FINPROD_ID = T61.FINPROD_ID AND T61.EXERCISE_TYPE ='02'
+        LEFT JOIN trd_trade_fee_detail ttft ON T.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
+        LEFT JOIN trd_trade_fee_detail ttft1 ON T.trade_id = ttft1.trade_id AND ttft1.fee_type = #{feeType08}
+        LEFT JOIN TRDQUTO_MATCH_INFO T7 ON T7.Trd_Id = T1.TOTLE_TRADE_ID
+        LEFT JOIN REG_FIN_PRODUCT_DEAL_TOTAL T8 ON T8.TOTLE_TRADE_ID = T7.PRE_TRADE_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_INFO T9 ON T9.PARTY_ID = T8.OU_PARTY_ID
+        LEFT JOIN SYS_USER T10 ON T10.USER_NAME = T8.OU_TRADER_ID
+        LEFT JOIN MST_COUNTER_PARTY T11 ON T11.COUNTER_ID = T8.COUNTER_ID
+        LEFT JOIN MST_CFETS_CUSTOMER_TRADER T12 ON T12.TRADER_ID = T8.COUNTER_TRADER
+        LEFT JOIN sys_datadict_list sdl ON sdl.dict_code='DISTRIBUTION' and sdl.item_code = T8.DIP_TYPE
+        WHERE T4.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01}
+        AND T1.TOTLE_TRADE_ID = #{totleTradeId} and T.trade_id=#{busiCode}
+        AND T1.TRADE_STATUS = #{TRADE_STATUS01} AND T1.IS_CANCEL = #{YESNO_N}
+
+    </select>
+    <select id="findPortIntFenPeiInfoList"
+            resultType="com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto">
+        SELECT ROWNUM rowNums,
+        TPDA.PORTFOLIO_ID portfolioId,
+        pp.PORTFOLIO_NAME portfolioName,
+        TPD.SHARE_AMT/100 QTYD,
+        TPD.PRIN_AMT prinAmtTheoryd,
+        TPD.INT_AMT intAmtTheoryd,
+        TPD.CPRICE_AMT cpriceAmt,
+        TPD.INT_AMT intAmt,
+        TPD.FPRICE_AMT fpriceAmt,
+        ttft.fee_amt jyFeeAmt,
+        ttft1.fee_amt jsFeeAmt,
+        TPD.TRADE_AMT tradeAmt,
+        TPDA.Entrust_Id entrustId,
+        EE.PRICE_MODEL priceModel,
+        (nvl(ee.entrust_amt,0) - nvl(efs.ent_finish_amt,0))/10000 unFinshAmt,
+        ssai.sec_acct_name secAcctId,
+        TPD.YIELD*100 matureYield,
+        TPD.EXER_YIELD*100 exeYield,
+        EE.BUSINESS_MODEL busiTypePosition,
+        TPD.UNIT_CPRICE unitPrice
+        FROM TRD_PRODUCT_DEAL TPD
+        INNER JOIN TRD_PRODUCT_DEAL_ADD TPDA on TPD.TRADE_ID = TPDA.TRADE_ID
+        LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = TPDA.PORTFOLIO_ID
+        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft ON tpd.trade_id = ttft.trade_id AND ttft.fee_type =#{feeType06}
+        LEFT JOIN TRD_TRADE_FEE_DETAIL ttft1 ON tpd.trade_id = ttft1.trade_id AND ttft1.fee_type =#{feeType08}
+        LEFT JOIN ETR_ENTRUST ee ON TPDA.Entrust_Id = ee.entrust_id
+        LEFT JOIN ETR_FINISH_STATUS efs ON ee.Entrust_Id = efs.entrust_id AND TPD.TRADE_ID = efs.trade_id
+        LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
+        where TPD.TOTLE_TRADE_ID = #{totleTradeId}
+        <if test="busiCode != null and busiCode != ''">
+            and TPD.TRADE_ID=#{busiCode}
+        </if>
+        <if test="userName != null and userName != ''">
+            and TPDA.PORTFOLIO_ID
+            IN (SELECT PORTFOLIO_ID
+            FROM PTL_PORTFOLIO_AUTHORITY
+            WHERE USER_ID = #{userName})
+        </if>
+    </select>
     <resultMap id="trdBondInvestTradeFullResultMap" type="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto"
                extends="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
         <result column="fee_amt"    property="channelFee"   jdbcType="DECIMAL"/>
@@ -1896,6 +2144,26 @@
         <result column="REFUND_RATE"       property="refundRate"      jdbcType="DECIMAL" />
         <result column="REFUND_AMOUNT"       property="refundAmount"      jdbcType="DECIMAL" />
         <result column="businessModel"       property="businessModel"      jdbcType="VARCHAR" />
+
+        <result column="UNIT_CPRICE"       property="unitCprice"      jdbcType="DECIMAL" />
+        <result column="YIELD"       property="yield"      jdbcType="DECIMAL" />
+        <result column="EXER_YIELD"       property="exerYield"      jdbcType="DECIMAL" />
+        <result column="REMARK"       property="remark"      jdbcType="VARCHAR" />
+        <result column="UNIT_INT"       property="unitInt"      jdbcType="DECIMAL" />
+        <result column="UNIT_FPRICE"       property="unitFprice"      jdbcType="DECIMAL" />
+        <result column="CPRICE_AMT"       property="cpriceAmt"      jdbcType="DECIMAL" />
+        <result column="INT_AMT"       property="intAmt"      jdbcType="DECIMAL" />
+        <result column="FPRICE_AMT"       property="fpriceAmt"      jdbcType="DECIMAL" />
+        <result column="ouPartyId"       property="ouPartyId"      jdbcType="VARCHAR" />
+        <result column="ouTraderId"       property="ouPartyId"      jdbcType="VARCHAR" />
+        <result column="execId"       property="execId"      jdbcType="VARCHAR" />
+        <result column="finprodMarketId"       property="finprodMarketId"      jdbcType="VARCHAR" />
+        <result column="settleSpeedStr"       property="settleSpeedStr"      jdbcType="VARCHAR" />
+        <result column="deliveryType"       property="deliveryType"      jdbcType="VARCHAR" />
+        <result column="qty"       property="qty"      jdbcType="DECIMAL" />
+        <result column="procedureAmt"       property="procedureAmt"      jdbcType="DECIMAL" />
+        <result column="settleServiceAmt"       property="settleServiceAmt"      jdbcType="DECIMAL" />
+        <result column="clearType"       property="clearType"      jdbcType="VARCHAR" />
         <association property="trdInvestPersonInfo" javaType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdInvestPersonInfoDto">
             <result column="TRADER"             property="trader"           jdbcType="VARCHAR" />
             <result column="COUNTER_ID"         property="counterId"        jdbcType="VARCHAR" />
@@ -1929,28 +2197,35 @@
         nvl(tpda.OUR_FPRICE_AMT, tpd.FPRICE_AMT) ownFpriceAmt,
         tpd.YIELD, tpd.EXER_YIELD, tpd.REMARK,
         tpd.TRADER, tpd.COUNTER_ID, tpd.COUNTER_TRADER, tpd.COUNTER_CONTACT,tpd.CHL_ID
-        <!-- 通道交易 新增 强成西 2019/03/26 start -->
         ,det.FEE_AMT
-        <!-- 通道交易 新增 强成西 2019/03/26 end -->
-        <!-- 推荐方 新增 zhuyongkang 20191023 start -->
         ,tpda.ASSET_RECOMMAND_ORG
-        <!-- 推荐方 新增 zhuyongkang 20191023 start -->
         ,tpd.PRIN_AMT
-        <!-- 撤销时无此字段 空指针 -->
         ,ptpd.REFUND_RATE*100 as REFUND_RATE
         ,ptpd.REFUND_AMOUNT as REFUND_AMOUNT
         ,TRD_PRODUCT_DEAL.BUSINESS_MODEL as businessModel
+        ,tpda.ou_party_id as ouPartyId
+        ,tpda.ou_trader_id as ouTraderId
+        ,match.exe_id as execId
+        ,fp.Finprod_Market_Id as finprodMarketId
+        ,decode(tpd.settle_speed,'0','01','1','02','2','03') as settleSpeedStr
+        ,tpd.delivery_type as deliveryType
+        ,nvl(tpd.SHARE_AMT,0)/100 as qty
+        ,ttft.fee_amt as procedureAmt
+        ,ttft1.fee_amt as settleServiceAmt
+        ,tpd.clear_type as clearType
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL tpd
         LEFT JOIN TRD_DEAL_TOTAL_ADD tpda ON tpda.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL ptpd ON ptpd.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
         LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = tpd.FINPROD_ID
-        <!-- 通道交易 新增 强成西 2019/03/26 start -->
         left join TRD_TRADE_FEE_DETAIL det ON det.TRADE_ID = tpd.TOTLE_TRADE_ID
         and det.FEE_TYPE=#{B09}
         and det.IS_PAY_WITH_TRADE=#{Y}
-        <!-- 通道交易 新增 强成西 2019/03/26 end -->
         LEFT JOIN PTL_PORTFOLIO PP ON tpd.PORTFOLIO_ID = PP.PORTFOLIO_ID
         left join trd_product_deal on TRD_PRODUCT_DEAL.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
+        left join trdquto_match_info match
+        on tpd.TOTLE_TRADE_ID=match.trd_id
+        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON tpd.TOTLE_TRADE_ID = ttft.TOTLE_TRADE_ID AND ttft.fee_type ='B06'
+        LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpd.TOTLE_TRADE_ID = ttft1.TOTLE_TRADE_ID AND ttft1.fee_type = 'B08'
         WHERE tpd.TOTLE_TRADE_ID = #{tradeId}
     </select>
     <select id="selectRegTotalInfoById"  resultType="com.joyintech.tams.common.base.entity.RegFinProductDealTotal">

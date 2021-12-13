@@ -37,12 +37,14 @@ import com.joyintech.service.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.system.base.dao.SysUploadFileInfoMapper;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.cfets.cfetsmanualsettle.dto.PortIntFenPeiInfoDto;
 import com.joyintech.tams.cfets.trdconfirm.dao.CfetsTrdConfirmMapper;
 import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmCstpInfoListResponse;
 import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmManualMatchInfoRequest;
 import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmMatchDto;
 import com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse;
 import com.joyintech.tams.cfets.trdquery.dao.CfetsTrdQueryMapper;
+import com.joyintech.tams.cfets.trdquery.dto.CfetsPortfolioIdFenPeiInfoResponse;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdBondInvestTradeDto;
 import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdInvestPersonInfoDto;
 import com.joyintech.tams.common.base.dao.*;
@@ -2029,6 +2031,14 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         params.put("Y", DictCodeList.是否_是.getValue());
         CfetsTrdBondInvestTradeDto resultDto = cfetsTrdQueryMapper.getTrdBondInvestTradeDto(params);
         if (resultDto != null) {
+            //待办事项中显示组合分配
+            Map<String,Object> pageParam = new HashMap<>();
+            pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
+            pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
+            pageParam.put("totleTradeId",tradeId);
+            List<PortIntFenPeiInfoDto> fenPeiList=cfetsTrdQueryMapper.findPortIntFenPeiInfoList(pageParam);
+            resultDto.setCfetsBussCombDistribtList(fenPeiList);
+
             if (resultDto.getSettleSpeed() != null) {
                 resultDto.setSettleSpeedStr(String.valueOf(resultDto.getSettleSpeed()));
             }
@@ -4385,11 +4395,32 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             parameter.setPageId("CfetsTrdBondInvestTrade002");
             parameter.setBusinessDataPk1(inputDto.getTotleTradeId() + "R");
             parameter.setBusinessDataPk2("F01");
-            if (mstWorkflowCommonService.isInWflProcess(parameter)) {
+          /*  if (mstWorkflowCommonService.isInWflProcess(parameter)) {
                 AjaxResult m = new AjaxResult();
                 m.setStatuCode(220);
                 m.setMessage(this.getMessage("BUSS_COM_E_0041"));
                 return m;
+            }*/
+         /*   if(StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_买入.getValue())
+                    || StringUtil.equals(inputDto.getPs(),DictCodeList.回购拆借方向_逆回购.getValue())
+            ){
+                if(!StringUtil.equals(inputDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())){
+                    AjaxResult m = new AjaxResult();
+                    m.setStatuCode(220);
+                    m.setMessage("已完成交收,不可撤销");
+                    return m;
+                }
+            }*/
+           if(StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_卖出.getValue())
+                || StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_行权_回售.getValue())
+                   || StringUtil.equals(inputDto.getPs(),DictCodeList.回购拆借方向_正回购.getValue())
+           ){
+                if(!StringUtil.equals(inputDto.getSettleStatus(),DictCodeListExt3.交收状态_未交收.getValue())){
+                    AjaxResult m = new AjaxResult();
+                    m.setStatuCode(220);
+                    m.setMessage("已完成交收,不可撤销");
+                    return m;
+                }
             }
             CfetsTrdBondInvestTradeDto dto = this.getTrdBondInvestTradeDto(inputDto.getTotleTradeId() + "R");
             if(com.joyintech.framework.util.StringUtil.isNotEmpty(dto)){

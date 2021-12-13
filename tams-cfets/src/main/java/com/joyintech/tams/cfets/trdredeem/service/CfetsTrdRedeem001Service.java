@@ -1,0 +1,693 @@
+/*
+ * 文件名：CfetsBondDealQuotedPrice002Service.java
+ * 版权：Copyright 2017-2018 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 描述：理财资管管理系统V2.0
+ * 修改人：zhangliang
+ * 修改时间：2020年5月13日
+ * 修改内容：新建
+ * 系统名称：理财资管管理系统V2.0
+ */
+
+package com.joyintech.tams.cfets.trdredeem.service;
+
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealDbDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
+import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
+import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealCommonDto;
+import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealRegisterQuoteDto;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.workflow.engine.WorkflowContext;
+import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
+
+/**
+ * 赎回登记
+ */
+@Service("CfetsTrdRedeem001Service")
+public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegisterQuoteDto> implements BaseProcessService<CfetsTrdRedeemDealRegisterQuoteDto> {
+
+    @Autowired
+    private IPlatformDate iPlatformDate;
+    @Autowired
+    private FinProductMapper finProductMapper;
+    @Autowired
+    private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
+
+    @Autowired(required = false)
+    private BaseGetBusinessId baseGetBusinessId;
+
+    @Autowired
+    private IbuQuoteBondService ibuQuoteBondService;
+
+    @Autowired
+    private RegFinProductDealTotalMapper regFinProductDealTotalMapper;
+
+    @Autowired
+    private RegFinProductDealTotalAddMapper regFinProductDealTotalAddMapper;
+
+    @Autowired
+    private RegTradeFeeTotalMapper regTradeFeeTotalMapper;
+
+    @Autowired
+    private RegFinProductDealMapper regFinProductDealMapper;
+
+    @Autowired
+    private RegFinProductDealAddMapper regFinProductDealAddMapper;
+
+    @Autowired
+    private RegTradeFeeMapper regTradeFeeMapper;
+
+    @Autowired
+    private WflRegFinProductDealTotalMapper wflRegFinProductDealTotalMapper;
+
+    @Autowired
+    private WflRegFinProDealTotalAddMapper wflRegFinProDealTotalAddMapper;
+
+    @Autowired
+    private WflRegTradeFeeTotalMapper wflRegTradeFeeTotalMapper;
+
+    @Autowired
+    private WflRegFinProductDealMapper wflRegFinProductDealMapper;
+
+    @Autowired
+    private WflRegFinProductDealAddMapper wflRegFinProductDealAddMapper;
+
+    @Autowired
+    private WflRegTradeFeeMapper wflRegTradeFeeMapper;
+
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
+
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
+
+    @Autowired
+    private EtrEntrustAddMapper etrEntrustAddMapper;
+
+    @Autowired
+    private BaseEtrInvestInfoService baseEtrInvestInfoServiceImpl;
+
+    @Autowired
+    private CfetsIbuQuoteBondEtrMapper cfetsIbuQuoteBondEtrMapper;
+
+    /**
+     * 提交保存check 必填项
+     * @param entity
+     * @return
+     */
+    public AjaxResult checkNotEmpty(CfetsTrdRedeemDealCommonDto entity) {
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        String ps = entity.getPs();
+        if(StringUtil.isEmpty(ps)){
+            errorList.add(new ValidMessage("请输入交易方向"));
+        }
+        if(StringUtil.isEmpty(entity.getFinprodId())){
+            errorList.add(new ValidMessage("请输入资产代码"));
+        }
+
+        if(CollectionUtils.isEmpty(entity.getPtlAllocatios())){
+            errorList.add(new ValidMessage("组合分配不可为空"));
+        }else{
+
+
+
+        }
+
+        ajaxResult.setErrorList(errorList);
+        return ajaxResult;
+    }
+
+    /**
+     * check 锚定值  净价 到期收益率  行权收益率
+     * @param entity
+     * @return
+     */
+    public AjaxResult checkcheckAnchoring(CfetsTrdRedeemDealCommonDto entity) {
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        String ps = entity.getPs();
+        //以选择的锚定值check
+        String anchoringValue = entity.getCalculateField();
+        List<PtlAllocationDto> ptlAllocatios = entity.getPtlAllocatios();
+        entity.setPrice(ArithmeticUtil.round(entity.getPrice(), 4, RoundingMode.HALF_UP));
+        entity.setMatureYield(ArithmeticUtil.round(entity.getMatureYield(), 4, RoundingMode.HALF_UP));
+        entity.setExerYield(ArithmeticUtil.round(entity.getExerYield(), 4, RoundingMode.HALF_UP));
+        for (PtlAllocationDto ptlAllocationDto : ptlAllocatios) {
+            ptlAllocationDto.setPrice(ArithmeticUtil.round(ptlAllocationDto.getPrice(), 4, RoundingMode.HALF_UP));
+            ptlAllocationDto.setMatureYield(ArithmeticUtil.round(ptlAllocationDto.getMatureYield(), 4, RoundingMode.HALF_UP));
+            ptlAllocationDto.setExerYield(ArithmeticUtil.round(ptlAllocationDto.getExerYield(), 4, RoundingMode.HALF_UP));
+            String priceModel = ptlAllocationDto.getPriceModel();
+            if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+                if(StringUtil.equals(anchoringValue,"01")){
+                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_指定价格.getValue())
+                    &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())!=0){
+                        errorList.add(new ValidMessage("存在指定价格指令，需按指定价格进行交易!指令代码:"+ptlAllocationDto.getEntrustId()));
+                    }
+                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_限价指令.getValue())
+                            &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())>0){
+                        errorList.add(new ValidMessage("登记交易净价不能大于指令净价!指令代码:"+ptlAllocationDto.getEntrustId()));
+                    }
+                }
+                if(StringUtil.equals(anchoringValue,"02")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())<0){
+                    errorList.add(new ValidMessage("登记交易到期收益率不能小于指令到期收益率！"));
+                }
+                if(StringUtil.equals(anchoringValue,"03")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())<0){
+                    errorList.add(new ValidMessage("登记交易行权收益率不能小于指令行权收益率！"));
+                }
+            }
+            if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
+                if(StringUtil.equals(anchoringValue,"01")){
+                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_指定价格.getValue())
+                            &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())!=0){
+                        errorList.add(new ValidMessage("存在指定价格指令，需按指定价格进行交易!指令代码:"+ptlAllocationDto.getEntrustId()));
+                    }
+                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_限价指令.getValue())
+                            &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())<0){
+                        errorList.add(new ValidMessage("登记交易净价不能小于指令净价!指令代码:"+ptlAllocationDto.getEntrustId()));
+                    }
+                }
+                if(StringUtil.equals(anchoringValue,"02")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())>0){
+                    errorList.add(new ValidMessage("登记交易到期收益率不能大于指令到期收益率！"));
+                }
+                if(StringUtil.equals(anchoringValue,"03")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())>0){
+                    errorList.add(new ValidMessage("登记交易行权收益率不能大于指令行权收益率！"));
+                }
+            }
+            if(CollectionUtils.isNotEmpty(errorList)){
+                ajaxResult.setErrorList(errorList);
+                return ajaxResult;
+            }
+        }
+        return ajaxResult;
+    }
+
+    /**
+     * 初始化登记
+     * @param cfetsBondDealQuoteCommonDto
+     * @return
+     */
+    public CfetsTrdRedeemDealCommonDto initReg(CfetsTrdRedeemDealCommonDto cfetsBondDealQuoteCommonDto){
+        String quoteId = cfetsBondDealQuoteCommonDto.getQuoteId();
+        if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getValidStatus(), BussinessDictCodeList.有效状态_流程中.getValue())){
+            cfetsBondDealQuoteCommonDto = null;//cfetsIbuQuoteBondMapper.getWflCfetsBondDealQuoteCommonDto(quoteId);
+            if(null!=cfetsBondDealQuoteCommonDto){
+                cfetsBondDealQuoteCommonDto.setPtlAllocatios(cfetsIbuQuoteBondMapper.listWflPtlAllocationDto(quoteId));
+            }
+        }else{
+            cfetsBondDealQuoteCommonDto =null;// cfetsIbuQuoteBondMapper.getCfetsBondDealQuoteCommonDto(quoteId);
+            if(null!=cfetsBondDealQuoteCommonDto){
+                cfetsBondDealQuoteCommonDto.setPtlAllocatios(cfetsIbuQuoteBondMapper.listPtlAllocationDto(quoteId));
+            }
+        }
+        return cfetsBondDealQuoteCommonDto;
+    }
+
+    /**
+     * 插入操作
+     */
+    @Override
+    public void doInsert(CfetsTrdRedeemDealRegisterQuoteDto entity,OperationType type){
+        if ("save".equals(entity.getOperatorType())) {
+            return;
+        }
+        if (!type.equals(OperationType.REVOKE) && !type.equals(OperationType.DELETE)) {
+            CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,type);
+            //登录业务流程
+            insertWfl(cfetsBondDealDbDto);
+            //头寸
+            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,type));
+        }
+
+    }
+    
+	@Override
+    public void doUpdate(CfetsTrdRedeemDealRegisterQuoteDto entity){
+        Map<String,Object> map = new HashMap<>();
+        if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
+            // 先删除流程中数据
+            this.deleteBussFlowData(entity.getWorkflowId());
+            CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,StringUtil.equals(entity.getOperatorType(),"revoke")?OperationType.REVOKE:OperationType.NEW);
+            //登录业务流程
+            insertWfl(cfetsBondDealDbDto);
+            ProcessMark newEntity;
+            //头寸
+            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,OperationType.NEW));
+            try {
+                newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsTrdRedeemDealRegisterQuoteDto.class, true);
+                // 工作流ID
+                newEntity.setWorkflowId(entity.getWorkflowId());
+                newEntity.setStatus(entity.getStatus());
+                newEntity.setBusinessData(JsonUtils.object2Json(entity));
+                WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doComplete(CfetsTrdRedeemDealRegisterQuoteDto entity, OperationType operationType) {
+        CfetsBondDealDbDto cfetsBondDealDbDto = prepareEntity(entity,operationType);
+        //删除业务流程数据
+        deleteBussFlowData(entity.getWorkflowId());
+        //登录db
+        insert(cfetsBondDealDbDto,operationType);
+        //履历表
+        updateCfetsOprHis(entity.getTotleTradeId(),operationType);
+        //头寸
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        }/*else{
+            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,operationType));
+        }*/
+        //处理指令执行进度
+        insertEtrFinishStatus(cfetsBondDealDbDto,operationType);
+    }
+
+    /**
+     * 处理指令完成度
+     * @param cfetsBondDealDbDto
+     * @param operationType
+     */
+    public void insertEtrFinishStatus(CfetsBondDealDbDto cfetsBondDealDbDto,OperationType operationType){
+        RegFinProductDealTotal regFinProductDealTotal = cfetsBondDealDbDto.getRegFinProductDealTotal();
+        List<RegFinProductDeal> regFinProductDeals = cfetsBondDealDbDto.getRegFinProductDeals();
+        if(CollectionUtils.isNotEmpty(regFinProductDeals)){
+            List<EtrFinishStatusDto> etrFinishStatusDtos = new ArrayList<>();
+            for (RegFinProductDeal regFinProductDeal : regFinProductDeals) {
+                EtrFinishStatusDto status = new EtrFinishStatusDto();
+                status.setEntrustId(regFinProductDeal.getEntrustId());
+                status.setTradeId(regFinProductDealTotal.getTotleTradeId());
+                status.setCstpTradeId(regFinProductDealTotal.getTotleTradeId());
+                status.setFinishDate(regFinProductDealTotal.getTradeDate());
+                EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(regFinProductDeal.getEntrustId());
+                if(etrEntrustAdd != null && StringUtil.isNotEmpty(etrEntrustAdd.getTargetType())
+                        && StringUtil.equals(DictCodeListExt3.目标类型_金额.getValue(),etrEntrustAdd.getTargetType())){
+                    status.setEntFinishAmt(regFinProductDeal.getTradeAmt());
+                }
+                else {
+                    status.setEntFinishAmt(regFinProductDeal.getShareAmt());
+                }
+                status.setTrader(regFinProductDealTotal.getOuTraderId());
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    baseEtrInvestInfoServiceImpl.cancelCompleteDelegate(status.getEntrustId(),status.getTradeId());
+                }
+                etrFinishStatusDtos.add(status);
+
+            }
+            if (!operationType.equals(OperationType.REVOKE) && !operationType.equals(OperationType.DELETE)) {
+                baseEtrInvestInfoServiceImpl.completeDelegate(etrFinishStatusDtos);
+            }
+        }
+    }
+
+
+    @Override
+    public void doDelete(String workflowId) {
+        
+        deleteBussFlowData(workflowId);
+        CfetsTrdRedeemDealRegisterQuoteDto  entity = getBussinessEntityByWorkflowId(workflowId);
+        //发送头寸
+        PositionHttpRequest.deleteMethod(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue());
+
+    }
+
+    /**
+     * 组装实体
+     * @param entity
+     * @return
+     */
+    public CfetsBondDealDbDto prepareEntity(CfetsTrdRedeemDealRegisterQuoteDto entity,OperationType operationType) {
+        CfetsBondDealDbDto result = new CfetsBondDealDbDto();
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            result.setWorkflowId(entity.getWorkflowId());
+            result.setOperationType(entity.getOperatorType());
+            result.setRegFinProductDealTotal(regFinProductDealTotalMapper.selectByPrimaryKey(entity.getTotleTradeId()));
+            result.setRegFinProductDealTotalAdd(regFinProductDealTotalAddMapper.selectByPrimaryKey(entity.getTotleTradeId()));
+            result.setRegTradeFeeTotals(cfetsIbuQuoteBondMapper.listRegTradeFeeTotal(entity.getTotleTradeId()));
+            result.setRegFinProductDeals(cfetsIbuQuoteBondMapper.listRegFinProductDeal(entity.getTotleTradeId()));
+            result.setRegFinProductDealAdds(cfetsIbuQuoteBondMapper.listRegFinProductDealAdd(entity.getTotleTradeId()));
+            result.setRegTradeFees(cfetsIbuQuoteBondMapper.listRegTradeFee(entity.getTotleTradeId()));
+        }else{
+            //登记日
+            entity.setTradeDate(iPlatformDate.getSysDate());
+            //理论行权日
+            entity.setSettleDate(entity.getTheoreticalExerciseDate());
+
+
+            //entity.setOuPartyId(entity.getMySide());
+          //  entity.setOuTraderId(entity.getMySideTrader());
+          //  entity.setDeliveryType(entity.getSettleMethod());
+           // entity.setClearType(entity.getSettleType());
+        //    entity.setUnitCprice(entity.getPrice());
+         //   entity.setYield(entity.getMatureYield());
+           Long settleSpreed = 0L;
+             /*if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加0.getValue())) {
+                settleSpreed = 0L;
+            } else if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加1.getValue())) {
+                settleSpreed = 1L;
+            } else if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加2.getValue())) {
+                settleSpreed = 2L;
+            }*/
+            //交易方向
+            String ps = entity.getPs();
+            //投管业务类型
+            String tgBusiType =DictCodeListExt3.共通业务类型_赎回登记.getValue();
+            //金融产品交易汇总登记
+            RegFinProductDealTotal regFinProductDealTotal = new RegFinProductDealTotal();
+            BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotal,entity);
+            regFinProductDealTotal.setTradeAmt(entity.getFpriceAmt());
+            regFinProductDealTotal.setSettleSpeed(settleSpreed);
+            regFinProductDealTotal.setQuoteType(entity.getQuoteStyle());
+            regFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            regFinProductDealTotal.setFaceValue(entity.getShareAmt());
+            regFinProductDealTotal.setShareAmt(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(100),2));
+            regFinProductDealTotal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+            regFinProductDealTotal.setDipType(entity.getDistribution());
+            regFinProductDealTotal.setBranch(0L);
+            regFinProductDealTotal.setTgBusiType(tgBusiType);
+            //金融产品交易汇总登记附属
+            RegFinProductDealTotalAdd regFinProductDealTotalAdd = new RegFinProductDealTotalAdd();
+            BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotalAdd,entity);
+            /*if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+                regFinProductDealTotalAdd.setLendinFpriceAmt(entity.getSaleinFpriceAmt());
+                regFinProductDealTotalAdd.setLendinIntAmt(entity.getSaleinIntAmt());
+                regFinProductDealTotalAdd.setLendinShareAmt(ArithmeticUtil.divide(entity.getSellAbleNum(),new BigDecimal(100),2));
+            }
+            if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
+                regFinProductDealTotalAdd.setLendinShareAmt(ArithmeticUtil.divide(entity.getLendinShareAmt(),new BigDecimal(100),2));
+            }*/
+            regFinProductDealTotalAdd.setOurShareAmt(regFinProductDealTotal.getShareAmt());
+            //汇总登记费用明细表
+           List<RegTradeFeeTotal> regTradeFeeTotals = new ArrayList<>();
+            /* if(null!=entity.getDealFeeAmt()){
+                regTradeFeeTotals.add(ibuQuoteBondService.prepareRegTradeFeeTotal(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),entity.getDealFeeAmt()));
+            }
+            if(null!=entity.getSettFeeAmt()){
+                //交易手续费
+                regTradeFeeTotals.add(ibuQuoteBondService.prepareRegTradeFeeTotal(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),entity.getSettFeeAmt()));
+            }*/
+            //交易登记明细
+            List<RegFinProductDeal> regFinProductDeals = new ArrayList<>();
+            List<RegFinProductDealAdd> regFinProductDealAdds = new ArrayList<>();
+            List<RegTradeFee> regTradeFees = new ArrayList<>();
+            if(CollectionUtils.isNotEmpty(entity.getPtlAllocatios())){
+                for (PtlAllocationDto ptlAllocatio : entity.getPtlAllocatios()){
+                    RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
+                    BeanUtil.copyPropertiesIgnoreNull(regFinProductDeal,regFinProductDealTotal);
+                    BussinessCodeParameter codeParameter = getBussinessCodeParameter(entity.getPs());
+                    regFinProductDeal.setTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+                    regFinProductDeal.setBusiType(DictCodeList.业务类型_银行间债券交易.getValue());
+                    regFinProductDeal.setEntrustId(ptlAllocatio.getEntrustId());
+                    regFinProductDeal.setPortfolioId(ptlAllocatio.getPortfolioId());
+                    regFinProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                    regFinProductDeal.setShareAmt(ArithmeticUtil.divide(ptlAllocatio.getShareAmt(),new BigDecimal(100),2));
+                    regFinProductDeal.setFaceValue(ptlAllocatio.getShareAmt());
+                    regFinProductDeal.setTradeAmt(ptlAllocatio.getFpriceAmt());
+                    regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
+                    regFinProductDeal.setCpriceAmt(ptlAllocatio.getCpriceAmt());
+                    regFinProductDeal.setIntAmt(ptlAllocatio.getIntAmt());
+                    regFinProductDeal.setTgBusiType(tgBusiType);
+                    regFinProductDeal.setSettleSpeed(settleSpreed);
+                    regFinProductDeal.setInvAim(ptlAllocatio.getBusinessModel());
+                    //附属
+                    RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
+                    regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
+                  //  regFinProductDealAdd.setOurShareAmt(ArithmeticUtil.divide(ptlAllocatio.getOurEntNum(),new BigDecimal(100),2));
+                    regFinProductDealAdd.setOurShareAmt(regFinProductDeal.getShareAmt());
+
+                    // regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.divide(ptlAllocatio.getLendinEntNum(),new BigDecimal(100),2));
+                    regFinProductDealAdd.setActSetteDate(entity.getActSetteDate());
+                  /*  if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
+                        regFinProductDealAdd.setLendinShareAmt(ArithmeticUtil.divide(ptlAllocatio.getSellAbleNum(),new BigDecimal(100),2));
+                    }*/
+                   /* if(null!=ptlAllocatio.getDealFeeAmt()){
+                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(regFinProductDeal.getTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),ptlAllocatio.getDealFeeAmt()));
+                    }
+                    if(null!=ptlAllocatio.getSettFeeAmt()){
+                        regTradeFees.add(ibuQuoteBondService.prepareRegTradeFee(regFinProductDeal.getTradeId(),BussinessDictCodeList.费用类型_结算手续费.getValue(),ptlAllocatio.getSettFeeAmt()));
+                    }*/
+                    regFinProductDeals.add(regFinProductDeal);
+                    regFinProductDealAdds.add(regFinProductDealAdd);
+                }
+            }
+            result.setWorkflowId(entity.getWorkflowId());
+            result.setOperationType(entity.getOperatorType());
+            result.setRegFinProductDealTotal(regFinProductDealTotal);
+            result.setRegFinProductDealTotalAdd(regFinProductDealTotalAdd);
+            result.setRegTradeFeeTotals(regTradeFeeTotals);
+            result.setRegFinProductDeals(regFinProductDeals);
+            result.setRegFinProductDealAdds(regFinProductDealAdds);
+            result.setRegTradeFees(regTradeFees);
+        }
+        return result;
+    }
+
+    private void insert(CfetsBondDealDbDto entity,OperationType operationType){
+        RegFinProductDealTotal regFinProductDealTotal = entity.getRegFinProductDealTotal();
+        String totleTradeId = regFinProductDealTotal.getTotleTradeId();
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            regFinProductDealTotal.setTotleTradeId(StringUtil.join(totleTradeId,"R"));
+            regFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+            regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+            regFinProductDealTotal.setpTradeId(totleTradeId);
+        }else{
+            regFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+            regFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+        }
+        regFinProductDealTotalMapper.insert(regFinProductDealTotal);
+        entity.getRegFinProductDealTotalAdd().setTotleTradeId(regFinProductDealTotal.getTotleTradeId());
+        regFinProductDealTotalAddMapper.insert(entity.getRegFinProductDealTotalAdd());
+        List<RegTradeFeeTotal> regTradeFeeTotals = entity.getRegTradeFeeTotals();
+        if(CollectionUtils.isNotEmpty(regTradeFeeTotals)){
+            regTradeFeeTotals.forEach(item ->{
+                item.setTradeId(regFinProductDealTotal.getTotleTradeId());
+                regTradeFeeTotalMapper.insert(item);
+            });
+        }
+        List<RegFinProductDeal> regFinProductDeals = entity.getRegFinProductDeals();
+        if(CollectionUtils.isNotEmpty(regFinProductDeals)){
+            regFinProductDeals.forEach(item ->{
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    String tradeId = item.getTradeId();
+                    item.setTradeId(StringUtil.join(tradeId,"R"));
+                    item.setTotleTradeId(StringUtil.join(totleTradeId,"R"));
+                    item.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+                    item.setIsCancel(DictCodeList.是否_否.getValue());
+                    item.setpTradeId(tradeId);
+                }else{
+                    item.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                    item.setIsCancel(DictCodeList.是否_否.getValue());
+                }
+                regFinProductDealMapper.insert(item);
+            });
+        }
+        List<RegFinProductDealAdd> regFinProductDealAdds = entity.getRegFinProductDealAdds();
+        if(CollectionUtils.isNotEmpty(regFinProductDealAdds)){
+            regFinProductDealAdds.forEach(item ->{
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    item.setTradeId(StringUtil.join(item.getTradeId(),"R"));
+                }
+                regFinProductDealAddMapper.insert(item);
+            });
+        }
+        List<RegTradeFee> regTradeFees = entity.getRegTradeFees();
+        if(CollectionUtils.isNotEmpty(regTradeFees)){
+            regTradeFees.forEach(item ->{
+                if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+                    item.setTradeId(StringUtil.join(item.getTradeId(),"R"));
+                }
+                regTradeFeeMapper.insert(item);
+            });
+        }
+        //更新原登记数据状态
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            //汇总
+            cfetsIbuQuoteBondMapper.updateRegFinProductDealTotal(totleTradeId);
+            //明细
+            cfetsIbuQuoteBondMapper.updateRegFinProductDeal(totleTradeId);
+        }
+    }
+    /**
+     * 插入业务流程表
+     * @param entity
+     */
+    private void insertWfl(CfetsBondDealDbDto entity){
+        String workflowId = entity.getWorkflowId();
+        WflRegFinProductDealTotal wflRegFinProductDealTotal = new WflRegFinProductDealTotal();
+        BeanUtil.copyPropertiesIgnoreNull(wflRegFinProductDealTotal,entity.getRegFinProductDealTotal());
+        wflRegFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+        wflRegFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+        wflRegFinProductDealTotal.setWorkflowId(workflowId);
+        wflRegFinProductDealTotalMapper.insert(wflRegFinProductDealTotal);
+        WflRegFinProDealTotalAdd wflRegFinProDealTotalAdd = new WflRegFinProDealTotalAdd();
+        BeanUtil.copyPropertiesIgnoreNull(wflRegFinProDealTotalAdd,entity.getRegFinProductDealTotalAdd());
+        wflRegFinProDealTotalAdd.setWorkflowId(workflowId);
+        wflRegFinProDealTotalAddMapper.insert(wflRegFinProDealTotalAdd);
+        List<RegTradeFeeTotal> regTradeFeeTotals = entity.getRegTradeFeeTotals();
+        if(CollectionUtils.isNotEmpty(regTradeFeeTotals)){
+            regTradeFeeTotals.forEach(item ->{
+                WflRegTradeFeeTotal wflRegTradeFeeTotal = new WflRegTradeFeeTotal();
+                BeanUtil.copyPropertiesIgnoreNull(wflRegTradeFeeTotal,item);
+                wflRegTradeFeeTotal.setWorkflowId(workflowId);
+                wflRegTradeFeeTotalMapper.insert(wflRegTradeFeeTotal);
+            });
+        }
+        List<RegFinProductDeal> regFinProductDeals = entity.getRegFinProductDeals();
+        if(CollectionUtils.isNotEmpty(regFinProductDeals)){
+            regFinProductDeals.forEach(item ->{
+                WflRegFinProductDeal wflRegFinProductDeal = new WflRegFinProductDeal();
+                BeanUtil.copyPropertiesIgnoreNull(wflRegFinProductDeal,item);
+                wflRegFinProductDeal.setWorkflowId(workflowId);
+                wflRegFinProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+                wflRegFinProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
+                wflRegFinProductDealMapper.insert(wflRegFinProductDeal);
+            });
+        }
+        List<RegFinProductDealAdd> regFinProductDealAdds = entity.getRegFinProductDealAdds();
+        if(CollectionUtils.isNotEmpty(regFinProductDealAdds)){
+            regFinProductDealAdds.forEach(item ->{
+                WflRegFinProductDealAdd wflRegFinProductDealAdd = new WflRegFinProductDealAdd();
+                BeanUtil.copyPropertiesIgnoreNull(wflRegFinProductDealAdd,item);
+                wflRegFinProductDealAdd.setWorkflowId(workflowId);
+                wflRegFinProductDealAddMapper.insert(wflRegFinProductDealAdd);
+            });
+        }
+        List<RegTradeFee> regTradeFees = entity.getRegTradeFees();
+        if(CollectionUtils.isNotEmpty(regTradeFees)){
+            regTradeFees.forEach(item ->{
+                WflRegTradeFee wflRegTradeFee = new WflRegTradeFee();
+                BeanUtil.copyPropertiesIgnoreNull(wflRegTradeFee,item);
+                wflRegTradeFee.setWorkflowId(workflowId);
+                wflRegTradeFeeMapper.insert(wflRegTradeFee);
+            });
+        }
+    }
+
+    /**
+     * 删除业务流程数据
+     * @param workflowId
+     */
+    private void deleteBussFlowData(String workflowId) {
+        wflRegFinProductDealTotalMapper.deleteByWorkflowId(workflowId);
+        wflRegFinProDealTotalAddMapper.deleteByWorkflowId(workflowId);
+        wflRegTradeFeeTotalMapper.deleteByWorkflowId(workflowId);
+        wflRegFinProductDealMapper.deleteByWorkflowId(workflowId);
+        wflRegFinProductDealAddMapper.deleteByWorkflowId(workflowId);
+        wflRegTradeFeeMapper.deleteByWorkflowId(workflowId);
+    }
+
+    /**
+     * 处理头寸
+     * @param entity
+     * @return
+     */
+    private Map<String,Object> preparePosition(CfetsBondDealDbDto entity,OperationType operationType){
+        Map<String,Object> result = new HashMap<>();
+        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+            result.put("interfaceType","Bond001");
+            result.put("totalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
+            result.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
+            result.put("userId", SecurityUtil.getLoginUser().getUserName());
+        }else{
+            String ps = entity.getRegFinProductDealTotal().getPs();
+            result.put("interfaceType","Bond001");
+            result.put("userId", SecurityUtil.getLoginUser().getUserName());
+            result.put("totalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
+            result.put("flowStatus",DictCodeListExt3.流程节点_流程提交.getValue());
+            result.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
+            result.put("balanceCheck","Y");
+            result.put("busiType",DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
+            result.put("busiAct",DictCodeListExt3.业务动作_交易登记.getValue());
+            result.put("ps",ps);
+            result.put("settleSpeed",entity.getRegFinProductDealTotal().getSettleSpeed());
+            result.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
+            result.put("systemAct",DictCodeListExt3.系统动作_新建.getValue());
+            result.put("cdate",DateUtil.format(entity.getRegFinProductDealTotal().getTradeDate()));
+            result.put("ccy",entity.getRegFinProductDealTotal().getCcy());
+            result.put("finprodId",entity.getRegFinProductDealTotal().getFinprodId());
+            if(CollectionUtils.isNotEmpty(entity.getRegFinProductDeals())){
+                List<Map<String,Object>> ptlList = new ArrayList<>();
+                Map<String,List<RegFinProductDealAdd>> regFinProductDealAddMap = new HashMap<>();
+                if(CollectionUtils.isNotEmpty(entity.getRegFinProductDealAdds())){
+                    entity.getRegFinProductDealAdds().stream().collect(Collectors.groupingBy(RegFinProductDealAdd::getTradeId,Collectors.toList()))
+                            .forEach(regFinProductDealAddMap::put);
+                }
+                for (RegFinProductDeal regFinProductDeal : entity.getRegFinProductDeals()) {
+                    Map<String,Object> pltMap = new HashMap<>();
+                    String portfolioId = regFinProductDeal.getPortfolioId();
+                    pltMap.put("portfolioId", portfolioId);
+                    pltMap.put("tradeId",regFinProductDeal.getTradeId());
+                    pltMap.put("etrId",regFinProductDeal.getEntrustId());
+                    pltMap.put("cashAcctId",cfetsIbuQuoteBondMapper.getACCTNO(portfolioId,BussinessDictCodeList.资金账户类型_托管账户.getValue()));
+                    pltMap.put("secAcctId",cfetsIbuQuoteBondMapper.getSecAcctId(portfolioId,regFinProductDeal.getFinprodId(),regFinProductDeal.getTradeMarket()));
+                    pltMap.put("secAmount",ArithmeticUtil.multiply(regFinProductDeal.getShareAmt(),new BigDecimal(100))); //券面总额
+                    pltMap.put("cashAmount",regFinProductDeal.getTradeAmt());
+                    RegFinProductDealAdd regFinProductDealAdd = regFinProductDealAddMap.get(regFinProductDeal.getTradeId()).get(0);
+                    pltMap.put("integrateSecAmount",ArithmeticUtil.multiply(regFinProductDealAdd.getLendinShareAmt()==null?BigDecimal.ZERO:regFinProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
+                    pltMap.put("ownSecAmount",ArithmeticUtil.multiply(regFinProductDealAdd.getOurShareAmt()==null?BigDecimal.ZERO:regFinProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
+                    pltMap.put("etrSecAmount",etrEntrustMapper.selectByPrimaryKey(regFinProductDeal.getEntrustId()).getEntrustNum());
+                    ptlList.add(pltMap);
+                }
+                result.put("ptlList",ptlList);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 处理履历
+     */
+    private void updateCfetsOprHis(String totleTradeId,OperationType operationType){
+        CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+        oprHisReq.setEntrustId(totleTradeId);
+        if(operationType.equals(OperationType.NEW)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
+        }else if(operationType.equals(OperationType.REVOKE)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
+        }
+        oprHisReq.setBusiDes("赎回登记");
+        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+    }
+
+}
