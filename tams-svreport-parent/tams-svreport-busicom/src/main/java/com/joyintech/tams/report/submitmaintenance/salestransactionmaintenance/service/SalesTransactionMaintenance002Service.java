@@ -108,6 +108,16 @@ public class SalesTransactionMaintenance002Service extends BaseService{
     }
 
     /**
+     * 删除err表并保存在info表
+     * @param
+     */
+    public void deleteAndSave(SalesTransactionMaintenanceDto dto) {
+        dto.setDataStatus("E");
+        salestransactionmaintenanceMapper.deleteErr(dto.getRegistSeqno());
+        salestransactionmaintenanceMapper.insert(dto);
+    }
+
+    /**
      * 删除erro
      */
     public boolean deleteByPrimaryKey(SalesTransactionMaintenanceDto dto){

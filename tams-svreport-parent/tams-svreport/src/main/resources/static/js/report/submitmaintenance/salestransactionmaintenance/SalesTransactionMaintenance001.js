@@ -97,6 +97,9 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
+                    if(data.dataStatus !="E"){
+                        return Joyin.error("只能删除有效数据，请重新选择");
+                    }
         var object = {selectedItem: [data], operateType:"delete"};
         Joyin.ajaxJson(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){

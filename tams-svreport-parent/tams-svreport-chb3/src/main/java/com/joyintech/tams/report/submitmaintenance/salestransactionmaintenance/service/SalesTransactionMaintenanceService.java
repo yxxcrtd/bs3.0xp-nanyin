@@ -154,6 +154,19 @@ public class SalesTransactionMaintenanceService extends CommonExportService<Sale
 				SvrAjaxResult.class);
 	}
 
+	/**
+	 * 删除err表并保存在info表
+	 * @param dto
+	 * @return
+	 */
+	public AjaxResult deleteAndSave(SalesTransactionMaintenanceDto dto){
+		if(StringUtil.isEmpty(dto.getOrgCode())){
+			dto.setOrgCode(CommonUtil.getOrgCode());
+		}
+		return restTemplate.postForObject(
+				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenance/deleteAndSave", dto,
+				SvrAjaxResult.class);
+	}
 
 	/**
 	 * 删除erro
