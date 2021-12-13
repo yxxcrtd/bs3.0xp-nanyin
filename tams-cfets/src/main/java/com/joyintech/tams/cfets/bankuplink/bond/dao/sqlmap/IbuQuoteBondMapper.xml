@@ -1172,7 +1172,7 @@
                 IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE,
                 FEE_AMT FEE_AMT
             FROM
-                REG_TRADE_FEE where exists (select 1 from REG_FIN_PRODUCT_DEAL where REG_FIN_PRODUCT_DEAL_ADD.TRADE_ID = REG_FIN_PRODUCT_DEAL.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
+                REG_TRADE_FEE where exists (select 1 from REG_FIN_PRODUCT_DEAL where REG_FIN_PRODUCT_DEAL.TRADE_ID = REG_TRADE_FEE.TRADE_ID and TOTLE_TRADE_ID  = #{totleTradeId})
     </select>
     <!--登记初始化 生效 撤销-->
     <select id="getCfetsBondDealQuoteCommonDto" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto">
