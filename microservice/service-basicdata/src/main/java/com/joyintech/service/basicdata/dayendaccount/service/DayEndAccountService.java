@@ -89,7 +89,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             pageParam.put("accountList", new ArrayList<>());
         }
         Object finprodIdObj = pageParam.get("finprodId");
-        if (StringUtil.isNotEmpty(finprodIdObj)) {
+        if (StringUtil.isNotEmpty(finprodIdObj) && StringUtil.isNotBlank((String)finprodIdObj)) {
             List<String> finprodMarketIdList = StringUtil.splitToList(GlobalConstant.COMMA, (String)finprodIdObj);
             Map<String, Object> finProdIdParam = new HashMap<>();
             finProdIdParam.put("finprodMarketIdList", finprodMarketIdList);
