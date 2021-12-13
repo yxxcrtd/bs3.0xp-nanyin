@@ -43,7 +43,7 @@ public class InvestDealRevokeProcessor extends BaseProcessor<NeedOperateEntity, 
         // 交易撤销逻辑
         BaseRevokeService revokeService = (BaseRevokeService)SpringContextUtil.getBean(secType + BaseRevokeService.REVOKE_BEAN_NAME);
         if(CollectionUtils.isNotEmpty(tradeIdList) || CollectionUtils.isNotEmpty(totalTradeIdList)) {
-            revokeService.doRevoke(tradeIdList, totalTradeIdList);
+            revokeService.doRevoke(item.getTradeIdMap(), item.getTotalTradeIdMap());
         }
         List<String> orderIds = new ArrayList<>();
         if (!StringUtil.isEmptyList(tradeIdList)){

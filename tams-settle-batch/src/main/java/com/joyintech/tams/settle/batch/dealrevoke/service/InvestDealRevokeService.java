@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -73,9 +74,17 @@ public class InvestDealRevokeService {
         busiTypeList.add(DictCodeList.共通业务类型_债券类资产交易.getValue());
         busiTypeList.add(DictCodeListExt2.共通业务类型_可转债申购交易.getValue());
         param.put("busiTypeList", busiTypeList);
-        param.put("psList", Arrays.asList(DictCodeList.交易方向_买入.getValue()
-                ,DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_行权_回售.getValue(),DictCodeList.交易方向_申购确认.getValue()
-                ,DictCodeList.交易方向_申购.getValue(),DictCodeListExt3.交易方向_债转股.getValue(),DictCodeListExt3.交易方向_配债.getValue()));
+        //增加协议回购中途换券撤销、竞价回购的入库、出库
+        param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
+        param.put("psList", Arrays.asList(/*DictCodeList.交易方向_买入.getValue()
+                ,*/DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_行权_回售.getValue(),/*DictCodeList.交易方向_申购确认.getValue()
+                ,DictCodeList.交易方向_申购.getValue(),*/DictCodeListExt3.交易方向_债转股.getValue(),DictCodeListExt3.交易方向_配债.getValue(),
+                DictCodeList.交易方向_上市流通.getValue()));
+        param.put("isBond", DictCodeList.是否_是.getValue());
+        param.put("PS_01", DictCodeList.交易方向_买入.getValue());
+        param.put("SHARES_TRADE_MARKET_01", DictCodeListExt1.交易市场_一级市场.getValue());
+        param.put("psApplyList", Arrays.asList(DictCodeList.交易方向_申购.getValue(),DictCodeList.交易方向_申购确认.getValue()));
+        param.put("PURCH_MODLE_02", DictCodeListExt3.申购方式_网下申购.getValue());
         return investDealRevokeMapper.selectTotalTradeIdTgM(param);
     }
 
@@ -89,6 +98,8 @@ public class InvestDealRevokeService {
         Map<String, Object> param = createCommonParam(tradeDate, portfolioIdList);
         param.put("finprodType2List", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()
                 ,DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()));
+        param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
+        param.put("psList",Arrays.asList(DictCodeList.交易方向_买入.getValue()));
         return investDealRevokeMapper.selectTradeIdTgM(param);
     }
 
@@ -100,9 +111,11 @@ public class InvestDealRevokeService {
      */
     public List<String> selectTotalTradeIdForRepo(Date tradeDate, List<String> portfolioIdList) {
         Map<String, Object> param = createCommonParam(tradeDate, portfolioIdList);
-        param.put("busiType", DictCodeList.共通业务类型_质押式回购存续期.getValue());
-        param.put("psList", Arrays.asList(DictCodeList.交易方向_到期续做.getValue(), DictCodeList.交易方向_到期.getValue()
-                , DictCodeListExt3.交易方向_投资端_提前终止.getValue()));
+//        param.put("busiType", DictCodeList.共通业务类型_质押式回购存续期.getValue());
+        param.put("psDurList", Arrays.asList(DictCodeList.交易方向_到期续做.getValue(), DictCodeList.交易方向_到期.getValue()
+                , DictCodeListExt3.交易方向_投资端_提前终止.getValue(),DictCodeListExt3.交易方向_中途换券.getValue()));
+        param.put("tgBusiTypeList",Arrays.asList(DictCodeListExt3.平安业务类型_债券质押式逆回购.getValue(),DictCodeListExt3.平安业务类型_债券质押式正回购.getValue()));
+        param.put("isRepoFund",DictCodeList.是否_是.getValue());
         return investDealRevokeMapper.selectTotalTradeIdTgM(param);
     }
 
@@ -115,6 +128,12 @@ public class InvestDealRevokeService {
     public List<String> selectTradeIdForShares(Date tradeDate, List<String> portfolioIdList) {
         Map<String, Object> param = createCommonParam(tradeDate, portfolioIdList);
         param.put("finprodType2List", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_股票.getValue()));
+        param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
+         //AND A.交易方向 IN (交易方向_买入，交易方向_卖出，交易方向_申购，交易方向_申购确认，交易方向_上市流通）
+        param.put("psSharsList",Arrays.asList(DictCodeList.交易方向_买入.getValue(),DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_申购.getValue(),
+                DictCodeList.交易方向_申购确认.getValue(),DictCodeList.交易方向_上市流通.getValue()));
+        param.put("psSharsTwoList",Arrays.asList(DictCodeList.交易方向_买入.getValue(),DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_申购.getValue(),
+                DictCodeList.交易方向_申购确认.getValue()));
         return investDealRevokeMapper.selectTradeIdTgM(param);
     }
 
@@ -127,7 +146,9 @@ public class InvestDealRevokeService {
     public List<String> selectTotalTradeIdForShares(Date tradeDate, List<String> portfolioIdList) {
         Map<String, Object> param = createCommonParam(tradeDate, portfolioIdList);
         param.put("busiType", DictCodeListExt2.共通业务类型_股票分红交易.getValue());
-        param.put("psList", Arrays.asList(DictCodeList.股票分红类型_分红送转.getValue()));
+        /*param.put("psList", Arrays.asList(DictCodeList.股票分红类型_分红送转.getValue()));*/
+        param.put("psList", Arrays.asList(DictCodeList.交易方向_现金分红.getValue(),DictCodeList.交易方向_红利再投.getValue()));
+        param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
         return investDealRevokeMapper.selectTotalTradeIdTgM(param);
     }
 
@@ -141,6 +162,7 @@ public class InvestDealRevokeService {
         Map<String, Object> param = createCommonParam(tradeDate, portfolioIdList);
         param.put("finprodType2List", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_基金.getValue()));
         param.put("psList", Arrays.asList(DictCodeList.交易方向_买入.getValue(),DictCodeList.交易方向_卖出.getValue()));
+        param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
         return investDealRevokeMapper.selectTradeIdTgM(param);
     }
 
@@ -154,6 +176,8 @@ public class InvestDealRevokeService {
         Map<String, Object> param = createCommonParam(tradeDate, portfolioIdList);
         param.put("busiType", DictCodeList.共通业务类型_基金类资产存续期.getValue());
         param.put("psList", Arrays.asList(DictCodeList.交易方向_除权登记.getValue(),DictCodeList.交易方向_现金分红.getValue(),DictCodeList.交易方向_红利再投.getValue()));
+        param.put("tradeMarketList",Arrays.asList(DictCodeListExt1.交易场所_上海证券交易所.getValue(),DictCodeListExt1.交易场所_深圳证券交易所.getValue()));
+        param.put("isRepoFund", DictCodeList.是否_是.getValue());
         return investDealRevokeMapper.selectTotalTradeIdTgM(param);
     }
 
@@ -297,5 +321,80 @@ public class InvestDealRevokeService {
             restTemplate.postForObject(tamsSerever + "/invest/trade/api/revoke", param, String.class);
         }
 
+    }
+
+    public Map<String,String> getTradeIdPsMap(List<String> tradeIdList) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("tradeIdList",tradeIdList);
+        param.put("isTotal","02");
+        if (!CollectionUtils.isEmpty(tradeIdList)){
+            return getTradeIdPsMap(param);
+        }
+        return null;
+    }
+
+    public Map<String,String> getTotalTradeIdPsMap(List<String> totleTradeIdList) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("totleTradeIdList",totleTradeIdList);
+        param.put("isTotal","01");
+        if (!CollectionUtils.isEmpty(totleTradeIdList)){
+            return getTradeIdPsMap(param);
+        }
+        return null;
+
+    }
+
+    public Map<String,String> getTradeIdPsMap(Map<String,Object> param) {
+        List<Map<String, String>> list = investDealRevokeMapper.selectPsById(param);
+        return getStringStringMap(param, list);
+    }
+
+    public Map<String,String> getRepoTradeIdPsMap(List<String> totleTradeIdList) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("isTotal","01");
+        param.put("totleTradeIdList",totleTradeIdList);
+        if (!CollectionUtils.isEmpty(totleTradeIdList)) {
+            List<Map<String, String>> list = investDealRevokeMapper.selectRepoPsById(param);
+            return getStringStringMap(param, list);
+        }
+        return null;
+    }
+
+    private Map<String, String> getStringStringMap(Map<String, Object> param, List<Map<String, String>> list) {
+        Map<String,String> map = new HashMap<>();
+        if (!StringUtil.isEmptyList(list)){
+            list.forEach(item->{
+               if (StringUtil.isNotEmpty(param.get("isTotal"))){
+                  if( StringUtil.equals(param.get("isTotal"),"01")) {
+                      String totalkey = null;
+                      String psvalue = null;
+                      for (Map.Entry<String,String> i:item.entrySet()) {
+                         if ("TOTALKEY".equals(i.getKey())) {
+                            totalkey = i.getValue();
+                         }else if ("PSVALUE".equals(i.getKey())) {
+                            psvalue = i.getValue();
+                         }
+                         if (totalkey != null) {
+                             map.put(totalkey, psvalue);
+                         }
+                       }
+                   }else if( StringUtil.equals(param.get("isTotal"),"02")){
+                       String tradekey = null;
+                       String psvalue = null;
+                       for (Map.Entry<String,String> i:item.entrySet()) {
+                         if ("TRADEKEY".equals(i.getKey())) {
+                             tradekey = i.getValue();
+                         }else if ("PSVALUE".equals(i.getKey())) {
+                              psvalue = i.getValue();
+                          }
+                           if (tradekey != null) {
+                               map.put(tradekey, psvalue);
+                           }
+                        }
+                    }
+                 }
+            });
+        }
+        return map;
     }
 }

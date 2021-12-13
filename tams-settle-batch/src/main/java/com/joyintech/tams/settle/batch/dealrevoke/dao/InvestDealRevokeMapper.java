@@ -137,4 +137,8 @@ public interface InvestDealRevokeMapper {
     int updateEtrCashPosition(EtrCashPosition etrCashPosition);
 
     int updateEtrSecPosition(EtrSecPosition etrSecPosition);
+
+    List<Map<String,String>> selectPsById(Map<String, Object> param);
+
+    List<Map<String, String>> selectRepoPsById(Map<String, Object> param);
 }

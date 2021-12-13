@@ -57,28 +57,35 @@ public class InvestDealRevokeReader extends BaseReader<DealRevokeParamDto> {
                 // 汇总交易编号
                 List<String> portfolioIdList=null;
                 List<String> bondTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForBond(tradeDate, portfolioIdList);
-                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_债券.getValue(), tradeDate, portfolioIdList,null, bondTotalTradeIdList));
+                Map<String,String> bondTotcalTradeIdMap = investDealRevokeService.getTotalTradeIdPsMap(bondTotalTradeIdList);
+                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_债券.getValue(), tradeDate, portfolioIdList,null, bondTotalTradeIdList,null,bondTotcalTradeIdMap));
 //            }
 //            else if(StringUtil.equals(DictCodeListExt1.证券品种_回购.getValue(), key)) {
                 // 交易编号
                 List<String> tradeIdList = investDealRevokeService.selectTradeIdForRepo(tradeDate, portfolioIdList);
                 // 汇总交易编号
                 List<String> repoTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForRepo(tradeDate, portfolioIdList);
-                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_回购.getValue(), tradeDate, portfolioIdList, tradeIdList, repoTotalTradeIdList));
+                Map<String,String> repoTradeIdMap = investDealRevokeService.getTradeIdPsMap(tradeIdList);
+                Map<String,String> repoTotcalTradeIdMap = investDealRevokeService.getRepoTradeIdPsMap(repoTotalTradeIdList);
+                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_回购.getValue(), tradeDate, portfolioIdList, tradeIdList, repoTotalTradeIdList,repoTradeIdMap,repoTotcalTradeIdMap));
 //            }
 //            else if(StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), key)) {
                 // 交易编号
                 List<String> sharesTradeIdList = investDealRevokeService.selectTradeIdForShares(tradeDate, portfolioIdList);
                 // 汇总交易编号
                 List<String> sharesTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForShares(tradeDate, portfolioIdList);
-                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_股票.getValue(), tradeDate, portfolioIdList, sharesTradeIdList, sharesTotalTradeIdList));
+                Map<String,String> sharesTradeIdMap = investDealRevokeService.getTradeIdPsMap(sharesTradeIdList);
+                Map<String,String> sharesTotcalTradeIdMap = investDealRevokeService.getTotalTradeIdPsMap(sharesTotalTradeIdList);
+                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_股票.getValue(), tradeDate, portfolioIdList, sharesTradeIdList, sharesTotalTradeIdList,sharesTradeIdMap,sharesTotcalTradeIdMap));
 //            }
 //            else if(StringUtil.equals(DictCodeListExt1.证券品种_基金.getValue(), key)) {
                 // 交易编号
                 List<String> fundTradeIdList = investDealRevokeService.selectTradeIdForFund(tradeDate, portfolioIdList);
                 // 汇总交易编号
                 List<String> fundTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForFund(tradeDate, portfolioIdList);
-                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_基金.getValue(), tradeDate, portfolioIdList, fundTradeIdList, fundTotalTradeIdList));
+                Map<String,String> fundTradeIdMap = investDealRevokeService.getTradeIdPsMap(fundTradeIdList);
+                Map<String,String> fundTotalTradeIdMap = investDealRevokeService.getTotalTradeIdPsMap(fundTotalTradeIdList);
+                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_基金.getValue(), tradeDate, portfolioIdList, fundTradeIdList, fundTotalTradeIdList,fundTradeIdMap,fundTotalTradeIdMap));
             //}
         return revokeParamDtos;
         //mody by   meifaxin  20211028 不从画面触发，改成文件解析后触发 end
