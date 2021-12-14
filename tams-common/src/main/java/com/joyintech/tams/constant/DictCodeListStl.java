@@ -261,7 +261,7 @@ public enum DictCodeListStl implements BaseDictCodeList {
 		清算数据源表_上中登ZQY(DictCode.清算数据源表,"ZQY","上中登ZQY"),
 		清算数据源表_深中登SJSKS(DictCode.清算数据源表,"SJSKS","深中登SJSKS"),
 	     清算数据源表_上中登TZXX(DictCode.清算数据源表,"TZXX","上中登TZXX"),
-		
+		清算数据源表_深中登SJSGB(DictCode.清算数据源表,"SJSGB","深中登SJSGB"),
 		// PTL_TRADE的业务表
 		业务表_结算指令表(DictCode.业务表,"01","结算指令表"),
 		业务表_金融产品交易表(DictCode.业务表,"02","金融产品交易表"),
@@ -314,6 +314,8 @@ public enum DictCodeListStl implements BaseDictCodeList {
 
 	共通业务类型_券商对账参数设置(DictCode.共通业务类型, "STL06", "券商对账参数设置"),
 	//add by chenjiaxing 20211015 end
+	广播类别_允许分红的基金(DictCode.广播类别, "ZT", "允许分红的基金"),
+	广播类别_权益分派方案(DictCode.广播类别, "QP", "权益分派方案")
 	;
     /**
      * 对应于数据字典code

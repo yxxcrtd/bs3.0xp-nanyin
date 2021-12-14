@@ -401,6 +401,29 @@ public class StlDownDataDealReaderService {
 						}
 					}
 				}
+				// 【深中登SJSGB】清算数据查询
+				if (StringUtil.equals(settleDataRulePartitionDto.getTableName(), DictCodeListStl.清算数据源表_深中登SJSGB.getValue())) {
+					List<SzdSjsgb> szdSjsgbList = this.selectSzdSjsgb(dealDate, settleDataRulePartitionDto.getDataFile(), searchMap);
+					for (SzdSjsgb szdSjsgb : szdSjsgbList) {
+						String key = settleDataRulePartitionDto.getFinprodType() + settleDataRulePartitionDto.getTableName() +
+								settleDataRulePartitionDto.getDataFile();
+						if (dealSettleDataMap.get(key) == null) {
+							StlDownDataDealOperatorDto stlDownDataDealOperatorDto = new StlDownDataDealOperatorDto();
+							stlDownDataDealOperatorDto.setFinprodType(settleDataRulePartitionDto.getFinprodType());
+							stlDownDataDealOperatorDto.setTableName(settleDataRulePartitionDto.getTableName());
+							stlDownDataDealOperatorDto.setDataFile(settleDataRulePartitionDto.getDataFile());
+							stlDownDataDealOperatorDto.setPortfolioIdList(portfolioIdList);
+							stlDownDataDealOperatorDto.setDealDate(dealDate);
+							StlDownDataDealOperatorBaseDto stlDownDataDealBaseDto = new StlDownDataDealOperatorBaseDto();
+							stlDownDataDealBaseDto.getSzdSjsgbList().add(szdSjsgb);
+							stlDownDataDealOperatorDto.setStlDownDataDealOperatorBaseDto(stlDownDataDealBaseDto);
+							dealSettleDataMap.put(key, stlDownDataDealOperatorDto);
+						}
+						else {
+							dealSettleDataMap.get(key).getStlDownDataDealOperatorBaseDto().getSzdSjsgbList().add(szdSjsgb);
+						}
+					}
+				}
 
     		}
     	}
@@ -439,6 +462,11 @@ public class StlDownDataDealReaderService {
 		return stlDownDataDealMapper.selectSzdTzxx(dealDate, dataFile, searchMap);
 	}
 
+	// 查询深中登SJSGB
+	public List<SzdSjsgb> selectSzdSjsgb(Date dealDate, String dataFile, Map<String, List<String>> searchMap) {
+		return stlDownDataDealMapper.selectSzdSjsgb(dealDate, dataFile, searchMap);
+	}
+	
 	// 删除【送股权益登记】
 	public int deleteShareBonusRegByCdate(Date dealDate){
 		return stlDownDataDealMapper.deleteShareBonusRegByCdate(dealDate);
