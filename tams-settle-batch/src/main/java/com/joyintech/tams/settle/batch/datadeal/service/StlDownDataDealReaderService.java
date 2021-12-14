@@ -378,7 +378,7 @@ public class StlDownDataDealReaderService {
     				}
     			}
 				// 上中登权益登记通知信息TZXX清算数据查询
-				if (StringUtil.equals(settleDataRulePartitionDto.getTableName(), DictCodeListStl.清算数据源表_深中登SJSKS.getValue())) {
+				if (StringUtil.equals(settleDataRulePartitionDto.getTableName(), DictCodeListStl.清算数据源表_上中登TZXX.getValue())) {
 					List<SzdTzxx> szdTzxxList = this.selectSzdTzxx(dealDate, settleDataRulePartitionDto.getDataFile(), searchMap);
 					for (SzdTzxx szdTzxx : szdTzxxList) {
 						String key = settleDataRulePartitionDto.getFinprodType() + settleDataRulePartitionDto.getTableName() +
