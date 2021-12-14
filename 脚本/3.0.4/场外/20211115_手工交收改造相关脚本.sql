@@ -28,6 +28,11 @@ delete from sys_datadict_list where DICT_CODE ='COMMON_BUSINESS_TYPE' and ITEM_C
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('COMMON_BUSINESS_TYPE', 'STL06', '交收管理', 1301, '0', 'system', '', sysdate, 'system', sysdate, '');
 
+--手工交收新增共通业务类型
+delete from sys_page_dictlist where PAGE_ID='MainPage' and DICT_ID = 'COMMON_BUSINESS_TYPE' and DICT_ITEM_VAL='STL06';
+insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('MainPage', '999999', 'COMMON_BUSINESS_TYPE', 'STL06', '', '', 'system', '', sysdate, 'system', sysdate, '');
+
 --交收操作类型增加枚举值
 delete from sys_datadict_list where DICT_CODE ='DELIVERY_OP_TYPE' and ITEM_CODE = '05';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
@@ -495,3 +500,10 @@ COMMENT ON COLUMN TRD_BANK_MANUAL_SET_DETAIL.CREATE_DEPT IS '创建部门';
 COMMENT ON COLUMN TRD_BANK_MANUAL_SET_DETAIL.CREATE_TIME IS '创建时间';
 COMMENT ON COLUMN TRD_BANK_MANUAL_SET_DETAIL.UPDATE_USER IS '更新人';
 COMMENT ON COLUMN TRD_BANK_MANUAL_SET_DETAIL.UPDATE_TIME IS '更新时间';
+
+--手工交收新增交收失败原因
+-- Add/modify columns
+alter table TRD_BANK_MANUAL_SETTLE_INFO add REMARK VARCHAR2(200);
+-- Add comments to the columns
+comment on column TRD_BANK_MANUAL_SETTLE_INFO.REMARK
+  is '交收失败原因';
