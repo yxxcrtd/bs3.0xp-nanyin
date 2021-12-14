@@ -44,7 +44,10 @@ public class StlDownDataDealOperatorBaseDto {
 
 	// TZXX清算数据List
 	List<SzdTzxx> szdTzxxList;
-	
+
+	// SJSGB清算数据List
+	List<SzdSjsgb> szdSjsgbList;
+
 	public StlDownDataDealOperatorBaseDto() {
 		jsmxList = new ArrayList<SzdJsmx>();
 		sjsmxList = new ArrayList<SzdSjsmx>();
@@ -56,6 +59,7 @@ public class StlDownDataDealOperatorBaseDto {
 		szdZqyList = new ArrayList<SzdZqy>();
 		szdSjsksList = new ArrayList<SzdSjsks>();
 		szdTzxxList=new ArrayList<SzdTzxx>();
+		szdSjsgbList=new ArrayList<SzdSjsgb>();
 	}
 	
 	public List<SzdJsmx> getJsmxList() {
@@ -136,5 +140,13 @@ public class StlDownDataDealOperatorBaseDto {
 
 	public void setSzdTzxxList(List<SzdTzxx> szdTzxxList) {
 		this.szdTzxxList = szdTzxxList;
+	}
+
+	public List<SzdSjsgb> getSzdSjsgbList() {
+		return szdSjsgbList;
+	}
+
+	public void setSzdSjsgbList(List<SzdSjsgb> szdSjsgbList) {
+		this.szdSjsgbList = szdSjsgbList;
 	}
 }

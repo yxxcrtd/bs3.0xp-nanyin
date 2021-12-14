@@ -50,6 +50,9 @@ public class StlDataDealProcessService {
 	@Autowired
 	protected StlDataDealSzdTzxxProcessService stlDataDealSzdTzxxProcessService;
 
+	@Autowired
+	protected StlDataDealSzdSjsgbProcessService stlDataDealSzdSjsgbProcessService;
+
 	// 生成数据清算批处理step2 processor的结果Dto
 	public StlDownDataDealWriteDto generatorStlDownDataDealWriteDto(StlDownDataDealOperatorDto stlDownDataDealOperatorDto) throws Exception {
 		
@@ -121,6 +124,13 @@ public class StlDataDealProcessService {
 		// 数据源【上中登TZXX】解析
 		if(CollectionUtils.isNotEmpty(stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdTzxxList())) {
 			StlDownDataDealWriteDto temp = stlDataDealSzdTzxxProcessService.generatorStlDownDataDealSzdTzxxWriteDto(stlDownDataDealOperatorDto);
+			if (temp != null) {
+				stlDownDataDealWriteDto.getStlDownDataDealWriteDtoList().add(temp);
+			}
+		}
+		// 数据源【深中登SJSGB】解析
+		if(CollectionUtils.isNotEmpty(stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getSzdSjsgbList())) {
+			StlDownDataDealWriteDto temp = stlDataDealSzdSjsgbProcessService.generatorStlDownDataDealSzdSjsgbWriteDto(stlDownDataDealOperatorDto);
 			if (temp != null) {
 				stlDownDataDealWriteDto.getStlDownDataDealWriteDtoList().add(temp);
 			}

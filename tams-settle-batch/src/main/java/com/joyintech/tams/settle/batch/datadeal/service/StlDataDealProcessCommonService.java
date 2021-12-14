@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -223,8 +224,23 @@ public class StlDataDealProcessCommonService {
 					trdDetailDto.setTradeMarket(stlDownDataDealWriteBaseDto.getSettleTransData().getTradeMarket());
 					// 交易平台
 					trdDetailDto.setTradePlat(stlDownDataDealWriteBaseDto.getSettleTransData().getTradePlat());
-					// 交易方向
-					trdDetailDto.setPs(stlDownDataDealWriteBaseDto.getSettleTransData().getPs());
+					
+					String busiSceneCalss = stlDownDataDealWriteBaseDto.getSettleTransData().getBusiSceneCalss();
+					if ((StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议正回购_到期续作.getValue()) ||
+							StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议正回购_首期_买入.getValue())) &&
+						BigDecimal.ZERO.compareTo(stlDownDataDealWriteBaseDto.getSettleTransData().getPrinAmt()) < 0){
+						// 交易方向
+						trdDetailDto.setPs(DictCodeListExt3.交易方向_正回购.getValue());
+					}else if ((StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue()) ||
+								StringUtil.equals(busiSceneCalss,DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue())) &&
+							BigDecimal.ZERO.compareTo(stlDownDataDealWriteBaseDto.getSettleTransData().getPrinAmt()) > 0){
+						// 交易方向
+						trdDetailDto.setPs(DictCodeListExt3.交易方向_逆回购.getValue());
+					}else {
+						// 交易方向
+						trdDetailDto.setPs(stlDownDataDealWriteBaseDto.getSettleTransData().getPs());	
+					}
+					
 					// 期限品种
 					trdDetailDto.setTermType(stlDownDataDealWriteBaseDto.getSettleTransData().getTermType());
 					// 全价总额

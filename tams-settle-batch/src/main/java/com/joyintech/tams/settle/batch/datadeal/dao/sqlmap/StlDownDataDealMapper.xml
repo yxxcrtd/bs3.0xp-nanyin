@@ -521,7 +521,7 @@
         <where>
       		CDATE = #{dealDate,jdbcType=DATE}
        		<if test="xgsgBusinessTypeList != null and xgsgBusinessTypeList.size() > 0">
-           		AND 
+           		AND
            		<foreach collection="xgsgBusinessTypeList" item="xgsgBusinessType" open="OTH_TYPE IN (" close=")" separator=",">
            			#{xgsgBusinessType,jdbcType=VARCHAR}
            		</foreach>
@@ -580,6 +580,20 @@
 		</where>
 	</delete>
 
+	<select id="selectSzdSjsgb" parameterType="java.util.Map"
+			resultMap="com.joyintech.tams.common.base.dao.SzdSjsgbMapper.BaseResultMap">
+		<include refid="com.joyintech.tams.common.base.dao.SzdSjsgbMapper.Sql_All_Data"></include>
+		<where>
+			IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(DATA_FILE) LIKE CONCAT(#{dataFile}, '%')) AND IS_SETTLE_TARGET = 'Y'
+			<foreach item="searchMapValue" index="searchMapKey" collection="searchMap">
+				AND ${searchMapKey} IN
+				<foreach collection="searchMapValue" item ="searchMapValueData" open="(" close=")" separator=",">
+					#{searchMapValueData}
+				</foreach>
+			</foreach>
+		</where>
+	</select>
+
 	<select id="selectAllStlDownDataDealAccountInfoDtoList" parameterType="java.util.Map" resultType="com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto">
 		SELECT DISTINCT
 		B.BROKER_ID as brokerId,
@@ -599,9 +613,9 @@
 
 	<select id="getZzgFinprodId"  resultType="String">
 		SELECT DISTINCT
-			 CON_FINPROD_ID conFinprodId
+		CON_FINPROD_ID conFinprodId
 		FROM
-			FIN_PRODUCT_CONVERTIBLE
+		FIN_PRODUCT_CONVERTIBLE
 		where CON_SHARE_ID = #{zqdm1}
 	</select>
 </mapper>

@@ -2181,6 +2181,17 @@
                     });
                     //add by chenjiaxing 更改资产为空时的价格模式枚举值 start
                 }
+                // add by fuyongsheng 20211213 交易方向非T46、T04 add start
+                else {
+                    // 画面.价格模式  = 数据字典.价格模式.限价指令，数据字典.价格模式.市价指令
+                    $("#priceModel_" + currentTab).updateChosenArr({
+                        item: [PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
+                        chosen: $("#priceModel_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger:true
+                    });
+                }
+                // add by fuyongsheng 20211213 交易方向非T46、T04 add end
             }else if(!finprodType2) {
                 // 画面.价格模式  = 数据字典.价格模式.限价指令，数据字典.价格模式.市价指令
                 $("#priceModel_" + currentTab).updateChosenArr({
