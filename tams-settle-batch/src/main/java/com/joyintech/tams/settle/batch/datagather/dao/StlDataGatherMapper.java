@@ -82,6 +82,12 @@ public interface StlDataGatherMapper {
      * @param paraMap
      */
     List<SettleTransDataDto> selectCashBonusSettleTransData(Map<String, Object> paraMap);
+
+    /**
+     * 获取申购确认成交明细数据
+     * @param paraMap
+     */
+    List<SettleTransDataDto> selectCashBonusSettleTransData1(Map<String, Object> paraMap);
     
     /**
      * 更新SETTLE_TRANS_TG_MAPPING
@@ -151,4 +157,30 @@ public interface StlDataGatherMapper {
      * @return
      */
     List<PtlSecPositionFlow> listPtlSecPositionFolw(Map<String, Object> param);
+
+    /**
+     * 获取现金分红成交明细数据
+     * @param paraMap
+     */
+    List<SettleTransDataDto> selectFundSettleTransData(Map<String, Object> paraMap);
+
+    List<String> selectCqTotleTradeId(Map<String, Object> map);
+
+    List<String> selectCqtradeId(String id);
+
+    void deleteCqTrdProductDealAdd(String tradeId);
+
+    void deleteCqPaTrdProductDeal(String tradeId);
+
+    void deleteCqPtlTrade(String tradeId);
+
+    void deleteCqTrdFinProductDealTotal(String totleTradeId);
+
+    void deleteCqTrdProductDeal(String totleTradeId);
+
+    void deleteCqPaTrdFinProductDealTotal(String totleTradeId);
+
+    void deleteCqTrdDealTotalAdd(String totleTradeId);
+
+    String selectCqBtradeId(@Param("secAcctId") String secAcctId, @Param("finprodId") String finprodId,@Param("dealDate") Date dealDate);
 }

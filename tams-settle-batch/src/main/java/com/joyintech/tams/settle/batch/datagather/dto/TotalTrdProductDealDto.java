@@ -99,6 +99,19 @@ public class TotalTrdProductDealDto extends TrdFinProductDealTotal {
      */
     private String finprodTypeExt;
 
+	/**
+	 * 总持仓数量
+	 */
+	private BigDecimal amount;
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
 	public String getEntrustId() {
 		return entrustId;
 	}

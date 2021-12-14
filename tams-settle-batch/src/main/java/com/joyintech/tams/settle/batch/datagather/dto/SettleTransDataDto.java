@@ -66,6 +66,58 @@ public class SettleTransDataDto extends SettleTransData {
 
     private List<TrdProductDealDto> trdProductDealList;
 
+    /**
+     * 权益登记日
+     */
+    private Date regDate;
+
+    /**
+     * 前置交易编号
+     */
+    private String bTradeId;
+
+    /**
+     * 持仓数量
+     */
+    private BigDecimal amount;
+
+    /**
+     * 申购交易份额
+     */
+    private BigDecimal shareAmtSg;
+
+    public BigDecimal getShareAmtSg() {
+        return shareAmtSg;
+    }
+
+    public void setShareAmtSg(BigDecimal shareAmtSg) {
+        this.shareAmtSg = shareAmtSg;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public String getbTradeId() {
+        return bTradeId;
+    }
+
+    public void setbTradeId(String bTradeId) {
+        this.bTradeId = bTradeId;
+    }
+
+    public Date getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(Date regDate) {
+        this.regDate = regDate;
+    }
+
     public String getOrderId() {
         return orderId;
     }

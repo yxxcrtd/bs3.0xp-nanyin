@@ -351,6 +351,10 @@ public class StlDataGatherService {
                         && DictCodeList.交易方向_现金分红.getValue().equals(productDealDto.getPs())) {
                 	trdProductDealAdd.setRegDate(productDealDto.getRegDate());
                 }
+                if ((DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(productDealDto.getFinprodType2()))&&productDealDto.getBonusCfmDate()!=null) {
+                    trdProductDealAdd.setBonusCfmDate(productDealDto.getBonusCfmDate());
+                }
+                trdProductDealAdd.setGenType("03");
                 trdProductDealAddMapper.insertSelective(trdProductDealAdd);
                 // 回购时登录PA_TRD_PRODUCT_DEAL表
                 if (StringUtil.equals(productDealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()) ||
@@ -566,6 +570,9 @@ public class StlDataGatherService {
                     else if (StringUtil.equals(ps, DictCodeList.交易方向_红利再投.getValue())) {
                         paBussType = DictCodeListExt1.平安业务类型_货币基金红利再投.getValue();
                     }
+                    else if (StringUtil.equals(ps, DictCodeList.交易方向_现金分红.getValue())) {
+                        paBussType = DictCodeListExt1.平安业务类型_货币基金现金分红.getValue();
+                    }
                 }
                 else {
                     if (StringUtil.equals(ps, DictCodeList.交易方向_申购.getValue())) {
@@ -589,11 +596,21 @@ public class StlDataGatherService {
                     else if (StringUtil.equals(ps, DictCodeList.交易方向_现金分红.getValue())) {
                         paBussType = DictCodeListExt1.平安业务类型_非货币基金现金分红.getValue();
                     }
+                    else if (StringUtil.equals(ps, DictCodeList.交易方向_红利再投.getValue())) {
+                        paBussType = DictCodeListExt1.平安业务类型_非货币基金红利再投.getValue();
+                    }
+                    else if (StringUtil.equals(ps, DictCodeList.交易方向_除权登记.getValue())) {
+                        paBussType = DictCodeListExt1.平安业务类型_非货币基金分红除权.getValue();
+                    }
                 }
             }
         }
         else if(StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), secType)) {
-            paBussType = DictCodeListExt2.平安业务类型_股票交易.getValue();
+            if(StringUtil.equals(ps, DictCodeList.交易方向_除权登记.getValue())){
+                paBussType = DictCodeListExt2.平安业务类型_送转.getValue();
+            }else {
+                paBussType = DictCodeListExt2.平安业务类型_股票交易.getValue();
+            }
         }
         return paBussType;
     }

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public abstract class StlDataGatherProcessor extends BaseProcessor<NeedOperateEntity, InvestTradeWriteDto> {
 
     @Autowired
-    private StlDataGatherMapper stlDataGatherMapper;
+    protected StlDataGatherMapper stlDataGatherMapper;
 
     @Autowired
     private StlDataGatherService stlDataGatherService;
