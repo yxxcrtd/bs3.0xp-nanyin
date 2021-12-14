@@ -927,7 +927,10 @@ public class StlDataDealSzdSjsjgProcessService {
         // 申请编号
         settleTransData.setApplyTradeId(szdSjsjg.getJgddbh());
         // 金融产品代码
-        settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm2() + ".SZ");
+        // ZGZGST-4212:修改资产代码取值字段 fuyongsheng 20211214 modify start
+        // settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm2() + ".SZ");
+        settleTransData.setFinprodId(DictCodeListExt1.金融产品类型_投管用_债券.getValue() + GlobalConstant.UNDER_LINE + szdSjsjg.getJgzqdm() + ".SZ");
+        // ZGZGST-4212:修改资产代码取值字段 fuyongsheng 20211214 modify end
         // 金融产品类型(投管分类)
         settleTransData.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         // 金融产品类型(估值核算)
