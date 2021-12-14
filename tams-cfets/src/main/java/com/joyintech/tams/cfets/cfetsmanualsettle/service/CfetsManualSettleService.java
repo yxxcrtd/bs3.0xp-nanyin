@@ -494,42 +494,48 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
 
     @Override
     public void doComplete(CfetsManualSettleDto entity, OperationType type) {
-        //处理业务数据
-        List<CfetsManualSettleInsertDto> insertDtoLists = handleSettleData(entity);
+        try{
+            //处理业务数据
+            List<CfetsManualSettleInsertDto> insertDtoLists = handleSettleData(entity);
 
-        //插入银行间手工交收相关表
-        for(CfetsManualSettleInsertDto cfetsManualSettleInsertDto : insertDtoLists){
+            //插入银行间手工交收相关表
+            for(CfetsManualSettleInsertDto cfetsManualSettleInsertDto : insertDtoLists){
 
-            //存在交收编号，说明是做过交收后又回溯，则做更新动作
-            cfetsManualSettleMapper.mergeInfo(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo());
-            //新增交收流水
-            trdBankManualSettleFlowMapper.insertSelective(cfetsManualSettleInsertDto.getTrdBankManualSettleFlow());
-            //新增交收明细
-            for(TrdBankManualSetDetail trdBankManualSetDetail:cfetsManualSettleInsertDto.getListTrdBnakSetDetails()){
-                trdBankManualSetDetailMapper.insertSelective(trdBankManualSetDetail);
+                //存在交收编号，说明是做过交收后又回溯，则做更新动作
+                cfetsManualSettleMapper.mergeInfo(cfetsManualSettleInsertDto.getTrdBankManualSettleInfo());
+                //新增交收流水
+                trdBankManualSettleFlowMapper.insertSelective(cfetsManualSettleInsertDto.getTrdBankManualSettleFlow());
+                //新增交收明细
+                for(TrdBankManualSetDetail trdBankManualSetDetail:cfetsManualSettleInsertDto.getListTrdBnakSetDetails()){
+                    trdBankManualSetDetailMapper.insertSelective(trdBankManualSetDetail);
+                }
+                //发送头寸
+                if(StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
+                        ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_回溯.getValue())
+                        ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())
+                        ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收修改.getValue())){
+                    sendPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
+                }
+                //交收失败后，自动撤销原交易、交易登记、行权登记数据，关闭对应指令
+    //            if(StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
+    //                CfetsTrdBondInvestTradeDto revokeEntity = this.getTrdBondInvestTradeDto(entity.getTradeId());
+    //                cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity,"交收失败");
+    //                //关闭对应指令
+    //                List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId());
+    //                for(CfetsManualSettleDealInfo dealInfo : listTemp){
+    //                    this.closeDelegateMethod(dealInfo.getEntrustId(),"","交收失败");
+    //                }
+    //                try {
+    //                    this.closeDelegate(listTemp,entity.getRemark());
+    //                } catch (Exception e) {
+    //                    e.printStackTrace();
+    //                }
+    //            }
             }
-            //发送头寸
-            if(StringUtil.equals(entity.getButtonType(), DictCodeListExt3.交收操作类型_交收.getValue())
-                    ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_回溯.getValue())
-                    ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())
-                    ||StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收修改.getValue())){
-                sendPositionMethod(cfetsManualSettleInsertDto,entity.getButtonType());
-            }
-            //交收失败后，自动撤销原交易、交易登记、行权登记数据，关闭对应指令
-//            if(StringUtil.equals(entity.getButtonType(),DictCodeListExt3.交收操作类型_交收失败.getValue())){
-//                CfetsTrdBondInvestTradeDto revokeEntity = this.getTrdBondInvestTradeDto(entity.getTradeId());
-//                cfetsTrdBondInvestTrade002Service.doCompleteRevoke(revokeEntity,"交收失败");
-//                //关闭对应指令
-//                List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(entity.getTradeId());
-//                for(CfetsManualSettleDealInfo dealInfo : listTemp){
-//                    this.closeDelegateMethod(dealInfo.getEntrustId(),"","交收失败");
-//                }
-//                try {
-//                    this.closeDelegate(listTemp,entity.getRemark());
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
+        }
+        catch (Exception e) {
+            logger.error("交收失败",e);
+            throw new RuntimeException(e);
         }
     }
 

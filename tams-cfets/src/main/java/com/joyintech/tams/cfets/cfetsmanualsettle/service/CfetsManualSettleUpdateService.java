@@ -255,6 +255,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
         }
         catch (Exception e) {
             logger.error("交收修改失败",e);
+            throw new RuntimeException(e);
         }
     }
 
