@@ -312,6 +312,7 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             //回溯、再次交收（回溯后交收）、首次修改（回溯后修改）
             trdBankManualSettleInfo.setSettleSeqNo(cfetsManualSettleDto.getSettleSeqNo());
             trdBankManualSettleInfo.setFinprodId(cfetsManualSettleDto.getFinprodId());
+            trdBankManualSettleInfo.setSettleAmt(cfetsManualSettleDto.getSettleAmt());
             //交收状态
             trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_未交收.getValue());
             if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
