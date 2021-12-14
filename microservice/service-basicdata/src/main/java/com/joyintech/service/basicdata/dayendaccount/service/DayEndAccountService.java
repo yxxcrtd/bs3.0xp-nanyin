@@ -89,7 +89,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             pageParam.put("accountList", new ArrayList<>());
         }
         Object finprodIdObj = pageParam.get("finprodId");
-        if (StringUtil.isNotEmpty(finprodIdObj)) {
+        if (StringUtil.isNotEmpty(finprodIdObj) && StringUtil.isNotBlank((String)finprodIdObj)) {
             List<String> finprodMarketIdList = StringUtil.splitToList(GlobalConstant.COMMA, (String)finprodIdObj);
             Map<String, Object> finProdIdParam = new HashMap<>();
             finProdIdParam.put("finprodMarketIdList", finprodMarketIdList);
@@ -556,6 +556,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
             for (SettleTransData settleTransData : listSettleTransData) {
                 DayEndAccountDto dealDetail = new DayEndAccountDto();
                 dealDetail.setFinprodType2(settleTransData.getFinprodType2());
+                dealDetail.setFinprodId(settleTransData.getFinprodId());
                 dealDetail.setPs(settleTransData.getPs());
                 dealDetail.setCjbh(settleTransData.getCjbh());
                 dealDetail.setCommissionAmt(settleTransData.getCommissionAmt());

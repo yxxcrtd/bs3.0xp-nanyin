@@ -292,10 +292,10 @@ public class AssetDeclarationCodeMaintenanceService extends CommonExportService<
 			excelValidDtolist.add(dto);
 		} else {
 			if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)) {
-				if (!DictCodeListExt3.金融产品其他代码类型_回售代码.getCodeName().equals(list.get(3))
+				if (/*!DictCodeListExt3.金融产品其他代码类型_回售代码.getCodeName().equals(list.get(3))
 						&& !DictCodeListExt3.金融产品其他代码类型_质押代码.getCodeName().equals(list.get(3))
-						&& !DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getCodeName().equals(list.get(3))
-						&& !DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getCodeName().equals(list.get(3))
+						&& */!DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getCodeName().equals(list.get(3))
+						/*&& !DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getCodeName().equals(list.get(3))*/
 						&& !DictCodeListExt3.金融产品其他代码类型_配债代码.getCodeName().equals(list.get(3))) {
 //					ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0013"));
 					ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),

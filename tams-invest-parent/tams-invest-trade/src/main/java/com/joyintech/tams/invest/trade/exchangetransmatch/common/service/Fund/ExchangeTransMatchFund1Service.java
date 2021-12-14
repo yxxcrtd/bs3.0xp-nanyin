@@ -4,10 +4,7 @@ import com.joyintech.background.component.common.pack.common.base.BaseService;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.StlPayOrders;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -38,6 +35,8 @@ public class ExchangeTransMatchFund1Service extends BaseService {
         entity.setTrdProductDealAdd(this.genTrdProductDealAdd(dto,commonEntrustDto,entity.getTrdProductDeal()));
         entity.setPtlTrade(generatePtlTrade(dto,commonEntrustDto,Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
         entity.setStlPayOrdersList(generateStlPayOrdersList(dto,Arrays.asList((TrdProductDealDto)entity.getTrdProductDeal())));
+        //生成费用信息list
+        entity.setTrdTradeFeeDetailList(this.genTrdTradeFeeDetailList(dto,commonEntrustDto,entity.getTrdProductDeal()));
         return entity;
     }
 
@@ -244,7 +243,71 @@ public class ExchangeTransMatchFund1Service extends BaseService {
         return res;
     }
 
+    /**
+     * 金融产品交易费用明细list
+     * @param
+     * @return
+     */
+    public List<TrdTradeFeeDetail> genTrdTradeFeeDetailList(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
+        List<TrdTradeFeeDetail> trdTradeFeeDetailList = new ArrayList<>();
+        TrdTradeFeeDetail stampFee = new TrdTradeFeeDetail();
+        stampFee.setTradeId(trdProductDeal.getTradeId());
+        stampFee.setFeeType(DictCodeListExt1.一次性费用类型_印花税.getValue());
+        stampFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+        stampFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSxfAmt()));
+        stampFee.setRegistOrg(trdProductDeal.getRegistOrg());
 
+        TrdTradeFeeDetail jsfFee = new TrdTradeFeeDetail();
+        jsfFee.setTradeId(trdProductDeal.getTradeId());
+        jsfFee.setFeeType(DictCodeListExt1.一次性费用类型_经手费.getValue());
+        jsfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+        jsfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getJsfAmt()));
+        jsfFee.setRegistOrg(trdProductDeal.getRegistOrg());
+
+        TrdTradeFeeDetail ghfFee = new TrdTradeFeeDetail();
+        ghfFee.setTradeId(trdProductDeal.getTradeId());
+        ghfFee.setFeeType(DictCodeListExt1.一次性费用类型_过户费.getValue());
+        ghfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+        ghfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getGhfAmt()));
+        ghfFee.setRegistOrg(trdProductDeal.getRegistOrg());
+
+        TrdTradeFeeDetail zgfFee = new TrdTradeFeeDetail();
+        zgfFee.setTradeId(trdProductDeal.getTradeId());
+        zgfFee.setFeeType(DictCodeListExt1.一次性费用类型_证管费.getValue());
+        zgfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+        zgfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getZgfAmt()));
+        zgfFee.setRegistOrg(trdProductDeal.getRegistOrg());
+
+        TrdTradeFeeDetail sxfFee = new TrdTradeFeeDetail();
+        sxfFee.setTradeId(trdProductDeal.getTradeId());
+        sxfFee.setFeeType(DictCodeListExt1.一次性费用类型_交易手续费.getValue());
+        sxfFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+        sxfFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSxfAmt()));
+        sxfFee.setRegistOrg(trdProductDeal.getRegistOrg());
+
+        TrdTradeFeeDetail settleFee = new TrdTradeFeeDetail();
+        settleFee.setTradeId(trdProductDeal.getTradeId());
+        settleFee.setFeeType(DictCodeListExt1.一次性费用类型_结算费.getValue());
+        settleFee.setIsPayWithTrade(DictCodeList.是否_是.getValue());
+        settleFee.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getSettleFee()));
+        settleFee.setRegistOrg(trdProductDeal.getRegistOrg());
+
+        TrdTradeFeeDetail commissionAmt = new TrdTradeFeeDetail();
+        commissionAmt.setTradeId(trdProductDeal.getTradeId());
+        commissionAmt.setFeeType(DictCodeListExt1.一次性费用类型_佣金.getValue());
+        commissionAmt.setIsPayWithTrade(dealDto.getIsPayWithTrade());
+        commissionAmt.setFeeAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(entrustDto.getMarchQty(),dealDto.getRemainNum(),4),dealDto.getCommissionAmt()));
+        commissionAmt.setRegistOrg(trdProductDeal.getRegistOrg());
+
+        trdTradeFeeDetailList.add(stampFee);
+        trdTradeFeeDetailList.add(jsfFee);
+        trdTradeFeeDetailList.add(ghfFee);
+        trdTradeFeeDetailList.add(zgfFee);
+        trdTradeFeeDetailList.add(sxfFee);
+        trdTradeFeeDetailList.add(settleFee);
+        trdTradeFeeDetailList.add(commissionAmt);
+        return trdTradeFeeDetailList;
+    }
 
     /**
      * 生成指令
