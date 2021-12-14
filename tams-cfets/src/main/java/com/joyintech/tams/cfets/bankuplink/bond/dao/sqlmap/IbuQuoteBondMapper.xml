@@ -941,6 +941,12 @@
         <if test="operationFlag != null and operationFlag.equals('02')">
             and  (T8.STATISTICAL_TIMES = 0 OR T8.STATISTICAL_TIMES IS null)
         </if>
+        <if test="quoteTypes != null and quoteTypes.size() > 0">
+            and T1.QUOTE_TYPE in
+            <foreach collection="quoteTypes" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
         UNION ALL
         <!--回售登记数据-->
         SELECT
@@ -1008,6 +1014,12 @@
         <if test="operationFlag != null and operationFlag.equals('02')">
             and  (T8.STATISTICAL_TIMES = 0 OR T8.STATISTICAL_TIMES IS null)
         </if>
+        <if test="quoteTypes != null and quoteTypes.size() > 0">
+            and T1.QUOTE_TYPE in
+            <foreach collection="quoteTypes" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
         UNION ALL
         <!--流程中数据-->
         SELECT
@@ -1070,7 +1082,12 @@
         <if test="operationFlag != null and operationFlag.equals('02')">
             and  (T8.STATISTICAL_TIMES = 0 OR T8.STATISTICAL_TIMES IS null)
         </if>
-
+        <if test="quoteTypes != null and quoteTypes.size() > 0">
+            and T1.QUOTE_TYPE in
+            <foreach collection="quoteTypes" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
     </select>
 
     <update id="updateRegFinProductDealTotal">

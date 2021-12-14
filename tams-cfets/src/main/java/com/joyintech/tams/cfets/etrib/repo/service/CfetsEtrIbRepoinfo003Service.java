@@ -19,6 +19,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioCashRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPosPortfolioSecRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoPositionRequest;
@@ -33,7 +34,6 @@ import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
@@ -88,7 +88,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
      * 附件信息共通Service
      */
     @Autowired(required = false)
-    private MstFileCommonService mstFileCommonService;
+    private CfetsEtribBondInfo003Service cfetsEtribBondInfo003Service;
 
     /**
      * 委托指令共同
@@ -332,9 +332,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("portfolioId", dto.getPortfolioId());
                 map.put("acctType", BussinessDictCodeList.资金账户类型_托管账户.getValue());
-                String cashAcctId ="";
-                //TODO
-//                		this.qryPortfolioCashAcctId(map);
+                String cashAcctId =cfetsEtribBondInfo003Service.qryPortfolioCashAcctId(map);
                 if (StringUtil.isNotEmpty(cashAcctId)) {
                     posport.setCashAcctId(cashAcctId); // 托管户
                 }
@@ -349,8 +347,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("portfolioId", dto.getPortfolioId());
                     map.put("finprodId", entity.getFinprodId());
-                    String secAcctId = "";//TODO
-//                		this.qryPortfolioSecAcctId(map);
+                    String secAcctId = cfetsEtribBondInfo003Service.qryPortfolioSecAcctId(map);
                     if (StringUtil.isNotEmpty(secAcctId)) {
                         secport.setSecAcctId(secAcctId); // 证券账户
                     }

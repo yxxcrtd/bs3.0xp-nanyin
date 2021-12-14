@@ -39,10 +39,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -543,6 +540,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			}
 			param.put("quoteIds",quoteIds);
 		}
+		//目前只导出对话登记
+		param.put("quoteTypes", Arrays.asList("01"));
 		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(param);
 		return new Message<Map<String,Object>>().success().setData(ibuQuoteBondService.exportDayRegCheck(dataList));
 	}
@@ -563,6 +562,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			String operationFlag = (String) requestDto.getParams().get("operationFlag");
 			param.put("operationFlag",operationFlag);
 		}
+		//目前只导出对话登记
+		param.put("quoteTypes", Arrays.asList("01"));
 		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(param);
 		String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
 		requestDto.setData(null);

@@ -5,9 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @ApiModel(value="可质押债券数据",description="可质押债券数据")
 public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
@@ -81,6 +79,12 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
      */
     @ApiModelProperty(name="branch",value="分支序号")
     private Long branch;
+
+    /**
+     * 分支序号
+     */
+    @ApiModelProperty(name="waitPeriod",value="待偿期")
+    private BigDecimal waitPeriod;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -184,5 +188,13 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
 
     public void setBranch(Long branch) {
         this.branch = branch;
+    }
+
+    public BigDecimal getWaitPeriod() {
+        return waitPeriod;
+    }
+
+    public void setWaitPeriod(BigDecimal waitPeriod) {
+        this.waitPeriod = waitPeriod;
     }
 }

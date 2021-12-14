@@ -17,13 +17,10 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.business.common.pojo.BaseMap;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosiInfoRequestDto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbdoRiskcalDto;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoinfoMapper;
@@ -39,18 +36,13 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
-import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -79,15 +71,6 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
 	@Autowired
 	private CfetsEtrIbRepoLib001Mapper cfetsEtrIbRepoLib001Mapper;
     /**
-     * 委托共通
-     */
-    @Autowired
-    private EtrCommonService etrCommonService;
-
-    @Autowired
-    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
-
-    /**
      * 平台日期
      */
     @Autowired(required = false)
@@ -110,6 +93,39 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         pageParam.put("TRADE_PLACE_01", DictCodeListExt1.交易场所_银行间.getValue());
         Page<CfetsEtrRepoZLCXResponse> result = super.queryForPage(cfetsEtrRepoZLCXRequest.getPageMode().getPageNo(), cfetsEtrRepoZLCXRequest.getPageMode().getPageSize(), () -> cfetsEtrIbRepoinfoMapper.findZlglPage(pageParam));
         return result;
+    }
+
+    /**
+     * 质押券入库画面，查询可质押债券列表
+     *
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     * @return
+     */
+    public Page<CfetsEtrIbRepoLibAvaPledgeBondResponse> selectAvaPledgeBondList(CfetsEtrRepoLibAvaPledgeBondRequest dto) {
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        this.setParam(pageParam);
+        return super.queryForPage(dto.getPageMode().getPageNo(),dto.getPageMode().getPageSize(),() ->cfetsEtrIbRepoLib001Mapper.selectAvaPledgeBondList(pageParam));
+    }
+    /**
+     * 检索参数设置：
+     * 标准券查询画面，查询标准券信息列表
+     * 质押券入库画面，查询可质押债券列表
+     * 质押券出库画面，查询待出库信息
+     *
+     * @param pageParam
+     */
+    private void setParam(Map<String, Object> pageParam) {
+        pageParam.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+        pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
+        pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+        pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        pageParam.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
+        pageParam.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        pageParam.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+        pageParam.put("plateDate",iPlatformDate.getSysDateStr());
     }
 
     public AjaxResult checkSaveErrorMethod(CfetsEtrRepoSaveRequest cfetsDto, BindingResult result){
@@ -423,118 +439,6 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
 		return cfetsEtrIbRepoinfoMapper.selectUserRolePosList(map);
 	}
 
-    public List<BaseMap> queryPositionInfo(CfetsEtrIbBondPosiInfoRequestDto requestDto) {
-        // 从原投管系统取
-        BigDecimal cashT = BigDecimal.ZERO; // 指令t日可用
-        BigDecimal cashT1 = BigDecimal.ZERO; // 指令t1日可用
-        BigDecimal realCash = BigDecimal.ZERO; // 账户现金
-        List<String> list = requestDto.getPortfolioIdList();
-        if (list != null) {
-            for (String portfolioId : list){
-                BaseMap paramMap = BaseMap.newMap()
-                        .put("finprodId", requestDto.getFinprodId())
-                        .put("portfolioId", portfolioId)
-                        .put("ccy", DictCodeList.币种_人民币_CNY.getValue())
-                        .put("vdate", requestDto.getCdate())
-                        .put("calId", "03") // 银行间
-                        ;
-                Map<String, Object> mapRst = etrCommonService.getProAvailableCash(paramMap);
-                if (mapRst != null){ // 指令t日可用，指令t1日可用
-                    cashT = ArithmeticUtil.doAdd(cashT, BaseMap.newMap(mapRst).getBigDecimal("cashT"));
-                    cashT1 = ArithmeticUtil.doAdd(cashT1, BaseMap.newMap(mapRst).getBigDecimal("cashT1"));
-                }
-                PtlCashPositionFlowDto positionQueryDto = new PtlCashPositionFlowDto();
-                positionQueryDto.setPortfolioId(portfolioId);
-                positionQueryDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
-                positionQueryDto.setCdate(iPlatformDate.getSysDate());
-                // 实际现金（账户现金）
-                realCash = ArithmeticUtil.doAdd(realCash, basePtlCashPositionInfoService.queryUsableCashPosition(positionQueryDto));
-            }
-        }
-
-        BaseMap bm = BaseMap.newMap()
-                .put("S_001", DictCodeListExt3.资产类型_指令汇总可用持仓.getValue())
-                .put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
-                .put("S_004", DictCodeListExt3.资产类型_汇总可用现金.getValue())
-                .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
-                .put("A_005", DictCodeListExt3.资产类型_债券融入券可用持仓.getValue())
-                .put("C_01", DictCodeListExt3.资产类型_现金账户持仓.getValue())
-                .put("portfolioIdList", requestDto.getPortfolioIdList())
-                .put("cdate", requestDto.getCdate())
-                .put("finprodId", requestDto.getFinprodId())
-                .put("acctId", requestDto.getAcctId());
-        // 查询头寸信息
-        Map map = cfetsEtrIbRepoinfoMapper.queryPositionInfo(bm);
-
-        return assemble( map, cashT, cashT1, realCash);
-    }
-
-    private List<BaseMap> assemble( Map map, BigDecimal cashT, BigDecimal cashT1, BigDecimal realCash) {
-        String T0KYXJ="T0KYXJ",T1KYXJ="T1KYXJ",ZHXJ="ZHXJ",RRQMKDGHCC="RRQMKDGHCC",ZCTRKYCC="ZCTRKYCC";
-        String ZCT1RKYCC="ZCT1RKYCC",BFQTRKYCC="BFQTRKYCC",BFQT1RKYCC="BFQT1RKYCC",RRQTRKYCC="RRQTRKYCC",RRQT1RKYCC="RRQT1RKYCC";
-        if (map == null) {
-            map = new HashMap();
-            map.put(T0KYXJ, "0");
-            map.put(T1KYXJ, "0");
-            map.put(ZHXJ, "0");
-        }
-        // 初始化返回集合
-        List<BaseMap> resp = new ArrayList<>();
-        BaseMap bm = BaseMap.newMap(map);
-        /**
-         * 若老投管现金存在需累计
-         */
-        if (cashT != null){
-            bm.put(T0KYXJ, addToStr(bm.getBigDecimal(T0KYXJ), cashT));
-        }
-        if (cashT1 != null){
-            bm.put(T1KYXJ, addToStr(bm.getBigDecimal(T1KYXJ), cashT1));
-        }
-        if (realCash != null){
-            bm.put(ZHXJ, addToStr(bm.getBigDecimal(ZHXJ), realCash));
-        }
-
-        /*T日可用现金*/
-        resp.add(BaseMap.newMap()
-                .put("field", T0KYXJ)
-                .put("name", "T日可用现金（元）")
-                .put("amount", bm.getBigDecimalStr(T0KYXJ, "0.00"))
-                .put("type", "xj"));
-        /*T+1日可用现金*/
-        resp.add(BaseMap.newMap()
-                .put("field", T1KYXJ)
-                .put("name", "T+1日可用现金（元）")
-                .put("amount", bm.getBigDecimalStr(T1KYXJ, "0.00"))
-                .put("type", "xj"));
-        /*账户现金*/
-        resp.add(BaseMap.newMap()
-                .put("field", ZHXJ)
-                .put("name", "账户现金（元）")
-                .put("amount", bm.getBigDecimalStr(ZHXJ, "0.00"))
-                .put("type", "xj"));
-
-        return resp;
-    }
-
-    private String addToStr(BigDecimal a, BigDecimal b){
-        if (a == null && b== null){
-            return "--";
-        }
-        return decimalToStr(ArithmeticUtil.doAdd(a,b),"0.00");
-    }
-
-    /**
-     * @param b
-     * @param pattern
-     * @return
-     */
-    private String decimalToStr(BigDecimal b, String pattern){
-        if (b == null){
-            return "--";
-        }
-        DecimalFormat df1 = new DecimalFormat(pattern);
-        return df1.format(b);
-    }
 
     public String doRiskcalCheckMethod(CfetsEtribRepoInfo003Dto dto){
         //参数不能为空
@@ -640,6 +544,103 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
         param.put("sysDate", iPlatformDate.getSysDateStr());
         return  cfetsEtrIbRepoinfoMapper.findEtrinfo(param);
+    }
+
+
+
+    /**
+     * 获取当前月天数
+     * @return
+     */
+    public String getTermType(Integer repoterm) {
+        //对选择的数据进行check
+        String termType  = null;
+        if(repoterm!= null &&repoterm<=21){
+            //期限品种小于21天
+            if(repoterm==1){
+                termType ="R001";
+            }
+            if(repoterm>1&&repoterm<=7){
+                termType ="R007";
+            }
+            if(repoterm>7&&repoterm<=14){
+                termType ="R014";
+            }
+            if(repoterm>14&&repoterm<=21){
+                termType ="R021";
+            }
+            return termType;
+        }
+        int day=0;
+        //date为空时  返回0
+        Date date = iPlatformDate.getSysDate();
+            //获取日期
+            //获取之后月00天 即本月最后一天
+        day =addDaysOfMonth(date,0);
+        if(repoterm<=day){
+            return "R1M";
+        }
+        day =addDaysOfMonth(date,1);
+        if(repoterm<=day){
+            return "R2M";
+        }
+        day =addDaysOfMonth(date,2);
+        if(repoterm<=day){
+            return "R3M";
+        }
+        day =addDaysOfMonth(date,3);
+        if(repoterm<=day){
+            return "R4M";
+        }
+        day =addDaysOfMonth(date,5);
+        if(repoterm<=day){
+            return "R6M";
+        }
+        day =addDaysOfMonth(date,8);
+        if(repoterm<=day){
+            return "R9M";
+        }
+        day =addDaysOfMonth(date,11);
+        if(repoterm<=day){
+            return "R1Y";
+        }
+        return null;
+    }
+
+    /**
+     * 获取当前月 天数到指定月份天数 的合计
+     * @return
+     */
+    public int addDaysOfMonth(Date date,int month) {
+        int day = getDaysOfMonth(date);
+        for(int i =0;i<month;i++){
+            date = getPreMonth(date);
+            day = day + getDaysOfMonth(date);//加下个月天数
+        }
+        return day;
+    }
+
+    /**
+     * 获取当前月天数
+     * @param date
+     * @return
+     */
+    public int getDaysOfMonth(Date date) {
+        Calendar calendar =Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * 获取下一个月
+     * @param date
+     * @return
+     */
+    public Date getPreMonth(Date date) {
+        Calendar calendar =Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH,1);
+        return calendar.getTime();
     }
 
 }
