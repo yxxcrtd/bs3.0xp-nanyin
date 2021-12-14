@@ -390,7 +390,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             insertWfl(cfetsBondDealDbDto);
             ProcessMark newEntity;
             //头寸
-            //PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,OperationType.NEW));
+            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,OperationType.NEW));
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsBondDealRegisterQuoteDto.class, true);
                 // 工作流ID
@@ -472,7 +472,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     @Override
     public void doBack(CfetsBondDealRegisterQuoteDto entity) {
         //退回冲销头寸
-        //PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
     }
 
     @Override
