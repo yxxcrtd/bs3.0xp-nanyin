@@ -106,7 +106,9 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
         //查询流程中数据"01"
         wflValidInputParameter.setSeachMode("01");
         List<String> result = cfetsManualSettleMapper.getBusinessData(wflValidInputParameter);
-        if(!StringUtil.isEmptyList(result)){
+        wflValidInputParameter.setPageId("CfetsManualSettle");
+        List<String> resultu = cfetsManualSettleMapper.getBusinessData(wflValidInputParameter);
+        if(!StringUtil.isEmptyList(result) || !StringUtil.isEmptyList(resultu)){
             //存在流程中数据
             returnMsg =getMessage("BUSS_COM_E_0023");
         }

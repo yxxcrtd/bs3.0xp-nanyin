@@ -1071,7 +1071,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
      * @see
      * @since 1.0
      */
-    public void doCompleteRevoke(CfetsTrdBondInvestTradeDto entity) {
+    public void doCompleteRevoke(CfetsTrdBondInvestTradeDto entity,String settleRemark) {
         // 调用基础组合.【金融产品交易组件.查询金融产品交易信息】获取原交易信息
         if (entity.getTotleTradeId().lastIndexOf('R') == entity.getTotleTradeId().length() - 1) {
             entity.setTotleTradeId(entity.getTotleTradeId().substring(0, entity.getTotleTradeId().length() - 1));
@@ -1168,7 +1168,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         }
         params.put("bizCode", bizCode);
         params.put("updateUser", SecurityUtil.getLoginUser().getUserName());
-        params.put("revokeReason", entity.getRevokeReason());
+        params.put("revokeReason", entity.getRevokeReason()==null?settleRemark : entity.getRevokeReason()+settleRemark);
         restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/doRevokeComplete?", params,
             String.class);
 
@@ -1183,9 +1183,9 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         if(null!=regTotal){
             String remark=StringUtil.isEmpty(regTotal.getRemark()) ? "" : regTotal.getRemark();
             if(StringUtil.isNotBlank(remark)){
-                remark=remark+"\n"+"交易撤销：" + bizCode;
+                remark=remark+settleRemark+"\n"+"交易撤销：" + bizCode;
             }else{
-                remark="交易撤销：" + bizCode;
+                remark=settleRemark+"交易撤销：" + bizCode;
             }
             regTotal.setRemark(remark);
             regTotal.setTradeStatus(DictCodeListExt1.有效状态_撤销.getValue());
@@ -1478,7 +1478,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         }
         // 撤销
         else {
-            this.doCompleteRevoke(entity);
+            this.doCompleteRevoke(entity,"");
 
             //补充  如果是撤销将交易ID赋值为null
             Map<String, Object> map = new HashMap<>();
@@ -4384,8 +4384,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
     }
     /**
      * 撤销提交时check检查
-     * @param allDto
-     * @param br
+     * @param input
      * @return
      */
     public AjaxResult  checkRevoke(CfetsTrdBondInvestTradeDto input) {
