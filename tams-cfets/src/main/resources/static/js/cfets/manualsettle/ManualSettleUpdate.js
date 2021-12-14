@@ -12,9 +12,9 @@
             //组合名称
             ,{field: 'portfolioName', width: "310", title: '组合名称', sortable:false}
             //付息周期
-            , {field: 'settleNum', width: "310", title: '交收数量（万元）',type: 'money', sortable:false}
+            , {field: 'settleNum', width: "307", title: '交收数量（万元）',type: 'money', sortable:false}
             //持有面额
-            , {field: 'settleAmt', width: "310", title: '交收金额', type: 'money', sortable:false}
+            , {field: 'settleAmt', width: "310", title: '交收金额（元）', type: 'money', sortable:false}
         ],
         beforeEditCell:function(){
         	return false;
