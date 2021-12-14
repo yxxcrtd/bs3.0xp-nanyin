@@ -1,6 +1,7 @@
 package com.joyintech.tams.component.business.trade.impl;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
@@ -635,23 +636,17 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             持仓类型 = DictCodeList.持仓类型_可用;
             needNegative = false;
         }
-        else if (DictCodeListExt1.交易流程状态_有效.getValue().equals(finProductTradeDto.getWorkflowStatus())) {
-            持仓类型 = DictCodeList.持仓类型_实际;
-            needNegative = false;
-        }
         if (持仓类型 == null) {
             return false;
         }
-
         boolean 是否处理持仓 = AllTradeCommonUtil.是否处理持仓(finProductTradeDto.getWorkflowId(), LoginUserUtil.getUserName(), 持仓类型);
-
         List<PtlSecPositionFlowDto> ptlSecPositionFlows = new ArrayList<>();
         List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<>();
         for (BaseTradeProductDealDto baseTradeProductDealDto : finProductTradeDto.getBaseTradeProductDealDtos()) {
             PortfolioPositionsFlowInputDto inputDto = new PortfolioPositionsFlowInputDto();
             inputDto.setPositionType(持仓类型.getValue());
             inputDto.setTrdProductDeal(baseTradeProductDealDto.getTrdProductDeal());
-//            增加附属表dto
+            // 增加附属表dto
             inputDto.setTrdFinProductBarterList(baseTradeProductDealDto.getTrdFinProductBarterList());
             inputDto.setPortfolioId(baseTradeProductDealDto.getTrdProductDealAdd().getPortfolioId());
             inputDto.setBonusMode(baseTradeProductDealDto.getTrdProductDealAdd().getPayType());
@@ -673,6 +668,11 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
 
                 //买断式回购持仓特殊处理
                 for (PtlSecPositionFlowDto dto : ptlSecPositionFlowDtoss){
+                    // 债券  申购确认  持仓类型为冻结
+                    if (StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())
+                            && StringUtil.equals(baseTradeProductDealDto.getTrdProductDeal().getPs(), DictCodeList.交易方向_申购确认.getValue())) {
+                       dto.setHodingType(DictCodeList.持仓类型_冻结.getValue());
+                    }
                     if (DictCodeListExt1.交易场所_银行间.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getTradeMarket())
                             && DictCodeList.交易方向_买入.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getPs())
                             && (DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue().equals(baseTradeProductDealDto.getTrdProductDeal().getFinprodType2())
