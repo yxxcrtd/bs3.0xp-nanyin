@@ -15,7 +15,7 @@ public class PortIntFenPeiInfoDto {
     @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
     private String portfolioName;
 
-    @ApiModelProperty(name="qtyd",value="持有面额（元）",example="A1")
+    @ApiModelProperty(name="qtyd",value="券面总额（万元）",example="A1")
     private BigDecimal qtyd;
 
     @ApiModelProperty(name="prinAmtTheoryd",value="还本金额（元）",example="A1")
@@ -68,6 +68,9 @@ public class PortIntFenPeiInfoDto {
 
     @ApiModelProperty(name="unitPrice",value="净价",example="1000000")
     private BigDecimal unitPrice;
+
+    @ApiModelProperty(name="qtydq",value="持有面额（元）",example="A1")
+    private BigDecimal qtydq;
 
     public String getPriceModelStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.价格模式, this.getPriceModel());
@@ -235,5 +238,13 @@ public class PortIntFenPeiInfoDto {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public BigDecimal getQtydq() {
+        return qtydq;
+    }
+
+    public void setQtydq(BigDecimal qtydq) {
+        this.qtydq = qtydq;
     }
 }

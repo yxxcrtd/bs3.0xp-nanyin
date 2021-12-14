@@ -352,6 +352,7 @@
         TPDA.PORTFOLIO_ID portfolioId,
         pp.PORTFOLIO_NAME portfolioName,
         TPD.SHARE_AMT/100 QTYD,
+        TPD.SHARE_AMT*100 QTYDQ,
         TPD.PRIN_AMT prinAmtTheoryd,
         TPD.INT_AMT intAmtTheoryd,
         TPD.CPRICE_AMT cpriceAmt,
