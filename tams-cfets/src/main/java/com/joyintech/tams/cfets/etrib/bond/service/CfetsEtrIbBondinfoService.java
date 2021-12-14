@@ -1556,7 +1556,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             entrustOwnNum=ArithmeticUtil.doAdd(entrustOwnNum,dtoList.get(i).getEntrustOwnNum());
             entrustIntegrateNum=ArithmeticUtil.doAdd(entrustIntegrateNum,dtoList.get(i).getEntrustIntegrateNum());
             //交易方向为卖出，回售时，判断是否存在不同的业务模式
-            if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.isNotEmpty(allDto.getFinprodId())
+          /*  if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.isNotEmpty(allDto.getFinprodId())
                     && StringUtil.isNotEmpty(distrib.getPortfolioId())
                     && StringUtil.isNotEmpty(distrib.getBusinessModel())
                     && (StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_卖出.getValue())
@@ -1574,7 +1574,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                          }
                     }
                 }
-            }
+            }*/
 
         }
         if(StringUtil.isNotEmpty(allDto.getTradeAmt()) && allDto.getTradeAmt().compareTo(entrustNum)!=0){

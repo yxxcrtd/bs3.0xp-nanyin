@@ -666,6 +666,7 @@ public class CfetsTrdConfirmService extends BaseService{
      * @since 1.0
      */
     public CfetsTrdBondInvestTradeDto prepareEntity(String totleTradeId,String genType) {
+        String userName = null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"system";
         //如果是登记数据
         //根据汇总交易编号查询登记数据
         CfetsTrdConfirmRegInfoListResponse dtoReg=cfetsTrdConfirmMapper.selectRegInfoByKey(totleTradeId);
@@ -787,15 +788,15 @@ public class CfetsTrdConfirmService extends BaseService{
             matchDto.setSeqno(IDGenerator.generate());
             matchDto.setPreTradeId(totleTradeId);
             matchDto.setTrdConfStatus(DictCodeList.确认状态_已确认.getValue());
-            matchDto.setCreateUser(SecurityUtil.getLoginUser().getUserName());
+            matchDto.setCreateUser(userName);
             matchDto.setCreateDept(CommonUtil.getDeptCode());
-            matchDto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+            matchDto.setUpdateUser(userName);
             matchDto.setTrdId(entity.getTotleTradeId());
             entity.setCfetsTrdConfirmMatchDto(matchDto);
         }else{
             matchDto.setPreTradeId(totleTradeId);
             matchDto.setTrdConfStatus(DictCodeList.确认状态_已确认.getValue());
-            matchDto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+            matchDto.setUpdateUser(userName);
             matchDto.setTrdId(entity.getTotleTradeId());
             entity.setCfetsTrdConfirmMatchDto(matchDto);
         }
@@ -1881,7 +1882,7 @@ public class CfetsTrdConfirmService extends BaseService{
         //调用头寸
         CfetsEtrIbPositionRequest req=new CfetsEtrIbPositionRequest();
         req.setInterfaceType("Bond001");
-        req.setUserId(SecurityUtil.getLoginUser().getUserName());
+        req.setUserId(null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"system");
         req.setTotalTradeId(entity.getTotleTradeId());
         req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
         req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());

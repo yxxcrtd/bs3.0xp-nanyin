@@ -191,6 +191,12 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="assetTypeOne",value="资产类型  type4")
     private String assetTypeOne;
 
+    @ApiModelProperty(name="parValueAmt",value="本金额(元)")
+    private BigDecimal parValueAmt;
+
+    @ApiModelProperty(name="parValue",value="每百元金额(元)")
+    private BigDecimal parValue;
+
     public String getQuoteId() {
         return quoteId;
     }
@@ -653,6 +659,22 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setQuoteOuTraderName(String quoteOuTraderName) {
         this.quoteOuTraderName = quoteOuTraderName;
+    }
+
+    public BigDecimal getParValueAmt() {
+        return parValueAmt;
+    }
+
+    public void setParValueAmt(BigDecimal parValueAmt) {
+        this.parValueAmt = parValueAmt;
+    }
+
+    public BigDecimal getParValue() {
+        return parValue;
+    }
+
+    public void setParValue(BigDecimal parValue) {
+        this.parValue = parValue;
     }
 }
 

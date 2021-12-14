@@ -3,6 +3,7 @@ package com.joyintech.tams.cfets.common.controller;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.tams.cfets.trdconfirm.service.CfetsTrdConfirmService;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.constant.OperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,9 +33,14 @@ public class CfetsIbuQuoteBatchCommonController {
     @PostMapping("resaleregautodeal")
     public void resaleregautodeal(@RequestBody Map<String,Object> parm){
         List<String> totleTradeIds = (List<String>) parm.get("totleTradeIds");
-        totleTradeIds.forEach(item ->{
-            cfetsTrdConfirmService.prepareEntity(item, DictCodeListExt1.生成方式_批处理生成.getValue());
-        });
+        try{
+            totleTradeIds.forEach(item ->{
+                cfetsTrdConfirmService.doCompleteMethod(cfetsTrdConfirmService.prepareEntity(item, DictCodeListExt1.生成方式_批处理生成.getValue()), OperationType.NEW);
+            });
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
