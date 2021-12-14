@@ -1132,10 +1132,10 @@ public class IbuQuoteBondService extends BaseService {
                 message = StringUtil.join("交易场所非银行间,不可导出!业务编号:"+item.getQuoteId());
                 break;
             }
-            if(!StringUtil.equals(item.getAssetType(),dataList.get(0).getAssetType())){
+            /*if(!StringUtil.equals(item.getAssetType(),dataList.get(0).getAssetType())){
                 message = StringUtil.join("资产类型不统一,不可导出!");
                 break;
-            }
+            }*/
             if(item.getStatisticalTimes()!=0){
                 quoteIds.add(item.getQuoteId());
             }
