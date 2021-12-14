@@ -9,7 +9,7 @@
          and SEQ_ID not in
              (
                  select
-                     SEQ_ID
+                     SEQ_NO
                  from
                      SETTLE_TRANS_DATA_TOTAL_STATUS
                  where
