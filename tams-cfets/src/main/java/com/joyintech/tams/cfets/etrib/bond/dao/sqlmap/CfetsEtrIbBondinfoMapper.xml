@@ -653,7 +653,7 @@ from
                 ) AS t1kyxj /*T+1日可用现金*/
                 from ETR_CASH_POSITION_RULE a
                 LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_004})
-                where to_char(a.cdate,'yyyy-MM-dd') = #{cdate} and b.S_HOLDINGTYPE IN (#{S_004}) 
+                where a.cdate = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') and b.S_HOLDINGTYPE IN (#{S_004}) 
                 <if test="portfolioIdList != null">
                     AND a.PORTFOLIO_ID in
                     <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
@@ -680,8 +680,8 @@ from
                 sum(CASE WHEN a.HODING_TYPE=#{A_005} AND a.DATE_TYPE ='1' THEN AMOUNT ELSE 0 END) AS rrqt1rkycc /*融入券T+1日可用持仓*/
                 from ETR_SEC_POSITION_RULE a
                 LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_001},#{S_003})
-                where to_char(a.cdate,'yyyy-MM-dd') = #{cdate} and (b.S_HOLDINGTYPE IN (#{S_001},#{S_003}) or a.HODING_TYPE in (#{A_004},#{A_005}))
-                <if test="finprodId != null">
+                where a.cdate = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') and (b.S_HOLDINGTYPE IN (#{S_001},#{S_003}) or a.HODING_TYPE in (#{A_004},#{A_005}))
+                <if test="finprodId != null and finprodId !=''">
                     and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
                 </if>
                 <if test="portfolioIdList != null">
@@ -696,8 +696,8 @@ from
                 <!--账户现金-->
                 SELECT d.PORTFOLIO_ID, sum(d.AMOUNT) AMOUNT
                 FROM PTL_CASH_POSITION_RULE d
-                where to_char(d.cdate,'yyyy-MM-dd') = #{cdate} AND d.HODING_TYPE =#{C_01}
-                <if test="acctId != null">
+                where d.cdate = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') AND d.HODING_TYPE =#{C_01} and DATE_TYPE ='0' 
+                <if test="acctId != null and acctId !=''">
                     and d.ACCT_ID = #{acctId,jdbcType=VARCHAR}
                 </if>
                 <if test="portfolioIdList != null">
