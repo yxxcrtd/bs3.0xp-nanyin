@@ -1,6 +1,7 @@
 package com.joyintech.tams.settle.batch.datagather.dao;
 
 import com.joyintech.tams.common.base.entity.PtlSecPosition;
+import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
 import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
 import com.joyintech.tams.settle.batch.datagather.dto.EtrEntrustDto;
 import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
@@ -129,4 +130,25 @@ public interface StlDataGatherMapper {
      * @return
      */
     List<PtlSecPosition> listPtlSecPosition(Map<String,Object> param);
+
+    /**
+     * 债券申购确认
+     * @param paraMap
+     * @return
+     */
+    List<SettleTransDataDto> listBondPurConfirSettleTransData(Map<String, Object> paraMap);
+
+    /**
+     * 债券股票上市流通
+     * @param paraMap
+     * @return
+     */
+    List<SettleTransDataDto> listBoundSharesMarketTradeData(Map<String, Object> paraMap);
+
+    /**
+     * 组合持仓流水
+     * @param param
+     * @return
+     */
+    List<PtlSecPositionFlow> listPtlSecPositionFolw(Map<String, Object> param);
 }

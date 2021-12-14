@@ -5,8 +5,7 @@ import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDownDataDealService;
 import com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper;
 import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeReaderDto;
@@ -54,54 +53,71 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
             //R325 债券存续期
             if(searchParam.containsKey("busiType")&&StringUtil.equals(searchParam.get("busiType"),"R3S5")){
                 searchParam.put("dealDate", execInfo.getExecuteDate());
-                // 业务类型
-                searchParam.put("finprodTypes", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券.getValue()));
-                // 交易方向列表
-                searchParam.put("psList",  Arrays.asList(DictCodeList.交易方向_行权_赎回.getValue(),DictCodeList.交易方向_到期.getValue(),DictCodeList.交易方向_还本.getValue(),DictCodeList.交易方向_收息.getValue()));
-                List<SettleTransDataDto> settleTransDataDtos = stlDataGatherService.listBondSettleTransData(searchParam);
-                List<SettleTransDataDto> settleTransDataResult = new ArrayList<>();
-                if(CollectionUtils.isNotEmpty(settleTransDataDtos)) {
-                    //需要汇总的成交明细
-                    Map<String,List<SettleTransDataDto>>  settleTransDataNeedTotalMap = new HashMap<>();
-                    List<SettleTransDataDto> settleTransDataSingle = settleTransDataDtos.stream().filter(item -> StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
-                            || (StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue()) && StringUtil.equals(item.getPs(), DictCodeList.交易方向_行权_赎回.getValue()))).collect(Collectors.toList());
-                    if(CollectionUtils.isNotEmpty(settleTransDataSingle)){
-                        settleTransDataSingle.stream().forEach(item -> item.setTradeIdList(Arrays.asList(item.getTradeId())));
-                        settleTransDataResult.addAll(settleTransDataSingle);
-                    }
-                    settleTransDataDtos.stream().filter(item -> !(StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
-                            || (StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue()) && StringUtil.equals(item.getPs(), DictCodeList.交易方向_行权_赎回.getValue())))).collect(Collectors.toList())
-                            .stream().collect(Collectors.groupingBy(SettleTransDataDto::getBusiKey,Collectors.toList())).forEach(settleTransDataNeedTotalMap::put);
-                    for (Map.Entry<String, List<SettleTransDataDto>> parammap : settleTransDataNeedTotalMap.entrySet()) {
-                        SettleTransDataDto settleTransDataDto = new SettleTransDataDto();
-                        List<SettleTransDataDto> value = parammap.getValue();
-                        if(CollectionUtils.isNotEmpty(value)){
-                            SettleTransDataDto settleTransDataDtoInit = value.get(0);
-                            BeanUtil.copyPropertiesIgnoreNull(settleTransDataDto, settleTransDataDtoInit );
-                            settleTransDataDto.setCpriceAmt(settleTransDataDtos.stream().map(item ->item.getCpriceAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
-                            settleTransDataDto.setShareAmt(settleTransDataDtos.stream().map(item ->item.getShareAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
-                            settleTransDataDto.setIntAmt(settleTransDataDtos.stream().map(item ->item.getIntAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
-                            settleTransDataDto.setFpriceAmt(settleTransDataDtos.stream().map(item ->item.getFpriceAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
-                            settleTransDataDto.setTradeAmt(settleTransDataDtos.stream().map(item ->item.getTradeAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
-                            if((null!=settleTransDataDto.getIntAmt()||settleTransDataDto.getIntAmt().compareTo(BigDecimal.ZERO)!=0)
-                                    &&settleTransDataDto.getIntAmt().compareTo(settleTransDataDto.getFpriceAmt())!=0){
-                                if(DateUtil.compareDate(settleTransDataDtoInit.getMdate(),settleTransDataDtoInit.getMdate2())==0){
-                                    settleTransDataDto.setPs(DictCodeList.交易方向_到期.getValue());
-                                }
-                                if(DateUtil.compareDate(settleTransDataDtoInit.getMdate(),settleTransDataDtoInit.getMdate2())!=0){
-                                    settleTransDataDto.setPs(DictCodeList.交易方向_还本.getValue());
-                                }
-                            }else{
-                                settleTransDataDto.setPs(DictCodeList.交易方向_收息.getValue());
-                            }
-                            settleTransDataDto.setTradeIdList(value.stream().map(e -> e.getTradeId()).collect(Collectors.toList()));
-                        }
-                        settleTransDataResult.add(settleTransDataDto);
-                    }
-                    investTradeReaderDto.setSettleTransDataList(settleTransDataResult);
+                if (searchParam.containsKey("finprodOthCodeType")&&StringUtil.equals(searchParam.get("finprodOthCodeType"),DictCodeListExt3.金融产品其他代码类型_上市流通.getValue())) {
+                    searchParam.put("OTH_TYPE_15", DictCodeListExt3.金融产品其他代码类型_上市流通.getValue());
+                    List<SettleTransDataDto> settleTransDataDtos = stlDataGatherService.listBoundSharesMarketTradeData(searchParam);
+                    investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
                     List<InvestTradeReaderDto> result = new ArrayList<>();
                     result.add(investTradeReaderDto);
                     return result;
+                }else{
+                    // 业务类型
+                    searchParam.put("finprodTypes", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券.getValue()));
+                    // 交易方向列表
+                    searchParam.put("psList", Arrays.asList(DictCodeList.交易方向_行权_赎回.getValue(), DictCodeList.交易方向_到期.getValue(), DictCodeList.交易方向_还本.getValue(), DictCodeList.交易方向_收息.getValue()));
+                    List<SettleTransDataDto> settleTransDataDtos = stlDataGatherService.listBondSettleTransData(searchParam);
+                    List<SettleTransDataDto> settleTransDataResult = new ArrayList<>();
+                    if (CollectionUtils.isNotEmpty(settleTransDataDtos)) {
+                        //需要汇总的成交明细
+                        Map<String, List<SettleTransDataDto>> settleTransDataNeedTotalMap = new HashMap<>();
+                        List<SettleTransDataDto> settleTransDataSingle = settleTransDataDtos.stream().filter(item -> StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                                || (StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue()) && StringUtil.equals(item.getPs(), DictCodeList.交易方向_行权_赎回.getValue()))).collect(Collectors.toList());
+                        if (CollectionUtils.isNotEmpty(settleTransDataSingle)) {
+                            settleTransDataSingle.stream().forEach(item -> item.setTradeIdList(Arrays.asList(item.getTradeId())));
+                            settleTransDataResult.addAll(settleTransDataSingle);
+                        }
+                        settleTransDataDtos.stream().filter(item -> !(StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                                        || (StringUtil.equals(item.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue()) && StringUtil.equals(item.getPs(), DictCodeList.交易方向_行权_赎回.getValue())))).collect(Collectors.toList())
+                                .stream().collect(Collectors.groupingBy(SettleTransDataDto::getBusiKey, Collectors.toList())).forEach(settleTransDataNeedTotalMap::put);
+                        for (Map.Entry<String, List<SettleTransDataDto>> parammap : settleTransDataNeedTotalMap.entrySet()) {
+                            SettleTransDataDto settleTransDataDto = new SettleTransDataDto();
+                            List<SettleTransDataDto> value = parammap.getValue();
+                            if (CollectionUtils.isNotEmpty(value)) {
+                                SettleTransDataDto settleTransDataDtoInit = value.get(0);
+                                BeanUtil.copyPropertiesIgnoreNull(settleTransDataDto, settleTransDataDtoInit);
+                                settleTransDataDto.setCpriceAmt(settleTransDataDtos.stream().map(item -> item.getCpriceAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
+                                settleTransDataDto.setShareAmt(settleTransDataDtos.stream().map(item -> item.getShareAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
+                                settleTransDataDto.setIntAmt(settleTransDataDtos.stream().map(item -> item.getIntAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
+                                settleTransDataDto.setFpriceAmt(settleTransDataDtos.stream().map(item -> item.getFpriceAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
+                                settleTransDataDto.setTradeAmt(settleTransDataDtos.stream().map(item -> item.getTradeAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
+                                if ((null != settleTransDataDto.getIntAmt() || settleTransDataDto.getIntAmt().compareTo(BigDecimal.ZERO) != 0)
+                                        && settleTransDataDto.getIntAmt().compareTo(settleTransDataDto.getFpriceAmt()) != 0) {
+                                    if (DateUtil.compareDate(settleTransDataDtoInit.getMdate(), settleTransDataDtoInit.getMdate2()) == 0) {
+                                        settleTransDataDto.setPs(DictCodeList.交易方向_到期.getValue());
+                                    }
+                                    if (DateUtil.compareDate(settleTransDataDtoInit.getMdate(), settleTransDataDtoInit.getMdate2()) != 0) {
+                                        settleTransDataDto.setPs(DictCodeList.交易方向_还本.getValue());
+                                    }
+                                } else {
+                                    settleTransDataDto.setPs(DictCodeList.交易方向_收息.getValue());
+                                }
+                                settleTransDataDto.setTradeIdList(value.stream().map(e -> e.getTradeId()).collect(Collectors.toList()));
+                            }
+                            settleTransDataResult.add(settleTransDataDto);
+                        }
+                        //成交明细添加债券确认 add by wangyang1 2021年12月7日 start
+                        searchParam.put("PS_T04", DictCodeList.交易方向_申购.getValue());
+                        searchParam.put("IS_CANCEL_N", DictCodeList.是否_否.getValue());
+                        searchParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+                        searchParam.put("PS_T05", DictCodeList.交易方向_申购确认.getValue());
+                        List<SettleTransDataDto> settlePurConfirTransDataDtos = stlDataGatherService.listBondPurConfirSettleTransData(searchParam);
+                        settleTransDataResult.addAll(settlePurConfirTransDataDtos);
+                        //成交明细添加债券确认 add by wangyang1 2021年12月7日 end
+                        investTradeReaderDto.setSettleTransDataList(settleTransDataResult);
+                        List<InvestTradeReaderDto> result = new ArrayList<>();
+                        result.add(investTradeReaderDto);
+                        return result;
+                    }
                 }
             }
             //回购存续期
@@ -111,6 +127,9 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                 searchParam.put("finprodTypes", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()));
                 // 交易方向列表
                 searchParam.put("psList",  Arrays.asList(DictCodeList.交易方向_到期.getValue()));
+                //数据字典.业务场景分类明细.债券质押式竞价逆回购-到期，数据字典.业务场景分类明细.债券质押式竞价正回购_到期
+                searchParam.put("busiSceneCalssList",  Arrays.asList(DictCodeListStl.业务场景分类明细_债券质押式竞价逆回购_到期.getValue(),
+                        DictCodeListStl.业务场景分类明细_债券质押式竞价正回购_到期.getValue()));
                 List<SettleTransDataDto> settleTransDataDtos = stlDataGatherService.listRepoSettleTransData(searchParam);
                 investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
                 List<InvestTradeReaderDto> result = new ArrayList<>();

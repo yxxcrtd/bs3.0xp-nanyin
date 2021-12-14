@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -23,25 +24,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.JoyinRestTemplate;
-import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
-import com.joyintech.tams.common.base.dao.EtrFinishStatusMapper;
-import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
-import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.PaTrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.PtlTradeMapper;
-import com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper;
-import com.joyintech.tams.common.base.dao.StlPayOrdersMapper;
-import com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductBarterMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductBarterTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
-import com.joyintech.tams.common.base.dao.TrdTradeFeeTotalMapper;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -138,7 +120,13 @@ public class StlDataGatherService {
     
     @Autowired
     private SettleTransTgMappingMapper settleTransTgMappingMapper;
-	
+
+    @Autowired
+    private PtlSecPositionFlowMapper ptlSecPositionFlowMapper;
+
+    @Autowired
+    private EtrSecPositionFlowMapper etrSecPositionFlowMapper;
+
 	/**
      * 获取除权交易明细
      * @param paraMap 查询参数
@@ -295,6 +283,16 @@ public class StlDataGatherService {
          * 日间委托完成度表有一笔交易编号等于自身委托编号的记录，这条记录每次正向跑批时需要实时更新
          */
         List<EtrFinishStatus> etrFinishStatusList = tradeWriteDto.getEtrFinishStatusList();
+
+        /**
+         *  指令持仓流水
+         */
+        List<EtrSecPositionFlow> etrSecPositionFlowList = tradeWriteDto.getEtrSecPositionFlowList();
+
+        /**
+         * 组合持仓流水
+         */
+        List<PtlSecPositionFlow> ptlSecPositionFlowList = tradeWriteDto.getPtlSecPositionFlowList();
 
         // 全量基金信息获取
         Map<String, FundInfoDto> fundInfoDtoMap = settleCommonService.getAllFundInfoDto();
@@ -505,6 +503,18 @@ public class StlDataGatherService {
         if (CollectionUtils.isNotEmpty(settleTransTgMappingList)){
             for (SettleTransTgMapping settleTransTgMapping : settleTransTgMappingList){
                 settleTransTgMappingMapper.insert(settleTransTgMapping);
+            }
+        }
+        // 组合持仓流水
+        if (CollectionUtils.isNotEmpty(ptlSecPositionFlowList)){
+            for (PtlSecPositionFlow ptlSecPositionFlow : ptlSecPositionFlowList){
+                ptlSecPositionFlowMapper.insert(ptlSecPositionFlow);
+            }
+        }
+        // 指令持仓流水
+        if (CollectionUtils.isNotEmpty(etrSecPositionFlowList)){
+            for (EtrSecPositionFlow etrSecPositionFlow : etrSecPositionFlowList){
+                etrSecPositionFlowMapper.insert(etrSecPositionFlow);
             }
         }
     }
@@ -976,5 +986,18 @@ public class StlDataGatherService {
 
     public List<SettleTransDataDto> listRepoSettleTransData(Map<String, Object> paraMap){
         return stlDataGatherMapper.listRepoSettleTransData(paraMap);
+    }
+
+    /**
+     * 查询债券确认列表
+     * @param paraMap
+     * @return
+     */
+    public List<SettleTransDataDto> listBondPurConfirSettleTransData(Map<String, Object> paraMap){
+        return stlDataGatherMapper.listBondPurConfirSettleTransData(paraMap);
+    }
+
+    public List<SettleTransDataDto> listBoundSharesMarketTradeData(Map<String, Object> paraMap) {
+        return stlDataGatherMapper.listBoundSharesMarketTradeData(paraMap);
     }
 }

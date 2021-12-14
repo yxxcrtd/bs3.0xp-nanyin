@@ -81,7 +81,11 @@ public class InvestTradeWriteDto extends NeedToWriteEntity {
      * 成交编号业务编号关联表（只针对除权登记数据）
      */
     private List<SettleTransTgMapping> settleTransTgMappingList;
-    
+
+    private List<EtrSecPositionFlow> etrSecPositionFlowList;
+
+    private List<PtlSecPositionFlow> ptlSecPositionFlowList;
+
     public InvestTradeWriteDto() {
     	finProductDealTotalList = new ArrayList<TotalTrdProductDealDto>();
     	trdDealTotalAddList = new ArrayList<TrdDealTotalAdd>();
@@ -208,4 +212,20 @@ public class InvestTradeWriteDto extends NeedToWriteEntity {
     public void setSettleTransTgMappingList(List<SettleTransTgMapping> settleTransTgMappingList) {
 		this.settleTransTgMappingList = settleTransTgMappingList;
 	}
+
+    public List<EtrSecPositionFlow> getEtrSecPositionFlowList() {
+        return etrSecPositionFlowList;
+    }
+
+    public void setEtrSecPositionFlowList(List<EtrSecPositionFlow> etrSecPositionFlowList) {
+        this.etrSecPositionFlowList = etrSecPositionFlowList;
+    }
+
+    public List<PtlSecPositionFlow> getPtlSecPositionFlowList() {
+        return ptlSecPositionFlowList;
+    }
+
+    public void setPtlSecPositionFlowList(List<PtlSecPositionFlow> ptlSecPositionFlowList) {
+        this.ptlSecPositionFlowList = ptlSecPositionFlowList;
+    }
 }
