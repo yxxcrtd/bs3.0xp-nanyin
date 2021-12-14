@@ -273,6 +273,7 @@ public class IbuQuoteBondCalService extends BaseService {
      * type=B06  交易费 type=B08 结算费  type=01 净价总额 type=02 全价总额
      */
     public void handleFeeTailDifference(List<PtlAllocationDto>  ptlAllocations,BigDecimal tailDifference,String type){
+        ptlAllocations.sort((p1,p2) -> p1.getShareAmt().compareTo(p2.getShareAmt()));
         //递增维度
         BigDecimal addDimension = amtDimension;
         int size = ptlAllocations.size();
@@ -345,11 +346,11 @@ public class IbuQuoteBondCalService extends BaseService {
             }*/
             item.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt,request.getCpriceAmt()),request.getShareAmt(),2,RoundingMode.HALF_DOWN));
             item.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmt,request.getFpriceAmt()),request.getShareAmt(),2,RoundingMode.HALF_DOWN));
-            tailDifferenceFpriceAmt = ArithmeticUtil.subtract(tailDifferenceFpriceAmt,item.getCpriceAmt());
-            tailDifferenceCpriceAmt = ArithmeticUtil.subtract(tailDifferenceCpriceAmt,item.getFpriceAmt());
+            tailDifferenceCpriceAmt = ArithmeticUtil.subtract(tailDifferenceCpriceAmt,item.getCpriceAmt());
+            tailDifferenceFpriceAmt = ArithmeticUtil.subtract(tailDifferenceFpriceAmt,item.getFpriceAmt());
         }
-        handleFeeTailDifference(ptlAllocations,tailDifferenceFpriceAmt,"01");
-        handleFeeTailDifference(ptlAllocations,tailDifferenceCpriceAmt,"02");
+        handleFeeTailDifference(ptlAllocations,tailDifferenceCpriceAmt,"01");
+        handleFeeTailDifference(ptlAllocations,tailDifferenceFpriceAmt,"02");
         ptlAllocations.forEach(item->{item.setIntAmt(ArithmeticUtil.subtract(item.getFpriceAmt(),item.getCpriceAmt()));});
     }
 
