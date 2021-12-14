@@ -216,12 +216,19 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         // 委托操作类型 = “撤回”并且投资委托信息dto.委托指令Entity.委托状态不是“待接收”
         if (DictCodeListExt1.委托操作类型_撤回.getValue().equals(delegateOperationType)) {
             if (etrInvestInfoDto.getEtrEntrust() != null) {
+                // modify by etliu 20211214 start
+                // ZGZGST-4157:待分发的指令点撤回,提示【 该委托状态不是待接收或待分发，无法撤回。】
+//                if (!(DictCodeList.委托状态_待接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
+//                		)) {
                 if (!(DictCodeList.委托状态_待接收.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
-                		)) {
+                    ) && !(DictCodeListExt3.委托状态_待分发.getValue().equals(etrInvestInfoDto.getEtrEntrust().getEntrustStatus())
+                    )) {
                     errorList.add(new ValidMessage(
                         // “待接收”
-                        this.getMessage("ETR_E_0010", this.getMessage("BaseEtrInvestInfoServiceImpl.toReceiveOrtoReceive"))));
+//                        this.getMessage("ETR_E_0010", this.getMessage("BaseEtrInvestInfoServiceImpl.toReceive"))));
+                            this.getMessage("ETR_E_0010", "待接收或待分发")));
                 }
+                // modify by etliu 20211214 end
             }
         }
         // 委托操作类型 = “分发”并且投资委托信息dto.委托指令Entity.委托状态不是“待接收”
