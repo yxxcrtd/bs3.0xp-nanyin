@@ -7,29 +7,19 @@ package com.joyintech.tams.invest.interf.fromjkpt.recon.service;
 
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.dao.FinProductOthCodeMapper;
 import com.joyintech.tams.common.base.dao.StlSecReconDealMapper;
-
-
-import com.joyintech.tams.common.base.entity.StlSecRecon;import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductOthCode;
-import com.joyintech.tams.common.base.entity.InterfFundBonusFjy;
+import com.joyintech.tams.common.base.entity.StlSecRecon;
 import com.joyintech.tams.common.base.entity.StlSecReconPara;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.invest.interf.fromjkpt.recon.dao.ReconInterfMapper;
 import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlCashReconDto;
 import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecReconDealDto;
 import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecpReconDto;
 import org.apache.commons.collections4.CollectionUtils;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -61,7 +51,44 @@ public class ReconInterfService {
 
     public void executerecon(Map<String,Object> param){
         param.put("RECON_PARA_CODE_02", DictCodeListStl.参数代码_对账维度.getValue());
+
         setParam(param);
+        //对于协议回购不管参数配置的是什么，恒生柜台的上交所分开，深交所都按委托编号汇总，金证柜台给的就是委托汇总维度
+        if(param.containsKey("collect")||param.containsKey("collectEntrustId")||param.containsKey("collectByMarketId")){
+            Map<String,Object> paramdetail = new HashMap<>();
+            paramdetail.put("execDate",param.get("execDate"));
+            List<StlSecReconDealDto> stlSecReconDealDetaileDtos = reconInterfMapper.listStlSecReconDealIntegratedRepDetaile(paramdetail);
+            if(null!=stlSecReconDealDetaileDtos&&!StringUtil.isEmptyList(stlSecReconDealDetaileDtos)){
+                paramdetail.put("tradeIds",stlSecReconDealDetaileDtos);
+                List<StlSecRecon> tradeIds=reconInterfMapper.listStlSecRecon(paramdetail);
+                if(CollectionUtils.isNotEmpty(tradeIds)) {
+                    paramdetail.put("tradeIds",tradeIds);
+                    //怎么登录之前怎么删除
+                    deleteAll(paramdetail);
+                }
+                stlSecReconDealDetaileDtos.forEach(item ->{
+                    item.setSeqNo(IDGenerator.generate());
+                    stlSecReconDealMapper.insertSelective(item);
+                });
+            }
+            //指令汇总
+            Map<String,Object> paramtotal = new HashMap<>();
+            paramtotal.put("execDate",param.get("execDate"));
+            List<StlSecReconDealDto> stlSecReconDealTotalDtos = reconInterfMapper.listStlSecReconDealIntegratedRepTotal(paramtotal);
+            if(null!=stlSecReconDealTotalDtos&&!StringUtil.isEmptyList(stlSecReconDealTotalDtos)){
+                paramtotal.put("entrustIds",stlSecReconDealTotalDtos);
+                List<StlSecRecon> finprodIds=reconInterfMapper.listStlSecRecon(paramdetail);
+                if(CollectionUtils.isNotEmpty(finprodIds)) {
+                    paramdetail.put("finprodIds",finprodIds);
+                    //怎么登录之前怎么删除
+                    deleteAll(paramdetail);
+                }
+                stlSecReconDealTotalDtos.forEach(item ->{
+                    item.setSeqNo(IDGenerator.generate());
+                    stlSecReconDealMapper.insertSelective(item);
+                });
+            }
+        }
         //明细
         if(param.containsKey("collect")){
             param.put("tradeIds",reconInterfMapper.listStlSecRecon(param));
