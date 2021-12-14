@@ -458,7 +458,7 @@ public class PositionInfoService {
     }
 
     private String formatStr(BigDecimal a){
-        if (a == null){
+        if (a == null || BigDecimal.ZERO.compareTo(a) == 0){
             return "--";
         }
         return decimalToStr(a,"0.00");

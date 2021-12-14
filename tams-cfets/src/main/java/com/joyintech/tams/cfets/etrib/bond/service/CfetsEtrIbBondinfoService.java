@@ -949,7 +949,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @return
      */
     private String decimalToStr(BigDecimal b, String pattern){
-        if (b == null){
+        if (b == null || BigDecimal.ZERO.compareTo(b) == 0){
             return "--";
         }
         DecimalFormat df1 = new DecimalFormat(pattern);
