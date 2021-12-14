@@ -1473,4 +1473,17 @@ public class SettleTransData extends BaseEntity {
     public void setFragmentaryFunds(BigDecimal fragmentaryFunds) {
         this.fragmentaryFunds = fragmentaryFunds;
     }
+
+    /**
+     * 置换方向
+     */
+    private String tradeType;
+
+    public String getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(String tradeType) {
+        this.tradeType = tradeType;
+    }
 }
