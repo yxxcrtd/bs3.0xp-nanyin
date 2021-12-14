@@ -125,6 +125,10 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                 searchParam.put("finprodTypes", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()));
                 // 交易方向列表
                 searchParam.put("psList",  Arrays.asList(DictCodeList.交易方向_到期.getValue()));
+                // ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add start
+                // 业务场景分类
+                searchParam.put("busiSceneCalssList",  Arrays.asList(DictCodeListStl.业务场景分类明细_债券质押式竞价逆回购_到期.getValue(),DictCodeListStl.业务场景分类明细_债券质押式竞价正回购_到期.getValue()));
+                // ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add end
                 List<SettleTransDataDto> settleTransDataDtos = stlDataGatherService.listRepoSettleTransData(searchParam);
                 investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
                 List<InvestTradeReaderDto> result = new ArrayList<>();
