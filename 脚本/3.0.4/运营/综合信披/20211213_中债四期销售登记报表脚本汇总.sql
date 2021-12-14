@@ -771,9 +771,9 @@ values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-029','Sale
 Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
 values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-030','SalesTransactionMaintenance002','lessThanCharLength','remark',null,'201','Y','备注不能超过200字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
-values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-031', 'SalesTransactionMaintenance002', 'isCustomizedStringForWhitelist', 'prdRegistCode', null, '^([CZ][0-9]{7}[A]?[0-9]{6})$', 'Y', '产品登记编码要素格式不对。正确的格式：6 位金融机构代码；2 位年度码；1 位标识码(可为空);6 位顺序码。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-031', 'SalesTransactionMaintenance002', 'isCustomizedStringForWhitelist', 'prdRegistCode', null, '^([CZ][0-9]{7}[A]?[0-9]{6})$', 'Y', '产品登记编码填写错误。正确的格式：6 位提供销售结算资金服务机构代码；2 位年度码；1 位标识码(可为空);6 位顺序码。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
-values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-032', 'SalesTransactionMaintenance002', 'isCustomizedStringForWhitelist', 'institutionCode', null, '^([CZ][0-9]{5})$', 'Y','金融机构代码格式不对。请输入正确的金融机构代码', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-032', 'SalesTransactionMaintenance002', 'isCustomizedStringForWhitelist', 'institutionCode', null, '^([CZ][0-9]{5})$', 'Y','提供销售结算资金服务机构代码填写错误。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
 
 --更改投资者明细与投资者信息到中债三四期菜单

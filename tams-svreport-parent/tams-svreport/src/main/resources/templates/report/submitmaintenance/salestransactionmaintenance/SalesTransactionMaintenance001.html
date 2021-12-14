@@ -34,7 +34,7 @@
                                class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                data-parentIds="institutionCode"
                                data-th-data-url="@{/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/getInstitutionCode}"
-                               data-idfield="code"
+                               data-idfield="code" data-effectivefields="code"
                                data-th-data-effectivefieldsalias='|{"code":"#{SalesTransactionMaintenance001.institutionCode}"}|'
                         />
                     </div>
@@ -59,7 +59,7 @@
                                class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                data-parentIds="prdRegistCode"
                                data-th-data-url="@{/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/getPrdRegistCode}"
-                               data-idfield="code"
+                               data-idfield="code" data-effectivefields="code"
                                data-th-data-effectivefieldsalias='|{"code":"#{SalesTransactionMaintenance001.prdRegistCode}"}|'
                         />
                     </div>
