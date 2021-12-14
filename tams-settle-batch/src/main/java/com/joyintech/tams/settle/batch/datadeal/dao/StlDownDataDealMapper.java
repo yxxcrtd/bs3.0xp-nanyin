@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

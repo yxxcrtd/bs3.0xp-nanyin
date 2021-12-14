@@ -34,6 +34,9 @@ public class StlDownDataDealAccountInfoDto {
 	// 股东代码
 	String shareholdersCode;
 
+    //上交所席位号
+	String szSeatno;
+
 	public String getShareholdersCode() {
 		return shareholdersCode;
 	}
@@ -96,5 +99,13 @@ public class StlDownDataDealAccountInfoDto {
 
 	public void setRegistOrg(String registOrg) {
 		this.registOrg = registOrg;
+	}
+
+	public String getSzSeatno() {
+		return szSeatno;
+	}
+
+	public void setSzSeatno(String szSeatno) {
+		this.szSeatno = szSeatno;
 	}
 }
