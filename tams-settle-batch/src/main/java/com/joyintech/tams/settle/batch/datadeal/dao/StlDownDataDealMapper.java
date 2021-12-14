@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -111,6 +112,10 @@ public interface StlDownDataDealMapper {
     
     // 查询深中登SJSKS
     List<SzdSjsks> selectSzdSjsks(@Param("dealDate") Date dealDate, @Param("dataFile") String dataFile, @Param("searchMap") Map<String, List<String>> searchMap);
+
+    // 资金账户查询
+    List<StlDownDataDealAccountInfoDto> getAllStlDownDataDealAccountInfoDtoList();
+
     // 查询上中登TZXX
     List<SzdTzxx> selectSzdTzxx(@Param("dealDate") Date dealDate, @Param("dataFile") String dataFile, @Param("searchMap") Map<String, List<String>> searchMap);
 
@@ -119,4 +124,6 @@ public interface StlDownDataDealMapper {
 
     // 删除【基金分红公告】
     int deletemstFundBonusNoticeByCdate(@Param("dealDate") Date dealDate);
+
+   List<String> getZzgFinprodId(@Param("zqdm1") String zqdm1);
 }

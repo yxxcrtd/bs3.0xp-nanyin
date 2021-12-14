@@ -22,6 +22,8 @@ public class StlDataDealProcessConstant {
 	public static final String JYFS_104 = "104";
 	// SzdJsmx交易方式_非交易
 	public static final String JYFS_003 = "003";
+	// SzdJsmx交易方式_中国结算上海分公司前台业务
+	public static final String JYFS_004 = "004";
 	// SzdJsmx交易方式_大宗交易专场交易
 	public static final String JYFS_102 = "102";
 	// SzdJsmx交易方式_综合业务平台业务
@@ -104,7 +106,11 @@ public class StlDataDealProcessConstant {
 	public static final String YWLX_013 = "013";
 	// SzdJsmx业务类型_非担保配股配债
 	public static final String YWLX_032 = "032";
-	
+	// SzdJsmx业务类型_质押入库
+	public static final String YWLX_025 = "025";
+	// SzdJsmx业务类型_质押出库
+	public static final String YWLX_026 = "026";
+
 	// SzdJsmx业务类型_买卖标识_B
 	public static final String MMBS_B = "B";
 	// SzdJsmx业务类型_买卖标识_S
@@ -208,6 +214,10 @@ public class StlDataDealProcessConstant {
 	public static final String GHLX_00V = "00V";
 	// SzdJsmx过户类型_交易过户
 	public static final String GHLX_00A = "00A";
+    // SzdJsmx过户类型
+	public static final String GHLX_00C = "00C";
+	// SzdJsmx过户类型
+	public static final String GHLX_00D = "00D";
 
 	// SzdJsmx证券代码1_204001
 	public static final String ZQDM1_204001 = "204001";
@@ -232,7 +242,9 @@ public class StlDataDealProcessConstant {
 	public static final String JGDM_0000 = "0000";
 	// SzdJsmx结果代码_部分交收成功（资金不足）
 	public static final String JGDM_0102 = "0102";
-	
+
+	public static final String JGDM_0100 = "0100";
+
 	// SzdJsmx权益类别_红利
 	public static final String QYLB_HL = "HL";
 
@@ -436,5 +448,7 @@ public class StlDataDealProcessConstant {
 
 	// SJSJG-业务类别-TGSS 股份上市
 	public static final String SJSJG_YWLB_TGSS = "TGSS";
-	
+
+	//标准券代码
+	public static final String BZJDM_888880 = "888880";
 }

@@ -521,7 +521,7 @@
         <where>
       		CDATE = #{dealDate,jdbcType=DATE}
        		<if test="xgsgBusinessTypeList != null and xgsgBusinessTypeList.size() > 0">
-           		AND
+           		AND 
            		<foreach collection="xgsgBusinessTypeList" item="xgsgBusinessType" open="OTH_TYPE IN (" close=")" separator=",">
            			#{xgsgBusinessType,jdbcType=VARCHAR}
            		</foreach>
@@ -579,4 +579,29 @@
 			CDATE = #{dealDate,jdbcType=DATE}
 		</where>
 	</delete>
+
+	<select id="selectAllStlDownDataDealAccountInfoDtoList" parameterType="java.util.Map" resultType="com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto">
+		SELECT DISTINCT
+		B.BROKER_ID as brokerId,
+		B.SZ_SEATNO as szSeatno,
+		F.SEC_ACCT_ID as secAcctId,
+		F.TRD_ACCT_ID as acctNo,
+		F.BOND_ID as shareholdersCode,
+		F.TRADE_PLACE as registOrg
+		FROM
+		STL_SEC_ACCT_INFO F
+		LEFT JOIN STL_CAPACCT_INFO C
+		ON C.ACCT_NO = F.TRD_ACCT_ID
+		AND C.CCY = F.TRD_ACCT_CCY
+		LEFT JOIN MST_SALE_DEPARTMENT B
+		ON B.SALE_DEPID =  C.OWN_DEPT
+	</select>
+
+	<select id="getZzgFinprodId"  resultType="String">
+		SELECT DISTINCT
+			 CON_FINPROD_ID conFinprodId
+		FROM
+			FIN_PRODUCT_CONVERTIBLE
+		where CON_SHARE_ID = #{zqdm1}
+	</select>
 </mapper>
