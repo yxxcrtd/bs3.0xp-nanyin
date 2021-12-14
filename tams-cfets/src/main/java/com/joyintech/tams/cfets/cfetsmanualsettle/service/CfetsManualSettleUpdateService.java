@@ -144,7 +144,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
             //金融产品代码
             trdBankManualSettleInfo.setFinprodId(cfetsManualSettleUpdateRequest.getFinprodId());
             //交收数量
-            trdBankManualSettleInfo.setSettleNum(ArithmeticUtil.multiply(cfetsManualSettleUpdateRequest.getSettleNumT(),new BigDecimal(10000)));
+            trdBankManualSettleInfo.setSettleNum(cfetsManualSettleUpdateRequest.getSettleNumT());
             //交收金额
             if(StringUtil.equals(cfetsManualSettleUpdateRequest.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
                     && StringUtil.equals(cfetsManualSettleUpdateRequest.getPs(),DictCodeList.交易方向_买入.getValue())){
@@ -168,7 +168,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
             //交收时间=当前时间
             trdBankManualSettleFlow.setSettleTime(new Date());
             //交收数量=画面.交收数量
-            trdBankManualSettleFlow.setSettleNum(ArithmeticUtil.multiply(cfetsManualSettleUpdateRequest.getSettleNumT(),new BigDecimal(10000)));
+            trdBankManualSettleFlow.setSettleNum(cfetsManualSettleUpdateRequest.getSettleNumT());
             //交收金额=画面.交收金额
             if(StringUtil.equals(cfetsManualSettleUpdateRequest.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
                     && StringUtil.equals(cfetsManualSettleUpdateRequest.getPs(),DictCodeList.交易方向_买入.getValue())){
@@ -202,7 +202,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
                 //组合代码=成交确认明细.投资组合代码
                 trdBankManualSetDetail.setPortfolioId(portSettleinfoDto.getPortfolioId());
                 //交割数量=成交确认明细.交易份额
-                trdBankManualSetDetail.setSettleNum(ArithmeticUtil.multiply(portSettleinfoDto.getSettleNum(),new BigDecimal(10000)));
+                trdBankManualSetDetail.setSettleNum(portSettleinfoDto.getSettleNum());
                 //交割金额=成交确认明细.交易金额
                 trdBankManualSetDetail.setSettleAmt(portSettleinfoDto.getSettleAmt());
                 //业务类别=画面.投管业务类型
