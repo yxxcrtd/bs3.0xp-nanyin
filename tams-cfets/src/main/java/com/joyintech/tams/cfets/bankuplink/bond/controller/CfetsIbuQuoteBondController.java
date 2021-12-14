@@ -441,7 +441,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		BondQuoteInfoDto bondQuoteInfoDto = new BondQuoteInfoDto();
 		AjaxResult ar = null;
 		List<String> entrustIds = StringUtil.splitToList(",",(String)param.get("entrustIds"));
-		param.put("entrustIdList",entrustIds);
+		param.put("entrustIds",entrustIds);
 		return new Message<AjaxResult>().success().setData(ibuQuoteBondService.doForcedFinishCheck(param,false));
 	}
 
@@ -452,7 +452,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	public Message<AjaxResult> doForcedFinish(@RequestBody Map<String,Object> param) {
 		AjaxResult ar = null;
 		List<String> entrustIds = StringUtil.splitToList(",",(String)param.get("entrustIds"));
-		param.put("entrustIdList",entrustIds);
+		param.put("entrustIds",entrustIds);
 		ar = ibuQuoteBondService.doForcedFinishCheck(param,true);
 		if(CollectionUtils.isNotEmpty(ar.getErrorList())){
 			return new Message<AjaxResult>().success().setData(ar);
@@ -566,6 +566,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		param.put("quoteTypes", Arrays.asList("01"));
 		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(param);
 		String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
+		String prefix = StringUtil.join("债券对话报价当日登记本币交易导出_",iPlatformDate.getSysDateStr());
 		requestDto.setData(null);
 		if(StringUtil.isNotEmpty(ibuExportCountMax)&&CollectionUtils.isNotEmpty(dataList)){
 			int max = Integer.parseInt(ibuExportCountMax);
@@ -575,15 +576,15 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			).collect(Collectors.toList());
 			for(int i=0;i<collect.size();i++){
 				List<CfetsBondDayRegDto> cfetsBondDayRegDtos = collect.get(i);
-				String appendString = collect.size()>1?String.format("%04d", i):StringUtil.EMPTY;
-				String excelAndSheetName = "当日登记本币交易导出_"+iPlatformDate.getSysDateStr()+appendString;
+				String appendString = collect.size()>=1?String.format("%04d", i+1):StringUtil.EMPTY;
+				String excelAndSheetName = StringUtil.join(prefix,"_",appendString);
 				ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
 							return cfetsBondDayRegDtos;
 					});
 			}
 		}
 		else{
-			String excelAndSheetName = "当日登记本币交易导出_"+iPlatformDate.getSysDateStr();
+			String excelAndSheetName = StringUtil.join(prefix,"_0001");
 			ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
 				return dataList;
 			});
