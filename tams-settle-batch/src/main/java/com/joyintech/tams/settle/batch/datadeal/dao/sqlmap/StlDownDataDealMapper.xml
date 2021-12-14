@@ -594,7 +594,7 @@
 		</where>
 	</select>
 
-	<select id="selectAllStlDownDataDealAccountInfoDtoList" parameterType="java.util.Map" resultType="com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto">
+	<select id="getAllStlDownDataDealAccountInfoDtoList" resultType="com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto">
 		SELECT DISTINCT
 		B.BROKER_ID as brokerId,
 		B.SZ_SEATNO as szSeatno,

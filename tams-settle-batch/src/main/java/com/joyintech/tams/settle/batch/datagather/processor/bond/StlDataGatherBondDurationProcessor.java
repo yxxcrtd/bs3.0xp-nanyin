@@ -148,6 +148,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                         }
                     }
                 }else{
+                    // 构造 金融产品交易明细
                     List<SettleTransDataDto> settleTransDataList = SettleTransDataMap.get(settleTransData.getSecType()+","
                             + settleTransData.getPs()+","+settleTransData.getSecAcctId()+","+settleTransData.getSeatNumber());
                     BigDecimal shareNumTotal = settleTransDataList.stream().map(i -> i.getShareNum()).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -182,14 +183,14 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     trdProductDeal.setTgBusiType(DictCodeListExt1.平安业务类型_债券类资产买入.getValue());
                     // 成交明细.委托代码
                     trdProductDeal.setEntrustId(settleTransData.getEntrustId());
-
+                    //构造 金融产品交易明细附属
                     TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
                     trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
                     trdProductDealAdd.setPortfolioId(settleTransData.getPortfolioId());
                     trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_接口接入.getValue());
                     productDealList.add(trdProductDeal);
-
-
+                    trdProductDealAddList.add(trdProductDealAdd);
+                    //构造 成交数据与投管交易关系
                     SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
                     settleTransTgMapping.setTradeId(settleTransData.getTradeId());
                     settleTransTgMapping.setTradeIdTg(trdProductDeal.getTradeId());
@@ -204,6 +205,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             investTradeWriteDto.setProductDealList(productDealList);
             investTradeWriteDto.setTrdProductDealAddList(trdProductDealAddList);
             investTradeWriteDto.setSecType(DictCodeListExt1.证券品种_债券.getValue());
+            investTradeWriteDto.setSettleTransTgMappingList(settleTransTgMappingList);
         }
         return investTradeWriteDto;
     }
