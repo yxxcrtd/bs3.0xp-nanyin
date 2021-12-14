@@ -9,7 +9,6 @@
         <result column="TZLB" property="tzlb" jdbcType="VARCHAR" />
         <result column="TZRQ" property="tzrq" jdbcType="VARCHAR" />
         <result column="QSBH" property="qsbh" jdbcType="VARCHAR" />
-        <result column="ZQZH" property="zqzh" jdbcType="VARCHAR" />
         <result column="ZQDM" property="zqdm" jdbcType="VARCHAR" />
         <result column="ZQLB" property="zqlb" jdbcType="VARCHAR" />
         <result column="LTLX" property="ltlx" jdbcType="VARCHAR" />
@@ -39,10 +38,10 @@
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, IMPORT_DATE IMPORT_DATE, DATA_FILE DATA_FILE,
-        SCDM SCDM, TZLB TZLB, TZRQ TZRQ, QSBH QSBH, ZQZH ZQZH, ZQDM ZQDM, ZQLB ZQLB,
+        SCDM SCDM, TZLB TZLB, TZRQ TZRQ, QSBH QSBH,  ZQDM ZQDM, ZQLB ZQLB,
         LTLX LTLX, QYLB QYLB, GPNF GPNF, ZH1 ZH1, ZH2 ZH2, RQ1 RQ1, RQ2 RQ2, JE1 JE1,
         JE2 JE2, JE3 JE3, JG1 JG1, JG2 JG2, BL1 BL1, BL2 BL2, SL1 SL1, SL2 SL2, FZDM FZDM,
-        BZ BZ, BY BY, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        BZ BZ, "BY" "BY", CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME,
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
     </sql>
     <sql id="Sql_All_Data" >
@@ -69,7 +68,7 @@
         insert into SZD_TZXX (SEQNO, IMPORT_DATE, DATA_FILE, 
             SCDM,
             TZLB, TZRQ, QSBH, 
-            ZQZH, ZQDM, ZQLB, 
+             ZQDM, ZQLB,
             LTLX, QYLB, GPNF, 
             ZH1, ZH2, RQ1, RQ2, 
              JE1, JE2, JE3,
@@ -81,7 +80,7 @@
         values (#{seqno,jdbcType=VARCHAR}, #{importDate,jdbcType=DATE}, #{dataFile,jdbcType=VARCHAR}, 
             #{scdm,jdbcType=VARCHAR},
             #{tzlb,jdbcType=VARCHAR}, #{tzrq,jdbcType=VARCHAR}, #{qsbh,jdbcType=VARCHAR}, 
-            #{zqzh,jdbcType=VARCHAR}, #{zqdm,jdbcType=VARCHAR}, #{zqlb,jdbcType=VARCHAR}, 
+             #{zqdm,jdbcType=VARCHAR}, #{zqlb,jdbcType=VARCHAR},
             #{ltlx,jdbcType=VARCHAR}, #{qylb,jdbcType=VARCHAR}, #{gpnf,jdbcType=VARCHAR}, 
             #{zh1,jdbcType=VARCHAR}, #{zh2,jdbcType=VARCHAR}, #{rq1,jdbcType=VARCHAR}, #{rq2,jdbcType=VARCHAR}, 
             #{rq3,jdbcType=VARCHAR}, #{je1,jdbcType=VARCHAR}, #{je2,jdbcType=VARCHAR}, #{je3,jdbcType=VARCHAR}, 
@@ -114,9 +113,6 @@
             </if>
             <if test="qsbh != null" >
                 QSBH,
-            </if>
-            <if test="zqzh != null" >
-                ZQZH,
             </if>
             <if test="zqdm != null" >
                 ZQDM,
@@ -219,9 +215,6 @@
             <if test="qsbh != null" >
                 #{qsbh,jdbcType=VARCHAR},
             </if>
-            <if test="zqzh != null" >
-                #{zqzh,jdbcType=VARCHAR},
-            </if>
             <if test="zqdm != null" >
                 #{zqdm,jdbcType=VARCHAR},
             </if>
@@ -304,11 +297,11 @@
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SzdTzxx" >
         insert into SZD_TZXX(SEQNO, IMPORT_DATE, DATA_FILE, IS_SETTLE_TARGET, XH, SCDM, 
-        TZLB, TZRQ, QSBH, ZQZH, ZQDM, ZQLB, LTLX, QYLB, GPNF, ZH1, ZH2, RQ1, RQ2,  JE1,
+        TZLB, TZRQ, QSBH, ZQDM, ZQLB, LTLX, QYLB, GPNF, ZH1, ZH2, RQ1, RQ2,  JE1,
         JE2, JE3, JG1, JG2, BL1, BL2, SL1, SL2, FZDM, BZ, BY, CREATE_USER, CREATE_DEPT, 
         CREATE_TIME, UPDATE_USER, UPDATE_TIME)
         select SEQNO, IMPORT_DATE, DATA_FILE, IS_SETTLE_TARGET, XH, SCDM, 
-            TZLB, TZRQ, QSBH, ZQZH, ZQDM, ZQLB, LTLX, QYLB, GPNF, ZH1, ZH2, RQ1, RQ2, JE1,
+            TZLB, TZRQ, QSBH, ZQDM, ZQLB, LTLX, QYLB, GPNF, ZH1, ZH2, RQ1, RQ2, JE1,
             JE2, JE3, JG1, JG2, BL1, BL2, SL1, SL2, FZDM, BZ, BY, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
              from SZD_TZXX
@@ -340,9 +333,6 @@
             </if>
             <if test="qsbh != null" >
                 QSBH = #{qsbh,jdbcType=VARCHAR},
-            </if>
-            <if test="zqzh != null" >
-                ZQZH = #{zqzh,jdbcType=VARCHAR},
             </if>
             <if test="zqdm != null" >
                 ZQDM = #{zqdm,jdbcType=VARCHAR},
@@ -424,7 +414,6 @@
             TZLB = #{tzlb,jdbcType=VARCHAR},
             TZRQ = #{tzrq,jdbcType=VARCHAR},
             QSBH = #{qsbh,jdbcType=VARCHAR},
-            ZQZH = #{zqzh,jdbcType=VARCHAR},
             ZQDM = #{zqdm,jdbcType=VARCHAR},
             ZQLB = #{zqlb,jdbcType=VARCHAR},
             LTLX = #{ltlx,jdbcType=VARCHAR},
