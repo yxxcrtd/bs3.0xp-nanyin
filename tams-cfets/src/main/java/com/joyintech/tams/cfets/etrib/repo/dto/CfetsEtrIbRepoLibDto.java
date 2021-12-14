@@ -1,18 +1,13 @@
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.invest.entrust.etrstandardbond.dto.EtrStandardBond002Dto;
-import com.joyintech.workflow.engine.annotation.PrimaryKey;
-import com.joyintech.workflow.engine.dto.ProcessEntity;
 
-@PageId("CfetsEtrIbRepoLibDto")
-public class CfetsEtrIbRepoLibDto extends CfetsEtrIbRepoLib001Dto implements ProcessEntity{
+import java.util.ArrayList;
+import java.util.List;
+
+public class CfetsEtrIbRepoLibDto extends CfetsEtrIbRepoLib001Dto {
 
     /**
      * 
@@ -25,23 +20,15 @@ public class CfetsEtrIbRepoLibDto extends CfetsEtrIbRepoLib001Dto implements Pro
     private String pageModel; 
     
     private String tradePlace;
-    
-    @Override
-    @PrimaryKey(PrimaryKey.Field.PK_1)
+
     public String getSecAcctId() {
         return super.getSecAcctId();
     }
     
-    @Override
-    @PrimaryKey(PrimaryKey.Field.PK_2)
     public String getPortfolioId() {
         return super.getPortfolioId();
     }
-    @Override
-    @PrimaryKey(PrimaryKey.Field.PK_3)
-    public String getFinProdId() {
-        return super.getFinProdId();
-    }
+
     
     /**
      * 质押券列表信息
@@ -154,5 +141,5 @@ public class CfetsEtrIbRepoLibDto extends CfetsEtrIbRepoLib001Dto implements Pro
 		// TODO Auto-generated method stub
 		
 	}
-    
+
 }

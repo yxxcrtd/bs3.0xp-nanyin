@@ -22,20 +22,23 @@ public class CfetsEtrRepoZLCXRequest {
     @ApiModelProperty(name="ps",value="交易方向",example="03")
     private String ps;
 
-    @ApiModelProperty(name="termType",value="期限品种",example="1")
-    private String termType;
+    @ApiModelProperty(name="termTypeList",value="期限品种",example="['R001','R007']")
+    private String termTypeList;
 
     @ApiModelProperty(name="entrustStatusList",value="指令状态",example="['1','2']")
     private List<String> entrustStatusList;
 
-    @ApiModelProperty(name="entrustDate",value="指令日期",example="2021-11-29")
-    private String entrustDate;
+    @ApiModelProperty(name="entrustDateStart",value="指令日期",example="2021-11-29")
+    private String entrustDateStart;
 
-    @ApiModelProperty(name="entrustId",value="指令编号",example="ETRREPO202111290001")
-    private String entrustId;
+    @ApiModelProperty(name="entrustDateEnd",value="指令日期",example="2021-11-29")
+    private String entrustDateEnd;
 
-    @ApiModelProperty(name="invManagerId",value="投资经理",example="wp")
-    private String invManagerId;
+    @ApiModelProperty(name="entrustIdList",value="指令编号",example="['ETRREPO202111290001','ETRREPO202111290001'}")
+    private String entrustIdList;
+
+    @ApiModelProperty(name="invManagerIdList",value="投资经理",example="['wp']")
+    private List<String> invManagerIdList;
 
     @ApiModelProperty(name="keywords",value="关键词",example="wp")
     private String keywords;
@@ -64,28 +67,28 @@ public class CfetsEtrRepoZLCXRequest {
         this.ps = ps;
     }
 
-    public String getTermType() {
-        return termType;
+    public String getTermTypeList() {
+        return termTypeList;
     }
 
-    public void setTermType(String termType) {
-        this.termType = termType;
+    public void setTermTypeList(String termTypeList) {
+        this.termTypeList = termTypeList;
     }
 
-    public String getEntrustId() {
-        return entrustId;
+    public String getEntrustIdList() {
+        return entrustIdList;
     }
 
-    public void setEntrustId(String entrustId) {
-        this.entrustId = entrustId;
+    public void setEntrustIdList(String entrustIdList) {
+        this.entrustIdList = entrustIdList;
     }
 
-    public String getInvManagerId() {
-        return invManagerId;
+    public List<String> getInvManagerIdList() {
+        return invManagerIdList;
     }
 
-    public void setInvManagerId(String invManagerId) {
-        this.invManagerId = invManagerId;
+    public void setInvManagerIdList(List<String> invManagerIdList) {
+        this.invManagerIdList = invManagerIdList;
     }
 
     public List<String> getEntrustStatusList() {
@@ -96,12 +99,20 @@ public class CfetsEtrRepoZLCXRequest {
         this.entrustStatusList = entrustStatusList;
     }
 
-    public String getEntrustDate() {
-        return entrustDate;
+    public String getEntrustDateStart() {
+        return entrustDateStart;
     }
 
-    public void setEntrustDate(String entrustDate) {
-        this.entrustDate = entrustDate;
+    public void setEntrustDateStart(String entrustDateStart) {
+        this.entrustDateStart = entrustDateStart;
+    }
+
+    public String getEntrustDateEnd() {
+        return entrustDateEnd;
+    }
+
+    public void setEntrustDateEnd(String entrustDateEnd) {
+        this.entrustDateEnd = entrustDateEnd;
     }
 
     public String getKeywords() {

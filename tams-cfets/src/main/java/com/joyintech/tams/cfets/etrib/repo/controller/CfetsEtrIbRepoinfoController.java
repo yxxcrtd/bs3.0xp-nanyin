@@ -24,10 +24,8 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
-import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosiInfoRequestDto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfoService;
@@ -110,7 +108,16 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         initPageParams.put("cfetsEtrIbRepoinfo_positionTable_refresh_period", CacheUtil.getSysParam("cfetsEtrIbRepoinfo_positionTable_refresh_period"));
         //本币业务指令画面指令列表区域自动刷新时间(ms)
         initPageParams.put("cfetsEtrIbRepoinfo_etrTable_refresh_period", CacheUtil.getSysParam("cfetsEtrIbRepoinfo_etrTable_refresh_period"));
-
+        Map<String,Object> map = new HashMap<>();
+        map.put("role_pos", DictCodeListExt2.角色岗位_投资经理.getValue());
+        map.put("userId", SecurityUtil.getLoginUser().getUserName());
+        Long count = cfetsEtrIbRepoinfoService.selectUserRolePosList(map) ;
+        //是否投资经理
+        if(count > 0){
+            initPageParams.put("is_role_pos", "Y");
+        }else{
+            initPageParams.put("is_role_pos", "N");
+        }
         //CMDS地址
         initPageParams.put("RepoWebSocketUrl", RepoWebSocketUrl);
         initPageParams.put("NEED_WORKFLOW", true);
@@ -124,6 +131,8 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         initPageParams.put("PRICE_MODEL", this.getSelectDataFromDataDic(DictCode.价格模式, null));
         initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));
         initPageParams.put("REGIST_ORG", this.getSelectDataFromDataDic(DictCode.登记托管机构, null));
+        initPageParams.put("MAIN_GRADE_RESULT", this.getSelectDataFromDataDic(DictCode.评级结果, null));
+        initPageParams.put("TERM_TYPE_REBACK", this.getSelectDataFromDataDic(DictCode.回购期限品种, null));
         //pageId
         initPageParams.put("pageId", "CfetsEtrIbRepoinfo003");
         return new Message<Map<String, Object>>(initPageParams).success();
@@ -270,13 +279,6 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         }
     }
 
-    @ApiOperation(value = "头寸信息查询", notes = "头寸信息查询")
-    @PostMapping("/queryPositionInfo")
-    @ResponseBody
-    public Message<List<BaseMap>> queryPositionInfo(@RequestBody CfetsEtrIbBondPosiInfoRequestDto requestDto) {
-        List<BaseMap> m = cfetsEtrIbRepoinfoService.queryPositionInfo(requestDto);
-        return new Message<List<BaseMap>>().success().setData(m);
-    }
 
     @ResponseBody
     @ApiOperation(value = "风险试算", notes = "风险试算")
@@ -372,5 +374,16 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
             return new Message<AjaxResult>().fail().setMessage("查询异常");
         }
     }
+
+    @ResponseBody
+    @ApiOperation(value = "计算期限品种", notes = "计算期限品种")
+    @PostMapping("getTermType")
+    public Message<AjaxResult> getTermType(@RequestBody Map<String,Object> map) throws Exception {
+        String msg = cfetsEtrIbRepoinfoService.getTermType((Integer) map.get("repoTerm"));
+        AjaxResult m =new AjaxResult();
+        m.setData(msg);
+        return new Message<AjaxResult>().success().setData(m);
+    }
+
 
 }

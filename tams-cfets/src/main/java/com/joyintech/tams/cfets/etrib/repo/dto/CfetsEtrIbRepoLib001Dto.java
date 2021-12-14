@@ -1,11 +1,11 @@
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
+import com.joyintech.framework.base.BaseEntity;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.joyintech.framework.base.BaseEntity;
 
 
 public class CfetsEtrIbRepoLib001Dto extends BaseEntity {
@@ -24,7 +24,7 @@ public class CfetsEtrIbRepoLib001Dto extends BaseEntity {
     /**
      * 金融产品代码
      */
-    private String finProdId;
+    private String finprodId;
 
     /**
      * 交易场所
@@ -101,22 +101,12 @@ public class CfetsEtrIbRepoLib001Dto extends BaseEntity {
         this.portfolioId = portfolioId;
     }
 
-    /**
-     * 获取 finProdId
-     *
-     * @rturn finProdId
-     */
-    public String getFinProdId() {
-        return this.finProdId;
+    public String getFinprodId() {
+        return finprodId;
     }
 
-    /**
-     * 设置 finProdId
-     *
-     * @param finProdId finProdId
-     */
-    public void setFinProdId(String finProdId) {
-        this.finProdId = finProdId;
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
     }
 
     /**

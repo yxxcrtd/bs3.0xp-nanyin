@@ -9,6 +9,7 @@
 		-- 			NVL(FIN_PRODUCT.FINPROD_NAME,STL_SEC_ACCT_INFO.SEC_ACCT_NAME)	 			secAcctStr,/*证券账户/通道代码*/
 		TABLE01.FINPROD_ID 				finProdId,/*金融产品Id*/
 		FIN_PRODUCT.FINPROD_ABBR     	finProdAbbr,/*金融产品简称*/
+		fpt.TYPE_9 finProdType,
 		TABLE01.BRANCH     				branch,/*分支序号*/
 		NVL(TABLE01.Amount,0)     Amount,/*券面总额*/
 		NVL(TABLE01.pledStrdPrinAmt,0)  pledStrdPrinAmt,/*可质押券面总额*/
@@ -90,6 +91,8 @@
 		LEFT JOIN FIN_PRODUCT FIN_PRODUCT2  on TABLE01.SEC_ACCT_ID = FIN_PRODUCT2.FINPROD_ID
 		INNER JOIN  FIN_PRODUCT
 		ON  FIN_PRODUCT.FINPROD_ID = TABLE01.FINPROD_ID
+		INNER JOIN  FIN_PRODUCT_TYPE fpt
+		ON  FIN_PRODUCT.FINPROD_ID = fpt.FINPROD_ID
 		LEFT JOIN (
 		SELECT
 		T2.SEC_ID,
@@ -152,29 +155,46 @@
 		AND FIN_PRODUCT.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
 		/*只获取交易场所为：01银行间，03上海证券交易所,04深圳证券交易所*/
 		AND FIN_PRODUCT.TRADE_MARKET = #{TRADEPLACE01} 
-		<if test="portfolioId != null and !portfolioId.isEmpty()">
-			AND (TABLE01.PORTFOLIO_ID in
-			<foreach collection="portfolioId" item="item" index= "index" open="(" close=")" separator="," >
-				<if test="(index % 998) == 0">
-					null) or TABLE01.PORTFOLIO_ID in (
-				</if>
+		<if test="portfolioIdList != null and !portfolioIdList.isEmpty()">
+			AND TABLE01.PORTFOLIO_ID in
+			<foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
-			)
 		</if>
-		<if test="secAcctId != null and !secAcctId.isEmpty()">
-			AND (TABLE01.SEC_ACCT_ID in
-			<foreach collection="secAcctId" item="item" index= "index" open="(" close=")" separator="," >
-				<if test="(index % 998) == 0">
-					null) or TABLE01.SEC_ACCT_ID in (
-				</if>
+		<if test="secAcctIdList != null and !secAcctIdList.isEmpty()">
+			AND TABLE01.SEC_ACCT_ID in
+			<foreach collection="secAcctIdList" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
-			)
 		</if>
+		<if test="finprodAbbrList != null and !finprodAbbrList.isEmpty()">
+			AND FIN_PRODUCT.FINPROD_ABBR in
+			<foreach collection="finprodAbbrList" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="finprodTypeList != null and !finprodTypeList.isEmpty()">
+			AND fpt.type_9 in
+			<foreach collection="finprodTypeList" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="gradeResultList != null and !gradeResultList.isEmpty()">
+			AND MBCR.GRADE_RESULT in
+			<foreach collection="gradeResultList" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<!--<if test="zyqkList != null and !zyqkList.isEmpty()">
+			AND EEP.PLEDGE_STOCK_ID in
+			<foreach collection="zyqkList" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>-->
 		<if test="zyqk !=null and zyqk !=''">
 			AND (EEP.PLEDGE_STOCK_ID !=#{zyqk,jdbcType=VARCHAR} or EEP.PLEDGE_STOCK_ID is null)
 		</if>
+
 	</select>
 	
 		<!-- 入库质押券列表-->
@@ -243,35 +263,25 @@
 		WHERE 1=1
 		AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
 		/*只获取交易场所为：01银行间，03上海证券交易所,04深圳证券交易所*/
-		AND FIN_PRODUCT.TRADE_MARKET = #{TRADEPLACE01} 
-		<if test="portfolioId != null and !portfolioId.isEmpty()">
-			AND (TABLE01.PORTFOLIO_ID in
-			<foreach collection="portfolioId" item="item" index= "index" open="(" close=")" separator="," >
-				<if test="(index % 998) == 0">
-					null) or TABLE01.PORTFOLIO_ID in (
-				</if>
+		AND FIN_PRODUCT.TRADE_MARKET = #{TRADEPLACE01}
+		<if test="portfolioIdList != null and !portfolioIdList.isEmpty()">
+			AND TABLE01.PORTFOLIO_ID in
+			<foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
-			)
 		</if>
-		<if test="secAcctId != null and !secAcctId.isEmpty()">
-			AND (TABLE01.SEC_ACCT_ID in
-			<foreach collection="secAcctId" item="item" index= "index" open="(" close=")" separator="," >
-				<if test="(index % 998) == 0">
-					null) or TABLE01.SEC_ACCT_ID in (
-				</if>
+		<if test="secAcctIdList != null and !secAcctIdList.isEmpty()">
+			AND TABLE01.SEC_ACCT_ID in
+			<foreach collection="secAcctIdList" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
-			)
 		</if>
-		<!-- 
-		<if test="channelId != null and channelId.size() > 0">
-			AND TABLE01.SEC_ACCT_ID in 
-			<foreach collection="channelId" item="item" open="(" close=")" separator=",">
+		<if test="finprodAbbrList != null and !finprodAbbrList.isEmpty()">
+			AND FIN_PRODUCT.FINPROD_ABBR in
+			<foreach collection="finprodAbbrList" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
-		</if> 
-		-->
+		</if>
 	</select>
 
 	<select id="selectEtrEntrustPledge" parameterType="com.joyintech.tams.common.base.entity.EtrEntrustPledge" resultType="com.joyintech.tams.common.base.entity.EtrEntrustPledge">

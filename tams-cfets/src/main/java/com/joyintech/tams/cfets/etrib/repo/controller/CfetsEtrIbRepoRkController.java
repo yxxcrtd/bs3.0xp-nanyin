@@ -4,11 +4,9 @@ import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoRkDto;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoPledgeAssetDetailRequest;
@@ -19,19 +17,15 @@ import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfoService;
 import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import com.joyintech.workflow.engine.constant.OperationType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -124,31 +118,14 @@ public class CfetsEtrIbRepoRkController extends BaseController {
      */
     @ResponseBody
     @PostMapping(ACTION_DELETE)
-    @ApiOperation(value = "delete", notes = "delete")
+    @ApiOperation(value = "删除质押券库", notes = "删除质押券库")
     public Message<AjaxResult> delete(@RequestBody CfetsEtrIbRepoRkDto dto, BindingResult br)
         throws Exception {
         if (br.hasErrors()) {
             return new Message<AjaxResult>().setData(new AjaxResult(br));
         }
-        //查询系列名称
-        CfetsEtrIbRepoRkDto businessInfoBySeqno = cfetsEtrIbRepoRKService.getBusinessInfoByPledgeStockId(dto.getPledgeStockId());
-        dto.setPledgeStockName(businessInfoBySeqno.getPledgeStockName());
-        ProcessParameter<CfetsEtrIbRepoRkDto> processParameter = new ProcessParameter<CfetsEtrIbRepoRkDto>();
-        WorkFlowParameter<CfetsEtrIbRepoRkDto> params = new WorkFlowParameter<CfetsEtrIbRepoRkDto>();
-        params.setPageId("EtrIbRepoRk002");
-        params.setElementId(dto.getElementId());
-        params.setBusinessCode(dto.getPledgeStockId());
-        params.setBusinessType(DictCodeList.共通业务类型_回购投资委托.getValue());
-        // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> {
-            return WorkFlowUtil.concatComment(getMessage("质押库代码"),
-                GlobalConstant.OPEN_PARENTHESIS, dto.getPledgeStockId(), GlobalConstant.CLOSE_PARENTHESIS,
-                getMessage("质押库名称"), GlobalConstant.OPEN_PARENTHESIS,
-                entity.getPledgeStockName(), GlobalConstant.CLOSE_PARENTHESIS);
-        });
-        processParameter.setWorkFlowParameter(params);
-        String msg = cfetsEtrIbRepoRKService.start(processParameter, dto);
-        return new Message<AjaxResult>().setData(new AjaxResult(msg));
+        cfetsEtrIbRepoRKService.doComplete(dto,OperationType.DELETE);
+        return new Message<AjaxResult>().setData(new AjaxResult("删除成功"));
     }
     
     /**
@@ -160,16 +137,16 @@ public class CfetsEtrIbRepoRkController extends BaseController {
      * @see
      * @since 1.0
      */
-    @ResponseBody
-    @PostMapping("checkq")
-    @ApiOperation(value = "保存按钮点击时的check", notes = "保存按钮点击时的check")
-    public Message<AjaxResult> check(@RequestBody @Validated({
-            ValidateGroupEdit.class}) CfetsEtrIbRepoRkDto dto, BindingResult result) {
-        if (result != null && result.hasErrors()) {
-            return new Message<AjaxResult>().setData(new AjaxResult(result));
-        }
-        return new Message<AjaxResult>().setData(commonCheck(result, dto.getOperateType()));
-    }
+//    @ResponseBody
+//    @PostMapping("checkq")
+//    @ApiOperation(value = "保存按钮点击时的check", notes = "保存按钮点击时的check")
+//    public Message<AjaxResult> check(@RequestBody @Validated({
+//            ValidateGroupEdit.class}) CfetsEtrIbRepoRkDto dto, BindingResult result) {
+//        if (result != null && result.hasErrors()) {
+//            return new Message<AjaxResult>().setData(new AjaxResult(result));
+//        }
+//        return new Message<AjaxResult>().setData(commonCheck(result, dto.getOperateType()));
+//    }
     
     /**
      * 批量提交
@@ -180,15 +157,13 @@ public class CfetsEtrIbRepoRkController extends BaseController {
      */
     @ResponseBody
     @PostMapping("save")
-    @ApiOperation(value = "批量提交", notes = "批量提交")
+    @ApiOperation(value = "质押券库保存", notes = "自动入库提交")
     public Message<AjaxResult> save(@RequestBody CfetsEtrIbRepoRkDto RepoInfoDto, BindingResult br)
             throws Exception {
         if (br.hasErrors()) {
             return new Message<AjaxResult>().setData(new AjaxResult(br));
         }
         // 临时主键
-//        BussinessCodeParameter param = new BussinessCodeParameter();
-//        param.setCommonBusinessType(DictCodeList.共通业务类型_回购投资委托);
         // 业务代码生成参数
         BussinessCodeParameter parameter = new BussinessCodeParameter();
         parameter.setSeqNo("0666");
@@ -200,23 +175,8 @@ public class CfetsEtrIbRepoRkController extends BaseController {
         for (int i = 0; i < RepoInfoDto.getPtlSecStock().size(); i++) {
             RepoInfoDto.getPtlSecStock().get(i).setPledgeStockName(RepoInfoDto.getPledgeStockName());
         }
-        ProcessParameter<CfetsEtrIbRepoRkDto> processParameter = new ProcessParameter<>();
-        WorkFlowParameter<CfetsEtrIbRepoRkDto> params = new WorkFlowParameter<>();
-        params.setPageId("EtrIbRepoRk");
-        params.setElementId(RepoInfoDto.getElementId());
-        params.setBusinessCode(generatedId);
-        params.setBusinessType(DictCodeList.共通业务类型_回购投资委托.getValue());
-
-        // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> {
-            return WorkFlowUtil.concatComment(getMessage("质押库代码"),
-                GlobalConstant.OPEN_PARENTHESIS, RepoInfoDto.getPledgeStockId(), GlobalConstant.CLOSE_PARENTHESIS,
-                getMessage("质押库名称"), GlobalConstant.OPEN_PARENTHESIS,
-                entity.getPledgeStockName(), GlobalConstant.CLOSE_PARENTHESIS);
-        });
-        processParameter.setWorkFlowParameter(params);
-        String msg = cfetsEtrIbRepoRKService.start(processParameter, RepoInfoDto);
-        return new Message<AjaxResult>().setData(new AjaxResult(msg));
+         cfetsEtrIbRepoRKService.doComplete(RepoInfoDto, OperationType.NEW);
+        return new Message<AjaxResult>().setData(new AjaxResult("保存成功"));
     }
 
 }
