@@ -219,7 +219,7 @@
         a.PORTFOLIO_ID,
         sum(
         CASE WHEN b.S_HOLDINGTYPE=#{S_003} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
-        ) AS RRQMKDGH, /*融入券卖空待购回持仓*/
+        ) AS RRQMKDGHCC, /*融入券卖空待购回持仓*/
         sum(
         CASE WHEN b.S_HOLDINGTYPE=#{S_005} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
         ) AS ZCTRKYCC, /*资产T日可用持仓*/
