@@ -569,14 +569,14 @@
 	<delete id="deleteShareBonusRegByCdate">
 		DELETE FROM SHARE_BONUS_REG
 		<where>
-			CDATE = #{dealDate,jdbcType=DATE}
+			REG_DATE = #{dealDate,jdbcType=DATE}
 		</where>
 	</delete>
 
 	<delete id="deletemstFundBonusNoticeByCdate">
 		DELETE FROM MST_FUND_BONUS_NOTICE
 		<where>
-			CDATE = #{dealDate,jdbcType=DATE}
+			REG_DATE = #{dealDate,jdbcType=DATE}
 		</where>
 	</delete>
 
