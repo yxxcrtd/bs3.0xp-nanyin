@@ -618,20 +618,17 @@ public class CfetsQuotedCommonService extends BaseService {
      * @return
      */
     public CfetsBondDealRequestQuoteDto createReueust(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){
-        CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
         preparCfetsBondDealQuoteCommon(cfetsBondDealQuoteCommonDto);
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,cfetsBondDealQuoteCommonDto);
+        CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = JsonUtils.json2Object(JsonUtils.object2Json(cfetsBondDealQuoteCommonDto),CfetsBondDealRequestQuoteDto.class);
         cfetsBondDealRequestQuoteDto.setAvaNum(cfetsBondDealQuoteCommonDto.getShareAmt());
         cfetsBondDealRequestQuoteDto.setSettleSpreed(cfetsBondDealQuoteCommonDto.getSettleSpreedCode());
         cfetsBondDealRequestQuoteDto.setSettleCcy(cfetsBondDealQuoteCommonDto.getCcy());
-        if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getCounterInfoList())){
-            List<CounterInfoDto> counterInfoDtos= new ArrayList<>();
-            cfetsBondDealQuoteCommonDto.getCounterInfoList().forEach(item ->{
-                CounterInfoDto counterInfoDto = new CounterInfoDto();
-                BeanUtil.copyPropertiesIgnoreNull(counterInfoDto,item);
-                counterInfoDtos.add(counterInfoDto);
+        if(CollectionUtils.isNotEmpty(cfetsBondDealRequestQuoteDto.getCounterInfoList())){
+            List<String> counterIdList = new ArrayList<>();
+            cfetsBondDealRequestQuoteDto.getCounterInfoList().forEach(item ->{
+                counterIdList.add(item.getCounterId());
             });
-            cfetsBondDealRequestQuoteDto.setCounterInfoList(counterInfoDtos);
+            cfetsBondDealRequestQuoteDto.setCounterIdList(counterIdList);
         }
         return cfetsBondDealRequestQuoteDto;
     }
