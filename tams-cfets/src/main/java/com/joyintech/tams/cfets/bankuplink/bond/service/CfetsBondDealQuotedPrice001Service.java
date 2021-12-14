@@ -60,6 +60,12 @@ public class CfetsBondDealQuotedPrice001Service {
             dayOfferTableList.forEach(item ->{
                 CfetsBondDayPriceDto cfetsBondDayPriceDto = new CfetsBondDayPriceDto();
                 BeanUtil.copyPropertiesIgnoreNull(cfetsBondDayPriceDto,item);
+                cfetsBondDayPriceDto.setOuPartyName(item.getPartyAbbr());
+                cfetsBondDayPriceDto.setCpPartyName(item.getCpPartyName());
+                cfetsBondDayPriceDto.setPrice(item.getUnitCprice());
+                cfetsBondDayPriceDto.setMatureYield(item.getYield());
+                cfetsBondDayPriceDto.setShareAmt(item.getPrinAmtHun());
+                cfetsBondDayPriceDto.setExecid(item.getfTradeId());
                 result.add(cfetsBondDayPriceDto);
             });
         }
