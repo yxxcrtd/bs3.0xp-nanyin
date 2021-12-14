@@ -74,8 +74,8 @@
         <!--账户现金-->
         SELECT d.PORTFOLIO_ID, sum(d.AMOUNT) AMOUNT
         FROM PTL_CASH_POSITION_RULE d
-        where to_char(d.cdate,'yyyy-MM-dd') = #{cdate} AND d.HODING_TYPE =#{C_01}
-        <if test="acctId != null">
+        where to_char(d.cdate,'yyyy-MM-dd') = #{cdate} AND d.HODING_TYPE =#{C_01} AND d.DATE_TYPE ='0'
+        <if test="acctId != null and acctId !='' ">
             and d.ACCT_ID = #{acctId,jdbcType=VARCHAR}
         </if>
         <if test="portfolioIdList != null">
@@ -121,7 +121,7 @@
                 <!--账户现金-->
                 SELECT d.PORTFOLIO_ID, sum(d.AMOUNT) AMOUNT
                 FROM PTL_CASH_POSITION_RULE d
-                where d.cdate = to_date(#{cdate},'yyyy-MM-dd') AND d.HODING_TYPE =#{C_01}
+                where d.cdate = to_date(#{cdate},'yyyy-MM-dd') AND d.HODING_TYPE =#{C_01} AND d.DATE_TYPE ='0'
                 <if test="acctId != null and acctId != ''">
                     and d.ACCT_ID = #{acctId,jdbcType=VARCHAR}
                 </if>
@@ -151,7 +151,7 @@
                 CASE WHEN b.S_HOLDINGTYPE=#{S_004} AND a.DATE_TYPE ='1' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
             ) AS T1KYXJ, /*T+1日可用现金*/
             sum(
-                CASE WHEN a.HODING_TYPE=#{C_01} THEN a.AMOUNT ELSE 0 END
+                CASE WHEN a.HODING_TYPE=#{C_01} AND a.DATE_TYPE ='0' THEN a.AMOUNT ELSE 0 END
             ) AS ZHXJ   /*账户现金*/
             from PTL_CASH_POSITION_RULE a
             LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_004})
@@ -186,7 +186,7 @@
         select
         a.PORTFOLIO_ID,
         sum(
-            CASE WHEN b.S_HOLDINGTYPE=#{S_003} THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
+            CASE WHEN b.S_HOLDINGTYPE=#{S_003} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
         ) AS RRQMKDGH, /*融入券卖空待购回持仓*/
         sum(
             CASE WHEN b.S_HOLDINGTYPE=#{S_001} AND a.DATE_TYPE ='0' THEN a.AMOUNT*nvl(b.CAL_FLAG,1) ELSE 0 END
@@ -201,7 +201,7 @@
         from ETR_SEC_POSITION_RULE a
         LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_001},#{S_003})
         where a.cdate = to_date(#{cdate},'yyyy-MM-dd') and (b.S_HOLDINGTYPE IN (#{S_001},#{S_003}) or a.HODING_TYPE in (#{A_004},#{A_005}))
-        <if test="finprodId != null">
+        <if test="finprodId != null and finprodId !='' ">
             and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </if>
         <if test="portfolioIdList != null">
@@ -233,7 +233,7 @@
         from PTL_SEC_POSITION_RULE a
         LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_005},#{S_003})
         where a.cdate = to_date(#{cdate},'yyyy-MM-dd') and (b.S_HOLDINGTYPE IN (#{S_005},#{S_003}) or a.HODING_TYPE in (#{A_004},#{A_005}))
-        <if test="finprodId != null">
+        <if test="finprodId != null and finprodId !='' ">
             and a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
         </if>
         <if test="portfolioIdList != null">
