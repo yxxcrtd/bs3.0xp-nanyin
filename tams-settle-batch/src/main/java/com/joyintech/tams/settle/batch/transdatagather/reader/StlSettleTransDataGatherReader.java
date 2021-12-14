@@ -50,8 +50,8 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
         // 日期
         Date tradeDate = execInfo.getExecuteDate();
         //1、删除
-        stlSettleTransDataGatherService.deleteTotalTradeByLastDeal(tradeDate);
         stlSettleTransDataGatherService.deleteTotalTradeAddByLastDeal(tradeDate);
+        stlSettleTransDataGatherService.deleteTotalTradeByLastDeal(tradeDate);
         stlSettleTransDataGatherService.deleteTotalTradeStatusByLastDeal();
         //2、查询对账一致或者不需要对账的成交数据明细表数据
        List<StlSettleTransDataGatherDto> selectNeedTotalDataList = stlSettleTransDataGatherService.selectNeedTotalDataList(tradeDate);
