@@ -91,7 +91,9 @@ public class StlDataDealSzdZqbdProcessService {
            			stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList() != null && 
            			stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList().size() > 0) {
 	        	List<FinProductQuto> finProductQutoList = generatorBondFinProductQutoList(stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList(), map, stlDownDataDealOperatorDto);
-	        	stlDownDataDealWriteDto.setFinProductQutoList(finProductQutoList);
+                List<FinProductQuto> circulateFinProductQutoList = generatorBondCirculateFinProductQutoList(stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList(), map, stlDownDataDealOperatorDto);
+                finProductQutoList.addAll(circulateFinProductQutoList);
+                stlDownDataDealWriteDto.setFinProductQutoList(finProductQutoList);
         	}
         }
         return stlDownDataDealWriteDto;
@@ -411,6 +413,40 @@ public class StlDataDealSzdZqbdProcessService {
                 }
                 shareBonusReg.setPerDevidentAmt(new BigDecimal(szdZqbd.getBdsl()));
                 list.add(shareBonusReg);
+            }
+        }
+        return list;
+    }
+    //上市流通
+    private List<FinProductQuto> generatorBondCirculateFinProductQutoList(List<SzdZqbd> pgSzdZqbdList,
+                                                                 Map<String, List<StlDownDataDealAccountInfoDto>> map,
+                                                                 StlDownDataDealOperatorDto stlDownDataDealOperatorDto) {
+        List<FinProductQuto> list = new ArrayList<FinProductQuto>();
+        for(SzdZqbd szdZqbd : pgSzdZqbdList) {
+            // KEY = 证券账户号码 + 交易单元
+            String key = szdZqbd.getZqzh() + szdZqbd.getXwh();
+            // 组合代码不在输入的组合代码List里面不处理
+            List<StlDownDataDealAccountInfoDto> accountInfoDtolist = map.get(key);
+
+            if (CollectionUtils.isEmpty(accountInfoDtolist)) {
+                continue;
+            }
+            // 组合代码不在输入的组合代码List里面不处理
+            else if (stlDownDataDealOperatorDto.getPortfolioIdList().size() > 0 && !stlDownDataDealOperatorDto.getPortfolioIdList().contains(accountInfoDtolist.get(0).getPortfolioId())) {
+                continue;
+            }
+            String approvalNo = szdZqbd.getZqdm();
+            List<String> finprodIdList = stlDownDataDealMapper.getFinproductIdByApprovalNo(DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue(), approvalNo);
+            if (finprodIdList != null && finprodIdList.size() > 0) {
+                FinProductQuto finProductQuto = new FinProductQuto();
+                finProductQuto.setSeqNo(IDGenerator.generate());
+                finProductQuto.setPortfolioId(accountInfoDtolist.get(0).getPortfolioId());
+                finProductQuto.setSecAcctId(accountInfoDtolist.get(0).getSecAcctId());
+                finProductQuto.setFinprodId(finprodIdList.get(0));
+                finProductQuto.setOthType(DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue());
+                finProductQuto.setCdate(DateUtil.parse(szdZqbd.getBdrq()));
+                finProductQuto.setQuto(new BigDecimal(szdZqbd.getBdsl()));
+                list.add(finProductQuto);
             }
         }
         return list;
