@@ -4,6 +4,8 @@ import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.file.SafelyFile;
 import com.thoughtworks.xstream.XStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -23,6 +25,8 @@ public class BaseInterfService extends BaseService  {
 	@Autowired
 	private XStream xstream;
 
+	private static final Logger logger = LoggerFactory.getLogger(BaseInterfService.class);
+
 
 	/**
 	 * 根据Entity生成文件
@@ -33,9 +37,13 @@ public class BaseInterfService extends BaseService  {
 	 * @return
 	 */
 	public String createFileFromEntity(List<String> prodIdlist, String date, String path) {
+		logger.info("下游数据发布-"+getFileName()+"获取业务Entity开始-------------------");
 		List<? extends BaseEntity> list = getBusEntity(prodIdlist, "F");
+		logger.info("下游数据发布-"+getFileName()+"获取业务Entity结束-------------------");
 		// 生成xml文件
+		logger.info("下游数据发布-"+getFileName()+"生成文件开始-------------------------");
 		writeEntityToXmlFile(list, path, date);
+		logger.info("下游数据发布-"+getFileName()+"生成文件结束-------------------------");
 		return "";
 	}
 
