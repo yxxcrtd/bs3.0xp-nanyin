@@ -937,7 +937,7 @@
                 #{item}
             </foreach>
         </if>
-        <!--过滤重复的-->
+        <!--过滤重复的 导出专用-->
         <if test="operationFlag != null and operationFlag.equals('02')">
             and  (T8.STATISTICAL_TIMES = 0 OR T8.STATISTICAL_TIMES IS null)
         </if>
@@ -997,14 +997,14 @@
         LEFT JOIN TRDQUTO_MATCH_INFO  T11 ON T11.PRE_TRADE_ID = T1.TOTLE_TRADE_ID
         LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL  T12 ON T12.TOTLE_TRADE_ID = T11.TRD_ID
         WHERE T1.PS = 'T03'  AND ((T1.TRADE_STATUS ='01' and (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL = 'N')) OR (T1.TRADE_STATUS ='03' AND T1.IS_CANCEL = 'Y'))  AND NOT EXISTS (SELECT 1 FROM TRDQUTO_MATCH_INFO tmi WHERE PRE_TRADE_ID = T1.TOTLE_TRADE_ID and (TRD_CONF_STATUS = #{CONFIRM_STATUS_0} or TRD_CONF_STATUS is null))
-        and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
+        <![CDATA[and T1.TRADE_DATE <= to_date(#{platDate}, 'yyyy-MM-dd') ]]>
         <if test="quoteIds != null and quoteIds.size() > 0">
             and T1.TOTLE_TRADE_ID in
             <foreach collection="quoteIds" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
-        <!--过滤重复的-->
+        <!--过滤重复的 导出专用-->
         <if test="operationFlag != null and operationFlag.equals('02')">
             and  (T8.STATISTICAL_TIMES = 0 OR T8.STATISTICAL_TIMES IS null)
         </if>
@@ -1066,7 +1066,7 @@
                 #{item}
             </foreach>
         </if>
-        <!--过滤重复的-->
+        <!--过滤重复的  导出专用-->
         <if test="operationFlag != null and operationFlag.equals('02')">
             and  (T8.STATISTICAL_TIMES = 0 OR T8.STATISTICAL_TIMES IS null)
         </if>
