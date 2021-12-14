@@ -972,7 +972,10 @@ public class StlDataDealSzdSjsjgProcessService {
         // 临时表流水号
         settleTransData.setSeqNo(szdSjsjg.getSeqno());
         // 交易份额  清算数据Entity.成交数量/100
-        settleTransData.setShareAmt(new BigDecimal(Math.abs(szdSjsjg.getJgcjsl().divide(new BigDecimal(100)).doubleValue())));
+        // ZGZGST-4207:通过工具类处理，防止字段为空 fuyongsheng 20211214 modify start
+        // settleTransData.setShareAmt(new BigDecimal(Math.abs(szdSjsjg.getJgcjsl().divide(new BigDecimal(100)).doubleValue())));
+        settleTransData.setShareAmt(new BigDecimal(Math.abs(ArithmeticUtil.divide(szdSjsjg.getJgcjsl(),new BigDecimal(100),2).doubleValue())));
+        // ZGZGST-4207:通过工具类处理，防止字段为空 fuyongsheng 20211214 modify end
         // 单位面值 调用【当前面值】
         settleTransData.setParValue(stlDataDealProcessCommonService.getUnitPrice(settleTransData.getFinprodId(),
                 settleTransData.getTradeDate()));
