@@ -1295,7 +1295,7 @@ from
     <select id="queryCfetsBussCombDisList" parameterType="Map" resultType="com.joyintech.tams.cfets.etrib.bond.dto.CfetsBussCombDistribtBaseDto">
         select
         tt.portfolio_id as portfolioId,
-        pp.portfolio_name portfolioName，
+        pp.portfolio_name portfolioName,
         invaim.INV_AIM as businessModel,
         nvl(tt.entrustNum,0)/10000 as entrustNum
         from
