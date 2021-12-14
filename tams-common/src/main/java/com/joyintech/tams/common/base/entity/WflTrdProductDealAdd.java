@@ -218,6 +218,54 @@ public class WflTrdProductDealAdd extends WflTrdProductDealAddKey {
     private BigDecimal replaceAmt;
 
     /**
+     * 本方券交易份额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal ourShareAmt;
+
+    /**
+     * 融入券交易份额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal lendinShareAmt;
+
+    /**
+     * 本方券净价总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal ourCpriceAmt;
+
+    /**
+     * 融入券净价总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal lendinCpriceAmt;
+
+    /**
+     * 本方券全价总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal ourFpriceAmt;
+
+    /**
+     * 融入券全价总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal lendinFpriceAmt;
+
+    /**
+     * 本方券利息总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal ourIntAmt;
+
+    /**
+     * 融入券利息总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal lendinIntAmt;
+
+    /**
      * 取得 ??????
      * @return ??????
      */
@@ -837,5 +885,69 @@ public class WflTrdProductDealAdd extends WflTrdProductDealAddKey {
 
     public void setReplaceAmt(BigDecimal replaceAmt) {
         this.replaceAmt = replaceAmt;
+    }
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
+    }
+
+    public BigDecimal getOurCpriceAmt() {
+        return ourCpriceAmt;
+    }
+
+    public void setOurCpriceAmt(BigDecimal ourCpriceAmt) {
+        this.ourCpriceAmt = ourCpriceAmt;
+    }
+
+    public BigDecimal getLendinCpriceAmt() {
+        return lendinCpriceAmt;
+    }
+
+    public void setLendinCpriceAmt(BigDecimal lendinCpriceAmt) {
+        this.lendinCpriceAmt = lendinCpriceAmt;
+    }
+
+    public BigDecimal getOurFpriceAmt() {
+        return ourFpriceAmt;
+    }
+
+    public void setOurFpriceAmt(BigDecimal ourFpriceAmt) {
+        this.ourFpriceAmt = ourFpriceAmt;
+    }
+
+    public BigDecimal getLendinFpriceAmt() {
+        return lendinFpriceAmt;
+    }
+
+    public void setLendinFpriceAmt(BigDecimal lendinFpriceAmt) {
+        this.lendinFpriceAmt = lendinFpriceAmt;
+    }
+
+    public BigDecimal getOurIntAmt() {
+        return ourIntAmt;
+    }
+
+    public void setOurIntAmt(BigDecimal ourIntAmt) {
+        this.ourIntAmt = ourIntAmt;
+    }
+
+    public BigDecimal getLendinIntAmt() {
+        return lendinIntAmt;
+    }
+
+    public void setLendinIntAmt(BigDecimal lendinIntAmt) {
+        this.lendinIntAmt = lendinIntAmt;
     }
 }

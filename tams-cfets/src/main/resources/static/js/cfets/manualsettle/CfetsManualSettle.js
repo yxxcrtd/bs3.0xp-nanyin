@@ -20,7 +20,12 @@
             {field: 'tgBusiTypeStr',width: "150", title: '业务类型', sortable:false},
             {field: 'ps', visible: false},
             {field: 'psStr',width: "150", title: '交易方向', sortable:false},
-            {field: 'settleNum',width: "150", title: '交收数量(万元)', type: 'money', sortable:false},
+            {field: 'settleNum',width: "150", title: '交收数量(万元)', type: 'money', sortable:false
+                ,render: function (data, type, row, meta) {
+                if(data=="" ||data==undefined){
+                    return '--';
+                }
+            }},
             {field: 'settleAmt',width: "150", title: '交收金额', type: 'money', sortable:false
                 ,render: function (data, type, row, meta) {
                 if(data=="" ||data==undefined){

@@ -1095,6 +1095,7 @@ public class AutoPeriodBondCommonService {
         dealadd.setGenType(DictCodeListExt1.生成方式_批处理生成.getValue());
         dealadd.setWorkflowId(deal.getWorkflowId());
         dealadd.setStatus(DictCodeList.数据状态_新建.getValue());
+        dealadd.setOurShareAmt(deal.getShareAmt());
 
         PtlTrade ptlTrade2 = new PtlTrade();
         ptlTrade2.setPortfolioId(dealadd.getPortfolioId());

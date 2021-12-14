@@ -120,7 +120,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
             paramMap.put("yield", pendingTradeData.getYield());
             List<FinAssetIntInfo> finAssetIntInfos = cfetsBondAutoDurDealGenerateMapper.findAssetIntInfo(paramMap);
             // 实收本息总额: 设置为 全价总额 理论本息总额
-            pendingTradeData.setTradeAmt(trdBondDurationDto.getFpriceAmt());
+            pendingTradeData.setTradeAmt(pendingTradeData.getFpriceAmt());
             BussinessCodeParameter parameter = new BussinessCodeParameter();
             parameter.setCommonBusinessType(DictCodeList.共通业务类型_资产存续期交易);
             pendingTradeData.setBusiCode(autoPeriodCommonService.buildBussinessCode(parameter));
