@@ -875,6 +875,7 @@
 
     <!--当日登记-->
     <select id="listDayReg" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDayRegDto">
+select * from (
         <!--买卖登记数据-->
         SELECT
             CASE WHEN T1.IS_CANCEL = 'Y' THEN '03'
@@ -956,7 +957,7 @@
             T1.QUOTE_TYPE,
             T1.FINPROD_ID,
             T2.FINPROD_MARKET_ID,
-            T2.FINPROD_ABBR,
+            T2.FINPROD_ABBR finprodName,
             T1.SHARE_AMT / 100 SHARE_AMT,
             T1.UNIT_CPRICE price,
             T1.YIELD matureYield,
@@ -1028,7 +1029,7 @@
             T1.QUOTE_TYPE,
             T1.FINPROD_ID,
             T2.FINPROD_MARKET_ID,
-            T2.FINPROD_ABBR,
+            T2.FINPROD_ABBR finprodName,
             T1.SHARE_AMT / 100 SHARE_AMT,
             T1.UNIT_CPRICE price,
             T1.YIELD matureYield,
@@ -1088,6 +1089,43 @@
                 #{item}
             </foreach>
         </if>
+        ) TT
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'STATUS_VALID')D ON
+        TT.validStatus = D.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'PS')E ON TT.PS = E.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_STYLE')F ON TT.QUOTE_TYPE = F.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'CUSTOM_ASSET_TYPE_FOUR')G ON TT.assetType = G.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'ACCOUNT_SPEED')H ON TT.SETTLE_SPEED = H.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'TRADE_PLACE')I ON TT.TRADE_MARKET = I.ITEM_CODE
+        <where>
+            <if test="search != null and search != ''">
+                (
+                D.ITEM_VALUE like '%' || #{search} || '%' OR
+                E.ITEM_VALUE like '%' || #{search} || '%' OR
+                F.ITEM_VALUE like '%' || #{search} || '%' OR
+                TT.FINPROD_MARKET_ID like '%' || #{search} || '%' OR
+                TT.finprodName like '%' || #{search} || '%' OR
+                G.ITEM_VALUE like '%' || #{search} || '%' OR
+                to_char(TT.SHARE_AMT/10000,'FM99990.9990')=#{search} or  TT.SHARE_AMT||'' =#{search} or
+                to_char(TT.price,'FM99990.9990')=#{search} or  TT.price||'' =#{search} or
+                to_char(TT.matureYield*100,'FM99990.9990')=#{search} or  TT.matureYield||'' =#{search} or
+                to_char(TT.exerYield*100,'FM99990.9990')=#{search} or  TT.exerYield||'' =#{search} or
+                TT.ouPartyName like '%' || #{search} || '%' OR
+                TT.cpPartyName like '%' || #{search} || '%' OR
+                TT.ouTraderName LIKE '%' || #{search} || '%' OR
+                TT.cpTraderName LIKE '%' || #{search} || '%' OR
+                H.ITEM_VALUE like '%' || #{search} || '%' OR
+                to_char(TT.SETTLE_DATE,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
+                I.ITEM_VALUE like '%' || #{search} || '%' OR
+                to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
+                to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
+                to_char(TT.tradeDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
+                to_char(TT.STATISTICAL_TIMES,'FM99990.9990')=#{search} or  TT.STATISTICAL_TIMES||'' =#{search} or
+                TT.quoteId LIKE '%' || #{search} || '%' OR
+                TT.TRD_ID LIKE '%' || #{search} || '%'
+                )
+            </if>
+        </where>
     </select>
 
     <update id="updateRegFinProductDealTotal">
