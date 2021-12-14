@@ -1063,3 +1063,10 @@ insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE
 values ('SVR', 'COLOR_CONFIG_top_list', '81,82,83,84,85,86,87,88,89,90,90,90,65,95,95', '01', null, '延迟报送检查画面的配置参数(tops)', 'system', null, SYSDATE, 'admin',SYSDATE, null, '01');
 
 
+--20211214——投资者持有信息、识别标识合并、变形转换规则应放在中债三期导航栏下
+delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_006' and SPLIT_MEMO = '中债三期';
+delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_007' and SPLIT_MEMO = '中债三期';
+INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_007', 3, '中债三期', 'admin', null, TIMESTAMP '2021-09-13 15:26:54', 'admin', TIMESTAMP '2021-09-13 15:26:54');
+
+
+
