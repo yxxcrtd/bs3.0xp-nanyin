@@ -2876,7 +2876,7 @@ public class EquityInfoValid {
                 // 投资者类别
                 message = checkHolderType(message, equityInfoRegist001Dto.getHolderType(), type,spzMap,objFiledsMap,null);
                 // 投资者分类
-                message = checkHolderClassify(message,equityInfoRegist001Dto.getHolderClassify(), type,spzMap,objFiledsMap,null);
+//                message = checkHolderClassify(message,equityInfoRegist001Dto.getHolderClassify(), type,spzMap,objFiledsMap,null);
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message,
                         equityInfoRegist001Dto.getPersonalIdentifyType(), type,
