@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.reportdetail.dao.PbcMonthReportDetailAssetMapper" >
+
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset" >
+        <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
+        <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+        <result column="TERM" property="term" jdbcType="VARCHAR" />
+        <result column="DETAILNO" property="detailno" jdbcType="VARCHAR" />
+        <result column="POSITION_TYPE" property="positionType" jdbcType="VARCHAR" />
+        <result column="CHL_ID" property="chlId" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE1" property="assetType1" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE3" property="assetType3" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY" property="rivalParty" jdbcType="VARCHAR" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL" />
+        <result column="END_DAYS" property="endDays" jdbcType="DECIMAL" />
+        <result column="DELAY_PAY_AMT" property="delayPayAmt" jdbcType="DECIMAL" />
+        <result column="COST_AMT" property="costAmt" jdbcType="DECIMAL" />
+        <result column="FLOAT_INGPL" property="floatIngpl" jdbcType="DECIMAL" />
+        <result column="INTINCEXP" property="intincexp" jdbcType="DECIMAL" />
+        <result column="INTADJEXP_ADD" property="intadjexpAdd" jdbcType="DECIMAL" />
+        <result column="LOSS_AMT" property="lossAmt" jdbcType="DECIMAL" />
+        <result column="BAL_FLAG" property="balFlag" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="OPENPLAN" property="openplan" jdbcType="DATE" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_LEVEL2" property="industryLevel2" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE1" property="orgAssetType1" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE2" property="orgAssetType2" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE3" property="orgAssetType3" jdbcType="VARCHAR" />
+        <result column="BUY_PLACE" property="buyPlace" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <select id="selectDetailList" resultMap="BaseResultMap">
+        SELECT
+            P.POSUUID,
+            CASE
+              WHEN INSTR(T.PROPERTYCODE,'AMT1')>0 THEN '1.期末理财资金投向情况'
+              WHEN INSTR(T.PROPERTYCODE,'AMT2')>0 THEN '2.期末理财负债情况'
+              WHEN INSTR(T.PROPERTYCODE,'AMT3')>0 THEN '3.附注'  end reportType1,
+            L.ITEM_VALUE reportType2,
+            T.PROPERNAME reportType3,
+            T.PROPERNAME reportType4,
+            P.PROD_ID prodId,
+            B.PROD_NAME prodName,
+            B.IS_FHXGCP ,
+            P.ASSET_CODE,
+            NVL(I.ASSET_NAME,B.SUBJECT_NAME) ASSET_NAME,
+            P.OLD_ASSET_CODE,
+            IA.ASSET_NAME OLD_ASSET_NAME,
+            NVL(I.VDATE,I.PLAN_SDATE) VDATE,
+            NVL(I.MDATE,I.PLAN_EDATE) MDATE,
+            I.exercise_date,
+            NVL2(I.chb_issuer_id,I.chb_financier_id,I.chb_manager_id) SUBJECT_NAME,
+            I.rival_party,
+            I.asset_yield RATE,
+            P.CCY,
+            AP.TDY_COST_AMT COST_AMT,
+            AP.TDY_FLOAT_INGPL FLOAT_INGPL,
+            AP.TDY_INTINCEXP INTINCEXP,
+            P.ASSETVALUE_A,
+            P.ASSETVALUE_B,
+            P.PRIVATEPRD_FLAG,
+            P.PRIVATEFUND_FLAG,
+            P.MAIN_GRADE,
+            P.CREDIT_GRADE,
+            P.RATING,
+            P.BONDTOSTOCK_FLAG,
+            P.IS_GOVERN_FUND1,
+            I.ORG_ASSET_TYPE1,
+            I.ORG_ASSET_TYPE2,
+            I.ORG_ASSET_TYPE3
+            FROM CHB_MONTH_REPORT_TEMPLATE T
+            LEFT JOIN CHB_MONTH_ASSET_POSITIONDETAIL P ON T.PROPERTYCODE = P.DETAILNO
+            LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
+            LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
+            LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
+            LEFT JOIN CHB_PRD_BASEINFO B ON P.PROD_ID = B.PROD_ID
+            LEFT JOIN SYS_DATADICT_LIST L ON L.ITEM_CODE = REPLACE(SUBSTR(T.PROPERTYCODE,0,7),'_','')  AND L.DICT_CODE = 'SVR_MONTH_REPORT_DETAIL'
+            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
+
+            WHERE T.REPORTTYPE = 'BALANCE'
+            <if test="enddate != null and enddate != ''">
+                and P.TERM =  #{enddate,jdbcType=VARCHAR}
+            </if>
+
+            <if test="prodIds != null and prodIds.size()>0 ">
+                AND P.PRODID IN(
+                <foreach item="item" index="index" collection="prodIds" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+
+            <if test="assetCodes != null and assetCodes.size()>0 ">
+                AND P.ASSET_CODE IN(
+                <foreach item="item" index="index" collection="assetCodes" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+
+            <if test="keysList != null and keysList.size()>0 ">
+
+                <foreach item="item" index="index" collection="keysList" separator="," open=" AND P.POSUUID IN(" close=")">
+                    <if test="(index % 999) == 998">
+                        null) OR P.POSUUID in (
+                    </if>
+                    #{item}
+                </foreach>
+
+            </if>
+            ORDER BY ORDERNO
+    </select>
+
+    <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT  a.id,nvl(a.text,a.id) text
+            FROM (SELECT I.ASSET_CODE id,I.ASSET_NAME text FROM CHB_ASSET_INFO I
+            UNION ALL
+            SELECT SRCFIELD1 id,S.SUBJECT_NAME text FROM CHB_TYPE_MAPPING_EX E
+            LEFT JOIN BOK_SUBJECT S ON S.SUBJECT_NO=E.SRCFIELD1
+             where E.MAPPINGCODE IN ('CASH_SUBJECTNO_AVG','CASH_SUBJECTNO_MKT')
+             GROUP BY SRCFIELD1,S.SUBJECT_NAME)A
+        <where>
+            A.id like concat(concat('%',#{prodId,
+			jdbcType=VARCHAR}),'%')
+			or  A.text like concat(concat('%',#{prodId,
+			jdbcType=VARCHAR}),'%')
+            <!-- and A.FINPROD_TYPE2 = 'F16' -->
+        </where>
+        order by A.id
+
+    </select>
+
+    <insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail" >
+        insert into PBC_MONTH_ASSET_POSITIONDETAIL (POSUUID, PRODID, TERM,
+                        DETAILNO, POSITION_TYPE, CHL_ID,
+                        ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2,
+                        ASSET_TYPE3, SUBJECT_NAME, RIVAL_PARTY,
+                        RATE, CCY, AMT, INT_AMT,
+                        END_DAYS, DELAY_PAY_AMT, COST_AMT,
+                        FLOAT_INGPL, INTINCEXP, INTADJEXP_ADD,
+                        LOSS_AMT, BAL_FLAG, VDATE,
+                        MDATE, OPENPLAN, INDUSTRY,
+                        INDUSTRY_LEVEL2, PARTY_TYPE1, PARTY_TYPE3,
+                        PARTY_TYPE2, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2,
+                        ORG_ASSET_TYPE3, BUY_PLACE)
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            sys_guid(), #{item.prodid,jdbcType=VARCHAR}, #{item.term,jdbcType=VARCHAR},
+            #{item.detailno,jdbcType=VARCHAR}, #{item.positionType,jdbcType=VARCHAR}, #{item.chlId,jdbcType=VARCHAR},
+            #{item.assetCode,jdbcType=VARCHAR}, #{item.assetType1,jdbcType=VARCHAR}, #{item.assetType2,jdbcType=VARCHAR},
+            #{item.assetType3,jdbcType=VARCHAR}, #{item.subjectName,jdbcType=VARCHAR}, #{item.rivalParty,jdbcType=VARCHAR},
+            #{item.rate,jdbcType=DECIMAL}, #{item.ccy,jdbcType=VARCHAR}, #{item.amt,jdbcType=DECIMAL}, #{item.intAmt,jdbcType=DECIMAL},
+            #{item.endDays,jdbcType=DECIMAL}, #{item.delayPayAmt,jdbcType=DECIMAL}, #{item.costAmt,jdbcType=DECIMAL},
+            #{item.floatIngpl,jdbcType=DECIMAL}, #{item.intincexp,jdbcType=DECIMAL}, #{item.intadjexpAdd,jdbcType=DECIMAL},
+            #{item.lossAmt,jdbcType=DECIMAL}, #{item.balFlag,jdbcType=VARCHAR}, #{item.vdate,jdbcType=DATE},
+            #{item.mdate,jdbcType=DATE}, #{item.openplan,jdbcType=DATE}, #{item.industry,jdbcType=VARCHAR},
+            #{item.industryLevel2,jdbcType=VARCHAR}, #{item.partyType1,jdbcType=VARCHAR}, #{item.partyType3,jdbcType=VARCHAR},
+            #{item.partyType2,jdbcType=VARCHAR}, #{item.orgAssetType1,jdbcType=VARCHAR}, #{item.orgAssetType2,jdbcType=VARCHAR},
+            #{item.orgAssetType3,jdbcType=VARCHAR}, #{item.buyPlace,jdbcType=VARCHAR}
+        </foreach>
+
+    </insert>
+
+
+    <delete id="deleteDetail" parameterType="java.lang.String" >
+        delete from PBC_MONTH_ASSET_POSITIONDETAIL
+        where TERM = #{term,jdbcType=CHAR}
+  </delete>
+
+    <select id="selectChbAssetInfoByAssetCodeList" resultMap="com.joyintech.tams.common.base.dao.ChbAssetInfoMapper.BaseResultMap" fetchSize="1">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbAssetInfoMapper.Base_Column_List" />
+        from CHB_ASSET_INFO
+        where STATUS in ('E', 'M')
+        <if test="assetCodeList != null and assetCodeList.size() > 0">
+            <foreach collection="assetCodeList" item="item" index= "index" open="AND (ASSET_CODE in (" close=")" separator="," >
+                <if test="(index % 998) == 0">
+                    null) or ASSET_CODE in (
+                </if>
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+
+</mapper>

@@ -213,9 +213,9 @@ $(function(){
         if(isMain=='01'){
             setTimeout(function() {
                 if($('#sendStatus').val()=='02'||$('#sendStatus').val()=='03'){
-                    $('#submitDate').val(searchDataStart+' - '+searchDataEnd);
+                    $('#submitTime').val(searchDataStart+' - '+searchDataEnd);
                 }else{
-                    $('#submitDeadLine').val(searchDataStart+' - '+searchDataEnd);
+                    $('#submitDeadline').val(searchDataStart+' - '+searchDataEnd);
                 }
                 table.load();
             }, 500);

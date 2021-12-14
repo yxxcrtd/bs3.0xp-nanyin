@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.monthreportdetail.dao.ChbMonthReportDetailAssetMapper" >
+
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailAsset" >
+        <id column="POSUUID" property="posuuid" jdbcType="VARCHAR" />
+        <result column="TERM" property="term" jdbcType="VARCHAR" />
+        <result column="DETAILNO" property="detailno" jdbcType="VARCHAR" />
+        <result column="INVEST_VARIETY" property="investVariety" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="ASSETTYPE" property="assettype" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+        <result column="ASSETVALUE_A" property="assetvalueA" jdbcType="DECIMAL" />
+        <result column="ASSETVALUE_B" property="assetvalueB" jdbcType="DECIMAL" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="OPENPLAN" property="openplan" jdbcType="DATE" />
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY" property="rivalParty" jdbcType="VARCHAR" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="INDUSTRY1" property="industry1" jdbcType="VARCHAR" />
+        <result column="INDUSTRY2" property="industry2" jdbcType="VARCHAR" />
+        <result column="INDUSTRY3" property="industry3" jdbcType="VARCHAR" />
+        <result column="INDUSTRY4" property="industry4" jdbcType="VARCHAR" />
+        <result column="DELAY_PAY_AMT" property="delayPayAmt" jdbcType="DECIMAL" />
+        <result column="COST_AMT" property="costAmt" jdbcType="DECIMAL" />
+        <result column="FLOAT_INGPL" property="floatIngpl" jdbcType="DECIMAL" />
+        <result column="INTINCEXP" property="intincexp" jdbcType="DECIMAL" />
+        <result column="INTADJEXP_ADD" property="intadjexpAdd" jdbcType="DECIMAL" />
+        <result column="LOSS_AMT" property="lossAmt" jdbcType="DECIMAL" />
+        <result column="IN_ASSET_TYPE" property="inAssetType" jdbcType="VARCHAR" />
+        <result column="PPPFLAG" property="pppflag" jdbcType="VARCHAR" />
+        <result column="MONIT_TYPE" property="monitType" jdbcType="VARCHAR" />
+        <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
+        <result column="IS_GOVERN_FUND1" property="isGovernFund1" jdbcType="VARCHAR" />
+        <result column="PRIVATEFUND_FLAG" property="privatefundFlag" jdbcType="VARCHAR" />
+        <result column="PRIVATEPRD_FLAG" property="privateprdFlag" jdbcType="VARCHAR" />
+        <result column="BONDTOSTOCK_FLAG" property="bondtostockFlag" jdbcType="VARCHAR" />
+        <result column="CREDIT_GRADE" property="creditGrade" jdbcType="VARCHAR" />
+        <result column="MAIN_GRADE" property="mainGrade" jdbcType="VARCHAR" />
+        <result column="TYPE_FINAL" property="typeFinal" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE1" property="orgAssetType1" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE2" property="orgAssetType2" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE3" property="orgAssetType3" jdbcType="VARCHAR" />
+        <result column="RATING" property="rating" jdbcType="VARCHAR" />
+        <result column="ASSETTYPE2" property="assettype2" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="OLD_ASSET_CODE" property="oldAssetCode" jdbcType="VARCHAR" />
+
+        <result column="reportType1" property="reportType1" jdbcType="VARCHAR" />
+        <result column="reportType2" property="reportType2" jdbcType="VARCHAR" />
+        <result column="reportType3" property="reportType3" jdbcType="VARCHAR" />
+        <result column="reportType4" property="reportType4" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="OLD_ASSET_NAME" property="oldAssetName" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+
+
+    </resultMap>
+
+
+    <select id="selectDetailList" resultMap="BaseResultMap">
+        SELECT
+            P.POSUUID,
+            CASE
+              WHEN INSTR(T.PROPERTYCODE,'AMT1')>0 THEN '1.期末理财资金投向情况'
+              WHEN INSTR(T.PROPERTYCODE,'AMT2')>0 THEN '2.期末理财负债情况'
+              WHEN INSTR(T.PROPERTYCODE,'AMT3')>0 THEN '3.附注'  end reportType1,
+            L.ITEM_VALUE reportType2,
+            T.PROPERNAME reportType3,
+            T.PROPERNAME reportType4,
+            P.PROD_ID prodId,
+            B.PROD_NAME prodName,
+            B.IS_FHXGCP ,
+            P.ASSET_CODE,
+            NVL(I.ASSET_NAME,B.SUBJECT_NAME) ASSET_NAME,
+            P.OLD_ASSET_CODE,
+            IA.ASSET_NAME OLD_ASSET_NAME,
+            NVL(I.VDATE,I.PLAN_SDATE) VDATE,
+            NVL(I.MDATE,I.PLAN_EDATE) MDATE,
+            I.exercise_date,
+            NVL2(I.chb_issuer_id,I.chb_financier_id,I.chb_manager_id) SUBJECT_NAME,
+            I.rival_party,
+            I.asset_yield RATE,
+            P.CCY,
+            AP.TDY_COST_AMT COST_AMT,
+            AP.TDY_FLOAT_INGPL FLOAT_INGPL,
+            AP.TDY_INTINCEXP INTINCEXP,
+            P.ASSETVALUE_A,
+            P.ASSETVALUE_B,
+            P.PRIVATEPRD_FLAG,
+            P.PRIVATEFUND_FLAG,
+            P.MAIN_GRADE,
+            P.CREDIT_GRADE,
+            P.RATING,
+            P.BONDTOSTOCK_FLAG,
+            P.IS_GOVERN_FUND1,
+            I.ORG_ASSET_TYPE1,
+            I.ORG_ASSET_TYPE2,
+            I.ORG_ASSET_TYPE3
+            FROM CHB_MONTH_REPORT_TEMPLATE T
+            LEFT JOIN CHB_MONTH_ASSET_POSITIONDETAIL P ON T.PROPERTYCODE = P.DETAILNO
+            LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
+            LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
+            LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
+            LEFT JOIN CHB_PRD_BASEINFO B ON P.PROD_ID = B.PROD_ID
+            LEFT JOIN SYS_DATADICT_LIST L ON L.ITEM_CODE = REPLACE(SUBSTR(T.PROPERTYCODE,0,7),'_','')  AND L.DICT_CODE = 'SVR_MONTH_REPORT_DETAIL'
+            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
+
+            WHERE T.REPORTTYPE = 'BALANCE'
+            <if test="enddate != null and enddate != ''">
+                and P.TERM =  #{enddate,jdbcType=VARCHAR}
+            </if>
+
+            <if test="prodIds != null and prodIds.size()>0 ">
+                AND P.PRODID IN(
+                <foreach item="item" index="index" collection="prodIds" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+
+            <if test="assetCodes != null and assetCodes.size()>0 ">
+                AND P.ASSET_CODE IN(
+                <foreach item="item" index="index" collection="assetCodes" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+
+            <if test="keysList != null and keysList.size()>0 ">
+
+                <foreach item="item" index="index" collection="keysList" separator="," open=" AND P.POSUUID IN(" close=")">
+                    <if test="(index % 999) == 998">
+                        null) OR P.POSUUID in (
+                    </if>
+                    #{item}
+                </foreach>
+
+            </if>
+            ORDER BY ORDERNO
+    </select>
+
+    <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT  a.id,nvl(a.text,a.id) text
+            FROM (SELECT I.ASSET_CODE id,I.ASSET_NAME text FROM CHB_ASSET_INFO I
+            UNION ALL
+            SELECT SRCFIELD1 id,S.SUBJECT_NAME text FROM CHB_TYPE_MAPPING_EX E
+            LEFT JOIN BOK_SUBJECT S ON S.SUBJECT_NO=E.SRCFIELD1
+             where E.MAPPINGCODE IN ('CASH_SUBJECTNO_AVG','CASH_SUBJECTNO_MKT')
+             GROUP BY SRCFIELD1,S.SUBJECT_NAME)A
+        <where>
+            A.id like concat(concat('%',#{prodId,
+			jdbcType=VARCHAR}),'%')
+			or  A.text like concat(concat('%',#{prodId,
+			jdbcType=VARCHAR}),'%')
+            <!-- and A.FINPROD_TYPE2 = 'F16' -->
+        </where>
+        order by A.id
+
+    </select>
+
+    <insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail" >
+        insert into CHB_MONTH_ASSET_POSITIONDETAIL (POSUUID, TERM, DETAILNO,
+                INVEST_VARIETY, ASSET_CODE, ASSETTYPE,
+                PROD_ID, IS_FHXGCP, ASSETVALUE_A,
+                ASSETVALUE_B, VDATE, MDATE,
+                OPENPLAN, SUBJECT_NAME, RIVAL_PARTY,
+                RATE, CCY, INDUSTRY1,
+                INDUSTRY2, INDUSTRY3, INDUSTRY4,
+                DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL,
+                INTINCEXP, INTADJEXP_ADD, LOSS_AMT,
+                IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE,
+                MANAGE_TYPE, IS_GOVERN_FUND1, PRIVATEFUND_FLAG,
+                PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, CREDIT_GRADE,
+                MAIN_GRADE, TYPE_FINAL, ORG_ASSET_TYPE1,
+                ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING,
+                ASSETTYPE2, ORG_CODE, DEPT_CODE,
+                OLD_ASSET_CODE)
+
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            sys_guid(),#{item.term,jdbcType=VARCHAR}, #{item.detailno,jdbcType=VARCHAR},
+            #{item.investVariety,jdbcType=VARCHAR}, #{item.assetCode,jdbcType=VARCHAR}, #{item.assettype,jdbcType=VARCHAR},
+            #{item.prodId,jdbcType=VARCHAR}, #{item.isFhxgcp,jdbcType=VARCHAR}, #{item.assetvalueA,jdbcType=DECIMAL},
+            #{item.assetvalueB,jdbcType=DECIMAL}, #{item.vdate,jdbcType=DATE}, #{item.mdate,jdbcType=DATE},
+            #{item.openplan,jdbcType=DATE}, #{item.subjectName,jdbcType=VARCHAR}, #{item.rivalParty,jdbcType=VARCHAR},
+            #{item.rate,jdbcType=DECIMAL}, #{item.ccy,jdbcType=VARCHAR}, #{item.industry1,jdbcType=VARCHAR},
+            #{item.industry2,jdbcType=VARCHAR}, #{item.industry3,jdbcType=VARCHAR}, #{item.industry4,jdbcType=VARCHAR},
+            #{item.delayPayAmt,jdbcType=DECIMAL}, #{item.costAmt,jdbcType=DECIMAL}, #{item.floatIngpl,jdbcType=DECIMAL},
+            #{item.intincexp,jdbcType=DECIMAL}, #{item.intadjexpAdd,jdbcType=DECIMAL}, #{item.lossAmt,jdbcType=DECIMAL},
+            #{item.inAssetType,jdbcType=VARCHAR}, #{item.pppflag,jdbcType=VARCHAR}, #{item.monitType,jdbcType=VARCHAR},
+            #{item.manageType,jdbcType=VARCHAR}, #{item.isGovernFund1,jdbcType=VARCHAR}, #{item.privatefundFlag,jdbcType=VARCHAR},
+            #{item.privateprdFlag,jdbcType=VARCHAR}, #{item.bondtostockFlag,jdbcType=VARCHAR}, #{item.creditGrade,jdbcType=VARCHAR},
+            #{item.mainGrade,jdbcType=VARCHAR}, #{item.typeFinal,jdbcType=VARCHAR}, #{item.orgAssetType1,jdbcType=VARCHAR},
+            #{item.orgAssetType2,jdbcType=VARCHAR}, #{item.orgAssetType3,jdbcType=VARCHAR}, #{item.rating,jdbcType=VARCHAR},
+            #{item.assettype2,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR},
+            #{item.oldAssetCode,jdbcType=VARCHAR}
+        </foreach>
+
+    </insert>
+
+
+    <delete id="deleteDetail" parameterType="java.lang.String" >
+        delete from CHB_MONTH_ASSET_POSITIONDETAIL
+        where TERM = #{term,jdbcType=CHAR}
+  </delete>
+
+</mapper>

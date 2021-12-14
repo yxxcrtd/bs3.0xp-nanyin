@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.svreport.pbc.reportdetail.service.PbcMonthReportDetailProdUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.ResultContext;
@@ -61,6 +62,9 @@ public class PbcMonthProdPositionService  extends BaseService{
 	
 	@Autowired
 	private PbcMonthReportMapper pbcMonthReportMapper;
+
+	@Autowired
+	private PbcMonthReportDetailProdUtil pbcMonthReportDetailProdUtil;
 	
 	
 	@Autowired
@@ -159,7 +163,9 @@ public class PbcMonthProdPositionService  extends BaseService{
 //        }else{
 //        	posPsbcList=posList;
 //        }
-        	 
+
+		pbcMonthReportDetailProdUtil.buildDatilList(posList,DateUtil.format(reportEndDate,"yyyyMM"));
+
         //生成产品端1.1~1.6以及3.1~3.2的报表数据
         for(PbcReportProdTotalService service : abstractsevices){
         	if(service instanceof PbcReportProd001Sub004Service){

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ChbMonthAssetPositionMapper {
@@ -76,6 +77,17 @@ public interface ChbMonthAssetPositionMapper {
      * @return List<ChbBotAstPosition>
      */
     List<ChbMonthAssetPosition> selectByMonthDate(@Param("startDate")String startDate,@Param("endDate")String endDate,@Param("prodids")List<String> prodids);
+
+    /**
+     * 功能:根据月度报表日期获取资产头寸数据
+     * @since 1.6.0
+     * @version 1.6.0
+     * @author：weiyuqiang 2019年1月31日
+     * @param startDate 月初日期
+     * @param endDate 月末日期
+     * @return List<ChbBotAstPosition>
+     */
+    List<ChbMonthAssetPosition> selectByMonthDateAll(@Param("startDate")String startDate,@Param("endDate")String endDate,@Param("prodids")List<String> prodids);
     /**
      * 跑批时先删后插
      * @param cdate
@@ -167,6 +179,15 @@ public interface ChbMonthAssetPositionMapper {
      * @return 资产信息
      */
     ChbAssetInfo selectChbAssetInfoByAssetCode(@Param("assetCode") String assetCode);
+
+
+    /**
+     * 根据资产代码查询资产相关信息
+     *
+     * @param assetCode 资产代码
+     * @return 资产信息
+     */
+    List<ChbAssetInfo> selectChbAssetInfoByAssetCodeList(@Param("assetCodeList") Set<String> assetCode);
 
     /**
      * 根据产品代码查询产品相关信息
