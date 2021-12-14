@@ -253,30 +253,37 @@
 
 <!--    取得人民币兑SAFE汇率-->
 	<select id="CNYExchange" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ccyExcharge">
-		SELECT
+		select
 		EXCHARGE_CODE exchargeCode,
-		OPEN_PRICE openPrice,
-		CLOSE_PRICE closePrice,
-		HIGH_PRICE highPrice,
-		LOW_PRICE lowPrice,
-		MID_PRICE midPrice
+		CHARGE charge
 		FROM
 		(
 		select
 		EXCHARGE_CODE,
-		OPEN_PRICE,
-		CLOSE_PRICE,
-		HIGH_PRICE,
-		LOW_PRICE,
-		MID_PRICE,
+		CHARGE,
 		ROW_NUMBER() over( partition by EXCHARGE_CODE order by TRADE_DATE desc ) excNo
+		from
+		(
+		select
+		EXCHARGE_CODE,
+		case #{exchangeSource,jdbcType=VARCHAR}
+		when '01' then OPEN_PRICE
+		when '02' then CLOSE_PRICE
+		when '03' then HIGH_PRICE
+		when '04' then LOW_PRICE
+		when '05' then MID_PRICE
+		end as CHARGE,
+		TRADE_DATE
 		FROM
 		MST_EXCHARGE_QUOTE quote
 		WHERE
 		DATASOURCE_TYPE = 'SAFE'
 		AND EXCHARGE_CODE like '%/CNY%'
-		AND TRADE_DATE BETWEEN to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-		) WHERE excNo = 1
+		AND TRADE_DATE  <![CDATA[ <= ]]> to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		)
+		WHERE CHARGE is not null
+		)
+		WHERE excNo = 1
 	</select>
 
 	<!--   获取美元兑 CFETS:外汇交易中心-->
