@@ -597,7 +597,7 @@
 	<select id="getAllStlDownDataDealAccountInfoDtoList" resultType="com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto">
 		SELECT DISTINCT
 		B.BROKER_ID as brokerId,
-		B.SZ_SEATNO as szSeatno,
+		B.SH_SEATNO as szSeatno,
 		F.SEC_ACCT_ID as secAcctId,
 		F.TRD_ACCT_ID as acctNo,
 		F.BOND_ID as shareholdersCode,
