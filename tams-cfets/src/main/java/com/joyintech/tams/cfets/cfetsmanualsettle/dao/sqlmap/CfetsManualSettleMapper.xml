@@ -378,12 +378,6 @@
         LEFT JOIN ETR_FINISH_STATUS efs ON ee.Entrust_Id = efs.entrust_id AND TPD.TRADE_ID = efs.trade_id
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON tpd.sec_manage_acct_id = ssai.SEC_ACCT_ID
         where TPD.TOTLE_TRADE_ID = #{tradeId}
-        <if test="userName != null and userName != ''">
-        and TPDA.PORTFOLIO_ID
-        IN (SELECT PORTFOLIO_ID
-            FROM PTL_PORTFOLIO_AUTHORITY
-            WHERE USER_ID = #{userName})
-        </if>
     </select>
 
     <select id="getDealDetailsByTradeId" parameterType="java.lang.String"
@@ -707,12 +701,6 @@
         LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA ON TPDA.Trade_Id = TPD.Trade_Id
         LEFT JOIN PTL_PORTFOLIO PP ON TPDA.Portfolio_Id = PP.PORTFOLIO_ID
         where TPD.Totle_Trade_Id = #{tradeId}
-        <if test="userName != null and userName != ''">
-            and TPDA.PORTFOLIO_ID
-            IN (SELECT PORTFOLIO_ID
-            FROM PTL_PORTFOLIO_AUTHORITY
-            WHERE USER_ID = #{userName})
-        </if>
     </select>
 
     <select id="queryTrdProductDealsByTotalTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealAddMapper.BaseResultMap">

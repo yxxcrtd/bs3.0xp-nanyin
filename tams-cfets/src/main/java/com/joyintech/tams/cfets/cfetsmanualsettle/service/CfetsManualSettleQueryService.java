@@ -269,7 +269,6 @@ public class CfetsManualSettleQueryService extends BaseService{
         resultData.put(dtCode+"_form2",infoForm2);
 
         //组合分配信息
-        pageParam.put("userName", LoginUserUtil.getUserName());
         pageParam.put("CASH_TYPE_1_02", DictCodeListExt1.现金流一级类型_利息.getValue());
         pageParam.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
         List<PortIntFenPeiInfoDto> portIntFenPeiInfoDtoList =  cfetsManualSettleMapper.findPortIntFenPeiInfoList(pageParam);
