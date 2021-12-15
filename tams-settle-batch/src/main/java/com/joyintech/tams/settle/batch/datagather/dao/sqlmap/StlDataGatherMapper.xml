@@ -660,7 +660,8 @@
 			SUM(AMOUNT) AMOUNT
 		FROM
 			PTL_SEC_POSITION psp
-		WHERE psp.HODING_TYPE = '03' AND CDATE = #{dealDate,jdbcType=DATE}
+		<!--WHERE psp.HODING_TYPE = '03' AND CDATE = #{dealDate,jdbcType=DATE}-->
+		WHERE psp.HODING_TYPE = '03' AND CDATE = TO_DATE(#{dealDate}, 'yyyy-MM-dd')
 		GROUP BY
 			SEC_ACCT_ID,
 			FINPROD_ID,
