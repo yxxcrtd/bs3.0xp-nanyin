@@ -325,6 +325,8 @@ public class CfetsSettleService extends BaseService{
 
         param.put("pageId", "CfetsManualSettle");
 
+        param.put("pageId01", "CfetsManualSettleUpdate");
+
         //查询待交收数据List
         List<CfetsSettleAllInfoDto> cfetsSettleDtoList = cfetsSettleMapper.selectAllSettleToDoList(param);
 

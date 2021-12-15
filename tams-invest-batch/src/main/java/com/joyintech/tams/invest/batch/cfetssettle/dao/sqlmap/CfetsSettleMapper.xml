@@ -63,7 +63,7 @@
 		           inner join (select max(HIS_NO) HIS_NO, WORKFLOW_ID from SYS_DATA_PROCESS_MARK
 								where 1=1
 								<if test="pageId != null and pageId !=''">
-								AND PAGE_ID = #{pageId}
+								AND PAGE_ID in (#{pageId},#{pageId01})
 								</if>
 								group by WORKFLOW_ID) tempHis
 					on pm.HIS_NO = tempHis.HIS_NO
@@ -377,7 +377,7 @@
 		ON R.REGIST_ORG = V.REGIST_ORG
 		WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
 		AND V.SEC_ACCT_TYPE = 'SEC'
-		AND V.TRADE_PLACE = in ('01','02')
+		AND V.TRADE_PLACE in ('01','02')
 		AND V.TRADE_PLACE = R.TRADE_MARKET
 		AND PSA.PORTFOLIO_ID = #{portfolioId}
 		AND R.FINPROD_ID = #{finprodId}
