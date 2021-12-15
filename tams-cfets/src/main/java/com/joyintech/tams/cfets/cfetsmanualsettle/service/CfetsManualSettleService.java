@@ -377,7 +377,6 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             //调用cancel接口
             PositionHttpRequest.sendRevoke(trdBankManualSettleInfo.getSettleSeqNo(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         }else if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收.getValue())
-                    ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())
                      ||StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收修改.getValue())){
             List<CfetsManualSettleDealInfo> listTemp = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleRequest.getTradeId());
 
@@ -458,9 +457,9 @@ public class CfetsManualSettleService extends BaseService<CfetsManualSettleDto> 
             }
             //业务动作BUSI_ACT 09:交收确认 10:交收失败
             req.setBusiAct("09");
-            if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
-                req.setBusiAct("10");
-            }
+//            if(StringUtil.equals(buttonType,DictCodeListExt3.交收操作类型_交收失败.getValue())){
+//                req.setBusiAct("10");
+//            }
             //交易方向
             req.setPs(cfetsManualSettleRequest.getPs());
             //新建 修改 关闭
