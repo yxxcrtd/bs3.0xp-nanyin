@@ -1319,10 +1319,20 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
                 rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
             }else if(StringUtil.equals(shortSellingSupported,"02")){
-                dd.setEntrustOwnNum(item.getEntrustOwnNum()==null?BigDecimal.ZERO:item.getEntrustOwnNum());
-                dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum()==null?BigDecimal.ZERO:item.getEntrustIntegrateNum());
-                bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
-                rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
+                if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_买入.getValue())
+                || StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_卖出.getValue())){
+                    dd.setEntrustOwnNum(item.getEntrustOwnNum()==null?BigDecimal.ZERO:item.getEntrustOwnNum());
+                    dd.setEntrustIntegrateNum(item.getEntrustIntegrateNum()==null?BigDecimal.ZERO:item.getEntrustIntegrateNum());
+                    bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
+                    rrqmkdghSAmt=ArithmeticUtil.doAdd(rrqmkdghSAmt,dd.getEntrustIntegrateNum());
+                }
+                if(StringUtil.equals(cfetsDto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
+                    dd.setEntrustOwnNum(item.getEntrustNum());
+                    dd.setEntrustIntegrateNum(BigDecimal.ZERO);
+                    bfqtrkyccSAmt=ArithmeticUtil.doAdd(bfqtrkyccSAmt,dd.getEntrustOwnNum());
+                    rrqmkdghSAmt=BigDecimal.ZERO;
+                }
+
             }else if(StringUtil.equals(shortSellingSupported,"03")){
                 dd.setEntrustOwnNum(item.getEntrustNum());
                 dd.setEntrustIntegrateNum(BigDecimal.ZERO);
