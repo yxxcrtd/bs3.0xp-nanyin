@@ -60,6 +60,8 @@ public class StlDataDealSzdZqbdProcessService {
         if (StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), stlDownDataDealOperatorDto.getFinprodType())) {
         	// 将ZQBD清算数据List中，证券类别是配股权益的数据去除，单独放在配股ZQBD清算数据List里面做后续处理。
     		List<SzdZqbd> pgSzdZqbdList = new ArrayList<SzdZqbd>();
+    		//上市流通
+    		List<SzdZqbd> gpSsltList = new ArrayList<SzdZqbd>();
     		List<SzdZqbd> notPgSzdZqbdList = new ArrayList<SzdZqbd>();
         	if (stlDownDataDealOperatorDto != null && stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto() != null &&
        			stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList() != null && 
@@ -68,6 +70,11 @@ public class StlDataDealSzdZqbdProcessService {
         			if (StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PG) && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLX_00K)) {
         				pgSzdZqbdList.add(szdZqbd);
         			}
+        			else if(StringUtil.equals(szdZqbd.getZqlb(), StlDataDealProcessConstant.ZQLB_PT)
+                            && StringUtil.equals(szdZqbd.getQylb(),StlDataDealProcessConstant.QYLB_P)
+                            && StringUtil.equals(szdZqbd.getBdlx(), StlDataDealProcessConstant.BDLB_00G)){
+                        gpSsltList.add(szdZqbd);
+                    }
         			else {
         				notPgSzdZqbdList.add(szdZqbd);
         			}
@@ -82,6 +89,8 @@ public class StlDataDealSzdZqbdProcessService {
             	List<FinProductQuto> finProductQutoList = generatorSharesFinProductQutoList(pgSzdZqbdList, map, stlDownDataDealOperatorDto);
             	stlDownDataDealWriteDto.setFinProductQutoList(finProductQutoList);
             }
+            //股票上市流通
+            stlDownDataDealWriteDto.getFinProductQutoList().addAll(generatorBondCirculateFinProductQutoList(gpSsltList, map, stlDownDataDealOperatorDto));
             //
             List<ShareBonusReg> shareBonusRegList = generatorShareBonusRegList(stlDownDataDealOperatorDto.getStlDownDataDealOperatorBaseDto().getZqbdList(), map, stlDownDataDealOperatorDto);
             stlDownDataDealWriteDto.setShareBonusRegList(shareBonusRegList);
@@ -451,4 +460,5 @@ public class StlDataDealSzdZqbdProcessService {
         }
         return list;
     }
+
 }
