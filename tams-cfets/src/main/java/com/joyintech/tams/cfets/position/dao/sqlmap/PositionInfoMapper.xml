@@ -154,8 +154,8 @@
                 CASE WHEN a.HODING_TYPE=#{C_01} AND a.DATE_TYPE ='0' THEN a.AMOUNT ELSE 0 END
             ) AS ZHXJ   /*账户现金*/
             from PTL_CASH_POSITION_RULE a
-            LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE IN (#{S_004})
-            where a.cdate = to_date(#{cdate},'yyyy-MM-dd') and b.S_HOLDINGTYPE IN (#{S_004}, #{C_01})
+            LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE =#{S_004}
+            where a.cdate = to_date(#{cdate},'yyyy-MM-dd') 
             <if test="acctId != null and acctId != ''">
                 and a.ACCT_ID = #{acctId,jdbcType=VARCHAR}
             </if>
