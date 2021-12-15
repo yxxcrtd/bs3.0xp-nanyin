@@ -153,7 +153,7 @@
         ROUND(t8.PRIN_AMT, 4) prinAmt,/*还本面额/百元*/
         T8.RANGE_YIELD*100 yield,/*区间票面利率（%）*/
         TO_CHAR(T8.PAY_DATE, 'yyyy-MM-dd') payDate,/*支付日*/
-        TO_CHAR(T8.PAY_DATE, 'yyyy-MM-dd') tradeDate,/*交易日*/
+        TO_CHAR(T8.mdate, 'yyyy-MM-dd') tradeDate,/*交易日*/
         ROUND(sum(T8.intAmt), 8) intAmtTheory,/*理论应计利息*/
         ROUND(sum(T8.prinAmt), 4) prinAmtTheory,/*理论还本金额*/
         T10.TRADE_MARKET,
