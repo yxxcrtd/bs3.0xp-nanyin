@@ -81,7 +81,13 @@ public class CfetsSettleService extends BaseService{
         //交收时间=当前时间
         trdBankManualSettleFlow.setSettleTime(new Date());
         //交收数量=画面.交收数量
-        trdBankManualSettleFlow.setSettleNum(cfetsSettleAllInfoDto.getSettleNumT());
+        //交收数量
+        if(StringUtil.equals(cfetsSettleAllInfoDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券存续期交易.getValue())
+                && (StringUtil.equals(cfetsSettleAllInfoDto.getPs(),DictCodeList.交易方向_收息.getValue())
+                ||StringUtil.equals(cfetsSettleAllInfoDto.getPs(),DictCodeList.交易方向_还本.getValue()))){
+        }else{
+            trdBankManualSettleFlow.setSettleNum(cfetsSettleAllInfoDto.getSettleNumT());
+        }
         //交收金额=画面.交收金额
         if(StringUtil.equals(cfetsSettleAllInfoDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
                 && StringUtil.equals(cfetsSettleAllInfoDto.getPs(),DictCodeList.交易方向_买入.getValue())){
@@ -121,7 +127,12 @@ public class CfetsSettleService extends BaseService{
         //交收时间=平台日
         trdBankManualSettleInfo.setSettleDate(executeDate);
         //交收数量
-        trdBankManualSettleInfo.setSettleNum(cfetsSettleAllInfoDto.getSettleNumT());
+        if(StringUtil.equals(cfetsSettleAllInfoDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_债券存续期交易.getValue())
+                && (StringUtil.equals(cfetsSettleAllInfoDto.getPs(),DictCodeList.交易方向_收息.getValue())
+                     ||StringUtil.equals(cfetsSettleAllInfoDto.getPs(),DictCodeList.交易方向_还本.getValue()))){
+        }else{
+            trdBankManualSettleInfo.setSettleNum(cfetsSettleAllInfoDto.getSettleNumT());
+        }
         //交收金额
         if(StringUtil.equals(cfetsSettleAllInfoDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
                 && StringUtil.equals(cfetsSettleAllInfoDto.getPs(),DictCodeList.交易方向_买入.getValue())){
