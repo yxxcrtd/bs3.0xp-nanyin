@@ -1297,7 +1297,7 @@ from
         select
         tt.portfolio_id as portfolioId,
         pp.portfolio_name portfolioName,
-        invaim.INV_AIM as businessModel,
+        inva.INV_AIM as businessModel,
         nvl(tt.entrustNum,0)/10000 as entrustNum
         from
         (select a.portfolio_id,a.finprod_id,
@@ -1327,8 +1327,8 @@ from
                 WHERE 1=1 AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
                 AND a.TRADE_DATE &lt;= #{platDate,jdbcType=DATE}
             ) WHERE rn = 1
-        ) invaim
-        on invaim.FINPROD_ID=tt.FINPROD_ID and invaim.PORTFOLIO_ID=tt.PORTFOLIO_ID
+        ) inva
+        on inva.FINPROD_ID=tt.FINPROD_ID and inva.PORTFOLIO_ID=tt.PORTFOLIO_ID
         left join PTL_PORTFOLIO pp
         on pp.portfolio_id=tt.portfolio_id
         where tt.entrustNum>0
