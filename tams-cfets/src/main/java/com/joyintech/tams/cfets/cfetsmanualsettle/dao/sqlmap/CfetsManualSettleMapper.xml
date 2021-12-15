@@ -479,7 +479,7 @@
         ON R.REGIST_ORG = V.REGIST_ORG
         WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
         AND V.SEC_ACCT_TYPE = 'SEC'
-        AND V.TRADE_PLACE = '01'
+        AND V.TRADE_PLACE in ('01','02')
         AND V.TRADE_PLACE = R.TRADE_MARKET
         AND PSA.PORTFOLIO_ID = #{portfolioId}
         AND R.FINPROD_ID = #{finprodId}
