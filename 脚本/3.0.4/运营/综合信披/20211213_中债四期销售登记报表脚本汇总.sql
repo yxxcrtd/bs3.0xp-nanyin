@@ -524,11 +524,11 @@ INSERT INTO CHB_REG_TIME_POINTS VALUES('34',null,'34',null,'03','03','02','业�
 --销售结算资金交易信息维护菜单配置
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'SalesTransactionMaintenance001';
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'SalesTransactionMaintenance002';
-delete from SYS_MENU where MENU_ID = 'REPORT_001_001_018';
-delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_018';
-INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 7, '中债四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 'REP', null, 'REPORT_001_001', 'SalesTransactionMaintenance001', 15, '02', '销售结算资金交易信息维护', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
-INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance001','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','REPORT_001_001_018',null,null,'02','01','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
+delete from SYS_MENU where MENU_ID = 'REPORT_001_001_025';
+delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_025';
+INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_025', 8, '中债四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_025', 'REP', null, 'REPORT_001_001', 'SalesTransactionMaintenance001', 15, '02', '销售结算资金交易信息维护', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
+INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance001','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','REPORT_001_001_025',null,null,'02','01','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance002','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002',null,null,null,'02','01','销售结算资金交易信息维护新建','system',null,sysdate,'system',sysdate);
 
 --销售结算资金交易信息维护按钮配置
@@ -777,12 +777,12 @@ values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-032', 'Sal
 
 
 --更改投资者明细与投资者信息到中债三四期菜单
-DELETE FROM SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_019';
-INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_019', 8, '中债三四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
+DELETE FROM SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_018';
+INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 7, '中债三四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
 delete from SYS_MENU where PAGE_ID = 'EquityInfo001';
 delete from SYS_MENU where PAGE_ID = 'SvrEquityBusinessDetails001';
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_019', 'REP', null, 'REPORT_001_001', 'EquityInfo001', 16, '02', '投资者身份信息', 'system', null, TIMESTAMP '2021-06-30 20:38:58', 'system', TIMESTAMP '2021-06-30 20:38:58');
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_020', 'SVR', null, 'REPORT_001_001', 'SvrEquityBusinessDetails001', 17, null, '投资者明细信息', 'system', null, TIMESTAMP '2021-06-30 20:38:58', 'system', TIMESTAMP '2021-06-30 20:38:58');
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 'REP', null, 'REPORT_001_001', 'EquityInfo001', 16, '02', '投资者身份信息', 'system', null, TIMESTAMP '2021-06-30 20:38:58', 'system', TIMESTAMP '2021-06-30 20:38:58');
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_019', 'SVR', null, 'REPORT_001_001', 'SvrEquityBusinessDetails001', 17, null, '投资者明细信息', 'system', null, TIMESTAMP '2021-06-30 20:38:58', 'system', TIMESTAMP '2021-06-30 20:38:58');
 
 
 --业务首页展示问题
