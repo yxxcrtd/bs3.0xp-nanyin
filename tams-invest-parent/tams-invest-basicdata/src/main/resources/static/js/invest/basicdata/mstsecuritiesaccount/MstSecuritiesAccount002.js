@@ -199,7 +199,7 @@ $(function() {
         //绑定init界面转换事件
     	if(pageModel==PAGE_MODEL_EDIT){
             $('#secAcctId').attr("disabled","disabled");
-            $('#bondId').attr("disabled","disabled");
+            // $('#bondId').attr("disabled","disabled");
         }
         // 绑定按钮事件
         $('#MstSecuritiesAccount002_btn_save').click(function() {
