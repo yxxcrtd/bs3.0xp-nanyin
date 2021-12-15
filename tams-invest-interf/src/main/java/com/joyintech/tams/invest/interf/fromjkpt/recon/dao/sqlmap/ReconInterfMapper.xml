@@ -333,7 +333,7 @@ LEFT JOIN FIN_PRODUCT T3 ON
 LEFT JOIN FIN_PRODUCT_TYPE FPT ON T3.FINPROD_ID = FPT.FINPROD_ID
 LEFT JOIN MST_SEAT  T4 ON T4.SEAT_ID  = T1.XWDM
 WHERE
-    T1.JYSC IN ('0', '1', '深圳', '上海') and EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.ZYBS = T1.ZYDM  AND ZYBS IS NOT NULL AND T1.ZYDM NOT IN('220131','220132','220144','220143','220148','220147','220134','220133') )
+    T1.JYSC IN ('0', '1', '深圳', '上海') and EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.ZYBS = to_char(T1.ZYDM)  AND ZYBS IS NOT NULL AND to_char(T1.ZYDM) NOT IN('220131','220132','220144','220143','220148','220147','220134','220133') )
     <if test="collect != null and collect.size()>0">
        AND  T4.CUSTOMER_ID IN
         <foreach item="item" index="index" collection="collect" open="(" separator=","  close=")">
@@ -607,7 +607,6 @@ WHERE
         ACCOUT,
         SEC_ACCT_ID,
         CCY,
-        PS,
         SUM(TRADE_NUM) TRADE_NUM,
         SUM(TRADE_AMT) TRADE_AMT,
         SUM(INT_AMT) INT_AMT,
@@ -635,8 +634,7 @@ WHERE
         TRADE_DATE,
         ACCOUT,
         SEC_ACCT_ID,
-        CCY,
-        PS
+        CCY
     </select>
 
 

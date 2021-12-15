@@ -507,6 +507,7 @@ public class StlDataDealSzdJsmxProcessService {
 						BigDecimal hglx = ArithmeticUtil.multiply(ArithmeticUtil.multiply(bjje, settleTransData.getIntRate()),
 								ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(settleTransData.getVpayDate(), settleTransData.getMpayDate())), 365, 14));
 						settleTransData.setmIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
+						settleTransData.setIntAmt(settleTransData.getmIntAmt());
 						// 到期本金
 						settleTransData.setmPrinAmt(bjje);
 						// add 计算费用时，计算基础为成交金额
@@ -596,6 +597,13 @@ public class StlDataDealSzdJsmxProcessService {
 						settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getJsrq()));
 						// 本金金额
 						BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue()));
+						// 计算回购利息 fuyongsheng 20211215 add start
+						// 回购利息
+						BigDecimal hglx = ArithmeticUtil.multiply(ArithmeticUtil.multiply(bjje, settleTransData.getIntRate()),
+								ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(settleTransData.getVpayDate(), settleTransData.getMpayDate())), 365, 14));
+						settleTransData.setmIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
+						settleTransData.setIntAmt(settleTransData.getmIntAmt());
+						// 计算回购利息 fuyongsheng 20211215 add end
 						// 到期金额
 						settleTransData.setmTradeAmt(bjje);
 					}
@@ -675,6 +683,7 @@ public class StlDataDealSzdJsmxProcessService {
 							BigDecimal hglx = ArithmeticUtil.multiply(ArithmeticUtil.divide(ArithmeticUtil.multiply(bjje, settleTransData.getIntRate()), 100, 2),
 									ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(settleTransData.getMpayDate(), settleTransData.getVpayDate())), 365, 14));
 							settleTransData.setmIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
+							settleTransData.setIntAmt(settleTransData.getmIntAmt());
 							// 到期本金
 //							settleTransData.setmPrinAmt(bjje);
 //							settleTransData.setFpriceAmt(bjje);

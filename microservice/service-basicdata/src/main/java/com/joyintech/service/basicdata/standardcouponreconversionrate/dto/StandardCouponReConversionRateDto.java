@@ -71,4 +71,14 @@ public class StandardCouponReConversionRateDto extends StdBondMoreConvrateInfo {
     public void setAccountType(String accountType) {
         this.accountType = accountType;
     }
+
+    private String finprodMarketId;
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
 }

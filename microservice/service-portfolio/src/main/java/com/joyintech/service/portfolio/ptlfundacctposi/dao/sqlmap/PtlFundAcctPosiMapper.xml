@@ -11,8 +11,11 @@
 				PTLACCT.ACCT_TYPE ACCTTYPE,
 				PP.PORTFOLIO_NAME PORTFOLIONAME,
                 STL.ACCT_NAME     ACCTNAME,
-                PTL.AMOUNT,
+				FLOW.TRUSTEE_ID   TRUSTEE_ID,
+				PTL.AMOUNT,
                 FLOW.AMOUNT1,
+				FLOW.quotaIn,
+				FLOW.quotaOut,
 				'02' isSummary
   FROM PTL_CASH_POSITION PTL
   LEFT JOIN PTL_CAPACCT_INFO PTLACCT
@@ -27,7 +30,10 @@
                     PTL.CDATE,
                     PTL.CCY,
                     PTL.HODING_TYPE,
-                    SUM(PTL.AMOUNT) AMOUNT1
+					FP.TRUSTEE_ID,
+                    SUM(PTL.AMOUNT) AMOUNT1,
+					SUM(case when PTL.AMOUNT &gt;0 then PTL.AMOUNT else 0 end ) quotaIn,
+					SUM(case when PTL.AMOUNT &lt;0 then PTL.AMOUNT else 0 end ) quotaOut
                FROM PTL_CASH_POSITION_FLOW PTL
                LEFT JOIN PTL_CAPACCT_INFO PTLACCT
                  ON PTLACCT.PORTFOLIO_ID = PTL.PORTFOLIO_ID
@@ -42,8 +48,9 @@
                        PTL.ACCT_ID,
                        PTL.CDATE,
                        PTL.CCY,
-                       PTL.HODING_TYPE
-             ) FLOW
+                       PTL.HODING_TYPE,
+					   FP.TRUSTEE_ID
+	) FLOW
     ON PTL.PORTFOLIO_ID = FLOW.PORTFOLIO_ID
    AND PTL.ACCT_ID = FLOW.ACCT_ID
    AND PTL.CDATE = FLOW.CDATE
@@ -68,13 +75,24 @@
 		'' ACCTTYPE,
 		'' PORTFOLIONAME,
 		'' ACCTNAME,
+		'' TRUSTEE_ID,
 		decode(SUM(AMOUNT),null,0,SUM(AMOUNT)) AMOUNT,
 		decode(SUM(AMOUNT1),null,0,SUM(AMOUNT1)) AMOUNT1,
+		decode(SUM(quotaIn),null,0,SUM(quotaIn)) quotaIn,
+		decode(SUM(quotaOut),null,0,SUM(quotaOut)) quotaOut,
 		'01' isSummary
 		from temp
 		group by ccy
 	</if>
-	)
+	)T1
+	<where>
+		<if test='quota != null and quota == "Y"'>
+			T1.AMOUNT1 != 0
+		</if>
+		<if test="trusteeId != null and trusteeId != ''">
+			AND T1.TRUSTEE_ID = #{trusteeId}
+		</if>
+	</where>
 </select>
 <sql id="sqlwhere">
   <where>
@@ -398,5 +416,23 @@
 		  where  CDATE BETWEEN #{startCDate} AND #{endCDate}
 	  </if>
 	</select>
-	
+
+	<select id="getOriginalInterestHolder" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT DISTINCT
+		CUSTOMER_ID id,
+		CUSTOMER_NAME text,
+		CUSTOMER_NAME shortName,
+		CUSTOMER_NAME hidCode
+		FROM MST_CUSTOMER_INFO
+		<where>
+			IS_TRUSTER = 'Y'
+			<if test="search != null and search != ''">
+				and (
+				CUSTOMER_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				OR
+				CUSTOMER_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				)
+			</if>
+		</where>
+	</select>
 </mapper>

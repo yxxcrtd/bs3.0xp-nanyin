@@ -12,6 +12,7 @@ import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.settle.batch.datagather.dao.StlDataGatherMapper;
 import com.joyintech.tams.settle.batch.datagather.dto.*;
 import com.joyintech.tams.settle.common.service.SettleCommonService;
+import com.joyintech.tams.settle.common.util.DateUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.formula.functions.T;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,7 +61,11 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             List<TrdProductDealAdd> trdProductDealAddList = new ArrayList<>();
             //持仓分配
             Map<String,Object> param = new HashMap<>();
-            param.put("dealDate",executeDate);
+            // ZGZGST-4216: 查询持仓时日期使用付息截止日前一日 fuyongsheng 20211214 modify start
+            // param.put("dealDate",executeDate);
+            Date mdate2 = settleTransDataDtos.get(0).getMdate2();
+            param.put("dealDate", DateUtil.getYesterDayDate(mdate2));
+            // ZGZGST-4216: 查询持仓时日期使用付息截止日前一日 fuyongsheng 20211214 modify end
             param.put("hodingType",DictCodeList.持仓类型_实际.getValue());
             List<PtlSecPosition> ptlSecPositions = stlDataGatherMapper.listPtlSecPosition(param);
             //按金融产品代码分组
@@ -77,7 +83,17 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                if (!StringUtil.equals(settleTransData.getPs(),DictCodeList.交易方向_申购确认.getValue())) {
                     //汇总交(资产维度)
                     TotalTrdProductDealDto totalTrdProductDealDto = new TotalTrdProductDealDto();
-                    totalTrdProductDealDto.setShareAmt(settleTransData.getShareAmt());
+                    // ZGZGST-4216: 交易份额使用持仓汇总数量 fuyongsheng 20211214 modify start
+                    // totalTrdProductDealDto.setShareAmt(settleTransData.getShareAmt());
+                    totalTrdProductDealDto.setPs(settleTransData.getPs());
+                    if(finprodIdMap.containsKey(settleTransData.getFinprodId())){
+                        List<PtlSecPosition> ptlSecPositionsByFinprodId = finprodIdMap.get(settleTransData.getFinprodId());
+                        BigDecimal amountTotal = ptlSecPositionsByFinprodId.stream().map(PtlSecPosition::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+                        totalTrdProductDealDto.setShareAmt(amountTotal);
+                    }else{
+                        totalTrdProductDealDto.setShareAmt(BigDecimal.ZERO);
+                    }
+                    // ZGZGST-4216: 交易份额使用持仓汇总数量 fuyongsheng 20211214 modify end
                     totalTrdProductDealDto.setTradeAmt(settleTransData.getTradeAmt());
                     totalTrdProductDealDto.setIntAmt(settleTransData.getIntAmt());
                     totalTrdProductDealDto.setFpriceAmt(settleTransData.getFpriceAmt());

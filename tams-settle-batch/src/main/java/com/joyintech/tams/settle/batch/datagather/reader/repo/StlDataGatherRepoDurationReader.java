@@ -25,8 +25,12 @@ public class StlDataGatherRepoDurationReader extends StlDataGatherReader {
 
     @Override
     protected void setSearchParam(Map<String, Object> searchParam) {
+        // ZGZGST-4212:使用自定义字段类型标识回购存续期 fuyongsheng 20211214 modify start
         // 业务类型
-        searchParam.put("busiType", "R3S14");
+        // searchParam.put("busiType", "R3S14");
+        // reader 类型
+        searchParam.put("readerType", "RepoDuration");
+        // ZGZGST-4212:使用自定义字段类型标识回购存续期 fuyongsheng 20211214 modify end
     }
     @Override
     protected boolean isSecType(String secType) {

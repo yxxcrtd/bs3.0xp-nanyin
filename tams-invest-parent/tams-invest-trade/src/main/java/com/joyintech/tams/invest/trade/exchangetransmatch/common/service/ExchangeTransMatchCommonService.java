@@ -104,6 +104,8 @@ public class ExchangeTransMatchCommonService extends BaseService {
     @Autowired
     private TrdFinProductBarterMapper trdFinProductBarterMapper;
     @Autowired
+    private TrdTradeFeeTotalMapper trdTradeFeeTotalMapper;
+    @Autowired
     private TrdTradeFeeDetailMapper trdTradeFeeDetailMapper;
     @Autowired
     private TrdFinProductBarterTotalMapper trdFinProductBarterTotalMapper;
@@ -246,19 +248,40 @@ public class ExchangeTransMatchCommonService extends BaseService {
                     BigDecimal marchQty = BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(), commonEntrustDto.getRemainEntrustNum()))>0?dto.getRemainNum() : commonEntrustDto.getRemainEntrustNum();
                     commonEntrustDto.setMarchQty(marchQty);
                     //已匹配金额
-                    commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(marchQty,dto.getUnitFprice()));
+                    if(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                        commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(marchQty,dto.getUnitFprice()));
+                    }
+                    else {
+                        commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(marchQty,dto.getUnitCprice()));
+                    }
+
                     //指令已匹配份额
                     BigDecimal marchQtyEn = BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),commonEntrustDto.getRemainEntrustNum()))>0?dto.getRemainNum() : commonEntrustDto.getRemainEntrustNum();
                     commonEntrustDto.setMarchQtyEn(marchQtyEn);
                     //指令已匹配金额
-                    commonEntrustDto.setMarchAmtEn(ArithmeticUtil.multiply(marchQtyEn,commonEntrustDto.getPrice()));
+                    if(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+                    || StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+                        commonEntrustDto.setMarchAmtEn(ArithmeticUtil.multiply(marchQtyEn,new BigDecimal(100)));
+                    }
+                    else {
+                        commonEntrustDto.setMarchAmtEn(ArithmeticUtil.multiply(marchQtyEn,commonEntrustDto.getPrice()));
+                    }
+
                 }
                 else {
-                    //已匹配份额
+
                     BigDecimal entrustQty = ArithmeticUtil.divide(commonEntrustDto.getRemainEntrustAmt(),dto.getUnitCprice(),4);
                     commonEntrustDto.setMarchQty(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),entrustQty))>0 ? dto.getRemainNum() : entrustQty);
                     //已匹配金额
-                    BigDecimal entrustAmt = ArithmeticUtil.multiply(entrustQty,dto.getUnitFprice());
+
+                    //已匹配份额
+                    BigDecimal entrustAmt = BigDecimal.ZERO;
+                    if(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                         entrustAmt = ArithmeticUtil.multiply(entrustQty,dto.getUnitFprice());
+                    }
+                    else {
+                        entrustAmt = ArithmeticUtil.multiply(entrustQty,dto.getUnitCprice());
+                    }
                     commonEntrustDto.setMarchAmt(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainAmount(),entrustAmt))>0?dto.getRemainAmount() : entrustAmt);
                     //指令已匹配份额
                     BigDecimal marchAmtEn = ArithmeticUtil.multiply(dto.getRemainNum(),dto.getUnitCprice());
@@ -288,11 +311,23 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 for(ExchangeTransMatchCommonEntrustDto commonEntrustDto : commonEntrustDtoList) {
                     if(StringUtil.equals(commonEntrustDto.getTargetType(),DictCodeListExt3.目标类型_数量.getValue())) {
                         commonEntrustDto.setMarchQty(commonEntrustDto.getRemainEntrustNum());
-                        commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(commonEntrustDto.getRemainEntrustNum(),dto.getUnitFprice()));
+                        if(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                            commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(commonEntrustDto.getRemainEntrustNum(),dto.getUnitFprice()));
+                        }
+                        else {
+                            commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(commonEntrustDto.getRemainEntrustNum(),dto.getUnitCprice()));
+                        }
+
                     }
                     else {
                         commonEntrustDto.setMarchQty(ArithmeticUtil.divide(commonEntrustDto.getRemainEntrustAmt(),dto.getUnitCprice(),4));
-                        commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(commonEntrustDto.getRemainEntrustAmt(),dto.getUnitCprice(),4),dto.getUnitFprice()));
+                        if(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                            commonEntrustDto.setMarchAmt(ArithmeticUtil.multiply(ArithmeticUtil.divide(commonEntrustDto.getRemainEntrustAmt(),dto.getUnitCprice(),4),dto.getUnitFprice()));
+                        }
+                        else {
+                            commonEntrustDto.setMarchAmt(commonEntrustDto.getRemainEntrustAmt());
+                        }
+
                     }
                     totalMarchQty = ArithmeticUtil.doAdd(totalMarchQty,commonEntrustDto.getMarchQty());
                 }
@@ -552,6 +587,12 @@ public class ExchangeTransMatchCommonService extends BaseService {
 
             if(StringUtil.isNotEmpty(baseTradeProductDealDto.getPaTrdFinProductDealTotal())){
                 paTrdFinProductDealTotalMapper.insertSelective(baseTradeProductDealDto.getPaTrdFinProductDealTotal());
+            }
+
+            if(!StringUtil.isEmptyList(baseTradeProductDealDto.getTrdTradeFeeTotalList())) {
+                for(TrdTradeFeeTotal trdTradeFeeTotal:baseTradeProductDealDto.getTrdTradeFeeTotalList()) {
+                    trdTradeFeeTotalMapper.insertSelective(trdTradeFeeTotal);
+                }
             }
 
             if(StringUtil.isNotEmpty(baseTradeProductDealDto.getTrdDealTotalAdd())){

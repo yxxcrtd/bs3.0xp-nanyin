@@ -15,6 +15,7 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.entity.FinProductConvertible;
 import com.joyintech.tams.common.base.entity.FinProductQuto;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
@@ -860,6 +861,31 @@ public class EtrExchangeTrade001Controller extends BaseController{
 				}
 			}
 		}
+
+		// add by etliu 20211207 start
+        // 交易所债券非交易类业务迁移
+        if (!map.containsKey(DictCodeListExt3.交易方向_质押券入库.getValue())) {
+            BigDecimal converseRatio = selectStdsecConverseRatio(param);
+            if (null != converseRatio) {
+                map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
+                map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
+            }
+        }
+        String finprodId = (String) param.get("finprodId");
+        if (!map.containsKey(DictCodeList.交易方向_行权_回售.getValue())) {
+            List<FinExercisePlan> exercisePlanList = etrExchangeTrade001Service.selectFinExercisePlanData(finprodId, sysDate);
+            if (!StringUtil.isEmptyList(exercisePlanList)) {
+                map.put(DictCodeList.交易方向_行权_回售.getValue(), exercisePlanList.get(0).getExercisePrice());
+            }
+        }
+        if (!map.containsKey(DictCodeListExt1.交易方向_债转股.getValue())) {
+            FinProductConvertible finProductConvertible = etrExchangeTrade001Service.selectConverseShareData(finprodId, sysDate);
+            if (finProductConvertible != null) {
+                map.put(DictCodeListExt1.交易方向_债转股.getValue(), finProductConvertible.getConPrice());
+            }
+        }
+        // add by etliu 20211207 end
+
 		return map;
 	}
 	
