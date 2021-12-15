@@ -79,6 +79,12 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                         BeanUtils.copyProperties(tempData, dealTotal);
                         //  汇总交易编号
                         dealTotal.setSeqId(IDGenerator.generate());
+                        // 回购需要将成交明细表的成交编号登到交易汇总表的原始成交编号 fuyongsheng add 20211215 start
+                        if(StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+                                || StringUtil.equals(settleTransDataDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())){
+                            dealTotal.setTradeIdRaw(tempData.getCjbh());
+                        }
+                        // 回购需要将成交明细表的成交编号登到交易汇总表的原始成交编号 fuyongsheng add 20211215 end
                         settleTransDataList.add(dealTotal);
                         //当笔成交数据明细.附属表流水号 非空
                         if(StringUtil.isNotEmpty(tempData.getTradeIdAdd())){
