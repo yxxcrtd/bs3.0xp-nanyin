@@ -1,15 +1,20 @@
 package com.joyintech.tams.svreport.interf.chb.baseinfo.service;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.tams.common.FileImpService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
+import com.joyintech.tams.common.base.entity.MstCustomerInfo;
 import com.joyintech.tams.common.base.entity.MstCustomerInfoAddWithBLOBs;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoImpMapper;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -22,21 +27,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.common.FileImpService;
-import com.joyintech.tams.common.InterfDefine;
-import com.joyintech.tams.common.InterfFile;
-import com.joyintech.tams.common.base.entity.MstCustomerInfo;
-import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
-import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
-import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
-import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoImpMapper;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 市场机构信息文件接口
@@ -348,7 +346,7 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
             		continue;
             	}
                 String value = map.get(key);
-                Field field = ReflectionUtils.findField(MstCustomerInfoAdd.class,
+                Field field = ReflectionUtils.findField(MstCustomerInfoAddWithBLOBs.class,
                 			subBlank(key.toLowerCase()));
                 if(field==null)
                 	continue;
@@ -457,13 +455,13 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 	}
 	
 	@SuppressWarnings("unused")
-	private void insertCustomerAdd(List<MstCustomerInfoAdd> addlist){
+	private void insertCustomerAdd(List<MstCustomerInfoAddWithBLOBs> addlist){
 		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
 		try {
 			int count = 0;
 			logger.debug("市场机构ADD表插入开始--------------"+new Date());
 			SvrMstCustomerInfoAddImpMapper batchMapper = session.getMapper(SvrMstCustomerInfoAddImpMapper.class);
-			for (MstCustomerInfoAdd dto : addlist) {
+			for (MstCustomerInfoAddWithBLOBs dto : addlist) {
 				batchMapper.insert(dto);
 				count++;
 				if (count % 1000 == 0) {

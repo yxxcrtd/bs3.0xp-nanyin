@@ -22,42 +22,353 @@
     <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
     <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <sql id="Base_Column_List">
-    CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR, CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER, 
-    IS_TRUSTER, IS_SALER, IS_FINANCIER, IS_GUARANTEE, IS_RATING_AGENCIES, IS_PLEDGOR, 
-    IS_DEPOSIT_BANK, IS_INVEST_ADVISER, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-    UPDATE_TIME
+	<sql id="Base_Column_List">
+    CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR, CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
+    IS_TRUSTER, IS_SALER, IS_FINANCIER, IS_GUARANTEE, IS_RATING_AGENCIES, IS_PLEDGOR,
+    IS_DEPOSIT_BANK, IS_INVEST_ADVISER, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+    UPDATE_TIME, IS_BROKER IS_BROKER, IS_COUNTER IS_COUNTER, IS_BANK IS_BANK, IS_FUTURE_COM IS_FUTURE_COM
   </sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from MST_CUSTOMER_INFO
+		where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from MST_CUSTOMER_INFO
+    where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+  </delete>
+	<insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+    insert into MST_CUSTOMER_INFO (CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
+      CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
+      IS_TRUSTER, IS_SALER, IS_FINANCIER,
+      IS_GUARANTEE, IS_RATING_AGENCIES, IS_PLEDGOR,
+      IS_DEPOSIT_BANK, IS_INVEST_ADVISER, CREATE_USER,
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+      UPDATE_TIME, IS_BROKER, IS_COUNTER,
+      IS_BANK, IS_FUTURE_COM)
+    values (#{customerId,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, #{customerAbbr,jdbcType=VARCHAR},
+      #{customerType,jdbcType=VARCHAR}, #{isIssuer,jdbcType=VARCHAR}, #{isAssteManager,jdbcType=VARCHAR},
+      #{isTruster,jdbcType=VARCHAR}, #{isSaler,jdbcType=VARCHAR}, #{isFinancier,jdbcType=VARCHAR},
+      #{isGuarantee,jdbcType=VARCHAR}, #{isRatingAgencies,jdbcType=VARCHAR}, #{isPledgor,jdbcType=VARCHAR},
+      #{isDepositBank,jdbcType=VARCHAR}, #{isInvestAdviser,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+      #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{isBroker,jdbcType=VARCHAR}, #{isCounter,jdbcType=VARCHAR},
+      #{isBank,jdbcType=VARCHAR}, #{isFutureCom,jdbcType=VARCHAR})
+  </insert>
+	<insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+		insert into MST_CUSTOMER_INFO
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="customerId != null">
+				CUSTOMER_ID,
+			</if>
+			<if test="customerName != null">
+				CUSTOMER_NAME,
+			</if>
+			<if test="customerAbbr != null">
+				CUSTOMER_ABBR,
+			</if>
+			<if test="customerType != null">
+				CUSTOMER_TYPE,
+			</if>
+			<if test="isIssuer != null">
+				IS_ISSUER,
+			</if>
+			<if test="isAssteManager != null">
+				IS_ASSTE_MANAGER,
+			</if>
+			<if test="isTruster != null">
+				IS_TRUSTER,
+			</if>
+			<if test="isSaler != null">
+				IS_SALER,
+			</if>
+			<if test="isFinancier != null">
+				IS_FINANCIER,
+			</if>
+			<if test="isGuarantee != null">
+				IS_GUARANTEE,
+			</if>
+			<if test="isRatingAgencies != null">
+				IS_RATING_AGENCIES,
+			</if>
+			<if test="isPledgor != null">
+				IS_PLEDGOR,
+			</if>
+			<if test="isDepositBank != null">
+				IS_DEPOSIT_BANK,
+			</if>
+			<if test="isInvestAdviser != null">
+				IS_INVEST_ADVISER,
+			</if>
+			<if test="createUser != null">
+				CREATE_USER,
+			</if>
+			<if test="createDept != null">
+				CREATE_DEPT,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="updateUser != null">
+				UPDATE_USER,
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME,
+			</if>
+			<if test="isBroker != null" >
+				IS_BROKER,
+			</if>
+			<if test="isCounter != null" >
+				IS_COUNTER,
+			</if>
+			<if test="isBank != null" >
+				IS_BANK,
+			</if>
+			<if test="isFutureCom != null" >
+				IS_FUTURE_COM,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="customerId != null">
+				#{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="customerName != null">
+				#{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test="customerAbbr != null">
+				#{customerAbbr,jdbcType=VARCHAR},
+			</if>
+			<if test="customerType != null">
+				#{customerType,jdbcType=VARCHAR},
+			</if>
+			<if test="isIssuer != null">
+				#{isIssuer,jdbcType=VARCHAR},
+			</if>
+			<if test="isAssteManager != null">
+				#{isAssteManager,jdbcType=VARCHAR},
+			</if>
+			<if test="isTruster != null">
+				#{isTruster,jdbcType=VARCHAR},
+			</if>
+			<if test="isSaler != null">
+				#{isSaler,jdbcType=VARCHAR},
+			</if>
+			<if test="isFinancier != null">
+				#{isFinancier,jdbcType=VARCHAR},
+			</if>
+			<if test="isGuarantee != null">
+				#{isGuarantee,jdbcType=VARCHAR},
+			</if>
+			<if test="isRatingAgencies != null">
+				#{isRatingAgencies,jdbcType=VARCHAR},
+			</if>
+			<if test="isPledgor != null">
+				#{isPledgor,jdbcType=VARCHAR},
+			</if>
+			<if test="isDepositBank != null">
+				#{isDepositBank,jdbcType=VARCHAR},
+			</if>
+			<if test="isInvestAdviser != null">
+				#{isInvestAdviser,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null">
+				#{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null">
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isBroker != null" >
+				#{isBroker,jdbcType=VARCHAR},
+			</if>
+			<if test="isCounter != null" >
+				#{isCounter,jdbcType=VARCHAR},
+			</if>
+			<if test="isBank != null" >
+				#{isBank,jdbcType=VARCHAR},
+			</if>
+			<if test="isFutureCom != null" >
+				#{isFutureCom,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+		update MST_CUSTOMER_INFO
+		<set>
+			<if test="customerName != null">
+				CUSTOMER_NAME = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test="customerAbbr != null">
+				CUSTOMER_ABBR = #{customerAbbr,jdbcType=VARCHAR},
+			</if>
+			<if test="customerType != null">
+				CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR},
+			</if>
+			<if test="isIssuer != null">
+				IS_ISSUER = #{isIssuer,jdbcType=VARCHAR},
+			</if>
+			<if test="isAssteManager != null">
+				IS_ASSTE_MANAGER = #{isAssteManager,jdbcType=VARCHAR},
+			</if>
+			<if test="isTruster != null">
+				IS_TRUSTER = #{isTruster,jdbcType=VARCHAR},
+			</if>
+			<if test="isSaler != null">
+				IS_SALER = #{isSaler,jdbcType=VARCHAR},
+			</if>
+			<if test="isFinancier != null">
+				IS_FINANCIER = #{isFinancier,jdbcType=VARCHAR},
+			</if>
+			<if test="isGuarantee != null">
+				IS_GUARANTEE = #{isGuarantee,jdbcType=VARCHAR},
+			</if>
+			<if test="isRatingAgencies != null">
+				IS_RATING_AGENCIES = #{isRatingAgencies,jdbcType=VARCHAR},
+			</if>
+			<if test="isPledgor != null">
+				IS_PLEDGOR = #{isPledgor,jdbcType=VARCHAR},
+			</if>
+			<if test="isDepositBank != null">
+				IS_DEPOSIT_BANK = #{isDepositBank,jdbcType=VARCHAR},
+			</if>
+			<if test="isInvestAdviser != null">
+				IS_INVEST_ADVISER = #{isInvestAdviser,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null">
+				CREATE_USER = #{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null">
+				CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null">
+				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isBroker != null" >
+				IS_BROKER = #{isBroker,jdbcType=VARCHAR},
+			</if>
+			<if test="isCounter != null" >
+				IS_COUNTER = #{isCounter,jdbcType=VARCHAR},
+			</if>
+			<if test="isBank != null" >
+				IS_BANK = #{isBank,jdbcType=VARCHAR},
+			</if>
+			<if test="isFutureCom != null" >
+				IS_FUTURE_COM = #{isFutureCom,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+    update MST_CUSTOMER_INFO
+    set CUSTOMER_NAME = #{customerName,jdbcType=VARCHAR},
+      CUSTOMER_ABBR = #{customerAbbr,jdbcType=VARCHAR},
+      CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR},
+      IS_ISSUER = #{isIssuer,jdbcType=VARCHAR},
+      IS_ASSTE_MANAGER = #{isAssteManager,jdbcType=VARCHAR},
+      IS_TRUSTER = #{isTruster,jdbcType=VARCHAR},
+      IS_SALER = #{isSaler,jdbcType=VARCHAR},
+      IS_FINANCIER = #{isFinancier,jdbcType=VARCHAR},
+      IS_GUARANTEE = #{isGuarantee,jdbcType=VARCHAR},
+      IS_RATING_AGENCIES = #{isRatingAgencies,jdbcType=VARCHAR},
+      IS_PLEDGOR = #{isPledgor,jdbcType=VARCHAR},
+      IS_DEPOSIT_BANK = #{isDepositBank,jdbcType=VARCHAR},
+      IS_INVEST_ADVISER = #{isInvestAdviser,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        IS_BROKER = #{isBroker,jdbcType=VARCHAR},
+        IS_COUNTER = #{isCounter,jdbcType=VARCHAR},
+        IS_BANK = #{isBank,jdbcType=VARCHAR},
+        IS_FUTURE_COM = #{isFutureCom,jdbcType=VARCHAR}
+    where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+  </update>
 
-  
+	<delete id="deleteCustomerAddBatch"
+			parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd">
+		delete from MST_CUSTOMER_INFO_ADD
+		<where>
+			<foreach collection="list" item="dto" open="CUSTOMER_ID in("
+					 close=")" separator=",">
+				#{dto.customerId,jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</delete>
+
+	<insert id="insertCustomerInfo" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo" >
+        insert into MST_CUSTOMER_INFO (CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
+            CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
+            IS_TRUSTER, IS_SALER, IS_FINANCIER,
+            IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
+            IS_INVEST_ADVISER, IS_BROKER, IS_COUNTER, IS_BANK, IS_FUTURE_COM)
+        values (#{customerId,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, #{customerAbbr,jdbcType=VARCHAR},
+            #{customerType,jdbcType=VARCHAR}, #{isIssuer,jdbcType=VARCHAR}, #{isAssteManager,jdbcType=VARCHAR},
+            #{isTruster,jdbcType=VARCHAR}, #{isSaler,jdbcType=VARCHAR}, #{isFinancier,jdbcType=VARCHAR},
+            #{isGuarantee,jdbcType=VARCHAR}, #{isRatingAgencies,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{isPledgor,jdbcType=VARCHAR}, #{isDepositBank,jdbcType=VARCHAR},
+            #{isInvestAdviser,jdbcType=VARCHAR},#{isBroker,jdbcType=VARCHAR},#{isCounter,jdbcType=VARCHAR}
+            ,#{isBank,jdbcType=VARCHAR},#{isFutureCom,jdbcType=VARCHAR})
+    </insert>
+
+	<delete id="deletAllData">
+	truncate table MST_CUSTOMER_INFO
+</delete>
+
+	<delete id="deleteTodayData">
+  delete from MST_CUSTOMER_INFO where to_char(nvl(UPDATE_TIME,CREATE_TIME),'yyyymmdd')=to_char(sysdate,'yyyymmdd')
+  </delete>
+
 	<insert id="mergeMstCustomerInfoData"
-		parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+			parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
 		MERGE INTO MST_CUSTOMER_INFO CII
 		USING (
 		<foreach collection="list" item="item" open="select * from("
-			close=")" separator="union all">
+				 close=")" separator="union all">
 			SELECT
-			'${item.customerName}' CUSTOMER_NAME,
-			'${item.customerAbbr}' CUSTOMER_ABBR,
-			'${item.customerType}' CUSTOMER_TYPE,
-			'${item.isIssuer}' IS_ISSUER,
-			'${item.isAssteManager}' IS_ASSTE_MANAGER,
-			'${item.isTruster}' IS_TRUSTER,
-			'${item.isSaler}' IS_SALER,
-			'${item.isFinancier}' IS_FINANCIER,
-			'${item.isGuarantee}' IS_GUARANTEE,
-			'${item.isRatingAgencies}' IS_RATING_AGENCIES,
-			'${item.isPledgor}' IS_PLEDGOR,
-			'${item.isDepositBank}' IS_DEPOSIT_BANK,
-			'${item.isInvestAdviser}' IS_INVEST_ADVISER,
-			'${item.createUser}' CREATE_USER,
-			'${item.createDept}' CREATE_DEPT,
-			current date CREATE_TIME,
-			'${item.updateUser}' UPDATE_USER,
-			current date UPDATE_TIME,
-			'${item.customerId}' CUSTOMER_ID
+			#{item.customerName,jdbcType=VARCHAR} CUSTOMER_NAME,
+			#{item.customerAbbr,jdbcType=VARCHAR} CUSTOMER_ABBR,
+			#{item.customerType,jdbcType=VARCHAR} CUSTOMER_TYPE,
+			#{item.isIssuer,jdbcType=VARCHAR} IS_ISSUER,
+			#{item.isAssteManager,jdbcType=VARCHAR} IS_ASSTE_MANAGER,
+			#{item.isTruster,jdbcType=VARCHAR} IS_TRUSTER,
+			#{item.isSaler,jdbcType=VARCHAR} IS_SALER,
+			#{item.isFinancier,jdbcType=VARCHAR} IS_FINANCIER,
+			#{item.isGuarantee,jdbcType=VARCHAR} IS_GUARANTEE,
+			#{item.isRatingAgencies,jdbcType=VARCHAR} IS_RATING_AGENCIES,
+			#{item.isPledgor,jdbcType=VARCHAR} IS_PLEDGOR,
+			#{item.isDepositBank,jdbcType=VARCHAR} IS_DEPOSIT_BANK,
+			#{item.isInvestAdviser,jdbcType=VARCHAR} IS_INVEST_ADVISER,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			sysdate CREATE_TIME,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			sysdate UPDATE_TIME,
+			#{item.isBroker,jdbcType=VARCHAR} IS_BROKER,
+			#{item.isCounter,jdbcType=VARCHAR} IS_COUNTER,
+			#{item.isBank,jdbcType=VARCHAR} IS_BANK,
+			#{item.isFutureCom,jdbcType=VARCHAR} IS_FUTURE_COM,
+			#{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
 			FROM
-			sysibm.SYSDUMMY1
+			DUAL
 		</foreach>
 		) TEMP
 		<!-- 业务主键匹配 -->
@@ -82,7 +393,11 @@
 		CREATE_DEPT = TEMP.CREATE_DEPT,
 		CREATE_TIME = TEMP.CREATE_TIME,
 		UPDATE_USER = TEMP.UPDATE_USER,
-		UPDATE_TIME = TEMP.UPDATE_TIME
+		UPDATE_TIME = TEMP.UPDATE_TIME,
+		IS_BROKER = TEMP.IS_BROKER,
+		IS_COUNTER = TEMP.IS_COUNTER,
+		IS_BANK = TEMP.IS_BANK,
+		IS_FUTURE_COM = TEMP.IS_FUTURE_COM
 		<!-- 未匹配到这插入 -->
 		WHEN NOT MATCHED THEN INSERT
 		(CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
@@ -91,13 +406,15 @@
 		IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER,
 		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
 		UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
-		IS_INVEST_ADVISER)
+		IS_INVEST_ADVISER, IS_BROKER, IS_COUNTER,
+		IS_BANK, IS_FUTURE_COM)
 		values (TEMP.CUSTOMER_ID, TEMP.CUSTOMER_NAME, TEMP.CUSTOMER_ABBR,
 		TEMP.CUSTOMER_TYPE, TEMP.IS_ISSUER, TEMP.IS_ASSTE_MANAGER,
 		TEMP.IS_TRUSTER, TEMP.IS_SALER, TEMP.IS_FINANCIER,
 		TEMP.IS_GUARANTEE, TEMP.IS_RATING_AGENCIES, TEMP.CREATE_USER,
 		TEMP.CREATE_DEPT, TEMP.CREATE_TIME, TEMP.UPDATE_USER,
 		TEMP.UPDATE_TIME, TEMP.IS_PLEDGOR, TEMP.IS_DEPOSIT_BANK,
-		TEMP.IS_INVEST_ADVISER)
+		TEMP.IS_INVEST_ADVISER, TEMP.IS_BROKER, TEMP.IS_COUNTER,
+		TEMP.IS_BANK, TEMP.IS_FUTURE_COM)
 	</insert>
 </mapper>
