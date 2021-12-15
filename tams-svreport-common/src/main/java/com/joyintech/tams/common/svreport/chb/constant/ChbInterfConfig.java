@@ -39,7 +39,8 @@ public enum  ChbInterfConfig {
 
 	产品利率基本信息接口("CHB_PRD_RATE"),
 	资产利率基本信息接口("CHB_ASSET_RATE"),
-	产品汇总交易接口("CHB_PRD_DEAL_TOTAL")
+	产品汇总交易接口("CHB_PRD_DEAL_TOTAL"),
+	市场机构信息数据("MST_CUSTOMER_INFO")
 	;
 	
 	
