@@ -490,9 +490,8 @@ public class CfetsBondDealQuotedPrice003Service extends BaseService<CfetsBondDea
      * @return boolean 是否成功
      */
     public boolean save(CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto){
-        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto1 = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto1,cfetsBondDealRequestQuoteDto);
-        return cfetsBondDealQuotedPriceService.insertBondRequestQuote(cfetsBondDealRequestQuoteDto1);
+        return cfetsBondDealQuotedPriceService.insertBondRequestQuote(JsonUtils.json2Object(JsonUtils.object2Json(cfetsBondDealRequestQuoteDto),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto.class)
+        );
         /*return restTemplate.postForObject(
             ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/insertBondRequestQuote",
             cfetsBondDealRequestQuoteDto, boolean.class);*/

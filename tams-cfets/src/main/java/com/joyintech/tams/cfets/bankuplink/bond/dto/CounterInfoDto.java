@@ -1,5 +1,7 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -30,6 +32,9 @@ public class CounterInfoDto {
 
     @ApiModelProperty(name="tradeStatus",value="交易状态")
     private String tradeStatus;
+
+    @ApiModelProperty(name="tradeStatus",value="交易状态名称")
+    private String tradeStatusStr;
 
     @ApiModelProperty(name="shareAmt",value="回复量(万元)")
     private BigDecimal shareAmt;
@@ -92,6 +97,14 @@ public class CounterInfoDto {
 
     public void setTradeStatus(String tradeStatus) {
         this.tradeStatus = tradeStatus;
+    }
+
+    public String getTradeStatusStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.银行间上行报价状态, this.getTradeStatus());
+    }
+
+    public void setTradeStatusStr(String tradeStatusStr) {
+        this.tradeStatusStr = tradeStatusStr;
     }
 
     public BigDecimal getShareAmt() {

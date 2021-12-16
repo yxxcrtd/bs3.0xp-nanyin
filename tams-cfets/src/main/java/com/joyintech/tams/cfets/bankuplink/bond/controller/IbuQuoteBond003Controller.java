@@ -10,6 +10,7 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice003Service;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CounterInfoDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
@@ -200,8 +201,7 @@ public class IbuQuoteBond003Controller extends BaseController {
         AjaxResult ar = new AjaxResult();
         StringBuffer sb = new StringBuffer();
         List<CfetsBondDealRequestQuoteDto> cfetsBondDealRequestQuoteDtoList = new ArrayList<>();
-        CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,cfetsBondDealQuoteCommonDto);
+        CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = cfetsQuotedCommonServiceVue.createReueust(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
             cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealRequestQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
         }

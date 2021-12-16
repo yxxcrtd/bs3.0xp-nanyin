@@ -174,6 +174,7 @@ public class BondQuoteSearchDto {
      */
     private String counterTrader;
 
+
     public String getQuoteType() {
         return quoteType;
     }
