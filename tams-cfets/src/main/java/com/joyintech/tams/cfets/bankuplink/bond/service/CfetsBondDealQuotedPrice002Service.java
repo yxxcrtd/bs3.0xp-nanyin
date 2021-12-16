@@ -122,8 +122,15 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
             if(null==entity.getSettleDate()){
                 errorList.add(new ValidMessage("请输入结算日期"));
             }
+            if(null!=entity.getPrice()&&entity.getPrice().compareTo(BigDecimal.ZERO)<=0){
+                errorList.add(new ValidMessage("净价必须大于0"));
+            }
             if(null==entity.getShareAmt()){
                 errorList.add(new ValidMessage("请输入券面总额"));
+            }else{
+                if(entity.getShareAmt().compareTo(BigDecimal.ZERO)<=0){
+                    errorList.add(new ValidMessage("券面总额必须大于0"));
+                }
             }
             if(StringUtil.isEmpty(entity.getSettleMethod())){
                 errorList.add(new ValidMessage("请输入结算方式"));

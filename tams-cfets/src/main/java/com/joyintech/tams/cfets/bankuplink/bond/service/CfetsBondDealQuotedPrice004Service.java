@@ -159,8 +159,15 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             if(null==entity.getSettleDate()){
                 errorList.add(new ValidMessage("请输入结算日期"));
             }
+            if(null!=entity.getPrice()&&entity.getPrice().compareTo(BigDecimal.ZERO)<=0){
+                errorList.add(new ValidMessage("净价必须大于0"));
+            }
             if(null==entity.getShareAmt()){
                 errorList.add(new ValidMessage("请输入券面总额"));
+            }else{
+                if(entity.getShareAmt().compareTo(BigDecimal.ZERO)<=0){
+                    errorList.add(new ValidMessage("券面总额必须大于0"));
+                }
             }
             if(StringUtil.isEmpty(entity.getSettleMethod())){
                 errorList.add(new ValidMessage("请输入结算方式"));
@@ -196,6 +203,10 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 if(null==ptlAllocatio.getShareAmt()){
                     errorList.add(new ValidMessage("请输入组合分配券面总额"));
                     break;
+                }else{
+                    if(ptlAllocatio.getShareAmt().compareTo(BigDecimal.ZERO)<=0){
+                        errorList.add(new ValidMessage("组合分配券面总额必须大于0"));
+                    }
                 }
                 if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())){
                     if(null==ptlAllocatio.getDealFeeAmt()){
