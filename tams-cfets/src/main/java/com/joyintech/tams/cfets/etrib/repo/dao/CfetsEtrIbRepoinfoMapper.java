@@ -102,6 +102,8 @@ public interface CfetsEtrIbRepoinfoMapper {
      * @return
      */
     List<SelectOptionDto> getPledgeStockIdByPortfolioId(Map<String, Object> param);
+
+    List<SelectOptionDto> getPledgeStockId(Map<String, Object> param);
     
     /**
      * 查询登录用户是否满足指定的角色岗位 

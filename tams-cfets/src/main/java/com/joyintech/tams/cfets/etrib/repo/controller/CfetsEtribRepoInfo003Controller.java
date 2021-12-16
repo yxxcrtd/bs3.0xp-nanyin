@@ -7,8 +7,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsPledgeBondInfoDto;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfo003Service;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
@@ -18,16 +18,13 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +66,7 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
      * @return
      */
     @Override
+    @RequestMapping(PAGE_INIT)
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.交易场所);
         this.setSelectOptionToModel(model, DictCode.交易市场);
@@ -180,39 +178,7 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
         // ----------add by zhangrui1 20200715 预占功能 start----------
         List<CfetsEtribRepoInfo003Dto> dataList = new ArrayList<>();
         // ----------add by zhangrui1 20200715 预占功能 end----------
-        for(CfetsEtribRepoInfo003Dto dto: RepoInfoDto.getEtrInvestRepoInfoDtos()) {
-            if (StringUtil.isEmpty(dto.getEntrustId())) {
-                BussinessCodeParameter param = new BussinessCodeParameter();
-                param.setCommonBusinessType(DictCodeList.共通业务类型_回购投资委托);
-                String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(
-                        param) : IDGenerator.generate();
-                dto.setEntrustId(code);
-            }
-            // ----------add by zhangrui1 20200715 预占功能 start----------
-            if (StringUtil.isNotEmpty(dto.getEntrustId())) {
-                dataList.add(dto);
-            }
-            // ----------add by zhangrui1 20200715 预占功能 end----------
-            if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL), "02")
-                    ||StringUtil.equals(RepoInfoDto.getPs(), DictCodeListExt1.回购方向_正回购.getValue())){
-                dto.setBussRepoSec(new BussRepoSecDto());
-                dto.getBussRepoSec().setPageFrom(this.getPageId());;
-                List<PledgeBondInfoDto> pledgeBondList= new ArrayList<>();
-                // ZGZGST-2152: 回购方向是逆回购时,质押券信息列表明细是null,增加非空判断 fuyongsheng 20210907 edit start
-                if(CollectionUtils.isNotEmpty(RepoInfoDto.getPledgeBondTotalListDetailed())){
-                    for(CfetsPledgeBondInfoDto cfetsPledgeBondInfoDto :RepoInfoDto.getPledgeBondTotalListDetailed()){
-                        if(StringUtil.equals(dto.getPortfolioId(), cfetsPledgeBondInfoDto.getPortfolioId())){
-                            //组合代码相同
-                            PledgeBondInfoDto pledgeBondInfoDto =new PledgeBondInfoDto();
-                            BeanUtil.copyPropertiesIgnoreNull(pledgeBondInfoDto, cfetsPledgeBondInfoDto);
-                            pledgeBondList.add(pledgeBondInfoDto);
-                        }
-                    }
-                }
-                // ZGZGST-2152: 回购方向是逆回购时,质押券信息列表明细是null,增加非空判断 fuyongsheng 20210907 edit end
-                dto.getBussRepoSec().setPledgeBondList(pledgeBondList);
-            }
-        }
+        cfetsEtrIbRepoinfo003Service.packageEquity(RepoInfoDto,dataList);
         if (StringUtil.equals(BussinessConstant.SUBMIT, RepoInfoDto.getOperateType())) {
             AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
                     dataList, DictCodeList.平安资产类型_质押式回购.getValue(),
@@ -251,8 +217,17 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
                         + entity.getEntrustAmt());
         processParameter.setWorkFlowParameter(params);
 
-        String msg = cfetsEtrIbRepoinfo003Service.start(processParameter, RepoInfoDto);
-        return new Message<AjaxResult>().setData(new AjaxResult(msg));
+//        String msg = cfetsEtrIbRepoinfo003Service.start(processParameter, RepoInfoDto);
+//        return new Message<AjaxResult>().setData(new AjaxResult(msg));
+        String msg = null;
+        try {
+            msg = cfetsEtrIbRepoinfo003Service.start(processParameter, RepoInfoDto);
+            AjaxResult m =new AjaxResult(msg);
+            return new Message<AjaxResult>().success().setData(m);
+        }catch (Exception e) {
+            logger.error("保存银行间质押式多组合指令新建失败",e);
+            return PositionUtil.ajaxErrorReturn(e);
+        }
     }
 
 

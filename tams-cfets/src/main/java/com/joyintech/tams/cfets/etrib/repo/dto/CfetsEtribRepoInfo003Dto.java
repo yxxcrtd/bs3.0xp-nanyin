@@ -16,6 +16,7 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -184,6 +185,7 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
         this.termType = termType;
     }
 
+    @PrimaryKey(value= PrimaryKey.Field.PK_1)
     public String getTotalEtrustId() {
         return totalEtrustId;
     }

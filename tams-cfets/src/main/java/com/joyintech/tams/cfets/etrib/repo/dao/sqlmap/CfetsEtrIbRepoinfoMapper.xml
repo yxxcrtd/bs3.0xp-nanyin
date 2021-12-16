@@ -7,18 +7,18 @@
             resultType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoZLCXResponse">
          select aaa.*  from (
             <choose>
-                <when test="entrustStatus == ''">
-                    <!-- 查询全部状态 -->
+                <when test=" search!=null and search == '有效'">
                     <include refid="onlyEtrEntrust"></include>
-                    UNION ALL
-                    <include refid="onlyWtfEtrEntrust"></include>
                 </when>
-                <when test="entrustStatus == ENTRUST_STATUS_08"> 
+                <when test=" search!=null and search == '流程中' ">
                     <!-- 只查流程中的数据 -->
                     <include refid="onlyWtfEtrEntrust"></include>
                 </when>
                 <otherwise>
+                    <!-- 查询全部状态 -->
                     <include refid="onlyEtrEntrust"></include>
+                    UNION ALL
+                    <include refid="onlyWtfEtrEntrust"></include>
                 </otherwise>
             </choose>
         ) aaa 
@@ -163,16 +163,19 @@
                 #{item}
             </foreach>
         </if>
-        <if test="ps != null and !ps.equals('')"><!-- 交易方向 -->
-            AND T1.PS=#{ps}
+        <if test="psList != null and !psList.size() > 0"><!-- 交易方向 -->
+            AND T1.PS in
+            <foreach collection="psList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
-        <if test="termTypeList !=null and ! termTypeList.equals('')"><!-- 期限品种 -->
+        <if test="termTypeList !=null and ! termTypeList.size() > 0"><!-- 期限品种 -->
             AND T7.TERM_TYPE in
             <foreach collection="termTypeList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
-        <if test="entrustStatusList != null and entrustStatusList != ''">
+        <if test="entrustStatusList != null and entrustStatusList.size() > 0">
             AND T1.ENTRUST_STATUS in
             <foreach collection="entrustStatusList" item="item" open="(" close=")" separator=",">
                 #{item}
@@ -184,13 +187,13 @@
         <if test="entrustDateEnd != null and entrustDateEnd != ''">
             AND T1.ENTRUST_Date &lt;= to_date(#{entrustDateEnd},'yyyy-MM-dd')
         </if>
-        <if test="entrustIdList != null and entrustIdList != ''"><!-- 指令编号 -->
+        <if test="entrustIdList != null and entrustIdList.size() > 0"><!-- 指令编号 -->
             AND T1.ENTRUST_ID in
             <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
-        <if test="invManagerIdList != null and invManagerIdList != ''"><!-- 投资经理 -->
+        <if test="invManagerIdList != null and invManagerIdList.size() > 0"><!-- 投资经理 -->
             AND T1.INV_MANAGER_ID in
             <foreach collection="invManagerIdList" item="item" open="(" close=")" separator=",">
                 #{item}
@@ -199,18 +202,18 @@
     </sql>
     
     <sql id="keywordsWhere">
-        <if test="keywords != null and keywords != ''">
+        <if test="search != null and search != ''">
             <where>( aaa.entrustId || '|' || aaa.entrustStatus || '|' || aaa.invManagerId || '|' || aaa.portfolioId || '|'
                 || aaa.portfolioName || '|' || aaa.repoTerm || '|' || aaa.ps || '|' || priceModel
                 || '|' || aaa.settleSpreed || '|' || aaa.approver || '|' || aaa.REMARK
                 || '|' || sdl_es.item_value || '|' || sdl_pm.item_value || '|' || sdl_ps.item_value
-                like '%' || #{keywords} || '%'
-                or to_char(aaa.termType)=#{keywords}
-                or to_char(aaa.entrustAmt)=#{keywords}
-                or to_char(aaa.price)=#{keywords}
-                or aaa.entrustDate=#{keywords}
-                or aaa.execProcess=#{keywords}
-                or aaa.transProcess=#{keywords}
+                like '%' || #{search} || '%'
+                or to_char(aaa.termType)=#{search}
+                or to_char(aaa.entrustAmt)=#{search}
+                or to_char(aaa.price)=#{search}
+                or aaa.entrustDate=#{search}
+                or aaa.execProcess=#{search}
+                or aaa.transProcess=#{search}
                 )
             </where>
         </if>
@@ -366,11 +369,11 @@
         left join SYS_DATADICT_LIST sdl_es on aaa.gradeResult=sdl_es.ITEM_CODE and sdl_es.DICT_CODE='MAIN_GRADE_RESULT'
         left join SYS_DATADICT_LIST sdl_pm on aaa.registOrg=sdl_pm.ITEM_CODE and sdl_pm.DICT_CODE='REGIST_ORG'
         left join SYS_DATADICT_LIST sdl_ps on aaa.finProdType=sdl_ps.ITEM_CODE and sdl_ps.DICT_CODE='CUSTOM_ASSET_TYPE_FOUR'
-        <if test="keywords != null and keywords != ''">
+        <if test="search != null and search != ''">
             <where>(aaa.portfolioId || '|'
                 || aaa.portfolioName || '|' || aaa.secAcctIdStr || '|' || sdl_ps.ITEM_VLUE || '|' || priceModel
                 || '|' || sdl_es.ITEM_VLUE || '|' || aaa.zyqk || '|' || sdl_pm.ITEM_VLUE
-                like '%' || #{keywords} || '%'
+                like '%' || #{search} || '%'
                 )
             </where>
         </if>
@@ -487,17 +490,29 @@
         <if test="pledgeStockId != null and pledgeStockId != ''">
            and psc.PLEDGE_STOCK_ID = #{pledgeStockId}
       	</if>
-      	<if test="profitType != null and profitType != ''">
-           and grp.PROFIT_TYPE = #{profitType}
+      	<if test="profitTypeList != null and profitTypeList != ''">
+            and grp.PROFIT_TYPE  in
+            <foreach collection="profitTypeList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
       	</if>
-      	<if test="openType != null and openType != ''">
-           and T2.OPEN_TYPE = #{openType}
+      	<if test="openTypeList != null and openTypeList != ''">
+            and T2.OPEN_TYPE in
+            <foreach collection="openTypeList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+      	<if test="raiseTypeList != null and raiseTypeList != ''">
+            and T2.RAISE_TYPE in
+            <foreach collection="raiseTypeList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
       	</if>
-      	<if test="raiseType != null and raiseType != ''">
-           and T2.RAISE_TYPE = #{raiseType}
-      	</if>
-      	<if test="investNature != null and investNature != ''">
-           and T2.INVEST_NATURE = #{investNature}
+      	<if test="investNatureList != null and investNatureList != ''">
+            and T2.INVEST_NATURE in
+            <foreach collection="investNatureList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
       	</if>
 			AND grp.PORTFOLIO_ID    IN
 			  (SELECT PORTFOLIO_ID FROM PTL_PORTFOLIO_AUTHORITY WHERE USER_ID = #{username}
@@ -749,9 +764,15 @@
         	</if>
         	</if>
         </where>
-    </select>  
-    
-     <!-- 查询登录用户是否满足指定的角色岗位 -->
+    </select>
+
+    <select id="getPledgeStockId" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select distinct
+        t.pledge_stock_id id,
+        t.pledge_stock_name text
+        from ETR_SEC_STOCK t
+    </select>
+    <!-- 查询登录用户是否满足指定的角色岗位 -->
     <select id="selectUserRolePosList" resultType="java.lang.Long">    
     	select 
     		count(sys_user.user_name)

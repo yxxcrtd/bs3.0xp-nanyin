@@ -212,5 +212,11 @@ public class CfetsEtrIbRepoPositionRequest {
 		this.ptlSecList = ptlSecList;
 	}
 
-    
+	public String getRepoPledgeModel() {
+		return repoPledgeModel;
+	}
+
+	public void setRepoPledgeModel(String repoPledgeModel) {
+		this.repoPledgeModel = repoPledgeModel;
+	}
 }

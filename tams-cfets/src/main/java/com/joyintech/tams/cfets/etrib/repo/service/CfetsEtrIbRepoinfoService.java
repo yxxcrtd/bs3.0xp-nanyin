@@ -19,9 +19,9 @@ import com.joyintech.framework.security.User;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbdoRiskcalDto;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
@@ -34,7 +34,6 @@ import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
 import com.joyintech.tams.common.base.entity.PtlSecStock;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -85,6 +84,7 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
      */
     public Page<CfetsEtrRepoZLCXResponse> findZlglPage(CfetsEtrRepoZLCXRequest cfetsEtrRepoZLCXRequest) {
         Map<String, Object> pageParam = BeanUtil.object2Map(cfetsEtrRepoZLCXRequest);
+        pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
         pageParam.put("FINPROD_TYPE2_Z", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         pageParam.put("FINPROD_TYPE2_N", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         pageParam.put("ENTRUST_STATUS_08", DictCodeListExt3.委托状态_流程中.getValue());
@@ -134,69 +134,43 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         }
         List<ValidMessage> messages = new ArrayList<>();
         boolean chlId = false;
-        if(cfetsDto.getSelectedItem()==null||cfetsDto.getSelectedItem().size()<=0){
+        if(cfetsDto.getEtrInvestRepoInfoDtos()==null||cfetsDto.getEtrInvestRepoInfoDtos().size()<=0){
             messages.add(new ValidMessage("portfolioSeries", "请输入组合信息"));
         }
-        List<CfetsEtrRepoSaveRequest> dtoList = cfetsDto.getSelectedItem();
-        if(dtoList.size()>0) {
-            messages = this.bussValid(dtoList.get(0));
-            CfetsEtrRepoSaveRequest dto = dtoList.get(0);
-            if(!StringUtil.isNotEmpty(dto.getPriceModel()))
-                messages.add(new ValidMessage("priceModel", "请输入价格模式。"));
-            if(!StringUtil.isNotEmpty(dto.getEntrustDate()))
-                messages.add(new ValidMessage("entrustDate", "请输入指令开始日。"));
-            if(!StringUtil.isNotEmpty(dtoList.get(0).getSettleSpreed()))
-                messages.add(new ValidMessage("settleSpreed", "请输入清算速度。"));
-            // 价格模式check
-            if (StringUtil.isNotEmpty(dto.getPriceModel()) &&
-                    (StringUtil.equals(dto.getPriceModel(), DictCodeListExt2.价格模式_指定价格.getValue())
-                            || StringUtil.equals(dto.getPriceModel(), DictCodeListExt2.价格模式_限价指令.getValue()))) {
-                // 价格模式选择限价指令，净价必填
-                if (dto.getPrice() == null ) {
-                    messages.add(new ValidMessage("price", "请输入利率。"));
-                }
-            }
-        }
+        List<CfetsEtrRepoSaveRequest> dtoList = cfetsDto.getEtrInvestRepoInfoDtos();
+        CfetsEtrRepoSaveRequest dto = cfetsDto;
+        if(!StringUtil.isNotEmpty(dto.getPriceModel()))
+            messages.add(new ValidMessage("priceModel", "请输入价格模式。"));
+        if(!StringUtil.isNotEmpty(dto.getEntrustDate()))
+            messages.add(new ValidMessage("entrustDate", "请输入指令日期。"));
+        if(!StringUtil.isNotEmpty(dto.getSettleSpreed()))
+            messages.add(new ValidMessage("settleSpreed", "请输入清算速度。"));
+        if(!StringUtil.isNotEmpty(dto.getRepoTerm()))
+            messages.add(new ValidMessage("repoTerm", "请输入回购天数。"));
+        if(!StringUtil.isNotEmpty(dto.getPrice()))
+            messages.add(new ValidMessage("price", "请输入回购利率。"));
+
         for(int i = 0; i< dtoList.size(); i++) {
-//            List<ValidMessage> messageslist = this.valid(dtoList.get(i));
-//            if(!StringUtil.isEmptyList(messageslist)){
-//                if(!StringUtil.isEmptyList(messages)){
-//                    for(ValidMessage message: messageslist){
-//                        boolean flag = true;
-//                        for(ValidMessage msg :messages){
-//                            //错误不一致  显示错误
-//                            if(StringUtil.equals(message.getMessage(), msg.getMessage())){
-//                                flag = false;;
-//                            }
-//                        }
-//                        if(flag){
-//                            messages.add(message);
-//                        }
-//                    }
-//                }else{
-//                    for(ValidMessage message: messageslist){
-//                        //显示错误
-//                        messages.add(message);
-//                    }
-//                }
-//
-//            }
             if(!StringUtil.isNotEmpty(dtoList.get(i).getPortfolioId()))
                 messages.add(new ValidMessage("请输入组合代码(第"+(i+1)+"行)。"));
             if(!StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt()))
                 messages.add(new ValidMessage("请输入指令金额(第"+(i+1)+"行)。"));
 
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL),"03")
-                    &&StringUtil.isNotEmpty(dtoList.get(0).getPs())
-                    &&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(), dtoList.get(0).getPs())
+                    &&StringUtil.isNotEmpty(dto.getPs())
+                    &&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(),dto.getPs())
                     &&!StringUtil.isNotEmpty(dtoList.get(i).getZyqk())){
                 messages.add(new ValidMessage("请输入质押券库(第"+(i+1)+"行)。"));
             }
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL),"02")
-                    &&StringUtil.isNotEmpty(dtoList.get(0).getPs())
-                    &&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(), dtoList.get(0).getPs())){
-                if(StringUtil.isNotEmpty(dtoList.get(i).getPortfolioId())){
-
+                    &&StringUtil.isNotEmpty(dto.getPs())
+                    &&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(), dto.getPs())){
+                if(StringUtil.isNotEmpty(dtoList.get(i).getTotalAmount())){
+                    if(StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt())&&dtoList.get(i).getTotalAmount().compareTo(dtoList.get(i).getTotalAmount())<0){
+                        messages.add(new ValidMessage("(第"+(i+1)+"行)，质押券金额不足。"));
+                    }
+                }else{
+                    messages.add(new ValidMessage("请添加质押券信息(第"+(i+1)+"行)。"));
                 }
             }
         }
@@ -206,13 +180,8 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
             return errorRs;
         }
         return new AjaxResult();
-//        return commonCheck(result, dtoList.get(0).getOperateType());
     }
 
-    private List<ValidMessage> bussValid(CfetsEtrRepoSaveRequest dto) {
-        List<ValidMessage> errorList = new ArrayList<>();
-        return errorList;
-    }
 
 	/**
      * 债券质押持仓信息查询
@@ -235,9 +204,9 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         return result;
     }
     
-    public Page<EtrSecStockConfig> getAssetDetailBySeqno(CfetsEtrRepoPledgeAssetDetailRequest cfetsEtrRepoPledgeAssetDetailRequest) {
+    public List<EtrSecStockConfig> getAssetDetailBySeqno(CfetsEtrRepoPledgeAssetDetailRequest cfetsEtrRepoPledgeAssetDetailRequest) {
     	Map<String, Object> pageParam = BeanUtil.object2Map(cfetsEtrRepoPledgeAssetDetailRequest);
-    	return super.queryForPage(cfetsEtrRepoPledgeAssetDetailRequest.getPageMode().getPageNo(), cfetsEtrRepoPledgeAssetDetailRequest.getPageMode().getPageSize(), () ->cfetsEtrIbRepoinfoMapper.getAssetDetailBySeqno(pageParam));
+    	return cfetsEtrIbRepoinfoMapper.getAssetDetailBySeqno(pageParam);
     }
 
     /**
@@ -435,6 +404,15 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
        return  cfetsEtrIbRepoinfoMapper.getPledgeStockIdByPortfolioId(param);
    }
 
+    /**
+     * 获取质押库下拉框
+     * @return 质押库下拉框
+     */
+    public List<SelectOptionDto> getPledgeStockId(CfetsSearchPledgeStockRequest cfetsSearchPledgeStockRequest) {
+        Map<String,Object> param = BeanUtil.object2Map(cfetsSearchPledgeStockRequest);
+        return  cfetsEtrIbRepoinfoMapper.getPledgeStockId(param);
+    }
+
 	public Long selectUserRolePosList(Map<String, Object> map) {
 		return cfetsEtrIbRepoinfoMapper.selectUserRolePosList(map);
 	}
@@ -442,6 +420,9 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
 
     public String doRiskcalCheckMethod(CfetsEtribRepoInfo003Dto dto){
         //参数不能为空
+        if(StringUtil.isEmpty(dto.getPs())){
+            return "交易方向";
+        }
         if(StringUtil.isEmptyList(dto.getEtrInvestRepoInfoDtos())){
             return "组合分配列表不能为空";
         }
@@ -451,41 +432,34 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
                 if(!StringUtil.isNotEmpty(item.getPortfolioId())){
                     messages.add("请输入组合名称。");
                 }
-                if(!StringUtil.isNotEmpty(item.getEntrustNum())){
+                if(!StringUtil.isNotEmpty(item.getEntrustAmt())){
                     messages.add("请输入指令金额。");
                 }
             }
         }
-//        if(!StringUtil.isNotEmpty(dto.getFinprodId())){
-//            messages.add("请输入资产代码。");
-//        }
         if(messages.size()>0) {
             return  StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE);
         }
         return null;
     }
 
-    public  Map<String, Object> doRiskcalPackageEquity(CfetsEtribRepoInfo003Dto dto) {
-        Map<String, Object> dataMap=new HashMap<>();
+    public  List<Map<String, Object>> doRiskcalPackageEquity(CfetsEtribRepoInfo003Dto dto) {
+        List<Map<String, Object>> dataMapList=new ArrayList<>();
         //风险试算封装dto
-        CfetsEtrIbdoRiskcalDto d=new CfetsEtrIbdoRiskcalDto();
-        BeanUtil.copyPropertiesIgnoreNull(d,dto);
         List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
         for(CfetsEtribRepoInfo003Dto pt:dto.getEtrInvestRepoInfoDtos()){
             pt.setInvAim(pt.getBusinessModel());
-            bussTrdTransfenpeiDto.add(BeanUtil.object2Map(pt));
+            pt.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
+            pt.setFinprodType2(DictCodeList.平安资产类型_质押式回购.getValue());
+            pt.setVdate(dto.getEntrustDate());
+            pt.setMdate(dto.getEntrustDate());;
+            pt.setCcy("CNY");
+            pt.setPs(dto.getPs());
+            Map<String,Object> map = BeanUtil.object2Map(pt);
+            map.put("vdate",DateUtil.format(dto.getEntrustDate()));
+            dataMapList.add(map);
         }
-        d.setBussTrdTransfenpeiDto(bussTrdTransfenpeiDto);
-        d.setBusiType("02");
-        d.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
-        d.setFinprodType2(DictCodeList.平安资产类型_质押式回购.getValue());
-        d.setVdate(dto.getEntrustDate());
-        d.setMdate(dto.getEntrustDate());;
-        d.setCcy("CNY");
-        d.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
-
-        dataMap=BeanUtil.object2Map(d);
-        return dataMap;
+        return dataMapList;
 
     }
 
@@ -642,6 +616,7 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         calendar.add(Calendar.MONTH,1);
         return calendar.getTime();
     }
+
 
 }
 

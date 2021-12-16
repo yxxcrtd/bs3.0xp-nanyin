@@ -34,8 +34,8 @@ public class CfetsEtrRepoZLCXPositionRequest {
     @ApiModelProperty(name="finprodTypeList",value="债券分类",example="CBC")
     private List<String> finprodTypeList;
 
-    @ApiModelProperty(name="keywords",value="关键字",example="CBC")
-    private String keywords;
+    @ApiModelProperty(name="search",value="关键字",example="CBC")
+    private String search;
 
     public PageMode getPageMode() {
         return pageMode;
@@ -93,11 +93,11 @@ public class CfetsEtrRepoZLCXPositionRequest {
         this.finprodTypeList = finprodTypeList;
     }
 
-    public String getKeywords() {
-        return keywords;
+    public String getSearch() {
+        return search;
     }
 
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
+    public void setSearch(String search) {
+        this.search = search;
     }
 }

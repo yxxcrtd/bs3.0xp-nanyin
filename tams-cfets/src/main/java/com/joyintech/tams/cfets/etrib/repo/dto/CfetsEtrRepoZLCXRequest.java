@@ -19,11 +19,11 @@ public class CfetsEtrRepoZLCXRequest {
     @ApiModelProperty(name="portfolioIdList",value="组合代码",example="['1','2']")
     private List<String> portfolioIdList;
 
-    @ApiModelProperty(name="ps",value="交易方向",example="03")
-    private String ps;
+    @ApiModelProperty(name="psList",value="交易方向",example="['03','04']")
+    private List<String> psList;
 
     @ApiModelProperty(name="termTypeList",value="期限品种",example="['R001','R007']")
-    private String termTypeList;
+    private List<String> termTypeList;
 
     @ApiModelProperty(name="entrustStatusList",value="指令状态",example="['1','2']")
     private List<String> entrustStatusList;
@@ -40,8 +40,8 @@ public class CfetsEtrRepoZLCXRequest {
     @ApiModelProperty(name="invManagerIdList",value="投资经理",example="['wp']")
     private List<String> invManagerIdList;
 
-    @ApiModelProperty(name="keywords",value="关键词",example="wp")
-    private String keywords;
+    @ApiModelProperty(name="search",value="关键词",example="wp")
+    private String search;
 
     public PageMode getPageMode() {
         return pageMode;
@@ -59,19 +59,19 @@ public class CfetsEtrRepoZLCXRequest {
         this.portfolioIdList = portfolioIdList;
     }
 
-    public String getPs() {
-        return ps;
+    public List<String> getPsList() {
+        return psList;
     }
 
-    public void setPs(String ps) {
-        this.ps = ps;
+    public void setPsList(List<String> psList) {
+        this.psList = psList;
     }
 
-    public String getTermTypeList() {
+    public List<String> getTermTypeList() {
         return termTypeList;
     }
 
-    public void setTermTypeList(String termTypeList) {
+    public void setTermTypeList(List<String> termTypeList) {
         this.termTypeList = termTypeList;
     }
 
@@ -115,11 +115,11 @@ public class CfetsEtrRepoZLCXRequest {
         this.entrustDateEnd = entrustDateEnd;
     }
 
-    public String getKeywords() {
-        return keywords;
+    public String getSearch() {
+        return search;
     }
 
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
+    public void setSearch(String search) {
+        this.search = search;
     }
 }

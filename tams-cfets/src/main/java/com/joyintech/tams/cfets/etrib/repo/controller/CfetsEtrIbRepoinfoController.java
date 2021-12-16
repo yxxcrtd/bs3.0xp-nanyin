@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.cfets.etrib.repo.controller;
 
+import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
@@ -19,7 +20,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -128,11 +128,16 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         initPageParams.put("isRiskmathSoftcontrol", CacheUtil.getSysParam("IS_RISKMATH_SOFTCONTROL"));
         //数据字典初始化数据
         initPageParams.put("FINPROD_TYPE", this.getSelectDataFromDataDic(DictCode.行内资产四级分类, null));
+        initPageParams.put("FINPROD_TYPE_THREE", this.getSelectDataFromDataDic(DictCode.行内资产三级分类, null));
         initPageParams.put("PRICE_MODEL", this.getSelectDataFromDataDic(DictCode.价格模式, null));
         initPageParams.put("ACCOUNT_SPEED", this.getSelectDataFromDataDic(DictCode.清算速度, null));
         initPageParams.put("REGIST_ORG", this.getSelectDataFromDataDic(DictCode.登记托管机构, null));
         initPageParams.put("MAIN_GRADE_RESULT", this.getSelectDataFromDataDic(DictCode.评级结果, null));
         initPageParams.put("TERM_TYPE_REBACK", this.getSelectDataFromDataDic(DictCode.回购期限品种, null));
+        initPageParams.put("PROFIT_TYPE",this.getSelectDataFromDataDic(DictCode.收益类型, null));
+        initPageParams.put("ISSUE_MODE",this.getSelectDataFromDataDic(DictCode.开放类型, null));
+        initPageParams.put("RAISE_TYPE",this.getSelectDataFromDataDic(DictCode.募集方式, null));
+        initPageParams.put("INVEST_TYPE",this.getSelectDataFromDataDic(DictCode.投资性质, null));
         //pageId
         initPageParams.put("pageId", "CfetsEtrIbRepoinfo003");
         return new Message<Map<String, Object>>(initPageParams).success();
@@ -292,17 +297,15 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
             }
             CfetsEtribdoRiskcalResponse result=new CfetsEtribdoRiskcalResponse();
             //风险试算组装dto
-            Map<String, Object> dataMap= null;
-            //TODO
-//                    cfetsEtrIbBondinfoService.doRiskcalPackageEquity(dto);
-            List<String> resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F07");
+            List<Map<String, Object>> dataMap= cfetsEtrIbRepoinfoService.doRiskcalPackageEquity(dto);
+            String resultArrList=interfRiskRdsController.batchRiskTrialRds(dataMap,"0", "F07");
             result.setRiskMathFlag("02");
             Boolean forbidFlag=false;
             Boolean cluflag=true;
             List<CfetsEtribdoRiskcalResponse> resultlist=new ArrayList<>();
-            if(!StringUtil.isEmptyList(resultArrList) ){
-                for(String row:resultArrList){
-                    ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
+            if(StringUtil.isNotEmpty(resultArrList) ){
+//                for(String row:resultArrList){
+                    ClientData resultArr = JsonUtils.json2Object(resultArrList, ClientData.class);
                     if(StringUtil.isNotEmpty(resultArr) && StringUtil.isNotEmpty(resultArr.getHead())
                             && StringUtil.isNotEmpty(resultArr.getHead().get("std400msgt"))
                     ){
@@ -342,7 +345,7 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
                             result.setRiskTrialSpan("试算通过");
                         }
                     }
-                }
+//                }
             }
             AjaxResult m =new AjaxResult();
             m.setData(result);

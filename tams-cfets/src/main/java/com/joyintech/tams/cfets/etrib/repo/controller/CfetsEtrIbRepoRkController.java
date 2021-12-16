@@ -4,27 +4,20 @@ import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.pojo.Message;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoRkDto;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoPledgeAssetDetailRequest;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsTreePortfolioRequest;
-import com.joyintech.tams.cfets.etrib.repo.dto.CfetsTreePortfolioResponse;
+import com.joyintech.tams.cfets.etrib.repo.dto.*;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoRKService;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfoService;
 import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.workflow.engine.constant.OperationType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,16 +56,6 @@ public class CfetsEtrIbRepoRkController extends BaseController {
     @Autowired
     private BaseGetBusinessId baseGetBusinessId;
 	
-
-    @Override
-    public String init(Model model) {
-    	this.setSelectOptionToModel(model, DictCode.是否,DictCode.WIND一级分类_含债券一级分类等,
-                DictCode.WIND二级分类_含债券二级分类等,DictCode.评级结果);
-            model.addAttribute("NO",DictCodeListExt1.是否_否.getValue());
-            model.addAttribute("YES",DictCodeListExt1.是否_是.getValue());
-        return super.init(model);
-    }
-
     /**
      * 组合树
      * @return
@@ -81,15 +64,33 @@ public class CfetsEtrIbRepoRkController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "组合树", notes = "组合树")
     public Message<List<CfetsTreePortfolioResponse>> getInterGroup(@RequestBody CfetsTreePortfolioRequest cfetsTreePortfolioRequest){
-    	Map<String,Object> map = BeanUtil.object2Map(cfetsTreePortfolioRequest);
-    	if(StringUtil.equals("select", getParam("pledgeStockId"))){
-    		map.put("pledgeStockId", "");
-    	}else{
-    		map.put("pledgeStockId", getParam("pledgeStockId"));
-    	}
-    	map.put("portfolioId", getParam("portfolioId"));
-    	List<CfetsTreePortfolioResponse> treeList = cfetsEtrIbRepoinfoService.getTreeNodeList(map);
-    	return new Message<List<CfetsTreePortfolioResponse>>(treeList).success();
+    	try{
+    	    Map<String,Object> map = BeanUtil.object2Map(cfetsTreePortfolioRequest);
+//            if(StringUtil.equals("select", getParam("pledgeStockId"))){
+//                map.put("pledgeStockId", "");
+//            }else{
+//                map.put("pledgeStockId", getParam("pledgeStockId"));
+//            }
+            map.put("portfolioId", getParam("portfolioId"));
+            List<CfetsTreePortfolioResponse> treeList = cfetsEtrIbRepoinfoService.getTreeNodeList(map);
+            return new Message<List<CfetsTreePortfolioResponse>>().success().setData(treeList);
+        }catch (Exception e){
+    	    e.printStackTrace();
+            return new Message<List<CfetsTreePortfolioResponse>>().fail();
+        }
+    }
+
+    @PostMapping("getPledgeStockId")
+    @ResponseBody
+    @ApiOperation(value = "质押库：列表", notes = "质押库：列表")
+    public Message<List<SelectOptionDto>> getPledgeStockId(@RequestBody CfetsSearchPledgeStockRequest params) {
+        try {
+            List<SelectOptionDto> page = cfetsEtrIbRepoinfoService.getPledgeStockId(params);
+            return new Message<List<SelectOptionDto>>().success().setData(page);
+        } catch (Exception e) {
+            return new Message<List<SelectOptionDto>>().fail().setMessage("查询异常");
+        }
+
     }
     
     /**
@@ -102,12 +103,16 @@ public class CfetsEtrIbRepoRkController extends BaseController {
      */
     @ResponseBody
     @PostMapping("findPage")
-    @ApiOperation(value = "质押券库查询", notes = "质押券库查询")
-    public Message<Page<EtrSecStockConfig>> findPage(@RequestBody CfetsEtrRepoPledgeAssetDetailRequest cfetsEtrRepoPledgeAssetDetailRequest) {
-        if (StringUtil.isNotEmpty(cfetsEtrRepoPledgeAssetDetailRequest.getPledgeStockId())) {
-            return new Message<Page<EtrSecStockConfig>>(cfetsEtrIbRepoinfoService.getAssetDetailBySeqno(cfetsEtrRepoPledgeAssetDetailRequest)).success();
+    @ApiOperation(value = "质押券库设置查询", notes = "质押券库设置查询")
+    public Message<List<EtrSecStockConfig>> findPage(@RequestBody CfetsEtrRepoPledgeAssetDetailRequest cfetsEtrRepoPledgeAssetDetailRequest) {
+        try{
+            if (StringUtil.isNotEmpty(cfetsEtrRepoPledgeAssetDetailRequest.getPledgeStockId())) {
+                return new Message<List<EtrSecStockConfig>>().success().setData(cfetsEtrIbRepoinfoService.getAssetDetailBySeqno(cfetsEtrRepoPledgeAssetDetailRequest));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        return new Message<Page<EtrSecStockConfig>>().success();
+        return new Message<List<EtrSecStockConfig>>().fail();
     }
     
     /**
@@ -121,33 +126,18 @@ public class CfetsEtrIbRepoRkController extends BaseController {
     @ApiOperation(value = "删除质押券库", notes = "删除质押券库")
     public Message<AjaxResult> delete(@RequestBody CfetsEtrIbRepoRkDto dto, BindingResult br)
         throws Exception {
-        if (br.hasErrors()) {
-            return new Message<AjaxResult>().setData(new AjaxResult(br));
+        try{
+            if (br.hasErrors()) {
+                return new Message<AjaxResult>().setData(new AjaxResult(br));
+            }
+            cfetsEtrIbRepoRKService.doComplete(dto,OperationType.DELETE);
+            return new Message<AjaxResult>().success().setData(new AjaxResult("删除成功"));
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Message<AjaxResult>().fail().setData(new AjaxResult("删除失败"));
         }
-        cfetsEtrIbRepoRKService.doComplete(dto,OperationType.DELETE);
-        return new Message<AjaxResult>().setData(new AjaxResult("删除成功"));
     }
-    
-    /**
-     * 保存按钮点击时的check
-     *
-     * @param dto
-     * @param result BindingResult
-     * @return check结果
-     * @see
-     * @since 1.0
-     */
-//    @ResponseBody
-//    @PostMapping("checkq")
-//    @ApiOperation(value = "保存按钮点击时的check", notes = "保存按钮点击时的check")
-//    public Message<AjaxResult> check(@RequestBody @Validated({
-//            ValidateGroupEdit.class}) CfetsEtrIbRepoRkDto dto, BindingResult result) {
-//        if (result != null && result.hasErrors()) {
-//            return new Message<AjaxResult>().setData(new AjaxResult(result));
-//        }
-//        return new Message<AjaxResult>().setData(commonCheck(result, dto.getOperateType()));
-//    }
-    
+
     /**
      * 批量提交
      *
@@ -160,23 +150,31 @@ public class CfetsEtrIbRepoRkController extends BaseController {
     @ApiOperation(value = "质押券库保存", notes = "自动入库提交")
     public Message<AjaxResult> save(@RequestBody CfetsEtrIbRepoRkDto RepoInfoDto, BindingResult br)
             throws Exception {
-        if (br.hasErrors()) {
-            return new Message<AjaxResult>().setData(new AjaxResult(br));
+        try{
+            if (br.hasErrors()) {
+                return new Message<AjaxResult>().fail().setData(new AjaxResult(br));
+            }
+            // 临时主键
+            // 业务代码生成参数
+            //前台默认
+    //        BussinessCodeParameter parameter = new BussinessCodeParameter();
+    //        parameter.setSeqNo("0666");
+    //        RepoInfoDto.setPledgeStockId(baseGetBusinessId.buildBussinessCode(parameter));
+            String generatedId = IDGenerator.generate();
+            for (int i = 0; i < RepoInfoDto.getEtrSecStockConfig().size(); i++) {
+                RepoInfoDto.getEtrSecStockConfig().get(i).setConfigId(IDGenerator.generate());
+                RepoInfoDto.getEtrSecStockConfig().get(i).setPledgeStockId(RepoInfoDto.getPledgeStockId());
+            }
+            for (int i = 0; i < RepoInfoDto.getPtlSecStock().size(); i++) {
+                RepoInfoDto.getPtlSecStock().get(i).setPledgeStockName(RepoInfoDto.getPledgeStockName());
+                RepoInfoDto.getPtlSecStock().get(i).setPledgeStockId(RepoInfoDto.getPledgeStockId());
+            }
+             cfetsEtrIbRepoRKService.doComplete(RepoInfoDto, OperationType.NEW);
+            return new Message<AjaxResult>().success().setData(new AjaxResult("保存成功"));
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Message<AjaxResult>().fail().setData(new AjaxResult("删除失败"));
         }
-        // 临时主键
-        // 业务代码生成参数
-        BussinessCodeParameter parameter = new BussinessCodeParameter();
-        parameter.setSeqNo("0666");
-        RepoInfoDto.setPledgeStockId(baseGetBusinessId.buildBussinessCode(parameter));
-        String generatedId = IDGenerator.generate();
-        for (int i = 0; i < RepoInfoDto.getEtrSecStockConfig().size(); i++) {
-            RepoInfoDto.getEtrSecStockConfig().get(i).setConfigId(IDGenerator.generate());
-        }
-        for (int i = 0; i < RepoInfoDto.getPtlSecStock().size(); i++) {
-            RepoInfoDto.getPtlSecStock().get(i).setPledgeStockName(RepoInfoDto.getPledgeStockName());
-        }
-         cfetsEtrIbRepoRKService.doComplete(RepoInfoDto, OperationType.NEW);
-        return new Message<AjaxResult>().setData(new AjaxResult("保存成功"));
     }
 
 }
