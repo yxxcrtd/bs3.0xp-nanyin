@@ -18,6 +18,7 @@ import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDisp
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
@@ -39,6 +40,7 @@ import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
@@ -113,7 +115,6 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
     /**
      * 流程结束后操作
      *
-     * @param dto           实体类
      * @param type 操作类型
      */
     @Override
@@ -346,6 +347,15 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         }
 	}
 
+    @Override
+    public void doDelete(String workflowId) {
+        CfetsEtribRepoInfo003Dto entity = getBussinessEntityByWorkflowId(workflowId);
+        WFlowCommonService.doCompleteFlow(entity.getWorkflowId());
+        //发送头寸
+        PositionHttpRequest.deleteMethod(entity.getTotalEtrustId(),DictCodeListExt1.子系统代码_委托.getValue());
+    }
+
+
     /**
      * 流程启动时为附件绑定工作流代码 <功能详细描述>
      *
@@ -516,6 +526,19 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 	}
 
     public CfetsEtribRepoInfo003Dto packageEquity(CfetsEtribRepoInfo003Dto RepoInfoDto,List<CfetsEtribRepoInfo003Dto> dataList) {
+        RepoInfoDto.setPrice(RepoInfoDto.getPrice().multiply(new BigDecimal(100)));//前端提交已经修改过此值  改回来
+        //风险
+        CfetsEtribdoRiskcalResponse riskDto=RepoInfoDto.getCfetsEtribdoRiskcalResponse();
+        List<RiskTrialRetDto> riskTrialRetDto=new ArrayList<>();
+        if(StringUtil.isNotEmpty(riskDto) && !StringUtil.isEmptyList(riskDto.getRiskcalReturnList())){
+            for(CfetsEtribdoRiskcalResponse it:riskDto.getRiskcalReturnList()){
+                RiskTrialRetDto t=new RiskTrialRetDto();
+                BeanUtil.copyPropertiesIgnoreNull(t,it);
+                t.setConclusion(riskDto.getRiskTrialSpan());
+                riskTrialRetDto.add(t);
+            }
+        }
+        RepoInfoDto.setRiskTrialRetDto(riskTrialRetDto);
         for(CfetsEtribRepoInfo003Dto dto: RepoInfoDto.getEtrInvestRepoInfoDtos()) {
             if (StringUtil.isEmpty(dto.getEntrustId())) {
                 BussinessCodeParameter param = new BussinessCodeParameter();
@@ -536,11 +559,13 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             dto.setPriceModel(RepoInfoDto.getPriceModel());
             dto.setTermType(RepoInfoDto.getTermType());
             dto.setCounterId(RepoInfoDto.getCounterId());
+            dto.setInvManagerId(SecurityUtil.getLoginUser().getUserName());
             // ----------add by zhangrui1 20200715 预占功能 start----------
             if (StringUtil.isNotEmpty(dto.getEntrustId())) {
                 dataList.add(dto);
             }
             // ----------add by zhangrui1 20200715 预占功能 end----------
+
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL), "02")
                     ||StringUtil.equals(RepoInfoDto.getPs(), DictCodeListExt1.回购方向_正回购.getValue())){
                 dto.setBussRepoSec(new BussRepoSecDto());
@@ -553,6 +578,8 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                             //组合代码相同
                             PledgeBondInfoDto pledgeBondInfoDto =new PledgeBondInfoDto();
                             BeanUtil.copyPropertiesIgnoreNull(pledgeBondInfoDto, cfetsPledgeBondInfoDto);
+                            pledgeBondInfoDto.setPledgeRatio(cfetsPledgeBondInfoDto.getScale());
+                            pledgeBondInfoDto.setPledgeRatio(cfetsPledgeBondInfoDto.getScale());
                             pledgeBondList.add(pledgeBondInfoDto);
                         }
                     }

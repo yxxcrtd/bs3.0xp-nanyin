@@ -91,6 +91,12 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         pageParam.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         pageParam.put("sysDate", iPlatformDate.getSysDateStr());
         pageParam.put("TRADE_PLACE_01", DictCodeListExt1.交易场所_银行间.getValue());
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        int year = c.get(Calendar.YEAR);
+        pageParam.put("year",year);
+        pageParam.put("sort",cfetsEtrRepoZLCXRequest.getPageMode().getSort());
+        pageParam.put("direction",cfetsEtrRepoZLCXRequest.getPageMode().getDirection());
         Page<CfetsEtrRepoZLCXResponse> result = super.queryForPage(cfetsEtrRepoZLCXRequest.getPageMode().getPageNo(), cfetsEtrRepoZLCXRequest.getPageMode().getPageSize(), () -> cfetsEtrIbRepoinfoMapper.findZlglPage(pageParam));
         return result;
     }

@@ -11,10 +11,7 @@ import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfo003Service;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -75,10 +72,7 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.回购类型);
         this.setSelectOptionToModel(model, DictCode.回购期限品种);
         this.setSelectOptionToModel(model, DictCode.清算速度);
-        this.setSelectOptionToModel(model, DictCode.投资目的);
-        this.setSelectOptionToModel(model, DictCode.交易平台);
         this.setSelectOptionToModel(model, DictCode.价格模式);
-        this.setSelectOptionToModel(model, DictCode.组合系列);
         Date sysDate = DateUtil.platDateFromCache();
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         CfetsEtribRepoInfo003Dto entity = null;
@@ -90,7 +84,7 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(entity.getEtrInvestPersonInfo()));
-            model.addAttribute("businessId",workflowId);
+//            model.addAttribute("businessId",workflowId);
             model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(entity.getEtrInvestRepoInfoDtos()));
             model.addAttribute("entity_PledgeBondTotalListDetailed",  JsonUtils.object2Json(entity.getPledgeBondTotalListDetailed()));
             todoList = true;
@@ -204,17 +198,13 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
         params.setPageId("CfetsEtrIbRepoinfo003");
         params.setElementId(RepoInfoDto.getEtrInvestRepoInfoDtos().get(0).getElementId());
         params.setBusinessCode(CfetsEtribRepoInfo003Dto::getTotalEtrustId);
-        params.setBusinessType(DictCodeList.共通业务类型_回购投资委托.getValue());
+        params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务指令_质押式回购.getValue());
 
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
-                entity -> this.getMessage("EtribRepoInfo003") + "(" + entity.getTotalEtrustId() + ")"
-                        + "-" + this.getMessage("EtribRepoInfo003.ps")+"("+ SysDataUtil.getNameFromDataDict(DictCode.回购拆借方向, entity.getPs())+")" + "-" + "("
-                        + this.getMessage("EtribRepoInfo003.vdate") + ":" + DateUtil.format(entity.getVdate())
-                        + ")-(" + this.getMessage("EtribRepoInfo003.mdate") + ":"
-                        + DateUtil.format(entity.getMdate())+ ")-"
-                        + this.getMessage("EtrRepo002.entrustAmt") + ":"
-                        + entity.getEntrustAmt());
+                entity ->  "(" + "指令日期" + ":" + DateUtil.format(entity.getEntrustDate()) + ")-"
+                        +"("+ "回购期限" +entity.getRepoTerm()+ ")-"
+                        + this.getMessage("EtrRepo002.entrustAmt") + ":" + entity.getEntrustAmt());
         processParameter.setWorkFlowParameter(params);
 
 //        String msg = cfetsEtrIbRepoinfo003Service.start(processParameter, RepoInfoDto);

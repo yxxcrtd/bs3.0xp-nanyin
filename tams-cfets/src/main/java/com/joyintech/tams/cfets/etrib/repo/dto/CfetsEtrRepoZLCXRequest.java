@@ -35,7 +35,7 @@ public class CfetsEtrRepoZLCXRequest {
     private String entrustDateEnd;
 
     @ApiModelProperty(name="entrustIdList",value="指令编号",example="['ETRREPO202111290001','ETRREPO202111290001'}")
-    private String entrustIdList;
+    private List<String>  entrustIdList;
 
     @ApiModelProperty(name="invManagerIdList",value="投资经理",example="['wp']")
     private List<String> invManagerIdList;
@@ -75,11 +75,11 @@ public class CfetsEtrRepoZLCXRequest {
         this.termTypeList = termTypeList;
     }
 
-    public String getEntrustIdList() {
+    public List<String> getEntrustIdList() {
         return entrustIdList;
     }
 
-    public void setEntrustIdList(String entrustIdList) {
+    public void setEntrustIdList(List<String> entrustIdList) {
         this.entrustIdList = entrustIdList;
     }
 

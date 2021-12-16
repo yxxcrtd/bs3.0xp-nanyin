@@ -28,6 +28,10 @@
         <!-- 关键字模糊查询 -->
         <include refid="keywordsWhere"></include>
         order by sdl_es.ORDER_NO, aaa.entrustId DESC
+        <!--前端传入排序字段-->
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
+            order by ${sort} ${direction}
+        </if>
     </select>
      <sql id="onlyEtrEntrust">
      	 select
@@ -48,8 +52,8 @@
         T1.VDATE vdate,
         T1.MDATE mdate,
         NVL(T5.FINISH_AMT,0) finishAmt,
-         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 execProcess,
-         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess,
+         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_AMT*100),4)*100 execProcess,
+         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_AMT*100),4)*100 transProcess,
         T1.REMARK,
           null approver,
          TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as entrustDateStr,
@@ -105,8 +109,8 @@
         T1.VDATE vdate,
         T1.MDATE mdate,
         NVL(T5.FINISH_AMT,0) finishAmt,
-         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 execProcess,
-         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess,
+         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_AMT*100),4)*100 execProcess,
+         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_AMT*100),4)*100 transProcess,
         T1.REMARK,
          nextApp.nowUserId as approver,
          TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as entrustDateStr,
@@ -163,13 +167,13 @@
                 #{item}
             </foreach>
         </if>
-        <if test="psList != null and !psList.size() > 0"><!-- 交易方向 -->
+        <if test="psList != null and psList.size() > 0"><!-- 交易方向 -->
             AND T1.PS in
             <foreach collection="psList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
-        <if test="termTypeList !=null and ! termTypeList.size() > 0"><!-- 期限品种 -->
+        <if test="termTypeList !=null and  termTypeList.size() > 0"><!-- 期限品种 -->
             AND T7.TERM_TYPE in
             <foreach collection="termTypeList" item="item" open="(" close=")" separator=",">
                 #{item}
@@ -204,14 +208,18 @@
     <sql id="keywordsWhere">
         <if test="search != null and search != ''">
             <where>( aaa.entrustId || '|' || aaa.entrustStatus || '|' || aaa.invManagerId || '|' || aaa.portfolioId || '|'
-                || aaa.portfolioName || '|' || aaa.repoTerm || '|' || aaa.ps || '|' || priceModel
+                || aaa.portfolioName || '|' || aaa.termType || '|' || aaa.ps || '|' || priceModel
                 || '|' || aaa.settleSpreed || '|' || aaa.approver || '|' || aaa.REMARK
                 || '|' || sdl_es.item_value || '|' || sdl_pm.item_value || '|' || sdl_ps.item_value
                 like '%' || #{search} || '%'
-                or to_char(aaa.termType)=#{search}
+                or to_char(aaa.repoTerm)=#{search}
                 or to_char(aaa.entrustAmt)=#{search}
                 or to_char(aaa.price)=#{search}
                 or aaa.entrustDate=#{search}
+                or aaa.entrustDate||'' =#{search}
+                or aaa.entrustDate=#{year}||'-'||#{search}
+                or replace(aaa.entrustDate,'-','/')=#{search}
+                or replace(aaa.entrustDate,'-','/')=#{year}||'/'||#{search}
                 or aaa.execProcess=#{search}
                 or aaa.transProcess=#{search}
                 )
@@ -227,8 +235,8 @@
         fpt.TYPE_9 finProdType,
         TABLE01.SEC_ACCT_ID secAcctId,/*证券账户/通道代码*/
         TABLE01.FINPROD_ID finProdId,/*金融产品Id*/
-        NVL(TABLE01.pledgeAmount,0) pledgeAmount,/*已质押券面总额*/
-        NVL(TABLE01.pledStrdPrinAmt,0) pledStrdPrinAmt,/*可质押券面总额*/
+        round(NVL(TABLE01.pledgeAmount,0)/10000,2) pledgeAmount,/*已质押券面总额*/
+        round(NVL(TABLE01.pledStrdPrinAmt,0)/10000,2) pledStrdPrinAmt,/*可质押券面总额*/
         case when MST_BOND_VALUATION_INFO.NETPRICE>nvl(prinAmt.prinAmt,100) then nvl(prinAmt.prinAmt,100)
             when  nvl(prinAmt.prinAmt,100)=0 then nvl(prinAmt.prinAmt,100)
           else round(MST_BOND_VALUATION_INFO.NETPRICE/nvl(prinAmt.prinAmt,100),4)*100   end as scale, /*折算比例*/
@@ -487,28 +495,28 @@
                 #{item}
             </foreach>
         </if>
-        <if test="pledgeStockId != null and pledgeStockId != ''">
+        <if test="pledgeStockId != null and pledgeStockId !=''">
            and psc.PLEDGE_STOCK_ID = #{pledgeStockId}
       	</if>
-      	<if test="profitTypeList != null and profitTypeList != ''">
+      	<if test="profitTypeList != null and profitTypeList.size() > 0">
             and grp.PROFIT_TYPE  in
             <foreach collection="profitTypeList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
       	</if>
-      	<if test="openTypeList != null and openTypeList != ''">
+      	<if test="openTypeList != null and openTypeList.size() > 0">
             and T2.OPEN_TYPE in
             <foreach collection="openTypeList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
-      	<if test="raiseTypeList != null and raiseTypeList != ''">
+      	<if test="raiseTypeList != null and raiseTypeList.size() > 0">
             and T2.RAISE_TYPE in
             <foreach collection="raiseTypeList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
       	</if>
-      	<if test="investNatureList != null and investNatureList != ''">
+      	<if test="investNatureList != null and investNatureList.size() > 0">
             and T2.INVEST_NATURE in
             <foreach collection="investNatureList" item="item" open="(" close=")" separator=",">
                 #{item}
@@ -805,18 +813,20 @@
     <resultMap id="Repo003DtoMap" type="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto">
             <id column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR"/>
             <result column="PRICE" property="price" jdbcType="VARCHAR"/>
-            <result column="ENTRUST_AMT" property="entrustAmt" jdbcType="VARCHAR"/>
             <result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR"/>
-            <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR"/>
-            <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="VARCHAR"/>
-            <result column="PLEDGE_STOCK_ID" property="zyqk" jdbcType="VARCHAR"/>
             <result column="PRICE" property="price" jdbcType="VARCHAR"/>
+            <result column="PS" property="ps" jdbcType="VARCHAR"/>
             <result column="ENTRUST_DATE" property="entrustDate" jdbcType="VARCHAR"/>
             <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR"/>
             <result column="TERM_DAYS" property="repoTerm" jdbcType="VARCHAR"/>
-            <result column="SETTLE_SPREED" property="settleSpeed" jdbcType="VARCHAR"/>
+            <result column="SETTLE_SPREED" property="settleSpreed" jdbcType="VARCHAR"/>
             <result column="ENTRUST_DATE" property="entrustDate" jdbcType="VARCHAR"/>
-            <result column="ENTRUST_DATE" property="entrustDate" jdbcType="VARCHAR"/>
+            <collection property="etrInvestRepoInfoDtos" ofType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto">
+                <result column="ENTRUST_AMT" property="entrustAmt" jdbcType="VARCHAR"/>
+                <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR"/>
+                <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="VARCHAR"/>
+                <result column="PLEDGE_STOCK_ID" property="zyqk" jdbcType="VARCHAR"/>
+            </collection>
             <collection property="pledgeBondTotalListDetailed" ofType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
                 <id column="FINPROD_ID" property="bondCode" jdbcType="VARCHAR" />
                 <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />

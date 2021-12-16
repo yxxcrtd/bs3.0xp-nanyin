@@ -34,25 +34,25 @@ public class CfetsTreePortfolioRequest{
      * 收益类型
      */
 	@ApiModelProperty(name="profitTypeList",value="收益类型")
-    private String profitTypeList;
+    private List<String> profitTypeList;
 
     /**
      * 开发类型
      */
 	@ApiModelProperty(name="openTypeList",value="开发类型")
-    private String openTypeList;
+    private List<String> openTypeList;
 
     /**
      * 募集方式
      */
 	@ApiModelProperty(name="raiseTypeList",value="募集方式")
-    private String raiseTypeList;
+    private List<String> raiseTypeList;
     
     /**
      * 投资性质
      */
 	@ApiModelProperty(name="investNatureList",value="投资性质")
-    private String investNatureList;
+    private List<String> investNatureList;
     
 
 
@@ -72,36 +72,35 @@ public class CfetsTreePortfolioRequest{
 		this.portfolioIdList = portfolioIdList;
 	}
 
-	public String getProfitTypeList() {
+	public List<String> getProfitTypeList() {
 		return profitTypeList;
 	}
 
-	public void setProfitTypeList(String profitTypeList) {
+	public void setProfitTypeList(List<String> profitTypeList) {
 		this.profitTypeList = profitTypeList;
 	}
 
-	public String getOpenTypeList() {
+	public List<String> getOpenTypeList() {
 		return openTypeList;
 	}
 
-	public void setOpenTypeList(String openTypeList) {
+	public void setOpenTypeList(List<String> openTypeList) {
 		this.openTypeList = openTypeList;
 	}
 
-	public String getRaiseTypeList() {
+	public List<String> getRaiseTypeList() {
 		return raiseTypeList;
 	}
 
-	public void setRaiseTypeList(String raiseTypeList) {
+	public void setRaiseTypeList(List<String> raiseTypeList) {
 		this.raiseTypeList = raiseTypeList;
 	}
 
-	public String getInvestNatureList() {
+	public List<String> getInvestNatureList() {
 		return investNatureList;
 	}
 
-	public void setInvestNatureList(String investNatureList) {
+	public void setInvestNatureList(List<String> investNatureList) {
 		this.investNatureList = investNatureList;
 	}
-
 }

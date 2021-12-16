@@ -10,12 +10,9 @@
 
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.json.CustomDateDeserialize;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
@@ -39,6 +36,13 @@ public class CfetsPledgeBondInfoDto extends BaseEntity {
     private String bondCode;
 
     /**
+     * 债券代码
+     */
+    @ApiModelProperty(name = "finprodAbbr",value="债券名称")
+    private String finprodAbbr;
+
+
+    /**
      * 债券金融产品代码
      */
     @ApiModelProperty(name = "finprodId",value="债券金融产品代码")
@@ -48,12 +52,6 @@ public class CfetsPledgeBondInfoDto extends BaseEntity {
      * 委托代码
      */
     private String entrustId;
-
-
-    /**
-     * 债券简称
-     */
-    private String bondAbbrName;
 
     /**
      * 组合代码
@@ -73,281 +71,164 @@ public class CfetsPledgeBondInfoDto extends BaseEntity {
     /**
      * 可质押券面总额
      */
-    private BigDecimal avaPledgePrin;
-    /**
-     * 可质押本方券券面总额
-     */
-    private BigDecimal avaPledgeBfPrin;
-    /**
-     * 可质押融入券券面总额
-     */
-    private BigDecimal avaPledgeRrPrin;
+    private BigDecimal pledStrdPrinAmt;
+
     /**
      * 质押券面额
      */
     private BigDecimal pledgePrin;
 
     /**
+     * 首次竞价
+     */
+    private BigDecimal firstNetPrice;
+
+
+    /**
      * 质押券折算总额
      */
-    private BigDecimal pledgeAmt;
+    private BigDecimal totalAmount;
     /**
      * 质押比例%
      */
     private BigDecimal pledgeRatio;
+
+    /**
+     * 质押比例%
+     */
+    private BigDecimal scale;
+
     /**
      * 登记托管机构
      */
     private String repRegistOrg;
     /**
-     * 按投资目的排序：摊余成本类->公允价值变动计入其他综合收益->公允价值变动计入当期损益
-     */
-    private Long invAimSort;
-
-
-    /**
-     * 获取 bondCode
      *
-     * @rturn bondCode
      */
+    private String registOrg;
+
     public String getBondCode() {
-        return this.bondCode;
+        return bondCode;
     }
 
-    /**
-     * 设置 bondCode
-     *
-     * @param bondCode bondCode
-     */
     public void setBondCode(String bondCode) {
         this.bondCode = bondCode;
     }
 
-    /**
-     * 获取 bondAbbrName
-     *
-     * @rturn bondAbbrName
-     */
-    public String getBondAbbrName() {
-        return this.bondAbbrName;
+    public String getFinprodAbbr() {
+        return finprodAbbr;
     }
 
-    /**
-     * 设置 bondAbbrName
-     *
-     * @param bondAbbrName bondAbbrName
-     */
-    public void setBondAbbrName(String bondAbbrName) {
-        this.bondAbbrName = bondAbbrName;
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
     }
 
-    /**
-     * 获取 mdate
-     *
-     * @rturn mdate
-     */
-    public Date getMdate() {
-        return this.mdate;
-    }
-
-    /**
-     * 设置 mdate
-     *
-     * @param mdate mdate
-     */
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    public void setMdate(Date mdate) {
-        this.mdate = mdate;
-    }
-
-    /**
-     * 获取 avaPledgePrin
-     *
-     * @rturn avaPledgePrin
-     */
-    public BigDecimal getAvaPledgePrin() {
-        return this.avaPledgePrin;
-    }
-
-    /**
-     * 设置 avaPledgePrin
-     *
-     * @param avaPledgePrin avaPledgePrin
-     */
-    public void setAvaPledgePrin(BigDecimal avaPledgePrin) {
-        this.avaPledgePrin = avaPledgePrin;
-    }
-
-    /**
-     * 获取 pledgePrin
-     *
-     * @rturn pledgePrin
-     */
-    public BigDecimal getPledgePrin() {
-        return this.pledgePrin;
-    }
-
-    /**
-     * 设置 pledgePrin
-     *
-     * @param pledgePrin pledgePrin
-     */
-    public void setPledgePrin(BigDecimal pledgePrin) {
-        this.pledgePrin = pledgePrin;
-    }
-
-    public BigDecimal getPledgeAmt() {
-        return pledgeAmt;
-    }
-
-    public void setPledgeAmt(BigDecimal pledgeAmt) {
-        this.pledgeAmt = pledgeAmt;
-    }
-
-    /**
-     * 获取 pledgeRatio
-     *
-     * @rturn pledgeRatio
-     */
-    public BigDecimal getPledgeRatio() {
-        return this.pledgeRatio;
-    }
-
-    /**
-     * 设置 pledgeRatio
-     *
-     * @param pledgeRatio pledgeRatio
-     */
-    public void setPledgeRatio(BigDecimal pledgeRatio) {
-        this.pledgeRatio = pledgeRatio;
-    }
-
-    /**
-     * 获取 repRegistOrg
-     *
-     * @rturn repRegistOrg
-     */
-    public String getRepRegistOrg() {
-        return this.repRegistOrg;
-    }
-
-    /**
-     * 设置 repRegistOrg
-     *
-     * @param repRegistOrg repRegistOrg
-     */
-    public void setRepRegistOrg(String repRegistOrg) {
-        this.repRegistOrg = repRegistOrg;
-    }
-
-    /**
-     * 获取 登记托管机构
-     * @rturn ccyText
-     */
-    public String getRepRegistOrgStr() {
-        if(StringUtil.isNoneBlank( this.getRepRegistOrg())){
-            return SysDataUtil.getNameFromDataDict(DictCode.登记托管机构_中债, this.getRepRegistOrg());
-        }
-        return null;
-    }
-
-    /**
-     * 获取 invAimSort
-     *
-     * @rturn invAimSort
-     */
-    public Long getInvAimSort() {
-        return this.invAimSort;
-    }
-
-    /**
-     * 设置 invAimSort
-     *
-     * @param invAimSort invAimSort
-     */
-    public void setInvAimSort(Long invAimSort) {
-        this.invAimSort = invAimSort;
-    }
-
-    /**
-     * 获取 portfolioId
-     * @return portfolioId.
-     */
-    public String getPortfolioId() {
-        return portfolioId;
-    }
-
-    /**
-     * 设置 portfolioId
-     * @param portfolioId portfolioId
-     */
-    public void setPortfolioId(String portfolioId) {
-        this.portfolioId = portfolioId;
-    }
-
-    /**
-     * 获取 portfolioName
-     * @return portfolioName.
-     */
-    public String getPortfolioName() {
-        return portfolioName;
-    }
-
-    /**
-     * 设置 portfolioName
-     * @param portfolioName portfolioName
-     */
-    public void setPortfolioName(String portfolioName) {
-        this.portfolioName = portfolioName;
-    }
-
-    /**
-     * 获取 entrustId
-     * @return entrustId.
-     */
-    public String getEntrustId() {
-        return entrustId;
-    }
-
-    /**
-     * 设置 entrustId
-     * @param entrustId entrustId
-     */
-    public void setEntrustId(String entrustId) {
-        this.entrustId = entrustId;
-    }
-
-    public BigDecimal getAvaPledgeBfPrin() {
-        return avaPledgeBfPrin;
-    }
-
-    public void setAvaPledgeBfPrin(BigDecimal avaPledgeBfPrin) {
-        this.avaPledgeBfPrin = avaPledgeBfPrin;
-    }
-
-    public BigDecimal getAvaPledgeRrPrin() {
-        return avaPledgeRrPrin;
-    }
-
-    public void setAvaPledgeRrPrin(BigDecimal avaPledgeRrPrin) {
-        this.avaPledgeRrPrin = avaPledgeRrPrin;
-    }
-    /**
-     * 获取 finprodId
-     *
-     * @return finprodId
-     */
     public String getFinprodId() {
         return finprodId;
     }
-    /**
-     * 设置 finprodId
-     *
-     * @param finprodId finprodId
-     */
+
     public void setFinprodId(String finprodId) {
         this.finprodId = finprodId;
     }
 
-    
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
+
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
+    public void setPortfolioId(String portfolioId) {
+        this.portfolioId = portfolioId;
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
+    public Date getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(Date mdate) {
+        this.mdate = mdate;
+    }
+
+    public BigDecimal getPledStrdPrinAmt() {
+        return pledStrdPrinAmt;
+    }
+
+    public void setPledStrdPrinAmt(BigDecimal pledStrdPrinAmt) {
+        this.pledStrdPrinAmt = pledStrdPrinAmt;
+    }
+
+    public BigDecimal getPledgePrin() {
+        return pledgePrin;
+    }
+
+    public void setPledgePrin(BigDecimal pledgePrin) {
+        this.pledgePrin = pledgePrin;
+    }
+
+    public BigDecimal getFirstNetPrice() {
+        return firstNetPrice;
+    }
+
+    public void setFirstNetPrice(BigDecimal firstNetPrice) {
+        this.firstNetPrice = firstNetPrice;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public BigDecimal getPledgeRatio() {
+        return pledgeRatio;
+    }
+
+    public void setPledgeRatio(BigDecimal pledgeRatio) {
+        this.pledgeRatio = pledgeRatio;
+    }
+
+    public BigDecimal getScale() {
+        return scale;
+    }
+
+    public void setScale(BigDecimal scale) {
+        this.scale = scale;
+    }
+
+    public String getRepRegistOrg() {
+        return repRegistOrg;
+    }
+
+    public void setRepRegistOrg(String repRegistOrg) {
+        this.repRegistOrg = repRegistOrg;
+    }
+
+    public String getRegistOrg() {
+        return registOrg;
+    }
+
+    public void setRegistOrg(String registOrg) {
+        this.registOrg = registOrg;
+    }
+
+    public String getRepRegistOrgStr() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.登记托管机构,this.getRegistOrg());
+    }
+
 }

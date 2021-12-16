@@ -12,6 +12,7 @@ package com.joyintech.tams.cfets.etrib.repo.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.component.business.trade.dto.BussEtrInvestPersonInfoDto;
 import com.joyintech.tams.invest.common.dto.common.BussRepoSecDto;
@@ -38,6 +39,9 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
      */
     @ApiModelProperty(name="elementId",value="按钮id")
     private String elementId;
+
+    @ApiModelProperty(name="portfolioName",value="组合名称")
+    private String portfolioName;
 
     /**
      * 操作类型
@@ -114,6 +118,8 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
     @ApiModelProperty(name="riskTrialRetDto",value="风险试算实体类")
     private List<RiskTrialRetDto> riskTrialRetDto;
 
+    private CfetsEtribdoRiskcalResponse cfetsEtribdoRiskcalResponse;
+
     /**
      * 多组合汇总指令ID
      */
@@ -154,6 +160,15 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
      */
     @ApiModelProperty(hidden = true)
     private String trader;
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
     /**
      * 获取 repoTerm
      * @return repoTerm.
@@ -202,7 +217,13 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
         this.riskTrialRetDto = riskTrialRetDto;
     }
 
+    public CfetsEtribdoRiskcalResponse getCfetsEtribdoRiskcalResponse() {
+        return cfetsEtribdoRiskcalResponse;
+    }
 
+    public void setCfetsEtribdoRiskcalResponse(CfetsEtribdoRiskcalResponse cfetsEtribdoRiskcalResponse) {
+        this.cfetsEtribdoRiskcalResponse = cfetsEtribdoRiskcalResponse;
+    }
 
     public String getElementId() {
         return elementId;

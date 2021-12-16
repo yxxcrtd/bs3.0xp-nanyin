@@ -84,7 +84,7 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
     @Autowired(required=false)
     private BussEtrInvestPersonInfoService bussEtrInvestPersonInfoService;
 
-    @Value("${BondWebSocketUrl}")
+    @Value("${bondWebSocketUrl}")
     private String RepoWebSocketUrl;
 
     /**
@@ -363,7 +363,7 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
     public Message<AjaxResult> modifyDelegate(@RequestBody CfetsEtribRepoInfo003Dto dto) throws Exception {
         //对选择的数据进行check
         AjaxResult ajaxResult = cfetsEtrIbRepoinfoService.modifyDelegateCheckMethod(dto);
-        if (!com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().fail().setData(ajaxResult);
         }
         try {
