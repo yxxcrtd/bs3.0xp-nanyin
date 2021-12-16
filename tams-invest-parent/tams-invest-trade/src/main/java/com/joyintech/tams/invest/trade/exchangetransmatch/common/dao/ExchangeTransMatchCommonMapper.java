@@ -48,12 +48,12 @@ public interface ExchangeTransMatchCommonMapper {
     /**
      * 根据汇总流水号获取成交明细
      *
-     * @param seqId 流水号
+     * @param paraMap 流水号
      * @return 汇总附属信息
      * @see
      * @since 1.0
      */
-    List<SettleTransData> getSettleTransDataList(@Param("seqId") String seqId);
+    List<SettleTransData> getSettleTransDataList(Map<String, Object> paraMap);
 
 
     /**
