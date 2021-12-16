@@ -10,16 +10,28 @@
 
 package com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dao.CfetsBondAutoDurDealGenerateMapper;
+import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsEtrIbPosPortfolioRequest;
+import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsEtrIbPositionRequest;
+import com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsTrdConfirmMatchDto;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -69,11 +81,16 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
     @Autowired
     private CfetsBondAutoDurDealGenerateMapper cfetsBondAutoDurDealGenerateMapper;
 
+
     /**
      * AutoPeriodCommonService
      */
     @Autowired(required = false)
     private BaseGetBussinessId baseGetBussinessId;
+    /**
+     * 递增维度(元)
+     */
+    private static  BigDecimal faceDimension = new BigDecimal("0.01");
 
     /**
      * process 数据处理
@@ -137,7 +154,11 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
             // 构造将要登录的业务流程表数据
             TrdBondDurationDto TrdBondDurationDto = genDataForShInsertDto(regFinProductDealTotal,batchDate);
 
-            trdBondDurationDtoInsertList.add(TrdBondDurationDto);
+           // trdBondDurationDtoInsertList.add(TrdBondDurationDto);
+            autoPeriodCommonService.insertCfetsShDealData(TrdBondDurationDto.getTrdBondDurDbInertDto());
+           //插入匹配关系表，且发送头寸
+            genMatchAndSendPosMethod(TrdBondDurationDto.getTrdBondDurDbInertDto(),regFinProductDealTotal);
+
         }
         //插入数据
         for(TrdBondDurationDto trdBondDurationDto: trdBondDurationDtoInsertList){
@@ -150,73 +171,247 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         TrdBondDurationDto trdBondDurationDto =new  TrdBondDurationDto();
         //查询登记明细相关表
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("totalTradeId", regFinProductDealTotal.getTotleTradeId());
-        List<RegFinProductDeal> regFinProductDealList = cfetsBondAutoDurDealGenerateMapper.queryRegDeallnfo(map);
+        //根据头寸查询当天需要进行赎回的明细数据
+        map.put("finprodId",regFinProductDealTotal.getFinprodId());
+        map.put("cdate",regFinProductDealTotal.getSettleDate());//理论行权日
+        map.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+        map.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        map.put("SEC_ACCT_ID",regFinProductDealTotal.getSecManageAcctId());//证券账户
+        map.put("ACCT_NO",regFinProductDealTotal.getAcctId());//资金账户
+        List<RegFinProductDeal> regFinProductDealList =cfetsBondAutoDurDealGenerateMapper.queryRegDealInfo(map);
+
+        BussinessCodeParameter parameter = new BussinessCodeParameter();
+        parameter.setCommonBusinessType(DictCodeList.共通业务类型_资产存续期交易);
+        String busiCode=autoPeriodCommonService.buildBussinessCode(parameter);
 
         TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
+        TrdDealTotalAdd trdDealTotalAdd = new TrdDealTotalAdd();
         List<TrdProductDeal> trdProductDealList = new ArrayList<TrdProductDeal>();
+        List<TrdProductDealAdd> trdProductDealaddList = new ArrayList<TrdProductDealAdd>();
         List<StlPayOrders> stlPayOrdersList =new ArrayList<StlPayOrders>();
         List<PtlTrade> ptlTradeList =new ArrayList<PtlTrade>();
+        //净价总额计算,净价总额=账户持仓券面总额（万元）*10000*赎回比例%*行权净价/100
+        BigDecimal cpriceAmt=ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getExercisePrice());
+        //应计利息计算
+        BigDecimal intAmt=ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getIntAmt());
+        //赎回金额计算：默认等于净价总额+应计利息总额；
+        BigDecimal tradeAmt=ArithmeticUtil.doAdd(cpriceAmt,intAmt);
 
         BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, regFinProductDealTotal);
+
+        trdFinProductDealTotal.setTotleTradeId(busiCode);
+        trdFinProductDealTotal.setBusiType(DictCodeList.共通业务类型_债券类资产存续期.getValue());
+        trdFinProductDealTotal.setFinprodId(regFinProductDealTotal.getFinprodId());
+        trdFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        trdFinProductDealTotal.setSecManageAcctId(regFinProductDealTotal.getSecManageAcctId());
+        trdFinProductDealTotal.setCcy(regFinProductDealTotal.getCcy());
+        trdFinProductDealTotal.setPs(DictCodeList.交易方向_行权_赎回.getValue());
+        trdFinProductDealTotal.setBranch(0L);
         trdFinProductDealTotal.setTradeDate(DateUtil.parse(DateUtil.format(batchDate)));
+      //  trdFinProductDealTotal.setVdate(DateUtil.parse(entity.getvDate()));
+      //  trdFinProductDealTotal.setMdate(DateUtil.parse(entity.getmDate()));
         trdFinProductDealTotal.setSettleDate(DateUtil.parse(DateUtil.format(batchDate)));
+        trdFinProductDealTotal.setShareAmt(regFinProductDealTotal.getShareAmt());
+       // trdFinProductDealTotal.setPortfolioId(entity.getPortfolioId());
+        trdFinProductDealTotal.setPrinAmt(cpriceAmt);
+        trdFinProductDealTotal.setIntAmt(intAmt);
+        //trdFinProductDealTotal.setWorkflowId(entity.getWorkflowId());
+        trdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+       // trdFinProductDealTotal.setWorkflowStatus(DictCodeList.数据状态_新建.getValue());
+        trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+        trdFinProductDealTotal.setStatus(DictCodeList.数据状态_新建.getValue());
+        trdFinProductDealTotal.setTgBusiType(AutoPeriodCommonService.change交易方向To投管类型(trdFinProductDealTotal.getPs()));
+        trdFinProductDealTotal.setIsClean(DictCodeList.是否_是.getValue());
+        trdFinProductDealTotal.setFpriceAmt(tradeAmt);
+        trdFinProductDealTotal.setTradeMarket(regFinProductDealTotal.getTradeMarket());
+        trdFinProductDealTotal.setTradeMarketMode(BussinessDictCodeList.交易市场_二级市场.getValue());
+        trdFinProductDealTotal.setTradeAmt(tradeAmt);
+      //  trdFinProductDealTotal.setCounterId(entity.getIssuer());
+
+
+        BeanUtil.copyPropertiesIgnoreNull(trdDealTotalAdd, regFinProductDealTotal);
+        trdDealTotalAdd.setTotleTradeId(busiCode);
+        trdDealTotalAdd.setOurShareAmt(trdFinProductDealTotal.getShareAmt());
+
+        //组合分配，按照账户持仓占比进行分配
+        //降序
+        regFinProductDealList.sort((p1,p2) -> p1.getFaceValue().compareTo(p2.getFaceValue()));
+        //账户持仓汇总值
+        BigDecimal avaNumTotal = regFinProductDealTotal.getFaceValue();
+        //尾差
+        BigDecimal tailDifferenceCprice = cpriceAmt;
+        BigDecimal tailDifferenceShAmt = tradeAmt;
+
+        for (RegFinProductDeal regFinProductDeal : regFinProductDealList) {
+            regFinProductDeal.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(cpriceAmt,regFinProductDeal.getFaceValue()),avaNumTotal,2,RoundingMode.DOWN));
+            regFinProductDeal.setTradeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(tradeAmt,regFinProductDeal.getFaceValue()),avaNumTotal,2,RoundingMode.DOWN));
+            tailDifferenceCprice = ArithmeticUtil.subtract(tailDifferenceCprice,regFinProductDeal.getCpriceAmt());
+            tailDifferenceShAmt=ArithmeticUtil.subtract(tailDifferenceShAmt,regFinProductDeal.getTradeAmt());
+        }
+        handleTailDifference(regFinProductDealList,tailDifferenceCprice,"01");
+        handleTailDifference(regFinProductDealList,tailDifferenceShAmt,"02");
+        regFinProductDealList.forEach(item->{item.setIntAmt(ArithmeticUtil.subtract(item.getTradeAmt(),item.getCpriceAmt()));});
+
 
         for(RegFinProductDeal regFinProductDeal : regFinProductDealList){
             TrdProductDeal trdProductDeal = new TrdProductDeal();
             BeanUtil.copyPropertiesIgnoreNull(trdProductDeal,regFinProductDeal);
+
             trdProductDeal.setTradeDate(DateUtil.parse(DateUtil.format(batchDate)));
             trdProductDeal.setSettleDate(DateUtil.parse(DateUtil.format(batchDate)));
+
+            trdProductDeal.setTradeId(autoPeriodCommonService.buildBussinessCode(parameter));
+            trdProductDeal.setBusiType(DictCodeList.共通业务类型_债券类资产存续期.getValue());
+            trdProductDeal.setFinprodId(regFinProductDeal.getFinprodId());
+            trdProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            trdProductDeal.setBranch(0L);
+          //  trdProductDeal.setVdate(DateUtil.parse(entity.getvDate()));
+           // trdProductDeal.setMdate(DateUtil.parse(entity.getmDate()));
+            trdProductDeal.setCcy(regFinProductDealTotal.getCcy());
+
+            trdProductDeal.setShareAmt(regFinProductDeal.getShareAmt());
+            trdProductDeal.setIntAmt(regFinProductDeal.getIntAmt());
+            trdProductDeal.setPrinAmt(regFinProductDeal.getCpriceAmt());
+            trdProductDeal.setFpriceAmt(regFinProductDeal.getTradeAmt());
+            trdProductDeal.setTradeAmt(regFinProductDeal.getTradeAmt());
+
+            trdProductDeal.setPs(DictCodeList.交易方向_行权_赎回.getValue());
+            trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
+            trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
+            trdProductDeal.setIsClean(DictCodeList.是否_是.getValue());
+            trdProductDeal.setTotleTradeId(busiCode);
+            trdProductDeal.setTradeMarket(regFinProductDealTotal.getTradeMarket());
+            trdProductDeal.setSecManageAcctId(regFinProductDealTotal.getSecManageAcctId());
+            trdProductDeal.setAccrNum(regFinProductDeal.getShareAmt());
             trdProductDealList.add(trdProductDeal);
 
-            //组装划款指令表
-            StlPayOrders stlPayOrders = new StlPayOrders();
-            BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-            bussinessCodeParameter.setSeqNo("9998");
-            String orderId;
-            if(baseGetBussinessId != null){
-                orderId = baseGetBussinessId.buildBussinessCode(bussinessCodeParameter);
-            }else{
-                orderId = IDGenerator.generate();
-            }
-            stlPayOrders.setOrderId(orderId);
-            stlPayOrders.setPayType(DictCodeListExt1.平安划款类型_托管划款.getValue());
-            String acctNo = autoPeriodCommonService.selectDealCapacctInfo(regFinProductDealTotal.getSecManageAcctId(), trdFinProductDealTotal.getCcy());
-            stlPayOrders.setMyAcctNo(acctNo);
-            stlPayOrders.setSettleDate(DateUtil.parse(DateUtil.format(batchDate)));
-            stlPayOrders.setPs(DictCodeListExt1.收支方向_收入.getValue());
-            stlPayOrders.setSettleAmt(regFinProductDealTotal.getTradeAmt());
-            stlPayOrders.setCcy(regFinProductDealTotal.getCcy());
-            stlPayOrders.setSettleStatus(DictCodeList.结算状态_已结算.getValue());
-            stlPayOrders.setIsNeedSend(DictCodeListExt1.是否_是.getValue());
-            stlPayOrders.setIsTotalTrade(DictCodeListExt1.是否_是.getValue());
-            stlPayOrders.setTradeId(regFinProductDealTotal.getTotleTradeId());
-            stlPayOrders.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
+            TrdProductDealAdd trdProductDealAdd=new TrdProductDealAdd();
+            BeanUtil.copyPropertiesIgnoreNull(trdProductDealAdd,regFinProductDeal);
 
-            stlPayOrdersList.add(stlPayOrders);
+            trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
+            trdProductDealAdd.setPortfolioId(regFinProductDeal.getPortfolioId());
+            trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_批处理生成.getValue());
+            //trdProductDealAdd.setWorkflowId(deal.getWorkflowId());
+            trdProductDealAdd.setStatus(DictCodeList.数据状态_新建.getValue());
 
             //组装组合交易表
             PtlTrade ptlTrade2 = new PtlTrade();
             ptlTrade2.setPortfolioId(regFinProductDeal.getPortfolioId());
-            ptlTrade2.setBusiNo(regFinProductDeal.getTradeId());
+            ptlTrade2.setBusiNo(trdProductDeal.getTradeId());
             ptlTrade2.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
-            ptlTrade2.setInvAim(regFinProductDeal.getInvAim());
-            ptlTrade2.setBusiId(regFinProductDeal.getFinprodId());
+            ptlTrade2.setInvAim(trdProductDeal.getInvAim());
+            ptlTrade2.setBusiId(trdProductDeal.getFinprodId());
             ptlTrade2.setBusiType(DictCodeList.共通业务类型_债券类资产存续期.getValue());
-            ptlTrade2.setSecManageAcctId(regFinProductDeal.getSecManageAcctId());
-            ptlTrade2.setSettleDate(DateUtil.parse(DateUtil.format(batchDate)));
+            ptlTrade2.setSecManageAcctId(trdProductDeal.getSecManageAcctId());
+            ptlTrade2.setSettleDate(trdProductDeal.getTradeDate());
 
             ptlTradeList.add(ptlTrade2);
         }
+        //组装划款指令表
+        StlPayOrders stlPayOrders = new StlPayOrders();
+        BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+        bussinessCodeParameter.setSeqNo("9998");
+        String orderId;
+        if(baseGetBussinessId != null){
+            orderId = baseGetBussinessId.buildBussinessCode(bussinessCodeParameter);
+        }else{
+            orderId = IDGenerator.generate();
+        }
+        stlPayOrders.setOrderId(orderId);
+        stlPayOrders.setPayType(DictCodeListExt1.平安划款类型_托管划款.getValue());
+        String acctNo = autoPeriodCommonService.selectDealCapacctInfo(regFinProductDealTotal.getSecManageAcctId(), trdFinProductDealTotal.getCcy());
+        stlPayOrders.setMyAcctNo(acctNo);
+        stlPayOrders.setSettleDate(DateUtil.parse(DateUtil.format(batchDate)));
+        stlPayOrders.setPs(DictCodeListExt1.收支方向_收入.getValue());
+        stlPayOrders.setSettleAmt(regFinProductDealTotal.getTradeAmt());
+        stlPayOrders.setCcy(regFinProductDealTotal.getCcy());
+        stlPayOrders.setSettleStatus(DictCodeList.结算状态_已结算.getValue());
+        stlPayOrders.setIsNeedSend(DictCodeListExt1.是否_是.getValue());
+        stlPayOrders.setIsTotalTrade(DictCodeListExt1.是否_是.getValue());
+        stlPayOrders.setTradeId(regFinProductDealTotal.getTotleTradeId());
+        stlPayOrders.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
+
+        stlPayOrdersList.add(stlPayOrders);
+
 
         trdBondDurDbInertDto.setTrdFinProductDealTotal(trdFinProductDealTotal);
+        trdBondDurDbInertDto.setTrdDealTotalAdd(trdDealTotalAdd);
         trdBondDurDbInertDto.setTrdProductDealList(trdProductDealList);
+        trdBondDurDbInertDto.setTrdProductDealAdds(trdProductDealaddList);
         trdBondDurDbInertDto.setStlPayOrdersList(stlPayOrdersList);
         trdBondDurDbInertDto.setPtlTrades(ptlTradeList);
 
         trdBondDurationDto.setTrdBondDurDbInertDto(trdBondDurDbInertDto);
 
         return trdBondDurationDto;
+    }
+    private void genMatchAndSendPosMethod (TrdBondDurDbInertDto trdBondDurDbInertDto,RegFinProductDealTotal regFinProductDealTotal) {
+
+        TrdFinProductDealTotal trdTotle=trdBondDurDbInertDto.getTrdFinProductDealTotal();
+        //匹配关系表
+        CfetsTrdConfirmMatchDto matchDto=new CfetsTrdConfirmMatchDto();
+        matchDto.setSeqno(IDGenerator.generate());
+        matchDto.setPreTradeId(regFinProductDealTotal.getTotleTradeId());
+        matchDto.setTrdConfStatus(DictCodeList.确认状态_已确认.getValue());
+        matchDto.setCreateUser("SYSTEM");
+        matchDto.setCreateDept(CommonUtil.getDeptCode());
+        matchDto.setUpdateUser("SYSTEM");
+        matchDto.setTrdId(trdTotle.getTotleTradeId());
+        //插入匹配关系表
+        cfetsBondAutoDurDealGenerateMapper.insertTrdQutoMatchInfo(matchDto);
+        //发送头寸
+        List<CfetsEtrIbPosPortfolioRequest> ptlList=new ArrayList<>();
+        for (TrdProductDeal dto : trdBondDurDbInertDto.getTrdProductDealList()) {
+            //调用头寸
+            CfetsEtrIbPosPortfolioRequest posport=new CfetsEtrIbPosPortfolioRequest();
+            posport.setPortfolioId(dto.getPortfolioId());
+            posport.setTradeId(dto.getTradeId());
+            if(StringUtil.isNotEmpty(dto.getPortfolioId())){
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("portfolioId", dto.getPortfolioId());
+                map.put("acctType", BussinessDictCodeList.资金账户类型_托管账户.getValue());
+                String cashAcctId = cfetsBondAutoDurDealGenerateMapper.qryPortfolioCashAcctId(map);
+                if (StringUtil.isNotEmpty(cashAcctId)) {
+                    posport.setCashAcctId(cashAcctId); // 托管户
+                }
+            }
+            posport.setSecAcctId(dto.getSecManageAcctId());
+            posport.setSecAmount(ArithmeticUtil.multiply(dto.getShareAmt()==null?BigDecimal.ZERO:dto.getShareAmt(),new BigDecimal(100)));
+            posport.setCashAmount(dto.getTradeAmt()==null?BigDecimal.ZERO:dto.getTradeAmt());
+            trdBondDurDbInertDto.getTrdProductDealAdds().forEach(trdProductDealAdd -> {
+                if (dto.getTradeId() != null
+                        && dto.getTradeId().equals(trdProductDealAdd.getTradeId())) {
+                    posport.setEtrId(trdProductDealAdd.getEntrustId());
+                    posport.setIntegrateSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getLendinShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
+                    posport.setOwnSecAmount(ArithmeticUtil.multiply(trdProductDealAdd.getOurShareAmt()==null?BigDecimal.ZERO:trdProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
+                }
+            });
+            ptlList.add(posport);
+        }
+        //调用头寸
+        CfetsEtrIbPositionRequest req=new CfetsEtrIbPositionRequest();
+        req.setInterfaceType("Bond001");
+        req.setUserId("SYSTEM");
+        req.setTotalTradeId(trdTotle.getTotleTradeId());
+        req.setFlowStatus(DictCodeListExt3.流程节点_流程提交.getValue());
+        req.setModelType(DictCodeListExt1.子系统代码_交易.getValue());
+        req.setBusiType(DictCodeListExt3.头寸业务类型_债券行权交易.getValue()); // 业务类型：01债券一级投标，02现券交易，03债券行权交易，04债券存续期交易
+
+        req.setTradePlace(BussinessDictCodeList.交易场所_银行间.getValue());
+        req.setSettleSpeed("01");
+
+        req.setBalanceCheck("Y");
+        req.setBusiAct(DictCodeListExt3.业务动作_成交确认.getValue());
+        req.setPs(trdTotle.getPs());
+        req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
+        req.setCdate(trdTotle.getTradeDate());
+        req.setCcy(trdTotle.getCcy());
+        req.setFinprodId(trdTotle.getFinprodId());
+        req.setPtlList(ptlList);
+        req.setbTotalTradeId(regFinProductDealTotal.getTotleTradeId());
+        PositionHttpRequest.send(req);
+
+        return;
     }
 
     /**
@@ -308,5 +503,32 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         param.put("STATUS_N", DictCodeList.数据状态_新建.getValue());
         //String plateDate = platformDateImpl.getSysDateStr();
         //param.put("PLATEFORM_DATE", DateUtil.parse(plateDate));
+    }
+    /**
+     *  尾差处理(券面)
+     * @param ptlAllocations
+     * @param tailDifference
+     */
+    public void handleTailDifference(List<RegFinProductDeal>  regFinProductDealList,BigDecimal tailDifference,String type){
+        //递增维度
+        BigDecimal addDimension = faceDimension;
+        int size = regFinProductDealList.size();
+        //委托维度 已经完全分配的集合
+        while(tailDifference.compareTo(BigDecimal.ZERO)>0&&size>0){
+            if(tailDifference.compareTo(new BigDecimal("1"))>=0){
+                addDimension = ArithmeticUtil.divide(tailDifference,new BigDecimal(size),2,RoundingMode.DOWN);
+            }
+            for (RegFinProductDeal item : regFinProductDealList) {
+                if(tailDifference.compareTo(BigDecimal.ZERO)>0){
+                    if(StringUtil.equals(type,"01")){
+                        item.setCpriceAmt(ArithmeticUtil.doAdd(item.getCpriceAmt(),addDimension));
+                    }
+                    if(StringUtil.equals(type,"02")){
+                        item.setTradeAmt(ArithmeticUtil.doAdd(item.getTradeAmt(),addDimension));
+                    }
+                    tailDifference = ArithmeticUtil.subtract(tailDifference,addDimension);
+                }
+            }
+        }
     }
 }

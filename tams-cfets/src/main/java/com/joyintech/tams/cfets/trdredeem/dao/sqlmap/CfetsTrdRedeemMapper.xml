@@ -89,7 +89,7 @@
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
 
-        where 1=1 and reg.trade_status='01' and is_cancel='N'
+        where 1=1 and reg.trade_status='01' and reg.is_cancel='N'
         <if test="sysDate != null and !sysDate.equals('')">
             AND  reg.trade_date= #{sysDate,jdbcType=DATE}
         </if>
@@ -176,7 +176,7 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
         left join sys_user su
         on reg.ou_trader_id=su.user_name
-        where 1=1 and reg.trade_status='01' and is_cancel='Y'
+        where 1=1 and reg.trade_status='01' and reg.is_cancel='Y'
         <if test="sysDate != null and !sysDate.equals('')">
             AND  reg.trade_date= #{sysDate,jdbcType=DATE}
         </if>
@@ -230,7 +230,7 @@
         from wfl_reg_fin_product_deal_total reg
         left join fin_product fp
         on fp.finprod_id=reg.finprod_id
-        left join wfl_reg_fin_product_deal_total_add regAdd
+        left join wfl_reg_fin_pro_deal_total_add regAdd
         on reg.totle_trade_id=regAdd.totle_trade_id
         inner join
         (

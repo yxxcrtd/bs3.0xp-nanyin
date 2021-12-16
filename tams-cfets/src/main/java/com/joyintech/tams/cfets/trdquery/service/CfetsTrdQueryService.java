@@ -648,13 +648,14 @@ public class CfetsTrdQueryService extends BaseService{
     public Page<CfetsTrdQueryTradeInfoListResponse> queryAllTradeInfoList(CfetsTrdQueryTradeInfoListRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         String effectiveStatus = (String)pageParam.get("effectiveStatus");
-        if(StringUtil.isNotEmpty(effectiveStatus)){
+       /* if(StringUtil.isNotEmpty(effectiveStatus)){
             List<String> list=StringUtil.splitToList(GlobalConstant.COMMA,effectiveStatus);
             if(list.contains(DictCodeListExt1.有效状态_有效.getValue())){
                 list.add("02");
             }
             pageParam.put("effectiveStatusList",list);
-        }
+        }*/
+        pageParam.put("effectiveStatusList",StringUtil.splitToList(GlobalConstant.COMMA,effectiveStatus));
         String regAssetType= (String)pageParam.get("regAssetType");
         if(StringUtil.isNotEmpty(regAssetType)){
             List<String> finprodType2List=new ArrayList<>();
@@ -722,6 +723,8 @@ public class CfetsTrdQueryService extends BaseService{
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
 
+
+
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
 
@@ -753,6 +756,10 @@ public class CfetsTrdQueryService extends BaseService{
                 finprodType2List.add(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
             }
             pageParam.put("finprodType2List",finprodType2List);
+        }
+        String portfolioId = (String)pageParam.get("portfolioId");
+        if(StringUtil.isNotEmpty(portfolioId)){
+            pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
         }
         String finprodId = (String)pageParam.get("finprodId");
         if(StringUtil.isNotEmpty(finprodId)){
@@ -819,7 +826,7 @@ public class CfetsTrdQueryService extends BaseService{
     }
 
     /**
-     * 只读表单设置及数据查询_成交信息查询
+     * 只读表单设置及数据查询_交易汇总信息查询
      * @param pageCode
      * @param dtCode
      * @param spcdCode
@@ -835,7 +842,7 @@ public class CfetsTrdQueryService extends BaseService{
         return cfetsManualSettleQueryService.findManualSettleInfo(pageCode,dtCode,spcdCode,entity);
     }
     /**
-     * 只读表单设置及数据查询_成交信息查询
+     * 只读表单设置及数据查询_交易明细信息查询
      * @param pageCode
      * @param dtCode
      * @param spcdCode

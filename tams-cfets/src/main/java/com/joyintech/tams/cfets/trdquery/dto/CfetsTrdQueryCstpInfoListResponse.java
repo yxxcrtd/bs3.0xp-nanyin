@@ -114,21 +114,21 @@ public class CfetsTrdQueryCstpInfoListResponse {
     private String clearType;
 
     @ApiModelProperty(name="tradeDate",value="成交日期")
-    private Date tradeDate;
+    private String tradeDate;
 
     @ApiModelProperty(name="remark",value="备注",example="字符串1")
     private String remark;
 
     @ApiModelProperty(name="buyId",value="买方",example="字符串1")
     private String buyId;
-    @ApiModelProperty(name="buyStr",value="买方Str",example="字符串1")
-    private String buyStr;
+    @ApiModelProperty(name="buyIdStr",value="买方Str",example="字符串1")
+    private String buyIdStr;
 
     @ApiModelProperty(name="sellId",value="卖方",example="字符串1")
     private String sellId;
 
-    @ApiModelProperty(name="sellStr",value="卖方Str",example="字符串1")
-    private String sellStr;
+    @ApiModelProperty(name="sellIdStr",value="卖方Str",example="字符串1")
+    private String sellIdStr;
 
     @ApiModelProperty(name="unitCprice",value="单位净价",example="字符串1")
     private BigDecimal unitCprice;
@@ -140,7 +140,7 @@ public class CfetsTrdQueryCstpInfoListResponse {
     private BigDecimal exerYield;
 
     @ApiModelProperty(name="settleDate",value="结算日期",example="字符串1")
-    private Date settleDate;
+    private String settleDate;
 
     @ApiModelProperty(name="deliveryTypeStr",value="结算方式",example="字符串1")
     private String deliveryTypeStr;
@@ -223,10 +223,10 @@ public class CfetsTrdQueryCstpInfoListResponse {
     private String repoType;
 
     @ApiModelProperty(name="vSettleDate",value="首次结算日",example="字符串1")
-    private Date   vsettleDate;
+    private String   vsettleDate;
 
     @ApiModelProperty(name="mSettleDate",value="到期结算日",example="字符串1")
-    private Date   msettleDate;
+    private String   msettleDate;
 
     @ApiModelProperty(name="actRepoTerm",value="实际占款天数",example="字符串1")
     private BigDecimal   actRepoTerm;
@@ -237,8 +237,8 @@ public class CfetsTrdQueryCstpInfoListResponse {
     @ApiModelProperty(name="mdeliveryTypeStr",value="到期结算方式",example="字符串1")
     private String mdeliveryTypeStr;
 
-
-
+    @ApiModelProperty(name="mdeliveryType",value="到期结算方式",example="字符串1")
+    private String mdeliveryType;
 
 
 
@@ -463,14 +463,6 @@ public class CfetsTrdQueryCstpInfoListResponse {
         this.clearType = clearType;
     }
 
-    public Date getTradeDate() {
-        return tradeDate;
-    }
-
-    public void setTradeDate(Date tradeDate) {
-        this.tradeDate = tradeDate;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -487,12 +479,12 @@ public class CfetsTrdQueryCstpInfoListResponse {
         this.buyId = buyId;
     }
 
-    public String getBuyStr() {
-        return buyStr;
+    public String getBuyIdStr() {
+        return buyIdStr;
     }
 
-    public void setBuyStr(String buyStr) {
-        this.buyStr = buyStr;
+    public void setBuyIdStr(String buyIdStr) {
+        this.buyIdStr = buyIdStr;
     }
 
     public String getSellId() {
@@ -503,11 +495,323 @@ public class CfetsTrdQueryCstpInfoListResponse {
         this.sellId = sellId;
     }
 
-    public String getSellStr() {
-        return sellStr;
+    public String getSellIdStr() {
+        return sellIdStr;
     }
 
-    public void setSellStr(String sellStr) {
-        this.sellStr = sellStr;
+    public void setSellIdStr(String sellIdStr) {
+        this.sellIdStr = sellIdStr;
+    }
+
+    public BigDecimal getUnitCprice() {
+        return unitCprice;
+    }
+
+    public void setUnitCprice(BigDecimal unitCprice) {
+        this.unitCprice = unitCprice;
+    }
+
+    public BigDecimal getYield() {
+        return yield;
+    }
+
+    public void setYield(BigDecimal yield) {
+        this.yield = yield;
+    }
+
+    public BigDecimal getExerYield() {
+        return exerYield;
+    }
+
+    public void setExerYield(BigDecimal exerYield) {
+        this.exerYield = exerYield;
+    }
+
+    public String getDeliveryTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, this.getDeliveryType());
+    }
+
+    public void setDeliveryTypeStr(String deliveryTypeStr) {
+        this.deliveryTypeStr = deliveryTypeStr;
+    }
+
+    public String getDeliveryType() {
+        return deliveryType;
+    }
+
+    public void setDeliveryType(String deliveryType) {
+        this.deliveryType = deliveryType;
+    }
+
+    public BigDecimal getUnitFprice() {
+        return unitFprice;
+    }
+
+    public void setUnitFprice(BigDecimal unitFprice) {
+        this.unitFprice = unitFprice;
+    }
+
+    public BigDecimal getUnitInt() {
+        return unitInt;
+    }
+
+    public void setUnitInt(BigDecimal unitInt) {
+        this.unitInt = unitInt;
+    }
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    public String getInstitutionb() {
+        return institutionb;
+    }
+
+    public void setInstitutionb(String institutionb) {
+        this.institutionb = institutionb;
+    }
+
+    public String getInstitutionbStr() {
+        return institutionbStr;
+    }
+
+    public void setInstitutionbStr(String institutionbStr) {
+        this.institutionbStr = institutionbStr;
+    }
+
+    public String getInstitutions() {
+        return institutions;
+    }
+
+    public void setInstitutions(String institutions) {
+        this.institutions = institutions;
+    }
+
+    public String getInstitutionsStr() {
+        return institutionsStr;
+    }
+
+    public void setInstitutionsStr(String institutionsStr) {
+        this.institutionsStr = institutionsStr;
+    }
+
+    public String getTraderb() {
+        return traderb;
+    }
+
+    public void setTraderb(String traderb) {
+        this.traderb = traderb;
+    }
+
+    public String getTraders() {
+        return traders;
+    }
+
+    public void setTraders(String traders) {
+        this.traders = traders;
+    }
+
+    public String getCapitalacctNameb() {
+        return capitalacctNameb;
+    }
+
+    public void setCapitalacctNameb(String capitalacctNameb) {
+        this.capitalacctNameb = capitalacctNameb;
+    }
+
+    public String getCapitalacctNumberb() {
+        return capitalacctNumberb;
+    }
+
+    public void setCapitalacctNumberb(String capitalacctNumberb) {
+        this.capitalacctNumberb = capitalacctNumberb;
+    }
+
+    public String getDepositAcctNameb() {
+        return depositAcctNameb;
+    }
+
+    public void setDepositAcctNameb(String depositAcctNameb) {
+        this.depositAcctNameb = depositAcctNameb;
+    }
+
+    public String getDepositAcctNumberb() {
+        return depositAcctNumberb;
+    }
+
+    public void setDepositAcctNumberb(String depositAcctNumberb) {
+        this.depositAcctNumberb = depositAcctNumberb;
+    }
+
+    public String getDepositAcctOrgb() {
+        return depositAcctOrgb;
+    }
+
+    public void setDepositAcctOrgb(String depositAcctOrgb) {
+        this.depositAcctOrgb = depositAcctOrgb;
+    }
+
+    public String getCapitalacctNames() {
+        return capitalacctNames;
+    }
+
+    public void setCapitalacctNames(String capitalacctNames) {
+        this.capitalacctNames = capitalacctNames;
+    }
+
+    public String getCapitalacctNumbers() {
+        return capitalacctNumbers;
+    }
+
+    public void setCapitalacctNumbers(String capitalacctNumbers) {
+        this.capitalacctNumbers = capitalacctNumbers;
+    }
+
+    public String getDepositAcctNames() {
+        return depositAcctNames;
+    }
+
+    public void setDepositAcctNames(String depositAcctNames) {
+        this.depositAcctNames = depositAcctNames;
+    }
+
+    public String getDepositAcctNumbers() {
+        return depositAcctNumbers;
+    }
+
+    public void setDepositAcctNumbers(String depositAcctNumbers) {
+        this.depositAcctNumbers = depositAcctNumbers;
+    }
+
+    public String getDepositAcctOrgs() {
+        return depositAcctOrgs;
+    }
+
+    public void setDepositAcctOrgs(String depositAcctOrgs) {
+        this.depositAcctOrgs = depositAcctOrgs;
+    }
+
+    public String getRsRepo() {
+        return rsRepo;
+    }
+
+    public void setRsRepo(String rsRepo) {
+        this.rsRepo = rsRepo;
+    }
+
+    public String getRbRepo() {
+        return rbRepo;
+    }
+
+    public void setRbRepo(String rbRepo) {
+        this.rbRepo = rbRepo;
+    }
+
+    public String getRsRepoStr() {
+        return rsRepoStr;
+    }
+
+    public void setRsRepoStr(String rsRepoStr) {
+        this.rsRepoStr = rsRepoStr;
+    }
+
+    public String getRbRepoStr() {
+        return rbRepoStr;
+    }
+
+    public void setRbRepoStr(String rbRepoStr) {
+        this.rbRepoStr = rbRepoStr;
+    }
+
+    public BigDecimal getRepoTerm() {
+        return repoTerm;
+    }
+
+    public void setRepoTerm(BigDecimal repoTerm) {
+        this.repoTerm = repoTerm;
+    }
+
+    public BigDecimal getMtradeAmt() {
+        return mtradeAmt;
+    }
+
+    public void setMtradeAmt(BigDecimal mtradeAmt) {
+        this.mtradeAmt = mtradeAmt;
+    }
+
+    public String getRepoType() {
+        return repoType;
+    }
+
+    public void setRepoType(String repoType) {
+        this.repoType = repoType;
+    }
+
+    public BigDecimal getActRepoTerm() {
+        return actRepoTerm;
+    }
+
+    public void setActRepoTerm(BigDecimal actRepoTerm) {
+        this.actRepoTerm = actRepoTerm;
+    }
+
+    public String getTermType() {
+        return termType;
+    }
+
+    public void setTermType(String termType) {
+        this.termType = termType;
+    }
+
+    public String getMdeliveryTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.结算方式, this.getMdeliveryType());
+    }
+
+    public void setMdeliveryTypeStr(String mdeliveryTypeStr) {
+        this.mdeliveryTypeStr = mdeliveryTypeStr;
+    }
+
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+    public String getSettleDate() {
+        return settleDate;
+    }
+
+    public void setSettleDate(String settleDate) {
+        this.settleDate = settleDate;
+    }
+
+    public String getVsettleDate() {
+        return vsettleDate;
+    }
+
+    public void setVsettleDate(String vsettleDate) {
+        this.vsettleDate = vsettleDate;
+    }
+
+    public String getMsettleDate() {
+        return msettleDate;
+    }
+
+    public void setMsettleDate(String msettleDate) {
+        this.msettleDate = msettleDate;
+    }
+
+    public String getMdeliveryType() {
+        return mdeliveryType;
+    }
+
+    public void setMdeliveryType(String mdeliveryType) {
+        this.mdeliveryType = mdeliveryType;
     }
 }

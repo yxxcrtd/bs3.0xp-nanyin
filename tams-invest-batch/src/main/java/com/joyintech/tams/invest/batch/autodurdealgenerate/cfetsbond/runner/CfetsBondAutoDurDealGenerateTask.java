@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
- * 债券存续期 自动生成债券还本、收息、到期交易
+ * 债券存续期 自动生成债券还本、收息、到期交易。赎回交易
  *
  * @author sjj
  * @version 1.0 2021年11月22日

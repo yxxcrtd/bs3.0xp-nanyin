@@ -4410,6 +4410,12 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
                     return m;
                 }
             }*/
+            if(inputDto.getTradeDate().compareTo(iPlatformDate.getSysDate())!=0){
+                AjaxResult m = new AjaxResult();
+                m.setStatuCode(220);
+                m.setMessage("只可在交易生效日进行撤销操作");
+                return m;
+            }
            if(StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_卖出.getValue())
                 || StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_行权_回售.getValue())
                    || StringUtil.equals(inputDto.getPs(),DictCodeList.回购拆借方向_正回购.getValue())

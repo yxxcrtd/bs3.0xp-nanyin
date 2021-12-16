@@ -126,6 +126,8 @@ public class CfetsTrdQueryController extends BaseController {
         initPageParams.put("TRD_MATCH_TYPE", this.getSelectDataFromDataDic(DictCode.下行交易匹配类型, null));
         initPageParams.put("CSTP_BUSINESS_TYPE", this.getSelectDataFromDataDic(DictCode.CSTP资产类型, null));
         initPageParams.put("QUOTE_STYLE", this.getSelectDataFromDataDic(BussinessDictCode.报价方式_登记, null));
+        initPageParams.put("DELIVERY_STATUS", this.getSelectDataFromDataDic(DictCode.交收状态, null));
+        initPageParams.put("SHARES_TRADE_MARKET", this.getSelectDataFromDataDic(DictCode.交易市场, null));
 
 
         //pageId

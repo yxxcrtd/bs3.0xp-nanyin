@@ -12,18 +12,7 @@ package com.joyintech.tams.invest.common.dto.period.common;
 
 import java.util.List;
 
-import com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.RepTrade;
-import com.joyintech.tams.common.base.entity.StlPayOrders;
-import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.WflPaTrdFinDealTotal;
-import com.joyintech.tams.common.base.entity.WflStlPayOrders;
-import com.joyintech.tams.common.base.entity.WflTrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
-import com.joyintech.tams.common.base.entity.WflTrdProductDealAdd;
+import com.joyintech.tams.common.base.entity.*;
 
 /**
  * 资产存续期要登录的流程数据
@@ -74,6 +63,10 @@ public class BaseTrdDurDbInertDto {
      * 金融产品交易汇总表
      */
     private TrdFinProductDealTotal trdFinProductDealTotal;
+    /**
+     * 金融产品交易汇总表
+     */
+    private TrdDealTotalAdd trdDealTotalAdd;
 
     /**
      * 划款指令表
@@ -332,5 +325,13 @@ public class BaseTrdDurDbInertDto {
      */
     public void setActPortfolioId(String actPortfolioId) {
         this.actPortfolioId = actPortfolioId;
+    }
+
+    public TrdDealTotalAdd getTrdDealTotalAdd() {
+        return trdDealTotalAdd;
+    }
+
+    public void setTrdDealTotalAdd(TrdDealTotalAdd trdDealTotalAdd) {
+        this.trdDealTotalAdd = trdDealTotalAdd;
     }
 }

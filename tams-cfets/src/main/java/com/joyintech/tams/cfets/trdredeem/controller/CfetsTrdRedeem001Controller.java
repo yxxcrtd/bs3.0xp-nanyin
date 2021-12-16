@@ -61,7 +61,7 @@ import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002
 @Controller
 @PageId("CfetsTrdRedeem001")
 @RequestMapping("/cfets/trdredeem/CfetsTrdRedeem001")
-@Api(tags = "赎回登记")
+@Api(tags = "赎回登记新建")
 public class CfetsTrdRedeem001Controller extends BaseController {
 
     /**
@@ -145,7 +145,7 @@ public class CfetsTrdRedeem001Controller extends BaseController {
 
     @ApiOperation(value = "当日登记撤销检查", notes = "当日登记撤销检查")
     @ResponseBody
-    @RequestMapping("/checkDayRegRevokeCheck")
+    @PostMapping("/checkDayRegRevokeCheck")
     public Message<AjaxResult> checkDayRegRevokeCheck(@RequestBody CfetsBondRegCheckRequst cfetsBondRegCheckRequst) {
         return new Message<AjaxResult>().success().setData(ibuQuoteBondService.checkDayRegRevokeCheck(cfetsBondRegCheckRequst));
     }
@@ -153,7 +153,7 @@ public class CfetsTrdRedeem001Controller extends BaseController {
 
     @ApiOperation(value = "当日登记撤销", notes = "当日登记撤销")
     @ResponseBody
-    @RequestMapping("regRevoke")
+    @PostMapping("regRevoke")
     public Message<AjaxResult> regRevoke(@RequestBody CfetsBondRegCheckRequst cfetsBondRegCheckRequst) throws WorkFlowException{
         //前后台转换
         AjaxResult ajaxResult = ibuQuoteBondService.checkDayRegRevokeCheck(cfetsBondRegCheckRequst);
@@ -183,8 +183,8 @@ public class CfetsTrdRedeem001Controller extends BaseController {
     }
 
     @ApiOperation(value = "登记提交检查", notes = "登记提交检查")
-    @PostMapping("/check")
     @ResponseBody
+    @PostMapping("/check")
     public Message<AjaxResult> check(@RequestBody CfetsTrdRedeemDealCommonDto cfetsTrdRedeemDealCommonDto){
         //check必填项
         AjaxResult ajaxResult = cfetsTrdRedeem001Service.checkNotEmpty(cfetsTrdRedeemDealCommonDto);
@@ -198,8 +198,8 @@ public class CfetsTrdRedeem001Controller extends BaseController {
     }
 
     @ApiOperation(value = "登记提交(保存)", notes = "登记提交(保存)")
-	@RequestMapping("save")
     @ResponseBody
+    @PostMapping("save")
 	public Message<AjaxResult> save(@RequestBody CfetsTrdRedeemDealCommonDto dto, BindingResult br) throws Exception{
         if (br.hasErrors()) {
             return new Message<AjaxResult>().success().setData(new AjaxResult(br));

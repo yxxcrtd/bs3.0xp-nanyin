@@ -296,6 +296,16 @@ public class RegFinProductDealTotal extends BaseEntity {
     private String dipType;
 
     /**
+     * 行权净价
+     */
+    private BigDecimal exercisePrice;
+    /**
+     * 赎回比例
+     */
+    private BigDecimal redeemRate;
+
+
+    /**
      * 取得 汇总登记编号
      * @return 汇总登记编号
      */
@@ -1161,5 +1171,21 @@ public class RegFinProductDealTotal extends BaseEntity {
      */
     public void setDipType(String dipType) {
         this.dipType = dipType == null ? null : dipType.trim();
+    }
+
+    public BigDecimal getExercisePrice() {
+        return exercisePrice;
+    }
+
+    public void setExercisePrice(BigDecimal exercisePrice) {
+        this.exercisePrice = exercisePrice;
+    }
+
+    public BigDecimal getRedeemRate() {
+        return redeemRate;
+    }
+
+    public void setRedeemRate(BigDecimal redeemRate) {
+        this.redeemRate = redeemRate;
     }
 }

@@ -29,6 +29,7 @@ import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurDbI
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,6 +79,9 @@ public class AutoPeriodCommonService extends BaseService {
      */
     @Autowired
     private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
+
+    @Autowired
+    private TrdDealTotalAddMapper trdDealTotalAddMapper;
     
     /**
      * StlPayOrdersMapper
@@ -546,6 +550,55 @@ public class AutoPeriodCommonService extends BaseService {
                 ptlTradeMapper.insert(ptlTrade);
             }
         }
+    }
+    /**
+     * 登录存续期流程数据
+     *
+     * @param trdBondDurDbInertDto
+     * @see
+     * @since 1.0
+     */
+    public void insertCfetsShDealData(TrdBondDurDbInertDto trdBondDurDbInertDto) {
+        if (trdBondDurDbInertDto == null) {
+            return;
+        }
+
+        if (trdBondDurDbInertDto.getTrdFinProductDealTotal() != null) {
+            trdFinProductDealTotalMapper.insert(trdBondDurDbInertDto.getTrdFinProductDealTotal());
+        }
+        if (trdBondDurDbInertDto.getTrdDealTotalAdd() != null) {
+            trdDealTotalAddMapper.insert(trdBondDurDbInertDto.getTrdDealTotalAdd());
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getStlPayOrdersList())) {
+            for (StlPayOrders StlPayOrders : trdBondDurDbInertDto.getStlPayOrdersList()) {
+                stlPayOrdersMapper.insert(StlPayOrders);
+            }
+        }
+
+        if (trdBondDurDbInertDto.getPaTrdFinProductDealTotal() != null) {
+            paTrdFinProductDealTotalMapper.insert(trdBondDurDbInertDto.getPaTrdFinProductDealTotal());
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getTrdProductDealList())) {
+            for (TrdProductDeal trdProductDeal : trdBondDurDbInertDto.getTrdProductDealList()) {
+                trdProductDealMapper.insert(trdProductDeal);
+            }
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getTrdProductDealAdds())) {
+            for (TrdProductDealAdd trdProductDealAdd : trdBondDurDbInertDto.getTrdProductDealAdds()) {
+                trdProductDealAddMapper.insert(trdProductDealAdd);
+            }
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getPtlTrades())) {
+            for (PtlTrade ptlTrade : trdBondDurDbInertDto.getPtlTrades()) {
+                ptlTradeMapper.insert(ptlTrade);
+            }
+        }
+
+
     }
 
     /**
