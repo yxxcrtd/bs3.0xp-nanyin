@@ -26,7 +26,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 质押式协议回购（提前终止/到期）
@@ -367,7 +369,10 @@ public class ExchangeTransMatchRepo5Service extends ExchangeTransMatchRepoCommon
      */
     private List<SettleTransData> handleSettleTransData(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto) {
         List<SettleTransData> settleTransDataList = new ArrayList<>();
-        List<SettleTransData> list = exchangeTransMatchCommonMapper.getSettleTransDataList(dealDto.getSeqId());
+        Map<String,Object> map = new HashMap<>();
+        map.put("seqId",dealDto.getSeqId());
+        map.put("tradeIdRaw",dealDto.getTradeIdRaw());
+        List<SettleTransData> list = exchangeTransMatchCommonMapper.getSettleTransDataList(map);
         for(SettleTransData item:list) {
             //收息到账
             if(BigDecimal.ZERO.compareTo(item.getmIntAmt())<0) {

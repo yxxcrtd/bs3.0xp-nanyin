@@ -23,7 +23,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 质押式协议回购（到期续作）
@@ -359,7 +361,10 @@ public class ExchangeTransMatchRepo4Service extends ExchangeTransMatchRepoCommon
      */
     private List<SettleTransData> handleSettleTransData(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto) {
         List<SettleTransData> settleTransDataList = new ArrayList<>();
-        List<SettleTransData> list = exchangeTransMatchCommonMapper.getSettleTransDataList(dealDto.getSeqId());
+        Map<String,Object> map = new HashMap<>();
+        map.put("seqId",dealDto.getSeqId());
+        map.put("tradeIdRaw",dealDto.getTradeIdRaw());
+        List<SettleTransData> list = exchangeTransMatchCommonMapper.getSettleTransDataList(map);
         for(SettleTransData item:list) {
             if(StringUtil.equals(item.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
                 if(StringUtil.equals(item.getBusiSceneCalss(), DictCodeListStl.业务场景分类明细_债券协议正回购_首期_买入.getValue())
