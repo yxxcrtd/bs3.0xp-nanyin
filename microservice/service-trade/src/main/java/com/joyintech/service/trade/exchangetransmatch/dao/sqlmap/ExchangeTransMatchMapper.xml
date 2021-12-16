@@ -75,6 +75,9 @@
             <if test="ps!=null and ps!='' ">
                 AND A.PS = #{ps}
             </if>
+            <if test="finprodType2_hg!=null and finprodType2_hg!='' ">
+                AND A.FINPROD_TYPE2 = #{finprodType2_hg}
+            </if>
             <if test="finprodType2!=null and finprodType2!='' ">
                 AND A.FINPROD_TYPE2 = #{finprodType2}
             </if>

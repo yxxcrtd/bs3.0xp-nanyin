@@ -76,8 +76,8 @@
            AND A.FINPROD_TYPE2 = A.FINPROD_TYPE2
         <where>
             B.SEQ_ID = #{seqId,jdbcType=VARCHAR}
-            <if test="applyTradeId != null and applyTradeId ！=''">
-                AND A.TRADE_ID = #{tradeIdRaw,jdbcType=VARCHAR}
+            <if test="tradeIdRaw != null and tradeIdRaw !=''">
+                AND A.CJBH = #{tradeIdRaw,jdbcType=VARCHAR}
             </if>
         </where>
     </select>
