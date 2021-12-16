@@ -472,11 +472,13 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
     @Override
     public void doBack(CfetsBondDealRegisterQuoteDto entity) {
         //退回冲销头寸
-        PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
+        //PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
     }
 
     @Override
     public void doDelete(String workflowId) {
+        CfetsBondDealRegisterQuoteDto entity = getBussinessEntityByWorkflowId(workflowId);
+        PositionHttpRequest.sendRevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
         deleteBussFlowData(workflowId);
     }
 

@@ -229,11 +229,11 @@ public class IbuQuoteBond002Controller extends BaseController {
     @ApiOperation(value = "对话报价拒绝", notes = "对话报价拒绝")
     @ResponseBody
     @RequestMapping("saveData")
-    public AjaxResult saveData(@RequestBody CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto) {
+    public Message<AjaxResult> saveData(@RequestBody CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto) {
 
         cfetsBondDealQuotedPrice002Service.save(cfetsBondDealDialogueQuoteDto);
 
-        return new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
+        return new Message<AjaxResult>().success().setData(new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS")));
     }
 
     @ApiOperation(value = "对话报价提交(保存)", notes = "对话报价提交(保存)")
