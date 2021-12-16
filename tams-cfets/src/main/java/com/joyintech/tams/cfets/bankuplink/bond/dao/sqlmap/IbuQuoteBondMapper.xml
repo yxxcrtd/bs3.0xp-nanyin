@@ -435,8 +435,8 @@
         '' SEND_STATUS,
         T1.SHARE_AMT/100 SHARE_AMT,
         T1.UNIT_CPRICE price,
-        T1.YIELD*100 matureYield,
-        T1.EXER_YIELD*100 exerYield,
+        T1.YIELD matureYield,
+        T1.EXER_YIELD exerYield,
         T1.SETTLE_SPEED ,
         '' quoteRoleType,
         T1.OU_PARTY_ID ,
@@ -497,8 +497,8 @@
         '' SEND_STATUS,
         T1.SHARE_AMT/100 SHARE_AMT,
         T1.UNIT_CPRICE price,
-        T1.YIELD*100 matureYield,
-        T1.EXER_YIELD*100 exerYield,
+        T1.YIELD matureYield,
+        T1.EXER_YIELD exerYield,
         T1.SETTLE_SPEED ,
         '' quoteRoleType,
         T1.OU_PARTY_ID ,
@@ -556,8 +556,8 @@
         ,y.I_Q_B_SEND_STATUS SEND_STATUS
         ,y.I_Q_B_D_PRIN_AMT/100  SHARE_AMT
         ,y.I_Q_B_D_UNIT_FPRICE price
-        ,y.I_Q_B_D_YIELD*100 matureYield
-        ,y.I_Q_B_D_EXER_YIELD*100 exerYield
+        ,y.I_Q_B_D_YIELD matureYield
+        ,y.I_Q_B_D_EXER_YIELD exerYield
         ,y.I_Q_B_SETTLE_SPEED SETTLE_SPEED
         ,y.I_Q_B_QUOTE_ROLE_TYPE quoteRoleType
         ,y.I_Q_B_OU_PARTY_ID OU_PARTY_ID
