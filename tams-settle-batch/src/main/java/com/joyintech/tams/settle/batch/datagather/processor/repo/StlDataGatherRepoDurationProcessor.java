@@ -58,7 +58,13 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 totalTrdProductDealDto.setShareAmt(settleTransData.getShareAmt());
                 totalTrdProductDealDto.setTradeAmt(settleTransData.getTradeAmt());
                 totalTrdProductDealDto.setIntAmt(settleTransData.getIntAmt());
-                totalTrdProductDealDto.setFpriceAmt(settleTransData.getFpriceAmt());
+                // ZGZGST-4220:解决页面字段为空的问题 fuyongsheng 20211216 modify start
+                // totalTrdProductDealDto.setFpriceAmt(settleTransData.getFpriceAmt());
+                totalTrdProductDealDto.setFpriceAmt(settleTransData.getmTradeAmt());
+                totalTrdProductDealDto.setPrinAmt(settleTransData.getmPrinAmt());
+                totalTrdProductDealDto.setTheoryInt(settleTransData.getmIntAmt());
+                totalTrdProductDealDto.setTheoryprinAmt(settleTransData.getmPrinAmt());
+                // ZGZGST-4220:解决页面字段为空的问题 fuyongsheng 20211216 modify end
                 totalTrdProductDealDto.setTradeAmt(settleTransData.getTradeAmt());
                 createTotalDeal(totalTrdProductDealDto,settleTransData);
                 finProductDealTotalList.add(totalTrdProductDealDto);
@@ -116,7 +122,15 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
      * @param settleTransData
      */
     private void createTotalDeal(TotalTrdProductDealDto dealTotal,SettleTransDataDto settleTransData){
-        String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易);
+        // ZGZGST-4220:存续期交易编号根据正、逆回购不同进行区分 fuyongsheng 20211216 modify start
+        // String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易);
+        String totalTradeId;
+        if (StringUtil.equals(settleTransData.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+            totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_正回购到期);
+        } else {
+            totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_逆回购到期);
+        }
+        // ZGZGST-4220:存续期交易编号根据正、逆回购不同进行区分 fuyongsheng 20211216 modify end
         dealTotal.setTotleTradeId(totalTradeId);
         // 业务类型
         dealTotal.setBusiType(DictCodeList.共通业务类型_质押式回购存续期.getValue());
@@ -131,7 +145,10 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
         // 起息日
         dealTotal.setVdate(settleTransData.getVdate());
         // 到期日
-        dealTotal.setMdate(settleTransData.getMdate2());
+        // ZGZGST-4220:到期日赋值Mdate fuyongsheng modify start
+        // dealTotal.setMdate(settleTransData.getMdate2());
+        dealTotal.setMdate(settleTransData.getMdate());
+        // ZGZGST-4220:到期日赋值Mdate fuyongsheng modify end
         // 交割日
         dealTotal.setSettleDate(settleTransData.getSettleDate());
         // 交易币种
@@ -238,9 +255,13 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
         // 交易日
         trdProductDeal.setTradeDate(settleTransData.getTradeDate());
         // 起息日
-        trdProductDeal.setVdate(null);
+        // ZGZGST-4220:金融产品交易表起息日和到期日赋值 fuyongsheng modify start
+        // trdProductDeal.setVdate(null);
+        trdProductDeal.setVdate(settleTransData.getVdate());
         // 到期日
-        trdProductDeal.setMdate(null);
+        // trdProductDeal.setMdate(null);
+        trdProductDeal.setMdate(settleTransData.getMdate());
+        // ZGZGST-4220:金融产品交易表起息日和到期日赋值 fuyongsheng modify end
         // 交付日
         trdProductDeal.setPayDate(settleTransData.getVpayDate());
         // 交割日
@@ -289,7 +310,8 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
         // 登记托管机构
         trdProductDeal.setRegistOrg(DictCodeList.登记托管机构_中债_中国证券登记结算有限责任公司.getValue());
         // 备注
-        trdProductDeal.setRemark(null);
+        // trdProductDeal.setRemark(null);
+        trdProductDeal.setRemark("数据清算自动处理");
         // 撤销说明
         trdProductDeal.setCancelRemark(null);
         // 销售代码
@@ -324,16 +346,20 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
         trdProductDeal.setFpriceAmt(settleTransData.getFpriceAmt());
         //交易金额
         trdProductDeal.setTradeAmt(settleTransData.getTradeAmt());*/
+        // ZGZGST-4220: 净价总额应为空 fuyongsheng 20211216 modify start
         //净价总额
-        trdProductDeal.setCpriceAmt(com.joyintech.framework.util.ArithmeticUtil.subtract(settleTransData.getFpriceAmt(),settleTransData.getIntAmt()));
+        // trdProductDeal.setCpriceAmt(com.joyintech.framework.util.ArithmeticUtil.subtract(settleTransData.getFpriceAmt(),settleTransData.getIntAmt()));
+        // ZGZGST-4220: 净价总额应为空 fuyongsheng 20211216 modify end
         // 单位净价
         trdProductDeal.setUnitCprice(settleTransData.getUnitCprice());
         // 单位利息
         trdProductDeal.setUnitInt(settleTransData.getUnitInt());
         // 单位全价
         trdProductDeal.setUnitFprice(settleTransData.getUnitFprice());
+        // ZGZGST-4220:交易方向已在外层处理,这里覆盖错误 fuyongsheng 20211216 modify start
         // 交易方向
-        trdProductDeal.setPs(settleTransData.getPs());
+        // trdProductDeal.setPs(settleTransData.getPs());
+        // ZGZGST-4220:交易方向已在外层处理,这里覆盖错误 fuyongsheng 20211216 modify end
         // 结算方式 券款兑付
         trdProductDeal.setSettMode("03");
         if(StringUtil.equals(settleTransData.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())){
