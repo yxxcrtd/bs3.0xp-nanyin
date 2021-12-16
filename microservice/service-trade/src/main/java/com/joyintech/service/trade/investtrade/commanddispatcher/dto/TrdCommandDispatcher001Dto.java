@@ -368,4 +368,14 @@ public class TrdCommandDispatcher001Dto extends EtrEntrust{
 	public void setPurchModle(String purchModle) {
 		this.purchModle = purchModle;
 	}
+
+	private String xyFlag;
+
+	public String getXyFlag() {
+		return xyFlag;
+	}
+
+	public void setXyFlag(String xyFlag) {
+		this.xyFlag = xyFlag;
+	}
 }

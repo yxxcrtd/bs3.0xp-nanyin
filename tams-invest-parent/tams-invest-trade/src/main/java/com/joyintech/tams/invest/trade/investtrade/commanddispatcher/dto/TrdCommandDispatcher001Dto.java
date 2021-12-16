@@ -450,4 +450,14 @@ public class TrdCommandDispatcher001Dto extends EtrEntrust{
 	public void setOtherPs(String otherPs) {
 		this.otherPs = otherPs;
 	}
+
+	private String xyFlag;
+
+	public String getXyFlag() {
+		return xyFlag;
+	}
+
+	public void setXyFlag(String xyFlag) {
+		this.xyFlag = xyFlag;
+	}
 }
