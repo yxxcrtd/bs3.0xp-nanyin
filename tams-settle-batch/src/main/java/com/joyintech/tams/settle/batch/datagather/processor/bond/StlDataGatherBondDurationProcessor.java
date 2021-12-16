@@ -64,7 +64,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             // ZGZGST-4216: 查询持仓时日期使用付息截止日前一日 fuyongsheng 20211214 modify start
             // param.put("dealDate",executeDate);
             Date mdate2 = settleTransDataDtos.get(0).getMdate2();
-            param.put("dealDate", DateUtil.getYesterDayDate(mdate2));
+            param.put("dealDate", DateUtil.parse(DateUtil.getYesterDayDate(mdate2)));
             // ZGZGST-4216: 查询持仓时日期使用付息截止日前一日 fuyongsheng 20211214 modify end
             param.put("hodingType",DictCodeList.持仓类型_实际.getValue());
             List<PtlSecPosition> ptlSecPositions = stlDataGatherMapper.listPtlSecPosition(param);

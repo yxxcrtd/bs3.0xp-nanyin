@@ -175,7 +175,7 @@
 			securities.FPRICE_AMT2 TRADE_AMT2,
 			securities.SHARE_AMT2 TRADE_NUM2,
 			securities.FINPROD_TYPE2 FINPROD_TYPE2,
-			securities.PS PS2,
+		    NULL PS2,
 			securities.TRADE_MARKET TRADE_MARKET2,
 			securities.TRADE_DATE TRADE_DATE2,
 			securities.SEC_ACCT_ID SEC_ACCT_ID2
@@ -202,7 +202,6 @@
 					ELSE std.SHARE_AMT*-1 END
 				) SHARE_AMT2,
 				std.FINPROD_TYPE2,
-				std.PS,
 				std.TRADE_MARKET,
 				std.TRADE_DATE,
 				std.SEC_ACCT_ID,
@@ -214,7 +213,6 @@
 			GROUP BY
 				std.FINPROD_ID,
 				std.FINPROD_TYPE2,
-				std.PS,
 				std.TRADE_MARKET,
 				std.TRADE_DATE,
 				std.SEC_ACCT_ID,

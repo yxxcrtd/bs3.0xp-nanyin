@@ -249,6 +249,11 @@
 		T2.VDATE ,
 		T2.MDATE,
 		<include refid="settleTransDataSql"></include>
+		<!--首期-->
+		INNER JOIN
+			SETTLE_TRANS_DATA stdsq ON std.SEAT_NUMBER = stdsq.SEAT_NUMBER
+				AND std.TRADE_DATE = stdsq.TRADE_DATE
+				AND std.APPLY_TRADE_ID = stdsq.CJBH
 		INNER JOIN SETTLE_TRANS_TG_MAPPING M
 		        ON M.TRADE_ID = std.TRADE_ID
 		INNER JOIN TRD_PRODUCT_DEAL T1
@@ -297,6 +302,13 @@
 					#{finprodType,jdbcType=VARCHAR}
 				</foreach>
 			</if>
+			<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add start-->
+			<if test="busiSceneCalssList != null and busiSceneCalssList.size() > 0">
+				<foreach collection="busiSceneCalssList" item="busiSceneCalss" open="AND std.BUSI_SCENE_CALSS IN (" close=")" separator=",">
+					#{busiSceneCalss,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add end-->
 		</where>
 	</select>
 
