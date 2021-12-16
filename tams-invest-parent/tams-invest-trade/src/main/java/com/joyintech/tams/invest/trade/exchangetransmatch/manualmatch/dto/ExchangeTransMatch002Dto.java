@@ -84,6 +84,31 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
     private String portfolioName;
 
     /**
+     * 回购类型
+     */
+    private String repoType;
+
+    /**
+     * 转股价格
+     */
+    private String conPrice;
+
+    /**
+     * 转股数量
+     */
+    private String conAmt;
+
+    /**
+     * 债转股的股票资产代码
+     */
+    private String rFinMarketId;
+
+    /**
+     *债转股的股票金融产品代码
+     */
+    private String rFinprodId;
+
+    /**
      * 委托交易list
      */
     private List<ExchangeTransMatch003Dto> entrustList;
@@ -240,6 +265,46 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
      */
     public String getTradeDateStr() {
         return DateUtil.format(this.getTradeDate());
+    }
+
+    public String getRepoType() {
+        return repoType;
+    }
+
+    public void setRepoType(String repoType) {
+        this.repoType = repoType;
+    }
+
+    public String getConPrice() {
+        return conPrice;
+    }
+
+    public void setConPrice(String conPrice) {
+        this.conPrice = conPrice;
+    }
+
+    public String getConAmt() {
+        return conAmt;
+    }
+
+    public void setConAmt(String conAmt) {
+        this.conAmt = conAmt;
+    }
+
+    public String getrFinMarketId() {
+        return rFinMarketId;
+    }
+
+    public void setrFinMarketId(String rFinMarketId) {
+        this.rFinMarketId = rFinMarketId;
+    }
+
+    public String getrFinprodId() {
+        return rFinprodId;
+    }
+
+    public void setrFinprodId(String rFinprodId) {
+        this.rFinprodId = rFinprodId;
     }
 }
 

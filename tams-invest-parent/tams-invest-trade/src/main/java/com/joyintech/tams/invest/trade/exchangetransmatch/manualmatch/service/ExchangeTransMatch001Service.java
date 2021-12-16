@@ -365,6 +365,13 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                         dtoStr = JsonUtils.object2Json(trdBondToStock001Dto);
                     }
                 }
+                else if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券入库.getValue())
+                || StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券出库.getValue())){
+                    //TODO 页面待开发
+                }
+                else if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())) {
+                    //TODO 页面待开发
+                }
 
             }
             else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())

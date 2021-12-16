@@ -38,6 +38,8 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
         map.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         map.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        map.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.findPage(map));
     }
 
@@ -46,7 +48,9 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("TRD_MATCH_STATUS_0", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
         map.put("TRD_MATCH_STATUS_1",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
         map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
+        map.put("ENTRUST_CLASS_02",DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
         map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
+        map.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
         if(StringUtil.isNotEmpty(map.get("finprodType2"))) {
             if(StringUtil.equals((String)map.get("finprodType2"),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
                 map.put("secType", DictCodeListExt1.证券品种_债券.getValue());
@@ -78,6 +82,7 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         map.put("ENTRUST_STATUS_03",DictCodeList.委托状态_已接收.getValue());
         map.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+        map.put("ENTRUST_CLASS_02",DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
 
         map.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         map.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
@@ -180,6 +185,7 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("TRD_MATCH_STATUS_1",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
         map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
         map.put("TRADE_TYPE_02", DictCodeListExt3.交易类型_投资指令.getValue());
+        map.put("ENTRUST_CLASS_02",DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
         return  exchangeTransMatchMapper.findEntrustList(map);
     }
 

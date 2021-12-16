@@ -172,4 +172,27 @@
                 AND D.ENTRUNST_TRADE_ID = #{entrunstId}
                 AND D.MATCH_CLASS = #{matchClass}
     </select>
+
+    <select id="getEntrustDetailList" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDetailDto">
+        select A.* from ETR_ENTRUST_DETAIL A
+        <where>
+            A.ENTRUST_ID = #{entrustId}
+        </where>
+    </select>
+
+    <select id="getFirstRepoTrade" resultType="com.joyintech.tams.common.base.entity.TrdProductDeal">
+            SELECT A.* FROM TRD_PRODUCT_DEAL A
+            INNER JOIN TRD_PRODUCT_DEAL_ADD B
+            ON A.TRADE_ID  = B.TRADE_ID
+            WHERE A.F_TRADE_ID = #{fCjbh}
+            AND A.VDATE = #{vdate}
+            AND B.PORTFOLIO_ID = #{portfolioId}
+    </select>
+
+    <select id="getFirstRepoSettleTransData" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
+        select A.*
+          from SETTLE_TRANS_DATA A
+         WHERE A.CJBH = #{fCjbh}
+           AND A.DEAL_DATE = #{portfolioId}
+    </select>
 </mapper>

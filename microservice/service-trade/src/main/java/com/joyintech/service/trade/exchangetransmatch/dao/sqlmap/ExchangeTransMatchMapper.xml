@@ -42,13 +42,20 @@
                 A.SETTLE_DATE settleDate,
                 D.ACCT_NO acctNo,
                 D.ACCT_NAME acctName,
-                nvl(A.STAMP_FEE,0) stampFee,
+		nvl(A.STAMP_FEE,0) stampFee,
                 nvl(A.JSF_AMT,0) jsfAmt,
                 nvl(A.GHF_AMT,0) ghfAmt,
                 nvl(A.ZGF_AMT,0) zgfAmt,
                 nvl(A.SXF_AMT,0) sxfAmt,
                 nvl(A.SETTLE_FEE,0) settleFee,
-                nvl(A.COMMISSION_AMT,0) commissionAmt
+                nvl(A.COMMISSION_AMT,0) commissionAmt,
+                A.SHARE_AMT shareAmt,
+                A.FPRICE_AMT fpriceAmt,
+                A1.REPO_TYPE repoType,
+                A1.CON_PRICE conPrice,
+                A1.CON_AMT conAmt,
+                A1.R_FINPROD_ID rFinMarketId,
+                E1.FINPROD_ID  rFinprodId
         from SETTLE_TRANS_DATA_TOTAL A
         LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B
             ON A.SEQ_ID = B.SEQ_NO
@@ -62,6 +69,11 @@
                     from SETTLE_TRANS_DATA_TOTAL_MATCH T
                     GROUP BY T.SEQ_NO) F
             ON A.SEQ_ID = F.SEQ_NO
+        LEFT JOIN SETTLE_TRANS_DATA_TOTAL_ADD A1
+            ON A.SEQ_ID = A1.TRADE_ID
+        LEFT JOIN FIN_PRODUCT E1
+            ON A1.R_FINPROD_ID  = E1.FINPROD_MARKET_ID
+            AND E1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F10}
         <where>
             <if test="tradeMarket!=null and tradeMarket!='' ">
                 AND A.TRADE_MARKET = #{tradeMarket}
@@ -116,7 +128,12 @@
                 A1.UPDATE_TIME updateTime,
                 #{TRADE_TYPE_02} tradeType,
                 A1.PORTFOLIO_ID portfolioId,
-                B1.PORTFOLIO_NAME portfolioName,
+                CASE
+                WHEN A1.ENTRUST_CLASS = #{ENTRUST_CLASS_02} THEN
+                    B2.TREE_NAME
+                ELSE
+                    B1.PORTFOLIO_NAME
+                END portfolioName,
                 CASE
                     WHEN A1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01} THEN #{SEC_TYPE_01}
                     WHEN A1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F10} THEN #{SEC_TYPE_06}
@@ -139,10 +156,14 @@
                 E1.SEC_ACCT_ID secAcctId,
                 E1.SEC_ACCT_NAME secAcctName,
                 F1.ACCT_NO acctNo,
-                F1.ACCT_NAME acctName
+                F1.ACCT_NAME acctName,
+                A1.ENTRUST_CLASS entrustClass
         FROM ETR_ENTRUST A1
-            INNER JOIN PTL_PORTFOLIO B1
+            LEFT JOIN PTL_PORTFOLIO B1
                 ON A1.PORTFOLIO_ID = B1.PORTFOLIO_ID
+            LEFT JOIN MUTIPTL_PORTFOLIO_TREE B2
+                ON A1.PORTFOLIO_ID = B2.TREE_ID
+                AND B2.PAR_TREE_ID IS NOT NULL
             LEFT JOIN FIN_PRODUCT C1
                 ON A1.FINPROD_ID = C1.FINPROD_ID
             LEFT JOIN ETR_ENTRUST_ADD D1
@@ -329,7 +350,12 @@
             s1.ENTRUNST_TRADE_ID entrustId,
             #{TRADE_TYPE_02} tradeType,
             e1.PORTFOLIO_ID portfolioId,
-            p1.PORTFOLIO_NAME portfolioName,
+            CASE
+                 WHEN e1.ENTRUST_CLASS = #{ENTRUST_CLASS_02} THEN
+                  p2.TREE_NAME
+            ELSE
+                  p1.PORTFOLIO_NAME
+            END portfolioName,
             s3.FINPROD_TYPE2 finprodType2,
             CASE
                 WHEN s3.SEC_TYPE=#{SEC_TYPE_09} THEN NULL
@@ -362,6 +388,9 @@
                            ON f1.FINPROD_ID=s3.FINPROD_ID
                  LEFT join PTL_PORTFOLIO p1
                            on p1.PORTFOLIO_ID=e1.PORTFOLIO_ID
+                 LEFT JOIN MUTIPTL_PORTFOLIO_TREE p2
+                            ON e1.PORTFOLIO_ID = p2.TREE_ID
+                           AND p2.PAR_TREE_ID IS NOT NULL
                  LEFT JOIN (
                       SELECT SEQ_NO,
                              ENTRUNST_TRADE_ID,
@@ -385,9 +414,14 @@
         C.TRADE_MARKET tradeMarket,
         C.APPLY_TRADE_ID applyTradeId,
         D.PORTFOLIO_ID portfolioId,
-        F.PORTFOLIO_NAME portfolioName,
         CASE
-            WHEN C.SEC_TYPE = '09' THEN NULL
+        WHEN D.ENTRUST_CLASS =  #{ENTRUST_CLASS_02} THEN
+            F1.TREE_NAME
+        ELSE
+            F.PORTFOLIO_NAME
+        END portfolioName,
+        CASE
+            WHEN C.SEC_TYPE = #{SEC_TYPE_09} THEN NULL
         ELSE
             E.FINPROD_MARKET_ID
         END finprodMarketId,
@@ -416,6 +450,9 @@
         ON E.FINPROD_ID = C.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO F
         ON D.PORTFOLIO_ID = F.PORTFOLIO_ID
+        LEFT JOIN MUTIPTL_PORTFOLIO_TREE F1
+        ON D.PORTFOLIO_ID = F1.TREE_ID
+        AND F1.PAR_TREE_ID IS NOT NULL
         <where>
             <if test="matchType!=null and matchType!='' ">
                 AND A.MATCH_CLASS = #{matchType}

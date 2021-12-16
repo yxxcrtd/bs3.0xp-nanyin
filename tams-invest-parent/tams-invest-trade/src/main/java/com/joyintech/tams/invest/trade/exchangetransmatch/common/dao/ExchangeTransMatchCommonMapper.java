@@ -3,6 +3,8 @@ package com.joyintech.tams.invest.trade.exchangetransmatch.common.dao;
 import com.joyintech.tams.common.base.entity.SettleTransData;
 import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
 import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
+import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDetailDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto;
 import org.apache.ibatis.annotations.Param;
@@ -94,4 +96,19 @@ public interface ExchangeTransMatchCommonMapper {
      * @return
      */
     List<ExchangeTransMatchCommonRevokeDto> getSettleTransTgMapping(Map<String, Object> paraMap);
+
+    List<ExchangeTransMatchCommonEntrustDetailDto> getEntrustDetailList(@Param("entrustId") String entrustId);
+
+    /**
+     * 获取首期委托交易
+     * @return
+     */
+    TrdProductDeal getFirstRepoTrade(Map<String, Object> paraMap);
+
+    /**
+     * 获取首期成交明细
+     * @param paraMap
+     * @return
+     */
+    SettleTransData getFirstRepoSettleTransData(Map<String, Object> paraMap);
 }
