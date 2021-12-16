@@ -494,10 +494,12 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransDataPledge.setTradeId(settleTransData.getTradeId());
 							settleTransDataPledge.setBranch(0L);
 							settleTransDataPledge.setPledgeFinprodId(szdJsmx.getZqdm2());
-							settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+							// settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+							settleTransDataPledge.setPledgeNumber(szdJsmx.getSl() == null ? BigDecimal.ZERO : new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
 						}
 						// 单位净价
-						settleTransData.setUnitCprice(new BigDecimal(szdJsmx.getJg1()));
+						// settleTransData.setUnitCprice(new BigDecimal(szdJsmx.getJg1()));
+						settleTransData.setUnitCprice(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getJg2()), new BigDecimal(100), 8));
 					}
 				}
 			}
@@ -523,13 +525,15 @@ public class StlDataDealSzdJsmxProcessService {
 							// 业务场景分类
 							settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券质押式竞价正回购_到期.getValue());
 							// 回购利率
-							settleTransData.setIntRate(new BigDecimal(szdJsmx.getJg2()));
+							// settleTransData.setIntRate(new BigDecimal(szdJsmx.getJg2()));
+							settleTransData.setIntRate(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getJg2()), new BigDecimal(100), 8));
 						}
 						if (StringUtil.equals(StlDataDealProcessConstant.YWLX_024, szdJsmx.getYwlx()) && StringUtil.equals(StlDataDealProcessConstant.MMBS_S, szdJsmx.getMmbz())) {
 							// 业务场景分类
 							settleTransData.setBusiSceneCalss(DictCodeListStl.业务场景分类明细_债券质押式竞价逆回购_到期.getValue());
 							// 回购利率
-							settleTransData.setIntRate(new BigDecimal(szdJsmx.getJg2()));
+							// settleTransData.setIntRate(new BigDecimal(szdJsmx.getJg2()));
+							settleTransData.setIntRate(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getJg2()), new BigDecimal(100), 8));
 						}
 						if (StringUtil.equals(StlDataDealProcessConstant.YWLX_603, szdJsmx.getYwlx()) && StringUtil.equals(StlDataDealProcessConstant.MMBS_B, szdJsmx.getMmbz())) {
 							// 业务场景分类
@@ -577,6 +581,10 @@ public class StlDataDealSzdJsmxProcessService {
 						// 计算回购利息 fuyongsheng 20211215 add end
 						// 到期金额
 						settleTransData.setmTradeAmt(bjje);
+						// 到期本金
+						settleTransData.setmPrinAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())));
+						// 单位净价
+						settleTransData.setUnitCprice(ArithmeticUtil.divide(new BigDecimal(szdJsmx.getJg2()), new BigDecimal(100), 8));
 					}
 				}
 			}
@@ -660,7 +668,8 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransDataPledge.setTradeId(settleTransData.getTradeId());
 							settleTransDataPledge.setBranch(0L);
 							settleTransDataPledge.setPledgeFinprodId(szdJsmx.getZqdm2());
-							settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+							// settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+							settleTransDataPledge.setPledgeNumber(szdJsmx.getSl() == null ? BigDecimal.ZERO : new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
 						}
 					}
 				}
@@ -745,7 +754,8 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransDataPledge.setTradeId(settleTransData.getTradeId());
 							settleTransDataPledge.setBranch(0L);
 							settleTransDataPledge.setPledgeFinprodId(szdJsmx.getZqdm2());
-							settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+							// settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+							settleTransDataPledge.setPledgeNumber(szdJsmx.getSl() == null ? BigDecimal.ZERO : new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
 						}
 					}
 				}
@@ -812,8 +822,8 @@ public class StlDataDealSzdJsmxProcessService {
 						settleTransDataPledge.setTradeId(settleTransData.getTradeId());
 						settleTransDataPledge.setBranch(0L);
 						settleTransDataPledge.setPledgeFinprodId(szdJsmx.getZqdm2());
-						settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
-
+						// settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
+						settleTransDataPledge.setPledgeNumber(szdJsmx.getSl() == null ? BigDecimal.ZERO : new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
 					}
 				}
 			}
