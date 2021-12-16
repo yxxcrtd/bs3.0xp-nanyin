@@ -918,7 +918,7 @@ public class AutoPeriodBondCommonService {
         trdFinProductDealTotal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
         trdFinProductDealTotal.setVdate(DateUtil.parse(entity.getvDate()));
         trdFinProductDealTotal.setMdate(DateUtil.parse(entity.getmDate()));
-        trdFinProductDealTotal.setSettleDate(DateUtil.parse(entity.getTradeDate()));
+        trdFinProductDealTotal.setSettleDate(DateUtil.parse(entity.getPayDate()));
         trdFinProductDealTotal.setShareAmt(ArithmeticUtil.divide(entity.getQty(), new BigDecimal(100), 2, RoundingMode.HALF_UP));
         trdFinProductDealTotal.setPortfolioId(entity.getPortfolioId());
         trdFinProductDealTotal.setPrinAmt(ArithmeticUtil.subtract(entity.getTradeAmt(), entity.getIntAmtTheory()));
