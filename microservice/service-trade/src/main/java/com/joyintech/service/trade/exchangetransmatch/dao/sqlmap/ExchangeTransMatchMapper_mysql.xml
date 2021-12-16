@@ -135,7 +135,12 @@
         A1.TRADE_PLAT tradePlat,
         A1.ENTRUST_AMT entrustAmt,
         A1.PRICE price,
-        A1.ENTRUST_NUM entrustNum,
+        CASE
+            WHEN
+            A1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) THEN A1.ENTRUST_AMT
+        ELSE
+            A1.ENTRUST_NUM
+        END entrustNum,
         E1.SEC_ACCT_ID secAcctId,
         E1.SEC_ACCT_NAME secAcctName,
         F1.ACCT_NO acctNo,
