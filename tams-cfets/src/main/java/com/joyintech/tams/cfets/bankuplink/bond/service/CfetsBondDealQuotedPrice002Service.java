@@ -630,8 +630,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      * @return boolean 是否成功
      */
     public boolean save(CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto) {
-        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDtoMicro = new com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto();
-        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDtoMicro,cfetsBondDealDialogueQuoteDto);
+        com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDtoMicro = JsonUtils.json2Object(JsonUtils.object2Json(cfetsBondDealDialogueQuoteDto),com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto.class);
         if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(),
             "marketResponse")) {
             return cfetsBondDealQuotedPriceService.sendBondRequestQuoteNewReply(cfetsBondDealDialogueQuoteDtoMicro);

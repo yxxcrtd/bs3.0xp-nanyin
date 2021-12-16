@@ -149,6 +149,31 @@ public class BondQuoteSearchDto {
      */
     private String quoteType;
 
+    /**
+     * 交易方向 多选
+     */
+    private List<String>  pss;
+
+    /**
+     * 市场代码 多选
+     */
+    private List<String> finprodMarketIds;
+
+    /**
+     * 本方交易员
+     */
+    private String mySideTrader;
+
+    /**
+     * 对手方
+     */
+    private List<String> counterIds;
+
+    /**
+     * 对手方交易员
+     */
+    private String counterTrader;
+
     public String getQuoteType() {
         return quoteType;
     }
@@ -620,4 +645,43 @@ public class BondQuoteSearchDto {
 		this.finprodIdList = finprodIdList;
 	}
 
+    public List<String> getPss() {
+        return pss;
+    }
+
+    public void setPss(List<String> pss) {
+        this.pss = pss;
+    }
+
+    public List<String> getFinprodMarketIds() {
+        return finprodMarketIds;
+    }
+
+    public void setFinprodMarketIds(List<String> finprodMarketIds) {
+        this.finprodMarketIds = finprodMarketIds;
+    }
+
+    public String getMySideTrader() {
+        return mySideTrader;
+    }
+
+    public void setMySideTrader(String mySideTrader) {
+        this.mySideTrader = mySideTrader;
+    }
+
+    public List<String> getCounterIds() {
+        return counterIds;
+    }
+
+    public void setCounterIds(List<String> counterIds) {
+        this.counterIds = counterIds;
+    }
+
+    public String getCounterTrader() {
+        return counterTrader;
+    }
+
+    public void setCounterTrader(String counterTrader) {
+        this.counterTrader = counterTrader;
+    }
 }

@@ -226,15 +226,7 @@ public class IbuQuoteBond002Controller extends BaseController {
         return new Message<AjaxResult>().success().setData(ar);
     }
 
-    /**
-     * 保存提交
-     *
-     * @param cfetsBondDealDialogueQuoteDto 对话报价对象
-     * @return 处理结果
-     * @throws WorkFlowException
-     * @see
-     * @since 1.0
-     */
+    @ApiOperation(value = "对话报价拒绝", notes = "对话报价拒绝")
     @ResponseBody
     @RequestMapping("saveData")
     public AjaxResult saveData(@RequestBody CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto) {
@@ -244,7 +236,7 @@ public class IbuQuoteBond002Controller extends BaseController {
         return new AjaxResult(this.getMessage("CFETS_COMMON_SUCSESS"));
     }
 
-    @ApiOperation(value = "对话报价提交(保存)", notes = "对话报价登记提交(保存)")
+    @ApiOperation(value = "对话报价提交(保存)", notes = "对话报价提交(保存)")
     @ResponseBody
     @RequestMapping("save")
     public Message<AjaxResult> save(@RequestBody CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto, BindingResult br) throws WorkFlowException {

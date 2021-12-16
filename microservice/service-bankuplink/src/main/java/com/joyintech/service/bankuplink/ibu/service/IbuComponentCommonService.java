@@ -661,6 +661,7 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteBondDto.setDealFeeAmt(cfetsBondDealDialogueQuoteDto.getDealFeeAmt());
         ibuQuoteBondDto.setSettFeeAmt(cfetsBondDealDialogueQuoteDto.getSettFeeAmt());
         ibuQuoteBondDto.setDipType(cfetsBondDealDialogueQuoteDto.getDistribution());
+        ibuQuoteBondDto.setSecManageAcctId(cfetsBondDealDialogueQuoteDto.getSecManageAcctId());
         inputBean.setWflIbuQuoteBond2Dto(ibuQuoteBondDto);
 
         // 银行间报价金额基对手信息
@@ -808,6 +809,7 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteBondDto.setDipType(cfetsBondDealDialogueQuoteDto.getDistribution());
         ibuQuoteBondDto.setDealFeeAmt(cfetsBondDealDialogueQuoteDto.getDealFeeAmt());
         ibuQuoteBondDto.setSettFeeAmt(cfetsBondDealDialogueQuoteDto.getSettFeeAmt());
+        ibuQuoteBondDto.setSecManageAcctId(cfetsBondDealDialogueQuoteDto.getSecManageAcctId());
         inputBean.setIbuQuoteBondDto(ibuQuoteBondDto);
 
         // 银行间报价金额基对手信息
@@ -987,8 +989,8 @@ public class IbuComponentCommonService extends BaseService {
                                                                             // *10000/100
         // ibuQuoteBondDto.setFpriceAmt(cfetsBondDealRequestQuoteDto.getFpriceAmt());
         ibuQuoteBondDto.setEffTime(
-            DateUtil.parse(iPlatformDate.getSysDateStr() + " "
-                           + cfetsBondDealRequestQuoteDto.getEffDate() + ":00")); // 请求报价从系统参数获取
+                DateUtil.parse(iPlatformDate.getSysDateStr() + " " + (cfetsBondDealRequestQuoteDto.getEffDate() == null
+                        ? CacheUtil.getSysParam("ibuVar_quoteEffTime") : cfetsBondDealRequestQuoteDto.getEffDate()) + ":00")); // 请求报价从系统参数获取
         ibuQuoteBondDto.setOuPartyId(cfetsBondDealRequestQuoteDto.getMySide());
         ibuQuoteBondDto.setOuTraderId(cfetsBondDealRequestQuoteDto.getMySideTrader());
         ibuQuoteBondDto.setRemark(cfetsBondDealRequestQuoteDto.getRemark());
@@ -1153,6 +1155,7 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteBondDto.setDealFeeAmt(cfetsBondDealRequestQuoteDto.getDealFeeAmt());
         ibuQuoteBondDto.setSettFeeAmt(cfetsBondDealRequestQuoteDto.getSettFeeAmt());
         ibuQuoteBondDto.setDipType(cfetsBondDealRequestQuoteDto.getDistribution());
+        ibuQuoteBondDto.setSecManageAcctId(cfetsBondDealRequestQuoteDto.getSecManageAcctId());
         inputBean.setWflIbuQuoteBond2Dto(ibuQuoteBondDto);
 
         // 银行间报价金额基对手信息列表
@@ -1950,6 +1953,22 @@ public class IbuComponentCommonService extends BaseService {
             }
         }
 
+        //针对前后端分离 高级查询
+        if(null!=param.get("pss")){
+            inputBean.setPss((List<String>)param.get("pss"));
+        }
+        if(null!=param.get("finprodMarketIds")){
+            inputBean.setFinprodMarketIds((List<String>)param.get("finprodMarketIds"));
+        }
+        if(null!=param.get("counterIds")){
+            inputBean.setCounterIds((List<String>)param.get("counterIds"));
+        }
+        if (param.get("mySideTrader") != null && !"".equals(param.get("mySideTrader"))) {
+            inputBean.setMySideTrader((String)param.get("mySideTrader"));
+        }
+        if (param.get("counterTrader") != null && !"".equals(param.get("counterTrader"))) {
+            inputBean.setCounterTrader((String)param.get("counterTrader"));
+        }
         return ibuMainService.getBondQuoteList(inputBean, null);
     }
 

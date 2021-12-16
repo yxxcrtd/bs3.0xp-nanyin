@@ -543,6 +543,31 @@
 	            	and concat(nvl(a.QUOTE_ROLE_TYPE, ''), concat(',', nvl(a.TRADE_STATUS, ''))) != '04,09'
 	            	<!-- add by zhangliang 20200803  做市方已撤回的数据也不能显示在当日报价页面   start-->
 	            </if>
+				<if test="pss != null and pss.size() > 0">
+					and a.PS in
+					<foreach item="item" index="index" collection="pss" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				<if test="finprodMarketIds != null and finprodMarketIds.size() > 0">
+					and c.FINPROD_MARKET_ID in
+					<foreach item="item" index="index" collection="finprodMarketIds" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				<if test="counterIds != null and counterIds.size() > 0">
+					and b.CP_PARTY_ID in
+					<foreach item="item" index="index" collection="counterIds" open="(" separator="," close=")">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				<if test="mySideTrader !=null and mySideTrader !=''">
+					and a.OU_TRADER_ID LIKE concat('%',concat(#{mySideTrader,jdbcType=VARCHAR},'%'))
+
+				</if>
+				<if test="counterTrader !=null and counterTrader !=''">
+					and b.CP_TRADER LIKE concat('%',concat(#{counterTrader,jdbcType=VARCHAR},'%'))
+				</if>
 	             <if test="keywords != null and keywords != ''">
 	      AND (a.WORKFLOW_STATUS like '%'||#{keywords}||'%'  OR A1.ITEM_VALUE LIKE '%'||#{keywords}||'%' 
           OR A.QUOTE_ROLE_TYPE like '%'||#{keywords}||'%' OR B.ITEM_VALUE LIKE '%'||#{keywords}||'%' 

@@ -393,7 +393,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		return new Message<AjaxResult>().success().setData(cfetsQuotedCommonService.checkOperationAllow(bondQuoteInfoDto));
 	}
 
-	@ApiOperation(value = "撤回", notes = "撤回")
+	@ApiOperation(value = "请求报价撤回", notes = "请求报价撤回")
 	@ResponseBody
 	@RequestMapping("doReCall")
 	public Message<AjaxResult> doReCall(@RequestBody CfetsBondCheckRequst cfetsBondCheckRequst) {
@@ -493,9 +493,10 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ApiOperation(value = "当日报价", notes = "当日报价")
 	@PostMapping("/listDayPrice")
 	@ResponseBody
-	public Message<List<CfetsBondDayPriceDto>> pageDayPrice(@RequestBody EntrustRequest dto){
+	public Message<List<CfetsBondDayPriceDto>> pageDayPrice(@RequestBody DayPriceRequest dto){
 		try {
 			Map<String, Object> stringObjectMap = JsonUtils.object2Map(dto);
+			stringObjectMap.put("keywords",dto.getSearch());
 			List<CfetsBondDayPriceDto> result = cfetsBondDealQuotedPrice001Service.listDayPrice(stringObjectMap);
 			return new Message<List<CfetsBondDayPriceDto>>().success().setData(result);
 		}catch (Exception e) {
