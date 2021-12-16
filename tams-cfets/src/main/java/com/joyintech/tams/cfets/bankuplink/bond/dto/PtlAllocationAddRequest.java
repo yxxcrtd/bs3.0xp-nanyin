@@ -24,6 +24,21 @@ public class PtlAllocationAddRequest {
     @ApiModelProperty(required = true,name="entrustIdList",value="排除已经选择的指令")
     private List<String> entrustIdList;
 
+    @ApiModelProperty(name="portfolioIds",value="组合名称",example="[A,B]")
+    private List<String> portfolioIds;
+
+    @ApiModelProperty(name="finprodMarketIds",value="市场代码",example="[A,B]")
+    private List<String> finprodMarketIds;
+
+    @ApiModelProperty(name="priceModels",value="价格模式代码集合")
+    private List<String> priceModels;
+
+    @ApiModelProperty(name="invManagerIds ",value="投资经理集合",example="[01,02]")
+    private List<String> invManagerIds ;
+
+    @ApiModelProperty(name="entrustIds ",value="指令代码集合")
+    private List<String> entrustIds ;
+
     public String getFinprodId() {
         return finprodId;
     }
@@ -54,6 +69,46 @@ public class PtlAllocationAddRequest {
 
     public void setEntrustIdList(List<String> entrustIdList) {
         this.entrustIdList = entrustIdList;
+    }
+
+    public List<String> getPortfolioIds() {
+        return portfolioIds;
+    }
+
+    public void setPortfolioIds(List<String> portfolioIds) {
+        this.portfolioIds = portfolioIds;
+    }
+
+    public List<String> getFinprodMarketIds() {
+        return finprodMarketIds;
+    }
+
+    public void setFinprodMarketIds(List<String> finprodMarketIds) {
+        this.finprodMarketIds = finprodMarketIds;
+    }
+
+    public List<String> getPriceModels() {
+        return priceModels;
+    }
+
+    public void setPriceModels(List<String> priceModels) {
+        this.priceModels = priceModels;
+    }
+
+    public List<String> getInvManagerIds() {
+        return invManagerIds;
+    }
+
+    public void setInvManagerIds(List<String> invManagerIds) {
+        this.invManagerIds = invManagerIds;
+    }
+
+    public List<String> getEntrustIds() {
+        return entrustIds;
+    }
+
+    public void setEntrustIds(List<String> entrustIds) {
+        this.entrustIds = entrustIds;
     }
 }
 
