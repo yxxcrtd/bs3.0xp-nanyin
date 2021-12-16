@@ -19,6 +19,7 @@ import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.Fund.Ex
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.*;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.ExchangeTransMatchRepo1Service;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.shares.ExchangeTransMatchShares1Service;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -219,9 +220,38 @@ public class ExchangeTransMatchCommonService extends BaseService {
     public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList){
         logger.error("批量处理成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
 
-        for(ExchangeTransMatchCommonDto dto:dtoList) {
-            this.transactionMacth(dto);
+        if(StringUtil.equals(dtoList.get(0).getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+                || StringUtil.equals(dtoList.get(0).getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+            Map<String,List<ExchangeTransMatchCommonDto>> dtoListMap = dtoList.stream().collect(Collectors.groupingBy(x -> x.getEntrustIdList().get(0)));
+            List<ExchangeTransMatchCommonDto> exchangeTransMatchCommonDtoList = new ArrayList<>();
+            Map<String,Object> entrustMap = new HashMap<>();
+            for(String key:dtoListMap.keySet()) {
+                entrustMap.put("entrustId",key);
+                List<ExchangeTransMatchCommonEntrustDto> commonEntrustDtoList = exchangeTransMatchCommonMapper.getEtrEntrustByIdList(entrustMap);
+                if(!StringUtil.isEmptyList(commonEntrustDtoList)) {
+                    BigDecimal remainEntrustAmt = commonEntrustDtoList.get(0).getRemainEntrustAmt();
+                    if(!StringUtil.isEmptyList(dtoListMap.get(key))) {
+                        for(ExchangeTransMatchCommonDto exchangeTransMatchCommonDto : dtoListMap.get(key)) {
+                            if(BigDecimal.ZERO.compareTo(remainEntrustAmt)>=0) {
+                                break;
+                            }
+                            exchangeTransMatchCommonDtoList.add(exchangeTransMatchCommonDto);
+                            remainEntrustAmt = ArithmeticUtil.subtract(remainEntrustAmt,exchangeTransMatchCommonDto.getRemainAmount());
+                        }
+                    }
+                }
+            }
+
+            for(ExchangeTransMatchCommonDto dto:exchangeTransMatchCommonDtoList) {
+                this.transactionMacth(dto);
+            }
         }
+        else {
+            for(ExchangeTransMatchCommonDto dto:dtoList) {
+                this.transactionMacth(dto);
+            }
+        }
+
         logger.error("批量处理成交匹配数据---结束");
     }
 
@@ -243,7 +273,9 @@ public class ExchangeTransMatchCommonService extends BaseService {
             //计算 已匹配份额，已匹配金额，指令已匹配份额，指令已匹配金额
             if(commonEntrustDtoList.size() == 1) {
                 ExchangeTransMatchCommonEntrustDto commonEntrustDto = commonEntrustDtoList.get(0);
-                if(StringUtil.equals(commonEntrustDto.getTargetType(),DictCodeListExt3.目标类型_数量.getValue())) {
+                if(StringUtil.equals(commonEntrustDto.getTargetType(),DictCodeListExt3.目标类型_数量.getValue())
+                && !(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+                        || StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) ) {
                     //已匹配份额
                     BigDecimal marchQty = BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(), commonEntrustDto.getRemainEntrustNum()))>0?dto.getRemainNum() : commonEntrustDto.getRemainEntrustNum();
                     commonEntrustDto.setMarchQty(marchQty);
@@ -259,14 +291,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
                     BigDecimal marchQtyEn = BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),commonEntrustDto.getRemainEntrustNum()))>0?dto.getRemainNum() : commonEntrustDto.getRemainEntrustNum();
                     commonEntrustDto.setMarchQtyEn(marchQtyEn);
                     //指令已匹配金额
-                    if(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
-                    || StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
-                        commonEntrustDto.setMarchAmtEn(ArithmeticUtil.multiply(marchQtyEn,new BigDecimal(100)));
-                    }
-                    else {
-                        commonEntrustDto.setMarchAmtEn(ArithmeticUtil.multiply(marchQtyEn,commonEntrustDto.getPrice()));
-                    }
-
+                    commonEntrustDto.setMarchAmtEn(ArithmeticUtil.multiply(marchQtyEn,commonEntrustDto.getPrice()));
                 }
                 else {
 
@@ -283,11 +308,20 @@ public class ExchangeTransMatchCommonService extends BaseService {
                         entrustAmt = ArithmeticUtil.multiply(entrustQty,dto.getUnitCprice());
                     }
                     commonEntrustDto.setMarchAmt(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainAmount(),entrustAmt))>0?dto.getRemainAmount() : entrustAmt);
+
                     //指令已匹配份额
                     BigDecimal marchAmtEn = ArithmeticUtil.multiply(dto.getRemainNum(),dto.getUnitCprice());
                     commonEntrustDto.setMarchQtyEn(ArithmeticUtil.divide(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(marchAmtEn,commonEntrustDto.getRemainEntrustAmt()))>0?marchAmtEn : commonEntrustDto.getRemainEntrustAmt(),commonEntrustDto.getPrice(),4));
                     //指令已匹配金额
                     commonEntrustDto.setMarchAmtEn(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(marchAmtEn,commonEntrustDto.getRemainEntrustAmt()))>0?marchAmtEn : commonEntrustDto.getRemainEntrustAmt());
+
+                    //特殊处理质押式竞价回购的分配逻辑
+                    if (StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+                            || StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
+                    {
+                        commonEntrustDto.setMarchQty(commonEntrustDto.getMarchAmt());
+                        commonEntrustDto.setMarchQtyEn(ArithmeticUtil.divide(commonEntrustDto.getMarchAmtEn(),new BigDecimal(100),2));
+                    }
                 }
 
                 if((StringUtil.equals(commonEntrustDto.getTargetType(),DictCodeListExt3.目标类型_数量.getValue())

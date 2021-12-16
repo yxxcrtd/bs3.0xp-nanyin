@@ -356,10 +356,10 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
         trdProductDeal.setUnitInt(settleTransData.getUnitInt());
         // 单位全价
         trdProductDeal.setUnitFprice(settleTransData.getUnitFprice());
-        // ZGZGST-4220:交易方向已在外层处理,这里覆盖错误 fuyongsheng 20211216 modify start
+        // ZGZGST-4220:交易方向已在外层处理 fuyongsheng 20211216 modify start
         // 交易方向
         // trdProductDeal.setPs(settleTransData.getPs());
-        // ZGZGST-4220:交易方向已在外层处理,这里覆盖错误 fuyongsheng 20211216 modify end
+        // ZGZGST-4220:交易方向已在外层处理 fuyongsheng 20211216 modify end
         // 结算方式 券款兑付
         trdProductDeal.setSettMode("03");
         if(StringUtil.equals(settleTransData.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())){
