@@ -69,6 +69,7 @@
                     WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice002_btn_submit", 'CfetsRepoDealQuotedPr002', function(result){
                          // $(".cfetsRepoDealQuotedPr002_div").load(location.href+" .cfetsRepoDealQuotedPr002_div");
                         document.getElementById('cfetsRepoDealQuotedPr002_iframe').contentWindow.location.reload(true);
+                        document.getElementById('CfetsRepoDealQuotedPr001_iframe').contentWindow.location.reload(true);
                     })
                 })
             }
@@ -82,6 +83,7 @@
                         // var index = window.parent.layer.getFrameIndex(window.name);
                         // window.parent.layer.close(index);
                         document.getElementById('cfetsRepoDealQuotedPr003_iframe').contentWindow.location.reload(true);
+                        document.getElementById('CfetsRepoDealQuotedPr001_iframe').contentWindow.location.reload(true);
                     })
                 })
             }
