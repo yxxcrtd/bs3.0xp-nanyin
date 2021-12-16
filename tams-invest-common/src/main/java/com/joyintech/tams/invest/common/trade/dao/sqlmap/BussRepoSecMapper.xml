@@ -439,7 +439,7 @@
    </select>
 
    <select id="selectBussRepoSecSellRepo" resultType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
-      SELECT
+      SELECT distinct
        fp.FINPROD_MARKET_ID bondCode,
        fp.FINPROD_ABBR bondAbbrName,
        fp.FINPROD_ID finprodId,
