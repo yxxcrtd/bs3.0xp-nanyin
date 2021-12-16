@@ -838,8 +838,13 @@ public class IbuQuoteBondService extends BaseService {
                         ||(StringUtil.equals(item.getEntrustStatus(), com.joyintech.tams.constant.DictCodeList.委托状态_待接收)&&item.getTransactioncom().compareTo(BigDecimal.ZERO)!=0)){
                     errorList.add(new ValidMessage("只可对待分发或者已接收执行进度为0的指令执行退回操作!"));
                 }
+                param.put("entrustId",item.getEntrustId());
+                if(cfetsIbuQuoteBondEtrMapper.checkDataStatus(param)>0){
+                    errorList.add(new ValidMessage("存在流程中的报价，不可退回！"));
+                }
             });
         }
+
         /*if(cfetsIbuQuoteBondEtrMapper.countNotDjsEtr(param)>0){
             errorList.add(new ValidMessage("只可对待分发指令执行退回操作!"));
         }*/
