@@ -387,7 +387,10 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
         // 单位全价
         trdProductDeal.setUnitFprice(settleTransData.getUnitFprice());
         // 交易方向
-        trdProductDeal.setPs(settleTransData.getPs());
+        // ZGZGST-4219:交易方向已在外层处理 fuyongsheng 20211216 modify start
+        // 交易方向
+        // trdProductDeal.setPs(settleTransData.getPs());
+        // ZGZGST-4219:交易方向已在外层处理 fuyongsheng 20211216 modify end
         // 结算方式 券款兑付
         trdProductDeal.setSettMode("03");
         if(StringUtil.equals(settleTransData.getPs(), DictCodeList.交易方向_收息到账.getValue())){
