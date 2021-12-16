@@ -33,7 +33,10 @@
                 A.PS ps,
                 nvl(A.SHARE_AMT,0) - nvl(F.MARCH_QTY,0) remainNum,
                 nvl(A.FPRICE_AMT,0) - nvl(F.MARCH_AMT,0) remainAmount,
-                A.UNIT_FPRICE unitFprice,
+                CASE
+                WHEN A.SEC_TYPE = #{SEC_TYPE_09} THEN A.UNIT_CPRICE
+                ELSE
+                A.UNIT_FPRICE END unitFprice,
                 A.UNIT_CPRICE unitCprice,
                 A.UNIT_INT unitInt,
                 A.CCY ccy,
@@ -71,6 +74,9 @@
             </if>
             <if test="ps!=null and ps!='' ">
                 AND A.PS = #{ps}
+            </if>
+            <if test="finprodType2!=null and finprodType2!='' ">
+                AND A.FINPROD_TYPE2 = #{finprodType2}
             </if>
             <if test="secAcctNo!=null and secAcctNo!='' ">
                 AND A.SEC_ACCT_ID = #{secAcctNo}
@@ -449,6 +455,9 @@
             </if>
             <if test="ps!=null and ps!='' ">
                 AND C.PS = #{ps}
+            </if>
+            <if test="finprodType2!=null and finprodType2!='' ">
+                AND C.FINPROD_TYPE2 = #{finprodType2}
             </if>
             <if test="tradeDateBegin != null and tradeDateBegin != ''">
                 <![CDATA[ AND C.TRADE_DATE  >= to_date(#{tradeDateBegin},'yyyy-mm-dd') ]]>
