@@ -750,7 +750,13 @@ public class ExchangeTransMatchCommonService extends BaseService {
      */
     private List<SettleTransTgMapping> genSettleTransTgMapping(ExchangeTransMatchCommonDto dealDto,String tradeId) {
         List<SettleTransTgMapping> list = new ArrayList<>();
-        List<SettleTransData> settleTransDataList = exchangeTransMatchCommonMapper.getSettleTransDataList(dealDto.getSeqId());
+        Map<String,Object> map = new HashMap<>();
+        map.put("seqId",dealDto.getSeqId());
+        if(StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+            || StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+            map.put("tradeIdRaw",dealDto.getTradeIdRaw());
+        }
+        List<SettleTransData> settleTransDataList = exchangeTransMatchCommonMapper.getSettleTransDataList(map);
         if(!StringUtil.isEmptyList(settleTransDataList)) {
             for(SettleTransData settleTransData:settleTransDataList) {
                 SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
