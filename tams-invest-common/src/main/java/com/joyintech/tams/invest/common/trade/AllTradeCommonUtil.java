@@ -2254,8 +2254,6 @@ public class AllTradeCommonUtil {
                             for(String confirmMessages :item.getConfirmMessages()){
                                 if(StringUtil.isNotEmpty(inputDtoList.get(index-1).getRownum())){
                                     confirmMessages ="第"+inputDtoList.get(index-1).getRownum()+"行:"+confirmMessages;
-                                }else {
-                                    confirmMessages ="第"+index+"行:"+confirmMessages;
                                 }
                                 if(stringList.contains(confirmMessages)){
                                     continue;
