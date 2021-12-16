@@ -51,7 +51,8 @@
                 nvl(A.ZGF_AMT,0) zgfAmt,
                 nvl(A.SXF_AMT,0) sxfAmt,
                 nvl(A.SETTLE_FEE,0) settleFee,
-                nvl(A.COMMISSION_AMT,0) commissionAmt
+                nvl(A.COMMISSION_AMT,0) commissionAmt,
+                A.TRADE_ID_RAW tradeIdRaw
         from SETTLE_TRANS_DATA_TOTAL A
         LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B
             ON A.SEQ_ID = B.SEQ_NO
@@ -455,6 +456,9 @@
             </if>
             <if test="ps!=null and ps!='' ">
                 AND C.PS = #{ps}
+            </if>
+            <if test="finprodType2_hg!=null and finprodType2_hg!='' ">
+                AND C.FINPROD_TYPE2 = #{finprodType2_hg}
             </if>
             <if test="finprodType2!=null and finprodType2!='' ">
                 AND C.FINPROD_TYPE2 = #{finprodType2}
