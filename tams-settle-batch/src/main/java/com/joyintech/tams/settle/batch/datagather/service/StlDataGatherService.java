@@ -330,6 +330,12 @@ public class StlDataGatherService {
                 if (StringUtil.isNotEmpty(totalTrdProductDealDto.getBonusCfmDate())) {
                 	paProductDealTotal.setBonusCfmDate(totalTrdProductDealDto.getBonusCfmDate());
                 }
+                // ZGZGST-4220:解决存续期详情画面字段为空问题 fuyongsheng add start
+                if(DictCodeList.共通业务类型_质押式回购存续期.getValue().equals(totalTrdProductDealDto.getBusiType())){
+                    paProductDealTotal.setTheoryInt(totalTrdProductDealDto.getTheoryInt());
+                    paProductDealTotal.setTheoryPrin(totalTrdProductDealDto.getTheoryprinAmt());
+                }
+                // ZGZGST-4220:解决存续期详情画面字段为空问题 fuyongsheng add end
                 paTrdFinProductDealTotalMapper.insertSelective(paProductDealTotal);
             }
         }

@@ -447,9 +447,7 @@ public class TradeHelper {
                 return futuresHelper.checkCommonParam(entrustPrice, entrustVolume, orderInterface, instruction);
             }
             Instrument instrument = instrumentService.queryByInnerCode(orderInterface.getStockCode());
-            if (Objects.nonNull(instrument)
-                    && Switches.OPEN.value.equals(commonManagement.getTradeTimeSwitch())
-                    && commonCheckHelper.checkTradeTime(instruction, instrument, orderInterface)) {
+            if (commonCheckHelper.checkTradeTime(instruction, instrument, orderInterface)) {
                 return false;
             }
             if (InvestmentAssetType1.NEGOTIATED_REPO.value.equals(instruction.getAssetType1())) {
