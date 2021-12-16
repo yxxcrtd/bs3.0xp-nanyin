@@ -197,6 +197,9 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="parValue",value="每百元金额(元)")
     private BigDecimal parValue;
 
+    @ApiModelProperty(name="effDate",value="有效时间")
+    private String effDate;
+
     public String getQuoteId() {
         return quoteId;
     }
@@ -675,6 +678,14 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setParValue(BigDecimal parValue) {
         this.parValue = parValue;
+    }
+
+    public String getEffDate() {
+        return effDate;
+    }
+
+    public void setEffDate(String effDate) {
+        this.effDate = effDate;
     }
 }
 
