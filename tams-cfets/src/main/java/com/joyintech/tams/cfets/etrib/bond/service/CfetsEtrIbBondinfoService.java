@@ -949,7 +949,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @return
      */
     private String decimalToStr(BigDecimal b, String pattern){
-        if (b == null || BigDecimal.ZERO.compareTo(b) == 0){
+        if (b == null){
             return "--";
         }
         DecimalFormat df1 = new DecimalFormat(pattern);
@@ -964,13 +964,13 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             map.put(T0KYXJ, "0");
             map.put(T1KYXJ, "0");
             map.put(ZHXJ, "0");
-            map.put(RRQMKDGHCC, "0");
-            map.put(ZCTRKYCC, "0");
-            map.put(ZCT1RKYCC, "0");
-            map.put(BFQTRKYCC, "0");
-            map.put(BFQT1RKYCC, "0");
-            map.put(RRQTRKYCC, "0");
-            map.put(RRQT1RKYCC, "0");
+//            map.put(RRQMKDGHCC, "0");
+//            map.put(ZCTRKYCC, "0");
+//            map.put(ZCT1RKYCC, "0");
+//            map.put(BFQTRKYCC, "0");
+//            map.put(BFQT1RKYCC, "0");
+//            map.put(RRQTRKYCC, "0");
+//            map.put(RRQT1RKYCC, "0");
         }
         // 初始化返回集合
         List<BaseMap> resp = new ArrayList<>();
@@ -992,19 +992,19 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         resp.add(BaseMap.newMap()
                 .put("field", T0KYXJ)
                 .put("name", "T日可用现金（元）")
-                .put("amount", decimalToStr(bm.getBigDecimal(T0KYXJ),"0.00"))
+                .put("amount", bm.get(T0KYXJ))
                 .put("type", "xj"));
         /*T+1日可用现金*/
         resp.add(BaseMap.newMap()
                 .put("field", T1KYXJ)
                 .put("name", "T+1日可用现金（元）")
-                .put("amount", decimalToStr(bm.getBigDecimal(T1KYXJ),"0.00"))
+                .put("amount", bm.get(T0KYXJ))
                 .put("type", "xj"));
         /*账户现金*/
         resp.add(BaseMap.newMap()
                 .put("field", ZHXJ)
                 .put("name", "账户现金（元）")
-                .put("amount", decimalToStr(bm.getBigDecimal(ZHXJ),"0.00"))
+                .put("amount", bm.get(T0KYXJ))
                 .put("type", "xj"));
 
         if (StringUtil.equals(flag, "01") || StringUtil.equals(flag, "02")){
