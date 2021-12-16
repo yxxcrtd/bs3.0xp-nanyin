@@ -1095,7 +1095,7 @@ select * from (
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'PS')E ON TT.PS = E.ITEM_CODE
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'QUOTE_STYLE')F ON TT.QUOTE_TYPE = F.ITEM_CODE
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'CUSTOM_ASSET_TYPE_FOUR')G ON TT.assetType = G.ITEM_CODE
-        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'ACCOUNT_SPEED')H ON TT.SETTLE_SPEED = H.ITEM_CODE
+        LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'ACCOUNT_SPEED')H ON DECODE(TT.SETTLE_SPEED,0,'01',1,'02',2,'03')  = H.ITEM_CODE
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'TRADE_PLACE')I ON TT.TRADE_MARKET = I.ITEM_CODE
         <where>
             <if test="search != null and search != ''">
@@ -1123,6 +1123,21 @@ select * from (
                 to_char(TT.STATISTICAL_TIMES,'FM99990.9990')=#{search} or  TT.STATISTICAL_TIMES||'' =#{search} or
                 TT.quoteId LIKE '%' || #{search} || '%' OR
                 TT.TRD_ID LIKE '%' || #{search} || '%'
+
+                or  to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd')||'' =#{search}
+                or  to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd')=#{year}||'-'||#{search}
+                or  replace(to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd'),'-','/')=#{search}
+                or  replace(to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
+
+                or  to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd')||'' =#{search}
+                or  to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd')=#{year}||'-'||#{search}
+                or  replace(to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd'),'-','/')=#{search}
+                or  replace(to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
+
+                or  to_char(TT.tradeDate,'yyyy-MM-dd')||'' =#{search}
+                or  to_char(TT.tradeDate,'yyyy-MM-dd')=#{year}||'-'||#{search}
+                or  replace(to_char(TT.tradeDate,'yyyy-MM-dd'),'-','/')=#{search}
+                or  replace(to_char(TT.tradeDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
                 )
             </if>
         </where>

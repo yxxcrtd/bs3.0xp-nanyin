@@ -1228,6 +1228,7 @@ public class IbuQuoteBondService extends BaseService {
         param.put("psT01", BussinessDictCodeList.交易方向_买入.getValue());
         param.put("psT02", BussinessDictCodeList.交易方向_卖出.getValue());
         param.put("psT03", BussinessDictCodeList.交易方向_行权回售.getValue());
+        param.put("year",DateUtil.getYear(iPlatformDate.getSysDateStr()));
         param.put("loginUserId", LoginUserUtil.getUserName());
     }
 }
