@@ -236,6 +236,9 @@ public class ExcelUitl {
 
 	public static <T> void exportAllData(File excelFile,String sheetName,List<ExcelColumn> columns,List<T> data, Map<String, BaseMap> styleMap) {
 		File excelTemplateFile = new File(excelFile.getParentFile(),Thread.currentThread().getName()+excelFile.getName());
+		if(StringUtil.isNotEmpty(sheetName)&&sheetName.length()>31){
+			sheetName = sheetName.substring(0,30);
+		}
 		createExcelTemplate(excelTemplateFile, sheetName, columns, styleMap);
 		EasyExcel.write(excelFile).withTemplate(excelTemplateFile).sheet(sheetName)
 				.registerConverter(new Converter<Date>() {
