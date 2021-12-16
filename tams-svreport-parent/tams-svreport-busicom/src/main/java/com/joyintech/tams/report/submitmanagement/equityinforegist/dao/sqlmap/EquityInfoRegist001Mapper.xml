@@ -393,6 +393,38 @@
 		 	</foreach>
 		</where>
 	</update>
+	
+	<!-- 四期字段变更 -更新INFO表 -->
+	<update id="updateEquityInfoForBatch" parameterType="java.util.List">
+		begin
+		<foreach collection="list" item="item" index="index" separator=";" > 
+			update CHB_EQU_HOLD  info
+				set 
+					info.HOLDER_CLASSIFY = #{item.holderClassify},
+            		info.FUND_ACC_PLACE = #{item.fundAccPlace}
+            	where 
+					info.REGIST_BANK_CODE = #{item.bankCode} 
+		 	 		and info.INDENTIFY_MARK = #{item.indentifyMark}
+		</foreach>
+		;end;
+		
+	</update>
+	
+	<!-- 四期字段变更 -更新SUB表 -->
+	<update id="updateEquitySubForBatch" parameterType="java.util.List" >
+		begin
+		<foreach collection="list" item="item" index="index" separator=";" > 
+			update CHB_EQU_SUB  sub
+				set 
+					sub.HOLDER_CLASSIFY = #{item.holderClassify},
+            		sub.FUND_ACC_PLACE = #{item.fundAccPlace}
+            	where 
+					sub.REGIST_BANK_CODE = #{item.bankCode} 
+		 	 		and sub.INDENTIFY_MARK = #{item.indentifyMark}
+		</foreach>
+		;end;
+	</update>
+	
 	<select id="queryExportListByKeys" resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
 		select INDENTIFY_MARK            as indentifyMark,
        		ORG_INDENTIFY_MARK        as orgIndentifyMark,

@@ -1182,6 +1182,77 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             equityInfoRegist001Mapper.insertBatchEquityRegist(newDataList);
         }
     }
+    
+    /**
+     * 分批次对INFO表进行更新
+     *
+     * @param dataList 数据
+     * @see
+     * @since 1.0
+     */
+    private void updateEuqHoldInfoByBatch(List<EquityInfo001Dto> dataList) {
+        if (StringUtil.isEmptyList(dataList)) {
+            return;
+        }
+
+        int maxDataCountOneTime = this.parsToInt(reportInsertLongCount,"1");
+        int dataCount = dataList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            equityInfoRegist001Mapper.updateEquityInfoForBatch(dataList);
+            return;
+        }
+
+        List<EquityInfo001Dto> newDataList = new ArrayList<EquityInfo001Dto>();
+        newDataList.addAll(dataList);
+
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        for (int i = 0; i < part; i++ ) {
+            equityInfoRegist001Mapper.updateEquityInfoForBatch(
+                    newDataList.subList(0, maxDataCountOneTime));
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            equityInfoRegist001Mapper.updateEquityInfoForBatch(newDataList);
+        }
+    }
+    
+    /**
+     * 分批次对SUB表进行更新
+     *
+     * @param dataList 数据
+     * @see
+     * @since 1.0
+     */
+    private void updateEuqHoldSubByBatch(List<EquityInfo001Dto> dataList) {
+        if (StringUtil.isEmptyList(dataList)) {
+            return;
+        }
+
+        int maxDataCountOneTime = this.parsToInt(reportInsertLongCount,"1");
+        int dataCount = dataList.size();
+        if (dataCount <= maxDataCountOneTime) {
+            equityInfoRegist001Mapper.updateEquitySubForBatch(dataList);
+            return;
+        }
+
+        List<EquityInfo001Dto> newDataList = new ArrayList<EquityInfo001Dto>();
+        newDataList.addAll(dataList);
+
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        for (int i = 0; i < part; i++ ) {
+            equityInfoRegist001Mapper.updateEquitySubForBatch(
+                    newDataList.subList(0, maxDataCountOneTime));
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            equityInfoRegist001Mapper.updateEquitySubForBatch(newDataList);
+        }
+    }
+    
     /**
      * 分批次执行insertBtachInterfEquityInfo
      *
@@ -2869,6 +2940,11 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         List<EquityInfo001Dto> listA = new ArrayList<EquityInfo001Dto>();
         //维护updatelist 维护表中数据状态为有效或者删除
         List<EquityInfo001Dto> listO = new ArrayList<EquityInfo001Dto>();
+        //只有四期数据变化的情况下，用来更新INFO表的数据结构
+        List<EquityInfo001Dto> listUpForInfo = new ArrayList<EquityInfo001Dto>();
+        //只有四期数据变化的情况下，用来更新SUB表的数据结构
+        List<EquityInfo001Dto> listUpForSub = new ArrayList<EquityInfo001Dto>();
+        
         //修改已报送过的数据对比方式
 //        List<EquityInfoRegist001Dto> registList = equityInfoRegist001Mapper.queryBatchForEquityInfoRegist(
 //            equityList);
@@ -2977,7 +3053,11 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                     listA.add(equityInfo001Dto);
                 }
                 else{
-                    listO.add(equityInfo001Dto);
+                	if(DictCodeListExt2.数据类型_中债_四期信息变更.getValue().equals(map1.get("type"))) {
+                		listUpForInfo.add(equityInfo001Dto);
+                	}else {
+                		listO.add(equityInfo001Dto);
+                	}
                 }
 //                else if (equityInfoCheck == null && "E".equals(equityInfo001Dto.getStatus())) {
 //                	if (tmpPath == null || isDB2DataBase) {
@@ -3002,23 +3082,27 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
 //                	this.getEquityInfo001DtoByIsOpen(equityInfoCheck, equityInfo001Dto, map,
 //                            result, listOE, interType, mapPrioty);
 //                }
-                if(DictCodeListExt1.维护数据状态_有效.getValue().equals(equityInfo001Dto.getStatus())){
-                	BeanUtil.copyPropertiesIgnoreNull(equityInfo001DtoTemp, equityInfo001Dto);
-                	if (tmpPath == null || isDB2DataBase) {
-//                        equityInfo001DtoTemp.setSumitSeq(
-//                                CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-                        equityInfo001DtoTemp.setSumitSeq(getSequenceStr(sequenceList, index));
-                        index++;
-                    }
-                    equityInfo001DtoTemp.setCheckSeqno("0");
-                    equityInfo001DtoTemp.setSubmitStatus(DictCodeListExt2.报送状态_未报送.getValue());
-                    equityInfo001DtoTemp.setStatus(type);
-                    if(equityInfo001DtoTemp.getTempMap()!=null){
-                        for(String key:equityInfo001DtoTemp.getTempMap().keySet()){
-                            EquityInfoCheckUtil.updateChcekDto(equityInfo001DtoTemp,key,equityInfo001DtoTemp.getTempMap().get(key));
+                if(DictCodeListExt2.数据类型_中债_四期信息变更.getValue().equals(map1.get("type"))) {
+                	listUpForSub.add(equityInfo001Dto);
+                }else {
+                	if(DictCodeListExt1.维护数据状态_有效.getValue().equals(equityInfo001Dto.getStatus())){
+                    	BeanUtil.copyPropertiesIgnoreNull(equityInfo001DtoTemp, equityInfo001Dto);
+                    	if (tmpPath == null || isDB2DataBase) {
+//                            equityInfo001DtoTemp.setSumitSeq(
+//                                    CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+                            equityInfo001DtoTemp.setSumitSeq(getSequenceStr(sequenceList, index));
+                            index++;
                         }
+                        equityInfo001DtoTemp.setCheckSeqno("0");
+                        equityInfo001DtoTemp.setSubmitStatus(DictCodeListExt2.报送状态_未报送.getValue());
+                        equityInfo001DtoTemp.setStatus(type);
+                        if(equityInfo001DtoTemp.getTempMap()!=null){
+                            for(String key:equityInfo001DtoTemp.getTempMap().keySet()){
+                                EquityInfoCheckUtil.updateChcekDto(equityInfo001DtoTemp,key,equityInfo001DtoTemp.getTempMap().get(key));
+                            }
+                        }
+                        listU.add(equityInfo001DtoTemp);
                     }
-                    listU.add(equityInfo001DtoTemp);
                 }
 //                if ("01".equals(equityInfo001Dto.getType())
 //                    || "03".equals(equityInfo001Dto.getType())) {
@@ -3246,6 +3330,26 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 }
                 logger.info("EquityInfo001Service listU 入库或生成文件处理结束 " + DateUtil.getCurrentDateTime());
             }
+            
+          //只有四期信息发生变更的情况下，对INFO表进行更新变更字段
+            if (CollectionUtils.isNotEmpty(listUpForInfo)) {
+                logger.info("EquityInfo001Service listUpForInfo 四期INFO更新开始 " + DateUtil.getCurrentDateTime());
+           
+                // 更新身份信息INFO表
+                this.updateEuqHoldInfoByBatch(listUpForInfo);
+                logger.info("EquityInfo001Service listUpForInfo 四期INFO更新结束 " + DateUtil.getCurrentDateTime());
+            }
+         
+            //只有四期信息发生变更的情况下，对SUB表进行更新变更字段
+            if (CollectionUtils.isNotEmpty(listUpForSub)) {
+                logger.info("EquityInfo001Service listUpForSub 四期SUB更新开始 " + DateUtil.getCurrentDateTime());
+                
+                // 更新身份信息SUB表
+                this.updateEuqHoldSubByBatch(listUpForSub);
+                
+                logger.info("EquityInfo001Service listUpForSub 四期SUB更新结束 " + DateUtil.getCurrentDateTime());
+            }
+            
             // 数据解析完成，并导入数据库成功后，将ftp文件修改名称
 //            return (CollectionUtils.isNotEmpty(listNA) || CollectionUtils.isNotEmpty(listNE)
 //                    || CollectionUtils.isNotEmpty(listAA) || CollectionUtils.isNotEmpty(listAE)
