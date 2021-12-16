@@ -118,7 +118,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		initPageParams.put("ibuFlag_quote_switch",CacheUtil.getSysParam("ibuFlag_quote_switch"));
 		//刷新时间
 		initPageParams.put("ibuQuoteBond_etrTable_refresh_period", CacheUtil.getSysParam("ibuQuoteBond_etrTable_refresh_period"));
-		initPageParams.put("effTime", CacheUtil.getSysParam("ibuVar_quoteEffTime"));
+		initPageParams.put("effDate", CacheUtil.getSysParam("ibuVar_quoteEffTime"));
 		return new Message<Map<String, Object>>(initPageParams).success();
 	}
 

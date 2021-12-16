@@ -999,6 +999,7 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteBondDto.setDipType(cfetsBondDealRequestQuoteDto.getDistribution());
         ibuQuoteBondDto.setDealFeeAmt(cfetsBondDealRequestQuoteDto.getDealFeeAmt());
         ibuQuoteBondDto.setSettFeeAmt(cfetsBondDealRequestQuoteDto.getSettFeeAmt());
+        ibuQuoteBondDto.setSecManageAcctId(cfetsBondDealRequestQuoteDto.getSecManageAcctId());
         inputBean.setIbuQuoteBondDto(ibuQuoteBondDto);
 
         // 银行间报价金额基对手信息列表
