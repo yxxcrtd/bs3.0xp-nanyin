@@ -99,6 +99,10 @@ public class TotalTrdProductDealDto extends TrdFinProductDealTotal {
      */
     private String finprodTypeExt;
 
+    private BigDecimal theoryInt; // 理论应计利息
+
+	private BigDecimal theoryprinAmt; // 理论还本金额
+
 	public String getEntrustId() {
 		return entrustId;
 	}
@@ -209,5 +213,21 @@ public class TotalTrdProductDealDto extends TrdFinProductDealTotal {
 
 	public void setFinprodTypeExt(String finprodTypeExt) {
 		this.finprodTypeExt = finprodTypeExt;
+	}
+
+	public BigDecimal getTheoryInt() {
+		return theoryInt;
+	}
+
+	public void setTheoryInt(BigDecimal theoryInt) {
+		this.theoryInt = theoryInt;
+	}
+
+	public BigDecimal getTheoryprinAmt() {
+		return theoryprinAmt;
+	}
+
+	public void setTheoryprinAmt(BigDecimal theoryprinAmt) {
+		this.theoryprinAmt = theoryprinAmt;
 	}
 }
