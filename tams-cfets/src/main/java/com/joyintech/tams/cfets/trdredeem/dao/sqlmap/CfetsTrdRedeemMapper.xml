@@ -14,22 +14,16 @@
                 <include refid="onlyWflRegInfo"></include>
                 UNION ALL
                 <include refid="onlyRegInfo"></include>
-                union all
-                <include refid="onlyRevokeRegInfo"></include>
             </otherwise>
         </choose>
         ) aaa
-        <!--left join SYS_DATADICT_LIST sdl on aaa.finprodType2=sdl.ITEM_CODE and sdl.DICT_CODE='FINPROD_TYPE_TG'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
-        left join SYS_DATADICT_LIST dicttradeMarket on aaa.tradeMarket=dicttradeMarket.ITEM_CODE and dicttradeMarket.DICT_CODE='TRADE_PLACE'
-        left join SYS_DATADICT_LIST dictsp on aaa.settleSpeed=dictsp.ITEM_CODE and dictsp.DICT_CODE='ACCOUNT_SPEED'
-        left join SYS_DATADICT_LIST dictquote on aaa.quoteType=dictquote.ITEM_CODE and dictquote.DICT_CODE='QUOTE_STYLE'
-        left join SYS_DATADICT_LIST dictms on aaa.matchStatus=dictms.ITEM_CODE and dictms.DICT_CODE='MATCH_STATUS'-->
+        left join SYS_DATADICT_LIST dictccy on aaa.ccy=dictccy.ITEM_CODE and dictccy.DICT_CODE='CCY'
 
         <!-- 关键字模糊查询 -->
-       <!-- <include refid="vagueQueryWhere"></include>-->
+        <include refid="vagueQueryWhere"></include>
 
-   <!--     order by aaa.finprodType2, aaa.regStatus,aaa.ps DESC-->
+         order by aaa.regTradeDate DESC
         )
         <!--前端传入排序字段-->
         <if test="sort != null and sort != '' and direction != null and direction != ''">
@@ -38,19 +32,21 @@
     </select>
     <sql id="onlyRegInfo">
         select
-        '有效' as effectiveStatusStr,
-        #{VALID_STATUS_01} effectiveStatus,
+        decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusStr,
+        decode(reg.is_cancel,'N',#{VALID_STATUS_01},'Y',#{VALID_STATUS_03}) as  effectiveStatus,
         reg.totle_trade_id as busiCode,
         reg.finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         regAdd.EXERCISE_PRICE as exercisePrice,
-        regAdd.redeem_Rate as redeemRate,
+        regAdd.redeem_Rate*100 as redeemRate,
         deal.accountPosition as accountPosition,
         reg.trade_date as regTradeDate,
         reg.settle_date as exerciseDate,
         regAdd.act_sette_date as actExerciseDate,
+        reg.sec_manage_acct_id as secManageAcctId,
+        stlinfo.SEC_ACCT_NAME as secManageAcctIdStr,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         reg.ccy as ccy,
@@ -62,148 +58,49 @@
         on reg.totle_trade_id=regAdd.totle_trade_id
         inner join
         (
-        select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
-        ,nvl(sum(bb.PTL_BOND_ZHCC),0)/10000 as accountPosition
-        from reg_fin_product_deal regdeal
-        inner join ptl_portfolio pp
-        on regdeal.portfolio_id=pp.portfolio_id
-        left join (select a.PORTFOLIO_ID, a.FINPROD_ID,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_ZHCC
-                    from PTL_SEC_POSITION_RULE a
-                    where a.cdate = #{cdate,jdbcType=DATE}  AND a.DATE_TYPE =#{DATE_TYPE_0}
-        group by a.PORTFOLIO_ID, a.FINPROD_ID
-        )bb
-        on regdeal.finprod_id=bb.FINPROD_ID and regdeal.PORTFOLIO_ID=bb.PORTFOLIO_ID
-        where 1=1
-        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-            AND regdeal.portfolio_id in
-            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        group by regdeal.totle_trade_id
+            select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
+            ,nvl(sum(bb.PTL_BOND_ZHCC),0)/10000 as accountPosition
+            from reg_fin_product_deal regdeal
+            inner join ptl_portfolio pp
+            on regdeal.portfolio_id=pp.portfolio_id
+            left join (select a.PORTFOLIO_ID, a.FINPROD_ID,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_ZHCC
+                        from PTL_SEC_POSITION_RULE a
+                        where a.cdate = #{cdate,jdbcType=DATE}  AND a.DATE_TYPE =#{DATE_TYPE_0}
+                        group by a.PORTFOLIO_ID, a.FINPROD_ID
+            )bb
+            on regdeal.finprod_id=bb.FINPROD_ID and regdeal.PORTFOLIO_ID=bb.PORTFOLIO_ID
+            where 1=1
+            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                AND regdeal.portfolio_id in
+                <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            group by regdeal.totle_trade_id
         )deal
         on reg.totle_trade_id=deal.totle_trade_id
-        left join trdquto_match_info match
-        on reg.totle_trade_id=match.pre_trade_id
-        left join trd_fin_product_deal_total total
-        on match.trd_id=total.totle_trade_id
-        left join stl_sec_acct_info stlinfo
-        on reg.sec_manage_acct_id=stlinfo.sec_acct_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
-
-        where 1=1 and reg.trade_status='01' and reg.is_cancel='N'
-        <if test="sysDate != null and !sysDate.equals('')">
-            AND  reg.trade_date= #{sysDate,jdbcType=DATE}
+        left join trdquto_match_info match on reg.totle_trade_id=match.pre_trade_id
+        left join trd_fin_product_deal_total total on match.trd_id=total.totle_trade_id
+        left join stl_sec_acct_info stlinfo on reg.sec_manage_acct_id=stlinfo.sec_acct_id
+        where 1=1 and reg.trade_status='01' and reg.is_cancel='N' and reg.ps='T39'
+        <if test="startRegDate != null and !startRegDate.equals('')">
+            AND  reg.trade_date>= #{startRegDate,jdbcType=DATE}
         </if>
-        <if test="startDate != null and !startDate.equals('')">
-            AND  reg.trade_date>= #{startDate,jdbcType=DATE}
+        <if test="endRegDate != null and !endRegDate.equals('')">
+            AND  reg.trade_date<![CDATA[<=]]> #{endRegDate,jdbcType=DATE}
         </if>
-        <if test="endDate != null and !endDate.equals('')">
-            AND  reg.trade_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+        <if test="startExerDate != null and !startExerDate.equals('')">
+            AND  reg.settle_date<![CDATA[>=]]>#{startExerDate,jdbcType=DATE}
+        </if>
+        <if test="endExerDate != null and !endExerDate.equals('')">
+            AND reg.settle_date<![CDATA[<=]]>#{endExerDate,jdbcType=DATE}
         </if>
         <if test="submitUserId != null and submitUserId != ''">
             and (reg.create_user= #{submitUserId} or reg.update_user= #{submitUserId})
         </if>
-        <if test="ps != null and !ps.equals('')">
-            AND reg.ps=#{ps}
-        </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
             AND reg.finprod_id in
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        <if test="secAcctIdList != null and secAcctIdList.size() > 0">
-            AND reg.sec_manage_acct_id in
-            <foreach collection="secAcctIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        <if test="busiCode != null and busiCode != ''">
-            AND reg.totle_trade_id like '%' || #{busiCode,jdbcType=VARCHAR} || '%'
-        </if>
-    </sql>
-    <sql id="onlyRevokeRegInfo">
-        select
-        '撤销' as effectiveStatusStr,
-        #{VALID_STATUS_03} effectiveStatus,
-        reg.totle_trade_id as busiCode,
-        reg.finprod_id as finprodId,
-        fp.finprod_market_id as finprodMarketId,
-        fp.finprod_abbr as finprodAbbr,
-        reg.ps as ps,
-        regAdd.EXERCISE_PRICE as exercisePrice,
-        regAdd.redeem_Rate as redeemRate,
-        deal.accountPosition as accountPosition,
-        reg.trade_date as regTradeDate,
-        reg.settle_date as exerciseDate,
-        regAdd.act_sette_date as actExerciseDate,
-        deal.portfolioId as portfolioIds,
-        deal.portfolioName as portfolioNames,
-        reg.ccy as ccy,
-        reg.remark as remark
-        from reg_fin_product_deal_total reg
-        left join fin_product fp
-        on fp.finprod_id=reg.finprod_id
-        left join reg_fin_product_deal_total_add regAdd
-        on reg.totle_trade_id=regAdd.totle_trade_id
-        inner join
-        (
-        select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
-        ,nvl(sum(bb.PTL_BOND_ZHCC),0)/10000 as accountPosition
-        from reg_fin_product_deal regdeal
-        inner join ptl_portfolio pp
-        on regdeal.portfolio_id=pp.portfolio_id
-        left join (select a.PORTFOLIO_ID, a.FINPROD_ID,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_ZHCC
-        from PTL_SEC_POSITION_RULE a
-        where a.cdate = #{cdate,jdbcType=DATE}  AND a.DATE_TYPE =#{DATE_TYPE_0}
-        group by a.PORTFOLIO_ID, a.FINPROD_ID
-        )bb
-        on regdeal.finprod_id=bb.FINPROD_ID and regdeal.PORTFOLIO_ID=bb.PORTFOLIO_ID
-        where 1=1
-        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-            AND regdeal.portfolio_id in
-            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        group by regdeal.totle_trade_id
-        )deal
-        on reg.totle_trade_id=deal.totle_trade_id
-        left join trdquto_match_info match
-        on reg.totle_trade_id=match.pre_trade_id
-        left join trd_fin_product_deal_total total
-        on match.trd_id=total.totle_trade_id
-        left join stl_sec_acct_info stlinfo
-        on reg.sec_manage_acct_id=stlinfo.sec_acct_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
-        left join sys_user su
-        on reg.ou_trader_id=su.user_name
-        where 1=1 and reg.trade_status='01' and reg.is_cancel='Y'
-        <if test="sysDate != null and !sysDate.equals('')">
-            AND  reg.trade_date= #{sysDate,jdbcType=DATE}
-        </if>
-        <if test="startDate != null and !startDate.equals('')">
-            AND  reg.trade_date>= #{startDate,jdbcType=DATE}
-        </if>
-        <if test="endDate != null and !endDate.equals('')">
-            AND  reg.trade_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
-        </if>
-        <if test="submitUserId != null and submitUserId != ''">
-            and (reg.create_user= #{submitUserId} or reg.update_user= #{submitUserId})
-        </if>
-        <if test="ps != null and !ps.equals('')">
-            AND reg.ps=#{ps}
-        </if>
-        <if test="finprodIdList != null and finprodIdList.size() > 0">
-            AND reg.finprod_id in
-            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        <if test="secAcctIdList != null and secAcctIdList.size() > 0">
-            AND reg.sec_manage_acct_id in
-            <foreach collection="secAcctIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
@@ -214,18 +111,20 @@
     <sql id="onlyWflRegInfo">
         select
         '流程中' as effectiveStatusStr,
-        #{VALID_STATUS_03} effectiveStatus,
+        #{VALID_STATUS_04} effectiveStatus,
         reg.totle_trade_id as busiCode,
         reg.finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         reg.ps as ps,
         regAdd.EXERCISE_PRICE as exercisePrice,
-        regAdd.redeem_Rate as redeemRate,
+        regAdd.redeem_Rate*100 as redeemRate,
         deal.accountPosition as accountPosition,
         reg.trade_date as regTradeDate,
         reg.settle_date as exerciseDate,
         regAdd.act_sette_date as actExerciseDate,
+        reg.sec_manage_acct_id as secManageAcctId,
+        stlinfo.SEC_ACCT_NAME as secManageAcctIdStr,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         reg.ccy as ccy,
@@ -258,38 +157,28 @@
         group by regdeal.totle_trade_id
         )deal
         on reg.totle_trade_id=deal.totle_trade_id
-        left join trdquto_match_info match
-        on reg.totle_trade_id=match.pre_trade_id
-        left join trd_fin_product_deal_total total
-        on match.trd_id=total.totle_trade_id
-        left join stl_sec_acct_info stlinfo
-        on reg.sec_manage_acct_id=stlinfo.sec_acct_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
-        where 1=1
-        <if test="sysDate != null and !sysDate.equals('')">
-            AND  reg.trade_date= #{sysDate,jdbcType=DATE}
+        left join trdquto_match_info match on reg.totle_trade_id=match.pre_trade_id
+        left join trd_fin_product_deal_total total on match.trd_id=total.totle_trade_id
+        left join stl_sec_acct_info stlinfo on reg.sec_manage_acct_id=stlinfo.sec_acct_id
+        where 1=1  and reg.ps='T39'
+        <if test="startRegDate != null and !startRegDate.equals('')">
+            AND  reg.trade_date>= #{startRegDate,jdbcType=DATE}
         </if>
-        <if test="startDate != null and !startDate.equals('')">
-            AND  reg.trade_date>= #{startDate,jdbcType=DATE}
+        <if test="endRegDate != null and !endRegDate.equals('')">
+            AND  reg.trade_date<![CDATA[<=]]> #{endRegDate,jdbcType=DATE}
         </if>
-        <if test="endDate != null and !endDate.equals('')">
-            AND  reg.trade_date<![CDATA[<=]]>#{endDate,jdbcType=DATE}
+        <if test="startExerDate != null and !startExerDate.equals('')">
+            AND  reg.settle_date<![CDATA[>=]]>#{startExerDate,jdbcType=DATE}
+        </if>
+        <if test="endExerDate != null and !endExerDate.equals('')">
+            AND reg.settle_date<![CDATA[<=]]>#{endExerDate,jdbcType=DATE}
         </if>
         <if test="submitUserId != null and submitUserId != ''">
             and (reg.create_user= #{submitUserId} or reg.update_user= #{submitUserId})
         </if>
-        <if test="ps != null and !ps.equals('')">
-            AND reg.ps=#{ps}
-        </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
             AND reg.finprod_id in
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        <if test="secAcctIdList != null and secAcctIdList.size() > 0">
-            AND reg.sec_manage_acct_id in
-            <foreach collection="secAcctIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
@@ -300,24 +189,27 @@
     <sql id="vagueQueryWhere">
         <if test="search != null and search != '' and search !='有效' ">
             <where>
-                ((aaa.effectiveStatusStr || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
-                || '|' || dictps.ITEM_VALUE || '|' || dicttradeMarket.ITEM_VALUE || '|' || dictsp.ITEM_VALUE
-                || '|' || aaa.secManageAcctIdStr || '|' || aaa.busiCode || '|' || aaa.trader
-                || '|' || aaa.counterId  || '|' || aaa.counterIdStr || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
-                || '|' || dictquote.ITEM_VALUE  || '|' || dictms.ITEM_VALUE || '|' || aaa.remark
+                ((aaa.effectiveStatusStr || '|' || aaa.busiCode
+                || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
+                || '|' || dictps.ITEM_VALUE || '|' || aaa.secManageAcctIdStr
+                || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
+                || '|' || dictccy.ITEM_VALUE || '|' || aaa.remark
                 like '%' || #{search} || '%')
-                or to_char(aaa.faceValue,'FM9999999999999990.99')=#{search} or to_char(aaa.faceValue)=#{search}
-                or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
-                or aaa.termDays||'' =#{search}
-                or to_char(aaa.tradeAmt,'FM9999999999999990.99')=#{search} or to_char(aaa.tradeAmt)=#{search}
+                or to_char(aaa.exercisePrice,'FM99990.9990')=#{search} or  aaa.exercisePrice||'' =#{search}
+                or to_char(aaa.redeemRate,'FM9999999999999990.90')=#{search} or to_char(aaa.redeemRate)=#{search}
+                or to_char(aaa.accountPosition,'FM9999999999999990.90')=#{search} or to_char(aaa.accountPosition)=#{search}
                 or aaa.regTradeDate||'' =#{search}
                 or aaa.regTradeDate||'' =#{year}||'-'||#{search}
                 or replace(aaa.regTradeDate,'-','/')||'' =#{search}
                 or replace(aaa.regTradeDate,'-','/')||'' =#{year}||'/'||#{search}
-                or aaa.confirmTradeDate||'' =#{search}
-                or aaa.confirmTradeDate||'' =#{year}||'-'||#{search}
-                or replace(aaa.confirmTradeDate,'-','/')||'' =#{search}
-                or replace(aaa.confirmTradeDate,'-','/')||'' =#{year}||'/'||#{search}
+                or aaa.exerciseDate||'' =#{search}
+                or aaa.exerciseDate||'' =#{year}||'-'||#{search}
+                or replace(aaa.exerciseDate,'-','/')||'' =#{search}
+                or replace(aaa.exerciseDate,'-','/')||'' =#{year}||'/'||#{search}
+                or aaa.actExerciseDate||'' =#{search}
+                or aaa.actExerciseDate||'' =#{year}||'-'||#{search}
+                or replace(aaa.actExerciseDate,'-','/')||'' =#{search}
+                or replace(aaa.actExerciseDate,'-','/')||'' =#{year}||'/'||#{search}
                 )
             </where>
         </if>

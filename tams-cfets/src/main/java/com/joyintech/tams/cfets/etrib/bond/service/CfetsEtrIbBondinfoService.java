@@ -427,14 +427,27 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-        if (StringUtil.equals(dto.getSettleSpeed(),
+       /* if (StringUtil.equals(dto.getSettleSpeed(),
                 DictCodeList.清算速度_T_0.getValue())) {
             pageParam.put("settleSpeed","0");
         }
         if (StringUtil.equals(dto.getSettleSpeed(),
                 DictCodeList.清算速度_T_1.getValue())) {
             pageParam.put("settleSpeed","1");
+        }*/
+        String settleSpeed=(String)pageParam.get("settleSpeed");
+        if(StringUtil.isNotEmpty(settleSpeed)){
+            pageParam.put("settleSpeedList", StringUtil.splitToList(GlobalConstant.COMMA,settleSpeed));
         }
+        String ps = (String)pageParam.get("ps");
+        if(StringUtil.isNotEmpty(ps)){
+            pageParam.put("psList", StringUtil.splitToList(GlobalConstant.COMMA,ps));
+        }
+        String repManager = (String)pageParam.get("repManager");
+        if(StringUtil.isNotEmpty(repManager)){
+            pageParam.put("repManagerList", StringUtil.splitToList(GlobalConstant.COMMA,repManager));
+        }
+
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         int year = c.get(Calendar.YEAR);

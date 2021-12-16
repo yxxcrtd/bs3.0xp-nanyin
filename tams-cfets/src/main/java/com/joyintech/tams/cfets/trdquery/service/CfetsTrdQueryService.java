@@ -655,7 +655,9 @@ public class CfetsTrdQueryService extends BaseService{
             }
             pageParam.put("effectiveStatusList",list);
         }*/
-        pageParam.put("effectiveStatusList",StringUtil.splitToList(GlobalConstant.COMMA,effectiveStatus));
+        if(StringUtil.isNotEmpty(effectiveStatus)){
+            pageParam.put("effectiveStatusList",StringUtil.splitToList(GlobalConstant.COMMA,effectiveStatus));
+        }
         String regAssetType= (String)pageParam.get("regAssetType");
         if(StringUtil.isNotEmpty(regAssetType)){
             List<String> finprodType2List=new ArrayList<>();

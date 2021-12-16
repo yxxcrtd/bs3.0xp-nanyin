@@ -1084,11 +1084,17 @@ from
         <if test="finprodAbbr != null and finprodAbbr != ''">
             AND T3.FINPROD_ABBR like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
         </if>
-        <if test="settleSpeed != null and settleSpeed != ''">
-            AND T7.SETTLE_SPREED = #{settleSpeed,jdbcType=VARCHAR}
+        <if test="settleSpeedList != null and settleSpeedList.size() > 0">
+            AND  decode(T7.SETTLE_SPREED,0,'01',1,'02',2,'03')  in
+            <foreach collection="settleSpeedList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
-        <if test="repManager != null and repManager != ''">
-            AND T8.REAL_NAME = #{repManager,jdbcType=VARCHAR}
+        <if test="repManagerList != null and repManagerList.size() > 0">
+            AND T1.INV_MANAGER_ID in
+            <foreach collection="repManagerList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
             AND T3.FINPROD_ID in
@@ -1096,8 +1102,11 @@ from
                 #{item}
             </foreach>
         </if>
-        <if test="ps != null and !ps.equals('')">
-            AND T1.PS=#{ps}
+        <if test="psList != null and psList.size() > 0">
+            AND T1.PS in
+            <foreach collection="psList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
         <if test="entrustStatus != null and entrustStatus.size() > 0">
             AND T1.ENTRUST_STATUS in
@@ -1205,11 +1214,17 @@ from
         <if test="finprodAbbr != null and finprodAbbr != ''">
             AND T3.FINPROD_ABBR like '%' || #{finprodAbbr,jdbcType=VARCHAR} || '%'
         </if>
-        <if test="settleSpeed != null and settleSpeed != ''">
-            AND T7.SETTLE_SPREED = #{settleSpeed,jdbcType=VARCHAR}
+        <if test="settleSpeedList != null and settleSpeedList.size() > 0">
+            AND  decode(T7.SETTLE_SPREED,0,'01',1,'02',2,'03')  in
+            <foreach collection="settleSpeedList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
-        <if test="repManager != null and repManager != ''">
-            AND T8.REAL_NAME = #{repManager,jdbcType=VARCHAR}
+        <if test="repManagerList != null and repManagerList.size() > 0">
+            AND T1.INV_MANAGER_ID in
+            <foreach collection="repManagerList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
             AND T3.FINPROD_ID in
@@ -1217,8 +1232,11 @@ from
                 #{item}
             </foreach>
         </if>
-        <if test="ps != null and !ps.equals('')">
-            AND T1.PS=#{ps}
+        <if test="psList != null and psList.size() > 0">
+            AND T1.PS in
+            <foreach collection="psList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
         <if test="entrustId != null and entrustId != ''">
             AND T1.ENTRUST_ID  LIKE concat('%',concat(#{entrustId,jdbcType=VARCHAR},'%'))

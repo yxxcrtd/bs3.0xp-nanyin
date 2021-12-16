@@ -62,9 +62,9 @@ public class CfetsTrdRedeemService extends BaseService{
      */
     public Page<CfetsTrdRedeemRegInfoListResponse> queryAllRedeemRegInfoList(CfetsTrdRedeemRegInfoListRequest dto) {
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
-        String regStatus = (String)pageParam.get("regStatus");
-        if(StringUtil.isNotEmpty(regStatus)){
-            pageParam.put("regStatusList", StringUtil.splitToList(GlobalConstant.COMMA,regStatus));
+        String effectiveStatus = (String)pageParam.get("effectiveStatus");
+        if(StringUtil.isNotEmpty(effectiveStatus)){
+            pageParam.put("effectiveStatusList",StringUtil.splitToList(GlobalConstant.COMMA,effectiveStatus));
         }
         String portfolioId = (String)pageParam.get("portfolioId");
         if(StringUtil.isNotEmpty(portfolioId)){
@@ -74,40 +74,19 @@ public class CfetsTrdRedeemService extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-        String regAssetType= (String)pageParam.get("regAssetType");
-        if(StringUtil.isNotEmpty(regAssetType)){
-            List<String> finprodType2List=new ArrayList<>();
-            if(StringUtil.equals(regAssetType,"01")){
-                finprodType2List.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-            }else{
-                finprodType2List.add(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
-                finprodType2List.add(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
-            }
-            pageParam.put("finprodType2List",finprodType2List);
-        }
-        String secAcctId=(String)pageParam.get("secAcctId");
-        if(StringUtil.isNotEmpty(secAcctId)){
-            pageParam.put("secAcctIdList", StringUtil.splitToList(GlobalConstant.COMMA,secAcctId));
-        }
-      /*  if (StringUtil.equals(dto.getSettleSpeed(),
-                DictCodeList.清算速度_T_0.getValue())) {
-            pageParam.put("settleSpeed","0");
-        }
-        if (StringUtil.equals(dto.getSettleSpeed(),
-                DictCodeList.清算速度_T_1.getValue())) {
-            pageParam.put("settleSpeed","1");
-        }
         if(StringUtil.equals(dto.getTabType(),"regCur")){
-            pageParam.put("sysDate",iPlatformDate.getSysDate());
+            //有效未交收或流程中
+
         }else if(StringUtil.equals(dto.getTabType(),"regPre")){
-            if(!StringUtil.isNotEmpty(dto.getStartDate()) && !StringUtil.isNotEmpty(dto.getEndDate())){
-                pageParam.put("startDate", DateUtil.addMonthDate(iPlatformDate.getSysDate(),-1));
-                pageParam.put("endDate",iPlatformDate.getSysDate());
-            }
-        }*/
+            //有效已交收或撤销
+
+        }
+
+
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.有效状态_有效.getValue());
-        pageParam.put("VALID_STATUS_02", DictCodeListExt1.有效状态_待处理.getValue());
         pageParam.put("VALID_STATUS_03", DictCodeListExt1.有效状态_撤销.getValue());
+        pageParam.put("VALID_STATUS_04", DictCodeListExt1.有效状态_流程中.getValue());
+
         pageParam.put("YES_NO_YES", DictCodeList.是否_是.getValue());
         pageParam.put("YES_NO_NO", DictCodeList.是否_否.getValue());
         pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());

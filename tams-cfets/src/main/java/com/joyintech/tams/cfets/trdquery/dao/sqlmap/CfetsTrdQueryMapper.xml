@@ -29,7 +29,7 @@
             </otherwise>
         </choose>
         ) aaa
-        left join SYS_DATADICT_LIST sdl on aaa.finprodType2=sdl.ITEM_CODE and sdl.DICT_CODE='FINPROD_TYPE_TG'
+        left join SYS_DATADICT_LIST sdl on aaa.finprodType2=sdl.ITEM_CODE and sdl.DICT_CODE='REG_ASSET_TYPE'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
         left join SYS_DATADICT_LIST dicttradeMarket on aaa.tradeMarket=dicttradeMarket.ITEM_CODE and dicttradeMarket.DICT_CODE='TRADE_PLACE'
         left join SYS_DATADICT_LIST dictsp on aaa.settleSpeed=dictsp.ITEM_CODE and dictsp.DICT_CODE='ACCOUNT_SPEED'
@@ -57,7 +57,7 @@
         decode(reg.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
-        deal.faceValue as faceValue,
+        decode(reg.finprod_type2,'F01',deal.faceValue,null) as faceValue,
         case when reg.finprod_type2='F01'  then nvl(reg.yield,0)*100
         when reg.finprod_id in ('F02','F03') then nvl(reg.rate,0)*100 else null end as tradeYield,
         reg.repo_term as termDays,
@@ -194,7 +194,7 @@
         decode(reg.settle_speed,0,'01',1,'02',2,'03') as settleSpeed,
         reg.sec_manage_acct_id as secManageAcctId,
         stlinfo.sec_acct_name as secManageAcctIdStr,
-        deal.faceValue as faceValue,
+        decode(reg.finprod_type2,'F01',deal.faceValue,null) as faceValue,
         case when reg.finprod_type2='F01' then nvl(reg.yield,0)*100
         when reg.finprod_id in ('F02','F03') then nvl(reg.rate,0)*100 else null end as tradeYield,
         reg.repo_term as termDays,
@@ -614,7 +614,7 @@
         <if test="userId != null and userId != ''">
             inner JOIN
             PTL_PORTFOLIO_AUTHORITY PPA
-            ON regdeal.portfolio_id = PPA.PORTFOLIO_ID
+            ON ir.portfolio_id = PPA.PORTFOLIO_ID
             AND PPA.USER_ID = #{userId}
         </if>
         where 1=1
@@ -741,7 +741,7 @@
         <if test="userId != null and userId != ''">
             inner JOIN
             PTL_PORTFOLIO_AUTHORITY PPA
-            ON regdeal.portfolio_id = PPA.PORTFOLIO_ID
+            ON ir.portfolio_id = PPA.PORTFOLIO_ID
             AND PPA.USER_ID = #{userId}
         </if>
         where 1=1
@@ -898,7 +898,7 @@
         <if test="userId != null and userId != ''">
             inner JOIN
             PTL_PORTFOLIO_AUTHORITY PPA
-            ON regdeal.portfolio_id = PPA.PORTFOLIO_ID
+            ON ir.portfolio_id = PPA.PORTFOLIO_ID
             AND PPA.USER_ID = #{userId}
         </if>
         where 1=1
@@ -1021,7 +1021,7 @@
         <if test="userId != null and userId != ''">
             inner JOIN
             PTL_PORTFOLIO_AUTHORITY PPA
-            ON regdeal.portfolio_id = PPA.PORTFOLIO_ID
+            ON ir.portfolio_id = PPA.PORTFOLIO_ID
             AND PPA.USER_ID = #{userId}
         </if>
         where 1=1
@@ -1233,7 +1233,7 @@
         <if test="userId != null and userId != ''">
             inner JOIN
             PTL_PORTFOLIO_AUTHORITY PPA
-            ON regdeal.portfolio_id = PPA.PORTFOLIO_ID
+            ON ir.portfolio_id = PPA.PORTFOLIO_ID
             AND PPA.USER_ID = #{userId}
         </if>
         group by ir.quote_id)deal
@@ -1339,7 +1339,7 @@
         <if test="userId != null and userId != ''">
             inner JOIN
             PTL_PORTFOLIO_AUTHORITY PPA
-            ON regdeal.portfolio_id = PPA.PORTFOLIO_ID
+            ON ir.portfolio_id = PPA.PORTFOLIO_ID
             AND PPA.USER_ID = #{userId}
         </if>
         group by ir.quote_id)deal
