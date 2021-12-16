@@ -74,7 +74,7 @@ public interface SvrMonthCollectInterfMapper {
 //获取人民币对
 	List<ccyExcharge> CNYExchange(@Param("exchangeSource")String exchangeSource,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 //获取美元对
-	List<ccyExcharge> USDExchange(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+	List<ccyExcharge> USDExchange(@Param("exchangeSource")String exchangeSource,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 	//	获取美元转人民币汇率
-	ccyExcharge USDExchangeCNY(@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+	ccyExcharge USDExchangeCNY(@Param("exchangeSource")String exchangeSource,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 }

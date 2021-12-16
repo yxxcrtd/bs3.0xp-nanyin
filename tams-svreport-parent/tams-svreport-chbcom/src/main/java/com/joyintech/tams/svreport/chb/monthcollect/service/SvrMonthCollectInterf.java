@@ -997,8 +997,8 @@ public class SvrMonthCollectInterf extends BaseService{
 	public List<ChbMonthCollect> currencyExchange (List<ChbMonthCollect> listAmountTotal,Date batchDateEnd,Date batchDateStart){
 		String exchangeSource=SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE);//获取系统参数中债汇率取值来源
 		//获取美元兑 CFETS:外汇交易中心
-		List<ccyExcharge> USDExchangeList = svrMonthCollectInterfMapper.USDExchange(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
-		ccyExcharge USDExchangeCNYList = svrMonthCollectInterfMapper.USDExchangeCNY(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+		List<ccyExcharge> USDExchangeList = svrMonthCollectInterfMapper.USDExchange(exchangeSource,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
+		ccyExcharge USDExchangeCNYList = svrMonthCollectInterfMapper.USDExchangeCNY(exchangeSource,DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
 		Map<String,ccyExcharge>USDExchangeMap = new HashMap<String,ccyExcharge>();
 		for(ccyExcharge USDExcharge :USDExchangeList){
 			USDExchangeMap.put(USDExcharge.getExchargeCode(),USDExcharge);
@@ -1032,8 +1032,8 @@ public class SvrMonthCollectInterf extends BaseService{
 				if(!ccy.equals("EUR") && !ccy.equals("USD") && !ccy.equals("CNY") && !ccy.equals("JPY")) {//美元对 CFETS:外汇交易中心
 					String USDExccy = ccy + "/USD";
 				  if (USDExchangeMap.get(USDExccy) != null){
-				  	BigDecimal USDcharge = USDExchangeMap.get(USDExccy).getOpenPrice();//外币折算美元
-					BigDecimal USDchargeCNY = USDExchangeCNYList.getOpenPrice();//美元折算人民币
+				  	BigDecimal USDcharge = USDExchangeMap.get(USDExccy).getCharge();//外币折算美元
+					BigDecimal USDchargeCNY = USDExchangeCNYList.getCharge();//美元折算人民币
 					//余额
 					if (listAmountTotal.get(i).getBalanceAmt() != null && USDcharge != null && USDchargeCNY != null) {
 //						先转美元
