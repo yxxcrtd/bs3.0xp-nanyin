@@ -89,7 +89,7 @@ public class CfetsTrdRedeemService extends BaseService{
         if(StringUtil.isNotEmpty(secAcctId)){
             pageParam.put("secAcctIdList", StringUtil.splitToList(GlobalConstant.COMMA,secAcctId));
         }
-        if (StringUtil.equals(dto.getSettleSpeed(),
+      /*  if (StringUtil.equals(dto.getSettleSpeed(),
                 DictCodeList.清算速度_T_0.getValue())) {
             pageParam.put("settleSpeed","0");
         }
@@ -104,7 +104,7 @@ public class CfetsTrdRedeemService extends BaseService{
                 pageParam.put("startDate", DateUtil.addMonthDate(iPlatformDate.getSysDate(),-1));
                 pageParam.put("endDate",iPlatformDate.getSysDate());
             }
-        }
+        }*/
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.有效状态_有效.getValue());
         pageParam.put("VALID_STATUS_02", DictCodeListExt1.有效状态_待处理.getValue());
         pageParam.put("VALID_STATUS_03", DictCodeListExt1.有效状态_撤销.getValue());

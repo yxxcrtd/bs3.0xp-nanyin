@@ -17,44 +17,32 @@ import java.util.Date;
 @ApiModel(value="赎回登记查询请求参数",description="赎回登记查询请求参数")
 public class CfetsTrdRedeemRegInfoListRequest {
 
-    @ApiModelProperty(name="regStatus",value="登记状态集合",example="字符串1,字符串2,...")
-    private String   regStatus;
+    @ApiModelProperty(name="effectiveStatus",value="有效状态",example="A1")
+    private String effectiveStatus;
 
     @ApiModelProperty(name="portfolioId",value="组合代码集合",example="字符串1,字符串2,...")
     private String portfolioId;
 
-    @ApiModelProperty(name="ps",value="交易方向",example="T01")
-    private String ps;
-
-    @ApiModelProperty(name="regAssetType",value="资产类型",example="01")
-    private String regAssetType;
-
     @ApiModelProperty(name="finprodId",value="资产代码",example="字符串1,字符串2,...")
     private String finprodId;
 
-    @ApiModelProperty(name="tradeMarket",value="交易场所",example="01")
-    private String tradeMarket;
+    @ApiModelProperty(name="startRegDate",value="查询登记开始日期",example="12")
+    private Date startRegDate;
 
-    @ApiModelProperty(name="settleSpeed",value="清算速度",example="01")
-    private String settleSpeed;
+    @ApiModelProperty(name="endRegDate",value="查询登记结束日期",example="12")
+    private Date endRegDate;
 
-    @ApiModelProperty(name="secAcctId",value="证券账户",example="字符串1,字符串2,...")
-    private String secAcctId;
+    @ApiModelProperty(name="startExerDate",value="查询理论行权开始日期",example="12")
+    private Date startExerDate;
+
+    @ApiModelProperty(name="endExerDate",value="查询理论行权结束日期",example="12")
+    private Date endExerDate;
 
     @ApiModelProperty(name="busiCode",value="业务编号",example="字符串1")
     private String busiCode;
 
-    @ApiModelProperty(name="effectiveStatus",value="有效状态",example="A1")
-    private String effectiveStatus;
-
-    @ApiModelProperty(name="matchStatus",value="匹配状态",example="字符串1")
-    private String matchStatus;
-
-    @ApiModelProperty(name="quoteType",value="报价方式",example="字符串1")
-    private String quoteType;
-
-    @ApiModelProperty(name="counterId",value="对手方",example="字符串1")
-    private String counterId;
+    @ApiModelProperty(name="tabType",value="查询tab页",example="12")
+    private String tabType;
 
     @ApiModelProperty(name="pageMode",value="分页对象")
     private PageMode pageMode;
@@ -62,21 +50,13 @@ public class CfetsTrdRedeemRegInfoListRequest {
     @ApiModelProperty(name="search",value="关键字",example="12")
     private String search;
 
-    @ApiModelProperty(name="tabType",value="查询tab页",example="12")
-    private String tabType;
 
-    @ApiModelProperty(name="startDate",value="查询开始日期",example="12")
-    private Date startDate;
-
-    @ApiModelProperty(name="endDate",value="查询结束日期",example="12")
-    private Date endDate;
-
-    public String getRegStatus() {
-        return regStatus;
+    public String getEffectiveStatus() {
+        return effectiveStatus;
     }
 
-    public void setRegStatus(String regStatus) {
-        this.regStatus = regStatus;
+    public void setEffectiveStatus(String effectiveStatus) {
+        this.effectiveStatus = effectiveStatus;
     }
 
     public String getPortfolioId() {
@@ -87,22 +67,6 @@ public class CfetsTrdRedeemRegInfoListRequest {
         this.portfolioId = portfolioId;
     }
 
-    public String getPs() {
-        return ps;
-    }
-
-    public void setPs(String ps) {
-        this.ps = ps;
-    }
-
-    public String getRegAssetType() {
-        return regAssetType;
-    }
-
-    public void setRegAssetType(String regAssetType) {
-        this.regAssetType = regAssetType;
-    }
-
     public String getFinprodId() {
         return finprodId;
     }
@@ -111,28 +75,36 @@ public class CfetsTrdRedeemRegInfoListRequest {
         this.finprodId = finprodId;
     }
 
-    public String getTradeMarket() {
-        return tradeMarket;
+    public Date getStartRegDate() {
+        return startRegDate;
     }
 
-    public void setTradeMarket(String tradeMarket) {
-        this.tradeMarket = tradeMarket;
+    public void setStartRegDate(Date startRegDate) {
+        this.startRegDate = startRegDate;
     }
 
-    public String getSettleSpeed() {
-        return settleSpeed;
+    public Date getEndRegDate() {
+        return endRegDate;
     }
 
-    public void setSettleSpeed(String settleSpeed) {
-        this.settleSpeed = settleSpeed;
+    public void setEndRegDate(Date endRegDate) {
+        this.endRegDate = endRegDate;
     }
 
-    public String getSecAcctId() {
-        return secAcctId;
+    public Date getStartExerDate() {
+        return startExerDate;
     }
 
-    public void setSecAcctId(String secAcctId) {
-        this.secAcctId = secAcctId;
+    public void setStartExerDate(Date startExerDate) {
+        this.startExerDate = startExerDate;
+    }
+
+    public Date getEndExerDate() {
+        return endExerDate;
+    }
+
+    public void setEndExerDate(Date endExerDate) {
+        this.endExerDate = endExerDate;
     }
 
     public String getBusiCode() {
@@ -141,38 +113,6 @@ public class CfetsTrdRedeemRegInfoListRequest {
 
     public void setBusiCode(String busiCode) {
         this.busiCode = busiCode;
-    }
-
-    public String getEffectiveStatus() {
-        return effectiveStatus;
-    }
-
-    public void setEffectiveStatus(String effectiveStatus) {
-        this.effectiveStatus = effectiveStatus;
-    }
-
-    public String getMatchStatus() {
-        return matchStatus;
-    }
-
-    public void setMatchStatus(String matchStatus) {
-        this.matchStatus = matchStatus;
-    }
-
-    public String getQuoteType() {
-        return quoteType;
-    }
-
-    public void setQuoteType(String quoteType) {
-        this.quoteType = quoteType;
-    }
-
-    public String getCounterId() {
-        return counterId;
-    }
-
-    public void setCounterId(String counterId) {
-        this.counterId = counterId;
     }
 
     public PageMode getPageMode() {
@@ -197,22 +137,6 @@ public class CfetsTrdRedeemRegInfoListRequest {
 
     public void setTabType(String tabType) {
         this.tabType = tabType;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 }
 

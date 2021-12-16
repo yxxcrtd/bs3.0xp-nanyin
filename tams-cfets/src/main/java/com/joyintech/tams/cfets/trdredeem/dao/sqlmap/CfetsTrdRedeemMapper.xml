@@ -19,17 +19,18 @@
             </otherwise>
         </choose>
         ) aaa
-        left join SYS_DATADICT_LIST sdl on aaa.finprodType2=sdl.ITEM_CODE and sdl.DICT_CODE='FINPROD_TYPE_TG'
+        <!--left join SYS_DATADICT_LIST sdl on aaa.finprodType2=sdl.ITEM_CODE and sdl.DICT_CODE='FINPROD_TYPE_TG'
         left join SYS_DATADICT_LIST dictps on aaa.PS=dictps.ITEM_CODE and dictps.DICT_CODE='PS'
         left join SYS_DATADICT_LIST dicttradeMarket on aaa.tradeMarket=dicttradeMarket.ITEM_CODE and dicttradeMarket.DICT_CODE='TRADE_PLACE'
         left join SYS_DATADICT_LIST dictsp on aaa.settleSpeed=dictsp.ITEM_CODE and dictsp.DICT_CODE='ACCOUNT_SPEED'
         left join SYS_DATADICT_LIST dictquote on aaa.quoteType=dictquote.ITEM_CODE and dictquote.DICT_CODE='QUOTE_STYLE'
-        left join SYS_DATADICT_LIST dictms on aaa.matchStatus=dictms.ITEM_CODE and dictms.DICT_CODE='MATCH_STATUS'
+        left join SYS_DATADICT_LIST dictms on aaa.matchStatus=dictms.ITEM_CODE and dictms.DICT_CODE='MATCH_STATUS'-->
 
         <!-- 关键字模糊查询 -->
-        <include refid="vagueQueryWhere"></include>
+       <!-- <include refid="vagueQueryWhere"></include>-->
 
-        order by aaa.finprodType2, aaa.regStatus,aaa.ps DESC)
+   <!--     order by aaa.finprodType2, aaa.regStatus,aaa.ps DESC-->
+        )
         <!--前端传入排序字段-->
         <if test="sort != null and sort != '' and direction != null and direction != ''">
             order by ${sort} ${direction}
@@ -69,6 +70,7 @@
         left join (select a.PORTFOLIO_ID, a.FINPROD_ID,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_ZHCC
                     from PTL_SEC_POSITION_RULE a
                     where a.cdate = #{cdate,jdbcType=DATE}  AND a.DATE_TYPE =#{DATE_TYPE_0}
+        group by a.PORTFOLIO_ID, a.FINPROD_ID
         )bb
         on regdeal.finprod_id=bb.FINPROD_ID and regdeal.PORTFOLIO_ID=bb.PORTFOLIO_ID
         where 1=1
@@ -155,6 +157,7 @@
         left join (select a.PORTFOLIO_ID, a.FINPROD_ID,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_ZHCC
         from PTL_SEC_POSITION_RULE a
         where a.cdate = #{cdate,jdbcType=DATE}  AND a.DATE_TYPE =#{DATE_TYPE_0}
+        group by a.PORTFOLIO_ID, a.FINPROD_ID
         )bb
         on regdeal.finprod_id=bb.FINPROD_ID and regdeal.PORTFOLIO_ID=bb.PORTFOLIO_ID
         where 1=1
@@ -242,6 +245,7 @@
         left join (select a.PORTFOLIO_ID, a.FINPROD_ID,sum(CASE WHEN a.HODING_TYPE =#{A_001} THEN a.AMOUNT ELSE 0 END) AS PTL_BOND_ZHCC
         from PTL_SEC_POSITION_RULE a
         where a.cdate = #{cdate,jdbcType=DATE}  AND a.DATE_TYPE =#{DATE_TYPE_0}
+        group by a.PORTFOLIO_ID, a.FINPROD_ID
         )bb
         on regdeal.finprod_id=bb.FINPROD_ID and regdeal.PORTFOLIO_ID=bb.PORTFOLIO_ID
         where 1=1

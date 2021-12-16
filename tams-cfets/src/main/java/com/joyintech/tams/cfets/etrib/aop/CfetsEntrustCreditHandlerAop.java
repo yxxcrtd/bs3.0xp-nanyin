@@ -154,7 +154,7 @@ public class CfetsEntrustCreditHandlerAop {
                     }
                 }
                 if (ar != null && !StringUtil.isEmptyList(ar.getErrorList())){
-                    List<String> messages = new ArrayList<>();
+                   /* List<String> messages = new ArrayList<>();
                     for(ValidMessage t:ar.getErrorList()){
                         messages.add(t.getMessage());
                     }
@@ -164,7 +164,11 @@ public class CfetsEntrustCreditHandlerAop {
                         m.setMessage(StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE));
                         ajaxResultMessage.setData(m);
 
-                    }
+                    }*/
+                        AjaxResult errorRs = new AjaxResult();
+                        errorRs.setErrorList(ar.getErrorList());
+                        ajaxResultMessage.setData(errorRs);
+
                 }
                 if (ar != null && StringUtil.isNotEmpty(ar.getData())){
                         AjaxResult m=new AjaxResult();

@@ -1483,21 +1483,21 @@ public class CfetsEtrIbBondinfoService extends BaseService{
      * @return
      */
     public AjaxResult  checkSaveErrorMethod(CfetsEtribSaveRequest allDto, BindingResult br) {
-        List<String> messages = new ArrayList<>();
+        List<ValidMessage> messages = new ArrayList<>();
         if(!StringUtil.isNotEmpty(allDto.getFinprodId())){
-            messages.add("请输入资产代码。");
+            messages.add(new ValidMessage("请输入资产代码。"));
         }
         if(!StringUtil.isNotEmpty(allDto.getPs())){
-            messages.add("请输入交易方向。");
+            messages.add(new ValidMessage("请输入交易方向。"));
         }
         if(StringUtil.isNotEmpty(allDto.getPs())
                 && !StringUtil.equals(allDto.getPs(),BussinessDictCodeList.交易方向_行权回售.getValue())
                 && !StringUtil.isNotEmpty(allDto.getSettleSpeed())
         ){
-           messages.add("请输入清算速度！");
+            messages.add(new ValidMessage("请输入清算速度。"));
         }
         if(!StringUtil.isNotEmpty(allDto.getPriceModel())){
-            messages.add("请输入价格模式！");
+            messages.add(new ValidMessage("请输入价格模式。"));
         }
         // 价格模式check
         if (StringUtil.isNotEmpty(allDto.getPriceModel()) &&
@@ -1505,26 +1505,29 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                         || StringUtil.equals(allDto.getPriceModel(), DictCodeListExt2.价格模式_限价指令.getValue()))) {
             // 价格模式选择限价指令，净价必填
             if (allDto.getPrice() == null ) {
-                messages.add("请输入净价。");
+                messages.add(new ValidMessage("请输入净价。"));
             }
         }
         if(StringUtil.isNotEmpty(allDto.getPrice()) && allDto.getPrice().compareTo(BigDecimal.ZERO)<=0){
-            messages.add("净价不允许小于等于0。");
+            messages.add(new ValidMessage("净价不允许小于等于0。"));
+
         }
         if(StringUtil.isNotEmpty(allDto.getTradeAmt())&& allDto.getTradeAmt().compareTo(BigDecimal.ZERO)<=0){
-            messages.add("基本信息中“券面总额”不允许小于等于0。");
+            messages.add(new ValidMessage("基本信息中“券面总额”不允许小于等于0。"));
+
         }
         String shortSellingSupported=CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
         if(StringUtil.equals(shortSellingSupported,"02")){
             if(StringUtil.isNotEmpty(allDto.getEntrustOwnNum())&& allDto.getEntrustOwnNum().compareTo(BigDecimal.ZERO)<0){
-                messages.add("基本信息中“本方券券面总额”不允许小于0。");
+                messages.add(new ValidMessage("基本信息中“本方券券面总额”不允许小于0。"));
+
             }
             if(StringUtil.isNotEmpty(allDto.getEntrustIntegrateNum())&& allDto.getEntrustIntegrateNum().compareTo(BigDecimal.ZERO)<0){
                 if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_买入.getValue())){
-                    messages.add("基本信息中“卖空购回券面总额”不允许小于0。");
+                    messages.add(new ValidMessage("基本信息中“卖空购回券面总额”不允许小于0。"));
 
                 }else{
-                    messages.add("基本信息中“融入券券面总额”不允许小于0。");
+                    messages.add(new ValidMessage("基本信息中“融入券券面总额”不允许小于0。"));
                 }
             }
         }
@@ -1541,24 +1544,25 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         for(int i = 0; i< dtoList.size(); i++) {
             CfetsBussCombDistribtDto distrib=dtoList.get(i);
             if(!StringUtil.isNotEmpty(dtoList.get(i).getPortfolioId()))
-                messages.add("请输入组合代码(第"+(i+1)+"行)。");
+                messages.add(new ValidMessage("请输入组合代码(第"+(i+1)+"行)。"));
             if(!StringUtil.isNotEmpty(dtoList.get(i).getEntrustNum()))
-                messages.add("请输入券面总额(第"+(i+1)+"行)。");
+               messages.add(new ValidMessage("请输入券面总额(第"+(i+1)+"行)。"));
             if(!StringUtil.isNotEmpty(dtoList.get(i).getBusinessModel()))
-                messages.add("请输入业务模式(第"+(i+1)+"行)。");
+               messages.add(new ValidMessage("请输入业务模式(第"+(i+1)+"行)。"));
             if(StringUtil.isNotEmpty(distrib.getEntrustNum())&& distrib.getEntrustNum().compareTo(BigDecimal.ZERO)<=0){
-                messages.add("组合分配处“券面总额”不允许小于等于0。");
+                messages.add(new ValidMessage("组合分配处“券面总额”不允许小于等于0。"));
+
             }
             if(StringUtil.equals(shortSellingSupported,"02")){
                 if(StringUtil.isNotEmpty(distrib.getEntrustOwnNum())&& distrib.getEntrustOwnNum().compareTo(BigDecimal.ZERO)<0){
-                    messages.add("组合分配处“本方券券面总额”不允许小于0。");
+                    messages.add(new ValidMessage("组合分配处“本方券券面总额”不允许小于0。"));
+
                 }
                 if(StringUtil.isNotEmpty(distrib.getEntrustIntegrateNum())&& distrib.getEntrustIntegrateNum().compareTo(BigDecimal.ZERO)<0){
                     if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_买入.getValue())){
-                        messages.add("组合分配处“卖空购回券面总额”不允许小于0。");
-
+                        messages.add(new ValidMessage("组合分配处“卖空购回券面总额”不允许小于0。"));
                     }else{
-                        messages.add("组合分配处“融入券券面总额”不允许小于0。");
+                        messages.add(new ValidMessage("组合分配处“融入券券面总额”不允许小于0。"));
                     }
                 }
             }
@@ -1588,21 +1592,24 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
         }
         if(StringUtil.isNotEmpty(allDto.getTradeAmt()) && allDto.getTradeAmt().compareTo(entrustNum)!=0){
-            messages.add("组合分配中各组合券面总额之和必须等于基本信息中券面总额。");
+            messages.add(new ValidMessage("组合分配中各组合券面总额之和必须等于基本信息中券面总额。"));
+
         }
         //根据卖空模式对本方券和融入券/卖空购回券面总额进行赋值
         if(StringUtil.equals(shortSellingSupported,"02")){
             if(StringUtil.isNotEmpty(allDto.getEntrustOwnNum()) && allDto.getEntrustOwnNum().compareTo(entrustOwnNum)!=0){
-                messages.add("组合分配中各组合本方券券面总额之和必须等于基本信息中本方券券面总额。");
+                messages.add(new ValidMessage("组合分配中各组合本方券券面总额之和必须等于基本信息中本方券券面总额。"));
+
             }
             if(StringUtil.isNotEmpty(allDto.getEntrustIntegrateNum()) && allDto.getEntrustIntegrateNum().compareTo(entrustIntegrateNum)!=0){
-                messages.add("组合分配中各组合卖空购回券面总额之和必须等于基本信息中卖空购回券面总额。");
+                messages.add(new ValidMessage("组合分配中各组合卖空购回券面总额之和必须等于基本信息中卖空购回券面总额。"));
+
             }
             if(StringUtil.isNotEmpty(allDto.getEntrustOwnNum()) && StringUtil.isNotEmpty(allDto.getEntrustIntegrateNum())
                &&  StringUtil.isNotEmpty(allDto.getTradeAmt())
             ){
                 if(allDto.getTradeAmt().compareTo(ArithmeticUtil.doAdd(allDto.getEntrustOwnNum(),allDto.getEntrustIntegrateNum()))!=0){
-                    messages.add("基本信息中券面总额必须等于基本信息中本方券券面总额和卖空购回券面总额之和。");
+                    messages.add(new ValidMessage("基本信息中券面总额必须等于基本信息中本方券券面总额和卖空购回券面总额之和。"));
                 }
             }
         }
@@ -1610,7 +1617,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
         if(StringUtil.isNotEmpty(fp)){
             String isHoliday = cfetsetrIbBondinfoMapper.getIsHoliday(allDto.getEtrDate(), fp.getCalendarId());
             if(StringUtil.isNotEmpty(isHoliday) && !StringUtil.equals(isHoliday,"0")){
-                messages.add("指令日期必须为交易日。");
+                messages.add(new ValidMessage("指令日期必须为交易日。"));
+
             }
         }
         boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));
@@ -1621,7 +1629,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 /*if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.ETRLIMIT_SWITCH_IS_TOTAL), "Y")){*/
                     String mess=getEtrLimitSwitch(allDto);
                     if(StringUtil.isNotEmpty(mess)){
-                        messages.add(mess);
+                        messages.add(new ValidMessage(mess));
+
                     }
               /*  }else{
                     List<CfetsBussCombDistribtDto> etribComDistribtDtoList =allDto.getBussCombDistribtList();
@@ -1643,10 +1652,9 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             }
         }
         if(messages.size()>0) {
-            AjaxResult m=new AjaxResult();
-            m.setStatuCode(220);
-            m.setMessage(StringUtil.joinString(messages,  GlobalConstant.VERTICAL_LINE));
-            return m;
+            AjaxResult errorRs = new AjaxResult();
+            errorRs.setErrorList(messages);
+            return errorRs;
         }
         return null;
     }
