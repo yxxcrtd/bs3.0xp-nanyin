@@ -579,9 +579,12 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                     r.setPositionsPrice(ArithmeticUtil.multiply(doAdd, r.getPrice()).divide(BigDecimal.valueOf(100)));
 
                     if (r.getPositionsAmt() != null){
-                        // 5.浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
-                        r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
+                        // 5.浮动盈亏（元） = 持仓市值（万元） - 持仓成本（万元）
+                        r.setFloatingPl(ArithmeticUtil.multiply(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()), BigDecimal.valueOf(10000L)));
                     }
+
+                    // 持仓市值(单位转换为元)
+                    r.setPositionsPrice(ArithmeticUtil.multiply(r.getPositionsPrice(), BigDecimal.valueOf(10000L)));
                 }
             });
         }
