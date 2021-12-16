@@ -28,6 +28,9 @@
                     #{item,jdbcType=VARCHAR}
                 </foreach>)
             </if>
+            <if test="entrustId !=null and entrustId != ''">
+                AND T1.ENTRUST_ID = #{entrustId}
+            </if>
         </where>
     </select>
 
