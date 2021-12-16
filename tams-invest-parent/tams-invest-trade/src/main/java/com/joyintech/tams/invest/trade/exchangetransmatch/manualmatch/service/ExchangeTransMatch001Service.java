@@ -190,7 +190,7 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
             if(StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())
                     || StringUtil.equals(ps,DictCodeListExt3.交易方向_逆回购.getValue()) ) {
                 map.put("ps",DictCodeList.交易方向_买入.getValue());
-                map.put("finprodType2",StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+                map.put("finprodType2_hg",StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
             }
         }
         Page<ExchangeTransMatch004Dto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
@@ -402,7 +402,7 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                 trdRepoTrade002Dto.setIsOutTrade(DictCodeList.是否_是.getValue());
                 trdRepoTrade002Dto.setTradeAmt(dto.getRemainAmount());
                 trdRepoTrade002Dto.setPrinAmt(dto.getRemainAmount());
-                trdRepoTrade002Dto.setRebackPrice(dto.getUnitCprice());
+                trdRepoTrade002Dto.setRebackPrice(ArithmeticUtil.multiply(dto.getUnitCprice(),new BigDecimal(100)));
                 trdRepoTrade002Dto.setShareAmt(dto.getRemainNum());
                 trdRepoTrade002Dto.setCommissionAmt(dto.getCommissionAmt());
                 trdRepoTrade002Dto.setTradeAmtAndFee(ArithmeticUtil.subtract(trdRepoTrade002Dto.getPrinAmt(),trdRepoTrade002Dto.getCommissionAmt()));
