@@ -359,7 +359,10 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         DayEndAccount002Dto dto = new DayEndAccount002Dto();
         //获取券商单数据
         String seqNo = (String) param.get("seqNo");
-        StlSecReconDeal stlSecReconDeal = stlSecReconDealMapper.selectByPrimaryKey(seqNo);
+        // ZGZGST-4203:修改查询券商对账单方式 fuyongsheng modify 20211215 start
+        // StlSecReconDeal stlSecReconDeal = stlSecReconDealMapper.selectByPrimaryKey(seqNo);
+        StlSecReconDeal stlSecReconDeal = dayEndAccountMapper.getStlSecReconDeal(seqNo);
+        // ZGZGST-4203:修改查询券商对账单方式 fuyongsheng modify 20211215 end
         List<DayEndAccountDto> reconDealInfoList = new ArrayList<DayEndAccountDto>();
         //费用加减标识
         BigDecimal stampFeeFlg = BigDecimal.ZERO;
