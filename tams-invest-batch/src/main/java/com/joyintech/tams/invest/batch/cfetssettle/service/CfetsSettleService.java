@@ -165,13 +165,13 @@ public class CfetsSettleService extends BaseService{
         if (!StringUtil.equals(CacheUtil.getSysParam("auto_settle_flag"),"Y")){
             return;
         }
-        //删除当日手工交收数据
-        //删除交收流水表
-        cfetsSettleMapper.deleteTodayCfetsSettleFlow(paramMap);
-        //删除交收明细表
-        cfetsSettleMapper.deleteTodayCfetsSettleDetail(paramMap);
-        //删除交收信息表
-        cfetsSettleMapper.deleteTodayCfetsSettleInfo(paramMap);
+//        //删除当日手工交收数据
+//        //删除交收流水表
+//        cfetsSettleMapper.deleteTodayCfetsSettleFlow(paramMap);
+//        //删除交收明细表
+//        cfetsSettleMapper.deleteTodayCfetsSettleDetail(paramMap);
+//        //删除交收信息表
+//        cfetsSettleMapper.deleteTodayCfetsSettleInfo(paramMap);
 
         //生成当日手工交收数据
         List<CfetsSettleReaderResult> insertDtoLists = this.createTodayTodoSettleData(paramMap);
