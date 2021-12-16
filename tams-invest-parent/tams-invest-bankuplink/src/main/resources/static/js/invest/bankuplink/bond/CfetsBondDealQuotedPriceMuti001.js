@@ -285,7 +285,6 @@
                 // $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', false);
                 //$('#CfetsBondDealQuotedPriceMuti001_settleSpreed').val('01').trigger('change').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_settleSpreed').trigger('change').attr('disabled', false);
-                $('#CfetsBondDealQuotedPriceMuti001_mySide').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_settleDate').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_ps').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceMuti001_finprodId').attr('disabled', false);
