@@ -236,6 +236,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
         //查询匹配的委托信息list
         Map<String,Object> entrustMap = new HashMap<>();
         entrustMap.put("entrustIdList",dto.getEntrustIdList());
+        entrustMap.put("ENTRUST_STATUS_03",DictCodeList.委托状态_已接收.getValue());
         List<ExchangeTransMatchCommonEntrustDto> commonEntrustDtoList = exchangeTransMatchCommonMapper.getEtrEntrustByIdList(entrustMap);
         if(!StringUtil.isEmptyList(commonEntrustDtoList)) {
             //只有一条匹配指令时
