@@ -529,7 +529,7 @@ from
             <!-- 账户持仓为0时数据不展示 -->
             where (
                     etrptl.PTL_BOND_ZHCC != 0 or etrptl.ETR_SUM_KYCC != 0 or etrptl.ETR_PLEDGE_KZYCC != 0 or etrptl.ETR_PLEDGE_YZYCC != 0
-                    or etrptl.PTL_BOND_BFQKYCC != 0 or etrptl.PTL_BOND_BFQZTCC != 0
+                    or etrptl.PTL_BOND_BFQKYCC != 0 
                 ) 
             <!-- 关键字模糊查询 -->
             <include refid="positionQueryAnd"/>
