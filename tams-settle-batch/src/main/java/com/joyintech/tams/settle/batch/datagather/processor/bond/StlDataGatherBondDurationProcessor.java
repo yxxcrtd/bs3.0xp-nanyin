@@ -283,7 +283,10 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
     private void createDeal(TrdProductDealDto trdProductDeal, SettleTransDataDto settleTransData){
         trdProductDeal.setTradeId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易));
         // 业务类型
-        trdProductDeal.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
+        // 业务类型为债券资产存续期 fuyongsheng 20211217 modify start
+        // trdProductDeal.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
+        trdProductDeal.setBusiType(DictCodeList.共通业务类型_债券类资产存续期.getValue());
+        // ZGZGST-4231,ZGZGST-4232:业务类型为债券资产存续期 fuyongsheng 20211217 modify end
         // 金融产品代码
         trdProductDeal.setFinprodId(settleTransData.getFinprodId());
         // 金融产品类型（投管分类）
