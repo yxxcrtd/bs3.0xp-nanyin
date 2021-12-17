@@ -2189,7 +2189,7 @@
             }
                 // 设置添加质押券共通参数
                 setBussRepoSecInput();
-            if(pageModel== PAGE_MODEL_NEW){
+            if(pageModel== PAGE_MODEL_NEW && isTranRecord != 'Y'){
                 $("#secAcctId").val('').trigger('change');
             }
         });
@@ -2322,8 +2322,12 @@
         }
 
         //场内成交匹配录单时，触发一下期限品种联动期限的方法
-        if(isTranRecord == 'Y'&& $('#termTypeReback').val() !='' && $('#termTypeReback').val()) {
-            termTypeChangeAction();
+        if(isTranRecord == 'Y') {
+
+            if($('#termTypeReback').val() !='' && $('#termTypeReback').val()) {
+                termTypeChangeAction();
+            }
+
         }
         if(preTradeId){
             $('#baseRiskMathComm').hide();

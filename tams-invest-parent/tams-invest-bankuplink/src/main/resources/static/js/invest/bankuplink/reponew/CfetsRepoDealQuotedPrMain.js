@@ -67,7 +67,8 @@
             if (result.data){
                 Joyin.confirm(result.data, function() {
                     WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice002_btn_submit", 'CfetsRepoDealQuotedPr002', function(result){
-                         // $(".cfetsRepoDealQuotedPr002_div").load(location.href+" .cfetsRepoDealQuotedPr002_div");
+                        // var index = window.parent.layer.getFrameIndex(window.name);
+                        // window.parent.layer.close(index);
                         document.getElementById('cfetsRepoDealQuotedPr002_iframe').contentWindow.location.reload(true);
                     })
                 })
