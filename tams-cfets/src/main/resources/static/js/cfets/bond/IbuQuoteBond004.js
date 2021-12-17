@@ -238,6 +238,18 @@
         object.operatorType = operatorType;
         object.isDzh = 'Y';
         object.pageId = "IbuQuoteBond004";
+        object.shareAmt = JoyinMath.doMul(object.shareAmt,10000);
+        if(object.matureYield){
+            object.matureYield = JoyinMath.doDiv(object.matureYield,100);
+        }
+        if(object.exerYield){
+            object.exerYield = JoyinMath.doDiv(object.exerYield,100);
+        }
+        if(object.cfetsBondDealDialogueQuoteDtoList){
+            $.each(object.cfetsBondDealDialogueQuoteDtoList,function(index,obj){
+                obj.shareAmt =  JoyinMath.doMul(obj.shareAmt,10000);
+            });
+        }
         Joyin.confirm("是否确认提交?",
             function() {
                 //保存 走流程
