@@ -74,6 +74,11 @@ public class ChbMonthReportDetailAssetUtil {
      * @return
      */
     public int insertBatch(List<ChbMonthAssetPositiondetail> prdPositionList,String term){
+
+        if(null!=prdPositionList&&prdPositionList.size()==0){
+            return 0;
+        }
+
         //一次性最大插入条数
         int maxDataCountOneTime = reportInsertCount;
         //同批次的详情数据删除

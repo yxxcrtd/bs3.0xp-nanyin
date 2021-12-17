@@ -14,7 +14,7 @@
             <form class="layui-form" id="searchForm">
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-md4">
-                        <label class="layui-form-label form-lable">产品</label>
+                        <label class="layui-form-label form-lable">产品代码</label>
                         <div class="layui-input-inline input-inline">
                             <select id="prodId" name="prodId"
                                     data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getProdID}'
@@ -30,6 +30,17 @@
                         <div class="layui-input-inline input-inline">
                             <input id="enddate" type="text"  name="timeControl"  class="layui-input form-input input-dateSelect"
                                    placeholder="请选择年月" />
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">金额类型</label>
+                        <div class="layui-input-inline input-inline">
+                            <select id="dataType" name="dataType"
+                                    class="layui-input form-input input-select"
+                                    data-th-data-result="${SVR_PBC_DATA_TYPE}" placeholder="请选择"
+                                    data-th-placeholder="#{SysCommon.selectplaceholder}"
+                                    allowClear="true" multiple="multiple">
+                            </select>
                         </div>
                     </div>
 
@@ -49,7 +60,7 @@
         	var submitStatus=/*[[${submitStatus}]]*/'';
         	var validKey=/*[[${validKey}]]*/'';
         </script>
-        <script data-th-src="@{/js/report/pbc/classic/monthreportdetail/ChbMonthReportDetailProd001.js}" type="text/javascript"></script>
+        <script data-th-src="@{/js/report/pbc/classic/monthreportdetail/PbcMonthReportDetailProd001.js}" type="text/javascript"></script>
         <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
     </div>
 </body>

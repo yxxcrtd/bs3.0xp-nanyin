@@ -7,11 +7,12 @@
 			P.POSUUID,
 			P.PRODID,
 			B.PROD_NAME prodName,
+			P.RAISEMODE raisemode,
 			B.VDATE,
 			B.MDATE,
 			B.raise_type raiseType,
 			B.IVSTORIENTATION,
-			B.raise_ccy raiseCcy,
+			P.ccy,
 			B.OPERATE_MODE operateMode,
 			DECODE(p.OPERATE_MODE,'03','01') opentype,
 			P.CLOSETERMDAY term,
@@ -43,14 +44,12 @@
 		LEFT JOIN CHB_PRD_BASEINFO B ON P.PRODID= b.Prod_Id
 		WHERE 1=1
 	  <if test="enddate != null and enddate != ''">
-	 	 and TP.TERM =  #{enddate,jdbcType=VARCHAR}
+	 	 and P.TERM =  #{enddate,jdbcType=VARCHAR}
 	  </if>
-	  <if test="prodIds != null and prodIds.size()>0 ">
-		  AND P.PRODID IN(
-		  <foreach item="item" index="index" collection="prodIds" separator=",">
+	  <if test="prodIds != null and prodIds != '' ">
+		  <foreach item="item" index="index" collection="prodIds" separator="," open=" AND P.PRODID IN(" close=")">
 			  #{item}
 		  </foreach>
-		  )
 	  </if>
 
 	  <if test="keysList != null and keysList.size()>0 ">

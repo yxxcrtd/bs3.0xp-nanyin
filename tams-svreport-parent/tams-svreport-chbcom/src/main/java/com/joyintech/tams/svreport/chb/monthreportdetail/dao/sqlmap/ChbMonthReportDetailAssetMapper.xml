@@ -50,6 +50,10 @@
         <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
         <result column="OLD_ASSET_CODE" property="oldAssetCode" jdbcType="VARCHAR" />
 
+
+
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+
         <result column="reportType1" property="reportType1" jdbcType="VARCHAR" />
         <result column="reportType2" property="reportType2" jdbcType="VARCHAR" />
         <result column="reportType3" property="reportType3" jdbcType="VARCHAR" />
@@ -73,8 +77,8 @@
             L.ITEM_VALUE reportType2,
             T.PROPERNAME reportType3,
             T.PROPERNAME reportType4,
-            P.PROD_ID prodId,
-            B.PROD_NAME prodName,
+            P.PROD_ID,
+            B.PROD_NAME,
             B.IS_FHXGCP ,
             P.ASSET_CODE,
             NVL(I.ASSET_NAME,B.SUBJECT_NAME) ASSET_NAME,
@@ -112,24 +116,22 @@
             LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
 
             WHERE T.REPORTTYPE = 'BALANCE'
+            AND P.PROD_ID IS NOT NULL
             <if test="enddate != null and enddate != ''">
                 and P.TERM =  #{enddate,jdbcType=VARCHAR}
             </if>
 
-            <if test="prodIds != null and prodIds.size()>0 ">
-                AND P.PRODID IN(
-                <foreach item="item" index="index" collection="prodIds" separator=",">
+            <if test="prodIds != null and prodIds != '' ">
+                <foreach item="item" index="index" collection="prodIds" separator="," open=" AND P.PROD_ID IN(" close=")">
                     #{item}
                 </foreach>
-                )
             </if>
 
-            <if test="assetCodes != null and assetCodes.size()>0 ">
-                AND P.ASSET_CODE IN(
-                <foreach item="item" index="index" collection="assetCodes" separator=",">
+            <if test="assetCodes != null and assetCodes != ''  ">
+
+                <foreach item="item" index="index" collection="assetCodes" separator="," open="AND P.ASSET_CODE IN(" close=")">
                     #{item}
                 </foreach>
-                )
             </if>
 
             <if test="keysList != null and keysList.size()>0 ">

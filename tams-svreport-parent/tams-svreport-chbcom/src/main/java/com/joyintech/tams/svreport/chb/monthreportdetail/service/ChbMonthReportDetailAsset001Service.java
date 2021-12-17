@@ -89,7 +89,7 @@ public class ChbMonthReportDetailAsset001Service extends CommonExportService<Chb
 			pageParam.put("prodIds",pageParam.get("prodId").toString().split(","));
 		}
 		if(StringUtil.isNotEmpty(pageParam.get("assetCode"))){
-			pageParam.put("assetCodes",pageParam.get("assetCodes").toString().split(","));
+			pageParam.put("assetCodes",pageParam.get("assetCode").toString().split(","));
 		}
 		Page<ChbMonthReportDetailAsset> page = queryForPage(
 				pagenum,legth,()->chbMonthReportDetailAssetMapper.selectDetailList(pageParam));

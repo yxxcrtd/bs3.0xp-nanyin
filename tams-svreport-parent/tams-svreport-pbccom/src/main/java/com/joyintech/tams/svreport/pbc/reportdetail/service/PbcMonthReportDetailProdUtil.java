@@ -2,12 +2,16 @@ package com.joyintech.tams.svreport.pbc.reportdetail.service;
 
 import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.tams.common.base.dao.ChbMonthPrdPositiondetailMapper;
 import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper;
+import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto;
+import com.joyintech.tams.svreport.pbc.common.constants.PbcReportProperycode;
 import com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto;
 import com.joyintech.tams.svreport.pbc.reportdetail.dao.PbcMonthReportDetailProdMapper;
 import com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailProd;
@@ -36,9 +40,9 @@ public class PbcMonthReportDetailProdUtil {
     @Autowired
     private ChbPrdBaseinfoMapper chbPrdBaseinfoMapper;
 
-    @Autowired
-    private ChbMonthPrdPositiondetailMapper chbMonthPrdPositiondetailMapper;
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private static Map<String,ChbTypeMappingEx> investorTypeMap;
 
     /**
      * 数据批量一次性insert条数
@@ -59,8 +63,45 @@ public class PbcMonthReportDetailProdUtil {
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthPrdPositiondetail,info);
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthPrdPositiondetail,prdPosition);
-        //赋值所属类型
-//        pbcMonthPrdPositiondetail.setDetailno(reportDetail.getPropertycode());
+
+
+        String ordIdentified = null;
+        if(DictCodeListExt2.客户二级类型_住户.getValue().equals(prdPosition.getCustomerType2())){
+            ordIdentified = DictCodeListExt2.客户一级类型_住户.getValue();
+        }else if(DictCodeListExt2.客户二级类型_广义政府.getValue().equals(prdPosition.getCustomerType2())){
+            ordIdentified = DictCodeListExt2.客户一级类型_广义政府.getValue();
+        }else if(DictCodeListExt2.客户二级类型_非金融企业.getValue().equals(prdPosition.getCustomerType2())){
+            ordIdentified = ordIdentified = DictCodeListExt2.客户一级类型_非金融企业.getValue();
+        }else if(DictCodeListExt2.客户二级类型_银行业存款类金融机构.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_银行业非存款类金融机构.getValue().equals(prdPosition.getCustomerType2())
+                /*****G06升级改造 leipeng 20210128   start**/
+                ||DictCodeListExt2.客户二级类型_保险业金融机构.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_信托公司.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_证券公司.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_基金公司.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_其他金融机构.getValue().equals(prdPosition.getCustomerType2())
+                /*****G06升级改造 leipeng 20210128   end**/
+                ||DictCodeListExt2.客户二级类型_非银行业金融机构.getValue().equals(prdPosition.getCustomerType2())){
+            ordIdentified = DictCodeListExt2.客户一级类型_金融机构.getValue();
+        }else if(DictCodeListExt2.客户二级类型_银行非保本理财.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_信托公司资管产品.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_证券公司及其子公司资管产品.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_基金管理公司及其子公司专户.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_期货公司及其子公司资管产品.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_保险资管产品.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_金融资产投资公司资管产品.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_公募基金.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_私募机构私募基金.getValue().equals(prdPosition.getCustomerType2())
+                ||DictCodeListExt2.客户二级类型_其他特定目的载体.getValue().equals(prdPosition.getCustomerType2())){
+            ordIdentified = DictCodeListExt2.客户一级类型_特定目的载体.getValue();
+        }else if (null!=prdPosition.getCustomerType2()&&prdPosition.getCustomerType2().contains(DictCodeListExt2.客户一级类型_境外.getValue())) {
+            ordIdentified = DictCodeListExt2.客户一级类型_境外.getValue();
+        }
+
+        pbcMonthPrdPositiondetail.setOrdIdentified(ordIdentified);
+
+        pbcMonthPrdPositiondetail.setTermdays(prdPosition.getTerm());
+
         pbcMonthPrdPositiondetail.setTerm(termid);
 
 //        pbcMonthPrdPositiondetail.setTermdays(getTermDays(info.getOperateMode(),info.getOpenCircle(),info.getOpenCircleDays(),prdPosition.getClosetermday()));
