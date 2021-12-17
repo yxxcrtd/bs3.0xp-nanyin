@@ -173,7 +173,10 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
         String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_资产存续期交易);
         dealTotal.setTotleTradeId(totalTradeId);
         // 业务类型
-        dealTotal.setBusiType(DictCodeList.共通业务类型_资产存续期交易.getValue());
+        // ZGZGST-4231,ZGZGST-4232:业务类型为债券资产存续期 fuyongsheng 20211217 modify start
+        // dealTotal.setBusiType(DictCodeList.共通业务类型_资产存续期交易.getValue());
+        dealTotal.setBusiType(DictCodeList.共通业务类型_债券类资产存续期.getValue());
+        // ZGZGST-4231,ZGZGST-4232:业务类型为债券资产存续期 fuyongsheng 20211217 modify end
         // 金融产品代码
         dealTotal.setFinprodId(settleTransData.getFinprodId());
         // 金融产品类型（投管分类）
@@ -291,10 +294,14 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
         trdProductDeal.setBranch(0L);
         // 交易日
         trdProductDeal.setTradeDate(settleTransData.getTradeDate());
+        // ZGZGST-4231:赋值起息日和到期日 fuyongsheng modify start
         // 起息日
-        trdProductDeal.setVdate(null);
+        // trdProductDeal.setVdate(null);
+        trdProductDeal.setVdate(settleTransData.getVdate());
         // 到期日
-        trdProductDeal.setMdate(null);
+        // trdProductDeal.setMdate(null);
+        trdProductDeal.setMdate(settleTransData.getMdate2());
+        // ZGZGST-4231:赋值起息日和到期日 fuyongsheng modify end
         // 交付日
         trdProductDeal.setPayDate(settleTransData.getVpayDate());
         // 交割日
