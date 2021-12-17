@@ -78,5 +78,7 @@
         <module>../../tams-cfets</module>
         <module>../../tams-cfets-system</module>
         <module>../../tams-common-basicdata</module>
+        <module>../../tams-exchange-touguan</module>
+        <module>../../tams-exchange-touguan-system</module>
     </modules>
 </project>
