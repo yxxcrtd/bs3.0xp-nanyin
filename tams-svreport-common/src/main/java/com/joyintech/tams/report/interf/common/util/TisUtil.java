@@ -443,13 +443,8 @@ public class TisUtil {
 
 	@SuppressWarnings("unchecked")
 	public static File createFile(Map<String, Object> paraMap, String exceltemplate, String flieName) {
-		String template = "";
 		// 模板路径pbc/
-//		try{
-//			template =  FileNameUtil.getTplFile(exceltemplate + ".xls");
-//		}catch (Exception e) {
-//			logger.info("classpath下未读到模板。");
-//		}
+		String template = FileNameUtil.getTplFile(exceltemplate + ".xls");
 		// 模板文件后缀名
 		String fileType = GlobalConstant.POINT + FilenameUtils.getExtension(template);
 		// 存放地址
@@ -463,14 +458,14 @@ public class TisUtil {
 		FileOutputStream outputStream = null;
 		try {
 			// 原文件
-//			File srcFile = new SafelyFile(template);
-//			if (srcFile.exists()) {
-//				inputStream = new FileInputStream(srcFile);
-//			} else {
-//				inputStream = TisUtil.class.getClassLoader().getResourceAsStream("tpl/" + exceltemplate + ".xls");
-//			}
+			File srcFile = new SafelyFile(template);
+			if (srcFile.exists()) {
+				inputStream = new FileInputStream(srcFile);
+			} else {
+				inputStream = TisUtil.class.getResourceAsStream("/tpl/" + exceltemplate + ".xls");
+			}
 			// 工作表对象初始化
-			wb = new HSSFWorkbook(TisUtil.class.getClassLoader().getResourceAsStream("tpl/" + exceltemplate + ".xls"));
+			wb = new HSSFWorkbook(inputStream);
 
 			for (Sheet sheet : wb) {
 				List<HSSFRow> listRows = new ArrayList<HSSFRow>();
@@ -556,18 +551,18 @@ public class TisUtil {
 									HSSFCell baseCell = (HSSFCell) row.getCell(index);
 									HSSFCell newcell = (HSSFCell) row.createCell(index);
 									copyCell((HSSFWorkbook) wb, baseCell, newcell, true);
-                                  if(exceltemplate.contains("Monthreport")){
-									  try {
-										  newcell.setCellValue(Double.parseDouble(value));
-										  if(!exceltemplate.contains("G06")){
-											  newcell.setCellType(baseCell.getCellType());
-										  }
-									  }catch(Exception e){
-										  newcell.setCellValue(value);
-									  }
-								  }else{
-									  newcell.setCellValue(value);
-								  }
+									if(exceltemplate.contains("Monthreport")){
+										try {
+											newcell.setCellValue(Double.parseDouble(value));
+											if(!exceltemplate.contains("G06")){
+												newcell.setCellType(baseCell.getCellType());
+											}
+										}catch(Exception e){
+											newcell.setCellValue(value);
+										}
+									}else{
+										newcell.setCellValue(value);
+									}
 								}else if(paraMap.get(key)==null){
 									insertRow(row, 1);
 									Map<String, Object> value2=new HashMap<String, Object>();
@@ -1307,7 +1302,7 @@ public class TisUtil {
 		}
 		String cellvalue = result.substring(result.indexOf("#{") + 2, result.indexOf("}"));
 		String[] keys = cellvalue.split("\\.");
-        String valKey=keys[1];
+		String valKey=keys[1];
 		Object value = datas.get(valKey);
 		if (value == null) {
 			cell.setCellValue("");
