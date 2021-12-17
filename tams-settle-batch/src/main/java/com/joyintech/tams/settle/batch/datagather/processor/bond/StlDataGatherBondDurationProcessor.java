@@ -96,7 +96,9 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                         settleTransTgMapping.setTradeId(tradeId);
                         settleTransTgMapping.setTradeIdTg(totalTrdProductDealDto.getTotleTradeId());
                         settleTransTgMapping.setTgDataStatus("02");
-                        //TODO 执行日期
+                        // add by fuyongsheng 对成交与投管关系执行时间赋值 fuyongsheng 20211217 start
+                        settleTransTgMapping.setDealDate(settleTransData.getDealDate());
+                        // add by fuyongsheng 对成交与投管关系执行时间赋值 fuyongsheng 20211217 end
                         settleTransTgMappingList.add(settleTransTgMapping);
                     }
                     //汇总交易(资产+组合维度)
@@ -159,6 +161,9 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
             investTradeWriteDto.setStlPayOrdersList(stlPayOrdersList);
             investTradeWriteDto.setProductDealList(productDealList);
             investTradeWriteDto.setTrdProductDealAddList(trdProductDealAddList);
+            // ZGZGST-4219: 对SettleTransTgMappingList赋值,解决撤销问题 fuyongsheng 20211217 add start
+            investTradeWriteDto.setSettleTransTgMappingList(settleTransTgMappingList);
+            // ZGZGST-4219: 对SettleTransTgMappingList赋值,解决撤销问题 fuyongsheng 20211217 add end
             investTradeWriteDto.setSecType(DictCodeListExt1.证券品种_债券.getValue());
         }
         return investTradeWriteDto;
