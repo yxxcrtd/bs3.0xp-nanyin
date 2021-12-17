@@ -373,7 +373,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
                     doInsertFlow(dto);
                 }
                 //发送头寸
-//                sendPositionMethod(entity);
+                sendPositionMethod(entity);
             }
         }
     }
