@@ -390,8 +390,7 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
     }
 
     public ResponseEntity<byte[]> exportMonthReportExcel(Map<String, Object> data, String exceltemplate,
-            String fileName) throws IOException {
-        logger.info(exceltemplate);
+                                                         String fileName) throws IOException {
         File depositfile = TisUtil.createFile(data, exceltemplate, fileName);
         return ExportUtil.export(fileName, depositfile, true);
     }
@@ -410,7 +409,6 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
                 SvrServiceApplication.CHB_SERVICE_NAME + "/ChbTransMonthReport/createData", selectParam, Map.class);
         data.put("termname", data.get("termname").toString());
         String termname = data.get("termname").toString();
-        logger.info(exceltemplate);
         String flieName = exceltemplate + "（" + termname + "）.xls";
         File depositfile = TisUtil.createFile(data, exceltemplate, flieName);
         return this.priView(depositfile, true);
