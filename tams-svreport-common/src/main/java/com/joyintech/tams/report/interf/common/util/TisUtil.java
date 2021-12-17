@@ -445,11 +445,11 @@ public class TisUtil {
 	public static File createFile(Map<String, Object> paraMap, String exceltemplate, String flieName) {
 		String template = "";
 		// 模板路径pbc/
-		try{
-			template =  FileNameUtil.getTplFile(exceltemplate + ".xls");
-		}catch (Exception e) {
-			logger.info("classpath下未读到模板。");
-		}
+//		try{
+//			template =  FileNameUtil.getTplFile(exceltemplate + ".xls");
+//		}catch (Exception e) {
+//			logger.info("classpath下未读到模板。");
+//		}
 		// 模板文件后缀名
 		String fileType = GlobalConstant.POINT + FilenameUtils.getExtension(template);
 		// 存放地址
@@ -463,14 +463,14 @@ public class TisUtil {
 		FileOutputStream outputStream = null;
 		try {
 			// 原文件
-			File srcFile = new SafelyFile(template);
-			if (srcFile.exists()) {
-				inputStream = new FileInputStream(srcFile);
-			} else {
-				inputStream = TisUtil.class.getClassLoader().getResourceAsStream("tpl/" + exceltemplate + ".xls");
-			}
+//			File srcFile = new SafelyFile(template);
+//			if (srcFile.exists()) {
+//				inputStream = new FileInputStream(srcFile);
+//			} else {
+//				inputStream = TisUtil.class.getClassLoader().getResourceAsStream("tpl/" + exceltemplate + ".xls");
+//			}
 			// 工作表对象初始化
-			wb = new HSSFWorkbook(inputStream);
+			wb = new HSSFWorkbook(TisUtil.class.getClassLoader().getResourceAsStream("tpl/" + exceltemplate + ".xls"));
 
 			for (Sheet sheet : wb) {
 				List<HSSFRow> listRows = new ArrayList<HSSFRow>();
