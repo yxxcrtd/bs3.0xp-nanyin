@@ -31,6 +31,7 @@
             <if test="entrustId !=null and entrustId != ''">
                 AND T1.ENTRUST_ID = #{entrustId}
             </if>
+            AND T1.ENTRUST_STATUS = #{ENTRUST_STATUS_03}
         </where>
     </select>
 
