@@ -1575,9 +1575,12 @@ public class StlDataDealSzdJsmxProcessService {
 		// 业务类型
 		settleTransData.setBusiType(DictCodeListExt3.业务类型_债券交易.getValue());
 		// 交易日期
-		ImplCalendar implCalendar = new ImplCalendar();
-		settleTransData.setTradeDate(DateUtil.parse(implCalendar.calcDate(szdJsmx.getJyrq(), 1,
-				BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
+		// modify by fuyongsheng 20211217 交易日期无需+1自然日 start
+		// ImplCalendar implCalendar = new ImplCalendar();
+		// settleTransData.setTradeDate(DateUtil.parse(implCalendar.calcDate(szdJsmx.getJyrq(), 1,
+		//		BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
+		settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
+		// modify by fuyongsheng 20211217 交易日期无需+1自然日 end
 		// 交割日期
 		settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getJsrq()));
 		// 交易币种
