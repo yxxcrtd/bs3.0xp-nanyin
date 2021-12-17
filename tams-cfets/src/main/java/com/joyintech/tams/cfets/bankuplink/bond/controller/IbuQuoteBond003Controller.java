@@ -10,11 +10,11 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice003Service;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CounterInfoDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -130,7 +130,7 @@ public class IbuQuoteBond003Controller extends BaseController {
         if(CollectionUtils.isNotEmpty(cfetsBondDealRequestQuoteDto.getCfetsBondDealRequestQuoteDtoList())){
             cfetsBondDealQuoteCommonDto.setPtlAllocatios(cfetsQuotedCommonServiceVue.createRequestPtlAllocationList(cfetsBondDealRequestQuoteDto.getCfetsBondDealRequestQuoteDtoList()));
         }
-        return new Message<CfetsBondDealQuoteCommonDto>().setData(cfetsBondDealQuoteCommonDto);
+        return new Message<CfetsBondDealQuoteCommonDto>().success().setData(cfetsBondDealQuoteCommonDto);
     }
 
     /**
@@ -205,6 +205,20 @@ public class IbuQuoteBond003Controller extends BaseController {
         if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
             cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealRequestQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
         }
+        List<com.joyintech.tams.cfets.bankuplink.bond.dto.CounterInfoDto> counterInfoList = cfetsBondDealQuoteCommonDto.getCounterInfoList();
+        if(CollectionUtils.isEmpty(counterInfoList)){
+            sb.append(this.getMessage("请选择可选机构"));
+        }else{
+            if(counterInfoList.size()>1){
+                sb.append(this.getMessage("COMMON_E_0058"));
+            }
+            counterInfoList.forEach(item ->{
+                if(!StringUtil.equals(item.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已回复.getValue())){
+                    sb.append(this.getMessage("CFETS_COMMON_R_028"));
+                    return;
+                }
+            });
+        }
         // 银行间报价-现券买卖报价-超委托剩余额度校验开关（01 硬阻挡 02 软阻挡）
         if (StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustAvaAmt"), "02")
                 && StringUtil.isNotEmpty(cfetsBondDealRequestQuoteDto.getEntrustId())) {
@@ -231,21 +245,23 @@ public class IbuQuoteBond003Controller extends BaseController {
         if (StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustPrice"), "02")) {
             cfetsBondDealQuotedPrice003Service.checkCalcFieldEntrust(cfetsBondDealRequestQuoteDto, null, sb, false);
         }
-
+        if(sb.length()>0){
+            ar.appendMessage(new ValidMessage(sb.toString()));
+        }
         // 委托为空的场合只有新建模式且系统参数为软校验
-        if (StringUtil.equals(CacheUtil.getSysParam("ibuFlag_startDialogueQuoteWithNoEntrust"), "02")
+        /*if (StringUtil.equals(CacheUtil.getSysParam("ibuFlag_startDialogueQuoteWithNoEntrust"), "02")
                 && !StringUtil.isNotEmpty(cfetsBondDealRequestQuoteDto.getEntrustId())) {
             sb.append(this.getMessage("CFETS_COMMON_E_039"));
             sb.append(GlobalConstant.HTML_NEWLINE);
-        }
+        }*/
 
-        if (sb.length() > 0) {
+        /*if (sb.length() > 0) {
             sb.append("请确认是否继续？");
             ar.setData(sb);
         }
         else {
             ar.setData(this.getMessage("COMMON_C_0001", this.getMessage("SysCommon.save")));
-        }
+        }*/
 
         return new Message<AjaxResult>().success().setData(ar);
     }

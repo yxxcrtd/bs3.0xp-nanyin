@@ -625,10 +625,13 @@ public class CfetsQuotedCommonService extends BaseService {
         cfetsBondDealRequestQuoteDto.setSettleCcy(cfetsBondDealQuoteCommonDto.getCcy());
         if(CollectionUtils.isNotEmpty(cfetsBondDealRequestQuoteDto.getCounterInfoList())){
             List<String> counterIdList = new ArrayList<>();
+            List<String>  detIdList = new ArrayList<>();
             cfetsBondDealRequestQuoteDto.getCounterInfoList().forEach(item ->{
                 counterIdList.add(item.getCounterId());
+                detIdList.add(item.getDetId());
             });
             cfetsBondDealRequestQuoteDto.setCounterIdList(counterIdList);
+            cfetsBondDealRequestQuoteDto.setDetIdList(detIdList);
         }
         return cfetsBondDealRequestQuoteDto;
     }
@@ -641,7 +644,7 @@ public class CfetsQuotedCommonService extends BaseService {
     public CfetsBondDealQuoteCommonDto createReueust2(CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto){
         CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto = new CfetsBondDealQuoteCommonDto();
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealQuoteCommonDto,cfetsBondDealRequestQuoteDto);
-        cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealRequestQuoteDto.getAvaNum()));
+        cfetsBondDealQuoteCommonDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealRequestQuoteDto.getAvaNum(),new BigDecimal(10000)));
         cfetsBondDealQuoteCommonDto.setSettleSpreedCode(cfetsBondDealRequestQuoteDto.getSettleSpreed());
         cfetsBondDealQuoteCommonDto.setCcy(cfetsBondDealRequestQuoteDto.getSettleCcy());
         return cfetsBondDealQuoteCommonDto;
@@ -692,7 +695,7 @@ public class CfetsQuotedCommonService extends BaseService {
         for (CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto : cfetsBondDealRequestQuoteDtoList) {
             PtlAllocationDto ptlAllocationDto = new PtlAllocationDto();
             BeanUtil.copyPropertiesIgnoreNull(ptlAllocationDto,cfetsBondDealRequestQuoteDto);
-            ptlAllocationDto.setShareAmt(cfetsBondDealRequestQuoteDto.getAvaNum());
+            ptlAllocationDto.setShareAmt(ArithmeticUtil.multiply(cfetsBondDealRequestQuoteDto.getAvaNum(),new BigDecimal(10000)));
             ptlAllocationDto.setAvaNum(cfetsBondDealRequestQuoteDto.getEntrustAvaNum());
             result.add(ptlAllocationDto);
         }
