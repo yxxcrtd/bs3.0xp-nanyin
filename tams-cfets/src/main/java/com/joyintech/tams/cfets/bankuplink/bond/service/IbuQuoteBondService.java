@@ -843,7 +843,7 @@ public class IbuQuoteBondService extends BaseService {
                 }
                 param.put("entrustId",item.getEntrustId());
                 if(cfetsIbuQuoteBondEtrMapper.checkDataStatus(param)>0){
-                    errorList.add(new ValidMessage("存在流程中的报价，不可退回！"));
+                    errorList.add(new ValidMessage("存在流程中的交易数据，不可退回!"));
                 }
             });
         }
