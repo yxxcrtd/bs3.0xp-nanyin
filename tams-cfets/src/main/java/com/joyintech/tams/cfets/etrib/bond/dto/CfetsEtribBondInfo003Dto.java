@@ -112,7 +112,10 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
     private String priceModel;
 
     List<CfetsEtribBondInfo003Dto> etrInvestBondInfoDtos;
-
+    /**
+     * 资产类型
+     */
+    private String assetType;
 
     /**
      * 文件上传dto
@@ -640,5 +643,13 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setTransmitTime(Date transmitTime) {
         this.transmitTime = transmitTime;
+    }
+
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
     }
 }

@@ -106,6 +106,18 @@ public class CfetsEtrRepoZLCXResponse {
      */
     private BigDecimal execProcess;
 
+    @ApiModelProperty(name="execFinishAmt",value="已完成指令额度",example="1")
+    private BigDecimal execFinishAmt;
+
+    @ApiModelProperty(name="execRemainderAmt",value="剩余指令额度",example="1")
+    private BigDecimal execRemainderAmt;
+
+    @ApiModelProperty(name="transFinishAmt",value="已成交额度",example="1")
+    private BigDecimal transFinishAmt;
+
+    @ApiModelProperty(name="transRemainderAmt",value="剩余成交额度",example="1")
+    private BigDecimal transRemainderAmt;
+
 
     /**
      * 备注
@@ -320,5 +332,37 @@ public class CfetsEtrRepoZLCXResponse {
 
     public void setExecProcess(BigDecimal execProcess) {
         this.execProcess = execProcess;
+    }
+
+    public BigDecimal getExecFinishAmt() {
+        return execFinishAmt;
+    }
+
+    public void setExecFinishAmt(BigDecimal execFinishAmt) {
+        this.execFinishAmt = execFinishAmt;
+    }
+
+    public BigDecimal getExecRemainderAmt() {
+        return execRemainderAmt;
+    }
+
+    public void setExecRemainderAmt(BigDecimal execRemainderAmt) {
+        this.execRemainderAmt = execRemainderAmt;
+    }
+
+    public BigDecimal getTransFinishAmt() {
+        return transFinishAmt;
+    }
+
+    public void setTransFinishAmt(BigDecimal transFinishAmt) {
+        this.transFinishAmt = transFinishAmt;
+    }
+
+    public BigDecimal getTransRemainderAmt() {
+        return transRemainderAmt;
+    }
+
+    public void setTransRemainderAmt(BigDecimal transRemainderAmt) {
+        this.transRemainderAmt = transRemainderAmt;
     }
 }

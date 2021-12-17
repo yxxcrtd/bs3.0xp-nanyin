@@ -32,6 +32,7 @@ import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfoService;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
 import com.joyintech.tams.component.business.trade.BussEtrInvestPersonInfoService;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.client.ClientData;
@@ -102,6 +103,7 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         Map<String, Object> initPageParams = new HashMap<>();
         initPageParams.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         initPageParams.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        initPageParams.put("PINAN_ASSET_TYPE_F07", DictCodeList.平安资产类型_质押式回购.getValue());
         // 回购模式
         initPageParams.put("repo_pledge_model", CacheUtil.getSysParam("repo_pledge_model"));
         //本币业务指令画面头寸信息区域自动刷新时间(ms)
@@ -177,8 +179,8 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
             return new Message<Page<CfetsEtrRepoZLCXPositionResponse>>().success().setData(list);
         }catch (Exception e) {
             e.printStackTrace();
-            logger.error("查询指令管理分页数据异常",e);
-            return new Message<Page<CfetsEtrRepoZLCXPositionResponse>>().fail().setMessage("查询债券质押持仓");
+            logger.error("查询质押券管理查询分页数据异常",e);
+            return new Message<Page<CfetsEtrRepoZLCXPositionResponse>>().fail().setMessage("查询质押券管理查询分页数据异常");
         }
     }
 
@@ -366,6 +368,23 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().fail().setData(ajaxResult);
         }
+        try {
+            CfetsEtribRepoInfo003Dto item = dto.getSelectedItem().get(0);
+            CfetsEtribRepoInfo003Dto result = cfetsEtrIbRepoinfoService.findEtrinfo(item);
+            AjaxResult m =new AjaxResult();
+            m.setData(result);
+            return new Message<AjaxResult>().success().setData(m);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<AjaxResult>().fail().setMessage("查询异常");
+        }
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "查看指令", notes = "查看指令")
+    @PostMapping("referenceDelegate")
+    public Message<AjaxResult> referenceDelegate(@RequestBody CfetsEtribRepoInfo003Dto dto)  {
+        //对选择的数据进行check
         try {
             CfetsEtribRepoInfo003Dto item = dto.getSelectedItem().get(0);
             CfetsEtribRepoInfo003Dto result = cfetsEtrIbRepoinfoService.findEtrinfo(item);

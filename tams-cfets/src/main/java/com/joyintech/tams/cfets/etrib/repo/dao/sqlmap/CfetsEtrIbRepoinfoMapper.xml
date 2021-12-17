@@ -54,6 +54,10 @@
         NVL(T5.FINISH_AMT,0) finishAmt,
          round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_AMT*100),4)*100 execProcess,
          round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_AMT*100),4)*100 transProcess,
+         NVL(T5.FINISH_AMT,0)/10000  as execFinishAmt,
+         (NVL(T1.ENTRUST_AMT,0)/10000 - NVL(T5.FINISH_AMT,0)/10000) as execRemainderAmt,
+         NVL(T5.FINISH_AMT,0)/10000  as transFinishAmt,
+         (NVL(T1.ENTRUST_AMT,0)/10000 - NVL(T5.FINISH_AMT,0)/10000) as transRemainderAmt,
         T1.REMARK,
           null approver,
          TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as entrustDateStr,
@@ -111,6 +115,10 @@
         NVL(T5.FINISH_AMT,0) finishAmt,
          round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_AMT*100),4)*100 execProcess,
          round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_AMT*100),4)*100 transProcess,
+         NVL(T5.FINISH_AMT,0)/10000  as execFinishAmt,
+         (NVL(T1.ENTRUST_AMT,0)/10000 - NVL(T5.FINISH_AMT,0)/10000) as execRemainderAmt,
+         NVL(T5.FINISH_AMT,0)/10000  as transFinishAmt,
+         (NVL(T1.ENTRUST_AMT,0)/10000 - NVL(T5.FINISH_AMT,0)/10000) as transRemainderAmt,
         T1.REMARK,
          nextApp.nowUserId as approver,
          TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as entrustDateStr,
@@ -215,13 +223,13 @@
                 or to_char(aaa.repoTerm)=#{search}
                 or to_char(aaa.entrustAmt)=#{search}
                 or to_char(aaa.price)=#{search}
-                or aaa.entrustDate=#{search}
-                or aaa.entrustDate||'' =#{search}
-                or aaa.entrustDate=#{year}||'-'||#{search}
-                or replace(aaa.entrustDate,'-','/')=#{search}
-                or replace(aaa.entrustDate,'-','/')=#{year}||'/'||#{search}
-                or aaa.execProcess=#{search}
-                or aaa.transProcess=#{search}
+                or aaa.entrustDateStr=#{search}
+                or aaa.entrustDateStr||'' =#{search}
+                or aaa.entrustDateStr=#{year}||'-'||#{search}
+                or replace(aaa.entrustDateStr,'-','/')=#{search}
+                or replace(aaa.entrustDateStr,'-','/')=#{year}||'/'||#{search}
+                or to_char(aaa.execProcess)=#{search}
+                or to_char(aaa.transProcess)=#{search}
                 )
             </where>
         </if>
@@ -250,7 +258,7 @@
         MST_BOND_VALUATION_INFO.NETPRICE firstNetPrice,
         FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,/*市场代码*/
         STL_SEC_ACCT_INFO.SEC_ACCT_NAME secAcctIdStr ,
-        ETR_SEC_STOCK.PLEDGE_STOCK_NAME
+        ETR_SEC_STOCK.PLEDGE_STOCK_NAME PLEDGESTOCKNAME
         FROM ETR_ENTRUST_PLEDGE
         left join ETR_SEC_STOCK on ETR_SEC_STOCK.PLEDGE_STOCK_ID=ETR_ENTRUST_PLEDGE.PLEDGE_STOCK_ID
         LEFT JOIN (
@@ -343,11 +351,8 @@
                 #{item}
             </foreach>
         </if>
-        <if test="zyqk != null and !zyqk.isEmpty()">
-            AND ETR_ENTRUST_PLEDGE.PLEDGE_STOCK_ID in
-            <foreach collection="zyqk" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
+        <if test="zyqk != null and zyqk!=''">
+            AND ETR_ENTRUST_PLEDGE.PLEDGE_STOCK_ID =#{zyqk}
         </if>
         <if test="registOrgList != null and !registOrgList.isEmpty()">
             AND FIN_PRODUCT.REGIST_ORG in
@@ -378,12 +383,25 @@
         left join SYS_DATADICT_LIST sdl_pm on aaa.registOrg=sdl_pm.ITEM_CODE and sdl_pm.DICT_CODE='REGIST_ORG'
         left join SYS_DATADICT_LIST sdl_ps on aaa.finProdType=sdl_ps.ITEM_CODE and sdl_ps.DICT_CODE='CUSTOM_ASSET_TYPE_FOUR'
         <if test="search != null and search != ''">
-            <where>(aaa.portfolioId || '|'
-                || aaa.portfolioName || '|' || aaa.secAcctIdStr || '|' || sdl_ps.ITEM_VLUE || '|' || priceModel
-                || '|' || sdl_es.ITEM_VLUE || '|' || aaa.zyqk || '|' || sdl_pm.ITEM_VLUE
+            <where>(aaa.portfolioId || '|' || aaa.finprodAbbr || '|'
+                || aaa.portfolioName || '|' || aaa.secAcctIdStr || '|' || sdl_ps.ITEM_VALUE || '|' || finProdId
+                || '|' || sdl_es.ITEM_VALUE || '|' || aaa.PLEDGESTOCKNAME || '|' || sdl_pm.ITEM_VALUE
                 like '%' || #{search} || '%'
+                or to_char(aaa.pledStrdPrinAmt)=#{search}
+                or to_char(aaa.pledgeAmount)=#{search}
+                or to_char(aaa.firstNetPrice)=#{search}
+                or to_char(aaa.scale)=#{search}
+                or aaa.mdateStr=#{search}
+                or aaa.mdateStr||'' =#{search}
+                or aaa.mdateStr=#{year}||'-'||#{search}
+                or replace(aaa.mdateStr,'-','/')=#{search}
+                or replace(aaa.mdateStr,'-','/')=#{year}||'/'||#{search}
                 )
             </where>
+        </if>
+        <!--前端传入排序字段-->
+        <if test="sort != null and sort != '' and direction != null and direction != ''">
+            order by ${sort} ${direction}
         </if>
     </select>
 
