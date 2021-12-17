@@ -67,6 +67,8 @@ public class ValAccountsAdjustAccountEntry004Dto extends BaseEntity{
     private String accountNet;
     
     private String dictName;
+
+    private String dictCode;
     
     private String fsceneNodeid;
     
@@ -211,7 +213,14 @@ public class ValAccountsAdjustAccountEntry004Dto extends BaseEntity{
         return dictName;
     }
 
-    
+    public String getDictCode() {
+        return dictCode;
+    }
+
+    public void setDictCode(String dictCode) {
+        this.dictCode = dictCode;
+    }
+
     /**
      * 设置 dictName
      * @param dictName dictName
