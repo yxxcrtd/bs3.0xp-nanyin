@@ -21,7 +21,7 @@
             {field:'tradePlatStr', sortField:'tradePlat',width:200, title: 'ExchangeTransMatch002.tradePlat'},
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch001.ps'},
             {field:'tradeDateStr', sortField:'tradeDate',width:200, title: 'ExchangeTransMatch002.tradeDate'},
-            {field:'unitFprice', sortField:'unitFprice',width:200, title: 'ExchangeTransMatch002.dealPrice',type: 'number'},
+            {field:'unitFprice', sortField:'unitFprice',width:200, title: 'ExchangeTransMatch002.dealPrice',type: 'number',digit: 4},
             {field:'shareAmt', sortField:'shareAmt',width:200, title: 'ExchangeTransMatch002.dealNum',type: 'number'},
             {field:'tradeAmt', sortField:'tradeAmt',width:200, title: 'ExchangeTransMatch002.dealAmout',type: 'money'},
             {field:'acctName', sortField:'acctNo',width:200, title: 'ExchangeTransMatch001.fundAccount'}
@@ -49,7 +49,7 @@
             {field:'tradeMarketStr', sortField:'tradeMarket',width:200, title: 'ExchangeTransMatch001.tradeMarket'},
             {field:'tradePlatStr', sortField:'tradePlat',width:200, title: 'ExchangeTransMatch001.tradePlat'},
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch002.etrps'},
-            {field:'price', sortField:'price',width:200, title: 'ExchangeTransMatch002.entrustPrice',type: 'number'},
+            {field:'price', sortField:'price',width:200, title: 'ExchangeTransMatch002.entrustPrice',type: 'number',digit: 4},
             {field:'entrustNum', sortField:'entrustNum',width:200, title: 'ExchangeTransMatch002.dealNum',type: 'number'},
             {field:'entrustAmt', sortField:'entrustAmt',width:200, title: 'ExchangeTransMatch002.entrustAmount',type: 'number'},
             {field:'secAcctName', sortField:'secAcctName',width:200, title: 'ExchangeTransMatch001.secAcctNo'},
