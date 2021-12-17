@@ -130,6 +130,8 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
     @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
     private String softSkipMode;
 
+
+    private String entrustDateStr;
     /**
      * 委托关闭方式
      */
@@ -154,6 +156,8 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
      */
     @ApiModelProperty(hidden = true)
     private BussEtrInvestPersonInfoDto etrInvestPersonInfo;
+
+    private CfetsEtribRepoInfo003Dto cfetsEtribRepoInfo003Dto;
 
     /**
      * 本方交易员
@@ -377,5 +381,19 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
         this.assetType1 = assetType1;
     }
 
+    public CfetsEtribRepoInfo003Dto getCfetsEtribRepoInfo003Dto() {
+        return cfetsEtribRepoInfo003Dto;
+    }
 
+    public void setCfetsEtribRepoInfo003Dto(CfetsEtribRepoInfo003Dto cfetsEtribRepoInfo003Dto) {
+        this.cfetsEtribRepoInfo003Dto = cfetsEtribRepoInfo003Dto;
+    }
+
+    public String getEntrustDateStr() {
+        return entrustDateStr;
+    }
+
+    public void setEntrustDateStr(String entrustDateStr) {
+        this.entrustDateStr = entrustDateStr;
+    }
 }

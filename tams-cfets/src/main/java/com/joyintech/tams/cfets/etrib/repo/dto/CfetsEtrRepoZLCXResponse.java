@@ -85,6 +85,11 @@ public class CfetsEtrRepoZLCXResponse {
     private String entrustDateStr;
 
 
+    /**
+     * 指令日期
+     */
+    @ApiModelProperty(name="mdate",value="到期日")
+    private String mdate;
 
     /**
      * 回购利率
@@ -364,5 +369,13 @@ public class CfetsEtrRepoZLCXResponse {
 
     public void setTransRemainderAmt(BigDecimal transRemainderAmt) {
         this.transRemainderAmt = transRemainderAmt;
+    }
+
+    public String getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(String mdate) {
+        this.mdate = mdate;
     }
 }

@@ -2131,14 +2131,17 @@ public class CfetsEtrIbBondinfoService extends BaseService{
 
                 //没有做过交易，直接关闭的
                 if(!StringUtil.isEmptyList(recallEntrustIdList)) {
-                    String assetType = DictCodeList.平安资产类型_债券.getValue();
                     if(StringUtil.equals(dto.getAssetType(),DictCodeList.平安资产类型_质押式回购.getValue())){
-                        assetType = DictCodeList.平安资产类型_质押式回购.getValue();
+                        EntrustRdsCommonAop.doListPreOccupy(
+                                recallEntrustIdList, DictCodeList.平安资产类型_质押式回购.getValue(),
+                                BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(),
+                                false, null);
+                    }else {
+                        // add by yushilong 批量撤销预占 start
+                        EntrustRdsCommonAop.doListPreOccupy(recallEntrustIdList, DictCodeList.平安资产类型_债券.getValue(),
+                                BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+                        // add by yushilong 批量撤销预占 end
                     }
-                    // add by yushilong 批量撤销预占 start
-                    EntrustRdsCommonAop.doListPreOccupy(recallEntrustIdList, assetType,
-                            BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
-                    // add by yushilong 批量撤销预占 end
                 }
 
                 //已经有委托完成度的
