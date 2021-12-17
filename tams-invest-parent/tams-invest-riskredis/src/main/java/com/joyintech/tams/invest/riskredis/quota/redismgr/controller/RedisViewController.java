@@ -414,7 +414,15 @@ public class RedisViewController extends RedisBaseController {
                 String field = en.getKey();
                 T obj = en.getValue();
                 if (obj != null) {
-                    resMap.put(field, JsonUtils.object2Json(obj));
+                    // modify by etliu 20211115 start
+                    // GZYHTZJY-368：【产品问题】【风险管理-指标管理】页面：1、选择框错位了；2、预警线、禁止线、审批线，显示错乱。
+                    // 框架调整，导致画面显示异常，需要业务代码自行处理
+//                    resMap.put(field, JsonUtils.object2Json(obj));
+                    String tempStr = JsonUtils.object2Json(obj);
+                    tempStr = StringUtil.replaceAll(tempStr, ">", "&gt;");
+                    tempStr = StringUtil.replaceAll(tempStr, "<", "&lt;");
+                    resMap.put(field, tempStr);
+                    // modify by etliu 20211115 end
                 }
             });
         }
