@@ -443,8 +443,13 @@ public class TisUtil {
 
 	@SuppressWarnings("unchecked")
 	public static File createFile(Map<String, Object> paraMap, String exceltemplate, String flieName) {
+		String template = "";
 		// 模板路径pbc/
-		String template = FileNameUtil.getTplFile(exceltemplate + ".xls");
+		try{
+			template =  FileNameUtil.getTplFile(exceltemplate + ".xls");
+		}catch (Exception e) {
+			logger.info("classpath下未读到模板。");
+		}
 		// 模板文件后缀名
 		String fileType = GlobalConstant.POINT + FilenameUtils.getExtension(template);
 		// 存放地址
@@ -462,7 +467,7 @@ public class TisUtil {
 			if (srcFile.exists()) {
 				inputStream = new FileInputStream(srcFile);
 			} else {
-				inputStream = TisUtil.class.getResourceAsStream("/tpl/" + exceltemplate + ".xls");
+				inputStream = TisUtil.class.getClassLoader().getResourceAsStream("tpl/" + exceltemplate + ".xls");
 			}
 			// 工作表对象初始化
 			wb = new HSSFWorkbook(inputStream);
