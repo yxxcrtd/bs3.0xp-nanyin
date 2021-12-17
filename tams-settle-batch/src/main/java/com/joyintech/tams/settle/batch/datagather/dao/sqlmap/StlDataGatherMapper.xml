@@ -526,7 +526,7 @@
 		psp.PORTFOLIO_ID portfolioId,
 		psp.AMOUNT redDateAmt,
 		psp.SEC_ACCT_ID secAcctId,
-		B.PER_DEVIDENT_AMT * A.AMOUNT as bonusAmt
+		sbr.PER_DEVIDENT_AMT * psp.AMOUNT as bonusAmt
 		FROM SHARE_BONUS_REG sbr
 		LEFT JOIN fin_product fp
 		ON fp.FINPROD_MARKET_ID = sbr.SHARES_ID
