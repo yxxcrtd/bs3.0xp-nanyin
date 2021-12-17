@@ -704,7 +704,7 @@
             T1.TRADE_AMT/*实收本息总额*/,
             T1.P_TRADE_ID pTradeId,
             <!--ZGZGST-4216:对类型字段做兼容 fuyongsheng 20211215 start-->
-            <!--t3.PA_BUSS_TYPE-->,
+            <!--t3.PA_BUSS_TYPE-->
             NVL(t3.PA_BUSS_TYPE,T1.TG_BUSI_TYPE) PA_BUSS_TYPE,
             <!--ZGZGST-4216:对类型字段做兼容 fuyongsheng 20211215 end-->
             T1.IS_CLEAN
