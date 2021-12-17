@@ -8,11 +8,11 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribSaveRequest;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrRepoSaveRequest;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
@@ -218,6 +218,9 @@ public class CfetsEntrustCreditHandlerAop {
                     && (operationType.equals(OperationType.NEW) || operationType.equals(OperationType.MODIFY))) {
 
                 CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+                if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
+                    return ;
+                }
                 //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
                 pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
                 pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
@@ -250,6 +253,9 @@ public class CfetsEntrustCreditHandlerAop {
           //add by longpeng 债券一级指令多对多导入不占授信 20201228 end
             if (StringUtil.isNotEmpty(mapTrd.get("operateType"))&& mapTrd.get("operateType").equals("submit")) {
                 CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+                if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
+                    return ;
+                }
                 //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
                 pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
                 pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
@@ -275,6 +281,9 @@ public class CfetsEntrustCreditHandlerAop {
         try {
             Object[] args = joinPoint.getArgs();
             CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+            if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
+                return ;
+            }
             //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
             pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
             pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));
@@ -294,6 +303,9 @@ public class CfetsEntrustCreditHandlerAop {
         try {
             Object[] args = joinPoint.getArgs();
             CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
+            if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
+                return ;
+            }
             //后续处理针对界面券面总额等字段乘10000，此时需换算成万元
             pageInputDto.setEntrustNum(ArithmeticUtil.divide(pageInputDto.getEntrustNum(),new BigDecimal(10000),8));
             pageInputDto.setEntrustOwnNum(ArithmeticUtil.divide(pageInputDto.getEntrustOwnNum(),new BigDecimal(10000),8));

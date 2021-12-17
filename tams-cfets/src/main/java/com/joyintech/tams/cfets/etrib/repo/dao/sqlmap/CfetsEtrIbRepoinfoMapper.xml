@@ -830,49 +830,58 @@
 
     <resultMap id="Repo003DtoMap" type="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto">
             <id column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR"/>
-            <result column="PRICE" property="price" jdbcType="VARCHAR"/>
-            <result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR"/>
-            <result column="PRICE" property="price" jdbcType="VARCHAR"/>
-            <result column="PS" property="ps" jdbcType="VARCHAR"/>
-            <result column="ENTRUST_DATE" property="entrustDate" jdbcType="VARCHAR"/>
-            <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR"/>
-            <result column="TERM_DAYS" property="repoTerm" jdbcType="VARCHAR"/>
-            <result column="SETTLE_SPREED" property="settleSpreed" jdbcType="VARCHAR"/>
-            <result column="ENTRUST_DATE" property="entrustDate" jdbcType="VARCHAR"/>
+            <association property="cfetsEtribRepoInfo003Dto" javaType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto">
+                <result column="PRICE" property="price" jdbcType="VARCHAR"/>
+                <result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR"/>
+                <result column="PRICE" property="price" jdbcType="VARCHAR"/>
+                <result column="PS" property="ps" jdbcType="VARCHAR"/>
+                <result column="ENTRUST_DATE" property="entrustDate" jdbcType="VARCHAR"/>
+                <result column="ENTRUST_DATE_STR" property="entrustDateStr" jdbcType="VARCHAR"/>
+                <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR"/>
+                <result column="TERM_DAYS" property="repoTerm" jdbcType="VARCHAR"/>
+                <result column="SETTLE_SPREED" property="settleSpreed" jdbcType="VARCHAR"/>
+                <result column="PRICE_MODEL" property="priceModel" jdbcType="VARCHAR"/>
+                <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+                <result column="ENTRUST_AMT" property="entrustAmt" jdbcType="VARCHAR"/>
+            </association>
             <collection property="etrInvestRepoInfoDtos" ofType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtribRepoInfo003Dto">
                 <result column="ENTRUST_AMT" property="entrustAmt" jdbcType="VARCHAR"/>
                 <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR"/>
                 <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="VARCHAR"/>
                 <result column="PLEDGE_STOCK_ID" property="zyqk" jdbcType="VARCHAR"/>
             </collection>
-            <collection property="pledgeBondTotalListDetailed" ofType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto">
-                <id column="FINPROD_ID" property="bondCode" jdbcType="VARCHAR" />
-                <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
-                <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
-                <result column="FINPROD_ABBR" property="bondAbbrName" jdbcType="VARCHAR" />
-                <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
-                <result column="PORTFOLIO_NAME" property="portfolioName" jdbcType="VARCHAR" />
+            <collection property="pledgeBondTotalListDetailed" ofType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsPledgeBondInfoDto">
+                <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+                <result column="FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
+                <result column="PORTFOLIO_ID_1" property="portfolioId" jdbcType="VARCHAR" />
+                <result column="PORTFOLIO_NAME_1" property="portfolioName" jdbcType="VARCHAR" />
                 <result column="PLEDGE_RATIO" property="pledgeRatio" jdbcType="VARCHAR" />
+                <result column="PLEDGE_RATIO" property="scale" jdbcType="VARCHAR" />
                 <result column="PLEDGE_AMT" property="pledgePrin" jdbcType="VARCHAR" />
-                <result column="pledStrdPrinAmt" property="avaPledgePrin" jdbcType="VARCHAR" />
-                <result column="pledStrdPrinAmt" property="avaPledgeBfPrin" jdbcType="VARCHAR" />
+                <!--<result column="pledStrdPrinAmt" property="avaPledgePrin" jdbcType="VARCHAR" />-->
+                <result column="pledStrdPrinAmt" property="pledStrdPrinAmt" jdbcType="VARCHAR" />
             </collection>
     </resultMap>
 
     <select id="findEtrinfo" resultMap="Repo003DtoMap" >
         SELECT
             ee.ENTRUST_ID,
+            ee.ENTRUST_AMT,
             ee.PRICE ,
+            ee.PRICE_MODEL,
             ee.ENTRUST_AMT ,
             ee.COUNTER_ID ,
             ee.PORTFOLIO_ID ,
             pp.PORTFOLIO_NAME ,
+            case when ep.ENTRUST_ID is not null then ee.PORTFOLIO_ID else null end as PORTFOLIO_ID_1 ,
+            case when ep.ENTRUST_ID is not null then pp.PORTFOLIO_NAME else null end as  PORTFOLIO_NAME_1 ,
             eea.PLEDGE_STOCK_ID ,
             ee.PS ,
             ee.ENTRUST_DATE ,
+            to_char(ee.ENTRUST_DATE,'yyyy-MM-dd')  ENTRUST_DATE_STR,
             eea.TERM_TYPE ,
             eea.TERM_DAYS ,
-            eea.SETTLE_SPREED ,
+            decode(eea.SETTLE_SPREED,0,'01',1,'02') SETTLE_SPREED,
             ep.FINPROD_ID ,
             ep.PLEDGE_RATIO ,
             ep.PLEDGE_AMT ,
@@ -918,6 +927,70 @@
                         TEMP.FINPROD_ID) espr ON ee.PORTFOLIO_ID =espr.PORTFOLIO_ID   AND espr.FINPROD_ID =ep.FINPROD_ID
          LEFT JOIN FIN_PRODUCT fp ON ep.FINPROD_ID =fp.FINPROD_ID
             where ee.ENTRUST_ID=#{entrustId}
+        union all
+        SELECT
+            ee.ENTRUST_ID,
+            ee.ENTRUST_AMT,
+            ee.PRICE ,
+            ee.PRICE_MODEL,
+            ee.ENTRUST_AMT ,
+            ee.COUNTER_ID ,
+            ee.PORTFOLIO_ID ,
+            pp.PORTFOLIO_NAME ,
+            case when ep.ENTRUST_ID is not null then ee.PORTFOLIO_ID else null end as PORTFOLIO_ID_1 ,
+            case when ep.ENTRUST_ID is not null then pp.PORTFOLIO_NAME else null end as  PORTFOLIO_NAME_1 ,
+            eea.PLEDGE_STOCK_ID ,
+            ee.PS ,
+            ee.ENTRUST_DATE ,
+            to_char(ee.ENTRUST_DATE,'yyyy-MM-dd')  ENTRUST_DATE_STR,
+            eea.TERM_TYPE ,
+            eea.TERM_DAYS ,
+            decode(eea.SETTLE_SPREED,0,'01',1,'02') SETTLE_SPREED,
+            ep.FINPROD_ID ,
+            ep.PLEDGE_RATIO ,
+            ep.PLEDGE_AMT ,
+            espr.pledStrdPrinAmt,
+            fp.FINPROD_ABBR
+        FROM WFL_ETR_ENTRUST ee
+                 LEFT JOIN WFL_ETR_ENTRUST_ADD eea ON ee.ENTRUST_ID =eea.ENTRUST_ID
+                 LEFT JOIN WFL_ETR_PLEDGE ep ON ee.ENTRUST_ID =ep.ENTRUST_ID
+                 LEFT JOIN PTL_PORTFOLIO pp ON ee.PORTFOLIO_ID =pp.PORTFOLIO_ID
+                 LEFT JOIN (SELECT
+                                TEMP.PORTFOLIO_ID,
+                                /*组合代码*/
+                                TEMP.SEC_ACCT_ID,
+                                /*证券账户/通道代码*/
+                                TEMP.FINPROD_ID,
+                                SUM(TEMP.pledStrdPrinAmt) pledStrdPrinAmt
+                            FROM
+                                (
+                                    SELECT
+                                        espr.PORTFOLIO_ID,
+                                        espr.SEC_ACCT_ID,
+                                        espr.FINPROD_ID,
+                                        CASE
+                                            WHEN ppc.S_HOLDINGTYPE = #{S_002} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,
+                                                                                                   1)
+                                            ELSE 0
+                                            END AS pledStrdPrinAmt
+                                    FROM
+                                        ETR_SEC_POSITION_RULE espr
+                                            INNER JOIN PTL_PORTFOLIO pp ON
+                                            espr.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                                            LEFT JOIN PTL_POSITION_CFG ppc ON
+                                                espr.HODING_TYPE = ppc.HOLDINGTYPE
+                                                AND ppc.S_HOLDINGTYPE =#{S_002}
+                                    WHERE
+                                        1 = 1
+                                      AND espr.CDATE = to_date(#{sysDate}, 'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
+                                      AND espr.DATE_TYPE = 0
+                                      AND ppc.S_HOLDINGTYPE =#{S_002} ) TEMP
+                            GROUP BY
+                                TEMP.PORTFOLIO_ID,
+                                TEMP.SEC_ACCT_ID,
+                                TEMP.FINPROD_ID) espr ON ee.PORTFOLIO_ID =espr.PORTFOLIO_ID   AND espr.FINPROD_ID =ep.FINPROD_ID
+                 LEFT JOIN FIN_PRODUCT fp ON ep.FINPROD_ID =fp.FINPROD_ID
+        where ee.ENTRUST_ID=#{entrustId}
     </select>
 
 </mapper>
