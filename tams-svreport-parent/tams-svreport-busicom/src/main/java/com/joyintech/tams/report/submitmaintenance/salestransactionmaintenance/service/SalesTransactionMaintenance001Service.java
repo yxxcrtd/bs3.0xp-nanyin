@@ -303,6 +303,14 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
                     flag = false;
                     message.add("销售结算资金交易金额不是数字");
                 }
+                else{
+                    BigDecimal amt=new BigDecimal(list.get(11));
+                    BigDecimal Zero = BigDecimal.ZERO;
+                    if(amt.compareTo(Zero) == -1 || amt.compareTo(Zero) == 0){
+                        flag = false;
+                        message.add("销售结算资金交易金额要大于0");
+                    }
+                }
             }
             //销售结算资金交易日期
             if(list.get(12) == null || list.get(12).trim().equals("")){
