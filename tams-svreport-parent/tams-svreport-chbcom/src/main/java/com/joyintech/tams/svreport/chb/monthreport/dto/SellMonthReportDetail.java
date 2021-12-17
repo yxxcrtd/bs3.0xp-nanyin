@@ -201,6 +201,10 @@ public class SellMonthReportDetail extends BaseEntity {
         return holderNum;
     }
 
+    public String getHolderNumStr() {
+        return holderNum.stripTrailingZeros().toPlainString();
+    }
+
     public void setHolderNum(BigDecimal holderNum) {
         this.holderNum = holderNum;
     }
