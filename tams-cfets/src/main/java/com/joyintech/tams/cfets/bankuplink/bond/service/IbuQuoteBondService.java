@@ -270,24 +270,27 @@ public class IbuQuoteBondService extends BaseService {
                 }
             }
             //处理行权日
+            Map<String,Object> planParam = new HashMap<>();
+            planParam.put("finprodId",cfetsBondDealQuoteCommonDto.getFinprodId());
+            planParam.put("platDate", iPlatformDate.getSysDateStr());
+            planParam.put("exerciseType", com.joyintech.tams.constant.DictCodeList.行权方式_回售.getValue());
+            FinExercisePlan finExercisePlan = cfetsIbuQuoteBondEtrMapper.getFinExercisePlan(planParam);
             if(StringUtil.equals(cfetsBondDealQuoteCommonDto.getPs(),com.joyintech.tams.constant.DictCodeList.交易方向_行权_回售.getValue())){
-                Map<String,Object> planParam = new HashMap<>();
-                planParam.put("finprodId",cfetsBondDealQuoteCommonDto.getFinprodId());
-                planParam.put("platDate", iPlatformDate.getSysDateStr());
-                planParam.put("exerciseType", com.joyintech.tams.constant.DictCodeList.行权方式_回售.getValue());
-                FinExercisePlan finExercisePlan = cfetsIbuQuoteBondEtrMapper.getFinExercisePlan(planParam);
                 if(null!=finExercisePlan){
-                    cfetsBondDealQuoteCommonDto.setExercisePlan(true);
                     cfetsBondDealQuoteCommonDto.setTheoreticalExerciseDate(finExercisePlan.getExerciseDate());
                     cfetsBondDealQuoteCommonDto.setActSetteDate(finExercisePlan.getActExerciseDate());
-                    cfetsBondDealQuoteCommonDto.setExercisePlan(true);
-                }else{
-                        cfetsBondDealQuoteCommonDto.setExercisePlan(false);
                 }
                 cfetsBondDealQuoteCommonDto.setUnitFprice(cfetsBondDealQuoteCommonDto.getPrice());
                 cfetsBondDealQuoteCommonDto.setCpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getPrice(),cfetsBondDealQuoteCommonDto.getShareAmt()),new BigDecimal(100),2));
                 cfetsBondDealQuoteCommonDto.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(cfetsBondDealQuoteCommonDto.getUnitFprice(),cfetsBondDealQuoteCommonDto.getShareAmt()),new BigDecimal(100),2));
+            }else{
+                if(null!=finExercisePlan){
+                    cfetsBondDealQuoteCommonDto.setExercisePlan(true);
+                }else{
+                    cfetsBondDealQuoteCommonDto.setExercisePlan(false);
+                }
             }
+
             //登记本方交易员应默认当前登录用户姓名
             cfetsBondDealQuoteCommonDto.setQuoteMySideTrader(cfetsBondDealQuoteCommonDto.getMySideTrader());
             cfetsBondDealQuoteCommonDto.setQuoteOuTraderName(cfetsBondDealEntrustOrderDto.getMySideTraderName());
