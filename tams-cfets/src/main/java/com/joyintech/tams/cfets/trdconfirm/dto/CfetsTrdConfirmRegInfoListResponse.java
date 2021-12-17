@@ -263,6 +263,12 @@ public class CfetsTrdConfirmRegInfoListResponse{
     private String   pledgeFaceValues;
     @ApiModelProperty(name="idDirectTrd",value="是否直接交易",example="字符串1")
     private String  isDirectTrd;
+
+    @ApiModelProperty(name="trdFeeAmt",value="交易手续费",example="字符串1")
+    private BigDecimal trdFeeAmt;
+
+    @ApiModelProperty(name="settleFeeAmt",value="结算手续费",example="字符串1")
+    private BigDecimal settleFeeAmt;
     @ApiModelProperty(name="selectedItem",value="选中数据",example="字符串1")
     private transient List<CfetsTrdConfirmRegInfoListResponse> selectedItem;
 
@@ -976,5 +982,21 @@ public class CfetsTrdConfirmRegInfoListResponse{
 
     public void setMtradeAmt(BigDecimal mtradeAmt) {
         this.mtradeAmt = mtradeAmt;
+    }
+
+    public BigDecimal getTrdFeeAmt() {
+        return trdFeeAmt;
+    }
+
+    public void setTrdFeeAmt(BigDecimal trdFeeAmt) {
+        this.trdFeeAmt = trdFeeAmt;
+    }
+
+    public BigDecimal getSettleFeeAmt() {
+        return settleFeeAmt;
+    }
+
+    public void setSettleFeeAmt(BigDecimal settleFeeAmt) {
+        this.settleFeeAmt = settleFeeAmt;
     }
 }

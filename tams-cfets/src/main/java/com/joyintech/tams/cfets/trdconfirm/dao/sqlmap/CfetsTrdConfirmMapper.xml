@@ -33,7 +33,7 @@
         </if>
     </select>
     <sql id="onlyRegInfo">
-        select  decode(reg.trade_status,'D','撤销','有效') as effectiveStatusName,
+        select   decode(reg.is_cancel,'Y','撤销','N','有效') as effectiveStatusName,
         decode(reg.finprod_type2,'F01','01','02') as finprodType2,
         reg.finprod_id as finprodId,
         fp.finprod_market_id as finprodMarketId,
@@ -94,7 +94,8 @@
         left join stl_sec_acct_info stlinfo
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
-        where reg.trade_date= #{sysDate,jdbcType=DATE}
+        where reg.trade_date= #{sysDate,jdbcType=DATE} and reg.trade_status='01'
+        and reg.ps in ('T01','T02','03','04')
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
             and reg.trade_status in ('01', '02')
@@ -203,6 +204,7 @@
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
         where reg.trade_date= #{sysDate,jdbcType=DATE}
+        and reg.ps in ('T01','T02','03','04')
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
             and reg.trade_status in ('01', '02')
@@ -374,7 +376,7 @@
         nvl(ib.share_amt,0)/100 as faceValue,
         nvl(ibd.yield,0)*100 as tradeYield,
         null as termDays,
-        ib.fprice_amt as tradeAmt,
+        ibd.fprice_amt as tradeAmt,
         ib.quote_id as busiCode,
         ib.ou_trader_id as trader,
         ib.quote_date as tradeDate,
@@ -398,13 +400,9 @@
         null as pledgeRatios,
         null as pledgeFaceValues
         from ibu_quote_bond ib
-        left join (
-        select I.*
-        from ibu_quote_bond_det I
-        INNER JOIN (SELECT quote_id ,MAX(update_time) UPDATETIME
-        FROM  ibu_quote_bond_det GROUP BY quote_id)	II ON  I.quote_id = II.quote_id AND II.UPDATETIME = I.Update_Time
-        )ibd
-        on  ib.quote_id=ibd.quote_id
+        inner join ibu_quote_bond_det ibd
+        on ib.quote_id=ibd.quote_id
+        and  ibd.trade_status='07'
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
         left join(
@@ -427,6 +425,7 @@
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ibd.cp_party_id= mcci.party_id
 
         where ib.quote_date= #{sysDate,jdbcType=DATE}
+        and ib.trade_status='07'
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
         </if>
@@ -533,7 +532,7 @@
         left join stl_sec_acct_info stlinfo
         on ic.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ic.cp_party_id= mcci.party_id
-        where ic.quote_date= #{sysDate,jdbcType=DATE}
+        where ic.quote_date= #{sysDate,jdbcType=DATE} and ic.TRADE_STATUS='07'
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
         </if>
@@ -663,7 +662,7 @@
         nvl(ib.share_amt,0)*100 as faceValue,
         ibd.yield  tradeYield,
         null as termDays,
-        ib.fprice_amt  as tradeAmt,
+        ibd.fprice_amt  as tradeAmt,
         ib.ou_trader_id as trader,
         ib.quote_date as tradeDate,
         ibd.cp_party_id as counterId,
@@ -686,16 +685,13 @@
         ibd.fprice_amt fpriceAmt,
         ibd.cprice_amt as cpriceAmt,
         ibd.int_amt as intAmt,
-        ibd.exer_yield as exerYield
-
-
+        ibd.exer_yield as exerYield,
+        ib.deal_fee_amt as trdFeeAmt,
+        ib.sett_fee_amt as settleFeeAmt
         from ibu_quote_bond ib
-        left join (
-        select I.*
-        from ibu_quote_bond_det I
-        INNER JOIN (SELECT quote_id ,MAX(update_time) UPDATETIME FROM  ibu_quote_bond_det GROUP BY quote_id)	II ON  I.quote_id = II.quote_id AND II.UPDATETIME = I.Update_Time
-        )ibd
-        on  ib.quote_id=ibd.quote_id
+        inner join ibu_quote_bond_det ibd
+        on ib.quote_id=ibd.quote_id
+        and  ibd.trade_status='07'
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
         left join trdquto_match_info match
@@ -707,7 +703,7 @@
         )i
         on match.exe_id=i.execid
 
-        where  ib.quote_id= #{totleTradeId,jdbcType=VARCHAR}
+        where  ib.quote_id= #{totleTradeId,jdbcType=VARCHAR} and  ib.trade_status='07'
     </select>
     <select id="findAllRegFeeInfoList" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegFeeInfoDto">
         select reg.trade_id as tradeId,
@@ -867,7 +863,9 @@
         reg.PORTFOLIO_ID as portfolioId,
         reg.share_amt as shareAmt,
         reg.fprice_amt as fpriceAmt,
-        reg.remark as remark
+        reg.remark as remark,
+        reg.deal_fee_amt as trdFeeAmt,
+        reg.sett_fee_amt as settleFeeAmt
         from IBU_QUOTE_ETR_RE  reg
         where reg.quote_id= #{totleTradeId,jdbcType=VARCHAR}
     </select>
@@ -905,7 +903,7 @@
      <!--   case when ipar.portfolio_id is not null then i.OURDEPOSITACCOUNTNUMBER	else i.COUNTERDEPOSITACCOUNTNUMBER end as  acctNo,-->
         stlinfo.sec_acct_name as acctNoName,
         nvl(I.LASTQTY,0)/10000 as lastqty,
-        decode(I.BUSINESSTYPE, 'BOND', I.yield2, 'REPO', I.PRICE) tradeYield,
+        decode(I.BUSINESSTYPE, 'BOND', I.yield2*100, 'REPO', I.PRICE*100) tradeYield,
         I.TRADELIMITDAYS termDays,
         I.TRADECASHAMT as tradeAmt,
         QUOTE.QUOTEID as quoteid,
@@ -918,7 +916,7 @@
         nvl(ts.dealdate,tr.dealdate) as tradeDate,
         nvl(ts.dealtext,tr.dealtext) as remark,
         nvl(ts.dealno,tr.tradeid) as cstpTradeId,
-        I.deliveryType as deliveryType,
+        decode(I.deliveryType,'0','03','5','02','4','01') as deliveryType,
         to_date(I.Settldate,'yyyy-MM-dd') as vsettleDate,
         to_date(I.Settldate2,'yyyy-MM-dd') as msettleDate,
         nvl(ts.settdate,tr.dealdate) as settleDate
@@ -936,9 +934,9 @@
         LEFT JOIN (
         SELECT distinct i.EXECID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID) QUOTEID
         FROM  INTERF_CSTP_TRADE i
-        LEFT JOIN IBU_QUOTE_BOND_DET iqbd ON i.EXECID = iqbd.EXECID
-        LEFT JOIN IBU_QUOTE_BOND iqb ON iqbd.QUOTE_ID = iqb.QUOTE_ID
-        LEFT JOIN IBU_QUOTE_CREP iqc ON i.EXECID = iqc.EXECID
+        LEFT JOIN IBU_QUOTE_BOND_DET iqbd ON i.EXECID = iqbd.EXECID and iqbd.TRADE_STATUS='07'
+        LEFT JOIN IBU_QUOTE_BOND iqb ON iqbd.QUOTE_ID = iqb.QUOTE_ID and iqb.TRADE_STATUS='07'
+        LEFT JOIN IBU_QUOTE_CREP iqc ON i.EXECID = iqc.EXECID and iqc.TRADE_STATUS='07'
         ) QUOTE ON QUOTE.EXECID=I.EXECID
         left join stl_sec_acct_info stlinfo
         on nvl(ts.OURDEPOSITACCOUNTNUMBER,tr.OURDEPOSITACCOUNTNUMBER)=stlinfo.sec_acct_id
@@ -1224,8 +1222,8 @@
         nvl(ib.quote_date,ic.quote_date) as tradeDate,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
-        null as trdFeeAmt,
-        null as settleFeeAmt,
+        deal.trdFeeAmt as trdFeeAmt,
+        deal.settleFeeAmt as settleFeeAmt,
         nvl(ib.cp_party_id,ic.cp_party_id) as counterId,
         mccic.PARTY_ABBR as counterIdName,
         nvl(ib.quote_type,ic.quote_type) as quoteType,
@@ -1236,21 +1234,22 @@
         from trdquto_match_info m
         left join (
         select
-        row_number() over (PARTITION BY t2.quote_id order by t2.update_time desc) as rn,
         t1.quote_id,t1.ps,t1.settle_speed,t1.share_amt,t1.finprod_id,t1.quote_type,
-        t2.yield,t1.fprice_amt,t1.quote_date,t2.cp_party_id
+        t2.yield,t2.fprice_amt,t1.quote_date,t2.cp_party_id
         from ibu_quote_bond t1
-        left join ibu_quote_bond_det  t2
+        inner join ibu_quote_bond_det  t2
         on t1.quote_id=t2.quote_id
+        where t1.TRADE_STATUS='07' and t2.TRADE_STATUS='07'
         ) ib
         on m.pre_trade_id=ib.quote_id
-        and ib.rn=1
         left join ibu_quote_crep ic
         on m.pre_trade_id=ic.quote_id
+        and ic.TRADE_STATUS='07'
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
         inner join(
-        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
+        select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+        sum(ir.deal_fee_amt) as trdFeeAmt,sum(ir.sett_fee_amt) as settleFeeAmt
         from ibu_quote_etr_re ir
         left join ptl_portfolio pp
         on ir.portfolio_id=pp.portfolio_id
@@ -1443,8 +1442,8 @@
         ibd.cprice_amt as cpriceAmt,
         ibd.int_amt as intAmt,
         ibd.fprice_amt as fpriceAmt,
-        null as trdFeeAmt,
-        null as settleFeeAmt,
+        ib.deal_fee_amt as trdFeeAmt,
+        ib.sett_fee_amt as settleFeeAmt,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         ib.sett_type as clearType,
@@ -1458,13 +1457,10 @@
         from  ibu_quote_bond ib
         left join fin_product fp
         on ib.finprod_id=fp.finprod_id
-        left join (
-        select ibd.* from ibu_quote_bond_det ibd
-        where ibd.quote_id=#{busiCode,jdbcType=VARCHAR}
-        and rownum=1
-        order by ibd.update_time desc
-        )ibd
+        left join ibu_quote_bond_det ibd
         on ib.quote_id=ibd.quote_id
+        and  ibd.trade_status='07'
+        and ibd.quote_id=#{busiCode,jdbcType=VARCHAR}
         left join(
         select ir.quote_id,wm_concat(ir.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
         from ibu_quote_etr_re ir
@@ -1580,7 +1576,7 @@
         on ic.quote_id=deal.quote_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ic.cp_party_id= mccic.party_id
 
-        where ic.quote_id=#{busiCode}
+        where ic.quote_id=#{busiCode}  and ic.TRADE_STATUS='07'
         )
         <!--前端传入排序字段-->
         <if test="sort != null and sort != '' and direction != null and direction != ''">
@@ -1612,7 +1608,7 @@
         ts.convintamt as intAmt,
         ts.settamt as mtradeAmt,
         I.Clearingmethod as clearType,
-        I.Deliverytype as deliveryType,
+        decode(I.Deliverytype,'0','03','5','02','4','01')  as deliveryType,
         I.Settlcurrency  as settCcy,
         I.Quoteid as quoteid,
         I.ourinstitutioncode as traderid,
@@ -1665,7 +1661,7 @@
         tr.deal_feeamt as trdFeeAmt,
         tr.sett_feeamt as settleFeeAmt,
         I.Clearingmethod as clearType,
-        I.Deliverytype as deliveryType,
+        decode(I.Deliverytype,'0','03','5','02','4','01') as deliveryType,
         I.Deliverytype2 as mdeliveryType,
         I.Settlcurrency  as settCcy,
         I.Quoteid as quoteid,

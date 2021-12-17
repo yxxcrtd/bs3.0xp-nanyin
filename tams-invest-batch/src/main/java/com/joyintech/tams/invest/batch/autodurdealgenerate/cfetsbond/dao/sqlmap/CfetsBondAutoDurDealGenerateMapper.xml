@@ -458,7 +458,7 @@
         left join trd_product_deal_add dealAdd
         on deal.trade_id=dealAdd.trade_id
         left join PTL_CAPACCT_INFO pc
-        on p.PORTFOLIO_ID=pc.PORTFOLIO_ID
+        on dealAdd.PORTFOLIO_ID=pc.PORTFOLIO_ID
         and pc.acct_type='A01'
         where TPDA.TRADE_STATUS = #{TRADE_STATUS01}
         AND TPDA.IS_CANCEL = #{YESNO_N}
@@ -473,7 +473,7 @@
         left join wfl_trd_product_deal_add dealAdd
         on deal.trade_id=dealAdd.trade_id
         left join PTL_CAPACCT_INFO pc
-        on p.PORTFOLIO_ID=pc.PORTFOLIO_ID
+        on dealAdd.PORTFOLIO_ID=pc.PORTFOLIO_ID
         and pc.acct_type='A01'
         where TPDA.TRADE_STATUS = #{TRADE_STATUS01}
         AND TPDA.IS_CANCEL = #{YESNO_N}

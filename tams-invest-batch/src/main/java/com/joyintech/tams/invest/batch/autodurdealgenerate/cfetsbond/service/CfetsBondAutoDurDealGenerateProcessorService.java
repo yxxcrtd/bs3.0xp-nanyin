@@ -118,6 +118,10 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
 
         //查询行权赎回待处理数据
         paramMap.put("psT39", DictCodeList.交易方向_行权_赎回.getValue());
+        paramMap.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+        paramMap.put("TRADE_STATUS01", DictCodeListExt1.交易状态_初始.getValue());
+        paramMap.put("YESNO_Y", DictCodeList.是否_是.getValue());
+        paramMap.put("YESNO_N", DictCodeList.是否_否.getValue());
         List<RegFinProductDealTotal> regFinProductDealTotalList = cfetsBondAutoDurDealGenerateMapper.findShData(paramMap);
 
         List<TrdBondDurationDto> trdBondDurationDtoInsertList = new ArrayList<TrdBondDurationDto>();

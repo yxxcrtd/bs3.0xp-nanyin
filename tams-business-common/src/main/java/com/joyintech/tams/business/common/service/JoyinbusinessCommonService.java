@@ -85,6 +85,10 @@ public class JoyinbusinessCommonService extends BaseService {
         param.put("assestType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         param.put("TRADE_PLACE_01",DictCodeListExt1.交易场所_银行间.getValue());
         param.put("TRADE_PLACE_02",DictCodeListExt1.交易场所_商业银行柜台.getValue());
+        if(StringUtil.isNotEmpty(dto.getDealType()) && StringUtil.equals(dto.getDealType(),"01")){
+            //需要查询债券资产和回购期限
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getfinprodIdOfBondAndRepo(param));
+        }
         if(StringUtil.isNotEmpty(dto.getPs()) && StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
             param.put("platDate",DateUtil.platDateFromCache());
             String userId = SecurityUtil.getLoginUser().getUserName();
@@ -149,7 +153,12 @@ public class JoyinbusinessCommonService extends BaseService {
     }
     public Page<SelectOptionDto> queryMySideTraderList(CfetsSearchInfoRequest dto) {
         Map<String, Object> param = BeanUtil.object2Map(dto);
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideTraderList(param));
+        if(StringUtil.equals(dto.getDealType(),"01")){
+            //系统内的用户
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryUserIdList(param));
+        }else{
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.queryMySideTraderList(param));
+        }
     }
 
     /**

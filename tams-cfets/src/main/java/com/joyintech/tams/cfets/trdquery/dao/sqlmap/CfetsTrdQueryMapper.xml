@@ -134,7 +134,7 @@
             </foreach>
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
-            AND reg.finprod_id in
+            AND nvl(reg.finprod_id,reg.term_type) in
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
@@ -267,7 +267,7 @@
             </foreach>
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
-            AND reg.finprod_id in
+            AND nvl(reg.finprod_id,reg.term_type) in
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
@@ -1875,7 +1875,7 @@
             btm.BUSI_TYPE tgBusiType,
             sdl2.item_value tgBusiTypeStr,
             t2.FINPROD_ID AS finprodId,
-            T2.FINPROD_MARKET_ID finprodMarketId,
+            nvl(T2.FINPROD_MARKET_ID,T3.TERM_TYPE) finprodMarketId,
             T2.FINPROD_ABBR finprodAbbr,
             T1.PS ps,
             sdl3.item_value psStr,
@@ -1902,6 +1902,7 @@
             T1.TRADE_DATE as tradeDate
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
+            left join fin_trade_product T3 on T1.FINPROD_ID=T3.finprod_id
             LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
             LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
             LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
@@ -1923,7 +1924,7 @@
             <![CDATA[ AND T1.trade_date >= #{startDate}]]>
             <![CDATA[ AND T1.trade_date <= #{endDate}]]>
             <if test="finprodIdList != null and finprodIdList.size() > 0">
-                AND T1.FINPROD_ID in
+                AND nvl(T3.TERM_TYPE,T1.FINPROD_ID) in
                 <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
@@ -2028,7 +2029,7 @@
         t2.portfolio_id as portfolioId,
         pp.portfolio_name as portfolioName,
         t1.finprod_id as finprodId,
-        fp.finprod_market_id as finprodMarketId,
+        nvl(fp.finprod_market_id,T3.TERM_TYPE) as finprodMarketId,
         fp.finprod_abbr as finprodAbbr,
         t1.ps as ps,
         sdl3.item_value psStr,
@@ -2056,6 +2057,7 @@
         left join trd_product_deal_add t2 on t1.trade_id=t2.trade_id
         left  join ptl_portfolio pp on t2.portfolio_id=pp.portfolio_id
         left join fin_product fp on t1.finprod_id=fp.finprod_id
+        left join fin_trade_product T3 on T1.FINPROD_ID=T3.finprod_id
         LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
         LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
         LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
@@ -2080,7 +2082,7 @@
             </foreach>
         </if>
         <if test="finprodIdList != null and finprodIdList.size() > 0">
-            AND T1.FINPROD_ID in
+            AND nvl(T3.TERM_TYPE,T1.FINPROD_ID) in
             <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>

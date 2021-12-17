@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -360,7 +361,11 @@ public class CfetsRegFinProductDealDto extends BaseEntity {
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal lendinIntAmt;
 
+    @ApiModelProperty(name="trdFeeAmt",value="交易手续费",example="字符串1")
+    private BigDecimal trdFeeAmt;
 
+    @ApiModelProperty(name="settleFeeAmt",value="结算手续费",example="字符串1")
+    private BigDecimal settleFeeAmt;
 
 
     /**
@@ -1341,5 +1346,21 @@ public class CfetsRegFinProductDealDto extends BaseEntity {
 
     public void setLendinIntAmt(BigDecimal lendinIntAmt) {
         this.lendinIntAmt = lendinIntAmt;
+    }
+
+    public BigDecimal getTrdFeeAmt() {
+        return trdFeeAmt;
+    }
+
+    public void setTrdFeeAmt(BigDecimal trdFeeAmt) {
+        this.trdFeeAmt = trdFeeAmt;
+    }
+
+    public BigDecimal getSettleFeeAmt() {
+        return settleFeeAmt;
+    }
+
+    public void setSettleFeeAmt(BigDecimal settleFeeAmt) {
+        this.settleFeeAmt = settleFeeAmt;
     }
 }
