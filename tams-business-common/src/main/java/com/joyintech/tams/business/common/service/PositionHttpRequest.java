@@ -106,11 +106,14 @@ public class PositionHttpRequest {
                 .put("interfaceType", interfaceType);
         String msg = cancel(bm);
         Map message = JsonUtils.json2Object(msg, Map.class);
-        if (message == null || !StringUtil.equals("success", message.get("code"))){
+        if (message == null) {
+            throw new PositionException("头寸返回数据为空！");
+        }
+        if (!StringUtil.equals("success", message.get("code"))){
             if(StringUtil.equals("FL0007", message.get("code"))){
-                throw new PositionException(CODE_BUSI_RK + "|" + (message==null?"":message.get("message")));
+                throw new PositionException(CODE_BUSI_RK + "|" + message.get("message"));
             }else {
-                throw new PositionException("头寸返回数据为空！");
+                throw new PositionException(message.get("message") + "");
             }
         }
     }
