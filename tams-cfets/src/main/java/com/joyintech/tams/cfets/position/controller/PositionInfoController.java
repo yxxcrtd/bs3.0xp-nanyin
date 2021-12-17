@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.position.controller;
 
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbBondPosiInfoRequestDto;
@@ -36,46 +37,49 @@ public class PositionInfoController {
     @ApiOperation(value = "指令现金查询", notes = "指令现金查询")
     @PostMapping("/queryEtrAvailableCash")
     @ResponseBody
-    public Message<BaseMap> queryEtrAvailableCash(@RequestBody PositionCashRequestDto requestDto) {
-        return new Message<BaseMap>().success().setData(
-                positionInfoService.queryEtrAvailableCash(
-                        requestDto.getPortfolioIdList(), 
-                        requestDto.getCdate(), 
-                        requestDto.getAcctId(), 
-                        requestDto.getCcy(),
-                        requestDto.getCalId()
-                )
+    public Message<List<BaseMap>> queryEtrAvailableCash(@RequestBody PositionCashRequestDto requestDto) {
+        BaseMap cashMap = positionInfoService.queryEtrAvailableCash(
+                requestDto.getPortfolioIdList(),
+                requestDto.getCdate(),
+                requestDto.getAcctId(),
+                requestDto.getCcy(),
+                requestDto.getCalId()
         );
+        // 封装现金结果集
+        List<BaseMap> data = positionInfoService.assembleCash(cashMap);
+        return new Message<List<BaseMap>>().success().setData(data);
     }
 
     @ApiOperation(value = "指令持仓查询", notes = "指令持仓查询")
     @PostMapping("/queryEtrPosition")
     @ResponseBody
-    public Message<BaseMap> queryEtrPosition(@RequestBody PositionInfoRequestDto requestDto) {
-        return new Message<BaseMap>().success().setData(
-                positionInfoService.queryEtrPosition(
-                        requestDto.getPortfolioIdList(),
-                        requestDto.getCdate(),
-                        requestDto.getFinprodId()
-                )
+    public Message<List<BaseMap>> queryEtrPosition(@RequestBody PositionInfoRequestDto requestDto) {
+        BaseMap secMap = positionInfoService.queryEtrPosition(
+                requestDto.getPortfolioIdList(),
+                requestDto.getCdate(),
+                requestDto.getFinprodId()
         );
+        String sellFlag = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
+        List<BaseMap> data = positionInfoService.assembleSec(sellFlag, secMap);
+        return new Message<List<BaseMap>>().success().setData(data);
     }
 
     @ApiOperation(value = "交易现金查询", notes = "交易现金查询")
     @PostMapping("/queryTrdAvailableCash")
     @ResponseBody
-    public Message<BaseMap> queryTrdAvailableCash(@RequestBody PositionCashRequestDto requestDto) {
-        return new Message<BaseMap>().success().setData(
-                positionInfoService.queryTrdAvailableCash(
-                        requestDto.getPortfolioIdList(),
-                        requestDto.getCdate(),
-                        requestDto.getAcctId(),
-                        requestDto.getCcy(),
-                        requestDto.getCalId(),
-                        requestDto.getAcctTypeList(),
-                        requestDto.getAcctTypes()
-                )
+    public Message<List<BaseMap>> queryTrdAvailableCash(@RequestBody PositionCashRequestDto requestDto) {
+        BaseMap cashMap = positionInfoService.queryTrdAvailableCash(
+                requestDto.getPortfolioIdList(),
+                requestDto.getCdate(),
+                requestDto.getAcctId(),
+                requestDto.getCcy(),
+                requestDto.getCalId(),
+                requestDto.getAcctTypeList(),
+                requestDto.getAcctTypes()
         );
+        // 封装现金结果集
+        List<BaseMap> data = positionInfoService.assembleCash(cashMap);
+        return new Message<List<BaseMap>>().success().setData(data);
     }
     
     @ApiOperation(value = "交易持仓查询", notes = "交易持仓查询")

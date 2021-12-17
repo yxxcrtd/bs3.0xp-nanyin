@@ -568,8 +568,8 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             pages.getRoot().forEach( r->{
                 CfetsUnitCostDto dto = unitCostMap.get(r.getPortfolioId() + r.getFinprodId());
                 if (dto != null){
-                    // 1.持仓成本（万元）
-                    r.setPositionsAmt(ArithmeticUtil.divide(dto.getBuyCostAmt(), BigDecimal.valueOf(10000), 2));
+                    // 1.持仓成本（元）
+                    r.setPositionsAmt(dto.getBuyCostAmt());
                     // 2.持仓成本价（元） 取单位成本
                     r.setUnitCost(dto.getUnitCost());
                 }
@@ -587,20 +587,16 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 }
 
                 if (r.getPrice() != null){
-                    // 4.持仓市值（万元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
-                    BigDecimal doAdd = ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt());
+                    // 4.持仓市值（元）=（交易可用券面总额+交易在途券面总额）* 最新净价 / 单位面值
+                    BigDecimal doAdd = ArithmeticUtil.multiply(ArithmeticUtil.doAdd(r.getTrdAvaShareAmt(), r.getTrdIntransShareAmt()), 
+                            BigDecimal.valueOf(10000L));
                     r.setPositionsPrice(ArithmeticUtil.multiply(doAdd, r.getPrice()).divide(BigDecimal.valueOf(100)));
 
                     if (r.getPositionsAmt() != null){
-                        // 5.浮动盈亏（万元） = 持仓市值（万元） - 持仓成本（万元）
+                        // 5.浮动盈亏（元） = 持仓市值（元） - 持仓成本（元）
                         r.setFloatingPl(ArithmeticUtil.subtract(r.getPositionsPrice(), r.getPositionsAmt()));
                     }
                 }
-                
-                // 单位转换:万元 -> 元
-                r.setPositionsAmt(ArithmeticUtil.multiply(r.getPositionsAmt(), BigDecimal.valueOf(10000L)));        // 持仓成本(元)
-                r.setFloatingPl(ArithmeticUtil.multiply(r.getFloatingPl(), BigDecimal.valueOf(10000L)));            // 浮动盈亏(元)
-                r.setPositionsPrice(ArithmeticUtil.multiply(r.getPositionsPrice(), BigDecimal.valueOf(10000L)));    // 持仓市值(元)
             });
         }
         return pages;
