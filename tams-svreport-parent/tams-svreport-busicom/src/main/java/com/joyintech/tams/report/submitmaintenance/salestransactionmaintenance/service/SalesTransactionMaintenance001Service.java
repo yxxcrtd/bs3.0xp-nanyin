@@ -312,6 +312,7 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
                     }
                 }
             }
+            
             //销售结算资金交易日期
             if(list.get(12) == null || list.get(12).trim().equals("")){
                 flag = false;
