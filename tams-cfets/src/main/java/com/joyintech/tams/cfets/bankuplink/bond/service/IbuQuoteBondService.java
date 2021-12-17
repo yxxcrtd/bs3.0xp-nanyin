@@ -430,7 +430,7 @@ public class IbuQuoteBondService extends BaseService {
                     //EXPORT_SHOW ==01 本币交易导出按钮配置为显示
                     if (StringUtil.equals(exportShow, "01")) {
                         //交易场所+交易方向+清算速度+标的+证券账户+交易账户必须一致
-                        if (partyIdFlag && !StringUtil.equals(one.getPartyId(), item.getPartyId())) {
+                        if (partyIdFlag && !StringUtil.equals(one.getPartyId(), item.getPartyId())&&(StringUtil.equals(item.getTradeMarket(), BussinessDictCodeList.交易场所_银行间.getValue()))) {
                             partyIdFlag = false;
                             message = message + "交易账户OR";
                         }
