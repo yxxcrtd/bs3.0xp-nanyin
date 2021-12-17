@@ -219,39 +219,9 @@ public class ExchangeTransMatchCommonService extends BaseService {
      */
     public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList){
         logger.error("批量处理成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
-
-        if(StringUtil.equals(dtoList.get(0).getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
-                || StringUtil.equals(dtoList.get(0).getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
-            Map<String,List<ExchangeTransMatchCommonDto>> dtoListMap = dtoList.stream().collect(Collectors.groupingBy(x -> x.getEntrustIdList().get(0)));
-            List<ExchangeTransMatchCommonDto> exchangeTransMatchCommonDtoList = new ArrayList<>();
-            Map<String,Object> entrustMap = new HashMap<>();
-            for(String key:dtoListMap.keySet()) {
-                entrustMap.put("entrustId",key);
-                List<ExchangeTransMatchCommonEntrustDto> commonEntrustDtoList = exchangeTransMatchCommonMapper.getEtrEntrustByIdList(entrustMap);
-                if(!StringUtil.isEmptyList(commonEntrustDtoList)) {
-                    BigDecimal remainEntrustAmt = commonEntrustDtoList.get(0).getRemainEntrustAmt();
-                    if(!StringUtil.isEmptyList(dtoListMap.get(key))) {
-                        for(ExchangeTransMatchCommonDto exchangeTransMatchCommonDto : dtoListMap.get(key)) {
-                            if(BigDecimal.ZERO.compareTo(remainEntrustAmt)>=0) {
-                                break;
-                            }
-                            exchangeTransMatchCommonDtoList.add(exchangeTransMatchCommonDto);
-                            remainEntrustAmt = ArithmeticUtil.subtract(remainEntrustAmt,exchangeTransMatchCommonDto.getRemainAmount());
-                        }
-                    }
-                }
-            }
-
-            for(ExchangeTransMatchCommonDto dto:exchangeTransMatchCommonDtoList) {
-                this.transactionMacth(dto);
-            }
+        for(ExchangeTransMatchCommonDto dto:dtoList) {
+            this.transactionMacth(dto);
         }
-        else {
-            for(ExchangeTransMatchCommonDto dto:dtoList) {
-                this.transactionMacth(dto);
-            }
-        }
-
         logger.error("批量处理成交匹配数据---结束");
     }
 
