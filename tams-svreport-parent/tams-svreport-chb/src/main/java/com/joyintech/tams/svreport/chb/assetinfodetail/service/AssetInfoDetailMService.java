@@ -16,6 +16,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -30,6 +31,8 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.AssetInfoDetailUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
+import com.joyintech.tams.svreport.interf.chb.assetinfo.service.ChbAssetInfoInterf;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -63,6 +66,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 
 	@Autowired
 	private RechbAassetInfoUtilService rechbAassetInfoUtilService;
+
+	@Autowired
+	private SvrMstCustomerInfoAddImpMapper svrMstCustomerInfoAddImpMapper;
 
 	@Autowired
 	private AssetInfoDetailUtil assetInfoDetailUtil;
@@ -172,6 +178,12 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			}
 		}
 
+		//获取市场机构规模数据
+		List<MstCustomerInfoAdd> institList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoInstit();
+		Map<String,String> institMap = institList.stream().collect(HashMap<String,String>::new,
+				(map, item)->map.put(item.getCustomerId(), item.getPartyType1()), (m, n)->m.putAll(n));
+		//2-5企业债券分行业、企业规模统计的列统计维度调整为根据市场机构管理中“机构类型（规模）”字段来取值。
+		ChbAssetInfoInterf.convertInstitSize(dto,institMap);
 		restTemplate.postForObject(
 				SvrServiceApplication.CHB_SERVICE_NAME + "/AssetInfoDetail/doComplete", dto, Integer.class);
 	}

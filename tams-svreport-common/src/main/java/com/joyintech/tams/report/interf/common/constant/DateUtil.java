@@ -890,6 +890,26 @@ public class DateUtil extends DateUtils {
         return DateUtil.format(endDate);
     }
 
+
+    /**
+     * 功能：获取上一个月的最后一天
+     * @since 1.7.0
+     * @version 1.7.0
+     * @author：weiyuqiang 2019年4月22日
+     * @param date
+     * @return
+     * Date
+     */
+    public static String getLastDayOfLayMonth(Date date,String format){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        // 获取上月的最后一天
+        calendar.add(Calendar.MONTH, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, 0);
+        Date endDate = calendar.getTime();
+        return DateUtil.format(endDate,format);
+    }
+
     /**
      * 功能：获取本月的最后一天
      * @since 1.7.0

@@ -1,3 +1,35 @@
+--各表增加字段
+ALTER TABLE CHB_EQU_HOLD ADD FUND_ACC_PLACE VARCHAR2(10);
+comment on column CHB_EQU_HOLD.FUND_ACC_PLACE is '账号开户所在地';
+ALTER TABLE CHB_EQU_HOLD ADD HOLDER_CLASSIFY VARCHAR2(10);
+comment on column CHB_EQU_HOLD.HOLDER_CLASSIFY is '投资者类型:01 不特定社会公众; 02 合格投资者';
+
+ALTER TABLE CHB_EQU_HOLD_HIS ADD FUND_ACC_PLACE VARCHAR2(10);
+comment on column CHB_EQU_HOLD_HIS.FUND_ACC_PLACE is '账号开户所在地';
+ALTER TABLE CHB_EQU_HOLD_HIS ADD HOLDER_CLASSIFY VARCHAR2(10);
+comment on column CHB_EQU_HOLD_HIS.HOLDER_CLASSIFY is '投资者类型:01 不特定社会公众; 02 合格投资者';
+
+ALTER TABLE CHB_EQU_HOLD_CHECK ADD FUND_ACC_PLACE VARCHAR2(10);
+comment on column CHB_EQU_HOLD_CHECK.FUND_ACC_PLACE is '账号开户所在地';
+ALTER TABLE CHB_EQU_HOLD_CHECK ADD HOLDER_CLASSIFY VARCHAR2(10);
+comment on column CHB_EQU_HOLD_CHECK.HOLDER_CLASSIFY is '投资者类型:01 不特定社会公众; 02 合格投资者';
+
+ALTER TABLE CHB_EQU_SUB ADD FUND_ACC_PLACE VARCHAR2(10);
+comment on column CHB_EQU_SUB.FUND_ACC_PLACE is '账号开户所在地';
+ALTER TABLE CHB_EQU_SUB ADD HOLDER_CLASSIFY VARCHAR2(10);
+comment on column CHB_EQU_SUB.HOLDER_CLASSIFY is '投资者类型:01 不特定社会公众; 02 合格投资者';
+
+ALTER TABLE CHB_EQU_SUB_HIS ADD FUND_ACC_PLACE VARCHAR2(10);
+comment on column CHB_EQU_SUB_HIS.FUND_ACC_PLACE is '账号开户所在地';
+ALTER TABLE CHB_EQU_SUB_HIS ADD HOLDER_CLASSIFY VARCHAR2(10);
+comment on column CHB_EQU_SUB_HIS.HOLDER_CLASSIFY is '投资者类型:01 不特定社会公众; 02 合格投资者';
+
+ALTER TABLE CHB_EQUDET_SUB ADD ORG_INDENTIFY_MARK VARCHAR2(30);
+comment on column CHB_EQUDET_SUB.ORG_INDENTIFY_MARK is '合并前识别标识';
+
+ALTER TABLE CHB_EQU_HOLD ADD CHB_EQUDET_SUB_HIS VARCHAR2(30);
+comment on column CHB_EQU_HOLD.CHB_EQUDET_SUB_HIS is '合并前识别标识';
+
 drop table CHB_SALER_STL_DEAL_INFO;
 create table CHB_SALER_STL_DEAL_INFO(
   REGIST_SEQNO	VARCHAR2(36) NOT NULL
@@ -492,11 +524,11 @@ INSERT INTO CHB_REG_TIME_POINTS VALUES('34',null,'34',null,'03','03','02','业�
 --销售结算资金交易信息维护菜单配置
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'SalesTransactionMaintenance001';
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'SalesTransactionMaintenance002';
-delete from SYS_MENU where MENU_ID = 'REPORT_001_001_018';
-delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_018';
-INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 7, '中债四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 'REP', null, 'REPORT_001_001', 'SalesTransactionMaintenance001', 15, '02', '销售结算资金交易信息维护', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
-INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance001','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','REPORT_001_001_018',null,null,'02','01','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
+delete from SYS_MENU where MENU_ID = 'REPORT_001_001_025';
+delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_025';
+INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_025', 8, '中债四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_025', 'REP', null, 'REPORT_001_001', 'SalesTransactionMaintenance001', 15, '02', '销售结算资金交易信息维护', 'system', null, TIMESTAMP '2021-06-30 20:43:03', 'system', TIMESTAMP '2021-06-30 20:43:03');
+INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance001','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001','REPORT_001_001_025',null,null,'02','01','销售结算资金交易信息维护','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('SalesTransactionMaintenance002','REP','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002','report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002',null,null,null,'02','01','销售结算资金交易信息维护新建','system',null,sysdate,'system',sysdate);
 
 --销售结算资金交易信息维护按钮配置
@@ -739,20 +771,302 @@ values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-029','Sale
 Insert into CHB_DATACHECK_RULE_INV (CHECKRULEID,PAGE_ID,CHECKMETHOD,SRCPROPERTY,COMPARETO,OBJVALUE,NULLABLE,REMARK,STATUS,CHECKCLASS)
 values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-030','SalesTransactionMaintenance002','lessThanCharLength','remark',null,'201','Y','备注不能超过200字符。','E','com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
-values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-031', 'SalesTransactionMaintenance002', 'isCustomizedStringForWhitelist', 'prdRegistCode', null, '^([CZ][0-9]{7}[A]?[0-9]{6})$', 'Y', '产品登记编码要素格式不对。正确的格式：6 位金融机构代码；2 位年度码；1 位标识码(可为空);6 位顺序码。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-031', 'SalesTransactionMaintenance002', 'isCustomizedStringForWhitelist', 'prdRegistCode', null, '^([CZ][0-9]{7}[A]?[0-9]{6})$', 'Y', '产品登记编码填写错误。正确的格式：6 位提供销售结算资金服务机构代码；2 位年度码；1 位标识码(可为空);6 位顺序码。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
-values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-032', 'SalesTransactionMaintenance002', 'isCustomizedStringForWhitelist', 'institutionCode', null, '^([CZ][0-9]{5})$', 'Y','金融机构代码格式不对。请输入正确的金融机构代码', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+values ('SALES_TRANSCATION_MAINTENANCE_RULE_PRD_REGIST_CODE-2021-1119-032', 'SalesTransactionMaintenance002', 'isCustomizedStringForWhitelist', 'institutionCode', null, '^([CZ][0-9]{5})$', 'Y','提供销售结算资金服务机构代码填写错误。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
 
 
---更改投资者明细与投资者信息到中债四期菜单
+--更改投资者明细与投资者信息到中债三四期菜单
+DELETE FROM SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_018';
+INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 7, '中债三四期', 'admin', null, TIMESTAMP '2021-09-13 15:26:47', 'admin', TIMESTAMP '2021-09-13 15:26:47');
 delete from SYS_MENU where PAGE_ID = 'EquityInfo001';
 delete from SYS_MENU where PAGE_ID = 'SvrEquityBusinessDetails001';
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_019', 'REP', null, 'REPORT_001_001', 'EquityInfo001', 16, '02', '投资者身份信息', 'system', null, TIMESTAMP '2021-06-30 20:38:58', 'system', TIMESTAMP '2021-06-30 20:38:58');
-INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_020', 'SVR', null, 'REPORT_001_001', 'SvrEquityBusinessDetails001', 17, null, '投资者明细信息', 'system', null, TIMESTAMP '2021-06-30 20:38:58', 'system', TIMESTAMP '2021-06-30 20:38:58');
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_018', 'REP', null, 'REPORT_001_001', 'EquityInfo001', 16, '02', '投资者身份信息', 'system', null, TIMESTAMP '2021-06-30 20:38:58', 'system', TIMESTAMP '2021-06-30 20:38:58');
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_019', 'SVR', null, 'REPORT_001_001', 'SvrEquityBusinessDetails001', 17, null, '投资者明细信息', 'system', null, TIMESTAMP '2021-06-30 20:38:58', 'system', TIMESTAMP '2021-06-30 20:38:58');
 
 
 --业务首页展示问题
 DELETE FROM SYS_PARA WHERE PARA_CODE = 'SVR_FIRST_MENU_ID';
 insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
 values ('SVR', 'SVR_FIRST_MENU_ID', 'REPORT_001', '02', NULL,'模块的 menu_id 类似于 REPORT_001 各项目配置不一样', 'system', null, SYSDATE, 'system', SYSDATE, null, '01');
+
+--20211204_月度报表详情表结构
+DROP TABLE CHB_MONTH_PRD_POSITIONDETAIL;
+create table CHB_MONTH_PRD_POSITIONDETAIL
+(
+  posuuid           VARCHAR2(36) not null,
+  prodid            VARCHAR2(150),
+  trem             VARCHAR2(10),
+  detailNo         VARCHAR2(50),
+  ccy               VARCHAR2(3),
+  raisemode         VARCHAR2(2),
+  ivstorientation   VARCHAR2(2),
+  termtype          VARCHAR2(20),
+  termdays         NUMBER(24,0),
+  open_type         VARCHAR2(2),
+  operate_mode      VARCHAR2(2),
+  profit_type       VARCHAR2(2),
+  sale_target       VARCHAR2(50),
+  is_transfer         VARCHAR2(2),
+  is_fhxgcp           VARCHAR2(2),
+  is_yllccp           VARCHAR2(2),
+  con_prd_traget    VARCHAR2(2),
+  ord_identified    VARCHAR2(2),
+  dirtyamtsum       NUMBER(24,2),
+  cleanamtsum       NUMBER(24,2),
+  redeemamt         NUMBER(24,2),
+  terminationamt    NUMBER(24,2),
+  endamtsum_oth     NUMBER(24,2),
+  customeramt       NUMBER(24,2),
+  redeemintamt      NUMBER(24,2),
+  terminationintamt NUMBER(24,2),
+  cashamt           NUMBER(24,2),
+  durationflag      VARCHAR2(2),
+  vdate             DATE,
+  mdate             DATE,
+  openduration      VARCHAR2(2),
+  org_code          VARCHAR2(20),
+  dept_code         VARCHAR2(20),
+  cash_mana_cate    VARCHAR2(2),
+  payamtsum         NUMBER(24,2),
+  closetermday      NUMBER(24,2),
+  bankamt         NUMBER(24,2),
+  trustfeeamt     NUMBER(24,2),
+  salefeeamt      NUMBER(24,2),
+  otherfeeamt     NUMBER(24,2),
+  manafeeamt      NUMBER(24,2),
+  floatfeeamt     NUMBER(24,2),
+  is_new_prd        VARCHAR2(2),
+  yield_e           NUMBER(24,2)
+);
+-- Add comments to the table
+comment on table CHB_MONTH_PRD_POSITIONDETAIL
+  is '银行月度报表产品头寸';
+-- Add comments to the columns
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.prodid
+  is '产品代码';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.TREM
+  is '期次';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.ccy
+  is '币种 CNY:人民币/USD:美元/EUR 欧元/QTBZ 其他币种';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.raisemode
+  is '募集方式 01：公募 02：私募';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.open_type
+  is '开放类型 01：现金管理类产品 02：封闭期在半年以上的定期开放式产品 99 : 其他';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.ivstorientation
+  is '投资性质 01固定收益类/02权益类/03混合类/04商品及金融衍生品类';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.termtype
+  is '期限品种01 T+0产品/02 7天（含）以内/03 7天-1个月（含）/04 1-3个月（含）/05 3-6 25个月(含)/06 6-12个月（含）/07 1-3年（含）/08 3年以上';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.termdays
+  is '期限（天）';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.is_transfer
+  is '是否母行划转产品';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.is_fhxgcp
+  is '是否合规新产品';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.is_yllccp
+  is '是否养老理财产品';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.operate_mode
+  is '运行方式01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.profit_type
+  is '产品收益方式01 保证收益/02 保本浮动收益/03 非保本浮动收益';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.sale_target
+  is '客户类型01 私人银行客户专属/02 机构客户专属/03 一般个人客户/04 金融同业专属/05 高资产净值客户';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.con_prd_traget
+  is '结构性产品挂钩标的';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.ord_identified
+  is '投资者类别 01自然人/02非金融机构/03银行金融机构/04其他金融机构';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.dirtyamtsum
+  is '本期总募集金额';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.cleanamtsum
+  is '本期净募集金额';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.redeemamt
+  is '本期赎回本金';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.terminationamt
+  is '提前终止/到期本金';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.endamtsum_oth
+  is '期末余额';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.customeramt
+  is '本期客户实现收益总额';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.redeemintamt
+  is '本期赎回利息';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.terminationintamt
+  is '本期提前终止/到期 利息';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.cashamt
+  is '本期现金分红/中间付息';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.bankamt
+  is '本期银行实现收益总额';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.trustfeeamt
+  is '本期本机构托管费';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.salefeeamt
+  is '本期本机构销售服务费';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.otherfeeamt
+  is '本期本机构其他费用';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.manafeeamt
+  is '本期本机构固定管理';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.floatfeeamt
+  is '本期浮动费/中收';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.durationflag
+  is '存续状态 01存续/02终止/03未起息';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.vdate
+  is '起息日';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.mdate
+  is '到期日';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.openduration
+  is '开放期限 01每日/02 180天以上/03 其他';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.org_code
+  is '机构代码';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.dept_code
+  is '部门代码';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.cash_mana_cate
+  is '是否现金管理类';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.payamtsum
+  is '本期兑付金额';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.closetermday
+  is '封闭式产品期限';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.is_new_prd
+  is '是否新产品';
+comment on column CHB_MONTH_PRD_POSITIONDETAIL.yield_e
+  is '加权率';
+-- Create/Recreate primary, unique and foreign key constraints
+alter table CHB_MONTH_PRD_POSITIONDETAIL
+  add constraint CHB_MONTH_PRD_POSIDETAIL_PK primary key (POSUUID);
+
+
+
+DROP TABLE CHB_MONTH_ASSET_POSITIONDETAIL;
+create table CHB_MONTH_ASSET_POSITIONDETAIL(
+  posuuid          VARCHAR2(36) not null,
+  trem             VARCHAR2(10),
+  detailNo         VARCHAR2(50),
+  invest_variety   VARCHAR2(4),
+  asset_code       VARCHAR2(50),
+  assettype        VARCHAR2(4) not null,
+  prod_id          VARCHAR2(150),
+  is_fhxgcp        VARCHAR2(2),
+  assetvalue_a     NUMBER(28,6),
+  assetvalue_b     NUMBER(28,6),
+  vdate             DATE,
+  mdate             DATE,
+  openPlan             DATE,
+  SUBJECT_NAME     VARCHAR2(300),
+  rival_party      VARCHAR2(300),
+  rate             NUMBER(28,6),
+  ccy              VARCHAR2(4),
+  industry1        VARCHAR2(4),
+  industry2        VARCHAR2(10),
+  industry3        VARCHAR2(15),
+  industry4        VARCHAR2(20),
+  delay_pay_amt NUMBER(30,2),
+  cost_amt    NUMBER(30,2),
+  float_ingpl NUMBER(30,2),
+  intincexp   NUMBER(30,2),
+  INTADJEXP_ADD NUMBER(30,2),
+  LOSS_AMT      NUMBER(30,2),
+  in_asset_type    VARCHAR2(2),
+  pppflag          VARCHAR2(4),
+  monit_type       VARCHAR2(2),
+  manage_type      VARCHAR2(2),
+  is_govern_fund1  VARCHAR2(2),
+  privatefund_flag VARCHAR2(2),
+  privateprd_flag  VARCHAR2(2),
+  bondtostock_flag VARCHAR2(2),
+  CREDIT_GRADE     VARCHAR2(50),
+  MAIN_GRADE       VARCHAR2(50),
+  TYPE_FINAL       VARCHAR2(50),
+  org_asset_type1         VARCHAR2(50),
+  org_asset_type2         VARCHAR2(50),
+  org_asset_type3         VARCHAR2(50),
+  rating           VARCHAR2(4),
+  assettype2       VARCHAR2(50),
+  org_code         VARCHAR2(20),
+  dept_code        VARCHAR2(20),
+  old_asset_code   VARCHAR2(50)
+);
+-- Add comments to the table
+comment on table CHB_MONTH_ASSET_POSITIONDETAIL
+  is '月度报表资产头寸';
+-- Add comments to the columns
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.posuuid
+  is '头寸编号';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.trem
+  is '统计日期';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.detailNo
+  is '月报分类';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.invest_variety
+  is '投资品种';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.asset_code
+  is '资产ID';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.assettype
+  is '资产一级分类';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.prod_id
+  is '产品代码';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.is_fhxgcp
+  is '是否合规新产品';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.vdate
+  is '资产起息日';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.mdate
+  is '资产到期日';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.assetvalue_a
+  is '穿透前资产价值';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.assetvalue_b
+  is '穿透后资产价值';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.industry1
+  is '所属行业';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.cost_amt
+  is '当日成本';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.float_ingpl
+  is '当日公允价值变动';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.intincexp
+  is '当日累计应计利息余额';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.delay_pay_amt
+  is '待清算款';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.in_asset_type
+  is '行类一级分类';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.pppflag
+  is '公共PPP';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.monit_type
+  is '是否投向地方政府平台';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.manage_type
+  is '管理方式';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.is_govern_fund1
+  is '是否政府投资基金';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.privatefund_flag
+  is '是否投向投向“金融资产投资公司或其附属机构发行的私募股权投资基金';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.privateprd_flag
+  is '是否投向金融资产投资公司发行的私募资产管理产品';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.bondtostock_flag
+  is '是否投向市场化债转股相关产品的部分';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.rating
+  is '评级结果';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.assettype2
+  is '资产二级分类';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.org_code
+  is '机构代码';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.dept_code
+  is '部门代码';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.old_asset_code
+  is '穿透前原始资产代码';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.is_fhxgcp
+  is '是否合规新产品';
+-- Create/Recreate primary, unique and foreign key constraints
+alter table CHB_MONTH_ASSET_POSITIONDETAIL
+  add constraint CHB_MONTH_ASSET_POSDETAIL_PK primary key (POSUUID);
+
+
+--20211129_中债四期相关维护脚本
+delete FROM SYS_PARA WHERE PARA_CODE = 'COLOR_CONFIG_mid_list';
+insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
+values ('SVR', 'COLOR_CONFIG_mid_list', '69,72,73,18,75,76,77,78,79,80,80,80,40,60,60', '01', null, '延迟报送检查画面的配置参数(mids)', 'system', null, SYSDATE, 'admin',SYSDATE, null, '01');
+
+delete FROM SYS_PARA WHERE PARA_CODE = 'COLOR_CONFIG_top_list';
+insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
+values ('SVR', 'COLOR_CONFIG_top_list', '81,82,83,84,85,86,87,88,89,90,90,90,65,95,95', '01', null, '延迟报送检查画面的配置参数(tops)', 'system', null, SYSDATE, 'admin',SYSDATE, null, '01');
+
+
+--20211214——投资者持有信息、识别标识合并、变形转换规则应放在中债三期导航栏下
+delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_006' and SPLIT_MEMO = '中债三期';
+delete from SYS_MENU_SPLIT where MENU_ID = 'REPORT_001_001_007' and SPLIT_MEMO = '中债三期';
+INSERT INTO SYS_MENU_SPLIT (MENU_ID, SPLIT_ORDER_NO, SPLIT_MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_001_007', 3, '中债三期', 'admin', null, TIMESTAMP '2021-09-13 15:26:54', 'admin', TIMESTAMP '2021-09-13 15:26:54');
+
+
 

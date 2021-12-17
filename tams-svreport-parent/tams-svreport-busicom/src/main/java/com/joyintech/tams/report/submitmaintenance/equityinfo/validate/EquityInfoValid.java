@@ -703,12 +703,6 @@ public class EquityInfoValid {
                 equityInfoRegist001Dto.getHolderType())) {
             map.put("HOLDER_TYPE", equityInfo001Dto.getHolderType());
         }
-//        // 投资者分类
-//        else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderClassify())
-//                && !equityInfo001Dto.getHolderClassify().equals(
-//                equityInfoRegist001Dto.getHolderClassify())) {
-//            map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
-//        }
         // 个人证件类别
         else if (StringUtil.isNotEmpty(equityInfo001Dto.getPersonalIdentifyType())
                 && !equityInfo001Dto.getPersonalIdentifyType().equals(
@@ -765,42 +759,63 @@ public class EquityInfoValid {
             map.put("HOLDER_SEX", equityInfo001Dto.getHolderSex());
         }
         else {
+        	//若固话不合规，则赋默认值对比
+        	this.getDefaultTelphone(equityInfo001Dto,flag);
             // 备注
             if (StringUtil.isNotEmpty(equityInfo001Dto.getRemark())
                     && !equityInfo001Dto.getRemark().equals(equityInfoRegist001Dto.getRemark())) {
                 map.put("REMARK", equityInfo001Dto.getRemark());
-            }
-            else {
+            } 
                 // 风险偏好
-                if (!equityInfo001Dto.getHolderRiskPrefer().equals(
+            else if (!equityInfo001Dto.getHolderRiskPrefer().equals(
                         equityInfoRegist001Dto.getHolderRiskPrefer())) {
                     map.put("HOLDER_RISK_PREFER", equityInfo001Dto.getHolderRiskPrefer());
                     type = "04";
                 }
                 // 手机号码
-                if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderCellphone())
+            else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderCellphone())
                         && !equityInfo001Dto.getHolderCellphone().equals(
                         equityInfoRegist001Dto.getHolderCellphone())) {
                     map.put("HOLDER_CELLPHONE", equityInfo001Dto.getHolderCellphone());
                     type = "04";
                 }
-                //若固话不合规，则赋默认值对比
-                this.getDefaultTelphone(equityInfo001Dto,flag);
                 // 固定电话
-                if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderTelephone())
+            else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderTelephone())
                         && !equityInfo001Dto.getHolderTelephone().equals(
                         equityInfoRegist001Dto.getHolderTelephone())) {
                     map.put("HOLDER_TELEPHONE", equityInfo001Dto.getHolderTelephone());
                     type = "04";
                 }
                 // 电子邮箱
-                if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderEmail())
+            else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderEmail())
                         && !equityInfo001Dto.getHolderEmail().equals(
                         equityInfoRegist001Dto.getHolderEmail())) {
                     map.put("HOLDER_EMAIL", equityInfo001Dto.getHolderEmail());
                     type = "04";
                 }
-            }
+                // 电子邮箱
+            else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderEmail())
+                        && !equityInfo001Dto.getHolderEmail().equals(
+                        equityInfoRegist001Dto.getHolderEmail())) {
+                    map.put("HOLDER_EMAIL", equityInfo001Dto.getHolderEmail());
+                    type = "04";
+                                           
+            } else {
+            	// 投资者分类 - 仅供四期使用字段
+            	if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderClassify())
+                        && !equityInfo001Dto.getHolderClassify().equals(
+                        equityInfoRegist001Dto.getHolderClassify())) {
+                    map.put("HOLDER_CLASSIFY", equityInfo001Dto.getHolderClassify());
+                    type = "05";
+                }
+                // 开户行所在地- 仅供四期使用字段
+                if (StringUtil.isNotEmpty(equityInfo001Dto.getFundAccPlace())
+                        && !equityInfo001Dto.getFundAccPlace().equals(
+                        equityInfoRegist001Dto.getFundAccPlace())) {
+                    map.put("FUND_ACC_PLACE", equityInfo001Dto.getFundAccPlace());
+                    type = "05";
+                }
+            } 
         }
         if (map.isEmpty()) {
             map.put("flag", "01");
@@ -2876,7 +2891,7 @@ public class EquityInfoValid {
                 // 投资者类别
                 message = checkHolderType(message, equityInfoRegist001Dto.getHolderType(), type,spzMap,objFiledsMap,null);
                 // 投资者分类
-                message = checkHolderClassify(message,equityInfoRegist001Dto.getHolderClassify(), type,spzMap,objFiledsMap,null);
+//                message = checkHolderClassify(message,equityInfoRegist001Dto.getHolderClassify(), type,spzMap,objFiledsMap,null);
                 // 个人证件类别验证
                 message = checkPersonalIdentifyType(message,
                         equityInfoRegist001Dto.getPersonalIdentifyType(), type,

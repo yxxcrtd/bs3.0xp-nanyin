@@ -200,8 +200,38 @@ $(function(){
 
     // 导出查询结果按钮点击事件
     $('#EquityInfoRegist001_btn_export').click(function() {
+    var expArr=table.getAllCheckedRows();
+    if(!expArr || expArr.length ==0){
+        var param={};
+              Joyin.ajax('searchInfo',
+              param,
+              function (result) {
+                if (result && result.length > 0){
+                     exportAll(result);
+                    }
+              });
+    }
+    else{
         exportMethod("1");
+        }
     });
+
+     function exportAll(expArr){
+            $.each(expArr, function(i, v) {
+                v.sendStatus=v.sendStatusCode;
+                v.status=v.statusCode;
+                v.ccy=v.ccyCode;
+            });
+            var param = {};
+            var keyList = [];
+            $.each(expArr, function(i, row) {
+                keyList.push(row.bankCode + '|' + row.indentifyMark + '|' + row.submitStatus + '|' + row.sumitSeq);
+            });
+            param.flag = "1";
+            param.keyList = JSON.stringify(expArr);
+            param.expKeys = keyList.join(',')
+            Joyin.exportExcel('export', param);
+        }
 
     //导出方法
     var exportMethod = function (flag){

@@ -302,7 +302,7 @@ public class SvrAssetBasisNoBtmFileImpService extends FileImpService{
 		try {
 			int count = 0;
 			for (ChbAssetsBasisData assetBasisData : list) {
-					batchMapper.insertNoBtm(assetBasisData);
+				chbAssetBasisInterfMapper.insertNoBtm(assetBasisData);
 				
 				count++;
 				if (count % 1000 == 0) {

@@ -25,10 +25,11 @@
     <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
     <result column="MD5PRIMARYKEY" property="md5primarykey" jdbcType="CHAR" />
     <result column="CHL_ID" property="chlId" jdbcType="CHAR" />
+	<result column="TDY_INTADJEXP_ADD" property="tdyIntadjexpAdd" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE, 
-    POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT, 
+    POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT, TDY_INTADJEXP_ADD,
     REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER, 
     UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey
   </sql>
@@ -81,6 +82,7 @@
 			#{item.tdyFloatIngpl,jdbcType=DECIMAL} TDY_FLOAT_INGPL,
 			#{item.tdyIntincexp,jdbcType=DECIMAL} TDY_INTINCEXP,
 			#{item.delayPayAmt,jdbcType=DECIMAL} DELAY_PAY_AMT,
+			#{item.tdyIntadjexpAdd,jdbcType=DECIMAL} TDY_INTADJEXP_ADD,
 			#{item.remark,jdbcType=VARCHAR} REMARK,
 			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
 			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
@@ -111,7 +113,8 @@
 			 CII.TDY_FLOAT_INGPL = TEMP.TDY_FLOAT_INGPL,
 			 CII.TDY_INTINCEXP = TEMP.TDY_INTINCEXP,
 			 CII.DELAY_PAY_AMT = TEMP.DELAY_PAY_AMT,
-			 CII.REMARK = TEMP.REMARK,
+	  		 CII.TDY_INTADJEXP_ADD = TEMP.TDY_INTADJEXP_ADD,
+	  		 CII.REMARK = TEMP.REMARK,
 			 CII.CREATE_TIME = TEMP.CREATE_TIME,
 			 CII.UPDATE_TIME = TEMP.UPDATE_TIME,
 			 CII.CREATE_DEPT = TEMP.CREATE_DEPT,
@@ -125,7 +128,7 @@
 			 ,CII.CCY = TEMP.CCY
 		<!-- 未匹配到这插入 -->
 		WHEN NOT MATCHED THEN INSERT (VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE, 
-			    POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT, 
+			    POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT, TDY_INTADJEXP_ADD,
 			    REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER, 
 			    UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey,CCY)
 		VALUES( TEMP.VAL_ID,
@@ -138,6 +141,7 @@
 				 TEMP.TDY_FLOAT_INGPL,
 				 TEMP.TDY_INTINCEXP,
 				 TEMP.DELAY_PAY_AMT,
+	  			 TEMP.TDY_INTADJEXP_ADD,
 				 TEMP.REMARK,
 				 TEMP.CREATE_TIME,
 				 TEMP.UPDATE_TIME,
@@ -167,6 +171,7 @@
 			#{item.tdyFloatIngpl,jdbcType=DECIMAL} TDY_FLOAT_INGPL,
 			#{item.tdyIntincexp,jdbcType=DECIMAL} TDY_INTINCEXP,
 			#{item.delayPayAmt,jdbcType=DECIMAL} DELAY_PAY_AMT,
+			#{item.tdyIntadjexpAdd,jdbcType=DECIMAL} TDY_INTADJEXP_ADD,
 			#{item.remark,jdbcType=VARCHAR} REMARK,
 			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
 			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
@@ -197,6 +202,7 @@
 			 CII.TDY_FLOAT_INGPL = TEMP.TDY_FLOAT_INGPL,
 			 CII.TDY_INTINCEXP = TEMP.TDY_INTINCEXP,
 			 CII.DELAY_PAY_AMT = TEMP.DELAY_PAY_AMT,
+		 	 CII.TDY_INTADJEXP_ADD = TEMP.TDY_INTADJEXP_ADD,
 			 CII.REMARK = TEMP.REMARK,
 			 CII.CREATE_TIME = TEMP.CREATE_TIME,
 			 CII.UPDATE_TIME = TEMP.UPDATE_TIME,
@@ -211,7 +217,7 @@
 			 ,CII.CCY = TEMP.CCY
 		<!-- 未匹配到这插入 -->
 		WHEN NOT MATCHED THEN INSERT (VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE, 
-			    POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT, 
+			    POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT, TDY_INTADJEXP_ADD,
 			    REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER, 
 			    UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey,CCY)
 		VALUES( TEMP.VAL_ID,
@@ -224,6 +230,7 @@
 				 TEMP.TDY_FLOAT_INGPL,
 				 TEMP.TDY_INTINCEXP,
 				 TEMP.DELAY_PAY_AMT,
+				 TEMP.TDY_INTADJEXP_ADD,
 				 TEMP.REMARK,
 				 TEMP.CREATE_TIME,
 				 TEMP.UPDATE_TIME,
@@ -354,6 +361,26 @@
 	  unqixi.ccy)aa group by aa.PROD_ID,aa.ASSET_ID,aa.VALUE_DATE,aa.MDATE,aa.ccy
 	  ) a
 	  where a.ASSET_ID is not null
+  </select>
+
+	<select id="selectIntadjexpAdd" parameterType="java.lang.String" resultMap="BaseResultMap"
+			resultSetType="FORWARD_ONLY" fetchSize="1000">
+		select nvl(nvl(FP.FINPROD_MARKET_ID,FP1.FINPROD_MARKET_ID),BSDP.BOOKSET_ID) as PROD_ID,
+		BSDP.BUSI_ID as ASSET_ID,
+		SUM(BSDP.TDY_INTADJEXP_ADD_B) AS TDY_INTADJEXP_ADD
+		from BOK_STAT_DET_POSIITON BSDP
+		left join FIN_PRODUCT FP
+		ON BSDP.BOOKSET_ID = FP.FINPROD_ID
+		AND FP.PROFIT_TYPE IN ('01','03')
+		AND FP.FINPROD_TYPE = 'F16'
+		AND FP.FINPROD_TYPE2 = 'F16'
+		left join FIN_PRODUCT FP1
+		ON BSDP.BOOKSET_ID = FP1.FINPROD_MARKET_ID
+		AND FP1.PROFIT_TYPE = '02'
+		AND FP1.FINPROD_TYPE = 'F16'
+		AND FP1.FINPROD_TYPE2 = 'F16'
+		where to_char(BSDP.BOOK_DATE,'yyyy-MM-dd')= #{batchTime,jdbcType=VARCHAR}
+		group by BSDP.BOOKSET_ID,BSDP.BUSI_ID,FP.FINPROD_MARKET_ID,FP1.FINPROD_MARKET_ID
   </select>
   
   <delete id="deleteByUpdateTime">
@@ -619,4 +646,23 @@ where 1=1 <!-- fp2.branch = 0 -->
 		where fpd.appear_market_id = #{assetId,jdbcType=VARCHAR}
 		and fp.finprod_type2 ='F01'
 	</select>
+
+	<insert id="insertNoBtm" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
+		insert into CHB_ASSETS_BASIS_DATA_NOBTM (VAL_ID, PROD_ID, ASSET_ID,CCY,
+		  VALUE_DATE, MDATE, POS_AMT,
+		  TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, TDY_INTADJEXP_ADD,
+		  DELAY_PAY_AMT, REMARK, CREATE_TIME,
+		  UPDATE_TIME, CREATE_DEPT, ORG_CODE,
+		  DEPT_CODE, CREATE_USER, UPDATE_USER,
+		  STATUS, DATA_SOURCE, MD5PRIMARYKEY
+		  )
+		values (#{valId,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
+		  #{valueDate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP}, #{posAmt,jdbcType=DECIMAL},
+		  #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, #{tdyIntadjexpAdd,jdbcType=DECIMAL},
+		  #{delayPayAmt,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, sysdate,
+		  sysdate, #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
+		  #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR},
+		  #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{md5primarykey,jdbcType=CHAR}
+		  )
+  	</insert>
 </mapper>

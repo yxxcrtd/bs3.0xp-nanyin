@@ -90,10 +90,4 @@ public class SalesTransactionMaintenanceRegistController {
     public List<SalesTransactionMaintenanceRegist001Dto> queryForInfoRegist(@RequestBody Map<String,Object> param){
     	return salesTransactionMaintenanceRegist001Service.queryForInfoRegist(param);
     }
-    
-    @PostMapping("insert")
-    public void insert(@RequestBody ChbBatchPara record){
-    	chbBatchParaMapper.insert(record);
-    }
-    
 }
