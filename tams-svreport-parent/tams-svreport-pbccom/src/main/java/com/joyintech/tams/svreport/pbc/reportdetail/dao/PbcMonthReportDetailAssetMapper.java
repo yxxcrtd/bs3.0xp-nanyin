@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.pbc.reportdetail.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -25,6 +26,8 @@ public interface PbcMonthReportDetailAssetMapper {
      * @return 资产信息
      */
     List<ChbAssetInfo> selectChbAssetInfoByAssetCodeList(@Param("assetCodeList") Set<String> assetCode);
+
+    List<ChbTypeMappingEx> getInvestorType();
 
     int deleteDetail(String term);
 }

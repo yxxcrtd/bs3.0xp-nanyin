@@ -40,7 +40,7 @@ $(function() {
             { title: "二级分类", width : 120, field: 'reportType2',sortField:'reportType2'},
             { title: "三级分类", width : 120, field: 'reportType3',sortField:'reportType3'},
             { title: "四级分类", width : 120, field: 'reportType4',sortField:'reportType4'},
-            { title: "产品代码", width : 120, field: 'prodid',sortField:'prodid'},
+            { title: "产品代码", width : 120, field: 'prodId',sortField:'prodId'},
             { title: "产品名称", width : 120, field: 'prodName',sortField:'prodName'},
             { title: "是否合规新产品", width : 120, field: 'isFhxgcpStr',sortField:'isFhxgcp'},
             { title: "资产代码/科目号", width : 120, field: 'assetCode',sortField:'assetCode'},
@@ -88,11 +88,11 @@ $(function() {
         var expArr=table.getAllCheckedRows();
         var param={};
         if(!expArr || expArr.length ==0){
-            // if(expArr.length ==0){
-            //     Joyin.error("请选择导出数据！");
-            //     return;
-            // }
             param = getSearchParams();
+            if(!param.enddate){
+                Joyin.error("请选择统计日期进行导出！");
+                return;
+            }
             Joyin.exportExcel("export",param);
         }else{
 

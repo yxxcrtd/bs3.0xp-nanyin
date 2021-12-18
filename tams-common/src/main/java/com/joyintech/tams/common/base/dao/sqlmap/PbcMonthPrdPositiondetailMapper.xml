@@ -9,6 +9,7 @@
         <result column="TRANSFER_TYPE" property="transferType" jdbcType="VARCHAR" />
         <result column="BUY_PLACE" property="buyPlace" jdbcType="VARCHAR" />
         <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="ORD_IDENTIFIED" property="ordIdentified" jdbcType="VARCHAR" />
         <result column="RAISEMODE" property="raisemode" jdbcType="VARCHAR" />
         <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
         <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
@@ -43,12 +44,12 @@
     </resultMap>
     <sql id="Base_Column_List" >
         POSUUID POSUUID, PRODID PRODID, ORG_CODE ORG_CODE, IS_CONSTRACTE IS_CONSTRACTE, TRANSFER_TYPE TRANSFER_TYPE, 
-        BUY_PLACE BUY_PLACE, OPERATE_MODE OPERATE_MODE, RAISEMODE RAISEMODE, IVSTORIENTATION IVSTORIENTATION, 
-        MANAGE_TYPE MANAGE_TYPE, FIDUCIARY_DUTY FIDUCIARY_DUTY, DURATIONFLAG DURATIONFLAG, 
-        IS_MARKET_FUND IS_MARKET_FUND, VDATE VDATE, MDATE MDATE, PAYSTATUS PAYSTATUS, TERM TERM, 
-        CCY CCY, CUSTOMER_TYPE2 CUSTOMER_TYPE2, ENDAMTSUM_OTH ENDAMTSUM_OTH, DIRTYAMTSUM DIRTYAMTSUM, 
-        REDAMT REDAMT, END_DAYS END_DAYS, ENDQTYSUM ENDQTYSUM, DIRTYQTY DIRTYQTY, REDQTY REDQTY, 
-        REDCOST REDCOST, ENDCOST ENDCOST, CASH_MANA_CATE CASH_MANA_CATE, IS_NEW_PRD IS_NEW_PRD, 
+        BUY_PLACE BUY_PLACE, OPERATE_MODE OPERATE_MODE, ORD_IDENTIFIED ORD_IDENTIFIED, RAISEMODE RAISEMODE, 
+        IVSTORIENTATION IVSTORIENTATION, MANAGE_TYPE MANAGE_TYPE, FIDUCIARY_DUTY FIDUCIARY_DUTY, 
+        DURATIONFLAG DURATIONFLAG, IS_MARKET_FUND IS_MARKET_FUND, VDATE VDATE, MDATE MDATE, 
+        PAYSTATUS PAYSTATUS, TERM TERM, CCY CCY, CUSTOMER_TYPE2 CUSTOMER_TYPE2, ENDAMTSUM_OTH ENDAMTSUM_OTH, 
+        DIRTYAMTSUM DIRTYAMTSUM, REDAMT REDAMT, END_DAYS END_DAYS, ENDQTYSUM ENDQTYSUM, DIRTYQTY DIRTYQTY, 
+        REDQTY REDQTY, REDCOST REDCOST, ENDCOST ENDCOST, CASH_MANA_CATE CASH_MANA_CATE, IS_NEW_PRD IS_NEW_PRD, 
         TERMTYPE TERMTYPE, TERMDAYS TERMDAYS, OPEN_TYPE OPEN_TYPE, PROFIT_TYPE PROFIT_TYPE, 
         SALE_TARGET SALE_TARGET, IS_TRANSFER IS_TRANSFER, IS_FHXGCP IS_FHXGCP, IS_YLLCCP IS_YLLCCP
     </sql>
@@ -75,30 +76,32 @@
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PbcMonthPrdPositiondetail" >
         insert into PBC_MONTH_PRD_POSITIONDETAIL (POSUUID, PRODID, ORG_CODE, 
             IS_CONSTRACTE, TRANSFER_TYPE, BUY_PLACE, 
-            OPERATE_MODE, RAISEMODE, IVSTORIENTATION, 
-            MANAGE_TYPE, FIDUCIARY_DUTY, DURATIONFLAG, 
-            IS_MARKET_FUND, VDATE, MDATE, 
-            PAYSTATUS, TERM, CCY, 
-            CUSTOMER_TYPE2, ENDAMTSUM_OTH, DIRTYAMTSUM, 
-            REDAMT, END_DAYS, ENDQTYSUM, 
-            DIRTYQTY, REDQTY, REDCOST, 
-            ENDCOST, CASH_MANA_CATE, IS_NEW_PRD, 
-            TERMTYPE, TERMDAYS, OPEN_TYPE, 
-            PROFIT_TYPE, SALE_TARGET, IS_TRANSFER, 
-            IS_FHXGCP, IS_YLLCCP)
+            OPERATE_MODE, ORD_IDENTIFIED, RAISEMODE, 
+            IVSTORIENTATION, MANAGE_TYPE, FIDUCIARY_DUTY, 
+            DURATIONFLAG, IS_MARKET_FUND, VDATE, 
+            MDATE, PAYSTATUS, TERM, 
+            CCY, CUSTOMER_TYPE2, ENDAMTSUM_OTH, 
+            DIRTYAMTSUM, REDAMT, END_DAYS, 
+            ENDQTYSUM, DIRTYQTY, REDQTY, 
+            REDCOST, ENDCOST, CASH_MANA_CATE, 
+            IS_NEW_PRD, TERMTYPE, TERMDAYS, 
+            OPEN_TYPE, PROFIT_TYPE, SALE_TARGET, 
+            IS_TRANSFER, IS_FHXGCP, IS_YLLCCP
+            )
         values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
             #{isConstracte,jdbcType=VARCHAR}, #{transferType,jdbcType=VARCHAR}, #{buyPlace,jdbcType=VARCHAR}, 
-            #{operateMode,jdbcType=VARCHAR}, #{raisemode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, 
-            #{manageType,jdbcType=VARCHAR}, #{fiduciaryDuty,jdbcType=VARCHAR}, #{durationflag,jdbcType=VARCHAR}, 
-            #{isMarketFund,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, 
-            #{paystatus,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, 
-            #{customerType2,jdbcType=VARCHAR}, #{endamtsumOth,jdbcType=DECIMAL}, #{dirtyamtsum,jdbcType=DECIMAL}, 
-            #{redamt,jdbcType=DECIMAL}, #{endDays,jdbcType=DECIMAL}, #{endqtysum,jdbcType=DECIMAL}, 
-            #{dirtyqty,jdbcType=DECIMAL}, #{redqty,jdbcType=DECIMAL}, #{redcost,jdbcType=DECIMAL}, 
-            #{endcost,jdbcType=DECIMAL}, #{cashManaCate,jdbcType=VARCHAR}, #{isNewPrd,jdbcType=VARCHAR}, 
-            #{termtype,jdbcType=VARCHAR}, #{termdays,jdbcType=DECIMAL}, #{openType,jdbcType=VARCHAR}, 
-            #{profitType,jdbcType=VARCHAR}, #{saleTarget,jdbcType=VARCHAR}, #{isTransfer,jdbcType=VARCHAR}, 
-            #{isFhxgcp,jdbcType=VARCHAR}, #{isYllccp,jdbcType=VARCHAR})
+            #{operateMode,jdbcType=VARCHAR}, #{ordIdentified,jdbcType=VARCHAR}, #{raisemode,jdbcType=VARCHAR}, 
+            #{ivstorientation,jdbcType=VARCHAR}, #{manageType,jdbcType=VARCHAR}, #{fiduciaryDuty,jdbcType=VARCHAR}, 
+            #{durationflag,jdbcType=VARCHAR}, #{isMarketFund,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, 
+            #{mdate,jdbcType=DATE}, #{paystatus,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR}, 
+            #{ccy,jdbcType=VARCHAR}, #{customerType2,jdbcType=VARCHAR}, #{endamtsumOth,jdbcType=DECIMAL}, 
+            #{dirtyamtsum,jdbcType=DECIMAL}, #{redamt,jdbcType=DECIMAL}, #{endDays,jdbcType=DECIMAL}, 
+            #{endqtysum,jdbcType=DECIMAL}, #{dirtyqty,jdbcType=DECIMAL}, #{redqty,jdbcType=DECIMAL}, 
+            #{redcost,jdbcType=DECIMAL}, #{endcost,jdbcType=DECIMAL}, #{cashManaCate,jdbcType=VARCHAR}, 
+            #{isNewPrd,jdbcType=VARCHAR}, #{termtype,jdbcType=VARCHAR}, #{termdays,jdbcType=DECIMAL}, 
+            #{openType,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, #{saleTarget,jdbcType=VARCHAR}, 
+            #{isTransfer,jdbcType=VARCHAR}, #{isFhxgcp,jdbcType=VARCHAR}, #{isYllccp,jdbcType=VARCHAR}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PbcMonthPrdPositiondetail" >
         insert into PBC_MONTH_PRD_POSITIONDETAIL
@@ -123,6 +126,9 @@
             </if>
             <if test="operateMode != null" >
                 OPERATE_MODE,
+            </if>
+            <if test="ordIdentified != null" >
+                ORD_IDENTIFIED,
             </if>
             <if test="raisemode != null" >
                 RAISEMODE,
@@ -240,6 +246,9 @@
             <if test="operateMode != null" >
                 #{operateMode,jdbcType=VARCHAR},
             </if>
+            <if test="ordIdentified != null" >
+                #{ordIdentified,jdbcType=VARCHAR},
+            </if>
             <if test="raisemode != null" >
                 #{raisemode,jdbcType=VARCHAR},
             </if>
@@ -337,17 +346,17 @@
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PbcMonthPrdPositiondetail" >
         insert into PBC_MONTH_PRD_POSITIONDETAIL(POSUUID, PRODID, ORG_CODE, IS_CONSTRACTE, 
-        TRANSFER_TYPE, BUY_PLACE, OPERATE_MODE, RAISEMODE, IVSTORIENTATION, MANAGE_TYPE, 
-        FIDUCIARY_DUTY, DURATIONFLAG, IS_MARKET_FUND, VDATE, MDATE, PAYSTATUS, TERM, CCY, 
-        CUSTOMER_TYPE2, ENDAMTSUM_OTH, DIRTYAMTSUM, REDAMT, END_DAYS, ENDQTYSUM, DIRTYQTY, 
-        REDQTY, REDCOST, ENDCOST, CASH_MANA_CATE, IS_NEW_PRD, TERMTYPE, TERMDAYS, OPEN_TYPE, 
-        PROFIT_TYPE, SALE_TARGET, IS_TRANSFER, IS_FHXGCP, IS_YLLCCP)
+        TRANSFER_TYPE, BUY_PLACE, OPERATE_MODE, ORD_IDENTIFIED, RAISEMODE, IVSTORIENTATION, 
+        MANAGE_TYPE, FIDUCIARY_DUTY, DURATIONFLAG, IS_MARKET_FUND, VDATE, MDATE, PAYSTATUS, 
+        TERM, CCY, CUSTOMER_TYPE2, ENDAMTSUM_OTH, DIRTYAMTSUM, REDAMT, END_DAYS, ENDQTYSUM, 
+        DIRTYQTY, REDQTY, REDCOST, ENDCOST, CASH_MANA_CATE, IS_NEW_PRD, TERMTYPE, TERMDAYS, 
+        OPEN_TYPE, PROFIT_TYPE, SALE_TARGET, IS_TRANSFER, IS_FHXGCP, IS_YLLCCP)
         select POSUUID, PRODID, ORG_CODE, IS_CONSTRACTE, 
-            TRANSFER_TYPE, BUY_PLACE, OPERATE_MODE, RAISEMODE, IVSTORIENTATION, MANAGE_TYPE, 
-            FIDUCIARY_DUTY, DURATIONFLAG, IS_MARKET_FUND, VDATE, MDATE, PAYSTATUS, TERM, CCY, 
-            CUSTOMER_TYPE2, ENDAMTSUM_OTH, DIRTYAMTSUM, REDAMT, END_DAYS, ENDQTYSUM, DIRTYQTY, 
-            REDQTY, REDCOST, ENDCOST, CASH_MANA_CATE, IS_NEW_PRD, TERMTYPE, TERMDAYS, OPEN_TYPE, 
-            PROFIT_TYPE, SALE_TARGET, IS_TRANSFER, IS_FHXGCP, IS_YLLCCP
+            TRANSFER_TYPE, BUY_PLACE, OPERATE_MODE, ORD_IDENTIFIED, RAISEMODE, IVSTORIENTATION, 
+            MANAGE_TYPE, FIDUCIARY_DUTY, DURATIONFLAG, IS_MARKET_FUND, VDATE, MDATE, PAYSTATUS, 
+            TERM, CCY, CUSTOMER_TYPE2, ENDAMTSUM_OTH, DIRTYAMTSUM, REDAMT, END_DAYS, ENDQTYSUM, 
+            DIRTYQTY, REDQTY, REDCOST, ENDCOST, CASH_MANA_CATE, IS_NEW_PRD, TERMTYPE, TERMDAYS, 
+            OPEN_TYPE, PROFIT_TYPE, SALE_TARGET, IS_TRANSFER, IS_FHXGCP, IS_YLLCCP
              from PBC_MONTH_PRD_POSITIONDETAIL
              where 1 = 1 and POSUUID = #{posuuid,jdbcType=CHAR}
     </insert>
@@ -371,6 +380,9 @@
             </if>
             <if test="operateMode != null" >
                 OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="ordIdentified != null" >
+                ORD_IDENTIFIED = #{ordIdentified,jdbcType=VARCHAR},
             </if>
             <if test="raisemode != null" >
                 RAISEMODE = #{raisemode,jdbcType=VARCHAR},
@@ -476,6 +488,7 @@
             TRANSFER_TYPE = #{transferType,jdbcType=VARCHAR},
             BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
             OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            ORD_IDENTIFIED = #{ordIdentified,jdbcType=VARCHAR},
             RAISEMODE = #{raisemode,jdbcType=VARCHAR},
             IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
             MANAGE_TYPE = #{manageType,jdbcType=VARCHAR},

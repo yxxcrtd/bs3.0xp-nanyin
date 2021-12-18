@@ -53,8 +53,8 @@
             T.PROPERNAME reportType3,
             T.PROPERNAME reportType4,
             P.PROD_ID prodId,
-            B.PROD_NAME prodName,
-            B.IS_FHXGCP ,
+            PB.PROD_NAME prodName,
+            PB.IS_FHXGCP ,
             P.ASSET_CODE,
             NVL(I.ASSET_NAME,B.SUBJECT_NAME) ASSET_NAME,
             P.OLD_ASSET_CODE,
@@ -86,7 +86,7 @@
             LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
             LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
             LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
-            LEFT JOIN CHB_PRD_BASEINFO B ON P.PROD_ID = B.PROD_ID
+            LEFT JOIN CHB_PRD_BASEINFO PB ON P.PROD_ID = PB.PROD_ID
             LEFT JOIN SYS_DATADICT_LIST L ON L.ITEM_CODE = REPLACE(SUBSTR(T.PROPERTYCODE,0,7),'_','')  AND L.DICT_CODE = 'SVR_MONTH_REPORT_DETAIL'
             LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
 
@@ -142,6 +142,13 @@
         order by A.id
 
     </select>
+
+    <select id="getInvestorType" resultType="com.joyintech.tams.common.base.entity.ChbTypeMappingEx">
+        SELECT SRCFIELD1,OBJFIELD1 FROM chb_type_mapping_ex
+        where mappingcode='MONTH_REPORT_INVESTOR_TYPE' and STATUS = 'E'
+    </select>
+
+
 
     <insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail" >
         insert into PBC_MONTH_ASSET_POSITIONDETAIL (POSUUID, PRODID, TERM,

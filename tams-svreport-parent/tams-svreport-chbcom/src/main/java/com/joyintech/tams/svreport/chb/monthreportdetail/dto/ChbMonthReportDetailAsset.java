@@ -18,6 +18,9 @@ import java.util.Date;
  */
 public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail implements  Cloneable{
 
+
+    private String prodName;
+
     private String reportType1;
 
     private String reportType2;
@@ -31,6 +34,15 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     private String oldAssetName;
 
     private String oldAssetCode;
+
+
+    public String getProdName() {
+        return prodName;
+    }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
+    }
 
     @Override
     public String getOldAssetCode() {

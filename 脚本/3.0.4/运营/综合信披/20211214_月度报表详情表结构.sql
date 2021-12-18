@@ -71,6 +71,17 @@ values ('SVR_MONTH_REPORT_DETAIL', 'AMT32', '3.2 银行资本补充工具', 20, 
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('SVR_MONTH_REPORT_DETAIL', 'AMT33', '3.3 穿透后投向为非标准化债权类资产的行业归属', 21, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
 
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SVR_PBC_DATA_TYPE';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SVR_PBC_DATA_TYPE', 'SVR', '人行月报详情数据类型', null, '02', 'system', null, SYSDATE, 'system', SYSDATE);
+
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_PBC_DATA_TYPE';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_PBC_DATA_TYPE', '01', '募集余额', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_PBC_DATA_TYPE', '02', '当期募集发生额', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_PBC_DATA_TYPE', '03', '当期兑付发生额', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
 
 
 -- 删除语句先注释
@@ -349,6 +360,7 @@ create table PBC_MONTH_PRD_POSITIONDETAIL
   transfer_type   VARCHAR2(2),
   buy_place       VARCHAR2(50),
   operate_mode    VARCHAR2(2),
+  ord_identified    VARCHAR2(2),
   raisemode       VARCHAR2(2),
   ivstorientation VARCHAR2(2),
   manage_type     VARCHAR2(2),
@@ -359,6 +371,7 @@ create table PBC_MONTH_PRD_POSITIONDETAIL
   mdate             DATE,
   paystatus       VARCHAR2(2),
   term             VARCHAR2(10),
+  termdays        varchar2(10),
   ccy             VARCHAR2(3),
   customer_type2  VARCHAR2(50),
   endamtsum_oth   NUMBER(24,2),
@@ -397,6 +410,8 @@ comment on column PBC_MONTH_PRD_POSITIONDETAIL.transfer_type
   is '转让类型：01 收益权转让/99 其他';
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.buy_place
   is '销售区域';
+comment on column PBC_MONTH_PRD_POSITIONDETAIL.ord_identified
+  is '投资者类别 01自然人/02非金融机构/03银行金融机构/04其他金融机构';
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.operate_mode
   is '运行方式：01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型 ';
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.raisemode
@@ -415,7 +430,7 @@ comment on column PBC_MONTH_PRD_POSITIONDETAIL.vdate
   is '起息日，结合存续状态获得新发产品（起息日在本期=03）';
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.paystatus
   is '兑付状态：01 正常兑付/02 提前兑付/03 延期兑付/04 到期未兑付';
-comment on column PBC_MONTH_PRD_POSITIONDETAIL.term
+comment on column PBC_MONTH_PRD_POSITIONDETAIL.termdays
   is '合同期限：0表示无固定期限，其他值根据期限所属区间映射';
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.ccy
   is '存续期交易的币种 CNY:人民币/USD:美元/EUR 欧元/GBP 英镑/JPY 日元/OTH 其他币种';

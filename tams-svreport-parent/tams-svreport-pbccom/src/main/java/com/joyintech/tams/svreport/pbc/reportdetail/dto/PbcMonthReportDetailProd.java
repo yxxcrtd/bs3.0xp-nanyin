@@ -18,111 +18,9 @@ import java.util.Date;
  */
 public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implements  Cloneable{
 
-    /**
-     * null
-     */
-    private String posuuid;
+    private String dataTypekey;
 
-    /**
-     * 产品代码
-     */
-    private String prodid;
-
-
-    /**
-     * 产品名称
-     */
-    private String prodName;
-
-    /**
-     * 起息日
-     */
-    private Date vdate;
-
-    /**
-     * 到期日
-     */
-    private Date mdate;
-
-    /**
-     * 募集方式 01：公募 02：私募
-     */
-    private String raiseType;
-
-    /**
-     * 投资性质 01固定收益类/02权益类/03混合类/04商品及金融衍生品类
-     */
-    private String ivstorientation;
-
-    /**
-     * 统计日期
-     */
-    private Date bookdate;
-
-    /**
-     * 开放类型
-     */
-    private String opentype;
-
-    /**
-     * 期限
-     */
-    private String term;
-
-    /**
-     * 币种 CNY:人民币/USD:美元/EUR 欧元/QTBZ 其他币种
-     */
-    private String raiseCcy;
-
-    /**
-     * 期限品种01 T+0产品/02 7天（含）以内/03 7天-1个月（含）/04 1-3个月（含）/05 3-6 25个月(含)/06 6-12个月（含）/07 1-3年（含）/08 3年以上
-     */
-    private String termtype;
-
-    /**
-     * 运行方式01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
-     */
-    private String operateMode;
-
-    /**
-     * 是否母行划转产品
-     */
-    private String isTransfer;
-    /**
-     * 是否保本理财
-     */
-    private String isBreakeven;
-
-    /**
-     * 新老产品标记
-     */
-    private String isFhxgcp;
-
-    /**
-     * 是否金融同业专属
-     */
-    private String excFinSector;
-
-    /**
-     * 是否养老理财产品
-     * @return
-     */
-    private   String  isYllccp;
-
-    /**
-     * 本期总募集金额
-     */
-    @JsonSerialize(using= BigDecimalSerializer.class)
-    private BigDecimal dirtyamtsum;
-
-    /**
-     * 本期净募集金额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal cleanamtsum;
-
-
-
+    private String dataType;
     /**
      * 是否本期发行
      */
@@ -133,32 +31,10 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
      * 是否本期发行
      */
     private String isEndTrem;
-
     /**
-     * 期末余额
+     *
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal endamtsumOth;
-
-    /**
-     * 本期兑付金额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal payamtsum;
-
-
-    /**
-     * 本期客户实现收益总额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal customeramt;
-
-    /**
-     * 本期银行实现收益总额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal bankamt;
-
+    private String isEndSubsist;
 
     /**
      * 本期银行实现收益总额
@@ -208,6 +84,563 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
     private BigDecimal ordIdentified09;
 
 
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal ordIdentifiedAll;
+
+
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace01;
+
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace02;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace03;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace04;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace05;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace06;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace07;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace08;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace09;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace10;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace11;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace12;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace13;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace14;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace15;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace16;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace17;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace18;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace19;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace20;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace21;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace22;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace23;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace24;
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace25;
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace26;
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace27;
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace28;
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace29;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace30;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace31;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace32;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace33;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace34;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace35;
+
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlace36;
+
+    /**
+     * 本期银行实现收益总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal buyPlaceAll;
+
+
+    public String getDataTypekey() {
+        return dataTypekey;
+    }
+
+    public void setDataTypekey(String dataTypekey) {
+        this.dataTypekey = dataTypekey;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getIsEndSubsist() {
+        return isEndSubsist;
+    }
+
+    public void setIsEndSubsist(String isEndSubsist) {
+        this.isEndSubsist = isEndSubsist;
+    }
+
+    public BigDecimal getOrdIdentifiedAll() {
+        return ordIdentifiedAll;
+    }
+
+    public void setOrdIdentifiedAll(BigDecimal ordIdentifiedAll) {
+        this.ordIdentifiedAll = ordIdentifiedAll;
+    }
+
+    public BigDecimal getBuyPlace01() {
+        return buyPlace01;
+    }
+
+    public void setBuyPlace01(BigDecimal buyPlace01) {
+        this.buyPlace01 = buyPlace01;
+    }
+
+    public BigDecimal getBuyPlace02() {
+        return buyPlace02;
+    }
+
+    public void setBuyPlace02(BigDecimal buyPlace02) {
+        this.buyPlace02 = buyPlace02;
+    }
+
+    public BigDecimal getBuyPlace03() {
+        return buyPlace03;
+    }
+
+    public void setBuyPlace03(BigDecimal buyPlace03) {
+        this.buyPlace03 = buyPlace03;
+    }
+
+    public BigDecimal getBuyPlace04() {
+        return buyPlace04;
+    }
+
+    public void setBuyPlace04(BigDecimal buyPlace04) {
+        this.buyPlace04 = buyPlace04;
+    }
+
+    public BigDecimal getBuyPlace05() {
+        return buyPlace05;
+    }
+
+    public void setBuyPlace05(BigDecimal buyPlace05) {
+        this.buyPlace05 = buyPlace05;
+    }
+
+    public BigDecimal getBuyPlace06() {
+        return buyPlace06;
+    }
+
+    public void setBuyPlace06(BigDecimal buyPlace06) {
+        this.buyPlace06 = buyPlace06;
+    }
+
+    public BigDecimal getBuyPlace07() {
+        return buyPlace07;
+    }
+
+    public void setBuyPlace07(BigDecimal buyPlace07) {
+        this.buyPlace07 = buyPlace07;
+    }
+
+    public BigDecimal getBuyPlace08() {
+        return buyPlace08;
+    }
+
+    public void setBuyPlace08(BigDecimal buyPlace08) {
+        this.buyPlace08 = buyPlace08;
+    }
+
+    public BigDecimal getBuyPlace09() {
+        return buyPlace09;
+    }
+
+    public void setBuyPlace09(BigDecimal buyPlace09) {
+        this.buyPlace09 = buyPlace09;
+    }
+
+    public BigDecimal getBuyPlace10() {
+        return buyPlace10;
+    }
+
+    public void setBuyPlace10(BigDecimal buyPlace10) {
+        this.buyPlace10 = buyPlace10;
+    }
+
+    public BigDecimal getBuyPlace11() {
+        return buyPlace11;
+    }
+
+    public void setBuyPlace11(BigDecimal buyPlace11) {
+        this.buyPlace11 = buyPlace11;
+    }
+
+    public BigDecimal getBuyPlace12() {
+        return buyPlace12;
+    }
+
+    public void setBuyPlace12(BigDecimal buyPlace12) {
+        this.buyPlace12 = buyPlace12;
+    }
+
+    public BigDecimal getBuyPlace13() {
+        return buyPlace13;
+    }
+
+    public void setBuyPlace13(BigDecimal buyPlace13) {
+        this.buyPlace13 = buyPlace13;
+    }
+
+    public BigDecimal getBuyPlace14() {
+        return buyPlace14;
+    }
+
+    public void setBuyPlace14(BigDecimal buyPlace14) {
+        this.buyPlace14 = buyPlace14;
+    }
+
+    public BigDecimal getBuyPlace15() {
+        return buyPlace15;
+    }
+
+    public void setBuyPlace15(BigDecimal buyPlace15) {
+        this.buyPlace15 = buyPlace15;
+    }
+
+    public BigDecimal getBuyPlace16() {
+        return buyPlace16;
+    }
+
+    public void setBuyPlace16(BigDecimal buyPlace16) {
+        this.buyPlace16 = buyPlace16;
+    }
+
+    public BigDecimal getBuyPlace17() {
+        return buyPlace17;
+    }
+
+    public void setBuyPlace17(BigDecimal buyPlace17) {
+        this.buyPlace17 = buyPlace17;
+    }
+
+    public BigDecimal getBuyPlace18() {
+        return buyPlace18;
+    }
+
+    public void setBuyPlace18(BigDecimal buyPlace18) {
+        this.buyPlace18 = buyPlace18;
+    }
+
+    public BigDecimal getBuyPlace19() {
+        return buyPlace19;
+    }
+
+    public void setBuyPlace19(BigDecimal buyPlace19) {
+        this.buyPlace19 = buyPlace19;
+    }
+
+    public BigDecimal getBuyPlace20() {
+        return buyPlace20;
+    }
+
+    public void setBuyPlace20(BigDecimal buyPlace20) {
+        this.buyPlace20 = buyPlace20;
+    }
+
+    public BigDecimal getBuyPlace21() {
+        return buyPlace21;
+    }
+
+    public void setBuyPlace21(BigDecimal buyPlace21) {
+        this.buyPlace21 = buyPlace21;
+    }
+
+    public BigDecimal getBuyPlace22() {
+        return buyPlace22;
+    }
+
+    public void setBuyPlace22(BigDecimal buyPlace22) {
+        this.buyPlace22 = buyPlace22;
+    }
+
+    public BigDecimal getBuyPlace23() {
+        return buyPlace23;
+    }
+
+    public void setBuyPlace23(BigDecimal buyPlace23) {
+        this.buyPlace23 = buyPlace23;
+    }
+
+    public BigDecimal getBuyPlace24() {
+        return buyPlace24;
+    }
+
+    public void setBuyPlace24(BigDecimal buyPlace24) {
+        this.buyPlace24 = buyPlace24;
+    }
+
+    public BigDecimal getBuyPlace25() {
+        return buyPlace25;
+    }
+
+    public void setBuyPlace25(BigDecimal buyPlace25) {
+        this.buyPlace25 = buyPlace25;
+    }
+
+    public BigDecimal getBuyPlace26() {
+        return buyPlace26;
+    }
+
+    public void setBuyPlace26(BigDecimal buyPlace26) {
+        this.buyPlace26 = buyPlace26;
+    }
+
+    public BigDecimal getBuyPlace27() {
+        return buyPlace27;
+    }
+
+    public void setBuyPlace27(BigDecimal buyPlace27) {
+        this.buyPlace27 = buyPlace27;
+    }
+
+    public BigDecimal getBuyPlace28() {
+        return buyPlace28;
+    }
+
+    public void setBuyPlace28(BigDecimal buyPlace28) {
+        this.buyPlace28 = buyPlace28;
+    }
+
+    public BigDecimal getBuyPlace29() {
+        return buyPlace29;
+    }
+
+    public void setBuyPlace29(BigDecimal buyPlace29) {
+        this.buyPlace29 = buyPlace29;
+    }
+
+    public BigDecimal getBuyPlace30() {
+        return buyPlace30;
+    }
+
+    public void setBuyPlace30(BigDecimal buyPlace30) {
+        this.buyPlace30 = buyPlace30;
+    }
+
+    public BigDecimal getBuyPlace31() {
+        return buyPlace31;
+    }
+
+    public void setBuyPlace31(BigDecimal buyPlace31) {
+        this.buyPlace31 = buyPlace31;
+    }
+
+    public BigDecimal getBuyPlace32() {
+        return buyPlace32;
+    }
+
+    public void setBuyPlace32(BigDecimal buyPlace32) {
+        this.buyPlace32 = buyPlace32;
+    }
+
+    public BigDecimal getBuyPlace33() {
+        return buyPlace33;
+    }
+
+    public void setBuyPlace33(BigDecimal buyPlace33) {
+        this.buyPlace33 = buyPlace33;
+    }
+
+    public BigDecimal getBuyPlace34() {
+        return buyPlace34;
+    }
+
+    public void setBuyPlace34(BigDecimal buyPlace34) {
+        this.buyPlace34 = buyPlace34;
+    }
+
+    public BigDecimal getBuyPlace35() {
+        return buyPlace35;
+    }
+
+    public void setBuyPlace35(BigDecimal buyPlace35) {
+        this.buyPlace35 = buyPlace35;
+    }
+
+    public BigDecimal getBuyPlace36() {
+        return buyPlace36;
+    }
+
+    public void setBuyPlace36(BigDecimal buyPlace36) {
+        this.buyPlace36 = buyPlace36;
+    }
+
+    public BigDecimal getBuyPlaceAll() {
+        return buyPlaceAll;
+    }
+
+    public void setBuyPlaceAll(BigDecimal buyPlaceAll) {
+        this.buyPlaceAll = buyPlaceAll;
+    }
+
     public String getIsEndTrem() {
         return isEndTrem;
     }
@@ -216,165 +649,7 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
         this.isEndTrem = isEndTrem;
     }
 
-    public String getProdid() {
-        return prodid;
-    }
 
-    public void setProdid(String prodid) {
-        this.prodid = prodid;
-    }
-
-    public String getProdName() {
-        return prodName;
-    }
-
-    public void setProdName(String prodName) {
-        this.prodName = prodName;
-    }
-
-    public Date getVdate() {
-        return vdate;
-    }
-
-    public void setVdate(Date vdate) {
-        this.vdate = vdate;
-    }
-
-    public Date getMdate() {
-        return mdate;
-    }
-
-    public void setMdate(Date mdate) {
-        this.mdate = mdate;
-    }
-
-    public String getPosuuid() {
-        return posuuid;
-    }
-
-    public void setPosuuid(String posuuid) {
-        this.posuuid = posuuid;
-    }
-
-    public String getRaiseType() {
-        return raiseType;
-    }
-
-    public void setRaiseType(String raiseType) {
-        this.raiseType = raiseType;
-    }
-
-    public String getIvstorientation() {
-        return ivstorientation;
-    }
-
-    public void setIvstorientation(String ivstorientation) {
-        this.ivstorientation = ivstorientation;
-    }
-
-    public Date getBookdate() {
-        return bookdate;
-    }
-
-    public void setBookdate(Date bookdate) {
-        this.bookdate = bookdate;
-    }
-
-    public String getOpentype() {
-        return opentype;
-    }
-
-    public void setOpentype(String opentype) {
-        this.opentype = opentype;
-    }
-
-    public String getTerm() {
-        return term;
-    }
-
-    public void setTerm(String term) {
-        this.term = term;
-    }
-
-    public String getRaiseCcy() {
-        return raiseCcy;
-    }
-
-    public void setRaiseCcy(String raiseCcy) {
-        this.raiseCcy = raiseCcy;
-    }
-
-    public String getTermtype() {
-        return termtype;
-    }
-
-    public void setTermtype(String termtype) {
-        this.termtype = termtype;
-    }
-
-    public String getOperateMode() {
-        return operateMode;
-    }
-
-    public void setOperateMode(String operateMode) {
-        this.operateMode = operateMode;
-    }
-
-    public String getIsTransfer() {
-        return isTransfer;
-    }
-
-    public void setIsTransfer(String isTransfer) {
-        this.isTransfer = isTransfer;
-    }
-
-    public String getIsBreakeven() {
-        return isBreakeven;
-    }
-
-    public void setIsBreakeven(String isBreakeven) {
-        this.isBreakeven = isBreakeven;
-    }
-
-    public String getIsFhxgcp() {
-        return isFhxgcp;
-    }
-
-    public void setIsFhxgcp(String isFhxgcp) {
-        this.isFhxgcp = isFhxgcp;
-    }
-
-    public String getExcFinSector() {
-        return excFinSector;
-    }
-
-    public void setExcFinSector(String excFinSector) {
-        this.excFinSector = excFinSector;
-    }
-
-    public String getIsYllccp() {
-        return isYllccp;
-    }
-
-    public void setIsYllccp(String isYllccp) {
-        this.isYllccp = isYllccp;
-    }
-
-    public BigDecimal getDirtyamtsum() {
-        return dirtyamtsum;
-    }
-
-    public void setDirtyamtsum(BigDecimal dirtyamtsum) {
-        this.dirtyamtsum = dirtyamtsum;
-    }
-
-    public BigDecimal getCleanamtsum() {
-        return cleanamtsum;
-    }
-
-    public void setCleanamtsum(BigDecimal cleanamtsum) {
-        this.cleanamtsum = cleanamtsum;
-    }
 
     public String getIsThisTrem() {
         return isThisTrem;
@@ -384,37 +659,6 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
         this.isThisTrem = isThisTrem;
     }
 
-    public BigDecimal getEndamtsumOth() {
-        return endamtsumOth;
-    }
-
-    public void setEndamtsumOth(BigDecimal endamtsumOth) {
-        this.endamtsumOth = endamtsumOth;
-    }
-
-    public BigDecimal getPayamtsum() {
-        return payamtsum;
-    }
-
-    public void setPayamtsum(BigDecimal payamtsum) {
-        this.payamtsum = payamtsum;
-    }
-
-    public BigDecimal getCustomeramt() {
-        return customeramt;
-    }
-
-    public void setCustomeramt(BigDecimal customeramt) {
-        this.customeramt = customeramt;
-    }
-
-    public BigDecimal getBankamt() {
-        return bankamt;
-    }
-
-    public void setBankamt(BigDecimal bankamt) {
-        this.bankamt = bankamt;
-    }
 
     public BigDecimal getOrdIdentified01() {
         return ordIdentified01;
@@ -513,9 +757,6 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
         return SysDataUtil.getNameFromDataDict(DictCode.产品运作模式, this.getOperateMode());
     }
 
-    public String getOpentypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.开放类型, this.getOpentype());
-    }
 
     public String getTermtypeStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.期限类型, this.getTermtype());
@@ -525,16 +766,8 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsTransfer());
     }
 
-    public String getIsBreakevenStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsBreakeven());
-    }
-
     public String getIsYllccpStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsYllccp());
-    }
-
-    public String getExcFinSectorStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getExcFinSector());
     }
 
     public String getIsFhxgcpStr() {
@@ -548,4 +781,40 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
     public String getIsEndTremStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsEndTrem());
     }
+
+    public String getPaystatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.兑付状态_中债, this.getPaystatus());
+    }
+
+    public String getIsConstracteStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsConstracte());
+    }
+
+    public String getTransferTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getTransferType());
+    }
+    public String getIsMarketFundStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsMarketFund());
+    }
+
+
+
+
+    public String getIsEndSubsistStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsEndSubsist());
+    }
+
+    public String getManageTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.管理方式, this.getManageType());
+    }
+
+    public String getFiduciaryDutyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.产品受托职责_中债, this.getFiduciaryDuty());
+    }
+
+    public String getDataTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.人行月报详情数据类型, this.getDataType());
+
+    }
+
 }

@@ -56,6 +56,10 @@ public class PbcMonthReportDetailProd001Service extends CommonExportService<PbcM
         if(StringUtil.isNotEmpty(pageParam.get("prodId"))){
 			pageParam.put("prodIds",pageParam.get("prodId").toString().split(","));
 		}
+
+		if(StringUtil.isNotEmpty(pageParam.get("dataType"))){
+			pageParam.put("dataTypes",pageParam.get("dataType").toString().split(","));
+		}
 		Page<PbcMonthReportDetailProd> page = queryForPage(
 				pagenum,legth,()->pbcMonthReportDetailProdMapper.selectDetailList(pageParam));
 		return page;

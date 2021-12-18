@@ -45,6 +45,11 @@ public class PbcMonthPrdPositiondetail extends BaseEntity {
     private String operateMode;
 
     /**
+     * 投资者类别 01自然人/02非金融机构/03银行金融机构/04其他金融机构
+     */
+    private String ordIdentified;
+
+    /**
      * 募集方式： 01公募/02私募
      */
     private String raisemode;
@@ -319,6 +324,22 @@ public class PbcMonthPrdPositiondetail extends BaseEntity {
      */
     public void setOperateMode(String operateMode) {
         this.operateMode = operateMode == null ? null : operateMode.trim();
+    }
+
+    /**
+     * 取得 投资者类别 01自然人/02非金融机构/03银行金融机构/04其他金融机构
+     * @return 投资者类别 01自然人/02非金融机构/03银行金融机构/04其他金融机构
+     */
+    public String getOrdIdentified() {
+        return ordIdentified;
+    }
+
+    /**
+     * 设置 投资者类别 01自然人/02非金融机构/03银行金融机构/04其他金融机构
+     * @param ordIdentified 投资者类别 01自然人/02非金融机构/03银行金融机构/04其他金融机构
+     */
+    public void setOrdIdentified(String ordIdentified) {
+        this.ordIdentified = ordIdentified == null ? null : ordIdentified.trim();
     }
 
     /**
