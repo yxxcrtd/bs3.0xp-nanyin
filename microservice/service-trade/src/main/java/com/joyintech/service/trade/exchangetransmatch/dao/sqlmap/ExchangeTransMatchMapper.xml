@@ -52,7 +52,9 @@
                 NVL(A.SXF_AMT,0) sxfAmt,
                 NVL(A.SETTLE_FEE,0) settleFee,
                 NVL(A.COMMISSION_AMT,0) commissionAmt,
-                A.TRADE_ID_RAW tradeIdRaw
+                A.TRADE_ID_RAW tradeIdRaw,
+                A.VDATE,
+                A.MDATE
         from SETTLE_TRANS_DATA_TOTAL A
         LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B
             ON A.SEQ_ID = B.SEQ_NO
