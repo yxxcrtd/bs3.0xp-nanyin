@@ -483,6 +483,8 @@ public class StlDataDealSzdJsmxProcessService {
 								ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(settleTransData.getVpayDate(), settleTransData.getMpayDate())), 365, 14));
 						settleTransData.setmIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
 						settleTransData.setIntAmt(settleTransData.getmIntAmt());
+						// 交易本金
+						settleTransData.setPrinAmt(bjje);
 						// 到期本金
 						settleTransData.setmPrinAmt(bjje);
 						// add 计算费用时，计算基础为成交金额
@@ -583,6 +585,8 @@ public class StlDataDealSzdJsmxProcessService {
 						settleTransData.setmIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
 						settleTransData.setIntAmt(settleTransData.getmIntAmt());
 						// 计算回购利息 fuyongsheng 20211215 add end
+						// 交易本金
+						settleTransData.setPrinAmt(bjje);
 						// 到期金额
 						settleTransData.setmTradeAmt(bjje);
 						// 到期本金
