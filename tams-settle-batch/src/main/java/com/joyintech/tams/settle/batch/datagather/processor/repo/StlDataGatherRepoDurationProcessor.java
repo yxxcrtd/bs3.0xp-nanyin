@@ -253,7 +253,10 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
         // 分支序号
         trdProductDeal.setBranch(0L);
         // 交易日
-        trdProductDeal.setTradeDate(settleTransData.getTradeDate());
+        // ZGZGST-4220:回购存续期交易日是明细到期日 fuyongsheng modify start
+        // trdProductDeal.setTradeDate(settleTransData.getTradeDate());
+        trdProductDeal.setTradeDate(settleTransData.getMdate());
+        // ZGZGST-4220:回购存续期交易日是明细到期日 fuyongsheng modify end
         // 起息日
         // ZGZGST-4220:金融产品交易表起息日和到期日赋值 fuyongsheng modify start
         // trdProductDeal.setVdate(null);
