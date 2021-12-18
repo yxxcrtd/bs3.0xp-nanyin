@@ -77,6 +77,15 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     totalTrdProductDealDto.setPs(settleTransData.getPs());
                     if(finprodIdMap.containsKey(settleTransData.getFinprodId())){
                         List<PtlSecPosition> ptlSecPositionsByFinprodId = finprodIdMap.get(settleTransData.getFinprodId());
+                        // ZGZGST-4246:过滤自己证券账户下的持仓 modify by fuyongsheng start
+                        Iterator<PtlSecPosition> iterator = ptlSecPositionsByFinprodId.iterator();
+                        while(iterator.hasNext()){
+                            PtlSecPosition position = iterator.next();
+                            if(!settleTransData.getSecAcctId().equals(position.getSecAcctId())){
+                                iterator.remove();
+                            }
+                        }
+                        // ZGZGST-4246:过滤自己证券账户下的持仓 modify by fuyongsheng end
                         BigDecimal amountTotal = ptlSecPositionsByFinprodId.stream().map(PtlSecPosition::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                         totalTrdProductDealDto.setShareAmt(amountTotal);
                     }else{
