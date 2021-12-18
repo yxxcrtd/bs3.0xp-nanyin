@@ -237,6 +237,26 @@ public class StlDataDealProcessConstant {
 	public static final String ZQDM1_204091 = "204091";
 	// SzdJsmx证券代码1_204182
 	public static final String ZQDM1_204182 = "204182";
+
+
+	// SzdJsmx证券代码1_204001
+	public static final String ZQDM1_206001 = "206001";
+	// SzdJsmx证券代码1_204002
+	public static final String ZQDM1_206002 = "206002";
+	// SzdJsmx证券代码1_204003
+	public static final String ZQDM1_206003 = "206003";
+	// SzdJsmx证券代码1_204004
+	public static final String ZQDM1_206004 = "206004";
+	// SzdJsmx证券代码1_204007
+	public static final String ZQDM1_206007 = "206007";
+	// SzdJsmx证券代码1_204014
+	public static final String ZQDM1_206014 = "206014";
+	// SzdJsmx证券代码1_204028
+	public static final String ZQDM1_206028 = "206028";
+	// SzdJsmx证券代码1_204091
+	public static final String ZQDM1_206091 = "206091";
+	// SzdJsmx证券代码1_204182
+	public static final String ZQDM1_206182 = "206182";
 	
 	// SzdJsmx结果代码_正常交收
 	public static final String JGDM_0000 = "0000";
