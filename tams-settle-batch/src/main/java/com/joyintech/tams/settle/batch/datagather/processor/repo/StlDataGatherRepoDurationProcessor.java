@@ -60,7 +60,10 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 totalTrdProductDealDto.setIntAmt(settleTransData.getIntAmt());
                 // ZGZGST-4220:解决页面字段为空的问题 fuyongsheng 20211216 modify start
                 // totalTrdProductDealDto.setFpriceAmt(settleTransData.getFpriceAmt());
-                totalTrdProductDealDto.setFpriceAmt(settleTransData.getmTradeAmt());
+                // 全价总额 = 本金 + 金额 modify by fuyongsheng 20211218 start
+                // totalTrdProductDealDto.setFpriceAmt(settleTransData.getmTradeAmt());
+                totalTrdProductDealDto.setFpriceAmt(settleTransData.getIntAmt().add(settleTransData.getPrinAmt()));
+                // 全价总额 = 本金 + 金额 modify by fuyongsheng 20211218 end
                 totalTrdProductDealDto.setPrinAmt(settleTransData.getmPrinAmt());
                 totalTrdProductDealDto.setTheoryInt(settleTransData.getmIntAmt());
                 totalTrdProductDealDto.setTheoryprinAmt(settleTransData.getmPrinAmt());
@@ -461,6 +464,8 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 // settleTransDataDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
                 trdProductDealDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
                 // ZGZGST-4220:存续期交易回购利息赋值有误 fuyongsheng modify 20211218 end
+                trdProductDealDto.setTradeAmt(settleTransDataDto.getIntAmt());
+                trdProductDealDto.setFpriceAmt(settleTransDataDto.getIntAmt());
                 if(intAmtMap.containsKey(key)){
                     BigDecimal bigDecimal = intAmtMap.get(key);
                     intAmtMap.put(key, ArithmeticUtil.subtract(bigDecimal,settleTransDataDto.getIntAmt()));
