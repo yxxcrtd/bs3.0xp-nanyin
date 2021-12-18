@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.joyintech.tams.svreport.interf.chb.proddeal.service.ProdFeeDealInterfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class SvrProdFeeDealInterfMainService extends AutoSendCBBaseService{
     private Logger logger = LoggerFactory.getLogger(getClass());
 	
     @Autowired
-    private ProdDealInterfService prodDealInterfService;
+    private ProdFeeDealInterfService prodFeeDealInterfService;
     @Autowired
     private ProdFeeDealInterfImpService prodFeeDealInterfImpService;
     /**
@@ -57,7 +58,7 @@ public class SvrProdFeeDealInterfMainService extends AutoSendCBBaseService{
 		String contentSrc = interfConfig.getContentSrc();
         // 费用交易信息
         if (InterfConstants.CONTENTSRC_DB.equals(contentSrc)){
-        	mapPara = prodDealInterfService.generatePrdFeeDealData(batchDate,prodIdList,isSynchronizeTask);
+        	mapPara = prodFeeDealInterfService.generatePrdFeeDealData(batchDate,prodIdList,isSynchronizeTask);
         }else  if (InterfConstants.CONTENTSRC_FILE_XML.equals(contentSrc) 
                 || InterfConstants.CONTENTSRC_FILE_TXT.equals(contentSrc)) {
             String result = prodFeeDealInterfImpService.execute(batchDate,com.joyintech.tams.common.InterfDefine.产品费用交易接口数据.getCode());
