@@ -370,7 +370,8 @@
 		  	AND a.DEAL_DATE = STR_TO_DATE(#{batchDate},'%Y-%m-%d')
 		  	AND (
 				a.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
-				OR (a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+				AND (a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+				AND ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
 			)
 			AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
 		GROUP BY
@@ -450,7 +451,8 @@
 				  	AND a.DEAL_DATE = STR_TO_DATE(#{batchDate},'%Y-%m-%d')
 				  	AND (
 						a.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
-						OR (a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+						AND (a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+						AND ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
 					)
 					AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
 				GROUP BY
@@ -532,7 +534,8 @@
 				  	AND a.DEAL_DATE = STR_TO_DATE(#{batchDate},'%Y-%m-%d')
 				  	AND (
 						a.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
-						OR (a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+						AND (a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+						AND ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
 					)
 					AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
 			) e
