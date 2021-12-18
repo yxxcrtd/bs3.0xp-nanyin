@@ -52,7 +52,7 @@ public class SvrChbProdDividendDealDBInterf extends BaseInterfService {
 	
     public void generateData(Date batchTime) {
 		// 查询数据
-		List<ChbPrdBonusDeal> listChbPrdfeeBasisData = getBusEntity(null, "D");
+		List<ChbPrdBonusDeal> listChbPrdfeeBasisData = getBusEntity(null, null, null, "D");
 
 		if(CollectionUtils.isNotEmpty(listChbPrdfeeBasisData)){
 			logger.info("插入"+DateUtil.format(new Date())+"日的产品分红交易数据，开始");
@@ -62,7 +62,7 @@ public class SvrChbProdDividendDealDBInterf extends BaseInterfService {
 
 
 	@Override
-	public List<ChbPrdBonusDeal> getBusEntity(List<String> prodIdlist, String source) {
+	public List<ChbPrdBonusDeal> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
 		logger.info("产品分红交易数据DB接口批处理开始");
 		long startTime=System.currentTimeMillis();
 

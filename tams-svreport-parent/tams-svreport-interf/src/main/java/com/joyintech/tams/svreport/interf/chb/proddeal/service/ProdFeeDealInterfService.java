@@ -125,7 +125,7 @@ public class ProdFeeDealInterfService extends BaseInterfService {
 	 */
 	public HashMap<String,List<String>> generatePrdFeeDealData(Date batchTime,List<String> prodIdList,boolean isSynchronizeTask) {
 		// 查询数据
-		List<ChbPrdFeeDeal> listChbPrdFeeDeal = getBusEntity(prodIdList, "D");
+		List<ChbPrdFeeDeal> listChbPrdFeeDeal = getBusEntity(prodIdList, batchTime, null, "D");
 		// 入库
 		if(!StringUtil.isEmptyList(listChbPrdFeeDeal)){
 			logger.debug("上游费用交易信息入库:----开始------" +  df.format(new Date()));
@@ -136,7 +136,7 @@ public class ProdFeeDealInterfService extends BaseInterfService {
 	}
 
 	@Override
-	public List<ChbPrdFeeDeal> getBusEntity(List<String> prodIdlist, String source) {
+	public List<ChbPrdFeeDeal> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
 		//处理费用交易信息
 		HashMap<String,List<String>> mapPara = new HashMap<String,List<String>>();
 		Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.产品费用交易信息接口.getInterId());
