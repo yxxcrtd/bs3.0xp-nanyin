@@ -565,14 +565,17 @@ public class StlDataDealSzdJsmxProcessService {
 						// 到期日
 						settleTransData.setMdate(DateUtil.parse(szdJsmx.getQtrq()));
 						// 交易日期
-						settleTransData.setTradeDate(settleTransData.getMdate());
+						// ZGZGST-4249:存续期明细的交易日期是清算数据的交易日期 modify by fuyongsheng 20211218 start
+						// settleTransData.setTradeDate(settleTransData.getMdate());
+						settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
+						// ZGZGST-4249:存续期明细的交易日期是清算数据的交易日期 modify by fuyongsheng 20211218 end
 						// 首期交收日
 						String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
 						settleTransData.setVpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getJyrq()), calendarId));
 						// 到期交收日
 						settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getJsrq()));
 						// 本金金额
-						BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue()));
+						BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue()));
 						// 计算回购利息 fuyongsheng 20211215 add start
 						// 回购利息
 						BigDecimal hglx = ArithmeticUtil.multiply(ArithmeticUtil.multiply(bjje, settleTransData.getIntRate()),
