@@ -58,17 +58,17 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 totalTrdProductDealDto.setShareAmt(settleTransData.getShareAmt());
                 totalTrdProductDealDto.setTradeAmt(settleTransData.getTradeAmt());
                 totalTrdProductDealDto.setIntAmt(settleTransData.getIntAmt());
+                totalTrdProductDealDto.setPrinAmt(settleTransData.getShareNum());
                 // ZGZGST-4220:解决页面字段为空的问题 fuyongsheng 20211216 modify start
                 // totalTrdProductDealDto.setFpriceAmt(settleTransData.getFpriceAmt());
                 // 全价总额 = 本金 + 金额 modify by fuyongsheng 20211218 start
                 // totalTrdProductDealDto.setFpriceAmt(settleTransData.getmTradeAmt());
                 totalTrdProductDealDto.setFpriceAmt(settleTransData.getIntAmt().add(settleTransData.getPrinAmt()));
                 // 全价总额 = 本金 + 金额 modify by fuyongsheng 20211218 end
-                totalTrdProductDealDto.setPrinAmt(settleTransData.getmPrinAmt());
                 totalTrdProductDealDto.setTheoryInt(settleTransData.getmIntAmt());
                 totalTrdProductDealDto.setTheoryprinAmt(settleTransData.getmPrinAmt());
                 // ZGZGST-4220:解决页面字段为空的问题 fuyongsheng 20211216 modify end
-                totalTrdProductDealDto.setTradeAmt(settleTransData.getTradeAmt());
+                totalTrdProductDealDto.setTradeAmt(totalTrdProductDealDto.getFpriceAmt());
                 createTotalDeal(totalTrdProductDealDto,settleTransData);
                 finProductDealTotalList.add(totalTrdProductDealDto);
                 //投管交易关系
@@ -147,7 +147,8 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
         // 分支序号
         dealTotal.setBranch(0L);
         // 交易日
-        dealTotal.setTradeDate(settleTransData.getTradeDate());
+        // dealTotal.setTradeDate(settleTransData.getTradeDate());
+        dealTotal.setTradeDate(settleTransData.getMdate());
         // 起息日
         dealTotal.setVdate(settleTransData.getVdate());
         // 到期日
@@ -463,6 +464,7 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 // ZGZGST-4220:存续期交易回购利息赋值有误 fuyongsheng modify 20211218 start
                 // settleTransDataDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
                 trdProductDealDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
+                settleTransDataDto.setIntAmt(trdProductDealDto.getIntAmt());
                 // ZGZGST-4220:存续期交易回购利息赋值有误 fuyongsheng modify 20211218 end
                 trdProductDealDto.setTradeAmt(trdProductDealDto.getIntAmt());
                 trdProductDealDto.setFpriceAmt(trdProductDealDto.getIntAmt());
