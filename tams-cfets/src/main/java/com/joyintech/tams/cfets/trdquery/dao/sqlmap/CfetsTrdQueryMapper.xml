@@ -2338,6 +2338,10 @@
         <result column="procedureAmt"       property="procedureAmt"      jdbcType="DECIMAL" />
         <result column="settleServiceAmt"       property="settleServiceAmt"      jdbcType="DECIMAL" />
         <result column="clearType"       property="clearType"      jdbcType="VARCHAR" />
+        <result column="ouPartyIdStr"       property="ouPartyIdStr"      jdbcType="VARCHAR" />
+        <result column="ouTraderIdStr"       property="ouTraderIdStr"      jdbcType="VARCHAR" />
+        <result column="counterIdStr"       property="counterIdStr"      jdbcType="VARCHAR" />
+        <result column="counterTraderStr"       property="counterTraderStr"      jdbcType="VARCHAR" />
         <association property="trdInvestPersonInfo" javaType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdInvestPersonInfoDto">
             <result column="TRADER"             property="trader"           jdbcType="VARCHAR" />
             <result column="COUNTER_ID"         property="counterId"        jdbcType="VARCHAR" />
@@ -2387,6 +2391,10 @@
         ,ttft.fee_amt as procedureAmt
         ,ttft1.fee_amt as settleServiceAmt
         ,tpd.clear_type as clearType
+        ,nvl(t2.PARTY_ABBR,tpda.ou_party_id) as ouPartyIdStr
+        ,nvl(t3.real_name,tpd.TRADER) as ouTraderIdStr
+        ,nvl(t1.counter_name,tpd.COUNTER_ID) as counterIdStr
+        ,nvl(t4.TRADER_NAME,tpd.COUNTER_TRADER) as counterTraderStr
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL tpd
         LEFT JOIN TRD_DEAL_TOTAL_ADD tpda ON tpda.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL ptpd ON ptpd.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
@@ -2396,10 +2404,13 @@
         and det.IS_PAY_WITH_TRADE=#{Y}
         LEFT JOIN PTL_PORTFOLIO PP ON tpd.PORTFOLIO_ID = PP.PORTFOLIO_ID
         left join trd_product_deal on TRD_PRODUCT_DEAL.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
-        left join trdquto_match_info match
-        on tpd.TOTLE_TRADE_ID=match.trd_id
+        left join trdquto_match_info match on tpd.TOTLE_TRADE_ID=match.trd_id
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft ON tpd.TOTLE_TRADE_ID = ttft.TOTLE_TRADE_ID AND ttft.fee_type ='B06'
         LEFT JOIN TRD_TRADE_FEE_TOTAL ttft1 ON tpd.TOTLE_TRADE_ID = ttft1.TOTLE_TRADE_ID AND ttft1.fee_type = 'B08'
+        left join MST_COUNTER_PARTY t1 on t1.counter_id=tpd.COUNTER_ID
+        left join MST_CFETS_CUSTOMER_INFO t2 on t2.PARTY_ID= tpda.ou_party_id
+        left join sys_user t3 on t3.user_name=tpd.TRADER
+        left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=tpd.COUNTER_TRADER
         WHERE tpd.TOTLE_TRADE_ID = #{tradeId}
     </select>
     <select id="selectRegTotalInfoById"  resultType="com.joyintech.tams.common.base.entity.RegFinProductDealTotal">

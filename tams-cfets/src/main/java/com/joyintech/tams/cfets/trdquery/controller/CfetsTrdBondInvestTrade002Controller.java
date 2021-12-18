@@ -151,8 +151,8 @@ public class CfetsTrdBondInvestTrade002Controller extends BaseController {
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdBondInvestTrade002Service.getBussinessEntityByWorkflowId(
                 workflowId);
-            dto.setYield(ArithmeticUtil.multiply(dto.getYield(), new BigDecimal(100)));
-            dto.setExerYield(ArithmeticUtil.multiply(dto.getExerYield(), new BigDecimal(100)));
+         //   dto.setYield(ArithmeticUtil.multiply(dto.getYield(), new BigDecimal(100)));
+         //   dto.setExerYield(ArithmeticUtil.multiply(dto.getExerYield(), new BigDecimal(100)));
             if (dto.getTotalFaceValue() != null) {
                 dto.setTradeAmt(dto.getTotalFaceValue());
             }
@@ -163,11 +163,9 @@ public class CfetsTrdBondInvestTrade002Controller extends BaseController {
                 model.addAttribute("bondFirstSign",dto.getBondFirstSign());
             }
 
-            // add by yeming 20210913 银行间场内场外拆分 start
             model.addAttribute("parentPageId", dto.getParentPageId());
             PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
             PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, dto.getParentPageId());
-            // add by yeming 20210913 银行间场内场外拆分 end
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdBondInvestTrade002Service.getTrdBondInvestTradeDto(tradeId);
