@@ -24,6 +24,11 @@ public class EtrEntrustPledgeKey extends BaseEntity {
     private String secAcctId;
 
     /**
+     * 质押券库代码
+     */
+    private String pledgeStockId;
+
+    /**
      * 取得 组合代码
      * @return 组合代码
      */
@@ -85,5 +90,21 @@ public class EtrEntrustPledgeKey extends BaseEntity {
      */
     public void setSecAcctId(String secAcctId) {
         this.secAcctId = secAcctId == null ? null : secAcctId.trim();
+    }
+
+    /**
+     * 取得 质押券库代码
+     * @return 质押券库代码
+     */
+    public String getPledgeStockId() {
+        return pledgeStockId;
+    }
+
+    /**
+     * 设置 质押券库代码
+     * @param pledgeStockId 质押券库代码
+     */
+    public void setPledgeStockId(String pledgeStockId) {
+        this.pledgeStockId = pledgeStockId == null ? null : pledgeStockId.trim();
     }
 }

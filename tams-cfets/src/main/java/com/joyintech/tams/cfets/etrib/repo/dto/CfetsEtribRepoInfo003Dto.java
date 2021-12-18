@@ -60,6 +60,12 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
      */
     @ApiModelProperty(name="zyqk",value="质押券库")
     private String zyqk;
+
+    /**
+     * 质押券库
+     */
+    @ApiModelProperty(name="zyqkStr",value="质押券库")
+    private String zyqkStr;
     
     /**
      * 质押券信息列表明细
@@ -395,5 +401,13 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setEntrustDateStr(String entrustDateStr) {
         this.entrustDateStr = entrustDateStr;
+    }
+
+    public String getZyqkStr() {
+        return zyqkStr;
+    }
+
+    public void setZyqkStr(String zyqkStr) {
+        this.zyqkStr = zyqkStr;
     }
 }

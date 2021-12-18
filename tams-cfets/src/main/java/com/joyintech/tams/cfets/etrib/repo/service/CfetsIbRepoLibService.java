@@ -99,6 +99,7 @@ public class CfetsIbRepoLibService {
                 etrEntrustPledgeKey.setFinprodId(temp.getFinprodId());
                 etrEntrustPledgeKey.setBranch(temp.getBranch());
                 etrEntrustPledgeKey.setSecAcctId(temp.getSecAcctId());
+                etrEntrustPledgeKey.setPledgeStockId(dto.getPledgeStockId());
                 
                 // 若存在数据，则删除后，在插入。
                 EtrEntrustPledge count = cfetsEtrIbRepoLib001Mapper.selectEtrEntrustPledge(etrEntrustPledge) ;

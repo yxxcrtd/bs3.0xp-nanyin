@@ -77,7 +77,7 @@
             field: 'zyqk', width: 100, title: 'EtrIbRepo001.zyqk',
             /* 光大质押券暂时隐藏 */
             visible: repo_pledge_model=='03'?true:false,
-            edit: false,
+            edit: true,
             sortable: false,
             editOption: {
                 type: 'select',
@@ -86,7 +86,7 @@
                 showField: 'text',
                 parentIds : 'portfolioId',
                 searchable: true,
-                url: JoyinUtil.getRealPath('/cfets/etrib/cfetsEtrIbRepoinfo/getPledgeStockIdByPortfolioIdOfSelectOptionDto')
+                url: JoyinUtil.getRealPath('/invest/entrust/etribrepo/EtrIbRepoinfo002/getPledgeStockIdByPortfolioId')
             }
         } 
         , {
@@ -111,13 +111,18 @@
         height: 190,
         addclick: function (row) {
 
+        },beforeEditCell: function (preVal, field, rowData) {
+            if(!initFlag){
+                return true;
+            }
+            return false;
         }
     });
 
 
 
     var init = function () {
-
+        initFlag=true
 
     }
     var pledgeBondTotalTblDetailed ;
