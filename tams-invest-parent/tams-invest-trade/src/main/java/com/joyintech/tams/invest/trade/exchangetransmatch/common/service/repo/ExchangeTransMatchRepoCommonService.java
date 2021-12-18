@@ -374,7 +374,9 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         finTradeProduct.setMdate(trdProductDeal.getMdate());
         finTradeProduct.setVpayDate(settleTransData.getVpayDate());
         finTradeProduct.setMpayDate(settleTransData.getMpayDate());
-//        finTradeProduct.setTerm(DateUtil.getBetweenDayNumber(trdProductDeal.getVdate(),trdProductDeal.getMdate()));
+        if(null != trdProductDeal.getVdate() && null != trdProductDeal.getMdate()){
+            finTradeProduct.setTerm(DateUtil.getBetweenDayNumber(trdProductDeal.getVdate(),trdProductDeal.getMdate()));
+        }
         finTradeProduct.setIntType(DictCodeList.利率类型_固定利率.getValue());
         finTradeProduct.setIntRate(settleTransData.getUnitCprice());
         finTradeProduct.setBasis(DictCodeList.计息基础_A_365.getValue());
@@ -385,7 +387,9 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         finTradeProduct.setTradeMarket(trdProductDeal.getTradeMarket());
         finTradeProduct.setCalendarId(StringUtil.equals(trdProductDeal.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())?DictCodeList.交易日历_上海交易所日历.getValue():DictCodeList.交易日历_深圳交易所日历.getValue());
         finTradeProduct.setTermType(settleTransData.getTermType());
-//        finTradeProduct.setActCapDays(DateUtil.getBetweenDayNumber(finTradeProduct.getVpayDate(),finTradeProduct.getMpayDate()));
+        if(null != finTradeProduct.getVpayDate() && null != finTradeProduct.getMpayDate()){
+            finTradeProduct.setActCapDays(DateUtil.getBetweenDayNumber(finTradeProduct.getVpayDate(),finTradeProduct.getMpayDate()));
+        }
         return finTradeProduct;
     }
 
