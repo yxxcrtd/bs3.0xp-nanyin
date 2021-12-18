@@ -41,7 +41,7 @@ import javax.validation.Valid;
  */
 @Controller
 @PageId("SalesTransactionMaintenance001")
-@RequestMapping("report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001")
+@RequestMapping("/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001")
 public class SalesTransactionMaintenance001Controller extends BaseController {
 
     /**

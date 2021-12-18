@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @PageId("SalesTransactionMaintenance002")
-@RequestMapping("report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002")
+@RequestMapping("/report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance002")
 public class SalesTransactionMaintenance002Controller extends BaseController {
     
     /**
