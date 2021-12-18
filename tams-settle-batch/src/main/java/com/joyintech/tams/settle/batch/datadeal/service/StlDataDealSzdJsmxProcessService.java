@@ -1580,7 +1580,10 @@ public class StlDataDealSzdJsmxProcessService {
 		// ImplCalendar implCalendar = new ImplCalendar();
 		// settleTransData.setTradeDate(DateUtil.parse(implCalendar.calcDate(szdJsmx.getJyrq(), 1,
 		//		BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
-		settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
+		// settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
+		// modify by fuyongsheng 20211218 交易日期取清算日期 start
+		settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getQsrq()));
+		// modify by fuyongsheng 20211218 交易日期取清算日期 end
 		// modify by fuyongsheng 20211217 交易日期无需+1自然日 end
 		// 交割日期
 		settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getJsrq()));
