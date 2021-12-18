@@ -74,7 +74,9 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 settleTransTgMapping.setTradeId(settleTransData.getTradeId());
                 settleTransTgMapping.setTradeIdTg(totalTrdProductDealDto.getTotleTradeId());
                 settleTransTgMapping.setTgDataStatus("02");
-                //TODO 执行日期
+                // add by fuyongsheng 对成交与投管关系执行时间赋值 fuyongsheng 20211217 start
+                settleTransTgMapping.setDealDate(settleTransData.getDealDate());
+                // add by fuyongsheng 对成交与投管关系执行时间赋值 fuyongsheng 20211217 end
                 settleTransTgMappingList.add(settleTransTgMapping);
                 //组合交易
                 //划款指令
@@ -106,6 +108,7 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
 
                 }
             }
+            investTradeWriteDto.setSettleTransTgMappingList(settleTransTgMappingList);
             investTradeWriteDto.setFinProductDealTotalList(finProductDealTotalList);
             investTradeWriteDto.setPtlTradeList(ptlTradeList);
             investTradeWriteDto.setStlPayOrdersList(stlPayOrdersList);
@@ -454,7 +457,10 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 TrdProductDealDto trdProductDealDto = new TrdProductDealDto();
                 trdProductDealDto.setPs(DictCodeList.交易方向_收息到账.getValue());
                 trdProductDealDto.setShareAmt(settleTransDataDto.getShareNum());
-                settleTransDataDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
+                // ZGZGST-4220:存续期交易回购利息赋值有误 fuyongsheng modify 20211218 start
+                // settleTransDataDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
+                trdProductDealDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
+                // ZGZGST-4220:存续期交易回购利息赋值有误 fuyongsheng modify 20211218 end
                 if(intAmtMap.containsKey(key)){
                     BigDecimal bigDecimal = intAmtMap.get(key);
                     intAmtMap.put(key, ArithmeticUtil.subtract(bigDecimal,settleTransDataDto.getIntAmt()));
