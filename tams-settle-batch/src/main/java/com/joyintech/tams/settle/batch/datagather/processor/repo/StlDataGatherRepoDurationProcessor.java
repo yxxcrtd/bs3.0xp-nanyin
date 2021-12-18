@@ -464,8 +464,8 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 // settleTransDataDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
                 trdProductDealDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
                 // ZGZGST-4220:存续期交易回购利息赋值有误 fuyongsheng modify 20211218 end
-                trdProductDealDto.setTradeAmt(settleTransDataDto.getIntAmt());
-                trdProductDealDto.setFpriceAmt(settleTransDataDto.getIntAmt());
+                trdProductDealDto.setTradeAmt(trdProductDealDto.getIntAmt());
+                trdProductDealDto.setFpriceAmt(trdProductDealDto.getIntAmt());
                 if(intAmtMap.containsKey(key)){
                     BigDecimal bigDecimal = intAmtMap.get(key);
                     intAmtMap.put(key, ArithmeticUtil.subtract(bigDecimal,settleTransDataDto.getIntAmt()));
