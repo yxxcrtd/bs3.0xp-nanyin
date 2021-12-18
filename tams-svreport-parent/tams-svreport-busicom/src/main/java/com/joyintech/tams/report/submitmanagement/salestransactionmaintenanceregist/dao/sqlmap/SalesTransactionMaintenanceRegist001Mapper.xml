@@ -43,15 +43,21 @@
 			<if test="dataStatus != null and dataStatus != ''">
 				and a.DATA_STATUS = #{dataStatus}
 			</if>
-			<if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
-				and a.SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-			</if>
-			<if test="searchStatusDateStart != null and searchStatusDateStart != ''">
-				and a.STATUS_DATE between to_date(#{searchStatusDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchStatusDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-			</if>
-			<if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
-				and a.SUBMIT_TIME between to_date(#{searchSubmitTimeStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitTimeEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-			</if>
+		    <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+			    and a.SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+	    	</if>
+		    <if test="searchStatusDateStart != null and searchStatusDateStart != ''">
+			    and  to_char(a.STATUS_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}
+		    </if>
+	    	<if test="searchStatusDateEnd != null and searchStatusDateEnd != ''">
+			    and  to_char(a.STATUS_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{searchStatusDateEnd,jdbcType=VARCHAR}
+	    	</if>
+		    <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+			    and  to_char(a.SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+		    </if>
+		    <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+			    and  to_char(a.SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+		    </if>
 		ORDER BY a.UPDATE_TIME DESC
 	</select>
 
@@ -107,10 +113,16 @@
 				and SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 			</if>
 			<if test="searchStatusDateStart != null and searchStatusDateStart != ''">
-				and STATUS_DATE between to_date(#{searchStatusDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchStatusDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+				and  to_char(STATUS_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="searchStatusDateEnd != null and searchStatusDateEnd != ''">
+				and  to_char(STATUS_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{searchStatusDateEnd,jdbcType=VARCHAR}
 			</if>
 			<if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
-				and SUBMIT_TIME between to_date(#{searchSubmitTimeStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitTimeEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+				and  to_char(SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+			</if>
+			<if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+				and  to_char(SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
 			</if>
 		</where>
 		) ORDER BY STATUSDATE
@@ -401,10 +413,16 @@
 			and a.SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
 		</if>
 		<if test="searchStatusDateStart != null and searchStatusDateStart != ''">
-			and a.STATUS_DATE between to_date(#{searchStatusDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchStatusDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+			and  to_char(a.STATUS_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}
+		</if>
+		<if test="searchStatusDateEnd != null and searchStatusDateEnd != ''">
+			and  to_char(a.STATUS_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{searchStatusDateEnd,jdbcType=VARCHAR}
 		</if>
 		<if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
-			and a.SUBMIT_TIME between to_date(#{searchSubmitTimeStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitTimeEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+			and  to_char(a.SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+		</if>
+		<if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+			and  to_char(a.SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
 		</if>
 	</select>
 

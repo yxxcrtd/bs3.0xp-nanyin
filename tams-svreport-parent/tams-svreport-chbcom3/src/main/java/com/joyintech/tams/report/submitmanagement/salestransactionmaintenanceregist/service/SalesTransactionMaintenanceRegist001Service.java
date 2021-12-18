@@ -289,13 +289,6 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
                 return null;
             }
         } else {
-            param.put("submitDeadline", StringUtil.isNotEmpty(param.get("vdate"))?(param.get("vdate").toString().split(",")):null);
-            param.put("sendStatus", StringUtil.isNotEmpty(param.get("mdate"))?(param.get("mdate").toString().split(",")):null);
-            param.put("dataStatus", StringUtil.isNotEmpty(param.get("ptlId"))?(param.get("ptlId").toString().split(",")):null);
-            param.put("statusDate", StringUtil.isNotEmpty(param.get("assetCode"))?(param.get("assetCode").toString().split(",")):null);
-            param.put("submitTime", StringUtil.isNotEmpty(param.get("assetType2"))?(param.get("assetType2").toString().split(",")):null);
-            param.put("submitFeedbackStatus", StringUtil.isNotEmpty(param.get("finprodType2"))?(param.get("finprodType2").toString().split(",")):null);
-
             resultList = salesTransactionMaintenanceRegist001Mapper.setDataList(param);
         }
         return resultList;
