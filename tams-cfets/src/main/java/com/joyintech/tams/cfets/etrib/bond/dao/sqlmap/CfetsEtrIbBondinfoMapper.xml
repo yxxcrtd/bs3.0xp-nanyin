@@ -1335,16 +1335,25 @@ from
         group by  a.portfolio_id,a.finprod_id)tt
         <!-- 业务模式查交易表 -->
         left join (
-            SELECT FINPROD_ID, PORTFOLIO_ID, INV_AIM
-            FROM (
-                select
-                a.INV_AIM , a.TRADE_DATE ,a.FINPROD_ID,b.PORTFOLIO_ID,
-                ROW_NUMBER () over(PARTITION BY a.FINPROD_ID,b.PORTFOLIO_ID ORDER BY a.TRADE_DATE DESC) rn
+            select FINPROD_ID, PORTFOLIO_ID, listagg(INV_AIM, ',') WITHIN GROUP (ORDER BY PORTFOLIO_ID, FINPROD_ID) as INV_AIM
+            from (
+                SELECT distinct FINPROD_ID, PORTFOLIO_ID, INV_AIM
+                FROM (
+                    select
+                    a.INV_AIM , a.TRADE_DATE ,a.FINPROD_ID,b.PORTFOLIO_ID,
+                    ROW_NUMBER () over(PARTITION BY a.FINPROD_ID,b.PORTFOLIO_ID ORDER BY a.TRADE_DATE DESC) rn
+                    from TRD_PRODUCT_DEAL a
+                    LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+                    WHERE 1=1 AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+                    AND a.TRADE_DATE &lt;= #{platDate,jdbcType=DATE}-1
+                ) WHERE rn = 1
+               union
+                SELECT distinct a.FINPROD_ID, b.PORTFOLIO_ID, a.INV_AIM
                 from TRD_PRODUCT_DEAL a
                 LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
                 WHERE 1=1 AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-                AND a.TRADE_DATE &lt;= #{platDate,jdbcType=DATE}
-            ) WHERE rn = 1
+                AND a.TRADE_DATE = #{platDate,jdbcType=DATE}
+            ) GROUP BY FINPROD_ID, PORTFOLIO_ID
         ) inva
         on inva.FINPROD_ID=tt.FINPROD_ID and inva.PORTFOLIO_ID=tt.PORTFOLIO_ID
         left join PTL_PORTFOLIO pp
@@ -1363,13 +1372,33 @@ from
         and T1.finprod_id=#{finprodId,jdbcType=VARCHAR}
     </select>
     <!--查询该资产该组合的所有的业务模式-->
-    <select id="selectAllBusModelListByInfo" parameterType="Map" resultType="java.lang.String">
-        select distinct t.inv_aim as busModel
-        from etr_entrust t
-        where t.finprod_id=#{finprodId,jdbcType=VARCHAR}
-        and t.portfolio_id=#{portfolioId,jdbcType=VARCHAR}
-        and t.inv_aim is not null
-
+    <select id="selectAllBusModelListByInfo" parameterType="Map" resultType="com.joyintech.tams.cfets.etrib.bond.dto.CfetsBussCombDistribtDto">
+        SELECT distinct INV_AIM as businessModel,PORTFOLIO_NAME  portfolioName
+        FROM (
+        select
+        a.INV_AIM , a.TRADE_DATE ,a.FINPROD_ID,b.PORTFOLIO_ID,pp.PORTFOLIO_NAME,
+        ROW_NUMBER () over( PARTITION BY a.TRADE_ID ORDER BY a.TRADE_DATE DESC) rn
+        from TRD_PRODUCT_DEAL a
+        LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+        left join PTL_PORTFOLIO pp
+        on b.PORTFOLIO_ID=pp.PORTFOLIO_ID
+        WHERE 1=1
+            AND a.finprod_id=#{finprodId,jdbcType=VARCHAR}
+            AND b.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
+            AND a.TRADE_DATE &lt;= to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd') - 1
+            and a.INV_AIM is not null
+        ) WHERE rn = 1
+        UNION
+        SELECT distinct a.INV_AIM as businessModel,pp.PORTFOLIO_NAME  portfolioName
+        from TRD_PRODUCT_DEAL a
+        LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+        left join PTL_PORTFOLIO pp
+        on b.PORTFOLIO_ID=pp.PORTFOLIO_ID
+        WHERE 1=1
+            AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND b.PORTFOLIO_ID =#{portfolioId,jdbcType=VARCHAR}
+            and a.INV_AIM is not null
+            AND a.TRADE_DATE = to_date(#{cdate,jdbcType=VARCHAR},'yyyy-MM-dd')
     </select>
     <!--该指令退回时，指令初始下达时间-->
     <select id="selectTransmitTimeByInfo"

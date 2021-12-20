@@ -52,7 +52,7 @@ public class CfetsTrdConfirmController extends BaseController {
     public Message<Map<String, Object>> getPageParams(){
         Map<String, Object> initPageParams = new HashMap<>();
         //是否支持CSTP下行接口
-        initPageParams.put("IS_SUPPORT_CSTP_FLAG", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG"));
+        //initPageParams.put("IS_SUPPORT_CSTP_FLAG", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG"));
         initPageParams.put("IS_SUPPORT_CSTP_FLAG_BOND", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND"));
         initPageParams.put("IS_SUPPORT_CSTP_FLAG_REPO", CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO"));
 

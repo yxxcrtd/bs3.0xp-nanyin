@@ -38,7 +38,7 @@
 
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryWhere"></include>
-        <include refid="vagueQueryCommWhere"></include>
+      <!--  <include refid="vagueQueryCommWhere"></include>-->
 
         order by aaa.finprodType2, aaa.regStatus,aaa.ps DESC)
         <!--前端传入排序字段-->
@@ -313,9 +313,12 @@
 
     </sql>
     <sql id="vagueQueryWhere">
-        <if test="search != null and search != '' and search !='有效' ">
-            <where>
-                ((aaa.effectiveStatusStr || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
+        <where>
+            <if test="effectiveStatus != null and effectiveStatus != ''">
+                and aaa.effectiveStatus=#{effectiveStatus}
+            </if>
+            <if test="search != null and search != '' and search !='有效' ">
+                and ((aaa.effectiveStatusStr || '|' || sdl.ITEM_VALUE || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr
                 || '|' || dictps.ITEM_VALUE || '|' || dicttradeMarket.ITEM_VALUE || '|' || dictsp.ITEM_VALUE
                 || '|' || aaa.secManageAcctIdStr || '|' || aaa.busiCode || '|' || aaa.trader
                 || '|' || aaa.counterId  || '|' || aaa.counterIdStr || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
@@ -334,16 +337,16 @@
                 or replace(aaa.confirmTradeDate,'-','/')||'' =#{search}
                 or replace(aaa.confirmTradeDate,'-','/')||'' =#{year}||'/'||#{search}
                 )
-            </where>
-        </if>
+            </if>
+        </where>
     </sql>
-    <sql id="vagueQueryCommWhere">
+ <!--   <sql id="vagueQueryCommWhere">
         <where>
             <if test="effectiveStatus != null and effectiveStatus != ''">
                 and aaa.effectiveStatus=#{effectiveStatus}
             </if>
         </where>
-    </sql>
+    </sql>-->
     <select id="selectRegFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryRegInfoListResponse">
         select
         reg.ou_party_id as traderid,
@@ -527,7 +530,7 @@
         left join SYS_DATADICT_LIST dictsp on aaa.settleSpeed=dictsp.ITEM_CODE and dictsp.DICT_CODE='ACCOUNT_SPEED'
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryIbuWhere"></include>
-        <include refid="vagueQueryIbuCommWhere"></include>
+     <!--   <include refid="vagueQueryIbuCommWhere"></include>-->
 
         order by aaa.finprodType2, aaa.quotationState,aaa.ps DESC)
         <!--前端传入排序字段-->
@@ -1097,33 +1100,39 @@
 
     </sql>
     <sql id="vagueQueryIbuWhere">
-        <if test="search != null and search != '' and search !='有效' ">
-            <where>
-                ((sdlStatus.ITEM_VALUE || '|' || sdlbjStatus.ITEM_VALUE    || '|' || sdlfsStatus.ITEM_VALUE
-                || '|' || aaa.quoteRoleType || '|' || dictps.ITEM_VALUE || '|' || sdl.ITEM_VALUE
-                || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr   || '|' || dictquote.ITEM_VALUE
-                || '|' ||  aaa.traderidStr || '|' ||  aaa.trader  || '|' ||  aaa.counterIdStr || '|' ||  aaa.counterTrader
-                || '|' || dictsp.ITEM_VALUE || '|' || aaa.secManageAcctIdStr || '|' || aaa.quoteId
-                || '|' || aaa.execid  || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
-                || '|' || aaa.entrustId || '|' || aaa.remark
-                like '%' || #{search} || '%')
-                or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
-                or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
-                or aaa.termDays||'' =#{search}
-                or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
-                or aaa.quoteDate||'' =#{search}
-                or aaa.quoteDate||'' =#{year}||'-'||#{search}
-                or replace(aaa.quoteDate,'-','/')||'' =#{search}
-                or replace(aaa.quoteDate,'-','/')||'' =#{year}||'/'||#{search}
-                or aaa.tradeDate||'' =#{search}
-                or aaa.tradeDate||'' =#{year}||'-'||#{search}
-                or replace(aaa.tradeDate,'-','/')||'' =#{search}
-                or replace(aaa.tradeDate,'-','/')||'' =#{year}||'/'||#{search}
-                )
-            </where>
-        </if>
+        <where>
+            <if test="quotationStateList != null and quotationStateList.size() > 0">
+                and  aaa.quotationState in
+                <foreach collection="quotationStateList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="search != null and search != '' and search !='有效' ">
+                AND ((sdlStatus.ITEM_VALUE || '|' || sdlbjStatus.ITEM_VALUE    || '|' || sdlfsStatus.ITEM_VALUE
+                    || '|' || aaa.quoteRoleType || '|' || dictps.ITEM_VALUE || '|' || sdl.ITEM_VALUE
+                    || '|' || aaa.finprodMarketId || '|' || aaa.finprodAbbr   || '|' || dictquote.ITEM_VALUE
+                    || '|' ||  aaa.traderidStr || '|' ||  aaa.trader  || '|' ||  aaa.counterIdStr || '|' ||  aaa.counterTrader
+                    || '|' || dictsp.ITEM_VALUE || '|' || aaa.secManageAcctIdStr || '|' || aaa.quoteId
+                    || '|' || aaa.execid  || '|' || aaa.portfolioIds  || '|' || aaa.portfolioNames
+                    || '|' || aaa.entrustId || '|' || aaa.remark
+                    like '%' || #{search} || '%')
+                    or to_char(aaa.faceValue,'FM9999999999999990.90')=#{search} or to_char(aaa.faceValue)=#{search}
+                    or to_char(aaa.tradeYield,'FM99990.9990')=#{search} or  aaa.tradeYield||'' =#{search}
+                    or aaa.termDays||'' =#{search}
+                    or to_char(aaa.tradeAmt,'FM9999999999999990.90')=#{search} or to_char(aaa.tradeAmt)=#{search}
+                    or aaa.quoteDate||'' =#{search}
+                    or aaa.quoteDate||'' =#{year}||'-'||#{search}
+                    or replace(aaa.quoteDate,'-','/')||'' =#{search}
+                    or replace(aaa.quoteDate,'-','/')||'' =#{year}||'/'||#{search}
+                    or aaa.tradeDate||'' =#{search}
+                    or aaa.tradeDate||'' =#{year}||'-'||#{search}
+                    or replace(aaa.tradeDate,'-','/')||'' =#{search}
+                    or replace(aaa.tradeDate,'-','/')||'' =#{year}||'/'||#{search}
+                    )
+            </if>
+        </where>
     </sql>
-    <sql id="vagueQueryIbuCommWhere">
+    <!--<sql id="vagueQueryIbuCommWhere">
         <where>
             <if test="quotationStateList != null and quotationStateList.size() > 0">
                 AND aaa.quotationState in
@@ -1132,7 +1141,7 @@
                 </foreach>
             </if>
         </where>
-    </sql>
+    </sql>-->
     <select id="selectIbuBondFormDataByKey" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryIbuInfoListResponse">
         select null as  dialogueRecord,
         ib.ou_party_id as traderid,
@@ -1728,7 +1737,7 @@
         left join SYS_DATADICT_LIST dictct on aaa.clearType=dictct.ITEM_CODE and dictct.DICT_CODE='CLEAR_TYPE'
 
         <!-- 关键字模糊查询 -->
-        <include refid="vagueQueryWhere"></include>
+        <include refid="vagueQueryCstpWhere"></include>
 
         order by aaa.businesstype, aaa.matchStatus,aaa.ps DESC)
         <!--前端传入排序字段-->

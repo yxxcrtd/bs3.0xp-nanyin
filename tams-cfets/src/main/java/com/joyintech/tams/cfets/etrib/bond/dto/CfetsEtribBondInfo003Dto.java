@@ -196,6 +196,11 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
     @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
     private String softSkipMode;
 
+    /**
+     * 资产简称
+     */
+    private String finprodAbbr;
+
     public String getBusinessId() {
         return businessId;
     }
@@ -651,5 +656,13 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setAssetType(String assetType) {
         this.assetType = assetType;
+    }
+
+    public String getFinprodAbbr() {
+        return finprodAbbr;
+    }
+
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
     }
 }

@@ -1263,6 +1263,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             dto.setEntrustDate(entrustDate);
             dto.setFinvdate(fp.getVdate());
             dto.setFinmdate(fp.getMdate());
+            dto.setFinprodAbbr(fp.getFinprodAbbr());
         }
         dto.setInvManagerId(SecurityUtil.getLoginUser().getUserName());
         dto.setEntrustNum(cfetsDto.getTradeAmt());
@@ -1578,7 +1579,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
             entrustOwnNum=ArithmeticUtil.doAdd(entrustOwnNum,dtoList.get(i).getEntrustOwnNum());
             entrustIntegrateNum=ArithmeticUtil.doAdd(entrustIntegrateNum,dtoList.get(i).getEntrustIntegrateNum());
             //交易方向为卖出，回售时，判断是否存在不同的业务模式
-          /*  if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.isNotEmpty(allDto.getFinprodId())
+            if(StringUtil.isNotEmpty(allDto.getPs()) && StringUtil.isNotEmpty(allDto.getFinprodId())
                     && StringUtil.isNotEmpty(distrib.getPortfolioId())
                     && StringUtil.isNotEmpty(distrib.getBusinessModel())
                     && (StringUtil.equals(allDto.getPs(),DictCodeList.交易方向_卖出.getValue())
@@ -1587,16 +1588,17 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 Map<String, Object> pageParam=new HashMap<>();
                 pageParam.put("finprodId",allDto.getFinprodId());
                 pageParam.put("portfolioId",distrib.getPortfolioId());
-                List<String> busmodelList=cfetsetrIbBondinfoMapper.selectAllBusModelListByInfo(pageParam);
+                pageParam.put("cdate",DateUtil.format(allDto.getEtrDate(),"yyyy-MM-dd"));
+                List<CfetsBussCombDistribtDto> busmodelList=cfetsetrIbBondinfoMapper.selectAllBusModelListByInfo(pageParam);
                 if(!StringUtil.isEmptyList(busmodelList)){
-                    for(String bus:busmodelList){
-                         if(!StringUtil.equals(bus,distrib.getBusinessModel())){
-                            messages.add("组合【"+distrib.getPortfolioId()+"】、资产【"+ allDto.getFinprodMarketId()+"】存在多个业务模式，不允许下指令，请先做资产重分类");
+                    for(CfetsBussCombDistribtDto bus:busmodelList){
+                         if(!StringUtil.equals(bus.getBusinessModel(),distrib.getBusinessModel())){
+                             messages.add(new ValidMessage("组合【"+bus.getPortfolioName()+"】存在多个业务模式，请先做资产重分类"));
                              break;
                          }
                     }
                 }
-            }*/
+            }
 
         }
         if(StringUtil.isNotEmpty(allDto.getTradeAmt()) && allDto.getTradeAmt().compareTo(entrustNum)!=0){

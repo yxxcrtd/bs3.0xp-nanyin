@@ -732,6 +732,9 @@ public class IbuComponentCommonService extends BaseService {
             	 wflIbuQuoteEtrReDto.setWorkflowId(cfetsBondDealDialogueQuoteDto.getWorkflowId());
                  wflIbuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
                  wflIbuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
+                 wflIbuQuoteEtrReDto.setCpriceAmt(item.getCpriceAmt());
+                 wflIbuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                 wflIbuQuoteEtrReDto.setIntAmt(item.getIntAmt());
                  wflIbuQuoteEtrReDtoList.add(wflIbuQuoteEtrReDto);
              });
              inputBean.setWflIbuQuoteEtrReDtoList(wflIbuQuoteEtrReDtoList);
@@ -869,6 +872,9 @@ public class IbuComponentCommonService extends BaseService {
 	           	ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
                 ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
                 ibuQuoteEtrReDto.setSettFeeAmt(item.getDealFeeAmt());
+                ibuQuoteEtrReDto.setCpriceAmt(item.getCpriceAmt());
+                ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                ibuQuoteEtrReDto.setIntAmt(item.getIntAmt());
 	           	ibuQuoteEtrReDtoList.add(ibuQuoteEtrReDto);
             });
             inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrReDtoList);
@@ -1061,6 +1067,9 @@ public class IbuComponentCommonService extends BaseService {
                 }
                 ibuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
                 ibuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
+                ibuQuoteEtrReDto.setCpriceAmt(item.getCpriceAmt());
+                ibuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                ibuQuoteEtrReDto.setIntAmt(item.getIntAmt());
 	           	ibuQuoteEtrReDtoList.add(ibuQuoteEtrReDto);
             });
             inputBean.setIbuQuoteEtrReDtoList(ibuQuoteEtrReDtoList);
@@ -1233,6 +1242,9 @@ public class IbuComponentCommonService extends BaseService {
                 }
                 wflIbuQuoteEtrReDto.setDealFeeAmt(item.getDealFeeAmt());
                 wflIbuQuoteEtrReDto.setSettFeeAmt(item.getSettFeeAmt());
+                wflIbuQuoteEtrReDto.setCpriceAmt(item.getCpriceAmt());
+                wflIbuQuoteEtrReDto.setFpriceAmt(item.getFpriceAmt());
+                wflIbuQuoteEtrReDto.setIntAmt(item.getIntAmt());
                 wflIbuQuoteEtrReDtoList.add(wflIbuQuoteEtrReDto);
             });
             inputBean.setWflIbuQuoteEtrReDtoList(wflIbuQuoteEtrReDtoList);

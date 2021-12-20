@@ -264,9 +264,12 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
      */
     @Override
     public String generateTitle(CfetsEtribBondInfo003Dto entity, OperationType type) {
-        return  "交易编号" + "(" + entity.getTotalEtrustId()  + ")" +"-"+
+        /*return  "交易编号" + "(" + entity.getTotalEtrustId()  + ")" +"-"+
                 "("+ SysDataUtil.getNameFromDataDict(DictCode.交易方向, entity.getPs())+")"+"-"+
-                "指令日期"+ ":" + DateUtil.format(entity.getEtrDate());
+                "指令日期"+ ":" + DateUtil.format(entity.getEtrDate());*/
+        return  "指令日期"+ ":" + DateUtil.format(entity.getEtrDate())+"-"+
+                "资产简称" + ":" + entity.getFinprodAbbr()  + "-"+
+                "券面总额"+ ":" +  ArithmeticUtil.divide(entity.getEntrustNum(),new BigDecimal(10000),2)+"万元";
     }
     /**
      *
