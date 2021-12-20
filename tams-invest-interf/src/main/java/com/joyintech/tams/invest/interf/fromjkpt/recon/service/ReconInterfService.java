@@ -71,23 +71,23 @@ public class ReconInterfService {
                     stlSecReconDealMapper.insertSelective(item);
                 });
             }
-            //指令汇总
-            Map<String,Object> paramtotal = new HashMap<>();
-            paramtotal.put("execDate",param.get("execDate"));
-            List<StlSecReconDealDto> stlSecReconDealTotalDtos = reconInterfMapper.listStlSecReconDealIntegratedRepTotal(paramtotal);
-            if(null!=stlSecReconDealTotalDtos&&!StringUtil.isEmptyList(stlSecReconDealTotalDtos)){
-                paramtotal.put("entrustIds",stlSecReconDealTotalDtos);
-                List<StlSecRecon> finprodIds=reconInterfMapper.listStlSecRecon(paramdetail);
-                if(CollectionUtils.isNotEmpty(finprodIds)) {
-                    paramdetail.put("finprodIds",finprodIds);
-                    //怎么登录之前怎么删除
-                    deleteAll(paramdetail);
-                }
-                stlSecReconDealTotalDtos.forEach(item ->{
-                    item.setSeqNo(IDGenerator.generate());
-                    stlSecReconDealMapper.insertSelective(item);
-                });
-            }
+//            //指令汇总
+//            Map<String,Object> paramtotal = new HashMap<>();
+//            paramtotal.put("execDate",param.get("execDate"));
+//            List<StlSecReconDealDto> stlSecReconDealTotalDtos = reconInterfMapper.listStlSecReconDealIntegratedRepTotal(paramtotal);
+//            if(null!=stlSecReconDealTotalDtos&&!StringUtil.isEmptyList(stlSecReconDealTotalDtos)){
+//                paramtotal.put("entrustIds",stlSecReconDealTotalDtos);
+//                List<StlSecRecon> finprodIds=reconInterfMapper.listStlSecRecon(paramdetail);
+//                if(CollectionUtils.isNotEmpty(finprodIds)) {
+//                    paramdetail.put("finprodIds",finprodIds);
+//                    //怎么登录之前怎么删除
+//                    deleteAll(paramdetail);
+//                }
+//                stlSecReconDealTotalDtos.forEach(item ->{
+//                    item.setSeqNo(IDGenerator.generate());
+//                    stlSecReconDealMapper.insertSelective(item);
+//                });
+//            }
         }
         //明细
         if(param.containsKey("collect")){

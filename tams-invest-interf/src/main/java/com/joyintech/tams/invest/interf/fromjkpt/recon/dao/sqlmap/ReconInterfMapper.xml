@@ -763,6 +763,125 @@ WHERE
 
     <!--协议回购明细维度对账单-->
     <select id="listStlSecReconDealIntegratedRepDetaile" resultType="com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlSecReconDealDto">
+        SELECT
+        CUSTOMER_ID,
+        ENTRUST_ID,
+        ACCOUT,
+        SEAT_NUMBER,
+        TRADE_DATE,
+        CCY,
+        TRADE_MARKET,
+        PS,
+        SUM(TRADE_NUM) TRADE_NUM,
+        SUM(TRADE_AMT),
+        SUM(INT_AMT) INT_AMT,
+        SUM(HAPPEN_AMT) HAPPEN_AMT,
+        SUM(HGDQJE) HGDQJE,
+        SUM(STAMP_FEE) STAMP_FEE,
+        SUM(JSF_AMT) JSF_AMT ,
+        SUM(GHF_AMT) GHF_AMT,
+        SUM(ZGF_AMT) ZGF_AMT,
+        SUM(SETTLE_FEE) SETTLE_FEE,
+        SUM(TRADE_FEE) TRADE_FEE,
+        SUM(COMMISSION_AMT) COMMISSION_AMT,
+        SUM(OTHER_FEEAMT),
+        SUM(TOTAL_TEEAMT)
+        FROM
+        (
+        SELECT
+        TO_DATE(T1.JYRQ, 'yyyy-MM-dd') TRADE_DATE,
+        a.BROKER_ID CUSTOMER_ID,
+        CJBH TRADE_ID,
+        WTBH ENTRUNST_ID,
+        CASE
+        WHEN T1.BZLB = 'RMB' THEN 'CNY'
+        WHEN T1.BZLB = 'HKD' THEN 'HKD'
+        WHEN T1.BZLB = 'USD' THEN 'USD'
+        END CCY,
+        T5.TRADE_PLACE TRADE_MARKET,
+        T5.SEC_ACCT_ID SEC_ACCT_ID,
+        XWBH SEAT_NUMBER,
+        '' SETTLEMEN_TYPE,
+        CJSL TRADE_NUM,
+        CJJG PRICE,
+        NULL UNIT,
+        NULL FULL_PRICE,
+        NULL INT_AMT,
+        case when CJJE&lt;0 then CJJE*-1 else CJJE  end TRADE_AMT ,
+        CJJE HAPPEN_AMT,
+        NULL TOTAL_TEEAMT,
+        NULL HGDQR,
+        NULL HGDQJE,
+        YHS STAMP_FEE,
+        NULL JSF_AMT,
+        GHF GHF_AMT,
+        NULL ZGF_AMT,
+        NULL SETTLE_FEE,
+        NULL TRADE_FEE,
+        NULL OTHER_FEEAMT,
+        YJ COMMISSION_AMT,
+        WTBH ENTRUST_ID,
+        CASE WHEN YWBS = '4429' and MMFX= '2' then '03'
+        WHEN YWBS = '4429' and MMFX= '1' then '03'
+        WHEN YWBS = '4030' and MMFX= '1' then 'T95'
+        WHEN YWBS = '4030' and MMFX= '2' then 'T95'
+        WHEN YWBS = '4031' and MMFX= '2' then 'T95'
+        WHEN YWBS = '4446' and MMFX= '1' then 'T95'
+        WHEN YWBS = '4446' and MMFX= '2' then 'T95'
+        WHEN YWBS = '4447' and MMFX= '1' then 'T95'
+        WHEN YWBS = '4447' and MMFX= '2' then 'T95'
+        ELSE NULL END PS,
+        T2.ACCT_NO ACCOUT,
+        CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
+        ELSE T3.FINPROD_MARKET_ID END MARKET_ID,
+        CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
+        ELSE T3.FINPROD_ID END FINPROD_ID,
+        CASE WHEN YWBS = '4429' and MMFX= '2' then 'F02'
+        WHEN YWBS = '4429' and MMFX= '1' then 'F03'
+        WHEN YWBS = '4030' and MMFX= '1' then 'F02'
+        WHEN YWBS = '4030' and MMFX= '2' then 'F03'
+        WHEN YWBS = '4031' and MMFX= '2' then 'F03'
+        WHEN YWBS = '4446' and MMFX= '1' then 'F02'
+        WHEN YWBS = '4446' and MMFX= '2' then 'F02'
+        WHEN YWBS = '4447' and MMFX= '2' then 'F02'
+        WHEN YWBS = '4447' and MMFX= '1' then 'F02'
+        ELSE NULL END FINPROD_TYPE
+        FROM
+        INTERF_DZD T1
+        LEFT JOIN STL_SEC_ACCT_INFO T5  ON T5. BOND_ID = T1.ZQZH
+        LEFT JOIN STL_CAPACCT_INFO T2 ON
+        T5.TRD_ACCT_ID = T2.ACCT_NO
+        and T5.TRD_ACCT_CCY= T2.CCY
+        LEFT JOIN MST_SALE_DEPARTMENT						a
+        ON T2.OWN_DEPT = a.SALE_DEPID
+        AND ((T5.TRADE_PLACE = '03' and a.SH_SEATNO = T1.XWBH) OR (T5.TRADE_PLACE = '04' and a.SZ_SEATNO = T1.XWBH))
+        LEFT JOIN FIN_PRODUCT T3 ON T3.FINPROD_MARKET_ID = T1.ZQDM ||DECODE(T5.TRADE_PLACE,'03','.SH','04','.SZ' )
+        where
+        T5.TRADE_PLACE = '04'
+        AND      EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.JYLB  = T1.JYLB  AND T6.YWBS = T1.YWBS AND ZYBS IS NULL and ZYBS  IN ('4429','4431','4030','4461','4448','4462','4447','4446'))
+        <if test="collect != null and collect.size()>0">
+            AND  a.BROKER_ID IN
+            <foreach item="item" index="index" collection="collect" open="(" separator=","  close=")">
+                #{item.customerId}
+            </foreach>
+        </if>
+        <if test="entrustIds != null and entrustIds.size()>0">
+            and T1.WTBH not in
+            <foreach item="item" index="index" collection="entrustIds" open="(" separator=","  close=")">
+                #{item.entrustTradeId}
+            </foreach>
+        </if>
+        )
+        GROUP BY
+        CUSTOMER_ID,
+        ENTRUST_ID,
+        ACCOUT,
+        SEAT_NUMBER,
+        TRADE_DATE,
+        CCY,
+        TRADE_MARKET,
+        PS
+        union  all
         <!--恒生的上交所按明细接入-->
         SELECT
         TO_DATE(T1.JYRQ, 'yyyy-MM-dd') TRADE_DATE,
