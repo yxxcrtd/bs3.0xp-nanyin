@@ -370,8 +370,11 @@
 				  	AND a.DEAL_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
 				  	AND (
 						a.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
-						AND (a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
-				  	    AND ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
+						AND (
+						    (a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+				  	    	OR ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
+							OR ((a.FINPROD_TYPE2 = #{prodType2_F06} OR a.FINPROD_TYPE2 = #{prodType2_F10}) AND a.PS NOT IN (#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12}))
+						)
 					)
 					AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
 				GROUP BY
@@ -450,10 +453,13 @@
 					(c.CHECK_RESULT IS NULL OR c.CHECK_RESULT = #{CHECK_RESULT_2})
 					AND d.PARA_VALUE = #{PARA_VALUE_01}
 				  	AND a.DEAL_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
-					AND (
+				  	AND (
 						a.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
-						AND (a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
-						AND ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
+						AND (
+							(a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+							OR ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
+							OR ((a.FINPROD_TYPE2 = #{prodType2_F06} OR a.FINPROD_TYPE2 = #{prodType2_F10}) AND a.PS NOT IN (#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12}))
+						)
 					)
 					AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
 				GROUP BY
@@ -533,10 +539,13 @@
 				(c.CHECK_RESULT IS NULL OR c.CHECK_RESULT = #{CHECK_RESULT_2})
 				AND d.PARA_VALUE = #{PARA_VALUE_03}
 			  	AND a.DEAL_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
-				AND (
+			  	AND (
 					a.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
-					AND (a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
-					AND ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
+					AND (
+						(a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+						OR ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
+						OR ((a.FINPROD_TYPE2 = #{prodType2_F06} OR a.FINPROD_TYPE2 = #{prodType2_F10}) AND a.PS NOT IN (#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12}))
+					)
 				)
 				AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
 		) e
