@@ -11,10 +11,10 @@
 package com.joyintech.service.trade.investtrade.commanddispatcher.dto;
 
 
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.joyintech.tams.common.base.entity.EtrEntrust;
 
 /**
  * 指令分发dto

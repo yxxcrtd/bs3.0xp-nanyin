@@ -49,16 +49,19 @@ public class PtlSubFundsAllocate002Validator implements BeanValidator {
                 messageList.add(new ValidMessage("子组合资金调配列表为空。"));
             }
             else {
-                Boolean flag = false;
+                Boolean flag = true;
                 Boolean ccyFlag = false;
                 for (PtlSubFundsAllocate002Dto ptlSubFundsAllocate002Dto : dto.getSelectedItem()) {
                     if (!ccyFlag && StringUtil.isEmpty(ptlSubFundsAllocate002Dto.getCcy())) {
                         ccyFlag = true;
                     }
                     if (ptlSubFundsAllocate002Dto.getTradeAmt() != null
-                            && ptlSubFundsAllocate002Dto.getTradeAmt().compareTo(BigDecimal.ZERO) == 0) {
+                            && ptlSubFundsAllocate002Dto.getTradeAmt().compareTo(BigDecimal.ZERO) == 0
+                            && flag) {
                         flag = true;
-                    }    
+                    }else{
+                        flag = false;     
+                    }       
                 }
                 if (ccyFlag){
                     messageList.add(new ValidMessage("子组合资金调配列表币种不能为空。"));    

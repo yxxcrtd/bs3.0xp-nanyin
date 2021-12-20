@@ -409,7 +409,10 @@ public class StlDataDealSzdJsmxProcessService {
 			settleTransData.setSettleMode(stlDataDealProcessCommonService.getSettleMode(szdJsmx.getJsfs()));
 			// 交易币种
 			settleTransData.setCcy(DictCodeList.币种_人民币_CNY.getValue());
-
+			// 交易日期(默认是交易日期,后面根据不同场景分别赋值)
+			settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
+			// 交割日期(默认是清算日期,后面根据不同场景分别赋值)
+			settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getQsrq()));
 			// 不同交易类型数据单独处理
 			// 竞价回购交易
 			if (StringUtil.equals(StlDataDealProcessConstant.YWLX_023, szdJsmx.getYwlx()) || StringUtil.equals(StlDataDealProcessConstant.YWLX_602, szdJsmx.getYwlx())) {
@@ -482,6 +485,8 @@ public class StlDataDealSzdJsmxProcessService {
 								ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(settleTransData.getVpayDate(), settleTransData.getMpayDate())), 365, 14));
 						settleTransData.setmIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
 						settleTransData.setIntAmt(settleTransData.getmIntAmt());
+						// 交易本金
+						settleTransData.setPrinAmt(bjje);
 						// 到期本金
 						settleTransData.setmPrinAmt(bjje);
 						// add 计算费用时，计算基础为成交金额
@@ -565,13 +570,15 @@ public class StlDataDealSzdJsmxProcessService {
 						settleTransData.setMdate(DateUtil.parse(szdJsmx.getQtrq()));
 						// 交易日期
 						settleTransData.setTradeDate(settleTransData.getMdate());
+						// 交割日期
+						settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getJsrq()));
 						// 首期交收日
 						String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
 						settleTransData.setVpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getJyrq()), calendarId));
 						// 到期交收日
 						settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getJsrq()));
 						// 本金金额
-						BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue()));
+						BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue()));
 						// 计算回购利息 fuyongsheng 20211215 add start
 						// 回购利息
 						BigDecimal hglx = ArithmeticUtil.multiply(ArithmeticUtil.multiply(bjje, settleTransData.getIntRate()),
@@ -579,6 +586,8 @@ public class StlDataDealSzdJsmxProcessService {
 						settleTransData.setmIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
 						settleTransData.setIntAmt(settleTransData.getmIntAmt());
 						// 计算回购利息 fuyongsheng 20211215 add end
+						// 交易本金
+						settleTransData.setPrinAmt(bjje);
 						// 到期金额
 						settleTransData.setmTradeAmt(bjje);
 						// 到期本金
@@ -748,6 +757,8 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransData.setMpayDate(DateUtil.parse(szdJsmx.getJsrq()));
 							// 到期金额
 							settleTransData.setmTradeAmt(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue())));
+							// 交易日期
+							settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getQsrq()));
 							// 质押品信息
 							// settleTransDataPledge.setTradeId(szdJsmx.getCjbh());
 							// 流水号 = 成交数据明细流水号
@@ -847,10 +858,6 @@ public class StlDataDealSzdJsmxProcessService {
 			settleTransData.setApplyTradeId(szdJsmx.getSqbh());
 			// 分支序号
 			settleTransData.setBranch(0L);
-			// 交易日期
-			settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
-			// 交割日期
-			settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getQsrq()));
 			// 印花税
 			if (StringUtil.isNotEmpty(szdJsmx.getYhs())){
 				settleTransData.setStampFee(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
@@ -1575,9 +1582,15 @@ public class StlDataDealSzdJsmxProcessService {
 		// 业务类型
 		settleTransData.setBusiType(DictCodeListExt3.业务类型_债券交易.getValue());
 		// 交易日期
-		ImplCalendar implCalendar = new ImplCalendar();
-		settleTransData.setTradeDate(DateUtil.parse(implCalendar.calcDate(szdJsmx.getJyrq(), 1,
-				BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
+		// modify by fuyongsheng 20211217 交易日期无需+1自然日 start
+		// ImplCalendar implCalendar = new ImplCalendar();
+		// settleTransData.setTradeDate(DateUtil.parse(implCalendar.calcDate(szdJsmx.getJyrq(), 1,
+		//		BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
+		// settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
+		// modify by fuyongsheng 20211218 交易日期取清算日期 start
+		settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getQsrq()));
+		// modify by fuyongsheng 20211218 交易日期取清算日期 end
+		// modify by fuyongsheng 20211217 交易日期无需+1自然日 end
 		// 交割日期
 		settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getJsrq()));
 		// 交易币种
