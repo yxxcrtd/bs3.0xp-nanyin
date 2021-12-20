@@ -85,14 +85,14 @@ values ('SVR_PBC_DATA_TYPE', '03', '当期兑付发生额', 1, null, 'system', n
 
 
 -- 删除语句先注释
--- DROP TABLE CHB_MONTH_PRD_POSITIONDETAIL;
--- DROP TABLE CHB_MONTH_ASSET_POSITIONDETAIL;
+DROP TABLE CHB_MONTH_PRD_POSITIONDETAIL;
+DROP TABLE CHB_MONTH_ASSET_POSITIONDETAIL;
 
 create table CHB_MONTH_PRD_POSITIONDETAIL
 (
   posuuid           VARCHAR2(36) not null,
   prodid            VARCHAR2(150),
-  term             VARCHAR2(10),
+  TERM             VARCHAR2(10),
   detailNo         VARCHAR2(50),
   ccy               VARCHAR2(3),
   raisemode         VARCHAR2(2),
@@ -231,7 +231,7 @@ alter table CHB_MONTH_PRD_POSITIONDETAIL
 
 create table CHB_MONTH_ASSET_POSITIONDETAIL(
   posuuid          VARCHAR2(36) not null,
-  term             VARCHAR2(10),
+  TERM             VARCHAR2(10),
   detailNo         VARCHAR2(50),
   invest_variety   VARCHAR2(4),
   asset_code       VARCHAR2(50),
@@ -349,7 +349,8 @@ alter table CHB_MONTH_ASSET_POSITIONDETAIL
 
 
 
-
+DROP TABLE PBC_MONTH_PRD_POSITIONDETAIL;
+DROP TABLE PBC_MONTH_ASSET_POSITIONDETAIL;
 -- Create table
 create table PBC_MONTH_PRD_POSITIONDETAIL
 (
@@ -360,7 +361,7 @@ create table PBC_MONTH_PRD_POSITIONDETAIL
   transfer_type   VARCHAR2(2),
   buy_place       VARCHAR2(50),
   operate_mode    VARCHAR2(2),
-  ord_identified    VARCHAR2(2),
+  ord_identified    VARCHAR2(10),
   raisemode       VARCHAR2(2),
   ivstorientation VARCHAR2(2),
   manage_type     VARCHAR2(2),
@@ -371,7 +372,6 @@ create table PBC_MONTH_PRD_POSITIONDETAIL
   mdate             DATE,
   paystatus       VARCHAR2(2),
   term             VARCHAR2(10),
-  termdays        varchar2(10),
   ccy             VARCHAR2(3),
   customer_type2  VARCHAR2(50),
   endamtsum_oth   NUMBER(24,2),
