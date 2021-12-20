@@ -193,7 +193,10 @@
             
                   T1.FINPROD_TYPE2 ,
                   T1.SEC_MANAGE_ACCT_ID,
-                  DATE_FORMAT(ptpd.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+                  <!--modify by fuyongsheng 数据的交易日期是到期数据的交易日期 start-->
+                  <!--DATE_FORMAT(ptpd.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,-->
+                  DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+                  <!--modify by fuyongsheng 数据的交易日期是到期数据的交易日期 end-->
                   DATE_FORMAT(T4.VDATE, '%Y-%m-%d') vDate,
                   DATE_FORMAT(T4.MDATE, '%Y-%m-%d') mDate,
                   NULL TERM,
@@ -316,7 +319,10 @@
                 T1.CHL_ID,
             
                 T1.FINPROD_TYPE2 ,
-                DATE_FORMAT(ptpd.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+                <!--modify by fuyongsheng 交易日期取到期的交易日期 start-->
+                <!--DATE_FORMAT(ptpd.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,-->
+                DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+                <!--modify by fuyongsheng 交易日期取到期的交易日期 end-->
                 DATE_FORMAT(T4.VDATE, '%Y-%m-%d') vDate,
                 DATE_FORMAT(T4.MDATE, '%Y-%m-%d') mDate,
                 T7.TERM,
