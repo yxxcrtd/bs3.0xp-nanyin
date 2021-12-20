@@ -449,8 +449,8 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
             }else{
                 settleTransDataDto.setBusiType("51");//质押式逆回购到期
             }
-            settleTransDataDto.setVdate(settleTransDataDto.getTradeDate());
-            settleTransDataDto.setMdate(settleTransDataDto.getMpayDate());
+            //settleTransDataDto.setVdate(settleTransDataDto.getTradeDate());
+            //settleTransDataDto.setMdate(settleTransDataDto.getMpayDate());
             settleTransDataDto.setPs(DictCodeList.交易方向_到期.getValue());
             settleTransDataDto.setTradeAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getTradeAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getPrinAmt(),2));
             if(tradeAmtMap.containsKey(key)){
