@@ -372,6 +372,19 @@ public class ChbPrdDeclareInfoDto extends BaseEntity{
      */
     private String isFhxgcp;
 
+    /***
+     * 产品特殊属性
+     */
+    private  String  prdSpecProperty;
+
+    public String getPrdSpecProperty() {
+        return prdSpecProperty;
+    }
+
+    public void setPrdSpecProperty(String prdSpecProperty) {
+        this.prdSpecProperty = prdSpecProperty;
+    }
+
     /**
      * null
      * @return DECLARE_UUID null

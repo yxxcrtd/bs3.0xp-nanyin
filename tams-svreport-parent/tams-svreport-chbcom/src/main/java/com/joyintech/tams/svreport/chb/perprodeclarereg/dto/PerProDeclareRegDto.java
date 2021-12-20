@@ -523,6 +523,20 @@ public class PerProDeclareRegDto extends BaseEntity implements ITableRow{
     private String flg2;
 
     /**
+     * 产品特殊属性
+     */
+    @DictFormat(DictCode.产品特殊属性)
+    private String prdSpecProperty;
+
+    public String getPrdSpecProperty() {
+        return prdSpecProperty;
+    }
+
+    public void setPrdSpecProperty(String prdSpecProperty) {
+        this.prdSpecProperty = prdSpecProperty;
+    }
+
+    /**
      * 登记序列
      * @return REGIST_SEQNO 登记序列
      */

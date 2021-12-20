@@ -494,6 +494,12 @@ $(function() {
 									width : 200, 
 									sortField:'creditMode'
 								},
+							    {
+								title : '产品特殊属性',
+								field : 'prdSpecProperty',
+								width : 200,
+								sortField:'prdSpecProperty'
+						     	},
 								{
 									title : '备注',
 									field : 'remark',

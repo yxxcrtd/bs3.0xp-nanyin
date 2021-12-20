@@ -94,7 +94,9 @@
 	<result column="YIELD" property="yield" />
 	<result column="INVEST_FEE_RATE" property="investFeeRate" />
 	<result column="IS_FHXGCP" property="isFhxgcp" />
- </resultMap>
+	<result column="PRD_SPEC_PROPERTY" property="prdSpecProperty" />
+
+	</resultMap>
    <select id="selectAllData" parameterType="java.util.HashMap" resultType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
       select 
 	    cds.REGIST_SEQNO registSeqno,
@@ -196,7 +198,8 @@
 		cds.YIELD yield,
 		cds.INVEST_FEE_RATE investFeeRate,
 		cds.SUMIT_SEQ sumitSeq,
-		cds.IS_FHXGCP isFhxgcp
+		cds.IS_FHXGCP isFhxgcp,
+	    cds.PRD_SPEC_PROPERTY prdSpecProperty
      from CHB_PRD_DECLARE_SUB cds
      left join CHB_PRDRESIST_CODE cpc on cpc.PRODID = cds.PROD_ID
      <if test="model_type != null">
@@ -512,7 +515,8 @@
     sub.NINE_FILE,
     sub.FILE_NO,
 	sub.FILE_NUM,
-	baseinfo.IS_FHXGCP
+	baseinfo.IS_FHXGCP,
+	baseinfo.PRD_SPEC_PROPERTY
 	from CHB_PRD_DECLARE_INFO baseinfo
 	<!-- add by zhangliang 20210306 先上传九大附件，然后修改了申报基本信息，重新执行“产品发行申报登记报送”批处理，已上传的附件在前台无法下载 备注：CHB_PRD_DECLARE_SUB表的NINE_FILE、FILE_NO、FILE_NUM字段变成空了 start -->
 	left join CHB_PRD_DECLARE_SUB sub on baseinfo.PROD_INS_ID = sub.PROD_INS_ID and sub.send_status = '01'
@@ -850,7 +854,8 @@
 	    CASH_MANA_CATE,
 	    YIELD,
 	    INVEST_FEE_RATE,
-	    IS_FHXGCP
+	    IS_FHXGCP,
+	    PRD_SPEC_PROPERTY
 	    )
 	    values(#{sumitSeq,jdbcType=VARCHAR},
 	    #{registSeqno,jdbcType=VARCHAR},
@@ -942,7 +947,8 @@
         #{cashManaCate,jdbcType=VARCHAR},
         #{yield,jdbcType=NUMERIC},
         #{investFeeRate,jdbcType=NUMERIC},
-        #{isFhxgcp,jdbcType=VARCHAR}
+        #{isFhxgcp,jdbcType=VARCHAR},
+        #{prdSpecProperty,jdbcType=VARCHAR}
 	    )
     </insert>
     
@@ -1055,7 +1061,7 @@
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
     UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
     FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP, SUBMIT_FEEDBACK_MSG
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP, SUBMIT_FEEDBACK_MSG,PRD_SPEC_PROPERTY
       )
       select 
     REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID, 
@@ -1071,7 +1077,7 @@
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, sysdate,
     UPDATE_USER, sysdate, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
     FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP, SUBMIT_FEEDBACK_MSG
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP, SUBMIT_FEEDBACK_MSG,PRD_SPEC_PROPERTY
     from CHB_PRD_DECLARE_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">

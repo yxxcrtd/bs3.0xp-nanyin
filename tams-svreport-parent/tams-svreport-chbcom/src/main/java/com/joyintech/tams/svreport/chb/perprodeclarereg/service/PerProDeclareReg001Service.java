@@ -381,6 +381,15 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 			if(item.getIsFhxgcp()!=null){
 				item.setIsFhxgcp(item.getIsFhxgcp().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.新老产品标记, item.getIsFhxgcp()));
 			}
+			//产品特殊属性
+			if(item.getPrdSpecProperty()!=null){
+				List<String> prdSpecPropertys=StringUtil.splitToList(GlobalConstant.COMMA, item.getPrdSpecProperty());
+				item.setPrdSpecProperty("");
+				for(String prdSpecProperty : prdSpecPropertys){
+					item.setPrdSpecProperty(item.getPrdSpecProperty()+","+prdSpecProperty+" "+SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性, prdSpecProperty));
+				}
+				item.setPrdSpecProperty(item.getPrdSpecProperty().substring(1));
+			}
 		});
 	}
 
