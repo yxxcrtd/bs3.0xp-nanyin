@@ -34,6 +34,7 @@ import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsCon
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -195,17 +196,6 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @PostMapping("save")
     public Message<AjaxResult> save(@RequestBody CfetsEtribSaveRequest cfetsDto, BindingResult br)
             throws Exception {
-      /* String  errorMessage = cfetsEtrIbBondinfoService.checkSaveError(cfetsDto, br);
-        if (StringUtil.isNotEmpty(errorMessage) ) {
-            AjaxResult m=new AjaxResult();
-            m.setStatuCode(220);
-            m.setMessage(errorMessage);
-            return new Message<AjaxResult>().success().setData(m);
-        }*/
-      /*  String  warnMessage = cfetsEtrIbBondinfoService.checkSaveWarn(cfetsDto, br);
-        if (StringUtil.isNotEmpty(warnMessage) ) {
-            return new Message<AjaxResult>().success().setMessage(warnMessage);
-        }*/
         CfetsEtribBondInfo003Dto allDto=cfetsEtrIbBondinfoService.packageEquity(cfetsDto);
         // ----------add by zhangrui1 20200715 预占功能 start----------
         List<CfetsEtribBondInfo003Dto> dataList = new ArrayList<>();
@@ -259,7 +249,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         params.setPageId("CfetsEtrIbBondinfo003");
         params.setElementId(allDto.getEtrInvestBondInfoDtos().get(0).getElementId());
         params.setBusinessCode(CfetsEtribBondInfo003Dto::getTotalEtrustId);
-        params.setBusinessType(DictCodeList.共通业务类型_债券投资委托.getValue());
+        params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务指令_债券.getValue());
         processParameter.setOperationType(OperationType.NEW);
         processParameter.setWorkFlowParameter(params);
 

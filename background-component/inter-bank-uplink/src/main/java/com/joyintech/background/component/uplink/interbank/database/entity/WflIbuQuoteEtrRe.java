@@ -62,6 +62,18 @@ public class WflIbuQuoteEtrRe extends WflIbuQuoteEtrReKey {
     private String dipType;
 
     /**
+     * 净价总额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal cpriceAmt;
+
+    /**
+     * 应计利息
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal intAmt;
+
+    /**
      * 取得 组合代码
      * @return 组合代码
      */
@@ -219,5 +231,37 @@ public class WflIbuQuoteEtrRe extends WflIbuQuoteEtrReKey {
      */
     public void setDipType(String dipType) {
         this.dipType = dipType == null ? null : dipType.trim();
+    }
+
+    /**
+     * 取得 净价总额
+     * @return 净价总额
+     */
+    public BigDecimal getCpriceAmt() {
+        return cpriceAmt;
+    }
+
+    /**
+     * 设置 净价总额
+     * @param cpriceAmt 净价总额
+     */
+    public void setCpriceAmt(BigDecimal cpriceAmt) {
+        this.cpriceAmt = cpriceAmt;
+    }
+
+    /**
+     * 取得 应计利息
+     * @return 应计利息
+     */
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    /**
+     * 设置 应计利息
+     * @param intAmt 应计利息
+     */
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
     }
 }
