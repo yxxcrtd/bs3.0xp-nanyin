@@ -52,9 +52,16 @@ public class IbuQuoteEtrRe extends IbuQuoteEtrReKey {
     private BigDecimal settFeeAmt;
 
     /**
-     * 分配方式
+     * 净价总额
      */
-    private String dipType;
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal cpriceAmt;
+
+    /**
+     * 应计利息
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal intAmt;
 
     /**
      * 取得 组合代码
@@ -185,18 +192,34 @@ public class IbuQuoteEtrRe extends IbuQuoteEtrReKey {
     }
 
     /**
-     * 取得 分配方式
-     * @return 分配方式
+     * 取得 净价总额
+     * @return 净价总额
      */
-    public String getDipType() {
-        return dipType;
+    public BigDecimal getCpriceAmt() {
+        return cpriceAmt;
     }
 
     /**
-     * 设置 分配方式
-     * @param dipType 分配方式
+     * 设置 净价总额
+     * @param cpriceAmt 净价总额
      */
-    public void setDipType(String dipType) {
-        this.dipType = dipType == null ? null : dipType.trim();
+    public void setCpriceAmt(BigDecimal cpriceAmt) {
+        this.cpriceAmt = cpriceAmt;
+    }
+
+    /**
+     * 取得 应计利息
+     * @return 应计利息
+     */
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    /**
+     * 设置 应计利息
+     * @param intAmt 应计利息
+     */
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
     }
 }
