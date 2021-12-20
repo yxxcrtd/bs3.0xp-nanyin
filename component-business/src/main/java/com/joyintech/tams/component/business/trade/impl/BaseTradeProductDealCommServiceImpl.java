@@ -636,6 +636,10 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
             持仓类型 = DictCodeList.持仓类型_可用;
             needNegative = false;
         }
+        else if (DictCodeListExt1.交易流程状态_有效.getValue().equals(finProductTradeDto.getWorkflowStatus())) {
+            持仓类型 = DictCodeList.持仓类型_实际;
+            needNegative = false;
+        }
         if (持仓类型 == null) {
             return false;
         }
