@@ -54,16 +54,17 @@
 		    <Cell order="49" name="客户赎回权标识">cusRedeemFlag</Cell><!--  -->	
 		    <Cell order="50" name="产品品牌">prodBrand</Cell><!--  -->	
 		    <Cell order="51" name="产品期次">prodStage</Cell><!--  -->
-		    <Cell order="52" name="投资管理费率%">investFeeRate</Cell><!--  -->	
-		    <Cell order="53" name="合作模式">contMode</Cell><!--  -->	
-		    <Cell order="54" name="合作机构名称">cooperationName</Cell><!--  -->	
-		    <Cell order="55" name="投资本金到账日">investPrinDate</Cell><!--  -->	
-		    <Cell order="56" name="投资收益到账日">investProfDate</Cell><!--  -->	
-		    <Cell order="57" name="产品增信标识">creditFlag</Cell><!--  -->	
-		    <Cell order="58" name="产品增信机构类型">creditType</Cell><!--  -->	
-		    <Cell order="59" name="产品增信形式">creditMode</Cell><!--  -->	
-		    <Cell order="60" name="投资资产种类及比例">invTypeRat</Cell><!--  -->	
-		    <Cell order="61" name="备注">remark</Cell><!--  -->	
+			<Cell order="52" name="产品特殊属性">prdSpecProperty</Cell><!--  -->
+			<Cell order="53" name="投资管理费率%">investFeeRate</Cell><!--  -->
+		    <Cell order="54" name="合作模式">contMode</Cell><!--  -->
+		    <Cell order="55" name="合作机构名称">cooperationName</Cell><!--  -->
+		    <Cell order="56" name="投资本金到账日">investPrinDate</Cell><!--  -->
+		    <Cell order="57" name="投资收益到账日">investProfDate</Cell><!--  -->
+		    <Cell order="58" name="产品增信标识">creditFlag</Cell><!--  -->
+		    <Cell order="59" name="产品增信机构类型">creditType</Cell><!--  -->
+		    <Cell order="60" name="产品增信形式">creditMode</Cell><!--  -->
+		    <Cell order="61" name="投资资产种类及比例">invTypeRat</Cell><!--  -->
+		    <Cell order="62" name="备注">remark</Cell><!--  -->
 		   
 		    
 		</Row>
