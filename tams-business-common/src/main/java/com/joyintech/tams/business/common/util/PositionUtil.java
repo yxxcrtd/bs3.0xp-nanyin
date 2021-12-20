@@ -215,6 +215,9 @@ public class PositionUtil {
         BigDecimal rs = BigDecimal.ZERO;
         if (tamsReq != null) {
             List list = (List) tamsReq.get("ptlList");
+            if(StringUtil.isEmptyList(list)){
+                list = (List) tamsReq.get("ptlCashList");
+            }
             if (list != null && !list.isEmpty()){
                 for (int i=0;i<list.size(); i++){
                     BaseMap each = BaseMap.newMap((Map) list.get(i));
