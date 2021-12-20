@@ -225,6 +225,17 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
         return SysDataUtil.getNameFromDataDict(DictCode.募集方式_中债, this.getRaisemode());
     }
 
+    private String raiseType;
+    public String getRaiseType() {
+        return raiseType;
+    }
+
+    public void setRaiseType(String raiseType) {
+        this.raiseType = raiseType;
+    }
+    public String getRaiseTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.募集方式_中债, this.getRaiseType());
+    }
 
     public String getIvstorientationStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.投资性质, this.getIvstorientation());

@@ -17,7 +17,7 @@ $(function() {
     laydate.render({
 		elem: '#enddate',
 		type: 'month',
-		format: 'yyyy-MM'
+		format: 'yyyyMM'
 			
 	});
 

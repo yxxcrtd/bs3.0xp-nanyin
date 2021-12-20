@@ -19,7 +19,7 @@ $(function() {
     laydate.render({
 		elem: '#enddate',
 		type: 'month',
-		format: 'yyyy-MM'
+		format: 'yyyyMM'
 			
 	});
 
@@ -43,11 +43,11 @@ $(function() {
             { title: "到期日", width : 200, field: 'mdateStr', sortField:'mdate'},
             { title: "募集方式", width : 130, field: 'raiseTypeStr',sortField:'raiseType'},
             { title: "投资性质", width : 130, field: 'ivstorientationStr',sortField:'ivstorientation'},
-            { title: "币种", width : 130, field: 'raiseCcy',sortField:'raiseCcy'},
+            { title: "币种", width : 130, field: 'ccy',sortField:'ccy'},
             { title: "管理方式", width : 130, field: 'manageTypeStr',sortField:'manageType'},
             { title: "受托职责", width : 130, field: 'fiduciaryDutyStr',sortField:'fiduciaryDuty'},
             { title: "产品运作模式", width : 130, field: 'operateModeStr',sortField:'operateMode'},
-            { title: "期限（天）", width : 130, field: 'term',sortField:'term'},
+            { title: "期限（天）", width : 130, field: 'termdays',sortField:'termdays'},
             { title: "期限类型", width : 130, field: 'termtypeStr',sortField:'termtype'},
             { title: "是否分级产品", width : 130, field: 'isConstracteStr',sortField:'isConstracte'},
             { title: "是否收益权转让产品", width : 130, field: 'transferTypeStr',sortField:'transferType'},
@@ -56,7 +56,6 @@ $(function() {
             { title: "是否本期终止", width : 130, field: 'isEndTremStr',sortField:'isEndTrem'},
             { title: "期末是否存续", width : 130, field: 'isEndSubsistStr',sortField:'isEndSubsist'},
             { title: "兑付类型", width : 130, field: 'paystatusStr',sortField:'paystatus'},
-
             {title: '住户',field:'ordIdentified01', type:'money', sortField:'ordIdentified01'},
             {title: '广义政府',field:'ordIdentified02', type:'money', sortField:'ordIdentified02'},
             {title: '非金融企业',field:'ordIdentified03', type:'money', sortField:'ordIdentified03'},

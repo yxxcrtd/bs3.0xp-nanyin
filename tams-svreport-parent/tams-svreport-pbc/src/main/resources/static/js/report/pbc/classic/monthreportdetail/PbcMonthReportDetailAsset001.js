@@ -19,7 +19,7 @@ $(function() {
     laydate.render({
         elem: '#enddate',
         type: 'month',
-        format: 'yyyy-MM'
+        format: 'yyyyMM'
 
     });
 
@@ -42,7 +42,6 @@ $(function() {
             { title: "四级分类", width : 120, field: 'reportType4',sortField:'reportType4'},
             { title: "五级分类", width : 120, field: 'reportType5',sortField:'reportType5'},
             { title: "六级分类", width : 120, field: 'reportType6',sortField:'reportType6'},
-
             { title: "产品代码", width : 120, field: 'prodid',sortField:'prodid'},
             { title: "产品名称", width : 120, field: 'prodName',sortField:'prodName'},
             { title: "资产代码/科目号", width : 120, field: 'assetCode',sortField:'assetCode'},
@@ -54,19 +53,19 @@ $(function() {
             { title: "交易对手名称", width : 120, field: 'rivalParty',sortField:'rivalParty'},
             { title: "利率", width : 120, field: 'rate', type:'money',sortField:'rate'},
             { title: "币种", width : 120, field: 'ccy',sortField:'ccy'},
-            { title: "行业分类", width : 120, field: 'industry1Str',sortField:'industry1'},
-            { title: "企业规模分类", width : 120, field: 'industry1Str',sortField:'industry1'},
-            { title: "除回购和拆借外贷款所属地区", width : 120, field: 'industry1Str',sortField:'industry1'},
+            { title: "行业分类", width : 120, field: 'industryStr',sortField:'industry'},
+            { title: "企业规模分类", width : 120, field: 'partyType1Str',sortField:'partyType1'},
+            { title: "除回购和拆借外贷款所属地区", width : 120, field: 'buyPlaceStr',sortField:'buyPlace'},
             { title: "成本", width : 120, field: 'costAmt', type:'money',sortField:'costAmt'},
             { title: "应计利息", width : 120, field: 'floatIngpl', type:'money',sortField:'floatIngpl'},
             { title: "利息调整", width : 120, field: 'intincexp', type:'money',sortField:'intincexp'},
             { title: "公允价值变动", width : 120, field: 'intadjexpAdd', type:'money',sortField:'intadjexpAdd'},
             { title: "减值", width : 120, field: 'lossAmt', type:'money',sortField:'lossAmt'},
-            { title: "期末余额", width : 120, field: 'assetvalueA', type:'money',sortField:'assetvalueA'},
+            { title: "期末余额", width : 120, field: 'amt', type:'money',sortField:'amt'},
             { title: "投管一级分类", width : 120, field: 'orgAssetType1Str',sortField:'orgAssetType1'},
             { title: "投管二级分类", width : 120, field: 'orgAssetType2Str',sortField:'orgAssetType2'},
             { title: "投管三级分类", width : 120, field: 'orgAssetType3Str',sortField:'orgAssetType3'},
-            { title: "资产负债剩余期限", width : 120, field: 'orgAssetType3Str',sortField:'orgAssetType3'},
+            { title: "资产负债剩余期限", width : 120, field: 'endDays',type:'number',sortField:'endDays'},
 
         ]
     });

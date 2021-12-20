@@ -67,13 +67,14 @@ public class PbcMonthReportDetailProd001Service extends CommonExportService<PbcM
 
 	public List<PbcMonthReportDetailProd> selectForExport(Map<String, Object> pageParam) {
 		//将发送状态改为空
+		int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
+		int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
 		if(StringUtil.isNotEmpty(pageParam.get("prodId"))){
 			pageParam.put("prodIds",pageParam.get("prodId").toString().split(","));
 		}
 
-		if(pageParam.containsKey("keyList")){
-			pageParam.put("keysList",
-					StringUtil.splitToList(",",(String) pageParam.get("keyList")));
+		if(StringUtil.isNotEmpty(pageParam.get("dataType"))){
+			pageParam.put("dataTypes",pageParam.get("dataType").toString().split(","));
 		}
 		List<PbcMonthReportDetailProd> list = pbcMonthReportDetailProdMapper.selectDetailList(pageParam);
 		return list;
@@ -84,7 +85,7 @@ public class PbcMonthReportDetailProd001Service extends CommonExportService<PbcM
 	@Override
 	protected void buildExportParam(ExportParam exportParam) {
 		exportParam.config(
-				"/com/joyintech/tams/svreport/chb/monthreportdetail/controller/conf/prodExport_conf.xml").dataSource(
+				"/com/joyintech/tams/svreport/pbc/classic/monthreportdetail/controller/conf/prodExport_conf.xml").dataSource(
 				DataSourceType.MASERT);
 	}
 

@@ -20,6 +20,10 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
 
     private String dataTypekey;
 
+    private String  prodName;
+
+
+
     private String dataType;
     /**
      * 是否本期发行
@@ -324,6 +328,28 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
     public String getDataType() {
         return dataType;
     }
+
+    public String getProdName() {
+        return prodName;
+    }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
+    }
+
+    private String raiseType;
+    public String getRaiseType() {
+        return raiseType;
+    }
+
+    public void setRaiseType(String raiseType) {
+        this.raiseType = raiseType;
+    }
+    public String getRaiseTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.募集方式_中债, this.getRaiseType());
+    }
+
+
 
     public void setDataType(String dataType) {
         this.dataType = dataType;
