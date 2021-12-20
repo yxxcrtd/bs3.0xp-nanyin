@@ -2039,7 +2039,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             List<PortIntFenPeiInfoDto> fenPeiList=cfetsTrdQueryMapper.findPortIntFenPeiInfoList(pageParam);
             resultDto.setCfetsBussCombDistribtList(fenPeiList);
 
-            if (resultDto.getSettleSpeed() != null) {
+          /*  if (resultDto.getSettleSpeed() != null) {
                 resultDto.setSettleSpeedStr(String.valueOf(resultDto.getSettleSpeed()));
             }
             else if(resultDto.getSettleSpeed() == 1L){
@@ -2048,7 +2048,16 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
                 resultDto.setSettleSpeedStr("2");
             }else{
                 resultDto.setSettleSpeedStr(resultDto.getSettleSpeed().toString());
-            }
+            }*/
+           /* if(StringUtil.isNotEmpty(resultDto.getSettleSpeed())) {
+                if (resultDto.getSettleSpeed() == 0L) {
+                    resultDto.setSettleSpeedStr("01");
+                } else if (resultDto.getSettleSpeed() == 1L) {
+                    resultDto.setSettleSpeedStr("02");
+                } else if (resultDto.getSettleSpeed() == 2L) {
+                    resultDto.setSettleSpeedStr("03");
+                }
+            }*/
             // 到期收益率
             if (resultDto.getYield() != null) {
                 resultDto.setYield(ArithmeticUtil.multiply(resultDto.getYield(), BigDecimal.valueOf(100)));
@@ -3396,6 +3405,19 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
         return codeParameter;
     }
 
+    /**
+     * 查询交易对手是否为净值高频或者货币
+     *
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public String getCounterId(Map<String, Object> map) {
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getCounterId", map,
+            String.class);
+    }
+
     private void setWorkflowId(CfetsTrdBondInvestTradeDto entity) {
         if (entity.getPaTrdFinProductDealTotal() != null) {
             entity.getPaTrdFinProductDealTotal().setWorkflowId(entity.getWorkflowId());
@@ -3413,19 +3435,6 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             entity.getPaTrdProductDeals().forEach(trdProductDeal -> trdProductDeal.setWorkflowId(entity.getWorkflowId()));
         }
         entity.getBussTrdTransferOrder().get(0).setWorkflowId(entity.getWorkflowId());
-    }
-
-    /**
-     * 查询交易对手是否为净值高频或者货币
-     * 
-     * @param map
-     * @return
-     * @see
-     * @since 1.0
-     */
-    public String getCounterId(Map<String, Object> map) {
-        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getCounterId", map,
-            String.class);
     }
 
     /**
@@ -4393,13 +4402,13 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
             WflValidInputParameter parameter = new WflValidInputParameter();
             parameter.setPageId("CfetsTrdBondInvestTrade002");
             parameter.setBusinessDataPk1(inputDto.getTotleTradeId() + "R");
-            parameter.setBusinessDataPk2("F01");
-          /*  if (mstWorkflowCommonService.isInWflProcess(parameter)) {
+            //parameter.setBusinessDataPk2("F01");
+            if (mstWorkflowCommonService.isInWflProcess(parameter)) {
                 AjaxResult m = new AjaxResult();
                 m.setStatuCode(220);
-                m.setMessage(this.getMessage("BUSS_COM_E_0041"));
+                m.setMessage(this.getMessage("BUSS_COM_E_0023"));
                 return m;
-            }*/
+            }
          /*   if(StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_买入.getValue())
                     || StringUtil.equals(inputDto.getPs(),DictCodeList.回购拆借方向_逆回购.getValue())
             ){
@@ -4428,7 +4437,7 @@ public class CfetsTrdBondInvestTrade002Service extends BaseService<CfetsTrdBondI
                 }
             }
             CfetsTrdBondInvestTradeDto dto = this.getTrdBondInvestTradeDto(inputDto.getTotleTradeId() + "R");
-            if(com.joyintech.framework.util.StringUtil.isNotEmpty(dto)){
+            if(StringUtil.isNotEmpty(dto)){
                 AjaxResult m = new AjaxResult();
                 m.setStatuCode(220);
                 m.setMessage("已撤销的交易不允许撤销");

@@ -1123,7 +1123,7 @@ from
         </if>
     </sql>
     <sql id="onlyWtfEtrEntrust">
-        select
+        select distinct
         decode(T1.ENTRUST_STATUS,'08','流程中','有效') as effectiveStatusName,
         T1.ENTRUST_ID entrustId,
         T1.ENTRUST_STATUS entrustStatus,
@@ -1181,7 +1181,7 @@ from
         LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
         LEFT JOIN FIN_PRODUCT_TYPE T4 ON T4.FINPROD_ID = T1.FINPROD_ID
         left join (
-        SELECT case when T.PROCESS_STATE = 'END' then  null else T.NEXT_USER end AS nowUserId,
+        SELECT distinct case when T.PROCESS_STATE = 'END' then  null else T.NEXT_USER end AS nowUserId,
         sdpm.Workflow_Id as workFlowId
         FROM SYS_WFL_BUSINESS_LIST T
         inner join SYS_DATA_PROCESS_MARK sdpm

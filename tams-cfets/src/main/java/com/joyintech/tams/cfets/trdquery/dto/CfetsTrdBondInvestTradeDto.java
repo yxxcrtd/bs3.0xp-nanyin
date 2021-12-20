@@ -453,6 +453,27 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
      */
     private BigDecimal qty;
 
+    /**
+     * 本方Str
+     * @return
+     */
+    private String ouPartyIdStr;
+    /**
+     * 本方交易员Str
+     * @return
+     */
+    private String ouTraderIdStr;
+    /**
+     * 对方Str
+     * @return
+     */
+    private String counterIdStr;
+    /**
+     * 对方交易员Str
+     * @return
+     */
+    private String counterTraderStr;
+
     public String getSettleIsPayWithTrade() {
         return settleIsPayWithTrade;
     }
@@ -2520,5 +2541,37 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 
     public void setCfetsBussCombDistribtList(List<PortIntFenPeiInfoDto> cfetsBussCombDistribtList) {
         this.cfetsBussCombDistribtList = cfetsBussCombDistribtList;
+    }
+
+    public String getOuPartyIdStr() {
+        return ouPartyIdStr;
+    }
+
+    public void setOuPartyIdStr(String ouPartyIdStr) {
+        this.ouPartyIdStr = ouPartyIdStr;
+    }
+
+    public String getOuTraderIdStr() {
+        return ouTraderIdStr;
+    }
+
+    public void setOuTraderIdStr(String ouTraderIdStr) {
+        this.ouTraderIdStr = ouTraderIdStr;
+    }
+
+    public String getCounterIdStr() {
+        return counterIdStr;
+    }
+
+    public void setCounterIdStr(String counterIdStr) {
+        this.counterIdStr = counterIdStr;
+    }
+
+    public String getCounterTraderStr() {
+        return counterTraderStr;
+    }
+
+    public void setCounterTraderStr(String counterTraderStr) {
+        this.counterTraderStr = counterTraderStr;
     }
 }
