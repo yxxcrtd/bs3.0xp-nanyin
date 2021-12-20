@@ -1326,47 +1326,47 @@ public class StlDataDealSzdSjsjgProcessService {
     private String getTermType(Date vdate, Date Mdate) {
         //起息日-到期日 <= 1
         if (BigDecimal.ONE.compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) >= 0) {
-            return DictCodeList.回购期限品种_GC001.getValue();
+            return DictCodeList.回购期限品种_R_001.getValue();
         }
         //1< 起息日-到期日 <=2  
         else if (BigDecimal.ONE.compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) < 0 &&
                 new BigDecimal(2).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) >= 0) {
-            return DictCodeList.回购期限品种_GC002.getValue();
+            return DictCodeList.回购期限品种_R_002.getValue();
         }
         //2< 起息日-到期日 <=3  
         else if (new BigDecimal(2).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) < 0 &&
                 new BigDecimal(3).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) >= 0) {
-            return DictCodeList.回购期限品种_GC003.getValue();
+            return DictCodeList.回购期限品种_R_003.getValue();
         }
         //3< 起息日-到期日 <=4  
         else if (new BigDecimal(3).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) < 0 &&
                 new BigDecimal(4).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) >= 0) {
-            return DictCodeList.回购期限品种_GC004.getValue();
+            return DictCodeList.回购期限品种_R_004.getValue();
         }
         //4< 起息日-到期日 <=7 
         else if (new BigDecimal(4).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) < 0 &&
                 new BigDecimal(7).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) >= 0) {
-            return DictCodeList.回购期限品种_GC007.getValue();
+            return DictCodeList.回购期限品种_R_007.getValue();
         }
         //7< 起息日-到期日 <=14  
         else if (new BigDecimal(7).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) < 0 &&
                 new BigDecimal(14).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) >= 0) {
-            return DictCodeList.回购期限品种_GC014.getValue();
+            return DictCodeList.回购期限品种_R_014.getValue();
         }
         //14< 起息日-到期日 <=28  
         else if (new BigDecimal(14).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) < 0 &&
                 new BigDecimal(28).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) >= 0) {
-            return DictCodeList.回购期限品种_GC028.getValue();
+            return DictCodeList.回购期限品种_R_028.getValue();
         }
         //28< 起息日-到期日 <=91  
         else if (new BigDecimal(28).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) < 0 &&
                 new BigDecimal(91).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) >= 0) {
-            return DictCodeList.回购期限品种_GC091.getValue();
+            return DictCodeList.回购期限品种_R_091.getValue();
         }
         //91< 起息日-到期日 <=182  
         else if (new BigDecimal(91).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) < 0 &&
                 new BigDecimal(182).compareTo(new BigDecimal(getBetweenDayNumber(vdate,Mdate))) >= 0) {
-            return DictCodeList.回购期限品种_GC182.getValue();
+            return DictCodeList.回购期限品种_R_182.getValue();
         }
         return null;
     }
