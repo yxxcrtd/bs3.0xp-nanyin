@@ -69,7 +69,8 @@
         reg.m_settle_date as msettleDate,
         null as pledgeFinprodIds,
         null as pledgeRatios,
-        null as pledgeFaceValues
+        null as pledgeFaceValues,
+        null as execid
         from reg_fin_product_deal_total reg
         left join fin_product fp
         on fp.finprod_id=reg.finprod_id
@@ -178,7 +179,8 @@
         reg.m_settle_date as msettleDate,
         null as pledgeFinprodIds,
         null as pledgeRatios,
-        null as pledgeFaceValues
+        null as pledgeFaceValues,
+        null as execid
         from wfl_reg_fin_product_deal_total reg
         left join fin_product fp
         on fp.finprod_id=reg.finprod_id
@@ -398,7 +400,8 @@
         null as msettleDate,
         null as pledgeFinprodIds,
         null as pledgeRatios,
-        null as pledgeFaceValues
+        null as pledgeFaceValues,
+        ibd.execid as execid
         from ibu_quote_bond ib
         inner join ibu_quote_bond_det ibd
         on ib.quote_id=ibd.quote_id
@@ -504,7 +507,8 @@
         ic.m_settle_date as msettleDate,
         icpledge.pledgeFinprodId as pledgeFinprodIds,
         icpledge.pledgeRatio as pledgeRatios,
-        icpledge.pledgeFaceValue as pledgeFaceValues
+        icpledge.pledgeFaceValue as pledgeFaceValues,
+        ic.execid as execid
         from ibu_quote_crep ic
         left join (
         select I.quote_id,

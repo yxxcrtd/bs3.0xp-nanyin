@@ -1335,16 +1335,25 @@ from
         group by  a.portfolio_id,a.finprod_id)tt
         <!-- 业务模式查交易表 -->
         left join (
-            SELECT FINPROD_ID, PORTFOLIO_ID, INV_AIM
-            FROM (
-                select
-                a.INV_AIM , a.TRADE_DATE ,a.FINPROD_ID,b.PORTFOLIO_ID,
-                ROW_NUMBER () over(PARTITION BY a.FINPROD_ID,b.PORTFOLIO_ID ORDER BY a.TRADE_DATE DESC) rn
+            select FINPROD_ID, PORTFOLIO_ID, listagg(INV_AIM, ',') WITHIN GROUP (ORDER BY PORTFOLIO_ID, FINPROD_ID) as INV_AIM
+            from (
+                SELECT distinct FINPROD_ID, PORTFOLIO_ID, INV_AIM
+                FROM (
+                    select
+                    a.INV_AIM , a.TRADE_DATE ,a.FINPROD_ID,b.PORTFOLIO_ID,
+                    ROW_NUMBER () over(PARTITION BY a.FINPROD_ID,b.PORTFOLIO_ID ORDER BY a.TRADE_DATE DESC) rn
+                    from TRD_PRODUCT_DEAL a
+                    LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+                    WHERE 1=1 AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+                    AND a.TRADE_DATE &lt;= #{platDate,jdbcType=DATE}-1
+                ) WHERE rn = 1
+               union
+                SELECT distinct a.FINPROD_ID, b.PORTFOLIO_ID, a.INV_AIM
                 from TRD_PRODUCT_DEAL a
                 LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
                 WHERE 1=1 AND a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-                AND a.TRADE_DATE &lt;= #{platDate,jdbcType=DATE}
-            ) WHERE rn = 1
+                AND a.TRADE_DATE = #{platDate,jdbcType=DATE}
+            ) GROUP BY FINPROD_ID, PORTFOLIO_ID
         ) inva
         on inva.FINPROD_ID=tt.FINPROD_ID and inva.PORTFOLIO_ID=tt.PORTFOLIO_ID
         left join PTL_PORTFOLIO pp

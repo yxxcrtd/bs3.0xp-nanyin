@@ -225,8 +225,11 @@ public class CfetsTrdConfirmService extends BaseService{
         if (StringUtils.isNotEmpty(userId)) {
             pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
             //根据有无下行查询不同
-            String supportCstpFlag=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG");
-            if(StringUtil.equals(supportCstpFlag,DictCodeList.是否_是.getValue())){
+            String support_cstp_flag_bond=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND");
+            String support_cstp_flag_repo=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO");
+            if(StringUtil.equals(support_cstp_flag_bond,DictCodeList.是否_是.getValue())
+                || StringUtil.equals(support_cstp_flag_repo,DictCodeList.是否_是.getValue())
+            ){
                 //针对查询可匹配执行交易
                 if(!StringUtil.isEmptyList(dto.getSelectedItem())){
                     CfetsTrdConfirmCstpInfoListResponse serchExecDto=dto.getSelectedItem().get(0);
@@ -261,7 +264,6 @@ public class CfetsTrdConfirmService extends BaseService{
                         pageParam.put("pledgeFaceValues",serchExecDto.getPledgeFaceValues());
                     }
                 }
-
                 //登记以及报价
                 return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsTrdConfirmMapper.findAllRegAndIbuInfoList(pageParam));
             }else{
@@ -390,9 +392,11 @@ public class CfetsTrdConfirmService extends BaseService{
             //basRiskMathCommService.insert(entity.getRiskTrialRetDto(), entity.getTotleTradeId());
 
             //无下行时，插入下行成交匹配关系.有下行时，手工匹配或自动匹配插入下行成交匹配表
-            String supportCstpFlag=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG");
+            String support_cstp_flag_bond=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND");
+          //  String supportCstpFlag=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_REPO");
+
             if(null!=entity.getCfetsTrdConfirmMatchDto()){
-                if(StringUtil.equals(supportCstpFlag,DictCodeList.是否_否.getValue())){
+                if(StringUtil.equals(support_cstp_flag_bond,DictCodeList.是否_否.getValue())){
                     cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(entity.getCfetsTrdConfirmMatchDto());
                 }else{
                     //根据登记编号查询下行成交匹配表
@@ -788,9 +792,9 @@ public class CfetsTrdConfirmService extends BaseService{
         // =====================人员信息=====================
 
         //无下行时，插入下行成交匹配关系.有下行时，手工匹配或自动匹配插入下行成交匹配表
-        String supportCstpFlag=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG");
+        String support_cstp_flag_bond=CacheUtil.getSysParam("IS_SUPPORT_CSTP_FLAG_BOND");
         CfetsTrdConfirmMatchDto matchDto=new CfetsTrdConfirmMatchDto();
-        if(StringUtil.equals(supportCstpFlag,DictCodeList.是否_否.getValue())){
+        if(StringUtil.equals(support_cstp_flag_bond,DictCodeList.是否_否.getValue())){
             matchDto.setSeqno(IDGenerator.generate());
             matchDto.setPreTradeId(totleTradeId);
             matchDto.setTrdConfStatus(DictCodeList.确认状态_已确认.getValue());
@@ -1601,9 +1605,22 @@ public class CfetsTrdConfirmService extends BaseService{
         }
         if (manualMatchDto.getSelectedCfetsTrdConfirmCstpInfoList().size() == 1
                 && manualMatchDto.getSelectedCfetsTrdConfirmRegInfoList().size() == 1) {
-            //判断基础要素是否一致
+            //进行匹配的数据
             CfetsTrdConfirmRegInfoListResponse regInfo = manualMatchDto.getSelectedCfetsTrdConfirmRegInfoList().get(0);
             CfetsTrdConfirmCstpInfoListResponse cstpInfo = manualMatchDto.getSelectedCfetsTrdConfirmCstpInfoList().get(0);
+            //如果是报价数据，则要求成交编号一致，否则不允许进行匹配
+            if(StringUtil.isNotEmpty(regInfo.getDealType())
+                    && (StringUtil.equals(regInfo.getDealType(),BussinessDictCodeList.报价方式_请求报价.getValue())
+                    || StringUtil.equals(regInfo.getDealType(),BussinessDictCodeList.报价方式_对话报价.getValue()))
+            ){
+                if(!StringUtil.equals(regInfo.getExecid(),cstpInfo.getExecid())){
+                    messages.add("CSTP下行成交回报数据中的成交编号与交易执行数据中交易类型为对话/请求的报价数据的成交编号不一致，请重新选择！");
+                    mes.setStatuCode(220);
+                    mes.setMessage(StringUtil.joinString(messages, GlobalConstant.VERTICAL_LINE));
+                    return mes;
+                }
+            }
+            //判断基础要素是否一致
             if (StringUtil.isNotEmpty(cstpInfo.getBusinesstype()) && StringUtil.equals(cstpInfo.getBusinesstype(), "BOND")) {
                 //债券
                 StringBuilder str = new StringBuilder();
@@ -1760,29 +1777,28 @@ public class CfetsTrdConfirmService extends BaseService{
         CfetsTrdConfirmCstpInfoListResponse cstpInfo = manualMatchDto.getSelectedCfetsTrdConfirmCstpInfoList().get(0);
         Boolean flag=true;
         //针对报价
-        if(StringUtil.isNotEmpty(regInfo.getDealType())
+       /* if(StringUtil.isNotEmpty(regInfo.getDealType())
           && (StringUtil.equals(regInfo.getDealType(),BussinessDictCodeList.报价方式_请求报价.getValue())
                 || StringUtil.equals(regInfo.getDealType(),BussinessDictCodeList.报价方式_对话报价.getValue()))
         ){
-            if(!StringUtil.equals(regInfo.getTotleTradeId(),cstpInfo.getQuoteid())){
+            if(!StringUtil.equals(regInfo.getExecid(),cstpInfo.getExecid())){
                 flag=false;
             }
-        }
-        if(flag){
-            //插入匹配表
-            CfetsTrdConfirmMatchDto matchDto=new CfetsTrdConfirmMatchDto();
-            matchDto.setSeqno(IDGenerator.generate());
-            matchDto.setCstpTradeId(cstpInfo.getCstpTradeId());
-            matchDto.setExeId(cstpInfo.getExecid());
-            matchDto.setPreTradeId(regInfo.getTotleTradeId());
-            matchDto.setMatchType(DictCodeListExt3.下行交易匹配类型_手动匹配.getValue());
-            matchDto.setMatchStatus(BussinessDictCodeList.匹配状态_已匹配.getValue());
-            matchDto.setTrdConfStatus(DictCodeList.确认状态_未确认.getValue());
-            matchDto.setCreateUser(SecurityUtil.getLoginUser().getUserName());
-            matchDto.setCreateDept(CommonUtil.getDeptCode());
-            matchDto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
-            cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(matchDto);
-        }
+        }*/
+        //插入匹配表
+        CfetsTrdConfirmMatchDto matchDto=new CfetsTrdConfirmMatchDto();
+        matchDto.setSeqno(IDGenerator.generate());
+        matchDto.setCstpTradeId(cstpInfo.getCstpTradeId());
+        matchDto.setExeId(cstpInfo.getExecid());
+        matchDto.setPreTradeId(regInfo.getTotleTradeId());
+        matchDto.setMatchType(DictCodeListExt3.下行交易匹配类型_手动匹配.getValue());
+        matchDto.setMatchStatus(BussinessDictCodeList.匹配状态_已匹配.getValue());
+        matchDto.setTrdConfStatus(DictCodeList.确认状态_未确认.getValue());
+        matchDto.setCreateUser(SecurityUtil.getLoginUser().getUserName());
+        matchDto.setCreateDept(CommonUtil.getDeptCode());
+        matchDto.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+        cfetsTrdConfirmMapper.insertTrdQutoMatchInfo(matchDto);
+
     }
     /**
      * 交易匹配确认列表分页查询

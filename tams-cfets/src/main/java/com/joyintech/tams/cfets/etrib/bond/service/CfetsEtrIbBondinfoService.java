@@ -1593,7 +1593,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
                 if(!StringUtil.isEmptyList(busmodelList)){
                     for(CfetsBussCombDistribtDto bus:busmodelList){
                          if(!StringUtil.equals(bus.getBusinessModel(),distrib.getBusinessModel())){
-                             messages.add(new ValidMessage("组合【"+bus.getPortfolioName()+"】存在多个业务模式，不允许下指令，请先做资产重分类"));
+                             messages.add(new ValidMessage("组合【"+bus.getPortfolioName()+"】存在多个业务模式，请先做资产重分类"));
                              break;
                          }
                     }
