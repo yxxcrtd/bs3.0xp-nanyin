@@ -145,6 +145,12 @@ public class CfetsEtrRepoZLCXResponse {
     @ApiModelProperty(name="counterId",value="交易对手代码")
     private String counterId;
 
+    /**
+     * 交易对手代码
+     */
+    @ApiModelProperty(name="counterName",value="交易对手")
+    private String counterName;
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -377,5 +383,13 @@ public class CfetsEtrRepoZLCXResponse {
 
     public void setMdate(String mdate) {
         this.mdate = mdate;
+    }
+
+    public String getCounterName() {
+        return counterName;
+    }
+
+    public void setCounterName(String counterName) {
+        this.counterName = counterName;
     }
 }

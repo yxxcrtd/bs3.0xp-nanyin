@@ -1,6 +1,9 @@
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
+import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -162,6 +165,10 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
         return gradeResult;
     }
 
+    public String getGradeResultStr() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.评级结果,gradeResult);
+    }
+
     public void setGradeResult(String gradeResult) {
         this.gradeResult = gradeResult;
     }
@@ -170,12 +177,20 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
         return mdate;
     }
 
+    public String getMdateStr() {
+        return DateUtil.format(getMdate());
+    }
+
     public void setMdate(Date mdate) {
         this.mdate = mdate;
     }
 
     public String getRegistOrg() {
         return registOrg;
+    }
+
+    public String getRegistOrgStr() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.登记托管机构,registOrg);
     }
 
     public void setRegistOrg(String registOrg) {

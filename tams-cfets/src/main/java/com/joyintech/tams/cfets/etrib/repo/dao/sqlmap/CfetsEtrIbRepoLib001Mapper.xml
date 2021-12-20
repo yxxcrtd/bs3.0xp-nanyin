@@ -5,14 +5,14 @@
 	<select id="selectAvaPledgeBondList" resultType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibAvaPledgeBondResponse">
 		SELECT DISTINCT
 		TABLE01.PORTFOLIO_ID 			portfolioId,/*组合代码*/
+		TABLE01.PORTFOLIO_NAME			portfolioName,
 		TABLE01.SEC_ACCT_ID 			secAcctId,/*证券账户/通道代码*/
-		-- 			NVL(FIN_PRODUCT.FINPROD_NAME,STL_SEC_ACCT_INFO.SEC_ACCT_NAME)	 			secAcctStr,/*证券账户/通道代码*/
 		TABLE01.FINPROD_ID 				finProdId,/*金融产品Id*/
 		FIN_PRODUCT.FINPROD_ABBR     	finProdAbbr,/*金融产品简称*/
 		fpt.TYPE_9 finProdType,
 		TABLE01.BRANCH     				branch,/*分支序号*/
-		NVL(TABLE01.Amount,0)     Amount,/*券面总额*/
-		NVL(TABLE01.pledStrdPrinAmt,0)  pledStrdPrinAmt,/*可质押券面总额*/
+		round(NVL(TABLE01.Amount,0)/10000,2)     Amount,/*券面总额*/
+		round(NVL(TABLE01.pledStrdPrinAmt,0)/10000,2)  pledStrdPrinAmt,/*可质押券面总额*/
 		FIN_PRODUCT.TRADE_MARKET 		tradePlace,/*交易场所*/
 		FIN_PRODUCT.MDATE   			mdate,/*到期日*/
 		MST_BOND_VALUATION_INFO.LAST_PERIOD lastPeriod,/*剩余期限*/

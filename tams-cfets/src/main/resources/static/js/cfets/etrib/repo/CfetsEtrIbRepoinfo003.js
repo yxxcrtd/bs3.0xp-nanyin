@@ -128,7 +128,7 @@
     var pledgeBondTotalTblDetailed ;
     if(repo_pledge_model=='02') {
 
-
+debugger;
 
         /**
          * 质押券汇总信息（Total）
@@ -137,6 +137,7 @@
             page: false,
             data: entity_PledgeBondTotalListDetailed || [],
             height: 200,
+            searchOnInit: true,
             /**
              * 定义表头
              */
@@ -212,13 +213,7 @@
                     width: 200
                 }
 
-            ],
-            done: function () {
-            },
-            beforeEditCell: function (preVal, field, rowData) {
-                return false;
-            },
-            checkbox: false
+            ]
         });
 
     }

@@ -62,9 +62,11 @@
           null approver,
          TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as entrustDateStr,
         T1.ENTRUST_DATE  entrustDate,
-        T1.COUNTER_ID counterId
+        T1.COUNTER_ID counterId,
+         mcp.COUNTER_NAME counterName
         from
         ETR_ENTRUST T1
+            left join MST_COUNTER_PARTY mcp on T1.COUNTER_ID=mcp.COUNTER_ID
         INNER JOIN
         PTL_PORTFOLIO_AUTHORITY PPA
         ON
@@ -123,9 +125,11 @@
          nextApp.nowUserId as approver,
          TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as entrustDateStr,
          T1.ENTRUST_DATE  entrustDate,
-         T1.COUNTER_ID counterId
+         T1.COUNTER_ID counterId,
+     	       mcp.COUNTER_NAME counterName
         from
         WFL_ETR_ENTRUST T1
+         left join MST_COUNTER_PARTY mcp on T1.COUNTER_ID=mcp.COUNTER_ID
         INNER JOIN
         PTL_PORTFOLIO_AUTHORITY PPA
         ON
@@ -250,6 +254,7 @@
         else round(MST_BOND_VALUATION_INFO.NETPRICE/nvl(prinAmt.prinAmt,100),4)*100 end as scale, /*折算比例*/
         ETR_ENTRUST_PLEDGE.PLEDGE_STOCK_ID pledgeStockId,/*质押库代码*/
         FIN_PRODUCT.MDATE mdate,/*到期日*/
+        FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,/*到期日*/
         to_char(FIN_PRODUCT.MDATE,'yyyy-MM-dd') mdateStr,
         MBCR.GRADE_RESULT gradeResult,/*债项评级*/
         FIN_PRODUCT.REGIST_ORG registOrg,/*登记托管机构*/
