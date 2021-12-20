@@ -68,6 +68,9 @@ public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
     @ApiModelProperty(name="cfetsEtribdoRiskcalReturn",value="风险试算dto",example="CfetsEtribdoRiskcalReturn")
     private CfetsEtribdoRiskcalResponse cfetsEtribdoRiskcalReturn;
 
+    @ApiModelProperty(name="finprodAbbr",value="资产简称",example="1")
+    private String finprodAbbr;
+
     @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
     private String softSkipMode;
 
@@ -240,5 +243,13 @@ public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
 
     public void setCreditIsContinue(String creditIsContinue) {
         this.creditIsContinue = creditIsContinue;
+    }
+
+    public String getFinprodAbbr() {
+        return finprodAbbr;
+    }
+
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
     }
 }

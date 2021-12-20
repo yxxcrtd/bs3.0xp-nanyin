@@ -299,7 +299,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 WFlowCommonService.insertFlow(initBaseEtrInvestInfoDto(dto));
             }
             //发送头寸
-            entity.setSoftSkipMode("Y");
+            entity.setSoftSkipMode("N");
             sendPositionMethod(entity);
         }
     }
