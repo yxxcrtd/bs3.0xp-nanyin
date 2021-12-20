@@ -254,7 +254,6 @@
         else round(MST_BOND_VALUATION_INFO.NETPRICE/nvl(prinAmt.prinAmt,100),4)*100 end as scale, /*折算比例*/
         ETR_ENTRUST_PLEDGE.PLEDGE_STOCK_ID pledgeStockId,/*质押库代码*/
         FIN_PRODUCT.MDATE mdate,/*到期日*/
-        FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId,/*到期日*/
         to_char(FIN_PRODUCT.MDATE,'yyyy-MM-dd') mdateStr,
         MBCR.GRADE_RESULT gradeResult,/*债项评级*/
         FIN_PRODUCT.REGIST_ORG registOrg,/*登记托管机构*/
