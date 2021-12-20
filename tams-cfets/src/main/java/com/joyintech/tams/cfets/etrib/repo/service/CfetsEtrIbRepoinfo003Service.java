@@ -437,7 +437,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
         req.setPs(entity.getPs());
         req.setSystemAct(DictCodeListExt3.系统动作_新建.getValue());
         req.setCdate(entity.getEntrustDate());
-        req.setCcy(entity.getCcy());
+        req.setCcy(DictCodeList.币种_人民币_CNY.getValue());
         req.setPtlCashList(ptlCashList);
         req.setPtlSecList(ptlSecList);
         PositionHttpRequest.send(req);
