@@ -411,6 +411,8 @@ public class StlDataDealSzdJsmxProcessService {
 			settleTransData.setCcy(DictCodeList.币种_人民币_CNY.getValue());
 			// 交易日期(默认是交易日期,后面根据不同场景分别赋值)
 			settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
+			// 交割日期(默认是清算日期,后面根据不同场景分别赋值)
+			settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getQsrq()));
 			// 不同交易类型数据单独处理
 			// 竞价回购交易
 			if (StringUtil.equals(StlDataDealProcessConstant.YWLX_023, szdJsmx.getYwlx()) || StringUtil.equals(StlDataDealProcessConstant.YWLX_602, szdJsmx.getYwlx())) {
@@ -567,10 +569,9 @@ public class StlDataDealSzdJsmxProcessService {
 						// 到期日
 						settleTransData.setMdate(DateUtil.parse(szdJsmx.getQtrq()));
 						// 交易日期
-						// ZGZGST-4249:存续期明细的交易日期是清算数据的交易日期 modify by fuyongsheng 20211218 start
-						// settleTransData.setTradeDate(settleTransData.getMdate());
-						settleTransData.setTradeDate(DateUtil.parse(szdJsmx.getJyrq()));
-						// ZGZGST-4249:存续期明细的交易日期是清算数据的交易日期 modify by fuyongsheng 20211218 end
+						settleTransData.setTradeDate(settleTransData.getMdate());
+						// 交割日期
+						settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getJsrq()));
 						// 首期交收日
 						String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
 						settleTransData.setVpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getJyrq()), calendarId));
@@ -857,8 +858,6 @@ public class StlDataDealSzdJsmxProcessService {
 			settleTransData.setApplyTradeId(szdJsmx.getSqbh());
 			// 分支序号
 			settleTransData.setBranch(0L);
-			// 交割日期
-			settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getQsrq()));
 			// 印花税
 			if (StringUtil.isNotEmpty(szdJsmx.getYhs())){
 				settleTransData.setStampFee(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getYhs()).doubleValue())));
