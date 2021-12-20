@@ -233,7 +233,7 @@ FROM
     LEFT JOIN STL_SEC_ACCT_INFO T5  ON T5.BOND_ID = T1.ZQZH
     LEFT JOIN STL_CAPACCT_INFO T2
         ON T5.TRD_ACCT_ID = T2.ACCT_NO and T5.TRD_ACCT_CCY = T2.CCY
-    LEFT JOIN MST_SALE_DEPARTMENT msd
+    INNER JOIN MST_SALE_DEPARTMENT msd
         ON T2.OWN_DEPT = msd.SALE_DEPID
             and ((T5.TRADE_PLACE = '03' and msd.SH_SEATNO = T1.XWBH)
             or (T5.TRADE_PLACE = '04' and msd.SZ_SEATNO = T1.XWBH)
@@ -242,7 +242,7 @@ FROM
     LEFT JOIN FIN_PRODUCT_TYPE FPT ON T3.FINPROD_ID = FPT.FINPROD_ID
     LEFT JOIN MST_SEAT  T4 ON T4.SEAT_ID  = T1.XWBH
 <where>
-         EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.JYLB  = T1.JYLB  AND T6.YWBS = T1.YWBS AND ZYBS IS NULL AND ZYBS IS NULL and T1.YWBS NOT IN ('14036','14037','14038','14039','14040','14041'))																						)
+        EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.JYLB  = T1.JYLB  AND T6.YWBS = T1.YWBS AND ZYBS IS NULL AND ZYBS IS NULL and T1.YWBS NOT IN ('14036','14037','14038','14039','14040','14041'))																						)
         <if test="collect != null and collect.size()>0">
             and T4.CUSTOMER_ID IN
             <foreach item="item" index="index" collection="collect" open="(" separator=","  close=")">
@@ -323,7 +323,7 @@ FROM
     LEFT JOIN STL_SEC_ACCT_INFO T5  ON T5.BOND_ID = T1.ZQZH
     LEFT JOIN STL_CAPACCT_INFO T2
         ON T5.TRD_ACCT_ID = T2.ACCT_NO and T5.TRD_ACCT_CCY = T2.CCY
-    LEFT JOIN MST_SALE_DEPARTMENT msd
+    INNER JOIN MST_SALE_DEPARTMENT msd
         ON T2.OWN_DEPT = msd.SALE_DEPID
                 and ((T1.JYSC in ('1', '上海') and msd.SH_SEATNO = T1.XWDM)
                 or (T1.JYSC in ('0', '深圳') and msd.SZ_SEATNO = T1.XWDM)
@@ -398,7 +398,7 @@ WHERE
     NULL OTHER_FEEAMT,
     YJ COMMISSION_AMT,
     CASE WHEN YWBS = '4023' THEN 'T49'
-    WHEN YWBS != '4023' AND CASE WHEN CJJE >0 THEN 'T02'
+    WHEN YWBS != '4023' AND CJJE >0 THEN 'T02'
     ELSE 'T01' END PS,
     T2.ACCT_NO ACCOUT,
     CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
@@ -420,7 +420,7 @@ WHERE
     LEFT JOIN FIN_PRODUCT_TYPE FPT ON T3.FINPROD_ID = FPT.FINPROD_ID
     LEFT JOIN MST_SEAT  T4 ON T4.SEAT_ID  = T1.XWBH
     <where>
-        EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.JYLB  = T1.JYLB  AND T6.YWBS = T1.YWBS AND ZYBS IS NULL AND ZYBS IS NULL AND T1.YWBS NOT IN ('14036','14037','14038','14039','14040','14041'))																						)
+        EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.JYLB  = T1.JYLB  AND T6.YWBS = T1.YWBS AND ZYBS IS NULL AND ZYBS IS NULL AND T1.YWBS NOT IN ('14036','14037','14038','14039','14040','14041'))
         NOT EXISTS (SELECT 1 FROM INTERF_DZD WHERE YWBS = '4023' AND CJSL &lt; 0)
         <if test="collect != null and collect.size()>0">
             and T4.CUSTOMER_ID IN
@@ -513,7 +513,7 @@ WHERE
     LEFT JOIN MST_SEAT  T4 ON T4.SEAT_ID  = T1.XWDM
     WHERE
     T1.JYSC IN ('0', '1', '深圳', '上海') and EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.ZYBS = T1.ZYDM  AND ZYBS IS NOT NULL AND T1.ZYDM NOT IN('220131','220132','220144','220143','220148','220147','220134','220133') )
-    NOT EXIST（SELECT 1 FROM INTERF_ZX_ZJGFLS WHERE ZYDM = '220142' AND CJSL &lt; 0）
+    AND NOT EXIST (SELECT 1 FROM INTERF_ZX_ZJGFLS WHERE ZYDM = '220142' AND CJSL &lt; 0)
 <if test="collect != null and collect.size()>0">
         AND  T4.CUSTOMER_ID IN
         <foreach item="item" index="index" collection="collect" open="(" separator=","  close=")">
@@ -749,7 +749,7 @@ WHERE
                 #{item.entrustTradeId}
             </foreach>
         </if>
-            )
+            ) tx
         GROUP BY
         CUSTOMER_ID,
         ENTRUST_ID,
@@ -884,10 +884,34 @@ WHERE
         union  all
         <!--恒生的上交所按明细接入-->
         SELECT
+        CUSTOMER_ID,
+        ENTRUST_ID,
+        ACCOUT,
+        SEAT_NUMBER,
+        TRADE_DATE,
+        CCY,
+        TRADE_MARKET,
+        PS,
+        SUM(TRADE_NUM) TRADE_NUM,
+        SUM(TRADE_AMT),
+        SUM(INT_AMT) INT_AMT,
+        SUM(HAPPEN_AMT) HAPPEN_AMT,
+        SUM(HGDQJE) HGDQJE,
+        SUM(STAMP_FEE) STAMP_FEE,
+        SUM(JSF_AMT) JSF_AMT ,
+        SUM(GHF_AMT) GHF_AMT,
+        SUM(ZGF_AMT) ZGF_AMT,
+        SUM(SETTLE_FEE) SETTLE_FEE,
+        SUM(TRADE_FEE) TRADE_FEE,
+        SUM(COMMISSION_AMT) COMMISSION_AMT,
+        SUM(OTHER_FEEAMT),
+        SUM(TOTAL_TEEAMT)
+        FROM(
+        SELECT
         TO_DATE(T1.JYRQ, 'yyyy-MM-dd') TRADE_DATE,
         a.BROKER_ID CUSTOMER_ID,
         CJBH TRADE_ID,
-        WTBH ENTRUNST_ID,
+        WTBH ENTRUST_ID,
         CASE
         WHEN T1.BZLB = 'RMB' THEN 'CNY'
         WHEN T1.BZLB = 'HKD' THEN 'HKD'
@@ -979,6 +1003,17 @@ WHERE
                 #{item.entrustTradeId}
             </foreach>
         </if>
+        ) tx
+        GROUP BY
+        CUSTOMER_ID,
+        ENTRUST_ID,
+        ACCOUT,
+        SEAT_NUMBER,
+        TRADE_DATE,
+        CCY,
+        TRADE_MARKET,
+        PS
+
         UNION ALL		<!--金证直接按照明细接入-->
         SELECT
         TO_DATE(T1.JYRQ, 'yyyy-MM-dd') TRADE_DATE,
