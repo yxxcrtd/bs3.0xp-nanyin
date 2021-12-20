@@ -9,7 +9,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>tams-exchange-touguan</artifactId>
-	<name>资管3.0-银行间业务工程(tams-exchange-touguan)</name>
+	<name>资管3.0-场内交易-指令管理业务工程(tams-exchange-touguan)</name>
 	<version>3.0.4</version>
 
 	<properties>
@@ -65,17 +65,5 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>service-bankuplink</artifactId>
-			<version>2.0.1</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>tams-invest-bankuplink</artifactId>
-			<version>1.0.0</version>
-			<scope>compile</scope>
-		</dependency>
     </dependencies>
 </project>
