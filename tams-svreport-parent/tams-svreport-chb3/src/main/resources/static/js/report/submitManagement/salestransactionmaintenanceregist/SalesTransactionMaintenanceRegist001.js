@@ -259,28 +259,14 @@ $(function(){
     	var expArr=table.getAllCheckedRows();
         var param={};
         if(!expArr || expArr.length ==0){
-        	if(expArr.length ==0){
-        		Joyin.error("请选择导出数据！");
-    			return;
-        	}
-            param = getSearchParams();
+            param = getPageParams();
             param.flag = flag;
-            if(flag=="0" &&(param.dataStatus==null||param.dataStatus=='')){
-            	param.dataStatus="01,02";
-            }
             param.exportflag = 'export';
             Joyin.exportExcel("export",param);
         }
         else{
-//        	Joyin.error("请选择导出数据！");
-//			return;
-//        }
         	if(flag=="0")
         		{
-        		if(expArr.length >1){
-        			Joyin.error("只能选择一条数据导出！");
-        			return;
-        		}
         	for(var i=0;i<expArr.length;i++){
         		if(expArr[i].dataStatus=="03"){
         			Joyin.error("只能导出新建或修改状态的数据，请重新选择");

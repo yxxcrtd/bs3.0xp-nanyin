@@ -251,6 +251,14 @@ public class SvrSalesTransactionDBInterf extends BaseService{
                 } else {
                 	sub.setDataStatus(DictCodeListExt2.报送数据状态_新建.getValue());
                     deleteList.add(sub);
+					Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+					dateList = ChbDeadlineUtil.getChbEndDate(
+							DictCodeListExt2.报表名称_销售结算资金交易信息登记.getValue(), sub.getDataStatus(), dateMap, sub.getTradeVdate());
+					if (!CollectionUtils.isEmpty(dateList)) {
+						sub.setChbSubmitDeadline(dateList.get(0));
+						sub.setSubmitDeadline(dateList.get(1));
+					}
+					insertList.add(sub);
                 }
             }
 //			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
