@@ -1722,7 +1722,11 @@ $(function() {
         });
         // modify by wanshiwei ZGZGST-2586 基金tab交易场所枚举值为上海证券交易所/深圳证券交易所 20210912 start
         $('#tradeMarketF02').updateChosenArr({
-            item: tradeMarket12Selections
+            // modify by etliu 20211206 start
+            // TISHKS-509: 【交易管理】【交易管理】【指令汇总】基金tab页，交易场所下拉框枚举值错误
+            // item: tradeMarket12Selections
+            item: tradeMarket124Selections
+            // modify by etliu 20211206 end
         });
         // modify by wanshiwei ZGZGST-2586 基金tab交易场所枚举值为上海证券交易所/深圳证券交易所 20210912 end
         $('#tradeMarketF07').updateChosenArr({

@@ -1640,6 +1640,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
             ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
             ptlSecPositionFlowDto.setFinprodId((String)paramMap.get("finprodId"));
             ptlSecPositionFlowDto.setEntrust(true);
+            FinProduct finProduct = finProductMapper.selectByPrimaryKey((String)paramMap.get("finprodId"));
             BigDecimal amount03 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
             ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_融入.getValue());
             BigDecimal amount05 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
@@ -1647,6 +1648,11 @@ public class EtrCommonService extends BaseService<ITableRow> {
             BigDecimal amount06 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
             BigDecimal assetPositionEntrustAmt = ArithmeticUtil.doAdd(amount03, amount05);
             assetPositionEntrustAmt = ArithmeticUtil.subtract(assetPositionEntrustAmt, amount06);
+
+            if (finProduct != null && StringUtil.equals(finProduct.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                assetPositionEntrustAmt = ArithmeticUtil.multiply(assetPositionEntrustAmt,BigDecimal.valueOf(100));
+            }
+
             result.put("positionAmount", assetPositionEntrustAmt);
         } else {
             result.put("canSellAmount", BigDecimal.ZERO);

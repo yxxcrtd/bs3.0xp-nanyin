@@ -32,6 +32,8 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.service.portfolio.ptlactivityperiod.dto.PtlActivityPeriod001Dto;
 import com.joyintech.service.portfolio.ptlfundacctposi.dao.PtlFundAcctPosiMapper;
 import com.joyintech.service.portfolio.ptlfundacctposi.dto.PtlFundAcctPosiDto;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 
@@ -274,5 +276,19 @@ public class PtlFundAcctPosiService extends BaseService<PtlFundAcctPosiDto>{
      */
     public Page<SelectOptionDto> getPortfolioId(Map<String, Object> param,int page,int length){
         return super.queryForPageForSelectReturn(page,length,()->ptlFundAcctPosiMapper.getPortfolioId(param));
+	}
+
+	/**
+	 * 获得托管机构信息
+	 * <功能详细描述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public Page<SelectOptionDto> getOriginalInterestHolder(@PathVariable("page") int page,
+														   @PathVariable("length") int length,
+														   @RequestBody Map<String, Object> paramMap) {
+		return queryForPageForSelectReturn(page, length,
+				() -> ptlFundAcctPosiMapper.getOriginalInterestHolder(paramMap));
 	}
 }

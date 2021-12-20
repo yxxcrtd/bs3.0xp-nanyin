@@ -92,7 +92,14 @@
             {field:'seqId', visible:false},
             {field:'settleDate', visible:false},
             {field:'tradeMarketMode', visible:false},
-            {field:'tradePlat', visible:false}
+            {field:'tradePlat', visible:false},
+            {field:'shareAmt', visible:false},
+            {field:'fpriceAmt', visible:false},
+            {field:'repoType', visible:false},
+            {field:'conPrice', visible:false},
+            {field:'conAmt', visible:false},
+            {field:'rFinMarketId', visible:false},
+            {field:'rFinprodId', visible:false}
         ]
 
     });

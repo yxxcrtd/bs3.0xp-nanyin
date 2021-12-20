@@ -9,7 +9,7 @@
          and SEQ_ID not in
              (
                  select
-                     SEQ_ID
+                     SEQ_NO
                  from
                      SETTLE_TRANS_DATA_TOTAL_STATUS
                  where
@@ -23,8 +23,8 @@
             B.TRADE_ID tradeIdAdd, B.REPO_TYPE, B.CON_PRICE, B.CON_AMT, B.CON_PRIN_AMT,
             B.R_FINPROD_ID, B.SE_REP_DAY_TYPE,
             C.CHECK_RESULT,
-            F.TRADE_ID TRADE_ID pledgeTradeId, F.BRANCH pledgeBranch, F.PLEDGE_FINPROD_ID, F.PLEDGE_FACE_VALUE PLEDGE_FACE_VALUE,
-            F.PLEDGE_NUMBER, F.PLEDGE_RATIO F.PLEDGE_AMT
+            F.TRADE_ID TRADE_ID, F.BRANCH pledgeBranch, F.PLEDGE_FINPROD_ID, F.PLEDGE_FACE_VALUE,
+            F.PLEDGE_NUMBER, F.PLEDGE_RATIO,F.PLEDGE_AMT
         from
             SETTLE_TRANS_DATA A
                 left join SETTLE_TRANS_DATA_ADD B

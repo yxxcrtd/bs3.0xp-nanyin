@@ -43,6 +43,15 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
             searchParam.put("dealDate", execInfo.getExecuteDate());
             setSearchParam(searchParam);
             List<SettleTransDataDto> settleTransDataDtos = stlDataGatherMapper.selectSettleTransData(searchParam);
+            // GZYHTZJY-717:回购无法自动匹配:交易方向需特殊处理 fuyongsheng 20211206 add start
+            settleTransDataDtos.forEach(settleTransDataDto -> {
+                if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(settleTransDataDto.getFinprodType2())){
+                    settleTransDataDto.setPs(DictCodeListExt3.交易方向_正回购.getValue());
+                }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(settleTransDataDto.getFinprodType2())){
+                    settleTransDataDto.setPs( DictCodeListExt3.交易方向_逆回购.getValue());
+                }
+            });
+            // GZYHTZJY-717:回购无法自动匹配:交易方向需特殊处理 fuyongsheng 20211206 add end
             Map<String, List<SettleTransDataDto>> tempMap = settleTransDataDtos.stream().collect(JoyinCollectors.groupingBy(SettleTransDataDto::getOrderId));
             return tempMap.values().stream().map(InvestTradeReaderDto::new).collect(Collectors.toList());
         }else{
@@ -51,7 +60,10 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
             Map<String, Object> searchParam = new HashMap<>(4);
             setSearchParam(searchParam);
             //R325 债券存续期
-            if(searchParam.containsKey("busiType")&&StringUtil.equals(searchParam.get("busiType"),"R3S5")){
+            // ZGZGST-4212:使用自定义字段类型区分回购存续期和债券存续期 fuyongsheng 20211214 modify start
+            //  if(searchParam.containsKey("busiType")&&StringUtil.equals(searchParam.get("busiType"),"R3S5")){
+            if(searchParam.containsKey("readerType")&&StringUtil.equals(searchParam.get("readerType"),"BondDuration")){
+            // ZGZGST-4212:使用自定义字段类型区分回购存续期和债券存续期 fuyongsheng 20211214 modify end
                 searchParam.put("dealDate", execInfo.getExecuteDate());
                 if (searchParam.containsKey("finprodOthCodeType")&&StringUtil.equals(searchParam.get("finprodOthCodeType"),DictCodeListExt3.金融产品其他代码类型_上市流通.getValue())) {
                     searchParam.put("OTH_TYPE_15", DictCodeListExt3.金融产品其他代码类型_上市流通.getValue());
@@ -121,15 +133,19 @@ public abstract class StlDataGatherReader extends BaseReader<InvestTradeReaderDt
                 }
             }
             //回购存续期
-            if(searchParam.containsKey("busiType")&&StringUtil.equals(searchParam.get("busiType"),"R3S14")){
+            // ZGZGST-4212:使用自定义字段类型区分回购存续期和债券存续期 fuyongsheng 20211214 modify start
+            // if(searchParam.containsKey("busiType")&&StringUtil.equals(searchParam.get("busiType"),"R3S14")){
+            if(searchParam.containsKey("readerType")&&StringUtil.equals(searchParam.get("readerType"),"RepoDuration")){
+            // ZGZGST-4212:使用自定义字段类型区分回购存续期和债券存续期 fuyongsheng 20211214 modify end
                 searchParam.put("dealDate", execInfo.getExecuteDate());
-                // 业务类型
+                // 资产类型
                 searchParam.put("finprodTypes", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()));
                 // 交易方向列表
                 searchParam.put("psList",  Arrays.asList(DictCodeList.交易方向_到期.getValue()));
-                //数据字典.业务场景分类明细.债券质押式竞价逆回购-到期，数据字典.业务场景分类明细.债券质押式竞价正回购_到期
-                searchParam.put("busiSceneCalssList",  Arrays.asList(DictCodeListStl.业务场景分类明细_债券质押式竞价逆回购_到期.getValue(),
-                        DictCodeListStl.业务场景分类明细_债券质押式竞价正回购_到期.getValue()));
+                // ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add start
+                // 业务场景分类
+                searchParam.put("busiSceneCalssList",  Arrays.asList(DictCodeListStl.业务场景分类明细_债券质押式竞价逆回购_到期.getValue(),DictCodeListStl.业务场景分类明细_债券质押式竞价正回购_到期.getValue()));
+                // ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add end
                 List<SettleTransDataDto> settleTransDataDtos = stlDataGatherService.listRepoSettleTransData(searchParam);
                 investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
                 List<InvestTradeReaderDto> result = new ArrayList<>();

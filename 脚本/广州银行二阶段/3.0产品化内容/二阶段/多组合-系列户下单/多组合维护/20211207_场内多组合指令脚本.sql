@@ -1,6 +1,6 @@
 delete from sys_para where PARA_CODE = 'IS_NEED_EXCHANGE_MULTI_PTL';
 insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
-values ('INV', 'IS_NEED_EXCHANGE_MULTI_PTL', '01', '01', null, '场内交易指令是否开启多组合指令。01:是,02:否', 'system', null, sysdate, 'admin', sysdate, null, '01');
+values ('INV', 'IS_NEED_EXCHANGE_MULTI_PTL', '02', '01', null, '场内交易指令是否开启多组合指令。01:是,02:否', 'system', null, sysdate, 'admin', sysdate, null, '01');
 
 
 delete from sys_page where PAGE_ID = 'EtrExchangeTradeMulti001';

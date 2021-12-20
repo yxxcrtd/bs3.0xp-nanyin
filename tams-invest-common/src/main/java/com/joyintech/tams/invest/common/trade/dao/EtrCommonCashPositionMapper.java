@@ -381,7 +381,7 @@ public interface EtrCommonCashPositionMapper {
 
     BigDecimal selectShengYuEntrustAmt(String entrustId);
 
-    BigDecimal selectZhiLingChiCang(String entrustId,String finprodId);
+    BigDecimal selectZhiLingChiCang(@Param("entrustId")String entrustId,@Param("finprodId")String finprodId);
 
-    BigDecimal selectJiaoYiChiCang(String entrustId, String finprodId);
+    BigDecimal selectJiaoYiChiCang(@Param("entrustId")String entrustId, @Param("finprodId")String finprodId);
 }

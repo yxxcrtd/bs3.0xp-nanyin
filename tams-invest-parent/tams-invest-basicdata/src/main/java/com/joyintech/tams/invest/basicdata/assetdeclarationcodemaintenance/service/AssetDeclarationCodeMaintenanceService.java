@@ -240,8 +240,14 @@ public class AssetDeclarationCodeMaintenanceService extends CommonExportService<
 			ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0011"));
 			excelValidDtolist.add(dto);
 		}
+
+		// modify by etliu 20211206 start
+		// TISHKS-525:【业务参数】【申报信息维护】导入时，1、标识码提示，期望用“资产代码+业务类型”；2、如图所示，配债导入时，资产代码为股票，系统提示“业务类型类型对应资产非股票”，提示不明确
+		String validKey = "资产代码: " + list.get(1) + "<br/>业务类型: " + list.get(3);
+
 		if (StringUtils.isEmpty(list.get(1))) {
-			ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0001"));
+//			ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0001"));
+			ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0001"));
 			excelValidDtolist.add(dto);
 		} else {
 			Map map = new HashMap();
@@ -255,7 +261,8 @@ public class AssetDeclarationCodeMaintenanceService extends CommonExportService<
 				//modify start
 				if(!res.get (0).getParentId ().equals (list.get (2))){
 					if(StringUtil.isNotEmpty (list.get (2))){
-						ExcelValidDto dto = new ExcelValidDto(list.get(2), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_YADD_0002"));
+//						ExcelValidDto dto = new ExcelValidDto(list.get(2), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_YADD_0002"));
+						ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_YADD_0002"));
 						excelValidDtolist.add(dto);
 					}
 				}
@@ -266,7 +273,8 @@ public class AssetDeclarationCodeMaintenanceService extends CommonExportService<
 //				}
 				//modify end
 			} else {
-				ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0002"));
+//				ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0002"));
+				ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0002"));
 				excelValidDtolist.add(dto);
 			}
 
@@ -274,25 +282,31 @@ public class AssetDeclarationCodeMaintenanceService extends CommonExportService<
 		// modify by dubaojun 2020-07-30 画面资产代码展示为市场代码 end
 		}
 		if (StringUtils.isEmpty(list.get(3))) {
-			ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0003"));
+//			ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0003"));
+			ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0003"));
 			excelValidDtolist.add(dto);
 		} else if (StringUtils.isEmpty(getOthCodeTypeByName(list.get(3)))) {
-			ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0004"));
+//			ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0004"));
+			ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0004"));
 			excelValidDtolist.add(dto);
 		} else {
 			if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)) {
-				if (!DictCodeListExt3.金融产品其他代码类型_回售代码.getCodeName().equals(list.get(3))
+				if (/*!DictCodeListExt3.金融产品其他代码类型_回售代码.getCodeName().equals(list.get(3))
 						&& !DictCodeListExt3.金融产品其他代码类型_质押代码.getCodeName().equals(list.get(3))
-						&& !DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getCodeName().equals(list.get(3))
-						&& !DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getCodeName().equals(list.get(3))
+						&& */!DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getCodeName().equals(list.get(3))
+						/*&& !DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getCodeName().equals(list.get(3))*/
 						&& !DictCodeListExt3.金融产品其他代码类型_配债代码.getCodeName().equals(list.get(3))) {
-					ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0013"));
+//					ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0013"));
+					ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),
+							this.getMessage("MST_ASSET_DECLARATION_CODE_E_0016", DictCodeListExt1.金融产品类型_投管用_债券.getCodeName(), list.get(3)));
 					excelValidDtolist.add(dto);
 				}
 			} else if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)) {
 				if (!DictCodeListExt3.金融产品其他代码类型_配股代码.getCodeName().equals(list.get(3))
 						&& !DictCodeListExt3.金融产品其他代码类型_新股申购代码.getCodeName().equals(list.get(3))) {
-					ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0014"));
+//					ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0014"));
+					ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),
+							this.getMessage("MST_ASSET_DECLARATION_CODE_E_0016", DictCodeListExt1.金融产品类型_投管用_股票.getCodeName(), list.get(3)));
 					excelValidDtolist.add(dto);
 				}
 			} else if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(finprodType2)) {
@@ -303,46 +317,54 @@ public class AssetDeclarationCodeMaintenanceService extends CommonExportService<
 			}
 		}
 		if (StringUtils.isEmpty(list.get(4))) {
-			ExcelValidDto dto = new ExcelValidDto(list.get(4), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0005"));
+//			ExcelValidDto dto = new ExcelValidDto(list.get(4), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0005"));
+			ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0005"));
 			excelValidDtolist.add(dto);
 		} else if (list.get(4).length() > 32) {
-			ExcelValidDto dto = new ExcelValidDto(list.get(4), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0006"));
+//			ExcelValidDto dto = new ExcelValidDto(list.get(4), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0006"));
+			ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0006"));
 			excelValidDtolist.add(dto);
 		}
 
 		//add start
 		if(StringUtils.isNotEmpty(list.get(5))){
 			if(DictCodeListExt3.金融产品其他代码类型_质押代码.getCodeName().equals(list.get(3))){
-				ExcelValidDto dto = new ExcelValidDto(list.get(5), String.valueOf(i),this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_001_01"));
+//				ExcelValidDto dto = new ExcelValidDto(list.get(5), String.valueOf(i),this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_001_01"));
+				ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_001_01"));
 				excelValidDtolist.add(dto);
 			}
 		}else if(StringUtils.isEmpty(list.get(5))){
 			if(!DictCodeListExt3.金融产品其他代码类型_质押代码.getCodeName().equals(list.get(3))) {
-				ExcelValidDto dto = new ExcelValidDto (list.get (5), String.valueOf (i), this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_001"));
+//				ExcelValidDto dto = new ExcelValidDto (list.get (5), String.valueOf (i), this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_001"));
+				ExcelValidDto dto = new ExcelValidDto (validKey, String.valueOf (i), this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_001"));
 				excelValidDtolist.add (dto);
 			}
 		}
 
 		if(StringUtils.isNotEmpty(list.get(6))){
 			if(DictCodeListExt3.金融产品其他代码类型_质押代码.getCodeName().equals(list.get(3))){
-				ExcelValidDto dto = new ExcelValidDto(list.get(6), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_YADD_002_01"));
+//				ExcelValidDto dto = new ExcelValidDto(list.get(6), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_YADD_002_01"));
+				ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_YADD_002_01"));
 				excelValidDtolist.add(dto);
 			}
 		}else if(StringUtils.isEmpty(list.get(6))){
 			if(!DictCodeListExt3.金融产品其他代码类型_质押代码.getCodeName().equals(list.get(3))) {
-				ExcelValidDto dto = new ExcelValidDto (list.get (6), String.valueOf (i), this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_002"));
+//				ExcelValidDto dto = new ExcelValidDto (list.get (6), String.valueOf (i), this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_002"));
+				ExcelValidDto dto = new ExcelValidDto (validKey, String.valueOf (i), this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_002"));
 				excelValidDtolist.add (dto);
 			}
 		}
 
 		if(StringUtils.isNotEmpty(list.get(7))){
 			if(DictCodeListExt3.金融产品其他代码类型_质押代码.getCodeName().equals(list.get(3))){
-				ExcelValidDto dto = new ExcelValidDto(list.get(7), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_YADD_003_01"));
+//				ExcelValidDto dto = new ExcelValidDto(list.get(7), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_YADD_003_01"));
+				ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_YADD_003_01"));
 				excelValidDtolist.add(dto);
 			}
 		}else if(StringUtils.isEmpty(list.get(7))){
 			if(!DictCodeListExt3.金融产品其他代码类型_质押代码.getCodeName().equals(list.get(3))) {
-				ExcelValidDto dto = new ExcelValidDto (list.get (7), String.valueOf (i), this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_003"));
+//				ExcelValidDto dto = new ExcelValidDto (list.get (7), String.valueOf (i), this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_003"));
+				ExcelValidDto dto = new ExcelValidDto (validKey, String.valueOf (i), this.getMessage ("MST_ASSET_DECLARATION_CODE_E_YADD_003"));
 				excelValidDtolist.add (dto);
 			}
 		}
@@ -357,13 +379,16 @@ public class AssetDeclarationCodeMaintenanceService extends CommonExportService<
 		AssetDeclarationCodeMaintenanceDto equityInfoCheck1 = selectByPrimaryKey(assetDeclarationCodeMaintenanceDto);
 		AssetDeclarationCodeMaintenanceDto equityInfoCheck2 = selectByUniqueKey(assetDeclarationCodeMaintenanceDto);
 		if (equityInfoCheck1 != null) {
-			ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0007"));
+//			ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0007"));
+			ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0007"));
 			excelValidDtolist.add(dto);
 		}
 		if (equityInfoCheck2 != null) {
-			ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0008"));
+//			ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0008"));
+			ExcelValidDto dto = new ExcelValidDto(validKey, String.valueOf(i),this.getMessage("MST_ASSET_DECLARATION_CODE_E_0008"));
 			excelValidDtolist.add(dto);
 		}
+		// modify by etliu 20211206 end
 		return excelValidDtolist;
 	}
 
@@ -445,15 +470,17 @@ public class AssetDeclarationCodeMaintenanceService extends CommonExportService<
 	 */
 	private String getOthCodeTypeByName(String othCodeName) {
 		String OthCodeType = new String();
-		if (DictCodeListExt3.金融产品其他代码类型_回售代码.getCodeName().equals(othCodeName)) {
+		// add by etliu 20211207 start
+		// 交易所债券非交易类业务迁移
+		/*if (DictCodeListExt3.金融产品其他代码类型_回售代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_回售代码.getValue();
 		} else if (DictCodeListExt3.金融产品其他代码类型_质押代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_质押代码.getValue();
-		} else if (DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getCodeName().equals(othCodeName)) {
+		} else */if (DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue();
-		} else if (DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getCodeName().equals(othCodeName)) {
+		}/* else if (DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getValue();
-		} else if (DictCodeListExt3.金融产品其他代码类型_配债代码.getCodeName().equals(othCodeName)) {
+		} */else if (DictCodeListExt3.金融产品其他代码类型_配债代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_配债代码.getValue();
 		} else if (DictCodeListExt3.金融产品其他代码类型_配股代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_配股代码.getValue();
@@ -462,6 +489,7 @@ public class AssetDeclarationCodeMaintenanceService extends CommonExportService<
 		} else if (DictCodeListExt3.金融产品其他代码类型_基金分红设置代码.getCodeName().equals(othCodeName)) {
 			OthCodeType = DictCodeListExt3.金融产品其他代码类型_基金分红设置代码.getValue();
 		}
+		// add by etliu 20211207 end
 		return OthCodeType;
 	}
 

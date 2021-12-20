@@ -131,6 +131,8 @@ public class StandardCouponReConversionRateService extends BaseService<StandardC
      */
     public List<SelectOptionDto> getFinprodIdInfo(Map<String,Object> map){
         map.put("F01_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        map.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         List<SelectOptionDto> list = basicStandardCouponReConversionRateMapper.getFinprodIdInfo(map);
         return list;
     }
@@ -172,6 +174,8 @@ public class StandardCouponReConversionRateService extends BaseService<StandardC
                 }else{
                     param.put("finprodId", list.get(1));
                     param.put("F01_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                    param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+                    param.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
                     String result = basicStandardCouponReConversionRateMapper.checkFinprodIdInfo(param);
                     if(StringUtil.isEmpty(result)){
                         flag = false;
@@ -198,6 +202,8 @@ public class StandardCouponReConversionRateService extends BaseService<StandardC
                     //资产代码
                     param.put("finprodId", list.get(1));
                     param.put("F01_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                    param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+                    param.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
                     String finprodIdResult = basicStandardCouponReConversionRateMapper.checkFinprodIdInfo(param);
                     dto1.setFinprodId(finprodIdResult);
                     //开始日期
@@ -312,6 +318,8 @@ public class StandardCouponReConversionRateService extends BaseService<StandardC
             }else{
                 param.put("finprodId", list.get(1));
                 param.put("F01_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+                param.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
                 String result = basicStandardCouponReConversionRateMapper.checkFinprodIdInfo(param);
                 if(StringUtil.isEmpty(result) && !StringUtil.equals(list.get(1),"所有")){
                     flag = false;
@@ -357,9 +365,9 @@ public class StandardCouponReConversionRateService extends BaseService<StandardC
                     message.add("结束使用日期格式不对");
                 }else{
                     if(StringUtil.isNotEmpty(list.get(5)) && StringUtil.isNotEmpty(list.get(4))){
-                        if(DateUtil.parse(list.get(5)).getTime() < DateUtil.parse(list.get(4)).getTime()){
+                        if(DateUtil.parse(list.get(5)).getTime() <= DateUtil.parse(list.get(4)).getTime()){
                             flag = false;
-                            message.add("结束使用日期小于开始使用日期");
+                            message.add("结束使用日期小于等于开始使用日期");
                         }
                     }
                 }
@@ -367,15 +375,14 @@ public class StandardCouponReConversionRateService extends BaseService<StandardC
            //过滤重复数据
             if(flag){
                 String zTemp = list.get(0)+list.get(1)+list.get(4);
-                if(checkTemp.size() <= 1){
-                    checkTemp.add(zTemp);
-                }else{
-                    for(int j = 0 ; j < checkTemp.size() ; j++){
-                        if(StringUtil.equals(zTemp,checkTemp.get(j))){
-                            flag = false;
-                        }
+                for(int j = 0 ; j < checkTemp.size() ; j++){
+                    if(StringUtil.equals(zTemp,checkTemp.get(j))){
+                        message.add("文件内部数据重复");
+                        flag = false;
+                        break;
                     }
                 }
+                checkTemp.add(zTemp);
             }
             if(flag){
                 StdBondMoreConvrateInfo entity = new StdBondMoreConvrateInfo();
@@ -391,6 +398,8 @@ public class StandardCouponReConversionRateService extends BaseService<StandardC
                 }else{
                     param.put("finprodId", list.get(1));
                     param.put("F01_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                    param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+                    param.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
                     String finprodIdResult = basicStandardCouponReConversionRateMapper.checkFinprodIdInfo(param);
                     entity.setFinprodId(finprodIdResult);
                 }

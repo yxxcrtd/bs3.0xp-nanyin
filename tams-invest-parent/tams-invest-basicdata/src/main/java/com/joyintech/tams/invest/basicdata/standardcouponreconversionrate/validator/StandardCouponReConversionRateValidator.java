@@ -54,7 +54,7 @@ public class StandardCouponReConversionRateValidator implements BeanValidator {
                     resultList.add(new ValidMessage(this.getMessage("开始使用日期不允许小于平台日期，请重新设置！")));
                 }
                 if(StringUtil.isNotEmpty(dto.getEndDate())){
-                    if(DateUtil.parse(dto.getEndDate()).getTime() < DateUtil.parse(dto.getStartDate()).getTime()){
+                    if(DateUtil.parse(dto.getEndDate()).getTime() <= DateUtil.parse(dto.getStartDate()).getTime()){
                         resultList.add(new ValidMessage(this.getMessage("结束使用日期需大于开始使用日期，请重新设置！")));
                     }
                 }

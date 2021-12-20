@@ -584,7 +584,7 @@
 			resultMap="com.joyintech.tams.common.base.dao.SzdSjsgbMapper.BaseResultMap">
 		<include refid="com.joyintech.tams.common.base.dao.SzdSjsgbMapper.Sql_All_Data"></include>
 		<where>
-			IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(DATA_FILE) LIKE CONCAT(#{dataFile}, '%')) AND IS_SETTLE_TARGET = 'Y'
+			IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(DATA_FILE) LIKE CONCAT(#{dataFile}, '%'))
 			<foreach item="searchMapValue" index="searchMapKey" collection="searchMap">
 				AND ${searchMapKey} IN
 				<foreach collection="searchMapValue" item ="searchMapValueData" open="(" close=")" separator=",">
