@@ -119,6 +119,9 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     public String getPrivateprdFlagStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivateprdFlag());
     }
+    public String getCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债, this.getCcy());
+    }
 
     public String getBondtostockFlagStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getBondtostockFlag());
@@ -139,4 +142,5 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     public String getOrgAssetType3Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getOrgAssetType3());
     }
+
 }

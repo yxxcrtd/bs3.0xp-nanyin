@@ -783,11 +783,15 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
         return SysDataUtil.getNameFromDataDict(DictCode.产品运作模式, this.getOperateMode());
     }
 
-
-    public String getTermtypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.期限类型, this.getTermtype());
+    public String getCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债, this.getCcy());
     }
 
+
+    public String getTermtypeStr() {
+        String  code = SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_期限类型, this.getTermtype());
+        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.产品期限, this.getTermtype());
+    }
     public String getIsTransferStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsTransfer());
     }
@@ -822,9 +826,6 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
     public String getIsMarketFundStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsMarketFund());
     }
-
-
-
 
     public String getIsEndSubsistStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsEndSubsist());

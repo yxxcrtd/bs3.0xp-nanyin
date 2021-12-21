@@ -14,8 +14,10 @@
 			B.IVSTORIENTATION,
 			P.ccy,
 			B.OPERATE_MODE operateMode,
-			DECODE(p.OPERATE_MODE,'03','01') opentype,
-			P.CLOSETERMDAY term,
+			  CASE WHEN B.cash_mana_cate = '01' THEN '01'
+			  WHEN B.termtype IN ('06','08','09') THEN '02'
+			  ELSE '99' END opentype,
+			P.TERMDAYS term,
 			P.termtype,
 			b.is_transfer isTransfer,
 			decode(b.profit_type,'03','02','01') isBreakeven,

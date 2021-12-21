@@ -245,6 +245,11 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
         return SysDataUtil.getNameFromDataDict(DictCode.产品运作模式, this.getOperateMode());
     }
 
+
+    public String getCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债, this.getCcy());
+    }
+
     public String getExcFinSector() {
         return excFinSector;
     }
@@ -270,11 +275,12 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
     }
 
     public String getOpentypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.开放类型, this.getOpentype());
+        return SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_开放类型, this.getOpentype());
     }
 
     public String getTermtypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.期限类型, this.getTermtype());
+        String  code = SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_期限类型, this.getTermtype());
+        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.产品期限, this.getTermtype());
     }
 
     public String getIsTransferStr() {

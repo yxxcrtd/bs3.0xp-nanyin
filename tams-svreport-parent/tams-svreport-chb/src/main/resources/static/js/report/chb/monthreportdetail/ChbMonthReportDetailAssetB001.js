@@ -51,7 +51,7 @@ $(function() {
             { title: "主体名称", width : 120, field: 'subjectName',sortField:'subjectName'},
             { title: "交易对手名称", width : 120, field: 'rivalParty',sortField:'rivalParty'},
             { title: "利率", width : 120, field: 'rate', type:'money',sortField:'rate'},
-            { title: "币种", width : 120, field: 'ccy',sortField:'ccy'},
+            { title: "币种", width : 120, field: 'ccyStr',sortField:'ccy'},
             { title: "行业一级分类", width : 120, field: 'industry1Str',sortField:'industry1'},
             { title: "行业二级分类", width : 120, field: 'industry2Str',sortField:'industry2'},
             { title: "行业三级分类", width : 120, field: 'industry3Str',sortField:'industry3'},

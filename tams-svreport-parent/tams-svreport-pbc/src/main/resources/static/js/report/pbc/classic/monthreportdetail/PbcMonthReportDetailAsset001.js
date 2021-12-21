@@ -52,7 +52,7 @@ $(function() {
             { title: "主体名称", width : 120, field: 'subjectName',sortField:'subjectName'},
             { title: "交易对手名称", width : 120, field: 'rivalParty',sortField:'rivalParty'},
             { title: "利率", width : 120, field: 'rate', type:'money',sortField:'rate'},
-            { title: "币种", width : 120, field: 'ccy',sortField:'ccy'},
+            { title: "币种", width : 120, field: 'ccyStr',sortField:'ccy'},
             { title: "行业分类", width : 120, field: 'industryStr',sortField:'industry'},
             { title: "企业规模分类", width : 120, field: 'partyType1Str',sortField:'partyType1'},
             { title: "除回购和拆借外贷款所属地区", width : 120, field: 'buyPlaceStr',sortField:'buyPlace'},

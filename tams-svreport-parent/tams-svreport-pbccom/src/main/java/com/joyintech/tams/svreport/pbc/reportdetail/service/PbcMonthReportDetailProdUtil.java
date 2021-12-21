@@ -10,6 +10,8 @@ import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcReportProperycode;
 import com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto;
@@ -100,7 +102,9 @@ public class PbcMonthReportDetailProdUtil {
 
         pbcMonthPrdPositiondetail.setOrdIdentified(ordIdentified);
 
-        pbcMonthPrdPositiondetail.setTermdays(prdPosition.getTerm());
+        pbcMonthPrdPositiondetail.setTermdays(getTermDays(info.getOperateMode(),info.getOpenCircle(),info.getOpenCircleDays(),new BigDecimal(DateUtil.getBetweenDayNumber(info.getVdate(),info.getMdate()))));
+
+        pbcMonthPrdPositiondetail.setTermtype(getTermType(pbcMonthPrdPositiondetail.getTermdays()));
 
         pbcMonthPrdPositiondetail.setTerm(termid);
 
@@ -130,6 +134,7 @@ public class PbcMonthReportDetailProdUtil {
         insertBatch(prodDetailList,termid);
     }
 
+
     /**
      * 开放式净值型、开放式非净值型时取产品的开放天数，开放天数与产品基本信息中的【规律开放周期】的对应关系如下
      * @param openCircle
@@ -139,7 +144,7 @@ public class PbcMonthReportDetailProdUtil {
     public static BigDecimal getTermDays(String operateMode,String openCircle,BigDecimal openCircleDays,BigDecimal closetermday){
         BigDecimal days = null;
         if(DictCodeListExt2.产品运作模式_封闭式净值型.getValue().equals(operateMode)
-            ||DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(operateMode)){
+                ||DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(operateMode)){
             days = closetermday;
         }else{
             if(StringUtil.isNotEmpty(openCircle)){
@@ -166,6 +171,30 @@ public class PbcMonthReportDetailProdUtil {
 
         return days;
     }
+
+
+    public static String getTermType(BigDecimal termDays){
+        String code = DictCodeListExt3.人行月度明细_期限类型_无固定期限.getValue();
+        if(termDays.compareTo(new BigDecimal(30))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_1个月.getValue();
+        }else if(termDays.compareTo(new BigDecimal(30))>0&&termDays.compareTo(new BigDecimal(90))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_1到3个月.getValue();
+        }else if(termDays.compareTo(new BigDecimal(90))>0&&termDays.compareTo(new BigDecimal(180))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_3到6个月.getValue();
+        }else if(termDays.compareTo(new BigDecimal(180))>0&&termDays.compareTo(new BigDecimal(360))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_6到12个月.getValue();
+        }else if(termDays.compareTo(new BigDecimal(360))>0&&termDays.compareTo(new BigDecimal(720))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_1到2年.getValue();
+        }else if(termDays.compareTo(new BigDecimal(720))>0&&termDays.compareTo(new BigDecimal(1080))<=0){
+            code = DictCodeListExt3.人行月度明细_期限类型_2到3年.getValue();
+        }else if(termDays.compareTo(new BigDecimal(1080))>0){
+            code = DictCodeListExt3.中债月度明细_期限类型_3年以上.getValue();
+        }
+        return code;
+    }
+
+
+
 
 //    /**
 //     * 为详情赋值费用数据

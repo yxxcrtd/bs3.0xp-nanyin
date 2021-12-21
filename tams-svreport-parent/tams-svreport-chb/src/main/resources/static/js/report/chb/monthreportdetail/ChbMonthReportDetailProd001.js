@@ -40,7 +40,7 @@ $(function() {
             { title: "到期日", width : 200, field: 'mdateStr', sortField:'mdate'},
             { title: "募集方式", width : 130, field: 'raiseTypeStr',sortField:'raiseType'},
             { title: "投资性质", width : 130, field: 'ivstorientationStr',sortField:'ivstorientation'},
-            { title: "募集币种", width : 130, field: 'ccy',sortField:'ccy'},
+            { title: "募集币种", width : 130, field: 'ccyStr',sortField:'ccy'},
             { title: "产品运作模式", width : 130, field: 'operateModeStr',sortField:'operateMode'},
             { title: "开放类型", width : 130, field: 'opentypeStr',sortField:'opentype'},
             { title: "期限（天）", width : 130, field: 'term',sortField:'term'},

@@ -43,7 +43,7 @@ $(function() {
             { title: "到期日", width : 200, field: 'mdateStr', sortField:'mdate'},
             { title: "募集方式", width : 130, field: 'raiseTypeStr',sortField:'raiseType'},
             { title: "投资性质", width : 130, field: 'ivstorientationStr',sortField:'ivstorientation'},
-            { title: "币种", width : 130, field: 'ccy',sortField:'ccy'},
+            { title: "币种", width : 130, field: 'ccyStr',sortField:'ccy'},
             { title: "管理方式", width : 130, field: 'manageTypeStr',sortField:'manageType'},
             { title: "受托职责", width : 130, field: 'fiduciaryDutyStr',sortField:'fiduciaryDuty'},
             { title: "产品运作模式", width : 130, field: 'operateModeStr',sortField:'operateMode'},

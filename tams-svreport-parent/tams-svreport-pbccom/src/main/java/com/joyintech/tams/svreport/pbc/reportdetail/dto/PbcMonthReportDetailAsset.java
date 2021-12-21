@@ -132,6 +132,9 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
         return SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债, this.getBuyPlace());
     }
 
+    public String getCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债, this.getCcy());
+    }
 
     public String getOrgAssetType1Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产一级分类, this.getOrgAssetType1());
