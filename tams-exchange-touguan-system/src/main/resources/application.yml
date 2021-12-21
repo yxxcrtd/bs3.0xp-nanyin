@@ -21,4 +21,4 @@ spring:
   profiles:
     include:
       - framework
-      - cfets
+      - exchange-touguan
