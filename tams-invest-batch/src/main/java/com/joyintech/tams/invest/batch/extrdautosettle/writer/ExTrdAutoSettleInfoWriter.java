@@ -5,8 +5,12 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.tams.invest.batch.extrdautosettle.dto.ExTrdAutoSettleInfoDto;
 import com.joyintech.tams.invest.batch.extrdautosettle.dto.ExTrdAutoSettleInfoResult;
+import com.joyintech.tams.invest.batch.extrdautosettle.dto.ManualSettleDto;
+import com.joyintech.tams.invest.batch.extrdautosettle.dto.ManualSettleDtoResult;
+import com.joyintech.tams.invest.batch.extrdautosettle.service.ManualSettleService;
 import com.joyintech.tams.invest.batch.mproddivreindealgen.dto.MProdDivReinDealGenResult;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.workflow.engine.constant.OperationType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -18,29 +22,23 @@ import java.util.List;
 @Scope("prototype")
 public class ExTrdAutoSettleInfoWriter extends BaseWriter<NeedToWriteEntity> {
 
+    /**
+     * 手工交收服务
+     */
     @Autowired
-    private JoyinRestTemplate restTemplate;
+    private ManualSettleService manualSettleService;
 
     @Override
     public void write(List<? extends NeedToWriteEntity> items) throws Exception {
-        @SuppressWarnings("unchecked")
-        List<ExTrdAutoSettleInfoResult> resultList = (List<ExTrdAutoSettleInfoResult>)items;
-        if(CollectionUtils.isEmpty(resultList)){
-            return;
+        //取process处理完成的结果集
+        ManualSettleDtoResult manualSettleDtoResult= (ManualSettleDtoResult)items;
+
+        List<ManualSettleDto> resultList = manualSettleDtoResult.getManualSettleDtoList();
+
+        for (ManualSettleDto manualSettleDto: resultList) {
+            //调用页面交收处理逻辑
+            manualSettleService.doComplete(manualSettleDto, OperationType.NEW);
         }
-        for(ExTrdAutoSettleInfoResult result : resultList){
-            List<ExTrdAutoSettleInfoDto> autoSettleInfoDtos = result.getAutoSettleInfoDtos();
-            if(CollectionUtils.isEmpty(autoSettleInfoDtos)){
-                continue;
-            }
-            for(ExTrdAutoSettleInfoDto autoSettleInfoDto : autoSettleInfoDtos){
-                restTemplate.postForObject(
-                        ServiceApplication.TRADE_SERVICE_NAME + "/ManualSettle/settle", autoSettleInfoDto,
-                        Integer.class);
-                restTemplate.postForObject(
-                        ServiceApplication.TRADE_SERVICE_NAME + "/ManualSettle/settleCash", autoSettleInfoDto,
-                        Integer.class);
-            }
-        }
+
     }
 }

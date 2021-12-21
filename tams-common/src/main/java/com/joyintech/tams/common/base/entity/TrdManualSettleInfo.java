@@ -17,10 +17,10 @@ public class TrdManualSettleInfo extends BaseEntity {
 
     /**
      * 交收状态数据字典
-未交收
-已交收
-交收延期
-交收失败
+        未交收
+        已交收
+        交收延期
+        交收失败
      */
     private String settleStatus;
 
@@ -137,6 +137,23 @@ public class TrdManualSettleInfo extends BaseEntity {
     private String pledgeName;
 
     /**
+     * 市场代码
+     */
+    private String finprodMarketId;
+
+    /**
+     * 金融产品全称
+     */
+    private String finprodName;
+    /**
+     * 组合名称
+     */
+    private String portfolioName;
+
+    private String counterName;
+
+
+    /**
      * 取得 待交割序号
      * @return 待交割序号
      */
@@ -154,15 +171,11 @@ public class TrdManualSettleInfo extends BaseEntity {
 
     /**
      * 取得 交收状态数据字典
-未交收
-已交收
-交收延期
-交收失败
+        未交收
+        已交收
+        交收延期
+        交收失败
      * @return 交收状态数据字典
-未交收
-已交收
-交收延期
-交收失败
      */
     public String getSettleStatus() {
         return settleStatus;
@@ -170,15 +183,11 @@ public class TrdManualSettleInfo extends BaseEntity {
 
     /**
      * 设置 交收状态数据字典
-未交收
-已交收
-交收延期
-交收失败
+        未交收
+        已交收
+        交收延期
+        交收失败
      * @param settleStatus 交收状态数据字典
-未交收
-已交收
-交收延期
-交收失败
      */
     public void setSettleStatus(String settleStatus) {
         this.settleStatus = settleStatus == null ? null : settleStatus.trim();
@@ -488,5 +497,37 @@ public class TrdManualSettleInfo extends BaseEntity {
 
     public void setPledgeName(String pledgeName) {
         this.pledgeName = pledgeName;
+    }
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
+
+    public String getFinprodName() {
+        return finprodName;
+    }
+
+    public void setFinprodName(String finprodName) {
+        this.finprodName = finprodName;
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
+    public String getCounterName() {
+        return counterName;
+    }
+
+    public void setCounterName(String counterName) {
+        this.counterName = counterName;
     }
 }
