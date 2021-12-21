@@ -896,7 +896,9 @@
             T1.EXER_YIELD exerYield,
             T5.PARTY_ABBR ouPartyName,
             T4.PARTY_ABBR cpPartyName,
-            T7.TRADER_NAME ouTraderName,
+            CASE WHEN T7.TRADER_NAME IS NOT NULL THEN T7.TRADER_NAME
+            WHEN T13.USER_NAME IS NOT NULL THEN T13.USER_NAME
+            ELSE T1.OU_TRADER_ID END ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
             T1.SETTLE_DATE settleDate,
@@ -935,6 +937,7 @@
         LEFT JOIN FIN_PRODUCT_TYPE T10 ON T10.FINPROD_ID = T1.FINPROD_ID
         LEFT JOIN TRDQUTO_MATCH_INFO  T11 ON T11.PRE_TRADE_ID = T1.TOTLE_TRADE_ID
         LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL  T12 ON T12.TOTLE_TRADE_ID = T11.TRD_ID
+        LEFT JOIN SYS_USER T13 ON T13.USER_NAME = T1.OU_TRADER_ID
         WHERE T1.PS IN ('T01','T02')  AND ((T1.TRADE_STATUS ='01' and (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL = 'N')) OR (T1.TRADE_STATUS ='03' AND T1.IS_CANCEL = 'Y'))
         and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
         <if test="quoteIds != null and quoteIds.size() > 0">
@@ -953,6 +956,9 @@
                 #{item}
             </foreach>
         </if>
+        <if test="loginUserId !=null and loginUserId !=''">
+            AND T1.CREATE_USER = #{loginUserId}
+        </if>
         UNION ALL
         <!--回售登记数据-->
         SELECT
@@ -969,7 +975,9 @@
             T1.EXER_YIELD exerYield,
             T5.PARTY_ABBR ouPartyName,
             T4.PARTY_ABBR cpPartyName,
-            T7.TRADER_NAME ouTraderName,
+            CASE WHEN T7.TRADER_NAME IS NOT NULL THEN T7.TRADER_NAME
+            WHEN T13.USER_NAME IS NOT NULL THEN T13.USER_NAME
+            ELSE T1.OU_TRADER_ID END ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
             T1.SETTLE_DATE settleDate,
@@ -1008,6 +1016,7 @@
         LEFT JOIN FIN_PRODUCT_TYPE T10 ON T10.FINPROD_ID = T1.FINPROD_ID
         LEFT JOIN TRDQUTO_MATCH_INFO  T11 ON T11.PRE_TRADE_ID = T1.TOTLE_TRADE_ID
         LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL  T12 ON T12.TOTLE_TRADE_ID = T11.TRD_ID
+        LEFT JOIN SYS_USER T13 ON T13.USER_NAME = T1.OU_TRADER_ID
         WHERE T1.PS = 'T03'  AND ((T1.TRADE_STATUS ='01' and (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL = 'N')) OR (T1.TRADE_STATUS ='03' AND T1.IS_CANCEL = 'Y'))  AND NOT EXISTS (SELECT 1 FROM TRDQUTO_MATCH_INFO tmi WHERE PRE_TRADE_ID = T1.TOTLE_TRADE_ID and (TRD_CONF_STATUS = #{CONFIRM_STATUS_0} or TRD_CONF_STATUS is null))
         <![CDATA[and T1.TRADE_DATE <= to_date(#{platDate}, 'yyyy-MM-dd') ]]>
         <if test="quoteIds != null and quoteIds.size() > 0">
@@ -1026,6 +1035,9 @@
                 #{item}
             </foreach>
         </if>
+        <if test="loginUserId !=null and loginUserId !=''">
+            AND T1.CREATE_USER = #{loginUserId}
+        </if>
         UNION ALL
         <!--流程中数据-->
         SELECT
@@ -1041,7 +1053,9 @@
             T1.EXER_YIELD exerYield,
             T5.PARTY_ABBR ouPartyName,
             T4.PARTY_ABBR cpPartyName,
-            T7.TRADER_NAME ouTraderName,
+            CASE WHEN T7.TRADER_NAME IS NOT NULL THEN T7.TRADER_NAME
+            WHEN T13.USER_NAME IS NOT NULL THEN T13.USER_NAME
+            ELSE T1.OU_TRADER_ID END ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
             T1.SETTLE_DATE settleDate,
@@ -1077,7 +1091,8 @@
             AND T8.OPER_TYPE = #{OPR_TYPE_09}
         </if>
         LEFT JOIN FIN_PRODUCT_TYPE T10 ON T10.FINPROD_ID = T1.FINPROD_ID
-         WHERE PS IN ('T01','T02','T03') and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
+        LEFT JOIN SYS_USER T13 ON T13.USER_NAME = T1.OU_TRADER_ID
+        WHERE PS IN ('T01','T02','T03') and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
         <if test="quoteIds != null and quoteIds.size() > 0">
             and T1.TOTLE_TRADE_ID in
             <foreach collection="quoteIds" item="item" open="(" close=")" separator=",">
@@ -1093,6 +1108,9 @@
             <foreach collection="quoteTypes" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="loginUserId !=null and loginUserId !=''">
+            AND T1.CREATE_USER = #{loginUserId}
         </if>
         ) TT
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'STATUS_VALID')D ON
