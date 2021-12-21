@@ -1037,7 +1037,7 @@ from
         TO_CHAR(T1.entrust_date, 'yyyy-MM-dd')  as etrDate,
         null as approver,
         T1.REMARK as remark,
-        round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 execProcess,
+        round((NVL(T4.FINISH_AMT*100,0)+NVL(T5.ENT_FINISH_AMT*100,0))/(T1.ENTRUST_NUM*100),4)*100 execProcess,
         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess,
         NVL(T5.FINISH_AMT,0)/100  as execFinishAmt,
         (NVL(T1.ENTRUST_NUM,0)/100 - NVL(T5.FINISH_AMT,0)/100) as execRemainderAmt,
@@ -1062,8 +1062,18 @@ from
         (
         SELECT
         ENTRUST_ID,
-        SUM(
-        FINISH_AMT) as FINISH_AMT
+        SUM(FINISH_AMT) AS FINISH_AMT
+        FROM
+        ETR_QUOTE_FINISH_STATUS
+        GROUP BY
+        ENTRUST_ID) T4
+        ON  T1.ENTRUST_ID = T4.ENTRUST_ID
+        LEFT JOIN
+        (
+        SELECT
+        ENTRUST_ID,
+        SUM(FINISH_AMT) as FINISH_AMT,
+        SUM(ENT_FINISH_AMT) AS ENT_FINISH_AMT
         FROM
         ETR_FINISH_STATUS
         GROUP BY
@@ -1146,7 +1156,7 @@ from
         TO_CHAR(T1.ENTRUST_DATE, 'yyyy-MM-dd') as etrDate,
         nextApp.nowUserId as approver,
         T1.REMARK as remark,
-        round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 execProcess,
+        round((NVL(T4.FINISH_AMT*100,0)+NVL(T5.ENT_FINISH_AMT*100,0))/(T1.ENTRUST_NUM*100),4)*100 execProcess,
         round(NVL(T5.FINISH_AMT,0)*100/(T1.ENTRUST_NUM*100),4)*100 transProcess,
         NVL(T5.FINISH_AMT,0)/100  as execFinishAmt,
         (NVL(T1.ENTRUST_NUM,0)/100- NVL(T5.FINISH_AMT,0)/100) as execRemainderAmt,
@@ -1171,7 +1181,18 @@ from
         (
         SELECT
         ENTRUST_ID,
-        SUM(FINISH_AMT) as FINISH_AMT
+        SUM(FINISH_AMT) AS FINISH_AMT
+        FROM
+        ETR_QUOTE_FINISH_STATUS
+        GROUP BY
+        ENTRUST_ID) T4
+        ON  T1.ENTRUST_ID = T4.ENTRUST_ID
+        LEFT JOIN
+        (
+        SELECT
+        ENTRUST_ID,
+        SUM(FINISH_AMT) as FINISH_AMT,
+        SUM(ENT_FINISH_AMT) AS ENT_FINISH_AMT
         FROM
         ETR_FINISH_STATUS
         GROUP BY

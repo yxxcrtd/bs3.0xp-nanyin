@@ -2101,7 +2101,7 @@ public class CfetsEtrIbBondinfoService extends BaseService{
     public Message<AjaxResult> closeDelegate( CfetsEtribBondInfo003Dto dto) throws Exception{
         //对选择的数据进行check
         AjaxResult ajaxResult = closeDelegateCheckMethod(dto);
-        if (!com.joyintech.background.component.common.pack.common.util.StringUtil.isEmptyList(ajaxResult.getErrorList())) {
+        if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return new Message<AjaxResult>().success().setData(ajaxResult);
         }
         List<CfetsEtribBondInfo003Dto> dtolist = dto.getSelectedItem();

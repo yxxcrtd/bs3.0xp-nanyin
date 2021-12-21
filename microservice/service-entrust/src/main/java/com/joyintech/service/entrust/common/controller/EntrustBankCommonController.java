@@ -40,7 +40,7 @@ public class EntrustBankCommonController {
         			errorList.add(new ValidMessage("已接收、已退回和已撤回,才能执行关闭操作！"+"指令编号："+entrustId));
         		}
     			else if(StringUtil.equals("2", flag)){
-        			errorList.add(new ValidMessage("已接收指令，指令完成度要为0，且不存在在途委托/报价/交易，才可进行关闭。"+"指令编号："+entrustId));
+        			errorList.add(new ValidMessage("已接收指令，指令执行进度、成交进度要为0，且不存在在途委托/报价/交易，才可进行关闭。"+"指令编号："+entrustId));
         		}
         	}
     	}

@@ -79,6 +79,8 @@
             <result column="MDATE" property="finmdate" jdbcType="VARCHAR" />
             <result column="CCY" property="ccy" jdbcType="VARCHAR" />
             <result column="PRICE" property="price" jdbcType="DOUBLE" />
+            <result column="EXERCISE_DATE" property="exerciseDate" jdbcType="VARCHAR" />
+            <result column="ACT_EXERCISE_DATE" property="actExerciseDate" jdbcType="VARCHAR" />
         </association>
     </resultMap>
     <select id="getfinprodIdForAdd" resultMap="finprodIdMap">
@@ -209,26 +211,35 @@
         to_char(T1.VDATE,'yyyy-MM-dd') VDATE,
         to_char(T1.MDATE, 'yyyy-MM-dd') MDATE,
         T1.CCY,
-        pr.price as PRICE
+        pr.price as PRICE,
+        to_char(pr.exercise_date,'yyyy-MM-dd') EXERCISE_DATE,
+        to_char(pr.act_exercise_date, 'yyyy-MM-dd') ACT_EXERCISE_DATE
         from ptl_sec_position_rule ptl
-        INNER JOIN
-        PTL_PORTFOLIO_AUTHORITY PPA
-        ON ptl.PORTFOLIO_ID = PPA.PORTFOLIO_ID
         <if test="userId != null and userId != ''">
+            INNER JOIN PTL_PORTFOLIO_AUTHORITY PPA
+            ON ptl.PORTFOLIO_ID = PPA.PORTFOLIO_ID
             AND PPA.USER_ID = #{userId}
         </if>
         inner join fin_product T1
         on ptl.finprod_id=T1.finprod_id
         and  T1.is_right='Y'
-        inner join FIN_EXERCISE_PLAN p
+     <!--   inner join FIN_EXERCISE_PLAN p
         on p.finprod_id=T1.finprod_id
-        and p.finprod_id=ptl.finprod_id
-        left join (
+        and p.finprod_id=ptl.finprod_id-->
+        inner join (
             select row_number() over(partition by pd.finprod_id order by pd.exercise_date) idx,
             pd.finprod_id,
-            pd.exercise_price as price
+            pd.exercise_price as price,
+            pd.exercise_date,
+            pd.act_exercise_date
             from FIN_EXERCISE_PLAN pd
             where pd.exercise_date<![CDATA[>]]>#{platDate}
+            <if test="ps != null and ps.equals('T03')">
+                and pd.exercise_type='02'
+            </if>
+            <if test="ps != null and ps.equals('T39')">
+                and pd.exercise_type='01'
+            </if>
         )pr
         on pr.finprod_id=T1.finprod_id
         and pr.finprod_id=ptl.finprod_id
@@ -240,7 +251,7 @@
             AND T1.TRADE_MARKET in(#{TRADE_PLACE_01},#{TRADE_PLACE_02})
             and  T1.is_right='Y'
             and  ptl.cdate=#{platDate}
-            and p.exercise_date>#{platDate}
+        <!--    and p.exercise_date>#{platDate}-->
             and ptl.amount>0
             <if test="search != null and !search.equals('')">
                 and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))

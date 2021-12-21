@@ -2,7 +2,7 @@ package com.joyintech.tams.cfets.trdredeem.dao;
 
 
 
-import com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryRegInfoListResponse;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemRegInfoListResponse;
 import org.springframework.stereotype.Repository;
 
@@ -26,5 +26,12 @@ public interface CfetsTrdRedeemMapper {
      * @return
      */
     List<CfetsTrdRedeemRegInfoListResponse> queryAllRedeemRegInfoList(Map<String, Object> pageParam);
+
+    /**
+     * 查询组合分配
+     * @param pageParam
+     * @return
+     */
+    List<PtlAllocationDto> queryCfetsBussCombDisList(Map pageParam);
 
 }

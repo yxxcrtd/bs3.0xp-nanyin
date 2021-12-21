@@ -1076,6 +1076,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
                 || etrFinishAmtDto.getSumFinishPercent().compareTo(bigDecimal) == 0) {
                 // 如果满足，则调用投资委托组件的更新委托状态接口，将委托状态设置为“已完成”
                 etrInvestInfoServiceImpl.updateDelegateStatus(etrFinishAmtDto.getEntrustId(), DictCodeList.委托状态_已完成.getValue());
+
             }
         }
         // 判断完成委托是否完成

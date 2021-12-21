@@ -21,25 +21,25 @@
         return object;
     }
     function getBussCombDistribtTableParams() {
-       var entityBussCombDistritList=entity_BussCombDistribtList||[];
+       var entityBussCombDistritList=ptlAllocatios||[];
 
        return entityBussCombDistritList;
     }
     var colsCombDistribt = [
         {
-            field: 'portfolioId', width: 100, title: '组合代码',  sortable: false
+            field: 'portfolioId', width: 290, title: '组合代码',  sortable: false
             ,disabled:true
         }
         ,{
-            field: 'portfolioIdName', width: 100, title: '组合名称',  sortable: false
+            field: 'portfolioName', width: 290, title: '组合名称',  sortable: false
             ,disabled:true
         }
         ,{
-            field: 'secManageAcctId', width: 100, title: '证券账户',  sortable: false
+            field: 'secManageAcctId', width: 280, title: '证券账户',  sortable: false
             ,disabled:true
         }
        ,{
-           field: 'shareAmt', width: 100, title: '账户持仓（万元）',  sortable: false
+           field: 'shareAmt', width: 280, title: '账户持仓（万元）',  sortable: false
            ,disabled:true
            ,type: 'number'
            ,digit: 2

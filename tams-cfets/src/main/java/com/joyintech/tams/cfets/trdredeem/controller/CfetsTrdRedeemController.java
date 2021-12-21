@@ -27,6 +27,7 @@ import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemRegInfoListRequest;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemRegInfoListResponse;
 import com.joyintech.tams.cfets.trdredeem.service.CfetsTrdRedeemService;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -62,10 +63,15 @@ public class CfetsTrdRedeemController extends BaseController {
 
         //数据字典初始化数据
         initPageParams.put("STATUS_VALID", this.getSelectDataFromDataDic(DictCode.有效状态, null));
+        initPageParams.put("CCY", this.getSelectDataFromDataDic(DictCode.币种, null));
+        initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
+        initPageParams.put("PS_T39", DictCodeList.交易方向_行权_赎回.getValue());
+        initPageParams.put("NEED_WORKFLOW", true);
+
         //pageId
         initPageParams.put("pageId", "CfetsTrdRedeem001");
         //当前平台日
-        initPageParams.put("platDate", DateUtil.platDateFromCache());
+        initPageParams.put("platDate", DateUtil.format(DateUtil.platDateFromCache()));
         return new Message<Map<String, Object>>(initPageParams).success();
     }
     @ApiOperation(value = "赎回登记列表分页查询", notes = "赎回登记列表分页查询")
