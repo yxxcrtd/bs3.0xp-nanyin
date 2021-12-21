@@ -49,7 +49,7 @@
         reg.repo_term as termDays,
         reg.trade_amt as tradeAmt,
         reg.totle_trade_id as busiCode,
-        reg.ou_trader_id as trader,
+        nvl(t3.real_name,reg.ou_trader_id) as trader,
         reg.trade_date as tradeDate,
         reg.counter_id as counterId,
         mcci.PARTY_ABBR as counterIdName,
@@ -95,6 +95,8 @@
         left join stl_sec_acct_info stlinfo
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
+        left join sys_user t3 on t3.user_name=reg.ou_trader_id
+
         where reg.trade_date= #{sysDate,jdbcType=DATE} and reg.trade_status='01'
         and reg.ps in ('T01','T02','03','04')
         <if test="isNullSelect != null and isNullSelect != ''">
@@ -161,7 +163,7 @@
         reg.repo_term as termDays,
         reg.trade_amt as tradeAmt,
         reg.totle_trade_id as busiCode,
-        reg.ou_trader_id as trader,
+        nvl(t3.real_name,reg.ou_trader_id) as trader,
         reg.trade_date as tradeDate,
         reg.counter_id as counterId,
         mcci.PARTY_ABBR as counterIdName,
@@ -205,6 +207,7 @@
         left join stl_sec_acct_info stlinfo
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON reg.counter_id= mcci.party_id
+        left join sys_user t3 on t3.user_name=reg.ou_trader_id
         where reg.trade_date= #{sysDate,jdbcType=DATE}
         and reg.ps in ('T01','T02','03','04')
         <if test="isNullSelect != null and isNullSelect != ''">
@@ -380,7 +383,7 @@
         null as termDays,
         ibd.fprice_amt as tradeAmt,
         ib.quote_id as busiCode,
-        ib.ou_trader_id as trader,
+        nvl(t4.TRADER_NAME,ib.ou_trader_id) as trader,
         ib.quote_date as tradeDate,
         ibd.cp_party_id as counterId,
         mcci.PARTY_ABBR as counterIdName,
@@ -426,7 +429,7 @@
         left join stl_sec_acct_info stlinfo
         on ib.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ibd.cp_party_id= mcci.party_id
-
+        left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=ib.ou_trader_id
         where ib.quote_date= #{sysDate,jdbcType=DATE}
         and ib.trade_status='07'
         <if test="isNullSelect != null and isNullSelect != ''">
@@ -487,7 +490,7 @@
         ic.term as termDays,
         ic.fprice_amt as tradeAmt,
         ic.quote_id as busiCode,
-        ic.ou_trader_id as trader,
+        nvl(t4.TRADER_NAME,ic.ou_trader_id)  as trader,
         ic.quote_date as tradeDate,
         ic.cp_party_id as counterId,
         mcci.PARTY_ABBR as counterIdName,
@@ -536,6 +539,7 @@
         left join stl_sec_acct_info stlinfo
         on ic.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mcci ON ic.cp_party_id= mcci.party_id
+        left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=ic.ou_trader_id
         where ic.quote_date= #{sysDate,jdbcType=DATE} and ic.TRADE_STATUS='07'
         <if test="isNullSelect != null and isNullSelect != ''">
             and match.trd_conf_status is null
@@ -647,10 +651,8 @@
         reg.trade_status as tradeStatus,
         reg.p_trade_id as ptradeId
         from reg_fin_product_deal_total reg
-        left join fin_product fp
-        on fp.finprod_id=reg.finprod_id
-        left join reg_fin_product_deal_total_add regAdd
-        on reg.totle_trade_id=regAdd.Totle_Trade_Id
+        left join fin_product fp on fp.finprod_id=reg.finprod_id
+        left join reg_fin_product_deal_total_add regAdd on reg.totle_trade_id=regAdd.Totle_Trade_Id
         where reg.totle_trade_id= #{totleTradeId,jdbcType=VARCHAR}
     </select>
     <select id="selectIbuInfoByKey" resultType="com.joyintech.tams.cfets.trdconfirm.dto.CfetsTrdConfirmRegInfoListResponse">
@@ -674,8 +676,8 @@
         ib.remark as remark,
         ib.quote_id as totleTradeId,
         ib.OU_PARTY_ID as ouPartyId,
-        ib.OU_TRADER_ID as ouTraderId,
-        ibd.CP_PARTY_ID as cpPartyId,
+        t3.user_name  as ouTraderId,
+        t1.counter_id as cpPartyId,
         ibd.CP_TRADER as cpTrader,
         i.OURDEPOSITACCOUNTNUMBER as secManageAcctId,
         ib.settle_date as settleDate,
@@ -706,6 +708,9 @@
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM  INTERF_CSTP_TRADE GROUP BY EXECID)	II ON  II.EXECID = I.EXECID AND II.UPDATETIME = I.UPDATETIME
         )i
         on match.exe_id=i.execid
+        left join MST_COUNTER_PARTY t1 on t1.party_id=ibd.CP_PARTY_ID
+        left join sys_user_add sua on  sua.ibu_trader=ib.OU_TRADER_ID
+        left join sys_user t3 on t3.user_id=sua.user_id
 
         where  ib.quote_id= #{totleTradeId,jdbcType=VARCHAR} and  ib.trade_status='07'
     </select>

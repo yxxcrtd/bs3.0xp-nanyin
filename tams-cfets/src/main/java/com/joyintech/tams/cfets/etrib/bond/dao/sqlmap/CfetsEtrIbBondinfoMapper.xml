@@ -1194,7 +1194,7 @@ from
                 WHERE A.WORKFLOW_ID = B.WORKFLOW_ID)
                 AND T.SEQ_NO = A.SEQ_NO)
                 AND T.PROCESS_STATE in ('ING')
-                and T.BUSINESS_TYPE='ETR02') nextApp
+                and T.BUSINESS_TYPE='ETR52') nextApp
         on T1.Workflow_Id=nextApp.workFlowId
         where T1.ENTRUST_NUM!=0 and
         T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
@@ -1257,8 +1257,8 @@ from
                 or to_char(aaa.shareNum,'FM9999999999999990.99')=#{search} or to_char(aaa.shareNum)=#{search}
                 or to_char(aaa.unitPrice,'FM99990.9990')=#{search} or  aaa.unitPrice||'' =#{search}
                 or to_char(aaa.allPrice,'FM99990.9990')=#{search} or  aaa.allPrice||'' =#{search}
-                or to_char(aaa.matureYield,'FM99990.9990')=#{search} or  aaa.matureYield||'' =#{search}
-                or to_char(aaa.exerYield,'FM99990.9990')=#{search} or  aaa.exerYield||'' =#{search}
+                or to_char(aaa.matureYield*100,'FM99990.9990')=#{search} or  aaa.matureYield||'' =#{search}
+                or to_char(aaa.exerYield*100,'FM99990.9990')=#{search} or  aaa.exerYield||'' =#{search}
                 or to_char(aaa.execProcess,'FM99990.9990')=#{search} or  aaa.execProcess||'' =#{search}
                 or to_char(aaa.transProcess,'FM99990.9990')=#{search} or  aaa.transProcess||'' =#{search}
                 or  aaa.etrDate||'' =#{search}

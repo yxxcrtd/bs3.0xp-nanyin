@@ -269,7 +269,7 @@ public class CfetsEtribBondInfo003Service extends CommonExportService<CfetsEtrib
                 "指令日期"+ ":" + DateUtil.format(entity.getEtrDate());*/
         return  "指令日期"+ ":" + DateUtil.format(entity.getEtrDate())+"-"+
                 "资产简称" + ":" + entity.getFinprodAbbr()  + "-"+
-                "券面总额"+ ":" +  ArithmeticUtil.divide(entity.getEntrustNum(),new BigDecimal(10000),2)+"万元";
+                "券面总额"+ ":" +  ArithmeticUtil.divide(entity.getTradeAmt(),new BigDecimal(10000),2)+"万元";
     }
     /**
      *

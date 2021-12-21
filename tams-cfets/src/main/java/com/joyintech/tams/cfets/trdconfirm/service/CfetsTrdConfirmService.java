@@ -747,7 +747,8 @@ public class CfetsTrdConfirmService extends BaseService{
 
         // 是否外部交易
         entity.setIsOutTrade(DictCodeList.是否_是.getValue());
-
+        //本方
+        entity.setOuPartyId(dtoReg.getOuPartyId());
         // 本方交易员
         entity.setTrader(dtoReg.getOuTraderId());
         // 交易对手
@@ -929,9 +930,10 @@ public class CfetsTrdConfirmService extends BaseService{
         FinProduct finProduct = finProductMapper.selectByPrimaryKey(dtoReg.getFinprodId());
         // 组装交易实体类
         TrdBondInvestTradeDto bondTradeDto = new TrdBondInvestTradeDto();
-        if(StringUtil.isNotEmpty(dtoReg.getCpPartyId())){
+        /*if(StringUtil.isNotEmpty(dtoReg.getCpPartyId())){
             bondTradeDto.setCounterId(cfetsTrdConfirmMapper.selectCounterId(dtoReg.getCpPartyId()));
-        }
+        }*/
+        bondTradeDto.setCounterId(dtoReg.getCpPartyId());
         bondTradeDto.setCounterTrader(dtoReg.getCpTrader());
         bondTradeDto.setTrader(dtoReg.getOuTraderId());
         bondTradeDto.setPs(dtoReg.getPs());
@@ -1029,7 +1031,8 @@ public class CfetsTrdConfirmService extends BaseService{
 
         // 是否外部交易
         entity.setIsOutTrade(DictCodeList.是否_是.getValue());
-
+        //本方
+        entity.setOuPartyId(dtoReg.getOuPartyId());
         // 本方交易员
         entity.setTrader(bondTradeDto.getTrader());
         // 交易对手
@@ -1230,6 +1233,7 @@ public class CfetsTrdConfirmService extends BaseService{
         trdDealTotalAdd.setLendinFpriceAmt2(dtoReg.getLendinIntAmt() == null ? BigDecimal.ZERO : dtoReg.getLendinIntAmt());
        // trdDealTotalAdd.setAssetRecommandOrg(dtoReg.getAssetRecommandOrg());
         //trdDealTotalAdd.setEntrustId(dtoReg.getEntrustId());
+        trdDealTotalAdd.setOuPartyId(dtoReg.getOuPartyId());
         return trdDealTotalAdd;
     }
     private void 生成组合交易(CfetsRegFinProductDealDto dto, String 交易编号, List<PtlTrade> ptlTrades) {
@@ -1457,10 +1461,24 @@ public class CfetsTrdConfirmService extends BaseService{
     public String trdConfirmSaveCheckMethod(CfetsTrdConfirmRegInfoListResponse dto) {
         String returnMsg ="";
         List<CfetsTrdConfirmRegInfoListResponse> selectedItem = dto.getSelectedItem();
-        AjaxResult ajaxResult=new AjaxResult();
+        if (StringUtil.isEmptyList(selectedItem)) {
+            return "未选择交易数据,请重新选择！";
+        }
         if(StringUtil.isNotEmpty(dto.getIsDirectTrd()) && StringUtil.equals(dto.getIsDirectTrd(),DictCodeList.是否_是.getValue())){
+            String cfets_manualconfirm_bond=CacheUtil.getSysParam("IS_CFETSSECTRD_MANUALCONFIRM_FLAG");
+            String cfets_manualconfirm_repo=CacheUtil.getSysParam("IS_CFETSREPOTRD_MANUALCONFIRM_FLAG");
             if(StringUtil.isNotEmpty(selectedItem)){
                 for(CfetsTrdConfirmRegInfoListResponse item:selectedItem){
+                    if(StringUtil.equals(cfets_manualconfirm_bond,DictCodeList.是否_否.getValue())
+                            && StringUtil.equals(item.getFinprodType2(),"01")
+                    ){
+                        return "根据参数配置，银行间债券不可手工确认！";
+                    }
+                    if(StringUtil.equals(cfets_manualconfirm_repo,DictCodeList.是否_否.getValue())
+                            && StringUtil.equals(item.getFinprodType2(),"02")
+                    ){
+                        return "根据参数配置，银行间回购不可手工确认！";
+                    }
                     if(StringUtil.equals(item.getEffectiveStatus(),DictCodeListExt1.交易流程状态_流程中.getValue())){
                         return "存在流程中的交易数据，请重新选择！";
                     }

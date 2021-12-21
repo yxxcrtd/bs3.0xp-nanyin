@@ -356,8 +356,10 @@ public class CfetsEtrIbfindEtrinfoResponse {
     }
 
     public String getSettleSpreedName() {
-        return "T+" + this.getSettleSpreed();
-
+        if(StringUtil.isNotEmpty(this.getSettleSpreed())){
+            return "T+" +this.getSettleSpreed();
+        }
+        return null;
     }
 
     public void setSettleSpreedName(String settleSpreedName) {

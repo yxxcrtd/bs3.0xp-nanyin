@@ -672,6 +672,18 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
      */
     private BigDecimal bidPrice;
 
+    /**
+     * 本方
+     * @return
+     */
+    private String ouPartyId;
+
+    /**
+     * 本方交易员
+     * @return
+     */
+    private String ouTraderId;
+
     public BigDecimal getBidPrice() {
         return bidPrice;
     }
@@ -2408,5 +2420,21 @@ public class CfetsTrdBondInvestTradeDto extends TrdFinProductDealTotal implement
 
     public void setRegIbuId(String regIbuId) {
         this.regIbuId = regIbuId;
+    }
+
+    public String getOuPartyId() {
+        return ouPartyId;
+    }
+
+    public void setOuPartyId(String ouPartyId) {
+        this.ouPartyId = ouPartyId;
+    }
+
+    public String getOuTraderId() {
+        return ouTraderId;
+    }
+
+    public void setOuTraderId(String ouTraderId) {
+        this.ouTraderId = ouTraderId;
     }
 }

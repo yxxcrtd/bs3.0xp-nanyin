@@ -2391,7 +2391,7 @@
         ,ptpd.REFUND_AMOUNT as REFUND_AMOUNT
         ,TRD_PRODUCT_DEAL.BUSINESS_MODEL as businessModel
         ,tpda.ou_party_id as ouPartyId
-        ,tpda.ou_trader_id as ouTraderId
+        ,tpd.TRADER as ouTraderId
         ,match.exe_id as execId
         ,fp.Finprod_Market_Id as finprodMarketId
         ,decode(tpd.settle_speed,'0','01','1','02','2','03') as settleSpeedStr
