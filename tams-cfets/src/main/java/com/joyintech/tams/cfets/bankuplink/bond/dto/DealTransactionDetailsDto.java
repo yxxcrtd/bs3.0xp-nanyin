@@ -350,7 +350,9 @@ public class DealTransactionDetailsDto {
     public String getValidStatusStr() {
         if (StringUtils.equals(this.getValidStatus(), BussinessDictCodeList.有效状态_流程中.getValue())) {
             return BussinessDictCodeList.有效状态_流程中.getCodeName();
-        } else {
+        } else if (StringUtils.equals(this.getValidStatus(), BussinessDictCodeList.有效状态_撤销.getValue())) {
+            return BussinessDictCodeList.有效状态_撤销.getCodeName();
+        }else{
             return BussinessDictCodeList.有效状态_有效.getCodeName();
         }
     }
