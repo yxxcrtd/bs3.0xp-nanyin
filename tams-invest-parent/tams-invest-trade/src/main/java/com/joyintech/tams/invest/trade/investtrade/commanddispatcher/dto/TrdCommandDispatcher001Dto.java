@@ -11,20 +11,17 @@
 package com.joyintech.tams.invest.trade.investtrade.commanddispatcher.dto;
 
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  *  指令分发dto
@@ -449,5 +446,15 @@ public class TrdCommandDispatcher001Dto extends EtrEntrust{
 	}
 	public void setOtherPs(String otherPs) {
 		this.otherPs = otherPs;
+	}
+
+	private String xyFlag;
+
+	public String getXyFlag() {
+		return xyFlag;
+	}
+
+	public void setXyFlag(String xyFlag) {
+		this.xyFlag = xyFlag;
 	}
 }

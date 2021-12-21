@@ -3508,7 +3508,7 @@
             targetTypeChange();
         });
         // 委托数量
-        $("#entrustNum_jj,#entrustNum_dz,#entrustNum_gd").change(function() {
+        $("#entrustNum_jj,#entrustNum_dz,#entrustNum_gd,#ps_jj").change(function() {
             entrustNumChange();
         });
         // 委托金额

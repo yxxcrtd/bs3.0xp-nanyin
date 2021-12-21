@@ -193,7 +193,10 @@
             
                   T1.FINPROD_TYPE2 ,
                   T1.SEC_MANAGE_ACCT_ID,
-                  DATE_FORMAT(ptpd.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+                  <!--modify by fuyongsheng 数据的交易日期是到期数据的交易日期 start-->
+                  <!--DATE_FORMAT(ptpd.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,-->
+                  DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+                  <!--modify by fuyongsheng 数据的交易日期是到期数据的交易日期 end-->
                   DATE_FORMAT(T4.VDATE, '%Y-%m-%d') vDate,
                   DATE_FORMAT(T4.MDATE, '%Y-%m-%d') mDate,
                   NULL TERM,
@@ -256,7 +259,10 @@
             
               T1.FINPROD_TYPE2 ,
                T1.SEC_MANAGE_ACCT_ID,
-              DATE_FORMAT(ptpd.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+              <!--modify by fuyongsheng 交易日期取到期数据的交易日期 start-->
+              <!--DATE_FORMAT(ptpd.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,-->
+              DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+              <!--modify by fuyongsheng 交易日期取到期数据的交易日期 end-->
               DATE_FORMAT(T4.VDATE, '%Y-%m-%d') vDate,
               DATE_FORMAT(T4.MDATE, '%Y-%m-%d') mDate,
               NULL TERM,
@@ -265,10 +271,10 @@
               DATE_FORMAT(T1.SETTLE_DATE, '%Y-%m-%d') SETTLE_DATE,
               T3.THEORY_INT,
               T3.THEORY_AMT,
-              
+
               T1.FPRICE_AMT ,
                 T1.TRADE_AMT,
-              
+
               T1.PS
             ,null workflow_id
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
@@ -312,11 +318,14 @@
                 PP.PORTFOLIO_ID ACT_PORTFOLIO_ID,
                 T2.PORTFOLIO_NAME,
                 T5.TYPE_6,
-            
+
                 T1.CHL_ID,
-            
+
                 T1.FINPROD_TYPE2 ,
-                DATE_FORMAT(ptpd.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+                <!--modify by fuyongsheng 交易日期取到期的交易日期 start-->
+                <!--DATE_FORMAT(ptpd.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,-->
+                DATE_FORMAT(T1.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+                <!--modify by fuyongsheng 交易日期取到期的交易日期 end-->
                 DATE_FORMAT(T4.VDATE, '%Y-%m-%d') vDate,
                 DATE_FORMAT(T4.MDATE, '%Y-%m-%d') mDate,
                 T7.TERM,

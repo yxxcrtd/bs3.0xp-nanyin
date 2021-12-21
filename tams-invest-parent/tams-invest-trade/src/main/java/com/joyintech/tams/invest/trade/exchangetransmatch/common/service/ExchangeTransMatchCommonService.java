@@ -21,6 +21,7 @@ import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.Fund.Ex
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.bond.*;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.repo.*;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.shares.ExchangeTransMatchShares1Service;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.constant.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -249,7 +250,6 @@ public class ExchangeTransMatchCommonService extends BaseService {
      */
     public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList){
         logger.error("批量处理成交匹配数据---开始，批量成交数据:"+ JsonUtils.objectArray2Json(dtoList));
-
         for(ExchangeTransMatchCommonDto dto:dtoList) {
             this.transactionMacth(dto);
         }
@@ -267,6 +267,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
         //查询匹配的委托信息list
         Map<String,Object> entrustMap = new HashMap<>();
         entrustMap.put("entrustIdList",dto.getEntrustIdList());
+        entrustMap.put("ENTRUST_STATUS_03",DictCodeList.委托状态_已接收.getValue());
         List<ExchangeTransMatchCommonEntrustDto> commonEntrustDtoList = exchangeTransMatchCommonMapper.getEtrEntrustByIdList(entrustMap);
         if(!StringUtil.isEmptyList(commonEntrustDtoList)) {
             String matchStatus = DictCodeListExt3.下行交易匹配状态_未匹配.getValue();
@@ -500,7 +501,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
         if(StringUtil.isNotEmpty(exchangeTransMatchBaseTradeDtos.get(0).getTrdDealTotalAdd())){
             trdDealTotalAddMapper.insertSelective(exchangeTransMatchBaseTradeDtos.get(0).getTrdDealTotalAdd());
         }
-		
+
         if(!StringUtil.isEmptyList(exchangeTransMatchBaseTradeDtos.get(0).getTrdTradeFeeTotalList())) {
         	for(TrdTradeFeeTotal trdTradeFeeTotal:exchangeTransMatchBaseTradeDtos.get(0).getTrdTradeFeeTotalList()) {
             	trdTradeFeeTotalMapper.insertSelective(trdTradeFeeTotal);
@@ -572,14 +573,28 @@ public class ExchangeTransMatchCommonService extends BaseService {
                trdStasecFlowDetailMapper.insertSelective(trdStasecFlowDetail);
             }
 
-            if(StringUtil.isNotEmpty(baseTradeProductDealDto.getFinTradeProduct())) {
-                finTradeProductMapper.insertSelective(baseTradeProductDealDto.getFinTradeProduct());
-            }
+            //竞价回购
+            if(!StringUtil.equals(dto.getSettleTransDataTotalAdd().getRepoType(),DictCodeList.回购类型_质押式协议回购.getValue())) {
+                if(StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+                        || StringUtil.equals(commonEntrustDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+                    SettleTransData settleTransData = new SettleTransData();
+                    BeanUtil.copyPropertiesIgnoreNull(settleTransData,dto);
+                    FinTradeProduct finTradeProduct = exchangeTransMatchRepo1Service.genFinTradeProduct(settleTransData, baseTradeProductDealDto.getTrdProductDeal());
+                    finTradeProductMapper.insertSelective(finTradeProduct);
 
-            if(StringUtil.isNotEmpty(baseTradeProductDealDto.getFinProductType())) {
-                finProductTypeMapper.insertSelective(baseTradeProductDealDto.getFinProductType());
-            }
+                    FinProductType finProductType = exchangeTransMatchRepo1Service.genFinProductType(dto,baseTradeProductDealDto.getTrdProductDeal());
 
+                    finProductTypeMapper.insertSelective(finProductType);
+                }
+            }else{
+                if(StringUtil.isNotEmpty(baseTradeProductDealDto.getFinTradeProduct())) {
+                    finTradeProductMapper.insertSelective(baseTradeProductDealDto.getFinTradeProduct());
+                }
+
+                if(StringUtil.isNotEmpty(baseTradeProductDealDto.getFinProductType())) {
+                    finProductTypeMapper.insertSelective(baseTradeProductDealDto.getFinProductType());
+                }
+            }
             if(!StringUtil.isEmptyList(baseTradeProductDealDto.getFinDealPledgeList())) {
                 for(FinDealPledge finTradeProduct:baseTradeProductDealDto.getFinDealPledgeList()) {
                     finDealPledgeMapper.insertSelective(finTradeProduct);

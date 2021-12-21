@@ -1182,9 +1182,12 @@ public class StlDataDealSzdSjsjgProcessService {
         // 业务类型
         settleTransData.setBusiType(DictCodeListExt3.业务类型_债券交易.getValue());
         // 交易日期
-        ImplCalendar implCalendar = new ImplCalendar();
-        settleTransData.setTradeDate(DateUtil.parse(implCalendar.calcDate(szdSjsjg.getJgqsrq(), 1,
-                BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
+        // modify by fuyongsheng 交易日无需+1自然日 start
+        // ImplCalendar implCalendar = new ImplCalendar();
+        // settleTransData.setTradeDate(DateUtil.parse(implCalendar.calcDate(szdSjsjg.getJgqsrq(), 1,
+        //        BussinessDictCodeListRds.操作符_加.getValue(), BussinessDictCodeListRds.特征值偏移单位_自然日.getValue())));
+        settleTransData.setTradeDate(DateUtil.parse(szdSjsjg.getJgqsrq()));
+        // modify by fuyongsheng 交易日无需+1自然日 end
         // 交割日期
         settleTransData.setSettleDate(DateUtil.parse(szdSjsjg.getJgjsrq()));
         // 交易币种

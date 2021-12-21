@@ -69,6 +69,8 @@ public class CommonCheckHelper {
     public boolean checkTradeTime(Instruction instruction, Instrument instrument, OrderInterface orderInterface) {
 
         if (Objects.isNull(instruction) || Objects.isNull(instrument) || Objects.isNull(orderInterface)) {
+            logger.debug("checkTradeTime() called with parameters => 【instruction = {}】, 【instrument = {}】, 【orderInterface = {}】",
+                    instruction, instrument, orderInterface);
             return false;
         }
         if (Switches.CLOSE.value.equals(commonManagement.getTradeTimeSwitch())) {

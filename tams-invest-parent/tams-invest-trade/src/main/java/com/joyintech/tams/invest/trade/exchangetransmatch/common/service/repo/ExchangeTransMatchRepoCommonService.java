@@ -42,8 +42,22 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
     @Autowired
     private SettleTransDataPledgeMapper settleTransDataPledgeMapper;
 
-    public List<ExchangeTransMatchBaseTradeDto> genFinProductTradeDto(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto){
-        return null;
+    public BaseTradeProductDealDto genFinProductTradeDto(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto){
+        BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
+        //生成金融产品交易信息
+        baseTradeProductDealDto.setTrdProductDeal(this.genTrdProductDeal(dealDto,entrustDto,baseTradeProductDealDto.getTrdFinProductDealTotal()));
+        //生成金融产品交易附属表信息
+        baseTradeProductDealDto.setTrdProductDealAdd(this.genTrdProductDealAdd(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+        //生成组合交易表数据
+        baseTradeProductDealDto.setPtlTrade(this.generatePtlTrade(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+        //生成费用信息list
+        baseTradeProductDealDto.setTrdTradeFeeDetailList(this.genTrdTradeFeeDetailList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+        //生成金融产品交易扩展
+        baseTradeProductDealDto.setPaTrdProductDeal(this.genPaTrdProductDeal(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+        //生成划款指令
+        baseTradeProductDealDto.setStlPayOrdersList(this.generateStlPayOrdersList(dealDto,entrustDto,baseTradeProductDealDto.getTrdProductDeal()));
+
+        return baseTradeProductDealDto;
     }
 
     /**
@@ -477,7 +491,9 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         finTradeProduct.setMdate(trdProductDeal.getMdate());
         finTradeProduct.setVpayDate(settleTransData.getVpayDate());
         finTradeProduct.setMpayDate(settleTransData.getMpayDate());
-        finTradeProduct.setTerm(DateUtil.getBetweenDayNumber(trdProductDeal.getVdate(),trdProductDeal.getMdate()));
+        if(null != trdProductDeal.getVdate() && null != trdProductDeal.getMdate()){
+            finTradeProduct.setTerm(DateUtil.getBetweenDayNumber(trdProductDeal.getVdate(),trdProductDeal.getMdate()));
+        }
         finTradeProduct.setIntType(DictCodeList.利率类型_固定利率.getValue());
         finTradeProduct.setIntRate(settleTransData.getUnitCprice());
         finTradeProduct.setBasis(DictCodeList.计息基础_A_365.getValue());
@@ -488,7 +504,9 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         finTradeProduct.setTradeMarket(trdProductDeal.getTradeMarket());
         finTradeProduct.setCalendarId(StringUtil.equals(trdProductDeal.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())?DictCodeList.交易日历_上海交易所日历.getValue():DictCodeList.交易日历_深圳交易所日历.getValue());
         finTradeProduct.setTermType(settleTransData.getTermType());
-        finTradeProduct.setActCapDays(DateUtil.getBetweenDayNumber(finTradeProduct.getVpayDate(),finTradeProduct.getMpayDate()));
+        if(null != finTradeProduct.getVpayDate() && null != finTradeProduct.getMpayDate()){
+            finTradeProduct.setActCapDays(DateUtil.getBetweenDayNumber(finTradeProduct.getVpayDate(),finTradeProduct.getMpayDate()));
+        }
         return finTradeProduct;
     }
 

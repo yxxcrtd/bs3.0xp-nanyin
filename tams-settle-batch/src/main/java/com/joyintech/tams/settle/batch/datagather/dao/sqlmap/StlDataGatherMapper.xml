@@ -252,6 +252,12 @@
 		<!--首期-->
 		INNER JOIN
 			SETTLE_TRANS_DATA stdsq ON std.SEAT_NUMBER = stdsq.SEAT_NUMBER
+			    <!--AND std.TRADE_DATE = stdsq.TRADE_DATE-->
+				AND std.VDATE = stdsq.TRADE_DATE
+			    AND std.APPLY_TRADE_ID = stdsq.CJBH
+		INNER JOIN SETTLE_TRANS_TG_MAPPING sttm ON stdsq.TRADE_ID = sttm.TRADE_ID
+		INNER JOIN TRD_PRODUCT_DEAL T1 ON sttm.TRADE_ID_TG = T1.TRADE_ID
+		<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 modify end-->
 				AND std.TRADE_DATE = stdsq.TRADE_DATE
 				AND std.APPLY_TRADE_ID = stdsq.CJBH
 		INNER JOIN SETTLE_TRANS_TG_MAPPING M
