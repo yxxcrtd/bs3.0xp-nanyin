@@ -36,8 +36,13 @@ public class ExTrdAutoSettleInfoWriter extends BaseWriter<NeedToWriteEntity> {
         List<ManualSettleDto> resultList = manualSettleDtoResult.getManualSettleDtoList();
 
         for (ManualSettleDto manualSettleDto: resultList) {
-            //调用页面交收处理逻辑
-            manualSettleService.doComplete(manualSettleDto, OperationType.NEW);
+            // 调用页面交收处理逻辑
+            // 由于页面上的传入参数在service.start()是selectedItem数组类型，
+            // 此处未调用流程，所以直接complete传入selectedItem作为参数
+            for (ManualSettleDto tmp: manualSettleDto.getSelectedItem()) {
+                manualSettleService.doComplete(tmp, OperationType.NEW);
+            }
+
         }
 
     }
