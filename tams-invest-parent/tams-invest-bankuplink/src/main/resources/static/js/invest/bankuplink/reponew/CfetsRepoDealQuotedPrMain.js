@@ -55,8 +55,11 @@
             if (result.data){
                 Joyin.confirm(result.data, function() {
                     WorkFlow.doSaveList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice002_btn_save", 'CfetsRepoDealQuotedPr002', function(result){
-                        var index = window.parent.layer.getFrameIndex(window.name);
-                        window.parent.layer.close(index);
+                        // var index = window.parent.layer.getLabelFrameIndex(window.name);
+                        // windowindow.parent.layer.close(indexOf);
+                        document.getElementById('cfetsRepoDealQuotedPr002_iframe').contentWindow.location.reload(true);
+                        document.getElementById('CfetsRepoDealQuotedPr001_iframe').contentWindow.location.reload(true);
+                        document.getElementById('CfetsRepoDealQuotedPrHq_iframe').contentWindow.location.reload(true);
                     })
                 })
             }
@@ -71,6 +74,7 @@
                         // window.parent.layer.close(index);
                         document.getElementById('cfetsRepoDealQuotedPr002_iframe').contentWindow.location.reload(true);
                         document.getElementById('CfetsRepoDealQuotedPr001_iframe').contentWindow.location.reload(true);
+                        document.getElementById('CfetsRepoDealQuotedPrHq_iframe').contentWindow.location.reload(true);
                     })
                 })
             }
@@ -85,6 +89,7 @@
                         // window.parent.layer.close(index);
                         document.getElementById('cfetsRepoDealQuotedPr003_iframe').contentWindow.location.reload(true);
                         document.getElementById('CfetsRepoDealQuotedPr001_iframe').contentWindow.location.reload(true);
+                        document.getElementById('CfetsRepoDealQuotedPrHq_iframe').contentWindow.location.reload(true);
                     })
                 })
             }
@@ -95,8 +100,11 @@
             if (result.data) {
                 Joyin.confirm(result.data, function () {
                     WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice003/save', object, "CfetsRepoDealQuotedPrice003_btn_submit", 'CfetsRepoDealQuotedPr003', function (result) {
-                        var index = window.parent.layer.getFrameIndex(window.name);
-                        window.parent.layer.close(index);
+                        // var index = window.parent.layer.getFrameIndex(window.name);
+                        // window.parent.layer.close(index);
+                        document.getElementById('cfetsRepoDealQuotedPr003_iframe').contentWindow.location.reload(true);
+                        document.getElementById('CfetsRepoDealQuotedPr001_iframe').contentWindow.location.reload(true);
+                        document.getElementById('CfetsRepoDealQuotedPrHq_iframe').contentWindow.location.reload(true);
                     })
                 })
             }
