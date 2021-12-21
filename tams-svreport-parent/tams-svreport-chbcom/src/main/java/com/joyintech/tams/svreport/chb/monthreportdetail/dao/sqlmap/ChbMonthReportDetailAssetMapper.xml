@@ -67,6 +67,58 @@
     </resultMap>
 
 
+    <resultMap id="MstBaseResultMap" type="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd" >
+        <id column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY2" property="industry2" jdbcType="VARCHAR" />
+        <result column="INSITITUTE_CODE" property="insitituteCode" jdbcType="VARCHAR" />
+        <result column="IS_GOV" property="isGov" jdbcType="VARCHAR" />
+        <result column="MAIN_CAPITAL" property="mainCapital" jdbcType="DECIMAL" />
+        <result column="REGISTER_CAPITAL" property="registerCapital" jdbcType="DECIMAL" />
+        <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+        <result column="CITY" property="city" jdbcType="VARCHAR" />
+        <result column="COUNTY" property="county" jdbcType="VARCHAR" />
+        <result column="HOLDING_TYPE" property="holdingType" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_OBJ_TYPE" property="customerObjType" jdbcType="VARCHAR" />
+        <result column="IS_LISTED_COMPANY" property="isListedCompany" jdbcType="VARCHAR" />
+        <result column="IS_GROUP_CUSTOMER" property="isGroupCustomer" jdbcType="VARCHAR" />
+        <result column="PARENT_CUSTOMER_ID" property="parentCustomerId" jdbcType="VARCHAR" />
+        <result column="PARENT_CUSTOMER_NAME" property="parentCustomerName" jdbcType="VARCHAR" />
+        <result column="IS_PRIVATE" property="isPrivate" jdbcType="VARCHAR" />
+        <result column="IS_ESCAPE_DEPT" property="isEscapeDept" jdbcType="VARCHAR" />
+        <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+        <result column="IS_CREDIT_RELATED_TRD" property="isCreditRelatedTrd" jdbcType="VARCHAR" />
+        <result column="STRUCT_ADJUST_TYPE" property="structAdjustType" jdbcType="VARCHAR" />
+        <result column="INDUS_UPGRATE_TYPE" property="indusUpgrateType" jdbcType="VARCHAR" />
+        <result column="SEX" property="sex" jdbcType="VARCHAR" />
+        <result column="PERSON_ID" property="personId" jdbcType="VARCHAR" />
+        <result column="M_PHONE" property="mPhone" jdbcType="VARCHAR" />
+        <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+        <result column="POSITION" property="position" jdbcType="VARCHAR" />
+        <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+        <result column="MAIL" property="mail" jdbcType="VARCHAR" />
+        <result column="PROPERTY" property="property" jdbcType="VARCHAR" />
+        <result column="COMPANY_NATURE" property="companyNature" jdbcType="VARCHAR" />
+        <result column="LINK_ID1" property="linkId1" jdbcType="VARCHAR" />
+        <result column="LINK_ID2" property="linkId2" jdbcType="VARCHAR" />
+        <result column="LINK_ID3" property="linkId3" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="HS_TYPE" property="hsType" jdbcType="VARCHAR" />
+        <result column="IS_FIN_LICENCE" property="isFinLicence" jdbcType="VARCHAR" />
+        <result column="INDUSTRY3" property="industry3" jdbcType="VARCHAR" />
+        <result column="INDUSTRY4" property="industry4" jdbcType="VARCHAR" />
+
+    </resultMap>
+
     <select id="selectDetailList" resultMap="BaseResultMap">
         SELECT
             P.POSUUID,
@@ -87,8 +139,7 @@
             NVL(I.VDATE,I.PLAN_SDATE) VDATE,
             NVL(I.MDATE,I.PLAN_EDATE) MDATE,
             I.exercise_date,
-            NVL(MC.CUSTOMER_NAME,nvl(NVL(I.chb_issuer_id,I.chb_financier_id),I.chb_manager_id)) SUBJECT_NAME,
-            I.rival_party,
+            NVL(MC.CUSTOMER_NAME,P.SUBJECT_NAME) SUBJECT_NAME,
             I.asset_yield RATE,
             P.CCY,
             AP.TDY_COST_AMT COST_AMT,
@@ -96,6 +147,11 @@
             AP.TDY_INTINCEXP INTINCEXP,
             P.ASSETVALUE_A,
             P.ASSETVALUE_B,
+            P.INDUSTRY1,
+            P.INDUSTRY2,
+            P.INDUSTRY3,
+            P.INDUSTRY4,
+            P.RIVAL_PARTY,
             P.PRIVATEPRD_FLAG,
             P.PRIVATEFUND_FLAG,
             P.MAIN_GRADE,
@@ -106,13 +162,13 @@
             I.ORG_ASSET_TYPE1,
             I.ORG_ASSET_TYPE2,
             I.ORG_ASSET_TYPE3
-            FROM CHB_MONTH_REPORT_TEMPLATE T
-            LEFT JOIN CHB_MONTH_ASSET_POSITIONDETAIL P ON T.PROPERTYCODE = P.DETAILNO
+            FROM CHB_MONTH_ASSET_POSITIONDETAIL P
+            LEFT JOIN CHB_MONTH_REPORT_TEMPLATE T ON T.PROPERTYCODE = P.DETAILNO
             LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
             LEFT JOIN CHB_ASSET_INFO IA ON IA.ASSET_CODE = P.OLD_ASSET_CODE
             LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
             LEFT JOIN CHB_PRD_BASEINFO B ON P.PROD_ID = B.PROD_ID
-            LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = nvl(NVL(I.chb_issuer_id,I.chb_financier_id),I.chb_manager_id)
+            LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = P.SUBJECT_NAME
             LEFT JOIN SYS_DATADICT_LIST L ON L.ITEM_CODE = REPLACE(SUBSTR(T.PROPERTYCODE,0,7),'_','')  AND L.DICT_CODE = 'SVR_MONTH_REPORT_DETAIL'
             LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
 
@@ -145,6 +201,7 @@
                 </foreach>
 
             </if>
+            ORDER BY T.ORDERNO
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -160,7 +217,6 @@
 			jdbcType=VARCHAR}),'%')
 			or  A.text like concat(concat('%',#{search,
 			jdbcType=VARCHAR}),'%')
-            <!-- and A.FINPROD_TYPE2 = 'F16' -->
         </where>
         order by A.id
 
@@ -211,5 +267,40 @@
         delete from CHB_MONTH_ASSET_POSITIONDETAIL
         where TERM = #{term,jdbcType=CHAR}
   </delete>
+
+    <select id="getCounterList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT  A.CODE id,A.TRADE_COUNTER text from(
+            SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,NVL(MC.CUSTOMER_NAME,T.TRADE_COUNTER) TRADE_COUNTER,DEALDATE,
+            row_number() over(partition by T.PROD_ID,T.ASSET_CODE,T.TRADE_COUNTER order by DEALDATE) row_number
+            FROM CHB_INVEST_TRADE T
+            LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
+            WHERE 1=1
+            <if test="keysList != null and keysList.size()>0 ">
+                <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.PROD_ID||'_'||T.ASSET_CODE IN (" close=")">
+                    <if test="(index % 999) == 998">
+                        null) OR T.PROD_ID||'_'||T.ASSET_CODE IN (
+                    </if>
+                    #{item}
+                </foreach>
+            </if>
+        ) a
+        WHERE A.row_number = 1
+    </select>
+
+
+    <select id="getCustomerList" resultMap="MstBaseResultMap">
+        SELECT  *
+        FROM MST_CUSTOMER_INFO_ADD T
+        WHERE 1=1
+        <if test="keysList != null and keysList.size()>0 ">
+            <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.CUSTOMER_ID (" close=")">
+                <if test="(index % 999) == 998">
+                    null) OR T.CUSTOMER_ID IN (
+                </if>
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
 
 </mapper>

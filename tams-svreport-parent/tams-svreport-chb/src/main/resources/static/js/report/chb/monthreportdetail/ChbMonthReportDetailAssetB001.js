@@ -109,22 +109,6 @@ $(function() {
 
 
     function init(){
-        if(isMain=='01'){
-            setTimeout(function() {
-                if($('#sendStatus').val()=='02'||$('#sendStatus').val()=='03'){
-                    $('#submitDate').val(searchDataStart+' - '+searchDataEnd);
-                }else{
-                    $('#submitDeadLine').val(searchDataStart + ' - ' + searchDataEnd);
-                }
-                table.load();
-            }, 500);
-        }
-        //报送前检查调用数据检查
-        if(validKey){
-            setTimeout(function() {
-                table.load();
-            },500)
-        }
     };
     init();
 

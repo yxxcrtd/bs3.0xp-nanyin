@@ -986,4 +986,8 @@ public class ChbMonthAssetPositiondetail extends BaseEntity {
     public void setOldAssetCode(String oldAssetCode) {
         this.oldAssetCode = oldAssetCode == null ? null : oldAssetCode.trim();
     }
+
+    public String getCounterListCode(){
+        return this.getProdId()+"_"+this.getAssetCode();
+    }
 }

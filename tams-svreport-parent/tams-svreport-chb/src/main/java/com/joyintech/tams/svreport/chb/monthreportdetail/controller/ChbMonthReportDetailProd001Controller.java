@@ -52,8 +52,7 @@ public class ChbMonthReportDetailProd001Controller extends BaseController{
 	 */
 	@Override
 	public String init(Model model) {
-		model.addAttribute("defDate",DateUtil.format(DateUtil.platDateFromCache(),"yyyyMM"));
-
+		model.addAttribute("defDate",DateUtil.format(DateUtil.addMonthDate(DateUtil.platDateFromCache(),-1),"yyyyMM"));
 		return super.init(model);
 	}
 

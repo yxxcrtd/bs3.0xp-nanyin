@@ -393,6 +393,8 @@ comment on column CHB_MONTH_ASSET_POSITIONDETAIL.old_asset_code
   is '穿透前原始资产代码';
 comment on column CHB_MONTH_ASSET_POSITIONDETAIL.is_fhxgcp
   is '是否合规新产品';
+comment on column CHB_MONTH_ASSET_POSITIONDETAIL.rival_party
+  is '交易对手名称';
 -- Create/Recreate primary, unique and foreign key constraints 
 alter table CHB_MONTH_ASSET_POSITIONDETAIL
   add constraint CHB_MONTH_ASSET_POSDETAIL_PK primary key (POSUUID);
@@ -604,7 +606,7 @@ comment on column PBC_MONTH_ASSET_POSITIONDETAIL.int_amt
   is '累计利息';
 comment on column PBC_MONTH_ASSET_POSITIONDETAIL.end_days
   is '剩余期限:0表示无固定期限';
-comment on column PBC_MONTH_ASSET_POSITIONDETAIL.rival_party
+comment on column PBC_MONTH_ASSET_POSITIONDETAIL.SUBJECT_NAME
   is '主体名称';
 comment on column PBC_MONTH_ASSET_POSITIONDETAIL.rival_party
   is '交易对手名称';

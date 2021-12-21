@@ -2,16 +2,17 @@ package com.joyintech.tams.svreport.pbc.reportdetail.service;
 
 import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.background.component.common.pack.common.util.IDGenerator;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper;
-import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.common.base.entity.ChbLoanDetailInfo;
-import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcReportProperycode;
 import com.joyintech.tams.svreport.pbc.reportdetail.dao.PbcMonthReportDetailAssetMapper;
 import com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,12 +114,23 @@ public class PbcMonthReportDetailAssetUtil {
             BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,prodInfoMap.get(position.getProdid()));
         }
         if(null!=assetInfoMap.get(position.getAssetCode())) {
-            BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset, assetInfoMap.get(position.getAssetCode()));
+            ChbAssetInfo assetInfo = assetInfoMap.get(position.getAssetCode());
+            BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset, assetInfo);
+
+            if(DictCodeList.是否_中债_是.getValue().equals(assetInfo.getOptionFlag())){
+                pbcMonthReportDetailAsset.setOpenplan(assetInfo.getExerciseDate());
+            }
+            pbcMonthReportDetailAsset.setSubjectName(null!=assetInfo.getChbIssuerId()?assetInfo.getChbIssuerId():
+                    null!=assetInfo.getChbFinancierId()?assetInfo.getChbFinancierId():assetInfo.getChbManagerId());
+
         }
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,position);
 
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,dto);
+
+
+
         //资产端绑定编号
         pbcMonthReportDetailAsset.setDetailno(code);
 
@@ -170,6 +182,24 @@ public class PbcMonthReportDetailAssetUtil {
         return flag;
     }
 
+
+
+    public void  insertBefore(List<PbcMonthReportDetailAsset> prdPositionList){
+        /**展示产品购买资产首次买入交易的交易对手名称***/
+        Map<String,Object> paraMap = new HashMap<>();
+        Set<String> codeList = prdPositionList.stream().map(PbcMonthReportDetailAsset::getCounterListCode).collect(Collectors.toSet());
+        paraMap.put("keysList",codeList);
+        //展示产品购买资产首次买入交易的交易对手名称
+        List<SelectOptionDto> oDto = pbcMonthReportDetailAssetMapper.getCounterList(paraMap);
+        Map<String,String> CounterMap = oDto.stream().collect(JoyinCollectors.toMap(x -> x.getId(), x -> x.getText()));
+        for(PbcMonthReportDetailAsset dto : prdPositionList){
+
+            //再赋值交易对手名称  展示产品购买资产首次买入交易的交易对手名称
+            dto.setRivalParty(CounterMap.get(dto.getProdid()+"_"+dto.getAssetCode()));
+
+        }
+    }
+
     /**
      * 批量入库方法
      * @param prdPositionList
@@ -180,7 +210,8 @@ public class PbcMonthReportDetailAssetUtil {
         int maxDataCountOneTime = reportInsertCount;
         //同批次的详情数据删除
         pbcMonthReportDetailAssetMapper.deleteDetail(term);
-
+        //部分数据的统一处理
+        this.insertBefore(prdPositionList);
 
         //插入list大小
         int dataCount = prdPositionList.size();

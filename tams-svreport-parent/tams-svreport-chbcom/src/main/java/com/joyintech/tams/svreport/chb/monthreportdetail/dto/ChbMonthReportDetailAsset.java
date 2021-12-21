@@ -116,6 +116,19 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivatefundFlag());
     }
 
+    public String getIndustry1Str() {
+        return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业一级分类, this.getIndustry1());
+    }
+    public String getIndustry2Str() {
+        return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, this.getIndustry2());
+    }
+    public String getIndustry3Str() {
+        return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业三级分类, this.getIndustry3());
+    }
+    public String getIndustry4Str() {
+        return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业四级分类, this.getIndustry4());
+    }
+
     public String getPrivateprdFlagStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivateprdFlag());
     }

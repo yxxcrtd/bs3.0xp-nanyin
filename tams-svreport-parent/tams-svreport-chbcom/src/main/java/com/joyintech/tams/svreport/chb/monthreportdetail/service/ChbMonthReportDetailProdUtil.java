@@ -79,7 +79,17 @@ public class ChbMonthReportDetailProdUtil {
         if(DictCodeListExt2.产品运作模式_封闭式净值型.getValue().equals(info.getOperateMode())
             ||DictCodeListExt2.产品运作模式_封闭式非净值型.getValue().equals(info.getOperateMode())){
             days = prdPosition.getClosetermday();
-            termType = info.getTermtype();
+            if(days.compareTo(new BigDecimal(90))<0){
+                termType = DictCodeListExt3.中债月度明细_期限类型_90天以内.getValue();
+            }else if(days.compareTo(new BigDecimal(90))>=0&&days.compareTo(new BigDecimal(183))<=0){
+                termType = DictCodeListExt3.中债月度明细_期限类型_90天到6个月.getValue();
+            }else if(days.compareTo(new BigDecimal(183))>0&&days.compareTo(new BigDecimal(365))<=0){
+                termType = DictCodeListExt3.中债月度明细_期限类型_6到12个月.getValue();
+            }else if(days.compareTo(new BigDecimal(365))>0&&days.compareTo(new BigDecimal(1095))<=0){
+                termType = DictCodeListExt3.中债月度明细_期限类型_1到3年.getValue();
+            }else if(days.compareTo(new BigDecimal(1095))>0){
+                termType = DictCodeListExt3.中债月度明细_期限类型_3年以上.getValue();
+            }
         }else{
             if(StringUtil.isNotEmpty(info.getOpenCircle())){
                 if(DictCodeListExt2.开放模式_中债_无规律开放.getValue().equals(info.getOpenMode())){
@@ -105,17 +115,7 @@ public class ChbMonthReportDetailProdUtil {
                     }
                 }
             }
-            if(days.compareTo(new BigDecimal(90))<0){
-                termType = DictCodeListExt3.中债月度明细_期限类型_90天以内.getValue();
-            }else if(days.compareTo(new BigDecimal(90))>=0&&days.compareTo(new BigDecimal(183))<=0){
-                termType = DictCodeListExt3.中债月度明细_期限类型_90天到6个月.getValue();
-            }else if(days.compareTo(new BigDecimal(183))>0&&days.compareTo(new BigDecimal(365))<=0){
-                termType = DictCodeListExt3.中债月度明细_期限类型_6到12个月.getValue();
-            }else if(days.compareTo(new BigDecimal(365))>0&&days.compareTo(new BigDecimal(1095))<=0){
-                termType = DictCodeListExt3.中债月度明细_期限类型_1到3年.getValue();
-            }else if(days.compareTo(new BigDecimal(1095))>0){
-                termType = DictCodeListExt3.中债月度明细_期限类型_3年以上.getValue();
-            }
+            termType = info.getTermtype();
         }
 
         chbMonthPrdPositiondetail.setTermtype(termType);

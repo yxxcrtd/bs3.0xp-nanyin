@@ -147,4 +147,8 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
     public String getOrgAssetType3Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getOrgAssetType3());
     }
+
+    public String getCounterListCode(){
+        return this.getProdid()+"_"+this.getAssetCode();
+    }
 }
