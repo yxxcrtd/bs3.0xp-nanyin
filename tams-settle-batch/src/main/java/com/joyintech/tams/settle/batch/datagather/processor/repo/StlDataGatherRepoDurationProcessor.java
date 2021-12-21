@@ -57,7 +57,7 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 TotalTrdProductDealDto totalTrdProductDealDto = new TotalTrdProductDealDto();
                 totalTrdProductDealDto.setShareAmt(settleTransData.getShareAmt());
                 totalTrdProductDealDto.setTradeAmt(settleTransData.getTradeAmt());
-                // totalTrdProductDealDto.setIntAmt(settleTransData.getIntAmt());
+                totalTrdProductDealDto.setIntAmt(settleTransData.getIntAmt());
                 totalTrdProductDealDto.setPrinAmt(settleTransData.getShareNum());
                 // ZGZGST-4220:解决页面字段为空的问题 fuyongsheng 20211216 modify start
                 // totalTrdProductDealDto.setFpriceAmt(settleTransData.getFpriceAmt());
