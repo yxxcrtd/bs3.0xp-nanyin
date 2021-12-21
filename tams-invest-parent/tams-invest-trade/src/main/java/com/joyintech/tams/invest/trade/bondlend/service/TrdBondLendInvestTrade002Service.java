@@ -1770,48 +1770,50 @@ public class TrdBondLendInvestTrade002Service extends BaseService<TrdBondLendInv
                 for (PledgeBondInfoDto pledgeBond : input.getBussRepoSec().getPledgeBondList()) {
                     // 待分配投资目的的质押券面总额
                     BigDecimal pledgePrin = pledgeBond.getPledgePrin();
-                    for (PledgeBondInfoDto avaBond : avaMap.get(pledgeBond.getBondCode())) {
-                        PtlSecPositionFlowDto resultDto = new PtlSecPositionFlowDto();
+                    if(avaMap.get(pledgeBond.getBondCode())!=null) {
+                        for (PledgeBondInfoDto avaBond : avaMap.get(pledgeBond.getBondCode())) {
+                            PtlSecPositionFlowDto resultDto = new PtlSecPositionFlowDto();
 
-                        // 当前投资目的可分配券面总额
-                        BigDecimal avaPrin = avaBond.getAvaPledgePrin();
-                        // 当前投资目的决定分配的券面总额
-                        BigDecimal prin = pledgePrin.compareTo(avaPrin) > 0 ? avaPrin : pledgePrin;
+                            // 当前投资目的可分配券面总额
+                            BigDecimal avaPrin = avaBond.getAvaPledgePrin();
+                            // 当前投资目的决定分配的券面总额
+                            BigDecimal prin = pledgePrin.compareTo(avaPrin) > 0 ? avaPrin : pledgePrin;
 
-                        // 组合代码 = 画面.组合代码
-                        resultDto.setPortfolioId(input.getPortfolioId());
-                        // 证券管理账户/通道代码 = nvl（nvl（金融产品交易Entity.证券托管账户，金融产品交易Entity.通道代码），999999）
-                        resultDto.setSecAcctId(StringUtil.isEmpty(input.getSecManageAcctId()) ? "999999" : input.getSecManageAcctId());
-                        // 金融产品代码 = 输出质押品DTO.金融产品代码
-                        resultDto.setFinprodId(avaBond.getFinprodId());
-                        // 分支序号 = 系统固定参数，默认为0
-                        resultDto.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
-                        // 持仓类型
-                        resultDto.setHodingType(DictCodeList.持仓类型_质押.getValue());
-                        // 日期 = 金融产品交易Entity.交易日
-                        resultDto.setCdate(input.getTradeDate());
-                        // 数量 = 输出质押品DTO.质押数量
-                        resultDto.setAmount(com.joyintech.framework.util.ArithmeticUtil.divide(prin, new BigDecimal("100"), 4));
-                        // 币种 = 金融产品交易Entity.币种
-                        resultDto.setCcy(input.getCcy());
-                        // 交易编号 = 金融产品交易Entity.交易编号
-                        resultDto.setTradeId(input.getTradeId());
-                        // 投资目的 = 按“摊余成本类-公允价值变动计入其他综合收益-公允价值变动计入当期损益”的顺序依次冻结，削减对应投资目的债券可用持仓
-                        resultDto.setInvAim(StringUtil.isEmpty(avaBond.getInvAim()) ? "999999" : avaBond.getInvAim());
+                            // 组合代码 = 画面.组合代码
+                            resultDto.setPortfolioId(input.getPortfolioId());
+                            // 证券管理账户/通道代码 = nvl（nvl（金融产品交易Entity.证券托管账户，金融产品交易Entity.通道代码），999999）
+                            resultDto.setSecAcctId(StringUtil.isEmpty(input.getSecManageAcctId()) ? "999999" : input.getSecManageAcctId());
+                            // 金融产品代码 = 输出质押品DTO.金融产品代码
+                            resultDto.setFinprodId(avaBond.getFinprodId());
+                            // 分支序号 = 系统固定参数，默认为0
+                            resultDto.setBranch(Long.parseLong((String) CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+                            // 持仓类型
+                            resultDto.setHodingType(DictCodeList.持仓类型_质押.getValue());
+                            // 日期 = 金融产品交易Entity.交易日
+                            resultDto.setCdate(input.getTradeDate());
+                            // 数量 = 输出质押品DTO.质押数量
+                            resultDto.setAmount(com.joyintech.framework.util.ArithmeticUtil.divide(prin, new BigDecimal("100"), 4));
+                            // 币种 = 金融产品交易Entity.币种
+                            resultDto.setCcy(input.getCcy());
+                            // 交易编号 = 金融产品交易Entity.交易编号
+                            resultDto.setTradeId(input.getTradeId());
+                            // 投资目的 = 按“摊余成本类-公允价值变动计入其他综合收益-公允价值变动计入当期损益”的顺序依次冻结，削减对应投资目的债券可用持仓
+                            resultDto.setInvAim(StringUtil.isEmpty(avaBond.getInvAim()) ? "999999" : avaBond.getInvAim());
 
-                        if (avaPrin.compareTo(BigDecimal.ZERO) > 0) {
-                            if (StringUtil.isNotEmpty(input.getActPortfolioId()) && !StringUtil.equals(input.getActPortfolioId(), input.getPortfolioId())) {
-                                PtlSecPositionFlowDto subResultDto = new PtlSecPositionFlowDto();
-                                BeanUtil.copyPropertiesIgnoreNull(subResultDto, resultDto);
-                                subResultDto.setPortfolioId(input.getActPortfolioId());
-                                lstPtlSecPositionFlowDto.add(subResultDto);
+                            if (avaPrin.compareTo(BigDecimal.ZERO) > 0) {
+                                if (StringUtil.isNotEmpty(input.getActPortfolioId()) && !StringUtil.equals(input.getActPortfolioId(), input.getPortfolioId())) {
+                                    PtlSecPositionFlowDto subResultDto = new PtlSecPositionFlowDto();
+                                    BeanUtil.copyPropertiesIgnoreNull(subResultDto, resultDto);
+                                    subResultDto.setPortfolioId(input.getActPortfolioId());
+                                    lstPtlSecPositionFlowDto.add(subResultDto);
+                                }
+                                lstPtlSecPositionFlowDto.add(resultDto);
                             }
-                            lstPtlSecPositionFlowDto.add(resultDto);
-                        }
-                        // 分配完毕后,停止可质押券信息（含投资目的）的循环
-                        pledgePrin = pledgePrin.subtract(prin);
-                        if (pledgePrin.compareTo(BigDecimal.ZERO) <= 0) {
-                            break;
+                            // 分配完毕后,停止可质押券信息（含投资目的）的循环
+                            pledgePrin = pledgePrin.subtract(prin);
+                            if (pledgePrin.compareTo(BigDecimal.ZERO) <= 0) {
+                                break;
+                            }
                         }
                     }
                 }

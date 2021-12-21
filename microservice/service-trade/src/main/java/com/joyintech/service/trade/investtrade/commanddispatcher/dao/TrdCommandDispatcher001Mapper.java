@@ -106,7 +106,7 @@ public interface TrdCommandDispatcher001Mapper {
      * 获取委托自动分发时间的方法
      * @return List<TrdCommandDispatcher001Dto>
      */
-    List<TrdCommandDispatcher001Dto>   selectEtrAutoTime();
+    List<TrdCommandDispatcher001Dto> selectEtrAutoTime();
     
     /**
      * 判断用户是否有操作相应资产类型的权限

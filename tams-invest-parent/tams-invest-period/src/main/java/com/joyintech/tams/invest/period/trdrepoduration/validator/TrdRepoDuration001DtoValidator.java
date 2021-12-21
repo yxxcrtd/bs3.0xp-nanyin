@@ -47,8 +47,12 @@ public class TrdRepoDuration001DtoValidator implements BeanValidator {
 
             periodCommonService.periodCommonRevokeCheck(dto.getStatusValid(), dto.getBusiCode(), errorList);
             //只支持当日撤销
-            if(dto.getSettleDate()!=null){//资金到账日与平台日期对比
-                if(!dto.getSettleDate().equals(platformDateImpl.getSysDateStr())){
+            // modify by fuyongsheng 撤销日期应该用交易日期与平台日期比较 start
+            //if(dto.getSettleDate()!=null){//资金到账日与平台日期对比
+                //if(!dto.getSettleDate().equals(platformDateImpl.getSysDateStr())){
+            if(dto.getTradeDate()!=null){//资金到账日与平台日期对比
+                if(!dto.getTradeDate().equals(platformDateImpl.getSysDateStr())){
+            // modify by fuyongsheng 撤销日期应该用交易日期与平台日期比较 end
                     ValidMessage validMessage = new ValidMessage(
                             getMessage("TrdRepoDuration001Dtosettdate"));
                     errorList.add(validMessage);

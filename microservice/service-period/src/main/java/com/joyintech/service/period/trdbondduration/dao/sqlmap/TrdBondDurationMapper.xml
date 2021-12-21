@@ -457,7 +457,11 @@
             SI.INSTITUTION_NAME institutionName, /*所属机构*/
             T1.INSTITUTION_CODE institutionCode,
             <!-- 多级法人改造 add by caiqun 20200615 -->
-            t3.PA_BUSS_TYPE,T1.FINPROD_ID,
+            <!--ZGZGST-4216:对类型字段做兼容 fuyongsheng 20211215 modify start-->
+            <!--t3.PA_BUSS_TYPE,T1.FINPROD_ID,-->
+            NVL(t3.PA_BUSS_TYPE,T1.TG_BUSI_TYPE) PA_BUSS_TYPE,
+            <!--ZGZGST-4216:对类型字段做兼容 fuyongsheng 20211215 modify end-->
+            T1.FINPROD_ID,
             NULL WORKFLOW_ID
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN TRD_DEAL_TOTAL_ADD wtdta on t1.totle_trade_ID = WTDTA.TOTLE_TRADE_ID
@@ -699,7 +703,10 @@
             T3.THEORY_AMT fpriceAmt/*理论本息总额*/,
             T1.TRADE_AMT/*实收本息总额*/,
             T1.P_TRADE_ID pTradeId,
-            t3.PA_BUSS_TYPE,
+            <!--ZGZGST-4216:对类型字段做兼容 fuyongsheng 20211215 start-->
+            <!--t3.PA_BUSS_TYPE-->
+            NVL(t3.PA_BUSS_TYPE,T1.TG_BUSI_TYPE) PA_BUSS_TYPE,
+            <!--ZGZGST-4216:对类型字段做兼容 fuyongsheng 20211215 end-->
             T1.IS_CLEAN
             FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
             LEFT JOIN TRD_PRODUCT_DEAL DEAL ON T1.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID

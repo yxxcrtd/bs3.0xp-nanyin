@@ -19,26 +19,26 @@
             a.STL_SEC_DEME,
             b.TRADE_ID,
             b.SEAT_NUMBER,
-            b.COMMISSION_AMT,
-            b.JSF_AMT,
-            b.ZGF_AMT,
-            b.STAMP_FEE,
-            b.SETTLE_FEE,
-            b.GHF_AMT,
-            b.SXF_AMT,
-            b.TRADE_AMT,
-            b.TRADE_NUM,
+            NVL(b.COMMISSION_AMT,0) COMMISSION_AMT,
+            NVL(b.JSF_AMT,0) JSF_AMT,
+            NVL(b.ZGF_AMT,0) ZGF_AMT,
+            NVL(b.STAMP_FEE,0) STAMP_FEE,
+            NVL(b.SETTLE_FEE,0) SETTLE_FEE,
+            NVL(b.GHF_AMT,0) GHF_AMT,
+            NVL(b.SXF_AMT,0) SXF_AMT,
+            NVL(b.TRADE_AMT,0) TRADE_AMT,
+            NVL(b.TRADE_NUM,0) TRADE_NUM,
             b.PS,
             b.SEC_ACCT_ID,
-            e.COMMISSION_AMT COMMISSION_AMT2,
-            e.JSF_AMT JSF_AMT2,
-            e.ZGF_AMT ZGF_AMT2,
-            e.STAMP_FEE STAMP_FEE2,
-            e.SETTLE_FEE SETTLE_FEE2,
-            e.GHF_AMT GHF_AMT2,
-            e.SXF_AMT SXF_AMT2,
-            e.FPRICE_AMT TRADE_AMT2,
-            e.SHARE_AMT TRADE_NUM2
+            NVL(e.COMMISSION_AMT,0) COMMISSION_AMT2,
+            NVL(e.JSF_AMT,0) JSF_AMT2,
+            NVL(e.ZGF_AMT,0) ZGF_AMT2,
+            NVL(e.STAMP_FEE,0) STAMP_FEE2,
+            NVL(e.SETTLE_FEE,0) SETTLE_FEE2,
+            NVL(e.GHF_AMT,0) GHF_AMT2,
+            NVL(e.SXF_AMT,0) SXF_AMT2,
+            NVL(e.FPRICE_AMT,0) TRADE_AMT2,
+            NVL(e.SHARE_AMT,0) TRADE_NUM2
         FROM
             STL_SEC_RECON a
         LEFT JOIN
@@ -631,17 +631,17 @@
                std.UNIT_FPRICE,
                std.PAR_VALUE,
                std.CPRICE_AMT,
-               std.SHARE_AMT,
-               std.PRIN_AMT,
-               std.INT_AMT,
-               std.FPRICE_AMT,
-               std.STAMP_FEE,
-               std.JSF_AMT,
-               std.GHF_AMT,
-               std.ZGF_AMT,
-               std.SXF_AMT,
-               std.SETTLE_FEE,
-               std.COMMISSION_AMT,
+               NVL(std.SHARE_AMT,0) SHARE_AMT,
+               NVL(std.PRIN_AMT,0) PRIN_AMT,
+               NVL(std.INT_AMT,0) INT_AMT,
+               NVL(std.FPRICE_AMT,0) FPRICE_AMT,
+               NVL(std.STAMP_FEE,0) STAMP_FEE,
+               NVL(std.JSF_AMT,0) JSF_AMT,
+               NVL(std.GHF_AMT,0) GHF_AMT,
+               NVL(std.ZGF_AMT,0) ZGF_AMT,
+               NVL(std.SXF_AMT,0) SXF_AMT,
+               NVL(std.SETTLE_FEE,0) SETTLE_FEE,
+               NVL(std.COMMISSION_AMT,0) COMMISSION_AMT,
                std.IS_PAY_WITH_TRADE,
                std.TRADE_AMT,
                std.PS,
@@ -1004,11 +1004,11 @@
         LEFT JOIN MST_CUSTOMER_INFO m2
         ON m1.BROKER_ID=m2.CUSTOMER_ID
         LEFT JOIN FIN_PRODUCT f1
-        ON t1.FINPROD_ID=f1.FINPROD_MARKET_ID
+        ON t1.FINPROD_ID=f1.FINPROD_ID
         LEFT JOIN STL_SECP_RECON s3
         ON t1.SEC_ACCT_ID=s3.ACCT_NO
         AND t1.CDATE=s3.CDATE
-        AND f1.FINPROD_ID=s3.FINPROD_ID
+        AND t1.FINPROD_ID=s3.FINPROD_ID
         left join FIN_PRODUCT_TYPE f2
         on f1.FINPROD_ID=f2.FINPROD_ID
         <where>
@@ -1101,5 +1101,61 @@
                 and BOND_ID like concat(concat('%',#{search}),'%')
             </if>
         </where>
+    </select>
+
+    <select id="getStlSecReconDeal" resultMap="com.joyintech.tams.common.base.dao.StlSecReconDealMapper.BaseResultMap" parameterType="java.lang.String">
+        SELECT
+            ssrd.SEQ_NO,
+            ssrd.TRADE_ID,
+            ssrd.INSTRUCTION_ID,
+            ssrd.CUSTOMER_ID,
+            ssrd.TRADE_NO,
+            ssrd.SALE_DEPID,
+            ssrd.SEAT_NUMBER,
+            ssrd.PORTFOLIO_ID,
+            ssrd.FINPROD_ID,
+            CASE
+                WHEN fpt.TYPE_8 IS NOT NULL THEN fpt.TYPE_8
+                WHEN ssrd.FINPROD_TYPE IS NOT NULL THEN ssrd.FINPROD_TYPE
+                WHEN ins.STOCK_CODE IS NOT NULL THEN 'F07'
+            END  FINPROD_TYPE,
+            ssrd.MARKET_ID,
+            ssrd.FINPROD_NAME,
+            ssrd.TRADE_MARKET,
+            ssrd.TRADE_PLAT,
+            ssrd.TRADE_DATE,
+            ssrd.SETTLE_DATE,
+            ssrd.ACCOUT,
+            ssrd.SEC_ACCT_ID,
+            ssrd.PS,
+            ssrd.SETTLEMEN_TYPE,
+            ssrd.ORDER_DATE,
+            ssrd.CCY,
+            NVL(ssrd.TRADE_NUM,0) TRADE_NUM,
+            NVL(ssrd.TRADE_AMT,0) TRADE_AMT,
+            ssrd.HAPPEN_AMT,
+            ssrd.PRICE,
+            ssrd.FULL_PRICE,
+            ssrd.UNIT,
+            ssrd.INT_AMT,
+            ssrd.HGDQJE,
+            ssrd.HGDQR,
+            NVL(ssrd.STAMP_FEE,0) STAMP_FEE,
+            NVL(ssrd.JSF_AMT,0) JSF_AMT,
+            NVL(ssrd.GHF_AMT,0) GHF_AMT,
+            NVL(ssrd.ZGF_AMT,0) ZGF_AMT,
+            NVL(ssrd.SXF_AMT,0) SXF_AMT,
+            NVL(ssrd.SETTLE_FEE,0) SETTLE_FEE,
+            NVL(ssrd.TRADE_FEE,0) TRADE_FEE,
+            NVL(ssrd.COMMISSION_AMT,0) COMMISSION_AMT,
+            NVL(ssrd.TOTAL_TEEAMT,0) TOTAL_TEEAMT
+        FROM
+            STL_SEC_RECON_DEAL ssrd
+        LEFT JOIN
+            FIN_PRODUCT_TYPE fpt ON ssrd.FINPROD_ID = fpt.FINPROD_ID
+        LEFT JOIN
+            T_INSTRUMENT ins ON ssrd.FINPROD_ID = ins.STOCK_CODE
+        WHERE
+            ssrd.SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </select>
 </mapper>

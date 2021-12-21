@@ -790,7 +790,12 @@ public class TradeRdsCommonAop {
             InterfRiskRdsService<InterfRiskRdsDto> service = getInterfRiskRdsService();
             Map<String, Object> preMap = new HashMap<>();
             preMap.putAll(trdMap);
-            preMap.put(InterfUtil.finprodId, trdMap.get(O_FINPROD_ID));
+            if (StringUtil.isNotEmpty(trdMap.get("finprodType2")) && 
+                    StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),(String)trdMap.get("finprodType2"))){
+                preMap.put(InterfUtil.finprodId, trdMap.get(O_FINPROD_ID) == null ? trdMap.get(InterfUtil.finprodId) : trdMap.get(O_FINPROD_ID));
+            }else{
+                preMap.put(InterfUtil.finprodId, trdMap.get(O_FINPROD_ID));   
+            }
             preMap.put(IS_DIFF_OCCUPY, BussinessDictCodeList.是否_是.getValue());
             Object deffOcpFlg = CommonUtil.findValue(trdMap, TOTLE_TRADE_ID);
             if (!StringUtil.isNotEmpty(deffOcpFlg)) {

@@ -130,6 +130,9 @@ public class FinPlanNetAsset002Controller extends BaseController{
                 finPlanAssetNInfo.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
                 finPlanAssetNInfo.setFjId(finPlanAssetNInfo.getFinprodId());
             }
+            if (StringUtil.isNotEmpty(getParam("pageModel"))){
+                finPlanAssetNInfo.setPageModel(getParam("pageModel"));     
+            }
             model.addAttribute("entity",finPlanAssetNInfo);
         }
         else if(!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)){

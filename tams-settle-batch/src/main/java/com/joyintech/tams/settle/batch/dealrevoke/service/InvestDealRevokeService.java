@@ -75,7 +75,11 @@ public class InvestDealRevokeService {
         param.put("busiTypeList", busiTypeList);
         param.put("psList", Arrays.asList(DictCodeList.交易方向_买入.getValue()
                 ,DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_行权_回售.getValue(),DictCodeList.交易方向_申购确认.getValue()
-                ,DictCodeList.交易方向_申购.getValue(),DictCodeListExt3.交易方向_债转股.getValue(),DictCodeListExt3.交易方向_配债.getValue()));
+                ,DictCodeList.交易方向_申购.getValue(),DictCodeListExt3.交易方向_债转股.getValue(),DictCodeListExt3.交易方向_配债.getValue()
+                // ZGZGST-4219: 对债券存续期交易进行撤销 fuyongsheng add start
+                ,DictCodeList.交易方向_收息到账.getValue(),DictCodeList.交易方向_还本到账.getValue()
+                // ZGZGST-4219: 对债券存续期交易进行撤销 fuyongsheng add end
+        ));
         return investDealRevokeMapper.selectTotalTradeIdTgM(param);
     }
 

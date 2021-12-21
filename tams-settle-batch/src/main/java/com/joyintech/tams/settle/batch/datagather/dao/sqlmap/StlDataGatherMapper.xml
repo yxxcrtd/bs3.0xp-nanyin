@@ -249,10 +249,20 @@
 		T2.VDATE ,
 		T2.MDATE,
 		<include refid="settleTransDataSql"></include>
-		INNER JOIN TRD_PRODUCT_DEAL T1 ON
+		<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 modify start-->
+		<!--INNER JOIN TRD_PRODUCT_DEAL T1 ON
 		T1.F_TRADE_ID = std.CJBH
 		AND T1.SEAT_ID = std.SEAT_NUMBER
-		AND T1.VDATE = STD .TRADE_DATE
+		AND T1.VDATE = STD .TRADE_DATE-->
+		<!--首期-->
+		INNER JOIN
+			SETTLE_TRANS_DATA stdsq ON std.SEAT_NUMBER = stdsq.SEAT_NUMBER
+			    <!--AND std.TRADE_DATE = stdsq.TRADE_DATE-->
+				AND std.VDATE = stdsq.TRADE_DATE
+			    AND std.APPLY_TRADE_ID = stdsq.CJBH
+		INNER JOIN SETTLE_TRANS_TG_MAPPING sttm ON stdsq.TRADE_ID = sttm.TRADE_ID
+		INNER JOIN TRD_PRODUCT_DEAL T1 ON sttm.TRADE_ID_TG = T1.TRADE_ID
+		<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 modify end-->
 		LEFT JOIN TRD_PRODUCT_DEAL_ADD T3 ON
 		T3.TRADE_ID = T1.TRADE_ID
 		LEFT JOIN FIN_TRADE_PRODUCT T2 ON
@@ -289,6 +299,13 @@
 					#{finprodType,jdbcType=VARCHAR}
 				</foreach>
 			</if>
+	        <!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add start-->
+			<if test="busiSceneCalssList != null and busiSceneCalssList.size() > 0">
+				<foreach collection="busiSceneCalssList" item="busiSceneCalss" open="AND std.BUSI_SCENE_CALSS IN (" close=")" separator=",">
+					#{busiSceneCalss,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 add end-->
 		</where>
 	</select>
 
@@ -644,7 +661,8 @@
 			SUM(AMOUNT) AMOUNT
 		FROM
 			PTL_SEC_POSITION psp
-		WHERE psp.HODING_TYPE = '03' AND CDATE = #{dealDate,jdbcType=DATE}
+		<!--WHERE psp.HODING_TYPE = '03' AND CDATE = #{dealDate,jdbcType=DATE}-->
+		WHERE psp.HODING_TYPE = '03' AND CDATE = TO_DATE(#{dealDate}, 'yyyy-MM-dd')
 		GROUP BY
 			SEC_ACCT_ID,
 			FINPROD_ID,

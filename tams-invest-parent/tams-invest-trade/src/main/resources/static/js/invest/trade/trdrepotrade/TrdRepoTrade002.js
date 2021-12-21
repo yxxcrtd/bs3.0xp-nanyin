@@ -357,7 +357,7 @@
         // 买断式回购从回购资产交易画面移除了，本处不作判断
         // 2) 当回购类型为质押式竞价回购和买断式回购时，期限品种为文本框，文本框支持输入联想，期限品种枚举值为：
         {
-            if (!isInit && !isTodoList) {
+            if (!isInit && !isTodoList && isTranRecord != 'Y') {
                 //modify by mashukai ZGBSSE-185 审批后双击查看交易，回购期限不显示 20210429 start
                 if (pageModel != PAGE_MODEL_REFERENCE){
                     $("#termTypeReback").val("");
@@ -401,7 +401,7 @@
             }
             $("#avaStandardStockPositionDiv").hide();
         }
-        if (pageModel != PAGE_MODEL_REFERENCE) {//查看页面
+        if ((pageModel != PAGE_MODEL_REFERENCE && isTranRecord != 'Y') || ( isTranRecord == 'Y'&& $('#termTypeReback').val() !='' && $('#termTypeReback').val())) {//查看页面
             var termTypeReback = pageModel== PAGE_MODEL_NEW? $('#termTypeReback').val():termTypeRebackValue;
             $('#termTypeReback').tradeRepTypeChange({
                 termType: 'termTypeReback',
@@ -499,7 +499,7 @@
             $("#repoTypeDiv").show();
             //add by nixiukuan 当交易场所选择 20191025 end
         }*/
-        if (pageModel != PAGE_MODEL_REFERENCE) {
+        if ((pageModel != PAGE_MODEL_REFERENCE && isTranRecord != 'Y') || ( isTranRecord == 'Y'&& $('#termTypeReback').val() !='' && $('#termTypeReback').val())) {
             $('#termTypeReback').tradeRepTypeChange({
                 termType: 'termTypeReback',
                 termTypeValue: $('#termTypeReback').val(),
@@ -2189,7 +2189,7 @@
             }
                 // 设置添加质押券共通参数
                 setBussRepoSecInput();
-            if(pageModel== PAGE_MODEL_NEW){
+            if(pageModel== PAGE_MODEL_NEW && isTranRecord != 'Y'){
                 $("#secAcctId").val('').trigger('change');
             }
         });
@@ -2321,6 +2321,14 @@
             return year+'-'+mon+'-'+date;
         }
 
+        //场内成交匹配录单时，触发一下期限品种联动期限的方法
+        if(isTranRecord == 'Y') {
+
+            if($('#termTypeReback').val() !='' && $('#termTypeReback').val()) {
+                termTypeChangeAction();
+            }
+
+        }
         if(preTradeId){
             $('#baseRiskMathComm').hide();
             $('#TrdRepoTrade002_btn_risk').hide();

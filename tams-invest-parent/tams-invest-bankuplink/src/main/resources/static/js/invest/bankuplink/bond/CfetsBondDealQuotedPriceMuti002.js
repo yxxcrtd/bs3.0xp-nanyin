@@ -242,7 +242,7 @@
             $('#CfetsBondDealQuotedPriceMuti002_ps').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti002_finprodId').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti002_settleSpreed').attr('disabled', true);
-            $('#CfetsBondDealQuotedPriceMuti002_mySide').attr('disabled', true);
+            // $('#CfetsBondDealQuotedPriceMuti002_mySide').attr('disabled', true);
         }
         else{
             $('#CfetsBondDealQuotedPriceMuti002_portfolioId').attr('disabled', false);
@@ -276,7 +276,7 @@
         $('#CfetsBondDealQuotedPriceMuti002_ps').attr('disabled', true);
         $('#CfetsBondDealQuotedPriceMuti002_finprodId').attr('disabled', true);
         $('#CfetsBondDealQuotedPriceMuti002_settleSpreed').attr('disabled', true);
-        $('#CfetsBondDealQuotedPriceMuti002_mySide').attr('disabled', true);
+        // $('#CfetsBondDealQuotedPriceMuti002_mySide').attr('disabled', true);
         // 判断本方交易员是否可改
         if (ouTraderIdCanEditFlag === 'N'){
             $('#CfetsBondDealQuotedPriceMuti002_mySideTrader').attr('disabled', true);

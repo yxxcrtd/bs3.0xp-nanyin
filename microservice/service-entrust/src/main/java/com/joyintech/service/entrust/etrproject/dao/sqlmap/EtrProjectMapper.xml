@@ -6,7 +6,7 @@
 	<select id="selectForPage" resultType="com.joyintech.service.entrust.etrproject.dto.EtrProjectDto">
 		select aaa.* from (
 		<choose>
-			<when test="entrustStatus == ''">
+			<when test="entrustStatus == '' or entrustStatus == null">
 				<!-- 查询全部状态 -->
 				<include refid="onlyWtfEtrEntrust"></include>
 				UNION ALL

@@ -58,6 +58,21 @@ public class AutoReconciliationService {
         param.put("PS_T56", DictCodeListExt3.交易方向_到期续做.getValue());
         param.put("PS_T95", DictCodeListExt3.交易方向_到期购回.getValue());
         param.put("PS_T96", DictCodeListExt3.交易方向_提前购回.getValue());
+        // add by fuyongsheng 20211208 没有对账单的自动批处理(step2)功能开发 start
+        param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
+        param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+        param.put("PS_T94", DictCodeListExt3.交易方向_中途换券.getValue());
+        param.put("PS_T04", DictCodeList.交易方向_申购.getValue());
+        param.put("PS_T05", DictCodeList.交易方向_申购确认.getValue());
+        param.put("PS_T11", DictCodeList.交易方向_现金分红.getValue());
+        param.put("PS_T12", DictCodeList.交易方向_红利再投.getValue());
+        param.put("PS_T39", DictCodeList.交易方向_行权_赎回.getValue());
+        param.put("PS_T08", DictCodeList.交易方向_还本.getValue());
+        param.put("PS_T09", DictCodeList.交易方向_收息.getValue());
+        // add by fuyongsheng 20211208 没有对账单的自动批处理(step2)功能开发 end
+        param.put("prodType2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("prodType2_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+        param.put("prodType2_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         param.put("prodType2_F07", DictCodeList.平安资产类型_质押式回购.getValue());
         param.put("prodType2_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         param.put("prodType2_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());

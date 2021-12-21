@@ -47,8 +47,8 @@
     	if(object.accountType){
     	    object.accountType = object.accountType.join(",");
     	}
-    	
-    	object.acctNo = object.largePayno + ':' + object.busiAcctNo;
+		object.acctNo = (object.largePayno?object.largePayno:'') + ':' + object.busiAcctNo;
+		// object.acctNo = object.largePayno + ':' + object.busiAcctNo;
         object.remark=$('#remark').val();
         object.operateType = operateType;
         object.pageModel = pageModel;
@@ -369,7 +369,8 @@
                 param.accountType = param.accountType.join(",");
             }
         	param.pageModel = pageModel;
-        	param.acctNo = param.largePayno + ':' + param.busiAcctNo;
+			param.acctNo = (param.largePayno?param.largePayno:'') + ':' + param.busiAcctNo;
+			// param.acctNo = param.largePayno + ':' + param.busiAcctNo;
         	param.remark=$('#remark').val();
         	param.wflOperType = $("#wfl_operType").val();
             var checkResult = false;
