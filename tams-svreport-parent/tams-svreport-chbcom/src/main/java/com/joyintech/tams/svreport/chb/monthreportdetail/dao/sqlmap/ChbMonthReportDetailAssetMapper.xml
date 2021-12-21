@@ -157,9 +157,9 @@
              where E.MAPPINGCODE IN ('CASH_SUBJECTNO_AVG','CASH_SUBJECTNO_MKT')
              GROUP BY SRCFIELD1,S.SUBJECT_NAME)A
         <where>
-            A.id like concat(concat('%',#{prodId,
+            A.id like concat(concat('%',#{search,
 			jdbcType=VARCHAR}),'%')
-			or  A.text like concat(concat('%',#{prodId,
+			or  A.text like concat(concat('%',#{search,
 			jdbcType=VARCHAR}),'%')
             <!-- and A.FINPROD_TYPE2 = 'F16' -->
         </where>

@@ -51,7 +51,7 @@ public class PbcMonthReportDetailProd001Controller extends BaseController{
 	@Override
 	public String init(Model model) {
 		Map<String, Object> map = RequestUtil.getPageParam();
-
+		model.addAttribute("defDate",DateUtil.format(DateUtil.platDateFromCache(),"yyyyMM"));
 		super.setSelectOptionToModel(model, DictCode.报送状态, DictCode.报送数据状态, DictCode.人行月报详情数据类型);
 		return super.init(model);
 	}

@@ -12,7 +12,7 @@
 		B.MDATE,
 		B.raise_type raiseType,
 		B.IVSTORIENTATION,
-		B.raise_ccy ccy,
+		P.CCY ccy,
 		P.PAYSTATUS,
 		B.MANAGE_TYPE manageType,
 		B.fiduciary_duty fiduciaryDuty,
