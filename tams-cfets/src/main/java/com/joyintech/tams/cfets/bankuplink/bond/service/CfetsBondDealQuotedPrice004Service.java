@@ -516,7 +516,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             entity.setClearType(entity.getSettleType());
             entity.setUnitCprice(entity.getPrice());
             entity.setYield(entity.getMatureYield());
-            Long settleSpreed = 0L;
+            Long settleSpreed = null;
             if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加0.getValue())) {
                 settleSpreed = 0L;
             } else if (StringUtil.equals(entity.getSettleSpreedCode(), BussinessDictCodeList.清算速度_T加1.getValue())) {
