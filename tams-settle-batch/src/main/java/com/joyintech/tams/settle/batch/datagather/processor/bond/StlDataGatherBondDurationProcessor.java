@@ -78,13 +78,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     if(finprodIdMap.containsKey(settleTransData.getFinprodId())){
                         List<PtlSecPosition> ptlSecPositionsByFinprodId = finprodIdMap.get(settleTransData.getFinprodId());
                         // ZGZGST-4246:过滤自己证券账户下的持仓 modify by fuyongsheng start
-                        Iterator<PtlSecPosition> iterator = ptlSecPositionsByFinprodId.iterator();
-                        while(iterator.hasNext()){
-                            PtlSecPosition position = iterator.next();
-                            if(!settleTransData.getSecAcctId().equals(position.getSecAcctId())){
-                                iterator.remove();
-                            }
-                        }
+                        ptlSecPositionsByFinprodId.removeIf(position -> !settleTransData.getSecAcctId().equals(position.getSecAcctId()));
                         // ZGZGST-4246:过滤自己证券账户下的持仓 modify by fuyongsheng end
                         BigDecimal amountTotal = ptlSecPositionsByFinprodId.stream().map(PtlSecPosition::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                         totalTrdProductDealDto.setShareAmt(amountTotal);
@@ -114,6 +108,8 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                     if(finprodIdMap.containsKey(settleTransData.getFinprodId())){
                         List<PtlSecPosition> ptlSecPositionsByFinprodId = finprodIdMap.get(settleTransData.getFinprodId());
                         BigDecimal amountTotal = ptlSecPositionsByFinprodId.stream().map(item2 -> item2.getAmount()).reduce(BigDecimal.ZERO, BigDecimal::add);
+                        // 已分配利息总额
+                        BigDecimal assignIntAmt = BigDecimal.ZERO;
                         for (PtlSecPosition ptlSecPosition : ptlSecPositionsByFinprodId) {
                             //汇总交易
                             TotalTrdProductDealDto totalTrdProductDealDtoDetaile = new TotalTrdProductDealDto();
@@ -124,6 +120,7 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                             totalTrdProductDealDtoDetaile.setPrinAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransData.getPrinAmt(),ptlSecPosition.getAmount()),amountTotal,2));
                             //利息总额
                             totalTrdProductDealDtoDetaile.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransData.getIntAmt(),ptlSecPosition.getAmount()),amountTotal,2));
+                            assignIntAmt = assignIntAmt.add(totalTrdProductDealDtoDetaile.getIntAmt());
                             //全价总额
                             totalTrdProductDealDtoDetaile.setFpriceAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransData.getFpriceAmt(),ptlSecPosition.getAmount()),amountTotal,2));
                             //交易金额
@@ -160,6 +157,25 @@ public class StlDataGatherBondDurationProcessor extends BaseProcessor<NeedOperat
                                 ptlTrade.setPortfolioId(ptlSecPosition.getPortfolioId());
                                 ptlTradeList.add(createPtlTrade(ptlTrade,trdProductDeal));
                                 trdProductDealAddList.add(trdProductDealAdd);
+                            }
+                        }
+                        // 分配利息差额(利息差额 = 利息总额 - 已分配利息总额)
+                        BigDecimal intAmtCe = settleTransData.getIntAmt().subtract(assignIntAmt);
+                        if(intAmtCe.compareTo(BigDecimal.ZERO) > 0){
+                            // 最大一笔持仓数量
+                            BigDecimal maxAmout = ptlSecPositionsByFinprodId.stream().max(Comparator.comparing(
+                                    PtlSecPosition::getAmount)).get().getAmount();
+                            // 将利息差额补到(资产+组合维度)最大持仓数量的数据上
+                            for(TotalTrdProductDealDto finProductDealTotal : finProductDealTotalList){
+                                // 过滤汇总交(资产维度)数据
+                                if(StringUtil.isEmpty(finProductDealTotal.getpTotleTradeId())){
+                                    continue;
+                                }
+                                // 如果当前数据持仓数量是最大持仓数量,则将利息差额补到该条数据上,跳出循环
+                                if(finProductDealTotal.getShareAmt().equals(maxAmout)){
+                                    finProductDealTotal.setIntAmt(finProductDealTotal.getIntAmt().add(intAmtCe));
+                                    break;
+                                }
                             }
                         }
                     }
