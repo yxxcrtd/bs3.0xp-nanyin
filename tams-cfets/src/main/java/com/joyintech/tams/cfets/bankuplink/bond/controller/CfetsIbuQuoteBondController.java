@@ -27,6 +27,7 @@ import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
 import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.systemtools.dao.TamsBaseMapper;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -80,6 +81,9 @@ public class CfetsIbuQuoteBondController extends BaseController {
 
 	@Autowired
 	private IPlatformDate iPlatformDate;
+
+	@Autowired
+	private TamsBaseMapper tamsBaseMapper;
 
 	@ApiOperation(value = "初始化参数", notes = "初始化参数")
 	@PostMapping("/initParams")
@@ -570,6 +574,12 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
 		String prefix = StringUtil.join("债券对话报价当日登记本币交易导出_",iPlatformDate.getSysDateStr());
 		requestDto.setData(null);
+		//获取递增序号
+		/*Map<String,String> sequenceIndex = new HashMap<>();
+		sequenceIndex.put("databaseType","Oracle");
+		sequenceIndex.put("sequenceName","DAYREGEXPORT_SEQUENCE");
+		Long sequenceIndexData = tamsBaseMapper.getSequenceIndexData(sequenceIndex);
+		if(null==sequenceIndexData){sequenceIndexData = 1L;}*/
 		if(StringUtil.isNotEmpty(ibuExportCountMax)&&CollectionUtils.isNotEmpty(dataList)){
 			int max = Integer.parseInt(ibuExportCountMax);
 			int fileCount = (dataList.size()+max-1)/ max;

@@ -36,6 +36,7 @@
                             <!-- add by wangpeng 登记托管机构 20190817 end-->
                             <!-- 有编号交易是否有报价 -->
                         	<input type="hidden" id="isOfferFlag" name="isOfferFlag" />
+                            <input type="hidden" id="dealSqeId" name="dealSqeId" th:value="${entity?.dealSqeId}"/>
                         </h3>
                         <div class="pro-module-item pro-item-wrap">
                             <div class="layui-form-item">
@@ -644,7 +645,10 @@
 		var REPO_TYPE_R6M = /*[[${REPO_TYPE_R6M}]]*/'';
 		var REPO_TYPE_R9M = /*[[${REPO_TYPE_R9M}]]*/'';
 		var REPO_TYPE_R1Y = /*[[${REPO_TYPE_R1Y}]]*/'';
-		// add by wangguoxian 费用设置新增期限品种 20190723 start
+		//是否是来自场内成交匹配交易录单
+        var isTranRecord = /*[[${isTranRecord}]]*/'';
+        // add by wangguoxian 费用设置新增期限品种 20190723 start
+
 
         // add by etliu 20210501 银行间场内场外拆分 start
         var parentPageId = /*[[${parentPageId}]]*/'';

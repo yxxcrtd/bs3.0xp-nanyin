@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.invest.asset.bond.validator;
 
+import com.google.common.cache.Cache;
+import com.joyintech.framework.base.intf.Page;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -18,6 +20,8 @@ import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -103,6 +107,25 @@ public class FinBondTargetAssetValidator implements BeanValidator{
                 }
                 if(dto.getTradePlat () == null || dto.getTradePlat () == ""){
                     resultList.add(new ValidMessage(getMessage("允许交易的平台不能为空")));
+                }
+            }
+            // 获取对应画面的page
+            Page page = CacheUtil.getPage("FinBondTargetAsset002");
+            // 获取page中SYS_ELEMENT_CONTROL表配置的是否展示or隐藏画面元素。如果隐藏则跳过判断，如果展示则进入判断逻辑
+            if (null != page && null != page.getElementcontrol("bussRepBondInfo") && page.getElementcontrol("bussRepBondInfo").getIsShow()) {
+                if(StringUtil.isNotEmpty(dto.getRepAssetType())
+                        &&StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_地方政府债.getValue())){
+                    if(dto.getBussFinBondRepInfoDto()!=null && !StringUtil.isNotEmpty(dto.getBussFinBondRepInfoDto().getBankSecZxzq())){
+                        resultList.add(new ValidMessage("bussFinBondRepInfoDto.bankSecZxzq",
+                                getMessage("是否专项债券数据不能为空。")));
+                    }
+                }
+                if(StringUtil.isNotEmpty(dto.getType12())
+                        &&StringUtil.equals(dto.getType12(), DictCodeListExt3.行内资产四级分类_可转债.getValue())){
+                    if(dto.getBussFinBondRepInfoDto()!=null && !StringUtil.isNotEmpty(dto.getBussFinBondRepInfoDto().getBankSecKzzq())){
+                        resultList.add(new ValidMessage("bussFinBondRepInfoDto.bankSecKzzq",
+                                getMessage("是否商业银行可转债数据不能为空。")));
+                    }
                 }
             }
         }
@@ -191,12 +214,16 @@ public class FinBondTargetAssetValidator implements BeanValidator{
                         getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.type12"))));
         	}
         }
-        if((StringUtil.equals(dto.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())
-        ||StringUtil.equals(dto.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue()))&&!StringUtil.isEmpty(dto.getConFinprodMarketId())){
-            if(StringUtil.isEmpty(dto.getFinProductConvertible().getConFinprodId())) {
+        if(StringUtil.equals(dto.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue())
+        ||StringUtil.equals(dto.getType4(),DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue())){
+            if(StringUtil.isEmpty(dto.getConFinprodMarketId())){
                 resultList.add(new ValidMessage("conFinprodMarketId",
                         getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.finProductConvertible.conFinprodId"))));
             }
+//            if(StringUtil.isEmpty(dto.getFinProductConvertible().getConFinprodId())) {
+//                resultList.add(new ValidMessage("conFinprodMarketId",
+//                        getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.finProductConvertible.conFinprodId"))));
+//            }
             if(StringUtil.isEmpty(dto.getFinProductConvertible().getConShareId())) {
                 resultList.add(new ValidMessage("finProductConvertible.conShareId",
                         getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.finProductConvertible.conShareId"))));
@@ -268,7 +295,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
         }
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            resultList = chbInvDataCheckService.chbCheckCommon(resultList, dto, null, dto.getRepAssetType());
+            resultList = chbInvDataCheckService.chbCheckCommon(resultList, dto, "FinBondTargetAsset002", dto.getRepAssetType());
         }
         //ZGBSSE-588  【中债直连】债券标的新建提交时，具体类别选择99其他债券，备注check重复
 //        if((StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) || StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT))&&dto.getBussFinBondRepInfoDto().getRepSectype().equals("99")){

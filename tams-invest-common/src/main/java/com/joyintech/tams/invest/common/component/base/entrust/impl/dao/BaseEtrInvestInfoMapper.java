@@ -60,6 +60,8 @@ public interface BaseEtrInvestInfoMapper {
      */
     List<EtrPledge> selectEtrPledgeByPrimaryKey(EtrPledgeKey key);
 
+    List<EtrPledge> selectWflEtrPledgeByPrimaryKey(EtrPledgeKey key);
+
     /**
      * 删除委托指令分发 <一句话功能简述> <功能详细描述>
      * @param key EtrDistributeKey

@@ -1,10 +1,11 @@
 package com.joyintech.tams.invest.basicdata.mstsharebonusnotice.validator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tools.util.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,6 +54,13 @@ public class MstShareBonusNoticeValidator implements BeanValidator {
                     resultList.add(new ValidMessage("sharesId", getMessage(
                             "MST_SHARE_BONUS_NOTICE001", getMessage("MstShareBonusNotice001.sharesId")
                             , getMessage("MstShareBonusNotice001.regDate"))));
+                }
+                //股票标的是否存在
+                FinStockInfoDto finStockInfoDto=mstShareBonusNotice001Service.selectByFinprodId(DictCodeListExt1.金融产品类型_投管用_股票.getValue()+"_"+dto.getSharesId());
+                if(finStockInfoDto==null){
+                    resultList.add(new ValidMessage("sharesId", getMessage(
+                            "MST_SHARE_BONUS_NOTICE002", getMessage("MstShareBonusNotice001.sharesId")
+                            )));
                 }
 
             }

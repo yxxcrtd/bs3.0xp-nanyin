@@ -15,23 +15,23 @@ import java.util.List;
  */
 public enum  ChbPrdDeclareRegFileCode {
 
-    报告主文件("01", "报告主文件", false, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx,txt"),
+    报告主文件("01", "报告主文件", false, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx"),
 
-    理财产品可行性评估报告("02", "理财产品可行性评估报告", true, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx,txt"),
+    理财产品可行性评估报告("02", "理财产品可行性评估报告", true, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx"),
 
-    内部审核文件("03", "内部审核文件", true, true, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx,txt"),
+    内部审核文件("03", "内部审核文件", true, true, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx"),
 
-    尽职调查文件("04", "对理财产品投资管理人、托管人、投资顾问等相关方的尽职调查文件", true, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx,txt"),
+    尽职调查文件("04", "对理财产品投资管理人、托管人、投资顾问等相关方的尽职调查文件", true, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx"),
 
-    法律文件("05", "与理财产品投资管理人、托管人、投资顾问等相关方签署的法律文件", true, true, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx,txt"),
+    法律文件("05", "与理财产品投资管理人、托管人、投资顾问等相关方签署的法律文件", true, true, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx"),
 
-    理财产品销售文件("06", "理财产品销售文件", true, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx,txt"),
+    理财产品销售文件("06", "理财产品销售文件", true, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx"),
 
-    理财产品说明书("07", "理财产品说明书", true, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx,txt"),
+    理财产品说明书("07", "理财产品说明书", true, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx"),
 
-    理财产品宣传材料("08", "理财产品宣传材料", true, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx,txt"),
+    理财产品宣传材料("08", "理财产品宣传材料", true, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx"),
 
-    其他材料("09", "其他材料", false, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx,txt");
+    其他材料("09", "其他材料", false, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx");
 
 
 

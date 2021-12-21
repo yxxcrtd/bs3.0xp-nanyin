@@ -14,12 +14,15 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.basicdata.util.ComBasicDataExcelUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.activiti.editor.language.json.converter.util.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +51,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 public class ComSharePriceService extends CommonExportService<ComSharePriceDto> implements BaseProcessService<ComSharePriceDto>{
 
-    
+
     /**
      * 查询
      * @param pageParam Map
@@ -60,7 +63,7 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
             ServiceApplication.CommonBasicDataService + "/ComSharePrice/selectForPage",
             pageParam, ComSharePriceDto.class);
     }
-    
+
     /**
      * 获取下拉选资产代码
      * @param map
@@ -80,14 +83,14 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
                 DataSourceType.MASERT);
     }
     /**
-     * 
+     *
      * 导出数据查询
      */
     @Override
     public Page<ComSharePriceDto> selectPageData(Map<String, Object> selectParam) {
         return selectForPage(selectParam);
     }
-    
+
     /**
      * 工作流（留痕处理进行的操作）
      */
@@ -97,7 +100,7 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
     }
 
     /**
-     * 通过id获取最近指定日期的股票行情信息   
+     * 通过id获取最近指定日期的股票行情信息
      * @param pageParam
      * @return
      */
@@ -115,8 +118,8 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
 		return restTemplate.postForList(ServiceApplication.CommonBasicDataService
                 + "/ComSharePrice/selectAllList",pageParam, ComSharePriceDto.class);
 	}
-	
-	
+
+
     /**
      * excel导入功能
      *
@@ -153,7 +156,7 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
         }
         return null;
     }
-    
+
     /**
      * excel导入数据整理
      *
@@ -177,7 +180,7 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
 
     /**
      * 导入文件内容检查 <功能详细描述>
-     * 
+     *
      * @param dataList 导入数据
      * @return 返回检查结果
      * @throws ParseException 抛出异常
@@ -187,6 +190,17 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
     private List<ExcelValidDto> checkExcelData(List<List<String>> dataList)
         throws ParseException {
         List<ExcelValidDto> checkResult = new ArrayList<>();
+        if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(dataList)){
+            for(int j=0; j<dataList.size(); j++){
+                List<ExcelValidDto> result = checkExcelCow(j, dataList.get(j));
+                if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(result)) {
+                    checkResult.addAll(result);
+                }
+            }
+        }
+        if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(checkResult)){
+            return checkResult;
+        }
         List<ComSharePriceDto> equityList = converToBean(dataList,null);
         ComSharePriceDto ComSharePriceDto = null;
         List<Integer> duplicateDataList=new ArrayList<Integer>();
@@ -194,9 +208,9 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
             for (int i = 0; i < equityList.size(); i++ ) {
                 ComSharePriceDto = equityList.get(i);
                 // 检查表内数据每行是否合法
-                if (checkExcelCow(i, dataList.get(i)) != null) {
-                    checkResult.addAll(checkExcelCow(i, dataList.get(i)));
-                }
+//                if (checkExcelCow(i, dataList.get(i)) != null) {
+//                    checkResult.addAll(checkExcelCow(i, dataList.get(i)));
+//                }
                 if(ComSharePriceDto.getSharesId() == null
                 		|| ComSharePriceDto.getDealDate() == null
                 		|| duplicateDataList.contains(i)){
@@ -246,66 +260,77 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
             List<String> list = dataList.get(i);
             ComSharePriceDto = new ComSharePriceDto();
             if (StringUtil.isNotEmpty(list.get(0))) {
+                //股票标的是否存在
+                Map<String, Object> params=new HashMap<>();
+                params.put("initValue",list.get(0));
+                try {
+                    Page<SelectOptionDto> page=getFinprodIdForAdd(params);
+                    if(page.getTotal()==0){
+                        continue;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 ComSharePriceDto.setSharesId(list.get(0).trim());
             }
             if (StringUtil.isNotEmpty(list.get(1))) {
                 ComSharePriceDto.setFinprodAbbr(list.get(1).trim());
             }
-            if (StringUtil.isNotEmpty(list.get(2))) {
+            if (StringUtil.isNotEmpty(list.get(2)) &&!ComBasicDataExcelUtil.isErrorDate(list.get(2))) {
                 ComSharePriceDto.setsShares(new BigDecimal(list.get(2).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(3))) {
+            if (StringUtil.isNotEmpty(list.get(3)) &&!ComBasicDataExcelUtil.isErrorDate(list.get(3))) {
                 ComSharePriceDto.setcShares(new BigDecimal(list.get(3).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(4))) {
+            if (StringUtil.isNotEmpty(list.get(4))&&!ComBasicDataExcelUtil.isErrorDate(list.get(4))) {
                 ComSharePriceDto.setDealDate(DateUtil.parse(list.get(4).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(5))) {
+            if (StringUtil.isNotEmpty(list.get(5))&&CommonUtil.isFloatNumeric(list.get(5))) {
                 ComSharePriceDto.setPreClosePrice(new BigDecimal(list.get(5).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(6))) {
+            if (StringUtil.isNotEmpty(list.get(6))&&CommonUtil.isFloatNumeric(list.get(6))) {
                 ComSharePriceDto.setOpenPrice(new BigDecimal(list.get(6).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(7))) {
+            if (StringUtil.isNotEmpty(list.get(7))&&CommonUtil.isFloatNumeric(list.get(7))) {
                 ComSharePriceDto.setHighPrice(new BigDecimal(list.get(7).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(8))) {
+            if (StringUtil.isNotEmpty(list.get(8))&&CommonUtil.isFloatNumeric(list.get(8))) {
                 ComSharePriceDto.setLowPrice(new BigDecimal(list.get(8).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(9))) {
+            if (StringUtil.isNotEmpty(list.get(9))&&CommonUtil.isFloatNumeric(list.get(8))) {
                 ComSharePriceDto.setClosePrice(new BigDecimal(list.get(9).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(10))) {
+            if (StringUtil.isNotEmpty(list.get(10))&&CommonUtil.isFloatNumeric(list.get(10))) {
                 ComSharePriceDto.setChange(new BigDecimal(list.get(10).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(11))) {
+            if (StringUtil.isNotEmpty(list.get(11))&&CommonUtil.isFloatNumeric(list.get(11))) {
                 ComSharePriceDto.setChangePercent(new BigDecimal(list.get(11).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(12))) {
+            if (StringUtil.isNotEmpty(list.get(12))&&CommonUtil.isFloatNumeric(list.get(12))) {
                 ComSharePriceDto.setDealValume(new BigDecimal(list.get(12).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(13))) {
+            if (StringUtil.isNotEmpty(list.get(13))&&CommonUtil.isFloatNumeric(list.get(13))) {
                 ComSharePriceDto.setDealAmount(new BigDecimal(list.get(13).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(14))) {
+            if (StringUtil.isNotEmpty(list.get(14))&&CommonUtil.isFloatNumeric(list.get(14))) {
                 ComSharePriceDto.setAvgPrice(new BigDecimal(list.get(14).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(15))) {
+            if (StringUtil.isNotEmpty(list.get(15))&&CommonUtil.isFloatNumeric(list.get(15))) {
                 ComSharePriceDto.setPreClosePriceAdj(new BigDecimal(list.get(15).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(16))) {
+            if (StringUtil.isNotEmpty(list.get(16))&&CommonUtil.isFloatNumeric(list.get(16))) {
                 ComSharePriceDto.setOpenPriceAdj(new BigDecimal(list.get(16).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(17))) {
+            if (StringUtil.isNotEmpty(list.get(17))&&CommonUtil.isFloatNumeric(list.get(17))) {
                 ComSharePriceDto.setHighPriceAdj(new BigDecimal(list.get(17).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(18))) {
+            if (StringUtil.isNotEmpty(list.get(18))&&CommonUtil.isFloatNumeric(list.get(18))) {
                 ComSharePriceDto.setLowPriceAdj(new BigDecimal(list.get(18).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(19))) {
+            if (StringUtil.isNotEmpty(list.get(19))&&CommonUtil.isFloatNumeric(list.get(19))) {
                 ComSharePriceDto.setClosePriceAdj(new BigDecimal(list.get(19).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(20))) {
+            if (StringUtil.isNotEmpty(list.get(20))&&CommonUtil.isFloatNumeric(list.get(20))) {
                 ComSharePriceDto.setFactorAdj(new BigDecimal(list.get(20).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(21))) {
@@ -322,10 +347,10 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
                     ComSharePriceDto.setTradeStatus(tradeStatus);
                 }
             }
-            if (StringUtil.isNotEmpty(list.get(22))) {
+            if (StringUtil.isNotEmpty(list.get(22))&&CommonUtil.isFloatNumeric(list.get(22))) {
                 ComSharePriceDto.setPe(new BigDecimal(list.get(22).trim()));
             }
-            if (StringUtil.isNotEmpty(list.get(23))) {
+            if (StringUtil.isNotEmpty(list.get(23))&&CommonUtil.isFloatNumeric(list.get(23))) {
                 ComSharePriceDto.setPb(new BigDecimal(list.get(23).trim()));
             }
             // Date date = new Date();
@@ -359,6 +384,19 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
             // 验证导入资产代码是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "资产代码为空");
             excelValidDtolist.add(dto);
+        }else{
+            //股票标的是否存在
+            Map<String, Object> params=new HashMap<>();
+            params.put("initValue",list.get(0));
+            try {
+                Page<SelectOptionDto> page=getFinprodIdForAdd(params);
+                if(page.getTotal()==0){
+                    ExcelValidDto dto = new ExcelValidDto(list.get(0), String.valueOf(i+2), "股票标的信息 不存在！");
+                    excelValidDtolist.add(dto);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         if (StringUtil.isEmpty(list.get(1))) {
             // 验证导入资产名称是否为空
@@ -369,51 +407,101 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
             // 验证导入总股本是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "总股本为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(2))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(2), String.valueOf(i+2), "总股本不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(3))) {
             // 验证导入流通股本是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "流通股本为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(3))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(3), String.valueOf(i+2), "流通股本不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(4))) {
             // 验证导入交易日期是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "交易日期为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(ComBasicDataExcelUtil.isErrorDate(list.get(4))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(4), String.valueOf(i+2), "交易日期格式不对");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(5))) {
             // 验证导入昨收盘价是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "昨收盘价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(5))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(5), String.valueOf(i+2), "昨收盘价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(6))) {
             // 验证导入开盘价是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "开盘价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(6))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(6), String.valueOf(i+2), "开盘价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(7))) {
             // 验证导入最高价是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "最高价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(7))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(7), String.valueOf(i+2), "最高价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(8))) {
             // 验证导入最低价是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "最低价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(8))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(8), String.valueOf(i+2), "最低价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(9))) {
             // 验证导入收盘价是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "收盘价为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(9))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(9), String.valueOf(i+2), "收盘价不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(12))) {
             // 验证导入成交量是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "成交量为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(12))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(12), String.valueOf(i+2), "成交量不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(13))) {
             // 验证导入成交金额是否为空
             ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "成交金额为空");
             excelValidDtolist.add(dto);
+        }else{
+            if(!CommonUtil.isFloatNumeric(list.get(13))){
+                ExcelValidDto dto = new ExcelValidDto(list.get(13), String.valueOf(i+2), "成交金额不为数字");
+                excelValidDtolist.add(dto);
+            }
         }
         if (StringUtil.isEmpty(list.get(21))) {
             // 验证导入交易状态是否为空
@@ -449,31 +537,33 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
         throws ParseException {
     	List<ComSharePriceDto> equityList = converToBean(dataList,null);
     	List<Integer> duplicateData=new ArrayList<Integer>();
-      for (int i = 0; i < dataList.size(); i++ ) {
-      	ComSharePriceDto ComSharePriceDto = equityList.get(i);
-      	if(ComSharePriceDto.getSharesId() == null
-        		|| ComSharePriceDto.getDealDate() == null
-        		|| duplicateData.contains(i)){
-      		continue;
+    	if(!org.apache.commons.collections4.CollectionUtils.isEmpty(equityList)) {
+            for (int i = 0; i < dataList.size(); i++) {
+                ComSharePriceDto ComSharePriceDto = equityList.get(i);
+                if (ComSharePriceDto.getSharesId() == null
+                        || ComSharePriceDto.getDealDate() == null
+                        || duplicateData.contains(i)) {
+                    continue;
+                }
+                // 检查表内数据是否有主键重复
+                for (int k = i + 1; k < dataList.size(); k++) {
+                    if (equityList.get(k).getSharesId() == null
+                            || equityList.get(k).getDealDate() == null) {
+                        continue;
+                    }
+                    if (equityList.get(k).getSharesId().equals(
+                            ComSharePriceDto.getSharesId())
+                            && equityList.get(k).getDealDate().equals(ComSharePriceDto.getDealDate())) {
+                        if (!duplicateData.contains(k)) {
+                            duplicateData.add(k);
+                        }
+                    }
+                }
+            }
         }
-          // 检查表内数据是否有主键重复
-          for (int k = i + 1; k < dataList.size(); k++ ) {
-        	  if(equityList.get(k).getSharesId() == null
-              		|| equityList.get(k).getDealDate() == null){
-        		  continue;
-              }
-              if (equityList.get(k).getSharesId().equals(
-              		ComSharePriceDto.getSharesId())
-                      && equityList.get(k).getDealDate().equals(ComSharePriceDto.getDealDate())) {
-              	if(!duplicateData.contains(k)){
-              		duplicateData.add(k);
-              	}
-              }
-          }
-      }
-      if(duplicateData.isEmpty()){
-    	  duplicateData.add(-1);
-      }
+//      if(duplicateData.isEmpty()){
+//    	  duplicateData.add(-1);
+//      }
       return duplicateData;
     }
 

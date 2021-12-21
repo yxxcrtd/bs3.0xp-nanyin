@@ -808,7 +808,8 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 			// modify by zhangliang 20210315 直连报送全量查询 end
 		}
 		if(CollectionUtils.isNotEmpty(list)){
-			List<CheckReport001Dto> resultlist  = check(null);
+			List<String> keys = list.stream().map(string -> string.getRegistSeqno()).collect(Collectors.toList());
+			List<CheckReport001Dto> resultlist  = check(null,keys);
 			Map<String,CheckReport001Dto> checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1, key2)->key1));
 			int i=result.size();
 			for(ChbAstValueRegist001Dto chbAstValueRegist001Dto : list){
@@ -849,7 +850,7 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 	 * @return List<CheckReport001Dto>
 	 * @version 1.7 2019年6月24日
 	 */
-	public List<CheckReport001Dto> check(Date batchDate){
+	public List<CheckReport001Dto> check(Date batchDate,List<String> keys){
 		Date checkdate = DateUtil.parse(DateUtil.getSysDate());
 		// 供跑批使用
 		if (StringUtil.isNotEmpty(batchDate)){
@@ -857,7 +858,7 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 		}
 		// 数据日期为系统时间
 		// 删除今天所有已检查的数据
-		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产估值信息登记.getValue(),checkdate);
+		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产估值信息登记.getValue(),checkdate,keys);
 		//增加例外情况过滤
 		List<ChbCheckRuleout> listRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_AST_VAL_SUB);
 		Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(
@@ -865,7 +866,7 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 
 		//检查数据
 		//报送前强制的错误检查
-		List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkAstValueSub(checkdate,mapRuleout);
+		List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkAstValueSub(checkdate,mapRuleout,keys);
 
 		//报错检查异常数据
 		int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数

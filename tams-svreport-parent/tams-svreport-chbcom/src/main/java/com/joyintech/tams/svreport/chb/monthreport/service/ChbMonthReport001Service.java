@@ -729,13 +729,13 @@ public class ChbMonthReport001Service extends SvrCommonExportService<ChbMonthRep
         // 数据日期为系统时间
         Date checkdate = DateUtil.parse(DateUtil.getSysDate());
         // 删除今天所有已检查的数据
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_银行月度统计表.getValue(),checkdate);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_银行月度统计表.getValue(),checkdate,null);
         //增加例外情况过滤
         List<ChbCheckRuleout> listRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_PRD_ISSUE_SUB);
         Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(
                  JoyinCollectors.groupingBy(x -> x.getProdId()));
         //检查数据
-        List<CheckReport001Dto> resultList = beforeSubCheck.checkProdMonthReport(checkdate,mapRuleout);
+        List<CheckReport001Dto> resultList = beforeSubCheck.checkProdMonthReport(checkdate,mapRuleout,null);
         //报错检查异常数据
         int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
         int batchLastIndex = batchCount;// 每批最后一个的下标

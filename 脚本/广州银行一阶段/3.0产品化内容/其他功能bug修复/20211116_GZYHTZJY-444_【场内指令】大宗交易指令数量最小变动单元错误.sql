@@ -1,0 +1,1 @@
+delete from TRD_ATTRIBUTE_CONFIG where CONFIG_NO in ('1111', '15645');

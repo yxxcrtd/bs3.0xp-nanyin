@@ -146,6 +146,21 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
 
         oneStepInfo = oneStepList.get(0);
 
+        if(StringUtil.isNotEmpty(inputDto.getZhiYaQuan())){
+            if(StringUtil.equals(oneStepInfo.getDeductObjType(),DictCodeListExt3.扣减对象_交易对手.getValue())){
+                inputDto.setFinprodId(inputDto.getZhiYaQuan());
+                List<CreditComInfoOneStepDto> List = getCreditInfoOneStep(inputDto);
+                if(List.size() != 1){
+                    logger.info(getMessage("==========处理数据结束,交易或指令编号:"+ inputDto.getFinprodId() + ",获取额度校验规则失败=========="));
+                    return;
+                }
+                oneStepInfo = List.get(0);
+                oneStepInfo.setDeductObjType(DictCodeListExt3.扣减对象_发行人.getValue());
+            }else {
+                return;
+            }
+        }
+
         if(StringUtil.equals(DictCodeListRsk.额度分类_不扣限额.getValue(),oneStepInfo.getCreditType())){
             // 为0或者无授信返回成功结果
             logger.info(getMessage("==========处理数据结束,交易或指令编号:"+ inputDto.getFinprodId() + ",不扣限额=========="));
@@ -278,7 +293,11 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                 if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_否.getValue())){
                     outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_17"));
                 }else if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_是.getValue())){
-                    outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_18"));
+                    if(StringUtil.isNotEmpty(inputDto.getZhiYaQuan())){
+                        outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_19"));
+                    }else {
+                        outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_18"));
+                    }
                 }
             }
         }
@@ -1743,6 +1762,9 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         creditLinesOutputDtoList.add(outputDto);
         // STEP  1 处理基础数据（资产授信数据，额度校验规则、机构授信数据）
         findBasicData(inputDto);
+        if(StringUtil.isNotEmpty(inputDto.getZhiYaQuan())){
+            inputDto.setFinprodId(null);
+        }
         if (creditLinesAst == null && (oneStepInfo != null && oneStepInfo.getDeductObj() == null || creditLinesOrg == null && creditLinesOrgItem == null)){
             return outputDto;
         }

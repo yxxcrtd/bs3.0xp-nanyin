@@ -347,7 +347,14 @@ public class RepurchaseDealTemplateRecService {
         // 金融产品交易
         TrdProductDeal valFinProductDeal = new TrdProductDeal();
         // 交易编号 = 自动生成
-        String tradeId = interfCommonService.getTradeid(dto.getPs(),dto.getTradeDate(), "A");
+        //String tradeId = interfCommonService.getTradeid(dto.getPs(),dto.getTradeDate(), "A");
+        /**由于债券交易不自动生成结算指令，需要根据上游交易编号来关联指令，交易编号直接取上游交易编号 update by yinya on 20211207**/
+        String tradeId=null;
+        if(dto.getDataActionSign().equals(DictCodeListExt1.交易状态_初始.getValue())){
+            tradeId=dto.getTradeId();
+        }else{
+            tradeId=interfCommonService.getTradeid(dto.getPs(),dto.getTradeDate(),"A");
+        }
         valFinProductDeal.setTradeId(tradeId);
         // 业务类型 = A.业务类型
         valFinProductDeal.setBusiType(dto.getBusiType());
@@ -571,7 +578,8 @@ public class RepurchaseDealTemplateRecService {
         if(valFinProductDeal.getTradeStatus().equals(DictCodeListExt1.交易状态_撤销.getValue())){
         	valFinProductDeal.setpTradeId(interfCommonService.getFTradeId(valFinProductDeal));
         }
-        
+        //是否生成结算指令 add by yinya on 20211201
+        valFinProductDeal.setIsOrders(dto.getIsClean());
         return valFinProductDeal;
     }
 

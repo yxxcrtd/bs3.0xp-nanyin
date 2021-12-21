@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
+import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,6 +44,9 @@ public class EtrPlanAssetCValidator implements EtrCommonValidator {
 
     @Autowired
     private EtrPlanAssetCService etrPlanAssetCService;
+
+    @Autowired
+    private PtlPortfolioMapper ptlPortfolioMapper;
     /**
      * {@inheritDoc}
      */
@@ -183,6 +188,15 @@ public class EtrPlanAssetCValidator implements EtrCommonValidator {
         }
             errorList.addAll(etrPlanAssetCService.check(dto));
         }
+        /*TISHKS-92 计划类货币型指令、计划类净值型指令与场外基金指令，交易方向选择买入时，提示框缺失 start*/
+        if(StringUtil.equals(DictCodeList.交易方向_买入.getValue(), dto.getPs()) && StringUtil.isNotEmpty( dto.getEtrInvestPersonInfo())
+                && StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getCounterId())) {
+            PtlPortfolio mcp = ptlPortfolioMapper.selectByPrimaryKey(dto.getEtrInvestPersonInfo().getCounterId());
+            if (mcp != null) {
+                errorList.add(new ValidMessage("etrInvestPersonInfo.counterId", this.getMessage("TRD_COUNTER_TYPE_001")));
+            }
+        }
+        /*TISHKS-92 计划类货币型指令、计划类净值型指令与场外基金指令，交易方向选择买入时，提示框缺失 end*/
         return errorList;
     }
 

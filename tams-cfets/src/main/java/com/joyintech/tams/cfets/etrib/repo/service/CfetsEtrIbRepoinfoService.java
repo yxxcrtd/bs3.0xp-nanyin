@@ -34,6 +34,7 @@ import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
 import com.joyintech.tams.common.base.entity.PtlSecStock;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -110,6 +111,9 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
      * @return
      */
     public Page<CfetsEtrIbRepoLibAvaPledgeBondResponse> selectAvaPledgeBondList(CfetsEtrRepoLibAvaPledgeBondRequest dto) {
+        if(!StringUtil.isNotEmpty(dto.getPledgeStockId())){
+            dto.setPledgeStockId("999999");
+        }
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         this.setParam(pageParam);
         return super.queryForPage(dto.getPageMode().getPageNo(),dto.getPageMode().getPageSize(),() ->cfetsEtrIbRepoLib001Mapper.selectAvaPledgeBondList(pageParam));
@@ -172,7 +176,7 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
                     &&StringUtil.isNotEmpty(dto.getPs())
                     &&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(), dto.getPs())){
                 if(StringUtil.isNotEmpty(dtoList.get(i).getTotalAmount())){
-                    if(StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt())&&dtoList.get(i).getTotalAmount().compareTo(dtoList.get(i).getTotalAmount())<0){
+                    if(StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt())&&dtoList.get(i).getTotalAmount().compareTo(dtoList.get(i).getEntrustAmt())<0){
                         messages.add(new ValidMessage("(第"+(i+1)+"行)，质押券金额不足。"));
                     }
                 }else{
@@ -197,8 +201,16 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
      * @since 1.0
      */
     public Page<CfetsEtrRepoZLCXPositionResponse> findZlglPositionPage(CfetsEtrRepoZLCXPositionRequest cfetsEtrRepoZLCXPositionRequest) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("role_pos", DictCodeListExt2.角色岗位_投资处长.getValue());
+        map.put("userId", SecurityUtil.getLoginUser().getUserName());
+        Long count = selectUserRolePosList(map) ;
         Map<String, Object> pageParam = BeanUtil.object2Map(cfetsEtrRepoZLCXPositionRequest);
-        pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+        if(count > 0){
+            pageParam.put("userId", null);
+        }else{
+            pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+        }
         pageParam.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
         pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
         pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());

@@ -11,18 +11,23 @@ import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustHistoryExam
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.dao.IntegratedEntrustHistoryMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.IntegratedEntrustHistoryService;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHistoryService {
 
     @Autowired
     private IntegratedEntrustHistoryMapper integratedEntrustHistoryMapper;
-
+    @Autowired
+    private SqlSessionTemplate sqlSessionTemplate;
     @Override
     public List<IntegratedEntrustHistory> queryAll() {
         return integratedEntrustHistoryMapper.selectByExample(null);
@@ -30,7 +35,18 @@ public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHis
 
     @Override
     public void saveIntegratedEntrustHistory(List<IntegratedEntrustHistory> integratedEntrustHistories) {
-        integratedEntrustHistoryMapper.insertBatch(integratedEntrustHistories);
+        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH,false);
+        IntegratedEntrustHistoryMapper integratedEntrustHistoryMapper = sqlSession.getMapper(IntegratedEntrustHistoryMapper.class);
+        AtomicInteger index = new AtomicInteger(0);
+        integratedEntrustHistories.forEach(integratedEntrustHistory -> {
+            index.getAndIncrement();
+            integratedEntrustHistoryMapper.insertSelective(integratedEntrustHistory);
+            if (index.get() % 500 == 0){
+                sqlSession.flushStatements();
+            }
+        });
+        sqlSession.commit();
+        sqlSession.close();
     }
 
     @Override

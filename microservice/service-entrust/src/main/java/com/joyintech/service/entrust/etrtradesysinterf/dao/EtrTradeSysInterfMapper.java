@@ -50,5 +50,6 @@ public interface EtrTradeSysInterfMapper {
      * @return
      */
     Integer updateEtrStatu(@Param("entrustId") String entrustId,@Param("entrustStatus") String entrustStatus);
-   
+
+    String getRealNameByUser(@Param("userId") String userId);
 }

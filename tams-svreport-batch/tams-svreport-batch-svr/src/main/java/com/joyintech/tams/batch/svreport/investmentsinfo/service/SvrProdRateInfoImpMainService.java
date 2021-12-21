@@ -3,6 +3,7 @@ package com.joyintech.tams.batch.svreport.investmentsinfo.service;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
+import com.joyintech.tams.common.ChbPrdRateFileImpService;
 import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
@@ -28,8 +29,8 @@ public class SvrProdRateInfoImpMainService extends AutoSendCBBaseService {
      */
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    //@Autowired
-    //private ProdPeriodyieldFileImpService prodPeriodyieldFileImpService;
+    @Autowired
+    private ChbPrdRateFileImpService chbPrdRateFileImpService;
 
     @Autowired
     private ChbProdInfoRateInterf chbProdInfoRateInterf;
@@ -57,11 +58,11 @@ public class SvrProdRateInfoImpMainService extends AutoSendCBBaseService {
                 }
             } else  if (InterfConstants.CONTENTSRC_FILE_XML.equals(contentSrc)
                     || InterfConstants.CONTENTSRC_FILE_TXT.equals(contentSrc)) {
-                // 报价信息文件接入
-               /* String result = prodPeriodyieldFileImpService.execute(batchDate,com.joyintech.tams.common.InterfDefine.产品收益率净值接口数据.getCode());
+                // 产品利率基本信息文件接入
+                String result = chbPrdRateFileImpService.execute(batchDate,com.joyintech.tams.common.InterfDefine.产品利率基本信息接口数据.getCode());
                 if("fail".equals(result)){
                     throw new BusinessException("fail");
-                }*/
+                }
             } else {
                 logger.error("CHB_INTERF_CONFIG表中内容来源配置无效！");
             }

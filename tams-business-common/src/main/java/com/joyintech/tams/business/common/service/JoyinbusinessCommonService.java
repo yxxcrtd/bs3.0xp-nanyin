@@ -89,15 +89,16 @@ public class JoyinbusinessCommonService extends BaseService {
             //需要查询债券资产和回购期限
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getfinprodIdOfBondAndRepo(param));
         }
-        if(StringUtil.isNotEmpty(dto.getPs()) && StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue())){
+        if(StringUtil.isNotEmpty(dto.getPs()) && (StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue())
+                                                   ||StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_赎回.getValue()))){
             param.put("platDate",DateUtil.platDateFromCache());
+            param.put("ps",dto.getPs());
             String userId = SecurityUtil.getLoginUser().getUserName();
-            if (StringUtils.isNotEmpty(userId)) {
+            if (StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_回售.getValue()) && StringUtils.isNotEmpty(userId)) {
                 param.put("userId", SecurityUtil.getLoginUser().getUserName());
-                return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getRightfinprodIdForAdd(param));
-            }else{
-                return null;
             }
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getRightfinprodIdForAdd(param));
+
         }else{
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.getfinprodIdForAdd(param));
         }

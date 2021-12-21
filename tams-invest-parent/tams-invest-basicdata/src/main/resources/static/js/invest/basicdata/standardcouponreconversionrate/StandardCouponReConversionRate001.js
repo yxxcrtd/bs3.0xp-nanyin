@@ -4,13 +4,6 @@ $(function() {
      */
     var getSearchParams = function() {
         var object = $.serializeToObject('#searchForm',true);
-
-        // if(object.brokerId){
-        //     object.brokerId = object.brokerId.join(",");
-        // }
-        // if(object.accountType){
-        //     object.accountType = object.accountType.join(",");
-        // }
         return object;
     };
 
@@ -31,14 +24,22 @@ $(function() {
                 JoyinUtil.getRealPath("invest/basicdata/standardcouponreconversionrate/StandardCouponReConversionRate002/init"),
                 "75%", "75%", data,
                 function(){
-                table.reload();
-            });
+                    table.reload();
+                });
         },
         cols:[{field:'brokerId',width:200,  title: '券商',visible:false}
+            ,{field:'seqNo',width:200,  title: '序列号',visible:false}
             ,{field:'brokerName',width:200,  title: '券商'}
-            ,{field:'accountType',width:200,  title: '资金账户',visible:false}
-            ,{field:'accountTypeStr',width:200,  title: '资金账户'}
-            ,{field:'tandardRate',width:200, title: '标准券再折算率（%）'}
+            /*            ,{field:'accountType',width:200,  title: '资金账户',visible:false}
+                        ,{field:'accountTypeStr',width:200,  title: '资金账户'}*/
+            ,{field:'finprodId',width:200,  title: '资产代码',visible:false}
+            /**修改资产代码 排序 liuzilong 2021-11-09**/
+            ,{field:'finprodIdStr',width:200,  title: '资产代码' ,visible:false}
+            ,{field:'finprodMarketIdStr',width:200,  title: '资产代码',sortField:"finprodMarketId", sort: true}
+            ,{field:'finprodAbbr',width:200,  title: '资产名称'}
+            ,{field:'moreConvrate',width:200,typeapplication:'number', title: '标准券再折算率（%）'}
+            ,{field:'startDate',width:200,  title: '开始使用日期'}
+            ,{field:'endDate',width:200,  title: '结束使用日期'}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });
@@ -66,7 +67,9 @@ $(function() {
                 "75%", "75%", {
                     pageModel: PAGE_MODEL_EDIT,
                     brokerId: data.brokerId,
-                    accountType: data.accountType
+                    finprodId: data.finprodId,
+                    startDate: data.startDate,
+                    seqNo:data.seqNo
                 }, function () {
                     table.reload();
                 })
@@ -76,11 +79,10 @@ $(function() {
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        var object = data;
-        object.operateType = "delete";
+        var object = {selectedItem: [data], operateType:"delete"};
         Joyin.ajaxJson(basePath + 'invest/basicdata/standardcouponreconversionrate/StandardCouponReConversionRate001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'invest/basicdata/standardcouponreconversionrate/StandardCouponReConversionRate002/save', object, "StandardCouponReConversionRate001_btn_delete", "StandardCouponReConversionRate002");
+                WorkFlow.doDeleteList(basePath + 'invest/basicdata/standardcouponreconversionrate/StandardCouponReConversionRate001/delete', object, "StandardCouponReConversionRate001_btn_delete", "StandardCouponReConversionRate002");
             });
         });
     });
@@ -103,6 +105,19 @@ $(function() {
 
         $('#StandardCouponReConversionRate001_btn_export').click(function() {
             exportExcel();
+        });
+
+        $('#StandardCouponReConversionRate001_btn_import').click(function() {
+            Joyin.confirm("请确认是否要导入数据？", function() {
+                Joyin.uploadFile({pageId:'StandardCouponReConversionRate001MTM'},function(fileName) {
+                    Joyin.ajax(basePath + 'invest/basicdata/standardcouponreconversionrate/StandardCouponReConversionRate001/checkConfirmMsgForImportData', {fileName: fileName}, function(result) {
+                        var a = result;
+                        Joyin.ajax(basePath + 'invest/basicdata/standardcouponreconversionrate/StandardCouponReConversionRate001/importFile', {fileName: fileName});
+                    });
+                },function() {
+                    table.reload();
+                });
+            });
         });
 
         $('#StandardCouponReConversionRate001_btn_delete').click(function() {

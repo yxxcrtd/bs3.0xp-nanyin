@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.identityrepair.dao.SvrIdentityRepairInterfMapper" >
+   
+    <select id="selectBatchData" resultType="com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair">
+		SELECT
+		tmp1.equMark,
+		tmp1.indentifyMark,
+		tmp1.registBankCode,
+		tmp2.fundAccPlace,
+		tmp2.agencyCode,
+		tmp2.orgIndentifyMark
+		FROM(
+		SELECT
+		'SUB'  equMark,
+		INDENTIFY_MARK indentifyMark,
+		REGIST_BANK_CODE registBankCode
+		FROM CHB_EQU_SUB
+		WHERE FUND_ACC_PLACE is NULL
+		OR THE_BANK_CODE is NULL
+
+		UNION ALL
+
+		SELECT
+		'CHECK'  equMark,
+		INDENTIFY_MARK indentifyMark,
+		REGIST_BANK_CODE registBankCode
+		FROM CHB_EQU_HOLD_CHECK
+		WHERE
+		FUND_ACC_PLACE is NULL
+		OR THE_BANK_CODE is NULL
+		)  tmp1
+		LEFT JOIN (
+		SELECT
+		DISTINCT(ORG_INDENTIFY_MARK) as orgIndentifyMark,
+		INDENTIFY_MARK as indentifyMark,
+		FUND_ACC_PLACE as fundAccPlace,
+		AGENCY_CODE  as agencyCode
+		FROM CHB_EQUDET_SUB
+		WHERE TO_CHAR(EQUITY_CONF_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+		group BY
+		ORG_INDENTIFY_MARK,
+		AGENCY_CODE,
+		INDENTIFY_MARK,
+		FUND_ACC_PLACE)  tmp2
+		ON tmp1.indentifyMark = tmp2.orgIndentifyMark
+		GROUP BY
+		tmp1.equMark,
+		tmp1.indentifyMark,
+		tmp1.registBankCode,
+		tmp2.fundAccPlace,
+		tmp2.agencyCode,
+		tmp2.orgIndentifyMark
+	</select>
+
+
+	<select id="idenCheck" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		from
+		CHB_EQUDET_SUB
+		WHERE TO_CHAR(EQUITY_CONF_DATE,'yyyy-mm-dd') = #{batchDate,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updataSub" parameterType="string">
+		UPDATE CHB_EQU_SUB
+		SET
+		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR},
+		THE_BANK_CODE = NVL(#{agencyCode,jdbcType=VARCHAR},#{registBankCode,jdbcType=VARCHAR})
+		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updataCheck" parameterType="string">
+		update CHB_EQU_HOLD_CHECK
+		SET
+		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR},
+		THE_BANK_CODE = NVL(#{agencyCode,jdbcType=VARCHAR},#{registBankCode,jdbcType=VARCHAR})
+		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
+	</update>
+</mapper>

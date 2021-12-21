@@ -74,7 +74,8 @@ public class FlowRiskStressTest001Service extends CommonExportService<FlowRiskSt
 	     param.put("in_test_id", dto.getTestId());//测试代码
 	     param.put("sceneId", dto.getSceneId());//情景代码
 	     param.put("portfolioSingleName", dto.getPortfolioSingleName());//所选产品
-	     param.put("analysisVdate", dto.getAnalysisVdate());//开始日期
+		 param.put("in_object_ids", dto.getPortfolioSingleName());//所选产品
+		 param.put("analysisVdate", dto.getAnalysisVdate());//开始日期
 	     param.put("analysisMdate", dto.getAnalysisMdate());//结束日期
          restTemplate.postForObject(
              ServiceApplication.RISK_SERVICE_NAME +

@@ -94,7 +94,9 @@ public class StlDataDealSzdZsmxProcessService {
             // 交易方向
             settleTransData.setPs(StringUtil.equalsIgnoreCase(szdZsmx.getMxywlb(), StlDataDealProcessConstant.ZSMX_YWLB_ZS) ? DictCodeList.交易方向_税费缴税.getValue() : null);
             // 成交编号
-            settleTransData.setTradeId(IDGenerator.generate());
+            String generate = IDGenerator.generate();
+            settleTransData.setTradeId(generate);
+            settleTransData.setCjbh(generate);
 			// 执行日期
 			settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
 			// 证券品种

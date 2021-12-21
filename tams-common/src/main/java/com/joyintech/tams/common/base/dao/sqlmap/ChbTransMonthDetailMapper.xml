@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbTransMonthDetailMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbTransMonthDetail" >
+        <id column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+        <result column="TERMID" property="termid" jdbcType="VARCHAR" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+        <result column="NEW_BALANCE" property="newBalance" jdbcType="DECIMAL" />
+        <result column="NEW_TERMS" property="newTerms" jdbcType="DECIMAL" />
+        <result column="OLD_BALANCE" property="oldBalance" jdbcType="DECIMAL" />
+        <result column="OLD_TERMS" property="oldTerms" jdbcType="DECIMAL" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DETAILUUID DETAILUUID, TERMID TERMID, REPORTTYPE REPORTTYPE, PROPERTYCODE PROPERTYCODE, 
+        NEW_BALANCE NEW_BALANCE, NEW_TERMS NEW_TERMS, OLD_BALANCE OLD_BALANCE, OLD_TERMS OLD_TERMS, 
+        ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, REPORTUUID REPORTUUID
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbTransMonthDetailMapper.Base_Column_List" />
+        from CHB_TRANS_MONTH_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbTransMonthDetailMapper.Base_Column_List" />
+        from CHB_TRANS_MONTH_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbTransMonthDetailMapper.Base_Column_List" />
+        from CHB_TRANS_MONTH_DETAIL
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_TRANS_MONTH_DETAIL
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbTransMonthDetail" >
+        insert into CHB_TRANS_MONTH_DETAIL (DETAILUUID, TERMID, REPORTTYPE, 
+            PROPERTYCODE, NEW_BALANCE, NEW_TERMS, 
+            OLD_BALANCE, OLD_TERMS, ORG_CODE, 
+            DEPT_CODE, REPORTUUID)
+        values (#{detailuuid,jdbcType=CHAR}, #{termid,jdbcType=VARCHAR}, #{reporttype,jdbcType=VARCHAR}, 
+            #{propertycode,jdbcType=VARCHAR}, #{newBalance,jdbcType=DECIMAL}, #{newTerms,jdbcType=DECIMAL}, 
+            #{oldBalance,jdbcType=DECIMAL}, #{oldTerms,jdbcType=DECIMAL}, #{orgCode,jdbcType=VARCHAR}, 
+            #{deptCode,jdbcType=VARCHAR}, #{reportuuid,jdbcType=CHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbTransMonthDetail" >
+        insert into CHB_TRANS_MONTH_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                DETAILUUID,
+            </if>
+            <if test="termid != null" >
+                TERMID,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE,
+            </if>
+            <if test="newBalance != null" >
+                NEW_BALANCE,
+            </if>
+            <if test="newTerms != null" >
+                NEW_TERMS,
+            </if>
+            <if test="oldBalance != null" >
+                OLD_BALANCE,
+            </if>
+            <if test="oldTerms != null" >
+                OLD_TERMS,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                #{detailuuid,jdbcType=CHAR},
+            </if>
+            <if test="termid != null" >
+                #{termid,jdbcType=VARCHAR},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="propertycode != null" >
+                #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="newBalance != null" >
+                #{newBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="newTerms != null" >
+                #{newTerms,jdbcType=DECIMAL},
+            </if>
+            <if test="oldBalance != null" >
+                #{oldBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="oldTerms != null" >
+                #{oldTerms,jdbcType=DECIMAL},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbTransMonthDetail" >
+        insert into CHB_TRANS_MONTH_DETAIL(DETAILUUID, TERMID, REPORTTYPE, PROPERTYCODE, 
+        NEW_BALANCE, NEW_TERMS, OLD_BALANCE, OLD_TERMS, ORG_CODE, DEPT_CODE, REPORTUUID)
+        select DETAILUUID, TERMID, REPORTTYPE, PROPERTYCODE, 
+            NEW_BALANCE, NEW_TERMS, OLD_BALANCE, OLD_TERMS, ORG_CODE, DEPT_CODE, REPORTUUID
+             from CHB_TRANS_MONTH_DETAIL
+             where 1 = 1 and DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbTransMonthDetail" >
+        update CHB_TRANS_MONTH_DETAIL
+        <set >
+            <if test="termid != null" >
+                TERMID = #{termid,jdbcType=VARCHAR},
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="newBalance != null" >
+                NEW_BALANCE = #{newBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="newTerms != null" >
+                NEW_TERMS = #{newTerms,jdbcType=DECIMAL},
+            </if>
+            <if test="oldBalance != null" >
+                OLD_BALANCE = #{oldBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="oldTerms != null" >
+                OLD_TERMS = #{oldTerms,jdbcType=DECIMAL},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID = #{reportuuid,jdbcType=CHAR},
+            </if>
+        </set>
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbTransMonthDetail" >
+        update CHB_TRANS_MONTH_DETAIL
+        set TERMID = #{termid,jdbcType=VARCHAR},
+            REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+            NEW_BALANCE = #{newBalance,jdbcType=DECIMAL},
+            NEW_TERMS = #{newTerms,jdbcType=DECIMAL},
+            OLD_BALANCE = #{oldBalance,jdbcType=DECIMAL},
+            OLD_TERMS = #{oldTerms,jdbcType=DECIMAL},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            REPORTUUID = #{reportuuid,jdbcType=CHAR}
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </update>
+</mapper>

@@ -626,7 +626,7 @@
             , {field: 'countertradername', title: '对手方交易员', width: '100'}
             , {field: 'ourinstitutioncode', title: '本方', width: '100'}
             , {field: 'ourtradername', title: '本方交易员', width: '100'}
-            , {field: 'lastqty', title: '券面总计（万元）', width: '100', type: 'money', digit: 2}
+            , {field: 'lastqty', title: '券面总额（万）', width: '100', type: 'money', digit: 2}
             , {field: 'price', title: '净价', width: '100', type: 'money', digit: 4}
             , {field: 'dirtyprice', title: '全价', width: '100', type: 'money', digit: 4}
             , {field: 'underlyingyield2', title: '到期收益率(%)', width: '100', type: 'money', digit: 4}
@@ -652,7 +652,7 @@
             , {field: 'ccyStr', title: '债券币种', sortField: 'ccy', width: '110'}
             , {field: 'ourcapitalbankname', width: 130, title: '本方资金开户行'}
             , {field: 'ourcapitalaccountname', width: 130, title: '本方资金账户户名'}
-            , {field: 'ourcapitalaccountnumber', width: 130, title: '本方资金账号'}
+            , {field: 'ourcapitalaccountnumber', width: 130, title: '本方资金账户账号'}
             , {field: 'ourpaymentsystemcode', width: 130, title: '本方支付账户户名'}
             , {field: 'countercapitalaccountnumber', width: 130, title: '对手方资金账号'}
             , {field: 'counterpaymentsystemcode', width: 130, title: '对手方支付系统行号'}

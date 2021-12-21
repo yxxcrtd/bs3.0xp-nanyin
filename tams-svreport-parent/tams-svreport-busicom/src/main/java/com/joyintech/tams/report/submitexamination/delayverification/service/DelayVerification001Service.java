@@ -134,9 +134,9 @@ public class DelayVerification001Service extends BaseService<DelayVerification00
         //在这里添加表名可以增加其Table的支持的列 因为现在字段不确定所以待后续更改
         String [] tableList={"CHB_PRD_DECLARE_SUB","CHB_PRD_ISSUE_SUB","CHB_PRD_RAISETOT_SUB","CHB_PRD_DEAL_SUB",
                              "CHB_PRD_END_SUB","CHB_ASSET_INFO_SUB","CHB_INVEST_TRADE_SUB","CHB_AST_VAL_SUB",
-                             "CHB_BOT_AST_POS_SUB","CHB_MONTH_REPORT","CHB_INVESTHOLD_INFO_SUB","CHB_EQU_SUB","CHB_EQUDET_SUB"};
+                             "CHB_BOT_AST_POS_SUB","CHB_MONTH_REPORT","CHB_SALER_STL_DEAL_SUB","CHB_SALE_MONTH_REPORT","CHB_INVESTHOLD_INFO_SUB","CHB_EQU_SUB","CHB_EQUDET_SUB"};
         String [] reportIndex={"01","02","04","06","07","10","11",
-                                "12","05","08","16","14","26"};
+                                "12","05","08","34","36","16","14","26"};
         pageParam.put("nosubmit", DictCodeListExt2.报送状态_未报送.getValue());
         pageParam.put("manualSub", DictCodeListExt2.报送状态_手工处理.getValue());
         Date now=svrBaseCommonService.getSysDate();
@@ -216,12 +216,12 @@ public class DelayVerification001Service extends BaseService<DelayVerification00
                 delayVerification002Dto.setCode(codeString);
             } else if (DictCodeListExt2.报表名称_人行月度统计报表.getValue().equals(reportIndex)){
                 // 人行月报的唯一标识单独处理
-                List<String> codeList = StringUtil.splitToList(GlobalConstant.VERTICAL_LINE, delayVerification002Dto.getCode());
-                String reporttype = codeList.get(0);
-                String termid = codeList.get(1);
-                String termName = termid.substring(0, 4)+"年"+termid.substring(4, 6)+"月";
-                String codeString = SvrDataUtil.getNameFromDataDict(DictCode.人行报表名称,reporttype)+"_"+termName;
-                delayVerification002Dto.setCode(codeString);
+//                List<String> codeList = StringUtil.splitToList(GlobalConstant.VERTICAL_LINE, delayVerification002Dto.getCode());
+//                String reporttype = codeList.get(0);
+//                String termid = codeList.get(1);
+//                String termName = termid.substring(0, 4)+"年"+termid.substring(4, 6)+"月";
+//                String codeString = SvrDataUtil.getNameFromDataDict(DictCode.人行报表名称,reporttype)+"_"+termName;
+//                delayVerification002Dto.setCode(codeString);
             }
             delayVerification002Dto.setRepName(SysDataUtil.getNameFromDataDict(DictCode.报表名称,
                 reportIndex));

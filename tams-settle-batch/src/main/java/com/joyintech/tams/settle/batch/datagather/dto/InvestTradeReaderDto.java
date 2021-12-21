@@ -12,6 +12,11 @@ import java.util.List;
  * @since 1.0
  */
 public class InvestTradeReaderDto extends NeedOperateEntity {
+
+    /**
+     * fasle表示调用自动匹配页面接口  true表示存续期  批处理处理交易数据
+     */
+    private boolean createTrade;
     /**
      * 成交数据明细数据
      */
@@ -56,5 +61,13 @@ public class InvestTradeReaderDto extends NeedOperateEntity {
 
     public void setSettleTransDataPledgeList(List<SettleTransDataPledge> settleTransDataPledgeList) {
         this.settleTransDataPledgeList = settleTransDataPledgeList;
+    }
+
+    public boolean isCreateTrade() {
+        return createTrade;
+    }
+
+    public void setCreateTrade(boolean createTrade) {
+        this.createTrade = createTrade;
     }
 }

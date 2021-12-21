@@ -15,7 +15,9 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
+import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -45,6 +47,8 @@ public class EtrFundValidator implements EtrCommonValidator {
     private EtrFundService etrFundService;
     List<ValidMessage> resultList = new ArrayList<ValidMessage>();
 
+    @Autowired
+    private PtlPortfolioMapper ptlPortfolioMapper;
     /**
      * {@inheritDoc}
      */
@@ -197,6 +201,16 @@ public class EtrFundValidator implements EtrCommonValidator {
             		errorList.add(new ValidMessage("finprodMarketId", getMessage("ETR_X_012", getMessage("EtrFund001.finprodId"))));
             	}
             	if(!StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
+                    errorList.add(new ValidMessage("entrustAmt", getMessage("ETR_X_012", getMessage("EtrFund001.entrustAmt"))));
+                }
+                if(StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
+                    if(etrFundDto.getEntrustAmt().compareTo(new BigDecimal(0)) != 1){
+                        errorList.add(new ValidMessage("entrustAmt", getMessage("ETR_X_008",getMessage("EtrFund001.entrustAmt"))));
+                    }
+                }
+            }
+            else if(etrFundDto.getPs().equals(DictCodeList.交易方向_卖出.getValue())){
+                if(!StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
                     errorList.add(new ValidMessage("entrustAmt", getMessage("ETR_X_012", getMessage("EtrFund001.entrustAmt"))));
                 }
                 if(StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
@@ -365,6 +379,16 @@ public class EtrFundValidator implements EtrCommonValidator {
                     }
                 }
             }
+            else if(etrFundDto.getPs().equals(DictCodeList.交易方向_卖出.getValue())){
+                if(!StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
+                    errorList.add(new ValidMessage("entrustAmt", getMessage("ETR_X_012", getMessage("EtrFund001.entrustAmt"))));
+                }
+                if(StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
+                    if(etrFundDto.getEntrustAmt().compareTo(new BigDecimal(0)) != 1){
+                        errorList.add(new ValidMessage("entrustAmt", getMessage("ETR_X_008",getMessage("EtrFund001.entrustAmt"))));
+                    }
+                }
+            }
             else{
             	if(StringUtil.isEmpty(etrFundDto.getFinprodMarketId())){
             		errorList.add(new ValidMessage("finprodMarketId", getMessage("ETR_X_012", getMessage("EtrFund001.finprodId"))));
@@ -403,8 +427,9 @@ public class EtrFundValidator implements EtrCommonValidator {
         // 增加可用现金的硬校验并增加开关 by 赵东东 20200121 start
         if(StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())&&StringUtil.isNotEmpty(etrFundDto.getProAvailableCash())&&
             (StringUtil.equals(etrFundDto.getPs(),DictCodeList.交易方向_买入.getValue())
-                ||StringUtil.equals(etrFundDto.getPs(),DictCodeList.交易方向_申购.getValue())
-                ||StringUtil.equals(etrFundDto.getPs(),DictCodeListExt2.交易方向_认购.getValue()))&&StringUtil.equals(
+//                ||StringUtil.equals(etrFundDto.getPs(),DictCodeList.交易方向_申购.getValue())
+//                ||StringUtil.equals(etrFundDto.getPs(),DictCodeListExt2.交易方向_认购.getValue())
+            )&&StringUtil.equals(
                     CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH),
                     DictCodeListExt1.是或否_否.getValue())) {
             if(etrFundDto.getEntrustAmt().compareTo(etrFundDto.getProAvailableCash())>0) {
@@ -422,7 +447,15 @@ public class EtrFundValidator implements EtrCommonValidator {
         && StringUtil.isEmpty(etrFundDto.getAssetType11())){
             errorList.add(new ValidMessage("assetType11", getMessage("ETR_X_012", getMessage("EtrInvestBondInfo001.type11"))));
         }
-
+        /*TISHKS-92 计划类货币型指令、计划类净值型指令与场外基金指令，交易方向选择买入时，提示框缺失 start*/
+        if(StringUtil.equals(DictCodeList.交易方向_买入.getValue(), etrFundDto.getPs()) && StringUtil.isNotEmpty(etrFundDto.getBussEtrInvestPersonInfoDto())
+                && StringUtil.isNotEmpty(etrFundDto.getBussEtrInvestPersonInfoDto().getCounterId())) {
+            PtlPortfolio mcp = ptlPortfolioMapper.selectByPrimaryKey(etrFundDto.getBussEtrInvestPersonInfoDto().getCounterId());
+            if (mcp != null) {
+                errorList.add(new ValidMessage("bussEtrInvestPersonInfoDto.counterId", this.getMessage("TRD_COUNTER_TYPE_001")));
+            }
+        }
+        /*TISHKS-92 计划类货币型指令、计划类净值型指令与场外基金指令，交易方向选择买入时，提示框缺失 end*/
         return errorList;
     }
 

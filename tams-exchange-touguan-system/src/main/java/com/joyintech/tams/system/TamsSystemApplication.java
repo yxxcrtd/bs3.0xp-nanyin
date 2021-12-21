@@ -33,7 +33,7 @@ public class TamsSystemApplication extends WebApplication {
 
 	@Bean
 	public Docket dataEtrexchangetradeDocket() {
-		return SwaggerConfig.createDocket("竞价交易", "com.joyintech.tams.exchange.touguan.etrexchange");
+		return SwaggerConfig.createDocket("竞价交易", "com.joyintech.tams.exchange.entrust.etrexchange");
 
 	}
 	

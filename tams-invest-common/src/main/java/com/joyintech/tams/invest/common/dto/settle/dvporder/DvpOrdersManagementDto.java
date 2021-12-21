@@ -168,6 +168,16 @@ public class DvpOrdersManagementDto extends BaseEntity {
      */
     private String orderStatus;
 
+    private String orderId;
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
     /**
      * 获取 sendStatus
      *

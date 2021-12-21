@@ -6,6 +6,8 @@ import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -13,22 +15,24 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 资产要素uuid（为修改删除使用）
      */
-    @PrimaryKey(PrimaryKey.Field.PK_1)
     private String assetUuid;
 
     /**
      * 行内资产负债编码
      */
+	@PrimaryKey(Field.PK_1)
     private String assetCode;
 
     /**
      * 资产类型
      */
+	@PrimaryKey(Field.PK_2)
     private String assetType;
 
     /**
      * 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
      */
+	@PrimaryKey(Field.PK_3)
     private String assetType2;
 
     /**
@@ -1045,26 +1049,6 @@ public class ChbAssetInfo extends BaseEntity {
     private String isChl;
 
     /**
-     * 是否商业银行可转债
-     */
-    private String bankSecKzzq;
-
-    /**
-     * 是否专项债券
-     */
-    private String bankSecZxzq;
-
-    /**
-     * 是否政府出资产业投资基金
-     */
-    private String isunlisted;
-
-    /**
-     * 是否标准化票据
-     */
-    private String isBzhpj;
-
-    /**
      * 发行人代码
      */
     private String chbIssuerId;
@@ -1095,6 +1079,26 @@ public class ChbAssetInfo extends BaseEntity {
     private String isBjszq;
 
     /**
+     * 是否商业银行可转债
+     */
+    private String bankSecKzzq;
+
+    /**
+     * 是否专项债券
+     */
+    private String bankSecZxzq;
+
+    /**
+     * 是否政府出资产业投资基金
+     */
+    private String isunlisted;
+
+    /**
+     * 是否标准化票据
+     */
+    private String isBzhpj;
+
+    /**
      * 永续债属性（债性/股性）
      */
     private String isPerpetual;
@@ -1103,6 +1107,42 @@ public class ChbAssetInfo extends BaseEntity {
      * 是否非标转标资产
      */
     private String isFbzb;
+
+    /**
+     * 结构化业务类型
+     */
+    private String constracteBusiType;
+
+    /**
+     * 结构化层级
+     */
+    private String constracteGrade;
+
+    /**
+     * 结构化杠杆倍数
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal constracteHeaverTimes;
+
+    /**
+     * 银行资本补充工具
+     */
+    private String bankCapital;
+
+    /**
+     * 是否PPN等低流动性债券
+     */
+    private String isPpn;
+
+    /**
+     * null
+     */
+    private String orgAssetTypeEx;
+
+    /**
+     * 是否持有金融牌照
+     */
+    private String isFinLicence;
 
     /**
      * 取得 资产要素uuid（为修改删除使用）
@@ -4315,70 +4355,6 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
-     * 取得 是否商业银行可转债
-     * @return 是否商业银行可转债
-     */
-    public String getBankSecKzzq() {
-        return bankSecKzzq;
-    }
-
-    /**
-     * 设置 是否商业银行可转债
-     * @param bankSecKzzq 是否商业银行可转债
-     */
-    public void setBankSecKzzq(String bankSecKzzq) {
-        this.bankSecKzzq = bankSecKzzq == null ? null : bankSecKzzq.trim();
-    }
-
-    /**
-     * 取得 是否专项债券
-     * @return 是否专项债券
-     */
-    public String getBankSecZxzq() {
-        return bankSecZxzq;
-    }
-
-    /**
-     * 设置 是否专项债券
-     * @param bankSecZxzq 是否专项债券
-     */
-    public void setBankSecZxzq(String bankSecZxzq) {
-        this.bankSecZxzq = bankSecZxzq == null ? null : bankSecZxzq.trim();
-    }
-
-    /**
-     * 取得 是否政府出资产业投资基金
-     * @return 是否政府出资产业投资基金
-     */
-    public String getIsunlisted() {
-        return isunlisted;
-    }
-
-    /**
-     * 设置 是否政府出资产业投资基金
-     * @param isunlisted 是否政府出资产业投资基金
-     */
-    public void setIsunlisted(String isunlisted) {
-        this.isunlisted = isunlisted == null ? null : isunlisted.trim();
-    }
-
-    /**
-     * 取得 是否标准化票据
-     * @return 是否标准化票据
-     */
-    public String getIsBzhpj() {
-        return isBzhpj;
-    }
-
-    /**
-     * 设置 是否标准化票据
-     * @param isBzhpj 是否标准化票据
-     */
-    public void setIsBzhpj(String isBzhpj) {
-        this.isBzhpj = isBzhpj == null ? null : isBzhpj.trim();
-    }
-
-    /**
      * 取得 发行人代码
      * @return 发行人代码
      */
@@ -4475,6 +4451,70 @@ public class ChbAssetInfo extends BaseEntity {
     }
 
     /**
+     * 取得 是否商业银行可转债
+     * @return 是否商业银行可转债
+     */
+    public String getBankSecKzzq() {
+        return bankSecKzzq;
+    }
+
+    /**
+     * 设置 是否商业银行可转债
+     * @param bankSecKzzq 是否商业银行可转债
+     */
+    public void setBankSecKzzq(String bankSecKzzq) {
+        this.bankSecKzzq = bankSecKzzq == null ? null : bankSecKzzq.trim();
+    }
+
+    /**
+     * 取得 是否专项债券
+     * @return 是否专项债券
+     */
+    public String getBankSecZxzq() {
+        return bankSecZxzq;
+    }
+
+    /**
+     * 设置 是否专项债券
+     * @param bankSecZxzq 是否专项债券
+     */
+    public void setBankSecZxzq(String bankSecZxzq) {
+        this.bankSecZxzq = bankSecZxzq == null ? null : bankSecZxzq.trim();
+    }
+
+    /**
+     * 取得 是否政府出资产业投资基金
+     * @return 是否政府出资产业投资基金
+     */
+    public String getIsunlisted() {
+        return isunlisted;
+    }
+
+    /**
+     * 设置 是否政府出资产业投资基金
+     * @param isunlisted 是否政府出资产业投资基金
+     */
+    public void setIsunlisted(String isunlisted) {
+        this.isunlisted = isunlisted == null ? null : isunlisted.trim();
+    }
+
+    /**
+     * 取得 是否标准化票据
+     * @return 是否标准化票据
+     */
+    public String getIsBzhpj() {
+        return isBzhpj;
+    }
+
+    /**
+     * 设置 是否标准化票据
+     * @param isBzhpj 是否标准化票据
+     */
+    public void setIsBzhpj(String isBzhpj) {
+        this.isBzhpj = isBzhpj == null ? null : isBzhpj.trim();
+    }
+
+    /**
      * 取得 永续债属性（债性/股性）
      * @return 永续债属性（债性/股性）
      */
@@ -4506,23 +4546,115 @@ public class ChbAssetInfo extends BaseEntity {
         this.isFbzb = isFbzb == null ? null : isFbzb.trim();
     }
 
-    private String orgAssetTypeEx;
+    /**
+     * 取得 结构化业务类型
+     * @return 结构化业务类型
+     */
+    public String getConstracteBusiType() {
+        return constracteBusiType;
+    }
 
-    private String isFinLicence;
+    /**
+     * 设置 结构化业务类型
+     * @param constracteBusiType 结构化业务类型
+     */
+    public void setConstracteBusiType(String constracteBusiType) {
+        this.constracteBusiType = constracteBusiType == null ? null : constracteBusiType.trim();
+    }
 
+    /**
+     * 取得 结构化层级
+     * @return 结构化层级
+     */
+    public String getConstracteGrade() {
+        return constracteGrade;
+    }
+
+    /**
+     * 设置 结构化层级
+     * @param constracteGrade 结构化层级
+     */
+    public void setConstracteGrade(String constracteGrade) {
+        this.constracteGrade = constracteGrade == null ? null : constracteGrade.trim();
+    }
+
+    /**
+     * 取得 结构化杠杆倍数
+     * @return 结构化杠杆倍数
+     */
+    public BigDecimal getConstracteHeaverTimes() {
+        return constracteHeaverTimes;
+    }
+
+    /**
+     * 设置 结构化杠杆倍数
+     * @param constracteHeaverTimes 结构化杠杆倍数
+     */
+    public void setConstracteHeaverTimes(BigDecimal constracteHeaverTimes) {
+        this.constracteHeaverTimes = constracteHeaverTimes;
+    }
+
+    /**
+     * 取得 银行资本补充工具
+     * @return 银行资本补充工具
+     */
+    public String getBankCapital() {
+        return bankCapital;
+    }
+
+    /**
+     * 设置 银行资本补充工具
+     * @param bankCapital 银行资本补充工具
+     */
+    public void setBankCapital(String bankCapital) {
+        this.bankCapital = bankCapital == null ? null : bankCapital.trim();
+    }
+
+    /**
+     * 取得 是否PPN等低流动性债券
+     * @return 是否PPN等低流动性债券
+     */
+    public String getIsPpn() {
+        return isPpn;
+    }
+
+    /**
+     * 设置 是否PPN等低流动性债券
+     * @param isPpn 是否PPN等低流动性债券
+     */
+    public void setIsPpn(String isPpn) {
+        this.isPpn = isPpn == null ? null : isPpn.trim();
+    }
+
+    /**
+     * 取得 null
+     * @return null
+     */
     public String getOrgAssetTypeEx() {
         return orgAssetTypeEx;
     }
 
+    /**
+     * 设置 null
+     * @param orgAssetTypeEx null
+     */
     public void setOrgAssetTypeEx(String orgAssetTypeEx) {
-        this.orgAssetTypeEx = orgAssetTypeEx;
+        this.orgAssetTypeEx = orgAssetTypeEx == null ? null : orgAssetTypeEx.trim();
     }
 
+    /**
+     * 取得 是否持有金融牌照
+     * @return 是否持有金融牌照
+     */
     public String getIsFinLicence() {
         return isFinLicence;
     }
 
+    /**
+     * 设置 是否持有金融牌照
+     * @param isFinLicence 是否持有金融牌照
+     */
     public void setIsFinLicence(String isFinLicence) {
-        this.isFinLicence = isFinLicence;
+        this.isFinLicence = isFinLicence == null ? null : isFinLicence.trim();
     }
 }

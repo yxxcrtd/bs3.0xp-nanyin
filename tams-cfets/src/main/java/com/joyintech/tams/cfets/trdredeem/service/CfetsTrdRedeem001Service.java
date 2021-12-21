@@ -24,6 +24,8 @@ import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealDbDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsBussCombDistribtBaseDto;
+import com.joyintech.tams.cfets.trdredeem.dao.CfetsTrdRedeemMapper;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealCommonDto;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealRegisterQuoteDto;
 import com.joyintech.tams.common.base.dao.*;
@@ -42,6 +44,7 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +70,8 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
     private FinProductMapper finProductMapper;
     @Autowired
     private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
+    @Autowired
+    private CfetsTrdRedeemMapper cfetsTrdRedeemMapper;
 
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
@@ -153,69 +158,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
         return ajaxResult;
     }
 
-    /**
-     * check 锚定值  净价 到期收益率  行权收益率
-     * @param entity
-     * @return
-     */
-    public AjaxResult checkcheckAnchoring(CfetsTrdRedeemDealCommonDto entity) {
-        AjaxResult ajaxResult = new AjaxResult();
-        List<ValidMessage> errorList = new ArrayList<>();
-        String ps = entity.getPs();
-        //以选择的锚定值check
-        String anchoringValue = entity.getCalculateField();
-        List<PtlAllocationDto> ptlAllocatios = entity.getPtlAllocatios();
-        entity.setPrice(ArithmeticUtil.round(entity.getPrice(), 4, RoundingMode.HALF_UP));
-        entity.setMatureYield(ArithmeticUtil.round(entity.getMatureYield(), 4, RoundingMode.HALF_UP));
-        entity.setExerYield(ArithmeticUtil.round(entity.getExerYield(), 4, RoundingMode.HALF_UP));
-        for (PtlAllocationDto ptlAllocationDto : ptlAllocatios) {
-            ptlAllocationDto.setPrice(ArithmeticUtil.round(ptlAllocationDto.getPrice(), 4, RoundingMode.HALF_UP));
-            ptlAllocationDto.setMatureYield(ArithmeticUtil.round(ptlAllocationDto.getMatureYield(), 4, RoundingMode.HALF_UP));
-            ptlAllocationDto.setExerYield(ArithmeticUtil.round(ptlAllocationDto.getExerYield(), 4, RoundingMode.HALF_UP));
-            String priceModel = ptlAllocationDto.getPriceModel();
-            if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
-                if(StringUtil.equals(anchoringValue,"01")){
-                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_指定价格.getValue())
-                    &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())!=0){
-                        errorList.add(new ValidMessage("存在指定价格指令，需按指定价格进行交易!指令代码:"+ptlAllocationDto.getEntrustId()));
-                    }
-                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_限价指令.getValue())
-                            &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())>0){
-                        errorList.add(new ValidMessage("登记交易净价不能大于指令净价!指令代码:"+ptlAllocationDto.getEntrustId()));
-                    }
-                }
-                if(StringUtil.equals(anchoringValue,"02")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())<0){
-                    errorList.add(new ValidMessage("登记交易到期收益率不能小于指令到期收益率！"));
-                }
-                if(StringUtil.equals(anchoringValue,"03")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())<0){
-                    errorList.add(new ValidMessage("登记交易行权收益率不能小于指令行权收益率！"));
-                }
-            }
-            if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
-                if(StringUtil.equals(anchoringValue,"01")){
-                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_指定价格.getValue())
-                            &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())!=0){
-                        errorList.add(new ValidMessage("存在指定价格指令，需按指定价格进行交易!指令代码:"+ptlAllocationDto.getEntrustId()));
-                    }
-                    if(StringUtil.equals(priceModel, com.joyintech.background.component.order.exchange.common.constant.DictCodeList.价格模式_限价指令.getValue())
-                            &&entity.getPrice().compareTo(ptlAllocationDto.getPrice())<0){
-                        errorList.add(new ValidMessage("登记交易净价不能小于指令净价!指令代码:"+ptlAllocationDto.getEntrustId()));
-                    }
-                }
-                if(StringUtil.equals(anchoringValue,"02")&&entity.getMatureYield().compareTo(ptlAllocationDto.getMatureYield())>0){
-                    errorList.add(new ValidMessage("登记交易到期收益率不能大于指令到期收益率！"));
-                }
-                if(StringUtil.equals(anchoringValue,"03")&&entity.getExerYield().compareTo(ptlAllocationDto.getExerYield())>0){
-                    errorList.add(new ValidMessage("登记交易行权收益率不能大于指令行权收益率！"));
-                }
-            }
-            if(CollectionUtils.isNotEmpty(errorList)){
-                ajaxResult.setErrorList(errorList);
-                return ajaxResult;
-            }
-        }
-        return ajaxResult;
-    }
+
 
     /**
      * 初始化登记
@@ -396,7 +339,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             //金融产品交易汇总登记
             RegFinProductDealTotal regFinProductDealTotal = new RegFinProductDealTotal();
             BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotal,entity);
-            regFinProductDealTotal.setTradeAmt(entity.getFpriceAmt());
+           // regFinProductDealTotal.setTradeAmt(cpriceAmt);
             regFinProductDealTotal.setSettleSpeed(settleSpreed);
             regFinProductDealTotal.setQuoteType(entity.getQuoteStyle());
             regFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
@@ -442,14 +385,17 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                     regFinProductDeal.setPortfolioId(ptlAllocatio.getPortfolioId());
                     regFinProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
                     regFinProductDeal.setShareAmt(ArithmeticUtil.divide(ptlAllocatio.getShareAmt(),new BigDecimal(100),2));
+                    BigDecimal cpriceAmt=ArithmeticUtil.multiply(ptlAllocatio.getShareAmt(),entity.getRedeemRate(),entity.getExercisePrice());
+
                     regFinProductDeal.setFaceValue(ptlAllocatio.getShareAmt());
-                    regFinProductDeal.setTradeAmt(ptlAllocatio.getFpriceAmt());
-                    regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
-                    regFinProductDeal.setCpriceAmt(ptlAllocatio.getCpriceAmt());
-                    regFinProductDeal.setIntAmt(ptlAllocatio.getIntAmt());
+                    regFinProductDeal.setTradeAmt(cpriceAmt);
+                   // regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
+                   // regFinProductDeal.setCpriceAmt(ptlAllocatio.getCpriceAmt());
+                   // regFinProductDeal.setIntAmt(ptlAllocatio.getIntAmt());
                     regFinProductDeal.setTgBusiType(tgBusiType);
                     regFinProductDeal.setSettleSpeed(settleSpreed);
                     regFinProductDeal.setInvAim(ptlAllocatio.getBusinessModel());
+                    regFinProductDeal.setTradeMarket(entity.getTradeMarket());
                     //附属
                     RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
                     regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
@@ -636,7 +582,11 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             result.put("totalTradeId",entity.getRegFinProductDealTotal().getTotleTradeId());
             result.put("flowStatus",DictCodeListExt3.流程节点_流程提交.getValue());
             result.put("modelType",DictCodeListExt1.子系统代码_交易.getValue());
-            result.put("balanceCheck","Y");
+            String balanceCheck="Y";
+            if(StringUtil.isNotEmpty(entity.getSoftSkipMode()) && StringUtil.equals(entity.getSoftSkipMode(),"Y")){
+                balanceCheck="N";
+            }
+            result.put("balanceCheck",balanceCheck);
             result.put("busiType",DictCodeListExt3.头寸业务类型_债券行权交易.getValue());
             result.put("busiAct",DictCodeListExt3.业务动作_交易登记.getValue());
             result.put("ps",ps);
@@ -666,7 +616,6 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                     RegFinProductDealAdd regFinProductDealAdd = regFinProductDealAddMap.get(regFinProductDeal.getTradeId()).get(0);
                     pltMap.put("integrateSecAmount",ArithmeticUtil.multiply(regFinProductDealAdd.getLendinShareAmt()==null?BigDecimal.ZERO:regFinProductDealAdd.getLendinShareAmt(),new BigDecimal(100)));
                     pltMap.put("ownSecAmount",ArithmeticUtil.multiply(regFinProductDealAdd.getOurShareAmt()==null?BigDecimal.ZERO:regFinProductDealAdd.getOurShareAmt(),new BigDecimal(100)));
-                    pltMap.put("etrSecAmount",etrEntrustMapper.selectByPrimaryKey(regFinProductDeal.getEntrustId()).getEntrustNum());
                     ptlList.add(pltMap);
                 }
                 result.put("ptlList",ptlList);
@@ -688,6 +637,20 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
         }
         oprHisReq.setBusiDes("赎回登记");
         joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
+    }
+    /**
+     * 查询该资产对应的组合分配列表
+     * @return
+     */
+    public List<PtlAllocationDto> queryCfetsBussCombDisList(String secId) {
+        if(!StringUtil.isNotEmpty(secId)){
+            return null;
+        }
+        Map<String, Object> param =new HashMap<>();
+        param.put("platDate",DateUtil.platDateFromCache());
+        param.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+        param.put("finprodId",secId);
+        return cfetsTrdRedeemMapper.queryCfetsBussCombDisList(param);
     }
 
 }

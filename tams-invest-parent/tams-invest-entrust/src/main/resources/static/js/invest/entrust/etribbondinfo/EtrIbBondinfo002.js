@@ -34,12 +34,16 @@
     };
     
     var getriskdata = function () {
+        var entrustNum=query("#entrustNum").val();
+        if (entrustNum) {
+            entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+        }
         var obj = {
             tradeDirection: query("#ps").val(),
             timePoint: MY_SUP_TIME_TYPE_02,
             valDate: sysDate,
             portfolioCode: query("#portfolioId").val(),
-            tradeAmount: query("#entrustNum").val(),
+            tradeAmount: entrustNum,
             assetType: fintype,
             isEnabled: "01",
             assetCode: query("#finprodIdhid").val()
@@ -424,6 +428,10 @@
     function doRiskcal() {
         var object = $.serializeToObject("#searchForm");
         if (object) {
+            var entrustNum=query("#entrustNum").val();
+            if (entrustNum) {
+                object.entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            }
             var riskdata = getriskdata(object);
             var riskInterfUrl = basePath + "riskrds/interf/doInfData/0/RSK002/F01";
             if (riskdata && riskInterfUrl) {

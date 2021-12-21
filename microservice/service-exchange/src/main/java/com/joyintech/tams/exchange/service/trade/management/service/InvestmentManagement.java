@@ -5,7 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.system.base.dao.SysUserMapper;
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
 import com.joyintech.tams.exchange.common.bean.investment.BusinessDepartmentBean;
@@ -147,12 +150,15 @@ public class InvestmentManagement extends BaseService {
         if (StringUtil.isNotEmpty(tradeTimeSwitch)) {
             commonManagement.setTradeTimeSwitch(tradeTimeSwitch);
         }
+        // modify by etliu 20211113 start
+        // TISHKS-343: 需求文档中描述闭市不可下委托，但系统没有做此校验；
         if (StringUtil.isNotEmpty(fairModeEntrustPriceBestThanInstruction)) {
-            commonManagement.setTradeTimeSwitch(fairModeEntrustPriceBestThanInstruction);
+            commonManagement.setFairModeEntrustPriceBestThanInstruction(fairModeEntrustPriceBestThanInstruction);
         }
         if (StringUtil.isNotEmpty(fairModeWithUnacceptInstruction)) {
-            commonManagement.setTradeTimeSwitch(fairModeWithUnacceptInstruction);
+            commonManagement.setFairModeWithUnacceptInstruction(fairModeWithUnacceptInstruction);
         }
+        // modify by etliu 20211113 end
     }
 
     /**
@@ -285,6 +291,11 @@ public class InvestmentManagement extends BaseService {
                             if (InstructionFlag.ACCEPT.value.equals(entrustOpeBean.getRecStatus())) {
                                 instruction.setEntrustStatus(InstructionStatus.ALREADY_RECEIVE.value);
                                 instruction.setTradeId(entrustOpeBean.getTrader());
+                                if (isSingle) {
+                                    instruction.setTraderName(simpleRestTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getRealNameByUser, entrustOpeBean.getTrader(), String.class));
+                                } else {
+                                    instruction.setTraderName(restTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.acceptOrRefuse, entrustOpeBean.getTrader(), String.class));
+                                }
                                 // 接收后，删除其他trader下的未接收指令
                                 List<String> traderSet = JsonUtils.getObjectListFromJson(instruction.getTradersInfo(), String.class);
                                 if (Objects.nonNull(traderSet)) {

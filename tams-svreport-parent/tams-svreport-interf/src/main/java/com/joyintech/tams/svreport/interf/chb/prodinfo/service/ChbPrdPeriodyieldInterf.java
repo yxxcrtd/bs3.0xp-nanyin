@@ -1,11 +1,21 @@
 package com.joyintech.tams.svreport.interf.chb.prodinfo.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
+import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
+import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdPeriodYieldInterfMapper;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -20,29 +30,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
-import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdPeriodYieldInterfMapper;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 @SuppressWarnings("rawtypes")
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ChbPrdPeriodyieldInterf extends BaseService{
+public class ChbPrdPeriodyieldInterf extends BaseInterfService {
 	/**
 	 * 日志
 	 */
@@ -62,6 +59,17 @@ public class ChbPrdPeriodyieldInterf extends BaseService{
 	 * @param batchDate
 	 */
 	public List<String> generatePrdPeriodyieldData(Date batchDate,List<String> prodidList,boolean isSynchronizeTask){
+		// 查询数据
+		List<ChbPrdPeriodYield> list = getBusEntity(prodidList, "D");
+		// 入库
+		if(!StringUtil.isEmptyList(list)){
+			mergeIntoData(list);
+		}
+		return null;
+	}
+
+	@Override
+	public List<ChbPrdPeriodYield> getBusEntity(List<String> prodIdlist, String source) {
 		//获取数据进入CHB_PRD_PERIODYIELD
 		//产品代码集合
 		List<String> prodList = new ArrayList<String>();
@@ -70,28 +78,28 @@ public class ChbPrdPeriodyieldInterf extends BaseService{
 		Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.产品报价变动信息接口.getInterId());
 		List<ChbPrdPeriodYield> periodyieldlist = new ArrayList<ChbPrdPeriodYield>();
 		//单位净值取值来源读系统参数 01:估值核算系统，02:信息批露系统，03:第三方
-		String valueSource = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_NET_UNIT_VALUE_SOURCE);
-		if("01".equals(valueSource)){
+//		String valueSource = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_NET_UNIT_VALUE_SOURCE);
+//		if("01".equals(valueSource)){
 			//单位净值取自估值核算系统
 			ChbPrdPeriodyieldInterf chbPrdPeriodyieldInterf2 =  SpringContextUtil.getBean(ChbPrdPeriodyieldInterf.class);
-			periodyieldlist = chbPrdPeriodyieldInterf2.selectPrdPeriodyieldData(lastUpdatetime,prodidList);
-		}else if("02".equals(valueSource)){
-			//TODO 单位净值取自信息批露系统
-			
-		}else if("03".equals(valueSource)){
-			//TODO 单位净值取自第三方系统
-			
-		}else{
-			logger.debug("单位净值取值来源配置错误！");;
-		}
+			periodyieldlist = chbPrdPeriodyieldInterf2.selectPrdPeriodyieldData(lastUpdatetime,prodIdlist);
+//		}else if("02".equals(valueSource)){
+//			//TODO 单位净值取自信息批露系统
+//
+//		}else if("03".equals(valueSource)){
+//			//TODO 单位净值取自第三方系统
+//
+//		}else{
+//			logger.debug("单位净值取值来源配置错误！");;
+//		}
 		logger.debug("读取上游报价信息----结束-----:" +  df.format(new Date()));
 		if(CollectionUtils.isNotEmpty(periodyieldlist)){
 			for(ChbPrdPeriodYield dto : periodyieldlist){
-				if(isSynchronizeTask){
-					if(!prodList.contains(dto.getFprodId()==null?dto.getProdId():dto.getFprodId())){
-						prodList.add(dto.getFprodId()==null?dto.getProdId():dto.getFprodId());
-					}
-				}
+//				if(isSynchronizeTask){
+////					if(!prodList.contains(dto.getFprodId()==null?dto.getProdId():dto.getFprodId())){
+////						prodList.add(dto.getFprodId()==null?dto.getProdId():dto.getFprodId());
+////					}
+////				}
 				//币种(默认成人民币)
 				dto.setCcy(DictCodeListExt1.币种_中债_人民币.getValue());
 				//部门代码
@@ -105,23 +113,35 @@ public class ChbPrdPeriodyieldInterf extends BaseService{
 				//数据状态
 				dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
 				//数据来源
-				dto.setDataSource("DB");
+				//数据来源
+				if("D".equals(source)){
+					dto.setDataSource("16");
+				}
 				if(dto.getUpdateTime().compareTo(lastUpdatetime) > 0){
 					lastUpdatetime = dto.getUpdateTime();
 				}
-					
+
 			}
 		}
 		//先删后插
 //		deleteBatch(periodyieldlist);
 //		insertBatch(periodyieldlist);
-		mergeIntoData(periodyieldlist);
 		//批量插入(先删再插)
 		//新的最后更新时间
-    	if(lastUpdatetime!=null){
-        	ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品报价变动信息接口.getInterId(), lastUpdatetime);;
-    	}
-		return prodList;
+		if(lastUpdatetime!=null){
+			ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品报价变动信息接口.getInterId(), lastUpdatetime);;
+		}
+		return periodyieldlist;
+	}
+
+	@Override
+	public Class getEntityClass() {
+		return ChbPrdPeriodYield.class;
+	}
+
+	@Override
+	public String getFileName() {
+		return InterfDefine.产品收益率净值接口数据.getCode();
 	}
 	
 	/**

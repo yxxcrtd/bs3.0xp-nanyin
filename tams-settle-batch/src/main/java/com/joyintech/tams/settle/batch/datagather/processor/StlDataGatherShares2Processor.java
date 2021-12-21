@@ -1,10 +1,7 @@
 package com.joyintech.tams.settle.batch.datagather.processor;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -110,6 +107,9 @@ public class StlDataGatherShares2Processor extends StlDataGatherProcessor {
 	protected String getSecType() {
 		return DictCodeListExt1.证券品种_股票.getValue();
 	}
+
+	@Override
+	protected List<String> getFinprodType() {return Arrays.asList(DictCodeListExt1.金融产品类型_投管用_股票.getValue());}
 
 	/**
 	 * 金融产品汇总交易生成

@@ -283,6 +283,31 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto 
      * 新人行资产三级分类
      */
     private String pbcAssetType3;
+    
+    /**
+     * 融资人代码
+     */
+    private String chbFinancierId;
+    
+    /**
+     * 是否资产四级分类为“北金所债权”
+     */
+    private String isBjszq;
+    
+    /**
+     * 结构化业务类型
+     */
+    private String constracteBusiType;
+    
+    /**
+     * 结构化层级
+     */
+    private String constracteGrade;
+    
+    /**
+     * 结构化杠杆倍数
+     */
+    private BigDecimal constracteHeaverTimes;
 
 
     private String  industryLevel2Type;
@@ -1013,4 +1038,44 @@ public class SvrBussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstdDto 
         this.pbcAssetType3 = pbcAssetType3;
     }
 
+	public String getChbFinancierId() {
+		return chbFinancierId;
+	}
+
+	public void setChbFinancierId(String chbFinancierId) {
+		this.chbFinancierId = chbFinancierId;
+	}
+
+	public String getIsBjszq() {
+		return isBjszq;
+	}
+
+	public void setIsBjszq(String isBjszq) {
+		this.isBjszq = isBjszq;
+	}
+
+	public String getConstracteBusiType() {
+		return constracteBusiType;
+	}
+
+	public void setConstracteBusiType(String constracteBusiType) {
+		this.constracteBusiType = constracteBusiType;
+	}
+
+	public String getConstracteGrade() {
+		return constracteGrade;
+	}
+
+	public void setConstracteGrade(String constracteGrade) {
+		this.constracteGrade = constracteGrade;
+	}
+
+	public BigDecimal getConstracteHeaverTimes() {
+		return constracteHeaverTimes;
+	}
+
+	public void setConstracteHeaverTimes(BigDecimal constracteHeaverTimes) {
+		this.constracteHeaverTimes = constracteHeaverTimes;
+	}    
+    
 }

@@ -1,0 +1,2 @@
+UPDATE SYS_PAGE_ELEMENT SET IS_CONTROL = '02' WHERE PAGE_ID = 'TrdPlanCurrDuration002' AND ELEMENT_ID = 'TrdPlanCurrDuration002_btn_save';
+UPDATE SYS_PAGE_ELEMENT SET IS_CONTROL = '02' WHERE PAGE_ID = 'TrdPlanCurrDuration002' AND ELEMENT_ID = 'TrdPlanCurrDuration002_btn_submit';

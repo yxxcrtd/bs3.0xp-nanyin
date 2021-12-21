@@ -1182,6 +1182,7 @@ public class CfetsTrdConfirmService extends BaseService{
             }
         }
         bussTrdTransferOrderDto.setTradeId(entity.getTotleTradeId());
+        bussTrdTransferOrderDto.setOrderRetStatus(DictCodeList.指令处理状态_处理成功.getValue());
         bussTrdTransferOrder.add(bussTrdTransferOrderDto);
         entity.setBussTrdTransferOrder(bussTrdTransferOrderService.save(bussTrdTransferOrder));
         // =====================划款指令信息=====================

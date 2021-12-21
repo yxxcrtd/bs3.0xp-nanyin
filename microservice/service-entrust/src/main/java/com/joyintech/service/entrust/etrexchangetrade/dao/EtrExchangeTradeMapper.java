@@ -73,6 +73,13 @@ public interface EtrExchangeTradeMapper {
      */
     List<SelectOptionDto> getSecAcctId(Map<String, Object> param);
 
+	/**
+	 *质押券代码下拉框查询
+	 * @param param
+	 * @return
+	 */
+	List<SelectOptionDto> selectZyq(Map<String, Object> param);
+
     /**
      * 获取债券基本信息
      * 
@@ -114,6 +121,20 @@ public interface EtrExchangeTradeMapper {
      * @return
      */
     String getInvAim();
+
+	/**
+	 * 联动债券的投资目的
+	 * @param map
+	 * @return
+	 */
+	String linkInvAim(Map<String, Object> map);
+
+	/**
+	 * 联动债券的投资目的-查询当日委托
+	 * @param map
+	 * @return
+	 */
+	String linkInvAimEtr(Map<String, Object> map);
 
     /**
      * 对手方交易商联想文本框初始化。
@@ -286,4 +307,17 @@ public interface EtrExchangeTradeMapper {
     //add by chenjiaxing 20210907 债券竞价交易添加偏离度 start
 	BigDecimal getLastNetPrice(Map<String, Object> param);
 	//add by chenjiaxing 20210907 债券竞价交易添加偏离度 end
+
+	// add by etliu 20211207 start
+	// 交易所债券非交易类业务迁移
+	/**
+	 *
+	 * @Description //查询行权回售数据
+	 * @Param [map]
+	 * @return 行权回售数据
+	 * @version 1.0
+	 * @see
+	 **/
+	List<FinExercisePlan> selectFinExercisePlanData(Map<String, Object> map);
+	// add by etliu 20211207 end
 }

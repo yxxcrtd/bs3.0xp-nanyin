@@ -2,6 +2,31 @@
  * 行情和交易信息
  */
 (function(){
+    var defaultStyle = "";
+    $("#enlarge").click(function () {
+        enlarge_narrow("enlarge");
+    });
+    $("#narrow").click(function () {
+        enlarge_narrow("narrow");
+    });
+    function enlarge_narrow(flag) {
+        let rightDiv =  $(window.parent.document).find("#right_bottom_panel_dev");
+        if(!rightDiv.attr("flag") || rightDiv.attr("flag") === "1"){
+            defaultStyle = rightDiv.attr("style");
+            rightDiv.attr("style", "position: absolute; left: 0px; top:0px; width: 100%; height:100%;background: #fff; z-index: 100");
+            rightDiv.attr("flag","0");
+        }else{
+            rightDiv.attr("style", " float:right; width:57.5%; height:100%; display: inline-block;");
+            rightDiv.attr("flag","1");
+        }
+        if(flag === "narrow"){
+            $("#enlarge").show();
+            $("#narrow").hide();
+        }else{
+            $("#enlarge").hide();
+            $("#narrow").show();
+        }
+    }
 
     //试算结果
     var riskResultdata;

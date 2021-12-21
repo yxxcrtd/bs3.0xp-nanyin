@@ -46,7 +46,9 @@ function sendRepo(websocket,termType,hqType){
 }
 
 function close(websocket){
-    websocket.close();
+    if(websocket){
+        websocket.close();
+    }
 }
 
 //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。

@@ -1,0 +1,97 @@
+package com.joyintech.tams.common;
+
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.file.SafelyFile;
+import com.thoughtworks.xstream.XStream;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
+
+/**
+ *
+ * 接口共通类
+ *
+ * @author zcw
+ *
+ */
+
+public class BaseInterfService extends BaseService  {
+
+	@Autowired
+	private XStream xstream;
+
+
+	/**
+	 * 根据Entity生成文件
+	 *
+	 * @param prodIdlist
+	 * @param date
+	 * @param path
+	 * @return
+	 */
+	public String createFileFromEntity(List<String> prodIdlist, String date, String path) {
+		List<? extends BaseEntity> list = getBusEntity(prodIdlist, "F");
+		// 生成xml文件
+		writeEntityToXmlFile(list, path, date);
+		return "";
+	}
+
+	/**
+	 * xml生成调用此方法
+	 *
+	 * @param list
+	 * @param path
+	 * @param date
+	 */
+	public void writeEntityToXmlFile(List<?> list, String path, String date) {
+		File file = new SafelyFile(path+File.separator+getFileName()+ "_"+date+".xml");
+		// 本地文件夹不存在先创建文件夹 add by zcw
+		File exportFilePaths = new SafelyFile(path);
+		if (!exportFilePaths.exists()) {
+			exportFilePaths.mkdirs();
+		}
+		// 当配置参数为服务器路径时从新获取本地路径 add by zcw
+		String saveFileDirPath = file.getAbsolutePath();
+
+		xstream.alias("info", getEntityClass());
+		try {
+			FileOutputStream out = new FileOutputStream(saveFileDirPath) ;
+			xstream.toXML(list, out);
+			out.close();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	/**
+	 * 获取业务对象
+	 * @param prodIdlist
+	 * @param source
+	 * @return
+	 */
+	public List<? extends BaseEntity> getBusEntity(List<String> prodIdlist, String source) {
+		return null;
+	}
+
+	/**
+	 * 获取文件名
+	 *
+	 * @return
+	 */
+	public String getFileName() {
+		return null;
+	}
+
+	/**
+	 * 获取泛型类名
+	 *
+	 * @return
+	 */
+	public Class getEntityClass() {
+		return null;
+	}
+
+}

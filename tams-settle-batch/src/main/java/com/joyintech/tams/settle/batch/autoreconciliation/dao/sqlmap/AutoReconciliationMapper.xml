@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.settle.batch.autoreconciliation.dao.AutoReconciliationMapper">
+
+	<select id="queryAccountTodoList" resultType="com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto">
+		<!-- 查询委托维度数据 -->
+		WITH tmp AS(
+			SELECT
+				ssrd.SEQ_NO,
+				ssrd.INSTRUCTION_ID,
+				ssrd.FINPROD_ID,
+				ssrd.TRADE_MARKET,
+				ssrd.CUSTOMER_ID,
+			    ssrd.ACCOUT,
+				ssrp.PARA_VALUE,
+				ssrd.FINPROD_TYPE,
+				ssrd.PS,
+				ssrd.TRADE_DATE,
+				ssrd.TRADE_ID,
+				ssrd.SEC_ACCT_ID,
+				ssr.CHECK_RESULT,
+				ssrd.SEAT_NUMBER,
+				ssrd.COMMISSION_AMT,
+				ssrd.JSF_AMT,
+				ssrd.ZGF_AMT,
+				ssrd.STAMP_FEE,
+				ssrd.SETTLE_FEE,
+				ssrd.GHF_AMT,
+				ssrd.SXF_AMT,
+				ssrd.TRADE_AMT,
+				ssrd.TRADE_NUM,
+				ssrd.TOTAL_TEEAMT
+			FROM
+				STL_SEC_RECON_DEAL ssrd
+				LEFT JOIN
+					STL_SEC_RECON ssr ON ssrd.SEQ_NO = ssr.SEQ_NO
+				LEFT JOIN
+				(
+					SELECT
+					    CUSTOMER_ID,
+					    PARA_VALUE,
+					    MAX(CONFIG_DATE)
+				    FROM
+						STL_SEC_RECON_PARA
+				    WHERE
+						<![CDATA[CONFIG_DATE <= TO_DATE(#{batchDate},'YYYY-MM-DD')]]>
+						AND PARA_CODE = #{PARA_CODE_02}
+				    GROUP BY
+						CUSTOMER_ID,
+						PARA_VALUE
+				)ssrp ON ssrd.CUSTOMER_ID = ssrp.CUSTOMER_ID
+			WHERE
+				(ssr.CHECK_RESULT is NULL or ssr.CHECK_RESULT in (#{CHECK_RESULT_0}, #{CHECK_RESULT_2}))
+		    	AND ssrd.TRADE_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
+		)
+		SELECT <!-- 查询委托汇总数据 -->
+			tmp.SEQ_NO,
+			tmp.TRADE_ID,
+			tmp.FINPROD_ID,
+			tmp.TRADE_MARKET,
+			tmp.CUSTOMER_ID,
+		    tmp.ACCOUT,
+			tmp.PARA_VALUE,
+			tmp.FINPROD_TYPE,
+			tmp.PS,
+			tmp.TRADE_DATE,
+			tmp.SEC_ACCT_ID,
+			tmp.CHECK_RESULT,
+			tmp.SEAT_NUMBER,
+			tmp.COMMISSION_AMT,
+			tmp.JSF_AMT,
+			tmp.ZGF_AMT,
+			tmp.STAMP_FEE,
+			tmp.SETTLE_FEE,
+			tmp.GHF_AMT,
+			tmp.SXF_AMT,
+			tmp.TRADE_AMT,
+			tmp.TRADE_NUM,
+			tmp.TOTAL_TEEAMT,
+			std.APPLY_TRADE_ID TRADE_ID2,
+			std.COMMISSION_AMT2,
+			std.JSF_AMT2,
+			std.ZGF_AMT2,
+			std.STAMP_FEE2,
+			std.SETTLE_FEE2,
+			std.GHF_AMT2,
+			std.SXF_AMT2,
+			std.FPRICE_AMT2 TRADE_AMT2,
+			std.SHARE_AMT2 TRADE_NUM2,
+			std.FINPROD_TYPE2 FINPROD_TYPE2,
+			std.PS PS2,
+			std.TRADE_MARKET TRADE_MARKET2,
+			std.TRADE_DATE TRADE_DATE2,
+			std.SEC_ACCT_ID SEC_ACCT_ID2
+		FROM
+			tmp
+		LEFT JOIN (
+			SELECT
+				APPLY_TRADE_ID,
+				SUM(COMMISSION_AMT) COMMISSION_AMT2,
+				SUM(JSF_AMT) JSF_AMT2,
+				SUM(ZGF_AMT) ZGF_AMT2,
+				SUM(STAMP_FEE) STAMP_FEE2,
+				SUM(SETTLE_FEE) SETTLE_FEE2,
+				SUM(GHF_AMT) GHF_AMT2,
+				SUM(SXF_AMT) SXF_AMT2,
+				SUM(
+					CASE WHEN PS = #{PS_T01} AND FINPROD_TYPE2 != #{prodType2_F02} THEN FPRICE_AMT*-1
+					WHEN PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND FINPROD_TYPE2 = #{prodType2_F02} THEN FPRICE_AMT*-1
+					ELSE FPRICE_AMT END
+				) FPRICE_AMT2,
+				SUM(
+					CASE WHEN PS = #{PS_T01} AND FINPROD_TYPE2 != #{prodType2_F02} THEN SHARE_AMT
+					WHEN PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND FINPROD_TYPE2 = #{prodType2_F02} THEN SHARE_AMT
+					ELSE SHARE_AMT*-1 END
+				) SHARE_AMT2,
+				FINPROD_TYPE2,
+				PS,
+				TRADE_MARKET,
+				TRADE_DATE,
+				SEC_ACCT_ID
+			FROM
+				SETTLE_TRANS_DATA
+			GROUP BY
+				APPLY_TRADE_ID,FINPROD_TYPE2,PS,TRADE_MARKET,TRADE_DATE,SEC_ACCT_ID
+			) std ON tmp.INSTRUCTION_ID = std.APPLY_TRADE_ID AND tmp.TRADE_DATE = std.TRADE_DATE
+		WHERE
+			tmp.PARA_VALUE = #{PARA_VALUE_02}
+		UNION ALL
+		<!-- 查询证券汇总数据 -->
+		SELECT
+			tmp.SEQ_NO,
+			tmp.TRADE_ID,
+			tmp.FINPROD_ID,
+			tmp.TRADE_MARKET,
+			tmp.CUSTOMER_ID,
+		    tmp.ACCOUT,
+			tmp.PARA_VALUE,
+			tmp.FINPROD_TYPE,
+			tmp.PS,
+			tmp.TRADE_DATE,
+			tmp.SEC_ACCT_ID,
+			tmp.CHECK_RESULT,
+			tmp.SEAT_NUMBER,
+			tmp.COMMISSION_AMT,
+			tmp.JSF_AMT,
+			tmp.ZGF_AMT,
+			tmp.STAMP_FEE,
+			tmp.SETTLE_FEE,
+			tmp.GHF_AMT,
+			tmp.SXF_AMT,
+			tmp.TRADE_AMT,
+			tmp.TRADE_NUM,
+			tmp.TOTAL_TEEAMT,
+		    NULL TRADE_ID2,
+			std.COMMISSION_AMT2,
+			std.JSF_AMT2,
+			std.ZGF_AMT2,
+			std.STAMP_FEE2,
+			std.SETTLE_FEE2,
+			std.GHF_AMT2,
+			std.SXF_AMT2,
+			std.FPRICE_AMT2 TRADE_AMT2,
+			std.SHARE_AMT2 TRADE_NUM2,
+			std.FINPROD_TYPE2 FINPROD_TYPE2,
+			NULL PS2,
+			std.TRADE_MARKET TRADE_MARKET2,
+			std.TRADE_DATE TRADE_DATE2,
+			std.SEC_ACCT_ID SEC_ACCT_ID2
+		FROM
+			tmp
+		LEFT JOIN (
+			SELECT
+				FINPROD_ID,
+				SUM(COMMISSION_AMT) COMMISSION_AMT2,
+				SUM(JSF_AMT) JSF_AMT2,
+				SUM(ZGF_AMT) ZGF_AMT2,
+				SUM(STAMP_FEE) STAMP_FEE2,
+				SUM(SETTLE_FEE) SETTLE_FEE2,
+				SUM(GHF_AMT) GHF_AMT2,
+				SUM(SXF_AMT) SXF_AMT2,
+				SUM(
+					CASE WHEN PS = #{PS_T01} AND FINPROD_TYPE2 != #{prodType2_F02} THEN FPRICE_AMT*-1
+					WHEN PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND FINPROD_TYPE2 = #{prodType2_F02} THEN FPRICE_AMT*-1
+					ELSE FPRICE_AMT END
+				) FPRICE_AMT2,
+					SUM(
+					CASE WHEN PS = #{PS_T01} AND FINPROD_TYPE2 != #{prodType2_F02} THEN SHARE_AMT
+					WHEN PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND FINPROD_TYPE2 = #{prodType2_F02} THEN SHARE_AMT
+					ELSE SHARE_AMT*-1 END
+				) SHARE_AMT2,
+				FINPROD_TYPE2,
+				TRADE_MARKET,
+				TRADE_DATE,
+				SEC_ACCT_ID
+			FROM
+				SETTLE_TRANS_DATA
+			GROUP BY
+				FINPROD_ID,
+				FINPROD_TYPE2,
+				TRADE_MARKET,
+				TRADE_DATE,
+				SEC_ACCT_ID
+			) std ON tmp.FINPROD_ID = std.FINPROD_ID AND tmp.TRADE_DATE = std.TRADE_DATE
+		WHERE
+			tmp.PARA_VALUE = #{PARA_VALUE_01}
+		UNION ALL
+		<!-- 查询成交明细数据 -->
+		SELECT
+			tmp.SEQ_NO,
+			tmp.TRADE_ID,
+			tmp.FINPROD_ID,
+			tmp.TRADE_MARKET,
+			tmp.CUSTOMER_ID,
+		    tmp.ACCOUT,
+			tmp.PARA_VALUE,
+			tmp.FINPROD_TYPE,
+			tmp.PS,
+			tmp.TRADE_DATE,
+			tmp.SEC_ACCT_ID,
+			tmp.CHECK_RESULT,
+			tmp.SEAT_NUMBER,
+			tmp.COMMISSION_AMT,
+			tmp.JSF_AMT,
+			tmp.ZGF_AMT,
+			tmp.STAMP_FEE,
+			tmp.SETTLE_FEE,
+			tmp.GHF_AMT,
+			tmp.SXF_AMT,
+			tmp.TRADE_AMT,
+			tmp.TRADE_NUM,
+			tmp.TOTAL_TEEAMT,
+			std.TRADE_ID TRADE_ID2,
+			std.COMMISSION_AMT COMMISSION_AMT2,
+			std.JSF_AMT JSF_AMT2,
+			std.ZGF_AMT ZGF_AMT2,
+			std.STAMP_FEE STAMP_FEE2,
+			std.SETTLE_FEE SETTLE_FEE2,
+			std.GHF_AMT GHF_AMT2,
+			std.SXF_AMT SXF_AMT2,
+			CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.FPRICE_AMT*-1
+			WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.FPRICE_AMT*-1
+			ELSE FPRICE_AMT END TRADE_AMT2,
+			CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.SHARE_AMT
+			WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.SHARE_AMT
+			ELSE std.SHARE_AMT*-1 END TRADE_NUM2,
+			std.FINPROD_TYPE2 FINPROD_TYPE2,
+			std.PS PS2,
+			std.TRADE_MARKET TRADE_MARKET2,
+			std.TRADE_DATE TRADE_DATE2,
+			std.SEC_ACCT_ID SEC_ACCT_ID2
+		FROM
+			tmp
+		LEFT JOIN
+			SETTLE_TRANS_DATA std ON tmp.TRADE_ID = std.CJBH AND tmp.SEAT_NUMBER = std.SEAT_NUMBER AND tmp.TRADE_DATE = std.TRADE_DATE
+		WHERE
+			tmp.TRADE_ID IS NOT NULL
+			AND tmp.PARA_VALUE = #{PARA_VALUE_03}
+		UNION ALL
+		<!-- 查询成交明细数据 -->
+		SELECT
+			tmp.SEQ_NO,
+			tmp.TRADE_ID,
+			tmp.FINPROD_ID,
+			tmp.TRADE_MARKET,
+			tmp.CUSTOMER_ID,
+		    tmp.ACCOUT,
+			tmp.PARA_VALUE,
+			tmp.FINPROD_TYPE,
+			tmp.PS,
+			tmp.TRADE_DATE,
+			tmp.SEC_ACCT_ID,
+			tmp.CHECK_RESULT,
+			tmp.SEAT_NUMBER,
+			tmp.COMMISSION_AMT,
+			tmp.JSF_AMT,
+			tmp.ZGF_AMT,
+			tmp.STAMP_FEE,
+			tmp.SETTLE_FEE,
+			tmp.GHF_AMT,
+			tmp.SXF_AMT,
+			tmp.TRADE_AMT,
+			tmp.TRADE_NUM,
+			tmp.TOTAL_TEEAMT,
+			std.TRADE_ID TRADE_ID2,
+			std.COMMISSION_AMT COMMISSION_AMT2,
+			std.JSF_AMT JSF_AMT2,
+			std.ZGF_AMT ZGF_AMT2,
+			std.STAMP_FEE STAMP_FEE2,
+			std.SETTLE_FEE SETTLE_FEE2,
+			std.GHF_AMT GHF_AMT2,
+			std.SXF_AMT SXF_AMT2,
+			CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.FPRICE_AMT*-1
+			WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.FPRICE_AMT*-1
+			ELSE FPRICE_AMT END TRADE_AMT2,
+			CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.SHARE_AMT
+			WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.SHARE_AMT
+			ELSE std.SHARE_AMT*-1 END TRADE_NUM2,
+			std.FINPROD_TYPE2 FINPROD_TYPE2,
+			std.PS PS2,
+			std.TRADE_MARKET TRADE_MARKET2,
+			std.TRADE_DATE TRADE_DATE2,
+			std.SEC_ACCT_ID SEC_ACCT_ID2
+		FROM
+			tmp
+		LEFT JOIN SETTLE_TRANS_DATA std ON tmp.FINPROD_ID = std.FINPROD_ID
+											AND tmp.SEC_ACCT_ID = std.SEC_ACCT_ID
+											AND tmp.SEAT_NUMBER = std.SEAT_NUMBER
+											AND tmp.TRADE_DATE = std.TRADE_DATE
+		WHERE
+			tmp.TRADE_ID IS NULL
+			AND tmp.PARA_VALUE = #{PARA_VALUE_03}
+	</select>
+
+	<select id="queryManualAccountTodoList" resultType="com.joyintech.tams.invest.common.reconciliation.dto.DayEndAccountDaichuliDto">
+		WITH temp1 AS(
+			SELECT
+				e.ACCT_NO accout,
+				e.DEAL_DATE TRADE_DATE2,
+				CASE
+					WHEN h.FINPROD_ID IS NOT NULL THEN h.FINPROD_ID
+					WHEN g.FINPROD_ID IS NOT NULL THEN g.FINPROD_ID
+					ELSE e.FINPROD_ID
+				END FINPROD_ID,
+				e.TRADE_MARKET TRADE_MARKET2,
+				e.CHECK_RESULT,
+				CASE
+					WHEN h.TYPE_8 IS NOT NULL THEN h.TYPE_8
+					WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
+				END  finprodType2,
+				e.APPLY_TRADE_ID TRADE_ID2,
+				NULL SEC_ACCT_ID2,
+				e.BROKER_ID CUSTOMER_ID,
+				e.PARA_VALUE,
+				e.SEAT_NUMBER
+			FROM(
+				SELECT
+					a.FINPROD_ID,
+					a.FINPROD_TYPE2,
+					a.TRADE_MARKET,
+					a.DEAL_DATE,
+					a.ACCT_NO,
+					a.SEAT_NUMBER,
+					a.APPLY_TRADE_ID,
+					#{CHECK_RESULT_2} CHECK_RESULT,
+					b.BROKER_ID,
+					d.PARA_VALUE
+				FROM
+					SETTLE_TRANS_DATA a
+				LEFT JOIN
+					MST_SALE_DEPARTMENT b ON (a.SEAT_NUMBER = b.SH_SEATNO OR a.SEAT_NUMBER = b.SZ_SEATNO)
+				LEFT JOIN
+					SETTLE_TRANS_DATA_STATUS c ON a.TRADE_ID = c.TRADE_ID
+				INNER JOIN (
+					SELECT
+						CUSTOMER_ID,
+						PARA_VALUE,
+						MAX(CONFIG_DATE)
+					FROM
+						STL_SEC_RECON_PARA
+					WHERE
+						CONFIG_DATE &lt;= TO_DATE(#{batchDate},'YYYY-MM-DD')
+						AND PARA_CODE = #{PARA_CODE_02}
+					GROUP BY
+						CUSTOMER_ID,PARA_VALUE
+				) d ON b.BROKER_ID = d.CUSTOMER_ID
+				WHERE
+					(c.CHECK_RESULT IS NULL OR c.CHECK_RESULT = #{CHECK_RESULT_2})
+					AND d.PARA_VALUE = #{PARA_VALUE_02}
+				  	AND a.DEAL_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
+				  	AND (
+						a.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
+						AND (
+						    (a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+				  	    	OR ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
+							OR ((a.FINPROD_TYPE2 = #{prodType2_F06} OR a.FINPROD_TYPE2 = #{prodType2_F10}) AND a.PS NOT IN (#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12}))
+						)
+					)
+					AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
+				GROUP BY
+					a.DEAL_DATE,
+					a.ACCT_NO,
+					a.SEAT_NUMBER,
+					a.APPLY_TRADE_ID,
+					a.FINPROD_ID,
+					a.FINPROD_TYPE2,
+					a.TRADE_MARKET,
+					b.BROKER_ID,
+					d.PARA_VALUE
+			) e
+			LEFT JOIN
+				FIN_PRODUCT f ON e.FINPROD_ID = f.FINPROD_ID
+			LEFT JOIN
+				FIN_TRADE_PRODUCT g ON e.FINPROD_ID = g.FINPROD_ID AND g.BRANCH = 0
+			LEFT JOIN
+				FIN_PRODUCT_TYPE h ON e.FINPROD_ID = h.FINPROD_ID
+			LEFT JOIN
+				T_INSTRUMENT ins ON e.FINPROD_ID = ins.STOCK_CODE
+			ORDER BY
+				e.BROKER_ID,e.DEAL_DATE DESC
+		),
+		temp2 AS(
+			SELECT
+				e.ACCT_NO accout,
+				e.DEAL_DATE TRADE_DATE2,
+				CASE
+					WHEN h.FINPROD_ID IS NOT NULL THEN h.FINPROD_ID
+					WHEN g.FINPROD_ID IS NOT NULL THEN g.FINPROD_ID
+					ELSE e.FINPROD_ID
+				END FINPROD_ID,
+				e.TRADE_MARKET TRADE_MARKET2,
+				e.CHECK_RESULT,
+				CASE
+					WHEN h.TYPE_8 IS NOT NULL THEN h.TYPE_8
+					WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
+				END  finprodType2,
+				NULL TRADE_ID2,
+				NULL SEC_ACCT_ID2,
+				e.BROKER_ID CUSTOMER_ID,
+				e.PARA_VALUE,
+				e.SEAT_NUMBER
+			FROM(
+				SELECT
+					a.FINPROD_ID,
+					a.FINPROD_TYPE2,
+					a.TRADE_MARKET,
+					a.DEAL_DATE,
+					a.ACCT_NO,
+					a.SEAT_NUMBER,
+					#{CHECK_RESULT_2} CHECK_RESULT,
+					b.BROKER_ID,
+					d.PARA_VALUE
+				FROM
+					SETTLE_TRANS_DATA a
+				LEFT JOIN
+					MST_SALE_DEPARTMENT b ON (a.SEAT_NUMBER = b.SH_SEATNO OR a.SEAT_NUMBER = b.SZ_SEATNO)
+				LEFT JOIN
+					SETTLE_TRANS_DATA_STATUS c ON a.TRADE_ID = c.TRADE_ID
+				INNER JOIN (
+					SELECT
+						CUSTOMER_ID,
+						PARA_VALUE,
+						MAX(CONFIG_DATE)
+					FROM
+						STL_SEC_RECON_PARA
+					WHERE
+						CONFIG_DATE &lt;= TO_DATE(#{batchDate},'YYYY-MM-DD')
+						AND PARA_CODE = #{PARA_CODE_02}
+					GROUP BY
+						CUSTOMER_ID,PARA_VALUE
+				) d ON b.BROKER_ID = d.CUSTOMER_ID
+				WHERE
+					(c.CHECK_RESULT IS NULL OR c.CHECK_RESULT = #{CHECK_RESULT_2})
+					AND d.PARA_VALUE = #{PARA_VALUE_01}
+				  	AND a.DEAL_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
+				  	AND (
+						a.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
+						AND (
+							(a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+							OR ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
+							OR ((a.FINPROD_TYPE2 = #{prodType2_F06} OR a.FINPROD_TYPE2 = #{prodType2_F10}) AND a.PS NOT IN (#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12}))
+						)
+					)
+					AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
+				GROUP BY
+					a.DEAL_DATE,
+					a.ACCT_NO,
+					a.SEAT_NUMBER,
+					a.FINPROD_ID,
+					a.FINPROD_TYPE2,
+					a.TRADE_MARKET,
+					b.BROKER_ID,
+					d.PARA_VALUE
+			) e
+			LEFT JOIN
+				FIN_PRODUCT f ON e.FINPROD_ID = f.FINPROD_ID
+			LEFT JOIN
+				FIN_TRADE_PRODUCT g ON e.FINPROD_ID = g.FINPROD_ID AND g.BRANCH = 0
+			LEFT JOIN
+				FIN_PRODUCT_TYPE h ON e.FINPROD_ID = h.FINPROD_ID
+			LEFT JOIN
+				T_INSTRUMENT ins ON e.FINPROD_ID = ins.STOCK_CODE
+			ORDER BY
+				e.BROKER_ID,e.DEAL_DATE DESC
+		),
+		temp3 AS(
+			SELECT
+				e.ACCT_NO accout,
+				e.DEAL_DATE TRADE_DATE2,
+				CASE
+					WHEN h.FINPROD_ID IS NOT NULL THEN h.FINPROD_ID
+					WHEN g.FINPROD_ID IS NOT NULL THEN g.FINPROD_ID
+					ELSE e.FINPROD_ID
+				END FINPROD_ID,
+				e.TRADE_MARKET TRADE_MARKET2,
+				e.CHECK_RESULT,
+				CASE
+					WHEN h.TYPE_8 IS NOT NULL THEN h.TYPE_8
+					WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
+				END  finprodType2,
+				e.CJBH TRADE_ID2,
+				e.SEC_ACCT_ID SEC_ACCT_ID2,
+				e.BROKER_ID CUSTOMER_ID,
+				e.PARA_VALUE,
+				e.SEAT_NUMBER
+			FROM(
+				SELECT
+					a.FINPROD_ID,
+					a.FINPROD_TYPE2,
+					a.TRADE_MARKET,
+					a.DEAL_DATE,
+					a.ACCT_NO,
+					a.SEAT_NUMBER,
+					a.CJBH,
+					a.SEC_ACCT_ID,
+					#{CHECK_RESULT_2} CHECK_RESULT,
+					b.BROKER_ID,
+					d.PARA_VALUE
+				FROM
+					SETTLE_TRANS_DATA a
+				LEFT JOIN
+					MST_SALE_DEPARTMENT b ON (a.SEAT_NUMBER = b.SH_SEATNO OR a.SEAT_NUMBER = b.SZ_SEATNO)
+				LEFT JOIN
+					SETTLE_TRANS_DATA_STATUS c ON a.TRADE_ID = c.TRADE_ID
+				INNER JOIN (
+					SELECT
+						CUSTOMER_ID,
+						PARA_VALUE,
+						MAX(CONFIG_DATE)
+					FROM
+						STL_SEC_RECON_PARA
+					WHERE
+						CONFIG_DATE &lt;= TO_DATE(#{batchDate},'YYYY-MM-DD')
+						AND PARA_CODE = #{PARA_CODE_02}
+					GROUP BY
+						CUSTOMER_ID,PARA_VALUE
+			) d ON b.BROKER_ID = d.CUSTOMER_ID
+			WHERE
+				(c.CHECK_RESULT IS NULL OR c.CHECK_RESULT = #{CHECK_RESULT_2})
+				AND d.PARA_VALUE = #{PARA_VALUE_03}
+			  	AND a.DEAL_DATE = TO_DATE(#{batchDate},'YYYY-MM-DD')
+			  	AND (
+					a.PS NOT IN (#{PS_T68},#{PS_T69},#{PS_T94},#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12})
+					AND (
+						(a.FINPROD_TYPE2 = #{prodType2_F01} AND a.PS NOT IN (#{PS_T39},#{PS_T07},#{PS_T08},#{PS_T09}))
+						OR ((a.FINPROD_TYPE2 = #{prodType2_F02} OR a.FINPROD_TYPE2 = #{prodType2_F03}) AND a.PS NOT IN (#{PS_T07}))
+						OR ((a.FINPROD_TYPE2 = #{prodType2_F06} OR a.FINPROD_TYPE2 = #{prodType2_F10}) AND a.PS NOT IN (#{PS_T04},#{PS_T05},#{PS_T11},#{PS_T12}))
+					)
+				)
+				AND NOT EXISTS (SELECT 1 FROM STL_SEC_RECON_DETAIL detail WHERE detail.TRADE_ID = a.TRADE_ID)
+		) e
+		LEFT JOIN
+			FIN_PRODUCT f ON e.FINPROD_ID = f.FINPROD_ID
+		LEFT JOIN
+			FIN_TRADE_PRODUCT g ON e.FINPROD_ID = g.FINPROD_ID AND g.BRANCH = 0
+		LEFT JOIN
+			FIN_PRODUCT_TYPE h ON e.FINPROD_ID = h.FINPROD_ID
+		LEFT JOIN
+			T_INSTRUMENT ins ON e.FINPROD_ID = ins.STOCK_CODE
+		ORDER BY
+			e.BROKER_ID,e.DEAL_DATE DESC
+		)
+		SELECT * FROM temp1
+		UNION ALL
+		SELECT * FROM temp2
+		UNION ALL
+		SELECT * FROM temp3
+	</select>
+</mapper>

@@ -214,6 +214,29 @@
             </where>
         </if>
     </sql>
+    <!--查询该资产对应的组合分配列表-->
+    <select id="queryCfetsBussCombDisList" parameterType="Map" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto">
+        select
+        p.portfolio_id as portfolioId,
+        pp.portfolio_name as portfolioName,
+        p.sec_acct_id as secManageAcctId,
+        stlinfo.sec_acct_name as secManageAcctIdStr,
+        p.amount/10000 as shareAmt
+        from PTL_SEC_POSITION_RULE p
+        left join PTL_PORTFOLIO pp
+        on pp.portfolio_id=p.portfolio_id
+        left join PTL_CAPACCT_INFO pc
+        on p.PORTFOLIO_ID=pc.PORTFOLIO_ID
+        and pc.acct_type='A01'
+        left join stl_sec_acct_info stlinfo
+        on p.sec_acct_id=stlinfo.sec_acct_id
+        where p.HODING_TYPE = #{A_001,jdbcType=VARCHAR} and p.DATE_TYPE = 0
+        and p.cdate=#{platDate,jdbcType=DATE}
+        and finprod_id=#{finprodId,jdbcType=VARCHAR}
+        and p.amount>0
+        order by p.sec_acct_id,pc.ACCT_NO
+    </select>
+
 </mapper>
 
 

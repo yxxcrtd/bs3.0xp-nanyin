@@ -110,7 +110,7 @@ public class FinTenderBondTargetAssetController {
     
     /**
      * 获取基本信息--修改/详细
-     * @param secId
+     * @param finprodId
      * @return
      * @throws Exception
      * @see
@@ -124,7 +124,7 @@ public class FinTenderBondTargetAssetController {
     /**
      * 市场代码是否重复
      * <功能详细描述>
-     * @param finprodId
+     * @param finprodMarketId
      * @return
      * @see
      * @since 1.0
@@ -133,5 +133,17 @@ public class FinTenderBondTargetAssetController {
     public int selectCountByfinprodMarketId(String finprodMarketId) {
         return finTenderBondTargetAssetService.selectCountByfinprodMarketId(finprodMarketId);
     }
-    
+
+    /**
+     * 查询关联此一级市场投标债券数量
+     * <功能详细描述>
+     * @param oFinprod
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("selectCountByOFinprodId")
+    public int selectCountByOFinprodId(String oFinprodId) {
+        return finTenderBondTargetAssetService.selectCountByOFinprodId(oFinprodId);
+    }
 }

@@ -1199,6 +1199,9 @@ public class IbuQuoteBondService extends BaseService {
         List<ValidMessage> errorList = new ArrayList<>();
         //是否存在流程中数据
         cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts().forEach(item ->{
+            if(!StringUtil.equals(item.getValidStatus(),BussinessDictCodeList.有效状态_有效.getValue())){
+                errorList.add(new ValidMessage("非有效状态数据不支持撤销!业务编号:"+item.getQuoteId()));
+            }
             WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
             wflValidInputParameter.setPageId("IbuQuoteBond004");
             wflValidInputParameter.setBusinessDataPk1(item.getQuoteId());
@@ -1214,7 +1217,7 @@ public class IbuQuoteBondService extends BaseService {
             //回售登记数据，在理论行权日前一交易日（包含前一交易日）之前均支持回售登记撤销操作，支持隔夜撤销。理论行权日之后（包含理论行权日）回售登记不支持手动撤销
             if(StringUtil.equals(item.getPs(), com.joyintech.tams.constant.DictCodeList.交易方向_行权_回售.getValue())){
                 RegFinProductDealTotal regFinProductDealTotal = regFinProductDealTotalMapper.selectByPrimaryKey(item.getQuoteId());
-                if(regFinProductDealTotal.getTradeDate().compareTo(regFinProductDealTotal.getSettleDate())>=0){
+                if(iPlatformDate.getSysDate().compareTo(regFinProductDealTotal.getSettleDate())>=0){
                     errorList.add(new ValidMessage("理论行权日之后(包含理论行权日)回售登记不支持手动撤销!业务编号:"+item.getQuoteId()));
                 }
             }

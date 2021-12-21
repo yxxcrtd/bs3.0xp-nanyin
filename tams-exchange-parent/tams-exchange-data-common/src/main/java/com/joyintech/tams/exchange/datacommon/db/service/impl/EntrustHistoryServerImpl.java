@@ -10,16 +10,22 @@ import com.joyintech.tams.exchange.common.db.domain.EntrustHistoryExample;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.dao.EntrustHistoryMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.EntrustHistoryService;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class EntrustHistoryServerImpl implements EntrustHistoryService {
     @Autowired
     private EntrustHistoryMapper entrustHistoryMapper;
 
+    @Autowired
+    private SqlSessionTemplate sqlSessionTemplate;
 
     @Override
     public List<EntrustHistory> queryAll() {
@@ -28,7 +34,18 @@ public class EntrustHistoryServerImpl implements EntrustHistoryService {
 
     @Override
     public void saveEntrustHistory(List<EntrustHistory> entrustHistories) {
-        entrustHistoryMapper.insertBatch(entrustHistories);
+        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH,false);
+        EntrustHistoryMapper entrustHistoryMapper = sqlSession.getMapper(EntrustHistoryMapper.class);
+        AtomicInteger index = new AtomicInteger(0);
+        entrustHistories.forEach(entrustHistory -> {
+            index.getAndIncrement();
+            entrustHistoryMapper.insertSelective(entrustHistory);
+            if (index.get() % 500 == 0){
+                sqlSession.flushStatements();
+            }
+        });
+        sqlSession.commit();
+        sqlSession.close();
     }
 
     @Override

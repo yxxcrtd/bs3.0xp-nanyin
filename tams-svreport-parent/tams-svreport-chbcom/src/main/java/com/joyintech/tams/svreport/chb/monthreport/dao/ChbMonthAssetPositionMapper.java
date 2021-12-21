@@ -1,14 +1,15 @@
 package com.joyintech.tams.svreport.chb.monthreport.dao;
 
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.ChbBotAstPosition;
+import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
-import com.joyintech.tams.common.base.entity.ChbBotAstPosition;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChbMonthAssetPositionMapper {
@@ -157,5 +158,23 @@ public interface ChbMonthAssetPositionMapper {
      * @since 1.0
      */
     List<ChbMonthAssetPosition> selectPlanInfoListByCommon(ChbMonthAssetPosition pos);
+
+    // add by dubaojun 2020-06-06 新增理财子公司月报资产头寸字段设置 start
+    /**
+     * 根据资产代码查询资产相关信息
+     *
+     * @param assetCode 资产代码
+     * @return 资产信息
+     */
+    ChbAssetInfo selectChbAssetInfoByAssetCode(@Param("assetCode") String assetCode);
+
+    /**
+     * 根据产品代码查询产品相关信息
+     *
+     * @param prodId 产品代码
+     * @return 产品信息
+     */
+    ChbPrdBaseinfo selectChbPrdBaseinfoByProdId(@Param("prodId") String prodId, @Param("endDate") Date endDate);
+    // add by dubaojun 2020-06-06 新增理财子公司月报资产头寸字段设置 end
     
 }

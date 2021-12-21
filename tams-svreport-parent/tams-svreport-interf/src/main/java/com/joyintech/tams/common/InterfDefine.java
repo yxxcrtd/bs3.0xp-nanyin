@@ -66,6 +66,8 @@ public enum InterfDefine {
     产品费用头寸接口("CHB_PRDFEE_BASIS_DATA","产品费用头寸接口"),
     产品分红交易接口数据("CHB_PRD_BONUS_DEAL","产品分红交易接口数据"),
     监管区域客户组别接口数据("SALE_CUST_SVRREPORT","监管区域客户组别接口数据"),
+    销售结算资金交易信息表报送数据接入("CHB_SALER_STL_DEAL_INFO","销售结算资金交易信息表报送数据接入"),
+
     产品利率基本信息接口数据("CHB_PRD_RATE","产品利率基本信息接口数据"),
     资产利率基本信息接口数据("CHB_ASSET_RATE","资产利率基本信息接口数据"),
 

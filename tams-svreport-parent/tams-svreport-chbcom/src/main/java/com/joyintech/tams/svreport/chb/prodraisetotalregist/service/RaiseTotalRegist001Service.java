@@ -274,7 +274,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		}
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 
-		if(CollectionUtils.isNotEmpty(data)){
+		if(data!=null){
 			page.setTotal(data.size()/pageSize+1);
 		}else{
 			page.setTotal(0);
@@ -500,7 +500,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		// 检查登记表中小于今天所有未报送的数据
 		if(CollectionUtils.isNotEmpty(checkKeys)){
 			// 调用检查方法
-			resultlist.addAll(check(null));
+			resultlist.addAll(check(null,checkKeys));
 			checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
 			for(String key : checkKeys){
 				if(checkmap.get(key)!=null){
@@ -529,7 +529,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 	 * @return List<CheckReport001Dto>
 	 * @version 1.7 2019年6月24日
 	 */
-	public List<CheckReport001Dto> check(Date batchDate){
+	public List<CheckReport001Dto> check(Date batchDate,List<String> keys){
 		// 数据日期为系统时间
 		Date checkdate = DateUtil.parse(DateUtil.getSysDate());
 		// 供跑批使用
@@ -537,7 +537,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 			checkdate = batchDate;
 		}
 		// 删除今天所有已检查的数据
-		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_募集总量登记.getValue(),checkdate);
+		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_募集总量登记.getValue(),checkdate,keys);
 		//增加例外情况过滤
         List<ChbCheckRuleout> listRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_PRD_RAISETOT_SUB);
         Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(
@@ -547,7 +547,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		//警告逻辑检查
         // List<CheckReport001Dto> resultList = beforeSubCheck.checkProdRaiseTotalReg(checkdate, mapRuleout);
 		//报送前强制的错误检查
-		List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkProdRaiseTotalReg(checkdate,null,mapRuleout);
+		List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkProdRaiseTotalReg(checkdate,keys,mapRuleout);
 //		//警告逻辑检查
 //		resultList.addAll(beforeSubCheck.checkProdRaiseTotalReg(checkdate,mapRuleout));
 

@@ -33,6 +33,10 @@ public interface DataCheckCommonMapper {
      */
     List<CheckRepType> queryChbCheckRepTypeList(@Param("pageId") String pageId, @Param("repType") String repType);
 
+    /**
+     * 根据ID查询画面中债 ElementId
+     * @param pageId
+     * @return
+     */
     String queryElementIdByPageId(@Param("pageId") String pageId);
-
 }

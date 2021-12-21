@@ -38,8 +38,8 @@
 				and bo.is_win = bobp.is_win
 				and bobp.WIN_PRICE is not null
 				and wtp.YIELD is not null
-				  and wtfpdt.TOTLE_TRADE_ID is not null
-			  	and bobp.TRADE_ID is not null
+				and wtfpdt.TOTLE_TRADE_ID is not null
+				and bobp.TRADE_ID is not null
 				<if test="portfolioIdList != null and portfolioIdList.size() >0">
 					AND  ee.PORTFOLIO_ID IN
 					<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
@@ -271,7 +271,9 @@
 	<update id="updateTradeId" parameterType="java.util.Map">
 		update BID_ORDER_BID_PRICE  set TRADE_ID = #{tradeId,jdbcType = VARCHAR}
 		where ENTRUST_ID= #{entrustId,jdbcType=VARCHAR}
-		and BID_PRICE = #{bidPrice}
+		<if test="bidPrice!=null and bidPrice!=''">
+			and BID_PRICE = #{bidPrice}
+		</if>
 		<!--and (WIN_PRICE = #{winPrice,jdbcType=DECIMAL}  OR  WIN_CPRICE = #{winCprice,jdbcType=DECIMAL})-->
 	</update>
 

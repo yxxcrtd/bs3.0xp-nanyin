@@ -9,7 +9,7 @@
 		TABLE01.SEC_ACCT_ID 			secAcctId,/*证券账户/通道代码*/
 		TABLE01.FINPROD_ID 				finProdId,/*金融产品Id*/
 		FIN_PRODUCT.FINPROD_ABBR     	finProdAbbr,/*金融产品简称*/
-		fpt.TYPE_9 finProdType,
+		fpt.TYPE_11 finProdType,
 		TABLE01.BRANCH     				branch,/*分支序号*/
 		round(NVL(TABLE01.Amount,0)/10000,2)     Amount,/*券面总额*/
 		round(NVL(TABLE01.pledStrdPrinAmt,0)/10000,2)  pledStrdPrinAmt,/*可质押券面总额*/
@@ -174,7 +174,7 @@
 			</foreach>
 		</if>
 		<if test="finprodTypeList != null and !finprodTypeList.isEmpty()">
-			AND fpt.type_9 in
+			AND fpt.TYPE_11 in
 			<foreach collection="finprodTypeList" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
@@ -193,6 +193,10 @@
 		</if>-->
 		<if test="zyqk !=null and zyqk !=''">
 			AND (EEP.PLEDGE_STOCK_ID !=#{zyqk,jdbcType=VARCHAR} or EEP.PLEDGE_STOCK_ID is null)
+		</if>
+
+		<if test="pledgeStockId !=null and pledgeStockId !=''">
+			AND (EEP.PLEDGE_STOCK_ID !=#{pledgeStockId,jdbcType=VARCHAR} or EEP.PLEDGE_STOCK_ID is null)
 		</if>
 
 	</select>

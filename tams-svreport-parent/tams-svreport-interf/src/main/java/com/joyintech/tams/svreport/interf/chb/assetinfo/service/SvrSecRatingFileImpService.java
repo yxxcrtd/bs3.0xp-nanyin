@@ -91,7 +91,12 @@ public class SvrSecRatingFileImpService extends FileImpService {
      */
     @Value("${spring.datasource.reportSqlldrDatabaseName}")
     private String reportSqlldrDatabaseName;
-    
+	/**
+	 * 数据批量一次性insert条数(单条数据字段较多)
+	 */
+	@Value("${application.reportInsertLongCount}")
+	private int reportInsertLongCount;
+
 	@Autowired
 	private SvrMstBondCreditRatingMapper svrMstBondCreditRatingMapper;
 
@@ -314,25 +319,35 @@ public class SvrSecRatingFileImpService extends FileImpService {
 	}
 	
 	private void insertSecRating(List<MstBondCreditRating> listNE) {
-		logger.debug("批量插入评级信息----开始-----:" +  df.format(new Date()));
+		int count = 0;
+		logger.debug("批量插入评级信息----开始------:" +  df.format(new Date()));
 		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-		MstBondCreditRatingMapper mstBondCreditRatingMapper =  session.getMapper(MstBondCreditRatingMapper.class);
-		try{
-			int count = 0;
-			for(MstBondCreditRating sch : listNE){
-				mstBondCreditRatingMapper.insert(sch);
-        		count++;
-        		if(count % 1000==0){
-            		session.commit();
-            		session.clearCache();
-        		}
-        	}	
-			session.commit();
-    		session.clearCache();
-		} finally {
-    		session.close();
-    	}
-		logger.debug("批量插入评级信息----结束-----:" +  df.format(new Date()));	
+		SvrMstBondCreditRatingMapper batchMapper =  session.getMapper(SvrMstBondCreditRatingMapper.class);
+		int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
+		int batchLastIndex = batchCount;//每批最后一个的下标
+		for(int index = 0; index < listNE.size();){
+			if(batchLastIndex > listNE.size()-1){
+				batchLastIndex = listNE.size();
+				batchMapper.mergeSecRating(listNE.subList(index, batchLastIndex));
+				break;//数据插入完毕,退出循环
+			}else{
+				batchMapper.mergeSecRating(listNE.subList(index, batchLastIndex));
+				index = batchLastIndex;//设置下一批下标
+				batchLastIndex = index + batchCount;
+			}
+			count ++;
+			// 每20次提交
+			if (count % 20 == 0) {
+				session.commit();
+				// 清理缓存，防止溢出
+				session.clearCache();
+			}
+		}
+		logger.debug("批量插入评级信息----结束-----:" +  df.format(new Date()));
+		session.commit();
+		// 清理缓存，防止溢出
+		session.clearCache();
+
 	}
 
 	private void deleteAllData(){

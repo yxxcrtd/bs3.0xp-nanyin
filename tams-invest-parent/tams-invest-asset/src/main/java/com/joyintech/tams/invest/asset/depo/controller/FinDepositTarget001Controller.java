@@ -10,9 +10,13 @@
  
 package com.joyintech.tams.invest.asset.depo.controller;
 
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -113,7 +117,19 @@ public class FinDepositTarget001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("editCheck")
     public AjaxResult editCheck(@RequestBody @Validated FinDepositTargetDto dto, BindingResult result) {
-        return commonCheck(result, dto.getOperateType());
+        AjaxResult checkResult = commonCheck(result, dto.getOperateType());
+        //如果平台日不为空,校验平台日和终止日期
+
+        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)
+                && StringUtil.isNotEmpty(DateUtil.platDateFromCache())){
+            if (DateUtil.compareDate(dto.getMdate(), DateUtil.platDateFromCache()) < 0){
+                ArrayList<ValidMessage> errorList = new ArrayList<>();
+                errorList.add(new ValidMessage("不能修改已到期资产要素！"));
+                checkResult.setErrorList(errorList);
+            }
+        }
+        return checkResult;
+       // return commonCheck(result, dto.getOperateType());
     }
     
     

@@ -117,8 +117,18 @@ public class SvrBussRepFundInfoDto extends RepFund {
      * 备注
      */
     private String remark;
-
+    
     /**
+     * 管理人代码
+     */
+    private String chbManagerId;
+    
+    /**
+     * 是否政府出资产业投资基金
+     */
+    private String isUnlisted;    
+
+	/**
      * 新人行资产一级分类
      */
     private String pbcAssetType1;
@@ -304,4 +314,20 @@ public class SvrBussRepFundInfoDto extends RepFund {
     public void setPbcAssetType3(String pbcAssetType3) {
         this.pbcAssetType3 = pbcAssetType3;
     }
+    
+    public String getChbManagerId() {
+		return chbManagerId;
+	}
+
+	public void setChbManagerId(String chbManagerId) {
+		this.chbManagerId = chbManagerId;
+	}
+
+	public String getIsUnlisted() {
+		return isUnlisted;
+	}
+
+	public void setIsUnlisted(String isUnlisted) {
+		this.isUnlisted = isUnlisted;
+	}
 }

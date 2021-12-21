@@ -15,6 +15,7 @@
         } else {
             pageParam.portfolioId = null;
         }
+        pageParam.busiCode = $("#busiCode").val();
         
         return pageParam;
     };

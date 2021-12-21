@@ -374,7 +374,15 @@ public class SecVestAssetDealTemplateRecService {
         // 金融产品交易
         TrdProductDeal valFinProductDeal = new TrdProductDeal();
         //定义编号
-        String tradeId=interfCommonService.getTradeid(dto.getPs(),dto.getDealDate(),"A");
+        //String tradeId=interfCommonService.getTradeid(dto.getPs(),dto.getDealDate(),"A");
+        /**由于债券交易不自动生成结算指令，需要根据上游交易编号来关联指令，交易编号直接取上游交易编号 update by yinya on 20211207**/
+        String tradeId=null;
+        if(dto.getDataActionSign().equals(DictCodeListExt1.交易状态_初始.getValue())){
+            tradeId=dto.getTradeId();
+        }else{
+            tradeId=interfCommonService.getTradeid(dto.getPs(),dto.getDealDate(),"A");
+        }
+
         // 交易编号 = 共通生成
         valFinProductDeal.setTradeId(tradeId);
         // 交易场所为银行间则业务类型为债券交易，反之为交易场所债券
@@ -544,6 +552,8 @@ public class SecVestAssetDealTemplateRecService {
         }
         // 创建时间 = 系统时间
         valFinProductDeal.setCreateTime(dto.getCreateTime());
+        //是否生成结算指令 add by yinya on 20211201
+        valFinProductDeal.setIsOrders(dto.getIsClean());
         return valFinProductDeal;
     }
 

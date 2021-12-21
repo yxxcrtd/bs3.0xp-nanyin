@@ -240,10 +240,10 @@
         object.pageId = "IbuQuoteBond004";
         object.shareAmt = JoyinMath.doMul(object.shareAmt,10000);
         if(object.matureYield){
-            object.matureYield = JoyinMath.doDiv(object.matureYield,100);
+            object.matureYield = JoyinMath.doDiv(object.matureYield,100,6);
         }
         if(object.exerYield){
-            object.exerYield = JoyinMath.doDiv(object.exerYield,100);
+            object.exerYield = JoyinMath.doDiv(object.exerYield,100,6);
         }
         if(object.cfetsBondDealDialogueQuoteDtoList){
             $.each(object.cfetsBondDealDialogueQuoteDtoList,function(index,obj){

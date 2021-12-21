@@ -70,7 +70,30 @@
                                 </select>    
                             </div>
                         </div>
-                        <!--  add by wangyang1 【吉林银行】 增加 产品经理 end -->
+						<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+							<label class="layui-form-label form-lable"
+								   data-th-text="#{PtlFundAcctPosi001.trusteeId}">托管机构</label>
+							<div class="layui-input-inline input-inline">
+								<select id="trusteeId" name="trusteeId"
+										class="layui-input form-input input-select"
+										data-th-data-url="@{getOriginalInterestHolder}"
+										allowClear="true" placeholder="请选择托管机构">
+								</select>
+							</div>
+						</div>
+						<div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4">
+							<label class="layui-form-label form-lable"
+								   data-th-text="#{PtlFundAcctPosi001.quota}">发生额不为0</label>
+							<div class="layui-input-inline input-inline">
+								<select id="quota" name="quota"
+										class="layui-input form-input input-select"
+										data-th-data-result="${YES_OR_NO}"
+										data-th-initValue='${YES_OR_NO_YES}'
+										allowClear="true" placeholder="请选择">
+								</select>
+							</div>
+						</div>
+						<!--  add by wangyang1 【吉林银行】 增加 产品经理 end -->
                     </div>
 				</form>
 			</div>
@@ -82,6 +105,7 @@
 	<div layout:fragment="script">
 		<script data-th-inline="javascript" type="text/javascript">
 			var sysDate = /*[[${sysDate}]]*/'';
+			var YES_OR_NO_YES = /*[[${YES_OR_NO_YES}]]*/'';
 		</script>
 		<script data-th-src="@{/js/invest/portfolio/ptlfundacctposi/PtlFundAcctPosi001.js}"></script>
 	</div>

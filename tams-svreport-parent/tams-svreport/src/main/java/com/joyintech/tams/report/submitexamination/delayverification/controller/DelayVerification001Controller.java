@@ -73,7 +73,7 @@ public class DelayVerification001Controller extends BaseController{
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
         Date dateStart=DateUtil.getFirstDay(svrBaseCommonService.getSysDate());
-        Date dateEnd=DateUtil.getLastDay(svrBaseCommonService.getSysDate());
+        Date dateEnd=svrBaseCommonService.getSysDate();
         model.addAttribute("DATE_START",DateUtil.format(dateStart));
         model.addAttribute("DATE_END",DateUtil.format(dateEnd));
         String needTab = SvrDataUtil.getSysParam("SVR_DELAY_SUBMIT_TAB");

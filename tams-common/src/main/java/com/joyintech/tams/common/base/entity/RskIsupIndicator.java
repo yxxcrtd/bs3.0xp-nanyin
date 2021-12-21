@@ -116,6 +116,12 @@ public class RskIsupIndicator extends BaseEntity {
      */
     private String isDisplayOriginal;
 
+    /*指标编号*/
+    private String indNum;
+
+    /*监管文件说明*/
+    private String supDoc;
+
     /**
      * 取得 监督指标编号
      * @return 监督指标编号
@@ -478,5 +484,36 @@ public class RskIsupIndicator extends BaseEntity {
      */
     public void setIsDisplayOriginal(String isDisplayOriginal) {
         this.isDisplayOriginal = isDisplayOriginal == null ? null : isDisplayOriginal.trim();
+    }
+    /**
+     * 取得 指标编号
+     * @return 指标编号
+     */
+    public String getIndNum() {
+        return indNum;
+    }
+
+    /**
+     * 设置 指标编号
+     * @param
+     */
+    public void setIndNum(String indNum) {
+        this.indNum = indNum;
+    }
+
+    /**
+     * 取得 监管文件说明
+     * @return 监管文件说明
+     */
+    public String getSupDoc() {
+        return supDoc;
+    }
+
+    /**
+     * 设置 监管文件说明
+     * @param
+     */
+    public void setSupDoc(String supDoc) {
+        this.supDoc = supDoc;
     }
 }

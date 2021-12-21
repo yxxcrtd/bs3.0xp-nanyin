@@ -59,12 +59,10 @@
 
         {
             /* 组合代码 */
-            field: 'portfolioId', width: 100, title: 'EtribRepoInfo003.portfolioId', edit: false, sortable: false,
+            field: 'portfolioId', width: 150, title: 'EtribRepoInfo003.portfolioId', edit: true, sortable: false,
             editOption: {
                 type: 'select',
                 id: 'portfolioId',
-                parentIds:'portfolioSeries',
-//                childrenIds : 'portfolioId',
                 multiple: false,
                 showField: 'text',
                 searchable: true,
@@ -74,7 +72,7 @@
 
         {
             /* 质押券库代码 */
-            field: 'zyqk', width: 100, title: 'EtrIbRepo001.zyqk',
+            field: 'zyqk', width: 150, title: 'EtrIbRepo001.zyqk',
             /* 光大质押券暂时隐藏 */
             visible: repo_pledge_model=='03'?true:false,
             edit: true,
@@ -92,8 +90,35 @@
         , {
         /*指令金额*/
             field: 'entrustAmt',
-            width: 50,
-            title: 'EtrRepo002.entrustAmt',
+            width: 150,
+            title: '指令金额（元）',
+            edit: false,
+            sortable: false,
+            type: 'number',
+            digit: 2
+        }, {
+            /*组合t日可用*/
+            field: 'availableCashT',
+            width: 150,
+            title: 'T日可用现金（元）',
+            edit: false,
+            sortable: false,
+            type: 'number',
+            digit: 2
+        }, {
+            /*组合t+1可用*/
+            field: 'availableCashT1',
+            width: 150,
+            title: 'T+1日可用现金（元）',
+            edit: false,
+            sortable: false,
+            type: 'number',
+            digit: 2
+        }, {
+            /*账户现金*/
+            field: 'accountCash',
+            width: 150,
+            title: '账户现金（元）',
             edit: false,
             sortable: false,
             type: 'number',
@@ -118,7 +143,90 @@
             return false;
         }
     });
+    var colsRiskTrialRet = [
+        {
+            /* 指标名称*/
+            field: 'kriName', width: 100, title: 'BaseRiskMathComm.indName',sortable: false
+        }
+        , {/*指标类型*/
+            field: 'kriTypeCn',
+            width: 50,
+            title: 'BaseRiskMathComm.indType',
+            sortable: false
+        }
+        , {
+            /*组合名称*/
+            field: 'portfolioName',
+            width: 150,
+            title: 'BaseRiskMathComm.portfolioName',
+            sortable: false
+        }
+        , {
+            /*预警阈值*/
+            field: 'warningLine',
+            width: 150,
+            title: 'BaseRiskMathComm.wthreshold',
+            sortable: false
+        }
+        , {
+            /*审批线*/
+            field: 'approveLine',
+            width: 150,
+            title: 'BaseRiskMathComm.approveold',
+            sortable: false
+        }
+        , {
+            /*当前实际值*/
+            field: 'kriValue',
+            width: 200,
+            title: 'BaseRiskMathComm.currValue',
+            sortable: false
+        }
+        , {
+            /*原值*/
+            field: 'oldValue',
+            width: 200,
+            title: 'BaseRiskMathComm.preValue',
+            sortable: false
+        }
+        , {
+            /*趋势*/
+            field: 'kriTrend',
+            width: 200,
+            title: 'BaseRiskMathComm.kriTrend',
+            sortable: false
+        }
+        ,{field:'kriStatusCn',  title: 'BaseRiskMathComm.currStatus',sortable:false,
+            render: function (data, type, row, meta) {
+                if(row.kriStatus == 0){
+                    return "<span>正常</span>";
+                }
+                if(row.kriStatus == 1){
+                    return "<span style='color:orange'>预警</span>";
+                }
+                if(row.kriStatus == 2){
+                    return "<span style='color:#F7580D'>审批</span>";
+                }
+                if(row.kriStatus == 3){
+                    return "<span style='color:#F71A0D'>违规</span>";
+                }
+                if(row.kriStatus == 4){
+                    return "<span style='color:#951F1F'>异常</span>";
+                }
+                return row.kriStatus;
+            }
+        }
+    ]
 
+    var tableRisk = $("#riskTrialRetTable").joyintable({
+        data:entity_RiskTrialRetList||[],
+        cols: colsRiskTrialRet,
+        page: true,
+        addToLast: true,
+        searchOnInit: true,
+        checkbox: false,
+        height: 290
+    });
 
 
     var init = function () {
@@ -128,7 +236,6 @@
     var pledgeBondTotalTblDetailed ;
     if(repo_pledge_model=='02') {
 
-debugger;
 
         /**
          * 质押券汇总信息（Total）
@@ -200,7 +307,11 @@ debugger;
                     sortable: false
                 }
                 //折算比例%
-                , {field: 'scale', title: '折算比例%', type: 'number', edit: false, sortable: false, width: 100}
+                , {field: 'scale', title: '折算比例%', type: 'number', edit: false, sortable: false, width: 100,
+                    render: function (data, type, row, meta) {
+                        return data*100;
+                    }
+                }
 
                 // 登记托管机构
                 , {

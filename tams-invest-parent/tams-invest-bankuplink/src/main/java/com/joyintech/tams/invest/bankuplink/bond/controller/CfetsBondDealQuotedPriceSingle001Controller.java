@@ -94,6 +94,7 @@ public class CfetsBondDealQuotedPriceSingle001Controller extends BaseController 
         model.addAttribute("ACCOUNT_SPEED_2", BussinessDictCodeList.清算速度_T加2.getValue());
         model.addAttribute("yesNoFlag_yes", BussinessDictCodeList.是否_是.getValue());
         model.addAttribute("assetTypeOne_abs", BussinessDictCodeList.平安资产一级分类_资产支持证券.getValue());
+        model.addAttribute("assetTypeTwo_abs", BussinessDictCodeList.行内资产三级分类_资产支持证券.getValue());
         model.addAttribute("calcTypeUnitCprice", BussinessDictCodeList.计算选择方式_净价.getValue());
         model.addAttribute("calcTypeYield", BussinessDictCodeList.计算选择方式_到期收益率.getValue());
         model.addAttribute("calcTypeExecYield", BussinessDictCodeList.计算选择方式_行权收益率.getValue());

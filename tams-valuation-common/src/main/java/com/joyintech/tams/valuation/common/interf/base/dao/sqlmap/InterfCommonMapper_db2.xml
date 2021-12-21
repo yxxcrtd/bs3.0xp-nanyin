@@ -679,17 +679,43 @@
 	
 	<select id='queryStlOrdersMapping' parameterType="com.joyintech.tams.valuation.common.interf.base.dto.ProductDealDto" 
 		resultType="com.joyintech.tams.common.base.entity.StlOrdersMapping">
-		select 
-		  <include refid="com.joyintech.tams.common.base.dao.StlOrdersMappingMapper.Base_Column_List" />
-		from STL_ORDERS_MAPPING 
+		select
+		<include refid="com.joyintech.tams.common.base.dao.StlOrdersMappingMapper.Base_Column_List" />
+		from STL_ORDERS_MAPPING
 		WHERE BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
 		AND TRADE_PS = #{ps,jdbcType=VARCHAR}
 		AND FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
 		AND CHANNEL_ASSET = #{channelAsset,jdbcType=VARCHAR}<!-- modify by dongjun on 20190314 remark:通道变更 -->
 		AND MAPPING_TYPE = #{mappingType,jdbcType=VARCHAR} /**add by yanya on 20191017 增加映射类型**/
+		<if test="isTrade != null">
+			AND IS_BOOK = #{isTrade,jdbcType=VARCHAR}
+		</if>
 		<if test="busiType != null and busiType =='02' ">
 			AND INV_AIM = #{invAim,jdbcType=VARCHAR}
 		</if>
+		<!-- add by yanya on 20210317 债券行权改造 -->
+		<if test="busiType != null and '24'.equals(busiType)">
+			<choose>
+				<when test="invAim != null and !invAim.equals('')">
+					AND INV_AIM = #{invAim,jdbcType=VARCHAR}
+				</when>
+				<otherwise>
+					AND INV_AIM IS NULL
+				</otherwise>
+			</choose>
+		</if>
+		<!-- add by wujie on 20201015 start remark:计划类收益型资产改造 -->
+		<if test="busiType != null and busiType =='09' ">
+			<choose>
+				<when test="invAim != null and !invAim.equals('')">
+					AND INV_AIM = #{invAim,jdbcType=VARCHAR}
+				</when>
+				<otherwise>
+					AND INV_AIM IS NULL
+				</otherwise>
+			</choose>
+		</if>
+		<!-- add by wujie on 20201015 end -->
 	</select>
 
 

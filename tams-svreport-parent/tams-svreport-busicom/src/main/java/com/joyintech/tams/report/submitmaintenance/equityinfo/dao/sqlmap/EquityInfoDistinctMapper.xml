@@ -41,6 +41,8 @@
     <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
     <result column="INTERF_CHECK_RESULT" property="interfCheckResult" jdbcType="VARCHAR" />
     <result column="MERGER_INDENTIFY_MARK" property="mergerindentifymark" jdbcType="VARCHAR" />
+	<result column="HOLDER_CLASSIFY" property="holderClassify" jdbcType="VARCHAR" />
+	<result column="FUND_ACC_PLACE" property="fundAccPlace" jdbcType="VARCHAR" />
   </resultMap>
  
 	
@@ -307,7 +309,9 @@
 	            HOLDER_EMAIL holderEmail,
 	            ORG_CODE orgCode,
 	            DEPT_CODE deptCode,
-	            REMARK remark
+	            REMARK remark,
+				FUND_ACC_PLACE fundAccPlace,
+				HOLDER_CLASSIFY holderClassify
 	   		FROM CHB_EQU_HOLD HOLD
 			 <where>
 			     <if test="keys !=null and keys.size()==1">
@@ -359,7 +363,9 @@
 	            HOLDER_EMAIL holderEmail,
 	            ORG_CODE orgCode,
 	            DEPT_CODE deptCode,
-	            REMARK remark
+	            REMARK remark,
+				FUND_ACC_PLACE fundAccPlace,
+				HOLDER_CLASSIFY holderClassify
 		  	 FROM CHB_EQU_HOLD_CHECK HOLDCHECK
 		     WHERE 1=1 
 			 AND NOT EXISTS (SELECT 1 FROM CHB_EQU_HOLD HOLD
@@ -462,7 +468,9 @@
        		UPDATE_TIME           	  as updateTime,
        		SUMIT_SEQ                 as sumitSeq,
        		ORG_CODE                  as orgCode,
-       		CHECK_SEQNO		  		  as checkSeqno
+       		CHECK_SEQNO		  		  as checkSeqno,
+		    HOLDER_CLASSIFY           as holderClassify,
+			FUND_ACC_PLACE 			  as fundAccPlace
 		 from CHB_EQU_SUB
 		where SUBMIT_STATUS='01'
 		 <if test="keys !=null and keys.size()>0">

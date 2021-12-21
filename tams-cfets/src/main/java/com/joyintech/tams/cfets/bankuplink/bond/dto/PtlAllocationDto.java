@@ -87,6 +87,9 @@ public class PtlAllocationDto {
     @ApiModelProperty(name="exerYield",value="行权收益率(%)")
     private BigDecimal exerYield;
 
+    @ApiModelProperty(name="secManageAcctIdStr",value="证券账户名称")
+    private String secManageAcctIdStr;
+
     public String getEntrustId() {
         return entrustId;
     }
@@ -277,6 +280,14 @@ public class PtlAllocationDto {
 
     public void setSecAcctName(String secAcctName) {
         this.secAcctName = secAcctName;
+    }
+
+    public String getSecManageAcctIdStr() {
+        return secManageAcctIdStr;
+    }
+
+    public void setSecManageAcctIdStr(String secManageAcctIdStr) {
+        this.secManageAcctIdStr = secManageAcctIdStr;
     }
 }
 

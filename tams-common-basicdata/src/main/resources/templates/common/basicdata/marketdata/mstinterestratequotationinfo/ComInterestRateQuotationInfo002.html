@@ -16,6 +16,18 @@
                 <div class="layui-form-item">
                     <div >
                         <label class="layui-form-label form-lable mst-lable"
+                               data-th-text="#{ComInterestRateQuotationInfo002.relaeseDate}">发布日</label>
+                        <div class="layui-input-inline input-inline">
+                            <input id="relaeseDate" name="relaeseDate"
+                                   class="layui-input form-input input-dateSelect" required="required"
+                                   data-th-value='${#dates.format(entity?.relaeseDate,"yyyy-MM-dd")}'
+                                   data-th-data-result='${COMMON_BUSINESS_TYPE}' placeholder="请选择时间">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div >
+                        <label class="layui-form-label form-lable mst-lable"
                                data-th-text="#{ComInterestRateQuotationInfo002.intRateName}">利率名称</label>
                         <div class="layui-input-inline input-inline">
                             <input id="intRateId" name="intRateId"
@@ -23,18 +35,6 @@
                                    placeholder="请输入内容" data-th-value="${entity?.intRateId}"
                                    data-th-placeholder="#{SysCommon.placeholder}"
                                    data-th-data-result='${SECRATE_DATA}' formatoption=true>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div >
-                        <label class="layui-form-label form-lable mst-lable"
-                               data-th-text="#{ComInterestRateQuotationInfo002.relaeseDate}">发布日</label>
-                        <div class="layui-input-inline input-inline">
-                            <input id="relaeseDate" name="relaeseDate"
-                                   class="layui-input form-input input-dateSelect" required="required"
-                                   data-th-value='${#dates.format(entity?.relaeseDate,"yyyy-MM-dd")}'
-                                   data-th-data-result='${COMMON_BUSINESS_TYPE}' placeholder="请选择时间">
                         </div>
                     </div>
                 </div>

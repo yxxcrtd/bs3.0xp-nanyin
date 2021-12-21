@@ -148,6 +148,11 @@ public class FinStockInfo002Controller extends BaseController {
             dto.setIsMarginFinprod(DictCodeList.是否_否.getValue());
 //            dto.setShOrZh(DictCodeListExt2.是否沪港通或深港通_否.getValue());
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+
+            // add by etliu 20211111 TISHKS-125 start
+            dto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+            // add by etliu 20211111 end
+
             //commonBusinessService.setTradeMarketId(dto,model);
             model.addAttribute("entity", dto);
             model.addAttribute("gp",DictCodeListExt1.金融产品类型_投管用_股票.getValue());

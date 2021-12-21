@@ -126,4 +126,9 @@ public class StlDataGatherFund2Reader extends StlDataGatherReader {
     protected boolean isSecType(String secType) {
         return false;
     }
+
+    @Override
+    protected boolean isCreateTrade(){
+        return false;
+    }
 }

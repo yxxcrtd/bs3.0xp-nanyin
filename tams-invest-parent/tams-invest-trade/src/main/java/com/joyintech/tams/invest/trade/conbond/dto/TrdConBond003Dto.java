@@ -256,6 +256,11 @@ public class TrdConBond003Dto extends TrdFinProductDealTotal implements ProcessE
      * @return
      */
     private Date actTradeDate;
+
+	/**
+	 * 成交匹配的流水号 seqId
+	 */
+	private String dealSqeId;
     
 
     @PrimaryKey(PrimaryKey.Field.PK_3)
@@ -664,5 +669,12 @@ public class TrdConBond003Dto extends TrdFinProductDealTotal implements ProcessE
 	public void setActTradeDate(Date actTradeDate) {
 		this.actTradeDate = actTradeDate;
 	}
-	
+
+	public String getDealSqeId() {
+		return dealSqeId;
+	}
+
+	public void setDealSqeId(String dealSqeId) {
+		this.dealSqeId = dealSqeId;
+	}
 }

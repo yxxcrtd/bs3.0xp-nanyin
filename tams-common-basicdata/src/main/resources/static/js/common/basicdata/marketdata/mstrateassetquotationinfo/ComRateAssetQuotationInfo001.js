@@ -48,7 +48,7 @@ $(function () {
             , {field: 'valDate', width: 200, title: '估值日期', type: 'date'}
             , {field: 'fullValuation', title: '全价估值（每百元）',type:'number',digit:4}
             , {field: 'valuation', title: '净价估值（每百元）',type:'number',digit:4}
-            , {field: 'importDate', width: 200, title: '导入日'}
+            , {field: 'importDate', width: 200, title: '导入日',visible: false}
             , {field: 'remark', width: 200, title: '备注'}
             , {field: 'operation', width: 200, title: 'SysCommon.operation', type: 'action', buttons: ['edit', 'delt']}
         ]

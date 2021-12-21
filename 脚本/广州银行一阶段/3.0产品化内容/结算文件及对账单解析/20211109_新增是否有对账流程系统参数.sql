@@ -1,0 +1,29 @@
+DELETE FROM sys_para WHERE system_code = 'SYS' AND PARA_CODE = 'IS_RECON';
+INSERT
+	INTO
+	sys_para (SYSTEM_CODE,
+	PARA_CODE,
+	PARAM_VALUE,
+	DATA_TYPE,
+	DATA_SCOPE,
+	REMARK,
+	CREATE_USER,
+	CREATE_DEPT,
+	CREATE_TIME,
+	UPDATE_USER,
+	UPDATE_TIME,
+	INSTITUTION_CODE,
+	UPDATE_FLG)
+VALUES ('SYS',
+'IS_RECON',
+'01',
+'  ',
+'',
+'是否有对账流程: 01有02无',
+'system',
+'',
+SYSDATE,
+'system',
+SYSDATE,
+'',
+'01');

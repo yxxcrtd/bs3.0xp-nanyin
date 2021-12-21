@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbPrdRateMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdRate" >
+        <id column="SEQNO" property="seqno" jdbcType="CHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR" />
+        <result column="IS_LAY" property="isLay" jdbcType="VARCHAR" />
+        <result column="CHANGE_DATE" property="changeDate" jdbcType="DATE" />
+        <result column="CASHMDATE" property="cashmdate" jdbcType="DATE" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="CHANGE_TYPE" property="changeType" jdbcType="VARCHAR" />
+        <result column="PROD_YIELD" property="prodYield" jdbcType="DECIMAL" />
+        <result column="PROD_BENCHMARK_RATE" property="prodBenchmarkRate" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_TOTAL" property="unitValueTotal" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE" property="unitValue" jdbcType="DECIMAL" />
+        <result column="SEVEN_DAY_RATE" property="sevenDayRate" jdbcType="DECIMAL" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="REV_DATE" property="revDate" jdbcType="DATE" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, PROD_ID PROD_ID, FPROD_ID FPROD_ID, IS_LAY IS_LAY, CHANGE_DATE CHANGE_DATE, 
+        CASHMDATE CASHMDATE, PROFIT_TYPE PROFIT_TYPE, CHANGE_TYPE CHANGE_TYPE, PROD_YIELD PROD_YIELD, 
+        PROD_BENCHMARK_RATE PROD_BENCHMARK_RATE, UNIT_VALUE_TOTAL UNIT_VALUE_TOTAL, UNIT_VALUE UNIT_VALUE, 
+        SEVEN_DAY_RATE SEVEN_DAY_RATE, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, STATUS STATUS, 
+        REV_DATE REV_DATE, DATA_SOURCE DATA_SOURCE, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, REMARK REMARK, CCY CCY
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbPrdRateMapper.Base_Column_List" />
+        from CHB_PRD_RATE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbPrdRateMapper.Base_Column_List" />
+        from CHB_PRD_RATE
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbPrdRateMapper.Base_Column_List" />
+        from CHB_PRD_RATE
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_PRD_RATE
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdRate" >
+        insert into CHB_PRD_RATE (SEQNO, PROD_ID, FPROD_ID, 
+            IS_LAY, CHANGE_DATE, CASHMDATE, 
+            PROFIT_TYPE, CHANGE_TYPE, PROD_YIELD, 
+            PROD_BENCHMARK_RATE, UNIT_VALUE_TOTAL, UNIT_VALUE, 
+            SEVEN_DAY_RATE, ORG_CODE, DEPT_CODE, 
+            STATUS, REV_DATE, DATA_SOURCE, 
+            UPDATE_USER, UPDATE_TIME, CREATE_USER, 
+            CREATE_TIME, REMARK, CCY
+            )
+        values (#{seqno,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{fprodId,jdbcType=VARCHAR}, 
+            #{isLay,jdbcType=VARCHAR}, #{changeDate,jdbcType=DATE}, #{cashmdate,jdbcType=DATE}, 
+            #{profitType,jdbcType=VARCHAR}, #{changeType,jdbcType=VARCHAR}, #{prodYield,jdbcType=DECIMAL}, 
+            #{prodBenchmarkRate,jdbcType=DECIMAL}, #{unitValueTotal,jdbcType=DECIMAL}, #{unitValue,jdbcType=DECIMAL}, 
+            #{sevenDayRate,jdbcType=DECIMAL}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, 
+            #{status,jdbcType=VARCHAR}, #{revDate,jdbcType=DATE}, #{dataSource,jdbcType=VARCHAR}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdRate" >
+        insert into CHB_PRD_RATE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="fprodId != null" >
+                FPROD_ID,
+            </if>
+            <if test="isLay != null" >
+                IS_LAY,
+            </if>
+            <if test="changeDate != null" >
+                CHANGE_DATE,
+            </if>
+            <if test="cashmdate != null" >
+                CASHMDATE,
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE,
+            </if>
+            <if test="changeType != null" >
+                CHANGE_TYPE,
+            </if>
+            <if test="prodYield != null" >
+                PROD_YIELD,
+            </if>
+            <if test="prodBenchmarkRate != null" >
+                PROD_BENCHMARK_RATE,
+            </if>
+            <if test="unitValueTotal != null" >
+                UNIT_VALUE_TOTAL,
+            </if>
+            <if test="unitValue != null" >
+                UNIT_VALUE,
+            </if>
+            <if test="sevenDayRate != null" >
+                SEVEN_DAY_RATE,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="revDate != null" >
+                REV_DATE,
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=CHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="fprodId != null" >
+                #{fprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="isLay != null" >
+                #{isLay,jdbcType=VARCHAR},
+            </if>
+            <if test="changeDate != null" >
+                #{changeDate,jdbcType=DATE},
+            </if>
+            <if test="cashmdate != null" >
+                #{cashmdate,jdbcType=DATE},
+            </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="changeType != null" >
+                #{changeType,jdbcType=VARCHAR},
+            </if>
+            <if test="prodYield != null" >
+                #{prodYield,jdbcType=DECIMAL},
+            </if>
+            <if test="prodBenchmarkRate != null" >
+                #{prodBenchmarkRate,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValueTotal != null" >
+                #{unitValueTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValue != null" >
+                #{unitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="sevenDayRate != null" >
+                #{sevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="revDate != null" >
+                #{revDate,jdbcType=DATE},
+            </if>
+            <if test="dataSource != null" >
+                #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdRate" >
+        insert into CHB_PRD_RATE(SEQNO, PROD_ID, FPROD_ID, IS_LAY, CHANGE_DATE, CASHMDATE, 
+        PROFIT_TYPE, CHANGE_TYPE, PROD_YIELD, PROD_BENCHMARK_RATE, UNIT_VALUE_TOTAL, UNIT_VALUE, 
+        SEVEN_DAY_RATE, ORG_CODE, DEPT_CODE, STATUS, REV_DATE, DATA_SOURCE, UPDATE_USER, 
+        UPDATE_TIME, CREATE_USER, CREATE_TIME, REMARK, CCY)
+        select SEQNO, PROD_ID, FPROD_ID, IS_LAY, CHANGE_DATE, CASHMDATE, 
+            PROFIT_TYPE, CHANGE_TYPE, PROD_YIELD, PROD_BENCHMARK_RATE, UNIT_VALUE_TOTAL, UNIT_VALUE, 
+            SEVEN_DAY_RATE, ORG_CODE, DEPT_CODE, #{status,jdbcType=VARCHAR} STATUS, REV_DATE, DATA_SOURCE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, REMARK, CCY
+             from CHB_PRD_RATE
+             where STATUS = 'E' and SEQNO = #{seqno,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdRate" >
+        update CHB_PRD_RATE
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="fprodId != null" >
+                FPROD_ID = #{fprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="isLay != null" >
+                IS_LAY = #{isLay,jdbcType=VARCHAR},
+            </if>
+            <if test="changeDate != null" >
+                CHANGE_DATE = #{changeDate,jdbcType=DATE},
+            </if>
+            <if test="cashmdate != null" >
+                CASHMDATE = #{cashmdate,jdbcType=DATE},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="changeType != null" >
+                CHANGE_TYPE = #{changeType,jdbcType=VARCHAR},
+            </if>
+            <if test="prodYield != null" >
+                PROD_YIELD = #{prodYield,jdbcType=DECIMAL},
+            </if>
+            <if test="prodBenchmarkRate != null" >
+                PROD_BENCHMARK_RATE = #{prodBenchmarkRate,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValueTotal != null" >
+                UNIT_VALUE_TOTAL = #{unitValueTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="unitValue != null" >
+                UNIT_VALUE = #{unitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="sevenDayRate != null" >
+                SEVEN_DAY_RATE = #{sevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="revDate != null" >
+                REV_DATE = #{revDate,jdbcType=DATE},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbPrdRate" >
+        update CHB_PRD_RATE
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            FPROD_ID = #{fprodId,jdbcType=VARCHAR},
+            IS_LAY = #{isLay,jdbcType=VARCHAR},
+            CHANGE_DATE = #{changeDate,jdbcType=DATE},
+            CASHMDATE = #{cashmdate,jdbcType=DATE},
+            PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            CHANGE_TYPE = #{changeType,jdbcType=VARCHAR},
+            PROD_YIELD = #{prodYield,jdbcType=DECIMAL},
+            PROD_BENCHMARK_RATE = #{prodBenchmarkRate,jdbcType=DECIMAL},
+            UNIT_VALUE_TOTAL = #{unitValueTotal,jdbcType=DECIMAL},
+            UNIT_VALUE = #{unitValue,jdbcType=DECIMAL},
+            SEVEN_DAY_RATE = #{sevenDayRate,jdbcType=DECIMAL},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            REV_DATE = #{revDate,jdbcType=DATE},
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR}
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </update>
+</mapper>

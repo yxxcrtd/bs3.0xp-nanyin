@@ -357,7 +357,7 @@
         // 买断式回购从回购资产交易画面移除了，本处不作判断
         // 2) 当回购类型为质押式竞价回购和买断式回购时，期限品种为文本框，文本框支持输入联想，期限品种枚举值为：
         {
-            if (!isInit && !isTodoList) {
+            if (!isInit && !isTodoList && isTranRecord != 'Y') {
                 //modify by mashukai ZGBSSE-185 审批后双击查看交易，回购期限不显示 20210429 start
                 if (pageModel != PAGE_MODEL_REFERENCE){
                     $("#termTypeReback").val("");
@@ -401,7 +401,7 @@
             }
             $("#avaStandardStockPositionDiv").hide();
         }
-        if (pageModel != PAGE_MODEL_REFERENCE) {//查看页面
+        if ((pageModel != PAGE_MODEL_REFERENCE && isTranRecord != 'Y') || ( isTranRecord == 'Y'&& $('#termTypeReback').val() !='' && $('#termTypeReback').val())) {//查看页面
             var termTypeReback = pageModel== PAGE_MODEL_NEW? $('#termTypeReback').val():termTypeRebackValue;
             $('#termTypeReback').tradeRepTypeChange({
                 termType: 'termTypeReback',
@@ -437,10 +437,11 @@
             $("#avaFundsDateDiv").show();
             $("#vpayDateDiv").show();
             $("#mpayDateDiv").show();
-            //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  start
-            $(".div_position").show();
-            //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  end
-
+            // TISHKS-253:场内质押式交易不展示资产可用持仓 fuyongsheng 20211116 edit start
+            // //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  start
+            // $(".div_position").show();
+            // //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  end
+            // TISHKS-253:场内质押式交易不展示资产可用持仓 fuyongsheng 20211116 edit end
             calcAvaFundsDate();
             if (!isInit) {
                 $("#fTradeId").val("").trigger("change");
@@ -498,7 +499,7 @@
             $("#repoTypeDiv").show();
             //add by nixiukuan 当交易场所选择 20191025 end
         }*/
-        if (pageModel != PAGE_MODEL_REFERENCE) {
+        if ((pageModel != PAGE_MODEL_REFERENCE && isTranRecord != 'Y') || ( isTranRecord == 'Y'&& $('#termTypeReback').val() !='' && $('#termTypeReback').val())) {
             $('#termTypeReback').tradeRepTypeChange({
                 termType: 'termTypeReback',
                 termTypeValue: $('#termTypeReback').val(),
@@ -1996,6 +1997,28 @@
 	    }
     }
     //add by lizhi 2020-2-26 划款指令是否自动生成  end
+
+    /**
+     * 验证日期是否正确
+     * 日期格式：yyyy-mm-dd，yyyy-m-d，yyyy/mm/dd，yyyy/m/d
+     */
+    function checkDate(dateStr) {
+        dateStr = dateStr.replace(/\//g, '-');
+        var dateReg = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
+        var rValue = dateStr.match(dateReg);
+        if (rValue == null) {
+            return false;
+        }
+        rValue[1] = parseInt(rValue[1], 10);
+        rValue[2] = parseInt(rValue[2] - 1, 10);
+        rValue[3] = parseInt(rValue[3], 10);
+        var dateObj = new Date(rValue[1], rValue[2], rValue[3]);
+        if (dateObj.getFullYear() != rValue[1] || dateObj.getMonth() != rValue[2] || dateObj.getDate() != rValue[3]) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 画面加载完成
      */
@@ -2087,13 +2110,19 @@
                 vdateChange();
         });
         $('#mdate').on("change", function () {
-                // 起息日、到期日改变时，自动计算回购期限
-                /*vmdateOnChangeCalcTerm();*/
-                vmdateOnChangeCalcDate($('#mdate').val(), $('#mpayDate'));
-                /*mpayDateChangeBymdate();*/
-                // 组合代码、证券托管户、交易日、到期日改变时，刷新可使用标准券额度
-                refreshAvaStandardStockPosition();
-                mdateChange();
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add start
+            if($('#mdate').val() && !checkDate($('#mdate').val())){
+                Joyin.error(JoyinUtil.getLabel("TrdRepoTrade002.mdate")+ "格式不正确!");
+                return;
+            }
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add end
+            // 起息日、到期日改变时，自动计算回购期限
+            /*vmdateOnChangeCalcTerm();*/
+            vmdateOnChangeCalcDate($('#mdate').val(), $('#mpayDate'));
+            /*mpayDateChangeBymdate();*/
+            // 组合代码、证券托管户、交易日、到期日改变时，刷新可使用标准券额度
+            refreshAvaStandardStockPosition();
+            mdateChange();
         });
         //实际占款天数刷新回购利息
         $('#actCapDays').on("change", function () {
@@ -2112,10 +2141,22 @@
 
         // add by zhanggenglin 首期交付日,到期交付日变动时 20190807 start
         $('#vpayDate').on("change", function(){
-                vpayDateChange()
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add start
+            if($('#vpayDate').val() && !checkDate($('#vpayDate').val())){
+                Joyin.error(JoyinUtil.getLabel("TrdRepoTrade002.vpayDate")+ "格式不正确!");
+                return;
+            }
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add end
+            vpayDateChange()
         });
         $('#mpayDate').on("change",function(){
-                mpayDateChange()
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add start
+            if($('#mpayDate').val() && !checkDate($('#mpayDate').val())){
+                Joyin.error(JoyinUtil.getLabel("TrdRepoTrade002.mpayDate")+ "格式不正确!");
+                return;
+            }
+            // TISHKS-253:校验日期格式 fuyongsheng 20211105 add end
+            mpayDateChange()
         });
        // add by zhanggenglin 首期交付日,到期交付日变动时 20190807 end
 
@@ -2148,7 +2189,7 @@
             }
                 // 设置添加质押券共通参数
                 setBussRepoSecInput();
-            if(pageModel== PAGE_MODEL_NEW){
+            if(pageModel== PAGE_MODEL_NEW && isTranRecord != 'Y'){
                 $("#secAcctId").val('').trigger('change');
             }
         });
@@ -2280,6 +2321,14 @@
             return year+'-'+mon+'-'+date;
         }
 
+        //场内成交匹配录单时，触发一下期限品种联动期限的方法
+        if(isTranRecord == 'Y') {
+
+            if($('#termTypeReback').val() !='' && $('#termTypeReback').val()) {
+                termTypeChangeAction();
+            }
+
+        }
         if(preTradeId){
             $('#baseRiskMathComm').hide();
             $('#TrdRepoTrade002_btn_risk').hide();

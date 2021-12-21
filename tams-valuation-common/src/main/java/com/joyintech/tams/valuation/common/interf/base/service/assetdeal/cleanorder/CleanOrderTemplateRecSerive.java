@@ -213,8 +213,8 @@ public class CleanOrderTemplateRecSerive {
         //币种 = A.币种
         stlOrders.setCcy(dto.getCcy());
         /**add 2018/11/14 start**/
-        //结算状态 = 设置固定值 数据字典：结算状态.结算成功
-        stlOrders.setSettleStatus(DictCodeList.成功失败标志_成功.getValue());
+        //结算状态 = 接口传入，若未提供默认成功 数据字典：结算状态.结算成功
+        stlOrders.setSettleStatus(dto.getSettleStatus()==null?DictCodeList.成功失败标志_成功.getValue():dto.getSettleStatus());
         //指令状态 = A.数据动作标志 新增 --> 01:初始 撤销 --> 03:撤销
         stlOrders.setOrderStatus(dto.getDataActionSign());
         //关联系统指令编号 = A.指令编号

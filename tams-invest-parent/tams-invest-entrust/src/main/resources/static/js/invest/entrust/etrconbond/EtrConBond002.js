@@ -75,11 +75,16 @@
   //查询组合可用现金
     var getPtlCashPositionInfo = function(){
         var data = {portfolioId:$('#portfolioId').val(),secAcctId:$('#secAcctId').val(),ccy:$('#ccy').val(),vdate:$('#entrustDate').val()}
-        Joyin.ajaxJson(basePath + 'invest/trade/conbond/TrdConBond002/getProAvailableCash',data,
+        // modify by etliu 20211129 start
+        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+        // Joyin.ajaxJson(basePath + 'invest/trade/conbond/TrdConBond002/getProAvailableCash',data,
+        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getProAvailableCash',data,
                 function(result) {
             $('#proAvailableCash').val(result.cashT).trigger('blur');
-            $('#tradeMarketCash').val(result.cashS).trigger('blur');
+            // $('#tradeMarketCash').val(result.cashS).trigger('blur');
+            $('#tradeMarketCash').val(result.cashT4).trigger('blur');
         });
+        // modify by etliu 20211129 end
     }  
    
     
@@ -276,11 +281,17 @@
         //联动通道可用现金
         $('#chlId').on("change", function () {
             if ($('#chlId').val()) {
-                var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),secAcctId:$('#secAcctId').val(),chlId:$('#chlId').val(),vdate:$('#entrustDate').val()}
-                Joyin.ajaxJson(basePath + 'invest/trade/conbond/TrdConBond002/getProAvailableCash',data,
+                // modify by etliu 20211129 start
+                // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+                // var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),secAcctId:$('#secAcctId').val(),chlId:$('#chlId').val(),vdate:$('#entrustDate').val()}
+                // Joyin.ajaxJson(basePath + 'invest/trade/conbond/TrdConBond002/getProAvailableCash',data,
+                var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),chlFinprodId:$('#chlId').val()}
+                Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getProAvailableCash',data,
                     function(result) {
-                        $('#channelAvailableCash').val(result.cashC).trigger('blur');
+                        // $('#channelAvailableCash').val(result.cashC).trigger('blur');
+                        $('#channelAvailableCash').val(result.cashT2).trigger('blur');
                     });
+                // modify by etliu 20211129 end
             }else {
                 $('#channelAvailableCash').val('').trigger('blur');
             }

@@ -101,6 +101,9 @@ public class ComBondMarketInfo002Controller extends BaseController {
     public AjaxResult check(@RequestBody ComBondMarketInfo001Dto dto) {
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        if(StringUtil.isNotEmpty(dto.getProcessState())){
+            errorList.add(new ValidMessage("流程中的数据不能修改!"));
+        }
         if (!StringUtil.isNotEmpty(dto.getFinprodId())){
             errorList.add(new ValidMessage("资产代码为必填项！"));
         }
@@ -148,6 +151,7 @@ public class ComBondMarketInfo002Controller extends BaseController {
             ajaxResult.setErrorList(errorList);
             return ajaxResult;
         }
+
 
         Map<String, Object> map = new HashMap<>();
         /** modify by yanya on 20210329 去除截取前四位字符的逻辑**/

@@ -236,6 +236,20 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
 
     private  String  isFbzb;
 
+    /**
+     * 转型表资产一级分类
+     */
+    private String sunassettype;
+
+    /**
+     * 转型表资产二级分类
+     */
+    private String sunassettype2;
+
+    /**
+     * 剩余期限
+     */
+    private BigDecimal terms;
 
     public String getIsFbzb() {
         return isFbzb;
@@ -740,6 +754,36 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
 	public void setBankSecPrefer(String bankSecPrefer) {
 		this.bankSecPrefer = bankSecPrefer;
 	}
-    
-    
+
+    public String getMonthReport() {
+        return monthReport;
+    }
+
+    public void setMonthReport(String monthReport) {
+        this.monthReport = monthReport;
+    }
+
+    public String getSunassettype() {
+        return sunassettype;
+    }
+
+    public void setSunassettype(String sunassettype) {
+        this.sunassettype = sunassettype;
+    }
+
+    public String getSunassettype2() {
+        return sunassettype2;
+    }
+
+    public void setSunassettype2(String sunassettype2) {
+        this.sunassettype2 = sunassettype2;
+    }
+
+    public BigDecimal getTerms() {
+        return terms;
+    }
+
+    public void setTerms(BigDecimal terms) {
+        this.terms = terms;
+    }
 }

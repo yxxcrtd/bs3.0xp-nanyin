@@ -610,13 +610,16 @@
     var setBussRepoSecInput = function () {
         //组合分配列表
         var portfolioId = "";
+        var entrustId = "";
         var ptlAllocationList = dzhTable.getAllRows();
         if (ptlAllocationList && ptlAllocationList.length > 0) {
             $.each(ptlAllocationList, function (i, e) {
                 portfolioId += e.portfolioId + ",";
+                entrustId += e.entrustId + ",";
             });
         }
         var data = {
+            entrustId:entrustId,
             portfolioId: portfolioId,
             ps: $("#CfetsRepoDealQuotedPrice002_ps").val(),
             secAcctId: $('#secAcctId').val(),
@@ -716,6 +719,9 @@
             //回购利率
             if (param[0].price) {
                 $("#CfetsRepoDealQuotedPrice002_price").val(param[0].price).trigger("change");
+            }
+            if (param[0].mySide) {
+                $("#CfetsRepoDealQuotedPrice002_mySide").textSelect('setValue', param[0].mySide);
             }
             /*添加限制*/
             $("#CfetsRepoDealQuotedPrice002_tradeDate").attr("disabled",true);

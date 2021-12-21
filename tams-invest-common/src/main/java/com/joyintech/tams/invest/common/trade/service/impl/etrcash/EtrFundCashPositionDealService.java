@@ -942,10 +942,12 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用现金(组合、托管户）：卖出交易日增加交易金额
                 if (StringUtil.isEmpty(chlId)) {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt());
-                    /*etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                        deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));*/
-                    etrCashPositionFlowDto.setAcctId(
-                            EtrCommonCashPositionDealService.select资金账户(finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),deal.getCcy()));
+                    // TISHKS-356:场外使用托管户 fuyongsheng 20211111 edit start
+                    etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+                        deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+//                    etrCashPositionFlowDto.setAcctId(
+//                            EtrCommonCashPositionDealService.select资金账户(finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),deal.getCcy()));
+                    // TISHKS-356:场外使用托管户 fuyongsheng 20211111 edit end
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.委托通道、无委托通道

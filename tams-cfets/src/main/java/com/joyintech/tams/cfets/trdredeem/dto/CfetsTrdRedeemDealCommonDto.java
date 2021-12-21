@@ -192,6 +192,8 @@ public class CfetsTrdRedeemDealCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="redeemRate",value="赎回比例")
     private BigDecimal redeemRate;
 
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
 
     public String getQuoteId() {
         return quoteId;
@@ -654,6 +656,14 @@ public class CfetsTrdRedeemDealCommonDto extends BaseEntity implements ProcessEn
 
     public void setRedeemRate(BigDecimal redeemRate) {
         this.redeemRate = redeemRate;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
     }
 }
 

@@ -56,6 +56,14 @@
             </div>
           </div>
         </div>
+        <div class="layui-form-item">
+          <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">投资者分类</label>
+            <div class="layui-input-inline input-inline">
+              <select id="holderClassify" name="holderClassify" class="input-select" allowClear="true" data-th-data-result='${HOLDER_CLASSIFY}' data-th-formatoption="false" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   <table class="layui-table" id="equityInfo"></table>

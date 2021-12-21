@@ -59,6 +59,19 @@ public class InterfCfetsTraderTmp extends BaseEntity {
     private String remark;
 
     /**
+     * 交易成员
+     */
+    private String partyCustomerName;
+
+    public String getPartyCustomerName() {
+        return partyCustomerName;
+    }
+
+    public void setPartyCustomerName(String partyCustomerName) {
+        this.partyCustomerName = partyCustomerName;
+    }
+
+    /**
      * 取得 交易员ID
      * @return 交易员ID
      */

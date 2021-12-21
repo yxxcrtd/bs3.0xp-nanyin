@@ -592,6 +592,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("固定电话");
             headList.add("电子邮箱");
             headList.add("备注");
+            headList.add("投资者分类");
+            headList.add("经办人");
+            headList.add("接入检查结果");
+            headList.add("中债反馈消息");
 
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
@@ -664,6 +668,20 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         
         List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, equityList.size());
         
+        //生僻字按照已经维护的规则进行转化
+        Map<String, Object> paramap=new HashMap<String, Object>();
+        paramap.put("statusList", Arrays.asList("E"));
+        List<TransformRule001Dto> allList=transformRule001Mapper.selectAllData(paramap);
+        Map<String,TransformRule001Dto> spzMap=allList.stream().collect(
+                Collectors.toMap(x -> x.getTransType()+x.getOrgField(),part->part));
+        List<ChbTransformRuleObjDto> allRuleObjList=chbTransformRuleObjDtoMapper.selectAllDataByTableId(CHB_EQU_HOLD);
+        Map<String,List<ChbTransformRuleObjDto>> objFiledsMap=allRuleObjList.stream().collect(
+                JoyinCollectors.groupingBy(
+                        x -> x.getInfoProperty() ));
+        
+        //设置数据结构的转化规则字段内容
+        EquityInfoCheckUtil.replaceByExchangeRule(allRuleObjList,spzMap,equityList);
+        
         for (int i = 0; i < equityList.size(); i++ ) {
         	EquityInfo001Dto  equityInfo001Dto = equityList.get(i);
             equityInfo001Dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
@@ -717,6 +735,9 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 equityInfo001DtoI.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
                 equityInfo001DtoI.setUpdateTime(DateUtil.now());
                 equityInfo001DtoI.setType(statusType);
+                //添加  账号开户所在地/投资者类型 入库
+                equityInfo001DtoI.setHolderClassify(equityInfo001Dto.getHolderClassify());
+                equityInfo001DtoI.setFundAccPlace(equityInfo001Dto.getFundAccPlace());
                 listI.add(equityInfo001DtoI);
             }
             // 插入前维护表有待处理，将dto放入listN
@@ -1291,6 +1312,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                             DictCode.SPV资金托管账户开户行, equityInfo001Dto.getSpvCapAccBank()));
                     equityInfo001Dto.setHolderType(SysDataUtil.getNameFromDataDict(DictCode.投资者类别,
                             equityInfo001Dto.getHolderType()));
+                    equityInfo001Dto.setHolderClassify(SysDataUtil.getNameFromDataDict(DictCode.投资者分类,
+                            equityInfo001Dto.getHolderClassify()));
+                    equityInfo001Dto.setFundAccPlace(SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债,
+                            equityInfo001Dto.getFundAccPlace()));
                     if (StringUtil.isNotEmpty(equityInfo001Dto.getPersonalIdentifyType())) {
                         equityInfo001Dto.setInentifyType(SysDataUtil.getNameFromDataDict(
                             DictCode.个人证件类别, equityInfo001Dto.getPersonalIdentifyType()));
@@ -1316,6 +1341,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                             DictCode.SPV资金托管账户开户行, equityInfo001Dto.getSpvCapAccBank()));
                     equityInfo001Dto.setHolderType(SysDataUtil.getZZDictCodeAndName(DictCode.投资者类别,
                             equityInfo001Dto.getHolderType()));
+                    equityInfo001Dto.setHolderClassify(SysDataUtil.getZZDictCodeAndName(DictCode.投资者分类,
+                            equityInfo001Dto.getHolderClassify()));
+                    equityInfo001Dto.setFundAccPlace(SysDataUtil.getZZDictCodeAndName(DictCode.销售区域_中债,
+                            equityInfo001Dto.getFundAccPlace()));
                     equityInfo001Dto.setHolderRiskPrefer(SysDataUtil.getZZDictCodeAndName(
                             DictCode.投资风险偏好, equityInfo001Dto.getHolderRiskPrefer()));
                     equityInfo001Dto.setPersonalIdentifyType(SysDataUtil.getZZDictCodeAndName(
@@ -1396,12 +1425,12 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             equityInfo001Dto.setHolderTelephone(list.get(19));
             equityInfo001Dto.setHolderEmail(list.get(20));
             equityInfo001Dto.setRemark(list.get(21));
-            equityInfo001Dto.setAgent(list.get(22));
+            equityInfo001Dto.setAgent(list.get(23));
             equityInfo001Dto.setOrgCode(orgCode);
-//            //接口接入数据校验字段置空
-//            if(!EquityInfoCheckUtil.isEmpty(list.get(25))) {
-//                equityInfo001Dto.setInterfCheckResult(" ");
-//            }
+            if (!EquityInfoCheckUtil.isEmpty(list.get(22))) {
+                equityInfo001Dto.setHolderClassify(
+                        EquityInfoCheckUtil.subDictcode(list.get(22), " "));
+            }
             // 增加行号
             equityInfo001Dto.setExcelNum(String.valueOf(i + 2));
             //检查序列号设置初始值
@@ -2391,6 +2420,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("固定电话");
             headList.add("电子邮箱");
             headList.add("备注");
+            headList.add("投资者分类");
 
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
@@ -2423,7 +2453,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                     EquityInfoDistinctService equityInfoDistinctService =
                             SpringContextUtil.getBean(EquityInfoDistinctService.class);
                     List<String> keys = equityInfoDistinctService.getKeys(equityList);
-		    equityInfoDistinctService.checkSendedData(equityList,keys,"01");
+                    equityInfoDistinctService.checkSendedData(equityList,keys,"01");
                     List<String> mergerKeys=equityInfoDistinctService.checkAllData(equityList,keys,"01");
                     equityInfoDistinctService.merger(equityList,"dto");
                     equityInfoDistinctService.deleteEquitInfoAndSub(mergerKeys);
@@ -2525,6 +2555,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             list.set(7, regist001Dto.getHolderRegion());
             // 投资者类别
             list.set(8, regist001Dto.getHolderType());
+
             // 个人证件类别
             list.set(9, regist001Dto.getPersonalIdentifyType());
             // 机构证件类别
@@ -2548,6 +2579,10 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             // 手机号码
             if (StringUtil.isBlank(list.get(18))) {
                 list.set(18, regist001Dto.getHolderCellphone());
+            }
+            // 手机号码
+            if (list.size()>=26&&StringUtil.isBlank(list.get(25))) {
+                list.set(25, regist001Dto.getHolderClassify());
             }
             // 固定电话
             if (StringUtil.isBlank(list.get(19))) {
@@ -2628,7 +2663,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("固定电话");
             headList.add("电子邮箱");
             headList.add("备注");
-
+            headList.add("投资者分类");
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);

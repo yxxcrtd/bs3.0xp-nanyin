@@ -67,7 +67,7 @@ public class SdAssetDealRegBatchService{
 
 		// 调用check逻辑
 		logger.debug("【资产交易信息登记】数据检查开始------检查前数据个数：" + resultList.size());
-		List<CheckReport001Dto> resultlist = investTradeRegist001Service.check(null);
+		List<CheckReport001Dto> resultlist = investTradeRegist001Service.check(null,null);
 		Map<String,CheckReport001Dto> checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1, key2)->key1));
 		for (int i = resultList.size() - 1; i >= 0; i--){
 			if (checkmap.containsKey(resultList.get(i).getRegistSeqno())

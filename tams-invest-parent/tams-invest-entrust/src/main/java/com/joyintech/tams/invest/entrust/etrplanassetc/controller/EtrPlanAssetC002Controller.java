@@ -29,6 +29,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
 import com.joyintech.tams.invest.entrust.etrplanassetc.dto.EtrPlanAssetCDto;
@@ -188,7 +189,7 @@ public class EtrPlanAssetC002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getAssetAvailablePosition")
-    public BigDecimal getAssetAvailablePosition(@RequestBody PtlSecPositionFlowDto dto){
+    public BigDecimal getAssetAvailablePosition(@RequestBody EtrSecPositionDto dto){
         return etrPlanAssetCService.getAssetAvailablePosition(dto);
     }
     /**

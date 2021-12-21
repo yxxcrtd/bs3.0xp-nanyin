@@ -27,6 +27,9 @@
         });
     }
     var init = function(){
+        if ($("#finprodAbbr").val()){
+            $("#finprodAbbr").trigger("change").attr("disabled", true);
+        }
     	var wfl_operType = $("#wfl_operType").val();
     	if(pageModel==PAGE_MODEL_EDIT){
     		if(wfl_operType == null || wfl_operType != 'NEW'){

@@ -378,5 +378,10 @@ public interface EtrCommonCashPositionMapper {
      * @return
      */
     BigDecimal getInterfPreClosePrice(@Param("finprodId") String finprodId, @Param("dealDate") Date dealDate);
-    
+
+    BigDecimal selectShengYuEntrustAmt(String entrustId);
+
+    BigDecimal selectZhiLingChiCang(@Param("entrustId")String entrustId,@Param("finprodId")String finprodId);
+
+    BigDecimal selectJiaoYiChiCang(@Param("entrustId")String entrustId, @Param("finprodId")String finprodId);
 }

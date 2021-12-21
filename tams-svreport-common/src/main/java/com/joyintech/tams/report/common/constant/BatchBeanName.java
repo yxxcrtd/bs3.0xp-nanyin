@@ -92,7 +92,9 @@ public enum BatchBeanName {
 
     // 监管客户组别区域报送数据接入 add by qufangxu at 2021-02-24
     监管客户组别区域报送数据接入("3003","svrSaleCustSvrreportInterfTastService","saleCustSvrrepportImpMainService","监管客户组别区域报送数据接入"),
-	/**
+    销售结算资金交易信息表报送数据接入("3053","svrChbSalerStlDealInfoInterfTastService","ChbSalerStlDealInfoImpMainService","销售结算资金交易信息表报送数据接入"),
+
+    /**
      * 业务明细数据自动检查报送
      */
 	投资者明细报送("3071", "equityBusiInfoAutoSendCBService","equityBusiInfoAutoSendCBMainService", "投资者明细报送"),
@@ -108,6 +110,8 @@ public enum BatchBeanName {
     资产利率基本信息接口数据接入("4101","svrAssetRateInfoInterfTaskService","SvrAssetRateInfoImpMainService","资产利率基本信息接口数据接入"),
 	投资者身份信息登记导出("3074","equityInfoExportService","equityInfoExportMainService","投资者身份信息登记导出"),
 	投资者持有信息登记导出("3076","investorsHoldInfoExportService","investorsHoldInfoExportMainService","投资者持有信息登记导出"),
+    // TODO
+    理财产品转型情况月度统计表生成("3042","investorsHoldInfoExportService","investorsHoldInfoExportMainService","理财产品转型情况月度统计表生成"),
 
             ;
 	/**

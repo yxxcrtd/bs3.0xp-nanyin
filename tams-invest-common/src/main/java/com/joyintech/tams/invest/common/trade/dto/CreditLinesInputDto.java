@@ -426,4 +426,17 @@ public class CreditLinesInputDto extends BaseEntity {
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
     }
+
+    /**
+     * 买断式回购中质押券标的代码
+     */
+    private String ZhiYaQuan;
+
+    public String getZhiYaQuan() {
+        return ZhiYaQuan;
+    }
+
+    public void setZhiYaQuan(String zhiYaQuan) {
+        ZhiYaQuan = zhiYaQuan;
+    }
 }

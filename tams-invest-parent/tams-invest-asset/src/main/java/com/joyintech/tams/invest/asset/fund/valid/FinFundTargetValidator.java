@@ -22,6 +22,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
 import com.joyintech.tams.invest.asset.fund.service.FinFundTargetService;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -119,6 +120,18 @@ public class FinFundTargetValidator implements BeanValidator {
                                         +"("+dto.getFinprodMarketId()+")")));
                     }
                 }
+                if((StringUtil.equals(dto.getType10(), BussinessDictCodeList.行内资产三级分类_混合基金.getValue())
+                        ||StringUtil.equals(dto.getType10(),BussinessDictCodeList.行内资产三级分类_基金中基金.getValue()))
+                        &&StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_ETF.getValue())){
+                    resultList.add(new ValidMessage("trmFundType",
+                            getMessage("FinFundTarget002.trmFundType01", getMessage("FinFundTarget002.trmFundType"))));
+                }
+                if (StringUtil.equals(DictCodeList.基金类资产类型_货币基金.getValue(), dto.getFundType())&&
+                        !(StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_ETF.getValue())||
+                        StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue()))){
+                    resultList.add(new ValidMessage("trmFundType",
+                            getMessage("FinFundTarget002.trmFundType02", getMessage("FinFundTarget002.trmFundType"))));
+                }
 
                 /*if(list.size()>0){
                     resultList.add(
@@ -126,6 +139,18 @@ public class FinFundTargetValidator implements BeanValidator {
                 }*/
             }
             else if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
+                if((StringUtil.equals(dto.getType10(), BussinessDictCodeList.行内资产三级分类_混合基金.getValue())
+                        ||StringUtil.equals(dto.getType10(),BussinessDictCodeList.行内资产三级分类_基金中基金.getValue()))
+                        &&StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_ETF.getValue())){
+                    resultList.add(new ValidMessage("trmFundType",
+                            getMessage("FinFundTarget002.trmFundType01", getMessage("FinFundTarget002.trmFundType"))));
+                }
+                if (StringUtil.equals(DictCodeList.基金类资产类型_货币基金.getValue(), dto.getFundType())&&
+                        !(StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_ETF.getValue())||
+                                StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue()))){
+                    resultList.add(new ValidMessage("trmFundType",
+                            getMessage("FinFundTarget002.trmFundType02", getMessage("FinFundTarget002.trmFundType"))));
+                }
 
                 // 获取原来的数据。
                 String finprodMarketId = dto.getFinprodMarketId();
@@ -191,6 +216,12 @@ public class FinFundTargetValidator implements BeanValidator {
                 if(StringUtil.isEmpty(dto.getTrmFundType())){
                     resultList.add(new ValidMessage("trmFundType",
                             getMessage("COMMON_E_0057", getMessage("FinFundTarget002.trmFundType"))));
+                }
+                if((StringUtil.equals(dto.getType10(), BussinessDictCodeList.行内资产三级分类_混合基金.getValue())
+                        ||StringUtil.equals(dto.getType10(),BussinessDictCodeList.行内资产三级分类_基金中基金.getValue()))
+                        &&StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_ETF.getValue())){
+                    resultList.add(new ValidMessage("trmFundAbbr",
+                            getMessage("FinFundTarget002.trmFundType01", getMessage("FinFundTarget002.trmFundType"))));
                 }
             }
             if(StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_分级基金.getValue())){

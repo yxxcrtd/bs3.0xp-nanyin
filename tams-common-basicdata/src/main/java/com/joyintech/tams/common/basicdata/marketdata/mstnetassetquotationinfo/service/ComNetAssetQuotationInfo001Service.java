@@ -284,10 +284,18 @@ public class ComNetAssetQuotationInfo001Service extends CommonExportService<ComN
                     //估值日期 必填
                     if (!StringUtil.isNotEmpty(rowData.get(2))){
                         errorMsg.append("估值日期 必填！");
+                    }else{
+                        if (!checkDate(rowData.get(2))) {
+                            errorMsg.append("估值日期格式不正确");
+                        }
                     }
                     //万份收益/净值 必填
                     if (!StringUtil.isNotEmpty(rowData.get(3))){
                         errorMsg.append("万份收益/净值 必填！");
+                    }else{
+                        if(isNotNumeric(rowData.get(3))){
+                            errorMsg.append("万份收益/净值格式不正确");
+                        }
                     }
                     //管理人 必填
 //                    if (!StringUtil.isNotEmpty(rowData.get(4))){
@@ -413,5 +421,69 @@ public class ComNetAssetQuotationInfo001Service extends CommonExportService<ComN
         }
         ajaxResult.setStatuCode(HttpStatus.OK.value());
         return ajaxResult;
+    }
+
+    /**
+     * 日期格式校验
+     *
+     * @param
+     * @return 返回boolean
+     */
+    private boolean checkDate(String date) {
+        boolean flag = true;
+        if(!DateUtil.isDateStr(date, DateUtil.DEFAULT_OTHER_FORMAT,
+                DateUtil.DEFAULT_ANOTHER_FORMAT,DateUtil.DEFAULT_DATE_FORMAT_EN)){
+            flag = false;
+        }else{
+            date = date.replace("-", "").replace("/", "");
+            //年
+            int year = Integer.valueOf(date.substring(0, 4));
+            //月
+            int month = Integer.valueOf(date.substring(4, 6));
+            //日
+            int day = Integer.valueOf(date.substring(6));
+            if(month < 1 || month > 12){
+                flag = false;
+            }else{
+                if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12){
+                    if(day < 1 || day > 31){
+                        flag = false;
+                    }
+                }else if(month == 4 || month == 6 || month == 9 || month == 11){
+                    if(day < 1 || day > 30){
+                        flag = false;
+                    }
+                }else if(month == 2){
+                    if((year % 4 == 0 && year % 100 != 0) ||year % 400 == 0){
+                        if(day < 1 || day > 29){
+                            flag = false;
+                        }
+                    }else{
+                        if(day < 1 || day > 28){
+                            flag = false;
+                        }
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * check是否是数值
+     *
+     * @param param 金融产品类型
+     * @return check结果
+     */
+    public static boolean isNotNumeric(Object param) {
+        if (StringUtil.isNotEmpty(param)) {
+            try {
+                Double.parseDouble((String)param);
+            }
+            catch (NumberFormatException e) {
+                return true;
+            }
+        }
+        return false;
     }
 }

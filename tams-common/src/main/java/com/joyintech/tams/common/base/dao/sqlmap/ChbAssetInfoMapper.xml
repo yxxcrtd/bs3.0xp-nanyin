@@ -219,6 +219,13 @@
         <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
         <result column="IS_PERPETUAL" property="isPerpetual" jdbcType="VARCHAR" />
         <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
+        <result column="CONSTRACTE_BUSI_TYPE" property="constracteBusiType" jdbcType="VARCHAR" />
+        <result column="CONSTRACTE_GRADE" property="constracteGrade" jdbcType="VARCHAR" />
+        <result column="CONSTRACTE_HEAVER_TIMES" property="constracteHeaverTimes" jdbcType="DECIMAL" />
+        <result column="BANK_CAPITAL" property="bankCapital" jdbcType="VARCHAR" />
+        <result column="IS_PPN" property="isPpn" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE_EX" property="orgAssetTypeEx" jdbcType="VARCHAR" />
+        <result column="IS_FIN_LICENCE" property="isFinLicence" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ASSET_UUID ASSET_UUID, ASSET_CODE ASSET_CODE, ASSET_TYPE ASSET_TYPE, ASSET_TYPE2 ASSET_TYPE2, 
@@ -282,7 +289,9 @@
         IS_CHL IS_CHL, CHB_ISSUER_ID CHB_ISSUER_ID, CHB_MANAGER_ID CHB_MANAGER_ID, CHB_FINANCIER_ID CHB_FINANCIER_ID, 
         PERPETUAL_FLAG PERPETUAL_FLAG, OPTION_FLAG OPTION_FLAG, IS_BJSZQ IS_BJSZQ, BANK_SEC_KZZQ BANK_SEC_KZZQ, 
         BANK_SEC_ZXZQ BANK_SEC_ZXZQ, ISUNLISTED ISUNLISTED, IS_BZHPJ IS_BZHPJ, IS_PERPETUAL IS_PERPETUAL, 
-        IS_FBZB IS_FBZB
+        IS_FBZB IS_FBZB, CONSTRACTE_BUSI_TYPE CONSTRACTE_BUSI_TYPE, CONSTRACTE_GRADE CONSTRACTE_GRADE, 
+        CONSTRACTE_HEAVER_TIMES CONSTRACTE_HEAVER_TIMES, BANK_CAPITAL BANK_CAPITAL, IS_PPN IS_PPN, 
+        ORG_ASSET_TYPE_EX ORG_ASSET_TYPE_EX, IS_FIN_LICENCE IS_FIN_LICENCE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -378,8 +387,10 @@
             CHB_MANAGER_ID, CHB_FINANCIER_ID, PERPETUAL_FLAG, 
             OPTION_FLAG, IS_BJSZQ, BANK_SEC_KZZQ, 
             BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, 
-            IS_PERPETUAL, IS_FBZB
-            )
+            IS_PERPETUAL, IS_FBZB, CONSTRACTE_BUSI_TYPE, 
+            CONSTRACTE_GRADE, CONSTRACTE_HEAVER_TIMES, 
+            BANK_CAPITAL, IS_PPN, ORG_ASSET_TYPE_EX, 
+            IS_FIN_LICENCE)
         values (#{assetUuid,jdbcType=CHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, 
             #{assetType2,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, 
             #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{discountYield,jdbcType=DECIMAL}, 
@@ -452,8 +463,10 @@
             #{chbManagerId,jdbcType=VARCHAR}, #{chbFinancierId,jdbcType=VARCHAR}, #{perpetualFlag,jdbcType=VARCHAR}, 
             #{optionFlag,jdbcType=VARCHAR}, #{isBjszq,jdbcType=VARCHAR}, #{bankSecKzzq,jdbcType=VARCHAR}, 
             #{bankSecZxzq,jdbcType=VARCHAR}, #{isunlisted,jdbcType=VARCHAR}, #{isBzhpj,jdbcType=VARCHAR}, 
-            #{isPerpetual,jdbcType=VARCHAR}, #{isFbzb,jdbcType=VARCHAR}
-            )
+            #{isPerpetual,jdbcType=VARCHAR}, #{isFbzb,jdbcType=VARCHAR}, #{constracteBusiType,jdbcType=VARCHAR}, 
+            #{constracteGrade,jdbcType=VARCHAR}, #{constracteHeaverTimes,jdbcType=DECIMAL}, 
+            #{bankCapital,jdbcType=VARCHAR}, #{isPpn,jdbcType=VARCHAR}, #{orgAssetTypeEx,jdbcType=VARCHAR}, 
+            #{isFinLicence,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo" >
         insert into CHB_ASSET_INFO
@@ -1109,6 +1122,27 @@
             <if test="isFbzb != null" >
                 IS_FBZB,
             </if>
+            <if test="constracteBusiType != null" >
+                CONSTRACTE_BUSI_TYPE,
+            </if>
+            <if test="constracteGrade != null" >
+                CONSTRACTE_GRADE,
+            </if>
+            <if test="constracteHeaverTimes != null" >
+                CONSTRACTE_HEAVER_TIMES,
+            </if>
+            <if test="bankCapital != null" >
+                BANK_CAPITAL,
+            </if>
+            <if test="isPpn != null" >
+                IS_PPN,
+            </if>
+            <if test="orgAssetTypeEx != null" >
+                ORG_ASSET_TYPE_EX,
+            </if>
+            <if test="isFinLicence != null" >
+                IS_FIN_LICENCE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="assetUuid != null" >
@@ -1762,6 +1796,27 @@
             <if test="isFbzb != null" >
                 #{isFbzb,jdbcType=VARCHAR},
             </if>
+            <if test="constracteBusiType != null" >
+                #{constracteBusiType,jdbcType=VARCHAR},
+            </if>
+            <if test="constracteGrade != null" >
+                #{constracteGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="constracteHeaverTimes != null" >
+                #{constracteHeaverTimes,jdbcType=DECIMAL},
+            </if>
+            <if test="bankCapital != null" >
+                #{bankCapital,jdbcType=VARCHAR},
+            </if>
+            <if test="isPpn != null" >
+                #{isPpn,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetTypeEx != null" >
+                #{orgAssetTypeEx,jdbcType=VARCHAR},
+            </if>
+            <if test="isFinLicence != null" >
+                #{isFinLicence,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo" >
@@ -1799,7 +1854,9 @@
         DEFERRED_INTEREST_INT, FIRST_REPRCE_DATE, REPRCE_CYCLE, PART_REDEM_FLAG, PART_REDEM_RATE, 
         CREDIT_ORG_CODE, CREDIT_ORG_NAME, EQUITY_QUIT, DEPT_EQUITY, HOLD_PURPOSE, FINANCIAL_COMISSUE, 
         IS_CHL, CHB_ISSUER_ID, CHB_MANAGER_ID, CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, 
-        IS_BJSZQ, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, IS_PERPETUAL, IS_FBZB )
+        IS_BJSZQ, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, IS_PERPETUAL, IS_FBZB, 
+        CONSTRACTE_BUSI_TYPE, CONSTRACTE_GRADE, CONSTRACTE_HEAVER_TIMES, BANK_CAPITAL, IS_PPN, 
+        ORG_ASSET_TYPE_EX, IS_FIN_LICENCE)
         select ASSET_UUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, 
             TRADE_MARKET, VDATE, MDATE, DISCOUNT_YIELD, ASSET_YIELD, BASIS, AMT, BANK_NAME, IS_STRUCT, 
             TARGET_TYPE, TARGET, ASSET_ID, ASSET_NAME, CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE, 
@@ -1834,7 +1891,9 @@
             DEFERRED_INTEREST_INT, FIRST_REPRCE_DATE, REPRCE_CYCLE, PART_REDEM_FLAG, PART_REDEM_RATE, 
             CREDIT_ORG_CODE, CREDIT_ORG_NAME, EQUITY_QUIT, DEPT_EQUITY, HOLD_PURPOSE, FINANCIAL_COMISSUE, 
             IS_CHL, CHB_ISSUER_ID, CHB_MANAGER_ID, CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, 
-            IS_BJSZQ, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, IS_PERPETUAL, IS_FBZB
+            IS_BJSZQ, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, IS_PERPETUAL, IS_FBZB, 
+            CONSTRACTE_BUSI_TYPE, CONSTRACTE_GRADE, CONSTRACTE_HEAVER_TIMES, BANK_CAPITAL, IS_PPN, 
+            ORG_ASSET_TYPE_EX, IS_FIN_LICENCE
              from CHB_ASSET_INFO
              where STATUS = 'E' and ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </insert>
@@ -2483,6 +2542,27 @@
             <if test="isFbzb != null" >
                 IS_FBZB = #{isFbzb,jdbcType=VARCHAR},
             </if>
+            <if test="constracteBusiType != null" >
+                CONSTRACTE_BUSI_TYPE = #{constracteBusiType,jdbcType=VARCHAR},
+            </if>
+            <if test="constracteGrade != null" >
+                CONSTRACTE_GRADE = #{constracteGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="constracteHeaverTimes != null" >
+                CONSTRACTE_HEAVER_TIMES = #{constracteHeaverTimes,jdbcType=DECIMAL},
+            </if>
+            <if test="bankCapital != null" >
+                BANK_CAPITAL = #{bankCapital,jdbcType=VARCHAR},
+            </if>
+            <if test="isPpn != null" >
+                IS_PPN = #{isPpn,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetTypeEx != null" >
+                ORG_ASSET_TYPE_EX = #{orgAssetTypeEx,jdbcType=VARCHAR},
+            </if>
+            <if test="isFinLicence != null" >
+                IS_FIN_LICENCE = #{isFinLicence,jdbcType=VARCHAR},
+            </if>
         </set>
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </update>
@@ -2701,7 +2781,14 @@
             ISUNLISTED = #{isunlisted,jdbcType=VARCHAR},
             IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
             IS_PERPETUAL = #{isPerpetual,jdbcType=VARCHAR},
-            IS_FBZB = #{isFbzb,jdbcType=VARCHAR}
+            IS_FBZB = #{isFbzb,jdbcType=VARCHAR},
+            CONSTRACTE_BUSI_TYPE = #{constracteBusiType,jdbcType=VARCHAR},
+            CONSTRACTE_GRADE = #{constracteGrade,jdbcType=VARCHAR},
+            CONSTRACTE_HEAVER_TIMES = #{constracteHeaverTimes,jdbcType=DECIMAL},
+            BANK_CAPITAL = #{bankCapital,jdbcType=VARCHAR},
+            IS_PPN = #{isPpn,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE_EX = #{orgAssetTypeEx,jdbcType=VARCHAR},
+            IS_FIN_LICENCE = #{isFinLicence,jdbcType=VARCHAR}
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </update>
 </mapper>

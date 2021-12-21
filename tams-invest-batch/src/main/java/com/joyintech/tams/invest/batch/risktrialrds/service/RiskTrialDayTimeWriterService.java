@@ -10,13 +10,10 @@
  
 package com.joyintech.tams.invest.batch.risktrialrds.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.RskPortfolioPackageDtl;
 import com.joyintech.tams.invest.batch.risktrialrds.dto.RiskTrialDayTimeReaderResult;
 import com.joyintech.tams.invest.common.risktrialrds.dto.SupervisionTargetDto;
@@ -196,7 +193,18 @@ public class RiskTrialDayTimeWriterService extends BaseService{
                 }
                 //DB操作
                 supervisionCalcSvc.deletePointSupervisionValue(dealDto);
-                supervisionCalcSvc.addPointSupervisionValue(dealDto);
+                //modify by yjp HFZG-396【风险指标】投资规模类指标，月末控制指标，应仅监控月末日期 20211018 start
+                String[] paramYMZBArr=StringUtil.isNotEmpty(CacheUtil.getSysParam("param_risk_ymzb"))?CacheUtil.getSysParam("param_risk_ymzb").split(com.joyintech.framework.constant.GlobalConstant.COMMA):null;
+                boolean YMZBFlag=StringUtil.isNotEmpty(paramYMZBArr)? Arrays.asList(paramYMZBArr).contains(dealDto.getIndId())?true:false:false;
+                if(YMZBFlag){
+                    if(dealDto.getSupDate() != null && DateUtil.isLastDayOfMonth(dealDto.getSupDate()))
+                    {
+                        supervisionCalcSvc.addPointSupervisionValue(dealDto);
+                    }
+                }else{
+                    supervisionCalcSvc.addPointSupervisionValue(dealDto);
+                }
+                //modify by yjp HFZG-396【风险指标】投资规模类指标，月末控制指标，应仅监控月末日期 20211018 end
             }catch (Exception e){
                 IllegalArgumentException re=new IllegalArgumentException("组合代码："+dealDto.getPortfolioId()+ GlobalConstant.COMMA+"指标代码："+dealDto.getIndId()+GlobalConstant.SEMICOLON+e.getMessage(),e);
                 throw re;

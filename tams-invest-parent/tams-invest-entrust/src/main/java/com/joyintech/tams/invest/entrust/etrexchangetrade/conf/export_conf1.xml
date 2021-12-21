@@ -20,6 +20,7 @@
             <Cell order="16" name="指令金额">entrustAmt</Cell>
             <Cell order="17" name="开始日期">vdate</Cell>
             <Cell order="18" name="结束日期">mdate</Cell>
+            <Cell order="19" name="当前处理人">nextUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

@@ -12,6 +12,11 @@
   		<artifactId>tams-svreport-interf</artifactId>
   		<version>${project.version}</version>
   	</dependency>
+    <dependency>
+        <groupId>com.joyintech.component</groupId>
+        <artifactId>msg-generate</artifactId>
+        <version>1.0.2</version>
+    </dependency>
   	<dependency>
           <groupId>dom4j</groupId>
           <artifactId>dom4j</artifactId>

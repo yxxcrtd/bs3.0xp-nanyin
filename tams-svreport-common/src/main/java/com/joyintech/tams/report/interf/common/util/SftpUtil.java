@@ -106,8 +106,8 @@ public class SftpUtil {
             vector = sftp.ls(pathname);
         }
         catch (SftpException e) {
-            logger.error("未找到文件:" + pathname);
-            logger.error(e.getMessage(),e);
+            logger.error("未找到文件:{}" , pathname);
+            //            logger.error(e.getMessage(),e);
         }
         return vector;
     }
@@ -220,8 +220,8 @@ public class SftpUtil {
             }
         }
         catch (SftpException e) {
-        	logger.error(e.getMessage(),e);
-            // log.error("未找到文件:"+pathname);
+//        	logger.error(e.getMessage(),e);
+            logger.error("未找到文件:{}" , filename);
         }
         return list;
     }
@@ -299,7 +299,7 @@ public class SftpUtil {
             vector = sftp.ls(finalPath);
         }
         catch (Exception e) {
-            logger.error("未找到文件:{},{}" , finalPath,e.getMessage(),e);
+            logger.error("未找到文件:{}" , finalPath);
         } finally {
             sFTPDisConnect();
         }
@@ -326,8 +326,15 @@ public class SftpUtil {
         try {
             SftpUtil.sFTPconnect(username, url, port, password);
             sftp.cd(directory);
+            // 本地文件夹不存在先创建文件夹 add by zcw
+            File saveFileDir = new File(saveFile);
+            if (!saveFileDir.exists()) {
+                saveFileDir.mkdirs();
+            }
+            // 当配置参数为服务器路径时从新获取本地路径 add by zcw
+            String saveFileDirPath = saveFileDir.getAbsolutePath();
             // File file=new File(saveFile);
-            sftp.get(downloadFile, saveFile);
+            sftp.get(downloadFile, saveFileDirPath);
         }
         catch (Exception e) {
             logger.error("下载文件失败：{}",e.getMessage(),e);

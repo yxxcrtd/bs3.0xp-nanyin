@@ -36,6 +36,7 @@ import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.business.basicdata.BaseTradeFeeCommService;
 import com.joyintech.tams.invest.common.component.business.basicdata.dto.BasicTradeFeeInputDto;
@@ -248,6 +249,9 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 	
     private final static String SJXY = "SJXY";//深交所协议回购期限品种
+
+    @Autowired
+    private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
 	
     /**
      * 交易及存续期交易，保存进待办，点批量审批时候需要报错。
@@ -580,6 +584,11 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
     		
     		investInterfCommService.doInvestInterf(investInterfCommDto);
     		// 调用投管接口 add by wm 20190218 end
+
+            //成交录单---调用共通
+            if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
+                exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTradeId(),OperationType.NEW);
+            }
         }
         // 撤销
         else {
@@ -587,6 +596,9 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
             
             // 发送Murex接口处理
 //            this.sendMurex(input, true);
+            //成交录单---调用共通
+            exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTradeId(),OperationType.REVOKE);
+
         }
         
         // 7.2删除原业务流程表中的交易记录

@@ -53,8 +53,6 @@ var calculateField;
 	            Joyin.error("本方券券面总额不能大于委托剩余额度")
 	            return;
 	        }
-	
-	        var s;
             if(typeof(BaseRiskMathComm) != 'undefined') {
 	        if(BaseRiskMathComm) {
 	            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
@@ -807,9 +805,10 @@ var calculateField;
             }
             if (shortSellingSupported == '01') {
                 $("#assetIntegrateSaleAvailablePosition_div").hide();
-                // 场内交易不展示融入券
+                // 该交易方向下：场内交易不展示融入券、展示本方券应计利息总额
                 if(parentPageId && parentPageId == "TrdBondInvestTradeEx001"){
                     $("#assetIntegrateAvailablePosition_div").hide();
+                    $("#ownIntAmt_div").show();
                 }else{
                     $("#assetIntegrateAvailablePosition_div").show();
                 }
@@ -833,9 +832,10 @@ var calculateField;
             	window.BussTrdAvailableCashQuery && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'] && window.BussTrdAvailableCashQuery['bussTrdAvailableCashQuery'].showCash(true);
             }
             if (shortSellingSupported == '01') {
-                // 场内交易不展示融入券
+                // 该交易方向下：场内交易不展示融入券、本方券应计利息总额
                 if(parentPageId && parentPageId == "TrdBondInvestTradeEx001"){
                     $("#assetIntegrateSaleAvailablePosition_div").hide();
+                    $("#ownIntAmt_div").hide();
                 }else{
                     $("#assetIntegrateSaleAvailablePosition_div").show();
                 }
@@ -963,6 +963,15 @@ var calculateField;
      * 1.4清算速度、交易日、交割日之间有联动关系
      */
     $("#settleSpeed").on("change", function () {
+        // TISHKS-227:对清算速度进行数字校验 fuyongsheng 20211105 add start
+        var settleSpeed = $("#settleSpeed").val();
+        var reg = /^\d{1}$/;
+        // 校验清算速度是否为数字
+        if(settleSpeed && !reg.test(settleSpeed)){
+            Joyin.error(JoyinUtil.getLabel("TrdBondInvestTrade002.settleSpreed")+ "数字格式不正确!");
+            return;
+        }
+        // TISHKS-227:对清算速度进行数字校验 fuyongsheng 20211105 add end
         calcSettleDate();
     });
     /**
@@ -2192,6 +2201,8 @@ var calculateField;
                 }
             }
         });
+
+        $('#bussTrdAvailableCashQuery_div_channelCash').hide();
     };
     
     var counterIdChangeFee = function (){
@@ -2450,8 +2461,9 @@ var calculateField;
                 $("#refundAmount_div").show();
                 if(null!=parentPageId && parentPageId=='EtrBondBiddingResultEx001' ){
                     $("#integrateFpriceAmt").val('');
-                    $("#integrateFpriceAmt_div").hide();
-
+                    //mody by meifaxin 20211105 html中判断,这个地方判断导致计算按钮没有效果 start
+                    //$("#integrateFpriceAmt_div").hide();
+                    //mody by meifaxin 20211105 html中判断,这个地方判断导致计算按钮没有效果 end
                 }
             }
             else if(tradeMarketMode==SHARES_TRADE_MARKET_02){
@@ -2614,6 +2626,7 @@ var calculateField;
                     // 记录隐藏值
                     $("#unitCprice_calc").val(data.unitCprice);
                     $("#unitInt_calc").val(data.unitInt);
+                    $("#unitIntCalc").val(data.unitInt);
                     $("#unitFprice_calc").val(data.unitFprice);
                     $("#cpriceAmt_calc").val(data.cpriceAmt);
                     $("#intAmt_calc").val(data.intAmt);

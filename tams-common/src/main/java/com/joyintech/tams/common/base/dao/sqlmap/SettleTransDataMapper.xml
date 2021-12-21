@@ -3,6 +3,7 @@
 <mapper namespace="com.joyintech.tams.common.base.dao.SettleTransDataMapper" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SettleTransData" >
         <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="CJBH" property="cjbh" jdbcType="VARCHAR" />
         <result column="DEAL_DATE" property="dealDate" jdbcType="DATE" />
         <result column="SEC_TYPE" property="secType" jdbcType="VARCHAR" />
         <result column="APPLY_TRADE_ID" property="applyTradeId" jdbcType="VARCHAR" />
@@ -71,9 +72,10 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_MODIFY" property="isModify" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        TRADE_ID TRADE_ID, DEAL_DATE DEAL_DATE, SEC_TYPE SEC_TYPE, APPLY_TRADE_ID APPLY_TRADE_ID, 
+        TRADE_ID TRADE_ID, CJBH CJBH, DEAL_DATE DEAL_DATE, SEC_TYPE SEC_TYPE, APPLY_TRADE_ID APPLY_TRADE_ID, 
         FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, FINPROD_TYPE2 FINPROD_TYPE2, BRANCH BRANCH, 
         BUSI_TYPE BUSI_TYPE, TRADE_DATE TRADE_DATE, SETTLE_DATE SETTLE_DATE, VDATE VDATE, 
         MDATE MDATE, VPAY_DATE VPAY_DATE, MPAY_DATE MPAY_DATE, TERM_TYPE TERM_TYPE, SETTLE_SPEED SETTLE_SPEED, 
@@ -89,7 +91,7 @@
         ZGF_AMT_RAW ZGF_AMT_RAW, SXF_AMT_RAW SXF_AMT_RAW, SETTLE_FEE_RAW SETTLE_FEE_RAW, 
         COMMISSION_AMT_RAW COMMISSION_AMT_RAW, TRADE_AMT_RAW TRADE_AMT_RAW, TRADE_ID_RAW TRADE_ID_RAW, 
         SEQ_NO SEQ_NO, IS_PURCH_TYPE_YX IS_PURCH_TYPE_YX, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, IS_MODIFY IS_MODIFY
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -112,11 +114,11 @@
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SettleTransData" >
-        insert into SETTLE_TRANS_DATA (TRADE_ID, DEAL_DATE, SEC_TYPE, 
-            APPLY_TRADE_ID, FINPROD_ID, FINPROD_TYPE, 
-            FINPROD_TYPE2, BRANCH, BUSI_TYPE, 
-            TRADE_DATE, SETTLE_DATE, VDATE, 
-            MDATE, VPAY_DATE, MPAY_DATE, 
+        insert into SETTLE_TRANS_DATA (TRADE_ID, CJBH, DEAL_DATE, 
+            SEC_TYPE, APPLY_TRADE_ID, FINPROD_ID, 
+            FINPROD_TYPE, FINPROD_TYPE2, BRANCH, 
+            BUSI_TYPE, TRADE_DATE, SETTLE_DATE, 
+            VDATE, MDATE, VPAY_DATE, MPAY_DATE, 
             TERM_TYPE, SETTLE_SPEED, CCY, 
             UNIT_CPRICE, UNIT_INT, UNIT_FPRICE, 
             PAR_VALUE, CPRICE_AMT, SHARE_AMT, 
@@ -134,13 +136,13 @@
             SXF_AMT_RAW, SETTLE_FEE_RAW, COMMISSION_AMT_RAW, 
             TRADE_AMT_RAW, TRADE_ID_RAW, SEQ_NO, 
             IS_PURCH_TYPE_YX, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_MODIFY
             )
-        values (#{tradeId,jdbcType=VARCHAR}, #{dealDate,jdbcType=DATE}, #{secType,jdbcType=VARCHAR}, 
-            #{applyTradeId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, 
-            #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{busiType,jdbcType=VARCHAR}, 
-            #{tradeDate,jdbcType=DATE}, #{settleDate,jdbcType=DATE}, #{vdate,jdbcType=DATE}, 
-            #{mdate,jdbcType=DATE}, #{vpayDate,jdbcType=DATE}, #{mpayDate,jdbcType=DATE}, 
+        values (#{tradeId,jdbcType=VARCHAR}, #{cjbh,jdbcType=VARCHAR}, #{dealDate,jdbcType=DATE}, 
+            #{secType,jdbcType=VARCHAR}, #{applyTradeId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
+            #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
+            #{busiType,jdbcType=VARCHAR}, #{tradeDate,jdbcType=DATE}, #{settleDate,jdbcType=DATE}, 
+            #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{vpayDate,jdbcType=DATE}, #{mpayDate,jdbcType=DATE}, 
             #{termType,jdbcType=VARCHAR}, #{settleSpeed,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, 
             #{unitCprice,jdbcType=DECIMAL}, #{unitInt,jdbcType=DECIMAL}, #{unitFprice,jdbcType=DECIMAL}, 
             #{parValue,jdbcType=DECIMAL}, #{cpriceAmt,jdbcType=DECIMAL}, #{shareAmt,jdbcType=DECIMAL}, 
@@ -158,14 +160,18 @@
             #{sxfAmtRaw,jdbcType=DECIMAL}, #{settleFeeRaw,jdbcType=DECIMAL}, #{commissionAmtRaw,jdbcType=DECIMAL}, 
             #{tradeAmtRaw,jdbcType=DECIMAL}, #{tradeIdRaw,jdbcType=VARCHAR}, #{seqNo,jdbcType=VARCHAR}, 
             #{isPurchTypeYx,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
-            )
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{isModify,jdbcType=VARCHAR}
+           )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SettleTransData" >
         insert into SETTLE_TRANS_DATA
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
                 TRADE_ID,
+            </if>
+            <if test="cjbh != null" >
+                CJBH,
             </if>
             <if test="dealDate != null" >
                 DEAL_DATE,
@@ -371,10 +377,16 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="isModify != null" >
+                IS_MODIFY,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
                 #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="cjbh != null" >
+                #{cjbh,jdbcType=VARCHAR},
             </if>
             <if test="dealDate != null" >
                 #{dealDate,jdbcType=DATE},
@@ -580,30 +592,35 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="isModify != null" >
+                #{isModify,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SettleTransData" >
-        insert into SETTLE_TRANS_DATA(TRADE_ID, DEAL_DATE, SEC_TYPE, APPLY_TRADE_ID, FINPROD_ID, 
-        FINPROD_TYPE, FINPROD_TYPE2, BRANCH, BUSI_TYPE, TRADE_DATE, SETTLE_DATE, VDATE, MDATE, 
-        VPAY_DATE, MPAY_DATE, TERM_TYPE, SETTLE_SPEED, CCY, UNIT_CPRICE, UNIT_INT, UNIT_FPRICE, 
-        PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, INT_AMT, FPRICE_AMT, STAMP_FEE, JSF_AMT, 
-        GHF_AMT, ZGF_AMT, SXF_AMT, SETTLE_FEE, COMMISSION_AMT, IS_PAY_WITH_TRADE, TRADE_AMT, 
-        PS, TRADE_MARKET, TRADE_MARKET_MODE, TRADE_PLAT, PLEDGE_SEC_NUM, SEAT_NUMBER, PORTFOLIO_ID, 
-        SEC_ACCT_ID, ACCT_NO, BATCH_NUMBER, M_PRIN_AMT, M_INT_AMT, M_TRADE_AMT, INT_RATE, 
-        BASIS, BUSI_SCENE_CALSS, SETTLE_MODE, STAMP_FEE_RAW, JSF_AMT_RAW, GHF_AMT_RAW, ZGF_AMT_RAW, 
-        SXF_AMT_RAW, SETTLE_FEE_RAW, COMMISSION_AMT_RAW, TRADE_AMT_RAW, TRADE_ID_RAW, SEQ_NO, 
-        IS_PURCH_TYPE_YX, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        insert into SETTLE_TRANS_DATA(TRADE_ID, CJBH, DEAL_DATE, SEC_TYPE, APPLY_TRADE_ID, 
+        FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, BUSI_TYPE, TRADE_DATE, SETTLE_DATE, 
+        VDATE, MDATE, VPAY_DATE, MPAY_DATE, TERM_TYPE, SETTLE_SPEED, CCY, UNIT_CPRICE, UNIT_INT, 
+        UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, INT_AMT, FPRICE_AMT, STAMP_FEE, 
+        JSF_AMT, GHF_AMT, ZGF_AMT, SXF_AMT, SETTLE_FEE, COMMISSION_AMT, IS_PAY_WITH_TRADE, 
+        TRADE_AMT, PS, TRADE_MARKET, TRADE_MARKET_MODE, TRADE_PLAT, PLEDGE_SEC_NUM, SEAT_NUMBER, 
+        PORTFOLIO_ID, SEC_ACCT_ID, ACCT_NO, BATCH_NUMBER, M_PRIN_AMT, M_INT_AMT, M_TRADE_AMT, 
+        INT_RATE, BASIS, BUSI_SCENE_CALSS, SETTLE_MODE, STAMP_FEE_RAW, JSF_AMT_RAW, GHF_AMT_RAW, 
+        ZGF_AMT_RAW, SXF_AMT_RAW, SETTLE_FEE_RAW, COMMISSION_AMT_RAW, TRADE_AMT_RAW, TRADE_ID_RAW, 
+        SEQ_NO, IS_PURCH_TYPE_YX, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+        IS_MODIFY
         )
-        select TRADE_ID, DEAL_DATE, SEC_TYPE, APPLY_TRADE_ID, FINPROD_ID, 
-            FINPROD_TYPE, FINPROD_TYPE2, BRANCH, BUSI_TYPE, TRADE_DATE, SETTLE_DATE, VDATE, MDATE, 
-            VPAY_DATE, MPAY_DATE, TERM_TYPE, SETTLE_SPEED, CCY, UNIT_CPRICE, UNIT_INT, UNIT_FPRICE, 
-            PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, INT_AMT, FPRICE_AMT, STAMP_FEE, JSF_AMT, 
-            GHF_AMT, ZGF_AMT, SXF_AMT, SETTLE_FEE, COMMISSION_AMT, IS_PAY_WITH_TRADE, TRADE_AMT, 
-            PS, TRADE_MARKET, TRADE_MARKET_MODE, TRADE_PLAT, PLEDGE_SEC_NUM, SEAT_NUMBER, PORTFOLIO_ID, 
-            SEC_ACCT_ID, ACCT_NO, BATCH_NUMBER, M_PRIN_AMT, M_INT_AMT, M_TRADE_AMT, INT_RATE, 
-            BASIS, BUSI_SCENE_CALSS, SETTLE_MODE, STAMP_FEE_RAW, JSF_AMT_RAW, GHF_AMT_RAW, ZGF_AMT_RAW, 
-            SXF_AMT_RAW, SETTLE_FEE_RAW, COMMISSION_AMT_RAW, TRADE_AMT_RAW, TRADE_ID_RAW, SEQ_NO, 
-            IS_PURCH_TYPE_YX, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+        select TRADE_ID, CJBH, DEAL_DATE, SEC_TYPE, APPLY_TRADE_ID, 
+            FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, BRANCH, BUSI_TYPE, TRADE_DATE, SETTLE_DATE, 
+            VDATE, MDATE, VPAY_DATE, MPAY_DATE, TERM_TYPE, SETTLE_SPEED, CCY, UNIT_CPRICE, UNIT_INT, 
+            UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, INT_AMT, FPRICE_AMT, STAMP_FEE, 
+            JSF_AMT, GHF_AMT, ZGF_AMT, SXF_AMT, SETTLE_FEE, COMMISSION_AMT, IS_PAY_WITH_TRADE, 
+            TRADE_AMT, PS, TRADE_MARKET, TRADE_MARKET_MODE, TRADE_PLAT, PLEDGE_SEC_NUM, SEAT_NUMBER, 
+            PORTFOLIO_ID, SEC_ACCT_ID, ACCT_NO, BATCH_NUMBER, M_PRIN_AMT, M_INT_AMT, M_TRADE_AMT, 
+            INT_RATE, BASIS, BUSI_SCENE_CALSS, SETTLE_MODE, STAMP_FEE_RAW, JSF_AMT_RAW, GHF_AMT_RAW, 
+            ZGF_AMT_RAW, SXF_AMT_RAW, SETTLE_FEE_RAW, COMMISSION_AMT_RAW, TRADE_AMT_RAW, TRADE_ID_RAW, 
+            SEQ_NO, IS_PURCH_TYPE_YX, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            IS_MODIFY
             
              from SETTLE_TRANS_DATA
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
@@ -611,6 +628,9 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SettleTransData" >
         update SETTLE_TRANS_DATA
         <set >
+            <if test="cjbh != null" >
+                CJBH = #{cjbh,jdbcType=VARCHAR},
+            </if>
             <if test="dealDate != null" >
                 DEAL_DATE = #{dealDate,jdbcType=DATE},
             </if>
@@ -806,12 +826,16 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="isModify != null" >
+                IS_MODIFY = #{isModify,jdbcType=VARCHAR},
+            </if>
         </set>
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SettleTransData" >
         update SETTLE_TRANS_DATA
-        set DEAL_DATE = #{dealDate,jdbcType=DATE},
+        set CJBH = #{cjbh,jdbcType=VARCHAR},
+            DEAL_DATE = #{dealDate,jdbcType=DATE},
             SEC_TYPE = #{secType,jdbcType=VARCHAR},
             APPLY_TRADE_ID = #{applyTradeId,jdbcType=VARCHAR},
             FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
@@ -875,7 +899,8 @@
             SEQ_NO = #{seqNo,jdbcType=VARCHAR},
             IS_PURCH_TYPE_YX = #{isPurchTypeYx,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            IS_MODIFY = #{isModify,jdbcType=VARCHAR}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
 </mapper>

@@ -422,9 +422,9 @@
 
     <!--指令的执行明细-->
     <select id="listDealTransactionDetails" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.DealTransactionDetailsDto">
-        <!--生效的登记数据-->
+        <!--生效及撤销的登记数据-->
         SELECT
-        '01' validStatus,
+        T1.TRADE_STATUS validStatus,
         '04' QUOTE_TYPE,
         T3.TRADE_DATE settleDate,
         T1.PS,
@@ -443,7 +443,7 @@
         T1.OU_TRADER_ID ,
         T1.COUNTER_ID ,
         T1.COUNTER_TRADER,
-        T6.PARTY_NAME ouPartyName ,
+        T6.PARTY_ABBR ouPartyName ,
         T10.REAL_NAME ouTraderName,
         <!--T5.TRADER_NAME ouTraderName,-->
         T8.COUNTER_NAME cpPartyName,
@@ -478,7 +478,7 @@
         FROM
         REG_FIN_PRODUCT_DEAL T9
         WHERE
-        T9.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID
+        T9.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID AND (T1.IS_CANCEL = 'N' OR T1.IS_CANCEL IS NULL)
         <if test="entrustId !=null and entrustId !=''">
             AND T9.ENTRUST_ID= #{entrustId}
         </if>
@@ -505,7 +505,7 @@
         T1.OU_TRADER_ID ,
         T1.COUNTER_ID ,
         T1.COUNTER_TRADER,
-        T6.PARTY_NAME ouPartyName ,
+        T6.PARTY_ABBR ouPartyName ,
         T10.REAL_NAME ouTraderName,
         T8.COUNTER_NAME cpPartyName,
         CASE
@@ -564,7 +564,7 @@
         ,y.I_Q_B_OU_TRADER_ID OU_TRADER_ID
         ,y.I_Q_B_D_CP_PARTY_ID COUNTER_ID
         ,y.I_Q_B_D_CP_TRADER COUNTER_TRADER
-        ,y.EXT_PARTY_NAME ouPartyName
+        ,y.EXT_PARTY_ABBR ouPartyName
         ,y.EXT_OUTRADER_NAME ouTraderName
         ,y.I_Q_B_D_CP_PARTY_NAME cpPartyName
         ,y.I_Q_B_D_CP_TRADER_NAME cpTraderName
@@ -880,7 +880,7 @@
 
     <!--当日登记-->
     <select id="listDayReg" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDayRegDto">
-select * from (
+    select TT.*,D.ITEM_VALUE validStatusStr,E.ITEM_VALUE psStr,F.ITEM_VALUE quoteTypeStr,G.ITEM_VALUE assetTypeStr,H.ITEM_VALUE settleSpeedStr,I.ITEM_VALUE tradeMarketStr from (
         <!--买卖登记数据-->
         SELECT
             CASE WHEN T1.IS_CANCEL = 'Y' THEN '03'
@@ -888,30 +888,32 @@ select * from (
             T1.PS,
             T1.QUOTE_TYPE,
             T1.FINPROD_ID,
-            T2.FINPROD_MARKET_ID,
+            T2.FINPROD_MARKET_ID finprodMarketId,
             T2.FINPROD_ABBR finprodName,
-            T1.SHARE_AMT / 100 SHARE_AMT,
+            T1.SHARE_AMT / 100 shareAmt,
             T1.UNIT_CPRICE price,
             T1.YIELD matureYield,
             T1.EXER_YIELD exerYield,
-            T5.PARTY_NAME ouPartyName,
-            T4.PARTY_NAME cpPartyName,
-            T7.TRADER_NAME ouTraderName,
+            T5.PARTY_ABBR ouPartyName,
+            T4.PARTY_ABBR cpPartyName,
+            CASE WHEN T7.TRADER_NAME IS NOT NULL THEN T7.TRADER_NAME
+            WHEN T13.USER_NAME IS NOT NULL THEN T13.USER_NAME
+            ELSE T1.OU_TRADER_ID END ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
-            T1.SETTLE_DATE ,
+            T1.SETTLE_DATE settleDate,
             T1.DELIVERY_TYPE ,
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
-            T8.STATISTICAL_TIMES,
+            T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,
             T1.TOTLE_TRADE_ID quoteId,
-            T9.ACT_SETTE_DATE ,
+            T9.ACT_SETTE_DATE actSetteDate,
             T10.TYPE_12 assetType,
-            T11.TRD_ID ,
+            T11.TRD_ID trdId,
             T12.TRADE_DATE dealDate
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -935,6 +937,7 @@ select * from (
         LEFT JOIN FIN_PRODUCT_TYPE T10 ON T10.FINPROD_ID = T1.FINPROD_ID
         LEFT JOIN TRDQUTO_MATCH_INFO  T11 ON T11.PRE_TRADE_ID = T1.TOTLE_TRADE_ID
         LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL  T12 ON T12.TOTLE_TRADE_ID = T11.TRD_ID
+        LEFT JOIN SYS_USER T13 ON T13.USER_NAME = T1.OU_TRADER_ID
         WHERE T1.PS IN ('T01','T02')  AND ((T1.TRADE_STATUS ='01' and (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL = 'N')) OR (T1.TRADE_STATUS ='03' AND T1.IS_CANCEL = 'Y'))
         and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
         <if test="quoteIds != null and quoteIds.size() > 0">
@@ -953,6 +956,9 @@ select * from (
                 #{item}
             </foreach>
         </if>
+        <if test="loginUserId !=null and loginUserId !=''">
+            AND T1.CREATE_USER = #{loginUserId}
+        </if>
         UNION ALL
         <!--回售登记数据-->
         SELECT
@@ -961,30 +967,32 @@ select * from (
             T1.PS,
             T1.QUOTE_TYPE,
             T1.FINPROD_ID,
-            T2.FINPROD_MARKET_ID,
+            T2.FINPROD_MARKET_ID finprodMarketId,
             T2.FINPROD_ABBR finprodName,
-            T1.SHARE_AMT / 100 SHARE_AMT,
+            T1.SHARE_AMT / 100 shareAmt,
             T1.UNIT_CPRICE price,
             T1.YIELD matureYield,
             T1.EXER_YIELD exerYield,
-            T5.PARTY_NAME ouPartyName,
-            T4.PARTY_NAME cpPartyName,
-            T7.TRADER_NAME ouTraderName,
+            T5.PARTY_ABBR ouPartyName,
+            T4.PARTY_ABBR cpPartyName,
+            CASE WHEN T7.TRADER_NAME IS NOT NULL THEN T7.TRADER_NAME
+            WHEN T13.USER_NAME IS NOT NULL THEN T13.USER_NAME
+            ELSE T1.OU_TRADER_ID END ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
-            T1.SETTLE_DATE ,
+            T1.SETTLE_DATE settleDate,
             T1.DELIVERY_TYPE ,
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
-            T8.STATISTICAL_TIMES,
+            T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,
             T1.TOTLE_TRADE_ID quoteId,
-            T9.ACT_SETTE_DATE ,
+            T9.ACT_SETTE_DATE actSetteDate,
             T10.TYPE_12 assetType,
-            T11.TRD_ID ,
+            T11.TRD_ID trdId,
             T12.TRADE_DATE dealDate
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -1008,6 +1016,7 @@ select * from (
         LEFT JOIN FIN_PRODUCT_TYPE T10 ON T10.FINPROD_ID = T1.FINPROD_ID
         LEFT JOIN TRDQUTO_MATCH_INFO  T11 ON T11.PRE_TRADE_ID = T1.TOTLE_TRADE_ID
         LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL  T12 ON T12.TOTLE_TRADE_ID = T11.TRD_ID
+        LEFT JOIN SYS_USER T13 ON T13.USER_NAME = T1.OU_TRADER_ID
         WHERE T1.PS = 'T03'  AND ((T1.TRADE_STATUS ='01' and (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL = 'N')) OR (T1.TRADE_STATUS ='03' AND T1.IS_CANCEL = 'Y'))  AND NOT EXISTS (SELECT 1 FROM TRDQUTO_MATCH_INFO tmi WHERE PRE_TRADE_ID = T1.TOTLE_TRADE_ID and (TRD_CONF_STATUS = #{CONFIRM_STATUS_0} or TRD_CONF_STATUS is null))
         <![CDATA[and T1.TRADE_DATE <= to_date(#{platDate}, 'yyyy-MM-dd') ]]>
         <if test="quoteIds != null and quoteIds.size() > 0">
@@ -1026,6 +1035,9 @@ select * from (
                 #{item}
             </foreach>
         </if>
+        <if test="loginUserId !=null and loginUserId !=''">
+            AND T1.CREATE_USER = #{loginUserId}
+        </if>
         UNION ALL
         <!--流程中数据-->
         SELECT
@@ -1033,30 +1045,32 @@ select * from (
             T1.PS,
             T1.QUOTE_TYPE,
             T1.FINPROD_ID,
-            T2.FINPROD_MARKET_ID,
+            T2.FINPROD_MARKET_ID finprodMarketId,
             T2.FINPROD_ABBR finprodName,
-            T1.SHARE_AMT / 100 SHARE_AMT,
+            T1.SHARE_AMT / 100 shareAmt,
             T1.UNIT_CPRICE price,
             T1.YIELD matureYield,
             T1.EXER_YIELD exerYield,
-            T5.PARTY_NAME ouPartyName,
-            T4.PARTY_NAME cpPartyName,
-            T7.TRADER_NAME ouTraderName,
+            T5.PARTY_ABBR ouPartyName,
+            T4.PARTY_ABBR cpPartyName,
+            CASE WHEN T7.TRADER_NAME IS NOT NULL THEN T7.TRADER_NAME
+            WHEN T13.USER_NAME IS NOT NULL THEN T13.USER_NAME
+            ELSE T1.OU_TRADER_ID END ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
-            T1.SETTLE_DATE ,
+            T1.SETTLE_DATE settleDate,
             T1.DELIVERY_TYPE ,
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
-            T8.STATISTICAL_TIMES,
+            T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,
             T1.TOTLE_TRADE_ID quoteId,
-            NULL ACT_SETTE_DATE ,
+            NULL actSetteDate ,
             T10.TYPE_12 assetType,
-            NULL TRD_ID,
+            NULL trdId,
             NULL dealDate
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -1077,7 +1091,8 @@ select * from (
             AND T8.OPER_TYPE = #{OPR_TYPE_09}
         </if>
         LEFT JOIN FIN_PRODUCT_TYPE T10 ON T10.FINPROD_ID = T1.FINPROD_ID
-         WHERE PS IN ('T01','T02','T03') and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
+        LEFT JOIN SYS_USER T13 ON T13.USER_NAME = T1.OU_TRADER_ID
+        WHERE PS IN ('T01','T02','T03') and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
         <if test="quoteIds != null and quoteIds.size() > 0">
             and T1.TOTLE_TRADE_ID in
             <foreach collection="quoteIds" item="item" open="(" close=")" separator=",">
@@ -1094,6 +1109,9 @@ select * from (
                 #{item}
             </foreach>
         </if>
+        <if test="loginUserId !=null and loginUserId !=''">
+            AND T1.CREATE_USER = #{loginUserId}
+        </if>
         ) TT
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'STATUS_VALID')D ON
         TT.validStatus = D.ITEM_CODE
@@ -1108,10 +1126,10 @@ select * from (
                 D.ITEM_VALUE like '%' || #{search} || '%' OR
                 E.ITEM_VALUE like '%' || #{search} || '%' OR
                 F.ITEM_VALUE like '%' || #{search} || '%' OR
-                TT.FINPROD_MARKET_ID like '%' || #{search} || '%' OR
+                TT.finprodMarketId like '%' || #{search} || '%' OR
                 TT.finprodName like '%' || #{search} || '%' OR
                 G.ITEM_VALUE like '%' || #{search} || '%' OR
-                to_char(TT.SHARE_AMT/10000,'FM99990.9990')=#{search} or  TT.SHARE_AMT||'' =#{search} or
+                to_char(TT.shareAmt/10000,'FM99990.9990')=#{search} or  TT.shareAmt||'' =#{search} or
                 to_char(TT.price,'FM99990.9990')=#{search} or  TT.price||'' =#{search} or
                 to_char(TT.matureYield*100,'FM99990.9990')=#{search} or  TT.matureYield||'' =#{search} or
                 to_char(TT.exerYield*100,'FM99990.9990')=#{search} or  TT.exerYield||'' =#{search} or
@@ -1120,24 +1138,24 @@ select * from (
                 TT.ouTraderName LIKE '%' || #{search} || '%' OR
                 TT.cpTraderName LIKE '%' || #{search} || '%' OR
                 H.ITEM_VALUE like '%' || #{search} || '%' OR
-                to_char(TT.SETTLE_DATE,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
+                to_char(TT.settleDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
                 I.ITEM_VALUE like '%' || #{search} || '%' OR
                 to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
-                to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
+                to_char(TT.actSetteDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
                 to_char(TT.tradeDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
-                to_char(TT.STATISTICAL_TIMES,'FM99990.9990')=#{search} or  TT.STATISTICAL_TIMES||'' =#{search} or
+                to_char(TT.statisticalTimes,'FM99990.9990')=#{search} or  TT.statisticalTimes||'' =#{search} or
                 TT.quoteId LIKE '%' || #{search} || '%' OR
-                TT.TRD_ID LIKE '%' || #{search} || '%'
+                TT.trdId LIKE '%' || #{search} || '%'
 
                 or  to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd')||'' =#{search}
                 or  to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd')=#{year}||'-'||#{search}
                 or  replace(to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd'),'-','/')=#{search}
                 or  replace(to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
 
-                or  to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd')||'' =#{search}
-                or  to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd')=#{year}||'-'||#{search}
-                or  replace(to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd'),'-','/')=#{search}
-                or  replace(to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
+                or  to_char(TT.actSetteDate,'yyyy-MM-dd')||'' =#{search}
+                or  to_char(TT.actSetteDate,'yyyy-MM-dd')=#{year}||'-'||#{search}
+                or  replace(to_char(TT.actSetteDate,'yyyy-MM-dd'),'-','/')=#{search}
+                or  replace(to_char(TT.actSetteDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
 
                 or  to_char(TT.tradeDate,'yyyy-MM-dd')||'' =#{search}
                 or  to_char(TT.tradeDate,'yyyy-MM-dd')=#{year}||'-'||#{search}
@@ -1146,6 +1164,9 @@ select * from (
                 )
             </if>
         </where>
+        <if test="pageMode != null and pageMode.sort != null and pageMode.sort != '' and pageMode.direction != null and pageMode.direction != ''">
+            order by ${pageMode.sort} ${pageMode.direction}
+        </if>
     </select>
 
     <update id="updateRegFinProductDealTotal">

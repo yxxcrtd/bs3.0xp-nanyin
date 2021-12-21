@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.service.entrust.etrproject.dto;
 
 import java.math.BigDecimal;
@@ -66,12 +66,12 @@ public class EtrProjectDto extends EtrEntrust {
      * 组合名称
      */
     private String portfolioName;
-    
+
     /**
      * 资产一级分类
      */
     private String assetType1;
-    
+
     /**
      * 金融产品全称
      */
@@ -81,7 +81,7 @@ public class EtrProjectDto extends EtrEntrust {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal finishAmt;
-    
+
     /**
      * 交易完成度
      */
@@ -93,12 +93,12 @@ public class EtrProjectDto extends EtrEntrust {
      * 资产二级分类
      */
     private String type9;
-    
+
     /**
      * 资产三级分类
      */
     private String type10;
-    
+
     /**
      * 资产四级分类
      */
@@ -106,7 +106,7 @@ public class EtrProjectDto extends EtrEntrust {
 
     /**
      * 获取 type9
-     * 
+     *
      * @return type9.
      */
     public String getType9() {
@@ -115,7 +115,7 @@ public class EtrProjectDto extends EtrEntrust {
 
     /**
      * 设置 type9
-     * 
+     *
      * @param type9
      *            type9
      */
@@ -125,7 +125,7 @@ public class EtrProjectDto extends EtrEntrust {
 
     /**
      * 获取 type10
-     * 
+     *
      * @return type10.
      */
     public String getType10() {
@@ -134,7 +134,7 @@ public class EtrProjectDto extends EtrEntrust {
 
     /**
      * 设置 type10
-     * 
+     *
      * @param type10
      *            type10
      */
@@ -144,7 +144,7 @@ public class EtrProjectDto extends EtrEntrust {
 
     /**
      * 获取 type11
-     * 
+     *
      * @return type11.
      */
     public String getType11() {
@@ -153,7 +153,7 @@ public class EtrProjectDto extends EtrEntrust {
 
     /**
      * 设置 type11
-     * 
+     *
      * @param type11
      *            type11
      */
@@ -171,7 +171,7 @@ public class EtrProjectDto extends EtrEntrust {
 
 
 
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -191,7 +191,7 @@ public class EtrProjectDto extends EtrEntrust {
     }
 
 
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -209,7 +209,7 @@ public class EtrProjectDto extends EtrEntrust {
         return etrInvestPersonInfo;
     }
 
-    
+
     /**
      * 设置 etrInvestPersonInfo
      * @param etrInvestPersonInfo etrInvestPersonInfo
@@ -218,7 +218,7 @@ public class EtrProjectDto extends EtrEntrust {
         this.etrInvestPersonInfo = etrInvestPersonInfo;
     }
 
-    
+
     /**
      * 获取 elementId
      * @return elementId.
@@ -227,7 +227,7 @@ public class EtrProjectDto extends EtrEntrust {
         return elementId;
     }
 
-    
+
     /**
      * 设置 elementId
      * @param elementId elementId
@@ -236,7 +236,7 @@ public class EtrProjectDto extends EtrEntrust {
         this.elementId = elementId;
     }
 
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -245,7 +245,7 @@ public class EtrProjectDto extends EtrEntrust {
         return selectedItem;
     }
 
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -254,7 +254,7 @@ public class EtrProjectDto extends EtrEntrust {
         this.selectedItem = selectedItem;
     }
 
-    
+
     /**
      * 获取 operateType
      * @return operateType.
@@ -263,7 +263,7 @@ public class EtrProjectDto extends EtrEntrust {
         return operateType;
     }
 
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -272,7 +272,7 @@ public class EtrProjectDto extends EtrEntrust {
         this.operateType = operateType;
     }
 
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -281,7 +281,7 @@ public class EtrProjectDto extends EtrEntrust {
         return CloseWay;
     }
 
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -290,7 +290,7 @@ public class EtrProjectDto extends EtrEntrust {
         CloseWay = closeWay;
     }
 
-    
+
     /**
      * 获取 portfolioName
      * @return portfolioName.
@@ -299,7 +299,7 @@ public class EtrProjectDto extends EtrEntrust {
         return portfolioName;
     }
 
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -308,7 +308,7 @@ public class EtrProjectDto extends EtrEntrust {
         this.portfolioName = portfolioName;
     }
 
-    
+
     /**
      * 获取 assetType1
      * @return assetType1.
@@ -317,7 +317,7 @@ public class EtrProjectDto extends EtrEntrust {
         return assetType1;
     }
 
-    
+
     /**
      * 设置 assetType1
      * @param assetType1 assetType1
@@ -326,7 +326,7 @@ public class EtrProjectDto extends EtrEntrust {
         this.assetType1 = assetType1;
     }
 
-    
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -335,7 +335,7 @@ public class EtrProjectDto extends EtrEntrust {
         return finprodName;
     }
 
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -344,7 +344,7 @@ public class EtrProjectDto extends EtrEntrust {
         this.finprodName = finprodName;
     }
 
-    
+
     /**
      * 获取 finishAmt
      * @return finishAmt.
@@ -353,7 +353,7 @@ public class EtrProjectDto extends EtrEntrust {
         return finishAmt;
     }
 
-    
+
     /**
      * 设置 finishAmt
      * @param finishAmt finishAmt
@@ -362,7 +362,7 @@ public class EtrProjectDto extends EtrEntrust {
         this.finishAmt = finishAmt;
     }
 
-    
+
     /**
      * 获取 transactioncom
      * @return transactioncom.
@@ -371,7 +371,7 @@ public class EtrProjectDto extends EtrEntrust {
         return transactioncom;
     }
 
-    
+
     /**
      * 设置 transactioncom
      * @param transactioncom transactioncom
@@ -380,5 +380,16 @@ public class EtrProjectDto extends EtrEntrust {
         this.transactioncom = transactioncom;
     }
 
-    
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
 }

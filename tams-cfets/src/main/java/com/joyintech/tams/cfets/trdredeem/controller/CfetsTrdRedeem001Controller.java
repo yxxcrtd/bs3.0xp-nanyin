@@ -19,8 +19,11 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckDetaileRequst;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckRequst;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
+import com.joyintech.tams.cfets.etrib.bond.controller.CfetsEtrIbBondinfoController;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsBussCombDistribtBaseDto;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealCommonDto;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealRegisterQuoteDto;
 import com.joyintech.tams.cfets.trdredeem.service.CfetsTrdRedeem001Service;
@@ -40,14 +43,13 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -63,6 +65,8 @@ import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002
 @RequestMapping("/cfets/trdredeem/CfetsTrdRedeem001")
 @Api(tags = "赎回登记新建")
 public class CfetsTrdRedeem001Controller extends BaseController {
+    private static final Logger logger = LoggerFactory.getLogger(CfetsTrdRedeem001Controller.class);
+
 
     /**
      * {@linkplain}
@@ -82,16 +86,7 @@ public class CfetsTrdRedeem001Controller extends BaseController {
     private CfetsQuotedCommonService cfetsQuotedCommonService;
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度,
-            BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种);
-        model.addAttribute("ACCOUNT_SPEED_0", BussinessDictCodeList.清算速度_T加0.getValue());
-        model.addAttribute("ACCOUNT_SPEED_1", BussinessDictCodeList.清算速度_T加1.getValue());
-        model.addAttribute("ACCOUNT_SPEED_2", BussinessDictCodeList.清算速度_T加2.getValue());
-        model.addAttribute("yesNoFlag_yes", BussinessDictCodeList.是否_是.getValue());
-        model.addAttribute("assetTypeOne_abs", BussinessDictCodeList.平安资产一级分类_资产支持证券.getValue());
-        model.addAttribute("calcTypeUnitCprice", BussinessDictCodeList.计算选择方式_净价.getValue());
-        model.addAttribute("calcTypeYield", BussinessDictCodeList.计算选择方式_到期收益率.getValue());
-        model.addAttribute("calcTypeExecYield", BussinessDictCodeList.计算选择方式_行权收益率.getValue());
+        this.setSelectOptionToModel(model, BussinessDictCode.交易方向,  BussinessDictCode.币种);
         CfetsTrdRedeemDealRegisterQuoteDto cfetsTrdRedeemDealRegisterQuoteDto = new CfetsTrdRedeemDealRegisterQuoteDto();
         CfetsTrdRedeemDealCommonDto cfetsTrdRedeemDealCommonDto = new CfetsTrdRedeemDealCommonDto();
         if (StringUtil.equals(this.getParam("workflowStatus"), BussinessDictCodeList.交易流程状态_流程中.getValue())
@@ -99,38 +94,16 @@ public class CfetsTrdRedeem001Controller extends BaseController {
             cfetsTrdRedeemDealRegisterQuoteDto = cfetsTrdRedeem001Service.getBussinessEntityByWorkflowId(getParam(GlobalConstant.WORKFLOW_ID));
             model.addAttribute(GlobalConstant.WORKFLOW_ID,getParam(GlobalConstant.WORKFLOW_ID));
             BeanUtil.copyPropertiesIgnoreNull(cfetsTrdRedeemDealCommonDto,cfetsTrdRedeemDealRegisterQuoteDto);
-            //收益率*100
-            if(null!=cfetsTrdRedeemDealCommonDto.getMatureYield()){
-                cfetsTrdRedeemDealCommonDto.setMatureYield(ArithmeticUtil.multiply(cfetsTrdRedeemDealCommonDto.getMatureYield(),new BigDecimal(100)));
-            }
-            if(null!=cfetsTrdRedeemDealCommonDto.getExerYield()){
-                cfetsTrdRedeemDealCommonDto.setExerYield(ArithmeticUtil.multiply(cfetsTrdRedeemDealCommonDto.getExerYield(),new BigDecimal(100)));
-            }
             //券面万元
             cfetsTrdRedeemDealCommonDto.setShareAmt(ArithmeticUtil.divide(cfetsTrdRedeemDealCommonDto.getShareAmt(),new BigDecimal(10000),2));
             //分配列表元转化万元
             if(CollectionUtils.isNotEmpty(cfetsTrdRedeemDealCommonDto.getPtlAllocatios())){
                 cfetsTrdRedeemDealCommonDto.getPtlAllocatios().stream().forEach(item ->{
-                    item.setAvaNum(ArithmeticUtil.divide(item.getAvaNum(),new BigDecimal(10000),2));
                     item.setShareAmt(ArithmeticUtil.divide(item.getShareAmt(),new BigDecimal(10000),2));
-                    item.setOurEntNum(ArithmeticUtil.divide(item.getOurEntNum(),new BigDecimal(10000),2));
-                    item.setLendinEntNum(ArithmeticUtil.divide(item.getLendinEntNum(),new BigDecimal(10000),2));
-                    item.setSellAbleNum(ArithmeticUtil.divide(item.getSellAbleNum(),new BigDecimal(10000),2));
-                    item.setMatureYield(ArithmeticUtil.multiply(item.getMatureYield(),new BigDecimal(100)));
-                    item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));
                 });
             }
         }
-        model.addAttribute("PRICE_MODEL_PRM01",DictCodeListExt2.价格模式_指定价格.getValue());
-        model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
-        model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
-        model.addAttribute("PS_T03", DictCodeList.交易方向_行权_回售.getValue());
-        model.addAttribute("quotaPageModel","new");
         model.addAttribute("ptlAllocatios", JsonUtils.object2Json(cfetsTrdRedeemDealCommonDto.getPtlAllocatios()));
-        //分配方式
-        model.addAttribute("distribution",cfetsTrdRedeemDealCommonDto.getDistribution());
-        //卖空模式
-        model.addAttribute("sellPara",CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
         model.addAttribute(GlobalConstant.ENTITY, cfetsTrdRedeemDealCommonDto);
         return super.init(model);
     }
@@ -233,9 +206,22 @@ public class CfetsTrdRedeem001Controller extends BaseController {
             return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
         }
         catch (Exception e) {
+            logger.error("赎回登记新建失败",e);
             return PositionUtil.ajaxErrorReturn(e);
         }
 	}
+    @ApiOperation(value = "赎回时组合分配列表查询", notes = "赎回时组合分配列表查询")
+    @PostMapping("/queryCfetsBussCombDisList/{secId:.+}")
+    @ResponseBody
+    public Message<List<PtlAllocationDto>> queryCfetsBussCombDisList(@PathVariable String secId) {
+        try {
+            List<PtlAllocationDto> list = cfetsTrdRedeem001Service.queryCfetsBussCombDisList(secId);
+            return new Message<List<PtlAllocationDto>>().success().setData(list);
+        } catch (Exception e) {
+            logger.error("查询该资产对应的组合分配列表异常", e);
+            return new Message<List<PtlAllocationDto>>().fail().setMessage("查询异常");
+        }
+    }
 
 
 }

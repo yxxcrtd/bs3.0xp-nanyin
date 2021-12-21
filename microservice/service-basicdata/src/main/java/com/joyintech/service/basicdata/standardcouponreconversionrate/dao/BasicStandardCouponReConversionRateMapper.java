@@ -30,6 +30,7 @@ public interface BasicStandardCouponReConversionRateMapper {
 
 
     StandardCouponReConversionRateDto selectByPrimaryKey(StandardCouponReConversionRateDto dto);
+
     int deleteByPrimaryKey(StandardCouponReConversionRateDto dto);
 
     int insertSelective(StandardCouponReConversionRateDto mstSeatInfo);
@@ -46,4 +47,10 @@ public interface BasicStandardCouponReConversionRateMapper {
     List<SelectOptionDto> getPtlSecAcctInfo(Map<String,Object> map);
 
     List<SelectOptionDto> brokerIdChange(Map<String,Object> map);
+
+    List<SelectOptionDto> getFinprodIdInfo(Map<String,Object> map);
+
+    String checkMstCustomerInfo(Map<String, Object> map);
+
+    String checkFinprodIdInfo(Map<String, Object> map);
 }

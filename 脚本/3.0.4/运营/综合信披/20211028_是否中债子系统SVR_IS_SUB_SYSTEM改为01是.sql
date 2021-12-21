@@ -1,0 +1,1 @@
+update SYS_PARA set PARAM_VALUE = '01' where PARA_CODE = 'SVR_IS_SUB_SYSTEM';

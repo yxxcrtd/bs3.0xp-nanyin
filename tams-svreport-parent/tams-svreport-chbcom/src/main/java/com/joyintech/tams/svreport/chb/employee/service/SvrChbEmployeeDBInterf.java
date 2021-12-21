@@ -132,35 +132,97 @@ public class SvrChbEmployeeDBInterf extends BaseService{
 			sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
 
             if (mapSub.get(sub.getKey())!= null){
-                // 已修改的数据则生成删除未报送、修改未报送
-				if (DictCodeListExt1.维护数据状态_删除.getValue().equals(sub.getStatus())){
-				    // 如果有删除已报送则不生成删除未报送，否则生成删除未报送
-				    if (DictCodeListExt2.报送数据状态_删除.getValue().
-				            equals(mapSub.get(sub.getKey()).getStatus())){
-                        deleteList.add(sub);
-                        continue;
-				    } else {
-				    	sub.setStatus(DictCodeListExt2.报送数据状态_删除.getValue());
-                        deleteList.add(sub);
-				    }
-				} else if (DictCodeListExt1.维护数据状态_修改.getValue().equals(sub.getStatus())
-						|| DictCodeListExt1.维护数据状态_有效.getValue().equals(sub.getStatus())){
-                    // 已登记数据是删除状态，业务数据是修改或者新建状态，则生成修改未报送
-				    if (DictCodeListExt2.报送数据状态_删除.getValue().
-                            equals(mapSub.get(sub.getKey()).getStatus())){
-                        sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
-                        deleteList.add(sub);
-                    } else if (!compareEmployeeRegData(sub,mapSub.get(sub.getKey()))){
-                    	sub.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
-                        deleteList.add(sub);
-                    } else {
-                        deleteList.add(sub);
-                        continue;
-                    }
-                } else {
-                    logger.info("数据维护状态有误，应为：D|A|M!");
-                    continue;
-                }
+				// 临时表存在、业务表也存在 的情况下
+            	ChbEmployeeInfoSub subYw = mapSub.get(sub.getKey());
+				// （业务表中此条记录的.【报送状态】 == “02：接口报送”|| 业务表中此条记录的.【报送状态】 ==
+				// “03：手工处理” ）
+				if ((StringUtil.equals(DictCodeListExt2.报送状态_接口报送.getValue(), subYw.getSendStatus())
+						|| StringUtil.equals(DictCodeListExt2.报送状态_手工处理.getValue(), subYw.getSendStatus()))) {
+					// 当已经报送的数据状态为删除时
+					if (StringUtil.equals(subYw.getStatus(), DictCodeListExt2.报送数据状态_删除.getValue())) {
+						// tmp表数据为删除时
+						if (StringUtil.equals(sub.getStatus(), DictCodeListExt2.数据状态_删除.getValue())) {
+							// 删除数据List.add(此条记录）
+							deleteList.add(sub);
+						} else {
+							// 删除数据List.add(此条记录）
+							deleteList.add(sub);
+							sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+							// 报送状态
+							sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+							insertList.add(sub);
+						}
+					} else {
+						// 反馈状态为发送失败和中债退回时候
+						if (StringUtil.equals(subYw.getSubmitFeedbackStatus(), DictCodeListExt2.报送反馈状态_中债退回.getValue())
+								|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
+										DictCodeListExt2.报送反馈状态_发送失败.getValue())) {
+							// tmp表数据为删除时
+							if (StringUtil.equals(sub.getStatus(), DictCodeListExt2.数据状态_删除.getValue())) {
+								// 删除未报送
+								deleteList.add(sub);
+							}
+							// tmp表数据不为删除时
+							else {
+								// 删除数据List.add(此条记录）删除的是未报送数据
+								deleteList.add(sub);
+								// 内容不一致进行处理
+								if (!compareEmployeeRegData(subYw, sub)) {
+									// 此条记录的【数据状态】= 原来的【数据状态】
+									sub.setStatus(subYw.getStatus());
+									// 报送状态
+									sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+									insertList.add(sub);
+								}
+							}
+						} // 反馈状态为发送成功或中债通过或审核文件下载失败
+						else if (StringUtil.equals(subYw.getSubmitFeedbackStatus(),
+								DictCodeListExt2.报送反馈状态_发送成功.getValue())
+								|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
+										DictCodeListExt2.报送反馈状态_中债通过.getValue())
+								|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
+										DictCodeListExt2.报送反馈状态_审核文件下载失败.getValue())
+								|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
+										DictCodeListExt2.报送反馈状态_发送中.getValue())
+								|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
+										DictCodeListExt2.报送反馈状态_发送异常.getValue())) {
+							// tmp表数据为删除时
+							if (StringUtil.equals(sub.getStatus(), DictCodeListExt2.数据状态_删除.getValue())) {
+								// 删除未报送
+								deleteList.add(sub);
+								// 新建 数据状态为删除数据状态，未报送数据
+								sub.setStatus(DictCodeListExt2.报送数据状态_删除.getValue());
+								// 报送状态
+								sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+								insertList.add(sub);
+
+							}
+							// tmp表数据不为删除时
+							else {
+								// 删除数据List.add(此条记录）删除的是未报送数据
+								deleteList.add(sub);
+								// 两条记录的所有申报字段比较，存在不一致的情况下，进行以下处理
+								if (!compareEmployeeRegData(subYw, sub)) {
+									// 此条记录的【数据状态】= '02:修改'
+									sub.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
+									// 报送状态
+									sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+									insertList.add(sub);
+
+								}
+							}
+						}
+					}
+				} else {
+					// 此条记录的【数据状态】= '02:新建'
+					sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+					// 报送状态
+					sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+					// 删除数据List.add(此条记录）
+					// 新建数据List.add(此条记录）
+					deleteList.add(sub);
+					insertList.add(sub);
+				}
             } else{
                 if (DictCodeListExt1.维护数据状态_删除.getValue().equals(sub.getStatus())){
                     deleteList.add(sub);
@@ -177,8 +239,6 @@ public class SvrChbEmployeeDBInterf extends BaseService{
 	        	sub.setChbSubmitDeadline(dateList.get(0));
 	        	sub.setSubmitDeadline(dateList.get(1));
 	        }
-            // 准备插入处理修改未报送的数据
-            insertList.add(sub);
     	}
     	
     	//4、持久化DB

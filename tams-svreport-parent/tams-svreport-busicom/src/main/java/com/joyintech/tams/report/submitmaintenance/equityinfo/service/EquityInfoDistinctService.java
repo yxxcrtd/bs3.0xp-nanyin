@@ -1000,6 +1000,9 @@ public class EquityInfoDistinctService {
 			map.put("AGENT",equityInfo001Dto.getAgent()== null ? "" : equityInfo001Dto.getAgent());
 			map.put("DEPT_CODE",equityInfo001Dto.getDeptCode()== null ? "" : equityInfo001Dto.getDeptCode());
 			map.put("DATATYPE",equityInfo001Dto.getDatatype()== null ? "01" : equityInfo001Dto.getDatatype());
+			map.put("HOLDER_CLASSIFY",equityInfo001Dto.getHolderClassify()== null ? "" : equityInfo001Dto.getHolderClassify());
+			map.put("FUND_ACC_PLACE",equityInfo001Dto.getFundAccPlace()== null ? "" : equityInfo001Dto.getFundAccPlace());
+
 		}else{
 			map.put("INDENTIFY_MARK", equityInfo001Dto.getIndentifyMark());
 			map.put("ORG_INDENTIFY_MARK",equityInfo001Dto.getOrgIndentifyMark());
@@ -1028,6 +1031,9 @@ public class EquityInfoDistinctService {
 			map.put("ORG_CODE",equityInfo001Dto.getOrgCode());
 			map.put("AGENT",equityInfo001Dto.getAgent());
 			map.put("DEPT_CODE",equityInfo001Dto.getDeptCode());
+			map.put("HOLDER_CLASSIFY",equityInfo001Dto.getHolderClassify()== null ? "" : equityInfo001Dto.getHolderClassify());
+			map.put("FUND_ACC_PLACE",equityInfo001Dto.getFundAccPlace()== null ? "" : equityInfo001Dto.getFundAccPlace());
+
 		}
 		return map;
 	}

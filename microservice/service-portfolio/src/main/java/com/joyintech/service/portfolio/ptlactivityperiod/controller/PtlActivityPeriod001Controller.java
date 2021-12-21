@@ -19,6 +19,8 @@ import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.PtlPortfolio;
+import com.joyintech.tams.common.base.entity.StlCapacctInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,7 +78,7 @@ public class PtlActivityPeriod001Controller {
         }
         else{
             param.replace("portfolioId", null);
-        } 
+        }
         // add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start
         if(param.get("prodManager") != null && !param.get("prodManager").equals("")){
             List<String> prodManager = new ArrayList<String>();
@@ -88,8 +90,8 @@ public class PtlActivityPeriod001Controller {
         }
         else{
             param.replace("prodManager", null);
-        } 
-        // add by wangyang1 【吉林银行】 增加 产品经理  end 
+        }
+        // add by wangyang1 【吉林银行】 增加 产品经理  end
         return ptlActivityPeriod001Service.selectForPage(page,length,param);
     }
     /**
@@ -127,7 +129,7 @@ public class PtlActivityPeriod001Controller {
                                                @PathVariable int page,@PathVariable int length){
         return ptlActivityPeriod001Service.getBusiAcctNo(map,page,length);
     }
-    
+
     /**
      * 获取账号下拉框集合
      * @param map 请求参数
@@ -149,7 +151,7 @@ public class PtlActivityPeriod001Controller {
         }
         return ptlActivityPeriod001Service.getBankDep(map,page,length);
     }
-    
+
     /**
      * 获取账号
      * @param map 请求参数
@@ -228,7 +230,7 @@ public class PtlActivityPeriod001Controller {
     public List<BussTrdTransferOrderDto> selectBussTrdTransferOrder(@RequestBody Map<String,Object> map){
         return ptlActivityPeriod001Service.selectBussTrdTransferOrder(map);
     }
-    
+
     /**
      * 划款金额默认为理论计提金额
      * @param paramMap 请求参数集合
@@ -240,7 +242,7 @@ public class PtlActivityPeriod001Controller {
     public BigDecimal initTradeAmt(@RequestBody Map<String,Object> paramMap) {
         return ptlActivityPeriod001Service.initTradeAmt(paramMap);
     }
-    
+
     /**
      * 查询明细信息
      * <一句话功能简述>
@@ -253,9 +255,9 @@ public class PtlActivityPeriod001Controller {
     @PostMapping("findDetailsPage")
     public List<PtlActivityPeriod001Dto> findDetailsPage(@RequestBody Map<String,Object> map) {
         return ptlActivityPeriod001Service.findDetailsPage(map);
-        
+
     }
-    
+
     /**
      * 查询子组合明细信息
      * <一句话功能简述>
@@ -269,8 +271,8 @@ public class PtlActivityPeriod001Controller {
     public List<PtlActivityPeriod001Dto> findChildrenPortfolioDetails(@RequestBody Map<String,Object> map) {
         return ptlActivityPeriod001Service.findChildrenPortfolioDetails(map);
     }
-    
-    
+
+
     /**
      * 通过交易编号查询组合明细信息
      * <一句话功能简述>
@@ -283,9 +285,9 @@ public class PtlActivityPeriod001Controller {
     @PostMapping("findDetailsByBusiNo")
     public List<PtlActivityPeriod001Dto> findDetailsByBusiNo(@RequestBody Map<String,Object> map) {
         return ptlActivityPeriod001Service.findDetailsByBusiNo(map);
-        
+
     }
-    
+
     /**
      * 获取账号
      * @param map 请求参数
@@ -297,8 +299,8 @@ public class PtlActivityPeriod001Controller {
     public String getRepAcctNo(@RequestBody Map<String,Object> map) {
         return ptlActivityPeriod001Service.getAcctNo(map);
     }
-    
-    
+
+
     /**
      * 获取报送登记编号
      * @param map 组合代码（市场代码）
@@ -310,5 +312,39 @@ public class PtlActivityPeriod001Controller {
     public List<String> getProdRegistCode(@RequestBody Map<String,Object> map) {
         return ptlActivityPeriod001Service.getProdRegistCode(map);
     }
-    
+    /**
+     * 验证组合
+     * @param str 请求参数
+     * @return 账号
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("isZuHe")
+    public List<PtlPortfolio> isZuHe(@RequestBody String str) {
+        return ptlActivityPeriod001Service.isZuHe(str);
+    }
+
+    /**
+     * 验证资金账户
+     * @param str 请求参数
+     * @return 账号
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("isZiJing")
+    public List<StlCapacctInfo> isZiJing(@RequestBody String str) {
+        return ptlActivityPeriod001Service.isZiJing(str);
+    }
+
+    /**
+     * 验证资金账号与组合代码是否存在关联
+     * @param map 请求参数
+     * @return 账号
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("checkZuHeAndZiJing")
+    public String checkZuHeAndZiJing(@RequestBody Map<String,Object> map) {
+        return ptlActivityPeriod001Service.checkZuHeAndZiJing(map);
+    }
 }

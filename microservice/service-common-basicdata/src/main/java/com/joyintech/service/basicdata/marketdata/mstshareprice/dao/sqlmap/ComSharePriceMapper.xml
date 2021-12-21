@@ -126,10 +126,15 @@
         a.UPDATE_USER 			UPDATE_USER, 
         a.UPDATE_TIME 			UPDATE_TIME,
         <!--ZGZGST-2340:展示资产名称 fuyongsheng 20210909 edit start-->
-        b.FINPROD_ABBR			FINPROD_ABBR
+        b.FINPROD_ABBR			FINPROD_ABBR，
         <!--ZGZGST-2340:展示资产名称 fuyongsheng 20210909 edit end-->
-        from mst_share_price a 
+        wfl.PROCESS_STATE as processState
+        from mst_share_price a
         left join fin_product b on a.shares_id=b.finprod_market_id
+        LEFT JOIN SYS_WFL_BUSINESS_LIST wfl
+        on wfl.trade_id=a.SHARES_ID AND PAGE_ID ='ComSharePrice002'
+        AND BUSINESS_TYPE = 'MST22'
+        AND ACTION_TYPE IN ( 'modify', 'delete' )  and PROCESS_STATE='ING'
         <where> 
          <if test="sharesId != null and !sharesId.equals('')" >
                and SHARES_ID =#{sharesId}

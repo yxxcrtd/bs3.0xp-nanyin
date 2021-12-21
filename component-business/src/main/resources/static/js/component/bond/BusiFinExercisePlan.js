@@ -36,6 +36,7 @@
         checkbox:false,
         height:290,
         addbtn:true,
+        sortfont:true,
         addclick:function(rowData){
             rowData.exerciseStatus = EXEC_TYPE_01;
         },

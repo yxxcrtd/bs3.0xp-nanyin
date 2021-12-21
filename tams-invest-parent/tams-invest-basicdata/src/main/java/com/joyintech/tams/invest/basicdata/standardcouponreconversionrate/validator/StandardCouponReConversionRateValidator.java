@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.basicdata.standardcouponreconversionrate.validator;
 
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,14 @@ public class StandardCouponReConversionRateValidator implements BeanValidator {
     public List<ValidMessage> valid(Object o) {
         StandardCouponReConversionRateDto dto = (StandardCouponReConversionRateDto) o;
         List<ValidMessage> resultList = new ArrayList<ValidMessage> ();
+        if(StringUtil.equals(dto.getOperateType(), "edit")){
+            if(StringUtil.isNotEmpty(dto.getStartDate())){
+                String platDate = DateUtil.format(DateUtil.platDateFromCache());
+                if(DateUtil.parse(dto.getStartDate()).getTime() < DateUtil.parse(platDate).getTime()){
+                    resultList.add(new ValidMessage(this.getMessage("该债券折算率已经使用，请重新建立！")));
+                }
+            }
+        }
         if (StringUtil.equals(dto.getOperateType(), "new") || StringUtil.equals(dto.getOperateType(), "update")) {
             if(StringUtil.isNotEmpty(dto.getTandardRate ())){
                 if(!NumberUtils.isNumber(dto.getTandardRate ())) {
@@ -37,13 +47,24 @@ public class StandardCouponReConversionRateValidator implements BeanValidator {
                     }
                 }
             }
+            if(StringUtil.isNotEmpty(dto.getStartDate())){
+                //获取平台日
+                String platDate = DateUtil.format(DateUtil.platDateFromCache());
+                if(DateUtil.parse(dto.getStartDate()).getTime() < DateUtil.parse(platDate).getTime()){
+                    resultList.add(new ValidMessage(this.getMessage("开始使用日期不允许小于平台日期，请重新设置！")));
+                }
+                if(StringUtil.isNotEmpty(dto.getEndDate())){
+                    if(DateUtil.parse(dto.getEndDate()).getTime() <= DateUtil.parse(dto.getStartDate()).getTime()){
+                        resultList.add(new ValidMessage(this.getMessage("结束使用日期需大于开始使用日期，请重新设置！")));
+                    }
+                }
+            }
             if(!StringUtil.equals(dto.getOperateType(), "update")){
                 StandardCouponReConversionRateDto entity = standardCouponReConversionRateService.selectByPrimaryKey(dto);
                 if(entity != null){
-                    resultList.add(new ValidMessage(this.getMessage("该券商和资金账户的再折算率维护已存在")));
+                    resultList.add(new ValidMessage(this.getMessage("该券商对应债券的再折算率维护已存在！")));
                 }
             }
-
         }
         return resultList;
     }

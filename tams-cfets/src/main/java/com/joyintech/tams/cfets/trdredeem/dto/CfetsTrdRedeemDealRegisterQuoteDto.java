@@ -135,6 +135,10 @@ public class CfetsTrdRedeemDealRegisterQuoteDto extends RegFinProductDealTotal i
      * 赎回比例
      */
     private BigDecimal redeemRate;
+    /**
+     * 软控是否继续？Y：继续
+     */
+    private String softSkipMode;
 
 
     public String getOperatorType() {
@@ -401,5 +405,13 @@ public class CfetsTrdRedeemDealRegisterQuoteDto extends RegFinProductDealTotal i
 
     public void setRedeemRate(BigDecimal redeemRate) {
         this.redeemRate = redeemRate;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
     }
 }

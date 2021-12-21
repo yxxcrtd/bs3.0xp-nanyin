@@ -11,17 +11,18 @@
 package com.joyintech.tams.invest.portfolio.ptlactivityperiod.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.alibaba.fastjson.JSONArray;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.joyintech.tams.common.base.dao.PaTrdProductDealMapper;
@@ -79,26 +80,26 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  * @since 1.0
  */
 @Service
-public class PtlActivityPeriod002Service extends CommonExportService<PtlActivityPeriod001Dto> 
+public class PtlActivityPeriod002Service extends CommonExportService<PtlActivityPeriod001Dto>
 implements BaseProcessService<PtlActivityPeriod001Dto>{
     /**
      * 注入主键生成工具类
      */
     @Autowired(required = false)
     public BaseGetBusinessId baseGetBussinessId;
-    
+
     /**
      * 货款指令Mapper
      */
     @Autowired
     private StlPayOrdersMapper stlPayOrdersMapper;
-    
+
     /**
      * 金融产品交易汇总Mapper
      */
     @Autowired
     private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
-    
+
     /**
      * 金融产品交易Mapper
      */
@@ -131,7 +132,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
     private BasePtlCashPositionInfoServiceImpl BasePtlCashPositionInfoServiceImpl;
     @Autowired
     private BussTrdTransferOrderService bussTrdTransferOrderService;
-    
+
     /**
      * 平台日期获取
      */
@@ -142,10 +143,10 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
      */
     @Autowired(required = false)
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
-    
+
     @Autowired
     private StlCapacctInfoMapper stlCapacctInfoMapper;
-    
+
     /**
      * 查询明细信息
      * <一句话功能简述>
@@ -161,15 +162,15 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
             List<String> busiAcctNoList = StringUtil.splitToList(",",busiAcctNo);
             map.put("busiAcctNoList", busiAcctNoList);
         }
-        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/findDetailsPage", map, PtlActivityPeriod001Dto.class); 
+        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/findDetailsPage", map, PtlActivityPeriod001Dto.class);
     }
-    
+
     public  List<PtlActivityPeriod001Dto> findChildrenPortfolioDetails(Map<String,Object> map) {
         List<PtlActivityPeriod001Dto> list = restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME +
-                                                "/ptlactivityperiod/findChildrenPortfolioDetails", map, PtlActivityPeriod001Dto.class); 
+                                                "/ptlactivityperiod/findChildrenPortfolioDetails", map, PtlActivityPeriod001Dto.class);
         return list;
     }
-    
+
     public List<PtlActivityPeriod001Dto> findDetailsByBusiNo(Map<String,Object> map) {
     	String busiAcctNo = (String)map.get("busiAcctNo");
     	if(!StringUtil.isNotEmpty(busiAcctNo)) {
@@ -179,14 +180,14 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
             List<String> busiAcctNoList = StringUtil.splitToList(",",busiAcctNo);
             map.put("busiAcctNoList", busiAcctNoList);
         }
-        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/findDetailsByBusiNo", map, PtlActivityPeriod001Dto.class); 
+        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/findDetailsByBusiNo", map, PtlActivityPeriod001Dto.class);
     }
-    
+
     public List<BussTrdTransferOrderDto> selectBussTrdTransferOrder(Map<String,Object> map) {
-        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/selectBussTrdTransferOrder", map, BussTrdTransferOrderDto.class); 
-        
+        return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/selectBussTrdTransferOrder", map, BussTrdTransferOrderDto.class);
+
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -204,13 +205,13 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
             }
 
             if("NEW".equals(dto.getOperateType())){
-                
+
                 //汇总交易
                 TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
                 BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, dto);
                 trdFinProductDealTotal.setTotleTradeId(dto.getBusiNo());
                 trdFinProductDealTotal.setFinprodId(dto.getAcctNo());
-                trdFinProductDealTotal.setTradeDate(dto.getSettleDate());
+                trdFinProductDealTotal.setTradeDate(dto.getSettleDate()!=null?dto.getSettleDate():dto.getDetailsList().get(0).getSettleDate());
 //                trdFinProductDealTotal.setVdate(dto.getVdate());//需求确认过不需要上次收息日，暂时没存该字段
                 trdFinProductDealTotal.setMdate(dto.getMdate());
                 trdFinProductDealTotal.setPs(DictCodeList.交易方向_收息.getValue());
@@ -221,30 +222,30 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                 trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                 trdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
                 trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal);
-                
-                
+
+
                 if(!StringUtil.isEmptyList(dto.getDetailsList())) {
                     for(PtlActivityPeriod001Dto period001Dto:dto.getDetailsList()) {
-                    	if(StringUtil.isNotEmpty(period001Dto.getActualTradeAmt()) 
+                    	if(StringUtil.isNotEmpty(period001Dto.getActualTradeAmt())
                     			&& period001Dto.getActualTradeAmt().compareTo(BigDecimal.ZERO) > 0) {
-                            period001Dto.setSettleDate(dto.getSettleDate());
-                            //交易表  
+                            period001Dto.setSettleDate(dto.getSettleDate()!=null?dto.getSettleDate():dto.getDetailsList().get(0).getSettleDate());
+                            //交易表
                             TrdProductDeal trdProductDeal = genTrdProductDeal(dto,period001Dto);
-                            
+
                             trdProductDealMapper.insertSelective(trdProductDeal);
                             // 一体化对应etliu end
-                            
+
                             TrdProductDealAdd add = this.genTrdProductDealAdd(period001Dto, trdProductDeal);
                             trdProductDealAddMapper.insertSelective(add);
-                            
+
                             PaTrdProductDeal paDeal = new PaTrdProductDeal();
                             paDeal.setPaBussType(DictCodeListExt1.平安业务类型_活期结息.getValue());
                             paDeal.setTradeId(trdProductDeal.getTradeId());
                             paTrdProductDealMapper.insertSelective(paDeal);
-                            
+
                             PtlTrade ptlTrade = this.genPtlTrade(period001Dto, trdProductDeal);
                             ptlTradeMapper.insertSelective(ptlTrade);
-                            
+
 
                             //划款指令
                             StlPayOrders stlPayOrders = new StlPayOrders();
@@ -254,11 +255,11 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                             stlPayOrders.setMyAcctNo(period001Dto.getBussTrdTransferOrder().getRecAcctNo());
                             stlPayOrders.setCounterAcctNo(period001Dto.getBussTrdTransferOrder().getPayAcctNo());
                             stlPayOrdersMapper.insert(stlPayOrders);
-                            
+
                             //组合现金流水
                             PtlCashPositionFlowDto ptlCashPositionFlowDto = this.genPtlCashPositionFlowDto(period001Dto,period001Dto.getBussTrdTransferOrder().getOrderId(),false);
                             BasePtlCashPositionInfoServiceImpl.insertCashPositionFlow(ptlCashPositionFlowDto);
-                            
+
                             //更新指令流水
                             List<PtlCashPositionFlowDto> ptlCash = new ArrayList<>();
                             ptlCash.add(ptlCashPositionFlowDto);
@@ -269,24 +270,24 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                                 ptlHoldDto.setPtlCashPositionFlows(ptlCash);
                                 baseEtrCashPositionCommService.portfolioEtrCashPosition(ptlHoldDto, true);
                             }
-                            
+
                             //子组合
                             if(StringUtil.equals(period001Dto.getIsParentPortfolio(), DictCodeList.是否_是.getValue())) {
                                 if(!StringUtil.isEmptyList(period001Dto.getChildrenDetailsList())) {
                                     for(PtlActivityPeriod001Dto childrenDetailsDto:period001Dto.getChildrenDetailsList()) {
                                         childrenDetailsDto.setSettleDate(dto.getSettleDate());
-                                        
+
                                         TrdProductDeal childrenTrdProductDeal = this.genTrdProductDeal(dto, childrenDetailsDto);
                                         trdProductDealMapper.insertSelective(childrenTrdProductDeal);
-                                        
+
                                         TrdProductDealAdd childrenAdd = this.genTrdProductDealAdd(childrenDetailsDto, childrenTrdProductDeal);
                                         trdProductDealAddMapper.insertSelective(childrenAdd);
-                                        
+
                                         PaTrdProductDeal childrenPaDeal = new PaTrdProductDeal();
                                         childrenPaDeal.setPaBussType(DictCodeListExt1.平安业务类型_活期结息.getValue());
                                         childrenPaDeal.setTradeId(childrenTrdProductDeal.getTradeId());
                                         paTrdProductDealMapper.insertSelective(childrenPaDeal);
-                                        
+
 //                                        //划款指令
 //                                        StlPayOrders childrenStlPayOrders = new StlPayOrders();
 //                                        BeanUtil.copyPropertiesIgnoreNull(childrenStlPayOrders, period001Dto.getBussTrdTransferOrder());
@@ -306,15 +307,15 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
 //                                        childrenStlPayOrders.setMyAcctNo(period001Dto.getBussTrdTransferOrder().getRecAcctNo());
 //                                        childrenStlPayOrders.setCounterAcctNo(period001Dto.getBussTrdTransferOrder().getPayAcctNo());
 //                                        stlPayOrdersMapper.insert(childrenStlPayOrders);
-                                        
+
                                         PtlTrade childrenPtlTrade = this.genPtlTrade(childrenDetailsDto, childrenTrdProductDeal);
                                         ptlTradeMapper.insertSelective(childrenPtlTrade);
-                                        
+
                                         //组合现金流水
                                         childrenDetailsDto.setCcy(period001Dto.getCcy());
                                         PtlCashPositionFlowDto childrenPtlCashPositionFlowDto = this.genPtlCashPositionFlowDto(childrenDetailsDto,period001Dto.getBussTrdTransferOrder().getOrderId(),false);
                                         BasePtlCashPositionInfoServiceImpl.insertCashPositionFlow(childrenPtlCashPositionFlowDto);
-                                        
+
                                         //更新指令流水
                                         List<PtlCashPositionFlowDto> childrenPtlCash = new ArrayList<>();
                                         childrenPtlCash.add(childrenPtlCashPositionFlowDto);
@@ -325,11 +326,11 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                                             childrenPtlHoldDto.setPtlCashPositionFlows(childrenPtlCash);
                                             baseEtrCashPositionCommService.portfolioEtrCashPosition(childrenPtlHoldDto, true);
                                         }
-                                        
+
                                         Map<String,Object> map = new HashMap<>();
                                         map.put("portfolioId", childrenDetailsDto.getPortfolioId());
                                         List<String> registCodeList = restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME +
-                                            "/ptlactivityperiod/getProdRegistCode", map, String.class); 
+                                            "/ptlactivityperiod/getProdRegistCode", map, String.class);
                                         if(registCodeList != null && registCodeList.size() > 0){
                                             String registCode = registCodeList.get(0);
                                             RepTrade repTrade = new RepTrade();
@@ -351,7 +352,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                                             }
                                             repTradeMapper.insertSelective(repTrade);
                                         }
-                                        
+
                                         // 一体化对应etliu start
                                         // 所有交易生效后调用的共通方法
                                         AllTradeCommonInputDto childrenInputDto = new AllTradeCommonInputDto();
@@ -363,14 +364,14 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                                         AllTradeCommonUtil.handleAfterTradeComplete(childrenInputDto);
                                     }
                                 }
-                            } 
-                            
-                            
+                            }
+
+
 
                             Map<String,Object> map = new HashMap<>();
                             map.put("portfolioId", period001Dto.getPortfolioId());
                             List<String> registCodeList = restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME +
-                                "/ptlactivityperiod/getProdRegistCode", map, String.class); 
+                                "/ptlactivityperiod/getProdRegistCode", map, String.class);
                             if(registCodeList != null && registCodeList.size() > 0){
                                 String registCode = registCodeList.get(0);
                                 RepTrade repTrade = new RepTrade();
@@ -392,7 +393,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                                 }
                                 repTradeMapper.insertSelective(repTrade);
                             }
-                            
+
                             // 一体化对应etliu start
                             // 所有交易生效后调用的共通方法
                             AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
@@ -406,7 +407,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                     }
                 }
             }
-           
+
             else{
                 //汇总交易表
                 TrdFinProductDealTotal trdFinProductDealTotal = trdFinProductDealTotalMapper.selectByPrimaryKey(dto.getBusiNo());
@@ -416,19 +417,19 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                     trdFinProductDealTotal.setWorkflowId(dto.getWorkflowId());
                     trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
                     trdFinProductDealTotalMapper.insertSelective(trdFinProductDealTotal);
-                    
+
                     TrdFinProductDealTotal trdFinProductDealTotalRevoke = new TrdFinProductDealTotal();
                     trdFinProductDealTotalRevoke.setTotleTradeId(dto.getBusiNo());
                     trdFinProductDealTotalRevoke.setIsCancel(DictCodeList.是否_是.getValue());
                     trdFinProductDealTotalMapper.updateByPrimaryKeySelective(trdFinProductDealTotalRevoke);
                 }
-                
+
                 List<TrdProductDeal> trdProductDealList = restTemplate.getForList(
-                    ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/queryTrdProductDealByTotleTradeId?tradeId=" 
+                    ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/queryTrdProductDealByTotleTradeId?tradeId="
                                 + dto.getBusiNo(), TrdProductDeal.class);
                 if(!StringUtil.isEmptyList(trdProductDealList)) {
                     for(TrdProductDeal trdProductDeal:trdProductDealList) {
-                        
+
                         //划款指令
                         List<StlPayOrders> listStlPayOrders = restTemplate.getForList(
                             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/queryStlPayOrdersByTradeId?tradeId="
@@ -443,17 +444,17 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                             stlPayOrdersDto.setOrderStatus(DictCodeListExt1.指令状态_撤销.getValue());
                             stlPayOrdersMapper.insertSelective(stlPayOrdersDto);
                         });
-                        
+
                         //交易附属表
                         TrdProductDealAdd trdProductDealAdd = trdProductDealAddMapper.selectByPrimaryKey(trdProductDeal.getTradeId());
                         trdProductDealAdd.setTradeId(trdProductDealAdd.getTradeId() + BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);
                         trdProductDealAddMapper.insertSelective(trdProductDealAdd);
-                        
+
                         //交易扩展表
                         PaTrdProductDeal paTrdProductDeal = paTrdProductDealMapper.selectByPrimaryKey(trdProductDeal.getTradeId());
                         paTrdProductDeal.setTradeId(paTrdProductDeal.getTradeId() + BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);
                         paTrdProductDealMapper.insertSelective(paTrdProductDeal);
-                        
+
                         //组合交易
                         PtlTradeKey ptlTradeKey = new PtlTradeKey();
                         ptlTradeKey.setBusiNo(trdProductDeal.getTradeId());
@@ -462,7 +463,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                         PtlTrade ptlTrade = ptlTradeMapper.selectByPrimaryKey(ptlTradeKey);
                         ptlTrade.setBusiNo(ptlTrade.getBusiNo() + BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);
                         ptlTradeMapper.insertSelective(ptlTrade);
-                        
+
                         //交易表
                         trdProductDeal.setpTradeId(trdProductDeal.getTradeId());
                         trdProductDeal.setTotleTradeId(trdProductDeal.getTotleTradeId() + BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);
@@ -471,13 +472,13 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                         trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
                         trdProductDeal.setCancelRemark(dto.getCancelRemark());
                         trdProductDealMapper.insertSelective(trdProductDeal);
-                        
+
                         TrdProductDeal trdProductDealRevoke = new TrdProductDeal();
                         trdProductDealRevoke.setTradeId(trdProductDeal.getpTradeId());
                         trdProductDealRevoke.setIsCancel(DictCodeList.是否_是.getValue());
                         trdProductDealMapper.updateByPrimaryKeySelective(trdProductDealRevoke);
-                        
-                        
+
+
                         RepTradeKey repTradeKey = new RepTradeKey();
                         repTradeKey.setRepBankTradeCode(trdProductDeal.getTradeId());
                         repTradeKey.setRepMoneyFlowType(DictCodeListExt2.资金流动类型_其他收入.getValue());
@@ -485,8 +486,8 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                         if(repTrade != null){
                             repTradeMapper.deleteByPrimaryKey(repTradeKey);
                         }
-                        
-                        
+
+
                         // 一体化对应etliu start
                         // 所有交易生效后调用的共通方法
                         AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
@@ -498,13 +499,13 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                         // 一体化对应etliu end
                     }
                 }
-                
 
-                
+
+
                 if(!StringUtil.isEmptyList(dto.getDetailsList())) {
                     for(PtlActivityPeriod001Dto period001Dto:dto.getDetailsList()) {
                         period001Dto.setSettleDate(dto.getSettleDate());
-                        PtlCashPositionFlowDto ptlCashPositionFlowDto = this.genPtlCashPositionFlowDto(period001Dto,period001Dto.getBussTrdTransferOrder().getOrderId(), true); 
+                        PtlCashPositionFlowDto ptlCashPositionFlowDto = this.genPtlCashPositionFlowDto(period001Dto,period001Dto.getBussTrdTransferOrder().getOrderId(), true);
                         BasePtlCashPositionInfoServiceImpl.insertCashPositionFlow(ptlCashPositionFlowDto);
                         List<PtlCashPositionFlowDto> ptlCash = new ArrayList<>();
                         ptlCash.add(ptlCashPositionFlowDto);
@@ -515,17 +516,17 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                             ptlHoldDto.setPtlCashPositionFlows(ptlCash);
                             baseEtrCashPositionCommService.portfolioEtrCashPosition(ptlHoldDto, true);
                         }
-                        
+
                         if(StringUtil.equals(period001Dto.getIsParentPortfolio(), DictCodeList.是否_是.getValue())) {
                             if(!StringUtil.isEmptyList(period001Dto.getChildrenDetailsList())) {
                                 for(PtlActivityPeriod001Dto childrenDetailsDto:period001Dto.getChildrenDetailsList()) {
                                     childrenDetailsDto.setSettleDate(dto.getSettleDate());
-                                    
+
                                     //组合现金流水
                                     childrenDetailsDto.setCcy(period001Dto.getCcy());
                                     PtlCashPositionFlowDto childrenPtlCashPositionFlowDto = this.genPtlCashPositionFlowDto(childrenDetailsDto,period001Dto.getBussTrdTransferOrder().getOrderId(),true);
                                     BasePtlCashPositionInfoServiceImpl.insertCashPositionFlow(childrenPtlCashPositionFlowDto);
-                                    
+
                                     //更新指令流水
                                     List<PtlCashPositionFlowDto> childrenPtlCash = new ArrayList<>();
                                     childrenPtlCash.add(childrenPtlCashPositionFlowDto);
@@ -541,9 +542,9 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
                         }
                     }
                 }
-       
+
             }
-        
+
     }
 
     /**
@@ -595,7 +596,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
     public String getInitDate(){
         return restTemplate.getForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/getInitDate", String.class);
     }
-    
+
     /**
      * 获取对手方账户列表
      * @param map 请求参数
@@ -606,7 +607,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
     public List<SelectOptionDto> getCounterAcct(Map<String,Object> map){
         return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/getCounterAcct",map, SelectOptionDto.class);
     }
-    
+
     /**
      * 划款金额默认为理论计提金额
      * @return 理论计提金额
@@ -616,7 +617,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
     public BigDecimal initTradeAmt(Map<String,Object> paramMap) {
         return restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/initTradeAmt", paramMap, BigDecimal.class);
     }
-    
+
     /**
      * 获取开户机构信息
      * <一句话功能简述>
@@ -628,8 +629,8 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
     public Page<SelectOptionDto> getBankDep(Map<String,Object> paramMap){
         return restTemplate.postForPage(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/getBankDep",paramMap, SelectOptionDto.class);
     }
-    
-    
+
+
     /**
      * 组装TrdProductDeal
      * <一句话功能简述>
@@ -641,12 +642,12 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
      * @since 1.0
      */
     private TrdProductDeal genTrdProductDeal(PtlActivityPeriod001Dto parentDto,PtlActivityPeriod001Dto dto){
-        BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter(); 
+        BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
         bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_活期结息);
         TrdProductDeal trdProductDeal = new TrdProductDeal();
         BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, dto);
-       
-        trdProductDeal.setTradeId(baseGetBussinessId !=null ? 
+
+        trdProductDeal.setTradeId(baseGetBussinessId !=null ?
             baseGetBussinessId.buildBussinessCode(bussinessCodeParameter):IDGenerator.generate());
         trdProductDeal.setFinprodId(dto.getAcctNo());
         trdProductDeal.setTradeDate(parentDto.getSettleDate());
@@ -663,7 +664,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
         trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
         return trdProductDeal;
     }
-    
+
     /**
      * 组装交易附属表
      * <一句话功能简述>
@@ -681,7 +682,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
         add.setTradeId(trdProductDeal.getTradeId());
         return add;
     }
-    
+
     private PtlTrade genPtlTrade(PtlActivityPeriod001Dto dto,TrdProductDeal trdProductDeal) {
         PtlTrade ptlTrade = new PtlTrade();
         BeanUtil.copyPropertiesIgnoreNull(ptlTrade, dto);
@@ -691,7 +692,7 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
         ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
         return ptlTrade;
     }
-        
+
     /**
      * 组装组合现金流水
      * <一句话功能简述>
@@ -721,9 +722,9 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
         }
         return ptlCashPositionFlowDto;
     }
-    
+
     /**
-     * 
+     *
      * 自定义生成付款指令
      * <功能详细描述>
      * @param bussSettleOrderParameterDtos
@@ -755,24 +756,340 @@ implements BaseProcessService<PtlActivityPeriod001Dto>{
             bussTrdTransferOrderDto.setIsTotalTrade(DictCodeList.是否_否.getValue());
             bussTrdTransferOrderDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_资金账户.getValue());
             bussTrdTransferOrderDto.setTradeId(ptlActivityPeriod001Dto.getBusiNo());
-            bussTrdTransferOrderDto.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue()); 
-            
+            bussTrdTransferOrderDto.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
+
             bussTrdTransferOrderDto.setRecAcctNo(ptlActivityPeriod001Dto.getAcctNo());
             bussTrdTransferOrderDto.setRecAcctName(ptlActivityPeriod001Dto.getAcctName());
-            
+
             StlCapacctInfo stlCapacctInfo = bussTrdTransferOrderService.queryStlCapacctInfoByBusiAcctNo(ptlActivityPeriod001Dto.getCcy(), ptlActivityPeriod001Dto.getAcctNo());
             bussTrdTransferOrderDto.setRecAcctPoint(stlCapacctInfo.getLargePayno());
             bussTrdTransferOrderDto.setInOutBank(SysDataUtil.getNameFromDataDict(DictCode.资产来源, stlCapacctInfo.getInOutBank()));
-            
-            
+
+
             bussTrdTransferOrderDto.setPortfolioId(ptlActivityPeriod001Dto.getPortfolioId());
             bussTrdTransferOrderDto.setPortfolioName(ptlActivityPeriod001Dto.getPortfolioName());
-            
+
             list.add(bussTrdTransferOrderDto);
         }
 
         return list;
-        
+
     }
-    
+    /**
+     * 验证导入的数据
+     *
+     * @param fileName 导入的数据
+     * @return
+     */
+    @Validated
+    public AjaxResult checkImportData(String fileName) {
+        List<List<String>> objects = ExcelUtil.getTempList(fileName);
+
+        int totalData = 0;
+        for (int i = 1; i < objects.size(); i++ ) {
+            List<String> rowData = objects.get(i);
+            totalData++ ;
+        }
+        AjaxResult wr = new AjaxResult();
+        // check导入数据是否大于200条
+        if (totalData > 200) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("errorMsg", getMessage("ETR_ERROR_0100"));
+            wr.setData(resultMap);
+        }
+        if (!StringUtil.isNotEmpty(wr.getData())) {
+            List<String> rowData = objects.get(0);
+            if(!(StringUtil.equals(rowData.get(0),"资金账户代码*") && StringUtil.equals(rowData.get(1),"组合代码*") && StringUtil.equals(rowData.get(2),"本次收息日*") &&
+                    StringUtil.equals(rowData.get(3),"支付日*") && StringUtil.equals(rowData.get(4),"理论收息金额") && StringUtil.equals(rowData.get(5),"实际收息金额*") &&
+                    StringUtil.equals(rowData.get(6),"调整金额") && StringUtil.equals(rowData.get(7),"交易备注"))){
+                Map<String, Object> resultMap = new HashMap<>();
+                resultMap.put("errorMsg", getMessage("ETR_ERROR_0101"));
+                wr.setData(resultMap);
+            }
+        }
+        if (!StringUtil.isNotEmpty(wr.getData())) {
+            String totalMsg = "";
+            List<List<String>> jsonArrays = new ArrayList<>();
+            // 失败条数
+            int errorNum = 0;
+            for (int i = 1; i < objects.size(); i++) {
+                String confirmMsg = "";
+                // excel的行号
+                String lineNo = String.valueOf(i + 1);
+                List<String> rowData = objects.get(i);
+                boolean isEntrust = true;
+                if (isEntrust) {
+                    // 资金账户代码
+                    confirmMsg = StringAddByBr(confirmMsg,checkIsBlank(rowData.get(0),"资金账户代码", lineNo));
+                    if (StringUtil.isNotEmpty(rowData.get(0))) {
+                        if (isZiJing(rowData.get(0))) {
+                            confirmMsg = StringAddByBr(confirmMsg, getMessage("ETR_ERROR_0106", lineNo));
+                        }
+                    }
+
+                    // 组合代码
+                    confirmMsg = StringAddByBr(confirmMsg,checkIsBlank(rowData.get(1),"组合代码", lineNo));
+                    if (StringUtil.isNotEmpty(rowData.get(1))) {
+                        if (isZuHe(rowData.get(1))) {
+                            confirmMsg = StringAddByBr(confirmMsg, getMessage("ETR_ERROR_0103", lineNo));
+                        }
+                        if (StringUtil.isNotEmpty(rowData.get(0))) {
+                            if (checkZuHeAndZiJing(rowData.get(1),rowData.get(0))) {
+                                confirmMsg = StringAddByBr(confirmMsg, getMessage("ETR_ERROR_0107", lineNo));
+                            }
+                        }
+                    }
+
+                    // 本次收息日
+                    confirmMsg = StringAddByBr(confirmMsg,checkIsBlank(rowData.get(2),"本次收息日", lineNo));
+                    confirmMsg = StringAddByBr(confirmMsg,checkIsDate(rowData.get(2), "本次收息日", lineNo));
+                    if (StringUtil.isNotEmpty(rowData.get(2)) && StringUtil.isNotEmpty(rowData.get(1))) {
+                        if (checkRepeat(rowData.get(1),rowData.get(2),objects,lineNo)) {
+                            confirmMsg = StringAddByBr(confirmMsg, getMessage("ETR_ERROR_0104", lineNo));
+                        }
+                    }
+
+                    // 支付日
+                    confirmMsg = StringAddByBr(confirmMsg,checkIsBlank(rowData.get(3),"支付日", lineNo));
+                    confirmMsg = StringAddByBr(confirmMsg,checkIsDate(rowData.get(3), "支付日", lineNo));
+                    if (StringUtil.isNotEmpty(rowData.get(3))) {
+                        if (DateUtil.parse(rowData.get(3)).compareTo(DateUtil.platDateFromCache()) < 0) {
+                            confirmMsg = StringAddByBr(confirmMsg, getMessage("ETR_ERROR_0102", lineNo));
+                        }
+                    }
+
+                    // 实际收息金额
+                    confirmMsg = StringAddByBr(confirmMsg,checkIsBlank(rowData.get(5),"实际收息金额", lineNo));
+                    if (StringUtil.isNotEmpty(rowData.get(4)) && StringUtil.isNotEmpty(rowData.get(5)) && StringUtil.isNotEmpty(rowData.get(6))) {
+                        BigDecimal lilun = new BigDecimal(rowData.get(4));
+                        BigDecimal shiji = new BigDecimal(rowData.get(5));
+                        BigDecimal tiaozheng = new BigDecimal(rowData.get(6));
+                        if (lilun.compareTo(shiji.add(tiaozheng))!=0) {
+                            confirmMsg = StringAddByBr(confirmMsg, getMessage("ETR_ERROR_0105", lineNo));
+                        }
+                    }
+                }
+                if (StringUtil.isBlank(confirmMsg)) {
+                    jsonArrays.add(rowData);
+                }else {
+                    // 导入失败条数统计
+                    totalMsg = StringAddByBr(totalMsg, confirmMsg);
+                    if (isEntrust) {
+                        errorNum++ ;
+                    }
+                }
+            }
+            totalMsg = StringAddByBr(totalMsg,
+                    getMessage("ETR_C_0001", String.valueOf(errorNum)));
+            Map<String, Object> resultMap = new HashMap<>();
+            if (StringUtil.isNotBlank(totalMsg)) {
+                resultMap.put("confirmMsg", totalMsg);
+            }
+            resultMap.put("correctData", JSONArray.toJSONString(jsonArrays));
+            wr.setData(resultMap);
+        }
+        return wr;
+    }
+
+    private String StringAddByBr(String errorMessage, String addMessage) {
+        // 错误信息拼接
+        if (StringUtil.isNotBlank(errorMessage) && StringUtil.isNotBlank(addMessage)) {
+            return errorMessage + "<br />" + addMessage;
+        }
+        else if (StringUtil.isNotBlank(errorMessage)) {
+            return errorMessage;
+        }
+        else {
+            return addMessage;
+        }
+    }
+
+    private String checkIsBlank(String cellData, String labelName, String indexId) {
+        // 判断是否是空
+        if (StringUtil.isBlank(cellData)) {
+            return getMessage("ETR_E_0015", labelName, indexId);
+        }
+        return "";
+    }
+
+    private String checkIsDate(String cellData, String labelName, String indexId) {
+        // 判断是否是正确的日期格式
+        if (StringUtil.isNotBlank(cellData)) {
+            try {
+                Date result = DateUtil.parse(cellData);
+                if (result == null) {
+                    return getMessage("ETR_E_0016", labelName, indexId);
+                }
+            }
+            catch (RuntimeException e) {
+                return getMessage("ETR_E_0016", getMessage(labelName), indexId);
+            }
+        }
+        return "";
+    }
+
+    //组合校验
+    private boolean isZuHe(String portfolioId){
+        List<PtlPortfolio> ptlPortfolioList = restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/isZuHe", portfolioId, PtlPortfolio.class);
+        if(ptlPortfolioList.size()!=0){
+            return false;
+        }
+        return true;
+    }
+
+    //资金账户校验
+    private boolean isZiJing(String busiAcctNo){
+        List<StlCapacctInfo> stlCapacctInfoList = restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/isZiJing", busiAcctNo, StlCapacctInfo.class);
+        if(stlCapacctInfoList.size()!=0){
+            return false;
+        }
+        return true;
+    }
+
+    //验证资金账号与组合代码是否存在关联
+    private boolean checkZuHeAndZiJing(String portfolioId,String busiAcctNo){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("portfolioId",portfolioId);
+        map.put("busiAcctNo",busiAcctNo);
+        String s = restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/checkZuHeAndZiJing", map, String.class);
+        if(StringUtil.equals(s,"true")){
+            return false;
+        }
+        return true;
+    }
+
+    //验证本次收息日对应的组合代码是否已有记录
+    private boolean checkRepeat(String portfolioId, String mDate, List<List<String>> objects, String lineNo){
+        List<String> rowData ;
+        for (int i=Integer.parseInt(lineNo);i<objects.size();i++){
+            rowData = objects.get(i);
+            if(StringUtil.equals(rowData.get(1),portfolioId) && StringUtil.equals(rowData.get(2),mDate)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获取委托列表数据
+     *
+     * @return
+     */
+    public List<PtlActivityPeriod001Dto> getData(String tempList) {
+        List<PtlActivityPeriod001Dto> PtlActivityPeriod001DtoList = new ArrayList<>();
+        JSONArray objects = JSONArray.parseArray(tempList);
+        for (int i = 0; i < objects.size(); i++ ) {
+            PtlActivityPeriod001Dto dto = new PtlActivityPeriod001Dto();
+            String issuer = "";
+            JSONArray data = JSONArray.parseArray(((JSONArray)objects.get(i)).toJSONString());
+            PtlPortfolio ptlPortfolio = new PtlPortfolio();
+            StlCapacctInfo stlCapacctInfo = new StlCapacctInfo();
+            ptlPortfolio = getZuHe(data.get(1).toString().trim());
+            stlCapacctInfo = getZiJing(data.get(0).toString().trim());
+            // 资金账户代码
+            dto.setBusiAcctNo(data.get(0).toString().trim());
+
+            // 资金账户名称
+            dto.setAcctName(stlCapacctInfo.getAcctName());
+
+            // 开户机构名称
+            dto.setBankDep(stlCapacctInfo.getBankDep());
+
+            dto.setAcctNo(stlCapacctInfo.getAcctNo());
+
+            // 组合代码
+            dto.setPortfolioId(data.get(1).toString().trim());
+
+            // 组合名称
+            dto.setPortfolioName(ptlPortfolio.getPortfolioName());
+
+            // 本次收息日
+            dto.setMdate(DateUtil.parse(data.get(2).toString().trim()));
+
+            // 支付日
+            dto.setSettleDate(DateUtil.parse(data.get(3).toString().trim()));
+
+            // 实际收息金额
+            dto.setActualTradeAmt(BigDecimal.valueOf(Double.valueOf(data.get(5).toString().trim())));
+
+            // 划款金额
+            dto.setTradeAmt(BigDecimal.valueOf(Double.valueOf(data.get(5).toString().trim())));
+
+            // 理论收息金额
+            if(StringUtil.isNotEmpty(data.get(4).toString().trim())) {
+                dto.setTheoryTradeAmt(BigDecimal.valueOf(Double.valueOf(data.get(4).toString().trim())));
+            }else if(StringUtil.isNotEmpty(data.get(6).toString().trim())){
+                dto.setTheoryTradeAmt(BigDecimal.valueOf(Double.valueOf(data.get(5).toString().trim())).add(BigDecimal.valueOf(Double.valueOf(data.get(6).toString().trim()))));
+            }else {
+                dto.setTheoryTradeAmt(new BigDecimal(0));
+            }
+            PtlActivityPeriod001DtoList.add(dto);
+        }
+        return PtlActivityPeriod001DtoList;
+    }
+
+    //组合校验
+    private PtlPortfolio getZuHe(String portfolioId){
+        List<PtlPortfolio> ptlPortfolioList = restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/isZuHe", portfolioId, PtlPortfolio.class);
+        return ptlPortfolioList.get(0);
+    }
+
+    //资金账户校验
+    private StlCapacctInfo getZiJing(String busiAcctNo){
+        List<StlCapacctInfo> stlCapacctInfoList = restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/ptlactivityperiod/isZiJing", busiAcctNo, StlCapacctInfo.class);
+        return stlCapacctInfoList.get(0);
+    }
+
+    /**
+     *
+     * 自定义生成付款指令
+     * <功能详细描述>
+     * @param bussSettleOrderParameterDtos
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<BussTrdTransferOrderDto> generateImportOrder(PtlActivityPeriod001Dto dto) {
+        List<BussTrdTransferOrderDto> list = new ArrayList<BussTrdTransferOrderDto>();
+        for(PtlActivityPeriod001Dto ptlActivityPeriod001Dto :dto.getDetailsList()) {
+            String orderId;
+            if(baseGetBussinessId != null){
+                BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
+                bussinessCodeParameter.setSeqNo("9998");
+                orderId = baseGetBussinessId.buildBussinessCode(bussinessCodeParameter);
+            }
+            else {
+                orderId = IDGenerator.generate();
+            }
+            BussTrdTransferOrderDto bussTrdTransferOrderDto = new BussTrdTransferOrderDto();
+            bussTrdTransferOrderDto.setOrderId(orderId);
+            bussTrdTransferOrderDto.setPayType(DictCodeListExt1.平安划款类型_托管划款.getValue());
+            bussTrdTransferOrderDto.setSettleDate(ptlActivityPeriod001Dto.getSettleDate());
+            bussTrdTransferOrderDto.setPs(DictCodeListExt1.收支方向_收入.getValue());
+            bussTrdTransferOrderDto.setSettleAmt(ptlActivityPeriod001Dto.getActualTradeAmt());
+            bussTrdTransferOrderDto.setCcy(ptlActivityPeriod001Dto.getCcy());
+            bussTrdTransferOrderDto.setSettleStatus(DictCodeList.结算状态_已结算.getValue());
+            bussTrdTransferOrderDto.setIsNeedSend(DictCodeList.是否_否.getValue());
+            bussTrdTransferOrderDto.setIsTotalTrade(DictCodeList.是否_否.getValue());
+            bussTrdTransferOrderDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_资金账户.getValue());
+            bussTrdTransferOrderDto.setTradeId(ptlActivityPeriod001Dto.getBusiNo());
+            bussTrdTransferOrderDto.setOrderStatus(DictCodeListExt1.指令状态_新建.getValue());
+
+            bussTrdTransferOrderDto.setRecAcctNo(ptlActivityPeriod001Dto.getAcctNo());
+            bussTrdTransferOrderDto.setRecAcctName(ptlActivityPeriod001Dto.getAcctName());
+
+            StlCapacctInfo stlCapacctInfo = bussTrdTransferOrderService.queryStlCapacctInfoByBusiAcctNo(ptlActivityPeriod001Dto.getCcy(), ptlActivityPeriod001Dto.getAcctNo());
+            bussTrdTransferOrderDto.setRecAcctPoint(stlCapacctInfo.getLargePayno());
+            bussTrdTransferOrderDto.setInOutBank(SysDataUtil.getNameFromDataDict(DictCode.资产来源, stlCapacctInfo.getInOutBank()));
+
+
+            bussTrdTransferOrderDto.setPortfolioId(ptlActivityPeriod001Dto.getPortfolioId());
+            bussTrdTransferOrderDto.setPortfolioName(ptlActivityPeriod001Dto.getPortfolioName());
+
+            list.add(bussTrdTransferOrderDto);
+        }
+
+        return list;
+
+    }
 }

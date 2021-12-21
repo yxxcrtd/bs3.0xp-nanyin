@@ -84,7 +84,7 @@ public class BeforeSubErrorCheck {
      * @see
      * @since 1.0
      */
-    public List<CheckReport001Dto> checkProdDurationReg(Date checkdate,List<String> listProd,Map<String, List<ChbCheckRuleout>> mapRuleout) {
+    public List<CheckReport001Dto> checkProdDurationReg(Date checkdate,List<String> keys,Map<String, List<ChbCheckRuleout>> mapRuleout) {
         logger.info("产品存续期错误检查开始.");
        List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
        
@@ -92,7 +92,7 @@ public class BeforeSubErrorCheck {
 //        List<CheckRule> listRules = dataCheckService.queryCheckRules("CHB_PRD_DEAL_SUB");
         
         //读取数据，查询登记表数据
-        List<Map<String,Object>> listData = chbBeforeSubErrorCheckMapper.selectProdDealSub(checkdate,listProd);
+        List<Map<String,Object>> listData = chbBeforeSubErrorCheckMapper.selectProdDealSub(checkdate,keys);
         List<Map<String,String>> listDataStr=new ArrayList<Map<String,String>>();
         for(Map<String,Object> singleMap:listData){
         	Map <String,String> smap=new HashMap<String,String>();
@@ -404,7 +404,7 @@ public class BeforeSubErrorCheck {
      * @see
      * @since 1.0
      */
-    public List<CheckReport001Dto> checkAssetInfoReg(Date checkdate,List<String> listAsset,Map<String, List<ChbCheckRuleout>> mapRuleout) {
+    public List<CheckReport001Dto> checkAssetInfoReg(Date checkdate,List<String> keys,Map<String, List<ChbCheckRuleout>> mapRuleout) {
         logger.info("资产要素登记错误检查开始");
        List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
        
@@ -412,7 +412,7 @@ public class BeforeSubErrorCheck {
         List<CheckRule> listRules = dataCheckService.queryCheckRules("CHB_ASSET_INFO_SUB");
         
         //读取数据，查询登记表数据
-        List<Map<String,Object>> listData = chbBeforeSubErrorCheckMapper.selectAssetInfoSub(checkdate,listAsset);
+        List<Map<String,Object>> listData = chbBeforeSubErrorCheckMapper.selectAssetInfoSub(checkdate,keys);
         List<Map<String,String>> listDataStr=new ArrayList<Map<String,String>>();
         for(Map<String,Object> singleMap:listData){
         	Map <String,String> smap=new HashMap<String,String>();
@@ -626,9 +626,9 @@ public class BeforeSubErrorCheck {
      * @see
      * @since 1.0
      */
-    public List<CheckReport001Dto> checkAstValueSub(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout) {
+    public List<CheckReport001Dto> checkAstValueSub(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout,List<String> keys) {
         logger.info("资产估值信息登记强制错误检查开始.");
-        List<Map<String,Object>> listData = chbBeforeSubErrorCheckMapper.selectChbAstValSub(checkdate);
+        List<Map<String,Object>> listData = chbBeforeSubErrorCheckMapper.selectChbAstValSub(checkdate,keys);
 
         //定义返回值
         List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();

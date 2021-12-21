@@ -88,7 +88,7 @@ public class ValAccountsAdjustAccountEntry001Service extends CommonExportService
                                                                    Integer level,String bookEvent) {
         List<ValAccountsAdjustAccountEntry001Dto> dtoList = valAccountsAdjustAccountEntry001Mapper.findAccountEntry(
             booksetId, nodeId, bookEvent,
-            DictCodeListExt1.数据类型_下拉框.getValue(), level , GlobalConstant.ACCOUNTEVENTS);
+            DictCodeListExt1.元素数据类型_下拉框.getValue(), level , GlobalConstant.ACCOUNTEVENTS);
         return super.queryForTree(()->dtoList,
             ValAccountsAdjustAccountEntry001Dto::getSceneNodeId,
             ValAccountsAdjustAccountEntry001Dto::getFsceneNodeid,

@@ -250,6 +250,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             }
             entity.setEtrEntrust(etrEntrust);
             entity.setEtrEntrustAdd(etrEntrustAdd);
+            entity.setEtrPledgeList(getEtrPledgeListByBussRepoSecDto(dto.getBussRepoSec(),dto.getEntrustId()));
             baseEtrInvestInfoService.newDelegate(entity);
         } else {
             dto.setFinprodType2(StringUtil.equals(dto.getPs(), DictCodeList.回购拆借方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
@@ -326,6 +327,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             }
             entity.setEtrEntrust(etrEntrust);
             entity.setEtrEntrustAdd(etrEntrustAdd);
+            entity.setEtrPledgeList(getEtrPledgeListByBussRepoSecDto(dto.getBussRepoSec(),dto.getEntrustId()));
             baseEtrInvestInfoService.updateDelegate(entity);
         }
 
@@ -515,7 +517,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 	                // 质押数量 = 输出质押品DTO.质押数量
 	                etrPledge.setPledgeNumber(ArithmeticUtil.divide(pledgeBond.getPledgePrin(), new BigDecimal("100"), 4));
 	                // 质押率 = 输出质押品DTO.质押率
-	                etrPledge.setPledgeRatio(ArithmeticUtil.divide(pledgeBond.getPledgeRatio(), new BigDecimal("100"), 4));
+	                etrPledge.setPledgeRatio(pledgeBond.getPledgeRatio());
 	                // 质押金额 = 输出质押品DTO.质押金额
 	                etrPledge.setPledgeAmt(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), etrPledge.getPledgeRatio()));
 	                etrPledgeList.add(etrPledge);
@@ -560,6 +562,7 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             dto.setTermType(RepoInfoDto.getTermType());
             dto.setCounterId(RepoInfoDto.getCounterId());
             dto.setInvManagerId(SecurityUtil.getLoginUser().getUserName());
+            dto.setRemark(RepoInfoDto.getRemark());
             // ----------add by zhangrui1 20200715 预占功能 start----------
             if (StringUtil.isNotEmpty(dto.getEntrustId())) {
                 dataList.add(dto);

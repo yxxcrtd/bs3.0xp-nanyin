@@ -63,7 +63,7 @@
             // 多级法人改造 add by caiqun 20200615
             ,{field: 'institutionName', visible : false}
             // 多级法人改造 add by caiqun 20200615
-            ,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: []}
+            /*,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: []}*/
         ]
     });
 

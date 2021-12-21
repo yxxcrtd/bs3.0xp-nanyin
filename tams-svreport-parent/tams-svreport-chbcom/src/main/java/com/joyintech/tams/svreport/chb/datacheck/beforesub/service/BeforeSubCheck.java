@@ -10,38 +10,34 @@
  
 package com.joyintech.tams.svreport.chb.datacheck.beforesub.service;
 
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.ChbPrdCustNumIfo;
+import com.joyintech.tams.batch.report.autosendcb.common.service.SvrCBBaseService;
+import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
+import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.common.constant.BatchBeanName;
+import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
+import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.svreport.chb.common.SvrCustomerNumCheckService;
+import com.joyintech.tams.svreport.chb.datacheck.beforesub.dao.ChbBeforeSubCheckMapper;
+import com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.exception.BusinessException;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.tams.report.common.constant.BatchBeanName;
-import com.joyintech.tams.report.common.util.SysDataUtil;
-import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
-import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
-import com.joyintech.tams.batch.report.autosendcb.common.service.SvrCBBaseService;
-import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
-import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.svreport.chb.datacheck.beforesub.dao.ChbBeforeSubCheckMapper;
-import com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto;
-import com.joyintech.tools.collectors.JoyinCollectors;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 中债一期、二期报送前检查
@@ -86,13 +82,13 @@ public class BeforeSubCheck extends SvrCBBaseService{
         List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
 
         // 删除检查表数据
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品终止登记.getValue(),checkdate);
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_募集总量登记.getValue(),checkdate);
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品存续期登记.getValue(),checkdate);
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品发行登记.getValue(),checkdate);
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(),checkdate);
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资管计划底层持仓信息登记.getValue(),checkdate);
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_银行月度统计表.getValue(),checkdate);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品终止登记.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_募集总量登记.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品存续期登记.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品发行登记.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资管计划底层持仓信息登记.getValue(),checkdate,null);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_银行月度统计表.getValue(),checkdate,null);
        
         //增加例外情况过滤
         List<ChbCheckRuleout> listPrdEndRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_PRD_END_SUB);
@@ -136,11 +132,11 @@ public class BeforeSubCheck extends SvrCBBaseService{
         resultList.addAll(beforeSubErrorCheck.checkProdRaiseTotalReg(checkdate,null,mapInvestTradeRuleout));
 
         //警告逻辑检查
-        resultList.addAll(checkProdEndReg(checkdate,mapPrdEndRuleout));
+        resultList.addAll(checkProdEndReg(checkdate,mapPrdEndRuleout,null));
         // resultList.addAll(checkProdRaiseTotalReg(checkdate,mapTotalRaiseRuleout));
-        resultList.addAll(checkInvestReg(checkdate,mapInvestTradeRuleout));
-        resultList.addAll(checkBotAstReg(checkdate,mapBomAstRuleout));
-        resultList.addAll(checkProdMonthReport(checkdate,mapMonthReportRuleout));
+        resultList.addAll(checkInvestReg(checkdate,mapInvestTradeRuleout,null));
+        resultList.addAll(checkBotAstReg(checkdate,mapBomAstRuleout,null));
+        resultList.addAll(checkProdMonthReport(checkdate,mapMonthReportRuleout,null));
         
         //报错检查异常数据
         int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
@@ -168,12 +164,12 @@ public class BeforeSubCheck extends SvrCBBaseService{
      * @see
      * @since 1.0
      */
-    public List<CheckReport001Dto> checkProdEndReg(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout) {
+    public List<CheckReport001Dto> checkProdEndReg(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout,List<String> keys) {
     	logger.info("终止登记检查开始");
         List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
 
         //查找募集登记检查数据
-        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectProdEndRegCheck(checkdate);
+        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectProdEndRegCheck(checkdate,keys);
         for ( ChbBeforeSubCheckDto m:checklist ) {
         	//增加例外情况过滤
         	if(mapRuleout.containsKey(m.getProdid())){
@@ -325,11 +321,11 @@ public class BeforeSubCheck extends SvrCBBaseService{
      * @see
      * @since 1.0
      */    
-    public List<CheckReport001Dto> checkInvestReg(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout) {
+    public List<CheckReport001Dto> checkInvestReg(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout,List<String> keys) {
     	logger.info("资产交易登记检查开始");
         List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
         //资产交易检查数据
-        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectInvestRegCheck(checkdate);
+        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectInvestRegCheck(checkdate,keys);
         for ( ChbBeforeSubCheckDto m:checklist ) {
         	//增加例外情况过滤
         	if(mapRuleout.containsKey(m.getProdid())){
@@ -383,12 +379,12 @@ public class BeforeSubCheck extends SvrCBBaseService{
      * @see
      * @since 1.0
      */    
-    public List<CheckReport001Dto> checkBotAstReg(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout) {
+    public List<CheckReport001Dto> checkBotAstReg(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout,List<String> checkKeys) {
     	logger.info("底层资产持仓检查开始");
         List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
 
         //查找募集登记检查数据
-        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectBotAstRegCheck(checkdate);
+        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectBotAstRegCheck(checkdate,checkKeys);
         for ( ChbBeforeSubCheckDto m:checklist ) {
         	//增加例外情况过滤
         	if(mapRuleout.containsKey(m.getAssetcode())){
@@ -443,7 +439,7 @@ public class BeforeSubCheck extends SvrCBBaseService{
      * @see
      * @since 1.0
      */    
-    public List<CheckReport001Dto> checkProdMonthReport(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout) {
+    public List<CheckReport001Dto> checkProdMonthReport(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout,List<String> keys) {
     	 logger.info("银行月度报表检查开始");
         List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
 
@@ -453,7 +449,7 @@ public class BeforeSubCheck extends SvrCBBaseService{
         calendar.setTime(checkdate);
         calendar.set(Calendar.DAY_OF_MONTH, 0);
         Date lastday = calendar.getTime();
-        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectProdMonthReportCheck(lastday);
+        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectProdMonthReportCheck(lastday,keys);
         for ( ChbBeforeSubCheckDto m:checklist ) {
             //不合格的数据加入到不合格列表
             CheckReport001Dto chbReportCheck = new CheckReport001Dto();
@@ -474,6 +470,47 @@ public class BeforeSubCheck extends SvrCBBaseService{
         logger.info("银行月度报表检查结束");
         return resultList;
         
+    }
+
+    /**
+     * 理财产品转型情况月度报表检查
+     *
+     * @param checkdate 校验日期
+     * @param mapRuleout 校验数据
+     * @return 校验结果
+     * @see
+     * @since 1.0
+     */
+    public List<CheckReport001Dto> checkProdTransMonthReport(Date checkdate,
+                                                                Map<String, List<ChbCheckRuleout>> mapRuleout, List<String> checkKeys) {
+        logger.info("理财产品转型情况月度报表检查开始");
+        List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
+        // 查找募集登记检查数据
+        // 将日期改到上个月月末
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(checkdate);
+        calendar.set(Calendar.DAY_OF_MONTH, 0);
+        Date lastday = calendar.getTime();
+        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectProdMonthReportCheck(lastday, checkKeys);
+        for (ChbBeforeSubCheckDto m : checklist) {
+            // 不合格的数据加入到不合格列表
+            CheckReport001Dto chbReportCheck = new CheckReport001Dto();
+            chbReportCheck.setCheckSeqno(IDGenerator.generate(32));
+            chbReportCheck.setRefseqno(m.getRegistseqno());
+            chbReportCheck.setRepCode(DictCodeListExt2.报表名称_理财产品转型情况月度统计表.getValue());
+            chbReportCheck.setRepName(DictCodeListExt2.报表名称_理财产品转型情况月度统计表.getCodeName());
+            chbReportCheck.setValidKey("月报期数:" + m.getTermid());
+            chbReportCheck.setCheckResult(
+                    SysDataUtil.getCodeFromDataDictByName(DictCode.检查结果, DictCodeListExt2.检查结果_存在预警信息项.getCodeName()));
+            chbReportCheck.setDataTime(checkdate);
+
+            if (m.getBankprofit1().compareTo(m.getBankprofit2()) != 0) {// 不合格
+                chbReportCheck.setWarnInfo("理财产品转型情况月度统计表与存续期登记的银行实现收益的数据不一致!");
+                resultList.add(chbReportCheck);
+            }
+        }
+        logger.info("理财产品转型情况月度报表检查结束");
+        return resultList;
     }
 
     /**

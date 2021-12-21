@@ -575,6 +575,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     收付方向_支付(DictCode.收付方向,"04","支付"),
     债项评级_债项评级低的优先质押(DictCode.债项评级,"01","债项评级低的优先质押"),
     债项评级_债项评级高的优先质押(DictCode.债项评级,"02","债项评级高的优先质押"),
+    交易类型_交易数据(DictCode.交易类型,"03","交易数据"),
     交易类型_投资指令(DictCode.交易类型,"02","投资指令"),
     交易类型_预录入(DictCode.交易类型,"01","预录入"),
     // 质押券优先级设置字典 2020-1-8 lizhi end
@@ -802,6 +803,10 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     联社机构类型_省级机构(DictCode.联社机构类型, "01", "省级机构"),
     联社机构类型_市级机构(DictCode.联社机构类型, "02", "市级机构"),
     联社机构类型_成员行社机构(DictCode.联社机构类型, "03", "成员行社机构"),
+    //add by wqg 20201021
+    行内资产四级分类_可交换债券(DictCode.行内资产四级分类,"011","可交换债券"),
+    行内资产四级分类_可转债(DictCode.行内资产四级分类,"013","可转债"),
+    行内资产四级分类_优先股(DictCode.行内资产四级分类,"023","优先股"),
 
     中债债券类型_国债_央票(DictCode.中债债券类型, "01", "国债/央票"),
     中债债券类型_次级债券(DictCode.中债债券类型, "02", "政策性金融债"),
@@ -1590,6 +1595,18 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     估值市价_外汇交易中心(DictCode.估值市价, "12", "外汇交易中心"),
     录入方式_模型生成(DictCode.录入方式,"07","模型"),
 
+    //add by chenjiaxing 20211015 start
+    共通业务类型_券商流水核对(DictCode.共通业务类型,"STL07","券商流水核对"),
+    对账状态结果_不一致(DictCode.对账状态结果,"0","不一致"),
+    对账状态结果_一致(DictCode.对账状态结果,"1","一致"),
+    对账状态结果_待处理(DictCode.对账状态结果,"2","待处理"),
+    对账状态结果_手工完成(DictCode.对账状态结果,"3","手工完成"),
+    //add by chenjiaxing 20211015 end
+	
+	下行交易匹配状态_未匹配(DictCode.下行交易匹配状态,"0","未匹配"),
+    下行交易匹配状态_部分匹配(DictCode.下行交易匹配状态,"1","部分匹配"),
+    下行交易匹配状态_匹配完成(DictCode.下行交易匹配状态,"2","匹配完成"),
+
     /**
      * 头寸使用流程节点
      */
@@ -1631,6 +1648,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     业务动作_交收失败(DictCode.业务动作,"10","交收失败"),
     业务动作_指令日终关闭(DictCode.业务动作,"13","指令日终关闭"),
     业务动作_指令手动关闭(DictCode.业务动作,"14","指令手动关闭"),
+    业务动作_指令自动完成(DictCode.业务动作,"15","指令自动完成"),
 
 
 

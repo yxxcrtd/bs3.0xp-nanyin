@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * 可转债委托dto 〈功能详细描述〉
- * 
+ *
  * @author gejiaao
  * @version 1.0 2019年10月24日
  * @see EtrConBondDto
@@ -30,17 +30,17 @@ import java.util.List;
  */
 public class EtrConBondDto extends EtrEntrust {
 
-     
+
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = -5106366412674252223L;
-    
+
     /**
      * 预计委托可用现金
      */
     private BigDecimal expectAvailableCash;
-    
+
     /**
      * 文件上传dto
      */
@@ -49,28 +49,28 @@ public class EtrConBondDto extends EtrEntrust {
      * 市场代码
      */
     private String finprodMarketId;
-    
+
     /**
      * 投资人员信息DTO
      */
     @Valid
     private BussEtrInvestPersonInfoDto etrInvestPersonInfo;
-   
+
     /**
      * 接收状态
      */
     private String recStatus;
-    
+
     /**
      * 指定交易员
      */
     private String trader;
-    
+
     /**
      * 委托关闭方式
      */
     private String CloseWay;
-    
+
     /**
      * 选中的数据
      */
@@ -84,7 +84,7 @@ public class EtrConBondDto extends EtrEntrust {
      * 组合名称
      */
     private String portfolioName;
-    
+
 
     /**
      * 金融产品全称
@@ -96,7 +96,7 @@ public class EtrConBondDto extends EtrEntrust {
      * 金融产品类型（投管分类），债券、理财产品、基金、理财产品模板、理财产品分层
      */
     private String finprodType2;
-    
+
     /**
      * 风险试算实体类
      */
@@ -149,7 +149,7 @@ public class EtrConBondDto extends EtrEntrust {
     public List<SysUploadFileInfo> getFileArray() {
         return fileArray;
     }
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -157,7 +157,7 @@ public class EtrConBondDto extends EtrEntrust {
     public void setFileArray(List<SysUploadFileInfo> fileArray) {
         this.fileArray = fileArray;
     }
-    
+
     /**
      * 获取 finprodMarketId
      * @return finprodMarketId.
@@ -165,7 +165,7 @@ public class EtrConBondDto extends EtrEntrust {
     public String getFinprodMarketId() {
         return finprodMarketId;
     }
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -173,7 +173,7 @@ public class EtrConBondDto extends EtrEntrust {
     public void setFinprodMarketId(String finprodMarketId) {
         this.finprodMarketId = finprodMarketId;
     }
-    
+
     /**
      * 获取 etrInvestPersonInfo
      * @return etrInvestPersonInfo.
@@ -181,7 +181,7 @@ public class EtrConBondDto extends EtrEntrust {
     public BussEtrInvestPersonInfoDto getEtrInvestPersonInfo() {
         return etrInvestPersonInfo;
     }
-    
+
     /**
      * 设置 etrInvestPersonInfo
      * @param etrInvestPersonInfo etrInvestPersonInfo
@@ -189,7 +189,7 @@ public class EtrConBondDto extends EtrEntrust {
     public void setEtrInvestPersonInfo(BussEtrInvestPersonInfoDto etrInvestPersonInfo) {
         this.etrInvestPersonInfo = etrInvestPersonInfo;
     }
-    
+
     /**
      * 获取 recStatus
      * @return recStatus.
@@ -197,7 +197,7 @@ public class EtrConBondDto extends EtrEntrust {
     public String getRecStatus() {
         return recStatus;
     }
-    
+
     /**
      * 设置 recStatus
      * @param recStatus recStatus
@@ -205,7 +205,7 @@ public class EtrConBondDto extends EtrEntrust {
     public void setRecStatus(String recStatus) {
         this.recStatus = recStatus;
     }
-    
+
     /**
      * 获取 trader
      * @return trader.
@@ -213,7 +213,7 @@ public class EtrConBondDto extends EtrEntrust {
     public String getTrader() {
         return trader;
     }
-    
+
     /**
      * 设置 trader
      * @param trader trader
@@ -221,7 +221,7 @@ public class EtrConBondDto extends EtrEntrust {
     public void setTrader(String trader) {
         this.trader = trader;
     }
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -229,7 +229,7 @@ public class EtrConBondDto extends EtrEntrust {
     public String getCloseWay() {
         return CloseWay;
     }
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -237,7 +237,7 @@ public class EtrConBondDto extends EtrEntrust {
     public void setCloseWay(String closeWay) {
         CloseWay = closeWay;
     }
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -245,7 +245,7 @@ public class EtrConBondDto extends EtrEntrust {
     public List<EtrConBondDto> getSelectedItem() {
         return selectedItem;
     }
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -253,7 +253,7 @@ public class EtrConBondDto extends EtrEntrust {
     public void setSelectedItem(List<EtrConBondDto> selectedItem) {
         this.selectedItem = selectedItem;
     }
-    
+
     /**
      * 获取 operateType
      * @return operateType.
@@ -261,7 +261,7 @@ public class EtrConBondDto extends EtrEntrust {
     public String getOperateType() {
         return operateType;
     }
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -269,7 +269,7 @@ public class EtrConBondDto extends EtrEntrust {
     public void setOperateType(String operateType) {
         this.operateType = operateType;
     }
-    
+
     /**
      * 获取 portfolioName
      * @return portfolioName.
@@ -277,7 +277,7 @@ public class EtrConBondDto extends EtrEntrust {
     public String getPortfolioName() {
         return portfolioName;
     }
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -285,7 +285,7 @@ public class EtrConBondDto extends EtrEntrust {
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
-    
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -293,7 +293,7 @@ public class EtrConBondDto extends EtrEntrust {
     public String getFinprodName() {
         return finprodName;
     }
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -301,7 +301,7 @@ public class EtrConBondDto extends EtrEntrust {
     public void setFinprodName(String finprodName) {
         this.finprodName = finprodName;
     }
-    
+
     /**
      * 获取 finprodType2
      * @return finprodType2.
@@ -309,7 +309,7 @@ public class EtrConBondDto extends EtrEntrust {
     public String getFinprodType2() {
         return finprodType2;
     }
-    
+
     /**
      * 设置 finprodType2
      * @param finprodType2 finprodType2
@@ -427,5 +427,17 @@ public class EtrConBondDto extends EtrEntrust {
 
     public void setChannelAvailableCash(BigDecimal channelAvailableCash) {
         this.channelAvailableCash = channelAvailableCash;
+    }
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
     }
 }

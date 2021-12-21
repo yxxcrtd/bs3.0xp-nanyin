@@ -259,4 +259,10 @@ public interface IAssetInfo extends IBusiness {
      */
     String getCustomerObjType();
     // add by zhangrui1 增加资产属性:机构主体类型 end
+
+    /**
+     * 取得 行内三级类型
+     * @return 行内三级类型
+     */
+    String getType11();
 }

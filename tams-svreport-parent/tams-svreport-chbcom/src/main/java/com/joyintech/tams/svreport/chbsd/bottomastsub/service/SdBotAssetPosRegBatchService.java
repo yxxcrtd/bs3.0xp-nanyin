@@ -66,7 +66,7 @@ public class SdBotAssetPosRegBatchService{
 
 		// 调用check逻辑
 		logger.debug("【底层资产持仓信息登记】数据检查开始------检查前数据个数：" + list.size());
-		List<CheckReport001Dto> resultlist = chbBotAstPositionRegist001Service.check(null);
+		List<CheckReport001Dto> resultlist = chbBotAstPositionRegist001Service.check(null,null);
 		Map<String,CheckReport001Dto> checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1, key2)->key1));
 		for (int i = list.size() - 1; i >= 0; i--){
 			if (checkmap.containsKey(list.get(i).getRegistSeqno())

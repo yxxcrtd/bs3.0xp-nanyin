@@ -63,14 +63,14 @@ public class FinStageManagementValidator implements BeanValidator{
                 if(DateUtil.compareDate(item.getMdate(),vmdto.getVdate()) <= 0){
                     resultList.add(new ValidMessage("子计划期次信息的到期日必须大于母计划的起息日！"));
                 }
-                // add by wanshiwei ZGZGST-2973 子计划期次信息的到期日必须小于母计划的到期日 20210928 start
-                if(DateUtil.compareDate(item.getMdate(),vmdto.getMdate()) >= 0){
+                // add by shulifu GZYHTZJY-306 子计划期次信息的到期日必须小于母计划的到期日  start
+                if(DateUtil.compareDate(item.getMdate(),vmdto.getMdate()) > 0){
                     resultList.add(new ValidMessage("子计划期次信息的到期日必须小于母计划的到期日！"));
                 }
-                // add by wanshiwei ZGZGST-2973 计划期次信息的到期日必须小于母计划的到期日 20210928 end
-                if(DateUtil.compareDate(item.getMdate(),item.getVdate()) <= 0){
-                    resultList.add(new ValidMessage("到期日必须大于起息日！"));
+                if(DateUtil.compareDate(item.getMdate(),item.getVdate()) < 0){
+                    resultList.add(new ValidMessage("起息日必须小于到期日！"));
                 }
+                // add by shulifu GZYHTZJY-306 计划期次信息的到期日必须小于母计划的到期日  end
          }
             /*增加校验 计划类利率型期次管理子计划期次信息的起息日、到期日都必须大于母计划的起息日 add by yujiaping 2020-11-10 end*/
             if(null==item.getIssueAmt()){

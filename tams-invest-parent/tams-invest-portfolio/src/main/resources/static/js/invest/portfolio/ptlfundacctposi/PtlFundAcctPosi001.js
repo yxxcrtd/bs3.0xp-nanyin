@@ -19,7 +19,9 @@ $(function() {
             accountType : $('#accountType').val(),
 			// add by wangyang1 【吉林银行】 增加 产品经理  2019年9月29日 start
             prodManager:$('#prodManager').val(),//组合代码
-			// add by wangyang1 【吉林银行】 增加 产品经理  end  
+			// add by wangyang1 【吉林银行】 增加 产品经理  end
+            trusteeId:$('#trusteeId').val(),
+            quota:$('#quota').val(),
             index:'0'
         }
     };
@@ -55,8 +57,11 @@ $(function() {
             ,{field:'acctName', title: 'PtlFundAcctPosi001.acctName', width:200}
             ,{field:'acctType', visible:false}
             ,{field:'acctTypeStr', sortField:'acctType', title: 'PtlFundAcctPosi001.acctType', width:200}
+            ,{field:'trusteeId', title: 'PtlFundAcctPosi001.trusteeId',width:140}
             ,{field:'amount', title: 'PtlFundAcctPosi001.amount',type:'money',width:140}
-            ,{field:'amount1', title: 'PtlFundAcctPosi001.amount1',type:'money',width:140}
+            ,{field:'amount1', title: 'PtlFundAcctPosi001.amount1',type:'money',width:140,visible:false}
+            ,{field:'quotaIn', title: 'PtlFundAcctPosi001.quotaIn',type:'money',width:140}
+            ,{field:'quotaOut', title: 'PtlFundAcctPosi001.quotaOut',type:'money',width:140}
             ,{field:'ccyStr', title: 'PtlFundAcctPosi001.ccy',sortField: 'ccy'}
             ,{field:'ccy', visible:false}
             ,{field:'hodingType', visible:false}

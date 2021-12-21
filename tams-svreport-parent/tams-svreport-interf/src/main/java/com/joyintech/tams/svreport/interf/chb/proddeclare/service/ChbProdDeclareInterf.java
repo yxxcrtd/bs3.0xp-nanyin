@@ -1,12 +1,16 @@
 package com.joyintech.tams.svreport.interf.chb.proddeclare.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -22,14 +26,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
-import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
-import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @Description 产品申报要素接入
@@ -40,7 +41,7 @@ import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoD
 @SuppressWarnings("rawtypes")
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ChbProdDeclareInterf extends BaseService{
+public class ChbProdDeclareInterf extends BaseInterfService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -63,6 +64,16 @@ public class ChbProdDeclareInterf extends BaseService{
 	 * @version 1.0 2019年10月09日
 	 */
 	public void generatePrdDeclareData(Date batchDate){
+		// 查询数据
+		List<ChbPrdDeclareInfoDto> prodidlist = getBusEntity(null, "D");
+		// 入库
+		if(!StringUtil.isEmptyList(prodidlist)){
+			insertDataMerge(prodidlist);
+		}
+	}
+
+	@Override
+	public List<ChbPrdDeclareInfoDto> getBusEntity(List<String> prodIdlist,String source) {
 		//切换数据源查询信息
 		ChbProdDeclareInterf chbPrdOpenschInterf2 =  SpringContextUtil.getBean(ChbProdDeclareInterf.class);
 		logger.debug("读取申报要素信息----开始-----:" +  df.format(new Date()));
@@ -75,8 +86,9 @@ public class ChbProdDeclareInterf extends BaseService{
 				if(single.getUpdateTime().compareTo(lastUpdatetime) > 0){
 					lastUpdatetime = single.getUpdateTime();
 				}
-				//DB接入 塞16
-				single.setDatasource("16");
+				if("D".equals(source)){
+					single.setDatasource("16");
+				}
 				// 中债对募集方式进行映射
 				if("1".equals(single.getRaiseType())) {
 					single.setRaiseType("01");
@@ -92,16 +104,25 @@ public class ChbProdDeclareInterf extends BaseService{
 			if(lastUpdatetime!=null){
 				ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品申报信息接口.getInterId(), lastUpdatetime);;
 			}
-			insertDataMerge(prodidlist);
 		}
-		
+		return prodidlist;
+	}
+
+	@Override
+	public Class getEntityClass() {
+		return ChbPrdDeclareInfoDto.class;
+	}
+
+	@Override
+	public String getFileName() {
+		return InterfDefine.产品申报信息接口数据.getCode();
 	}
 
 	private void insertDataMerge(List<ChbPrdDeclareInfoDto> assetInfoList) {
 		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
 		try {
 			int count = 0;
-			logger.debug("产品要素插入开始--------------" + new Date());
+			logger.debug("产品申报信息插入开始--------------" + new Date());
 			ChbPrdDeclareInfoMapper batchMapper = session.getMapper(ChbPrdDeclareInfoMapper.class);
 			int batchCount = reportInsertLongCount == 0 ? 50 : reportInsertLongCount;// 每批commit的个数
 			int batchLastIndex = batchCount;// 每批最后一个的下标
@@ -129,7 +150,7 @@ public class ChbProdDeclareInterf extends BaseService{
 		} finally {
 			session.close();
 		}
-		logger.debug("产品要素插入结束--------------" + new Date());
+		logger.debug("产品申报信息插入结束--------------" + new Date());
 	}
 	
 	/**

@@ -155,7 +155,8 @@ $(function () {
     var curSelectedIndex = 0;
     var xAxisData = ["产品申\n报登记", "产品发\n行登记","产品募集期\n总量登记",
                      "产品存续\n期登记", "产品终\n止登记", "资产要\n素登记", "交易信\n息登记", "资产估\n值登记",
-                     "资管计划底\n层持仓登记",  "银行月度\n统计表登记","投资者持有\n信息登记","投资者\n信息登记","投资者明细\n信息登记"];
+                     "资管计划底\n层持仓登记",  "银行月度\n统计表登记" ,"销售结算资金\n交易信息表","理财业务销售\n数据月度统计表","投资者持有\n信息登记","投资者\n信息登记","投资者明细\n信息登记"
+                    ];
     var option = {
         tooltip: {
             trigger: 'item',
@@ -239,7 +240,7 @@ $(function () {
                 data: [{value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}, {value: 0,num: 0},
                        {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0},
                        {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0},
-                       {value: 0, num: 0}/*   {value: 0, num: 0}, {value: 0, num: 0}*/
+                       {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}
                 ]
             }
         ]
@@ -252,7 +253,7 @@ $(function () {
             }
         },
         xAxis: [{
-            data: ['','','','','','','','','','','',''],
+            data: ['','','','','','','','','','','','','','',''],
             axisLabel: {
                 interval: 0,
                 textStyle: {
@@ -327,7 +328,7 @@ $(function () {
     var curSelectedIndexPbc = 0;
     var xAxisDataPbc = ["PPB1资产池\n基本信息", "PIB1产品\n基本信息","PIB2产品\n起始募集信息",
                      "PIE1产品\n终止信息",  "PPE1资产池\n终止信息", "PCD1产品资金\n募集信息", "PVD1资产\n负债信息",
-                    "MI统计\n模板数据", "PIB产品\n基本信息", "PIE产品\n终止信息"];
+                    "MI统计\n模板数据", "PIB产品\n基本信息", "PIE产品\n终止信息" ];
     var optionpbc = {
         tooltip: {
             trigger: 'item',

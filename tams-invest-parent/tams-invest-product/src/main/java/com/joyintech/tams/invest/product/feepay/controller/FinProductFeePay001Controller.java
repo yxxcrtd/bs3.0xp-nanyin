@@ -17,11 +17,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 
-import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.dao.WflTrdFinProductDealTotalMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.dto.FinFloatMgtExpQuotation001Dto;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -46,9 +48,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.MstFeeinfoMapper;
 import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.entity.MstFeeinfo;
-import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -103,6 +102,10 @@ public class FinProductFeePay001Controller extends BaseController {
     private LeaveMarkProcessService leaveMarkProcessService;
     @Autowired
     private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
+
+    @Autowired
+    private WflTrdFinProductDealTotalMapper wflTrdFinProductDealTotalMapper;
+
     @Autowired
     private MstFeeinfoMapper mstFeeinfoMapper;
 
@@ -156,7 +159,27 @@ public class FinProductFeePay001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("selectForPage")
     public Page<FinProductFeePay001Dto> selectForPage() {
-        return finProductFeePay001Service.selectForPage(RequestUtil.getPageParam());
+        Page<FinProductFeePay001Dto> page = finProductFeePay001Service.selectForPage(RequestUtil.getPageParam());
+        // TISHKS-9:产品费用支付由于组合代码可能未关联费用,统一对流程中的数据进行特殊处理 fuyongsheng 20211116 edit start
+        if(null != page && CollectionUtils.isNotEmpty(page.getRoot())){
+            for(FinProductFeePay001Dto dto : page.getRoot()){
+                WflTrdFinProductDealTotalKey key = new WflTrdFinProductDealTotalKey();
+                key.setTotleTradeId(dto.getTradeId());
+                key.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+                WflTrdFinProductDealTotal wflDealTotal = wflTrdFinProductDealTotalMapper.selectByPrimaryKey(key);
+                if(wflDealTotal != null){
+                    ProcessMark pro = finProductFeePay002Service.getBusinessInfo(wflDealTotal.getWorkflowId());
+                    if (pro != null) {
+                        FinProductFeePay002Dto entity = (FinProductFeePay002Dto)JsonUtils.json2Object(
+                                pro.getBusinessData(), FinProductFeePay002Dto.class);
+                        dto.setFeeType1(entity.getFeeType());
+                        dto.setFeeName(entity.getFeeName());
+                    }
+                }
+            }
+        }
+        // TISHKS-9:产品费用支付由于组合代码可能未关联费用,统一对流程中的数据进行特殊处理 fuyongsheng 20211116 edit end
+        return page;
     }
 
     /**

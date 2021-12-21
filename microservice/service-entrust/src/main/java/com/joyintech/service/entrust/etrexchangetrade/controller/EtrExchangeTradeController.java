@@ -145,6 +145,17 @@ public class EtrExchangeTradeController {
         return etrExchangeTradeService.getSecAcctId(page, length, param);
     }
 
+
+
+    /**
+     * 质押券代码下拉框查询
+     */
+    @RequestMapping("selectZyq/{page}/{length}")
+    public Page<SelectOptionDto> selectZyq(@RequestBody Map<String, Object> param,
+                                              @PathVariable("page") int page,
+                                              @PathVariable("length") int length) {
+        return etrExchangeTradeService.selectZyq(page, length, param);
+    }
     /**
      * 查询债券利率重置信息
      *
@@ -254,6 +265,15 @@ public class EtrExchangeTradeController {
     @RequestMapping("getInvAim")
     public String getInvAim() {
        return etrExchangeTradeService.getInvAim();
+    }
+
+    /**
+     * 获取投资目的
+     * @return
+     */
+    @RequestMapping("linkInvAim")
+    public String linkInvAim(@RequestBody Map<String, Object> param) {
+        return etrExchangeTradeService.linkInvAim(param);
     }
     
     /**
@@ -480,4 +500,20 @@ public class EtrExchangeTradeController {
         return etrExchangeTradeService.calcDeviationDegree(param);
     }
     //add by chenjiaxing 20210907 债券竞价交易添加偏离度展示 end
+
+    // add by etliu 20211207 start
+    // 交易所债券非交易类业务迁移
+    /**
+     *
+     * @Description //查询行权回售数据
+     * @Param [map]
+     * @return 行权回售数据
+     * @version 1.0
+     * @see
+     **/
+    @PostMapping("selectFinExercisePlanData")
+    public List<FinExercisePlan> selectFinExercisePlanData(@RequestBody Map<String, Object> map){
+        return etrExchangeTradeService.selectFinExercisePlanData(map);
+    }
+    // add by etliu 20211207 end
 }

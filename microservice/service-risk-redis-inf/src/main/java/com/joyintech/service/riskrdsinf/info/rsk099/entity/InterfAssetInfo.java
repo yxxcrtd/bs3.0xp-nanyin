@@ -638,4 +638,9 @@ public class InterfAssetInfo extends BaseEntity implements IAssetInfo {
         return null;
     }
     // add by zhangrui1 增加资产属性:机构主体类型 end
+
+    @Override
+    public String getType11() {
+        return null;
+    }
 }

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +118,10 @@ public class FinTenderBondTargetAsset002Controller extends BaseController{
                 finprodId);
             //commonBusinessService.setTradeMarketId(finBondTargetAssetDto,model);
             model.addAttribute("entity", finBondTargetAssetDto);
+            // 判断是否关联二级债券
+            if(finTenderBondTargetAssetService.selectCountByOFinprodId(finprodId)>0){
+                model.addAttribute("isRelatedSecondBond", BussinessDictCodeList.是否_是.getValue());
+            }
         }//来自于代办
         else if(!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)){
             //根据工作流与留痕处理提供的共通方法获取业务实体

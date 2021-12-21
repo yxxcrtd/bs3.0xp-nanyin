@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * 可转债委托dto 〈功能详细描述〉
- * 
+ *
  * @author gejiaao
  * @version 1.0 2019年10月23日
  * @see EtrConBondDto
@@ -44,24 +44,24 @@ import java.util.List;
  */
 @PageId("EtrConBond002")
 @ValidLogic(targetClass = EtrConBondDtoValidator.class, groups = {ValidateGroupEdit.class,
-    ValidateGroupDelete.class})
+        ValidateGroupDelete.class})
 public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
 
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = -7300212795949457812L;
-    
+
     /**
      * 按钮id
      */
     private String elementId;
-    
+
     /**
      * 预计委托可用现金
      */
     private BigDecimal expectAvailableCash;
-    
+
     /**
      * 文件上传dto
      */
@@ -70,13 +70,13 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
      * 市场代码
      */
     private String finprodMarketId;
-    
+
     //add by gaopeng 20200102 start
     /**
      * 序号
      */
     private String indexId;
-    
+
     /**
      * 证券托管户名称
      */
@@ -92,22 +92,22 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
      */
     @Valid
     private BussEtrInvestPersonInfoDto etrInvestPersonInfo;
-   
+
     /**
      * 接收状态
      */
     private String recStatus;
-    
-   /**
-    * 中标状态
-    */
+
+    /**
+     * 中标状态
+     */
     private String isWin;
-    
+
     /**
      * 指定交易员
      */
     private String trader;
-    
+
     /**
      * 委托关闭方式
      */
@@ -116,12 +116,12 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
      * 是否多对多导入指令
      */
     private boolean importFlow;
-    
+
     /**
      * 选中的数据
      */
     private transient List<EtrConBondDto> selectedItem;
-   
+
     /**
      * 操作类型
      */
@@ -131,7 +131,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
      * 组合名称
      */
     private String portfolioName;
-    
+
 
     /**
      * 金融产品全称
@@ -147,12 +147,12 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
      * 缴款方式
      */
     private String etrPayType;
-    
+
     /**
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-    
+
     /**
      * 资产起息日
      */
@@ -167,12 +167,12 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
      * 申购日期
      */
     private Date purchDate;
-    
+
     /**
      * 申购日期Text
      */
     private String purchDateText;
-    
+
     /**
      * 申购方式
      */
@@ -218,8 +218,8 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
      * 债券一级类型
      */
     private String assetType1;
-    
-    
+
+
 
 
     /**
@@ -229,7 +229,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public List<SysUploadFileInfo> getFileArray() {
         return fileArray;
     }
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -237,7 +237,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setFileArray(List<SysUploadFileInfo> fileArray) {
         this.fileArray = fileArray;
     }
-    
+
     /**
      * 获取 finprodMarketId
      * @return finprodMarketId.
@@ -246,7 +246,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getFinprodMarketId() {
         return finprodMarketId;
     }
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -254,7 +254,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setFinprodMarketId(String finprodMarketId) {
         this.finprodMarketId = finprodMarketId;
     }
-    
+
     /**
      * 获取 etrInvestPersonInfo
      * @return etrInvestPersonInfo.
@@ -262,7 +262,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public BussEtrInvestPersonInfoDto getEtrInvestPersonInfo() {
         return etrInvestPersonInfo;
     }
-    
+
     /**
      * 设置 etrInvestPersonInfo
      * @param etrInvestPersonInfo etrInvestPersonInfo
@@ -270,7 +270,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setEtrInvestPersonInfo(BussEtrInvestPersonInfoDto etrInvestPersonInfo) {
         this.etrInvestPersonInfo = etrInvestPersonInfo;
     }
-    
+
     /**
      * 获取 recStatus
      * @return recStatus.
@@ -278,7 +278,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getRecStatus() {
         return recStatus;
     }
-    
+
     /**
      * 设置 recStatus
      * @param recStatus recStatus
@@ -286,7 +286,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setRecStatus(String recStatus) {
         this.recStatus = recStatus;
     }
-    
+
     /**
      * 获取 trader
      * @return trader.
@@ -294,7 +294,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getTrader() {
         return trader;
     }
-    
+
     /**
      * 设置 trader
      * @param trader trader
@@ -302,7 +302,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setTrader(String trader) {
         this.trader = trader;
     }
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -310,7 +310,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getCloseWay() {
         return CloseWay;
     }
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -318,7 +318,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setCloseWay(String closeWay) {
         CloseWay = closeWay;
     }
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -326,7 +326,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public List<EtrConBondDto> getSelectedItem() {
         return selectedItem;
     }
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -334,7 +334,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setSelectedItem(List<EtrConBondDto> selectedItem) {
         this.selectedItem = selectedItem;
     }
-    
+
     /**
      * 获取 operateType
      * @return operateType.
@@ -342,7 +342,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getOperateType() {
         return operateType;
     }
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -350,7 +350,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setOperateType(String operateType) {
         this.operateType = operateType;
     }
-    
+
     /**
      * 获取 portfolioName
      * @return portfolioName.
@@ -358,7 +358,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getPortfolioName() {
         return portfolioName;
     }
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -366,7 +366,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
-    
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -374,7 +374,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getFinprodName() {
         return finprodName;
     }
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -382,7 +382,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setFinprodName(String finprodName) {
         this.finprodName = finprodName;
     }
-    
+
     /**
      * 获取 finprodType2
      * @return finprodType2.
@@ -390,7 +390,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getFinprodType2() {
         return finprodType2;
     }
-    
+
     /**
      * 设置 finprodType2
      * @param finprodType2 finprodType2
@@ -404,10 +404,10 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
      */
     @Override
     @NotEmpty(fieldName = "EtrConBond001.purchDate", groups = {ValidateGroupEdit.class})
-     public Date getEntrustDate() {
+    public Date getEntrustDate() {
         return super.getEntrustDate();
     }
-    
+
     /**
      * 获取 etrPayType
      * @return etrPayType.
@@ -478,7 +478,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setFinmdate(Date finmdate) {
         this.finmdate = finmdate;
     }
-    
+
     /**
      * 取得 委托代码
      * @return 委托代码
@@ -489,7 +489,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
         return super.getEntrustId();
     }
     /**
-     * 
+     *
      * 取得组合代码
      */
     @Override
@@ -497,7 +497,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getPortfolioId() {
         return super.getPortfolioId();
     }
-    
+
     /**
      * 取得 委托开始日
      * @return 委托开始日
@@ -506,7 +506,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public Date getVdate() {
         return super.getVdate();
     }
-    
+
     /**
      * 取得 委托结束日
      * @return 委托结束日
@@ -515,7 +515,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public Date getMdate() {
         return super.getMdate();
     }
-    
+
     /**
      * 取得 币种
      * @return 币种
@@ -525,7 +525,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getCcy() {
         return super.getCcy();
     }
-    
+
     /**
      * 取得 投资目的
      * @return 投资目的
@@ -544,9 +544,9 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getTradeMarket() {
         return super.getTradeMarket();
     }
-   
+
     /**
-     * 
+     *
      * 设置委托状态数据字典
      * <功能详细描述>
      * @return
@@ -557,7 +557,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.委托状态, super.getEntrustStatus());
     }
     /**
-     * 
+     *
      * 设置币种数据字典
      * <功能详细描述>
      * @return
@@ -569,7 +569,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
 
     }
     /**
-     * 
+     *
      * 设置交易场所数据字典
      * <功能详细描述>
      * @return
@@ -580,7 +580,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所, super.getTradeMarket());
     }
     /**
-     * 
+     *
      * 设置交易平台数据字典
      * <功能详细描述>
      * @return
@@ -590,10 +590,10 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getBusTradePlat(){
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.交易平台, super.getTradePlat());
     }
-    
+
     /**
      * 设置中标状态数据字典
-     * 
+     *
      * @return
      * @see
      * @since 1.0
@@ -604,7 +604,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
         }
         return null;
     }
-    
+
     /**
      * 获取 isWin
      * @return isWin.
@@ -612,7 +612,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getIsWin() {
         return isWin;
     }
-    
+
     /**
      * 设置 isWin
      * @param isWin isWin
@@ -620,7 +620,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setIsWin(String isWin) {
         this.isWin = isWin;
     }
-    
+
     /**
      * 缴款方式数据字典
      * <一句话功能简述>
@@ -654,7 +654,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setPurchDate(Date purchDate) {
         this.purchDate = purchDate;
     }
-   /* @NotEmpty(fieldName = "EtrConBond001.purchModle", groups = {ValidateGroupEdit.class})*/
+    /* @NotEmpty(fieldName = "EtrConBond001.purchModle", groups = {ValidateGroupEdit.class})*/
     public String getPurchModle() {
         return purchModle;
     }
@@ -804,13 +804,13 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
 
     /**
      * 获取 tradeMarketName
-     * 
+     *
      * @return tradeMarketName.
      */
     public String getTradeMarketName() {
         return SysDataUtil.getNameFromDataDict(DictCode.交易场所, super.getTradeMarket());
     }
-    
+
     /**
      * 获取 投资目的名称
      *
@@ -819,7 +819,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getInvAimName() {
         return SysDataUtil.getNameFromDataDict(DictCode.投资目的, getInvAim());
     }
-    
+
     /**
      * 获取 币种名称
      *
@@ -828,7 +828,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getCcyName() {
         return SysDataUtil.getNameFromDataDict(DictCode.币种, getCcy());
     }
-    
+
     /**
      * 获取 申购方式名称
      *
@@ -837,7 +837,7 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public String getPurchModleName() {
         return SysDataUtil.getNameFromDataDict(DictCode.申购方式, getPurchModle());
     }
-    
+
     /**
      * 获取 申购类型名称
      *
@@ -864,5 +864,16 @@ public class EtrConBondDto extends EtrEntrust implements ProcessEntity {
     public void setImportFlow(boolean importFlow) {
         this.importFlow = importFlow;
     }
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
 
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
 }

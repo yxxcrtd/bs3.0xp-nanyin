@@ -86,6 +86,10 @@
                 });
             }
         }
+        if(!$('#invAim').val()){
+            Joyin.error("请输入投资目的");
+            return;
+        }
         // if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
         //     if(object.businessModel=="Y1"){
         //         object.invAim = 'AC';
@@ -285,7 +289,7 @@
             if(finprodId){
                 var data = $('#finprodId').select2('data')[0].object;
                 $('#finprodIdhid').val(data.finprodId).trigger('change');
-                $('#finprodName').val(data.finprodId).trigger('change');
+                $('#finprodName').val($('#finprodId').val()).trigger('change');
                 $('#calendarId').val(data.calendarId).trigger('change');
                 $('#finvdate').val(new Date(data.finvdate)).trigger('change');
                 $('#finmdate').val(new Date(data.finmdate)).trigger('change');

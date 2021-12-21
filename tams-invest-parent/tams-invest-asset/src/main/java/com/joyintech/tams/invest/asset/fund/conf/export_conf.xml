@@ -14,7 +14,7 @@
             <Cell order="10" name="基金管理人">manager</Cell>
             <Cell order="11" name="申购确认速度">purSpeed</Cell>
             <Cell order="12" name="赎回确认速度">redSpeed</Cell>
-            <Cell order="13" name="允许的分红方式">divideMethodStr</Cell>
+            <Cell order="13" name="分红方式">divideMethodStr</Cell>
             <Cell order="14" name="分红频率">carryoverFreqStr</Cell>
             <Cell order="15" name="币种">ccyStr</Cell>
             <Cell order="16" name="成立日期">vdateStr</Cell>

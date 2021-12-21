@@ -168,11 +168,21 @@
                     cancelCheck(exceptionArr);
             });
         }else{
-            confirmMessage = JoyinUtil.getMessage("COMMON_C_0001","提交");
-            //正常提交
-            Joyin.confirm(confirmMessage,function(){
-                finalSubmit(object);
-            });
+            if(item == "04") {
+                Joyin.confirm(JoyinUtil.getMessage("MANUAL_SETTLE_005"), function () {
+                    confirmMessage = JoyinUtil.getMessage("COMMON_C_0001","提交");
+                    //正常提交
+                    Joyin.confirm(confirmMessage,function(){
+                        finalSubmit(object);
+                    });
+                });
+            } else {
+                confirmMessage = JoyinUtil.getMessage("COMMON_C_0001","提交");
+                //正常提交
+                Joyin.confirm(confirmMessage,function(){
+                    finalSubmit(object);
+                });
+            }
         }
     }
 

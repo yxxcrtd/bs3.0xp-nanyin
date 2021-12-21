@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.entrust.etrconbond.dto.EtrConBondDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
 import com.joyintech.tams.invest.entrust.etrfund.dto.EtrFundDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo002Dto;
+import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtribBondInfo003Dto;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrIbRepoinfo002Dto;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.invest.entrust.etrlendspecinfo.dto.EtrLendSpecInfoDto;
@@ -728,13 +729,21 @@ public class EtrCommonService extends BaseService<ITableRow> {
             // 指令关闭
             CreditLinesInputDto creditLinesInputDto = new CreditLinesInputDto();
             creditLinesInputDto.setTradeId(((EtrEntrust) object).getEntrustId());
+            if(StringUtil.isEmpty(creditLinesInputDto.getTradeId()) && object instanceof EtribBondInfo003Dto)
+                creditLinesInputDto.setTradeId(((EtribBondInfo003Dto)object).getTotalEtrustId());
             creditLinesInputDto.setTradeStatus(status);
             inputDtoList.add(creditLinesInputDto);
         }else {
             CreditLinesInputDto creditLinesInputDto = generateInputDto(object,status,method);
             if (creditLinesInputDto != null){
                 creditLinesInputDto.setRownum(rownum);
-                inputDtoList.add(creditLinesInputDto);
+                if (!StringUtil.isEmptyList(creditLinesInputDto.getInputDtoList())){
+                    inputDtoList.addAll(creditLinesInputDto.getInputDtoList());
+                }else {
+                    creditLinesInputDto.setRownum(rownum);
+                    inputDtoList.add(creditLinesInputDto);
+                }
+
             }
         }
     }
@@ -817,6 +826,40 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 }
                 //界面上的券面总额单位是万元，换算为元
                 inputDto.setEntrustNum(inputDto.getEntrustNum().multiply(new BigDecimal(10000)));
+                creditLinesInputDto.setTradeAmt(inputDto.getEntrustNum());
+                if (inputDto.getEntrustNum() != null){
+                    creditLinesInputDto.setShareAmt(inputDto.getEntrustNum().divide(new BigDecimal(100), RoundingMode.HALF_UP));
+                }
+                //最新面值
+                BigDecimal newFaceValue = creditLinesDealsMapper.getFaceValue(creditLinesInputDto);
+                if (newFaceValue == null){
+                    newFaceValue = new BigDecimal(100);
+                }
+                if (creditLinesInputDto.getShareAmt() != null) {
+                    creditLinesInputDto.setTradeAmt(newFaceValue.multiply(creditLinesInputDto.getShareAmt()));
+                }else if (creditLinesInputDto.getTradeAmt() != null){
+                    creditLinesInputDto.setTradeAmt(newFaceValue.multiply(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),100,2)));
+                }
+            }
+        }
+        if (object instanceof EtribBondInfo003Dto){
+            EtribBondInfo003Dto pageInputDto = (EtribBondInfo003Dto) object;
+            EtribBondInfo003Dto inputDto = new EtribBondInfo003Dto();
+            BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
+            if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(),inputDto.getPs())){
+                creditLinesInputDto = new CreditLinesInputDto();
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
+                creditLinesInputDto.setTradeId(inputDto.getTotalEtrustId());
+                creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
+                creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                creditLinesInputDto.setTradeDate(inputDto.getVdate());
+                creditLinesInputDto.setTradeStatus(status);
+                creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+                if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
+                    creditLinesInputDto.setCounterId(inputDto.getEtrInvestPersonInfo().getCounterId());
+                }
+                //界面上的券面总额单位是万元，换算为元
+//                inputDto.setEntrustNum(inputDto.getEntrustNum().multiply(new BigDecimal(10000)));
                 creditLinesInputDto.setTradeAmt(inputDto.getEntrustNum());
                 if (inputDto.getEntrustNum() != null){
                     creditLinesInputDto.setShareAmt(inputDto.getEntrustNum().divide(new BigDecimal(100), RoundingMode.HALF_UP));
@@ -1067,7 +1110,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
         //债券借贷
         if(object instanceof EtrSecLendDto){
             EtrSecLendDto inputDto = (EtrSecLendDto) object;
-            if (StringUtil.equals(DictCodeList.回购拆借方向_融出.getValue(),inputDto.getBusiPs())){
+            if (StringUtil.equals(DictCodeList.回购拆借方向_融入.getValue(),inputDto.getBusiPs())){
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
@@ -1081,11 +1124,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
                     creditLinesInputDto.setCounterId(inputDto.getEtrInvestPersonInfo().getCounterId());
                 }
-                creditLinesInputDto.setTradeAmt(ArithmeticUtil.multiply(inputDto.getTotalAmt(),new BigDecimal(10000)));
-                if (inputDto.getTotalAmt() != null){
-                    creditLinesInputDto.setShareAmt(inputDto.getTotalAmt().multiply(new BigDecimal(100)));
-                }
-                creditLinesInputDto.setShareAmt(ArithmeticUtil.multiply(inputDto.getTotalAmt(),new BigDecimal(10000)));
+                creditLinesInputDto.setTradeAmt(inputDto.getTotalAmt());
+                creditLinesInputDto.setShareAmt(inputDto.getTotalAmt());
                 //最新面值
                 BigDecimal newFaceValue = creditLinesDealsMapper.getFaceValue(creditLinesInputDto);
                 if (newFaceValue == null){
@@ -1190,6 +1230,22 @@ public class EtrCommonService extends BaseService<ITableRow> {
         if(object instanceof EtrBoutRepoDto){
             EtrBoutRepoDto inputDto = (EtrBoutRepoDto) object;
             if (StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue(),inputDto.getPs())){
+                // 先判断标的券类型是否需要扣减授信额度
+                List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
+                // 查询资产类型
+                FinProductTypeKey key = new FinProductTypeKey();
+                key.setFinprodId(inputDto.getFinprodId());
+                key.setBranch(0L);
+                FinProductType finProductType = creditLinesDealsMapper.selectByPrimaryKey(key);
+                FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(inputDto.getFinprodId());
+                String astType = finProductType.getType10();
+                if (StringUtil.equals(finProductAdd.getIsSecBond(),DictCodeList.是否_是.getValue())){
+                    astType = astType.concat("_") + DictCodeList.是否_是.getValue();
+                }
+                // 资产类型在【不扣减授信参数】列表
+                if (assetTypeList.contains(astType)){
+                    return null;
+                }
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
                 creditLinesInputDto.setTradeId(inputDto.getEntrustId());
@@ -1216,6 +1272,18 @@ public class EtrCommonService extends BaseService<ITableRow> {
                     creditLinesInputDto.setTradeAmt(newFaceValue.multiply(creditLinesInputDto.getShareAmt()));
                 }else if (creditLinesInputDto.getTradeAmt() != null){
                     creditLinesInputDto.setTradeAmt(newFaceValue.multiply(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),100,2)));
+                }
+                List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+                if("01".equals(status)){
+                    CreditLinesInputDto dto1 = new CreditLinesInputDto();
+                    BeanUtil.copyPropertiesIgnoreNull(dto1,creditLinesInputDto);
+                    inputDtoList.add(dto1);
+
+                    CreditLinesInputDto dto2 = new CreditLinesInputDto();
+                    BeanUtil.copyPropertiesIgnoreNull(dto2,creditLinesInputDto);
+                    dto2.setZhiYaQuan(inputDto.getFinprodId());
+                    inputDtoList.add(dto2);
+                    creditLinesInputDto.setInputDtoList(inputDtoList);
                 }
             }
         }
@@ -1302,6 +1370,23 @@ public class EtrCommonService extends BaseService<ITableRow> {
                     creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
                     creditLinesInputDto.setShareAmt(inputDto.getEntrustNum());
                 }
+            }
+            // 股票指令
+            if (inputDto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())
+                    && (StringUtil.equals(DictCodeList.交易方向_买入.getValue(),inputDto.getPs())
+                    || StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())
+                    || StringUtil.equals(DictCodeListExt2.交易方向_配股.getValue(),inputDto.getPs()))){
+                creditLinesInputDto = new CreditLinesInputDto();
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
+                creditLinesInputDto.setTradeId(inputDto.getEntrustId());
+                creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
+                creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+                creditLinesInputDto.setTradeDate(inputDto.getVdate());
+                creditLinesInputDto.setTradeStatus(status);
+                creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+                creditLinesInputDto.setCounterId(inputDto.getCounterId());
+                creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
+                creditLinesInputDto.setShareAmt(inputDto.getEntrustNum());
             }
             // 债券指令
             if (inputDto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())
@@ -1555,6 +1640,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
             ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
             ptlSecPositionFlowDto.setFinprodId((String)paramMap.get("finprodId"));
             ptlSecPositionFlowDto.setEntrust(true);
+            FinProduct finProduct = finProductMapper.selectByPrimaryKey((String)paramMap.get("finprodId"));
             BigDecimal amount03 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
             ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_融入.getValue());
             BigDecimal amount05 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
@@ -1562,6 +1648,11 @@ public class EtrCommonService extends BaseService<ITableRow> {
             BigDecimal amount06 = basePtlSecPositionInfoService.queryOtherSecPosition(ptlSecPositionFlowDto);
             BigDecimal assetPositionEntrustAmt = ArithmeticUtil.doAdd(amount03, amount05);
             assetPositionEntrustAmt = ArithmeticUtil.subtract(assetPositionEntrustAmt, amount06);
+
+            if (finProduct != null && StringUtil.equals(finProduct.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+                assetPositionEntrustAmt = ArithmeticUtil.multiply(assetPositionEntrustAmt,BigDecimal.valueOf(100));
+            }
+
             result.put("positionAmount", assetPositionEntrustAmt);
         } else {
             result.put("canSellAmount", BigDecimal.ZERO);
@@ -2066,4 +2157,22 @@ public class EtrCommonService extends BaseService<ITableRow> {
         return portfolioName;
     }
 
+    public String getZyqk(String zyqkName){
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getZyqk", zyqkName,
+                String.class);
+    }
+
+    public String checkZyqkExist(String cellData, String labelName, String indexId) {
+        // 判断是否是正确的组合代码
+        if (StringUtil.isNotBlank(cellData)) {
+             String zyqk =restTemplate.postForObject(
+                    ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getZyqk", cellData,
+                    String.class);
+            if (!StringUtil.isNotEmpty(zyqk)) {
+                return getMessage("ETR_E_0017", getMessage(labelName), indexId);
+            }
+        }
+        return "";
+    }
 }
