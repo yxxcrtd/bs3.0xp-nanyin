@@ -30,10 +30,12 @@ import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
@@ -41,6 +43,9 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dto.JjEtrExchangeTradeQuotationRequest;
+import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dto.JjEtrExchangeTradeQuotationResponse;
+import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dto.JjFinprodMarketInfoRequest;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
@@ -59,6 +64,7 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -317,7 +323,7 @@ public class JjEtrExchangeTrade001Service extends CommonExportService<EtrExchang
      * 查询证券代码
      * @return
      */
-	public Page<SelectOptionDto> getFinprodMarketInfo(Map<String, Object> map) {
+	public Page<SelectOptionDto> getFinprodMarketInfo(Map<String,Object> map) {
 		return restTemplate.postForPage(
 				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getFinprodMarketInfo", map,
 				SelectOptionDto.class);
@@ -891,9 +897,10 @@ public class JjEtrExchangeTrade001Service extends CommonExportService<EtrExchang
     }
 
 	/** 查询大宗交易行情信息 **/
-	public Page<EtrExchangeTradeQuotation001Dto> findTradeQuotationsPage(Map<String, Object> map) {
-		Page<EtrExchangeTradeQuotation001Dto> page = new Page<EtrExchangeTradeQuotation001Dto>();
-		List<EtrExchangeTradeQuotation001Dto> list = new ArrayList<EtrExchangeTradeQuotation001Dto>();
+	public Page<JjEtrExchangeTradeQuotationResponse> findTradeQuotationsPage(JjEtrExchangeTradeQuotationRequest request) {
+		Map<String, Object> map = BeanUtil.object2Map(request);
+		Page<JjEtrExchangeTradeQuotationResponse> page = new Page<JjEtrExchangeTradeQuotationResponse>();
+		List<JjEtrExchangeTradeQuotationResponse> list = new ArrayList<JjEtrExchangeTradeQuotationResponse>();
         String secId = (String)map.get("secId");
 		String param = "?quote_type=1&stock_code="+secId;
 
@@ -907,7 +914,7 @@ public class JjEtrExchangeTrade001Service extends CommonExportService<EtrExchang
 			List<Map<String, Object>> quoteList = (List<Map<String, Object>>) quoteMap.get("data");
 			if(!StringUtil.isEmptyList(quoteList)) {
 				quoteList.forEach(tmp -> {
-					EtrExchangeTradeQuotation001Dto dto =new EtrExchangeTradeQuotation001Dto();
+					JjEtrExchangeTradeQuotationResponse dto =new JjEtrExchangeTradeQuotationResponse();
 					dto.setSecId((String)tmp.get("stockCode"));
 					dto.setSecName((String)tmp.get("stockName"));
                     dto.setMarket((String)tmp.get("market"));
@@ -957,7 +964,7 @@ public class JjEtrExchangeTrade001Service extends CommonExportService<EtrExchang
 					//对手方交易员联系方式
 					dto.setContactNumber((String)tmp.get("liaisonTel"));
 
-					list.add(dto);
+					//list.add(dto);
 				});
 			}
 		}

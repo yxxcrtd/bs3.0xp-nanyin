@@ -39,6 +39,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.orm.jpa.vendor.OpenJpaDialect;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,7 +49,7 @@ public class ExcelUitl {
 
 	public static void doExport(CfetsExportRequestDto requestDto, HttpServletResponse response, String excelAndSheetName, DoQuery doQuery) {
 		List<BaseMap> header = requestDto.getHeader();
-		List dataList = requestDto.getData();
+		List<BaseMap> dataList = requestDto.getData();
 		if (dataList == null || dataList.isEmpty()){
 			List mapList = new ArrayList();
 			dataList = doQuery.query();
@@ -59,6 +60,25 @@ public class ExcelUitl {
 			}
 			doExport(excelAndSheetName, header, mapList, response);
 		}else {
+			try{
+				Set<String> dateSet = new HashSet<String>();
+				header.forEach(item ->{
+					String colCode = (String)item.get("colCode");
+					if(item.containsKey("extendCfg")){
+						Map<String, Object> extendCfgMap = (Map)JsonUtils.json2Object((String)item.get("extendCfg"),Map.class);
+						if(extendCfgMap.containsKey("dataType")&&StringUtil.equals((String)extendCfgMap.get("dataType"),"date")){
+							dateSet.add(colCode);
+						}
+					}
+				});
+				dataList.forEach(item -> {
+					for (Map.Entry<String, Object> m : item.entrySet()) {
+						if(dateSet.contains(m.getKey())&&null!=m.getValue()){
+							item.put(m.getKey(),new Date((Long)m.getValue()));
+						}
+					}
+				});
+			}catch (Exception e){logger.error("导出格式化日期异常");}
 			doExport(excelAndSheetName, header, dataList, response);
 		}
 	}

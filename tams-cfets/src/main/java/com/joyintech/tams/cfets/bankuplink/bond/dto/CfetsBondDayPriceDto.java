@@ -35,6 +35,9 @@ public class CfetsBondDayPriceDto {
     @ApiModelProperty(name="sendStatusStr",value="发送状态名称")
     private String sendStatusStr;
 
+    @ApiModelProperty(name="finprodId",value="资产代码")
+    private String finprodId;
+
     @ApiModelProperty(name="finprodMarketId",value="资产代码")
     private String finprodMarketId;
 
@@ -186,6 +189,14 @@ public class CfetsBondDayPriceDto {
 
     public void setSendStatusStr(String sendStatusStr) {
         this.sendStatusStr = sendStatusStr;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
     }
 
     public String getFinprodMarketId() {

@@ -12,6 +12,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.service.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
+import com.joyintech.service.bankuplink.ibu.service.IbuComponentCommonService;
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
@@ -19,7 +20,6 @@ import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
 import com.joyintech.tams.cfets.etrdispatcher.service.CfetsEtrDispatcherService;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrInvestBondInfoReqDto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.common.base.dao.*;
@@ -111,6 +111,16 @@ public class IbuQuoteBondService extends BaseService {
 
     @Autowired
     private JoyinbusinessCommonMapper joyinbusinessCommonMapper;
+
+    @Autowired
+    private IbuComponentCommonService ibuComponentCommonService;
+
+    @Autowired
+    private CfetsBondDealQuotedPrice002Service cfetsBondDealQuotedPrice002Service;
+    @Autowired
+    private CfetsBondDealQuotedPrice003Service cfetsBondDealQuotedPrice003Service;
+
+
     /**
      * 风险试算check
      * @param entity
@@ -1050,7 +1060,9 @@ public class IbuQuoteBondService extends BaseService {
                 BussinessDictCodeList.银行间上行本方角色_询价方.getValue())) {
             CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,bondQuoteInfoDto);
-            return cfetsBondDealQuotedPriceService.sendBondDialogueQuoteRevoke(cfetsBondDealDialogueQuoteDto);
+            cfetsBondDealQuotedPriceService.sendBondDialogueQuoteRevoke(cfetsBondDealDialogueQuoteDto);
+            //处理头寸
+            cfetsBondDealQuotedPrice002Service.sendPosition(cfetsBondDealQuotedPrice002Service.handpositionByQuoteId(bondQuoteInfoDto.getQuoteId()),DictCodeListExt3.流程节点_审批生效.getValue(),DictCodeListExt3.系统动作_撤回.getValue());
             /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
                             + "/CfetsBondDealQuotedPrice/sendBondDialogueQuoteRevoke",
                     bondQuoteInfoDto, boolean.class);*/
@@ -1059,7 +1071,9 @@ public class IbuQuoteBondService extends BaseService {
                 BussinessDictCodeList.银行间上行本方角色_做市方.getValue())) {
             CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,bondQuoteInfoDto);
-            return cfetsBondDealQuotedPriceService.sendBondRequestQuoteRevokeReply(cfetsBondDealRequestQuoteDto);
+            cfetsBondDealQuotedPriceService.sendBondRequestQuoteRevokeReply(cfetsBondDealRequestQuoteDto);
+            //处理头寸
+            cfetsBondDealQuotedPrice003Service.sendPosition(cfetsBondDealQuotedPrice003Service.handpositionByQuoteId(bondQuoteInfoDto.getQuoteId()),DictCodeListExt3.流程节点_审批生效.getValue(),DictCodeListExt3.系统动作_撤回.getValue());
             /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
                             + "/CfetsBondDealQuotedPrice/sendBondRequestQuoteRevokeReply",
                     bondQuoteInfoDto, boolean.class);*/
@@ -1068,10 +1082,12 @@ public class IbuQuoteBondService extends BaseService {
                 BussinessDictCodeList.银行间上行本方角色_非做市方.getValue())) {
             CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,bondQuoteInfoDto);
-            return cfetsBondDealQuotedPriceService.sendBondRequestQuoteRevoke(cfetsBondDealRequestQuoteDto);
+            cfetsBondDealQuotedPriceService.sendBondRequestQuoteRevoke(cfetsBondDealRequestQuoteDto);
+            cfetsBondDealQuotedPrice003Service.sendPosition(cfetsBondDealQuotedPrice003Service.handpositionByQuoteId(bondQuoteInfoDto.getQuoteId()),DictCodeListExt3.流程节点_审批生效.getValue(),DictCodeListExt3.系统动作_撤回.getValue());
             /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
                             + "/CfetsBondDealQuotedPrice/sendBondRequestQuoteRevoke",
                     bondQuoteInfoDto, boolean.class);*/
+            //处理头寸
         }
         return false;
     }
@@ -1086,7 +1102,11 @@ public class IbuQuoteBondService extends BaseService {
                 BussinessDictCodeList.报价方式_对话报价.getValue())) {
             CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto,bondQuoteInfoDto);
-            return cfetsBondDealQuotedPriceService.bondDialogueQuoteRestore(cfetsBondDealDialogueQuoteDto);
+            ibuComponentCommonService.bondDialogueQuoteRestore(cfetsBondDealDialogueQuoteDto);
+            //处理头寸
+            cfetsBondDealQuotedPrice002Service.sendPosition(cfetsBondDealQuotedPrice002Service.handpositionByQuoteId(bondQuoteInfoDto.getQuoteId()),DictCodeListExt3.流程节点_流程提交.getValue(),DictCodeListExt3.系统动作_退回.getValue());
+            return true;
+            //return cfetsBondDealQuotedPriceService.bondDialogueQuoteRestore(cfetsBondDealDialogueQuoteDto);
             /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
                             + "/CfetsBondDealQuotedPrice/bondDialogueQuoteRestore",
                     bondQuoteInfoDto, boolean.class);*/
@@ -1095,7 +1115,11 @@ public class IbuQuoteBondService extends BaseService {
                 BussinessDictCodeList.报价方式_请求报价.getValue())) {
             CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = new CfetsBondDealRequestQuoteDto();
             BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRequestQuoteDto,bondQuoteInfoDto);
-            return cfetsBondDealQuotedPriceService.sendBondRequestQuoteRestore(cfetsBondDealRequestQuoteDto);
+            ibuComponentCommonService.sendBondRequestQuoteRestore(cfetsBondDealRequestQuoteDto);
+            //处理头寸
+            cfetsBondDealQuotedPrice003Service.sendPosition(cfetsBondDealQuotedPrice003Service.handpositionByQuoteId(bondQuoteInfoDto.getQuoteId()),DictCodeListExt3.流程节点_流程提交.getValue(),DictCodeListExt3.系统动作_退回.getValue());
+            return true;
+            //return cfetsBondDealQuotedPriceService.sendBondRequestQuoteRestore(cfetsBondDealRequestQuoteDto);
             /*return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
                             + "/CfetsBondDealQuotedPrice/sendBondRequestQuoteRestore",
                     bondQuoteInfoDto, boolean.class);*/

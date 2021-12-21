@@ -54,8 +54,8 @@ public class CfetsIbuQuoteBondController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CfetsIbuQuoteBondController.class);
 
-	@Value("${bondWebSocketUrl}")
-	private String bondWebSocketUrl;
+	@Value("${cmdsWebSocketUrl}")
+	private String cmdsWebSocketUrl;
 
 	@Autowired
 	private IbuQuoteBondService ibuQuoteBondService;
@@ -108,7 +108,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		initPageParams.put("ibuFlag_startDialogueQuoteWithNoEntrust",CacheUtil.getSysParam("ibuFlag_startDialogueQuoteWithNoEntrust"));
 		initPageParams.put("SHORT_SELLING_SUPPORTED",CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
 		//CMDS地址
-		initPageParams.put("bondWebSocketUrl", bondWebSocketUrl);
+		initPageParams.put("cmdsWebSocketUrl", cmdsWebSocketUrl);
 		//本币导出按钮配置
 		initPageParams.put("EXPORT_SHOW",CacheUtil.getSysParam("EXPORT_SHOW"));
 		initPageParams.put("PAGE_ID_REGIT","IbuQuoteBond004");

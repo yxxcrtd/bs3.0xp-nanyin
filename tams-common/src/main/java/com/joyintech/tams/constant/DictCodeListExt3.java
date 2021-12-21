@@ -1600,10 +1600,12 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
      * 头寸系统动作
      */
     系统动作_新建(DictCode.系统动作,"01","新建"),
-    系统动作_撤销(DictCode.系统动作,"02","撤销"),
+    系统动作_修改(DictCode.系统动作,"02","撤销"),
     系统动作_撤回(DictCode.系统动作,"03","撤回"),
     系统动作_退回(DictCode.系统动作,"04","退回"),
     系统动作_关闭(DictCode.系统动作,"05","关闭"),
+    系统动作_成交(DictCode.系统动作,"06","成交"),
+    系统动作_完成(DictCode.系统动作,"07","完成"),
     /**
      * 头寸业务类型
      */
