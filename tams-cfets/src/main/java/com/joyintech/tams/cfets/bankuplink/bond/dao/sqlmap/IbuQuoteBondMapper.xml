@@ -443,7 +443,7 @@
         T1.OU_TRADER_ID ,
         T1.COUNTER_ID ,
         T1.COUNTER_TRADER,
-        T6.PARTY_NAME ouPartyName ,
+        T6.PARTY_ABBR ouPartyName ,
         T10.REAL_NAME ouTraderName,
         <!--T5.TRADER_NAME ouTraderName,-->
         T8.COUNTER_NAME cpPartyName,
@@ -505,7 +505,7 @@
         T1.OU_TRADER_ID ,
         T1.COUNTER_ID ,
         T1.COUNTER_TRADER,
-        T6.PARTY_NAME ouPartyName ,
+        T6.PARTY_ABBR ouPartyName ,
         T10.REAL_NAME ouTraderName,
         T8.COUNTER_NAME cpPartyName,
         CASE
@@ -564,7 +564,7 @@
         ,y.I_Q_B_OU_TRADER_ID OU_TRADER_ID
         ,y.I_Q_B_D_CP_PARTY_ID COUNTER_ID
         ,y.I_Q_B_D_CP_TRADER COUNTER_TRADER
-        ,y.EXT_PARTY_NAME ouPartyName
+        ,y.EXT_PARTY_ABBR ouPartyName
         ,y.EXT_OUTRADER_NAME ouTraderName
         ,y.I_Q_B_D_CP_PARTY_NAME cpPartyName
         ,y.I_Q_B_D_CP_TRADER_NAME cpTraderName
@@ -894,8 +894,8 @@ select * from (
             T1.UNIT_CPRICE price,
             T1.YIELD matureYield,
             T1.EXER_YIELD exerYield,
-            T5.PARTY_NAME ouPartyName,
-            T4.PARTY_NAME cpPartyName,
+            T5.PARTY_ABBR ouPartyName,
+            T4.PARTY_ABBR cpPartyName,
             T7.TRADER_NAME ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
@@ -967,8 +967,8 @@ select * from (
             T1.UNIT_CPRICE price,
             T1.YIELD matureYield,
             T1.EXER_YIELD exerYield,
-            T5.PARTY_NAME ouPartyName,
-            T4.PARTY_NAME cpPartyName,
+            T5.PARTY_ABBR ouPartyName,
+            T4.PARTY_ABBR cpPartyName,
             T7.TRADER_NAME ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
@@ -1039,8 +1039,8 @@ select * from (
             T1.UNIT_CPRICE price,
             T1.YIELD matureYield,
             T1.EXER_YIELD exerYield,
-            T5.PARTY_NAME ouPartyName,
-            T4.PARTY_NAME cpPartyName,
+            T5.PARTY_ABBR ouPartyName,
+            T4.PARTY_ABBR cpPartyName,
             T7.TRADER_NAME ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
