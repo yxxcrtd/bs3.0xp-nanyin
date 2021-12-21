@@ -234,11 +234,11 @@ public class ValAssetBook002Service extends CommonExportService<ValAssetbook002D
             entity.getBooksetId());
         // 不存在账套日期，新增，已存在则更新
         if (valBokBooksetDate != null) {
-            valBokBooksetDate.setBooksetId(entity.getBooksetId());
-            // 账套日期 = 账套.开始日期
-            valBokBooksetDate.setBooksetDate(entity.getStartDate());
-            // 更新账套日期
-            bokBooksetDateMapper.updateByPrimaryKey(valBokBooksetDate);
+//            valBokBooksetDate.setBooksetId(entity.getBooksetId());
+//            // 账套日期 = 账套.开始日期
+//            valBokBooksetDate.setBooksetDate(entity.getStartDate());
+//            // 更新账套日期
+//            bokBooksetDateMapper.updateByPrimaryKey(valBokBooksetDate);
         }
         else {
             valBokBooksetDate = new BokBooksetDate();
