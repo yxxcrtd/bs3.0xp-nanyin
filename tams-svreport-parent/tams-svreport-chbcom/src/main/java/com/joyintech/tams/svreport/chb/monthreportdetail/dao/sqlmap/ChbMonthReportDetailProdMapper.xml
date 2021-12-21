@@ -27,8 +27,7 @@
 			p.dirtyamtsum,
 			p.cleanamtsum,
 			CASE WHEN TO_CHAR(B.VDATE,'yyyyMM') = P.TERM then '01' else '02' end isThisTrem,
-			CASE WHEN TO_CHAR(B.MDATE,'yyyyMM') &lt; P.TERM then '01' else '02' end isEndTrem,
-
+			CASE WHEN TO_CHAR(B.MDATE,'yyyyMM') &lt; P.TERM then '02' else '01' end isEndTrem,
 			P.ENDAMTSUM_OTH endamtsumOth,
 			P.PAYAMTSUM payamtsum,
 			P.CUSTOMERAMT customeramt,

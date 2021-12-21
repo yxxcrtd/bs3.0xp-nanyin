@@ -24,7 +24,7 @@
 		P.IS_MARKET_FUND isMarketFund,
 		CASE WHEN TO_CHAR(B.VDATE,'yyyyMM') = P.TERM then '01' else '02' end isThisTrem,
 		CASE WHEN TO_CHAR(B.MDATE,'yyyyMM') = P.TERM then '01' else '02' end isEndTrem,
-		CASE WHEN TO_CHAR(B.MDATE,'yyyyMM') &lt; P.TERM then '01' else '02' end isEndSubsist,
+		CASE WHEN TO_CHAR(B.MDATE,'yyyyMM') &lt; P.TERM then '02' else '01' end isEndSubsist,
 		P.DURATIONFLAG,
 		ORD_IDENTIFIED,
 		P.BUY_PLACE,
