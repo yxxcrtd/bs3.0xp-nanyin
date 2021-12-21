@@ -244,7 +244,7 @@
         select * from ( select aaa.* from (SELECT
         TABLE01.PORTFOLIO_ID portfolioId,/*组合代码*/
         TABLE01.PORTFOLIO_NAME portfolioName,
-        fpt.TYPE_9 finProdType,
+        fpt.TYPE_11 finProdType,
         TABLE01.SEC_ACCT_ID secAcctId,/*证券账户/通道代码*/
         TABLE01.FINPROD_ID finProdId,/*金融产品Id*/
         round(NVL(TABLE01.pledgeAmount,0)/10000,2) pledgeAmount,/*已质押券面总额*/
@@ -374,10 +374,10 @@
             FIN_PRODUCT.REGIST_ORG = #{registOrg}
         </if>
         <if test="finProdType != null and finProdType!='' ">
-            fpt.TYPE_9 = #{finProdType}
+            fpt.TYPE_11 = #{finProdType}
         </if>
         <if test="finProdTypeList != null and !finProdTypeList.isEmpty()">
-            AND fpt.TYPE_9 in
+            AND fpt.TYPE_11 in
             <foreach collection="finProdTypeList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>

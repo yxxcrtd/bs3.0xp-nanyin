@@ -110,6 +110,9 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
      * @return
      */
     public Page<CfetsEtrIbRepoLibAvaPledgeBondResponse> selectAvaPledgeBondList(CfetsEtrRepoLibAvaPledgeBondRequest dto) {
+        if(!StringUtil.isNotEmpty(dto.getPledgeStockId())){
+            dto.setPledgeStockId("999999");
+        }
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         this.setParam(pageParam);
         return super.queryForPage(dto.getPageMode().getPageNo(),dto.getPageMode().getPageSize(),() ->cfetsEtrIbRepoLib001Mapper.selectAvaPledgeBondList(pageParam));

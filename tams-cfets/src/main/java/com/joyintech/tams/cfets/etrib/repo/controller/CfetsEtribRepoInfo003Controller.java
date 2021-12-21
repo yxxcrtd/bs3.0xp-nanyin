@@ -87,6 +87,7 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
 //            model.addAttribute("businessId",workflowId);
             model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(entity.getEtrInvestRepoInfoDtos()));
             model.addAttribute("entity_PledgeBondTotalListDetailed",  JsonUtils.object2Json(entity.getPledgeBondTotalListDetailed()));
+            model.addAttribute("entity_RiskTrialRetList",  JsonUtils.object2Json(entity.getRiskTrialRetDto()));
             todoList = true;
             model.addAttribute("businessId", entity.getTotalEtrustId());
         } else {

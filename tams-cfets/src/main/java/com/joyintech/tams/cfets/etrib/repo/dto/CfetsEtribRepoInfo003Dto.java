@@ -90,6 +90,26 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
      */
     @ApiModelProperty(name="repoTerm",value="回购期限")
     private BigDecimal repoTerm;
+
+    /**
+     * T日可用现金
+     */
+    @ApiModelProperty(name="availableCashT",value="T日可用现金")
+    private BigDecimal availableCashT;
+
+    /**
+     * T1日可用现金
+     */
+    @ApiModelProperty(name="availableCashT1",value="T1日可用现金")
+    private BigDecimal availableCashT1;
+
+    /**
+     * 账户现金
+     */
+    @ApiModelProperty(name="accountCash",value="账户现金")
+    private BigDecimal accountCash;
+
+
     /**
      * 期限品种
      */
@@ -409,5 +429,29 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setZyqkStr(String zyqkStr) {
         this.zyqkStr = zyqkStr;
+    }
+
+    public BigDecimal getAvailableCashT() {
+        return availableCashT;
+    }
+
+    public void setAvailableCashT(BigDecimal availableCashT) {
+        this.availableCashT = availableCashT;
+    }
+
+    public BigDecimal getAvailableCashT1() {
+        return availableCashT1;
+    }
+
+    public void setAvailableCashT1(BigDecimal availableCashT1) {
+        this.availableCashT1 = availableCashT1;
+    }
+
+    public BigDecimal getAccountCash() {
+        return accountCash;
+    }
+
+    public void setAccountCash(BigDecimal accountCash) {
+        this.accountCash = accountCash;
     }
 }

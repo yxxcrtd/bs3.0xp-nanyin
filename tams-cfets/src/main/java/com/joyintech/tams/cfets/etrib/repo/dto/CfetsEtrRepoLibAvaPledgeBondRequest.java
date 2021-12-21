@@ -37,6 +37,8 @@ public class CfetsEtrRepoLibAvaPledgeBondRequest {
     @ApiModelProperty(name="zyqk",value="质押券库",example="'2'")
     private List<String> zyqk;
 
+    private String pledgeStockId;
+
     public PageMode getPageMode() {
         return pageMode;
     }
@@ -99,5 +101,13 @@ public class CfetsEtrRepoLibAvaPledgeBondRequest {
 
     public void setZyqk(List<String> zyqk) {
         this.zyqk = zyqk;
+    }
+
+    public String getPledgeStockId() {
+        return pledgeStockId;
+    }
+
+    public void setPledgeStockId(String pledgeStockId) {
+        this.pledgeStockId = pledgeStockId;
     }
 }
