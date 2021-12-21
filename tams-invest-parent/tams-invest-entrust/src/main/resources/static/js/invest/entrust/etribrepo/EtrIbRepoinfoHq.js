@@ -116,12 +116,7 @@
             //queryJJHQXX(termType);
             document.getElementById('tradeType').innerHTML = termType;
             var hqTypeArr = document.getElementsByName('hqType');
-            var hqType = "";
-            for(var i=0; i<hqTypeArr.length;i++){
-                if(hqTypeArr.item(i).checked){
-                    hqType=hqTypeArr.item(i).getAttribute("title");
-                }
-            }
+            var hqType = $("[name='hqType']").attr("title");
             sendRepo(websocket,termType,hqType);
             // add by caiqun 20211220 调用接口平台外汇cmds行情 end
         }
