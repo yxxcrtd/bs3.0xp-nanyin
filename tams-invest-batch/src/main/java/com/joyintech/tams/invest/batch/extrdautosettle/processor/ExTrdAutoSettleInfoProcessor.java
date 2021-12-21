@@ -55,29 +55,33 @@ public class ExTrdAutoSettleInfoProcessor extends BaseProcessor<NeedOperateEntit
         Set<String> dealNoSet = autoSettleInfoDtos.stream().map(ExTrdAutoSettleInfoDto::getDealNo).collect(Collectors.toSet());
 
         //调用交易端交收状态查询接口 TODO 待接口联调测试
-        List<RtgsStatusRet> RtgsStatusRetList = rtgsStatusRetService.getRtgsStatusRetList(dealNoSet);
+        List<RtgsStatusRet> RtgsStatusRetList = (List<RtgsStatusRet>)rtgsStatusRetService.getRtgsStatusRetList(dealNoSet);
 
         //返回结果集
         List<ManualSettleDto> manualSettleDtoList =new ArrayList<>();
-        for (int i = 0; i < RtgsStatusRetList.size(); i++) {
-            //手工交收数据
-            List<ExTrdAutoSettleInfoDto> tmp_ExTrdAutoSettleInfoDtoList = dealNoMap.get(RtgsStatusRetList.get(i).getDealNo());
-            if(tmp_ExTrdAutoSettleInfoDtoList.size()>0){
-                //组装手工交收参数
-                ManualSettleDto manualSettleDto = buildManualSettleDtoByList(tmp_ExTrdAutoSettleInfoDtoList);
 
-                if(StringUtil.equals(RtgsStatusRetList.get(i).getStatus(), DictCodeListExt3.交收状态_已交收.getValue())){
-                    manualSettleDto.setPageModel(DictCodeListExt3.交收状态_已交收.getValue());
+        if(RtgsStatusRetList != null){
+            for (int i = 0; i < RtgsStatusRetList.size(); i++) {
+                //手工交收数据
+                List<ExTrdAutoSettleInfoDto> tmp_ExTrdAutoSettleInfoDtoList = dealNoMap.get(RtgsStatusRetList.get(i).getDealNo());
+                if(tmp_ExTrdAutoSettleInfoDtoList.size()>0){
+                    //组装手工交收参数
+                    ManualSettleDto manualSettleDto = buildManualSettleDtoByList(tmp_ExTrdAutoSettleInfoDtoList);
 
-                }else if(StringUtil.equals(RtgsStatusRetList.get(i).getStatus(), DictCodeListExt3.交收状态_交收失败.getValue())){
-                    manualSettleDto.setPageModel(DictCodeListExt3.交收状态_交收失败.getValue());
+                    if(StringUtil.equals(RtgsStatusRetList.get(i).getStatus(), DictCodeListExt3.交收状态_已交收.getValue())){
+                        manualSettleDto.setPageModel(DictCodeListExt3.交收状态_已交收.getValue());
 
-                }else{
-                    logger.info("交收状态不是已交收或交收失败，不处理");
+                    }else if(StringUtil.equals(RtgsStatusRetList.get(i).getStatus(), DictCodeListExt3.交收状态_交收失败.getValue())){
+                        manualSettleDto.setPageModel(DictCodeListExt3.交收状态_交收失败.getValue());
+
+                    }else{
+                        logger.info("交收状态不是已交收或交收失败，不处理");
+                    }
+                    manualSettleDtoList.add(manualSettleDto);
                 }
-                manualSettleDtoList.add(manualSettleDto);
             }
         }
+
 
         ManualSettleDtoResult result = new ManualSettleDtoResult();
         result.setManualSettleDtoList(manualSettleDtoList);
