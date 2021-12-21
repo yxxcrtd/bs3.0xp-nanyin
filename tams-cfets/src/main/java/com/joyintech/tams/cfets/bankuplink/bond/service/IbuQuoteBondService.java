@@ -1199,6 +1199,9 @@ public class IbuQuoteBondService extends BaseService {
         List<ValidMessage> errorList = new ArrayList<>();
         //是否存在流程中数据
         cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts().forEach(item ->{
+            if(!StringUtil.equals(item.getValidStatus(),BussinessDictCodeList.有效状态_有效.getValue())){
+                errorList.add(new ValidMessage("非有效状态数据不支持撤销!业务编号:"+item.getQuoteId()));
+            }
             WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
             wflValidInputParameter.setPageId("IbuQuoteBond004");
             wflValidInputParameter.setBusinessDataPk1(item.getQuoteId());

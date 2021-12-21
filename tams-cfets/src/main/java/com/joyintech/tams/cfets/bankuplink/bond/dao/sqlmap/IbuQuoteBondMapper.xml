@@ -422,9 +422,9 @@
 
     <!--指令的执行明细-->
     <select id="listDealTransactionDetails" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.DealTransactionDetailsDto">
-        <!--生效的登记数据-->
+        <!--生效及撤销的登记数据-->
         SELECT
-        '01' validStatus,
+        T1.TRADE_STATUS validStatus,
         '04' QUOTE_TYPE,
         T3.TRADE_DATE settleDate,
         T1.PS,
@@ -478,7 +478,7 @@
         FROM
         REG_FIN_PRODUCT_DEAL T9
         WHERE
-        T9.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID
+        T9.TOTLE_TRADE_ID = T1.TOTLE_TRADE_ID AND (T1.IS_CANCEL = 'N' OR T1.IS_CANCEL IS NULL)
         <if test="entrustId !=null and entrustId !=''">
             AND T9.ENTRUST_ID= #{entrustId}
         </if>
