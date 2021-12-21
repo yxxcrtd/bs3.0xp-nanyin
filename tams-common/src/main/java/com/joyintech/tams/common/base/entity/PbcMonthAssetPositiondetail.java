@@ -30,6 +30,11 @@ public class PbcMonthAssetPositiondetail extends BaseEntity {
     private String detailno;
 
     /**
+     * null
+     */
+    private String detailno2;
+
+    /**
      * 类型，枚举值：01 资产、02 负债、03 科目余额
      */
     private String positionType;
@@ -200,6 +205,36 @@ public class PbcMonthAssetPositiondetail extends BaseEntity {
     private String buyPlace;
 
     /**
+     * 贷款-借款人类型
+     */
+    private String borrowerType;
+
+    /**
+     * 贷款-行业信息
+     */
+    private String industryInfo;
+
+    /**
+     * 贷款-企业规模
+     */
+    private String enterpriseScale;
+
+    /**
+     * 贷款-借款人地区(市)
+     */
+    private String borrowerCity;
+
+    /**
+     * 贷款-基础资产投向分类
+     */
+    private String assetsInvest;
+
+    /**
+     * 贷款-各比例
+     */
+    private String eachProportion;
+
+    /**
      * 取得 主键uuid
      * @return 主键uuid
      */
@@ -261,6 +296,22 @@ public class PbcMonthAssetPositiondetail extends BaseEntity {
      */
     public void setDetailno(String detailno) {
         this.detailno = detailno == null ? null : detailno.trim();
+    }
+
+    /**
+     * 取得 null
+     * @return null
+     */
+    public String getDetailno2() {
+        return detailno2;
+    }
+
+    /**
+     * 设置 null
+     * @param detailno2 null
+     */
+    public void setDetailno2(String detailno2) {
+        this.detailno2 = detailno2 == null ? null : detailno2.trim();
     }
 
     /**
@@ -776,5 +827,101 @@ public class PbcMonthAssetPositiondetail extends BaseEntity {
      */
     public void setBuyPlace(String buyPlace) {
         this.buyPlace = buyPlace == null ? null : buyPlace.trim();
+    }
+
+    /**
+     * 取得 贷款-借款人类型
+     * @return 贷款-借款人类型
+     */
+    public String getBorrowerType() {
+        return borrowerType;
+    }
+
+    /**
+     * 设置 贷款-借款人类型
+     * @param borrowerType 贷款-借款人类型
+     */
+    public void setBorrowerType(String borrowerType) {
+        this.borrowerType = borrowerType == null ? null : borrowerType.trim();
+    }
+
+    /**
+     * 取得 贷款-行业信息
+     * @return 贷款-行业信息
+     */
+    public String getIndustryInfo() {
+        return industryInfo;
+    }
+
+    /**
+     * 设置 贷款-行业信息
+     * @param industryInfo 贷款-行业信息
+     */
+    public void setIndustryInfo(String industryInfo) {
+        this.industryInfo = industryInfo == null ? null : industryInfo.trim();
+    }
+
+    /**
+     * 取得 贷款-企业规模
+     * @return 贷款-企业规模
+     */
+    public String getEnterpriseScale() {
+        return enterpriseScale;
+    }
+
+    /**
+     * 设置 贷款-企业规模
+     * @param enterpriseScale 贷款-企业规模
+     */
+    public void setEnterpriseScale(String enterpriseScale) {
+        this.enterpriseScale = enterpriseScale == null ? null : enterpriseScale.trim();
+    }
+
+    /**
+     * 取得 贷款-借款人地区(市)
+     * @return 贷款-借款人地区(市)
+     */
+    public String getBorrowerCity() {
+        return borrowerCity;
+    }
+
+    /**
+     * 设置 贷款-借款人地区(市)
+     * @param borrowerCity 贷款-借款人地区(市)
+     */
+    public void setBorrowerCity(String borrowerCity) {
+        this.borrowerCity = borrowerCity == null ? null : borrowerCity.trim();
+    }
+
+    /**
+     * 取得 贷款-基础资产投向分类
+     * @return 贷款-基础资产投向分类
+     */
+    public String getAssetsInvest() {
+        return assetsInvest;
+    }
+
+    /**
+     * 设置 贷款-基础资产投向分类
+     * @param assetsInvest 贷款-基础资产投向分类
+     */
+    public void setAssetsInvest(String assetsInvest) {
+        this.assetsInvest = assetsInvest == null ? null : assetsInvest.trim();
+    }
+
+    /**
+     * 取得 贷款-各比例
+     * @return 贷款-各比例
+     */
+    public String getEachProportion() {
+        return eachProportion;
+    }
+
+    /**
+     * 设置 贷款-各比例
+     * @param eachProportion 贷款-各比例
+     */
+    public void setEachProportion(String eachProportion) {
+        this.eachProportion = eachProportion == null ? null : eachProportion.trim();
     }
 }

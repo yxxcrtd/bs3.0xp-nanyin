@@ -1,9 +1,17 @@
 package com.joyintech.tams.svreport.interf.chb.proddividenddeal.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.base.entity.ChbPrdBonusDeal;
+import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
+import com.joyintech.tams.svreport.interf.chb.proddividenddeal.dao.SvrChbProdDividentDealDBInterfMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.ResultContext;
@@ -17,20 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.tams.common.base.dao.ChbPrdBonusDealMapper;
-import com.joyintech.tams.common.base.entity.ChbInvestTrade;
-import com.joyintech.tams.common.base.entity.ChbPrdBonusDeal;
-import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
-import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbInvestTradeInterfMapper;
-import com.joyintech.tams.svreport.interf.chb.proddividenddeal.dao.SvrChbProdDividentDealDBInterfMapper;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -41,7 +38,7 @@ import com.joyintech.tams.svreport.interf.chb.proddividenddeal.dao.SvrChbProdDiv
 @SuppressWarnings("rawtypes")
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class SvrChbProdDividendDealDBInterf extends BaseService{
+public class SvrChbProdDividendDealDBInterf extends BaseInterfService {
 	@Autowired
 	private SvrChbProdDividentDealDBInterfMapper svrChbProdDividentDealDBInterfMapper;
 	
@@ -54,41 +51,56 @@ public class SvrChbProdDividendDealDBInterf extends BaseService{
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
     public void generateData(Date batchTime) {
-    	logger.info("产品分红交易数据DB接口批处理开始");
-    	long startTime=System.currentTimeMillis();
-    	//定义批量插入mapper
-    	SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-    	ChbPrdBonusDealMapper batchMapper =  session.getMapper(ChbPrdBonusDealMapper.class);
-    	
-    	//获取上一次更新时间
-    	Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.产品分红交易接口.getInterId());
-		//根据日期去上游查询数据
-    	List<ChbPrdBonusDeal>  listChbPrdfeeBasisData=getDataFromInterf(lastUpdatetime);
-    	if(CollectionUtils.isNotEmpty(listChbPrdfeeBasisData)){
-    	
-    		for(ChbPrdBonusDeal  data:listChbPrdfeeBasisData){
-    			//主键
-    			data.setSeqno(IDGenerator.generate(36));
-    			data.setCreateUser("system");
-        		data.setUpdateUser("system");
-        		data.setCreateTime(new  Date());
-        		data.setUpdateTime(new  Date());
-        		if(data.getUpdateTime().compareTo(lastUpdatetime)>0)
-            		lastUpdatetime =data.getUpdateTime();
-    		}
+		// 查询数据
+		List<ChbPrdBonusDeal> listChbPrdfeeBasisData = getBusEntity(null, null, null, "D");
 
-        	logger.info("插入"+DateUtil.format(new Date())+"日的产品分红交易数据，开始");
-        	insertDataMerge(listChbPrdfeeBasisData);
-        	logger.debug("插入"+DateUtil.format(new Date())+"日的产品分红交易数据，结束");
-    	
-   
-    	//新的最后更新时间
-    	if(lastUpdatetime!=null){
-    		ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品分红交易接口.getInterId(), lastUpdatetime);
-    	}
-    	logger.info("产品费用头寸接口导入批处理结束。用时："+(System.currentTimeMillis()-startTime)/1000+"s");
-    }
-    }
+		if(CollectionUtils.isNotEmpty(listChbPrdfeeBasisData)){
+			logger.info("插入"+DateUtil.format(new Date())+"日的产品分红交易数据，开始");
+			insertDataMerge(listChbPrdfeeBasisData);
+			logger.debug("插入"+DateUtil.format(new Date())+"日的产品分红交易数据，结束");		}
+	}
+
+
+	@Override
+	public List<ChbPrdBonusDeal> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
+		logger.info("产品分红交易数据DB接口批处理开始");
+		long startTime=System.currentTimeMillis();
+
+		//获取上一次更新时间
+		Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.产品分红交易接口.getInterId());
+		//根据日期去上游查询数据
+		List<ChbPrdBonusDeal>  listChbPrdfeeBasisData=getDataFromInterf(lastUpdatetime);
+		if(CollectionUtils.isNotEmpty(listChbPrdfeeBasisData)){
+
+			for(ChbPrdBonusDeal  data:listChbPrdfeeBasisData){
+				//主键
+				data.setSeqno(IDGenerator.generate(36));
+				data.setCreateUser("system");
+				data.setUpdateUser("system");
+				data.setCreateTime(new  Date());
+				data.setUpdateTime(new  Date());
+				if(data.getUpdateTime().compareTo(lastUpdatetime)>0)
+					lastUpdatetime =data.getUpdateTime();
+			}
+
+			//新的最后更新时间
+			if(lastUpdatetime!=null){
+				ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品分红交易接口.getInterId(), lastUpdatetime);
+			}
+			logger.info("产品分红交易数据DB接口批处理结束。用时："+(System.currentTimeMillis()-startTime)/1000+"s");
+		}
+		return listChbPrdfeeBasisData;
+	}
+
+	@Override
+	public Class getEntityClass() {
+		return ChbPrdBonusDeal.class;
+	}
+
+	@Override
+	public String getFileName() {
+		return InterfDefine.产品分红交易接口数据.getCode();
+	}
 	
 		@Transactional(propagation=Propagation.REQUIRES_NEW)
 	    @DataSource(DataSourceType.INTERF)

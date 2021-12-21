@@ -19,7 +19,7 @@ $(function() {
     laydate.render({
         elem: '#enddate',
         type: 'month',
-        format: 'yyyy-MM'
+        format: 'yyyyMM'
 
     });
 
@@ -40,7 +40,7 @@ $(function() {
             { title: "二级分类", width : 120, field: 'reportType2',sortField:'reportType2'},
             { title: "三级分类", width : 120, field: 'reportType3',sortField:'reportType3'},
             { title: "四级分类", width : 120, field: 'reportType4',sortField:'reportType4'},
-            { title: "产品代码", width : 120, field: 'prodid',sortField:'prodid'},
+            { title: "产品代码", width : 120, field: 'prodId',sortField:'prodId'},
             { title: "产品名称", width : 120, field: 'prodName',sortField:'prodName'},
             { title: "是否合规新产品", width : 120, field: 'isFhxgcpStr',sortField:'isFhxgcp'},
             { title: "资产代码/科目号", width : 120, field: 'assetCode',sortField:'assetCode'},
@@ -51,7 +51,7 @@ $(function() {
             { title: "主体名称", width : 120, field: 'subjectName',sortField:'subjectName'},
             { title: "交易对手名称", width : 120, field: 'rivalParty',sortField:'rivalParty'},
             { title: "利率", width : 120, field: 'rate', type:'money',sortField:'rate'},
-            { title: "币种", width : 120, field: 'ccy',sortField:'ccy'},
+            { title: "币种", width : 120, field: 'ccyStr',sortField:'ccy'},
             { title: "行业一级分类", width : 120, field: 'industry1Str',sortField:'industry1'},
             { title: "行业二级分类", width : 120, field: 'industry2Str',sortField:'industry2'},
             { title: "行业三级分类", width : 120, field: 'industry3Str',sortField:'industry3'},
@@ -65,9 +65,7 @@ $(function() {
             { title: "期末余额", width : 120, field: 'assetvalueA', type:'money',sortField:'assetvalueA'},
             { title: "1.12.9.a投向金融资产投资公司或其附属机构发行的私募股权投资基金", width : 120, field: 'privatefundFlagStr',sortField:'privatefundFlag'},
             { title: "1.13.7.a投向金融资产投资公司发行的私募资产管理产品", width : 120, field: 'privateprdFlagStr',sortField:'privateprdFlag'},
-            { title: "信用债债项评级", width : 120, field: 'creditGrade',sortField:'creditGrade'},
-            { title: "信用债主体评级", width : 120, field: 'mainGrade',sortField:'mainGrade'},
-            { title: "信用债使用评级", width : 120, field: 'typeFinal',sortField:'typeFinal'},
+            { title: "信用债使用评级", width : 120, field: 'rating',sortField:'rating'},
             { title: "1.15.b 投向市场化债转股相关产品的部分", width : 120, field: 'bondtostockFlagStr',sortField:'bondtostockFlag'},
             { title: "1.15.c 逾期资产", width : 120, field: 'industry1',sortField:'industry1'},
             { title: "3.1.1 创业投资基金", width : 120, field: 'industry1',sortField:'industry1'},
@@ -88,11 +86,11 @@ $(function() {
         var expArr=table.getAllCheckedRows();
         var param={};
         if(!expArr || expArr.length ==0){
-            // if(expArr.length ==0){
-            //     Joyin.error("请选择导出数据！");
-            //     return;
-            // }
             param = getSearchParams();
+            if(!param.enddate){
+                Joyin.error("请选择统计日期进行导出！");
+                return;
+            }
             Joyin.exportExcel("export",param);
         }else{
 

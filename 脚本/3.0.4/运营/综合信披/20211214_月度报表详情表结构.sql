@@ -71,17 +71,78 @@ values ('SVR_MONTH_REPORT_DETAIL', 'AMT32', '3.2 银行资本补充工具', 20, 
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('SVR_MONTH_REPORT_DETAIL', 'AMT33', '3.3 穿透后投向为非标准化债权类资产的行业归属', 21, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
 
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SVR_PBC_DATA_TYPE';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SVR_PBC_DATA_TYPE', 'SVR', '人行月报详情数据类型', null, '02', 'system', null, SYSDATE, 'system', SYSDATE);
+
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_PBC_DATA_TYPE';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_PBC_DATA_TYPE', '01', '募集余额', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_PBC_DATA_TYPE', '02', '当期募集发生额', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_PBC_DATA_TYPE', '03', '当期兑付发生额', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SVR_OPEN_TYPE';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SVR_OPEN_TYPE', 'SVR', '开放类型', null, '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_OPEN_TYPE';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_OPEN_TYPE', '01', '现金管理类产品', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_OPEN_TYPE', '02', '封闭期在半年以上的定期开放式产品', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_OPEN_TYPE', '99', '其他', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SVR_TERM_TYPE';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SVR_TERM_TYPE', 'SVR', '人行月度明细_期限类型', null, '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_TERM_TYPE';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE', '01', '1个月（含）以下', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE', '02', '1-3个月（含）', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE', '03', '3-6个月（含）', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE', '04', '6-12个月（含）', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE', '05', '1-2年（含）', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE', '06', '2-3年（含）', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE', '07', '3年以上', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE', '99', '无固定期限', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+
+
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SVR_TERM_TYPE1';
+insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SVR_TERM_TYPE1', 'SVR', '中债月度明细_期限类型', null, '02', 'system', null, SYSDATE, 'system', SYSDATE);
+DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_TERM_TYPE1';
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE1', 'A', '90天以内', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE1', 'B', '90天（含）-6个月(含)', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE1', 'C', '6-12个月（含）', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE1', 'D', '1-3年（含）', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('SVR_TERM_TYPE1', 'E', '3年以上', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
 
 
 -- 删除语句先注释
--- DROP TABLE CHB_MONTH_PRD_POSITIONDETAIL;
--- DROP TABLE CHB_MONTH_ASSET_POSITIONDETAIL;
+DROP TABLE CHB_MONTH_PRD_POSITIONDETAIL;
+DROP TABLE CHB_MONTH_ASSET_POSITIONDETAIL;
 
 create table CHB_MONTH_PRD_POSITIONDETAIL
 (
   posuuid           VARCHAR2(36) not null,
   prodid            VARCHAR2(150),
-  term             VARCHAR2(10),
+  TERM             VARCHAR2(10),
   detailNo         VARCHAR2(50),
   ccy               VARCHAR2(3),
   raisemode         VARCHAR2(2),
@@ -141,7 +202,7 @@ comment on column CHB_MONTH_PRD_POSITIONDETAIL.open_type
 comment on column CHB_MONTH_PRD_POSITIONDETAIL.ivstorientation
   is '投资性质 01固定收益类/02权益类/03混合类/04商品及金融衍生品类';
 comment on column CHB_MONTH_PRD_POSITIONDETAIL.termtype
-  is '期限品种01 T+0产品/02 7天（含）以内/03 7天-1个月（含）/04 1-3个月（含）/05 3-6 25个月(含)/06 6-12个月（含）/07 1-3年（含）/08 3年以上';
+  is '期限品种';
 comment on column CHB_MONTH_PRD_POSITIONDETAIL.termdays
   is '期限（天）';
 comment on column CHB_MONTH_PRD_POSITIONDETAIL.is_transfer
@@ -220,7 +281,7 @@ alter table CHB_MONTH_PRD_POSITIONDETAIL
 
 create table CHB_MONTH_ASSET_POSITIONDETAIL(
   posuuid          VARCHAR2(36) not null,
-  term             VARCHAR2(10),
+  TERM             VARCHAR2(10),
   detailNo         VARCHAR2(50),
   invest_variety   VARCHAR2(4),
   asset_code       VARCHAR2(50),
@@ -338,7 +399,7 @@ alter table CHB_MONTH_ASSET_POSITIONDETAIL
 
 
 
-
+DROP TABLE PBC_MONTH_PRD_POSITIONDETAIL;
 -- Create table
 create table PBC_MONTH_PRD_POSITIONDETAIL
 (
@@ -349,6 +410,7 @@ create table PBC_MONTH_PRD_POSITIONDETAIL
   transfer_type   VARCHAR2(2),
   buy_place       VARCHAR2(50),
   operate_mode    VARCHAR2(2),
+  ord_identified    VARCHAR2(10),
   raisemode       VARCHAR2(2),
   ivstorientation VARCHAR2(2),
   manage_type     VARCHAR2(2),
@@ -397,6 +459,8 @@ comment on column PBC_MONTH_PRD_POSITIONDETAIL.transfer_type
   is '转让类型：01 收益权转让/99 其他';
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.buy_place
   is '销售区域';
+comment on column PBC_MONTH_PRD_POSITIONDETAIL.ord_identified
+  is '投资者类别 01自然人/02非金融机构/03银行金融机构/04其他金融机构';
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.operate_mode
   is '运行方式：01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型 ';
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.raisemode
@@ -415,7 +479,7 @@ comment on column PBC_MONTH_PRD_POSITIONDETAIL.vdate
   is '起息日，结合存续状态获得新发产品（起息日在本期=03）';
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.paystatus
   is '兑付状态：01 正常兑付/02 提前兑付/03 延期兑付/04 到期未兑付';
-comment on column PBC_MONTH_PRD_POSITIONDETAIL.term
+comment on column PBC_MONTH_PRD_POSITIONDETAIL.termdays
   is '合同期限：0表示无固定期限，其他值根据期限所属区间映射';
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.ccy
   is '存续期交易的币种 CNY:人民币/USD:美元/EUR 欧元/GBP 英镑/JPY 日元/OTH 其他币种';
@@ -456,12 +520,13 @@ comment on column PBC_MONTH_PRD_POSITIONDETAIL.sale_target
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.open_type
   is '开放类型 01：现金管理类产品 02：封闭期在半年以上的定期开放式产品 99 : 其他';
 comment on column PBC_MONTH_PRD_POSITIONDETAIL.termtype
-  is '期限品种01 T+0产品/02 7天（含）以内/03 7天-1个月（含）/04 1-3个月（含）/05 3-6 25个月(含)/06 6-12个月（含）/07 1-3年（含）/08 3年以上';
+  is '期限品种';
 
 -- Create/Recreate primary, unique and foreign key constraints
 alter table PBC_MONTH_PRD_POSITIONDETAIL
   add constraint PBC_MONTH_PRD_POSIDETAIL_PK primary key (POSUUID);
 
+DROP TABLE PBC_MONTH_ASSET_POSITIONDETAIL;
 
 -- Create table
 create table PBC_MONTH_ASSET_POSITIONDETAIL
@@ -470,6 +535,7 @@ create table PBC_MONTH_ASSET_POSITIONDETAIL
   prodid        VARCHAR2(50),
   term             VARCHAR2(10),
   detailNo         VARCHAR2(50),
+  detailNo2         VARCHAR2(50),
   position_type VARCHAR2(50),
   chl_id        VARCHAR2(36),
   asset_code    VARCHAR2(300),
@@ -501,7 +567,13 @@ create table PBC_MONTH_ASSET_POSITIONDETAIL
   org_asset_type1         VARCHAR2(50),
   org_asset_type2         VARCHAR2(50),
   org_asset_type3         VARCHAR2(50),
-    buy_place       VARCHAR2(50)
+    buy_place       VARCHAR2(50),
+     borrower_type                  VARCHAR2(10),
+     industry_info                  VARCHAR2(10),
+     enterprise_scale               VARCHAR2(40),
+     borrower_city                  VARCHAR2(50),
+     assets_invest                  VARCHAR2(50),
+     each_proportion                VARCHAR2(50)
 
 );
 -- Add comments to the table
@@ -572,7 +644,18 @@ comment on column PBC_MONTH_ASSET_POSITIONDETAIL.org_asset_type1
   is '投管一级分类';
 comment on column PBC_MONTH_ASSET_POSITIONDETAIL.org_asset_type1
   is '投管一级分类';
-
+comment on column PBC_MONTH_ASSET_POSITIONDETAIL.assets_invest
+  is '贷款-基础资产投向分类';
+comment on column PBC_MONTH_ASSET_POSITIONDETAIL.each_proportion
+  is '贷款-各比例';
+comment on column PBC_MONTH_ASSET_POSITIONDETAIL.borrower_type
+  is '贷款-借款人类型';
+comment on column PBC_MONTH_ASSET_POSITIONDETAIL.industry_info
+  is '贷款-行业信息';
+comment on column PBC_MONTH_ASSET_POSITIONDETAIL.borrower_city
+  is '贷款-借款人地区(市)';
+comment on column PBC_MONTH_ASSET_POSITIONDETAIL.enterprise_scale
+  is '贷款-企业规模';
 -- Create/Recreate primary, unique and foreign key constraints
 alter table PBC_MONTH_ASSET_POSITIONDETAIL
   add constraint PBC_MONTH_ASSET_POSIDETAIL_PK primary key (POSUUID);

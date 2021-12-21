@@ -4,17 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -177,7 +168,7 @@ public class PbcMonthAssetReportService  extends BaseService{
     @Autowired
 	private PbcMonthReportDetailAssetUtil pbcMonthReportDetailAssetUtil;
 
-    private List<PbcMonthReportDetailAsset> assetDetailList = new ArrayList();
+    private List<PbcMonthReportDetailAsset> assetDetailList;
 
 
 	/*
@@ -210,6 +201,7 @@ public class PbcMonthAssetReportService  extends BaseService{
      * void
      */
     public void generateMonthAssetReport(Date generateDate,List<String> prodList,boolean isEdit){
+        assetDetailList = new ArrayList<>();
         logger.debug("资产报表生成(2_1\2_4\2_5\3_3):----开始------" +  df.format(new Date())); 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(generateDate);
@@ -267,6 +259,10 @@ public class PbcMonthAssetReportService  extends BaseService{
         // 表2-4 资产收益权按基础资产投向分类统计表
 //        generateMonthAssetReportInCome(posAssetList,generateDate,assetMap,isEdit);
         generateMonthAssetReportInComeEx(posAssetList,generateDate,chbLoandMap,isEdit);
+        //为明细信息赋值对应的贷款属性
+        PbcMonthReportDetailAssetUtil.updateLoan(assetDetailList,chbLoandMap);
+
+
         // 表2-5 企业债券分行业、企业规模统计
         generateMonthReportCompanyBond(posAssetList,generateDate,assetMap,isEdit);
 //        }
@@ -7718,51 +7714,68 @@ public class PbcMonthAssetReportService  extends BaseService{
     		,Map<String, BigDecimal> rateMap,String source){
     	BigDecimal cnyAmt = ChbCcyConvertUtil.exchangeMoney(
     			pos.getCcy(),DictCodeListExt1.币种_中债_人民币.getValue(),pos.getEnddate(),pos.getAmt(),rateMap,source);
+    	String code2 = "";
     	if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q01.equals(pos.getAssetType3())){//贷款收益权
-//			BigDecimal cnyAmt=BigDecimal.ZERO;
-			
 			if(line.getLoanIncomeRight()!=null){
 				line.setLoanIncomeRight(line.getLoanIncomeRight().add(cnyAmt));
 			}else{
 				line.setLoanIncomeRight(cnyAmt);
 			}
+            code2 = PbcReportProperycode.AMT_761000_DKSYQ;
 		}else if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q02.equals(pos.getAssetType3())){//债务证券收益权
 			if(line.getDebtSecuritiesIncomeRights()!=null){
 				line.setDebtSecuritiesIncomeRights(line.getDebtSecuritiesIncomeRights().add(cnyAmt));
 			}else{
 				line.setDebtSecuritiesIncomeRights(cnyAmt);
 			}
-		}else if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q03.equals(pos.getAssetType3())){//应收账款收益权
+            code2 = PbcReportProperycode.AMT_762000_ZWZQSYQ;
+
+        }else if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q03.equals(pos.getAssetType3())){//应收账款收益权
 			if(line.getReceivableIncomeRights()!=null){
 				line.setReceivableIncomeRights(line.getReceivableIncomeRights().add(cnyAmt));
 			}else{
 				line.setReceivableIncomeRights(cnyAmt);
 			}
-		}else if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q04.equals(pos.getAssetType3())){//其他债权收益权
+            code2 = PbcReportProperycode.AMT_763000_YSZKSYQ;
+
+        }else if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q04.equals(pos.getAssetType3())){//其他债权收益权
 			if(line.getOtherCreditorRights()!=null){
 				line.setOtherCreditorRights(line.getOtherCreditorRights().add(cnyAmt));
 			}else{
 				line.setOtherCreditorRights(cnyAmt);
 			}
-		}else if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q05.equals(pos.getAssetType3())){//股票收益权
+            code2 = PbcReportProperycode.AMT_764000_QTZQSYQ;
+
+        }else if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q05.equals(pos.getAssetType3())){//股票收益权
 			if(line.getStockIncomeRight()!=null){
 				line.setStockIncomeRight(line.getStockIncomeRight().add(cnyAmt));
 			}else{
 				line.setStockIncomeRight(cnyAmt);
 			}
-		}else if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q06.equals(pos.getAssetType3())){//其他股权收益权
+            code2 = PbcReportProperycode.AMT_765000_GPSYQ;
+
+        }else if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q06.equals(pos.getAssetType3())){//其他股权收益权
 			if(line.getOtherEquityIncomeRights()!=null){
 				line.setOtherEquityIncomeRights(line.getOtherEquityIncomeRights().add(cnyAmt));
 			}else{
 				line.setOtherEquityIncomeRights(cnyAmt);
 			}
-		}else if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q07.equals(pos.getAssetType3())){//物权资产收益权
+            code2 = PbcReportProperycode.AMT_766000_QTGQSYQ;
+
+        }else if(PbcMonthReportConstants.PBC_ASSETTYPE3_Q07.equals(pos.getAssetType3())){//物权资产收益权
 			if(line.getPropertyRights()!=null){
 				line.setPropertyRights(line.getPropertyRights().add(cnyAmt));
 			}else{
 				line.setPropertyRights(cnyAmt);
 			}
-		}
+            code2 = PbcReportProperycode.AMT_767000_WQZCSYQ;
+
+        }else{
+    	    return;
+        }
+    	if(null!=line.getPropertycode()&&!PbcReportProperycode.AMT_B00000_ZJ.equals(line.getPropertycode())){
+            assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail2(pos,line,line.getPropertycode(),code2));
+        }
     }
     /**
      * 表2-4 行塞值
@@ -7900,7 +7913,8 @@ public class PbcMonthAssetReportService  extends BaseService{
     		}
     		//汇总数据计算
     		setAssetDebtDetailValue((PbcReportAssetDebtDetailDto)dto.get(code), pos.getCcy(), amt, rateMap, (Date) assetMap.get("endDate"),source);
-            if(!StringUtil.isNotEmpty(hxl)){
+            if(!StringUtil.isNotEmpty(hxl)&&
+                    PbcMonthReportDetailAssetUtil.isAssetDate(code)){
                 assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,dto.get(code),code));
             }
     		if(null!=deptDto&&null!=deptDto.get(pos.getInstitutionCode())){
@@ -7917,7 +7931,6 @@ public class PbcMonthAssetReportService  extends BaseService{
     	}else if(PbcReportType.PBC_REPORT_2_2.equals(rep_code)){
     		//汇总数据计算
     		setCompanyDetailValue(pos, (PbcReportCompanyDetailDto)dto.get(code), rateMap, source, hxl, false);
-            assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,dto.get(code),code));
             //部门数据计算
         	if(null!=deptDto&&null!=deptDto.get(code)){
         		setCompanyDetailValue(pos, (PbcReportCompanyDetailDto)deptDto.get(code), rateMap, source, hxl, false);
@@ -7927,7 +7940,6 @@ public class PbcMonthAssetReportService  extends BaseService{
     	}else if(PbcReportType.PBC_REPORT_2_3.equals(rep_code)){
     		//汇总数据计算
     		setAreaDetailValue(pos,(PbcReportAreaDetailDto)dto.get(code), rateMap,source,hxl);
-            assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,dto.get(code),code));
             //部门数据计算
         	if(null!=deptDto&&null!=deptDto.get(code)){
         		setAreaDetailValue(pos,(PbcReportAreaDetailDto)deptDto.get(code), rateMap,source,hxl);
@@ -7936,7 +7948,6 @@ public class PbcMonthAssetReportService  extends BaseService{
     	}else if(PbcReportType.PBC_REPORT_2_4.equals(rep_code)){
     		//汇总数据计算
     		setAssetReportInComeValueEx(pos,(PbcReportAssetIncomeDetail)dto.get(code), rateMap,source,hxl,assetMap);
-            assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,dto.get(code),code));
             //部门数据计算
         	if(null!=deptDto&&null!=deptDto.get(code)){
         		setAssetReportInComeValueEx(pos,(PbcReportAssetIncomeDetail)deptDto.get(code), rateMap,source,hxl,assetMap);
@@ -7945,7 +7956,7 @@ public class PbcMonthAssetReportService  extends BaseService{
     	}else if(PbcReportType.PBC_REPORT_2_5.equals(rep_code)){
     		//汇总数据计算
         	setAssetReportCompanyBondValue(pos,(PbcReportCompanyDetailDto)dto.get(code), rateMap,source,hxl,assetMap);
-        	//部门数据计算
+            //部门数据计算
         	if(null!=deptDto&&null!=deptDto.get(code)){
         		
         		setAssetReportCompanyBondValue(pos,(PbcReportCompanyDetailDto)deptDto.get(code), rateMap,source,hxl,assetMap);
@@ -8424,7 +8435,7 @@ public class PbcMonthAssetReportService  extends BaseService{
 				line.setMediumCompanyAmt(cnyAmt);
 			}
 		}
-        assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,line,line.getPropertycode()));
+//        assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,line,line.getPropertycode()));
 
     }
     /**
@@ -8512,7 +8523,7 @@ public class PbcMonthAssetReportService  extends BaseService{
                     line.setSpecialShare(cnyAmt);
                 }
             }
-            assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,line,line.getPropertycode()));
+//            assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,line,line.getPropertycode()));
         } else if (PbcMonthReportConstants.PBC_GROUPTYPE_3_3_02.equals(line.getGrouptype())
             && (PbcMonthReportConstants.POSITION_TYPE_FZ.equals(pos.getPositionType())
 	        		|| PbcMonthReportConstants.PBC_ASSETTYPE3_J03.equals(pos.getAssetType3())
@@ -8535,7 +8546,7 @@ public class PbcMonthAssetReportService  extends BaseService{
                     line.setDebtInstrument(cnyAmt);
                 }
             }
-            assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,line,line.getPropertycode()));
+//            assetDetailList.add(PbcMonthReportDetailAssetUtil.buildAssetDetail(pos,line,line.getPropertycode()));
         }
     }
     private  void setReportDebttermValueProd(PbcMonthPrdPostionDto pos,PbcReportDebtTermDetail line

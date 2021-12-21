@@ -134,8 +134,15 @@ public class SvrSalesTransactionDBInterf extends BaseService{
 							// 删除数据List.add(此条记录）
 							deleteList.add(sub);
 							sub.setDataStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+							Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+							dateList = ChbDeadlineUtil.getChbEndDate(
+									DictCodeListExt2.报表名称_销售结算资金交易信息登记.getValue(), sub.getDataStatus(), dateMap, sub.getTradeVdate());
 							// 报送状态
 							sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+							if (!CollectionUtils.isEmpty(dateList)) {
+								sub.setChbSubmitDeadline(dateList.get(0));
+								sub.setSubmitDeadline(dateList.get(1));
+							}
 							insertList.add(sub);
 						}
 					} else {
@@ -158,6 +165,13 @@ public class SvrSalesTransactionDBInterf extends BaseService{
 									sub.setDataStatus(subYw.getDataStatus());
 									// 报送状态
 									sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+									Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+									dateList = ChbDeadlineUtil.getChbEndDate(
+											DictCodeListExt2.报表名称_销售结算资金交易信息登记.getValue(), sub.getDataStatus(), dateMap, sub.getTradeVdate());
+									if (!CollectionUtils.isEmpty(dateList)) {
+										sub.setChbSubmitDeadline(dateList.get(0));
+										sub.setSubmitDeadline(dateList.get(1));
+									}
 									insertList.add(sub);
 								}
 							}
@@ -180,6 +194,13 @@ public class SvrSalesTransactionDBInterf extends BaseService{
 								sub.setDataStatus(DictCodeListExt2.报送数据状态_删除.getValue());
 								// 报送状态
 								sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+								Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+								dateList = ChbDeadlineUtil.getChbEndDate(
+										DictCodeListExt2.报表名称_销售结算资金交易信息登记.getValue(), sub.getDataStatus(), dateMap, sub.getTradeVdate());
+								if (!CollectionUtils.isEmpty(dateList)) {
+									sub.setChbSubmitDeadline(dateList.get(0));
+									sub.setSubmitDeadline(dateList.get(1));
+								}
 								insertList.add(sub);
 
 							}
@@ -193,6 +214,13 @@ public class SvrSalesTransactionDBInterf extends BaseService{
 									sub.setDataStatus(DictCodeListExt2.报送数据状态_修改.getValue());
 									// 报送状态
 									sub.setSendStatus(DictCodeListExt2.报送状态_未报送.getValue());
+									Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+									dateList = ChbDeadlineUtil.getChbEndDate(
+											DictCodeListExt2.报表名称_销售结算资金交易信息登记.getValue(), sub.getDataStatus(), dateMap, sub.getTradeVdate());
+									if (!CollectionUtils.isEmpty(dateList)) {
+										sub.setChbSubmitDeadline(dateList.get(0));
+										sub.setSubmitDeadline(dateList.get(1));
+									}
 									insertList.add(sub);
 
 								}
@@ -207,6 +235,13 @@ public class SvrSalesTransactionDBInterf extends BaseService{
 					// 删除数据List.add(此条记录）
 					// 新建数据List.add(此条记录）
 					deleteList.add(sub);
+					Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+					dateList = ChbDeadlineUtil.getChbEndDate(
+							DictCodeListExt2.报表名称_销售结算资金交易信息登记.getValue(), sub.getDataStatus(), dateMap, sub.getTradeVdate());
+					if (!CollectionUtils.isEmpty(dateList)) {
+						sub.setChbSubmitDeadline(dateList.get(0));
+						sub.setSubmitDeadline(dateList.get(1));
+					}
 					insertList.add(sub);
 				}
             } else{
@@ -216,18 +251,26 @@ public class SvrSalesTransactionDBInterf extends BaseService{
                 } else {
                 	sub.setDataStatus(DictCodeListExt2.报送数据状态_新建.getValue());
                     deleteList.add(sub);
+					Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+					dateList = ChbDeadlineUtil.getChbEndDate(
+							DictCodeListExt2.报表名称_销售结算资金交易信息登记.getValue(), sub.getDataStatus(), dateMap, sub.getTradeVdate());
+					if (!CollectionUtils.isEmpty(dateList)) {
+						sub.setChbSubmitDeadline(dateList.get(0));
+						sub.setSubmitDeadline(dateList.get(1));
+					}
+					insertList.add(sub);
                 }
             }
-			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
-			dateList = ChbDeadlineUtil.getChbEndDate(
-	                DictCodeListExt2.报表名称_销售结算资金交易信息登记.getValue(), sub.getDataStatus(), dateMap, sub.getTradeVdate());
-	        if (!CollectionUtils.isEmpty(dateList)) {
-	        	sub.setChbSubmitDeadline(dateList.get(0));
-	        	sub.setSubmitDeadline(dateList.get(1));
-//	        	sub.setDataStatus(dateList.get());
-	        }
-            // 准备插入处理修改未报送的数据
-            insertList.add(sub);
+//			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+//			dateList = ChbDeadlineUtil.getChbEndDate(
+//	                DictCodeListExt2.报表名称_销售结算资金交易信息登记.getValue(), sub.getDataStatus(), dateMap, sub.getTradeVdate());
+//	        if (!CollectionUtils.isEmpty(dateList)) {
+//	        	sub.setChbSubmitDeadline(dateList.get(0));
+//	        	sub.setSubmitDeadline(dateList.get(1));
+////	        	sub.setDataStatus(dateList.get());
+//	        }
+//            // 准备插入处理修改未报送的数据
+//            insertList.add(sub);
     	}
     	
     	//4、持久化DB

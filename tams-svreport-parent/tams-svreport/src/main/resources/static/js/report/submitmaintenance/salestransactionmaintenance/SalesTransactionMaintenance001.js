@@ -52,7 +52,7 @@
             ,{field:'tradeCounterAccName', title: '销售结算资金交易对手方账户名称', width:'150',sortField:'tradeCounterAccName'}
             ,{field:'tradeCounterAccBankNo', title: '销售结算资金交易对手方开户行名称 ', width:'150',sortField:'tradeCounterAccBankNo'}
             ,{field:'tradeCounterAccBankName', title: '销售结算资金交易对手方账户开户行号 ', width:'150',sortField:'tradeCounterAccBankName'}
-            ,{field:'tradeCcy', title: '销售结算资金交易币种', width:'150',sortField:'tradeCcy'}
+            ,{field:'tradeCcyName', title: '销售结算资金交易币种', width:'150',sortField:'tradeCcy'}
             ,{field:'tradeAmt', title: '销售结算资金交易金额', width:'150',sortField:'tradeAmt',type:'money',digit: 2}
             ,{field:'tradeTime', title: '销售结算资金交易时间', width:'150',sortField:'tradeTime'}
             ,{field:'tradeNo', title: '销售结算资金交易流水号', width:'150',sortField:'tradeNo'}
@@ -172,6 +172,11 @@
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
+            }
+            for(var i=0;i<selArr.length;i++){
+              if(selArr[i].dataStatus !="E"){
+                 return Joyin.error("只能删除有效数据，请重新选择");
+              }
             }
             var object = {selectedItem: selArr, operateType:"delete"};
             Joyin.ajaxJson(basePath + 'report/submitmaintenance/salestransactionmaintenance/SalesTransactionMaintenance001/check', object, function(result) {

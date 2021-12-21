@@ -21,110 +21,30 @@ import java.util.Date;
  */
 public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implements  Cloneable{
 
-    /**
-     * null
-     */
-    private String posuuid;
-
-    /**
-     * 产品代码
-     */
-    private String prodid;
 
 
-    /**
-     * 产品名称
-     */
+
     private String prodName;
-
-    /**
-     * 起息日
-     */
-    private Date vdate;
-
-    /**
-     * 到期日
-     */
-    private Date mdate;
-
-    /**
-     * 募集方式 01：公募 02：私募
-     */
-    private String raiseType;
-
-    /**
-     * 投资性质 01固定收益类/02权益类/03混合类/04商品及金融衍生品类
-     */
-    private String ivstorientation;
-
-    /**
-     * 统计日期
-     */
-    private Date bookdate;
-
-    /**
-     * 开放类型
-     */
-    private String opentype;
-
     /**
      * 期限
      */
     private String term;
 
     /**
-     * 币种 CNY:人民币/USD:美元/EUR 欧元/QTBZ 其他币种
+     *
+     * 是否金融同业专属
      */
-    private String raiseCcy;
+    private String excFinSector;
 
-    /**
-     * 期限品种01 T+0产品/02 7天（含）以内/03 7天-1个月（含）/04 1-3个月（含）/05 3-6 25个月(含)/06 6-12个月（含）/07 1-3年（含）/08 3年以上
-     */
-    private String termtype;
-
-    /**
-     * 运行方式01 封闭式净值型/02 封闭式非净值型/03 开放式净值型/04 开放式非净值型
-     */
-    private String operateMode;
-
-    /**
-     * 是否母行划转产品
-     */
-    private String isTransfer;
     /**
      * 是否保本理财
      */
     private String isBreakeven;
 
     /**
-     * 新老产品标记
+     * 开放类型
      */
-    private String isFhxgcp;
-
-    /**
-     * 是否金融同业专属
-     */
-    private String excFinSector;
-
-    /**
-     * 是否养老理财产品
-     * @return
-     */
-    private   String  isYllccp;
-
-    /**
-     * 本期总募集金额
-     */
-    @JsonSerialize(using= BigDecimalSerializer.class)
-    private BigDecimal dirtyamtsum;
-
-    /**
-     * 本期净募集金额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal cleanamtsum;
-
-
+    private String opentype;
 
     /**
      * 是否本期发行
@@ -136,32 +56,6 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
      * 是否本期发行
      */
     private String isEndTrem;
-
-    /**
-     * 期末余额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal endamtsumOth;
-
-    /**
-     * 本期兑付金额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal payamtsum;
-
-
-    /**
-     * 本期客户实现收益总额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal customeramt;
-
-    /**
-     * 本期银行实现收益总额
-     */
-    @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal bankamt;
-
 
     /**
      * 本期银行实现收益总额
@@ -211,22 +105,6 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
     private BigDecimal ordIdentified09;
 
 
-    public String getIsEndTrem() {
-        return isEndTrem;
-    }
-
-    public void setIsEndTrem(String isEndTrem) {
-        this.isEndTrem = isEndTrem;
-    }
-
-    public String getProdid() {
-        return prodid;
-    }
-
-    public void setProdid(String prodid) {
-        this.prodid = prodid;
-    }
-
     public String getProdName() {
         return prodName;
     }
@@ -235,60 +113,12 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
         this.prodName = prodName;
     }
 
-    public Date getVdate() {
-        return vdate;
+    public String getIsEndTrem() {
+        return isEndTrem;
     }
 
-    public void setVdate(Date vdate) {
-        this.vdate = vdate;
-    }
-
-    public Date getMdate() {
-        return mdate;
-    }
-
-    public void setMdate(Date mdate) {
-        this.mdate = mdate;
-    }
-
-    public String getPosuuid() {
-        return posuuid;
-    }
-
-    public void setPosuuid(String posuuid) {
-        this.posuuid = posuuid;
-    }
-
-    public String getRaiseType() {
-        return raiseType;
-    }
-
-    public void setRaiseType(String raiseType) {
-        this.raiseType = raiseType;
-    }
-
-    public String getIvstorientation() {
-        return ivstorientation;
-    }
-
-    public void setIvstorientation(String ivstorientation) {
-        this.ivstorientation = ivstorientation;
-    }
-
-    public Date getBookdate() {
-        return bookdate;
-    }
-
-    public void setBookdate(Date bookdate) {
-        this.bookdate = bookdate;
-    }
-
-    public String getOpentype() {
-        return opentype;
-    }
-
-    public void setOpentype(String opentype) {
-        this.opentype = opentype;
+    public void setIsEndTrem(String isEndTrem) {
+        this.isEndTrem = isEndTrem;
     }
 
     public String getTerm() {
@@ -299,124 +129,12 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
         this.term = term;
     }
 
-    public String getRaiseCcy() {
-        return raiseCcy;
-    }
-
-    public void setRaiseCcy(String raiseCcy) {
-        this.raiseCcy = raiseCcy;
-    }
-
-    public String getTermtype() {
-        return termtype;
-    }
-
-    public void setTermtype(String termtype) {
-        this.termtype = termtype;
-    }
-
-    public String getOperateMode() {
-        return operateMode;
-    }
-
-    public void setOperateMode(String operateMode) {
-        this.operateMode = operateMode;
-    }
-
-    public String getIsTransfer() {
-        return isTransfer;
-    }
-
-    public void setIsTransfer(String isTransfer) {
-        this.isTransfer = isTransfer;
-    }
-
-    public String getIsBreakeven() {
-        return isBreakeven;
-    }
-
-    public void setIsBreakeven(String isBreakeven) {
-        this.isBreakeven = isBreakeven;
-    }
-
-    public String getIsFhxgcp() {
-        return isFhxgcp;
-    }
-
-    public void setIsFhxgcp(String isFhxgcp) {
-        this.isFhxgcp = isFhxgcp;
-    }
-
-    public String getExcFinSector() {
-        return excFinSector;
-    }
-
-    public void setExcFinSector(String excFinSector) {
-        this.excFinSector = excFinSector;
-    }
-
-    public String getIsYllccp() {
-        return isYllccp;
-    }
-
-    public void setIsYllccp(String isYllccp) {
-        this.isYllccp = isYllccp;
-    }
-
-    public BigDecimal getDirtyamtsum() {
-        return dirtyamtsum;
-    }
-
-    public void setDirtyamtsum(BigDecimal dirtyamtsum) {
-        this.dirtyamtsum = dirtyamtsum;
-    }
-
-    public BigDecimal getCleanamtsum() {
-        return cleanamtsum;
-    }
-
-    public void setCleanamtsum(BigDecimal cleanamtsum) {
-        this.cleanamtsum = cleanamtsum;
-    }
-
     public String getIsThisTrem() {
         return isThisTrem;
     }
 
     public void setIsThisTrem(String isThisTrem) {
         this.isThisTrem = isThisTrem;
-    }
-
-    public BigDecimal getEndamtsumOth() {
-        return endamtsumOth;
-    }
-
-    public void setEndamtsumOth(BigDecimal endamtsumOth) {
-        this.endamtsumOth = endamtsumOth;
-    }
-
-    public BigDecimal getPayamtsum() {
-        return payamtsum;
-    }
-
-    public void setPayamtsum(BigDecimal payamtsum) {
-        this.payamtsum = payamtsum;
-    }
-
-    public BigDecimal getCustomeramt() {
-        return customeramt;
-    }
-
-    public void setCustomeramt(BigDecimal customeramt) {
-        this.customeramt = customeramt;
-    }
-
-    public BigDecimal getBankamt() {
-        return bankamt;
-    }
-
-    public void setBankamt(BigDecimal bankamt) {
-        this.bankamt = bankamt;
     }
 
     public BigDecimal getOrdIdentified01() {
@@ -507,6 +225,17 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
         return SysDataUtil.getNameFromDataDict(DictCode.募集方式_中债, this.getRaisemode());
     }
 
+    private String raiseType;
+    public String getRaiseType() {
+        return raiseType;
+    }
+
+    public void setRaiseType(String raiseType) {
+        this.raiseType = raiseType;
+    }
+    public String getRaiseTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.募集方式_中债, this.getRaiseType());
+    }
 
     public String getIvstorientationStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.投资性质, this.getIvstorientation());
@@ -516,12 +245,42 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
         return SysDataUtil.getNameFromDataDict(DictCode.产品运作模式, this.getOperateMode());
     }
 
+
+    public String getCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债, this.getCcy());
+    }
+
+    public String getExcFinSector() {
+        return excFinSector;
+    }
+
+    public void setExcFinSector(String excFinSector) {
+        this.excFinSector = excFinSector;
+    }
+
+    public String getOpentype() {
+        return opentype;
+    }
+
+    public void setOpentype(String opentype) {
+        this.opentype = opentype;
+    }
+
+    public String getIsBreakeven() {
+        return isBreakeven;
+    }
+
+    public void setIsBreakeven(String isBreakeven) {
+        this.isBreakeven = isBreakeven;
+    }
+
     public String getOpentypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.开放类型, this.getOpentype());
+        return SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_开放类型, this.getOpentype());
     }
 
     public String getTermtypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.期限类型, this.getTermtype());
+        String  code = SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_期限类型, this.getTermtype());
+        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.产品期限, this.getTermtype());
     }
 
     public String getIsTransferStr() {
@@ -539,6 +298,8 @@ public class ChbMonthReportDetailProd extends ChbMonthPrdPositiondetail implemen
     public String getExcFinSectorStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getExcFinSector());
     }
+
+
 
     public String getIsFhxgcpStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsFhxgcp());

@@ -673,7 +673,7 @@
         			 </if>
 			    AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
 				    			WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK
-				    		    AND T.SUBMIT_STATUS = '03'
+				    		    AND T.SUBMIT_STATUS in('02','03')
 			                  )
   </delete>
   

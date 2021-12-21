@@ -65,7 +65,7 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 	 */
 	public List<String> generatePrdOpenschData(Date batchDate,List<String> prodIdlist){
 		// 查询数据
-		List<ChbPrdOpensch> openSchlist = getBusEntity(prodIdlist, "D");
+		List<ChbPrdOpensch> openSchlist = getBusEntity(prodIdlist,null, null, "D");
 		// 入库
 		if(!StringUtil.isEmptyList(openSchlist)){
 			insertData2(openSchlist);
@@ -73,7 +73,7 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 		return null;
 	}
 	@Override
-	public List<ChbPrdOpensch> getBusEntity(List<String> prodIdlist, String source) {
+	public List<ChbPrdOpensch> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
 		//从FIN_OPEN_PLAN获取数据进入CHB_PRD_OPENSCH
 		//切换数据源查询信息
 		ChbPrdOpenschInterf chbPrdOpenschInterf2 =  SpringContextUtil.getBean(ChbPrdOpenschInterf.class);

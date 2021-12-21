@@ -7,24 +7,28 @@
 			P.POSUUID,
 			P.PRODID,
 			B.PROD_NAME prodName,
+			P.RAISEMODE raisemode,
 			B.VDATE,
 			B.MDATE,
 			B.raise_type raiseType,
 			B.IVSTORIENTATION,
-			B.raise_ccy raiseCcy,
+			P.ccy,
 			B.OPERATE_MODE operateMode,
-			DECODE(p.OPERATE_MODE,'03','01') opentype,
-			P.CLOSETERMDAY term,
+	 		 CASE WHEN B.OPERATE_MODE = '03' THEN
+				  CASE WHEN B.cash_mana_cate = '01' THEN '01'
+				  WHEN B.termtype IN ('06','08','09') THEN '02'
+				  ELSE '99' END END opentype,
+			P.TERMDAYS term,
 			P.termtype,
 			b.is_transfer isTransfer,
 			decode(b.profit_type,'03','02','01') isBreakeven,
 			b.is_fhxgcp isFhxgcp,
-			DECODE(B.saletarget,'04','01','02') excFinSector,
+	  		B.exc_fin_sector excFinSector,
 			B.IS_YLLCCP isYllccp,
 			p.dirtyamtsum,
 			p.cleanamtsum,
 			CASE WHEN TO_CHAR(B.VDATE,'yyyyMM') = P.TERM then '01' else '02' end isThisTrem,
-			CASE WHEN TO_CHAR(B.MDATE,'yyyyMM') = P.TERM then '01' else '02' end isEndTrem,
+			CASE WHEN TO_CHAR(B.MDATE,'yyyyMM') &lt; P.TERM then '02' else '01' end isEndTrem,
 			P.ENDAMTSUM_OTH endamtsumOth,
 			P.PAYAMTSUM payamtsum,
 			P.CUSTOMERAMT customeramt,
@@ -43,14 +47,12 @@
 		LEFT JOIN CHB_PRD_BASEINFO B ON P.PRODID= b.Prod_Id
 		WHERE 1=1
 	  <if test="enddate != null and enddate != ''">
-	 	 and TP.TERM =  #{enddate,jdbcType=VARCHAR}
+	 	 and P.TERM =  #{enddate,jdbcType=VARCHAR}
 	  </if>
-	  <if test="prodIds != null and prodIds.size()>0 ">
-		  AND P.PRODID IN(
-		  <foreach item="item" index="index" collection="prodIds" separator=",">
+	  <if test="prodIds != null and prodIds != '' ">
+		  <foreach item="item" index="index" collection="prodIds" separator="," open=" AND P.PRODID IN(" close=")">
 			  #{item}
 		  </foreach>
-		  )
 	  </if>
 
 	  <if test="keysList != null and keysList.size()>0 ">

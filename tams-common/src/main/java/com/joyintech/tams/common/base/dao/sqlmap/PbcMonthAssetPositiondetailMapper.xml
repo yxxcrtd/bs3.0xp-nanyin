@@ -6,6 +6,7 @@
         <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
         <result column="TERM" property="term" jdbcType="VARCHAR" />
         <result column="DETAILNO" property="detailno" jdbcType="VARCHAR" />
+        <result column="DETAILNO2" property="detailno2" jdbcType="VARCHAR" />
         <result column="POSITION_TYPE" property="positionType" jdbcType="VARCHAR" />
         <result column="CHL_ID" property="chlId" jdbcType="VARCHAR" />
         <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
@@ -38,17 +39,25 @@
         <result column="ORG_ASSET_TYPE2" property="orgAssetType2" jdbcType="VARCHAR" />
         <result column="ORG_ASSET_TYPE3" property="orgAssetType3" jdbcType="VARCHAR" />
         <result column="BUY_PLACE" property="buyPlace" jdbcType="VARCHAR" />
+        <result column="BORROWER_TYPE" property="borrowerType" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_INFO" property="industryInfo" jdbcType="VARCHAR" />
+        <result column="ENTERPRISE_SCALE" property="enterpriseScale" jdbcType="VARCHAR" />
+        <result column="BORROWER_CITY" property="borrowerCity" jdbcType="VARCHAR" />
+        <result column="ASSETS_INVEST" property="assetsInvest" jdbcType="VARCHAR" />
+        <result column="EACH_PROPORTION" property="eachProportion" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        POSUUID POSUUID, PRODID PRODID, TERM TERM, DETAILNO DETAILNO, POSITION_TYPE POSITION_TYPE, 
-        CHL_ID CHL_ID, ASSET_CODE ASSET_CODE, ASSET_TYPE1 ASSET_TYPE1, ASSET_TYPE2 ASSET_TYPE2, 
-        ASSET_TYPE3 ASSET_TYPE3, SUBJECT_NAME SUBJECT_NAME, RIVAL_PARTY RIVAL_PARTY, RATE RATE, 
-        CCY CCY, AMT AMT, INT_AMT INT_AMT, END_DAYS END_DAYS, DELAY_PAY_AMT DELAY_PAY_AMT, 
+        POSUUID POSUUID, PRODID PRODID, TERM TERM, DETAILNO DETAILNO, DETAILNO2 DETAILNO2, 
+        POSITION_TYPE POSITION_TYPE, CHL_ID CHL_ID, ASSET_CODE ASSET_CODE, ASSET_TYPE1 ASSET_TYPE1, 
+        ASSET_TYPE2 ASSET_TYPE2, ASSET_TYPE3 ASSET_TYPE3, SUBJECT_NAME SUBJECT_NAME, RIVAL_PARTY RIVAL_PARTY, 
+        RATE RATE, CCY CCY, AMT AMT, INT_AMT INT_AMT, END_DAYS END_DAYS, DELAY_PAY_AMT DELAY_PAY_AMT, 
         COST_AMT COST_AMT, FLOAT_INGPL FLOAT_INGPL, INTINCEXP INTINCEXP, INTADJEXP_ADD INTADJEXP_ADD, 
         LOSS_AMT LOSS_AMT, BAL_FLAG BAL_FLAG, VDATE VDATE, MDATE MDATE, OPENPLAN OPENPLAN, 
         INDUSTRY INDUSTRY, INDUSTRY_LEVEL2 INDUSTRY_LEVEL2, PARTY_TYPE1 PARTY_TYPE1, PARTY_TYPE3 PARTY_TYPE3, 
         PARTY_TYPE2 PARTY_TYPE2, ORG_ASSET_TYPE1 ORG_ASSET_TYPE1, ORG_ASSET_TYPE2 ORG_ASSET_TYPE2, 
-        ORG_ASSET_TYPE3 ORG_ASSET_TYPE3, BUY_PLACE BUY_PLACE
+        ORG_ASSET_TYPE3 ORG_ASSET_TYPE3, BUY_PLACE BUY_PLACE, BORROWER_TYPE BORROWER_TYPE, 
+        INDUSTRY_INFO INDUSTRY_INFO, ENTERPRISE_SCALE ENTERPRISE_SCALE, BORROWER_CITY BORROWER_CITY, 
+        ASSETS_INVEST ASSETS_INVEST, EACH_PROPORTION EACH_PROPORTION
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -72,29 +81,35 @@
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PbcMonthAssetPositiondetail" >
         insert into PBC_MONTH_ASSET_POSITIONDETAIL (POSUUID, PRODID, TERM, 
-            DETAILNO, POSITION_TYPE, CHL_ID, 
-            ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2, 
-            ASSET_TYPE3, SUBJECT_NAME, RIVAL_PARTY, 
-            RATE, CCY, AMT, INT_AMT, 
-            END_DAYS, DELAY_PAY_AMT, COST_AMT, 
-            FLOAT_INGPL, INTINCEXP, INTADJEXP_ADD, 
-            LOSS_AMT, BAL_FLAG, VDATE, 
-            MDATE, OPENPLAN, INDUSTRY, 
-            INDUSTRY_LEVEL2, PARTY_TYPE1, PARTY_TYPE3, 
-            PARTY_TYPE2, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, 
-            ORG_ASSET_TYPE3, BUY_PLACE)
+            DETAILNO, DETAILNO2, POSITION_TYPE, 
+            CHL_ID, ASSET_CODE, ASSET_TYPE1, 
+            ASSET_TYPE2, ASSET_TYPE3, SUBJECT_NAME, 
+            RIVAL_PARTY, RATE, CCY, 
+            AMT, INT_AMT, END_DAYS, 
+            DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL, 
+            INTINCEXP, INTADJEXP_ADD, LOSS_AMT, 
+            BAL_FLAG, VDATE, MDATE, 
+            OPENPLAN, INDUSTRY, INDUSTRY_LEVEL2, 
+            PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2, 
+            ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, 
+            BUY_PLACE, BORROWER_TYPE, INDUSTRY_INFO, 
+            ENTERPRISE_SCALE, BORROWER_CITY, ASSETS_INVEST, 
+            EACH_PROPORTION)
         values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR}, 
-            #{detailno,jdbcType=VARCHAR}, #{positionType,jdbcType=VARCHAR}, #{chlId,jdbcType=VARCHAR}, 
-            #{assetCode,jdbcType=VARCHAR}, #{assetType1,jdbcType=VARCHAR}, #{assetType2,jdbcType=VARCHAR}, 
-            #{assetType3,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, #{rivalParty,jdbcType=VARCHAR}, 
-            #{rate,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, #{amt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, 
-            #{endDays,jdbcType=DECIMAL}, #{delayPayAmt,jdbcType=DECIMAL}, #{costAmt,jdbcType=DECIMAL}, 
-            #{floatIngpl,jdbcType=DECIMAL}, #{intincexp,jdbcType=DECIMAL}, #{intadjexpAdd,jdbcType=DECIMAL}, 
-            #{lossAmt,jdbcType=DECIMAL}, #{balFlag,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, 
-            #{mdate,jdbcType=DATE}, #{openplan,jdbcType=DATE}, #{industry,jdbcType=VARCHAR}, 
-            #{industryLevel2,jdbcType=VARCHAR}, #{partyType1,jdbcType=VARCHAR}, #{partyType3,jdbcType=VARCHAR}, 
-            #{partyType2,jdbcType=VARCHAR}, #{orgAssetType1,jdbcType=VARCHAR}, #{orgAssetType2,jdbcType=VARCHAR}, 
-            #{orgAssetType3,jdbcType=VARCHAR}, #{buyPlace,jdbcType=VARCHAR})
+            #{detailno,jdbcType=VARCHAR}, #{detailno2,jdbcType=VARCHAR}, #{positionType,jdbcType=VARCHAR}, 
+            #{chlId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetType1,jdbcType=VARCHAR}, 
+            #{assetType2,jdbcType=VARCHAR}, #{assetType3,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, 
+            #{rivalParty,jdbcType=VARCHAR}, #{rate,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, 
+            #{amt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{endDays,jdbcType=DECIMAL}, 
+            #{delayPayAmt,jdbcType=DECIMAL}, #{costAmt,jdbcType=DECIMAL}, #{floatIngpl,jdbcType=DECIMAL}, 
+            #{intincexp,jdbcType=DECIMAL}, #{intadjexpAdd,jdbcType=DECIMAL}, #{lossAmt,jdbcType=DECIMAL}, 
+            #{balFlag,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, 
+            #{openplan,jdbcType=DATE}, #{industry,jdbcType=VARCHAR}, #{industryLevel2,jdbcType=VARCHAR}, 
+            #{partyType1,jdbcType=VARCHAR}, #{partyType3,jdbcType=VARCHAR}, #{partyType2,jdbcType=VARCHAR}, 
+            #{orgAssetType1,jdbcType=VARCHAR}, #{orgAssetType2,jdbcType=VARCHAR}, #{orgAssetType3,jdbcType=VARCHAR}, 
+            #{buyPlace,jdbcType=VARCHAR}, #{borrowerType,jdbcType=VARCHAR}, #{industryInfo,jdbcType=VARCHAR}, 
+            #{enterpriseScale,jdbcType=VARCHAR}, #{borrowerCity,jdbcType=VARCHAR}, #{assetsInvest,jdbcType=VARCHAR}, 
+            #{eachProportion,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PbcMonthAssetPositiondetail" >
         insert into PBC_MONTH_ASSET_POSITIONDETAIL
@@ -110,6 +125,9 @@
             </if>
             <if test="detailno != null" >
                 DETAILNO,
+            </if>
+            <if test="detailno2 != null" >
+                DETAILNO2,
             </if>
             <if test="positionType != null" >
                 POSITION_TYPE,
@@ -207,6 +225,24 @@
             <if test="buyPlace != null" >
                 BUY_PLACE,
             </if>
+            <if test="borrowerType != null" >
+                BORROWER_TYPE,
+            </if>
+            <if test="industryInfo != null" >
+                INDUSTRY_INFO,
+            </if>
+            <if test="enterpriseScale != null" >
+                ENTERPRISE_SCALE,
+            </if>
+            <if test="borrowerCity != null" >
+                BORROWER_CITY,
+            </if>
+            <if test="assetsInvest != null" >
+                ASSETS_INVEST,
+            </if>
+            <if test="eachProportion != null" >
+                EACH_PROPORTION,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="posuuid != null" >
@@ -220,6 +256,9 @@
             </if>
             <if test="detailno != null" >
                 #{detailno,jdbcType=VARCHAR},
+            </if>
+            <if test="detailno2 != null" >
+                #{detailno2,jdbcType=VARCHAR},
             </if>
             <if test="positionType != null" >
                 #{positionType,jdbcType=VARCHAR},
@@ -317,21 +356,41 @@
             <if test="buyPlace != null" >
                 #{buyPlace,jdbcType=VARCHAR},
             </if>
+            <if test="borrowerType != null" >
+                #{borrowerType,jdbcType=VARCHAR},
+            </if>
+            <if test="industryInfo != null" >
+                #{industryInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseScale != null" >
+                #{enterpriseScale,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowerCity != null" >
+                #{borrowerCity,jdbcType=VARCHAR},
+            </if>
+            <if test="assetsInvest != null" >
+                #{assetsInvest,jdbcType=VARCHAR},
+            </if>
+            <if test="eachProportion != null" >
+                #{eachProportion,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PbcMonthAssetPositiondetail" >
-        insert into PBC_MONTH_ASSET_POSITIONDETAIL(POSUUID, PRODID, TERM, DETAILNO, POSITION_TYPE, 
-        CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3, SUBJECT_NAME, RIVAL_PARTY, 
-        RATE, CCY, AMT, INT_AMT, END_DAYS, DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL, INTINCEXP, 
-        INTADJEXP_ADD, LOSS_AMT, BAL_FLAG, VDATE, MDATE, OPENPLAN, INDUSTRY, INDUSTRY_LEVEL2, 
+        insert into PBC_MONTH_ASSET_POSITIONDETAIL(POSUUID, PRODID, TERM, DETAILNO, DETAILNO2, 
+        POSITION_TYPE, CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3, SUBJECT_NAME, 
+        RIVAL_PARTY, RATE, CCY, AMT, INT_AMT, END_DAYS, DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL, 
+        INTINCEXP, INTADJEXP_ADD, LOSS_AMT, BAL_FLAG, VDATE, MDATE, OPENPLAN, INDUSTRY, INDUSTRY_LEVEL2, 
         PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, 
-        BUY_PLACE)
-        select POSUUID, PRODID, TERM, DETAILNO, POSITION_TYPE, 
-            CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3, SUBJECT_NAME, RIVAL_PARTY, 
-            RATE, CCY, AMT, INT_AMT, END_DAYS, DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL, INTINCEXP, 
-            INTADJEXP_ADD, LOSS_AMT, BAL_FLAG, VDATE, MDATE, OPENPLAN, INDUSTRY, INDUSTRY_LEVEL2, 
+        BUY_PLACE, BORROWER_TYPE, INDUSTRY_INFO, ENTERPRISE_SCALE, BORROWER_CITY, ASSETS_INVEST, 
+        EACH_PROPORTION)
+        select POSUUID, PRODID, TERM, DETAILNO, DETAILNO2, 
+            POSITION_TYPE, CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3, SUBJECT_NAME, 
+            RIVAL_PARTY, RATE, CCY, AMT, INT_AMT, END_DAYS, DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL, 
+            INTINCEXP, INTADJEXP_ADD, LOSS_AMT, BAL_FLAG, VDATE, MDATE, OPENPLAN, INDUSTRY, INDUSTRY_LEVEL2, 
             PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, 
-            BUY_PLACE
+            BUY_PLACE, BORROWER_TYPE, INDUSTRY_INFO, ENTERPRISE_SCALE, BORROWER_CITY, ASSETS_INVEST, 
+            EACH_PROPORTION
              from PBC_MONTH_ASSET_POSITIONDETAIL
              where 1 = 1 and POSUUID = #{posuuid,jdbcType=CHAR}
     </insert>
@@ -346,6 +405,9 @@
             </if>
             <if test="detailno != null" >
                 DETAILNO = #{detailno,jdbcType=VARCHAR},
+            </if>
+            <if test="detailno2 != null" >
+                DETAILNO2 = #{detailno2,jdbcType=VARCHAR},
             </if>
             <if test="positionType != null" >
                 POSITION_TYPE = #{positionType,jdbcType=VARCHAR},
@@ -443,6 +505,24 @@
             <if test="buyPlace != null" >
                 BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
             </if>
+            <if test="borrowerType != null" >
+                BORROWER_TYPE = #{borrowerType,jdbcType=VARCHAR},
+            </if>
+            <if test="industryInfo != null" >
+                INDUSTRY_INFO = #{industryInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseScale != null" >
+                ENTERPRISE_SCALE = #{enterpriseScale,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowerCity != null" >
+                BORROWER_CITY = #{borrowerCity,jdbcType=VARCHAR},
+            </if>
+            <if test="assetsInvest != null" >
+                ASSETS_INVEST = #{assetsInvest,jdbcType=VARCHAR},
+            </if>
+            <if test="eachProportion != null" >
+                EACH_PROPORTION = #{eachProportion,jdbcType=VARCHAR},
+            </if>
         </set>
         where POSUUID = #{posuuid,jdbcType=CHAR}
     </update>
@@ -451,6 +531,7 @@
         set PRODID = #{prodid,jdbcType=VARCHAR},
             TERM = #{term,jdbcType=VARCHAR},
             DETAILNO = #{detailno,jdbcType=VARCHAR},
+            DETAILNO2 = #{detailno2,jdbcType=VARCHAR},
             POSITION_TYPE = #{positionType,jdbcType=VARCHAR},
             CHL_ID = #{chlId,jdbcType=VARCHAR},
             ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
@@ -482,7 +563,13 @@
             ORG_ASSET_TYPE1 = #{orgAssetType1,jdbcType=VARCHAR},
             ORG_ASSET_TYPE2 = #{orgAssetType2,jdbcType=VARCHAR},
             ORG_ASSET_TYPE3 = #{orgAssetType3,jdbcType=VARCHAR},
-            BUY_PLACE = #{buyPlace,jdbcType=VARCHAR}
+            BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+            BORROWER_TYPE = #{borrowerType,jdbcType=VARCHAR},
+            INDUSTRY_INFO = #{industryInfo,jdbcType=VARCHAR},
+            ENTERPRISE_SCALE = #{enterpriseScale,jdbcType=VARCHAR},
+            BORROWER_CITY = #{borrowerCity,jdbcType=VARCHAR},
+            ASSETS_INVEST = #{assetsInvest,jdbcType=VARCHAR},
+            EACH_PROPORTION = #{eachProportion,jdbcType=VARCHAR}
         where POSUUID = #{posuuid,jdbcType=CHAR}
     </update>
 </mapper>

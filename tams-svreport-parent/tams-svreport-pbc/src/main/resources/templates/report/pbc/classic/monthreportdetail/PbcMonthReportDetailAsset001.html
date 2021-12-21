@@ -7,7 +7,9 @@
 
 <body>
     <div layout:fragment="content">
-        <div class="form-button-area" export="true">
+        <div class="form-button-area" export="false">
+            <a id="PbcMonthReportDetailAsset001_btn_chbexport"
+               class="layui-btn layui-btn-sm btn-export btn-default">导出</a>
         </div>
         <div class="joyin-form-wrap joyin-filter-form condition-area">
             <form class="layui-form" id="searchForm">
@@ -15,8 +17,8 @@
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable">统计年月</label>
                         <div class="layui-input-inline input-inline">
-                            <input id="enddate" type="text"  name="timeControl"  class="layui-input form-input input-dateSelect" 
-                            placeholder="请选择年月" />
+                            <input id="enddate" type="text"  name="timeControl"  class="layui-input form-input input-dateSelect"
+                                   placeholder="请选择年月" data-th-value='${defDate}' />
                         </div>
                     </div>
                     <div class="layui-inline layui-col-md4">

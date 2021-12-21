@@ -125,7 +125,7 @@ public class ProdDealInterfService extends BaseInterfService {
 	 */
 	public HashMap<String,List<String>> generatePrdDealData(Date batchTime,List<String> prodIdList,boolean isSynchronizeTask) {
 		// 查询数据
-		List<ChbPrdDeal> list = getBusEntity(prodIdList, "D");
+		List<ChbPrdDeal> list = getBusEntity(prodIdList, batchTime, null, "D");
 		// 入库
 		if(!StringUtil.isEmptyList(list)){
 			insertDataMerge(list);
@@ -134,7 +134,7 @@ public class ProdDealInterfService extends BaseInterfService {
 	}
 
 	@Override
-	public List<ChbPrdDeal> getBusEntity(List<String> prodIdlist, String source) {
+	public List<ChbPrdDeal> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
 		//数据从文件中读取入库
 		logger.debug("上游产品存续期交易批处理开始:----开始------" +  df.format(new Date()));
 		HashMap<String,List<String>> mapPara = new HashMap<String,List<String>>();

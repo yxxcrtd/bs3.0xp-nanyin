@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @Controller
 @PageId("SalesTransactionMaintenanceRegist001")
-@RequestMapping("report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001")
+@RequestMapping("/report/submitmanagement/salestransactionmaintenanceregist/SalesTransactionMaintenanceRegist001")
 public class SalesTransactionMaintenanceRegist001Controller extends BaseController {
 
     @Autowired

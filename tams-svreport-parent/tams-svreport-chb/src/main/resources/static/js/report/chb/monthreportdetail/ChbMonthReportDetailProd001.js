@@ -17,7 +17,7 @@ $(function() {
     laydate.render({
 		elem: '#enddate',
 		type: 'month',
-		format: 'yyyy-MM'
+		format: 'yyyyMM'
 			
 	});
 
@@ -40,7 +40,7 @@ $(function() {
             { title: "到期日", width : 200, field: 'mdateStr', sortField:'mdate'},
             { title: "募集方式", width : 130, field: 'raiseTypeStr',sortField:'raiseType'},
             { title: "投资性质", width : 130, field: 'ivstorientationStr',sortField:'ivstorientation'},
-            { title: "募集币种", width : 130, field: 'raiseCcy',sortField:'raiseCcy'},
+            { title: "募集币种", width : 130, field: 'ccyStr',sortField:'ccy'},
             { title: "产品运作模式", width : 130, field: 'operateModeStr',sortField:'operateMode'},
             { title: "开放类型", width : 130, field: 'opentypeStr',sortField:'opentype'},
             { title: "期限（天）", width : 130, field: 'term',sortField:'term'},
@@ -78,11 +78,11 @@ $(function() {
         var expArr=table.getAllCheckedRows();
         var param={};
         if(!expArr || expArr.length ==0){
-            // if(expArr.length ==0){
-            //     Joyin.error("请选择导出数据！");
-            //     return;
-            // }
             param = getSearchParams();
+            if(!param.enddate){
+                Joyin.error("请选择统计日期进行导出！");
+                return;
+            }
             Joyin.exportExcel("export",param);
         }else{
             var keyList = [];

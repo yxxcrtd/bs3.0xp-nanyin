@@ -27,9 +27,15 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
 
     private String reportType4;
 
+    private String reportType5;
+
+    private String reportType6;
+
     private String assetName;
 
     private String oldAssetName;
+
+    private String prodName;
 
     public String getReportType1() {
         return reportType1;
@@ -63,6 +69,22 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
         this.reportType4 = reportType4;
     }
 
+    public String getReportType5() {
+        return reportType5;
+    }
+
+    public void setReportType5(String reportType5) {
+        this.reportType5 = reportType5;
+    }
+
+    public String getReportType6() {
+        return reportType6;
+    }
+
+    public void setReportType6(String reportType6) {
+        this.reportType6 = reportType6;
+    }
+
     public String getAssetName() {
         return assetName;
     }
@@ -79,7 +101,13 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
         this.oldAssetName = oldAssetName;
     }
 
+    public String getProdName() {
+        return prodName;
+    }
 
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
+    }
 
     public String getVdateStr() {
         return DateUtil.format(this.getVdate(),"yyyy-MM-dd");
@@ -89,21 +117,24 @@ public class PbcMonthReportDetailAsset extends PbcMonthAssetPositiondetail imple
         return DateUtil.format(this.getMdate(),"yyyy-MM-dd");
     }
 
-//    public String getPrivatefundFlagStr() {
-//        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivatefundFlag());
-//    }
-//
-//    public String getPrivateprdFlagStr() {
-//        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getPrivateprdFlag());
-//    }
-//
-//    public String getBondtostockFlagStr() {
-//        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getBondtostockFlag());
-//    }
-//
-//    public String getIsGovernFund1Str() {
-//        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsGovernFund1());
-//    }
+
+    public String getIndustryStr(){
+        String code = SysDataUtil.getNameFromDataDict(DictCode.机构所属行业一级分类, this.getIndustry());
+        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.行业门内编码, this.getIndustry());
+    }
+
+    public String getPartyType1Str(){
+        String code = SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, this.getPartyType1());
+        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.企业规模, this.getPartyType1());
+    }
+
+    public String getBuyPlaceStr(){
+        return SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债, this.getBuyPlace());
+    }
+
+    public String getCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债, this.getCcy());
+    }
 
     public String getOrgAssetType1Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产一级分类, this.getOrgAssetType1());

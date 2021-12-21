@@ -27,7 +27,7 @@ public class MstCustomerInfoInterfService extends BaseInterfService {
     private MstCustomerInfoInterfMapper mstCustomerInfoInterfMapper;
 
     @Override
-    public List<MstCustomerInfoInterfDto> getBusEntity(List<String> prodIdlist, String source) {
+    public List<MstCustomerInfoInterfDto> getBusEntity(List<String> prodIdlist, Date date, String institutionCode, String source) {
 
         Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.市场机构信息数据.getInterId());
 
