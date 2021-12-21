@@ -475,6 +475,8 @@ public class StlDataDealSzdJsmxProcessService {
 						// 到期交收日
 						String calendarId = CacheUtil.getSysParam(StlDataDealProcessConstant.STL_DOWNDATA_DEAL_SHJYS_CALID);
 						settleTransData.setMpayDate(stlDataDealProcessCommonService.getNextWorkDay(DateUtil.parse(szdJsmx.getQtrq()), calendarId));
+						// 交割日
+						settleTransData.setSettleDate(DateUtil.parse(szdJsmx.getJsrq()));
 						// 本金金额
 						// BigDecimal bjje = new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getQsje()).doubleValue()));
 						// 本金金额 = 成交数量 fuyongsheng 20211101 edit start
@@ -1629,6 +1631,8 @@ public class StlDataDealSzdJsmxProcessService {
 		// 单位面值 调用【当前面值】
 		settleTransData.setParValue(stlDataDealProcessCommonService.getUnitPrice(settleTransData.getFinprodId(),
 				settleTransData.getTradeDate()));
+		// 交易金额 ABS(清算数据Entity.实际收付)
+		settleTransData.setTradeAmt(BigDecimal.valueOf(Math.abs(new BigDecimal(szdJsmx.getSjsf()).doubleValue())));
 		if(StringUtil.equals(szdJsmx.getYwlx(), StlDataDealProcessConstant.YWLX_352)){ // 债券兑付
 			FinProduct finProduct = settleCommonService.selectFinProduct(settleTransData.getFinprodId());
 			// 清算数据的交易日期 == 标的信息的到期日
