@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.asset.project.validator;
 
+import com.joyintech.framework.base.intf.Page;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -19,6 +20,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.asset.project.dto.FinProjectTargetAssetDto;
 import com.joyintech.tams.invest.asset.project.service.FinProjectTargetAssetService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -47,6 +49,7 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
 
     @Autowired
     private InvDataCheckService chbInvDataCheckService;
+
 
     /**
      * {@inheritDoc}
@@ -97,7 +100,32 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
                             getMessage("COMMON_E_0057", getMessage("FinProjectTargetAsset002.projInvestIndustry2"))));
                     }
                 }
-
+                Page page = CacheUtil.getPage("FinProjectTargetAsset002");
+                //mod by wangyaning 20211022 start
+                if (null != page && null != page.getElementcontrol("bussRepProjectInfo") && page.getElementcontrol("bussRepProjectInfo").getIsShow()) {
+                    if(StringUtil.isNotEmpty(dto.getRepAssetType())
+                            && StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_股权.getValue())){
+                        if(dto.getBussRepEquityInfoDto()!=null && !StringUtil.isNotEmpty(dto.getBussRepEquityInfoDto().getIsUnlisted())){
+                            resultList.add(new ValidMessage("bussRepEquityInfoDto.isUnlisted",
+                                    getMessage("COMMON_E_0057", getMessage("BussRepEquityInfo.isUnlisted"))));
+                        }
+                    }
+                    if(StringUtil.isNotEmpty(dto.getRepAssetType())
+                            && StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_其他权益类投资.getValue())){
+                        if(dto.getBussRepOtherInvestTargetInfoDto()!=null && !StringUtil.isNotEmpty(dto.getBussRepOtherInvestTargetInfoDto().getIsUnlisted())){
+                            resultList.add(new ValidMessage("bussRepOtherInvestTargetInfoDto.isUnlisted",
+                                    getMessage("COMMON_E_0057", getMessage("BussRepOtherInvestTargetInfo.isUnlisted"))));
+                        }
+                    }
+                    if(StringUtil.isNotEmpty(dto.getRepAssetType())
+                            && StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.项目类资产二级类型_票据类.getValue())){
+                        if(dto.getBussRepAssetAstBillInfoDto()!=null && !StringUtil.isNotEmpty(dto.getBussRepAssetAstBillInfoDto().getIsBzhpj())){
+                            resultList.add(new ValidMessage("bussRepAssetAstBillInfoDto.isBzhpj",
+                                    getMessage("COMMON_E_0057", getMessage("BussRepAssetAstBillInfo.isBzhpj"))));
+                        }
+                    }
+                }
+                //mod by wangyaning 20211022 end
                 /****1、需要增加对评级信息的必填项check,评级信息中若没有主体评级的记录则不允许提交且给出提示；***/
                 //ZGBSSE-576   【项目类标的】新建项目类标的，发行人已维护评级信息，点击提交时，系统仍提示：评级信息中必须包含主体评级信息! 项目类不再验证
 //                boolean flag = true;

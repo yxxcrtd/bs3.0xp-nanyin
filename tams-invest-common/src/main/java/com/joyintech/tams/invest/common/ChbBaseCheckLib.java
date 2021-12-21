@@ -950,7 +950,7 @@ public class ChbBaseCheckLib {
     public static boolean compareValueSysPara(Map<String, String> data, CheckElement rule) {
         boolean result = false;
 
-        String srcValue = data.get(rule.getSrcproperty());
+        String srcValue = rule.getSrcproperty();
         if (StringUtil.isNotEmpty(srcValue)){
             String sysParam = CacheUtil.getSysParam(srcValue);
             if (StringUtil.isNotEmpty(sysParam)){

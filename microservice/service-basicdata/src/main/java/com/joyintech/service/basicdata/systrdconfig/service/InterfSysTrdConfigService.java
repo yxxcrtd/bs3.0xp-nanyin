@@ -133,12 +133,13 @@ public class InterfSysTrdConfigService{
         }
         if (map.get("finprodId")!=null && map.get("finprodId")!=""){
             Map<String,Object> map1 = interfSysTrdConfigMapper.getFinProdInfo(map);
-            map.put("tradeMarket",map1.get("TRADE_MARKET"));
-            map.put("assetType",map1.get("TYPE_8"));
-            map.put("assetType1",map1.get("TYPE_6"));
-            map.put("assetType2",map1.get("TYPE_7"));
-            map.put("marketType",map1.get("BOARD"));
-
+            if (map1 != null) {
+                map.put("tradeMarket",map1.get("TRADE_MARKET"));
+                map.put("assetType",map1.get("TYPE_8"));
+                map.put("assetType1",map1.get("TYPE_6"));
+                map.put("assetType2",map1.get("TYPE_7"));
+                map.put("marketType",map1.get("BOARD"));
+            }
         }
         Map<String,Object> returnMap = new HashMap<String,Object>();
         returnMap.put("errorCode",0);

@@ -36,49 +36,51 @@ public class InvestDealRevokeReader extends BaseReader<DealRevokeParamDto> {
 
     @Override
     public List<DealRevokeParamDto> createList() {
+        //mody by   meifaxin  20211028 不从画面触发，改成文件解析后触发 start
         // 批处理执行信息
         SysBatchExecInfo execInfo = getBatchExecuteInfo();
         // 日期
         Date tradeDate = execInfo.getExecuteDate();
-        // 数据清算参数表
-        List<SettleBatchPara> list = stlDownDataDealService.selectAllParam(tradeDate);
+//        // 数据清算参数表
+//        List<SettleBatchPara> list = stlDownDataDealService.selectAllParam(tradeDate);
         // 撤销参数
-        List<DealRevokeParamDto> revokeParamDtos = new ArrayList<>(list.size());
+        List<DealRevokeParamDto> revokeParamDtos = new ArrayList<>();
 
-        // 按证券品种分组
-        Map<String, List<SettleBatchPara>> listMap = list.stream().collect(JoyinCollectors.groupingBy(SettleBatchPara::getSecType));
-
-        listMap.forEach((key, value) -> {
-            // 提取当前分组中的组合代码
-            List<String> portfolioIdList = value.stream().map(SettleBatchPara::getPortfolioId).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
-            // 根据证券品种分别调用不同的查询逻辑，查询交易编号和汇总交易编号
-            if(StringUtil.equals(DictCodeListExt1.证券品种_债券.getValue(), key)) {
+//        // 按证券品种分组
+//        Map<String, List<SettleBatchPara>> listMap = list.stream().collect(JoyinCollectors.groupingBy(SettleBatchPara::getSecType));
+//
+//        listMap.forEach((key, value) -> {
+//            // 提取当前分组中的组合代码
+//            List<String> portfolioIdList = value.stream().map(SettleBatchPara::getPortfolioId).filter(StringUtil::isNotEmpty).collect(Collectors.toList());
+//            // 根据证券品种分别调用不同的查询逻辑，查询交易编号和汇总交易编号
+//            if(StringUtil.equals(DictCodeListExt1.证券品种_债券.getValue(), key)) {
                 // 汇总交易编号
-                List<String> totalTradeIdList = investDealRevokeService.selectTotalTradeIdForBond(tradeDate, portfolioIdList);
-                revokeParamDtos.add(new DealRevokeParamDto(key, tradeDate, portfolioIdList,null, totalTradeIdList));
-            }
-            else if(StringUtil.equals(DictCodeListExt1.证券品种_回购.getValue(), key)) {
+                List<String> portfolioIdList=null;
+                List<String> bondTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForBond(tradeDate, portfolioIdList);
+                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_债券.getValue(), tradeDate, portfolioIdList,null, bondTotalTradeIdList));
+//            }
+//            else if(StringUtil.equals(DictCodeListExt1.证券品种_回购.getValue(), key)) {
                 // 交易编号
                 List<String> tradeIdList = investDealRevokeService.selectTradeIdForRepo(tradeDate, portfolioIdList);
                 // 汇总交易编号
-                List<String> totalTradeIdList = investDealRevokeService.selectTotalTradeIdForRepo(tradeDate, portfolioIdList);
-                revokeParamDtos.add(new DealRevokeParamDto(key, tradeDate, portfolioIdList, tradeIdList, totalTradeIdList));
-            }
-            else if(StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), key)) {
+                List<String> repoTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForRepo(tradeDate, portfolioIdList);
+                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_回购.getValue(), tradeDate, portfolioIdList, tradeIdList, repoTotalTradeIdList));
+//            }
+//            else if(StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), key)) {
                 // 交易编号
-                List<String> tradeIdList = investDealRevokeService.selectTradeIdForShares(tradeDate, portfolioIdList);
+                List<String> sharesTradeIdList = investDealRevokeService.selectTradeIdForShares(tradeDate, portfolioIdList);
                 // 汇总交易编号
-                List<String> totalTradeIdList = investDealRevokeService.selectTotalTradeIdForShares(tradeDate, portfolioIdList);
-                revokeParamDtos.add(new DealRevokeParamDto(key, tradeDate, portfolioIdList, tradeIdList, totalTradeIdList));
-            }
-            else if(StringUtil.equals(DictCodeListExt1.证券品种_基金.getValue(), key)) {
+                List<String> sharesTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForShares(tradeDate, portfolioIdList);
+                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_股票.getValue(), tradeDate, portfolioIdList, sharesTradeIdList, sharesTotalTradeIdList));
+//            }
+//            else if(StringUtil.equals(DictCodeListExt1.证券品种_基金.getValue(), key)) {
                 // 交易编号
-                List<String> tradeIdList = investDealRevokeService.selectTradeIdForFund(tradeDate, portfolioIdList);
+                List<String> fundTradeIdList = investDealRevokeService.selectTradeIdForFund(tradeDate, portfolioIdList);
                 // 汇总交易编号
-                List<String> totalTradeIdList = investDealRevokeService.selectTotalTradeIdForFund(tradeDate, portfolioIdList);
-                revokeParamDtos.add(new DealRevokeParamDto(key, tradeDate, portfolioIdList, tradeIdList, totalTradeIdList));
-            }
-        });
+                List<String> fundTotalTradeIdList = investDealRevokeService.selectTotalTradeIdForFund(tradeDate, portfolioIdList);
+                revokeParamDtos.add(new DealRevokeParamDto(DictCodeListExt1.证券品种_基金.getValue(), tradeDate, portfolioIdList, fundTradeIdList, fundTotalTradeIdList));
+            //}
         return revokeParamDtos;
+        //mody by   meifaxin  20211028 不从画面触发，改成文件解析后触发 end
     }
 }

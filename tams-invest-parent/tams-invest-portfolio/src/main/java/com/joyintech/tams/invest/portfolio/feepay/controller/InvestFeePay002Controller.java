@@ -180,7 +180,10 @@ public class InvestFeePay002Controller extends BaseController {
 //                    if (!StringUtil.equals(finProductFeePay001Dto.getFeeType(),
 //                        DictCodeList.费用品种类型_账户维护费.getValue())) {
                         // 查询费用待支付费用
-                        finProductFeePay002Dto.setPayAmt(new BigDecimal(this.getParam("feeAmt")));
+                     if(StringUtil.isNotEmpty(this.getParam("feeAmt"))){
+                         finProductFeePay002Dto.setPayAmt(new BigDecimal(this.getParam("feeAmt")));
+                     }
+
                         // 实付 - 理论
                         finProductFeePay002Dto.setAdjustAmt(
                             ArithmeticUtil.subtract(finProductFeePay002Dto.getActPayAmt(),

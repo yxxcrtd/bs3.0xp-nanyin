@@ -13,17 +13,17 @@
             <Cell order="6" name="资产五级分类">type12Abbr</Cell>
              <!--  /*  end、zhuyongkang、2019.7.22、添加了2345级，隐藏了12级   */ -->
             <!-- <Cell order="5" name="交易方式">transMode</Cell> -->
-            <Cell order="7" name="币种">ccyAbbr</Cell>
-            <Cell order="8" name="成立日期">vdate</Cell>
-            <Cell order="9" name="终止日期">mdate</Cell>
-            <Cell order="10" name="管理人">manager</Cell>
+            <Cell order="7" name="管理人">manager</Cell>
             <!-- add by 张普裕  2019/10/16 更新导出模板 start -->
-<!--            <Cell order="11" name="托管人">trusteeId</Cell>-->
-            <Cell order="11" name="发行人">issuer</Cell>
+            <Cell order="8" name="托管人">trusteeId</Cell>
+            <Cell order="9" name="发行人">issuer</Cell>
+            <Cell order="10" name="币种">ccyAbbr</Cell>
+            <Cell order="11" name="成立日期">vdate</Cell>
+            <Cell order="12" name="终止日期">mdate</Cell>
             <!-- add by 张普裕  2019/10/16 更新导出模板 end -->
 			<!-- 增加推荐方与推荐费率 add by renping 20191014 start -->
 <!--            <Cell order="12" name="资产推荐方">recommenderName</Cell>-->
-            <Cell order="12" name="母计划">parentPlanStr</Cell>
+<!--            <Cell order="12" name="母计划">parentPlanStr</Cell>-->
 			<!-- 增加推荐方与推荐费率 add by renping 20191014 end -->
         </Row>
     </Worksheet>

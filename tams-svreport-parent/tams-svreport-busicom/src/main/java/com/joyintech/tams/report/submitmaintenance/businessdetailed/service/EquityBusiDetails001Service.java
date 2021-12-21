@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -23,6 +22,7 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,11 +38,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.LongAdder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -76,7 +77,6 @@ import com.joyintech.framework.export.handler.ReportCfgHandler;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.progressbar.ProgressBarService;
-import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
@@ -91,6 +91,7 @@ import com.joyintech.framework.util.ZipFileUtil;
 import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.base.entity.ChbEqudet;
 import com.joyintech.tams.common.base.entity.ChbFileReadMonitorInfo;
+import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
@@ -118,10 +119,15 @@ import com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto;
 import com.joyintech.tams.report.submitmaintenance.businessdetailed.dao.EquityBusiDetails001Mapper;
 import com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto;
 import com.joyintech.tams.report.submitmaintenance.businessdetailed.entity.InterestsBusinessDetailed;
+import com.joyintech.tams.report.submitmaintenance.businessdetailed.util.BusinessDetailInfoCheckUtil;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfo001Mapper;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.util.EquityInfoCheckUtil;
 import com.joyintech.tams.report.submitmaintenance.exchangerate.dao.Exchangerate001Mapper;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dao.ChbTransformRuleObjDtoMapper;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dao.TransformRule001Mapper;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dto.ChbTransformRuleObjDto;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto;
 import com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dao.EquityBusiInfoRegist001Mapper;
 import com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.EquityBusiInfoRegist001Dto;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
@@ -173,6 +179,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      * CHB_EQUDET_NAME
      */
     private static final String CHB_EQUDET_NAME = "CHB_EQUDET";
+    
+    /**
+     * CHB_EQUDET
+     */
+    private static final String CHB_EQUDET = "CHB_EQUDET";
 
     /**
      * CHB_EQUDET_SUB_NAME
@@ -185,6 +196,12 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
     @Autowired
     private EquityBusiDetails001Mapper equityBusiDetails001Mapper;
 
+    @Autowired
+    private TransformRule001Mapper transformRule001Mapper;
+    
+    @Autowired
+    private ChbTransformRuleObjDtoMapper chbTransformRuleObjDtoMapper;
+    
     /**
      * 查询对应币种的汇率
      */
@@ -232,6 +249,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      * 数字18.5
      */
     public static final String PATTERN_EIGTEEN_FIFVE = "([0-9]{0,13})(\\.(\\d){0,5})?$";
+    /**
+     * YYYYMMDD 时间格式校验，正则表达式
+     */
+    public static final String DATE_FORMAT_YYYYMMDD = "((\\d{3}[1-9]|\\d{2}[1-9]\\d|\\d[1-9]\\d{2}|[1-9]\\d{3})(((0[13578]|1[02])(0[1-9]|[12]\\d|3[01]))|((0[469]|11)(0[1-9]|[12]\\d|30))|(02(0[1-9]|[1]\\d|2[0-8]))))|(((\\d{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))0229)";
 
     /**
      * 上游接口解析读取文件处理最大线程数
@@ -835,7 +856,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             List<Map<String, String>> mapList = listToMap(dataList);
 
             // 检查数据是否合法
-                List<ExcelValidDto> checkResult = checkDataInfo(dataList,mapList,queryList, entitiesList,bankCode,deptCode,orgCode,userName);
+            List<ExcelValidDto> checkResult = checkDataInfo(dataList,mapList,queryList, entitiesList,bankCode,deptCode,orgCode,userName);
 
             if (checkResult.isEmpty()) {
                 try {
@@ -893,6 +914,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         // item.setDataStatus(DictCodeList.维护数据状态_有效.getValue());
                         item.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
                         item.setDeptCode(deptCode);
+                        //不管是否有变更都需要赋值
+                        item.setOrgIndentifyMark(item.getIndentifyMark());
                         setOrgIndentifyMark(item,equityInfocheckMap);
                         // 设值createDept
                         String createDept = item.getDeptCode();
@@ -1210,6 +1233,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         item.setDataStatus(DictCodeListExt1.维护数据状态_有效.getValue());
                         item.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
                         item.setDeptCode(deptCode);
+                        item.setOrgIndentifyMark(item.getIndentifyMark());
                         setOrgIndentifyMark(item,equityInfocheckMap);
                         // 设值createDept
                         String createDept = item.getDeptCode();
@@ -1449,6 +1473,28 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     }
                 }
             }
+            
+          //判断导入数据是否存在已导入的数据
+            //查询已经在数据库中存在的数据记录
+            List<EquiteBusiDetails001Dto> listExistDto = equityBusiDetails001Mapper.selectTMPExistInInfo(
+            		queryList);           
+            Map<String, EquiteBusiDetails001Dto> exitsChbEqudetDataMap = StringUtil.isEmptyList(
+            		listExistDto) ? new HashMap<String, EquiteBusiDetails001Dto>() : listExistDto.stream().collect(
+                    JoyinCollectors.toMap(
+                            x -> x.getBusiSeqno() + GlobalConstant.UNDER_LINE + x.getRegistBankCode(),
+                            x -> x));
+            
+            for (int i = 0; i < mapList.size(); i++ ) {
+            	String compreKey = mapList.get(i).get("busiSeqno") + GlobalConstant.UNDER_LINE + mapList.get(i).get("registBankCode");
+            	if (exitsChbEqudetDataMap.get(compreKey) != null) {
+                    result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1),
+                            this.getMessage("REPORT_COMMON_FILE_E_0028",
+                            		mapList.get(i).get("busiSeqno"))));                    
+                    return result;
+                }
+            }
+            
+            
 
             //获取所有的身份信息
             Map<String, String> indentifyMap = getAllIndentifyInfo();
@@ -1490,9 +1536,21 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     }
                 }
                 String row = String.valueOf(rowId + 1);
+                // 增加业务确认日期格式校验 by caozhenming 20210922 start
+                boolean equityConfDateFlag = false;
+                String equityConfDate =  item.get("equityConfDate");
+                Pattern pattern = Pattern.compile(DATE_FORMAT_YYYYMMDD);
+                Matcher matcher = pattern.matcher(equityConfDate);
+                if (matcher.matches()) {
+                    equityConfDateFlag = true;
+                } else {
+                    message.add(this.getMessage("CHB_EQUITY_EQUITYCONFDATE_CHECK"));
+                }
+                // 增加业务确认日期格式校验 by caozhenming 20210922 end
+
 
                 // 判断已存在数据中 "业务确认日"是否跨区间，是则不能更新
-                if (allChbEqudetDataMap != null && allChbEqudetDataMap.size() > 0) {
+                if (equityConfDateFlag && allChbEqudetDataMap != null && allChbEqudetDataMap.size() > 0) {
                     String account =item.get("account");
                     if (item.containsKey("regCode")) {
                         account =allRegCodeMap.get(item.get("regCode"));
@@ -1633,7 +1691,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
                 try {
                     // 16 业务确认日期
-                    entity.setEquityConfDate(DateUtil.parse(item.get("equityConfDate")));
+                    if (equityConfDateFlag) {
+                        entity.setEquityConfDate(DateUtil.parse(item.get("equityConfDate")));
+                    }
                 }
                 catch (Exception e) {
                     // TODO: handle exception
@@ -2373,6 +2433,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     ibd.setOrgIndentifyMark(ibd.getIndentifyMark());
                     ibd.setIndentifyMark(
                             equityInfocheckMap.get(ibd.getIndentifyMark()).getMergerindentifymark());
+                }else{
+                    //不管是否有变更都需要赋值
+                    ibd.setOrgIndentifyMark(ibd.getIndentifyMark());
                 }
                 /*edit by xuyang for业务确认日期为空时，防止获取报送时点报错 徽商个性化 20200822*/
                 if(ibd.getEquityConfDate()!=null) {
@@ -3033,9 +3096,34 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 			   sequenceList=  CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, details.size());
 		   }
            int index = 0;
-           
+        
+           //生僻字转化处理   
+           //生僻字按照已经维护的规则进行转化
+             Map<String, Object> paramap=new HashMap<String, Object>();
+             paramap.put("statusList", Arrays.asList("E"));
+             List<TransformRule001Dto> allList=transformRule001Mapper.selectAllData(paramap);
+             Map<String,TransformRule001Dto> spzMap=allList.stream().collect(
+                     Collectors.toMap(x -> x.getTransType()+x.getOrgField(),part->part));
+             List<ChbTransformRuleObjDto> allRuleObjList=chbTransformRuleObjDtoMapper.selectAllDataByTableId(CHB_EQUDET);
+             Map<String,List<ChbTransformRuleObjDto>> objFiledsMap=allRuleObjList.stream().collect(
+                     JoyinCollectors.groupingBy(
+                             x -> x.getInfoProperty() ));
+             
+             //设置数据结构的转化规则字段内容
+             BusinessDetailInfoCheckUtil.replaceByExchangeRuleForDtl(allRuleObjList, spzMap, details);   
+             
+             
+          //生僻字转化后设置数据结构              
         for (EquiteBusiDetails001Dto detail : details) {
             EquityBusiInfoRegist001Dto dto = new EquityBusiInfoRegist001Dto();
+            
+            //用规则转换后的字段替换转化前的字段
+            if(detail.getTempMap()!=null){
+      	       for(String key:detail.getTempMap().keySet()){
+      	           EquityInfoCheckUtil.updateChcekDto(detail,key,detail.getTempMap().get(key));
+      	       }
+      	    }
+            
             BeanUtil.copyPropertiesIgnoreNull(dto, detail);
             dto.setCustName(ChbSensitiveInfoUtil.handle汉字变形(dto.getCustName()));
             //证件类型是身份证或者临时身份证，客户编号脱敏

@@ -2,7 +2,7 @@
  * 持仓信息（右上）
  */
 (function(){
-	
+
     function getPositionsSearchParams(){
         var data = $.serializeToObject('#searchForm_cc');
         data.portfolioId = data.portfolioId ? data.portfolioId.join(','):'';
@@ -10,13 +10,13 @@
         data.finprodType2 = data.finprodType2;
         return data;
     }
-    
-	function getZqzyPositionParams() {
-		var data = $.serializeToObject('#searchForm_zqzy');
-		return data;
-	}
 
-	function getSearchParams() {
+    function getZqzyPositionParams() {
+        var data = $.serializeToObject('#searchForm_zqzy');
+        return data;
+    }
+
+    function getSearchParams() {
         var data = $.serializeToObject('#searchForm');
         data.entrustStatus = $('#searchForm').find('input:radio:checked').val();
         data.portfolioId = data.portfolioId ? data.portfolioId.join(','):'';
@@ -109,6 +109,7 @@
             ,{field:'entrustAmt', title: 'EtrExchangeTrade003.entrustAmt',type:'number',digit:4, width : 120,sortField:'ENTRUST_AMT'}//可卖数量
             ,{field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//持仓成本
             ,{field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'MDATE'}//最新价
+            ,{field:'nextUser', title: 'EtrCommon.nextUser', width:120,sortable:false}
             ,{field:'finprodId',visible: false}//资产ID
             ,{field:'ps', visible: false}//交易方向
             ,{field:'portfolioId', visible: false}//组合代码
@@ -131,7 +132,7 @@
     /**
      * 定义数据表格
      */
-    var positionsTable = $("#positionsTable").joyintable({ 
+    var positionsTable = $("#positionsTable").joyintable({
         ajax: {
             url: 'findPositionsPage',//请求路径
             type: 'POST',//请求类型
@@ -170,7 +171,7 @@
         checkbox:false,
         searchOnInit:true,
         cols:[
-             {field:'portfolioId', title: 'EtrExchangeTrade002.portfolioId', sortField:'portfolioId',width : 100}//组合名称
+            {field:'portfolioId', title: 'EtrExchangeTrade002.portfolioId', sortField:'portfolioId',width : 100}//组合名称
             ,{field:'portfolioName', title: 'EtrExchangeTrade002.portfolioName', sortField:'portfolioName',width : 100}//组合名称
             ,{field:'secAcctId', title: 'EtrExchangeTrade002.secAcctId', sortField:'secAcctId',width : 130}//证券账户代码
             ,{field:'secAcctName', title: 'EtrExchangeTrade002.secAcctName',sortField:'secAcctName', width : 130}//证券账户名称
@@ -181,7 +182,7 @@
             ,{field:'secName', title: 'EtrExchangeTrade002.finpordName', width : 160}//资产名称
             ,{field:'finprodType2', title: 'EtrExchangeTrade002.finprodType', width : 160,render: function (data, type, row, meta) {
                     if (data == 'F01'){data = "债券";} if(data == 'F06'){data = "基金";}if (data=='F10'){data="股票";} return data;}}//资产类型
-            // ,{field:'invAimStr', title: 'EtrExchangeTrade002.invAim',sortField:'invAim', width : 150}//投资目的
+            ,{field:'invAimStr', title: 'EtrExchangeTrade002.invAim',sortField:'invAim', width : 150}//投资目的
             ,{field:'positionsNum', title: 'EtrExchangeTrade002.positionsNum',type:'number', digit : 0, width : 150}//持仓数量
             ,{field:'sellNum', title: 'EtrExchangeTrade002.sellNum',type:'number', digit : 0, width : 150}//可卖数量
             ,{field:'positionsAmt', title: 'EtrExchangeTrade002.positionsAmt',type:'number', width : 150}//持仓成本
@@ -193,7 +194,7 @@
     /**
      * 定义数据表格
      */
-    var positionsTable_zqzy = $("#positionsTable_zqzy").joyintable({ 
+    var positionsTable_zqzy = $("#positionsTable_zqzy").joyintable({
         ajax: {
             url: 'findZqzyPositionsPage',//请求路径
             type: 'POST',//请求类型
@@ -239,83 +240,83 @@
             ,{field:'repoNum', title: 'EtrExchangeTrade002.repoNum',type:'number', digit : 0, width : 150}//质押数量
             ,{field:'secNum', title: 'EtrExchangeTrade002.secNum',type:'number', digit : 0,  width : 150}//标准券数量
             ,{field:'canRepoNum', title: 'EtrExchangeTrade002.canRepoNum',type:'number', digit : 0, width : 150}//可质押数量
-            ],
-		    done : function(res) {
-                // 最后一行汇总标准券数量
-                var totalNum = Number(0);
-                var allRows = positionsTable_zqzy.getAllRows();
-                if (allRows){
-                    allRows.forEach(item => {
-                        totalNum +=  Number(item.secNum);
+        ],
+        done : function(res) {
+            // 最后一行汇总标准券数量
+            var totalNum = Number(0);
+            var allRows = positionsTable_zqzy.getAllRows();
+            if (allRows){
+                allRows.forEach(item => {
+                    totalNum +=  Number(item.secNum);
+                });
+                $('#secNumTotal').text(totalNum+ '张')
+            }
+            var param = getZqzyPositionParams();
+            clearlabelElement();
+            if(param.portfolioId){
+                secNum_sh = 0;
+                secNum_sz = 0;
+                if (res != null && res.length > 0) {
+                    for (var i = 0; i < res.length; i++) {
+                        if(res[i].tradeMarket == "03"){
+                            secNum_sh += Number(res[i].canUseSecNum);
+                        }else if(res[i].tradeMarket == "04"){
+                            secNum_sz += Number(res[i].canUseSecNum);
+                        }
+                    }
+                    Joyin.ajax(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade002/loadSecNum', param, function(result) {
+                        if(result) {
+                            $("#usableNum_sh").text(result.secNum_sh + '张');
+                            if(secNum_sh != 0){
+                                var usableNum_sh = result.secNum_sh.replace(/,/g,'')
+                                var res_sh = parseFloat(usableNum_sh)/parseFloat(secNum_sh);
+                                $("#usingRate_sh").text(Math.round(res_sh*10000)/100 + '%');
+                                $("#usingRate_sh").css('color', res_sh < 1 ? "green":"red");
+                                $("#usableNum_sh").css('color', res_sh < 1 ? "green":"red");
+
+                                $("#secNum_sh").text(toThousands(secNum_sh - parseFloat(usableNum_sh)) + '张');
+                                $("#secNum_sh").css('color', secNum_sh - parseFloat(usableNum_sh) > 0 ? "green":"red");
+                            }
+                            $("#usableNum_sz").text(result.secNum_sz + '张');
+                            if(secNum_sz != 0){
+                                var usableNum_sz = result.secNum_sz.replace(/,/g,'');
+                                var res_sz = parseFloat(usableNum_sz)/parseFloat(secNum_sz);
+                                $("#usingRate_sz").text(Math.round(res_sz*10000)/100 + '%');
+                                $("#usingRate_sz").css('color', res_sz < 1 ? "green":"red");
+                                $("#usableNum_sz").css('color', res_sz < 1 ? "green":"red");
+
+                                $("#secNum_sz").text(toThousands(secNum_sz - parseFloat(usableNum_sz)) + '张');
+                                $("#secNum_sz").css('color', secNum_sz - parseFloat(usableNum_sz) > 0 ? "green":"red");
+                            }
+                        }
                     });
-                    $('#secNumTotal').text(totalNum+ '张')
                 }
-		    var param = getZqzyPositionParams();
-		    clearlabelElement();
-		    if(param.portfolioId){
-		    	secNum_sh = 0;
-		    	secNum_sz = 0;
-			   if (res != null && res.length > 0) {
-				for (var i = 0; i < res.length; i++) {
-					if(res[i].tradeMarket == "03"){
-						secNum_sh += Number(res[i].canUseSecNum);
-					}else if(res[i].tradeMarket == "04"){
-						secNum_sz += Number(res[i].canUseSecNum);
-					}
-				}
-	            Joyin.ajax(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade002/loadSecNum', param, function(result) {
-	                if(result) {
-	                    $("#usableNum_sh").text(result.secNum_sh + '张');
-	                    if(secNum_sh != 0){
-	                    	var usableNum_sh = result.secNum_sh.replace(/,/g,'')
-	                    	var res_sh = parseFloat(usableNum_sh)/parseFloat(secNum_sh);
-	                    	$("#usingRate_sh").text(Math.round(res_sh*10000)/100 + '%');
-	                    	$("#usingRate_sh").css('color', res_sh < 1 ? "green":"red");
-	                    	$("#usableNum_sh").css('color', res_sh < 1 ? "green":"red");
-	                    	
-	                    	$("#secNum_sh").text(toThousands(secNum_sh - parseFloat(usableNum_sh)) + '张');
-		    	            $("#secNum_sh").css('color', secNum_sh - parseFloat(usableNum_sh) > 0 ? "green":"red");
-	                    }
-	                    $("#usableNum_sz").text(result.secNum_sz + '张');
-	                    if(secNum_sz != 0){
-	                    	var usableNum_sz = result.secNum_sz.replace(/,/g,'');
-	                    	var res_sz = parseFloat(usableNum_sz)/parseFloat(secNum_sz);
-	                    	$("#usingRate_sz").text(Math.round(res_sz*10000)/100 + '%');
-	                    	$("#usingRate_sz").css('color', res_sz < 1 ? "green":"red");
-	                    	$("#usableNum_sz").css('color', res_sz < 1 ? "green":"red");
-	                    	
-	                    	$("#secNum_sz").text(toThousands(secNum_sz - parseFloat(usableNum_sz)) + '张');
-		    	            $("#secNum_sz").css('color', secNum_sz - parseFloat(usableNum_sz) > 0 ? "green":"red");
-	                    }
-	                }
-	            });
-	          }
-		   }
-		}
+            }
+        }
     });
-    
+
     function toThousands(num) {
         return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
     }
-    
-	function clearlabelElement() {
-		$("#secNum_sh").text('--');
-		$("#secNum_sh").css('color', 'black');
-		$("#secNum_sz").text('--');
-		$("#secNum_sz").css('color', 'black');
-		$("#usableNum_sh").text('--');
-		$("#usableNum_sh").css('color', 'black');
-		$("#usableNum_sz").text('--');
-		$("#usableNum_sz").css('color', 'black');
-		$("#usingRate_sh").text('--');
-		$("#usingRate_sh").css('color', 'black');
-		$("#usingRate_sz").text('--');
-		$("#usingRate_sz").css('color', 'black');
-	}
+
+    function clearlabelElement() {
+        $("#secNum_sh").text('--');
+        $("#secNum_sh").css('color', 'black');
+        $("#secNum_sz").text('--');
+        $("#secNum_sz").css('color', 'black');
+        $("#usableNum_sh").text('--');
+        $("#usableNum_sh").css('color', 'black');
+        $("#usableNum_sz").text('--');
+        $("#usableNum_sz").css('color', 'black');
+        $("#usingRate_sh").text('--');
+        $("#usingRate_sh").css('color', 'black');
+        $("#usingRate_sz").text('--');
+        $("#usingRate_sz").css('color', 'black');
+    }
 
     /**
-	 * 刷新列表
-	 */
+     * 刷新列表
+     */
     var refreshPositionsTable = function(){
         positionsTable.table ? positionsTable.reload() : positionsTable.load();
     }
@@ -334,21 +335,21 @@
      * 更新上交所和深交所汇总标准券数量
      */
     var loadSecNum = function() {
-        
+
     }
     var init = function() {
         //loadSecNum();
     }
-    
 
-	var zqzyPositionRefresh = function(portfolioId) {
-		$("#portfolioId_zqzy").textSelect('setValue', portfolioId);
-		if (!portfolioId) {
-			$("#portfolioId_zqzy").val("").trigger('change');
-		}
-		refreshZqzyPositionsTable();// 加载表格
-		
-	};
+
+    var zqzyPositionRefresh = function(portfolioId) {
+        $("#portfolioId_zqzy").textSelect('setValue', portfolioId);
+        if (!portfolioId) {
+            $("#portfolioId_zqzy").val("").trigger('change');
+        }
+        refreshZqzyPositionsTable();// 加载表格
+
+    };
     //add by chenjiaxing 指令管理添加导出功能 start
     /**
      * 导出
@@ -369,31 +370,33 @@
     };
     //add by chenjiaxing 指令管理添加导出功能 end
     /**
-	 * 画面加载完成
-	 */
+     * 画面加载完成
+     */
     $(function() {
         $('.zlgl-transfer-form #EtrExchangeTrade002_btn_filter').hide();
         $('.zlgl-transfer-form #EtrExchangeTrade002_btn_export').hide();
-    	// 切换到质押持仓，查询页面
+        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_search').hide();
+        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_reset').hide();
+        // 切换到质押持仓，查询页面
         layui.use(['element', 'form'], function() {
             // 绑定交易平台TAB切换事件
             var element = layui.element;
             element.on('tab(tradePlatform)', function(data) {
                 if(data.index == 0) {
-                	refreshPositionsTable();
+                    refreshPositionsTable();
                 }else if(data.index == 1) {
-                	refreshZqzyPositionsTable();
+                    refreshZqzyPositionsTable();
                 }
             });
         });
-        
+
         // 绑定查询按钮
-        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_search').click(function() {
-        	refreshPositionsTable();//加载表格
+        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_ccsearch').click(function() {
+            refreshPositionsTable();//加载表格
         });
         // 绑定债券质押查询按钮
         $('#EtrExchangeTrade002_zqzy_search_btn').click(function() {
-        	refreshZqzyPositionsTable();// 加载表格
+            refreshZqzyPositionsTable();// 加载表格
         });
         //add by chenjiaxing 指令管理导出 start
         $('.zhiling-transfer-form #EtrExchangeTrade002_btn_export').click(function() {
@@ -444,11 +447,21 @@
                 }
             }
         });
-        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_reset').click(function() {
-            $("#portfolioId").val("");
-            $("#tradeMarket_cc").val("");
-            $("#secId").val("");
-            $("#finprodType2").val("");
+
+        //质押券重置按钮点击事件
+        $('#EtrExchangeTrade002_zqzy_reset_btn').click(function() {
+            $("#portfolioId_zqzy").val("").trigger('change');
+            $("#tradeMarket_zqzy").val("").trigger('change');
+            $("#date_zqzy").val("").trigger('change');
+            $("#finprodMarketId_zqzy").val("").trigger('change');
+        });
+
+        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_ccreset').click(function() {
+            $("#portfolioId").val("").trigger('change');
+            $("#tradeMarket_cc").val("").trigger('change');
+            $("#secId").val("").trigger('change');
+            $("#finprodType2").val("").trigger('change');
+            positionsTable.clear();
         });
 
         init();
@@ -472,7 +485,7 @@
      * 对外公开的接口
      */
     parent.EtrExchangeTrade002 = {
-    	zqzyPositionRefresh:zqzyPositionRefresh,
+        zqzyPositionRefresh:zqzyPositionRefresh,
         getAllCheckedRows:getAllCheckedRows
     }
 

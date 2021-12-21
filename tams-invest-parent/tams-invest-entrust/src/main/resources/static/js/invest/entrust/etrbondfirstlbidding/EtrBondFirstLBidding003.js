@@ -54,6 +54,7 @@
         , {field: 'finprodMarketId', title: 'EtrBondFirstLBidding002.finprodId',sortable : false, width: 150}
         , {field: 'tradeMarket', title: 'EtrBondFirstLBidding002.tradeMarket', sortable : false,width: 120, visible: false}
         , {field: 'tradeMarketName', title: 'EtrBondFirstLBidding002.tradeMarket',sortable : false, width: 120}
+        , {field: 'entrustDate', title: 'EtrBondFirstLBidding002.bidDate',sortable : false, type: 'date', width: 150}
         , {field: 'etrPayType', title: 'EtrBondFirstLBidding002.payType',sortable : false, width: 150, visible: false}
         , {field: 'etrPayTypeName', title: 'EtrBondFirstLBidding002.payType', sortable : false,width: 150}
         , {field: 'invAim', title: 'EtrBondFirstLBidding002.invAim', width: 120, sortable : false,visible: false}
@@ -69,14 +70,13 @@
         , {field: 'assetType10Name', title: 'EtrInvestBondInfo001.type10', sortable : false,width: 150}
         , {field: 'assetType11', title: 'EtrInvestBondInfo001.type11',sortable : false, width: 150, visible: false}
         , {field: 'assetType11Name', title: 'EtrInvestBondInfo001.type11',sortable : false, width: 150}
-        , {field: 'entrustDate', title: 'EtrBondFirstLBidding002.bidDate',sortable : false, type: 'date', width: 150, visible: false}
         , {field: 'bidPrinAmt', title: 'EtrBondFirstLBidding001.bidPriceTotal', sortable : false,type: 'number', width: 150}
         , {field: 'dealAmount', title: 'EtrBondFirstLBidding003.dealAmount', sortable : false,type: 'number', width: 150}
         , {field: 'etrAvailableCash', title: 'EtrBondFirstLBidding003.etrAvailableCash',sortable : false, type: 'number', width: 150}
         , {field: 'etrAvailablePosition', title: 'EtrBondFirstLBidding003.etrAvailablePosition', sortable : false,type: 'number', width: 150}
+        , {field: 'mainConsignee', width: 150,title: 'EtrBondFirstLBidding002.mainConsignee', sortable : false}
         , {field: 'fileArray', title: 'EtrBondFirstLBidding003.fileArray', width: 150, visible: false}
         , {field: 'businessId', width: 150, visible: false}
-        , {field: 'mainConsignee', width: 150, visible: false}
         , {field: 'fileArrayName', title: 'EtrBondFirstLBidding003.fileArray', type: 'text', width: 150}
         , {
             field: 'operation1', title: 'SysCommon.operation', render: function (data, type, row, meta) {

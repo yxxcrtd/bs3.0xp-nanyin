@@ -48,30 +48,31 @@
 	        </if>
         </where>
     </select>
-	<select id="findDvpTransferTableData" resultType="com.joyintech.tams.invest.common.dto.settle.dvporder.DvpOrdersManagementDto">
+    <select id="findDvpTransferTableData" resultType="com.joyintech.tams.invest.common.dto.settle.dvporder.DvpOrdersManagementDto">
         SELECT
-            T1.TRADE_ID bizCode,
-            T3.PA_BUSS_TYPE,
-            t2.PORTFOLIO_ID,
-            t4.PORTFOLIO_NAME,
-             
-            T3.BUSI_ACCT_NO payAcctNo,
-            T3.ACCT_NAME payAcctName,
-            T2.BUSI_ACCT_NO recAcctNo,
-            T2.ACCT_NAME recAcctName,
-            T2.LARGE_PAYNO largePayNo,
-            
-            t5.FINPROD_ID,
-            t5.FINPROD_MARKET_ID,
-            IFNULL(T5.FINPROD_ABBR, T5.FINPROD_NAME) finprodName,
-            DATE_FORMAT(t1.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
-            DATE_FORMAT(t1.SETTLE_DATE, '%Y-%m-%d') SETTLE_DATE,
-            T1.TRADE_AMT,
-            t1.CCY,
-            T6.COUNTER_ACCT_NO,
-            T6.MY_ACCT_NO,
-            SSAI.REGIST_ORG,
-            case when t9.ORDER_ID is null then '${DISPOSE_STATUS_02}'  else '${DISPOSE_STATUS_01}' end dealStatus
+        T1.TRADE_ID bizCode,
+        T3.PA_BUSS_TYPE,
+        t2.PORTFOLIO_ID,
+        t4.PORTFOLIO_NAME,
+
+        stlci.BUSI_ACCT_NO payAcctNo,
+        stlci.ACCT_NAME payAcctName,
+        sci.BUSI_ACCT_NO recAcctNo,
+        sci.ACCT_NAME recAcctName,
+        sci.LARGE_PAYNO largePayNo,
+
+        t5.FINPROD_ID,
+        t5.FINPROD_MARKET_ID,
+        ifnull(T5.FINPROD_ABBR, T5.FINPROD_NAME) finprodName,
+        DATE_FORMAT(t1.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+        DATE_FORMAT(t1.SETTLE_DATE, '%Y-%m-%d') SETTLE_DATE,
+        T1.TRADE_AMT,
+        t1.CCY,
+        T6.COUNTER_ACCT_NO,
+        T6.MY_ACCT_NO,
+        SSAI.REGIST_ORG,
+        case when t9.ORDER_ID is null then '${DISPOSE_STATUS_02}'  else '${DISPOSE_STATUS_01}' end dealStatus
+        ,S.ORDER_ID orderId
         FROM
         TRD_PRODUCT_DEAL T1
         LEFT JOIN TRD_PRODUCT_DEAL_ADD T2 ON T1.TRADE_ID = T2.TRADE_ID
@@ -82,14 +83,14 @@
         LEFT JOIN PTL_CAPACCT_INFO T7 ON T6.COUNTER_ACCT_NO = T7.ACCT_NO AND T1.CCY = T7.CCY AND T2.PORTFOLIO_ID = T7.PORTFOLIO_ID
         LEFT JOIN STL_DVP_TRADE_MATCH T9 ON T1.TRADE_ID = T9.TRADE_ID
         and exists(select 1 from STL_DVP_ORDERS where  T9.order_id=STL_DVP_ORDERS.order_id and (STL_DVP_ORDERS.ORDER_STATUS is null or STL_DVP_ORDERS.ORDER_STATUS!='02'))
-
+        LEFT JOIN STL_DVP_ORDERS S ON S.ORDER_ID = T9.ORDER_ID
         LEFT JOIN STL_SEC_ACCT_INFO SSAI ON SSAI.SEC_ACCT_ID = T1.SEC_MANAGE_ACCT_ID AND SSAI.TRD_ACCT_CCY = T1.CCY
-         
-        LEFT JOIN STL_CAPACCT_INFO T2 ON 
-        ((T6.PS = #{PS01} and T6.MY_ACCT_NO = T2.ACCT_NO) OR (T6.PS = #{PS02} and T6.COUNTER_ACCT_NO =T2.ACCT_NO))
-        LEFT JOIN STL_CAPACCT_INFO T3 ON 
-        ((T6.PS = #{PS02} and T6.MY_ACCT_NO = T3.ACCT_NO) OR (T6.PS = #{PS01} and T6.COUNTER_ACCT_NO =T3.ACCT_NO))
-        
+
+        LEFT JOIN STL_CAPACCT_INFO sci /*收款方*/ON
+        ((T6.PS = #{PS01} and T6.MY_ACCT_NO = sci.ACCT_NO) OR (T6.PS = #{PS02} and T6.COUNTER_ACCT_NO =sci.ACCT_NO))
+        LEFT JOIN STL_CAPACCT_INFO stlci /*付款方*/ON
+        ((T6.PS = #{PS02} and T6.MY_ACCT_NO = stlci.ACCT_NO) OR (T6.PS = #{PS01} and T6.COUNTER_ACCT_NO =stlci.ACCT_NO))
+
         WHERE T1.IS_CANCEL = #{NO} and t1.TRADE_STATUS=#{TS_01}
         AND (T3.PA_BUSS_TYPE IN (
         #{PINAN_BUSINESS_TYPE_09},
@@ -97,15 +98,21 @@
         #{PINAN_BUSINESS_TYPE_74},
         #{PINAN_BUSINESS_TYPE_75},
         #{PINAN_BUSINESS_TYPE_20},
-        #{PINAN_BUSINESS_TYPE_19})
-            OR (T3.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_11}) AND T1.PS = #{T03})
-            OR (T1.FINPROD_TYPE2 IN (#{F29}, #{F30}))
+        #{PINAN_BUSINESS_TYPE_19},
+        #{PINAN_BUSINESS_TYPE_11},
+        #{PINAN_BUSINESS_TYPE_51},
+        #{PINAN_BUSINESS_TYPE_52},
+        #{PINAN_BUSINESS_TYPE_76},
+        #{PINAN_BUSINESS_TYPE_77})
+        OR (T3.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_11}) AND T1.PS = #{T03})
+        OR (T1.FINPROD_TYPE2 IN (#{F29}, #{F30}))
         )
-        
+        /*查询债券、回购交易场所为银行间，证券账户来源是理财、是否发送指令是否*/
         AND SSAI.SEC_ACCT_SOURCE = #{ACCOUNT_SOURCE_01}
         AND SSAI.TRADE_PLACE = #{TRADE_PLACE_01}
         AND T6.IS_NEED_SEND = #{NO}
         AND SSAI.REGIST_ORG IN ('01', '02')
+        AND T1.IS_OUT_TRADE != 'N'
         <if test="portfolioId != null and !portfolioId.isEmpty()">
             AND T2.PORTFOLIO_ID IN
             <foreach collection="portfolioId" open="(" close=")" separator="," item="item">#{item}</foreach>
@@ -136,7 +143,9 @@
             AND NOT EXISTS (SELECT 1 FROM STL_DVP_TRADE_MATCH tt where tt.TRADE_ID = t1.TRADE_ID)
         </if>
         <if test="counterAcctNo1 != null and !counterAcctNo1.isEmpty()">
-            AND T6.MY_ACCT_NO like concat_ws('', '%', #{counterAcctNo1}, '%')
+            AND (T2.ACCT_NO like concat(concat('%',#{counterAcctNo1}),'%')
+            OR T3.ACCT_NO like concat(concat('%',#{counterAcctNo1}),'%')
+            )
         </if>
 
         UNION ALL
@@ -146,16 +155,16 @@
         T3.PA_BUSS_TYPE,
         t1.PORTFOLIO_ID,
         t4.PORTFOLIO_NAME,
-        
-        T3.BUSI_ACCT_NO payAcctNo,
-        T3.ACCT_NAME payAcctName,
+
+        stlci.BUSI_ACCT_NO payAcctNo,
+        stlci.ACCT_NAME payAcctName,
         T2.BUSI_ACCT_NO recAcctNo,
         T2.ACCT_NAME recAcctName,
         T2.LARGE_PAYNO largePayNo,
-            
+
         t5.FINPROD_ID,
         t5.FINPROD_MARKET_ID,
-        IFNULL(T5.FINPROD_ABBR, T5.FINPROD_NAME) finprodName,
+        ifnull(T5.FINPROD_ABBR, T5.FINPROD_NAME) finprodName,
         DATE_FORMAT(t1.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
         DATE_FORMAT(t1.SETTLE_DATE, '%Y-%m-%d') SETTLE_DATE,
         T1.TRADE_AMT,
@@ -164,6 +173,7 @@
         T6.MY_ACCT_NO,
         SSAI.REGIST_ORG,
         case when t9.ORDER_ID is null then '${DISPOSE_STATUS_02}' else '${DISPOSE_STATUS_01}' end dealStatus
+        ,S.ORDER_ID orderId
         FROM
         TRD_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL T3 ON T1.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
@@ -173,25 +183,23 @@
         LEFT JOIN PTL_CAPACCT_INFO T7 ON T6.COUNTER_ACCT_NO = T7.ACCT_NO AND T1.CCY = T7.CCY AND T1.PORTFOLIO_ID = T7.PORTFOLIO_ID
         LEFT JOIN STL_DVP_TRADE_MATCH T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
         and exists(select 1 from STL_DVP_ORDERS where  T9.order_id=STL_DVP_ORDERS.order_id and (STL_DVP_ORDERS.ORDER_STATUS is null or STL_DVP_ORDERS.ORDER_STATUS!='02'))
-
+        LEFT JOIN STL_DVP_ORDERS S ON S.ORDER_ID = T9.ORDER_ID
         LEFT JOIN STL_SEC_ACCT_INFO SSAI ON SSAI.SEC_ACCT_ID = T1.SEC_MANAGE_ACCT_ID AND SSAI.TRD_ACCT_CCY = T1.CCY
-         
-        LEFT JOIN STL_CAPACCT_INFO T2 ON 
+
+        LEFT JOIN STL_CAPACCT_INFO T2 /*收款方*/ON
         ((T6.PS = #{PS01} and T6.MY_ACCT_NO = T2.ACCT_NO) OR (T6.PS = #{PS02} and T6.COUNTER_ACCT_NO =T2.ACCT_NO))
-        LEFT JOIN STL_CAPACCT_INFO T3 ON 
-        ((T6.PS = #{PS02} and T6.MY_ACCT_NO = T3.ACCT_NO) OR (T6.PS = #{PS01} and T6.COUNTER_ACCT_NO =T3.ACCT_NO))
-        
+        LEFT JOIN STL_CAPACCT_INFO stlci /*付款方*/ON
+        ((T6.PS = #{PS02} and T6.MY_ACCT_NO = stlci.ACCT_NO) OR (T6.PS = #{PS01} and T6.COUNTER_ACCT_NO =stlci.ACCT_NO))
+
         WHERE
         T1.IS_CANCEL = #{NO} and t1.TRADE_STATUS=#{TS_01}
         AND SSAI.SEC_ACCT_SOURCE = #{ACCOUNT_SOURCE_01}
         AND SSAI.TRADE_PLACE = #{TRADE_PLACE_01}
-        AND (T3.PA_BUSS_TYPE IN (
-        #{PINAN_BUSINESS_TYPE_76},
-        #{PINAN_BUSINESS_TYPE_77},
-        #{PINAN_BUSINESS_TYPE_52},
-        #{PINAN_BUSINESS_TYPE_51})
-        OR (T1.FINPROD_TYPE2 IN (#{F29}, #{F30}))
-        )
+        AND T1.IS_OUT_TRADE != 'N'
+        /*BS-252  去除下面条件限制    债券交易STL_PAY_ORDERS.TRADE_ID存的是TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID  modifly by caojin  2020/6/23  start*/
+        AND (T3.PA_BUSS_TYPE    IN ( '76', '77', '52', '51','09','10','11','19','20','74','75')
+        OR (T1.FINPROD_TYPE2    IN ('F29', 'F30')) )
+        /*BS-252  去除下面条件限制    债券交易STL_PAY_ORDERS.TRADE_ID存的是TRD_FIN_PRODUCT_DEAL_TOTAL.TOTLE_TRADE_ID  modifly by caojin  2020/6/23  end*/
         <if test="portfolioId != null and !portfolioId.isEmpty()">
             AND T1.PORTFOLIO_ID IN
             <foreach collection="portfolioId" open="(" close=")" separator="," item="item">#{item}</foreach>
@@ -222,10 +230,113 @@
             AND NOT EXISTS (SELECT 1 FROM STL_DVP_TRADE_MATCH tt where tt.TRADE_ID = t1.TOTLE_TRADE_ID)
         </if>
         <if test="counterAcctNo1 != null and !counterAcctNo1.isEmpty()">
-            AND T6.MY_ACCT_NO like concat_ws('', '%',#{counterAcctNo1},'%')
+            AND (T2.ACCT_NO like concat(concat('%',#{counterAcctNo1}),'%')
+            OR T3.ACCT_NO like concat(concat('%',#{counterAcctNo1}),'%')
+            )
         </if>
-    </select>
-	<select id="findTradeData" resultType="com.joyintech.tams.invest.common.dto.settle.dvporder.DvpOrdersManagementDto">
+
+        UNION ALL
+        SELECT T1.TRADE_ID bizCode,
+        #{PINAN_BUSINESS_TYPE_81} PA_BUSS_TYPE,
+        T2.PORTFOLIO_ID,
+        t4.PORTFOLIO_NAME,
+        case T2.PS
+        when '02' then
+        T2.MY_ACCT_NO
+        else
+        T2.COUNTER_ACCT_NO
+        end as payAcctNo,
+        case T2.PS
+        when '02' then
+        SCI.ACCT_NAME
+        else
+        SCI1.ACCT_NAME
+        end payAcctName,
+        case T2.PS
+        when '02' then
+        T2.COUNTER_ACCT_NO
+        else
+        T2.MY_ACCT_NO
+        end as recAcctNo,
+        case T2.PS
+        when '02' then
+        SCI1.ACCT_NAME
+        else
+        SCI.ACCT_NAME
+        end recAcctName,
+        '',
+        '',
+        '',
+        '',
+        DATE_FORMAT(t1.TRADE_DATE, '%Y-%m-%d') TRADE_DATE,
+        DATE_FORMAT(t1.SETTLE_DATE, '%Y-%m-%d') SETTLE_DATE,
+        T1.TRADE_AMT,
+        t1.CCY,
+        T6.COUNTER_ACCT_NO,
+        T6.MY_ACCT_NO,
+        '' REGIST_ORG,
+        case
+        when SDTM.ORDER_ID is null then
+        '02'
+        else
+        '01'
+        end dealStatus
+        ,T2.ORDER_ID orderId
+        FROM TRD_PRODUCT_DEAL T1
+        LEFT JOIN STL_DVP_TRADE_MATCH SDTM ON T1.TRADE_ID = SDTM.TRADE_ID
+        LEFT JOIN STL_DVP_ORDERS T2 ON T2.ORDER_ID = SDTM.ORDER_ID
+        LEFT JOIN PA_TRD_PRODUCT_DEAL T3 ON T1.TRADE_ID = T3.TRADE_ID
+        LEFT JOIN PTL_PORTFOLIO T4 ON T2.PORTFOLIO_ID = T4.PORTFOLIO_ID
+        LEFT JOIN FIN_PRODUCT T5 ON T1.FINPROD_ID = T5.FINPROD_ID
+        LEFT JOIN STL_PAY_ORDERS T6 ON T1.TRADE_ID = T6.TRADE_ID
+        LEFT JOIN STL_CAPACCT_INFO SCI ON T2.MY_ACCT_NO = SCI.ACCT_NO
+        LEFT JOIN STL_CAPACCT_INFO SCI1 ON T2.COUNTER_ACCT_NO = SCI1.ACCT_NO
+        and exists (select 1 from STL_DVP_ORDERS
+        where SDTM.order_id = STL_DVP_ORDERS.order_id
+        and (STL_DVP_ORDERS.ORDER_STATUS is null or
+        STL_DVP_ORDERS.ORDER_STATUS != '02'))
+        WHERE T1.IS_CANCEL = 'N'
+        and t1.TRADE_STATUS = '01'
+        AND T3.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_88}, #{PINAN_BUSINESS_TYPE_89},#{PINAN_BUSINESS_TYPE_90},#{PINAN_BUSINESS_TYPE_91},#{PINAN_BUSINESS_TYPE_92},#{PINAN_BUSINESS_TYPE_93})
+        <if test="portfolioId != null and !portfolioId.isEmpty()">
+            AND T2.PORTFOLIO_ID IN
+            <foreach collection="portfolioId" open="(" close=")" separator="," item="item">#{item}</foreach>
+        </if>
+        <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
+            AND instr(T5.FINPROD_MARKET_ID, #{finprodMarketId}) > 0
+        </if>
+        <if test="bizCode != null and !bizCode.isEmpty()">
+            AND instr(T1.TRADE_ID, #{bizCode}) > 0
+        </if>
+        <if test="acctType != null and !acctType.isEmpty()">
+            AND 1 = 2
+        </if>
+        <if test="settleDateStart != null and !settleDateStart.isEmpty()">
+            AND T1.SETTLE_DATE >= STR_TO_DATE(#{settleDateStart}, '%Y-%m-%d')
+        </if>
+        <if test="settleDateEnd != null and !settleDateEnd.isEmpty()">
+            AND T1.SETTLE_DATE &lt;= STR_TO_DATE(#{settleDateEnd}, '%Y-%m-%d')
+        </if>
+        <if test="paBusinessType != null and !paBusinessType.isEmpty()">
+            <if test="paBusinessType1 == null || paBusinessType1.isEmpty()">
+                and 1=2
+            </if>
+            <if test="paBusinessType1 != null and !paBusinessType1.isEmpty()">
+                AND T3.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_88}, #{PINAN_BUSINESS_TYPE_89},#{PINAN_BUSINESS_TYPE_90},#{PINAN_BUSINESS_TYPE_91},#{PINAN_BUSINESS_TYPE_92},#{PINAN_BUSINESS_TYPE_93})
+            </if>
+        </if>
+        <if test="dealStatus != null and !dealStatus.isEmpty() and dealStatus == DISPOSE_STATUS_01">
+            AND EXISTS (SELECT 1 FROM STL_DVP_TRADE_MATCH tt where tt.TRADE_ID = t1.TRADE_ID)
+        </if>
+        <if test="dealStatus != null and !dealStatus.isEmpty() and dealStatus == DISPOSE_STATUS_02">
+            AND NOT EXISTS (SELECT 1 FROM STL_DVP_TRADE_MATCH tt where tt.TRADE_ID = t1.TRADE_ID)
+        </if>
+        <if test="counterAcctNo1 != null and !counterAcctNo1.isEmpty()">
+            AND (T2.MY_ACCT_NO like concat(concat('%',#{counterAcctNo1}),'%')
+            OR T2.COUNTER_ACCT_NO like concat(concat('%',#{counterAcctNo1}),'%')
+            )
+        </if>
+    </select>	<select id="findTradeData" resultType="com.joyintech.tams.invest.common.dto.settle.dvporder.DvpOrdersManagementDto">
         SELECT
         T1.TRADE_ID bizCode,
         T3.PA_BUSS_TYPE,

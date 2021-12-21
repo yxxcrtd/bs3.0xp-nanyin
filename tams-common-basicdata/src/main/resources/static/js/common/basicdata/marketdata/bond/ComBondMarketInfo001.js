@@ -77,14 +77,14 @@ $(function() {
         data.valueDate = new Date(data.valueDate).format();
         data.pageModel=PAGE_MODEL_EDIT;
         data.operateType='edit';
-//        Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/bondmarketinfo/ComBondMarketInfo002/check', data, function(result) {
+       Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/bondmarketinfo/ComBondMarketInfo002/check', data, function(result) {
             Joyin.confirm("请确认是否要修改？", function(){
                 Joyin.dialog(JoyinUtil.getLabel("每日债券行情编辑"),
                     basePath + "common/basicdata/marketdata/bondmarketinfo/ComBondMarketInfo002/init",
                     "98%", "95%",data,
                     function(){table.reload();});
             });
-//        });
+       });
 
     });
     /**

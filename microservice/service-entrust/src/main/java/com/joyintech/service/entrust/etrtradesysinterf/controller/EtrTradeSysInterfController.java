@@ -125,6 +125,9 @@ public class EtrTradeSysInterfController {
 		resultMap.put("entrustOpeList",list);
 		return resultMap;
     }
-    
-   
+
+	@RequestMapping("/getRealNameByUser")
+	public String getRealNameByUser(@RequestBody String param) {
+    	return etrTradeSysInterfService.getRealNameByUser(param);
+	}
 }

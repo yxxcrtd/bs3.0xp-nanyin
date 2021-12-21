@@ -7,18 +7,17 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.entrust.etrplanassetc.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo001Dto;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,7 +93,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
 
     /**
      * 计划类净值委托分页查询 <功能详细描述>
-     * 
+     *
      * @param param
      * @return
      * @see
@@ -121,14 +120,25 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
         }
         /*添加三四级分类 lishuping 2019/7/29 end*/
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForPage(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/findPage", param,
-            EtrPlanAssetCDto.class);
+        Page<EtrPlanAssetCDto> page = restTemplate.postForPage(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/findPage", param,
+                EtrPlanAssetCDto.class);
+        List<SysUser> userList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/getAllUserList",
+                param, SysUser.class);
+        for(EtrPlanAssetCDto dto:page.getRoot()){
+            if(StringUtil.isNotEmpty(dto.getNextUser())){
+                String sysUsers = userList.stream().filter(x-> Arrays.asList(dto.getNextUser().split(",")).contains(x.getUserName()))
+                        .map(SysUser::getRealName)
+                        .collect(Collectors.joining(",","",""));
+                dto.setNextUser(sysUsers);
+            }
+        }
+        return page;
     }
-    
+
     /**
      * 组合代码联想文本框 <功能详细描述>
-     * 
+     *
      * @param param
      * @return
      * @see
@@ -140,13 +150,13 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
         map.put("userId", user.getUserName());
         map.put("param", param);
         return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME
-                                       + "/EtrPlanAssetC/getentrustId" , map,
-            SuggestDto.class);
+                        + "/EtrPlanAssetC/getentrustId" , map,
+                SuggestDto.class);
     }
 
     /**
      * 资产代码联想文本框 <功能详细描述>
-     * 
+     *
      * @param param
      * @return
      * @see
@@ -154,26 +164,26 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
      */
     public List<SuggestDto> getfinprodId(String param) {
         return restTemplate.getForList(ServiceApplication.ENTRUST_SERVICE_NAME
-                                       + "/EtrPlanAssetC/getfinprodId?finprodId=" + param,
-            SuggestDto.class);
+                        + "/EtrPlanAssetC/getfinprodId?finprodId=" + param,
+                SuggestDto.class);
     }
 
     /**
      * 删除委托 <功能详细描述>
-     * 
+     *
      * @param entrustId
      * @see
      * @since 1.0
      */
     public boolean deleteDelegate(String entrustId) {
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                                         + "/EtrPlanAssetC/delete?entrustId=" + entrustId,
-            boolean.class);
+                        + "/EtrPlanAssetC/delete?entrustId=" + entrustId,
+                boolean.class);
     }
 
     /**
      * 关闭委托 <功能详细描述>
-     * 
+     *
      * @param entrustId
      * @param closeWay
      * @see
@@ -181,21 +191,21 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
      */
     public boolean closeDelegate(String entrustId, String closeWay) {
         return restTemplate.getForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/close?entrustId=" + entrustId
-                                         + "&closeWay=" + closeWay,
-            boolean.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/close?entrustId=" + entrustId
+                        + "&closeWay=" + closeWay,
+                boolean.class);
     }
 
     /**
      * 撤回委托 <功能详细描述>
-     * 
+     *
      * @param entity
      * @see
      * @since 1.0
      */
     public boolean recallDelegate(EtrPlanAssetCDto dto) {
         return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/recall", dto, boolean.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/recall", dto, boolean.class);
     }
 
     /**
@@ -208,32 +218,32 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
         dto.setEntrustDate(sysDate);
         basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
         restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/doComplete", dto,
-            Integer.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/doComplete", dto,
+                Integer.class);
     }
-    
+
     /**
-     * 
+     *
      * 流程发起时调用
      */
-     @Override
-     public void doInsert(EtrPlanAssetCDto dto, OperationType type){
-         //dto.setOperateType(type.toString());
-         restTemplate.postForObject(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/doInsert",dto,
-             Integer.class);
-     }
+    @Override
+    public void doInsert(EtrPlanAssetCDto dto, OperationType type){
+        //dto.setOperateType(type.toString());
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/doInsert",dto,
+                Integer.class);
+    }
 
-     /**
-      * 
-      * 流程修改时调用
-      */
-     @Override
-     public void doUpdate(EtrPlanAssetCDto dto){
-         restTemplate.postForObject(
-             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/doUpdate",dto,
-             Integer.class);
-     }
+    /**
+     *
+     * 流程修改时调用
+     */
+    @Override
+    public void doUpdate(EtrPlanAssetCDto dto){
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/doUpdate",dto,
+                Integer.class);
+    }
 
     @Override
     public void doBack(EtrPlanAssetCDto dto) {
@@ -244,7 +254,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
 
     /**
      * 新建页面组合代码联想下拉框 <功能详细描述>
-     * 
+     *
      * @param map
      * @return
      * @see
@@ -253,13 +263,13 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
     public Page<SelectOptionDto> getentrustIdAdd(Map<String, Object> map) {
         map.put("userId", SecurityUtil.getLoginUser().getUserName());
         return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME
-                                       + "/EtrPlanAssetC/getentrustIdAdd" ,map,
-            SelectOptionDto.class);
+                        + "/EtrPlanAssetC/getentrustIdAdd" ,map,
+                SelectOptionDto.class);
     }
 
     /**
      * 新建页面资产代码联想下拉框 <功能详细描述>
-     * 
+     *
      * @param search
      * @return
      * @see
@@ -267,25 +277,25 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
      */
     public Page<SelectOptionDto> getfinprodIdForAdd(Map<String, Object> map) {
         return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME
-                                       + "/EtrPlanAssetC/getfinprodIdForAdd",map,SelectOptionDto.class);
+                + "/EtrPlanAssetC/getfinprodIdForAdd",map,SelectOptionDto.class);
     }
 
     /**
      * 校验方法 <功能详细描述>
-     * 
+     *
      * @see
      * @since 1.0
      */
     public List<ValidMessage> check(EtrPlanAssetCDto dto) {
         dto.setCloseWay(DictCodeListExt1.委托关闭方式_人工.getValue());
         return restTemplate.postForList(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/check", dto,
-            ValidMessage.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/check", dto,
+                ValidMessage.class);
     }
 
     /**
      * 根据主键查询修改/查看信息 <功能详细描述>
-     * 
+     *
      * @param entrustId
      * @return
      * @see
@@ -293,13 +303,13 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
      */
     public EtrPlanAssetCDto selectByKey(String entrustId) {
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                                         + "/EtrPlanAssetC/selectByKey?entrustId=" + entrustId,
-            EtrPlanAssetCDto.class);
+                        + "/EtrPlanAssetC/selectByKey?entrustId=" + entrustId,
+                EtrPlanAssetCDto.class);
     }
-    
+
     /**
      * 导出
-     * 
+     *
      * @param exportParam 导出信息
      * @see
      * @since 1.0
@@ -307,7 +317,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
     @Override
     protected void buildExportParam(ExportParam exportParam) {
         exportParam.config("/com/joyintech/tams/invest/entrust/etrplanassetc/conf/export_conf.xml")
-            .dataSource(DataSourceType.MASERT);
+                .dataSource(DataSourceType.MASERT);
     }
     @Override
     public Page<EtrPlanAssetCDto> selectPageData(Map<String, Object> selectParam) {
@@ -319,7 +329,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
             cell.setCellValue(value+"%");
         }
     }
-    
+
     /**
      * 组合可用现金查询
      * <功能详细描述>
@@ -334,11 +344,15 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
         if(StringUtil.isNotEmpty(calId)){
             List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(vdate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(vdate)), 15),calId);
             Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(vdate)), 1, holidayList, "1");
-            param.put("vdate1",DateUtil.format(tradeDay));
+            param.put("sysDateT1",DateUtil.format(tradeDay));
         }
-        return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/getProAvailableCash",param,
-            Map.class);
+        // modify by etliu 20211129 start
+        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/getProAvailableCash",param,
+//            Map.class);
+        return etrCommonService.getProAvailableCash(param);
+        // modify by etliu 20211129 end
     }
 
     /**
@@ -349,17 +363,21 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
      * @see
      * @since 1.0
      */
-    public BigDecimal getAssetAvailablePosition(PtlSecPositionFlowDto dto) {
+    public BigDecimal getAssetAvailablePosition(EtrSecPositionDto dto) {
         Date sysDate =  CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
         dto.setCdate(DateUtil.parse(DateUtil.format(sysDate)));
         dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-        return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/getAssetAvailablePosition",dto,
-            BigDecimal.class);
+        // modify by etliu 20211129 start
+        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetC/getAssetAvailablePosition",dto,
+//            BigDecimal.class);
+        return etrCommonService.getAssetAvailablePosition(dto);
+        // modify by etliu 20211129 end
     }
-    
+
     /**
-     * 
+     *
      * 查询授权额度
      * <功能详细描述>
      * @param map
@@ -375,8 +393,8 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
         map.put("tradeMarket", dto.getTradeMarket());
         map.put("ps",dto.getPs());
         return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/common/SelectLimitAmt/selectLimitAmt", map,
-            BigDecimal.class);
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/SelectLimitAmt/selectLimitAmt", map,
+                BigDecimal.class);
     }
 
     // add by renping 授权增加 2019-08-22 start
@@ -385,11 +403,11 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
         EtrPlanAssetCDto dto = this.getBussinessEntity(entity);
         if (taskId != null) {
             try {
-            	Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), (null == dto.getEntrustAmt() ? dto.getEntrustNum() : dto.getEntrustAmt()),
-                    LoginUserUtil.getUserName(),
-                    BussinessDictCodeList.平安资产类型_计划类资产_货币型.getValue(), dto.getFinprodType2(),
-                    dto.getTradeMarket(), dto.getPs(), dto.getFinprodId(), dto.getWorkflowId());
-            	return commonBusinessService.是否需要上级审批_委托用(params);
+                Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), (null == dto.getEntrustAmt() ? dto.getEntrustNum() : dto.getEntrustAmt()),
+                        LoginUserUtil.getUserName(),
+                        BussinessDictCodeList.平安资产类型_计划类资产_货币型.getValue(), dto.getFinprodType2(),
+                        dto.getTradeMarket(), dto.getPs(), dto.getFinprodId(), dto.getWorkflowId());
+                return commonBusinessService.是否需要上级审批_委托用(params);
             }
             catch (WorkFlowException e) {
                 // 未设置授权或设置成不授权时，抛出异常，当前用户只能退回
@@ -428,7 +446,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
             dto.setPs(rowData.get(5).toString().trim().split(":")[0]);
             // 根据交易方向来赋值委托份额和委托金额
             String[] s2 = rowData.get(5).toString().split(":");
-			if (StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())) {
+            if (StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())) {
                 // 委托份额
                 dto.setEntrustNum2(
                         BigDecimal.valueOf(Double.valueOf(rowData.get(6).toString().trim())));
@@ -443,15 +461,15 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                 dto.setEntrustAmt(dto.getEntrustAmt2());
                 dto.setEntrustNumShow(dto.getEntrustNum2());
                 dto.setEntrustAmtShow(dto.getEntrustAmt2());
-			}
+            }
             else if (StringUtil.equals(s2[0], DictCodeList.交易方向_卖出.getValue())) {
                 // 委托份额
                 dto.setEntrustNum2(
-                    BigDecimal.valueOf(Double.valueOf(rowData.get(6).toString().trim())));
+                        BigDecimal.valueOf(Double.valueOf(rowData.get(6).toString().trim())));
                 // 当交易方向为卖出的时候，委托金额=委托份额+待结转份额
                 if(StringUtil.isNotEmpty(rowData.get(8).toString().trim())){
-                dto.setEntrustAmt2(dto.getEntrustNum2().add(
-                    BigDecimal.valueOf(Double.valueOf(rowData.get(8).toString().trim()))));
+                    dto.setEntrustAmt2(dto.getEntrustNum2().add(
+                            BigDecimal.valueOf(Double.valueOf(rowData.get(8).toString().trim()))));
                 }else {
                     dto.setEntrustAmt2(dto.getEntrustNum2());
                 }
@@ -462,17 +480,17 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
             }
             else if (StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())) {
                 dto.setEntrustAmt(
-                    BigDecimal.valueOf(Double.valueOf(rowData.get(7).toString().trim())));
+                        BigDecimal.valueOf(Double.valueOf(rowData.get(7).toString().trim())));
                 dto.setEntrustAmtShow(dto.getEntrustAmt());
             }
             else {
                 dto.setEntrustNum(
-                    BigDecimal.valueOf(Double.valueOf(rowData.get(6).toString().trim())));
+                        BigDecimal.valueOf(Double.valueOf(rowData.get(6).toString().trim())));
                 dto.setEntrustNumShow(dto.getEntrustNum());
             }
             // 交易方向为买入和卖出的时候页面待结转份额入库
             if ((StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())
-                || StringUtil.equals(s2[0], DictCodeList.交易方向_卖出.getValue()))&&StringUtil.isNotEmpty(rowData.get(8).toString().trim())) {
+                    || StringUtil.equals(s2[0], DictCodeList.交易方向_卖出.getValue()))&&StringUtil.isNotEmpty(rowData.get(8).toString().trim())) {
                 dto.setPrice(BigDecimal.valueOf(Double.valueOf(rowData.get(8).toString().trim())));
             }
             // 获取备注
@@ -508,7 +526,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
             Page<SelectOptionDto> finprodIds = getfinprodIdForAdd(map);
             SelectOptionDto selectOptionDto = finprodIds.getRoot().get(0);
             JSONObject jsonObject = JSONObject.parseObject(
-                JSONObject.toJSONString(selectOptionDto.getObject()));
+                    JSONObject.toJSONString(selectOptionDto.getObject()));
             // 资产名称
             dto.setFinprodName(jsonObject.get("finprodName").toString());
             dto.setCcy(jsonObject.get("ccy").toString());
@@ -519,40 +537,40 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                 dto.setEntrustDate(DateUtil.parse(jsonObject.get("entrustDate").toString()));
             }
             dto.setFinprodId(jsonObject.get("finprodId").toString());
-			// 指令可用现金
-			if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
-					|| StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())) {
-				Map<String, Object> param = new HashMap<>();
-				param.put("finprodId", jsonObject.get("finprodId").toString());
-				param.put("portfolioId", dto.getPortfolioId());
-				param.put("ccy", dto.getCcy());
-				param.put("vdate", DateUtil.format(dto.getVdate()));
-				Map<String, Object> proAvailableCash = getProAvailableCash(param);
-				if (proAvailableCash != null && proAvailableCash.get("cashT") != null) {
-					dto.setEtrAvailableCash(
-							BigDecimal.valueOf(Double.valueOf(proAvailableCash.get("cashT").toString())));
+            // 指令可用现金
+            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
+                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())) {
+                Map<String, Object> param = new HashMap<>();
+                param.put("finprodId", jsonObject.get("finprodId").toString());
+                param.put("portfolioId", dto.getPortfolioId());
+                param.put("ccy", dto.getCcy());
+                param.put("vdate", DateUtil.format(dto.getVdate()));
+                Map<String, Object> proAvailableCash = getProAvailableCash(param);
+                if (proAvailableCash != null && proAvailableCash.get("cashT") != null) {
+                    dto.setEtrAvailableCash(
+                            BigDecimal.valueOf(Double.valueOf(proAvailableCash.get("cashT").toString())));
                     //组合可用现金
-					dto.setProAvailableCash(BigDecimal.valueOf(Double.valueOf(proAvailableCash.get("cashT").toString())));
-				}
-				// 托管户可用现金
-				if ((proAvailableCash!=null&&proAvailableCash.containsKey("cashTG")) && (
-						proAvailableCash.get("cashTG") != null)) {
-					dto.setAccAvailableCash(
-							BigDecimal.valueOf(Double.valueOf(proAvailableCash.get("cashTG").toString())));
-				}
-			}
-			// 指令可用持仓
-			if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
-					|| StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
-				EtrSecPositionDto etrSecPositionDto = new EtrSecPositionDto();
-				Date sysDate = DateUtil.platDateFromCache();
-				etrSecPositionDto.setCdate(DateUtil.parse(DateUtil.format(sysDate)));
-				etrSecPositionDto.setFinprodId(jsonObject.get("finprodId").toString());
-				etrSecPositionDto.setPortfolioId(dto.getPortfolioId());
-				etrSecPositionDto.setCcy(dto.getCcy());
-				BigDecimal assetAvailablePosition = etrCommonService.getAssetAvailablePosition(etrSecPositionDto);
-				dto.setAssetAvailablePosition(BigDecimal.valueOf(Double.valueOf(assetAvailablePosition.toString())));
-			}
+                    dto.setProAvailableCash(BigDecimal.valueOf(Double.valueOf(proAvailableCash.get("cashT").toString())));
+                }
+                // 托管户可用现金
+                if ((proAvailableCash!=null&&proAvailableCash.containsKey("cashTG")) && (
+                        proAvailableCash.get("cashTG") != null)) {
+                    dto.setAccAvailableCash(
+                            BigDecimal.valueOf(Double.valueOf(proAvailableCash.get("cashTG").toString())));
+                }
+            }
+            // 指令可用持仓
+            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
+                    || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())) {
+                EtrSecPositionDto etrSecPositionDto = new EtrSecPositionDto();
+                Date sysDate = DateUtil.platDateFromCache();
+                etrSecPositionDto.setCdate(DateUtil.parse(DateUtil.format(sysDate)));
+                etrSecPositionDto.setFinprodId(jsonObject.get("finprodId").toString());
+                etrSecPositionDto.setPortfolioId(dto.getPortfolioId());
+                etrSecPositionDto.setCcy(dto.getCcy());
+                BigDecimal assetAvailablePosition = etrCommonService.getAssetAvailablePosition(etrSecPositionDto);
+                dto.setAssetAvailablePosition(BigDecimal.valueOf(Double.valueOf(assetAvailablePosition.toString())));
+            }
             etrPlanAssetCDtoList.add(dto);
         }
         return etrPlanAssetCDtoList;
@@ -565,9 +583,9 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
      */
     public String getCounterName(String counterId) {
         return restTemplate.getForObject(ServiceApplication.ENTRUST_SERVICE_NAME
-                                         + "/EtrBondFirstLBidding/getCounterName?counterId="
-                                         + counterId,
-            String.class);
+                        + "/EtrBondFirstLBidding/getCounterName?counterId="
+                        + counterId,
+                String.class);
     }
 
     /**
@@ -577,11 +595,11 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
      * @return
      */
     public AjaxResult checkImportData(String fileName) {
-    	List<List<String>> objects = ExcelUtil.getTempList(fileName);
+        List<List<String>> objects = ExcelUtil.getTempList(fileName);
         int totalData = 0;
         // 导入数据超过100条做报错信息的check
         for (int i = 2; i < objects.size(); i++ ) {
-        	List<String> rowData = objects.get(i);
+            List<String> rowData = objects.get(i);
             for (int j = 0; j <= 10; j++ ) {
                 if (StringUtil.isNotEmpty(rowData.get(j))) {
                     totalData++ ;
@@ -613,35 +631,35 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                 // ZGZGST-1845:序号为空时提示错误 fuyongsheng 20210902 edit end
                 // 委托开始日check非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(1).toString(),
-                        "EtrPlanAssetR002.vdate", lineNo));
+                        etrCommonService.checkIsBlank(rowData.get(1).toString(),
+                                "EtrPlanAssetR002.vdate", lineNo));
                 // 委托开始日格式check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsDate(rowData.get(1).toString(),
-                        "EtrPlanAssetR002.vdate", lineNo));
+                        etrCommonService.checkIsDate(rowData.get(1).toString(),
+                                "EtrPlanAssetR002.vdate", lineNo));
                 // 委托结束日
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(2).toString(),
-                        "EtrPlanAssetR002.mdate", lineNo));
+                        etrCommonService.checkIsBlank(rowData.get(2).toString(),
+                                "EtrPlanAssetR002.mdate", lineNo));
                 // 委托终止日格式check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsDate(rowData.get(2).toString(),
-                        "EtrPlanAssetR002.mdate", lineNo));
+                        etrCommonService.checkIsDate(rowData.get(2).toString(),
+                                "EtrPlanAssetR002.mdate", lineNo));
                 // 委托开始、终止日是否是平台日check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                         EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
                 // 组合代码
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(3).toString(),
-                        "EtrPlanAssetR002.portfolioId", lineNo));
+                        etrCommonService.checkIsBlank(rowData.get(3).toString(),
+                                "EtrPlanAssetR002.portfolioId", lineNo));
                 // 组合代码是否存在
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkPortfolioIdExist(rowData.get(3).toString(),
-                        "EtrPlanAssetR002.portfolioId", lineNo));
+                        etrCommonService.checkPortfolioIdExist(rowData.get(3).toString(),
+                                "EtrPlanAssetR002.portfolioId", lineNo));
                 // 资产代码
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(4).toString(),
-                        "EtrPlanAssetR002.finprodId", lineNo));
+                        etrCommonService.checkIsBlank(rowData.get(4).toString(),
+                                "EtrPlanAssetR002.finprodId", lineNo));
                 if (StringUtil.isNotEmpty(rowData.get(4).toString())) {
                     Map<String, Object> map = new HashMap<>();
                     // ZGZGST-1844:资产代码关联查询条件用initValue fuyongsheng 20210902 edit start
@@ -652,20 +670,20 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                     Page<SelectOptionDto> finprodIds = getfinprodIdForAdd(map);
                     if (finprodIds.getRoot().isEmpty()) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
-                            "ETR_E_0017", getMessage("EtrPlanAssetR002.finprodId"), lineNo));
+                                "ETR_E_0017", getMessage("EtrPlanAssetR002.finprodId"), lineNo));
                     }
                 }
                 // 交易方向非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrPlanAssetR002.ps",
-                            lineNo));
+                        etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrPlanAssetR002.ps",
+                                lineNo));
                 // 根据交易方向来check委托份额和委托金额
                 String[] s2 = rowData.get(5).toString().split(":");
                 if (StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())) {
                     // 委托份额 改为 指令份额
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(6).toString(),
-                            "EtrPlanAssetC002.entrustNum", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(6).toString(),
+                                    "EtrPlanAssetC002.entrustNum", lineNo));
                     /*// 委托金额
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                         etrCommonService.checkIsBlank(rowData.get(7).toString(),
@@ -678,18 +696,18 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                     // 交易方向为卖出时，委托金额为空check
                     if (StringUtil.isNotBlank(rowData.get(7).toString())) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
-                            "ETR_E_0030", getMessage("EtrPlanAssetR002.ps"), lineNo));
+                                "ETR_E_0030", getMessage("EtrPlanAssetR002.ps"), lineNo));
                     }
                 }
                 if (StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())) {
                     // 委托金额
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(7).toString(),
-                            "EtrPlanAssetR002.entrustAmt", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(7).toString(),
+                                    "EtrPlanAssetR002.entrustAmt", lineNo));
                     // 交易方向为申购时，委托份额为空check
                     if (StringUtil.isNotBlank(rowData.get(6).toString())) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
-                            "ETR_E_0031", getMessage("EtrPlanAssetR002.ps"), lineNo));
+                                "ETR_E_0031", getMessage("EtrPlanAssetR002.ps"), lineNo));
                     }
                 }
                 else if(StringUtil.equals(s2[0], DictCodeList.交易方向_赎回.getValue())){
@@ -700,13 +718,13 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                     // 交易方向为赎回时，委托金额为空check
                     if (StringUtil.isNotBlank(rowData.get(7).toString())) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
-                            "ETR_E_0032", getMessage("EtrPlanAssetR002.ps"), lineNo));
+                                "ETR_E_0032", getMessage("EtrPlanAssetR002.ps"), lineNo));
                     }
                 }
                 // 交易对手非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    etrCommonService.checkIsBlank(rowData.get(10).toString(),
-                        "EtrPlanAssetC003.counterId", lineNo));
+                        etrCommonService.checkIsBlank(rowData.get(10).toString(),
+                                "EtrPlanAssetC003.counterId", lineNo));
                 //是否存在check
                 if (StringUtil.isNotBlank(rowData.get(10).toString())) {
                     Map<String, Object> map = new HashMap<>();
@@ -742,7 +760,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                 }
             }
             confirmMsg1 = etrCommonService.StringAddByBr(confirmMsg1,
-                getMessage("ETR_C_0001", String.valueOf(errorNum)));
+                    getMessage("ETR_C_0001", String.valueOf(errorNum)));
             Map<String, Object> resultMap = new HashMap<>();
             if (StringUtil.isNotBlank(confirmMsg1)) {
                 resultMap.put("confirmMsg", confirmMsg1);
@@ -756,7 +774,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
 
     /**
      * check 数字非空及格式
-     * 
+     *
      * @param confirmMsg 错误信息
      * @param indexId 序号
      * @param data 数据
@@ -773,7 +791,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
             }
             catch (NumberFormatException e) {
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                    getMessage("ETR_E_0016", getMessage(labelName), indexId));
+                        getMessage("ETR_E_0016", getMessage(labelName), indexId));
             }
         }
         return confirmMsg;

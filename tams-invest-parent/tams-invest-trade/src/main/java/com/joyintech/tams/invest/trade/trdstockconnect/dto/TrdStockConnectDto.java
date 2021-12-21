@@ -1255,5 +1255,18 @@ public class TrdStockConnectDto extends TrdProductDeal implements ProcessEntity 
 	public void setTargetType(String targetType) {
 		this.targetType = targetType;
 	}
+
+	/**
+	 * 成交匹配的流水号 seqId
+	 */
+	private String dealSqeId;
+
+	public String getDealSqeId() {
+		return dealSqeId;
+	}
+
+	public void setDealSqeId(String dealSqeId) {
+		this.dealSqeId = dealSqeId;
+	}
 	
 }

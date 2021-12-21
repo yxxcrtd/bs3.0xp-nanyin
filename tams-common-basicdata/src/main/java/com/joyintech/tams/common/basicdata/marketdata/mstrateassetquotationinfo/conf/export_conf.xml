@@ -9,7 +9,7 @@
             <Cell order="5" name="估值日期">valDateStr</Cell>
             <Cell order="6" name="全价估值">fullValuation</Cell>
             <Cell order="7" name="净价估值">valuation</Cell>
-            <Cell order="8" name="导入日">importDate</Cell>
+<!--            <Cell order="8" name="导入日">importDate</Cell>-->
             <Cell order="9" name="备注">remark</Cell>
         </Row>
     </Worksheet>

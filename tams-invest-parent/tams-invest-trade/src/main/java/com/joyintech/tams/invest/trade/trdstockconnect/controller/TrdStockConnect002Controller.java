@@ -16,6 +16,7 @@ import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsServic
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,6 +133,8 @@ public class TrdStockConnect002Controller extends BaseController {
         String workflowStatus = this.getParam("workflowStatus");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String entrustId = this.getParam("entrustId");
+		//获取成交匹配录单
+		String tranRecord = this.getParam("tranRecord");
 //        String validStatus = this.getParam("validStatus");
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
@@ -144,7 +147,10 @@ public class TrdStockConnect002Controller extends BaseController {
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdStockConnect002Service.getTrdProductDealDto(tradeId);
-        }
+        }   //成交匹配录单
+		else if(StringUtil.isNotEmpty(tranRecord)) {
+			dto = JsonUtils.json2Object(tranRecord, TrdStockConnectDto.class);
+		}
         else  if (StringUtil.isNotEmpty(entrustId)){
         	TrdStockConnectDto etrdto = trdStockConnect002Service.getEntrustInfo(entrustId);
             BeanUtil.copyPropertiesIgnoreNull(dto, etrdto);

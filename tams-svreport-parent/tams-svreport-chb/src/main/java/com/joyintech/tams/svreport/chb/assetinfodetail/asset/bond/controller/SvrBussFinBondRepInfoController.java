@@ -56,6 +56,9 @@ public class SvrBussFinBondRepInfoController extends BaseController{
                 DictCode.发行方式,DictCode.主体评级_中债,DictCode.是否_中债,DictCode.登记托管机构_监管报送,
                 DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类}
          );
+        //中债新增数据字典
+        setSelectOptionToModel(model, DictCode.结构化业务类型);
+        setSelectOptionToModel(model, DictCode.结构化层级);
 
 
         //2、当入参assetType2资产/负债二级类别 为【01：债券类资产/理财直接融资工具/同业存单】进行以下处理

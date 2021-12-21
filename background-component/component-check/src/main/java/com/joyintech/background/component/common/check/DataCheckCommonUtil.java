@@ -84,7 +84,10 @@ public class DataCheckCommonUtil {
                 else if (StringUtil.equals(pageId, "FinStockInfo002Interf")){
                     pageId = "FinStockInfo002";
                     pageFlag = null;
-                }
+                }else if (StringUtil.equals(pageId, "SalesTransactionMaintenance002")){
+                    pageId = "SalesTransactionMaintenance002";
+                    pageFlag = null;
+                }                
 
                 Map<String, String> entityMap = new HashMap<>();
 

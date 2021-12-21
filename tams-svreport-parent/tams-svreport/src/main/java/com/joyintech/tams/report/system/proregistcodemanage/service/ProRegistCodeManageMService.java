@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -19,6 +20,7 @@ import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.submitmaintenance.businessdetailed.service.EquityBusiDetails001Service;
 import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 
@@ -32,6 +34,10 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 @Service
 public class ProRegistCodeManageMService extends BaseService<ProRegistCodeManage001Dto>{
+	
+	@Autowired
+	private ProRegistCodeManage001Service proRegistCodeManage001Service;
+	
     /**
      * 产品下拉框
      * @return 产品代码和名称列表
@@ -146,14 +152,12 @@ public class ProRegistCodeManageMService extends BaseService<ProRegistCodeManage
      * @return 处理结果
      */
     public AjaxResult checkConfirmMsgForImportData(String fileName)  {
-    	Map<String,Object> param = new HashMap<String,Object>();
-    	param.put("dataList", ExcelUtil.getDataList1(fileName));
-    	param.put("orgCode", CommonUtil.getOrgCode());
-    	param.put("deptCode", CommonUtil.getDeptCode());
-        return restTemplate.postForObject(
-	       		SvrServiceApplication.COMMON_SERVICE_NAME + "/ProRegistCodeManage/checkConfirmMsgForImportData", 
-	       		param,
-	       		SvrAjaxResult.class);
+    	
+    	List<List<String>> dataList = (List<List<String>>) ExcelUtil.getDataList1(fileName);
+    	String orgCode  = CommonUtil.getOrgCode();
+		String deptCode = CommonUtil.getDeptCode();
+    	
+    	return proRegistCodeManage001Service.checkConfirmMsgForImportData(dataList,orgCode,deptCode);
     }
     /**
     *

@@ -61,6 +61,7 @@ public class TradeServiceURL {
     public static String flushInstructionAll = "/instruction/flush";
 
     public static String queryQuoteTick = "/quote/tick";
+    public static String queryQuoteTickConvert = "/quote/tick/convert";
 
     public static String queryInstrument = "/common/instrument";
 
@@ -127,6 +128,7 @@ public class TradeServiceURL {
     public static String queryAccountRiskControl = "/";
 
     public static String acceptOrRefuse = "/EtrTradeSysInterf/handleEntrust";//指令接收|放弃接口
+    public static String getRealNameByUser = "/EtrTradeSysInterf/getRealNameByUser";
     public static String expireIncomeRate = "/TrdBondInvestTrade/calculate03Data";//到期收益率
 
     public static String unitCprice = "/TrdBondInvestTrade/calculate01Data";//净价

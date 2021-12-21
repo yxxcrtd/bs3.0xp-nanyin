@@ -75,6 +75,7 @@ public class StlDownDataDealService {
         dealParam.setTradeAmt(settleTransData.getTradeAmt());
         dealParam.setSettleDate(settleTransData.getSettleDate());
         dealParam.setVdate(settleTransData.getSettleDate());
+        dealParam.setTradeDate(settleTransData.getTradeDate());
         dealParam.setTradeMarket(settleTransData.getTradeMarket());
         dealParam.setTradeMarketMode(settleTransData.getTradeMarketMode());
         dealParam.setPs(settleTransData.getPs());

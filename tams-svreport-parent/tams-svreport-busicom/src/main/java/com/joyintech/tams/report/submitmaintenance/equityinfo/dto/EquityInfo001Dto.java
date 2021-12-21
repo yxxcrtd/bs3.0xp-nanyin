@@ -87,6 +87,8 @@ public class EquityInfo001Dto extends TableRow {
 
     private String holderType;// 权益人类别
 
+    private String holderClassify;// 权益人分类
+
     private String personalIdentifyType;// 个人证件类型
 
     private String institutionIdentifyType;// 机构证件类型
@@ -116,8 +118,18 @@ public class EquityInfo001Dto extends TableRow {
     private String remark;// 备注
     
     private String interfCheckResult;//接口接入数据检查结果
-    
-   
+
+
+    private String fundAccPlace;// 账号开户所在地
+
+    public String getFundAccPlace() {
+        return fundAccPlace;
+    }
+
+    public void setFundAccPlace(String fundAccPlace) {
+        this.fundAccPlace = fundAccPlace;
+    }
+
     /**
      * 经办人
      */
@@ -429,6 +441,14 @@ public class EquityInfo001Dto extends TableRow {
      */
     public void setHolderType(String holderType) {
         this.holderType = holderType;
+    }
+
+    public String getHolderClassify() {
+        return holderClassify;
+    }
+
+    public void setHolderClassify(String holderClassify) {
+        this.holderClassify = holderClassify;
     }
 
     /**

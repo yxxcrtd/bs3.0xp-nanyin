@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -102,9 +103,9 @@ public class ComBondMarketInfo001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody ComBondMarketInfo001Dto dto) {
-        AjaxResult ajaxResult = new AjaxResult();
-        return ajaxResult;
+    public AjaxResult check(@RequestBody @Validated({
+            ValidateGroupEdit.class}) ComBondMarketInfo001Dto dto, BindingResult result) {
+        return commonCheck(result, dto.getOperateType());
     }
     /**
      * 页面查询

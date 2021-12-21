@@ -135,6 +135,10 @@ public class EquityInfoMaintenanceService extends BaseService{
         equityInfo001Dto.setOrgCode(map.get("ORG_CODE"));
         equityInfo001Dto.setAgent(map.get("AGENT"));
         equityInfo001Dto.setDeptCode(map.get("DEPT_CODE"));
+        //新增字段添加
+        equityInfo001Dto.setHolderClassify(map.get("HOLDER_CLASSIFY"));
+        equityInfo001Dto.setFundAccPlace(map.get("FUND_ACC_PLACE"));
+
     }
     /**
      * 通过配置及开关获取最新的dto,空值不覆盖
@@ -228,6 +232,12 @@ public class EquityInfoMaintenanceService extends BaseService{
             else{
                 equityInfo001Dto.setHolderEmail(map.get("HOLDER_EMAIL"));
             }
+
+            //新增字段添加
+            equityInfo001Dto.setHolderClassify(map.get("HOLDER_CLASSIFY"));
+            equityInfo001Dto.setFundAccPlace(map.get("FUND_ACC_PLACE"));
+
+
             equityInfo001Dto.setRemark(map.get("REMARK"));
             equityInfo001Dto.setOrgCode(map.get("ORG_CODE"));
             equityInfo001Dto.setAgent(map.get("AGENT"));

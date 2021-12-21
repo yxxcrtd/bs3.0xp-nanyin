@@ -53,6 +53,9 @@ public class ComBondMarketInfoValidator implements BeanValidator {
 //                if(comBondMarketInfo001Service.selectByKey(mst.getSecId(), DateUtil.format(mst.getValueDate()),mst.getValueSource()) == null){
 //                    resultList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0022")));
 //                }
+                if(StringUtil.isNotEmpty(mst.getProcessState())){
+                    resultList.add(new ValidMessage("流程中的数据不能删除!"));
+                }
             }
 
         }
@@ -70,6 +73,9 @@ public class ComBondMarketInfoValidator implements BeanValidator {
 //                if ( StringUtil.isNotEmpty(dto.getImportDay()) && DateUtil.compareDate(DateUtil.format(dto.getImportDay()), DateUtil.format(platDate))  != 0) {
 //                    resultList.add(new ValidMessage("修改/删除时,仅能修改/删除导入日为平台日的数据!"));
 //                }
+                if(StringUtil.isNotEmpty(dto.getProcessState())){
+                    resultList.add(new ValidMessage("流程中的数据不能修改!"));
+                }
             }
             else {
                 // 保存check

@@ -1,33 +1,11 @@
 package com.joyintech.tams.svreport.interf.chb.prodinfo.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.SqlSession;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbTypeMapping;
 import com.joyintech.tams.common.base.entity.PrdMdateAdjust;
@@ -47,6 +25,23 @@ import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdBaseinfoInterfM
 import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ProdInfoMapper;
 import com.joyintech.tams.svreport.interf.chb.prodinfo.dto.ChbPrdBaseinfoExtend;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.ResultContext;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -57,7 +52,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 @SuppressWarnings("rawtypes")
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ProdInfoInterfService extends BaseService {
+public class ProdInfoInterfService extends BaseInterfService {
 	@Autowired
 	private ProdInfoMapper prodInfoMapper;
 	@Autowired
@@ -84,40 +79,63 @@ public class ProdInfoInterfService extends BaseService {
 	 * @version 1.0 2019年3月5日
 	 */
 	public List<String> getIssueData(Date batchTime) {
+
+		// 查询数据
+		List<ChbPrdBaseinfo> prodinfos = getBusEntity(null, "D");
+		// 入库
+		if(!StringUtil.isEmptyList(prodinfos)){
+			insertDataMerge(prodinfos);
+		}
+//		this.insert2(batchTime, prodinfos);
+		// 新的最后更新时间
+		// 插入母产品代码
+		/*
+		 * for(ChbPrdBaseinfo model:prodinfos){
+		 * if("F24".equals(model.getFinprodtype2())){ String prodid =
+		 * model.getProdId(); for(ChbPrdBaseinfo fmodel:prodinfos){
+		 * if("F16".equals(fmodel.getFinprodtype2())&&model.getProdId()==prodid)
+		 * { model.setFprodId(fmodel.getProdId()); } } } }
+		 */
+		return null;
+	}
+
+	@Override
+	public List<ChbPrdBaseinfo> getBusEntity(List<String> prodIdlist, String source) {
+		Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.产品要素信息接口.getInterId());
+		// 入库
 		ProdInfoInterfService prodInfoInterfService = SpringContextUtil.getBean(ProdInfoInterfService.class);
 		// 从bs库FIN_PRODUCT，REP_PROD_ISSUE，REP_PROD_DECLARE获取数据
 		List<String> prodList = new ArrayList<String>();
 		List<ChbPrdBaseinfo> prodinfos = new ArrayList<ChbPrdBaseinfo>();
-		Date lastUpdatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.产品要素信息接口.getInterId());
 		// 查询信息
 		logger.debug("产品要素查询开始--------------"+new Date());
 		prodinfos = prodInfoInterfService.selectProdInfo(lastUpdatetime);
 		// 开放周期映射
-        List<ChbTypeMapping> openCycleMappingList = chbTypeMappingMapper.selectMappingBySrcDataType(InterfMappingConstants.MAAPING_OPEN_CYCLE_UNIT_ZG);
-        Map<String, ChbTypeMapping> openCycleMappingMap  = new HashMap<String, ChbTypeMapping>();
-        if (!StringUtil.isEmptyList(openCycleMappingList)){
-            openCycleMappingMap = openCycleMappingList.stream().collect(Collectors.toMap(ChbTypeMapping::getSrcdatatypeid, chbTypeMapping -> chbTypeMapping));
-        }
-        //业绩比较基准 处理
-        List<ChbPrdBaseinfoExtend> prodYieldList = chbPrdBaseinfoExtemdMapper.selectProdYieldInfo(lastUpdatetime);
-        Map<String, List<ChbPrdBaseinfoExtend>> prodYieldMap  = new HashMap<String, List<ChbPrdBaseinfoExtend>>();
-        if (!StringUtil.isEmptyList(prodYieldList)){
-        	prodYieldMap = prodYieldList.stream().collect(Collectors.groupingBy(ChbPrdBaseinfoExtend::getFinprodMarketId));
-        }
-        //投资管理费率 处理
-        List<ChbPrdBaseinfoExtend> prodInvestFeeRateList = chbPrdBaseinfoExtemdMapper.selectProdInvestFeeRate(lastUpdatetime);
-        Map<String, List<ChbPrdBaseinfoExtend>> prodInvestFeeRateListMap  = new HashMap<String, List<ChbPrdBaseinfoExtend>>();
-        if (!StringUtil.isEmptyList(prodInvestFeeRateList)){
-        	prodInvestFeeRateListMap = prodInvestFeeRateList.stream().collect(Collectors.groupingBy(ChbPrdBaseinfoExtend::getFinprodMarketId));
-        }
+		List<ChbTypeMapping> openCycleMappingList = chbTypeMappingMapper.selectMappingBySrcDataType(InterfMappingConstants.MAAPING_OPEN_CYCLE_UNIT_ZG);
+		Map<String, ChbTypeMapping> openCycleMappingMap  = new HashMap<String, ChbTypeMapping>();
+		if (!StringUtil.isEmptyList(openCycleMappingList)){
+			openCycleMappingMap = openCycleMappingList.stream().collect(Collectors.toMap(ChbTypeMapping::getSrcdatatypeid, chbTypeMapping -> chbTypeMapping));
+		}
+		//业绩比较基准 处理
+		List<ChbPrdBaseinfoExtend> prodYieldList = chbPrdBaseinfoExtemdMapper.selectProdYieldInfo(lastUpdatetime);
+		Map<String, List<ChbPrdBaseinfoExtend>> prodYieldMap  = new HashMap<String, List<ChbPrdBaseinfoExtend>>();
+		if (!StringUtil.isEmptyList(prodYieldList)){
+			prodYieldMap = prodYieldList.stream().collect(Collectors.groupingBy(ChbPrdBaseinfoExtend::getFinprodMarketId));
+		}
+		//投资管理费率 处理
+		List<ChbPrdBaseinfoExtend> prodInvestFeeRateList = chbPrdBaseinfoExtemdMapper.selectProdInvestFeeRate(lastUpdatetime);
+		Map<String, List<ChbPrdBaseinfoExtend>> prodInvestFeeRateListMap  = new HashMap<String, List<ChbPrdBaseinfoExtend>>();
+		if (!StringUtil.isEmptyList(prodInvestFeeRateList)){
+			prodInvestFeeRateListMap = prodInvestFeeRateList.stream().collect(Collectors.groupingBy(ChbPrdBaseinfoExtend::getFinprodMarketId));
+		}
 		logger.debug("产品要素查询结束--------------"+new Date());
 		for (ChbPrdBaseinfo model : prodinfos) {
-            // 映射源数据和中债所需数据
-            if (!StringUtil.isEmptyList(openCycleMappingList)){
-                if (openCycleMappingMap.get(model.getOpencycleunitp()) != null){
-                    model.setOpencycleunitp(openCycleMappingMap.get(model.getOpencycleunitp()).getObjdatatypeid());
-                }
-            }
+			// 映射源数据和中债所需数据
+			if (!StringUtil.isEmptyList(openCycleMappingList)){
+				if (openCycleMappingMap.get(model.getOpencycleunitp()) != null){
+					model.setOpencycleunitp(openCycleMappingMap.get(model.getOpencycleunitp()).getObjdatatypeid());
+				}
+			}
 			if ("02".equals(model.getOpentypep())) {// 高频开放设为D
 				model.setOpencycleunitp("D");
 			}
@@ -147,40 +165,38 @@ public class ProdInfoInterfService extends BaseService {
 			model.setDeptCode(CommonUtil.getDeptCode());
 			//最大更新时间
 			if (model.getUpdateTime() != null) {
-			    lastUpdatetime = model.getUpdateTime().after(lastUpdatetime) ? model.getUpdateTime()
+				lastUpdatetime = model.getUpdateTime().after(lastUpdatetime) ? model.getUpdateTime()
 						: lastUpdatetime;
 			}
 			prodList.add(model.getProdId());
 		}
-		// 入库
-		insertDataMerge(prodinfos);
-//		this.insert2(batchTime, prodinfos);
-		// 新的最后更新时间
 		if (lastUpdatetime != null) {
 			ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品要素信息接口.getInterId(), lastUpdatetime);
 		}
-		// 插入母产品代码
-		/*
-		 * for(ChbPrdBaseinfo model:prodinfos){
-		 * if("F24".equals(model.getFinprodtype2())){ String prodid =
-		 * model.getProdId(); for(ChbPrdBaseinfo fmodel:prodinfos){
-		 * if("F16".equals(fmodel.getFinprodtype2())&&model.getProdId()==prodid)
-		 * { model.setFprodId(fmodel.getProdId()); } } } }
-		 */
-		return prodList;
+		return prodinfos;
 	}
 
-	/**   
-	* @Function: ProdInfoInterfService.java
-	* @Description: 产品要素接入时，对 业绩比较基准 及 投资管理费率 进行处理赋值
-	*
-	* @param: prodYieldMap 业绩比较基准map
-	* @param: prodInvestFeeRateListMap 投资管理费率map
-	* @param: model 产品要素model
-	*
-	* @author: 王冠/wangguan
-	* @date: 2019年8月8日 下午6:03:00 
-	*/
+	@Override
+	public Class getEntityClass() {
+		return ChbPrdBaseinfo.class;
+	}
+
+	@Override
+	public String getFileName() {
+		return InterfDefine.产品基本信息接口数据.getCode();
+	}
+
+	/**
+        * @Function: ProdInfoInterfService.java
+        * @Description: 产品要素接入时，对 业绩比较基准 及 投资管理费率 进行处理赋值
+        *
+        * @param: prodYieldMap 业绩比较基准map
+        * @param: prodInvestFeeRateListMap 投资管理费率map
+        * @param: model 产品要素model
+        *
+        * @author: 王冠/wangguan
+        * @date: 2019年8月8日 下午6:03:00
+        */
 	public void setProdYieldAndInvestFeeRate(Map<String, List<ChbPrdBaseinfoExtend>> prodYieldMap,
 			Map<String, List<ChbPrdBaseinfoExtend>> prodInvestFeeRateListMap, ChbPrdBaseinfo model) {
 		// 业绩比较基准 赋值
@@ -390,6 +406,7 @@ public class ProdInfoInterfService extends BaseService {
 		}
 		logger.debug("产品要素插入结束--------------" + new Date());
 	}
+
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
     @DataSource(DataSourceType.INTERF)
 	public List<Date> isUpdated(Date batchTime){
@@ -400,7 +417,7 @@ public class ProdInfoInterfService extends BaseService {
      * @since 1.6.0
      * @version 1.6.0
      * @author：luminmin 2019年2日26
-     * @param interfDate 跑批日
+     * @param batchTime 跑批日
      * @return 
      * List<ChbAssetInfo>
      */

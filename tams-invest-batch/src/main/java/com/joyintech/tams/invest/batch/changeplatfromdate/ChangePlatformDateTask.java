@@ -19,6 +19,7 @@ import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.web.PlatformDate;
+import com.joyintech.system.cache.CacheRefreshService;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tools.util.HttpClient;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 平台日切换批处理
@@ -73,6 +75,9 @@ public class ChangePlatformDateTask extends BatchBaseService {
      * 日志
      */
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired(required = false)
+    private CacheRefreshService cacheRefreshService;
 
     /**
      * {@inheritDoc}
@@ -114,23 +119,25 @@ public class ChangePlatformDateTask extends BatchBaseService {
             }
 
 
-            if (isSingle) {
-                final String[] services = ServiceApplication.PINGAN_SERVICE_NAME.split(",");
-                if (services != null && services.length > 0) {
-                    for (String service: services) {
-                        logger.debug("更新一体化应用{}平台日缓存", service);
-                        // 调用平安页面端service，刷新平台日缓存
-                        simpleRestTemplate.getForObject(
-                                service + "/api/sys/refreshPlatDate?institutionCode="+institutionCode,
-                                String.class);
-                    }
-                }
+//            if (isSingle) {
+//                final String[] services = ServiceApplication.PINGAN_SERVICE_NAME.split(",");
+//                if (services != null && services.length > 0) {
+//                    for (String service: services) {
+//                        logger.debug("更新一体化应用{}平台日缓存", service);
+//                        // 调用平安页面端service，刷新平台日缓存
+//                        simpleRestTemplate.getForObject(
+//                                service + "/api/sys/refreshPlatDate?institutionCode="+institutionCode,
+//                                String.class);
+//                    }
+//                }
+//
+//            }
+//            else {
+//                // 更新web应用端缓存
+//                refreshAppCache(institutionCode);
+//            }
 
-            }
-            else {
-                // 更新web应用端缓存
-                refreshAppCache(institutionCode);
-            }
+            this.cacheRefreshService.updatePlatDate((Set)null);
             
             result.setStatus(BatchStatus.COMPLETED);
 

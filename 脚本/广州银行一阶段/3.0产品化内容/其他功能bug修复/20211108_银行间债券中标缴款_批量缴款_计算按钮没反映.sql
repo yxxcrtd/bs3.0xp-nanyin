@@ -1,0 +1,1 @@
+delete from SYS_ELEMENT_CONTROL  where PAGE_ID='TrdBondInvestTrade003' and ELEMENT_ID='refundDiv' and ELEMENT_FIELD='refundDiv';

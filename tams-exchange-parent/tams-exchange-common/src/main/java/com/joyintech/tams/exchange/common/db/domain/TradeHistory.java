@@ -57,6 +57,8 @@ public class TradeHistory implements Serializable {
     private String tradeTime;
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal discount;
+    @JsonSerialize(using = DoubleSerializerUtils.class)
+    private BigDecimal fullPrice;
 
     private String transCode;
 
@@ -79,16 +81,6 @@ public class TradeHistory implements Serializable {
 
     private String hedgeFlag;
     private String portfolioId;
-
-    private BigDecimal fullPrice;
-
-    public BigDecimal getFullPrice() {
-        return fullPrice;
-    }
-
-    public void setFullPrice(BigDecimal fullPrice) {
-        this.fullPrice = fullPrice;
-    }
 
     @Id
     public String getId() {
@@ -201,6 +193,14 @@ public class TradeHistory implements Serializable {
 
     public void setEntrustType(String entrustType) {
         this.entrustType = entrustType == null ? null : entrustType.trim();
+    }
+
+    public BigDecimal getFullPrice() {
+        return fullPrice;
+    }
+
+    public void setFullPrice(BigDecimal fullPrice) {
+        this.fullPrice = fullPrice;
     }
 
     public String getEntrustProp() {

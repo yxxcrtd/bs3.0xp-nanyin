@@ -302,7 +302,7 @@
 													class="layui-input form-input input-select"
 													data-th-data-url="@{/business/common/CommonSelect/selectCalendarId}"
 													formatoption="true" allowClear="true"
-													data-th-initValue='${entity?.calendarId}'
+													data-th-initValue="${entity?.calendarId  == null ? '01' : entity?.calendarId}"
 													required="required" placeholder="请输入内容"
 													data-th-placeholder="#{SysCommon.placeholder}">
 												</select>

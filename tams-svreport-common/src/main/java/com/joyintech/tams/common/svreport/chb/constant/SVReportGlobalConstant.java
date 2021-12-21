@@ -292,7 +292,7 @@ public class SVReportGlobalConstant {
     /**
      * 单位净值取值来源(01:估值核算系统，02:信息批露系统，03:第三方)
      */
-    public static final String SVR_NET_UNIT_VALUE_SOURCE = "SVR_NET_UNIT_VALUE_SOURCE";
+//    public static final String SVR_NET_UNIT_VALUE_SOURCE = "SVR_NET_UNIT_VALUE_SOURCE";
     /**
      * 中债汇率取值来源(01:开盘价，02:收盘价，03:最高价，04:最低价，05:中间价)
      */

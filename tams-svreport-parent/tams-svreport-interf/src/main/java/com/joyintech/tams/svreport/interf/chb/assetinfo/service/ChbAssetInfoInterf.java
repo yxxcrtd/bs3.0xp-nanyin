@@ -8,6 +8,7 @@ import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.busicommon.productRating.service.CommonProductRatingService;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
 import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -87,6 +88,9 @@ public class ChbAssetInfoInterf  extends BaseService{
 
     @Autowired
     private CommonProductRatingService commonProductRatingService;
+
+    @Autowired
+    private SvrMstCustomerInfoAddImpMapper svrMstCustomerInfoAddImpMapper;
     
     @Autowired
     private SqlSessionTemplate template;
@@ -172,6 +176,12 @@ public class ChbAssetInfoInterf  extends BaseService{
         // 交易对手信息
         Map<String,ChbMstCounterParty> counterPartyMap = allCounterList.stream().collect(
                 Collectors.toMap(item->item.getCounterId(), item->item,(k1,k2)->k1));
+
+        //获取市场机构规模数据
+        //获取市场机构规模数据
+        List<MstCustomerInfoAdd> institList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoInstit();
+        Map<String,String> institMap = institList.stream().collect(HashMap<String,String>::new,
+                (map, item)->map.put(item.getCustomerId(), item.getPartyType1()), (m, n)->m.putAll(n));
         for(ChbAssetInfo assetInfo : listChbAssetInfo){
             //新的最后更新时间
             if (assetInfo.getUpdateTime() != null 
@@ -287,6 +297,8 @@ public class ChbAssetInfoInterf  extends BaseService{
                     assetInfo.setUpdateUser(CommonUtil.getUserName());
                     // 映射人行资产一级二级三级分类
                     convertPbcAssetType(assetInfo,counterPartyMap);
+                    //2-5企业债券分行业、企业规模统计的列统计维度调整为根据市场机构管理中“机构类型（规模）”字段来取值。
+                    convertInstitSize(assetInfo,institMap);
                     if(DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue().equals(assetInfo.getAssetType())
                             ||DictCodeListExt2.资产_负债类别_公募基金.getValue().equals(assetInfo.getAssetType())
                             ||DictCodeListExt2.资产_负债类别_私募基金.getValue().equals(assetInfo.getAssetType())){
@@ -604,6 +616,53 @@ public class ChbAssetInfoInterf  extends BaseService{
             session.close();
         }
     }
+
+    /**
+     * 表2-5企业债券分行业、企业规模统计的列统计维度调整为根据市场机构管理中“机构类型（规模）”字段来取值。
+     * @param chbAssetInfo  资产基本信息
+     * @param institMap     市场机构数据
+     */
+    public static void convertInstitSize(ChbAssetInfo chbAssetInfo,Map<String,String> institMap){
+            String institSize = chbAssetInfo.getInstitSize();
+            if(null!=chbAssetInfo){
+                //获取市场机构.优先级为:发行人→管理人→融资人 由于人行与市场机构数据字典不同.直接进行修改
+                if(StringUtil.isNotEmpty(institMap.get(chbAssetInfo.getChbIssuerId()))){
+                    institSize = changeInstitSize(
+                            institMap.get(chbAssetInfo.getChbIssuerId()));
+                }else if(StringUtil.isNotEmpty(institMap.get(chbAssetInfo.getChbManagerId()))){
+                    institSize = changeInstitSize(
+                            institMap.get(chbAssetInfo.getChbManagerId()));
+                }else if(StringUtil.isNotEmpty(institMap.get(chbAssetInfo.getChbFinancierId()))){
+                    institSize = changeInstitSize(
+                            institMap.get(chbAssetInfo.getChbFinancierId()));
+                }
+            }
+            chbAssetInfo.setInstitSize(institSize);
+    }
+
+    /**
+     * 由于人行与市场机构数据字典不同.直接进行修改
+     */
+    public static String changeInstitSize(String institSize){
+        switch (institSize){
+            case "01":
+                institSize = "01";
+                break;
+            case "02":
+                institSize = "03";
+                break;
+            case "03":
+                institSize = "04";
+                break;
+            case "04":
+                institSize = "02";
+                break;
+            case "05":
+                institSize = "99";
+                break;
+        }
+        return institSize;
+    }
     
     /**
      * 功能:通过资产一级二级三级分类映射人行一级二级三级分类
@@ -711,10 +770,11 @@ public class ChbAssetInfoInterf  extends BaseService{
 //                        chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
 //                    isCentralCounter = null;
 //                }
-                // 非银行业金融机构 区分是否中央交易对手
-                if(InterfMappingConstants.BS_ASSETTYPE3_C0402.equals(counterType2)) {
+                // 非银行业金融机构 区分是否中央交易对手   修改获取非银行业金融机构类型方法
+                //if(InterfMappingConstants.BS_ASSETTYPE3_C0402.equals(counterType2)) {
+                if(DictCodeListExt3.对手方类型_非银行业金融机构.getValue().equals(chbAssetInfo.getRivalPartyType())){
                     // 根据配置映射项判别是否带相应属性
-                    if (chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_COUNTER,
+                    if (chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_DSFLX,
                             chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) != null) {
                         // 市场结构是否为交易所 03 上海证券交易所/04 深圳证券交易所,是-中央交易对手，否-非中央交易对手
                         if ("03".equals(marketStr) || "04".equals(marketStr) ) {
@@ -747,10 +807,16 @@ public class ChbAssetInfoInterf  extends BaseService{
                         chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
                     blnarea = null;
                 }
+                String rivalPartyType = chbAssetInfo.getRivalPartyType();
+                // 根据配置映射项判别是否带相应属性
+                if (!StringUtils.isEmpty(blnarea) && chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_DSFLX,
+                        chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
+                    rivalPartyType = null;
+                }
                 //TISHKBS-2835  监管报送-人行资管产品月度统计报告  添加对手方类型映射规则
                 mappingEx = chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_PBCASSETTYPE, 
                         chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3(),industry,repprofittype
-                        ,isCentralCounter,counterType2,blnarea,chbAssetInfo.getRivalPartyType());
+                        ,isCentralCounter,counterType2,blnarea,rivalPartyType);
             }
             if(mappingEx!=null){
                 chbAssetInfo.setPbcAssetType1(mappingEx.getObjfield1());

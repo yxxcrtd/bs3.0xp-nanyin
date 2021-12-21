@@ -1,11 +1,14 @@
 package com.joyintech.tams.common.basicdata.util;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,5 +54,26 @@ public class ComBasicDataExcelUtil extends ExcelUtil {
             logger.error(e1.getMessage(),e1);
         }
         return dataList;
+    }
+
+    /**
+     * check是否是错误日期格式
+     *
+     * @param param 参数
+     * @return check结果
+     */
+    public static boolean isErrorDate(Object param) {
+        if (StringUtil.isNotEmpty(param)) {
+            try {
+                Date result = DateUtil.parse((String)param);
+                if (result == null) {
+                    return true;
+                }
+            }
+            catch (RuntimeException e) {
+                return true;
+            }
+        }
+        return false;
     }
 }

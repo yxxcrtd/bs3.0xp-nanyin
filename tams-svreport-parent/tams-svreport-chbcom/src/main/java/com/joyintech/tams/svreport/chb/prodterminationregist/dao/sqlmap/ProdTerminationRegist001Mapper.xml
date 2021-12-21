@@ -623,7 +623,10 @@
       from CHB_PRD_END_SUB sub
       where 1=1
       <if test="keyList != null and keyList.size() > 0">
-          <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+          <foreach collection="keyList" index="index" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+              <if test="(index % 998) == 0">
+                null) or sub.REGIST_SEQNO in (
+              </if>
               #{items,jdbcType=VARCHAR}
           </foreach>
       </if>

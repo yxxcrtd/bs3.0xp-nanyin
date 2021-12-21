@@ -295,6 +295,9 @@
      * b. 若投资目的选择公允价值计入其他综合收益或公允价值计入当期损益，净价默认带出该债券平台日期前一估值日的估价净价（取市场行情），可修改
      */
     var priceInitByInCpy = function () {
+        if(pageModel == PAGE_MODEL_REFERENCE){
+            return;
+        }
         // 清空净价
         $('#price').val('').trigger('blur').trigger('change');
         // 委托开始日

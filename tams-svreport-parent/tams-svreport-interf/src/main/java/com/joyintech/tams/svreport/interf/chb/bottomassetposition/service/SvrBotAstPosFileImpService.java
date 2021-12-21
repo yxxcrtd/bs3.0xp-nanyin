@@ -444,7 +444,7 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 		 SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
 			try {
 					 	int count = 0;
-			            logger.debug("产品费用交易插入开始--------------" + new Date());
+			            logger.debug("底层资产持仓接口数据插入开始--------------" + new Date());
 			            ChbBotAstPosInterfMapper batchMapper = session.getMapper(ChbBotAstPosInterfMapper.class);
 			            int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
 			            int batchLastIndex = batchCount;//每批最后一个的下标

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.service.entrust.etrbrowdepoinfo.dao.EtrBrowDepoInfoMapper">
-    
+
     <resultMap type="com.joyintech.service.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto" id="BaseResultMap">
         <id column="entrustId" property="entrustId" jdbcType="VARCHAR" />
         <result column="portfolioId" property="portfolioId" jdbcType="VARCHAR" />
@@ -32,16 +32,16 @@
         <result column="chlId" property="chlId" jdbcType="VARCHAR" />
         <result column="isAgreementEnd" property="isAgreementEnd" jdbcType="VARCHAR" />
         <association property="bussEtrInvestPersonInfoDto" javaType="com.joyintech.service.entrust.etrbrowdepoinfo.dto.BussEtrInvestPersonInfoDto">
-        <result column="invManagerId"  property="invManagerId"/>
-        <result column="trader"  property="trader"/>
-        <result column="counterId"  property="counterId"/>
-        <result column="counterTrader"  property="counterTrader"/>
-        <result column="contactInfo"  property="contactInfo"/>
+            <result column="invManagerId"  property="invManagerId"/>
+            <result column="trader"  property="trader"/>
+            <result column="counterId"  property="counterId"/>
+            <result column="counterTrader"  property="counterTrader"/>
+            <result column="contactInfo"  property="contactInfo"/>
         </association>
     </resultMap>
-    
-    
-    
+
+
+
     <!-- 页面详情 -->
     <select id="selectByKey" resultMap="BaseResultMap">
             select
@@ -116,12 +116,12 @@
             WHERE
                 T1.ENTRUST_ID = #{entrustId}
     </select>
-    
+
     <!-- 页面查询 -->
     <select id="select" resultType="com.joyintech.service.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto">
         select aaa.* from (
         <choose>
-            <when test="entrustStatus == ''">
+            <when test="entrustStatus == '' or entrustStatus == null">
                 <!-- 查询全部状态 -->
                 <include refid="onlyWtfEtrEntrust"></include>
                 UNION ALL
@@ -163,7 +163,8 @@
         ETR_ENTRUST.ENTRUST_AMT                entrustAmt,
         ETR_FINISH_STATUS_A.FINISH_AMT         finishAmt,
         round(ETR_FINISH_STATUS_A.FINISH_AMT/ETR_ENTRUST.ENTRUST_AMT,2)*100 transactioncom,
-        su.REAL_NAME    invManagerId
+        su.REAL_NAME    invManagerId,
+        '' nextUser
         from    ETR_ENTRUST
 
         left join     PTL_PORTFOLIO
@@ -260,7 +261,7 @@
     <sql id="onlyWtfEtrEntrust">
         select
         ETR_ENTRUST.ENTRUST_ID                 entrustId,
-        ETR_ENTRUST.ENTRUST_STATUS             entrustStatus,
+        '08'             entrustStatus,
         ETR_ENTRUST.PORTFOLIO_ID             portfolioId,
         PTL_PORTFOLIO.PORTFOLIO_NAME          portfolioName,
         <!-- 资产二、三、四级分类    王贵奇    2019/8/6    开始  -->
@@ -280,7 +281,8 @@
         ETR_ENTRUST.ENTRUST_AMT                entrustAmt,
         ETR_FINISH_STATUS_A.FINISH_AMT         finishAmt,
         round(ETR_FINISH_STATUS_A.FINISH_AMT/ETR_ENTRUST.ENTRUST_AMT,2)*100 transactioncom,
-        su.REAL_NAME    invManagerId
+        su.REAL_NAME    invManagerId,
+        SWBL.NEXT_USER nextUser
         from    WFL_ETR_ENTRUST ETR_ENTRUST
 
         left join     PTL_PORTFOLIO
@@ -303,6 +305,7 @@
         ON
         PTL_PORTFOLIO.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
         AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+        LEFT JOIN SYS_WFL_BUSINESS_LIST SWBL ON SWBL.SEQ_NO = ETR_ENTRUST.WORKFLOW_ID and SWBL.PROCESS_STATE != 'END'
         <where>
             <!-- 子组合查询    王贵奇    2019/8/21-->
             PTL_PORTFOLIO.PORTFOLIO_TYPE IN (#{portfolioType}, #{portfolioType1})
@@ -371,21 +374,21 @@
             <!-- added by wangguiqi on 2019/8/1 -end-->
         </where>
     </sql>
-    
+
     <!-- 组合代码联想文本框 -->
     <select id="getPortfolioId" resultType="com.joyintech.framework.select.SuggestDto">
         SELECT
-            PTL_PORTFOLIO.PORTFOLIO_ID code,
-            PTL_PORTFOLIO.PORTFOLIO_NAME name,
-            PTL_PORTFOLIO.PORTFOLIO_NAME shortName，
-            PTL_PORTFOLIO.PORTFOLIO_ID hidCode
+        PTL_PORTFOLIO.PORTFOLIO_ID code,
+        PTL_PORTFOLIO.PORTFOLIO_NAME name,
+        PTL_PORTFOLIO.PORTFOLIO_NAME shortName，
+        PTL_PORTFOLIO.PORTFOLIO_ID hidCode
         FROM
-            PTL_PORTFOLIO
-        INNER JOIN 
-            PTL_PORTFOLIO_AUTHORITY
+        PTL_PORTFOLIO
+        INNER JOIN
+        PTL_PORTFOLIO_AUTHORITY
         ON
-            PTL_PORTFOLIO.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
-            AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+        PTL_PORTFOLIO.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+        AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
         <where>
             <if test="portfolioId != null and portfolioId != ''">
                 PTL_PORTFOLIO.PORTFOLIO_ID like concat('%',concat(#{portfolioId,jdbcType=VARCHAR},'%'))
@@ -399,12 +402,12 @@
     <!-- 资产代码联想文本框 -->
     <select id="getFinprodMarketId" resultType="com.joyintech.framework.select.SuggestDto">
         SELECT
-            FINPROD_MARKET_ID code,
-            FINPROD_ABBR name,
-            FINPROD_ABBR shortName,
-            FINPROD_ID  finprodId  <!-- wangyang1 二级法人改造 -->
+        FINPROD_MARKET_ID code,
+        FINPROD_ABBR name,
+        FINPROD_ABBR shortName,
+        FINPROD_ID  finprodId  <!-- wangyang1 二级法人改造 -->
         FROM
-            FIN_PRODUCT
+        FIN_PRODUCT
         <where>
             <if test="finprodId != null and finprodId != ''">
                 FINPROD_MARKET_ID like concat('%',concat(#{finprodId,jdbcType=VARCHAR},'%'))
@@ -437,42 +440,42 @@
     </resultMap>
     <!-- 新建页面资产代码联想下拉框 -->
     <select id="getSelectFinprodMarketId" resultMap="finprodIdMap">
-        select                            
-                FIN_PRODUCT.FINPROD_MARKET_ID id,
-                FIN_PRODUCT.FINPROD_NAME text,
-                NVL(FIN_PRODUCT.FINPROD_ABBR, FIN_PRODUCT.FINPROD_NAME) FINPROD_NAME,
-                FIN_PRODUCT.FINPROD_ID,
-                FIN_PRODUCT.VDATE,
-                FIN_PRODUCT.MDATE,
-                FIN_PRODUCT.TERM_DAYS,
-                FIN_PRODUCT.CCY,
-                FIN_CASH_CALC_RULE.YIELD*100 YIELD,
-                FIN_PRODUCT_TYPE.TYPE_6,
-                <!-- 新增资产二、三、四级类型 王贵奇 2019/8/1 开始 -->
-                FIN_PRODUCT_TYPE.TYPE_9,
-                FIN_PRODUCT_TYPE.TYPE_10,
-                FIN_PRODUCT_TYPE.TYPE_11,
-                <!-- 新增资产二、三、四级类型 王贵奇 2019/8/1 结束 -->
-                FIN_PRODUCT.ISSUE_AMT,
-                mcp.counter_id ISSUER
+        select
+        FIN_PRODUCT.FINPROD_MARKET_ID id,
+        FIN_PRODUCT.FINPROD_NAME text,
+        NVL(FIN_PRODUCT.FINPROD_ABBR, FIN_PRODUCT.FINPROD_NAME) FINPROD_NAME,
+        FIN_PRODUCT.FINPROD_ID,
+        FIN_PRODUCT.VDATE,
+        FIN_PRODUCT.MDATE,
+        FIN_PRODUCT.TERM_DAYS,
+        FIN_PRODUCT.CCY,
+        FIN_CASH_CALC_RULE.YIELD*100 YIELD,
+        FIN_PRODUCT_TYPE.TYPE_6,
+        <!-- 新增资产二、三、四级类型 王贵奇 2019/8/1 开始 -->
+        FIN_PRODUCT_TYPE.TYPE_9,
+        FIN_PRODUCT_TYPE.TYPE_10,
+        FIN_PRODUCT_TYPE.TYPE_11,
+        <!-- 新增资产二、三、四级类型 王贵奇 2019/8/1 结束 -->
+        FIN_PRODUCT.ISSUE_AMT,
+        mcp.counter_id ISSUER
         from
-                FIN_PRODUCT
-                left join FIN_CASH_CALC_RULE
-                    on FIN_PRODUCT.FINPROD_ID = FIN_CASH_CALC_RULE.FINPROD_ID
-                    and FIN_PRODUCT.VDATE = FIN_CASH_CALC_RULE.EFF_DATE
-                left join FIN_CASH_INFO
-                    on FIN_CASH_CALC_RULE.CASH_ID = FIN_CASH_INFO.CASH_ID
-                left join FIN_PRODUCT_TYPE
-                    on FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID
-                left join mst_counter_party mcp
-                    on mcp.link_id = FIN_PRODUCT.ISSUER
+        FIN_PRODUCT
+        left join FIN_CASH_CALC_RULE
+        on FIN_PRODUCT.FINPROD_ID = FIN_CASH_CALC_RULE.FINPROD_ID
+        and FIN_PRODUCT.VDATE = FIN_CASH_CALC_RULE.EFF_DATE
+        left join FIN_CASH_INFO
+        on FIN_CASH_CALC_RULE.CASH_ID = FIN_CASH_INFO.CASH_ID
+        left join FIN_PRODUCT_TYPE
+        on FIN_PRODUCT.FINPROD_ID = FIN_PRODUCT_TYPE.FINPROD_ID
+        left join mst_counter_party mcp
+        on mcp.link_id = FIN_PRODUCT.ISSUER
         <where>
             <if test="initValue != null and initValue != ''">
                 FIN_PRODUCT.FINPROD_MARKET_ID =#{initValue,jdbcType=VARCHAR}
             </if>
             <if test="search != null and search != ''">
-            AND    (FIN_PRODUCT.FINPROD_MARKET_ID like concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
-            OR  FIN_PRODUCT.FINPROD_NAME like concat('%',concat(#{search,jdbcType=VARCHAR},'%')) )
+                AND    (FIN_PRODUCT.FINPROD_MARKET_ID like concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
+                OR  FIN_PRODUCT.FINPROD_NAME like concat('%',concat(#{search,jdbcType=VARCHAR},'%')) )
             </if>
             <if test="finprodType2 != null and finprodType2 != ''">
                 AND    FIN_PRODUCT.FINPROD_TYPE2 = #{finprodType2, jdbcType=VARCHAR}
@@ -480,28 +483,28 @@
             <if test="cashType1 != null and cashType1 != ''">
                 AND    FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1, jdbcType=VARCHAR}
             </if>
-        </where>        
-        
+        </where>
+
     </select>
-    
+
     <!-- 新建页面组合代码联想下拉框 -->
     <select id="getSelectPortfolioId" resultType="com.joyintech.framework.select.SelectOptionDto">
         select
-                PTL_PORTFOLIO.PORTFOLIO_ID id,
-                PTL_PORTFOLIO.PORTFOLIO_NAME text
+        PTL_PORTFOLIO.PORTFOLIO_ID id,
+        PTL_PORTFOLIO.PORTFOLIO_NAME text
         from
-                PTL_PORTFOLIO
-                inner join
-                PTL_PORTFOLIO_AUTHORITY
-                on
-                PTL_PORTFOLIO.PORTFOLIO_ID=PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+        PTL_PORTFOLIO
+        inner join
+        PTL_PORTFOLIO_AUTHORITY
+        on
+        PTL_PORTFOLIO.PORTFOLIO_ID=PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
         <where>
             <if test="search != null and search != ''">
-            AND    (PTL_PORTFOLIO.PORTFOLIO_ID like concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
-            OR PTL_PORTFOLIO.PORTFOLIO_NAME like concat('%',concat(#{search,jdbcType=VARCHAR},'%')))
+                AND    (PTL_PORTFOLIO.PORTFOLIO_ID like concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
+                OR PTL_PORTFOLIO.PORTFOLIO_NAME like concat('%',concat(#{search,jdbcType=VARCHAR},'%')))
             </if>
             <if test="initValue != null and initValue != ''">
-            AND    PTL_PORTFOLIO.PORTFOLIO_ID = #{initValue,jdbcType=VARCHAR}
+                AND    PTL_PORTFOLIO.PORTFOLIO_ID = #{initValue,jdbcType=VARCHAR}
             </if>
             <!-- 产品组合和子组合查询     王贵奇    2019/8/20    开始-->
             <!-- <if test="portType != null and portType != ''">
@@ -541,38 +544,38 @@
            and pcp.cdate = #{platDate,jdbcType=DATE}
            and pcp.hoding_type = '03'
     </select>
-    
+
     <!-- 新建页面交易对手下拉框 -->
     <!-- <select id="" resultType="com.joyintech.framework.select.SelectOptionDto">
-        select                                    
+        select
                 COUNTER_ID        id,
                 LINK_ID            text,
-                COUNTER_NAME    col                            
-        from                                    
+                COUNTER_NAME    col
+        from
                 MST_COUNTER_PARTY
         <where>
             <if test="finprodId != null and finprodId != ''">
                 COUNTER_NAME like concat('%',concat(#{finprodId,jdbcType=VARCHAR},'%'))
             OR    LINK_ID like concat('%',concat(#{finprodId,jdbcType=VARCHAR},'%'))
             </if>
-        </where>                            
+        </where>
     </select> -->
     <!-- 查询已委托金额 -->
     <select id="selectEntrustAmt" resultType="java.math.BigDecimal">
-        select sum(nvl(ENTRUST_AMT,0)) ENTRUST_AMT 
+        select sum(nvl(ENTRUST_AMT,0)) ENTRUST_AMT
         from  ETR_ENTRUST
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and PS = #{ps,jdbcType=VARCHAR}
-             and ENTRUST_STATUS in 
-             <foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">  
-                #{item,jdbcType=VARCHAR}
-            </foreach>
+        and ENTRUST_STATUS in
+        <foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
         group by  FINPROD_ID
     </select>
     <!-- 查询发行规模 -->
     <select id="selectIssueAmt" resultType="java.math.BigDecimal">
-        select ISSUE_AMT from FIN_PRODUCT 
+        select ISSUE_AMT from FIN_PRODUCT
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
     </select>
-    
-    
+
+
 </mapper>

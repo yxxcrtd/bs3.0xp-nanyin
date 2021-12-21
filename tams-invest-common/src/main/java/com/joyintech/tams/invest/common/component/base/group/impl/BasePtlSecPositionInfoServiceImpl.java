@@ -135,17 +135,20 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
         BeanUtil.copyPropertiesIgnoreNull(positionQueryDto, positionQueryDtoParam);
 
         Assert.isTrue(positionQueryDto != null, "查询dto不能为null");
-        Assert.isTrue(StringUtil.isNotEmpty(positionQueryDto.getPortfolioId()), "组合代码不能为空");
-        Assert.notNull(positionQueryDto.getCdate(), "日期不能为null");
-        Assert.notNull(positionQueryDto.getHodingType(), "持仓类型不能为null，支持：持仓类型.在途、持仓类型.实际、持仓类型.质押");
+        if (StringUtil.isNotEmpty(positionQueryDto.getPortfolioId())) {
+            Assert.isTrue(StringUtil.isNotEmpty(positionQueryDto.getPortfolioId()), "组合代码不能为空");
+            Assert.notNull(positionQueryDto.getCdate(), "日期不能为null");
+            Assert.notNull(positionQueryDto.getHodingType(), "持仓类型不能为null，支持：持仓类型.在途、持仓类型.实际、持仓类型.质押");
 
-        // 查询最大日期
-        Date maxCdate = basePtlSecPositionInfoMapper.selectSecPositionMaxCdate(positionQueryDto);
-        positionQueryDto.setCdate(maxCdate);
-        if (maxCdate == null) {
-            return BigDecimal.ZERO;
+            // 查询最大日期
+            Date maxCdate = basePtlSecPositionInfoMapper.selectSecPositionMaxCdate(positionQueryDto);
+            positionQueryDto.setCdate(maxCdate);
+            if (maxCdate == null) {
+                return BigDecimal.ZERO;
+            }
+            return basePtlSecPositionInfoMapper.selectSecPosition(positionQueryDto);
         }
-        return basePtlSecPositionInfoMapper.selectSecPosition(positionQueryDto);
+        return null;
     }
 
     /**

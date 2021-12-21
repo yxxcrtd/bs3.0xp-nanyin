@@ -18,6 +18,7 @@
             <Cell order="10" name="币种">busCcy</Cell>
             <Cell order="11" name="备注">remark</Cell>
             <Cell order="12" name="投资经理">invManagerId</Cell>
+            <Cell order="13" name="当前处理人">nextUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

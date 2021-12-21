@@ -26,4 +26,9 @@ public class StlDataGatherBond1Reader extends StlDataGatherBondBaseReader {
         return Arrays.asList(DictCodeList.交易方向_买入.getValue()
                 ,DictCodeList.交易方向_卖出.getValue(),DictCodeList.交易方向_行权_回售.getValue());
     }
+
+    @Override
+    protected boolean isCreateTrade(){
+        return false;
+    }
 }

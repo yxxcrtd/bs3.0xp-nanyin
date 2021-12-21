@@ -156,7 +156,7 @@ public class InProdIssueInfoBatchService extends FileImpService {
 			// 创建机构
 			sub.setOrgCode(CommonUtil.getOrgCode());
 			// 发行机构代码取值
-			sub.setIssuePartyId(SvrDataUtil.getSysParam(CommonUtil.selectBankCode()));
+			sub.setIssuePartyId(CommonUtil.selectBankCode());
 			// 报送流水号
 			sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
 			// 业务表不存在数据：
@@ -222,7 +222,11 @@ public class InProdIssueInfoBatchService extends FileImpService {
 								|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
 										DictCodeListExt2.报送反馈状态_中债通过.getValue())
 								|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
-										DictCodeListExt2.报送反馈状态_审核文件下载失败.getValue())) {
+										DictCodeListExt2.报送反馈状态_审核文件下载失败.getValue())
+								|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
+										DictCodeListExt2.报送反馈状态_发送中.getValue())
+								|| StringUtil.equals(subYw.getSubmitFeedbackStatus(),
+										DictCodeListExt2.报送反馈状态_发送异常.getValue())) {
 							// tmp表数据为删除时
 							if (StringUtil.equals(sub.getStatus(), DictCodeListExt2.数据状态_删除.getValue())) {
 								// 删除未报送

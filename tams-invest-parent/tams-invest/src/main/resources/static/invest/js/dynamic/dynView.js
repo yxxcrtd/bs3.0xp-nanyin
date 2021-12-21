@@ -176,7 +176,7 @@ function DynamicView (pageId, dynId, callback, options){
         $.each(checkedList, function(index, value){
             // alert(index + "-" + value.name + "-" + value.label + "=" + value.suffix);
             if(value.label){
-                var item = $('<div style="float: left;width: 50%;height: 22px;line-height: 22px;"><label>'+ value.label +':</label><label id="EtrIbBondinfoHq_'+ value.name +'"></label></div>');
+                var item = $('<div style="float: left;width: 50%;height: 22px;line-height: 22px;"><label>'+ value.label +':</label><label id="' + o.pageid +'_' + value.name +'"></label></div>');
                 item.appendTo(_this);
             }
         });

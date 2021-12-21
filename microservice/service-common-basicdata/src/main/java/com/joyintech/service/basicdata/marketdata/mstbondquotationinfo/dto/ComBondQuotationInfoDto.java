@@ -78,4 +78,14 @@ public class ComBondQuotationInfoDto extends MstBondValuationInfo {
 	public void setImportDayStr(String importDayStr) {
 		this.importDayStr = importDayStr;
 	}
+
+	private String processState;
+
+	public String getProcessState() {
+		return processState;
+	}
+
+	public void setProcessState(String processState) {
+		this.processState = processState;
+	}
 }

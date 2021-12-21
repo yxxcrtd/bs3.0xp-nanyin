@@ -122,6 +122,9 @@ public class TrdRepoTrade002Controller extends BaseController {
         String isCstp = this.getParam("isCstp");
         String isCstpSure = this.getParam("isCstpSure");
         String isSubmit = this.getParam("isSubmit");
+        String tranRecord = this.getParam("tranRecord");
+
+
 
         // add by etliu 20210501 银行间场内场外拆分 start
         model.addAttribute("parentPageId", this.getParam("parentPageId"));
@@ -147,7 +150,13 @@ public class TrdRepoTrade002Controller extends BaseController {
             PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
             PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.回购类型, dto.getParentPageId());
             // add by yeming 20210914 银行间场内场外拆分 end
-        } else if (StringUtil.isNotEmpty(tradeId)) {
+        }
+        else if(StringUtil.isNotEmpty(tranRecord)){
+            model.addAttribute("isTranRecord", DictCodeList.是否_是.getValue());
+            dto=JsonUtils.json2Object(tranRecord,TrdRepoTrade002Dto.class);
+        }
+
+        else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdRepoTrade002Service.getTrdRepoTradeDto(tradeId);
 
             if(dto!=null && StringUtil.isNotEmpty(dto.getrTradeId())){

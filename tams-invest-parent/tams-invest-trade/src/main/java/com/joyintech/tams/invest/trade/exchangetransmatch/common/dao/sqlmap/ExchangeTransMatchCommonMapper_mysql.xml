@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.invest.trade.exchangetransmatch.common.dao.ExchangeTransMatchCommonMapper_mysql" >
+    <select id="getEtrEntrustByIdList" resultType="com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto">
+        select
+        T2.TARGET_TYPE targetType,
+        T2.TRADER trader,
+        ifnull(T1.ENTRUST_NUM,0) - ifnull(S.MARCH_QTY_EN,0) remainEntrustNum,
+        ifnull(T1.ENTRUST_AMT,0) - ifnull(S.MARCH_AMT_EN,0) remainEntrustAmt,
+        T1.*
+        from ETR_ENTRUST T1
+        left join
+            ETR_ENTRUST_ADD T2
+            ON T1.ENTRUST_ID = T2.ENTRUST_ID
+        LEFT JOIN (SELECT ENTRUNST_TRADE_ID,
+                    ifnull(SUM(MARCH_QTY_EN), 0) MARCH_QTY_EN,
+                    ifnull(SUM(MARCH_AMT_EN), 0) MARCH_AMT_EN
+                        FROM SETTLE_TRANS_DATA_TOTAL_MATCH
+                    GROUP BY ENTRUNST_TRADE_ID) S
+            ON S.ENTRUNST_TRADE_ID = T1.ENTRUST_ID
+        <where>
+            <if test="entrustIdList!=null and entrustIdList.size()>0 ">
+                AND (T1.ENTRUST_ID IN
+                <foreach item="item" index="index" collection="entrustIdList" open="(" close=")" separator=",">
+                    <if test="(index % 998) == 0">
+                        null) or T1.ENTRUST_ID in (
+                    </if>
+                    #{item,jdbcType=VARCHAR}
+                </foreach>)
+            </if>
+        </where>
+    </select>
+
+    <select id="getRemainNum" resultType="java.math.BigDecimal">
+            select ifnull(SUM(T.MARCH_QTY),0)
+              from SETTLE_TRANS_DATA_TOTAL_MATCH T
+             WHERE T.SEQ_NO = #{totalSeqId}
+    </select>
+</mapper>

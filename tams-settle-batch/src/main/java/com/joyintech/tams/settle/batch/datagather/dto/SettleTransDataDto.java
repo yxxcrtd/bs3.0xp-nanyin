@@ -1,6 +1,15 @@
 package com.joyintech.tams.settle.batch.datagather.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SettleTransData;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author 何阳阳
@@ -28,6 +37,34 @@ public class SettleTransDataDto extends SettleTransData {
      * 投管交易编号
      */
     private String tradeIdTg;
+
+    /**
+     * 委托代码
+     */
+    private String entrustId;
+
+    /**
+     * 付息截止日
+     */
+    private Date mdate2;
+
+    /**
+     * 持仓份额(回购交易表数据)
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal shareNum;
+
+    /**
+     * 明细流水号  处理成交数据与投资关系
+     */
+    private List<String>  tradeIdList;
+
+    /**
+     * 金融产品交易编号
+     */
+    private String tradeId2;
+
+    private List<TrdProductDealDto> trdProductDealList;
 
     public String getOrderId() {
         return orderId;
@@ -60,4 +97,57 @@ public class SettleTransDataDto extends SettleTransData {
     public void setTradeIdTg(String tradeIdTg) {
         this.tradeIdTg = tradeIdTg;
     }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
+    }
+
+    public Date getMdate2() {
+        return mdate2;
+    }
+
+    public void setMdate2(Date mdate2) {
+        this.mdate2 = mdate2;
+    }
+
+    public List<String> getTradeIdList() {
+        return tradeIdList;
+    }
+
+    public void setTradeIdList(List<String> tradeIdList) {
+        this.tradeIdList = tradeIdList;
+    }
+
+    public List<TrdProductDealDto> getTrdProductDealList() {
+        return trdProductDealList;
+    }
+
+    public void setTrdProductDealList(List<TrdProductDealDto> trdProductDealList) {
+        this.trdProductDealList = trdProductDealList;
+    }
+
+    public BigDecimal getShareNum() {
+        return shareNum;
+    }
+
+    public void setShareNum(BigDecimal shareNum) {
+        this.shareNum = shareNum;
+    }
+
+    public String getTradeId2() {
+        return tradeId2;
+    }
+
+    public void setTradeId2(String tradeId2) {
+        this.tradeId2 = tradeId2;
+    }
+
+    public String getBusiKey(){
+        return StringUtil.joinString(Arrays.asList(getFinprodId(), DateUtil.format(getMdate()),getSecAcctId(),getSeatNumber(),getAcctNo()),"_");
+    }
+
 }

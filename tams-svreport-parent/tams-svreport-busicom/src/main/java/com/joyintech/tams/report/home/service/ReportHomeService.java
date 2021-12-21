@@ -71,9 +71,12 @@ public class ReportHomeService{
 	private static final String 资产负债信息_PAGEID = "PbcPrdAssetDebtSub";
 	private static final String 新人行产品基本信息_PAGEID = "PbcPrdBaseinfoSubNew001";
 	private static final String 新人行产品终止信息_PAGEID = "PbcPrdBaseinfoEndSubNew001";
-	
-    
-    public Map<String, SubmitInformationRegistrationDto> searchReportInfo(Map<String, Object> parmMap) {
+	private static final String 销售结算资金交易登记_PAGEID = "SalesTransactionMaintenanceRegist001";
+	private static final String 理财业务销售数据月度统计表登记_PAGEID = "SellMonthReport001";
+
+
+
+	public Map<String, SubmitInformationRegistrationDto> searchReportInfo(Map<String, Object> parmMap) {
         parmMap.put("searchDate", ToolsUtil.getCurrentTime(DateUtil.parse((String)parmMap.get("searchDate"))));
         parmMap.put("NO_SUBMIT", DictCodeListExt2.报送状态_未报送.getValue());
         List<String> reportlist =(List<String>) parmMap.get("reportlist");
@@ -133,6 +136,10 @@ public class ReportHomeService{
 					dtoList.addAll(reportHomeMapper.selectPbcPrdBaseinfoSubNew(parmMap));
 				}else if (DictCodeListExt2.报表名称_新人行产品终止信息.getValue().equals(report)){
 					dtoList.addAll(reportHomeMapper.selectPbcPrdBaseinfoEndSubNew(parmMap));
+				}else if (DictCodeListExt2.报表名称_销售结算资金交易登记.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectSalesTransactionMaintenanceRegist001(parmMap));
+				}else if (DictCodeListExt2.报表名称_理财业务销售数据月度统计表登记.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectSellMonthReport(parmMap));
 				} else if ("25".equals(report)){
         			dtoList.addAll(reportHomeMapper.selectChbG06(parmMap));
         		}
@@ -313,6 +320,11 @@ public class ReportHomeService{
     			case 产品募集信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_产品资金募集信息.getValue());
     			break;
     			case 资产负债信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_资产负债信息.getValue());
+					break;
+				case 销售结算资金交易登记_PAGEID:menulist1.add(DictCodeListExt2.报表名称_销售结算资金交易登记.getValue());
+					break;
+				case 理财业务销售数据月度统计表登记_PAGEID:menulist1.add(DictCodeListExt2.报表名称_理财业务销售数据月度统计表登记.getValue());
+					break;
     			}
     		}
     	}

@@ -122,7 +122,8 @@ var setBussRepoSecInput = function () {
         repoType: $('#repoType').val(),
         chlId: $('#chlId').val(),
         tradeMarket:$('#tradeMarket').val(),
-        substitution:'yes'
+        substitution:'yes',
+        mdate:$('#mdate').val()
     };
     var object = {
         portfolioId: ['portfolioId', 'TrdRepoTrade002.portfolioId'],
@@ -130,7 +131,7 @@ var setBussRepoSecInput = function () {
         secAcctId: ['secAcctId', 'TrdRepoTrade002.secAcctId'],
         chlId: ['chlId', 'TrdRepoTrade002.chlId'],
         repoType: ['repoType', 'TrdRepoTrade002.repoType'],
-
+//        mdate: ['mdate', 'TrdRepoTrade002.mdate'],
         tradeMarket: ['tradeMarket', 'TrdRepoTrade002.tradeMarket'],
         data: data
     };

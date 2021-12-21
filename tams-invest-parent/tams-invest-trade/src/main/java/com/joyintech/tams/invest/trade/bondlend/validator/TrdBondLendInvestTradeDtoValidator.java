@@ -21,6 +21,7 @@ import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.trade.bondlend.dto.TrdBondLendInvestTradeDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
         TrdBondLendInvestTradeDto inputDto = (TrdBondLendInvestTradeDto)value;
         //万元转换 add  by yeming 20210817 start
         if(inputDto.getBussRepoSec() != null){
-            if( inputDto.getBussRepoSec().getTotalPrinAmt()  != null){
+            if( inputDto.getBussRepoSec().getTotalPrinAmt()  != null && StringUtil.equals(CacheUtil.getSysParam("entrustAmtUnit"),"02")){
                 inputDto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply(2, RoundingMode.HALF_UP, inputDto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
             }
             for (PledgeBondInfoDto pledgeBond :  inputDto.getBussRepoSec().getPledgeBondList()) {
@@ -170,7 +171,7 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
         // 交易方向为融出时，显示可用持仓，券面总额不可大于可用持仓；
         if (StringUtil.equals(DictCodeList.回购拆借方向_融出.getValue(), inputDto.getPs())) {
             if (inputDto.getShareAmt() != null && inputDto.getAssetPosition() != null
-                && inputDto.getShareAmt().multiply(new BigDecimal(100)).compareTo(inputDto.getAssetPosition()) > 0) {
+                && inputDto.getShareAmt().compareTo(inputDto.getAssetPosition()) > 0) {
                 ValidMessage validMessage = new ValidMessage(
                     getMessage("BUSS_COM_E_0003", getMessage("TrdBondLendInvestTrade002.tradeAmt"),
                         getMessage("TrdBondLendInvestTrade002.avaliblePosition")));
@@ -179,7 +180,7 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
         }
         if (StringUtil.equals(DictCodeList.回购拆借方向_融入.getValue(), inputDto.getPs())) {
             if (inputDto.getShareAmt() != null && inputDto.getBussRepoSec() != null && inputDto.getBussRepoSec().getTotalPrinAmt() !=null
-                    && inputDto.getShareAmt().multiply(new BigDecimal(10000)).compareTo(inputDto.getBussRepoSec().getTotalPrinAmt()) > 0) {
+                    && inputDto.getShareAmt().compareTo(inputDto.getBussRepoSec().getTotalPrinAmt()) > 0) {
                 ValidMessage validMessage = new ValidMessage(
                         getMessage("BUSS_COM_E_0003", getMessage("TrdBondLendInvestTrade002.tradeAmt"),
                                 getMessage("BussRepoSec.totalPrinAmt")));
@@ -267,7 +268,7 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
 
     //证券托管户
         if(inputDto.getSecManageAcctId()==null||"".equals(inputDto.getSecManageAcctId())){
-        	 ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0014",getMessage("invest.channelId")));
+             ValidMessage validMessage =  new ValidMessage("secManageAcctId",getMessage("TRD_E_0014_1"));
         	
         	errorList.add(validMessage);
         }

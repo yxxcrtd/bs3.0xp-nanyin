@@ -5,13 +5,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -93,6 +92,9 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
     
     @Autowired
     private ChbMstCounterPartyInterfMapper chbMstCounterPartyInterfMapper;
+
+    @Autowired
+    private SvrMstCustomerInfoAddImpMapper svrMstCustomerInfoAddImpMapper;
     
     /**
      * 中债基础数据mapper
@@ -279,6 +281,11 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
         // 交易对手信息
         Map<String,ChbMstCounterParty> counterPartyMap = allCounterList.stream().collect(
                 Collectors.toMap(item->item.getCounterId(), item->item,(k1,k2)->k1));
+
+        //获取市场机构规模数据
+        List<MstCustomerInfoAdd> institList = svrMstCustomerInfoAddImpMapper.getAllMstCustomerInfoInstit();
+        Map<String,String> institMap = institList.stream().collect(HashMap<String,String>::new,
+                (map, item)->map.put(item.getCustomerId(), item.getPartyType1()), (m, n)->m.putAll(n));
         // 获取产品表的列
         // List<String> listCloumn = prodFactorInfo001Mapper.getTableColumnList(CHB_PRD_BASEINFO);
         for (Map<String, String> map : infoList) {
@@ -409,6 +416,10 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
             }
             // 映射人行资产一级二级三级分类
             ChbAssetInfoInterf.convertPbcAssetType(chbAssetInfo,counterPartyMap);
+
+            //2-5企业债券分行业、企业规模统计的列统计维度调整为根据市场机构管理中“机构类型（规模）”字段来取值。
+            ChbAssetInfoInterf.convertInstitSize(chbAssetInfo,institMap);
+
             entities.add(chbAssetInfo);
         }
         return entities;

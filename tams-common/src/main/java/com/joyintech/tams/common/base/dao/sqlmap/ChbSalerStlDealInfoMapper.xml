@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSalerStlDealInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSalerStlDealInfo" >
+        <id column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+        <id column="TRADE_NO" property="tradeNo" jdbcType="VARCHAR" />
+        <result column="REGIST_SEQNO" property="registSeqno" jdbcType="VARCHAR" />
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
+        <result column="PRD_REGIST_CODE" property="prdRegistCode" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_NO" property="accountNo" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+        <result column="TRADE_PS" property="tradePs" jdbcType="VARCHAR" />
+        <result column="TRADE_COUNTER_ACC_NO" property="tradeCounterAccNo" jdbcType="VARCHAR" />
+        <result column="TRADE_COUNTER_ACC_NAME" property="tradeCounterAccName" jdbcType="VARCHAR" />
+        <result column="TRADE_COUNTER_ACC_BANK_NAME" property="tradeCounterAccBankName" jdbcType="VARCHAR" />
+        <result column="TRADE_COUNTER_ACC_BANK_NO" property="tradeCounterAccBankNo" jdbcType="VARCHAR" />
+        <result column="TRADE_CCY" property="tradeCcy" jdbcType="VARCHAR" />
+        <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL" />
+        <result column="TRADE_VDATE" property="tradeVdate" jdbcType="DATE" />
+        <result column="TRADE_TIME" property="tradeTime" jdbcType="TIMESTAMP" />
+        <result column="POSTSCRIPT" property="postscript" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="RECEPT_DATE" property="receptDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        INSTITUTION_CODE INSTITUTION_CODE, TRADE_NO TRADE_NO, REGIST_SEQNO REGIST_SEQNO, 
+        DATA_STATUS DATA_STATUS, PRD_REGIST_CODE PRD_REGIST_CODE, ACCOUNT_NO ACCOUNT_NO, 
+        ACCOUNT_NAME ACCOUNT_NAME, TRADE_PS TRADE_PS, TRADE_COUNTER_ACC_NO TRADE_COUNTER_ACC_NO, 
+        TRADE_COUNTER_ACC_NAME TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME TRADE_COUNTER_ACC_BANK_NAME, 
+        TRADE_COUNTER_ACC_BANK_NO TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY TRADE_CCY, TRADE_AMT TRADE_AMT, 
+        TRADE_VDATE TRADE_VDATE, TRADE_TIME TRADE_TIME, POSTSCRIPT POSTSCRIPT, REMARK REMARK, 
+        RECEPT_DATE RECEPT_DATE, CREATE_USER CREATE_USER, ORG_CODE ORG_CODE, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSalerStlDealInfoMapper.Base_Column_List" />
+        from CHB_SALER_STL_DEAL_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSalerStlDealInfoMapper.Base_Column_List" />
+        from CHB_SALER_STL_DEAL_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbSalerStlDealInfoKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSalerStlDealInfoMapper.Base_Column_List" />
+        from CHB_SALER_STL_DEAL_INFO
+        where INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+          and TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSalerStlDealInfoKey" >
+        delete from CHB_SALER_STL_DEAL_INFO
+        where INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+          and TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSalerStlDealInfo" >
+        insert into CHB_SALER_STL_DEAL_INFO (INSTITUTION_CODE, TRADE_NO, REGIST_SEQNO, 
+            DATA_STATUS, PRD_REGIST_CODE, ACCOUNT_NO, 
+            ACCOUNT_NAME, TRADE_PS, TRADE_COUNTER_ACC_NO, 
+            TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, 
+            TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY, TRADE_AMT, 
+            TRADE_VDATE, TRADE_TIME, POSTSCRIPT, 
+            REMARK, RECEPT_DATE, CREATE_USER, 
+            ORG_CODE, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{institutionCode,jdbcType=VARCHAR}, #{tradeNo,jdbcType=VARCHAR}, #{registSeqno,jdbcType=VARCHAR}, 
+            #{dataStatus,jdbcType=VARCHAR}, #{prdRegistCode,jdbcType=VARCHAR}, #{accountNo,jdbcType=VARCHAR}, 
+            #{accountName,jdbcType=VARCHAR}, #{tradePs,jdbcType=VARCHAR}, #{tradeCounterAccNo,jdbcType=VARCHAR}, 
+            #{tradeCounterAccName,jdbcType=VARCHAR}, #{tradeCounterAccBankName,jdbcType=VARCHAR}, 
+            #{tradeCounterAccBankNo,jdbcType=VARCHAR}, #{tradeCcy,jdbcType=VARCHAR}, #{tradeAmt,jdbcType=DECIMAL}, 
+            #{tradeVdate,jdbcType=DATE}, #{tradeTime,jdbcType=TIMESTAMP}, #{postscript,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{receptDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, 
+            #{orgCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSalerStlDealInfo" >
+        insert into CHB_SALER_STL_DEAL_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE,
+            </if>
+            <if test="tradeNo != null" >
+                TRADE_NO,
+            </if>
+            <if test="registSeqno != null" >
+                REGIST_SEQNO,
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS,
+            </if>
+            <if test="prdRegistCode != null" >
+                PRD_REGIST_CODE,
+            </if>
+            <if test="accountNo != null" >
+                ACCOUNT_NO,
+            </if>
+            <if test="accountName != null" >
+                ACCOUNT_NAME,
+            </if>
+            <if test="tradePs != null" >
+                TRADE_PS,
+            </if>
+            <if test="tradeCounterAccNo != null" >
+                TRADE_COUNTER_ACC_NO,
+            </if>
+            <if test="tradeCounterAccName != null" >
+                TRADE_COUNTER_ACC_NAME,
+            </if>
+            <if test="tradeCounterAccBankName != null" >
+                TRADE_COUNTER_ACC_BANK_NAME,
+            </if>
+            <if test="tradeCounterAccBankNo != null" >
+                TRADE_COUNTER_ACC_BANK_NO,
+            </if>
+            <if test="tradeCcy != null" >
+                TRADE_CCY,
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT,
+            </if>
+            <if test="tradeVdate != null" >
+                TRADE_VDATE,
+            </if>
+            <if test="tradeTime != null" >
+                TRADE_TIME,
+            </if>
+            <if test="postscript != null" >
+                POSTSCRIPT,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="receptDate != null" >
+                RECEPT_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="institutionCode != null" >
+                #{institutionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeNo != null" >
+                #{tradeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="registSeqno != null" >
+                #{registSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="prdRegistCode != null" >
+                #{prdRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="accountNo != null" >
+                #{accountNo,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null" >
+                #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePs != null" >
+                #{tradePs,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCounterAccNo != null" >
+                #{tradeCounterAccNo,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCounterAccName != null" >
+                #{tradeCounterAccName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCounterAccBankName != null" >
+                #{tradeCounterAccBankName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCounterAccBankNo != null" >
+                #{tradeCounterAccBankNo,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCcy != null" >
+                #{tradeCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeAmt != null" >
+                #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeVdate != null" >
+                #{tradeVdate,jdbcType=DATE},
+            </if>
+            <if test="tradeTime != null" >
+                #{tradeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="postscript != null" >
+                #{postscript,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="receptDate != null" >
+                #{receptDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSalerStlDealInfo" >
+        insert into CHB_SALER_STL_DEAL_INFO(INSTITUTION_CODE, TRADE_NO, REGIST_SEQNO, DATA_STATUS, 
+        PRD_REGIST_CODE, ACCOUNT_NO, ACCOUNT_NAME, TRADE_PS, TRADE_COUNTER_ACC_NO, TRADE_COUNTER_ACC_NAME, 
+        TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY, TRADE_AMT, TRADE_VDATE, 
+        TRADE_TIME, POSTSCRIPT, REMARK, RECEPT_DATE, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select INSTITUTION_CODE, TRADE_NO, REGIST_SEQNO, DATA_STATUS, 
+            PRD_REGIST_CODE, ACCOUNT_NO, ACCOUNT_NAME, TRADE_PS, TRADE_COUNTER_ACC_NO, TRADE_COUNTER_ACC_NAME, 
+            TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY, TRADE_AMT, TRADE_VDATE, 
+            TRADE_TIME, POSTSCRIPT, REMARK, RECEPT_DATE, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from CHB_SALER_STL_DEAL_INFO
+             where 1 = 1 and INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR} and TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSalerStlDealInfo" >
+        update CHB_SALER_STL_DEAL_INFO
+        <set >
+            <if test="registSeqno != null" >
+                REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="prdRegistCode != null" >
+                PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="accountNo != null" >
+                ACCOUNT_NO = #{accountNo,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null" >
+                ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePs != null" >
+                TRADE_PS = #{tradePs,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCounterAccNo != null" >
+                TRADE_COUNTER_ACC_NO = #{tradeCounterAccNo,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCounterAccName != null" >
+                TRADE_COUNTER_ACC_NAME = #{tradeCounterAccName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCounterAccBankName != null" >
+                TRADE_COUNTER_ACC_BANK_NAME = #{tradeCounterAccBankName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCounterAccBankNo != null" >
+                TRADE_COUNTER_ACC_BANK_NO = #{tradeCounterAccBankNo,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCcy != null" >
+                TRADE_CCY = #{tradeCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeVdate != null" >
+                TRADE_VDATE = #{tradeVdate,jdbcType=DATE},
+            </if>
+            <if test="tradeTime != null" >
+                TRADE_TIME = #{tradeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="postscript != null" >
+                POSTSCRIPT = #{postscript,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="receptDate != null" >
+                RECEPT_DATE = #{receptDate,jdbcType=DATE},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+          and TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSalerStlDealInfo" >
+        update CHB_SALER_STL_DEAL_INFO
+        set REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR},
+            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR},
+            ACCOUNT_NO = #{accountNo,jdbcType=VARCHAR},
+            ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
+            TRADE_PS = #{tradePs,jdbcType=VARCHAR},
+            TRADE_COUNTER_ACC_NO = #{tradeCounterAccNo,jdbcType=VARCHAR},
+            TRADE_COUNTER_ACC_NAME = #{tradeCounterAccName,jdbcType=VARCHAR},
+            TRADE_COUNTER_ACC_BANK_NAME = #{tradeCounterAccBankName,jdbcType=VARCHAR},
+            TRADE_COUNTER_ACC_BANK_NO = #{tradeCounterAccBankNo,jdbcType=VARCHAR},
+            TRADE_CCY = #{tradeCcy,jdbcType=VARCHAR},
+            TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+            TRADE_VDATE = #{tradeVdate,jdbcType=DATE},
+            TRADE_TIME = #{tradeTime,jdbcType=TIMESTAMP},
+            POSTSCRIPT = #{postscript,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            RECEPT_DATE = #{receptDate,jdbcType=DATE},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+          and TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

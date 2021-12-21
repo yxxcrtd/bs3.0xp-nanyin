@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.service.entrust.etrplanassetr.dto;
 
 import java.math.BigDecimal;
@@ -66,7 +66,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
      * 组合名称
      */
     private String portfolioName;
-    
+
     /**
      * 资产一级分类
      */
@@ -107,17 +107,17 @@ public class EtrPlanAssetRDto extends EtrEntrust{
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal finishAmt;
-    
+
     /**
      * 交易完成度
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal transactioncom;
-    
-    
-    
-    
-    
+
+
+
+
+
     /**
      * 获取 fileArray
      * @return fileArray.
@@ -129,7 +129,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
 
 
 
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -151,7 +151,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
 
 
 
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -171,7 +171,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
     }
 
 
-    
+
     /**
      * 设置 elementId
      * @param elementId elementId
@@ -181,7 +181,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
     }
 
 
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -191,7 +191,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
     }
 
 
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -201,7 +201,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
     }
 
 
-    
+
     /**
      * 获取 assetType1
      * @return assetType1.
@@ -211,7 +211,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
     }
 
 
-    
+
     /**
      * 设置 assetType1
      * @param assetType1 assetType1
@@ -229,7 +229,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
         return etrInvestPersonInfo;
     }
 
-    
+
     /**
      * 设置 etrInvestPersonInfo
      * @param etrInvestPersonInfo etrInvestPersonInfo
@@ -239,7 +239,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
     }
 
 
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -248,7 +248,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
         return CloseWay;
     }
 
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -270,7 +270,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
 
 
 
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -290,7 +290,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
     }
 
 
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -300,7 +300,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
     }
 
 
-    
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -310,7 +310,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
     }
 
 
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -320,7 +320,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
     }
 
 
-    
+
     /**
      * 获取 finishAmt
      * @return finishAmt.
@@ -331,7 +331,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
 
 
 
-    
+
     /**
      * 设置 finishAmt
      * @param finishAmt finishAmt
@@ -342,7 +342,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
 
 
 
-    
+
     /**
      * 获取 transactioncom
      * @return transactioncom.
@@ -353,7 +353,7 @@ public class EtrPlanAssetRDto extends EtrEntrust{
 
 
 
-    
+
     /**
      * 设置 transactioncom
      * @param transactioncom transactioncom
@@ -361,7 +361,16 @@ public class EtrPlanAssetRDto extends EtrEntrust{
     public void setTransactioncom(BigDecimal transactioncom) {
         this.transactioncom = transactioncom;
     }
-    
-    
-    
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
 }

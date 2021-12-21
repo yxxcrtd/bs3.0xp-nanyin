@@ -139,7 +139,7 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
             etrInvestBondInfoDto.setPs(rowData.get(5).toString().split(":")[0]);
             // 币种
             etrInvestBondInfoDto.setCcy(rowData.get(6).toString().split(":")[0]);
-            // 券面总额
+            // 券面总额(万元)
             etrInvestBondInfoDto.setEntrustNum(new BigDecimal(rowData.get(7).toString()));
 	         // 清算速度
 	//          etrInvestBondInfoDto.setSettleSpreed(rowData.get(13).toString().split(":")[0]);
@@ -317,7 +317,7 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                             posMap.get("position").toString()).multiply(BigDecimal.valueOf(100)));
                     // modify by yushilong 持仓查询结果*100为实际持仓金额 20200717 end
                 }
-                // 本方券券面总额
+                // 本方券券面总额(万元）
                 etrInvestBondInfoDto.setEntrustOwnNum(etrInvestBondInfoDto.getEntrustNum());
                 // 融入券券面总额
                 etrInvestBondInfoDto.setEntrustIntegrateNum(BigDecimal.ZERO);
@@ -332,7 +332,12 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                 try {
                     // 计算全价
                 	EtrIbBondinfo002Dto temp = new EtrIbBondinfo002Dto();
+                    //万元特殊处理
+                    BigDecimal entrustNum =etrInvestBondInfoDto.getEntrustNum().multiply(new BigDecimal(10000));
                     BeanUtil.copyPropertiesIgnoreNull(temp, etrInvestBondInfoDto);
+                    temp.setEntrustNum(entrustNum);
+                    temp.setEntrustOwnNum(entrustNum);
+
                     if (temp.getPrice() != null) {
                         temp.setCalflag("price");
                     }
@@ -514,7 +519,7 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                     rowData.get(13).toString(), "EtrInvestBondInfo004.invAim", lineNo));
             // 交易场所非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
-                    rowData.get(14).toString(), "EtrInvestBondInfo004.tradeMarket", lineNo));
+                    rowData.get(14).toString(), "EtrInvestBondInfo004.tradePlat", lineNo));
 //            // 通道存在
 //            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
 //                Map<String, Object> param = new HashMap<>();

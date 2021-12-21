@@ -136,5 +136,15 @@ public class ComSharePriceDto extends MstSharePrice implements ITableRow{
     public void setElementId(String elementId) {
         this.elementId = elementId;
     }
-   
+
+    private String processState;
+
+    public String getProcessState() {
+        return processState;
+    }
+
+    public void setProcessState(String processState) {
+        this.processState = processState;
+    }
+
 }

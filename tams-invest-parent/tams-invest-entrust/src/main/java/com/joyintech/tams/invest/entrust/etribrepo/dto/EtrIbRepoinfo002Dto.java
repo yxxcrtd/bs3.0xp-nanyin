@@ -1030,5 +1030,17 @@ public class EtrIbRepoinfo002Dto extends EtrEntrust implements ProcessEntity {
     public String getSettleSpreedName() {
         return SysDataUtil.getNameFromDataDict(DictCode.清算速度, this.getSettleSpreed());
     }
-    
+
+    /**
+     * 质押券库
+     */
+    private String zyqkName;
+
+    public String getZyqkName() {
+        return zyqkName;
+    }
+
+    public void setZyqkName(String zyqkName) {
+        this.zyqkName = zyqkName;
+    }
 }

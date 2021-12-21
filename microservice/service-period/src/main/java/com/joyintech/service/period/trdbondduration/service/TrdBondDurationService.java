@@ -624,4 +624,14 @@ public class TrdBondDurationService extends BaseService {
 
         return queryForPageForSelectReturn(page, length, () -> trdBondDurationMapper.getFinprodId(param));
     }
+
+    public Page<SelectOptionDto> getBusiCodeNew(int page, int length, Map<String, Object> param) {
+        param.put("FINPROD_TYPE_TGF01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        param.put("YESNO_N", DictCodeList.是否_否.getValue());
+        param.put("TRADE_STATUS01", DictCodeListExt1.交易状态_初始.getValue());
+        param.put("TRADE_STATUS03", DictCodeListExt1.交易状态_撤销.getValue());
+        param.put("TRD10", DictCodeList.共通业务类型_债券类资产存续期.getValue());
+        param.put("userName", LoginUserUtil.getUserName());
+        return queryForPageForSelectReturn(page, length, () -> trdBondDurationMapper.getBusiCodeNew(param));
+    }
 }

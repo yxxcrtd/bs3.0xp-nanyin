@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.service.entrust.common.service;
 
 import com.joyintech.framework.base.BaseService;
@@ -15,6 +15,7 @@ import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.entrust.common.dao.EntrustBankCommonMapper;
 import com.joyintech.service.entrust.common.dao.EntrustCommonMapper;
+import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrFinishStatus;
@@ -40,7 +41,7 @@ import java.util.Map;
 @Service
 public class EntrustCommonService extends BaseService<ITableRow> {
 
-	
+
 	@Autowired
 	private EntrustCommonMapper entrustCommonMapper;
 
@@ -48,4 +49,11 @@ public class EntrustCommonService extends BaseService<ITableRow> {
 		return entrustCommonMapper.assetIsTestBySppi(map);
 	}
 
+	public List<SysUser> getAllUserList(Map<String, Object> map) {
+		return entrustCommonMapper.getAllUserList();
+	}
+
+	public String getZyqk(String param) {
+		return entrustCommonMapper.getZyqk(param);
+	}
 }

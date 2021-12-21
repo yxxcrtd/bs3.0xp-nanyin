@@ -10,16 +10,16 @@
 
 package com.joyintech.tams.invest.entrust.etragrereptrade.dto;
 
-        import com.joyintech.framework.annotation.PageId;
-        import com.joyintech.framework.util.StringUtil;
-        import com.joyintech.framework.util.SysDataUtil;
-        import com.joyintech.tams.common.base.entity.EtrEntrust;
-        import com.joyintech.tams.constant.DictCode;
-        import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
 
-        import java.math.BigDecimal;
-        import java.util.Date;
-        import java.util.List;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉
@@ -548,5 +548,18 @@ public class EtrAgreRepTrade003Dto extends EtrEntrust{
 
     public void setBusiPs(String busiPs) {
         this.busiPs = busiPs;
+    }
+
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
     }
 }

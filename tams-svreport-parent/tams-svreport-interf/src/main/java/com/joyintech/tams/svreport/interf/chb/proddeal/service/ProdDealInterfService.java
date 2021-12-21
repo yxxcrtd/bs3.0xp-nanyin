@@ -1,12 +1,13 @@
 package com.joyintech.tams.svreport.interf.chb.proddeal.service;
 
-import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.BaseInterfService;
+import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.entity.ChbPrdDeal;
 import com.joyintech.tams.common.base.entity.ChbPrdFeeDeal;
@@ -49,7 +50,7 @@ import java.util.*;
 @SuppressWarnings("rawtypes")
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ProdDealInterfService extends BaseService{
+public class ProdDealInterfService extends BaseInterfService {
 	/**认购类型**/
 	public final static String TRADE_TYPE_RG = "C1";
 	/**申购类型**/
@@ -122,24 +123,126 @@ public class ProdDealInterfService extends BaseService{
 	 * @param prodIdList
 	 * @param isFromSelect
 	 */
-	public HashMap<String,List<String>> generatePrdDealData(Date batchTime,List<String> prodIdList,boolean isSynchronizeTask) {	
-        //数据从文件中读取入库
+	public HashMap<String,List<String>> generatePrdDealData(Date batchTime,List<String> prodIdList,boolean isSynchronizeTask) {
+		// 查询数据
+		List<ChbPrdDeal> list = getBusEntity(prodIdList, "D");
+		// 入库
+		if(!StringUtil.isEmptyList(list)){
+			insertDataMerge(list);
+		}
+		return null;
+	}
+
+	@Override
+	public List<ChbPrdDeal> getBusEntity(List<String> prodIdlist, String source) {
+		//数据从文件中读取入库
 		logger.debug("上游产品存续期交易批处理开始:----开始------" +  df.format(new Date()));
-	    HashMap<String,List<String>> mapPara = new HashMap<String,List<String>>();
+		HashMap<String,List<String>> mapPara = new HashMap<String,List<String>>();
 		//处理存续交易信息
 		ProdDealInterfService prodDealInterfService =  SpringContextUtil.getBean(ProdDealInterfService.class);
 		Date last_updatetime = ChbInterfUtil.queryUpdateTime(ChbInterfConfig.产品存续交易信息接口.getInterId());
-		List<ChbPrdDeal> resultList = prodDealInterfService.getPrdDealFromInterf(last_updatetime,prodIdList);
+		List<ChbPrdDeal> resultList = prodDealInterfService.getPrdDealFromInterf(last_updatetime,prodIdlist);
 		//当前轮循时查询到的存续期交易更新的产品
 //		List<String> updateProdList = new ArrayList<String>();
 		if(!StringUtil.isEmptyList(resultList)){
-//			updateProdList =
-		    List<String> dealList = calPrdDealData(batchTime, resultList,last_updatetime,isSynchronizeTask);
-		    mapPara.put(DEAL_INTER_DURADEAL, dealList);
-		} 
-        logger.debug("上游产品存续期交易批处理结束:----结束------" +  df.format(new Date()));
-		
-		return mapPara;
+			//认购数据需要更新要素表存续状态为01 存续，到期数据需要更新02 终止
+			HashMap<String,ChbPrdDeal> dlMap = new HashMap<String,ChbPrdDeal>();
+			List<String> duraDealList = new ArrayList<String>();
+			String key = "";
+			for(ChbPrdDeal dl : resultList){
+				dl.setSeqno(IDGenerator.generate(36));
+				dl.setIssuePartyId(CommonUtil.selectBankCode());
+				dl.setCreateUser(SecurityUtil.getLoginUser() == null ?"system" :SecurityUtil.getLoginUser().getUid());
+				dl.setUpdateUser(SecurityUtil.getLoginUser() == null ?"system" :SecurityUtil.getLoginUser().getUid());
+				if(DictCodeListExt2.产品存续期登记交易类型_募集期认购.getValue().equals(dl.getTradeType())
+						|| DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(dl.getTradeType())){
+					key = (null == dl.getFprodId() ? dl.getProdId() : dl.getFprodId());
+					if(dlMap.containsKey(key)){
+						if(DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(dl.getTradeType())){
+							dlMap.put(key, dl);
+						}
+					}else{
+						dlMap.put(key, dl);
+					}
+				}
+				// 交易成本逻辑处理 add by gaojian 2019-07-23 begin
+				// 交易类型为 03 存续期赎回、 16 到期兑付、 17 提前赎回时，交易成本有值，其余无值
+				if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(dl.getTradeType()) ||
+						DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(dl.getTradeType()) ||
+						DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(dl.getTradeType())) {
+					// 预期收益型、货币型的交易成本等于交易份额,其余为已查询的赎回成本，无需重新赋值
+					if (StringUtil.equals("N", dl.getBusiType())) {
+						dl.setTradeCost(dl.getRedCost());
+						dl.setIntAmt(dl.getRedprofit());
+					} else {
+						dl.setTradeCost(dl.getTradeQty());
+					}
+					// 交易类型为 01 募集期认购、 02 存续期申购、 05 收益再投资交易成本等于交易金额
+				} else if (DictCodeListExt2.产品存续期登记交易类型_募集期认购.getValue().equals(dl.getTradeType()) ||
+						DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(dl.getTradeType()) ||
+						DictCodeListExt2.产品存续期登记交易类型_收益再投资.getValue().equals(dl.getTradeType())){
+					dl.setTradeCost(dl.getTradePrince());
+				}
+				// 交易成本逻辑处理 add by gaojian 2019-07-23 end
+//				if(isSynchronizeTask){
+//					if(null != dl.getFprodId()){
+//						if(!duraDealList.contains(dl.getFprodId())){
+//							duraDealList.add(dl.getFprodId());
+//						}
+//					}else{
+//						if(!duraDealList.contains(dl.getProdId())){
+//							duraDealList.add(dl.getProdId());
+//						}
+//					}
+//				}
+
+				if(dl.getUpdateTime().compareTo(last_updatetime) > 0){
+					last_updatetime = dl.getUpdateTime();
+				}
+
+			}
+//		deletePrdDealBatch(listChbPrdDeal);
+//		insertPrdDealBatch(listChbPrdDeal);
+//		insertPrdDeal(batchTime, listChbPrdDeal);
+
+			logger.debug("反向更新要素信息:----开始-----" + df.format(new Date()));
+			//反向更新要素信息
+			ArrayList<ChbPrdDeal> updList = new ArrayList<ChbPrdDeal>();
+			for(Map.Entry<String, ChbPrdDeal> entry: dlMap.entrySet()){
+				ChbPrdDeal dl = entry.getValue();
+				if(null != dl.getFprodId()){
+					dl.setProdId(dl.getFprodId());
+				}
+				updList.add(dl);
+			}
+
+			if(!StringUtil.isEmptyList(updList)){
+				// 一体化共库时走删除逻辑
+				if("D".equals(source)){
+					updatePrdBaseInfo(updList);
+				}
+			}
+			logger.debug("反向更新要素信息:----结束-----" + df.format(new Date()));
+
+			//更新轮询接口表时间
+			if(last_updatetime!=null){
+				ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品存续交易信息接口.getInterId(), last_updatetime);
+			}
+			mapPara.put(DEAL_INTER_DURADEAL, duraDealList);
+		}
+		logger.debug("上游产品存续期交易批处理结束:----结束------" +  df.format(new Date()));
+
+		return resultList;
+	}
+
+	@Override
+	public Class getEntityClass() {
+		return ChbPrdDeal.class;
+	}
+
+	@Override
+	public String getFileName() {
+		return InterfDefine.投资者交易信息接口数据.getCode();
 	}
 	/**   
 	* @Function: ProdDealInterfService.java
@@ -400,97 +503,97 @@ public class ProdDealInterfService extends BaseService{
 	}
 
 
-	/**
-	 * 产品端存续交易处理
-	 * @param batchTime
-	 * @param listChbPrdDeal
-	 */
-	private List<String> calPrdDealData(Date batchTime, List<ChbPrdDeal> listChbPrdDeal,Date last_updatetime,boolean isSynchronizeTask) {
-		//认购数据需要更新要素表存续状态为01 存续，到期数据需要更新02 终止
-		HashMap<String,ChbPrdDeal> dlMap = new HashMap<String,ChbPrdDeal>(); 
-		List<String> duraDealList = new ArrayList<String>();
-		String key = "";
-		for(ChbPrdDeal dl : listChbPrdDeal){
-			dl.setSeqno(IDGenerator.generate(36));
-			dl.setIssuePartyId(CommonUtil.selectBankCode());
-			dl.setCreateUser(SecurityUtil.getLoginUser() == null ?"system" :SecurityUtil.getLoginUser().getUid());
-			dl.setUpdateUser(SecurityUtil.getLoginUser() == null ?"system" :SecurityUtil.getLoginUser().getUid());
-			if(DictCodeListExt2.产品存续期登记交易类型_募集期认购.getValue().equals(dl.getTradeType())
-				|| DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(dl.getTradeType())){
-				key = (null == dl.getFprodId() ? dl.getProdId() : dl.getFprodId());
-				if(dlMap.containsKey(key)){
-					if(DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(dl.getTradeType())){
-						dlMap.put(key, dl);
-					}
-				}else{
-					dlMap.put(key, dl);
-				}
-			}
-			// 交易成本逻辑处理 add by gaojian 2019-07-23 begin
-			// 交易类型为 03 存续期赎回、 16 到期兑付、 17 提前赎回时，交易成本有值，其余无值
-			if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(dl.getTradeType()) ||
-					DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(dl.getTradeType()) ||
-					DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(dl.getTradeType())) {
-				// 预期收益型、货币型的交易成本等于交易份额,其余为已查询的赎回成本，无需重新赋值
-				if (StringUtil.equals("N", dl.getBusiType())) {
-					dl.setTradeCost(dl.getRedCost());
-					dl.setIntAmt(dl.getRedprofit());
-				} else {
-					dl.setTradeCost(dl.getTradeQty());
-				}
-				// 交易类型为 01 募集期认购、 02 存续期申购、 05 收益再投资交易成本等于交易金额
-			} else if (DictCodeListExt2.产品存续期登记交易类型_募集期认购.getValue().equals(dl.getTradeType()) ||
-					DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(dl.getTradeType()) ||
-					DictCodeListExt2.产品存续期登记交易类型_收益再投资.getValue().equals(dl.getTradeType())){
-				dl.setTradeCost(dl.getTradePrince());
-			}
-			// 交易成本逻辑处理 add by gaojian 2019-07-23 end
-			if(isSynchronizeTask){
-				if(null != dl.getFprodId()){
-				   if(!duraDealList.contains(dl.getFprodId())){
-					   duraDealList.add(dl.getFprodId());
-				   }
-			    }else{
-				   if(!duraDealList.contains(dl.getProdId())){
-					   duraDealList.add(dl.getProdId());
-				   }
-			   }
-			}
-			
-		   if(dl.getUpdateTime().compareTo(last_updatetime) > 0){
-				last_updatetime = dl.getUpdateTime();
-		   }
-		   
-		}
-		
-		//入库
-		insertDataMerge(listChbPrdDeal);
-//		deletePrdDealBatch(listChbPrdDeal);
-//		insertPrdDealBatch(listChbPrdDeal);
-//		insertPrdDeal(batchTime, listChbPrdDeal);
-		
-		logger.debug("反向更新要素信息:----开始-----" + df.format(new Date()));
-		//反向更新要素信息
-		ArrayList<ChbPrdDeal> updList = new ArrayList<ChbPrdDeal>();
-		for(Map.Entry<String, ChbPrdDeal> entry: dlMap.entrySet()){
-			ChbPrdDeal dl = entry.getValue();
-			if(null != dl.getFprodId()){
-				dl.setProdId(dl.getFprodId());
-			}
-			updList.add(dl);
-        }
-		
-		if(!StringUtil.isEmptyList(updList)){
-			updatePrdBaseInfo(updList);
-		}
-		logger.debug("反向更新要素信息:----结束-----" + df.format(new Date()));
-		
-		//更新轮询接口表时间
-		if(last_updatetime!=null){
-    		ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品存续交易信息接口.getInterId(), last_updatetime);
-    	}
-		return duraDealList;
-	}
+//	/**
+//	 * 产品端存续交易处理
+//	 * @param batchTime
+//	 * @param listChbPrdDeal
+//	 */
+//	private List<String> calPrdDealData(Date batchTime, List<ChbPrdDeal> listChbPrdDeal,Date last_updatetime,boolean isSynchronizeTask) {
+//		//认购数据需要更新要素表存续状态为01 存续，到期数据需要更新02 终止
+//		HashMap<String,ChbPrdDeal> dlMap = new HashMap<String,ChbPrdDeal>();
+//		List<String> duraDealList = new ArrayList<String>();
+//		String key = "";
+//		for(ChbPrdDeal dl : listChbPrdDeal){
+//			dl.setSeqno(IDGenerator.generate(36));
+//			dl.setIssuePartyId(CommonUtil.selectBankCode());
+//			dl.setCreateUser(SecurityUtil.getLoginUser() == null ?"system" :SecurityUtil.getLoginUser().getUid());
+//			dl.setUpdateUser(SecurityUtil.getLoginUser() == null ?"system" :SecurityUtil.getLoginUser().getUid());
+//			if(DictCodeListExt2.产品存续期登记交易类型_募集期认购.getValue().equals(dl.getTradeType())
+//				|| DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(dl.getTradeType())){
+//				key = (null == dl.getFprodId() ? dl.getProdId() : dl.getFprodId());
+//				if(dlMap.containsKey(key)){
+//					if(DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(dl.getTradeType())){
+//						dlMap.put(key, dl);
+//					}
+//				}else{
+//					dlMap.put(key, dl);
+//				}
+//			}
+//			// 交易成本逻辑处理 add by gaojian 2019-07-23 begin
+//			// 交易类型为 03 存续期赎回、 16 到期兑付、 17 提前赎回时，交易成本有值，其余无值
+//			if (DictCodeListExt2.产品存续期登记交易类型_存续期赎回.getValue().equals(dl.getTradeType()) ||
+//					DictCodeListExt2.产品存续期登记交易类型_到期兑付.getValue().equals(dl.getTradeType()) ||
+//					DictCodeListExt2.产品存续期登记交易类型_提前赎回.getValue().equals(dl.getTradeType())) {
+//				// 预期收益型、货币型的交易成本等于交易份额,其余为已查询的赎回成本，无需重新赋值
+//				if (StringUtil.equals("N", dl.getBusiType())) {
+//					dl.setTradeCost(dl.getRedCost());
+//					dl.setIntAmt(dl.getRedprofit());
+//				} else {
+//					dl.setTradeCost(dl.getTradeQty());
+//				}
+//				// 交易类型为 01 募集期认购、 02 存续期申购、 05 收益再投资交易成本等于交易金额
+//			} else if (DictCodeListExt2.产品存续期登记交易类型_募集期认购.getValue().equals(dl.getTradeType()) ||
+//					DictCodeListExt2.产品存续期登记交易类型_存续期申购.getValue().equals(dl.getTradeType()) ||
+//					DictCodeListExt2.产品存续期登记交易类型_收益再投资.getValue().equals(dl.getTradeType())){
+//				dl.setTradeCost(dl.getTradePrince());
+//			}
+//			// 交易成本逻辑处理 add by gaojian 2019-07-23 end
+//			if(isSynchronizeTask){
+//				if(null != dl.getFprodId()){
+//				   if(!duraDealList.contains(dl.getFprodId())){
+//					   duraDealList.add(dl.getFprodId());
+//				   }
+//			    }else{
+//				   if(!duraDealList.contains(dl.getProdId())){
+//					   duraDealList.add(dl.getProdId());
+//				   }
+//			   }
+//			}
+//
+//		   if(dl.getUpdateTime().compareTo(last_updatetime) > 0){
+//				last_updatetime = dl.getUpdateTime();
+//		   }
+//
+//		}
+//
+//		//入库
+//		insertDataMerge(listChbPrdDeal);
+////		deletePrdDealBatch(listChbPrdDeal);
+////		insertPrdDealBatch(listChbPrdDeal);
+////		insertPrdDeal(batchTime, listChbPrdDeal);
+//
+//		logger.debug("反向更新要素信息:----开始-----" + df.format(new Date()));
+//		//反向更新要素信息
+//		ArrayList<ChbPrdDeal> updList = new ArrayList<ChbPrdDeal>();
+//		for(Map.Entry<String, ChbPrdDeal> entry: dlMap.entrySet()){
+//			ChbPrdDeal dl = entry.getValue();
+//			if(null != dl.getFprodId()){
+//				dl.setProdId(dl.getFprodId());
+//			}
+//			updList.add(dl);
+//        }
+//
+//		if(!StringUtil.isEmptyList(updList)){
+//			updatePrdBaseInfo(updList);
+//		}
+//		logger.debug("反向更新要素信息:----结束-----" + df.format(new Date()));
+//
+//		//更新轮询接口表时间
+//		if(last_updatetime!=null){
+//    		ChbInterfUtil.updateLastupdatetime(ChbInterfConfig.产品存续交易信息接口.getInterId(), last_updatetime);
+//    	}
+//		return duraDealList;
+//	}
 
 
 	public void deletePrdDealBatch(List<ChbPrdDeal> listChbPrdDeal) {

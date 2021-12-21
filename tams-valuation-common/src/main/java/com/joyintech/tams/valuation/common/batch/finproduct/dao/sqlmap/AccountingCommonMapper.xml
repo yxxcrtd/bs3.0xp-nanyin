@@ -252,6 +252,6 @@
 					  AND B.CDATE <![CDATA[<]]> #{happenDate}
 				),A.SETTLE_DATE
 			)
-
+			AND A.SETTLE_DATE <![CDATA[<=]]> #{happenDate}
 	</select>
 </mapper>

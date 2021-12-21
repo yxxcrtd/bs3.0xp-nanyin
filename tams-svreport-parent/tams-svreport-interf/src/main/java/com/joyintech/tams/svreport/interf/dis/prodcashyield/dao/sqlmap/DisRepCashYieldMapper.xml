@@ -19,6 +19,7 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="CHARGE_RATIO" property="chargeRatio" jdbcType="DECIMAL" />
     </resultMap>
     <insert id="insert" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
         insert into REP_CASH_YIELD (BUSI_ID, CASH_ID, CASH_NAME, 
@@ -26,13 +27,13 @@
             REMARK, INPUT_TYPE, INPUT_USER, 
             STATUS, ADAPTER_ID, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, RATE)
+            UPDATE_TIME, RATE,CHARGE_RATIO)
         values (#{busiId,jdbcType=VARCHAR}, #{cashId,jdbcType=VARCHAR}, #{cashName,jdbcType=VARCHAR}, 
             #{cashType,jdbcType=VARCHAR}, #{cashType2,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE}, 
             #{remark,jdbcType=VARCHAR}, #{inputType,jdbcType=VARCHAR}, #{inputUser,jdbcType=VARCHAR}, 
             #{status,jdbcType=VARCHAR}, #{adapterId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP}, #{rate,jdbcType=DECIMAL})
+            #{updateTime,jdbcType=TIMESTAMP}, #{rate,jdbcType=DECIMAL}, #{chargeRatio,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
         insert into REP_CASH_YIELD
@@ -88,6 +89,9 @@
             <if test="rate != null" >
                 RATE,
             </if>
+            <if test="chargeRatio != null" >
+                CHARGE_RATIO,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="busiId != null" >
@@ -141,15 +145,18 @@
             <if test="rate != null" >
                 #{rate,jdbcType=DECIMAL},
             </if>
+            <if test="chargeRatio != null" >
+                #{chargeRatio,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
         insert into REP_CASH_YIELD(BUSI_ID, CASH_ID, CASH_NAME, CASH_TYPE, CASH_TYPE2, START_DATE, 
         REMARK, INPUT_TYPE, INPUT_USER, STATUS, ADAPTER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-        UPDATE_USER, UPDATE_TIME, RATE)
+        UPDATE_USER, UPDATE_TIME, RATE,CHARGE_RATIO)
         select BUSI_ID, CASH_ID, CASH_NAME, CASH_TYPE, CASH_TYPE2, START_DATE, 
             REMARK, INPUT_TYPE, INPUT_USER, #{status,jdbcType=VARCHAR} STATUS, ADAPTER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, RATE
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, RATE,CHARGE_RATIO
              from REP_CASH_YIELD
              where STATUS = 'E'
     </insert>
@@ -182,13 +189,14 @@
 		#{item.createTime,jdbcType=TIMESTAMP} as CREATE_TIME,  
 		#{item.updateUser,jdbcType=VARCHAR}   as UPDATE_USER,  
 		#{item.updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME,  
-		#{item.rate,jdbcType=DECIMAL}         as RATE 
-       from dual
+		#{item.rate,jdbcType=DECIMAL}         as RATE,
+        #{item.chargeRatio,jdbcType=DECIMAL}  as CHARGE_RATIO
+        from dual
        </foreach>
 	) T1
 	ON (T.BUSI_ID=T1.BUSI_ID 
-	and T.CASH_TYPE2 = T1.CASH_TYPE2 
-	and T.START_DATE = T1.START_DATE )
+	and T.CASH_TYPE2 = T1.CASH_TYPE2
+	and T.START_DATE = T1.START_DATE)
 	WHEN MATCHED THEN
 	UPDATE SET
 	T.CASH_ID    = T1.CASH_ID     ,
@@ -202,11 +210,11 @@
 	T.CREATE_USER= T1.CREATE_USER ,
 	T.CREATE_DEPT= T1.CREATE_DEPT ,
 	T.CREATE_TIME= T1.CREATE_TIME ,
-	T.UPDATE_USER= T1.UPDATE_USER ,
+    T.UPDATE_USER= T1.UPDATE_USER ,
 	T.UPDATE_TIME= T1.UPDATE_TIME ,
-	T.RATE       = T1.RATE  
-	
-	WHEN NOT MATCHED THEN
+	T.RATE       = T1.RATE,
+    T.CHARGE_RATIO= T1.CHARGE_RATIO
+    WHEN NOT MATCHED THEN
 	INSERT(
 	T.BUSI_ID, 
 	T.CASH_ID, 
@@ -224,7 +232,8 @@
 	T.CREATE_TIME, 
 	T.UPDATE_USER, 
 	T.UPDATE_TIME, 
-	T.RATE
+	T.RATE,
+    T.CHARGE_RATIO
 	) VALUES (
 	T1.BUSI_ID, 
 	T1.CASH_ID, 
@@ -242,7 +251,8 @@
 	T1.CREATE_TIME, 
 	T1.UPDATE_USER, 
 	T1.UPDATE_TIME, 
-	T1.RATE
+	T1.RATE,
+    T1.CHARGE_RATIO
 	)	
     </update>
     
@@ -251,7 +261,7 @@
 	    (   
 	        BUSI_ID, CASH_ID, CASH_NAME, CASH_TYPE, CASH_TYPE2, START_DATE, 
 	        REMARK, INPUT_TYPE, INPUT_USER, STATUS, ADAPTER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-	        UPDATE_USER, UPDATE_TIME, RATE
+	        UPDATE_USER, UPDATE_TIME, RATE,CHARGE_RATIO
 	    )
 	    <foreach collection="list" item="item" open=" select * from (select " close="from dual)" separator="from dual union all select ">
 	    	#{item.busiId,jdbcType=VARCHAR}, #{item.cashId,jdbcType=VARCHAR}, #{item.cashName,jdbcType=VARCHAR}, 
@@ -259,7 +269,7 @@
             #{item.remark,jdbcType=VARCHAR}, #{item.inputType,jdbcType=VARCHAR}, #{item.inputUser,jdbcType=VARCHAR}, 
             #{item.status,jdbcType=VARCHAR}, #{item.adapterId,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, 
             #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, 
-            #{item.updateTime,jdbcType=TIMESTAMP}, #{item.rate,jdbcType=DECIMAL}
+            #{item.updateTime,jdbcType=TIMESTAMP}, #{item.rate,jdbcType=DECIMAL},#{item.chargeRatio,jdbcType=DECIMAL}
 	    </foreach>
 	
 	</insert>

@@ -101,9 +101,9 @@
 				AND MST.CUSTOMER_ID = #{initValue,jdbcType=VARCHAR}
 			</if>
         AND
-		    <!-- 改为用估值类型进行数据过滤 modify by yanya on 20210209-->
+		    <!-- 改为用估值类型进行数据过滤 modify by   on 20210209-->
 			<!--FIN.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}-->
-			FIN.FINPROD_TYPE = #{finprodType2,jdbcType=VARCHAR}
+			FIN.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
 		AND
 			MST.IS_ASSTE_MANAGER = #{yes,jdbcType=VARCHAR}
 </select>

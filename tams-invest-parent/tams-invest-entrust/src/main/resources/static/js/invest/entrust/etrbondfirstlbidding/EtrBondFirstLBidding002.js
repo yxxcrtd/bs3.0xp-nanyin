@@ -203,13 +203,29 @@
     
   //查询组合可用现金
     var getPtlCashPositionInfo = function(){
-        var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
-        var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/getProAvailableCash',data,
+        // modify by etliu 20211129 start
+        // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+        // var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
+        // var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
+        var finprodId = '';
+        if ($('#finprodId').val()) {
+            finprodId = $('#finprodId').select2('data')[0];
+            if (finprodId && finprodId.object){
+                finprodId = finprodId.object.finprodId;
+            }
+        }
+        var data = {portfolioId:$('#portfolioId').val(),
+            ccy:$('#ccy').val(),
+            vdate:$('#vdate').val(),
+            calId:$('#calendarId').val(),
+            finprodId:finprodId};
+        // Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/getProAvailableCash',data,
+        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getProAvailableCash',data,
                 function(result) {
             $('#proAvailableCash').val(result.cashT).trigger('blur');
             $('#proAvailableCash1').val(result.cashT1).trigger('blur');
         });
+        // modify by etliu 20211129 end
     }  
    
     /*var changeBussnissModelByFinprodId = function(){
@@ -380,11 +396,27 @@
     	$('#etrInvestPersonInfo_trader').attr('multiple',true);
     	// ZGZGST-1721 组合代码不为空时再调查询可用现金接口 fuyongsheng 202108311130 eidt start
         if($('#portfolioId').val() != ""){
-            var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
-            Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/getProAvailableCash',data,
+            // modify by etliu 20211129 start
+            // TISHKS-465: 组合T日可用现金、组合T+1日可用现金为交易可用，应为指令可用
+            // var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
+            // Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/getProAvailableCash',data,
+            var finprodId = '';
+            if ($('#finprodId').val()) {
+                finprodId = $('#finprodId').select2('data')[0];
+                if (finprodId && finprodId.object){
+                    finprodId = finprodId.object.finprodId;
+                }
+            }
+            var data = {portfolioId:$('#portfolioId').val(),
+                ccy:$('#ccy').val(),
+                vdate:$('#vdate').val(),
+                calId:$('#calendarId').val(),
+                finprodId:finprodId};
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getProAvailableCash',data,
                 function(result) {
                     $('#proAvailableCash1').val(result.cashT1).trigger('blur');
                 });
+            // modify by etliu 20211129 end
         }
         // ZGZGST-1721 组合代码不为空时再调查询可用现金接口 fuyongsheng 202108311130 eidt end
 //    	$('#etrInvestPersonInfo_counterId').val('').prop('disabled',false).prop('required',true).trigger('change');

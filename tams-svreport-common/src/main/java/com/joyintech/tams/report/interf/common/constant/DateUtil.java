@@ -127,6 +127,26 @@ public class DateUtil extends DateUtils {
     }
 
     /**
+     * 将日期字符串转为日期形式
+     *
+     * @param dateString 日期字符串
+     * @return 日期
+     */
+    public static Date parse(String dateString,String parsePatterns) {
+        // 外围系统有用C开发的，他们的日期如果是空的话给的是0
+        if (StringUtil.isEmpty(dateString) || "0".equals(dateString) || "00000000".equals(dateString)) {
+            return null;
+        }
+
+        try {
+            return parseDate(dateString,parsePatterns);
+        }
+        catch (ParseException e) {
+            throw new BusinessException("Date ParseException");
+        }
+    }
+
+    /**
      * 根据格式化字符串格式化日期
      *
      * @param date 格式化前日期
@@ -629,6 +649,35 @@ public class DateUtil extends DateUtils {
     public static boolean isDateStr(String str) {
         SimpleDateFormat format = new SimpleDateFormat(DEFAULT_DATE_FORMAT_EN);
         try {
+            format.parse(str);
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+    /**
+     * 主要功能:判断字符串是否为日期 注意事项:无
+     *
+     * @param str 日期字符串 yyyy-MM-dd
+     * @return 是否
+     */
+    public static boolean isDateStr(String str,boolean lenient) {
+        SimpleDateFormat format = new SimpleDateFormat(DEFAULT_DATE_FORMAT_EN);
+        try {
+            format.setLenient(lenient);
+            format.parse(str);
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isDateStrE(String str,boolean lenient) {
+        SimpleDateFormat format = new SimpleDateFormat(DEFAULT_OTHER_FORMAT);
+        try {
+            format.setLenient(lenient);
             format.parse(str);
         }
         catch (Exception e) {

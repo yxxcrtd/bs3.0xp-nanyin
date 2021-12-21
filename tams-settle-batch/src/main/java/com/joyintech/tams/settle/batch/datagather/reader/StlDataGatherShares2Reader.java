@@ -120,4 +120,9 @@ public class StlDataGatherShares2Reader extends StlDataGatherReader {
     protected boolean isSecType(String secType) {
         return StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), secType);
     }
+
+    @Override
+    protected boolean isCreateTrade(){
+        return false;
+    }
 }

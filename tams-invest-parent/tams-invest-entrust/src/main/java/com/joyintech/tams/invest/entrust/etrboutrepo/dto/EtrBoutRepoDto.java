@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.entrust.etrboutrepo.dto;
 
 import java.math.BigDecimal;
@@ -46,7 +46,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  */
 @PageId("EtrBoutRepo002")
 @ValidLogic(targetClass = EtrBoutRepoValidator.class , groups = {ValidateGroupEdit.class,
-    ValidateGroupDelete.class})
+        ValidateGroupDelete.class})
 public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
 
     /**
@@ -72,13 +72,13 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     private String mdateText;
     /**
      * 获取 mdateText
-    *
-    * @rturn mdateText
-    */
-   public String getMdateText() {
-       mdateText = DateUtil.format(this.getMdate());
-       return this.mdateText;
-       }
+     *
+     * @rturn mdateText
+     */
+    public String getMdateText() {
+        mdateText = DateUtil.format(this.getMdate());
+        return this.mdateText;
+    }
     /**
      * 资产起息日
      */
@@ -103,7 +103,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
      * 首次净价
      */
     private BigDecimal firstprice;
-    
+
     /**
      * 首次净价
      */
@@ -207,7 +207,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
      * 风险试算实体类
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
-   // 委托列表新增字段 by 赵东东 20200111 start
+    // 委托列表新增字段 by 赵东东 20200111 start
     /**
      * 序号
      */
@@ -228,19 +228,19 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
      * 交易对手名称
      */
     private String counterIdName;
-     /**
-      * 
-      * 获取交易对手名称
-      * <功能详细描述>
-      * @return
-      * @see
-      * @since 1.0
-      */
+    /**
+     *
+     * 获取交易对手名称
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
     public String getCounterIdName() {
         return counterIdName;
     }
     /**
-     * 
+     *
      * 设置交易对手名称
      * <功能详细描述>
      * @param counterIdName
@@ -251,19 +251,19 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
         this.counterIdName = counterIdName;
     }
     /**
-      * 
-               * 获取交易日历名称
-      * <功能详细描述>
-      * @return
-      * @see
-      * @since 1.0
-      */
+     *
+     * 获取交易日历名称
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
     public String getCalendarIdName() {
         return calendarIdName;
     }
     /**
-     * 
-             * 设置交易日历名称
+     *
+     * 设置交易日历名称
      * <功能详细描述>
      * @param calendarIdName
      * @see
@@ -273,19 +273,19 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
         this.calendarIdName = calendarIdName;
     }
     /**
-      * 
-               * 获取通道名称
-      * <功能详细描述>
-      * @return
-      * @see
-      * @since 1.0
-      */
+     *
+     * 获取通道名称
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
     public String getChlIdName() {
         return chlIdName;
     }
     /**
-     * 
-             * 设置通道名称
+     *
+     * 设置通道名称
      * <功能详细描述>
      * @param chlIdName
      * @see
@@ -295,19 +295,19 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
         this.chlIdName = chlIdName;
     }
     /**
-      * 
-               * 获取证券账户名称
-      * <功能详细描述>
-      * @return
-      * @see
-      * @since 1.0
-      */
+     *
+     * 获取证券账户名称
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
     public String getSecuritiesCustName() {
         return securitiesCustName;
     }
     /**
-     * 
-             * 设置证券账户名称
+     *
+     * 设置证券账户名称
      * <功能详细描述>
      * @param securitiesCustName
      * @see
@@ -317,28 +317,28 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
         this.securitiesCustName = securitiesCustName;
     }
     /**
-      * 
-      * 获取序号
-      * <功能详细描述>
-      * @return
-      * @see
-      * @since 1.0
-      */
+     *
+     * 获取序号
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
     public String getIndexId() {
         return indexId;
     }
-     /**
-      * 
-      * 设置序号
-      * <功能详细描述>
-      * @param indexId
-      * @see
-      * @since 1.0
-      */
+    /**
+     *
+     * 设置序号
+     * <功能详细描述>
+     * @param indexId
+     * @see
+     * @since 1.0
+     */
     public void setIndexId(String indexId) {
         this.indexId = indexId;
     }
- // 委托列表新增字段 by 赵东东 20200111 end
+    // 委托列表新增字段 by 赵东东 20200111 end
 
     /**
      * 获取 finvdate
@@ -348,7 +348,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
         return finvdate;
     }
 
-    
+
     /**
      * 设置 finvdate
      * @param finvdate finvdate
@@ -357,7 +357,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
         this.finvdate = finvdate;
     }
 
-    
+
     /**
      * 获取 finmdate
      * @return finmdate.
@@ -366,7 +366,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
         return finmdate;
     }
 
-    
+
     /**
      * 设置 finmdate
      * @param finmdate finmdate
@@ -401,7 +401,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
         return termDays;
     }
 
-    
+
     /**
      * 设置 termDays
      * @param termDays termDays
@@ -444,7 +444,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     }
 
 
-    
+
     /**
      * 获取 firstprice2
      * @return firstprice2.
@@ -457,7 +457,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
 
 
 
-    
+
     /**
      * 设置 firstprice2
      * @param firstprice2 firstprice2
@@ -479,7 +479,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     }
 
 
-    
+
     /**
      * 设置 firstprice
      * @param firstprice firstprice
@@ -498,7 +498,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
         return finprodMarketId;
     }
 
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -514,7 +514,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public String getSecuritiesCust() {
         return securitiesCust;
     }
-    
+
     /**
      * 设置 securitiesCust
      * @param securitiesCust securitiesCust
@@ -522,7 +522,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setSecuritiesCust(String securitiesCust) {
         this.securitiesCust = securitiesCust;
     }
-    
+
     /**
      * 获取 availableDay
      * @return availableDay.
@@ -530,7 +530,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public Date getAvailableDay() {
         return availableDay;
     }
-    
+
     /**
      * 设置 availableDay
      * @param availableDay availableDay
@@ -538,7 +538,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setAvailableDay(Date availableDay) {
         this.availableDay = availableDay;
     }
-    
+
     /**
      * 获取 mdateAdd
      * @return mdateAdd.
@@ -546,7 +546,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public Date getMdateAdd() {
         return mdateAdd;
     }
-    
+
     /**
      * 设置 mdateAdd
      * @param mdateAdd mdateAdd
@@ -554,7 +554,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setMdateAdd(Date mdateAdd) {
         this.mdateAdd = mdateAdd;
     }
-    
+
     /**
      * 获取 vdateAdd
      * @return vdateAdd.
@@ -562,7 +562,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public Date getVdateAdd() {
         return vdateAdd;
     }
-    
+
     /**
      * 设置 vdateAdd
      * @param vdateAdd vdateAdd
@@ -570,7 +570,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setVdateAdd(Date vdateAdd) {
         this.vdateAdd = vdateAdd;
     }
-    
+
     /**
      * 获取 settleSpreed
      * @return settleSpreed.
@@ -579,7 +579,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public String getSettleSpreed() {
         return settleSpreed;
     }
-    
+
     /**
      * 设置 settleSpreed
      * @param settleSpreed settleSpreed
@@ -587,7 +587,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setSettleSpreed(String settleSpreed) {
         this.settleSpreed = settleSpreed;
     }
-    
+
     /**
      * 获取 settleSpeed
      * @return settleSpeed.
@@ -595,7 +595,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public Long getSettleSpeed() {
         return settleSpeed;
     }
-    
+
     /**
      * 设置 settleSpeed
      * @param settleSpeed settleSpeed
@@ -603,7 +603,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setSettleSpeed(Long settleSpeed) {
         this.settleSpeed = settleSpeed;
     }
-    
+
     /**
      * 获取 rate
      * @return rate.
@@ -611,7 +611,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public String getRate() {
         return rate;
     }
-    
+
     /**
      * 设置 rate
      * @param rate rate
@@ -619,7 +619,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setRate(String rate) {
         this.rate = rate;
     }
-    
+
     /**
      * 获取 repoTerm
      * @return repoTerm.
@@ -631,10 +631,10 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
 //        }else if(this.getTermDays() != null && this.getTermDays2() != null){
 //            return this.getTermDays().toString()+"-"+this.getTermDays2().toString();
 //        }else{
-            return repoTerm;
+        return repoTerm;
 //        }
     }
-    
+
     /**
      * 设置 repoTerm
      * @param repoTerm repoTerm
@@ -642,7 +642,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setRepoTerm(String repoTerm) {
         this.repoTerm = repoTerm;
     }
-    
+
     /**
      * 获取 termType
      * @return termType.
@@ -650,7 +650,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public String getTermType() {
         return termType;
     }
-    
+
     /**
      * 设置 termType
      * @param termType termType
@@ -658,7 +658,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setTermType(String termType) {
         this.termType = termType;
     }
-    
+
     /**
      * 获取 assetAvailablePosition
      * @return assetAvailablePosition.
@@ -666,7 +666,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public BigDecimal getAssetAvailablePosition() {
         return assetAvailablePosition;
     }
-    
+
     /**
      * 设置 assetAvailablePosition
      * @param assetAvailablePosition assetAvailablePosition
@@ -674,7 +674,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setAssetAvailablePosition(BigDecimal assetAvailablePosition) {
         this.assetAvailablePosition = assetAvailablePosition;
     }
-    
+
     /**
      * 获取 fileArray
      * @return fileArray.
@@ -682,7 +682,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public List<SysUploadFileInfo> getFileArray() {
         return fileArray;
     }
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -690,7 +690,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setFileArray(List<SysUploadFileInfo> fileArray) {
         this.fileArray = fileArray;
     }
-    
+
     /**
      * 获取 etrInvestPersonInfo
      * @return etrInvestPersonInfo.
@@ -698,7 +698,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public BussEtrInvestPersonInfoDto getEtrInvestPersonInfo() {
         return etrInvestPersonInfo;
     }
-    
+
     /**
      * 设置 etrInvestPersonInfo
      * @param etrInvestPersonInfo etrInvestPersonInfo
@@ -706,7 +706,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setEtrInvestPersonInfo(BussEtrInvestPersonInfoDto etrInvestPersonInfo) {
         this.etrInvestPersonInfo = etrInvestPersonInfo;
     }
-    
+
     /**
      * 获取 elementId
      * @return elementId.
@@ -714,7 +714,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public String getElementId() {
         return elementId;
     }
-    
+
     /**
      * 设置 elementId
      * @param elementId elementId
@@ -722,7 +722,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setElementId(String elementId) {
         this.elementId = elementId;
     }
-    
+
     /**
      * 获取 selectedItem
      * @return selectedItem.
@@ -730,7 +730,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public List<EtrBoutRepoDto> getSelectedItem() {
         return selectedItem;
     }
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -738,7 +738,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setSelectedItem(List<EtrBoutRepoDto> selectedItem) {
         this.selectedItem = selectedItem;
     }
-    
+
     /**
      * 获取 operateType
      * @return operateType.
@@ -746,7 +746,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public String getOperateType() {
         return operateType;
     }
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -754,7 +754,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setOperateType(String operateType) {
         this.operateType = operateType;
     }
-    
+
     /**
      * 获取 closeWay
      * @return closeWay.
@@ -762,7 +762,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public String getCloseWay() {
         return CloseWay;
     }
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -770,7 +770,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setCloseWay(String closeWay) {
         CloseWay = closeWay;
     }
-    
+
     /**
      * 获取 portfolioName
      * @return portfolioName.
@@ -778,7 +778,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public String getPortfolioName() {
         return portfolioName;
     }
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -786,7 +786,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
-    
+
     /**
      * 获取 assetType1
      * @return assetType1.
@@ -794,7 +794,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public String getAssetType1() {
         return assetType1;
     }
-    
+
     /**
      * 设置 assetType1
      * @param assetType1 assetType1
@@ -802,7 +802,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setAssetType1(String assetType1) {
         this.assetType1 = assetType1;
     }
-    
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -810,7 +810,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public String getFinprodName() {
         return finprodName;
     }
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -818,7 +818,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setFinprodName(String finprodName) {
         this.finprodName = finprodName;
     }
-    
+
     /**
      * 获取 finishAmt
      * @return finishAmt.
@@ -826,7 +826,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public BigDecimal getFinishAmt() {
         return finishAmt;
     }
-    
+
     /**
      * 设置 finishAmt
      * @param finishAmt finishAmt
@@ -834,7 +834,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setFinishAmt(BigDecimal finishAmt) {
         this.finishAmt = finishAmt;
     }
-    
+
     /**
      * 获取 transactioncom
      * @return transactioncom.
@@ -842,7 +842,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public BigDecimal getTransactioncom() {
         return transactioncom;
     }
-    
+
     /**
      * 设置 transactioncom
      * @param transactioncom transactioncom
@@ -850,7 +850,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setTransactioncom(BigDecimal transactioncom) {
         this.transactioncom = transactioncom;
     }
-    
+
     /**
      * 获取 riskTrialRetDto
      * @return riskTrialRetDto.
@@ -858,7 +858,7 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public List<RiskTrialRetDto> getRiskTrialRetDto() {
         return riskTrialRetDto;
     }
-    
+
     /**
      * 设置 riskTrialRetDto
      * @param riskTrialRetDto riskTrialRetDto
@@ -866,89 +866,89 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     public void setRiskTrialRetDto(List<RiskTrialRetDto> riskTrialRetDto) {
         this.riskTrialRetDto = riskTrialRetDto;
     }
-    
+
     @Override
     @PrimaryKey(value = Field.PK_1)
     public String getEntrustId(){
         return super.getEntrustId();
     }
-    
+
     @Override
     @NotEmpty(fieldName = "EtrBoutRepo002.portfolioId", groups = {ValidateGroupEdit.class})
     public String getPortfolioId(){
         return super.getPortfolioId();
     }
-    
+
     @Override
     @NotEmpty(fieldName = "EtrBoutRepo002.vdate", groups = {ValidateGroupEdit.class})
     public Date getVdate(){
         return super.getVdate();
     }
-    
+
     @Override
     @NotEmpty(fieldName = "EtrBoutRepo002.mdate", groups = {ValidateGroupEdit.class})
     public Date getMdate(){
         return super.getMdate();
     }
-    
+
     @Override
     @NotEmpty(fieldName = "EtrBoutRepo002.ps", groups = {ValidateGroupEdit.class})
     public String getPs(){
         return super.getPs();
     }
-    
+
     @Override
     @NotEmpty(fieldName = "EtrBoutRepo002.entrustAmt", groups = {ValidateGroupEdit.class})
     public BigDecimal getEntrustAmt(){
         return super.getEntrustAmt();
     }
-    
+
     @Override
     @NotEmpty(fieldName = "EtrBoutRepo002.tradeMarket", groups = {ValidateGroupEdit.class})
     public String getTradeMarket(){
         return super.getTradeMarket();
     }
-    
+
     @Override
     @NotEmpty(fieldName = "EtrBoutRepo002.ccy", groups = {ValidateGroupEdit.class})
     public String getCcy(){
         return super.getCcy();
     }
-    
+
     @Override
     //@NotEmpty(fieldName = "EtrBoutRepo002.price", groups = {ValidateGroupEdit.class})
     public BigDecimal getPrice(){
         return super.getPrice();
     }
-    
+
     @Override
     @NotEmpty(fieldName = "EtrBoutRepo002.calendarId", groups = {ValidateGroupEdit.class})
     public String getCalendarId(){
         return super.getCalendarId();
     }
-    
+
     // 增加获取交易场所和清算速度数据字典名称方法 by zhaodongdong 20200110 end
     public String getTradeMarketStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.交易场所, super.getTradeMarket());
     }
-    
+
     public String getSettleSpreedStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.清算速度, this.getSettleSpreed());
     }
     // 增加获取交易场所和清算速度数据字典名称方法 by zhaodongdong 20200110 end
-    
+
     public String getBusCcy(){
         return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
     }
-    
+
     public String getBusPs(){
         return SysDataUtil.getNameFromDataDict(DictCode.回购拆借方向, super.getPs());
     }
-    
+
     public String getBusTermType(){
         return SysDataUtil.getNameFromDataDict(DictCode.回购期限品种, this.getTermType());
     }
-    
+
     public String getBusEntrustStatus(){
         return SysDataUtil.getNameFromDataDict(DictCode.委托状态, super.getEntrustStatus());
     }
@@ -959,5 +959,18 @@ public class EtrBoutRepoDto extends EtrEntrust implements ProcessEntity {
     @NotEmpty(fieldName = "EtrBoutRepo002.priceModel", groups = {ValidateGroupEdit.class})
     public String getPriceModel() {
         return super.getPriceModel();
+    }
+
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
     }
 }

@@ -202,7 +202,7 @@
             else{
                 $('#CfetsBondDealQuotedPriceSingle001_div_exerYield').toggle(false);
             }
-            if (data.assetType1 == assetTypeOne_abs){
+            if (data.paassetType1 == assetTypeOne_abs){
                 $('#CfetsBondDealQuotedPriceSingle001_div_abs1').toggle(true);
                 $('#CfetsBondDealQuotedPriceSingle001_div_abs2').toggle(true);
 
@@ -219,6 +219,14 @@
                 $('#CfetsBondDealQuotedPriceSingle001_matureYield').attr('disabled', false);
                 $('#CfetsBondDealQuotedPriceSingle001_exerYield').attr('disabled', false);
                 $("input[name='calculateField']").attr('disabled', false);
+            }
+
+            if (data.assetType10 == assetTypeTwo_abs) {
+                $('#CfetsBondDealQuotedPriceSingle001_div_abs1').toggle(true);
+                $('#CfetsBondDealQuotedPriceSingle001_div_abs2').toggle(true);
+            }else{
+                $('#CfetsBondDealQuotedPriceSingle001_div_abs1').toggle(false);
+                $('#CfetsBondDealQuotedPriceSingle001_div_abs2').toggle(false);
             }
         }else{
             $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val("");
@@ -618,9 +626,9 @@
             //修改无委托初始化增加不可修改项 add by yzg 20210123 end
             $('#CfetsBondDealQuotedPriceSingle001_btn_done').toggle(false);
             $('#CfetsBondDealQuotedPriceSingle001_btn_refuse').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(true);
 
         }
         // 含权、资产一级类型
@@ -882,6 +890,8 @@
         $("#CfetsBondDealQuotedPriceSingle001_settleSpreed").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_tradeDate").val(sysDate).trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_settleDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle001_tradeDate").val().trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle001_settleDate").val().trigger("change")
         $("#CfetsBondDealQuotedPriceSingle001_responseAmt").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_settleMethod").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_secManageAcctId").val("").trigger("change");

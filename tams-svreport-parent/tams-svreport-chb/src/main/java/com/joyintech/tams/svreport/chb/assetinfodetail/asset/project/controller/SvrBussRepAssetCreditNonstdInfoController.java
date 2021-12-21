@@ -68,6 +68,8 @@ public class SvrBussRepAssetCreditNonstdInfoController extends BaseController{
         setSelectOptionToModel(model, DictCode.永续条款类型);
         setSelectOptionToModel(model, DictCode.利息递延条款类型);
         setSelectOptionToModel(model, DictCode.是或否);
+        setSelectOptionToModel(model, DictCode.结构化业务类型);
+        setSelectOptionToModel(model, DictCode.结构化层级);
 
         //2、当入参assetType2资产/负债二级类别 为【非标准化债权类资产/新增可投资资产】进行以下处理
         if(assetInfoDetailMService.getDataListLink().get(DictCodeListExt2.资产_负债类别_非标准化债权类资产_信贷资产流转项目.getValue()).contains(assetType)){

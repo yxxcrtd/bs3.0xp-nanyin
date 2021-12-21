@@ -17,6 +17,7 @@ import java.util.Map;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
@@ -210,7 +211,7 @@ public class EtrProject002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getAssetAvailablePosition")
-    public BigDecimal getAssetAvailablePosition(@RequestBody PtlSecPositionFlowDto dto){
+    public BigDecimal getAssetAvailablePosition(@RequestBody EtrSecPositionDto dto){
         return etrProjectService.getAssetAvailablePosition(dto);
     }
     /**

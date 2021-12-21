@@ -18,7 +18,9 @@
 	 	A.APPROVE_COND approveCond,
 	 	A.IS_ENABLED isEnabled,
 	 	A.IS_ADJUST isAdjust,
-	 	A.ADJUST adjust
+	 	A.ADJUST adjust,
+	    A.IND_NUM indNum,
+	    A.SUP_DOC supDoc
 	 FROM 
 	 	RSK_ISUP_INDICATOR A
 	 <where>
@@ -159,7 +161,9 @@
             APPROVE_COND,         
 			IS_EXCP_WHEN_DIV_ZERO,
 			COMPARE_DAYS,
-			IS_DISPLAY_ORIGINAL
+			IS_DISPLAY_ORIGINAL,
+			 IND_NUM,
+	         SUP_DOC
 		) values (
 		    #{indId, jdbcType=VARCHAR},
 			#{indName , jdbcType=VARCHAR},
@@ -183,7 +187,9 @@
             #{approveCond, jdbcType=VARCHAR},
  			#{isExcpWhenDivZero,jdbcType=VARCHAR},
  			#{compareDays,jdbcType=DECIMAL},
- 			#{isDisplayOriginal,jdbcType=VARCHAR}
+ 			#{isDisplayOriginal,jdbcType=VARCHAR},
+ 			#{indNum,jdbcType=VARCHAR},
+ 			#{supDoc,jdbcType=VARCHAR}
 		)
  	</insert>
  	
@@ -242,7 +248,9 @@
 	  m.IS_ENABLED isEnabled,
 	  m.IS_EXCP_WHEN_DIV_ZERO isExcpWhenDivZero,
 	  m.COMPARE_DAYS compareDays,
-	  m.IS_DISPLAY_ORIGINAL isDisplayOriginal
+	  m.IS_DISPLAY_ORIGINAL isDisplayOriginal,
+	  m.IND_NUM indNum,
+	  m.SUP_DOC supDoc
     from   RSK_ISUP_INDICATOR m 
     left join (select XMLAGG(xmlelement(E,PORTFOLIO_ID || ',')).extract('//text()').getclobval() as PORTFOLIO_ID ,IND_ID from RSK_PORTFOLIO_INDICATOR  GROUP BY IND_ID) n
     on m.IND_ID=n.IND_ID

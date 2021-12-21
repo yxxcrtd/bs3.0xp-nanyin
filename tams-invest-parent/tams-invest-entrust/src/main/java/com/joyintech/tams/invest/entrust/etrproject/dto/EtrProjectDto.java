@@ -45,7 +45,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  */
 @PageId("EtrProject002")
 @ValidLogic(targetClass = EtrProjectValidator.class , groups = {ValidateGroupEdit.class,
-    ValidateGroupDelete.class})
+        ValidateGroupDelete.class})
 public class EtrProjectDto extends EtrEntrust implements ProcessEntity {
     /**
      *  所属部门
@@ -547,13 +547,13 @@ public class EtrProjectDto extends EtrEntrust implements ProcessEntity {
     public String getPortfolioName() {
         return portfolioName;
     }
-    
+
     /**
      * 取得 投资目的
      * @return 投资目的
      */
     @Override
-//    @NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
     public String getInvAim() {
         return super.getInvAim();
     }
@@ -712,7 +712,7 @@ public class EtrProjectDto extends EtrEntrust implements ProcessEntity {
         return super.getMdate();
     }
 
-//    @Override
+    //    @Override
 //    @NotEmpty(fieldName = "EtrProject002.finprodId", groups = {ValidateGroupEdit.class})
 //    public String getFinprodId(){
 //        return super.getFinprodId();
@@ -854,8 +854,19 @@ public class EtrProjectDto extends EtrEntrust implements ProcessEntity {
     }
 
     @Override
-     public String getBusinessModel() {
+    public String getBusinessModel() {
         return super.getBusinessModel();
     }
-    
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
 }

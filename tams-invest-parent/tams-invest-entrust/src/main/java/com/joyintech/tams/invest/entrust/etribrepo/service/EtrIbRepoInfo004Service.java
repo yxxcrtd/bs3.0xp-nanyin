@@ -194,7 +194,11 @@ public class EtrIbRepoInfo004Service extends CommonExportService<EtrIbRepoinfo00
 //                    etrRepoDto.setSecAcctId(rowData.get(10).toString());
 //                }
                 // 备注
-                etrRepoDto.setRemark(rowData.get(10).toString());
+                etrRepoDto.setZyqkName(rowData.get(10).toString());
+                if (StringUtil.isNotEmpty(rowData.get(10).toString())){
+                    etrRepoDto.setZyqk(etrCommonService.getZyqk(rowData.get(10).toString()));
+                }
+                etrRepoDto.setRemark(rowData.get(11).toString());
 //                etrRepoDto.setZyqk(rowData.get(14).toString());
                 etrRepoDto.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
                 etrRepoDto.setInvManagerId(LoginUserUtil.getUserName());
@@ -378,6 +382,16 @@ public class EtrIbRepoInfo004Service extends CommonExportService<EtrIbRepoinfo00
             // 期限是大于0
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                 etrCommonService.checkIsGtZero(repoTerm, "EtrRepo003.repoTerm", lineNo));
+            // 质押券库
+            String zyqk = rowData.get(10).toString();
+            if (StringUtil.isNotEmpty(rowData.get(4).toString()) && StringUtil.equals(rowData.get(4).toString(),"03:正回购")) {
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkIsBlank(zyqk, "EtrRepo003.zyqk", lineNo));
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        etrCommonService.checkZyqkExist(zyqk,"EtrRepo003.zyqk", lineNo));
+            }
+
+
 //            String zyqk = rowData.get(14).toString();
 //            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
 //                    etrCommonService.checkIsBlank(zyqk, "EtrRepo003.repoTerm", lineNo));

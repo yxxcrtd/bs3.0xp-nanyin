@@ -782,8 +782,9 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
         List<CheckReport001Dto> resultlist = new ArrayList<CheckReport001Dto>();
         // 检查登记表中小于今天所有未报送的数据
         if(CollectionUtils.isNotEmpty(checkKeys)){
-            // 调用检查方法
-            resultlist.addAll(check(null));
+			List<String> keys = checkKeys.stream().map(string -> string.getRegistSeqno()).collect(Collectors.toList());
+			// 调用检查方法
+            resultlist.addAll(check(null,keys));
             // 同一资产同一产品汇总一条
             Map<String,String> showInMap = new HashMap<String,String>();
             checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getUniqueKey,(p)->p,(key1,key2)->key1));
@@ -836,7 +837,7 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
      * @return List<CheckReport001Dto>
      * @version 1.7 2019年6月24日
      */
-    public List<CheckReport001Dto> check(Date batchDate){
+    public List<CheckReport001Dto> check(Date batchDate,List<String> keys){
         // 数据日期为系统时间
         Date checkdate = DateUtil.parse(DateUtil.getSysDate());
 		// 供跑批使用
@@ -844,7 +845,9 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 			checkdate = batchDate;
 		}
         // 删除今天所有已检查的数据
-        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(),checkdate);
+		//TODO
+		//删除逻辑需要修改表结构,延后处理
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(),checkdate,keys);
         //增加例外情况过滤
         List<ChbCheckRuleout> listInvestTradeRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_INVEST_TRADE_SUB);
         Map<String, List<ChbCheckRuleout>> mapInvestTradeRuleout = listInvestTradeRuleout.stream().collect(
@@ -852,9 +855,9 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
         //检查数据
         List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
         //报送前强制的错误检查
-        resultList.addAll(beforeSubErrorCheck.checkInvestTradeReg(checkdate,null,mapInvestTradeRuleout));
+        resultList.addAll(beforeSubErrorCheck.checkInvestTradeReg(checkdate,keys,mapInvestTradeRuleout));
         //警告逻辑检查
-        resultList.addAll(beforeSubCheck.checkInvestReg(checkdate,mapInvestTradeRuleout));
+        resultList.addAll(beforeSubCheck.checkInvestReg(checkdate,mapInvestTradeRuleout,keys));
         //报错检查异常数据
         int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
         int batchLastIndex = batchCount;// 每批最后一个的下标

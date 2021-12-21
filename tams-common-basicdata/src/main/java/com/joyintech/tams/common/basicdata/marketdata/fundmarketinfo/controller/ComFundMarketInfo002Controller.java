@@ -77,6 +77,9 @@ public class ComFundMarketInfo002Controller extends BaseController {
     public AjaxResult check(@RequestBody ComFundMarketInfo001dto dto) {
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        if(StringUtil.isNotEmpty(dto.getProcessState())){
+            errorList.add(new ValidMessage("流程中的数据不能修改!"));
+        }
         if (!StringUtil.isNotEmpty(dto.getFinprodId())){
             errorList.add(new ValidMessage("基金代码为必填项！"));
         }

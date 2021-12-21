@@ -69,7 +69,7 @@ public class SdProdIssueBatchService {
 
 		// 调用check逻辑
 		logger.debug("产品发行信息登记数据检查开始------检查前数据个数：" + listSub.size());
-		List<CheckReport001Dto> resultlist = prodPersonIssue001Service.check(batchDate);
+		List<CheckReport001Dto> resultlist = prodPersonIssue001Service.check(batchDate,prodIdList);
 		Map<String,CheckReport001Dto> checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1, key2)->key1));
 		for (int i = listSub.size() - 1; i >= 0; i--){
 			if (checkmap.containsKey(listSub.get(i).getRegistSeqno())

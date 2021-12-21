@@ -97,6 +97,9 @@ public class TrdConBond002Controller extends BaseController {
         //配置单位 add by yeming 20210723 start
         String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
         model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
+
+        //获取成交匹配录单
+        String tranRecord = this.getParam("tranRecord");
         //配置单位 add by yeming 20210723 end
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
@@ -107,6 +110,10 @@ public class TrdConBond002Controller extends BaseController {
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdConBond002Service.getTrdConBondDto(tradeId);
+        }
+        //成交匹配录单
+        else if(StringUtil.isNotEmpty(tranRecord)) {
+            dto = JsonUtils.json2Object(tranRecord,TrdConBondDto.class);
         }
         else {
             String entrustId = this.getParam("entrustId");

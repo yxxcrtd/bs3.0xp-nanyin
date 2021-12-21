@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.invest.entrust.etrplanassetr.dto;
 
 import java.math.BigDecimal;
@@ -37,7 +37,7 @@ import com.joyintech.tams.invest.entrust.etrplanassetr.validator.EtrPlanAssetRVa
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 /**
- * 
+ *
  *计划类利率委托Dto
  *
  * @author zhangjun
@@ -47,7 +47,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  */
 @PageId("EtrPlanAssetN002")
 @ValidLogic(targetClass = EtrPlanAssetRValidator.class, groups = {ValidateGroupEdit.class,
-    ValidateGroupDelete.class})
+        ValidateGroupDelete.class})
 public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     /**
      * <意义，目的和功能，以及可能被用到的地方>
@@ -167,7 +167,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
      * 组合名称
      */
     private String portfolioName;
-    
+
     /**
      * 资产二级分类
      */
@@ -220,7 +220,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal finishAmt;
-    
+
     /**
      * 交易完成度
      */
@@ -253,7 +253,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     public void setCounterType(String counterType) {
         this.counterType = counterType;
     }
-    
+
     /**
      * 获取 finvdate
      * @return finvdate.
@@ -266,7 +266,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
 
 
 
-    
+
     /**
      * 设置 finvdate
      * @param finvdate finvdate
@@ -279,7 +279,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
 
 
 
-    
+
     /**
      * 获取 finmdate
      * @return finmdate.
@@ -292,7 +292,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
 
 
 
-    
+
     /**
      * 设置 finmdate
      * @param finmdate finmdate
@@ -316,7 +316,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
 
 
 
-    
+
     /**
      * 设置 riskTrialRetDto
      * @param riskTrialRetDto riskTrialRetDto
@@ -338,7 +338,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
 
 
 
-    
+
     /**
      * 设置 assetAvailablePosition
      * @param assetAvailablePosition assetAvailablePosition
@@ -358,7 +358,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     }
 
 
-    
+
     /**
      * 设置 fileArray
      * @param fileArray fileArray
@@ -377,7 +377,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         return finprodMarketId;
     }
 
-    
+
     /**
      * 设置 finprodMarketId
      * @param finprodMarketId finprodMarketId
@@ -389,17 +389,17 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     public String getEntrustStatusStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.委托状态, super.getEntrustStatus());
     }
-    
+
     public String getCcyStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
     }
     public String getPsStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * 获取 assetType1
      * @return assetType1.
@@ -411,7 +411,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         return assetType1;
     }
 
-    
+
     /**
      * 设置 assetType1
      * @param assetType1 assetType1
@@ -428,7 +428,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         return selectedItem;
     }
 
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -437,7 +437,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         this.selectedItem = selectedItem;
     }
 
-    
+
     /**
      * 获取 finishAmt
      * @return finishAmt.
@@ -446,7 +446,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         return finishAmt;
     }
 
-    
+
     /**
      * 设置 finishAmt
      * @param finishAmt finishAmt
@@ -455,7 +455,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         this.finishAmt = finishAmt;
     }
 
-    
+
     /**
      * 获取 transactioncom
      * @return transactioncom.
@@ -464,7 +464,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         return transactioncom;
     }
 
-    
+
     /**
      * 设置 transactioncom
      * @param transactioncom transactioncom
@@ -481,7 +481,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         return etrInvestPersonInfo;
     }
 
-    
+
     /**
      * 设置 etrInvestPersonInfo
      * @param etrInvestPersonInfo etrInvestPersonInfo
@@ -489,9 +489,9 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     public void setEtrInvestPersonInfo(BussEtrInvestPersonInfoDto etrInvestPersonInfo) {
         this.etrInvestPersonInfo = etrInvestPersonInfo;
     }
-    
+
     /**
-     * 
+     *
      * 资产代码判空
      */
     public String getFinprodId(){
@@ -506,7 +506,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     public String getPortfolioId() {
         return super.getPortfolioId();
     }
-    
+
     /**
      * 取得 委托开始日
      * @return 委托开始日
@@ -515,7 +515,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     public Date getVdate() {
         return super.getVdate();
     }
-    
+
     /**
      * 取得 委托结束日
      * @return 委托结束日
@@ -524,7 +524,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     public Date getMdate() {
         return super.getMdate();
     }
-    
+
     /**
      * 取得 币种
      * @return 币种
@@ -543,7 +543,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     public String getPs() {
         return super.getPs();
     }
-    
+
     /**
      * 获取 portfolioName
      * @return portfolioName.
@@ -552,7 +552,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         return portfolioName;
     }
 
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -561,9 +561,9 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         this.portfolioName = portfolioName;
     }
 
-    
 
-    
+
+
     /**
      * 获取 finprodName
      * @return finprodName.
@@ -572,7 +572,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         return finprodName;
     }
 
-    
+
     /**
      * 设置 finprodName
      * @param finprodName finprodName
@@ -589,7 +589,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     }
 
 
-    
+
     /**
      * 获取 operationType
      * @return operationType.
@@ -599,7 +599,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     }
 
 
-    
+
     /**
      * 设置 operationType
      * @param operationType operationType
@@ -608,7 +608,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         this.operateType = operateType;
     }
 
-    
+
     /**
      * 获取 elementId
      * @return elementId.
@@ -617,7 +617,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         return elementId;
     }
 
-    
+
     /**
      * 设置 elementId
      * @param elementId elementId
@@ -635,7 +635,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
         return CloseWay;
     }
 
-    
+
     /**
      * 设置 closeWay
      * @param closeWay closeWay
@@ -643,7 +643,7 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     public void setCloseWay(String closeWay) {
         CloseWay = closeWay;
     }
-    
+
     public String getAssetType1Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类, assetType1);
     }
@@ -663,19 +663,19 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     public String getEntrustId(){
         return super.getEntrustId();
     }
-    
+
     @Override
     @Amount(fieldName = "EtrPlanAssetR001.entrustAmt", groups = {ValidateGroupEdit.class})
     public BigDecimal getEntrustAmt(){
         return super.getEntrustAmt();
     }
-    
+
     @Override
     @Amount(fieldName = "EtrPlanAssetR002.entrustNum", groups = {ValidateGroupEdit.class})
     public BigDecimal getEntrustNum(){
         return super.getEntrustNum();
     }
-    
+
     /**
      * 取得 投资目的
      * @return 投资目的
@@ -687,8 +687,19 @@ public class EtrPlanAssetRDto extends EtrEntrust implements ProcessEntity{
     }
 
     @Override
-     public String getBusinessModel() {
+    public String getBusinessModel() {
         return super.getBusinessModel();
     }
- 
+    /**
+     * 当前处理人
+     */
+    private String nextUser;
+
+    public String getNextUser() {
+        return nextUser;
+    }
+
+    public void setNextUser(String nextUser) {
+        this.nextUser = nextUser;
+    }
 }

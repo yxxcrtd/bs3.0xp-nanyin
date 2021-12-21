@@ -18,7 +18,6 @@ import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.service.dao.ProductComMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +41,7 @@ import java.util.Map;
  * @since 1.0
  */
 @Service
+@Primary
 public class ProductComService extends BaseService<Product> implements ProductService {
 
     /**

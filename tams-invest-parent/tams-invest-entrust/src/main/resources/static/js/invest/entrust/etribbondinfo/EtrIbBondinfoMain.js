@@ -74,6 +74,10 @@ $(
         function doRiskcal002() {
             var object = EtrIbBondinfo002.getSearchParams();
             if (object && EtrIbBondinfo002.isNeedRiskcal()) {
+                var entrustNum=object.entrustNum;
+                if (entrustNum) {
+                    object.entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                }
                 var riskdata = EtrIbBondinfo002.getriskdata(object);
                 var riskInterfUrl = EtrIbBondinfo002.getRiskInterfUrl();
                 if (riskdata && riskInterfUrl) {
@@ -113,6 +117,14 @@ $(
             //     }
             // }
             let checkParam = EtrIbBondinfo003.getriskdata();
+            var bussCombDistribtList=object.bussCombDistribtList;
+            for(var index in bussCombDistribtList){
+                var item = bussCombDistribtList[index];
+                var entrustNum =item.entrustNum;
+                if (entrustNum){
+                    item.entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                }
+            }
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + "riskrds/interf/doInfBatchData/0/RSK002/F01", object, checkParam, riskMathRedisCallback003);
         }
         /**

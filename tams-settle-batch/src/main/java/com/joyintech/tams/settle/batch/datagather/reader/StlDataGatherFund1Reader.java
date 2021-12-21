@@ -44,4 +44,9 @@ public class StlDataGatherFund1Reader extends StlDataGatherReader {
     protected boolean isSecType(String secType) {
         return StringUtil.equals(DictCodeListExt1.证券品种_基金.getValue(), secType);
     }
+
+    @Override
+    protected boolean isCreateTrade(){
+        return false;
+    }
 }

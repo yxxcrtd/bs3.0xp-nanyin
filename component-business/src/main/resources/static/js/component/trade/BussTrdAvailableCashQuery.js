@@ -48,7 +48,6 @@
         if(params.portfolioId && params.portfolioId.trim() 
                 && params.calendarId && params.ccy && params.tradeDate){
             params.acctTypeList = ACCT_TYPE_A01 + "," + ACCT_TYPE_A07;
-            debugger;
             if(typeof(bondFirstSign) != 'undefined' && bondFirstSign){
                 params.bondFirstSign = bondFirstSign;
             }

@@ -3,12 +3,12 @@ package com.joyintech.tams.batch.svreport.investmentsinfo.service;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
+import com.joyintech.tams.common.ChbAssetRateFileImpService;
 import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.interf.common.constant.InterfConstants;
 import com.joyintech.tams.svreport.interf.chb.investmentsinfo.service.ChbAssetInfoRateInterf;
-import com.joyintech.tams.svreport.interf.chb.investmentsinfo.service.ChbProdInfoRateInterf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,8 @@ public class SvrAssetRateInfoImpMainService extends AutoSendCBBaseService {
      * 日志
      */
     private Logger logger = LoggerFactory.getLogger(getClass());
-
+    @Autowired
+    private ChbAssetRateFileImpService chbAssetRateFileImpService;
 
     @Autowired
     private ChbAssetInfoRateInterf chbAssetInfoRateInterf;
@@ -56,7 +57,8 @@ public class SvrAssetRateInfoImpMainService extends AutoSendCBBaseService {
                 }
             } else  if (InterfConstants.CONTENTSRC_FILE_XML.equals(contentSrc)
                     || InterfConstants.CONTENTSRC_FILE_TXT.equals(contentSrc)) {
-
+                // 资产利率基本信息文件接入
+                String result = chbAssetRateFileImpService.execute(batchDate,com.joyintech.tams.common.InterfDefine.资产利率基本信息接口数据.getCode());
             } else {
                 logger.error("CHB_INTERF_CONFIG表中内容来源配置无效！");
             }

@@ -120,7 +120,7 @@
 					CASE WHEN z.QUOTE_ID IS NOT null THEN z.ENTRUST_ID
 					ELSE a.ENTRUST_ID
 					END I_Q_B_ENTRUST_ID,
-		             a.QUOTE_DATE        AS I_Q_B_QUOTE_DATE,
+					to_date(to_char(a.QUOTE_DATE,'yyyy-MM-dd'),'yyyy-MM-dd') AS I_Q_B_QUOTE_DATE,
 		             a.SETTLE_DATE       AS I_Q_B_SETTLE_DATE,
 		             a.SETTLE_SPEED      AS I_Q_B_SETTLE_SPEED,
 		             a.DELIVERY_TYPE     AS I_Q_B_DELIVERY_TYPE,
@@ -737,7 +737,7 @@
 		    a.QUOTE_ROLE_TYPE    I_Q_C_QUOTE_ROLE_TYPE,
 			a.PORTFOLIO_ID       I_Q_C_PORTFOLIO_ID,
 			a.ENTRUST_ID         I_Q_C_ENTRUST_ID,
-		    a.QUOTE_DATE         I_Q_C_QUOTE_DATE,
+		    to_date(to_char(a.QUOTE_DATE,'yyyy-MM-dd'),'yyyy-MM-dd') I_Q_C_QUOTE_DATE,
 		    a.V_SETTLE_DATE      I_Q_C_V_SETTLE_DATE,
 		    a.M_SETTLE_DATE      I_Q_C_M_SETTLE_DATE,
 		    a.SETTLE_SPEED       I_Q_C_SETTLE_SPEED,
@@ -1337,7 +1337,7 @@ SELECT T.QUOTE_ID,
 		QUOTE_ID) PORTFOLIO_ID ,
 		LISTAGG(ENTRUST_ID, ',') WITHIN GROUP(
 		ORDER BY
-		QUOTE_ID) ENTRUST_ID
+		QUOTE_ID)ENTRUST_ID
 		FROM
 		WFL_IBU_QUOTE_ETR_RE
 		GROUP BY
@@ -1516,6 +1516,9 @@ SELECT T.QUOTE_ID,
 			</if>
 			<if test="termEnd !=null and termEnd !=''">
 				and a.TERM <![CDATA[<=]]> #{termEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="term !=null and term !=''">
+				and a.TERM = #{term,jdbcType=VARCHAR}
 			</if>
 			<if test="ouPartyIdList != null and ouPartyIdList.size() > 0">
 				and a.OU_PARTY_ID in

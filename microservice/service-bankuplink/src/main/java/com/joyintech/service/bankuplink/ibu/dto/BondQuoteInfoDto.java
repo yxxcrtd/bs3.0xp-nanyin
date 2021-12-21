@@ -909,5 +909,30 @@ public class BondQuoteInfoDto extends BaseEntity {
 	public void setIsDzh(String isDzh) {
 		this.isDzh = isDzh;
 	}
-    
+
+    /**
+     * 结算方式，券款对付、见券付款、见款付券
+     */
+    private String deliveryType;
+
+    /**
+     * 清算类型
+     */
+    private String settType;
+
+    public String getDeliveryType() {
+        return deliveryType;
+    }
+
+    public void setDeliveryType(String deliveryType) {
+        this.deliveryType = deliveryType;
+    }
+
+    public String getSettType() {
+        return settType;
+    }
+
+    public void setSettType(String settType) {
+        this.settType = settType;
+    }
 }

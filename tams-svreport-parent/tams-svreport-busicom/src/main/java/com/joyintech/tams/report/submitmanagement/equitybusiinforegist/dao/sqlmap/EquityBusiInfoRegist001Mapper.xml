@@ -229,7 +229,7 @@
 		STATUS, WORKFLOW_ID,DEPT_CODE,
 		UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
 		ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
-		STATUS_DATE,CHECK_SEQNO)
+		STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK)
 		select  SEQ_EQUDET_SUB.NEXTVAL,
 		BUSI_SEQNO, REG_CODE,
 		ACCOUNT,REGIST_BANK_CODE, INDENTIFY_MARK,
@@ -244,7 +244,7 @@
 		STATUS, null WORKFLOW_ID,DEPT_CODE,
 		UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
 		ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
-		STATUS_DATE,CHECK_SEQNO
+		STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK
 		from CHB_EQUDET_SUB
 		<where>
 			<foreach collection="investList" item="equityRegist" open="(" close=")" separator=") or (">
@@ -491,7 +491,7 @@
 		STATUS, SUMIT_SEQ,DEPT_CODE,
 		UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
 		ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
-		STATUS_DATE,CHECK_SEQNO)
+		STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK)
 		select ciish.BUSI_SEQNO, ciish.REG_CODE,
 		ciish.ACCOUNT,ciish.REGIST_BANK_CODE, ciish.INDENTIFY_MARK,
 		ciish.EQUITY_CONF_DATE, ciish.SHARE_CONF_DATETIME, ciish.FUND_ACC_PLACE,
@@ -504,7 +504,7 @@
 		ciish.STATUS, ciish.SUMIT_SEQ,ciish.DEPT_CODE,
 		ciish.UPDATE_USER, ciish.UPDATE_TIME,ciish.CREATE_USER,ciish.CREATE_TIME,
 		ciish.ORG_CODE, ciish.CHB_SUBMIT_DEADLINE,ciish.CREATE_DEPT,
-		ciish.STATUS_DATE,ciish.CHECK_SEQNO
+		ciish.STATUS_DATE,ciish.CHECK_SEQNO,ciish.ORG_INDENTIFY_MARK
 		from (select max(HIS_NO) HIS_NO,BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK
 		from CHB_EQUDET_SUB_HIS where SUBMIT_STATUS !='01'
 		GROUP BY BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK) A
@@ -719,7 +719,7 @@
 		CUST_NAME, AGENCY_CODE, AGENCY_NAME, AGENCY_FSA, BUSI_FSA, PROD_VALUE, FEE_AMT, TRAN_TELL_NAME,
 		SUBMIT_DEADLINE,CHB_SUBMIT_DEADLINE,CHECK_SEQNO,STATUS_DATE,SUBMIT_STATUS,SUBMIT_TIME,SUMIT_SEQ,
 		STATUS,  DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
-		ORG_CODE,  CREATE_DEPT
+		ORG_CODE,  CREATE_DEPT,ORG_INDENTIFY_MARK
 		)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
 			#{item.busiSeqno,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR},
@@ -737,7 +737,7 @@
 			#{item.submitTime,jdbcType=TIMESTAMP},#{item.sumitSeq,jdbcType=VARCHAR},#{item.status,jdbcType=VARCHAR},
 			#{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
 			#{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
-			#{item.orgCode,jdbcType=VARCHAR},  #{item.createDept,jdbcType=VARCHAR}
+			#{item.orgCode,jdbcType=VARCHAR},  #{item.createDept,jdbcType=VARCHAR},  #{item.orgIndentifyMark,jdbcType=VARCHAR}
 
 		</foreach>
 	</insert>

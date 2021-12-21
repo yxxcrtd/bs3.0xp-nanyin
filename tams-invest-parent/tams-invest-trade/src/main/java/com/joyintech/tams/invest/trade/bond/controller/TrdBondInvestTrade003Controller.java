@@ -126,6 +126,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         String payType = this.getParam("payType");      // 缴款方式
         String yield = this.getParam("winPrice");       // 中标 "标位"
         String winPrinAmt = this.getParam("winPrinAmt");// 中标 "中标券面总额"
+        model.addAttribute("winPrinAmtList",(String)this.getParam("winPrinAmtList"));
         String bondFirstSign = this.getParam("bondFirstSign");
         String isCstp = this.getParam("isCstp");
         String isCstpSure = this.getParam("isCstpSure");
@@ -159,6 +160,7 @@ public class TrdBondInvestTrade003Controller extends BaseController {
             BigDecimal winPrinAmtBig = BigDecimal.ZERO;
             if(StringUtil.isNotEmpty(winPrinAmt)){
                 winPrinAmtBig = new BigDecimal(winPrinAmt);
+                winPrinAmtBig = winPrinAmtBig.multiply(new BigDecimal(10000));
             }
             dto.setTradeAmt(winPrinAmtBig);
             dto.setYield(BigDecimal.valueOf(Double.valueOf(yield == null ? "0" : yield)));
@@ -793,12 +795,10 @@ public class TrdBondInvestTrade003Controller extends BaseController {
         //中标结果查询进来  add by gejiaao 2019/7/26 end
         List<BaseEtrInvestInfoDto> entrustInfos = trdBondInvestTrade002Service.getEntrustInfos(dto.getEntrustId());
         if (StringUtil.isNotBlank(dto.getBondFirstSign())){
-            entrustInfos.stream().forEach(e ->{
-                //数量*100，再转换成万元
-                e.getEtrEntrust().setEntrustNum(ArithmeticUtil.multiply(e.getEtrEntrust().getEntrustNum(),new BigDecimal("1000000")));
-                //转换成万元
-                e.setDoEntrustMoney(ArithmeticUtil.multiply(e.getDoEntrustMoney(),new BigDecimal("10000")));
-            });
+            String[] winPrinAmtList = dto.getWinPrinAmtList().split(",");
+            for (int i = 0; i < entrustInfos.size(); i++) {
+                entrustInfos.get(i).getEtrEntrust().setEntrustNum(new BigDecimal(winPrinAmtList[i]));
+            }
         }
         return entrustInfos;
     }

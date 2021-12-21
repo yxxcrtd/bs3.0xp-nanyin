@@ -66,6 +66,16 @@ public class EquityInfoRegist001Dto extends TableRow {
      */
     private String seqList;
 
+    private String  fundAccPlace;
+
+    public String getFundAccPlace() {
+        return fundAccPlace;
+    }
+
+    public void setFundAccPlace(String fundAccPlace) {
+        this.fundAccPlace = fundAccPlace;
+    }
+
     /**
      * 删除原因
      */
@@ -253,6 +263,12 @@ public class EquityInfoRegist001Dto extends TableRow {
      */
     @DictFormat(DictCode.投资者类别)
     private String holderType;
+
+    /**
+     * 权益人类别
+     */
+    @DictFormat(DictCode.投资者分类)
+    private String holderClassify;
 
     /**
      * 证件类别
@@ -675,6 +691,14 @@ public class EquityInfoRegist001Dto extends TableRow {
      */
     public void setHolderType(String holderType) {
         this.holderType = holderType;
+    }
+
+    public String getHolderClassify() {
+        return holderClassify;
+    }
+
+    public void setHolderClassify(String holderClassify) {
+        this.holderClassify = holderClassify;
     }
 
     /**

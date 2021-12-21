@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,41 +52,39 @@ public class StandardCouponReConversionRate002Controller extends BaseController 
         this.setSelectOptionToModel(model, new DictCode[] {DictCode.资金账户类型,DictCode.申报单位,DictCode.特殊处理业务,
                 DictCode.柜台接口类型,DictCode.是或否});
         List<SelectOptionDto> brokerIds = new ArrayList<SelectOptionDto> ();
-        List<SelectOptionDto> accountTypeList = new ArrayList<SelectOptionDto> ();
-
-//        SelectOptionDto aop = new SelectOptionDto ();
-//        aop.setId ("00000000000000000");
-//        aop.setText ("所有");
+        List<SelectOptionDto> finprodIdList = new ArrayList<SelectOptionDto> ();
         try {
             brokerIds = getMstCustomerInfo();
-//            brokerIds.add (0,aop);
             model.addAttribute("brokerIds", JsonUtils.objectArray2Json(brokerIds.toArray()));
 
-            accountTypeList = getPtlSecAcctInfo();
-//            accountTypeList.add (0,aop);
-            model.addAttribute("accountTypeList", JsonUtils.objectArray2Json(accountTypeList.toArray()));
+            finprodIdList = getFinprodIdInfo();
+            model.addAttribute("finprodIdList", JsonUtils.objectArray2Json(finprodIdList.toArray()));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         String brokerId = getParam("brokerId");
-        String accountType = getParam("accountType");
+        String finprodId = getParam("finprodId");
+        String startDate = getParam("startDate");
         String workflowId = getParam("workflowId");
-
+        StandardCouponReConversionRateDto entity = new StandardCouponReConversionRateDto();
         // 不来自于代办
-        if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(brokerId) && StringUtil.isNotEmpty(accountType)) {
+        if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(brokerId) && StringUtil.isNotEmpty(finprodId) && StringUtil.isNotEmpty(startDate)) {
             // 根据主键获取业务实体
             StandardCouponReConversionRateDto dto = new StandardCouponReConversionRateDto();
             dto.setBrokerId (brokerId);
-            dto.setAccountType (accountType);
-            StandardCouponReConversionRateDto entity = standardCouponReConversionRateService.selectByPrimaryKey(dto);
+            dto.setFinprodId(finprodId);
+            dto.setStartDate(startDate);
+            entity = standardCouponReConversionRateService.selectByPrimaryKey(dto);
+            entity.setTandardRate(entity.getMoreConvrate().toString());
             model.addAttribute("entity", entity);
+            model.addAttribute("seqNo", entity.getSeqNo());
         }
         // 来自代办
         else if (StringUtil.isNotEmpty(workflowId)) {
             // 根据工作流与留痕处理提供的共通方法获取业务实体
-            StandardCouponReConversionRateDto entity = standardCouponReConversionRateService.getBussinessEntityByWorkflowId(workflowId);
+            entity = standardCouponReConversionRateService.getBussinessEntityByWorkflowId(workflowId);
             model.addAttribute("entity", entity);
             model.addAttribute("workflowId", workflowId);
         }
@@ -108,10 +107,10 @@ public class StandardCouponReConversionRate002Controller extends BaseController 
         }
 
         List<SelectOptionDto> temp = new ArrayList<SelectOptionDto> ();
-        SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.所有, null);
+/*        SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.所有, null);
         for (SelectOptionDto dto : selectDto1.getOptions()) {
             temp.add (dto);
-        }
+        }*/
         List<SelectOptionDto> tempList = standardCouponReConversionRateService.getMstCustomerInfo(map);
         for (int i = 0; i < tempList.size (); i++){
             temp.add (tempList.get (i));
@@ -138,6 +137,22 @@ public class StandardCouponReConversionRate002Controller extends BaseController 
 
         return temp;
     }
+
+    //add by chenjiaxing 20211019 标准券再折算率改造 start
+    public List<SelectOptionDto> getFinprodIdInfo(){
+        Map<String, Object> map = new HashMap<String, Object> ();
+        List<SelectOptionDto> temp = new ArrayList<SelectOptionDto> ();
+        SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.所有, null);
+        for (SelectOptionDto dto : selectDto1.getOptions()) {
+            temp.add (dto);
+        }
+        List<SelectOptionDto> tempList = standardCouponReConversionRateService.getFinprodIdInfo(map);
+        for (int i = 0; i < tempList.size (); i++){
+            temp.add (tempList.get (i));
+        }
+        return temp;
+    }
+    //add by chenjiaxing 20211019 标准券再折算率改造 end
 
 
     /**
@@ -166,10 +181,10 @@ public class StandardCouponReConversionRate002Controller extends BaseController 
                 new WorkFlowParameter<StandardCouponReConversionRateDto>();
         params.setPageId(this.getPageId());
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(dto.getAccountType ()+ dto.getBrokerId ());
+        params.setBusinessCode(dto.getFinprodId ()+"-"+dto.getBrokerId ());
         params.setBusinessType(DictCodeListExt3.共通业务类型_标准券再折算率.getValue());
         // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> SpringContextUtil.getTextValue("资金账户类型") + "("+ entity.getAccountType () + ")");
+        params.setComment(entity -> SpringContextUtil.getTextValue("资产代码") + "("+ entity.getFinprodId () + ")");
         processParameter.setWorkFlowParameter(params);
         String msg = standardCouponReConversionRateService.start (processParameter,dto);
         return new AjaxResult(msg);

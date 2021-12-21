@@ -48,6 +48,14 @@ public final class InterfMappingConstants {
     * BS2.0对人行资产类型映射-交易对手二级分类
     */
    public static final String PBCASSETTYPE_COUNTER = "PBCASSETTYPE_COUNTER";
+
+
+
+	/**
+	 * BS2.0对人行资产类型映射-交易对手二级分类
+	 */
+	public static final String PBCASSETTYPE_DSFLX = "PBCASSETTYPE_DSFLX";
+
    /**
     * BS2.0对人行资产类型映射-是否中央交易对手
     */

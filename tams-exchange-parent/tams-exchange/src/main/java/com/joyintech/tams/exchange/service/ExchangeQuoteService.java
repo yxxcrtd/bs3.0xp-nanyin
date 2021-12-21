@@ -1,9 +1,11 @@
 package com.joyintech.tams.exchange.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.tams.exchange.common.bean.InterfQuoteStrBean;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,6 +21,10 @@ public class ExchangeQuoteService extends BaseService {
 
     public ResultBean queryQuoteTick(String param) {
         return restTemplate.getForObject(ServiceApplication.QUOTE_SERVICE_NAME + TradeServiceURL.prefix + TradeServiceURL.queryQuoteTick + param, ResultBean.class);
+    }
+
+    public ResultBean queryQuoteTickConvert(HttpEntity<InterfQuoteStrBean> request) {
+        return restTemplate.postForObject(ServiceApplication.QUOTE_SERVICE_NAME + TradeServiceURL.prefix + TradeServiceURL.queryQuoteTickConvert, request, ResultBean.class);
     }
 
     public ResultBean queryIntegratedBulkQuote(String param) {

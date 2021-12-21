@@ -1,5 +1,8 @@
 package com.joyintech.tams.svreport.chb.monthreport.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -196,6 +199,11 @@ public class ChbMonthPrdPosition {
      */
     private   BigDecimal closetermday;
 
+    /**
+     * 加权率
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal yieldE;
 
     public BigDecimal getPayamtsum() {
         return payamtsum;
@@ -662,4 +670,12 @@ public class ChbMonthPrdPosition {
 	public void setCashmanacate(String cashmanacate) {
 		this.cashmanacate = cashmanacate;
 	}
+
+    public BigDecimal getYieldE() {
+        return yieldE;
+    }
+
+    public void setYieldE(BigDecimal yieldE) {
+        this.yieldE = yieldE;
+    }
 }

@@ -154,7 +154,7 @@ public class TrdFundInvestTradeValidator implements TradeCommonValidator {
                     }
                 }
             }
-            if (DictCodeListExt2.交易方向_转换申请.getValue().equals(dto.getPs()) && StringUtil.isEmpty(dto.getrFinprodId())) {
+            if (DictCodeListExt2.交易方向_转换申请.getValue().equals(dto.getPs()) && StringUtil.isEmpty(dto.getChangeToFinprodMarketId())) {
                 errorList.add(new ValidMessage("changeToFinprodMarketId", "基金转换申请时，转入资产必填。"));
             }
 //            if(bussCommonMapperDelegateService != null && StringUtil.isNotEmpty(dto.getFinprodId())) {
