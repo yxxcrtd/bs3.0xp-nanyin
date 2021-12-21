@@ -59,7 +59,7 @@
                         // windowindow.parent.layer.close(indexOf);
                         document.getElementById('cfetsRepoDealQuotedPr002_iframe').contentWindow.location.reload(true);
                         document.getElementById('CfetsRepoDealQuotedPr001_iframe').contentWindow.location.reload(true);
-                        document.getElementById('CfetsRepoDealQuotedPrHq_iframe').contentWindow.location.reload(true);
+                        document.getElementById('EtrEtfInfoHq').contentWindow.location.reload(true);
                     })
                 })
             }
@@ -74,7 +74,7 @@
                         // window.parent.layer.close(index);
                         document.getElementById('cfetsRepoDealQuotedPr002_iframe').contentWindow.location.reload(true);
                         document.getElementById('CfetsRepoDealQuotedPr001_iframe').contentWindow.location.reload(true);
-                        document.getElementById('CfetsRepoDealQuotedPrHq_iframe').contentWindow.location.reload(true);
+                        document.getElementById('EtrEtfInfoHq').contentWindow.location.reload(true);
                     })
                 })
             }
@@ -89,7 +89,7 @@
                         // window.parent.layer.close(index);
                         document.getElementById('cfetsRepoDealQuotedPr003_iframe').contentWindow.location.reload(true);
                         document.getElementById('CfetsRepoDealQuotedPr001_iframe').contentWindow.location.reload(true);
-                        document.getElementById('CfetsRepoDealQuotedPrHq_iframe').contentWindow.location.reload(true);
+                        document.getElementById('EtrEtfInfoHq').contentWindow.location.reload(true);
                     })
                 })
             }
@@ -104,7 +104,7 @@
                         // window.parent.layer.close(index);
                         document.getElementById('cfetsRepoDealQuotedPr003_iframe').contentWindow.location.reload(true);
                         document.getElementById('CfetsRepoDealQuotedPr001_iframe').contentWindow.location.reload(true);
-                        document.getElementById('CfetsRepoDealQuotedPrHq_iframe').contentWindow.location.reload(true);
+                        document.getElementById('EtrEtfInfoHq').contentWindow.location.reload(true);
                     })
                 })
             }
