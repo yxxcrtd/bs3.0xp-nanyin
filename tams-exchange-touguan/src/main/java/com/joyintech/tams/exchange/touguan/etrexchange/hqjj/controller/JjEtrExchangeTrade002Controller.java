@@ -16,24 +16,27 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
-import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dto.*;
 import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.service.JjEtrExchangeTrade001Service;
 import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.service.JjEtrExchangeTrade002Service;
 import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.service.JjEtrExchangeTrade003Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade003Dto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import com.joyintech.tams.business.common.pojo.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +50,10 @@ import java.util.Map;
 @Controller
 @PageId("JjEtrExchangeTrade002")
 @RequestMapping("/etrexchange/hqjj/jjetrExchangeTrade002")
+@Api(tags = "交易所持仓")
 public class JjEtrExchangeTrade002Controller extends BaseController{
+
+    private static final Logger logger = LoggerFactory.getLogger(JjEtrExchangeTrade002Controller.class);
 
     /**
      * 可转债委托处理详细
@@ -60,21 +66,27 @@ public class JjEtrExchangeTrade002Controller extends BaseController{
 
     @Autowired
     private JjEtrExchangeTrade003Service jjEtrExchangeTrade003Service;
-    @Override
-    public String init(Model model) {
-        this.setSelectOptionToModel(model,BussinessDictCode.交易场所);
-        this.setSelectOptionToModel(model, DictCode.金融产品类型_投管用);
-        this.setSelectOptionToModel(model, DictCode.交易方向);
+
+
+    @ApiOperation(value="查询页面初始化参数", notes = "查询页面初始化参数")
+    @PostMapping("/init")
+    @ResponseBody
+    public Message<Map<String,Object>> init() {
+        Map<String, Object> initPageParams = new HashMap<>();
+        initPageParams.put("TRADE_PLACE", this.getSelectDataFromDataDic(BussinessDictCode.交易场所, null));
+        initPageParams.put("FINPROD_TYPE_TG", this.getSelectDataFromDataDic(DictCode.金融产品类型_投管用, null));
+        initPageParams.put("PS", this.getSelectDataFromDataDic(DictCode.交易方向, null));
+
         EtrExchangeTrade002Dto exchangeTradeDto002 = new EtrExchangeTrade002Dto();
-        model.addAttribute("entity",exchangeTradeDto002);
-        model.addAttribute("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-        model.addAttribute("DECLA_TYPE_PRM05", DictCodeListExt3.申报类型_不指定.getValue());
-        model.addAttribute("DECLA_TYPE_PRM14", DictCodeListExt3.申报类型_指定对手方成交申报.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_15", DictCodeListExt3.上农商_指令业务类型_债券质押式回购竞价指令.getValue());
-        model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
-        model.addAttribute("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
-        model.addAttribute("TARGET_CLASS_01", DictCodeListExt3.目标类型_数量.getValue());
-        model.addAttribute("PRICE_MODEL_PRM01", DictCodeListExt2.价格模式_指定价格.getValue());
+        initPageParams.put("entity",exchangeTradeDto002);
+        initPageParams.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        initPageParams.put("DECLA_TYPE_PRM05", DictCodeListExt3.申报类型_不指定.getValue());
+        initPageParams.put("DECLA_TYPE_PRM14", DictCodeListExt3.申报类型_指定对手方成交申报.getValue());
+        initPageParams.put("ENTRUST_BUSS_TYPE_15", DictCodeListExt3.上农商_指令业务类型_债券质押式回购竞价指令.getValue());
+        initPageParams.put("PS_T02", DictCodeList.交易方向_卖出.getValue());
+        initPageParams.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+        initPageParams.put("TARGET_CLASS_01", DictCodeListExt3.目标类型_数量.getValue());
+        initPageParams.put("PRICE_MODEL_PRM01", DictCodeListExt2.价格模式_指定价格.getValue());
         
         // 场内交易指令画面持仓列表自动刷新时间（毫秒）
         long etrExchange_posTable_refresh_period = 20000;
@@ -89,7 +101,7 @@ public class JjEtrExchangeTrade002Controller extends BaseController{
             catch (Exception e) {
             }
         }
-        model.addAttribute("etrExchange_posTable_refresh_period", etrExchange_posTable_refresh_period);
+        initPageParams.put("etrExchange_posTable_refresh_period", etrExchange_posTable_refresh_period);
         /*add by chenjiaxing 更改交易方向枚举值 start*/
         SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.交易方向, null);
         for(int i = 0 ; i < selectDto1.getOptions().size() ; i++){
@@ -98,9 +110,9 @@ public class JjEtrExchangeTrade002Controller extends BaseController{
             }
         }
         List<SelectOptionDto> optionsGradeResult = selectDto1.getOptions();
-        model.addAttribute("PS_ETR", JsonUtils.objectArray2Json(optionsGradeResult.toArray()));
+        initPageParams.put("PS_ETR", JsonUtils.objectArray2Json(optionsGradeResult.toArray()));
         /*add by chenjiaxing 更改交易方向枚举值 end*/
-        return super.init(model);
+        return new Message<Map<String, Object>>(initPageParams).success();
     }
     
     /**
@@ -109,10 +121,12 @@ public class JjEtrExchangeTrade002Controller extends BaseController{
      * @see
      * @since 1.0
      */
+    @ApiOperation(value="查询持仓分页数据",notes="查询持仓分页数据")
+    @PostMapping("findPositionsPage")
     @ResponseBody
-    @RequestMapping("findPositionsPage")
-    public Page<EtrExchangeTrade002Dto> findPositionsPage(){
-        return jjEtrExchangeTrade002Service.findPositionsPage(RequestUtil.getPageParam());
+    public Message<Page<JjEtrExchangeTradePositionsResponse>> findPositionsPage(JjEtrExchangeTradePositionsRequest request){
+        Page<JjEtrExchangeTradePositionsResponse> page = jjEtrExchangeTrade002Service.findPositionsPage(request);
+        return new Message<Page<JjEtrExchangeTradePositionsResponse>>().success().setData(page);
     }
 
     /**
@@ -122,24 +136,27 @@ public class JjEtrExchangeTrade002Controller extends BaseController{
      * @see
      * @since 1.0
      */
-    @ResponseBody
+    @ApiOperation(value="查询债券质押持仓分页数据",notes="查询债券质押持仓分页数据")
     @RequestMapping("findZqzyPositionsPage")
-    public Page<EtrExchangeTrade002Dto> findZqzyPositionsPage(){
-        return jjEtrExchangeTrade002Service.findZqzyPositionsPage(RequestUtil.getPageParam());
+    @ResponseBody
+    public Message<Page<JjEtrExchangeTradePositionsResponse>> findZqzyPositionsPage(JjEtrExchangeTradePositionsRequest request){
+        Page<JjEtrExchangeTradePositionsResponse> page = jjEtrExchangeTrade002Service.findZqzyPositionsPage(request);
+        return new Message<Page<JjEtrExchangeTradePositionsResponse>>().success().setData(page);
     }
 
     /**
      * 查询证券代码联想框文本框
      *
-     * @param params 画面参数
+     * @param request 画面参数
      * @return 证券代码联想框文本框
      * @see
      * @since 1.0
      */
+    @ApiOperation(value = " 证券代码：联想文本框",notes = "证券代码：联想文本框")
     @RequestMapping("getSecAcctId")
-    @ResponseBody
-    public Page<SelectOptionDto> getSecAcctId(@RequestParam Map<String, Object> params) {
-        return jjEtrExchangeTrade002Service.getSecAcctId(params);
+    public Message<Page<SelectOptionDto>> getSecAcctId(@RequestBody SelectOptionRequestDto request) {
+        Page<SelectOptionDto> tempList = jjEtrExchangeTrade002Service.getSecAcctId(request);
+        return new Message<Page<SelectOptionDto>>().success().setData(tempList);
     }
 
     /**
@@ -149,17 +166,24 @@ public class JjEtrExchangeTrade002Controller extends BaseController{
      * @see
      * @since 1.0
      */
+    @ApiOperation(value = " 查询上交所和深交所标准券数量",notes = "查询上交所和深交所标准券数量")
     @RequestMapping("loadSecNum")
     @ResponseBody
-    public Map<String, String> loadSecNum(Map<String, Object> params) {
-        return jjEtrExchangeTrade002Service.loadSecNum(RequestUtil.getPageParam());
+    public Message<Map<String, String>> loadSecNum(@RequestBody SelectOptionRequestDto request) {
+        Map<String, String> map = jjEtrExchangeTrade002Service.loadSecNum(request);
+        return new Message<Map<String, String>>().success().setData(map);
     }
 
-    @ResponseBody
+    /**
+     * 指令列表
+     * @return
+     */
+    @ApiOperation(value = " 查询指令列表分页数据",notes = "查询指令列表分页数据")
     @RequestMapping("selectEtrExchange")
-    public Page<EtrExchangeTrade003Dto> selectEtrExchange(){
-        Page<EtrExchangeTrade003Dto>  result = jjEtrExchangeTrade001Service.selectEtrExchange(RequestUtil.getPageParam());
-        return result;
+    @ResponseBody
+    public Message<Page<JjEtrExchangeTradeEtrExchangeResponse>> selectEtrExchange(JjEtrExchangeTradeEtrExchangeRequest request){
+        Page<JjEtrExchangeTradeEtrExchangeResponse> result = jjEtrExchangeTrade002Service.selectEtrExchange(request);
+        return new Message<Page<JjEtrExchangeTradeEtrExchangeResponse>>().success().setData(result);
     }
 
     /**
@@ -170,26 +194,56 @@ public class JjEtrExchangeTrade002Controller extends BaseController{
      * @see
      * @since 1.0
      */
-    @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
-        Map<String, Object> param = RequestUtil.getPageParam();
-        /*指令执行导出*/
-        String datas = this.getParam("datas");
-        List<EtrExchangeTrade003Dto> param1;
-        if (datas == null) {
-            param1 = jjEtrExchangeTrade001Service.selectEtrExchange2(RequestUtil.getPageParam());
-        } else {
-            param1 = JsonUtils.json2List(datas, EtrExchangeTrade003Dto.class);
-        }
-        File outFile = jjEtrExchangeTrade003Service.makeFile(
-                "/com/joyintech/tams/invest/entrust/etrexchangetrade/conf/export_conf1.xml",
-                param1);
-        return ExportUtil.export(
-                "场内交易指令管理" + SystemGlobalConstant.OPEN_PARENTHESIS
-                        + DateUtil.format(DateUtil.platDateFromCache())
-                        + SystemGlobalConstant.CLOSE_PARENTHESIS
-                        + SystemGlobalConstant.POINT
-                        + FileNameUtil.getFileExtName(outFile),
-                outFile, true);
+    @RequestMapping("exportPosition")
+    @ResponseBody
+    @ApiOperation(value = "持仓列表导出", notes = "持仓列表导出")
+    public void exportPosition(@RequestBody JjEtrExchangeTradeExportRequest requestDto, HttpServletResponse response) {
+//        Map<String, Object> param = RequestUtil.getPageParam();
+//        /*指令执行导出*/
+//        String datas = this.getParam("datas");
+//        List<EtrExchangeTrade003Dto> param1;
+//        if (datas == null) {
+//            param1 = jjEtrExchangeTrade001Service.selectEtrExchange2(RequestUtil.getPageParam());
+//        } else {
+//            param1 = JsonUtils.json2List(datas, EtrExchangeTrade003Dto.class);
+//        }
+//        File outFile = jjEtrExchangeTrade003Service.makeFile(
+//                "/com/joyintech/tams/invest/entrust/etrexchangetrade/conf/export_conf1.xml",
+//                param1);
+//        return ExportUtil.export(
+//                "场内交易指令管理" + SystemGlobalConstant.OPEN_PARENTHESIS
+//                        + DateUtil.format(DateUtil.platDateFromCache())
+//                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+//                        + SystemGlobalConstant.POINT
+//                        + FileNameUtil.getFileExtName(outFile),
+//                outFile, true);
+        // 导出
+        ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
+            JjEtrExchangeTradePositionsRequest dto = requestDto.getDto(JjEtrExchangeTradePositionsRequest.class);
+            List dataList = jjEtrExchangeTrade002Service.findPositionsPage(dto).getRoot();
+            return dataList;
+        });
     }
+
+    /**
+     * 导出信息excel
+     *
+     * @return excel
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("exportEtrExchange")
+    @ResponseBody
+    @ApiOperation(value = "指令列表导出", notes = "指令列表导出")
+    public void exportEtrExchange(@RequestBody JjEtrExchangeTradeExportRequest requestDto, HttpServletResponse response) {
+        // 导出
+        ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
+            JjEtrExchangeTradeEtrExchangeRequest dto = requestDto.getDto(JjEtrExchangeTradeEtrExchangeRequest.class);
+            List dataList = jjEtrExchangeTrade002Service.selectEtrExchange(dto).getRoot();
+            return dataList;
+        });
+    }
+
+
 }
