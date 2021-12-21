@@ -880,7 +880,7 @@
 
     <!--当日登记-->
     <select id="listDayReg" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDayRegDto">
-select * from (
+    select TT.*,D.ITEM_VALUE validStatusStr,E.ITEM_VALUE psStr,F.ITEM_VALUE quoteTypeStr,G.ITEM_VALUE assetTypeStr,H.ITEM_VALUE settleSpeedStr,I.ITEM_VALUE tradeMarketStr from (
         <!--买卖登记数据-->
         SELECT
             CASE WHEN T1.IS_CANCEL = 'Y' THEN '03'
@@ -888,9 +888,9 @@ select * from (
             T1.PS,
             T1.QUOTE_TYPE,
             T1.FINPROD_ID,
-            T2.FINPROD_MARKET_ID,
+            T2.FINPROD_MARKET_ID finprodMarketId,
             T2.FINPROD_ABBR finprodName,
-            T1.SHARE_AMT / 100 SHARE_AMT,
+            T1.SHARE_AMT / 100 shareAmt,
             T1.UNIT_CPRICE price,
             T1.YIELD matureYield,
             T1.EXER_YIELD exerYield,
@@ -899,19 +899,19 @@ select * from (
             T7.TRADER_NAME ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
-            T1.SETTLE_DATE ,
+            T1.SETTLE_DATE settleDate,
             T1.DELIVERY_TYPE ,
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
-            T8.STATISTICAL_TIMES,
+            T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,
             T1.TOTLE_TRADE_ID quoteId,
-            T9.ACT_SETTE_DATE ,
+            T9.ACT_SETTE_DATE actSetteDate,
             T10.TYPE_12 assetType,
-            T11.TRD_ID ,
+            T11.TRD_ID trdId,
             T12.TRADE_DATE dealDate
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -961,9 +961,9 @@ select * from (
             T1.PS,
             T1.QUOTE_TYPE,
             T1.FINPROD_ID,
-            T2.FINPROD_MARKET_ID,
+            T2.FINPROD_MARKET_ID finprodMarketId,
             T2.FINPROD_ABBR finprodName,
-            T1.SHARE_AMT / 100 SHARE_AMT,
+            T1.SHARE_AMT / 100 shareAmt,
             T1.UNIT_CPRICE price,
             T1.YIELD matureYield,
             T1.EXER_YIELD exerYield,
@@ -972,19 +972,19 @@ select * from (
             T7.TRADER_NAME ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
-            T1.SETTLE_DATE ,
+            T1.SETTLE_DATE settleDate,
             T1.DELIVERY_TYPE ,
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
-            T8.STATISTICAL_TIMES,
+            T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,
             T1.TOTLE_TRADE_ID quoteId,
-            T9.ACT_SETTE_DATE ,
+            T9.ACT_SETTE_DATE actSetteDate,
             T10.TYPE_12 assetType,
-            T11.TRD_ID ,
+            T11.TRD_ID trdId,
             T12.TRADE_DATE dealDate
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -1033,9 +1033,9 @@ select * from (
             T1.PS,
             T1.QUOTE_TYPE,
             T1.FINPROD_ID,
-            T2.FINPROD_MARKET_ID,
+            T2.FINPROD_MARKET_ID finprodMarketId,
             T2.FINPROD_ABBR finprodName,
-            T1.SHARE_AMT / 100 SHARE_AMT,
+            T1.SHARE_AMT / 100 shareAmt,
             T1.UNIT_CPRICE price,
             T1.YIELD matureYield,
             T1.EXER_YIELD exerYield,
@@ -1044,19 +1044,19 @@ select * from (
             T7.TRADER_NAME ouTraderName,
             T6.TRADER_NAME cpTraderName,
             T1.SETTLE_SPEED,
-            T1.SETTLE_DATE ,
+            T1.SETTLE_DATE settleDate,
             T1.DELIVERY_TYPE ,
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
             T1.SETTLE_DATE theoreticalExerciseDate,
-            T8.STATISTICAL_TIMES,
+            T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,
             T1.TOTLE_TRADE_ID quoteId,
-            NULL ACT_SETTE_DATE ,
+            NULL actSetteDate ,
             T10.TYPE_12 assetType,
-            NULL TRD_ID,
+            NULL trdId,
             NULL dealDate
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
@@ -1108,10 +1108,10 @@ select * from (
                 D.ITEM_VALUE like '%' || #{search} || '%' OR
                 E.ITEM_VALUE like '%' || #{search} || '%' OR
                 F.ITEM_VALUE like '%' || #{search} || '%' OR
-                TT.FINPROD_MARKET_ID like '%' || #{search} || '%' OR
+                TT.finprodMarketId like '%' || #{search} || '%' OR
                 TT.finprodName like '%' || #{search} || '%' OR
                 G.ITEM_VALUE like '%' || #{search} || '%' OR
-                to_char(TT.SHARE_AMT/10000,'FM99990.9990')=#{search} or  TT.SHARE_AMT||'' =#{search} or
+                to_char(TT.shareAmt/10000,'FM99990.9990')=#{search} or  TT.shareAmt||'' =#{search} or
                 to_char(TT.price,'FM99990.9990')=#{search} or  TT.price||'' =#{search} or
                 to_char(TT.matureYield*100,'FM99990.9990')=#{search} or  TT.matureYield||'' =#{search} or
                 to_char(TT.exerYield*100,'FM99990.9990')=#{search} or  TT.exerYield||'' =#{search} or
@@ -1120,24 +1120,24 @@ select * from (
                 TT.ouTraderName LIKE '%' || #{search} || '%' OR
                 TT.cpTraderName LIKE '%' || #{search} || '%' OR
                 H.ITEM_VALUE like '%' || #{search} || '%' OR
-                to_char(TT.SETTLE_DATE,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
+                to_char(TT.settleDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
                 I.ITEM_VALUE like '%' || #{search} || '%' OR
                 to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
-                to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
+                to_char(TT.actSetteDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
                 to_char(TT.tradeDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
-                to_char(TT.STATISTICAL_TIMES,'FM99990.9990')=#{search} or  TT.STATISTICAL_TIMES||'' =#{search} or
+                to_char(TT.statisticalTimes,'FM99990.9990')=#{search} or  TT.statisticalTimes||'' =#{search} or
                 TT.quoteId LIKE '%' || #{search} || '%' OR
-                TT.TRD_ID LIKE '%' || #{search} || '%'
+                TT.trdId LIKE '%' || #{search} || '%'
 
                 or  to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd')||'' =#{search}
                 or  to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd')=#{year}||'-'||#{search}
                 or  replace(to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd'),'-','/')=#{search}
                 or  replace(to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
 
-                or  to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd')||'' =#{search}
-                or  to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd')=#{year}||'-'||#{search}
-                or  replace(to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd'),'-','/')=#{search}
-                or  replace(to_char(TT.ACT_SETTE_DATE,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
+                or  to_char(TT.actSetteDate,'yyyy-MM-dd')||'' =#{search}
+                or  to_char(TT.actSetteDate,'yyyy-MM-dd')=#{year}||'-'||#{search}
+                or  replace(to_char(TT.actSetteDate,'yyyy-MM-dd'),'-','/')=#{search}
+                or  replace(to_char(TT.actSetteDate,'yyyy-MM-dd'),'-','/')=#{year}||'/'||#{search}
 
                 or  to_char(TT.tradeDate,'yyyy-MM-dd')||'' =#{search}
                 or  to_char(TT.tradeDate,'yyyy-MM-dd')=#{year}||'-'||#{search}
@@ -1146,6 +1146,9 @@ select * from (
                 )
             </if>
         </where>
+        <if test="pageMode != null and pageMode.sort != null and pageMode.sort != '' and pageMode.direction != null and pageMode.direction != ''">
+            order by ${pageMode.sort} ${pageMode.direction}
+        </if>
     </select>
 
     <update id="updateRegFinProductDealTotal">
