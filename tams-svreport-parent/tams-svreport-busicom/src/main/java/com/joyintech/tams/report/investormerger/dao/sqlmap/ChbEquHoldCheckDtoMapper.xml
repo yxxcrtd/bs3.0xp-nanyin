@@ -714,6 +714,16 @@
             #{key,jdbcType=VARCHAR}
         </foreach>
 	 </if>
+	 ORDER BY 
+	 HOLD.REGIST_BANK_CODE,
+     HOLD.IDENTIFY_NUMBER,
+     HOLD.HOLDER_NAME,
+     HOLD.PERSONAL_IDENTIFY_TYPE,
+     HOLD.INSTITUTION_IDENTIFY_TYPE,
+     HOLD.OTHER_IDENTIFY_NAME,
+     HOLD.IS_BELONG_BANK,
+     HOLD.INDENTIFY_MARK
+   </select>
    
    <delete id="deleteEquityInfoBatch" parameterType="java.util.List">
 	            DELETE FROM CHB_EQU_HOLD HOLD
