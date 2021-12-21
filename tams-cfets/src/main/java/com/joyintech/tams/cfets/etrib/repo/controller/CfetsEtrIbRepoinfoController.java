@@ -85,7 +85,7 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
     @Autowired(required=false)
     private BussEtrInvestPersonInfoService bussEtrInvestPersonInfoService;
 
-    @Value("${bondWebSocketUrl}")
+    @Value("${cmdsWebSocketUrl}")
     private String RepoWebSocketUrl;
 
     /**
