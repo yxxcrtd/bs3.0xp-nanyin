@@ -145,7 +145,6 @@
                 </foreach>
 
             </if>
-            ORDER BY ORDERNO
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
