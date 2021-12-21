@@ -124,8 +124,8 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
     @Autowired
     private InterfRiskRdsController interfRiskRdsController;
 
-    @Value("${bondWebSocketUrl}")
-    private String bondWebSocketUrl;
+    @Value("${cmdsWebSocketUrl}")
+    private String cmdsWebSocketUrl;
 
     @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
@@ -141,7 +141,7 @@ public class CfetsEtrIbBondinfoController  extends BaseController{
         initPageParams.put("cfetsEtrIbBondinfo_etrTable_refresh_period", CacheUtil.getSysParam("cfetsEtrIbBondinfo_etrTable_refresh_period"));
 
         //CMDS地址
-        initPageParams.put("bondWebSocketUrl", bondWebSocketUrl);
+        initPageParams.put("cmdsWebSocketUrl", cmdsWebSocketUrl);
         initPageParams.put("NEED_WORKFLOW", true);
         initPageParams.put("SHARES_TRADE_MARKET_02",DictCodeListExt1.交易市场_二级市场.getValue());
         initPageParams.put("platDate",DateUtil.platDateFromCache());

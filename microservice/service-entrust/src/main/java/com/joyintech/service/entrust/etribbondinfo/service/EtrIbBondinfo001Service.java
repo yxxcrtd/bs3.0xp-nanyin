@@ -14,6 +14,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.entrust.etribbondinfo.dao.EtrIbBondinfo001Mapper;
 import com.joyintech.service.entrust.etribbondinfo.dto.EtrFinProductDto;
@@ -214,6 +215,11 @@ public class EtrIbBondinfo001Service extends BaseService{
         pageParam.put("EXEC_MODE_01", DictCodeList.行权方式_赎回.getValue());
         pageParam.put("EXEC_MODE_02", DictCodeList.行权方式_回售.getValue());
         pageParam.put("FINPROD_TYPE2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        pageParam.put("BOND_VALUATION_RULE", CacheUtil.getSysParam("BOND_VALUATION_RULE"));
+        pageParam.put("VALUATION_SOURCE_CBC", DictCodeList.估值来源_中债登_CBC.getValue());
+        pageParam.put("VALUATION_SOURCE_SCH", DictCodeList.估值来源_上清所_SCH.getValue());
+        pageParam.put("SVR_REGIST_ORG_01", DictCodeList.登记托管机构_中债_中央国债登记结算有限责任公司.getValue());
+        pageParam.put("SVR_REGIST_ORG_02", DictCodeList.登记托管机构_中债_上海清算所.getValue());
         EtrFinProductDto dto = etrIbBondinfo001Mapper.getEtrFinProductInfo(pageParam);
         if (dto != null) {
             //剩余期限为负统一为0

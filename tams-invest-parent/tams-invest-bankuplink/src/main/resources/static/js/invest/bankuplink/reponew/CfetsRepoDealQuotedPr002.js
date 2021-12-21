@@ -822,7 +822,7 @@
             var chlFinprodId = '';
             var finprodIdhid = '';
             var portfolioId = $("#CfetsRepoDealQuotedPrice002_portfolioName").val();
-            var termType = $("#CfetsRepoDealQuotedPrice002_term").val();
+            var termType = $("#CfetsRepoDealQuotedPrice002_termType").val();
             var vdate = $("#CfetsRepoDealQuotedPrice002_tradeDate").val();
             var ccy = "CNY";
             if(pageModel == PAGE_MODEL_NEW){

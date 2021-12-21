@@ -218,8 +218,12 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label" style="float: left;">行情类别: </label>
                         <div class="layui-input-block">
-                            <input type="radio" name="hqType"  value="0"  title="R" checked>
-                            <input type="radio" name="hqType"  value="37" title="DR" >
+                            <label>
+                                <input type="radio" name="hqType"  value="0" title="R" checked>
+                            </label>
+                            <label>
+                                <input type="radio" name="hqType"  value="37" title="DR">
+                            </label>
                         </div>
                     </div>
                 </form>
@@ -265,8 +269,9 @@
 </div>
 <div layout:fragment="script">
     <script th:inline="javascript" type="text/javascript">
-    var MarketInfoInterf_BaseUrl = /*[[${MarketInfoInterf_BaseUrl}]]*/'';
+    var cmdsWebSocketUrl = /*[[${cmdsWebSocketUrl}]]*/'';  //外汇交易中心CMDS现券行情接口地址
     </script>
+    <script data-th-src="@{/invest/js/cmds/cmds.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/invest/entrust/etribrepo/EtrIbRepoinfoHq.js}" type="text/javascript"></script>
 </div>
 </body>
