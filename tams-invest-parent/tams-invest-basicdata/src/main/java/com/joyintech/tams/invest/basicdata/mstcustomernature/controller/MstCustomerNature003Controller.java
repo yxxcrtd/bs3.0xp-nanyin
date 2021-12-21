@@ -293,16 +293,16 @@ public class MstCustomerNature003Controller extends BaseController {
            List<MstCustomerNatureDto> mstCustomerNatureDtoList =  dto.getSelectedItem().stream()
                    .filter(item->StringUtil.equals(item.getCustomerCharater(),DictCodeListExt3.客户性质_交易对手.getValue())).collect(Collectors.toList());
            if (CollectionUtils.isEmpty(mstCustomerNatureDtoList)) {
-               int status = mstCustomerNatureService.selectCounter(dto.getCustomerId());
-               if (status > 0) {
-                   return new AjaxResult("选择的记录已经被使用，不允许删除客户性质为交易对手的记录！", MessageType.错误消息);
-               }
+//               int status = mstCustomerNatureService.selectCounter(dto.getCustomerId());
+//               if (status > 0) {
+//                   return new AjaxResult("选择的记录已经被使用，不允许删除客户性质为交易对手的记录！", MessageType.错误消息);
+//               }
            }
        }else{
-           int status = mstCustomerNatureService.selectCounter(dto.getCustomerId());
-           if (status > 0) {
-               return new AjaxResult("选择的记录已经被使用，不允许删除客户性质为交易对手的记录！", MessageType.错误消息);
-           }
+//           int status = mstCustomerNatureService.selectCounter(dto.getCustomerId());
+//           if (status > 0) {
+//               return new AjaxResult("选择的记录已经被使用，不允许删除客户性质为交易对手的记录！", MessageType.错误消息);
+//           }
        }
         if (WorkFlowUtil.isNotFromToDoList()) {
             
