@@ -32,3 +32,10 @@ Insert into sys_datadict_list (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 values ('SVR_SPEC_PROPERTY','02','北向通理财产品（专项）',2,'0','system',null,sysdate,'system',sysdate,null);
 Insert into sys_datadict_list (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) 
 values ('SVR_SPEC_PROPERTY','03','北向通理财产品（非专项）',3,'0','system',null,sysdate,'system',sysdate,null);
+
+/**统一数据维护*/
+delete from  chb_infomgr_result_config  where  RESULT_ID='AFC15D27-AE5D-9140-E153-9C5AA8C0AC06';
+Insert into chb_infomgr_result_config (RESULT_ID,MGRTABLE_ID,COLUMN_ID,COLUMN_NAME,DICTCODE,ORDER_NO,SHOWFLAG,REAL_COLUMN_ID)
+values ('AFC15D27-AE5D-9140-E153-9C5AA8C0AC06','CHB_PRD_DECLARE_INFO','PRD_SPEC_PROPERTY','产品增信形式','SVR_SPEC_PROPERTY',63,'Y',null);
+UPDATE  chb_infomgr_result_config  SET  ORDER_NO=ORDER_NO+1  where MGRTABLE_ID='CHB_PRD_DECLARE_INFO' AND( ORDER_NO>=64  OR COLUMN_ID='REMARK');
+commit;
