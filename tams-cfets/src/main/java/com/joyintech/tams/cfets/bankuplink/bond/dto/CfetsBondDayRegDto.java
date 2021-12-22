@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.bankuplink.bond.dto;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
@@ -279,16 +280,18 @@ public class CfetsBondDayRegDto {
     }
 
     public String getSettleSpeedStr() {
-        if (this.getSettleSpeed() != null && this.getSettleSpeed() == 0L) {
-            return BussinessDictCodeList.清算速度_T加0.getCodeName();
+        if(StringUtil.isEmpty(this.settleSpeedStr)){
+            if (this.getSettleSpeed() != null && this.getSettleSpeed() == 0L) {
+                return BussinessDictCodeList.清算速度_T加0.getCodeName();
+            }
+            else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 1L) {
+                return BussinessDictCodeList.清算速度_T加1.getCodeName();
+            }
+            else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 2L) {
+                return BussinessDictCodeList.清算速度_T加2.getCodeName();
+            }
         }
-        else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 1L) {
-            return BussinessDictCodeList.清算速度_T加1.getCodeName();
-        }
-        else if (this.getSettleSpeed() != null && this.getSettleSpeed() == 2L) {
-            return BussinessDictCodeList.清算速度_T加2.getCodeName();
-        }
-        return null;
+        return this.settleSpeedStr;
     }
 
     public void setSettleSpeedStr(String settleSpeedStr) {

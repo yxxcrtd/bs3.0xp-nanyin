@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -582,9 +584,15 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		//净价、到期收益率、行权收益率，只需导出对应锚定值数据，其他数据应为空
 		if(CollectionUtils.isNotEmpty(dataList)){
 			dataList.forEach(item ->{
+                //债券代码不需要后缀
+                item.setFinprodMarketId(item.getFinprodMarketId().substring(0,item.getFinprodMarketId().indexOf(".")));
+			    //清算速度不需要显示T，只需要显示+0或+1
+                if(StringUtil.isNotEmpty(item.getSettleSpeedStr())){
+                    item.setSettleSpeedStr(item.getSettleSpeedStr().substring(item.getSettleSpeedStr().indexOf("+"),item.getSettleSpeedStr().length()));
+                }
 				if(StringUtil.equals(item.getCalMode(),"01")){item.setMatureYield(null);item.setExerYield(null);}
-				if(StringUtil.equals(item.getCalMode(),"02")){item.setPrice(null);item.setExerYield(null);}
-				if(StringUtil.equals(item.getCalMode(),"03")){item.setPrice(null);item.setMatureYield(null);}
+				if(StringUtil.equals(item.getCalMode(),"02")){item.setMatureYield(ArithmeticUtil.multiply(item.getMatureYield(),new BigDecimal(100)));item.setPrice(null);item.setExerYield(null);}
+				if(StringUtil.equals(item.getCalMode(),"03")){item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));item.setPrice(null);item.setMatureYield(null);}
 			});
 		}
 		if(StringUtil.isNotEmpty(ibuExportCountMax)&&CollectionUtils.isNotEmpty(dataList)){
