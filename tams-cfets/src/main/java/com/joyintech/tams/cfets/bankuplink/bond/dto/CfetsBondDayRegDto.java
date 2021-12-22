@@ -47,6 +47,9 @@ public class CfetsBondDayRegDto {
     @ApiModelProperty(name="shareAmt",value="券面总额（万元）")
     private BigDecimal shareAmt;
 
+    @ApiModelProperty(name="intAmt",value="应计利息")
+    private BigDecimal intAmt;
+
     @ApiModelProperty(name="price",value="净价（元）")
     private BigDecimal price;
 
@@ -83,6 +86,12 @@ public class CfetsBondDayRegDto {
 
     @ApiModelProperty(name="settleSpeed",value="清算速度")
     private Long settleSpeed;
+
+    @ApiModelProperty(name="ccy",value="币种")
+    private String settCcy;
+
+    @ApiModelProperty(name="ccyStr",value="币种")
+    private String  settCcyStr;
 
     @ApiModelProperty(name="settleSpeedStr",value="清算速度")
     private String settleSpeedStr;
@@ -134,6 +143,10 @@ public class CfetsBondDayRegDto {
 
     @ApiModelProperty(name="dealDate",value="成交日期")
     private Date dealDate;
+
+    @ApiModelProperty(name="calMode",value="计算方式  锚定值")
+    private String calMode;
+
 
     public String getValidStatus() {
         return validStatus;
@@ -209,6 +222,14 @@ public class CfetsBondDayRegDto {
         this.shareAmt = shareAmt;
     }
 
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -239,6 +260,22 @@ public class CfetsBondDayRegDto {
 
     public void setSettleSpeed(Long settleSpeed) {
         this.settleSpeed = settleSpeed;
+    }
+
+    public String getSettCcy() {
+        return settCcy;
+    }
+
+    public void setSettCcy(String settCcy) {
+        this.settCcy = settCcy;
+    }
+
+    public String getSettCcyStr() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.币种, this.getSettCcy());
+    }
+
+    public void setSettCcyStr(String settCcyStr) {
+        this.settCcyStr = settCcyStr;
     }
 
     public String getSettleSpeedStr() {
@@ -460,6 +497,14 @@ public class CfetsBondDayRegDto {
 
     public void setAssetTypeStr(String assetTypeStr) {
         this.assetTypeStr = assetTypeStr;
+    }
+
+    public String getCalMode() {
+        return calMode;
+    }
+
+    public void setCalMode(String calMode) {
+        this.calMode = calMode;
     }
 }
 

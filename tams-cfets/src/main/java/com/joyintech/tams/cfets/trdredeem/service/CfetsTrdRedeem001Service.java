@@ -22,6 +22,7 @@ import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealDbDto;
+import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckRequst;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsBussCombDistribtBaseDto;
@@ -30,7 +31,9 @@ import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealCommonDto;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealRegisterQuoteDto;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -119,6 +122,9 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
     private JoyinbusinessCommonService joyinbusinessCommonService;
 
     @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
+
+    @Autowired
     private EtrEntrustMapper etrEntrustMapper;
 
     @Autowired
@@ -194,7 +200,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             //登录业务流程
             insertWfl(cfetsBondDealDbDto);
             //头寸
-            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,type));
+          //  PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,type));
         }
 
     }
@@ -210,7 +216,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             insertWfl(cfetsBondDealDbDto);
             ProcessMark newEntity;
             //头寸
-            PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,OperationType.NEW));
+          //  PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,OperationType.NEW));
             try {
                 newEntity = WorkFlowUtil.getBusinessObjectFromRequest(CfetsTrdRedeemDealRegisterQuoteDto.class, true);
                 // 工作流ID
@@ -244,7 +250,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,operationType));
         }*/
         //处理指令执行进度
-        insertEtrFinishStatus(cfetsBondDealDbDto,operationType);
+        //insertEtrFinishStatus(cfetsBondDealDbDto,operationType);
     }
 
     /**
@@ -343,8 +349,8 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             regFinProductDealTotal.setSettleSpeed(settleSpreed);
             regFinProductDealTotal.setQuoteType(entity.getQuoteStyle());
             regFinProductDealTotal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-            regFinProductDealTotal.setFaceValue(entity.getShareAmt());
-            regFinProductDealTotal.setShareAmt(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(100),2));
+            regFinProductDealTotal.setFaceValue(ArithmeticUtil.multiply( entity.getShareAmt(),new BigDecimal(10000)));
+            regFinProductDealTotal.setShareAmt(ArithmeticUtil.multiply(entity.getShareAmt(),new BigDecimal(100)));
             regFinProductDealTotal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
             regFinProductDealTotal.setDipType(entity.getDistribution());
             regFinProductDealTotal.setBranch(0L);
@@ -384,10 +390,10 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                     regFinProductDeal.setEntrustId(ptlAllocatio.getEntrustId());
                     regFinProductDeal.setPortfolioId(ptlAllocatio.getPortfolioId());
                     regFinProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-                    regFinProductDeal.setShareAmt(ArithmeticUtil.divide(ptlAllocatio.getShareAmt(),new BigDecimal(100),2));
-                    BigDecimal cpriceAmt=ArithmeticUtil.multiply(ptlAllocatio.getShareAmt(),entity.getRedeemRate(),entity.getExercisePrice());
+                    regFinProductDeal.setShareAmt(ArithmeticUtil.multiply(ptlAllocatio.getShareAmt(),new BigDecimal(100)));
+                    BigDecimal cpriceAmt=ArithmeticUtil.multiply(ptlAllocatio.getShareAmt(),new BigDecimal(10000),entity.getRedeemRate(),entity.getExercisePrice());
 
-                    regFinProductDeal.setFaceValue(ptlAllocatio.getShareAmt());
+                    regFinProductDeal.setFaceValue(ArithmeticUtil.multiply(ptlAllocatio.getShareAmt(),new BigDecimal(10000)));
                     regFinProductDeal.setTradeAmt(cpriceAmt);
                    // regFinProductDeal.setFpriceAmt(ptlAllocatio.getFpriceAmt());
                    // regFinProductDeal.setCpriceAmt(ptlAllocatio.getCpriceAmt());
@@ -651,6 +657,45 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
         param.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
         param.put("finprodId",secId);
         return cfetsTrdRedeemMapper.queryCfetsBussCombDisList(param);
+    }
+    /**
+     * 当日登记撤销检查
+     * @param cfetsBondRegCheckRequst
+     * @return
+     */
+    public AjaxResult checkDayRegRevokeCheck(CfetsBondRegCheckRequst cfetsBondRegCheckRequst){
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        //是否存在流程中数据
+        cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts().forEach(item ->{
+            /*if(!StringUtil.equals(item.getValidStatus(),BussinessDictCodeList.有效状态_有效.getValue())){
+                errorList.add(new ValidMessage("非有效状态数据不支持撤销!业务编号:"+item.getQuoteId()));
+            }
+            WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+            wflValidInputParameter.setPageId("CfetsTrdRedeem001");
+            wflValidInputParameter.setBusinessDataPk1(item.getQuoteId());
+            if(null != mstWorkflowCommonService &&
+                    mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)){
+                errorList.add(
+                        new ValidMessage(this.getMessage("COMMON_E_0012",item.getQuoteId())));
+            }*/
+            //是否已确认成交
+           /* if(cfetsIbuQuoteBondMapper.countMatchInfo(item.getQuoteId(),com.joyintech.tams.constant.DictCodeList.确认状态_已确认.getValue())>0){
+                errorList.add(new ValidMessage("当日登记所选登记数据已成交确认不支持撤销!业务编号:"+item.getQuoteId()));
+            }
+            //回售登记数据，在理论行权日前一交易日（包含前一交易日）之前均支持回售登记撤销操作，支持隔夜撤销。理论行权日之后（包含理论行权日）回售登记不支持手动撤销
+            if(StringUtil.equals(item.getPs(), com.joyintech.tams.constant.DictCodeList.交易方向_行权_回售.getValue())){
+                RegFinProductDealTotal regFinProductDealTotal = regFinProductDealTotalMapper.selectByPrimaryKey(item.getQuoteId());
+                if(iPlatformDate.getSysDate().compareTo(regFinProductDealTotal.getSettleDate())>=0){
+                    errorList.add(new ValidMessage("理论行权日之后(包含理论行权日)回售登记不支持手动撤销!业务编号:"+item.getQuoteId()));
+                }
+            }*/
+            if(CollectionUtils.isNotEmpty(errorList)){
+                return;
+            }
+        });
+        ajaxResult.setErrorList(errorList);
+        return ajaxResult;
     }
 
 }

@@ -26,6 +26,7 @@ import java.text.MessageFormat;
  */
 @Configuration
 public class TamsSystemApplication extends WebApplication {
+
 	@Bean
 	public Docket dataBusinessCommonDocket() {
 		return SwaggerConfig.createDocket("通用接口", "com.joyintech.tams.business.common.controller");
