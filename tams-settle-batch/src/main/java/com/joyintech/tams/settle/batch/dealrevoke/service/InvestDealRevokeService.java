@@ -249,6 +249,21 @@ public class InvestDealRevokeService {
             }
         });
     }
+
+    public void updateEtrStatusByTrdId(List<String> tradeIdList, List<String> totalTradeIdList) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("ENTRUST_STATUS_03",DictCodeList.委托状态_已接收.getValue());
+        if (!StringUtil.isEmptyList(tradeIdList)){
+            param.put("trdIdList", tradeIdList);
+            investDealRevokeMapper.updateEtrStatusByTrdId(param);
+        }
+        if (!StringUtil.isEmptyList(totalTradeIdList)){
+            param.put("trdIdList", totalTradeIdList);
+            investDealRevokeMapper.updateEtrStatusByTrdId(param);
+        }
+
+
+    }
     
     /**
      * 删除日终交易占用的委托完成度信息

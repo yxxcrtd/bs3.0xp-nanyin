@@ -646,6 +646,19 @@ and HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
 and CDATE = #{cdate,jdbcType=DATE}
 </update>
 
+<update id="updateEtrStatusByTrdId" parameterType="java.util.Map">
+    UPDATE ETR_ENTRUST T
+   SET T.ENTRUST_STATUS = #{ENTRUST_STATUS_03}
+ WHERE T.ENTRUST_ID IN (SELECT DISTINCT ENTRUST_ID
+                          FROM ETR_FINISH_STATUS WHERE TRADE_ID IN
+                        <if test="trdIdList != null and trdIdList.size() > 0">
+                            <foreach collection="trdIdList" item="trdId" open="(" close=")" separator=",">
+                                #{trdId,jdbcType=VARCHAR}
+                            </foreach>
+                        </if>
+                        )
+</update>
+
 <select id="selectPsById" resultType="java.util.HashMap">
 SELECT A.TOTLE_TRADE_ID totalkey,
 A.TRADE_ID tradekey,
