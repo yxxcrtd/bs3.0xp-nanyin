@@ -62,7 +62,7 @@ $(function() {
             {title: '金融机构（实体）',field:'ordIdentified04', type:'money', sortField:'ordIdentified04'},
             {title: '特定目的载体',field:'ordIdentified05', type:'money', sortField:'ordIdentified05'},
             {title: '境外',field:'ordIdentified06', type:'money', sortField:'ordIdentified06'},
-            {title: '合计',field:'ordIdentified07', type:'money', sortField:'ordIdentified07'},
+            {title: '合计',field:'ordIdentifiedAll', type:'money', sortField:'ordIdentifiedAll'},
             {title: '401000北京',field:'buyPlace01', type:'money', sortField:'buyPlace01'},
             {title: '402000天津',field:'buyPlace02', type:'money', sortField:'buyPlace02'},
             {title: '403000河北',field:'buyPlace03', type:'money', sortField:'buyPlace03'},
