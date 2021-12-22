@@ -9,7 +9,11 @@ import com.joyintech.tams.exchange.service.trade.management.service.TradeManagem
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController("TradeController_dtx")
 @RequestMapping("/trade/joyin")
@@ -22,19 +26,19 @@ public class TradeController {
 
     @ApiOperation(value = "查询成交信息", notes = "查询成交信息")
     @RequestMapping(value = "/trade", method = RequestMethod.POST)
-    public ResultBean queryTradeAll(@RequestBody TradeInfoRequest request) {
+    public ResultBean queryTradeAll(@RequestBody @Validated TradeInfoRequest request) {
         return tradeManagement.queryTrade(request);
     }
 
     @ApiOperation(value = "查询历史成交信息", notes = "查询历史成交信息")
     @RequestMapping(value = "/trade/history", method = RequestMethod.POST)
-    public ResultBean queryHistoryTrade(@RequestBody HistoryTradeInfoRequest request) {
+    public ResultBean queryHistoryTrade(@RequestBody @Validated HistoryTradeInfoRequest request) {
         return tradeManagement.queryHistoryTrade(request);
     }
 
     @ApiOperation(value = "查询分页成交信息", notes = "查询分页成交信息")
     @RequestMapping(value = "/trade/page", method = RequestMethod.POST)
-    public ResultBean queryAllForPage(PageTradeInfoRequest request) {
+    public ResultBean queryAllForPage(@RequestBody @Validated PageTradeInfoRequest request) {
         return tradeManagement.queryAllForPage(request);
     }
 }
