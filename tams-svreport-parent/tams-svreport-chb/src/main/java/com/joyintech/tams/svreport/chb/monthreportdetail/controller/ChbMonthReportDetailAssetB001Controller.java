@@ -101,7 +101,7 @@ public class ChbMonthReportDetailAssetB001Controller extends BaseController{
 		File outFile = chbMonthReportDetailAsset001Service.makeFile(
 				"/com/joyintech/tams/svreport/chb/monthreportdetail/controller/conf/assetBExport_conf.xml", dtoList);
 		return ExportUtil.export(
-				this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
+				"G06资产端明细穿透台账" + GlobalConstant.OPEN_PARENTHESIS
 						+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
 						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
 				outFile, true);

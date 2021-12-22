@@ -85,7 +85,7 @@ $(function() {
     var exportExcel = function(flag) {
         var expArr=table.getAllCheckedRows();
         var param={};
-        if(!expArr || expArr.length ==0){
+        if(flag == '0'){
             param = getSearchParams();
             if(!param.enddate){
                 Joyin.error("请选择统计日期进行导出！");
@@ -93,7 +93,10 @@ $(function() {
             }
             Joyin.exportExcel("export",param);
         }else{
-
+            if((!expArr || expArr.length ==0)){
+                Joyin.error("请选择导出数据！");
+                return;
+            }
             var keyList = [];
             $.each(expArr, function(i, row) {
                 keyList.push(row.posuuid);

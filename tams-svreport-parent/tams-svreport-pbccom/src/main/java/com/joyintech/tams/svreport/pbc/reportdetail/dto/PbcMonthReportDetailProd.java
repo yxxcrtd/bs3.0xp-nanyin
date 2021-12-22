@@ -789,8 +789,7 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
 
 
     public String getTermtypeStr() {
-        String  code = SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_期限类型, this.getTermtype());
-        return null!=code?code:SysDataUtil.getNameFromDataDict(DictCode.产品期限, this.getTermtype());
+        return SysDataUtil.getNameFromDataDict(DictCode.人行月度明细_期限类型, this.getTermtype());
     }
     public String getIsTransferStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.是否_中债, this.getIsTransfer());

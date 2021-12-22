@@ -86,7 +86,7 @@ public class ChbMonthReportDetailProd001Controller extends BaseController{
 			File outFile = chbMonthReportDetailProd001Service.makeFile(
 					"/com/joyintech/tams/svreport/chb/monthreportdetail/controller/conf/prodExport_conf.xml", dtoList);
 			return ExportUtil.export(
-					this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
+					"G06产品端明细台账" + GlobalConstant.OPEN_PARENTHESIS
 							+ DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
 							+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
 					outFile, true);
