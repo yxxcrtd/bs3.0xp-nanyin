@@ -47,7 +47,8 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     @ApiModelProperty(name="operateType",value="操作类型",example="submit/save", required = true)
     private String operateType;
-
+    @ApiModelProperty(name="elementId",value="按钮id",example="EtrExchangeTradeCommon001_btn_submit")
+    private String elementId;
 
 
     @ApiModelProperty(name="acctNo",value="资金账户",example="submit/save", required = true)
@@ -584,6 +585,14 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     public void setPortfolioDtoList(List<EtrExchangeTradePortfolioRequest> portfolioDtoList) {
         this.portfolioDtoList = portfolioDtoList;
+    }
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
     }
 
     public String getSecAcctId() {

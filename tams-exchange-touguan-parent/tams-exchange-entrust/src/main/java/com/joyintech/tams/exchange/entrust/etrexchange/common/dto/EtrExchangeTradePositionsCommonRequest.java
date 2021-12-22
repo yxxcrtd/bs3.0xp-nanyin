@@ -28,6 +28,8 @@ import java.util.List;
 public class EtrExchangeTradePositionsCommonRequest {
 
 
+
+
     @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")
     private String portfolioId;
 
