@@ -8,31 +8,38 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.tams.exchange.entrust.etrexchange.hqjj.controller;
+package com.joyintech.tams.exchange.entrust.etrexchange.common.controller;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon003Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj001Service;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj002Service;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj003Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import com.joyintech.tams.business.common.pojo.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
@@ -42,28 +49,28 @@ import java.util.Map;
  * 交易所指令交易（债券股票回购基金场内指令交易）
  * @author meifaxin
  * @version 1.0 2021年12月20日
- * @see EtrExchangeTradeJj002Controller
+ * @see EtrExchangeTradeCommon002Controller
  * @since 1.0
  */
 @Controller
 @PageId("JjEtrExchangeTrade002")
 @RequestMapping("/etrexchange/hqjj/jjetrExchangeTrade002")
 @Api(tags = "交易所持仓")
-public class EtrExchangeTradeJj002Controller extends BaseController{
+public class EtrExchangeTradeCommon002Controller extends BaseController{
 
-    private static final Logger logger = LoggerFactory.getLogger(EtrExchangeTradeJj002Controller.class);
+    private static final Logger logger = LoggerFactory.getLogger(EtrExchangeTradeCommon002Controller.class);
 
     /**
      * 可转债委托处理详细
      */
     @Autowired
-    private EtrExchangeTradeJj002Service jjEtrExchangeTrade002Service;
+    private EtrExchangeTradeCommon002Service etrExchangeTradeCommon002Service;
 
     @Autowired
-    private EtrExchangeTradeJj001Service jjEtrExchangeTrade001Service;
+    private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
 
     @Autowired
-    private EtrExchangeTradeJj003Service jjEtrExchangeTrade003Service;
+    private EtrExchangeTradeCommon003Service etrExchangeTradeCommon003Service;
 
 
     @ApiOperation(value="查询页面初始化参数", notes = "查询页面初始化参数")
@@ -122,9 +129,9 @@ public class EtrExchangeTradeJj002Controller extends BaseController{
     @ApiOperation(value="查询持仓分页数据",notes="查询持仓分页数据")
     @PostMapping("findPositionsPage")
     @ResponseBody
-    public Message<Page<EtrExchangeTradePositionsJjResponse>> findPositionsPage(EtrExchangeTradePositionsJjRequest request){
-        Page<EtrExchangeTradePositionsJjResponse> page = jjEtrExchangeTrade002Service.findPositionsPage(request);
-        return new Message<Page<EtrExchangeTradePositionsJjResponse>>().success().setData(page);
+    public Message<Page<EtrExchangeTradePositionsCommonResponse>> findPositionsPage(EtrExchangeTradePositionsCommonRequest request){
+        Page<EtrExchangeTradePositionsCommonResponse> page = etrExchangeTradeCommon002Service.findPositionsPage(request);
+        return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(page);
     }
 
     /**
@@ -137,9 +144,9 @@ public class EtrExchangeTradeJj002Controller extends BaseController{
     @ApiOperation(value="查询债券质押持仓分页数据",notes="查询债券质押持仓分页数据")
     @RequestMapping("findZqzyPositionsPage")
     @ResponseBody
-    public Message<Page<EtrExchangeTradePositionsJjResponse>> findZqzyPositionsPage(EtrExchangeTradePositionsJjRequest request){
-        Page<EtrExchangeTradePositionsJjResponse> page = jjEtrExchangeTrade002Service.findZqzyPositionsPage(request);
-        return new Message<Page<EtrExchangeTradePositionsJjResponse>>().success().setData(page);
+    public Message<Page<EtrExchangeTradePositionsCommonResponse>> findZqzyPositionsPage(EtrExchangeTradePositionsCommonRequest request){
+        Page<EtrExchangeTradePositionsCommonResponse> page = etrExchangeTradeCommon002Service.findZqzyPositionsPage(request);
+        return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(page);
     }
 
     /**
@@ -153,7 +160,7 @@ public class EtrExchangeTradeJj002Controller extends BaseController{
     @ApiOperation(value = " 证券代码：联想文本框",notes = "证券代码：联想文本框")
     @RequestMapping("getSecAcctId")
     public Message<Page<SelectOptionDto>> getSecAcctId(@RequestBody SelectOptionRequestDto request) {
-        Page<SelectOptionDto> tempList = jjEtrExchangeTrade002Service.getSecAcctId(request);
+        Page<SelectOptionDto> tempList = etrExchangeTradeCommon002Service.getSecAcctId(request);
         return new Message<Page<SelectOptionDto>>().success().setData(tempList);
     }
 
@@ -168,7 +175,7 @@ public class EtrExchangeTradeJj002Controller extends BaseController{
     @RequestMapping("loadSecNum")
     @ResponseBody
     public Message<Map<String, String>> loadSecNum(@RequestBody SelectOptionRequestDto request) {
-        Map<String, String> map = jjEtrExchangeTrade002Service.loadSecNum(request);
+        Map<String, String> map = etrExchangeTradeCommon002Service.loadSecNum(request);
         return new Message<Map<String, String>>().success().setData(map);
     }
 
@@ -179,9 +186,9 @@ public class EtrExchangeTradeJj002Controller extends BaseController{
     @ApiOperation(value = " 查询指令列表分页数据",notes = "查询指令列表分页数据")
     @RequestMapping("selectEtrExchange")
     @ResponseBody
-    public Message<Page<EtrExchangeTradeEtrExchangeJjResponse>> selectEtrExchange(EtrExchangeTradeEtrExchangeJjRequest request){
-        Page<EtrExchangeTradeEtrExchangeJjResponse> result = jjEtrExchangeTrade002Service.selectEtrExchange(request);
-        return new Message<Page<EtrExchangeTradeEtrExchangeJjResponse>>().success().setData(result);
+    public Message<Page<EtrExchangeTradeEtrExchangeCommonResponse>> selectEtrExchange(EtrExchangeTradeEtrExchangeCommonRequest request){
+        Page<EtrExchangeTradeEtrExchangeCommonResponse> result = etrExchangeTradeCommon002Service.selectEtrExchange(request);
+        return new Message<Page<EtrExchangeTradeEtrExchangeCommonResponse>>().success().setData(result);
     }
 
     /**
@@ -195,17 +202,17 @@ public class EtrExchangeTradeJj002Controller extends BaseController{
     @RequestMapping("exportPosition")
     @ResponseBody
     @ApiOperation(value = "持仓列表导出", notes = "持仓列表导出")
-    public void exportPosition(@RequestBody EtrExchangeTradeExportJjRequest requestDto, HttpServletResponse response) {
+    public void exportPosition(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response) {
 //        Map<String, Object> param = RequestUtil.getPageParam();
 //        /*指令执行导出*/
 //        String datas = this.getParam("datas");
 //        List<EtrExchangeTrade003Dto> param1;
 //        if (datas == null) {
-//            param1 = jjEtrExchangeTrade001Service.selectEtrExchange2(RequestUtil.getPageParam());
+//            param1 = etrExchangeTradeCommon001Service.selectEtrExchange2(RequestUtil.getPageParam());
 //        } else {
 //            param1 = JsonUtils.json2List(datas, EtrExchangeTrade003Dto.class);
 //        }
-//        File outFile = jjEtrExchangeTrade003Service.makeFile(
+//        File outFile = etrExchangeTradeCommon003Service.makeFile(
 //                "/com/joyintech/tams/invest/entrust/etrexchangetrade/conf/export_conf1.xml",
 //                param1);
 //        return ExportUtil.export(
@@ -217,8 +224,8 @@ public class EtrExchangeTradeJj002Controller extends BaseController{
 //                outFile, true);
         // 导出
         ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
-            EtrExchangeTradePositionsJjRequest dto = requestDto.getDto(EtrExchangeTradePositionsJjRequest.class);
-            List dataList = jjEtrExchangeTrade002Service.findPositionsPage(dto).getRoot();
+            EtrExchangeTradePositionsCommonRequest dto = requestDto.getDto(EtrExchangeTradePositionsCommonRequest.class);
+            List dataList = etrExchangeTradeCommon002Service.findPositionsPage(dto).getRoot();
             return dataList;
         });
     }
@@ -234,14 +241,12 @@ public class EtrExchangeTradeJj002Controller extends BaseController{
     @RequestMapping("exportEtrExchange")
     @ResponseBody
     @ApiOperation(value = "指令列表导出", notes = "指令列表导出")
-    public void exportEtrExchange(@RequestBody EtrExchangeTradeExportJjRequest requestDto, HttpServletResponse response) {
+    public void exportEtrExchange(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response) {
         // 导出
         ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
-            EtrExchangeTradeEtrExchangeJjRequest dto = requestDto.getDto(EtrExchangeTradeEtrExchangeJjRequest.class);
-            List dataList = jjEtrExchangeTrade002Service.selectEtrExchange(dto).getRoot();
+            EtrExchangeTradeEtrExchangeCommonRequest dto = requestDto.getDto(EtrExchangeTradeEtrExchangeCommonRequest.class);
+            List dataList = etrExchangeTradeCommon002Service.selectEtrExchange(dto).getRoot();
             return dataList;
         });
     }
-
-
 }

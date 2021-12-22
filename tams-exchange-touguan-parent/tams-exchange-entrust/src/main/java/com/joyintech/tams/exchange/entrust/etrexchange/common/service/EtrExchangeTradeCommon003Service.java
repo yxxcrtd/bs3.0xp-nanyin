@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
 
-package com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service;
+package com.joyintech.tams.exchange.entrust.etrexchange.common.service;
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.util.DateUtil;
@@ -28,7 +28,7 @@ import java.util.Date;
  * @since 1.0
  */
 @Service
-public class EtrExchangeTradeJj003Service extends CommonExportService<EtrExchangeTrade003Dto>{
+public class EtrExchangeTradeCommon003Service extends CommonExportService<EtrExchangeTrade003Dto>{
     @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
         if(("vdate".equals(propName)) && value != null){

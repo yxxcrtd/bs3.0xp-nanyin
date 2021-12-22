@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.tams.exchange.entrust.etrexchange.hqjj.controller;
+package com.joyintech.tams.exchange.entrust.etrexchange.common.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
@@ -22,10 +22,10 @@ import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeEtrExchangeJjRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeEtrExchangeJjResponse;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj001Service;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj002Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
@@ -53,21 +53,21 @@ import java.util.Map;
  * 交易所指令交易（债券股票回购基金场内指令交易）
  * @author chendijun
  * @version 1.0 2021年12月20日
- * @see EtrExchangeTradeJj003Controller
+ * @see EtrExchangeTradeCommon003Controller
  * @since 1.0
  */
 @Controller
 @PageId("JjEtrExchangeTrade003")
 @RequestMapping("/etrexchange/hqjj/jjetrExchangeTrade003")
-public class EtrExchangeTradeJj003Controller extends BaseController{
+public class EtrExchangeTradeCommon003Controller extends BaseController{
 
-    private static final Logger logger = LoggerFactory.getLogger(EtrExchangeTradeJj003Controller.class);
-
-    @Autowired
-    private EtrExchangeTradeJj001Service jjEtrExchangeTrade001Service;
+    private static final Logger logger = LoggerFactory.getLogger(EtrExchangeTradeCommon003Controller.class);
 
     @Autowired
-    private EtrExchangeTradeJj002Service jjEtrExchangeTrade002Service;
+    private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
+
+    @Autowired
+    private EtrExchangeTradeCommon002Service etrExchangeTradeCommon002Service;
 
     @Autowired
     private EtrCommonService etrCommonService;
@@ -105,9 +105,9 @@ public class EtrExchangeTradeJj003Controller extends BaseController{
     @ApiOperation(value = "查询指令列表分页数据", notes = "查询指令列表分页数据")
     @ResponseBody
     @RequestMapping("selectEtrExchange")
-    public Message<Page<EtrExchangeTradeEtrExchangeJjResponse>> selectEtrExchange(EtrExchangeTradeEtrExchangeJjRequest request){
-        Page<EtrExchangeTradeEtrExchangeJjResponse> page = jjEtrExchangeTrade002Service.selectEtrExchange(request);
-        return new Message<Page<EtrExchangeTradeEtrExchangeJjResponse>>().setData(page);
+    public Message<Page<EtrExchangeTradeEtrExchangeCommonResponse>> selectEtrExchange(EtrExchangeTradeEtrExchangeCommonRequest request){
+        Page<EtrExchangeTradeEtrExchangeCommonResponse> page = etrExchangeTradeCommon002Service.selectEtrExchange(request);
+        return new Message<Page<EtrExchangeTradeEtrExchangeCommonResponse>>().setData(page);
     }
 
     @ApiOperation(value = "关闭校验", notes = "关闭校验")
@@ -180,7 +180,7 @@ public class EtrExchangeTradeJj003Controller extends BaseController{
       //判断指令是否已经分发，没分发就不调用交易系统指令状态变更接口；
 		List<EtrExchangeTrade003Dto> etrDistributeList = new ArrayList<EtrExchangeTrade003Dto>();
 		for (EtrExchangeTrade003Dto selectedItem : dto.getSelectedItem()) {
-			EtrDistribute etrDistribute = jjEtrExchangeTrade001Service.getDistributeByEntrustId(selectedItem.getEntrustId());
+			EtrDistribute etrDistribute = etrExchangeTradeCommon001Service.getDistributeByEntrustId(selectedItem.getEntrustId());
 			if (etrDistribute != null && StringUtils.equals(etrDistribute.getEntrustId(), selectedItem.getEntrustId())) {
 				etrDistributeList.add(selectedItem);
 			}
@@ -197,7 +197,7 @@ public class EtrExchangeTradeJj003Controller extends BaseController{
         // modify by zhangrui1 委托关闭释放剩余预占 start
         List<String> entrustIdList = new ArrayList<>();
         for(EtrExchangeTrade003Dto item : dto.getSelectedItem()){
-            jjEtrExchangeTrade001Service.closeDelegate(item);
+            etrExchangeTradeCommon001Service.closeDelegate(item);
             //释放风险接口释放
             entrustIdList.add(item.getEntrustId());
         }
@@ -217,7 +217,7 @@ public class EtrExchangeTradeJj003Controller extends BaseController{
 		//判断指令是否已经分发，没分发就不调用交易系统指令状态变更接口；
 		List<EtrExchangeTrade003Dto> etrDistributeList = new ArrayList<EtrExchangeTrade003Dto>();
 		for(EtrExchangeTrade003Dto selectedItem : dto.getSelectedItem()){
-			EtrDistribute etrDistribute = jjEtrExchangeTrade001Service.getDistributeByEntrustId(selectedItem.getEntrustId());
+			EtrDistribute etrDistribute = etrExchangeTradeCommon001Service.getDistributeByEntrustId(selectedItem.getEntrustId());
 			if(etrDistribute != null && StringUtils.equals(etrDistribute.getEntrustId(), selectedItem.getEntrustId())){
 				etrDistributeList.add(selectedItem);
 			}
@@ -232,7 +232,7 @@ public class EtrExchangeTradeJj003Controller extends BaseController{
 			}
 		}
 		for (EtrExchangeTrade003Dto item : dto.getSelectedItem()) {
-			jjEtrExchangeTrade001Service.recallDelegate(item);
+			etrExchangeTradeCommon001Service.recallDelegate(item);
 			// 释放风险接口释放
 			
             if(StringUtil.equals(item.getPs(),DictCodeListExt3.交易方向_债转股.getValue())) {
