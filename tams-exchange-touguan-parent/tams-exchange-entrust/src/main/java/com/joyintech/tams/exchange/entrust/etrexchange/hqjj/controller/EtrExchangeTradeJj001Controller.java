@@ -64,8 +64,8 @@ import java.util.Map;
  * @since 1.0
  */
 @Controller
-@PageId("JjEtrExchangeTrade001")
-@RequestMapping("/etrexchange/hqjj/jjetrExchangeTrade001")
+@PageId("EtrExchangeTradeJj001")
+@RequestMapping("/etrexchange/hqjj/etrExchangeTradeJj001")
 @Api(tags = "竞价回购指令下单")
 public class EtrExchangeTradeJj001Controller extends BaseController{
 

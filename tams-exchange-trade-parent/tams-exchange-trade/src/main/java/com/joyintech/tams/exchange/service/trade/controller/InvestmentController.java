@@ -1,37 +1,43 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
 import com.joyintech.tams.exchange.common.bean.InstructionPage;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.investment.BusinessDepartmentBean;
 import com.joyintech.tams.exchange.common.bean.investment.CapitalAccountBean;
+import com.joyintech.tams.exchange.common.db.domain.EntrustInterface;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
+import com.joyintech.tams.exchange.common.domain.Message;
+import com.joyintech.tams.exchange.common.request.CapitalAccountQueryRequest;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/service/joyin")
+@RequestMapping("/trade/joyin")
+@Api(tags = "场内交易-投资系统接口")
 public class InvestmentController {
 
     @Autowired
     private InvestmentManagement investmentManagement;
-
 
     /**
      * 处理审核指令
      *
      * @param orderId            订单号
      * @param instructionsStatus 指令状态
-     * @return ResultBean
+     * @param approveReason      审核描述
+     * @return Message
      */
+    @ApiOperation(value = "处理审核指令", notes = "处理审核指令")
     @RequestMapping(value = "/instruction/examine", method = RequestMethod.POST)
-    public ResultBean handleExamine(@RequestParam(value = "eventId") String orderId,
-                                    @RequestParam(value = "approveResult") String instructionsStatus,
-                                    @RequestParam(value = "approveReason", required = false) String approveReason) {
-        return investmentManagement.handleExamine(orderId, instructionsStatus, approveReason);
+    public Message<EntrustInterface> handleExamine(@RequestParam(value = "eventId") String orderId,
+                                                   @RequestParam(value = "approveResult") String instructionsStatus,
+                                                   @RequestParam(value = "approveReason", required = false) String approveReason) {
+        return new Message<EntrustInterface>(investmentManagement.handleExamine(orderId, instructionsStatus, approveReason));
     }
 
     /**
@@ -39,25 +45,19 @@ public class InvestmentController {
      *
      * @param instructionId 订单号
      * @param status        状态
-     * @return ResultBean
+     * @return Message
      */
+    @ApiOperation(value = "处理指令变更", notes = "处理指令变更")
     @RequestMapping(value = "/instructionChange", method = RequestMethod.POST)
-    public ResultBean instructionChange(@RequestParam(value = "entrustId") String instructionId,
-                                        @RequestParam(value = "entrustStatus") String status) {
-        return investmentManagement.instructionChange(instructionId, status);
+    public Message<Object> instructionChange(@RequestParam(value = "entrustId") String instructionId,
+                                             @RequestParam(value = "entrustStatus") String status) {
+        return new Message<Object>(investmentManagement.instructionChange(instructionId, status));
     }
 
-    /**
-     * 查询账户资金
-     *
-     * @return ResultBean
-     */
-    @RequestMapping(value = "/queryCapitalAccount", method = RequestMethod.GET)
-    public List<CapitalAccountBean> queryCapitalAccount(@RequestParam(value = "portfolioId", defaultValue = "") String portfolioId,
-                                                        @RequestParam(value = "acctNo", defaultValue = "") String acctNo,
-                                                        @RequestParam(value = "busiAcctNo", defaultValue = "") String busiAcctNo,
-                                                        @RequestParam(value = "acctType", defaultValue = "") String acctType) {
-        return investmentManagement.queryCapitalAccount(portfolioId, acctNo, busiAcctNo, acctType);
+    @ApiOperation(value = "查询账户资金", notes = "查询账户资金")
+    @RequestMapping(value = "/queryCapitalAccount", method = RequestMethod.POST)
+    public Message<List<CapitalAccountBean>> queryCapitalAccount(@RequestBody CapitalAccountQueryRequest request) {
+        return new Message<List<CapitalAccountBean>>(investmentManagement.queryCapitalAccount(request.getPortfolioId(), request.getAcctNo(), request.getBusiAcctNo(), request.getAcctType()));
     }
 
     /**
@@ -65,33 +65,35 @@ public class InvestmentController {
      *
      * @return ResultBean
      */
+    @ApiOperation(value = "查询营业部", notes = "查询营业部")
     @RequestMapping(value = "/queryBusinessDepartment", method = RequestMethod.GET)
-    public List<BusinessDepartmentBean> queryBusinessDepartment(@RequestParam(value = "stockExchangeNo", defaultValue = "") String stockExchangeNo) {
-        return investmentManagement.queryBusinessDepartment(stockExchangeNo);
+    public Message<List<BusinessDepartmentBean>> queryBusinessDepartment(@RequestParam(value = "stockExchangeNo", defaultValue = "") String stockExchangeNo) {
+        return new Message<List<BusinessDepartmentBean>>(investmentManagement.queryBusinessDepartment(stockExchangeNo));
     }
 
     /**
-     * 指令撤销
+     * 撤销指令
      *
      * @param instructionId     指令id
      * @param instructionStatus 指令状态
-     * @return
+     * @return Message
      */
+    @ApiOperation(value = "撤销指令", notes = "撤销指令")
     @RequestMapping(value = "/instruction/cancel", method = RequestMethod.POST)
-    public ResultBean cancelInstruction(@RequestParam(value = "instruction_Id") String instructionId,
-                                        @RequestParam(value = "entrustStatus", required = false) String instructionStatus) {
-        return investmentManagement.cancelInstruction(instructionId, instructionStatus);
+    public Message<Object> cancelInstruction(@RequestParam(value = "instructionId") String instructionId,
+                                             @RequestParam(value = "entrustStatus", required = false) String instructionStatus) {
+        return new Message<Object>(investmentManagement.cancelInstruction(instructionId, instructionStatus));
     }
-
 
     /**
      * 指令分发
      *
      * @param instructionPage 指令及质押券列表
-     * @return
+     * @return Message
      */
+    @ApiOperation(value = "指令分发", notes = "指令分发")
     @RequestMapping(value = "/instruction/distribute", method = RequestMethod.POST)
-    public ResultBean appointInstruction(@RequestBody InstructionPage<Instruction, InstructionPledge> instructionPage) throws Exception {
-        return investmentManagement.appointInstruction(instructionPage);
+    public Message<Object> appointInstruction(@RequestBody InstructionPage<Instruction, InstructionPledge> instructionPage) throws Exception {
+        return new Message<Object>(investmentManagement.appointInstruction(instructionPage));
     }
 }

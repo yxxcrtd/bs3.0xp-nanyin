@@ -5,6 +5,8 @@ import com.joyintech.tams.exchange.common.bean.ServerExtendInfo;
 import com.joyintech.tams.exchange.common.bean.ServerInfoBean;
 import com.joyintech.tams.exchange.common.utils.AccountUtils;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,57 +15,39 @@ import java.io.Serializable;
 /**
  * 投管系统营业部查询返回bean
  */
+@ApiModel(value = "查询营业部返回报文", description = "查询营业部返回报文")
 public class BusinessDepartmentBean implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(BusinessDepartmentBean.class);
     private static final long serialVersionUID = 3719878179570814070L;
-    /**
-     * 所属券商ID
-     */
+
+    @ApiModelProperty(name = "brockerId", value = "所属券商ID")
     private String brockerId;
 
-    /**
-     * 所属券商名称
-     */
+    @ApiModelProperty(name = "brockerName", value = "所属券商名称")
     private String brockerName;
 
-    /**
-     * IP地址
-     */
+    @ApiModelProperty(name = "ip", value = "IP地址")
     private String ip;
 
-    /**
-     * 端口
-     */
+    @ApiModelProperty(name = "mac", value = "端口")
     private String mac;
 
-    /**
-     * 备用IP地址
-     */
+    @ApiModelProperty(name = "ipBack", value = "备用IP地址")
     private String ipBack;
 
-    /**
-     * 备用端口
-     */
+    @ApiModelProperty(name = "macBack", value = "备用端口")
     private String macBack;
 
-    /**
-     * 申报单位
-     */
+    @ApiModelProperty(name = "orderUnit", value = "申报单位")
     private String orderUnit;
 
-    /**
-     * 净价回报
-     */
+    @ApiModelProperty(name = "netPriceReturn", value = "净价回报")
     private String netPriceReturn;
 
-    /**
-     * 柜台接口类型
-     */
+    @ApiModelProperty(name = "agentType", value = "柜台接口类型")
     private String agentType;
 
-    /**
-     * 特殊处理业务
-     */
+    @ApiModelProperty(name = "specialBuss", value = "特殊处理业务")
     private String specialBuss;
 
     private String serverInfo;

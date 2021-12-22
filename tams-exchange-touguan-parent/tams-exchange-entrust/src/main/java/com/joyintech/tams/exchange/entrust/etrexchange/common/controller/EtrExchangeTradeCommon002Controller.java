@@ -35,10 +35,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -55,7 +53,7 @@ import java.util.Map;
 @Controller
 @PageId("EtrExchangeTradeCommon002")
 @RequestMapping("/etrexchange/common/EtrExchangeTradeCommon002")
-@Api(tags = "持仓指令共通接口")
+@Api(tags = "场内交易-持仓指令共通接口")
 public class EtrExchangeTradeCommon002Controller extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(EtrExchangeTradeCommon002Controller.class);
@@ -129,9 +127,15 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
     @ApiOperation(value="查询持仓分页数据",notes="查询持仓分页数据")
     @PostMapping("findPositionsPage")
     @ResponseBody
-    public Message<Page<EtrExchangeTradePositionsCommonResponse>> findPositionsPage(EtrExchangeTradePositionsCommonRequest request){
-        Page<EtrExchangeTradePositionsCommonResponse> page = etrExchangeTradeCommon002Service.findPositionsPage(request);
-        return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(page);
+    public Message<Page<EtrExchangeTradePositionsCommonResponse>> findPositionsPage(@RequestBody   EtrExchangeTradePositionsCommonRequest request){
+        try {
+            Page<EtrExchangeTradePositionsCommonResponse> page = etrExchangeTradeCommon002Service.findPositionsPage(request);
+            return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(page);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().fail().setMessage("查询异常");
+        }
+
     }
 
     /**
@@ -142,9 +146,9 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
      * @since 1.0
      */
     @ApiOperation(value="查询债券质押持仓分页数据",notes="查询债券质押持仓分页数据")
-    @RequestMapping("findZqzyPositionsPage")
+    @PostMapping("findZqzyPositionsPage")
     @ResponseBody
-    public Message<Page<EtrExchangeTradePositionsCommonResponse>> findZqzyPositionsPage(EtrExchangeTradePositionsCommonRequest request){
+    public Message<Page<EtrExchangeTradePositionsCommonResponse>> findZqzyPositionsPage(@RequestBody   EtrExchangeTradePositionsCommonRequest request){
         Page<EtrExchangeTradePositionsCommonResponse> page = etrExchangeTradeCommon002Service.findZqzyPositionsPage(request);
         return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(page);
     }
@@ -158,7 +162,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
      * @since 1.0
      */
     @ApiOperation(value = " 证券代码：联想文本框",notes = "证券代码：联想文本框")
-    @RequestMapping("getSecAcctId")
+    @PostMapping("getSecAcctId")
     public Message<Page<SelectOptionDto>> getSecAcctId(@RequestBody SelectOptionRequestDto request) {
         Page<SelectOptionDto> tempList = etrExchangeTradeCommon002Service.getSecAcctId(request);
         return new Message<Page<SelectOptionDto>>().success().setData(tempList);
@@ -172,7 +176,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
      * @since 1.0
      */
     @ApiOperation(value = " 查询上交所和深交所标准券数量",notes = "查询上交所和深交所标准券数量")
-    @RequestMapping("loadSecNum")
+    @PostMapping("loadSecNum")
     @ResponseBody
     public Message<Map<String, String>> loadSecNum(@RequestBody SelectOptionRequestDto request) {
         Map<String, String> map = etrExchangeTradeCommon002Service.loadSecNum(request);
@@ -184,11 +188,16 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
      * @return
      */
     @ApiOperation(value = " 查询指令列表分页数据",notes = "查询指令列表分页数据")
-    @RequestMapping("selectEtrExchange")
+    @PostMapping("selectEtrExchange")
     @ResponseBody
-    public Message<Page<EtrExchangeTradeEtrExchangeCommonResponse>> selectEtrExchange(EtrExchangeTradeEtrExchangeCommonRequest request){
-        Page<EtrExchangeTradeEtrExchangeCommonResponse> result = etrExchangeTradeCommon002Service.selectEtrExchange(request);
-        return new Message<Page<EtrExchangeTradeEtrExchangeCommonResponse>>().success().setData(result);
+    public Message<Page<EtrExchangeTradeEtrExchangeCommonResponse>> selectEtrExchange(@RequestBody  EtrExchangeTradeEtrExchangeCommonRequest request){
+        try {
+            Page<EtrExchangeTradeEtrExchangeCommonResponse> result = etrExchangeTradeCommon002Service.selectEtrExchange(request);
+            return new Message<Page<EtrExchangeTradeEtrExchangeCommonResponse>>().success().setData(result);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<Page<EtrExchangeTradeEtrExchangeCommonResponse>>().fail().setMessage("查询异常");
+        }
     }
 
     /**
@@ -199,7 +208,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
      * @see
      * @since 1.0
      */
-    @RequestMapping("exportPosition")
+    @PostMapping("exportPosition")
     @ResponseBody
     @ApiOperation(value = "持仓列表导出", notes = "持仓列表导出")
     public void exportPosition(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response) {
@@ -238,7 +247,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
      * @see
      * @since 1.0
      */
-    @RequestMapping("exportEtrExchange")
+    @PostMapping("exportEtrExchange")
     @ResponseBody
     @ApiOperation(value = "指令列表导出", notes = "指令列表导出")
     public void exportEtrExchange(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response) {
