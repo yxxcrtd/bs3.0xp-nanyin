@@ -53,9 +53,9 @@ import java.util.Map;
  * @since 1.0
  */
 @Controller
-@PageId("JjEtrExchangeTrade002")
-@RequestMapping("/etrexchange/hqjj/jjetrExchangeTrade002")
-@Api(tags = "交易所持仓")
+@PageId("EtrExchangeTradeCommon002")
+@RequestMapping("/etrexchange/common/EtrExchangeTradeCommon002")
+@Api(tags = "持仓指令共通接口")
 public class EtrExchangeTradeCommon002Controller extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(EtrExchangeTradeCommon002Controller.class);

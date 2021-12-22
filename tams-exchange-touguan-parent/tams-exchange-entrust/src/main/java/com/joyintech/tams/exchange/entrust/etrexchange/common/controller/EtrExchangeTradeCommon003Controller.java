@@ -57,8 +57,8 @@ import java.util.Map;
  * @since 1.0
  */
 @Controller
-@PageId("JjEtrExchangeTrade003")
-@RequestMapping("/etrexchange/hqjj/jjetrExchangeTrade003")
+@PageId("EtrExchangeTradeCommon003")
+@RequestMapping("/etrexchange/common/jjetrExchangeTrade003")
 public class EtrExchangeTradeCommon003Controller extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(EtrExchangeTradeCommon003Controller.class);

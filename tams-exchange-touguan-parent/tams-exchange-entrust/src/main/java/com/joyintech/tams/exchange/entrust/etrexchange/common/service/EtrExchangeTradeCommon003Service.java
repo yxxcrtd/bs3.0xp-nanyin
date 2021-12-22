@@ -24,7 +24,7 @@ import java.util.Date;
  * 
  * @author meifaxin
  * @version 1.0 2021年12月20日
- * @see JjEtrExchangeTrade003Service
+ * @see EtrExchangeTradeCommon003Service
  * @since 1.0
  */
 @Service

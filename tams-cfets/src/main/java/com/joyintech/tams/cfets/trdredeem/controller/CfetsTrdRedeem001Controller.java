@@ -95,13 +95,13 @@ public class CfetsTrdRedeem001Controller extends BaseController {
             model.addAttribute(GlobalConstant.WORKFLOW_ID,getParam(GlobalConstant.WORKFLOW_ID));
             BeanUtil.copyPropertiesIgnoreNull(cfetsTrdRedeemDealCommonDto,cfetsTrdRedeemDealRegisterQuoteDto);
             //券面万元
-            cfetsTrdRedeemDealCommonDto.setShareAmt(ArithmeticUtil.divide(cfetsTrdRedeemDealCommonDto.getShareAmt(),new BigDecimal(10000),2));
+           // cfetsTrdRedeemDealCommonDto.setShareAmt(ArithmeticUtil.divide(cfetsTrdRedeemDealCommonDto.getShareAmt(),new BigDecimal(10000),2));
             //分配列表元转化万元
-            if(CollectionUtils.isNotEmpty(cfetsTrdRedeemDealCommonDto.getPtlAllocatios())){
+           /* if(CollectionUtils.isNotEmpty(cfetsTrdRedeemDealCommonDto.getPtlAllocatios())){
                 cfetsTrdRedeemDealCommonDto.getPtlAllocatios().stream().forEach(item ->{
                     item.setShareAmt(ArithmeticUtil.divide(item.getShareAmt(),new BigDecimal(10000),2));
                 });
-            }
+            }*/
         }
         model.addAttribute("ptlAllocatios", JsonUtils.object2Json(cfetsTrdRedeemDealCommonDto.getPtlAllocatios()));
         model.addAttribute(GlobalConstant.ENTITY, cfetsTrdRedeemDealCommonDto);
@@ -120,7 +120,7 @@ public class CfetsTrdRedeem001Controller extends BaseController {
     @ResponseBody
     @PostMapping("/checkDayRegRevokeCheck")
     public Message<AjaxResult> checkDayRegRevokeCheck(@RequestBody CfetsBondRegCheckRequst cfetsBondRegCheckRequst) {
-        return new Message<AjaxResult>().success().setData(ibuQuoteBondService.checkDayRegRevokeCheck(cfetsBondRegCheckRequst));
+        return new Message<AjaxResult>().success().setData(cfetsTrdRedeem001Service.checkDayRegRevokeCheck(cfetsBondRegCheckRequst));
     }
 
 
@@ -129,7 +129,7 @@ public class CfetsTrdRedeem001Controller extends BaseController {
     @PostMapping("regRevoke")
     public Message<AjaxResult> regRevoke(@RequestBody CfetsBondRegCheckRequst cfetsBondRegCheckRequst) throws WorkFlowException{
         //前后台转换
-        AjaxResult ajaxResult = ibuQuoteBondService.checkDayRegRevokeCheck(cfetsBondRegCheckRequst);
+        AjaxResult ajaxResult = cfetsTrdRedeem001Service.checkDayRegRevokeCheck(cfetsBondRegCheckRequst);
         if(CollectionUtils.isNotEmpty(ajaxResult.getErrorList())){
             return new Message<AjaxResult>().success().setData(ajaxResult);
         }

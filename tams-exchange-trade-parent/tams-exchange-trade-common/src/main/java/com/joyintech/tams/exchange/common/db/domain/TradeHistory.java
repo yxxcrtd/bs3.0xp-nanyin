@@ -2,84 +2,132 @@ package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@ApiModel(value = "历史成交信息", description = "历史成交信息")
 public class TradeHistory implements Serializable {
     private static final long serialVersionUID = 8867771423212338029L;
+
+    @ApiModelProperty(value = "主键ID")
     private String id;
 
+    @ApiModelProperty(value = "指令编号")
     private String instructionId;
 
+    @ApiModelProperty(value = "订单编号")
     private String parentOrderId;
 
+    @ApiModelProperty(value = "委托编号")
     private String entrustId;
 
+    @ApiModelProperty(value = "网点号:资金账户编号")
     private String accountId;
 
+    @ApiModelProperty(value = "成交ID")
     private String tradeId;
 
+    @ApiModelProperty(value = "资金账户编号")
     private String financeAccount;
 
+    @ApiModelProperty(value = "资金账户名称")
     private String accountName;
 
+    @ApiModelProperty(value = "交易场所")
     private String market;
 
+    @ApiModelProperty(value = "资产类型")
     private String assetType;
 
+    @ApiModelProperty(value = "证券代码")
     private String stockCode;
 
+    @ApiModelProperty(value = "证券名称")
     private String stockName;
 
+    @ApiModelProperty(value = "业务标识：5 公平；6 批量")
     private String businessFlag;
 
+    @ApiModelProperty(value = "委托类别")
     private String entrustType;
 
+    @ApiModelProperty(value = "委托属性")
     private String entrustProp;
 
+    @ApiModelProperty(value = "委托方向")
     private String entrustBs;
 
+    @ApiModelProperty(value = "委托方向标识")
     private String bsFlag;
 
+    @ApiModelProperty(value = "成交类别")
     private int tradeType;
+
     @JsonSerialize(using = DoubleSerializerUtils.class)
+    @ApiModelProperty(value = "已成交金额")
     private BigDecimal tradedBalance;
 
+    @ApiModelProperty(value = "已成交数量")
     private long tradedVolume;
+
     @JsonSerialize(using = DoubleSerializerUtils.class)
+    @ApiModelProperty(value = "成交价格")
     private BigDecimal tradedPrice;
+
     @JsonSerialize(using = DoubleSerializerUtils.class)
+    @ApiModelProperty(value = "清算金额")
     private BigDecimal clearBalance;
 
+    @ApiModelProperty(value = "成交时间")
     private String tradeTime;
+
     @JsonSerialize(using = DoubleSerializerUtils.class)
+    @ApiModelProperty(value = "质押券折算比例")
     private BigDecimal discount;
+
     @JsonSerialize(using = DoubleSerializerUtils.class)
+    @ApiModelProperty(value = "全价价格")
     private BigDecimal fullPrice;
 
+    @ApiModelProperty(value = "到期续作类型：0 非第三方；1 第三方")
     private String transCode;
 
+    @ApiModelProperty(value = "对手方交易商编号")
     private String propSeatNo;
 
+    @ApiModelProperty(value = "交易日期")
     private String tradingDay;
 
+    @ApiModelProperty(value = "本地委托编号")
     private String localEntrustId;
 
+    @ApiModelProperty(value = "柜台委托编号")
     private String brokerEntrustId;
 
+    @ApiModelProperty(value = "柜台成交编号")
     private String brokerTradeId;
 
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
+
+    @ApiModelProperty(value = "报文编号")
     private String reportNo;//柜台报盘编号
 
+    @ApiModelProperty(value = "冲正标识")
     private String offsetFlag;
 
+    @ApiModelProperty(value = "套期保值标识")
     private String hedgeFlag;
+
+    @ApiModelProperty(value = "组合编号")
     private String portfolioId;
 
     @Id

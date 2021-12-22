@@ -21,7 +21,7 @@
         left join SYS_DATADICT_LIST dictccy on aaa.ccy=dictccy.ITEM_CODE and dictccy.DICT_CODE='CCY'
 
         <!-- 关键字模糊查询 -->
-        <include refid="vagueQueryWhere"></include>
+      <!--  <include refid="vagueQueryWhere"></include>-->
 
          order by aaa.regTradeDate DESC
         )
@@ -45,8 +45,8 @@
         reg.trade_date as regTradeDate,
         reg.settle_date as exerciseDate,
         regAdd.act_sette_date as actExerciseDate,
-        reg.sec_manage_acct_id as secManageAcctId,
-        stlinfo.SEC_ACCT_NAME as secManageAcctIdStr,
+        deal.sec_manage_acct_id as secManageAcctId,
+        deal.SEC_ACCT_NAME as secManageAcctIdStr,
         deal.portfolioId as portfolioIds,
         deal.portfolioName as portfolioNames,
         reg.ccy as ccy,
@@ -58,8 +58,9 @@
         on reg.totle_trade_id=regAdd.totle_trade_id
         inner join
         (
-            select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName
-            ,nvl(sum(bb.PTL_BOND_ZHCC),0)/10000 as accountPosition
+            select regdeal.totle_trade_id,wm_concat(regdeal.portfolio_id) as portfolioId,wm_concat(pp.portfolio_name) portfolioName,
+            wm_concat(regdeal.sec_manage_acct_id) sec_manage_acct_id,wm_concat(stlinfo.SEC_ACCT_NAME) SEC_ACCT_NAME,
+            nvl(sum(bb.PTL_BOND_ZHCC),0)/10000 as accountPosition
             from reg_fin_product_deal regdeal
             inner join ptl_portfolio pp
             on regdeal.portfolio_id=pp.portfolio_id
@@ -69,6 +70,7 @@
                         group by a.PORTFOLIO_ID, a.FINPROD_ID
             )bb
             on regdeal.finprod_id=bb.FINPROD_ID and regdeal.PORTFOLIO_ID=bb.PORTFOLIO_ID
+            left join stl_sec_acct_info stlinfo on regdeal.sec_manage_acct_id=stlinfo.sec_acct_id
             where 1=1
             <if test="portfolioIdList != null and portfolioIdList.size() > 0">
                 AND regdeal.portfolio_id in
@@ -80,8 +82,7 @@
         )deal
         on reg.totle_trade_id=deal.totle_trade_id
         left join trdquto_match_info match on reg.totle_trade_id=match.pre_trade_id
-        left join trd_fin_product_deal_total total on match.trd_id=total.totle_trade_id
-        left join stl_sec_acct_info stlinfo on reg.sec_manage_acct_id=stlinfo.sec_acct_id
+        LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON match.trd_id = T8.TRADE_ID
         where 1=1 and reg.trade_status='01' and reg.is_cancel='N' and reg.ps='T39'
         <if test="startRegDate != null and !startRegDate.equals('')">
             AND  reg.trade_date>= #{startRegDate,jdbcType=DATE}
@@ -106,6 +107,18 @@
         </if>
         <if test="busiCode != null and busiCode != ''">
             AND reg.totle_trade_id like '%' || #{busiCode,jdbcType=VARCHAR} || '%'
+        </if>
+        <if test="effectiveStatusList != null and effectiveStatusList.size() > 0">
+            AND decode(reg.is_cancel,'N',#{VALID_STATUS_01},'Y',#{VALID_STATUS_03}) in
+            <foreach collection="effectiveStatusList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="tabType != null and tabType.equals('regCur')">
+            and reg.is_cancel='N' and nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})=#{DELIVERY_STATUS_01}
+        </if>
+        <if test="tabType != null and tabType.equals('regPre')">
+            and (reg.is_cancel='Y' or (reg.is_cancel='N' and nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})=#{DELIVERY_STATUS_02}) )
         </if>
     </sql>
     <sql id="onlyWflRegInfo">
@@ -185,8 +198,17 @@
         <if test="busiCode != null and busiCode != ''">
             AND reg.totle_trade_id like '%' || #{busiCode,jdbcType=VARCHAR} || '%'
         </if>
+        <if test="effectiveStatusList != null and effectiveStatusList.size() > 0">
+            AND #{VALID_STATUS_04} in
+            <foreach collection="effectiveStatusList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="tabType != null and !tabType.equals('')">
+            and 'regCur'=#{tabType,jdbcType=VARCHAR}
+        </if>
     </sql>
-    <sql id="vagueQueryWhere">
+<!--    <sql id="vagueQueryWhere">
         <if test="search != null and search != '' and search !='有效' ">
             <where>
                 ((aaa.effectiveStatusStr || '|' || aaa.busiCode
@@ -213,7 +235,7 @@
                 )
             </where>
         </if>
-    </sql>
+    </sql>-->
     <!--查询该资产对应的组合分配列表-->
     <select id="queryCfetsBussCombDisList" parameterType="Map" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto">
         select
