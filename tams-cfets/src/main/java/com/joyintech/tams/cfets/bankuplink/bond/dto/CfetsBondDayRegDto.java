@@ -492,7 +492,7 @@ public class CfetsBondDayRegDto {
     }
 
     public String getAssetTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类, getAssetType());
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产五级分类, getAssetType());
     }
 
     public void setAssetTypeStr(String assetTypeStr) {

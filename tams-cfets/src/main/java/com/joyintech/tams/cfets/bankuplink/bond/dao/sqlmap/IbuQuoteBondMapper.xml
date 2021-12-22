@@ -906,7 +906,8 @@
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
-            T1.SETTLE_DATE theoreticalExerciseDate,
+            case when T1.PS = 'T03' THEN T1.SETTLE_DATE
+            ELSE NULL END  theoreticalExerciseDate,
             T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,
@@ -1027,7 +1028,8 @@
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
-            T1.SETTLE_DATE theoreticalExerciseDate,
+            case when T1.PS = 'T03' THEN T1.SETTLE_DATE
+            ELSE NULL END  theoreticalExerciseDate,
             T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,
@@ -1153,7 +1155,8 @@
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
-            T1.SETTLE_DATE theoreticalExerciseDate,
+            case when T1.PS = 'T03' THEN T1.SETTLE_DATE
+            ELSE NULL END  theoreticalExerciseDate,
             T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,

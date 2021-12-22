@@ -571,7 +571,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		/*param.put("quoteTypes", Arrays.asList("01"));*/
 		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(param);
 		String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
-		String prefix = StringUtil.join("债券对话报价当日登记本币交易导出_",iPlatformDate.getSysDateStr());
+		String prefix = StringUtil.join("债券对话报价本币交易导出_",iPlatformDate.getSysDateStr());
 		requestDto.setData(null);
 		//获取递增序号
 		Map<String,String> sequenceIndex = new HashMap<>();
