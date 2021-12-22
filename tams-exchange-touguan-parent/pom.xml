@@ -11,6 +11,8 @@
     </parent>
     <version>3.0.4</version>
     <artifactId>tams-exchange-touguan-parent</artifactId>
+    <packaging>pom</packaging>
+    <name>tams-exchange-touguan-parent</name>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
