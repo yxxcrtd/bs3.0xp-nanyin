@@ -8,11 +8,8 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dto;
+package com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto;
 
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.constant.DictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -23,11 +20,11 @@ import java.math.BigDecimal;
  * 〈功能详细描述〉
  * @author meifaxin
  * @version 1.0 2021年12月21日
- * @see JjEtrExchangeTradePositionsResponse
+ * @see EtrExchangeTradePositionsJjResponse
  * @since 1.0
  */
 @ApiModel(value="持仓信息查询返回参数",description="持仓信息查询返回参数")
-public class JjEtrExchangeTradePositionsResponse {
+public class EtrExchangeTradePositionsJjResponse {
 
 
     @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")

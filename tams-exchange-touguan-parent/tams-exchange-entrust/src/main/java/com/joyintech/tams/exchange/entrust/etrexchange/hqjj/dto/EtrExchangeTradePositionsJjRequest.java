@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dto;
+package com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto;
 
 import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
@@ -21,11 +21,11 @@ import java.util.List;
  * 〈功能详细描述〉
  * @author wangyang1
  * @version 1.0 2021年12月21日
- * @see JjEtrExchangeTradePositionsRequest
+ * @see EtrExchangeTradePositionsJjRequest
  * @since 1.0
  */
 @ApiModel(value="持仓信息查询请求参数",description="持仓信息查询请求参数")
-public class JjEtrExchangeTradePositionsRequest {
+public class EtrExchangeTradePositionsJjRequest {
 
 
     @ApiModelProperty(name="portfolioId",value="组合代码",example="A1")

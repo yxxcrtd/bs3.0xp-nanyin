@@ -8,16 +8,13 @@
  * 系统名称：理财资管管理系统V2.0
  */
 
-package com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dto;
+package com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -26,11 +23,11 @@ import java.util.List;
  * 〈功能详细描述〉
  * @author meifaxin
  * @version 1.0 2020年7月2日
- * @see JjEtrExchangeTrade003Dto
+ * @see EtrExchangeTradeEtrExchangeJjResponse
  * @since 1.0
  */
 @ApiModel(value="指令列表查询返回参数",description="指令列表查询返回参数")
-public class JjEtrExchangeTradeEtrExchangeResponse{
+public class EtrExchangeTradeEtrExchangeJjResponse {
 
 
     /**
@@ -57,7 +54,7 @@ public class JjEtrExchangeTradeEtrExchangeResponse{
     @ApiModelProperty(name="finprodAbbr",value="资产名称",example="A1")
     private String finprodAbbr;
 
-    private List<JjEtrExchangeTrade003Dto> selectedItem;
+    private List<EtrExchangeTradeJj003Dto> selectedItem;
 
     @ApiModelProperty(name="paAssetType",value="平安资产类型",example="A1")
     private String paAssetType;
@@ -368,11 +365,11 @@ public class JjEtrExchangeTradeEtrExchangeResponse{
         this.finprodAbbr = finprodAbbr;
     }
 
-    public List<JjEtrExchangeTrade003Dto> getSelectedItem() {
+    public List<EtrExchangeTradeJj003Dto> getSelectedItem() {
         return selectedItem;
     }
 
-    public void setSelectedItem(List<JjEtrExchangeTrade003Dto> selectedItem) {
+    public void setSelectedItem(List<EtrExchangeTradeJj003Dto> selectedItem) {
         this.selectedItem = selectedItem;
     }
 

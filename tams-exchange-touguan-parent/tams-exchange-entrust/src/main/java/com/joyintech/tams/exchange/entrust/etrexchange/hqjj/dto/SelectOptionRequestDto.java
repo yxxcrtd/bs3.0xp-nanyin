@@ -1,4 +1,4 @@
-package com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dto;
+package com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto;
 
 import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;

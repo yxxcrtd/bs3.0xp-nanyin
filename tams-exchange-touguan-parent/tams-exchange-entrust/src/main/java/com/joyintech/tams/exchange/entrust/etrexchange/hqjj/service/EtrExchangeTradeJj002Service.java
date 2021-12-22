@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.tams.exchange.touguan.etrexchange.hqjj.service;
+package com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -20,13 +20,14 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.entrust.etrexchangetrade.dao.EtrExchangeTradeMapper;
 import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dao.JjEtrExchangeTradeMapper;
-import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dto.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dao.EtrExchangeTradeJjMapper;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
@@ -43,18 +44,18 @@ import java.util.Map;
  *  交易所指令交易（债券股票回购基金场内指令交易）
  * @author meifaxin
  * @version 1.0 2021年12月20日
- * @see JjEtrExchangeTrade002Service
+ * @see EtrExchangeTradeJj002Service
  * @since 1.0
  */
 @Service
-public class JjEtrExchangeTrade002Service extends BaseService {
+public class EtrExchangeTradeJj002Service extends BaseService {
 
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
     private IPlatformDate iPlatformDate;
 
-	private JjEtrExchangeTradeMapper jjEtrExchangeTradeMapper;
+	private EtrExchangeTradeJjMapper jjEtrExchangeTradeMapper;
     /**
      * 分页查询产品持仓信息
      * <功能详细描述>
@@ -63,7 +64,7 @@ public class JjEtrExchangeTrade002Service extends BaseService {
      * @see
      * @since 1.0
      */
-	public Page<JjEtrExchangeTradePositionsResponse> findPositionsPage(JjEtrExchangeTradePositionsRequest dto) {
+	public Page<EtrExchangeTradePositionsJjResponse> findPositionsPage(EtrExchangeTradePositionsJjRequest dto) {
 		try {
 			Map<String, Object> param = BeanUtil.object2Map(dto);
 			String userId = SecurityUtil.getLoginUser().getUserName();
@@ -97,10 +98,10 @@ public class JjEtrExchangeTrade002Service extends BaseService {
 				param.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
 				param.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
 				// 浮动盈亏计算修改 modify by yufei 20200806 start
-				Page<JjEtrExchangeTradePositionsResponse> result = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> jjEtrExchangeTradeMapper.findPositionsPage(param));
+				Page<EtrExchangeTradePositionsJjResponse> result = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> jjEtrExchangeTradeMapper.findPositionsPage(param));
 				if(!StringUtil.isEmptyList(result.getRoot())){
 					// 计算浮动盈亏
-					for(JjEtrExchangeTradePositionsResponse entity : result.getRoot()){
+					for(EtrExchangeTradePositionsJjResponse entity : result.getRoot()){
 						// 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
 						BigDecimal floatPL = ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum());
 						floatPL = ArithmeticUtil.subtract(floatPL,entity.getPositionsAmt());
@@ -127,7 +128,7 @@ public class JjEtrExchangeTrade002Service extends BaseService {
 	 * @see
 	 * @since 1.0
 	 */
-	public Page<JjEtrExchangeTradePositionsResponse> findZqzyPositionsPage(JjEtrExchangeTradePositionsRequest request) {
+	public Page<EtrExchangeTradePositionsJjResponse> findZqzyPositionsPage(EtrExchangeTradePositionsJjRequest request) {
 		try {
 			Map<String, Object> pageParam = BeanUtil.object2Map(request);
 			String userId = SecurityUtil.getLoginUser().getUserName();
@@ -161,7 +162,7 @@ public class JjEtrExchangeTrade002Service extends BaseService {
 				else {
 					pageParam.put("date", iPlatformDate.getSysDate());
 				}
-				Page<JjEtrExchangeTradePositionsResponse> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(),
+				Page<EtrExchangeTradePositionsJjResponse> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(),
 						() -> jjEtrExchangeTradeMapper.findZqzyPositionsPage(pageParam));
 				return result;
 //				return restTemplate.postForPage(
@@ -231,7 +232,7 @@ public class JjEtrExchangeTrade002Service extends BaseService {
     }
 
 
-	public Page<JjEtrExchangeTradeEtrExchangeResponse> selectEtrExchange(JjEtrExchangeTradeEtrExchangeRequest request) {
+	public Page<EtrExchangeTradeEtrExchangeJjResponse> selectEtrExchange(EtrExchangeTradeEtrExchangeJjRequest request) {
 		Map<String, Object> param = BeanUtil.object2Map(request);
 		param.put("userId", LoginUserUtil.getUserName());
 		param.put("sysDate",iPlatformDate.getSysDateStr());
@@ -242,7 +243,7 @@ public class JjEtrExchangeTrade002Service extends BaseService {
 		String portfolioId = (String)param.get("portfolioId");
 		if (StringUtil.isNotEmpty(portfolioId)) {
 			param.put("portfolioIdList",
-					StringUtil.splitToList(com.joyintech.framework.constant.GlobalConstant.COMMA, portfolioId));
+					StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
 		}
 		return super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> jjEtrExchangeTradeMapper.selectEtrExchange(param));
 //		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",

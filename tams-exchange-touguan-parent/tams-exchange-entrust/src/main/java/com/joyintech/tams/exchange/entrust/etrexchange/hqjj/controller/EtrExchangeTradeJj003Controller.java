@@ -15,35 +15,30 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dto.JjEtrExchangeTradeEtrExchangeRequest;
-import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.dto.JjEtrExchangeTradeEtrExchangeResponse;
-import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.service.JjEtrExchangeTrade001Service;
-import com.joyintech.tams.exchange.touguan.etrexchange.hqjj.service.JjEtrExchangeTrade002Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeEtrExchangeJjRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeEtrExchangeJjResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj001Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj002Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade003Dto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade001Service;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,13 +61,13 @@ import java.util.Map;
 @RequestMapping("/etrexchange/hqjj/jjetrExchangeTrade003")
 public class EtrExchangeTradeJj003Controller extends BaseController{
 
-    private static final Logger logger = LoggerFactory.getLogger(JjEtrExchangeTrade003Controller.class);
+    private static final Logger logger = LoggerFactory.getLogger(EtrExchangeTradeJj003Controller.class);
 
     @Autowired
-    private JjEtrExchangeTrade001Service jjEtrExchangeTrade001Service;
+    private EtrExchangeTradeJj001Service jjEtrExchangeTrade001Service;
 
     @Autowired
-    private JjEtrExchangeTrade002Service jjEtrExchangeTrade002Service;
+    private EtrExchangeTradeJj002Service jjEtrExchangeTrade002Service;
 
     @Autowired
     private EtrCommonService etrCommonService;
@@ -110,9 +105,9 @@ public class EtrExchangeTradeJj003Controller extends BaseController{
     @ApiOperation(value = "查询指令列表分页数据", notes = "查询指令列表分页数据")
     @ResponseBody
     @RequestMapping("selectEtrExchange")
-    public Message<Page<JjEtrExchangeTradeEtrExchangeResponse>> selectEtrExchange(JjEtrExchangeTradeEtrExchangeRequest request){
-        Page<JjEtrExchangeTradeEtrExchangeResponse> page = jjEtrExchangeTrade002Service.selectEtrExchange(request);
-        return new Message<Page<JjEtrExchangeTradeEtrExchangeResponse>>().setData(page);
+    public Message<Page<EtrExchangeTradeEtrExchangeJjResponse>> selectEtrExchange(EtrExchangeTradeEtrExchangeJjRequest request){
+        Page<EtrExchangeTradeEtrExchangeJjResponse> page = jjEtrExchangeTrade002Service.selectEtrExchange(request);
+        return new Message<Page<EtrExchangeTradeEtrExchangeJjResponse>>().setData(page);
     }
 
     @ApiOperation(value = "关闭校验", notes = "关闭校验")
