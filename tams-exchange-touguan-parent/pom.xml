@@ -7,10 +7,10 @@
         <groupId>com.joyintech</groupId>
         <artifactId>tams-parent</artifactId>
         <version>0.0.4</version>
-        <relativePath/>
     </parent>
     <version>3.0.4</version>
     <artifactId>tams-exchange-touguan-parent</artifactId>
+    <packaging>pom</packaging>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
