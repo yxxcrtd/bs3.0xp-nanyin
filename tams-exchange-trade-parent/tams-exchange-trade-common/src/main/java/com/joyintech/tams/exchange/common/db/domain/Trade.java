@@ -2,6 +2,8 @@ package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Digits;
@@ -11,152 +13,193 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@ApiModel(value = "成交信息", description = "成交信息")
 public class Trade implements Serializable, KeyMethodInterface<String> {
     private static final long serialVersionUID = 5901437777136803168L;
     @NotNull
     @Size(max = 32)
     @Id
+    @ApiModelProperty(value = "主键ID")
     private String id;
 
+    @ApiModelProperty(value = "定位串")
     private String positionStr;
 
     @NotNull
     @Size(max = 32)
+    @ApiModelProperty(value = "指令编号")
     private String instructionId;
 
     @Size(max = 32)
+    @ApiModelProperty(value = "订单编号")
     private String parentOrderId;
 
     @NotNull
     @Size(max = 32)
+    @ApiModelProperty(value = "委托编号")
     private String entrustId;
 
     @NotNull
     @Size(max = 32)
+    @ApiModelProperty(value = "网点号:资金账户编号")
     private String accountId;
 
     @NotNull
     @Size(max = 32)
+    @ApiModelProperty(value = "资金账户编号")
     private String financeAccount;
 
     @NotNull
     @Size(max = 32)
+    @ApiModelProperty(value = "资金账户名称")
     private String accountName;
 
     @NotNull
     @Size(max = 8)
+    @ApiModelProperty(value = "交易场所")
     private String market;
 
     @NotNull
     @Size(max = 3)
+    @ApiModelProperty(value = "资产类型")
     private String assetType;
 
     @NotNull
     @Size(max = 32)
+    @ApiModelProperty(value = "证券代码")
     private String stockCode;
 
     @NotNull
     @Size(max = 32)
+    @ApiModelProperty(value = "证券名称")
     private String stockName;
 
     @NotNull
     @Size(max = 1)
+    @ApiModelProperty(value = "业务标识：5 公平；6 批量")
     private String businessFlag;
 
     @NotNull
     @Size(max = 1)
+    @ApiModelProperty(value = "委托类别")
     private String entrustType;
 
     @NotNull
     @Size(max = 4)
+    @ApiModelProperty(value = "委托属性")
     private String entrustProp;
 
     @NotNull
     @Size(max = 1)
+    @ApiModelProperty(value = "委托方向")
     private String entrustBs;
 
     @NotNull
     @Size(max = 2)
+    @ApiModelProperty(value = "委托方向标识")
     private String bsFlag;
 
     @NotNull
     @Digits(integer = 6, fraction = 0)
+    @ApiModelProperty(value = "成交类别")
     private int tradeType;
 
     @NotNull
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
+    @ApiModelProperty(value = "已成交金额")
     private BigDecimal tradedBalance;
 
     @NotNull
     @Digits(integer = 20, fraction = 0)
+    @ApiModelProperty(value = "已成交数量")
     private long tradedVolume;
 
     @NotNull
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
+    @ApiModelProperty(value = "成交价格")
     private BigDecimal tradedPrice;
 
     @NotNull
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
+    @ApiModelProperty(value = "全价价格")
     private BigDecimal fullPrice;
 
     @NotNull
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
+    @ApiModelProperty(value = "清算金额")
     private BigDecimal clearBalance;
 
     @NotNull
     @Size(max = 32)
+    @ApiModelProperty(value = "成交时间")
     private String tradeTime;
 
     @NotNull
     @Digits(integer = 10, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
+    @ApiModelProperty(value = "质押券折算比例")
     private BigDecimal discount;
 
     @Size(max = 32)
+    @ApiModelProperty(value = "到期续作类型：0 非第三方；1 第三方")
     private String transCode;
 
     @Size(max = 16)
+    @ApiModelProperty(value = "对手方交易商编号")
     private String propSeatNo;
 
     @NotNull
     @Size(max = 10)
+    @ApiModelProperty(value = "交易日期")
     private String tradingDay;
 
     @Size(max = 32)
+    @ApiModelProperty(value = "本地委托编号")
     private String localEntrustId;
 
     @NotNull
     @Size(max = 32)
+    @ApiModelProperty(value = "柜台委托编号")
     private String brokerEntrustId;
 
     @NotNull
     @Size(max = 32)
+    @ApiModelProperty(value = "柜台成交编号")
     private String brokerTradeId;
 
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
+    @ApiModelProperty(value = "")
     public int count;
 
     @Size(max = 32)
-    private String reportNo;//柜台报盘编号
+    @ApiModelProperty(value = "报文编号")
+    private String reportNo;
 
+    @ApiModelProperty(value = "无撤销委托标识")
     private boolean noCancelEntrust;
 
     @Size(max = 8)
+    @ApiModelProperty(value = "冲正标识")
     private String offsetFlag;
 
     @Size(max = 8)
+    @ApiModelProperty(value = "套期保值标识")
     private String hedgeFlag;
 
     @Size(max = 18)
+    @ApiModelProperty(value = "组合编号")
     private String portfolioId;
 
+    @ApiModelProperty(value = "错误信息")
     private String errorMsg;
 
     public Trade() {
@@ -175,11 +218,13 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
         this.noCancelEntrust = noCancelEntrust;
     }
 
+    @Override
     @Id
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id == null ? null : id.trim();
     }

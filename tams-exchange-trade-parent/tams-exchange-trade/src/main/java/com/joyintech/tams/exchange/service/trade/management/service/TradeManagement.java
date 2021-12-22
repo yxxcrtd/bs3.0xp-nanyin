@@ -9,10 +9,12 @@ import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.constant.PresentOrHistoryQryType;
 import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.common.db.domain.TradeHistory;
+import com.joyintech.tams.exchange.common.request.HistoryTradeInfoRequest;
+import com.joyintech.tams.exchange.common.request.PageTradeInfoRequest;
+import com.joyintech.tams.exchange.common.request.TradeInfoRequest;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeHistoryService;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeService;
-import com.joyintech.tams.exchange.service.trade.processor.TradeHelper;
 import com.joyintech.tams.exchange.service.trade.processor.others.TerminalHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,18 +30,21 @@ public class TradeManagement {
     @Autowired
     private TradeService tradeService;
     @Autowired
-    private TradeHelper tradeHelper;
-    @Autowired
     private TerminalHelper terminalHelper;
     @Autowired
     private TradeHistoryService tradeHistoryService;
     @Autowired
     private CommonManagement commonManagement;
 
+
+    public ResultBean queryTrade(TradeInfoRequest request) {
+        return queryTrade(request.getUserId(), request.getEntrustId(), request.getInstructionId(), request.getAccountId(), request.getOrderId());
+    }
+
     /**
      * 根据Entrust行数据查询Trade表中数据
      */
-    public ResultBean queryTrade(String userId, String entrustId, String instructionId, String accountId, String orderId) {
+    private ResultBean queryTrade(String userId, String entrustId, String instructionId, String accountId, String orderId) {
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             return new ResultBean(ErrorCode.SUCCESS, new ArrayList());
@@ -80,7 +85,11 @@ public class TradeManagement {
         });
     }
 
-    public ResultBean queryHistoryTrade(String startDay, String endDay, String accountId, String postStr, int pageSize, String userId) {
+    public ResultBean queryHistoryTrade(HistoryTradeInfoRequest request) {
+        return queryHistoryTrade(request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPostStr(), request.getPageSize(), request.getUserId());
+    }
+
+    private ResultBean queryHistoryTrade(String startDay, String endDay, String accountId, String postStr, int pageSize, String userId) {
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             return new ResultBean(ErrorCode.SUCCESS, new ArrayList());
@@ -90,7 +99,11 @@ public class TradeManagement {
         return new ResultBean(ErrorCode.SUCCESS, historyTrade);
     }
 
-    public ResultBean queryAllForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String market, String stockCode, String entrustProp, String entrustId) {
+    public ResultBean queryAllForPage(PageTradeInfoRequest request) {
+        return queryAllForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(), request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustId());
+    }
+
+    private ResultBean queryAllForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String market, String stockCode, String entrustProp, String entrustId) {
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             if (!Strings.isNullOrEmpty(entrustId)) {
