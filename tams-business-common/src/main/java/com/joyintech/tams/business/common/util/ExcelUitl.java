@@ -49,7 +49,7 @@ public class ExcelUitl {
 
 	public static void doExport(CfetsExportRequestDto requestDto, HttpServletResponse response, String excelAndSheetName, DoQuery doQuery) {
 		List<BaseMap> header = requestDto.getHeader();
-		List<BaseMap> dataList = requestDto.getData();
+		List dataList = requestDto.getData();
 		if (dataList == null || dataList.isEmpty()){
 			List mapList = new ArrayList();
 			dataList = doQuery.query();
@@ -60,6 +60,7 @@ public class ExcelUitl {
 			}
 			doExport(excelAndSheetName, header, mapList, response);
 		}else {
+			List<BaseMap> dataResultList = requestDto.getData();
 			try{
 				Set<String> dateSet = new HashSet<String>();
 				header.forEach(item ->{
@@ -71,15 +72,17 @@ public class ExcelUitl {
 						}
 					}
 				});
-				dataList.forEach(item -> {
+				dataResultList.forEach(item -> {
 					for (Map.Entry<String, Object> m : item.entrySet()) {
 						if(dateSet.contains(m.getKey())&&null!=m.getValue()){
 							item.put(m.getKey(),new Date((Long)m.getValue()));
 						}
 					}
 				});
-			}catch (Exception e){logger.error("导出格式化日期异常");}
-			doExport(excelAndSheetName, header, dataList, response);
+			}catch (Exception e){
+				logger.error("导出格式化日期异常");
+			}
+			doExport(excelAndSheetName, header, dataResultList, response);
 		}
 	}
 
