@@ -100,11 +100,15 @@ public class AgentInstitution001Controller extends BaseController {
     public AjaxResult deleteCheck(@RequestBody AgentInstitutionDto agentInstitutionDto) {
         AjaxResult wr = new AjaxResult();
         List<JoyinMessage> joyinMessages = new ArrayList<>();
-        String agentInstitutionCode = agentInstitutionDto.getAgentInstitutionCode();
-        if (chbAgentInstitutionInfoMapper.deleteCheck(agentInstitutionCode) > 0) {
-            JoyinMessage ms = new JoyinMessage("该机构已维护过委托销售产品编码信息，请确认是否删除全部相关信息?", MessageType.确认消息);
-            joyinMessages.add(ms);
-            wr.setJoyinMessages(joyinMessages);
+        List<AgentInstitutionDto> agentInstitutionCodeList = agentInstitutionDto.getSelectedItem();
+        for(AgentInstitutionDto info : agentInstitutionCodeList) {
+            String agentInstitutionCode = info.getAgentInstitutionCode();
+            if (chbAgentInstitutionInfoMapper.deleteCheck(agentInstitutionCode) > 0) {
+                JoyinMessage ms = new JoyinMessage("选择机构已维护过委托销售产品编码信息，请确认是否删除全部相关信息?", MessageType.确认消息);
+                joyinMessages.add(ms);
+                wr.setJoyinMessages(joyinMessages);
+                break;
+            }
         }
         return wr;
     }
