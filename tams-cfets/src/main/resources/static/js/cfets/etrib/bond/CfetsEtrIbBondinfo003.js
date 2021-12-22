@@ -298,7 +298,6 @@
 
 
     var init = function () {
-    debugger;
         query("#calculateField_price").prop('checked', true);
         layui.form.render('radio');
         if(calculateField){
@@ -456,7 +455,6 @@
 
     // 绑定提交按钮
     $('#CfetsEtrIbBondinfo003_btn_submit').click(function () {
-    debugger;
         saveOrSubmit('submit');
     });
 

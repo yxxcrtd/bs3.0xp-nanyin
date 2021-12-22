@@ -539,7 +539,6 @@
      * 设置添加质押券共通参数
      */
     var setBussRepoSecInput = function () {
-        debugger;
         //组合分配列表
         var portfolioId = "";
         var ptlAllocationList = dzhTable.getAllRows();

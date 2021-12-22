@@ -151,7 +151,6 @@ var refreshTable;
      * 计算模拟可用现金
      */
     var countMockAvailableAmt = function (){
-        debugger;
         if(assetTable) {
             var amountTotal = 0;
             var list = assetTable.getAllRows();

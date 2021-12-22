@@ -91,7 +91,6 @@ $(function () {
                 }
                 object[i].effStatus = effStatus;
             }
-            debugger;
             if (msg != "") {
                 Joyin.alert("第" + msg + '行数据状态不正确，不能更新');
                 return;

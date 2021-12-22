@@ -28,7 +28,6 @@ $(function() {
     $(function(){
     		//导出中债Excel
     	    $('#RskValBotDetailReport001_btn_export').click(function() {
-    	    	debugger;
     	        exportExcel();
     	    });
        });

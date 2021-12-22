@@ -68,7 +68,6 @@
 //							return true;
 //						},
 				         editCell : function(value, data, field, cell, column){
-				        	 debugger;
 				             //设置产品款型JSON数组
 				             if(field === 'prodStyle'){
 				                 tableDataChange();

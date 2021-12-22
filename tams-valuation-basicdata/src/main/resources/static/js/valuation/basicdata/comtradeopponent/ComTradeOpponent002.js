@@ -152,7 +152,6 @@ $(function(){
      * @returns
      */
 	function chan(temp){
-	    debugger;
 	    selectItem = temp;
 	    if(temp == COUNTER_TYPE_05){
 	        $('a.btn-table-add').css('display','none');
@@ -216,7 +215,6 @@ $(function(){
      * 页面切换
      */
 	function initChange(){
-	    debugger;
 	    $(".counterType").change(function(){
 	        var temp = this.value;
 	        if(selectItem != temp){
@@ -341,7 +339,6 @@ $(function(){
 	 * @returns
 	 */
     function init(){
-        debugger;
         counterId2 = $('#counterId').val();
     	// /**新建页面不展示内部交易对手 add by chendijun**/
     	// if(pageModel===PAGE_MODEL_NEW) {
@@ -403,7 +400,6 @@ $(function(){
      * @returns
      */
     function saveOrSubmit(operateType) {
-        debugger;
         var object = null;
         if(selectItem == COUNTER_TYPE_01){
             object = $.serializeToObject('#marketForm');

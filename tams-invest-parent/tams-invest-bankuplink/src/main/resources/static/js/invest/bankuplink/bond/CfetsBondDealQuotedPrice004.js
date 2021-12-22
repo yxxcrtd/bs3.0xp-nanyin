@@ -246,7 +246,6 @@
         object.pageId = "CfetsBondDealQuotedPrice003";
         Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice004/check', object,
         function(result) {
-            debugger;
             if (result.data) {
                 Joyin.confirm(result.data,
                 function() {
@@ -712,7 +711,6 @@
     	 * 提交按钮按下处理
     	 */
     	$('#CfetsBondDealQuotedPrice004_btn_submit').click(function(){
-    	    debugger;
     		saveOrSubmitAction('submit');
     	});
     	
@@ -720,7 +718,6 @@
     	 * 成交
     	 */
     	$('#CfetsBondDealQuotedPrice004_btn_done').click(function(){
-    	    debugger;
     		saveOrSubmitAction('done');
     	});
     	
