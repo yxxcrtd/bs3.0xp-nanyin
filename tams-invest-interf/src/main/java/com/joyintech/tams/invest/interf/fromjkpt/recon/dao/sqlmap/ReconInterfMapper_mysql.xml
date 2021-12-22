@@ -303,7 +303,10 @@
                 ELSE abs(QJCJJE) * -1
             END AS TRADE_AMT,
             FYHJ TOTAL_TEEAMT,
-            STR_TO_DATE(HGDQR, '%Y%m%d') HGDQR,
+            CASE
+                WHEN HGDQR IS NOT NULL THEN STR_TO_DATE(HGDQR, '%Y%m%d')
+                ELSE NULL
+            END HGDQR,
             HGDQJE HGDQJE,
             YHS STAMP_FEE,
             JSF JSF_AMT,
@@ -692,7 +695,7 @@
             NULL TRADE_ID,
             SEC_ACCT_ID,
             NULL SETTLEMEN_TYPE,
-            NULL PRICE,
+            PRICE,
             NULL UNIT,
             NULL FULL_PRICE,
             NULL HGDQR,
@@ -896,7 +899,8 @@
             MARKET_ID,
             FINPROD_ID,
             FINPROD_TYPE,
-            SEC_ACCT_ID
+            SEC_ACCT_ID,
+            PRICE
         UNION ALL
         <!--金证直接按照明细接入-->
         SELECT
@@ -907,8 +911,11 @@
             STR_TO_DATE(T1.JYRQ,'%Y%m%d') TRADE_DATE,
             CASE
                 WHEN T1.BZ = '0' THEN 'CNY'
+                WHEN T1.BZ = '人民币' THEN 'CNY'
                 WHEN T1.BZ = '1' THEN 'HKD'
+                WHEN T1.BZ = '港币' THEN 'HKD'
                 WHEN T1.BZ = '2' THEN 'USD'
+                WHEN T1.BZ = '美元' THEN 'USD'
             END CCY,
             T5.TRADE_PLACE TRADE_MARKET,
             CASE
@@ -936,7 +943,10 @@
             CJJJ PRICE,
             DWYJLX UNIT,
             CJQJ FULL_PRICE,
-            HGDQR HGDQR,
+            CASE
+                WHEN HGDQR IS NOT NULL THEN STR_TO_DATE(HGDQR, '%Y%m%d')
+                ELSE NULL
+            END HGDQR,
             CASE
                 WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
                 ELSE T3.FINPROD_MARKET_ID
@@ -984,7 +994,7 @@
             STL_SEC_ACCT_INFO T5  ON T5. BOND_ID = T1.ZQZH
         LEFT JOIN
             STL_CAPACCT_INFO T2 ON T5.TRD_ACCT_ID = T2.ACCT_NO AND T5.TRD_ACCT_CCY= T2.CCY
-        LEFT JOIN
+        INNER JOIN
             MST_SALE_DEPARTMENT	a ON T2.OWN_DEPT = a.SALE_DEPID AND ((T5.TRADE_PLACE = '03' and a.SH_SEATNO = T1.XWDM) OR (T5.TRADE_PLACE = '04' and a.SZ_SEATNO = T1.XWDM))
         LEFT JOIN
             STL_CAPACCT_INFO T7 ON T7.BUSI_ACCT_NO = T1.ZJZH
@@ -993,7 +1003,7 @@
         LEFT JOIN
             MST_SEAT T4 ON T4.SEAT_ID  = T1.XWDM
         WHERE
-            T1.JYSC IN ('0','1')
+            T1.JYSC IN ('0','1','上海','深圳')
             AND EXISTS (
                 SELECT
                     1
