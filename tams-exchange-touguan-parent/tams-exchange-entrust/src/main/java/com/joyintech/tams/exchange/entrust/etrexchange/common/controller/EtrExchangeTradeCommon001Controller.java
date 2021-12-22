@@ -68,7 +68,7 @@ import java.util.stream.Collectors;
 @Controller
 @PageId("EtrExchangeTradeCommon001")
 @RequestMapping("/etrexchange/common/etrExchangeTrade001")
-@Api(tags = "场内交易指令下单共通接口")
+@Api(tags = "场内交易-指令下单共通接口")
 public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 	/**
