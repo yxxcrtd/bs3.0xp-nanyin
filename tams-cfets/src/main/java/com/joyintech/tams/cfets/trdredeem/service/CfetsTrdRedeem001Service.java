@@ -18,15 +18,13 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
-import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealDbDto;
-import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckRequst;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
-import com.joyintech.tams.cfets.etrib.bond.dto.CfetsBussCombDistribtBaseDto;
 import com.joyintech.tams.cfets.trdredeem.dao.CfetsTrdRedeemMapper;
+import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemCheckRequst;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealCommonDto;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealRegisterQuoteDto;
 import com.joyintech.tams.common.base.dao.*;
@@ -47,12 +45,10 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -154,17 +150,20 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
 
         if(CollectionUtils.isEmpty(entity.getPtlAllocatios())){
             errorList.add(new ValidMessage("组合分配不可为空"));
-        }else{
-
-
-
         }
 
         ajaxResult.setErrorList(errorList);
         return ajaxResult;
     }
 
-
+    /**
+     * 设置流程业务说明
+     */
+    @Override
+    public String generateTitle(CfetsTrdRedeemDealRegisterQuoteDto entity, OperationType type) {
+        return  "登记日期"+ ":" + DateUtil.format(entity.getTradeDate())+"-"+
+                "资产简称" + ":" + entity.getFinprodAbbr();
+    }
 
     /**
      * 初始化登记
@@ -204,7 +203,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
         }
 
     }
-    
+
 	@Override
     public void doUpdate(CfetsTrdRedeemDealRegisterQuoteDto entity){
         Map<String,Object> map = new HashMap<>();
@@ -244,9 +243,9 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
         //履历表
         updateCfetsOprHis(entity.getTotleTradeId(),operationType);
         //头寸
-        if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
+        /*if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             PositionHttpRequest.sendRevoke(cfetsBondDealDbDto.getRegFinProductDealTotal().getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),"Bond001");
-        }/*else{
+        }else{
             PositionHttpRequest.send(preparePosition(cfetsBondDealDbDto,operationType));
         }*/
         //处理指令执行进度
@@ -295,9 +294,9 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
     public void doDelete(String workflowId) {
         
         deleteBussFlowData(workflowId);
-        CfetsTrdRedeemDealRegisterQuoteDto  entity = getBussinessEntityByWorkflowId(workflowId);
+       // CfetsTrdRedeemDealRegisterQuoteDto  entity = getBussinessEntityByWorkflowId(workflowId);
         //发送头寸
-        PositionHttpRequest.deleteMethod(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue());
+       // PositionHttpRequest.deleteMethod(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue());
 
     }
 
@@ -313,10 +312,10 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             result.setOperationType(entity.getOperatorType());
             result.setRegFinProductDealTotal(regFinProductDealTotalMapper.selectByPrimaryKey(entity.getTotleTradeId()));
             result.setRegFinProductDealTotalAdd(regFinProductDealTotalAddMapper.selectByPrimaryKey(entity.getTotleTradeId()));
-            result.setRegTradeFeeTotals(cfetsIbuQuoteBondMapper.listRegTradeFeeTotal(entity.getTotleTradeId()));
+          //  result.setRegTradeFeeTotals(cfetsIbuQuoteBondMapper.listRegTradeFeeTotal(entity.getTotleTradeId()));
             result.setRegFinProductDeals(cfetsIbuQuoteBondMapper.listRegFinProductDeal(entity.getTotleTradeId()));
             result.setRegFinProductDealAdds(cfetsIbuQuoteBondMapper.listRegFinProductDealAdd(entity.getTotleTradeId()));
-            result.setRegTradeFees(cfetsIbuQuoteBondMapper.listRegTradeFee(entity.getTotleTradeId()));
+         //   result.setRegTradeFees(cfetsIbuQuoteBondMapper.listRegTradeFee(entity.getTotleTradeId()));
         }else{
             //登记日
             entity.setTradeDate(iPlatformDate.getSysDate());
@@ -368,7 +367,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             }*/
             regFinProductDealTotalAdd.setOurShareAmt(regFinProductDealTotal.getShareAmt());
             //汇总登记费用明细表
-           List<RegTradeFeeTotal> regTradeFeeTotals = new ArrayList<>();
+         //  List<RegTradeFeeTotal> regTradeFeeTotals = new ArrayList<>();
             /* if(null!=entity.getDealFeeAmt()){
                 regTradeFeeTotals.add(ibuQuoteBondService.prepareRegTradeFeeTotal(entity.getTotleTradeId(),BussinessDictCodeList.费用类型_交易手续费.getValue(),entity.getDealFeeAmt()));
             }
@@ -379,7 +378,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             //交易登记明细
             List<RegFinProductDeal> regFinProductDeals = new ArrayList<>();
             List<RegFinProductDealAdd> regFinProductDealAdds = new ArrayList<>();
-            List<RegTradeFee> regTradeFees = new ArrayList<>();
+          //  List<RegTradeFee> regTradeFees = new ArrayList<>();
             if(CollectionUtils.isNotEmpty(entity.getPtlAllocatios())){
                 for (PtlAllocationDto ptlAllocatio : entity.getPtlAllocatios()){
                     RegFinProductDeal regFinProductDeal = new RegFinProductDeal();
@@ -402,6 +401,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                     regFinProductDeal.setSettleSpeed(settleSpreed);
                     regFinProductDeal.setInvAim(ptlAllocatio.getBusinessModel());
                     regFinProductDeal.setTradeMarket(entity.getTradeMarket());
+                    regFinProductDeal.setSecManageAcctId(ptlAllocatio.getSecManageAcctId());
                     //附属
                     RegFinProductDealAdd regFinProductDealAdd = new RegFinProductDealAdd();
                     regFinProductDealAdd.setTradeId(regFinProductDeal.getTradeId());
@@ -427,10 +427,10 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
             result.setOperationType(entity.getOperatorType());
             result.setRegFinProductDealTotal(regFinProductDealTotal);
             result.setRegFinProductDealTotalAdd(regFinProductDealTotalAdd);
-            result.setRegTradeFeeTotals(regTradeFeeTotals);
+         //   result.setRegTradeFeeTotals(regTradeFeeTotals);
             result.setRegFinProductDeals(regFinProductDeals);
             result.setRegFinProductDealAdds(regFinProductDealAdds);
-            result.setRegTradeFees(regTradeFees);
+           // result.setRegTradeFees(regTradeFees);
         }
         return result;
     }
@@ -450,13 +450,13 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
         regFinProductDealTotalMapper.insert(regFinProductDealTotal);
         entity.getRegFinProductDealTotalAdd().setTotleTradeId(regFinProductDealTotal.getTotleTradeId());
         regFinProductDealTotalAddMapper.insert(entity.getRegFinProductDealTotalAdd());
-        List<RegTradeFeeTotal> regTradeFeeTotals = entity.getRegTradeFeeTotals();
+       /* List<RegTradeFeeTotal> regTradeFeeTotals = entity.getRegTradeFeeTotals();
         if(CollectionUtils.isNotEmpty(regTradeFeeTotals)){
             regTradeFeeTotals.forEach(item ->{
                 item.setTradeId(regFinProductDealTotal.getTotleTradeId());
                 regTradeFeeTotalMapper.insert(item);
             });
-        }
+        }*/
         List<RegFinProductDeal> regFinProductDeals = entity.getRegFinProductDeals();
         if(CollectionUtils.isNotEmpty(regFinProductDeals)){
             regFinProductDeals.forEach(item ->{
@@ -483,7 +483,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                 regFinProductDealAddMapper.insert(item);
             });
         }
-        List<RegTradeFee> regTradeFees = entity.getRegTradeFees();
+        /*List<RegTradeFee> regTradeFees = entity.getRegTradeFees();
         if(CollectionUtils.isNotEmpty(regTradeFees)){
             regTradeFees.forEach(item ->{
                 if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
@@ -491,7 +491,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                 }
                 regTradeFeeMapper.insert(item);
             });
-        }
+        }*/
         //更新原登记数据状态
         if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
             //汇总
@@ -516,7 +516,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
         BeanUtil.copyPropertiesIgnoreNull(wflRegFinProDealTotalAdd,entity.getRegFinProductDealTotalAdd());
         wflRegFinProDealTotalAdd.setWorkflowId(workflowId);
         wflRegFinProDealTotalAddMapper.insert(wflRegFinProDealTotalAdd);
-        List<RegTradeFeeTotal> regTradeFeeTotals = entity.getRegTradeFeeTotals();
+       /* List<RegTradeFeeTotal> regTradeFeeTotals = entity.getRegTradeFeeTotals();
         if(CollectionUtils.isNotEmpty(regTradeFeeTotals)){
             regTradeFeeTotals.forEach(item ->{
                 WflRegTradeFeeTotal wflRegTradeFeeTotal = new WflRegTradeFeeTotal();
@@ -524,7 +524,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                 wflRegTradeFeeTotal.setWorkflowId(workflowId);
                 wflRegTradeFeeTotalMapper.insert(wflRegTradeFeeTotal);
             });
-        }
+        }*/
         List<RegFinProductDeal> regFinProductDeals = entity.getRegFinProductDeals();
         if(CollectionUtils.isNotEmpty(regFinProductDeals)){
             regFinProductDeals.forEach(item ->{
@@ -545,7 +545,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                 wflRegFinProductDealAddMapper.insert(wflRegFinProductDealAdd);
             });
         }
-        List<RegTradeFee> regTradeFees = entity.getRegTradeFees();
+       /* List<RegTradeFee> regTradeFees = entity.getRegTradeFees();
         if(CollectionUtils.isNotEmpty(regTradeFees)){
             regTradeFees.forEach(item ->{
                 WflRegTradeFee wflRegTradeFee = new WflRegTradeFee();
@@ -553,7 +553,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                 wflRegTradeFee.setWorkflowId(workflowId);
                 wflRegTradeFeeMapper.insert(wflRegTradeFee);
             });
-        }
+        }*/
     }
 
     /**
@@ -663,33 +663,29 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
      * @param cfetsBondRegCheckRequst
      * @return
      */
-    public AjaxResult checkDayRegRevokeCheck(CfetsBondRegCheckRequst cfetsBondRegCheckRequst){
+    public AjaxResult checkDayRegRevokeCheck(CfetsTrdRedeemCheckRequst cfetsBondRegCheckRequst){
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
         //是否存在流程中数据
-        cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts().forEach(item ->{
-            /*if(!StringUtil.equals(item.getValidStatus(),BussinessDictCodeList.有效状态_有效.getValue())){
-                errorList.add(new ValidMessage("非有效状态数据不支持撤销!业务编号:"+item.getQuoteId()));
+         cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts().forEach(item ->{
+           if(!StringUtil.equals(item.getEffectiveStatus(),BussinessDictCodeList.有效状态_有效.getValue())){
+                errorList.add(new ValidMessage("非有效状态数据不支持撤销!业务编号:"+item.getBusiCode()));
             }
             WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
             wflValidInputParameter.setPageId("CfetsTrdRedeem001");
-            wflValidInputParameter.setBusinessDataPk1(item.getQuoteId());
+            wflValidInputParameter.setBusinessDataPk1(item.getBusiCode());
             if(null != mstWorkflowCommonService &&
                     mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)){
                 errorList.add(
-                        new ValidMessage(this.getMessage("COMMON_E_0012",item.getQuoteId())));
-            }*/
-            //是否已确认成交
-           /* if(cfetsIbuQuoteBondMapper.countMatchInfo(item.getQuoteId(),com.joyintech.tams.constant.DictCodeList.确认状态_已确认.getValue())>0){
-                errorList.add(new ValidMessage("当日登记所选登记数据已成交确认不支持撤销!业务编号:"+item.getQuoteId()));
+                        new ValidMessage(this.getMessage("COMMON_E_0012",item.getBusiCode())));
             }
-            //回售登记数据，在理论行权日前一交易日（包含前一交易日）之前均支持回售登记撤销操作，支持隔夜撤销。理论行权日之后（包含理论行权日）回售登记不支持手动撤销
-            if(StringUtil.equals(item.getPs(), com.joyintech.tams.constant.DictCodeList.交易方向_行权_回售.getValue())){
-                RegFinProductDealTotal regFinProductDealTotal = regFinProductDealTotalMapper.selectByPrimaryKey(item.getQuoteId());
-                if(iPlatformDate.getSysDate().compareTo(regFinProductDealTotal.getSettleDate())>=0){
-                    errorList.add(new ValidMessage("理论行权日之后(包含理论行权日)回售登记不支持手动撤销!业务编号:"+item.getQuoteId()));
+            //赎回登记数据，在理论行权日前一交易日（包含前一交易日）之前均支持赎回登记撤销操作，支持隔夜撤销。理论行权日之后（包含理论行权日）赎回登记不支持手动撤销
+            if(StringUtil.equals(item.getPs(), com.joyintech.tams.constant.DictCodeList.交易方向_行权_赎回.getValue())){
+                RegFinProductDealTotal regFinProductDealTotal = regFinProductDealTotalMapper.selectByPrimaryKey(item.getBusiCode());
+                if(iPlatformDate.getSysDate().compareTo(item.getExerciseDate())>=0){
+                    errorList.add(new ValidMessage("理论行权日之后(包含理论行权日)回售登记不支持手动撤销!业务编号:"+item.getBusiCode()));
                 }
-            }*/
+            }
             if(CollectionUtils.isNotEmpty(errorList)){
                 return;
             }

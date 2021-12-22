@@ -90,6 +90,7 @@ public class CfetsTrdRedeemService extends BaseService{
         }*/
         pageParam.put("DELIVERY_STATUS_01", DictCodeListExt3.交收状态_未交收.getValue());
         pageParam.put("DELIVERY_STATUS_02", DictCodeListExt3.交收状态_已交收.getValue());
+        pageParam.put("DELIVERY_STATUS_04", DictCodeListExt3.交收状态_交收失败.getValue());
 
 
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.有效状态_有效.getValue());

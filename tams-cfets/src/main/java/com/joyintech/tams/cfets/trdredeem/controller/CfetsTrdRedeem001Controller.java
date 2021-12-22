@@ -24,8 +24,10 @@ import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
 import com.joyintech.tams.cfets.etrib.bond.controller.CfetsEtrIbBondinfoController;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsBussCombDistribtBaseDto;
+import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemCheckRequst;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealCommonDto;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealRegisterQuoteDto;
+import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemRegInfoListResponse;
 import com.joyintech.tams.cfets.trdredeem.service.CfetsTrdRedeem001Service;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
@@ -119,7 +121,7 @@ public class CfetsTrdRedeem001Controller extends BaseController {
     @ApiOperation(value = "当日登记撤销检查", notes = "当日登记撤销检查")
     @ResponseBody
     @PostMapping("/checkDayRegRevokeCheck")
-    public Message<AjaxResult> checkDayRegRevokeCheck(@RequestBody CfetsBondRegCheckRequst cfetsBondRegCheckRequst) {
+    public Message<AjaxResult> checkDayRegRevokeCheck(@RequestBody CfetsTrdRedeemCheckRequst cfetsBondRegCheckRequst) {
         return new Message<AjaxResult>().success().setData(cfetsTrdRedeem001Service.checkDayRegRevokeCheck(cfetsBondRegCheckRequst));
     }
 
@@ -127,16 +129,16 @@ public class CfetsTrdRedeem001Controller extends BaseController {
     @ApiOperation(value = "当日登记撤销", notes = "当日登记撤销")
     @ResponseBody
     @PostMapping("regRevoke")
-    public Message<AjaxResult> regRevoke(@RequestBody CfetsBondRegCheckRequst cfetsBondRegCheckRequst) throws WorkFlowException{
+    public Message<AjaxResult> regRevoke(@RequestBody CfetsTrdRedeemCheckRequst cfetsBondRegCheckRequst) throws WorkFlowException{
         //前后台转换
         AjaxResult ajaxResult = cfetsTrdRedeem001Service.checkDayRegRevokeCheck(cfetsBondRegCheckRequst);
         if(CollectionUtils.isNotEmpty(ajaxResult.getErrorList())){
             return new Message<AjaxResult>().success().setData(ajaxResult);
         }
         List<CfetsTrdRedeemDealRegisterQuoteDto> CfetsBondDealRegisterQuoteDtos = new ArrayList<>();
-        for (CfetsBondRegCheckDetaileRequst cfetsBondRegCheckDetaileRequst : cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts()) {
+        for (CfetsTrdRedeemRegInfoListResponse cfetsBondRegCheckDetaileRequst : cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts()) {
             CfetsTrdRedeemDealRegisterQuoteDto cfetsTrdRedeemDealRegisterQuoteDto = new CfetsTrdRedeemDealRegisterQuoteDto();
-            cfetsTrdRedeemDealRegisterQuoteDto.setTotleTradeId(cfetsBondRegCheckDetaileRequst.getQuoteId());
+            cfetsTrdRedeemDealRegisterQuoteDto.setTotleTradeId(cfetsBondRegCheckDetaileRequst.getBusiCode());
             cfetsTrdRedeemDealRegisterQuoteDto.setRemark(cfetsBondRegCheckRequst.getRemark());
             cfetsTrdRedeemDealRegisterQuoteDto.setOperatorType("revoke");
             CfetsBondDealRegisterQuoteDtos.add(cfetsTrdRedeemDealRegisterQuoteDto);
@@ -147,7 +149,6 @@ public class CfetsTrdRedeem001Controller extends BaseController {
         workFlowParameter.setElementId("CfetsTrdRedeem001_btn_revoke");
         workFlowParameter.setBusinessCode(item -> item.getTotleTradeId());
         workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_赎回登记.getValue());
-        workFlowParameter.setComment(entity ->  "赎回登记编号(" + entity.getTotleTradeId() + ")");
         processParameter.setWorkFlowParameter(workFlowParameter);
         processParameter.setOperationType(OperationType.REVOKE);
         String msg = cfetsTrdRedeem001Service.start(processParameter,
@@ -161,12 +162,6 @@ public class CfetsTrdRedeem001Controller extends BaseController {
     public Message<AjaxResult> check(@RequestBody CfetsTrdRedeemDealCommonDto cfetsTrdRedeemDealCommonDto){
         //check必填项
         AjaxResult ajaxResult = cfetsTrdRedeem001Service.checkNotEmpty(cfetsTrdRedeemDealCommonDto);
-        if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
-           // ajaxResult = cfetsTrdRedeem001Service.checkcheckAnchoring(cfetsTrdRedeemDealCommonDto);
-        }
-        if(CollectionUtils.isEmpty(ajaxResult.getErrorList())){
-           // ajaxResult = cfetsQuotedCommonService.positionCheck(cfetsTrdRedeemDealCommonDto);
-        }
         return new Message<AjaxResult>().success().setData(ajaxResult);
     }
 
@@ -191,12 +186,8 @@ public class CfetsTrdRedeem001Controller extends BaseController {
 		WorkFlowParameter<CfetsTrdRedeemDealRegisterQuoteDto> params = new WorkFlowParameter<CfetsTrdRedeemDealRegisterQuoteDto>();
 		params.setPageId("CfetsTrdRedeem001");
 		params.setElementId(cfetsTrdRedeemDealRegisterQuoteDto.getElementId());
-       // params.setElementId("CfetsTrdRedeem001_btn_submit");
 		params.setBusinessType(DictCodeListExt3.共通业务类型_赎回登记.getValue());
 		params.setBusinessCode(cfetsTrdRedeemDealRegisterQuoteDto.getTotleTradeId());
-        params.setComment(entity -> getMessage("登记报价编号") + "(" + entity.getTotleTradeId() + ")-"
-                + "业务类型" + "(现券登记)-" + "平台日" + "("
-                + DateUtil.format(iPlatformDate.getSysDate()) + ")");
         cfetsTrdRedeemDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券登记报价.getValue());
 		processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);

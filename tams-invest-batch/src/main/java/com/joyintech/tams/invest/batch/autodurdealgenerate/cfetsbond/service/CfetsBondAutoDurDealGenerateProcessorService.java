@@ -412,7 +412,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         req.setCcy(trdTotle.getCcy());
         req.setFinprodId(trdTotle.getFinprodId());
         req.setPtlList(ptlList);
-        req.setbTotalTradeId(regFinProductDealTotal.getTotleTradeId());
+       // req.setbTotalTradeId(regFinProductDealTotal.getTotleTradeId());
         PositionHttpRequest.send(req);
 
         return;
