@@ -3,23 +3,16 @@ package com.joyintech.tams.exchange.common.bean;
 import java.io.Serializable;
 import java.util.List;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 /**
  * @author swwan
  * @create 2020-03-20 11:45
  */
-@ApiModel(value="指令查询返回报文",description="指令查询返回报文")
+
 public class InstructionPage<T, V> implements Serializable {
     private static final long serialVersionUID = 3325317592745725894L;
-    @ApiModelProperty(name="AMOUNT",value="数量")
     private int AMOUNT;
-    @ApiModelProperty(name="pageCount",value="页数")
     private int pageCount;
-    @ApiModelProperty(name="etr_entrust_list",value="指令列表")
     private List<T> etr_entrust_list;
-    @ApiModelProperty(name="etr_pledge_list",value="质押券列表")
     private List<V> etr_pledge_list;
 
     public InstructionPage() {

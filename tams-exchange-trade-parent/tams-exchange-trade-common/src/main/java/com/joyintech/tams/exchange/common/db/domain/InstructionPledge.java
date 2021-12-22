@@ -2,10 +2,6 @@ package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Digits;
@@ -18,7 +14,6 @@ import java.math.BigDecimal;
  * @author swwan
  * @create 2020-03-20 13:13
  */
-@ApiModel(value="质押券报文",description="质押券报文")
 public class InstructionPledge implements Serializable, KeyMethodInterface<String> {
     private static final long serialVersionUID = -7130177040330108562L;
     @NotNull
@@ -26,12 +21,10 @@ public class InstructionPledge implements Serializable, KeyMethodInterface<Strin
     @Id
     private String id;
 
-    @ApiModelProperty(name="entrustId",value="委托代码")
     @NotNull
     @Size(max = 32)
     private String entrustId = "";// 委托代码
 
-    @ApiModelProperty(name="finprodId",value="金融产品代码")
     @Size(max = 50)
     private String finprodId = "";// 金融产品代码
 

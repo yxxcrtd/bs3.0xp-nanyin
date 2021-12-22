@@ -33,7 +33,7 @@ public class CacheBeanUtils {
                 int realCount = 0;
                 for (int i = 0; i < fields.length; ++i) {
                     if (!Modifier.isStatic(fields[i].getModifiers())) {
-                        Object o = ReflectionUtils.getField(fields[realCount], item);
+                        Object o = ReflectionUtils.getField(fields[i], item);
                         if (Objects.nonNull(o)) contents[realCount] = o;
                         else contents[realCount] = null;
                         realCount += 1;

@@ -4,10 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Digits;
@@ -18,25 +14,19 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
-@ApiModel(value="指令报文",description="指令报文")
 public class Instruction implements Serializable, KeyMethodInterface<String>, Cloneable {
 
     private static final long serialVersionUID = -81616163906470229L;
-    
-    @ApiModelProperty(name="approverFlage",value="审批标志")
     @Size(max = 50)
     private String approverFlage;//审批标志
 
-    @ApiModelProperty(name="conShareId",value="转股代码")
     @Size(max = 50)
     private String conShareId;//转股代码
 
-    @ApiModelProperty(name="conPrice",value="转股价格")
     @Digits(integer = 30, fraction = 14)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal conPrice = new BigDecimal("0.0000");//转股价格
 
-    @ApiModelProperty(name="conNum",value="转股数量")
     @Digits(integer = 30, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal conNum = new BigDecimal("0");//转股数量
