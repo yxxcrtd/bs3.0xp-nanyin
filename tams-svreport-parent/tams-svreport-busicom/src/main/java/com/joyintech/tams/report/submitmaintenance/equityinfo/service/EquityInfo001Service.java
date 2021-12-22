@@ -1251,7 +1251,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         if (CollectionUtils.isNotEmpty(newDataList)) {
             equityInfoRegist001Mapper.updateEquitySubForBatch(newDataList);
         }
-    }
+    }    
     
     /**
      * 分批次执行insertBtachInterfEquityInfo
@@ -3331,7 +3331,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 logger.info("EquityInfo001Service listU 入库或生成文件处理结束 " + DateUtil.getCurrentDateTime());
             }
             
-          //只有四期信息发生变更的情况下，对INFO表进行更新变更字段
+            //只有四期信息发生变更的情况下，对INFO表进行更新变更字段
             if (CollectionUtils.isNotEmpty(listUpForInfo)) {
                 logger.info("EquityInfo001Service listUpForInfo 四期INFO更新开始 " + DateUtil.getCurrentDateTime());
            
@@ -3348,7 +3348,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 this.updateEuqHoldSubByBatch(listUpForSub);
                 
                 logger.info("EquityInfo001Service listUpForSub 四期SUB更新结束 " + DateUtil.getCurrentDateTime());
-            }
+            }            
             
             // 数据解析完成，并导入数据库成功后，将ftp文件修改名称
 //            return (CollectionUtils.isNotEmpty(listNA) || CollectionUtils.isNotEmpty(listNE)
