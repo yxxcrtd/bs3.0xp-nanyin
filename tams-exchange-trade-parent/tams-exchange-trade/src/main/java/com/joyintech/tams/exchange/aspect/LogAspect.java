@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LogAspect {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Before(value = "execution(public * com.joyintech.tams.exchange.controller..*.*(..))")
+    @Before(value = "execution(public * com.joyintech.tams.exchange.service.trade.controller..*.*(..))")
     public void doBefore(JoinPoint joinPoint) {
         logger.debug("className [{}] methodName [{}] reqMethod [{}] request for [{}] resulted in [{}] reqArgs [{}]",
                 joinPoint.getTarget().getClass().getName(),
@@ -29,7 +29,7 @@ public class LogAspect {
                 cn.hutool.json.JSONUtil.toJsonStr(joinPoint.getArgs()));
     }
 
-    @AfterReturning(pointcut = "execution(public * com.joyintech.tams.exchange.controller..*.*(..))", returning = "returnVal")
+    @AfterReturning(pointcut = "execution(public * com.joyintech.tams.exchange.service.trade.controller..*.*(..))", returning = "returnVal")
     public void afterReturn(JoinPoint joinPoint, Object returnVal) {
         logger.debug("className [{}] methodName [{}] return result [{}]",
                 joinPoint.getTarget().getClass().getName(),

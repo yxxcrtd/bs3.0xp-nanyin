@@ -26,6 +26,11 @@ import java.text.MessageFormat;
  */
 @Configuration
 public class TamsSystemApplication extends WebApplication {
+	
+	@Bean
+	public Docket dataExchangeDocket() {
+		return SwaggerConfig.createDocket("场内交易接口", "com.joyintech.tams.exchange.service.trade.controller");
+	}
 
 	@Bean
 	public Docket dataCfetsDocket() {
