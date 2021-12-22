@@ -188,7 +188,7 @@ public class PbcMonthReportDetailProdUtil {
         }else if(termDays.compareTo(new BigDecimal(720))>0&&termDays.compareTo(new BigDecimal(1080))<=0){
             code = DictCodeListExt3.人行月度明细_期限类型_2到3年.getValue();
         }else if(termDays.compareTo(new BigDecimal(1080))>0){
-            code = DictCodeListExt3.中债月度明细_期限类型_3年以上.getValue();
+            code = DictCodeListExt3.人行月度明细_期限类型_3年以上.getValue();
         }
         return code;
     }
