@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/service/joyin")
+@RequestMapping("/trade/joyin")
 public class MemoryCacheController {
     @Autowired
     private MemoryCacheManagement memoryCacheManagement;

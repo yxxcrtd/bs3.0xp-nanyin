@@ -1,16 +1,26 @@
 package com.joyintech.tams.exchange.common.db.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
+@ApiModel(value = "账户终端映射信息", description = "账户终端映射信息")
 public class TerminalMapping {
+
+    @ApiModelProperty(value = "主键ID")
     private String id;
 
+    @ApiModelProperty(value = "资金账户编号")
     private String accountId;
 
+    @ApiModelProperty(value = "终端名称")
     private String terminalName;
 
+    @ApiModelProperty(value = "终端权重")
     private int terminalWeight;
 
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
     public String getId() {
