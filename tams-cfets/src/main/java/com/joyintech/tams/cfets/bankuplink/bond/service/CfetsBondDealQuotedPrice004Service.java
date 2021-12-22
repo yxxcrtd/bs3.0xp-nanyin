@@ -538,6 +538,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             regFinProductDealTotal.setFaceValue(entity.getShareAmt());
             regFinProductDealTotal.setShareAmt(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(100),2));
             regFinProductDealTotal.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+            regFinProductDealTotal.setSettCcy(regFinProductDealTotal.getCcy());
             regFinProductDealTotal.setDipType(entity.getDistribution());
             regFinProductDealTotal.setBranch(0L);
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
@@ -554,6 +555,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
             //金融产品交易汇总登记附属
             RegFinProductDealTotalAdd regFinProductDealTotalAdd = new RegFinProductDealTotalAdd();
             BeanUtil.copyPropertiesIgnoreNull(regFinProductDealTotalAdd,entity);
+            regFinProductDealTotalAdd.setCalMode(entity.getCalculateField());
             if(StringUtil.equals(ps,DictCodeList.交易方向_买入.getValue())){
                 regFinProductDealTotalAdd.setLendinFpriceAmt(entity.getSaleinFpriceAmt());
                 regFinProductDealTotalAdd.setLendinIntAmt(entity.getSaleinIntAmt());

@@ -914,7 +914,10 @@
             T9.ACT_SETTE_DATE actSetteDate,
             T10.TYPE_12 assetType,
             T11.TRD_ID trdId,
-            T12.TRADE_DATE dealDate
+            T12.TRADE_DATE dealDate,
+            T9.CAL_MODE calMode,
+            T1.INT_AMT intAmt,
+            T1.SETT_CCY  settCcy
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -993,7 +996,10 @@
             T9.ACT_SETTE_DATE actSetteDate,
             T10.TYPE_12 assetType,
             T11.TRD_ID trdId,
-            T12.TRADE_DATE dealDate
+            T12.TRADE_DATE dealDate,
+            T9.CAL_MODE calMode,
+            T1.INT_AMT intAmt,
+            T1.SETT_CCY  settCcy
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -1071,7 +1077,10 @@
             NULL actSetteDate ,
             T10.TYPE_12 assetType,
             NULL trdId,
-            NULL dealDate
+            NULL dealDate,
+            '' calMode,
+            T1.INT_AMT intAmt,
+            T1.SETT_CCY  settCcy
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
