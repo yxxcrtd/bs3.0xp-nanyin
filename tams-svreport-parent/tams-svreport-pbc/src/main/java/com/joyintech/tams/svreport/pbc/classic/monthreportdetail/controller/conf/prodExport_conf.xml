@@ -28,7 +28,7 @@
 			<Cell order="24 name=金融机构（实体）">ordIdentified04</Cell>
 			<Cell order="25 name=特定目的载体">ordIdentified05</Cell>
 			<Cell order="26 name=境外">ordIdentified06</Cell>
-			<Cell order="27 name=合计">ordIdentified07</Cell>
+			<Cell order="27 name=合计">ordIdentifiedAll</Cell>
 			<Cell order="28 name=401000北京">buyPlace01</Cell>
 			<Cell order="29 name=402000天津">buyPlace02</Cell>
 			<Cell order="30 name=403000河北">buyPlace03</Cell>

@@ -76,13 +76,12 @@ $(function() {
      */
     var exportExcel = function(flag) {
         var expArr=table.getAllCheckedRows();
-        var param={};
+        var param=getSearchParams();
+        if(!param.enddate){
+            Joyin.error("请选择统计日期进行导出！");
+            return;
+        }
         if(flag == '0'){
-            param = getSearchParams();
-            if(!param.enddate){
-                Joyin.error("请选择统计日期进行导出！");
-                return;
-            }
             Joyin.exportExcel("export",param);
         }else{
             if((!expArr || expArr.length ==0)){

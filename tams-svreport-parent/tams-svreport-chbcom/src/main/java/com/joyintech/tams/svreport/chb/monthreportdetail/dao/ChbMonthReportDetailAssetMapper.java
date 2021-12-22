@@ -30,4 +30,10 @@ public interface ChbMonthReportDetailAssetMapper {
 
     List<MstCustomerInfoAdd> getCustomerList(Map<String,Object> map);
 
+    List<ChbMonthReportDetailAsset> selectBalanceData(Map<String,Object> map);
+
+    List<ChbMonthReportDetailAsset> selectBalanceDataSubSystem(Map<String,Object> map);
+
+
+
 }

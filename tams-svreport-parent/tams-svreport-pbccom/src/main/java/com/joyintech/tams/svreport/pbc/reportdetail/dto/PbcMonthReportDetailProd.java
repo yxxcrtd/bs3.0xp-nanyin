@@ -32,11 +32,11 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
 
 
     /**
-     * 是否本期发行
+     * 是否本期终止
      */
     private String isEndTrem;
     /**
-     *
+     *是否存续
      */
     private String isEndSubsist;
 
@@ -687,7 +687,7 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
 
 
     public BigDecimal getOrdIdentified01() {
-        return ordIdentified01;
+        return null!=ordIdentified01?ordIdentified01.divide(ordIdentified01,6,BigDecimal.ROUND_HALF_UP):null;
     }
 
     public void setOrdIdentified01(BigDecimal ordIdentified01) {
@@ -831,7 +831,7 @@ public class PbcMonthReportDetailProd extends PbcMonthPrdPositiondetail implemen
     }
 
     public String getManageTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.管理方式, this.getManageType());
+        return SysDataUtil.getNameFromDataDict(DictCode.管理方式_发行登记, this.getManageType());
     }
 
     public String getFiduciaryDutyStr() {

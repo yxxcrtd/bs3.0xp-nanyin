@@ -2,26 +2,35 @@ package com.joyintech.tams.svreport.chb.monthreportdetail.service;
 
 import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.background.component.common.pack.common.util.IDGenerator;
-import com.joyintech.component.svrreport.chb.contant.DictCodeListExt;
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.common.base.dao.ChbMonthAssetPositiondetailMapper;
-import com.joyintech.tams.common.base.dao.ChbMonthPrdPositiondetailMapper;
+import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
-import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportDetail;
 import com.joyintech.tams.svreport.chb.monthreportdetail.dao.ChbMonthReportDetailAssetMapper;
-import com.joyintech.tams.svreport.chb.monthreportdetail.dao.ChbMonthReportDetailProdMapper;
+import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
+import com.joyintech.tams.svreport.position.dto.ChbAssetPosition;
+import com.joyintech.tams.svreport.position.service.AssetPositionService;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.ResultContext;
+import org.apache.ibatis.session.ResultHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -33,6 +42,14 @@ public class ChbMonthReportDetailAssetUtil {
 
     @Autowired
     private ChbMonthReportDetailAssetMapper chbMonthReportDetailAssetMapper;
+
+
+    /**
+     * 映射配置mapper
+     */
+    @Autowired
+    private ChbTypeMappingExMapper chbTypeMappingExMapper;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
@@ -40,6 +57,8 @@ public class ChbMonthReportDetailAssetUtil {
      */
     @Value("${application.reportInsertCount}")
     public int reportInsertCount;
+
+
 
 
     /**
@@ -88,7 +107,7 @@ public class ChbMonthReportDetailAssetUtil {
         return chbMonthAssetPositiondetail;
     }
 
-    public void  insertBefore(List<ChbMonthAssetPositiondetail> prdPositionList){
+    public void  insertBefore(List<ChbMonthAssetPositiondetail> prdPositionList,Date batchDate){
         /**展示产品购买资产首次买入交易的交易对手名称***/
         Map<String,Object> paraMap = new HashMap<>();
         Set<String> codeList = prdPositionList.stream().map(ChbMonthAssetPositiondetail::getCounterListCode).collect(Collectors.toSet());
@@ -99,7 +118,6 @@ public class ChbMonthReportDetailAssetUtil {
         //展示资产对应主体（没有主体的找交易对手）在市场机构中的行业一级分类
         List<MstCustomerInfoAdd> customerList = chbMonthReportDetailAssetMapper.getCustomerList(null);
         Map<String,MstCustomerInfoAdd> customerMap = customerList.stream().collect(Collectors.toMap(MstCustomerInfoAdd::getCustomerId,x->x));
-
         for(ChbMonthAssetPositiondetail dto : prdPositionList){
             //先赋值行业
             MstCustomerInfoAdd info = null!=customerMap.get(dto.getSubjectName())?customerMap.get(dto.getSubjectName()):customerMap.get(dto.getRivalParty());
@@ -113,22 +131,97 @@ public class ChbMonthReportDetailAssetUtil {
             }
             //再赋值交易对手名称  展示产品购买资产首次买入交易的交易对手名称
             dto.setRivalParty(CounterMap.get(dto.getProdId()+"_"+dto.getAssetCode()));
-
         }
+        //现金特殊处理产品代码
+//        List<ChbMonthAssetPositiondetail> detail1001 = prdPositionList.stream().filter(s-> "1001".equals(s.getAssettype2())&&s.getAssetvalueA()!=null).collect(Collectors.toList());
+        Map<String, ChbMonthAssetPositiondetail>  detail1001 = prdPositionList.stream().filter(detail ->
+                ("1001".equals(detail.getAssettype2())&&detail.getAssetvalueA()!=null)).collect(Collectors.toMap(ChbMonthAssetPositiondetail::getProdId,Positiondetail -> Positiondetail));
+
+        if(null!=detail1001&&!detail1001.isEmpty()){
+            Map<String, Object> param = new HashMap<String, Object>();
+            param.put("cdate", batchDate);
+            param.put("prodids", detail1001.keySet());
+            List<ChbMonthAssetPositiondetail> prdPosition1001List = new ArrayList<>();
+            //获取产品科目信息
+            this.buildPrdProstion(prdPosition1001List,param);
+            //科目类数据合计
+            if(!StringUtil.isEmptyList(prdPosition1001List)){
+                for(ChbMonthAssetPositiondetail dto : prdPosition1001List){
+                    dto.setPosuuid(IDGenerator.generate(36));
+                    dto.setDetailno(detail1001.get(dto.getProdId()).getDetailno());
+                    dto.setTerm(detail1001.get(dto.getProdId()).getTerm());
+                    dto.setAssettype(detail1001.get(dto.getProdId()).getAssettype());
+                    dto.setAssettype2(detail1001.get(dto.getProdId()).getAssettype2());
+                    dto.setManageType(detail1001.get(dto.getProdId()).getManageType());
+                    dto.setVdate(detail1001.get(dto.getProdId()).getVdate());
+                    dto.setMdate(detail1001.get(dto.getProdId()).getMdate());
+                }
+                //将所有现金删除
+                prdPositionList.removeAll(detail1001.values());
+                //替换为对应的科目信息
+                prdPositionList.addAll(prdPosition1001List);
+            }
+        }
+
     }
+
+
+
+    /**
+     * 估值表现金查询方式拆分
+     * @param assetPositionListAdd
+     * @param param
+     */
+    public void buildPrdProstion(List<ChbMonthAssetPositiondetail> assetPositionListAdd,Map<String, Object> param){
+        // 查询当日的头寸数据
+        String monthReportCalWay = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ASSETPOSITION_CALWAY);
+        String isBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+        String iscal= SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ASSETPOSITION_CASHCALWAY);
+        //如果是移动平均法,且取值不是科目余额表中.则跳出获取估值科目信息的方法
+        if(!SVReportGlobalConstant.ASSETPOSITION_CALWAY_AVERAGE
+                .equals(monthReportCalWay)&&DictCodeList.是否_中债_是.getValue().equals(iscal)){
+            return;
+        }
+        // 通过系统参数判断是查询一体化还是中债子系统
+        String isSubSystem = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM);
+        // 查询科目余额
+        List<String> subjectNoList = new ArrayList<String>();
+        List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
+                .selectByMappingcode(InterfMappingConstants.MAPPINGCODE_CASH_SUBJECTNO_AVG);
+        for(ChbTypeMappingEx mapping: subjectNoMappingList){
+            // 获取源属性1：科目号
+            subjectNoList.add(mapping.getSrcfield1());
+        }
+        param.put("subjectNoList", subjectNoList);
+
+        if (DictCodeList.是否_中债_是.getValue().equals(isSubSystem)){
+            assetPositionListAdd.addAll(chbMonthReportDetailAssetMapper.selectBalanceDataSubSystem(param));
+        } else if (DictCodeList.是否_中债_否.getValue().equals(isSubSystem)){
+            // 读取是否穿透开关
+            param.put("isBtm", isBtm);
+            assetPositionListAdd.addAll(chbMonthReportDetailAssetMapper.selectBalanceData(param));
+        } else {
+            throw new RuntimeException("系统参数中：SVR_IS_SUB_SYSTEM配置错误！");
+        }
+
+    }
+
+
+
+
 
     /**
      * 批量入库方法
      * @param prdPositionList
      * @return
      */
-    public int insertBatch(List<ChbMonthAssetPositiondetail> prdPositionList,String term){
+    public int insertBatch(List<ChbMonthAssetPositiondetail> prdPositionList,String term,Date batchDate){
 
         if(null!=prdPositionList&&prdPositionList.size()==0){
             return 0;
         }
         //部分数据的统一处理
-        this.insertBefore(prdPositionList);
+        this.insertBefore(prdPositionList,batchDate);
 
         //一次性最大插入条数
         int maxDataCountOneTime = reportInsertCount;

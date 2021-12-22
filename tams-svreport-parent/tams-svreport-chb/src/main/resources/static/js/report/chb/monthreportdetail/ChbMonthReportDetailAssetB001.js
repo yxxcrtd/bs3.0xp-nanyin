@@ -69,8 +69,8 @@ $(function() {
             { title: "1.13.7.a投向金融资产投资公司发行的私募资产管理产品", width : 120, field: 'privateprdFlagStr',sortField:'privateprdFlag'},
             { title: "信用债使用评级", width : 120, field: 'rating',sortField:'rating'},
             { title: "1.15.b 投向市场化债转股相关产品的部分", width : 120, field: 'bondtostockFlagStr',sortField:'bondtostockFlag'},
-            { title: "1.15.c 逾期资产", width : 120, field: 'industry1',sortField:'industry1'},
-            { title: "3.1.1 创业投资基金", width : 120, field: 'industry1',sortField:'industry1'},
+            { title: "1.15.c 逾期资产", width : 120, field: 'typeFinal',sortField:'typeFinal'},
+            { title: "3.1.1 创业投资基金", width : 120, field: 'typeFinal',sortField:'typeFinal'},
             { title: "3.1.2 政府出资产业投资基金", width : 120, field: 'isGovernFund1Str',sortField:'isGovernFund1'},
             { title: "3.2 银行资本补充工具", width : 120, field: 'isYhbcgjStr',sortField:'isYhbcgj'},
             { title: "3.3非标债权行业归属", width : 120, field: 'isGovernFund1Str',sortField:'isGovernFund1'},
@@ -87,13 +87,12 @@ $(function() {
      */
     var exportExcel = function(flag) {
         var expArr=table.getAllCheckedRows();
-        var param={};
+        var param=getSearchParams();
+        if(!param.enddate){
+            Joyin.error("请选择统计日期进行导出！");
+            return;
+        }
         if(flag == '0'){
-            param = getSearchParams();
-            if(!param.enddate){
-                Joyin.error("请选择统计日期进行导出！");
-                return;
-            }
             Joyin.exportExcel("export",param);
         }else{
             if((!expArr || expArr.length ==0)){

@@ -111,7 +111,7 @@
             PB.PROD_NAME,
             PB.IS_FHXGCP,
             P.ASSET_CODE,
-            nvl(NVL(I.ASSET_NAME,B.SUBJECT_NAME),P.ASSET_CODE) ASSET_NAME,
+            NVL(I.ASSET_NAME,P.ASSET_CODE) ASSET_NAME,
             I.VDATE,
             I.MDATE,
             P.OPENPLAN,

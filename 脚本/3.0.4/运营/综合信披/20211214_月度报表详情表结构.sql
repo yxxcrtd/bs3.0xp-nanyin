@@ -77,11 +77,11 @@ values ('SVR_PBC_DATA_TYPE', 'SVR', '人行月报详情数据类型', null, '02'
 
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_PBC_DATA_TYPE';
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('SVR_PBC_DATA_TYPE', '01', '募集余额', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+values ('SVR_PBC_DATA_TYPE', '01', '01 募集余额（表1-1、1-4、3-1）', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('SVR_PBC_DATA_TYPE', '02', '当期募集发生额', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+values ('SVR_PBC_DATA_TYPE', '02', '02 当期募集发生额（表1-2、3-2）', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('SVR_PBC_DATA_TYPE', '03', '当期兑付发生额', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
+values ('SVR_PBC_DATA_TYPE', '03', '03 当期兑付发生额（表1-2）', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
 
 
 DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SVR_OPEN_TYPE';
