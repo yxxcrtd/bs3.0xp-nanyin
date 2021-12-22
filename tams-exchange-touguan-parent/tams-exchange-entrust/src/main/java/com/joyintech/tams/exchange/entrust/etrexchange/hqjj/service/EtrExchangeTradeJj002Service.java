@@ -10,17 +10,34 @@
  
 package com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service;
 
-import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.invest.common.constant.ServiceApplication;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.entrust.etrexchangetrade.dao.EtrExchangeTradeMapper;
+import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dao.EtrExchangeTradeJjMapper;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.*;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,28 +48,70 @@ import java.util.Map;
  * @since 1.0
  */
 @Service
-public class EtrExchangeTradeJj002Service extends CommonExportService<EtrExchangeTrade002Dto> {
+public class EtrExchangeTradeJj002Service extends BaseService {
 
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	
+
+    private IPlatformDate iPlatformDate;
+
+	private EtrExchangeTradeJjMapper jjEtrExchangeTradeMapper;
     /**
      * 分页查询产品持仓信息
      * <功能详细描述>
-     * @param param 查询参数
+     * @param dto 查询参数
      * @return 分页结果
      * @see
      * @since 1.0
      */
-	public Page<EtrExchangeTrade002Dto> findPositionsPage(Map<String, Object> param) {
+	public Page<EtrExchangeTradePositionsJjResponse> findPositionsPage(EtrExchangeTradePositionsJjRequest dto) {
 		try {
+			Map<String, Object> param = BeanUtil.object2Map(dto);
 			String userId = SecurityUtil.getLoginUser().getUserName();
 			if (StringUtils.isNotEmpty(userId)) {
 				logger.info("请求用户【{}】", "userId = " + userId);
 				param.put("userId", SecurityUtil.getLoginUser().getUserName());
-				return restTemplate.postForPage(
-						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/findPositionsPage", param,
-						EtrExchangeTrade002Dto.class);
+				String portfolioId = (String)param.get("portfolioId");
+				if (StringUtil.isNotEmpty(portfolioId)) {
+					param.put("portfolioIdList",
+							StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
+				}
+				param.put("sysDate", iPlatformDate.getSysDate());
+				param.put("POSITION_TYPE_03", BussinessDictCodeList.持仓类型_实际.getValue());
+				param.put("POSITION_TYPE_04", BussinessDictCodeList.持仓类型_质押.getValue());
+				param.put("POSITION_TYPE_05", BussinessDictCodeList.持仓类型_融入.getValue());
+				param.put("POSITION_TYPE_06", BussinessDictCodeList.持仓类型_融出.getValue());
+				param.put("VALUATION_SOURCE_CSD", BussinessDictCodeList.估值来源_中证登.getValue());
+				param.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+				param.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+				param.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+				param.put("PS_T01", BussinessDictCodeList.交易方向_买入.getValue());
+				param.put("PS_T02", BussinessDictCodeList.交易方向_卖出.getValue());
+				param.put("PS_T03", BussinessDictCodeList.交易方向_行权回售.getValue());
+				param.put("PS_T05", BussinessDictCodeList.交易方向_申购确认.getValue());
+				param.put("PS_T19", BussinessDictCodeList.交易方向_赎回确认.getValue());
+				param.put("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
+				param.put("PS_T48", DictCodeListExt2.交易方向_新股中签.getValue());
+				param.put("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
+				param.put("PS_T97", DictCodeListExt3.交易方向_配债.getValue());
+				param.put("PS_T04", DictCodeList.交易方向_申购.getValue());
+				param.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
+				param.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
+				// 浮动盈亏计算修改 modify by yufei 20200806 start
+				Page<EtrExchangeTradePositionsJjResponse> result = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> jjEtrExchangeTradeMapper.findPositionsPage(param));
+				if(!StringUtil.isEmptyList(result.getRoot())){
+					// 计算浮动盈亏
+					for(EtrExchangeTradePositionsJjResponse entity : result.getRoot()){
+						// 最新净价*组合持仓.数量 - 持仓成本 as 浮动盈亏
+						BigDecimal floatPL = ArithmeticUtil.multiply(entity.getPrice(),entity.getPtlPositionsNum());
+						floatPL = ArithmeticUtil.subtract(floatPL,entity.getPositionsAmt());
+						entity.setFloatingPL(floatPL);
+					}
+				}
+				return result;
+//				return restTemplate.postForPage(
+//						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/findPositionsPage", param,
+//						EtrExchangeTrade002Dto.class);
 			}
 		} catch (Exception ex) {
 			logger.info(ex.getMessage());
@@ -63,21 +122,52 @@ public class EtrExchangeTradeJj002Service extends CommonExportService<EtrExchang
 	/**
 	 * 分页查询债券质押持仓信息
 	 * 
-	 * @param param
+	 * @param request
 	 *            查询参数
 	 * @return 分页结果
 	 * @see
 	 * @since 1.0
 	 */
-	public Page<EtrExchangeTrade002Dto> findZqzyPositionsPage(Map<String, Object> param) {
+	public Page<EtrExchangeTradePositionsJjResponse> findZqzyPositionsPage(EtrExchangeTradePositionsJjRequest request) {
 		try {
+			Map<String, Object> pageParam = BeanUtil.object2Map(request);
 			String userId = SecurityUtil.getLoginUser().getUserName();
 			if (StringUtils.isNotEmpty(userId)) {
 				logger.info("请求用户【{}】", "userId = " + userId);
-				param.put("userId", SecurityUtil.getLoginUser().getUserName());
-				return restTemplate.postForPage(
-						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/findZqzyPositionsPage", param,
-						EtrExchangeTrade002Dto.class);
+				pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+				pageParam.put("POSITION_TYPE_03", BussinessDictCodeList.持仓类型_实际.getValue());
+				pageParam.put("POSITION_TYPE_04", BussinessDictCodeList.持仓类型_质押.getValue());
+				pageParam.put("POSITION_TYPE_05", BussinessDictCodeList.持仓类型_融入.getValue());
+				pageParam.put("POSITION_TYPE_06", BussinessDictCodeList.持仓类型_融出.getValue());
+				pageParam.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+				pageParam.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+				pageParam.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+				pageParam.put("PS_T01", BussinessDictCodeList.交易方向_买入.getValue());
+				pageParam.put("PS_T02", BussinessDictCodeList.交易方向_卖出.getValue());
+				pageParam.put("PS_T03", BussinessDictCodeList.交易方向_行权回售.getValue());
+				pageParam.put("PS_T05", BussinessDictCodeList.交易方向_申购确认.getValue());
+				pageParam.put("PS_T19", BussinessDictCodeList.交易方向_赎回确认.getValue());
+				pageParam.put("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
+				pageParam.put("PS_T48", DictCodeListExt2.交易方向_新股中签.getValue());
+				pageParam.put("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
+				pageParam.put("PS_T97", DictCodeListExt3.交易方向_配债.getValue());
+				pageParam.put("PS_T04", DictCodeList.交易方向_申购.getValue());
+				pageParam.put("LIBRARY_DIRECTION_01", DictCodeListExt3.交易方向_质押券入库.getValue());
+				pageParam.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
+				pageParam.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
+				pageParam.put("MORE_CONVRATE", 0.9);
+				if(StringUtil.isNotEmpty(pageParam.get("date"))) {
+					pageParam.put("date", DateUtil.parse((String) pageParam.get("date")));
+				}
+				else {
+					pageParam.put("date", iPlatformDate.getSysDate());
+				}
+				Page<EtrExchangeTradePositionsJjResponse> result = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(),
+						() -> jjEtrExchangeTradeMapper.findZqzyPositionsPage(pageParam));
+				return result;
+//				return restTemplate.postForPage(
+//						ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/findZqzyPositionsPage", param,
+//						EtrExchangeTrade002Dto.class);
 			}
 		} catch (Exception ex) {
 			logger.info(ex.getMessage());
@@ -88,30 +178,75 @@ public class EtrExchangeTradeJj002Service extends CommonExportService<EtrExchang
     /**
      * 查询证券代码联想框文本框
      *
-     * @param parameters 画面参数
+     * @param request 画面参数
      * @return 证券代码联想框文本框
      * @see
      * @since 1.0
      */
-    public Page<SelectOptionDto> getSecAcctId(Map<String, Object> parameters) {
-        Page<SelectOptionDto> tempList = restTemplate.postForPage(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getSecAcctId",
-            parameters, SelectOptionDto.class);
+    public Page<SelectOptionDto> getSecAcctId(SelectOptionRequestDto request) {
+//        Page<SelectOptionDto> tempList = restTemplate.postForPage(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getSecAcctId",
+//            parameters, SelectOptionDto.class);
+		Map<String, Object> param = BeanUtil.object2Map(request);
+		Page<SelectOptionDto> tempList = super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> jjEtrExchangeTradeMapper.getSecAcctId(param));
         return tempList;
     }
 
     /**
      * 查询上交所和深交所标准券数量
      *
-     * @param pageParam 页面参数
+     * @param request 页面参数
      * @return 上交所和深交所标准券数量
      * @see
      * @since 1.0
      */
-    public Map<String, String> loadSecNum(Map<String, Object> pageParam) {
-        Map<String, String> map = (Map<String, String>)restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/loadSecNum",
-                pageParam, Map.class);
-        return map;
+    public Map<String, String> loadSecNum(SelectOptionRequestDto request) {
+		Map<String, Object> pageParam = BeanUtil.object2Map(request);
+		Map<String, String> resultMap = new HashMap<>();
+		resultMap.put("secNum_sh", "0");
+		resultMap.put("secNum_color_sh", "red");
+		resultMap.put("secNum_sz", "0");
+		resultMap.put("secNum_color_sz", "red");
+		List<EtrExchangeTrade002Dto> dtoList = jjEtrExchangeTradeMapper.selectSecNum(pageParam);
+		for (EtrExchangeTrade002Dto dto : dtoList) {
+			if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
+				java.text.DecimalFormat format = new java.text.DecimalFormat("###,###,###");
+				resultMap.put("secNum_sh", format.format(dto.getSecNum()));
+				if(dto.getSecNum().compareTo(BigDecimal.ZERO) < 0) {
+					resultMap.put("secNum_color_sh", "green");
+				}
+			}
+			else if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
+				java.text.DecimalFormat format = new java.text.DecimalFormat("###,###,###");
+				resultMap.put("secNum_sz", format.format(dto.getSecNum()));
+				if(dto.getSecNum().compareTo(BigDecimal.ZERO) < 0) {
+					resultMap.put("secNum_color_sz", "green");
+				}
+			}
+		}
+		return resultMap;
+//        Map<String, String> map = (Map<String, String>)restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/loadSecNum",
+//                pageParam, Map.class);
+//        return map;
     }
+
+
+	public Page<EtrExchangeTradeEtrExchangeJjResponse> selectEtrExchange(EtrExchangeTradeEtrExchangeJjRequest request) {
+		Map<String, Object> param = BeanUtil.object2Map(request);
+		param.put("userId", LoginUserUtil.getUserName());
+		param.put("sysDate",iPlatformDate.getSysDateStr());
+		param.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
+		param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
+		param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
+		param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+		String portfolioId = (String)param.get("portfolioId");
+		if (StringUtil.isNotEmpty(portfolioId)) {
+			param.put("portfolioIdList",
+					StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
+		}
+		return super.queryForPage(request.getPageMode().getPageNo(), request.getPageMode().getPageSize(), () -> jjEtrExchangeTradeMapper.selectEtrExchange(param));
+//		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",
+//				param, EtrExchangeTrade003Dto.class);
+	}
 }
