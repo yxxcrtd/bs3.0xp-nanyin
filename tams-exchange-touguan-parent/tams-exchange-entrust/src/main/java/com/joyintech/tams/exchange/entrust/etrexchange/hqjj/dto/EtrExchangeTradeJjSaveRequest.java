@@ -21,9 +21,11 @@ import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.validator.EtrExchang
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *  交易信息 （左边下）
@@ -35,6 +37,7 @@ import java.math.BigDecimal;
 @PageId("JjEtrExchangeTrade001")
 @ValidLogic(targetClass = EtrExchangeTradeJj001Validator.class , groups = {ValidateGroupEdit.class,
     ValidateGroupDelete.class})
+@ApiModel(value="竞价指令下单表单",description="竞价指令下单表单")
 public class EtrExchangeTradeJjSaveRequest extends EtrEntrust implements ProcessEntity{
 
 
@@ -57,8 +60,11 @@ public class EtrExchangeTradeJjSaveRequest extends EtrEntrust implements Process
     @ApiModelProperty(name="targetType",value="目标类型",example="")
     private String targetType;
 
-    @ApiModelProperty(name="netPrice",value="净价",example="")
-    private BigDecimal netPrice;
+    @ApiModelProperty(name="priceModel",value="价格模式Code",example="01")
+    private String priceModel;
+
+    @ApiModelProperty(name="price",value="净价",example="")
+    private BigDecimal price;
 
     @ApiModelProperty(name="declaType",value="全价价格",example="")
     private BigDecimal fprice;
@@ -75,6 +81,17 @@ public class EtrExchangeTradeJjSaveRequest extends EtrEntrust implements Process
 
     @ApiModelProperty(name="businessTypeName",value="业务类型名称",example="")
     private String businessTypeName;
+
+    @ApiModelProperty(name="standardBondVolume",value="标准券数量",example="")
+    private Integer standardBondVolume;
+
+    @ApiModelProperty(name="repoAmt",value="回购金额",example="12")
+    private BigDecimal repoAmt;
+
+    @ApiModelProperty(name="repoRate",value="回购利率",example="12")
+    private BigDecimal repoRate;
+
+    List<EtrExchangeTradePortfolioRequest> portfolioDtoList;
     
 
 
@@ -206,6 +223,39 @@ public class EtrExchangeTradeJjSaveRequest extends EtrEntrust implements Process
 		this.targetType = targetType;
 	}
 
+    @Override
+    public String getPriceModel() {
+        return priceModel;
+    }
+
+    @Override
+    public void setPriceModel(String priceModel) {
+        this.priceModel = priceModel;
+    }
+
+    public Integer getStandardBondVolume() {
+        return standardBondVolume;
+    }
+
+    public void setStandardBondVolume(Integer standardBondVolume) {
+        this.standardBondVolume = standardBondVolume;
+    }
+
+    public BigDecimal getRepoAmt() {
+        return repoAmt;
+    }
+
+    public void setRepoAmt(BigDecimal repoAmt) {
+        this.repoAmt = repoAmt;
+    }
+
+    public BigDecimal getRepoRate() {
+        return repoRate;
+    }
+
+    public void setRepoRate(BigDecimal repoRate) {
+        this.repoRate = repoRate;
+    }
 
     /**
      * 获取 getPsStr
@@ -236,19 +286,29 @@ public class EtrExchangeTradeJjSaveRequest extends EtrEntrust implements Process
         this.acctNo = acctNo;
     }
 
+    @Override
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    @Override
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public List<EtrExchangeTradePortfolioRequest> getPortfolioDtoList() {
+        return portfolioDtoList;
+    }
+
+    public void setPortfolioDtoList(List<EtrExchangeTradePortfolioRequest> portfolioDtoList) {
+        this.portfolioDtoList = portfolioDtoList;
+    }
+
     public String getSecAcctId() {
         return secAcctId;
     }
 
     public void setSecAcctId(String secAcctId) {
         this.secAcctId = secAcctId;
-    }
-
-    public BigDecimal getNetPrice() {
-        return netPrice;
-    }
-
-    public void setNetPrice(BigDecimal netPrice) {
-        this.netPrice = netPrice;
     }
 }
