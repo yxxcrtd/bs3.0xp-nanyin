@@ -272,11 +272,11 @@ public class IbuQuoteBondService extends BaseService {
                     break;
                 }
                 if(StringUtil.equals(key,"02")){
-                    cfetsBondDealQuoteCommonDto.setMatureYield(ArithmeticUtil.divide((BigDecimal)anchoringValueMap.get(key),100,4));
+                    cfetsBondDealQuoteCommonDto.setMatureYield(ArithmeticUtil.divide((BigDecimal)anchoringValueMap.get(key),100,6));
                     break;
                 }
                 if(StringUtil.equals(key,"03")){
-                    cfetsBondDealQuoteCommonDto.setExerYield(ArithmeticUtil.divide((BigDecimal)anchoringValueMap.get(key),100,4));
+                    cfetsBondDealQuoteCommonDto.setExerYield(ArithmeticUtil.divide((BigDecimal)anchoringValueMap.get(key),100,6));
                     break;
                 }
             }
@@ -413,7 +413,7 @@ public class IbuQuoteBondService extends BaseService {
                         ajaxResult.setMessage(message);
                         return ajaxResult;
                     }
-                    if (StringUtil.isEmpty(item.getPartyId())&&StringUtil.equals(exportShow,"01")) {
+                    if (StringUtil.isEmpty(item.getPartyId())&&StringUtil.equals(exportShow,"01")&&StringUtil.equals(item.getTradeMarket(), BussinessDictCodeList.交易场所_银行间.getValue())) {
                         message = "指令" + item.getEntrustId() + "下组合未关联交易账户，请至[银行间业务参数管理-CFETS关联账户]中维护";
                         ajaxResult.setMessage(message);
                         return ajaxResult;
