@@ -171,7 +171,6 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	 * @see
 	 * @since 1.0
 	 */
-	@ApiOperation(value = "保存提交check", notes = "保存提交check")
 	@PostMapping("checkSaveError")
 	@ResponseBody
 	public Message<AjaxResult> checkSaveError(@RequestBody EtrExchangeTradeJjSaveRequest saveRequest, BindingResult br)

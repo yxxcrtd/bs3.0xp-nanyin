@@ -28,7 +28,7 @@ import java.util.Date;
  * @see EtrExchangeTradeGsImportCommonDto
  * @since 1.0
  */
-public class EtrExchangeTradeGsImportCommonDto extends EtrExchangeTradeCommon001Dto {
+public class EtrExchangeTradeGsImportCommonDto extends EtrExchangeTradeSaveRequest {
 
     /**
      * @param portfolioId 组合代码
