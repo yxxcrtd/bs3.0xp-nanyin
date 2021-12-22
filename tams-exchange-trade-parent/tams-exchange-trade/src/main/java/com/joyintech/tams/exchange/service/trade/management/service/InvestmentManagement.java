@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.system.base.dao.SysUserMapper;
-import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
 import com.joyintech.tams.exchange.common.bean.investment.BusinessDepartmentBean;
@@ -766,7 +763,7 @@ public class InvestmentManagement extends BaseService {
             logger.info("应答报文[{}]", JSONObject.toJSONString(result));
             return result;
         } catch (Exception e) {
-            logger.info("净价转换全价接口调用失败: {}", e);
+            logger.info("净价转换全价接口调用失败: {}", e.getMessage(), e);
             result = new ExpireIncomeRateRet();
             result.setStatuCode(ExchangeConstant.HTTP_STATUS_CODE_INTERNAL_SERVER_ERROR);
             return result;
@@ -785,7 +782,7 @@ public class InvestmentManagement extends BaseService {
             logger.info("appointInstruction {}", JsonUtils.getJsonFromObject(instructionPage));
             return new ResultBean(ErrorCode.SUCCESS);
         } catch (Exception e) {
-            logger.warn("appointInstruction error {}", e);
+            logger.warn("appointInstruction error {}", e.getMessage(), e);
             throw e;
         }
     }

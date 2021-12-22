@@ -1,34 +1,77 @@
 package com.joyintech.tams.exchange.common.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * create By MAXX on 2020/10/15
- */
+@ApiModel(value="买卖单位及交易上下限控制信息",description="买卖单位及交易上下限控制信息")
 public class MinTrdUnitLimit implements Serializable {
     private static final long serialVersionUID = 4144411393550111397L;
-    private String tradeMarket;//交易场所
-    private String tradePlat;//交易平台
-    private String assetType;//资产一级分类
-    private String assetType1;//资产二级分类
-    private String assetType2;//资产三级分类
-    private String ps;//交易方向
-    private String marketType;//上市板
-    private Integer minStep = 0;//最小交易单元
-    private String minStepUnit;//最小交易单元单位
-    private BigDecimal minAmt = new BigDecimal("0.00");//最低交易金额
-    private BigDecimal maxAmt = new BigDecimal("0.00");//最大交易金额
-    private Integer minNum = 0;//最低交易数量
-    private String minNumUnit;//最低交易数量单位
-    private Integer maxNum = 0;//最大交易数量
-    private String maxNumUnit;//最大交易数量单位
-    private Integer minNumMarket = 0;//最低交易数量（市价）
-    private String minNumMarketUnit;//最低交易数量单位（市价）
-    private Integer maxNumMarket = 0;//最大交易数量（市价）
-    private String maxNumMarketUnit;//最大交易数量单位（市价）
-    private Date effDate;//生效日
+
+    @ApiModelProperty(required = false, name = "tradeMarket", value = "交易场所")
+    private String tradeMarket;
+
+    @ApiModelProperty(required = false, name = "tradePlat", value = "交易平台")
+    private String tradePlat;
+
+    @ApiModelProperty(required = false, name = "assetType", value = "资产一级分类")
+    private String assetType;
+
+    @ApiModelProperty(required = false, name = "assetType1", value = "资产二级分类")
+    private String assetType1;
+
+    @ApiModelProperty(required = false, name = "assetType2", value = "资产三级分类")
+    private String assetType2;
+
+    @ApiModelProperty(required = false, name = "ps", value = "交易方向")
+    private String ps;
+
+    @ApiModelProperty(required = false, name = "marketType", value = "上市板")
+    private String marketType;
+
+    @ApiModelProperty(required = false, name = "minStep", value = "最小交易单元")
+    private Integer minStep = 0;
+
+    @ApiModelProperty(required = false, name = "minStepUnit", value = "最小交易单元单位")
+    private String minStepUnit;
+
+    @ApiModelProperty(required = false, name = "minAmt", value = "最低交易金额")
+    private BigDecimal minAmt = new BigDecimal("0.00");
+
+    @ApiModelProperty(required = false, name = "maxAmt", value = "最大交易金额")
+    private BigDecimal maxAmt = new BigDecimal("0.00");
+
+    @ApiModelProperty(required = false, name = "minNum", value = "最低交易数量")
+    private Integer minNum = 0;
+
+    @ApiModelProperty(required = false, name = "minNumUnit", value = "最低交易数量单位")
+    private String minNumUnit;
+
+    @ApiModelProperty(required = false, name = "maxNum", value = "最大交易数量")
+    private Integer maxNum = 0;
+
+    @ApiModelProperty(required = false, name = "maxNumUnit", value = "最大交易数量单位")
+    private String maxNumUnit;
+
+    @ApiModelProperty(required = false, name = "minNumMarket", value = "最低交易数量（市价）")
+    private Integer minNumMarket = 0;
+
+    @ApiModelProperty(required = false, name = "minNumMarketUnit", value = "最低交易数量单位（市价）")
+    private String minNumMarketUnit;
+
+    @ApiModelProperty(required = false, name = "maxNumMarket", value = "最大交易数量（市价）")
+    private Integer maxNumMarket = 0;
+
+    @ApiModelProperty(required = false, name = "maxNumMarketUnit", value = "最大交易数量单位（市价）")
+    private String maxNumMarketUnit;
+
+    @ApiModelProperty(required = false, name = "effDate", value = "生效日")
+    private Date effDate;
+
+    @ApiModelProperty(required = false, name = "market", value = "市场")
     private String market;
 
     public String getTradeMarket() {

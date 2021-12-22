@@ -2,24 +2,37 @@ package com.joyintech.tams.exchange.common.bean.instrument;
 
 import com.joyintech.tams.exchange.common.bean.MinPrice;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @Author: think
- * @Description: 最小价差、买卖单位及交易上下限控制bean
- * @Date: Created in 14:11 2020/11/5
- */
+@ApiModel(value = "最小价差、买卖单位及交易上下限控制信息", description = "最小价差、买卖单位及交易上下限控制信息")
 public class MinPriceAndMinTrdUnitLimitBean implements Serializable {
     private static final long serialVersionUID = -8413378793368636977L;
+
+    @ApiModelProperty(required = false, name = "errorCode", value = "返回码")
     private int errorCode;
+
+    @ApiModelProperty(required = false, name = "errorCode", value = "描述信息")
     private String errorMsg;
+
+    @ApiModelProperty(required = false, name = "stockCode", value = "市场代码")
     private String stockCode;
+
+    @ApiModelProperty(required = false, name = "minPriceList", value = "最小价差控制信息")
     private List<MinPrice> minPriceList;
+
+    @ApiModelProperty(required = false, name = "minTrdUnitLimitList", value = "买卖单位及交易上下限控制信息")
     private List<MinTrdUnitLimit> minTrdUnitLimitList;
+
+    @ApiModelProperty(required = false, name = "volumeMultiple", value = "")
     private int volumeMultiple = 1;
-    private String isFullPrice = "N"; //默认为净价
+
+    @ApiModelProperty(required = false, name = "isFullPrice", value = "是否全价，默认为净价")
+    private String isFullPrice = "N";
+
     public MinPriceAndMinTrdUnitLimitBean() {
     }
 

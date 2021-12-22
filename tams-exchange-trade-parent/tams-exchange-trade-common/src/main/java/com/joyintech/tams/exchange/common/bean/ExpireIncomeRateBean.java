@@ -1,37 +1,64 @@
 package com.joyintech.tams.exchange.common.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
-/**
- * create By MAXX on 2020/5/8
- */
+@ApiModel(value = "到期收益率计算接口请求报文", description = "到期收益率计算接口请求报文")
 public class ExpireIncomeRateBean implements Serializable {
-
     private static final long serialVersionUID = -1027162939930687815L;
-    private String status;          // 状态
-    private String createUser;      // 创建人
-    private String createTime;      // 创建时间
-    private String updateUser;      // 修改人
-    private String updateTime;      // 修改时间
-    private String finprodId;       // 资产代码
-    private String settleDate;      // 交割日
-    private Double unitCprice;      // 净价
-    private Double unitInt;         // 单位利息
-    private Double unitFprice;      // 全价
-    private Double cpriceAmt;       // 净价总额
-    private Double prinAmt;         // 券面总额
-    private Double intAmt;          // 利息总额
-    private Double fpriceAmt;       // 全价总额
-    private Double tradeAmt;        // 交易总额
-    private Double yield;           // 到期收益率
-    private String invAim;          // 投资目的
-    private String tradeMarket;     // 交易市场 03-上海证券交易所;04-深圳证券交易所
-    private String tradeMarketMode; // 市场等级 一级市场 01 二级市场
-    private String calculateField;  // 参与计算字段
-    private Double integrateIntAmt; // 综合利息总额
-    private Double integrateFpriceAmt;  // 综合全价总额
-    private Double integrateCpriceAmt;  // 综合净价总额
-    private String mdateStr;            // 到期日
+
+    @ApiModelProperty(required = false, name = "status", value = "状态")
+    private String status;
+    @ApiModelProperty(required = false, name = "createUser", value = "创建人")
+    private String createUser;
+    @ApiModelProperty(required = false, name = "createTime", value = "创建时间")
+    private String createTime;
+    @ApiModelProperty(required = false, name = "updateUser", value = "修改人")
+    private String updateUser;
+    @ApiModelProperty(required = false, name = "updateTime", value = "修改时间")
+    private String updateTime;
+    @ApiModelProperty(required = true, name = "finprodId", value = "资产代码")
+    private String finprodId;
+    @ApiModelProperty(required = true, name = "settleDate", value = "交割日")
+    private String settleDate;
+    @ApiModelProperty(required = true, name = "unitCprice", value = "净价")
+    private Double unitCprice;
+    @ApiModelProperty(required = false, name = "unitInt", value = "单位利息")
+    private Double unitInt;
+    @ApiModelProperty(required = false, name = "unitFprice", value = "全价")
+    private Double unitFprice;
+    @ApiModelProperty(required = false, name = "cpriceAmt", value = "净价总额")
+    private Double cpriceAmt;
+    @ApiModelProperty(required = false, name = "prinAmt", value = "券面总额")
+    private Double prinAmt;
+    @ApiModelProperty(required = false, name = "intAmt", value = "利息总额")
+    private Double intAmt;
+    @ApiModelProperty(required = false, name = "fpriceAmt", value = "全价总额")
+    private Double fpriceAmt;
+    @ApiModelProperty(required = true, name = "tradeAmt", value = "交易总额")
+    private Double tradeAmt;
+    @ApiModelProperty(required = false, name = "yield", value = "到期收益率")
+    private Double yield;
+    @ApiModelProperty(required = true, name = "invAim", value = "投资目的")
+    private String invAim;
+    @ApiModelProperty(required = true, name = "tradeMarket", value = " 交易市场（03-上海证券交易所，04-深圳证券交易所）")
+    private String tradeMarket;
+    @ApiModelProperty(required = true, name = "tradeMarketMode", value = "市场等级（01-一级市场，02-二级市场）")
+    private String tradeMarketMode;
+    @ApiModelProperty(required = false, name = "calculateField", value = "参与计算字段")
+    private String calculateField;
+    @ApiModelProperty(required = false, name = "integrateIntAmt", value = "综合利息总额")
+    private Double integrateIntAmt;
+    @ApiModelProperty(required = false, name = "integrateFpriceAmt", value = "综合全价总额")
+    private Double integrateFpriceAmt;
+    @ApiModelProperty(required = false, name = "integrateCpriceAmt", value = "综合净价总额")
+    private Double integrateCpriceAmt;
+    @ApiModelProperty(required = false, name = "mdateStr", value = "到期日")
+    private String mdateStr;
+    @ApiModelProperty(required = false, name = "calculateType", value = "计算模式（1-净价，2-全价，3-到期收益率）")
+    private int calculateType = 3;
 
     public String getStatus() {
         return status;
@@ -223,5 +250,13 @@ public class ExpireIncomeRateBean implements Serializable {
 
     public void setMdateStr(String mdateStr) {
         this.mdateStr = mdateStr;
+    }
+
+    public int getCalculateType() {
+        return calculateType;
+    }
+
+    public void setCalculateType(int calculateType) {
+        this.calculateType = calculateType;
     }
 }
