@@ -3,58 +3,43 @@ package com.joyintech.tams.exchange.common.bean.investment;
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.db.domain.Account;
 import com.joyintech.tams.exchange.common.utils.AccountUtils;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
 /**
  * 投管系统资金账户查询返回bean
  */
+@ApiModel(value = "查询账户资金返回报文", description = "查询账户资金返回报文")
 public class CapitalAccountBean implements Serializable {
-
     private static final long serialVersionUID = -7758117880214238801L;
-    /**
-     * 网点账号
-     */
+
+    @ApiModelProperty(name = "acctNo", value = "网点账号")
     private String acctNo;
 
-    /**
-     * 账户账号
-     */
+    @ApiModelProperty(name = "busiAcctNo", value = "资金账号")
     private String busiAcctNo;
 
-    /**
-     * 账户姓名
-     */
+    @ApiModelProperty(name = "accountName", value = "账户姓名")
     private String accountName;
 
-    /**
-     * 币种
-     */
+    @ApiModelProperty(name = "CCY", value = "币种")
     private String CCY;
 
-    /**
-     * 资金账户类型
-     */
+    @ApiModelProperty(name = "acctType", value = "资金账户类型")
     private String acctType;
 
-    /**
-     * 券商营业部代码
-     */
+    @ApiModelProperty(name = "stockExchangeNo", value = "券商营业部代码")
     private String stockExchangeNo;
 
-    /**
-     * 启用状态
-     */
+    @ApiModelProperty(name = "status", value = "启用状态")
     private String status;
 
-    /**
-     * 账户密码
-     */
+    @ApiModelProperty(name = "acctPwd", value = "账户密码")
     private String acctPwd;
 
-    /**
-     * 交易密码
-     */
+    @ApiModelProperty(name = "tradePwd", value = "交易密码")
     private String tradePwd;
 
     public String getAcctNo() {
