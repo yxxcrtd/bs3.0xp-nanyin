@@ -75,7 +75,7 @@ public class EntrustController {
     }
 
     /**
-     * 撤销user下对应entrust
+     * 撤销user下对应entrust  //撤销审批，对应revokecontroller,指令中有是否需要复核参数，决定是否走这个revoke
      *
      * @param userId 用户Id
      * @param dto    委托单号

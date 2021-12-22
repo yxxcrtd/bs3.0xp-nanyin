@@ -2,6 +2,7 @@ package com.joyintech.tams.exchange.service.trade.management.service;
 
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.*;
+import com.joyintech.tams.exchange.common.bean.investment.CapitalAccountBean;
 import com.joyintech.tams.exchange.common.constant.CompareType;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
@@ -46,11 +47,11 @@ public class AccountManagement {
     private InvestmentManagement investmentManagement;
 
     // 账户现存于投管，查询时调用投管服务
-    public ResultBean queryAccount(String id) {
+    public List<CapitalAccountBean> queryAccount(String id) {
         if (!Strings.isNullOrEmpty(id)) {
-            return new ResultBean(ErrorCode.SUCCESS, investmentManagement.queryCapitalAccountByIdOrAgentType(id, null));
+            return investmentManagement.queryCapitalAccountByIdOrAgentType(id, null);
         } else {
-            return new ResultBean(ErrorCode.SUCCESS, investmentManagement.queryCapitalAccountAll());
+            return investmentManagement.queryCapitalAccountAll();
         }
     }
 

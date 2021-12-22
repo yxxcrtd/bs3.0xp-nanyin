@@ -25,9 +25,8 @@ public class IntegratedQuoteManagement {
     @Autowired
     private QuoteJob quoteJob;
 
-    public ResultBean queryIntegratedBulkQuote(String stockCode, String entrustProp, String entrustBs, String accountId, int pageSize) {
-        List<IntegratedBulkQuoteBean> integratedBulkQuotes = terminalHelper.queryIntegratedBulkQuote(stockCode, entrustProp, entrustBs, accountId, pageSize);
-        return new ResultBean(ErrorCode.SUCCESS, integratedBulkQuotes);
+    public List<IntegratedBulkQuoteBean> queryIntegratedBulkQuote(String stockCode, String entrustProp, String entrustBs, String accountId, int pageSize) {
+        return terminalHelper.queryIntegratedBulkQuote(stockCode, entrustProp, entrustBs, accountId, pageSize);
     }
 
     public ResultBean queryIntegratedBulkCloseQuote(String stockCode, String exchangeType, String accountId, int pageSize) {
