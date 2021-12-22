@@ -1,9 +1,6 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.common.dao;
 
-import com.joyintech.tams.common.base.entity.SettleTransData;
-import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
-import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDetailDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto;
@@ -111,4 +108,17 @@ public interface ExchangeTransMatchCommonMapper {
      * @return
      */
     SettleTransData getFirstRepoSettleTransData(Map<String, Object> paraMap);
+
+    /**
+     * 获取首期交易的
+     * @param paraMap
+     * @return
+     */
+    List<FinDealPledge> getFirstRepoFinDealPledge(Map<String, Object> paraMap);
+
+    /**
+     * 根据汇总交易编号获取质押券置换结果list
+     * @param paraMap
+     */
+    List<FinPledgeDisplaceResult> getFinPledgeDisplaceResult (Map<String, Object> paraMap);
 }

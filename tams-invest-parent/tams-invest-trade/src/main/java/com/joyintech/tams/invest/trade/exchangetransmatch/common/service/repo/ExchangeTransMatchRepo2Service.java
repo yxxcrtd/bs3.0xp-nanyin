@@ -73,7 +73,7 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
                 BeanUtil.copyPropertiesIgnoreNull(settleTransData,dealDto);
                 baseTradeProductDealDto.setFinTradeProduct(this.genFinTradeProduct(settleTransData, baseTradeProductDealDto.getTrdProductDeal()));
                 baseTradeProductDealDto.setFinProductType(this.genFinProductType(dealDto,baseTradeProductDealDto.getTrdProductDeal()));
-                baseTradeProductDealDto.setFinDealPledgeList(this.genFinDealPledgeList(settleTransData,baseTradeProductDealDto.getTrdProductDeal()));
+                baseTradeProductDealDto.setFinDealPledgeList(this.genFinDealPledgeList(settleTransData,settleTransData.getCjbh(),baseTradeProductDealDto.getTrdProductDeal()));
 
                 baseTradeProductDealDtoList.add(baseTradeProductDealDto);
             }
@@ -101,7 +101,7 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
             BeanUtil.copyPropertiesIgnoreNull(settleTransData,dealDto);
             baseTradeProductDealDto.setFinTradeProduct(this.genFinTradeProduct(settleTransData, baseTradeProductDealDto.getTrdProductDeal()));
             baseTradeProductDealDto.setFinProductType(this.genFinProductType(dealDto,baseTradeProductDealDto.getTrdProductDeal()));
-            baseTradeProductDealDto.setFinDealPledgeList(this.genFinDealPledgeList(settleTransData,baseTradeProductDealDto.getTrdProductDeal()));
+            baseTradeProductDealDto.setFinDealPledgeList(this.genFinDealPledgeList(settleTransData,settleTransData.getCjbh(),baseTradeProductDealDto.getTrdProductDeal()));
 
             baseTradeProductDealDtoList.add(baseTradeProductDealDto);
         }

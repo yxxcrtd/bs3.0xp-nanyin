@@ -344,15 +344,16 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
 
     /**
      * 获取回购首期交易
-     * @param dealDto
-     * @param entrustDto
+     * @param fCjbh
+     * @param vdate
+     * @param portfolioId
      * @return
      */
-    public TrdProductDeal getFirstRepoTrade(ExchangeTransMatchCommonDto dealDto,ExchangeTransMatchCommonEntrustDto entrustDto) {
+    public TrdProductDeal getFirstRepoTrade(String fCjbh,Date vdate,String portfolioId) {
         Map<String,Object> queryMap = new HashMap<>();
-        queryMap.put("fCjbh",dealDto.getfCjbh());
-        queryMap.put("vdate",dealDto.getVdate());
-        queryMap.put("portfolioId",entrustDto.getPortfolioId());
+        queryMap.put("fCjbh",fCjbh);
+        queryMap.put("vdate",vdate);
+        queryMap.put("portfolioId",portfolioId);
         return exchangeTransMatchCommonMapper.getFirstRepoTrade(queryMap);
     }
 
@@ -367,6 +368,21 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
         queryMap.put("fCjbh",fCjbh);
         queryMap.put("vdate",vdate);
         return exchangeTransMatchCommonMapper.getFirstRepoSettleTransData(queryMap);
+    }
+
+    /**
+     * 获取回购首期交易
+     * @param fCjbh
+     * @param vdate
+     * @param portfolioId
+     * @return
+     */
+    public List<FinDealPledge> getFirstRepoFinDealPledge(String fCjbh,Date vdate,String portfolioId) {
+        Map<String,Object> queryMap = new HashMap<>();
+        queryMap.put("fCjbh",fCjbh);
+        queryMap.put("vdate",vdate);
+        queryMap.put("portfolioId",portfolioId);
+        return exchangeTransMatchCommonMapper.getFirstRepoFinDealPledge(queryMap);
     }
 
     public TrdDealTotalAdd generateDealTotalAdd(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdFinProductDealTotal trdFinProductDealTotal) {
@@ -518,9 +534,9 @@ public class ExchangeTransMatchRepoCommonService extends BaseService {
      * @param trdProductDeal
      * @return
      */
-    public List<FinDealPledge> genFinDealPledgeList(SettleTransData settleTransData,TrdProductDeal trdProductDeal){
+    public List<FinDealPledge> genFinDealPledgeList(SettleTransData settleTransData,String cjbh,TrdProductDeal trdProductDeal){
         List<FinDealPledge> finDealPledgeList = new ArrayList<>();
-        SettleTransData firstSettleTransData = this.getFirstRepoSettleTransData(settleTransData.getfCjbh(),settleTransData.getVdate());
+        SettleTransData firstSettleTransData = this.getFirstRepoSettleTransData(cjbh,settleTransData.getVdate());
         if(StringUtil.isNotEmpty(firstSettleTransData)) {
             SettleTransDataPledge firstSettleTransDataPledge = settleTransDataPledgeMapper.selectByPrimaryKey(firstSettleTransData.getTradeId());
             if(StringUtil.isNotEmpty(firstSettleTransDataPledge)) {
