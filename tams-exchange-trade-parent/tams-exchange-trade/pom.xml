@@ -34,6 +34,36 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		
+		
+		<dependency>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>amqp-client</artifactId>
+			<version>4.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>framework-rabbitmq</artifactId>
+			<version>0.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>framework-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>io.lettuce</groupId>
+					<artifactId>lettuce-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+		</dependency>
 	</dependencies>
 
 	<properties>
