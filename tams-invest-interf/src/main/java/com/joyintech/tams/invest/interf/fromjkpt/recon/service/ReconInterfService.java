@@ -53,41 +53,41 @@ public class ReconInterfService {
         param.put("RECON_PARA_CODE_02", DictCodeListStl.参数代码_对账维度.getValue());
 
         setParam(param);
-        //对于协议回购不管参数配置的是什么，恒生柜台的上交所分开，深交所都按委托编号汇总，金证柜台给的就是委托汇总维度
+        //对于协议回购不管参数配置的是什么，都是委托汇总维度
         if(param.containsKey("collect")||param.containsKey("collectEntrustId")||param.containsKey("collectByMarketId")){
             Map<String,Object> paramdetail = new HashMap<>();
-            paramdetail.put("execDate",param.get("execDate"));
-            List<StlSecReconDealDto> stlSecReconDealDetaileDtos = reconInterfMapper.listStlSecReconDealIntegratedRepDetaile(paramdetail);
-            if(null!=stlSecReconDealDetaileDtos&&!StringUtil.isEmptyList(stlSecReconDealDetaileDtos)){
-                paramdetail.put("tradeIds",stlSecReconDealDetaileDtos);
-                List<StlSecRecon> tradeIds=reconInterfMapper.listStlSecRecon(paramdetail);
-                if(CollectionUtils.isNotEmpty(tradeIds)) {
-                    paramdetail.put("tradeIds",tradeIds);
-                    //怎么登录之前怎么删除
-                    deleteAll(paramdetail);
-                }
-                stlSecReconDealDetaileDtos.forEach(item ->{
-                    item.setSeqNo(IDGenerator.generate());
-                    stlSecReconDealMapper.insertSelective(item);
-                });
-            }
-//            //指令汇总
-//            Map<String,Object> paramtotal = new HashMap<>();
-//            paramtotal.put("execDate",param.get("execDate"));
-//            List<StlSecReconDealDto> stlSecReconDealTotalDtos = reconInterfMapper.listStlSecReconDealIntegratedRepTotal(paramtotal);
-//            if(null!=stlSecReconDealTotalDtos&&!StringUtil.isEmptyList(stlSecReconDealTotalDtos)){
-//                paramtotal.put("entrustIds",stlSecReconDealTotalDtos);
-//                List<StlSecRecon> finprodIds=reconInterfMapper.listStlSecRecon(paramdetail);
-//                if(CollectionUtils.isNotEmpty(finprodIds)) {
-//                    paramdetail.put("finprodIds",finprodIds);
+//            paramdetail.put("execDate",param.get("execDate"));
+//            List<StlSecReconDealDto> stlSecReconDealDetaileDtos = reconInterfMapper.listStlSecReconDealIntegratedRepDetaile(paramdetail);
+//            if(null!=stlSecReconDealDetaileDtos&&!StringUtil.isEmptyList(stlSecReconDealDetaileDtos)){
+//                paramdetail.put("tradeIds",stlSecReconDealDetaileDtos);
+//                List<StlSecRecon> tradeIds=reconInterfMapper.listStlSecRecon(paramdetail);
+//                if(CollectionUtils.isNotEmpty(tradeIds)) {
+//                    paramdetail.put("tradeIds",tradeIds);
 //                    //怎么登录之前怎么删除
 //                    deleteAll(paramdetail);
 //                }
-//                stlSecReconDealTotalDtos.forEach(item ->{
+//                stlSecReconDealDetaileDtos.forEach(item ->{
 //                    item.setSeqNo(IDGenerator.generate());
 //                    stlSecReconDealMapper.insertSelective(item);
 //                });
 //            }
+            //委托汇总
+            Map<String,Object> paramtotal = new HashMap<>();
+            paramtotal.put("execDate",param.get("execDate"));
+            List<StlSecRecon> stlSecRecons = reconInterfMapper.listStlSecRecon(paramtotal);
+            if(CollectionUtils.isNotEmpty(stlSecRecons)){
+                stlSecRecons.removeIf(secRecon -> StringUtil.isEmpty(secRecon.getEntrustTradeId()));
+            }
+            paramtotal.put("entrustIds", stlSecRecons);
+            List<StlSecReconDealDto> stlSecReconDealTotalDtos = reconInterfMapper.listStlSecReconDealIntegratedRepTotal(paramtotal);
+            if(null!=stlSecReconDealTotalDtos&&!StringUtil.isEmptyList(stlSecReconDealTotalDtos)){
+                //删除对账单及业务数据
+                deleteAll(paramtotal);
+                stlSecReconDealTotalDtos.forEach(item ->{
+                    item.setSeqNo(IDGenerator.generate());
+                    stlSecReconDealMapper.insertSelective(item);
+                });
+            }
         }
         //明细
         if(param.containsKey("collect")){
@@ -108,7 +108,12 @@ public class ReconInterfService {
             Map<String,Object> paramtotal = new HashMap<>();
             paramtotal.put("execDate",param.get("execDate"));
             paramtotal.put("collect",param.get("collectEntrustId"));
-            paramtotal.put("finprodIds",reconInterfMapper.listStlSecRecon(paramtotal));
+            // paramtotal.put("finprodIds",reconInterfMapper.listStlSecRecon(paramtotal));
+            List<StlSecRecon> stlSecRecons = reconInterfMapper.listStlSecRecon(paramtotal);
+            if(CollectionUtils.isNotEmpty(stlSecRecons)){
+                stlSecRecons.removeIf(secRecon -> StringUtil.isEmpty(secRecon.getEntrustTradeId()));
+            }
+            paramtotal.put("entrustIds",stlSecRecons);
             List<StlSecReconDealDto> stlSecReconDealDtos = reconInterfMapper.listStlSecReconDealTotalByEntrustId(paramtotal);
             if(null!=stlSecReconDealDtos&&!StringUtil.isEmptyList(stlSecReconDealDtos)){
                 //删除对账单及相关业务数据
@@ -126,10 +131,11 @@ public class ReconInterfService {
             paramtotal.put("execDate",param.get("execDate"));
             paramtotal.put("collect",param.get("collectByMarketId"));
             List<StlSecRecon> stlSecRecons = reconInterfMapper.listStlSecRecon(paramtotal);
-            if(CollectionUtils.isNotEmpty(stlSecRecons)){
-                stlSecRecons.removeIf(secRecon -> StringUtil.isEmpty(secRecon.getEntrustTradeId()));
-            }
-            paramtotal.put("entrustIds", stlSecRecons);
+//            if(CollectionUtils.isNotEmpty(stlSecRecons)){
+//                stlSecRecons.removeIf(secRecon -> StringUtil.isEmpty(secRecon.getEntrustTradeId()));
+//            }
+//            paramtotal.put("entrustIds", stlSecRecons);
+            paramtotal.put("finprodIds", stlSecRecons);
             List<StlSecReconDealDto> stlSecReconDealDtos = reconInterfMapper.listStlSecReconDealTotalByMarketId(paramtotal);
             if(null!=stlSecReconDealDtos&&!StringUtil.isEmptyList(stlSecReconDealDtos)){
                 //删除对账单及业务数据
