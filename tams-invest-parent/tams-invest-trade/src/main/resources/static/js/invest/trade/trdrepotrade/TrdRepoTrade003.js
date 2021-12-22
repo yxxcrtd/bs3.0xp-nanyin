@@ -110,7 +110,6 @@
     }
 
     function realSaveOrSubmit(operateType) {
-        debugger;
         var s;
         var maxTradeamt = 0;
         if(typeof(BaseRiskMathComm) != 'undefined') {

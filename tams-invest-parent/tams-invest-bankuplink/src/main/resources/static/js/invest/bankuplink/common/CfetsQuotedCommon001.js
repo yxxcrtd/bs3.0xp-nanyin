@@ -202,7 +202,6 @@
     var reloadPtlAllocation = function(result){
         for (var i in result) {
             var obj = result[i];
-            debugger;
             if (obj != null && obj !== '') {
                 var datas = {
                     portfolioId:obj.portfolioId,

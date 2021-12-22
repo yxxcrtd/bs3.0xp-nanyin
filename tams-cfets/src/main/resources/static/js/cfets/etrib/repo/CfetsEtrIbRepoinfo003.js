@@ -349,7 +349,6 @@
         param.riskTrialRetDto = object.riskTrialRetDto;
         param.elementId = 'CfetsEtrIbRepoinfo003_btn_submit';
         res.param = param;
-        debugger;
         // res.objects = objects;
         return res;
     }

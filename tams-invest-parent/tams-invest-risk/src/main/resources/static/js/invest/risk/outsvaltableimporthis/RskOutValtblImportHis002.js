@@ -3,7 +3,6 @@ $(function() {
      * 获取查询参数
      */
     var getSearchParams = function() {
-        debugger;
         return {
             fileName: $("#fileName").val(),
             valdate: $("#valdate").val(),

@@ -641,7 +641,6 @@
     	object.indId = $("#indId").val();
     	object.indType = $("#indType").val();
     	//条件设置
-    	debugger;
     	if(dataTable!=null && dataTable!=''){
             var selArr = dataTable.getAllRows();
         }

@@ -62,7 +62,6 @@
       * 画面加载完成
       */
      $(function() {
-        debugger;
         $('#CfetsManualSettle_btn_submit').click(function() {
             saveOrSubmit('submit');
         });

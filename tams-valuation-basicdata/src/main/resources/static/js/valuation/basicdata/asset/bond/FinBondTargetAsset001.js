@@ -3,7 +3,6 @@
      * 获取查询参数
      */
     var getSearchParams = function() {
-        debugger;
         var objDiv= $("#FinBondTargetAsset001_DIV");
         var param = $.serializeToObject('#searchForm');
         //	查询条件换成资产二级分类多选项 -wangguiqi on 2019/7/18 -end

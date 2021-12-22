@@ -234,7 +234,6 @@
 
 
     var init = function () {
-        debugger;
         if(statusValid && statusValid == statusValid_01){
             //2021-04-25
             dealIntDetail();

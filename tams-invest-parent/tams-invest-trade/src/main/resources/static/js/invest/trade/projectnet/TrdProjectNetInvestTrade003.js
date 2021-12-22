@@ -10,7 +10,6 @@ $(function() {
     }
 
     function saveOrSubmit(operateType) {
-        debugger;
         // 划款指令隐藏时，自动生成划款指令信息
         generateOrders(function () {
             var s;

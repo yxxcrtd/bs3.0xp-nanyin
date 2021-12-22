@@ -80,7 +80,6 @@ var rsk = function() {
     	/**
     	 * 获取列表参数
     	 */
-    	debugger;
     	var object = $.serializeToObject('#submitForm', false);
     	if(table!=null && table!=''){
             var selArr = table.getAllRows();
@@ -107,8 +106,6 @@ var rsk = function() {
     }
     
     var init = function(){
-    	debugger;
-    	
     	if(entity&&entity.selectedItem){
     		setTimeout(function(){
     		table.reload({data:entity.selectedItem})

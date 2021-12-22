@@ -10,7 +10,6 @@
 	 */
   var onSaveOrSubmitAction = function(operateType) {
 		var object = $.serializeToObject('#AssetClassManagement002_Form');
-		debugger;
 		object.operateType = operateType;
 		object.pageModel = pageModel;
 		Joyin
@@ -23,7 +22,6 @@
 									.confirm(
 											result.data,
 											function() {
-												debugger;
 												if (operateType === 'save') {
 													WorkFlow
 															.doSaveList(

@@ -164,7 +164,6 @@
 
 	    // 父画面处理模式联动事件
         $('#' + payTypeElement).on('change', function () {
-            debugger;
             payTypeChange();
         });
 	});
