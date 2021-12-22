@@ -74,7 +74,6 @@
         <module>../../tams-invest-interf</module>
 
         <module>../../tams-invest-parent</module>
-        <module>../../tams-invest-parent</module>
         <module>../../tams-system/touguan/app</module>
         <module>../../tams-business-common</module>
         <module>../../tams-cfets</module>
@@ -84,6 +83,6 @@
         <module>../../tams-exchange-touguan-system</module>
         <module>../../tams-svreport-common</module>
         <module>../../tams-svreport-parent/tams-svreport-interf</module>
-        
+
     </modules>
 </project>
