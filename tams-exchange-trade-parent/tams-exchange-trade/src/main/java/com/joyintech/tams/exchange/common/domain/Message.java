@@ -1,12 +1,11 @@
 package com.joyintech.tams.exchange.common.domain;
 
-import java.io.Serializable;
-
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
 
 @ApiModel(value = "消息对象", description = "消息对象")
 public class Message<T> implements Serializable {
@@ -16,10 +15,10 @@ public class Message<T> implements Serializable {
     private static final String SUCCESS = "000";
     private static final String FAIL = "001";
 
-    @ApiModelProperty(required = true, name = "code", value = "响应码", example = "")
+    @ApiModelProperty(required = true, name = "code", value = "响应码", example = "000")
     private String code;
 
-    @ApiModelProperty(required = true, name = "message", value = "消息", example = "")
+    @ApiModelProperty(required = true, name = "message", value = "消息", example = "成功")
     private String message;
 
     @ApiModelProperty(required = true, name = "data", value = "数据", example = "")
@@ -30,19 +29,20 @@ public class Message<T> implements Serializable {
      */
     public Message() {
     }
-    
+
     public Message(ResultBean resultBean) {
-    	if(resultBean==null) {
-    		this.fail();
-    	}
-    	if (resultBean.getErrorCode() == ErrorCode.SUCCESS.value) {
-    		this.code = SUCCESS;
-    	}else {
-    		this.code = resultBean.getErrorCode()+"";
-    	}
-        this.message = resultBean.getErrorMsg();
-        if(resultBean.getData()!=null) {
-        	this.data = (T) resultBean.getData();
+        if (resultBean == null) {
+            this.fail();
+        } else {
+            if (resultBean.getErrorCode() == ErrorCode.SUCCESS.value) {
+                this.code = SUCCESS;
+            } else {
+                this.code = resultBean.getErrorCode() + "";
+            }
+            this.message = resultBean.getErrorMsg();
+            if (resultBean.getData() != null) {
+                this.data = (T) resultBean.getData();
+            }
         }
     }
 
@@ -53,10 +53,9 @@ public class Message<T> implements Serializable {
     }
 
     public Message(T data) {
-    	this.code = SUCCESS;
+        this.code = SUCCESS;
         this.data = data;
     }
-
 
     public Message<T> success() {
         this.code = SUCCESS;
