@@ -287,6 +287,7 @@
 
     var websocket = cmds(cmdsWebSocketUrl,
         function (data) {
+            debugger
             if(data != null && data != "" && "没有数据" != data){
                 var objs = eval('('+data+')');
                 var noMDEntries = objs.noMDTypes.noRelatedSym.noMDEntries;
@@ -299,6 +300,10 @@
                         document.getElementById('EtrIbBondinfoHq_newPrice').innerHTML =  JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2);
                     }
                 }
+            }else{
+                document.getElementById('EtrIbBondinfoHq_newRate').innerHTML = ''; // 最新收益率
+                document.getElementById('EtrIbBondinfoHq_latestYield').innerHTML ='';// 收益率的涨跌
+                document.getElementById('EtrIbBondinfoHq_newPrice').innerHTML ='';// 最新净价
             }
         }
         ,

@@ -148,6 +148,14 @@
                         document.getElementById('pjlvRate').innerHTML = JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2) + '%';
                     }
                 }
+            }else{
+                document.getElementById('newRate').innerHTML ='';// 最新利率
+                document.getElementById('kpRate').innerHTML ='';// 开盘利率
+                document.getElementById('zgRate').innerHTML ='';// 最高利率
+                document.getElementById('zdRate').innerHTML ='';// 最低利率
+                document.getElementById('pjRate').innerHTML ='';// 加权平均利率
+                document.getElementById('pjTerm').innerHTML = '--';// 平均回购期限
+                document.getElementById('pjlvRate').innerHTML ='';// 加权平均利率(利率债)
             }
         },
         function (event) {
