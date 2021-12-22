@@ -523,7 +523,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ApiOperation(value = "查询当日登记列表分页数据", notes = "查询当日登记列表分页数据")
 	@PostMapping("/pageDayReg")
 	@ResponseBody
-	public Message<Page<CfetsBondDayRegDto>> pageDayReg(@RequestBody EntrustRequest dto){
+	public Message<Page<CfetsBondDayRegDto>> pageDayReg(@RequestBody DayRegRequest dto){
 		try {
 			Page<CfetsBondDayRegDto> list = ibuQuoteBondService.pageDayReg(dto);
 			return new Message<Page<CfetsBondDayRegDto>>().success().setData(list);

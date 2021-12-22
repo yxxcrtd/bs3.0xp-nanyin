@@ -1132,7 +1132,7 @@ public class IbuQuoteBondService extends BaseService {
      * @param dto
      * @return
      */
-    public Page<CfetsBondDayRegDto> pageDayReg(EntrustRequest dto){
+    public Page<CfetsBondDayRegDto> pageDayReg(DayRegRequest dto){
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("loginUserId", LoginUserUtil.getUserName());
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
