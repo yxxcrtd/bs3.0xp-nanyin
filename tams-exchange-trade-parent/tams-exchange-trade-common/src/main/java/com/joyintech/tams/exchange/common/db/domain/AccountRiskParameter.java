@@ -1,43 +1,56 @@
 package com.joyintech.tams.exchange.common.db.domain;
 
-import org.springframework.data.annotation.Id;
+import java.io.Serializable;
+import java.util.Date;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.Date;
+
+import org.springframework.data.annotation.Id;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 账户风控参数
  */
+@ApiModel(value="账户风控参数",description="账户风控参数")
 public class AccountRiskParameter implements Serializable, KeyMethodInterface<String> {
     private static final long serialVersionUID = -8454602210516114176L;
+    @ApiModelProperty(required = true, name = "accountId", value = "账户Id", example = "")
     @NotNull
     @Size(max = 32)
     @Id
     private String accountId;
 
+    @ApiModelProperty(required = true, name = "flow", value = "下单流量控制", example = "")
     @NotNull
     @Digits(integer = 20, fraction = 0)
     private Integer flow;//下单流量控制
 
+    @ApiModelProperty(required = true, name = "totalCount", value = "委托总次数控制", example = "")
     @NotNull
     @Digits(integer = 20, fraction = 0)
     private Integer totalCount;//委托总次数控制
 
+    @ApiModelProperty(required = true, name = "cancelRatio", value = "报撤单比列", example = "")
     @NotNull
     @Digits(integer = 3, fraction = 2)
     private Double cancelRatio;//报撤单比列
 
+    @ApiModelProperty(required = true, name = "selfTrade", value = "同账号自成交控制", example = "")
     @NotNull
     private Boolean selfTrade;//同账号自成交控制
 
+    @ApiModelProperty(name = "createTime", value = "创建时间", example = "")
     @NotNull
     private Date createTime;
 
+    @ApiModelProperty(name = "createTime", value = "更新时间", example = "")
     private Date updateTime;
 
+    @ApiModelProperty(name = "count", value = "count", example = "")
     private int count;
 
     public AccountRiskParameter() {
