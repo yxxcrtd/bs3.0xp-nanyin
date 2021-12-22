@@ -1552,7 +1552,7 @@
     <!--流程中组合分配-->
     <select id="listWflPtlAllocationDto" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto">
 SELECT
-                T1.ENTRUST_ID ,
+                T1.ENTRUST_ID,
                 T1.PORTFOLIO_ID,
                 T5.PORTFOLIO_ID,
                 T1.SHARE_AMT*100,
@@ -1595,5 +1595,22 @@ SELECT
         <if test="CONFIRM_STATUS_1 !=null and CONFIRM_STATUS_1 !=''">
             AND TRD_CONF_STATUS = #{CONFIRM_STATUS_1}
         </if>
+    </select>
+
+    <!--获取指令流程中占用券面总额-->
+    <select id="getWflShareAmtByEntrustId" resultType="java.math.BigDecimal">
+    SELECT
+            SUM(SHARE_AMT) SHARE_AMT
+        FROM
+            (
+            SELECT
+                SHARE_AMT*100 SHARE_AMT
+            FROM
+                WFL_REG_FIN_PRODUCT_DEAL where ENTRUST_ID = #{entrustId}
+        UNION ALL
+            SELECT
+                SHARE_AMT*100 SHARE_AMT
+            FROM
+                WFL_IBU_QUOTE_ETR_RE where ENTRUST_ID = #{entrustId})
     </select>
 </mapper>

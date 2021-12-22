@@ -17,13 +17,17 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.position.service.PositionInfoService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.bankuplink.bond.dto.*;
+import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
+import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
+import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
+import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.collections.CollectionUtils;
@@ -50,6 +54,8 @@ public class CfetsQuotedCommonService extends BaseService {
     private static final Logger logger = LoggerFactory.getLogger(CfetsQuotedCommonService.class);
 
 
+    @Autowired
+    private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
     /**
      * {@linkplain}
      */
@@ -790,5 +796,13 @@ public class CfetsQuotedCommonService extends BaseService {
         return ajaxResult;
     }
 
+    /**
+     * 获取指令流程中占用的券面总额
+     * @param entrustId
+     * @return
+     */
+    public BigDecimal getWflShareAmtByEntrustId(String entrustId){
+        return cfetsIbuQuoteBondMapper.getWflShareAmtByEntrustId(entrustId);
+    }
 
 }
