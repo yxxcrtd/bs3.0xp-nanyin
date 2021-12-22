@@ -42,11 +42,12 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeJjSaveRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeDzImportCommonDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeGsImportCommonDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj002Service;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
@@ -112,8 +113,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
     @Autowired
     FinProductConvertibleMapper finProductConvertibleMapper;
     
-    @Autowired
-	EtrExchangeTradeJj002Service etrExchangeTrade002Service;
 
     @Autowired
     FinProductAddMapper finProductAddMapper;
