@@ -70,6 +70,8 @@ public class ExchangeTransMatch001Controller  extends BaseController {
         model.addAttribute("PS_T47", DictCodeListExt2.交易方向_增发.getValue());
         model.addAttribute("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
 
+        model.addAttribute("TARGET_BACK_TYPE_H01",DictCodeList.回购类型_质押式协议回购.getValue());
+
         model.addAttribute("TRD_MATCH_TYPE_0", DictCodeListExt3.下行交易匹配类型_自动匹配.getValue());
         model.addAttribute("TRD_MATCH_TYPE_1", DictCodeListExt3.下行交易匹配类型_手动匹配.getValue());
 

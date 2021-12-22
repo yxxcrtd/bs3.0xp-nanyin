@@ -277,6 +277,8 @@
                 object.tradePlat = item.tradePlat;
                 object.dealDate = new Date(item.dealDate).Format("yyyy-MM-dd");
                 object.secAccount = item.secAcctNo;
+                object.repoType = item.repoType;
+                object.remainNum = item.remainNum;
                 if(entrustDataTable.table) {
                     entrustDataTable.clear();
                 }

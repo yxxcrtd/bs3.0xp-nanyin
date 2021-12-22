@@ -234,6 +234,9 @@
         <if test="secAccount!=null and secAccount!='' ">
             AND D1.SEC_ACCT_ID = #{secAccount}
         </if>
+        <if test="repoType!=null and repoType!='' and repoType == 'H01'.toString()">
+            AND ifnull(A1.ENTRUST_AMT,0)-ifnull(S.MARCH_AMT_EN,0) >= #{remainNum}
+        </if>
     </select>
 
     <select id="findDealList" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto">
