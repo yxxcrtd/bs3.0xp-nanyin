@@ -1,32 +1,39 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import com.joyintech.tams.exchange.common.bean.*;
+import com.joyintech.tams.exchange.common.bean.AlgorithmPlaceBean;
+import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
+import com.joyintech.tams.exchange.common.bean.ReviewDto;
+import com.joyintech.tams.exchange.common.bean.TrdExchangeDto;
 import com.joyintech.tams.exchange.common.db.domain.Algorithm;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
+import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.service.trade.management.service.OrderManagement;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("OrderController_dtx")
-@RequestMapping("/service/joyin")
+@RequestMapping("/trade/joyin")
+@Api(tags = "场内交易-委托操作接口")
 public class OrderController {
 
     @Autowired
     private OrderManagement orderManagement;
 
-    /**
-     * 查询订单信息
-     *
-     * @param userId        用户Id
-     * @param instructionId 指令Id
-     * @param accountId     账户Id
-     * @return ResultBean
-     */
+//    /**
+//     * 查询订单信息
+//     *
+//     * @param userId        用户Id
+//     * @param instructionId 指令Id
+//     * @param accountId     账户Id
+//     * @return ResultBean
+//     */
 //    @RequestMapping(value = {"/order"}, method = RequestMethod.GET)
-//    public ResultBean queryAll(@RequestParam(value = "user_id") String userId,
-//                               @RequestParam(value = "instruction_id", required = false, defaultValue = "") String instructionId,
-//                               @RequestParam(value = "account_id", required = false, defaultValue = "") String accountId) {
-//        return orderManagement.queryOrder(userId, instructionId, accountId);
+//    public Message<List<Order>> queryAll(@RequestParam(value = "userId") String userId,
+//                               @RequestParam(value = "instructionId", required = false, defaultValue = "") String instructionId,
+//                               @RequestParam(value = "accountId", required = false, defaultValue = "") String accountId) {
+//        return new Message<List<Order>>(orderManagement.queryOrder(userId, instructionId, accountId));
 //    }
 
     /**
@@ -36,10 +43,10 @@ public class OrderController {
      * @param order  下单信息
      * @return ResultBean
      */
+    @ApiOperation(value = "普通下单（竞价下单）", notes = "普通下单（竞价下单）")
     @RequestMapping(value = "/order", method = RequestMethod.POST)
-    public ResultBean sendOrder(@RequestParam(value = "user_id") String userId,
-                                @RequestBody OrderPlaceBean order) {
-        return orderManagement.sendOrder(userId, order);
+    public Message<OrderPlaceBean> sendOrder(@RequestParam(value = "userId") String userId, @RequestBody OrderPlaceBean order) {
+        return new Message<OrderPlaceBean>(orderManagement.sendOrder(userId, order));
     }
 
     /**
@@ -49,35 +56,35 @@ public class OrderController {
      * @param integratedEntrust 综合订单信息
      * @return ResultBean
      */
+    @ApiOperation(value = "综合业务下单", notes = "综合业务下单")
     @RequestMapping(value = "/order/integratedEntrust", method = RequestMethod.POST)
-    public ResultBean sendIntegratedEntrust(@RequestParam(value = "user_id") String userId,
-                                            @RequestBody IntegratedEntrust integratedEntrust) {
-        return orderManagement.sendIntegratedEntrust(userId, integratedEntrust);
+    public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestParam(value = "userId") String userId, @RequestBody IntegratedEntrust integratedEntrust) {
+        return new Message<IntegratedEntrust>(orderManagement.sendIntegratedEntrust(userId, integratedEntrust));
     }
 
     /**
-     * 撤单
+     * 委托撤单
      *
      * @param userId  用户Id
      * @param orderId 订单Id
      * @return ResultBean
      */
+    @ApiOperation(value = "委托撤单", notes = "委托撤单")
     @RequestMapping(value = "/order/cancel", method = RequestMethod.POST)
-    public ResultBean cancelOrder(@RequestParam(value = "user_id") String userId,
-                                  @RequestParam(value = "order_id") String orderId) {
-        return orderManagement.cancelOrder(userId, orderId);
+    public Message<Boolean> cancelOrder(@RequestParam(value = "userId") String userId, @RequestParam(value = "orderId") String orderId) {
+        return new Message<Boolean>(orderManagement.cancelOrder(userId, orderId));
     }
 
+    @ApiOperation(value = "普通委托复核", notes = "普通委托复核")
     @RequestMapping(value = "/order/review", method = RequestMethod.POST)
-    public ResultBean sendOrderWithReview(@RequestParam(value = "user_id") String userId,
-                                          @RequestBody ReviewDto dto) {
-        return orderManagement.sendOrderWithReview(userId, dto);
+    public Message<ReviewDto> sendOrderWithReview(@RequestParam(value = "userId") String userId, @RequestBody ReviewDto dto) {
+        return new Message<ReviewDto>(orderManagement.sendOrderWithReview(userId, dto));
     }
 
+    @ApiOperation(value = "综合业务委托复核", notes = "综合业务委托复核")
     @RequestMapping(value = "/order/integratedEntrust/review", method = RequestMethod.POST)
-    public ResultBean sendOrderWithReview(@RequestParam(value = "user_id") String userId,
-                                          @RequestBody TrdExchangeDto dto) {
-        return orderManagement.sendIntegratedEntrustWithReview(userId, dto);
+    public Message<TrdExchangeDto> sendOrderWithReview(@RequestParam(value = "userId") String userId, @RequestBody TrdExchangeDto dto) {
+        return new Message<TrdExchangeDto>(orderManagement.sendIntegratedEntrustWithReview(userId, dto));
     }
 
     /**
@@ -87,10 +94,10 @@ public class OrderController {
      * @param algorithm 算法母单信息
      * @return ResultBean
      */
+    @ApiOperation(value = "算法单创建", notes = "算法单创建")
     @RequestMapping(value = "/order/algorithm", method = RequestMethod.POST)
-    public ResultBean createAlgorithm(@RequestParam(value = "user_id") String userId,
-                                      @RequestBody AlgorithmPlaceBean algorithm) {
-        return orderManagement.createAlgorithm(userId, algorithm);
+    public Message<Algorithm> createAlgorithm(@RequestParam(value = "userId") String userId, @RequestBody AlgorithmPlaceBean algorithm) {
+        return new Message<Algorithm>(orderManagement.createAlgorithm(userId, algorithm));
     }
 
     /**
@@ -100,9 +107,10 @@ public class OrderController {
      * @param algorithmId 算法母单id
      * @return ResultBean
      */
+    @ApiOperation(value = "算法单取消", notes = "算法单取消")
     @RequestMapping(value = "/order/algorithm/cancel", method = RequestMethod.POST)
-    public ResultBean cancelAlgorithm(@RequestParam(value = "algorithm_id") String algorithmId) {
-        return orderManagement.cancelAlgorithm(algorithmId);
+    public Message<Algorithm> cancelAlgorithm(@RequestParam(value = "algorithmId") String algorithmId) {
+        return new Message<Algorithm>(orderManagement.cancelAlgorithm(algorithmId));
     }
 
 //    @RequestMapping(value = "/order/cancel/revoke", method = RequestMethod.POST)
