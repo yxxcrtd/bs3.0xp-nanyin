@@ -72,7 +72,7 @@ $(function() {
             { title: "1.15.c 逾期资产", width : 120, field: 'industry1',sortField:'industry1'},
             { title: "3.1.1 创业投资基金", width : 120, field: 'industry1',sortField:'industry1'},
             { title: "3.1.2 政府出资产业投资基金", width : 120, field: 'isGovernFund1Str',sortField:'isGovernFund1'},
-            { title: "3.2 银行资本补充工具", width : 120, field: 'isGovernFund1Str',sortField:'isGovernFund1'},
+            { title: "3.2 银行资本补充工具", width : 120, field: 'isYhbcgjStr',sortField:'isYhbcgj'},
             { title: "3.3非标债权行业归属", width : 120, field: 'isGovernFund1Str',sortField:'isGovernFund1'},
             { title: "投管一级分类", width : 120, field: 'orgAssetType1Str',sortField:'orgAssetType1'},
             { title: "投管二级分类", width : 120, field: 'orgAssetType2Str',sortField:'orgAssetType2'},

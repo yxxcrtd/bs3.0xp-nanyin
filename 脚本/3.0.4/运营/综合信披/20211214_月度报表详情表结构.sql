@@ -325,8 +325,13 @@ create table CHB_MONTH_ASSET_POSITIONDETAIL(
   assettype2       VARCHAR2(50),
   org_code         VARCHAR2(20),
   dept_code        VARCHAR2(20),
+  SUNASSETTYPE     VARCHAR2(50),
+  SUNASSETTYPE2     VARCHAR2(50),
   old_asset_code   VARCHAR2(50)
 );
+
+
+
 -- Add comments to the table
 comment on table CHB_MONTH_ASSET_POSITIONDETAIL
   is '月度报表资产头寸';

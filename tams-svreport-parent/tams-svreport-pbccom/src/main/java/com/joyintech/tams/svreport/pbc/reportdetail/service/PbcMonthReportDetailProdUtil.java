@@ -73,7 +73,7 @@ public class PbcMonthReportDetailProdUtil {
         }else if(DictCodeListExt2.客户二级类型_广义政府.getValue().equals(prdPosition.getCustomerType2())){
             ordIdentified = DictCodeListExt2.客户一级类型_广义政府.getValue();
         }else if(DictCodeListExt2.客户二级类型_非金融企业.getValue().equals(prdPosition.getCustomerType2())){
-            ordIdentified = ordIdentified = DictCodeListExt2.客户一级类型_非金融企业.getValue();
+            ordIdentified  = DictCodeListExt2.客户一级类型_非金融企业.getValue();
         }else if(DictCodeListExt2.客户二级类型_银行业存款类金融机构.getValue().equals(prdPosition.getCustomerType2())
                 ||DictCodeListExt2.客户二级类型_银行业非存款类金融机构.getValue().equals(prdPosition.getCustomerType2())
                 /*****G06升级改造 leipeng 20210128   start**/

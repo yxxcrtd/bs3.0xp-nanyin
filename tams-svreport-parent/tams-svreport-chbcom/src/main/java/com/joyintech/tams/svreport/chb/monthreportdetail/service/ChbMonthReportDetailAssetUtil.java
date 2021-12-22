@@ -2,11 +2,13 @@ package com.joyintech.tams.svreport.chb.monthreportdetail.service;
 
 import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.background.component.common.pack.common.util.IDGenerator;
+import com.joyintech.component.svrreport.chb.contant.DictCodeListExt;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.common.base.dao.ChbMonthAssetPositiondetailMapper;
 import com.joyintech.tams.common.base.dao.ChbMonthPrdPositiondetailMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition;
@@ -59,13 +61,23 @@ public class ChbMonthReportDetailAssetUtil {
         BeanUtil.copyPropertiesIgnoreNull(chbMonthAssetPositiondetail,position);
         BeanUtil.copyPropertiesIgnoreNull(chbMonthAssetPositiondetail,reportDetail);
 
-
         if(null!=chbAssetInfo){
             if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getOptionFlag())){
                 chbMonthAssetPositiondetail.setOpenplan(chbAssetInfo.getExerciseDate());
             }
             chbMonthAssetPositiondetail.setSubjectName(null!=chbAssetInfo.getChbIssuerId()?chbAssetInfo.getChbIssuerId():
                     null!=chbAssetInfo.getChbFinancierId()?chbAssetInfo.getChbFinancierId():chbAssetInfo.getChbManagerId());
+
+            if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPrefer())){
+                chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_优先股.getValue());
+            }else if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPerpetual())){
+                chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_永续债.getValue());
+            }else if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecCapital())){
+                chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_二级资本债.getValue());
+            }else if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecKzzq())){
+                chbMonthAssetPositiondetail.setIsYhbcgj(DictCodeListExt3.中债月度明细_银行资本补充工具_可转债.getValue());
+            }
+
         }
 //        BeanUtil.copyPropertiesIgnoreNull(chbMonthAssetPositiondetail,reportDetail);
         chbMonthAssetPositiondetail.setDetailno(reportDetail.getPropertycode());

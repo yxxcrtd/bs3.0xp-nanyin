@@ -50,7 +50,9 @@
         <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
         <result column="OLD_ASSET_CODE" property="oldAssetCode" jdbcType="VARCHAR" />
 
-
+        <result column="SUNASSETTYPE" property="sunassettype" jdbcType="VARCHAR" />
+        <result column="SUNASSETTYPE2" property="sunassettype2" jdbcType="VARCHAR" />
+        <result column="IS_YHBCGJ" property="isYhbcgj" jdbcType="VARCHAR" />
 
         <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
 
@@ -161,7 +163,8 @@
             P.IS_GOVERN_FUND1,
             I.ORG_ASSET_TYPE1,
             I.ORG_ASSET_TYPE2,
-            I.ORG_ASSET_TYPE3
+            I.ORG_ASSET_TYPE3,
+            P.IS_YHBCGJ
             FROM CHB_MONTH_ASSET_POSITIONDETAIL P
             LEFT JOIN CHB_MONTH_REPORT_TEMPLATE T ON T.PROPERTYCODE = P.DETAILNO
             LEFT JOIN CHB_ASSET_INFO I ON P.ASSET_CODE = I.ASSET_CODE
@@ -224,25 +227,26 @@
 
     <insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail" >
         insert into CHB_MONTH_ASSET_POSITIONDETAIL (POSUUID, TERM, DETAILNO,
-                INVEST_VARIETY, ASSET_CODE, ASSETTYPE,
-                PROD_ID, IS_FHXGCP, ASSETVALUE_A,
-                ASSETVALUE_B, VDATE, MDATE,
-                OPENPLAN, SUBJECT_NAME, RIVAL_PARTY,
-                RATE, CCY, INDUSTRY1,
-                INDUSTRY2, INDUSTRY3, INDUSTRY4,
-                DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL,
-                INTINCEXP, INTADJEXP_ADD, LOSS_AMT,
-                IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE,
-                MANAGE_TYPE, IS_GOVERN_FUND1, PRIVATEFUND_FLAG,
-                PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, CREDIT_GRADE,
-                MAIN_GRADE, TYPE_FINAL, ORG_ASSET_TYPE1,
-                ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING,
-                ASSETTYPE2, ORG_CODE, DEPT_CODE,
-                OLD_ASSET_CODE)
+                    INVEST_VARIETY, ASSET_CODE, ASSETTYPE,
+                    PROD_ID, IS_FHXGCP, ASSETVALUE_A,
+                    ASSETVALUE_B, VDATE, MDATE,
+                    OPENPLAN, SUBJECT_NAME, RIVAL_PARTY,
+                    RATE, CCY, INDUSTRY1,
+                    INDUSTRY2, INDUSTRY3, INDUSTRY4,
+                    DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL,
+                    INTINCEXP, INTADJEXP_ADD, LOSS_AMT,
+                    IN_ASSET_TYPE, PPPFLAG, MONIT_TYPE,
+                    MANAGE_TYPE, IS_GOVERN_FUND1, PRIVATEFUND_FLAG,
+                    PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, CREDIT_GRADE,
+                    MAIN_GRADE, TYPE_FINAL, ORG_ASSET_TYPE1,
+                    ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, RATING,
+                    ASSETTYPE2, ORG_CODE, DEPT_CODE,
+                    OLD_ASSET_CODE, SUNASSETTYPE, SUNASSETTYPE2,
+                    IS_YHBCGJ)
 
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close="from dual)">
-            sys_guid(),#{item.term,jdbcType=VARCHAR}, #{item.detailno,jdbcType=VARCHAR},
+            sys_guid(), #{item.term,jdbcType=VARCHAR}, #{item.detailno,jdbcType=VARCHAR},
             #{item.investVariety,jdbcType=VARCHAR}, #{item.assetCode,jdbcType=VARCHAR}, #{item.assettype,jdbcType=VARCHAR},
             #{item.prodId,jdbcType=VARCHAR}, #{item.isFhxgcp,jdbcType=VARCHAR}, #{item.assetvalueA,jdbcType=DECIMAL},
             #{item.assetvalueB,jdbcType=DECIMAL}, #{item.vdate,jdbcType=DATE}, #{item.mdate,jdbcType=DATE},
@@ -257,7 +261,8 @@
             #{item.mainGrade,jdbcType=VARCHAR}, #{item.typeFinal,jdbcType=VARCHAR}, #{item.orgAssetType1,jdbcType=VARCHAR},
             #{item.orgAssetType2,jdbcType=VARCHAR}, #{item.orgAssetType3,jdbcType=VARCHAR}, #{item.rating,jdbcType=VARCHAR},
             #{item.assettype2,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR},
-            #{item.oldAssetCode,jdbcType=VARCHAR}
+            #{item.oldAssetCode,jdbcType=VARCHAR}, #{item.sunassettype,jdbcType=VARCHAR}, #{item.sunassettype2,jdbcType=VARCHAR},
+            #{item.isYhbcgj,jdbcType=VARCHAR}
         </foreach>
 
     </insert>

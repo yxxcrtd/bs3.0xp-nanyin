@@ -148,6 +148,10 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产一级分类, this.getOrgAssetType1());
     }
 
+    public String getIsYhbcgjStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_银行资本补充工具, this.getIsYhbcgj());
+    }
+
     public String getOrgAssetType2Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产二级分类, this.getOrgAssetType2());
     }

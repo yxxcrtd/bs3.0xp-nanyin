@@ -638,7 +638,7 @@
 		            WHERE
 		                1 = 1
 		                AND dl.settdate_date BETWEEN #{reportStartDate,jdbcType=DATE} AND #{reportEndDate,jdbcType=DATE}
-		                ---AND dl.trade_type != '04'
+		                /***AND dl.trade_type != '04'**/
 		                AND dl.status in ('E','M')
 		            GROUP BY
 		                nvl(dl.fprod_id, dl.prod_id),

@@ -249,6 +249,21 @@ public class ChbMonthAssetPositiondetail extends BaseEntity {
     private String oldAssetCode;
 
     /**
+     * 转型表资产一级分类
+     */
+    private String sunassettype;
+
+    /**
+     * 转型表资产二级分类
+     */
+    private String sunassettype2;
+
+    /**
+     * 银行补充工具
+     */
+    private String isYhbcgj;
+
+    /**
      * 取得 头寸编号
      * @return 头寸编号
      */
@@ -985,6 +1000,54 @@ public class ChbMonthAssetPositiondetail extends BaseEntity {
      */
     public void setOldAssetCode(String oldAssetCode) {
         this.oldAssetCode = oldAssetCode == null ? null : oldAssetCode.trim();
+    }
+
+    /**
+     * 取得 转型表资产一级分类
+     * @return 转型表资产一级分类
+     */
+    public String getSunassettype() {
+        return sunassettype;
+    }
+
+    /**
+     * 设置 转型表资产一级分类
+     * @param sunassettype 转型表资产一级分类
+     */
+    public void setSunassettype(String sunassettype) {
+        this.sunassettype = sunassettype == null ? null : sunassettype.trim();
+    }
+
+    /**
+     * 取得 转型表资产二级分类
+     * @return 转型表资产二级分类
+     */
+    public String getSunassettype2() {
+        return sunassettype2;
+    }
+
+    /**
+     * 设置 转型表资产二级分类
+     * @param sunassettype2 转型表资产二级分类
+     */
+    public void setSunassettype2(String sunassettype2) {
+        this.sunassettype2 = sunassettype2 == null ? null : sunassettype2.trim();
+    }
+
+    /**
+     * 取得 银行补充工具
+     * @return 银行补充工具
+     */
+    public String getIsYhbcgj() {
+        return isYhbcgj;
+    }
+
+    /**
+     * 设置 银行补充工具
+     * @param isYhbcgj 银行补充工具
+     */
+    public void setIsYhbcgj(String isYhbcgj) {
+        this.isYhbcgj = isYhbcgj == null ? null : isYhbcgj.trim();
     }
 
     public String getCounterListCode(){

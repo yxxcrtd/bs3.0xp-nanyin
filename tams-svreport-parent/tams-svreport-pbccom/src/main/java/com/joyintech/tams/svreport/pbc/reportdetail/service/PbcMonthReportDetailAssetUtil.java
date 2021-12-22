@@ -71,7 +71,14 @@ public class PbcMonthReportDetailAssetUtil {
             BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,prodInfoMap.get(position.getProdid()));
         }
         if(null!=assetInfoMap.get(position.getAssetCode())) {
-            BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset, assetInfoMap.get(position.getAssetCode()));
+            ChbAssetInfo assetInfo = assetInfoMap.get(position.getAssetCode());
+            BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset, assetInfo);
+
+            if(DictCodeList.是否_中债_是.getValue().equals(assetInfo.getOptionFlag())){
+                pbcMonthReportDetailAsset.setOpenplan(assetInfo.getExerciseDate());
+            }
+            pbcMonthReportDetailAsset.setSubjectName(null!=assetInfo.getChbIssuerId()?assetInfo.getChbIssuerId():
+                    null!=assetInfo.getChbFinancierId()?assetInfo.getChbFinancierId():assetInfo.getChbManagerId());
         }
         //先基本信息,再头寸信息,避免错误覆盖
         BeanUtil.copyPropertiesIgnoreNull(pbcMonthReportDetailAsset,position);
