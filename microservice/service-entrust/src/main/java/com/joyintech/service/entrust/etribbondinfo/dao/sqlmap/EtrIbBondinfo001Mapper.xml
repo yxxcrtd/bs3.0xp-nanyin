@@ -407,7 +407,7 @@ select
     ,t6.INT_TYPE AS rateType
 	,NVL(t8.YIELD, t6.RATE)*100 rate
 	,TO_CHAR(B.EXERCISE_DATE,'yyyy-MM-dd') xqdate
-    ,NVL(MBVI.BPYIELD, 0)*100 gzRate
+    ,MBVI.BPYIELD*100 gzRate
     ,ROUND(MBVI.NETVALUATION_EXERCISE,4) priceXq
     ,ROUND(MBVI.NETPRICE,4)  priceTj
     ,MBVI.NETPRICE as newPrice

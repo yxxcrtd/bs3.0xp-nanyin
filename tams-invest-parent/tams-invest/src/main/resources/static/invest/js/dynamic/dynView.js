@@ -203,7 +203,7 @@ function DynamicView (pageId, dynId, callback, options){
                     // alert(index + "-" + value.name + "-" + value.label + "===" + str);
                     if(resultValue && resultValue != ''){
                         if(value.suffix && value.suffix != 'undefined' && value.suffix != ''){
-                            if(value.suffix == '%'){
+                            if(value.suffix == '%' || value.suffix == '元'){
                                 _labelName.html(JoyinUtil.formatNumber(resultValue, 4, null, 2) + value.suffix);
                             }else{
                                 _labelName.html(resultValue + value.suffix);
