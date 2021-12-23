@@ -206,7 +206,7 @@
         <where>
             <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
                 AND	(a.AGENT_INSTITUTION_CODE like concat('%',concat(#{agentInstitutionCode,jdbcType=VARCHAR},'%'))
-                or	a.AGENT_INSTITUTION_NAME like concat('%',concat(#{agentInstitutionCode,jdbcType=VARCHAR},'%')))
+                or	b.AGENT_INSTITUTION_NAME like concat('%',concat(#{agentInstitutionCode,jdbcType=VARCHAR},'%')))
             </if>
         </where>
     </select>
