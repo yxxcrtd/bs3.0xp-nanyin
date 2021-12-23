@@ -13,6 +13,7 @@ import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
 import com.joyintech.tams.exchange.common.db.domain.*;
+import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
@@ -424,10 +425,10 @@ public class EntrustManagement extends BaseService {
         }
     }
 
-    public ResultBean queryIntegratedEntrustForPage(PageEntrustInfoRequest request) {
-        return queryIntegratedEntrustForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(),
+    public Message<PageInfo<Object>> queryIntegratedEntrustForPage(PageEntrustInfoRequest request) {
+        return new Message<>(queryIntegratedEntrustForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(),
                 request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPortfolioId(),
-                request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus());
+                request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus()));
     }
 
     public ResultBean queryIntegratedEntrustForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus) {
@@ -451,10 +452,10 @@ public class EntrustManagement extends BaseService {
         }
     }
 
-    public ResultBean queryAllEntrustForPage(PageEntrustInfoRequest request) {
-        return queryAllEntrustForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(),
+    public Message<PageInfo<Object>> queryAllEntrustForPage(PageEntrustInfoRequest request) {
+        return new Message<>(queryAllEntrustForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(),
                 request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPortfolioId(),
-                request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus());
+                request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustStatus()));
     }
 
     public ResultBean queryAllEntrustForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus) {

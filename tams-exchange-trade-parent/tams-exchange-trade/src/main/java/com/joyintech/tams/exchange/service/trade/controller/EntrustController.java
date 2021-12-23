@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.OrderAndEntrustQryResult;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.RevokeDto;
+import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
@@ -157,14 +159,14 @@ public class EntrustController {
     }
 
     @ApiOperation(value = "查询分页委托信息", notes = "查询分页委托信息")
-    @GetMapping(value = "/entrust/page")
-    public ResultBean queryAllEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+    @PostMapping(value = "/entrust/page")
+    public Message<PageInfo<Object>> queryAllEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
         return entrustManagement.queryAllEntrustForPage(request);
     }
 
     @ApiOperation(value = "查询分页综合业务委托信息", notes = "查询分页综合业务委托信息")
-    @GetMapping(value = "/entrust/integrated/page")
-    public ResultBean queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+    @PostMapping(value = "/entrust/integrated/page")
+    public Message<PageInfo<Object>> queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
         return entrustManagement.queryIntegratedEntrustForPage(request);
     }
 

@@ -1,7 +1,10 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.bean.HistoryTrade;
+import com.joyintech.tams.exchange.common.db.domain.Trade;
+import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.HistoryTradeInfoRequest;
 import com.joyintech.tams.exchange.common.request.PageTradeInfoRequest;
 import com.joyintech.tams.exchange.common.request.TradeInfoRequest;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController("TradeController_dtx")
 @RequestMapping("/trade/joyin")
 @ResponseResultBody
@@ -26,19 +31,19 @@ public class TradeController {
 
     @ApiOperation(value = "查询成交信息", notes = "查询成交信息")
     @RequestMapping(value = "/trade", method = RequestMethod.POST)
-    public ResultBean queryTradeAll(@RequestBody @Validated TradeInfoRequest request) {
+    public Message<List<Trade>> queryTradeAll(@RequestBody @Validated TradeInfoRequest request) {
         return tradeManagement.queryTrade(request);
     }
 
     @ApiOperation(value = "查询历史成交信息", notes = "查询历史成交信息")
     @RequestMapping(value = "/trade/history", method = RequestMethod.POST)
-    public ResultBean queryHistoryTrade(@RequestBody @Validated HistoryTradeInfoRequest request) {
+    public Message<List<HistoryTrade>> queryHistoryTrade(@RequestBody @Validated HistoryTradeInfoRequest request) {
         return tradeManagement.queryHistoryTrade(request);
     }
 
     @ApiOperation(value = "查询分页成交信息", notes = "查询分页成交信息")
     @RequestMapping(value = "/trade/page", method = RequestMethod.POST)
-    public ResultBean queryAllForPage(@RequestBody @Validated PageTradeInfoRequest request) {
+    public Message<PageInfo<Object>> queryAllForPage(@RequestBody @Validated PageTradeInfoRequest request) {
         return tradeManagement.queryAllForPage(request);
     }
 }
