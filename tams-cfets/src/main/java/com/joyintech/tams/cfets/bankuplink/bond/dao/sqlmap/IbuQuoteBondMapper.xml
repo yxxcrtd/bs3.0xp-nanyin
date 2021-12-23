@@ -1270,10 +1270,10 @@
                 TT.finprodMarketId like '%' || #{search} || '%' OR
                 TT.finprodName like '%' || #{search} || '%' OR
                 G.ITEM_VALUE like '%' || #{search} || '%' OR
-                to_char(TT.shareAmt,'FM99990.90')=#{search} or  TT.shareAmt||'' =#{search} or
-                to_char(TT.price,'FM99990.9990')=#{search} or  TT.price||'' =#{search} or
-                to_char(TT.matureYield*100,'FM99990.9990')=#{search} or  TT.matureYield||'' =#{search} or
-                to_char(TT.exerYield*100,'FM99990.9990')=#{search} or  TT.exerYield||'' =#{search} or
+                to_char(TT.shareAmt,'FM99999.90')=#{search} or
+                to_char(TT.price,'FM99990.9999')=#{search} or  TT.price||'' =#{search} or
+                to_char(TT.matureYield*100,'FM99990.9999')=#{search} or  TT.matureYield||'' =#{search} or
+                to_char(TT.exerYield*100,'FM99990.9999')=#{search} or  TT.exerYield||'' =#{search} or
                 TT.ouPartyName like '%' || #{search} || '%' OR
                 TT.cpPartyName like '%' || #{search} || '%' OR
                 TT.ouTraderName LIKE '%' || #{search} || '%' OR
@@ -1284,7 +1284,7 @@
                 to_char(TT.theoreticalExerciseDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
                 to_char(TT.actSetteDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
                 to_char(TT.tradeDate,'yyyy-MM-dd')  LIKE '%' || #{search} || '%' OR
-                to_char(TT.statisticalTimes,'FM99990.9990')=#{search} or  TT.statisticalTimes||'' =#{search} or
+                to_char(TT.statisticalTimes,'FM99990.9999')=#{search} or  TT.statisticalTimes||'' =#{search} or
                 TT.quoteId LIKE '%' || #{search} || '%' OR
                 TT.trdId LIKE '%' || #{search} || '%'
 
