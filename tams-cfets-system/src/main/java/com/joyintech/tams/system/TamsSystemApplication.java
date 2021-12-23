@@ -53,6 +53,11 @@ public class TamsSystemApplication extends WebApplication {
 	}
 
 	@Bean
+	public Docket dataBankuplinkRepoDocket() {
+		return SwaggerConfig.createDocket("本币业务交易-质押式回购", "com.joyintech.tams.cfets.bankuplink.repo.controller");
+	}
+
+	@Bean
 	public Docket dataCfetsManualSettleDocket() {
 		return SwaggerConfig.createDocket("手工交收", "com.joyintech.tams.cfets.cfetsmanualsettle.controller");
 	}
