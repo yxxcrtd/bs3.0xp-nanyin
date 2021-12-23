@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/trade/joyin")
 @ResponseResultBody
-@Api(tags = "账户相关接口")
+@Api(tags = "场内交易-账户操作接口")
 public class AccountController {
     @Autowired
     private AccountManagement accountManagement;
