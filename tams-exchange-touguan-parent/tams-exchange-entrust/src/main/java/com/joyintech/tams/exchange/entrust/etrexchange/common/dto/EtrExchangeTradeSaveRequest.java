@@ -19,7 +19,6 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradePortfolioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.validator.EtrExchangeTradeJj001Validator;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -47,9 +46,10 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     @ApiModelProperty(name="operateType",value="操作类型",example="submit/save", required = true)
     private String operateType;
-    @ApiModelProperty(name="elementId",value="按钮id",example="EtrExchangeTradeCommon001_btn_submit")
+    @ApiModelProperty(name="elementId",value="按钮id",example="EtrExchangeTradeJj_btn_submit/EtrExchangeTradeJj_btn_save")
     private String elementId;
-
+    @ApiModelProperty(name="pageId",value="d",example="EtrExchangeTradeJj")
+    private String pageId;
 
     @ApiModelProperty(name="acctNo",value="资金账户",example="submit/save", required = true)
     private String acctNo;
@@ -216,8 +216,8 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
 
-
-    List<EtrExchangeTradePortfolioRequest> portfolioDtoList;
+    @ApiModelProperty(required = true,name="portfolioList",value="组合列表",example="[{'portfolioId':'qwqw'}]]")
+    List<EtrExchangeTradePortfolioRequest> portfolioList;
     
 
 
@@ -255,6 +255,14 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
      */
     public void setFprice(BigDecimal fprice) {
         this.fprice = fprice;
+    }
+
+    public List<EtrExchangeTradePortfolioRequest> getPortfolioList() {
+        return portfolioList;
+    }
+
+    public void setPortfolioList(List<EtrExchangeTradePortfolioRequest> portfolioList) {
+        this.portfolioList = portfolioList;
     }
 
     /**
@@ -579,13 +587,6 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
         this.price = price;
     }
 
-    public List<EtrExchangeTradePortfolioRequest> getPortfolioDtoList() {
-        return portfolioDtoList;
-    }
-
-    public void setPortfolioDtoList(List<EtrExchangeTradePortfolioRequest> portfolioDtoList) {
-        this.portfolioDtoList = portfolioDtoList;
-    }
 
     public String getElementId() {
         return elementId;
@@ -593,6 +594,14 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     public void setElementId(String elementId) {
         this.elementId = elementId;
+    }
+
+    public String getPageId() {
+        return pageId;
+    }
+
+    public void setPageId(String pageId) {
+        this.pageId = pageId;
     }
 
     public String getSecAcctId() {

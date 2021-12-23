@@ -171,6 +171,19 @@
 			</exclusions>
 		</dependency>
 
+		<!--场内交易-->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>tams-exchange-entrust</artifactId>
+			<version>3.0.4</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>tams-touguan</finalName>

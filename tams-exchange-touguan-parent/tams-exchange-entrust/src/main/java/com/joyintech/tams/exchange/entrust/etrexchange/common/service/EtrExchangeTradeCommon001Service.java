@@ -13,14 +13,6 @@ package com.joyintech.tams.exchange.entrust.etrexchange.common.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.joyintech.background.component.common.pack.common.security.User;
-import com.joyintech.background.component.order.exchange.business.dto.*;
-import com.joyintech.background.component.order.exchange.common.constant.UnitEnum;
-import com.joyintech.background.component.order.exchange.common.dto.EtrBaseDto;
-import com.joyintech.background.component.order.exchange.common.dto.EtrParameterDto;
-import com.joyintech.background.component.order.exchange.common.dto.EtrSinglePortfolioDto;
-import com.joyintech.background.component.order.exchange.common.service.EtrComponentCommService;
-import com.joyintech.background.component.order.exchange.common.service.impl.EtrComponentFactory;
 import com.joyintech.calculation.CalculatorFactory;
 import com.joyintech.calculation.bonds.PaperIrReset;
 import com.joyintech.calculation.bonds.SecIntSchedule;
@@ -33,7 +25,6 @@ import com.joyintech.calculation.shell.YieldByPriceCalculator;
 import com.joyintech.calculation.shell.param.*;
 import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.CommonExportService;
@@ -44,34 +35,25 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
-import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.dao.FinProductAddMapper;
+import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
-import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
-import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
-import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
-import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
-import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
-import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
-import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -85,11 +67,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
@@ -1128,12 +1107,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @return 联想文本框
      */
     public List<SuggestDto> selectCounterDealer(Map<String, Object> map) {
-		// 交易场所
-		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
-		List<SuggestDto> suggestDtos = etrExchangeTradeCommonMapper.selectCounterDealer(map);
-		return suggestDtos;
-//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectCounterDealer",
-//                map, SuggestDto.class);
+        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectCounterDealer",
+                map, SuggestDto.class);
     }
 
     /**
@@ -1285,6 +1260,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         String tradeMarket = (String) param.get("tradeMarket");
         String ps = (String) param.get("ps");
         String calculateField = (String) param.get("calculateField");
+
         // 定义需要返回的参数
         BigDecimal unitInt = null;// 单位应计利息
         BigDecimal intAmt = null;// 应计利息总额
@@ -1306,6 +1282,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         if (StringUtil.isNotEmpty(param.get("exerYield"))) {
             exerYield = new BigDecimal(param.get("exerYield").toString()).divide(new BigDecimal(100));// 行权收益率
         }
+
         // 如果交易场所为上交所、深交所以外的情况
         boolean isJiaoYiSuo = true;
         if (!StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(), tradeMarket)
@@ -1350,6 +1327,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
                 intSchList.add(item);
             }
         }
+
         // d.获取债券基本资料信息
         // 计算行权收益率，非行权时，取大于当日的行权日
         tempParamMap.put("ps", ps);
@@ -1453,6 +1431,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             yieldPriceInParameter.setCurrIntMethod(CurrIntCalMethod.使用区间起始日前最新票面利率计算);
             priceYieldInParameter.setCurrIntMethod(CurrIntCalMethod.使用区间起始日前最新票面利率计算);
         }
+
         // 百元面值应计利息
         BigDecimal accurInt = BigDecimal.ZERO;
         // 交易所债券特殊处理start----------------------------------------------------------------
@@ -2349,7 +2328,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		}
 	}
 
-	/***
+    /***
      * 取更新时间最新记录.投资目的  指令业务类型 = 数据字典.委托类型.大宗债券指令
      * @return
      */
@@ -2733,6 +2712,10 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public AjaxResult  checkSaveErrorMethod(EtrExchangeTradeSaveRequest dto, BindingResult br) {
+		//暂时支持一个组合
+		EtrExchangeTradePortfolioRequest portfolioRequest=dto.getPortfolioList().get(0);
+		dto.setPortfolioId(portfolioRequest.getPortfolioId());
+		//暂时支持一个组合
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}
