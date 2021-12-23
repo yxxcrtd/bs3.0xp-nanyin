@@ -44,7 +44,7 @@ public class TradeManagement {
     /**
      * 根据Entrust行数据查询Trade表中数据
      */
-    private ResultBean queryTrade(String userId, String entrustId, String instructionId, String accountId, String orderId) {
+    public ResultBean queryTrade(String userId, String entrustId, String instructionId, String accountId, String orderId) {
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             return new ResultBean(ErrorCode.SUCCESS, new ArrayList());
@@ -89,7 +89,7 @@ public class TradeManagement {
         return queryHistoryTrade(request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getPostStr(), request.getPageSize(), request.getUserId());
     }
 
-    private ResultBean queryHistoryTrade(String startDay, String endDay, String accountId, String postStr, int pageSize, String userId) {
+    public ResultBean queryHistoryTrade(String startDay, String endDay, String accountId, String postStr, int pageSize, String userId) {
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             return new ResultBean(ErrorCode.SUCCESS, new ArrayList());
@@ -103,7 +103,7 @@ public class TradeManagement {
         return queryAllForPage(request.getPageNum(), request.getPageSize(), request.getHistoryType(), request.getUserId(), request.getStartDay(), request.getEndDay(), request.getAccountId(), request.getMarket(), request.getStockCode(), request.getEntrustProp(), request.getEntrustId());
     }
 
-    private ResultBean queryAllForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String market, String stockCode, String entrustProp, String entrustId) {
+    public ResultBean queryAllForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String market, String stockCode, String entrustProp, String entrustId) {
         List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             if (!Strings.isNullOrEmpty(entrustId)) {
