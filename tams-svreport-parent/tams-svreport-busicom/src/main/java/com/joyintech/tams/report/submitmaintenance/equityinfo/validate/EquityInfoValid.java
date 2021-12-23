@@ -665,6 +665,8 @@ public class EquityInfoValid {
     private void getDiffDto(EquityInfo001Dto equityInfo001Dto,
                             EquityInfoRegist001Dto equityInfoRegist001Dto,
                             Map<String, String> map ,boolean flag) {
+    	String updateFlg = SvrDataUtil.getSysParam("SVR_EQU_REPAIR_BATCH_FLAG");
+		    	
         // 投资者是否属于本行比较
         String type = "03";
         if (StringUtil.isNotEmpty(equityInfo001Dto.getIsBelongBank())
@@ -682,7 +684,10 @@ public class EquityInfoValid {
         else if (StringUtil.isNotEmpty(equityInfo001Dto.getTheBankCode())
                 && !equityInfo001Dto.getTheBankCode().equals(
                 equityInfoRegist001Dto.getTheBankCode())) {
-            map.put("THE_BANK_CODE", equityInfo001Dto.getTheBankCode());
+        	//只有当系统参数为01：使用修复批的情况下，才取以前保存在库中的check表数据
+    		if(!"01".equals(updateFlg)) {
+    			map.put("THE_BANK_CODE", equityInfo001Dto.getTheBankCode());
+    		}
         }
         // 投资者境内外标识
         else if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderMark())

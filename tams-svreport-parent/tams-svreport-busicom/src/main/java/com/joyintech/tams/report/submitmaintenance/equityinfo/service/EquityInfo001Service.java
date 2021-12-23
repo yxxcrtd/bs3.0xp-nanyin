@@ -596,6 +596,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             headList.add("经办人");
             headList.add("接入检查结果");
             headList.add("中债反馈消息");
+            headList.add("账号开户所在地");
 
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
@@ -664,7 +665,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
 //        EquityInfo001Dto equityInfo001DtoTemp = null;
         Map<String, String> map = new HashMap<String, String>();
         // RegTimePoints001Dto regTimePoints001Dto =
-        // regTimePointsDtoMapper.findByReportCode(DictCodeList.报表名称_投资者身份信息登记.getValue(),null);
+        // regTimePointsDtoMapper.findByReportCode(DictCodeList.报表名称_投资者身份信息登记.getValue(),null);       
         
         List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, equityList.size());
         
@@ -717,7 +718,8 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             equityInfo001Dto.setOrgCode(orgCode);
             // if(EquityInfoCheckUtil.isEmpty(equityInfo001Dto.getImportStatus())){
             EquityInfo001Dto equityInfoCheck = equityInfo001Mapper.getEquityInfo001DtoByKey(
-                    equityInfo001Dto);
+                    equityInfo001Dto);                                
+            
             // 插入前维护表中无数据，将dto放入listN
             if (equityInfoCheck == null) {
                 listN.add(equityInfo001Dto);
@@ -741,7 +743,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 listI.add(equityInfo001DtoI);
             }
             // 插入前维护表有待处理，将dto放入listN
-            else if ("A".equals(equityInfoCheck.getStatus())) {
+            else if ("A".equals(equityInfoCheck.getStatus())) {            	
                 listA.add(equityInfo001Dto);
             }
             // 插入前维护表有除待处理，将dto放入listN
@@ -1502,10 +1504,12 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 equityInfo001Dto.setHolderClassify(
                         EquityInfoCheckUtil.subDictcode(list.get(22), " "));
             }
+            //开户行所在地
+            equityInfo001Dto.setFundAccPlace(list.get(26));
             // 增加行号
             equityInfo001Dto.setExcelNum(String.valueOf(i + 2));
             //检查序列号设置初始值
-            equityInfo001Dto.setCheckSeqno("0");
+            equityInfo001Dto.setCheckSeqno("0");       
             returnInfoList.add(equityInfo001Dto);
         }
         return returnInfoList;

@@ -573,6 +573,48 @@
            </where>
 	</select>
 	
+	<select id="getEquityInfoSub001DtoByKey" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		select 
+			INDENTIFY_MARK as indentifyMark,
+         	REGIST_BANK_CODE as bankCode,
+         	ORG_INDENTIFY_MARK as orgIndentifyMark,
+        	IS_BELONG_BANK as isBelongBank,
+        	THE_BANK_NAME as theBankName,
+        	THE_BANK_CODE as theBankCode,
+        	HOLDER_MARK as holderMark,
+        	HOLDER_REGION as holderRegion,
+        	HOLDER_TYPE as holderType,
+		    HOLDER_CLASSIFY as holderClassify,
+			FUND_ACC_PLACE as fundAccPlace,
+        	PERSONAL_IDENTIFY_TYPE as personalIdentifyType,
+        	INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+        	nvl(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as inentify_Type,
+        	IDENTIFY_NUMBER as identifyNumber,
+        	OTHER_IDENTIFY_NAME as otherIdentifyName,
+        	SPV_CAP_ACC_BANK as spvCapAccBank,
+        	OTHER_CAP_ACC_BANK as otherCapAccBank,
+        	SPV_REGIST_CODE as spvRegistCode,
+        	HOLDER_NAME as holderName,
+        	HOLDER_SEX as holderSex,
+        	HOLDER_RISK_PREFER as holderRiskPrefer,
+        	HOLDER_CELLPHONE as holderCellphone,
+        	HOLDER_TELEPHONE as holderTelephone,
+        	HOLDER_EMAIL as holderEmail,
+        	REMARK as remark,
+        	A.ORG_CODE orgCode,
+        	STATUS as status
+   		from CHB_EQU_SUB A
+		  <where>
+        	<if test="type !=null and type == '02'.toString()">
+            		INDENTIFY_MARK in (#{orgIndentifyMark,jdbcType=VARCHAR},#{indentifyMark,jdbcType=VARCHAR} ) and
+            	</if>
+        		<if test="type !=null and type != '02'">
+            		INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} and
+            	</if>
+            	 REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR}
+           </where>
+	</select>
+	
 	<!-- 插入数据到临时表 -->
 	<insert id="insertIntoImportTable" parameterType="java.util.List">
 		insert into CHB_EQU_HOLD_IMP_TMP(INDENTIFY_MARK,ORG_INDENTIFY_MARK,REGIST_BANK_CODE,TYPE)
