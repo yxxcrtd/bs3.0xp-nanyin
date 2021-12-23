@@ -1,15 +1,25 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import com.joyintech.tams.exchange.common.ResponseResultBody;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.common.bean.RevokeDto;
-import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
-import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.joyintech.tams.exchange.common.ResponseResultBody;
+import com.joyintech.tams.exchange.common.bean.OrderAndEntrustQryResult;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.bean.RevokeDto;
+import com.joyintech.tams.exchange.common.domain.Message;
+import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
+import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
+import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/service/joyin")
@@ -29,12 +39,10 @@ public class EntrustController {
      * @param orderId       订单Id
      * @return ResultBean
      */
-    @RequestMapping(value = {"/entrust"}, method = RequestMethod.GET)
-    public ResultBean queryAll(@RequestParam(value = "user_id") String userId,
-                               @RequestParam(value = "instruction_id", required = false) String instructionId,
-                               @RequestParam(value = "account_id", required = false) String accountId,
-                               @RequestParam(value = "order_id", required = false) String orderId) {
-        return entrustManagement.queryEntrust(userId, instructionId, accountId, orderId);
+    @ApiOperation(value = "查询委托信息", notes = "查询委托信息")
+    @RequestMapping(value = {"/entrust"}, method = RequestMethod.POST)
+    public Message<OrderAndEntrustQryResult> queryAll(@RequestBody EntrustQueryRequest entrustQueryRequest) {
+        return new Message<OrderAndEntrustQryResult>(entrustManagement.queryEntrust(entrustQueryRequest.getUserId(), entrustQueryRequest.getInstructionId(), entrustQueryRequest.getAccountId(), entrustQueryRequest.getOrderId()));
     }
 
     /**
