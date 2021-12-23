@@ -146,11 +146,13 @@ public class IbuQuoteBondService extends BaseService {
      * @param dto
      * @return
      */
-    public List<EntrustDto> listEntrust(EntrustRequest dto){
+    public List<EntrustDto> listEntrust(EntrustRequest dto,String loginUserId){
         List<EntrustDto> result = new ArrayList<>();
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         setParam(pageParam);
-        pageParam.remove("loginUserId");
+        if(StringUtil.isNotEmpty(loginUserId)){
+            pageParam.put("loginUserId", loginUserId);
+        }
         List<CfetsBondDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteBondMapper.listEntrust(pageParam);
         cfetsBondDealEntrustOrderDtos.forEach(item ->{
                 EntrustDto entrustDto = JsonUtils.json2Object(JsonUtils.object2Json(item),EntrustDto.class);
@@ -894,7 +896,6 @@ public class IbuQuoteBondService extends BaseService {
 
     public void doForcedFinish(Map<String,Object> param) throws Exception{
         setParam(param);
-        param.remove("loginUserId");
         List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if(entrustDtos != null && entrustDtos.size()>0){
             List<CfetsEtribBondInfo003Dto> dtolist = new ArrayList<>();
@@ -1282,7 +1283,7 @@ public class IbuQuoteBondService extends BaseService {
         param.put("psT02", BussinessDictCodeList.交易方向_卖出.getValue());
         param.put("psT03", BussinessDictCodeList.交易方向_行权回售.getValue());
         param.put("year",DateUtil.getYear(iPlatformDate.getSysDateStr()));
-        param.put("loginUserId", LoginUserUtil.getUserName());
+        param.put("loginUserId", param.containsKey("loginUserId")?(String)param.get("loginUserId"):LoginUserUtil.getUserName());
     }
 }
 

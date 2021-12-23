@@ -58,8 +58,14 @@
                 WFL_REG_FIN_PRODUCT_DEAL
                 <where>
                     <if test="entrustIdList != null and entrustIdList.size() > 0">
-                        ENTRUST_ID  in
+                        and ENTRUST_ID  in
                         <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="entrustIds != null and entrustIds.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
                             #{item}
                         </foreach>
                     </if>
@@ -71,8 +77,14 @@
                 WFL_IBU_QUOTE_ETR_RE
                 <where>
                     <if test="entrustIdList != null and entrustIdList.size() > 0">
-                        ENTRUST_ID  in
+                        and ENTRUST_ID  in
                         <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="entrustIds != null and entrustIds.size() > 0">
+                        and ENTRUST_ID  in
+                        <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
                             #{item}
                         </foreach>
                     </if>
@@ -87,6 +99,12 @@
                 <if test="entrustIdList != null and entrustIdList.size() > 0">
                     and T2.ENTRUST_ID  in
                     <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="entrustIds != null and entrustIds.size() > 0">
+                    and T2.ENTRUST_ID  in
+                    <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
                         #{item}
                     </foreach>
                 </if>
@@ -108,6 +126,12 @@
                 <if test="entrustIdList != null and entrustIdList.size() > 0">
                     and T2.ENTRUST_ID  in
                     <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="entrustIds != null and entrustIds.size() > 0">
+                    and T2.ENTRUST_ID  in
+                    <foreach collection="entrustIds" item="item" open="(" close=")" separator=",">
                         #{item}
                     </foreach>
                 </if>

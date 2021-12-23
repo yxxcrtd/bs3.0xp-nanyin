@@ -15,6 +15,10 @@ public class EntrustForcedFinishDto extends BaseEntity implements ProcessEntity 
     @PrimaryKey(PrimaryKey.Field.PK_1)
     private String entrustId;
 
+    private String loginUserId;
+
+    private String entrustIds;
+
     private List<EntrustDto> entrustList;
 
     private List<DealTransactionDetailsDto> dealTransactionList;
@@ -30,6 +34,22 @@ public class EntrustForcedFinishDto extends BaseEntity implements ProcessEntity 
 
     public void setEntrustId(String entrustId) {
         this.entrustId = entrustId;
+    }
+
+    public String getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId(String loginUserId) {
+        this.loginUserId = loginUserId;
+    }
+
+    public String getEntrustIds() {
+        return entrustIds;
+    }
+
+    public void setEntrustIds(String entrustIds) {
+        this.entrustIds = entrustIds;
     }
 
     public List<EntrustDto> getEntrustList() {

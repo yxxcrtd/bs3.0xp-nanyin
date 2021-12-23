@@ -26,9 +26,12 @@ public class EntrustForcedFinishService extends BaseService<EntrustForcedFinishD
         Map<String,Object> param = new HashMap<>();
         param.put("entrustId",entity.getEntrustId());
         param.put("remark",entity.getRemark());
+        param.put("loginUserId", entity.getLoginUserId());
         try{
             ibuQuoteBondService.doForcedFinish(param);
-        }catch (Exception e){}
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
 

@@ -1,10 +1,10 @@
 $(function() {
     var entrustIdcols = [
         {field:'entrustStatusStr',  title: '指令状态'},
-        ,{field:'transactioncom', title: '执行进度(%)',render : function(data, type, row, meta){
+        {field:'transactioncom', title: '执行进度(%)',render : function(data, type, row, meta){
                 return "<div class='layui-progress layui-progress-big' style='margin-top:1px;'><div class='layui-progress-bar layui-bg-green' style='width:"+row.transactioncom+"%'><span class='layui-progress-text' style='color:black;'>"+row.transactioncom+"%</span></div></div>";
             }, width:'8%',sortable:false},
-        ,{field:'tradeFinishPercent', title: '成交进度(%)',render : function(data, type, row, meta){
+        {field:'tradeFinishPercent', title: '成交进度(%)',render : function(data, type, row, meta){
                 return "<div class='layui-progress layui-progress-big' style='margin-top:1px;'><div class='layui-progress-bar layui-bg-green' style='width:"+row.tradeFinishPercent+"%'><span class='layui-progress-text' style='color:black;'>"+row.tradeFinishPercent+"%</span></div></div>";
             }, width:'8%',sortable:false},
         {field:'entrustNum',  title: '指令额度(万元)',type:'number',digit:'2'},
@@ -25,7 +25,7 @@ $(function() {
         {field:'entrustDate',title:'指令日期',width:150,type:'date'},
         {field:'transmitTime',  title: '下达时间'},
         {field:'entrustId',  title: '指令代码'},
-        {field:'remark',  title: '备注'},
+        {field:'remark',  title: '备注'}
     ];
 
     var dealcols = [
@@ -52,7 +52,7 @@ $(function() {
         {field:'shareAmtHun',  title: '回复量(万)',type:'number',digit:'2'},
         {field:'quoteId',  title: '业务编号'},
         {field:'trdId',  title: '成交编号'},
-        {field:'remark',  title: '备注'},
+        {field:'remark',  title: '备注'}
     ];
     /**
      * 定义数据表格
@@ -62,9 +62,8 @@ $(function() {
         cols:entrustIdcols,
         searchOnInit: true,
         loadonce:true,
-        checkbox:false,
+        height:200,
         page:false,
-        addbtn:true,
     });
 
     var dealTable=$("#dealTable").joyintable({
@@ -72,9 +71,8 @@ $(function() {
         cols:dealcols,
         searchOnInit: true,
         loadonce:true,
-        checkbox:false,
+        height:400,
         page:false,
-        addbtn:true,
     });
 
     function saveOrSubmit(operateType) {

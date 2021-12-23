@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustForcedFinishDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.EntrustRequest;
@@ -55,7 +56,7 @@ public class EntrustForcedFinishController extends BaseController {
             if(null!=entrustForcedFinishDto){
                 EntrustRequest entrustRequest = new EntrustRequest();
                 entrustRequest.setEntrustId(entrustForcedFinishDto.getEntrustId());
-                entrustForcedFinishDto.setEntrustList(ibuQuoteBondService.listEntrust(entrustRequest));
+                entrustForcedFinishDto.setEntrustList(ibuQuoteBondService.listEntrust(entrustRequest,entrustForcedFinishDto.getLoginUserId()));
                 entrustForcedFinishDto.setDealTransactionList(ibuQuoteBondService.listDealTransactionDetails(entrustForcedFinishDto.getEntrustId()));
             }
         }
@@ -78,16 +79,17 @@ public class EntrustForcedFinishController extends BaseController {
     @ApiOperation(value = "登记提交(保存)", notes = "登记提交(保存)")
     @RequestMapping("save")
     @ResponseBody
-    public Message<AjaxResult> save(@RequestBody Map<String,Object> param, BindingResult br) throws Exception{
+    public Message<AjaxResult> save(@RequestBody EntrustForcedFinishDto dto, BindingResult br) throws Exception{
         if (br.hasErrors()) {
             return new Message<AjaxResult>().success().setData(new AjaxResult(br));
         }
-        List<String> entrustIds = StringUtil.splitToList(",",(String)param.get("entrustIds"));
-        String remark = (String)param.get("remark");
+        List<String> entrustIds = StringUtil.splitToList(",",dto.getEntrustIds());
+        String remark = dto.getRemark();
         List<EntrustForcedFinishDto> result = new ArrayList<>();
         entrustIds.forEach(item ->{
             EntrustForcedFinishDto entrustForcedFinishDto = new EntrustForcedFinishDto();
             entrustForcedFinishDto.setEntrustId(item);
+            entrustForcedFinishDto.setLoginUserId(LoginUserUtil.getUserName());
             entrustForcedFinishDto.setRemark(remark);
             result.add(entrustForcedFinishDto);
         });
@@ -97,7 +99,7 @@ public class EntrustForcedFinishController extends BaseController {
         params.setElementId("EntrustForcedFinish_btn_submit");
         params.setBusinessType(DictCodeListExt3.共通业务类型_指令强制完成.getValue());
         params.setBusinessCode(item->item.getEntrustId());
-        params.setComment(entity -> getMessage("指令代码") + "(" + entity.getEntrustId());
+        params.setComment(entity -> getMessage("指令代码") + "(" + entity.getEntrustId()+")");
         processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.MODIFY);
         String msg = entrustForcedFinishService.start(processParameter,
