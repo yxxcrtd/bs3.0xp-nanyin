@@ -1,59 +1,104 @@
 package com.joyintech.tams.exchange.common.bean;
 
 
-/**
- * @ClassName IntegratedRepurchaseQuoteBean
- * @Description 协议回购行情
- * @Author liujianping
- * @Date 2020/9/21
- * @Version
- **/
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "质押式协议回购行情返回报文", description = "质押式协议回购行情返回报文")
 public class IntegratedRepurchaseQuoteBean {
+    @ApiModelProperty(name = "errorCode", value = "错误码")
     private int errorCode;
+    @ApiModelProperty(name = "errorMsg", value = "错误描述")
     private String errorMsg;
 
+    @ApiModelProperty(name = "brokerId", value = "柜台ID")
     private String brokerId;
+    @ApiModelProperty(name = "brokerName", value = "柜台名称")
     private String brokerName;
+    @ApiModelProperty(name = "cbpconferId", value = "约定号")
     private String cbpconferId;
+    @ApiModelProperty(name = "entrustNo", value = "委托编号")
     private int entrustNo;
+    @ApiModelProperty(name = "entrustProp", value = "委托属性")
     private String entrustProp;
+    @ApiModelProperty(name = "entrustBs", value = "回购方向（1-正回购，2-逆回购）")
     private String entrustBs;
+    @ApiModelProperty(name = "exchangeType", value = "交易类别")
     private String exchangeType;
+    @ApiModelProperty(name = "stockType", value = "证券类别")
     private String stockType;
+    @ApiModelProperty(name = "stockCode", value = "质押券代码")
     private String stockCode;
+    @ApiModelProperty(name = "stockName", value = "质押券名称")
     private String stockName;
+    @ApiModelProperty(name = "expireYearRate", value = "回购利率（到期年收益率）")
     private double expireYearRate;
+    @ApiModelProperty(name = "repoTerm", value = "回购期限")
     private int repoTerm;
+    @ApiModelProperty(name = "fundUsedDays", value = "实际占款天数")
     private int fundUsedDays;
+    @ApiModelProperty(name = "firstExchdate", value = "首次结算日")
     private int firstExchdate;
+    @ApiModelProperty(name = "repurchaseDate", value = "回购到期日")
     private int repurchaseDate;
+    @ApiModelProperty(name = "settleEndDate", value = "到期结算日")
     private int settleEndDate;
+    @ApiModelProperty(name = "componentNum", value = "成份股个数")
     private int componentNum;
+    @ApiModelProperty(name = "oldImpawnCode", value = "原质押券代码")
     private String oldImpawnCode;
+    @ApiModelProperty(name = "impawnAmount", value = "质押券数量")
     private int impawnAmount;
+    @ApiModelProperty(name = "funderRatio", value = "折算比例")
     private double funderRatio;
+    @ApiModelProperty(name = "impawnBalance", value = "成交金额")
     private double impawnBalance;
+    @ApiModelProperty(name = "prevImpawnBalance", value = "原成交金额")
     private double prevImpawnBalance;
+    @ApiModelProperty(name = "profit", value = "回购利息")
     private double profit;
+    @ApiModelProperty(name = "settleBalance", value = "到期结算金额")
     private double settleBalance;
+    @ApiModelProperty(name = "assetNetValue", value = "质押券面总额合计")
     private double assetNetValue;
+    @ApiModelProperty(name = "bprsrcStatus", value = "协议回购质权人类型")
     private String bprsrcStatus;
+    @ApiModelProperty(name = "origEntrustDate", value = "初始交易日期")
     private int origEntrustDate;
+    @ApiModelProperty(name = "origCbpconferId", value = "原约定号")
     private String origCbpconferId;
+    @ApiModelProperty(name = "agencyNo", value = "发起方交易商代码")
     private String agencyNo;
+    @ApiModelProperty(name = "traderId", value = "发起方交易员代码")
     private String traderId;
+    @ApiModelProperty(name = "fundAccount", value = "资金账号")
     private String fundAccount;
+    @ApiModelProperty(name = "stockAccount", value = "证券账户")
     private String stockAccount;
+    @ApiModelProperty(name = "seatNo", value = "席位编号")
     private String seatNo;
+    @ApiModelProperty(name = "oppoAgency", value = "对手方交易商代码")
     private String oppoAgency;
+    @ApiModelProperty(name = "oppoTraderId", value = "对手方交易员代码")
     private String oppoTraderId;
+    @ApiModelProperty(name = "agencyName", value = "发起方交易商名称")
     private String agencyName;
+    @ApiModelProperty(name = "positionStr", value = "定位串")
     private String positionStr;
+    @ApiModelProperty(name = "oppoAgencyName", value = "对手方交易商名称")
     private String oppoAgencyName;
+    @ApiModelProperty(name = "propStockAccount", value = "对方申报账号")
     private String propStockAccount;
+    @ApiModelProperty(name = "propSeatNo", value = "对方席位号")
     private String propSeatNo;
+    @ApiModelProperty(name = "remark", value = "补充条款")
     private String remark;
+    @ApiModelProperty(name = "propAccountName", value = "对方账户名称")
     private String propAccountName;
+    @ApiModelProperty(name = "realDateBack", value = "实际购回日期")
+    private int realDateBack;
+    @ApiModelProperty(name = "pledgeeName", value = "质权人")
+    private String pledgeeName;
 
     public String getBrokerId() {
         return brokerId;
@@ -422,8 +467,5 @@ public class IntegratedRepurchaseQuoteBean {
     public void setPledgeeName(String pledgeeName) {
         this.pledgeeName = pledgeeName;
     }
-
-    private int realDateBack;
-    private String pledgeeName;
 
 }

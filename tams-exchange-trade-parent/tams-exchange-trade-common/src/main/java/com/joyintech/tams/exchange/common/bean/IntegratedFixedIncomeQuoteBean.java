@@ -1,27 +1,37 @@
 package com.joyintech.tams.exchange.common.bean;
 
 
-/**
- * @ClassName IntegratedFixedIncomeQuoteBean
- * @Description 固收行情
- * @Author liujianping
- * @Date 2020/9/21
- * @Version
- **/
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "上海固收行情查询返回报文", description = "上海固收行情查询返回报文")
 public class IntegratedFixedIncomeQuoteBean {
+    @ApiModelProperty(name = "errorCode", value = "错误码")
     private int errorCode;
+    @ApiModelProperty(name = "errorMsg", value = "错误描述")
     private String errorMsg;
 
+    @ApiModelProperty(name = "orderNo", value = "订单编号")
     private String orderNo;
+    @ApiModelProperty(name = "stockCode", value = "证券代码")
     private String stockCode;
+    @ApiModelProperty(name = "stockName", value = "证券名称")
     private String stockName;
+    @ApiModelProperty(name = "agencyName", value = "报价方")
     private String agencyName;
+    @ApiModelProperty(name = "entrustBs", value = "买卖方向")
     private String entrustBs;
+    @ApiModelProperty(name = "entrustPrice", value = "价格（净价）")
     private double entrustPrice;
+    @ApiModelProperty(name = "fullPrice", value = "全价")
     private double fullPrice;
+    @ApiModelProperty(name = "entrustVolume", value = "数量")
     private int entrustVolume;
+    @ApiModelProperty(name = "expireIncomeRate", value = "到期收益率")
     private double expireIncomeRate;//到期收益率 lastrate 到期年收益率
+    @ApiModelProperty(name = "interest", value = "债券应计利息")
     private double interest;//债券应计利息 bondintr
+    @ApiModelProperty(name = "reportTime", value = "报价时间")
     private int reportTime;
 
     public int getErrorCode() {

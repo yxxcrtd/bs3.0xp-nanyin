@@ -97,16 +97,14 @@ public class TerminalHelper {
         TradeAgent tradeAgent = tradeAgentManager.findAgentByAccountId(accountId);
         if (Objects.nonNull(tradeAgent)) {
             return tradeAgent.reqEntrusts(accountId);
-        } else
-            throw new Exception(ErrorCode.TERMINAL_NOT_ONLINE.errorMsg);
+        } else throw new Exception(ErrorCode.TERMINAL_NOT_ONLINE.errorMsg);
     }
 
     public List<Trade> queryTradeFromTerminal(String accountId) throws Exception {
         TradeAgent tradeAgent = tradeAgentManager.findAgentByAccountId(accountId);
         if (Objects.nonNull(tradeAgent)) {
             return tradeAgent.reqTrades(accountId);
-        } else
-            throw new Exception(ErrorCode.TERMINAL_NOT_ONLINE.errorMsg);
+        } else throw new Exception(ErrorCode.TERMINAL_NOT_ONLINE.errorMsg);
     }
 
     public List<IntegratedQuote> queryIntegratedQuote(int quoteType, String stockCode, String accountId, String oppositeLiaisonTel, String liaisonTel, int pageSize, String posStr) {
@@ -126,19 +124,14 @@ public class TerminalHelper {
                 logger.warn("not found agent from accountAgents because no terminal login with trade !!!");
             }
         }
-        if (!Strings.isNullOrEmpty(stockCode))
-            quoteQryBean.setStockCode(stockCode);
-        if (!Strings.isNullOrEmpty(oppositeLiaisonTel))
-            quoteQryBean.setOppositeLiaisonTel(oppositeLiaisonTel);
-        if (!Strings.isNullOrEmpty(liaisonTel))
-            quoteQryBean.setOppositeLiaisonTel(liaisonTel);
+        if (!Strings.isNullOrEmpty(stockCode)) quoteQryBean.setStockCode(stockCode);
+        if (!Strings.isNullOrEmpty(oppositeLiaisonTel)) quoteQryBean.setOppositeLiaisonTel(oppositeLiaisonTel);
+        if (!Strings.isNullOrEmpty(liaisonTel)) quoteQryBean.setOppositeLiaisonTel(liaisonTel);
         if (pageSize > 0) {
-            if (pageSize > 1000)
-                pageSize = 1000;
+            if (pageSize > 1000) pageSize = 1000;
             quoteQryBean.setPageSize(pageSize);
         }
-        if (!Strings.isNullOrEmpty(posStr))
-            quoteQryBean.setPostStr(posStr);
+        if (!Strings.isNullOrEmpty(posStr)) quoteQryBean.setPostStr(posStr);
         quoteQryBean.setQuoteType(quoteType);
         if (Objects.nonNull(tradeAgent)) {
             try {
@@ -256,10 +249,8 @@ public class TerminalHelper {
             TradeAgent agent = tradeAgentManager.findAgentByAccountId(accountId);
             if (Objects.nonNull(agent)) {
                 String agentType = agent.getAccountMap().get(accountId).getAgentType();
-                if (AgentType.UFX.value.equals(agentType))
-                    rowCount = 1000;
-                else
-                    rowCount = 100;
+                if (AgentType.UFX.value.equals(agentType)) rowCount = 1000;
+                else rowCount = 100;
                 List<Instrument> instrumentList;
                 for (Market market : Market.values()) {
                     do {
@@ -279,15 +270,12 @@ public class TerminalHelper {
         return instruments;
     }
 
-    public List<IntegratedBulkQuoteBean> queryIntegratedBulkQuote(String stockCode, String entrustProp, String entrustBs, String accountId, int pageSize) {
-        if (pageSize > 0) {
-            if (pageSize > 1000)
-                pageSize = 1000;
+    public List<IntegratedBulkQuoteBean> queryIntegratedBulkQuote(IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean) {
+        int pageSize = integratedBulkQuoteQryBean.getPageSize();
+        if (pageSize > 1000) {
+            integratedBulkQuoteQryBean.setPageSize(1000);
         }
-
-        IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean = new IntegratedBulkQuoteQryBean(stockCode, entrustProp, entrustBs, accountId, pageSize);
-
-        TradeAgent tradeAgent = getAgent(accountId);
+        TradeAgent tradeAgent = getAgent(integratedBulkQuoteQryBean.getAccountId());
         if (Objects.nonNull(tradeAgent)) {
             try {
                 List<IntegratedBulkQuoteBean> quoteBeanList = tradeAgent.reqIntegratedBulkQuote(integratedBulkQuoteQryBean);
@@ -311,15 +299,13 @@ public class TerminalHelper {
         return new ArrayList<>();
     }
 
-    public List<IntegratedBulkCloseQuoteBean> queryIntegratedBulkCloseQuote(String stockCode, String exchangeType, String accountId, int pageSize) {
-        if (pageSize > 0) {
-            if (pageSize > 1000)
-                pageSize = 1000;
+    public List<IntegratedBulkCloseQuoteBean> queryIntegratedBulkCloseQuote(IntegratedBulkCloseQuoteQryBean integratedBulkCloseQuoteQryBean) {
+        int pageSize = integratedBulkCloseQuoteQryBean.getPageSize();
+        if (pageSize > 1000) {
+            integratedBulkCloseQuoteQryBean.setPageSize(1000);
         }
 
-        IntegratedBulkCloseQuoteQryBean integratedBulkCloseQuoteQryBean = new IntegratedBulkCloseQuoteQryBean(stockCode, exchangeType, accountId, pageSize);
-
-        TradeAgent tradeAgent = getAgent(accountId);
+        TradeAgent tradeAgent = getAgent(integratedBulkCloseQuoteQryBean.getAccountId());
         if (Objects.nonNull(tradeAgent)) {
             try {
                 List<IntegratedBulkCloseQuoteBean> beanList = tradeAgent.reqIntegratedBulkCloseQuote(integratedBulkCloseQuoteQryBean);
@@ -342,11 +328,14 @@ public class TerminalHelper {
         return new ArrayList<>();
     }
 
-    public List<IntegratedRepurchaseQuoteBean> queryIntegratedRepurchaseQuote(int actionIn, String entrustProp, String accountId, int pageSize) {
-        if (pageSize > 0) {
-            if (pageSize > 1000)
-                pageSize = 1000;
+    public List<IntegratedRepurchaseQuoteBean> queryIntegratedRepurchaseQuote(IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean) {
+        int pageSize = integratedRepurchaseQuoteQryBean.getPageSize();
+        if (pageSize > 1000) {
+            pageSize = 1000;
         }
+        String accountId = integratedRepurchaseQuoteQryBean.getAccountId();
+        int actionIn = integratedRepurchaseQuoteQryBean.getActionIn();
+        String entrustProp = integratedRepurchaseQuoteQryBean.getEntrustProp();
         // 投管查询行情时，不会传入账户信息，需要查询到所有券商的行情信息， 故选择当前已连接券商，并选择其中一个账户进行查询
         if (Strings.isNullOrEmpty(accountId)) {
             return quoteJob.getIntegratedRepurchaseQuoteBeanList(actionIn, entrustProp);
@@ -368,15 +357,13 @@ public class TerminalHelper {
         return new ArrayList<>();
     }
 
-    public List<IntegratedFixedIncomeQuoteBean> queryIntegratedFixedIncomeQuote(String stockCode, String exchangeType, String accountId, int pageSize) {
-        if (pageSize > 0) {
-            if (pageSize > 1000)
-                pageSize = 1000;
+    public List<IntegratedFixedIncomeQuoteBean> queryIntegratedFixedIncomeQuote(IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean) {
+        int pageSize = integratedFixedIncomeQuoteQryBean.getPageSize();
+        if (pageSize > 1000) {
+            integratedFixedIncomeQuoteQryBean.setPageSize(1000);
         }
 
-        IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean = new IntegratedFixedIncomeQuoteQryBean(stockCode, exchangeType, accountId, pageSize);
-
-        TradeAgent tradeAgent = getAgent(accountId);
+        TradeAgent tradeAgent = getAgent(integratedFixedIncomeQuoteQryBean.getAccountId());
         if (Objects.nonNull(tradeAgent)) {
             try {
                 return tradeAgent.reqIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean);
