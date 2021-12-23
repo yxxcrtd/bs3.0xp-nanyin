@@ -47,6 +47,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.background.component.common.pack.common.security.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
@@ -565,7 +566,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * 配置用户
 	 */
 	public void setUser(EtrParameterDto paraDto){
-		com.joyintech.background.component.common.pack.common.security.User user = new User();
+		User user = new User();
 		user.setUserName(LoginUserUtil.getUserName());
 		user.setDeptCode(LoginUserUtil.getDeptCode());
 		paraDto.setUser(user);
@@ -1128,12 +1129,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @return 联想文本框
      */
     public List<SuggestDto> selectCounterDealer(Map<String, Object> map) {
-		// 交易场所
-		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
-		List<SuggestDto> suggestDtos = etrExchangeTradeCommonMapper.selectCounterDealer(map);
-		return suggestDtos;
-//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectCounterDealer",
-//                map, SuggestDto.class);
+        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectCounterDealer",
+                map, SuggestDto.class);
     }
 
     /**
@@ -1285,6 +1282,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         String tradeMarket = (String) param.get("tradeMarket");
         String ps = (String) param.get("ps");
         String calculateField = (String) param.get("calculateField");
+
         // 定义需要返回的参数
         BigDecimal unitInt = null;// 单位应计利息
         BigDecimal intAmt = null;// 应计利息总额
@@ -1306,6 +1304,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         if (StringUtil.isNotEmpty(param.get("exerYield"))) {
             exerYield = new BigDecimal(param.get("exerYield").toString()).divide(new BigDecimal(100));// 行权收益率
         }
+
         // 如果交易场所为上交所、深交所以外的情况
         boolean isJiaoYiSuo = true;
         if (!StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(), tradeMarket)
@@ -1350,6 +1349,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
                 intSchList.add(item);
             }
         }
+
         // d.获取债券基本资料信息
         // 计算行权收益率，非行权时，取大于当日的行权日
         tempParamMap.put("ps", ps);
@@ -1453,6 +1453,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             yieldPriceInParameter.setCurrIntMethod(CurrIntCalMethod.使用区间起始日前最新票面利率计算);
             priceYieldInParameter.setCurrIntMethod(CurrIntCalMethod.使用区间起始日前最新票面利率计算);
         }
+
         // 百元面值应计利息
         BigDecimal accurInt = BigDecimal.ZERO;
         // 交易所债券特殊处理start----------------------------------------------------------------
@@ -2037,7 +2038,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * 委托关闭
      * @param entity
      */
-	public void closeDelegate(EtrExchangeTrade003Dto entity){
+	public void closeDelegate(EtrExchangeTradeOperateRequest entity){
 //        restTemplate.postForObject(
 //                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/entrustClose",entity,
 //                Integer.class);
@@ -2058,7 +2059,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * 委托撤销
      * @param entity
      */
-    public void recallDelegate(EtrExchangeTrade003Dto entity){
+    public void recallDelegate(EtrExchangeTradeOperateRequest entity){
 		EtrBaseDto etrBaseDto = new EtrBaseDto();
 		etrBaseDto.setEntrustId(entity.getEntrustId());
 		EtrParameterDto paraDto = new EtrParameterDto();
@@ -2349,7 +2350,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		}
 	}
 
-	/***
+    /***
      * 取更新时间最新记录.投资目的  指令业务类型 = 数据字典.委托类型.大宗债券指令
      * @return
      */
@@ -2733,6 +2734,10 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public AjaxResult  checkSaveErrorMethod(EtrExchangeTradeSaveRequest dto, BindingResult br) {
+		//暂时支持一个组合
+		EtrExchangeTradePortfolioRequest portfolioRequest=dto.getPortfolioList().get(0);
+		dto.setPortfolioId(portfolioRequest.getPortfolioId());
+		//暂时支持一个组合
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}

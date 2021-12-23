@@ -34,7 +34,7 @@ import java.util.*;
  * @see FieldEtrInfoQueryService
  * @since 1.0
  */
-@Service("CfetsEtrInfoQueryService")
+@Service("FieldEtrInfoQueryService")
 public class FieldEtrInfoQueryService extends BaseService{
 
     @Autowired

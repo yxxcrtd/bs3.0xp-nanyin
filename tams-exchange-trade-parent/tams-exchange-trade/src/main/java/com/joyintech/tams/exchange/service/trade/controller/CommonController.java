@@ -1,20 +1,35 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.common.bean.SysParamBean;
-import com.joyintech.tams.exchange.common.constant.ErrorCode;
-import com.joyintech.tams.exchange.service.trade.management.service.CommonManagement;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.joyintech.tams.exchange.common.ResponseResultBody;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.bean.SysParamBean;
+import com.joyintech.tams.exchange.common.constant.ErrorCode;
+import com.joyintech.tams.exchange.common.domain.Message;
+import com.joyintech.tams.exchange.common.request.BaseRequest;
+import com.joyintech.tams.exchange.service.trade.management.service.CommonManagement;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
-@RequestMapping("/service/joyin")
+@RequestMapping("/trade/joyin")
+@ResponseResultBody
+@Api(tags = "场内交易-共通操作接口")
 public class CommonController {
     @Autowired
     private CommonManagement commonManagement;
+    
 
     /**
      * 市场合约代码查询
@@ -42,12 +57,13 @@ public class CommonController {
         return commonManagement.queryFuturesInstrument(stockCode);
     }
 
-    @RequestMapping(value = "/common/fairtrade", method = RequestMethod.GET)
-    public ResultBean queryFairTradeParam(@RequestParam(value = "user_id") String userId) {
+    @ApiOperation(value = "公平交易参数查询", notes = "公平交易参数查询")
+    @RequestMapping(value = "/common/fairtrade", method = RequestMethod.POST)
+    public Message<Object> queryFairTradeParam(@RequestBody BaseRequest baseRequest) {
         Map<String, Object> pageParam = new HashMap<>();
         pageParam.put("systemCode", "TRD");
         pageParam.put("paraCode", "TRD_CHECK_FAIR");
-        return new ResultBean(ErrorCode.SUCCESS, commonManagement.querySysPara(pageParam));
+        return new Message<Object>(commonManagement.querySysPara(pageParam));
     }
 
     /**
@@ -56,9 +72,10 @@ public class CommonController {
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/common/sysdate", method = RequestMethod.GET)
-    public ResultBean queryInvestSystemDate(@RequestParam(value = "user_id") String userId) {
-        return new ResultBean(ErrorCode.SUCCESS, commonManagement.queryInvestSystemDate());
+    @ApiOperation(value = "获取系统平台日", notes = "获取系统平台日")
+    @RequestMapping(value = "/common/sysdate", method = RequestMethod.POST)
+    public Message<Date> queryInvestSystemDate(@RequestBody BaseRequest baseRequest) {
+        return new Message<Date>(commonManagement.queryInvestSystemDate());
     }
 
     /**

@@ -1,9 +1,9 @@
 package com.joyintech.tams.exchange.controller;
 
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.common.constant.ErrorCode;
-import com.joyintech.tams.exchange.service.ExchangeCommonService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.service.ExchangeCommonService;
 
 @RestController
 @RequestMapping("/joyin")
@@ -21,17 +20,18 @@ public class ExchangeCommonController {
     @Autowired
     private ExchangeCommonService commonService;
 
-    /**
-     * 公平交易参数查询
-     *
-     * @param userId 用户Id
-     * @return ResultBean
-     */
-    @RequestMapping(value = "/common/fairtrade", method = RequestMethod.GET)
-    public ResultBean queryFairTradeParam(@RequestParam(value = "user_id") String userId) {
-        String param = "?user_id=" + userId;
-        return commonService.queryFairTradeParam(param);
-    }
+/////////////////////////////////////迁移到新UI接口    
+//    /**
+//     * 公平交易参数查询
+//     *
+//     * @param userId 用户Id
+//     * @return ResultBean
+//     */
+//    @RequestMapping(value = "/common/fairtrade", method = RequestMethod.GET)
+//    public ResultBean queryFairTradeParam(@RequestParam(value = "user_id") String userId) {
+//        String param = "?user_id=" + userId;
+//        return commonService.queryFairTradeParam(param);
+//    }
 
     /**
      * 市场合约代码查询
@@ -93,17 +93,18 @@ public class ExchangeCommonController {
         return commonService.setDataServiceConfig(param);
     }
 
-    /**
-     * 获取系统平台日
-     *
-     * @param userId
-     * @return
-     */
-    @RequestMapping(value = "/common/sysdate", method = RequestMethod.GET)
-    public ResultBean queryInvestSystemDate(@RequestParam(value = "user_id") String userId) {
-        String param = "?user_id=" + userId;
-        return new ResultBean(ErrorCode.SUCCESS, DateUtil.platDateFromCache());
-    }
+/////////////////////////////////////迁移到新UI接口        
+//    /**
+//     * 获取系统平台日
+//     *
+//     * @param userId
+//     * @return
+//     */
+//    @RequestMapping(value = "/common/sysdate", method = RequestMethod.GET)
+//    public ResultBean queryInvestSystemDate(@RequestParam(value = "user_id") String userId) {
+//        String param = "?user_id=" + userId;
+//        return new ResultBean(ErrorCode.SUCCESS, DateUtil.platDateFromCache());
+//    }
 
     @RequestMapping(value = "/common/trade/date", method = RequestMethod.POST)
     public ResultBean changeDbType(@RequestParam(value = "calender_type") String tradeCalendarType,

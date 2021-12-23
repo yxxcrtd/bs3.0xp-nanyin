@@ -7,19 +7,19 @@ import org.hibernate.validator.constraints.NotBlank;
 @ApiModel(value = "盘后大宗行情请求报文", description = "盘后大宗行情请求报文")
 public class IntegratedBulkCloseQuoteQryBean {
 
-    @ApiModelProperty(required = true, name = "stockCode", value = "证券代码")
+    @ApiModelProperty(required = true, name = "stockCode", value = "证券代码",example = "000001.SZ")
     @NotBlank(message = "证券代码不能为空")
     private String stockCode;
 
-    @ApiModelProperty(name = "exchangeType", value = "交易类别")
+    @ApiModelProperty(name = "exchangeType", value = "交易类别（1-上海，2-深圳）",example = "2")
     @NotBlank(message = "交易类别不能为空")
     private String exchangeType;
 
-    @ApiModelProperty(required = true, name = "accountId", value = "网点账号")
+    @ApiModelProperty(required = true, name = "accountId", value = "网点账号",example = "A0001:12345")
     @NotBlank(message = "网点账号不能为空")
     private String accountId;
 
-    @ApiModelProperty(name = "pageSize", value = "记录数")
+    @ApiModelProperty(name = "pageSize", value = "记录数",example = "100")
     private int pageSize;
 
     public IntegratedBulkCloseQuoteQryBean(String stockCode, String exchangeType, String accountId, int pageSize) {

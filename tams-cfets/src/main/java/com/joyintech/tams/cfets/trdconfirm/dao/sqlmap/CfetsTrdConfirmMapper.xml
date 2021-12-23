@@ -1403,8 +1403,8 @@
         reg.delivery_type as deliveryType,
         reg.ccy as ccy,
         reg.counter_id as counterId,
-        mccic.PARTY_ABBR as counterIdName,
-        reg.counter_trader as counterTrader,
+        nvl(t1.counter_name,reg.counter_id) as counterIdName,
+        nvl(t4.TRADER_NAME, reg.counter_trader) as counterTrader,
         reg.remark as remark,
         reg.settle_date as settleDate
         from reg_fin_product_deal_total reg
@@ -1425,9 +1425,10 @@
         where regdeal.totle_trade_id=#{busiCode,jdbcType=VARCHAR}
         group by regdeal.totle_trade_id)deal
         on reg.totle_trade_id=deal.totle_trade_id
-        left join stl_sec_acct_info stlinfo
-        on reg.sec_manage_acct_id=stlinfo.sec_acct_id
-        LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON reg.counter_id= mccic.party_id
+        left join stl_sec_acct_info stlinfo on reg.sec_manage_acct_id=stlinfo.sec_acct_id
+        left join MST_COUNTER_PARTY t1 on t1.counter_id=reg.counter_id
+        left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=reg.counter_trader
+
         where reg.totle_trade_id=#{busiCode,jdbcType=VARCHAR} and reg.finprod_type2='F01'
 
         union all
@@ -1460,7 +1461,7 @@
         ib.sett_ccy as ccy,
         ibd.cp_party_id as counterId,
         mccic.PARTY_ABBR as counterIdName,
-        ibd.cp_trader as counterTrader,
+        nvl(t4.TRADER_NAME, ibd.cp_trader) as counterTrader,
         ib.remark as remark,
         ib.settle_date as settleDate
         from  ibu_quote_bond ib
@@ -1481,6 +1482,7 @@
         left join stl_sec_acct_info stlinfo
         on ib.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_CFETS_CUSTOMER_INFO mccic ON ibd.cp_party_id= mccic.party_id
+        left join MST_CFETS_CUSTOMER_TRADER t4 on t4.TRADER_ID=ibd.cp_trader
 
         where ib.quote_id=#{busiCode,jdbcType=VARCHAR}
     )

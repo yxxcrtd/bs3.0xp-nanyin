@@ -89,7 +89,58 @@
         </where>
     </select>
 
-    <select id="listEntrust" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealEntrustOrderDto">
+    <resultMap id="resultMap" type="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealEntrustOrderDto">
+        <id property="entrustStatus" column="entrustStatus"/>
+        <id property="finishAmt" column="finishAmt"/>
+        <id property="avaNum" column="avaNum"/>
+        <id property="finishDealAmt" column="finishDealAmt"/>
+        <id property="avaDealAmt" column="avaDealAmt"/>
+        <id property="transactioncom" column="transactioncom"/>
+        <id property="tradeFinishPercent" column="tradeFinishPercent"/>
+        <id property="entrustNum" column="entrustNum"/>
+        <id property="portfolioId" column="portfolioId"/>
+        <id property="portfolioName" column="portfolioName"/>
+        <id property="finprodIds" column="finprodIds"/>
+        <id property="finprodMarketNames" column="finprodMarketNames"/>
+        <id property="pledgeStockId" column="pledgeStockId"/>
+        <id property="pledgeStockName" column="pledgeStockName"/>
+        <id property="settleSpreed" column="settleSpreed"/>
+        <id property="ps" column="ps"/>
+        <id property="repoTerm" column="repoTerm"/>
+        <id property="tradeYield" column="tradeYield"/>
+        <id property="invManagerId" column="invManagerId"/>
+        <id property="invManagerName" column="invManagerName"/>
+        <id property="counterId" column="counterId"/>
+        <id property="counterName" column="counterName"/>
+        <id property="entrustDate" column="ENTRUST_DATE"/>
+        <id property="transmitTime" column="TRANSMIT_TIME"/>
+        <id property="entrustId" column="entrustId"/>
+        <id property="remark" column="remark"/>
+        <id property="vdate" column="vdate"/>
+        <id property="mdate" column="mdate"/>
+        <id property="quoteType" column="quoteType"/>
+        <id property="mySide" column="mySide"/>
+        <id property="mySideAbbr" column="mySideAbbr"/>
+        <id property="mySideTrader" column="mySideTrader"/>
+        <id property="mySideTraderName" column="mySideTraderName"/>
+        <id property="counterTrader" column="counterTrader"/>
+        <id property="counterTraderName" column="counterTraderName"/>
+        <id property="settleCcy" column="settleCcy"/>
+        <id property="ccy" column="ccy"/>
+        <id property="secAcctSource" column="secAcctSource"/>
+        <id property="partyId" column="partyId"/>
+        <id property="secManageAcctId" column="secManageAcctId"/>
+        <id property="portfolioSeries" column="portfolioSeries"/>
+        <id property="termType" column="termType"/>
+        <collection property="repoEntrustPledgeDtos" ofType="com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto"
+                    javaType="java.util.ArrayList" >
+            <result column="bondCode" property="bondCode" jdbcType="VARCHAR" />
+            <result column="bondAbbrName" property="bondAbbrName" jdbcType="VARCHAR" />
+            <result column="pledgePrin" property="pledgePrin" jdbcType="VARCHAR" />
+        </collection>
+    </resultMap>
+
+    <select id="listEntrust" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealEntrustOrderDto" resultMap="resultMap">
         SELECT *
         FROM (
             SELECT ETR_ENTRUST.ENTRUST_STATUS                                                                 entrustStatus/*指令状态*/
@@ -110,6 +161,9 @@
             <if test="repo_pledge_model != null and repo_pledge_model == '02'">
                 ,PLEDGE.finprodIds /*质押债券*/
                 ,PLEDGE.finprodMarketNames /*质押债券*/
+                ,PLEDGES.bondCode
+                ,PLEDGES.bondAbbrName
+                ,PLEDGES.pledgePrin
             </if>
             <if test="repo_pledge_model != null and repo_pledge_model == '03'">
                 ,ETR_ENTRUST_ADD.PLEDGE_STOCK_ID                                                              pledgeStockId/*质押券库*/
@@ -222,6 +276,13 @@
                 group by ENTRUST_ID
             ) PLEDGE /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
                 ON PLEDGE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+            LEFT JOIN
+            (
+            select ENTRUST_ID, fp.FINPROD_MARKET_ID bondCode, fp.FINPROD_ABBR bondAbbrName,PLEDGE_AMT pledgePrin
+            from ETR_PLEDGE ep
+            left join FIN_PRODUCT fp on ep.FINPROD_ID = fp.FINPROD_ID
+            ) PLEDGES /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
+            ON PLEDGES.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
         </if>
         <if test="repo_pledge_model != null and repo_pledge_model == '03'">
             LEFT JOIN ETR_SEC_STOCK ON ETR_SEC_STOCK.PLEDGE_STOCK_ID = ETR_ENTRUST_ADD.PLEDGE_STOCK_ID
@@ -1137,7 +1198,6 @@
                  LEFT JOIN SYS_USER SU
                            ON SU.USER_NAME = RFPDT.OU_TRADER_ID
         where RFPDT.IS_CANCEL = 'Y'
-          and RFPDT.TRADE_STATUS = '03'
           and RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
           AND EXISTS (
                 SELECT  1
@@ -1192,7 +1252,7 @@
                 </if>
             )
     </sql>
-    
+
     <select id="listDealTransactionDetails" resultType="com.joyintech.tams.cfets.bankuplink.repo.dto.DealTransactionDetailsDto">
         select distinct
                statusValid/*有效*/,
@@ -1229,7 +1289,7 @@
             where sur.USER_ID = #{loginUserId}
                 and sr.ROLE_POS = #{rolePos03})
     </select>
-    
+
     <sql id="listRegFinPledge_sql">
         SELECT
            trade_id,
@@ -1653,7 +1713,7 @@
             LEFT JOIN TRDQUTO_MATCH_INFO TMI ON TMI.PRE_TRADE_ID = RFPDT.TOTLE_TRADE_ID
             WHERE RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
               AND ((RFPDT.TRADE_STATUS = '01' and (RFPDT.IS_CANCEL IS NULL OR RFPDT.IS_CANCEL = 'N')) OR
-                   (RFPDT.TRADE_STATUS = '03' AND RFPDT.IS_CANCEL = 'Y'))
+                   RFPDT.IS_CANCEL = 'Y')
               and RFPDT.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
                 <if test="quoteIds != null and quoteIds.size() > 0">
                     and RFPDT.TOTLE_TRADE_ID in
@@ -1713,7 +1773,7 @@
             </if>
         WHERE RFPDT.FINPROD_TYPE2 in ('F02', 'F03')
             AND ((RFPDT.TRADE_STATUS = '01' and (RFPDT.IS_CANCEL IS NULL OR RFPDT.IS_CANCEL = 'N')) OR
-                (RFPDT.TRADE_STATUS = '03' AND RFPDT.IS_CANCEL = 'Y'))
+                RFPDT.IS_CANCEL = 'Y')
             and RFPDT.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
             <if test="quoteIds != null and quoteIds.size() > 0">
                 and RFPDT.TOTLE_TRADE_ID in

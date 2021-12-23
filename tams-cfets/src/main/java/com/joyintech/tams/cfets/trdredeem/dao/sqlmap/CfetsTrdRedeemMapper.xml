@@ -262,6 +262,19 @@
         and p.amount>0
         order by p.sec_acct_id,pc.ACCT_NO
     </select>
+    <select id="isExistRegInfo"  parameterType="Map"  resultType="com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemRegInfoListResponse">
+        SELECT   t.totle_trade_id as busiCode
+        from reg_fin_product_deal_total t
+        where t.finprod_id=#{finprodId,jdbcType=VARCHAR}
+        and t.settle_date=#{settleDate,jdbcType=DATE}
+        and  t.is_cancel='N' and t.trade_status='01'   and t.ps='T39'
+        union all
+        SELECT t.totle_trade_id as busiCode
+        from wfl_reg_fin_product_deal_total t
+        where t.finprod_id=#{finprodId,jdbcType=VARCHAR}
+        and t.settle_date=#{settleDate,jdbcType=DATE}
+        and  t.is_cancel='N' and t.trade_status='01' and t.ps='T39'
+    </select>
 
 </mapper>
 

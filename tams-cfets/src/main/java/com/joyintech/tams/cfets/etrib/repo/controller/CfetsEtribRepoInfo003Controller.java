@@ -205,7 +205,7 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
         params.setComment(
                 entity ->  "(" + "指令日期" + ":" + DateUtil.format(entity.getEntrustDate()) + ")-"
                         +"("+ "回购期限" +entity.getRepoTerm()+ ")-"
-                        + this.getMessage("EtrRepo002.entrustAmt") + ":" + entity.getEntrustAmt());
+                        + this.getMessage("EtrRepo002.entrustAmt") + ":" + entity.getEntrustAmt()+"元");
         processParameter.setWorkFlowParameter(params);
 
 //        String msg = cfetsEtrIbRepoinfo003Service.start(processParameter, RepoInfoDto);

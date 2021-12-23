@@ -22,6 +22,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
@@ -43,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -70,6 +72,10 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
     
 	@Autowired
 	private CfetsEtrIbRepoLib001Mapper cfetsEtrIbRepoLib001Mapper;
+
+
+    @Autowired
+    private CfetsEtrIbBondinfoMapper cfetsetrIbBondinfoMapper;
     /**
      * 平台日期
      */
@@ -116,6 +122,8 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         }
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         this.setParam(pageParam);
+        pageParam.put("sort",dto.getPageMode().getSort());
+        pageParam.put("direction",dto.getPageMode().getDirection());
         return super.queryForPage(dto.getPageMode().getPageNo(),dto.getPageMode().getPageSize(),() ->cfetsEtrIbRepoLib001Mapper.selectAvaPledgeBondList(pageParam));
     }
     /**
@@ -159,12 +167,24 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
             messages.add(new ValidMessage("repoTerm", "请输入回购天数。"));
         if(!StringUtil.isNotEmpty(dto.getPrice()))
             messages.add(new ValidMessage("price", "请输入回购利率。"));
+        if(StringUtil.isNotEmpty(dto.getPrice()) && dto.getPrice().compareTo(BigDecimal.ZERO)<=0)
+            messages.add(new ValidMessage("回购利率不允许小于等于0。"));
+        //指令日期若是节假日，不可以保存、提交
+        if(StringUtil.isNotEmpty(dto.getEntrustDate())){
+            String isHoliday = cfetsetrIbBondinfoMapper.getIsHoliday(dto.getEntrustDate(), "03");
+            if(StringUtil.isNotEmpty(isHoliday) && !StringUtil.equals(isHoliday,"0")){
+                messages.add(new ValidMessage("非银行间交易日不可提交指令。"));
+
+            }
+        }
 
         for(int i = 0; i< dtoList.size(); i++) {
             if(!StringUtil.isNotEmpty(dtoList.get(i).getPortfolioId()))
                 messages.add(new ValidMessage("请输入组合代码(第"+(i+1)+"行)。"));
             if(!StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt()))
                 messages.add(new ValidMessage("请输入指令金额(第"+(i+1)+"行)。"));
+            if(StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt()) && dtoList.get(i).getEntrustAmt().compareTo(BigDecimal.ZERO)<=0)
+                messages.add(new ValidMessage("指令金额不允许小于等于0。(第"+(i+1)+"行)。"));
 
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL),"03")
                     &&StringUtil.isNotEmpty(dto.getPs())
@@ -181,6 +201,16 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
                     }
                 }else{
                     messages.add(new ValidMessage("请添加质押券信息(第"+(i+1)+"行)。"));
+                }
+            }
+        }
+        if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL),"02")
+                &&StringUtil.isNotEmpty(dto.getPs())
+                &&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(), dto.getPs())){
+            List<CfetsPledgeBondInfoDto> list = dto.getPledgeBondTotalListDetailed();
+            for(int i = 0; i< list.size(); i++){
+                if(!StringUtil.isNotEmpty(list.get(i).getScale())){
+                    messages.add(new ValidMessage("质押券信息(第"+(i+1)+"行),折算比例必填"));
                 }
             }
         }
