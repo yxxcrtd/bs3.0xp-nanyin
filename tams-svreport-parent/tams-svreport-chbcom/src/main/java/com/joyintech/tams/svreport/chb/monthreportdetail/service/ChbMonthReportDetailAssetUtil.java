@@ -60,6 +60,8 @@ public class ChbMonthReportDetailAssetUtil {
     public int reportInsertCount;
 
 
+    private static List<String> fbCode = Arrays.asList("1201","1210","1202","1203","1204","1205","1206","1207","1208","1209","1299","2201","2202","2101","2299");
+
 
 
     /**
@@ -99,6 +101,7 @@ public class ChbMonthReportDetailAssetUtil {
             }
 
         }
+
 //        BeanUtil.copyPropertiesIgnoreNull(chbMonthAssetPositiondetail,reportDetail);
         chbMonthAssetPositiondetail.setDetailno(reportDetail.getPropertycode());
         chbMonthAssetPositiondetail.setTerm(reportDetail.getTermid());
@@ -130,6 +133,22 @@ public class ChbMonthReportDetailAssetUtil {
                 dto.setIndustry4(info.getIndustry4());
 
             }
+            //非标转标字段塞值
+            String isFbhy = null;
+            switch (dto.getDetailno()){
+                case "AMT3_3_1" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_农林牧渔业.getValue(); break;
+                case "AMT3_3_2" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_制造业.getValue(); break;
+                case "AMT3_3_3" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_采矿业.getValue(); break;
+                case "AMT3_3_4" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_建筑业.getValue(); break;
+                case "AMT3_3_5" :case "07" :case "14" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_基础设施建设.getValue(); break;
+                case "AMT3_3_6" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_房地产业.getValue(); break;
+                case "AMT3_3_7" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_金融业.getValue(); break;
+                default:  isFbhy =DictCodeListExt3.中债月度明细_非标行业_其他服务业.getValue(); break;
+            }
+
+            dto.setIsFbhy(isFbhy);
+
+
             //再赋值交易对手名称  展示产品购买资产首次买入交易的交易对手名称
             dto.setRivalParty(CounterMap.get(dto.getProdId()+"_"+dto.getAssetCode()));
         }
@@ -173,7 +192,6 @@ public class ChbMonthReportDetailAssetUtil {
         }
 
     }
-
 
 
     /**
