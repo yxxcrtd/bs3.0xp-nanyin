@@ -1,17 +1,28 @@
 package com.joyintech.tams.exchange.common.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * create By MAXX on 2020/5/12
- */
+@ApiModel(value = "到期收益率计算接口返回报文", description = "到期收益率计算接口返回报文")
 public class ExpireIncomeRateRet implements Serializable {
     private static final long serialVersionUID = -4184293437942470878L;
+
+    @ApiModelProperty(required = false, name = "sortable", value = "排序")
     private String sortable;
+
+    @ApiModelProperty(required = false, name = "statuCode", value = "状态")
     private String statuCode;
+
+    @ApiModelProperty(required = false, name = "messageType", value = "类型")
     private String messageType;
+
+    @ApiModelProperty(required = false, name = "data", value = "计算结果")
     private ExpireIncomeRateBean data;
+
+    @ApiModelProperty(required = false, name = "errorList", value = "错误信息")
     private List<ExpireIncomeRateError> errorList;
 
     public String getSortable() {

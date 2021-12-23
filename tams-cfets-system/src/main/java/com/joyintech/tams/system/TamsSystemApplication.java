@@ -29,7 +29,7 @@ public class TamsSystemApplication extends WebApplication {
 	
 	@Bean
 	public Docket dataExchangeDocket() {
-		return SwaggerConfig.createDocket("场内交易接口", "com.joyintech.tams.exchange.service.trade.controller");
+		return SwaggerConfig.createDocket("场内交易接口", "com.joyintech.tams.exchange");
 	}
 
 	@Bean
@@ -50,6 +50,11 @@ public class TamsSystemApplication extends WebApplication {
 	@Bean
 	public Docket dataBankuplinkDocket() {
 		return SwaggerConfig.createDocket("本币业务交易", "com.joyintech.tams.cfets.bankuplink.bond.controller");
+	}
+
+	@Bean
+	public Docket dataBankuplinkRepoDocket() {
+		return SwaggerConfig.createDocket("本币业务交易-质押式回购", "com.joyintech.tams.cfets.bankuplink.repo.controller");
 	}
 
 	@Bean

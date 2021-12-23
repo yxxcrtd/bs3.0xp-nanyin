@@ -105,7 +105,6 @@ $(function () {
      */
     table1.bind('click', '#table1SeqNo', function(data, index) {
         console.log(data);
-        debugger;
         data.pageModel = PAGE_MODEL_EDIT;
         Joyin.ajaxJson('/valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery002/check', data, function(result) {
             var tradeId=data.tradeId;
@@ -124,7 +123,6 @@ $(function () {
      * 余额流水信息表中的业务编号链接
      */
     table1.bind('click', '#table1Yewu', function(data, index) {
-        debugger;
         data.pageModel = PAGE_MODEL_EDIT;
         Joyin.ajaxJson('/valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery002/check', data, function(result) {
             $('#tradeId').val(data.tradeId);
@@ -208,7 +206,6 @@ $(function () {
      * 交易信息表中的业务编号链接
      */
     table3.bind('click', '#table3Yewu', function(data, index) {
-        debugger;
         Joyin.ajaxJson('/valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery002/check', data, function(result) {
             var bondBusitypeArr =  ['02','24'];//债券
             var planBusitypeArr =  ['09'];//计划类资产
@@ -303,7 +300,6 @@ $(function () {
      */
     table3.bind('click', '#table3Zichan', function(data, index) {
         Joyin.ajaxJson('/valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery002/check', data, function(result) {
-            debugger;
             var finprodType=data.finprodType;
             var buybackFinprod=["F02","F03","F04","F05"];
             if(finprodType=="F01"){
@@ -362,7 +358,6 @@ $(function () {
          * 绑定查看交易信息按钮事件
          */
         $('#ValBalanceStatementQuery002_btn_view').click(function() {
-            debugger;
             var tradeIds=document.getElementById('vocher').innerText;
             var index=tradeIds.indexOf(':');
             var tradeId=tradeIds.substring(index+1);

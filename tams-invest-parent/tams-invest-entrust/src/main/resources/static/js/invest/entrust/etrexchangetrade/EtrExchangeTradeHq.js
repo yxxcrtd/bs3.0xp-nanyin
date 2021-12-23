@@ -156,7 +156,6 @@
         //接收到消息的回调方法
         websocket.onmessage = function (event) {
             // setMessageInnerHTML(event.data);
-            debugger;
             console.log(event.data);
             // 处理 空数据
             if (event.data == '没有数据') {

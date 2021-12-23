@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.bean;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @ClassName TrdExchange002
@@ -14,59 +15,37 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
 //@PageId("TrdExchange002")
 public class TrdExchangeDto extends IntegratedEntrust implements ProcessEntity {
 
-    /**
-     * 订单编号
-     */
+    @ApiModelProperty(required = true, name = "orderID", value = "订单编号")
     private String orderID;
 
-    /**
-     * 操作类型
-     */
+    @ApiModelProperty(required = true, name = "operateType", value = "操作类型")
     private String operateType;
 
-    /**
-     * 画面模式
-     */
+    @ApiModelProperty(required = true, name = "pageModel", value = "画面模式")
     private String pageModel;
 
-    /**
-     * 工作流状态
-     */
+    @ApiModelProperty(required = true, name = "workflowStatus", value = "工作流状态")
     private String workflowStatus;
 
-    /**
-     * 审批人
-     */
+    @ApiModelProperty(required = true, name = "users", value = "审批人")
     private String users;
 
-    /**
-     * 审批角色
-     */
+    @ApiModelProperty(required = true, name = "roles", value = "审批角色")
     private String roles;
 
-    /**
-     * 操作类型
-     */
+    @ApiModelProperty(required = true, name = "operType", value = "操作类型")
     private String operType;
 
-    /**
-     * 页面ID
-     */
+    @ApiModelProperty(required = true, name = "pageId", value = "页面ID")
     private String pageId;
 
-    /**
-     * 工作流参数
-     */
+    @ApiModelProperty(required = true, name = "workflowParameter", value = "工作流参数")
     private String workflowParameter;
 
-    /**
-     * 元素ID
-     */
+    @ApiModelProperty(required = true, name = "elementId", value = "元素ID")
     private String elementId;
 
-    /**
-     * 提交标识
-     */
+    @ApiModelProperty(required = true, name = "submit", value = "提交标识")
     private String submit;
 
 

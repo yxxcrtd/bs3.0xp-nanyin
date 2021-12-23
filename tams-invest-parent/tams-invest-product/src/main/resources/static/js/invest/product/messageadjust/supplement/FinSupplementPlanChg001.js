@@ -11,7 +11,6 @@ $(function() {
         if(param.layFinprodId) {
             param.layFinprodId = param.layFinprodId.join(",");
         }
-        debugger;
         return param;
     };
     

@@ -74,13 +74,23 @@ public class CfetsTrdRedeemService extends BaseService{
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
         }
-        if(StringUtil.equals(dto.getTabType(),"regCur")){
+       /* if(StringUtil.equals(dto.getTabType(),"regCur")){
             //有效未交收或流程中
+            List<String> statusList=new ArrayList<>();
+            statusList.add(DictCodeListExt1.有效状态_有效.getValue());
+            statusList.add(DictCodeListExt1.有效状态_流程中.getValue());
+            pageParam.put("statusList",statusList);
 
         }else if(StringUtil.equals(dto.getTabType(),"regPre")){
             //有效已交收或撤销
-
-        }
+            List<String> statusList=new ArrayList<>();
+            statusList.add(DictCodeListExt1.有效状态_有效.getValue());
+            statusList.add( DictCodeListExt1.有效状态_撤销.getValue());
+            pageParam.put("statusList",statusList);
+        }*/
+        pageParam.put("DELIVERY_STATUS_01", DictCodeListExt3.交收状态_未交收.getValue());
+        pageParam.put("DELIVERY_STATUS_02", DictCodeListExt3.交收状态_已交收.getValue());
+        pageParam.put("DELIVERY_STATUS_04", DictCodeListExt3.交收状态_交收失败.getValue());
 
 
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.有效状态_有效.getValue());
@@ -94,10 +104,6 @@ public class CfetsTrdRedeemService extends BaseService{
         pageParam.put("DATE_TYPE_0", 0);
         pageParam.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
         pageParam.put("cdate",iPlatformDate.getSysDate());
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        int year = c.get(Calendar.YEAR);
-        pageParam.put("year",year);
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
         String userId = SecurityUtil.getLoginUser().getUserName();
@@ -105,16 +111,11 @@ public class CfetsTrdRedeemService extends BaseService{
             //判断角色配置
             List<String> roleList=cfetsTrdQueryMapper.selectSysRoleById(userId);
             if(roleList.contains(DictCodeList.角色岗位_领导.getValue())
-                    || roleList.contains(DictCodeList.角色岗位_投资处长.getValue())
-                    || roleList.contains(DictCodeList.角色岗位_交易处长.getValue())
             ){
-                //角色配置为领导、交易处长、投资处长可查看所有数据
+                //角色配置为领导可查看所有数据
             }else if(roleList.contains(DictCodeList.角色岗位_交易员.getValue())){
                 //交易员
                 pageParam.put("submitUserId", SecurityUtil.getLoginUser().getUserName());
-            }else if(roleList.contains(DictCodeList.角色岗位_投资经理.getValue())){
-                //投资经理
-                pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
             }
             //登记
             return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsTrdRedeemMapper.queryAllRedeemRegInfoList(pageParam));

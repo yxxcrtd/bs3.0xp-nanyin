@@ -1,8 +1,12 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import com.joyintech.tams.exchange.common.bean.IntegratedBulkQuoteBean;
 import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteBean;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.service.trade.management.service.IntegratedQuoteManagement;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +33,7 @@ public class BulkQuoteController {
      * @date: 2020/9/21 17:46
      */
     @RequestMapping(value = "/entrust/integrated/bulk_quote", method = RequestMethod.GET)
-    public ResultBean queryIntegratedBulkQuote(@RequestParam(value = "stock_code") String stockCode,
+    public List<IntegratedBulkQuoteBean> queryIntegratedBulkQuote(@RequestParam(value = "stock_code") String stockCode,
                                                @RequestParam(value = "entrust_prop", required = false) String entrustProp,
                                                @RequestParam(value = "entrust_bs",required = false) String entrustBs,
                                                @RequestParam(value = "account_id") String accountId,

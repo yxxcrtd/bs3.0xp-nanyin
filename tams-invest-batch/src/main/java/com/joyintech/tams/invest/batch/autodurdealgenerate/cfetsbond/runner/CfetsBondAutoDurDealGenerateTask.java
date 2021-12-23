@@ -80,7 +80,9 @@ public class CfetsBondAutoDurDealGenerateTask extends BatchBaseService {
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
+           // logger.error(e.getMessage());
+            throw new RuntimeException(e);
         }
 
         return result;

@@ -312,7 +312,6 @@
         });
         //风险试算
         $('#TrdAssetsProject001_btn_risk').click(function(){
-        	debugger;
             var data = projectListInfoList.getAllRows();
             if(data!=null && data != '') {
                 var object = $.serializeToObject('#TrdAssetsProject001_form', true);

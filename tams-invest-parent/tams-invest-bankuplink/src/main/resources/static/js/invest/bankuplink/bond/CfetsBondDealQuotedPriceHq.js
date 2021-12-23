@@ -294,11 +294,15 @@
                     if (noMDEntries[j].mDEntryType === '1') { // 最新收益率
                         document.getElementById('EtrIbBondinfoHq_newRate').innerHTML = JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2) + '%';
                     } else if (noMDEntries[j].mDEntryType === 'N') { // 收益率的涨跌
-                        document.getElementById('EtrIbBondinfoHq_latestYield').innerHTML =  JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 2, null, 2)+' BP';
+                        document.getElementById('EtrIbBondinfoHq_latestYield').innerHTML =  JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 2, null, 2)+'BP';
                     } else if (noMDEntries[j].mDEntryType === 'e') { // 最新净价
-                        document.getElementById('EtrIbBondinfoHq_newPrice').innerHTML =  JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2);
+                        document.getElementById('EtrIbBondinfoHq_newPrice').innerHTML =  JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2)+'元';
                     }
                 }
+            }else{
+                document.getElementById('EtrIbBondinfoHq_newRate').innerHTML = ''; // 最新收益率
+                document.getElementById('EtrIbBondinfoHq_latestYield').innerHTML ='';// 收益率的涨跌
+                document.getElementById('EtrIbBondinfoHq_newPrice').innerHTML ='';// 最新净价
             }
         }
         ,

@@ -35,7 +35,7 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
     private PageMode pageMode;
 
     @ApiModelProperty(name="entrustStatus",value="指令状态",example="A1")
-    private String entrustStatus;
+    private List<String> entrustStatus;
 
     @ApiModelProperty(name="startDate",value="查询开始日期",example="A1")
     private String startDate;
@@ -54,6 +54,9 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
 
     @ApiModelProperty(name="finprodType2",value="资产类型",example="A1")
     private String finprodType2;
+
+    @ApiModelProperty(name="invManagerId",value="投资经理",example="A1")
+    private String invManagerId;
 
 
     public PageMode getPageMode() {
@@ -89,11 +92,11 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
         this.endDate = endDate;
     }
 
-    public String getEntrustStatus() {
+    public List<String> getEntrustStatus() {
         return entrustStatus;
     }
 
-    public void setEntrustStatus(String entrustStatus) {
+    public void setEntrustStatus(List<String> entrustStatus) {
         this.entrustStatus = entrustStatus;
     }
 
@@ -119,6 +122,14 @@ public class EtrExchangeTradeEtrExchangeCommonRequest {
 
     public void setSecId(String secId) {
         this.secId = secId;
+    }
+
+    public String getInvManagerId() {
+        return invManagerId;
+    }
+
+    public void setInvManagerId(String invManagerId) {
+        this.invManagerId = invManagerId;
     }
 
     public String getFinprodType2() {

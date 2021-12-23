@@ -3,6 +3,10 @@ package com.joyintech.tams.exchange.common.db.domain;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Digits;
@@ -12,6 +16,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@ApiModel(value="订单报文",description="订单报文")
 public class Order implements Serializable, Cloneable, OrderInterface, KeyMethodInterface<String> {
     private static final long serialVersionUID = 7947633128705147688L;
     @NotNull
@@ -19,160 +24,203 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
     @Id
     private String id;
 
+    @ApiModelProperty(name = "instructionId", value = "指令id")
     @NotNull
     @Size(max = 32)
     private String instructionId;
 
+    @ApiModelProperty(name = "portfolioId", value = "组合id")
     @NotNull
     @Size(max = 18)
     private String portfolioId;
 
+    @ApiModelProperty(name = "userId", value = "用户id")
     @NotNull
     @Size(max = 18)
     private String userId;
 
+    @ApiModelProperty(name = "username", value = "用户名称")
     @NotNull
     @Size(max = 255)
     private String username;
 
+    @ApiModelProperty(name = "accountId", value = "网点号:账号")
     @NotNull
     @Size(max = 32)
     private String accountId;
 
+    @ApiModelProperty(name = "accountName", value = "资金账户名称")
     @Size(max = 32)
     private String accountName;
 
+    @ApiModelProperty(name = "financeAccount", value = "资金账户ID")
     @Size(max = 32)
     private String financeAccount;
 
+    @ApiModelProperty(name = "assetType", value = "资产类型：F01 债券；F02 基金；F07 质押式回购；F11 股票")
     @NotNull
     @Size(max = 3)
     private String assetType;
 
+    @ApiModelProperty(name = "algorithmId", value = "算法ID")
     @Size(max = 32)
     private String algorithmId;
 
+    @ApiModelProperty(name = "relativeOrderId", value = "关联订单ID")
     @Size(max = 32)
     private String relativeOrderId;
 
+    @ApiModelProperty(name = "businessFlag", value = "交易标识BusinessFlag：5 公平；6 批量")
     @NotNull
     @Size(max = 1)
     private String businessFlag;
 
+    @ApiModelProperty(name = "entrustType", value = "委托类别")
     @NotNull
     @Size(max = 1)
     private String entrustType;
 
+    @ApiModelProperty(name = "entrustProp", value = "委托属性Enum：发往券商柜台的交易属性标识")
     @NotNull
     @Size(max = 4)
     private String entrustProp;
 
+    @ApiModelProperty(name = "entrustBs", value = "委托方向: 买入 卖出")
     @NotNull
     @Size(max = 1)
     private String entrustBs;
 
+    @ApiModelProperty(name = "bsFlag", value = "委托方向Enum：发往券商柜台的交易方向标识")
     @NotNull
     @Size(max = 2)
     private String bsFlag;
 
+    @ApiModelProperty(name = "stockCode", value = "证券代码")
     @NotNull
     @Size(max = 32)
     private String stockCode;
 
+    @ApiModelProperty(name = "stockName", value = "证券名称")
     @NotNull
     @Size(max = 32)
     private String stockName;
 
+    @ApiModelProperty(name = "orderStatus", value = "订单状态")
     @NotNull
     @Digits(integer = 6, fraction = 0)
     private int orderStatus;
 
+    @ApiModelProperty(name = "orderVolume", value = "订单数量")
     @NotNull
     @Digits(integer = 20, fraction = 0)
     private long orderVolume;
 
+    @ApiModelProperty(name = "orderPrice", value = "订单价格")
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal orderPrice;
 
+    @ApiModelProperty(name = "orderBalance", value = "订单金额")
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal orderBalance;
 
+    @ApiModelProperty(name = "entrustVolume", value = "委托数量")
     @NotNull
     @Digits(integer = 20, fraction = 0)
     private long entrustVolume;
 
+    @ApiModelProperty(name = "entrustPrice", value = "委托价格")
     @NotNull
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal entrustPrice;//净价价格
 
+    @ApiModelProperty(name = "fullPrice", value = "全价价格")
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal fullPrice;//全价价格
 
+    @ApiModelProperty(name = "entrustBalance", value = "委托金额")
     @NotNull
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal entrustBalance;
 
+    @ApiModelProperty(name = "frozenBalance", value = "冻结金额")
     @NotNull
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal frozenBalance;
 
+    @ApiModelProperty(name = "frozenVolume", value = "冻结数量")
     @NotNull
     @Digits(integer = 20, fraction = 0)
     private long frozenVolume;
 
+    @ApiModelProperty(name = "tradedBalance", value = "已成交金额")
     @NotNull
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal tradedBalance;
 
+    @ApiModelProperty(name = "tradedVolume", value = "已成交数量")
     @NotNull
     @Digits(integer = 20, fraction = 0)
     private long tradedVolume;
 
+    @ApiModelProperty(name = "tradedPrice", value = "成交价格")
     @NotNull
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal tradedPrice;
 
+    @ApiModelProperty(name = "cancelVolume", value = "撤销数量")
     @NotNull
     @Digits(integer = 20, fraction = 0)
     private long cancelVolume;
 
+    @ApiModelProperty(name = "errorCode", value = "错误码")
     @NotNull
     @Digits(integer = 8, fraction = 0)
     private int errorCode;
 
+    @ApiModelProperty(name = "errorMsg", value = "错误消息")
     @Size(max = 2)
     private String errorMsg;
 
+    @ApiModelProperty(name = "tradingDay", value = "交易日期")
     @NotNull
     @Size(max = 10)
     private String tradingDay;
 
+    @ApiModelProperty(name = "ipMac", value = "IP及MAC信息")
     @Size(max = 64)
     private String ipMac;
 
+    @ApiModelProperty(name = "remark", value = "备注")
     @Size(max = 64)
     private String remark;
 
+    @ApiModelProperty(name = "createTime", value = "创建时间")
     private Date createTime;
 
+    @ApiModelProperty(name = "updateTime", value = "更新时间")
     private Date updateTime;
 
+    @ApiModelProperty(name = "ps", value = "投管ps")
     private String ps; //投管ps
 
+    @ApiModelProperty(name = "count", value = "count")
     private int count;
 
+    @ApiModelProperty(name = "isFullPrice", value = "全价(Y:是 ， N：否)")
     private String isFullPrice;//  Y:是 ， N：否
 
+    @ApiModelProperty(name = "offsetFlag", value = "冲正标识")
     private String offsetFlag;
 
+    @ApiModelProperty(name = "hedgeFlag", value = "套期保值标识：期货使用")
     private String hedgeFlag;
 
     public Order() {

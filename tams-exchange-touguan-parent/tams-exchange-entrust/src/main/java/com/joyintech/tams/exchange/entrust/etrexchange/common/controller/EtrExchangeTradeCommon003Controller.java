@@ -13,7 +13,6 @@ package com.joyintech.tams.exchange.entrust.etrexchange.common.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
@@ -22,8 +21,7 @@ import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeOperateRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
@@ -31,7 +29,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade003Dto;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -57,8 +55,9 @@ import java.util.Map;
  * @since 1.0
  */
 @Controller
-@PageId("JjEtrExchangeTrade003")
-@RequestMapping("/etrexchange/hqjj/jjetrExchangeTrade003")
+@PageId("EtrExchangeTradeCommon003")
+@RequestMapping("/etrexchange/common/EtrExchangeTradeCommon003")
+@Api(tags = "场内交易-指令共通接口")
 public class EtrExchangeTradeCommon003Controller extends BaseController{
 
     private static final Logger logger = LoggerFactory.getLogger(EtrExchangeTradeCommon003Controller.class);
@@ -72,7 +71,6 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
     @Autowired
     private EtrCommonService etrCommonService;
 
-    @ApiOperation(value = "查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/getPageParams")
     public Message<Map<String,Object>> init() {
         Map<String, Object> initPageParams = new HashMap<>();
@@ -93,27 +91,12 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
         initPageParams.put("etrExchange_entrustTable_refresh_period", etrExchange_entrustTable_refresh_period);
         return new Message<Map<String, Object>>(initPageParams).success();
     }
-    
-    @ApiOperation(value = "指令管理查询", notes = "指令管理查询")
-    @ResponseBody
-    @PostMapping("findPage")
-    public Message<Page<EtrExchangeTrade003Dto>> findPage(){
-        Page<EtrExchangeTrade003Dto> page = new Page<EtrExchangeTrade003Dto>();
-        return new Message<Page<EtrExchangeTrade003Dto>>().setData(page);
-    }
 
-    @ApiOperation(value = "查询指令列表分页数据", notes = "查询指令列表分页数据")
-    @ResponseBody
-    @RequestMapping("selectEtrExchange")
-    public Message<Page<EtrExchangeTradeEtrExchangeCommonResponse>> selectEtrExchange(EtrExchangeTradeEtrExchangeCommonRequest request){
-        Page<EtrExchangeTradeEtrExchangeCommonResponse> page = etrExchangeTradeCommon002Service.selectEtrExchange(request);
-        return new Message<Page<EtrExchangeTradeEtrExchangeCommonResponse>>().setData(page);
-    }
 
     @ApiOperation(value = "关闭校验", notes = "关闭校验")
     @ResponseBody
-    @RequestMapping("closeCheck")
-    public Message<AjaxResult> closeCheck(@RequestBody EtrExchangeTrade003Dto dto,
+    @PostMapping("closeCheck")
+    public Message<AjaxResult> closeCheck(@RequestBody EtrExchangeTradeOperateRequest dto,
 			BindingResult result) {
         try {
             AjaxResult ajax = new AjaxResult();
@@ -121,8 +104,8 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
                 return new Message<AjaxResult>().success().setData(new AjaxResult(result));
             }
             List<ValidMessage> errList = new ArrayList<>();
-            List<EtrExchangeTrade003Dto>  etrExchangeTrade003Dto = dto.getSelectedItem();
-            for(EtrExchangeTrade003Dto item : etrExchangeTrade003Dto){
+            List<EtrExchangeTradeOperateRequest>  tradeOperateRequests = dto.getSelectedItem();
+            for(EtrExchangeTradeOperateRequest item : tradeOperateRequests){
                 //银行间保持一致
                 if(!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收.getValue())
                 &&!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已退回.getValue())
@@ -146,14 +129,14 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
 
     @ApiOperation(value = "撤回校验", notes = "撤回校验")
     @ResponseBody
-    @RequestMapping("revokeCheck")
-    public Message<AjaxResult> revokeCheck(@RequestBody EtrExchangeTrade003Dto dto,
+    @PostMapping("revokeCheck")
+    public Message<AjaxResult> revokeCheck(@RequestBody EtrExchangeTradeOperateRequest dto,
 			BindingResult result) {
         try {
             AjaxResult webResult = new AjaxResult();
             List<ValidMessage> errList = new ArrayList<>();
-            List<EtrExchangeTrade003Dto> etrExchangeTrade003Dto = dto.getSelectedItem();
-            for (EtrExchangeTrade003Dto item : etrExchangeTrade003Dto) {
+            List<EtrExchangeTradeOperateRequest> etrExchangeTrade003Dto = dto.getSelectedItem();
+            for (EtrExchangeTradeOperateRequest item : etrExchangeTrade003Dto) {
                 if (!(StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_待接收.getValue())
                         || StringUtil.equals(item.getEntrustStatus(), DictCodeListExt3.委托状态_待分发.getValue()))) {
                     errList.add(new ValidMessage(item.getEntrustStatusString() + "的指令不允许撤回!"));
@@ -173,13 +156,13 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
 
     @ApiOperation(value = "关闭操作", notes = "关闭操作")
     @ResponseBody
-    @RequestMapping("entrustClose")
-    public Message<AjaxResult> close(@RequestBody EtrExchangeTrade003Dto dto) throws Exception {
+    @PostMapping("entrustClose")
+    public Message<AjaxResult> close(@RequestBody EtrExchangeTradeOperateRequest dto) throws Exception {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errList = new ArrayList<>();
       //判断指令是否已经分发，没分发就不调用交易系统指令状态变更接口；
-		List<EtrExchangeTrade003Dto> etrDistributeList = new ArrayList<EtrExchangeTrade003Dto>();
-		for (EtrExchangeTrade003Dto selectedItem : dto.getSelectedItem()) {
+		List<EtrExchangeTradeOperateRequest> etrDistributeList = new ArrayList<EtrExchangeTradeOperateRequest>();
+		for (EtrExchangeTradeOperateRequest selectedItem : dto.getSelectedItem()) {
 			EtrDistribute etrDistribute = etrExchangeTradeCommon001Service.getDistributeByEntrustId(selectedItem.getEntrustId());
 			if (etrDistribute != null && StringUtils.equals(etrDistribute.getEntrustId(), selectedItem.getEntrustId())) {
 				etrDistributeList.add(selectedItem);
@@ -196,7 +179,7 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
 		}
         // modify by zhangrui1 委托关闭释放剩余预占 start
         List<String> entrustIdList = new ArrayList<>();
-        for(EtrExchangeTrade003Dto item : dto.getSelectedItem()){
+        for(EtrExchangeTradeOperateRequest item : dto.getSelectedItem()){
             etrExchangeTradeCommon001Service.closeDelegate(item);
             //释放风险接口释放
             entrustIdList.add(item.getEntrustId());
@@ -209,14 +192,14 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
 
     @ApiOperation(value = "撤回操作", notes = "撤回操作")
     @ResponseBody
-    @RequestMapping("entrustRevoke")
-	public Message<AjaxResult> revoke(@RequestBody EtrExchangeTrade003Dto dto) throws Exception {
+    @PostMapping("entrustRevoke")
+	public Message<AjaxResult> revoke(@RequestBody EtrExchangeTradeOperateRequest dto) throws Exception {
 		AjaxResult webResult = new AjaxResult();
 		List<ValidMessage> errList = new ArrayList<>();
 
 		//判断指令是否已经分发，没分发就不调用交易系统指令状态变更接口；
-		List<EtrExchangeTrade003Dto> etrDistributeList = new ArrayList<EtrExchangeTrade003Dto>();
-		for(EtrExchangeTrade003Dto selectedItem : dto.getSelectedItem()){
+		List<EtrExchangeTradeOperateRequest> etrDistributeList = new ArrayList<EtrExchangeTradeOperateRequest>();
+		for(EtrExchangeTradeOperateRequest selectedItem : dto.getSelectedItem()){
 			EtrDistribute etrDistribute = etrExchangeTradeCommon001Service.getDistributeByEntrustId(selectedItem.getEntrustId());
 			if(etrDistribute != null && StringUtils.equals(etrDistribute.getEntrustId(), selectedItem.getEntrustId())){
 				etrDistributeList.add(selectedItem);
@@ -231,7 +214,7 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
 				return new Message<AjaxResult>().success().setData(webResult);
 			}
 		}
-		for (EtrExchangeTrade003Dto item : dto.getSelectedItem()) {
+		for (EtrExchangeTradeOperateRequest item : dto.getSelectedItem()) {
 			etrExchangeTradeCommon001Service.recallDelegate(item);
 			// 释放风险接口释放
 			

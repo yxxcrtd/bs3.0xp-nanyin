@@ -2,19 +2,46 @@ package com.joyintech.tams.exchange.common.bean;
 
 import java.io.Serializable;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value="标准券报文",description="标准券报文")
 public class StandardBonds implements Serializable {
     private static final long serialVersionUID = 8569288818585352732L;
+    @ApiModelProperty(name = "stockCode", value = "对应的质押券代码")
     private String stockCode; //对应的质押券代码
+    
+    @ApiModelProperty(name = "stockName", value = "对应的质押券名称")
     private String stockName;
+    
+    @ApiModelProperty(name = "market", value = "市场")
     private String market;
+    
+    @ApiModelProperty(name = "discount", value = "折扣")
     private double discount;
+    
+    @ApiModelProperty(name = "bondEnable", value = "标准券可融资数量")
     private int bondEnable;//标准券可融资数量
+    
+    @ApiModelProperty(name = "bondFrozen", value = "标准券冻结")
     private int bondFrozen;//标准券冻结
+    
+    @ApiModelProperty(name = "bondUnFrozen", value = "标准券解冻")
     private int bondUnFrozen;//标准券解冻
+    
+    @ApiModelProperty(name = "stockAccount", value = "证券账号")
     private String stockAccount;//证券账号
+    
+    @ApiModelProperty(name = "netAsset", value = "净资产")
     private Double netAsset;//净资产
+    
+    @ApiModelProperty(name = "bondEnout", value = "可出库数量")
     private int bondEnout;//可出库数量
+    
+    @ApiModelProperty(name = "stockType", value = "证券类别")
     private String stockType;//证券类别
+    
+    @ApiModelProperty(name = "accountId", value = "账号id")
     private String accountId;
 
     public String getStockCode() {

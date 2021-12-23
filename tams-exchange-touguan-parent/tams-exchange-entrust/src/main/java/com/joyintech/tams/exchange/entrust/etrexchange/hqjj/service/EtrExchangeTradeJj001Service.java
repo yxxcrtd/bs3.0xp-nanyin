@@ -106,8 +106,6 @@ public class EtrExchangeTradeJj001Service extends CommonExportService<EtrExchang
     @Autowired
     FinProductConvertibleMapper finProductConvertibleMapper;
     
-    @Autowired
-	EtrExchangeTradeJj002Service etrExchangeTrade002Service;
 
     @Autowired
     FinProductAddMapper finProductAddMapper;

@@ -969,7 +969,7 @@ public class CfetsTrdConfirmRegInfoListResponse{
     }
 
     public String getQuoteTypeName() {
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式_登记, getDealType());
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式_登记, getQuoteType());
     }
 
     public void setQuoteTypeName(String quoteTypeName) {

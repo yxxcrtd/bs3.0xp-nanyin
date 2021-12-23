@@ -22,7 +22,6 @@ $(function () {
          editCell: function (value, row, field, cell, column) {
              if (column.field == 'gradeResult') {
                 var flag = true;
-                debugger;
                  // 控制外部评级的唯一性
                  if (typeof value != "undefined" && value) {
                         flag = checkUniqueData(value,column,row);

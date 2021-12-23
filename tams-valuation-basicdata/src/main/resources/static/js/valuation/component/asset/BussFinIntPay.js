@@ -161,7 +161,6 @@
 	}
 
 	$(function() {
-		debugger;
 		//分红频率发生改变时
 		getElementById('payCycle').change(function() {
 			dayValueChang();

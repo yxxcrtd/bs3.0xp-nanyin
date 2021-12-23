@@ -2,6 +2,8 @@ package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Digits;
@@ -10,81 +12,99 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-/**
- * @author swwan
- * @create 2020-03-20 13:13
- */
+@ApiModel(value="指令质押券信息",description="指令质押券信息")
 public class InstructionPledge implements Serializable, KeyMethodInterface<String> {
     private static final long serialVersionUID = -7130177040330108562L;
+
+    @ApiModelProperty(required = false,name="id",value="指令质押券信息ID")
     @NotNull
     @Size(max = 64)
     @Id
     private String id;
 
+    @ApiModelProperty(required = false,name="entrustId",value="委托代码")
     @NotNull
     @Size(max = 32)
-    private String entrustId = "";// 委托代码
+    private String entrustId = "";
 
+    @ApiModelProperty(required = false,name="finprodId",value="金融产品代码")
     @Size(max = 50)
-    private String finprodId = "";// 金融产品代码
+    private String finprodId = "";
 
+    @ApiModelProperty(required = false,name="finprodAbbr",value="金融产品简称")
     @Size(max = 200)
-    private String finprodAbbr = "";//金融产品简称
+    private String finprodAbbr = "";
 
+    @ApiModelProperty(required = false,name="tradeMarket",value="交易场所")
     @Size(max = 50)
-    private String tradeMarket = "";//交易场所
+    private String tradeMarket = "";
 
+    @ApiModelProperty(required = false,name="finprodMarketId",value="市场代码")
     @Size(max = 20)
-    private String finprodMarketId = "";//市场代码
+    private String finprodMarketId = "";
 
+    @ApiModelProperty(required = false,name="pledgeFaceValue",value="质押面值")
     @Digits(integer = 30, fraction = 2)
     @JsonSerialize(using = BigDecimalSerializer.class)
-    private BigDecimal pledgeFaceValue = new BigDecimal(0);//质押面值
+    private BigDecimal pledgeFaceValue = new BigDecimal(0);
 
+    @ApiModelProperty(required = false,name="pledgeNumber",value="质押数量")
     @Digits(integer = 30, fraction = 2)
     @JsonSerialize(using = BigDecimalSerializer.class)
-    private BigDecimal pledgeNumber = new BigDecimal(0);//质押数量
+    private BigDecimal pledgeNumber = new BigDecimal(0);
 
+    @ApiModelProperty(required = false,name="usedPledgeNumber",value="已使用抵押券数量")
     @Digits(integer = 30, fraction = 2)
     @JsonSerialize(using = BigDecimalSerializer.class)
-    private BigDecimal usedPledgeNumber = new BigDecimal(0);//已使用质押数量
+    private BigDecimal usedPledgeNumber = new BigDecimal(0);
 
+    @ApiModelProperty(required = false,name="pledgeRatio",value="质押率")
     @Digits(integer = 30, fraction = 14)
     @JsonSerialize(using = BigDecimalSerializer.class)
-    private BigDecimal pledgeRatio = new BigDecimal(0);//质押率
+    private BigDecimal pledgeRatio = new BigDecimal(0);
 
+    @ApiModelProperty(required = false,name="pledgeAmt",value="质押金额")
     @Digits(integer = 30, fraction = 2)
     @JsonSerialize(using = BigDecimalSerializer.class)
-    private BigDecimal pledgeAmt = new BigDecimal(0);//质押金额
+    private BigDecimal pledgeAmt = new BigDecimal(0);
 
+    @ApiModelProperty(required = false,name="oldFinprodId",value="原老金融产品代码")
     @Size(max = 50)
     private String oldFinprodId;
 
+    @ApiModelProperty(required = false,name="oldFinprodAbbr",value="原金融产品简称")
     @Size(max = 200)
     private String oldFinprodAbbr;
 
+    @ApiModelProperty(required = false,name="oldTradeMarket",value="原交易场所")
     @Size(max = 50)
     private String oldTradeMarket;
 
+    @ApiModelProperty(required = false,name="oldFinprodMarketId",value="原市场代码")
     @Size(max = 20)
     private String oldFinprodMarketId;
 
+    @ApiModelProperty(required = false,name="oldPledgeFaceValue",value="原质押面值")
     @Digits(integer = 30, fraction = 2)
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal oldPledgeFaceValue;
 
+    @ApiModelProperty(required = false,name="oldPledgeNumber",value="原质押数量")
     @Digits(integer = 30, fraction = 2)
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal oldPledgeNumber;
 
+    @ApiModelProperty(required = false,name="pledgeAmt",value="原质押率")
     @Digits(integer = 30, fraction = 14)
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal oldPledgeRatio;
 
+    @ApiModelProperty(required = false,name="oldPledgeAmt",value="原质押金额")
     @Digits(integer = 30, fraction = 2)
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal oldPledgeAmt;
 
+    @ApiModelProperty(required = false,name="count",value="数量")
     private int count;
 
     @Id

@@ -84,7 +84,6 @@ $(function () {
     }
 
     var init = function(){
-        debugger;
         var tableData = table.getAllCheckedRows();
         table.load();
 

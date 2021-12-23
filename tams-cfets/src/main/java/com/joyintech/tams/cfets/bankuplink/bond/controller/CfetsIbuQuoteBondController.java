@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.JsonUtils;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -113,7 +115,6 @@ public class CfetsIbuQuoteBondController extends BaseController {
 		initPageParams.put("SHORT_SELLING_SUPPORTED",CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
 		//CMDS地址
 		initPageParams.put("cmdsWebSocketUrl", cmdsWebSocketUrl);
-		//本币导出按钮配置
 		initPageParams.put("EXPORT_SHOW",CacheUtil.getSysParam("EXPORT_SHOW"));
 		initPageParams.put("PAGE_ID_REGIT","IbuQuoteBond004");
 		initPageParams.put("PAGE_ID_DIALOG","CfetsBondDealQuotedPrice004");
@@ -524,7 +525,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ApiOperation(value = "查询当日登记列表分页数据", notes = "查询当日登记列表分页数据")
 	@PostMapping("/pageDayReg")
 	@ResponseBody
-	public Message<Page<CfetsBondDayRegDto>> pageDayReg(@RequestBody EntrustRequest dto){
+	public Message<Page<CfetsBondDayRegDto>> pageDayReg(@RequestBody DayRegRequest dto){
 		try {
 			Page<CfetsBondDayRegDto> list = ibuQuoteBondService.pageDayReg(dto);
 			return new Message<Page<CfetsBondDayRegDto>>().success().setData(list);
@@ -547,7 +548,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			param.put("quoteIds",quoteIds);
 		}
 		//目前只导出对话登记
-		param.put("quoteTypes", Arrays.asList("01"));
+		/*param.put("quoteTypes", Arrays.asList("01"));*/
 		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(param);
 		return new Message<Map<String,Object>>().success().setData(ibuQuoteBondService.exportDayRegCheck(dataList));
 	}
@@ -569,17 +570,31 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			param.put("operationFlag",operationFlag);
 		}
 		//目前只导出对话登记
-		param.put("quoteTypes", Arrays.asList("01"));
+		/*param.put("quoteTypes", Arrays.asList("01"));*/
 		List<CfetsBondDayRegDto> dataList = ibuQuoteBondService.listDayReg(param);
 		String ibuExportCountMax = CacheUtil.getSysParam("IBU_EXPORT_COUNT_MAX");
-		String prefix = StringUtil.join("债券对话报价当日登记本币交易导出_",iPlatformDate.getSysDateStr());
+		String prefix = StringUtil.join("债券对话报价本币交易导出_",iPlatformDate.getSysDateStr());
 		requestDto.setData(null);
 		//获取递增序号
-		/*Map<String,String> sequenceIndex = new HashMap<>();
+		Map<String,String> sequenceIndex = new HashMap<>();
 		sequenceIndex.put("databaseType","Oracle");
 		sequenceIndex.put("sequenceName","DAYREGEXPORT_SEQUENCE");
 		Long sequenceIndexData = tamsBaseMapper.getSequenceIndexData(sequenceIndex);
-		if(null==sequenceIndexData){sequenceIndexData = 1L;}*/
+		if(null==sequenceIndexData){sequenceIndexData = 1L;}
+		//净价、到期收益率、行权收益率，只需导出对应锚定值数据，其他数据应为空
+		if(CollectionUtils.isNotEmpty(dataList)){
+			dataList.forEach(item ->{
+                //债券代码不需要后缀
+                item.setFinprodMarketId(item.getFinprodMarketId().substring(0,item.getFinprodMarketId().indexOf(".")));
+			    //清算速度不需要显示T，只需要显示+0或+1
+                if(StringUtil.isNotEmpty(item.getSettleSpeedStr())){
+                    item.setSettleSpeedStr(item.getSettleSpeedStr().substring(item.getSettleSpeedStr().indexOf("+"),item.getSettleSpeedStr().length()));
+                }
+				if(StringUtil.equals(item.getCalMode(),"01")){item.setMatureYield(null);item.setExerYield(null);}
+				if(StringUtil.equals(item.getCalMode(),"02")){item.setMatureYield(ArithmeticUtil.multiply(item.getMatureYield(),new BigDecimal(100)));item.setPrice(null);item.setExerYield(null);}
+				if(StringUtil.equals(item.getCalMode(),"03")){item.setExerYield(ArithmeticUtil.multiply(item.getExerYield(),new BigDecimal(100)));item.setPrice(null);item.setMatureYield(null);}
+			});
+		}
 		if(StringUtil.isNotEmpty(ibuExportCountMax)&&CollectionUtils.isNotEmpty(dataList)){
 			int max = Integer.parseInt(ibuExportCountMax);
 			int fileCount = (dataList.size()+max-1)/ max;
@@ -588,7 +603,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			).collect(Collectors.toList());
 			for(int i=0;i<collect.size();i++){
 				List<CfetsBondDayRegDto> cfetsBondDayRegDtos = collect.get(i);
-				String appendString = collect.size()>=1?String.format("%04d", i+1):StringUtil.EMPTY;
+				String appendString = collect.size()>=1?String.format("%04d", sequenceIndexData):StringUtil.EMPTY;
 				String excelAndSheetName = StringUtil.join(prefix,"_",appendString);
 				ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
 							return cfetsBondDayRegDtos;
@@ -596,7 +611,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			}
 		}
 		else{
-			String excelAndSheetName = StringUtil.join(prefix,"_0001");
+			String excelAndSheetName = StringUtil.join(prefix,"_",sequenceIndexData);
 			ExcelUitl.doExport(requestDto, response, excelAndSheetName,() -> {
 				return dataList;
 			});

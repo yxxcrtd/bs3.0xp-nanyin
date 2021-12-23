@@ -94,13 +94,11 @@ $(function() {
         done: function() {
         	//如果是代办中第一次打开时
         	if(search){
-        		debugger;
         		sel = table.getAllRows();
         		for(var j=0;j<sel.length;j++){
         			table.checkRow(sel[j].LAY_TABLE_INDEX);
 				 }
         	}else{
-        		debugger;
         		var rows = table.getAllRows();
         		if(rows&&rows.length>0&&sel&&sel.length>0){
        			 for(var i=0;i<sel.length;i++){

@@ -195,9 +195,9 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         List<StlPayOrders> stlPayOrdersList =new ArrayList<StlPayOrders>();
         List<PtlTrade> ptlTradeList =new ArrayList<PtlTrade>();
         //净价总额计算,净价总额=账户持仓券面总额（万元）*10000*赎回比例%*行权净价/100
-        BigDecimal cpriceAmt=ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getExercisePrice());
+        BigDecimal cpriceAmt=ArithmeticUtil.divide(ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getExercisePrice()),new BigDecimal(100),2) ;
         //应计利息计算
-        BigDecimal intAmt=ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getIntAmt());
+        BigDecimal intAmt=ArithmeticUtil.divide(ArithmeticUtil.multiply(regFinProductDealTotal.getFaceValue(),regFinProductDealTotal.getRedeemRate(),regFinProductDealTotal.getIntAmt()),new BigDecimal(100),2) ;
         //赎回金额计算：默认等于净价总额+应计利息总额；
         BigDecimal tradeAmt=ArithmeticUtil.doAdd(cpriceAmt,intAmt);
 
@@ -296,7 +296,9 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
             trdProductDealAdd.setPortfolioId(regFinProductDeal.getPortfolioId());
             trdProductDealAdd.setGenType(DictCodeListExt1.生成方式_批处理生成.getValue());
             //trdProductDealAdd.setWorkflowId(deal.getWorkflowId());
+            trdProductDealAdd.setOurShareAmt(trdProductDeal.getShareAmt());
             trdProductDealAdd.setStatus(DictCodeList.数据状态_新建.getValue());
+            trdProductDealaddList.add(trdProductDealAdd);
 
             //组装组合交易表
             PtlTrade ptlTrade2 = new PtlTrade();
@@ -412,7 +414,7 @@ public class CfetsBondAutoDurDealGenerateProcessorService extends BaseService {
         req.setCcy(trdTotle.getCcy());
         req.setFinprodId(trdTotle.getFinprodId());
         req.setPtlList(ptlList);
-        req.setbTotalTradeId(regFinProductDealTotal.getTotleTradeId());
+       // req.setbTotalTradeId(regFinProductDealTotal.getTotleTradeId());
         PositionHttpRequest.send(req);
 
         return;

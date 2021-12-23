@@ -57,8 +57,8 @@
         FROM ETR_ENTRUST
         <where>
             AND ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustAwait},#{entrustDistribute},#{entrustReceive},#{entrustUntread},#{entrustClose},#{entrustReturn},#{entrustRecall})
-            <if test="etrId != null and etrId != ''">
-                AND ENTRUST_ID like concat(concat('%',#{etrId,jdbcType=VARCHAR}),'%')
+            <if test="search != null and search != ''">
+                AND ENTRUST_ID like concat(concat('%',#{search,jdbcType=VARCHAR}),'%')
             </if>
         </where>
     </select>
@@ -159,9 +159,9 @@
         FROM PTL_PORTFOLIO A
         LEFT JOIN PA_PTL_PORTFOLIO B
         ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
-        INNER JOIN PTL_PORTFOLIO_AUTHORITY PPA
-        ON A.PORTFOLIO_ID = PPA.PORTFOLIO_ID
         <if test="userId != null and userId != ''">
+            INNER JOIN PTL_PORTFOLIO_AUTHORITY PPA
+            ON A.PORTFOLIO_ID = PPA.PORTFOLIO_ID
             AND PPA.USER_ID = #{userId}
         </if>
         <where>

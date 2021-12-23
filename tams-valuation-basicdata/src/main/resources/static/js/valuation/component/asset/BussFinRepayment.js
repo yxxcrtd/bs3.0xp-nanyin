@@ -383,7 +383,6 @@
      * @returns
      */
     function getPreviewParams() {
-        debugger;
         var param = {}
       //付息信息
         var param = {}

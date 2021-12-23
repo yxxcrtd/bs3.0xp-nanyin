@@ -66,9 +66,9 @@ public class JoyinbusinessCommonService extends BaseService {
      * @param entrustIdRequestDto
      * @return List<SelectOptionDto>
      */
-    public Page<SelectOptionDto> getEntrustId(EntrustIdRequestDto entrustIdRequestDto) {
+    public Page<SelectOptionDto> getEntrustId(CfetsSearchInfoRequest entrustIdRequestDto) {
         Map<String,Object> pageParam = new HashMap<String,Object>();
-        pageParam.put("etrId", entrustIdRequestDto.getEtrId());
+        pageParam.put("search", entrustIdRequestDto.getSearch());
         pageParam.put("entrustAwait", DictCodeList.委托状态_待接收.getValue());
         pageParam.put("entrustDistribute", DictCodeListExt3.委托状态_待分发.getValue());
         pageParam.put("entrustReceive", DictCodeList.委托状态_已接收.getValue());
@@ -106,6 +106,9 @@ public class JoyinbusinessCommonService extends BaseService {
     public Page<SelectOptionDto> selectPortfolioIdList(CfetsSearchInfoRequest dto) {
         Map<String, Object> param =new HashMap<>();
         param.put("search",dto.getSearch());
+        if(StringUtil.isNotEmpty(dto.getPs()) && StringUtil.equals(dto.getPs(),DictCodeList.交易方向_行权_赎回.getValue())){
+            return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), ()->joyinbusinessCommonMapper.selectPortfolioIdList(param));
+        }
         String userId = SecurityUtil.getLoginUser().getUserName();
         if (StringUtils.isNotEmpty(userId)) {
             param.put("userId", SecurityUtil.getLoginUser().getUserName());

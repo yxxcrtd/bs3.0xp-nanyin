@@ -134,8 +134,6 @@ $(function(){
         });
         //撤销操作
         $('#PreTrdRepoTrade001_btn_revoke').click(function(){
-            debugger;
-            
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();//判断表格不为空，然后获取选择的数据
                 if (selArr.length > 1){

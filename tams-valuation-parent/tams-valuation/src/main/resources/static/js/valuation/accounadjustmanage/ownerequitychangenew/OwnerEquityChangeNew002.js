@@ -71,7 +71,6 @@ $(function () {
      * 画面加载完成
      */
     $(function() {
-        debugger;
         $("#tIncomeFund").val(formatMoney($("#tIncomeFund").val()));
         $("#tUnQuarterProfit").val(formatMoney($("#tUnQuarterProfit").val()));
         $("#tOtherCompIncome").val(formatMoney($("#tOtherCompIncome").val()));

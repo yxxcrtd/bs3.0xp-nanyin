@@ -168,7 +168,6 @@
         $('#FxSecRequestQuote001_btn_revoke').click(function () {
             var selArr;
             var seqnos='';
-            debugger;
             if (listTbl != null && listTbl != '') {
                 selArr = listTbl.getAllCheckedRows();
                 for(var i=0;i<selArr.length;i++){

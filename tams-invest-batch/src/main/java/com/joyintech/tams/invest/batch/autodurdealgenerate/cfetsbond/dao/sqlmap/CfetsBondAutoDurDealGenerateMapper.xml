@@ -426,7 +426,7 @@
         t1.trade_market as tradeMarket,t1.trade_market_mode as tradeMarketMode,
         t1.tg_busi_type as tgBusiType,
         t2.exercise_price as exercisePrice,t2.redeem_rate as redeemRate,
-        nvl(fcp.int_amt,0)*(#{PLATEFORM_DATE}-fcp.vdate) as intAmt
+        fcp.int_amt*(#{PLATEFORM_DATE,jdbcType=DATE}-fcp.vdate) as intAmt
         from REG_FIN_PRODUCT_DEAL_TOTAL T1
         left join reg_fin_product_deal_total_add t2
         on t1.totle_trade_id=t2.totle_trade_id
@@ -437,20 +437,19 @@
         on p.PORTFOLIO_ID=pc.PORTFOLIO_ID
         and pc.acct_type='A01'
         where p.HODING_TYPE = #{A_001} and p.DATE_TYPE = 0
-        and p.cdate=#{PLATEFORM_DATE}
+        and p.cdate=#{PLATEFORM_DATE}-1
         group by p.finprod_id,p.sec_acct_id,pc.ACCT_NO
         )t3
         on t1.finprod_id=t3.finprod_id
         left join FIN_CASH_PLAN fcp
         on T1.finprod_id=fcp.finprod_id
         and fcp.cash_type in ('01','04')
-        and fcp.vdate<![CDATA[<=]]>#{PLATEFORM_DATE}
-        and fcp.mdate>#{PLATEFORM_DATE}
+        and fcp.vdate<![CDATA[<=]]>#{PLATEFORM_DATE,jdbcType=DATE}
+        and fcp.mdate>#{PLATEFORM_DATE,jdbcType=DATE}
         WHERE T1.PS = #{psT39} and t3.faceValue!=0
-        AND T1.settle_date = #{PLATEFORM_DATE}
+        AND T1.settle_date = #{PLATEFORM_DATE,jdbcType=DATE}
         AND T1.TRADE_STATUS = #{TRADE_STATUS01}
         AND T1.IS_CANCEL != #{YESNO_Y}
-        and T3.faceValue!=0
         /*不存在生效的交易*/
         and NOT EXISTS (SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL TPDA
         left join trd_product_deal deal
@@ -462,7 +461,7 @@
         and pc.acct_type='A01'
         where TPDA.TRADE_STATUS = #{TRADE_STATUS01}
         AND TPDA.IS_CANCEL = #{YESNO_N}
-        and TPDA.trade_date=#{PLATEFORM_DATE}
+        and TPDA.trade_date=#{PLATEFORM_DATE,jdbcType=DATE}
         AND TPDA.FINPROD_ID = T1.FINPROD_ID
         and TPDA.ps=#{psT39}
         AND TPDA.SEC_MANAGE_ACCT_ID = t3.sec_acct_id and t3.ACCT_NO=pc.ACCT_NO )
@@ -478,7 +477,7 @@
         where TPDA.TRADE_STATUS = #{TRADE_STATUS01}
         AND TPDA.IS_CANCEL = #{YESNO_N}
         and TPDA.ps=#{psT39}
-        and TPDA.trade_date=#{PLATEFORM_DATE}
+        and TPDA.trade_date=#{PLATEFORM_DATE,jdbcType=DATE}
         AND TPDA.FINPROD_ID = T1.FINPROD_ID
         AND TPDA.SEC_MANAGE_ACCT_ID = t3.sec_acct_id and t3.ACCT_NO=pc.ACCT_NO )
     </select>
@@ -493,7 +492,10 @@
         T1.SEC_ACCT_ID as secManageAcctId
         FROM PTL_SEC_POSITION_RULE T1
         INNER JOIN fin_exercise_plan T2 ON T1.FINPROD_ID = T2.FINPROD_ID
-        AND T2.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01} AND t1.CDATE = t2.exercise_date
+        AND T2.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+        AND t1.CDATE = t2.exercise_date-1
+        and t2.exercise_type='01'
+
         left join PTL_CAPACCT_INFO pc
         on T1.PORTFOLIO_ID=pc.PORTFOLIO_ID
         and pc.acct_type='A01'
@@ -502,7 +504,7 @@
         AND T1.HODING_TYPE = #{A_001}
         AND T1.DATE_TYPE = 0
         AND T2.FINPROD_ID = #{finprodId}
-        AND t2.exercise_date = #{cdate}
+        AND t2.exercise_date = #{cdate,jdbcType=DATE}
         and T1.SEC_ACCT_ID = #{SEC_ACCT_ID}
         and pc.ACCT_NO= #{ACCT_NO}
         group by T1.FINPROD_ID,T1.PORTFOLIO_ID,T1.SEC_ACCT_ID)aaa

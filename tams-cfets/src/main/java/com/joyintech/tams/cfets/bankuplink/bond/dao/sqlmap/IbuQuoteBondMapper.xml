@@ -906,7 +906,8 @@
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
-            T1.SETTLE_DATE theoreticalExerciseDate,
+            case when T1.PS = 'T03' THEN T1.SETTLE_DATE
+            ELSE NULL END  theoreticalExerciseDate,
             T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,
@@ -914,7 +915,10 @@
             T9.ACT_SETTE_DATE actSetteDate,
             T10.TYPE_12 assetType,
             T11.TRD_ID trdId,
-            T12.TRADE_DATE dealDate
+            T12.TRADE_DATE dealDate,
+            T9.CAL_MODE calMode,
+            T1.INT_AMT intAmt,
+            T1.SETT_CCY  settCcy
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -940,6 +944,51 @@
         LEFT JOIN SYS_USER T13 ON T13.USER_NAME = T1.OU_TRADER_ID
         WHERE T1.PS IN ('T01','T02')  AND ((T1.TRADE_STATUS ='01' and (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL = 'N')) OR (T1.TRADE_STATUS ='03' AND T1.IS_CANCEL = 'Y'))
         and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
+        <if test="tradeMarkets  != null and tradeMarkets .size() > 0">
+            AND T1.TRADE_MARKET IN
+            <foreach collection="tradeMarkets " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="pss  != null and pss .size() > 0">
+            AND T1.PS IN
+            <foreach collection="pss " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="quoteTypes  != null and quoteTypes .size() > 0">
+            AND T1.QUOTE_TYPE IN
+            <foreach collection="quoteTypes " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="settleSpeeds  != null and settleSpeeds .size() > 0">
+            AND T1.SETTLE_SPEED IN
+            <foreach collection="settleSpeeds " item="item" open="(" close=")" separator=",">
+                DECODE(#{item},'01',0,'02',1,'03',2)
+            </foreach>
+        </if>
+        <if test="mySideTraders  != null and mySideTraders .size() > 0">
+            AND T1.OU_TRADER_ID IN
+            <foreach collection="mySideTraders " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="counterTraders  != null and counterTraders .size() > 0">
+            AND T1.COUNTER_TRADER IN
+            <foreach collection="counterTraders " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="counterId !=null and counterId !=''">
+            AND T1.COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodAbbr !=null and finprodAbbr !=''">
+            AND T2.FINPROD_MARKET_ID = #{finprodAbbr,jdbcType=VARCHAR}
+        </if>
+        <if test="quoteId !=null and quoteId !=''">
+            AND T1.TOTLE_TRADE_ID = #{quoteId,jdbcType=VARCHAR}
+        </if>
         <if test="quoteIds != null and quoteIds.size() > 0">
             and T1.TOTLE_TRADE_ID in
             <foreach collection="quoteIds" item="item" open="(" close=")" separator=",">
@@ -949,12 +998,6 @@
         <!--过滤重复的 导出专用-->
         <if test="operationFlag != null and operationFlag.equals('02')">
             and  (T8.STATISTICAL_TIMES = 0 OR T8.STATISTICAL_TIMES IS null)
-        </if>
-        <if test="quoteTypes != null and quoteTypes.size() > 0">
-            and T1.QUOTE_TYPE in
-            <foreach collection="quoteTypes" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
         </if>
         <if test="loginUserId !=null and loginUserId !=''">
             AND T1.CREATE_USER = #{loginUserId}
@@ -985,7 +1028,8 @@
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
-            T1.SETTLE_DATE theoreticalExerciseDate,
+            case when T1.PS = 'T03' THEN T1.SETTLE_DATE
+            ELSE NULL END  theoreticalExerciseDate,
             T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,
@@ -993,7 +1037,10 @@
             T9.ACT_SETTE_DATE actSetteDate,
             T10.TYPE_12 assetType,
             T11.TRD_ID trdId,
-            T12.TRADE_DATE dealDate
+            T12.TRADE_DATE dealDate,
+            T9.CAL_MODE calMode,
+            T1.INT_AMT intAmt,
+            T1.SETT_CCY  settCcy
         FROM
             REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -1019,6 +1066,51 @@
         LEFT JOIN SYS_USER T13 ON T13.USER_NAME = T1.OU_TRADER_ID
         WHERE T1.PS = 'T03'  AND ((T1.TRADE_STATUS ='01' and (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL = 'N')) OR (T1.TRADE_STATUS ='03' AND T1.IS_CANCEL = 'Y'))  AND NOT EXISTS (SELECT 1 FROM TRDQUTO_MATCH_INFO tmi WHERE PRE_TRADE_ID = T1.TOTLE_TRADE_ID and (TRD_CONF_STATUS = #{CONFIRM_STATUS_0} or TRD_CONF_STATUS is null))
         <![CDATA[and T1.TRADE_DATE <= to_date(#{platDate}, 'yyyy-MM-dd') ]]>
+        <if test="tradeMarkets  != null and tradeMarkets .size() > 0">
+            AND T1.TRADE_MARKET IN
+            <foreach collection="tradeMarkets " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="pss  != null and pss .size() > 0">
+            AND T1.PS IN
+            <foreach collection="pss " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="quoteTypes  != null and quoteTypes .size() > 0">
+            AND T1.QUOTE_TYPE IN
+            <foreach collection="quoteTypes " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="settleSpeeds  != null and settleSpeeds .size() > 0">
+            AND T1.SETTLE_SPEED IN
+            <foreach collection="settleSpeeds " item="item" open="(" close=")" separator=",">
+                DECODE(#{item},'01',0,'02',1,'03',2)
+            </foreach>
+        </if>
+        <if test="mySideTraders  != null and mySideTraders .size() > 0">
+            AND T1.OU_TRADER_ID IN
+            <foreach collection="mySideTraders " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="counterTraders  != null and counterTraders .size() > 0">
+            AND T1.COUNTER_TRADER IN
+            <foreach collection="counterTraders " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="counterId !=null and counterId !=''">
+            AND T1.COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodAbbr !=null and finprodAbbr !=''">
+            AND T2.FINPROD_MARKET_ID = #{finprodAbbr,jdbcType=VARCHAR}
+        </if>
+        <if test="quoteId !=null and quoteId !=''">
+            AND T1.TOTLE_TRADE_ID = #{quoteId,jdbcType=VARCHAR}
+        </if>
         <if test="quoteIds != null and quoteIds.size() > 0">
             and T1.TOTLE_TRADE_ID in
             <foreach collection="quoteIds" item="item" open="(" close=")" separator=",">
@@ -1063,7 +1155,8 @@
             T1.CLEAR_TYPE,
             T1.TRADE_MARKET,
             T1.TRADE_DATE tradeDate,
-            T1.SETTLE_DATE theoreticalExerciseDate,
+            case when T1.PS = 'T03' THEN T1.SETTLE_DATE
+            ELSE NULL END  theoreticalExerciseDate,
             T8.STATISTICAL_TIMES statisticalTimes,
             T1.DELIVERY_TYPE settleMethod,
             T1.CLEAR_TYPE settleType,
@@ -1071,7 +1164,10 @@
             NULL actSetteDate ,
             T10.TYPE_12 assetType,
             NULL trdId,
-            NULL dealDate
+            NULL dealDate,
+            '' calMode,
+            T1.INT_AMT intAmt,
+            T1.SETT_CCY  settCcy
         FROM
             WFL_REG_FIN_PRODUCT_DEAL_TOTAL T1
         LEFT JOIN FIN_PRODUCT T2 ON
@@ -1093,6 +1189,51 @@
         LEFT JOIN FIN_PRODUCT_TYPE T10 ON T10.FINPROD_ID = T1.FINPROD_ID
         LEFT JOIN SYS_USER T13 ON T13.USER_NAME = T1.OU_TRADER_ID
         WHERE PS IN ('T01','T02','T03') and T1.TRADE_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
+        <if test="tradeMarkets  != null and tradeMarkets .size() > 0">
+            AND T1.TRADE_MARKET IN
+            <foreach collection="tradeMarkets " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="pss  != null and pss .size() > 0">
+            AND T1.PS IN
+            <foreach collection="pss " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="quoteTypes  != null and quoteTypes .size() > 0">
+            AND T1.QUOTE_TYPE IN
+            <foreach collection="quoteTypes " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="settleSpeeds  != null and settleSpeeds .size() > 0">
+            AND T1.SETTLE_SPEED IN
+            <foreach collection="settleSpeeds " item="item" open="(" close=")" separator=",">
+                DECODE(#{item},'01',0,'02',1,'03',2)
+            </foreach>
+        </if>
+        <if test="mySideTraders  != null and mySideTraders .size() > 0">
+            AND T1.OU_TRADER_ID IN
+            <foreach collection="mySideTraders " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="counterTraders  != null and counterTraders .size() > 0">
+            AND T1.COUNTER_TRADER IN
+            <foreach collection="counterTraders " item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="counterId !=null and counterId !=''">
+            AND T1.COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+        </if>
+        <if test="finprodAbbr !=null and finprodAbbr !=''">
+            AND T2.FINPROD_MARKET_ID = #{finprodAbbr,jdbcType=VARCHAR}
+        </if>
+        <if test="quoteId !=null and quoteId !=''">
+            AND T1.TOTLE_TRADE_ID = #{quoteId,jdbcType=VARCHAR}
+        </if>
         <if test="quoteIds != null and quoteIds.size() > 0">
             and T1.TOTLE_TRADE_ID in
             <foreach collection="quoteIds" item="item" open="(" close=")" separator=",">
@@ -1129,7 +1270,7 @@
                 TT.finprodMarketId like '%' || #{search} || '%' OR
                 TT.finprodName like '%' || #{search} || '%' OR
                 G.ITEM_VALUE like '%' || #{search} || '%' OR
-                to_char(TT.shareAmt/10000,'FM99990.9990')=#{search} or  TT.shareAmt||'' =#{search} or
+                to_char(TT.shareAmt,'FM99990.90')=#{search} or  TT.shareAmt||'' =#{search} or
                 to_char(TT.price,'FM99990.9990')=#{search} or  TT.price||'' =#{search} or
                 to_char(TT.matureYield*100,'FM99990.9990')=#{search} or  TT.matureYield||'' =#{search} or
                 to_char(TT.exerYield*100,'FM99990.9990')=#{search} or  TT.exerYield||'' =#{search} or
@@ -1411,7 +1552,7 @@
     <!--流程中组合分配-->
     <select id="listWflPtlAllocationDto" resultType="com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto">
 SELECT
-                T1.ENTRUST_ID ,
+                T1.ENTRUST_ID,
                 T1.PORTFOLIO_ID,
                 T5.PORTFOLIO_ID,
                 T1.SHARE_AMT*100,
@@ -1454,5 +1595,22 @@ SELECT
         <if test="CONFIRM_STATUS_1 !=null and CONFIRM_STATUS_1 !=''">
             AND TRD_CONF_STATUS = #{CONFIRM_STATUS_1}
         </if>
+    </select>
+
+    <!--获取指令流程中占用券面总额-->
+    <select id="getWflShareAmtByEntrustId" resultType="java.math.BigDecimal">
+    SELECT
+            SUM(SHARE_AMT) SHARE_AMT
+        FROM
+            (
+            SELECT
+                SHARE_AMT*100 SHARE_AMT
+            FROM
+                WFL_REG_FIN_PRODUCT_DEAL where ENTRUST_ID = #{entrustId}
+        UNION ALL
+            SELECT
+                SHARE_AMT*100 SHARE_AMT
+            FROM
+                WFL_IBU_QUOTE_ETR_RE where ENTRUST_ID = #{entrustId})
     </select>
 </mapper>

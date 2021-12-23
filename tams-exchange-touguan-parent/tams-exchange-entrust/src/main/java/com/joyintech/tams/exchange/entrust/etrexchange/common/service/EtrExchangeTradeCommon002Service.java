@@ -32,6 +32,7 @@ import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -51,8 +52,10 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
+	@Autowired
     private IPlatformDate iPlatformDate;
 
+	@Autowired
 	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
     /**
      * 分页查询产品持仓信息
@@ -226,7 +229,7 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 	public Page<EtrExchangeTradeEtrExchangeCommonResponse> selectEtrExchange(EtrExchangeTradeEtrExchangeCommonRequest request) {
 		Map<String, Object> param = BeanUtil.object2Map(request);
 		param.put("userId", LoginUserUtil.getUserName());
-		param.put("sysDate",iPlatformDate.getSysDateStr());
+		param.put("sysDate",DateUtil.platDateFromCache());
 		param.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
 		param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
 		param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());

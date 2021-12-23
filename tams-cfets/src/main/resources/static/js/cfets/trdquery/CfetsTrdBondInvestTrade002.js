@@ -23,7 +23,6 @@
         return object;
     }
     function getBussCombDistribtTableParams() {
-    debugger;
        var entityBussCombDistritList=entity_BussCombDistribtList||[];
 
        return entityBussCombDistritList;

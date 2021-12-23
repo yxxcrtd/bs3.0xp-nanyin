@@ -1,24 +1,47 @@
 package com.joyintech.tams.exchange.common.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * create By MAXX on 2020/10/15
- */
+@ApiModel(value="最小价差控制信息",description="最小价差控制信息")
 public class MinPrice implements Serializable {
     private static final long serialVersionUID = 5477488588173744320L;
-    private String tradeMarket;//交易场所
-    private String tradePlat;//交易平台
-    private String assetType;//资产一级分类
-    private String assetType1;//资产二级分类
-    private String assetType2;//资产三级分类
-    private String isGrade;//是否分档
-    private String gradeCondition;//分档条件
-    private Integer gradeAmt = 0;//分档金额
-    private BigDecimal minPrice = new BigDecimal("0.00");//最小价差
-    private Date effDate;//生效日
+
+    @ApiModelProperty(required = false, name = "tradeMarket", value = "交易场所")
+    private String tradeMarket;
+
+    @ApiModelProperty(required = false, name = "tradePlat", value = "交易平台")
+    private String tradePlat;
+
+    @ApiModelProperty(required = false, name = "assetType", value = "资产一级分类")
+    private String assetType;
+
+    @ApiModelProperty(required = false, name = "assetType1", value = "资产二级分类")
+    private String assetType1;
+
+    @ApiModelProperty(required = false, name = "assetType2", value = "资产三级分类")
+    private String assetType2;
+
+    @ApiModelProperty(required = false, name = "isGrade", value = "是否分档")
+    private String isGrade;
+
+    @ApiModelProperty(required = false, name = "gradeCondition", value = "分档条件")
+    private String gradeCondition;
+
+    @ApiModelProperty(required = false, name = "gradeAmt", value = "分档金额")
+    private Integer gradeAmt = 0;
+
+    @ApiModelProperty(required = false, name = "minPrice", value = "最小价差")
+    private BigDecimal minPrice = new BigDecimal("0.00");
+
+    @ApiModelProperty(required = false, name = "effDate", value = "生效日")
+    private Date effDate;
+
+    @ApiModelProperty(required = false, name = "market", value = "市场")
     private String market;
 
     public String getTradeMarket() {

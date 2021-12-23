@@ -286,7 +286,6 @@ $(function() {
         });
         //风险试算按钮
         $('#FundAssetTransfer001_btn_risk').click(function(){
-        	debugger;
             var data = funAssetTransferDtoListTable.getAllRows();
             if(data!=null && data != '') {
                 //-----------add by jjpei 2020-01-07 风险新版本 start----------

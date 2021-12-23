@@ -101,6 +101,9 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
     @Autowired
     private IbuMainService ibuMainService;
 
+    @Autowired
+    private com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService cfetsQuotedCommonServicevue;
+
     public AjaxResult checkNotEmpty(CfetsBondDealQuoteCommonDto entity) {
         AjaxResult ajaxResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
@@ -197,6 +200,15 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
                         break;
                     }
                 }*/
+                if(ptlAllocatio.getAvaNum().compareTo(ptlAllocatio.getShareAmt())<0){
+                    errorList.add(new ValidMessage("报价指令剩余额度不能小于券面总额！"));
+                }
+                if(null!=ptlAllocatio.getShareAmt()){
+                    BigDecimal wflShareAmtByEntrustId = cfetsQuotedCommonServicevue.getWflShareAmtByEntrustId(ptlAllocatio.getEntrustId());
+                    if(wflShareAmtByEntrustId.compareTo(BigDecimal.ZERO)>0&&ArithmeticUtil.doAdd(ptlAllocatio.getShareAmt(),wflShareAmtByEntrustId).compareTo(ptlAllocatio.getAvaNum())>0){
+                        errorList.add(new ValidMessage(StringUtil.join("组合分配券面总额不能超过指令剩余额度!流程中占用额度:",wflShareAmtByEntrustId.toString(),"元,指令代码:",ptlAllocatio.getEntrustId())));
+                    }
+                }
                 shareAmtTotal = ArithmeticUtil.doAdd(shareAmtTotal,ptlAllocatio.getShareAmt());
                 dealFeeAmtTotal = ArithmeticUtil.doAdd(dealFeeAmtTotal,ptlAllocatio.getDealFeeAmt());
                 settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal,ptlAllocatio.getSettFeeAmt());

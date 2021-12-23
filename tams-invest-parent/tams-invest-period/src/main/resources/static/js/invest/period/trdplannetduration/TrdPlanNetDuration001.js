@@ -74,7 +74,6 @@
      * 绑定编辑事件
      */
     table.bind('click', '.edit2', function(data, index) {
-        debugger
         if(data.statusValid != PAGE_DATA_STATUS_06){
             return Joyin.error(JoyinUtil.getMessage('REVOKE_ERROE_001'));
         }

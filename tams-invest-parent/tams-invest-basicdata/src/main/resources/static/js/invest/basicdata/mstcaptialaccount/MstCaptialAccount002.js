@@ -264,7 +264,6 @@
         		$('#effectDate_div').toggle(true);
         		$('#basis_div').toggle(true);
         		$('#rateType_div').toggle(true);
-        		debugger;
             	//默认固定利率
             	$('#rateType').val(INT_TYPE_01).trigger('change');
             	//默认计息基础为360/A

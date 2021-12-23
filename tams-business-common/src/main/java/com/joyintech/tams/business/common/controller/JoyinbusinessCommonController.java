@@ -69,7 +69,7 @@ public class JoyinbusinessCommonController extends BaseController {
 	@PostMapping("/getEntrustId")
 	@ApiOperation(value = "指令代码列表查询", notes = "指令代码列表查询")
 	@ResponseBody
-	public Message<Page<SelectOptionDto>> getEntrustId(@RequestBody EntrustIdRequestDto entrustIdRequestDto) {
+	public Message<Page<SelectOptionDto>> getEntrustId(@RequestBody CfetsSearchInfoRequest entrustIdRequestDto) {
 		try {
 			Page<SelectOptionDto> tempList = joyinbusinessCommonService.getEntrustId(entrustIdRequestDto);
 			return new Message<Page<SelectOptionDto>>().success().setData(tempList);

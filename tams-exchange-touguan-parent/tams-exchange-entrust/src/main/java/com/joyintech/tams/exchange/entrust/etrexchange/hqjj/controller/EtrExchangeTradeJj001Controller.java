@@ -64,8 +64,8 @@ import java.util.Map;
  * @since 1.0
  */
 @Controller
-@PageId("JjEtrExchangeTrade001")
-@RequestMapping("/etrexchange/hqjj/jjetrExchangeTrade001")
+@PageId("EtrExchangeTradeJj001")
+@RequestMapping("/etrexchange/hqjj/etrExchangeTradeJj001")
 @Api(tags = "竞价回购指令下单")
 public class EtrExchangeTradeJj001Controller extends BaseController{
 
@@ -107,7 +107,6 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@PostMapping("findTradeQuotationsPage")
-	@ApiOperation(value = "查询交易行情信息", notes = "查询交易行情信息")
 	public Message<Page<EtrExchangeTradeQuotationResponse>> findTradeQuotationsPage(@RequestBody EtrExchangeTradeQuotationRequest request){
 		try {
 			Page<EtrExchangeTradeQuotationResponse> list = etrExchangeTradeJj001Service.findTradeQuotationsPage(request);
@@ -171,7 +170,6 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	 * @see
 	 * @since 1.0
 	 */
-	@ApiOperation(value = "保存提交check", notes = "保存提交check")
 	@PostMapping("checkSaveError")
 	@ResponseBody
 	public Message<AjaxResult> checkSaveError(@RequestBody EtrExchangeTradeJjSaveRequest saveRequest, BindingResult br)
@@ -200,7 +198,6 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	 * @throws Exception
 	 *             异常
 	 */
-	@ApiOperation(value = "保存提交", notes = "保存提交")
 	@PostMapping("save")
 	@ResponseBody
 	public Message<AjaxResult> save(@RequestBody EtrExchangeTradeJjSaveRequest dto, BindingResult br){

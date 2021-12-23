@@ -122,7 +122,6 @@
      * @returns
      */
     function saveOrSubmit(operateType) {
-        debugger;
         //增加 提交时首次回补日校验 add by wangcheng 20191101 start
         if($('#operationType').val()=='01'&& !$("#bussFinProductFloatFeeDto_provisionFirstDay",parent.document).val()){
             var firstAnapleroticDate = $('#firstAnapleroticDate').val();
@@ -605,7 +604,6 @@
         });
     };
     var finprodIdChange = function(){
-        debugger;
         var finprodId = $('#finprodId').val();
 //        if(null == finprodId || ''== finprodId) {
 //            return;

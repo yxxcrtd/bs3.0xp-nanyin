@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Digits;
@@ -14,279 +16,350 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
+@ApiModel(value = "指令信息", description = "指令信息")
 public class Instruction implements Serializable, KeyMethodInterface<String>, Cloneable {
-
     private static final long serialVersionUID = -81616163906470229L;
-    @Size(max = 50)
-    private String approverFlage;//审批标志
 
+    @ApiModelProperty(required = false, name = "approverFlage", value = "审批标志")
     @Size(max = 50)
-    private String conShareId;//转股代码
+    private String approverFlage;
 
+    @ApiModelProperty(required = false, name = "conShareId", value = "转股代码")
+    @Size(max = 50)
+    private String conShareId;
+
+    @ApiModelProperty(required = false, name = "conPrice", value = "转股价格")
     @Digits(integer = 30, fraction = 14)
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal conPrice = new BigDecimal("0.0000");//转股价格
+    private BigDecimal conPrice = new BigDecimal("0.0000");
 
+    @ApiModelProperty(required = false, name = "conNum", value = "转股数量")
     @Digits(integer = 30, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal conNum = new BigDecimal("0");//转股数量
+    private BigDecimal conNum = new BigDecimal("0");
 
+    @ApiModelProperty(required = false, name = "entrustId", value = "指令编号")
     @NotNull
     @Size(max = 32)
     @Id
-    private String entrustId = "";//委托代码
+    private String entrustId = "";
 
+    @ApiModelProperty(required = false, name = "portfolioId", value = "组合代码")
     @Size(max = 32)
-    private String portfolioId = "";//组合代码
+    private String portfolioId = "";
 
+    @ApiModelProperty(required = false, name = "portfolioName", value = "组合名称")
     @Size(max = 200)
-    private String portfolioName = "";//组合名称
+    private String portfolioName = "";
 
+    @ApiModelProperty(required = false, name = "finprodId", value = "金融产品代码")
     @Size(max = 50)
-    private String finprodId = "";//金融产品代码
+    private String finprodId = "";
 
+    @ApiModelProperty(required = false, name = "finprodAbbr", value = "金融产品简称")
     @Size(max = 200)
-    private String finprodAbbr = "";//金融产品简称
+    private String finprodAbbr = "";
 
+    @ApiModelProperty(required = false, name = "finprodName", value = "金融产品名称")
     @Size(max = 200)
-    private String finprodName = "";//金融产品名称
+    private String finprodName = "";
 
+    @ApiModelProperty(required = false, name = "finprodType2", value = "金融产品类型（投管分类）：债券、理财产品、基金、理财产品模板、理财产品分层")
     @Size(max = 64)
-    private String finprodType2 = "";//金融产品类型（投管分类），债券、理财产品、基金、理财产品模板、理财产品分层
+    private String finprodType2 = "";
 
+    @ApiModelProperty(required = false, name = "acctNo", value = "网点账号")
     @Size(max = 50)
-    private String acctNo = "";//网点账号
+    private String acctNo = "";
 
+    @ApiModelProperty(required = false, name = "ccy", value = "币种")
     @Size(max = 50)
-    private String ccy = "";//币种
+    private String ccy = "";
 
+    @ApiModelProperty(required = false, name = "busiAcctNo", value = "资金账号")
     @Size(max = 30)
-    private String busiAcctNo = "";//资金账号
+    private String busiAcctNo = "";
 
+    @ApiModelProperty(required = false, name = "acctName", value = "户名")
     @Size(max = 200)
-    private String acctName = "";// 	 户名
+    private String acctName = "";
 
+    @ApiModelProperty(required = false, name = "secAcctId", value = "证券账户代码")
     @Size(max = 32)
-    private String secAcctId = "";//	 证券账户代码
+    private String secAcctId = "";
 
+    @ApiModelProperty(required = false, name = "secAcctName", value = "证券账户名称")
     @Size(max = 200)
-    private String secAcctName = "";//	 证券账户名称
+    private String secAcctName = "";
 
+    @ApiModelProperty(required = false, name = "stockHolderNo", value = "股东代码")
     @Size(max = 32)
-    private String stockHolderNo = "";//
+    private String stockHolderNo = "";
 
+    @ApiModelProperty(required = false, name = "tradeMarket", value = "交易场所")
     @Size(max = 50)
-    private String tradeMarket = "";// 交易场所
+    private String tradeMarket = "";
 
+    @ApiModelProperty(required = false, name = "tradePlat", value = "交易平台")
     @Size(max = 50)
-    private String tradePlat = "";// 交易平台
+    private String tradePlat = "";
 
+    @ApiModelProperty(required = false, name = "finprodMarketId", value = "市场代码")
     @Size(max = 20)
-    private String finprodMarketId = "";// 市场代码
-    //@JsonSerialize(using = PsSerializerUtils.class)
+    private String finprodMarketId = "";
 
+    @ApiModelProperty(required = false, name = "ps", value = "交易方向")
     @Size(max = 50)
-    private String ps = "";//	 交易方向
+    private String ps = "";
 
+    @ApiModelProperty(required = false, name = "dealMode", value = "交易方式")
     @Size(max = 50)
-    private String dealMode = "";//	 交易方式
+    private String dealMode = "";
 
+    @ApiModelProperty(required = false, name = "counterId", value = "交易对手")
     @Size(max = 32)
-    private String counterId = "";//	 交易对手
+    private String counterId = "";
 
+    @ApiModelProperty(required = false, name = "counterName", value = "交易对手名称")
     @Size(max = 200)
-    private String counterName = "";//	交易对手名称
+    private String counterName = "";
 
+    @ApiModelProperty(required = false, name = "counterSeat", value = "对手席位")
     @Size(max = 10)
-    private String counterSeat = "";// 	 对手席位
+    private String counterSeat = "";
 
+    @ApiModelProperty(required = false, name = "counterTrader", value = "对手方交易员")
     @Size(max = 32)
-    private String counterTrader = "";//	 对手方交易员
+    private String counterTrader = "";
 
+    @ApiModelProperty(required = false, name = "counterInfo", value = "对手方联系方式")
     @Size(max = 1000)
-    private String counterInfo = "";//	 对手方联系方式
+    private String counterInfo = "";
 
+    @ApiModelProperty(required = false, name = "counterDealerId", value = "对手方交易商代码")
     @Size(max = 32)
-    private String counterDealerId = "";//	 对手方交易商代码
+    private String counterDealerId = "";
 
+    @ApiModelProperty(required = false, name = "appointmentNumber", value = "约定号")
     @Size(max = 10)
-    private String appointmentNumber = ""; // 	 约定号
+    private String appointmentNumber = "";
 
+    @ApiModelProperty(required = false, name = "dealNo", value = "成交编号")
     @Size(max = 50)
-    private String dealNo = "";//	 成交编号
+    private String dealNo = "";
 
+    @ApiModelProperty(required = false, name = "trdMatchId", value = "初始交易编号")
     @Size(max = 50)
-    private String trdMatchId = "";//	 初始交易编号
+    private String trdMatchId = "";
 
+    @ApiModelProperty(required = false, name = "quoterefId", value = "交易所请求号")
     @Size(max = 10)
-    private String quoterefId = "";//	 交易所请求号
+    private String quoterefId = "";
 
+    @ApiModelProperty(required = false, name = "tradeDate", value = "委托日期")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date tradeDate = new Date();//委托日期
+    private Date tradeDate = new Date();
 
+    @ApiModelProperty(required = false, name = "vdate", value = "委托开始日")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date vdate = new Date();//委托开始日
+    private Date vdate = new Date();
 
+    @ApiModelProperty(required = false, name = "mdate", value = "委托结束日")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date mdate = new Date();//委托结束日
+    private Date mdate = new Date();
 
+    @ApiModelProperty(required = false, name = "entrustAmt", value = "委托额度")
     @Digits(integer = 30, fraction = 2)
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal entrustAmt = new BigDecimal("0.00");//委托额度
+    private BigDecimal entrustAmt = new BigDecimal("0.00");
 
+    @ApiModelProperty(required = false, name = "entrustNum", value = "委托数量")
     @Digits(integer = 30, fraction = 4)
-    private long entrustNum = 0; // 委托数量
+    private long entrustNum = 0;
 
+    @ApiModelProperty(required = false, name = "entrustStatus", value = "委托状态")
     @Size(max = 50)
-    private String entrustStatus = "";//	 委托状态
+    private String entrustStatus = "";
 
+    @ApiModelProperty(required = false, name = "entrustPrice", value = "委托单价")
     @Digits(integer = 30, fraction = 14)
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal entrustPrice = new BigDecimal(0);//委托单价
+    private BigDecimal entrustPrice = new BigDecimal(0);
 
+    @ApiModelProperty(required = false, name = "fullPrice", value = "全价")
     @Digits(integer = 30, fraction = 15)
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal fullPrice = new BigDecimal(0);//全价
+    private BigDecimal fullPrice = new BigDecimal(0);
 
+    @ApiModelProperty(required = false, name = "priceMode", value = "限价模式")
     @Size(max = 50)
-    private String priceMode = "";//	 限价模式
+    private String priceMode = "";
 
+    @ApiModelProperty(required = false, name = "entrustLeftAmt", value = "已完成数量 或者金额")
     @Digits(integer = 30, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal entrustLeftAmt = new BigDecimal("0.00");//已完成数量 或者金额
+    private BigDecimal entrustLeftAmt = new BigDecimal("0.00");
 
-    //冻结数量
+    @ApiModelProperty(required = false, name = "frozenQuantity", value = "冻结数量")
     @Digits(integer = 30, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal frozenQuantity = new BigDecimal("0.00");
 
+    @ApiModelProperty(required = false, name = "settleSpeed", value = "清算速度")
     @Digits(integer = 10, fraction = 0)
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal settleSpeed = new BigDecimal(0);//清算速度
+    private BigDecimal settleSpeed = new BigDecimal(0);
 
+    @ApiModelProperty(required = false, name = "valueDate", value = "起息日")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date valueDate = new Date();//	 起息日
+    private Date valueDate = new Date();
 
+    @ApiModelProperty(required = false, name = "valueDate2", value = "起息日2")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date valueDate2 = new Date();//	 起息日2
+    private Date valueDate2 = new Date();
 
+    @ApiModelProperty(required = false, name = "maturityDate", value = "到期日")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date maturityDate = new Date();//	 到期日
+    private Date maturityDate = new Date();
 
+    @ApiModelProperty(required = false, name = "maturityDate2", value = "到期日2")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date maturityDate2 = new Date();//	 到期日2
+    private Date maturityDate2 = new Date();
 
+    @ApiModelProperty(required = false, name = "termDays", value = "期限天数")
     @Digits(integer = 10, fraction = 0)
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal termDays = new BigDecimal(0);//期限天数
+    private BigDecimal termDays = new BigDecimal(0);
 
+    @ApiModelProperty(required = false, name = "termDays2", value = "期限天数2")
     @Digits(integer = 10, fraction = 0)
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal termDays2 = new BigDecimal(0);//期限天数2
+    private BigDecimal termDays2 = new BigDecimal(0);
 
+    @ApiModelProperty(required = false, name = "purchType", value = "申购类型")
     @Size(max = 50)
-    private String purchType = "";//	 申购类型
+    private String purchType = "";
 
+    @ApiModelProperty(required = false, name = "saleCode", value = "配售代码")
     @Size(max = 50)
-    private String saleCode = "";// 配售代码
+    private String saleCode = "";
 
+    @ApiModelProperty(required = false, name = "minAmt", value = "最低成交金额")
     @Digits(integer = 30, fraction = 14)
     @JsonSerialize(using = DoubleSerializerUtils.class)
-    private BigDecimal minAmt = new BigDecimal(0);//最低成交金额
+    private BigDecimal minAmt = new BigDecimal(0);
 
+    @ApiModelProperty(required = false, name = "tarFinprodId", value = "目标金融产品代码")
     @Size(max = 50)
-    private String tarFinprodId = "";// 目标金融产品代码
+    private String tarFinprodId = "";
 
+    @ApiModelProperty(required = false, name = "tarinprodAbbr", value = "目标金融产品简称")
     @Size(max = 50)
-    private String tarinprodAbbr = "";//	 目标金融产品简称
+    private String tarinprodAbbr = "";
 
+    @ApiModelProperty(required = false, name = "tarinprodMarketId", value = "目标金融产品市场代码")
     @Size(max = 20)
-    private String tarinprodMarketId = "";//	 目标金融产品市场代码
+    private String tarinprodMarketId = "";
 
+    @ApiModelProperty(required = false, name = "tradeId", value = "交易员编号")
     @Size(max = 20)
-    private String tradeId = "";//	 交易员编号
+    private String tradeId = "";
 
+    @ApiModelProperty(required = false, name = "traderName", value = "交易员姓名")
     @Size(max = 200)
-    private String traderName = "";//	 交易员姓名
+    private String traderName = "";
 
+    @ApiModelProperty(required = false, name = "invManagerId", value = "投资经理")
     @Size(max = 20)
-    private String invManagerId = "";//	 投资经理
+    private String invManagerId = "";
 
+    @ApiModelProperty(required = false, name = "assetType", value = "资产类型")
     @Size(max = 50)
-    private String assetType = "";//	 资产类型
+    private String assetType = "";
 
+    @ApiModelProperty(required = false, name = "assetType1", value = "资产二级分类")
     @Size(max = 50)
-    private String assetType1 = "";//	 资产二级分类
+    private String assetType1 = "";
 
+    @ApiModelProperty(required = false, name = "assetType10", value = "资产三级分类")
     @Size(max = 50)
-    private String assetType10 = "";// 资产三级分类
+    private String assetType10 = "";
 
+    @ApiModelProperty(required = false, name = "assetType11", value = "资产四级分类")
     @Size(max = 50)
-    private String assetType11 = "";// 资产四级分类
+    private String assetType11 = "";
 
+    @ApiModelProperty(required = false, name = "ourTrader", value = "本方交易员")
     @Size(max = 32)
-    private String ourTrader = ""; // 本方交易员
+    private String ourTrader = "";
 
+    @ApiModelProperty(required = false, name = "invAim", value = "投资目的")
     @Size(max = 128)
-    private String invAim = "";        //投资目的
-    // 存储指令分发时，同一条指令的对应的多个trader
+    private String invAim = "";
+
+    @ApiModelProperty(required = false, name = "invAim", value = "存储指令分发时，同一条指令的对应的多个trader")
     private String tradersInfo;
 
+    @ApiModelProperty(required = false, name = "isAutoReceive", value = "自动接收标志")
     @Size(max = 1)
-    private String isAutoReceive; // 自动接收标志
+    private String isAutoReceive;
 
+    @ApiModelProperty(required = false, name = "vPayDate", value = "首期结算日")
     private Date vPayDate;
 
+    @ApiModelProperty(required = false, name = "mPayDate", value = "到期结算日")
     private Date mPayDate;
 
+    @ApiModelProperty(required = false, name = "capDays", value = "占款天数")
     @NotNull
     @Digits(integer = 10, fraction = 0)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal capDays = new BigDecimal(0);
 
+    @ApiModelProperty(required = false, name = "mIntAmt", value = "回购利息")
     @NotNull
     @Digits(integer = 30, fraction = 14)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal mIntAmt = new BigDecimal(0);
 
+    @ApiModelProperty(required = false, name = "mTradeAmt", value = "到期结算金额")
     @NotNull
     @Digits(integer = 30, fraction = 14)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal mTradeAmt = new BigDecimal(0);
 
+    @ApiModelProperty(required = false, name = "firstRepoPs", value = "到期结算金额")
     @Size(max = 50)
     private String firstRepoPs;
 
+    @ApiModelProperty(required = false, name = "remark", value = "指令备注，补充协议")
     @Size(max = 1000)
-    private String remark; // 补充协议
+    private String remark;
 
+    @ApiModelProperty(required = false, name = "derivativeBsDir", value = "买卖方向")
     @Size(max = 8)
-    private String derivativeBsDir;//买卖方向
+    private String derivativeBsDir;
 
+    @ApiModelProperty(required = false, name = "derivativeOcFlag", value = "开平仓标志")
     @Size(max = 8)
-    private String derivativeOcFlag;//开平仓标志
+    private String derivativeOcFlag;
+
+    @ApiModelProperty(required = false, name = "minPriceAndMinTrdUnitLimitBean", value = "最小价差、买卖单位及交易上下限控制")
     private MinPriceAndMinTrdUnitLimitBean minPriceAndMinTrdUnitLimitBean;
 
+    @ApiModelProperty(required = false, name = "pledgeeType", value = "质权人类型：协议回购到期续作指令必填 0-非第三方 1-第三方")
     @Size(max = 1)
-    private String pledgeeType;//质权人类型 协议回购到期续作指令必填 0-非第三方 1-第三方
+    private String pledgeeType;
+
+    @ApiModelProperty(required = false, name = "count", value = "数量")
     private int count;
 
-    /**
-     * 指令业务类型
-     *        
-     * @author swwan
-     * @date 2020/12/2
-     */
+    @ApiModelProperty(required = false, name = "entrustBussType", value = "指令业务类型")
     @NotNull
     @Size(max = 50)
     private String entrustBussType;
 
-    /**
-     * 申赎方式
-     *        
-     * @author swwan
-     * @date 2020/12/2
-     */
+    @ApiModelProperty(required = false, name = "deliveryMethod", value = "申赎方式，交割方式")
     @Size(max = 50)
     private String deliveryMethod;
 

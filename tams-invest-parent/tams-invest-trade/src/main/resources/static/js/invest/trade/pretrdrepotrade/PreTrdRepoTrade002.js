@@ -421,7 +421,6 @@
 
         // 清算速度
         $('#settleSpeedText').change(function(){
-            debugger
             settleSpeedChangeAction();
         });
 

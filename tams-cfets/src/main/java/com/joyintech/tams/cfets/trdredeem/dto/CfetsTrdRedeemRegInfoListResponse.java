@@ -151,7 +151,7 @@ public class CfetsTrdRedeemRegInfoListResponse {
     }
 
     public String getPsStr() {
-        return psStr;
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.交易方向, this.getPs());
     }
 
     public void setPsStr(String psStr) {
@@ -247,7 +247,7 @@ public class CfetsTrdRedeemRegInfoListResponse {
     }
 
     public String getCcyStr() {
-        return ccyStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getCcy());
     }
 
     public void setCcyStr(String ccyStr) {

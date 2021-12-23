@@ -6,7 +6,6 @@ $(function () {
      * 获取查询参数
      */
     var getSearchParams = function () {
-        debugger;
         return {
             finProdMarketId: $('#finProdMarketId').val(),
             finProdName: $('#finProdName').val(),

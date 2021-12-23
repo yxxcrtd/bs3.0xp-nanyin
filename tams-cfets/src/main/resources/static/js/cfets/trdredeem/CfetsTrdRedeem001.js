@@ -62,5 +62,26 @@
 
     }
     init();
+     function saveOrSubmit(operatorType) {
+      debugger;
+        var object = $.serializeToObject('#searchForm');
+        object.operatorType = operatorType;
+        object.pageId = "CfetsTrdRedeem001";
+        if (operatorType === "save") {
+            WorkFlow.doSaveList(basePath+'cfets/trdredeem/CfetsTrdRedeem001/save',object,"CfetsTrdRedeem001_btn_save","CfetsTrdRedeem001");
+        } else {
+           WorkFlow.doSubmitList(basePath+'cfets/trdredeem/CfetsTrdRedeem001/save',object,"CfetsTrdRedeem001_btn_submit","CfetsTrdRedeem001");
+        }
+        }
+    // 绑定提交按钮
+    $('#CfetsTrdRedeem001_btn_submit').click(function () {
+    debugger;
+        saveOrSubmit('submit');
+    });
+
+    // 绑定保存按钮
+    $('#CfetsTrdRedeem001_btn_save').click(function () {
+        saveOrSubmit('save');
+    });
 
 }());
