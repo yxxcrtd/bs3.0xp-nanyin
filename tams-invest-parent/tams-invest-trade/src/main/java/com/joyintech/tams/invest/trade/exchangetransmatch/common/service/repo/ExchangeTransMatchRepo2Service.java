@@ -266,6 +266,8 @@ public class ExchangeTransMatchRepo2Service extends ExchangeTransMatchRepoCommon
         }
         // 交易金额
         trdProductDeal.setTradeAmt(entrustDto.getMarchAmt());
+        //交易份额
+        trdProductDeal.setShareAmt(entrustDto.getMarchAmt());
         // 未随交易支付费用
         if(!StringUtil.equals(DictCodeList.是否_是.getValue(), dealDto.getIsPayWithTrade())) {
             trdProductDeal.setFeeAmtUnpay(dealDto.getCommissionAmt());
