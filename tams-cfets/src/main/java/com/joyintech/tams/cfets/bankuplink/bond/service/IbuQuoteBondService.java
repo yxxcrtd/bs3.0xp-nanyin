@@ -141,15 +141,31 @@ public class IbuQuoteBondService extends BaseService {
         return ajaxResult;
     }
 
-
     /**
-     *  初始化指令列表
+     * 指令列表
      * @param dto
      * @return
      */
-    public Page<EntrustDto> listEntrust(EntrustRequest dto){
+    public List<EntrustDto> listEntrust(EntrustRequest dto){
+        List<EntrustDto> result = new ArrayList<>();
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
-        pageParam.put("loginUserId", LoginUserUtil.getUserName());
+        setParam(pageParam);
+        pageParam.remove("loginUserId");
+        List<CfetsBondDealEntrustOrderDto> cfetsBondDealEntrustOrderDtos = cfetsIbuQuoteBondMapper.listEntrust(pageParam);
+        cfetsBondDealEntrustOrderDtos.forEach(item ->{
+                EntrustDto entrustDto = JsonUtils.json2Object(JsonUtils.object2Json(item),EntrustDto.class);
+                result.add(entrustDto);
+        });
+        return result;
+    }
+
+    /**
+     *  初始化指令列表(分页)
+     * @param dto
+     * @return
+     */
+    public Page<EntrustDto> pageEntrust(EntrustRequest dto){
+        Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
         setParam(pageParam);
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> cfetsIbuQuoteBondMapper.listEntrust(pageParam));
@@ -878,6 +894,7 @@ public class IbuQuoteBondService extends BaseService {
 
     public void doForcedFinish(Map<String,Object> param) throws Exception{
         setParam(param);
+        param.remove("loginUserId");
         List<CfetsBondDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteBondMapper.listEntrust(param);
         if(entrustDtos != null && entrustDtos.size()>0){
             List<CfetsEtribBondInfo003Dto> dtolist = new ArrayList<>();
