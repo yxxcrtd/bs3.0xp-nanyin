@@ -205,7 +205,7 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
                 }
                 if(null!=ptlAllocatio.getShareAmt()){
                     BigDecimal wflShareAmtByEntrustId = cfetsQuotedCommonServicevue.getWflShareAmtByEntrustId(ptlAllocatio.getEntrustId());
-                    if(wflShareAmtByEntrustId.compareTo(BigDecimal.ZERO)>0&&ArithmeticUtil.doAdd(ptlAllocatio.getShareAmt(),wflShareAmtByEntrustId).compareTo(ptlAllocatio.getAvaNum())>0){
+                    if(null!=wflShareAmtByEntrustId&&wflShareAmtByEntrustId.compareTo(BigDecimal.ZERO)>0&&ArithmeticUtil.doAdd(ptlAllocatio.getShareAmt(),wflShareAmtByEntrustId).compareTo(ptlAllocatio.getAvaNum())>0){
                         errorList.add(new ValidMessage(StringUtil.join("组合分配券面总额不能超过指令剩余额度!流程中占用额度:",wflShareAmtByEntrustId.toString(),"元,指令代码:",ptlAllocatio.getEntrustId())));
                     }
                 }
@@ -214,14 +214,16 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
                 settFeeamtTotal = ArithmeticUtil.doAdd(settFeeamtTotal,ptlAllocatio.getSettFeeAmt());
             }
             //券面总额   交易手续费  结算服务费  总和需要相等
-            if(null!=entity.getShareAmt()&&entity.getShareAmt().compareTo(shareAmtTotal)!=0){
-                errorList.add(new ValidMessage("组合分配券面总额总和需要等于券面总额"));
-            }
-            if(null!=entity.getDealFeeAmt()&&entity.getDealFeeAmt().compareTo(dealFeeAmtTotal)!=0){
-                errorList.add(new ValidMessage("组合分配交易手续费总和需要等于交易手续费"));
-            }
-            if(null!=entity.getSettFeeAmt()&&entity.getSettFeeAmt().compareTo(settFeeamtTotal)!=0){
-                errorList.add(new ValidMessage("组合分配结算服务费总和需要等于结算服务费"));
+            if(CollectionUtils.isEmpty(errorList)){
+                if(null!=entity.getShareAmt()&&entity.getShareAmt().compareTo(shareAmtTotal)!=0){
+                    errorList.add(new ValidMessage("组合分配券面总额总和需要等于券面总额"));
+                }
+                if(null!=entity.getDealFeeAmt()&&entity.getDealFeeAmt().compareTo(dealFeeAmtTotal)!=0){
+                    errorList.add(new ValidMessage("组合分配交易手续费总和需要等于交易手续费"));
+                }
+                if(null!=entity.getSettFeeAmt()&&entity.getSettFeeAmt().compareTo(settFeeamtTotal)!=0){
+                    errorList.add(new ValidMessage("组合分配结算服务费总和需要等于结算服务费"));
+                }
             }
         }
         if(StringUtil.isNotEmpty(entity.getFinprodId())){

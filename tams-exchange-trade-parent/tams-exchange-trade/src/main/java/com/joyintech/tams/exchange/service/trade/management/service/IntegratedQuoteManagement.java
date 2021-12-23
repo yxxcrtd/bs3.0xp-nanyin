@@ -25,33 +25,31 @@ public class IntegratedQuoteManagement {
     @Autowired
     private QuoteJob quoteJob;
 
-    public List<IntegratedBulkQuoteBean> queryIntegratedBulkQuote(String stockCode, String entrustProp, String entrustBs, String accountId, int pageSize) {
-        return terminalHelper.queryIntegratedBulkQuote(stockCode, entrustProp, entrustBs, accountId, pageSize);
+    public List<IntegratedBulkQuoteBean> queryIntegratedBulkQuote(IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean) {
+        return terminalHelper.queryIntegratedBulkQuote(integratedBulkQuoteQryBean);
     }
 
-    public ResultBean queryIntegratedBulkCloseQuote(String stockCode, String exchangeType, String accountId, int pageSize) {
-        List<IntegratedBulkCloseQuoteBean> integratedBulkCloseQuoteBeans = terminalHelper.queryIntegratedBulkCloseQuote(stockCode, exchangeType, accountId, pageSize);
-        return new ResultBean(ErrorCode.SUCCESS, integratedBulkCloseQuoteBeans);
+    public List<IntegratedBulkCloseQuoteBean> queryIntegratedBulkCloseQuote(IntegratedBulkCloseQuoteQryBean integratedBulkCloseQuoteQryBean) {
+        return terminalHelper.queryIntegratedBulkCloseQuote(integratedBulkCloseQuoteQryBean);
     }
 
-    public ResultBean queryIntegratedRepurchaseQuote(int actionIn, String entrustProp, String accountId, int pageSize) {
-        if (!"".equals(entrustProp)
-                && !EntrustProp.SH_REPURCHASE_TRADE.value.equals(entrustProp)
-                && !EntrustProp.SH_REPURCHASE_RENEWAL.value.equals(entrustProp)
-                && !EntrustProp.SH_REPURCHASE_RELEASE.value.equals(entrustProp)
-                && !EntrustProp.SH_REPURCHASE_EXCHANGE.value.equals(entrustProp)
-                && !EntrustProp.SH_REPURCHASE_TERMINATE.value.equals(entrustProp)
-                && !EntrustProp.SH_REPURCHASE_EXPIRE.value.equals(entrustProp)
-                && !EntrustProp.SH_REPURCHASE_INTENTION.value.equals(entrustProp)) {
-            return new ResultBean(ErrorCode.REQ_PARAMETER_ERROR, null);
+    public List<IntegratedRepurchaseQuoteBean> queryIntegratedRepurchaseQuote(IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean) {
+        String entrustProp = integratedRepurchaseQuoteQryBean.getEntrustProp();
+        if (!"".equals(entrustProp) &&
+                !EntrustProp.SH_REPURCHASE_TRADE.value.equals(entrustProp) &&
+                !EntrustProp.SH_REPURCHASE_RENEWAL.value.equals(entrustProp) &&
+                !EntrustProp.SH_REPURCHASE_RELEASE.value.equals(entrustProp) &&
+                !EntrustProp.SH_REPURCHASE_EXCHANGE.value.equals(entrustProp) &&
+                !EntrustProp.SH_REPURCHASE_TERMINATE.value.equals(entrustProp) &&
+                !EntrustProp.SH_REPURCHASE_EXPIRE.value.equals(entrustProp) &&
+                !EntrustProp.SH_REPURCHASE_INTENTION.value.equals(entrustProp)) {
+            return null;
         }
-        List<IntegratedRepurchaseQuoteBean> integratedRepurchaseQuoteBeans = terminalHelper.queryIntegratedRepurchaseQuote(actionIn, entrustProp, accountId, pageSize);
-        return new ResultBean(ErrorCode.SUCCESS, integratedRepurchaseQuoteBeans);
+        return terminalHelper.queryIntegratedRepurchaseQuote(integratedRepurchaseQuoteQryBean);
     }
 
-    public ResultBean queryIntegratedFixedIncomeQuote(String stockCode, String exchangeType, String accountId, int pageSize) {
-        List<IntegratedFixedIncomeQuoteBean> integratedFixedIncomeBeans = terminalHelper.queryIntegratedFixedIncomeQuote(stockCode, exchangeType, accountId, pageSize);
-        return new ResultBean(ErrorCode.SUCCESS, integratedFixedIncomeBeans);
+    public List<IntegratedFixedIncomeQuoteBean> queryIntegratedFixedIncomeQuote(IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean) {
+        return terminalHelper.queryIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean);
     }
 
     public ResultBean addIntegratedRepurchaseQuote(IntegratedRepurchaseQuoteBean repurchaseQuoteBean) {

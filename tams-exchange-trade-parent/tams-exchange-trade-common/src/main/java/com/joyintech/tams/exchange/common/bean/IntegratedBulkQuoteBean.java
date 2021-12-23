@@ -1,34 +1,50 @@
 package com.joyintech.tams.exchange.common.bean;
 
 
-/**
- * @ClassName IntegratedBulkQuoteBean
- * @Description 大宗行情
- * @Author liujianping
- * @Date 2020/9/21
- * @Version
- **/
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel(value = "大宗行情返回报文", description = "大宗行情返回报文")
 public class IntegratedBulkQuoteBean {
+
+    @ApiModelProperty(name = "errorCode", value = "错误码")
     private int errorCode;
+    @ApiModelProperty(name = "errorMsg", value = "错误描述")
     private String errorMsg;
 
+    @ApiModelProperty(name = "orderNo", value = "记录号")
     private String orderNo;
+    @ApiModelProperty(name = "seatNo", value = "席位号")
     private String seatNo;
+    @ApiModelProperty(name = "entrustProp", value = "业务类别")
     private String entrustProp;
+    @ApiModelProperty(name = "entrustBs", value = "买卖标志")
     private String entrustBs;
+    @ApiModelProperty(name = "stockCode", value = "证券代码")
     private String stockCode;
+    @ApiModelProperty(name = "assetType", value = "资产类型")
     private String assetType;
+    @ApiModelProperty(name = "stockName", value = "证券名称")
     private String stockName;
+    @ApiModelProperty(name = "entrustPrice", value = "申报价格")
     private double entrustPrice;
+    @ApiModelProperty(name = "entrustAmount", value = "申报数量")
     private int entrustAmount;
+    @ApiModelProperty(name = "businessAmount", value = "成交数量")
     private int businessAmount;
+    @ApiModelProperty(name = "compactTerm", value = "合约期限")
     private int compactTerm;
+    @ApiModelProperty(name = "relationName", value = "联系人名称")
     private String relationName;
+    @ApiModelProperty(name = "relationTel", value = "联系方式")
     private String relationTel;
+    @ApiModelProperty(name = "cbpconferId", value = "约定号")
     private String cbpconferId;
+    @ApiModelProperty(name = "reportTime", value = "申报时间")
     private String reportTime;
+    @ApiModelProperty(name = "positionStr", value = "定位串")
     private String positionStr;
+    @ApiModelProperty(name = "remark", value = "备用文本")
     private String remark;
 
     public int getErrorCode() {

@@ -1,16 +1,24 @@
 package com.joyintech.tams.exchange.common.bean;
 
-/**
- * @ClassName IntegratedFixedIncomeQuoteQryBean
- * @Description TODO
- * @Author liujianping
- * @Date 2020/9/21
- * @Version
- **/
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.NotBlank;
+
+@ApiModel(value = "上海固收行情请求报文", description = "上海固收行情请求报文")
 public class IntegratedFixedIncomeQuoteQryBean {
+    @ApiModelProperty(required = true, name = "stockCode", value = "证券代码")
+    @NotBlank(message = "证券代码不能为空")
     private String stockCode;
+
+    @ApiModelProperty(name = "exchangeType", value = "交易类别")
+    @NotBlank(message = "交易类别不能为空")
     private String exchangeType;
+
+    @ApiModelProperty(required = true, name = "accountId", value = "网点账号")
+    @NotBlank(message = "网点账号不能为空")
     private String accountId;
+
+    @ApiModelProperty(name = "pageSize", value = "记录数")
     private int pageSize;
 
     public IntegratedFixedIncomeQuoteQryBean(String stockCode, String exchangeType, String accountId, int pageSize) {
