@@ -215,30 +215,34 @@ public class EquityInfoDistinctService {
 					 }
 				 }
 			 }else if(yibaosongModel!=null && indentifyMark.equals(yibaosongModel.getIndentifyMark())){
-				 ChbEquHoldCheckDto checkModel = chbEquHoldCheckDtoMapper.selectByPrimarykey(yibaosongModel.getIndentifyMark());
-				 if(StringUtil.isNotEmpty(checkModel)){
-					 boolean updFlg = false;
-					 //更新CHECK表
-					 EquityInfo001Dto model = new EquityInfo001Dto();
-					 if(tmpMap  instanceof Map){
-						 EquityInfoMaintenanceService.maptoDto((Map<String,String>)tmpMap, model);
-					 }else if(tmpMap  instanceof EquityInfo001Dto){
-						 model = (EquityInfo001Dto)tmpMap;
+				//修复批启用的情况下，如果接入的txt对应的信息为空，则用之前check表的内容替换
+				 if("01".equals(updateFlg)) {
+					 ChbEquHoldCheckDto checkModel = chbEquHoldCheckDtoMapper.selectByPrimarykey(yibaosongModel.getIndentifyMark());
+					 if(StringUtil.isNotEmpty(checkModel)){
+						 boolean updFlg = false;
+						 //更新CHECK表
+						 EquityInfo001Dto model = new EquityInfo001Dto();
+						 if(tmpMap  instanceof Map){
+							 EquityInfoMaintenanceService.maptoDto((Map<String,String>)tmpMap, model);
+						 }else if(tmpMap  instanceof EquityInfo001Dto){
+							 model = (EquityInfo001Dto)tmpMap;
+						 }
+						 ChbEquHoldCheckDto regDto = transformModelToCheck(model);
+						 regDto.setMergerindentifymark(yibaosongModel.getIndentifyMark());
+						 regDto.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
+						 //设置 账号开户所在地
+						 if(StringUtil.isEmpty(regDto.getFundAccPlace())) {
+							 regDto.setFundAccPlace(checkModel.getFundAccPlace());
+						 }
+						 //设置 权益人所属银行代码
+						 if(StringUtil.isEmpty(regDto.getTheBankCode())) {
+							 regDto.setTheBankCode(checkModel.getTheBankCode());
+						 }
+						 chbEquHoldCheckDtoMapper.updateForRepair(regDto);
+						
 					 }
-					 ChbEquHoldCheckDto regDto = transformModelToCheck(model);
-					 regDto.setMergerindentifymark(yibaosongModel.getIndentifyMark());
-					 regDto.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
-					 //设置 账号开户所在地
-					 if(StringUtil.isNotEmpty(regDto.getFundAccPlace())) {
-						 regDto.setFundAccPlace(checkModel.getFundAccPlace());
-					 }
-					 //设置 权益人所属银行代码
-					 if(StringUtil.isNotEmpty(regDto.getTheBankCode())) {
-						 regDto.setTheBankCode(checkModel.getTheBankCode());
-					 }
-					 chbEquHoldCheckDtoMapper.updateForRepair(regDto);
-					
 				 }
+				 
 			 }
 		}
 		keys.removeAll(keyList);
