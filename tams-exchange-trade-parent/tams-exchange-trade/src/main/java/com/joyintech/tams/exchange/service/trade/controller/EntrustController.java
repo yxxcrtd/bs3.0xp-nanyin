@@ -1,13 +1,20 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.RevokeDto;
+import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
 import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/service/joyin")
+@ResponseResultBody
+@Api(tags = "场内交易-委托操作接口")
 public class EntrustController {
 
     @Autowired
@@ -141,66 +148,16 @@ public class EntrustController {
         return entrustManagement.getOthCode(finprodId, othCodeType);
     }
 
-    /**
-     * @param pageNum
-     * @param pageSize
-     * @param historyType
-     * @param userId
-     * @param startDay
-     * @param endDay
-     * @param accountId
-     * @param portfolioId
-     * @param market
-     * @param stockCode
-     * @param entrustProp
-     * @param entrustStatus
-     * @return
-     */
-    @RequestMapping(value = "/entrust/page", method = RequestMethod.GET)
-    public ResultBean queryAllEntrustForPage(@RequestParam(value = "page_num", required = false, defaultValue = "0") int pageNum,
-                                             @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
-                                             @RequestParam(value = "history_type") int historyType,
-                                             @RequestParam(value = "user_id") String userId,
-                                             @RequestParam(value = "start_day", required = false) String startDay,
-                                             @RequestParam(value = "end_day", required = false) String endDay,
-                                             @RequestParam(value = "account_id", required = false) String accountId,
-                                             @RequestParam(value = "portfolio_id", required = false) String portfolioId,
-                                             @RequestParam(value = "market", required = false) String market,
-                                             @RequestParam(value = "stock_code", required = false) String stockCode,
-                                             @RequestParam(value = "entrust_prop", required = false) String entrustProp,
-                                             @RequestParam(value = "entrust_status", required = false, defaultValue = "-100") int entrustStatus) {
-        return entrustManagement.queryAllEntrustForPage(pageNum, pageSize, historyType, userId, startDay, endDay, accountId, portfolioId, market, stockCode, entrustProp, entrustStatus);
+    @ApiOperation(value = "查询分页委托信息", notes = "查询分页委托信息")
+    @GetMapping(value = "/entrust/page")
+    public ResultBean queryAllEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+        return entrustManagement.queryAllEntrustForPage(request);
     }
 
-    /**
-     * @param pageNum
-     * @param pageSize
-     * @param historyType
-     * @param userId
-     * @param startDay
-     * @param endDay
-     * @param accountId
-     * @param portfolioId
-     * @param market
-     * @param stockCode
-     * @param entrustProp
-     * @param entrustStatus
-     * @return
-     */
-    @RequestMapping(value = "/entrust/integrated/page", method = RequestMethod.GET)
-    public ResultBean queryIntegratedEntrustForPage(@RequestParam(value = "page_num", required = false, defaultValue = "0") int pageNum,
-                                                    @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
-                                                    @RequestParam(value = "history_type") int historyType,
-                                                    @RequestParam(value = "user_id") String userId,
-                                                    @RequestParam(value = "start_day", required = false) String startDay,
-                                                    @RequestParam(value = "end_day", required = false) String endDay,
-                                                    @RequestParam(value = "account_id", required = false) String accountId,
-                                                    @RequestParam(value = "portfolio_id", required = false) String portfolioId,
-                                                    @RequestParam(value = "market", required = false) String market,
-                                                    @RequestParam(value = "stock_code", required = false) String stockCode,
-                                                    @RequestParam(value = "entrust_prop", required = false) String entrustProp,
-                                                    @RequestParam(value = "entrust_status", required = false, defaultValue = "-100") int entrustStatus) {
-        return entrustManagement.queryIntegratedEntrustForPage(pageNum, pageSize, historyType, userId, startDay, endDay, accountId, portfolioId, market, stockCode, entrustProp, entrustStatus);
+    @ApiOperation(value = "查询分页综合业务委托信息", notes = "查询分页综合业务委托信息")
+    @GetMapping(value = "/entrust/integrated/page")
+    public ResultBean queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+        return entrustManagement.queryIntegratedEntrustForPage(request);
     }
 
     @RequestMapping(value = "/entrust/exception", method = RequestMethod.GET)

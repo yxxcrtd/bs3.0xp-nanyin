@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("TradeController_dtx")
 @RequestMapping("/trade/joyin")
 @ResponseResultBody
-@Api(tags = "场内交易成交接口")
+@Api(tags = "场内交易-成交查询接口")
 public class TradeController {
 
     @Autowired
