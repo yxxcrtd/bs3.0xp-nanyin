@@ -290,13 +290,14 @@
             if(data != null && data != "" && "没有数据" != data){
                 var objs = eval('('+data+')');
                 var noMDEntries = objs.noMDTypes.noRelatedSym.noMDEntries;
+                debugger
                 for(var j = 0;j<noMDEntries.length;j++) {
                     if (noMDEntries[j].mDEntryType === '1') { // 最新收益率
                         document.getElementById('EtrIbBondinfoHq_newRate').innerHTML = JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2) + '%';
                     } else if (noMDEntries[j].mDEntryType === 'N') { // 收益率的涨跌
-                        document.getElementById('EtrIbBondinfoHq_latestYield').innerHTML =  JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 2, null, 2)+"BP";
+                        document.getElementById('EtrIbBondinfoHq_latestYield').innerHTML =  JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 2, null, 2)+ 'BP';
                     } else if (noMDEntries[j].mDEntryType === 'e') { // 最新净价
-                        document.getElementById('EtrIbBondinfoHq_newPrice').innerHTML =  JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2)+"元";
+                        document.getElementById('EtrIbBondinfoHq_newPrice').innerHTML =  JoyinUtil.formatNumber(noMDEntries[j].mDEntryPx, 4, null, 2)+'元';
                     }
                 }
             }else{
