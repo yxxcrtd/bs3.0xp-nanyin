@@ -5,6 +5,7 @@ import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.OrderAndEntrustQryResult;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.RevokeDto;
+import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
@@ -15,45 +16,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/service/joyin")
+@RequestMapping("/trade/joyin")
 @ResponseResultBody
-@Api(tags = "场内交易-委托查询接口")
+@Api(tags = "场内交易-委托操作接口")
 public class EntrustController {
 
     @Autowired
     private EntrustManagement entrustManagement;
 
-    /**
-     * 查询委托信息
-     *
-     * @param userId        用户Id
-     * @param instructionId 指令Id
-     * @param accountId     账户Id
-     * @param orderId       订单Id
-     * @return ResultBean
-     */
     @ApiOperation(value = "查询委托信息", notes = "查询委托信息")
     @RequestMapping(value = {"/entrust"}, method = RequestMethod.POST)
-    public Message<OrderAndEntrustQryResult> queryAll(@RequestBody EntrustQueryRequest entrustQueryRequest) {
+    public Message<OrderAndEntrustQryResult> queryAll(@RequestBody @Validated EntrustQueryRequest entrustQueryRequest) {
         return new Message<OrderAndEntrustQryResult>(entrustManagement.queryEntrust(entrustQueryRequest.getUserId(), entrustQueryRequest.getInstructionId(), entrustQueryRequest.getAccountId(), entrustQueryRequest.getOrderId()));
     }
 
-    /**
-     * 查询综合业务信息
-     *
-     * @param userId        用户Id
-     * @param instructionId 指令Id
-     * @param accountId     账户Id
-     * @param orderId       订单Id
-     * @return ResultBean
-     */
-    @RequestMapping(value = {"/entrust/integrated"}, method = RequestMethod.GET)
-    public ResultBean queryIntegratedEntrustAll(@RequestParam(value = "user_id") String userId,
-                                                @RequestParam(value = "instruction_id", required = false) String instructionId,
-                                                @RequestParam(value = "account_id", required = false) String accountId,
-                                                @RequestParam(value = "order_id", required = false) String orderId) {
-        return entrustManagement.queryIntegratedEntrust(userId, instructionId, accountId, orderId);
+    @ApiOperation(value = "查询综合业务信息", notes = "查询综合业务信息")
+    @RequestMapping(value = {"/entrust/integrated"}, method = RequestMethod.POST)
+    public Message<List<IntegratedEntrust>> queryIntegratedEntrustAll(@RequestBody @Validated EntrustQueryRequest request) {
+        return new Message<List<IntegratedEntrust>>(entrustManagement.queryIntegratedEntrust(request.getUserId(), request.getInstructionId(), request.getAccountId(), request.getOrderId()));
     }
 
     /**
@@ -63,10 +46,11 @@ public class EntrustController {
      * @param entrustId 委托单号
      * @return ResultBean
      */
+    @ApiOperation(value = "撤销委托", notes = "撤销委托")
     @RequestMapping(value = "/entrust/cancel", method = RequestMethod.POST)
-    public ResultBean cancelEntrust(@RequestParam(value = "user_id") String userId,
-                                    @RequestParam(value = "entrust_id") String entrustId) {
-        return entrustManagement.cancelEntrust(userId, entrustId);
+    public Message<Object> cancelEntrust(@RequestParam(value = "userId") String userId,
+                                         @RequestParam(value = "entrustId") String entrustId) {
+        return new Message<Object>(entrustManagement.cancelEntrust(userId, entrustId));
     }
 
     /**

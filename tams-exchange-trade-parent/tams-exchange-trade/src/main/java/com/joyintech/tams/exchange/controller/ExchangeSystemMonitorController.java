@@ -5,7 +5,8 @@ import com.joyintech.tams.exchange.common.bean.DynamicMonitorDTO;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
-import com.joyintech.tams.exchange.service.ExchangeSystemMonitorService;
+import com.joyintech.tams.exchange.service.trade.management.service.MemoryCacheManagement;
+import com.joyintech.tams.exchange.service.trade.management.service.SystemMonitorManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +16,14 @@ import java.util.List;
 @RequestMapping("/joyin")
 public class ExchangeSystemMonitorController {
 
+//    @Autowired
+//    private ExchangeSystemMonitorService exchangeSystemMonitorService;
+
     @Autowired
-    private ExchangeSystemMonitorService exchangeSystemMonitorService;
+    private SystemMonitorManagement systemMonitorManagement;
+
+    @Autowired
+    private MemoryCacheManagement memoryCacheManagement;
 
     /**
      * 查询监控数据
@@ -28,7 +35,8 @@ public class ExchangeSystemMonitorController {
     @RequestMapping(value = "/monitor", method = RequestMethod.GET)
     public ResultBean queryExchangeMonitor(@RequestParam(value = "user_id") String userId) {
         String param = "?user_id=" + userId;
-        return exchangeSystemMonitorService.queryExchangeMonitor(param);
+//        return exchangeSystemMonitorService.queryExchangeMonitor(param);
+        return systemMonitorManagement.queryExchangeMonitor();
     }
 
     /**
@@ -52,7 +60,8 @@ public class ExchangeSystemMonitorController {
         if (ObjectUtil.isNotEmpty(perPage)) {
             param += "&count=" + perPage;
         }
-        return exchangeSystemMonitorService.queryCacheExchangeMonitor(param);
+//        return exchangeSystemMonitorService.queryCacheExchangeMonitor(param);
+        return memoryCacheManagement.getData(serviceName, page, perPage);
     }
 
     /**
@@ -63,7 +72,8 @@ public class ExchangeSystemMonitorController {
                                               @RequestParam(value = "service_name") String serviceName,
                                               @RequestBody String beanInfoList) {
         String param = "?user_id=" + userId + "&service_name=" + serviceName;
-        return exchangeSystemMonitorService.addCacheExchangeMonitor(param, beanInfoList);
+//        return exchangeSystemMonitorService.addCacheExchangeMonitor(param, beanInfoList);
+        return memoryCacheManagement.addData(serviceName, beanInfoList);
     }
 
     /**
@@ -81,7 +91,8 @@ public class ExchangeSystemMonitorController {
         if (ObjectUtil.isNotEmpty(coverType)) {
             param += "&type=" + coverType;
         }
-        return exchangeSystemMonitorService.recoverCacheExchangeMonitor(param);
+//        return exchangeSystemMonitorService.recoverCacheExchangeMonitor(param);
+        return memoryCacheManagement.recoverData(serviceName, id, coverType);
     }
 
     /**
@@ -91,7 +102,8 @@ public class ExchangeSystemMonitorController {
     public ResultBean clearExchangeCacheMonitor(@RequestParam(value = "user_id") String userId,
                                                 @RequestParam(value = "service_name") String serviceName) {
         String param = "?user_id=" + userId + "&service_name=" + serviceName;
-        return exchangeSystemMonitorService.clearCacheExchangeMonitor(param);
+//        return exchangeSystemMonitorService.clearCacheExchangeMonitor(param);
+        return memoryCacheManagement.clearData(serviceName);
     }
 
     /**
@@ -111,7 +123,8 @@ public class ExchangeSystemMonitorController {
         if (ObjectUtil.isNotEmpty(snapshotTime)) {
             dto.setSnapshotTime(snapshotTime);
         }
-        return exchangeSystemMonitorService.queryExchangeMonitorDynamic(dto);
+//        return exchangeSystemMonitorService.queryExchangeMonitorDynamic(dto);
+        return systemMonitorManagement.queryExchangeMonitorDynamic(dto);
     }
 
     /*** 
@@ -130,7 +143,8 @@ public class ExchangeSystemMonitorController {
         }
         String param = "?user_id=" + userId
                 + "&service_name=" + serviceName;
-        return exchangeSystemMonitorService.deleteExchangeCacheMonitor(param, id);
+//        return exchangeSystemMonitorService.deleteExchangeCacheMonitor(param, id);
+        return memoryCacheManagement.deleteData(serviceName, id);
     }
 
     /***
@@ -142,6 +156,7 @@ public class ExchangeSystemMonitorController {
      */
     @RequestMapping(value = "/cache/monitor", method = RequestMethod.GET)
     public ResultBean queryExchangeCacheMonitor() {
-        return exchangeSystemMonitorService.queryExchangeCacheMonitor();
+//        return exchangeSystemMonitorService.queryExchangeCacheMonitor();
+        return systemMonitorManagement.queryCacheMonitor();
     }
 }

@@ -252,7 +252,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
     @ApiOperation(value = "指令列表导出", notes = "指令列表导出")
     public void exportEtrExchange(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response) {
         // 导出
-        ExcelUitl.doExport(requestDto, response, "持仓列表", () -> {
+        ExcelUitl.doExport(requestDto, response, "指令列表", () -> {
             EtrExchangeTradeEtrExchangeCommonRequest dto = requestDto.getDto(EtrExchangeTradeEtrExchangeCommonRequest.class);
             List dataList = etrExchangeTradeCommon002Service.selectEtrExchange(dto).getRoot();
             return dataList;

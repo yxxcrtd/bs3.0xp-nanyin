@@ -18,67 +18,68 @@ public class ExchangeEntrustController {
     @Autowired
     private ExchangeEntrustService entrustService;
 
-    /**
-     * 查询委托信息
-     *
-     * @param userId        用户Id
-     * @param instructionId 指令Id
-     * @param accountId     账户Id
-     * @param orderId       订单Id
-     * @return ResultBean
-     */
-    @RequestMapping(value = {"/entrust"}, method = RequestMethod.GET)
-    public ResultBean queryAll(@RequestParam(value = "user_id") String userId,
-                               @RequestParam(value = "instruction_id", required = false) String instructionId,
-                               @RequestParam(value = "account_id", required = false) String accountId,
-                               @RequestParam(value = "order_id", required = false) String orderId) {
-        String param = "?user_id=" + userId;
-        if (Objects.nonNull(instructionId))
-            param += "&instruction_id=" + instructionId;
-        if (Objects.nonNull(accountId))
-            param += "&account_id=" + accountId;
-        if (Objects.nonNull(orderId))
-            param += "&order_id=" + orderId;
-        return entrustService.queryAll(param);
-    }
-
-    /**
-     * 查询综合业务信息
-     *
-     * @param userId        用户Id
-     * @param instructionId 指令Id
-     * @param accountId     账户Id
-     * @param orderId       订单Id
-     * @return ResultBean
-     */
-    @RequestMapping(value = {"/entrust/integrated"}, method = RequestMethod.GET)
-    public ResultBean queryIntegratedEntrustAll(@RequestParam(value = "user_id") String userId,
-                                                @RequestParam(value = "instruction_id", required = false) String instructionId,
-                                                @RequestParam(value = "account_id", required = false) String accountId,
-                                                @RequestParam(value = "order_id", required = false) String orderId) {
-        String param = "?user_id=" + userId;
-        if (Objects.nonNull(instructionId))
-            param += "&instruction_id=" + instructionId;
-        if (Objects.nonNull(accountId))
-            param += "&account_id=" + accountId;
-        if (Objects.nonNull(orderId))
-            param += "&order_id=" + orderId;
-        return entrustService.queryIntegratedEntrustAll(param);
-    }
-
-    /**
-     * 撤销user下对应entrust
-     *
-     * @param userId    用户Id
-     * @param entrustId 委托单号
-     * @return ResultBean
-     */
-    @RequestMapping(value = "/entrust/cancel", method = RequestMethod.PUT)
-    public ResultBean cancelEntrust(@RequestParam(value = "user_id") String userId,
-                                    @RequestParam(value = "entrust_id") String entrustId) {
-        String param = "?user_id=" + userId + "&entrust_id=" + entrustId;
-        return entrustService.cancelEntrust(param);
-    }
+///////////////////////////////////////迁移到新UI接口
+//    /**
+//     * 查询委托信息
+//     *
+//     * @param userId        用户Id
+//     * @param instructionId 指令Id
+//     * @param accountId     账户Id
+//     * @param orderId       订单Id
+//     * @return ResultBean
+//     */
+//    @RequestMapping(value = {"/entrust"}, method = RequestMethod.GET)
+//    public ResultBean queryAll(@RequestParam(value = "user_id") String userId,
+//                               @RequestParam(value = "instruction_id", required = false) String instructionId,
+//                               @RequestParam(value = "account_id", required = false) String accountId,
+//                               @RequestParam(value = "order_id", required = false) String orderId) {
+//        String param = "?user_id=" + userId;
+//        if (Objects.nonNull(instructionId))
+//            param += "&instruction_id=" + instructionId;
+//        if (Objects.nonNull(accountId))
+//            param += "&account_id=" + accountId;
+//        if (Objects.nonNull(orderId))
+//            param += "&order_id=" + orderId;
+//        return entrustService.queryAll(param);
+//    }
+//
+//    /**
+//     * 查询综合业务信息
+//     *
+//     * @param userId        用户Id
+//     * @param instructionId 指令Id
+//     * @param accountId     账户Id
+//     * @param orderId       订单Id
+//     * @return ResultBean
+//     */
+//    @RequestMapping(value = {"/entrust/integrated"}, method = RequestMethod.GET)
+//    public ResultBean queryIntegratedEntrustAll(@RequestParam(value = "user_id") String userId,
+//                                                @RequestParam(value = "instruction_id", required = false) String instructionId,
+//                                                @RequestParam(value = "account_id", required = false) String accountId,
+//                                                @RequestParam(value = "order_id", required = false) String orderId) {
+//        String param = "?user_id=" + userId;
+//        if (Objects.nonNull(instructionId))
+//            param += "&instruction_id=" + instructionId;
+//        if (Objects.nonNull(accountId))
+//            param += "&account_id=" + accountId;
+//        if (Objects.nonNull(orderId))
+//            param += "&order_id=" + orderId;
+//        return entrustService.queryIntegratedEntrustAll(param);
+//    }
+//
+//    /**
+//     * 撤销user下对应entrust
+//     *
+//     * @param userId    用户Id
+//     * @param entrustId 委托单号
+//     * @return ResultBean
+//     */
+//    @RequestMapping(value = "/entrust/cancel", method = RequestMethod.PUT)
+//    public ResultBean cancelEntrust(@RequestParam(value = "user_id") String userId,
+//                                    @RequestParam(value = "entrust_id") String entrustId) {
+//        String param = "?user_id=" + userId + "&entrust_id=" + entrustId;
+//        return entrustService.cancelEntrust(param);
+//    }
 
     /**
      * 大宗行情查询
@@ -143,37 +144,38 @@ public class ExchangeEntrustController {
         return entrustService.queryEnable(param);
     }
 
-    /**
-     * @param pageNum
-     * @param pageSize
-     * @param historyType
-     * @param userId
-     * @param startDay
-     * @param endDay
-     * @param accountId
-     * @param portfolioId
-     * @param market
-     * @param stockCode
-     * @param entrustProp
-     * @param entrustStatus
-     * @return
-     */
-    @RequestMapping(value = "/entrust/page", method = RequestMethod.GET)
-    public ResultBean queryAllForPage(@RequestParam(value = "page_num", required = false, defaultValue = "0") int pageNum,
-                                      @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
-                                      @RequestParam(value = "history_type") int historyType,
-                                      @RequestParam(value = "user_id") String userId,
-                                      @RequestParam(value = "start_day", required = false) String startDay,
-                                      @RequestParam(value = "end_day", required = false) String endDay,
-                                      @RequestParam(value = "account_id", required = false) String accountId,
-                                      @RequestParam(value = "portfolio_id", required = false) String portfolioId,
-                                      @RequestParam(value = "market", required = false) String market,
-                                      @RequestParam(value = "stock_code", required = false) String stockCode,
-                                      @RequestParam(value = "entrust_prop", required = false) String entrustProp,
-                                      @RequestParam(value = "entrust_status", required = false, defaultValue = "-100") int entrustStatus) {
-        String param = queryEntrustParams(pageNum, pageSize, historyType, userId, startDay, endDay, accountId, portfolioId, market, stockCode, entrustProp, entrustStatus);
-        return entrustService.queryAllForPage(param);
-    }
+///////////////////////////////////////迁移到新UI接口
+//    /**
+//     * @param pageNum
+//     * @param pageSize
+//     * @param historyType
+//     * @param userId
+//     * @param startDay
+//     * @param endDay
+//     * @param accountId
+//     * @param portfolioId
+//     * @param market
+//     * @param stockCode
+//     * @param entrustProp
+//     * @param entrustStatus
+//     * @return
+//     */
+//    @RequestMapping(value = "/entrust/page", method = RequestMethod.GET)
+//    public ResultBean queryAllForPage(@RequestParam(value = "page_num", required = false, defaultValue = "0") int pageNum,
+//                                      @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
+//                                      @RequestParam(value = "history_type") int historyType,
+//                                      @RequestParam(value = "user_id") String userId,
+//                                      @RequestParam(value = "start_day", required = false) String startDay,
+//                                      @RequestParam(value = "end_day", required = false) String endDay,
+//                                      @RequestParam(value = "account_id", required = false) String accountId,
+//                                      @RequestParam(value = "portfolio_id", required = false) String portfolioId,
+//                                      @RequestParam(value = "market", required = false) String market,
+//                                      @RequestParam(value = "stock_code", required = false) String stockCode,
+//                                      @RequestParam(value = "entrust_prop", required = false) String entrustProp,
+//                                      @RequestParam(value = "entrust_status", required = false, defaultValue = "-100") int entrustStatus) {
+//        String param = queryEntrustParams(pageNum, pageSize, historyType, userId, startDay, endDay, accountId, portfolioId, market, stockCode, entrustProp, entrustStatus);
+//        return entrustService.queryAllForPage(param);
+//    }
 
     private String queryEntrustParams(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus) {
         String param = "?user_id=" + userId + "&history_type=" + historyType;

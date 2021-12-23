@@ -36,7 +36,7 @@ public class EtrExchangeTradePositionsCommonRequest {
     @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
     private PageMode pageMode;
 
-    @ApiModelProperty(name="portfolioIdList",value="组合代码",example="A1")
+    @ApiModelProperty(name="portfolioIdList",value="组合代码",example="['1','2']")
     private List<String> portfolioIdList;
 
     @ApiModelProperty(name="secAcctId",value="证券账户",example="A1")
