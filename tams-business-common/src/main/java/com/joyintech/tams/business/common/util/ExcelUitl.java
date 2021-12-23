@@ -64,7 +64,7 @@ public class ExcelUitl {
                     }
                 });
 			}
-			doExport(excelAndSheetName, header, mapList, response);
+			doExport(excelAndSheetName+DateUtil.format(DateUtil.platDateFromCache()), header, mapList, response);
 		}else {
 			List<BaseMap> dataResultList = requestDto.getData();
 			try{
@@ -88,7 +88,7 @@ public class ExcelUitl {
 			}catch (Exception e){
 				logger.error("导出格式化日期异常");
 			}
-			doExport(excelAndSheetName, header, dataResultList, response);
+			doExport(excelAndSheetName+DateUtil.format(DateUtil.platDateFromCache()), header, dataResultList, response);
 		}
 	}
 

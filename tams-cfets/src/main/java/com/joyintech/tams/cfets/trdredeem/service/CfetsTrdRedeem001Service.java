@@ -13,6 +13,8 @@ package com.joyintech.tams.cfets.trdredeem.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
@@ -27,6 +29,7 @@ import com.joyintech.tams.cfets.trdredeem.dao.CfetsTrdRedeemMapper;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemCheckRequst;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealCommonDto;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealRegisterQuoteDto;
+import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemRegInfoListResponse;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
@@ -49,10 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
@@ -151,7 +151,16 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
         if(CollectionUtils.isEmpty(entity.getPtlAllocatios())){
             errorList.add(new ValidMessage("组合分配不可为空"));
         }
-
+        //查询该资产在这个理论行权日是否已经有数据了
+        if(StringUtil.isNotEmpty(entity.getFinprodId()) && StringUtil.isNotEmpty(entity.getTheoreticalExerciseDate())){
+            Map<String,Object> map = new HashMap<>();
+            map.put("finprodId",entity.getFinprodId());
+            map.put("settleDate",entity.getTheoreticalExerciseDate());
+            List<CfetsTrdRedeemRegInfoListResponse> regList=cfetsTrdRedeemMapper.isExistRegInfo(map);
+            if(!StringUtil.isEmptyList(regList) && regList.size()>0){
+                errorList.add(new ValidMessage("该资产在该行权区间内存在流程中或有效数据，不允许重复提交！"));
+            }
+        }
         ajaxResult.setErrorList(errorList);
         return ajaxResult;
     }
@@ -511,6 +520,11 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
         wflRegFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         wflRegFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
         wflRegFinProductDealTotal.setWorkflowId(workflowId);
+        wflRegFinProductDealTotal.setCreateUser(LoginUserUtil.getUserName()==null?GlobalConstant.SYSTEM_USER:LoginUserUtil.getUserName());
+        wflRegFinProductDealTotal.setUpdateUser(LoginUserUtil.getUserName()==null?GlobalConstant.SYSTEM_USER:LoginUserUtil.getUserName());
+        wflRegFinProductDealTotal.setCreateTime(new Date());
+        wflRegFinProductDealTotal.setUpdateTime(new Date());
+        wflRegFinProductDealTotal.setCreateDept(LoginUserUtil.getDeptCode());
         wflRegFinProductDealTotalMapper.insert(wflRegFinProductDealTotal);
         WflRegFinProDealTotalAdd wflRegFinProDealTotalAdd = new WflRegFinProDealTotalAdd();
         BeanUtil.copyPropertiesIgnoreNull(wflRegFinProDealTotalAdd,entity.getRegFinProductDealTotalAdd());
