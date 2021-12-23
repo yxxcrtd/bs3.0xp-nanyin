@@ -37,15 +37,15 @@ public class OrderController {
 //    }
 
     /**
-     * 下单
+     * 普通下单
      *
      * @param userId 用户id
      * @param order  下单信息
-     * @return ResultBean
+     * @return Message
      */
     @ApiOperation(value = "普通下单（竞价下单）", notes = "普通下单（竞价下单）")
     @RequestMapping(value = "/order", method = RequestMethod.POST)
-    public Message<OrderPlaceBean> sendOrder(@RequestParam(value = "userId") String userId, @RequestBody OrderPlaceBean order) {
+    public Message<OrderPlaceBean> sendOrder(@RequestBody String userId, @RequestBody OrderPlaceBean order) {
         return new Message<OrderPlaceBean>(orderManagement.sendOrder(userId, order));
     }
 
@@ -54,11 +54,11 @@ public class OrderController {
      *
      * @param userId            用户Id
      * @param integratedEntrust 综合订单信息
-     * @return ResultBean
+     * @return Message
      */
     @ApiOperation(value = "综合业务下单", notes = "综合业务下单")
     @RequestMapping(value = "/order/integratedEntrust", method = RequestMethod.POST)
-    public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestParam(value = "userId") String userId, @RequestBody IntegratedEntrust integratedEntrust) {
+    public Message<IntegratedEntrust> sendIntegratedEntrust(@RequestBody String userId, @RequestBody IntegratedEntrust integratedEntrust) {
         return new Message<IntegratedEntrust>(orderManagement.sendIntegratedEntrust(userId, integratedEntrust));
     }
 
@@ -67,23 +67,23 @@ public class OrderController {
      *
      * @param userId  用户Id
      * @param orderId 订单Id
-     * @return ResultBean
+     * @return Message
      */
     @ApiOperation(value = "委托撤单", notes = "委托撤单")
     @RequestMapping(value = "/order/cancel", method = RequestMethod.POST)
-    public Message<Boolean> cancelOrder(@RequestParam(value = "userId") String userId, @RequestParam(value = "orderId") String orderId) {
+    public Message<Boolean> cancelOrder(@RequestBody String userId, @RequestBody String orderId) {
         return new Message<Boolean>(orderManagement.cancelOrder(userId, orderId));
     }
 
     @ApiOperation(value = "普通委托复核", notes = "普通委托复核", hidden = true)
     @RequestMapping(value = "/order/review", method = RequestMethod.POST)
-    public Message<ReviewDto> sendOrderWithReview(@RequestParam(value = "userId") String userId, @RequestBody ReviewDto dto) {
+    public Message<ReviewDto> sendOrderWithReview(@RequestBody String userId, @RequestBody ReviewDto dto) {
         return new Message<ReviewDto>(orderManagement.sendOrderWithReview(userId, dto));
     }
 
     @ApiOperation(value = "综合业务委托复核", notes = "综合业务委托复核", hidden = true)
     @RequestMapping(value = "/order/integratedEntrust/review", method = RequestMethod.POST)
-    public Message<TrdExchangeDto> sendOrderWithReview(@RequestParam(value = "userId") String userId, @RequestBody TrdExchangeDto dto) {
+    public Message<TrdExchangeDto> sendOrderWithReview(@RequestBody String userId, @RequestBody TrdExchangeDto dto) {
         return new Message<TrdExchangeDto>(orderManagement.sendIntegratedEntrustWithReview(userId, dto));
     }
 
@@ -96,7 +96,7 @@ public class OrderController {
      */
     @ApiOperation(value = "算法单创建", notes = "算法单创建", hidden = true)
     @RequestMapping(value = "/order/algorithm", method = RequestMethod.POST)
-    public Message<Algorithm> createAlgorithm(@RequestParam(value = "userId") String userId, @RequestBody AlgorithmPlaceBean algorithm) {
+    public Message<Algorithm> createAlgorithm(@RequestBody String userId, @RequestBody AlgorithmPlaceBean algorithm) {
         return new Message<Algorithm>(orderManagement.createAlgorithm(userId, algorithm));
     }
 
@@ -109,7 +109,7 @@ public class OrderController {
      */
     @ApiOperation(value = "算法单取消", notes = "算法单取消", hidden = true)
     @RequestMapping(value = "/order/algorithm/cancel", method = RequestMethod.POST)
-    public Message<Algorithm> cancelAlgorithm(@RequestParam(value = "algorithmId") String algorithmId) {
+    public Message<Algorithm> cancelAlgorithm(@RequestBody String algorithmId) {
         return new Message<Algorithm>(orderManagement.cancelAlgorithm(algorithmId));
     }
 

@@ -147,6 +147,12 @@ public class CfetsEtrRepoSaveRequest extends EtrEntrust implements ProcessEntity
      */
     private transient List<CfetsEtrRepoSaveRequest> selectedItem;
 
+    /**
+     * 质押券信息列表明细
+     */
+//    @ApiModelProperty(name="pledgeBondTotalListDetailed",value="质押券信息列表明细")
+    private List<CfetsPledgeBondInfoDto> pledgeBondTotalListDetailed;
+
 
 
     //add by chenjiaxing 多组合本方交易员字段未添加 20210914 start
@@ -353,5 +359,13 @@ public class CfetsEtrRepoSaveRequest extends EtrEntrust implements ProcessEntity
 
     public void setCreditIsContinue(String creditIsContinue) {
         this.creditIsContinue = creditIsContinue;
+    }
+
+    public List<CfetsPledgeBondInfoDto> getPledgeBondTotalListDetailed() {
+        return pledgeBondTotalListDetailed;
+    }
+
+    public void setPledgeBondTotalListDetailed(List<CfetsPledgeBondInfoDto> pledgeBondTotalListDetailed) {
+        this.pledgeBondTotalListDetailed = pledgeBondTotalListDetailed;
     }
 }

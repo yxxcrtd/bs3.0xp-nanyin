@@ -949,7 +949,7 @@ public class IbuQuoteBondService extends BaseService {
             // add by zhangrui1 批量委托关闭 end
 
             //发送头寸，批量关闭
-            cfetsEtrIbBondinfoService.closeDelegatePositionMethod(dtolist);
+            cfetsEtrIbBondinfoService.closeDelegatePositionMethod(dtolist, com.joyintech.tams.constant.DictCodeList.平安资产类型_债券.getValue());
             //更新操作日志
             dtolist.forEach(item ->{
                 cfetsEtrIbBondinfoService.closeDelegatOprHisMethod(item);
