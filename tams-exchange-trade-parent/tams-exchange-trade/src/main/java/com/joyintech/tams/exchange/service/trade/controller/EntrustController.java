@@ -1,27 +1,19 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.github.pagehelper.PageInfo;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.OrderAndEntrustQryResult;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.RevokeDto;
 import com.joyintech.tams.exchange.common.domain.Message;
-import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
 import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/service/joyin")
@@ -100,7 +92,7 @@ public class EntrustController {
      */
     @RequestMapping(value = "/entrust/cancel/revoke", method = RequestMethod.POST)
     public ResultBean cancelEntrustWithRevoke(String userId,
-                                    @RequestBody RevokeDto dto) {
+                                              @RequestBody RevokeDto dto) {
         return entrustManagement.cancelEntrustWithRevoke(userId, dto);
     }
 
