@@ -23,6 +23,13 @@ public interface ExchangeTransMatchCommonMapper {
     List<ExchangeTransMatchCommonEntrustDto> getEtrEntrustByIdList(Map<String,Object> entrustMap);
 
     /**
+     * 查询回购质押品汇总信息信息
+     * @param entrustMap
+     * @return
+     */
+    List<SettleTransDataTotalPledge> getSettleTransDataTotalPledgeList(Map<String,Object> entrustMap);
+
+    /**
      * 获取下一工作日
      */
     Date getNextWorkDay(@Param("nowday") Date nowday, @Param("calendarId") String calendarId);

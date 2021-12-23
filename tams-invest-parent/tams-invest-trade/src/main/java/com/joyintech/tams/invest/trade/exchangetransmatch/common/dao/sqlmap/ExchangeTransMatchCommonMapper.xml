@@ -233,4 +233,11 @@
             AND BRANCH = #{branch}
         </where>
     </select>
+
+    <select id="getSettleTransDataTotalPledgeList" resultType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.SettleTransDataTotalPledgeMapper.Base_Column_List" />
+        from SETTLE_TRANS_DATA_TOTAL_PLEDGE
+        WHERE TRADE_ID = #{tradeId}
+    </select>
 </mapper>

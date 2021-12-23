@@ -264,6 +264,10 @@ public class ExchangeTransMatchCommonService extends BaseService {
         logger.error("处理成交匹配数据---开始，成交数据:"+ JsonUtils.object2Json(dto));
         //查询汇总成交数据附属表
         dto.setSettleTransDataTotalAdd(settleTransDataTotalAddMapper.selectByPrimaryKey(dto.getSeqId()));
+        //查询质押品信息
+        Map<String,Object> queryMap = new HashMap<>();
+        queryMap.put("tradeId",dto.getSeqId());
+        dto.setSettleTransDataTotalPledgeList(exchangeTransMatchCommonMapper.getSettleTransDataTotalPledgeList(queryMap));
         //查询匹配的委托信息list
         Map<String,Object> entrustMap = new HashMap<>();
         entrustMap.put("entrustIdList",dto.getEntrustIdList());
@@ -1294,6 +1298,7 @@ public class ExchangeTransMatchCommonService extends BaseService {
      * @param matchStatus
      */
     private String calcAgreRepShareAndAmount(ExchangeTransMatchCommonDto dto,List<ExchangeTransMatchCommonEntrustDto> commonEntrustDtoList,String matchStatus){
+
         //只有一条匹配指令时
         if(dto.getEntrustIdList().size() == 1) {
             ExchangeTransMatchCommonEntrustDto commonEntrustDto = commonEntrustDtoList.get(0);

@@ -3,8 +3,8 @@
 <mapper namespace="com.joyintech.tams.common.base.dao.SettleTransDataTotalPledgeMapper" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge" >
         <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
-        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
-        <result column="PLEDGE_FINPROD_ID" property="pledgeFinprodId" jdbcType="VARCHAR" />
+        <id column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <id column="PLEDGE_FINPROD_ID" property="pledgeFinprodId" jdbcType="VARCHAR" />
         <result column="PLEDGE_FACE_VALUE" property="pledgeFaceValue" jdbcType="DECIMAL" />
         <result column="PLEDGE_NUMBER" property="pledgeNumber" jdbcType="DECIMAL" />
         <result column="PLEDGE_RATIO" property="pledgeRatio" jdbcType="DECIMAL" />
@@ -32,15 +32,19 @@
         <include refid="com.joyintech.tams.common.base.dao.SettleTransDataTotalPledgeMapper.Base_Column_List" />
         from SETTLE_TRANS_DATA_TOTAL_PLEDGE
     </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledgeKey" >
         select 
         <include refid="com.joyintech.tams.common.base.dao.SettleTransDataTotalPledgeMapper.Base_Column_List" />
         from SETTLE_TRANS_DATA_TOTAL_PLEDGE
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledgeKey" >
         delete from SETTLE_TRANS_DATA_TOTAL_PLEDGE
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge" >
         insert into SETTLE_TRANS_DATA_TOTAL_PLEDGE (TRADE_ID, BRANCH, PLEDGE_FINPROD_ID, 
@@ -147,17 +151,11 @@
             PLEDGE_NUMBER, PLEDGE_RATIO, PLEDGE_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
             #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, "DISPLACE DIRECTION"
              from SETTLE_TRANS_DATA_TOTAL_PLEDGE
-             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL} and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge" >
         update SETTLE_TRANS_DATA_TOTAL_PLEDGE
         <set >
-            <if test="branch != null" >
-                BRANCH = #{branch,jdbcType=DECIMAL},
-            </if>
-            <if test="pledgeFinprodId != null" >
-                PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR},
-            </if>
             <if test="pledgeFaceValue != null" >
                 PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
             </if>
@@ -181,12 +179,12 @@
             </if>
         </set>
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge" >
         update SETTLE_TRANS_DATA_TOTAL_PLEDGE
-        set BRANCH = #{branch,jdbcType=DECIMAL},
-            PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR},
-            PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
+        set PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
             PLEDGE_NUMBER = #{pledgeNumber,jdbcType=DECIMAL},
             PLEDGE_RATIO = #{pledgeRatio,jdbcType=DECIMAL},
             PLEDGE_AMT = #{pledgeAmt,jdbcType=DECIMAL},
@@ -194,5 +192,7 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             "DISPLACE DIRECTION" = #{displaceDirection,jdbcType=VARCHAR}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
     </update>
 </mapper>
