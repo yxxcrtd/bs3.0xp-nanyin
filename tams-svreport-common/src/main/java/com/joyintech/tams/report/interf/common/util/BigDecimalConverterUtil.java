@@ -89,4 +89,9 @@ public class BigDecimalConverterUtil {
     public static String bigDecimalToStringWithPercent(BigDecimal number){ 
         return bigDecimalToStringWithPercentAndScale(number,0);
     }
+
+    public static String getMonthDetailString(BigDecimal number){
+        DecimalFormat df4 = new DecimalFormat("#,##0.000000");
+        return null!=number?df4.format(number.divide(new BigDecimal("10000"),2,BigDecimal.ROUND_HALF_UP)):null;
+    }
 }

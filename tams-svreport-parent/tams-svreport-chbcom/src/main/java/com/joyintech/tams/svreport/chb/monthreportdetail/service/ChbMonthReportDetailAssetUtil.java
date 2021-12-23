@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -135,18 +136,25 @@ public class ChbMonthReportDetailAssetUtil {
         //现金特殊处理产品代码
 //        List<ChbMonthAssetPositiondetail> detail1001 = prdPositionList.stream().filter(s-> "1001".equals(s.getAssettype2())&&s.getAssetvalueA()!=null).collect(Collectors.toList());
         Map<String, ChbMonthAssetPositiondetail>  detail1001 = prdPositionList.stream().filter(detail ->
-                ("1001".equals(detail.getAssettype2())&&detail.getAssetvalueA()!=null)).collect(Collectors.toMap(ChbMonthAssetPositiondetail::getProdId,Positiondetail -> Positiondetail));
+                ("1001".equals(detail.getAssettype2())&&"REMAININGCASH".equals(detail.getAssetCode())&&detail.getAssetvalueA()!=null)).collect(Collectors.toMap(ChbMonthAssetPositiondetail::getProdId,Positiondetail -> Positiondetail));
 
         if(null!=detail1001&&!detail1001.isEmpty()){
             Map<String, Object> param = new HashMap<String, Object>();
             param.put("cdate", batchDate);
             param.put("prodids", detail1001.keySet());
             List<ChbMonthAssetPositiondetail> prdPosition1001List = new ArrayList<>();
+            List<ChbMonthAssetPositiondetail> subjectAddList = new ArrayList<>();
+
             //获取产品科目信息
             this.buildPrdProstion(prdPosition1001List,param);
             //科目类数据合计
             if(!StringUtil.isEmptyList(prdPosition1001List)){
                 for(ChbMonthAssetPositiondetail dto : prdPosition1001List){
+                    //如果金额未0则不进行记录
+                    if(dto.getAssetvalueA().compareTo(BigDecimal.ZERO)==0&&
+                            dto.getAssetvalueB().compareTo(BigDecimal.ZERO)==0){
+                        continue;
+                    }
                     dto.setPosuuid(IDGenerator.generate(36));
                     dto.setDetailno(detail1001.get(dto.getProdId()).getDetailno());
                     dto.setTerm(detail1001.get(dto.getProdId()).getTerm());
@@ -155,11 +163,12 @@ public class ChbMonthReportDetailAssetUtil {
                     dto.setManageType(detail1001.get(dto.getProdId()).getManageType());
                     dto.setVdate(detail1001.get(dto.getProdId()).getVdate());
                     dto.setMdate(detail1001.get(dto.getProdId()).getMdate());
+                    subjectAddList.add(dto);
                 }
                 //将所有现金删除
                 prdPositionList.removeAll(detail1001.values());
                 //替换为对应的科目信息
-                prdPositionList.addAll(prdPosition1001List);
+                prdPositionList.addAll(subjectAddList);
             }
         }
 
@@ -177,17 +186,24 @@ public class ChbMonthReportDetailAssetUtil {
         String monthReportCalWay = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ASSETPOSITION_CALWAY);
         String isBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
         String iscal= SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ASSETPOSITION_CASHCALWAY);
+        String subjectno = null;
         //如果是移动平均法,且取值不是科目余额表中.则跳出获取估值科目信息的方法
         if(!SVReportGlobalConstant.ASSETPOSITION_CALWAY_AVERAGE
                 .equals(monthReportCalWay)&&DictCodeList.是否_中债_是.getValue().equals(iscal)){
             return;
+        }else if(SVReportGlobalConstant.ASSETPOSITION_CALWAY_MARKETPRICE
+                .equals(monthReportCalWay)){
+            subjectno = InterfMappingConstants.MAPPINGCODE_CASH_SUBJECTNO_MKT;
+
+        }else if(!SVReportGlobalConstant.ASSETPOSITION_CALWAY_AVERAGE.equals(monthReportCalWay)){
+            subjectno = InterfMappingConstants.MAPPINGCODE_CASH_SUBJECTNO_AVG;
         }
         // 通过系统参数判断是查询一体化还是中债子系统
         String isSubSystem = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM);
         // 查询科目余额
         List<String> subjectNoList = new ArrayList<String>();
         List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
-                .selectByMappingcode(InterfMappingConstants.MAPPINGCODE_CASH_SUBJECTNO_AVG);
+                .selectByMappingcode(subjectno);
         for(ChbTypeMappingEx mapping: subjectNoMappingList){
             // 获取源属性1：科目号
             subjectNoList.add(mapping.getSrcfield1());

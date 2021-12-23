@@ -6,6 +6,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.interf.common.util.BigDecimalConverterUtil;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -35,6 +36,8 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
 
     private String oldAssetCode;
 
+
+    private Date exerciseDate;
 
     public String getProdName() {
         return prodName;
@@ -102,7 +105,15 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
         this.oldAssetName = oldAssetName;
     }
 
+    public Date getExerciseDate() {
+        return exerciseDate;
+    }
 
+    public void setExerciseDate(Date exerciseDate) {
+        this.exerciseDate = exerciseDate;
+    }
+
+    public String getExerciseDateStr(){return DateUtil.format(this.getExerciseDate(),"yyyy-MM-dd");}
 
     public String getVdateStr() {
         return DateUtil.format(this.getVdate(),"yyyy-MM-dd");
@@ -159,5 +170,31 @@ public class ChbMonthReportDetailAsset extends ChbMonthAssetPositiondetail imple
     public String getOrgAssetType3Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.中债_上游资产三级分类, this.getOrgAssetType3());
     }
+
+    private String isFbhy;
+
+    public String getIsFbhy() {
+        return isFbhy;
+    }
+
+    public void setIsFbhy(String isFbhy) {
+        this.isFbhy = isFbhy;
+    }
+
+    public String getIsFbhyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_非标行业, this.getIsFbhy());
+    }
+
+
+
+    public String getDelayPayAmtStr(){ return null!=this.getDelayPayAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getDelayPayAmt()):null; }
+    public String getCostAmtStr(){ return null!=this.getCostAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getCostAmt()):null; }
+    public String getFloatIngplStr(){ return null!=this.getFloatIngpl()? BigDecimalConverterUtil.getMonthDetailString(this.getFloatIngpl()):null; }
+    public String getIntincexpStr(){ return null!=this.getIntincexp()? BigDecimalConverterUtil.getMonthDetailString(this.getIntincexp()):null; }
+    public String getIntadjexpAddStr(){ return null!=this.getIntadjexpAdd()? BigDecimalConverterUtil.getMonthDetailString(this.getIntadjexpAdd()):null; }
+    public String getLossAmtStr(){ return null!=this.getLossAmt()? BigDecimalConverterUtil.getMonthDetailString(this.getLossAmt()):null; }
+    public String getAssetvalueAStr(){ return null!=this.getAssetvalueA()? BigDecimalConverterUtil.getMonthDetailString(this.getAssetvalueA()):null; }
+    public String getAssetvalueBStr(){ return null!=this.getAssetvalueB()? BigDecimalConverterUtil.getMonthDetailString(this.getAssetvalueB()):null; }
+
 
 }
