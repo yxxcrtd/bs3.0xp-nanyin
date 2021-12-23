@@ -12,24 +12,25 @@ public class ExchangeRecordController {
     @Autowired
     private TradeManagement tradeManagement;
 
-    /**
-     * 查询交易信息
-     *
-     * @param userId        用户Id
-     * @param entrustId     委托Id
-     * @param instructionId 指令Id
-     * @param accountId     账户Id
-     * @param orderId       订单Id
-     * @return ResultBean
-     */
-    @GetMapping(value = "/trade")
-    public ResultBean queryTradeAll(@RequestParam(value = "user_id") String userId,
-                                    @RequestParam(value = "entrust_id", required = false) String entrustId,
-                                    @RequestParam(value = "instruction_id", required = false) String instructionId,
-                                    @RequestParam(value = "account_id", required = false) String accountId,
-                                    @RequestParam(value = "order_id", required = false) String orderId) {
-        return tradeManagement.queryTrade(userId, entrustId, instructionId, accountId, orderId);
-    }
+///////////////////////////////////////迁移到新UI接口    
+//    /**
+//     * 查询交易信息
+//     *
+//     * @param userId        用户Id
+//     * @param entrustId     委托Id
+//     * @param instructionId 指令Id
+//     * @param accountId     账户Id
+//     * @param orderId       订单Id
+//     * @return ResultBean
+//     */
+//    @GetMapping(value = "/trade")
+//    public ResultBean queryTradeAll(@RequestParam(value = "user_id") String userId,
+//                                    @RequestParam(value = "entrust_id", required = false) String entrustId,
+//                                    @RequestParam(value = "instruction_id", required = false) String instructionId,
+//                                    @RequestParam(value = "account_id", required = false) String accountId,
+//                                    @RequestParam(value = "order_id", required = false) String orderId) {
+//        return tradeManagement.queryTrade(userId, entrustId, instructionId, accountId, orderId);
+//    }
 
     /**
      * @param userId    用户Id

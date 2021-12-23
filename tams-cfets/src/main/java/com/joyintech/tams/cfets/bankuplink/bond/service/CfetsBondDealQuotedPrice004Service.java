@@ -476,7 +476,7 @@ public class CfetsBondDealQuotedPrice004Service extends BaseService<CfetsBondDea
                 }
                 status.setTrader(regFinProductDealTotal.getOuTraderId());
                 if (operationType.equals(OperationType.REVOKE) || operationType.equals(OperationType.DELETE)) {
-                    baseEtrInvestInfoServiceImpl.cancelCompleteDelegate(status.getEntrustId(),status.getTradeId());
+                    baseEtrInvestInfoServiceImpl.cancelCompleteDelegate(status.getEntrustId(),regFinProductDealTotal.getpTradeId());
                 }
                 etrFinishStatusDtos.add(status);
             }
