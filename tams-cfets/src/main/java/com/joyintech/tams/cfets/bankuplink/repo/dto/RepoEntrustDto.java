@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 指令列表
@@ -141,6 +142,9 @@ public class RepoEntrustDto {
 
     @ApiModelProperty(required = false, name = "secManageAcctId", value = "证券账户")
     private String secManageAcctId;
+
+    @ApiModelProperty(required = false, name = "repoEntrustPledgeDtos", value = "质押券信息")
+    private List<RepoEntrustPledgeDto> repoEntrustPledgeDtos;
 
     public String getEntrustStatus() {
         return entrustStatus;
@@ -453,6 +457,14 @@ public class RepoEntrustDto {
 
     public void setSecManageAcctId(String secManageAcctId) {
         this.secManageAcctId = secManageAcctId;
+    }
+
+    public List<RepoEntrustPledgeDto> getRepoEntrustPledgeDtos() {
+        return repoEntrustPledgeDtos;
+    }
+
+    public void setRepoEntrustPledgeDtos(List<RepoEntrustPledgeDto> repoEntrustPledgeDtos) {
+        this.repoEntrustPledgeDtos = repoEntrustPledgeDtos;
     }
 }
 

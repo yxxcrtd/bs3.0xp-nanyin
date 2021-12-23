@@ -19,8 +19,10 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 委托指令 本币业务交易-质押式回购交易
@@ -201,6 +203,9 @@ public class CfetsRepoDealEntrustOrderDto extends EtrEntrust {
      * 指令下达时间
      */
     private String transmitTime;
+
+    //质押券信息
+    private List<RepoEntrustPledgeDto> repoEntrustPledgeDtos;
 
     public String getPortfolioSeries() {
         return portfolioSeries;
@@ -900,5 +905,13 @@ public class CfetsRepoDealEntrustOrderDto extends EtrEntrust {
 
     public String getEntrustDateStr() {
         return DateUtil.format(this.getEntrustDate());
+    }
+
+    public List<RepoEntrustPledgeDto> getRepoEntrustPledgeDtos() {
+        return repoEntrustPledgeDtos;
+    }
+
+    public void setRepoEntrustPledgeDtos(List<RepoEntrustPledgeDto> repoEntrustPledgeDtos) {
+        this.repoEntrustPledgeDtos = repoEntrustPledgeDtos;
     }
 }
