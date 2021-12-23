@@ -438,7 +438,6 @@
         and pc.acct_type='A01'
         where p.HODING_TYPE = #{A_001} and p.DATE_TYPE = 0
         and p.cdate=#{PLATEFORM_DATE}-1
-      <!--  AND p.cdate=to_date('2021-07-08','yyyy-MM-dd')-->
         group by p.finprod_id,p.sec_acct_id,pc.ACCT_NO
         )t3
         on t1.finprod_id=t3.finprod_id
@@ -493,8 +492,8 @@
         T1.SEC_ACCT_ID as secManageAcctId
         FROM PTL_SEC_POSITION_RULE T1
         INNER JOIN fin_exercise_plan T2 ON T1.FINPROD_ID = T2.FINPROD_ID
-        AND T2.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01} AND t1.CDATE = t2.exercise_date-1
-       <!-- AND t1.CDATE=to_date('2021-07-08','yyyy-MM-dd')-->
+        AND T2.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+        AND t1.CDATE = t2.exercise_date-1
         and t2.exercise_type='01'
 
         left join PTL_CAPACCT_INFO pc
@@ -505,7 +504,7 @@
         AND T1.HODING_TYPE = #{A_001}
         AND T1.DATE_TYPE = 0
         AND T2.FINPROD_ID = #{finprodId}
-        AND t2.exercise_date = #{cdate}
+        AND t2.exercise_date = #{cdate,jdbcType=DATE}
         and T1.SEC_ACCT_ID = #{SEC_ACCT_ID}
         and pc.ACCT_NO= #{ACCT_NO}
         group by T1.FINPROD_ID,T1.PORTFOLIO_ID,T1.SEC_ACCT_ID)aaa

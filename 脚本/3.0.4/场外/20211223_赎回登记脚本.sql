@@ -18,6 +18,11 @@ delete from sys_wfl_business_module where page_id='CfetsTrdRedeem001' and elemen
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
 values ('CfetsTrdRedeem001', 'CfetsTrdRedeem001_btn_save', 'oneApproval', 'system', '0001', sysdate, 'system', sysdate, 'ALL', '02');
 
+delete from sys_wfl_business_module where page_id='CfetsTrdRedeem001' and element_id='CfetsTrdRedeem001_btn_revoke';
+insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
+values ('CfetsTrdRedeem001', 'CfetsTrdRedeem001_btn_revoke', 'oneApproval', 'system', '0001', sysdate, 'system', sysdate, 'ALL', '02');
+
+
 delete from sys_para t where t.para_code='cfetsTrdRedeem_regList_refresh_period';
 insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
 values ('TRD', 'cfetsTrdRedeem_regList_refresh_period', '30000', '01', '', '查询赎回登记当前列表自动刷新时间（毫秒）', 'system', '', sysdate, 'system', sysdate, '', '01');

@@ -390,7 +390,7 @@ public class CfetsTrdRedeem001Service extends BaseService<CfetsTrdRedeemDealRegi
                     regFinProductDeal.setPortfolioId(ptlAllocatio.getPortfolioId());
                     regFinProductDeal.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
                     regFinProductDeal.setShareAmt(ArithmeticUtil.multiply(ptlAllocatio.getShareAmt(),new BigDecimal(100)));
-                    BigDecimal cpriceAmt=ArithmeticUtil.multiply(ptlAllocatio.getShareAmt(),new BigDecimal(10000),entity.getRedeemRate(),entity.getExercisePrice());
+                    BigDecimal cpriceAmt=ArithmeticUtil.multiply(ptlAllocatio.getShareAmt(),new BigDecimal(100),entity.getRedeemRate(),entity.getExercisePrice());
 
                     regFinProductDeal.setFaceValue(ArithmeticUtil.multiply(ptlAllocatio.getShareAmt(),new BigDecimal(10000)));
                     regFinProductDeal.setTradeAmt(cpriceAmt);
