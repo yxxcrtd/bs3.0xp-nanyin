@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/service/joyin")
 @ResponseResultBody
-@Api(tags = "场内交易-委托操作接口")
+@Api(tags = "场内交易-委托查询接口")
 public class EntrustController {
 
     @Autowired
