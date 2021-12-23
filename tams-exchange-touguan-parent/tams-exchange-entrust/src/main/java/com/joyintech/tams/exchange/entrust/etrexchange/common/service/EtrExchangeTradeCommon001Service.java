@@ -5364,20 +5364,20 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
   		return null;
   	}
 
-	public String doRiskcalCheckMethod(EtrExchangeTradeCommonRiskcalRequest dto){
+	public String doRiskcalCheckMethod(EtrExchangeTradeSaveRequest dto){
 		//参数不能为空
-		if(StringUtil.isEmptyList(dto.getBussCombDistribtList())){
+		if(StringUtil.isEmptyList(dto.getPortfolioList())){
 			return "组合分配列表不能为空";
 		}
 		List<String> messages = new ArrayList<>();
-		if(StringUtil.isNotEmpty(dto.getBussCombDistribtList())){
-			for(EtrExchangeTradeCommonBaseDto item:dto.getBussCombDistribtList()){
+		if(StringUtil.isNotEmpty(dto.getPortfolioList())){
+			for(EtrExchangeTradePortfolioRequest item:dto.getPortfolioList()){
 				if(!StringUtil.isNotEmpty(item.getPortfolioId())){
 					messages.add("请输入组合名称。");
 				}
-				if(!StringUtil.isNotEmpty(item.getEntrustNum())){
-					messages.add("请输入券面总额。");
-				}
+//				if(!StringUtil.isNotEmpty(item.getEntrustNum())){
+//					messages.add("请输入券面总额。");
+//				}
 			}
 		}
 		if(!StringUtil.isNotEmpty(dto.getFinprodId())){
@@ -5393,22 +5393,25 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 *风险试算时，后台数据转换
 	 * @return
 	 */
-	public  Map<String, Object> doRiskcalPackageEquity(EtrExchangeTradeCommonRiskcalRequest dto) {
+	public  Map<String, Object> doRiskcalPackageEquity(EtrExchangeTradeSaveRequest dto) {
 		//风险试算封装dto
 		EtrExchangeTradeCommonRiskcalDto d=new EtrExchangeTradeCommonRiskcalDto();
 		BeanUtil.copyPropertiesIgnoreNull(d,dto);
 		List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
-		for(EtrExchangeTradeCommonBaseDto pt:dto.getBussCombDistribtList()){
-			pt.setInvAim(pt.getBusinessModel());
+		for(EtrExchangeTradePortfolioRequest pt:dto.getPortfolioList()){
 			bussTrdTransfenpeiDto.add(BeanUtil.object2Map(pt));
 		}
 		d.setBussTrdTransfenpeiDto(bussTrdTransfenpeiDto);
 		d.setBusiType("02");
-		d.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
-		d.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-		d.setVdate(dto.getEtrDate());
-		d.setMdate(dto.getEtrDate());;
-		d.setCcy("CNY");
+		d.setTradeMarket(dto.getTradeMarket());
+		d.setFinprodType2(dto.getFinprodType2());
+		d.setTradeDirection(dto.getPs());
+		d.setIsEnabled("01");
+		d.setAssetCode(dto.getFinprodId());
+		d.setAssetType(dto.getFinprodType2());
+		d.setVdate(dto.getEntrustDate());
+		d.setMdate(dto.getEntrustDate());
+		d.setCcy(dto.getCcy());
 		d.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
 		Map<String, Object> dataMap=BeanUtil.object2Map(d);
 		return dataMap;

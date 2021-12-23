@@ -89,12 +89,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@Autowired
 	private BusiFinExercisePlanService busiFinExercisePlanService;
 
-	/**
-	 * 风险接口组件Controller
-	 */
-	@Autowired
-	private InterfRiskRdsController interfRiskRdsController;
-
 	public static final String ENTRUST_RECORD_NEW = "new";
 
 	public static final String ENTRUST_RECORD_MODIFY = "modify";
@@ -539,8 +533,11 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 	@ResponseBody
 	@RequestMapping("/getFinprodId")
-	public List<SelectOptionDto> getFinprodId(){
+	public List<SelectOptionDto> getFinprodId(@RequestBody FinprodMarketInfoRequest dto){
+
+
 		return etrExchangeTrade001CommonService.getFinprodId(RequestUtil.getPageParam());
+
 	}
 
 	@ResponseBody
@@ -1179,80 +1176,6 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		ajaxResult.setData(etrExchangeTrade001CommonService.IsBondAsset(RequestUtil.getPageParam()));
 //        ajaxResult.setData("2");
 		return ajaxResult;
-	}
-
-
-	@ResponseBody
-	@ApiOperation(value = "风险试算", notes = "风险试算")
-	@PostMapping("doRiskcal")
-	public Message<AjaxResult> doRiskcal(@RequestBody EtrExchangeTradeCommonRiskcalRequest dto) throws Exception {
-		try {
-			//风险试算check
-			String  message = etrExchangeTrade001CommonService.doRiskcalCheckMethod(dto);
-			if (StringUtil.isNotEmpty(message)) {
-				return new Message<AjaxResult>().fail().setMessage(message);
-			}
-			EtrExchangeTradeCommonRiskcalResponse result=new EtrExchangeTradeCommonRiskcalResponse();
-			//风险试算组装dto
-			Map<String, Object> dataMap=etrExchangeTrade001CommonService.doRiskcalPackageEquity(dto);
-			List<String> resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F01");
-			result.setRiskMathFlag("02");
-			Boolean forbidFlag=false;
-			Boolean cluflag=true;
-			List<EtrExchangeTradeCommonRiskcalResponse> resultlist=new ArrayList<>();
-			if(!StringUtil.isEmptyList(resultArrList) ){
-				for(String row:resultArrList){
-					ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
-					if(StringUtil.isNotEmpty(resultArr) && StringUtil.isNotEmpty(resultArr.getHead())
-							&& StringUtil.isNotEmpty(resultArr.getHead().get("std400msgt"))
-					){
-						if (StringUtil.equals(resultArr.getHead().get("std400msgt"),"E")) {
-							return new Message<AjaxResult>().fail().setMessage(resultArr.getHead().get("stdrtninfo").toString());
-						}
-					}
-					if (!StringUtil.isNotEmpty(resultArr) || !StringUtil.isNotEmpty(resultArr.getBody())
-							|| !StringUtil.isNotEmpty(resultArr.getBody().get("RSK_LIST"))
-							|| !StringUtil.isNotEmpty(resultArr.getBody().get("rskStatus"))) {
-						return new Message<AjaxResult>().success().setMessage("无");
-					}
-					List<Map<String, Object>> riskList = (List<Map<String, Object>>)resultArr.getBody().get("RSK_LIST");
-					for(Map<String, Object> map: riskList){
-						if(StringUtil.equals(map.get("kriStatus"),"0") && !StringUtil.equals(map.get("kriTrend"),"向好")){
-							forbidFlag=true;
-						}
-						map.put("kriStatusCn",etrExchangeTrade001CommonService.getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
-						resultlist.add(BeanUtil.mapToObject(map, EtrExchangeTradeCommonRiskcalResponse.class));
-					}
-					result.setRiskcalReturnList(resultlist);
-					result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());
-					//当置为不通过时就不再进来了
-					if(cluflag) {
-						if(!StringUtil.equals(resultArr.getBody().get("rskStatus"),"3")){
-							if(StringUtil.equals(resultArr.getBody().get("rskStatus"),"4")&&forbidFlag){
-								cluflag=false;
-								resultArr.getBody().put("rskStatus","3");
-								result.setRskStatus("3");
-							}
-						}else{
-							cluflag=false;
-						}
-						if (!cluflag) {
-							result.setRiskTrialSpan("试算不通过");
-						} else {
-							result.setRiskTrialSpan("试算通过");
-						}
-					}
-
-				}
-
-			}
-			AjaxResult m =new AjaxResult();
-			m.setData(result);
-			return new Message<AjaxResult>().success().setData(m);
-		} catch (Exception e) {
-			logger.error("查询功能异常", e);
-			return new Message<AjaxResult>().fail().setMessage("查询异常");
-		}
 	}
 }
 	

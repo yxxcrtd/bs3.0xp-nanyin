@@ -87,6 +87,22 @@ public class EtrExchangeTradeCommonRiskcalDto {
     @ApiModelProperty(name="tradeMarketMode",value="交易市场",example="02")
     private String tradeMarketMode;
 
+    @ApiModelProperty(name="tradeAmount",value="交易金额",example="02")
+    private String tradeAmount;
+
+    @ApiModelProperty(name="assetType",value="资产类型",example="02")
+    private String assetType;
+
+    @ApiModelProperty(name="assetCode",value="资产代码",example="02")
+    private String assetCode;
+
+    @ApiModelProperty(name="isEnabled",value="启用状态",example="02")
+    private String isEnabled;
+
+    @ApiModelProperty(name="tradeDirection",value="交易方向",example="02")
+    private String tradeDirection;
+
+
     public String getFinprodId() {
         return finprodId;
     }
@@ -286,5 +302,45 @@ public class EtrExchangeTradeCommonRiskcalDto {
 
     public void setTradeMarketMode(String tradeMarketMode) {
         this.tradeMarketMode = tradeMarketMode;
+    }
+
+    public String getTradeAmount() {
+        return tradeAmount;
+    }
+
+    public void setTradeAmount(String tradeAmount) {
+        this.tradeAmount = tradeAmount;
+    }
+
+    public String getAssetType() {
+        return assetType;
+    }
+
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
+    }
+
+    public String getAssetCode() {
+        return assetCode;
+    }
+
+    public void setAssetCode(String assetCode) {
+        this.assetCode = assetCode;
+    }
+
+    public String getIsEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(String isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    public String getTradeDirection() {
+        return tradeDirection;
+    }
+
+    public void setTradeDirection(String tradeDirection) {
+        this.tradeDirection = tradeDirection;
     }
 }

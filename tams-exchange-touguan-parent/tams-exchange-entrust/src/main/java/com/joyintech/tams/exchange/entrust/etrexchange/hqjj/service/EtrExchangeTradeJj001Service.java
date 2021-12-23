@@ -966,17 +966,13 @@ public class EtrExchangeTradeJj001Service extends CommonExportService<EtrExchang
 	}
 
 	/** 查询固定收益行情数据 **/
-	public Page<EtrExchangeTradeQuotation001Dto> findFixedIncomePage(Map<String, Object> map) {
+	public Page<EtrExchangeTradeQuotation001Dto> findFixedIncomePage(EtrExchangeTradeQuotationRequest request) {
         Page<EtrExchangeTradeQuotation001Dto> page = new Page<EtrExchangeTradeQuotation001Dto>();
         List<EtrExchangeTradeQuotation001Dto> list = new ArrayList<EtrExchangeTradeQuotation001Dto>();
-        String secId= (String)map.get("secId");
-
+		Map<String, Object> map = BeanUtil.object2Map(request);
+		String secId= (String)map.get("secId");
         String param = "?quote_type=5&stockId="+secId;
-
         Map quoteMap = restTemplate.getForObject(ServiceApplication.EXCHANGE_SERVICE_NAME + queryIntegratedQuote + param, Map.class);
-
-        //Map quoteMap = simpleRestTemplate.getForObject("http://192.168.70.3:8081/tams" + queryIntegratedQuote + param, Map.class);
-
         if(quoteMap != null && quoteMap.get("data") !=null) {
             List<Map<String, Object>> quoteList = (List<Map<String, Object>>) quoteMap.get("data");
             if(!StringUtil.isEmptyList(quoteList)) {
@@ -995,17 +991,14 @@ public class EtrExchangeTradeJj001Service extends CommonExportService<EtrExchang
                         //定价申报
                         dto.setEntrustPs(DictCodeList.交易方向_卖出.getValue());
                     }
-
                     //数量
                     if(tmp.get("entrustVolume") !=null) {
                         dto.setEntrustNum(new BigDecimal((Integer)tmp.get("entrustVolume")));
                     }
-
                     //价格（净价） / 回购利率
                     if(tmp.get("entrustPrice") !=null) {
                         dto.setnPrice(new BigDecimal((Double)tmp.get("entrustPrice")));
                     }
-
                     //全价
                     if(tmp.get("fullPrice") !=null) {
                         dto.setfPrice(new BigDecimal((Double)tmp.get("fullPrice")));
@@ -1028,17 +1021,13 @@ public class EtrExchangeTradeJj001Service extends CommonExportService<EtrExchang
 	}
 
 	/** 查询大宗盘后行情信息 **/
-	public Page<EtrExchangeTradeQuotation001Dto> findAfterHoursPage(Map<String, Object> map) {
+	public Page<EtrExchangeTradeQuotation001Dto> findAfterHoursPage(EtrExchangeTradeQuotationRequest request) {
 		Page<EtrExchangeTradeQuotation001Dto> page = new Page<EtrExchangeTradeQuotation001Dto>();
 		List<EtrExchangeTradeQuotation001Dto> list = new ArrayList<EtrExchangeTradeQuotation001Dto>();
+		Map<String, Object> map = BeanUtil.object2Map(request);
         String secId= (String)map.get("secId");
-
 		String param = "?quote_type=2&stock_code="+secId;
-
 	    Map quoteMap = restTemplate.getForObject(ServiceApplication.EXCHANGE_SERVICE_NAME + queryIntegratedQuote + param, Map.class);
-
-	    //Map quoteMap = simpleRestTemplate.getForObject("http://192.168.70.3:8081/tams" + queryIntegratedQuote + param, Map.class);
-
 		if(quoteMap != null && quoteMap.get("data") !=null) {
 			List<Map<String, Object>> quoteList = (List<Map<String, Object>>) quoteMap.get("data");
 			if(!StringUtil.isEmptyList(quoteList)) {
@@ -1051,12 +1040,10 @@ public class EtrExchangeTradeJj001Service extends CommonExportService<EtrExchang
 					if(tmp.get("entrustPrice") !=null) {
 						dto.setClosingPrice(new BigDecimal((Double)tmp.get("entrustPrice")));
 					}
-
 					//日均价
 					if(tmp.get("fullPrice") !=null) {
 						dto.setDailyAvgPrice(new BigDecimal((Double)tmp.get("fullPrice")));
 					}
-
 					list.add(dto);
 				});
 			}
