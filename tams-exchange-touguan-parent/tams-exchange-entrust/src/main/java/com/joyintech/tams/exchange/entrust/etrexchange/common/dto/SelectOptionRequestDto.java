@@ -19,6 +19,11 @@ public class SelectOptionRequestDto {
     @ApiModelProperty(name="tradeMarket",value="交易场所",example="A1")
     private String tradeMarket;
 
+    @ApiModelProperty(name="counterType",value="交易对手类型",example="A1")
+    private String counterType;
+
+    @ApiModelProperty(name="counterIdName",value="交易对手名称",example="A1")
+    private String counterIdName;
 
     public String getSearch() {
         return search;
@@ -50,5 +55,21 @@ public class SelectOptionRequestDto {
 
     public void setTradeMarket(String tradeMarket) {
         this.tradeMarket = tradeMarket;
+    }
+
+    public String getCounterType() {
+        return counterType;
+    }
+
+    public void setCounterType(String counterType) {
+        this.counterType = counterType;
+    }
+
+    public String getCounterIdName() {
+        return counterIdName;
+    }
+
+    public void setCounterIdName(String counterIdName) {
+        this.counterIdName = counterIdName;
     }
 }

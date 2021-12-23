@@ -770,7 +770,7 @@
       WHERE
         A.FINPROD_ID = #{finprodId}
     </select>
-    <select id="getFinCashPlan" resultType="com.joyintech.tams.invest.common.trade.dto.FinCashPlanDto">
+    <select id="getFinCashPlan" resultType="com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto">
       SELECT
         A.CASH_TYPE_1 cashType1,
         B.VDATE vdate,

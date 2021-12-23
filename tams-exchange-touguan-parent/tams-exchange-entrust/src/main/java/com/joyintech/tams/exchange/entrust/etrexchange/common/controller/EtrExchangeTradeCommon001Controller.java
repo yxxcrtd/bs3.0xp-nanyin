@@ -24,9 +24,11 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
+import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -50,10 +52,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -66,7 +65,7 @@ import java.util.stream.Collectors;
 @Controller
 @PageId("EtrExchangeTradeCommon001")
 @RequestMapping("/etrexchange/common/etrExchangeTrade001")
-@Api(tags = "场内交易-指令下单共通接口")
+@Api(tags = "场内交易指令共通接口")
 public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 	/**
@@ -83,14 +82,17 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@Autowired(required=false)
 	private BaseGetBusinessId bussGetBussinessIdService;
 
-
 	@Autowired
 	private EtrExchangeTradeCommon001Service etrExchangeTrade001CommonService;
-
 
 	@Autowired
 	private BusiFinExercisePlanService busiFinExercisePlanService;
 
+	/**
+	 * 风险接口组件Controller
+	 */
+	@Autowired
+	private InterfRiskRdsController interfRiskRdsController;
 
 	public static final String ENTRUST_RECORD_NEW = "new";
 
@@ -204,14 +206,12 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			}
 		}
 		initPageParams.put("etrExchange_HqArea_refresh_period", etrExchange_HqArea_refresh_period);
-
 		return new Message<Map<String, Object>>(initPageParams).success();
 	}
 
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
-	 *
-	 * @param initPageParams
+	 * @param initPageParams initPageParams
 	 */
 	private void setSettleSpreedSelectOptions(Map<String, Object> initPageParams) {
 		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.清算速度, null);
@@ -225,8 +225,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
-	 *
-	 * @param initPageParams
+	 * @param initPageParams initPageParams
 	 */
 	private void setPsSelectOptions(Map<String, Object> initPageParams) {
 		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.交易方向, null);
@@ -263,8 +262,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 	/**
 	 * 价格模式
-	 *
-	 * @param initPageParams
+	 * @param initPageParams initPageParams
 	 */
 	private void setPriceModelSelectOptions(Map<String, Object> initPageParams) {
 		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.价格模式, null);
@@ -286,8 +284,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的申报类型
-	 *
-	 * @param initPageParams
+	 * @param initPageParams initPageParams
 	 */
 	private void setDeclaTypeSelectOptions(Map<String, Object> initPageParams) {
 		SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.申报类型, null);
@@ -311,8 +308,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 	/**
 	 * 设置画面的一些固定的数据字典明细
-	 *
-	 * @param initPageParams
+	 * @param initPageParams initPageParams
 	 */
 	private void setConstSelectOption(Map<String, Object> initPageParams) {
 		// 金融产品类型(投管用)
@@ -373,35 +369,30 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		// 目标类型
 		initPageParams.put("TARGET_CLASS_01", DictCodeListExt3.目标类型_数量.getValue());
 		initPageParams.put("TARGET_CLASS_02", DictCodeListExt3.目标类型_金额.getValue());
-
 		// 交易平台
 		initPageParams.put("SHARES_TRADE_PLATFORM_02", DictCodeList.交易平台_竞价撮合平台.getValue());
 		initPageParams.put("SHARES_TRADE_PLATFORM_03", DictCodeList.交易平台_固定收益平台.getValue());
 		initPageParams.put("SHARES_TRADE_PLATFORM_04", DictCodeList.交易平台_大宗交易平台.getValue());
 		initPageParams.put("SHARES_TRADE_PLATFORM_05", DictCodeList.交易平台_综合协议交易平台.getValue());
-
 		// 金融产品其他代码类型
 		initPageParams.put("FINPROD_OTH_CODE_TYPE_06", DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
 		initPageParams.put("FINPROD_OTH_CODE_TYPE_05", DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
 		initPageParams.put("FINPROD_OTH_CODE_TYPE_07", DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
-
 		// 金融产品其他代码类型
 		initPageParams.put("WINDTYPEONE_B07", DictCodeList.WIND一级分类_含债券一级分类等_公司债.getValue());
 		initPageParams.put("WINDTYPEONE_B13", DictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue());
 		initPageParams.put("WINDTYPEONE_B14", DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue());
 		initPageParams.put("WINDTYPEONE_B15", DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue());
-
 	}
 
 	/**
 	 * 由于交易平台不同，设置不同交易平台对应的委托方向
-	 *
-	 * @param psOptionsRequest
+	 * @param psOptionsRequest psOptionsRequest
 	 */
 	@ApiOperation(value = "获取交易方向", notes = "获取交易方向")
 	@PostMapping("/getPsSelectOptions")
 	@ResponseBody
-	public Message<List<SelectOptionDto>> getPsSelectOptions(@RequestBody  PsOptionsRequest psOptionsRequest) {
+	public Message<List<SelectOptionDto>> getPsSelectOptions(@RequestBody PsOptionsRequest psOptionsRequest) {
 		try {
 			SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.交易方向, null);
 			List<SelectOptionDto> tempList = etrExchangeTrade001CommonService.getPsSelectOptions(psOptionsRequest,selectDto);
@@ -412,12 +403,16 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		}
 	}
 
-
-
 	@ResponseBody
-	@RequestMapping("/selectCounterIdByCounterType")
-	public List<SelectOptionDto> selectCounterIdByCounterType(){
-		return etrExchangeTrade001CommonService.selectCounterIdByCounterType(RequestUtil.getPageParam());
+	@PostMapping("/selectCounterIdByCounterType")
+	public Message<List<SelectOptionDto>> selectCounterIdByCounterType(SelectOptionRequestDto dto){
+		try {
+			List<SelectOptionDto> selectOptionDtos = etrExchangeTrade001CommonService.selectCounterIdByCounterType(dto);
+			return new Message<List<SelectOptionDto>>().success().setData(selectOptionDtos);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<List<SelectOptionDto>>().fail().setMessage("查询异常");
+		}
 	}
 
 	@ResponseBody
@@ -572,8 +567,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	/**
 	 * 保存按钮点击时的check
 	 *
-	 * @param EtrExchangeTradeSaveRequest dto
-	 * @param Message BindingResult
+	 * @param  dto
+	 * @param  br
 	 * @return check结果
 	 * @see
 	 * @since 1.0
@@ -903,8 +898,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	/**
 	 * 导入
 	 *
-	 * @param paramMap
-	 *            导入的文件名
+	 * @param paramMap 导入的文件名
 	 * @return 处理结果
 	 * @throws Exception
 	 *             异常
@@ -912,13 +906,13 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ApiOperation(value = "导入的文件check", notes = "导入的文件check")
 	@PostMapping("/checkImportData")
 	@ResponseBody
-	public Message<AjaxResult> checkImportData(@RequestBody Map<String,Object> paramMap)  {
+	public Message<AjaxResult> checkImportData(@RequestBody Map<String,Object> paramMap, BindingResult br)  {
 		try{
-			AjaxResult ajaxResult=etrExchangeTrade001CommonService.checkImportData(paramMap);
-		return new Message<AjaxResult>().success().setData(ajaxResult);
-	}catch (Exception e){
-		return new Message<AjaxResult>().fail().setData(new AjaxResult("check失败"));
-	}
+			AjaxResult ajaxResult=etrExchangeTrade001CommonService.checkImportData(paramMap,br);
+			return new Message<AjaxResult>().success().setData(ajaxResult);
+		}catch (Exception e){
+			return new Message<AjaxResult>().fail().setData(new AjaxResult("check失败"));
+		}
 	}
 
 	/**
@@ -1068,6 +1062,80 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 		ajaxResult.setData(etrExchangeTrade001CommonService.IsBondAsset(RequestUtil.getPageParam()));
 //        ajaxResult.setData("2");
 		return ajaxResult;
+	}
+
+
+	@ResponseBody
+	@ApiOperation(value = "风险试算", notes = "风险试算")
+	@PostMapping("doRiskcal")
+	public Message<AjaxResult> doRiskcal(@RequestBody EtrExchangeTradeCommonRiskcalRequest dto) throws Exception {
+		try {
+			//风险试算check
+			String  message = etrExchangeTrade001CommonService.doRiskcalCheckMethod(dto);
+			if (StringUtil.isNotEmpty(message)) {
+				return new Message<AjaxResult>().fail().setMessage(message);
+			}
+			EtrExchangeTradeCommonRiskcalResponse result=new EtrExchangeTradeCommonRiskcalResponse();
+			//风险试算组装dto
+			Map<String, Object> dataMap=etrExchangeTrade001CommonService.doRiskcalPackageEquity(dto);
+			List<String> resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F01");
+			result.setRiskMathFlag("02");
+			Boolean forbidFlag=false;
+			Boolean cluflag=true;
+			List<EtrExchangeTradeCommonRiskcalResponse> resultlist=new ArrayList<>();
+			if(!StringUtil.isEmptyList(resultArrList) ){
+				for(String row:resultArrList){
+					ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
+					if(StringUtil.isNotEmpty(resultArr) && StringUtil.isNotEmpty(resultArr.getHead())
+							&& StringUtil.isNotEmpty(resultArr.getHead().get("std400msgt"))
+					){
+						if (StringUtil.equals(resultArr.getHead().get("std400msgt"),"E")) {
+							return new Message<AjaxResult>().fail().setMessage(resultArr.getHead().get("stdrtninfo").toString());
+						}
+					}
+					if (!StringUtil.isNotEmpty(resultArr) || !StringUtil.isNotEmpty(resultArr.getBody())
+							|| !StringUtil.isNotEmpty(resultArr.getBody().get("RSK_LIST"))
+							|| !StringUtil.isNotEmpty(resultArr.getBody().get("rskStatus"))) {
+						return new Message<AjaxResult>().success().setMessage("无");
+					}
+					List<Map<String, Object>> riskList = (List<Map<String, Object>>)resultArr.getBody().get("RSK_LIST");
+					for(Map<String, Object> map: riskList){
+						if(StringUtil.equals(map.get("kriStatus"),"0") && !StringUtil.equals(map.get("kriTrend"),"向好")){
+							forbidFlag=true;
+						}
+						map.put("kriStatusCn",etrExchangeTrade001CommonService.getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
+						resultlist.add(BeanUtil.mapToObject(map, EtrExchangeTradeCommonRiskcalResponse.class));
+					}
+					result.setRiskcalReturnList(resultlist);
+					result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());
+					//当置为不通过时就不再进来了
+					if(cluflag) {
+						if(!StringUtil.equals(resultArr.getBody().get("rskStatus"),"3")){
+							if(StringUtil.equals(resultArr.getBody().get("rskStatus"),"4")&&forbidFlag){
+								cluflag=false;
+								resultArr.getBody().put("rskStatus","3");
+								result.setRskStatus("3");
+							}
+						}else{
+							cluflag=false;
+						}
+						if (!cluflag) {
+							result.setRiskTrialSpan("试算不通过");
+						} else {
+							result.setRiskTrialSpan("试算通过");
+						}
+					}
+
+				}
+
+			}
+			AjaxResult m =new AjaxResult();
+			m.setData(result);
+			return new Message<AjaxResult>().success().setData(m);
+		} catch (Exception e) {
+			logger.error("查询功能异常", e);
+			return new Message<AjaxResult>().fail().setMessage("查询异常");
+		}
 	}
 }
 	

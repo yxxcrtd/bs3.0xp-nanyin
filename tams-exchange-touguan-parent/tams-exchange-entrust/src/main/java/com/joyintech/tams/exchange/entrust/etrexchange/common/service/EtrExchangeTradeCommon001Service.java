@@ -13,6 +13,14 @@ package com.joyintech.tams.exchange.entrust.etrexchange.common.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.joyintech.background.component.common.pack.common.security.User;
+import com.joyintech.background.component.order.exchange.business.dto.*;
+import com.joyintech.background.component.order.exchange.common.constant.UnitEnum;
+import com.joyintech.background.component.order.exchange.common.dto.EtrBaseDto;
+import com.joyintech.background.component.order.exchange.common.dto.EtrParameterDto;
+import com.joyintech.background.component.order.exchange.common.dto.EtrSinglePortfolioDto;
+import com.joyintech.background.component.order.exchange.common.service.EtrComponentCommService;
+import com.joyintech.background.component.order.exchange.common.service.impl.EtrComponentFactory;
 import com.joyintech.calculation.CalculatorFactory;
 import com.joyintech.calculation.bonds.PaperIrReset;
 import com.joyintech.calculation.bonds.SecIntSchedule;
@@ -25,6 +33,7 @@ import com.joyintech.calculation.shell.YieldByPriceCalculator;
 import com.joyintech.calculation.shell.param.*;
 import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.CommonExportService;
@@ -35,25 +44,34 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
+import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -67,8 +85,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
@@ -110,6 +131,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
     @Autowired
     FinProductConvertibleMapper finProductConvertibleMapper;
     
+    @Autowired
+	EtrExchangeTradeCommon002Service etrExchangeTrade002Service;
 
     @Autowired
     FinProductAddMapper finProductAddMapper;
@@ -117,15 +140,482 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	@Autowired
 	FinProductMapper finProductMapper;
 
+	@Autowired
+	EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
+	/**
+	 * 委托指令共通
+	 */
+	@Autowired(required = false)
+	private FinProductTypeMapper finProductTypeMapper;
+
+	/**
+	 * 投资委托基础组件
+	 */
+	@Autowired
+	private BaseEtrInvestInfoService baseEtrInvestInfoService;
+
+	/**
+	 * 指令分发接口
+	 */
+	@Autowired
+	private EtrCommandDispatcherService etrCommandDispatcherService;
+
+	/**
+	 * 委托自动分发
+	 */
+	@Autowired(required = false)
+	private BusiAutoEtrDispService busiAutoEtrDispService;
+
+	public static final String ENTRUST_RECORD_MODIFY = "modify";
+
+	public static final String ENTRUST_RECORD_NEW = "new";
+
+	/**
+	 * 委托指令Mapper
+	 */
+	@Autowired
+	private EtrEntrustMapper etrEntrustMapper;
+
+	@Autowired
+	private EtrComponentCommService<EtrBlockTradeStockDto> componentService;
+
+	/**
+	 * 委托指令共通
+	 */
+	@Autowired(required = false)
+	private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void doComplete(EtrExchangeTradeSaveRequest entity, OperationType arg1) {
+	public void doComplete(EtrExchangeTradeSaveRequest dto, OperationType arg1) {
 		// TODO Auto-generated method stub
-		restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/doComplete", entity,
-				Integer.class);
-        doDeleteFlow(entity.getWorkflowId());
+//		restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/doComplete", entity,
+//				Integer.class);
+		BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+		EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
+		EtrEntrust etrEntrust = new EtrEntrust();
+		EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+		entrustCommonDto.setEtrEntrust(etrEntrust);
+		entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
+		if (StringUtil.isNotEmpty(dto.getFinprodId())) {
+			FinProductTypeKey key = new FinProductTypeKey();
+			key.setFinprodId(dto.getFinprodId());
+			key.setBranch(new Long(0));
+			FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(key);
+			if (null != finProductType) {
+				etrEntrustAdd.setAssetType(finProductType.getType8());
+			}else {
+				etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+			}
+		} else {
+			etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+		}
+
+		//设置清算速度 硬编码
+		if (StringUtil.isNotEmpty(dto.getSettleSpeed())) {
+			if (StringUtil.equals(dto.getSettleSpeed(), DictCodeList.清算速度_T_0.getValue())) {
+				dto.setSettleSpeed("0");
+			} else if (StringUtil.equals(dto.getSettleSpeed(), DictCodeList.清算速度_T_1.getValue())) {
+				dto.setSettleSpeed("1");
+			}
+		}
+
+		// add by tanxuan on 20200514 指令分发推送MQ 参数定义 start
+		String isPushMsg = DictCodeList.是否_否.getValue();
+		// add by tanxuan on 20200514 指令分发推送MQ 参数定义 end
+
+		// 构造投资指令DTO
+		EtrBaseDto baseDto = getEtrBaseDto(dto);
+
+		// 构造单组合单资产DTO
+		EtrSinglePortfolioDto etrSinglePortfolioDto = getEtrSinglePortfolio(dto);
+
+		//待分发逻辑处理
+		BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto);
+		BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, dto);
+
+		etrEntrust.setBusinessModel(dto.getBusinessModel());
+		//根据投资目的与业务模式的对应关系入库时赋值
+		if(StringUtil.equals("Y1",dto.getBusinessModel())){
+			dto.setInvAim("AC");
+			etrEntrust.setInvAim("AC");
+		}else if(StringUtil.equals("Y2",dto.getBusinessModel())){
+			dto.setInvAim("FVTPL");
+			etrEntrust.setInvAim("FVTPL");
+		}
+		// 自动分发
+		List<EtrDistribute> etrDistributeList = new ArrayList<>();
+		if (busiAutoEtrDispService != null) {
+			// 检测是否设置交易员
+			if (!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)) {
+				// 跳出自动分发
+				entity.setEtrDistributeList(etrDistributeList);
+				isPushMsg = DictCodeList.是否_是.getValue();
+			} else {
+				// 查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
+				// 设置指令日期 add by yufei 20200808 start
+				if(etrEntrust.getEntrustDate() == null) {
+					etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+				}
+				// 设置指令日期 add by yufei 20200808 end
+				if (busiAutoEtrDispService.checkEntrustTime(etrEntrust)) {
+					// 自动分发
+					entity.setEtrDistributeList(busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd));
+					isPushMsg = DictCodeList.是否_是.getValue();
+				}
+			}
+		}
+		if(StringUtil.isEmptyList(entity.getEtrDistributeList())){//无分发人员
+			baseDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
+			etrSinglePortfolioDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
+		}
+
+		// 股票竞价指令dto
+		EtrStockBiddingDto etrStockBiddingDto = new EtrStockBiddingDto();
+		if (DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrStockBiddingDto, etrSinglePortfolioDto);
+			etrStockBiddingDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());
+		}
+
+		// 基金竞价指令dto
+		EtrFundBiddingDto etrFundBiddingDto = new EtrFundBiddingDto();
+		if (DictCodeListExt3.上农商_指令业务类型_基金竞价指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrFundBiddingDto, etrSinglePortfolioDto);
+			etrFundBiddingDto.setAssetType(DictCodeList.平安资产类型_基金.getValue());
+		}
+
+		// 大宗债券质押式回购指令dto
+		EtrBlockTradePledgeRepoDto etrBlockTradePledgeRepoDto = new EtrBlockTradePledgeRepoDto();
+		if (DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBlockTradePledgeRepoDto, etrSinglePortfolioDto);
+			etrBlockTradePledgeRepoDto.setCounterId(dto.getCounterId());// 交易对手
+			etrBlockTradePledgeRepoDto.setCounterSeat(dto.getSeatId());// 席位号
+			etrBlockTradePledgeRepoDto.setCounterConNo(dto.getAgreeOnId());// 约定号
+			etrBlockTradePledgeRepoDto.setPrice(ArithmeticUtil.divide(etrSinglePortfolioDto.getPrice(),new BigDecimal(100),6));
+			if (DictCodeListExt3.交易方向_正回购.getValue().equals(etrBlockTradePledgeRepoDto.getPs())) {
+				etrBlockTradePledgeRepoDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+			} else {
+				etrBlockTradePledgeRepoDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+			}
+			etrBlockTradePledgeRepoDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+		}
+
+		// 大宗股票指令dto
+		EtrBlockTradeStockDto etrBlockTradeStockDto = new EtrBlockTradeStockDto();
+		if (DictCodeListExt3.上农商_指令业务类型_大宗股票指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBlockTradeStockDto, etrSinglePortfolioDto);
+			etrBlockTradeStockDto.setCounterId(dto.getCounterId());// 交易对手
+			etrBlockTradeStockDto.setCounterSeat(dto.getSeatId());// 席位号
+			etrBlockTradeStockDto.setCounterConNo(dto.getAgreeOnId());// 约定号
+			etrBlockTradeStockDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());
+		}
+
+		// 大宗基金指令dto
+		EtrBlockTradeFundDto etrBlockTradeFundDto = new EtrBlockTradeFundDto();
+		if (DictCodeListExt3.上农商_指令业务类型_大宗基金指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBlockTradeFundDto, etrSinglePortfolioDto);
+			etrBlockTradeFundDto.setCounterId(dto.getCounterId());// 交易对手
+			etrBlockTradeFundDto.setCounterSeat(dto.getSeatId());// 席位号
+			etrBlockTradeFundDto.setCounterConNo(dto.getAgreeOnId());// 约定号
+			etrBlockTradeFundDto.setAssetType(DictCodeList.平安资产类型_基金.getValue());
+		}
+
+		// 大宗债券指令dto
+		EtrBlockTradeBondDto etrBlockTradeBondDto = new EtrBlockTradeBondDto();
+		if (DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBlockTradeBondDto, etrSinglePortfolioDto);
+			etrBlockTradeBondDto.setMatureYield(ArithmeticUtil.divide(dto.getYield(),new BigDecimal(100),8));// 收益率
+			etrBlockTradeBondDto.setFullPrice(dto.getFprice());// 全价
+			etrBlockTradeBondDto.setCounterId(dto.getCounterId());// 交易对手
+			etrBlockTradeBondDto.setCounterSeat(dto.getSeatId()); // 席位号
+			etrBlockTradeBondDto.setCounterConNo(dto.getAgreeOnId());// 约定号
+			etrBlockTradeBondDto.setCalMode(dto.getCalculateField());// 计算方式
+			etrBlockTradeBondDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());
+		}
+
+		// 债券竞价指令
+		EtrBondBiddingDto etrBondBiddingDto = new EtrBondBiddingDto();
+		if (DictCodeListExt3.上农商_指令业务类型_债券竞价指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBondBiddingDto, etrSinglePortfolioDto);
+			etrBondBiddingDto.setMatureYield(ArithmeticUtil.divide(dto.getYield(),new BigDecimal(100),8)); // 到期收益率
+			etrBondBiddingDto.setFullPrice(dto.getFprice()); // 全价
+			etrBondBiddingDto.setCalMode(dto.getCalculateField());// 计算方式
+			etrBondBiddingDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondBiddingDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+		}
+
+		// 上交所固定收益平台现券交易指令
+		EtrBondFxdIncmPlatSHDto etrBondFxdIncmPlatSHDto = new EtrBondFxdIncmPlatSHDto();
+		if (DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBondFxdIncmPlatSHDto, etrSinglePortfolioDto);
+			etrBondFxdIncmPlatSHDto.setMatureYield(ArithmeticUtil.divide(dto.getYield(),new BigDecimal(100),8)); // 到期收益率
+			etrBondFxdIncmPlatSHDto.setFullPrice(dto.getFprice()); // 全价
+			etrBondFxdIncmPlatSHDto.setCounterId(dto.getCounterId());// 交易对手
+			etrBondFxdIncmPlatSHDto.setTrader(dto.getTrader());// 本方交易员
+			etrBondFxdIncmPlatSHDto.setCounterTrader(dto.getCounterTrader());// 对手方交易员
+			etrBondFxdIncmPlatSHDto.setCounterOrg(dto.getCounterOrg());// 对手方交易商
+			etrBondFxdIncmPlatSHDto.setCounterConNo(dto.getAgreeOnId());// 约定号
+			etrBondFxdIncmPlatSHDto.setCalMode(dto.getCalculateField());// 计算方式
+			etrBondFxdIncmPlatSHDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondFxdIncmPlatSHDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+			etrBondFxdIncmPlatSHDto.setSettleSpreed(Long.parseLong(dto.getSettleSpeed()));//清算速度
+		}
+
+		// 债券回售指令
+		EtrBondRepurchaseDto etrBondRepurchaseDto = new EtrBondRepurchaseDto();
+		if (DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBondRepurchaseDto, etrSinglePortfolioDto);
+			etrBondRepurchaseDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondRepurchaseDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+		}
+
+		// 配股指令
+		EtrStockRightDto etrStockRightDto = new EtrStockRightDto();
+		if (DictCodeListExt3.上农商_指令业务类型_配股指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrStockRightDto, etrSinglePortfolioDto);
+			etrStockRightDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrStockRightDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());// 资产大类
+		}
+
+		// 新股申购指令
+		EtrStockNewDto etrStockNewDto = new EtrStockNewDto();
+		if (DictCodeListExt3.上农商_指令业务类型_新股申购指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrStockNewDto, etrSinglePortfolioDto);
+			etrStockNewDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrStockNewDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());// 资产大类
+		}
+
+		// 配债指令
+		EtrBondRightDto etrBondRightDto = new EtrBondRightDto();
+		if (DictCodeListExt3.上农商_指令业务类型_配债指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBondRightDto, etrSinglePortfolioDto);
+			etrBondRightDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondRightDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+		}
+
+		// 可转债申购指令
+		EtrConvBondApplyDto etrConvBondApplyDto = new EtrConvBondApplyDto();
+		if (DictCodeListExt3.上农商_指令业务类型_可转债申购指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrConvBondApplyDto, etrSinglePortfolioDto);
+			etrConvBondApplyDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrConvBondApplyDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+		}
+
+		// 债转股指令
+		EtrBondToStockDto etrBondToStockDto = new EtrBondToStockDto();
+		if (DictCodeListExt3.上农商_指令业务类型_债转股指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBondToStockDto, etrSinglePortfolioDto);
+			etrBondToStockDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondToStockDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+			etrBondToStockDto.setExpConNum(dto.getToShareAvailableNum());//可转股数量
+		}
+
+		// 标准券出入库指令
+		EtrStandardBondInOutDto etrStandardBondInOutDto = new EtrStandardBondInOutDto();
+		if (DictCodeListExt3.上农商_指令业务类型_标准券出入库指令.getValue().equals(baseDto.getEntrustType())) {
+			etrSinglePortfolioDto.setPrice(ArithmeticUtil.divide(etrSinglePortfolioDto.getPrice(),new BigDecimal(100),6));
+			BeanUtil.copyPropertiesIgnoreNull(etrStandardBondInOutDto, etrSinglePortfolioDto);
+			//etrStandardBondInOutDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			if (etrStandardBondInOutDto.getPs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())) {
+				etrStandardBondInOutDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+			} else if (etrStandardBondInOutDto.getPs().equals(DictCodeListExt3.交易方向_质押券出库.getValue())) {
+				etrStandardBondInOutDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());// 资产大类
+			}
+		}
+
+		// 债券质押式回购竞价指令
+		EtrBondRepoBiddingDto etrBondRepoBiddingDto = new EtrBondRepoBiddingDto();
+		if (DictCodeListExt3.上农商_指令业务类型_债券质押式回购竞价指令.getValue().equals(baseDto.getEntrustType())) {
+			etrSinglePortfolioDto.setPrice(ArithmeticUtil.divide(etrSinglePortfolioDto.getPrice(),new BigDecimal(100),6));
+			BeanUtil.copyPropertiesIgnoreNull(etrBondRepoBiddingDto, etrSinglePortfolioDto);
+			etrBondRepoBiddingDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondRepoBiddingDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());// 资产大类
+		}
+
+		EtrParameterDto paraDto = new EtrParameterDto();
+		setUser(paraDto);
+
+		if (null != dto.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(dto.getEntrustId())) {
+			dto.setOptType(ENTRUST_RECORD_MODIFY);
+		}
+
+		if (StringUtil.equals(dto.getOptType(), ENTRUST_RECORD_NEW)) {//
+			if (DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrStockBiddingDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStockBiddingDto.class).entrustNew(etrStockBiddingDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_基金竞价指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrFundBiddingDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrFundBiddingDto.class).entrustNew(etrFundBiddingDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBlockTradePledgeRepoDto.class).updateSettings(paraDto);
+				//质押式回购 设置 AssetType1->平安资产类型_质押式回购
+				etrBlockTradePledgeRepoDto.setAssetType1(DictCodeList.回购类型_质押式竞价回购.getValue());
+				EtrComponentFactory.getComponentService(EtrBlockTradePledgeRepoDto.class).entrustNew(etrBlockTradePledgeRepoDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_大宗股票指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBlockTradeStockDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBlockTradeStockDto.class).entrustNew(etrBlockTradeStockDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_大宗基金指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBlockTradeFundDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBlockTradeFundDto.class).entrustNew(etrBlockTradeFundDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBlockTradeBondDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBlockTradeBondDto.class).entrustNew(etrBlockTradeBondDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_债券竞价指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondBiddingDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondBiddingDto.class).entrustNew(etrBondBiddingDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondFxdIncmPlatSHDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondFxdIncmPlatSHDto.class).entrustNew(etrBondFxdIncmPlatSHDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondRepurchaseDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondRepurchaseDto.class).entrustNew(etrBondRepurchaseDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_配股指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrStockRightDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStockRightDto.class).entrustNew(etrStockRightDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_新股申购指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrStockNewDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStockNewDto.class).entrustNew(etrStockNewDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_配债指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondRightDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondRightDto.class).entrustNew(etrBondRightDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_可转债申购指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrConvBondApplyDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrConvBondApplyDto.class).entrustNew(etrConvBondApplyDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_债转股指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondToStockDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondToStockDto.class).entrustNew(etrBondToStockDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_标准券出入库指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrStandardBondInOutDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStandardBondInOutDto.class).entrustNew(etrStandardBondInOutDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_债券质押式回购竞价指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondRepoBiddingDto.class).updateSettings(paraDto);
+				//质押式回购 设置 AssetType1->平安资产类型_质押式回购
+				etrBondRepoBiddingDto.setAssetType1(DictCodeList.回购类型_质押式竞价回购.getValue());
+				EtrComponentFactory.getComponentService(EtrBondRepoBiddingDto.class).entrustNew(etrBondRepoBiddingDto);
+			}
+		} else {
+			if (DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrStockBiddingDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStockBiddingDto.class).entrustEdit(etrStockBiddingDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_基金竞价指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrFundBiddingDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrFundBiddingDto.class).entrustEdit(etrFundBiddingDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBlockTradePledgeRepoDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBlockTradePledgeRepoDto.class).entrustEdit(etrBlockTradePledgeRepoDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_大宗股票指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBlockTradeStockDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBlockTradeStockDto.class).entrustEdit(etrBlockTradeStockDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_大宗基金指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBlockTradeFundDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBlockTradeFundDto.class).entrustEdit(etrBlockTradeFundDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBlockTradeBondDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBlockTradeBondDto.class).entrustEdit(etrBlockTradeBondDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_债券竞价指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondBiddingDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondBiddingDto.class).entrustEdit(etrBondBiddingDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondFxdIncmPlatSHDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondFxdIncmPlatSHDto.class).entrustEdit(etrBondFxdIncmPlatSHDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondRepurchaseDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondRepurchaseDto.class).entrustEdit(etrBondRepurchaseDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_配股指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrStockRightDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStockRightDto.class).entrustEdit(etrStockRightDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_新股申购指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrStockNewDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStockNewDto.class).entrustEdit(etrStockNewDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_配债指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondRightDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondRightDto.class).entrustEdit(etrBondRightDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_可转债申购指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrConvBondApplyDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrConvBondApplyDto.class).entrustEdit(etrConvBondApplyDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_债转股指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondToStockDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondToStockDto.class).entrustEdit(etrBondToStockDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_标准券出入库指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrStandardBondInOutDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStandardBondInOutDto.class).entrustEdit(etrStandardBondInOutDto);
+			} else if (DictCodeListExt3.上农商_指令业务类型_债券质押式回购竞价指令.getValue().equals(baseDto.getEntrustType())) {
+				EtrComponentFactory.getComponentService(EtrBondRepoBiddingDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondRepoBiddingDto.class).entrustEdit(etrBondRepoBiddingDto);
+			}
+		}
+		// 自动分发数据入库 add by yufei 20200808 start
+		if(!StringUtil.isEmptyList(entity.getEtrDistributeList())){
+			baseEtrInvestInfoService.distributeDelegate(entity.getEtrDistributeList());
+		}
+		// 自动分发数据入库 add by yufei 20200808 end
+		// add by tanxuan on 20200514 指令分发推送信息到交易系统
+		if (DictCodeList.是否_是.getValue().equals(isPushMsg)) {
+			Map<String, Object> param = new HashMap<>();
+			param.put("entrustId", dto.getEntrustId());
+			etrCommandDispatcherService.pushCommandMsg(param);
+		}
+        doDeleteFlow(dto.getWorkflowId());
+	}
+
+	/**
+	 * 配置用户
+	 */
+	public void setUser(EtrParameterDto paraDto){
+		com.joyintech.background.component.common.pack.common.security.User user = new User();
+		user.setUserName(LoginUserUtil.getUserName());
+		user.setDeptCode(LoginUserUtil.getDeptCode());
+		paraDto.setUser(user);
+	}
+
+	/**
+	 * 构造单组合单资产DTO
+	 * @param dto
+	 * @return
+	 */
+	public EtrSinglePortfolioDto getEtrSinglePortfolio(EtrExchangeTradeSaveRequest dto) {
+		//构造投资指令DTO
+		EtrBaseDto baseDto = getEtrBaseDto(dto);
+		// 构造单组合单资产DTO start
+		EtrSinglePortfolioDto etrSinglePortfolioDto = new EtrSinglePortfolioDto();
+		BeanUtil.copyPropertiesIgnoreNull(etrSinglePortfolioDto, baseDto);
+		etrSinglePortfolioDto.setPortfolioId(dto.getPortfolioId());// 组合代码
+		etrSinglePortfolioDto.setStockId(dto.getStockId());// 证券代码
+		etrSinglePortfolioDto.setFinprodId(dto.getFinprodId());// 证券代码对应的金融产品代码
+		etrSinglePortfolioDto.setSecAcctId(dto.getSecAcctId());// 证券账户
+		etrSinglePortfolioDto.setDealCurAcct(dto.getAcctNo());// 资金账户
+		etrSinglePortfolioDto.setPs(dto.getPs());// 委托方向
+		etrSinglePortfolioDto.setPriceModel(dto.getPriceModel());// 价格模式
+		etrSinglePortfolioDto.setPrice(dto.getEntrustPrice() != null ? dto.getEntrustPrice() : dto.getPrice());// 指令价格
+		etrSinglePortfolioDto.setEntrustNum(dto.getEntrustNum());// 指令数量
+		etrSinglePortfolioDto.setEntrustAmt(dto.getEntrustAmt());// 指令金额
+		etrSinglePortfolioDto.setInvAim(dto.getInvAim());// 投资目的
+		etrSinglePortfolioDto.setTradeMarket(dto.getTradeMarket());// 交易场所
+		etrSinglePortfolioDto.setTradePlat(dto.getTradePlat());// 交易平台
+		/*
+		 * if 画面.交易平台 = 数据字典.交易平台.大宗交易平台 and 画面.交易场所 = 数据字典.交易场所.深圳证券交易所
+		 * 交易平台 = 数据字典.交易平台.综合协议平台
+		 * else if 画面.交易平台 = 数据字典.交易平台.大宗交易平台 and 画面.交易场所 = 数据字典.交易场所.上海证券交易所
+		 * 交易平台 = 数据字典.交易平台.大宗交易平台 end
+		 */
+		if (DictCodeList.交易平台_大宗交易平台.getValue().equals(etrSinglePortfolioDto.getTradePlat())
+				&& DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(dto.getTradeMarket())) {
+			etrSinglePortfolioDto.setTradePlat(DictCodeList.交易平台_综合协议交易平台.getValue());
+
+		} else if (DictCodeList.交易平台_大宗交易平台.getValue().equals(etrSinglePortfolioDto.getTradePlat())
+				&& DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(dto.getTradeMarket())) {
+			etrSinglePortfolioDto.setTradePlat(DictCodeList.交易平台_大宗交易平台.getValue());
+		}
+		/***********************************************************************/
+		etrSinglePortfolioDto.setFinprodType2(dto.getFinprodType2());// 金融产品分类
+		etrSinglePortfolioDto.setDealCurAcct(dto.getAcctNo());// 资金账户
+		/***********************************************************************/
+		etrSinglePortfolioDto.setDealMode(dto.getDeclaType());//申报类型-db 交易方式
+		// 构造单组合单资产DTO end
+		return etrSinglePortfolioDto;
 	}
 
 	@Override
@@ -183,7 +673,37 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             }
         }
     }
-    
+
+	/**
+	 * 构造投资指令DTO
+	 * @param dto
+	 * @return
+	 */
+	public EtrBaseDto getEtrBaseDto(EtrExchangeTradeSaveRequest dto) {
+		// 构造投资指令DTO start
+		EtrBaseDto baseDto = new EtrBaseDto();
+		baseDto.setMdate(dto.getMdate());// 指令起始日
+		baseDto.setVdate(dto.getVdate());// 指令结束日
+		baseDto.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());// 指令状态
+		// 指令接收日期 NULL
+		// 指令关闭日期 NULL
+		baseDto.setInvManagerId(dto.getInvManagerId());// 登录用户.用户ID
+		baseDto.setCreateUser(dto.getCreateUser());// 创建用户
+		baseDto.setCreateDept(dto.getCreateDept());// 创建部门
+		baseDto.setCreateTime(dto.getCreateTime());// 创建时间
+		baseDto.setUpdateUser(LoginUserUtil.getUserName());// 更新用户
+		baseDto.setUpdateTime(new Date());// 更新时间
+		baseDto.setEntrustClass(DictCodeListExt3.投资指令类型_单组合单资产指令.getValue());// 数据字典.指令类型.单组合单资产
+		baseDto.setEntrustType(dto.getEntrustBussType());// 指令业务类型
+		baseDto.setEntrustId(dto.getEntrustId());// 指令编号
+		if (iPlatformDate != null) {
+			baseDto.setEntrustDate(iPlatformDate.getSysDate());// 委托日期
+		}
+		baseDto.setTargetType(dto.getTargetType());// 目标类型
+		// 构造投资指令DTO end
+		return baseDto;
+	}
+
     /**
      * 流程判断
      */
@@ -264,9 +784,226 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
     }
 
     private void doInsertFlow(EtrExchangeTradeSaveRequest dto) {
-        BaseEtrInvestInfoDto entity = restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/buildEtrFlow", dto,
-            BaseEtrInvestInfoDto.class);
+//        BaseEtrInvestInfoDto entity = restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/buildEtrFlow", dto,
+//            BaseEtrInvestInfoDto.class);
+		BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+		EtrBaseDto baseDto = getEtrBaseDto(dto);
+		EtrSinglePortfolioDto etrSinglePortfolioDto = getEtrSinglePortfolio(dto);
+		EtrEntrust etrEntrust = new EtrEntrust();
+		EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+		if (StringUtil.isNotEmpty(dto.getFinprodId())) {
+			FinProductTypeKey key = new FinProductTypeKey();
+			key.setFinprodId(dto.getFinprodId());
+			key.setBranch(new Long(0));
+			FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(key);
+			if (null != finProductType) {
+				etrEntrustAdd.setAssetType(finProductType.getType8());
+			}else {
+				etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+			}
+		} else {
+			etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+		}
+		// 股票竞价指令dto
+		EtrStockBiddingDto etrStockBiddingDto = new EtrStockBiddingDto();
+		if (DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrStockBiddingDto, etrSinglePortfolioDto);
+			etrStockBiddingDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrStockBiddingDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrStockBiddingDto);
+		}
+
+		// 基金竞价指令dto
+		EtrFundBiddingDto etrFundBiddingDto = new EtrFundBiddingDto();
+		if (DictCodeListExt3.上农商_指令业务类型_基金竞价指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrFundBiddingDto, etrSinglePortfolioDto);
+			etrFundBiddingDto.setAssetType(DictCodeList.平安资产类型_基金.getValue());
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrFundBiddingDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrFundBiddingDto);
+		}
+
+		// 大宗债券质押式回购指令dto
+		EtrBlockTradePledgeRepoDto etrBlockTradePledgeRepoDto = new EtrBlockTradePledgeRepoDto();
+		if (DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBlockTradePledgeRepoDto, etrSinglePortfolioDto);
+			etrBlockTradePledgeRepoDto.setCounterId(dto.getCounterId());// 交易对手
+			etrBlockTradePledgeRepoDto.setCounterSeat(dto.getSeatId());// 席位号
+			etrBlockTradePledgeRepoDto.setCounterConNo(dto.getAgreeOnId());// 约定号
+			etrBlockTradePledgeRepoDto.setPrice(ArithmeticUtil.divide(etrSinglePortfolioDto.getPrice(),new BigDecimal(100),6));
+			if (DictCodeListExt3.交易方向_正回购.getValue().equals(etrBlockTradePledgeRepoDto.getPs())) {
+				etrBlockTradePledgeRepoDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+			} else {
+				etrBlockTradePledgeRepoDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+			}
+			etrBlockTradePledgeRepoDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+			//质押式回购 设置 AssetType1->平安资产类型_质押式回购
+			etrBlockTradePledgeRepoDto.setAssetType1(DictCodeList.回购类型_质押式竞价回购.getValue());
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBlockTradePledgeRepoDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBlockTradePledgeRepoDto);
+		}
+
+		// 大宗股票指令dto
+		EtrBlockTradeStockDto etrBlockTradeStockDto = new EtrBlockTradeStockDto();
+		if (DictCodeListExt3.上农商_指令业务类型_大宗股票指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBlockTradeStockDto, etrSinglePortfolioDto);
+			etrBlockTradeStockDto.setCounterId(dto.getCounterId());// 交易对手
+			etrBlockTradeStockDto.setCounterSeat(dto.getSeatId());// 席位号
+			etrBlockTradeStockDto.setCounterConNo(dto.getAgreeOnId());// 约定号
+			etrBlockTradeStockDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBlockTradeStockDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBlockTradeStockDto);
+		}
+
+		// 大宗基金指令dto
+		EtrBlockTradeFundDto etrBlockTradeFundDto = new EtrBlockTradeFundDto();
+		if (DictCodeListExt3.上农商_指令业务类型_大宗基金指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBlockTradeFundDto, etrSinglePortfolioDto);
+			etrBlockTradeFundDto.setCounterId(dto.getCounterId());// 交易对手
+			etrBlockTradeFundDto.setCounterSeat(dto.getSeatId());// 席位号
+			etrBlockTradeFundDto.setCounterConNo(dto.getAgreeOnId());// 约定号
+			etrBlockTradeFundDto.setAssetType(DictCodeList.平安资产类型_基金.getValue());
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBlockTradeFundDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBlockTradeFundDto);
+		}
+
+		// 大宗债券指令dto
+		EtrBlockTradeBondDto etrBlockTradeBondDto = new EtrBlockTradeBondDto();
+		if (DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBlockTradeBondDto, etrSinglePortfolioDto);
+			etrBlockTradeBondDto.setMatureYield(ArithmeticUtil.divide(dto.getYield(),new BigDecimal(100),8));// 收益率
+			etrBlockTradeBondDto.setFullPrice(dto.getFprice());// 全价
+			etrBlockTradeBondDto.setCounterId(dto.getCounterId());// 交易对手
+			etrBlockTradeBondDto.setCounterSeat(dto.getSeatId()); // 席位号
+			etrBlockTradeBondDto.setCounterConNo(dto.getAgreeOnId());// 约定号
+			etrBlockTradeBondDto.setCalMode(dto.getCalculateField());// 计算方式
+			etrBlockTradeBondDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBlockTradeBondDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBlockTradeBondDto);
+		}
+
+		// 债券竞价指令
+		EtrBondBiddingDto etrBondBiddingDto = new EtrBondBiddingDto();
+		if (DictCodeListExt3.上农商_指令业务类型_债券竞价指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBondBiddingDto, etrSinglePortfolioDto);
+			etrBondBiddingDto.setMatureYield(ArithmeticUtil.divide(dto.getYield(),new BigDecimal(100),8)); // 到期收益率
+			etrBondBiddingDto.setFullPrice(dto.getFprice()); // 全价
+			etrBondBiddingDto.setCalMode(dto.getCalculateField());// 计算方式
+			etrBondBiddingDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondBiddingDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBondBiddingDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBondBiddingDto);
+		}
+
+		// 上交所固定收益平台现券交易指令
+		EtrBondFxdIncmPlatSHDto etrBondFxdIncmPlatSHDto = new EtrBondFxdIncmPlatSHDto();
+		if (DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBondFxdIncmPlatSHDto, etrSinglePortfolioDto);
+			etrBondFxdIncmPlatSHDto.setMatureYield(ArithmeticUtil.divide(dto.getYield(),new BigDecimal(100),8)); // 到期收益率
+			etrBondFxdIncmPlatSHDto.setFullPrice(dto.getFprice()); // 全价
+			etrBondFxdIncmPlatSHDto.setCounterId(dto.getCounterId());// 交易对手
+			etrBondFxdIncmPlatSHDto.setTrader(dto.getTrader());// 本方交易员
+			etrBondFxdIncmPlatSHDto.setCounterTrader(dto.getCounterTrader());// 对手方交易员
+			etrBondFxdIncmPlatSHDto.setCounterOrg(dto.getCounterOrg());// 对手方交易商
+			etrBondFxdIncmPlatSHDto.setCounterConNo(dto.getAgreeOnId());// 约定号
+			etrBondFxdIncmPlatSHDto.setCalMode(dto.getCalculateField());// 计算方式
+			etrBondFxdIncmPlatSHDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondFxdIncmPlatSHDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+			etrBondFxdIncmPlatSHDto.setSettleSpreed(StringUtil.isNotEmpty(dto.getSettleSpeed())?Long.parseLong(dto.getSettleSpeed()):0L);//清算速度
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBondFxdIncmPlatSHDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBondFxdIncmPlatSHDto);
+		}
+
+		// 债券回售指令
+		EtrBondRepurchaseDto etrBondRepurchaseDto = new EtrBondRepurchaseDto();
+		if (DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBondRepurchaseDto, etrSinglePortfolioDto);
+			etrBondRepurchaseDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondRepurchaseDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBondRepurchaseDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBondRepurchaseDto);
+		}
+
+		// 配股指令
+		EtrStockRightDto etrStockRightDto = new EtrStockRightDto();
+		if (DictCodeListExt3.上农商_指令业务类型_配股指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrStockRightDto, etrSinglePortfolioDto);
+			etrStockRightDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrStockRightDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());// 资产大类
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrStockRightDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrStockRightDto);
+		}
+
+		// 新股申购指令
+		EtrStockNewDto etrStockNewDto = new EtrStockNewDto();
+		if (DictCodeListExt3.上农商_指令业务类型_新股申购指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrStockNewDto, etrSinglePortfolioDto);
+			etrStockNewDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrStockNewDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());// 资产大类
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrStockNewDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrStockNewDto);
+		}
+
+		// 配债指令
+		EtrBondRightDto etrBondRightDto = new EtrBondRightDto();
+		if (DictCodeListExt3.上农商_指令业务类型_配债指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBondRightDto, etrSinglePortfolioDto);
+			etrBondRightDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondRightDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBondRightDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBondRightDto);
+		}
+
+		// 可转债申购指令
+		EtrConvBondApplyDto etrConvBondApplyDto = new EtrConvBondApplyDto();
+		if (DictCodeListExt3.上农商_指令业务类型_可转债申购指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrConvBondApplyDto, etrSinglePortfolioDto);
+			etrConvBondApplyDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrConvBondApplyDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrConvBondApplyDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrConvBondApplyDto);
+		}
+
+		// 债转股指令
+		EtrBondToStockDto etrBondToStockDto = new EtrBondToStockDto();
+		if (DictCodeListExt3.上农商_指令业务类型_债转股指令.getValue().equals(baseDto.getEntrustType())) {
+			BeanUtil.copyPropertiesIgnoreNull(etrBondToStockDto, etrSinglePortfolioDto);
+			etrBondToStockDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondToStockDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+			etrBondToStockDto.setExpConNum(dto.getToShareAvailableNum());//可转股数量
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBondToStockDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBondToStockDto);
+		}
+
+		// 标准券出入库指令
+		EtrStandardBondInOutDto etrStandardBondInOutDto = new EtrStandardBondInOutDto();
+		if (DictCodeListExt3.上农商_指令业务类型_标准券出入库指令.getValue().equals(baseDto.getEntrustType())) {
+			etrSinglePortfolioDto.setPrice(ArithmeticUtil.divide(etrSinglePortfolioDto.getPrice(),new BigDecimal(100),6));
+			BeanUtil.copyPropertiesIgnoreNull(etrStandardBondInOutDto, etrSinglePortfolioDto);
+			//etrStandardBondInOutDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			if (etrStandardBondInOutDto.getPs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())) {
+				etrStandardBondInOutDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+			} else if (etrStandardBondInOutDto.getPs().equals(DictCodeListExt3.交易方向_质押券出库.getValue())) {
+				etrStandardBondInOutDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());// 资产大类
+			}
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrStandardBondInOutDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrStandardBondInOutDto);
+		}
+
+		// 债券质押式回购竞价指令
+		EtrBondRepoBiddingDto etrBondRepoBiddingDto = new EtrBondRepoBiddingDto();
+		if (DictCodeListExt3.上农商_指令业务类型_债券质押式回购竞价指令.getValue().equals(baseDto.getEntrustType())) {
+			etrSinglePortfolioDto.setPrice(ArithmeticUtil.divide(etrSinglePortfolioDto.getPrice(),new BigDecimal(100),6));
+			BeanUtil.copyPropertiesIgnoreNull(etrBondRepoBiddingDto, etrSinglePortfolioDto);
+			etrBondRepoBiddingDto.setFinprodType2(dto.getFinprodType2());// 金融产品类型（投管）
+			etrBondRepoBiddingDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());// 资产大类
+			// 质押式回购 设置 AssetType1->平安资产类型_质押式回购
+			etrBondRepoBiddingDto.setAssetType1(DictCodeList.回购类型_质押式竞价回购.getValue());
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrust, etrBondRepoBiddingDto);
+			BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, etrBondRepoBiddingDto);
+		}
+		entity.setEtrEntrust(etrEntrust);
+		entity.setEtrEntrustAdd(etrEntrustAdd);
 		// 设置指令创建来源
 		entity.getEtrEntrustAdd().setEntrustCreateSource(DictCodeListExt3.指令创建来源_场内实时.getValue());
         entity.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
@@ -293,7 +1030,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * 查询交易对手【非内部交易对手】
      * @return
      */
-	public List<SelectOptionDto> selectCounterIdByCounterType(Map<String, Object> map) {
+	public List<SelectOptionDto> selectCounterIdByCounterType(SelectOptionRequestDto dto) {
+		Map<String, Object> map = BeanUtil.object2Map(dto);
 	    if (map.containsKey("search")){
             map.put("counterId",map.get("search"));
         }
@@ -306,11 +1044,11 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         if (object instanceof List<?>){
             List<Map<String,Object>> mapList = (List<Map<String,Object>>)object;
             mapList.forEach(item ->{
-                SelectOptionDto dto = new SelectOptionDto();
-                dto.setId(item.get("counterId").toString());
-                dto.setText(item.get("counterName").toString());
-                dto.setObject(item);
-                resultList.add(dto);
+                SelectOptionDto selectOptionDto = new SelectOptionDto();
+				selectOptionDto.setId(item.get("counterId").toString());
+				selectOptionDto.setText(item.get("counterName").toString());
+				selectOptionDto.setObject(item);
+                resultList.add(selectOptionDto);
             });
         }
 		return resultList;
@@ -390,8 +1128,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @return 联想文本框
      */
     public List<SuggestDto> selectCounterDealer(Map<String, Object> map) {
-        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectCounterDealer",
-                map, SuggestDto.class);
+		// 交易场所
+		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+		List<SuggestDto> suggestDtos = etrExchangeTradeCommonMapper.selectCounterDealer(map);
+		return suggestDtos;
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectCounterDealer",
+//                map, SuggestDto.class);
     }
 
     /**
@@ -424,8 +1166,11 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @return 联想文本框
      */
     public List<SuggestDto> selectTrader(Map<String, Object> map) {
-        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectTrader",
-                map, SuggestDto.class);
+		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+		List<SuggestDto> suggestDtos = etrExchangeTradeCommonMapper.selectTrader(map);
+		return suggestDtos;
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectTrader",
+//                map, SuggestDto.class);
     }
 
 	/**
@@ -540,7 +1285,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         String tradeMarket = (String) param.get("tradeMarket");
         String ps = (String) param.get("ps");
         String calculateField = (String) param.get("calculateField");
-
         // 定义需要返回的参数
         BigDecimal unitInt = null;// 单位应计利息
         BigDecimal intAmt = null;// 应计利息总额
@@ -562,7 +1306,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         if (StringUtil.isNotEmpty(param.get("exerYield"))) {
             exerYield = new BigDecimal(param.get("exerYield").toString()).divide(new BigDecimal(100));// 行权收益率
         }
-
         // 如果交易场所为上交所、深交所以外的情况
         boolean isJiaoYiSuo = true;
         if (!StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(), tradeMarket)
@@ -575,14 +1318,23 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         tempParamMap.put("finprodId", finprodId);
 
         // b.获取计息区间投资端利率报价信息（债券的利率重置信息）
-        List<FinCashCalcRule> finCashCalcRuleList = restTemplate.postForList(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectBondsIntResetList", tempParamMap,
-                FinCashCalcRule.class);
+//		Map<String, Object> param = new HashMap<String, Object>();
+//		param.put("finprodId", finprodId);
+		param.put("finprodType", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+		List<FinCashCalcRule> finCashCalcRuleList = etrExchangeTradeCommonMapper.selectBondsIntResetList(param);
+//		List<FinCashCalcRule> finCashCalcRuleList = restTemplate.postForList(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectBondsIntResetList", tempParamMap,
+//                FinCashCalcRule.class);
 
         // c.获取债券的付息计划信息
-        List<FinCashPlanDto> finCashPlanList = restTemplate.postForList(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getFinCashPlan", tempParamMap,
-                FinCashPlanDto.class);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("finprodId", finprodId);
+		map.put("cashType1", DictCodeListExt1.现金流一级类型_利息.getValue());
+		map.put("finprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
+		List<FinCashPlanDto> finCashPlanList = etrExchangeTradeCommonMapper.getFinCashPlan(map);
+//        List<FinCashPlanDto> finCashPlanList = restTemplate.postForList(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getFinCashPlan", tempParamMap,
+//                FinCashPlanDto.class);
         List<SecIntSchedule> invScheduleList = new ArrayList<>();
         List<FinCashPlanDto> intSchList = new ArrayList<FinCashPlanDto>();
         for (FinCashPlanDto item : finCashPlanList) {
@@ -598,13 +1350,22 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
                 intSchList.add(item);
             }
         }
-
         // d.获取债券基本资料信息
         // 计算行权收益率，非行权时，取大于当日的行权日
         tempParamMap.put("ps", ps);
-        SecInfoModelDto secInfoModelDto = restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getSecInfoModel", tempParamMap,
-                SecInfoModelDto.class);
+		tempParamMap.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+		tempParamMap.put("cashType1", DictCodeListExt1.现金流一级类型_利息.getValue());
+		tempParamMap.put("finprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
+		tempParamMap.put("sysDate", DateUtil.platDateFromCache());
+		tempParamMap.put("YES_NO_Y", DictCodeList.是否_是.getValue());
+		tempParamMap.put("EXEC_MODE02", DictCodeList.行权方式_回售.getValue());
+		tempParamMap.put("EXEC_MODE01", DictCodeList.行权方式_赎回.getValue());
+		tempParamMap.put("psT03", DictCodeList.交易方向_行权_回售.getValue());
+		tempParamMap.put("psT39", DictCodeList.交易方向_行权_赎回.getValue());
+		SecInfoModelDto secInfoModelDto = etrExchangeTradeCommonMapper.getSecInfoModel(tempParamMap);
+//        SecInfoModelDto secInfoModelDto = restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getSecInfoModel", tempParamMap,
+//                SecInfoModelDto.class);
         SecInfoModel secInfoModel = toSecInfoModel(secInfoModelDto);
         if (secInfoModelDto != null && secInfoModelDto.getStartDate() != null
                 && DateUtil.compareTo(secInfoModelDto.getStartDate(), settleDate) > 0) {
@@ -692,7 +1453,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             yieldPriceInParameter.setCurrIntMethod(CurrIntCalMethod.使用区间起始日前最新票面利率计算);
             priceYieldInParameter.setCurrIntMethod(CurrIntCalMethod.使用区间起始日前最新票面利率计算);
         }
-
         // 百元面值应计利息
         BigDecimal accurInt = BigDecimal.ZERO;
         // 交易所债券特殊处理start----------------------------------------------------------------
@@ -706,14 +1466,17 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             }
         }
         // 交易所债券特殊处理end----------------------------------------------------------------
-
         // a.当前债券面额取得（根据还本计划计算）
         Map<String, Object> paraMap = new HashMap<>();
         paraMap.put("finprodId", finprodId);
         paraMap.put("settleDate", DateUtil.format(tempSettleDate));
-        BigDecimal curSecAmt = restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getCurSecAmt", paraMap, BigDecimal.class);
-
+//        BigDecimal curSecAmt = restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getCurSecAmt", paraMap, BigDecimal.class);
+		param.put("cashType1", DictCodeListExt1.现金流一级类型_本金.getValue());
+		param.put("finprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
+//		String settleDate = (String) param.get("settleDate");
+		param.put("settleDate",settleDate);
+		BigDecimal curSecAmt = etrExchangeTradeCommonMapper.getCurSecAmt(param);
         AccurIntCalInParameter accurIntCalInParameter = new AccurIntCalInParameter();
         // 计算日
         accurIntCalInParameter.setCalDate(toLocalDate(tempSettleDate));
@@ -727,7 +1490,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         accurIntCalInParameter.setSecIntScheduleList(invScheduleList);
         // 利率重置信息
         accurIntCalInParameter.setPaperIrResetList(paperIrResetList);
-
         // 交易所债券特殊处理start----------------------------------------------------------------
         AccurIntCalOutParameter out = null;
         // 如果交易场所为上交所、深交所的情况
@@ -739,7 +1501,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
                     intMap.put(intSche.getActualCutoffDate().toString(), intSche.getAmount());
                 }
             }
-
             if (intMap.containsKey(accurIntCalInParameter.getCalDate().toString())
                     && !((Variety.贴现.equals(secInfoModel.getBondsType()))
                             || Variety.零息.equals(secInfoModel.getBondsType()))) {
@@ -756,7 +1517,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             }
         }
         // 交易所债券特殊处理end----------------------------------------------------------------
-
         if (out != null) {
             accurInt = ArithmeticUtil.round(out.getInterest(), SCALE, RoundingMode.HALF_UP);
         } else {
@@ -766,7 +1526,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             AccurIntCalOutParameter accurIntCalOutParameter = calc.calculate(accurIntCalInParameter);
             accurInt = ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);
         }
-
         // 单位应计利息
         if (isJiaoYiSuo) {
             unitInt = ArithmeticUtil.divide(ArithmeticUtil.multiply(accurInt, curSecAmt), new BigDecimal(100),
@@ -780,7 +1539,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
                     RoundingMode.HALF_UP);
         }
         intAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(unitInt, prinAmt), 100, 2);
-
         if ((StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), ps)
                 || StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), ps))) {
             if (unitInt.compareTo(BigDecimal.ZERO) < 0) {
@@ -900,14 +1658,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		List<EtrExchangeTradeQuotationResponse> list = new ArrayList<EtrExchangeTradeQuotationResponse>();
         String secId = (String)map.get("secId");
 		String param = "?quote_type=1&stock_code="+secId;
-
 		boolean flag = isBuyback(secId);
 		Map quoteMap = restTemplate.getForObject(ServiceApplication.EXCHANGE_SERVICE_NAME + queryIntegratedQuote + param, Map.class);
-
-		//Map quoteMap = simpleRestTemplate.getForObject("http://192.168.70.3:8081/tams" + queryIntegratedQuote + param, Map.class);
-
-
-		if(quoteMap != null && quoteMap.get("data") !=null) {
+        if(quoteMap != null && quoteMap.get("data") !=null) {
 			List<Map<String, Object>> quoteList = (List<Map<String, Object>>) quoteMap.get("data");
 			if(!StringUtil.isEmptyList(quoteList)) {
 				quoteList.forEach(tmp -> {
@@ -938,29 +1691,22 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 							dto.setEntrustPs(DictCodeListExt3.交易方向_逆回购.getValue());
 						}
 					}
-
 					//数量
 					if((Integer)tmp.get("entrustVolume") !=null) {
 						dto.setEntrustNum(new BigDecimal((Integer)tmp.get("entrustVolume")));
 					}
-
 					//价格（净价） / 回购利率
 					if((Double)tmp.get("entrustPrice") !=null) {
 						dto.setEntrustPrice(new BigDecimal((Double)tmp.get("entrustPrice")));
 					}
-
 					//对手方交易席位
 					dto.setOppositeSeat((String)tmp.get("propSeatNo"));
-
 					//订单编号
 					dto.setAgreeNum((String)tmp.get("contractId"));
-
 					//对手方交易员姓名
 					dto.setContacts((String)tmp.get("liaisonName"));
-
 					//对手方交易员联系方式
 					dto.setContactNumber((String)tmp.get("liaisonTel"));
-
 					//list.add(dto);
 				});
 			}
@@ -974,13 +1720,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         Page<EtrExchangeTradeQuotation001Dto> page = new Page<EtrExchangeTradeQuotation001Dto>();
         List<EtrExchangeTradeQuotation001Dto> list = new ArrayList<EtrExchangeTradeQuotation001Dto>();
         String secId= (String)map.get("secId");
-
         String param = "?quote_type=5&stockId="+secId;
-
         Map quoteMap = restTemplate.getForObject(ServiceApplication.EXCHANGE_SERVICE_NAME + queryIntegratedQuote + param, Map.class);
-
-        //Map quoteMap = simpleRestTemplate.getForObject("http://192.168.70.3:8081/tams" + queryIntegratedQuote + param, Map.class);
-
         if(quoteMap != null && quoteMap.get("data") !=null) {
             List<Map<String, Object>> quoteList = (List<Map<String, Object>>) quoteMap.get("data");
             if(!StringUtil.isEmptyList(quoteList)) {
@@ -1036,13 +1777,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		Page<EtrExchangeTradeQuotation001Dto> page = new Page<EtrExchangeTradeQuotation001Dto>();
 		List<EtrExchangeTradeQuotation001Dto> list = new ArrayList<EtrExchangeTradeQuotation001Dto>();
         String secId= (String)map.get("secId");
-
 		String param = "?quote_type=2&stock_code="+secId;
-
 	    Map quoteMap = restTemplate.getForObject(ServiceApplication.EXCHANGE_SERVICE_NAME + queryIntegratedQuote + param, Map.class);
-
-	    //Map quoteMap = simpleRestTemplate.getForObject("http://192.168.70.3:8081/tams" + queryIntegratedQuote + param, Map.class);
-
 		if(quoteMap != null && quoteMap.get("data") !=null) {
 			List<Map<String, Object>> quoteList = (List<Map<String, Object>>) quoteMap.get("data");
 			if(!StringUtil.isEmptyList(quoteList)) {
@@ -1055,7 +1791,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 					if(tmp.get("entrustPrice") !=null) {
 						dto.setClosingPrice(new BigDecimal((Double)tmp.get("entrustPrice")));
 					}
-
 					//日均价
 					if(tmp.get("fullPrice") !=null) {
 						dto.setDailyAvgPrice(new BigDecimal((Double)tmp.get("fullPrice")));
@@ -1113,49 +1848,516 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @since 1.0
 	 */
 	public EtrExchangeTradeSaveRequest getEtrExchangeTradeInfo(String entrustId) {
-        return restTemplate.postForObject(
-            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getEtrExchangeTradeInfo",entrustId,
-            EtrExchangeTradeSaveRequest.class);
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getEtrExchangeTradeInfo",entrustId,
+//            EtrExchangeTradeSaveRequest.class);
+		try {
+			EtrExchangeTradeSaveRequest etrExchangeTrade001Dto = new EtrExchangeTradeSaveRequest();
+			//通过指令ID获取委托指令表的DTO,获取委托类型
+			EtrEntrust etrEntrust =  etrExchangeTradeCommonMapper.selectEntrustByKey(entrustId);
+			if(StringUtil.isNotEmpty(etrEntrust)) {
+				//股票竞价指令
+				if(StringUtil.equals(etrEntrust.getEntrustType(), DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue())) {
+					EtrStockBiddingDto etrStockBiddingDto = EtrComponentFactory.getComponentService(EtrStockBiddingDto.class).entrustSelect(entrustId);
+					if(StringUtil.isNotEmpty(etrStockBiddingDto)) {
+						BeanUtil.copyProperties(etrExchangeTrade001Dto, etrStockBiddingDto);
+						etrExchangeTrade001Dto.setAcctNo(etrStockBiddingDto.getDealCurAcct());// 资金账户
+					}
+				}
+				//基金竞价指令
+				else if(StringUtil.equals(etrEntrust.getEntrustType(), DictCodeListExt3.上农商_指令业务类型_基金竞价指令.getValue())) {
+					EtrFundBiddingDto etrFundBiddingDto = EtrComponentFactory.getComponentService(EtrFundBiddingDto.class).entrustSelect(entrustId);
+					if(StringUtil.isNotEmpty(etrFundBiddingDto)) {
+						BeanUtil.copyProperties(etrExchangeTrade001Dto, etrFundBiddingDto);
+						etrExchangeTrade001Dto.setAcctNo(etrFundBiddingDto.getDealCurAcct());// 资金账户
+					}
+				}
+				//大宗债券质押式回购指令
+				else if(StringUtil.equals(etrEntrust.getEntrustType(), DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue())) {
+					EtrBlockTradePledgeRepoDto etrBlockTradePledgeRepoDto =  EtrComponentFactory.getComponentService(EtrBlockTradePledgeRepoDto.class).entrustSelect(entrustId);
+					if(StringUtil.isNotEmpty(etrBlockTradePledgeRepoDto)) {
+						BeanUtil.copyProperties(etrExchangeTrade001Dto, etrBlockTradePledgeRepoDto);
+						etrExchangeTrade001Dto.setSeatId(etrBlockTradePledgeRepoDto.getCounterSeat());//席位号
+						etrExchangeTrade001Dto.setAgreeOnId(etrBlockTradePledgeRepoDto.getCounterConNo());//约定号
+						etrExchangeTrade001Dto.setAcctNo(etrBlockTradePledgeRepoDto.getDealCurAcct());// 资金账户
+						etrExchangeTrade001Dto.setPrice(ArithmeticUtil.multiply(etrBlockTradePledgeRepoDto.getPrice(),new BigDecimal(100)));
+					}
+				}
+				//大宗股票指令
+				else if(StringUtil.equals(etrEntrust.getEntrustType(), DictCodeListExt3.上农商_指令业务类型_大宗股票指令.getValue())) {
+					EtrBlockTradeStockDto etrBlockTradeStockDto =  EtrComponentFactory.getComponentService(EtrBlockTradeStockDto.class).entrustSelect(entrustId);
+					if(StringUtil.isNotEmpty(etrBlockTradeStockDto)) {
+						BeanUtil.copyProperties(etrExchangeTrade001Dto, etrBlockTradeStockDto);
+						etrExchangeTrade001Dto.setSeatId(etrBlockTradeStockDto.getCounterSeat());//席位号
+						etrExchangeTrade001Dto.setAgreeOnId(etrBlockTradeStockDto.getCounterConNo());//约定号
+						etrExchangeTrade001Dto.setAcctNo(etrBlockTradeStockDto.getDealCurAcct());// 资金账户
+					}
+				}
+				//大宗基金指令
+				else if(StringUtil.equals(etrEntrust.getEntrustType(), DictCodeListExt3.上农商_指令业务类型_大宗基金指令.getValue())) {
+					EtrBlockTradeFundDto etrBlockTradeFundDto =  EtrComponentFactory.getComponentService(EtrBlockTradeFundDto.class).entrustSelect(entrustId);
+					if(StringUtil.isNotEmpty(etrBlockTradeFundDto)) {
+						BeanUtil.copyProperties(etrExchangeTrade001Dto, etrBlockTradeFundDto);
+						etrExchangeTrade001Dto.setSeatId(etrBlockTradeFundDto.getCounterSeat());//席位号
+						etrExchangeTrade001Dto.setAgreeOnId(etrBlockTradeFundDto.getCounterConNo());//约定号
+						etrExchangeTrade001Dto.setAcctNo(etrBlockTradeFundDto.getDealCurAcct());// 资金账户
+					}
+				}
+
+				//大宗债券指令
+				else if(StringUtil.equals(etrEntrust.getEntrustType(), DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue())) {
+					EtrBlockTradeBondDto etrBlockTradeBondDto = EtrComponentFactory.getComponentService(EtrBlockTradeBondDto.class).entrustSelect(entrustId);
+					if(StringUtil.isNotEmpty(etrBlockTradeBondDto)) {
+						BeanUtil.copyProperties(etrExchangeTrade001Dto, etrBlockTradeBondDto);
+						etrExchangeTrade001Dto.setSeatId(etrBlockTradeBondDto.getCounterSeat());//席位号
+						etrExchangeTrade001Dto.setAgreeOnId(etrBlockTradeBondDto.getCounterConNo());//约定号
+						etrExchangeTrade001Dto.setYield(etrBlockTradeBondDto.getMatureYield().multiply(new BigDecimal(100)));//收益率
+						etrExchangeTrade001Dto.setFprice(etrBlockTradeBondDto.getFullPrice());//全价
+						etrExchangeTrade001Dto.setCalculateField(etrBlockTradeBondDto.getCalMode());// 计算方式
+						etrExchangeTrade001Dto.setAcctNo(etrBlockTradeBondDto.getDealCurAcct());// 资金账户
+					}
+
+				}
+				//债券竞价指令
+				else if(DictCodeListExt3.上农商_指令业务类型_债券竞价指令.getValue().equals(etrEntrust.getEntrustType())) {
+					EtrBondBiddingDto etrBondBiddingDto = EtrComponentFactory.getComponentService(EtrBondBiddingDto.class).entrustSelect(entrustId);
+					if(StringUtil.isNotEmpty(etrBondBiddingDto)){
+						BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto,etrBondBiddingDto);
+						etrExchangeTrade001Dto.setYield(etrBondBiddingDto.getMatureYield().multiply(new BigDecimal(100))); // 到期收益率
+						etrExchangeTrade001Dto.setFprice(etrBondBiddingDto.getFullPrice()); // 全价
+						etrExchangeTrade001Dto.setCalculateField(etrBondBiddingDto.getCalMode());// 计算方式
+						etrExchangeTrade001Dto.setFinprodType2(etrBondBiddingDto.getFinprodType2());// 金融产品类型（投管）
+					}
+				}
+				// 上交所固定收益平台现券交易指令
+				else if (DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue().equals(etrEntrust.getEntrustType())) {
+					EtrBondFxdIncmPlatSHDto etrBondFxdIncmPlatSHDto = EtrComponentFactory.getComponentService(EtrBondFxdIncmPlatSHDto.class).entrustSelect(entrustId);
+					BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto, etrBondFxdIncmPlatSHDto);
+					etrExchangeTrade001Dto.setYield(etrBondFxdIncmPlatSHDto.getMatureYield().multiply(new BigDecimal(100))); // 到期收益率
+					etrExchangeTrade001Dto.setFprice(etrBondFxdIncmPlatSHDto.getFullPrice()); // 全价
+					etrExchangeTrade001Dto.setCounterId(etrBondFxdIncmPlatSHDto.getCounterId());// 交易对手
+					etrExchangeTrade001Dto.setTrader(etrBondFxdIncmPlatSHDto.getTrader());// 本方交易员
+					etrExchangeTrade001Dto.setCounterTrader(etrBondFxdIncmPlatSHDto.getCounterTrader());// 对手方交易员
+					etrExchangeTrade001Dto.setCounterOrg(etrBondFxdIncmPlatSHDto.getCounterOrg());// 对手方交易商
+					etrExchangeTrade001Dto.setAgreeOnId(etrBondFxdIncmPlatSHDto.getCounterConNo());//约定号
+					etrExchangeTrade001Dto.setCalculateField(etrBondFxdIncmPlatSHDto.getCalMode());// 计算方式
+					etrExchangeTrade001Dto.setFinprodType2(etrBondFxdIncmPlatSHDto.getFinprodType2());// 金融产品类型（投管）
+					if (etrBondFxdIncmPlatSHDto.getSettleSpreed() != null) {
+						if (etrBondFxdIncmPlatSHDto.getSettleSpreed() == 0) {
+							etrExchangeTrade001Dto.setSettleSpeed(DictCodeList.清算速度_T_0.getValue());// 清算速度
+						} else if (etrBondFxdIncmPlatSHDto.getSettleSpreed() == 1) {
+							etrExchangeTrade001Dto.setSettleSpeed(DictCodeList.清算速度_T_1.getValue());// 清算速度
+						}
+					}
+				}
+
+				// 债券回售指令
+				else if (DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue().equals(etrEntrust.getEntrustType())) {
+					EtrBondRepurchaseDto etrBondRepurchaseDto = EtrComponentFactory.getComponentService(EtrBondRepurchaseDto.class).entrustSelect(entrustId);
+					BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto,etrBondRepurchaseDto);
+					etrExchangeTrade001Dto.setFinprodType2(etrBondRepurchaseDto.getFinprodType2());// 金融产品类型（投管）
+				}
+
+				// 配股指令
+				else if (DictCodeListExt3.上农商_指令业务类型_配股指令.getValue().equals(etrEntrust.getEntrustType())) {
+					EtrStockRightDto etrStockRightDto = EtrComponentFactory.getComponentService(EtrStockRightDto.class).entrustSelect(entrustId);
+					BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto, etrStockRightDto);
+					etrExchangeTrade001Dto.setFinprodType2(etrStockRightDto.getFinprodType2());// 金融产品类型（投管）
+				}
+				// 新股申购指令
+				else if (DictCodeListExt3.上农商_指令业务类型_新股申购指令.getValue().equals(etrEntrust.getEntrustType())) {
+					EtrStockNewDto etrStockNewDto = EtrComponentFactory.getComponentService(EtrStockNewDto.class).entrustSelect(entrustId);
+					BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto, etrStockNewDto);
+					etrExchangeTrade001Dto.setFinprodType2(etrStockNewDto.getFinprodType2());// 金融产品类型（投管）
+				}
+
+				// 配债指令
+				else if (DictCodeListExt3.上农商_指令业务类型_配债指令.getValue().equals(etrEntrust.getEntrustType())) {
+					EtrBondRightDto etrBondRightDto = EtrComponentFactory.getComponentService(EtrBondRightDto.class).entrustSelect(entrustId);
+					BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto, etrBondRightDto);
+					etrExchangeTrade001Dto.setFinprodType2(etrBondRightDto.getFinprodType2());// 金融产品类型（投管）
+				}
+
+				// 可转债申购指令
+				else if (DictCodeListExt3.上农商_指令业务类型_可转债申购指令.getValue().equals(etrEntrust.getEntrustType())) {
+					EtrConvBondApplyDto etrConvBondApplyDto = EtrComponentFactory.getComponentService(EtrConvBondApplyDto.class).entrustSelect(entrustId);
+					BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto, etrConvBondApplyDto);
+					etrExchangeTrade001Dto.setFinprodType2(etrConvBondApplyDto.getFinprodType2());// 金融产品类型（投管）
+				}
+
+				// 债转股指令
+				else if (DictCodeListExt3.上农商_指令业务类型_债转股指令.getValue().equals(etrEntrust.getEntrustType())) {
+					EtrBondToStockDto etrBondToStockDto = EtrComponentFactory.getComponentService(EtrBondToStockDto.class).entrustSelect(entrustId);
+					BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto, etrBondToStockDto);
+					etrExchangeTrade001Dto.setFinprodType2(etrBondToStockDto.getFinprodType2());// 金融产品类型（投管）
+					etrExchangeTrade001Dto.setToShareAvailableNum(etrBondToStockDto.getExpConNum());//债转股数量
+				}
+
+				// 标准券出入库指令
+				else if (DictCodeListExt3.上农商_指令业务类型_标准券出入库指令.getValue().equals(etrEntrust.getEntrustType())) {
+					EtrStandardBondInOutDto etrStandardBondInOutDto = EtrComponentFactory.getComponentService(EtrStandardBondInOutDto.class).entrustSelect(entrustId);
+					BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto, etrStandardBondInOutDto);
+					etrExchangeTrade001Dto.setPrice(etrStandardBondInOutDto.getPrice().multiply(new BigDecimal(100)));
+					etrExchangeTrade001Dto.setFinprodType2(etrStandardBondInOutDto.getFinprodType2());// 金融产品类型（投管）
+				}
+
+				// 债券质押式回购竞价指令
+				else if (DictCodeListExt3.上农商_指令业务类型_债券质押式回购竞价指令.getValue().equals(etrEntrust.getEntrustType())) {
+					EtrBondRepoBiddingDto etrBondRepoBiddingDto = EtrComponentFactory.getComponentService(EtrBondRepoBiddingDto.class).entrustSelect(entrustId);
+					BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto, etrBondRepoBiddingDto);
+					etrExchangeTrade001Dto.setPrice(etrBondRepoBiddingDto.getPrice().multiply(new BigDecimal(100)));
+					etrExchangeTrade001Dto.setFinprodType2(etrBondRepoBiddingDto.getFinprodType2());// 金融产品类型（投管）
+				}
+
+				if(!StringUtil.equals(etrEntrust.getEntrustType(), DictCodeListExt3.上农商_指令业务类型_债券竞价指令.getValue()) && !StringUtil.equals(etrEntrust.getEntrustType(), DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue()) && !StringUtil.equals(etrEntrust.getEntrustType(), DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue())) {
+					etrExchangeTrade001Dto.setEntrustPrice(etrExchangeTrade001Dto.getPrice());//指令价格
+					etrExchangeTrade001Dto.setPrice(null);//净价需要置空
+				}
+
+				etrExchangeTrade001Dto.setEntrustBussType(etrEntrust.getEntrustType());
+
+				EtrEntrustAdd etrEntrustAdd = etrExchangeTradeCommonMapper.selectEntrustAddByKey(etrEntrust.getEntrustId());
+				if(null != etrEntrustAdd && StringUtils.isNotEmpty(etrEntrustAdd.getDealCurAcct())){
+					etrExchangeTrade001Dto.setAcctNo(etrEntrustAdd.getDealCurAcct());
+				}
+				if (null != etrEntrustAdd && StringUtils.isNotEmpty(etrEntrustAdd.getDealMode())) {
+					etrExchangeTrade001Dto.setDeclaType(etrEntrustAdd.getDealMode());
+				}
+			}
+			return etrExchangeTrade001Dto;
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
     /**
      * 委托关闭
      * @param entity
      */
-	public void closeDelegate(EtrExchangeTradeOperateRequest entity){
-        restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/entrustClose",entity,
-                Integer.class);
+	public void closeDelegate(EtrExchangeTrade003Dto entity){
+//        restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/entrustClose",entity,
+//                Integer.class);
+		EtrBaseDto etrBaseDto = new EtrBaseDto();
+		etrBaseDto.setEntrustId(entity.getEntrustId());
+		EtrParameterDto paraDto = new EtrParameterDto();
+		setUser(paraDto);
+		componentService.updateSettings(paraDto);
+		componentService.entrustClose(etrBaseDto);
+		// 处理指令持仓和头寸
+		if (baseEtrCashPositionCommService != null
+				&& DictCodeList.委托状态_已接收.getValue().equals(entity.getEntrustStatus())) {
+			baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
+		}
     }
 
     /**
      * 委托撤销
      * @param entity
      */
-    public void recallDelegate(EtrExchangeTradeOperateRequest entity){
-        restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/entrustRevoke",entity,
-                Integer.class);
+    public void recallDelegate(EtrExchangeTrade003Dto entity){
+		EtrBaseDto etrBaseDto = new EtrBaseDto();
+		etrBaseDto.setEntrustId(entity.getEntrustId());
+		EtrParameterDto paraDto = new EtrParameterDto();
+		setUser(paraDto);
+		componentService.updateSettings(paraDto);
+		//关闭委托
+		componentService.entrustRevoke(etrBaseDto);
+		//处理指令持仓和头寸(仅有未被接收的指令才可以撤会,所以一般只可能存在下指令时生成的持仓和流水)
+		if (baseEtrCashPositionCommService != null && (DictCodeList.委托状态_待接收.getValue().equals(entity.getEntrustStatus())
+				||DictCodeListExt3.委托状态_待分发.getValue().equals(entity.getEntrustStatus()))) {
+			baseEtrCashPositionCommService.entrustCloseExecute(entity.getEntrustId());
+		}
+//        restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/entrustRevoke",entity,
+//                Integer.class);
     }
     
     /**
      * 保存check
      * @param entity
      */
-    public AjaxResult checkSave(EtrExchangeTradeSaveRequest entity){
-        return restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/checkSave",entity,
-                AjaxResult.class);
-    }
+    public AjaxResult checkSave(EtrExchangeTradeSaveRequest entity, BindingResult result){
+//        return restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/checkSave",entity,
+//                AjaxResult.class);
+		try {
+			EtrParameterDto paraDto = new EtrParameterDto();
+			setUser(paraDto);
+			if(null != entity.getEntrustPrice()){
+				entity.setPrice(entity.getEntrustPrice());// 指令价格 或者净价
+			}
+			// 构造单组合单资产DTO
+			EtrSinglePortfolioDto etrSinglePortfolioDto = getEtrSinglePortfolio(entity);
+			//设置交易买卖默认参数
+			setCheckParams(entity,paraDto);
+			if (DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				//股票竞价指令
+				EtrStockBiddingDto etrStockBiddingDto = new EtrStockBiddingDto();
+				BeanUtil.copyProperties(etrStockBiddingDto, etrSinglePortfolioDto);
+				etrStockBiddingDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrStockBiddingDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStockBiddingDto.class).entrustCheck(etrStockBiddingDto, result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_基金竞价指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				//基金竞价指令
+				EtrFundBiddingDto etrFundBiddingDto = new EtrFundBiddingDto();
+				BeanUtil.copyProperties(etrFundBiddingDto, entity);
+				etrFundBiddingDto.setAssetType(DictCodeList.平安资产类型_基金.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrFundBiddingDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrFundBiddingDto.class).entrustCheck(etrFundBiddingDto, result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				//大宗质押式回购指令
+				EtrBlockTradePledgeRepoDto etrBlockTradePledgeRepoDto = new EtrBlockTradePledgeRepoDto();
+				BeanUtil.copyProperties(etrBlockTradePledgeRepoDto, entity);
+				etrBlockTradePledgeRepoDto.setCounterSeat(entity.getSeatId());
+				etrBlockTradePledgeRepoDto.setCounterConNo(entity.getAgreeOnId());// 约定号
+				etrBlockTradePledgeRepoDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrBlockTradePledgeRepoDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBlockTradePledgeRepoDto.class).entrustCheck(etrBlockTradePledgeRepoDto, result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_大宗股票指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				//大宗股票指令
+				EtrBlockTradeStockDto etrBlockTradeStockDto = new EtrBlockTradeStockDto();
+				BeanUtil.copyProperties(etrBlockTradeStockDto, entity);
+				etrBlockTradeStockDto.setCounterSeat(entity.getSeatId());
+				etrBlockTradeStockDto.setCounterConNo(entity.getAgreeOnId());// 约定号
+				etrBlockTradeStockDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrBlockTradeStockDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBlockTradeStockDto.class).entrustCheck(etrBlockTradeStockDto,result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_大宗基金指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				//大宗基金指令
+				EtrBlockTradeFundDto etrBlockTradeFundDto = new EtrBlockTradeFundDto();
+				BeanUtil.copyProperties(etrBlockTradeFundDto, entity);
+				etrBlockTradeFundDto.setCounterSeat(entity.getSeatId());
+				etrBlockTradeFundDto.setCounterConNo(entity.getAgreeOnId());// 约定号
+				etrBlockTradeFundDto.setAssetType(DictCodeList.平安资产类型_基金.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrBlockTradeFundDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBlockTradeFundDto.class).entrustCheck(etrBlockTradeFundDto,result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				//大宗债券指令
+				EtrBlockTradeBondDto etrBlockTradeBondDto = new EtrBlockTradeBondDto();
+				BeanUtil.copyProperties(etrBlockTradeBondDto, entity);
+				etrBlockTradeBondDto.setCounterSeat(entity.getSeatId());
+				etrBlockTradeBondDto.setCounterConNo(entity.getAgreeOnId());// 约定号
+				etrBlockTradeBondDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrBlockTradeBondDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBlockTradeBondDto.class).entrustCheck(etrBlockTradeBondDto,result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_债券竞价指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				// 债券竞价指令
+				EtrBondBiddingDto etrBondBiddingDto = new EtrBondBiddingDto();
+				BeanUtil.copyPropertiesIgnoreNull(etrBondBiddingDto, etrSinglePortfolioDto);
+				etrBondBiddingDto.setMatureYield(ArithmeticUtil.divide(entity.getYield(),new BigDecimal(100),8)); // 到期收益率
+				etrBondBiddingDto.setFullPrice(entity.getFprice()); // 全价
+				etrBondBiddingDto.setCalMode(entity.getCalculateField());// 计算方式
+				etrBondBiddingDto.setFinprodType2(entity.getFinprodType2());// 金融产品类型（投管）
+				etrBondBiddingDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrBondBiddingDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondBiddingDto.class).entrustCheck(etrBondBiddingDto,result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				// 上交所固定收益平台现券交易指令
+				EtrBondFxdIncmPlatSHDto etrBondFxdIncmPlatSHDto = new EtrBondFxdIncmPlatSHDto();
+				BeanUtil.copyPropertiesIgnoreNull(etrBondFxdIncmPlatSHDto, etrSinglePortfolioDto);
+				etrBondFxdIncmPlatSHDto.setMatureYield(ArithmeticUtil.divide(entity.getYield(),new BigDecimal(100),8)); // 到期收益率
+				etrBondFxdIncmPlatSHDto.setFullPrice(entity.getFprice()); // 全价
+				etrBondFxdIncmPlatSHDto.setCounterId(entity.getCounterId());// 交易对手
+				etrBondFxdIncmPlatSHDto.setTrader(entity.getTrader());// 本方交易员
+				etrBondFxdIncmPlatSHDto.setCounterTrader(entity.getCounterTrader());// 对手方交易员
+				etrBondFxdIncmPlatSHDto.setCounterOrg(entity.getCounterOrg());// 对手方交易商
+				etrBondFxdIncmPlatSHDto.setCounterConNo(entity.getAgreeOnId());// 约定号
+				etrBondFxdIncmPlatSHDto.setCalMode(entity.getCalculateField());// 计算方式
+				etrBondFxdIncmPlatSHDto.setFinprodType2(entity.getFinprodType2());// 金融产品类型（投管）
+				etrBondFxdIncmPlatSHDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+				etrBondFxdIncmPlatSHDto.setSettleSpreed(Long.parseLong(entity.getSettleSpeed()));//清算速度
+				EtrComponentFactory.getComponentService(EtrBondFxdIncmPlatSHDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondFxdIncmPlatSHDto.class).entrustCheck(etrBondFxdIncmPlatSHDto,result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				// 债券回售指令
+				EtrBondRepurchaseDto etrBondRepurchaseDto = new EtrBondRepurchaseDto();
+				BeanUtil.copyPropertiesIgnoreNull(etrBondRepurchaseDto, etrSinglePortfolioDto);
+				etrBondRepurchaseDto.setFinprodType2(entity.getFinprodType2());// 金融产品类型（投管）
+				etrBondRepurchaseDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrBondRepurchaseDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondRepurchaseDto.class).entrustCheck(etrBondRepurchaseDto,result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_配股指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				// 配股指令
+				EtrStockRightDto etrStockRightDto = new EtrStockRightDto();
+				BeanUtil.copyPropertiesIgnoreNull(etrStockRightDto, etrSinglePortfolioDto);
+				etrStockRightDto.setFinprodType2(entity.getFinprodType2());// 金融产品类型（投管）
+				etrStockRightDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrStockRightDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStockRightDto.class).entrustCheck(etrStockRightDto,result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_新股申购指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				// 新股申购指令
+				EtrStockNewDto etrStockNewDto = new EtrStockNewDto();
+				BeanUtil.copyPropertiesIgnoreNull(etrStockNewDto, etrSinglePortfolioDto);
+				etrStockNewDto.setFinprodType2(entity.getFinprodType2());// 金融产品类型（投管）
+				etrStockNewDto.setAssetType(DictCodeListExt2.平安资产类型_股票.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrStockNewDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStockNewDto.class).entrustCheck(etrStockNewDto,result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_配债指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				// 配债指令
+				EtrBondRightDto etrBondRightDto = new EtrBondRightDto();
+				BeanUtil.copyPropertiesIgnoreNull(etrBondRightDto, etrSinglePortfolioDto);
+				etrBondRightDto.setFinprodType2(entity.getFinprodType2());// 金融产品类型（投管）
+				etrBondRightDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrBondRightDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondRightDto.class).entrustCheck(etrBondRightDto,result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_可转债申购指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				// 可转债申购指令
+				EtrConvBondApplyDto etrConvBondApplyDto = new EtrConvBondApplyDto();
+				BeanUtil.copyPropertiesIgnoreNull(etrConvBondApplyDto, etrSinglePortfolioDto);
+				etrConvBondApplyDto.setFinprodType2(entity.getFinprodType2());// 金融产品类型（投管）
+				etrConvBondApplyDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrConvBondApplyDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrConvBondApplyDto.class).entrustCheck(etrConvBondApplyDto,result);
 
-    /***
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_债转股指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				// 债转股指令
+				EtrBondToStockDto etrBondToStockDto = new EtrBondToStockDto();
+				BeanUtil.copyPropertiesIgnoreNull(etrBondToStockDto, etrSinglePortfolioDto);
+				etrBondToStockDto.setFinprodType2(entity.getFinprodType2());// 金融产品类型（投管）
+				etrBondToStockDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+				etrBondToStockDto.setExpConNum(entity.getToShareAvailableNum());// 可转股数量
+				EtrComponentFactory.getComponentService(EtrBondToStockDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondToStockDto.class).entrustCheck(etrBondToStockDto,result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_标准券出入库指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				// 标准券出入库指令
+				EtrStandardBondInOutDto etrStandardBondInOutDto = new EtrStandardBondInOutDto();
+				BeanUtil.copyPropertiesIgnoreNull(etrStandardBondInOutDto, etrSinglePortfolioDto);
+				etrStandardBondInOutDto.setAssetType(DictCodeList.平安资产类型_债券.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrStandardBondInOutDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrStandardBondInOutDto.class).entrustCheck(etrStandardBondInOutDto,result);
+			}
+			if (DictCodeListExt3.上农商_指令业务类型_债券质押式回购竞价指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+				// 债券质押式回购竞价指令
+				EtrBondRepoBiddingDto etrBondRepoBiddingDto = new EtrBondRepoBiddingDto();
+				BeanUtil.copyPropertiesIgnoreNull(etrBondRepoBiddingDto, etrSinglePortfolioDto);
+				etrBondRepoBiddingDto.setFinprodType2(entity.getFinprodType2());// 金融产品类型（投管）
+				etrBondRepoBiddingDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());// 资产大类
+				EtrComponentFactory.getComponentService(EtrBondRepoBiddingDto.class).updateSettings(paraDto);
+				EtrComponentFactory.getComponentService(EtrBondRepoBiddingDto.class).entrustCheck(etrBondRepoBiddingDto, result);
+			}
+			AjaxResult ajax = new AjaxResult(result);
+			Field[] fields = ReflectUtil.getDeclaredFields(ajax);
+			for(Field field : fields) {
+				if(StringUtil.equals(field.getName(), "messageType")) {
+					field.setAccessible(true);
+					ReflectionUtils.setField(field, ajax, MessageType.错误消息.name());
+					break;
+				}
+			}
+			return ajax;
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * //根据金融产品代码获取投管一级分类
+	 * @param entity
+	 * @return
+	 */
+	public EtrExchangeTradeSaveRequest setAssetTypeById(EtrExchangeTradeSaveRequest entity) {
+		// 根据资产获取资产类型
+		if (StringUtil.isNotEmpty(entity.getFinprodId())) {
+			FinProductTypeKey key = new FinProductTypeKey();
+			key.setFinprodId(entity.getFinprodId());
+			key.setBranch(new Long(0));
+			FinProductType finProductType = finProductTypeMapper.selectByPrimaryKey(key);
+			if (null != finProductType) {//获取资产一级分类
+//				entity.setAssetsType(finProductType.getType6());
+			}
+		}
+		return entity;
+	}
+
+	public void setCheckParams(EtrExchangeTradeSaveRequest entity, EtrParameterDto paraDto) {
+		/********************************/
+		setAssetTypeById(entity);
+		//设置默认最小价差、最小交易单位；否则指令组件抛异常；
+		paraDto.setMinDiffPrice(new BigDecimal(0.001).setScale(3,BigDecimal.ROUND_HALF_UP));
+		paraDto.setMinDealUnit(new BigDecimal(1));
+
+		Map<String, UnitEnum> numUnit = new HashMap<String, UnitEnum>();
+		if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(entity.getFinprodType2())) {
+			numUnit.put(entity.getTradeMarket(), UnitEnum.份);
+		} else if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(entity.getFinprodType2())) {
+			numUnit.put(entity.getTradeMarket(), UnitEnum.股);
+		} else {
+			numUnit.put(entity.getTradeMarket(), UnitEnum.张);
+		}
+		paraDto.setNumUnit(numUnit);
+
+		// 竞价交易平台 设置涨跌停
+		if (DictCodeList.交易平台_竞价撮合平台.getValue().equals(entity.getTradePlat())) {
+			if (null != entity.getLimitUp()) {
+				paraDto.setLimitUpAmt(entity.getLimitUp());
+			}
+			if (null != entity.getLimitDown()) {
+				paraDto.setLimitDnAmt(entity.getLimitDown());
+			}
+			paraDto.setMinReportUnit(new BigDecimal(1));
+		}
+
+
+		// 大宗交易平台
+		if (DictCodeList.交易平台_大宗交易平台.getValue().equals(entity.getTradePlat())) {
+			/*
+			 * A股单笔交易不低于30W股，或者交易金额不低于200W人民币；
+			 * 基金单笔交易数量不低于200W份，或者交易金额不低于200W人民币；
+			 * 深交所债券买卖或者回购单笔不得低于5千张，或者就交易金额不低于50W人民币；上交所不低于1000手（10000张），
+			 * 或者交易金额不低于100W人民币； 股票、基金交易场所均为上交所,深交所不支持
+			 */
+			if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(entity.getFinprodType2())) {
+				paraDto.putLimitAmtNum(entity.getTradeMarket(), new BigDecimal(300000), null, UnitEnum.万股,
+						new BigDecimal(2000000), null);
+			}
+			if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(entity.getFinprodType2())) {
+				paraDto.putLimitAmtNum(entity.getTradeMarket(), new BigDecimal(2000000), null, UnitEnum.万份,
+						new BigDecimal(2000000), null);
+			}
+			if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(entity.getFinprodType2())
+					|| DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(entity.getFinprodType2())
+					|| DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(entity.getFinprodType2())) {
+				if (DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(entity.getTradeMarket())) {
+					paraDto.putLimitAmtNum(DictCodeListExt1.交易场所_深圳证券交易所.getValue(), new BigDecimal(5000), null,
+							UnitEnum.张, new BigDecimal(500000), null);
+				} else {
+					paraDto.putLimitAmtNum(DictCodeListExt1.交易场所_上海证券交易所.getValue(), new BigDecimal(10000), null,
+							UnitEnum.张, new BigDecimal(1000000), null);
+				}
+			}
+		}
+	}
+
+	/***
      * 取更新时间最新记录.投资目的  指令业务类型 = 数据字典.委托类型.大宗债券指令
      * @return
      */
     public String getInvAim() {
-        String invAim = restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getInvAim", null, String.class);
-        return invAim;
+		return etrExchangeTradeCommonMapper.getInvAim();
+//        String invAim = restTemplate.postForObject(
+//                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getInvAim", null, String.class);
+//        return invAim;
     }
     
     /**
@@ -1164,8 +2366,15 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @return
      */
 	public int selectBondExecPlan(Map<String, Object> map) {
-		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectBondExecPlan",
-				map, Integer.class);
+//		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectBondExecPlan",
+//				map, Integer.class);
+		// 交易场所。上海证券交易所
+		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+		// 行权方式.回售
+		map.put("EXEC_MODE_02", DictCodeList.行权方式_回售.getValue());
+		// 现金流二级类型.本金
+		map.put("CASH_TYPE_2_C01", DictCodeListExt1.现金流二级类型_本金.getValue());
+		return etrExchangeTradeCommonMapper.selectBondExecPlan(map);
 	}
 	
 	/**
@@ -1174,8 +2383,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @return
      */
 	public String getCustomerTypeTwo(Map<String, Object> map) {
-		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getCustomerTypeTwo",
-				map, String.class);
+		return etrExchangeTradeCommonMapper.getCustomerTypeTwo(map);
+//		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getCustomerTypeTwo",
+//				map, String.class);
 	}
 
 	/**
@@ -1582,7 +2792,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_固定收益平台.getValue())) {
 			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue());
 		}
-		AjaxResult ajax  = checkSave(dto);
+		AjaxResult ajax  = checkSave(dto,br);
 		if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList())) {
 			return ajax;
 		}
@@ -1820,8 +3030,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	public EtrDistribute getDistributeByEntrustId(String entrustId) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("entrustId", entrustId);
-		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getDistributeByEntrustId", map,
-				EtrDistribute.class);
+		return etrExchangeTradeCommonMapper.getDistributeByEntrustId(map);
+//		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getDistributeByEntrustId", map,
+//				EtrDistribute.class);
 	}
 
 	private <T> void checkElement(T t, StringBuilder errorMsg, Consumer<T> callback, Function<T, String>... chkFunc){
@@ -1954,9 +3165,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			// 交易对手是否存在
 			if(StringUtil.isNotEmpty(dzImportDto.getCounterId())){
 				checkElement(dzImportDto,promptMsg,null,obj-> {
-					Map<String, Object> param = new HashMap();
-					param.put("counterIdName",obj.getCounterId());
-					List<SelectOptionDto> result = this.selectCounterIdByCounterType(param);
+					 SelectOptionRequestDto requestDto = new SelectOptionRequestDto();
+					requestDto.setCounterIdName(obj.getCounterId());
+					List<SelectOptionDto> result = this.selectCounterIdByCounterType(requestDto);
 					if(result!=null&&result.size()>0){
 						dzImportDto.setCounterId(result.get(0).getId());
 					}else{
@@ -2192,7 +3403,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 */
 	@SuppressWarnings({ "rawtypes", "static-access", "unchecked" })
 	@Transactional(rollbackFor = Exception.class)
-	public AjaxResult checkImportData(Map<String,Object> paramMap) throws Exception {
+	public AjaxResult checkImportData(Map<String,Object> paramMap, BindingResult br) throws Exception {
 		ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(StringUtil.isNotEmpty(paramMap.get("fileName"))?paramMap.get("fileName").toString():StringUtil.EMPTY), null);
 		List<List<String>> objects = excelUtil.readToList(0, 1, 0);
 		if (objects.size() - 1 > 100) {
@@ -2832,7 +4043,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
                         }
                         unit.setTradePlat(DictCodeList.交易平台_竞价撮合平台.getValue());
                         settleEntrustType(unit);
-                        AjaxResult ajax = checkSave(unit);
+                        AjaxResult ajax = checkSave(unit,br);
                         if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList())) {
                             for (ValidMessage validMessage : ajax.getErrorList()) {
                                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg, validMessage.getMessage() + "(行号为" + lineNo + ")。");
@@ -3242,9 +4453,11 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public String selectStdsecConverseRatio(Map<String, Object> param) {
-		return restTemplate.postForObject(
-				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectStdsecConverseRatio", param,
-				String.class);
+//		return restTemplate.postForObject(
+//				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectStdsecConverseRatio", param,
+//				String.class);
+		param.put("date", iPlatformDate.getSysDate());
+		return etrExchangeTradeCommonMapper.selectStdsecConverseRatio(param);
 	}
 	/**
 	 * 转股价
@@ -3591,7 +4804,6 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
         String finprodId = (String) param.get("finprodId");
         String finprodType2 = (String) param.get("finprodType2");
         String tradeMarket = (String) param.get("tradeMarket");
-
         BigDecimal minNum = new BigDecimal(1);
         MinTrdUnitLimitDto minTrdUnitLimitDto = getInterfSysMinTrdUnit(finprodId, currentTab, tradeMarket, finprodType2, ps);
         if(null != minTrdUnitLimitDto && null != minTrdUnitLimitDto.getMinStep()){
@@ -3639,9 +4851,15 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public BigDecimal queryStandandTicketCanUse(Map<String, Object> pageParam) {
-		return restTemplate.postForObject(
-				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/queryStandandTicketCanUse", pageParam,
-				BigDecimal.class);
+//		return restTemplate.postForObject(
+//				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/queryStandandTicketCanUse", pageParam,
+//				BigDecimal.class);
+		pageParam.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
+		pageParam.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+		pageParam.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
+		pageParam.put("BROKER", DictCodeListExt3.所有_所有.getValue());
+		String ticketCanUse = etrExchangeTradeCommonMapper.queryStandandTicketCanUse(pageParam);
+		return new BigDecimal(ticketCanUse);
 	}
 	
 	/**
@@ -3651,9 +4869,14 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public String qryMstBondMarketPrice(Map<String, Object> pageParam) {
-		return restTemplate.postForObject(
-				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/qryMstBondMarketPrice", pageParam,
-				String.class);
+//		return restTemplate.postForObject(
+//				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/qryMstBondMarketPrice", pageParam,
+//				String.class);
+		String mstBondMarketPrice = etrExchangeTradeCommonMapper.qryMstBondMarketInfo(pageParam);
+		if (StringUtils.isEmpty(mstBondMarketPrice)) {
+			mstBondMarketPrice = etrExchangeTradeCommonMapper.qryInterfBondMarketInfo(pageParam);
+		}
+		return mstBondMarketPrice;
 	}
 	
 	/**
@@ -3663,9 +4886,14 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public String qryMstFundMarketPrice(Map<String, Object> pageParam) {
-		return restTemplate.postForObject(
-				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/qryMstFundMarketPrice", pageParam,
-				String.class);
+//		return restTemplate.postForObject(
+//				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/qryMstFundMarketPrice", pageParam,
+//				String.class);
+		String mstBondMarketPrice = etrExchangeTradeCommonMapper.qryMstFundMarketInfo(pageParam);
+		if (StringUtils.isEmpty(mstBondMarketPrice)) {
+			mstBondMarketPrice = etrExchangeTradeCommonMapper.qryInterfFundMarketInfo(pageParam);
+		}
+		return mstBondMarketPrice;
 	}
 	
 	
@@ -3676,9 +4904,14 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @return
 	 */
 	public String qryMstStockMarketPrice(Map<String, Object> pageParam) {
-		return restTemplate.postForObject(
-				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/qryMstStockMarketPrice", pageParam,
-				String.class);
+//		return restTemplate.postForObject(
+//				ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/qryMstStockMarketPrice", pageParam,
+//				String.class);
+		String mstBondMarketPrice = etrExchangeTradeCommonMapper.qryMstShareMarketInfo(pageParam);
+		if (StringUtils.isEmpty(mstBondMarketPrice)) {
+			mstBondMarketPrice = etrExchangeTradeCommonMapper.qryInterfShareMarketInfo(pageParam);
+		}
+		return mstBondMarketPrice;
 	}
 	/**
 	 * 插入和修改时，指令持仓流水 、现金流水处理
@@ -3687,11 +4920,90 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param dto
 	 */
 	public void doInsetOrUpdateForEtrPositionHold(EtrExchangeTradeSaveRequest dto) {
-		restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/doInsetOrUpdateForEtrPositionHold", dto,
-				Integer.class);
+//		restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/doInsetOrUpdateForEtrPositionHold", dto,
+//				Integer.class);
+		// 构造单组合单资产DTO
+		EtrSinglePortfolioDto etrSinglePortfolioDto = getEtrSinglePortfolio(dto);
+		// 指令持仓流水 、现金流水处理
+		EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();// 组合持仓流水、组合现金流水
+		List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();// 现金流水
+		List<EtrSecPositionFlowDto> etrSecPositionFlows = new ArrayList<>();// 持仓流水
+		EtrSecPositionFlowDto etrSecPositionFlowDtoUnit = new EtrSecPositionFlowDto();// 组合持仓流水DTO
+		EtrCashPositionFlowDto etrCashPositionFlowDtoUnit = new EtrCashPositionFlowDto();// 组合现金流水DTO
+		if (DictCodeList.交易方向_卖出.getValue().equals(etrSinglePortfolioDto.getPs())
+				|| DictCodeListExt3.交易方向_正回购.getValue().equals(etrSinglePortfolioDto.getPs())
+				|| DictCodeList.交易方向_行权_回售.getValue().equals(etrSinglePortfolioDto.getPs())
+				|| DictCodeListExt1.交易方向_债转股.getValue().equals(etrSinglePortfolioDto.getPs())
+				|| DictCodeListExt3.交易方向_质押券入库.getValue().equals(etrSinglePortfolioDto.getPs())
+				|| DictCodeListExt3.交易方向_质押券出库.getValue().equals(etrSinglePortfolioDto.getPs())) {
+
+			/********************** 持仓流水DTO构造 *************************************/
+			etrSecPositionFlowDtoUnit.setSeqno(getSeqNo());
+			etrSecPositionFlowDtoUnit.setPortfolioId(etrSinglePortfolioDto.getPortfolioId());// 组合代码
+			etrSecPositionFlowDtoUnit.setSecAcctId(etrSinglePortfolioDto.getSecAcctId());// 证券账户
+			etrSecPositionFlowDtoUnit.setFinprodId(etrSinglePortfolioDto.getFinprodId());// 金融产品代码
+			if (DictCodeListExt3.交易方向_正回购.getValue().equals(etrSinglePortfolioDto.getPs()) && (DictCodeList.交易平台_竞价撮合平台.getValue().equals(etrSinglePortfolioDto.getTradePlat())
+					|| DictCodeList.交易平台_大宗交易平台.getValue().equals(etrSinglePortfolioDto.getTradePlat())
+					|| DictCodeList.交易平台_综合协议交易平台.getValue().equals(etrSinglePortfolioDto.getTradePlat()))) {
+				etrSecPositionFlowDtoUnit.setFinprodId("XN_PRODID999");
+			}else if (DictCodeListExt3.交易方向_质押券出库.getValue().equals(etrSinglePortfolioDto.getPs())) {
+				etrSecPositionFlowDtoUnit.setFinprodId("XN_PRODID999");
+			}
+			etrSecPositionFlowDtoUnit.setBranch(new Long(0));// 分支序号
+			etrSecPositionFlowDtoUnit.setInvAim(StringUtils.isNotEmpty(etrSinglePortfolioDto.getInvAim()) ? etrSinglePortfolioDto.getInvAim() : "999999");
+			etrSecPositionFlowDtoUnit.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());// 持仓类型
+			etrSecPositionFlowDtoUnit.setCdate(iPlatformDate.getSysDate());// 日期
+			etrSecPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
+			if (DictCodeListExt3.交易方向_质押券出库.getValue().equals(etrSinglePortfolioDto.getPs())) {
+				etrSecPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustAmt().multiply(new BigDecimal(-1)));// 标准券数量
+			} else {
+				etrSecPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustNum().multiply(new BigDecimal(-1)));// 数量
+			}
+			etrSecPositionFlowDtoUnit.setpFinprodId(null);// 母金融产品代码
+			etrSecPositionFlowDtoUnit.setTradeId(etrSinglePortfolioDto.getEntrustId());// 指令编号
+			etrSecPositionFlows.add(etrSecPositionFlowDtoUnit);
+			/*************************************************************************/
+		} else if (DictCodeList.交易方向_买入.getValue().equals(etrSinglePortfolioDto.getPs())
+				|| DictCodeListExt3.交易方向_逆回购.getValue().equals(etrSinglePortfolioDto.getPs())
+				|| DictCodeListExt2.交易方向_配股.getValue().equals(etrSinglePortfolioDto.getPs())
+				|| DictCodeList.交易方向_申购.getValue().equals(etrSinglePortfolioDto.getPs())
+				|| DictCodeListExt3.交易方向_配债.getValue().equals(etrSinglePortfolioDto.getPs())) {
+			/********************** 持仓流水DTO构造 *************************************/
+			etrCashPositionFlowDtoUnit.setSeqno(getSeqNo());
+			etrCashPositionFlowDtoUnit.setPortfolioId(etrSinglePortfolioDto.getPortfolioId());// 组合代码
+			etrCashPositionFlowDtoUnit.setAcctId(etrSinglePortfolioDto.getDealCurAcct());// 资金账户
+			etrCashPositionFlowDtoUnit.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());// 持仓类型
+			etrCashPositionFlowDtoUnit.setCdate(iPlatformDate.getSysDate());// 日期
+			etrCashPositionFlowDtoUnit.setCcy(DictCodeList.币种_人民币_CNY.getValue());// 币种
+			// if 画面.全价不为空，则数量 = 画面.全价*画面.数量 else 投资指令DTO.指令金额
+			if (null != dto.getFprice()) {
+				etrCashPositionFlowDtoUnit.setAmount(dto.getEntrustNum().multiply(dto.getFprice()).multiply(new BigDecimal(-1)));
+			} else {
+				etrCashPositionFlowDtoUnit.setAmount(etrSinglePortfolioDto.getEntrustAmt().multiply(new BigDecimal(-1)));// 数量
+			}
+			etrCashPositionFlowDtoUnit.setOrderId(etrSinglePortfolioDto.getEntrustId());// 业务编号
+			etrCashPositionFlowDtoUnit.setChlFinprodId(null);// 通道金融产品代码
+			etrCashPositionFlowDtoUnit.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());// 冲正标识
+			etrCashPositionFlowDtoUnit.setOffsetId(etrSinglePortfolioDto.getEntrustId());// 冲销业务编号
+			/*************************************************************************/
+			etrCashPositionFlows.add(etrCashPositionFlowDtoUnit);
+		}
+		etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
+		etrPositionHoldDto.setPtlSecPositionFlows(etrSecPositionFlows);
+		etrPositionHoldDto.setDealEtr(true);
+		etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(DateUtil.platDateFromCache()));
+		etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(DateUtil.platDateFromCache()));
+		EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
 	}
 
-
+	/**
+	 * 生成流水号获取
+	 *
+	 * @return
+	 */
+	public static String getSeqNo() {
+		return IDGenerator.generate();
+	}
 
 	/**
 	 *
@@ -3702,8 +5014,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @see
 	**/
     public List<FinProductOthCodeDto> getFinprodOthCodeInfo(Map<String,Object> map){
-        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getFinprodOthCodeInfo", map,
-                FinProductOthCodeDto.class);
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getFinprodOthCodeInfo", map,
+//                FinProductOthCodeDto.class);
+		return etrExchangeTradeCommonMapper.getFinprodOthCodeInfo(map);
     }
 
     /**
@@ -3715,8 +5028,9 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @see
     **/
     public List<FinProductQuto> getFinProductQutoInfo(Map<String,Object> map){
-        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getFinProductQutoInfo", map,
-                FinProductQuto.class);
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getFinProductQutoInfo", map,
+//                FinProductQuto.class);
+		return etrExchangeTradeCommonMapper.getFinProductQutoInfo(map);
     }
 
 
@@ -3730,8 +5044,10 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @see
     **/
     public List<SubEqutityDto> getsubEqutity(Map<String,Object> map){
-        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getsubEqutity", map,
-                SubEqutityDto.class);
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getsubEqutity", map,
+//                SubEqutityDto.class);
+		map.put("entrustStatusClose",DictCodeList.委托状态_已关闭.getValue());
+		return etrExchangeTradeCommonMapper.getsubEqutity(map);
     }
 
 
@@ -3834,8 +5150,10 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @see
     **/
     public List<WflEtrEntrust> selectWflEntrust(Map<String,Object> map){
-        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrust", map,
-                WflEtrEntrust.class);
+//        return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrust", map,
+//                WflEtrEntrust.class);
+		map.put("ps_T04",DictCodeList.交易方向_申购.getValue());
+		return etrExchangeTradeCommonMapper.selectWflEntrust(map);
     }
 	/**
 	 *
@@ -3846,63 +5164,110 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @see
 	 **/
 	public List<String> selectWflEntrustAddAndEtrEntrustAdd(Map<String,Object> map){
-		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrustAddAndEtrEntrustAdd", map,
-				List.class);
+		return etrExchangeTradeCommonMapper.selectWflEntrustAddAndEtrEntrustAdd(map);
+//		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrustAddAndEtrEntrustAdd", map,
+//				List.class);
 	}
 
 	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 start
 	/**
 	 * 1.6计算偏离度
 	 *
-	 * @param parameters 画面参数
+	 * @param param 画面参数
 	 * @return 偏离度
 	 * @see
 	 * @since 1.0
 	 */
-	public String calcDeviationDegree(Map<String, Object> parameters) {
+	public String calcDeviationDegree(Map<String, Object> param) {
 		// 平台日
-		parameters.put("sysDate", DateUtil.format(iPlatformDate.getSysDate()));
-
-		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/EtrExchangeTrade/calcDeviationDegree",
-				parameters, String.class);
+		param.put("sysDate", DateUtil.format(iPlatformDate.getSysDate()));
+        // 参数.资产代码(市场代码)
+		String 市场代码 = (String) param.get("finprodMarketId");
+		// 参数.净价
+		String 净价 = (String) param.get("unitCprice");
+		if (StringUtil.isBlank(市场代码) || StringUtil.isBlank(净价)) {
+			return null;
+		}
+		String sysDate = (String) param.get("sysDate");
+		param.put("sysDate", DateUtil.parse(sysDate));
+		// 查询债券登记托管机构
+		FinProduct finProduct = finProductMapper.selectByPrimaryKey((String) param.get("finprodId"));
+		if (finProduct != null) {
+			if (StringUtil.equals(DictCodeList.登记托管机构_中债_中央国债登记结算有限责任公司.getValue(),
+					finProduct.getRegistOrg())) {
+				param.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
+			}
+			else if (StringUtil.equals(DictCodeList.登记托管机构_中债_上海清算所.getValue(),
+					finProduct.getRegistOrg())) {
+				param.put("VALUATION_SOURCE", DictCodeList.估值来源_上清所_SCH.getValue());
+			}
+			else if (StringUtil.equals(DictCodeList.登记托管机构_中债_中国证券登记结算有限责任公司.getValue(),
+					finProduct.getRegistOrg())) {
+				param.put("VALUATION_SOURCE", DictCodeList.估值来源_中证登_CSD.getValue());
+			}
+			else {
+				param.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
+			}
+		}
+		else {
+			param.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
+		}
+		// 查询上一估值日的净价
+		BigDecimal 上一估值日净价 = etrExchangeTradeCommonMapper.getLastNetPrice(param);
+		if (上一估值日净价 == null || BigDecimal.ZERO.compareTo(上一估值日净价) == 0) {
+			return "0%";
+		}
+		try {
+			BigDecimal 所输净价 = new BigDecimal(净价);
+			// 计算公式：（所输净价-上一估值净价）/上一估值净价*100%
+			BigDecimal result = ArithmeticUtil.subtract(所输净价, 上一估值日净价);
+			result = ArithmeticUtil.multiply(result, new BigDecimal(100));
+			result = ArithmeticUtil.divide(result, 上一估值日净价, 0);
+			return String.valueOf(result) + "%";
+		}
+		catch (Exception e) {
+		}
+		return null;
+//		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/EtrExchangeTrade/calcDeviationDegree",
+//				parameters, String.class);
 	}
     //add by chenjiaxing 债券竞价交易计算偏离度 20210907 end
 
 	/**
 	 * 获取交易方向
 	 *
-	 * @param PsOptionsRequest 画面参数
+	 * @param  dto 画面参数 SelectDto selectDto
 	 * @return 偏离度
 	 * @see
 	 * @since 1.0
 	 */
 	public List<SelectOptionDto> getPsSelectOptions(PsOptionsRequest dto,SelectDto selectDto) {
-		 List<SelectOptionDto> selectOptionDtos=new ArrayList<>();
+		List<SelectOptionDto> selectOptionDtos=new ArrayList<>();
 		String tradePlat=dto.getTradePlat();
 		String finprodType2=dto.getFinprodType2();
 		String othCodeType=dto.getOthCodeType();
-		 if(StringUtil.equals(tradePlat,DictCodeList.交易平台_竞价撮合平台.getValue())){
-              if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-				  //债券默认买入、卖出
-				  selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-					  return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-							  || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue()) ;
-				  }).collect(Collectors.toList());
-				 Map<String, Object> map = BeanUtil.object2Map(dto);
-              	Map<String, Object> returnMap=setPsExt(map) ;
-               for(String key: returnMap.keySet()){
-					  if (StringUtil.equals(key,DictCodeList.交易方向_申购.getValue())) {
-					    selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
-					  	  return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
-					    }).collect(Collectors.toList());
-						  break;
-					  } else {
-						     List<SelectOptionDto> tempList = selectDto.getOptions().stream().filter(option -> {
-					  	   	  return StringUtil.equals(option.getId(), key);
-					  	     }).collect(Collectors.toList());
-					  	     selectOptionDtos.addAll(tempList)   ;
-					  }
+		if(StringUtil.equals(tradePlat,DictCodeList.交易平台_竞价撮合平台.getValue())){
+		     if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
+			  //债券默认买入、卖出
+			  selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+				  return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
+						  || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue()) ;
+			  }).collect(Collectors.toList());
+			 Map<String, Object> map = BeanUtil.object2Map(dto);
+		     Map<String, Object> returnMap=setPsExt(map) ;
+		     for(String key: returnMap.keySet()){
+				  if (StringUtil.equals(key,DictCodeList.交易方向_申购.getValue())) {
+					selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
+					  return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue());
+					}).collect(Collectors.toList());
+					  break;
+				  } else {
+						 List<SelectOptionDto> tempList = selectDto.getOptions().stream().filter(option -> {
+						  return StringUtil.equals(option.getId(), key);
+						 }).collect(Collectors.toList());
+						 selectOptionDtos.addAll(tempList)   ;
 				  }
+			  }
 			  }else if(StringUtil.equals(finprodType2,DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
               	       selectOptionDtos = selectDto.getOptions().stream().filter(option -> {
               	     	  return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
@@ -3929,70 +5294,135 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
                	  	  return StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue()) ;
                	  }).collect(Collectors.toList());
                }
-
 		 }
 		 return selectOptionDtos;
-
 	}
 
 	private  Map<String, Object> setPsExt(Map<String, Object> param){
-		  	Map<String, Object> map = new HashMap<String, Object>();
-		  		Date sysDate = DateUtil.platDateFromCache();
-		  		param.put("date", DateUtil.format(sysDate));
-		  		List<TrdOthCodeInfoDto> list = getTrdOthCodeInfos(param);
-		  		if (null != list && list.size() > 0) {
-		  			for (TrdOthCodeInfoDto dto : list) {
-		  				if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
-		  						&& !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
-		  					// 只能选择申购，其他委托方向不可选
-		  					String ps = OthTypeMapToPs(dto.getOthCodeType());
-		  					if (StringUtils.equals(ps, DictCodeList.交易方向_申购.getValue())) {
-		  						map.clear();
-		  						map.put(ps, dto.getDeclaredPrice());
-		  						return map;
-		  					} else if (StringUtils.equals(ps, DictCodeListExt3.交易方向_质押券入库.getValue())) {
-								BigDecimal converseRatio = null;
-								try {
-									converseRatio = getStdsecConverseRatio(param);
-								} catch (Exception e) {
-								}
-								if (null != converseRatio) {
-		  							map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
-		  							map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
-		  						}
-		  					} else {
-		  						map.put(ps, dto.getDeclaredPrice());
-		  					}
-		  				}
-		  			}
-		  		}
-		  		return map;
-
-	}
-	/**
-		 * 申报类型-》交易方向的映射
-		 * @param othCodeType
-		 * @return
-		 */
-		private String OthTypeMapToPs(String othCodeType) {
-			if (StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue())) {
-				return DictCodeList.交易方向_申购.getValue();
-			}else if(StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_回售代码.getValue())){
-				return DictCodeList.交易方向_行权_回售.getValue();
-			}else if(StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getValue())){
-				return DictCodeListExt1.交易方向_债转股.getValue();
-			}else if(StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_质押代码.getValue())){
-				return DictCodeListExt3.交易方向_质押券入库.getValue();
+		Map<String, Object> map = new HashMap<String, Object>();
+		Date sysDate = DateUtil.platDateFromCache();
+		param.put("date", DateUtil.format(sysDate));
+		List<TrdOthCodeInfoDto> list = getTrdOthCodeInfos(param);
+		if (null != list && list.size() > 0) {
+			for (TrdOthCodeInfoDto dto : list) {
+				if (!StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配股代码.getValue())
+						&& !StringUtils.equals(dto.getOthCodeType(), DictCodeListExt3.金融产品其他代码类型_配债代码.getValue())) {
+					// 只能选择申购，其他委托方向不可选
+					String ps = OthTypeMapToPs(dto.getOthCodeType());
+					if (StringUtils.equals(ps, DictCodeList.交易方向_申购.getValue())) {
+						map.clear();
+						map.put(ps, dto.getDeclaredPrice());
+						return map;
+					} else if (StringUtils.equals(ps, DictCodeListExt3.交易方向_质押券入库.getValue())) {
+						BigDecimal converseRatio = null;
+						try {
+							converseRatio = getStdsecConverseRatio(param);
+						} catch (Exception e) {
+						}
+						if (null != converseRatio) {
+							map.put(DictCodeListExt3.交易方向_质押券入库.getValue(), converseRatio);
+							map.put(DictCodeListExt3.交易方向_质押券出库.getValue(), converseRatio);
+						}
+					} else {
+						map.put(ps, dto.getDeclaredPrice());
+					}
+				}
 			}
-			return null;
 		}
-		  private BigDecimal getStdsecConverseRatio(Map<String, Object> param) throws Exception {
-		  		String converseRatio = selectStdsecConverseRatio(param);
-		  		if (StringUtils.isNotEmpty(converseRatio)) {
-		  			// 画面上乘以100后展示
-		  			return ArithmeticUtil.multiply(new BigDecimal(converseRatio), BigDecimal.valueOf(100));
-		  		}
-		  		return null;
-		  	}
+		return map;
+	}
 
+	/**
+	 * 申报类型-》交易方向的映射
+	 * @param othCodeType
+	 * @return
+	 */
+	private String OthTypeMapToPs(String othCodeType) {
+		if (StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue())) {
+			return DictCodeList.交易方向_申购.getValue();
+		}else if(StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_回售代码.getValue())){
+			return DictCodeList.交易方向_行权_回售.getValue();
+		}else if(StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_可转债转股代码.getValue())){
+			return DictCodeListExt1.交易方向_债转股.getValue();
+		}else if(StringUtils.equals(othCodeType, DictCodeListExt3.金融产品其他代码类型_质押代码.getValue())){
+			return DictCodeListExt3.交易方向_质押券入库.getValue();
+		}
+		return null;
+	}
+
+    private BigDecimal getStdsecConverseRatio(Map<String, Object> param) throws Exception {
+  		String converseRatio = selectStdsecConverseRatio(param);
+  		if (StringUtils.isNotEmpty(converseRatio)) {
+  			// 画面上乘以100后展示
+  			return ArithmeticUtil.multiply(new BigDecimal(converseRatio), BigDecimal.valueOf(100));
+  		}
+  		return null;
+  	}
+
+	public String doRiskcalCheckMethod(EtrExchangeTradeCommonRiskcalRequest dto){
+		//参数不能为空
+		if(StringUtil.isEmptyList(dto.getBussCombDistribtList())){
+			return "组合分配列表不能为空";
+		}
+		List<String> messages = new ArrayList<>();
+		if(StringUtil.isNotEmpty(dto.getBussCombDistribtList())){
+			for(EtrExchangeTradeCommonBaseDto item:dto.getBussCombDistribtList()){
+				if(!StringUtil.isNotEmpty(item.getPortfolioId())){
+					messages.add("请输入组合名称。");
+				}
+				if(!StringUtil.isNotEmpty(item.getEntrustNum())){
+					messages.add("请输入券面总额。");
+				}
+			}
+		}
+		if(!StringUtil.isNotEmpty(dto.getFinprodId())){
+			messages.add("请输入资产代码。");
+		}
+		if(messages.size()>0) {
+			return  StringUtil.joinString(messages,  com.joyintech.framework.constant.GlobalConstant.VERTICAL_LINE);
+		}
+		return null;
+	}
+
+	/**
+	 *风险试算时，后台数据转换
+	 * @return
+	 */
+	public  Map<String, Object> doRiskcalPackageEquity(EtrExchangeTradeCommonRiskcalRequest dto) {
+		//风险试算封装dto
+		EtrExchangeTradeCommonRiskcalDto d=new EtrExchangeTradeCommonRiskcalDto();
+		BeanUtil.copyPropertiesIgnoreNull(d,dto);
+		List<Map> bussTrdTransfenpeiDto=new ArrayList<>();
+		for(EtrExchangeTradeCommonBaseDto pt:dto.getBussCombDistribtList()){
+			pt.setInvAim(pt.getBusinessModel());
+			bussTrdTransfenpeiDto.add(BeanUtil.object2Map(pt));
+		}
+		d.setBussTrdTransfenpeiDto(bussTrdTransfenpeiDto);
+		d.setBusiType("02");
+		d.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
+		d.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+		d.setVdate(dto.getEtrDate());
+		d.setMdate(dto.getEtrDate());;
+		d.setCcy("CNY");
+		d.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+		Map<String, Object> dataMap=BeanUtil.object2Map(d);
+		return dataMap;
+	}
+
+	public  String getKriStatusCnByKriStatus(String kriStatus){
+		if(StringUtil.isNotEmpty(kriStatus)){
+			if(StringUtil.equals(kriStatus,"0")){
+				return "正常";
+			}else if(StringUtil.equals(kriStatus,"1")){
+				return "预警";
+			}else  if(StringUtil.equals(kriStatus,"2")){
+				return "审批";
+			}else  if(StringUtil.equals(kriStatus,"3")){
+				return "违规";
+			}else  if(StringUtil.equals(kriStatus,"4")){
+				return "异常";
+			}
+		}
+		return null;
+	}
 }

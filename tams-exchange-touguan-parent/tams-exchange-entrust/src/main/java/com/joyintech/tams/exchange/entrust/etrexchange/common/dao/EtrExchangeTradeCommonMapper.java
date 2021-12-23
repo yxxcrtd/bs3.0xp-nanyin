@@ -14,16 +14,16 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.service.entrust.etrexchangetrade.dto.FinProductOthCodeDto;
-import com.joyintech.service.entrust.etrexchangetrade.dto.SubEqutityDto;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
+import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.FinProductOthCodeDto;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.SubEqutityDto;
 import org.apache.ibatis.annotations.Param;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
-import com.joyintech.tams.invest.common.trade.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import org.springframework.stereotype.Repository;
 
@@ -121,7 +121,7 @@ public interface EtrExchangeTradeCommonMapper {
      * @param map 检索参数
      * @return 联想文本框
      */
-    List<SuggestDto> selectCounterDealer(Map<String, String> map);
+    List<SuggestDto> selectCounterDealer(Map<String, Object> map);
 
     /**
      * 对手方交易员联想文本框初始化。
@@ -137,7 +137,7 @@ public interface EtrExchangeTradeCommonMapper {
      * @param map 检索参数
      * @return 联想文本框
      */
-    List<SuggestDto> selectTrader(Map<String, String> map);
+    List<SuggestDto> selectTrader(Map<String, Object> map);
     
     /**
      * 债券回售计划查询
