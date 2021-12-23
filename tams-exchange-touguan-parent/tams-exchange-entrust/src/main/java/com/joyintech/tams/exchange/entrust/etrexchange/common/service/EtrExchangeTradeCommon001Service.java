@@ -13,6 +13,14 @@ package com.joyintech.tams.exchange.entrust.etrexchange.common.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.joyintech.background.component.common.pack.common.security.User;
+import com.joyintech.background.component.order.exchange.business.dto.*;
+import com.joyintech.background.component.order.exchange.common.constant.UnitEnum;
+import com.joyintech.background.component.order.exchange.common.dto.EtrBaseDto;
+import com.joyintech.background.component.order.exchange.common.dto.EtrParameterDto;
+import com.joyintech.background.component.order.exchange.common.dto.EtrSinglePortfolioDto;
+import com.joyintech.background.component.order.exchange.common.service.EtrComponentCommService;
+import com.joyintech.background.component.order.exchange.common.service.impl.EtrComponentFactory;
 import com.joyintech.calculation.CalculatorFactory;
 import com.joyintech.calculation.bonds.PaperIrReset;
 import com.joyintech.calculation.bonds.SecIntSchedule;
@@ -25,6 +33,7 @@ import com.joyintech.calculation.shell.YieldByPriceCalculator;
 import com.joyintech.calculation.shell.param.*;
 import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.CommonExportService;
@@ -35,25 +44,35 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
-import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.background.component.common.pack.common.security.*;
+import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
+import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -67,8 +86,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
@@ -544,7 +566,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * 配置用户
 	 */
 	public void setUser(EtrParameterDto paraDto){
-		com.joyintech.background.component.common.pack.common.security.User user = new User();
+		User user = new User();
 		user.setUserName(LoginUserUtil.getUserName());
 		user.setDeptCode(LoginUserUtil.getDeptCode());
 		paraDto.setUser(user);
@@ -2016,7 +2038,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * 委托关闭
      * @param entity
      */
-	public void closeDelegate(EtrExchangeTrade003Dto entity){
+	public void closeDelegate(EtrExchangeTradeOperateRequest entity){
 //        restTemplate.postForObject(
 //                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/entrustClose",entity,
 //                Integer.class);
@@ -2037,7 +2059,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * 委托撤销
      * @param entity
      */
-    public void recallDelegate(EtrExchangeTrade003Dto entity){
+    public void recallDelegate(EtrExchangeTradeOperateRequest entity){
 		EtrBaseDto etrBaseDto = new EtrBaseDto();
 		etrBaseDto.setEntrustId(entity.getEntrustId());
 		EtrParameterDto paraDto = new EtrParameterDto();
