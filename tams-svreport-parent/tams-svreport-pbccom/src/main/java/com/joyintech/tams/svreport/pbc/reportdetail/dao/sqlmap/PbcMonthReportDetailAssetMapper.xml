@@ -103,35 +103,35 @@
     </resultMap>
 
 
-    <select id="selectDetailList" resultMap="BaseResultMap">
+    <select id="selectDetailList" resultType="com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset">
         SELECT
             DECODE(T1.PROPERNAME,NULL,NULL,substr(T1.PROPERTYCODE,5,6)||' '||T1.PROPERNAME) reportType5,
             substr(T.PROPERTYCODE,5,6)||' '||T.PROPERNAME reportType6,
             P.PRODID,
-            PB.PROD_NAME,
-            PB.IS_FHXGCP,
-            P.ASSET_CODE,
-            NVL(I.ASSET_NAME,P.ASSET_CODE) ASSET_NAME,
+            PB.PROD_NAME prodName,
+            PB.IS_FHXGCP isFhxgcp,
+            P.ASSET_CODE assetCode,
+            NVL(I.ASSET_NAME,P.ASSET_CODE) assetName ,
             I.VDATE,
             I.MDATE,
             P.OPENPLAN,
             /**企业债,取资产基本信息(2-5逻辑)其余取贷款的信息(2-2~2-4逻辑)**/
-            DECODE(P.ASSET_TYPE3,'S05',I.INSTIT_SIZE,P.enterprise_scale) PARTY_TYPE1,
-            NVL(MC.CUSTOMER_NAME,P.SUBJECT_NAME) SUBJECT_NAME,
+            DECODE(P.ASSET_TYPE3,'S05',I.INSTIT_SIZE,P.enterprise_scale) partyType1 ,
+            NVL(MC.CUSTOMER_NAME,P.SUBJECT_NAME) subjectName,
             DECODE(P.ASSET_TYPE3,'S05',I.INDUSTRY,P.borrower_type) INDUSTRY,
-            P.borrower_city BUY_PLACE,
+            P.borrower_city buyPlace,
             I.ASSET_YIELD RATE,
             P.CCY,
-            AP.TDY_COST_AMT COST_AMT,
-            AP.TDY_FLOAT_INGPL FLOAT_INGPL,
+            AP.TDY_COST_AMT costAmt,
+            AP.TDY_FLOAT_INGPL floatIngpl,
             AP.TDY_INTINCEXP INTINCEXP,
-            0 TDY_LOSS_AMT,
+            0 lossAmt,
             P.AMT,
-            P.RIVAL_PARTY,
-            I.ORG_ASSET_TYPE1,
-            I.ORG_ASSET_TYPE2,
-            I.ORG_ASSET_TYPE3,
-            P.END_DAYS
+            P.RIVAL_PARTY rivalParty,
+            I.ORG_ASSET_TYPE1 orgAssetType1,
+            I.ORG_ASSET_TYPE2 orgAssetType2,
+            I.ORG_ASSET_TYPE3 orgAssetType3,
+            P.END_DAYS endDays
             FROM PBC_MONTH_ASSET_POSITIONDETAIL P
             LEFT JOIN PBC_REPORT_TEMPLATE T ON T.PROPERTYCODE = P.DETAILNO
             LEFT JOIN PBC_REPORT_TEMPLATE T1 ON T1.PROPERTYCODE = P.DETAILNO2
