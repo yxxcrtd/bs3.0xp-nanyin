@@ -75,13 +75,13 @@ public class OrderController {
         return new Message<Boolean>(orderManagement.cancelOrder(userId, orderId));
     }
 
-    @ApiOperation(value = "普通委托复核", notes = "普通委托复核")
+    @ApiOperation(value = "普通委托复核", notes = "普通委托复核", hidden = true)
     @RequestMapping(value = "/order/review", method = RequestMethod.POST)
     public Message<ReviewDto> sendOrderWithReview(@RequestParam(value = "userId") String userId, @RequestBody ReviewDto dto) {
         return new Message<ReviewDto>(orderManagement.sendOrderWithReview(userId, dto));
     }
 
-    @ApiOperation(value = "综合业务委托复核", notes = "综合业务委托复核")
+    @ApiOperation(value = "综合业务委托复核", notes = "综合业务委托复核", hidden = true)
     @RequestMapping(value = "/order/integratedEntrust/review", method = RequestMethod.POST)
     public Message<TrdExchangeDto> sendOrderWithReview(@RequestParam(value = "userId") String userId, @RequestBody TrdExchangeDto dto) {
         return new Message<TrdExchangeDto>(orderManagement.sendIntegratedEntrustWithReview(userId, dto));
@@ -94,7 +94,7 @@ public class OrderController {
      * @param algorithm 算法母单信息
      * @return ResultBean
      */
-    @ApiOperation(value = "算法单创建", notes = "算法单创建")
+    @ApiOperation(value = "算法单创建", notes = "算法单创建", hidden = true)
     @RequestMapping(value = "/order/algorithm", method = RequestMethod.POST)
     public Message<Algorithm> createAlgorithm(@RequestParam(value = "userId") String userId, @RequestBody AlgorithmPlaceBean algorithm) {
         return new Message<Algorithm>(orderManagement.createAlgorithm(userId, algorithm));
@@ -107,7 +107,7 @@ public class OrderController {
      * @param algorithmId 算法母单id
      * @return ResultBean
      */
-    @ApiOperation(value = "算法单取消", notes = "算法单取消")
+    @ApiOperation(value = "算法单取消", notes = "算法单取消", hidden = true)
     @RequestMapping(value = "/order/algorithm/cancel", method = RequestMethod.POST)
     public Message<Algorithm> cancelAlgorithm(@RequestParam(value = "algorithmId") String algorithmId) {
         return new Message<Algorithm>(orderManagement.cancelAlgorithm(algorithmId));

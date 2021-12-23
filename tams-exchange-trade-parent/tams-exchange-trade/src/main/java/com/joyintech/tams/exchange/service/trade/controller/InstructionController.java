@@ -37,7 +37,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/trade/joyin")
-@Api(tags = "场内交易-指令查询接口")
+@Api(tags = "场内交易-指令操作接口")
 public class InstructionController {
     private final Logger LOGGER = LoggerFactory.getLogger(InstructionController.class);
 
@@ -97,7 +97,7 @@ public class InstructionController {
         return new Message<List<EntrustOpeBean>>(investmentManagement.acceptOrRefuse(entrustList));
     }
 
-    @ApiOperation(value = "从投管重新刷入指令数据", notes = "从投管重新刷入指令数据")
+    @ApiOperation(value = "从投管重新刷入指令数据", notes = "从投管重新刷入指令数据", hidden = true)
     @RequestMapping(value = "/instruction/flush", method = RequestMethod.POST)
     public Message<Object> flushInstructionFromInvest(@RequestParam(value = "userId") String userId) {
         return new Message<Object>(investmentManagement.flushInstructionFromInvest());

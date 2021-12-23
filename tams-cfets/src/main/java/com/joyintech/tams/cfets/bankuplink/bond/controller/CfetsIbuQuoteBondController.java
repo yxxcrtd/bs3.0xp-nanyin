@@ -15,10 +15,7 @@ import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.*;
-import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice001Service;
-import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService;
-import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondCalService;
-import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
+import com.joyintech.tams.cfets.bankuplink.bond.service.*;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtrIbBondinfoService;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
@@ -42,7 +39,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -86,6 +86,9 @@ public class CfetsIbuQuoteBondController extends BaseController {
 
 	@Autowired
 	private TamsBaseMapper tamsBaseMapper;
+
+	@Autowired
+	private EntrustForcedFinishService entrustForcedFinishService;
 
 	@ApiOperation(value = "初始化参数", notes = "初始化参数")
 	@PostMapping("/initParams")
@@ -132,7 +135,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 	@ResponseBody
 	public Message<Page<EntrustDto>> pageEntrust(@RequestBody EntrustRequest dto){
 		try {
-			Page<EntrustDto> list = ibuQuoteBondService.listEntrust(dto);
+			Page<EntrustDto> list = ibuQuoteBondService.pageEntrust(dto);
 			return new Message<Page<EntrustDto>>().success().setData(list);
 		}catch (Exception e) {
 			logger.error("查询指令列表分页数据异常",e);
@@ -489,7 +492,7 @@ public class CfetsIbuQuoteBondController extends BaseController {
 			// 导出
 			ExcelUitl.doExport(requestDto, response, "指令列表", () -> {
 				EntrustRequest  entrustRequest = requestDto.getDto(EntrustRequest.class);
-				List dataList = ibuQuoteBondService.listEntrust(entrustRequest).getRoot();
+				List dataList = ibuQuoteBondService.pageEntrust(entrustRequest).getRoot();
 				return dataList;
 			});
 	}
