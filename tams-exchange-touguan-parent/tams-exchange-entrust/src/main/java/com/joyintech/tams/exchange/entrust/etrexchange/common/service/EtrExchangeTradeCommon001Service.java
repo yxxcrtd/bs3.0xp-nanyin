@@ -42,10 +42,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeDzImportCommonDto;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeGsImportCommonDto;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
@@ -371,18 +368,18 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	}
 	
 	
-	public Page<EtrExchangeTrade003Dto> selectEtrExchange(Map<String, Object> param) {
+	public Page<EtrExchangeTradeOperateRequest> selectEtrExchange(Map<String, Object> param) {
         param.put("userId", LoginUserUtil.getUserName());
         param.put("sysDate",iPlatformDate.getSysDateStr());
 		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",
-				param, EtrExchangeTrade003Dto.class);
+				param, EtrExchangeTradeOperateRequest.class);
 	}
 	//add by chenjiaxing 导出全部数据 202100902 start
-	public List<EtrExchangeTrade003Dto> selectEtrExchange2(Map<String, Object> param) {
+	public List<EtrExchangeTradeOperateRequest> selectEtrExchange2(Map<String, Object> param) {
 		param.put("userId", LoginUserUtil.getUserName());
 		param.put("sysDate",iPlatformDate.getSysDateStr());
 		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange2",
-				param, EtrExchangeTrade003Dto.class);
+				param, EtrExchangeTradeOperateRequest.class);
 	}
 	//add by chenjiaxing 导出全部数据 202100902 end
 
@@ -1125,7 +1122,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * 委托关闭
      * @param entity
      */
-	public void closeDelegate(EtrExchangeTrade003Dto entity){
+	public void closeDelegate(EtrExchangeTradeOperateRequest entity){
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/entrustClose",entity,
                 Integer.class);
@@ -1135,7 +1132,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * 委托撤销
      * @param entity
      */
-    public void recallDelegate(EtrExchangeTrade003Dto entity){
+    public void recallDelegate(EtrExchangeTradeOperateRequest entity){
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/entrustRevoke",entity,
                 Integer.class);

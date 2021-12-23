@@ -48,6 +48,7 @@ public class EtrExchangeTradePositionsCommonRequest {
     @ApiModelProperty(name="secId",value="证券代码",example="A1")
     private String secId;
 
+
     @ApiModelProperty(name="finprodType2",value="金融产品类型",example="A1")
     private String finprodType2;
 

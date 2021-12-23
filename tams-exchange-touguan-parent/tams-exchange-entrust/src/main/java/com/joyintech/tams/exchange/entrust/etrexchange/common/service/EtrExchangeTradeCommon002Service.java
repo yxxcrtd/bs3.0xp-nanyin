@@ -32,6 +32,7 @@ import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -51,8 +52,10 @@ public class EtrExchangeTradeCommon002Service extends BaseService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
+	@Autowired
     private IPlatformDate iPlatformDate;
 
+	@Autowired
 	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
     /**
      * 分页查询产品持仓信息

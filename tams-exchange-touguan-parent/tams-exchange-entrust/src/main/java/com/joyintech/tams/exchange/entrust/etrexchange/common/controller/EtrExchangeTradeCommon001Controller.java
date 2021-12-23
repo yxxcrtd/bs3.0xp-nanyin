@@ -20,22 +20,18 @@ import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.FinProductQuto;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeJjSaveRequest;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.FinProductOthCodeDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinPirceDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.TrdOthCodeInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -50,12 +46,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -911,10 +909,16 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	 * @throws Exception
 	 *             异常
 	 */
+	@ApiOperation(value = "导入的文件check", notes = "导入的文件check")
+	@PostMapping("/checkImportData")
 	@ResponseBody
-	@RequestMapping("checkImportData")
-	public AjaxResult checkImportData(@RequestBody Map<String,Object> paramMap) throws Exception {
-		return etrExchangeTrade001CommonService.checkImportData(paramMap);
+	public Message<AjaxResult> checkImportData(@RequestBody Map<String,Object> paramMap)  {
+		try{
+			AjaxResult ajaxResult=etrExchangeTrade001CommonService.checkImportData(paramMap);
+		return new Message<AjaxResult>().success().setData(ajaxResult);
+	}catch (Exception e){
+		return new Message<AjaxResult>().fail().setData(new AjaxResult("check失败"));
+	}
 	}
 
 	/**
