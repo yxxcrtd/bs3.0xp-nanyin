@@ -140,7 +140,7 @@ public class ChbMonthReportDetailAssetUtil {
                 case "AMT3_3_2" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_制造业.getValue(); break;
                 case "AMT3_3_3" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_采矿业.getValue(); break;
                 case "AMT3_3_4" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_建筑业.getValue(); break;
-                case "AMT3_3_5" :case "07" :case "14" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_基础设施建设.getValue(); break;
+                case "AMT3_3_5" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_基础设施建设.getValue(); break;
                 case "AMT3_3_6" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_房地产业.getValue(); break;
                 case "AMT3_3_7" : isFbhy =DictCodeListExt3.中债月度明细_非标行业_金融业.getValue(); break;
                 default:  isFbhy =DictCodeListExt3.中债月度明细_非标行业_其他服务业.getValue(); break;

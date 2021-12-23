@@ -6,7 +6,7 @@
 			<Cell order="2" name="二级分类">reportType2</Cell>
 			<Cell order="3" name="三级分类">reportType3</Cell>
 			<Cell order="4" name="四级分类">reportType4</Cell>
-			<Cell order="5" name="产品代码">prodid</Cell>
+			<Cell order="5" name="产品代码">prodId</Cell>
 			<Cell order="6" name="产品名称">prodName</Cell>
 			<Cell order="7" name="是否合规新产品">isFhxgcpStr</Cell>
 			<Cell order="8" name="资产代码/科目号">assetCode</Cell>
@@ -26,9 +26,9 @@
 			<Cell order="22" name="资管计划名称">oldAssetName</Cell>
 			<Cell order="23" name="份额">delayPayAmtStr</Cell>
 			<Cell order="24" name="成本">costAmtStr</Cell>
-			<Cell order="25" name="应计利息">floatIngplStr</Cell>
-			<Cell order="26" name="利息调整">intincexpStr</Cell>
-			<Cell order="27" name="公允价值变动">intadjexpAddStr</Cell>
+			<Cell order="25" name="应计利息">intincexpStr</Cell>
+			<Cell order="26" name="利息调整">intadjexpAddStr</Cell>
+			<Cell order="27" name="公允价值变动">floatIngplStr</Cell>
 			<Cell order="28" name="减值">lossAmtStr</Cell>
 			<Cell order="29" name="期末余额">assetvalueBStr</Cell>
 			<Cell order="30" name="1.12.9.a投向金融资产投资公司或其附属机构发行的私募股权投资基金">privatefundFlagStr</Cell>

@@ -148,6 +148,8 @@
             AP.TDY_COST_AMT  costAmt,
             AP.TDY_FLOAT_INGPL  floatIngpl,
             AP.TDY_INTINCEXP INTINCEXP,
+            AP.TDY_INTADJEXP_ADD intadjexpAdd,
+            AP.TDY_LOSS_AMT lossAmt,
             P.ASSETVALUE_A assetvalueA,
             P.ASSETVALUE_B assetvalueB,
             P.INDUSTRY1,
