@@ -163,7 +163,7 @@
          WHERE A.WORKFLOW_ID = B.WORKFLOW_ID)
          AND T.SEQ_NO = A.SEQ_NO)
          AND T.PROCESS_STATE in ('ING')
-         and T.BUSINESS_TYPE='ETR08') nextApp
+         and T.BUSINESS_TYPE='ETR53') nextApp
          on T1.Workflow_Id=nextApp.workFlowId
         LEFT JOIN WFL_ETR_ENTRUST_ADD T7 ON T1.ENTRUST_ID = T7.ENTRUST_ID
         LEFT JOIN SYS_USER T8 ON T1.INV_MANAGER_ID = T8.USER_NAME
@@ -249,8 +249,8 @@
         TABLE01.FINPROD_ID finProdId,/*金融产品Id*/
         round(NVL(TABLE01.pledgeAmount,0)/10000,2) pledgeAmount,/*已质押券面总额*/
         round(NVL(TABLE01.pledStrdPrinAmt,0)/10000,2) pledStrdPrinAmt,/*可质押券面总额*/
-        case when MST_BOND_VALUATION_INFO.NETPRICE>nvl(prinAmt.prinAmt,100) then nvl(prinAmt.prinAmt,100)
-        when nvl(prinAmt.prinAmt,100)=0 then nvl(prinAmt.prinAmt,100)
+        case when MST_BOND_VALUATION_INFO.NETPRICE>nvl(prinAmt.prinAmt,100) then round(100/100,4)*100
+        when MST_BOND_VALUATION_INFO.NETPRICE is null then round(nvl(prinAmt.prinAmt,100)/100,4)*100
         else round(MST_BOND_VALUATION_INFO.NETPRICE/nvl(prinAmt.prinAmt,100),4)*100 end as scale, /*折算比例*/
         ETR_ENTRUST_PLEDGE.PLEDGE_STOCK_ID pledgeStockId,/*质押库代码*/
         FIN_PRODUCT.MDATE mdate,/*到期日*/
@@ -893,7 +893,8 @@
             ep.PLEDGE_RATIO ,
             ep.PLEDGE_AMT ,
             espr.pledStrdPrinAmt,
-            fp.FINPROD_ABBR
+            fp.FINPROD_ABBR,
+               ee.REMARK
         FROM ETR_ENTRUST ee
          LEFT JOIN ETR_ENTRUST_ADD eea ON ee.ENTRUST_ID =eea.ENTRUST_ID
          LEFT JOIN ETR_PLEDGE ep ON ee.ENTRUST_ID =ep.ENTRUST_ID
@@ -957,7 +958,8 @@
             ep.PLEDGE_RATIO ,
             ep.PLEDGE_AMT ,
             espr.pledStrdPrinAmt,
-            fp.FINPROD_ABBR
+            fp.FINPROD_ABBR,
+            ee.REMARK
         FROM WFL_ETR_ENTRUST ee
                  LEFT JOIN WFL_ETR_ENTRUST_ADD eea ON ee.ENTRUST_ID =eea.ENTRUST_ID
                  LEFT JOIN WFL_ETR_PLEDGE ep ON ee.ENTRUST_ID =ep.ENTRUST_ID

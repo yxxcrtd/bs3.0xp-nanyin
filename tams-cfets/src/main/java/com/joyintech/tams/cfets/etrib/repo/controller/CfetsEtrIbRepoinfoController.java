@@ -142,6 +142,7 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         initPageParams.put("INVEST_TYPE",this.getSelectDataFromDataDic(DictCode.投资性质, null));
         //pageId
         initPageParams.put("pageId", "CfetsEtrIbRepoinfo003");
+        initPageParams.put("elementId", "CfetsEtrIbRepoinfo003_btn_submit");
         return new Message<Map<String, Object>>(initPageParams).success();
     }
     
