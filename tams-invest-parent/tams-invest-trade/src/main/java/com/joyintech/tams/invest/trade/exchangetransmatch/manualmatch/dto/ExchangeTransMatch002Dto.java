@@ -7,6 +7,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.validator.ExchangeTransMatchValidator;
@@ -229,9 +230,11 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
 
     public String getPsStr() {
         // GZYHTZJY-716:成交明细汇总表回购方向与指令方向不一致,需特殊处理 fuyongsheng 20211206 edit start
-        if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(this.getFinprodType2())){
+        if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(this.getFinprodType2())
+        && StringUtil.equals(this.getPs(), DictCodeList.交易方向_买入.getValue())){
             return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_正回购.getValue());
-        }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(this.getFinprodType2())){
+        }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(this.getFinprodType2())
+                && StringUtil.equals(this.getPs(), DictCodeList.交易方向_买入.getValue())){
             return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_逆回购.getValue());
         }else{
             return SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());

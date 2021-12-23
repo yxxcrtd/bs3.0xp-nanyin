@@ -29,10 +29,12 @@ public class ExchangeTransMatchValidator implements BeanValidator {
 
             //比较基本信息
             String ps = dealDto.getPs();
-            if(StringUtil.equals(dealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+            if(StringUtil.equals(dealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+            && StringUtil.equals(dealDto.getPs(), DictCodeList.交易方向_买入.getValue())) {
                 ps = DictCodeList.回购拆借方向_正回购.getValue();
             }
-            else if (StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+            else if (StringUtil.equals(dealDto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
+            && StringUtil.equals(dealDto.getPs(), DictCodeList.交易方向_买入.getValue())) {
                 ps = DictCodeList.回购拆借方向_逆回购.getValue();
             }
             if(!StringUtil.equals(dealDto.getSecAcctId(),entrustDto.getSecAcctId())
