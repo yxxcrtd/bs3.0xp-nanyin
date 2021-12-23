@@ -52,10 +52,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -570,8 +567,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	/**
 	 * 保存按钮点击时的check
 	 *
-	 * @param EtrExchangeTradeSaveRequest dto
-	 * @param Message BindingResult
+	 * @param  dto
+	 * @param  br
 	 * @return check结果
 	 * @see
 	 * @since 1.0
@@ -909,15 +906,13 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ApiOperation(value = "导入的文件check", notes = "导入的文件check")
 	@PostMapping("/checkImportData")
 	@ResponseBody
-	public AjaxResult checkImportData(@RequestBody Map<String,Object> paramMap, BindingResult br) throws Exception {
-		return etrExchangeTrade001CommonService.checkImportData(paramMap,br);
-	public Message<AjaxResult> checkImportData(@RequestBody Map<String,Object> paramMap)  {
+	public Message<AjaxResult> checkImportData(@RequestBody Map<String,Object> paramMap, BindingResult br)  {
 		try{
-			AjaxResult ajaxResult=etrExchangeTrade001CommonService.checkImportData(paramMap);
-		return new Message<AjaxResult>().success().setData(ajaxResult);
-	}catch (Exception e){
-		return new Message<AjaxResult>().fail().setData(new AjaxResult("check失败"));
-	}
+			AjaxResult ajaxResult=etrExchangeTrade001CommonService.checkImportData(paramMap,br);
+			return new Message<AjaxResult>().success().setData(ajaxResult);
+		}catch (Exception e){
+			return new Message<AjaxResult>().fail().setData(new AjaxResult("check失败"));
+		}
 	}
 
 	/**

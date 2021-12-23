@@ -87,8 +87,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.MapBindingResult;
-import org.springframework.validation.BindingResult;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -192,12 +190,8 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void doComplete(EtrExchangeTradeSaveRequest entity, OperationType arg1) {
+	public void doComplete(EtrExchangeTradeSaveRequest dto, OperationType arg1) {
 		// TODO Auto-generated method stub
-		restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/doComplete", entity,
-				Integer.class);
-        doDeleteFlow(entity.getWorkflowId());
-	public void doComplete(EtrExchangeTradeCommon001Dto dto, OperationType arg1) {
 //		restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/doComplete", entity,
 //				Integer.class);
 		BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
@@ -582,7 +576,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param dto
 	 * @return
 	 */
-	public EtrSinglePortfolioDto getEtrSinglePortfolio(EtrExchangeTradeCommon001Dto dto) {
+	public EtrSinglePortfolioDto getEtrSinglePortfolio(EtrExchangeTradeSaveRequest dto) {
 		//构造投资指令DTO
 		EtrBaseDto baseDto = getEtrBaseDto(dto);
 		// 构造单组合单资产DTO start
@@ -685,7 +679,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param dto
 	 * @return
 	 */
-	public EtrBaseDto getEtrBaseDto(EtrExchangeTradeCommon001Dto dto) {
+	public EtrBaseDto getEtrBaseDto(EtrExchangeTradeSaveRequest dto) {
 		// 构造投资指令DTO start
 		EtrBaseDto baseDto = new EtrBaseDto();
 		baseDto.setMdate(dto.getMdate());// 指令起始日
@@ -789,7 +783,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
             Boolean.class);
     }
 
-    private void doInsertFlow(EtrExchangeTradeCommon001Dto dto) {
+    private void doInsertFlow(EtrExchangeTradeSaveRequest dto) {
 //        BaseEtrInvestInfoDto entity = restTemplate.postForObject(
 //            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/buildEtrFlow", dto,
 //            BaseEtrInvestInfoDto.class);
@@ -1853,12 +1847,12 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @see
 	 * @since 1.0
 	 */
-	public EtrExchangeTradeCommon001Dto getEtrExchangeTradeInfo(String entrustId) {
+	public EtrExchangeTradeSaveRequest getEtrExchangeTradeInfo(String entrustId) {
 //        return restTemplate.postForObject(
 //            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/getEtrExchangeTradeInfo",entrustId,
-//            EtrExchangeTradeCommon001Dto.class);
+//            EtrExchangeTradeSaveRequest.class);
 		try {
-			EtrExchangeTradeCommon001Dto etrExchangeTrade001Dto = new EtrExchangeTradeCommon001Dto();
+			EtrExchangeTradeSaveRequest etrExchangeTrade001Dto = new EtrExchangeTradeSaveRequest();
 			//通过指令ID获取委托指令表的DTO,获取委托类型
 			EtrEntrust etrEntrust =  etrExchangeTradeCommonMapper.selectEntrustByKey(entrustId);
 			if(StringUtil.isNotEmpty(etrEntrust)) {
@@ -2086,7 +2080,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * 保存check
      * @param entity
      */
-    public AjaxResult checkSave(EtrExchangeTradeCommon001Dto entity, BindingResult result){
+    public AjaxResult checkSave(EtrExchangeTradeSaveRequest entity, BindingResult result){
 //        return restTemplate.postForObject(
 //                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/checkSave",entity,
 //                AjaxResult.class);
@@ -2282,7 +2276,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param entity
 	 * @return
 	 */
-	public EtrExchangeTradeCommon001Dto setAssetTypeById(EtrExchangeTradeCommon001Dto entity) {
+	public EtrExchangeTradeSaveRequest setAssetTypeById(EtrExchangeTradeSaveRequest entity) {
 		// 根据资产获取资产类型
 		if (StringUtil.isNotEmpty(entity.getFinprodId())) {
 			FinProductTypeKey key = new FinProductTypeKey();
@@ -2296,7 +2290,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		return entity;
 	}
 
-	public void setCheckParams(EtrExchangeTradeCommon001Dto entity, EtrParameterDto paraDto) {
+	public void setCheckParams(EtrExchangeTradeSaveRequest entity, EtrParameterDto paraDto) {
 		/********************************/
 		setAssetTypeById(entity);
 		//设置默认最小价差、最小交易单位；否则指令组件抛异常；
@@ -2798,7 +2792,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_固定收益平台.getValue())) {
 			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue());
 		}
-		AjaxResult ajax  = checkSave(dto);
+		AjaxResult ajax  = checkSave(dto,br);
 		if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList())) {
 			return ajax;
 		}
@@ -4090,7 +4084,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
      * @return 返回指令对象
      */
     @SuppressWarnings(value = {"unchecked"})
-	public <T extends EtrExchangeTradeCommon001Dto> T getEntrustListData(T etrExchangeTrade001Dto) {
+	public <T extends EtrExchangeTradeSaveRequest> T getEntrustListData(T etrExchangeTrade001Dto) {
             //根据模板中固定的下标来赋值
             //etrExchangeTrade001Dto.setSeqNo(String.valueOf(i+1));
             //原excel中的行号
@@ -4202,7 +4196,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 				mappz.put("secId", marketId);
 				int scale = getScale(etrExchangeTrade001Dto.getFinprodType2(),etrExchangeTrade001Dto.getTradeMarket());
 				mappz.put("scale", scale);
-				EtrExchangeTradeCommon001Dto pzDto = findBidQuotationsPage(mappz);
+				EtrExchangeTradeSaveRequest pzDto = findBidQuotationsPage(mappz);
 				etrExchangeTrade001Dto.setEntrustPrice(pzDto.getEntrustPrice());
 			}
 			else if(DictCodeList.交易方向_行权_回售.getValue().equals(etrExchangeTrade001Dto.getPs())){
@@ -4430,11 +4424,11 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @see
 	 * @since 1.0
 	 */
-	public void dealAfterCheck(List<EtrExchangeTradeCommon001Dto> equityList) {
-		List<EtrExchangeTradeCommon001Dto> listN = new ArrayList<EtrExchangeTradeCommon001Dto>();
+	public void dealAfterCheck(List<EtrExchangeTradeSaveRequest> equityList) {
+		List<EtrExchangeTradeSaveRequest> listN = new ArrayList<EtrExchangeTradeSaveRequest>();
 		for (int i = 0; i < equityList.size(); i++) {
-			EtrExchangeTradeCommon001Dto assetDeclarationCodeMaintenanceDto = equityList.get(i);
-			EtrExchangeTradeCommon001Dto equityInfoCheck = null;
+			EtrExchangeTradeSaveRequest assetDeclarationCodeMaintenanceDto = equityList.get(i);
+			EtrExchangeTradeSaveRequest equityInfoCheck = null;
 			if (equityInfoCheck == null) {
 				listN.add(assetDeclarationCodeMaintenanceDto);
 			}
@@ -4667,7 +4661,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param lineNo
 	 * @return
 	 */
-	private String checkMinTrdUnit(EtrExchangeTradeCommon001Dto dto, MinTrdUnitLimitDto minTrdUnitLimitDto, String lineNo) {
+	private String checkMinTrdUnit(EtrExchangeTradeSaveRequest dto, MinTrdUnitLimitDto minTrdUnitLimitDto, String lineNo) {
 		// 按数量check
 		String confirmMsg = "";
 		boolean flag1 = false;
@@ -4776,7 +4770,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * @param dto
 	 * @return true 不是交易时段，不可交易 false 可以交易
 	 */
-	public Boolean isNonTradingTime(EtrExchangeTradeCommon001Dto dto) {
+	public Boolean isNonTradingTime(EtrExchangeTradeSaveRequest dto) {
 		if (CacheUtil.getSysParam(BussinessConstant.ETR_TRADE_TIME_SWITCH).equals(DictCodeListExt1.是否_是.getValue())) {
 			if (StringUtil.isNotEmpty(dto.getTradeMarket()) && StringUtil.isNotEmpty(dto.getFinprodType2())) {
 				TrdTimeConfigDto trdTimeConfigDto = getTrdTimeConfig(dto.getTradePlat(), dto.getTradeMarket(),
@@ -4925,7 +4919,7 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 	 * 20201128
 	 * @param dto
 	 */
-	public void doInsetOrUpdateForEtrPositionHold(EtrExchangeTradeCommon001Dto dto) {
+	public void doInsetOrUpdateForEtrPositionHold(EtrExchangeTradeSaveRequest dto) {
 //		restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/doInsetOrUpdateForEtrPositionHold", dto,
 //				Integer.class);
 		// 构造单组合单资产DTO
