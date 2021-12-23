@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.common.BusinessResultException;
 import com.joyintech.tams.exchange.common.bean.ExpireIncomeRateBean;
 import com.joyintech.tams.exchange.common.bean.ExpireIncomeRateRet;
@@ -21,6 +22,7 @@ import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
+import com.joyintech.tams.exchange.common.request.InstructionExportRequest;
 import com.joyintech.tams.exchange.common.request.InstructionQueryRequest;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
@@ -34,6 +36,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @RestController
@@ -69,6 +72,13 @@ public class InstructionController {
 
         Map<String, Object> pageParam = JsonUtils.getObjectFromJson(JsonUtils.getJsonFromObject(instructionQuery), Map.class);
         return new Message<InstructionPage<Instruction, InstructionPledge>>(investmentManagement.queryInstructionsFromCache(pageParam));
+    }
+
+    @PostMapping(value="/instruction/export")
+    @ResponseBody
+    @ApiOperation(value = "导出指令列表", notes = "导出指令列表")
+    public void exportPosition(@RequestBody InstructionExportRequest request, HttpServletResponse response) {
+        ExcelUitl.doExport(request, response, "指令列表", () -> investmentManagement.queryExportPage(request.getDto(InstructionQueryRequest.class)));
     }
 
     @ApiOperation(value = "指令接收|放弃接口", notes = "指令接收|放弃接口")

@@ -31,6 +31,7 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.business.common.dto.BaseExportRequest;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.dto.FieldExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
@@ -127,18 +128,60 @@ public class ExcelUitl {
 		}
 	}
 
-	private static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
-		OutputStream os = null;
-		File excelFile = null;
-		String dir = UUID.randomUUID().toString();
-		File path = null;
-		try {
-			os = response.getOutputStream();
-			response.setContentType("text/vnd.ms-excel;charset=UTF-8");
-			response.setCharacterEncoding("UTF-8");
-			response.setHeader("Pragma", "public");
-			response.setHeader("Cache-Control", "max-age=30");
-			response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileName + ".xlsx", "UTF-8"));
+    public static void doExport(BaseExportRequest requestDto, HttpServletResponse response, String excelAndSheetName, DoQuery doQuery) {
+        List<BaseMap> header = requestDto.getHeader();
+        List<BaseMap> dataList = requestDto.getData();
+        if (dataList == null || dataList.isEmpty()) {
+            List mapList = new ArrayList();
+            dataList = doQuery.query();
+            if (dataList != null && !dataList.isEmpty()) {
+				dataList.forEach(e -> {
+					if (e instanceof BaseMap) {
+						mapList.add(e);
+					} else {
+						mapList.add(BeanUtil.object2Map(e));
+					}
+				});
+            }
+            doExport(excelAndSheetName, header, mapList, response);
+        } else {
+            try {
+                Set<String> dateSet = new HashSet<String>();
+                header.forEach(item -> {
+                    String colCode = (String) item.get("colCode");
+                    if (item.containsKey("extendCfg")) {
+                        Map<String, Object> extendCfgMap = (Map) JsonUtils.json2Object((String) item.get("extendCfg"), Map.class);
+                        if (extendCfgMap.containsKey("dataType") && StringUtil.equals((String) extendCfgMap.get("dataType"), "date")) {
+                            dateSet.add(colCode);
+                        }
+                    }
+                });
+                dataList.forEach(item -> {
+                    for (Map.Entry<String, Object> m : item.entrySet()) {
+                        if (dateSet.contains(m.getKey()) && null != m.getValue()) {
+                            item.put(m.getKey(), new Date((Long) m.getValue()));
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                logger.error("导出格式化日期异常");
+            }
+            doExport(excelAndSheetName, header, dataList, response);
+        }
+    }
+
+    private static void doExport(String fileName, List<BaseMap> heads, List dataList, HttpServletResponse response) {
+        OutputStream os = null;
+        File excelFile = null;
+        String dir = UUID.randomUUID().toString();
+        File path = null;
+        try {
+            os = response.getOutputStream();
+            response.setContentType("text/vnd.ms-excel;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("Pragma", "public");
+            response.setHeader("Cache-Control", "max-age=30");
+            response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileName + ".xlsx", "UTF-8"));
 
 			/**
 			 * 设置格式配置信息，后面监听并加入到excel中

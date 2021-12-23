@@ -17,6 +17,7 @@ import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
 import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
+import com.joyintech.tams.exchange.common.request.InstructionQueryRequest;
 import com.joyintech.tams.exchange.common.utils.*;
 import com.joyintech.tams.exchange.datacommon.db.service.*;
 import com.joyintech.tams.exchange.service.trade.processor.MessageConsumerService;
@@ -156,6 +157,18 @@ public class InvestmentManagement extends BaseService {
             commonManagement.setFairModeWithUnacceptInstruction(fairModeWithUnacceptInstruction);
         }
         // modify by etliu 20211113 end
+    }
+
+    /**
+     * 指令列表导出内容查询
+     * @param request
+     * @return
+     */
+    public List<Instruction> queryExportPage(InstructionQueryRequest request) {
+        Map<String, Object> pageParam = JsonUtils.getObjectFromJson(JsonUtils.getJsonFromObject(request), Map.class);
+        InstructionPage<Instruction, InstructionPledge> page = queryInstructionsFromCache(pageParam);
+        List<Instruction> instructionList = page.getEtr_entrust_list();
+        return instructionList;
     }
 
     /**
