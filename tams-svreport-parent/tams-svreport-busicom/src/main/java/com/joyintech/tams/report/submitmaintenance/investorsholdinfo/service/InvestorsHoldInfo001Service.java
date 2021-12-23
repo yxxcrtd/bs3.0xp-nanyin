@@ -2030,6 +2030,10 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			}
 			// add by wangmin 2018-07-11 end
 			// prodRegInfoList若为null，下方synchronized（prodRegInfoList） 方法报错
+
+			// add by yangxianjiu 2021-12-23 end
+			// investorsHoldInfo001Mapper.countInvestorByIndentifyMark(indentifyMark)==0 优化导入
+			List<String> allInvestor = investorsHoldInfo001Mapper.selectAllInvestor();
 			for (Map<String, String> item : mapList) {
 				List<String> message = new ArrayList<>();
 				//String checkMess="";
@@ -2085,7 +2089,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 					message.add(this.getMessage("REPORT_COMMON_E_0002", "识别标识", 30));
 				}
 				//add by  liubin 20181108 start 判断是否是excel导入并且识别标识不存在，直接拦截
-				else if(isExcel && investorsHoldInfo001Mapper.countInvestorByIndentifyMark(indentifyMark)==0 ){
+				else if(isExcel && (!allInvestor.contains(indentifyMark))){
+//				else if(isExcel && (mapInvestor.get(indentifyMark) == null) ){
+//				else if(isExcel && (investorsHoldInfo001Mapper.countInvestorByIndentifyMark(indentifyMark)==0)){
 					isNeed = false;
 					message.add(this.getMessage("CHB_INVESTHOLD_INDENTIFYMARK"));
 				}

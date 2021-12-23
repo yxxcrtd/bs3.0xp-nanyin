@@ -682,6 +682,17 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         
         //设置数据结构的转化规则字段内容
         EquityInfoCheckUtil.replaceByExchangeRule(allRuleObjList,spzMap,equityList);
+
+        // add by yangxianjiu 2021-12-23 end
+        // equityInfo001Mapper.getEquityInfo001DtoByKey(equityInfo001Dto); 优化导入
+        // 组合 indentifyMark bankCode
+        List<EquityInfo001Dto> equityInfo001DtoList = equityInfo001Mapper.selectAllEquityInfo();
+        Map<String, EquityInfo001Dto> equityInfoMap = equityInfo001DtoList.stream().collect(
+                JoyinCollectors.toMap(x -> x.getIndentifyMark() + "_" + x.getBankCode(),part -> part));
+//        for (EquityInfo001Dto equityInfo001Dto : equityInfo001DtoList) {
+//            equityInfoMap.put(equityInfo001Dto.getIndentifyMark()+"_"+equityInfo001Dto.getBankCode(),
+//                    equityInfo001Dto);
+//        }
         
         for (int i = 0; i < equityList.size(); i++ ) {
         	EquityInfo001Dto  equityInfo001Dto = equityList.get(i);
@@ -716,14 +727,20 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             equityInfo001Dto.setDeptCode(deptCode);
             equityInfo001Dto.setDataSource(DictCodeListExt2.数据来源_EXCEL导入.getValue());
             equityInfo001Dto.setOrgCode(orgCode);
-            // if(EquityInfoCheckUtil.isEmpty(equityInfo001Dto.getImportStatus())){
-            EquityInfo001Dto equityInfoCheck = equityInfo001Mapper.getEquityInfo001DtoByKey(
-                    equityInfo001Dto);                                
-            
+
+            EquityInfo001Dto equityCheck = equityInfoMap.get(
+                    equityInfo001Dto.getIndentifyMark() + "_" + equityInfo001Dto.getBankCode());
             // 插入前维护表中无数据，将dto放入listN
-            if (equityInfoCheck == null) {
+            if (equityCheck == null) {
                 listN.add(equityInfo001Dto);
             }
+            // if(EquityInfoCheckUtil.isEmpty(equityInfo001Dto.getImportStatus())){
+//            EquityInfo001Dto equityInfoCheck = equityInfo001Mapper.getEquityInfo001DtoByKey(
+//                    equityInfo001Dto);
+            // 插入前维护表中无数据，将dto放入listN
+//            if (equityInfoCheck == null) {
+//                listN.add(equityInfo001Dto);
+//            }
             //识别标识变更
             else if(DictCodeListExt2.数据类型_中债_识别标识变更.getValue().equals(statusType)){
                 EquityInfo001Dto equityInfo001DtoI = new EquityInfo001Dto();
@@ -743,7 +760,7 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
                 listI.add(equityInfo001DtoI);
             }
             // 插入前维护表有待处理，将dto放入listN
-            else if ("A".equals(equityInfoCheck.getStatus())) {            	
+            else if ("A".equals(equityCheck.getStatus())) {
                 listA.add(equityInfo001Dto);
             }
             // 插入前维护表有除待处理，将dto放入listN

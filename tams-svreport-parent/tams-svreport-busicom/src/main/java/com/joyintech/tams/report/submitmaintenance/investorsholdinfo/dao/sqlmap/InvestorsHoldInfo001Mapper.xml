@@ -799,4 +799,17 @@ where
 		WHERE INDENTIFY_MARK= #{indentifyMark,jdbcType=VARCHAR}
 		)
 	</select>
+
+	<select id="selectAllInvestor" resultType="java.lang.String">
+		SELECT
+			INDENTIFY_MARK
+		FROM
+			CHB_EQU_HOLD
+		WHERE CHB_EQU_HOLD.STATUS = 'E'
+		UNION ALL
+		SELECT
+			INDENTIFY_MARK
+		FROM
+			CHB_EQU_HOLD_CHECK
+	</select>
 </mapper>
