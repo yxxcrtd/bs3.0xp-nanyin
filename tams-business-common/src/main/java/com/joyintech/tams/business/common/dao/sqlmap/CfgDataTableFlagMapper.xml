@@ -15,6 +15,22 @@
           and EFFERANGE = 1
     </select>
 
+    <select id="getByPageCodeAndDtCodes" parameterType="String"
+            resultType="com.joyintech.tams.business.common.entity.CfgDataTableShowFlag">
+        select *
+        from CFG_DATATABLE_SHOW_FLAG
+        where PAGECODE = #{pageCode}
+          and DTCODE = #{dtCode}
+            <if test="spcdCodes != null and spcdCodes.size() > 0 ">
+                AND SPCDCODE IN
+                <foreach collection="spcdCodes" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+          and RANGEID = #{rangeId}
+          and EFFERANGE = 1
+    </select>
+
     <insert id="insertCfgDataTableFlag" parameterType="com.joyintech.tams.business.common.entity.CfgDataTableShowFlag">
         insert into CFG_DATATABLE_SHOW_FLAG(PAGECODE, DTCODE, SPCDCODE,EFFERANGE, RANGEID, UPDATETIME)
         values (#{pageCode ,jdbcType=VARCHAR},
