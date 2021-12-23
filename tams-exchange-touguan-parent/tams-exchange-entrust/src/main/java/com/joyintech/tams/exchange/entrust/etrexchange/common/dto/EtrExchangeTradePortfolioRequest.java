@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto;
+package com.joyintech.tams.exchange.entrust.etrexchange.common.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

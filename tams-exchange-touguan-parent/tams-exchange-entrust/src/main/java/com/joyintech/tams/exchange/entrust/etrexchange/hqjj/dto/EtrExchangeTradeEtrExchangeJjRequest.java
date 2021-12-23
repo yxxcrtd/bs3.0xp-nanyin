@@ -31,7 +31,7 @@ public class EtrExchangeTradeEtrExchangeJjRequest {
     @ApiModelProperty(name="entrustId",value="指令代码",example="A1")
     private String entrustId;
 
-    @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
+    @ApiModelProperty(name="pageMode",value="分页对象",example="{'pageSize': 10,'pageNo': 1, 'sort': 'name', 'direction': 'asc'}")
     private PageMode pageMode;
 
     @ApiModelProperty(name="entrustStatus",value="指令状态",example="A1")
