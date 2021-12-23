@@ -10,9 +10,11 @@
             ssr.FINPROD_ID,
             ssr.TRADE_MARKET,
             ssr.CHECK_RESULT,
-            CASE WHEN fpt.TYPE_8 IS NOT NULL THEN fpt.TYPE_8
-            WHEN ssrd.FINPROD_TYPE IS NOT NULL THEN ssrd.FINPROD_TYPE
-            WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
+            CASE
+                WHEN ssrd.FINPROD_TYPE IS NOT NULL THEN ssrd.FINPROD_TYPE
+                WHEN ssrd.FINPROD_TYPE IS NOT NULL THEN ssrd.FINPROD_TYPE
+                WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
+                WHEN fpt.TYPE_8 IS NOT NULL THEN fpt.TYPE_8
             END  FINPROD_TYPE,
             ssr.ENTRUST_TRADE_ID,
             ssr.CUSTOMER_ID,
@@ -46,6 +48,7 @@
         LEFT JOIN (
             SELECT
                 detail.SEQ_NO,
+                std.FINPROD_TYPE2,
                 SUM(std.COMMISSION_AMT) COMMISSION_AMT,
                 SUM(std.JSF_AMT) JSF_AMT,
                 SUM(std.ZGF_AMT) ZGF_AMT,
@@ -69,6 +72,7 @@
                 SETTLE_TRANS_DATA std ON detail.TRADE_ID = std.TRADE_ID
             GROUP BY
                 detail.SEQ_NO
+                std.FINPROD_TYPE2
             )settle ON ssr.SEQ_NO = settle.SEQ_NO
         LEFT JOIN
             FIN_PRODUCT_TYPE fpt ON ssr.FINPROD_ID = fpt.FINPROD_ID

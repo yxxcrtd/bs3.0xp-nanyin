@@ -390,6 +390,18 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             settleTransDataTotalAdd.setTradeId(dealTotal.getSeqId());
                             settleTransDataAddList.add(settleTransDataTotalAdd);
                         }
+                        //当笔成交数据明细.质押品信息流水号 非空
+                        if(StringUtil.isNotEmpty(settleTransDataDto.getPledgeTradeId())){
+                            SettleTransDataTotalPledge settleTransDataTotalPledge = new SettleTransDataTotalPledge();
+                            settleTransDataTotalPledge.setTradeId(dealTotal.getSeqId());
+                            settleTransDataTotalPledge.setBranch(dealTotal.getBranch());
+                            settleTransDataTotalPledge.setPledgeFinprodId(settleTransDataDto.getPledgeFinprodId());
+                            settleTransDataTotalPledge.setPledgeFaceValue(settleTransDataDto.getPledgeFaceValue());
+                            settleTransDataTotalPledge.setPledgeNumber(settleTransDataDto.getPledgeNumber());
+                            settleTransDataTotalPledge.setPledgeRatio(settleTransDataDto.getPledgeRatio());
+                            settleTransDataTotalPledge.setPledgeAmt(settleTransDataDto.getPledgeAmt());
+                            settleTransDataPledgeList.add(settleTransDataTotalPledge);
+                        }
                     }
             }else{
                 //对账结果核对if 变量.temp_当前成交数据明细数据list 中所有数据都满足【对账结果 为空 或者为 对账一致 或者为 手工完成】

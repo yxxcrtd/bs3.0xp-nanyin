@@ -185,7 +185,8 @@
             NULL OTHER_FEEAMT,
             YJ COMMISSION_AMT,
             CASE
-                WHEN CJJE >0 THEN 'T02'
+                WHEN YWBS = '4023' THEN 'T49'
+                WHEN YWBS != '4023' AND CJJE >0 THEN 'T02'
                 ELSE 'T01'
             END PS,
             T2.ACCT_NO ACCOUT,
@@ -244,6 +245,17 @@
                         '债券质押提前终止购回利息',
                         '债券质押购回交易',
                         '债券质押购回利息')
+            )
+            AND NOT EXISTS (
+                SELECT
+                    1
+                FROM
+                    STL_SEC_RECON_CONFIG T6
+                WHERE
+                    T6.JYLB = T1.JYLB
+                    AND T6.YWBS = T1.YWBS
+                    AND ZYBS IS NULL
+                    AND T1.YWBS = '4023' AND T1.CJSL <![CDATA[<]]> 0
             )
             <if test="collect != null and collect.size()>0">
                 and T4.CUSTOMER_ID IN
@@ -317,7 +329,8 @@
             QTF OTHER_FEEAMT,
             JYJ COMMISSION_AMT,
             CASE
-                WHEN QJCJJE >0 THEN 'T02'
+                WHEN ZYDM = '220142' THEN 'T49'
+                WHEN ZYDM != '220142' AND QJCJJE >0 THEN 'T02'
                 ELSE 'T01'
             END PS,
             T2.ACCT_NO ACCOUT,
@@ -375,6 +388,16 @@
                         '债券回购续做返回'
                         '债券回购购回收取'
                         '债券回购购回返回')
+            )
+            AND NOT EXISTS (
+                SELECT
+                    1
+                FROM
+                    STL_SEC_RECON_CONFIG T6
+                WHERE
+                    T6.ZYBS = T1.ZYDM
+                    AND ZYBS IS NOT NULL
+                    AND T1.ZYDM = '220142' AND T1.CJSL <![CDATA[<]]> 0
             )
         <if test="collect != null and collect.size()>0">
             AND  T4.CUSTOMER_ID IN
@@ -702,6 +725,7 @@
             MARKET_ID,
             FINPROD_ID,
             FINPROD_TYPE,
+            'H01' REPO_TYPE,
             SUM(TRADE_NUM) TRADE_NUM,
             SUM(TRADE_AMT) TRADE_AMT,
             SUM(INT_AMT) INT_AMT,
@@ -740,10 +764,7 @@
                 NULL UNIT,
                 NULL FULL_PRICE,
                 NULL INT_AMT,
-                CASE
-                    WHEN CJJE&lt;0 THEN CJJE*-1
-                    ELSE CJJE
-                END TRADE_AMT,
+                CJJE TRADE_AMT,
                 CJJE HAPPEN_AMT,
                 NULL TOTAL_TEEAMT,
                 NULL HGDQR,
@@ -974,8 +995,15 @@
                 WHEN ZYDM = '债券回购购回收取'  then 'F03'
                 ELSE NULL
             END FINPROD_TYPE,
-            CJSL TRADE_NUM,
-            QJCJJE TRADE_AMT,
+            'H01' REPO_TYPE,
+            CASE
+                WHEN SJSF > 0 THEN abs(CJSL) * -1
+                ELSE abs(CJSL)
+            END AS TRADE_NUM,
+            CASE
+                WHEN SJSF > 0 THEN abs(QJCJJE)
+                ELSE abs(QJCJJE) * -1
+            END AS TRADE_AMT,
             YJLXZE INT_AMT,
             SJSF HAPPEN_AMT,
             HGDQJE HGDQJE,

@@ -741,7 +741,7 @@ public class StlDataDealSzdJsmxProcessService {
 							// 流水号 = 成交数据明细流水号
 							settleTransDataPledge.setTradeId(settleTransData.getTradeId());
 							settleTransDataPledge.setBranch(0L);
-							settleTransDataPledge.setPledgeFinprodId(szdJsmx.getZqdm2());
+							settleTransDataPledge.setPledgeFinprodId("F01_" + szdJsmx.getZqdm2() + ".SH");
 //							settleTransDataPledge.setPledgeNumber(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getSl()).doubleValue())));
 						    //质押数量
 						    settleTransDataPledge.setPledgeNumber(ArithmeticUtil.divide(new BigDecimal(Math.abs(new BigDecimal(szdJsmx.getCjsl()).doubleValue())),BigDecimal.valueOf(100),2));
@@ -1091,6 +1091,8 @@ public class StlDataDealSzdJsmxProcessService {
 			settleTransDataAdd.setTradeId(settleTransData.getTradeId());
 			settleTransDataAdd.setSeRepDayType(CacheUtil.getSysParam(StlDataDealProcessConstant.STL_SE_REP_DAY_TYPE));
 			stlDownDataDealWriteBaseDto.setSettleTransDataAdd(settleTransDataAdd);
+			// 成交数据明细质押品信息表
+			stlDownDataDealWriteBaseDto.setSettleTransDataPledgeList(Arrays.asList(settleTransDataPledge));
 			// 成交数据与投管交易关系
 			SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
 			settleTransTgMapping.setTradeId(settleTransData.getTradeId());

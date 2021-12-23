@@ -50,9 +50,11 @@ public class StlSettleTransDataGatherProcessor extends BaseProcessor<NeedOperate
         });
         // 汇总质押品
         List<SettleTransDataTotalPledge> transDataTotalPledgeList = item.getSettleTransDataTotalPledge();
-        transDataTotalPledgeList.forEach(pledge -> {
-            stlSettleTransDataGatherService.insetSettleTransDataTotalPledge(pledge);
-        });
+        if(CollectionUtils.isNotEmpty(transDataTotalPledgeList)){
+            transDataTotalPledgeList.forEach(pledge -> {
+                stlSettleTransDataGatherService.insetSettleTransDataTotalPledge(pledge);
+            });
+        }
         return null;
     }
 }
