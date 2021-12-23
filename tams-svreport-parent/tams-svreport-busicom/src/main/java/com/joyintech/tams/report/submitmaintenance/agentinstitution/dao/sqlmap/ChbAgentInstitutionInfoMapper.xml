@@ -151,6 +151,15 @@
           and AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
     </select>
 
+    <select id="checkAgentInstitutionCodeImport" resultType="com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto">
+        select
+        AGENT_INSTITUTION_CODE agentInstitutionCode
+        from
+        CHB_AGENT_INSTITUTION_INFO
+        where
+        STATUS = 'E'
+    </select>
+
     <select id="checkAgentInstitutionCodeD" resultType="integer" parameterType="java.lang.String" >
         select
           count(*)
@@ -159,5 +168,14 @@
         where
           STATUS = 'D'
           and AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="checkAgentInstitutionCodeDImport" resultType="com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto">
+        select
+        AGENT_INSTITUTION_CODE agentInstitutionCode
+        from
+        CHB_AGENT_INSTITUTION_INFO
+        where
+        STATUS = 'D'
     </select>
 </mapper>

@@ -108,7 +108,27 @@
           STATUS = 'D'
           and AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
           and PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
+    </select>
 
+    <!--    导入时check表中是否存在相同的逻辑删除数据-->
+    <select id="checkAgentInstitutionCodeDImport" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
+        select
+        AGENT_INSTITUTION_CODE agentInstitutionCode，
+        PROD_REGIST_CODE prodRegistCode
+        from
+        CHB_AGENT_PRD_INFO
+        where
+        STATUS = 'D'
+    </select>
+
+    <select id="checkProdRegistCodeImport" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
+        select
+        AGENT_INSTITUTION_CODE agentInstitutionCode，
+        PROD_REGIST_CODE prodRegistCode
+        from
+        CHB_AGENT_PRD_INFO
+        where
+        STATUS = 'E'
     </select>
 
 <!--    校验代销机构代码相同时，产品登记编码不能相同-->

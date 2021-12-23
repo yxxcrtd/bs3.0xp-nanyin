@@ -44,6 +44,12 @@ public interface ChbAgentPrdInfoMapper {
 //    check表中是否存在相同的逻辑删除数据
     int checkAgentInstitutionCodeD(@Param("agentInstitutionCode") String agentInstitutionCode,@Param("prodRegistCode") String prodRegistCode);
 
+    //    check表中是否存在相同的逻辑删除数据导入
+    List<AgentPrdInfoDto> checkAgentInstitutionCodeDImport();
+
+    //    check表中是否存在相同的有效数据导入
+    List<AgentPrdInfoDto> checkProdRegistCodeImport();
+
     /**
      * check代理销售机构代码相同时，产品登记编码不可重复
      * @param

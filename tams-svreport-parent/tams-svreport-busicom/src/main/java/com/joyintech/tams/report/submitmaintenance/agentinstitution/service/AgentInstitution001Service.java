@@ -126,9 +126,15 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 List<ExcelValidDto> checkResult= checkExcelSales(dataList, entities,userName,deptCode);
                 if (checkResult.isEmpty()) {
                     entities = convertToEntity(dataList, orgCode);
+                    //校验是否已存在逻辑删除的数据
+                    List<AgentInstitutionDto> AgentInstitutionCodeDImportList =  chbAgentInstitutionInfoMapper.checkAgentInstitutionCodeDImport();
+                    Map<String,AgentInstitutionDto> AgentInstitutionCodeDImportMap = new HashMap<String,AgentInstitutionDto>();
+                    for(AgentInstitutionDto info :AgentInstitutionCodeDImportList){
+                        AgentInstitutionCodeDImportMap.put(info.getAgentInstitutionCode(),info);
+                    }
                     for(AgentInstitutionDto dto : entities){
                         //check表中是否存在已逻辑删除的数据
-                        if(chbAgentInstitutionInfoMapper.checkAgentInstitutionCodeD(dto.getAgentInstitutionCode()) != 0){
+                        if(AgentInstitutionCodeDImportMap.get(dto.getAgentInstitutionCode()) != null){
                             //如果存在就先 删除表中删除状态数据再 新增插入
                             chbAgentInstitutionInfoMapper.delete(dto.getAgentInstitutionCode());
                         }
@@ -159,6 +165,12 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
     private List<ExcelValidDto> checkExcelSales(List<List<String>> dataList, List<AgentInstitutionDto> entities, String userName, String deptCode) {
         String orgCode = CommonUtil.getOrgCode();
         String issuePartyId = chbAgentInstitutionInfoMapper.selectIssuePartyId(orgCode);
+        //导入代理销售机构代码重复校验
+        List<AgentInstitutionDto> AgentInstitutionCodeList = chbAgentInstitutionInfoMapper.checkAgentInstitutionCodeImport();
+        Map<String,AgentInstitutionDto> AgentInstitutionCodeMap = new HashMap<String,AgentInstitutionDto>();
+        for(AgentInstitutionDto info :AgentInstitutionCodeList){
+            AgentInstitutionCodeMap.put(info.getAgentInstitutionCode(),info);
+        }
         List<ExcelValidDto> checkResult = new ArrayList<>();
         for (int i = 0; i < dataList.size(); i++ ) {
             //是否正常标志
@@ -186,7 +198,7 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 if(!list.get(1).matches(regex)){
                     flag = false;
                     message.add("代理销售机构代码格式不对");
-                }else if(chbAgentInstitutionInfoMapper.checkAgentInstitutionCode(list.get(1)) > 0){
+                }else if(AgentInstitutionCodeMap.get(list.get(1)) != null){
                     flag = false;
                     message.add("代理销售机构代码已存在");
                 }
