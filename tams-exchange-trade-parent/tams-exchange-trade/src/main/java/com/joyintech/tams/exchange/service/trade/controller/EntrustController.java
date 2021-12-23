@@ -5,6 +5,7 @@ import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.OrderAndEntrustQryResult;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.RevokeDto;
+import com.joyintech.tams.exchange.common.db.domain.EntrustInterface;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
@@ -12,6 +13,7 @@ import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
 import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,12 +46,12 @@ public class EntrustController {
      *
      * @param userId    用户Id
      * @param entrustId 委托单号
-     * @return ResultBean
+     * @return Message
      */
     @ApiOperation(value = "撤销委托", notes = "撤销委托")
     @RequestMapping(value = "/entrust/cancel", method = RequestMethod.POST)
-    public Message<Object> cancelEntrust(@RequestParam(value = "userId") String userId,
-                                         @RequestParam(value = "entrustId") String entrustId) {
+    public Message<Object> cancelEntrust(@RequestBody String userId,
+                                         @RequestBody String entrustId) {
         return new Message<Object>(entrustManagement.cancelEntrust(userId, entrustId));
     }
 
@@ -57,14 +59,16 @@ public class EntrustController {
      * 强制撤销对应entrust
      *
      * @param userId    用户Id
+     * @param userName  用户名称
      * @param entrustId 委托单号
-     * @return ResultBean
+     * @return Message
      */
+    @ApiOperation(value = "撤销异常委托", notes = "撤销异常委托")
     @RequestMapping(value = "/entrust/exception/cancel", method = RequestMethod.POST)
-    public ResultBean cancelExceptionEntrust(@RequestParam(value = "user_id") String userId,
-                                             @RequestParam(value = "user_name") String userName,
-                                             @RequestParam(value = "entrust_id") String entrustId) {
-        return entrustManagement.cancelExceptionEntrust(userId, userName, entrustId);
+    public Message<Object> cancelExceptionEntrust(@RequestBody String userId,
+                                                  @RequestBody String userName,
+                                                  @RequestBody String entrustId) {
+        return new Message<Object>(entrustManagement.cancelExceptionEntrust(userId, userName, entrustId));
     }
 
     /**
@@ -75,8 +79,7 @@ public class EntrustController {
      * @return ResultBean
      */
     @RequestMapping(value = "/entrust/cancel/revoke", method = RequestMethod.POST)
-    public ResultBean cancelEntrustWithRevoke(String userId,
-                                              @RequestBody RevokeDto dto) {
+    public ResultBean cancelEntrustWithRevoke(String userId, @RequestBody RevokeDto dto) {
         return entrustManagement.cancelEntrustWithRevoke(userId, dto);
     }
 
@@ -146,9 +149,13 @@ public class EntrustController {
         return entrustManagement.queryIntegratedEntrustForPage(request);
     }
 
-    @RequestMapping(value = "/entrust/exception", method = RequestMethod.GET)
-    public ResultBean queryExceptionEntrust(@RequestParam(value = "user_id") String userId,
-                                            @RequestParam(value = "entrust_status", required = false, defaultValue = "1,3,4") String entrustStatus) {
-        return entrustManagement.queryEntrustByStatus(userId, entrustStatus);
+    @ApiOperation(value = "查询异常委托", notes = "查询异常委托")
+    @RequestMapping(value = "/entrust/exception", method = RequestMethod.POST)
+    public Message<List<EntrustInterface>> queryExceptionEntrust(@RequestBody String userId,
+                                                                 @RequestBody(required = false) String entrustStatus) {
+        if (StringUtils.isEmpty(entrustStatus)) {
+            entrustStatus = "1,3,4";
+        }
+        return new Message<List<EntrustInterface>>(entrustManagement.queryEntrustByStatus(userId, entrustStatus));
     }
 }
