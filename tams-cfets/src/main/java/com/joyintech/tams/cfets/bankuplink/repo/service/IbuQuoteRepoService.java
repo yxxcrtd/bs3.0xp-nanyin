@@ -5,6 +5,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
@@ -657,8 +658,8 @@ public class IbuQuoteRepoService extends BaseService {
         Map<String, Object> param = new HashMap<>();
         param.put("entrustId", entrustId);
         param.put("rolePos03", DictCodeListExt2.角色岗位_交易处长.getValue());
-//        param.put("loginUserId", LoginUserUtil.getUserName());
-        param.put("loginUserId", "jp"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
+        param.put("loginUserId", LoginUserUtil.getUserName());
+//        param.put("loginUserId", "jp"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
         return cfetsIbuQuoteRepoMapper.listDealTransactionDetails(param);
     }
 
@@ -1302,16 +1303,16 @@ public class IbuQuoteRepoService extends BaseService {
             param.put("secAcctSource", BussinessDictCodeList.账户来源_自营.getValue());
             param.put("ps_03", DictCodeListExt3.交易方向_正回购.getValue());
             param.put("ps_04", DictCodeListExt3.交易方向_逆回购.getValue());
-//            param.put("loginUserId", LoginUserUtil.getUserName());
-            param.put("loginUserId", "jp"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
+            param.put("loginUserId", LoginUserUtil.getUserName());
+//            param.put("loginUserId", "jp"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
         } else if (type == 2) {
             param.put("platDate", iPlatformDate.getSysDateStr());
             param.put("POSITION_TYPE_01", DictCodeList.持仓类型_可用.getValue());
             param.put("POSITION_TYPE_03", DictCodeList.持仓类型_实际.getValue());
             param.put("POSITION_TYPE_04", DictCodeList.持仓类型_质押.getValue());
             param.put("POSITION_TYPE_05", DictCodeList.持仓类型_融入.getValue());
-//            param.put("loginUserId", LoginUserUtil.getUserName());
-            param.put("loginUserId", "jp"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
+            param.put("loginUserId", LoginUserUtil.getUserName());
+//            param.put("loginUserId", "jp"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
             param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
             param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
             //银行间质押式回购质押券模式：01无质押券库，02单个质押库，03多个质押券库
@@ -1324,8 +1325,8 @@ public class IbuQuoteRepoService extends BaseService {
             param.put("TRADEPLACE01", DictCodeListExt1.交易场所_银行间.getValue());
             param.put("TRADEPLACE03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
             param.put("TRADEPLACE04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
-//            param.put("loginUserId", LoginUserUtil.getUserName());
-            param.put("loginUserId", "jp"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
+            param.put("loginUserId", LoginUserUtil.getUserName());
+//            param.put("loginUserId", "jp"/*LoginUserUtil.getUserName()*/);//TODO 测试写死登录用户 提交代码时修改
             param.put("plateDate", iPlatformDate.getSysDateStr());
         }
     }
