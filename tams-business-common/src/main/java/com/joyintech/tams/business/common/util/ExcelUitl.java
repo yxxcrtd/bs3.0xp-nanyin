@@ -55,9 +55,13 @@ public class ExcelUitl {
 			List mapList = new ArrayList();
 			dataList = doQuery.query();
 			if (dataList != null && !dataList.isEmpty()){
-				dataList.forEach(e -> {
-					mapList.add(BeanUtil.object2Map(e));
-				});	
+                dataList.forEach(e -> {
+                    if (e instanceof BaseMap) {
+                        mapList.add(e);
+                    } else {
+                        mapList.add(BeanUtil.object2Map(e));
+                    }
+                });
 			}
 			doExport(excelAndSheetName, header, mapList, response);
 		}else {

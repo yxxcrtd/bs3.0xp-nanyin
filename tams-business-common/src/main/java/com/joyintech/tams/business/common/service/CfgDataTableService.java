@@ -142,4 +142,24 @@ public class CfgDataTableService {
         }
         return list;
     }
+
+    /**
+     * 根据pageCode，dtCode和spcdCode查询页面展示设置
+     *
+     * @param pageCode
+     * @param dtCode
+     * @return
+     */
+    public List<CfgDataTableShow> getByPageCodeAndDtCodes(String pageCode, String dtCode, List<String> spcdCodes) {
+        List<CfgDataTableShow> list;
+        //获取登录用户的ID
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCodes(pageCode, dtCode,spcdCodes, userId);
+        if (null == flag) {
+            list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode,spcdCodes, EFFERANGE_NO, USER_ID);
+        } else {
+            list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode,spcdCodes, EFFERANGE_IS, userId);;
+        }
+        return list;
+    }
 }
