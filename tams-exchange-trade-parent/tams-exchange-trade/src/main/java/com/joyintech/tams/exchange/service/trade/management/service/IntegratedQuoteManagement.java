@@ -1,8 +1,12 @@
 package com.joyintech.tams.exchange.service.trade.management.service;
 
 import com.joyintech.tams.exchange.common.bean.*;
+import com.joyintech.tams.exchange.common.cache.QuoteTickService;
 import com.joyintech.tams.exchange.common.constant.EntrustProp;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
+import com.joyintech.tams.exchange.common.db.domain.FuturesInstrument;
+import com.joyintech.tams.exchange.common.utils.TickConverter;
+import com.joyintech.tams.exchange.datacommon.db.service.FuturesInstrumentService;
 import com.joyintech.tams.exchange.service.trade.processor.others.TerminalHelper;
 import com.joyintech.tams.exchange.service.trade.scheduled.quote.QuoteJob;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName IntegratedQuoteManagement
@@ -24,6 +29,23 @@ public class IntegratedQuoteManagement {
     private TerminalHelper terminalHelper;
     @Autowired
     private QuoteJob quoteJob;
+    
+    @Autowired
+    private QuoteTickService quoteTickService;
+    @Autowired
+    private FuturesInstrumentService futuresInstrumentService;
+    
+    public ResultBean getTick(String stockCode) {
+        if ("*".equals(stockCode)) {
+            return new ResultBean(ErrorCode.SUCCESS, quoteTickService.getAll().values()
+                    .stream().map(TickConverter::convertTick).collect(Collectors.toList()));
+        }
+        FuturesInstrument futuresInstrument = futuresInstrumentService.queryByStockCode(stockCode);
+        if (Objects.nonNull(futuresInstrument)) {
+            stockCode = futuresInstrument.getInnerCode();
+        }
+        return new ResultBean(ErrorCode.SUCCESS, TickConverter.convertTick(quoteTickService.findFromRedisById(stockCode)));
+    }
 
     public List<IntegratedBulkQuoteBean> queryIntegratedBulkQuote(IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean) {
         return terminalHelper.queryIntegratedBulkQuote(integratedBulkQuoteQryBean);

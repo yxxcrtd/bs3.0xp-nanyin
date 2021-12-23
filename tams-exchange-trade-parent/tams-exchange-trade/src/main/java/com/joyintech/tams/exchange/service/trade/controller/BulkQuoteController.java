@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -53,5 +54,16 @@ public class BulkQuoteController {
     @RequestMapping(value = "/add/integrated/repurchase_quote", method = RequestMethod.POST)
     public Message<Object> addIntegratedRepurchaseQuote(@RequestBody IntegratedRepurchaseQuoteBean repurchaseQuoteBean) {
         return new Message<Object>(integratedQuoteManagement.addIntegratedRepurchaseQuote(repurchaseQuoteBean));
+    }
+    
+    /**
+     * 查询行情tick信息
+     *
+     * @param stockCode 合约代码
+     */
+    @ApiOperation(value = "查询合约行情", notes = "查询合约行情（针对普通交易）")
+    @RequestMapping(value = {"/quote/tick"}, method = RequestMethod.POST)
+    public Message<Object> queryTick(@RequestParam(value = "stock_code") String stockCode) {
+        return new Message<Object>(integratedQuoteManagement.getTick(stockCode));
     }
 }
