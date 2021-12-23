@@ -379,6 +379,20 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             }
         }
     }
+
+    @Override
+    public void doUpdate(CfetsEtribRepoInfo003Dto entity) {
+        if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
+            WFlowCommonService.deleteFlow(entity.getWorkflowId());
+            for (CfetsEtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+                dto.setWorkflowId(entity.getWorkflowId());
+                doInsertFlow(dto);
+            }
+            //发送头寸
+            entity.setSoftSkipMode("Y");
+            sendPositionMethod(entity);
+        }
+    }
      
     private  void sendPositionMethod(CfetsEtribRepoInfo003Dto entity){
         List<CfetsEtrIbRepoPosPortfolioCashRequest> ptlCashList=new ArrayList<>();

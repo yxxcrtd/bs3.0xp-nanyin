@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper">
 	
 	<select id="selectAvaPledgeBondList" resultType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibAvaPledgeBondResponse">
-		SELECT DISTINCT
+		select * from (SELECT DISTINCT
 		TABLE01.PORTFOLIO_ID 			portfolioId,/*组合代码*/
 		TABLE01.PORTFOLIO_NAME			portfolioName,
 		TABLE01.SEC_ACCT_ID 			secAcctId,/*证券账户/通道代码*/
@@ -168,7 +168,7 @@
 			</foreach>
 		</if>
 		<if test="finprodAbbrList != null and !finprodAbbrList.isEmpty()">
-			AND FIN_PRODUCT.FINPROD_ABBR in
+			AND FIN_PRODUCT.FINPROD_MARKET_ID in
 			<foreach collection="finprodAbbrList" item="item" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
@@ -197,6 +197,10 @@
 
 		<if test="pledgeStockId !=null and pledgeStockId !=''">
 			AND (EEP.PLEDGE_STOCK_ID !=#{pledgeStockId,jdbcType=VARCHAR} or EEP.PLEDGE_STOCK_ID is null)
+		</if>)
+		<!--前端传入排序字段-->
+		<if test="sort != null and sort != '' and direction != null and direction != ''">
+			order by ${sort} ${direction}
 		</if>
 
 	</select>
