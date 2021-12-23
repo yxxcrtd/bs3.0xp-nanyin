@@ -23,6 +23,38 @@ values ('SVR_FBHY', '07', '3.3.7 金融业', 1, null, 'system', null, SYSDATE, '
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('SVR_FBHY', '08', '3.3.8 其他服务业', 1, null, 'system', null, SYSDATE, 'system', SYSDATE, null);
 
+DELETE FROM SYS_PAGE_ELEMENT WHERE PAGE_ID IN ('ChbMonthReportDetailProd001','ChbMonthReportDetailAsset001','ChbMonthReportDetailAssetB001','PbcMonthReportDetailProd001','PbcMonthReportDetailAsset001');
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ChbMonthReportDetailProd001', 'ChbMonthReportDetailProd001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ChbMonthReportDetailProd001', 'ChbMonthReportDetailProd001_btn_exportCheck', '01', '01', null, '选择导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ChbMonthReportDetailProd001', 'ChbMonthReportDetailProd001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ChbMonthReportDetailAsset001', 'ChbMonthReportDetailAsset001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ChbMonthReportDetailAsset001', 'ChbMonthReportDetailAsset001_btn_exportCheck', '01', '01', null, '选择导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ChbMonthReportDetailAsset001', 'ChbMonthReportDetailAsset001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ChbMonthReportDetailAssetB001', 'ChbMonthReportDetailAssetB001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ChbMonthReportDetailAssetB001', 'ChbMonthReportDetailAssetB001_btn_exportCheck', '01', '01', null, '选择导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('ChbMonthReportDetailAssetB001', 'ChbMonthReportDetailAssetB001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('PbcMonthReportDetailProd001', 'PbcMonthReportDetailProd001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('PbcMonthReportDetailProd001', 'PbcMonthReportDetailProd001_btn_exportCheck', '01', '01', null, '选择导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('PbcMonthReportDetailProd001', 'PbcMonthReportDetailProd001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('PbcMonthReportDetailAsset001', 'PbcMonthReportDetailAsset001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('PbcMonthReportDetailAsset001', 'PbcMonthReportDetailAsset001_btn_exportCheck', '01', '01', null, '选择导出', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID)
+values ('PbcMonthReportDetailAsset001', 'PbcMonthReportDetailAsset001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system',sysdate, 'COM', null);
+
 
 ALTER TABLE CHB_ASSETS_BASIS_DATA ADD TDY_LOSS_AMT NUMBER(30,2);
 ALTER TABLE CHB_ASSETS_BASIS_DATA_NOBTM ADD TDY_LOSS_AMT NUMBER(30,2);
