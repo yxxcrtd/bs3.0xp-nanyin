@@ -416,7 +416,7 @@
     </sql>
 
     <select id="getEtrInfoQueryOperate"
-            resultType="com.joyintech.tams.cfets.cfetsetrinfoquery.dto.FieldEtrInfoOperateListResponse">
+            resultType="com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoOperateListResponse">
         SELECT rownum SEQ_NO,t.* from (select
         ENTRUST_ID,
         OPER_TYPE,
