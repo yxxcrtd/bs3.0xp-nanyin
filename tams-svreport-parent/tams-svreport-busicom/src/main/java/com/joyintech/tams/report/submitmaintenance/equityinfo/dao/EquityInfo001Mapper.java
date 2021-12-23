@@ -208,4 +208,6 @@ public interface EquityInfo001Mapper {
      * @return 结果
      */
     List<EquityInfo001Dto> selectEquityInfoForTrans();
+
+    List<EquityInfo001Dto> selectAllEquityInfo();
 }
