@@ -102,7 +102,12 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
                 }
                 Page page = CacheUtil.getPage("FinProjectTargetAsset002");
                 //mod by wangyaning 20211022 start
-                if (null != page && null != page.getElementcontrol("bussRepProjectInfo") && page.getElementcontrol("bussRepProjectInfo").getIsShow()) {
+                // modify by etliu 20211223 start
+                // SYS_ELEMENT_CONTROL表没有配置，认为是显示，需要做check
+//                if (null != page && null != page.getElementcontrol("bussRepProjectInfo") && page.getElementcontrol("bussRepProjectInfo").getIsShow()) {
+                if (null != page && ((null != page.getElementcontrol("bussRepProjectInfo") && page.getElementcontrol("bussRepProjectInfo").getIsShow())
+                    || page.getElementcontrol("bussRepProjectInfo") == null)) {
+                // modify by etliu 20211223 end
                     if(StringUtil.isNotEmpty(dto.getRepAssetType())
                             && StringUtil.equals(dto.getRepAssetType(), DictCodeListExt2.资产_负债二级类别_股权.getValue())){
                         if(dto.getBussRepEquityInfoDto()!=null && !StringUtil.isNotEmpty(dto.getBussRepEquityInfoDto().getIsUnlisted())){
