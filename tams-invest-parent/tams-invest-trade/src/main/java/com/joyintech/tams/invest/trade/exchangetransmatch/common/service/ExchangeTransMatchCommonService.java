@@ -643,8 +643,6 @@ public class ExchangeTransMatchCommonService extends BaseService {
                         finDealPledgeMapper.deleteByPrimaryKey(finDealPledge);
                     }
                 }
-
-
             }
 
         }
@@ -959,6 +957,11 @@ public class ExchangeTransMatchCommonService extends BaseService {
                 settleTransTgMappingMapper.deleteByPrimaryKey(key);
                 //汇总成交数据匹配结果表（SETTLE_TRANS_DATA_TOTAL_MATCH）：数据删除
                 settleTransDataTotalMatchMapper.deleteByPrimaryKey(dto);
+
+                Map<String,Object> deleteMap = new HashMap<>();
+                deleteMap.put("seqNo",dto.getSeqNo());
+                deleteMap.put("entrustId",dto.getEntrunstTradeId());
+                exchangeTransMatchCommonMapper.deleteSettleDataTotalPledgeMatch(deleteMap);
             }
 
             //更新汇总成交数据状态表
@@ -1317,12 +1320,10 @@ public class ExchangeTransMatchCommonService extends BaseService {
             commonEntrustDto.setMarchFeeAmtPay(ArithmeticUtil.multiply(ArithmeticUtil.divide(commonEntrustDto.getMarchQty(),dto.getRemainNum(),4),dto.getTotalFeeAmtPay()));
             commonEntrustDto.setMarchFeeAmtUnPay(ArithmeticUtil.multiply(ArithmeticUtil.divide(commonEntrustDto.getMarchQty(),dto.getRemainNum(),4),dto.getTotalUnFeeAmtPay()));
 
-            if(StringUtil.equals(commonEntrustDto.getTargetType(),DictCodeListExt3.目标类型_数量.getValue())
-                    && BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),commonEntrustDto.getRemainEntrustNum())) >=0) {
+            if(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),commonEntrustDto.getRemainEntrustNum())) >=0) {
                 matchStatus = DictCodeListExt3.下行交易匹配状态_匹配完成.getValue();
             }
-            else if(StringUtil.equals(commonEntrustDto.getTargetType(),DictCodeListExt3.目标类型_数量.getValue())
-                    && BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),commonEntrustDto.getRemainEntrustNum())) < 0
+            else if(BigDecimal.ZERO.compareTo(ArithmeticUtil.subtract(dto.getRemainNum(),commonEntrustDto.getRemainEntrustNum())) < 0
             ){
                 matchStatus = DictCodeListExt3.下行交易匹配状态_部分匹配.getValue();
             }

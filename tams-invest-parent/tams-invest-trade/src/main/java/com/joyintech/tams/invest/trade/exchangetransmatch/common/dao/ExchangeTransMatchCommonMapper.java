@@ -128,4 +128,12 @@ public interface ExchangeTransMatchCommonMapper {
      * @param paraMap
      */
     List<FinPledgeDisplaceResult> getFinPledgeDisplaceResult (Map<String, Object> paraMap);
+
+
+    /**
+     * 删除汇总成交质押品匹配结果表数据
+     * @param paraMap
+     * @return
+     */
+    int deleteSettleDataTotalPledgeMatch(Map<String, Object> paraMap);
 }

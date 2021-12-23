@@ -166,6 +166,7 @@
             E.TRADE_ID tradeIdTgDetail,
             C.PS ps,
             C.SEQ_ID seqTotalId,
+            F.PORTFOLIO_ID portfolioId,
             <!--<include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />-->
             A.*
             from SETTLE_TRANS_TG_MAPPING A
@@ -240,4 +241,10 @@
         from SETTLE_TRANS_DATA_TOTAL_PLEDGE
         WHERE TRADE_ID = #{tradeId}
     </select>
+
+    <delete id="deleteSettleDataTotalPledgeMatch" parameterType="java.util.Map">
+        delete from SETTLE_DATA_TOTAL_PLEDGE_MATCH
+         WHERE SEQ_NO = #{seqNo}
+           AND ENTRUNST_TRADE_ID = #{entrustId}
+    </delete>
 </mapper>
