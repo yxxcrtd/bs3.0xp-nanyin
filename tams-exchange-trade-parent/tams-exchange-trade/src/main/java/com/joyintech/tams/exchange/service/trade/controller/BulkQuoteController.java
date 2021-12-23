@@ -40,7 +40,7 @@ public class BulkQuoteController {
     }
 
     @ApiOperation(value = "上海固收行情查询", notes = "上海固收行情查询")
-    @RequestMapping(value = "/entrust/integrated/fixed_income_quote", method = RequestMethod.GET)
+    @RequestMapping(value = "/entrust/integrated/fixed_income_quote", method = RequestMethod.POST)
     public Message<List<IntegratedFixedIncomeQuoteBean>> queryIntegratedFixedIncomeQuote(@RequestBody @Valid IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean) {
         return new Message<List<IntegratedFixedIncomeQuoteBean>>(integratedQuoteManagement.queryIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean));
     }
