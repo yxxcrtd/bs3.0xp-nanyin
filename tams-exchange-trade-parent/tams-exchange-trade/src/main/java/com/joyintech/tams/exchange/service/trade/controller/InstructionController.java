@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -51,7 +52,7 @@ public class InstructionController {
     @ApiOperation(value = "查询指令列表", notes = "查询指令列表")
     @RequestMapping(value = "/instruction/users", method = RequestMethod.POST)
     @CrossOrigin
-    public Message<InstructionPage<Instruction, InstructionPledge>> queryAllInstruction(@RequestBody InstructionQueryRequest instructionQuery) {
+    public Message<InstructionPage<Instruction, InstructionPledge>> queryAllInstruction(@RequestBody @Validated InstructionQueryRequest instructionQuery) {
         String fairCode = CacheUtil.getSysParam(ExchangeConstant.FAIR_CODE_IN_PARA);
         String platDate = DateUtil.getSysDate();
         String approveCode = CacheUtil.getSysParam(ExchangeConstant.RISK_APPROVAL_IN_PARA);
@@ -73,21 +74,21 @@ public class InstructionController {
     @ApiOperation(value = "指令接收|放弃接口", notes = "指令接收|放弃接口")
     @RequestMapping(value = "/instruction/confirm", method = RequestMethod.POST)
     @CrossOrigin
-    public Message<List<EntrustOpeBean>> acceptOrRefuse(@RequestBody List<InstructionOpBean> instructionOpBeans) {
+    public Message<List<EntrustOpeBean>> acceptOrRefuse(@RequestBody @Validated List<InstructionOpBean> instructionOpBeans) {
         if (Objects.isNull(instructionOpBeans) || instructionOpBeans.size() == 0) {
             throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "参数不可以为空");
         }
         List<EntrustOpeBean> entrustList = new ArrayList<>();
         for (InstructionOpBean instructionOpBean : instructionOpBeans) {
-            if (Strings.isNullOrEmpty(instructionOpBean.getInstructionId())) {
-                throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "指令ID不可以为空");
-            }
-            if (Strings.isNullOrEmpty(instructionOpBean.getRecStatus())) {
-                throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "接收状态不可以为空");
-            }
-            if (Strings.isNullOrEmpty(instructionOpBean.getTrader())) {
-                throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "交易员不可以为空");
-            }
+//            if (Strings.isNullOrEmpty(instructionOpBean.getInstructionId())) {
+//                throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "指令ID不可以为空");
+//            }
+//            if (Strings.isNullOrEmpty(instructionOpBean.getRecStatus())) {
+//                throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "接收状态不可以为空");
+//            }
+//            if (Strings.isNullOrEmpty(instructionOpBean.getTrader())) {
+//                throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "交易员不可以为空");
+//            }
             EntrustOpeBean entrustOpeBean = new EntrustOpeBean();
             entrustOpeBean.setEntrustId(instructionOpBean.getInstructionId());
             entrustOpeBean.setRecStatus(instructionOpBean.getRecStatus());

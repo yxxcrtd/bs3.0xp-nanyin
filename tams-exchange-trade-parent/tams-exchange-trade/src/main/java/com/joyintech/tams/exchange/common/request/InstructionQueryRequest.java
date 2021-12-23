@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,6 +13,7 @@ public class InstructionQueryRequest implements Serializable {
     private static final long serialVersionUID = 1238733335264286511L;
 
     @ApiModelProperty(required = true, name = "traderList", value = "交易员")
+    @NotEmpty(message = "交易员不能为空")
     private List<String> traderList;
 
     @ApiModelProperty(required = false, name = "amount", value = "数量")
