@@ -92,6 +92,11 @@ public class BigDecimalConverterUtil {
 
     public static String getMonthDetailString(BigDecimal number){
         DecimalFormat df4 = new DecimalFormat("#,##0.000000");
-        return null!=number?df4.format(number.divide(new BigDecimal("10000"),2,BigDecimal.ROUND_HALF_UP)):null;
+        return null!=number?df4.format(number.divide(new BigDecimal("10000"),6,BigDecimal.ROUND_HALF_UP)):null;
+    }
+
+    public static BigDecimal BigDecimalAdd(BigDecimal number,BigDecimal number2){
+
+        return (null!=number?number:BigDecimal.ZERO).add(null!=number2?number2:BigDecimal.ZERO);
     }
 }

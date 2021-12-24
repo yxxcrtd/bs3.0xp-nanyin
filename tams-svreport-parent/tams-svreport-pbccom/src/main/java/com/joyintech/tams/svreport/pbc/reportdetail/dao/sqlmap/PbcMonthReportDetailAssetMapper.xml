@@ -261,7 +261,7 @@
     <select id="getCounterList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT  A.CODE id,A.TRADE_COUNTER text from(
         SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,NVL(MC.CUSTOMER_NAME,T.TRADE_COUNTER) TRADE_COUNTER,DEALDATE,
-        row_number() over(partition by T.PROD_ID,T.ASSET_CODE,T.TRADE_COUNTER order by DEALDATE) row_number
+        row_number() over(partition by T.PROD_ID,T.ASSET_CODE order by DEALDATE) row_number
         FROM CHB_INVEST_TRADE T
         LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
         WHERE 1=1

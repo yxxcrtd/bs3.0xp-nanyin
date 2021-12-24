@@ -154,42 +154,42 @@ public class ChbMonthReportDetailAssetUtil {
         }
         //现金特殊处理产品代码
 //        List<ChbMonthAssetPositiondetail> detail1001 = prdPositionList.stream().filter(s-> "1001".equals(s.getAssettype2())&&s.getAssetvalueA()!=null).collect(Collectors.toList());
-        Map<String, ChbMonthAssetPositiondetail>  detail1001 = prdPositionList.stream().filter(detail ->
-                ("1001".equals(detail.getAssettype2())&&"REMAININGCASH".equals(detail.getAssetCode())&&detail.getAssetvalueA()!=null)).collect(Collectors.toMap(ChbMonthAssetPositiondetail::getProdId,Positiondetail -> Positiondetail));
-
-        if(null!=detail1001&&!detail1001.isEmpty()){
-            Map<String, Object> param = new HashMap<String, Object>();
-            param.put("cdate", batchDate);
-            param.put("prodids", detail1001.keySet());
-            List<ChbMonthAssetPositiondetail> prdPosition1001List = new ArrayList<>();
-            List<ChbMonthAssetPositiondetail> subjectAddList = new ArrayList<>();
-
-            //获取产品科目信息
-            this.buildPrdProstion(prdPosition1001List,param);
-            //科目类数据合计
-            if(!StringUtil.isEmptyList(prdPosition1001List)){
-                for(ChbMonthAssetPositiondetail dto : prdPosition1001List){
-                    //如果金额未0则不进行记录
-                    if(dto.getAssetvalueA().compareTo(BigDecimal.ZERO)==0&&
-                            dto.getAssetvalueB().compareTo(BigDecimal.ZERO)==0){
-                        continue;
-                    }
-                    dto.setPosuuid(IDGenerator.generate(36));
-                    dto.setDetailno(detail1001.get(dto.getProdId()).getDetailno());
-                    dto.setTerm(detail1001.get(dto.getProdId()).getTerm());
-                    dto.setAssettype(detail1001.get(dto.getProdId()).getAssettype());
-                    dto.setAssettype2(detail1001.get(dto.getProdId()).getAssettype2());
-                    dto.setManageType(detail1001.get(dto.getProdId()).getManageType());
-                    dto.setVdate(detail1001.get(dto.getProdId()).getVdate());
-                    dto.setMdate(detail1001.get(dto.getProdId()).getMdate());
-                    subjectAddList.add(dto);
-                }
-                //将所有现金删除
-                prdPositionList.removeAll(detail1001.values());
-                //替换为对应的科目信息
-                prdPositionList.addAll(subjectAddList);
-            }
-        }
+//        Map<String, ChbMonthAssetPositiondetail>  detail1001 = prdPositionList.stream().filter(detail ->
+//                ("1001".equals(detail.getAssettype2())&&"REMAININGCASH".equals(detail.getAssetCode())&&detail.getAssetvalueA()!=null)).collect(Collectors.toMap(ChbMonthAssetPositiondetail::getProdId,Positiondetail -> Positiondetail));
+//
+//        if(null!=detail1001&&!detail1001.isEmpty()){
+//            Map<String, Object> param = new HashMap<String, Object>();
+//            param.put("cdate", batchDate);
+//            param.put("prodids", detail1001.keySet());
+//            List<ChbMonthAssetPositiondetail> prdPosition1001List = new ArrayList<>();
+//            List<ChbMonthAssetPositiondetail> subjectAddList = new ArrayList<>();
+//
+//            //获取产品科目信息
+//            this.buildPrdProstion(prdPosition1001List,param);
+//            //科目类数据合计
+//            if(!StringUtil.isEmptyList(prdPosition1001List)){
+//                for(ChbMonthAssetPositiondetail dto : prdPosition1001List){
+//                    //如果金额未0则不进行记录
+//                    if(dto.getAssetvalueA().compareTo(BigDecimal.ZERO)==0&&
+//                            dto.getAssetvalueB().compareTo(BigDecimal.ZERO)==0){
+//                        continue;
+//                    }
+//                    dto.setPosuuid(IDGenerator.generate(36));
+//                    dto.setDetailno(detail1001.get(dto.getProdId()).getDetailno());
+//                    dto.setTerm(detail1001.get(dto.getProdId()).getTerm());
+//                    dto.setAssettype(detail1001.get(dto.getProdId()).getAssettype());
+//                    dto.setAssettype2(detail1001.get(dto.getProdId()).getAssettype2());
+//                    dto.setManageType(detail1001.get(dto.getProdId()).getManageType());
+//                    dto.setVdate(detail1001.get(dto.getProdId()).getVdate());
+//                    dto.setMdate(detail1001.get(dto.getProdId()).getMdate());
+//                    subjectAddList.add(dto);
+//                }
+//                //将所有现金删除
+//                prdPositionList.removeAll(detail1001.values());
+//                //替换为对应的科目信息
+//                prdPositionList.addAll(subjectAddList);
+//            }
+//        }
 
     }
 

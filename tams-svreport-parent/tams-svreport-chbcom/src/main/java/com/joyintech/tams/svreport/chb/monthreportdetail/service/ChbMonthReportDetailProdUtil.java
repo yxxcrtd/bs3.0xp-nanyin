@@ -6,6 +6,10 @@ import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.tams.common.base.dao.ChbMonthPrdPositiondetailMapper;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
@@ -25,9 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional(rollbackFor = Exception.class)
 @Service
@@ -135,6 +139,37 @@ public class ChbMonthReportDetailProdUtil {
         }
     }
 
+
+    /**
+     * 组装详情信息入库
+     * @param posList
+     */
+    public void buildDatilList(List<ChbMonthPrdPositiondetail> prdPositionList,String term) {
+        String date = DateUtil.getYesterDayDate(DateUtil.addMonthDateStrM(term+"01",1));
+        String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
+        Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
+        for(ChbMonthPrdPositiondetail dto: prdPositionList){
+            if(!DictCodeListExt1.币种_中债_人民币.getValue().equals(dto.getCcy())){
+                if(null!=dto.getEndamtsumOth()){
+                    dto.setEndamtsumOth(ChbCcyConvertUtil.exchangeMoney(
+                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getEndamtsumOth(),rateMap,source));
+                }
+                if(null!=dto.getPayamtsum()){
+                    dto.setPayamtsum(ChbCcyConvertUtil.exchangeMoney(
+                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getPayamtsum(),rateMap,source));
+                }
+                if(null!=dto.getCustomeramt()){
+                    dto.setCustomeramt(ChbCcyConvertUtil.exchangeMoney(
+                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getCustomeramt(),rateMap,source));
+                }
+                if(null!=dto.getBankamt()){
+                    dto.setBankamt(ChbCcyConvertUtil.exchangeMoney(
+                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),DateUtil.parse(date),dto.getBankamt(),rateMap,source));
+                }
+            }
+        }
+    }
+
     /**
      * 批量入库方法
      * @param prdPositionList
@@ -149,6 +184,9 @@ public class ChbMonthReportDetailProdUtil {
         int maxDataCountOneTime = reportInsertCount;
         //同批次的详情数据删除
         chbMonthReportDetailProdMapper.deleteDetail(term);
+
+
+        this.buildDatilList(prdPositionList,term);
 
         //插入list大小
         int dataCount = prdPositionList.size();

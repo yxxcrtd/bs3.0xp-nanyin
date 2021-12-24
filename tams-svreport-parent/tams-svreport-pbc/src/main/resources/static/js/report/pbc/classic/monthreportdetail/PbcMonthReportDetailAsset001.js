@@ -51,7 +51,7 @@ $(function() {
             { title: "最近开放计划结束日/行权日", width : 200, field: 'openplanStr',sortField:'openplan'},
             { title: "主体名称", width : 120, field: 'subjectName',sortField:'subjectName'},
             { title: "交易对手名称", width : 120, field: 'rivalParty',sortField:'rivalParty'},
-            { title: "利率", width : 120, field: 'rate', type:'money',sortField:'rate'},
+            { title: "利率", width : 120, field: 'rateStr', type:'money',sortField:'rate'},
             { title: "币种", width : 120, field: 'ccyStr',sortField:'ccy'},
             { title: "行业分类", width : 120, field: 'industryStr',sortField:'industry'},
             { title: "企业规模分类", width : 120, field: 'partyType1Str',sortField:'partyType1'},

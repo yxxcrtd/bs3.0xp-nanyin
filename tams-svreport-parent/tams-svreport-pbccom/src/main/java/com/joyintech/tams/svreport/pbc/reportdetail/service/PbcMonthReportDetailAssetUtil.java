@@ -192,6 +192,14 @@ public class PbcMonthReportDetailAssetUtil {
 
 
     public void  insertBefore(List<PbcMonthReportDetailAsset> prdPositionList){
+
+        //首先根据产品代码/资产代码/科目号进行去重(现金及其他相关科目数据可能重复)
+        prdPositionList = prdPositionList.stream().collect(
+                Collectors. collectingAndThen(
+                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getProdid() + ";" + o.getAssetCode()+";"+o.getDetailno()+";"+o.getDetailno2()))), ArrayList::new)
+        );
+
+
         /**展示产品购买资产首次买入交易的交易对手名称***/
         Map<String,Object> paraMap = new HashMap<>();
         Set<String> codeList = prdPositionList.stream().map(PbcMonthReportDetailAsset::getCounterListCode).collect(Collectors.toSet());
@@ -200,10 +208,8 @@ public class PbcMonthReportDetailAssetUtil {
         List<SelectOptionDto> oDto = pbcMonthReportDetailAssetMapper.getCounterList(paraMap);
         Map<String,String> CounterMap = oDto.stream().collect(JoyinCollectors.toMap(x -> x.getId(), x -> x.getText()));
         for(PbcMonthReportDetailAsset dto : prdPositionList){
-
             //再赋值交易对手名称  展示产品购买资产首次买入交易的交易对手名称
             dto.setRivalParty(CounterMap.get(dto.getProdid()+"_"+dto.getAssetCode()));
-
         }
     }
 
@@ -219,6 +225,10 @@ public class PbcMonthReportDetailAssetUtil {
         pbcMonthReportDetailAssetMapper.deleteDetail(term);
         //部分数据的统一处理
         this.insertBefore(prdPositionList);
+
+
+
+
 
         //插入list大小
         int dataCount = prdPositionList.size();

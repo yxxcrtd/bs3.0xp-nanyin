@@ -92,7 +92,7 @@ public class PbcMonthReportDetailProd001Controller extends BaseController{
 		File outFile = pbcMonthReportDetailProd001Service.makeFile(
 				"/com/joyintech/tams/svreport/pbc/classic/monthreportdetail/controller/conf/prodExport_conf.xml", dtoList);
 		return ExportUtil.export(
-				"人行产品端明细台账"+ GlobalConstant.OPEN_PARENTHESIS
+				"人行月报产品端明细台账"+ GlobalConstant.OPEN_PARENTHESIS
 						+ pageParam.get("enddate") + GlobalConstant.CLOSE_PARENTHESIS
 						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
 				outFile, true);

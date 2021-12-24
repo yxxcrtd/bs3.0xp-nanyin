@@ -226,6 +226,7 @@ public class DateUtil extends DateUtils {
 
         return format(date);
     }
+
     /**
      * 根据格式化字符串格式化日期
      *
@@ -727,6 +728,18 @@ public class DateUtil extends DateUtils {
      */
     public static Date addMonthDateStr(String str, Integer num)
             throws ParseException {
+        return addMonthDate(DateUtil.parse(str), num);
+    }
+
+    /**
+     * 日期按月相加，
+     *
+     * @param str 原日期
+     * @param num 相加月数，正数为加，负数为减
+     * @return Date
+     * @throws ParseException 异常
+     */
+    public static Date addMonthDateStrM(String str, Integer num) {
         return addMonthDate(DateUtil.parse(str), num);
     }
 

@@ -9,6 +9,10 @@ import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail;
 import com.joyintech.tams.common.base.entity.ChbPrdBaseinfo;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
@@ -127,9 +131,26 @@ public class PbcMonthReportDetailProdUtil {
         List<ChbPrdBaseinfo> prdBaseinfoList = chbPrdBaseinfoMapper.selectAllProd(null);
         prodMap = null!=prdBaseinfoList?prdBaseinfoList.stream().collect(Collectors.toMap(p->p.getProdId(), p-> p,(key1, key2)->key1)):new HashMap<>();
 
+        String source = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE_PBC);
+        Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
         for(PbcMonthPrdPostionDto dto: posList){
+            if(!DictCodeListExt1.币种_中债_人民币.getValue().equals(dto.getCcy())){
+                if(null!=dto.getEndamtsumOth()){
+                    dto.setEndamtsumOth(ChbCcyConvertUtil.exchangeMoney(
+                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),dto.getEnddate(),dto.getEndamtsumOth(),rateMap,source));
+                }
+                if(null!=dto.getDirtyamtsum()){
+                    dto.setDirtyamtsum(ChbCcyConvertUtil.exchangeMoney(
+                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),dto.getEnddate(),dto.getDirtyamtsum(),rateMap,source));
+                }
+                if(null!=dto.getRedamt()){
+                    dto.setRedamt(ChbCcyConvertUtil.exchangeMoney(
+                            dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(),dto.getEnddate(),dto.getRedamt(),rateMap,source));
+                }
+            }
             prodDetailList.add(buildProdDetail(dto,prodMap.get(dto.getProdid()),termid));
         }
+
 
         insertBatch(prodDetailList,termid);
     }
