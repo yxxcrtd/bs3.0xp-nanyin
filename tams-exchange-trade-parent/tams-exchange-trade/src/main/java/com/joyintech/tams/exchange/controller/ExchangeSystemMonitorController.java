@@ -92,6 +92,7 @@ public class ExchangeSystemMonitorController {
             param += "&type=" + coverType;
         }
 //        return exchangeSystemMonitorService.recoverCacheExchangeMonitor(param);
+//////////////////////////兼容新UI后端
         return memoryCacheManagement.recoverData(serviceName, id, coverType);
     }
 
@@ -103,6 +104,7 @@ public class ExchangeSystemMonitorController {
                                                 @RequestParam(value = "service_name") String serviceName) {
         String param = "?user_id=" + userId + "&service_name=" + serviceName;
 //        return exchangeSystemMonitorService.clearCacheExchangeMonitor(param);
+//////////////////////////兼容新UI后端
         return memoryCacheManagement.clearData(serviceName);
     }
 
@@ -124,6 +126,7 @@ public class ExchangeSystemMonitorController {
             dto.setSnapshotTime(snapshotTime);
         }
 //        return exchangeSystemMonitorService.queryExchangeMonitorDynamic(dto);
+//////////////////////////兼容新UI后端
         return systemMonitorManagement.queryExchangeMonitorDynamic(dto);
     }
 
@@ -144,6 +147,7 @@ public class ExchangeSystemMonitorController {
         String param = "?user_id=" + userId
                 + "&service_name=" + serviceName;
 //        return exchangeSystemMonitorService.deleteExchangeCacheMonitor(param, id);
+//////////////////////////兼容新UI后端
         return memoryCacheManagement.deleteData(serviceName, id);
     }
 
@@ -157,6 +161,7 @@ public class ExchangeSystemMonitorController {
     @RequestMapping(value = "/cache/monitor", method = RequestMethod.GET)
     public ResultBean queryExchangeCacheMonitor() {
 //        return exchangeSystemMonitorService.queryExchangeCacheMonitor();
+//////////////////////////兼容新UI后端
         return systemMonitorManagement.queryCacheMonitor();
     }
 }
