@@ -159,7 +159,33 @@ public class FieldEtrDispatcherExeListInfoResponse extends FieldEtrDispatcherBas
     @ApiModelProperty(name="entrustId",value="委托编号",example="A1")
     private String entrustId;
     
-    
+    @ApiModelProperty(name="entrustNum",value="委托数量",example="100")
+    private BigDecimal entrustNum;
+
+    @ApiModelProperty(name="price",value="委托价格",example="100")
+    private BigDecimal price;
+
+    @ApiModelProperty(name="entrustAmt",value="委托金额",example="100")
+    private BigDecimal entrustAmt;
+
+    @ApiModelProperty(name="entrustStatus",value="委托状态",example="字符串1")
+    private String entrustStatus;
+
+    @ApiModelProperty(name="entrustAmt",value="已成交量/已成金额",example="100")
+    private BigDecimal finishAmt;
+
+    @ApiModelProperty(name="entrustAmt",value="成交均价",example="100")
+    private BigDecimal clinchPrice;
+
+    @ApiModelProperty(name="entrustAmt",value="委托进度",example="100")
+    private BigDecimal dealPercent;
+
+    @ApiModelProperty(name="entrustDate",value="委托日期",example="2021-01-01")
+    private String entrustDate;
+
+    @ApiModelProperty(name="transmitTime",value="委托时间",example="HH:MM:SS")
+    private String transmitTime;
+            
 
     public String getEffectFlag() {
         return effectFlag;
