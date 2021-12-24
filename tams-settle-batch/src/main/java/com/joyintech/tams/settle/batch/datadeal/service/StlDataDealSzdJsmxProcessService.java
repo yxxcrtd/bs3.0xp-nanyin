@@ -958,7 +958,7 @@ public class StlDataDealSzdJsmxProcessService {
 					    // settleTransDataPledge.setPledgeNumber(ArithmeticUtil.divide(settleTransData.getShareAmt(),BigDecimal.valueOf(100),2));
 						settleTransDataPledge.setPledgeNumber(settleTransData.getShareAmt());
 						//置换方向
-					    settleTransDataPledge.setTradeType(settleTransData.getTradeType());
+					    settleTransDataPledge.setDisplaceDirection(settleTransData.getTradeType());
 //					}
 				}
 			}

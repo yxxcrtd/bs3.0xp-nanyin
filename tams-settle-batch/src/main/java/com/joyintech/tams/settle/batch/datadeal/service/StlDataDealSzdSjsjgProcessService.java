@@ -30,6 +30,7 @@ import com.joyintech.tams.settle.common.dto.FundInfoDto;
 import com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto;
 import com.joyintech.tams.settle.common.service.SettleCommonService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -593,7 +594,7 @@ public class StlDataDealSzdSjsjgProcessService {
                 // 交易本金
                 settleTransData.setPrinAmt(BigDecimal.ZERO);
                 // 到期日
-                settleTransData.setMdate(DateUtil.parseDate(szdSjsjg.getJgcjrq(), DateUtil.DEFAULT_OTHER_FORMAT));
+                settleTransData.setMdate(DateUtil.parseDate(szdSjsjg.getJgqsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
                 // 交易日
                 settleTransData.setTradeDate(DateUtil.parseDate(szdSjsjg.getJgfsrq(), DateUtil.DEFAULT_OTHER_FORMAT));
                 // 到期交收日
@@ -609,8 +610,19 @@ public class StlDataDealSzdSjsjgProcessService {
                 settleTransData.setmPrinAmt(abs(qsbj));
                 // 首期成交编号
                 settleTransData.setfCjbh(szdSjsjg.getJgfjsm());
-                //全价总额
-                settleTransData.setFpriceAmt(settleTransData.getmTradeAmt());
+                // 查询首期
+                List<SettleTransData> sqSettleTransDatas = stlDownDataDealMapper.selectSqSettleTransDatas(
+                        settleTransData.getfCjbh(), settleTransData.getSeatNumber(), settleTransData.getSecAcctId());
+                if(CollectionUtils.isNotEmpty(sqSettleTransDatas)){
+                    settleTransData.setVdate(sqSettleTransDatas.get(0).getVdate());
+                    // 首期交收日 = 起息日+1个工作日
+                    settleTransData.setVpayDate(nextWorkDay(settleTransData.getVdate()));
+                    if(sqSettleTransDatas.get(0).getVpayDate().compareTo(settleTransData.getSettleDate())>0){
+                        settleTransData.setPs(DictCodeListExt3.交易方向_投资端_提前终止.getValue());
+                    }
+                }
+                //全价总额(到期金额+到期利息)
+                settleTransData.setFpriceAmt(settleTransData.getmTradeAmt().add(settleTransData.getmIntAmt()));
             }
             //去除 协议回购合约的数据处理
 //            else {

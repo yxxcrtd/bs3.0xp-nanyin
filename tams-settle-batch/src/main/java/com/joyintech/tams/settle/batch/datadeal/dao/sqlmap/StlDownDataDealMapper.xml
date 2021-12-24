@@ -618,4 +618,16 @@
 		FIN_PRODUCT_CONVERTIBLE
 		where CON_SHARE_ID = #{zqdm1}
 	</select>
+
+	<select id="selectSqSettleTransDatas" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
+		SELECT
+		    VDATE,
+			MPAY_DATE
+		FROM
+			SETTLE_TRANS_DATA
+		WHERE
+			F_CJBH = #{sqcjbh, jdbcType=VARCHAR}
+			AND SEAT_NUMBER = #{seatNumber, jdbcType=VARCHAR}
+			AND SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
+	</select>
 </mapper>

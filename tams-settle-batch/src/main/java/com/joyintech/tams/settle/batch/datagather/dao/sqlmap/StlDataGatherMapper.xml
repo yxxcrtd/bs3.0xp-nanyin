@@ -255,11 +255,6 @@
 			    <!--AND std.TRADE_DATE = stdsq.TRADE_DATE-->
 				AND std.VDATE = stdsq.TRADE_DATE
 			    AND std.APPLY_TRADE_ID = stdsq.CJBH
-		INNER JOIN SETTLE_TRANS_TG_MAPPING sttm ON stdsq.TRADE_ID = sttm.TRADE_ID
-		INNER JOIN TRD_PRODUCT_DEAL T1 ON sttm.TRADE_ID_TG = T1.TRADE_ID
-		<!--ZGZGST-4214:增加业务场景类型条件 fuyongsheng 20211214 modify end-->
-				AND std.TRADE_DATE = stdsq.TRADE_DATE
-				AND std.APPLY_TRADE_ID = stdsq.CJBH
 		INNER JOIN SETTLE_TRANS_TG_MAPPING M
 		        ON M.TRADE_ID = std.TRADE_ID
 		INNER JOIN TRD_PRODUCT_DEAL T1
@@ -325,13 +320,34 @@
 			case when ptl.PROFIT_TYPE = '01' then 'FVTPL' else 'AC' end as invAim,ee.ENTRUST_ID,
 			<!--<include refid="settleTransDataSql"></include>-->
 			<include refid="settleTransDataTotalSql"></include>
-			LEFT JOIN T_ENTRUSTHISTORY teh ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = teh.BROKER_ENTRUST_ID
+			LEFT JOIN SETTLE_TRANS_DATA_TOTAL_ADD stdta ON std.SEQ_ID = stdta.TRADE_ID
+			LEFT JOIN T_ENTRUSTHISTORY teh
+				ON (
+					LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = teh.BROKER_ENTRUST_ID
+					OR
+					std.APPLY_TRADE_ID = teh.BROKER_ENTRUST_ID
+				)
 				and teh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = teh.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
-			LEFT JOIN T_ENTRUST te ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = te.BROKER_ENTRUST_ID 
+			LEFT JOIN T_ENTRUST te
+				ON (
+				    LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = te.BROKER_ENTRUST_ID
+				    OR
+					std.APPLY_TRADE_ID = te.BROKER_ENTRUST_ID
+				)
 				and te.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = te.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
-			LEFT JOIN T_INTEGRATED_ENTRUSTHISTORY tieh ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = tieh.BROKER_ENTRUST_ID 
+			LEFT JOIN T_INTEGRATED_ENTRUSTHISTORY tieh
+				ON (
+				    LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = tieh.BROKER_ENTRUST_ID
+				    OR
+					std.APPLY_TRADE_ID = tieh.BROKER_ENTRUST_ID
+				)
 				and tieh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = tieh.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
-			LEFT JOIN T_INTEGRATED_ENTRUST tie ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = tie.BROKER_ENTRUST_ID 
+			LEFT JOIN T_INTEGRATED_ENTRUST tie
+				ON (
+					LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = tie.BROKER_ENTRUST_ID
+				    OR
+					std.APPLY_TRADE_ID = tie.BROKER_ENTRUST_ID
+				)
 				and tie.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = tie.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
 			LEFT JOIN ETR_ENTRUST ee ON (ee.ENTRUST_ID = NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID) OR ee.ENTRUST_ID = NVL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID))
 			LEFT JOIN PTL_PORTFOLIO ptl ON (ptl.PORTFOLIO_ID = std.PORTFOLIO_ID)
@@ -538,7 +554,7 @@
 		ON fp.FINPROD_MARKET_ID = sbr.SHARES_ID
 		AND fp.FINPROD_TYPE = 'F10' AND fp.FINPROD_TYPE2 = 'F10'
 		INNER JOIN ptl_sec_position psp
-		ON sbr.FINPROD_ID = psp.FINPROD_ID
+		ON fp.FINPROD_ID = psp.FINPROD_ID
 		AND psp.CDATE = REG_DATE
 		AND psp.HODING_TYPE = '03'
         <where>
@@ -698,6 +714,8 @@
 			T1.ENTRUST_DATE,
 			T2.SEC_ACCT_ID,
 			T2.DEAL_CUR_ACCT,
+		    T2.TRADE_ID,
+		    T2.VDATE,
 			T1.TRADE_PLAT,
 			T1.ENTRUST_NUM ,
 			T1.ENTRUST_AMT
@@ -806,7 +824,8 @@
 
 	<select id="selectFundSettleTransData" parameterType="java.util.Map"
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
-		std.SEQ_ID TRADE_ID,
+		SELECT
+		std.SEQ_NO TRADE_ID,
 		/*std.CJBH CJBH,*/
 		std.DEAL_DATE DEAL_DATE,/*执行日期*/
 		std.FINPROD_ID,/*金融产品代码*/
@@ -829,10 +848,12 @@
 		psp.PORTFOLIO_ID, /*组合代码*/
 		psp.AMOUNT shareAmt, /*数量*/
 		psp.CDATE regDate, /*权益登记日*/
-		(SELECT TOTLE_TRADE_ID FROM (SELECT t1.REG_DATE FROM	TRD_FIN_PRODUCT_DEAL_TOTAL t1
+		(SELECT TOTLE_TRADE_ID FROM (SELECT t1.TOTLE_TRADE_ID FROM	TRD_FIN_PRODUCT_DEAL_TOTAL t1
 		WHERE t1.FINPROD_ID=std.FINPROD_ID AND t1.BUSI_TYPE='TRD14'
-		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc) a WHERE rownum=1) bTradeId, /*前置交易编号*/
+		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc) a limit 1) bTradeId /*前置交易编号*/
 		FROM SETTLE_TRANS_DATA std
+		left join FIN_PRODUCT fp on std.FINPROD_ID = fp.FINPROD_ID
+		LEFT JOIN fin_product_type fpt ON fp.FINPROD_ID=fpt.FINPROD_ID
 		INNER JOIN PTL_SEC_POSITION psp
 		ON psp.FINPROD_ID=std.FINPROD_ID
 		AND psp.SEC_ACCT_ID=std.SEC_ACCT_ID
@@ -844,10 +865,9 @@
 		)
 		ELSE(SELECT REG_DATE FROM (SELECT t1.REG_DATE FROM	TRD_FIN_PRODUCT_DEAL_TOTAL t1
 		WHERE t1.FINPROD_ID=std.FINPROD_ID AND t1.BUSI_TYPE='TRD14'
-		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc) WHERE rownum=1)
+		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc)b limit 1)
+		END
 		)
-		left join FIN_PRODUCT fp on std.FINPROD_ID = fp.FINPROD_ID
-		LEFT JOIN fin_product_type fpt ON fp.FINPROD_ID=fpt.FINPROD_ID
 		<where>
 			std.DEAL_DATE = #{dealDate,jdbcType=DATE}
 			AND std.FINPROD_TYPE2 = 'F06'
@@ -914,4 +934,14 @@
 		WHERE rownum = 1
 	</select>
 
+	<select id="selectSettleTransDataTotalPledge" parameterType="java.lang.String" resultType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge">
+		SELECT
+			TRADE_ID,
+		   	PLEDGE_FINPROD_ID,
+			DISPLACE DIRECTION
+		FROM
+			SETTLE_TRANS_DATA_TOTAL_PLEDGE
+		WHERE
+			TRADE_ID = #{seqId,jdbcType=VARCHAR}
+	</select>
 </mapper>

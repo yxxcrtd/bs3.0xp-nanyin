@@ -400,6 +400,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             settleTransDataTotalPledge.setPledgeNumber(settleTransDataDto.getPledgeNumber());
                             settleTransDataTotalPledge.setPledgeRatio(settleTransDataDto.getPledgeRatio());
                             settleTransDataTotalPledge.setPledgeAmt(settleTransDataDto.getPledgeAmt());
+                            settleTransDataTotalPledge.setDisplaceDirection(settleTransDataDto.getDisplaceDirection());
                             settleTransDataPledgeList.add(settleTransDataTotalPledge);
                         }
                     }
@@ -579,6 +580,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             settleTransDataTotalPledge.setPledgeNumber(settleTransDataDto.getPledgeNumber());
                             settleTransDataTotalPledge.setPledgeRatio(settleTransDataDto.getPledgeRatio());
                             settleTransDataTotalPledge.setPledgeAmt(settleTransDataDto.getPledgeAmt());
+                            settleTransDataTotalPledge.setDisplaceDirection(settleTransDataDto.getDisplaceDirection());
                             settleTransDataPledgeList.add(settleTransDataTotalPledge);
                         }
                     }else{
@@ -694,6 +696,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                     settleTransDataTotalPledge.setPledgeNumber(item.getPledgeNumber());
                                     settleTransDataTotalPledge.setPledgeRatio(item.getPledgeRatio());
                                     settleTransDataTotalPledge.setPledgeAmt(item.getPledgeAmt());
+                                    settleTransDataTotalPledge.setDisplaceDirection(item.getDisplaceDirection());
                                     settleTransDataPledgeList.add(settleTransDataTotalPledge);
                                 }
                             }

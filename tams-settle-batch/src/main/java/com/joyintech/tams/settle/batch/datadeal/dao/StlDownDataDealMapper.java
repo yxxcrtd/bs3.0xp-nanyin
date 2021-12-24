@@ -129,4 +129,13 @@ public interface StlDownDataDealMapper {
     int deletemstFundBonusNoticeByCdate(@Param("dealDate") Date dealDate);
 
    List<String> getZzgFinprodId(@Param("zqdm1") String zqdm1);
+
+    /**
+     * 查询首期清算数据
+     * @param sqcjbh
+     * @param seatNumber
+     * @param secAcctId
+     * @return
+     */
+   List<SettleTransData> selectSqSettleTransDatas(@Param("sqcjbh") String sqcjbh, @Param("seatNumber") String seatNumber, @Param("secAcctId") String secAcctId);
 }

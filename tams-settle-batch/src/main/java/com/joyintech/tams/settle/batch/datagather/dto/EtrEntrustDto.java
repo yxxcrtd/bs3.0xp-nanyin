@@ -23,6 +23,19 @@ public class EtrEntrustDto extends EtrEntrust {
      */
     private String dealCurAcct;
 
+    /**
+     * 指令明细表tradeId
+     */
+    private String tradeId;
+
+    public String getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;
+    }
+
     public String getSecAcctId() {
         return secAcctId;
     }

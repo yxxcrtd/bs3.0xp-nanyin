@@ -2,6 +2,7 @@ package com.joyintech.tams.settle.batch.datagather.dao;
 
 import com.joyintech.tams.common.base.entity.PtlSecPosition;
 import com.joyintech.tams.common.base.entity.PtlSecPositionFlow;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge;
 import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
 import com.joyintech.tams.settle.batch.datagather.dto.EtrEntrustDto;
 import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
@@ -183,4 +184,6 @@ public interface StlDataGatherMapper {
     void deleteCqTrdDealTotalAdd(String totleTradeId);
 
     String selectCqBtradeId(@Param("secAcctId") String secAcctId, @Param("finprodId") String finprodId,@Param("dealDate") Date dealDate);
+
+    List<SettleTransDataTotalPledge> selectSettleTransDataTotalPledge(String seqId);
 }
