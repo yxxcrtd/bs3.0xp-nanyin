@@ -91,20 +91,20 @@ public class EtrExchangeTradeCommonRiskcalController extends BaseController{
             List<String> resultArrList=null;
             //债券
             if(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-               resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK011","F01");
+               resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F01");
             }
             //基金
             else if (StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
-                resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK011","F02");
+                resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F02");
             }
             //股票
             else if (StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-                resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK011","F11");
+                resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F11");
             }
             //质押式回购
             else if (StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
                   && StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
-                resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK011","F07");
+                resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F07");
             }
             result.setRiskMathFlag("02");
             Boolean forbidFlag=false;

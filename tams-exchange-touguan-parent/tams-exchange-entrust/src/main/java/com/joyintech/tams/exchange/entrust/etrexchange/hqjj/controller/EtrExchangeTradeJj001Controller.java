@@ -23,10 +23,7 @@ import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationResponse;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeJjSaveRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.FinprodMarketInfoJjRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -115,6 +112,25 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 		}
 	}
 
+	/**
+	 * 查询交易行情信息
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="查询竞价交易行情信息",notes = "查询竞价交易行情信息")
+	@ResponseBody
+	@PostMapping("findQuotations")
+	public Message<EtrExchangeTradeQuotationHqResponse> findQuotations(@RequestBody String secId) {
+		try {
+			EtrExchangeTradeQuotationHqResponse quotations = etrExchangeTradeJj001Service.findQuotations(secId);
+			return new Message<EtrExchangeTradeQuotationHqResponse>().success().setData(quotations);
+		}catch (Exception e) {
+			logger.error("查询竞价易行情数据异常",e);
+			return new Message<EtrExchangeTradeQuotationHqResponse>().fail().setMessage("查询竞价交易行情信息数据异常");
+		}
+	}
 
 	/**
 	 * 查询盘后行情信息
@@ -620,7 +636,7 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	/**
 	 * 导入
 	 *
-	 * @param fileName
+	 * @param paramMap
 	 *            导入的文件名
 	 * @return 处理结果
 	 * @throws Exception
