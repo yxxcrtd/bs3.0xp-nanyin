@@ -110,7 +110,7 @@ import static com.joyintech.tams.invest.common.asset.service.BondAssetCalcServic
  * @see EtrExchangeTradeCommon001Service
  * @since 1.0
  */
-@Service
+@Service("etrExchangeTradeCommon001Service")
 public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExchangeTradeSaveRequest>
 		implements BaseProcessService<EtrExchangeTradeSaveRequest> {
 
@@ -5432,5 +5432,15 @@ public class EtrExchangeTradeCommon001Service extends CommonExportService<EtrExc
 			}
 		}
 		return null;
+	}
+
+	/**
+	 *  查找组合对应的证券账户
+	 * @author zhangnian
+	 * @date 2021/1/13 0013
+	 * @return
+	 */
+	public String qryPortfolioSecAcctId(Map<String,Object> map){
+		return etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
 	}
 }

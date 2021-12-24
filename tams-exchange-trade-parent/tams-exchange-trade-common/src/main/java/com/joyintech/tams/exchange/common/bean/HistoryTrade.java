@@ -1,124 +1,165 @@
 package com.joyintech.tams.exchange.common.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
+@ApiModel(value = "历史成交信息", description = "历史成交信息")
 public class HistoryTrade implements Serializable {
+    
     private static final long serialVersionUID = 7037506087690811868L;
     /**
      * 定位串
      */
+    @ApiModelProperty(value = "定位串")
     private String postStr;
 
+    @ApiModelProperty(value = "网点号:资金账户编号")
     private String accountId;
     /**
      * 清算日
      */
+    @ApiModelProperty(value = "清算日")
     private String clearDay;
     /**
      * 资金发生数
      */
+    @ApiModelProperty(value = "资金发生数")
     private double financeAmount;
 
+    @ApiModelProperty(value = "交易日期")
     private String tradingDay;
 
+    @ApiModelProperty(value = "交易时间")
     private String tradeTime;
 
     /**
      * 用户流水号--委托序号
      */
+    @ApiModelProperty(value = "用户流水号--委托序号")
     private String serialNo;
     /**
      * 资金账户
      */
+    @ApiModelProperty(value = "资金账户")
     private String financeAccount;
     /**
      * 财富账户(保留项)
      */
+    @ApiModelProperty(value = "财富账户(保留项)")
     private String fortuneAccount;
 
     /**
      * 机构编码(保留项)
      */
+    @ApiModelProperty(value = "机构编码(保留项)")
     private String orgId;
 
     /**
      * 产品编码(保留项)
      */
+    @ApiModelProperty(value = "产品编码(保留项)")
     private String portfolioId;
     /**
      * 股东代码
      */
+    @ApiModelProperty(value = "股东代码")
     private String stockHolderId;
     /**
      * 交易行为
      */
+    @ApiModelProperty(value = "交易行为")
     private String bsFlag;
+    @ApiModelProperty(value = "交易场所")
     private String market;
     /**
      * 申报合同序号
      */
+    @ApiModelProperty(value = "申报合同序号")
     private String orderId;
 
+    @ApiModelProperty(value = "证券编号")
     private String stockCode;
+    @ApiModelProperty(value = "证券名称")
     private String stockName;
+    @ApiModelProperty(value = "证券类型")
     private String stockType;
+    @ApiModelProperty(value = "委托价格")
     private double entrustPrice;
+    @ApiModelProperty(value = "委托数量")
     private long entrustVolume;
+    @ApiModelProperty(value = "成交价格")
     private double tradePrice;
+    @ApiModelProperty(value = "成交数量")
     private long tradeVolume;
 
+    @ApiModelProperty(value = "已成交金额")
     private double tradedBalance;
     /**
      * 成交编号
      */
+    @ApiModelProperty(value = "成交编号")
     private String brokerTradeId;
     /**
      * 股份余额
      */
+    @ApiModelProperty(value = "股份余额")
     private long stockResidue;
     /**
      * 前台费用
      */
+    @ApiModelProperty(value = "前台费用")
     private double frontCost;
     /**
      * 手续费
      */
+    @ApiModelProperty(value = "手续费")
     private double procedureCost;
     /**
      * 印花税
      */
+    @ApiModelProperty(value = "印花税")
     private double printingCost;
     /**
      * 证管费
      */
+    @ApiModelProperty(value = "证管费")
     private double secCost;
     /**
      * 经手费
      */
+    @ApiModelProperty(value = "经手费")
     private double handleCost;
     /**
      * 过户费
      */
+    @ApiModelProperty(value = "过户费")
     private double transferCost;
     /**
      * 清算费
      */
+    @ApiModelProperty(value = "清算费")
     private double clearCost;
     /**
      * 其他费
      */
+    @ApiModelProperty(value = "其他费")
     private double otherCost;
     /**
      * 交易规费
      */
+    @ApiModelProperty(value = "交易规费")
     private double tradeRuleCost;
     /**
      * 使用金额(保留)
      */
+    @ApiModelProperty(value = "使用金额(保留)")
     private double useMoney;
     /**
      * 债券应计利息（保留）
      */
+    @ApiModelProperty(value = "债券应计利息（保留）")
     private double bondInterest;
 
     /**
@@ -126,6 +167,7 @@ public class HistoryTrade implements Serializable {
      *
      * @return
      */
+    @ApiModelProperty(value = "净手续费")
     private double jinShouXuFei;
 
     public String getPostStr() {

@@ -39,7 +39,7 @@ public class TradeManagement {
 
 
     public Message<List<Trade>> queryTrade(TradeInfoRequest request) {
-        return new Message<>(queryTrade(request.getUserId(), request.getEntrustId(), request.getInstructionId(), request.getAccountId(), request.getOrderId()));
+        return new Message<List<Trade>>(queryTrade(request.getUserId(), request.getEntrustId(), request.getInstructionId(), request.getAccountId(), request.getOrderId()));
     }
 
     /**

@@ -373,7 +373,8 @@ shiro:
     /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,
     /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo,/interf/xp,/interf/xp/**,/interf/zg,/interf/zg/**,/FinProjectTargetAsset/insert,/FinAssetRateAdj/getFinAssetRateAdjByCashId,
     /cfets/**,/common/workflow/**,/common/config/**,/component/**,/FinProductRating/**,/common/joyinbusinessCommon/**,/cfets/bankuplink/bond/IbuQuoteBond/**,/cfets/bond/IbuQuoteBond004/**,/BussSettleOrderComm/**,
-    /etrexchange/hqjj/jjetrExchangeTrade001/**,/MstSecuritiesAccountInfo/**,/etrexchange/common/etrExchangeTrade001/**,/etrexchange/common/EtrExchangeTradeCommon002/**,/etrexchange/common/EtrExchangeTradeCommon003/**
+    /etrexchange/hqjj/jjetrExchangeTrade001/**,/MstSecuritiesAccountInfo/**,/etrexchange/common/etrExchangeTrade001/**,/etrexchange/common/EtrExchangeTradeCommon002/**,/etrexchange/common/EtrExchangeTradeCommon003/**,
+    /TrdBondInvestTrade/**
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl

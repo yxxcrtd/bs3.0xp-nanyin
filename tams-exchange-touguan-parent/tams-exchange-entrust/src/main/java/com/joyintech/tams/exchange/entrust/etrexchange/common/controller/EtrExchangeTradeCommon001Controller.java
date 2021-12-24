@@ -26,6 +26,7 @@ import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.common.client.ClientData;
@@ -100,6 +101,8 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 
 	@Value("${quote.ws.url}")
 	private String wsUrl;
+	@Autowired
+	private EtrExchangeTradeCommonMapper etrExchangeTradeCommonMapper;
 
 	@Override
 	public String init(Model model) {
@@ -142,6 +145,7 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			if(secIds.length == 2 && StringUtil.isEmpty(entity.getStockId())){
 				entity.setStockId(secIds[1]);
 			}
+
 			//add by chenjiaxing 流程中不显示资产名称 end
 			model.addAttribute(GlobalConstant.ENTITY, entity);
 			model.addAttribute("workflowId", workflowId);
@@ -254,8 +258,10 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 					workflowId);
 			//add by chenjiaxing 流程中不显示资产名称 start
 			String[] secIds = StringUtil.split(entity.getFinprodId(),"_");
-			if(secIds.length == 2 && StringUtil.isEmpty(entity.getStockId())){
-				entity.setStockId(secIds[1]);
+			if(secIds!=null){
+				if(secIds.length == 2 && StringUtil.isEmpty(entity.getStockId())){
+					entity.setStockId(secIds[1]);
+				}
 			}
 			//add by chenjiaxing 流程中不显示资产名称 end
 			initPageParams.put(GlobalConstant.ENTITY, entity);
@@ -722,6 +728,22 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			if (br.hasErrors()) {
 				return new Message<AjaxResult>().fail().setData(new AjaxResult(br));
 			}
+			//暂时支持一个组合
+			EtrExchangeTradePortfolioRequest portfolioRequest=dto.getPortfolioList().get(0);
+			dto.setPortfolioId(portfolioRequest.getPortfolioId());
+			dto.setAcctNo(portfolioRequest.getAcctNo());
+			dto.setOptType(ENTRUST_RECORD_NEW);
+			//默认证券账户
+			if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("portfolioId", dto.getPortfolioId());
+				//map.put("finprodId", dto.getFinprodId());
+				String secAcctId = etrExchangeTradeCommonMapper.qryPortfolioSecAcctId(map);
+				if (StringUtil.isNotEmpty(secAcctId)) {
+					dto.setSecAcctId(secAcctId); // 证券账户
+				}
+			}
+			//暂时支持一个组合
 			//业务类型
 			String businessType = String.valueOf("");
 			if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
@@ -881,11 +903,11 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 				} else {
 					infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
 				}
-				AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
-						infCode, finprodType2);
-				if (StringUtil.isNotEmpty(ar)) {
-					return new Message<AjaxResult>().success().setData(ar);
-				}
+//				AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+//						infCode, finprodType2);
+//				if (StringUtil.isNotEmpty(ar)) {
+//					return new Message<AjaxResult>().success().setData(ar);
+//				}
 			}
 			// ----------add by zhangrui1 20200703 预占功能 end----------
 
@@ -910,21 +932,24 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 			 * 数据字典.共通业务类型.大宗债券指令
 			 */
 			dto.setBusinessTypeName(SysDataUtil.getNameFromDataDict(DictCode.共通业务类型, businessType));
-			dto.setInvManagerId(LoginUserUtil.getUserName());// 投资经理
-			dto.setCreateUser(LoginUserUtil.getUserName());// 用户名
-			dto.setCreateDept(LoginUserUtil.getDeptCode());// 用户部门
+			dto.setInvManagerId("fxmei");//LoginUserUtil.getUserName());// 投资经理
+			dto.setCreateUser("fxmei");//LoginUserUtil.getUserName());// 用户名
+			dto.setCreateDept("YHZGB");//LoginUserUtil.getDeptCode());// 用户部门
 			dto.setCreateTime(new Date());// 创建时间
 			ProcessParameter<EtrExchangeTradeSaveRequest> processParameter = new ProcessParameter<EtrExchangeTradeSaveRequest>();
 			WorkFlowParameter<EtrExchangeTradeSaveRequest> params = etrExchangeTrade001CommonService.getWorkFlowParameter(dto);
+			params.setPageId(dto.getPageId());
+			params.setElementId(dto.getElementId());
 			params.setBusinessType(businessType);
 			params.setBusinessCode(dto.getEntrustId());
-			params.setComment(entity -> getMessage("EtrExchangeTrade003.entrustId") + "(" + entity.getEntrustId() + ")"
+			params.setComment(entity -> getMessage("EtrExchangeTradeCommon001.entrustId") + "(" + entity.getEntrustId() + ")"
 					+ "-" + "业务类型" + "(" + entity.getBusinessTypeName() + ")-"
 					+ "平台日" + "(" + DateUtil.format(iPlatformDate.getSysDate()) + ")");
 			processParameter.setWorkFlowParameter(params);
 			String msg = etrExchangeTrade001CommonService.start(processParameter, dto);
 			return new Message<AjaxResult>().success().setData(new AjaxResult(msg));
 		}catch (Exception e){
+			e.printStackTrace();
 			return new Message<AjaxResult>().fail().setData(new AjaxResult("保存失败"));
 		}
 
@@ -943,8 +968,20 @@ public class EtrExchangeTradeCommon001Controller extends BaseController{
 	@ApiOperation(value = "计算结果", notes = "计算结果")
 	@ResponseBody
 	@PostMapping("/calcPriceAndYield")
-	public Map<String, BigDecimal> calcPriceAndYield(@RequestBody Map<String, Object> param){
-		return etrExchangeTrade001CommonService.calcPriceAndYield(param);
+	public Message<CalcPriceAndYieldResponse> calcPriceAndYield(@RequestBody CalcPriceAndYieldRequest dto ){
+		try{
+			Map<String, Object> param = BeanUtil.object2Map(dto);
+			Map<String, BigDecimal> returnMap=etrExchangeTrade001CommonService.calcPriceAndYield(param);
+			Map<String, Object> returnObjMap=new HashMap<>();
+			returnMap.forEach((key, value) -> {
+				returnObjMap.put(key,value);
+			});
+			CalcPriceAndYieldResponse response=BeanUtil.mapToObject(returnObjMap,CalcPriceAndYieldResponse.class);
+			return new Message<CalcPriceAndYieldResponse>().success().setData(response);
+	}catch (Exception e){
+			e.printStackTrace();
+		return new Message<CalcPriceAndYieldResponse>().fail().setData(null);
+	}
 	}
 
 	/**
