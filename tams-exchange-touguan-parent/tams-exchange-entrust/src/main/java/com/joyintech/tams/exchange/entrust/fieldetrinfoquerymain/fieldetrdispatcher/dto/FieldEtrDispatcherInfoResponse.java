@@ -101,6 +101,136 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     @ApiModelProperty(name="totalPrinAmt",value="汇总券面总额",example="10000")
     private BigDecimal totalPrinAmt;
+    
+    @ApiModelProperty(name="pledgeRatio",value="折算率",example="10000")
+    private BigDecimal pledgeRatio;
+
+    @ApiModelProperty(name="pledgeNumber",value="质押数量",example="10000")
+    private BigDecimal pledgeNumber;
+
+    @ApiModelProperty(name="mIntAmt",value="回购利息",example="10000")
+    private BigDecimal mIntAmt;
+
+    @ApiModelProperty(name="mTradeAmt",value="到期结算金额",example="10000")
+    private BigDecimal mTradeAmt;
+
+    @ApiModelProperty(name="vpayDate",value="首期结算日",example="2021-01-01")
+    private String vpayDate;
+
+    @ApiModelProperty(name="vpayDate",value="到期结算日",example="2021-01-01")
+    private String mpayDate;
+
+    @ApiModelProperty(name="pledStrdPrinAmt",value="券面金额",example="10000")
+    private BigDecimal pledStrdPrinAmt;
+
+    @ApiModelProperty(name="tradeId",value="初始交易编号",example="字符串1")
+    private String tradeId;
+
+
+    @ApiModelProperty(name="oldPledgeRatio",value="原折算率",example="10000")
+    private BigDecimal oldPledgeRatio;
+
+    @ApiModelProperty(name="oldPledgeNumber",value="原质押数量",example="10000")
+    private BigDecimal oldPledgeNumber;
+
+    @ApiModelProperty(name="oldPledStrdPrinAmt",value="原券面金额",example="10000")
+    private BigDecimal oldPledStrdPrinAmt;
+
+    public BigDecimal getOldPledgeRatio() {
+        return oldPledgeRatio;
+    }
+
+    public void setOldPledgeRatio(BigDecimal oldPledgeRatio) {
+        this.oldPledgeRatio = oldPledgeRatio;
+    }
+
+    public BigDecimal getOldPledgeNumber() {
+        return oldPledgeNumber;
+    }
+
+    public void setOldPledgeNumber(BigDecimal oldPledgeNumber) {
+        this.oldPledgeNumber = oldPledgeNumber;
+    }
+
+    public BigDecimal getOldPledStrdPrinAmt() {
+        return oldPledStrdPrinAmt;
+    }
+
+    public void setOldPledStrdPrinAmt(BigDecimal oldPledStrdPrinAmt) {
+        this.oldPledStrdPrinAmt = oldPledStrdPrinAmt;
+    }
+
+    public String getOldFinprodMarketId() {
+        return oldFinprodMarketId;
+    }
+
+    public void setOldFinprodMarketId(String oldFinprodMarketId) {
+        this.oldFinprodMarketId = oldFinprodMarketId;
+    }
+
+    public String getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;
+    }
+
+    public BigDecimal getPledStrdPrinAmt() {
+        return pledStrdPrinAmt;
+    }
+
+    public void setPledStrdPrinAmt(BigDecimal pledStrdPrinAmt) {
+        this.pledStrdPrinAmt = pledStrdPrinAmt;
+    }
+
+    public BigDecimal getPledgeNumber() {
+        return pledgeNumber;
+    }
+
+    public void setPledgeNumber(BigDecimal pledgeNumber) {
+        this.pledgeNumber = pledgeNumber;
+    }
+    
+    public String getVpayDate() {
+        return vpayDate;
+    }
+
+    public void setVpayDate(String vpayDate) {
+        this.vpayDate = vpayDate;
+    }
+
+    public String getMpayDate() {
+        return mpayDate;
+    }
+
+    public void setMpayDate(String mpayDate) {
+        this.mpayDate = mpayDate;
+    }
+    
+    public BigDecimal getmIntAmt() {
+        return mIntAmt;
+    }
+
+    public void setmIntAmt(BigDecimal mIntAmt) {
+        this.mIntAmt = mIntAmt;
+    }
+
+    public BigDecimal getmTradeAmt() {
+        return mTradeAmt;
+    }
+
+    public void setmTradeAmt(BigDecimal mTradeAmt) {
+        this.mTradeAmt = mTradeAmt;
+    }
+    
+    public BigDecimal getPledgeRatio() {
+        return pledgeRatio;
+    }
+
+    public void setPledgeRatio(BigDecimal pledgeRatio) {
+        this.pledgeRatio = pledgeRatio;
+    }
 
     @ApiModelProperty(name="repoPledgeModel",value="场内质押式回购质押券模式",example="01无质押券库，02单个质押库，03多个质押券库")
     private String repoPledgeModel;
@@ -126,7 +256,23 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     @ApiModelProperty(name="isRight",value="是否含权",example="A1")
     private String isRight;
 
+    @ApiModelProperty(name="secType",value="债券分类",example="字符串1")
+    private String secType;
 
+    @ApiModelProperty(name="oldFinprodMarketId",value="原质押券",example="字符串1")
+    private String oldFinprodMarketId;
+
+    
+    
+    
+    public String getSecType() {
+        return secType;
+    }
+
+    public void setSecType(String secType) {
+        this.secType = secType;
+    }
+    
     public String getBusiPs() {
         return busiPs;
     }

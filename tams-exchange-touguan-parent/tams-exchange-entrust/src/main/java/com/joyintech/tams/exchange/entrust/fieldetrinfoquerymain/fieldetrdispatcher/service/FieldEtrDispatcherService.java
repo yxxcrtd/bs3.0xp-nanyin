@@ -261,9 +261,9 @@ public class FieldEtrDispatcherService extends BaseService{
         //将交易员和投资经理转为真实姓名
         List<FieldEtrDispatcherTradeListResponse> list = pageLimit.getRoot();
         if(!list.isEmpty()){
-            for(FieldEtrDispatcherTradeListResponse  cfetsEtrDispatcherTradeListResponse : list){
-                if(StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getTrader())){
-                    String[] traders = cfetsEtrDispatcherTradeListResponse.getTrader().split(",");
+            for(FieldEtrDispatcherTradeListResponse  fieldEtrDispatcherTradeListResponse : list){
+                if(StringUtil.isNotEmpty(fieldEtrDispatcherTradeListResponse.getTrader())){
+                    String[] traders = fieldEtrDispatcherTradeListResponse.getTrader().split(",");
                     StringBuffer buffer = new StringBuffer();
                     StringBuffer userName = new StringBuffer();
                     for (String trader : traders) {
@@ -274,39 +274,22 @@ public class FieldEtrDispatcherService extends BaseService{
                         }
                     }
                     if(buffer.toString().length() !=0){
-                        cfetsEtrDispatcherTradeListResponse.setTrader(buffer.toString().substring(0, buffer.toString().length() - 1));
+                        fieldEtrDispatcherTradeListResponse.setTrader(buffer.toString().substring(0, buffer.toString().length() - 1));
                     }
-//                    if(userName.toString().length() !=0){
-//                        cfetsEtrDispatcherTradeListResponse.setUserName(userName.toString().substring(0,userName.toString().length() - 1));
-//                    }
                 }
-                if(StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getInvManagerId())){
-                    User user1=fieldEtrDispatcherMapper.getRealNameByUserName(cfetsEtrDispatcherTradeListResponse.getInvManagerId());
+                if(StringUtil.isNotEmpty(fieldEtrDispatcherTradeListResponse.getInvManagerId())){
+                    User user1=fieldEtrDispatcherMapper.getRealNameByUserName(fieldEtrDispatcherTradeListResponse.getInvManagerId());
                     if(StringUtil.isNotEmpty(user1)){
-                        cfetsEtrDispatcherTradeListResponse.setInvManagerId(user1.getRealName());
+                        fieldEtrDispatcherTradeListResponse.setInvManagerId(user1.getRealName());
                     }
                 }
-                if(StringUtil.isNotEmpty(cfetsEtrDispatcherTradeListResponse.getBusiPs())){
+                if(StringUtil.isNotEmpty(fieldEtrDispatcherTradeListResponse.getBusiPs())){
                     //委托指令附属表中取出回购/拆借方向
-                    if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(), cfetsEtrDispatcherTradeListResponse.getFinprodType2())
-                            || StringUtil.equals(DictCodeList.平安资产类型_拆借.getValue(), cfetsEtrDispatcherTradeListResponse.getFinprodType2()) ){
-                        cfetsEtrDispatcherTradeListResponse.setPs(cfetsEtrDispatcherTradeListResponse.getBusiPs());
+                    if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(), fieldEtrDispatcherTradeListResponse.getFinprodType2())
+                            || StringUtil.equals(DictCodeList.平安资产类型_拆借.getValue(), fieldEtrDispatcherTradeListResponse.getFinprodType2()) ){
+                        fieldEtrDispatcherTradeListResponse.setPs(fieldEtrDispatcherTradeListResponse.getBusiPs());
                     }
                 }
-//                if(StringUtil.equals(cfetsEtrDispatcherTradeListResponse.getFinprodType2(), DictCodeListExt2.平安资产类型_一级市场债.getValue())){
-////                    //债券一级投标交易方向的查询结果显示为空；
-//                    cfetsEtrDispatcherTradeListResponse.setPs(null);
-//                    FieldEtrDispatcherTradeListResponse dto2= fieldEtrDispatcherMapper.getEtrBidInfo(dto.getEntrustId());
-//                    if(StringUtil.isNotEmpty(dto2)){
-//                        //列表项中委托额度后增加字段 投标标位
-//                        cfetsEtrDispatcherTradeListResponse.setBidPrice(dto2.getBidPrice());
-//                        // 委托额度显示的是投标委托的投标券面总额汇总；
-//                        cfetsEtrDispatcherTradeListResponse.setEntrustAmt(dto2.getBidPrinAmt());
-//                        //设置投标日期
-//                        cfetsEtrDispatcherTradeListResponse.setBussBidDate(DateUtil.format(dto2.getBidDate()));
-//                    }
-//                }
-                //TODO 清算速度
             }
         }
         return pageLimit;
@@ -315,12 +298,12 @@ public class FieldEtrDispatcherService extends BaseService{
     /**
      * 自动分发规则、参数设置check
      * @author sjj
-     * @param cfetsDto br
+     * @param fieldDto br
      * @return Message<AjaxResult>
      */
-    public String checkSave(FieldEtrDispatcherAutoRequest cfetsDto, BindingResult br) {
+    public String checkSave(FieldEtrDispatcherAutoRequest fieldDto, BindingResult br) {
         String returnMsg ="";
-        if(StringUtil.isEmpty(cfetsDto.getVdate())){
+        if(StringUtil.isEmpty(fieldDto.getVdate())){
             returnMsg = "请选择分发日期";
         }
         return returnMsg;
@@ -339,20 +322,20 @@ public class FieldEtrDispatcherService extends BaseService{
     /**
      * 插入自动分发的日期
      *
-     * @param cfetsDto
+     * @param fieldDto
      * @return int
      */
-    public int insertEtrAutoTime(FieldEtrDispatcherAutoRequest cfetsDto) {
+    public int insertEtrAutoTime(FieldEtrDispatcherAutoRequest fieldDto) {
         try {
             String generate = IDGenerator.generate(32);
             EtrAutoDispenseRule rule = new EtrAutoDispenseRule();
             rule.setRuleId(generate);
-            rule.setVdate(DateUtil.parse(cfetsDto.getVdate()));
-            rule.setMdate(DateUtil.parse(cfetsDto.getMdate()));
-            rule.setDispenseRule(cfetsDto.getDistributeRule());
+            rule.setVdate(DateUtil.parse(fieldDto.getVdate()));
+            rule.setMdate(DateUtil.parse(fieldDto.getMdate()));
+            rule.setDispenseRule(fieldDto.getDistributeRule());
             etrAutoDispenseRuleMapper.insertSelective(rule);
-            if(StringUtil.isNotBlank(cfetsDto.getDistributeParameter())){
-                String[] split = cfetsDto.getDistributeParameter().split(",");
+            if(StringUtil.isNotBlank(fieldDto.getDistributeParameter())){
+                String[] split = fieldDto.getDistributeParameter().split(",");
                 if(split.length>0){
                     EtrAutoDispenseRuleDetail detail = new EtrAutoDispenseRuleDetail();
                     for (String str:split) {
@@ -522,7 +505,7 @@ public class FieldEtrDispatcherService extends BaseService{
      * @since 1.0
      */
     public FieldEtrDispatcherInfoResponse getEtrDispatcherInfo(FieldEtrDispatcherInfoRequest dto) {
-        FieldEtrDispatcherInfoResponse cfetsResponseDto =new FieldEtrDispatcherInfoResponse();
+        FieldEtrDispatcherInfoResponse fieldResponseDto =new FieldEtrDispatcherInfoResponse();
         //dto转成map
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("YESORNO_YES", DictCodeList.是否_是.getValue());
@@ -530,15 +513,15 @@ public class FieldEtrDispatcherService extends BaseService{
         if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
             return new FieldEtrDispatcherInfoResponse();
         }else {
-            cfetsResponseDto = fieldEtrDispatcherMapper.getEtrDispatcherInfo(pageParam);
+            fieldResponseDto = fieldEtrDispatcherMapper.getEtrDispatcherInfo(pageParam);
             //一级市场投标增加投标标位List
-            if (cfetsResponseDto != null) {
+            if (fieldResponseDto != null) {
                 if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_债券一级投标.getValue())) {
-                    cfetsResponseDto.setBidPriceList(mapper.selectBidPriceByKey(pageParam));
-                    cfetsResponseDto.setEtrBidDate(cfetsResponseDto.getEntrustDate());
+                    fieldResponseDto.setBidPriceList(mapper.selectBidPriceByKey(pageParam));
+                    fieldResponseDto.setEtrBidDate(fieldResponseDto.getEntrustDate());
                 } else if (StringUtil.equals(dto.getBusiTypePosition(), "利率互换首期")) {
-                    if (cfetsResponseDto.getDueDate().equals(" - ")) {
-                        cfetsResponseDto.setDueDate("");
+                    if (fieldResponseDto.getDueDate().equals(" - ")) {
+                        fieldResponseDto.setDueDate("");
                     }
                 } else if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_债券借贷首期.getValue())
                                 ||StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_质押式回购首期.getValue())) {
@@ -556,19 +539,18 @@ public class FieldEtrDispatcherService extends BaseService{
                         for (PledgeBondInfoDto pbi : pledgeList) {
                             totalPrinAmt = ArithmeticUtil.doAdd(totalPrinAmt, ArithmeticUtil.multiply(pbi.getPledgePrin(), pbi.getPledgeRatio()).divide(new BigDecimal("100")));
                         }
-                        cfetsResponseDto.setPledgeBondList(pledgeList);
-                        cfetsResponseDto.setTotalPrinAmt(totalPrinAmt);
+                        fieldResponseDto.setPledgeBondList(pledgeList);
+                        fieldResponseDto.setTotalPrinAmt(totalPrinAmt);
                     }
                 }else if(StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_现券交易.getValue())){
                     if(StringUtil.equals("01", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"))){
-                        cfetsResponseDto.setEntrustOwnNum(BigDecimal.ZERO);
-                        cfetsResponseDto.setIntegrateSecAmount(BigDecimal.ZERO);
+                        fieldResponseDto.setEntrustOwnNum(BigDecimal.ZERO);
+                        fieldResponseDto.setIntegrateSecAmount(BigDecimal.ZERO);
                     }
 
                 }
             }
-            //cfetsResponseDto.setRepoPledgeModel(CacheUtil.getSysParam(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL)));
-            return cfetsResponseDto;
+            return fieldResponseDto;
         }
     }
 
@@ -1066,9 +1048,9 @@ public class FieldEtrDispatcherService extends BaseService{
                 return o1.getSeqno().compareTo(o2.getSeqno());
             }
         });
-        FieldEtrDispatcherInfoResponse cfetsResponseDto = this.getEtrDispatcherInfo(dto);
+        FieldEtrDispatcherInfoResponse fieldResponseDto = this.getEtrDispatcherInfo(dto);
         resultData.put(dtCode+"_form",infoForm);
-        resultData.put(dtCode+"_data",cfetsResponseDto);
+        resultData.put(dtCode+"_data",fieldResponseDto);
         return resultData;
     }
 }

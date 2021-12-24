@@ -153,6 +153,14 @@ public class FieldEtrDispatcherExeListInfoResponse extends FieldEtrDispatcherBas
     @ApiModelProperty(name="finprodType2",value="资产类型",example="债券、回购")
     private String finprodType2;
 
+    @ApiModelProperty(name="acctId",value="资金账户",example="XXX资金账户")
+    private String acctId;
+
+    @ApiModelProperty(name="entrustId",value="委托编号",example="A1")
+    private String entrustId;
+    
+    
+
     public String getEffectFlag() {
         return effectFlag;
     }
