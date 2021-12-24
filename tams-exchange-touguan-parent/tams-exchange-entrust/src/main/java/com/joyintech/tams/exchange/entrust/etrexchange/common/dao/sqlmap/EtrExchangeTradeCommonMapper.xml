@@ -1336,4 +1336,13 @@
                     AND VALUE_SOURCE = #{VALUATION_SOURCE}
             )
     </select>
+
+    <select id="qryPortfolioSecAcctId" resultType="java.lang.String">
+        SELECT V.SEC_ACCT_ID AS SECACCTID
+        FROM PTL_SEC_ACCT PSA, STL_SEC_ACCT_INFO V
+        WHERE PSA.ACCT_NO = V.SEC_ACCT_ID
+          AND V.SEC_ACCT_TYPE = 'SEC'
+          AND V.TRADE_PLACE in ('03','04')
+          AND PSA.PORTFOLIO_ID = #{portfolioId}
+    </select>
 </mapper>

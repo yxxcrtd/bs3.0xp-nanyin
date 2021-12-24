@@ -21,6 +21,9 @@ import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.WflEtrEntrust;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommon001Dto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
@@ -49,7 +52,7 @@ import java.util.Map;
 public class EtrExchangeTradeJj001Validator implements EtrCommonValidator {
 
 	@Autowired
-	EtrExchangeTrade001Service etrExchangeTrade001Service;
+	EtrExchangeTradeCommon001Service etrExchangeTrade001Service;
 	
 	 /**
      * 委托指令Mapper
@@ -68,7 +71,7 @@ public class EtrExchangeTradeJj001Validator implements EtrCommonValidator {
 	public List<ValidMessage> bussValid(Object value) {
 		List<ValidMessage> errorList = new ArrayList<>();
 		// TODO Auto-generated method stub
-		EtrExchangeTrade001Dto dto = (EtrExchangeTrade001Dto) value;
+		EtrExchangeTradeSaveRequest dto = (EtrExchangeTradeSaveRequest) value;
 		if (dto.getOperateType().equals("save") || dto.getOperateType().equals("submit")) {
 			Boolean isNonTradingTime = etrExchangeTrade001Service.isNonTradingTime(dto);
 			if (isNonTradingTime) {

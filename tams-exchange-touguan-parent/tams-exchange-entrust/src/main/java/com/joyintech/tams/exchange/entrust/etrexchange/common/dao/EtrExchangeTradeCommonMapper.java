@@ -286,4 +286,10 @@ public interface EtrExchangeTradeCommonMapper {
     //add by chenjiaxing 20210907 债券竞价交易添加偏离度 start
 	BigDecimal getLastNetPrice(Map<String, Object> param);
 	//add by chenjiaxing 20210907 债券竞价交易添加偏离度 end
+	/**
+	 * 查询组合证券账户下的证券代码
+	 * @param map
+	 * @return
+	 */
+	String qryPortfolioSecAcctId(Map<String, Object> map);
 }
