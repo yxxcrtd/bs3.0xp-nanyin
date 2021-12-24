@@ -40,7 +40,7 @@ public class OrderPlaceBean implements Serializable {
     @ApiModelProperty(required = false, name = "batchInfo", value = "批量下单信息")
     private BatchInfo batchInfo;
 
-    @ApiModelProperty(required = false, name = "offsetFlag", value = "开平仓标志")
+    @ApiModelProperty(required = false, name = "offsetFlag", value = "冲正标识")
     private String offsetFlag;
 
     @ApiModelProperty(required = false, name = "hedgeFlag", value = "套期保值标志")

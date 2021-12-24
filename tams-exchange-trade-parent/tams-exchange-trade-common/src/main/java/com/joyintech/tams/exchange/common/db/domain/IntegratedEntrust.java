@@ -128,17 +128,17 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal entrustBalance;
 
-    @ApiModelProperty(required = true, name = "discount", value = "")
+    @ApiModelProperty(required = true, name = "discount", value = "质押券折算比例")
     @NotNull
     @Digits(integer = 10, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal discount;
 
-    @ApiModelProperty(required = true, name = "transCode", value = "借用字段 质权人类型 协议回购到期续作指令必填 0-非第三方 1-第三方")
+    @ApiModelProperty(required = true, name = "transCode", value = "到期续作类型（0-非第三方，1-第三方）")
     @Size(max = 32)
     private String transCode;//借用字段 质权人类型 协议回购到期续作指令必填 0-非第三方 1-第三方
 
-    @ApiModelProperty(required = true, name = "expireYearRate", value = "")
+    @ApiModelProperty(required = true, name = "expireYearRate", value = "到期交割比率")
     @NotNull
     @Digits(integer = 10, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
@@ -149,35 +149,35 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
     @Digits(integer = 10, fraction = 4)
     private long pretermYearRate;
 
-    @ApiModelProperty(required = true, name = "liaisonName", value = "")
+    @ApiModelProperty(required = true, name = "liaisonName", value = "联络人姓名")
     @Size(max = 32)
     private String liaisonName;
 
-    @ApiModelProperty(required = true, name = "liaisonTel", value = "")
+    @ApiModelProperty(required = true, name = "liaisonTel", value = "对手方交易员ID")
     @Size(max = 32)
     private String liaisonTel;
 
-    @ApiModelProperty(required = true, name = "propSeatNo", value = "")
+    @ApiModelProperty(required = true, name = "propSeatNo", value = "对手方交易商ID")
     @Size(max = 16)
     private String propSeatNo;
 
-    @ApiModelProperty(required = true, name = "sellerNo", value = "")
+    @ApiModelProperty(required = true, name = "sellerNo", value = "本方交易员ID")
     @Size(max = 32)
     private String sellerNo;
 
-    @ApiModelProperty(required = true, name = "propSeatName", value = "")
+    @ApiModelProperty(required = true, name = "propSeatName", value = "对手方交易商名称")
     @Size(max = 32)
     private String propSeatName;
 
-    @ApiModelProperty(required = true, name = "contractId", value = "")
+    @ApiModelProperty(required = true, name = "contractId", value = "交易所请求编号")
     @Size(max = 32)
     private String contractId;
 
-    @ApiModelProperty(required = true, name = "firstSettleDate", value = "")
+    @ApiModelProperty(required = true, name = "firstSettleDate", value = "首次结算日")
     @Size(max = 8)
     private String firstSettleDate;
 
-    @ApiModelProperty(required = true, name = "backDate", value = "")
+    @ApiModelProperty(required = true, name = "backDate", value = "到期结算日")
     @Size(max = 8)
     private String backDate;
 
@@ -186,13 +186,13 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
     @Digits(integer = 4, fraction = 0)
     private int compactTerm;
 
-    @ApiModelProperty(required = true, name = "backBalance", value = "")
+    @ApiModelProperty(required = true, name = "backBalance", value = "到期结算金额")
     @NotNull
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal backBalance;
 
-    @ApiModelProperty(required = true, name = "origSerialNo", value = "")
+    @ApiModelProperty(required = true, name = "origSerialNo", value = "原交易编号")
     @Size(max = 32)
     private String origSerialNo;
 
@@ -268,7 +268,7 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
     @Size(max = 32)
     private String brokerEntrustId;
 
-    @ApiModelProperty(required = true, name = "ipMac", value = "")
+    @ApiModelProperty(required = true, name = "ipMac", value = "IP及MAC信息")
     @Size(max = 64)
     private String ipMac;
 
