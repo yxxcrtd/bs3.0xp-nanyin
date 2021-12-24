@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -176,6 +177,11 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
     @ApiModelProperty(hidden = true)
     private String assetType1;
 
+
+    /**
+     *
+     */
+    private Date transmitTime;
 
     /**
      * 投资人员信息DTO
@@ -453,5 +459,13 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setAccountCash(BigDecimal accountCash) {
         this.accountCash = accountCash;
+    }
+
+    public Date getTransmitTime() {
+        return transmitTime;
+    }
+
+    public void setTransmitTime(Date transmitTime) {
+        this.transmitTime = transmitTime;
     }
 }

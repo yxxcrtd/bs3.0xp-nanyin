@@ -367,7 +367,7 @@
             </foreach>
         </if>
         <if test="finprodAbbrList != null and !finprodAbbrList.isEmpty()">
-            AND FIN_PRODUCT.FINPROD_ABBR in
+            AND FIN_PRODUCT.FINPROD_MARKET_ID in
             <foreach collection="finprodAbbrList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
@@ -378,9 +378,9 @@
         <if test="finProdType != null and finProdType!='' ">
             fpt.TYPE_11 = #{finProdType}
         </if>
-        <if test="finProdTypeList != null and !finProdTypeList.isEmpty()">
+        <if test="finprodTypeList != null and !finprodTypeList.isEmpty()">
             AND fpt.TYPE_11 in
-            <foreach collection="finProdTypeList" item="item" open="(" close=")" separator=",">
+            <foreach collection="finprodTypeList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
@@ -423,6 +423,14 @@
         FROM PTL_SEC_ACCT A
         INNER JOIN STL_SEC_ACCT_INFO B
         ON  A.ACCT_NO = B.SEC_ACCT_ID
+        LEFT JOIN
+            (SELECT sum(AMOUNT),PORTFOLIO_ID,SEC_ACCT_ID FROM ETR_SEC_POSITION_RULE espr
+            LEFT JOIN PTL_POSITION_CFG ppc ON
+            espr.HODING_TYPE = ppc.HOLDINGTYPE
+            AND ppc.S_HOLDINGTYPE = #{S_002}
+            WHERE espr.DATE_TYPE =0 AND espr.CDATE =to_date(#{sysDate},'yyyy-MM-dd')
+            GROUP BY PORTFOLIO_ID,SEC_ACCT_ID HAVING sum(AMOUNT)>0) espr
+        on A.PORTFOLIO_ID=espr.PORTFOLIO_ID and A.ACCT_NO=espr.SEC_ACCT_ID
         <where>
             <if test="search != null and search != ''">
                 AND
@@ -432,22 +440,11 @@
                 B.SEC_ACCT_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
                 )
             </if>
-        </where>
-        UNION ALL
-        SELECT
-        FINPROD_ID id ,
-        FINPROD_NAME text
-        FROM FIN_PRODUCT
-        <where>
-            <if test="search != null and search != ''">
-                and (
-                FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
-                or
-                FINPROD_NAME like concat(concat('%',#{search}),'%')
-                )
-            </if>
-            <if test="finprodType2 != null and finprodType2 != ''">
-                AND FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                AND espr.PORTFOLIO_ID in
+                <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
             </if>
         </where>
         )tb
@@ -816,11 +813,11 @@
 			on sys_user_role.role_id = sys_role.role_id
 		where 1=1
 			and sys_user.user_name = #{userId,jdbcType=VARCHAR}
-			and ( 
-				sys_user.admin_flag ='01' /*管理员 */
-			 	or 
-			 	sys_role.role_pos = #{role_pos,jdbcType=VARCHAR}
-			)
+-- 			/*and (
+-- 				sys_user.admin_flag ='01' /*管理员 */
+-- 			 	or */
+			 and sys_role.role_pos = #{role_pos,jdbcType=VARCHAR}
+-- 			/*)*/
 	</select>
 	
 	
@@ -859,14 +856,16 @@
             </collection>
             <collection property="pledgeBondTotalListDetailed" ofType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsPledgeBondInfoDto">
                 <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+                <result column="FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR" />
                 <result column="FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
                 <result column="PORTFOLIO_ID_1" property="portfolioId" jdbcType="VARCHAR" />
                 <result column="PORTFOLIO_NAME_1" property="portfolioName" jdbcType="VARCHAR" />
                 <result column="PLEDGE_RATIO" property="pledgeRatio" jdbcType="VARCHAR" />
                 <result column="PLEDGE_RATIO" property="scale" jdbcType="VARCHAR" />
                 <result column="PLEDGE_AMT" property="pledgePrin" jdbcType="VARCHAR" />
-                <!--<result column="pledStrdPrinAmt" property="avaPledgePrin" jdbcType="VARCHAR" />-->
+                <result column="firstNetPrice" property="firstNetPrice" jdbcType="VARCHAR" />
                 <result column="pledStrdPrinAmt" property="pledStrdPrinAmt" jdbcType="VARCHAR" />
+                <result column="regist_Org" property="registOrg" jdbcType="VARCHAR" />
             </collection>
     </resultMap>
 
@@ -894,6 +893,9 @@
             ep.PLEDGE_AMT ,
             espr.pledStrdPrinAmt,
             fp.FINPROD_ABBR,
+            MST_BOND_VALUATION_INFO.NETPRICE firstNetPrice,
+            fp.FINPROD_MARKET_ID,
+            fp.regist_Org,
                ee.REMARK
         FROM ETR_ENTRUST ee
          LEFT JOIN ETR_ENTRUST_ADD eea ON ee.ENTRUST_ID =eea.ENTRUST_ID
@@ -934,6 +936,25 @@
                         TEMP.SEC_ACCT_ID,
                         TEMP.FINPROD_ID) espr ON ee.PORTFOLIO_ID =espr.PORTFOLIO_ID   AND espr.FINPROD_ID =ep.FINPROD_ID
          LEFT JOIN FIN_PRODUCT fp ON ep.FINPROD_ID =fp.FINPROD_ID
+         LEFT JOIN (
+            SELECT
+                T2.SEC_ID, T2.LAST_PERIOD,T2.NETPRICE
+            FROM (
+                     SELECT
+                         tmp1.SEC_ID, tmp1.value_source,
+                         MAX(tmp1.value_date) AS value_date
+                     FROM MST_BOND_VALUATION_INFO tmp1
+                              LEFT JOIN FIN_PRODUCT tmp2
+                                        ON tmp1.sec_id = tmp2.finprod_market_id
+                     WHERE 1 = 1
+                       AND tmp1.value_date &lt;= to_date(#{sysDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+                       AND tmp1.value_source = #{VALUATION_SOURCE_CBC}
+                     GROUP BY tmp1.sec_id, tmp1.value_source
+                 ) T1
+                     LEFT JOIN MST_BOND_VALUATION_INFO T2
+                               ON T1.SEC_ID = T2.SEC_ID AND T1.value_source = T2.value_source AND T1.VALUE_DATE = T2.VALUE_DATE
+        ) MST_BOND_VALUATION_INFO
+                   ON fp.FINPROD_MARKET_ID = MST_BOND_VALUATION_INFO.SEC_ID
             where ee.ENTRUST_ID=#{entrustId}
         union all
         SELECT
@@ -959,6 +980,9 @@
             ep.PLEDGE_AMT ,
             espr.pledStrdPrinAmt,
             fp.FINPROD_ABBR,
+            MST_BOND_VALUATION_INFO.NETPRICE firstNetPrice,
+            fp.FINPROD_MARKET_ID,
+            fp.regist_Org,
             ee.REMARK
         FROM WFL_ETR_ENTRUST ee
                  LEFT JOIN WFL_ETR_ENTRUST_ADD eea ON ee.ENTRUST_ID =eea.ENTRUST_ID
@@ -999,6 +1023,25 @@
                                 TEMP.SEC_ACCT_ID,
                                 TEMP.FINPROD_ID) espr ON ee.PORTFOLIO_ID =espr.PORTFOLIO_ID   AND espr.FINPROD_ID =ep.FINPROD_ID
                  LEFT JOIN FIN_PRODUCT fp ON ep.FINPROD_ID =fp.FINPROD_ID
+                 LEFT JOIN (
+                    SELECT
+                        T2.SEC_ID, T2.LAST_PERIOD,T2.NETPRICE
+                    FROM (
+                             SELECT
+                                 tmp1.SEC_ID, tmp1.value_source,
+                                 MAX(tmp1.value_date) AS value_date
+                             FROM MST_BOND_VALUATION_INFO tmp1
+                                      LEFT JOIN FIN_PRODUCT tmp2
+                                                ON tmp1.sec_id = tmp2.finprod_market_id
+                             WHERE 1 = 1
+                               AND tmp1.value_date &lt;= to_date(#{sysDate},'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+                               AND tmp1.value_source = #{VALUATION_SOURCE_CBC}
+                             GROUP BY tmp1.sec_id, tmp1.value_source
+                         ) T1
+                             LEFT JOIN MST_BOND_VALUATION_INFO T2
+                                       ON T1.SEC_ID = T2.SEC_ID AND T1.value_source = T2.value_source AND T1.VALUE_DATE = T2.VALUE_DATE
+                ) MST_BOND_VALUATION_INFO
+                           ON fp.FINPROD_MARKET_ID = MST_BOND_VALUATION_INFO.SEC_ID
         where ee.ENTRUST_ID=#{entrustId}
     </select>
 

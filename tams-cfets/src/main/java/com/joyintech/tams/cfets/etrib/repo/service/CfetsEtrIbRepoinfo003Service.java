@@ -18,6 +18,8 @@ import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDisp
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
+import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribBondInfo003Dto;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.cfets.etrib.bond.service.CfetsEtribBondInfo003Service;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
@@ -52,10 +54,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 王波
@@ -111,6 +110,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
 
     @Autowired(required = false)
     private BussRepoSecService bussRepoSecService;
+
+    @Autowired(required = false)
+    private CfetsEtrIbBondinfoMapper cfetsEtrIbBondinfoMapper;
+
+
 
     /**
      * 流程结束后操作
@@ -196,6 +200,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             etrEntrustAdd.setVdate(dto.getVdate());
             etrEntrustAdd.setMdate(dto.getMdate());
             etrEntrustAdd.setPledgeStockId(dto.getZyqk());
+            if(StringUtil.isNotEmpty(dto.getTransmitTime())){
+                etrEntrustAdd.setTransmitTime(dto.getTransmitTime());
+            }else{
+                etrEntrustAdd.setTransmitTime(new Date());
+            }
             if (StringUtil.equals(dto.getSettleSpreed(),
                     DictCodeList.清算速度_T_0.getValue())) {
                 etrEntrustAdd.setSettleSpreed((long) 0);
@@ -276,6 +285,11 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             //指令接收查询交易方向丢失 add by libaisong 2021-03-01 end
             etrEntrustAdd.setVdate(dto.getVdate());
             etrEntrustAdd.setMdate(dto.getMdate());
+            if(StringUtil.isNotEmpty(dto.getTransmitTime())){
+                etrEntrustAdd.setTransmitTime(dto.getTransmitTime());
+            }else{
+                etrEntrustAdd.setTransmitTime(new Date());
+            }
             etrEntrustAdd.setPledgeStockId(dto.getZyqk());
             if (StringUtil.equals(dto.getSettleSpreed(),
                     DictCodeList.清算速度_T_0.getValue())) {
@@ -583,6 +597,15 @@ public class CfetsEtrIbRepoinfo003Service extends CommonExportService<CfetsEtrib
             }
             // ----------add by zhangrui1 20200715 预占功能 end----------
 
+            //针对退回指令，查询指令下达时间
+            if(StringUtil.isNotEmpty(RepoInfoDto.getEntrustId())){
+                //根据指令id查询出该资产是退回指令，且该指令的下达时间
+                CfetsEtribBondInfo003Dto transmitTimeDto=cfetsEtrIbBondinfoMapper.selectTransmitTimeByInfo(RepoInfoDto.getEntrustId());
+                if(null!=transmitTimeDto && StringUtil.isNotEmpty(transmitTimeDto.getTransmitTime())){
+                    RepoInfoDto.setTransmitTime(transmitTimeDto.getTransmitTime());
+                    dto.setTransmitTime(transmitTimeDto.getTransmitTime());
+                }
+            }
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL), "02")
                     ||StringUtil.equals(RepoInfoDto.getPs(), DictCodeListExt1.回购方向_正回购.getValue())){
                 dto.setBussRepoSec(new BussRepoSecDto());

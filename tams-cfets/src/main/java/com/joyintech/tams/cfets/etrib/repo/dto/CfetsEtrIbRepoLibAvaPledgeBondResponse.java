@@ -1,9 +1,6 @@
 package com.joyintech.tams.cfets.etrib.repo.dto;
 
-import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.systemtools.util.SysDatadictUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -77,6 +74,22 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
      */
     @ApiModelProperty(name="registOrg",value="登记托管机构")
     private String registOrg ;
+
+    /**
+     * 债项评级
+     */
+    @ApiModelProperty(name="gradeResult",value="债项评级")
+    private String gradeResultStr ;
+    /**
+     * 到期日
+     */
+    @ApiModelProperty(name="mdate",value="到期日")
+    private String mdateStr ;
+    /**
+     * 登记托管机构
+     */
+    @ApiModelProperty(name="registOrg",value="登记托管机构")
+    private String registOrgStr ;
     /**
      * 分支序号
      */
@@ -165,9 +178,6 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
         return gradeResult;
     }
 
-    public String getGradeResultStr() {
-        return SysDatadictUtil.getNameFromDataDict(DictCode.评级结果,gradeResult);
-    }
 
     public void setGradeResult(String gradeResult) {
         this.gradeResult = gradeResult;
@@ -177,9 +187,6 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
         return mdate;
     }
 
-    public String getMdateStr() {
-        return DateUtil.format(getMdate());
-    }
 
     public void setMdate(Date mdate) {
         this.mdate = mdate;
@@ -189,9 +196,6 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
         return registOrg;
     }
 
-    public String getRegistOrgStr() {
-        return SysDatadictUtil.getNameFromDataDict(DictCode.登记托管机构,registOrg);
-    }
 
     public void setRegistOrg(String registOrg) {
         this.registOrg = registOrg;
@@ -211,5 +215,29 @@ public class CfetsEtrIbRepoLibAvaPledgeBondResponse extends BaseEntity {
 
     public void setWaitPeriod(BigDecimal waitPeriod) {
         this.waitPeriod = waitPeriod;
+    }
+
+    public String getGradeResultStr() {
+        return gradeResultStr;
+    }
+
+    public void setGradeResultStr(String gradeResultStr) {
+        this.gradeResultStr = gradeResultStr;
+    }
+
+    public String getMdateStr() {
+        return mdateStr;
+    }
+
+    public void setMdateStr(String mdateStr) {
+        this.mdateStr = mdateStr;
+    }
+
+    public String getRegistOrgStr() {
+        return registOrgStr;
+    }
+
+    public void setRegistOrgStr(String registOrgStr) {
+        this.registOrgStr = registOrgStr;
     }
 }

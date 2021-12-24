@@ -47,6 +47,12 @@ public class CfetsPledgeBondInfoDto extends BaseEntity {
      */
     @ApiModelProperty(name = "finprodId",value="债券金融产品代码")
     private String finprodId;
+
+    /**
+     * 债券金融产品代码
+     */
+    @ApiModelProperty(name = "finprodMarketId",value="债券金融产品代码")
+    private String finprodMarketId;
     
     /**
      * 委托代码
@@ -227,8 +233,15 @@ public class CfetsPledgeBondInfoDto extends BaseEntity {
         this.registOrg = registOrg;
     }
 
-    public String getRepRegistOrgStr() {
+    public String getRegistOrgStr() {
         return SysDatadictUtil.getNameFromDataDict(DictCode.登记托管机构,this.getRegistOrg());
     }
 
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
 }

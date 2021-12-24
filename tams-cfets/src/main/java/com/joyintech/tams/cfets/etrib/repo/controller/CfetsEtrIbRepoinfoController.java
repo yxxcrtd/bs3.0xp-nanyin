@@ -24,7 +24,10 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
+import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
+import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
@@ -93,6 +96,9 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
      */
     @Autowired
     private InterfRiskRdsController interfRiskRdsController;
+
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
 
 
 
@@ -183,6 +189,24 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
             logger.error("查询质押券管理查询分页数据异常",e);
             return new Message<Page<CfetsEtrRepoZLCXPositionResponse>>().fail().setMessage("查询质押券管理查询分页数据异常");
         }
+    }
+
+    @PostMapping("/getSecManageAcctId")
+    @ApiOperation(value = "证券账户列表查询", notes = "证券账户列表查询")
+    public Message<Page<SelectOptionDto>> getSecManageAcctId(@RequestBody SecManageAcctIdRequestDto secManageAcctIdRequestDto) {
+        try {
+            Page<SelectOptionDto> tempList = cfetsEtrIbRepoinfoService.getSecManageAcctId(secManageAcctIdRequestDto);
+            return new Message<Page<SelectOptionDto>>().success().setData(tempList);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<Page<SelectOptionDto>>().fail().setMessage("查询异常");
+        }
+    }
+
+    @RequestMapping("/queryMySideList")
+    public Page<SelectOptionDto> queryMySideList(@RequestBody CfetsSearchInfoRequest item){
+        Page<SelectOptionDto> list = joyinbusinessCommonService.queryMySideList(item);
+        return list;
     }
 
     @PostMapping(value="/exportPosition")

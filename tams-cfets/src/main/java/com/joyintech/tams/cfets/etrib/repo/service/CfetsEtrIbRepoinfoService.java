@@ -22,6 +22,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoinfoMapper;
@@ -180,24 +181,24 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
 
         for(int i = 0; i< dtoList.size(); i++) {
             if(!StringUtil.isNotEmpty(dtoList.get(i).getPortfolioId()))
-                messages.add(new ValidMessage("请输入组合代码(第"+(i+1)+"行)。"));
+                messages.add(new ValidMessage("组合信息(第"+(i+1)+"行)，请输入组合代码。"));
             if(!StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt()))
-                messages.add(new ValidMessage("请输入指令金额(第"+(i+1)+"行)。"));
+                messages.add(new ValidMessage("组合信息(第"+(i+1)+"行)，请输入指令金额。"));
             if(StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt()) && dtoList.get(i).getEntrustAmt().compareTo(BigDecimal.ZERO)<=0)
-                messages.add(new ValidMessage("指令金额不允许小于等于0。(第"+(i+1)+"行)。"));
+                messages.add(new ValidMessage("组合信息(第"+(i+1)+"行)，指令金额不允许小于等于0。"));
 
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL),"03")
                     &&StringUtil.isNotEmpty(dto.getPs())
                     &&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(),dto.getPs())
                     &&!StringUtil.isNotEmpty(dtoList.get(i).getZyqk())){
-                messages.add(new ValidMessage("请输入质押券库(第"+(i+1)+"行)。"));
+                messages.add(new ValidMessage("组合信息(第"+(i+1)+"行)，请输入质押券库。"));
             }
             if(StringUtil.equals(CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL),"02")
                     &&StringUtil.isNotEmpty(dto.getPs())
                     &&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(), dto.getPs())){
                 if(StringUtil.isNotEmpty(dtoList.get(i).getTotalAmount())){
                     if(StringUtil.isNotEmpty(dtoList.get(i).getEntrustAmt())&&dtoList.get(i).getTotalAmount().compareTo(dtoList.get(i).getEntrustAmt())<0){
-                        messages.add(new ValidMessage("(第"+(i+1)+"行)，质押券金额不足。"));
+                        messages.add(new ValidMessage("组合信息(第"+(i+1)+"行)，指令金额不得大于该组合下的质押券折算总额。"));
                     }
                 }else{
                     messages.add(new ValidMessage("请添加质押券信息(第"+(i+1)+"行)。"));
@@ -210,7 +211,10 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
             List<CfetsPledgeBondInfoDto> list = dto.getPledgeBondTotalListDetailed();
             for(int i = 0; i< list.size(); i++){
                 if(!StringUtil.isNotEmpty(list.get(i).getScale())){
-                    messages.add(new ValidMessage("质押券信息(第"+(i+1)+"行),折算比例必填"));
+                    messages.add(new ValidMessage("质押券信息(第"+(i+1)+"行)，折算比例必填。"));
+                }
+                if(StringUtil.isNotEmpty(list.get(i).getPledgePrin())&&list.get(i).getPledgePrin().compareTo(list.get(i).getPledStrdPrinAmt())>0){
+                    messages.add(new ValidMessage("质押券信息(第"+(i+1)+"行)，质押券面总额不可超过可质押券面总额。"));
                 }
             }
         }
@@ -265,15 +269,18 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
 
     /**
      * 查询证券账户
-     * @param page
-     * @param length
-     * @param param
-     * @return
      */
-    public Page<SelectOptionDto> getSecManageAcctId(int page, int length,
-                                                  Map<String, Object> param) {
-        return queryForPageForSelectReturn(page, length,
-                () -> cfetsEtrIbRepoinfoMapper.getSecManageAcctId(param));
+    public Page<SelectOptionDto> getSecManageAcctId(SecManageAcctIdRequestDto secManageAcctIdRequestDto) {
+        Map<String,Object> pageParam = BeanUtil.object2Map(secManageAcctIdRequestDto);
+        String portfolioId = (String)pageParam.get("portfolioId");
+        if(StringUtil.isNotEmpty(pageParam.get("portfolioId"))){
+            List<String> portfolioIdList = StringUtil.splitToList(",",(String)pageParam.get("portfolioId"));
+            pageParam.put("portfolioIdList", portfolioIdList);
+        }
+        pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
+        pageParam.put("sysDate", iPlatformDate.getSysDateStr());
+        return super.queryForPage(secManageAcctIdRequestDto.getPageMode().getPageNo(), secManageAcctIdRequestDto.getPageMode().getPageSize(),
+                () -> cfetsEtrIbRepoinfoMapper.getSecManageAcctId(pageParam));
     }
 
     /**
@@ -571,6 +578,7 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         Map<String,Object> param= BeanUtil.object2Map(dto);
         param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
         param.put("sysDate", iPlatformDate.getSysDateStr());
+        param.put("VALUATION_SOURCE_CBC", DictCodeList.估值来源_中债登_CBC.getValue());
         return  cfetsEtrIbRepoinfoMapper.findEtrinfo(param);
     }
 
