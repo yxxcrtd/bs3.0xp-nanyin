@@ -111,114 +111,63 @@
 
 	<select id="selectBatchDataForChgByIde" resultType="com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair">
 		SELECT
-		'SUB'  equMark,
-		indentifyMark,
-		registBankCode,
-		fundAccPlace,
-		agencyCode,
-		orgIndentifyMark
-		FROM
-		（
-		SELECT
-		indentifyMark,
-		registBankCode,
-		fundAccPlace,
-		agencyCode,
-		orgIndentifyMark,
-		ROW_NUMBER() over( partition by tmp.indentifyMark ,tmp.orgMark order by tmp.tableNo desc,tmp.UPDATE_TIME desc ) indMarkNo
-		FROM（
-		----从SUB表查询相关记录
-		SELECT
-		'02'   tableNo,
-		A.INDENTIFY_MARK indentifyMark,
-		A.ORG_INDENTIFY_MARK orgMark,
-		A.REGIST_BANK_CODE registBankCode,
-		B.FUND_ACC_PLACE fundAccPlace,
-		B.THE_BANK_CODE agencyCode,
-		A.INDENTIFY_MARK orgIndentifyMark,
-		B.UPDATE_TIME
+			'SUB'  equMark,
+			indentifyMark,
+			registBankCode,
+			fundAccPlace,
+			agencyCode,
+			orgIndentifyMark
 		FROM
 		(
-		select * from CHB_EQU_SUB
-		where NVL(TO_CHAR(UPDATE_TIME,'yyyy-mm-dd'),TO_CHAR(CREATE_TIME,'yyyy-mm-dd')) =  #{batchDate,jdbcType=VARCHAR}
-		and STATUS = '02'
-		and ORG_INDENTIFY_MARK is not null
-		and (FUND_ACC_PLACE is NULL
-		OR THE_BANK_CODE is NULL)
-		) A
-		LEFT JOIN CHB_EQU_SUB B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
-
-		UNION ALL
-
-		SELECT
-		'02'   tableNo,
-		C.INDENTIFY_MARK indentifyMark,
-		C.ORG_INDENTIFY_MARK orgMark,
-		C.REGIST_BANK_CODE registBankCode,
-		D.FUND_ACC_PLACE fundAccPlace,
-		D.THE_BANK_CODE agencyCode,
-		C.INDENTIFY_MARK orgIndentifyMark,
-		D.UPDATE_TIME
-		FROM
-		(
-		select * from CHB_EQU_SUB
-		where NVL(TO_CHAR(UPDATE_TIME,'yyyy-mm-dd'),TO_CHAR(CREATE_TIME,'yyyy-mm-dd')) =  #{batchDate,jdbcType=VARCHAR}
-		and STATUS = '02'
-		and ORG_INDENTIFY_MARK is not null
-		and (FUND_ACC_PLACE is NULL
-		OR THE_BANK_CODE is NULL)
-		) C
-		LEFT JOIN CHB_EQU_SUB D
-		on C.ORG_INDENTIFY_MARK = D.INDENTIFY_MARK
-
-		UNION ALL
-		------从HIS表查询相关记录
-		SELECT
-		'01'   tableNo,
-		E.INDENTIFY_MARK indentifyMark,
-		E.ORG_INDENTIFY_MARK orgMark,
-		E.REGIST_BANK_CODE registBankCode,
-		F.FUND_ACC_PLACE fundAccPlace,
-		F.THE_BANK_CODE agencyCode,
-		E.INDENTIFY_MARK orgIndentifyMark,
-		F.UPDATE_TIME
-		FROM
-		(
-		select * from CHB_EQU_SUB
-		where NVL(TO_CHAR(UPDATE_TIME,'yyyy-mm-dd'),TO_CHAR(CREATE_TIME,'yyyy-mm-dd')) =  #{batchDate,jdbcType=VARCHAR}
-		and STATUS = '02'
-		and ORG_INDENTIFY_MARK is not null
-		and (FUND_ACC_PLACE is NULL
-		OR THE_BANK_CODE is NULL)
-		) E
-		LEFT JOIN CHB_EQU_HOLD_HIS F
-		on E.INDENTIFY_MARK = F.INDENTIFY_MARK
-
-		UNION ALL
-
-		SELECT
-		'01'   tableNo,
-		G.INDENTIFY_MARK indentifyMark,
-		G.ORG_INDENTIFY_MARK orgMark,
-		G.REGIST_BANK_CODE registBankCode,
-		H.FUND_ACC_PLACE fundAccPlace,
-		H.THE_BANK_CODE agencyCode,
-		G.INDENTIFY_MARK orgIndentifyMark,
-		H.UPDATE_TIME
-		FROM
-		(
-		select * from CHB_EQU_SUB
-		where NVL(TO_CHAR(UPDATE_TIME,'yyyy-mm-dd'),TO_CHAR(CREATE_TIME,'yyyy-mm-dd')) =  #{batchDate,jdbcType=VARCHAR}
-		and STATUS = '02'
-		and ORG_INDENTIFY_MARK is not null
-		and (FUND_ACC_PLACE is NULL
-		OR THE_BANK_CODE is NULL)
-		) G
-		LEFT JOIN CHB_EQU_HOLD_HIS H
-		on G.ORG_INDENTIFY_MARK = H.INDENTIFY_MARK
-
-		） tmp
+			SELECT
+				indentifyMark,
+				registBankCode,
+				fundAccPlace,
+				agencyCode,
+				orgIndentifyMark,
+				ROW_NUMBER() over( partition by tmp.indentifyMark ,tmp.orgMark order by tmp.tableNo desc,tmp.UPDATE_TIME desc ) indMarkNo
+			FROM (
+					----从SUB表查询相关记录
+					SELECT
+						'02'   tableNo,
+						A.INDENTIFY_MARK indentifyMark,
+						A.ORG_INDENTIFY_MARK orgMark,
+						A.REGIST_BANK_CODE registBankCode,
+						B.FUND_ACC_PLACE fundAccPlace,
+						B.THE_BANK_CODE agencyCode,
+						A.INDENTIFY_MARK orgIndentifyMark,
+						B.UPDATE_TIME
+					FROM
+						(
+							select * from CHB_EQU_SUB
+							where NVL(TO_CHAR(UPDATE_TIME,'yyyy-mm-dd'),TO_CHAR(CREATE_TIME,'yyyy-mm-dd')) =  #{batchDate,jdbcType=VARCHAR}
+							and TYPE = '02'
+						) A
+					LEFT JOIN CHB_EQU_SUB B
+						on A.ORG_INDENTIFY_MARK = B.INDENTIFY_MARK									
+		
+					UNION ALL
+					
+					------从HIS表查询相关记录
+					SELECT
+						'01'   tableNo,
+						E.INDENTIFY_MARK indentifyMark,
+						E.ORG_INDENTIFY_MARK orgMark,
+						E.REGIST_BANK_CODE registBankCode,
+						F.FUND_ACC_PLACE fundAccPlace,
+						F.THE_BANK_CODE agencyCode,
+						E.INDENTIFY_MARK orgIndentifyMark,
+						F.UPDATE_TIME
+					FROM
+						(
+							select * from CHB_EQU_SUB
+							where 
+								NVL(TO_CHAR(UPDATE_TIME,'yyyy-mm-dd'),TO_CHAR(CREATE_TIME,'yyyy-mm-dd')) =  #{batchDate,jdbcType=VARCHAR}
+							 and TYPE = '02'						
+						) E
+					LEFT JOIN CHB_EQU_HOLD_HIS F
+						on E.ORG_INDENTIFY_MARK = F.INDENTIFY_MARK
+			) tmp
 		)
 		WHERE  indMarkNo = '2'
 	</select>
