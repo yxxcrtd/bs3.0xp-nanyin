@@ -64,7 +64,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
         createBondToStockList(bondToStockList,tradeDate,returnList);
         //3)其他的还是下面的逻辑	 查询得到的数据list按照 席位号 + 申请编号 的维度进行分组 得到List<Map<席位号 + 申请编号,StlSettleTransDataGatherDto>>
         List<StlSettleTransDataGatherDto> selectNeedTotalDataList= selectNeedTotalDataNewList.stream().filter(item->!DictCodeListExt3.交易方向_债转股.getValue().equals(item.getPs())&&
-                        !DictCodeListExt3.交易方向_债转股.getValue().equals(item.getPs())).collect(Collectors.toList());
+                        !DictCodeList.回购类型_质押式协议回购.getValue().equals(item.getRepoType())).collect(Collectors.toList());
         Map<String,List<StlSettleTransDataGatherDto>> mapList=selectNeedTotalDataList
                 .stream()
                 .collect(Collectors.groupingBy(dto ->
@@ -365,7 +365,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
         Map<String,List<StlSettleTransDataGatherDto>> mapList=selectNeedTotalDataList
                 .stream()
                 .collect(Collectors.groupingBy(dto ->
-                        dto.getApplyTradeId() + "_" + dto.getSeatNumber()));
+                        dto.getApplyTradeId() + "_" + dto.getSeatNumber()+"_" + dto.getPs()));
         //4、循环当前循环的map的value
         List<SettleTransDataTotal> settleTransDataList=new ArrayList<>();
         List<SettleTransDataTotalAdd> settleTransDataAddList=new ArrayList<>();
@@ -426,7 +426,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             break;
                         }
                     }
-                    if(flag){//交易方向  not in （中途换券， 解除质押）
+                    if(flag){ //交易方向  not in （中途换券， 解除质押）
                         //  汇总交易编号
                         dealTotal.setSeqId(IDGenerator.generate());
                         //执行日期
@@ -582,6 +582,7 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                             settleTransDataPledgeList.add(settleTransDataTotalPledge);
                         }
                     }else{
+                        flag=true;
                         for (StlSettleTransDataGatherDto item : list) {
                             String ps = item.getPs();
                             if (!(StringUtil.equals(ps, DictCodeListExt3.交易方向_中途换券.getValue())
@@ -682,6 +683,19 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                 totalSettleFeeRaw=ArithmeticUtil.doAdd(totalSettleFeeRaw, item.getSettleFeeRaw());
                                 totalCommissionAmtRaw=ArithmeticUtil.doAdd(totalCommissionAmtRaw, item.getCommissionAmt());
                                 totaltradeAmtRaw=ArithmeticUtil.doAdd(totaltradeAmtRaw, item.getTradeAmtRaw());
+
+                                //当笔成交数据明细.质押品信息流水号 非空
+                                if(StringUtil.isNotEmpty(item.getPledgeTradeId())){
+                                    SettleTransDataTotalPledge settleTransDataTotalPledge = new SettleTransDataTotalPledge();
+                                    settleTransDataTotalPledge.setTradeId(dealTotal.getSeqId());
+                                    settleTransDataTotalPledge.setBranch(item.getBranch());
+                                    settleTransDataTotalPledge.setPledgeFinprodId(item.getPledgeFinprodId());
+                                    settleTransDataTotalPledge.setPledgeFaceValue(item.getPledgeFaceValue());
+                                    settleTransDataTotalPledge.setPledgeNumber(item.getPledgeNumber());
+                                    settleTransDataTotalPledge.setPledgeRatio(item.getPledgeRatio());
+                                    settleTransDataTotalPledge.setPledgeAmt(item.getPledgeAmt());
+                                    settleTransDataPledgeList.add(settleTransDataTotalPledge);
+                                }
                             }
                             //单位面值  空
                             // 交易份额 空
@@ -771,25 +785,10 @@ public class StlSettleTransDataGatherReader extends BaseReader<StlSettleTransDat
                                 settleTransDataTotalAdd.setSeRepDayType(settleTransDataDto.getSeRepDayType());
                                 settleTransDataAddList.add(settleTransDataTotalAdd);
                             }
-                            //当笔成交数据明细.质押品信息流水号 非空
-                            if(StringUtil.isNotEmpty(settleTransDataDto.getPledgeTradeId())){
-                                SettleTransDataTotalPledge settleTransDataTotalPledge = new SettleTransDataTotalPledge();
-                                settleTransDataTotalPledge.setTradeId(dealTotal.getSeqId());
-                                settleTransDataTotalPledge.setBranch(dealTotal.getBranch());
-                                settleTransDataTotalPledge.setPledgeFinprodId(settleTransDataDto.getPledgeFinprodId());
-                                settleTransDataTotalPledge.setPledgeFaceValue(settleTransDataDto.getPledgeFaceValue());
-                                settleTransDataTotalPledge.setPledgeNumber(settleTransDataDto.getPledgeNumber());
-                                settleTransDataTotalPledge.setPledgeRatio(settleTransDataDto.getPledgeRatio());
-                                settleTransDataTotalPledge.setPledgeAmt(settleTransDataDto.getPledgeAmt());
-                                settleTransDataPledgeList.add(settleTransDataTotalPledge);
-                            }
                         }
                     }
                 }
-
-
             }
-
         });
         StlSettleTransDataGatherParamDto dataGatherParamDto = new StlSettleTransDataGatherParamDto(settleTransDataList,settleTransDataAddList,settleTransDataPledgeList);
         returnList.add(dataGatherParamDto);

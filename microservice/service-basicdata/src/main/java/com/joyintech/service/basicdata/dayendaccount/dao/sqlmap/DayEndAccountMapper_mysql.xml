@@ -916,9 +916,9 @@ from
 			ssrd.PORTFOLIO_ID,
 			ssrd.FINPROD_ID,
 			CASE
-				WHEN fpt.TYPE_8 IS NOT NULL THEN fpt.TYPE_8
 				WHEN ssrd.FINPROD_TYPE IS NOT NULL THEN ssrd.FINPROD_TYPE
 				WHEN ins.STOCK_CODE IS NOT NULL THEN 'F07'
+				WHEN fpt.TYPE_8 IS NOT NULL THEN fpt.TYPE_8
 				END  FINPROD_TYPE,
 			ssrd.MARKET_ID,
 			ssrd.FINPROD_NAME,
@@ -958,5 +958,82 @@ from
 			T_INSTRUMENT ins ON ssrd.FINPROD_ID = ins.STOCK_CODE
 		WHERE
 			ssrd.SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectAllSettleTransData"
+			resultType="com.joyintech.tams.common.base.entity.SettleTransData">
+		select std.TRADE_ID,
+			   std.CJBH,
+			   std.DEAL_DATE,
+			   std.SEC_TYPE,
+			   std.APPLY_TRADE_ID,
+			   std.FINPROD_ID,
+			   std.FINPROD_TYPE,
+			   std.FINPROD_TYPE2,
+			   std.BRANCH,
+			   BUSI_TYPE,
+			   std.TRADE_DATE,
+			   std.SETTLE_DATE,
+			   std.VDATE,
+			   std.MDATE,
+			   std.VPAY_DATE,
+			   std.MPAY_DATE,
+			   std.TERM_TYPE,
+			   std.SETTLE_SPEED,
+			   std.CCY,
+			   std.UNIT_CPRICE,
+			   std.UNIT_INT,
+			   std.UNIT_FPRICE,
+			   std.PAR_VALUE,
+			   std.CPRICE_AMT,
+			   IFNULL(std.SHARE_AMT,0) SHARE_AMT,
+			   IFNULL(std.PRIN_AMT,0) PRIN_AMT,
+			   IFNULL(std.INT_AMT,0) INT_AMT,
+			   IFNULL(std.FPRICE_AMT,0) FPRICE_AMT,
+			   IFNULL(std.STAMP_FEE,0) STAMP_FEE,
+			   IFNULL(std.JSF_AMT,0) JSF_AMT,
+			   IFNULL(std.GHF_AMT,0) GHF_AMT,
+			   IFNULL(std.ZGF_AMT,0) ZGF_AMT,
+			   IFNULL(std.SXF_AMT,0) SXF_AMT,
+			   IFNULL(std.SETTLE_FEE,0) SETTLE_FEE,
+			   IFNULL(std.COMMISSION_AMT,0) COMMISSION_AMT,
+			   std.IS_PAY_WITH_TRADE,
+			   std.TRADE_AMT,
+			   std.PS,
+			   std.TRADE_MARKET,
+			   std.TRADE_MARKET_MODE,
+			   std.TRADE_PLAT,
+			   std.PLEDGE_SEC_NUM,
+			   std.SEAT_NUMBER,
+			   std.PORTFOLIO_ID,
+			   std.SEC_ACCT_ID,
+			   std.ACCT_NO,
+			   std.BATCH_NUMBER,
+			   std.M_PRIN_AMT,
+			   std.M_INT_AMT,
+			   std.M_TRADE_AMT,
+			   std.INT_RATE,
+			   std.BASIS,
+			   std.BUSI_SCENE_CALSS,
+			   std.SETTLE_MODE,
+			   std.STAMP_FEE_RAW,
+			   std.JSF_AMT_RAW,
+			   std.GHF_AMT_RAW,
+			   std.ZGF_AMT_RAW,
+			   std.SXF_AMT_RAW,
+			   std.SETTLE_FEE_RAW,
+			   std.COMMISSION_AMT_RAW,
+			   std.TRADE_AMT_RAW,
+			   std.TRADE_ID_RAW,
+			   std.SEQ_NO,
+			   std.CREATE_USER,
+			   std.CREATE_DEPT,
+			   std.CREATE_TIME,
+			   std.UPDATE_USER,
+			   std.UPDATE_TIME,
+			   std.IS_PURCH_TYPE_YX
+		from settle_trans_data std
+				 inner join STL_SEC_RECON_DETAIL ssrd on ssrd.TRADE_ID = std.TRADE_ID
+		WHERE ssrd.SEQ_NO = #{seqNo, jdbcType=VARCHAR}
 	</select>
 </mapper>

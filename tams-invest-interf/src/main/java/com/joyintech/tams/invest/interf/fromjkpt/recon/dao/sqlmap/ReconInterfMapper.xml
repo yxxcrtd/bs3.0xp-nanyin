@@ -282,17 +282,6 @@ FROM
                     '债券质押购回利息'
                 )
         )
-        AND NOT EXISTS (
-            SELECT
-                1
-            FROM
-                STL_SEC_RECON_CONFIG T6
-            WHERE
-                T6.JYLB = T1.JYLB
-                AND T6.YWBS = T1.YWBS
-                AND ZYBS IS NULL
-                AND T1.YWBS = '4023' AND T1.CJSL <![CDATA[<]]> 0)
-        )
         <if test="collect != null and collect.size()>0">
             and T4.CUSTOMER_ID IN
             <foreach item="item" index="index" collection="collect" open="(" separator=","  close=")">
@@ -424,16 +413,6 @@ WHERE
                 '债券回购购回返回'
            )
     )
-    AND NOT EXISTS (
-        SELECT
-            1
-        FROM
-            STL_SEC_RECON_CONFIG T6
-        WHERE
-            T6.ZYBS = to_char(T1.ZYDM)
-            AND ZYBS IS NOT NULL
-            AND to_char(T1.ZYDM) = '220142' AND T1.CJSL <![CDATA[<]]> 0
-    )
     <if test="collect != null and collect.size()>0">
        AND  T4.CUSTOMER_ID IN
         <foreach item="item" index="index" collection="collect" open="(" separator=","  close=")">
@@ -461,67 +440,120 @@ WHERE
 </sql>
 <sql id="detailesql2">
     SELECT
-    TO_DATE(T1.JYRQ, 'yyyyMMdd') TRADE_DATE,
-    T4.CUSTOMER_ID CUSTOMER_ID,
-    CJBH TRADE_ID,
-    WTBH INSTRUCTION_ID,
-    CASE
-    WHEN T1.BZLB in ('RMB', '人民币') THEN 'CNY'
-    WHEN T1.BZLB in ('HKD', '港币') THEN 'HKD'
-    WHEN T1.BZLB in ('USD', '美元') THEN 'USD'
-    END CCY,
-    CASE WHEN JYLB = '1' THEN '03'
-    WHEN JYLB = '上海' THEN '03'
-    WHEN JYLB = '2' THEN '04'
-    WHEN JYLB = '深圳' THEN '04'
-    END TRADE_MARKET ,
-    T5.SEC_ACCT_ID SEC_ACCT_ID,
-    XWBH SEAT_NUMBER,
-    '' SETTLEMEN_TYPE,
-    CJSL TRADE_NUM,
-    CASE WHEN T1.GZZLX !=0 THEN CJJG
-    ELSE NULL END PRICE,
-    YJLX UNIT,
-    CASE WHEN T1.GZZLX !=0 THEN null
-    ELSE CJJG END FULL_PRICE,
-    GZZLX INT_AMT,
-    CJJE TRADE_AMT,
-    NULL TOTAL_TEEAMT,
-    NULL HGDQR,
-    NULL HGDQJE,
-    YHS STAMP_FEE,
-    NULL JSF_AMT,
-    GHF GHF_AMT,
-    NULL ZGF_AMT,
-    NULL SETTLE_FEE,
-    NULL TRADE_FEE,
-    NULL OTHER_FEEAMT,
-    YJ COMMISSION_AMT,
-    CASE WHEN YWBS = '4023' THEN 'T49'
-    WHEN YWBS != '4023' AND CJJE >0 THEN 'T02'
-    ELSE 'T01' END PS,
-    T2.ACCT_NO ACCOUT,
-    CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
-    ELSE T3.FINPROD_MARKET_ID END MARKET_ID,
-    CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
-    ELSE T3.FINPROD_ID END FINPROD_ID,
-    FPT.TYPE_8 AS FINPROD_TYPE
+        TO_DATE(T1.JYRQ, 'yyyyMMdd') TRADE_DATE,
+        T4.CUSTOMER_ID CUSTOMER_ID,
+        CJBH TRADE_ID,
+        WTBH INSTRUCTION_ID,
+        CASE
+            WHEN T1.BZLB in ('RMB', '人民币') THEN 'CNY'
+            WHEN T1.BZLB in ('HKD', '港币') THEN 'HKD'
+            WHEN T1.BZLB in ('USD', '美元') THEN 'USD'
+        END CCY,
+        CASE WHEN JYLB = '1' THEN '03'
+            WHEN JYLB = '上海' THEN '03'
+            WHEN JYLB = '2' THEN '04'
+            WHEN JYLB = '深圳' THEN '04'
+        END TRADE_MARKET ,
+        T5.SEC_ACCT_ID SEC_ACCT_ID,
+        XWBH SEAT_NUMBER,
+        '' SETTLEMEN_TYPE,
+        CJSL TRADE_NUM,
+        CASE
+            WHEN T1.GZZLX !=0 THEN CJJG
+            ELSE NULL
+        END PRICE,
+        YJLX UNIT,
+        CASE WHEN
+            T1.GZZLX !=0 THEN null
+            ELSE CJJG
+        END FULL_PRICE,
+        GZZLX INT_AMT,
+        CJJE TRADE_AMT,
+        NULL TOTAL_TEEAMT,
+        NULL HGDQR,
+        NULL HGDQJE,
+        YHS STAMP_FEE,
+        NULL JSF_AMT,
+        GHF GHF_AMT,
+        NULL ZGF_AMT,
+        NULL SETTLE_FEE,
+        NULL TRADE_FEE,
+        NULL OTHER_FEEAMT,
+        YJ COMMISSION_AMT,
+        CASE
+            WHEN YWBS = '4023' THEN 'T49'
+            WHEN YWBS != '4023' AND CJJE >0 THEN 'T02'
+            ELSE 'T01'
+        END PS,
+        T2.ACCT_NO ACCOUT,
+        CASE
+            WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
+            ELSE T3.FINPROD_MARKET_ID
+            END MARKET_ID,
+        CASE
+            WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
+            ELSE T3.FINPROD_ID
+        END FINPROD_ID,
+        FPT.TYPE_8 AS FINPROD_TYPE
     FROM
-    INTERF_DZD T1
-    LEFT JOIN STL_SEC_ACCT_INFO T5  ON T5.BOND_ID = T1.ZQZH
-    LEFT JOIN STL_CAPACCT_INFO T2
-    ON T5.TRD_ACCT_ID = T2.ACCT_NO and T5.TRD_ACCT_CCY = T2.CCY
-    LEFT JOIN MST_SALE_DEPARTMENT msd
-    ON T2.OWN_DEPT = msd.SALE_DEPID
-    and ((T5.TRADE_PLACE = '03' and msd.SH_SEATNO = T1.XWBH)
-    or (T5.TRADE_PLACE = '04' and msd.SZ_SEATNO = T1.XWBH)
-    )
-    LEFT JOIN FIN_PRODUCT T3 ON T3.FINPROD_MARKET_ID = T1.ZQDM ||DECODE(T5.TRADE_PLACE,'03','.SH','04','.SZ' )
-    LEFT JOIN FIN_PRODUCT_TYPE FPT ON T3.FINPROD_ID = FPT.FINPROD_ID
-    LEFT JOIN MST_SEAT  T4 ON T4.SEAT_ID  = T1.XWBH
+        INTERF_DZD T1
+    LEFT JOIN
+        STL_SEC_ACCT_INFO T5 ON T5.BOND_ID = T1.ZQZH
+    LEFT JOIN
+        STL_CAPACCT_INFO T2 ON T5.TRD_ACCT_ID = T2.ACCT_NO AND T5.TRD_ACCT_CCY = T2.CCY
+    INNER JOIN
+        MST_SALE_DEPARTMENT msd ON T2.OWN_DEPT = msd.SALE_DEPID
+            AND (
+                (T5.TRADE_PLACE = '03' and msd.SH_SEATNO = T1.XWBH)
+                OR
+                (T5.TRADE_PLACE = '04' and msd.SZ_SEATNO = T1.XWBH)
+        )
+    LEFT JOIN
+        FIN_PRODUCT T3 ON T3.FINPROD_MARKET_ID = T1.ZQDM ||DECODE(T5.TRADE_PLACE,'03','.SH','04','.SZ' )
+    LEFT JOIN
+        FIN_PRODUCT_TYPE FPT ON T3.FINPROD_ID = FPT.FINPROD_ID
+    LEFT JOIN
+        MST_SEAT  T4 ON T4.SEAT_ID  = T1.XWBH
     <where>
-        EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.JYLB  = T1.JYLB  AND T6.YWBS = T1.YWBS AND ZYBS IS NULL AND ZYBS IS NULL AND T1.YWBS NOT IN ('14036','14037','14038','14039','14040','14041'))
-        NOT EXISTS (SELECT 1 FROM INTERF_DZD WHERE YWBS = '4023' AND CJSL &lt; 0)
+        EXISTS (
+            SELECT
+                1
+            FROM
+                STL_SEC_RECON_CONFIG T6
+            WHERE
+                T6.JYLB = T1.JYLB
+                AND T6.YWBS = T1.YWBS
+                AND ZYBS IS NULL AND ZYBS IS NULL
+                AND T1.YWBS NOT IN (
+                '4429',
+                '4431',
+                '4030',
+                '4461',
+                '4448',
+                '4462',
+                '4447',
+                '4446',
+                '债券质押初始交易',
+                '债券质押到期续做新开',
+                '债券质押到期续做了结',
+                '债券质押到期续作（前期合约了结）购回利息',
+                '债券质押提前终止',
+                '债券质押提前终止购回利息',
+                '债券质押购回交易',
+                '债券质押购回利息'
+                )
+        )
+        AND NOT EXISTS (
+            SELECT
+                1
+            FROM
+                STL_SEC_RECON_CONFIG T6
+            WHERE
+                T6.JYLB = T1.JYLB
+                AND T6.YWBS = T1.YWBS
+                AND ZYBS IS NULL
+                AND T1.YWBS = '4023' AND T1.CJSL <![CDATA[<]]> 0)
+        )
         <if test="collect != null and collect.size()>0">
             and T4.CUSTOMER_ID IN
             <foreach item="item" index="index" collection="collect" open="(" separator=","  close=")">
@@ -549,97 +581,144 @@ WHERE
     </where>
     UNION ALL
     SELECT
-    TO_DATE(T1.JYRQ, 'yyyyMMdd') TRADE_DATE,
-    T4.CUSTOMER_ID CUSTOMER_ID,
-    LSH TRADE_ID,
-    WTBH INSTRUCTION_ID,
-    CASE
-    WHEN T1.BZ in ('0', '人民币') THEN 'CNY'
-    WHEN T1.BZ in ('1', '港币') THEN 'HKD'
-    WHEN T1.BZ in ('2', '美元') THEN 'USD'
-    END CCY,
-    CASE
-    WHEN JYSC = '1' THEN '03'
-    WHEN JYSC = '上海' THEN '03'
-    WHEN JYSC = '0' THEN '04'
-    WHEN JYSC = '深圳' THEN '04'
-    END TRADE_MARKET ,
-    T5.SEC_ACCT_ID SEC_ACCT_ID,
-    XWDM SEAT_NUMBER,
-    JSFS SETTLEMEN_TYPE,
-    case when SJSF > 0 then abs(CJSL) * -1
-    else abs(CJSL)
-    end as TRADE_NUM,
-    CJJJ PRICE,
-    DWYJLX UNIT,
-    CJQJ FULL_PRICE,
-    YJLXZE INT_AMT,
-    case when SJSF > 0 then abs(QJCJJE)
-    else abs(QJCJJE) * -1
-    end as TRADE_AMT,
-    FYHJ TOTAL_TEEAMT,
-    TO_DATE(HGDQR, 'yyyyMMdd') HGDQR,
-    HGDQJE HGDQJE,
-    YHS STAMP_FEE,
-    JSF JSF_AMT,
-    GHF GHF_AMT,
-    ZGF ZGF_AMT,
-    QSF SETTLE_FEE,
-    JYGF TRADE_FEE,
-    QTF OTHER_FEEAMT,
-    JYJ COMMISSION_AMT,
-    CASE WHEN ZYDM = '220142' THEN 'T49'
-    WHEN ZYDM != '220142' AND QJCJJE >0 THEN 'T02'
-    ELSE 'T01' END PS,
-    T2.ACCT_NO ACCOUT,
-    CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
-    ELSE T3.FINPROD_MARKET_ID END MARKET_ID,
-    CASE WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
-    ELSE T3.FINPROD_ID END FINPROD_ID,
-    FPT.TYPE_8 AS FINPROD_TYPE
+        TO_DATE(T1.JYRQ, 'yyyyMMdd') TRADE_DATE,
+        T4.CUSTOMER_ID CUSTOMER_ID,
+        LSH TRADE_ID,
+        WTBH INSTRUCTION_ID,
+        CASE
+        WHEN T1.BZ in ('0', '人民币') THEN 'CNY'
+        WHEN T1.BZ in ('1', '港币') THEN 'HKD'
+        WHEN T1.BZ in ('2', '美元') THEN 'USD'
+        END CCY,
+        CASE
+        WHEN JYSC = '1' THEN '03'
+        WHEN JYSC = '上海' THEN '03'
+        WHEN JYSC = '0' THEN '04'
+        WHEN JYSC = '深圳' THEN '04'
+        END TRADE_MARKET ,
+        T5.SEC_ACCT_ID SEC_ACCT_ID,
+        XWDM SEAT_NUMBER,
+        JSFS SETTLEMEN_TYPE,
+        CASE
+        WHEN SJSF > 0 THEN abs(CJSL) * -1
+        ELSE abs(CJSL)
+        END AS TRADE_NUM,
+        CJJJ PRICE,
+        DWYJLX UNIT,
+        CJQJ FULL_PRICE,
+        YJLXZE INT_AMT,
+        CASE
+        WHEN SJSF > 0 THEN abs(QJCJJE)
+        ELSE abs(QJCJJE) * -1
+        END AS TRADE_AMT,
+        FYHJ TOTAL_TEEAMT,
+        TO_DATE(HGDQR, 'yyyyMMdd') HGDQR,
+        HGDQJE HGDQJE,
+        YHS STAMP_FEE,
+        JSF JSF_AMT,
+        GHF GHF_AMT,
+        ZGF ZGF_AMT,
+        QSF SETTLE_FEE,
+        JYGF TRADE_FEE,
+        QTF OTHER_FEEAMT,
+        JYJ COMMISSION_AMT,
+        CASE
+        WHEN ZYDM = '220142' THEN 'T49'
+        WHEN ZYDM != '220142' AND QJCJJE >0 THEN 'T02'
+        ELSE 'T01'
+        END PS,
+        T2.ACCT_NO ACCOUT,
+        CASE
+        WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
+        ELSE T3.FINPROD_MARKET_ID
+        END MARKET_ID,
+        CASE
+        WHEN T3.FINPROD_ID IS NULL THEN T1.ZQDM
+        ELSE T3.FINPROD_ID
+        END FINPROD_ID,
+        FPT.TYPE_8 AS FINPROD_TYPE
     FROM
-    INTERF_ZX_ZJGFLS T1
-    LEFT JOIN STL_SEC_ACCT_INFO T5  ON T5.BOND_ID = T1.ZQZH
-    LEFT JOIN STL_CAPACCT_INFO T2
-    ON T5.TRD_ACCT_ID = T2.ACCT_NO and T5.TRD_ACCT_CCY = T2.CCY
-    LEFT JOIN MST_SALE_DEPARTMENT msd
-    ON T2.OWN_DEPT = msd.SALE_DEPID
-    and ((T1.JYSC in ('1', '上海') and msd.SH_SEATNO = T1.XWDM)
-    or (T1.JYSC in ('0', '深圳') and msd.SZ_SEATNO = T1.XWDM)
-    )
-    LEFT JOIN FIN_PRODUCT T3 ON
-    T3.FINPROD_MARKET_ID = T1.ZQDM || '.' || DECODE(T1.JYSC, '0', 'SZ', '深圳', 'SZ', '1', 'SH', '上海', 'SH')
-    LEFT JOIN FIN_PRODUCT_TYPE FPT ON T3.FINPROD_ID = FPT.FINPROD_ID
-    LEFT JOIN MST_SEAT  T4 ON T4.SEAT_ID  = T1.XWDM
+        INTERF_ZX_ZJGFLS T1
+    LEFT JOIN
+        STL_SEC_ACCT_INFO T5  ON T5.BOND_ID = T1.ZQZH
+    LEFT JOIN
+        STL_CAPACCT_INFO T2 ON T5.TRD_ACCT_ID = T2.ACCT_NO and T5.TRD_ACCT_CCY = T2.CCY
+    INNER JOIN
+        MST_SALE_DEPARTMENT msd ON T2.OWN_DEPT = msd.SALE_DEPID
+            AND (
+                (T1.JYSC IN ('1', '上海') AND msd.SH_SEATNO = T1.XWDM)
+                OR
+                (T1.JYSC IN ('0', '深圳') AND msd.SZ_SEATNO = T1.XWDM)
+            )
+    LEFT JOIN
+        FIN_PRODUCT T3 ON T3.FINPROD_MARKET_ID = T1.ZQDM || '.' || DECODE(T1.JYSC, '0', 'SZ', '深圳', 'SZ', '1', 'SH', '上海', 'SH')
+    LEFT JOIN
+        FIN_PRODUCT_TYPE FPT ON T3.FINPROD_ID = FPT.FINPROD_ID
+    LEFT JOIN
+        MST_SEAT  T4 ON T4.SEAT_ID  = T1.XWDM
     WHERE
-    T1.JYSC IN ('0', '1', '深圳', '上海') and EXISTS (SELECT 1 FROM STL_SEC_RECON_CONFIG T6 WHERE T6.ZYBS = T1.ZYDM  AND ZYBS IS NOT NULL AND T1.ZYDM NOT IN('220131','220132','220144','220143','220148','220147','220134','220133') )
-    AND NOT EXIST (SELECT 1 FROM INTERF_ZX_ZJGFLS WHERE ZYDM = '220142' AND CJSL &lt; 0)
-<if test="collect != null and collect.size()>0">
-        AND  T4.CUSTOMER_ID IN
-        <foreach item="item" index="index" collection="collect" open="(" separator=","  close=")">
-            #{item.customerId}
-        </foreach>
-    </if>
-    <if test="finprodIds != null and finprodIds.size()>0">
-        and T3.FINPROD_ID not in
-        <foreach item="item" index="index" collection="finprodIds" open="(" separator=","  close=")">
-            #{item.finprodId}
-        </foreach>
-    </if>
-    <if test="entrustIds != null and entrustIds.size()>0">
-        and T1.WTBH not in
-        <foreach item="item" index="index" collection="entrustIds" open="(" separator=","  close=")">
-            #{item.entrustTradeId}
-        </foreach>
-    </if>
-    <if test="tradeIds != null and tradeIds.size()>0">
-        and T1.LSH not in
-        <foreach item="item" index="index" collection="tradeIds" open="(" separator=","  close=")">
-            #{item.entrustTradeId}
-        </foreach>
-    </if>
-
-
+        T1.JYSC IN ('0', '1', '深圳', '上海')
+        AND EXISTS (
+            SELECT
+                1
+            FROM
+                STL_SEC_RECON_CONFIG T6
+            WHERE
+                T6.ZYBS = to_char(T1.ZYDM)
+                AND ZYBS IS NOT NULL
+                AND to_char(T1.ZYDM) NOT IN(
+                '220131',
+                '220132',
+                '220144',
+                '220143',
+                '220148',
+                '220147',
+                '220134',
+                '220133',
+                '债券回购初始融入'
+                '债券回购初始融出'
+                '债券回购提前收取'
+                '债券回购提前返回'
+                '债券回购续做收取'
+                '债券回购续做返回'
+                '债券回购购回收取'
+                '债券回购购回返回'
+            )
+        )
+        AND NOT EXISTS (
+            SELECT
+                1
+            FROM
+                STL_SEC_RECON_CONFIG T6
+            WHERE
+                T6.ZYBS = to_char(T1.ZYDM)
+                AND ZYBS IS NOT NULL
+                AND to_char(T1.ZYDM) = '220142' AND T1.CJSL <![CDATA[<]]> 0
+        )
+        <if test="collect != null and collect.size()>0">
+            AND  T4.CUSTOMER_ID IN
+            <foreach item="item" index="index" collection="collect" open="(" separator=","  close=")">
+                #{item.customerId}
+            </foreach>
+        </if>
+        <if test="finprodIds != null and finprodIds.size()>0">
+            and T3.FINPROD_ID not in
+            <foreach item="item" index="index" collection="finprodIds" open="(" separator=","  close=")">
+                #{item.finprodId}
+            </foreach>
+        </if>
+        <if test="entrustIds != null and entrustIds.size()>0">
+            and T1.WTBH not in
+            <foreach item="item" index="index" collection="entrustIds" open="(" separator=","  close=")">
+                #{item.entrustTradeId}
+            </foreach>
+        </if>
+        <if test="tradeIds != null and tradeIds.size()>0">
+            and T1.LSH not in
+            <foreach item="item" index="index" collection="tradeIds" open="(" separator=","  close=")">
+                #{item.entrustTradeId}
+            </foreach>
+        </if>
 </sql>
 
 
@@ -678,7 +757,7 @@ WHERE
         SUM(TOTAL_TEEAMT) TOTAL_TEEAMT
         FROM
         (
-            <include refid="com.joyintech.tams.invest.interf.fromjkpt.recon.dao.ReconInterfMapper.detailesql" />
+            <include refid="com.joyintech.tams.invest.interf.fromjkpt.recon.dao.ReconInterfMapper.detailesql2" />
         ) resultData
         GROUP BY
         INSTRUCTION_ID,
@@ -798,7 +877,10 @@ WHERE
                 NULL UNIT,
                 NULL FULL_PRICE,
                 NULL INT_AMT,
-                CJJE TRADE_AMT,
+                CASE
+                    WHEN FSJE &lt; 0 THEN abs(CJJE)*-1
+                    ELSE abs(CJJE)
+                END TRADE_AMT,
                 CJJE HAPPEN_AMT,
                 NULL TOTAL_TEEAMT,
                 NULL HGDQR,

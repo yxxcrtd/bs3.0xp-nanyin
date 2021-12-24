@@ -63,7 +63,7 @@ public class StlDataGatherFund2Reader extends StlDataGatherReader {
             }
         });
 
-        Map<String, Object> searchParam = new HashMap<>(4);
+        Map<String, Object> searchParam = new HashMap<>();
         searchParam.put("portfolioIdList", portfolioIdList);
         searchParam.put("dealDate", execInfo.getExecuteDate());
         setSearchParam(searchParam);

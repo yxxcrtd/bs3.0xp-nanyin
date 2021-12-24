@@ -641,7 +641,7 @@
                NVL(std.FPRICE_AMT,0) FPRICE_AMT,
                NVL(std.STAMP_FEE,0) STAMP_FEE,
                NVL(std.JSF_AMT,0) JSF_AMT,
-               NVL(td.GHF_AMT,0) GHF_AMT,
+               NVL(std.GHF_AMT,0) GHF_AMT,
                NVL(std.ZGF_AMT,0) ZGF_AMT,
                NVL(std.SXF_AMT,0) SXF_AMT,
                NVL(std.SETTLE_FEE,0) SETTLE_FEE,
