@@ -409,6 +409,9 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     public String getSendStatusName() {
         return SysDataUtil.getNameFromDataDict(DictCode.报送状态, this.getSendStatus());
     }
+    public String getStatus() {
+        return SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getDataStatus());
+    }
 
     public String getSubmitTimeStr() {
         if(StringUtil.isNotEmpty(this.getSubmitTime())){
@@ -435,4 +438,6 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     public void setCheckSeqno(String checkSeqno) {
         this.checkSeqno = checkSeqno;
     }
+    
+
 }
