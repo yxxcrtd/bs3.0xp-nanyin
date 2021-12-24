@@ -68,7 +68,7 @@ public class CfetsEtrIbRepoRKService extends BaseService<CfetsEtrIbRepoRkDto> {
     public int delete( CfetsEtrIbRepoRkDto dto) {
     	cfetsEtrIbRepoinfoMapper.deleteByPrimaryKey(dto.getPledgeStockId());
     	cfetsEtrIbRepoinfoMapper.delete(dto.getPledgeStockId());
-        return cfetsEtrIbRepoinfoMapper.deleteByPrimaryKey(dto.getPledgeStockId());
+        return etrSecStockMapper.deleteByPrimaryKey(dto.getPledgeStockId());
     }
     
     public int checkIsExistByPledgeStockName( Map<String, Object> map){

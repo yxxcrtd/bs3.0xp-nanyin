@@ -76,7 +76,6 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 
 	@Autowired
 	private IPlatformDate iPlatformDate;
-
 	/**
 	 * 业务编号组件
 	 */
@@ -96,8 +95,6 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 
 	public static final String ENTRUST_RECORD_MODIFY = "modify";
 
-
-
 	/**
 	 * 查询交易行情信息
 	 * <一句话功能简述>
@@ -105,6 +102,7 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	 * @see
 	 * @since 1.0
 	 */
+	@ApiOperation(value="查询交易行情信息",notes = "查询交易行情信息")
 	@ResponseBody
 	@PostMapping("findTradeQuotationsPage")
 	public Message<Page<EtrExchangeTradeQuotationResponse>> findTradeQuotationsPage(@RequestBody EtrExchangeTradeQuotationRequest request){
@@ -113,7 +111,7 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 			return new Message<Page<EtrExchangeTradeQuotationResponse>>().success().setData(list);
 		}catch (Exception e) {
 			logger.error("查询指令管理分页数据异常",e);
-			return new Message<Page<EtrExchangeTradeQuotationResponse>>().fail().setMessage("查询指令管理分页数据异常");
+			return new Message<Page<EtrExchangeTradeQuotationResponse>>().fail().setMessage("查询交易行情信息数据异常");
 		}
 	}
 
@@ -125,10 +123,17 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	 * @see
 	 * @since 1.0
 	 */
+	@ApiOperation(value="查询盘后行情信息",notes = "查询盘后行情信息")
 	@ResponseBody
-	@RequestMapping("findAfterHoursPage")
-	public Page<EtrExchangeTradeQuotation001Dto> findAfterHoursPage(){
-		return this.etrExchangeTradeJj001Service.findAfterHoursPage(RequestUtil.getPageParam());
+	@PostMapping("findAfterHoursPage")
+	public Message<Page<EtrExchangeTradeQuotation001Dto>> findAfterHoursPage(@RequestBody EtrExchangeTradeQuotationRequest request){
+		try {
+			Page<EtrExchangeTradeQuotation001Dto> page = etrExchangeTradeJj001Service.findAfterHoursPage(request);
+			return new Message<Page<EtrExchangeTradeQuotation001Dto>>().success().setData(page);
+		}catch (Exception e) {
+			logger.error("查询指令管理分页数据异常",e);
+			return new Message<Page<EtrExchangeTradeQuotation001Dto>>().fail().setMessage("查询盘后行情信息数据异常");
+		}
 	}
 
 	/**
@@ -138,10 +143,17 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	 * @see
 	 * @since 1.0
 	 */
+	@ApiOperation(value="查询固定收益行情数据",notes = "查询固定收益行情数据")
 	@ResponseBody
-	@RequestMapping("findFixedIncomePage")
-	public Page<EtrExchangeTradeQuotation001Dto> findFixedIncomePage(){
-		return this.etrExchangeTradeJj001Service.findFixedIncomePage(RequestUtil.getPageParam());
+	@PostMapping("findFixedIncomePage")
+	public Message<Page<EtrExchangeTradeQuotation001Dto>> findFixedIncomePage(@RequestBody EtrExchangeTradeQuotationRequest request){
+		try {
+			Page<EtrExchangeTradeQuotation001Dto> page = etrExchangeTradeJj001Service.findFixedIncomePage(request);
+			return new Message<Page<EtrExchangeTradeQuotation001Dto>>().success().setData(page);
+		}catch (Exception e) {
+			logger.error("查询指令管理分页数据异常",e);
+			return new Message<Page<EtrExchangeTradeQuotation001Dto>>().fail().setMessage("查询固定收益行情数据异常");
+		}
 	}
 
 
@@ -152,9 +164,10 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	 * @see
 	 * @since 1.0
 	 */
+	@ApiOperation(value="查询盘后行情信息",notes = "查询盘后行情信息")
 	@ResponseBody
-	@RequestMapping("findRepoPage")
-	public Page<EtrExchangeTradeQuotation001Dto> findRepoPage(){
+	@PostMapping("findRepoPage")
+	public Page<EtrExchangeTradeQuotation001Dto> findRepoPage(@RequestBody EtrExchangeTradeQuotationRequest request){
 		Page<EtrExchangeTradeQuotation001Dto> page = new Page<EtrExchangeTradeQuotation001Dto>();
 		return page;
 	}
@@ -164,8 +177,8 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	/**
 	 * 保存按钮点击时的check
 	 *
-	 * @param dto dto
-	 * @param result BindingResult
+	 * @param saveRequest dto
+	 * @param br BindingResult
 	 * @return check结果
 	 * @see
 	 * @since 1.0
@@ -430,7 +443,6 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	public List<SelectOptionDto> getFinprodId(){
 		return etrExchangeTradeJj001Service.getFinprodId(RequestUtil.getPageParam());
 	}
-
 
 	@ResponseBody
 	@RequestMapping("/getFinprodMarketInfoPosition")
@@ -752,7 +764,6 @@ public class EtrExchangeTradeJj001Controller extends BaseController{
 	 */
 	@RequestMapping(value = "/initHq")
 	public String initHq(Model model){
-
 		return "invest/entrust/etrexchangetrade/EtrExchangeTradeHq";
 	}
 

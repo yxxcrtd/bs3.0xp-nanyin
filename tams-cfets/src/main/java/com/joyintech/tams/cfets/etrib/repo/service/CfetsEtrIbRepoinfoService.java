@@ -209,7 +209,7 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
                 &&StringUtil.equals(DictCodeList.回购拆借方向_正回购.getValue(), dto.getPs())){
             List<CfetsPledgeBondInfoDto> list = dto.getPledgeBondTotalListDetailed();
             for(int i = 0; i< list.size(); i++){
-                if(StringUtil.isNotEmpty(list.get(i).getScale())){
+                if(!StringUtil.isNotEmpty(list.get(i).getScale())){
                     messages.add(new ValidMessage("质押券信息(第"+(i+1)+"行),折算比例必填"));
                 }
             }
