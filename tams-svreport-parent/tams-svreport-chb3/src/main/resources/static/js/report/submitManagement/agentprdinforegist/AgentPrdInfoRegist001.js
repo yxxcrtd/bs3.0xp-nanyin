@@ -47,9 +47,9 @@ $(function(){
         },
         cols: [
              {title: "登记序列",field:'registSeqno',visible:false}
-            ,{field: 'status', title: "数据状态",width:100,sortField:'status'}
+            ,{field: 'status', title: "数据状态",visible:false,sortField:'status'}
             ,{field: 'statusStr', title: "数据状态",width:100,sortField:'status'}
-            ,{field: 'sendStatus', title: "报送状态", width:100 ,sortField:'sendStatus'}
+            ,{field: 'sendStatus', title: "报送状态",visible:false,sortField:'sendStatus'}
             ,{field: 'sendStatusStr', title: "报送状态", width:100 ,sortField:'sendStatus'}
             ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
             ,{field: 'submitDeadlineStr', title: "报送截止日", width:150,sortField:'submitDeadline'}
