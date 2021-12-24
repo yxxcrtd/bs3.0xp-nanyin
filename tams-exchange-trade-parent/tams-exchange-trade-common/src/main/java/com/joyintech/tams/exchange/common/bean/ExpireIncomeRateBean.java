@@ -57,7 +57,7 @@ public class ExpireIncomeRateBean implements Serializable {
     private Double integrateCpriceAmt;
     @ApiModelProperty(required = false, name = "mdateStr", value = "到期日")
     private String mdateStr;
-    @ApiModelProperty(required = false, name = "calculateType", value = "计算模式（1-净价，2-全价，3-到期收益率）")
+    @ApiModelProperty(required = false, name = "calculateType", value = "计算模式（1-净价，2-全价，3-到期收益率）",example ="3")
     private int calculateType = 3;
 
     public String getStatus() {

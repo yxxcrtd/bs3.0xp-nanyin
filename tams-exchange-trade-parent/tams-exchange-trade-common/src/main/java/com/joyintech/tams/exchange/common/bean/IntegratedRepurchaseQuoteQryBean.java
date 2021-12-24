@@ -20,6 +20,8 @@ public class IntegratedRepurchaseQuoteQryBean {
     @ApiModelProperty(name = "pageSize", value = "记录数", example = "100")
     private int pageSize;
 
+    public IntegratedRepurchaseQuoteQryBean() {
+    }
 
     public IntegratedRepurchaseQuoteQryBean(int actionIn, String entrustProp, String accountId, int pageSize) {
         this.actionIn = actionIn;

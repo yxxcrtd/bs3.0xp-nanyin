@@ -28,6 +28,9 @@ public class IntegratedFixedIncomeQuoteQryBean {
         this.pageSize = pageSize;
     }
 
+    public IntegratedFixedIncomeQuoteQryBean() {
+    }
+
     public String getStockCode() {
         return stockCode;
     }
