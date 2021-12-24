@@ -17,7 +17,7 @@ public class AgentInstitutionDto extends ChbAgentInstitutionInfo implements Proc
     private String operateType;//操作类型
     private String elementId;//页面元素
     private String pageModel;//页面模型
-    private String fileNo;//文件代码
+    private String sendStatus;//已登记的数据报送状态
 
     /**
      * 选中的数据
@@ -60,11 +60,11 @@ public class AgentInstitutionDto extends ChbAgentInstitutionInfo implements Proc
         this.pageModel = pageModel;
     }
 
-    public String getFileNo() {
-        return fileNo;
+    public String getSendStatus() {
+        return sendStatus;
     }
 
-    public void setFileNo(String fileNo) {
-        this.fileNo = fileNo;
+    public void setSendStatus(String sendStatus) {
+        this.sendStatus = sendStatus;
     }
 }

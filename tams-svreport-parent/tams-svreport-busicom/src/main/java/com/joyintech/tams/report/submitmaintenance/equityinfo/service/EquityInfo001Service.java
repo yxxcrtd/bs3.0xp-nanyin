@@ -659,6 +659,24 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         List<EquityInfo001Dto> listI = new ArrayList<EquityInfo001Dto>();
         // 当前批次报送时点集合
         Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
+        //只有四期数据变化的情况下，用来更新INFO表的数据结构
+        List<EquityInfo001Dto> listUpForInfo = new ArrayList<EquityInfo001Dto>();
+        //只有四期数据变化的情况下，用来更新SUB表的数据结构
+        List<EquityInfo001Dto> listUpForSub = new ArrayList<EquityInfo001Dto>();
+        //
+        List<EquityInfoRegist001Dto> registList=new ArrayList<EquityInfoRegist001Dto>();
+        template.select("com.joyintech.tams.report.submitmanagement.equityinforegist.dao.EquityInfoRegist001Mapper.queryBatchForEquityInfoConStrast",
+                new ResultHandler() {
+                    @Override
+                    public void handleResult(ResultContext resultContext) {
+                        registList.add((EquityInfoRegist001Dto) resultContext.getResultObject());
+                    }
+                });
+        Map<String, List<EquityInfoRegist001Dto>> mapRegist = registList.stream()
+                .collect(
+                        JoyinCollectors.groupingBy(
+                                x -> x.getBankCode() + GlobalConstant.VERTICAL_LINE
+                                        + GlobalConstant.VERTICAL_LINE + x.getIndentifyMark()));
         List<Date> dateList = null;
 
       //  EquityInfo001Dto equityInfo001Dto = null;
@@ -698,11 +716,26 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         	EquityInfo001Dto  equityInfo001Dto = equityList.get(i);
             equityInfo001Dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             map = listType.get(i);
+            List<EquityInfoRegist001Dto> listRegistDto = mapRegist.get(equityInfo001Dto.getBankCode() + GlobalConstant.VERTICAL_LINE
+                    + GlobalConstant.VERTICAL_LINE + equityInfo001Dto.getIndentifyMark());
             String statusType = map.get("type");
             // 数据未发生改变，不进行数据更新
 //            if ("01".equals(statusType) && "01".equals(map.get("flag"))) {
 //                continue;
 //            }
+            //四期涉及到字段，放置重新导入覆盖修复内容。
+            if(null != listRegistDto && null != listRegistDto.get(0)) {
+        		if(StringUtil.isEmpty(equityInfo001Dto.getTheBankCode())) {
+        			equityInfo001Dto.setTheBankCode(listRegistDto.get(0).getTheBankCode());
+        		}
+        		if(StringUtil.isEmpty(equityInfo001Dto.getFundAccPlace())) {
+        			equityInfo001Dto.setFundAccPlace(listRegistDto.get(0).getFundAccPlace());
+        		}
+        		if(StringUtil.isEmpty(equityInfo001Dto.getHolderClassify())) {
+        			equityInfo001Dto.setHolderClassify(listRegistDto.get(0).getHolderClassify());
+        		}
+        	}
+            
             String type = StringUtil.EMPTY;
             if (DictCodeListExt2.报送数据状态_新建.getValue().equals(statusType)) {
                 type = DictCodeListExt2.报送数据状态_新建.getValue();
@@ -765,9 +798,16 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             }
             // 插入前维护表有除待处理，将dto放入listN
             else {
-                listO.add(equityInfo001Dto);
+            	if(DictCodeListExt2.数据类型_中债_四期信息变更.getValue().equals(statusType)) {
+            		listUpForInfo.add(equityInfo001Dto);
+            	}else {
+            		listO.add(equityInfo001Dto);
+            	}   
             }
-            if (!("01".equals(statusType) &&"01".equals(map.get("flag")))) {
+            
+            if(DictCodeListExt2.数据类型_中债_四期信息变更.getValue().equals(statusType)) {
+            	listUpForSub.add(equityInfo001Dto);
+            }else if (!("01".equals(statusType) &&"01".equals(map.get("flag")))) {
             	EquityInfo001Dto  equityInfo001DtoTemp = new EquityInfo001Dto();
             	    BeanUtil.copyPropertiesIgnoreNull(equityInfo001DtoTemp, equityInfo001Dto);
             	    equityInfo001DtoTemp.setCheckSeqno("0");
@@ -895,6 +935,25 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             this.deleteBatchEquityRegist(listU);
             this.insertBatchEquityRegistByPart(listU);
             equityInfoDistinctService.refreshIndentifyMark(listU,1);
+        }
+        
+        //只有四期信息发生变更的情况下，对INFO表进行更新变更字段
+        if (CollectionUtils.isNotEmpty(listUpForInfo)) {
+            logger.info("EquityInfo001Service listUpForInfo 四期INFO更新开始 " + DateUtil.getCurrentDateTime());
+       
+            // 更新身份信息INFO表
+            this.updateEuqHoldInfoByBatch(listUpForInfo);
+            logger.info("EquityInfo001Service listUpForInfo 四期INFO更新结束 " + DateUtil.getCurrentDateTime());
+        }
+     
+        //只有四期信息发生变更的情况下，对SUB表进行更新变更字段
+        if (CollectionUtils.isNotEmpty(listUpForSub)) {
+            logger.info("EquityInfo001Service listUpForSub 四期SUB更新开始 " + DateUtil.getCurrentDateTime());
+            
+            // 更新身份信息SUB表
+            this.updateEuqHoldSubByBatch(listUpForSub);
+            
+            logger.info("EquityInfo001Service listUpForSub 四期SUB更新结束 " + DateUtil.getCurrentDateTime());
         }
     }
 

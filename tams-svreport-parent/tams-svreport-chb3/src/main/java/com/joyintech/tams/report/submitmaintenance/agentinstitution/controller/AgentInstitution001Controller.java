@@ -27,15 +27,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.joyintech.framework.grid.Page;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,7 +91,9 @@ public class AgentInstitution001Controller extends BaseController {
     }
 
     /**
-     *deleteCheck
+     * 删除check
+     * @param agentInstitutionDto
+     * @return
      */
     @ResponseBody
     @RequestMapping("deleteCheck")
@@ -108,6 +108,33 @@ public class AgentInstitution001Controller extends BaseController {
                 joyinMessages.add(ms);
                 wr.setJoyinMessages(joyinMessages);
                 break;
+            }
+        }
+        return wr;
+    }
+
+    /**
+     * 删除附件check
+     * @param agentInstitutionDto
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("deleteFileCheck")
+    public AjaxResult deleteFileCheck(@RequestBody AgentInstitutionDto agentInstitutionDto) {
+        AjaxResult wr = new AjaxResult();
+        List<JoyinMessage> joyinMessages = new ArrayList<>();
+        AgentInstitutionDto agentInstitutionCodeList = agentInstitutionDto.getSelectedItem().get(0);
+            String agentInstitutionCode = agentInstitutionCodeList.getAgentInstitutionCode();
+        List<AgentInstitutionDto> deleteFileCheckList = chbAgentInstitutionInfoMapper.deleteFileCheck(agentInstitutionCode);
+        if(deleteFileCheckList.size() != 0) {
+            for (AgentInstitutionDto deleteFileCheck : deleteFileCheckList) {
+                if(deleteFileCheckList.size() == 1) {
+                    if (!deleteFileCheck.getSendStatus().equals("01")) {
+                        JoyinMessage ms = new JoyinMessage("该条数据已报送，请确认是否删除附件?", MessageType.确认消息);
+                        joyinMessages.add(ms);
+                        wr.setJoyinMessages(joyinMessages);
+                    }
+                }
             }
         }
         return wr;
@@ -204,5 +231,48 @@ public class AgentInstitution001Controller extends BaseController {
         map.put("agentInstitutionCode", RequestUtil.getPageParam().get("agentInstitutionCode"));
         List<SuggestDto> temp = agentInstitutionService.getAgentInstitutionCode(map);
         return temp;
+    }
+
+    /**
+     * 删除附件
+     * @param map
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/deltFile", method = RequestMethod.POST)
+    public AjaxResult deltFile(@RequestParam Map<String, Object> map)  {
+        agentInstitution001Service.deltFile(map);
+        return new AjaxResult("删除成功");
+    }
+
+    /**
+     * 附件下载
+     * @param map
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/downloadFile", method = RequestMethod.POST)
+    public AjaxResult downloadFile(@RequestParam Map<String, Object> map)  {
+        return new AjaxResult("下载成功");
+
+    }
+
+    /**
+     * 查看附件
+     * @param map
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getFileList", method = RequestMethod.POST)
+    public String getFileList(@RequestParam Map<String, Object> map)  {
+        String res;
+        try {
+            res = agentInstitution001Service.getFileList(map);
+        } catch (IOException e) {
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+        return res;
+
     }
 }

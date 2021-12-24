@@ -3,7 +3,6 @@ package com.joyintech.tams.report.submitmanagement.agentinstitutionregist.contro
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
@@ -14,13 +13,14 @@ import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dto.AgentInstitutionRegistDto;
 import com.joyintech.tams.report.submitmanagement.agentinstitutionregist.service.AgentInstitutionRegist001Service;
 import com.joyintech.tams.report.submitmanagement.agentinstitutionregist.service.AgentInstitutionRegistService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -37,6 +37,10 @@ public class AgentInstitutionRegist001Controller extends BaseController {
     private AgentInstitutionRegist001Service agentInstitutionRegist001Service;
     @Autowired
     private AgentInstitutionRegistService agentInstitutionRegistService;
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 初始化
@@ -151,6 +155,37 @@ public class AgentInstitutionRegist001Controller extends BaseController {
     public ResponseEntity<byte[]> download() throws IOException {
         String datas = this.getParam("keyList");
         return agentInstitutionRegist001Service.download(this.getPageId(), RequestUtil.getPageParam(),datas);
+    }
+
+    /**
+     * 附件下载
+     * @param map
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/downloadFile", method = RequestMethod.POST)
+    public AjaxResult downloadFile(@RequestParam Map<String, Object> map)  {
+        return new AjaxResult("下载成功");
+
+    }
+
+    /**
+     * 查看附件
+     * @param map
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getFileList", method = RequestMethod.POST)
+    public String getFileList(@RequestParam Map<String, Object> map)  {
+        String res;
+        try {
+            res = agentInstitutionRegist001Service.getFileList(map);
+        } catch (IOException e) {
+            logger.error(e.getMessage(),e);
+            return null;
+        }
+        return res;
+
     }
 
     /**

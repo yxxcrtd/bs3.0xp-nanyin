@@ -45,7 +45,10 @@ $(function(){
         },
         cols: [
              {title: "登记序列",field:'registSeqno',visible:false}
+            ,{field: 'enclosureAddress',visible : false}
+            ,{field: 'status', title: "数据状态",visible:false,sortField:'status'}
             ,{field: 'statusStr', title: "数据状态",width:100,sortField:'status'}
+            ,{field: 'sendStatus', title: "报送状态", visible:false ,sortField:'sendStatus'}
             ,{field: 'sendStatusStr', title: "报送状态", width:100 ,sortField:'sendStatus'}
             ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
             ,{field: 'submitDeadlineStr', title: "报送截止日", width:150,sortField:'submitDeadline'}
@@ -62,6 +65,37 @@ $(function(){
                  ,{field: 'sumitSeq',visible:false} ]}
         ]
     });
+
+        //附件查看
+    	table.bind('click', '.fileView', function(data, index) {
+
+    		$.post('getFileList', {enclosureAddress:data.enclosureAddress}, function(str){
+    			  layer.open({
+    			    type: 0,
+    			    content:decodeURIComponent(str), //注意，如果str是object，那么需要字符拼接。
+    			    area: ['300px', '300px'],
+    			    skin: 'layui-layer-lan',
+    			    offset: 'rb'
+    			  });
+    			});
+    	});
+
+        //附件下载
+    	table.bind('click', '.download', function(data, index) {
+    		if (!data.enclosureAddress || data.enclosureAddress == null) {
+    			Joyin.error("未上传附件，不能下载！");
+    			return;
+    		}
+    		parm = {};
+    		var url = JoyinUtil.getRealPath('/framework/download/' + data.enclosureAddress);
+    		Joyin.ajax(url, parm, function downloadFileByForm() {
+    			Joyin.exportExcel('/framework/download/' + data.enclosureAddress, parm);
+    		},
+    		function errorDownload(){
+    			Joyin.error("文件未找到！");
+    		}
+    		);
+    	});
 
         // 查询按钮点击事件
         $('#AgentInstitutionRegist001_btn_search').click(function() {
